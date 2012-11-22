@@ -2,9 +2,9 @@
 <ploopi>
     <moduletype>
         <label>doc</label>
-        <version>4.7.0</version>
+        <version>4.7.0a</version>
         <author>Ovensia / HeXad</author>
-        <date>20120413000000</date>
+        <date>20121122000000</date>
         <description>Gestion de Documents</description>
         <paramtype>
             <name>doc_viewfoldersinblock</name>

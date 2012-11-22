@@ -1,3 +1,9 @@
+== Module DOC - version 4.7.0a ====================================================
+
+2012-11-22  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Correction d'un bug sur l'application du paramètre empêchant le dépôt d'un fichier à la racine.
+
 == Module DOC - version 4.7.0 ====================================================
 
 2012-04-13  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

@@ -143,7 +143,7 @@ else
                         <a title="Rechercher un Fichier" href="<?php echo ploopi_urlencode("admin.php?op=doc_search&currentfolder=0"); ?>" style="float:right;"><img src="./modules/doc/img/ico_search.png"></a>
 
                         <?php
-                        if (!doc_folder_contentisreadonly($objFolder->fields, _DOC_ACTION_ADDFILE) && ploopi_getparam('doc_rootwritable'))
+                        if (!doc_folder_contentisreadonly($objFolder->fields, _DOC_ACTION_ADDFILE) && ((ploopi_getparam('doc_rootwritable') && $currentfolder == 0) || $currentfolder > 0))
                         {
                             ?>
                             <a title="Créer un nouveau fichier" href="<?php echo ploopi_urlencode("admin.php?op=doc_fileform&currentfolder={$currentfolder}"); ?>" style="float:right;"><img src="./modules/doc/img/ico_newfile.png"></a>
