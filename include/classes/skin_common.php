@@ -503,7 +503,7 @@ class skin_common
                     if (!empty($array['columns']['left'])) $columns += $array['columns']['left'];
                     if (!empty($array['columns']['actions_right'])) $columns += $array['columns']['actions_right'];
 
-                    if (isset($array['columns'][$_SESSION['ploopi']['arrays'][$strArrayId]['orderby']]))
+                    if (isset($columns[$_SESSION['ploopi']['arrays'][$strArrayId]['orderby']]))
                     {
                         // Lecture du tri en session
                         $array['orderby'] = $_SESSION['ploopi']['arrays'][$strArrayId]['orderby'];
@@ -543,18 +543,22 @@ class skin_common
 
             if ($array['sort'] == 'ASC') ksort($array['index'], SORT_STRING);
             else krsort($array['index'], SORT_STRING);
-            // Sauvegarde du tri en session
-            $_SESSION['ploopi']['arrays'][$strArrayId] = array(
-                'orderby' => $array['orderby'],
-                'sort' => $array['sort'],
-            );
 
             $sort_img = ($array['sort'] == 'DESC') ? "<img src=\"{$this->values['path']}/arrays/arrow_down.png\">" : "<img src=\"{$this->values['path']}/arrays/arrow_up.png\">";
 
         }
         else $array['index'] = array_keys($array['values']);
 
+        // Lecture page en session
+        if (isset($_SESSION['ploopi']['arrays'][$strArrayId]['page'])) $array['options']['page'] = $_SESSION['ploopi']['arrays'][$strArrayId]['page'];
         if (!empty($intIdPage) && is_numeric($intIdPage)) $array['options']['page'] = $intIdPage;
+
+        // Sauvegarde du tri + page en session
+        $_SESSION['ploopi']['arrays'][$strArrayId] = array(
+            'orderby' => $array['orderby'],
+            'sort' => $array['sort'],
+            'page' => $array['options']['page'],
+        );
 
         $objSV->save($array);
 
