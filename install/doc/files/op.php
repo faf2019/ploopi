@@ -1060,7 +1060,8 @@ if ($_SESSION['ploopi']['connected'])
 switch($ploopi_op)
 {
     case 'doc_getthumbnail':
-
+    case 'doc_image_get':
+    	
         if (isset($_GET['docfile_md5id']))
         {
             $intTimeCache = 2592000; // 30 jours
