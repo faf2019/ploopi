@@ -479,35 +479,35 @@ CREATE TABLE IF NOT EXISTS `ploopi_mb_action` (
 
 INSERT INTO `ploopi_mb_action` (`id_module_type`, `id_action`, `label`, `description`, `id_workspace`, `id_object`, `role_enabled`) VALUES
 (1, 1, 'Installer un Module', NULL, 0, 0, 1),
-(1, 2, 'DÃ©sinstaller un Module', NULL, 0, 0, 1),
-(1, 3, 'Modifier les ParamÃ¨tres d''un Module', NULL, 0, 0, 1),
+(1, 2, 'Désinstaller un Module', NULL, 0, 0, 1),
+(1, 3, 'Modifier les Paramètres d''un Module', NULL, 0, 0, 1),
 (1, 4, 'Instancier / Utiliser un Module', NULL, 0, 0, 1),
-(1, 5, 'Modifier les PropriÃ©tÃ©s d''un Module', NULL, 0, 0, 1),
+(1, 5, 'Modifier les Propriétés d''un Module', NULL, 0, 0, 1),
 (1, 6, 'Modifier la Page d''Accueil', NULL, 0, 0, 1),
 (1, 7, 'Installer un Skin', NULL, 0, 0, 1),
-(1, 8, 'DÃ©sinstaller un Skin', NULL, 0, 0, 1),
-(1, 9, 'CrÃ©er un Groupe', NULL, 0, 0, 1),
+(1, 8, 'Désinstaller un Skin', NULL, 0, 0, 1),
+(1, 9, 'Créer un Groupe', NULL, 0, 0, 1),
 (1, 10, 'Modifier un Groupe', NULL, 0, 0, 1),
 (1, 11, 'Supprimer un Groupe', NULL, 0, 0, 1),
 (1, 12, 'Cloner un Groupe', NULL, 0, 0, 1),
-(1, 13, 'CrÃ©er un RÃ´le', NULL, 0, 0, 1),
-(1, 14, 'Modifier un RÃ´le', NULL, 0, 0, 1),
-(1, 15, 'Supprimer un RÃ´le', NULL, 0, 0, 1),
-(1, 16, 'CrÃ©er un Profil', NULL, 0, 0, 1),
+(1, 13, 'Créer un Rôle', NULL, 0, 0, 1),
+(1, 14, 'Modifier un Rôle', NULL, 0, 0, 1),
+(1, 15, 'Supprimer un Rôle', NULL, 0, 0, 1),
+(1, 16, 'Créer un Profil', NULL, 0, 0, 1),
 (1, 17, 'Modifier un Profil', NULL, 0, 0, 1),
 (1, 18, 'Supprimer un Profil', NULL, 0, 0, 1),
 (1, 19, 'Ajouter un Utilisateur', NULL, 0, 0, 1),
 (1, 20, 'Modifier un Utilisateur', NULL, 0, 0, 1),
 (1, 21, 'Supprimer un Utilisateur', NULL, 0, 0, 1),
-(1, 22, 'DÃ©tacher un Module', NULL, 0, 0, 1),
+(1, 22, 'Détacher un Module', NULL, 0, 0, 1),
 (1, 23, 'Supprimer un Module', NULL, 0, 0, 1),
-(1, 24, 'Mettre Ã  jour la MÃ©tabase', NULL, 0, 0, 1),
+(1, 24, 'Mettre à jour la Métabase', NULL, 0, 0, 1),
 (1, 25, 'Connexion Utilisateur', NULL, 0, 0, 1),
 (1, 26, 'Erreur de Connexion', NULL, 0, 0, 1),
-(1, 27, 'DÃ©placer un Utilisateur', NULL, 0, 0, 1),
+(1, 27, 'Déplacer un Utilisateur', NULL, 0, 0, 1),
 (1, 28, 'Attacher un Utilisateur', NULL, 0, 0, 1),
-(1, 29, 'DÃ©tacher un Utilisateur', NULL, 0, 0, 1),
-(1, 32, 'Mettre Ã  jour un module', NULL, 0, 0, 1),
+(1, 29, 'Détacher un Utilisateur', NULL, 0, 0, 1),
+(1, 32, 'Mettre à jour un module', NULL, 0, 0, 1),
 (1, 39, 'Créer un Espace de Travail', NULL, 0, 0, 1),
 (1, 40, 'Modifier un Espace de Travail', NULL, 0, 0, 1),
 (1, 41, 'Supprimer un Espace de Travail', NULL, 0, 0, 1),
@@ -1166,7 +1166,7 @@ CREATE TABLE IF NOT EXISTS `ploopi_module` (
 --
 
 INSERT INTO `ploopi_module` (`id`, `label`, `id_module_type`, `id_workspace`, `active`, `visible`, `public`, `shared`, `herited`, `adminrestricted`, `viewmode`, `transverseview`, `autoconnect`) VALUES
-(1, 'SystÃ¨me', 1, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0),
+(1, 'Système', 1, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0),
 (-1, 'Recherche', 1, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0);
 
 -- --------------------------------------------------------
@@ -1312,8 +1312,8 @@ CREATE TABLE IF NOT EXISTS `ploopi_param_type` (
 --
 
 INSERT INTO `ploopi_param_type` (`id_module_type`, `name`, `default_value`, `public`, `description`, `label`) VALUES
-(1, 'system_generate_htpasswd', '1', 0, '', 'GÃ©nÃ©rer un fichier htpasswd'),
-(1, 'system_language', '', 1, '', 'Langue du systÃ¨me'),
+(1, 'system_generate_htpasswd', '1', 0, '', 'Générer un fichier htpasswd'),
+(1, 'system_language', '', 1, '', 'Langue du système'),
 (1, 'system_jodwebservice', '', 0, '', 'URL du webservice JODConverter'),
 (1, 'system_focus_popup', '0', 0, '', 'Activer le Focus sur les Popups'),
 (1, 'system_search_displaymodule', '0', 0, '', 'Afficher la colonne "Module" dans la recherche'),
@@ -1892,7 +1892,7 @@ CREATE TABLE IF NOT EXISTS `ploopi_workspace_user_role` (
 --
 
 ALTER TABLE `ploopi_documents_file` ADD `md5id` VARCHAR( 32 ) NOT NULL AFTER `id` , ADD INDEX ( `md5id` );
-ALTER TABLE `ploopi_documents_folder` ADD `md5id` VARCHAR( 32 ) NOT NULL AFTER `id` , ADD INDEX ( `md5id` ); 
+ALTER TABLE `ploopi_documents_folder` ADD `md5id` VARCHAR( 32 ) NOT NULL AFTER `id` , ADD INDEX ( `md5id` );
 UPDATE `ploopi_documents_file` SET `md5id` = MD5(CONCAT(id, '_', timestp_create));
 UPDATE `ploopi_documents_folder` SET `md5id` = MD5(CONCAT(id, '_', timestp_create));
 
@@ -1901,4 +1901,10 @@ ALTER TABLE `ploopi_user` ADD FULLTEXT `ft` (`lastname` ,`firstname` ,`email` ,`
 
 INSERT INTO `ploopi_param_type` (`id_module_type`, `name`, `default_value`, `public`, `description`, `label`) VALUES ('1', 'system_user_required_fields', 'email,phone,service,function,city', '0', NULL, 'Champs requis dans le profil utilisateur');
 INSERT INTO `ploopi_param_default` (`id_module`, `name`, `value`, `id_module_type`) VALUES ('1', 'system_user_required_fields', 'email,phone,service,function,city', '1');
-UPDATE `ploopi_module_type` SET `version` = '1.9.2.0', `author` = 'Ovensia', `date` = '20121109000000', `description` = 'Noyau du système' WHERE `ploopi_module_type`.`id` = 1;
+UPDATE `ploopi_module_type` SET `version` = '1.9.2.1', `author` = 'Ovensia', `date` = '20121205000000', `description` = 'Noyau du système' WHERE `ploopi_module_type`.`id` = 1;
+
+ALTER TABLE `ploopi_module_workspace` ADD INDEX ( `id_module` ) ;
+ALTER TABLE `ploopi_module_workspace` ADD INDEX ( `id_workspace` ) ;
+ALTER TABLE `ploopi_module_type` ADD INDEX ( `label` ) ;
+ALTER TABLE `ploopi_group` ADD INDEX ( `parents` ) ;
+ALTER TABLE `ploopi_workspace_group` ADD INDEX ( `id_group` ) ;
