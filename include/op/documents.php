@@ -122,8 +122,14 @@ switch($ploopi_op)
             }
         }
 
-        echo "Le fichier n'existe pas";
-        ploopi_redirect('admin.php', true, true, 2);
+        ploopi_ob_clean();
+
+        echo "Le fichier n'existe pas ou a été supprimé, redirection automatique dans 2 secondes...";
+
+        if (isset($_SERVER['HTTP_REFERER'])) ploopi_redirect($_SERVER['HTTP_REFERER'], false, false, 2);
+        else ploopi_redirect('admin.php', true, true, 2);
+
+        ploopi_die();
     break;
 
     case 'documents_downloadfile_zip':
@@ -163,8 +169,14 @@ switch($ploopi_op)
             }
         }
 
-        echo "Le fichier n'existe pas";
-        ploopi_redirect('admin.php', true, true, 2);
+        ploopi_ob_clean();
+
+        echo "Le fichier n'existe pas ou a été supprimé, redirection automatique dans 2 secondes...";
+
+        if (isset($_SERVER['HTTP_REFERER'])) ploopi_redirect($_SERVER['HTTP_REFERER'], false, false, 2);
+        else ploopi_redirect('admin.php', true, true, 2);
+
+        ploopi_die();
     break;
 
     case 'documents_savefolder':
