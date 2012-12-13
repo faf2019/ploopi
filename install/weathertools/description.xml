@@ -2,9 +2,9 @@
 <ploopi>
    <moduletype>
       <label>weathertools</label>
-      <version>1.1.3a</version>
+      <version>1.1.3b</version>
       <author>Ovensia</author>
-      <date>20120220000000</date>
+      <date>20121213000000</date>
       <description>Fonctions météo (lecture METAR, affichage météo, stations les plus proches d'un point, cartes de vigilance)</description>
       <paramtype>
          <name>weathertools_station_list_url</name>
@@ -61,8 +61,8 @@
          <paramchoice>
             <value>0</value>
             <displayed_value>non</displayed_value>
-         </paramchoice>      
-	  </paramtype>
+         </paramchoice>
+      </paramtype>
       <paramtype>
          <name>weathertools_display_cartevigicrue</name>
          <label>Afficher la carte Vigicrue</label>
@@ -76,7 +76,7 @@
          <paramchoice>
             <value>0</value>
             <displayed_value>non</displayed_value>
-         </paramchoice>      
+         </paramchoice>
       </paramtype>
       <paramtype>
          <name>weathertools_display_meteometar</name>
@@ -91,7 +91,7 @@
          <paramchoice>
             <value>0</value>
             <displayed_value>non</displayed_value>
-         </paramchoice>      
+         </paramchoice>
       </paramtype>
       <paramtype>
          <name>weathertools_cartevigilance_size</name>

@@ -1,3 +1,9 @@
+== Module Wheathertools - version 1.1.3b ==================================================
+
+2012-12-13  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+ * Correction d'un bug mineur lié à un "deprecated" (PHP 5.3)
+
 == Module Wheathertools - version 1.1.3a ==================================================
 
 2012-02-20  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
@@ -33,45 +39,45 @@
 2009-04-30  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
  * Meilleure gestion des erreurs liées aux problèmes de lecture de données distantes
- * Meilleure gestion du cache sur les images des cartes  
+ * Meilleure gestion du cache sur les images des cartes
 
 == Module Weathertools - version 1.1.0 ====================================================
 
 2009-03-31  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
- * Tentative de détournement de l'erreur générée par la lecture des propriétés d'une image non valide  
+ * Tentative de détournement de l'erreur générée par la lecture des propriétés d'une image non valide
 
 == Module Weathertools - version 1.03 ====================================================
 
 2009-01-24  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
- * Ajout d'un paramètre variable lors du téléchargement des cartes météo pour forcer la relecture du fichier au travers d'un proxy (doit corriger un problème de mise à jour des données)  
+ * Ajout d'un paramètre variable lors du téléchargement des cartes météo pour forcer la relecture du fichier au travers d'un proxy (doit corriger un problème de mise à jour des données)
 
 == Module Weathertools - version 1.02 ====================================================
 
 2009-01-23  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
- * Correction d'un bug sur la classe PEAR Metar en attendant la correction officielle  
+ * Correction d'un bug sur la classe PEAR Metar en attendant la correction officielle
 
 == Module Weathertools - version 1.01 ====================================================
 
 2009-01-05  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
- * Correction de plusieurs bugs similaires lors de l'appel à http_request ($$ au lieu de $)  
+ * Correction de plusieurs bugs similaires lors de l'appel à http_request ($$ au lieu de $)
 
 == Module Weathertools - version 1.0 ====================================================
 
 2008-01-05  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
- * Téléchargement automatique des données GEOIP (admin) 
- * Géocodage d'IP avec le module GEOIP 
+ * Téléchargement automatique des données GEOIP (admin)
+ * Géocodage d'IP avec le module GEOIP
  * Calcul de distance entre 2 points du globe
- 
+
 == Module Weathertools - version 0.95 ====================================================
 
 2008-12-31  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
- * Téléchargement, mise en cache et affichage des cartes de vigilance Météo France et Vigicrues (en option via proxy) 
+ * Téléchargement, mise en cache et affichage des cartes de vigilance Météo France et Vigicrues (en option via proxy)
 
 == Module Weathertools - version 0.9 ====================================================
 
