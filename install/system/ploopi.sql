@@ -1901,10 +1901,15 @@ ALTER TABLE `ploopi_user` ADD FULLTEXT `ft` (`lastname` ,`firstname` ,`email` ,`
 
 INSERT INTO `ploopi_param_type` (`id_module_type`, `name`, `default_value`, `public`, `description`, `label`) VALUES ('1', 'system_user_required_fields', 'email,phone,service,function,city', '0', NULL, 'Champs requis dans le profil utilisateur');
 INSERT INTO `ploopi_param_default` (`id_module`, `name`, `value`, `id_module_type`) VALUES ('1', 'system_user_required_fields', 'email,phone,service,function,city', '1');
-UPDATE `ploopi_module_type` SET `version` = '1.9.2.1', `author` = 'Ovensia', `date` = '20121205000000', `description` = 'Noyau du système' WHERE `ploopi_module_type`.`id` = 1;
 
 ALTER TABLE `ploopi_module_workspace` ADD INDEX ( `id_module` ) ;
 ALTER TABLE `ploopi_module_workspace` ADD INDEX ( `id_workspace` ) ;
 ALTER TABLE `ploopi_module_type` ADD INDEX ( `label` ) ;
 ALTER TABLE `ploopi_group` ADD INDEX ( `parents` ) ;
 ALTER TABLE `ploopi_workspace_group` ADD INDEX ( `id_group` ) ;
+ALTER TABLE `ploopi_ticket_dest` ADD INDEX ( `id_user` ) ;
+ALTER TABLE `ploopi_ticket_watch` ADD INDEX ( `id_ticket` ) ;
+ALTER TABLE `ploopi_ticket_watch` ADD INDEX ( `id_user` ) ;
+ALTER TABLE `ploopi_ticket_watch` ADD INDEX ( `notify` ) ;
+
+UPDATE `ploopi_module_type` SET `version` = '1.9.2.2', `author` = 'Ovensia', `date` = '20121214000000', `description` = 'Noyau du système' WHERE `ploopi_module_type`.`id` = 1;
