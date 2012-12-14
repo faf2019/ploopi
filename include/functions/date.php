@@ -110,6 +110,26 @@ function ploopi_gettimestampdetail($mytimestamp)
 function ploopi_createtimestamp() { return date(_PLOOPI_TIMESTAMPFORMAT_MYSQL); }
 
 /**
+ * Crée un datetime de la date du serveur au format MYSQL (AAAA-MM-JJ hh:mm:ss)
+ *
+ * @return string
+ */
+
+function ploopi_createdatetime() { return date(_PLOOPI_DATETIMEFORMAT_MYSQL); }
+
+/**
+ * Convertit un datetime MYSQL (AAAA-MM-JJ hh:mm:ss) au format local (date+heure)
+ *
+ * @param string $mydatetime
+ * @return array tableau associatif contenant la date et l'heure : Array('date' => '', 'time' => '');
+ */
+
+function ploopi_datetime2local($mydatetime)
+{
+    return ploopi_timestamp2local(str_replace(array('-', ':', ' '), '', $mydatetime));
+}
+
+/**
  * Renvoie un timestamp UNIX au format local (_PLOOPI_TIMEFORMAT)
  *
  * @param int $mytimestamp timestamp UNIX
@@ -242,6 +262,39 @@ function ploopi_local2timestamp($mydate, $mytime = '00:00:00')
                 preg_match(_PLOOPI_DATEFORMAT_EREG_US, $mydate, $dateregs);
                 if ($dateregs[1]<100) $dateregs[1]+=2000;
                 $mydatetime = date(_PLOOPI_TIMESTAMPFORMAT_MYSQL, mktime($timeregs[1],$timeregs[2],$timeregs[3],$dateregs[2],$dateregs[3],$dateregs[1]));
+            break;
+        }
+
+        return $mydatetime;
+    }
+    else return false;
+}
+
+/**
+ * Convertit un date locale au format datetime MYSQL (AAAA-MM-JJ hh:mm:ss)
+ *
+ * @param string $mydate date au format local
+ * @param string $mytime heure au format local (optionnel, par défaut '00:00:00')
+ * @return string timestamp MYSQL
+ */
+
+function ploopi_local2datetime($mydate, $mytime = '00:00:00')
+{
+    // verify local format
+    if (ploopi_dateverify($mydate))// && ploopi_timeverify($mytime))
+    {
+        preg_match(_PLOOPI_TIMEFORMAT_EREG, $mytime, $timeregs);
+        switch(_PLOOPI_DATEFORMAT)
+        {
+            case _PLOOPI_DATEFORMAT_FR:
+                preg_match(_PLOOPI_DATEFORMAT_EREG_FR, $mydate, $dateregs);
+                if ($dateregs[3]<100) $dateregs[3]+=2000;
+                $mydatetime = date(_PLOOPI_DATETIMEFORMAT_MYSQL, mktime($timeregs[1],$timeregs[2],$timeregs[3],$dateregs[2],$dateregs[1],$dateregs[3]));
+            break;
+            case _PLOOPI_DATEFORMAT_US:
+                preg_match(_PLOOPI_DATEFORMAT_EREG_US, $mydate, $dateregs);
+                if ($dateregs[1]<100) $dateregs[1]+=2000;
+                $mydatetime = date(_PLOOPI_DATETIMEFORMAT_MYSQL, mktime($timeregs[1],$timeregs[2],$timeregs[3],$dateregs[2],$dateregs[3],$dateregs[1]));
             break;
         }
 

@@ -22,7 +22,7 @@
 */
 
 /**
- * Chargement des paramètres des modules + description des actions
+ * Chargement des paramètres des modules
  *
  * @package ploopi
  * @subpackage param
@@ -33,7 +33,6 @@
 
 $_SESSION['ploopi']['modules'] = array();
 $_SESSION['ploopi']['moduletypes'] = array();
-$_SESSION['ploopi']['actions_desc'] = array();
 
 // On récupère les modules
 $db->query("
@@ -69,86 +68,7 @@ while ($fields = $db->fetchrow())
 
 $listmodules = implode(',',array_keys($_SESSION['ploopi']['modules']));
 
-// On récupère les paramètres par défaut
-$db->query("
-    SELECT      pd.id_module,
-                pt.name,
-                pt.label,
-                pd.value
-
-    FROM        ploopi_param_default pd
-
-    INNER JOIN  ploopi_param_type pt
-    ON          pt.name = pd.name
-    AND         pt.id_module_type = pd.id_module_type
-
-    WHERE       pd.id_module IN ({$listmodules})
-");
-    
-while ($fields = $db->fetchrow())
-{
-    $_SESSION['ploopi']['params'][$fields['id_module']]['default'][$fields['name']] = $fields['value'];
-}
-
-// On récupère les paramètres "espace de travail"
-$db->query("
-    SELECT      pg.id_module,
-                pt.name,
-                pt.label,
-                pg.value,
-                pg.id_workspace
-
-    FROM        ploopi_param_workspace pg
-
-    INNER JOIN  ploopi_param_type pt
-    ON          pt.name = pg.name
-    AND         pt.id_module_type = pg.id_module_type
-
-    WHERE       pg.id_module IN ({$listmodules})
-");
-            
-while ($fields = $db->fetchrow())
-{
-    $_SESSION['ploopi']['params'][$fields['id_module']]['workspace'][$fields['id_workspace']][$fields['name']] = $fields['value'];
-}
-
-// On récupère les paramètres utilisateur
-if (!empty($_SESSION['ploopi']['userid']))
-{
-    $db->query("
-        SELECT      pu.id_module,
-                    pt.name,
-                    pt.label,
-                    pu.value
-
-        FROM        ploopi_param_user pu
-
-        INNER JOIN  ploopi_param_type pt
-        ON          pt.name = pu.name
-        AND         pt.id_module_type = pu.id_module_type
-
-        WHERE       pu.id_module IN ({$listmodules})
-        AND         pu.id_user = {$_SESSION['ploopi']['userid']}
-    ");
-        
-    while ($fields = $db->fetchrow())
-    {
-        $_SESSION['ploopi']['params'][$fields['id_module']]['user'][$fields['name']] = $fields['value'];
-    }
-}
-
 ploopi_loadparams();
-
-// On récupère la description des actions
-$db->query("
-    SELECT      mba.id_module_type,
-                mba.id_action,
-                mba.label
-
-    FROM        ploopi_mb_action mba
-");
-    
-while ($row = $db->fetchrow()) $_SESSION['ploopi']['actions_desc'][$row['id_module_type']][$row['id_action']] = $row['label'];
 
 $_SESSION['ploopi']['paramloaded'] = true;
 ?>

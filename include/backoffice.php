@@ -245,6 +245,8 @@ if ($_SESSION['ploopi']['connected'])
         'MAINMENU_SEARCH'           => _PLOOPI_LABEL_SEARCH,
         'MAINMENU_DISCONNECTION'    => _PLOOPI_LABEL_DISCONNECTION,
 
+		'POPUP_PROFLE'				=> ploopi_queryencode("ploopi_op=system_update_profile"),
+
         'MAINMENU_SHOWPROFILE_URL'      => ploopi_urlencode('admin.php?op=profile', _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
         'MAINMENU_SHOWANNOTATIONS_URL'  => ploopi_urlencode('admin.php?op=annotation', _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
         'MAINMENU_SHOWTICKETS_URL'      => ploopi_urlencode('admin.php?op=tickets', _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),

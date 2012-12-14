@@ -163,7 +163,7 @@ function ploopi_getmimetype($filename)
     {
         if (preg_match('/Opera(\/| )([0-9].[0-9]{1,2})/', $_SERVER['HTTP_USER_AGENT']))
             $strUserBrowser = "Opera";
-        elseif (preg_match('MSIE ([0-9].[0-9]{1,2})', $_SERVER['HTTP_USER_AGENT']))
+        elseif (preg_match('/MSIE ([0-9].[0-9]{1,2})/', $_SERVER['HTTP_USER_AGENT']))
             $strUserBrowser = "IE";
     }
 
@@ -189,7 +189,7 @@ function ploopi_getmimetype($filename)
 
 function ploopi_downloadfile($filepath, $destfilename, $deletefile = false, $attachment = true, $die = true)
 {
-    //if (substr($path,-1) == '/') $path = substr($path, 0, strlen($path)-1);
+    clearstatcache();
 
     if (file_exists($filepath))
     {

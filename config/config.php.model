@@ -98,7 +98,7 @@ switch($http_host)
          * Active ou non l'utilisation du cache interne
          * @see _PLOOPI_PATHCACHE
          */
-         
+
         define ('_PLOOPI_USE_CACHE', false);
 
         /**
@@ -151,6 +151,14 @@ switch($http_host)
         define ('_PLOOPI_SESSIONTIME','3600'); // time in second
 
         /**
+         * Niveau de compression des sessions de 0 à 9.
+         * 0 = aucune compression (consommation CPU allégée)
+         * 9 = maximum compression (consommation place allégée)
+         */
+
+        define ('_PLOOPI_SESSION_COMPRESSION', 1); // level of gzip compression (0:none - 9:maximum)
+
+        /**
          * Active ou non le gestionnaire interne de session utilisant la base de données.
          * Attention, l'activation de cette fonctionnalité peut dégrader les performances de l'application (impact faible)
          */
@@ -161,8 +169,8 @@ switch($http_host)
          * Le serveur de base de données pour les sessions.
          * Il peut aussi inclure le numéro de port.
          * C'est-à-dire "hostname:port" ou le chemin vers le socket local, c'est-à-dire ":/path/to/socket" pour localhost.
-         */        
-        
+         */
+
         define ('_PLOOPI_SESSION_DB_SERVER', _PLOOPI_DB_SERVER);
 
         /**

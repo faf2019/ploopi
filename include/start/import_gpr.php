@@ -1,7 +1,7 @@
 <?php
 /*
     Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2012 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -57,7 +57,36 @@ foreach(array('POST', 'GET') as $strGlobalVar)
             if (strstr($strParam, '=')) list($strKey, $strValue) = explode('=',$strParam);
             else {$strKey = $strParam; $strValue = '';}
 
-            $_REQUEST[$strKey] = ${"_{$strGlobalVar}"}[$strKey] = urldecode($strValue);
+            // Variable structurée ?
+            // Traitement des variables de type var[dimension1][dimension2]=value
+            if (($pos = strpos($strKey, '[')) !== false)
+            {
+                // Extraction des [xxx]
+                preg_match_all('@\[([^\]]*)\]@', $strKey, $arrMatches);
+                if (sizeof($arrMatches))
+                {
+                    $funcBuildVar = function($var, $key = 0) use ($arrMatches, $strValue, &$funcBuildVar)
+                    {
+                        // Cas général : on construit la variable en suivant la branche
+                        if (isset($arrMatches[1][$key])) {
+                            if (!isset($var[$arrMatches[1][$key]])) $var[$arrMatches[1][$key]] = array();
+                            $var[$arrMatches[1][$key]] = $funcBuildVar($var[$arrMatches[1][$key]], $key+1);
+                        }
+                        // Cas particuler : terminaison de branche, on stocke la variable
+                        else $var = urldecode($strValue);
+
+                        return $var;
+                    };
+
+                    // Variable racine
+                    $strRootKey = substr($strKey, 0, $pos);
+
+                    if (!isset($_REQUEST[$strRootKey])) $_REQUEST[$strRootKey] = array();
+                    $_REQUEST[$strRootKey] = ${"_{$strGlobalVar}"}[$strRootKey] = $funcBuildVar($_REQUEST[$strRootKey]);
+                }
+            }
+            // variable simple
+            else $_REQUEST[$strKey] = ${"_{$strGlobalVar}"}[$strKey] = urldecode($strValue);
         }
 
         unset($strKey);

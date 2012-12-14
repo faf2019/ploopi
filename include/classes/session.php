@@ -69,7 +69,7 @@ class ploopi_session
 
     public static function get_path() { return self::get_basepath()._PLOOPI_SEP.self::get_id(); }
 
-    private static function compress(&$data) { return self::$booCompress ? @gzcompress($data) : $data; }
+    private static function compress(&$data) { return self::$booCompress ? @gzcompress($data, defined('_PLOOPI_SESSION_COMPRESSION') ? _PLOOPI_SESSION_COMPRESSION : -1) : $data; }
 
     private static function uncompress(&$data) { return self::$booCompress && $data != '' ? @gzuncompress($data) : $data; }
 

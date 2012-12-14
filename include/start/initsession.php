@@ -102,16 +102,16 @@ $_SESSION['ploopi']['hosts'] =
         'backoffice' => array()
     );
 
-// on garde les id de groupes autorisés en fonction du domaine courant
-foreach($workspaces as $gid => $grp)
+// on garde les id de espaces autorisés en fonction du domaine courant
+foreach($workspaces as $wid => $wsp)
 {
-    foreach($grp['frontoffice_domain_array'] as $domain)
+    foreach($wsp['frontoffice_domain_array'] as $domain)
     {
-        if ($workspaces[$gid]['frontoffice'] && sizeof(array_intersect($workspaces[$gid]['frontoffice_domain_array'], $host_array)) && !in_array($gid, $_SESSION['ploopi']['hosts']['frontoffice'])) $_SESSION['ploopi']['hosts']['frontoffice'][] = $gid;
+        if ($workspaces[$wid]['frontoffice'] && sizeof(array_intersect($workspaces[$wid]['frontoffice_domain_array'], $host_array)) && !in_array($wid, $_SESSION['ploopi']['hosts']['frontoffice'])) $_SESSION['ploopi']['hosts']['frontoffice'][] = $wid;
     }
-    foreach($grp['backoffice_domain_array'] as $domain)
+    foreach($wsp['backoffice_domain_array'] as $domain)
     {
-        if ($workspaces[$gid]['backoffice'] && sizeof(array_intersect($workspaces[$gid]['backoffice_domain_array'], $host_array)) && !in_array($gid, $_SESSION['ploopi']['hosts']['backoffice'])) $_SESSION['ploopi']['hosts']['backoffice'][] = $gid;
+        if ($workspaces[$wid]['backoffice'] && sizeof(array_intersect($workspaces[$wid]['backoffice_domain_array'], $host_array)) && !in_array($wid, $_SESSION['ploopi']['hosts']['backoffice'])) $_SESSION['ploopi']['hosts']['backoffice'][] = $wid;
     }
 }
 
@@ -123,12 +123,6 @@ foreach($_SESSION['ploopi']['workspaces'] as $wid => $wsp)
     $workspace = new workspace();
     if ($workspace->open($wid))
     {
-        $_SESSION['ploopi']['workspaces'][$wid]['children'] = $workspace->getchildren();
-        $_SESSION['ploopi']['workspaces'][$wid]['parents'] = explode(';',$workspace->fields['parents']);
-        $_SESSION['ploopi']['workspaces'][$wid]['brothers'] = $workspace->getbrothers();
-        $_SESSION['ploopi']['workspaces'][$wid]['list_parents'] = implode(',',$_SESSION['ploopi']['workspaces'][$wid]['parents']);
-        $_SESSION['ploopi']['workspaces'][$wid]['list_children'] = implode(',',$_SESSION['ploopi']['workspaces'][$wid]['children']);
-        $_SESSION['ploopi']['workspaces'][$wid]['list_brothers'] = implode(',',$_SESSION['ploopi']['workspaces'][$wid]['brothers']);
         $_SESSION['ploopi']['workspaces'][$wid]['modules'] = $workspace->getmodules(true);
     }
 }

@@ -4,17 +4,18 @@
 # Copyright (c) 2008-2009 Ovensia
 # GNU General Public License (GPL)
 
-export YUIVER='-2.4.2'
+export YUIVER='-2.4.6'
 
 echo "COMPRESSION DU FICHIER functions.js"
 
 rm js/functions*.*
 cat js/*.js > js/functions.js
-java -jar ../yuicompressor/build/yuicompressor$YUIVER.jar --charset ISO-8859-15 js/functions.js > js/functions.pack.js 
+java -jar ../yuicompressor/build/yuicompressor$YUIVER.jar --charset ISO-8859-15 js/functions.js > js/functions.pack.js
 gzip -c js/functions.pack.js > js/functions.pack.js.gz
 rm js/functions.js;
 
-for template in ./templates/backoffice/{eyeos,redmine,ploopi*}; do
+for template in $( find ./templates/backoffice/ -maxdepth 1 -type d  \( -name eyeos* -or -name ploopi* -or -name redmine* \) )
+do
     if [ -d $template ]; then
         echo "COMPRESSION DU TEMPLATE $template"
 
@@ -48,12 +49,12 @@ echo "COMPRESSION DES FICHIERS js/css DE FCKEDITOR"
 for i in $( find ./modules ./templates/frontoffice \( -name 'fck*.js' -or -name 'fck*.css' \) -type f )
 do
     echo "Compression : $i => $i.gz"
-    
+
     if [[ `file $i | grep -c 'UTF-8'` == '1' ]]
         then java -jar ../yuicompressor/build/yuicompressor$YUIVER.jar --charset UTF-8 $i | gzip > $i.gz
         else java -jar ../yuicompressor/build/yuicompressor$YUIVER.jar --charset ISO-8859-1 $i | gzip > $i.gz
     fi
-    
+
     export ta=`stat -c "%s" $i`
     export tb=`stat -c "%s" $i.gz`
     echo "Résultat : $ta => $tb"
@@ -70,14 +71,43 @@ done
 
 for i in $( find ./lib/jstoolbar \( -name '*.js' -or -name '*.css' \) -type f )
 do
-    echo "Compression : $i => $i.gz"; 
-    
+    echo "Compression : $i => $i.gz";
+
     if [[ `file $i | grep -c 'UTF-8'` == '1' ]]
         then java -jar ../yuicompressor/build/yuicompressor$YUIVER.jar --charset UTF-8 $i | gzip > $i.gz
         else java -jar ../yuicompressor/build/yuicompressor$YUIVER.jar --charset ISO-8859-1 $i | gzip > $i.gz
     fi
-    
+
     export ta=`stat -c "%s" $i`
     export tb=`stat -c "%s" $i.gz`
     echo "Résultat : $ta => $tb"
 done
+
+for i in $( find ./lib/jscolor \( -name '*.js' -or -name '*.css' \) -type f )
+do
+    echo "Compression : $i => $i.gz";
+
+    if [[ `file $i | grep -c 'UTF-8'` == '1' ]]
+        then java -jar ../yuicompressor/build/yuicompressor$YUIVER.jar --charset UTF-8 $i | gzip > $i.gz
+        else java -jar ../yuicompressor/build/yuicompressor$YUIVER.jar --charset ISO-8859-1 $i | gzip > $i.gz
+    fi
+
+    export ta=`stat -c "%s" $i`
+    export tb=`stat -c "%s" $i.gz`
+    echo "Résultat : $ta => $tb"
+done
+
+for i in $( find ./lib/livepipe \( -name '*.js' -or -name '*.css' \) -type f )
+do
+    echo "Compression : $i => $i.gz";
+
+    if [[ `file $i | grep -c 'UTF-8'` == '1' ]]
+        then java -jar ../yuicompressor/build/yuicompressor$YUIVER.jar --charset UTF-8 $i | gzip > $i.gz
+        else java -jar ../yuicompressor/build/yuicompressor$YUIVER.jar --charset ISO-8859-1 $i | gzip > $i.gz
+    fi
+
+    export ta=`stat -c "%s" $i`
+    export tb=`stat -c "%s" $i.gz`
+    echo "Résultat : $ta => $tb"
+done
+

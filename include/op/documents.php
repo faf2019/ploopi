@@ -39,20 +39,19 @@ switch($ploopi_op)
 
     case 'documents_selectfile':
 
-        $_SESSION['documents']['id_object'] = $_GET['id_object'];
-        $_SESSION['documents']['id_record'] = $_GET['id_record'];
-        $_SESSION['documents']['id_user'] = $_SESSION['ploopi']['userid'];
-        $_SESSION['documents']['id_workspace'] = $_SESSION['ploopi']['workspaceid'];
-        $_SESSION['documents']['id_module'] = $_SESSION['ploopi']['moduleid'];
-        $_SESSION['documents']['documents_id'] = $_GET['documents_id'];
-        $_SESSION['documents']['mode'] = 'selectfile';
-        $_SESSION['documents']['destfield'] = $_GET['destfield'];
+        if (empty($_GET['id_object']) || empty($_GET['id_record'])) break;
+        if (!isset($_GET['callback']) || !isset($_GET['destfield'])) break;
 
         ob_start();
 
-        ?>
-        <div id="ploopidocuments_<?php echo $_SESSION['documents']['documents_id']; ?>">
-        <?php
+        ploopi_documents($_GET['id_object'], $_GET['id_record'], null, null, array('ROOT_NAME' => empty($_GET['rootname']) ? '' : $_GET['rootname'], 'MODE' => empty($_GET['callback']) ? 'selectfile' : 'selectfile_callback', 'TARGET' => $_GET['destfield'], 'FIELDS' => array('label', 'size', 'timestp_modify')));
+
+        $content = ob_get_contents();
+        ob_end_clean();
+
+        ploopi_die($skin->create_popup('Explorateur de fichiers', $content, 'ploopi_documents_popup'));
+    break;
+
 
     case 'documents_browser':
         include_once './include/classes/documents.php';
@@ -122,8 +121,14 @@ switch($ploopi_op)
             }
         }
 
-        echo "Le fichier n'existe pas";
-        ploopi_redirect('admin.php', true, true, 2);
+        ploopi_ob_clean();
+
+        echo "Le fichier n'existe pas ou a été supprimé, redirection automatique dans 2 secondes...";
+
+        if (isset($_SERVER['HTTP_REFERER'])) ploopi_redirect($_SERVER['HTTP_REFERER'], false, false, 2);
+        else ploopi_redirect('admin.php', true, true, 2);
+
+        ploopi_die();
     break;
 
     case 'documents_downloadfile_zip':
@@ -163,8 +168,14 @@ switch($ploopi_op)
             }
         }
 
-        echo "Le fichier n'existe pas";
-        ploopi_redirect('admin.php', true, true, 2);
+        ploopi_ob_clean();
+
+        echo "Le fichier n'existe pas ou a été supprimé, redirection automatique dans 2 secondes...";
+
+        if (isset($_SERVER['HTTP_REFERER'])) ploopi_redirect($_SERVER['HTTP_REFERER'], false, false, 2);
+        else ploopi_redirect('admin.php', true, true, 2);
+
+        ploopi_die();
     break;
 
     case 'documents_savefolder':

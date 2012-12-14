@@ -488,8 +488,83 @@ function ploopi_getmoduleid($strModuleName, $booFirstOnly = true)
 
 function ploopi_loadparams()
 {
+    global $db;
+
+    $arrParams = array();
+
+    $listmodules = implode(',',array_keys($_SESSION['ploopi']['modules']));
+
+    // On récupère les paramètres par défaut
+    $db->query("
+        SELECT      pd.id_module,
+                    pt.name,
+                    pt.label,
+                    pd.value
+
+        FROM        ploopi_param_default pd
+
+        INNER JOIN  ploopi_param_type pt
+        ON          pt.name = pd.name
+        AND         pt.id_module_type = pd.id_module_type
+
+        WHERE       pd.id_module IN ({$listmodules})
+    ");
+
+    while ($fields = $db->fetchrow())
+    {
+        $arrParams[$fields['id_module']]['default'][$fields['name']] = $fields['value'];
+    }
+
+    // On récupère les paramètres "espace de travail"
+    $db->query("
+        SELECT      pg.id_module,
+                    pt.name,
+                    pt.label,
+                    pg.value,
+                    pg.id_workspace
+
+        FROM        ploopi_param_workspace pg
+
+        INNER JOIN  ploopi_param_type pt
+        ON          pt.name = pg.name
+        AND         pt.id_module_type = pg.id_module_type
+
+        WHERE       pg.id_module IN ({$listmodules})
+    ");
+
+    while ($fields = $db->fetchrow())
+    {
+        $arrParams[$fields['id_module']]['workspace'][$fields['id_workspace']][$fields['name']] = $fields['value'];
+    }
+
+    // On récupère les paramètres utilisateur
+    if (!empty($_SESSION['ploopi']['userid']))
+    {
+        $db->query("
+            SELECT      pu.id_module,
+                        pt.name,
+                        pt.label,
+                        pu.value
+
+            FROM        ploopi_param_user pu
+
+            INNER JOIN  ploopi_param_type pt
+            ON          pt.name = pu.name
+            AND         pt.id_module_type = pu.id_module_type
+
+            WHERE       pu.id_module IN ({$listmodules})
+            AND         pu.id_user = {$_SESSION['ploopi']['userid']}
+        ");
+
+        while ($fields = $db->fetchrow())
+        {
+            $arrParams[$fields['id_module']]['user'][$fields['name']] = $fields['value'];
+        }
+    }
+
+
     // load params
-    foreach($_SESSION['ploopi']['params'] as $param_idmodule => $param_type)
+    foreach($arrParams as $param_idmodule => $param_type)
     {
         if (!empty($param_type['default']))
             foreach($param_type['default'] as $param_name => $param_value)
@@ -526,38 +601,63 @@ function ploopi_viewworkspaces($moduleid = -1)
     {
         default:
         case _PLOOPI_VIEWMODE_PRIVATE:
+
             $workspaces = $current_workspaceid;
+
         break;
 
         case _PLOOPI_VIEWMODE_DESC:
-            $workspaces = $_SESSION['ploopi']['workspaces'][$current_workspaceid]['list_parents'];
-            if ($workspaces!='') $workspaces.=',';
-            $workspaces .= $current_workspaceid;
+
+            $workspaces = explode(';',$_SESSION['ploopi']['workspaces'][$current_workspaceid]['parents']);
+            $workspaces[] = $current_workspaceid;
+            $workspaces = implode(',', $workspaces);
+
         break;
 
         case _PLOOPI_VIEWMODE_ASC:
-            $workspaces = $_SESSION['ploopi']['workspaces'][$current_workspaceid]['list_children'];
-            if ($workspaces!='') $workspaces.=',';
-            $workspaces .= $current_workspaceid;
+
+            $objWorkspace = new workspace();
+            $objWorkspace->open($current_workspaceid);
+            $workspaces = array_keys($objWorkspace->getChildren());
+            $workspaces[] = $current_workspaceid;
+            $workspaces = implode(',', $workspaces);
+
         break;
 
         case _PLOOPI_VIEWMODE_GLOBAL:
+
             $workspaces = $_SESSION['ploopi']['allworkspaces'];
+
         break;
 
         case _PLOOPI_VIEWMODE_ASCDESC:
-            $arrWorkspaces = array_merge($_SESSION['ploopi']['workspaces'][$current_workspaceid]['parents'], $_SESSION['ploopi']['workspaces'][$current_workspaceid]['children']);
-            $arrWorkspaces[] = $current_workspaceid;
 
-            $workspaces .= implode(',', $arrWorkspaces);
+            $workspaces = explode(';',$_SESSION['ploopi']['workspaces'][$current_workspaceid]['parents']);
+
+            $objWorkspace = new workspace();
+            $objWorkspace->open($current_workspaceid);
+
+            $workspaces = array_merge($workspaces, array_keys($objWorkspace->getChildren()));
+            $workspaces[] = $current_workspaceid;
+            $workspaces = implode(',', $workspaces);
+
         break;
 
     }
 
-    if ($_SESSION['ploopi']['modules'][$moduleid]['transverseview'] && $_SESSION['ploopi']['workspaces'][$current_workspaceid]['list_brothers'] != '')
+    if ($_SESSION['ploopi']['modules'][$moduleid]['transverseview'])
     {
-        if ($workspaces!='') $workspaces.=',';
-        $workspaces .= $_SESSION['ploopi']['workspaces'][$current_workspaceid]['list_brothers'];
+
+        if (!isset($objWorkspace))
+        {
+            $objWorkspace = new workspace();
+            $objWorkspace->open($current_workspaceid);
+        }
+
+        $arrBrothers = $objWorkspace->getbrothers();
+
+        if (!empty($arrBrothers)) $workspaces .= ','.implode(',', $arrBrothers);
+
     }
 
     return $workspaces;
@@ -584,30 +684,64 @@ function ploopi_viewworkspaces_inv($moduleid = -1)
     {
         default:
         case _PLOOPI_VIEWMODE_PRIVATE:
+
             $workspaces = $current_workspaceid;
+
         break;
 
         case _PLOOPI_VIEWMODE_ASC:
-            $workspaces = $_SESSION['ploopi']['workspaces'][$current_workspaceid]['list_parents'];
-            if ($workspaces!='') $workspaces.=',';
-            $workspaces .= $current_workspaceid;
+
+            $workspaces = explode(';',$_SESSION['ploopi']['workspaces'][$current_workspaceid]['parents']);
+            $workspaces[] = $current_workspaceid;
+            $workspaces = implode(',', $workspaces);
+
         break;
 
         case _PLOOPI_VIEWMODE_DESC:
-            $workspaces = $_SESSION['ploopi']['workspaces'][$current_workspaceid]['list_children'];
-            if ($workspaces!='') $workspaces.=',';
-            $workspaces .= $current_workspaceid;
+
+            $objWorkspace = new workspace();
+            $objWorkspace->open($current_workspaceid);
+            $workspaces = array_keys($objWorkspace->getChildren());
+            $workspaces[] = $current_workspaceid;
+            $workspaces = implode(',', $workspaces);
+
         break;
 
         case _PLOOPI_VIEWMODE_GLOBAL:
+
             $workspaces = $_SESSION['ploopi']['allworkspaces'];
+
         break;
+
+
+        case _PLOOPI_VIEWMODE_ASCDESC:
+
+            $workspaces = explode(';',$_SESSION['ploopi']['workspaces'][$current_workspaceid]['parents']);
+
+            $objWorkspace = new workspace();
+            $objWorkspace->open($current_workspaceid);
+
+            $workspaces = array_merge($workspaces, array_keys($objWorkspace->getChildren()));
+            $workspaces[] = $current_workspaceid;
+            $workspaces = implode(',', $workspaces);
+
+        break;
+
     }
 
-    if ($_SESSION['ploopi']['modules'][$moduleid]['transverseview'] && $_SESSION['ploopi']['workspaces'][$current_workspaceid]['list_brothers'] != '')
+    if ($_SESSION['ploopi']['modules'][$moduleid]['transverseview'])
     {
-        if ($workspaces!='') $workspaces.=',';
-        $workspaces .= $_SESSION['ploopi']['workspaces'][$current_workspaceid]['list_brothers'];
+
+        if (!isset($objWorkspace))
+        {
+            $objWorkspace = new workspace();
+            $objWorkspace->open($current_workspaceid);
+        }
+
+        $arrBrothers = $objWorkspace->getbrothers();
+
+        if (!empty($arrBrothers)) $workspaces .= ','.implode(',', $arrBrothers);
+
     }
 
     return $workspaces;

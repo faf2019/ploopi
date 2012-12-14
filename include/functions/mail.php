@@ -241,6 +241,7 @@ function ploopi_send_mail_smtp($from, $to, $subject, $message, $params = null, $
 
     $objMail = Mail::factory('smtp', array (
         'host' => isset($params['host']) ? $params['host'] : 'localhost',
+        'port' => isset($params['port']) ? $params['port'] : 25,
         'auth' => isset($params['auth']) ? $params['auth'] : false,
         'username' => isset($params['username']) ? $params['username'] : '',
         'password' => isset($params['password']) ? $params['password'] : '',

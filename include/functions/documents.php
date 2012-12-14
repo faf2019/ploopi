@@ -104,6 +104,8 @@ function ploopi_documents($id_object, $id_record, $rights = array(), $default_fo
     if (empty($params['CALLBACK_INC'])) $params['CALLBACK_INC'] = null;
     if (empty($params['DEFAULT_FOLDER'])) $params['DEFAULT_FOLDER'] = '';
     if (empty($params['LIMIT'])) $params['LIMIT'] = 0;
+    if (empty($params['MODE'])) $params['MODE'] = '';
+    if (empty($params['TARGET'])) $params['TARGET'] = '';
 
     // permet de modifier le champ sur lequel va s'effectuer le tri du tableau
     if (empty($params['ORDER_BY'])) $params['ORDER_BY'] = 'name';
@@ -118,8 +120,6 @@ function ploopi_documents($id_object, $id_record, $rights = array(), $default_fo
     if (empty($params['NEW_FOLDER_IMG'])) $params['NEW_FOLDER_IMG'] = $_SESSION['ploopi']['template_path'] . '/img/documents/ico_newfolder.png';
     if (empty($params['NEW_FILE'])) $params['NEW_FILE'] = 'Créer un nouveau Fichier';
     if (empty($params['NEW_FILE_IMG'])) $params['NEW_FILE_IMG'] = $_SESSION['ploopi']['template_path'] . '/img/documents/ico_newfile.png';
-    if (empty($params['SEARCH_FILE'])) $params['SEARCH_FILE'] = 'Rechercher un Fichier';
-    if (empty($params['SEARCH_FILE_IMG'])) $params['SEARCH_FILE_IMG'] = $_SESSION['ploopi']['template_path'] . '/img/documents/ico_search.png';
 
     $_SESSION['documents'] =
         array (
@@ -129,7 +129,6 @@ function ploopi_documents($id_object, $id_record, $rights = array(), $default_fo
             'id_workspace'  => $id_workspace,
             'id_module'     => $id_module,
             'documents_id'  => $documents_id,
-            'mode'          => '', // peut valoir 'selectfile'
             'root_name'     => $params['ROOT_NAME'],
             'attachement'   => $params['ATTACHEMENT'],
             'fields'        => $params['FIELDS'],
@@ -147,8 +146,9 @@ function ploopi_documents($id_object, $id_record, $rights = array(), $default_fo
             'new_folder_img'  => $params['NEW_FOLDER_IMG'],
             'new_file'      => $params['NEW_FILE'],
             'new_file_img'  => $params['NEW_FILE_IMG'],
-            'search_file'   => $params['SEARCH_FILE'],
-            'search_file_img'  => $params['SEARCH_FILE_IMG']
+            // Pour le sélecteur de fichier
+            'mode'          => $params['MODE'], // peut valoir 'selectfile'
+            'target'        => $params['TARGET'], // id de champ ou fonction de callback
 
         );
 
@@ -196,6 +196,8 @@ function ploopi_documents($id_object, $id_record, $rights = array(), $default_fo
         </div>
         <?php
     }
+
+    return $currentfolder;
 }
 
 /**
@@ -366,13 +368,6 @@ function ploopi_documents_browser($currentfolder)
 
         <div class="documents_path">
             <?php
-            if ($_SESSION['documents']['rights']['SEARCH'])
-            {
-                ?>
-                <a title="<?php echo $_SESSION['documents']['search_file']; ?>" href="javascript:void(0);" style="float:right;"><img src="<?php echo $_SESSION['documents']['search_file_img']; ?>"></a>
-                <?php
-            }
-
             if (empty($_SESSION['documents']['mode']))
             {
                 if ($_SESSION['documents']['rights']['DOCUMENT_CREATE'])
@@ -642,7 +637,12 @@ function ploopi_documents_browser($currentfolder)
             if ($_SESSION['documents']['mode'] == 'selectfile')
             {
                 $documents_values[$i]['link'] = 'javascript:void(0);';
-                $documents_values[$i]['onclick'] = "javascript:ploopi_getelem('{$_SESSION['documents']['destfield']}').value='{$row['name']}';ploopi_getelem('{$_SESSION['documents']['destfield']}_id').value='{$row['id']}';ploopi_hidepopup('ploopi_documents_popup');";
+                $documents_values[$i]['onclick'] = "javascript:dest = $('{$_SESSION['documents']['target']}'); if (dest.type) dest.value='{$row['name']}'; else dest.innerHTML='{$row['name']}'; ploopi_getelem('{$_SESSION['documents']['target']}_id').value='{$row['id']}';ploopi_hidepopup('ploopi_documents_popup');";
+            }
+            elseif ($_SESSION['documents']['mode'] == 'selectfile_callback')
+            {
+                $documents_values[$i]['link'] = 'javascript:void(0);';
+                $documents_values[$i]['onclick'] = "javascript:{$_SESSION['documents']['target']}({$row['id']}, '".addslashes($row['name'])."');";
             }
             else $documents_values[$i]['link'] = ploopi_urlencode("admin-light.php?ploopi_op=documents_downloadfile&documentsfile_id={$row['md5id']}&attachement=".$_SESSION['documents']['attachement']);
 

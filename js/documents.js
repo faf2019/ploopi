@@ -78,8 +78,17 @@ function ploopi_documents_validate(form)
     return false;
 }
 
-function ploopi_documents_popup(id_object, id_record, id_module, destfield, event)
+function ploopi_documents_popup(id_object, id_record, id_module, destfield, event, callback, rootname, width)
 {
     var documents_id = ploopi_base64_encode(id_module+'_'+id_object+'_'+ploopi_addslashes(id_record)+'_popup');
-    ploopi_showpopup(''+ploopi_xmlhttprequest('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=documents_selectfile&id_object='+id_object+'&id_record='+id_record+'&documents_id='+documents_id+'&destfield='+destfield)+'', 600, event, 'click', 'ploopi_documents_popup');
+
+    if (typeof(callback) == 'undefined') callback = false;
+    if (typeof(rootname) == 'undefined') rootname = '';
+    if (typeof(width) == 'undefined') width = 600;
+
+    query = 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=documents_selectfile&id_object='+id_object+'&id_record='+id_record+'&documents_id='+documents_id+'&destfield='+encodeURIComponent(destfield)+'&rootname='+encodeURIComponent(rootname)+'&callback='+(callback?1:0);
+
+    ploopi_showpopup(ploopi_ajaxloader_content, width, event, 'click', 'ploopi_documents_popup');
+
+    ploopi_xmlhttprequest_todiv('admin-light.php', query, 'ploopi_documents_popup', 'get');
 }

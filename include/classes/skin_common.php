@@ -288,8 +288,8 @@ class skin_common
                     <div class="simplebloc_footer" style="cursor:move;" id="handlebottom_'.$popupid.'"></div>
                 </div>
                 <script type="text/javascript">
-                new Draggable(\''.$popupid.'\', { handle: \'handle_'.$popupid.'\'});
-                new Draggable(\''.$popupid.'\', { handle: \'handlebottom_'.$popupid.'\'});
+                new Draggable(\''.$popupid.'\', { zindex:99999, handle: \'handle_'.$popupid.'\'});
+                new Draggable(\''.$popupid.'\', { zindex:99999, handle: \'handlebottom_'.$popupid.'\'});
                 '.$strOptionAnchor.'
                 </script>
                 ';
@@ -343,8 +343,8 @@ class skin_common
                     Event.observe(window, \'load\', function() {
                         '.$arrOptions['stringJsBeforeStart'].'
                         ploopi_popupize(\''.$popupid.'\', '.$arrOptions['intWidth'].', '.($arrOptions['booCentered'] ? 'true' : 'false').', '.$arrOptions['intPosx'].', '.$arrOptions['intPosy'].');
-                        new Draggable(\''.$popupid.'\', { handle: \'handle_'.$popupid.'\'});
-                        new Draggable(\''.$popupid.'\', { handle: \'handlebottom_'.$popupid.'\'});
+                        new Draggable(\''.$popupid.'\', { zindex:99999, handle: \'handle_'.$popupid.'\'});
+                        new Draggable(\''.$popupid.'\', { zindex:99999, handle: \'handlebottom_'.$popupid.'\'});
                         '.$arrOptions['stringJsAfterFinish'].'
                         '.$strOptionAnchor.'
                     });
@@ -496,9 +496,19 @@ class skin_common
             {
                 if (!empty($_SESSION['ploopi']['arrays'][$strArrayId]))
                 {
-                    // Lecture du tri en session
-                    $array['orderby'] = $_SESSION['ploopi']['arrays'][$strArrayId]['orderby'];
-                    $array['sort'] = $_SESSION['ploopi']['arrays'][$strArrayId]['sort'];
+                    // On crée une liste applatie des colonnes pour vérifier l'existence de la colonne de tri
+                    $columns = array();
+                    if (!empty($array['columns']['auto'])) $columns += $array['columns']['auto'];
+                    if (!empty($array['columns']['right'])) $columns += $array['columns']['right'];
+                    if (!empty($array['columns']['left'])) $columns += $array['columns']['left'];
+                    if (!empty($array['columns']['actions_right'])) $columns += $array['columns']['actions_right'];
+
+                    if (isset($columns[$_SESSION['ploopi']['arrays'][$strArrayId]['orderby']]))
+                    {
+                        // Lecture du tri en session
+                        $array['orderby'] = $_SESSION['ploopi']['arrays'][$strArrayId]['orderby'];
+                        $array['sort'] = $_SESSION['ploopi']['arrays'][$strArrayId]['sort'];
+                    }
                 }
 
                 if (empty($array['orderby'])) {
@@ -533,18 +543,22 @@ class skin_common
 
             if ($array['sort'] == 'ASC') ksort($array['index'], SORT_STRING);
             else krsort($array['index'], SORT_STRING);
-            // Sauvegarde du tri en session
-            $_SESSION['ploopi']['arrays'][$strArrayId] = array(
-                'orderby' => $array['orderby'],
-                'sort' => $array['sort'],
-            );
 
             $sort_img = ($array['sort'] == 'DESC') ? "<img src=\"{$this->values['path']}/arrays/arrow_down.png\">" : "<img src=\"{$this->values['path']}/arrays/arrow_up.png\">";
 
         }
         else $array['index'] = array_keys($array['values']);
 
+        // Lecture page en session
+        if (isset($_SESSION['ploopi']['arrays'][$strArrayId]['page'])) $array['options']['page'] = $_SESSION['ploopi']['arrays'][$strArrayId]['page'];
         if (!empty($intIdPage) && is_numeric($intIdPage)) $array['options']['page'] = $intIdPage;
+
+        // Sauvegarde du tri + page en session
+        $_SESSION['ploopi']['arrays'][$strArrayId] = array(
+            'orderby' => $array['orderby'],
+            'sort' => $array['sort'],
+            'page' => $array['options']['page'],
+        );
 
         $objSV->save($array);
 

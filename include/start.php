@@ -273,16 +273,11 @@ if ($ploopi_initsession)
 
                     if ($workspace_ok)
                     {
-                        //$_SESSION['ploopi']['workspaces'][$gid] = $fields;
                         $_SESSION['ploopi']['workspaces'][$wid] = $workspaces[$wid];
                         $_SESSION['ploopi']['workspaces'][$wid]['adminlevel']  = $adminlevel;
                         $_SESSION['ploopi']['workspaces'][$wid]['backoffice']  = 1;
-                        $_SESSION['ploopi']['workspaces'][$wid]['children']  = $workspace->getchildren();
-                        $_SESSION['ploopi']['workspaces'][$wid]['parents'] = explode(';',$_SESSION['ploopi']['workspaces'][$wid]['parents']);
-                        $_SESSION['ploopi']['workspaces'][$wid]['brothers']  = $workspace->getbrothers();
-                        $_SESSION['ploopi']['workspaces'][$wid]['list_parents'] = implode(',',$_SESSION['ploopi']['workspaces'][$wid]['parents']);
-                        $_SESSION['ploopi']['workspaces'][$wid]['list_children'] = implode(',',$_SESSION['ploopi']['workspaces'][$wid]['children']);
-                        $_SESSION['ploopi']['workspaces'][$wid]['list_brothers'] = implode(',',$_SESSION['ploopi']['workspaces'][$wid]['brothers']);
+
+                        // Faire une requête globale pour les modules ici ?
                         $_SESSION['ploopi']['workspaces'][$wid]['modules'] = $workspace->getmodules(true);
 
                         $_SESSION['ploopi']['backoffice']['connected'] = 1;

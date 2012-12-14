@@ -279,101 +279,38 @@ function ploopi_array2xls($arrArray, $booHeader = true, $strFileName = 'document
 
 
 /**
- * Retourne le contenu d'un tableau à 2 dimensions au format XLS
+ * Retourne le contenu d'un tableau à 2 dimensions au format ODS
  *
  * @param array $arrArray tableau de données
  * @param boolean $booHeader true si la ligne d'entête doit être ajoutée (nom des colonnes)
  * @param string $strFileName nom du fichier
- * @param string $strSheetName nom de la feuille dans le document XLS
- * @param array $arrDataFormats formats des colonnes ('type', 'width')
- * @param array $arrOptions Options de configuration de l'export ('landscape', 'fitpage_width', 'fitpage_height', 'tofile', 'setborder')
- * @return binary contenu XLS
+ * @param string $strSheetName nom de la feuille dans le document ODS
+ * @param array $arrDataFormats formats des colonnes ('type', 'width') // EXPERIMENTAL ou NON IMPLEMENTE
+ * @param array $arrOptions Options de configuration de l'export ('tofile')
+ * @return binary contenu ODS
  */
 
-function ploopi_array2xlsOLD($arrArray, $booHeader = true, $strFileName = 'document.xls', $strSheetName = 'Feuille', $arrDataFormats = null, $arrOptions = null)
-{
-    ploopi_unset_error_handler();
-    // Attention deprecated php 5.3
-    require_once 'Spreadsheet/Excel/Writer.php';
-    ploopi_set_error_handler();
 
-    $workbook = new Spreadsheet_Excel_Writer();
-    $worksheet =& $workbook->addWorksheet();
+function ploopi_array2ods($arrArray, $booHeader = true, $strFileName = 'document.ods', $strSheetName = 'Feuille', $arrDataFormats = null, $arrOptions = null)
+{
+    require_once './lib/ods/ods.php';
+
+    $objOds = newOds(); //create a new ods file
 
     $arrDefautOptions = array(
-        'landscape' => true,
-        'fitpage_width' => true,
-        'fitpage_height' => false,
         'tofile' => false,
-        'setborder' => false
     );
 
     $arrOptions = empty($arrOptions) ? $arrDefautOptions : array_merge($arrDefautOptions, $arrOptions);
 
-    // Création du document
-    if ($arrOptions['tofile']) $objWorkBook = new Spreadsheet_Excel_Writer($strFileName);
-    else { $objWorkBook = new Spreadsheet_Excel_Writer(); $objWorkBook->send($strFileName); }
-
-    $objFormatTitle = $objWorkBook->addFormat( array( 'Align' => 'center', 'Bold'  => 1, 'Color'  => 'black', 'Size'  => 10, 'vAlign' => 'vcenter', 'FgColor' => 'silver'));
-    if ($arrOptions['setborder']) { $objFormatTitle->setBorder(1); $objFormatTitle->setBorderColor('black'); }
-    $objFormatDefault = $objWorkBook->addFormat( array( 'TextWrap' => 1, 'Align' => 'left', 'Bold'  => 0, 'Color'  => 'black', 'Size'  => 10, 'vAlign' => 'vcenter'));
-    if ($arrOptions['setborder']) { $objFormatDefault->setBorder(1); $objFormatDefault->setBorderColor('black'); }
-
-    // Définition des différents formats numériques/text
-    $arrFormats = array(
-        'string' => null,
-        'float' => null,
-        'float_percent' => null,
-        'float_euro' => null,
-        'integer' => null,
-        'integer_percent' => null,
-        'integer_euro' => null,
-        'date' => null,
-        'datetime' => null
-    );
-
-    foreach($arrFormats as $strKey => &$objFormat)
-    {
-        $objFormat = $objWorkBook->addFormat( array( 'Align' => 'right', 'TextWrap' => 1, 'Bold'  => 0, 'Color'  => 'black', 'Size'  => 10, 'vAlign' => 'vcenter'));
-        if ($arrOptions['setborder']) { $objFormat->setBorder(1); $objFormat->setBorderColor('black'); }
-
-        switch($strKey)
-        {
-            case 'string': $objFormat->setAlign('left'); break;
-            case 'float': $objFormat->setNumFormat('#,##0.00;-#,##0.00'); break;
-            case 'float_percent': $objFormat->setNumFormat('#,##0.00 %;-#,##0.00 %'); break;
-            case 'float_euro': $objFormat->setNumFormat('#,##0.00 €;-#,##0.00 €'); break;
-            case 'integer': $objFormat->setNumFormat('#,##0;-#,##0'); break;
-            case 'integer_percent': $objFormat->setNumFormat('#,##0 %;-#,##0 %'); break;
-            case 'integer_euro': $objFormat->setNumFormat('#,##0 €;-#,##0 €'); break;
-            case 'date': $objFormat->setNumFormat('DD/MM/YYYY'); break;
-            case 'datetime' : $objFormat->setNumFormat('DD/MM/YYYY HH:MM:SS'); break;
-        }
-    }
-    unset($objFormat);
-
-    $objWorkSheet = $objWorkBook->addWorksheet($strSheetName);
-    if ($arrOptions['fitpage_width'] || $arrOptions['fitpage_height']) $objWorkSheet->fitToPages($arrOptions['fitpage_width'] ? 1 : 0, $arrOptions['fitpage_height'] ? 1 : 0);
-    if ($arrOptions['landscape']) $objWorkSheet->setLandscape();
 
     if (!empty($arrArray))
     {
-        // Définition des formats de colonnes
-        if (!empty($arrDataFormats))
-        {
-            $intCol = 0;
-            foreach(array_keys(reset($arrArray)) as $strKey)
-            {
-                if (isset($arrDataFormats[$strKey]['width'])) $objWorkSheet->setColumn($intCol, $intCol, $arrDataFormats[$strKey]['width']);
-                $intCol++;
-            }
-        }
-
         // Ajout de la ligne d'entête
         if ($booHeader)
         {
             $intCol = 0;
-            foreach(array_keys(reset($arrArray)) as $strKey) $objWorkSheet->writeString(0, $intCol++, isset($arrDataFormats[$strKey]['title']) ? $arrDataFormats[$strKey]['title'] : $strKey, $objFormatTitle);
+            foreach(array_keys(reset($arrArray)) as $strKey) $objOds->addCell($strSheetName, 0, $intCol++, isset($arrDataFormats[$strKey]['title']) ? $arrDataFormats[$strKey]['title'] : $strKey, 'string');
         }
         // Traitement des contenus
         $intLine = 1;
@@ -382,21 +319,44 @@ function ploopi_array2xlsOLD($arrArray, $booHeader = true, $strFileName = 'docum
             $intCol = 0;
             foreach($row as $strKey => $strValue)
             {
-                // On vérifie si un format de donné est proposé pour le champ
-                $objFormat = (!empty($arrDataFormats[$strKey]['type']) && !empty($arrFormats[$arrDataFormats[$strKey]['type']])) ? $arrFormats[$arrDataFormats[$strKey]['type']] : $objFormatDefault;
+                if (empty($arrDataFormats[$strKey]['type'])) $arrDataFormats[$strKey]['type'] = 'string';
 
-                if (empty($arrDataFormats[$strKey]['type']) || $arrDataFormats[$strKey]['type'] == 'string') $objWorkSheet->writeString($intLine, $intCol++, $strValue, $objFormat);
-                else $objWorkSheet->write($intLine, $intCol++, $strValue, $objFormat);
+                switch($arrDataFormats[$strKey]['type'])
+                {
+                    case 'float':
+                        $objOds->addCell($strSheetName, $intLine, $intCol++, $strValue, 'float');
+                    break;
+
+                    default:
+                        $objOds->addCell($strSheetName, $intLine, $intCol++, $strValue, 'string');
+                    break;
+                }
             }
             $intLine++;
         }
     }
 
-    // fermeture du document
-    $objWorkBook->close();
+    // Génération du document
+    if ($arrDefautOptions['tofile']) $strFile = $strFileName;
+    else $strFile = tempnam(sys_get_temp_dir(), 'ods').'.ods';
+
+    saveOds($objOds, $strFile);
+    if (!$arrDefautOptions['tofile']) {
+
+        header('Content-Type: application/vnd.oasis.opendocument.spreadsheet');
+        header('Content-disposition: inline; filename="'.$strFileName.'"');
+        header('Expires: Sat, 1 Jan 2000 05:00:00 GMT');
+        header('Accept-Ranges: bytes');
+        header('Cache-control: private');
+        header('Pragma: private');
+        header('Content-length: '.filesize($strFile));
+        header('Content-Encoding: None');
+        readfile($strFile);
+    }
 
     return true;
 }
+
 
 /**
  * "Nettoie" les clés d'un tableau multidimensionnel afin que les clés soient compatibles avec des noms d'entités ou de variables

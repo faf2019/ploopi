@@ -755,7 +755,7 @@ class form_checkbox extends form_field
         $strChecked = $this->_booChecked ? ' checked="checked"' : '';
         $strValue = htmlentities($this->_arrValues[0]);
 
-        return $this->renderForm("<input type=\"checkbox\" name=\"{$this->_strName}\" id=\"{$this->_strId}\" value=\"{$strValue}\" tabindex=\"{$intTabindex}\" {$strChecked}{$strProperties}{$strEvents} />");
+        return $this->renderForm("<input type=\"checkbox\" name=\"{$this->_strName}\" id=\"{$this->_strId}\" value=\"{$strValue}\" title=\"{$this->_strLabel}\" tabindex=\"{$intTabindex}\" {$strChecked}{$strProperties}{$strEvents} />");
     }
 }
 

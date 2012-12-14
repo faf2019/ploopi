@@ -165,10 +165,25 @@ if ($_SESSION['ploopi']['connected'])
 
             <form name="form_modify_user" action="<?php echo ploopi_urlencode('admin-light.php?ploopi_op=system_update_profile_save'); ?>" method="POST" onsubmit="javascript:ploopi_xmlhttprequest_submitform(this, 'system_popup_update_profile', system_user_validate ); return false;  ">
             <div>
-                <div style="padding:10px;text-align:center;">
-                    Votre profil utilisateur n'est pas complet. Merci de remplir les champs marqués d'une étoile.
-                    <br /><em>Vous pouvez passer cette étape en cliquant en bas sur le bouton "Annuler".</em>
-                </div>
+				<?
+				// Vérification de la validité du profil
+				$booUpdateProfile = false;
+				foreach($arrRequiredFields as $strField)
+				{
+					$strField = trim($strField);
+					if (isset($user->fields[$strField]) && $user->fields[$strField] == '') { $booUpdateProfile = true; break; }
+				}
+
+				if ($booUpdateProfile)
+				{
+					?>
+					<div style="padding:10px;text-align:center;">
+						Votre profil utilisateur n'est pas complet. Merci de remplir les champs marqués d'une étoile.
+						<br /><em>Vous pouvez passer cette étape en cliquant en bas sur le bouton "Annuler".</em>
+					</div>
+					<?
+				}
+				?>
                 <div style="float:left;width:50%;">
                     <div style="padding:2px;">
                         <fieldset class="fieldset">

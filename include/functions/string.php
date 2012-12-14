@@ -117,7 +117,7 @@ function ploopi_rawurlencode($str)
 
 function ploopi_string2url($str)
 {
-    $str = ploopi_rawurlencode(ploopi_convertaccents(strtolower(strtr(trim($str), _PLOOPI_INDEXATION_WORDSEPARATORS, str_pad('', strlen(_PLOOPI_INDEXATION_WORDSEPARATORS), '-')))));
+    $str = urlencode(strtolower(ploopi_convertaccents(strtr(trim($str), _PLOOPI_INDEXATION_WORDSEPARATORS, str_pad('', strlen(_PLOOPI_INDEXATION_WORDSEPARATORS), '-')))));
     return preg_replace(array('/--+/', '/-$/'), array('-', ''), $str);
 }
 

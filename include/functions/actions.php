@@ -44,11 +44,14 @@
 function ploopi_create_user_action_log($id_action, $id_record, $id_module_type = -1, $id_module = -1)
 {
     include_once './include/classes/log.php';
+    include_once './include/classes/mb.php';
 
     global $db;
 
     if ($id_module_type == -1) $id_module_type = $_SESSION['ploopi']['moduletypeid'];
     if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];
+
+
 
     $user_action_log = new user_action_log();
 
@@ -60,7 +63,10 @@ function ploopi_create_user_action_log($id_action, $id_record, $id_module_type =
     {
         $user_action_log->fields['module'] = $_SESSION['ploopi']['modules'][$id_module]['label'];
         $user_action_log->fields['module_type'] = $_SESSION['ploopi']['modules'][$id_module]['moduletype'];
-        $user_action_log->fields['action'] = isset($_SESSION['ploopi']['actions_desc'][$_SESSION['ploopi']['modules'][$id_module]['id_module_type']][$id_action]) ? $_SESSION['ploopi']['actions_desc'][$_SESSION['ploopi']['modules'][$id_module]['id_module_type']][$id_action] : '';
+
+        $action = new mb_action();
+        if ($action->open($id_module_type, $id_action)) $user_action_log->fields['action'] = $action->fields['label'];
+        else $user_action_log->fields['action'] = '';
     }
     else
     {

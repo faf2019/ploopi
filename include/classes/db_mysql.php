@@ -30,6 +30,9 @@
  * @license GNU General var License (GPL)
  * @author Stéphane Escaich
  */
+ 
+include_once './include/functions/system.php';
+
 
 /**
  * Classe MySQL d'accès aux données.
@@ -131,6 +134,14 @@ class ploopi_db
 
     private  $arrLog;
 
+    /**
+     * Activation du log de requête ou non
+     *
+     * @var boolean
+     */
+
+    private $log;
+
 
     /**
      * Constructeur de la classe. Connexion à une base de données, sélection de la base.
@@ -143,7 +154,7 @@ class ploopi_db
      * @return mixed false si problème de connexion, id de connexion sinon
      */
 
-    public function ploopi_db($server, $user, $password = '', $database = '', $persistency = false)
+    public function ploopi_db($server, $user, $password = '', $database = '', $persistency = false, $log = false)
     {
         $this->persistency = $persistency;
         $this->user = $user;
@@ -153,8 +164,9 @@ class ploopi_db
         $this->connection_id = 0;
         $this->num_queries = 0;
         $this->exectime_queries = 0;
+        $this->log = $log;
 
-        $this->flush_log();
+        if ($this->log) $this->flush_log();
 
         if($this->persistency)
         {
@@ -266,7 +278,7 @@ class ploopi_db
             @mysql_select_db($this->database, $this->connection_id);
             $this->query_result = @mysql_query($query, $this->connection_id);
 
-            $this->arrLog[] = array ('query' => $query, 'time' => $this->timer_stop());
+            if ($this->log) $this->arrLog[] = array ('query' => $query, 'time' => $this->timer_stop());
 
             if (mysql_errno() != 0) trigger_error(mysql_error()."<br />ressource:{$this->connection_id}<br /><b>query:</b> $query", E_USER_WARNING);
 
@@ -286,6 +298,8 @@ class ploopi_db
     public function multiplequeries($queries)
     {
         if (!$this->isconnected()) return false;
+
+        if ($this->log) $this->arrLog[] = array ('query' => $queries, 'time' => $stop);
 
         $queries_array = explode("\n",$queries);
 
@@ -586,8 +600,6 @@ class ploopi_db
 
     public function addslashes($var)
     {
-        include_once './include/functions/system.php';
-
         if ($this->isconnected()) return(ploopi_array_map(array($this, 'escape_string'), $var));
         else return(false);
     }

@@ -45,6 +45,11 @@ include_once './include/classes/data_object.php';
 
 class workspace extends data_object
 {
+    // Stockage temporaire des résultats
+    // Utile si plusieurs appels à une même fonction dans l'exécution de la page
+    // Trop lourd à stocker en session
+    private static $_arrCache = array();
+
     /**
      * Constructeur de la classe
      *
@@ -120,14 +125,16 @@ class workspace extends data_object
      *
      * @return array tableau des espaces fils de l'espace (identifiants)
      */
-    
+
     public function getchildren()
     {
+        if (isset(self::$_arrCache[$this->fields['id']]['children'])) return self::$_arrCache[$this->fields['id']]['children'];
+
         global $db;
 
         $rs = $db->query("SELECT id FROM ploopi_workspace WHERE parents = '{$this->fields['parents']};{$this->fields['id']}' OR parents LIKE '{$this->fields['parents']};{$this->fields['id']};%'");
 
-        return $db->getarray($rs, true);
+        return self::$_arrCache[$this->fields['id']]['children'] = $db->getarray($rs, true);
     }
 
     /**
@@ -135,9 +142,11 @@ class workspace extends data_object
      *
      * @return array tableau des espaces frères de l'espace (identifiants)
      */
-    
+
     public function getbrothers()
     {
+        if (isset(self::$_arrCache[$this->fields['id']]['brothers'])) return self::$_arrCache[$this->fields['id']]['brothers'];
+
         global $db;
 
         $rs = $db->query("
@@ -147,7 +156,7 @@ class workspace extends data_object
             AND     id <> {$this->fields['id']}
         ");
 
-        return $db->getarray($rs, true);
+        return self::$_arrCache[$this->fields['id']]['brothers'] = $db->getarray($rs, true);
     }
 
     /**
@@ -161,7 +170,7 @@ class workspace extends data_object
         include_once './modules/system/include/functions.php';
         return system_getparents($this->fields['parents'], 'workspace');
     }
-    
+
     /**
      * Retourne l'espace père ou false
      *
@@ -181,7 +190,7 @@ class workspace extends data_object
      * @param boolean $booWithGroups true si la fonction doit renvoyer les utilisateurs des groupes rattachés (false par défaut)
      * @return array tableau des utilisateurs
      */
-    
+
     public function getusers($booWithGroups = false)
     {
         global $db;
@@ -191,22 +200,22 @@ class workspace extends data_object
         $result = $db->query("
             SELECT  u.*,
                     wu.adminlevel
-                    
+
             FROM    ploopi_user u,
                     ploopi_workspace_user wu
-            WHERE   
+            WHERE
                     wu.id_workspace = {$this->fields['id']}
             AND     wu.id_user = u.id
         ");
 
         while ($fields = $db->fetchrow($result)) $arrUsers[$fields['id']] = $fields;
-        
+
         if ($booWithGroups)
         {
             $result = $db->query("
                 SELECT  u.*,
                         wg.adminlevel
-                        
+
                 FROM    ploopi_user u,
                         ploopi_workspace_group wg,
                         ploopi_group_user gu
@@ -217,13 +226,13 @@ class workspace extends data_object
 
                 GROUP BY u.id
             ");
-    
-            while ($fields = $db->fetchrow($result)) $arrUsers[$fields['id']] = $fields;            
+
+            while ($fields = $db->fetchrow($result)) $arrUsers[$fields['id']] = $fields;
         }
-        
+
         return $arrUsers;
     }
-    
+
     /**
      * Retourne le nombre d'utilisateurs dans l'espace de travail (sans les groupes)
      *
@@ -242,10 +251,10 @@ class workspace extends data_object
         ");
 
         $fields = $db->fetchrow($result);
-        
+
         return $fields['c'];
-    }   
-    
+    }
+
     /**
      * Retourne un tableau associatif (id => fields) contenant les utilisateurs de l'espace et des sous-espaces
      *
@@ -488,7 +497,7 @@ class module_workspace extends data_object
     /**
      * Enregistre les infos sur la relation module / espace de rattachement (position par exemple)
      */
-    
+
     public function save()
     {
         global $db;
@@ -510,7 +519,7 @@ class module_workspace extends data_object
     }
 
     /**
-     * Supprime la relation module / espace de rattachement 
+     * Supprime la relation module / espace de rattachement
      */
 
     public function delete()
@@ -524,7 +533,7 @@ class module_workspace extends data_object
     }
 
     /**
-     * Modifie la position de la relation module / espace de rattachement 
+     * Modifie la position de la relation module / espace de rattachement
      *
      * @param string $direction sens du mouvement 'down' / 'up'
      */
@@ -661,7 +670,7 @@ class workspace_user_role extends data_object
 
 class workspace_group extends data_object
 {
-    
+
     /**
      * Constructeur de la classe
      *
@@ -677,7 +686,7 @@ class workspace_group extends data_object
     /**
      * Supprime la relation groupe / espace de rattachement
      */
-    
+
     public function delete()
     {
         global $db;

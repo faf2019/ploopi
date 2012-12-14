@@ -20,7 +20,7 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-var ploopi_ajaxloader_content = '<div style="text-align:center;padding:40px 10px;"><img src="./img/ajax-loader.gif"></div>';
+var ploopi_ajaxloader_content = '<div style="text-align:center;padding:40px 10px;"><img src="./img/ajax-loader.png"></div>';
 
 function ploopi_ajaxloader(div)
 {
@@ -146,39 +146,39 @@ function ploopi_xmlhttprequest_tofunction(url, data, callback, ticket, getxml, m
 /**
  * Affiche le contenu contenu d'une requête HTTP dans un élément de la page
  *
- * @param string url nom du script à appeler 
- * @param string data paramètres complémentaires 
- * @param string div identifiant de l'élément 
- * @param string method méthode http à utiliser (GET/POST) 
+ * @param string url nom du script à appeler
+ * @param string data paramètres complémentaires
+ * @param string div identifiant de l'élément
+ * @param string method méthode http à utiliser (GET/POST)
  */
- 
- 
+
+
 function ploopi_xmlhttprequest_todiv(url, parameters, id, method)
 {
     if (typeof(method) == 'undefined') method = 'GET';
 
-	new Ajax.Request(url, {
+    new Ajax.Request(url, {
         method:     method,
         parameters: parameters,
-	    encoding:   'iso-8859-15',
-	    onSuccess:  function(transport) {
-	        ploopi_innerHTML(id, transport.responseText);
+        encoding:   'iso-8859-15',
+        onSuccess:  function(transport) {
+            ploopi_innerHTML(id, transport.responseText);
         }
-	});
+    });
 }
 
 /**
  * Permet d'ouvrir un popup avec le contenu d'une requête HTTP
  *
- * @param int width largeur du popup 
- * @param event e événement déclencheur 
- * @param string id identifiant du popup 
- * @param string url nom du script à appeler 
- * @param string data paramètres complémentaires 
- * @param string method méthode http à utiliser (GET/POST) 
- * @param boolean true|false active la capture de la touche escape pour fermeture de la popup  
+ * @param int width largeur du popup
+ * @param event e événement déclencheur
+ * @param string id identifiant du popup
+ * @param string url nom du script à appeler
+ * @param string data paramètres complémentaires
+ * @param string method méthode http à utiliser (GET/POST)
+ * @param boolean true|false active la capture de la touche escape pour fermeture de la popup
  */
- 
+
 function ploopi_xmlhttprequest_topopup(width, e, id, url, data, method, enable_esc)
 {
     if (typeof(method) == 'undefined') method = 'GET';
@@ -191,18 +191,18 @@ function ploopi_xmlhttprequest_topopup(width, e, id, url, data, method, enable_e
 /**
  * Permet de valider automatiquement un formulaire via xmlhttprequest
  *
- * @param object form formulaire 
- * @param string id identifiant du popup 
- * @param function beforesubmit fonction appelée avant validation (doit retourner true/false) 
+ * @param object form formulaire
+ * @param string id identifiant du popup
+ * @param function beforesubmit fonction appelée avant validation (doit retourner true/false)
  *
  * @todo possibilité de ne pas renvoyer la réponse vers du contenu
  */
- 
+
 function ploopi_xmlhttprequest_submitform(form, id, beforesubmit)
 {
     var submit = true;
     if (typeof(beforesubmit) == 'function') submit = beforesubmit(form);
-    
+
     query = form.serialize();
     query += (query == '' ? '' : '&')+'ploopi_xhr=1';
     if (submit) ploopi_xmlhttprequest_todiv(form.action, query, id, 'POST');
