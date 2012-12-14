@@ -2,9 +2,9 @@
 <ploopi>
     <moduletype>
         <label>doc</label>
-        <version>4.7.0</version>
+        <version>4.7.1</version>
         <author>Ovensia / HeXad</author>
-        <date>20120413000000</date>
+        <date>20121214000000</date>
         <description>Gestion de Documents</description>
         <paramtype>
             <name>doc_viewfoldersinblock</name>
@@ -69,6 +69,21 @@
         <paramtype>
             <name>doc_displayroot</name>
             <label>Afficher le lien "Racine"</label>
+            <default_value>1</default_value>
+            <public>1</public>
+            <description/>
+            <paramchoice>
+                <value>1</value>
+                <displayed_value>oui</displayed_value>
+            </paramchoice>
+            <paramchoice>
+                <value>0</value>
+                <displayed_value>non</displayed_value>
+            </paramchoice>
+        </paramtype>
+        <paramtype>
+            <name>doc_viewannotations</name>
+            <label>Afficher les annotations</label>
             <default_value>1</default_value>
             <public>1</public>
             <description/>

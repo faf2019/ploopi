@@ -76,4 +76,4 @@ if ($objFolder->fields['foldertype'] != 'private')
 /**
  * Affichage du bloc d'annotations
  */
-ploopi_annotation(_DOC_OBJECT_FOLDER, $objFolder->fields['id'], $objFolder->fields['name']); ?>
+if (ploopi_getparam('doc_viewannotations')) ploopi_annotation(_DOC_OBJECT_FOLDER, $objFolder->fields['id'], $objFolder->fields['name']); ?>

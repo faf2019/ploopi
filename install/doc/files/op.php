@@ -659,7 +659,7 @@ if ($_SESSION['ploopi']['connected'])
                             {
                                 $docfolder = new docfolder();
                                 $docfolder->open($docfile->fields['id_folder']);
-                                
+
                                 // On va chercher les abonnés
                                 $arrSubscribers = $docfolder->getSubscribers(array(_DOC_ACTION_MODIFYFILE, _DOC_ACTION_DELETEFILE));
 
@@ -1060,6 +1060,7 @@ if ($_SESSION['ploopi']['connected'])
 switch($ploopi_op)
 {
     case 'doc_getthumbnail':
+    case 'doc_image_get':
 
         if (isset($_GET['docfile_md5id']))
         {

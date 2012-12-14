@@ -1,3 +1,11 @@
+== Module DOC - version 4.7.1 ====================================================
+
+2012-12-14  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Ajout d'un paramètre permettant d'activer ou non les annotations
+* Correction sur la fonctionnalité de création de miniatures
+* Correction d'un bug sur l'application du paramètre empêchant le dépôt d'un fichier à la racine.
+
 == Module DOC - version 4.7.0 ====================================================
 
 2012-04-13  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

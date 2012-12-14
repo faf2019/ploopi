@@ -194,7 +194,7 @@ while ($row = $db->fetchrow($rs))
         $tools .= '<a title="Publier" style="display:block;float:right;" href="'.ploopi_urlencode("admin.php?ploopi_op=doc_folderpublish&currentfolder={$currentfolder}&docfolder_id={$row['id']}").'"><img src="./modules/doc/img/ico_validate.png" /></a>';
     }
 
-    $tools .= '<a title="Modifier" style="display:block;float:right;" href="'.ploopi_urlencode("admin.php?op=doc_foldermodify&currentfolder={$row['id']}&addfolder=0").'"><img src="./modules/doc/img/ico_modify.png" /></a>';
+    $tools .= '<a title="Modifier" style="display:block;float:right;" href="'.ploopi_urlencode("admin.php?op=doc_foldermodify&currentfolder={$row['id']}&addfolder=0").'"><img src="./modules/doc/img/ico_main.png" /></a>';
 
     $linked = ($currentfolder ==0 && $row['id_folder'] != 0 && ($row['foldertype'] == 'shared' || $row['foldertype'] == 'public'));
 
@@ -311,7 +311,7 @@ while ($row = $db->fetchrow())
     }
 
     $tools .= '
-        <a title="Modifier" style="display:block;float:right;" href="'.ploopi_urlencode("admin.php?op=doc_fileform&currentfolder={$currentfolder}&docfile_md5id={$row['md5id']}&docfile_tab=modify").'"><img src="./modules/doc/img/ico_modify.png" /></a>
+        <a title="Modifier" style="display:block;float:right;" href="'.ploopi_urlencode("admin.php?op=doc_fileform&currentfolder={$currentfolder}&docfile_md5id={$row['md5id']}&docfile_tab=modify").'"><img src="./modules/doc/img/ico_main.png" /></a>
         <a title="Télécharger" style="display:block;float:right;" href="'.ploopi_urlencode("admin-light.php?ploopi_op=doc_filedownload&docfile_md5id={$row['md5id']}").'"><img src="./modules/doc/img/ico_download.png" /></a>
         <a title="Télécharger (ZIP)" style="display:block;float:right;" href="'.ploopi_urlencode("admin-light.php?ploopi_op=doc_filedownloadzip&docfile_md5id={$row['md5id']}").'"><img src="./modules/doc/img/ico_download_zip.png" /></a>
     ';
