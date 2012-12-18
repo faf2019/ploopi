@@ -39,7 +39,7 @@
  * @param Array $arrInfo Info for "Order By" and "Limit"
  * @return Array $arrReturn with 'page' and 'id'
  */
-function forum_GetSubjectPage($intIdSubject,&$arrInfo)
+function forum_GetSubjectPage($intIdSubject, $arrInfo)
 {
   global $strForumSqlLimitGroupMess;
   global $db;
@@ -301,7 +301,7 @@ function forum_ListModer($intIdCat = -1, $intObject = -1, $booWidthDetail = true
   if($intObject > -1)
   {
     $arrForumModeratSearch = ploopi_validation_get($intObject, $intIdCat);
-    
+
     $arrForumModerat = array();
     foreach($arrForumModeratSearch as $value)
     {
@@ -318,7 +318,7 @@ function forum_ListModer($intIdCat = -1, $intObject = -1, $booWidthDetail = true
         }
       }
       else $arrForumModerat[$value['id_validation']] = $value;
-    }      
+    }
   }
 
   if($booWidthDetail)
