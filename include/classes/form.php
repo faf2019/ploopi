@@ -93,7 +93,9 @@ abstract class form_element
 
         'text',
 
-        'richtext'
+        'richtext',
+
+        'datetime'
     );
 
     /**
@@ -946,6 +948,60 @@ class form_richtext extends form_field
         return $this->renderForm("<span{$strStyle}>".$strContent.'</span>');
     }
 }
+/**
+ * Classe de gestion des champs de type "datetime" d'un formulaire
+ *
+ */
+class form_datetime extends form_field
+{
+    /**
+     * Options par défaut d'un richtext
+     *
+     * @var array
+     */
+    private static $_arrDefaultOptions = array(
+        'style' => 'width:100px;margin-right:2px;',
+    );
+
+    /**
+     * Constructeur de la classe
+     *
+     * @param string $strLabel libellé du champ
+     * @param string $strValue valeur du champ
+     * @param string $strName propriété "name" du champ
+     * @param string $strId propriété "id" du champ
+     * @param array $arrOptions options du champ
+     *
+     * @return form_richtext
+     */
+    public function __construct($strLabel, $arrValues, $strName, $strId = null, $arrOptions = null)
+    {
+        parent::__construct('datetime', $strLabel, $arrValues, $strName, $strId, is_null($arrOptions) ? self::$_arrDefaultOptions : array_merge(self::$_arrDefaultOptions, $arrOptions));
+    }
+
+    /**
+     * Génère le rendu html du champ
+     *
+     * @param int $intTabindex tabindex du champs dans le formulaire
+     * @return string code html
+     */
+    public function render($intTabindex = null)
+    {
+        $strOutput = '';
+
+        $strEvents = $this->generateEvents();
+        $strProperties = $this->generateProperties();
+        $strMaxLength = is_null($this->_arrOptions['maxlength']) || !is_numeric($this->_arrOptions['maxlength']) ? '' : " maxlength=\"{$this->_arrOptions['maxlength']}\"";
+        $arrValues = ploopi_array_map('htmlentities', $this->_arrValues);
+
+        $strOutput .= "<input type=\"text\" name=\"{$this->_strName}_date\" id=\"{$this->_strId}_date\" value=\"{$arrValues['date']}\" tabindex=\"{$intTabindex}\"{$strProperties}{$strMaxLength}{$strEvents} />";
+        if (!$this->_arrOptions['readonly'] && !$this->_arrOptions['disabled']) $strOutput .= ploopi_open_calendar($this->_strId.'_date', false, null, 'display:block;float:left;margin-left:-35px;margin-top:5px;');
+        $strOutput .= "<input type=\"text\" name=\"{$this->_strName}_time\" id=\"{$this->_strId}_time\" value=\"{$arrValues['time']}\" tabindex=\"{$intTabindex}\"{$strProperties}{$strMaxLength}{$strEvents} />";
+
+        return $this->renderForm($strOutput);
+
+    }
+}
 
 /**
  * Classe de gestion des boutons d'un formulaire
@@ -1283,7 +1339,7 @@ class form
         'target'        => null,                                    // cible de la validation du formulaire (un iframe par exemple)
         'enctype'       => null,                                    // type d'encodage du formulaire
         'onsubmit'      => null,                                    // action à effectuer sur l'événement "onsubmit" du formulaire
-        'button_style'  => 'text-align:right;padding:2px 4px;',     // style appliqué aux boutons de validation du formulaire
+        'button_style'  => '',                                      // style appliqué aux boutons de validation du formulaire
         'legend'        => null,                                    // contenu de la légende du formulaire
         'legend_style'  => 'margin-right:4px;',                     // style appliqué à la légende du formulaire
         'class'         => 'ploopi_generate_form',                  // class par défaut du formulaire (partie champs)
@@ -1484,11 +1540,9 @@ class form
             {
                 if ($objField->_strName != '')
                 {
-                    //$strFormField = $objField->_strId != '' ? "$('{$objField->_strId}')" : "form.{$objField->_strName}";
                     $strFormField = "form['{$objField->_strName}']";
 
                     $strCond = "$('{$objField->_strId}_form').style.display == 'none' ||";
-
 
                     switch ($objField->_strType)
                     {
@@ -1511,25 +1565,16 @@ class form
 
                         case 'input:checkbox':
                             if ($objField->_arrOptions['required']) $strOutput .= "\nif ({$strCond} ploopi_validatefield('".addslashes(strip_tags(html_entity_decode($objField->_strLabel)))."', form['{$objField->_strName}[]'], 'checked'))";
-                            /*
-                            if ($objField->_arrOptions['required'])
-                            {
-                                // Fonction manuelle de vérification qu'une case au moins est cochée (la fonction de ploopi gère la case seule)
-                                $arrChecked = array();
-                                $intNumCheck = 0;
-                                foreach($arrValues = $objField->_arrValues as $strKey => $strValue)
-                                {
-                                    $strFormField = "$('{$objField->_strId}_{$intNumCheck}')";
-                                    $arrChecked[] = "{$strFormField}.checked";
-                                    $intNumCheck++;
-                                }
+                        break;
 
-                                $strOutput .= "\nif (!(".implode(' || ', $arrChecked).")) {
-                                    var msg = lstmsg[14];
-                                    var reg = new RegExp(\"<FIELD_LABEL>\",\"gi\");
-                                    alert(msg.replace(reg, '".addslashes(strip_tags(html_entity_decode($objField->_strLabel)))."'));
-                                } else ";
-                            }*/
+                        case 'datetime':
+                            $strCond = "$('{$objField->_strId}_form').style.display == 'none' ||";
+
+                            foreach(array('date', 'time') as $key) {
+                                $strFormField = "form['{$objField->_strName}_{$key}']";
+                                $strFormat = ($objField->_arrOptions['required'] ? '' : 'empty').$key;
+                                $strOutput .= "\nif ({$strCond} ploopi_validatefield('".addslashes(strip_tags(html_entity_decode($objField->_strLabel)))."', {$strFormField}, '{$strFormat}'))";
+                            }
                         break;
                     }
                 }

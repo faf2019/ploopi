@@ -139,7 +139,7 @@ if (isset($ploopi_op))
                                         array(
                                             array(
                                                     'name' => $_SERVER['HTTP_HOST'],
-                                                    'address' => _PLOOPI_ADMINMAIL
+                                                    'address' => trim(current(explode(',', _PLOOPI_ADMINMAIL)))
                                             )
                                         ),
                                         array(
@@ -183,7 +183,7 @@ if (isset($ploopi_op))
                                 array(
                                     array(
                                             'name' => $_SERVER['HTTP_HOST'],
-                                            'address' => _PLOOPI_ADMINMAIL
+                                            'address' => trim(current(explode(',', _PLOOPI_ADMINMAIL)))
                                     )
                                 ),
                                 array(

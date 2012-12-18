@@ -118,7 +118,7 @@ function ploopi_error_handler($errno, $errstr, $errfile, $errline, $vars)
         if ($errno == E_ERROR || $errno == E_PARSE || $errno == E_USER_ERROR) $ploopi_errors_level = 2;
         else if (($errno == E_WARNING || $errno == E_NOTICE || $errno == E_USER_NOTICE || $errno == E_DEPRECATED || $errno == E_USER_DEPRECATED) && $ploopi_errors_level < 2) $ploopi_errors_level = 1;
 
-        if ($ploopi_errors_msg == '') $ploopi_errors_msg  = (php_sapi_name() == 'cli' ? '' : "[{$_SERVER['HTTP_HOST']}] ")."le ".date("d-m-Y H:i:s (T)")."\n\nVersion PHP : ".PHP_VERSION."\nOS : ".PHP_OS."\n\n";
+        if ($ploopi_errors_msg == '') $ploopi_errors_msg  = (php_sapi_name() == 'cli' ? '' : "[{$_SERVER['HTTP_HOST']}] ")."le ".date("d-m-Y H:i:s (T)")."\n\nVersion PHP : ".PHP_VERSION."\nOS : ".php_uname()."\nPloopi : "._PLOOPI_VERSION.' '._PLOOPI_REVISION."\n\n";
 
         $ploopi_errors_msg .= "\nType d'erreur : {$ploopi_errortype[$errno]}\nMessage : $errstr\n";
 

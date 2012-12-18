@@ -224,10 +224,20 @@ switch($http_host)
         define ('_PLOOPI_MAIL_ERRORS', false);
 
         /**
-         * Adresse email de l'administrateur système du site.
-         * Cette adresse est utilisée pour l'envoi des mails d'erreurs, mais également pour l'envoi de tout message système.
+         * Adresse destinataires des mails d'erreurs.
+         * Plusieurs destinataires peuvent être saisis.
+         * Chaque adresse doit être séparée par une virgule.
          *
          * @see _PLOOPI_MAIL_ERRORS
+         */
+
+        define ('_PLOOPI_SYSMAIL', '<ADMIN_MAIL>');
+        
+        /**
+         * Adresse émettrice des mails du portail incluant erreurs, alertes, tickets
+         * C'est aussi l'adresse utilisée par défaut lorsque l'utilisateur n'en dispose pas.
+         * Ce champ ne peut contenir qu'une seule adresse !
+         * Si plusieurs adresses, seule la première est prise en compte.
          */
 
         define ('_PLOOPI_ADMINMAIL', '<ADMIN_MAIL>');

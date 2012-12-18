@@ -66,18 +66,18 @@ function ploopi_die($var = null, $flush = true)
         $ploopi_errors_level &&
         defined('_PLOOPI_MAIL_ERRORS') &&
         _PLOOPI_MAIL_ERRORS  &&
-        defined('_PLOOPI_ADMINMAIL') &&
-        _PLOOPI_ADMINMAIL != ''
+        defined('_PLOOPI_SYSMAIL') &&
+        _PLOOPI_SYSMAIL != ''
         )
     {
         mail(
-            _PLOOPI_ADMINMAIL,
+            _PLOOPI_SYSMAIL,
             "[{$ploopi_errorlevel[$ploopi_errors_level]}] sur [{$strHost}]",
             "{$ploopi_errors_nb} erreur(s) sur {$ploopi_errors_msg}".
             "\n_SERVER:\n".print_r($_SERVER, true).
             "\n_POST:\n".print_r($_POST, true).
             "\n_GET:\n".print_r($_GET, true),
-            "From: "._PLOOPI_ADMINMAIL
+            "From: ".trim(current(explode(',', _PLOOPI_ADMINMAIL)))
         );
     }
 
