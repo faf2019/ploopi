@@ -63,7 +63,7 @@ $load['h24']['title'] = '1 journée';
 // Calcul Charge :
 foreach($load as $key => $l)
 {
-    log::getdb()->query("
+    ploopi_log::getdb()->query("
         SELECT      sum(total_exec_time) as total_exec_time,
                     sum(sql_exec_time) as sql_exec_time,
                     sum(numqueries) as numqueries,
@@ -74,8 +74,8 @@ foreach($load as $key => $l)
 
         WHERE       ts >= {$l['ts']}
     ");
-    
-    if ($row = log::getdb()->fetchrow())
+
+    if ($row = ploopi_log::getdb()->fetchrow())
     {
         $load[$key]['res'] = $row;
         $load[$key]['res']['load'] = ($row['total_exec_time'] / ($l['time']*10)) / _PLOOPI_LOAD_NBCORE; // charge (ratio tps d'exec/tps écoulé) en %
@@ -130,13 +130,13 @@ foreach($load as $key => $l)
 <?php
 $skin->display_array($columns, $values, 'array_load');
 
-log::getdb()->query("SELECT COUNT(*) AS c FROM ploopi_log");
-$row = log::getdb()->fetchrow();
+ploopi_log::getdb()->query("SELECT COUNT(*) AS c FROM ploopi_log");
+$row = ploopi_log::getdb()->fetchrow();
 $intLogRows = $row['c'];
 
 
 // Analyse des x dernières requêtes
-log::getdb()->query( "
+ploopi_log::getdb()->query( "
             SELECT  ts,
                     browser,
                     system,
@@ -171,7 +171,7 @@ $columns['auto']['uri'] = array('label' => 'URI');
 
 $c = 0;
 
-while ($row = log::getdb()->fetchrow())
+while ($row = ploopi_log::getdb()->fetchrow())
 {
     $ldate = ploopi_timestamp2local($row['ts']);
     $values[$c]['values']['ts'] = array('label' => "{$ldate['date']} {$ldate['time']}", 'sort_label' => $row['ts']);
