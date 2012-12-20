@@ -176,7 +176,7 @@ function ploopi_tickets_send($title, $message, $needed_validation = 0, $delivery
             }
         }
 
-        $email_subject = strip_tags("[MESSAGE] - {$title}");
+        $email_subject = strip_tags($title);
 
         $tplmail->assign_vars(array(
             'USER_FROM_NAME' => $email_from[0]['name'].' ['._PLOOPI_BASEPATH.']',
