@@ -283,15 +283,17 @@ class formsForm extends data_object
             break;
 
             case 'desc':
-                $strWorkspaces = $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['list_parents'];
-                if ($strWorkspaces != '') $strWorkspaces .= ',';
-                $strWorkspaces .= $_SESSION['ploopi']['workspaceid'];
+                $arrWorkspaces = explode(';',$_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['parents']);
+                $arrWorkspaces[] = $_SESSION['ploopi']['workspaceid'];
+                $strWorkspaces = implode(',', $arrWorkspaces);
             break;
 
             case 'asc':
-                $strWorkspaces = $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['list_children'];
-                if ($strWorkspaces!='') $strWorkspaces .= ',';
-                $strWorkspaces .= $_SESSION['ploopi']['workspaceid'];
+                $objWorkspace = new workspace();
+                $objWorkspace->open($_SESSION['ploopi']['workspaceid']);
+                $arrWorkspaces = array_keys($objWorkspace->getChildren());
+                $arrWorkspaces[] = $_SESSION['ploopi']['workspaceid'];
+                $strWorkspaces = implode(',', $arrWorkspaces);
             break;
 
             case 'global':
@@ -2032,7 +2034,7 @@ class formsForm extends data_object
                             {
                                 switch($objFieldVar->fields['format'])
                                 {
-                                    case 'int':
+                                    case 'integer':
                                         $strJsCond .= "C{$key} = C{$key} || (V{$key}[i] >= parseInt('".$arrValues[0]."', 10) && V{$key}[i] <= parseInt('".$arrValues[1]."', 10));";
                                     break;
 
@@ -2052,7 +2054,7 @@ class formsForm extends data_object
                             {
                                 switch($objFieldVar->fields['format'])
                                 {
-                                    case 'int':
+                                    case 'integer':
                                         $strJsCond .= "C{$key} = C{$key} || (V{$key}[i] == parseInt('".$strValue."', 10));";
                                     break;
 
@@ -2074,7 +2076,7 @@ class formsForm extends data_object
 
                             switch($objFieldVar->fields['format'])
                             {
-                                case 'int':
+                                case 'integer':
                                     $strJsCond .= "C{$key} = C{$key} || (V{$key}[i] {$row['op']} parseInt('".$strValue."', 10));";
                                 break;
 
