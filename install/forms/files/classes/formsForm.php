@@ -532,27 +532,25 @@ class formsForm extends data_object
             /**
              * Construction des jointures sur les champs statiques (ip, user, etc...)
              */
+            $objQuery->add_select('rec.`user_id`');
+
             if ($booExport || $this->fields['option_displayuser'])
             {
-                $objQuery->add_select('rec.`user_id`');
 
                 $objQuery->add_leftjoin('ploopi_user pu ON pu.id = rec.user_id');
-                $objQuery->add_select('pu.id as `user_id`');
                 $objQuery->add_select('pu.login as `user_login`');
                 $objQuery->add_select('pu.firstname as `user_firstname`');
                 $objQuery->add_select('pu.lastname as `user_lastname`');
             }
 
+            $objQuery->add_select('rec.`workspace_id`');
+
             if ($booExport || $this->fields['option_displaygroup'])
             {
-                $objQuery->add_select('rec.`workspace_id`');
-
                 $objQuery->add_leftjoin('ploopi_workspace pw ON pw.id = rec.workspace_id');
-                $objQuery->add_select('pw.id as `workspace_id`');
                 $objQuery->add_select('pw.label as `workspace_label`');
                 $objQuery->add_select('pw.code as `workspace_code`');
             }
-
             if ($booExport || $this->fields['option_displayip']) $objQuery->add_select('rec.`ip`');
         }
 
