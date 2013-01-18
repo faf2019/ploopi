@@ -176,7 +176,7 @@ switch($ploopi_op)
             $list['groups'][$fields['id_group']]['users'][$fields['id']] = $fields['id'];
         }
 
-        if (!sizeof($list['users']))
+        if (!sizeof($list['users']) && !sizeof($list['groups']))
         {
             ?>
             <div class="ploopi_share_select_empty">
