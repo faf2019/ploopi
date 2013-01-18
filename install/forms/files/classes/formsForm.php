@@ -187,6 +187,7 @@ class formsForm extends data_object
         // Clonage des champs
         $objDoc = new data_object_collection('formsField');
         $objDoc->add_where('id_form = %d', $intOldId);
+        $objDoc->add_orderby('position');
         foreach($objDoc->get_objects() as $obj)
         {
             $objClone = clone $obj;

@@ -1,3 +1,9 @@
+== Module FORMS - version 3.5.1l =====================================================
+
+2013-01-18  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Correction d'un bug sur le clonage d'un formulaire (non préservation des positions de champs)
+
 == Module FORMS - version 3.5.1k =====================================================
 
 2013-01-02  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
