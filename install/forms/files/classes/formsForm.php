@@ -187,6 +187,7 @@ class formsForm extends data_object
         // Clonage des champs
         $objDoc = new data_object_collection('formsField');
         $objDoc->add_where('id_form = %d', $intOldId);
+        $objDoc->add_orderby('position');
         foreach($objDoc->get_objects() as $obj)
         {
             $objClone = clone $obj;
@@ -283,15 +284,17 @@ class formsForm extends data_object
             break;
 
             case 'desc':
-                $strWorkspaces = $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['list_parents'];
-                if ($strWorkspaces != '') $strWorkspaces .= ',';
-                $strWorkspaces .= $_SESSION['ploopi']['workspaceid'];
+                $arrWorkspaces = explode(';',$_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['parents']);
+                $arrWorkspaces[] = $_SESSION['ploopi']['workspaceid'];
+                $strWorkspaces = implode(',', $arrWorkspaces);
             break;
 
             case 'asc':
-                $strWorkspaces = $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['list_children'];
-                if ($strWorkspaces!='') $strWorkspaces .= ',';
-                $strWorkspaces .= $_SESSION['ploopi']['workspaceid'];
+                $objWorkspace = new workspace();
+                $objWorkspace->open($_SESSION['ploopi']['workspaceid']);
+                $arrWorkspaces = array_keys($objWorkspace->getChildren());
+                $arrWorkspaces[] = $_SESSION['ploopi']['workspaceid'];
+                $strWorkspaces = implode(',', $arrWorkspaces);
             break;
 
             case 'global':
@@ -530,23 +533,22 @@ class formsForm extends data_object
             /**
              * Construction des jointures sur les champs statiques (ip, user, etc...)
              */
+            $objQuery->add_select('rec.`user_id`');
+
             if ($booExport || $this->fields['option_displayuser'])
             {
-                $objQuery->add_select('rec.`user_id`');
 
                 $objQuery->add_leftjoin('ploopi_user pu ON pu.id = rec.user_id');
-                $objQuery->add_select('pu.id as `user_id`');
                 $objQuery->add_select('pu.login as `user_login`');
                 $objQuery->add_select('pu.firstname as `user_firstname`');
                 $objQuery->add_select('pu.lastname as `user_lastname`');
             }
 
+            $objQuery->add_select('rec.`workspace_id`');
+
             if ($booExport || $this->fields['option_displaygroup'])
             {
-                $objQuery->add_select('rec.`workspace_id`');
-
                 $objQuery->add_leftjoin('ploopi_workspace pw ON pw.id = rec.workspace_id');
-                $objQuery->add_select('pw.id as `workspace_id`');
                 $objQuery->add_select('pw.label as `workspace_label`');
                 $objQuery->add_select('pw.code as `workspace_code`');
             }
@@ -1562,6 +1564,8 @@ class formsForm extends data_object
 
                 foreach($arrValues as $intFieldId => $strValue) if (is_numeric($intFieldId)) $arrFieldsContent[$intFieldId] = explode('||', $strValue);
 
+                ploopi_print_r($arrValues);
+
                 if (isset($arrValues['panel'])) $intDefaultPanel = $arrValues['panel'];
             }
         }
@@ -2032,7 +2036,7 @@ class formsForm extends data_object
                             {
                                 switch($objFieldVar->fields['format'])
                                 {
-                                    case 'int':
+                                    case 'integer':
                                         $strJsCond .= "C{$key} = C{$key} || (V{$key}[i] >= parseInt('".$arrValues[0]."', 10) && V{$key}[i] <= parseInt('".$arrValues[1]."', 10));";
                                     break;
 
@@ -2052,7 +2056,7 @@ class formsForm extends data_object
                             {
                                 switch($objFieldVar->fields['format'])
                                 {
-                                    case 'int':
+                                    case 'integer':
                                         $strJsCond .= "C{$key} = C{$key} || (V{$key}[i] == parseInt('".$strValue."', 10));";
                                     break;
 
@@ -2074,7 +2078,7 @@ class formsForm extends data_object
 
                             switch($objFieldVar->fields['format'])
                             {
-                                case 'int':
+                                case 'integer':
                                     $strJsCond .= "C{$key} = C{$key} || (V{$key}[i] {$row['op']} parseInt('".$strValue."', 10));";
                                 break;
 

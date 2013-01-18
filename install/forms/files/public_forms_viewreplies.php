@@ -389,6 +389,8 @@ echo $skin->open_simplebloc($objForm->fields['label'].' ('._FORMS_VIEWLIST.')', 
                     <td align="left" nowrap>
                         <a title="Ouvrir" href="<?php echo ploopi_urlencode("admin.php?op=forms_reply_display&forms_id={$objForm->fields['id']}&record_id={$intReplyId}"); ?>"><img alt="ouvrir" border="0" src="./modules/forms/img/ico_display.png"></a>
                         <?php
+                        ploopi_print_r($rowData);
+
                         // Droit de modif d'un enregistrement
                         if (ploopi_isadmin() || (
                                 ploopi_isactionallowed(_FORMS_ACTION_ADDREPLY) && (
