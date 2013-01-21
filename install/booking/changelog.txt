@@ -1,3 +1,9 @@
+== Module BOOKING - version 1.0.3a ====================================================
+
+2013-01-21  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+* Correction d'un notice
+
 == Module BOOKING - version 1.0.3 ====================================================
 
 2011-10-14  Corinne Leclaire ~ SZSIC Metz
