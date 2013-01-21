@@ -104,10 +104,10 @@ switch($ploopi_op)
                     ploopi_module_workspace mw
             WHERE   w.id = mw.id_workspace
             AND     w.id IN (".ploopi_viewworkspaces_inv().")
-            AND     w.backoffice = 1
             AND     mw.id_module = {$_SESSION['ploopi']['moduleid']}
             ORDER BY w.depth, w.label
         ");
+
 
         while ($row = $db->fetchrow($rs))
         {
@@ -122,58 +122,61 @@ switch($ploopi_op)
             }
         }
 
-        $cleanedfilter = $db->addslashes($_GET['ploopi_share_userfilter']);
-        $userfilter = "(u.login LIKE '%{$cleanedfilter}%' OR u.firstname LIKE '%{$cleanedfilter}%' OR u.lastname LIKE '%{$cleanedfilter}%')";
+        if (!empty($list['workspaces'])) {
 
-        // recherche des utilisateurs
-        $query_u =  "
-                    SELECT      distinct(u.id), u.login, u.firstname, u.lastname, wu.id_workspace
-                    FROM        ploopi_user u
+            $cleanedfilter = $db->addslashes($_GET['ploopi_share_userfilter']);
+            $userfilter = "(u.login LIKE '%{$cleanedfilter}%' OR u.firstname LIKE '%{$cleanedfilter}%' OR u.lastname LIKE '%{$cleanedfilter}%')";
 
-                    INNER JOIN  ploopi_workspace_user wu
-                    ON          wu.id_user = u.id
-                    AND         wu.id_workspace IN (".implode(',',array_keys($list['workspaces'])).")
+            // recherche des utilisateurs
+            $query_u =  "
+                        SELECT      distinct(u.id), u.login, u.firstname, u.lastname, wu.id_workspace
+                        FROM        ploopi_user u
 
-                    INNER JOIN  ploopi_module_workspace mw
-                    ON          mw.id_workspace = wu.id_workspace
-                    AND         mw.id_module = {$_SESSION['ploopi']['moduleid']}
-                    WHERE       {$userfilter}
+                        INNER JOIN  ploopi_workspace_user wu
+                        ON          wu.id_user = u.id
+                        AND         wu.id_workspace IN (".implode(',',array_keys($list['workspaces'])).")
 
-                    ORDER BY    u.lastname, u.firstname
-                    ";
+                        INNER JOIN  ploopi_module_workspace mw
+                        ON          mw.id_workspace = wu.id_workspace
+                        AND         mw.id_module = {$_SESSION['ploopi']['moduleid']}
+                        WHERE       {$userfilter}
 
-        // recherche des utilisateurs de groupes
-        $query_g =  "
-                    SELECT      distinct(u.id), u.login, u.firstname, u.lastname, wg.id_group, wg.id_workspace
-                    FROM        ploopi_user u
+                        ORDER BY    u.lastname, u.firstname
+                        ";
 
-                    INNER JOIN  ploopi_group_user gu
-                    ON          gu.id_user = u.id
+            // recherche des utilisateurs de groupes
+            $query_g =  "
+                        SELECT      distinct(u.id), u.login, u.firstname, u.lastname, wg.id_group, wg.id_workspace
+                        FROM        ploopi_user u
 
-                    INNER JOIN  ploopi_workspace_group wg
-                    ON          wg.id_group = gu.id_group
-                    AND         wg.id_workspace IN (".implode(',',array_keys($list['workspaces'])).")
+                        INNER JOIN  ploopi_group_user gu
+                        ON          gu.id_user = u.id
 
-                    INNER JOIN  ploopi_module_workspace mw
-                    ON          mw.id_workspace = wg.id_workspace
-                    AND         mw.id_module = {$_SESSION['ploopi']['moduleid']}
-                    WHERE       {$userfilter}
+                        INNER JOIN  ploopi_workspace_group wg
+                        ON          wg.id_group = gu.id_group
+                        AND         wg.id_workspace IN (".implode(',',array_keys($list['workspaces'])).")
 
-                    ORDER BY    u.lastname, u.firstname
-                    ";
+                        INNER JOIN  ploopi_module_workspace mw
+                        ON          mw.id_workspace = wg.id_workspace
+                        AND         mw.id_module = {$_SESSION['ploopi']['moduleid']}
+                        WHERE       {$userfilter}
 
-        $db->query($query_u);
-        while ($fields = $db->fetchrow())
-        {
-            $list['users'][$fields['id']] = array('id' => $fields['id'], 'login' => $fields['login'], 'lastname' => $fields['lastname'], 'firstname' => $fields['firstname']);
-            $list['workspaces'][$fields['id_workspace']]['users'][$fields['id']] = $fields['id'];
-        }
+                        ORDER BY    u.lastname, u.firstname
+                        ";
 
-        $db->query($query_g);
-        while ($fields = $db->fetchrow())
-        {
-            $list['users'][$fields['id']] = array('id' => $fields['id'], 'login' => $fields['login'], 'lastname' => $fields['lastname'], 'firstname' => $fields['firstname']);
-            $list['groups'][$fields['id_group']]['users'][$fields['id']] = $fields['id'];
+            $db->query($query_u);
+            while ($fields = $db->fetchrow())
+            {
+                $list['users'][$fields['id']] = array('id' => $fields['id'], 'login' => $fields['login'], 'lastname' => $fields['lastname'], 'firstname' => $fields['firstname']);
+                $list['workspaces'][$fields['id_workspace']]['users'][$fields['id']] = $fields['id'];
+            }
+
+            $db->query($query_g);
+            while ($fields = $db->fetchrow())
+            {
+                $list['users'][$fields['id']] = array('id' => $fields['id'], 'login' => $fields['login'], 'lastname' => $fields['lastname'], 'firstname' => $fields['firstname']);
+                $list['groups'][$fields['id_group']]['users'][$fields['id']] = $fields['id'];
+            }
         }
 
         if (!sizeof($list['users']) && !sizeof($list['groups']))
