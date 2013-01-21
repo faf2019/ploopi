@@ -81,7 +81,7 @@ if ($booDateModify) // modification de la date de visualisation
     if (isset($arrSearchPattern['booking_week']) && $arrSearchPattern['booking_week'] > 52) $arrSearchPattern['booking_week'] = date('W', mktime(0, 0, 0, 12, 28, $arrSearchPattern['booking_year']));
 
     // Contrôle de la validité de numéro de jour (cas ou l'on remonte d'un mois et que le jour sélectionné est > 28)
-    if ($arrSearchPattern['booking_day'] > 28)
+    if (isset($arrSearchPattern['booking_day']) && $arrSearchPattern['booking_day'] > 28)
     {
         $intMax = date('t', mktime(0, 0, 0, $arrSearchPattern['booking_month'], 1, $arrSearchPattern['booking_year']));
         if ($arrSearchPattern['booking_day'] > $intMax) $arrSearchPattern['booking_day'] = $intMax;

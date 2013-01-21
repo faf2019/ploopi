@@ -1,3 +1,9 @@
+== Module BOOKING - version 1.0.4 ====================================================
+
+2013-01-21  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+* Correction d'un notice
+
 == Module BOOKING - version 1.0.3 ====================================================
 
 2011-10-14  Corinne Leclaire ~ SZSIC Metz
@@ -47,14 +53,14 @@
 
 2010-03-26  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Correction d'un bug lors de la suppression d'une demande en frontoffice. Si l'encodage des url était activé, l'utilisateur était redirigé vers le backoffice. 
+ * Correction d'un bug lors de la suppression d'une demande en frontoffice. Si l'encodage des url était activé, l'utilisateur était redirigé vers le backoffice.
 
 == Module BOOKING - version 0.9.9 ====================================================
 
 2010-03-22  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Corrections sur l'appel des calendriers 
- 
+ * Corrections sur l'appel des calendriers
+
 == Module BOOKING - version 0.9.2g ====================================================
 
 2010-01-27  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
@@ -99,7 +105,7 @@
 
  * Intégration et compatibilité Ploopi 1.5
  * Optimisations dans la navigation par date (mois/semaine/jour)
- 
+
 == Module BOOKING - version 0.9.1 ====================================================
 
 2009-04-09  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
@@ -145,7 +151,7 @@
 
  * Mise en place des droits de validation/visualisation des données
  * Nouvelle mise en forme des options de validation : valider/refuser/supprimer
- * Ajout d'un champ "commentaire" sur chaque détail d'événement 
+ * Ajout d'un champ "commentaire" sur chaque détail d'événement
  * Envoi de mails sur annulation/validation d'une demande (adresses complémentaires)
  * Correctifs d'interface avec IE
 
@@ -162,7 +168,7 @@
 
  * Correction d'un bug dans la classe "booking_resource" (chargement des espaces sélectionnés)
  * Ajout de paramètres de taille pour l'affichage frontoffice du planning (objets "WCE")
- 
+
 == Module BOOKING - version 0.5 ====================================================
 
 2008-12-09  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
@@ -185,7 +191,7 @@
 
  * Création d'une classe "calendar" permettant d'afficher un planning mensuel
  * Création d'une interface de consultation / réservation en backoffice
- 
+
  == Module BOOKING - version 0.1 ====================================================
 
 2008-11-17  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

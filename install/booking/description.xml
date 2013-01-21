@@ -2,9 +2,9 @@
 <ploopi>
     <moduletype>
         <label>booking</label>
-        <version>1.0.3</version>
+        <version>1.0.4</version>
         <author>Ovensia</author>
-        <date>20111014000000</date>
+        <date>20130121000000</date>
         <description>Gestion de réservation</description>
       <paramtype>
          <name>booking_front_planning_width</name>
@@ -34,7 +34,7 @@
             <value>0</value>
             <displayed_value>non</displayed_value>
          </paramchoice>
-      </paramtype>      
+      </paramtype>
       <action>
             <id_action>10</id_action>
             <label>Gérer les types de ressources</label>
