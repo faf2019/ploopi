@@ -169,6 +169,7 @@ if ($_SESSION['ploopi']['connected'])
             case 'forms_clone':
                 ploopi_init_module('forms');
 
+
                 if (!ploopi_isactionallowed(_FORMS_ACTION_ADMIN)) ploopi_redirect('admin.php');
 
                 include_once './include/classes/query.php';
@@ -182,14 +183,26 @@ if ($_SESSION['ploopi']['connected'])
 
                     if (isset($_GET['data']) && $_GET['data'] == 'true')
                     {
-                        // Copie les données
-                        $objQuerySel = new ploopi_query_select();
-                        $objQuerySel->add_from($objForm->getDataTableName());
+                        $strSrcTable = $objForm->getDataTableName();
+                        $strCloneTable = $objFormClone->getDataTableName();
 
-                        $objQuery = new ploopi_query_insert();
-                        $objQuery->set_table($objFormClone->getDataTableName());
-                        $objQuery->add_raw($objQuerySel->get_sql());
-                        $objQuery->execute();
+                        // Extraction de la structure
+                        $db->query("SHOW CREATE TABLE `{$strSrcTable}`");
+                        if ($row = $db->fetchrow()) {
+
+                            $strCreateTable = preg_replace("@^CREATE TABLE `{$strSrcTable}`@i", "CREATE TABLE `{$strCloneTable}`", $row['Create Table']);
+
+                            // Suppression de la table de destination
+                            $db->query("DROP TABLE IF EXISTS `{$strCloneTable}`");
+
+                            // Création de la table de destination
+                            $db->query($strCreateTable);
+
+                            // Copie des données
+                            $db->query("INSERT INTO `{$strCloneTable}` SELECT * FROM `{$strSrcTable}`");
+
+                        }
+
                     }
 
                     // Renvoi vers le clone

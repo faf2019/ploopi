@@ -195,7 +195,7 @@ class formsForm extends data_object
 
             // Récupération du bon groupe (le clone)
             if (isset($arrGroups[$objClone->fields['id_group']])) $objClone->fields['id_group'] = $arrGroups[$objClone->fields['id_group']]->fields['id'];
-            $objClone->save();
+            $objClone->quicksave();
 
             $arrFields[$obj->fields['id']] = $objClone;
         }
@@ -231,17 +231,25 @@ class formsForm extends data_object
      * @return int indentifiant du formulaire
      */
 
-    public function save($booExport = true)
+    public function save($booUpdateTable = true)
     {
         $booIsNew = $this->isnew();
 
         $res = parent::save();
 
-        if ($booIsNew) $this->generateTable();
+        if ($booIsNew && $booUpdateTable) $this->generateTable();
         $this->updateMetabase();
 
         return $res;
     }
+
+    /**
+     * Enregistre le formulaire sans traitement
+     *
+     * @return int indentifiant du formulaire
+     */
+
+    public function quicksave() { return parent::save(); }
 
     /**
      * Supprime le formulaire
@@ -552,6 +560,7 @@ class formsForm extends data_object
                 $objQuery->add_select('pw.label as `workspace_label`');
                 $objQuery->add_select('pw.code as `workspace_code`');
             }
+
             if ($booExport || $this->fields['option_displayip']) $objQuery->add_select('rec.`ip`');
         }
 

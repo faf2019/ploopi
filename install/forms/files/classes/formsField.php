@@ -235,6 +235,9 @@ class formsField extends data_object
         if ($booUpdateTable && !empty($this->fields['fieldname']))
         {
 
+            // Lecture du type actuel du champ
+            $strType = $this->getSqlType();
+
             $objForm = new formsForm();
             if ($objForm->open($this->fields['id_form']))
             {
@@ -243,16 +246,13 @@ class formsField extends data_object
                     /**
                      * Ajout du champ physique
                      */
-                    $db->query("ALTER TABLE `".$objForm->getDataTableName()."` ADD `{$this->fields['fieldname']}` ".$this->getSqlType());
+                    $db->query("ALTER TABLE `".$objForm->getDataTableName()."` ADD `{$this->fields['fieldname']}` {$strType}");
                 }
                 else
                 {
                     /**
                      * Mise à jour du champ physique
                      */
-
-                    // Lecture du type actuel du champ
-                    $strType = $this->getSqlType();
 
                     // Modification de la structure si changement de nom ou de type
                     if ($this->_strOriginalFieldName != $this->fields['fieldname'] || $this->_strOriginalType != $strType)
