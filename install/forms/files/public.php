@@ -104,7 +104,7 @@ switch($op)
             if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open($_GET['forms_id']))
             {
                 if (ploopi_set_flag('forms_nbclick', $_GET['forms_id'])) $objForm->fields['viewed']++;
-                $objForm->save(false);
+                $objForm->quicksave();
 
                 include './modules/forms/public_forms_display.php';
             }
