@@ -426,6 +426,7 @@ if (sizeof($arrSize) == 2 && is_numeric($arrSize[0]) && is_numeric($arrSize[1]))
 
             case 'week':
             case 'day':
+            case 'today':
                 $strUsers = '';
                 if (!empty($arrEvent['res']))
                 {
@@ -461,6 +462,25 @@ if (sizeof($arrSize) == 2 && is_numeric($arrSize[0]) && is_numeric($arrSize[1]))
         }
 
 
+        // Options standards pour tous (onclick)
+        $arrOptions = array(
+            'strHref' => 'javascript:void(0);',
+            'strOnClick' => "ploopi_xmlhttprequest_topopup('450', event, 'popup_planning_event', 'admin-light.php', '".ploopi_queryencode("ploopi_op=planning_event_detail_open&planning_event_detail_id={$arrEvent['ed_id']}")."');", // onclick
+        );
+
+        // Options avancées pour ceux qui peuvent modifier le planning
+        if (ploopi_isactionallowed(_PLANNING_ADD_EVENT))
+        {
+            $arrOptions = array_merge($arrOptions, array(
+                'strOnClose' => "if (confirm('Êtes vous certain de vouloir supprimer cet événement ?')) ploopi_xmlhttprequest_todiv('admin-light.php', '".ploopi_queryencode("ploopi_op=planning_event_detail_delete&planning_event_detail_id={$arrEvent['ed_id']}")."', 'planning_main'); ploopi_hidepopup('popup_planning_event');",
+                'arrOnDrop' => array(
+                    'url' => ploopi_urlencode("admin-light.php?ploopi_op=planning_event_detail_quicksave&planning_event_detail_id={$arrEvent['ed_id']}"),
+                    'element_id' => 'planning_main'
+                )
+            ));
+        }
+
+
         if ($arrSearchPattern['planning_channels'])
         {
             if (!empty($arrEvent['res']))
@@ -480,16 +500,9 @@ if (sizeof($arrSize) == 2 && is_numeric($arrSize[0]) && is_numeric($arrSize[1]))
                                     '<time_begin> / <time_end>',
                                     $strContent,
                                     $strTypeResource[0].$intIdResource,
-                                    array(
-                                        'strColor' => $arrResource['color'],
-                                        'strHref' => 'javascript:void(0);',
-                                        'strOnClick' => "ploopi_xmlhttprequest_topopup('450', event, 'popup_planning_event', 'admin-light.php', '".ploopi_queryencode("ploopi_op=planning_event_detail_open&planning_event_detail_id={$arrEvent['ed_id']}")."');", // onclick
-                                        'strOnClose' => "if (confirm('Êtes vous certain de vouloir supprimer cet événement ?')) ploopi_xmlhttprequest_todiv('admin-light.php', '".ploopi_queryencode("ploopi_op=planning_event_detail_delete&planning_event_detail_id={$arrEvent['ed_id']}")."', 'planning_main'); ploopi_hidepopup('popup_planning_event');",
-                                        'arrOnDrop' => array(
-                                            'url' => ploopi_urlencode("admin-light.php?ploopi_op=planning_event_detail_quicksave&planning_event_detail_id={$arrEvent['ed_id']}"),
-                                            'element_id' => 'planning_main'
-                                        )
-                                    )
+                                    array_merge($arrOptions, array(
+                                        'strColor' => $arrResource['color']
+                                    ))
                                 )
                             );
                         }
@@ -506,15 +519,7 @@ if (sizeof($arrSize) == 2 && is_numeric($arrSize[0]) && is_numeric($arrSize[1]))
                     '<time_begin> / <time_end>',
                     $strContent,
                     '',
-                    array(
-                        'strHref' => 'javascript:void(0);',
-                        'strOnClick' => "ploopi_xmlhttprequest_topopup('450', event, 'popup_planning_event', 'admin-light.php', '".ploopi_queryencode("ploopi_op=planning_event_detail_open&planning_event_detail_id={$arrEvent['ed_id']}")."');", // onclick
-                        'strOnClose' => "if (confirm('Êtes vous certain de vouloir supprimer cet événement ?')) ploopi_xmlhttprequest_todiv('admin-light.php', '".ploopi_queryencode("ploopi_op=planning_event_detail_delete&planning_event_detail_id={$arrEvent['ed_id']}")."', 'planning_main'); ploopi_hidepopup('popup_planning_event');",
-                        'arrOnDrop' => array(
-                            'url' => ploopi_urlencode("admin-light.php?ploopi_op=planning_event_detail_quicksave&planning_event_detail_id={$arrEvent['ed_id']}"),
-                            'element_id' => 'planning_main'
-                        )
-                    )
+                    $arrOptions
                 )
             );
         }
