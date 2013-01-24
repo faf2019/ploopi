@@ -1,3 +1,10 @@
+== Module Planning - version 0.7.9d ====================================================
+
+2013-01-24  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+* Correction sur les droits de modification/suppression pour un utilisateur sans rôle
+* Corrections d'affichage
+
 == Module Planning - version 0.7.9c ====================================================
 
 2011-02-17 ~ HeXad  <xavier@hexad.fr>

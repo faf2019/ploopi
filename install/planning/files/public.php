@@ -37,7 +37,7 @@ echo $skin->open_simplebloc('Planning');
 <? include_once './modules/planning/public_planning.php'; ?>
 </div>
 <?
-echo $skin->close_simplebloc(); 
+echo $skin->close_simplebloc();
 
 /**
  * Affichage du popup de sélection des ressources
@@ -46,7 +46,7 @@ ob_start();
 ?>
 <div id="planning_ressource_list">
 <form id="planning_resource_list_form" action="<? echo ploopi_urlencode('admin-light.php?ploopi_op=planning_setresources'); ?>" method="post" onsubmit="javascript:ploopi_xmlhttprequest_submitform($('planning_resource_list_form'), 'planning_main'); return false;">
-<?    
+<?
 foreach ($arrResources as $strResourceType => $arrResourceType)
 {
     if (!empty($arrResourceType))
@@ -89,25 +89,25 @@ foreach ($arrResources as $strResourceType => $arrResourceType)
     <strong>Rechercher un événement</strong>
 </p>
 <p class="ploopi_va">
-	<input type="text" title="Champ de recherche" alt="Champ de recherche" class="text" style="width:145px;" name="query_string" value="" />
-	<input type="submit" title="Bouton pour valider la recherche" class="button" style="width:30px;" value="go" />
+    <input type="text" title="Champ de recherche" alt="Champ de recherche" class="text" style="width:145px;" name="query_string" value="" />
+    <input type="submit" title="Bouton pour valider la recherche" class="button" style="width:30px;" value="go" />
 </p>
 </form>
 </div>
 
 <div id="planning_search_result">
 </div>
-<?    
+<?
 $content = ob_get_contents();
 ob_end_clean();
 
 echo $skin->open_popup(
-    'Ressources affichées', 
-    $content, 
-    'popup_planning', 
+    'Ressources affichées',
+    $content,
+    'popup_planning',
     array(
         'intWidth' => 200,
-        'intPosx' => '$(\'planning_display\').viewportOffset().left +  $(\'planning_display\').getWidth() - 206', 
+        'intPosx' => '$(\'planning_display\').viewportOffset().left +  $(\'planning_display\').getWidth() - 206',
         'intPosy' => '$(\'planning_display\').viewportOffset().top + 20',
         'booCentered' => false
     )
