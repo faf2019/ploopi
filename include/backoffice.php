@@ -302,7 +302,7 @@ else
  * Gestion du cas où on demande à l'utilisateur de compléter son profil
  */
 
-if ($_SESSION['ploopi']['updateprofile']) {
+if (!empty($_SESSION['ploopi']['updateprofile'])) {
     $ploopi_additional_javascript .= "
         Event.observe(window, 'load', function() {
             ploopi_showpopup('', 750, null, true, 'system_popup_update_profile')
