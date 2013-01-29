@@ -68,7 +68,7 @@ $arrPlanningSize =
         '800x650',
         '1000x800',
         '1200x975'
-    );   
+    );
 
 /**
  * Retourne la liste des ressources disponibles (utilisateurs/groupes)
@@ -81,9 +81,9 @@ function planning_get_resources()
     include_once './include/classes/workspace.php';
 
     $arrResource = array('user' => array(), 'group' => array());
-    
+
     $arrWorkspaces = explode(',', ploopi_viewworkspaces());
-    
+
     foreach($arrWorkspaces as $intIdWorkspace)
     {
         $objWorkspace = new workspace();
@@ -110,43 +110,43 @@ function planning_get_resources()
             }
         }
     }
-    
+
     return $arrResource;
 }
 
 function planning_get_events($arrResources, $intTimepstpBegin = null, $intTimepstpEnd = null)
 {
     global $db;
-    
+
     $arrEvents = array();
-    
+
     $arrWhere = array();
-    
+
     $arrWhere['ed'][] = 'ed.id_event = e.id';
     if (!empty($intTimepstpBegin)) $arrWhere['ed'][] = "ed.timestp_end >= $intTimepstpBegin";
     if (!empty($intTimepstpEnd)) $arrWhere['ed'][] = "ed.timestp_begin <= $intTimepstpEnd";
-    
+
     /**
      * Selection des événements (+ détails)
-     */    
+     */
     $db->query("
         SELECT      e.*,
                     ed.id as ed_id,
                     ed.timestp_begin,
                     ed.timestp_end
-                
+
         FROM        ploopi_mod_planning_event e
-        
+
         INNER JOIN  ploopi_mod_planning_event_detail ed
         ON          ".implode(' AND ', $arrWhere['ed'])."
-        
+
         WHERE       e.id_module = {$_SESSION['ploopi']['moduleid']}
         AND         e.id_workspace IN (".ploopi_viewworkspaces().")
-        
+
         ORDER BY    ed.timestp_begin, ed.timestp_end
     ");
-    
-    while ($row = $db->fetchrow()) 
+
+    while ($row = $db->fetchrow())
     {
         if ($row['timestp_begin'] > $row['timestp_end'])
         {
@@ -154,56 +154,76 @@ function planning_get_events($arrResources, $intTimepstpBegin = null, $intTimeps
             $row['timestp_begin'] = $row['timestp_end'];
             $row['timestp_end'] = $intTs;
         }
-            
+
         $arrEvents[$row['ed_id']] = $row;
     }
-    
+
     /**
      * Selection des ressources
-     */    
+     */
     if (!empty($arrEvents))
     {
         $db->query("
-            SELECT      edr.* 
-                    
+            SELECT      edr.*
+
             FROM        ploopi_mod_planning_event_detail_resource edr
-            
+
             WHERE       edr.id_event_detail IN (".implode(',', array_keys($arrEvents)).")
-            
+
             ORDER BY    edr.type_resource, edr.id_resource
         ");
-    
-        while ($row = $db->fetchrow()) 
+
+        while ($row = $db->fetchrow())
         {
             $arrEvents[$row['id_event_detail']]['res'][$row['type_resource']][$row['id_resource']] = $row['id_resource'];
             /*$arrEvents[$row['id_event_detail']]['res'][] = array(
-                'id_resource' => $row['id_resource'], 
+                'id_resource' => $row['id_resource'],
                 'type_resource' => $row['type_resource']
             );*/
         }
     }
-    
+
     /**
      * Filtrage en fonction des ressources
      */
     $arrFilteredEvents = array();
-    
+
     foreach($arrEvents as $intIdEvent => $arrEvent)
     {
         if (isset($arrEvent['res']))
         {
             if ((isset($arrEvent['res']['group']) && isset($arrResources['group']) && count(array_intersect($arrEvent['res']['group'], $arrResources['group']))) || (isset($arrEvent['res']['user']) && isset($arrResources['user']) && count(array_intersect($arrEvent['res']['user'], $arrResources['user']))))
-            { 
+            {
                 $arrFilteredEvents[$intIdEvent] = $arrEvent;
             }
-        }        
+        }
     }
-    
-    
+
+
     unset($arrEvents);
     unset($arrWhere);
-    
+
     return $arrFilteredEvents;
 }
 
+/**
+ * Lecture du cookie de recherche
+ */
+
+function planning_getcookie()
+{
+    $arrSearchPattern = array();
+
+    // Lecture cookie
+    ploopi_unset_error_handler();
+    if (isset($_COOKIE["planning_request{$_SESSION['ploopi']['moduleid']}"])) $arrSearchPattern = unserialize(gzuncompress($_COOKIE["planning_request{$_SESSION['ploopi']['moduleid']}"]));
+    ploopi_set_error_handler();
+
+    return $arrSearchPattern;
+}
+
+function planning_setcookie($arrSearchPattern)
+{
+    setcookie("planning_request{$_SESSION['ploopi']['moduleid']}", gzcompress(serialize($arrSearchPattern), 9));
+}
 ?>
