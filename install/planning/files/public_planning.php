@@ -69,9 +69,7 @@ if (isset($_REQUEST['op']) && $_REQUEST['op'] == 'display_event' && !empty($_REQ
 else
 {
     // Lecture cookie
-    ploopi_unset_error_handler();
-    if (isset($_COOKIE["planning_request{$_SESSION['ploopi']['moduleid']}"])) $arrSearchPattern = unserialize(gzuncompress($_COOKIE["planning_request{$_SESSION['ploopi']['moduleid']}"]));
-    ploopi_set_error_handler();
+    $arrSearchPattern = planning_getcookie();
 
     // Lecture des paramètres
     if (isset($_REQUEST['planning_display_type'])) $arrSearchPattern['planning_display_type'] = $_REQUEST['planning_display_type'];
@@ -164,7 +162,7 @@ $arrSearchPattern['planning_year'] = date('Y', $arrSearchPattern['planning_virtu
 $arrSearchPattern['planning_day'] = date('j', $arrSearchPattern['planning_virtualdate']);
 
 // Sauvegarde cookie
-setcookie("planning_request{$_SESSION['ploopi']['moduleid']}", gzcompress(serialize($arrSearchPattern), 9));
+planning_setcookie($arrSearchPattern);
 
 $arrSize = explode('x', $arrSearchPattern['planning_size']);
 

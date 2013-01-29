@@ -2,9 +2,9 @@
 <ploopi>
     <moduletype>
         <label>planning</label>
-        <version>0.8.0</version>
+        <version>0.8.0a</version>
         <author>Ovensia</author>
-        <date>20130124000000</date>
+        <date>20130129000000</date>
         <description>Planning partagé</description>
         <paramtype>
             <name>planning_width</name>
