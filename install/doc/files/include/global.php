@@ -672,41 +672,30 @@ function doc_getrenderer($strExtension)
 
 /**
  * Retourne true si le dossier n'est pas modifiable
- * Règle générale : le dossier n'est modifiable que par son propriétaire ou le super admin ou celui qui a le rôle d'admin sur le module
- * Le dossier reste modifiable par son propriétaire même si le dossier parent est protégé
- * ?? Prendre en compte l'action de modification de dossier ?
+ * Modifiable par l'admin sys, le rôle admin, le propriétaire, accessible + role sup
  */
 function doc_folder_isreadonly($row, $action = null)
 {
     $booActionIsOk = is_null($action) || ploopi_isactionallowed($action);
 
-    return !(ploopi_isadmin() || ploopi_isactionallowed(_DOC_ACTION_ADMIN) || ($row['id_user'] == $_SESSION['ploopi']['userid'] && $booActionIsOk));
+    return !(ploopi_isadmin() || ploopi_isactionallowed(_DOC_ACTION_ADMIN) || $row['id_user'] == $_SESSION['ploopi']['userid'] || (doc_folder_isenabled($row) && $booActionIsOk));
 }
 
-
-/*
-function doc_folder_isreadonly($row, $row_parent = null)
+/**
+ * Retourne true si le dossier est accessible dans le contexte courant
+ * Equivalent de la méthode doc->isEnabled
+ */
+function doc_folder_isenabled($row)
 {
-    include_once './modules/doc/class_docfolder.php';
+    doc_getshare();
 
-    // on vérifie que l'utilisateur a bien le droit de modifier ce dossier (en fonction du statut du dossier et du dossier parent)
-    $booReadonlyContent = true;
-
-    if (!empty($row['id_folder']))
-    {
-        if (is_null($row_parent))
-        {
-            $objParent = new docfolder();
-            $objParent->open($row['id_folder']);
-            $row_parent = $objParent->fields;
-        }
-
-        $booReadonlyContent = doc_folder_contentisreadonly($row_parent);
-    }
-
-    return !(ploopi_isadmin() || ploopi_isactionallowed(_DOC_ACTION_ADMIN) || (!$booReadonlyContent || $row['id_user'] == $_SESSION['ploopi']['userid']));
+    return  $row['id_user'] == $_SESSION['ploopi']['userid'] // Propriétaire ?
+            || ploopi_isadmin() // Admin sys ?
+            || ploopi_isactionallowed(_DOC_ACTION_ADMIN) // Rôle admin ?
+            || ($row['foldertype'] == 'public' && in_array($row['id_workspace'], explode(',', ploopi_viewworkspaces()))) // Public pour l'espace courant ?
+            || ($row['foldertype'] == 'shared' &&  in_array($row['id'], $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['share']['folders'])); // Partagé pour l'utilisateur ?
 }
-*/
+
 
 /**
  * Retourne true si le contenu du dossier n'est pas modifiable
@@ -715,7 +704,7 @@ function doc_folder_isreadonly($row, $row_parent = null)
 function doc_folder_contentisreadonly($row, $action = null)
 {
     $booActionIsOk = is_null($action) || ploopi_isactionallowed($action);
-    
+
     $root = empty($row['id']);
 
     // On peut écrire dans le dossier si
@@ -723,50 +712,20 @@ function doc_folder_contentisreadonly($row, $action = null)
     // - pas racine & pas en lecture seule & actionOK
     // - propriétaire du dossier & actionOK
     // - admin du module
-    // - super admin 
+    // - super admin
     return !((((!$root && !$row['readonly']) || $row['id_user'] == $_SESSION['ploopi']['userid'] || ($root && ploopi_getparam('doc_rootwritable'))) && $booActionIsOk) || ploopi_isadmin() || ploopi_isactionallowed(_DOC_ACTION_ADMIN));
-    // return !(((!$row['readonly'] || $row['id_user'] == $_SESSION['ploopi']['userid']) && $booActionIsOk) || ploopi_isadmin() || ploopi_isactionallowed(_DOC_ACTION_ADMIN));
-    // return $row['readonly'] && $row['id_user'] != $_SESSION['ploopi']['userid'] && !ploopi_isadmin() && !ploopi_isactionallowed(_DOC_ACTION_ADMIN);
-    // return !(ploopi_isadmin() || ploopi_isactionallowed(_DOC_ACTION_ADMIN) || (!$row['readonly'] || $row['id_user'] == $_SESSION['ploopi']['userid']));
 }
 
 
 /**
  * Retourne true si le fichier n'est pas modifiable
- * Règle générale : Si l'attribut "readonly" est actif, seul le propriétaire, le super admin ou celui qui a le rôle d'admin du module peuvent modifier le fichier.
+ * Modifiable par l'admin sys, le rôle admin, le propriétaire, non readonly + role sup
  */
 
 function doc_file_isreadonly($row, $action = null)
 {
     $booActionIsOk = is_null($action) || ploopi_isactionallowed($action);
 
-    return !(((!$row['readonly'] || $row['id_user'] == $_SESSION['ploopi']['userid']) && $booActionIsOk) || ploopi_isadmin() || ploopi_isactionallowed(_DOC_ACTION_ADMIN));
-
-    // return $row['readonly'] && $row['id_user'] != $_SESSION['ploopi']['userid'] && !ploopi_isadmin() && !ploopi_isactionallowed(_DOC_ACTION_ADMIN);
-    // return !(ploopi_isadmin() || ploopi_isactionallowed(_DOC_ACTION_ADMIN) || ((!$booReadonlyContent && !$row['readonly']) || $row['id_user'] == $_SESSION['ploopi']['userid']));
+    return !(ploopi_isadmin() || ploopi_isactionallowed(_DOC_ACTION_ADMIN) || $row['id_user'] == $_SESSION['ploopi']['userid'] || ($booActionIsOk && !$row['readonly']));
 }
-
-
-/*
-function doc_file_isreadonly($row, $row_folder = null)
-{
-    include_once './modules/doc/class_docfolder.php';
-
-    $booReadonlyContent = false;
-
-    if (!empty($row['id_folder']))
-    {
-        if (is_null($row_folder))
-        {
-            $objParent = new docfolder();
-            $objParent->open($row['id_folder']);
-            $row_folder = $objParent->fields;
-        }
-
-        $booReadonlyContent = doc_folder_contentisreadonly($row_folder);
-    }
-
-     return !(ploopi_isadmin() || ploopi_isactionallowed(_DOC_ACTION_ADMIN) || ((!$booReadonlyContent && !$row['readonly']) || $row['id_user'] == $_SESSION['ploopi']['userid']));
-}
-**/
 ?>
