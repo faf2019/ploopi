@@ -345,7 +345,15 @@ function webedit_getheadings($moduleid = -1)
 
     $arrHeadings = array('list' => array(), 'tree' => array(), 'feed_enabled' => false, 'subscription_enabled' => false);
 
-    $select = "SELECT * FROM ploopi_mod_webedit_heading WHERE id_module = {$moduleid} ORDER BY depth, position";
+    $select = "
+        SELECT      wh.*, count(distinct(s.id)) as shares
+        FROM        ploopi_mod_webedit_heading wh
+        LEFT JOIN   ploopi_share s ON s.id_record = wh.id AND s.id_module = wh.id_module AND s.id_object = "._WEBEDIT_OBJECT_HEADING."
+        WHERE       wh.id_module = {$moduleid}
+        GROUP BY    wh.id
+        ORDER BY    wh.depth, wh.position
+    ";
+
     $result = $db->query($select);
     while ($fields = $db->fetchrow($result))
     {
@@ -364,7 +372,16 @@ function webedit_getheadings($moduleid = -1)
             $arrHeadings['list'][$fields['id']]['herited_template'] = 1;
         }
 
-        if ($arrHeadings['list'][$fields['id']]['private']) $arrHeadings['list'][$fields['id']]['herited_private'] = $fields['id'];
+        if ($arrHeadings['list'][$fields['id']]['private']) 
+        {
+            // Cas particulier si aucun partage et qu'il existe un parent privé, on hérite des partages du parent
+            if ($fields['shares'] == 0 && isset($arrHeadings['list'][$fields['id_heading']]) && $arrHeadings['list'][$fields['id_heading']]['private']) 
+            {
+                $arrHeadings['list'][$fields['id']]['private_visible'] = $arrHeadings['list'][$fields['id_heading']]['private_visible'];
+                $arrHeadings['list'][$fields['id']]['herited_private'] = $arrHeadings['list'][$fields['id_heading']]['herited_private'];
+            }
+            else $arrHeadings['list'][$fields['id']]['herited_private'] = $fields['id'];
+        }
 
         if (!$arrHeadings['list'][$fields['id']]['private'] && isset($arrHeadings['list'][$fields['id_heading']]) && $arrHeadings['list'][$fields['id_heading']]['private'])
         {

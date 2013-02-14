@@ -1,3 +1,9 @@
+== Module WebEdit - version 2.5.0c ============================================
+
+2013-02-14  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+ * Correction d'un problème sur l'application de l'héritage des droits d'accès dans le cas d'une rubrique cochée privée mais sans sélection d'utilisateurs
+
 == Module WebEdit - version 2.5.0b ============================================
 
 2012-08-07  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
