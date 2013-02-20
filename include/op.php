@@ -268,11 +268,18 @@ if (isset($ploopi_op))
                 $year = $_REQUEST['calendar_year'];
             }
 
-            if (empty($_SESSION['calendar']['selected_day']))
+                // Vérifications basiques
+            if (empty($_SESSION['calendar']['selected_day']) || empty($_SESSION['calendar']['selected_year']) || empty($_SESSION['calendar']['selected_month']) || empty($_SESSION['calendar']['selected_day']) || $_SESSION['calendar']['selected_month'] < 1 || $_SESSION['calendar']['selected_month'] > 12 || $_SESSION['calendar']['selected_day'] < 1 || $_SESSION['calendar']['selected_day'] > 31)
             {
                 $_SESSION['calendar']['selected_month'] = date('n');
                 $_SESSION['calendar']['selected_day'] = date('d');
                 $_SESSION['calendar']['selected_year'] = date('Y');
+            }
+
+            if (empty($month) || empty($year) || $month < 1 || $month > 12)
+            {
+                $month = date('n');
+                $year = date('Y');
             }
 
             settype($day,'int');
