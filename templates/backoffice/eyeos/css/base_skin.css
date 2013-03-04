@@ -1,7 +1,5 @@
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2009 Ovensia
-    Copyright (c) 2008 HeXad
+    Copyright (c) 2007-2012 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -29,7 +27,6 @@ position:absolute;
 top:0px;
 left:0px;
 width:200px;
-overflow:hidden;
 }
 
 .calendardiv {
@@ -45,14 +42,15 @@ width:150px;
 
 .pagetitle {
 border:1px solid #222;
--moz-border-radius:5px;
+border-radius:3px;
 color:#fff;
-background-image: url(../img/template/pagetitle_background.png);
-/*background:#0088ff;*/
+background-color:rgba(0,0,0,0.5);
 font-size:12px;
 font-weight:bold;
 padding:4px 10px;
-margin-bottom:2px;
+margin-bottom:4px;
+box-shadow:0 0 3px rgba(0,0,0,0.7);
+letter-spacing:1px;
 }
 
 .pagetitle p {
@@ -63,11 +61,15 @@ padding-left:6px;
 
 .simplebloc_title {
 color:#fff;
-background-image: url(../img/template/bloctitle_background.png);
-border:1px solid #222;
--moz-border-radius-topleft:5px;
--moz-border-radius-topright:5px;
+background: linear-gradient(left, rgba(37,70,78,1) 0%, rgba(37,70,78,1) 25%, rgba(37,70,78,0.8) 100%);
+background: -moz-linear-gradient(left, rgba(37,70,78,1) 0%, rgba(37,70,78,1) 25%, rgba(37,70,78,0.8) 100%);
+background: -webkit-linear-gradient(left, rgba(37,70,78,1) 0%, rgba(37,70,78,1) 25%, rgba(37,70,78,0.8) 100%);
+border-top:1px solid #fff;
+border-left:1px solid #fff;
+border-right:1px solid #fff;
+border-radius:3px 3px 0 0;
 font-variant:small-caps;
+letter-spacing:1px;
 font-weight:bold;
 text-align:left;
 padding:2px 6px;
@@ -86,85 +88,96 @@ text-decoration:none;
 
 .simplebloc_content {
 position:relative;
-border-top:1px solid #222;
-border-left:1px solid #222;
-border-right:1px solid #222;
+border-top:1px solid #fff;
+border-left:1px solid #fff;
+border-right:1px solid #fff;
 background-color:#f0f0f0;
 overflow:auto;
 }
 
 .simplebloc {
-margin-bottom:2px;
+margin-top:4px;
+box-shadow:0 0 3px rgba(0,0,0,0.7);
 }
 
 .simplebloc_footer {
 height:5px;
-background-image: url(../img/template/bloctitle_background.png);
-border-bottom:1px solid #222;
-border-left:1px solid #222;
-border-right:1px solid #222;
--moz-border-radius-bottomleft:5px;
--moz-border-radius-bottomright:5px;
+background:rgba(37,70,78,0.9);
+border-bottom:1px solid #fff;
+border-left:1px solid #fff;
+border-right:1px solid #fff;
+border-radius:0 0 3px 3px;
 }
 
-
-select.select {
-border: 1px solid #b0b0b0;
-background: #fff;
+select,
+input,
+textarea {
+border-radius:3px;
+-moz-border-radius:3px;
+-webkit-border-radius:3px;
 color: #2c4056;
-padding: 3px;
-}
-
-select.select:focus {
-border: 1px solid #808080;
+padding: 4px;
+border: 1px solid rgba(0,0,0,0.5);
+box-shadow:inset 0 0 3px rgba(0,0,0,0.2);
+-moz-box-shadow:inset 0 0 3px rgba(0,0,0,0.2);
+-webkit-box-shadow:inset 0 0 3px rgba(0,0,0,0.2);
+background: linear-gradient(45deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.5) 100%);
+background: -moz-linear-gradient(45deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.5) 100%);
+background: -webkit-linear-gradient(45deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.5) 100%);
 }
 
 input.text {
-border: 1px solid #b0b0b0;
--moz-border-radius:5px;
-background: #fff;
-color: #2c4056;
-padding: 3px;
-height:16px;
+/* height:16px; */
 }
 
-input.text:focus {
-border: 1px solid #808080;
+input::-webkit-input-placeholder { color:#888; }
+input:-moz-placeholder { color:#888; }
+
+select:focus,
+input:focus,
+textarea:focus {
+box-shadow:inset 0 0 3px rgba(0,0,0,0.6);
+-moz-box-shadow:inset 0 0 3px rgba(0,0,0,0.6);
+-webkit-box-shadow:inset 0 0 3px rgba(0,0,0,0.6);
+background: linear-gradient(45deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.8) 100%);
+background: -moz-linear-gradient(45deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.8) 100%);
+background: -webkit-linear-gradient(45deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.8) 100%);
 }
 
-textarea.text {
-border: 1px solid #b0b0b0;
--moz-border-radius:5px;
-background: #fff;
-color: #2c4056;
-padding: 3px;
-}
-
-textarea.text:focus {
-border: 1px solid #808080;
-}
-
-input.flatbutton, input.button, button {
-border: 1px solid #a0a0a0;
--moz-border-radius:5px;
-background:#d0d0d0;
+input[type='submit'], input[type='button'], input[type='reset'], button {
+border: 1px solid rgba(0,0,0,0.5);
+border-radius:3px;
+-moz-border-radius:3px;
+-webkit-border-radius:3px;
+background: linear-gradient(top, rgba(230,230,230,0.9) 0%, rgba(200,200,200,1) 100%);
+background: -moz-linear-gradient(top, rgba(230,230,230,0.9) 0%, rgba(200,200,200,1) 100%);
+background: -webkit-linear-gradient(top, rgba(230,230,230,0.9) 0%, rgba(200,200,200,1) 100%);
+box-shadow: 0 0 2px rgba(0,0,0,0.3);
+-moz-box-shadow: 0 0 2px rgba(0,0,0,0.3);
+-webkit-box-shadow: 0 0 2px rgba(0,0,0,0.3);
 color: #2c4056;
 text-align:center;
 padding:3px;
 cursor: pointer;
 }
 
-input.flatbutton:hover, input.button:hover, button:hover {
-border: 1px solid #707070;
-background:#c0c0c0;
+input[type='submit']:hover, input[type='button']:hover, input[type='reset']:hover, button:hover {
+border: 1px solid rgba(0,0,0,0.7);
+box-shadow: 0 0 2px rgba(0,0,0,0.5);
+-moz-box-shadow: 0 0 2px rgba(0,0,0,0.5);
+-wevkit-box-shadow: 0 0 2px rgba(0,0,0,0.5);
+background: linear-gradient(top, rgba(200,200,200,1) 0%, rgba(230,230,230,0.9) 100%);
+background: -moz-linear-gradient(top, rgba(200,200,200,1) 0%, rgba(230,230,230,0.9) 100%);
+background: -webkit-linear-gradient(top, rgba(200,200,200,1) 0%, rgba(230,230,230,0.9) 100%);
 }
 
-input.flatbutton[type='submit'], input.button[type='submit'], button[type='submit'] {
+input[type='submit'], button[type='submit'] {
 font-weight:bold;
 }
 
+
 .toolbar {
-padding-bottom:2px;
+padding-bottom:4px;
 overflow:auto;
 }
 
@@ -214,8 +227,9 @@ display:block;
 float:left;
 border:1px solid #375f6a;
 -moz-border-radius:5px;
-margin-right:2px;
+margin-right:4px;
 background-color:#fff;
+box-shadow:0 0 3px rgba(0,0,0,0.7);
 }
 
 .toolbar_icon a {
@@ -262,8 +276,9 @@ display:block;
 float:left;
 border:1px solid #375f6a;
 -moz-border-radius:5px;
-margin-right:2px;
+margin-right:4px;
 background-color:#fff;
+box-shadow:0 0 3px rgba(0,0,0,0.7);
 }
 
 .toolbar_icon_sel a {
@@ -292,15 +307,20 @@ background-color:#4f8999;
 
 .tabs {
 border:1px solid #222;
--moz-border-radius:5px;
+border-radius:3px;
+-moz-border-radius:3px;
+-webkit-border-radius:3px;
 background-color:#375f6a;
-margin-bottom:2px;
+margin-bottom:4px;
 overflow:auto;
+box-shadow:0 0 3px rgba(0,0,0,0.7);
 }
 
 .tabs_inner {
 border:1px solid #4f8999;
--moz-border-radius:5px;
+border-radius:3px;
+-moz-border-radius:3px;
+-webkit-border-radius:3px;
 background-color:#375f6a;
 padding:2px;
 overflow:auto;
@@ -315,14 +335,24 @@ white-space:nowrap;
 -moz-user-select: none;
 -khtml-user-select: none;
 user-select: none;
-margin-right:1px;
--moz-border-radius:5px;
+border-radius:3px;
+-moz-border-radius:3px;
+-webkit-border-radius:3px;
+-moz-transition-property: background-color;
+-moz-transition-duration: 0.5s;
+-moz-transition-timing-function: ease;
+border:1px solid transparent;
 }
 
 .tabs a:hover {
+border:1px solid rgba(255,255,255,0.5);
 background-color:#4f8999;
-text-decoration:none;
 color:#fff;
+text-decoration:none;
+-moz-transition-duration: 0s;
+box-shadow:inset 0 0 1px rgba(0,0,0,0.5);
+-moz-box-shadow:inset 0 0 1px rgba(0,0,0,0.5);
+-webkit-box-shadow:inset 0 0 1px rgba(0,0,0,0.5);
 }
 
 .tabs a.selected {
@@ -523,12 +553,16 @@ div.ploopi_explorer_maintitle {
 div.ploopi_explorer_title {
     font-weight:bold;
     border-bottom:1px solid #b8b8b8;
-    background-color:#f0f0f0;
+    background: linear-gradient(top, rgba(250,250,250,1) 0%, rgba(220,220,220,1) 100%);
+    background: -moz-linear-gradient(top, rgba(250,250,250,1) 0%, rgba(220,220,220,1) 100%);
+    background: -webkit-linear-gradient(top, rgba(250,250,250,1) 0%, rgba(220,220,220,1) 100%);
     overflow:hidden;
 }
 
 div.ploopi_explorer_title a.ploopi_explorer_element_selected {
-    background-color:#c0c0c0;
+    background: linear-gradient(top, rgba(220,220,220,1) 0%, rgba(190,190,190,1) 100%);
+    background: -moz-linear-gradient(top, rgba(220,220,220,1) 0%, rgba(190,190,190,1) 100%);
+    background: -webkit-linear-gradient(top, rgba(220,220,220,1) 0%, rgba(190,190,190,1) 100%);
 }
 
 div.ploopi_explorer_column {
@@ -550,7 +584,7 @@ a.ploopi_explorer_element * {
 
 *.ploopi_explorer_element p {
     margin:0;
-    padding:2px 4px;
+    padding:3px 4px;
 }
 
 *.ploopi_explorer_element p img, *.ploopi_explorer_element p span, *.ploopi_explorer_element p a {
@@ -559,7 +593,9 @@ vertical-align: middle;
 }
 
 a.ploopi_explorer_element:hover {
-    background-color:#e0e0e0;
+    background: linear-gradient(top, rgba(220,220,220,1) 0%, rgba(190,190,190,1) 100%);
+    background: -moz-linear-gradient(top, rgba(220,220,220,1) 0%, rgba(190,190,190,1) 100%);
+    background: -webkit-linear-gradient(top, rgba(220,220,220,1) 0%, rgba(190,190,190,1) 100%);
     text-decoration:none;
 }
 
@@ -567,7 +603,6 @@ a.ploopi_explorer_link {
     display:block;
     overflow:hidden;
     text-decoration:none;
-    margin-top:1px;
 }
 
 a.ploopi_explorer_link:hover {
@@ -788,8 +823,7 @@ background: url(../img/template/tabs.png) 0 -20px no-repeat;
 .ploopi_generate_form h1,
 .ploopi_generate_form h2,
 .ploopi_generate_form h3,
-.ploopi_generate_form form,
-.ploopi_generate_form button{
+.ploopi_generate_form form{
     border:0;
     margin:0;
     padding:0;
@@ -835,23 +869,40 @@ background: url(../img/template/tabs.png) 0 -20px no-repeat;
     font-weight:normal;
 }
 
-.ploopi_generate_form label{
+
+.ploopi_generate_form > form > div > fieldset {
+    clear:both;
     display:block;
+    margin: 0;
+    padding: 0.2em;
+    margin: 0.2em;
+    border:1px solid #ccc;
+}
+
+.ploopi_generate_form > form > div > fieldset > legend {
+    padding:0 4px;
+    font-weight:bold;
+}
+
+.ploopi_generate_form > form > div > fieldset > div > label{
+    display:block;
+    position:relative;
     text-align:right;
     width:30%;
     float:left;
     clear:both;
     padding-right:10px;
+    padding-top:4px;
     -moz-user-select: none;
     -khtml-user-select: none;
     user-select: none;
 }
 
-.ploopi_generate_form label.required{
-    background:url(../img/forms/required.png) no-repeat right top;
+.ploopi_generate_form > form > div > fieldset > div > label.required{
+    background:url(../img/forms/required.png) no-repeat right 4px;
 }
 
-.ploopi_generate_form label span{
+.ploopi_generate_form > form > div > fieldset > div > label > span{
     color:#666;
     display:block;
     font-weight:normal;
@@ -859,20 +910,20 @@ background: url(../img/template/tabs.png) 0 -20px no-repeat;
     width:100%;
 }
 
-.ploopi_generate_form input,
-.ploopi_generate_form select,
-.ploopi_generate_form textarea{
+.ploopi_generate_form > form > div > fieldset > div > input,
+.ploopi_generate_form > form > div > fieldset > div > select,
+.ploopi_generate_form > form > div > fieldset > div > textarea{
     float:left;
-    border: 1px solid #b0b0b0;
-    -moz-border-radius:5px;
-    background: #fff;
-    color: #2c4056;
-    padding: 3px;
     width:60%;
     margin:2px 0 5px 0;
 }
 
-.ploopi_generate_form select option, .ploopi_generate_form select optgroup {
+.ploopi_generate_form > form > div > fieldset > div > input[type='checkbox'] {
+    width:auto;
+}
+
+.ploopi_generate_form > form > div > fieldset > div > select option,
+.ploopi_generate_form > form > div > fieldset > div > select optgroup {
     background: #f8f8f8;
 }
 
@@ -891,7 +942,7 @@ background: url(../img/template/tabs.png) 0 -20px no-repeat;
     color:#888;
 }
 
-.ploopi_generate_form span{
+.ploopi_generate_form > form > div > fieldset > div > span{
     display:block;
     float:left;
     margin:2px 0 5px 0;
@@ -899,10 +950,7 @@ background: url(../img/template/tabs.png) 0 -20px no-repeat;
 }
 
 
-.ploopi_generate_form span *{
-    width:auto;
-}
-.ploopi_generate_form span label{
+.ploopi_generate_form > form > div > fieldset > div > span > label{
     display:block;
     float:left;
     clear:none;
@@ -911,49 +959,29 @@ background: url(../img/template/tabs.png) 0 -20px no-repeat;
     width:auto;
 }
 
-.ploopi_generate_form span input{
+.ploopi_generate_form > form > div > fieldset > div > span > input{
     margin:2px 0;
-}
-
-.ploopi_generate_form fieldset {
-    clear:both;
-    display:block;
-    margin: 0;
-    padding: 0.2em;
-    margin: 0.2em;
-    border:1px solid #ccc;
-}
-
-.ploopi_generate_form fieldset legend {
-    padding:0 4px;
-    font-weight:bold;
 }
 
 .ploopi_generate_form .buttons {
     clear:both;
     margin:2px 8%;
+    padding-bottom:2px;
     overflow:auto;
+    text-align:right;
 }
 
-.ploopi_generate_form button {
-    float:right;
-    border: 1px solid #a0a0a0;
-    -moz-border-radius:5px;
-    background:#d0d0d0;
-    color: #2c4056;
-    text-align:center;
-    padding:3px;
-    cursor: pointer;
+.ploopi_generate_form .buttons button {
+    margin-left:4px;
+    display:inline-block;
+    vertical-align:center;
 }
 
-.ploopi_generate_form button[type=submit] {
-    font-weight:bold;
+.ploopi_generate_form .buttons span {
+    display:inline-block;
+    vertical-align:center;
 }
 
-.ploopi_generate_form button:hover {
-    border: 1px solid #707070;
-    background:#c0c0c0
-}
 
 .ploopi_array {
     border:1px solid #000;

@@ -24,8 +24,20 @@
   MAIN LAYOUT
 *******************/
 
+@font-face {
+    font-family: 'UbuntuRegular';
+    src: url('../fonts/Ubuntu-R-webfont.eot');
+    src: url('../fonts/Ubuntu-R-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/Ubuntu-R-webfont.woff') format('woff'),
+         url('../fonts/Ubuntu-R-webfont.ttf') format('truetype'),
+         url('../fonts/Ubuntu-R-webfont.svg#UbuntuRegular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
 body, form, table, td, input, select, textarea, button {
-font: 11px tahoma, verdana, sans-serif;
+    font: normal 12px 'UbuntuRegular', serif;
 }
 
 body, form  {
@@ -95,6 +107,7 @@ margin:0;
 padding:0;
 }
 
+
 .login_form_box {
 display:block;
 position:relative;
@@ -106,12 +119,10 @@ display:block;
 margin-top:6px;
 }
 
-.login_form_box input {
+.login_form_box input.text {
 display:block;
-border:1px solid #1c2329;
+border: 2px solid rgba(255,255,255,1);
 width:100%;
-background:#fff;
--moz-border-radius:5px;
 padding-left:4px;
 padding-right:4px;
 margin-top:6px;
@@ -124,26 +135,37 @@ right:10px;
 z-index:2;
 }
 
-.login_btn_right a {
+.login_btn_right button {
+background:transparent;
+border:none;
 color:#fff;
-text-decoration:none;
-font-weight:bold;
+box-shadow:none;
+margin:0;
+padding:0;
 }
 
-.login_btn_right a img,
-.login_btn_right a span {
+.login_btn_right button:hover {
+background:transparent;
+border:none;
+color:#fff;
+box-shadow:none;
+}
+
+.login_btn_right button img,
+.login_btn_right button span {
 display: inline-block;
 vertical-align: middle;
 }
 
-.login_btn_right a img {
+.login_btn_right button img {
 border:0;
 opacity:0.7;
 }
 
-.login_btn_right a:hover img {
+.login_btn_right button:hover img {
 opacity:1;
 }
+
 
 .login_btn_left {
 position:absolute;
@@ -204,6 +226,8 @@ font-weight:bold;
 height:31px;
 background:transparent url(../img/template/dock.png) repeat-x 0 0;
 color:#fff;
+z-index:2;
+box-shadow:0 0 4px rgba(0,0,0,0.7);
 }
 
 #mainmenu {
@@ -269,6 +293,19 @@ width:150px;
 z-index:2;
 }
 
+#mainmenu li div.blockmenu:after {
+content:"";
+position:absolute;
+display:block;
+width:100%;
+top:5px;
+bottom:0;
+left:0;
+box-shadow:0 0 5px rgba(0,0,0,1);
+z-index:-1;
+}
+
+
 #mainmenu div.blockmenu a.blockmenu {
 display:block;
 word-wrap:break-word;
@@ -279,6 +316,7 @@ padding:6px 8px;
 border-bottom:1px solid #f0f0f0;
 border-left:1px solid #f0f0f0;
 border-right:1px solid #f0f0f0;
+background:#e0e0e0;
 }
 
 #mainmenu div.blockmenu a.blockmenu:hover {
@@ -298,6 +336,7 @@ padding:6px 8px;
 border-bottom:1px solid #f0f0f0;
 border-left:1px solid #f0f0f0;
 border-right:1px solid #f0f0f0;
+background:#e0e0e0;
 overflow:auto;
 }
 
@@ -319,6 +358,8 @@ width:100%;
 -khtml-user-select: none;
 user-select: none;
 color:#0f3d61;
+z-index:2;
+box-shadow:0 0 4px rgba(0,0,0,0.5);
 }
 
 #statusbar .menu_right {
@@ -405,10 +446,21 @@ border-left:1px solid #666;
 border-right:1px solid #666;
 border-top:1px solid #666;
 background-color:#e0e0e0;
-position: absolute;
-bottom: 29px;
-display: none;
-z-index:2;
+position:absolute;
+bottom:29px;
+display:none;
+}
+
+.statusmenu li div:after {
+content:"";
+position:absolute;
+display:block;
+width:100%;
+top:0;
+left:0;
+bottom:5px;
+box-shadow:0 0 5px rgba(0,0,0,1);
+z-index:-10;
 }
 
 .statusmenu div a {
@@ -419,6 +471,7 @@ padding:6px 8px;
 border-left:1px solid #f0f0f0;
 border-right:1px solid #f0f0f0;
 border-top:1px solid #f0f0f0;
+background-color:#e0e0e0;
 }
 
 .statusmenu div a:hover {
@@ -442,6 +495,7 @@ border-right:1px solid #f0f0f0;
 border-top:1px solid #f0f0f0;
 color:#444;
 clear:both;
+background-color:#e0e0e0;
 }
 
 #workspacemenu {

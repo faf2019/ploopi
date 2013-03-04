@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <!--
-    Ploopi ~ Template pour Ploopi
+    Eyeos ~ Template pour Ploopi
     Copyright (c) 2007-2008 Ovensia
 
     This file is part of Ploopi.
@@ -53,41 +53,41 @@
     {ADDITIONAL_JAVASCRIPT}
 
     <!-- BEGIN switch_user_logged_out -->
-	var effect = false;
+    var effect = false;
 
-	function tpl_passwordlost() {
-	    if (effect) return false;
-	    effect = true;
-	    new Effect.Appear(
-	        'lostpassword_form', {
-		        from: 0.0,
-		        to: 1.0,
-		        duraction: 0.2,
-		        fps: 25,
-	            afterFinish:function() {
-	                $('ploopi_lostpassword_login').focus();
-	                effect = false;
-	            }
-	        }
-	    );
-	}
+    function tpl_passwordlost() {
+        if (effect) return false;
+        effect = true;
+        new Effect.Appear(
+            'lostpassword_form', {
+                from: 0.0,
+                to: 1.0,
+                duraction: 0.2,
+                fps: 25,
+                afterFinish:function() {
+                    $('ploopi_lostpassword_login').focus();
+                    effect = false;
+                }
+            }
+        );
+    }
 
-	function tpl_passwordlost_cancel() {
-	    if (effect) return false;
-	    effect = true;
-	    new Effect.Appear(
-	        'lostpassword_form', {
-		        from: 1.0,
-		        to: 0.0,
-		        duraction: 0.2,
-		        fps: 25,
-	            afterFinish:function() {
-	                $('ploopi_login').focus();
-	                effect = false;
-	            }
-	        }
-	    );
-	}
+    function tpl_passwordlost_cancel() {
+        if (effect) return false;
+        effect = true;
+        new Effect.Appear(
+            'lostpassword_form', {
+                from: 1.0,
+                to: 0.0,
+                duraction: 0.2,
+                fps: 25,
+                afterFinish:function() {
+                    $('ploopi_login').focus();
+                    effect = false;
+                }
+            }
+        );
+    }
 
     ploopi_window_onload_stock(function() { if ($('ploopi_login')) $('ploopi_login').focus(); } );
     <!-- END switch_user_logged_out -->
@@ -144,11 +144,11 @@
                 <div class="login_form_box">
                     <p>
                         <label for="ploopi_login">Identifiant:&nbsp;</label>
-                        <input type="text" class="text" id="ploopi_login" name="ploopi_login" size="20" title="Saisissez votre identifiant" tabindex="1" />
+                        <input type="text" class="text" id="ploopi_login" name="ploopi_login" size="20" title="Saisir votre identifiant" placeholder="Saisir votre identifiant" tabindex="1" />
                     </p>
                     <p>
                         <label for="ploopi_password">Mot de passe:&nbsp;</label>
-                        <input type="password" class="text" id="ploopi_password" name="ploopi_password" size="20" title="Saisissez votre mot de passe" tabindex="2" />
+                        <input type="password" class="text" id="ploopi_password" name="ploopi_password" size="20" title="Saisir votre mot de passe" placeholder="Saisir votre mot de passe" tabindex="2" />
                     </p>
                     <!-- BEGIN switch_ploopimsg -->
                     <div style="color:#ffff00;margin-top:10px;">
@@ -163,8 +163,10 @@
                 </div>
             </div>
             <div class="login_btn_right">
-                <a href="javascript:void(0);" onclick="javascript:$('login_form').submit();"><span style="margin-right:6px;">Valider</span><img src="{TEMPLATE_PATH}/img/template/enter.png" /></a>
-                <input type="submit" style="display:none;" />
+                <button type="submit">
+                    <span style="margin-right:4px;">Valider</span>
+                    <img src="{TEMPLATE_PATH}/img/template/enter.png">
+                </button>
             </div>
             <div class="login_btn_left">
                 <a href="javascript:void(0);" onclick="javascript:tpl_passwordlost();"><img src="{TEMPLATE_PATH}/img/template/lost.png" /><span style="margin-left:6px;">Mot de passe perdu</span></a>
@@ -185,17 +187,19 @@
                     <em><strong>ATTENTION</strong>, une demande de mot de passe génère un nouveau mot de passe automatique.</em>
                 </div>
             </div>
-	        <div class="login_btn_right">
-	            <a href="javascript:void(0);" onclick="javascript:$('lostpassword_form').submit();"><span style="margin-right:6px;">Envoyer</span><img src="{TEMPLATE_PATH}/img/template/enter.png" /></a>
-	            <input type="submit" style="display:none;" />
-	        </div>
-	        <div class="login_btn_left">
-	            <a href="javascript:void(0);" onclick="javascript:tpl_passwordlost_cancel();"><img src="{TEMPLATE_PATH}/img/template/cancel.png" /><span style="margin-left:6px;">Annuler</span></a>
-	        </div>
+            <div class="login_btn_right">
+                <button type="submit">
+                    <span style="margin-right:4px;">Envoyer</span>
+                    <img src="{TEMPLATE_PATH}/img/template/enter.png">
+                </button>
+            </div>
+            <div class="login_btn_left">
+                <a href="javascript:void(0);" onclick="javascript:tpl_passwordlost_cancel();"><img src="{TEMPLATE_PATH}/img/template/cancel.png" /><span style="margin-left:6px;">Annuler</span></a>
+            </div>
         </form>
     </div>
     <div id="login_statusbar">
-		Template:&nbsp;<a href="http://www.ovensia.fr">{TEMPLATE_NAME}</a> |&nbsp;Propulsé par&nbsp;<a href="http://www.ploopi.fr">Ploopi {PLOOPI_VERSION} ({PLOOPI_REVISION})</a>&nbsp;&#169;&nbsp;2009&nbsp;<a href="http://www.ovensia.fr">Ovensia</a>&nbsp;|&nbsp;<a href="http://www.ploopi.org/#Utilisation">Documentation utilisateur</a>&nbsp;|&nbsp;<a href="http://www.mozilla-europe.org/fr/products/firefox/">Préférez Firefox</a>
+        Template:&nbsp;<a href="http://www.ovensia.fr">{TEMPLATE_NAME}</a> |&nbsp;Propulsé par&nbsp;<a href="http://www.ploopi.fr">Ploopi {PLOOPI_VERSION} ({PLOOPI_REVISION})</a>&nbsp;&#169;&nbsp;2009&nbsp;<a href="http://www.ovensia.fr">Ovensia</a>&nbsp;|&nbsp;<a href="http://www.ploopi.org/#Utilisation">Documentation utilisateur</a>&nbsp;|&nbsp;<a href="http://www.mozilla-europe.org/fr/products/firefox/">Préférez Firefox</a>
     </div>
     <!-- END switch_user_logged_out -->
 
@@ -261,8 +265,8 @@
                 <div>
                     <form method="post" id="form_recherche" action="{MAINMENU_SHOWSEARCH_URL}">
                     <p style="margin:0;padding:10px;overflow:auto;">
-	                    <input type="text" name="system_search_keywords" class="text" style="width:180px;float:left;" value="{SEARCH_KEYWORDS}">
-	                    <img src="{TEMPLATE_PATH}/img/template/icons/search.png" value="Recherche" style="cursor:pointer;float:left;margin-left:4px;margin-top:4px;" onclick="$('form_recherche').submit();">
+                        <input type="text" name="system_search_keywords" class="text" style="width:180px;float:left;" value="{SEARCH_KEYWORDS}">
+                        <img src="{TEMPLATE_PATH}/img/template/icons/search.png" value="Recherche" style="cursor:pointer;float:left;margin-left:4px;margin-top:4px;" onclick="$('form_recherche').submit();">
                     </p>
                     </form>
                 </div>
@@ -282,24 +286,24 @@
 
         <div id="workspace" style="float:left;line-height:30px;height:30px;padding:0 10px;">Espace de travail sélectionné :</div>
         <img src="{TEMPLATE_PATH}/img/template/status_sep.png" style="display:block;float:left;" />
-	    <ul id="workspacemenu" class="statusmenu">
-	        <li>
-		        <a class="menu" href="javascript:void(0);" title="Sélectionner un autre espace de travail">{WORKSPACE_LABEL}</a>
-		        <div>
-		        <!-- BEGIN workspace -->
-		            <a href="{switch_user_logged_in.workspace.URL}" class="{switch_user_logged_in.workspace.SELECTED}" title="Sélectionner l'espace de travail &laquo; {switch_user_logged_in.workspace.TITLE} &raquo;">{switch_user_logged_in.workspace.TITLE}</a>
-		        <!-- END workspace -->
-	            <a href="{USER_WORKSPACE_URL}" class="{USER_WORKSPACE_SEL}" title="Sélectionner l'espace de travail &laquo; {USER_WORKSPACE_LABEL} &raquo;"><em>{USER_WORKSPACE_LABEL}</em></a>
-		        </div>
-	        </li>
-	    </ul>
+        <ul id="workspacemenu" class="statusmenu">
+            <li>
+                <a class="menu" href="javascript:void(0);" title="Sélectionner un autre espace de travail">{WORKSPACE_LABEL}</a>
+                <div>
+                <!-- BEGIN workspace -->
+                    <a href="{switch_user_logged_in.workspace.URL}" class="{switch_user_logged_in.workspace.SELECTED}" title="Sélectionner l'espace de travail &laquo; {switch_user_logged_in.workspace.TITLE} &raquo;">{switch_user_logged_in.workspace.TITLE}</a>
+                <!-- END workspace -->
+                <a href="{USER_WORKSPACE_URL}" class="{USER_WORKSPACE_SEL}" title="Sélectionner l'espace de travail &laquo; {USER_WORKSPACE_LABEL} &raquo;"><em>{USER_WORKSPACE_LABEL}</em></a>
+                </div>
+            </li>
+        </ul>
         <img src="{TEMPLATE_PATH}/img/template/status_sep.png" style="display:block;float:left;" />
 
     </div>
 
     <div id="ploopi_mod_mess" class=""></div>
 
-    <div id="pagecontent">
+    <div id="pagecontent" class="hook">
         <div style="padding:10px;">
         {PAGE_CONTENT}
         </div>
