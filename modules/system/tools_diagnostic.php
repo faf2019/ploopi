@@ -134,11 +134,11 @@ if ($testpear)
 {
     $testpearinfo = (file_exists(_PLOOPI_PEARPATH.'/PEAR/Info.php'));
 
-    $comment = ($testpearinfo) ? 'PEAR_info est installé.' : 'Vous devez installer la classe PEAR PEAR_info.';
+    $comment = ($testpearinfo) ? 'PEAR_info est installé.' : "Vous devez installer la classe PEAR PEAR_info.\nPour l'installer, faites &laquo; pear install --alldeps PEAR_info &raquo;.";
     $bullet = ($testpearinfo) ? 'green' : 'red';
 
     $values[$c]['values']['function']   = array('label' => "PEAR - PEAR_info");
-    $values[$c]['values']['desc']       = array('label' => ploopi_nl2br("La classe PEAR_info n'est pas installée. Pour l'installer, faites &laquo; pear install --alldeps PEAR_info &raquo;."), 'style' => '');
+    $values[$c]['values']['desc']       = array('label' => ploopi_nl2br("Informations sur PEAR.\nAffichage des dépendances."), 'style' => '');
     $values[$c]['values']['comment']    = array('label' => ploopi_nl2br($comment), 'style' => '');
     $values[$c]['values']['result']     = array('label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/p_{$bullet}.png\" />", 'style' => '');
     $c++;
@@ -150,17 +150,22 @@ if ($testpear)
         $packPEAR = new PEAR_Info(); // Class PEAR_Info for test if modules pear are installed
         ploopi_set_error_handler();
 
-        $arrPearClasses = array('Cache_Lite', 'HTTP_Request', 'XML_Feed_Parser', 'Xml_Beautifier', 'OLE', 'Spreadsheet_Excel_Writer');
+        $arrPearClasses = array(
+            'Cache_Lite' => 'Gestion du cache.',
+            'HTTP_Request2' => 'Gestion des connexions sortantes.',
+            'Text_Highlighter' => 'Gestion de la colorisation syntaxique.',
+            'Horde_Text_Diff' => 'Gestion du différentiel.'
+        );cd web
 
-        foreach($arrPearClasses as $strPearClass)
+        foreach($arrPearClasses as $strPearClass => $desc)
         {
             $testok = $packPEAR->packageInstalled($strPearClass);
 
-            $comment = ($testok) ? "{$strPearClass} est installé." : "Vous devez installer la classe PEAR {$strPearClass}.";
+            $comment = ($testok) ? "{$strPearClass} est installé." : "Vous devez installer la classe PEAR {$strPearClass}.\nPour l'installer, faites &laquo; pear install --alldeps {$strPearClass} &raquo;.";
             $bullet = ($testok) ? 'green' : 'orange';
 
             $values[$c]['values']['function']   = array('label' => "PEAR - {$strPearClass}");
-            $values[$c]['values']['desc']       = array('label' => ploopi_nl2br("La classe {$strPearClass} n'est pas installée. Pour l'installer, faites &laquo; pear install --alldeps {$strPearClass} &raquo;."), 'style' => '');
+            $values[$c]['values']['desc']       = array('label' => ploopi_nl2br($desc));
             $values[$c]['values']['comment']    = array('label' => ploopi_nl2br($comment));
             $values[$c]['values']['result']     = array('label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/p_{$bullet}.png\" />");
             $c++;
@@ -291,28 +296,29 @@ $c++;
 $testurl = 'http://www.ploopi.org';
 if ($testpear)
 {
-    ploopi_unset_error_handler();
-    require_once 'HTTP/Request.php';
-    ploopi_set_error_handler();
-
-    $request = new HTTP_Request($testurl);
-
-    if (_PLOOPI_INTERNETPROXY_HOST != '')
-    {
-        $request->setProxy(
-            _PLOOPI_INTERNETPROXY_HOST,
-            _PLOOPI_INTERNETPROXY_PORT,
-            _PLOOPI_INTERNETPROXY_USER,
-            _PLOOPI_INTERNETPROXY_PASS
-        );
-    }
-
     $comment = 'Connexion internet ouverte.';
     $testok = true;
 
-    ploopi_unset_error_handler();
-    $res = !PEAR::isError($request->sendRequest());
-    ploopi_set_error_handler();
+    require_once 'HTTP/Request2.php';
+
+    $objRequest = new HTTP_Request2($testurl);
+
+    if (_PLOOPI_INTERNETPROXY_HOST != '')
+    {
+        $arrConfig['proxy_host'] = _PLOOPI_INTERNETPROXY_HOST;
+        $arrConfig['proxy_port'] = _PLOOPI_INTERNETPROXY_PORT;
+        $arrConfig['proxy_user'] = _PLOOPI_INTERNETPROXY_USER;
+        $arrConfig['proxy_password'] = _PLOOPI_INTERNETPROXY_PASS;
+        $arrConfig['proxy_auth_scheme'] = HTTP_Request2::AUTH_DIGEST;
+        $objRequest->setConfig($arrConfig);
+    }
+
+
+    $objResponse = $objRequest->send();
+
+    $strStatus = $objResponse->getStatus();
+
+    $res = $strStatus == '200' || $objResponse->getStatus() == '';
 }
 else $res = false;
 

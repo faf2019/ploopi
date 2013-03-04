@@ -278,6 +278,252 @@ function ploopi_array2xls($arrArray, $booHeader = true, $strFileName = 'document
 }
 
 
+
+/**
+ * Retourne le contenu d'un tableau à 2 dimensions aux formats XLSX / XLS
+ *
+ * @param array $arrArray tableau de données
+ * @param boolean $booHeader true si la ligne d'entête doit être ajoutée (nom des colonnes)
+ * @param string $strFileName nom du fichier
+ * @param string $strSheetName nom de la feuille dans le document XLS
+ * @param array $arrDataFormats formats des colonnes ('title', 'type', 'width')
+ * @param array $arrOptions Options de configuration de l'export ('landscape', 'fitpage_width', 'fitpage_height', 'tofile', 'setborder', 'writer')
+ * @return binary contenu XLS
+ */
+
+function ploopi_array2excel($arrArray, $booHeader = true, $strFileName = 'document.xls', $strSheetName = 'Feuille', $arrDataFormats = null, $arrOptions = null)
+{
+    include './lib/PHPExcel/PHPExcel.php';
+
+    $objWorkBook = new PHPExcel;
+    $objWorkSheet = $objWorkBook->getActiveSheet();
+
+    $arrDefautOptions = array(
+        'landscape' => true,
+        'fitpage_width' => true,
+        'fitpage_height' => false,
+        'tofile' => false,
+        'setborder' => false,
+        'writer' => 'excel2007' // excel2007, excel5, csv, html, pdf (instable)
+    );
+
+    $arrOptions = empty($arrOptions) ? $arrDefautOptions : array_merge($arrDefautOptions, $arrOptions);
+
+    // Style par défaut pour toute la feuille
+    $rowDefaultStyle = array(
+        'font'  => array(
+            'bold'  => false,
+            'size'  => 10,
+            'name'  => 'Arial',
+            'color' => array('rgb' => '000000')
+        ),
+        'alignment' => array(
+            'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
+            'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER
+        )
+    );
+
+    // Style titre
+    $rowTitleStyle = array(
+        'font'  => array(
+            'bold'  => true,
+        ),
+        'alignment' => array(
+            'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+        ),
+        'fill' => array(
+            'type' => PHPExcel_Style_Fill::FILL_SOLID,
+            'color'=> array('rgb' => 'DDDDDD')
+        )
+    );
+
+    // Bordure optionnelle sur le titre
+    if ($arrOptions['setborder']) {
+
+        $rowTitleStyle['borders'] = array(
+            'allborders' => array(
+                'style' => PHPExcel_Style_Border::BORDER_THIN ,
+                'color' => array('rgb' => '000000')
+            )
+        );
+
+    }
+
+    // Style par défaut pour la feuille
+    $objWorkSheet->getDefaultStyle()->applyFromArray($rowDefaultStyle);
+
+    // Titre
+    $objWorkSheet->setTitle(utf8_encode($strSheetName));
+
+    // Fit to page
+    $objWorkSheet->getPageSetup()->setFitToWidth($arrOptions['fitpage_width']);
+    $objWorkSheet->getPageSetup()->setFitToHeight($arrOptions['fitpage_height']);
+
+    // Paysage
+    if ($arrOptions['landscape']) $objWorkSheet->getPageSetup()->setOrientation(PHPExcel_Worksheet_PageSetup::ORIENTATION_LANDSCAPE);
+
+    if (!empty($arrArray))
+    {
+        $intLineMax = sizeof($arrArray)+1;
+
+        // Ajout de la ligne d'entête
+        if ($booHeader)
+        {
+            $intCol = 0;
+            foreach(array_keys(reset($arrArray)) as $strKey) $objWorkSheet->setCellValueByColumnAndRow($intCol++, 1, utf8_encode(isset($arrDataFormats[$strKey]['title']) ? $arrDataFormats[$strKey]['title'] : $strKey));
+
+            $chrCol = chr($intCol-1+65);
+
+            $objWorkSheet->duplicateStyleArray(
+                $rowTitleStyle,
+                "A1:{$chrCol}1"
+            );
+        }
+
+        // Traitement des contenus
+        $intLine = 2;
+        foreach($arrArray as $row)
+        {
+            $intCol = 0;
+            foreach($row as $strKey => $strValue)
+            {
+                // Conversion date
+                if (isset($arrDataFormats[$strKey]['type']) && in_array($arrDataFormats[$strKey]['type'], array('datetime', 'date'))) {
+                    $strValue = PHPExcel_Shared_Date::PHPToExcel($strValue);
+                }
+
+                $objWorkSheet->setCellValueByColumnAndRow($intCol, $intLine, utf8_encode($strValue));
+
+                $intCol++;
+            }
+            $intLine++;
+        }
+
+        // Traitement des contenus
+        $intCol = 0;
+
+
+        // Mise en forme des données
+        foreach(array_keys(reset($arrArray)) as $strKey)
+        {
+            if (empty($arrDataFormats[$strKey]['type'])) $arrDataFormats[$strKey]['type'] = 'string';
+
+            $chrCol = chr($intCol+65);
+
+            $rowStyle = $rowDefaultStyle;
+
+            // Bordure optionnelle
+            if ($arrOptions['setborder']) {
+
+                $rowStyle['borders'] = array(
+                    'allborders' => array(
+                        'style' => PHPExcel_Style_Border::BORDER_THIN ,
+                        'color' => array('rgb' => '000000')
+                    )
+                );
+
+            }
+
+            // Application du format
+            switch($arrDataFormats[$strKey]['type']) {
+
+                case 'float': $strFormat = '0.00'; break;
+                case 'float_percent': $strFormat = '0.00%'; break;
+                case 'float_euro': $strFormat = '[$EUR ]#,##0.00_-'; break;
+                case 'integer': $strFormat = '0'; break;
+                case 'integer_percent': $strFormat = '0%'; break;
+                case 'integer_euro': $strFormat = '[$EUR ]#,##0_-'; break;
+                case 'date': $strFormat = 'dd/mm/yyyy'; break;
+                case 'datetime' : $strFormat = 'dd/mm/yyyy hh:mm:ss'; break;
+
+                default:
+                case 'string': $strFormat = 'General'; break;
+
+            }
+
+            // Impact du format de donnée sur le style
+            $rowStyle['numberformat'] = array(
+                'code' => $strFormat
+            );
+
+            // Alignement à droite des dates, valeurs numériques
+            if ($arrDataFormats[$strKey]['type'] != 'string') {
+                $rowStyle['alignment'] = array(
+                    'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_RIGHT,
+                );
+            }
+
+            // Application du style sur le colonne
+            $objWorkSheet->duplicateStyleArray(
+                $rowStyle,
+                "{$chrCol}2:{$chrCol}{$intLineMax}"
+            );
+
+            // Largeur de colonne
+            if (isset($arrDataFormats[$strKey]['width'])) $objWorkSheet->getColumnDimension(chr($intCol+65))->setWidth($arrDataFormats[$strKey]['width']);
+
+            $intCol++;
+
+        }
+
+    }
+
+
+    // Sélection du writer
+    switch($arrOptions['writer']) {
+
+        case 'excel5':
+            $objWriter = new PHPExcel_Writer_Excel5($objWorkBook);
+        break;
+
+        case 'pdf':
+            $objWriter = new PHPExcel_Writer_PDF($objWorkBook);
+            $objWriter->setSheetIndex(0);
+            header('Content-type: application/pdf');
+            header("Content-Disposition:inline;filename={$strFileName}");
+
+            $objWriter->save('php://output');
+            die();
+
+
+        break;
+
+        case 'csv':
+            $objWriter = new PHPExcel_Writer_CSV($objWorkBook);
+            $objWriter->setSheetIndex(0);
+            $writer->setDelimiter(",");
+
+        break;
+
+        case 'html':
+            $objWriter = new PHPExcel_Writer_HTML($objWorkBook);
+            $objWriter->setSheetIndex(0);
+        break;
+
+        case 'excel2007':
+        default:
+            $objWriter = new PHPExcel_Writer_Excel2007($objWorkBook);
+            $objWriter->setOffice2003Compatibility(true);
+        break;
+
+    }
+
+    // Création du document
+    if ($arrOptions['tofile']) {
+        $objWriter->save($strFileName);
+    }
+    else {
+        ob_start();
+        // Les headers ne sont pas envoyés
+        $objWriter->save('php://output');
+        return ob_get_clean();
+    }
+
+    return true;
+}
+
+
+
 /**
  * Retourne le contenu d'un tableau à 2 dimensions au format ODS
  *

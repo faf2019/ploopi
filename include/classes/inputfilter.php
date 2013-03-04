@@ -28,7 +28,7 @@
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
- * 
+ *
  */
 
 /**
@@ -48,7 +48,7 @@ class ploopi_inputfilter
     {
         return $strSource = preg_replace('/<\/?[\w]+[^>]*>/','',$this->decode($strSource));
     }
-    
+
     /**
      * Essaye de convertir le texte en Plaintext.
      *
@@ -65,10 +65,10 @@ class ploopi_inputfilter
         $strSource = preg_replace('/&#(\d+);/me', "chr(\\1)", $strSource); // decimal notation
         // convert hex
         $strSource = preg_replace('/&#x([a-f0-9]+);/mei', "chr(0x\\1)", $strSource); // hex notation
-        
+
         return $strSource;
     }
-    
-    
+
+
 }
 ?>

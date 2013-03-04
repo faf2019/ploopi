@@ -31,14 +31,11 @@
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  *
- * @todo trouver une autre solution...
  */
 
 ?>
-defaultStatus = '<?php echo addslashes($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['title']); ?>';
 
 _PLOOPI_ENV = '<?php echo $_SESSION['ploopi']['env']; ?>';
-_PLOOPI_URL_ENCODE = <?php echo (_PLOOPI_URL_ENCODE) ? 'true' : 'false'; ?>;
 
 var lstmsg = new Array();
 lstmsg[0] = "<?php echo _PLOOPI_JS_EMAIL_ERROR ?>";

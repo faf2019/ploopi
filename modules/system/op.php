@@ -42,7 +42,7 @@ if ($_SESSION['ploopi']['connected'])
         case 'system_update_profile_save':
             $user = new user();
             $user->open($_SESSION['ploopi']['userid']);
-            
+
             unset($_POST['user_password']);
             unset($_POST['user_login']);
 
@@ -57,7 +57,7 @@ if ($_SESSION['ploopi']['connected'])
             ob_end_clean();
 
             echo $skin->create_popup('Validation du profil utilisateur', $content, 'system_popup_update_profile');
-            
+
             ?>
             <script type="text/javascript">
             new PeriodicalExecuter(function(pe) {
@@ -165,25 +165,25 @@ if ($_SESSION['ploopi']['connected'])
 
             <form name="form_modify_user" action="<?php echo ploopi_urlencode('admin-light.php?ploopi_op=system_update_profile_save'); ?>" method="POST" onsubmit="javascript:ploopi_xmlhttprequest_submitform(this, 'system_popup_update_profile', system_user_validate ); return false;  ">
             <div>
-				<?
-				// Vérification de la validité du profil
-				$booUpdateProfile = false;
-				foreach($arrRequiredFields as $strField)
-				{
-					$strField = trim($strField);
-					if (isset($user->fields[$strField]) && $user->fields[$strField] == '') { $booUpdateProfile = true; break; }
-				}
+                <?
+                // Vérification de la validité du profil
+                $booUpdateProfile = false;
+                foreach($arrRequiredFields as $strField)
+                {
+                    $strField = trim($strField);
+                    if (isset($user->fields[$strField]) && $user->fields[$strField] == '') { $booUpdateProfile = true; break; }
+                }
 
-				if ($booUpdateProfile)
-				{
-					?>
-					<div style="padding:10px;text-align:center;">
-						Votre profil utilisateur n'est pas complet. Merci de remplir les champs marqués d'une étoile.
-						<br /><em>Vous pouvez passer cette étape en cliquant en bas sur le bouton "Annuler".</em>
-					</div>
-					<?
-				}
-				?>
+                if ($booUpdateProfile)
+                {
+                    ?>
+                    <div style="padding:10px;text-align:center;">
+                        Votre profil utilisateur n'est pas complet. Merci de remplir les champs marqués d'une étoile.
+                        <br /><em>Vous pouvez passer cette étape en cliquant en bas sur le bouton "Annuler".</em>
+                    </div>
+                    <?
+                }
+                ?>
                 <div style="float:left;width:50%;">
                     <div style="padding:2px;">
                         <fieldset class="fieldset">
@@ -330,6 +330,21 @@ if ($_SESSION['ploopi']['connected'])
 
 }
 
+if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOOPI_MODULE_SEARCH)
+{
+    switch($ploopi_op)
+    {
+        /**
+         * Moteur de recherche
+         */
+
+        case 'system_search':
+            include_once('./modules/system/public_search_result.php');
+            ploopi_die();
+        break;
+    }
+}
+
 /**
  * Opérations accessibles pour les utilisateurs connectés dans le module système
  */
@@ -366,6 +381,12 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                     // on trie par profondeur + libellé
                     ksort($arrWspList);
 
+                    // Traitement spécial XLS (date)
+                    if ($strTypeDoc == 'xls' || $strTypeDoc == 'xlsx' || $strTypeDoc == 'ods' || $strTypeDoc == 'sxc' || $strTypeDoc == 'pdf') {
+                        $row['date_creation'] = ploopi_timestamp2unixtimestamp($row['date_creation']);
+                    }
+
+
                     $rowData = array(
                         'login' => $row['login'],
                         'lastname' => $row['lastname'],
@@ -392,11 +413,6 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                         'date_creation' => $row['date_creation']
                     );
 
-                    // Traitement spécial XLS (date)
-                    if ($strTypeDoc == 'xls' || $strTypeDoc == 'ods' || $strTypeDoc == 'sxc' || $strTypeDoc == 'pdf') {
-                        $rowData['date_creation'] = ploopi_timestamp2xls($rowData['date_creation']);
-                    }
-
                     // Traitement spécial vCard
                     if ($strTypeDoc != 'vcf') {
                         unset($rowData['lastname']);
@@ -415,6 +431,111 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
             // Nom du fichier envoyé à l'utilisateur
             $strFileName = "utilisateurs.{$strTypeDoc}";
 
+
+            // Format d'export (XLS et dérivés)
+            $arrFormats = array(
+                'login' => array(
+                    'title' => 'Identifiant',
+                    'type' => 'string',
+                    'width' => 15
+                ),
+                'user' => array(
+                    'title' => 'Utilisateur',
+                    'type' => 'string',
+                    'width' => 20
+                ),
+                'workspaces' => array(
+                    'title' => 'Liste des Espaces de Travail',
+                    'type' => 'string',
+                    'width' => 40
+                ),
+                'service' => array(
+                    'title' => 'Service',
+                    'type' => 'string',
+                    'width' => 20
+                ),
+                'service2' => array(
+                    'title' => 'Bureau',
+                    'type' => 'string',
+                    'width' => 20
+                ),
+                'function' => array(
+                    'title' => 'Fonction',
+                    'type' => 'string',
+                    'width' => 20
+                ),
+                'rank' => array(
+                    'title' => 'Grade',
+                    'type' => 'string',
+                    'width' => 20
+                ),
+                'number' => array(
+                    'title' => 'Numéro de Poste',
+                    'type' => 'string',
+                    'width' => 20
+                ),
+                'phone' => array(
+                    'title' => 'Téléphone',
+                    'type' => 'string',
+                    'width' => 20
+                ),
+                'mobile' => array(
+                    'title' => 'Mobile',
+                    'type' => 'string',
+                    'width' => 20
+                ),
+                'fax' => array(
+                    'title' => 'Fax',
+                    'type' => 'string',
+                    'width' => 20
+                ),
+                'email' => array(
+                    'title' => 'Courriel',
+                    'type' => 'string',
+                    'width' => 35
+                ),
+                'building' => array(
+                    'title' => 'Bâtiment',
+                    'type' => 'string',
+                    'width' => 20
+                ),
+                'floor' => array(
+                    'title' => 'Etage',
+                    'type' => 'string',
+                    'width' => 20
+                ),
+                'office' => array(
+                    'title' => 'Bureau',
+                    'type' => 'string',
+                    'width' => 20
+                ),
+                'address' => array(
+                    'title' => 'Adresse',
+                    'type' => 'string',
+                    'width' => 20
+                ),
+                'postalcode' => array(
+                    'title' => 'Code Postal',
+                    'type' => 'string',
+                    'width' => 20
+                ),
+                'city' => array(
+                    'title' => 'Ville',
+                    'type' => 'string',
+                    'width' => 20
+                ),
+                'country' => array(
+                    'title' => 'Pays',
+                    'type' => 'string',
+                    'width' => 20
+                ),
+                'date_creation' => array(
+                    'title' => 'Date de création',
+                    'type' => 'datetime',
+                    'width' => 35
+                )
+            );
+
             ploopi_ob_clean();
 
             switch($strTypeDoc)
@@ -425,192 +546,59 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                     foreach($arrData as $row) {
                         echo "BEGIN:VCARD\nVERSION:3.0\nN:{$row['lastname']};{$row['firstname']}\nFN:{$row['user']}\nTEL;type=WORK,VOICE:{$row['phone']}\nTEL;type=WORK,CELL:{$row['mobile']}\nTEL;type=WORK,FAX:{$row['fax']}\nEMAIL;type=PREF,INTERNET:{$row['email']}\nEND:VCARD\n";
                     }
-                    header('Content-Type: ' . ploopi_getmimetype($strFileName));
-                    header('Content-Disposition: attachment; Filename="'.$strFileName.'"');
-                    header('Cache-Control: private');
-                    header('Pragma: private');
-                    header('Content-Length: '.ob_get_length());
-                    header("Content-Encoding: None");
                 break;
 
                 case 'csv':
+                    echo ploopi_array2csv($arrData);
+                break;
+
                 case 'xml':
+                    echo ploopi_array2xml($arrData);
+                break;
+
                 case 'json':
-
-                    switch($strTypeDoc)
-                    {
-                        case 'csv':
-                            echo ploopi_array2csv($arrData);
-                        break;
-
-                        case 'xml':
-                            echo ploopi_array2xml($arrData);
-                        break;
-
-                        case 'json':
-                            echo ploopi_array2json($arrData);
-                        break;
-                    }
-
-                    header('Content-Type: ' . ploopi_getmimetype($strFileName));
-                    header('Content-Disposition: attachment; Filename="'.$strFileName.'"');
-                    header('Cache-Control: private');
-                    header('Pragma: private');
-                    header('Content-Length: '.ob_get_length());
-                    header("Content-Encoding: None");
+                    echo ploopi_array2json($arrData);
                 break;
 
                 case 'xls':
+                    echo ploopi_array2excel($arrData, true, $strFileName, 'Export', $arrFormats, array('writer' => 'excel5'));
+                break;
+
+                case 'xlsx':
+                    echo ploopi_array2excel($arrData, true, $strFileName, 'Export', $arrFormats, array('writer' => 'excel2007'));
+                break;
+
                 case 'ods':
                 case 'sxc':
                 case 'pdf':
-
-                    // Définition du nom du fichier temporaire
-                    $strFileId = uniqid();
-                    $strOutputXls = $strOutputPath."/{$strFileId}.xls";
-
-                    // Format d'export (XLS)
-                    $arrFormats = array(
-                        'login' => array(
-                            'title' => 'Identifiant',
-                            'type' => 'string',
-                            'width' => 15
-                        ),
-                        'user' => array(
-                            'title' => 'Utilisateur',
-                            'type' => 'string',
-                            'width' => 20
-                        ),
-                        'workspaces' => array(
-                            'title' => 'Liste des Espaces de Travail',
-                            'type' => 'string',
-                            'width' => 40
-                        ),
-                        'service' => array(
-                            'title' => 'Service',
-                            'type' => 'string',
-                            'width' => 20
-                        ),
-                        'service2' => array(
-                            'title' => 'Bureau',
-                            'type' => 'string',
-                            'width' => 20
-                        ),
-                        'function' => array(
-                            'title' => 'Fonction',
-                            'type' => 'string',
-                            'width' => 20
-                        ),
-                        'rank' => array(
-                            'title' => 'Grade',
-                            'type' => 'string',
-                            'width' => 20
-                        ),
-                        'number' => array(
-                            'title' => 'Numéro de Poste',
-                            'type' => 'string',
-                            'width' => 20
-                        ),
-                        'phone' => array(
-                            'title' => 'Téléphone',
-                            'type' => 'string',
-                            'width' => 20
-                        ),
-                        'mobile' => array(
-                            'title' => 'Mobile',
-                            'type' => 'string',
-                            'width' => 20
-                        ),
-                        'fax' => array(
-                            'title' => 'Fax',
-                            'type' => 'string',
-                            'width' => 20
-                        ),
-                        'email' => array(
-                            'title' => 'Courriel',
-                            'type' => 'string',
-                            'width' => 35
-                        ),
-                        'building' => array(
-                            'title' => 'Bâtiment',
-                            'type' => 'string',
-                            'width' => 20
-                        ),
-                        'floor' => array(
-                            'title' => 'Etage',
-                            'type' => 'string',
-                            'width' => 20
-                        ),
-                        'office' => array(
-                            'title' => 'Bureau',
-                            'type' => 'string',
-                            'width' => 20
-                        ),
-                        'address' => array(
-                            'title' => 'Adresse',
-                            'type' => 'string',
-                            'width' => 20
-                        ),
-                        'postalcode' => array(
-                            'title' => 'Code Postal',
-                            'type' => 'string',
-                            'width' => 20
-                        ),
-                        'city' => array(
-                            'title' => 'Ville',
-                            'type' => 'string',
-                            'width' => 20
-                        ),
-                        'country' => array(
-                            'title' => 'Pays',
-                            'type' => 'string',
-                            'width' => 20
-                        ),
-                        'date_creation' => array(
-                            'title' => 'Date de création',
-                            'type' => 'datetime',
-                            'width' => 35
-                        )
-                    );
-
-                    ploopi_array2xls($arrData, true, $strOutputXls, 'Export', $arrFormats, array('tofile' => true, 'setborder' => true));
+                    $objOdfConverter = new odf_converter(ploopi_getparam('system_jodwebservice'));
 
                     switch($strTypeDoc)
                     {
-                        case 'ods':
-                        case 'sxc':
                         case 'pdf':
-                            $objOdfConverter = new odf_converter(ploopi_getparam('system_jodwebservice'));
-
-                            $rawOuputFile = $strOutputPath."/{$strFileId}.{$strTypeDoc}";
-
-                            switch($strTypeDoc)
-                            {
-                                case 'pdf':
-                                    $strOuputMime = 'application/pdf';
-                                break;
-
-                                case 'sxc':
-                                    $strOuputMime = 'application/vnd.sun.xml.calc';
-                                break;
-
-                                case 'ods':
-                                    $strOuputMime = 'application/vnd.oasis.opendocument.spreadsheet';
-                                break;
-                            }
-
-                            file_put_contents($rawOuputFile, $objOdfConverter->convert(file_get_contents($strOutputXls), 'application/vnd.ms-excel', $strOuputMime));
-
+                            $strOuputMime = 'application/pdf';
                         break;
 
-                        default:
-                            $rawOuputFile = $strOutputXls;
+                        case 'sxc':
+                            $strOuputMime = 'application/vnd.sun.xml.calc';
+                        break;
+
+                        case 'ods':
+                            $strOuputMime = 'application/vnd.oasis.opendocument.spreadsheet';
                         break;
                     }
 
-                    ploopi_downloadfile($rawOuputFile, $strFileName, true);
+                    echo $objOdfConverter->convert(ploopi_array2excel($arrData, true, $strFileName, 'Export', $arrFormats, array('writer' => 'excel2007')), 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', $strOuputMime);
+
                 break;
             }
+
+            header('Content-Type: ' . ploopi_getmimetype($strFileName));
+            header('Content-Disposition: attachment; Filename="'.$strFileName.'"');
+            header('Cache-Control: private');
+            header('Pragma: private');
+            header('Content-Length: '.ob_get_length());
+            header("Content-Encoding: None");
 
             ploopi_die();
         break;
@@ -757,14 +745,6 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
             ploopi_redirect("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets");
         break;
 
-        /**
-         * Moteur de recherche
-         */
-
-        case 'system_search':
-            include_once('./modules/system/public_search_result.php');
-            ploopi_die();
-        break;
 
         default:
             /**

@@ -245,7 +245,7 @@ if ($_SESSION['ploopi']['connected'])
         'MAINMENU_SEARCH'           => _PLOOPI_LABEL_SEARCH,
         'MAINMENU_DISCONNECTION'    => _PLOOPI_LABEL_DISCONNECTION,
 
-		'POPUP_PROFLE'				=> ploopi_queryencode("ploopi_op=system_update_profile"),
+        'POPUP_PROFLE'              => ploopi_queryencode("ploopi_op=system_update_profile"),
 
         'MAINMENU_SHOWPROFILE_URL'      => ploopi_urlencode('admin.php?op=profile', _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
         'MAINMENU_SHOWANNOTATIONS_URL'  => ploopi_urlencode('admin.php?op=annotation', _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
@@ -259,7 +259,7 @@ if ($_SESSION['ploopi']['connected'])
         'MAINMENU_SHOWTICKETS_SEL'      => ($_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_MYWORKSPACE && !empty($_REQUEST['op']) && $_REQUEST['op'] == 'actions') ? 'selected' : '',
         'MAINMENU_SHOWSEARCH_SEL'       => ($_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_WORKSPACES) ? 'selected' : '',
 
-        'SEARCH_KEYWORDS'               => (!empty($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords'])) ? $_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords'] : '',
+        'SEARCH_KEYWORDS'               => (!empty($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords'])) ? htmlentities($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords']) : '',
 
         'NEWTICKETS'                => $newtickets,
         'LAST_NEWTICKET'            => $lastticket,

@@ -118,18 +118,6 @@ function ploopi_createtimestamp() { return date(_PLOOPI_TIMESTAMPFORMAT_MYSQL); 
 function ploopi_createdatetime() { return date(_PLOOPI_DATETIMEFORMAT_MYSQL); }
 
 /**
- * Convertit un datetime MYSQL (AAAA-MM-JJ hh:mm:ss) au format local (date+heure)
- *
- * @param string $mydatetime
- * @return array tableau associatif contenant la date et l'heure : Array('date' => '', 'time' => '');
- */
-
-function ploopi_datetime2local($mydatetime)
-{
-    return ploopi_timestamp2local(str_replace(array('-', ':', ' '), '', $mydatetime));
-}
-
-/**
  * Renvoie un timestamp UNIX au format local (_PLOOPI_TIMEFORMAT)
  *
  * @param int $mytimestamp timestamp UNIX
@@ -145,7 +133,17 @@ function ploopi_unixtimestamp2local($mytimestamp) { return(date(_PLOOPI_DATEFORM
  * @return string timestamp MYSQL
  */
 
- function ploopi_unixtimestamp2timestamp($mytimestamp) { return(date(_PLOOPI_TIMESTAMPFORMAT_MYSQL,$mytimestamp)); }
+function ploopi_unixtimestamp2timestamp($mytimestamp) { return(date(_PLOOPI_TIMESTAMPFORMAT_MYSQL,$mytimestamp)); }
+
+/**
+ * Convertit un timestamp UNIX en datetime MYSQL (AAAA-MM-JJ hh:mm:ss)
+ *
+ * @param int $mytimestamp timestamp UNIX
+ * @return string datetime MYSQL
+ */
+
+function ploopi_unixtimestamp2datetime($mytimestamp) { return(date(_PLOOPI_DATETIMEFORMAT_MYSQL,$mytimestamp)); }
+
 
 /**
  * Convertit un timestamp MYSQL (AAAAMMJJhhmmss) en timestamp UNIX
@@ -154,8 +152,8 @@ function ploopi_unixtimestamp2local($mytimestamp) { return(date(_PLOOPI_DATEFORM
  * @return int timestamp UNIX
  */
 
- function ploopi_timestamp2unixtimestamp($mytimestamp)
- {
+function ploopi_timestamp2unixtimestamp($mytimestamp)
+{
     $timestp_array = ploopi_gettimestampdetail($mytimestamp);
 
     return(
@@ -168,7 +166,45 @@ function ploopi_unixtimestamp2local($mytimestamp) { return(date(_PLOOPI_DATEFORM
             $timestp_array[_PLOOPI_DATE_YEAR]
         )
     );
- }
+}
+
+/**
+ * Convertit un datetime MYSQL (AAAA-MM-JJ hh:mm:ss) en timestamp MySQL (AAAAMMJJhhmmss)
+ *
+ * @param string $mytimestamp datetime MYSQL
+ * @return int timestamp UNIX
+ */
+
+function ploopi_datetime2timestamp($mydatetime)
+{
+    return str_replace(array('-', ':', ' '), '', $mydatetime);
+}
+
+/**
+ * Convertit un datetime MYSQL (AAAA-MM-JJ hh:mm:ss) en timestamp UNIX
+ *
+ * @param string $mytimestamp datetime MYSQL
+ * @return int timestamp UNIX
+ */
+
+function ploopi_datetime2unixtimestamp($mydatetime)
+{
+    return ploopi_timestamp2unixtimestamp(ploopi_datetime2timestamp($mydatetime));
+}
+
+
+/**
+ * Convertit un datetime MYSQL (AAAA-MM-JJ hh:mm:ss) au format local (date+heure)
+ *
+ * @param string $mydatetime
+ * @return array tableau associatif contenant la date et l'heure : Array('date' => '', 'time' => '');
+ */
+
+function ploopi_datetime2local($mydatetime)
+{
+    return ploopi_timestamp2local(ploopi_datetime2timestamp($mydatetime));
+}
+
 
 /**
  * Convertit un timestamp MYSQL (AAAAMMJJhhmmss) au format local (date+heure)
@@ -270,6 +306,8 @@ function ploopi_local2timestamp($mydate, $mytime = '00:00:00')
     else return false;
 }
 
+
+
 /**
  * Convertit un date locale au format datetime MYSQL (AAAA-MM-JJ hh:mm:ss)
  *
@@ -333,6 +371,38 @@ function ploopi_timestamp_add($timestp, $h=0, $mn=0, $s=0, $m=0, $d=0, $y=0)
             )
         );
 }
+
+/**
+ * Ajoute un durée (positive ou négative) à un datetime MYSQL (AAAA-MM-JJ hh:mm:ss)
+ *
+ * @param string $datetime datetime MYSQL
+ * @param int $h nombre d'heures à ajouter
+ * @param int $mn nombre de minutes à ajouter
+ * @param int $s nombre de secondes à ajouter
+ * @param int $m nombre de mois à ajouter
+ * @param int $d nombre de jours à ajouter
+ * @param int $y nombre d'année à ajouter
+ * @return string datetime MYSQL mis à jour
+ */
+
+function ploopi_datetime_add($datetime, $h=0, $mn=0, $s=0, $m=0, $d=0, $y=0)
+{
+    $timestp_array = ploopi_gettimestampdetail(ploopi_datetime2timestamp($datetime));
+
+    return
+        date(
+            _PLOOPI_DATETIMEFORMAT_MYSQL,
+            mktime(
+                $timestp_array[_PLOOPI_DATE_HOUR]+$h,
+                $timestp_array[_PLOOPI_DATE_MINUTE]+$mn,
+                $timestp_array[_PLOOPI_DATE_SECOND]+$s,
+                $timestp_array[_PLOOPI_DATE_MONTH]+$m,
+                $timestp_array[_PLOOPI_DATE_DAY]+$d,
+                $timestp_array[_PLOOPI_DATE_YEAR]+$y
+            )
+        );
+}
+
 
 /**
  * Retourne un timestamp unix de la date du 1er jour d'une semaine

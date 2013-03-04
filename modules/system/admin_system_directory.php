@@ -417,6 +417,7 @@ $intNbRep = current($objQueryCount->execute()->fetchrow());
     }
     ?>
     <a href="<? echo ploopi_urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=xls"); ?>"><img src="./img/export/xls.png"><span>MS Excel &trade; <sup>XLS</sup></span></a>
+    <a href="<? echo ploopi_urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=xlsx"); ?>"><img src="./img/export/xls.png"><span>MS Excel &trade; <sup>XLSX</sup></span></a>
 </div>
 
 <?php

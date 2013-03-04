@@ -471,7 +471,7 @@ if ($_SESSION['ploopi']['mode'] == 'backoffice')
         }
 
         // new action selected
-        if (isset($ploopi_action)) $_SESSION['ploopi']['action'] = $ploopi_action;
+        if (isset($ploopi_action) && ($ploopi_action == 'public' || $ploopi_action == 'admin') ) $_SESSION['ploopi']['action'] = $ploopi_action;
     }
 
     if (empty($_SESSION['ploopi']['backoffice']['workspaceid'])) $_SESSION['ploopi']['backoffice']['workspaceid'] = $_SESSION['ploopi']['hosts']['backoffice'][0];

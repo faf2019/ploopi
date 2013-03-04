@@ -259,7 +259,7 @@ function ploopi_ob_callback($buffer)
         if ($content_type != 'text/html') header("Content-Encoding: none");
     }
 
-    header('Content-Length: '.strlen($buffer));
+    header('Content-Length: '.mb_strlen($buffer, '8bit'));
 
     return $buffer;
 }

@@ -127,7 +127,7 @@ function system_tickets_display(ticket_id, opened, isroot, tpl_path)
 function system_search_next()
 {
     ploopi_ajaxloader('system_search_result');
-    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=system_search&system_search_keywords='+$('system_search_keywords').value+'&system_search_workspace='+$('system_search_workspace').value+'&system_search_date1='+$('system_search_date1').value+'&system_search_date2='+$('system_search_date2').value,'system_search_result');
+    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=system_search&system_search_keywords='+$('system_search_keywords').value+'&system_search_module='+$('system_search_module').value+'&system_search_date1='+$('system_search_date1').value+'&system_search_date2='+$('system_search_date2').value,'system_search_result');
 }
 
 function system_serverload()

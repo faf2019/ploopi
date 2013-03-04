@@ -446,13 +446,12 @@ function ploopi_search($keywords, $id_object = -1, $id_record = null, $id_module
         elseif ($id_record != '') $arrSearch[] = "e.id_record LIKE '".$db->addslashes($id_record)."%'";
     }
 
-    if ($id_object != -1) $arrSearch[] = "e.id_object = {$id_object}";
+    if ($id_object != -1) $arrSearch[] = sprintf("e.id_object = %d", $id_object);
 
     if (!empty($id_module))
     {
         if (is_array($id_module)) $arrSearch[] = "e.id_module IN (".implode(',', $id_module).")";
-        else $arrSearch[] = "e.id_module = {$id_module}";
-        //$arrSearch[] = 'e.id_workspace IN ('.ploopi_viewworkspaces($id_module).')';
+        else $arrSearch[] = sprintf("e.id_module = %d", $id_module);
     }
 
     $strSearch = (empty($arrSearch)) ? '' : ' AND '.implode(' AND ', $arrSearch);

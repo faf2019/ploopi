@@ -181,10 +181,10 @@ abstract class form_element
      * Génère les événements d'une balise
      * @return string
      */
-    protected function generateProperties($strClass = null)
+    protected function generateProperties($strClass = null, $strStyle = null)
     {
         return
-            self::_getProperty('style',  $this->_arrOptions['style']).
+            self::_getProperty('style',  is_null($strStyle) ? $this->_arrOptions['style'] : $strStyle).
             self::_getProperty('class',  is_null($strClass) ? $this->_arrOptions['class'] : $strClass).
             self::_getProperty('readonly',  $this->_arrOptions['readonly'] ? 'readonly' : null).
             self::_getProperty('disabled',  $this->_arrOptions['disabled'] ? 'disabled' : null);
@@ -464,6 +464,7 @@ class form_select_option extends form_element
     }
 }
 
+
 /**
  * Classe de gestion des champs de type "select" d'un formulaire
  */
@@ -542,20 +543,42 @@ class form_select extends form_field
     private function _renderOptions($arrValues, $intTabindex)
     {
         $strOutput = '';
+        $strCurrentGroup = '';
+        $strGroup = '';
 
         foreach($arrValues as $mixKey => $mixValue)
         {
-            if (is_array($mixValue))
-            {
-                $mixKey = htmlentities($mixKey);
-                //$strOutput .= "<optgroup label=\"{$mixKey}\">".$this->_renderOptions($mixValue)."</optgroup>";
-            }
-            elseif (is_object($mixValue) && $mixValue instanceof form_select_option)
+            if (is_object($mixValue) && $mixValue instanceof form_select_option)
             {
                 $strOutput .= $mixValue->render($intTabindex);
             }
             else
             {
+                if (is_array($mixValue))
+                {
+                    if (isset($mixValue['label']))
+                    {
+                        $strGroup = isset($mixValue['group']) ? htmlentities($mixValue['group']) : '';
+                        $mixValue = $mixValue['label'];
+                    }
+                    else
+                    {
+                        trigger_error('Valeur d\'option incorrecte', E_USER_ERROR);
+                    }
+                }
+
+                if ($strGroup != $strCurrentGroup)
+                {
+                    // Fermeture du précédent groupe
+                    if ($strCurrentGroup != '') $strOutput .= "</optgroup>";
+
+                    // Ouverture nouveau groupe
+                    if ($strGroup != '') $strOutput .= "<optgroup label=\"{$strGroup}\">";
+
+                    $strCurrentGroup = $strGroup;
+                }
+
+
                 $mixValue = str_replace(' ', '&nbsp;', htmlentities($mixValue));
                 $mixKey = htmlentities($mixKey);
 
@@ -563,6 +586,9 @@ class form_select extends form_field
                 $strOutput .= "<option value=\"{$mixKey}\"{$strSelected}>{$mixValue}</option>";
             }
         }
+
+        // Fermeture du précédent groupe
+        if ($strCurrentGroup != '') $strOutput .= "</optgroup>";
 
         return $strOutput;
     }
@@ -948,6 +974,8 @@ class form_richtext extends form_field
         return $this->renderForm("<span{$strStyle}>".$strContent.'</span>');
     }
 }
+
+
 /**
  * Classe de gestion des champs de type "datetime" d'un formulaire
  *
@@ -961,6 +989,8 @@ class form_datetime extends form_field
      */
     private static $_arrDefaultOptions = array(
         'style' => 'width:100px;margin-right:2px;',
+        'style_h' => 'width:45px;margin-right:2px;',
+        'style_m' => 'width:45px;'
     );
 
     /**
@@ -991,17 +1021,31 @@ class form_datetime extends form_field
 
         $strEvents = $this->generateEvents();
         $strProperties = $this->generateProperties();
-        $strMaxLength = is_null($this->_arrOptions['maxlength']) || !is_numeric($this->_arrOptions['maxlength']) ? '' : " maxlength=\"{$this->_arrOptions['maxlength']}\"";
-        $arrValues = ploopi_array_map('htmlentities', $this->_arrValues);
+        $strProperties_H = $this->generateProperties(null, $this->_arrOptions['style_h']);
+        $strProperties_M = $this->generateProperties(null, $this->_arrOptions['style_m']);
 
-        $strOutput .= "<input type=\"text\" name=\"{$this->_strName}_date\" id=\"{$this->_strId}_date\" value=\"{$arrValues['date']}\" tabindex=\"{$intTabindex}\"{$strProperties}{$strMaxLength}{$strEvents} />";
+        $strMaxLength = is_null($this->_arrOptions['maxlength']) || !is_numeric($this->_arrOptions['maxlength']) ? '' : " maxlength=\"{$this->_arrOptions['maxlength']}\"";
+        $strDate = htmlentities($this->_arrValues['date']);
+        list($strHour, $strMinute) = explode(':', $this->_arrValues['time']);
+
+        $strOutput .= "<input type=\"text\" name=\"{$this->_strName}_date\" id=\"{$this->_strId}_date\" value=\"{$strDate}\" tabindex=\"{$intTabindex}\"{$strProperties}{$strMaxLength}{$strEvents} />";
         if (!$this->_arrOptions['readonly'] && !$this->_arrOptions['disabled']) $strOutput .= ploopi_open_calendar($this->_strId.'_date', false, null, 'display:block;float:left;margin-left:-35px;margin-top:5px;');
-        $strOutput .= "<input type=\"text\" name=\"{$this->_strName}_time\" id=\"{$this->_strId}_time\" value=\"{$arrValues['time']}\" tabindex=\"{$intTabindex}\"{$strProperties}{$strMaxLength}{$strEvents} />";
+
+        $strOutput .= "<select name=\"{$this->_strName}_time_h\" id=\"{$this->_strId}_time_h\" tabindex=\"{$intTabindex}\"{$strProperties_H}{$strEvents}>";
+        for ($intH = 0; $intH < 24; $intH++ ) $strOutput .= sprintf('<option %s value="%2$02d">%2$02d</option>', $intH == intval($strHour) ? 'selected="selected"' : '', $intH);
+        $strOutput .= "</select>";
+
+        $strOutput .= "<select name=\"{$this->_strName}_time_m\" id=\"{$this->_strId}_time_m\" tabindex=\"{$intTabindex}\"{$strProperties_M}{$strEvents}>";
+        for ($intM = 0; $intM < 59; $intM++ ) $strOutput .= sprintf('<option %s value="%2$02d">%2$02d</option>', $intM == intval($strMinute) ? 'selected="selected"' : '', $intM);
+        $strOutput .= "</select>";
+
+        //$strOutput .= "<input type=\"text\" name=\"{$this->_strName}_time\" id=\"{$this->_strId}_time\" value=\"{$arrValues['time']}\" tabindex=\"{$intTabindex}\"{$strProperties}{$strMaxLength}{$strEvents} />";
 
         return $this->renderForm($strOutput);
 
     }
 }
+
 
 /**
  * Classe de gestion des boutons d'un formulaire
@@ -1554,6 +1598,13 @@ class form
                             $strOutput .= "\nif ({$strCond} ploopi_validatefield('".addslashes(strip_tags(html_entity_decode($objField->_strLabel)))."', {$strFormField}, '{$strFormat}'))";
                         break;
 
+                        case 'input:hidden':
+                            if (isset($objField->_arrOptions['label'])) {
+                                $strFormat = ($objField->_arrOptions['required'] ? '' : 'empty').$objField->_arrOptions['datatype'];
+                                $strOutput .= "\nif (ploopi_validatefield('".addslashes(strip_tags(html_entity_decode($objField->_arrOptions['label'])))."', {$strFormField}, '{$strFormat}'))";
+                            }
+                        break;
+
                         case 'select':
                         case 'color':
                             if ($objField->_arrOptions['required']) $strOutput .= "\nif ({$strCond} ploopi_validatefield('".addslashes(strip_tags(html_entity_decode($objField->_strLabel)))."', {$strFormField}, 'selected'))";
@@ -1570,11 +1621,10 @@ class form
                         case 'datetime':
                             $strCond = "$('{$objField->_strId}_form').style.display == 'none' ||";
 
-                            foreach(array('date', 'time') as $key) {
-                                $strFormField = "form['{$objField->_strName}_{$key}']";
-                                $strFormat = ($objField->_arrOptions['required'] ? '' : 'empty').$key;
-                                $strOutput .= "\nif ({$strCond} ploopi_validatefield('".addslashes(strip_tags(html_entity_decode($objField->_strLabel)))."', {$strFormField}, '{$strFormat}'))";
-                            }
+                            $strFormField = "form['{$objField->_strName}_date']";
+                            $strFormat = ($objField->_arrOptions['required'] ? 'date' : 'emptydate');
+                            $strOutput .= "\nif ({$strCond} ploopi_validatefield('".addslashes(strip_tags(html_entity_decode($objField->_strLabel)))."', {$strFormField}, '{$strFormat}'))";
+
                         break;
                     }
                 }

@@ -1,6 +1,5 @@
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2013 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -46,18 +45,10 @@ function ploopi_documents_deletefolder(query, documents_id)
 
 function ploopi_documents_browser(query, documents_id, asynchronous)
 {
-    // ploopi_documents_browser(documents_id, currentfolder, mode, orderby, asynchronous)
-    //if (typeof(currentfolder) == 'undefined') currentfolder = '';
-    //if (typeof(orderby) == 'undefined') orderby = '';
-    //if (typeof(mode) == 'undefined') mode = '';
-    // var option = (orderby != '') ? '&orderby='+orderby : '';
-
     if (typeof(asynchronous) == 'undefined') asynchronous = false;
-
 
     if (asynchronous)
     {
-        // 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=documents_browser&mode='+mode+'&currentfolder='+currentfolder+option
         ploopi_ajaxloader('ploopidocuments_'+documents_id);
         ploopi_xmlhttprequest_todiv('admin-light.php', query,'ploopidocuments_'+documents_id);
     }
@@ -78,17 +69,10 @@ function ploopi_documents_validate(form)
     return false;
 }
 
-function ploopi_documents_popup(id_object, id_record, id_module, destfield, event, callback, rootname, width)
+// Ouverture d'un popup de sélection de fichier
+function ploopi_documents_selectfile(query, event, width)
 {
-    var documents_id = ploopi_base64_encode(id_module+'_'+id_object+'_'+ploopi_addslashes(id_record)+'_popup');
-
-    if (typeof(callback) == 'undefined') callback = false;
-    if (typeof(rootname) == 'undefined') rootname = '';
     if (typeof(width) == 'undefined') width = 600;
-
-    query = 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=documents_selectfile&id_object='+id_object+'&id_record='+id_record+'&documents_id='+documents_id+'&destfield='+encodeURIComponent(destfield)+'&rootname='+encodeURIComponent(rootname)+'&callback='+(callback?1:0);
-
     ploopi_showpopup(ploopi_ajaxloader_content, width, event, 'click', 'ploopi_documents_popup');
-
     ploopi_xmlhttprequest_todiv('admin-light.php', query, 'ploopi_documents_popup', 'get');
 }

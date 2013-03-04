@@ -33,18 +33,20 @@
 
 switch($ploopi_op)
 {
-      /***********************/
-     /** DOCUMENTS_BROWSER **/
-    /***********************/
 
+    // Appelé depuis fonction javascript d'ouverture du popup de navigation/sélection de fichier
     case 'documents_selectfile':
+        if (empty($_REQUEST['documents_id'])) return;
 
-        if (empty($_GET['id_object']) || empty($_GET['id_record'])) break;
-        if (!isset($_GET['callback']) || !isset($_GET['destfield'])) break;
+        $documents_id = $_REQUEST['documents_id'];
 
         ob_start();
 
-        ploopi_documents($_GET['id_object'], $_GET['id_record'], null, null, array('ROOT_NAME' => empty($_GET['rootname']) ? '' : $_GET['rootname'], 'MODE' => empty($_GET['callback']) ? 'selectfile' : 'selectfile_callback', 'TARGET' => $_GET['destfield'], 'FIELDS' => array('label', 'size', 'timestp_modify')));
+        ?>
+        <div id="ploopidocuments_<?php echo $documents_id; ?>">
+            <?php ploopi_documents_browser($_SESSION['documents'][$documents_id]['currentfolder'], $documents_id); ?>
+        </div>
+        <?php
 
         $content = ob_get_contents();
         ob_end_clean();
@@ -53,56 +55,27 @@ switch($ploopi_op)
     break;
 
 
+
     case 'documents_browser':
         include_once './include/classes/documents.php';
 
+        // Vérification de l'id de l'instance
+        if (!isset($_REQUEST['documents_id'])) return;
+
+        $documents_id = $_REQUEST['documents_id'];
+
+        // Vérification des paramètres de l'instance
+        if (!isset($_SESSION['documents'][$documents_id])) return;
+
+
         if (isset($_REQUEST['currentfolder'])) $currentfolder = $_REQUEST['currentfolder'];
-        if (isset($_REQUEST['mode'])) $_SESSION['documents']['mode'] = $_REQUEST['mode'];
+        else $currentfolder = $_SESSION['documents'][$documents_id]['currentfolder'];
 
-        if (empty($currentfolder)) // on va chercher la racine
-        {
-            $db->query("SELECT md5id FROM ploopi_documents_folder WHERE id_folder = 0 and id_object = '{$_SESSION['documents']['id_object']}' and id_record = '".$db->addslashes($_SESSION['documents']['id_record'])."'");
-
-            if ($row = $db->fetchrow()) $currentfolder = $row['md5id'];
-            else // racine inexistante, il faut la créer
-            {
-                $documentsfolder = new documentsfolder();
-                $documentsfolder->fields['name'] = 'Racine';
-                $documentsfolder->fields['id_folder'] = 0;
-                $documentsfolder->fields['id_object'] = $_SESSION['documents']['id_object'];
-                $documentsfolder->fields['id_record'] = $_SESSION['documents']['id_record'];
-                $documentsfolder->fields['id_module'] = $_SESSION['documents']['id_module'];
-                $documentsfolder->fields['id_user'] = $_SESSION['documents']['id_user'];
-                $documentsfolder->fields['id_workspace'] = $_SESSION['documents']['id_workspace'];
-                $documentsfolder->save();
-                $currentfolder = $documentsfolder->fields['md5id'];
-            }
-        }
-
-        ploopi_documents_browser($currentfolder);
-
-        if ($ploopi_op == 'documents_selectfile')
-        {
-            ?>
-            </div>
-            <?php
-            $content = ob_get_contents();
-            ob_end_clean();
-
-            echo $skin->create_popup('Explorateur de fichiers', $content, 'ploopi_documents_popup');
-        }
+        ploopi_documents_browser($currentfolder, $documents_id);
 
         ploopi_die();
     break;
 
-    case 'documents_popup':
-        //include_once './include/functions/documents.php';
-        //ploopi_documents($_GET['id_object'], $_GET['id_record']);
-        ?>
-        <div id="ploopidocuments_<?php echo ploopi_documents_getid($_GET['id_object'], $_GET['id_record']); ?>"></div>
-        <?php
-        ploopi_die();
-    break;
 
     case 'documents_downloadfile':
         if (!empty($_GET['documentsfile_id']))
@@ -121,14 +94,8 @@ switch($ploopi_op)
             }
         }
 
-        ploopi_ob_clean();
-
-        echo "Le fichier n'existe pas ou a été supprimé, redirection automatique dans 2 secondes...";
-
-        if (isset($_SERVER['HTTP_REFERER'])) ploopi_redirect($_SERVER['HTTP_REFERER'], false, false, 2);
-        else ploopi_redirect('admin.php', true, true, 2);
-
-        ploopi_die();
+        echo "Le fichier n'existe pas";
+        ploopi_redirect('admin.php', true, true, 2);
     break;
 
     case 'documents_downloadfile_zip':
@@ -168,14 +135,8 @@ switch($ploopi_op)
             }
         }
 
-        ploopi_ob_clean();
-
-        echo "Le fichier n'existe pas ou a été supprimé, redirection automatique dans 2 secondes...";
-
-        if (isset($_SERVER['HTTP_REFERER'])) ploopi_redirect($_SERVER['HTTP_REFERER'], false, false, 2);
-        else ploopi_redirect('admin.php', true, true, 2);
-
-        ploopi_die();
+        echo "Le fichier n'existe pas";
+        ploopi_redirect('admin.php', true, true, 2);
     break;
 
     case 'documents_savefolder':
@@ -183,7 +144,13 @@ switch($ploopi_op)
         $documentsfolder = new documentsfolder();
         $documentsfolder_parent = new documentsfolder();
 
+        // Contrôle currentfolder
         if (!isset($_GET['currentfolder']) || !$documentsfolder_parent->openmd5($_GET['currentfolder'])) ploopi_die();
+        // Contrôle id instance
+        if (!isset($_GET['documents_id']) || !isset($_SESSION['documents'][$_GET['documents_id']])) ploopi_die();
+
+        $currentfolder = $_GET['currentfolder'];
+        $documents_id = $_GET['documents_id'];
 
         if (!empty($_GET['documentsfolder_id']))
         {
@@ -202,19 +169,19 @@ switch($ploopi_op)
                 $documentsfolder->fields['description'] = $_POST['fck_documentsfolder_description'];
 
             $documentsfolder->fields['id_folder'] = $documentsfolder_parent->fields['id'];
-            $documentsfolder->fields['id_object'] = $_SESSION['documents']['id_object'];
-            $documentsfolder->fields['id_record'] = $_SESSION['documents']['id_record'];
-            $documentsfolder->fields['id_module'] = $_SESSION['documents']['id_module'];
-            $documentsfolder->fields['id_user'] = $_SESSION['documents']['id_user'];
-            $documentsfolder->fields['id_workspace'] = $_SESSION['documents']['id_workspace'];
+            $documentsfolder->fields['id_object'] = $_SESSION['documents'][$documents_id]['id_object'];
+            $documentsfolder->fields['id_record'] = $_SESSION['documents'][$documents_id]['id_record'];
+            $documentsfolder->fields['id_module'] = $_SESSION['documents'][$documents_id]['id_module'];
+            $documentsfolder->fields['id_user'] = $_SESSION['documents'][$documents_id]['id_user'];
+            $documentsfolder->fields['id_workspace'] = $_SESSION['documents'][$documents_id]['id_workspace'];
             $documentsfolder->save();
 
-            if (!empty($_SESSION['documents']['callback_inc'])) include $_SESSION['documents']['callback_inc'];
-            if (!empty($_SESSION['documents']['callback_func'])) $_SESSION['documents']['callback_func']('savefolder', $documentsfolder);
+            if (!empty($_SESSION['documents'][$documents_id]['callback_inc'])) include $_SESSION['documents'][$documents_id]['callback_inc'];
+            if (!empty($_SESSION['documents'][$documents_id]['callback_func'])) $_SESSION['documents'][$documents_id]['callback_func']('savefolder', $documentsfolder);
         }
         ?>
         <script type="text/javascript">
-            window.parent.ploopi_documents_browser('<?php echo ploopi_queryencode("ploopi_op=documents_browser&currentfolder={$_GET['currentfolder']}&mode={$_SESSION['documents']['mode']}"); ?>', '<?php echo $_SESSION['documents']['documents_id']; ?>');
+            window.parent.ploopi_documents_browser('<?php echo ploopi_queryencode("ploopi_op=documents_browser&currentfolder={$currentfolder}&documents_id={$documents_id}"); ?>', '<?php echo $documents_id; ?>');
             window.parent.ploopi_hidepopup('ploopi_documents_openfolder_popup');
         </script>
         <?php
@@ -222,9 +189,14 @@ switch($ploopi_op)
     break;
 
     case 'documents_openfolder':
+
+        if (empty($_GET['currentfolder'])) return;
+        if (empty($_GET['documents_id'])) return;
+
         ob_start();
         include_once './include/classes/documents.php';
         $documentsfolder = new documentsfolder();
+
 
         if (empty($_GET['documentsfolder_id']))
         {
@@ -237,7 +209,7 @@ switch($ploopi_op)
             $title = "Modification du Dossier";
         }
 
-        $url = "admin-light.php?ploopi_op=documents_savefolder&currentfolder={$_GET['currentfolder']}";
+        $url = "admin-light.php?ploopi_op=documents_savefolder&currentfolder={$_GET['currentfolder']}&documents_id={$_GET['documents_id']}";
         if (!empty($_GET['documentsfolder_id'])) $url .= "&documentsfolder_id={$_GET['documentsfolder_id']}";
 
         ?>
@@ -294,16 +266,22 @@ switch($ploopi_op)
         $documentsfile = new documentsfile();
         $documentsfolder = new documentsfolder();
 
+        // Contrôle currentfolder
         if (!isset($_GET['currentfolder']) || !$documentsfolder->openmd5($_GET['currentfolder'])) ploopi_die();
+        // Contrôle id instance
+        if (!isset($_GET['documents_id']) || !isset($_SESSION['documents'][$_GET['documents_id']])) ploopi_die();
+
+        $currentfolder = $_GET['currentfolder'];
+        $documents_id = $_GET['documents_id'];
 
         if (!empty($_GET['documentsfile_id'])) $documentsfile->openmd5($_GET['documentsfile_id']);
         else
         {
-            $documentsfile->fields['id_object'] = $_SESSION['documents']['id_object'];
-            $documentsfile->fields['id_record'] = $_SESSION['documents']['id_record'];
-            $documentsfile->fields['id_module'] = $_SESSION['documents']['id_module'];
-            $documentsfile->fields['id_user'] = $_SESSION['documents']['id_user'];
-            $documentsfile->fields['id_workspace'] = $_SESSION['documents']['id_workspace'];
+            $documentsfile->fields['id_object'] = $_SESSION['documents'][$documents_id]['id_object'];
+            $documentsfile->fields['id_record'] = $_SESSION['documents'][$documents_id]['id_record'];
+            $documentsfile->fields['id_module'] = $_SESSION['documents'][$documents_id]['id_module'];
+            $documentsfile->fields['id_user'] = $_SESSION['documents'][$documents_id]['id_user'];
+            $documentsfile->fields['id_workspace'] = $_SESSION['documents'][$documents_id]['id_workspace'];
         }
 
         $documentsfile->setvalues($_POST,'documentsfile_');
@@ -325,11 +303,11 @@ switch($ploopi_op)
 
         $error = $documentsfile->save();
 
-        if (!empty($_SESSION['documents']['callback_inc'])) include $_SESSION['documents']['callback_inc'];
-        if (!empty($_SESSION['documents']['callback_func'])) $_SESSION['documents']['callback_func']('savefile', $documentsfile);
+        if (!empty($_SESSION['documents']['callback_inc'])) include $_SESSION['documents'][$documents_id]['callback_inc'];
+        if (!empty($_SESSION['documents']['callback_func'])) $_SESSION['documents'][$documents_id]['callback_func']('savefile', $documentsfile);
         ?>
         <script type="text/javascript">
-            window.parent.ploopi_documents_browser('<?php echo ploopi_queryencode("ploopi_op=documents_browser&currentfolder={$_GET['currentfolder']}&mode={$_SESSION['documents']['mode']}"); ?>', '<?php echo $_SESSION['documents']['documents_id']; ?>');
+            window.parent.ploopi_documents_browser('<?php echo ploopi_queryencode("ploopi_op=documents_browser&currentfolder={$currentfolder}&documents_id={$documents_id}"); ?>', '<?php echo $documents_id; ?>');
             window.parent.ploopi_hidepopup('ploopi_documents_openfile_popup');
         </script>
         <?php
@@ -340,6 +318,9 @@ switch($ploopi_op)
         ob_start();
         include_once './include/classes/documents.php';
         $documentsfile = new documentsfile();
+
+        if (empty($_GET['currentfolder'])) return;
+        if (empty($_GET['documents_id'])) return;
 
         if (empty($_GET['documentsfile_id']))
         {
@@ -354,7 +335,7 @@ switch($ploopi_op)
 
         $ldate = ($documentsfile->fields['timestp_file']!=0 && $documentsfile->fields['timestp_file']!='') ? ploopi_timestamp2local($documentsfile->fields['timestp_file']) : array('date' => '');
 
-        $url = "admin-light.php?ploopi_op=documents_savefile&currentfolder={$_GET['currentfolder']}";
+        $url = "admin-light.php?ploopi_op=documents_savefile&currentfolder={$_GET['currentfolder']}&documents_id={$_GET['documents_id']}";
         if (!empty($_GET['documentsfile_id'])) $url .= "&documentsfile_id={$_GET['documentsfile_id']}";
 
         ?>
@@ -440,7 +421,10 @@ switch($ploopi_op)
     break;
 
     case 'documents_deletefile':
-        if (!isset($_GET['currentfolder'])) ploopi_die();
+        // Vérification de l'id de l'instance
+        if (!isset($_REQUEST['documents_id'])) return;
+
+        if (!isset($_GET['currentfolder'])) return;
 
         include_once './include/classes/documents.php';
 
@@ -454,11 +438,14 @@ switch($ploopi_op)
             if (!empty($_SESSION['documents']['callback_func'])) $_SESSION['documents']['callback_func']('deletefile', $documentsfile);
         }
 
-        ploopi_redirect("admin.php?ploopi_op=documents_browser&currentfolder={$_GET['currentfolder']}");
+        ploopi_redirect("admin.php?ploopi_op=documents_browser&currentfolder={$_GET['currentfolder']}&documents_id={$_REQUEST['documents_id']}");
     break;
 
     case 'documents_deletefolder':
-        if (!isset($_GET['currentfolder'])) ploopi_die();
+        // Vérification de l'id de l'instance
+        if (!isset($_REQUEST['documents_id'])) return;
+
+        if (!isset($_GET['currentfolder'])) return;
 
         include_once './include/classes/documents.php';
 
@@ -471,7 +458,7 @@ switch($ploopi_op)
             if (!empty($_SESSION['documents']['callback_inc'])) include $_SESSION['documents']['callback_inc'];
             if (!empty($_SESSION['documents']['callback_func'])) $_SESSION['documents']['callback_func']('deletefolder', $documentsfolder);
         }
-        ploopi_redirect("admin.php?ploopi_op=documents_browser&currentfolder={$_GET['currentfolder']}");
+        ploopi_redirect("admin.php?ploopi_op=documents_browser&currentfolder={$_GET['currentfolder']}&documents_id={$_REQUEST['documents_id']}");
     break;
 }
 ?>

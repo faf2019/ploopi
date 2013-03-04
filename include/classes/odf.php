@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2012 Ovensia
+    Copyright (c) 2007-2013 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -60,8 +60,23 @@ class odf_varparser
         <style:style style:name="PLOOPI_UNDERLINE" style:family="text">
             <style:text-properties style:text-underline-style="solid" style:text-underline-width="auto" style:text-underline-color="font-color"/>
         </style:style>
-    ';
 
+        <style:style style:name="PLOOPI_PAGE" style:family="paragraph" style:parent-style-name="Standard">
+            <style:paragraph-properties fo:break-before="page"/>
+        </style:style>
+
+        <style:style style:name="PLOOPI_IMG_LEFT" style:family="graphic" style:parent-style-name="Graphics">
+            <style:graphic-properties style:horizontal-pos="left" style:horizontal-rel="paragraph" style:mirror="none" fo:margin-top="0.15cm" fo:margin-right="0.15cm" fo:margin-bottom="0.15cm" fo:margin-left="0.15cm" fo:clip="rect(0cm, 0cm, 0cm, 0cm)" draw:luminance="0%" draw:contrast="0%" draw:red="0%" draw:green="0%" draw:blue="0%" draw:gamma="100%" draw:color-inversion="false" draw:image-opacity="100%" draw:color-mode="standard"/>
+        </style:style>
+
+        <style:style style:name="PLOOPI_IMG_RIGHT" style:family="graphic" style:parent-style-name="Graphics">
+            <style:graphic-properties style:horizontal-pos="right" style:horizontal-rel="paragraph" style:mirror="none" fo:margin-top="0.15cm" fo:margin-right="0.15cm" fo:margin-bottom="0.15cm" fo:margin-left="0.15cm" fo:clip="rect(0cm, 0cm, 0cm, 0cm)" draw:luminance="0%" draw:contrast="0%" draw:red="0%" draw:green="0%" draw:blue="0%" draw:gamma="100%" draw:color-inversion="false" draw:image-opacity="100%" draw:color-mode="standard"/>
+        </style:style>
+
+        <style:style style:name="PLOOPI_IMG_CENTER" style:family="graphic" style:parent-style-name="Graphics">
+            <style:graphic-properties style:horizontal-pos="center" style:horizontal-rel="paragraph" style:mirror="none" fo:margin-top="0.15cm" fo:margin-right="0.15cm" fo:margin-bottom="0.15cm" fo:margin-left="0.15cm" fo:clip="rect(0cm, 0cm, 0cm, 0cm)" draw:luminance="0%" draw:contrast="0%" draw:red="0%" draw:green="0%" draw:blue="0%" draw:gamma="100%" draw:color-inversion="false" draw:image-opacity="100%" draw:color-mode="standard"/>
+        </style:style>
+    ';
 
     /**
      * Constructeur de la classe. Crée le parser.
@@ -121,12 +136,6 @@ class odf_varparser
 
         $this->xmltags[] = array($tag, $params_str);
 
-        if ($tag == 'text:span')
-        {
-            echo "ici";
-        }
-
-
         if ($tag == 'office:automatic-styles')
         {
             // Insertion des styles PLOOPI de base
@@ -168,7 +177,11 @@ class odf_varparser
 
         // traitement des retours chariot (CR LF), fonction de la balise contenant
         // $data = preg_replace("/\r\n|\n|\r/", "</{$tag[0]}><{$tag[0]} {$tag[1]}>", $data);
-        $data = str_replace("[ploopi-br]", "</{$tag[0]}><{$tag[0]} {$tag[1]}>", $data);
+        $data = str_replace(
+            array("[ploopi-br]", "[ploopi-hr]"),
+            array("</{$tag[0]}><{$tag[0]} {$tag[1]}>", "</{$tag[0]}><{$tag[0]} text:style-name=\"PLOOPI_PAGE\">"),
+            $data
+        );
 
         $this->parsed_data .= $data;
     }
@@ -454,6 +467,27 @@ class odf_html2odf
                 $this->_result .= $content;
             break;
 
+            case 'hr':
+                // Astuce pour traiter les retours à la ligne :
+                // Fermer tous les span/a ouverts et les réouvrir
+                foreach($this->_stack as $row) {
+                    switch($row[0]) {
+                        case 'a':
+                            $this->_result .= '</text:a>';
+                        break;
+                        default:
+                            $this->_result .= '</text:span>';
+                        break;
+                    }
+                }
+
+                $this->_result .= "[ploopi-hr]"; // Ils sont traités plus tard
+
+                foreach($this->_stack as $row) $this->_result .= $row[1];
+            break;
+
+
+            case 'p':
             case 'br':
                 // Astuce pour traiter les retours à la ligne :
                 // Fermer tous les span/a ouverts et les réouvrir
@@ -638,17 +672,20 @@ class odf_parser
      * @param string $value chemin absolu vers le fichier image
      * @param string $width largeur de l'image
      * @param string $height hauteur de l'image
+     * @param string $align left, right, center
+     * @param string $anchortype paragraph, as-char
      */
 
-    public function set_image($key, $value, $width = '5cm', $height = '5cm')
+    public function set_image($key, $value, $width = '5cm', $height = '5cm', $align = 'left', $anchortype = 'paragraph')
     {
         $file = basename($value);
         $this->images[$value] = $file;
         $name = 'image'.sizeof($this->images);
+        $style = 'PLOOPI_IMG_'.strtoupper($align);
 
-        $xml = '<draw:frame draw:style-name="fr1" draw:name="'.$name.'" text:anchor-type="paragraph" svg:width="'.$width.'" svg:height="'.$height.'" draw:z-index="0"><draw:image xlink:href="Pictures/'.$file.'" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/></draw:frame>';
+        $xml = '<draw:frame draw:style-name="'.$style.'" draw:name="'.$name.'" text:anchor-type="'.$anchortype.'" svg:width="'.$width.'" svg:height="'.$height.'" draw:z-index="0"><draw:image xlink:href="Pictures/'.$file.'" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/></draw:frame>';
 
-        $this->set_var($key, $xml, false);
+        $this->set_var($key, $xml, false, true);
     }
 
     /**
@@ -689,32 +726,35 @@ class odf_parser
         {
             foreach($v as $key => $row)
             {
-                if (empty($row['type'])) $row['type'] = 'var';
-                if (empty($row['value'])) $row['value'] = '';
+                if (!isset($row['type'])) $row['type'] = 'var';
+                if (!isset($row['value'])) $row['value'] = '';
 
-                switch($row['type'])
+                if (!isset($row['clean'])) $row['clean'] = true;
+                if (!isset($row['html'])) $row['html'] = false;
+
+                if ($row['type'] == 'image')
                 {
-                    case 'var':
-                        if (empty($row['html'])) $row['value'] = ploopi_nl2br(htmlentities($row['value']));
-                        if (empty($row['clean'])) $row['value'] = self::clean_var($row['value']);
+                    if (empty($row['width'])) $row['width'] = '5cm';
+                    if (empty($row['height'])) $row['height'] = '5cm';
+                    if (empty($row['align'])) $row['align'] = 'left';
+                    if (empty($row['anchortype'])) $row['anchortype'] = 'paragraph';
 
-                        $this->blockvars[$blockname][$k]['{'.$key.'}'] = $row['value'];
-                    break;
+                    $row['html'] = true;
+                    $row['clean'] = false;
 
-                    case 'image':
-                        if (empty($row['width'])) $row['width'] = '5cm';
-                        if (empty($row['height'])) $row['height'] = '5cm';
+                    $file = basename($row['value']);
+                    $this->images[$row['value']] = $file;
+                    $name = 'image'.sizeof($this->images);
+                    $style = 'PLOOPI_IMG_'.strtoupper($row['align']);
 
-                        $file = basename($row['value']);
-                        $this->images[$row['value']] = $file;
-                        $name = 'image'.sizeof($this->images);
-
-                        $xml = '<draw:frame draw:style-name="fr1" draw:name="'.$name.'" text:anchor-type="paragraph" svg:width="'.$row['width'].'" svg:height="'.$row['height'].'" draw:z-index="0"><draw:image xlink:href="Pictures/'.$file.'" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/></draw:frame>';
-
-
-                        $this->blockvars[$blockname][$k]['{'.$key.'}'] = $xml;
-                    break;
+                    $row['value'] = '<draw:frame draw:style-name="'.$style.'" draw:name="'.$name.'" text:anchor-type="'.$row['anchortype'].'" svg:width="'.$row['width'].'" svg:height="'.$row['height'].'" draw:z-index="0"><draw:image xlink:href="Pictures/'.$file.'" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/></draw:frame>';
                 }
+
+                if (!$row['html']) $row['value'] = ploopi_nl2br(htmlentities($row['value']));
+                if ($row['clean']) $row['value'] = self::clean_var($row['value']);
+
+                $this->blockvars[$blockname][$k]['{'.$key.'}'] = $row['value'];
+
             }
         }
 
@@ -874,16 +914,17 @@ class odf_converter
 
     function convert($inputData, $inputType, $outputType)
     {
-        ploopi_unset_error_handler();
-        require_once 'HTTP/Request.php';
-        ploopi_set_error_handler();
-        $request = new HTTP_Request($this->url);
-        $request->setMethod("POST");
-        $request->addHeader("Content-Type", $inputType);
-        $request->addHeader("Accept", $outputType);
-        $request->setBody($inputData);
-        $request->sendRequest();
-        return $request->getResponseBody();
+        require_once 'HTTP/Request2.php';
+
+        $objRequest = new HTTP_Request2($this->url);
+
+        return $objRequest
+            ->setMethod(HTTP_Request2::METHOD_POST)
+            ->setHeader("Content-Type", $inputType)
+            ->setHeader("Accept", $outputType)
+            ->setBody($inputData)
+            ->send()
+            ->getBody();
     }
 }
 ?>

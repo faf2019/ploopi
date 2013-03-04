@@ -91,7 +91,7 @@ $values = array();
 $c = 0;
 
 $columns['auto']['desc']        = array('label' => _SYSTEM_LABEL_DESCRIPTION, 'options' => array('sort' => true));
-$columns['right']['action']     = array('label' => _SYSTEM_LABEL_UNINSTALL, 'width' => '100', 'style' => 'text-align:center;');
+$columns['right']['action']     = array('label' => _SYSTEM_LABEL_UNINSTALL, 'width' => '130', 'style' => 'text-align:center;');
 $columns['right']['wce']        = array('label' => _SYSTEM_LABEL_WCEOBJECTS, 'width' => '100');
 $columns['right']['metabase']   = array('label' => _SYSTEM_LABEL_METABASE, 'width' => '80');
 $columns['right']['actions']    = array('label' => _SYSTEM_LABEL_ACTIONS, 'width' => '60');
@@ -163,7 +163,7 @@ $values = array();
 $c = 0;
 
 $columns['auto']['desc'] = array('label' => _SYSTEM_LABEL_DESCRIPTION, 'options' => array('sort' => true));
-$columns['right']['action'] = array('label' => _SYSTEM_LABEL_UPDATE, 'width' => '100', 'style' => 'text-align:center;');
+$columns['right']['action'] = array('label' => _SYSTEM_LABEL_UPDATE, 'width' => '130', 'style' => 'text-align:center;');
 $columns['right']['date'] = array('label' => _SYSTEM_LABEL_DATE, 'width' => '80', 'options' => array('sort' => true));
 $columns['right']['version'] = array('label' => _SYSTEM_LABEL_VERSION, 'width' => '75', 'options' => array('sort' => true));
 $columns['right']['author'] = array('label' => _SYSTEM_LABEL_AUTHOR, 'width' => '130', 'options' => array('sort' => true));
@@ -209,7 +209,7 @@ $values = array();
 $c = 0;
 
 $columns['auto']['desc'] = array('label' => _SYSTEM_LABEL_DESCRIPTION, 'options' => array('sort' => true));
-$columns['right']['action'] = array('label' => _SYSTEM_LABEL_INSTALL, 'width' => '100', 'style' => 'text-align:center;');
+$columns['right']['action'] = array('label' => _SYSTEM_LABEL_INSTALL, 'width' => '130', 'style' => 'text-align:center;');
 $columns['right']['date'] = array('label' => _SYSTEM_LABEL_DATE, 'width' => '80', 'options' => array('sort' => true));;
 $columns['right']['version'] = array('label' => _SYSTEM_LABEL_VERSION, 'width' => '75', 'options' => array('sort' => true));
 $columns['right']['author'] = array('label' => _SYSTEM_LABEL_AUTHOR, 'width' => '130', 'options' => array('sort' => true));
