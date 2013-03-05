@@ -208,8 +208,9 @@ class HTMLPurifier_CSSDefinition extends HTMLPurifier_Definition
 
         $this->info['border-spacing'] = new HTMLPurifier_AttrDef_CSS_Multiple(new HTMLPurifier_AttrDef_CSS_Length(), 2);
 
-        // partial support
-        $this->info['white-space'] = new HTMLPurifier_AttrDef_Enum(array('nowrap'));
+        // These CSS properties don't work on many browsers, but we live
+        // in THE FUTURE!
+        $this->info['white-space'] = new HTMLPurifier_AttrDef_Enum(array('nowrap', 'normal', 'pre', 'pre-wrap', 'pre-line'));
 
         if ($config->get('CSS.Proprietary')) {
             $this->doSetupProprietary($config);
@@ -217,6 +218,10 @@ class HTMLPurifier_CSSDefinition extends HTMLPurifier_Definition
 
         if ($config->get('CSS.AllowTricky')) {
             $this->doSetupTricky($config);
+        }
+
+        if ($config->get('CSS.Trusted')) {
+            $this->doSetupTrusted($config);
         }
 
         $allow_important = $config->get('CSS.AllowImportant');
@@ -245,12 +250,17 @@ class HTMLPurifier_CSSDefinition extends HTMLPurifier_Definition
         // only opacity, for now
         $this->info['filter'] = new HTMLPurifier_AttrDef_CSS_Filter();
 
+        // more CSS3
+        $this->info['page-break-after'] =
+        $this->info['page-break-before'] = new HTMLPurifier_AttrDef_Enum(array('auto','always','avoid','left','right'));
+        $this->info['page-break-inside'] = new HTMLPurifier_AttrDef_Enum(array('auto','avoid'));
+
     }
 
     protected function doSetupTricky($config) {
         $this->info['display'] = new HTMLPurifier_AttrDef_Enum(array(
             'inline', 'block', 'list-item', 'run-in', 'compact',
-            'marker', 'table', 'inline-table', 'table-row-group',
+            'marker', 'table', 'inline-block', 'inline-table', 'table-row-group',
             'table-header-group', 'table-footer-group', 'table-row',
             'table-column-group', 'table-column', 'table-cell', 'table-caption', 'none'
         ));
@@ -260,6 +270,23 @@ class HTMLPurifier_CSSDefinition extends HTMLPurifier_Definition
         $this->info['overflow'] = new HTMLPurifier_AttrDef_Enum(array('visible', 'hidden', 'auto', 'scroll'));
     }
 
+    protected function doSetupTrusted($config) {
+        $this->info['position'] = new HTMLPurifier_AttrDef_Enum(array(
+            'static', 'relative', 'absolute', 'fixed'
+        ));
+        $this->info['top'] =
+        $this->info['left'] =
+        $this->info['right'] =
+        $this->info['bottom'] = new HTMLPurifier_AttrDef_CSS_Composite(array(
+            new HTMLPurifier_AttrDef_CSS_Length(),
+            new HTMLPurifier_AttrDef_CSS_Percentage(),
+            new HTMLPurifier_AttrDef_Enum(array('auto')),
+        ));
+        $this->info['z-index'] = new HTMLPurifier_AttrDef_CSS_Composite(array(
+            new HTMLPurifier_AttrDef_Integer(),
+            new HTMLPurifier_AttrDef_Enum(array('auto')),
+        ));
+    }
 
     /**
      * Performs extra config-based processing. Based off of
@@ -272,17 +299,26 @@ class HTMLPurifier_CSSDefinition extends HTMLPurifier_Definition
         // setup allowed elements
         $support = "(for information on implementing this, see the ".
                    "support forums) ";
-        $allowed_attributes = $config->get('CSS.AllowedProperties');
-        if ($allowed_attributes !== null) {
+        $allowed_properties = $config->get('CSS.AllowedProperties');
+        if ($allowed_properties !== null) {
             foreach ($this->info as $name => $d) {
-                if(!isset($allowed_attributes[$name])) unset($this->info[$name]);
-                unset($allowed_attributes[$name]);
+                if(!isset($allowed_properties[$name])) unset($this->info[$name]);
+                unset($allowed_properties[$name]);
             }
             // emit errors
-            foreach ($allowed_attributes as $name => $d) {
+            foreach ($allowed_properties as $name => $d) {
                 // :TODO: Is this htmlspecialchars() call really necessary?
                 $name = htmlspecialchars($name);
                 trigger_error("Style attribute '$name' is not supported $support", E_USER_WARNING);
+            }
+        }
+
+        $forbidden_properties = $config->get('CSS.ForbiddenProperties');
+        if ($forbidden_properties !== null) {
+            foreach ($this->info as $name => $d) {
+                if (isset($forbidden_properties[$name])) {
+                    unset($this->info[$name]);
+                }
             }
         }
 
