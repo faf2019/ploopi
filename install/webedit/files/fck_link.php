@@ -48,7 +48,7 @@ else
     $webedit_idm = 0;
     foreach($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['modules'] as $idm)
     {
-        if (isset($_SESSION['ploopi']['modules'][$idm]['active']) && $_SESSION['ploopi']['modules'][$idm]['active'] && $_SESSION['ploopi']['modules'][$idm]['label'] == 'WEBEDIT') $webedit_idm = $idm;
+        if (!empty($_SESSION['ploopi']['modules'][$idm]['active']) && $_SESSION['ploopi']['modules'][$idm]['moduletype'] == 'webedit') $webedit_idm = $idm;
     }
 }
 

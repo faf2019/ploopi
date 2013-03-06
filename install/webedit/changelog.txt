@@ -1,3 +1,9 @@
+== Module WebEdit - version 2.5.0d ============================================
+
+2013-03-06  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+ * Correction d'un bug sur la détection du module lors d'un appel externe pour création de liens
+ 
 == Module WebEdit - version 2.5.0c ============================================
 
 2013-02-14  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
