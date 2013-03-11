@@ -398,7 +398,7 @@ class odf_blockparser
 
 /**
  * Conversion de balises HTML en version ODF
- * Pour le moment : strong, b, em, u, i
+ * Pour le moment : strong, b, em, u, i, img ?
  */
 
 class odf_html2odf
@@ -412,9 +412,15 @@ class odf_html2odf
 
     private $_stack = array();
 
-    public function __construct($html)
+    private $_odf_parser = null;
+
+    public function __construct($html, $odf_parser)
     {
-        $this->_html = $html;
+
+        $this->_odf_parser = $odf_parser;
+
+        // On contrôle la qualité du code HTML fourni
+        $this->_html = ploopi_htmlpurifier($html);
         $this->_result = '';
 
         $this->_html_parser = xml_parser_create('ISO-8859-1');
@@ -441,6 +447,38 @@ class odf_html2odf
     {
         switch(strtolower($tag))
         {
+            case 'img':
+                // $this->_result .= $content;
+                // ploopi_print_r($tag);
+                // ploopi_print_r($attribs);
+
+                $width = '5cm';
+                $height = '5cm';
+                $align = 'left';
+                $anchortype = 'paragraph';
+
+                if (file_exists($attribs['src'])) {
+
+                    // Récupération des styles (largeur, hauteur, alignement)
+                    if (!empty($attribs['style'])) {
+                        $arrStyle = explode(';', $attribs['style']);
+                        foreach($arrStyle as $key => $rowStyle) {
+                            $row = explode(':', $rowStyle);
+                            if (sizeof($row) == 2) {
+                                switch($row[0]) {
+                                    case 'width': $width = trim($row[1]); break;
+                                    case 'height': $height = trim($row[1]); break;
+                                    case 'text-align': $align = trim($row[1]); break;
+                                }
+                            }
+                        }
+                    }
+
+                    $this->_result .= $this->_odf_parser->add_image($attribs['src'], $width, $height, $align, $anchortype);
+                }
+
+            break;
+
             case 'a':
                 $content = '<text:a xlink:type="simple" xlink:href="'.$attribs['href'].'">';
                 $this->_stack[] = array('a', $content);
@@ -629,6 +667,27 @@ class odf_parser
         }
     }
 
+
+    /**
+     * Ajoute une image à la liste des images et génère le code xml associé
+     * @param string $image chemin absolu vers le fichier image
+     * @param string $width largeur de l'image
+     * @param string $height hauteur de l'image
+     * @param string $align left, right, center
+     * @param string $anchortype paragraph, as-char
+     * @return string xml source code
+     */
+
+    public function add_image($image, $width = '5cm', $height = '5cm', $align = 'left', $anchortype = 'paragraph')
+    {
+        $file = basename($image);
+        $this->images[$image] = $file;
+        $name = 'image'.sizeof($this->images);
+        $style = 'PLOOPI_IMG_'.strtoupper($align);
+
+        return '<draw:frame draw:style-name="'.$style.'" draw:name="'.$name.'" text:anchor-type="'.$anchortype.'" svg:width="'.$width.'" svg:height="'.$height.'" draw:z-index="0"><draw:image xlink:href="Pictures/'.$file.'" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/></draw:frame>';
+    }
+
     /**
      * Nettoie une chaîne (décode les entités html) et l'encode en UTF8
      * + traitement des URLs
@@ -637,13 +696,11 @@ class odf_parser
      * @return string chaîne "nettoyée"
      *
      */
-    protected static function clean_var($value)
+    public function clean_var($value)
     {
-        $odf_html2odf = new odf_html2odf($value);
+        $odf_html2odf = new odf_html2odf($value, $this);
         return $odf_html2odf->convert();
     }
-
-
 
 
     /**
@@ -660,7 +717,7 @@ class odf_parser
     public function set_var($key, $value, $clean = true, $html = false)
     {
         if (!$html) $value = ploopi_nl2br(htmlentities($value));
-        if ($clean) $value = self::clean_var($value);
+        if ($clean) $value = $this->clean_var($value);
 
         $this->vars['{'.$key.'}'] = $value;
     }
@@ -678,14 +735,7 @@ class odf_parser
 
     public function set_image($key, $value, $width = '5cm', $height = '5cm', $align = 'left', $anchortype = 'paragraph')
     {
-        $file = basename($value);
-        $this->images[$value] = $file;
-        $name = 'image'.sizeof($this->images);
-        $style = 'PLOOPI_IMG_'.strtoupper($align);
-
-        $xml = '<draw:frame draw:style-name="'.$style.'" draw:name="'.$name.'" text:anchor-type="'.$anchortype.'" svg:width="'.$width.'" svg:height="'.$height.'" draw:z-index="0"><draw:image xlink:href="Pictures/'.$file.'" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/></draw:frame>';
-
-        $this->set_var($key, $xml, false, true);
+        $this->set_var($this->add_image($value, $width, $height, $align, $anchortype), $xml, false, true);
     }
 
     /**
@@ -704,7 +754,7 @@ class odf_parser
             foreach($v as $key => $value)
             {
                 if (!$html) $value = ploopi_nl2br(htmlentities($value));
-                if ($clean) $value = self::clean_var($value);
+                if ($clean) $value = $this->clean_var($value);
                 $this->blockvars[$blockname][$k]['{'.$key.'}'] = $value;
             }
         }
@@ -742,16 +792,11 @@ class odf_parser
                     $row['html'] = true;
                     $row['clean'] = false;
 
-                    $file = basename($row['value']);
-                    $this->images[$row['value']] = $file;
-                    $name = 'image'.sizeof($this->images);
-                    $style = 'PLOOPI_IMG_'.strtoupper($row['align']);
-
-                    $row['value'] = '<draw:frame draw:style-name="'.$style.'" draw:name="'.$name.'" text:anchor-type="'.$row['anchortype'].'" svg:width="'.$row['width'].'" svg:height="'.$row['height'].'" draw:z-index="0"><draw:image xlink:href="Pictures/'.$file.'" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/></draw:frame>';
+                    $row['value'] = $this->add_image($row['value'], $row['width'], $row['height'], $row['align'], $row['anchortype']);
                 }
 
                 if (!$row['html']) $row['value'] = ploopi_nl2br(htmlentities($row['value']));
-                if ($row['clean']) $row['value'] = self::clean_var($row['value']);
+                if ($row['clean']) $row['value'] = $this->clean_var($row['value']);
 
                 $this->blockvars[$blockname][$k]['{'.$key.'}'] = $row['value'];
 
@@ -855,8 +900,6 @@ class odf_parser
 
         if ($this->zip->open($this->filename, ZIPARCHIVE::CREATE) === TRUE)
         {
-            foreach($this->images as $path => $file)
-                $this->zip->addFile($path,'Pictures/'.$file);
 
             if (!$this->zip->addFromString('content.xml', $this->content_xml))
                 exit('Erreur lors de l\'enregistrement');
@@ -864,6 +907,10 @@ class odf_parser
                 exit('Erreur lors de l\'enregistrement');
             if (!$this->zip->addFromString('META-INF/manifest.xml', $this->manifest_xml))
                 exit('Erreur lors de l\'enregistrement');
+
+            foreach($this->images as $path => $file)
+                $this->zip->addFile($path,'Pictures/'.$file);
+
             $this->zip->close();
         }
         else
@@ -928,3 +975,4 @@ class odf_converter
     }
 }
 ?>
+

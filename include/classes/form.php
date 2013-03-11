@@ -447,6 +447,7 @@ class form_hidden extends form_field
 /**
  * Classe de gestion des options des champs de type "select" d'un formulaire
  */
+
 class form_select_option extends form_element
 {
     public function __construct($strLabel, $strValue, $strId = null, $arrOptions = null)
@@ -454,13 +455,15 @@ class form_select_option extends form_element
         parent::__construct('option', $strLabel, array($strValue), null, $strId, $arrOptions);
     }
 
-    public function render($intTabindex = null)
+    public function render($intTabindex = null, $booSelected = false)
     {
         $strId = is_null($this->_strId) ? '' : " id=\"{$this->_strId}\"";
         $strStyle = is_null($this->_arrOptions['style']) ? '' : " style=\"{$this->_arrOptions['style']}\"";
         $strLabel = htmlentities($this->_strLabel);
         $strValue = htmlentities($this->_arrValues[0]);
-        return "<option value=\"{$strValue}\"{$strId}{$strStyle}>{$strLabel}</option>";
+        $strSelected = $booSelected ? ' selected="selected"' : '';
+
+        return "<option value=\"{$strValue}\"{$strId}{$strStyle}{$strSelected}>{$strLabel}</option>";
     }
 }
 
@@ -548,9 +551,11 @@ class form_select extends form_field
 
         foreach($arrValues as $mixKey => $mixValue)
         {
+            $booSelected = in_array($mixKey, $this->_arrSelected);
+            
             if (is_object($mixValue) && $mixValue instanceof form_select_option)
             {
-                $strOutput .= $mixValue->render($intTabindex);
+                $strOutput .= $mixValue->render($intTabindex, $booSelected);
             }
             else
             {
@@ -582,7 +587,7 @@ class form_select extends form_field
                 $mixValue = str_replace(' ', '&nbsp;', htmlentities($mixValue));
                 $mixKey = htmlentities($mixKey);
 
-                $strSelected = in_array($mixKey, $this->_arrSelected) ? ' selected="selected"' : '';
+                $strSelected = $booSelected ? ' selected="selected"' : '';
                 $strOutput .= "<option value=\"{$mixKey}\"{$strSelected}>{$mixValue}</option>";
             }
         }
