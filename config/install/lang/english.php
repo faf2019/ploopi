@@ -121,8 +121,12 @@ define ('_PLOOPI_INSTALL_PEAR_INFO',                      '---- Control package 
 // define ('_PLOOPI_INSTALL_PEAR_INFO_URL_INFO',          'http://www.ploopi.org/trac/wiki/PloopiInstall');
 define ('_PLOOPI_INSTALL_PEAR_CACHE_LITE',                '---- Control package PEAR : CACHE_Lite');
 // define ('_PLOOPI_INSTALL_PEAR_CACHE_LITE_URL_INFO',    'http://www.ploopi.org/trac/wiki/PloopiInstall');
-define ('_PLOOPI_INSTALL_PEAR_HTTP_REQUEST',              '---- Control package PEAR : HTTP_Request');
+define ('_PLOOPI_INSTALL_PEAR_HTTP_REQUEST',              '---- Control package PEAR : HTTP_Request2');
 // define ('_PLOOPI_INSTALL_PEAR_HTTP_REQUEST_URL_INFO',  'http://www.ploopi.org/trac/wiki/PloopiInstall');
+
+define ('_PLOOPI_INSTALL_PEAR_TEXT_HIGHLIGHTER',              '---- Control package PEAR : Text_Highlighter');
+define ('_PLOOPI_INSTALL_PEAR_HORDE_TEXT_DIFF',              '---- Control package PEAR : Horde_Text_Diff');
+
 define ('_PLOOPI_INSTALL_PEAR_XML_FEED_PARSER',           '---- Control package PEAR : XML_Feed_Parser');
 // define ('_PLOOPI_INSTALL_PEAR_XML_FEED_PARSER_URL_INFO', 'http://www.ploopi.org/trac/wiki/PloopiInstall');
 define ('_PLOOPI_INSTALL_PEAR_XML_BEAUTIFIER',            '---- Control package PEAR : XML_Beautifier');

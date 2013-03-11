@@ -290,7 +290,7 @@ if($_POST['stage']>=$stage)
   if(isset($_POST['dir_pear'])) $_SESSION['install']['<PEARPATH>'] = ploopi_del_end_slashe(trim($_POST['dir_pear']));
 
   $strVersionApache = ploopi_apache_get_version();
-  
+
   // Control APACHE
   $arrInstallInfos[] = array(
             'id'        => 'div_apache',
@@ -334,7 +334,7 @@ if($_POST['stage']>=$stage)
                                               )
                                      )
                     );
-    // Control packages pear's : PEAR_info, XML_Feed_Parser, Xml_Beautifier, OLE-0.6.1, Spreadsheet_Excel_Writer-0.9.1
+    // Control packages pear's :
     // PEAR_info
     if(file_exists($_SESSION['install']['<PEARPATH>'].'/PEAR/Info.php'))
     {
@@ -342,19 +342,13 @@ if($_POST['stage']>=$stage)
       $arrInstallInfos[] = array('id' => 'div_pear_info', 'state' => true, 'title' => '_PLOOPI_INSTALL_PEAR_INFO');
       $packPEAR = new PEAR_Info(); // Class PEAR_Info for test if modules pear are installed
       // Cache_Lite
-      $arrInstallInfos[] = array('id' => 'div_pear_Cache_Lite', 'state' => $packPEAR->packageInstalled('Cache_Lite'), 'title' => '_PLOOPI_INSTALL_PEAR_CACHE_LITE');
-      // HTTP_Request
-      $arrInstallInfos[] = array('id' => 'div_pear_HTTP_Request', 'state' => $packPEAR->packageInstalled('HTTP_Request'), 'title' => '_PLOOPI_INSTALL_PEAR_HTTP_REQUEST');
-      // XML_Feed_Parser
-      $arrInstallInfos[] = array('id' => 'div_pear_XML_Feed_Parser', 'state' => $packPEAR->packageInstalled('XML_Feed_Parser'), 'title' => '_PLOOPI_INSTALL_PEAR_XML_FEED_PARSER');
-      // Xml_Beautifier
-      $arrInstallInfos[] = array('id' => 'div_pear_Xml_Beautifier', 'state' => $packPEAR->packageInstalled('Xml_Beautifier'), 'title' => '_PLOOPI_INSTALL_PEAR_XML_BEAUTIFIER');
-      // OLE-0.6.1
-      $arrInstallInfos[] = array('id' => 'div_pear_OLE', 'state' => $packPEAR->packageInstalled('OLE'), 'title' => '_PLOOPI_INSTALL_PEAR_OLE');
-      // Spreadsheet_Excel_Writer-0.9.1
-      $arrInstallInfos[] = array('id' => 'div_pear_Spreadsheet_Excel_Writer', 'state' => $packPEAR->packageInstalled('Spreadsheet_Excel_Writer'), 'title' => '_PLOOPI_INSTALL_PEAR_SPREADSHEET_EXCEL_WRITER');
-      // Net_UserAgent_Detect
-      $arrInstallInfos[] = array('id' => 'div_pear_Net_UserAgent_Detect', 'state' => $packPEAR->packageInstalled('Net_UserAgent_Detect'), 'title' => '_PLOOPI_INSTALL_PEAR_NET_USERAGENT_DETECT');
+      $arrInstallInfos[] = array('id' => 'div_pear_Cache_Lite', 'state' => $packPEAR->packageInstalled('Cache_Lite', '1.7.15'), 'title' => '_PLOOPI_INSTALL_PEAR_CACHE_LITE');
+      // HTTP_Request2
+      $arrInstallInfos[] = array('id' => 'div_pear_HTTP_Request2', 'state' => $packPEAR->packageInstalled('HTTP_Request2', '2.1.1'), 'title' => '_PLOOPI_INSTALL_PEAR_HTTP_REQUEST');
+      // Text_Highlighter
+      $arrInstallInfos[] = array('id' => 'div_pear_Text_Highlighter', 'state' => $packPEAR->packageInstalled('Text_Highlighter', '0.7.3'), 'title' => '_PLOOPI_INSTALL_PEAR_TEXT_HIGHLIGHTER');
+      // Horde_Text_Diff
+      $arrInstallInfos[] = array('id' => 'div_pear_Horde_Text_Diff', 'state' => $packPEAR->packageInstalled('Horde_Text_Diff', '2', 'pear.horde.org'), 'title' => '_PLOOPI_INSTALL_PEAR_HORDE_TEXT_DIFF');
     }
     else // PEAR_Info not installed
     {
@@ -969,7 +963,7 @@ else
 if($_POST['stage'] < count($arrInstallAllStages))
 {
   $intTabINdex = 0;
-  
+
   /**
    *  Management of buttons next, previous and refresh
    */
