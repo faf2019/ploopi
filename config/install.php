@@ -134,6 +134,7 @@ if(!isset($_SESSION['install'])) {
     '<ADMIN_LOGIN>'     => 'admin',           // ok
     '<ADMIN_PASSWORD>'  => 'admin',           // ok
     '<ADMIN_MAIL>'      => '',                // ok
+    '<SYS_MAIL>'      => '',                  // ok
     '<LANGUAGE>'        => 'french',          // ok
     '<SITE_NAME>'       => 'PLOOPI',          // ok
     '<TIME_ZONE>'       => '1',
@@ -415,6 +416,7 @@ if($_POST['stage']>=$stage)
   if(isset($_POST['pass_admin']))    $_SESSION['install']['<ADMIN_PASSWORD>'] = trim($_POST['pass_admin']);
   if(isset($_POST['secret']))        $_SESSION['install']['<SECRETKEY>'] = trim($_POST['secret']);
   if(isset($_POST['email_admin']))   $_SESSION['install']['<ADMIN_MAIL>'] = trim($_POST['email_admin']);
+  if(isset($_POST['email_sys']))     $_SESSION['install']['<SYS_MAIL>'] = trim($_POST['email_sys']);
   if(isset($_POST['url_encode']))    $_SESSION['install']['<URL_ENCODE>'] = ($_POST['url_encode']=='true' ? true : false);
   if(isset($_POST['session_bdd']))   $_SESSION['install']['<USE_DBSESSION>'] = ($_POST['session_bdd']=='true' ? true : false);
   if(isset($_POST['front_active']))  $_SESSION['install']['<FRONTOFFICE>'] = ($_POST['front_active']=='true' ? true : false);
@@ -607,6 +609,10 @@ if($_POST['stage']>=$stage)
                                      'input' => '<input name="email_admin" id="email_admin" type="text" tabindex="%tabIndex%" value="'.$_SESSION['install']['<ADMIN_MAIL>'].'"/>',
                                      'js'   => 'ploopi_validatefield(\''.addslashes(_PLOOPI_INSTALL_ADMIN_MAIL_JS).'\',form.email_admin,\'emptyemail\')'
                                     ),
+                               array('label' => _PLOOPI_INSTALL_SYS_MAIL,
+                                     'input' => '<input name="email_sys" id="email_sys" type="text" tabindex="%tabIndex%" value="'.$_SESSION['install']['<SYS_MAIL>'].'"/>',
+                                     'js'   => 'ploopi_validatefield(\''.addslashes(_PLOOPI_INSTALL_SYS_MAIL_JS).'\',form.email_sys,\'emptyemail\')'
+                                    ),
                                array('label' => _PLOOPI_INSTALL_URL_ENCODE,
                                      'input' => '<select name="url_encode" id="url_encode" tabindex="%tabIndex%">
                                                    <option value="true" '.$strInstallUrlEncodeTrue.'>'._PLOOPI_INSTALL_YES.'</option>
@@ -641,25 +647,31 @@ if($_POST['stage']>=$stage)
 
   // Test internet connection
   $booFormHidden = ($_POST['div_connect_form_hidden']=="1") ? true : false;
-  require_once 'HTTP/Request.php';
-  $strTestUrl = 'http://www.ovensia.fr';
-  $objRequest = new HTTP_Request($testurl, array('timeout', 1000));
+  require_once 'HTTP/Request2.php';
+  $objRequest = new HTTP_Request2('http://www.ovensia.fr');
 
   if ($_SESSION['install']['<INTERNETPROXY_HOST>'] != '')
   {
-    $objRequest->setProxy( $_SESSION['install']['<INTERNETPROXY_HOST>'],
-                           $_SESSION['install']['<INTERNETPROXY_PORT>'],
-                           $_SESSION['install']['<INTERNETPROXY_USER>'],
-                           $_SESSION['install']['<INTERNETPROXY_PASS>']
-                         );
+    $arrConfig['proxy_host'] = $_SESSION['install']['<INTERNETPROXY_HOST>'];
+    $arrConfig['proxy_port'] = $_SESSION['install']['<INTERNETPROXY_PORT>'];
+    $arrConfig['proxy_user'] = $_SESSION['install']['<INTERNETPROXY_USER>'];
+    $arrConfig['proxy_password'] = $_SESSION['install']['<INTERNETPROXY_PASS>'];
+    $arrConfig['proxy_auth_scheme'] = HTTP_Request2::AUTH_DIGEST;
+    $objRequest->setConfig($arrConfig);
     $booFormHidden = '0';
   }
-  else
-    $booFormHidden = '1';
+  else $booFormHidden = '1';
+
+  $state = false;
+
+  try {
+    $objRep = $objRequest->send();
+    $state = true;
+  } catch (HTTP_Request2_Exception $e) { }
 
   // All form hidden or not
   $arrInstallInfos[] = array('id' => 'div_connect',
-                             'state' => $objRequest->sendRequest(),
+                             'state' => $state,
                              'title' => '_PLOOPI_INSTALL_WEB_CONNECT',
                              'form_hidden' => $booFormHidden,
                              'form'  => array( array('label' => _PLOOPI_INSTALL_PROXY_HOST,

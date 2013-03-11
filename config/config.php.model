@@ -224,15 +224,15 @@ switch($http_host)
         define ('_PLOOPI_MAIL_ERRORS', false);
 
         /**
-         * Adresse destinataires des mails d'erreurs.
+         * Adresse destinatrice des mails d'erreurs.
          * Plusieurs destinataires peuvent être saisis.
          * Chaque adresse doit être séparée par une virgule.
          *
          * @see _PLOOPI_MAIL_ERRORS
          */
 
-        define ('_PLOOPI_SYSMAIL', '<ADMIN_MAIL>');
-        
+        define ('_PLOOPI_SYSMAIL', '<SYS_MAIL>');
+
         /**
          * Adresse émettrice des mails du portail incluant erreurs, alertes, tickets
          * C'est aussi l'adresse utilisée par défaut lorsque l'utilisateur n'en dispose pas.

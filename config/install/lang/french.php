@@ -199,6 +199,8 @@ define ('_PLOOPI_INSTALL_SECRET_SENTENCE',   '<sup>* </sup>Phrase Secrète:');
 define ('_PLOOPI_INSTALL_SECRET_SENTENCE_JS','Phrase Secrète');
 define ('_PLOOPI_INSTALL_ADMIN_MAIL',        'Mèl Administrateur:');
 define ('_PLOOPI_INSTALL_ADMIN_MAIL_JS',     'Mèl Administrateur');
+define ('_PLOOPI_INSTALL_SYS_MAIL',          'Mèl Système:');
+define ('_PLOOPI_INSTALL_SYS_MAIL_JS',       'Mèl Système');
 define ('_PLOOPI_INSTALL_URL_ENCODE',        'Encodage des URL visibles:');
 define ('_PLOOPI_INSTALL_SESSION_BDD',       'Stocker les Sessions en BDD:');
 
