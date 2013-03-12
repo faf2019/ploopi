@@ -116,15 +116,15 @@ if ($booDateModify) // modification de la date de visualisation
     if (!empty($_POST['planning_week_previousmonth'])) $arrSearchPattern['planning_day'] = date('t', mktime(0, 0, 0, $arrSearchPattern['planning_month'], 1, $arrSearchPattern['planning_year']));
 
     // Contrôle de la validité de numéro de semaine (cas ou l'on remonte d'une année et que la semaine sélectionnée est 53)
-    if ($arrSearchPattern['planning_week'] > 52) $arrSearchPattern['planning_week'] = date('W', mktime(0, 0, 0, 12, 28, $arrSearchPattern['planning_year']));
+    if (isset($arrSearchPattern['planning_week']) && $arrSearchPattern['planning_week'] > 52) $arrSearchPattern['planning_week'] = date('W', mktime(0, 0, 0, 12, 28, $arrSearchPattern['planning_year']));
 
     // Contrôle de la validité de numéro de jour (cas ou l'on remonte d'un mois et que le jour sélectionné est > 28)
-    if ($arrSearchPattern['planning_day'] > 28)
+    if (isset($arrSearchPattern['planning_day']) && $arrSearchPattern['planning_day'] > 28)
     {
         $intMax = date('t', mktime(0, 0, 0, $arrSearchPattern['planning_month'], 1, $arrSearchPattern['planning_year']));
         if ($arrSearchPattern['planning_day'] > $intMax) $arrSearchPattern['planning_day'] = $intMax;
     }
-
+    
     // calcul de la nouvelle date virtuelle en fonction du type d'affichage
     switch ($arrSearchPattern['planning_display_type'])
     {
