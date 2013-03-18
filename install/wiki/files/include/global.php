@@ -189,10 +189,8 @@ function wiki_render($strContent, $cbInternalLinks = 'wiki_internal_links')
     $strContent = wiki_make_links(str_replace($arrSearch, $arrReplace, $strContent));
     //$strContent = str_replace($arrSearch, $arrReplace, $strContent);
 
-    ploopi_unset_error_handler();
-    // La classe Textile retourne des erreurs sur les images si allow_url_fopen est désactivé dans php.ini
+    // Renderer textile
     $strTextile = utf8_decode($objTextile->TextileThis(utf8_encode($strContent)));
-    ploopi_set_error_handler();
 
     // Traitement des liens externes
     $strTextile = preg_replace_callback ('/<a[^>]*href="(.*)"[^>]*>(.*)<\/a>/i', 'wiki_links', $strTextile);
@@ -219,13 +217,11 @@ function wiki_highlight($strContent, $strFormat = 'php')
 
     if (in_array($strFormat, $arrAllowedFormats))
     {
-        ploopi_unset_error_handler();
         require_once 'Text/Highlighter.php';
         require_once 'Text/Highlighter/Renderer/Html.php';
-        $objHL =& Text_Highlighter::factory($strFormat);
+        $objHL = Text_Highlighter::factory($strFormat);
         $objHL->setRenderer(new Text_Highlighter_Renderer_Html());
         $strContent = $objHL->highlight($strContent);
-        ploopi_set_error_handler();
    }
     else $strContent = '<pre>'.ploopi_nl2br(htmlentities($strContent)).'</pre>';
 

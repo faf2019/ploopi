@@ -1,3 +1,10 @@
+== Module Wiki - version 1.2.2 ====================================================
+
+2013-03-18  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+* Remplacement de Text/Diff par Horde/Text/Diff
+* Mise à jour de la librairie Textile
+
 == Module Wiki - version 1.2.1b ====================================================
 
 2012-03-30  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
