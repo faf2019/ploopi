@@ -105,17 +105,18 @@ class formsForm extends data_object
     }
 
     /**
-     * Traduit une date FR au format XLS
+     * Traduit une date FR au format XLS (timestamp unix)
      */
 
     private static function _dateFrToXls($strDate)
     {
+
         if (empty($strDate)) return '';
 
         $arrDate = explode(' ', $strDate);
         $intTs = ploopi_timestamp2unixtimestamp(ploopi_local2timestamp($arrDate[0], isset($arrDate[1]) ? $arrDate[1] : '00:00:00'));
 
-        return empty($intTs) ? '' : $intTs / 86400 + 25569 + 1/12;
+        return empty($intTs) ? '' : $intTs;
     }
 
     /**
@@ -991,9 +992,10 @@ class formsForm extends data_object
 
     public function export($strFormat, $booExport = true)
     {
-        ploopi_loadv2();
+        include_once './include/functions/array.php';
+        include_once './include/classes/odf.php';
 
-        require_once './include/classes/odf.php';
+        set_time_limit(300);
 
         // Lecture des données
         list($arrData) = $this->prepareData(true, true, $booExport, false);
@@ -1031,11 +1033,17 @@ class formsForm extends data_object
                 if (empty($strLineSep)) $strLineSep = "\n";
                 if (empty($strTextSep)) $strTextSep = '"';
 
-                echo ploopiArray::getInstance($arrData)->toCsv(true, $strFieldSep, $strLineSep, $strTextSep);
+                $arrOptions = array(
+                    'strFieldSep' => $strFieldSep,
+                    'strLineSep' => $strLineSep,
+                    'strTextSep' => $strTextSep,
+                );
+
+                echo ploopi_array2csv($arrData, $arrOptions);
             break;
 
+            case 'xlsx':
             case 'xls':
-            case 'sxc':
             case 'ods':
             case 'pdf':
                 // Options d'export
@@ -1116,39 +1124,57 @@ class formsForm extends data_object
                     }
                 }
 
-                if ($strFormat == 'xls') echo ploopiArray::getInstance($arrData)->toXls(true, 'export', $arrTitles, $arrOptions);
-                elseif (ploopi_getparam('forms_webservice_jodconverter') != '')
+
+                // Détermination du type mime du format demandé
+                switch($strFormat)
                 {
-                    // Init de l'interface avec le convertisseur
-                    $objOdfConverter = new odf_converter(ploopi_getparam('forms_webservice_jodconverter'));
+                    case 'xlsx':
+                        $arrOptions['writer'] = 'excel2007';
+                        echo ploopi_array2excel($arrData, true, 'document.xlsx', 'Feuille', $arrTitles, $arrOptions);
+                    break;
 
-                    // Détermination du type mime du format demandé
-                    switch($strFormat)
-                    {
-                        case 'pdf':
-                            $strOuputMime = 'application/pdf';
-                        break;
+                    case 'xls':
+                        $arrOptions['writer'] = 'excel5';
+                        echo ploopi_array2excel($arrData, true, 'document.xls', 'Feuille', $arrTitles, $arrOptions);
+                    break;
 
-                        case 'sxc':
-                            $strOuputMime = 'application/vnd.sun.xml.calc';
-                        break;
+                    default:
+                        if (ploopi_getparam('system_jodwebservice', _PLOOPI_MODULE_SYSTEM) != '')
+                        {
+                            // Init de l'interface avec le convertisseur
+                            $objOdfConverter = new odf_converter(ploopi_getparam('system_jodwebservice', _PLOOPI_MODULE_SYSTEM));
 
-                        case 'ods':
-                            $strOuputMime = 'application/vnd.oasis.opendocument.spreadsheet';
-                        break;
-                    }
+                            // Détermination du type mime du format demandé
+                            switch($strFormat)
+                            {
+                                case 'pdf':
+                                    $strOuputMime = 'application/pdf';
+                                break;
 
-                    // Génération XLS + Conversion
-                    echo $objOdfConverter->convert(ploopiArray::getInstance($arrData)->toXls(true, 'export', $arrTitles, $arrOptions), 'application/vnd.ms-excel', $strOuputMime);
+                                case 'sxc':
+                                    $strOuputMime = 'application/vnd.sun.xml.calc';
+                                break;
+
+                                case 'ods':
+                                    $strOuputMime = 'application/vnd.oasis.opendocument.spreadsheet';
+                                break;
+                            }
+
+                            // Génération XLS + Conversion
+                            $arrOptions['writer'] = 'excel2007';
+                            echo $objOdfConverter->convert(ploopi_array2excel($arrData, true, 'document.pdf', 'Feuille', $arrTitles, $arrOptions), 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', $strOuputMime);
+                        }
+                    break;
                 }
+
             break;
 
             case 'xml':
-                echo ploopiArray::getInstance($arrData)->toXml();
+                echo ploopi_array2xml($arrData);
             break;
 
             case 'html':
-                echo ploopiArray::getInstance($arrData)->toHtml();
+                echo ploopi_array2html($arrData);
             break;
 
             default:
