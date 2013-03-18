@@ -34,10 +34,8 @@
  * Inclusion des dépendances PEAR
  */
 
-ploopi_unset_error_handler();
-require_once 'HTTP/Request.php';
-require_once './lib/simplepie/simplepie.inc.php';
-ploopi_set_error_handler();
+require_once 'HTTP/Request2.php';
+require_once './lib/simplepie/autoloader.php';
 
 
 /**
@@ -54,7 +52,7 @@ ploopi_set_error_handler();
  * @see _PLOOPI_INTERNETPROXY_USER
  * @see _PLOOPI_INTERNETPROXY_PASS
  *
- * @link http://pear.php.net/package/HTTP_Request
+ * @link http://pear.php.net/package/HTTP_Request2
  */
 
 class xmlrss
@@ -99,40 +97,31 @@ class xmlrss
 
         if (!$this->error)
         {
-            ploopi_unset_error_handler();
-            $request = new HTTP_Request($url, array('timeout' => 500));
-            ploopi_set_error_handler();
+            $objRequest = new HTTP_Request2($url);
+
+            $arrConfig['timeout'] = '500';
 
             if (_PLOOPI_INTERNETPROXY_HOST != '')
             {
-                $request->setProxy(
-                    _PLOOPI_INTERNETPROXY_HOST,
-                    _PLOOPI_INTERNETPROXY_PORT,
-                    _PLOOPI_INTERNETPROXY_USER,
-                    _PLOOPI_INTERNETPROXY_PASS
-                );
+                $arrConfig['proxy_host'] = _PLOOPI_INTERNETPROXY_HOST;
+                $arrConfig['proxy_port'] = _PLOOPI_INTERNETPROXY_PORT;
+                $arrConfig['proxy_user'] = _PLOOPI_INTERNETPROXY_USER;
+                $arrConfig['proxy_password'] = _PLOOPI_INTERNETPROXY_PASS;
+                $arrConfig['proxy_auth_scheme'] = HTTP_Request2::AUTH_DIGEST;
             }
 
-            ploopi_unset_error_handler();
-            $res = !PEAR::isError($objReq = $request->sendRequest());
-            ploopi_set_error_handler();
+            $objRequest->setConfig($arrConfig);
 
-            if ($res)
+            $objResponse = $objRequest->send();
+
+            if ($objResponse->getStatus() != '200' && $objResponse->getStatus() != '')
             {
-                if ($request->getResponseCode() != '200' && $request->getResponseCode() != '')
-                {
-                    $this->error = true;
-                    $this->error_msg = sprintf("Erreur HTTP %s",$request->getResponseCode());
-                }
-                else
-                {
-                    $this->content = $request->getResponseBody();
-                }
+                $this->error = true;
+                $this->error_msg = sprintf("Erreur HTTP %s", $objResponse->getStatus());
             }
             else
             {
-                $this->error = true;
-                $this->error_msg = sprintf("Erreur HTTP %s : %s",$objReq->getCode(),$objReq->getMessage());
+                $this->content = $objResponse->getBody();
             }
         }
     }
