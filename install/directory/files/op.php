@@ -238,27 +238,27 @@ if ($_SESSION['ploopi']['connected'])
                 include_once './modules/directory/class_directory_heading.php';
 
                 $directory_contact = new directory_contact();
-                if (!empty($_GET['directory_contact_id']) && is_numeric($_GET['directory_contact_id'])) 
+                if (!empty($_GET['directory_contact_id']) && is_numeric($_GET['directory_contact_id']))
                 {
                     $directory_contact->open($_GET['directory_contact_id']);
                     $booForcePos = !empty($_POST['_directory_contact_forcepos']);
                 }
                 else $booForcePos = false;
-                
+
                 // Rattachement à une rubrique
                 if (!empty($_GET['directory_heading_id']) && is_numeric($_GET['directory_heading_id']))
                 {
                     $directory_heading = new directory_heading();
                     if ($directory_heading->open($_GET['directory_heading_id'])) $directory_contact->fields['id_heading'] = $_GET['directory_heading_id'];
                 }
-                
+
                 // Rattachement à une rubrique
                 if (!empty($_POST['directory_heading_id']) && is_numeric($_POST['directory_heading_id']))
                 {
                     $directory_heading = new directory_heading();
                     if ($directory_heading->open($_POST['directory_heading_id'])) $directory_contact->fields['id_heading'] = $_POST['directory_heading_id'];
                 }
-                
+
                 $directory_contact->setvalues($_POST, 'directory_contact_');
                 $directory_contact->setuwm();
                 $directory_contact->save($booForcePos);
@@ -272,13 +272,13 @@ if ($_SESSION['ploopi']['connected'])
                     rename($_SESSION['directory']['contact_photopath'], $directory_contact->getphotopath());
                     unset($_SESSION['directory']['contact_photopath']);
                 }
-                
+
                 if (ploopi_getsessionvar("deletephoto_{$_GET['directory_contact_id']}"))
                 {
                     ploopi_setsessionvar("deletephoto_{$_GET['directory_contact_id']}", 0);
                     $directory_contact->deletephoto();
-                }                
-                
+                }
+
                 ploopi_redirect('admin.php');
             break;
 
@@ -295,7 +295,7 @@ if ($_SESSION['ploopi']['connected'])
 
             case 'directory_favorites_add':
                 include_once './modules/directory/class_directory_favorites.php';
-                
+
                 if (!empty($_GET['directory_favorites_id_user']) && is_numeric($_GET['directory_favorites_id_user']))
                 {
                     $db->query("DELETE FROM ploopi_mod_directory_favorites WHERE id_ploopi_user = {$_GET['directory_favorites_id_user']} AND id_user = {$_SESSION['ploopi']['userid']} AND id_contact = 0");
@@ -372,7 +372,7 @@ if ($_SESSION['ploopi']['connected'])
                 {
                     // reset suppression
                     ploopi_setsessionvar("deletephoto_{$_GET['directory_photo_id']}", 0);
-                    
+
                     // On vérifie qu'un fichier a bien été uploadé
                     if (!empty($_FILES['directory_contact_photo']['tmp_name']))
                     {
@@ -392,7 +392,7 @@ if ($_SESSION['ploopi']['connected'])
                 }
                 ploopi_die();
             break;
-            
+
             case 'directory_delete_photo':
                 // demande de suppression d'une photo
                 if (!empty($_GET['directory_contact_id']) && is_numeric($_GET['directory_contact_id']))
@@ -472,20 +472,20 @@ if ($_SESSION['ploopi']['connected'])
                 include_once './modules/directory/class_directory_heading.php';
 
                 $objHeading = new directory_heading();
-                
+
                 if (empty($_GET['directory_heading_id']) || !is_numeric($_GET['directory_heading_id']) || !$objHeading->open($_GET['directory_heading_id'])) ploopi_redirect('admin.php');
-                
+
                 $objHeading->setvalues($_POST, 'directory_heading_');
                 $objHeading->save(!empty($_POST['_directory_heading_forcepos']));
-                
+
                 if (ploopi_isactionallowed(_DIRECTORY_ACTION_MANAGERS)) ploopi_validation_save(_DIRECTORY_OBJECT_HEADING, $objHeading->fields['id']);
 
                 ploopi_redirect("admin.php?directory_heading_id={$_GET['directory_heading_id']}");
             break;
-            
+
             case 'directory_heading_choose':
                 ob_start();
-                
+
                 ploopi_init_module('directory', false, false, false);
 
                 // Récupération des rubriques
@@ -502,34 +502,34 @@ if ($_SESSION['ploopi']['connected'])
                 ob_end_clean();
 
                 echo $skin->create_popup("Choix d'une rubrique", $content, 'popup_directory_heading_choose');
-                
+
                 ploopi_die();
             break;
-            
+
             case 'directory_speeddialing_save':
                 ploopi_init_module('directory', false, false, false);
                 if (!ploopi_isactionallowed(_DIRECTORY_ACTION_SPEEDDIALING)) ploopi_redirect("admin.php");
-                
+
                 include_once './modules/directory/class_directory_speeddialing.php';
-                
+
                 $objSpeedDialing = new directory_speeddialing();
-                
-                if (!empty($_GET['directory_speeddialing_id']) && is_numeric($_GET['directory_speeddialing_id'])) $objSpeedDialing->open($_GET['directory_speeddialing_id']); 
+
+                if (!empty($_GET['directory_speeddialing_id']) && is_numeric($_GET['directory_speeddialing_id'])) $objSpeedDialing->open($_GET['directory_speeddialing_id']);
 
                 $objSpeedDialing->setvalues($_POST, 'directory_speeddialing_');
-                
+
                 // Nouvelle rubrique
                 if (empty($_POST['directory_speeddialing_heading']) && isset($_POST['_directory_speeddialing_newheading'])) $objSpeedDialing->fields['heading'] = $_POST['_directory_speeddialing_newheading'];
-                
+
                 $objSpeedDialing->save();
-                
+
                 ploopi_redirect("admin.php");
             break;
-            
+
             case 'directory_speeddialing_modify':
                 ploopi_init_module('directory', false, false, false);
                 if (!ploopi_isactionallowed(_DIRECTORY_ACTION_SPEEDDIALING)) ploopi_redirect("admin.php");
-                
+
                 if ((!empty($_GET['directory_speeddialing_id']) && is_numeric($_GET['directory_speeddialing_id'])))
                 {
                     ob_start();
@@ -539,14 +539,14 @@ if ($_SESSION['ploopi']['connected'])
 
                     $objSpeedDialing = new directory_speeddialing();
                     if (empty($_GET['directory_speeddialing_id']) || !is_numeric($_GET['directory_speeddialing_id']) || !$objSpeedDialing->open($_GET['directory_speeddialing_id'])) ploopi_die();
-                                
+
                     $arrHeadings = $db->getarray(
                         $db->query("
                             SELECT      distinct(ds.heading)
                             FROM        ploopi_mod_directory_speeddialing ds
                             ORDER BY    ds.label
                         "), true
-                    );                    
+                    );
                     ?>
                     <form action="<?php echo ploopi_urlencode("admin.php?ploopi_op=directory_speeddialing_save&directory_speeddialing_id={$objSpeedDialing->fields['id']}"); ?>" method="post" onsubmit="return directory_speeddialing_validate(this);">
                     <div class="ploopi_form">
@@ -576,10 +576,10 @@ if ($_SESSION['ploopi']['connected'])
                     </div>
                         <div style="padding:2px 4px;text-align:right;">
                         <input type="button" class="button" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php"); ?>';" tabindex="121" />
-                        <input type="submit" class="button" value="<?php echo _PLOOPI_SAVE; ?>" tabindex="120" />                
-                    </div> 
+                        <input type="submit" class="button" value="<?php echo _PLOOPI_SAVE; ?>" tabindex="120" />
+                    </div>
                     </form>
-                    <?php 
+                    <?php
                     $content = ob_get_contents();
                     ob_end_clean();
 
@@ -588,29 +588,29 @@ if ($_SESSION['ploopi']['connected'])
 
                 ploopi_die();
             break;
-            
+
             case 'directory_speeddialing_delete':
                 ploopi_init_module('directory', false, false, false);
                 if (!ploopi_isactionallowed(_DIRECTORY_ACTION_SPEEDDIALING)) ploopi_redirect("admin.php");
 
                 include_once './modules/directory/class_directory_speeddialing.php';
-                
+
                 $objSpeedDialing = new directory_speeddialing();
-                
+
                 if (!empty($_GET['directory_speeddialing_id']) && is_numeric($_GET['directory_speeddialing_id']) && $objSpeedDialing->open($_GET['directory_speeddialing_id'])) $objSpeedDialing->delete();
-                            
+
                 ploopi_redirect("admin.php");
             break;
-            
+
             case 'directory_import':
                 ploopi_init_module('directory', false, false, false);
-                
+
                 if (empty($_GET['directory_heading_id']) && !is_numeric($_GET['directory_heading_id'])) ploopi_die();
-                
+
                 if (isset($_GET['directory_step']) && $_GET['directory_step'] == '2')
                 {
                     include_once './modules/directory/class_directory_contact.php';
-                    
+
                     $arrData = ploopi_getsessionvar('contact_import');
                     if (!empty($arrData))
                     {
@@ -624,13 +624,13 @@ if ($_SESSION['ploopi']['connected'])
                                 if ($db->numrows() == 0)
                                 {
                                     $objContact = new directory_contact();
-                                    
+
                                     // Import des champs
                                     foreach($arrContact as $strField => $strValue) if (isset($arrDirectoryImportFields[$strField])) $objContact->fields[$strField] = $strValue;
-                                    
+
                                     $objContact->fields['id_heading'] = $_GET['directory_heading_id'];
                                     $objContact->setuwm();
-                                    
+
                                     // Enregistrement du contact
                                     $objContact->save();
                                     $intCount++;
@@ -651,54 +651,54 @@ if ($_SESSION['ploopi']['connected'])
                 else
                 {
                     include_once './include/functions/array.php';
-                    
+
                     $arrLineHeader = array();
                     $arrData = array();
                     $arrDataExcerpt = array();
                     $booDataError = false;
                     ploopi_setsessionvar('contact_import', $arrData);
-                    
+
                     $intCount = 0;
                     if (!empty($_FILES['directory_import_file']) && !empty($_FILES['directory_import_file']['name']))
                     {
-                        
+
                         // Récupération & contrôle du séparateur de champs
                         $strSep = empty($_POST['directory_import_sep']) ? ',' : $_POST['directory_import_sep'];
                         if (!in_array($strSep, array(',', ';'))) $strSep = ',';
-                         
+
                         // Lecture du fichier si ok
                         if (file_exists($_FILES['directory_import_file']['tmp_name']))
                         {
                             $ptrHandle = fopen($_FILES['directory_import_file']['tmp_name'], 'r');
-                            
-                            while (($arrLineData = fgetcsv($ptrHandle, null, $strSep)) !== FALSE) 
+
+                            while (($arrLineData = fgetcsv($ptrHandle, null, $strSep)) !== FALSE)
                             {
                                 if ($intCount == 0) $arrLineHeader = $arrLineData;
                                 else
                                 {
-                                    if (is_array($arrLineData) && sizeof($arrLineHeader) >= sizeof($arrLineData)) 
+                                    if (is_array($arrLineData) && sizeof($arrLineHeader) >= sizeof($arrLineData))
                                     {
                                         $arrData[] = array_combine($arrLineHeader, $arrLineData);
                                         if ($intCount < 3) $arrDataExcerpt[] = &$arrData[sizeof($arrData)-1];
                                     }
-                                    else $booDataError = true; 
+                                    else $booDataError = true;
                                 }
-                                
+
                                 $intCount++;
-                                
+
                             }
                         }
-                        
+
                         $arrInvalidCols = array_diff($arrLineHeader, array_keys($arrDirectoryImportFields));
-                        
+
                         ?>
                         <div style="margin:4px;padding:4px;border:1px solid #c0c0c0;background:#e0e0e0;">
                             <div><strong>Le fichier envoyé (<? echo $_FILES['directory_import_file']['name']; ?>) contient <? echo $intCount; ?> ligne(s) et <? echo sizeof($arrLineHeader) ?> colonnes dont <? echo sizeof($arrLineHeader) - sizeof($arrInvalidCols) ?> sont connues.</strong></div>
-                            <? 
-                            if ($booDataError) echo '<div>Des erreurs de données ont été rencontrées</div>'; 
+                            <?
+                            if ($booDataError) echo '<div>Des erreurs de données ont été rencontrées</div>';
                             if (!empty($arrInvalidCols)) echo '<div>Les colonnes suivantes sont inconnues : '.implode(', ', $arrInvalidCols).'</div>';
                             ?>
-                            
+
                             <div>Aperçu du fichier :</div>
                             <div style="overflow:auto;border:1px solid #c0c0c0;margin:4px;padding:4px;background:#fff;"><? echo ploopi_array2html($arrDataExcerpt); ?></div>
                             <div style="text-align:right;">
@@ -717,18 +717,18 @@ if ($_SESSION['ploopi']['connected'])
                         </div>
                         <?
                     }
-                } 
-                
-                               
+                }
+
+
                 ploopi_die();
             break;
-            
+
             case 'directory_export':
                 ploopi_init_module('directory', false, false, false);
                 include_once './include/functions/array.php';
-                
+
                 if (empty($_GET['directory_heading_id']) || !is_numeric($_GET['directory_heading_id']) || !isset($_GET['directory_format'])) ploopi_die();
-                
+
                 $sql =  "
                     SELECT  ".implode(',', array_keys($arrDirectoryImportFields))."
                     FROM    ploopi_mod_directory_contact
@@ -736,38 +736,37 @@ if ($_SESSION['ploopi']['connected'])
                 ";
 
                 $rs = $db->query($sql);
-                
+
                 $strFormat = strtolower($_GET['directory_format']);
-                
+
                 ploopi_ob_clean();
-                
+
                 switch($_GET['directory_format'])
                 {
                     case 'xls':
-                        ploopi_array2xls($db->getarray(), true, 'contacts.xls');
-                        ploopi_die();
+                        echo ploopi_array2excel($db->getarray());
                     break;
-                    
+
                     case 'csv':
-                     echo ploopi_array2csv($db->getarray());
+                        echo ploopi_array2csv($db->getarray());
                     break;
-                    
+
                     default:
                         $strFormat = 'xml';
                     case 'xml':
                         echo ploopi_array2xml($db->getarray(), 'contacts', 'contact');
                     break;
                 }
-                
+
                 $strFileName = "contacts.{$strFormat}";
-                
+
                 header('Content-Type: ' . ploopi_getmimetype($strFileName) . '; charset=ISO-8859-15');
                 header('Content-Disposition: attachment; Filename="'.$strFileName.'"');
                 header('Cache-Control: private');
                 header('Pragma: private');
                 header('Content-Length: '.ob_get_length());
-                header("Content-Encoding: None");   
-                
+                header("Content-Encoding: None");
+
                 ploopi_die();
             break;
         }
