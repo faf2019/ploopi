@@ -1,3 +1,10 @@
+== Module WebEdit - version 2.5.1 ============================================
+
+2013-03-18  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+* Correction d'un bug sur la détection du module lors d'un appel externe pour création de liens
+* Correction d'un problème sur l'application de l'héritage des droits d'accès dans le cas d'une rubrique cochée privée mais sans sélection d'utilisateurs
+
 == Module WebEdit - version 2.5.0b ============================================
 
 2012-08-07  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>

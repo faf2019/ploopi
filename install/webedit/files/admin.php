@@ -629,7 +629,7 @@ switch($menu)
                             $from[] =
                                 array(
                                     'name' => $_SERVER['HTTP_HOST'],
-                                    'address' => (empty($_SESSION['ploopi']['user']['email'])) ? _PLOOPI_ADMINMAIL : $_SESSION['ploopi']['user']['email']
+                                    'address' => (empty($_SESSION['ploopi']['user']['email'])) ? trim(current(explode(',', _PLOOPI_ADMINMAIL))) : $_SESSION['ploopi']['user']['email']
                                 );
 
                             // envoi d'un mail à chaque abonné
