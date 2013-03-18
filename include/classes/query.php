@@ -40,7 +40,7 @@ abstract class ploopi_sqlformat
      *
      * @var string
      */
-    private static $strRegExFormat = '|%(([0-9]*)\$){0,1}([s,d,f,t,e,g])|';
+    private static $strRegExFormat = '|%(([0-9]*)\$){0,1}([s,d,f,t,e,g,r])|';
 
     /**
      * Numéro du paramètre traité
@@ -117,8 +117,12 @@ abstract class ploopi_sqlformat
                 break;
 
                 case 's': // string
-                default:
                     $strValue = "'".self::$objDb->addslashes($mixValue)."'";
+                break;
+
+                case 'r': // raw
+                default:
+                    $strValue = $mixValue;
                 break;
             }
 
@@ -179,6 +183,8 @@ abstract class ploopi_query
         if (!is_null($objDb)) $this->objDb = $objDb;
         else { global $db; $this->objDb = $db; }
 
+        $this->arrRaw = array();
+
         return true;
     }
 
@@ -187,19 +193,37 @@ abstract class ploopi_query
      *
      * @param string $strRaw chaîne SQL
      */
+    /*
     public function add_raw($strRaw)
     {
         $this->arrRaw[] = $strRaw;
+    }*/
+
+    public function add_raw($strRaw, $mixValues = null)
+    {
+        if (!empty($mixValues) && !is_array($mixValues)) $mixValues = array($mixValues);
+        $this->arrRaw[] = array('rawsql' => $strRaw, 'values' => $mixValues);
     }
 
-    /**
+
+   /**
      * Retourne la clause Brute
      *
      * @return string
      */
+    /*
     protected function get_raw()
     {
         return empty($this->arrRaw) ? false : ' '.implode(' ', $this->arrRaw);
+    }
+    */
+
+    protected function get_raw()
+    {
+        $arrRaw = array();
+        foreach($this->arrRaw as $arrRawDetail) $arrRaw[] = ploopi_sqlformat::replace($arrRawDetail, $this->objDb);
+
+        return empty($arrRaw) ? false : implode(' ', $arrRaw);
     }
 
     /**
@@ -622,8 +646,6 @@ class ploopi_query_select extends ploopi_query_sud
      */
     public function get_sql()
     {
-        $strSql = '';
-
         if ($this->get_from() !== false)
         {
             $strSql = $this->get_select().
@@ -636,6 +658,9 @@ class ploopi_query_select extends ploopi_query_sud
                 $this->get_orderby().
                 $this->get_limit().
                 $this->get_raw();
+        }
+        elseif ($this->get_raw() !== false) {
+            $strSql = $this->get_raw();
         }
 
         return $strSql;
