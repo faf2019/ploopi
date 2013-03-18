@@ -30,7 +30,7 @@
  * @license GNU General var License (GPL)
  * @author Stéphane Escaich
  */
- 
+
 include_once './include/functions/system.php';
 
 
@@ -181,7 +181,7 @@ class ploopi_db
             $this->timer_stop();
         }
 
-        if (mysql_errno() != 0) trigger_error(mysql_error(), E_USER_ERROR);
+        if (mysql_errno() != 0) trigger_error(mysql_error(), E_USER_WARNING);
 
         if($this->connection_id)
         {

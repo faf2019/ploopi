@@ -174,8 +174,10 @@ class ploopi_db
         $this->mysqli = new mysqli($this->server, $this->user, $this->password, $this->database);
         $this->timer_stop();
 
-
-        if ($this->mysqli->connect_errno) trigger_error($this->mysqli->connect_error, E_USER_ERROR);
+        if ($this->mysqli->connect_errno) {
+            trigger_error($this->mysqli->connect_error, E_USER_WARNING);
+            $this->mysqli = null;
+        }
     }
 
     /**
@@ -249,7 +251,7 @@ class ploopi_db
             $stop = $this->timer_stop();
             if ($this->log) $this->arrLog[] = array ('query' => $query, 'time' => $stop);
 
-            if ($this->query_result === false) trigger_error($mysqli->error."<br /><b>query:</b> {$query}", E_USER_WARNING);
+            if ($this->query_result === false) trigger_error($this->mysqli->error."<br /><b>query:</b> {$query}", E_USER_WARNING);
 
 
         }
@@ -278,7 +280,7 @@ class ploopi_db
 
         if ($this->log) $this->arrLog[] = array ('query' => $queries, 'time' => $stop);
 
-        if ($res === false) trigger_error($mysqli->error."<br /><b>queries:</b> {$queries}", E_USER_WARNING);
+        if ($res === false) trigger_error($this->mysqli->error."<br /><b>queries:</b> {$queries}", E_USER_WARNING);
 
         return $res;
     }
