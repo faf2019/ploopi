@@ -31,7 +31,7 @@
  * @author Stéphane Escaich
  */
 
-@include_once 'Cache/Lite/Output.php';
+require_once 'Cache/Lite/Output.php';
 
 /**
  * Classe de gestion du cache
@@ -43,64 +43,70 @@
  * @author Stéphane Escaich
  */
 
-class ploopi_cache extends Cache_Lite_Output
+class ploopi_cache
 {
     /**
      * Cache activé ?
      */
-    static private $activated;
-    
+    static private $_booActivated;
+
     /**
      * Nombre d'écriture dans la page
      */
-    static private $written;
-    
+    static private $_intWritten;
+
     /**
      * Nombre de lecture dans la page
      */
-    static private $read;
-    
+    static private $_intRead;
+
     /**
      * Id du cache
-     */    
-    private $cache_id;
-    
+     */
+    private $_strCacheId;
+
     /**
      * Id du cache
-     */    
-    private $cache_groupe = 'default';
-    
-    
+     */
+    private $_strCacheGroup = 'default';
+
+
+    /**
+     * Object Cache_Lite_Output
+     */
+    private $_objCache = null;
+
+
     /**
      * Constructeur statique
      */
     public static function init()
     {
-        self::$activated = _PLOOPI_USE_CACHE;
-        self::$written = 0;
-        self::$read = 0;         
+        self::$_booActivated = _PLOOPI_USE_CACHE;
+        self::$_intWritten = 0;
+        self::$_intRead = 0;
     }
-    
+
     /**
      * Retourne le nombre de lecture dans la page
      */
-    public static function getread() { return self::$read; }
-    
+    public static function getread() { return self::$_intRead; }
+
     /**
      * Retourne le nombre d'écriture dans la page
      */
-    public static function getwritten() { return self::$written; }
-    
+    public static function getwritten() { return self::$_intWritten; }
+
     /**
      * Retourne true si le cache est activé
      */
-    public static function getactivated() { return self::$activated; }
-    
+    public static function getactivated() { return self::$_booActivated; }
+
     /*
      * Modifie le groupe de cache
      */
-    public function set_groupe($strGroup = 'default') { if(is_string($strGroup)) $this->cache_groupe = $strGroup; }
-    
+    public function set_groupe($strGroup = 'default') { if(is_string($strGroup)) $this->_strCacheGroup = $strGroup; }
+
     /**
      * Constructeur de la classe
      *
@@ -109,14 +115,14 @@ class ploopi_cache extends Cache_Lite_Output
      * @return ploopi_cache
      */
 
-    public function ploopi_cache($id, $lifetime = _PLOOPI_CACHE_DEFAULT_LIFETIME, $cachedir = _PLOOPI_PATHCACHE)
+    public function __construct($id, $lifetime = _PLOOPI_CACHE_DEFAULT_LIFETIME, $cachedir = _PLOOPI_PATHCACHE)
     {
-        if (self::$activated)
+        if (self::$_booActivated)
         {
             if (substr($cachedir, -1) != '/') $cachedir .= '/';
-            
-            $this->cache_id = $id;
-            $this->Cache_Lite_Output(array( 'cacheDir' => $cachedir, 'lifeTime' => $lifetime));
+
+            $this->_strCacheId = $id;
+            $this->_objCache = new Cache_Lite_Output(array( 'cacheDir' => $cachedir, 'lifeTime' => $lifetime));
         }
     }
 
@@ -127,10 +133,10 @@ class ploopi_cache extends Cache_Lite_Output
      */
     public function get_lastmodified()
     {
-        if (self::$activated)
+        if (self::$_booActivated)
         {
-            $this->_setFileName($this->cache_id, $this->cache_groupe);
-            if (file_exists($this->_file)) return($this->lastModified());
+            $this->_objCache->_setFileName($this->_strCacheId, $this->_strCacheGroup);
+            if (file_exists($this->_file)) return($this->_objCache->lastModified());
             else return 0;
         }
 
@@ -144,16 +150,16 @@ class ploopi_cache extends Cache_Lite_Output
      * @return mixed contenu du cache ou false si le cache est désactivé ou vide
      */
 
-    public function start($force_caching = false)
+    public function start($booForceCaching = false)
     {
-        if (self::$activated)
+        if (self::$_booActivated)
         {
-            if ($force_caching) $this->setOption('lifeTime', 0);
-            $cache_content = parent::start($this->cache_id, $this->cache_groupe);
+            if ($booForceCaching) $this->_objCache->setOption('lifeTime', 0);
+            $strContent = $this->_objCache->start($this->_strCacheId, $this->_strCacheGroup);
 
-            if ($cache_content) self::$read++;
+            if ($strContent) self::$_intRead++;
 
-            return $cache_content;
+            return $strContent;
         }
         else return false; // no cache
     }
@@ -162,57 +168,57 @@ class ploopi_cache extends Cache_Lite_Output
      * Termine la mise en cache
      */
 
-    public function end() 
-    { 
-        if (self::$activated) 
+    public function end()
+    {
+        if (self::$_booActivated)
         {
-            parent::end(); 
-            self::$written++;
+            $this->_objCache->end();
+            self::$_intWritten++;
         }
     }
-    
+
     /*
      * Vide le cache d'un groupe
      */
     public function clean()
     {
-        if (self::$activated) 
+        if (self::$_booActivated)
         {
-            parent::clean($this->cache_groupe);
+            $this->_objCache->clean($this->_strCacheGroup);
         }
     }
-    
+
     /**
      * Lit une variable en cache
      */
-    public function get_var($force_caching = false)
-    { 
-        if (self::$activated)
+    public function get_var($booForceCaching = false)
+    {
+        if (self::$_booActivated)
         {
-            if ($force_caching) $this->setOption('lifeTime', 0);
-            $var = unserialize(parent::get($this->cache_id,$this->cache_groupe));
+            if ($booForceCaching) $this->_objCache->setOption('lifeTime', 0);
+            $mixVar = unserialize($this->_objCache->get($this->_strCacheId,$this->_strCacheGroup));
 
-            if ($var) self::$read++;
-            
-            return $var;
+            if ($mixVar) self::$_intRead++;
+
+            return $mixVar;
         }
         else return false;
-         
+
     }
-    
+
     /**
-     * Enregistre une variable en cache 
+     * Enregistre une variable en cache
      */
-    public function save_var($var) 
-    { 
-        if (self::$activated)
+    public function save_var($var)
+    {
+        if (self::$_booActivated)
         {
-            parent::save(serialize($var),$this->cache_groupe);
-            self::$written++;
+            $this->_objCache->save(serialize($var),$this->_strCacheGroup);
+            self::$_intWritten++;
         }
     }
-    
-    
+
+
 }
 
 ?>
