@@ -34,159 +34,148 @@ if (ploopi_ismoduleallowed('weathertools'))
 {
     switch($ploopi_op)
     {
-    	case 'weathertools_open_bulletin':
-    	    ob_start();
+        case 'weathertools_open_bulletin':
+            ob_start();
             if (empty($_GET['weathertools_icao'])) ploopi_die();
-    	    
+
             ploopi_init_module('weathertools', false, false, false);
-    		
-			$strUrlMetarFiles = empty($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['weathertools_metar_data_url']) ? '' : 'http://weather.noaa.gov/pub/data/observations/metar/stations';
 
-			echo '<div style="padding:4px;">'.weathertools_get_metar_bulletin($strUrlMetarFiles, $_GET['weathertools_icao']).'</div>';
+            $strUrlMetarFiles = empty($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['weathertools_metar_data_url']) ? '' : 'http://weather.noaa.gov/pub/data/observations/metar/stations';
 
-			$strContent = ob_get_contents();
+            echo '<div style="padding:4px;">'.weathertools_get_metar_bulletin($strUrlMetarFiles, $_GET['weathertools_icao']).'</div>';
+
+            $strContent = ob_get_contents();
             ob_end_clean();
-    
+
             echo $skin->create_popup("Données météo pour &laquo; {$_GET['weathertools_icao']} &raquo;", $strContent, 'popup_weathertools_bulletin');
             ploopi_die();
-    	break;
-    	
-    	case 'weathertools_geoip_import':
-    	    // Le fichier à télécharger est assez gros
-    	    // On va faire sauter le max_execution_time pour ce script uniquement
-    	    if (!ini_get('safe_mode')) ini_set('max_execution_time', 0); 
-    	    
+        break;
+
+        case 'weathertools_geoip_import':
+            // Le fichier à télécharger est assez gros et le serveur assez lent...
+            // http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz
+            set_time_limit(0);
+
             ploopi_init_module('weathertools', false, false, false);
 
-            ploopi_unset_error_handler();
-            require_once 'HTTP/Request.php'; // PEAR
-            ploopi_set_error_handler();
-    	    
+            require_once 'HTTP/Request2.php';
+
             if(!empty($_POST['weather_urlgeoip']))
             {
-                ploopi_unset_error_handler();
-            	$objRequest = new HTTP_Request($_POST['weather_urlgeoip']);
-                
+                $objRequest = new HTTP_Request2($_POST['weather_urlgeoip']);
+
                 if (_PLOOPI_INTERNETPROXY_HOST != '')
                 {
-                    $objRequest->setProxy( 
-                        _PLOOPI_INTERNETPROXY_HOST,
-                        _PLOOPI_INTERNETPROXY_PORT,
-                        _PLOOPI_INTERNETPROXY_USER,
-                        _PLOOPI_INTERNETPROXY_PASS
-                    );
+                    $arrConfig['proxy_host'] = _PLOOPI_INTERNETPROXY_HOST;
+                    $arrConfig['proxy_port'] = _PLOOPI_INTERNETPROXY_PORT;
+                    $arrConfig['proxy_user'] = _PLOOPI_INTERNETPROXY_USER;
+                    $arrConfig['proxy_password'] = _PLOOPI_INTERNETPROXY_PASS;
+                    $arrConfig['proxy_auth_scheme'] = HTTP_Request2::AUTH_DIGEST;
+                    $objRequest->setConfig($arrConfig);
                 }
-                                    
-                $intResult = $objRequest->sendRequest();
-                ploopi_set_error_handler();
-                
-                if ($intResult == 1) 
+
+                $objResponse = $objRequest->send();
+
+                $strStatus = $objResponse->getStatus();
+
+                if ($strStatus == '200' || $strStatus != '')
                 {
-                    if ($objRequest->getResponseCode() != '200' && $objRequest->getResponseCode() != '') printf("HTTP Error %s", $objRequest->getResponseCode());
-                    else
-                    {
-                        ploopi_makedir(WEATHERTOOLS_PATHDATA);
+                    // Création du dossier si n'existe pas
+                    ploopi_makedir(WEATHERTOOLS_PATHDATA);
 
-                        // on récupère le contenu du fichier
-                        $ptrFp = fopen(WEATHERTOOLS_FILE, 'wb');
-                        fwrite($ptrFp, $objRequest->getResponseBody());
-                        fclose($ptrFp);
-                        
-                        ploopi_redirect("admin.php?weather_urlgeoip={$_POST['weather_urlgeoip']}&weather_geoip_import=1");
-                    }
-                    ploopi_redirect("admin.php?error=".$objRequest->getResponseCode()."&weather_urlgeoip={$_POST['weather_urlgeoip']}");
+                    // On récupère le contenu du fichier
+                    $ptrFp = fopen(WEATHERTOOLS_FILE, 'wb');
+                    // On le dézippe et on enregistre
+                    fwrite($ptrFp, file_get_contents('compress.zlib://data:who/cares;base64,'. base64_encode($objResponse->getBody())));
+                    fclose($ptrFp);
+
+                    ploopi_redirect("admin.php?weather_urlgeoip={$_POST['weather_urlgeoip']}&weather_geoip_import=1");
                 }
-                ploopi_redirect("admin.php?error&weather_urlgeoip={$_POST['weather_urlgeoip']}");
+                else ploopi_redirect("admin.php?error{$strStatus}&weather_urlgeoip={$_POST['weather_urlgeoip']}");
             }
-            
+
             ploopi_redirect("admin.php?error");
-            
+
         break;
-        
-    	case 'weathertools_stations_import':
-    		ploopi_init_module('weathertools', false, false, false);
 
-            ploopi_unset_error_handler();
-            require_once 'HTTP/Request.php'; // PEAR
-            ploopi_set_error_handler();
-			include_once './modules/weathertools/classes/class_weathertools_station.php';
-    		
-    		if(!empty($_POST['weather_urlstations']))
-    		{
-				$objRequest = new HTTP_Request($_POST['weather_urlstations']);
-				
-				if (_PLOOPI_INTERNETPROXY_HOST != '')
-				{
-					$objRequest->setProxy( 
-						_PLOOPI_INTERNETPROXY_HOST,
-						_PLOOPI_INTERNETPROXY_PORT,
-						_PLOOPI_INTERNETPROXY_USER,
-						_PLOOPI_INTERNETPROXY_PASS
-					);
-				}
-									
-				$intResult = $objRequest->sendRequest();
+        case 'weathertools_stations_import':
+            ploopi_init_module('weathertools', false, false, false);
 
-				if ($intResult == 1) 
-				{
-					if ($objRequest->getResponseCode() != '200' && $objRequest->getResponseCode() != '') printf("HTTP Error %s", $objRequest->getResponseCode());
-					else
-					{
-						$intImport = 0;
-						
-						// on vide la table des stations
-						$db->query('TRUNCATE ploopi_mod_weathertools_station');
+            require_once 'HTTP/Request2.php'; // PEAR
+            include_once './modules/weathertools/classes/class_weathertools_station.php';
 
-						// on récupère le contenu du fichier
-						$strFileContent = $objRequest->getResponseBody();
-						
-						$arrStations = preg_split("/\n/", $strFileContent);
-						
-						foreach($arrStations as $strStation)
-						{
-							$arrStationDetail = preg_split('/;/', $strStation);
-							
-							$arrStationDetail = array_merge($arrStationDetail, array_fill(0, 14, 0));
-							
-							if (sizeof($arrStationDetail) >= 14)
-							{
-								$weather_station = new weathertools_station();
-								
-								$weather_station->fields['icao'] = $arrStationDetail[0];
-								$weather_station->fields['block_number'] = $arrStationDetail[1];
-								$weather_station->fields['station_number'] = $arrStationDetail[2];
-								$weather_station->fields['place_name'] = $arrStationDetail[3];
-								$weather_station->fields['us_state'] = $arrStationDetail[4];
-								$weather_station->fields['country_name'] = $arrStationDetail[5];
-								$weather_station->fields['wmo_region'] = $arrStationDetail[6];
-								$weather_station->fields['station_latitude'] = $arrStationDetail[7];
-								$weather_station->fields['station_longitude'] = $arrStationDetail[8];
-								$weather_station->fields['upper_air_latitude'] = $arrStationDetail[9];
-								$weather_station->fields['upper_air_longitude'] = $arrStationDetail[10];
-								$weather_station->fields['station_elevation'] = $arrStationDetail[11];
-								$weather_station->fields['upper_air_elevation'] = $arrStationDetail[12];
-								$weather_station->fields['rbsn_indicateur'] = $arrStationDetail[13];
-								
-								$weather_station->fields['station_latitude_wgs84'] = weathertools_nad83_to_wgs84($arrStationDetail[7]);
-								$weather_station->fields['station_longitude_wgs84'] = weathertools_nad83_to_wgs84($arrStationDetail[8]);
-								
-								$weather_station->save();
-								
-								$intImport++;
-							}	
-							else ploopi_print_r($arrStationDetail);
-						}
+            if(!empty($_POST['weather_urlstations']))
+            {
+                $objRequest = new HTTP_Request2($_POST['weather_urlstations']);
 
-						
-						ploopi_redirect("admin.php?weather_urlstations={$_POST['weather_urlstations']}&weather_station_import={$intImport}");
-					}
-					ploopi_redirect("admin.php?error=".$objRequest->getResponseCode()."&weather_urlstations={$_POST['weather_urlstations']}");
-				}
-				ploopi_redirect("admin.php?error&weather_urlstations={$_POST['weather_urlstations']}");
-			}
-			
-			ploopi_redirect("admin.php?error");
-    	break;
+                if (_PLOOPI_INTERNETPROXY_HOST != '')
+                {
+                    $arrConfig['proxy_host'] = _PLOOPI_INTERNETPROXY_HOST;
+                    $arrConfig['proxy_port'] = _PLOOPI_INTERNETPROXY_PORT;
+                    $arrConfig['proxy_user'] = _PLOOPI_INTERNETPROXY_USER;
+                    $arrConfig['proxy_password'] = _PLOOPI_INTERNETPROXY_PASS;
+                    $arrConfig['proxy_auth_scheme'] = HTTP_Request2::AUTH_DIGEST;
+                }
+
+                $objResponse = $objRequest->send();
+
+                $strStatus = $objResponse->getStatus();
+
+                if ($strStatus == '200' || $strStatus != '')
+                {
+                    $intImport = 0;
+
+                    // on vide la table des stations
+                    $db->query('TRUNCATE ploopi_mod_weathertools_station');
+
+                    // on récupère le contenu du fichier
+                    $strFileContent = $objResponse->getBody();
+
+                    $arrStations = preg_split("/\n/", $strFileContent);
+
+                    foreach($arrStations as $strStation)
+                    {
+                        $arrStationDetail = preg_split('/;/', $strStation);
+
+                        $arrStationDetail = array_merge($arrStationDetail, array_fill(0, 14, 0));
+
+                        if (sizeof($arrStationDetail) >= 14)
+                        {
+                            $weather_station = new weathertools_station();
+
+                            $weather_station->fields['icao'] = $arrStationDetail[0];
+                            $weather_station->fields['block_number'] = $arrStationDetail[1];
+                            $weather_station->fields['station_number'] = $arrStationDetail[2];
+                            $weather_station->fields['place_name'] = $arrStationDetail[3];
+                            $weather_station->fields['us_state'] = $arrStationDetail[4];
+                            $weather_station->fields['country_name'] = $arrStationDetail[5];
+                            $weather_station->fields['wmo_region'] = $arrStationDetail[6];
+                            $weather_station->fields['station_latitude'] = $arrStationDetail[7];
+                            $weather_station->fields['station_longitude'] = $arrStationDetail[8];
+                            $weather_station->fields['upper_air_latitude'] = $arrStationDetail[9];
+                            $weather_station->fields['upper_air_longitude'] = $arrStationDetail[10];
+                            $weather_station->fields['station_elevation'] = $arrStationDetail[11];
+                            $weather_station->fields['upper_air_elevation'] = $arrStationDetail[12];
+                            $weather_station->fields['rbsn_indicateur'] = $arrStationDetail[13];
+
+                            $weather_station->fields['station_latitude_wgs84'] = weathertools_nad83_to_wgs84($arrStationDetail[7]);
+                            $weather_station->fields['station_longitude_wgs84'] = weathertools_nad83_to_wgs84($arrStationDetail[8]);
+
+                            $weather_station->save();
+
+                            $intImport++;
+                        }
+                        else ploopi_print_r($arrStationDetail);
+                    }
+
+
+                    ploopi_redirect("admin.php?weather_urlstations={$_POST['weather_urlstations']}&weather_station_import={$intImport}");
+                }
+                else ploopi_redirect("admin.php?error={$strStatus}&weather_urlstations={$_POST['weather_urlstations']}");
+            }
+
+            ploopi_redirect("admin.php?error");
+        break;
     }
 }
 
@@ -198,7 +187,7 @@ switch($ploopi_op)
 
         // On récupère le moduleid
         $moduleid = (isset($_REQUEST['weathertools_moduleid']) && is_numeric($_REQUEST['weathertools_moduleid'])) ? $_REQUEST['weathertools_moduleid'] : $_SESSION['ploopi']['moduleid'];
-        
+
         // On vérifie que le typemap est valide et on envoie la carte
         if (isset($_REQUEST['weathertools_typemap']) && in_array($_REQUEST['weathertools_typemap'], array('vigilance', 'vigicrue'))) weathertools_getmap($_REQUEST['weathertools_typemap'], $moduleid, 1800);
 

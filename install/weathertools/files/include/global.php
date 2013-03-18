@@ -51,9 +51,7 @@ define ('WEATHERTOOLS_FILE', WEATHERTOOLS_PATHDATA._PLOOPI_SEP.'GeoLiteCity.dat'
 
 function weathertools_getmap($type_map, $moduleid = null, $cache_length = 1800)
 {
-    ploopi_unset_error_handler();
-    require_once 'HTTP/Request.php'; // PEAR
-    ploopi_set_error_handler();
+    require_once 'HTTP/Request2.php';
     include_once './include/classes/cache.php';
 
     $strUrl = '';
@@ -77,47 +75,39 @@ function weathertools_getmap($type_map, $moduleid = null, $cache_length = 1800)
 
     $intFileTs = filemtime("{$strCacheFile}.raw");
 
-    $booCached = true;
-
     if ((!file_exists("{$strCacheFile}.raw") || (mktime() - $intFileTs > $cache_length)) && (!isset($_SESSION['weathertools'][$strCacheFile]) || mktime() >= $_SESSION['weathertools'][$strCacheFile]))
     {
-        $booCached = false;
-
-        $objRequest = new HTTP_Request("{$strUrl}?".ploopi_createtimestamp());
+        $objRequest = new HTTP_Request2("{$strUrl}?".ploopi_createtimestamp());
 
         if (_PLOOPI_INTERNETPROXY_HOST != '')
         {
-            $objRequest->setProxy(
-                _PLOOPI_INTERNETPROXY_HOST,
-                _PLOOPI_INTERNETPROXY_PORT,
-                _PLOOPI_INTERNETPROXY_USER,
-                _PLOOPI_INTERNETPROXY_PASS
-            );
+            $arrConfig['proxy_host'] = _PLOOPI_INTERNETPROXY_HOST;
+            $arrConfig['proxy_port'] = _PLOOPI_INTERNETPROXY_PORT;
+            $arrConfig['proxy_user'] = _PLOOPI_INTERNETPROXY_USER;
+            $arrConfig['proxy_password'] = _PLOOPI_INTERNETPROXY_PASS;
+            $arrConfig['proxy_auth_scheme'] = HTTP_Request2::AUTH_DIGEST;
+            $objRequest->setConfig($arrConfig);
         }
 
-        ploopi_unset_error_handler();
-        $objPearError = $objRequest->sendRequest();
-        ploopi_set_error_handler();
+        $objResponse = $objRequest->send();
 
-        if (!PEAR::isError($objPearError))
+        $strStatus = $objResponse->getStatus();
+
+        if ($strStatus == '200' || $strStatus != '')
         {
-            if ($objRequest->getResponseCode() != '200' && $objRequest->getResponseCode() != '') return false;
-            else
-            {
-                ploopi_makedir($strCachePath);
+            ploopi_makedir($strCachePath);
 
-                $ptrFd = fopen("{$strCacheFile}.raw", 'wb');
-                fwrite($ptrFd, $objRequest->getResponseBody());
-                fclose($ptrFd);
+            $ptrFd = fopen("{$strCacheFile}.raw", 'wb');
+            fwrite($ptrFd, $objRequest->getResponseBody());
+            fclose($ptrFd);
 
-                $intFileTs = filemtime("{$strCacheFile}.raw");
-            }
+            $intFileTs = filemtime("{$strCacheFile}.raw");
 
             unset($_SESSION['weathertools'][$strCacheFile]);
         }
-        else // Problème de lecture du fichier
-        {
+        else {
             $_SESSION['weathertools'][$strCacheFile] = mktime() + $cache_length;
+            return false;
         }
     }
 
@@ -427,9 +417,7 @@ function weathertools_get_metar_bulletin($url, $icao, $force = false, $debug = f
 
 function weathertools_get_metar_file($url, $icao, $force = false)
 {
-    ploopi_unset_error_handler();
-    require_once 'HTTP/Request.php'; // PEAR
-    ploopi_set_error_handler();
+    require_once 'HTTP/Request2.php';
     include_once './modules/weathertools/classes/class_weathertools_cache.php';
 
     if (!ploopi_is_url($url)) return "Erreur URL non valide";
@@ -439,31 +427,31 @@ function weathertools_get_metar_file($url, $icao, $force = false)
     if (!$objWeatherCache->open($icao) || (ploopi_createtimestamp() - $objWeatherCache->fields['timestp'] > 1800) || $force) // cache pas à jour (ou rechargement forcé)
     {
         $icao = strtoupper($icao);
-        $objRequest = new HTTP_Request("{$url}/{$icao}.TXT");
+
+        $objRequest = new HTTP_Request2("{$url}/{$icao}.TXT");
 
         if (_PLOOPI_INTERNETPROXY_HOST != '')
         {
-            $objRequest->setProxy(
-                _PLOOPI_INTERNETPROXY_HOST,
-                _PLOOPI_INTERNETPROXY_PORT,
-                _PLOOPI_INTERNETPROXY_USER,
-                _PLOOPI_INTERNETPROXY_PASS
-            );
+            $arrConfig['proxy_host'] = _PLOOPI_INTERNETPROXY_HOST;
+            $arrConfig['proxy_port'] = _PLOOPI_INTERNETPROXY_PORT;
+            $arrConfig['proxy_user'] = _PLOOPI_INTERNETPROXY_USER;
+            $arrConfig['proxy_password'] = _PLOOPI_INTERNETPROXY_PASS;
+            $arrConfig['proxy_auth_scheme'] = HTTP_Request2::AUTH_DIGEST;
+            $objRequest->setConfig($arrConfig);
         }
 
-        $intResult = $objRequest->sendRequest();
+        $objResponse = $objRequest->send();
 
-        if ($intResult == 1)
+        $strStatus = $objResponse->getStatus();
+
+        if ($strStatus == '200' || $strStatus != '')
         {
-            if ($objRequest->getResponseCode() != '200' && $objRequest->getResponseCode() != '') return sprintf("Erreur HTTP %s", $objRequest->getResponseCode());
-            else
-            {
-                $objWeatherCache->fields['zoneid'] = $icao;
-                $objWeatherCache->fields['rawcontent'] = $objRequest->getResponseBody();
-                $objWeatherCache->save();
-                return preg_split("/\n/", $objWeatherCache->fields['rawcontent']);
-            }
+            $objWeatherCache->fields['zoneid'] = $icao;
+            $objWeatherCache->fields['rawcontent'] = $objResponse->getBody();
+            $objWeatherCache->save();
+            return preg_split("/\n/", $objWeatherCache->fields['rawcontent']);
         }
+        else return sprintf("Erreur HTTP %s", $strStatus);
     }
     else
     {
@@ -630,6 +618,8 @@ function weathertools_iptolocation($ip = null)
     // wget http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz
     // gunzip GeoLiteCity.dat.gz
 
+    require_once 'Net/GeoIP.php';
+
     $record = null;
     // On vérifie l'existence de la BDD
     if (file_exists(_PLOOPI_PATHDATA.'/weathertools/GeoLiteCity.dat'))
@@ -639,9 +629,10 @@ function weathertools_iptolocation($ip = null)
         $gi = geoip_open(_PLOOPI_PATHDATA.'/weathertools/GeoLiteCity.dat', GEOIP_STANDARD);
 
         $record = geoip_record_by_addr($gi, empty($ip) ? $_SESSION['ploopi']['remote_ip'][0] : $ip);
+
         geoip_close($gi);
     }
 
-    return($record);
+    return $record;
 }
 ?>

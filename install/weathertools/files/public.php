@@ -32,14 +32,14 @@
 
 ploopi_init_module('weathertools');
 
-echo $skin->create_pagetitle("{$_SESSION['ploopi']['modulelabel']} - Consultation des données météo (METAR)"); 
+echo $skin->create_pagetitle("{$_SESSION['ploopi']['modulelabel']} - Consultation des données météo (METAR)");
 echo $skin->open_simplebloc('Recherche d\'une station météo');
 
 $record = weathertools_iptolocation();
 
 ?>
 <div style="padding:4px;">
-    <? 
+    <?
     $strWeatherCountryName = empty($_REQUEST['weather_country_name']) ? '' : $_REQUEST['weather_country_name'];
     $strWeatherPlaceName = empty($_REQUEST['weather_place_name']) ? '' : $_REQUEST['weather_place_name'];
     ?>
@@ -75,15 +75,15 @@ $record = weathertools_iptolocation();
             <label>Nom de station : </label>
             <input type="text" class="text" name="weather_place_name" value="<? echo htmlentities($strWeatherPlaceName); ?>" />
         </p>
-    </div>      
+    </div>
     <div style="padding:4px;text-align:right;">
         <input type="submit" class="button" value="Chercher" />
     </div>
     </form>
     <?
     $arrStations = array();
-    $booAutodetect = false;    
-    
+    $booAutodetect = false;
+
     if ($strWeatherCountryName == '@' || (empty($strWeatherCountryName) && empty($strWeatherPlaceName))) // Autodetection
     {
         if (!empty($record))
@@ -94,74 +94,74 @@ $record = weathertools_iptolocation();
     }
     elseif (!empty($strWeatherCountryName) || !empty($strWeatherPlaceName))
     {
-        
+
         if ($strWeatherCountryName == '#') $strWeatherCountryName = '';
-        
+
         if (!empty($strWeatherCountryName) || !empty($strWeatherPlaceName))
         {
             $arrWhere = array();
-            
+
             if (!empty($strWeatherCountryName)) $arrWhere[] = "country_name LIKE '%".$db->addslashes($strWeatherCountryName)."%'";
             if (!empty($strWeatherPlaceName)) $arrWhere[] = "place_name LIKE '%".$db->addslashes($strWeatherPlaceName)."%'";
-             
+
             // Affectation des données dans le tableau
             $rs = $db->query("SELECT * FROM ploopi_mod_weathertools_station WHERE ".implode(' AND ', $arrWhere));
-            
+
             $arrStations = $db->getarray();
         }
     }
-    
+
     // Préparation du tableau d'affichage
-    $arrResult = 
+    $arrResult =
         array(
             'columns' => array(),
             'rows' => array()
         );
-        
-        
-    $arrResult['columns']['left']['icao'] = 
-        array(    
+
+
+    $arrResult['columns']['left']['icao'] =
+        array(
             'label' => 'ICAO',
             'width' => 60,
             'options' => array('sort' => true)
-        );    
-        
-    $arrResult['columns']['left']['country_name'] = 
-        array(    
+        );
+
+    $arrResult['columns']['left']['country_name'] =
+        array(
             'label' => 'Pays',
             'width' => 150,
             'options' => array('sort' => true)
-        );    
-        
-    $arrResult['columns']['auto']['place_name'] = 
-        array(    
+        );
+
+    $arrResult['columns']['auto']['place_name'] =
+        array(
             'label' => 'Station',
             'options' => array('sort' => true)
         );
-        
-    $arrResult['columns']['right']['distance'] = 
-        array(   
+
+    $arrResult['columns']['right']['distance'] =
+        array(
             'label' => 'Dist.',
             'width' => 70,
             'options' => array('sort' => true)
         );
-        
-    $arrResult['columns']['right']['latitude'] = 
-        array(   
+
+    $arrResult['columns']['right']['latitude'] =
+        array(
             'label' => 'Lat.',
             'width' => 70,
             'options' => array('sort' => true)
         );
 
-    $arrResult['columns']['right']['longitude'] = 
-        array(   
+    $arrResult['columns']['right']['longitude'] =
+        array(
             'label' => 'Long.',
             'width' => 70,
             'options' => array('sort' => true)
         );
-     
-    $arrResult['columns']['right']['altitude'] = 
-        array(   
+
+    $arrResult['columns']['right']['altitude'] =
+        array(
             'label' => 'Alt.',
             'width' => 60,
             'options' => array('sort' => true)
@@ -171,10 +171,10 @@ $record = weathertools_iptolocation();
     foreach($arrStations as $row)
     {
         $intDistance = (empty($record->latitude)) ? 0 : ceil(weathertools_get_distance($record->latitude, $record->longitude, $row['station_latitude_wgs84'], $row['station_longitude_wgs84']));
-        
-        $arrResult['rows'][] = 
+
+        $arrResult['rows'][] =
             array(
-                'values' => 
+                'values' =>
                     array(
                         'icao' => array('label' => $row['icao']),
                         'country_name' => array('label' => $row['country_name']),
@@ -189,27 +189,27 @@ $record = weathertools_iptolocation();
                 'onclick' => "weathertools_open_bulletin('{$row['icao']}', event);"
             );
     }
-    
-    
+
+
     ?>
     <div style="margin:2px;border:1px solid #a0a0a0;">
         <?
         // Affichage du tableau
         $skin->display_array(
-            $arrResult['columns'], 
-            $arrResult['rows'], 
-            'weathertools_stations', 
+            $arrResult['columns'],
+            $arrResult['rows'],
+            'weathertools_stations',
             array(
-                'sortable' => true, 
+                'sortable' => true,
                 'orderby_default' => $booAutodetect ? 'distance' : 'place_name',
                 'sort_default' => 'ASC'
             )
         );
-        ?>      
+        ?>
     </div>
 </div>
 
-<? echo $skin->close_simplebloc(); 
+<? echo $skin->close_simplebloc();
 
 /*
 ploopi_init_module('weathertools');
@@ -218,10 +218,10 @@ $strUrlMetarFiles = empty($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['mo
 
 $arrStations = weathertools_get_closest_station(48, 5, 5);
 
-foreach($arrStations as $arrDetailStation) 
+foreach($arrStations as $arrDetailStation)
 {
-	echo '<div style="padding:4px;"><strong>à '.floor($arrDetailStation['distance']).' km</strong></div>';
-	echo '<div style="padding:4px;">'.weathertools_get_metar_bulletin($strUrlMetarFiles, $arrDetailStation['icao']).'</div>';
+    echo '<div style="padding:4px;"><strong>à '.floor($arrDetailStation['distance']).' km</strong></div>';
+    echo '<div style="padding:4px;">'.weathertools_get_metar_bulletin($strUrlMetarFiles, $arrDetailStation['icao']).'</div>';
 }
 */
 ?>

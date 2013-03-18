@@ -32,29 +32,29 @@
 
 ploopi_init_module('weathertools');
 
-echo $skin->create_pagetitle("{$_SESSION['ploopi']['modulelabel']} - Administration"); 
+echo $skin->create_pagetitle("{$_SESSION['ploopi']['modulelabel']} - Administration");
 echo $skin->open_simplebloc();
 ?>
 <div style="padding:4px;">
-	<?
-	echo $skin->open_simplebloc('Import des stations météo');
+    <?
+    echo $skin->open_simplebloc('Import des stations météo');
 
-	// URL par défaut du fichier contenant les stations météo (US National weather service / NOAA)
-	$strUrlStations = empty($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['weathertools_station_list_url']) ? "http://weather.noaa.gov/data/nsd_cccc.txt" : $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['weathertools_station_list_url'];
-	if (!empty($_REQUEST['weather_urlstations'])) $strUrlStations = $_REQUEST['weather_urlstations'];
+    // URL par défaut du fichier contenant les stations météo (US National weather service / NOAA)
+    $strUrlStations = empty($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['weathertools_station_list_url']) ? "http://weather.noaa.gov/data/nsd_cccc.txt" : $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['weathertools_station_list_url'];
+    if (!empty($_REQUEST['weather_urlstations'])) $strUrlStations = $_REQUEST['weather_urlstations'];
 
-	if (!isset($_GET['error']) && isset($_GET['weather_station_import']))
-	{
-		?>
-		<div style="padding:4px;font-weight:bold;">
-			Import du fichier effectué. <? echo $_GET['weather_station_import']; ?> station(s) traitées.
-		</div>
-		<?
-	}
-	else
-	{
-    	$rs = $db->query('SELECT count(*) as c FROM ploopi_mod_weathertools_station');
-    	if ($db->numrows())
+    if (!isset($_GET['error']) && isset($_GET['weather_station_import']))
+    {
+        ?>
+        <div style="padding:4px;font-weight:bold;">
+            Import du fichier effectué. <? echo $_GET['weather_station_import']; ?> station(s) traitées.
+        </div>
+        <?
+    }
+    else
+    {
+        $rs = $db->query('SELECT count(*) as c FROM ploopi_mod_weathertools_station');
+        if ($db->numrows())
         {
             ?>
             <div style="padding:4px;font-weight:bold;">
@@ -63,24 +63,24 @@ echo $skin->open_simplebloc();
             <?
         }
     }
-	?>
+    ?>
 
-	<form action="<? echo ploopi_urlencode("admin-light.php?ploopi_op=weathertools_stations_import"); ?>" method="post">
-	<div class=ploopi_form>
-		<p>
-			<label>Url du fichier (weather.noaa.gov) : </label>
-			<input type="text" class="text" name="weather_urlstations" value="<? echo htmlentities($strUrlStations); ?>" />
-		</p>
-	</div>		
-	<div style="padding:4px;text-align:right;">
-		<input type="reset" class="button" value="Réinitialiser" />
-		<input type="submit" class="button" value="Importer" />
-	</div>
-	</form>
-	<?
-	echo $skin->close_simplebloc();
+    <form action="<? echo ploopi_urlencode("admin-light.php?ploopi_op=weathertools_stations_import"); ?>" method="post">
+    <div class=ploopi_form>
+        <p>
+            <label>Url du fichier (weather.noaa.gov) : </label>
+            <input type="text" class="text" name="weather_urlstations" value="<? echo htmlentities($strUrlStations); ?>" />
+        </p>
+    </div>
+    <div style="padding:4px;text-align:right;">
+        <input type="reset" class="button" value="Réinitialiser" />
+        <input type="submit" class="button" value="Importer" />
+    </div>
+    </form>
+    <?
+    echo $skin->close_simplebloc();
 
-	
+
     echo $skin->open_simplebloc('Import des données GEOIP');
 
     // URL par défaut du fichier contenant les données GEOIP
@@ -101,7 +101,7 @@ echo $skin->open_simplebloc();
         {
             ?>
             <div style="padding:4px;font-weight:bold;">
-                La base de données GEOIP est présente et date du <? echo date('d/m/Y', filemtime(WEATHERTOOLS_FILE)); ?>.
+                La base de données GEOIP est présente et date du <? echo date('d/m/Y', filemtime(WEATHERTOOLS_FILE)); ?>. Le fichier pèse <? echo number_format(filesize(WEATHERTOOLS_FILE)/1024,0,'.',' '); ?> ko.
             </div>
             <?
         }
@@ -122,100 +122,100 @@ echo $skin->open_simplebloc();
             <label>Url du fichier GEOIP : </label>
             <input type="text" class="text" name="weather_urlgeoip" value="<? echo htmlentities($strUrlGeoIP); ?>" />
         </p>
-    </div>      
+    </div>
     <div style="padding:4px;text-align:right;">
         <input type="reset" class="button" value="Réinitialiser" />
         <input type="submit" class="button" value="Importer" />
     </div>
     </form>
     <?
-    echo $skin->close_simplebloc();	
-	
-	echo $skin->open_simplebloc('Recherche d\'une station météo');
+    echo $skin->close_simplebloc();
 
-	$strWeatherCountryName = empty($_REQUEST['weather_country_name']) ? '' : $_REQUEST['weather_country_name'];
-	$strWeatherPlaceName = empty($_REQUEST['weather_place_name']) ? '' : $_REQUEST['weather_place_name'];
-	?>
-	<form action="<? echo ploopi_urlencode("admin.php?op=recherche"); ?>" method="post">
-	<div class=ploopi_form>
-		<p>
-			<label>Pays : </label>
-			<input type="text" class="text" name="weather_country_name" value="<? echo htmlentities($strWeatherCountryName); ?>" />
-		</p>
-		<p>
-			<label>Nom de station : </label>
-			<input type="text" class="text" name="weather_place_name" value="<? echo htmlentities($strWeatherPlaceName); ?>" />
-		</p>
-	</div>		
-	<div style="padding:4px;text-align:right;">
-		<input type="submit" class="button" value="Chercher" />
-	</div>
-	</form>
-	<?
-	if (!empty($strWeatherCountryName) || !empty($strWeatherPlaceName))
-	{
+    echo $skin->open_simplebloc('Recherche d\'une station météo');
+
+    $strWeatherCountryName = empty($_REQUEST['weather_country_name']) ? '' : $_REQUEST['weather_country_name'];
+    $strWeatherPlaceName = empty($_REQUEST['weather_place_name']) ? '' : $_REQUEST['weather_place_name'];
+    ?>
+    <form action="<? echo ploopi_urlencode("admin.php?op=recherche"); ?>" method="post">
+    <div class=ploopi_form>
+        <p>
+            <label>Pays : </label>
+            <input type="text" class="text" name="weather_country_name" value="<? echo htmlentities($strWeatherCountryName); ?>" />
+        </p>
+        <p>
+            <label>Nom de station : </label>
+            <input type="text" class="text" name="weather_place_name" value="<? echo htmlentities($strWeatherPlaceName); ?>" />
+        </p>
+    </div>
+    <div style="padding:4px;text-align:right;">
+        <input type="submit" class="button" value="Chercher" />
+    </div>
+    </form>
+    <?
+    if (!empty($strWeatherCountryName) || !empty($strWeatherPlaceName))
+    {
         // Préparation du tableau d'affichage
-        $arrResult = 
+        $arrResult =
             array(
                 'columns' => array(),
                 'rows' => array()
             );
-            
-            
-        $arrResult['columns']['left']['icao'] = 
-            array(    
+
+
+        $arrResult['columns']['left']['icao'] =
+            array(
                 'label' => 'ICAO',
                 'width' => 60,
                 'options' => array('sort' => true)
-            );    
-            
-        $arrResult['columns']['left']['country_name'] = 
-            array(    
+            );
+
+        $arrResult['columns']['left']['country_name'] =
+            array(
                 'label' => 'Pays',
                 'width' => 150,
                 'options' => array('sort' => true)
-            );    
-            
-        $arrResult['columns']['auto']['place_name'] = 
-            array(    
+            );
+
+        $arrResult['columns']['auto']['place_name'] =
+            array(
                 'label' => 'Station',
                 'options' => array('sort' => true)
             );
-            
-        $arrResult['columns']['right']['latitude'] = 
-            array(   
+
+        $arrResult['columns']['right']['latitude'] =
+            array(
                 'label' => 'Lat.',
                 'width' => 70,
                 'options' => array('sort' => true)
             );
 
-        $arrResult['columns']['right']['longitude'] = 
-            array(   
+        $arrResult['columns']['right']['longitude'] =
+            array(
                 'label' => 'Long.',
                 'width' => 70,
                 'options' => array('sort' => true)
             );
-         
-        $arrResult['columns']['right']['altitude'] = 
-            array(   
+
+        $arrResult['columns']['right']['altitude'] =
+            array(
                 'label' => 'Alt.',
                 'width' => 60,
                 'options' => array('sort' => true)
             );
 
         $arrWhere = array();
-        
+
         if (!empty($strWeatherCountryName)) $arrWhere[] = "country_name LIKE '%".$db->addslashes($strWeatherCountryName)."%'";
         if (!empty($strWeatherPlaceName)) $arrWhere[] = "place_name LIKE '%".$db->addslashes($strWeatherPlaceName)."%'";
-         
+
         // Affectation des données dans le tableau
         $rs = $db->query("SELECT * FROM ploopi_mod_weathertools_station WHERE ".implode(' AND ', $arrWhere));
-        
+
         while ($row = $db->fetchrow($rs))
         {
-            $arrResult['rows'][] = 
+            $arrResult['rows'][] =
                 array(
-                    'values' => 
+                    'values' =>
                         array(
                             'icao' => array('label' => $row['icao']),
                             'country_name' => array('label' => $row['country_name']),
@@ -229,29 +229,29 @@ echo $skin->open_simplebloc();
                     'onclick' => "weathertools_open_bulletin('{$row['icao']}', event);"
                 );
         }
-        
-		
-		?>
-		<div style="margin:2px;border:1px solid #a0a0a0;">
-			<?
-			// Affichage du tableau
-			$skin->display_array(
-				$arrResult['columns'], 
-				$arrResult['rows'], 
-				'weathertools_stations', 
-				array(
-					'sortable' => true, 
-					'orderby_default' => 'place_name',
-					'sort_default' => 'ASC'
-				)
-			);
-			?>		
-		</div>
-		<?
-	}
-	
-	echo $skin->close_simplebloc();
-	?>
+
+
+        ?>
+        <div style="margin:2px;border:1px solid #a0a0a0;">
+            <?
+            // Affichage du tableau
+            $skin->display_array(
+                $arrResult['columns'],
+                $arrResult['rows'],
+                'weathertools_stations',
+                array(
+                    'sortable' => true,
+                    'orderby_default' => 'place_name',
+                    'sort_default' => 'ASC'
+                )
+            );
+            ?>
+        </div>
+        <?
+    }
+
+    echo $skin->close_simplebloc();
+    ?>
 </div>
 
 <? echo $skin->close_simplebloc(); ?>
