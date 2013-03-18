@@ -409,6 +409,7 @@ function ploopi_htmlpurifier($strContent, $booTrusted = false)
     $objConfig = HTMLPurifier_Config::createDefault();
     $objConfig->set('Cache.SerializerPath', $strCachePath);
     $objConfig->set('Core.Encoding', 'ISO-8859-15');
+    $objConfig->set('Core.EscapeNonASCIICharacters', true);
     $objConfig->set('HTML.Doctype', 'XHTML 1.0 Strict');
 
     if ($booTrusted)
