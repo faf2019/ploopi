@@ -1,3 +1,11 @@
+== Module DBREPORT - version 1.0.8 ====================================================
+
+2013-03-18  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Modification de l'export XLS (via PhpExcel)
+* Ajout de l'export XLSX (via PhpExcel)
+* Correction de notices
+
 == Module DBREPORT - version 1.0.7 ====================================================
 
 2012-03-21  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
@@ -15,7 +23,7 @@
 2011-06-28  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
 
  * Ajout de l'opérateur "IN" (Dans la liste de valeurs) pour les filtres dans les requêtes
- 
+
 == Module DBREPORT - version 1.0.5 ====================================================
 
 2010-09-06  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
@@ -98,7 +106,7 @@
 
  * Gestion du paramétrage des relations
  * Ajout des formats d'export PDF/ODS
- * L'URI affichée intègre les paramètres "utilisateur" 
+ * L'URI affichée intègre les paramètres "utilisateur"
  * Gestion de la mise en cache des données
  * Ajout d'un paramètre permettant de gérer la durée de mise en cache des résultats de requête et des fichiers générés
 
@@ -123,7 +131,7 @@
  * Possibilité d'activer ou non le webservice associé à une requête
  * Finalisation de l'interface de sélection des modules (paramètres)
  * Utilisation intégrale de la classe "ploopi_query" en remplacement de "db"
- 
+
 == Module DBREPORT - version 0.8.5 ====================================================
 
 2009-09-24  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

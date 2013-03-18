@@ -170,7 +170,7 @@ if (isset($_POST['dbreport_query_id']) && is_numeric($_POST['dbreport_query_id']
             $objForm->addButton( new form_button('input:reset', 'Réinitialiser') );
             $objForm->addButton( new form_button('input:submit', 'Enregistrer', null, null, array('style' => 'margin-left:2px;')) );
 
-            $objForm->addPanel($objPanel = &new form_panel('dbreport_panel_tables', 'Tables disponibles'));
+            $objForm->addPanel($objPanel = new form_panel('dbreport_panel_tables', 'Tables disponibles'));
 
             if ($booUniqueChoice)
             {

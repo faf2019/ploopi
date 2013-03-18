@@ -185,6 +185,8 @@ function dbreport_getdata($strWsId, $arrParams, $strFormat = 'raw', $strDbreport
             include_once './modules/dbreport/classes/class_dbreport_query.php';
             include_once './include/classes/data_object_collection.php';
 
+            set_time_limit(300);
+
             $mixedVar = null;
 
             $objDOC = new data_object_collection('dbreport_query');
@@ -231,7 +233,12 @@ function dbreport_getdata($strWsId, $arrParams, $strFormat = 'raw', $strDbreport
 
                             case 'xls':
                                 include_once './include/functions/array.php';
-                                $mixedVar = ploopi_array2xls($objDbrQuery->getresult(), true, 'dbreport.xls', 'query');
+                                $mixedVar = ploopi_array2excel($objDbrQuery->getresult(), true, 'dbreport.xls', 'query', null, array('writer' => 'excel5'));
+                            break;
+
+                            case 'xlsx':
+                                include_once './include/functions/array.php';
+                                $mixedVar = ploopi_array2excel($objDbrQuery->getresult(), true, 'dbreport.xlsx', 'query', null, array('writer' => 'excel2007'));
                             break;
 
                             case 'sxc':
@@ -239,19 +246,11 @@ function dbreport_getdata($strWsId, $arrParams, $strFormat = 'raw', $strDbreport
                             case 'pdf':
                                 include_once './include/classes/odf.php';
 
-                                // Création d'un fichier temporaire XLS
-                                // Création du dossier de travail (si n'existe pas)
-                                ploopi_makedir($strOutputPath = _PLOOPI_PATHDATA._PLOOPI_SEP.'dbreport'._PLOOPI_SEP.'tmp');
-                                $strFileId = uniqid();
-                                $strOutputXls = $strOutputPath._PLOOPI_SEP."{$strFileId}.xls";
-
-                                // Génération du fichier XLS
-                                ploopi_array2xls($objDbrQuery->getresult(), true, $strOutputXls, 'query', null, array('tofile' => true, 'setborder' => true));
+                                // Génération du fichier XLSX
+                                $strXlsContent = ploopi_array2excel($objDbrQuery->getresult(), true,  'dbreport.xlsx', 'query', null, array('writer' => 'excel2007'));
 
                                 // Instanciation du convertisseur ODF
-                                $objOdfConverter = new odf_converter(ploopi_getparam('dbreport_webservice_jodconverter', ploopi_getmoduleid('dbreport')));
-
-                                $rawOuputFile = $strOutputPath._PLOOPI_SEP."{$strFileId}.{$strFormat}";
+                                $objOdfConverter = new odf_converter(ploopi_getparam('system_webservice_jodconverter', ploopi_getmoduleid('system')));
 
                                 switch($strFormat)
                                 {
@@ -269,9 +268,7 @@ function dbreport_getdata($strWsId, $arrParams, $strFormat = 'raw', $strDbreport
                                 }
 
                                 // Conversion du document dans le format sélectionné
-                                $mixedVar = $objOdfConverter->convert(file_get_contents($strOutputXls), 'application/vnd.ms-excel', $strOuputMime);
-                                // Suppression du fichier temporaire XLS
-                                unlink($strOutputXls);
+                                $mixedVar = $objOdfConverter->convert($strXlsContent, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', $strOuputMime);
                             break;
 
                             case 'csv':

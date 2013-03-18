@@ -529,9 +529,9 @@ if (ploopi_ismoduleallowed('dbreport'))
                             <strong>ODS</strong><span>&nbsp;(OpenOffice Calc &#174;)</span>
                         </p>
                         <p class="ploopi_checkbox" style="padding:2px;" onclick="javascript:ploopi_checkbox_click(event,'dbreport_format_xls');">
-                            <input type="radio" class="radio" name="dbreport_format" id="dbreport_format_xls" value="xls" />
+                            <input type="radio" class="radio" name="dbreport_format" id="dbreport_format_xls" value="xlsx" />
                             <img src="./modules/dbreport/img/mime/xls.png" />
-                            <strong>XLS</strong><span>&nbsp;(Microsoft Excel &#174;)</span>
+                            <strong>XLSX</strong><span>&nbsp;(Microsoft Excel &#174;)</span>
                         </p>
                         <p class="ploopi_checkbox" style="padding:2px;" onclick="javascript:ploopi_checkbox_click(event,'dbreport_format_csv');">
                             <input type="radio" class="radio" name="dbreport_format" id="dbreport_format_csv" value="csv" />

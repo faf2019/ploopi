@@ -74,7 +74,7 @@ if (isset($_POST['dbreport_query_id']) && is_numeric($_POST['dbreport_query_id']
 
         while($row = $objRs->fetchrow())
         {
-            $objForm->addPanel($objPanel = &new form_panel("dbreport_panel_{$row['mt_label']}_{$row['label']}", "Table &laquo; [{$row['mt_label']}] {$row['label']} &raquo;"));
+            $objForm->addPanel($objPanel = new form_panel("dbreport_panel_{$row['mt_label']}_{$row['label']}", "Table &laquo; [{$row['mt_label']}] {$row['label']} &raquo;"));
 
             $objQuery = new ploopi_query_select();
             $objQuery->add_from('ploopi_mb_field');

@@ -2,9 +2,9 @@
 <ploopi>
     <moduletype>
         <label>dbreport</label>
-        <version>1.0.7</version>
+        <version>1.0.8</version>
         <author>Ovensia</author>
-        <date>20120321000000</date>
+        <date>20130318000000</date>
         <description>Requêteur Base de Données</description>
         <paramtype>
             <name>dbreport_webservice_jodconverter</name>
@@ -12,7 +12,7 @@
             <default_value></default_value>
             <public>0</public>
             <description/>
-        </paramtype>        
+        </paramtype>
         <paramtype>
             <name>dbreport_cache_lifetime</name>
             <label>Durée de vie du cache (en seconde)</label>
@@ -23,10 +23,10 @@
         <action>
             <id_action>10</id_action>
             <label>Gérer les requêtes</label>
-        </action>          
+        </action>
         <action>
             <id_action>99</id_action>
             <label>Verrouiller les requêtes</label>
-        </action>        
+        </action>
     </moduletype>
 </ploopi>

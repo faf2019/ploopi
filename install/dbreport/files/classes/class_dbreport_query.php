@@ -817,6 +817,8 @@ class dbreport_query extends data_object
         include_once './include/functions/array.php';
         include_once './include/classes/odf.php';
 
+        set_time_limit(300);
+
         $strFormat = strtolower($strFormat);
         $strCharset = 'iso-8859-1';
 
@@ -842,7 +844,11 @@ class dbreport_query extends data_object
             break;
 
             case 'xls':
-                echo ploopi_array2xls($this->getresult(), true, 'dbreport.xls', 'query');
+                echo ploopi_array2excel($this->getresult(), true, 'dbreport.xls', 'query', null, array('writer' => 'excel5'));
+            break;
+
+            case 'xlsx':
+                echo ploopi_array2excel($this->getresult(), true, 'dbreport.xlsx', 'query', null, array('writer' => 'excel2007'));
             break;
 
             case 'odt': // experimental
@@ -867,19 +873,11 @@ class dbreport_query extends data_object
             case 'sxc':
             case 'ods':
             case 'pdf':
-                // Création d'un fichier temporaire XLS
-                // Création du dossier de travail (si n'existe pas)
-                ploopi_makedir($strOutputPath = _PLOOPI_PATHDATA._PLOOPI_SEP.'dbreport'._PLOOPI_SEP.'tmp');
-                $strFileId = uniqid();
-                $strOutputXls = $strOutputPath._PLOOPI_SEP."{$strFileId}.xls";
-
-                // Génération du fichier XLS
-                ploopi_array2xls($this->getresult(), true, $strOutputXls, 'query', null, array('tofile' => true, 'setborder' => true));
+                // Génération du fichier XLSX
+                $strXlsContent = ploopi_array2excel($this->getresult(), true,  'dbreport.xlsx', 'query', null, array('writer' => 'excel2007'));
 
                 // Instanciation du convertisseur ODF
-                $objOdfConverter = new odf_converter(ploopi_getparam('dbreport_webservice_jodconverter', ploopi_getmoduleid('dbreport')));
-
-                $rawOuputFile = $strOutputPath._PLOOPI_SEP."{$strFileId}.{$strFormat}";
+                $objOdfConverter = new odf_converter(ploopi_getparam('system_jodwebservice', _PLOOPI_MODULE_SYSTEM));
 
                 switch($strFormat)
                 {
@@ -897,9 +895,7 @@ class dbreport_query extends data_object
                 }
 
                 // Conversion du document dans le format sélectionné
-                echo $objOdfConverter->convert(file_get_contents($strOutputXls), 'application/vnd.ms-excel', $strOuputMime);
-                // Suppression du fichier temporaire XLS
-                unlink($strOutputXls);
+                echo $objOdfConverter->convert($strXlsContent, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', $strOuputMime);
             break;
 
             case 'csv':
