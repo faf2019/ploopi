@@ -329,7 +329,7 @@ if ($_SESSION['ploopi']['connected'])
                                     {
                                         $arrFrom[] =
                                             array(
-                                                'address' => _PLOOPI_ADMINMAIL,
+                                                'address' => trim(current(explode(',', _PLOOPI_ADMINMAIL))),
                                                 'name' => "{$_SESSION['ploopi']['user']['firstname']} {$_SESSION['ploopi']['user']['lastname']}"
                                             );
                                     }
