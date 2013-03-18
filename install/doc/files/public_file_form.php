@@ -289,9 +289,7 @@ else
                         ?>
                         <div style="border:1px solid #c0c0c0;margin:4px;padding:4px;background-color:#ffffff;height:<?php echo $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_viewerheight']; ?>px;overflow:auto;">
                         <?php
-                        ploopi_unset_error_handler();
                         require_once "Text/Highlighter.php";
-                        ploopi_set_error_handler();
                         require_once "Text/Highlighter/Renderer/Html.php";
                         $objHL = Text_Highlighter::factory($arrRenderer[1]);
 

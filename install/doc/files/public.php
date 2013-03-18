@@ -55,7 +55,7 @@ if (ploopi_getsessionvar('unoconv') === false && is_null(ploopi_getsessionvar('j
 }
 
 $op = (isset($_REQUEST['op'])) ? $_REQUEST['op'] : 'doc_browser';
-$currentfolder = (isset($_REQUEST['currentfolder'])) ? $_REQUEST['currentfolder'] : 0;
+$currentfolder = (isset($_REQUEST['currentfolder']) && is_numeric($_REQUEST['currentfolder'])) ? $_REQUEST['currentfolder'] : 0;
 
 // Lien vers document sans folder ?
 // Cas du lien depuis le moteur de recherche global

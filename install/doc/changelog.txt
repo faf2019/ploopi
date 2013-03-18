@@ -1,3 +1,10 @@
+== Module DOC - version 4.7.1b ====================================================
+
+2013-03-18  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Meilleur contrôle de la variable "currentfolder" lors d'un changement de dossier
+* Corrections d'une anomalie dans l'interprétation des droits de modification/suppression de dossiers et fichiers
+
 == Module DOC - version 4.7.1a ====================================================
 
 2013-01-29  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
