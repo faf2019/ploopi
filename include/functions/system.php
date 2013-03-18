@@ -851,18 +851,17 @@ function ploopi_logout($intErrorCode = null, $intSleep = 1, $booRedirect = true)
     if ($intSleep > 0) sleep($intSleep);
 
     // Préparation de l'url de redirection
-    require_once 'Net/URL.php';
+    require_once 'Net/URL2.php';
     if ($booRedirect && isset($_SERVER['HTTP_REFERER']))
     {
-        $objUrl = new Net_URL($_SERVER['HTTP_REFERER']);
-        if (isset($intErrorCode)) $objUrl->addQueryString('ploopi_errorcode', $intErrorCode);
+        $objUrl = new Net_URL2($_SERVER['HTTP_REFERER']);
+        if (isset($intErrorCode)) $objUrl->setQueryVariable('ploopi_errorcode', $intErrorCode);
         ploopi_redirect($objUrl->getURL(), false, false);
     }
     else
     {
         ploopi_redirect(basename($arrParsedURI['path']).(isset($intErrorCode) ? "?ploopi_errorcode={$intErrorCode}" : ''), false);
     }
-
 }
 
 /**
