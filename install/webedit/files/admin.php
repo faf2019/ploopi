@@ -127,18 +127,16 @@ switch($menu)
             break;
 
             case 'heading_addnew':
-                if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT) || webedit_isEditor($headingid))
+                $heading = new webedit_heading();
+                if ((ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT) || webedit_isEditor($headingid)) && is_numeric($headingid) && $heading->open($headingid))
                 {
-                    $heading = new webedit_heading();
-                    $heading->open($headingid);
-
                     $heading_new = new webedit_heading();
                     $heading_new->fields['label'] = "Sous rubrique de '{$heading->fields['label']}'";
                     $heading_new->fields['id_heading'] = $headingid;
                     $heading_new->fields['parents'] = "{$heading->fields['parents']};{$headingid}";
                     $heading_new->fields['depth'] = $heading->fields['depth']+1;
 
-                    $select = "Select max(position) as maxpos from ploopi_mod_webedit_heading WHERE id_heading = $headingid";
+                    $select = "Select max(position) as maxpos from ploopi_mod_webedit_heading WHERE id_heading = {$headingid}";
                     $db->query($select);
                     $fields = $db->fetchrow();
                     $maxpos = $fields['maxpos'];
@@ -188,71 +186,72 @@ switch($menu)
                     else
                     {
                         $heading = new webedit_heading();
-                        $heading->open($headingid);
-
-                        $newposition = $_POST['head_position'];
-                        if ($newposition != $heading->fields['position']) // nouvelle position définie
+                        if (is_numeric($headingid) && $heading->open($headingid))
                         {
-                            // contrôle de position (on vérifie que la position proposée est possible)
-                            if ($newposition<1) $newposition=1;
-                            else
+                            $newposition = $_POST['head_position'];
+                            if ($newposition != $heading->fields['position']) // nouvelle position définie
                             {
-                                $select = "Select max(position) as maxpos from ploopi_mod_webedit_heading where id_heading = {$heading->fields['id_heading']} AND id_module = {$_SESSION['ploopi']['moduleid']}";
-                                $db->query($select);
-                                $fields = $db->fetchrow();
-                                if ($newposition > $fields['maxpos']) $newposition = $fields['maxpos'];
+                                // contrôle de position (on vérifie que la position proposée est possible)
+                                if ($newposition<1) $newposition=1;
+                                else
+                                {
+                                    $select = "Select max(position) as maxpos from ploopi_mod_webedit_heading where id_heading = {$heading->fields['id_heading']} AND id_module = {$_SESSION['ploopi']['moduleid']}";
+                                    $db->query($select);
+                                    $fields = $db->fetchrow();
+                                    if ($newposition > $fields['maxpos']) $newposition = $fields['maxpos'];
+                                }
+
+                                // mise à jour des positions
+                                $db->query("update ploopi_mod_webedit_heading set position=0 where position={$heading->fields['position']} AND id_heading = {$heading->fields['id_heading']} AND id_module = {$_SESSION['ploopi']['moduleid']}");
+                                if ($newposition > $heading->fields['position'])
+                                {
+                                    $db->query("update ploopi_mod_webedit_heading set position=position-1 where position BETWEEN ".($heading->fields['position']+1)." AND {$newposition} AND id_heading = {$heading->fields['id_heading']} AND id_module = {$_SESSION['ploopi']['moduleid']}");
+                                }
+                                else
+                                {
+                                    $db->query("update ploopi_mod_webedit_heading set position=position+1 where position BETWEEN {$newposition} AND ".($heading->fields['position']-1)." AND id_heading = {$heading->fields['id_heading']} AND id_module = {$_SESSION['ploopi']['moduleid']}");
+                                }
+                                $db->query("update ploopi_mod_webedit_heading set position={$newposition} where position=0 AND id_heading = {$heading->fields['id_heading']} AND id_module = {$_SESSION['ploopi']['moduleid']}");
+                                $heading->fields['position'] = $newposition;
                             }
 
-                            // mise à jour des positions
-                            $db->query("update ploopi_mod_webedit_heading set position=0 where position={$heading->fields['position']} AND id_heading = {$heading->fields['id_heading']} AND id_module = {$_SESSION['ploopi']['moduleid']}");
-                            if ($newposition > $heading->fields['position'])
-                            {
-                                $db->query("update ploopi_mod_webedit_heading set position=position-1 where position BETWEEN ".($heading->fields['position']+1)." AND {$newposition} AND id_heading = {$heading->fields['id_heading']} AND id_module = {$_SESSION['ploopi']['moduleid']}");
-                            }
-                            else
-                            {
-                                $db->query("update ploopi_mod_webedit_heading set position=position+1 where position BETWEEN {$newposition} AND ".($heading->fields['position']-1)." AND id_heading = {$heading->fields['id_heading']} AND id_module = {$_SESSION['ploopi']['moduleid']}");
-                            }
-                            $db->query("update ploopi_mod_webedit_heading set position={$newposition} where position=0 AND id_heading = {$heading->fields['id_heading']} AND id_module = {$_SESSION['ploopi']['moduleid']}");
-                            $heading->fields['position'] = $newposition;
+                            $heading->setvalues($_POST,'webedit_heading_');
+
+                            // Contrôle si pas de boucle infinie en redirection de page/rubrique
+                            if(!empty($_POST['webedit_heading_linkedpage']) && webedit_ctrl_infinite_loops_redirect($headingid,$_POST['webedit_heading_linkedpage'])) $heading->fields['linkedpage'] = 0;
+
+                            if (empty($_POST['webedit_heading_visible'])) $heading->fields['visible'] = 0;
+                            if (empty($_POST['webedit_heading_url_window'])) $heading->fields['url_window'] = 0;
+                            if (empty($_POST['webedit_heading_private'])) $heading->fields['private'] = 0;
+                            if (empty($_POST['webedit_heading_private_visible'])) $heading->fields['private_visible'] = 0;
+
+                            if (empty($_POST['webedit_heading_feed_enabled'])) $heading->fields['feed_enabled'] = 0;
+                            if (empty($_POST['webedit_heading_subscription_enabled'])) $heading->fields['subscription_enabled'] = 0;
+
+                            $heading->save();
+
+                            /* DEBUT ABONNEMENT */
+
+                            // on construit la liste des objets parents (y compris l'objet courant)
+                            $arrHeadingList = preg_split('/;/', "{$heading->fields['parents']};{$heading->fields['id']}");
+
+                            // on cherche la liste des abonnés à chacun des objets pour construire une liste globale d'abonnés
+                            $arrUsers = array();
+                            foreach ($arrHeadingList as $intObjectId)
+                                $arrUsers += ploopi_subscription_getusers(_WEBEDIT_OBJECT_HEADING, $intObjectId, array(_WEBEDIT_ACTION_CATEGORY_EDIT));
+
+                            // on envoie le ticket de notification d'action sur l'objet
+                            ploopi_subscription_notify(_WEBEDIT_OBJECT_HEADING, $heading->fields['id'], _WEBEDIT_ACTION_CATEGORY_EDIT, $heading->fields['label'], array_keys($arrUsers), 'Cet objet à été modifié');
+
+                            /* FIN ABONNEMENT */
+
+                            // Enregistrement des partages si la rubrique est privée
+                            if (!$heading->fields['private']) unset($_SESSION['ploopi']['share']['users_selected']);
+                            ploopi_share_save(_WEBEDIT_OBJECT_HEADING, $heading->fields['id']);
+
+                            ploopi_validation_save(_WEBEDIT_OBJECT_HEADING, $heading->fields['id']);
+                            ploopi_validation_save(_WEBEDIT_OBJECT_HEADING_BACK_EDITOR, $heading->fields['id']);
                         }
-
-                        $heading->setvalues($_POST,'webedit_heading_');
-
-                        // Contrôle si pas de boucle infinie en redirection de page/rubrique
-                        if(!empty($_POST['webedit_heading_linkedpage']) && webedit_ctrl_infinite_loops_redirect($headingid,$_POST['webedit_heading_linkedpage'])) $heading->fields['linkedpage'] = 0;
-
-                        if (empty($_POST['webedit_heading_visible'])) $heading->fields['visible'] = 0;
-                        if (empty($_POST['webedit_heading_url_window'])) $heading->fields['url_window'] = 0;
-                        if (empty($_POST['webedit_heading_private'])) $heading->fields['private'] = 0;
-                        if (empty($_POST['webedit_heading_private_visible'])) $heading->fields['private_visible'] = 0;
-
-                        if (empty($_POST['webedit_heading_feed_enabled'])) $heading->fields['feed_enabled'] = 0;
-                        if (empty($_POST['webedit_heading_subscription_enabled'])) $heading->fields['subscription_enabled'] = 0;
-
-                        $heading->save();
-
-                        /* DEBUT ABONNEMENT */
-
-                        // on construit la liste des objets parents (y compris l'objet courant)
-                        $arrHeadingList = preg_split('/;/', "{$heading->fields['parents']};{$heading->fields['id']}");
-
-                        // on cherche la liste des abonnés à chacun des objets pour construire une liste globale d'abonnés
-                        $arrUsers = array();
-                        foreach ($arrHeadingList as $intObjectId)
-                            $arrUsers += ploopi_subscription_getusers(_WEBEDIT_OBJECT_HEADING, $intObjectId, array(_WEBEDIT_ACTION_CATEGORY_EDIT));
-
-                        // on envoie le ticket de notification d'action sur l'objet
-                        ploopi_subscription_notify(_WEBEDIT_OBJECT_HEADING, $heading->fields['id'], _WEBEDIT_ACTION_CATEGORY_EDIT, $heading->fields['label'], array_keys($arrUsers), 'Cet objet à été modifié');
-
-                        /* FIN ABONNEMENT */
-
-                        // Enregistrement des partages si la rubrique est privée
-                        if (!$heading->fields['private']) unset($_SESSION['ploopi']['share']['users_selected']);
-                        ploopi_share_save(_WEBEDIT_OBJECT_HEADING, $heading->fields['id']);
-
-                        ploopi_validation_save(_WEBEDIT_OBJECT_HEADING, $heading->fields['id']);
-                        ploopi_validation_save(_WEBEDIT_OBJECT_HEADING_BACK_EDITOR, $heading->fields['id']);
                     }
 
                     ploopi_redirect("admin.php?headingid={$headingid}");

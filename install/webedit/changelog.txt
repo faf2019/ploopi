@@ -1,3 +1,9 @@
+== Module WebEdit - version 2.5.0e ============================================
+
+2013-03-19  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+* Meilleur contrôle de la rubrique sélectionnée au moment de l'enregistrement des modifications
+
 == Module WebEdit - version 2.5.0d ============================================
 
 2013-03-06  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
