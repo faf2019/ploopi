@@ -1,3 +1,9 @@
+== Module WebEdit - version 2.5.0f ============================================
+
+2013-03-19  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+* Amélioration de la recherche avancée
+
 == Module WebEdit - version 2.5.0e ============================================
 
 2013-03-19  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
