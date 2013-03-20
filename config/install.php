@@ -110,7 +110,7 @@ $arrInfos = array();
 if(!isset($_SESSION['install'])) {
   // in order of apparaition in file 'config.php.model'
   $_SESSION['install'] = array(
-    '<DB_TYPE>'         => 'mysql',           // ok
+    '<DB_TYPE>'         => 'mysqli',          // ok
     '<DB_SERVER>'       => 'localhost',       // ok
     '<DB_LOGIN>'        => 'root',            // ok
     '<DB_PASSWORD>'     => '',                // ok
@@ -348,6 +348,8 @@ if($_POST['stage']>=$stage)
       $arrInstallInfos[] = array('id' => 'div_pear_HTTP_Request2', 'state' => $packPEAR->packageInstalled('HTTP_Request2', '2.1.1'), 'title' => '_PLOOPI_INSTALL_PEAR_HTTP_REQUEST');
       // Text_Highlighter
       $arrInstallInfos[] = array('id' => 'div_pear_Text_Highlighter', 'state' => $packPEAR->packageInstalled('Text_Highlighter', '0.7.3'), 'title' => '_PLOOPI_INSTALL_PEAR_TEXT_HIGHLIGHTER');
+      // Net_UserAgent_Detect
+      $arrInstallInfos[] = array('id' => 'div_pear_Net_UserAgent_Detect', 'state' => $packPEAR->packageInstalled('Net_UserAgent_Detect', '2.5.2'), 'title' => '_PLOOPI_INSTALL_PEAR_NET_USERAGENT_DETECT');
       // Horde_Text_Diff
       $arrInstallInfos[] = array('id' => 'div_pear_Horde_Text_Diff', 'state' => $packPEAR->packageInstalled('Horde_Text_Diff', '2', 'pear.horde.org'), 'title' => '_PLOOPI_INSTALL_PEAR_HORDE_TEXT_DIFF');
     }
