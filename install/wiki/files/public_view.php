@@ -331,6 +331,7 @@ echo $skin->open_simplebloc($strWikiPageId);
                 include_once "Horde/Text/Diff.php";
                 include_once "Horde/Text/Diff/Op/Base.php";
                 include_once "Horde/Text/Diff/Op/Add.php";
+                include_once "Horde/Text/Diff/Op/Change.php";
                 include_once "Horde/Text/Diff/Op/Copy.php";
                 include_once "Horde/Text/Diff/Engine/Native.php";
                 include_once "Horde/Text/Diff/Renderer.php";

@@ -1,3 +1,9 @@
+== Module Wiki - version 1.2.2a ====================================================
+
+2013-03-20  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+* Correction d'un bug de chargement de dépendance avec Horde/Text/Diff
+
 == Module Wiki - version 1.2.2 ====================================================
 
 2013-03-18  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
