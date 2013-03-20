@@ -1,10 +1,10 @@
 #!/bin/sh
 
 # Compression des fichiers css/js
-# Copyright (c) 2008-2009 Ovensia
+# Copyright (c) 2008-2012 Ovensia
 # GNU General Public License (GPL)
 
-export YUIVER='-2.4.6'
+export YUIVER='-2.4.7'
 
 echo "COMPRESSION DU FICHIER functions.js"
 
@@ -50,7 +50,7 @@ for i in $( find ./modules ./templates/frontoffice \( -name 'fck*.js' -or -name 
 do
     echo "Compression : $i => $i.gz"
 
-    if [[ `file $i | grep -c 'UTF-8'` == '1' ]]
+    if [ `file $i | grep -c 'UTF-8'` -eq '1' ]
         then java -jar ../yuicompressor/build/yuicompressor$YUIVER.jar --charset UTF-8 $i | gzip > $i.gz
         else java -jar ../yuicompressor/build/yuicompressor$YUIVER.jar --charset ISO-8859-1 $i | gzip > $i.gz
     fi
@@ -73,7 +73,7 @@ for i in $( find ./lib/jstoolbar \( -name '*.js' -or -name '*.css' \) -type f )
 do
     echo "Compression : $i => $i.gz";
 
-    if [[ `file $i | grep -c 'UTF-8'` == '1' ]]
+    if [ `file $i | grep -c 'UTF-8'` -eq '1' ]
         then java -jar ../yuicompressor/build/yuicompressor$YUIVER.jar --charset UTF-8 $i | gzip > $i.gz
         else java -jar ../yuicompressor/build/yuicompressor$YUIVER.jar --charset ISO-8859-1 $i | gzip > $i.gz
     fi
@@ -87,7 +87,7 @@ for i in $( find ./lib/jscolor \( -name '*.js' -or -name '*.css' \) -type f )
 do
     echo "Compression : $i => $i.gz";
 
-    if [[ `file $i | grep -c 'UTF-8'` == '1' ]]
+    if [ `file $i | grep -c 'UTF-8'` -eq '1' ]
         then java -jar ../yuicompressor/build/yuicompressor$YUIVER.jar --charset UTF-8 $i | gzip > $i.gz
         else java -jar ../yuicompressor/build/yuicompressor$YUIVER.jar --charset ISO-8859-1 $i | gzip > $i.gz
     fi
@@ -101,7 +101,7 @@ for i in $( find ./lib/livepipe \( -name '*.js' -or -name '*.css' \) -type f )
 do
     echo "Compression : $i => $i.gz";
 
-    if [[ `file $i | grep -c 'UTF-8'` == '1' ]]
+    if [ `file $i | grep -c 'UTF-8'` -eq '1' ]
         then java -jar ../yuicompressor/build/yuicompressor$YUIVER.jar --charset UTF-8 $i | gzip > $i.gz
         else java -jar ../yuicompressor/build/yuicompressor$YUIVER.jar --charset ISO-8859-1 $i | gzip > $i.gz
     fi
