@@ -2,13 +2,15 @@
 # @package ploopi
 # @copyright Ovensia
 # @license GNU General Public License (GPL)
-# @version	$Revision$
+# @version  $Revision$
 # @author $Author$
 # @modifiedby $LastChangedBy$
 # @lastmodified $Date$
- 
+
 # Attention, ce fichier est une configuration generique qu'il convient d'adapter a votre environnement.
 # Il existe des configurations plus solides que vous pouvez utiliser si vous pouvez directement modifier le fichier de configuration d'apache.
+
+AddDefaultCharset ISO-8859-15
 
 <IfModule mod_dir.c>
     DirectoryIndex index.html index.php
@@ -25,12 +27,13 @@
     php_flag magic_quotes_gpc Off
     php_flag register_globals Off
     php_value include_path .
-    
+
     php_value memory_limit 128M
-    php_value post_max_size 16M
-    php_value upload_max_filesize 16M
-    
-    php_value date.timezone Europe/Paris    
+    php_value post_max_size 32M
+    php_value upload_max_filesize 32M
+    php_value output_buffering Off
+
+    php_value date.timezone Europe/Paris
 </IfModule>
 
 <IfModule mod_expires.c>
@@ -56,11 +59,25 @@
     AddEncoding gzip .gz
 </files>
 
+<ifModule mod_headers.c>
+  Header unset ETag
+</ifModule>
+
+FileETag None
+
 <IfModule rewrite_module>
     RewriteEngine on
 
     # Changez cette valeur si PLOOPI est installe dans un sous dossier du site (ex : /test )
     RewriteBase /
+
+    # Exemple de blocage des urls publiques vers les documents (version rewritée)
+    #RewriteRule ^documents/[a-z0-9]{32}/.*$ - [F]
+
+    # Exemple de blocage des urls publiques vers les documents (version brute)
+    #RewriteCond %{QUERY_STRING} ploopi_op=doc_file_download
+    #RewriteCond %{QUERY_STRING} docfile_md5id=[a-z0-9]{32}
+    #RewriteRule ^(.+) - [F]
 
     # Vérifie si le navigateur peut accepter les fichier gzip
     ReWriteCond %{HTTP:accept-encoding} gzip
@@ -84,9 +101,9 @@
     RewriteRule ^tag-([a-zA-Z0-9]*)\.[a-zA-Z0-9]*(.*)$ index.php?query_tag=$1$2 [L]
     RewriteRule ^(.*)-d([a-z0-9]{32})\.[a-zA-Z0-9]*(.*)$ index-quick.php?ploopi_op=doc_file_download&docfile_md5id=$2 [L]
     RewriteRule ^unsubscribe-([a-zA-Z0-9].*)\.html$ index.php?ploopi_op=webedit_unsubscribe&subscription_email=$1 [L]
-    
+
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule ^(.*) index.php    
+    RewriteRule ^(.*) index.php
 </IfModule>
 
