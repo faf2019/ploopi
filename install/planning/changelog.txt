@@ -1,3 +1,9 @@
+== Module Planning - version 0.8.0c ====================================================
+
+2013-03-20  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+* Correction d'un problème de compatibilité entre les cookies zippés et le module suhosin (encodage des cookies en base64). Attention impact sur la taille des cookies.
+
 == Module Planning - version 0.8.0b ====================================================
 
 2013-01-29  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>

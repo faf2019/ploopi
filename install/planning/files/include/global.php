@@ -216,7 +216,7 @@ function planning_getcookie()
 
     // Lecture cookie
     ploopi_unset_error_handler();
-    if (isset($_COOKIE["planning_request{$_SESSION['ploopi']['moduleid']}"])) $arrSearchPattern = unserialize(gzuncompress($_COOKIE["planning_request{$_SESSION['ploopi']['moduleid']}"]));
+    if (isset($_COOKIE["planning_request{$_SESSION['ploopi']['moduleid']}"])) $arrSearchPattern = unserialize(gzuncompress(base64_decode($_COOKIE["planning_request{$_SESSION['ploopi']['moduleid']}"])));
     ploopi_set_error_handler();
 
     return $arrSearchPattern;
@@ -224,6 +224,6 @@ function planning_getcookie()
 
 function planning_setcookie($arrSearchPattern)
 {
-    setcookie("planning_request{$_SESSION['ploopi']['moduleid']}", gzcompress(serialize($arrSearchPattern), 9));
+    setcookie("planning_request{$_SESSION['ploopi']['moduleid']}", base64_encode(gzcompress(serialize($arrSearchPattern), 9)));
 }
 ?>
