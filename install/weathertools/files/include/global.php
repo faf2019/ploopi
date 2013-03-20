@@ -98,7 +98,7 @@ function weathertools_getmap($type_map, $moduleid = null, $cache_length = 1800)
             ploopi_makedir($strCachePath);
 
             $ptrFd = fopen("{$strCacheFile}.raw", 'wb');
-            fwrite($ptrFd, $objRequest->getResponseBody());
+            fwrite($ptrFd, $objRequest->getBody());
             fclose($ptrFd);
 
             $intFileTs = filemtime("{$strCacheFile}.raw");
@@ -440,6 +440,7 @@ function weathertools_get_metar_file($url, $icao, $force = false)
             $objRequest->setConfig($arrConfig);
         }
 
+
         $objResponse = $objRequest->send();
 
         $strStatus = $objResponse->getStatus();
@@ -617,8 +618,6 @@ function weathertools_iptolocation($ip = null)
     // cd ./modules/weathertools/geoip/
     // wget http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz
     // gunzip GeoLiteCity.dat.gz
-
-    require_once 'Net/GeoIP.php';
 
     $record = null;
     // On vérifie l'existence de la BDD

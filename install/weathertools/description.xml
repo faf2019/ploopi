@@ -2,9 +2,9 @@
 <ploopi>
    <moduletype>
       <label>weathertools</label>
-      <version>1.1.5</version>
+      <version>1.1.5a</version>
       <author>Ovensia</author>
-      <date>20130318000000</date>
+      <date>20130320000000</date>
       <description>Fonctions météo (lecture METAR, affichage météo, stations les plus proches d'un point, cartes de vigilance)</description>
       <paramtype>
          <name>weathertools_station_list_url</name>
@@ -44,7 +44,7 @@
       <paramtype>
          <name>weathertools_cartevigicrue_link</name>
          <label>Carte Vigicrue (lien infos détaillées)</label>
-         <default_value>http://www.vigicrue.ecologie.gouv.fr</default_value>
+         <default_value>http://www.vigicrues.ecologie.gouv.fr</default_value>
          <public>0</public>
          <description/>
       </paramtype>

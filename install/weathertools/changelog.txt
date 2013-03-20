@@ -1,3 +1,11 @@
+== Module Wheathertools - version 1.1.5a ==================================================
+
+2013-03-20  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+* Correction d'un bug sur la fonction de téléchargement des cartes météo (suite intégration HTTP_Request2)
+* Modification de l'URL par défaut du site vigicrues dans les paramètres du module (xml)
+* Intégration et modification des classes PEAR Weather/Metar pour correction et simplification des dépendances
+
 == Module Wheathertools - version 1.1.5 ==================================================
 
 2013-03-18  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>

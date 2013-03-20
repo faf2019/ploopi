@@ -1,7 +1,5 @@
 <?
-ploopi_unset_error_handler();
-require_once 'Services/Weather/Metar.php'; // PEAR
-ploopi_set_error_handler();
+require_once 'Metar.php'; // PEAR
 
 // Traducation partielle de
 // http://meteocentre.com/doc/metarf.html
