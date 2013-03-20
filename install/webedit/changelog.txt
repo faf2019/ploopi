@@ -1,3 +1,11 @@
+== Module WebEdit - version 2.5.1a ============================================
+
+2013-03-20  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+* Amélioration de la recherche avancée
+* Meilleur contrôle de la rubrique sélectionnée au moment de l'enregistrement des modifications
+* Amélioration de l'affichage du formulaire de modification d'une rubrique
+
 == Module WebEdit - version 2.5.1 ============================================
 
 2013-03-18  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>

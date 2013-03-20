@@ -517,6 +517,7 @@ if ($query_string != '' || $advanced_search) // recherche intégrale
                                 $arrRelevance['doc_'.$row['id_record']] = $row;
                             }
                         }
+                        else $arrRelevance['doc_'.$row['id_record']] = $row;
                     }
                 }
             }
@@ -524,7 +525,6 @@ if ($query_string != '' || $advanced_search) // recherche intégrale
 
         // tri général de la recherche
         uasort($arrRelevance, create_function('$a,$b', 'return $b[\'relevance\'] > $a[\'relevance\'];'));
-
 
         $responses = 0;
 
@@ -610,6 +610,7 @@ if ($query_string != '' || $advanced_search) // recherche intégrale
                                     break;
                                 }
 
+
                                 $template_body->assign_block_vars('switch_search.result',
                                     array(
                                         'RELEVANCE' => sprintf("%.02f", $result['relevance']),
@@ -617,7 +618,7 @@ if ($query_string != '' || $advanced_search) // recherche intégrale
                                         'TITLE_RAW' => $objArticle->fields['title'],
                                         'AUTHOR' => htmlentities($objArticle->fields['author']),
                                         'AUTHOR_RAW' => $objArticle->fields['author'],
-                                        'EXTRACT' => isset($kw['']) ? '' : ploopi_highlight($cleaned_content, array_merge(array_keys($result['kw']), array_keys($result['stem']))),
+                                        'EXTRACT' => empty($result['kw']) && empty($result['stem']) ? $cleaned_content : ploopi_highlight($cleaned_content, array_merge(array_keys($result['kw']), array_keys($result['stem']))),
                                         'METATITLE' => htmlentities($objArticle->fields['metatitle']),
                                         'METATITLE_RAW' => $objArticle->fields['metatitle'],
                                         'METAKEYWORDS' => htmlentities($objArticle->fields['metakeywords']),

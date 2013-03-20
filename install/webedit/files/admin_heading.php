@@ -86,7 +86,7 @@ if(!$booIsAllowedEdit) $booIsAllowedEdit = ploopi_isactionallowed(_WEBEDIT_ACTIO
         <img style="display:block;float:right;cursor:pointer;" src="./modules/webedit/img/chart.png" alt="Statistiques" title="Statistiques de visites de cette rubrique" onclick="javascript:webedit_stats_open(null, <?php echo $heading->fields['id']; ?>, event);">
         <?php
     }
-    
+
     if ($heading->fields['id_heading'] == 0) // racine
     {
         ?>
@@ -311,24 +311,24 @@ if ($display_type == 'advanced')
         </div>
     </div>
 
-    <div class="webedit_form" style="float:left;width:54%;">
+    <div class="ploopi_form" style="float:left;width:54%;">
         <div style="padding:2px;">
             <p style="font-weight:bold;">Contenu:</p>
 
             <p>
-                <label>Type de Contenu:</label>
-                <span>
+                <label style="width:20%;">&nbsp;</label>
+                <span style="width:75%;">
                     <?php
                     if ($booIsAllowedEdit)
                     {
                         ?>
-                        <div style="clear:both;cursor:pointer;" onclick="javascript:ploopi_checkbox_click(event, 'heading_content_type_article_first');">
+                        <span style="clear:both;cursor:pointer;" onclick="javascript:ploopi_checkbox_click(event, 'heading_content_type_article_first');">
                             <input style="cursor:pointer;" type="radio" name="webedit_heading_content_type" value="article_first" id="heading_content_type_article_first" <?php if ($heading->fields['content_type'] == 'article_first') echo 'checked'; ?> />Afficher le premier article
-                        </div>
-                        <div style="clear:both;cursor:pointer;" onclick="javascript:ploopi_checkbox_click(event, 'heading_content_type_article_redirect');">
+                        </span>
+                        <span style="clear:both;cursor:pointer;" onclick="javascript:ploopi_checkbox_click(event, 'heading_content_type_article_redirect');">
                             <input style="cursor:pointer;" type="radio" name="webedit_heading_content_type" value="article_redirect" id="heading_content_type_article_redirect" <?php if ($heading->fields['content_type'] == 'article_redirect') echo 'checked'; ?> />Redirection vers un article ou une rubrique
-                        </div>
-                        <div style="padding-left:20px;">
+                        </span>
+                        <span style="padding-left:20px;">
                             <?php
                             $redirect_title = '';
                             if (!empty($heading->fields['linkedpage']))
@@ -347,24 +347,24 @@ if ($display_type == 'advanced')
                             ?>
                             <input type="hidden" id="webedit_heading_linkedpage" name="webedit_heading_linkedpage" value="<?php echo $heading->fields['linkedpage']; ?>">
                             <input type="text" readonly class="text" style="width:150px;" id="linkedpage_displayed" value="<?php echo $redirect_title; ?>">
-                            <img src="./modules/webedit/img/ico_choose_article.png" style="cursor:pointer;" title="Choisir un article" alt="Choisir" onclick="javascript:ploopi_showpopup(ploopi_xmlhttprequest('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=webedit_heading_selectredirect',false), 300, event, 'click', 'webedit_popup_selectredirect');" />
-                            <img src="./modules/webedit/img/ico_clear_article.png" style="cursor:pointer;" title="Effacer la redirection" alt="Choisir" onclick="javascript:ploopi_getelem('webedit_heading_linkedpage').value='';ploopi_getelem('linkedpage_displayed').value='';" />
-                        </div>
-                        <div style="cursor:pointer;" onclick="javascript:ploopi_checkbox_click(event, 'heading_content_type_url_redirect');">
+                            <img src="./modules/webedit/img/ico_choose_article.png" style="display:block;float:left;cursor:pointer;margin:2px 4px;" title="Choisir un article" alt="Choisir" onclick="javascript:ploopi_showpopup(ploopi_xmlhttprequest('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=webedit_heading_selectredirect',false), 300, event, 'click', 'webedit_popup_selectredirect');" />
+                            <img src="./modules/webedit/img/ico_clear_article.png" style="display:block;float:left;cursor:pointer;margin:2px 4px;" title="Effacer la redirection" alt="Choisir" onclick="javascript:ploopi_getelem('webedit_heading_linkedpage').value='';ploopi_getelem('linkedpage_displayed').value='';" />
+                        </span>
+                        <span style="cursor:pointer;" onclick="javascript:ploopi_checkbox_click(event, 'heading_content_type_url_redirect');">
                             <input style="cursor:pointer;" type="radio" name="webedit_heading_content_type" value="url_redirect" id="heading_content_type_url_redirect" <?php if ($heading->fields['content_type'] == 'url_redirect') echo 'checked'; ?> />Redirection vers une URL
-                        </div>
-                        <div style="padding-left:20px;">
-                            <input type="text" class="text" name="webedit_heading_url" style="width:95%;" value="<?php echo htmlentities($heading->fields['url']); ?>" onkeyup="javascript:if (this.value.length>0 && !$('heading_content_type_url_redirect').checked) ploopi_checkbox_click(event, 'heading_content_type_url_redirect');" tabindex="8" />
-                        </div>
-                        <div style="cursor:pointer;" onclick="javascript:ploopi_checkbox_click(event, 'heading_content_type_headings');">
+                        </span>
+                        <span style="padding-left:20px;">
+                            <input type="text" class="text" name="webedit_heading_url" style="width:100%;" value="<?php echo htmlentities($heading->fields['url']); ?>" onkeyup="javascript:if (this.value.length>0 && !$('heading_content_type_url_redirect').checked) ploopi_checkbox_click(event, 'heading_content_type_url_redirect');" tabindex="8" />
+                        </span>
+                        <span style="cursor:pointer;" onclick="javascript:ploopi_checkbox_click(event, 'heading_content_type_headings');">
                             <input style="cursor:pointer;" type="radio" name="webedit_heading_content_type" value="headings" id="heading_content_type_headings" <?php if ($heading->fields['content_type'] == 'headings') echo 'checked'; ?> />Afficher le contenu des sous rubriques
-                        </div>
-                        <div style="cursor:pointer;" onclick="javascript:ploopi_checkbox_click(event, 'heading_content_type_blog');">
+                        </span>
+                        <span style="cursor:pointer;" onclick="javascript:ploopi_checkbox_click(event, 'heading_content_type_blog');">
                             <input style="cursor:pointer;" type="radio" name="webedit_heading_content_type" value="blog" id="heading_content_type_blog" <?php if ($heading->fields['content_type'] == 'blog') echo 'checked'; ?> />Afficher comme Blog
-                        </div>
-                        <div style="cursor:pointer;" onclick="javascript:ploopi_checkbox_click(event, 'heading_content_type_sitemap');">
+                        </span>
+                        <span style="cursor:pointer;" onclick="javascript:ploopi_checkbox_click(event, 'heading_content_type_sitemap');">
                             <input style="cursor:pointer;" type="radio" name="webedit_heading_content_type" value="sitemap" id="heading_content_type_sitemap" <?php if ($heading->fields['content_type'] == 'sitemap') echo 'checked'; ?> />Afficher le plan du site
-                        </div>
+                        </span>
                         <?php
                     }
                     else
@@ -416,6 +416,7 @@ if ($display_type == 'advanced')
                     ?>
                 </span>
             </p>
+
             <p style="font-weight:bold;">Propriétés annexes:</p>
             <p>
                 <label>Couleur:</label>
