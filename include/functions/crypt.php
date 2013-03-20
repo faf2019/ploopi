@@ -238,5 +238,3 @@ function ploopi_unserialize($str)
 
     return $mixVar;
 }
-
-?>

@@ -163,4 +163,3 @@ class index_stem extends data_object
         parent::data_object('ploopi_index_stem', 'id');
     }
 }
-?>

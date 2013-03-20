@@ -126,4 +126,3 @@ foreach($_SESSION['ploopi']['workspaces'] as $wid => $wsp)
         $_SESSION['ploopi']['workspaces'][$wid]['modules'] = $workspace->getmodules(true);
     }
 }
-?>

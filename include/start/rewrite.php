@@ -98,5 +98,3 @@ if (isset($_SERVER['REDIRECT_STATUS']) && $_SERVER['REDIRECT_STATUS'] == '200')
         ploopi_die('Page non trouvée');
     }
 }
-
-?>

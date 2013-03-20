@@ -118,4 +118,3 @@ class subscription_action extends data_object
         parent::data_object('ploopi_subscription_action', 'id_subscription', 'id_action');
     }
 }
-?>

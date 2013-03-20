@@ -72,10 +72,10 @@ if ($_SESSION['ploopi']['mode'] == 'backoffice')
                 'PATH' => './js/functions.pack.js?v='.urlencode(_PLOOPI_VERSION.','._PLOOPI_REVISION)
             )
         );
-        
+
         $ploopi_additional_head = '';
         $ploopi_additional_javascript = '';
-        
+
         // GET MODULE ADDITIONAL JS
         ob_start();
         include './include/javascript.php';
@@ -121,4 +121,3 @@ else // frontoffice
 {
     include_once './include/frontoffice.php';
 }
-?>

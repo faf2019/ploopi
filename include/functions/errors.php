@@ -44,7 +44,7 @@ $ploopi_errors_level = 0;
 // Php < 5.3
 if (!defined('E_DEPRECATED')) define('E_DEPRECATED', 8192);
 if (!defined('E_USER_DEPRECATED')) define('E_USER_DEPRECATED', 16384);
-    
+
 $ploopi_errortype =
     array(
         E_ERROR          => 'Error',
@@ -63,8 +63,8 @@ $ploopi_errortype =
         E_DEPRECATED         => 'Deprecated',
         E_USER_DEPRECATED => 'User Deprecated'
 );
-	
-   
+
+
 $ploopi_errorlevel =
     array(
         0 => 'OK',
@@ -197,4 +197,3 @@ function ploopi_unset_error_handler()
     restore_error_handler();
     error_reporting(0);
 }
-?>

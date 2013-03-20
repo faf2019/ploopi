@@ -151,4 +151,3 @@ class ploopi_cipher
         return($strDecoded);
     }
 }
-?>

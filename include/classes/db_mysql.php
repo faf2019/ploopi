@@ -650,4 +650,3 @@ class ploopi_db
     public function flush_log() { $this->arrLog = array(); }
 
 }
-?>

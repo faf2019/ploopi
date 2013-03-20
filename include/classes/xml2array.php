@@ -185,4 +185,3 @@ class xml2array
         $this->currentdata .= $data;
     }
 }
-?>

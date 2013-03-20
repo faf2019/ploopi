@@ -512,4 +512,3 @@ class data_object
     }
 
 }
-?>

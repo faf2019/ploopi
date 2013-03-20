@@ -323,4 +323,3 @@ switch($ploopi_op)
         ploopi_die();
     break;
 }
-?>

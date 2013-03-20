@@ -97,7 +97,7 @@ switch ($_SESSION['ploopi']['mainmenu'])
     break;
 
     case _PLOOPI_MENU_MYWORKSPACE:
-        
+
         $blockpath = "./modules/system/block_public.php";
 
         if (file_exists($blockpath))
@@ -122,4 +122,3 @@ switch ($_SESSION['ploopi']['mainmenu'])
     case _PLOOPI_MENU_SEARCH:
     break;
 }
-?>

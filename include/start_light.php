@@ -70,4 +70,3 @@ switch ($_SESSION['ploopi']['mode'])
 }
 
 if (isset($_REQUEST['ploopi_moduleid']) && is_numeric($_REQUEST['ploopi_moduleid'])) $_SESSION['ploopi']['moduleid'] = $ploopi_moduleid = $_REQUEST['ploopi_moduleid'];
-?>

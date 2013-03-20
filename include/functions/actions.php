@@ -182,5 +182,3 @@ function ploopi_actions_getusers($id_action, $id_module_type = -1)
     return($users);
 
 }
-
-?>

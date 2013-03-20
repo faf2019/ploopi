@@ -215,4 +215,3 @@ function ploopi_share_get($id_user = -1, $id_object = -1, $id_record = -1,  $id_
 
     return($db->getarray());
 }
-?>

@@ -54,10 +54,10 @@ include_once './include/functions/string.php';
 function ploopi_resizeimage($imagefile, $coef = 0, $wmax = 0, $hmax = 0, $format = '', $nbcolor = 0, $filename = '', $centerwidthcolor = false, $bgcolor = false)
 {
     $imagefile_name = basename($imagefile);
-    
+
     $qualite = 75;
     $originaltransparentcolor = -1;
-    
+
     if(is_array($format))
     {
         $qualite = (is_int($format[1])) ? $format[1] : 75;
@@ -66,8 +66,8 @@ function ploopi_resizeimage($imagefile, $coef = 0, $wmax = 0, $hmax = 0, $format
     else
         $format = strtolower($format);
 
-    $extension = mime_content_type($imagefile); //FIXME Cette fonction est devenue obsolète car Fileinfo fournit la même fonctionnalité (et bien plus) d'une façon plus propre (Mais intégré en php 5.3.0 et debian au jour d'aujourd'hui est en 5.2...). 
-      
+    $extension = mime_content_type($imagefile); //FIXME Cette fonction est devenue obsolète car Fileinfo fournit la même fonctionnalité (et bien plus) d'une façon plus propre (Mais intégré en php 5.3.0 et debian au jour d'aujourd'hui est en 5.2...).
+
     // Ouverture de l'image source
     switch($extension)
     {
@@ -93,12 +93,12 @@ function ploopi_resizeimage($imagefile, $coef = 0, $wmax = 0, $hmax = 0, $format
           $originaltransparentcolor = imagecolortransparent($imgsrc);
         }
         break;
-        
+
         default: // format en entrée non supporté
           return false;
         break;
     }
-    
+
     // Récupération de la taille de l'image
     $w = imagesx($imgsrc);
     $h = imagesy($imgsrc);
@@ -107,18 +107,18 @@ function ploopi_resizeimage($imagefile, $coef = 0, $wmax = 0, $hmax = 0, $format
     if(!empty($bgcolor) && ($extension == 'png' || $extension == 'gif'))
     {
         $arrColor = ploopi_color_hex2rgb($bgcolor);
-        
+
         $imgtmp = imagecreatetruecolor ($w, $h);
-        
+
         // On colore le fond avec $bgcolor
         imagefill($imgtmp, 0, 0, imagecolorallocate($imgtmp, $arrColor[0], $arrColor[1], $arrColor[2]));
-        
+
         // On mets l'image par dessus
         imagecopy($imgtmp,$imgsrc,0,0,0,0,$w,$h);
         imagedestroy($imgsrc);
         $imgsrc = &$imgtmp;
     }
-    
+
     // Pas de coef de redimensionnement ? on essaye de le calculer en fonction de hmax et wmax
     if (!$coef && ($hmax || $wmax))
     {
@@ -141,21 +141,21 @@ function ploopi_resizeimage($imagefile, $coef = 0, $wmax = 0, $hmax = 0, $format
 
     if($wmax && $wdest > $wmax) $wdest = $wmax;
     if($hmax && $hdest > $hmax) $hdest = $hmax;
-    
+
     // Centrage de l'image demandé avec pourtour de couleur $centerwidthcolor
     if(!empty($centerwidthcolor))
     {
         $distX = ($wmax > $wdest) ? round(($wmax-$wdest)/2) : 0;
         $distY = ($hmax > $hdest) ? round(($hmax-$hdest)/2) : 0;
-        
-        
+
+
         $imgdest = imagecreatetruecolor ((($wmax) ? $wmax : $wdest), (($hmax) ? $hmax : $hdest));
 
         if($centerwidthcolor == 'transparent' && ($format == 'png' || $format == 'gif'))
         {
-            
+
             if($format == 'gif')
-            {   
+            {
                 if($originaltransparentcolor > -1)
                 {
                     $transparentcolor = imagecolorsforindex($imgdest, $originaltransparentcolor);
@@ -179,7 +179,7 @@ function ploopi_resizeimage($imagefile, $coef = 0, $wmax = 0, $hmax = 0, $format
         else
         {
             if($centerwidthcolor == 'transparent') $centerwidthcolor = '#ffffff'; // on demande transparent mais pas png ni gif... donc inutile !
-            
+
             $arrColor = ploopi_color_hex2rgb($centerwidthcolor);
             $background = imagecolorallocate($imgdest, $arrColor[0], $arrColor[1], $arrColor[2]);
             imageFilledRectangle($imgdest, 0, 0, (($wmax) ? $wmax : $wdest), (($hmax) ? $hmax : $hdest), $background);
@@ -209,9 +209,9 @@ function ploopi_resizeimage($imagefile, $coef = 0, $wmax = 0, $hmax = 0, $format
         if($extension == 'png')
         {
             imagealphablending($imgdest, false);
-            imagesavealpha($imgdest, true);        
+            imagesavealpha($imgdest, true);
         }
-        
+
         header("Content-Type: image/{$extension}");
         header("Content-Disposition: inline; filename=\"{$imagefile_name}\"");
 
@@ -236,17 +236,17 @@ function ploopi_resizeimage($imagefile, $coef = 0, $wmax = 0, $hmax = 0, $format
     {
         $path = dirname($filename);
         $exists = file_exists($filename);
-        
+
         // Détermination du format de sortie
         $extension = ($format == '') ? ploopi_file_getextension($filename) : $format;
         if (!in_array($extension, array('jpg', 'jpeg', 'png', 'gif'))) $extension = 'png';
-        
+
         if($extension == 'png')
         {
             imagealphablending($imgdest, false);
-            imagesavealpha($imgdest, true);        
+            imagesavealpha($imgdest, true);
         }
-        
+
         if (is_writable($path) && (!$exists || ($exists && is_writable($filename))))
         {
             switch($extension)
@@ -267,7 +267,7 @@ function ploopi_resizeimage($imagefile, $coef = 0, $wmax = 0, $hmax = 0, $format
                 default:
                     imagedestroy($imgdest);
                     imagedestroy($imgsrc);
-                    
+
                     return false;
                 break;
             }
@@ -276,14 +276,14 @@ function ploopi_resizeimage($imagefile, $coef = 0, $wmax = 0, $hmax = 0, $format
         {
             imagedestroy($imgdest);
             imagedestroy($imgsrc);
-            
+
             return false;
-        } 
+        }
     }
-    
+
     imagedestroy($imgdest);
     imagedestroy($imgsrc);
-    
+
     return true;
 }
 
@@ -337,4 +337,3 @@ function ploopi_image_wordwrap($text, $width, $fontsize, $font)
 
     return array ('lineheight' => $intLineHeight, 'textwidth' => $intTextWidth, 'lines' => $arrLines);
 }
-?>

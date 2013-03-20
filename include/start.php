@@ -597,4 +597,3 @@ $_SESSION['ploopi']['env'] =
         $_SESSION['ploopi']['moduleid'],
         $_SESSION['ploopi']['action']
     );
-?>

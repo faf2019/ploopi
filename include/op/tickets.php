@@ -519,4 +519,3 @@ switch($ploopi_op)
     break;
 
 }
-?>

@@ -359,4 +359,3 @@ if(isset($_GET['ploopi_mod_error']) && defined($_GET['ploopi_mod_error']))
 }
 
 $template_body->pparse('body');
-?>

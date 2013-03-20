@@ -56,4 +56,3 @@ class validation extends data_object
         parent::data_object('ploopi_validation','id');
     }
 }
-?>

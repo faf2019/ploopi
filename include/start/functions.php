@@ -69,4 +69,3 @@ include_once './include/functions/string.php';
 include_once './include/functions/subscription.php';
 include_once './include/functions/tickets.php';
 include_once './include/functions/validation.php';
-?>

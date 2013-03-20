@@ -105,4 +105,3 @@ $_POST = ploopi_filtervar($_POST, null, !empty($_POST['ploopi_xhr']));
 $_REQUEST = ploopi_filtervar($_REQUEST, null, !empty($_POST['ploopi_xhr']));
 $_COOKIE = ploopi_filtervar($_COOKIE);
 $_SERVER = ploopi_filtervar($_SERVER);
-?>

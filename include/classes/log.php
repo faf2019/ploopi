@@ -131,4 +131,3 @@ class user_action_log extends data_object
     }
 
 }
-?>

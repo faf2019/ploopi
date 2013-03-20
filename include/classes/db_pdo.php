@@ -609,4 +609,3 @@ class ploopi_db
     public function get_log() { return $this->arrLog; } 
 
 }
-?>

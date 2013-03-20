@@ -149,4 +149,3 @@ include_once './include/start/header.php';
 
 include_once './include/classes/cache.php' ;
 ploopi_cache::init();
-?>

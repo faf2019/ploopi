@@ -161,4 +161,3 @@ class role_action extends data_object
     }
 
 }
-?>

@@ -921,18 +921,3 @@ function ploopi_setsessionvar($strVarName, $mixVar = null, $intModuleId = null, 
         $_SESSION['ploopi'][$strModuleType][$intModuleId][$intWorkspaceId][$strVarName] = $mixVar;
     }
 }
-
-
-function ploopi_loadv2()
-{
-    /**
-     * Autoloader pour les classes v2 + compatibilité anciennes versions php
-     */
-    require_once './include/functions/compatibility.php';
-    require_once './include/classes_v2/ploopiAutoloader.php';
-    ploopiAutoloader::init();
-}
-
-?>
-
-

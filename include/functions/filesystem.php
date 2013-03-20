@@ -254,5 +254,3 @@ function ploopi_file_getextension($filename)
     $filename_array = explode('.',$filename);
     return(strtolower($filename_array[sizeof($filename_array)-1]));
 }
-
-?>

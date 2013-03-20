@@ -288,5 +288,3 @@ class group_user extends data_object
         parent::data_object('ploopi_group_user','id_group','id_user');
     }
 }
-
-?>

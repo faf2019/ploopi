@@ -147,5 +147,3 @@ function ploopi_isipvalid($iprules)
 
     return($ip_ok);
 }
-
-?>

@@ -739,4 +739,3 @@ class workspace_group_role extends data_object
         parent::data_object('ploopi_workspace_group_role','id_group','id_workspace','id_role');
     }
 }
-?>

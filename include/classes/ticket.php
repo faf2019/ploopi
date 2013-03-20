@@ -196,4 +196,3 @@ class ticket_dest extends data_object
         parent::data_object('ploopi_ticket_dest','id_user','id_ticket');
     }
 }
-?>

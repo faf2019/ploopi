@@ -46,4 +46,3 @@ if (empty($_SESSION['ploopi']['mode']))
 }
 
 include './include/op.php';
-?>

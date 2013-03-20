@@ -220,5 +220,3 @@ class ploopi_cache
 
 
 }
-
-?>

@@ -399,4 +399,3 @@ class user extends data_object
         return (_PLOOPI_PATHDATA._PLOOPI_SEP.'system'._PLOOPI_SEP.$this->fields['id'].'.png');
     }
 }
-?>

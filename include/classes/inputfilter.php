@@ -71,4 +71,3 @@ class ploopi_inputfilter
 
 
 }
-?>

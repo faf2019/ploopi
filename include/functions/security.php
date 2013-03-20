@@ -115,9 +115,9 @@ function ploopi_filtervar($mixVar, $strVarName = null, $booUtf8 = false)
     else
     {
         if (get_magic_quotes_gpc()) $mixVar = stripslashes($mixVar);
-        
+
         if ($booUtf8) $mixVar = utf8_decode($mixVar);
-        
+
         if (substr($strVarName,0,4) != 'fck_')
         {
             $inputFilter = new ploopi_inputfilter();
@@ -211,5 +211,3 @@ function ploopi_ismoduleallowed($moduletype, $moduleid = -1, $workspaceid = -1)
             &&  in_array($moduleid ,$_SESSION['ploopi']['workspaces'][$workspaceid]['modules'])
         );
 }
-
-?>

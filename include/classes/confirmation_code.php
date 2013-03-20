@@ -75,4 +75,3 @@ class confirmation_code extends data_object
     }
 
 }
-?>

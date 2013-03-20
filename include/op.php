@@ -667,4 +667,3 @@ if (isset($ploopi_op))
     }
 
 }
-?>

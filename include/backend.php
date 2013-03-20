@@ -44,7 +44,7 @@ if (isset($_REQUEST['ploopi_moduleid']) && is_numeric($_REQUEST['ploopi_moduleid
 
     if ($row = $db->fetchrow())
     {
-        if (file_exists($backend_filepath = "./modules/{$row['labeltype']}/backend.php")) 
+        if (file_exists($backend_filepath = "./modules/{$row['labeltype']}/backend.php"))
         {
             include_once $backend_filepath;
             ploopi_die();
@@ -52,4 +52,3 @@ if (isset($_REQUEST['ploopi_moduleid']) && is_numeric($_REQUEST['ploopi_moduleid
     }
 }
 ploopi_h404();
-?>

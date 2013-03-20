@@ -46,4 +46,3 @@ if (!empty($_SESSION['ploopi']['frontoffice']['template_path']) && file_exists("
 ploopi_init_module('webedit', false, false, false);
 
 include './modules/webedit/display.php';
-?>

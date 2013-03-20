@@ -485,5 +485,3 @@ function ploopi_clean_filename($str)
     $arrReplace = array ('_','');
     return preg_replace($arrSearch, $arrReplace, $str);
 }
-
-?>

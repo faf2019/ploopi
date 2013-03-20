@@ -690,4 +690,3 @@ class mimethumb
         return true;
     }
 }
-?>

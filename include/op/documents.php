@@ -461,4 +461,3 @@ switch($ploopi_op)
         ploopi_redirect("admin.php?ploopi_op=documents_browser&currentfolder={$_GET['currentfolder']}&documents_id={$_REQUEST['documents_id']}");
     break;
 }
-?>

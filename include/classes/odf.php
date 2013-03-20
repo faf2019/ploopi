@@ -974,5 +974,3 @@ class odf_converter
             ->getBody();
     }
 }
-?>
-

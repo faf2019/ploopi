@@ -87,8 +87,8 @@ function ploopi_ckeditor($strInstanceName, $strContent, $strWidth, $strHeight, $
     $oFCKeditor->config['filebrowserWindowHeight'] = '480';
 
     $oFCKeditor->config['toolbar'] = array(
-    	array( 'Source', '-', 'Bold', 'Italic', 'Underline', 'Strike' ),
-    	array( 'Image', 'Link', 'Unlink', 'Anchor', 'MediaEmbed' )
+        array( 'Source', '-', 'Bold', 'Italic', 'Underline', 'Strike' ),
+        array( 'Image', 'Link', 'Unlink', 'Anchor', 'MediaEmbed' )
     );
 
 
@@ -107,4 +107,3 @@ function ploopi_ckeditor($strInstanceName, $strContent, $strWidth, $strHeight, $
     // render
     $oFCKeditor->editor('FCKeditor_'.md5(uniqid(rand())), $strContent);
 }
-?>

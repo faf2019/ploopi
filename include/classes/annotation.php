@@ -207,4 +207,3 @@ class tag extends data_object
         parent::data_object('ploopi_tag','id');
     }
 }
-?>

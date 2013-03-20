@@ -55,4 +55,3 @@ class share extends data_object
         parent::data_object('ploopi_share','id');
     }
 }
-?>

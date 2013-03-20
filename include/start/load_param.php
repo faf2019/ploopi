@@ -71,4 +71,3 @@ $listmodules = implode(',',array_keys($_SESSION['ploopi']['modules']));
 ploopi_loadparams();
 
 $_SESSION['ploopi']['paramloaded'] = true;
-?>

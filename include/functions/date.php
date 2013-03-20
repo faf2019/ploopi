@@ -647,5 +647,3 @@ function ploopi_open_calendar($strInputFieldId, $booEcho = true, $strClass = nul
     if ($booEcho) echo $strEcho;
     else return $strEcho;
 }
-
-?>

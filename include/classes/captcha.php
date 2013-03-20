@@ -774,4 +774,3 @@ class captcha_sound extends ploopi_captcha
         }        
     }
 }
- ?>

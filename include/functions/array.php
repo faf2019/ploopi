@@ -672,4 +672,3 @@ function ploopi_array_getpages($intNumRows, $intMaxLines = 50, $strUrlMask = '?p
 
     return implode(' ', $arrPages);
 }
-?>

@@ -1060,4 +1060,3 @@ class ploopi_recordset
         return $this->objDb->getjson($this->resRs, $booUtf8);
     }
 }
-?>

@@ -53,4 +53,3 @@ function ploopi_filexplorer_init($strBasePath, $strDestField, $strFilExplorerId 
 
     return $strFilExplorerId;
 }
-?>

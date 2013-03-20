@@ -750,4 +750,3 @@ function ploopi_documents_browser($currentfolder, $documents_id)
     </div>
     <?php
 }
-?>

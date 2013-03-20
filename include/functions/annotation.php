@@ -246,4 +246,3 @@ function ploopi_annotation_refresh($id_annotation)
     </script>
     <?php
 }
-?>

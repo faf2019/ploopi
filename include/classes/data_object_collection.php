@@ -152,4 +152,3 @@ class data_object_collection
         return $arrResult;
     }
 }
-?>

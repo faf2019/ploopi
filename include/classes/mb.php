@@ -264,4 +264,3 @@ class mb_action extends data_object
         parent::delete();
     }
 }
-?>

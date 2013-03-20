@@ -37,4 +37,4 @@ $webservice_path = "./modules/{$_REQUEST['module']}";
 $webservice_rootfile = "{$webservice_path}/webservice.php";
 
 if (is_dir($webservice_path) && file_exists($webservice_rootfile)) include $webservice_rootfile;
-?>
+

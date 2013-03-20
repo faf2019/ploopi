@@ -477,5 +477,3 @@ function ploopi_checkemail($email)
 
     return (preg_match($regex, $email));
 }
-
-?>

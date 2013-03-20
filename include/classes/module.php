@@ -579,4 +579,3 @@ class module_type extends data_object
 
     }
 }
-?>

@@ -150,4 +150,3 @@ function ploopi_session_update()
 
     $_SESSION['ploopi']['scriptname'] = $scriptname;
 }
-?>
