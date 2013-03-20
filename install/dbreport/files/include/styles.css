@@ -20,53 +20,55 @@
 */
 
 .dbreport_title {
-	display:block;
-	margin:0;
-	padding:2px 4px;
-	font-size:13px;
-	font-weight:bold;
-	border-bottom:1px solid #ccc;
-	background-color:#ddd;
+    display:block;
+    margin:0;
+    padding:2px 4px;
+    font-size:13px;
+    font-weight:bold;
+    border-bottom:1px solid #ccc;
+    background-color:#ddd;
 }
 
 .dbreport_checkboxes {
     overflow:hidden;
 }
 
-.dbreport_checkboxes label {
+.dbreport_checkboxes > form > div > fieldset > div > label {
     float:right;
-    width:325px;
+    width:330px;
     overflow:hidden;
     text-align:left;
 }
 
-.dbreport_checkboxes input {
+.dbreport_checkboxes > form > div > fieldset > div > input {
     float:left;
     width:15px;
+    margin:5px 0 0 2px;
 }
 
-.dbreport_checkboxes em {
-	margin-left:10px;
+.dbreport_checkboxes > form > div > fieldset > div > label > em {
+    margin-left:10px;
+    color:#888;
 }
 
-.dbreport_checkboxes label span {
-	display:inline;
-	float:none;
-	width:auto;
+.dbreport_checkboxes > form > div > fieldset > div > label > span {
+    display:inline;
+    float:none;
+    width:auto;
 }
 
-.dbreport_checkboxes fieldset {
+.dbreport_checkboxes > form > div > fieldset {
     padding:4px;
     border:1px solid #888;
     background-color:#f0f0f0;
 }
 
-.dbreport_checkboxes fieldset legend {
+.dbreport_checkboxes > form > div > fieldset > legend {
     font-weight:bold;
 }
 
 #dbreport_query_tables {
-	overflow:auto;
+    overflow:auto;
 }
 
 #dbreport_query_fields {
@@ -75,21 +77,23 @@
 }
 
 .dbreport_table {
-	border:1px solid #aaa;
-	float:left;
-	width:200px;
-	margin:10px;
+    border:1px solid #aaa;
+    float:left;
+    width:230px;
+    margin:10px;
 }
 
 .dbreport_table_title {
     font-weight:bold;
-    padding:2px 4px;
+    padding:4px;
     border-bottom:1px solid #ccc;
-    background-color:#ddd;
+    background: linear-gradient(top, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.25) 100%);
+    background: -moz-linear-gradient(top, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.25) 100%);
+    background: -webkit-linear-gradient(top, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.25) 100%);
 }
 
 .dbreport_table_fields {
-    height:150px;
+    height:200px;
     overflow-y:scroll;
 }
 

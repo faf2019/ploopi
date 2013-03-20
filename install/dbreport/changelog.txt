@@ -1,3 +1,11 @@
+== Module DBREPORT - version 1.0.8a ====================================================
+
+2013-03-20  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Corrections d'affichage lors de la sélection des champs
+* Modification mineures d'affichage
+* Correctif mineur sur le webservice
+
 == Module DBREPORT - version 1.0.8 ====================================================
 
 2013-03-18  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

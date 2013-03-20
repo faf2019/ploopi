@@ -45,8 +45,7 @@ $strError = '';
 
 $strFileName = "dbreport.{$strDbreportFormat}";
 
-ob_end_clean();
-ob_start();
+ploopi_ob_clean();
 
 echo dbreport_getdata($strDbreportWsId, $_REQUEST, $strDbreportFormat, $strDbreportCode);
 

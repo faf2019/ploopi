@@ -85,7 +85,7 @@ if (isset($_POST['dbreport_query_id']) && is_numeric($_POST['dbreport_query_id']
 
             while($row2 = $objRs2->fetchrow())
             {
-                $objPanel->addField( new form_checkbox("<strong>".htmlentities($row2['label'])."</strong>".($row2['label'] != $row2['name'] ? "<span>&nbsp;(".htmlentities($row2['name']).")</span>" : '')."<em style=\"color:#888;\">".$arrDbReportTypes[dbreport_getbasictype($row2['type'])]."</em>", "{$row2['tablename']}.{$row2['name']}", false, 'dbreport_fieldnames[]', "{$row2['tablename']}.{$row2['name']}", array('class_form' => 'onclick')) );
+                $objPanel->addField( new form_checkbox("<strong>".htmlentities($row2['label'])."</strong>".($row2['label'] != $row2['name'] ? "<span>&nbsp;(".htmlentities($row2['name']).")</span>" : '')."<em>".$arrDbReportTypes[dbreport_getbasictype($row2['type'])]."</em>", "{$row2['tablename']}.{$row2['name']}", false, 'dbreport_fieldnames[]', "{$row2['tablename']}.{$row2['name']}", array('class_form' => 'onclick')) );
             }
         }
 
