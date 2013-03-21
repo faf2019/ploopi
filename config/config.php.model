@@ -207,11 +207,12 @@ switch($http_host)
         /**
          * Définit le niveau de sensibilité du gestionnaire d'erreur.
          * Valeurs possibles : E_ALL, E_ERROR,  E_WARNING,  E_PARSE,  E_NOTICE
+         * Attention, pour PHP 5.4, pensez à ajouter ^ E_STRICT
          *
          * @link http://fr.php.net/manual/fr/errorfunc.constants.php
          */
 
-        define ('_PLOOPI_ERROR_REPORTING', E_ALL);
+        define ('_PLOOPI_ERROR_REPORTING', E_ALL ^ E_STRICT);
 
         /**
          * Active ou on l'envoi d'un mail si une erreur est rencontrée.
