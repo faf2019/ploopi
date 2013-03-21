@@ -122,7 +122,8 @@ echo $skin->open_simplebloc();
                     'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_group_child.png",
                 );
 
-            echo $skin->create_toolbar($toolbar_workspace, $x = 0, false, true);
+            $x = null;
+            echo $skin->create_toolbar($toolbar_workspace, $x, false, true);
             ?>
         </div>
     </div>

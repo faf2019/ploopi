@@ -151,21 +151,25 @@ if ($testpear)
         ploopi_set_error_handler();
 
         $arrPearClasses = array(
-            'Cache_Lite' => 'Gestion du cache.',
-            'HTTP_Request2' => 'Gestion des connexions sortantes.',
-            'Text_Highlighter' => 'Gestion de la colorisation syntaxique.',
-            'Horde_Text_Diff' => 'Gestion du différentiel.'
-        );cd web
+            'Cache_Lite' => array('Gestion du cache.', '1.7.15', null),
+            'HTTP_Request2' => array('Gestion des connexions sortantes.', '2.1.1', null),
+            'Text_Highlighter' => array('Gestion de la colorisation syntaxique.', '0.7.3', null),
+            'Net_UserAgent_Detect' => array('Détection du UserAgent.', '2.5.2', null),
+            'Horde_Text_Diff' => array('Gestion du différentiel.', '2', 'pear.horde.org')
+        );
+
 
         foreach($arrPearClasses as $strPearClass => $desc)
         {
-            $testok = $packPEAR->packageInstalled($strPearClass);
+            ploopi_unset_error_handler();
+            $testok = $packPEAR->packageInstalled($strPearClass, $desc[1], $desc[2]);
+            ploopi_set_error_handler();
 
             $comment = ($testok) ? "{$strPearClass} est installé." : "Vous devez installer la classe PEAR {$strPearClass}.\nPour l'installer, faites &laquo; pear install --alldeps {$strPearClass} &raquo;.";
             $bullet = ($testok) ? 'green' : 'orange';
 
             $values[$c]['values']['function']   = array('label' => "PEAR - {$strPearClass}");
-            $values[$c]['values']['desc']       = array('label' => ploopi_nl2br($desc));
+            $values[$c]['values']['desc']       = array('label' => ploopi_nl2br($desc[0]));
             $values[$c]['values']['comment']    = array('label' => ploopi_nl2br($comment));
             $values[$c]['values']['result']     = array('label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/p_{$bullet}.png\" />");
             $c++;
@@ -325,7 +329,7 @@ else $res = false;
 if (!$res)
 {
     $comment = "Problème de connexion internet.\nPLOOPI n'a pas pu se connecter sur <a title=\"{$testurl}\" href=\"{$testurl}\">{$testurl}</a>.";
-    if ($_SESSION['ploopi']['modules'][1]['system_proxy_host'] != '') $comment .= "\nen utilisant les paramètres Proxy suivants :\nproxy_host: {$_SESSION['ploopi']['modules'][1]['system_proxy_host']}, proxy_port: {$_SESSION['ploopi']['modules'][1]['system_proxy_port']}, proxy_user: {$_SESSION['ploopi']['modules'][1]['system_proxy_user']}, proxy_pass: {$_SESSION['ploopi']['modules'][1]['system_proxy_pass']}";
+    if (_PLOOPI_INTERNETPROXY_HOST != '') $comment .= "\nen utilisant les paramètres Proxy suivants :\nproxy_host: "._PLOOPI_INTERNETPROXY_HOST.", proxy_port: "._PLOOPI_INTERNETPROXY_PORT.", proxy_user: "._PLOOPI_INTERNETPROXY_USER.", proxy_pass: "._PLOOPI_INTERNETPROXY_PASS;
 
     $testok = false;
 }
