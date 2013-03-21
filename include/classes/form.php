@@ -287,6 +287,7 @@ class form_field extends form_element
      */
     private static $_arrDefaultOptions = array(
         'description' => '',
+        'placeholder' => '',
         'style' => null,
         'style_form' => null,
         'class' => null,
@@ -379,19 +380,20 @@ class form_field extends form_element
         $strMaxLength = is_null($this->_arrOptions['maxlength']) || !is_numeric($this->_arrOptions['maxlength']) ? '' : " maxlength=\"{$this->_arrOptions['maxlength']}\"";
         $strValue = htmlentities($this->_arrValues[0]);
 
+        $strPlaceHolder = $this->_arrOptions['placeholder'] != '' ? ' placeholder="'.htmlentities($this->_arrOptions['placeholder']).'"' : '';
         switch($this->_strType)
         {
             case 'input:text':
-                $strOutput .= "<input type=\"text\" name=\"{$this->_strName}\" id=\"{$this->_strId}\" value=\"{$strValue}\" tabindex=\"{$intTabindex}\"{$strProperties}{$strMaxLength}{$strEvents} />";
+                $strOutput .= "<input type=\"text\" name=\"{$this->_strName}\" id=\"{$this->_strId}\" value=\"{$strValue}\" tabindex=\"{$intTabindex}\"{$strProperties}{$strMaxLength}{$strEvents}{$strPlaceHolder} />";
                 if ($this->_arrOptions['datatype'] == 'date' && !$this->_arrOptions['readonly'] && !$this->_arrOptions['disabled']) $strOutput .= ploopi_open_calendar($this->_strId, false, null, 'display:block;float:left;margin-left:-35px;margin-top:5px;');
             break;
 
             case 'input:password':
-                $strOutput .= "<input type=\"password\" name=\"{$this->_strName}\" id=\"{$this->_strId}\" value=\"{$strValue}\" tabindex=\"{$intTabindex}\"{$strProperties}{$strMaxLength}{$strEvents} />";
+                $strOutput .= "<input type=\"password\" name=\"{$this->_strName}\" id=\"{$this->_strId}\" value=\"{$strValue}\" tabindex=\"{$intTabindex}\"{$strProperties}{$strMaxLength}{$strEvents}{$strPlaceHolder} />";
             break;
 
             case 'textarea':
-                $strOutput .= "<textarea name=\"{$this->_strName}\" id=\"{$this->_strId}\" tabindex=\"{$intTabindex}\"{$strProperties}{$strMaxLength}{$strEvents}>{$strValue}</textarea>";
+                $strOutput .= "<textarea name=\"{$this->_strName}\" id=\"{$this->_strId}\" tabindex=\"{$intTabindex}\"{$strProperties}{$strMaxLength}{$strEvents}{$strPlaceHolder}>{$strValue}</textarea>";
             break;
 
             case 'input:file':
@@ -552,7 +554,7 @@ class form_select extends form_field
         foreach($arrValues as $mixKey => $mixValue)
         {
             $booSelected = in_array($mixKey, $this->_arrSelected);
-            
+
             if (is_object($mixValue) && $mixValue instanceof form_select_option)
             {
                 $strOutput .= $mixValue->render($intTabindex, $booSelected);
