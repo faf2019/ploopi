@@ -158,7 +158,12 @@ class ploopi_db
         $this->persistency = $persistency;
         $this->user = $user;
         $this->password = $password;
-        $this->server = $server;
+        $server_detail = explode(':', $server);
+        $this->server = $server_detail[0];
+        $this->port = '3306';
+
+        if (sizeof($server_detail) > 1) $this->port = $server_detail[1];
+
         $this->database = $database;
         $this->mysqli = null;
         $this->num_queries = 0;
@@ -171,7 +176,7 @@ class ploopi_db
         if ($this->persistency) $this->server = 'p:'.$this->server;
 
         $this->timer_start();
-        $this->mysqli = new mysqli($this->server, $this->user, $this->password, $this->database);
+        $this->mysqli = @new mysqli($this->server, $this->user, $this->password, $this->database, $this->port);
         $this->timer_stop();
 
         if ($this->mysqli->connect_errno) {
@@ -274,13 +279,19 @@ class ploopi_db
 
         $this->timer_start();
 
-        $res = $this->mysqli->multi_query($queries);
+        $i = 1;
+        if ($res = $this->mysqli->multi_query($queries))
+        {
+            do $i++; while ($res = $this->mysqli->next_result());
+        }
+
+        if ($this->mysqli->errno) {
+            trigger_error($this->mysqli->error."<br /><b>query {$i}:</b> {$queries}", E_USER_WARNING);
+        }
 
         $stop = $this->timer_stop();
 
         if ($this->log) $this->arrLog[] = array ('query' => $queries, 'time' => $stop);
-
-        if ($res === false) trigger_error($this->mysqli->error."<br /><b>queries:</b> {$queries}", E_USER_WARNING);
 
         return $res;
     }
