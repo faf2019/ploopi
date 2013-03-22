@@ -119,25 +119,15 @@ define ('_PLOOPI_INSTALL_SELECT_PEAR',           '<sup>* </sup>Répertoire d\'ins
 define ('_PLOOPI_INSTALL_SELECT_PEAR_JS',        'Répertoire d\'installation PEAR');
 
 define ('_PLOOPI_INSTALL_PEAR_INFO',                      '---- Contrôle du package PEAR : PEAR_Info');
-// define ('_PLOOPI_INSTALL_PEAR_INFO_URL_INFO',          'http://www.ploopi.org/trac/wiki/PloopiInstall');
 define ('_PLOOPI_INSTALL_PEAR_CACHE_LITE',                '---- Contrôle du package PEAR : CACHE_Lite');
-// define ('_PLOOPI_INSTALL_PEAR_CACHE_LITE_URL_INFO',    'http://www.ploopi.org/trac/wiki/PloopiInstall');
 define ('_PLOOPI_INSTALL_PEAR_HTTP_REQUEST',              '---- Contrôle du package PEAR : HTTP_Request2');
-// define ('_PLOOPI_INSTALL_PEAR_HTTP_REQUEST_URL_INFO',  'http://www.ploopi.org/trac/wiki/PloopiInstall');
-
 define ('_PLOOPI_INSTALL_PEAR_TEXT_HIGHLIGHTER',              '---- Contrôle du package PEAR : Text_Highlighter');
 define ('_PLOOPI_INSTALL_PEAR_HORDE_TEXT_DIFF',              '---- Contrôle du package PEAR : Horde_Text_Diff');
-
 define ('_PLOOPI_INSTALL_PEAR_XML_FEED_PARSER',           '---- Contrôle du package PEAR : XML_Feed_Parser');
-// define ('_PLOOPI_INSTALL_PEAR_XML_FEED_PARSER_URL_INFO', 'http://www.ploopi.org/trac/wiki/PloopiInstall');
-define ('_PLOOPI_INSTALL_PEAR_XML_BEAUTIFIER',            '---- Contrôle du package PEAR : XML_Beautifier');
-// define ('_PLOOPI_INSTALL_PEAR_XML_BEAUTIFIER_URL_INFO','http://www.ploopi.org/trac/wiki/PloopiInstall');
+define ('_PLOOPI_INSTALL_PEAR_XML_SERIALIZER',            '---- Contrôle du package PEAR : XML_Serializer');
 define ('_PLOOPI_INSTALL_PEAR_OLE',                       '---- Contrôle du package PEAR : OLE');
-// define ('_PLOOPI_INSTALL_PEAR_OLE_URL_INFO',           'http://www.ploopi.org/trac/wiki/PloopiInstall');
 define ('_PLOOPI_INSTALL_PEAR_SPREADSHEET_EXCEL_WRITER',  '---- Contrôle du package PEAR : Spreadsheet_Excel_Writer');
-// define ('_PLOOPI_INSTALL_PEAR_SPREADSHEET_EXCEL_WRITER_URL_INFO','http://www.ploopi.org/trac/wiki/PloopiInstall');
 define ('_PLOOPI_INSTALL_PEAR_NET_USERAGENT_DETECT',      '---- Contrôle du package PEAR : Net_UserAgent_Detect');
-// define ('_PLOOPI_INSTALL_PEAR_NET_USERAGENT_DETECT',   'http://www.ploopi.org/trac/wiki/PloopiInstall');
 
 /*********
 * Stage 3

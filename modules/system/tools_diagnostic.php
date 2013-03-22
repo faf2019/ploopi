@@ -155,7 +155,8 @@ if ($testpear)
             'HTTP_Request2' => array('Gestion des connexions sortantes.', '2.1.1', null),
             'Text_Highlighter' => array('Gestion de la colorisation syntaxique.', '0.7.3', null),
             'Net_UserAgent_Detect' => array('Détection du UserAgent.', '2.5.2', null),
-            'Horde_Text_Diff' => array('Gestion du différentiel.', '2', 'pear.horde.org')
+            'Horde_Text_Diff' => array('Gestion du différentiel.', '2', 'pear.horde.org'),
+            'XML_Serializer' => array('Génération XML', '0.20.2', '')
         );
 
 

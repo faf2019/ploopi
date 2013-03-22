@@ -352,6 +352,9 @@ if($_POST['stage']>=$stage)
       $arrInstallInfos[] = array('id' => 'div_pear_Net_UserAgent_Detect', 'state' => $packPEAR->packageInstalled('Net_UserAgent_Detect', '2.5.2'), 'title' => '_PLOOPI_INSTALL_PEAR_NET_USERAGENT_DETECT');
       // Horde_Text_Diff
       $arrInstallInfos[] = array('id' => 'div_pear_Horde_Text_Diff', 'state' => $packPEAR->packageInstalled('Horde_Text_Diff', '2', 'pear.horde.org'), 'title' => '_PLOOPI_INSTALL_PEAR_HORDE_TEXT_DIFF');
+      // Horde_Text_Diff
+      $arrInstallInfos[] = array('id' => 'div_pear_XML_Serializer', 'state' => $packPEAR->packageInstalled('XML_Serializer', '0.20.2'), 'title' => '_PLOOPI_INSTALL_PEAR_XML_SERIALIZER');
+
     }
     else // PEAR_Info not installed
     {

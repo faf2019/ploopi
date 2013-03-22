@@ -118,25 +118,15 @@ define ('_PLOOPI_INSTALL_SELECT_PEAR',           '<sup>* </sup>PEAR installation
 define ('_PLOOPI_INSTALL_SELECT_PEAR_JS',        'PEAR installation directory');
 
 define ('_PLOOPI_INSTALL_PEAR_INFO',                      '---- Control package PEAR : PEAR_Info');
-// define ('_PLOOPI_INSTALL_PEAR_INFO_URL_INFO',          'http://www.ploopi.org/trac/wiki/PloopiInstall');
 define ('_PLOOPI_INSTALL_PEAR_CACHE_LITE',                '---- Control package PEAR : CACHE_Lite');
-// define ('_PLOOPI_INSTALL_PEAR_CACHE_LITE_URL_INFO',    'http://www.ploopi.org/trac/wiki/PloopiInstall');
 define ('_PLOOPI_INSTALL_PEAR_HTTP_REQUEST',              '---- Control package PEAR : HTTP_Request2');
-// define ('_PLOOPI_INSTALL_PEAR_HTTP_REQUEST_URL_INFO',  'http://www.ploopi.org/trac/wiki/PloopiInstall');
-
-define ('_PLOOPI_INSTALL_PEAR_TEXT_HIGHLIGHTER',              '---- Control package PEAR : Text_Highlighter');
-define ('_PLOOPI_INSTALL_PEAR_HORDE_TEXT_DIFF',              '---- Control package PEAR : Horde_Text_Diff');
-
+define ('_PLOOPI_INSTALL_PEAR_TEXT_HIGHLIGHTER',          '---- Control package PEAR : Text_Highlighter');
+define ('_PLOOPI_INSTALL_PEAR_HORDE_TEXT_DIFF',           '---- Control package PEAR : Horde_Text_Diff');
 define ('_PLOOPI_INSTALL_PEAR_XML_FEED_PARSER',           '---- Control package PEAR : XML_Feed_Parser');
-// define ('_PLOOPI_INSTALL_PEAR_XML_FEED_PARSER_URL_INFO', 'http://www.ploopi.org/trac/wiki/PloopiInstall');
-define ('_PLOOPI_INSTALL_PEAR_XML_BEAUTIFIER',            '---- Control package PEAR : XML_Beautifier');
-// define ('_PLOOPI_INSTALL_PEAR_XML_BEAUTIFIER_URL_INFO','http://www.ploopi.org/trac/wiki/PloopiInstall');
+define ('_PLOOPI_INSTALL_PEAR_XML_SERIALIZER',            '---- Control package PEAR : XML_Serializer');
 define ('_PLOOPI_INSTALL_PEAR_OLE',                       '---- Control package PEAR : OLE');
-// define ('_PLOOPI_INSTALL_PEAR_OLE_URL_INFO',           'http://www.ploopi.org/trac/wiki/PloopiInstall');
 define ('_PLOOPI_INSTALL_PEAR_SPREADSHEET_EXCEL_WRITER',  '---- Control package PEAR : Spreadsheet_Excel_Writer');
-// define ('_PLOOPI_INSTALL_PEAR_SPREADSHEET_EXCEL_WRITER_URL_INFO','http://www.ploopi.org/trac/wiki/PloopiInstall');
 define ('_PLOOPI_INSTALL_PEAR_NET_USERAGENT_DETECT',      '---- Control package PEAR : Net_UserAgent_Detect');
-// define ('_PLOOPI_INSTALL_PEAR_NET_USERAGENT_DETECT',   'http://www.ploopi.org/trac/wiki/PloopiInstall');
 
 /*********
 * Stage 3
