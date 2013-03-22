@@ -1,3 +1,10 @@
+== Module DBREPORT - version 1.0.8b ====================================================
+
+2013-03-22  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Modification de l'export CSV pour pouvoir traiter les gros volumes de données (suppression de la bufferisation, pas de stockage mémoire, traitement à la volée)
+* Choix par défaut du format CSV pour l'export des données
+
 == Module DBREPORT - version 1.0.8a ====================================================
 
 2013-03-20  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

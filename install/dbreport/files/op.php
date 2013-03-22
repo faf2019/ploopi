@@ -534,12 +534,12 @@ if (ploopi_ismoduleallowed('dbreport'))
                             <strong>XLSX</strong><span>&nbsp;(Microsoft Excel &#174;)</span>
                         </p>
                         <p class="ploopi_checkbox" style="padding:2px;" onclick="javascript:ploopi_checkbox_click(event,'dbreport_format_csv');">
-                            <input type="radio" class="radio" name="dbreport_format" id="dbreport_format_csv" value="csv" />
+                            <input type="radio" class="radio" name="dbreport_format" id="dbreport_format_csv" value="csv" checked />
                             <img src="./modules/dbreport/img/mime/csv.png" />
-                            <strong>CSV</strong><span>&nbsp;(Comma-separated Values)</span>
+                            <strong>CSV</strong><span style="color:red;">&nbsp;(RECOMMANDE)</span>
                         </p>
                         <p class="ploopi_checkbox" style="padding:2px;" onclick="javascript:ploopi_checkbox_click(event,'dbreport_format_pdf');">
-                            <input type="radio" class="radio" name="dbreport_format" id="dbreport_format_pdf" value="pdf" checked />
+                            <input type="radio" class="radio" name="dbreport_format" id="dbreport_format_pdf" value="pdf" />
                             <img src="./modules/dbreport/img/mime/pdf.png" />
                             <strong>PDF</strong><span>&nbsp;(Adobe Acrobat &#174;)</span>
                         </p>

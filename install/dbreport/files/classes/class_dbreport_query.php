@@ -759,6 +759,29 @@ class dbreport_query extends data_object
         else return false;
     }
 
+
+
+    /**
+     * Exécute la requête
+     *
+     * @param array $arrParam tableau optionnel de paramètres
+     * @return boolean true si la requête a pu être exécutée
+     */
+    public function getrs()
+    {
+        if (!empty($this->strSqlQuery))
+        {
+
+            set_time_limit(0);
+            // Exécution de la requête
+            return $this->objQuery->execute();
+
+        }
+
+        return false;
+    }
+
+
     /**
      * Retourne l'id du cache pour la requête
      *
@@ -802,6 +825,68 @@ class dbreport_query extends data_object
      * @return string
      */
     public function getquery() { return $this->strSqlQuery; }
+
+
+
+    /**
+     * Fonction d'export optimisée pour traiter les gros volumes de données.
+     * Pas de bufferisation, pas de stockage des données en mémoire.
+     */
+    public function export_raw_csv($strFileName = null, $booSetHeaders = true, $strContentDisposition = 'attachment') {
+
+        $strFormat = 'csv';
+        $strCharset = 'iso-8859-1';
+
+        ploopi_ob_clean(true);
+        ob_start();
+
+        $intSize = 0;
+
+        if (($objRs = $this->getrs()) !== false) {
+            $first = true;
+
+            while ($row = $objRs->fetchrow()) {
+
+                if ($first) {
+                    if ($booSetHeaders) {
+                        $line = '';
+                        foreach(array_keys($row) as $str) {
+                            if ($line != '') $line .= ',';
+                            $line .= '"'.str_replace('"', '""', $str).'"';
+                        }
+                        $line .= "\n";
+                        echo $line;
+                        $intSize += mb_strlen($line, '8bit');
+                    }
+
+                    $first = false;
+                }
+
+                $line = '';
+                foreach($row as $key => $str) {
+                    if ($line != '') $line .= ',';
+                    // Conversion date
+                    if (isset($this->arrFields[$key]) && $this->arrFields[$key]['type'] == 'date') $str = empty($str) ? '' : implode(' ', ploopi_timestamp2local($str));
+                    $line .= '"'.str_replace('"', '""', $str).'"';
+                }
+                $line .= "\n";
+                echo $line;
+                $intSize += mb_strlen($line, '8bit');
+            }
+        }
+
+
+        if (is_null($strFileName)) $strFileName = "dbreport.{$strFormat}";
+
+        header('Content-Type: '.ploopi_getmimetype($strFileName).'; charset='.$strCharset);
+        header('Content-Disposition: '.$strContentDisposition.'; Filename="'.$strFileName.'"');
+        header('Cache-Control: private');
+        header('Pragma: private');
+        header('Content-Length: '.$intSize);
+        header('Content-Encoding: none');
+
+        die();
+    }
 
 
     /**

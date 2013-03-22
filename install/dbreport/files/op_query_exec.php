@@ -49,14 +49,19 @@ if (isset($_REQUEST['dbreport_format']) && isset($_REQUEST['dbreport_query_id'])
     // Instanciation du cache fichier (id unique en fonction de la requête)
     $objCache = new ploopi_cache($objDbrQuery->getcacheid()."/{$strFileName}", $intCacheLifetime);
 
-    ploopi_ob_clean();
-
     // Cache existe ?
     if (!$objCache->start())
     {
         if ($_REQUEST['dbreport_format'] == 'sql')
         {
             echo $objDbrQuery->getquery();
+        }
+        elseif ($_REQUEST['dbreport_format'] == 'csv')
+        {
+            // Traitement spécial CSV
+            // PAS DE MISE EN CACHE
+            // Spécial gros fichiers
+            $objDbrQuery->export_raw_csv();
         }
         else
         {
