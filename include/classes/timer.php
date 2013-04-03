@@ -50,7 +50,7 @@ class timer
      *
      * @return timer
      */
-    
+
     public function timer()
     {
         $this->start = 0;
@@ -59,12 +59,12 @@ class timer
     /**
      * Démarre le timer
      */
-    
+
     public function start()
     {
-        $this->start = $this->getmicrotime();       
+        $this->start = $this->getmicrotime();
     }
-    
+
     /**
      * Retourne le timestamp UNIX actuel en secondes avec les microsecondes
      *
@@ -73,10 +73,9 @@ class timer
 
     public function getmicrotime()
     {
-        list($usec, $sec) = explode(" ",microtime());
-        return ((float)$usec + (float)$sec);
+        return microtime(true);
     }
-    
+
     /**
      * Retourne le nombre de secondes écoulées depuis le démarrage du timer
      *
