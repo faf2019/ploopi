@@ -277,8 +277,6 @@ function ploopi_array2xls($arrArray, $booHeader = true, $strFileName = 'document
     return true;
 }
 
-
-
 /**
  * Retourne le contenu d'un tableau à 2 dimensions aux formats XLSX / XLS
  *
@@ -372,7 +370,8 @@ function ploopi_array2excel($arrArray, $booHeader = true, $strFileName = 'docume
             $intCol = 0;
             foreach(array_keys(reset($arrArray)) as $strKey) $objWorkSheet->setCellValueByColumnAndRow($intCol++, 1, utf8_encode(isset($arrDataFormats[$strKey]['title']) ? $arrDataFormats[$strKey]['title'] : $strKey));
 
-            $chrCol = chr($intCol-1+65);
+            // Calcul colonne type Excel "Bijective base-26"
+            $chrCol = ($intCol>25 ? chr(64+floor($intCol/26)) : '').chr(65+$intCol%26);
 
             $objWorkSheet->duplicateStyleArray(
                 $rowTitleStyle,
@@ -408,7 +407,8 @@ function ploopi_array2excel($arrArray, $booHeader = true, $strFileName = 'docume
         {
             if (empty($arrDataFormats[$strKey]['type'])) $arrDataFormats[$strKey]['type'] = 'string';
 
-            $chrCol = chr($intCol+65);
+            // Calcul colonne type Excel "Bijective base-26"
+            $chrCol = ($intCol>25 ? chr(64+floor($intCol/26)) : '').chr(65+$intCol%26);
 
             $rowStyle = $rowDefaultStyle;
 
@@ -453,7 +453,7 @@ function ploopi_array2excel($arrArray, $booHeader = true, $strFileName = 'docume
                 );
             }
 
-            // Application du style sur le colonne
+            // Application du style sur la colonne
             $objWorkSheet->duplicateStyleArray(
                 $rowStyle,
                 "{$chrCol}2:{$chrCol}{$intLineMax}"
@@ -465,7 +465,6 @@ function ploopi_array2excel($arrArray, $booHeader = true, $strFileName = 'docume
             $intCol++;
 
         }
-
     }
 
 

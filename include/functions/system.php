@@ -164,7 +164,7 @@ function ploopi_ob_callback($buffer)
     if (isset($db))
     {
         $ploopi_stats['numqueries'] = $db->get_num_queries();
-        $ploopi_stats['sql_exectime'] = round($db->get_exectime_queries()*1000,0);
+        $ploopi_stats['sql_exectime'] = round($db->get_exectime_queries()*1000,1);
     }
     else
     {
@@ -174,7 +174,7 @@ function ploopi_ob_callback($buffer)
 
     if (isset($ploopi_timer))
     {
-        $ploopi_stats['total_exectime'] = round($ploopi_timer->getexectime()*1000,0);
+        $ploopi_stats['total_exectime'] = round($ploopi_timer->getexectime()*1000,1);
         $ploopi_stats['sql_ratiotime'] = round(($ploopi_stats['sql_exectime']*100)/$ploopi_stats['total_exectime'] ,0);
         $ploopi_stats['php_ratiotime'] = 100 - $ploopi_stats['sql_ratiotime'];
     }
@@ -227,6 +227,7 @@ function ploopi_ob_callback($buffer)
         $array_tags = array(
             '<PLOOPI_PAGE_SIZE>',
             '<PLOOPI_EXEC_TIME>',
+            '<PLOOPI_SQL_TIME>',
             '<PLOOPI_PHP_P100>',
             '<PLOOPI_SQL_P100>',
             '<PLOOPI_NUMQUERIES>',
@@ -237,6 +238,7 @@ function ploopi_ob_callback($buffer)
         $array_values = array(
             sprintf("%.02f",$ploopi_stats['pagesize']/1024),
             $ploopi_stats['total_exectime'],
+            $ploopi_stats['sql_exectime'],
             $ploopi_stats['php_ratiotime'],
             $ploopi_stats['sql_ratiotime'],
             $ploopi_stats['numqueries'],
@@ -608,7 +610,9 @@ function ploopi_viewworkspaces($moduleid = -1)
 
         case _PLOOPI_VIEWMODE_DESC:
 
-            $workspaces = explode(';',$_SESSION['ploopi']['workspaces'][$current_workspaceid]['parents']);
+            $objWorkspace = new workspace();
+            $objWorkspace->open($current_workspaceid);
+            $workspaces = explode(';', $objWorkspace->fields['parents']);
             $workspaces[] = $current_workspaceid;
             $workspaces = implode(',', $workspaces);
 
@@ -632,11 +636,10 @@ function ploopi_viewworkspaces($moduleid = -1)
 
         case _PLOOPI_VIEWMODE_ASCDESC:
 
-            $workspaces = explode(';',$_SESSION['ploopi']['workspaces'][$current_workspaceid]['parents']);
-
             $objWorkspace = new workspace();
             $objWorkspace->open($current_workspaceid);
 
+            $workspaces = explode(';', $objWorkspace->fields['parents']);
             $workspaces = array_merge($workspaces, array_keys($objWorkspace->getChildren()));
             $workspaces[] = $current_workspaceid;
             $workspaces = implode(',', $workspaces);
@@ -839,7 +842,6 @@ function ploopi_h404() { header("HTTP/1.0 404 Not Found"); }
  */
 function ploopi_logout($intErrorCode = null, $intSleep = 1, $booRedirect = true)
 {
-    global $session;
     global $arrParsedURI;
 
     // Suppression de l'information de connexion

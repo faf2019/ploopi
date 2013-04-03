@@ -41,6 +41,7 @@
  */
 
 include_once './include/classes/search_index.php';
+include_once './lib/phonetic/phonetic.php';
 
 if (!function_exists('stem_french')) { function stem_french($str) { return ''; } }
 
@@ -263,7 +264,7 @@ function ploopi_search_create_index($id_object, $id_record, $label, &$content, $
     if ($debug) printf("<br />GETWORDS: %0.2f",$ploopi_timer->getexectime()*1000);
 
     // nettoyage index
-    ploopi_search_remove_index($id_object, $id_record);
+    ploopi_search_remove_index($id_object, $id_record, $id_module);
     if ($debug) printf("<br />REMOVE INDEX: %0.2f",$ploopi_timer->getexectime()*1000);
 
     $stem = current($words);
@@ -329,6 +330,7 @@ function ploopi_search_create_index($id_object, $id_record, $label, &$content, $
                     $objKw = new index_keyword();
                     $objKw->fields['id'] = $kw_md5;
                     $objKw->fields['keyword'] = $kw_value;
+                    $objKw->fields['phonetic'] = strtolower(phonetique($kw_value));
                     $objKw->fields['id_stem'] = $stem_md5;
                     $objKw->save();
                 }
@@ -454,7 +456,7 @@ function ploopi_search($keywords, $id_object = -1, $id_record = null, $id_module
         else $arrSearch[] = sprintf("e.id_module = %d", $id_module);
     }
 
-    $strSearch = (empty($arrSearch)) ? '' : ' AND '.implode(' AND ', $arrSearch);
+    $strSearch = (empty($arrSearch)) ? '' : ' WHERE '.implode(' AND ', $arrSearch);
 
     $orderby = (empty($options['orderby'])) ? 'relevance' : $options['orderby'];
     $sort = (isset($options['sort'])) ? $options['sort'] : 'DESC';
@@ -465,11 +467,10 @@ function ploopi_search($keywords, $id_object = -1, $id_record = null, $id_module
     if (empty($arrKeywords) && empty($arrStems))
     {
         $sql =  "
-                SELECT      e.*, 100 as relevance
+                SELECT      e.*
 
                 FROM        ploopi_index_element e
 
-                WHERE       1=1
                 {$strSearch}
 
                 ORDER BY {$orderby} {$sort}
@@ -482,11 +483,11 @@ function ploopi_search($keywords, $id_object = -1, $id_record = null, $id_module
             $id = ($id_module != '') ? $row['id_record'] : $row['id'];
 
             $arrElements[$id] = $row;
-            $arrRelevance[$id]['relevance'] = $row['relevance'];
-            $arrRelevance[$id]['count'] = 1;
-            $arrRelevance[$id]['kw'] = array();
-            $arrRelevance[$id]['stem'] = array();
-            $arrRelevance[$id]['kw_ratio'] = 0;
+            $arrRelevance[$id] = array(
+                'relevance' => 100,
+                'count' => 1,
+                'kw_ratio' => 0
+            );
         }
 
     }
@@ -504,14 +505,11 @@ function ploopi_search($keywords, $id_object = -1, $id_record = null, $id_module
                     SELECT      e.*,
                                 se.relevance
 
-                    FROM        ploopi_index_stem_element se,
-                                ploopi_index_element e
+                    FROM        ploopi_index_stem_element se
+                    INNER JOIN  ploopi_index_element e ON e.id = se.id_element
 
-                    WHERE       e.id = se.id_element
-                    AND         se.id_stem = '{$id_stem}'
                     {$strSearch}
-
-                    ORDER BY {$orderby} {$sort}
+                    AND         se.id_stem = '{$id_stem}'
                     ";
 
             $db->query($sql);
@@ -523,18 +521,17 @@ function ploopi_search($keywords, $id_object = -1, $id_record = null, $id_module
                 if (!isset($arrElements[$id]))
                 {
                     $arrElements[$id] = $row;
-                    $arrRelevance[$id]['relevance'] = $row['relevance'];
-                    $arrRelevance[$id]['count'] = 1;
-                    $arrRelevance[$id]['kw'] = array();
-                    $arrRelevance[$id]['stem'] = array();
+                    $arrRelevance[$id] = array(
+                        'relevance' => $row['relevance'],
+                        'count' => 1
+                    );
                 }
                 else
                 {
                     $arrRelevance[$id]['relevance'] += $row['relevance'];
-                    $arrRelevance[$id]['count'] ++;
+                    $arrRelevance[$id]['count']++;
                 }
 
-                $arrRelevance[$id]['stem'][$stem] = 1;
             }
         }
 
@@ -548,16 +545,13 @@ function ploopi_search($keywords, $id_object = -1, $id_record = null, $id_module
                                 ke.relevance,
                                 k.keyword
 
-                    FROM        ploopi_index_keyword k,
-                                ploopi_index_keyword_element ke,
-                                ploopi_index_element e
+                    FROM        ploopi_index_keyword k
+                    INNER JOIN  ploopi_index_keyword_element ke ON k.id = ke.id_keyword
+                    INNER JOIN  ploopi_index_element e ON e.id = ke.id_element
 
-                    WHERE       e.id = ke.id_element
-                    AND         k.id = ke.id_keyword
-                    AND         k.keyword like '".$db->addslashes($kw)."%'
                     {$strSearch}
-
-                    ORDER BY {$orderby} {$sort}
+                    AND         k.keyword LIKE '".$db->addslashes($kw)."%'
+                    OR          k.phonetic = '".$db->addslashes(phonetique($kw))."'
                     ";
 
             $db->query($sql);
@@ -572,18 +566,17 @@ function ploopi_search($keywords, $id_object = -1, $id_record = null, $id_module
                 if (!isset($arrElements[$id]))
                 {
                     $arrElements[$id] = $row;
-                    $arrRelevance[$id]['relevance'] = $row['relevance'];
-                    $arrRelevance[$id]['count'] = 1;
-                    $arrRelevance[$id]['kw'] = array();
-                    $arrRelevance[$id]['stem'] = array();
+                    $arrRelevance[$id] = array(
+                        'relevance' => $row['relevance'],
+                        'count' => 1
+                    );
                 }
                 else
                 {
                     $arrRelevance[$id]['relevance'] += $row['relevance'];
-                    $arrRelevance[$id]['count'] ++;
+                    $arrRelevance[$id]['count']++;
                 }
 
-                $arrRelevance[$id]['kw'][$kw] = 1;
             }
 
 
@@ -593,19 +586,14 @@ function ploopi_search($keywords, $id_object = -1, $id_record = null, $id_module
                                 100 as relevance,
                                 t.tag_clean as keyword
 
-                    FROM        ploopi_annotation a,
-                                ploopi_annotation_tag at,
-                                ploopi_tag t,
-                                ploopi_index_element e
+                    FROM        ploopi_annotation a
 
-                    WHERE       at.id_tag = t.id
-                    AND         at.id_annotation = a.id
-                    AND         a.id_element = e.id
-                    AND         t.tag_clean like '".$db->addslashes($kw)."%'
+                    INNER JOIN  ploopi_annotation_tag at ON at.id_annotation = a.id
+                    INNER JOIN  ploopi_tag t ON at.id_tag = t.id
+                    INNER JOIN  ploopi_index_element e ON a.id_element = e.id
 
                     {$strSearch}
-
-                    ORDER BY {$orderby} {$sort}
+                    AND         t.tag_clean like '".$db->addslashes($kw)."%'
                     ";
 
             $db->query($sql);
@@ -620,31 +608,32 @@ function ploopi_search($keywords, $id_object = -1, $id_record = null, $id_module
                 if (!isset($arrElements[$id]))
                 {
                     $arrElements[$id] = $row;
-                    $arrRelevance[$id]['relevance'] = $row['relevance'];
-                    $arrRelevance[$id]['count'] = 1;
-                    $arrRelevance[$id]['kw'] = array();
-                    $arrRelevance[$id]['stem'] = array();
+                    $arrRelevance[$id] = array(
+                        'relevance' => $row['relevance'],
+                        'count' => 1
+                    );
                 }
                 else
                 {
                     $arrRelevance[$id]['relevance'] += $row['relevance'];
-                    $arrRelevance[$id]['count'] ++;
+                    $arrRelevance[$id]['count']++;
                 }
 
-                $arrRelevance[$id]['kw'][$kw] = 1;
             }
 
         }
 
+        $intNbKw = sizeof($arrKeywords)+sizeof($arrStems);
         foreach($arrRelevance as $key => $element)
         {
-            $arrRelevance[$key]['kw_ratio'] = (sizeof($arrRelevance[$key]['kw'])+sizeof($arrRelevance[$key]['stem'])) / (sizeof($arrKeywords)+sizeof($arrStems));
+            $arrRelevance[$key]['kw_ratio'] = $arrRelevance[$key]['count'] / $intNbKw;
             $arrRelevance[$key]['relevance'] = ($arrRelevance[$key]['relevance']/$arrRelevance[$key]['count']) * $arrRelevance[$key]['kw_ratio'];
         }
     }
 
     // tri du résultat en fonction du champ et de l'ordre
     $compare_sign = ($sort == 'DESC') ? '>' : '<';
+
     uasort($arrRelevance, create_function('$a,$b', 'return $b[\''.$orderby.'\'] '.$compare_sign.' $a[\''.$orderby.'\'];'));
 
     $arrResult = array();
@@ -652,7 +641,8 @@ function ploopi_search($keywords, $id_object = -1, $id_record = null, $id_module
     $c = 0;
     while (current($arrRelevance) !== false && $c++ < $limit)
     {
-        $arrResult[key($arrRelevance)] = array_merge($arrElements[key($arrRelevance)], $arrRelevance[key($arrRelevance)]);
+        $k = key($arrRelevance);
+        $arrResult[$k] = array_merge($arrElements[$k], $arrRelevance[$k]);
         next($arrRelevance);
     }
 

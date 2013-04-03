@@ -58,7 +58,7 @@ ploopi_set_error_handler();
 /**
  * Chargement des constantes, globales
  */
-include_once './include/start/constants.php';
+include_once './include/constants.php';
 
 /**
  * Chargements des classes et fonctions principales
@@ -79,17 +79,13 @@ $db = new ploopi_db(_PLOOPI_DB_SERVER, _PLOOPI_DB_LOGIN, _PLOOPI_DB_PASSWORD, _P
 if(!$db->isconnected()) trigger_error(_PLOOPI_MSG_DBERROR, E_USER_ERROR);
 
 $cron_rs = $db->query("
-    SELECT      ploopi_module.id,
-                ploopi_module_type.label
-    FROM        ploopi_module
-    INNER JOIN  ploopi_module_type
-    ON          ploopi_module.id_module_type = ploopi_module_type.id
+    SELECT      label
+    FROM        ploopi_module_type
 ");
 
 while ($cron_fields = $db->fetchrow($cron_rs))
 {
     $cronfile = "./modules/{$cron_fields['label']}/cron.php";
-    $cron_moduleid = $cron_fields['id'];
     if (file_exists($cronfile)) include $cronfile;
 }
 

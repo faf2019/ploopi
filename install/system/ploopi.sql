@@ -1929,4 +1929,6 @@ INSERT INTO `ploopi_mimetype` (`ext`, `mimetype`, `filetype`, `group`) VALUES
 
 UPDATE `ploopi_mimetype` SET `mimetype` = 'video/mp4' WHERE `ploopi_mimetype`.`ext` = 'm4v';
 
-UPDATE `ploopi_module_type` SET `version` = '1.9.3.0', `author` = 'Ovensia', `date` = '20130318000000', `description` = 'Noyau du système' WHERE `ploopi_module_type`.`id` = 1;
+ALTER TABLE `ploopi_index_keyword` ADD `phonetic` CHAR( 20 ) NOT NULL AFTER `length` , ADD INDEX ( `phonetic` );
+
+UPDATE `ploopi_module_type` SET `version` = '1.9.3.1', `author` = 'Ovensia', `date` = '20130327000000', `description` = 'Noyau du système' WHERE `ploopi_module_type`.`id` = 1;

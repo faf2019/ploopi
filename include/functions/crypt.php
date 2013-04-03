@@ -136,7 +136,7 @@ function ploopi_queryencode($query, $ploopi_mainmenu = null, $ploopi_workspaceid
     if (!is_null($ploopi_moduleid)) $arrParams['ploopi_moduleid'] = $ploopi_moduleid;
     if (!is_null($ploopi_action)) $arrParams['ploopi_action'] = $ploopi_action;
 
-    if ($addenv && isset($_SESSION['ploopi']))
+    if ($addenv && isset($_SESSION['ploopi']['moduleid']))
     {
         // si des paramètres sont manquants, on va lire la valeur de la session
         if (!isset($arrParams['ploopi_mainmenu'])) $arrParams['ploopi_mainmenu'] = (is_null($ploopi_mainmenu)) ? $_SESSION['ploopi']['mainmenu'] : '';

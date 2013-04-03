@@ -62,6 +62,11 @@ else
         case _SYSTEM_GROUPS:
         case _SYSTEM_WORKSPACES:
 
+            global $workspaces;
+            global $groups;
+            global $workspaceid;
+            global $groupid;
+
             list($workspaces, $groups) = system_getwg();
 
             // init session

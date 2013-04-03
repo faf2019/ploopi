@@ -313,18 +313,19 @@ if (!empty($_SESSION['ploopi']['updateprofile'])) {
     $_SESSION['ploopi']['updateprofile'] = false;
 }
 
+$wsp = ploopi_loader::getworkspace();
 
 $template_body->assign_vars(array(
     'TEMPLATE_PATH'                 => $_SESSION['ploopi']['template_path'],
     'TEMPLATE_NAME'                 => $_SESSION['ploopi']['template_name'],
-    'WORKSPACE_LABEL'               => $_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_MYWORKSPACE ? htmlentities(_PLOOPI_LABEL_MYWORKSPACE) : htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['label']),
-    'WORKSPACE_CODE'                => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['code']),
-    'WORKSPACE_TITLE'               => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['title']),
-    'WORKSPACE_META_DESCRIPTION'    => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['meta_description']),
-    'WORKSPACE_META_KEYWORDS'       => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['meta_keywords']),
-    'WORKSPACE_META_AUTHOR'         => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['meta_author']),
-    'WORKSPACE_META_COPYRIGHT'      => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['meta_copyright']),
-    'WORKSPACE_META_ROBOTS'         => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['meta_robots']),
+    'WORKSPACE_LABEL'               => $_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_MYWORKSPACE ? htmlentities(_PLOOPI_LABEL_MYWORKSPACE) : htmlentities($wsp['label']),
+    'WORKSPACE_CODE'                => htmlentities($wsp['code']),
+    'WORKSPACE_TITLE'               => htmlentities($wsp['title']),
+    'WORKSPACE_META_DESCRIPTION'    => htmlentities($wsp['meta_description']),
+    'WORKSPACE_META_KEYWORDS'       => htmlentities($wsp['meta_keywords']),
+    'WORKSPACE_META_AUTHOR'         => htmlentities($wsp['meta_author']),
+    'WORKSPACE_META_COPYRIGHT'      => htmlentities($wsp['meta_copyright']),
+    'WORKSPACE_META_ROBOTS'         => htmlentities($wsp['meta_robots']),
     'SITE_CONNECTEDUSERS'           => $_SESSION['ploopi']['connectedusers'],
     'SITE_ANONYMOUSUSERS'           => $_SESSION['ploopi']['anonymoususers'],
     'ADDITIONAL_JAVASCRIPT'         => $ploopi_additional_javascript,

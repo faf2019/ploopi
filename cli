@@ -56,7 +56,7 @@ ploopi_set_error_handler();
 /**
  * Chargement des constantes, globales
  */
-include_once './include/start/constants.php';
+include_once './include/constants.php';
 
 /**
  * Chargements des classes et fonctions principales
@@ -86,7 +86,7 @@ for ($i=1;$i<$argc;$i++)
         $booHelp = true;
         break;
     }
-    
+
     $arrArg = preg_split('/=/', $argv[$i]);
     if (sizeof($arrArg) == 2) // argument valide
     {
@@ -108,10 +108,9 @@ STDOUT;
 }
 elseif (!empty($module) && !empty($op))
 {
-    if (file_exists("./modules/{$module}/cli.php")) 
+    if (file_exists("./modules/{$module}/cli.php"))
     {
         include_once "./modules/{$module}/cli.php";
-        //echo "script {$ploopi_timer}\n";
     }
     else
     {
@@ -121,8 +120,7 @@ elseif (!empty($module) && !empty($op))
 else
 {
     echo<<<STDOUT
-cli : unreconized option\r
+cli : paramètre manquant\r
 Pour en savoir davantage, faites: « ./cli --help ».\n
 STDOUT;
 }
-?>

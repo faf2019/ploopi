@@ -41,4 +41,3 @@ $db->query("DELETE FROM `ploopi_log` WHERE ts < {$strTsDelete}");
 
 // optimisation des tables
 $db->query("OPTIMIZE TABLE `ploopi_log`");
-?>

@@ -90,18 +90,18 @@ class user extends data_object
         }
 
         $this->deletephoto();
-        
+
         parent::delete();
     }
-    
+
     /**
      * Supprime la photo associée à l'utilisateur
      */
     public function deletephoto()
     {
         $strPhotoPath = $this->getphotopath();
-        
-        if (file_exists($strPhotoPath)) unlink($strPhotoPath);        
+
+        if (file_exists($strPhotoPath)) unlink($strPhotoPath);
     }
 
     /**
@@ -147,7 +147,7 @@ class user extends data_object
 
                         FROM        ploopi_workspace w
 
-                        LEFT JOIN   ploopi_workspace_group wg ON wg.id_workspace = w.id
+                        INNER JOIN  ploopi_workspace_group wg ON wg.id_workspace = w.id
 
                         WHERE       wg.id_group IN ('{$groups}')
                         ";
@@ -206,21 +206,16 @@ class user extends data_object
     public function getgroups($lite = false)
     {
         global $db;
-        
+
         ploopi_init_module('system', false, false, false);
-        
+
         $select =   "
-                    SELECT      g.*
-
-                    FROM        ploopi_group_user gu
-
-                    LEFT JOIN   ploopi_group g
-                    ON          gu.id_group = g.id
-
-                    WHERE       gu.id_user = {$this->fields['id']}
-
-                    ORDER BY    g.depth ASC
-                    ";
+            SELECT      g.*
+            FROM        ploopi_group g
+            INNER JOIN  ploopi_group_user gu ON gu.id_group = g.id
+            WHERE       gu.id_user = {$this->fields['id']}
+            ORDER BY    g.depth ASC
+        ";
 
         $result = $db->query($select);
 
@@ -297,16 +292,16 @@ class user extends data_object
     /**
      * Retourne un tableau des actions autorisées pour cet utilisateur.
      * $actions[id_workspace][id_module][$fields['id_action']]
-     * 
+     *
      * @param array $arrActions tableau d'actions déjà existant (optionnel)
      * @param boolean $booWithGroups true si la méthode doit renvoyer les actions des groupes de l'utilisateurs (optionnel, false par défaut)
      * @return array tableau des actions
      */
-    
+
     public function getactions($arrActions = null, $booWithGroups = false)
     {
         include_once './include/classes/group.php';
-        
+
         global $db;
 
         $result = $db->query("
@@ -322,7 +317,7 @@ class user extends data_object
         ");
 
         while ($fields = $db->fetchrow($result)) $arrActions[$fields['id_workspace']][$fields['id_module']][$fields['id_action']] = true;
-        
+
         if ($booWithGroups)
         {
             foreach ($this->getgroups() as $arrGroup)
@@ -334,10 +329,10 @@ class user extends data_object
                 }
             }
         }
-        
+
         return $arrActions;
     }
-    
+
     /**
      * Retourne un tableau contenant les utilisateurs "visibles" par l'utilisateur
      *

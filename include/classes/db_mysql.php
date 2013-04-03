@@ -623,7 +623,7 @@ class ploopi_db
     /**
      * Met à jour le temps d'exécution global avec le timer en cours
      *
-     * @return int temps écoulé en microsecondes
+     * @return float temps écoulé en secondes
      *
      * @see timer
      * @see timer::getexectime
@@ -631,14 +631,14 @@ class ploopi_db
 
     public function timer_stop()
     {
-        $intExt = 0;
+        $floExt = 0;
         if (class_exists('timer'))
         {
-            $intExt = $this->db_timer->getexectime();
-            $this->exectime_queries += $intExt;
+            $floExt = $this->db_timer->getexectime();
+            $this->exectime_queries += $floExt;
         }
 
-        return $intExt;
+        return $floExt;
     }
 
     public function get_num_queries() { return($this->num_queries); }

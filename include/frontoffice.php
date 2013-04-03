@@ -32,6 +32,17 @@
  * @author Stéphane Escaich
  */
 
+global $db;
+global $skin;
+global $template_body;
+global $ploopi_timer;
+global $ploopi_viewmodes;
+global $ploopi_system_levels;
+global $ploopi_days;
+global $ploopi_months;
+global $ploopi_errormsg;
+global $ploopi_civility;
+
 $skin = null;
 if (!empty($_SESSION['ploopi']['frontoffice']['template_path']) && file_exists("{$_SESSION['ploopi']['frontoffice']['template_path']}/class_skin.php"))
 {

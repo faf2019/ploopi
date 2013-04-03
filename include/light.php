@@ -32,6 +32,7 @@
  * @author Stéphane Escaich
  */
 
+
 if ($_SESSION['ploopi']['mode'] == 'backoffice')
 {
     if ($_SESSION['ploopi']['connected'])
