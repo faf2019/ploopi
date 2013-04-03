@@ -35,6 +35,8 @@
  */
 
 ploopi_init_module('planning');
+global $arrPlanningPeriodicity;
+global $arrPlanningSize;
 
 include_once './include/classes/calendar.php';
 

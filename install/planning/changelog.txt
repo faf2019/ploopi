@@ -1,3 +1,9 @@
+== Module Planning - version 0.8.1 ====================================================
+
+2013-04-03  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+* Corrections suite à la modification du loader de Ploopi
+
 == Module Planning - version 0.8.0c ====================================================
 
 2013-03-20  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
