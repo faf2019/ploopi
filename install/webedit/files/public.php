@@ -36,6 +36,9 @@
  */
 ploopi_init_module('webedit');
 
+global $article_status;
+global $heading_sortmodes;
+
 /**
  * Inclusions des classes du module
  */

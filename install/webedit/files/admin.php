@@ -40,6 +40,10 @@
  */
 ploopi_init_module('webedit');
 
+global $article_status;
+global $heading_sortmodes;
+
+
 $op = (empty($_REQUEST['op'])) ? '' : $_REQUEST['op'];
 $menu = (empty($_REQUEST['webedit_menu'])) ? '' : $_REQUEST['webedit_menu'];
 

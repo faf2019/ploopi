@@ -1934,8 +1934,9 @@ $ploopi_additional_javascript .= ob_get_contents();
 $lastupdate = ($lastupdate = webedit_getlastupdate()) ? ploopi_timestamp2local($lastupdate) : array('date' => '', 'time' => '');
 
 // template assignments
+$wsp = ploopi_loader::getworkspace();
 
-list($keywords) = ploopi_getwords("{$_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['title']} {$_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['meta_keywords']} {$_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['meta_author']}");
+list($keywords) = ploopi_getwords("{$wsp['title']} {$wsp['meta_keywords']} {$wsp['meta_author']}");
 
 // PLOOPI JS
 $template_body->assign_block_vars(
@@ -1959,7 +1960,7 @@ $template_body->assign_block_vars(
     )
 );
 
-$title_raw = $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['title'];
+$title_raw = $wsp['title'];
 $title = htmlentities($title_raw);
 
 // Doit on afficher le flux du site ?
@@ -1995,11 +1996,11 @@ $template_body->assign_vars(
         'SITE_TITLE_RAW'                => $title_raw,
         'WORKSPACE_TITLE'               => $title,
         'WORKSPACE_TITLE_RAW'           => $title_raw,
-        'WORKSPACE_META_DESCRIPTION'    => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['meta_description']),
-        'WORKSPACE_META_KEYWORDS'       => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['meta_keywords']),
-        'WORKSPACE_META_AUTHOR'         => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['meta_author']),
-        'WORKSPACE_META_COPYRIGHT'      => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['meta_copyright']),
-        'WORKSPACE_META_ROBOTS'         => htmlentities($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['meta_robots']),
+        'WORKSPACE_META_DESCRIPTION'    => htmlentities($wsp['meta_description']),
+        'WORKSPACE_META_KEYWORDS'       => htmlentities($wsp['meta_keywords']),
+        'WORKSPACE_META_AUTHOR'         => htmlentities($wsp['meta_author']),
+        'WORKSPACE_META_COPYRIGHT'      => htmlentities($wsp['meta_copyright']),
+        'WORKSPACE_META_ROBOTS'         => htmlentities($wsp['meta_robots']),
         'UNIQUE_KEYWORDS'               => htmlentities(implode(', ', array_keys($keywords))),
         'PAGE_QUERYSTRING'              => $query_string,
         'PAGE_QUERYDATE_B'              => $query_date_b,
