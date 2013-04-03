@@ -1,3 +1,9 @@
+== Module RSS - version 2.2.1a ====================================================
+
+2013-04-03  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Suppression fin de fichier sur cron.php
+
 == Module RSS - version 2.2.1 ====================================================
 
 2013-03-18  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

@@ -75,4 +75,3 @@ while ($fields = $db->fetchrow($result))
     unset($rss_feed);
   }
 }
-?>
