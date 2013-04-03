@@ -36,6 +36,8 @@
  */
 ploopi_init_module('directory');
 
+global $arrDirectoryImportFields;
+
 /**
  * Inclusion des classes du module
  */

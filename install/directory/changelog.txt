@@ -1,3 +1,9 @@
+== Module DIRECTORY - version 2.3.8a ====================================================
+
+2013-04-03  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+* Corrections suite à la modification du loader de Ploopi
+
 == Module DIRECTORY - version 2.3.8 ====================================================
 
 2013-03-18  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
