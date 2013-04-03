@@ -1,3 +1,9 @@
+== Module BOOKING - version 1.0.4b ====================================================
+
+2013-04-03  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+* Corrections suite à la modification du loader de Ploopi
+
 == Module BOOKING - version 1.0.4a ====================================================
 
 2013-03-18  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
