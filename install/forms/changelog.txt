@@ -1,3 +1,9 @@
+== Module FORMS - version 3.5.3a =====================================================
+
+2013-04-03  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+* Corrections suite à la modification du loader de Ploopi
+
 == Module FORMS - version 3.5.3 =====================================================
 
 2013-03-18  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

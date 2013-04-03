@@ -38,6 +38,14 @@
 
 ploopi_init_module('forms');
 
+global $field_types;
+global $field_formats;
+global $field_operators;
+global $form_types;
+global $forms_graphic_types;
+global $forms_graphic_line_aggregation;
+global $forms_graphic_operation;
+
 /**
  * On vérifie que l'utilisateur connecté est admin du module
  */

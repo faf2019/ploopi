@@ -37,6 +37,14 @@
  */
 ploopi_init_module('forms');
 
+global $field_types;
+global $field_formats;
+global $field_operators;
+global $form_types;
+global $forms_graphic_types;
+global $forms_graphic_line_aggregation;
+global $forms_graphic_operation;
+
 include_once './modules/forms/classes/formsForm.php';
 include_once './modules/forms/classes/formsField.php';
 include_once './modules/forms/classes/formsRecord.php';
