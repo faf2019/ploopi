@@ -303,11 +303,31 @@ switch($ploopi_op)
 
         $error = $documentsfile->save();
 
-        if (!empty($_SESSION['documents']['callback_inc'])) include $_SESSION['documents'][$documents_id]['callback_inc'];
-        if (!empty($_SESSION['documents']['callback_func'])) $_SESSION['documents'][$documents_id]['callback_func']('savefile', $documentsfile);
+        if (!empty($_SESSION['documents'][$documents_id]['callback_inc'])) include $_SESSION['documents'][$documents_id]['callback_inc'];
+        if (!empty($_SESSION['documents'][$documents_id]['callback_func'])) $_SESSION['documents'][$documents_id]['callback_func']('savefile', $documentsfile);
         ?>
         <script type="text/javascript">
-            window.parent.ploopi_documents_browser('<?php echo ploopi_queryencode("ploopi_op=documents_browser&currentfolder={$currentfolder}&documents_id={$documents_id}"); ?>', '<?php echo $documents_id; ?>');
+            <?
+            // Sélection directe d'un fichier
+            if (isset($_GET['selectfile'])) {
+
+                if ($_SESSION['documents'][$documents_id]['mode'] == 'tofield')
+                {
+                    echo "dest = $('{$_SESSION['documents'][$documents_id]['target']}'); if (dest.type) dest.value='{$documentsfile->fields['name']}'; else dest.innerHTML='{$documentsfile->fields['name']}'; ploopi_getelem('{$_SESSION['documents'][$documents_id]['target']}_id').value='{$documentsfile->fields['id']}';ploopi_hidepopup('ploopi_documents_popup');";
+                }
+                elseif ($_SESSION['documents'][$documents_id]['mode'] == 'tocallback')
+                {
+                    echo "window.parent.{$_SESSION['documents'][$documents_id]['target']}({$documentsfile->fields['id']}, '".addslashes($documentsfile->fields['name'])."', '".ploopi_urlencode("admin-light.php?ploopi_op=documents_downloadfile&documentsfile_id={$documentsfile->fields['md5id']}")."');";
+                }
+
+            }
+            // Mise à jour du navigateur
+            else {
+                ?>
+                window.parent.ploopi_documents_browser('<?php echo ploopi_queryencode("ploopi_op=documents_browser&currentfolder={$currentfolder}&documents_id={$documents_id}"); ?>', '<?php echo $documents_id; ?>');
+                <?
+            }
+            ?>
             window.parent.ploopi_hidepopup('ploopi_documents_openfile_popup');
         </script>
         <?php
@@ -337,6 +357,7 @@ switch($ploopi_op)
 
         $url = "admin-light.php?ploopi_op=documents_savefile&currentfolder={$_GET['currentfolder']}&documents_id={$_GET['documents_id']}";
         if (!empty($_GET['documentsfile_id'])) $url .= "&documentsfile_id={$_GET['documentsfile_id']}";
+        if (isset($_GET['selectfile'])) $url .= "&selectfile";
 
         ?>
         <form id="documents_folderform" action="<?php echo ploopi_urlencode($url); ?>" method="post" target="documents_fileform_iframe" enctype="multipart/form-data" onsubmit="javascript:return ploopi_documents_validate(this)">

@@ -51,6 +51,36 @@ function ploopi_documents_getid($id_object, $id_record, $id_module = -1)
 }
 
 /**
+ * Retourne le code d'appel javascript du popup de création de fichier
+ *
+ * @param int $id_object identifiant de l'objet
+ * @param string $id_record identifiant de l'enregistrement
+ * @param array $rights tableau définissant les droits 'DOCUMENT_CREATE':boolean, 'DOCUMENT_MODIFY':boolean, 'DOCUMENT_DELETE':boolean, 'FOLDER_CREATE':boolean, 'FOLDER_MODIFY':boolean, 'FOLDER_DELETE': boolean, 'SEARCH': boolean
+ * @param array $default_folders tableau définissant les sous-dossiers par défaut à créer
+ * @param array $params tableau définissant les paramètres du bloc 'ROOT_NAME':string, 'ATTACHEMENT':boolean, 'FIELDS':array
+ * @param int $width largeur du popup
+ * @param int $id_user identifiant de l'utilisateur
+ * @param int $id_workspace identifiant de l'espace
+ * @param int $id_module identifiant du module
+ *
+ * @return string code d'appel javascript
+ */
+
+function ploopi_documents_getopenfilejs($id_object, $id_record, $rights = array(), $default_folders = array(), $params = array(), $width = 600, $id_user = -1, $id_workspace = -1, $id_module = -1)
+{
+    // Important : il faut définir un mode de fonctionnement et une cible dans le paramètre $params
+    // Mode : tofield / tocallback
+    // Target : champ de destination (tofield) ou fonction de callback tocallback)
+
+    // Instanciation de la ged
+    $documents_id = ploopi_documents($id_object, $id_record, $rights, $default_folders, $params, false, $id_user, $id_workspace, $id_module);
+
+    $query = ploopi_queryencode("ploopi_op=documents_openfile&currentfolder={$_SESSION['documents'][$documents_id]['currentfolder']}&documents_id={$documents_id}&selectfile");
+
+    return "ploopi_documents_openfile('{$query}', event)";
+}
+
+/**
  * Retourne le code d'appel javascript du popup de sélection de fichier
  *
  * @param int $id_object identifiant de l'objet
