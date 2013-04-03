@@ -735,7 +735,7 @@ class odf_parser
 
     public function set_image($key, $value, $width = '5cm', $height = '5cm', $align = 'left', $anchortype = 'paragraph')
     {
-        $this->set_var($this->add_image($value, $width, $height, $align, $anchortype), $xml, false, true);
+        $this->set_var($key, $this->add_image($value, $width, $height, $align, $anchortype), false, true);
     }
 
     /**
