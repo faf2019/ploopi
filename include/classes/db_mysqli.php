@@ -79,6 +79,14 @@ class ploopi_db
     private $server;
 
     /**
+     * Port pour la connexion à la BDD
+     *
+     * @var string
+     */
+
+    private $port;
+
+    /**
      * Nom de la base de données pour la connexion à la BDD
      *
      * @var string
@@ -279,19 +287,13 @@ class ploopi_db
 
         $this->timer_start();
 
-        $i = 1;
-        if ($res = $this->mysqli->multi_query($queries))
-        {
-            do $i++; while ($res = $this->mysqli->next_result());
-        }
-
-        if ($this->mysqli->errno) {
-            trigger_error($this->mysqli->error."<br /><b>query {$i}:</b> {$queries}", E_USER_WARNING);
-        }
+        $res = $this->mysqli->multi_query($queries);
 
         $stop = $this->timer_stop();
 
         if ($this->log) $this->arrLog[] = array ('query' => $queries, 'time' => $stop);
+
+        if ($res === false) trigger_error($this->mysqli->error."<br /><b>queries:</b> {$queries}", E_USER_WARNING);
 
         return $res;
     }
