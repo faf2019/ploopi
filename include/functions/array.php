@@ -291,7 +291,7 @@ function ploopi_array2xls($arrArray, $booHeader = true, $strFileName = 'document
 
 function ploopi_array2excel($arrArray, $booHeader = true, $strFileName = 'document.xls', $strSheetName = 'Feuille', $arrDataFormats = null, $arrOptions = null)
 {
-    include './lib/PHPExcel/PHPExcel.php';
+    include_once './lib/PHPExcel/PHPExcel.php';
 
     $objWorkBook = new PHPExcel;
     $objWorkSheet = $objWorkBook->getActiveSheet();
@@ -371,6 +371,7 @@ function ploopi_array2excel($arrArray, $booHeader = true, $strFileName = 'docume
             foreach(array_keys(reset($arrArray)) as $strKey) $objWorkSheet->setCellValueByColumnAndRow($intCol++, 1, utf8_encode(isset($arrDataFormats[$strKey]['title']) ? $arrDataFormats[$strKey]['title'] : $strKey));
 
             // Calcul colonne type Excel "Bijective base-26"
+            $intCol--;
             $chrCol = ($intCol>25 ? chr(64+floor($intCol/26)) : '').chr(65+$intCol%26);
 
             $objWorkSheet->duplicateStyleArray(

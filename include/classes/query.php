@@ -646,6 +646,8 @@ class ploopi_query_select extends ploopi_query_sud
      */
     public function get_sql()
     {
+        $strSql = '';
+
         if ($this->get_from() !== false)
         {
             $strSql = $this->get_select().

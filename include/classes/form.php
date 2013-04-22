@@ -553,6 +553,7 @@ class form_select extends form_field
 
         foreach($arrValues as $mixKey => $mixValue)
         {
+            $mixKey = htmlentities($mixKey);
             $booSelected = in_array($mixKey, $this->_arrSelected);
 
             if (is_object($mixValue) && $mixValue instanceof form_select_option)
@@ -587,7 +588,6 @@ class form_select extends form_field
 
 
                 $mixValue = str_replace(' ', '&nbsp;', htmlentities($mixValue));
-                $mixKey = htmlentities($mixKey);
 
                 $strSelected = $booSelected ? ' selected="selected"' : '';
                 $strOutput .= "<option value=\"{$mixKey}\"{$strSelected}>{$mixValue}</option>";
