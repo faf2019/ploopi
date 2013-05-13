@@ -1056,7 +1056,7 @@ abstract class ploopi_loader
     {
         include_once './include/classes/workspace.php';
 
-        if (self::$initsession) self::initsession();
+        if (self::$initsession) self::getworkspaces();
 
         switch(self::$script)
         {

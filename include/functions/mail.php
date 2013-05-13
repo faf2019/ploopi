@@ -378,7 +378,7 @@ function ploopi_send_mail_smtp($from, $to, $subject, $message, $params = null, $
 
     $mail = $objMail->send($str_to, $objMessage->headers($arrHeaders), $objMessage->get());
 
-    return PEAR::isError($mail);
+    return PEAR::isError($mail) ? $mail->getMessage() : true;
 }
 
 /**

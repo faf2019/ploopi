@@ -87,7 +87,7 @@ function ploopi_urlencode($url, $ploopi_mainmenu = null, $ploopi_workspaceid = n
 
     $strQueryEncode = ploopi_queryencode(empty($arrParsedURL['query']) ? '' : $arrParsedURL['query'], $ploopi_mainmenu, $ploopi_workspaceid, $ploopi_moduleid, $ploopi_action, $addenv, $trusted);
 
-    return (empty($arrParsedURL['scheme']) ? '' : "{$arrParsedURL['scheme']}://").(empty($arrParsedURL['host']) ? '' : $arrParsedURL['host']).(empty($arrParsedURL['port']) ? '' : ":{$arrParsedURL['port']}")."{$arrParsedURL['path']}".(empty($strQueryEncode) ? '' : "?{$strQueryEncode}");
+    return (isset($arrParsedURL['scheme']) ? "{$arrParsedURL['scheme']}://" : '').(isset($arrParsedURL['host']) ? $arrParsedURL['host'] : '').(isset($arrParsedURL['port']) ? ":{$arrParsedURL['port']}" : '')."{$arrParsedURL['path']}".(empty($strQueryEncode) ? '' : "?{$strQueryEncode}").(isset($arrParsedURL['fragment']) ? "#{$arrParsedURL['fragment']}" : '');
 }
 
 /**
