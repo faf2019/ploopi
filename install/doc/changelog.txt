@@ -1,3 +1,9 @@
+== Module DOC - version 4.7.1c ====================================================
+
+2013-05-22  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Mise à jour liée à l'externalisation des données d'indexation
+
 == Module DOC - version 4.7.1b ====================================================
 
 2013-03-18  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

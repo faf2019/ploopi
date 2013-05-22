@@ -36,6 +36,9 @@
  * Affichage du bloc 'statistiques'
  */
 
+include_once './include/functions/search_index.php';
+$idxdb = ploopi_search_getdb();
+
 echo $skin->open_simplebloc(_DOC_TAB_TITLE_STATS);
 ?>
 <div class="doc_admin_titlebar"><b>Quelques chiffres</b></div>
@@ -47,14 +50,16 @@ echo $skin->open_simplebloc(_DOC_TAB_TITLE_STATS);
 $array_columns = array();
 $array_values = array();
 
-$array_columns['right']['nombre'] = array(  'label' => 'Nombre',
-                                            'width' => '100',
-                                            'options' => array('sort' => true)
-                                            );
+$array_columns['right']['nombre'] = array(
+    'label' => 'Nombre',
+    'width' => '100',
+    'options' => array('sort' => true)
+);
 
-$array_columns['auto']['indicateur'] = array(   'label' => 'Indicateur',
-                                        'options' => array('sort' => true)
-                                        );
+$array_columns['auto']['indicateur'] = array(
+    'label' => 'Indicateur',
+    'options' => array('sort' => true)
+);
 
 $c = 1;
 
@@ -78,7 +83,7 @@ $c++;
  * Compte nombre de métas indexés
  */
 
-$db->query( "
+$idxdb->query( "
             SELECT  count(ke.id_keyword) as nb
             FROM    ploopi_index_element e,
                     ploopi_index_keyword_element ke
@@ -89,7 +94,7 @@ $db->query( "
             AND     ke.weight = 999999
             ");
 
-$row = $db->fetchrow();
+$row = $idxdb->fetchrow();
 
 $array_values[$c]['values']['indicateur']   = array('label' => 'Metas indexés', 'style' => '');
 $array_values[$c]['values']['nombre']       = array('label' => $row['nb'], 'style' => '');
@@ -102,7 +107,7 @@ $c++;
  * Compte nombre de mots indexés
  */
 
-$db->query( "
+$idxdb->query( "
             SELECT  sum(ke.weight) as total_weight
             FROM    ploopi_index_element e,
                     ploopi_index_keyword_element ke
@@ -113,7 +118,7 @@ $db->query( "
             AND     ke.weight <> 999999
             ");
 
-$row = $db->fetchrow();
+$row = $idxdb->fetchrow();
 
 $total_weight = $row['total_weight'];
 
@@ -136,29 +141,34 @@ $skin->display_array($array_columns, $array_values, 'docparser_stats', array('he
 $array_columns = array();
 $array_values = array();
 
-$array_columns['left']['pos'] = array(  'label' => 'Pos.',
-                                        'width' => '60',
-                                        'options' => array('sort' => true)
-                                        );
+$array_columns['left']['pos'] = array(
+    'label' => 'Pos.',
+    'width' => '60',
+    'options' => array('sort' => true)
+);
 
-$array_columns['right']['pcent'] = array(   'label' => '%',
-                                            'width' => '50',
-                                            'options' => array('sort' => true)
-                                            );
+$array_columns['right']['pcent'] = array(
+    'label' => '%',
+    'width' => '50',
+    'options' => array('sort' => true)
+);
 
-$array_columns['right']['poids'] = array(   'label' => 'Poids',
-                                            'width' => '100',
-                                            'options' => array('sort' => true)
-                                            );
+$array_columns['right']['poids'] = array(
+    'label' => 'Poids',
+    'width' => '100',
+    'options' => array('sort' => true)
+);
 
-$array_columns['right']['taille'] = array(  'label' => 'Taille',
-                                            'width' => '100',
-                                            'options' => array('sort' => true)
-                                            );
+$array_columns['right']['taille'] = array(
+    'label' => 'Taille',
+    'width' => '100',
+    'options' => array('sort' => true)
+);
 
-$array_columns['auto']['mot'] = array(  'label' => 'Mot',
-                                        'options' => array('sort' => true)
-                                        );
+$array_columns['auto']['mot'] = array(
+    'label' => 'Mot',
+    'options' => array('sort' => true)
+);
 
 /**
  * Recherche des mots les plus fréquents
@@ -183,10 +193,10 @@ $sql =  "
         LIMIT 0,50
         ";
 
-$db->query($sql);
+$idxdb->query($sql);
 
 $c = 1;
-while ($row = $db->fetchrow())
+while ($row = $idxdb->fetchrow())
 {
     $weight = ($total_weight == 0) ? 0 : number_format(($row['w']*100)/$total_weight,2);
 
