@@ -82,8 +82,8 @@ function ploopi_session_reset()
                 'backoffice' => array()
             ),
 
-        'currentrequesttime' => mktime(),
-        'lastrequesttime' => mktime(),
+        'currentrequesttime' => time(),
+        'lastrequesttime' => time(),
 
         'moduleid' => '',
         'mainmenu' => '',
