@@ -368,6 +368,32 @@ switch($http_host)
         define ('_PLOOPI_INDEXATION_KEYWORDSMAXPCENT', 100);
 
         /**
+         * Le serveur de base de données pour l'index
+         * Il peut aussi inclure le numéro de port.
+         * C'est-à-dire "hostname:port" ou le chemin vers le socket local, c'est-à-dire ":/path/to/socket" pour localhost.
+         */
+
+        define ('_PLOOPI_INDEXATION_DB_SERVER', _PLOOPI_DB_SERVER);
+
+        /**
+         * Le nom de l'utilisateur pour la connexion à la base de données de l'index
+         */
+
+        define ('_PLOOPI_INDEXATION_DB_LOGIN', _PLOOPI_DB_LOGIN);
+
+        /**
+         * Le mot de passe pour la connexion à la base de données de l'index
+         */
+
+        define ('_PLOOPI_INDEXATION_DB_PASSWORD', _PLOOPI_DB_PASSWORD);
+
+        /**
+         * Le nom de la base de données de l'index
+         */
+
+        define ('_PLOOPI_INDEXATION_DB_DATABASE', _PLOOPI_DB_DATABASE);
+
+        /**
          * Nombre de coeurs affectés au rendu des pages (permet d'ajuster le calcul de la charge).
          */
 

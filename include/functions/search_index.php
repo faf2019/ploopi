@@ -47,6 +47,32 @@ if (!function_exists('stem_french')) { function stem_french($str) { return ''; }
 
 
 /**
+ * Connexion à la base de données d'indexation
+ */
+
+function ploopi_search_getdb() {
+    static $objDb = null;
+    if (!is_null($objDb)) return $objDb;
+
+    if (_PLOOPI_DB_SERVER != _PLOOPI_INDEXATION_DB_SERVER || _PLOOPI_DB_DATABASE != _PLOOPI_INDEXATION_DB_DATABASE)
+    {
+        $objDb = new ploopi_db(_PLOOPI_INDEXATION_DB_SERVER, _PLOOPI_INDEXATION_DB_LOGIN, _PLOOPI_INDEXATION_DB_PASSWORD, _PLOOPI_INDEXATION_DB_DATABASE);
+        if(!$objDb->isconnected()) {
+            $objDb = null;
+            trigger_error(_PLOOPI_MSG_DBERROR, E_USER_ERROR);
+        }
+    }
+    else
+    {
+        global $db;
+        $objDb = $db;
+    }
+
+    return $objDb;
+}
+
+
+/**
  * Génération d'un identifiant unique pour un enregistrement d'un objet
  *
  * @param int $id_module identifiant du module
@@ -72,7 +98,7 @@ function ploopi_search_generate_id($id_module, $id_object, $id_record)
 
 function ploopi_search_remove_index($id_object, $id_record, $id_module = -1)
 {
-    global $db;
+    $db = ploopi_search_getdb();
 
     if ($id_module == -1 && !empty($_SESSION['ploopi']['moduleid'])) $id_module= $_SESSION['ploopi']['moduleid'];
     $id_element = ploopi_search_generate_id($id_module,$id_object,$id_record);
@@ -80,52 +106,6 @@ function ploopi_search_remove_index($id_object, $id_record, $id_module = -1)
     $db->query("DELETE FROM ploopi_index_element WHERE id = '{$id_element}'");
     $db->query("DELETE FROM ploopi_index_keyword_element WHERE id_element = '{$id_element}'");
     $db->query("DELETE FROM ploopi_index_stem_element WHERE id_element = '{$id_element}'");
-}
-
-/**
- * Alimente l'index d'un enregistrement d'un objet avec les annotation liées
- *
- * @param int $id_object identifiant de l'objet
- * @param string $id_record identifiant de l'enregistrement
- * @param string $tags chaîne contenant les mots clés de l'annotation
- * @param int $id_module identifiant du module (optionnel)
- */
-
-function ploopi_search_create_index_annotation($id_object, $id_record, $tags, $id_module = -1)
-{
-    global $db;
-    if ($id_module == -1 && !empty($_SESSION['ploopi']['moduleid'])) $id_module= $_SESSION['ploopi']['moduleid'];
-
-    $id_element = ploopi_search_generate_id($id_module,$id_object,$id_record);
-
-    list($arrKeywords) = ploopi_getwords($tags, true, false);
-
-    foreach($arrKeywords as $kw)
-    {
-        // on calcule le hash md5
-        $kw_md5 = md5($kw);
-
-        // enregistrement du mot clé si n'existe pas déjà
-        $db->query("SELECT id FROM ploopi_index_keyword WHERE id = '{$kw_md5}'");
-        if (!$db->numrows())
-        {
-            $objKw = new index_keyword();
-            $objKw->fields['id'] = $kw_md5;
-            $objKw->fields['keyword'] = $kw;
-            $objKw->fields['id_stem'] = $stem_md5;
-            $objKw->save();
-        }
-
-        // enregistrement du lien mot clé <-> enregistrement
-        $objKwElement = new index_keyword_element();
-        $objKwElement->fields['id_keyword'] = $kw_md5;
-        $objKwElement->fields['id_element'] = $id_element;
-        $objKwElement->fields['weight'] = $kw_weight;
-        $objKwElement->fields['ratio'] = (empty($kw['meta'])) ? ((empty($words_overall)) ? 0 : ($kw_weight / $words_overall)*100) : 1;
-        $objKwElement->fields['relevance'] = (empty($kw['meta'])) ? ($kw_weight*100)/$max_weight : 100;
-        $objKwElement->save();
-
-    }
 }
 
 /**
@@ -165,8 +145,9 @@ function ploopi_search_create_index_annotation($id_object, $id_record, $tags, $i
 
 function ploopi_search_create_index($id_object, $id_record, $label, &$content, $meta = '', $usecommonwords = true, $timestp_create = 0, $timestp_modify = 0, $id_user = -1, $id_workspace = -1, $id_module = -1, $debug = false)
 {
-    global $db;
     global $ploopi_timer;
+
+    $db = ploopi_search_getdb();
 
     if ($id_user == -1 && !empty($_SESSION['ploopi']['userid'])) $id_user = $_SESSION['ploopi']['userid'];
     if ($id_workspace == -1 && !empty($_SESSION['ploopi']['workspaceid'])) $id_workspace = $_SESSION['ploopi']['workspaceid'];
@@ -370,7 +351,7 @@ function ploopi_search_create_index($id_object, $id_record, $label, &$content, $
 
 function ploopi_search_get_index($id_object, $id_record, $limit = 100, $id_module = -1)
 {
-    global $db;
+    $db = ploopi_search_getdb();
 
     $index = array();
 
@@ -422,7 +403,7 @@ function ploopi_search_get_index($id_object, $id_record, $limit = 100, $id_modul
 
 function ploopi_search($keywords, $id_object = -1, $id_record = null, $id_module = null, $options = null)
 {
-    global $db;
+    $db = ploopi_search_getdb();
 
     if ($id_module == -1 && !empty($_SESSION['ploopi']['moduleid'])) $id_module = $_SESSION['ploopi']['moduleid'];
 
@@ -552,48 +533,6 @@ function ploopi_search($keywords, $id_object = -1, $id_record = null, $id_module
                     {$strSearch}
                     AND         k.keyword LIKE '".$db->addslashes($kw)."%'
                     OR          k.phonetic = '".$db->addslashes(phonetique($kw))."'
-                    ";
-
-            $db->query($sql);
-
-            while ($row = $db->fetchrow())
-            {
-                $id = ($id_module != '') ? $row['id_record'] : $row['id'];
-
-                // relevance = relevance * ratio de similarité entre les 2 chaines
-                $row['relevance'] *= (strlen($kw)/strlen($row['keyword']));
-
-                if (!isset($arrElements[$id]))
-                {
-                    $arrElements[$id] = $row;
-                    $arrRelevance[$id] = array(
-                        'relevance' => $row['relevance'],
-                        'count' => 1
-                    );
-                }
-                else
-                {
-                    $arrRelevance[$id]['relevance'] += $row['relevance'];
-                    $arrRelevance[$id]['count']++;
-                }
-
-            }
-
-
-            // recherche dans les annotation de l'utilisateur (considéré comme meta ?)
-            $sql =  "
-                    SELECT      e.*,
-                                100 as relevance,
-                                t.tag_clean as keyword
-
-                    FROM        ploopi_annotation a
-
-                    INNER JOIN  ploopi_annotation_tag at ON at.id_annotation = a.id
-                    INNER JOIN  ploopi_tag t ON at.id_tag = t.id
-                    INNER JOIN  ploopi_index_element e ON a.id_element = e.id
-
-                    {$strSearch}
-                    AND         t.tag_clean like '".$db->addslashes($kw)."%'
                     ";
 
             $db->query($sql);
@@ -829,7 +768,7 @@ function ploopi_highlight($content, $words, $snippet_length = 150, $snippet_num 
 
 function ploopi_search_get_records($id_object = null, $id_module = null)
 {
-    global $db;
+    $db = ploopi_search_getdb();
 
     $arrWhere = array();
 
