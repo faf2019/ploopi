@@ -16,7 +16,14 @@
   license : GPL / LGPL / MPL
   copyright : Frederico Caldeira Knabben
 
-* HTML Purifier 4.0.0
+* FeedWriter 0.1
+  path : ./lib/feedwriter
+  url : http://www.phpclasses.org/package/4548-PHP-Parse-RSS-and-ATOM-feeds.html
+  url : http://ajaxray.com/blog/php-universal-feed-parser-lightweight-php-class-for-parsing-rss-and-atom-feeds
+  license : GPL v2
+  copyright : Anis Uddin Ahmad
+
+* HTML Purifier 4.5.0
   path : ./lib/htmlpurifier
   url : http://htmlpurifier.org
   license : GPL v2
@@ -34,7 +41,7 @@
   licence : LGPL
   copyright : artofsolving
 
-* JsColor
+* JsColor 1.4.0
   path : ./lib/jscolor
   url : http://jscolor.com/
   licence : LGPL v3
@@ -57,7 +64,19 @@
   url : http://livepipe.net/core
   licence : MIT
   copyright : PersonalGrid Corporation <http://personalgrid.com/>
- 
+
+* PhpJs
+  path : ./js/php.js
+  url : http://phpjs.org
+  licence : GPL v2
+  copyright : Kevin van Zonneveld
+
+* Phonetic
+  path : ./lib/phonetic
+  url : http://www.roudoudou.com/php/phonetic.php
+  licence :  CC 2.0 - Paternité - Pas d'Utilisation Commerciale
+  copyright : Édouard BERGÉ
+
 * PHP Universal Feed Generator
   path : ./lib/feedwriter
   url : http://www.ajaxray.com/projects/rss
@@ -70,25 +89,25 @@
   licence : GPL v2
   copyright : The phpBB Group
 
-* Protoaculous 1.8.3 (prototype 1.6.1 + scriptaculous 1.8.3)
+* Protoaculous 1.9.0 (prototype 1.7.0 + scriptaculous 1.9.0)
   path : ./lib/protoaculous
   url : http://groups.google.com/group/prototype-core
   licence : ?
   copyright : ?
 
-    * prototype 1.6.1
+    * prototype 1.7.0
       path : ./lib/prototype
       url : http://www.prototypejs.org
       license : MIT
       copyright : Sam Stephenson
 
-    * scriptaculous 1.8.3
+    * scriptaculous 1.9.0
       path : ./lib/protaculous
       url : http://script.aculo.us
       license : MIT
       copyright : Thomas Fuchs
 
- * SimplePie 1.2
+ * SimplePie 1.3.1
   path : ./lib/simplepie
   url :  http://simplepie.org/
   licence : BSD
@@ -106,8 +125,10 @@
    license : CC SA
    copyright : ?
 
-* Textile
+* Textile 2.5
   path : ./lib/textile
   url : http://textile.thresholdstate.com/
+  url : http://textile.sitemonks.com/
+  url : http://github.com/netcarver
   licence : Free Software
-  copyright : Dean Allen <dean@textism.com>
+  copyright : Dean Allen <dean@textism.com>, Alex Shiels, Stef Dawson, Netcarver
