@@ -33,6 +33,8 @@
 switch($op)
 {
     default:
+        include_once './include/functions/search_index.php';
+
         echo $skin->create_pagetitle($_SESSION['ploopi']['modulelabel']);
         echo $skin->open_simplebloc('Réindexation');
 
@@ -48,7 +50,8 @@ switch($op)
         $db->query("SELECT count(*) as c FROM ploopi_mod_webedit_tag WHERE id_module = {$_SESSION['ploopi']['moduleid']}");
         $arrStats['tags'] = ($row = $db->fetchrow()) ? $row['c'] : 0;
 
-        $db->query(
+        $idxdb = ploopi_search_getdb();
+        $idxdb->query(
             "
             SELECT  count(*) as c
             FROM    ploopi_index_element e,
@@ -60,7 +63,7 @@ switch($op)
             "
         );
 
-        $arrStats['keywords'] = ($row = $db->fetchrow()) ? $row['c'] : 0;
+        $arrStats['keywords'] = ($row = $idxdb->fetchrow()) ? $row['c'] : 0;
 
         ?>
         <div style="padding:4px;">

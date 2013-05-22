@@ -1,3 +1,9 @@
+== Module WebEdit - version 2.5.1c ============================================
+
+2013-05-22  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Mise à jour liée à l'externalisation des données d'indexation
+
 == Module WebEdit - version 2.5.1b ============================================
 
 2013-04-03  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
