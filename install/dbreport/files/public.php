@@ -41,10 +41,10 @@ $strDbReportOp = isset($_REQUEST['dbreport_op']) ? $_REQUEST['dbreport_op'] : ''
 switch($strDbReportOp)
 {
     case 'query_modify':
-        if (!ploopi_isactionallowed(_DBREPORT_ACTION_MANAGE)) ploopi_logout();
+        if (!ploopi_isactionallowed(dbreport::_ACTION_MANAGE)) ploopi_logout();
         include_once './modules/dbreport/public_query_modify.php';
     break;
-    
+
     default:
         include_once './modules/dbreport/public_query_list.php';
     break;

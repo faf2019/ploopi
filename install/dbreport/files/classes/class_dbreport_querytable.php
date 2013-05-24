@@ -22,7 +22,7 @@
 
 /**
  * Gestion des tables d'une requête
- * 
+ *
  * @package dbreport
  * @subpackage querytable
  * @copyright Ovensia
@@ -49,54 +49,54 @@ include_once './modules/dbreport/classes/class_dbreport_queryrelation.php';
 
 
 class dbreport_querytable extends data_object
-{	
+{
     /**
      * Constructeur de la classe
      */
-	public function __construct()
-	{
-		parent::__construct('ploopi_mod_dbreport_querytable');
-	}
+    public function __construct()
+    {
+        parent::__construct('ploopi_mod_dbreport_querytable');
+    }
 
-	/**
-	 * Enregistrement du lien table/requête
-	 *
-	 * @return int id
-	 */
-	public function save()
-	{
-	    $objDbrQuery = new dbreport_query();
-	    if ($objDbrQuery->open($this->fields['id_query'])) $objDbrQuery->save();
-	     
-	    return parent::save();
-	}
-	
-	/**
-	 * Suppression de la table de la requête
-	 */
-	public function delete()
-	{
-	    // Suppression des champs liés à la table supprimée
+    /**
+     * Enregistrement du lien table/requête
+     *
+     * @return int id
+     */
+    public function save()
+    {
+        $objDbrQuery = new dbreport_query();
+        if ($objDbrQuery->open($this->fields['id_query'])) $objDbrQuery->save();
+
+        return parent::save();
+    }
+
+    /**
+     * Suppression de la table de la requête
+     */
+    public function delete()
+    {
+        // Suppression des champs liés à la table supprimée
         $objCol = new data_object_collection('dbreport_queryfield');
         $objCol->add_where('id_query = %d', $this->fields['id_query']);
         $objCol->add_where('tablename = %s', $this->fields['tablename']);
         $arrObjects = $objCol->get_objects();
         foreach($arrObjects as $objField) $objField->delete();
-		
+
         // Suppression des relations liées à la table supprimée
-		$objCol = new data_object_collection('dbreport_queryrelation');
+        $objCol = new data_object_collection('dbreport_queryrelation');
         $objCol->add_where('id_query = %d', $this->fields['id_query']);
         $objCol->add_where('(tablename_src = %1$s OR tablename_dest = %1$s)', $this->fields['tablename']);
         $arrObjects = $objCol->get_objects();
         foreach($arrObjects as $objRelation) $objRelation->delete();
-        
+
         // Mise à jour de la requête
         $objDbrQuery = new dbreport_query();
         if ($objDbrQuery->open($this->fields['id_query'])) $objDbrQuery->save();
-        
-        parent::delete();
-	}
 
-	
+        parent::delete();
+    }
+
+
 }
 ?>

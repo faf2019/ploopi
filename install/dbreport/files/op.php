@@ -46,7 +46,7 @@ if (ploopi_ismoduleallowed('dbreport'))
         case 'dbreport_query_modify':
             ploopi_init_module('dbreport',false, false, false);
 
-            if (!ploopi_isactionallowed(_DBREPORT_ACTION_MANAGE)) ploopi_logout();
+            if (!ploopi_isactionallowed(dbreport::_ACTION_MANAGE)) ploopi_logout();
 
             include_once './include/classes/form.php';
             include_once './include/classes/query.php';
@@ -91,7 +91,7 @@ if (ploopi_ismoduleallowed('dbreport'))
             $objForm = new form( 'dbreport_form_query_add', ploopi_urlencode($strUrl), 'post', array('legend' => '* Champs obligatoires', 'style' => 'border-bottom:1px solid #aaa;background:#f8f8f8;padding:4px;') );
             $objForm->addField( new form_field('input:text', 'Libellé:', $objDbrQuery->fields['label'], 'dbreport_query_label', null, array('required' => true)) );
 
-            if (ploopi_isactionallowed(_DBREPORT_ACTION_LOCK))
+            if (ploopi_isactionallowed(dbreport::_ACTION_LOCK))
                 $objForm->addField( new form_checkbox('Verrouiller:', '1', $objDbrQuery->fields['locked'], 'dbreport_query_locked') );
 
             // Panel "Modules dispos"
@@ -141,20 +141,20 @@ if (ploopi_ismoduleallowed('dbreport'))
         case 'dbreport_query_save':
             ploopi_init_module('dbreport',false, false, false);
 
-            if (!ploopi_isactionallowed(_DBREPORT_ACTION_MANAGE)) ploopi_logout();
+            if (!ploopi_isactionallowed(dbreport::_ACTION_MANAGE)) ploopi_logout();
 
             include_once './include/classes/query.php';
             include_once './modules/dbreport/classes/class_dbreport_query.php';
             include_once './modules/dbreport/classes/class_dbreport_query_module_type.php';
 
             // Si pas d'action, interdiction de modifier la valeur
-            if (!ploopi_isactionallowed(_DBREPORT_ACTION_LOCK)) unset($_POST['dbreport_query_locked']);
+            if (!ploopi_isactionallowed(dbreport::_ACTION_LOCK)) unset($_POST['dbreport_query_locked']);
 
             $objDbrQuery = new dbreport_query();
             if (isset($_GET['dbreport_query_id']) && is_numeric($_GET['dbreport_query_id'])) $objDbrQuery->open($_GET['dbreport_query_id']);
             $objDbrQuery->setvalues($_POST,'dbreport_query_');
             if (!isset($_POST['dbreport_query_ws_activated'])) $objDbrQuery->fields['ws_activated'] = 0;
-            if (ploopi_isactionallowed(_DBREPORT_ACTION_LOCK) && !isset($_POST['dbreport_query_locked'])) $objDbrQuery->fields['locked'] = 0;
+            if (ploopi_isactionallowed(dbreport::_ACTION_LOCK) && !isset($_POST['dbreport_query_locked'])) $objDbrQuery->fields['locked'] = 0;
             $objDbrQuery->setuwm();
             $objDbrQuery->save();
 
@@ -181,7 +181,7 @@ if (ploopi_ismoduleallowed('dbreport'))
         case 'dbreport_query_delete':
             ploopi_init_module('dbreport',false, false, false);
 
-            if (!ploopi_isactionallowed(_DBREPORT_ACTION_MANAGE)) ploopi_logout();
+            if (!ploopi_isactionallowed(dbreport::_ACTION_MANAGE)) ploopi_logout();
 
             include_once './modules/dbreport/classes/class_dbreport_query.php';
 
@@ -192,11 +192,79 @@ if (ploopi_ismoduleallowed('dbreport'))
         break;
 
 
+        // Enregistrement d'une transformation
+        case 'dbreport_transformation_save':
+            ploopi_init_module('dbreport',false, false, false);
+
+            if (!ploopi_isactionallowed(dbreport::_ACTION_MANAGE)) ploopi_logout();
+
+            include_once './modules/dbreport/classes/class_dbreport_query.php';
+
+            $objDbrQuery = new dbreport_query();
+            if (isset($_GET['dbreport_query_id']) && is_numeric($_GET['dbreport_query_id'])) $objDbrQuery->open($_GET['dbreport_query_id']);
+            $objDbrQuery->setvalues($_POST,'dbreport_query_');
+            if (!isset($_POST['dbreport_query_transformation'])) $objDbrQuery->fields['transformation'] = '';
+            $objDbrQuery->setuwm();
+            $objDbrQuery->save();
+
+            ploopi_redirect("admin.php?dbreport_op=query_modify&dbreport_query_id={$objDbrQuery->fields['id']}#dbreport_trans");
+        break;
+
+        // Enregistrement d'un graphique
+        case 'dbreport_chart_save':
+            ploopi_init_module('dbreport',false, false, false);
+
+            if (!ploopi_isactionallowed(dbreport::_ACTION_MANAGE)) ploopi_logout();
+
+            include_once './modules/dbreport/classes/class_dbreport_query.php';
+
+            $objDbrQuery = new dbreport_query();
+            if (isset($_GET['dbreport_query_id']) && is_numeric($_GET['dbreport_query_id'])) $objDbrQuery->open($_GET['dbreport_query_id']);
+            $objDbrQuery->setvalues($_POST,'dbreport_query_');
+            // Traitement des checkboxes
+            foreach(array('chart_legend_display', 'chart_indexes_display', 'chart_interlaced_display', 'chart_animation') as $strCheckbox)
+                if (!isset($_POST["dbreport_query_{$strCheckbox}"]))
+                    $objDbrQuery->fields[$strCheckbox] = 0;
+
+            if (isset($_POST["fck_dbreport_query_chart_tooltip_format"])) {
+                $objDbrQuery->fields['chart_tooltip_format'] = $_POST["fck_dbreport_query_chart_tooltip_format"];
+            }
+            if (isset($_POST["fck_dbreport_query_chart_indexes_format"])) {
+                $objDbrQuery->fields['chart_indexes_format'] = $_POST["fck_dbreport_query_chart_indexes_format"];
+            }
+
+
+            $objDbrQuery->setuwm();
+            $objDbrQuery->save();
+
+            ploopi_redirect("admin.php?dbreport_op=query_modify&dbreport_query_id={$objDbrQuery->fields['id']}#dbreport_chart");
+        break;
+
+        case 'dbreport_canvas2png':
+            if (!empty($_POST['image'])) {
+                // Extraction des données
+                list($type, $image) = explode(',', $_POST['image']);
+                // Fichier temporaire
+                $strFileName = tempnam(_PLOOPI_PATHDATA, 'dbreport_canvas');
+                file_put_contents($strFileName, base64_decode($image));
+
+                ploopi_downloadfile($strFileName, 'graphique.png', true, true, true);
+            }
+            ploopi_die();
+        break;
+
+
+        // Génération d'un graphique
+        case 'dbreport_chart_generate':
+            include_once './modules/dbreport/op_chart_generate.php';
+        break;
+
+
         // Popup d'ajout d'un champ dans une requête
         case 'dbreport_queryfield_add':
             ploopi_init_module('dbreport',false, false, false);
 
-            if (!ploopi_isactionallowed(_DBREPORT_ACTION_MANAGE)) ploopi_logout();
+            if (!ploopi_isactionallowed(dbreport::_ACTION_MANAGE)) ploopi_logout();
 
             include_once './modules/dbreport/op_queryfield_add.php';
         break;
@@ -205,7 +273,7 @@ if (ploopi_ismoduleallowed('dbreport'))
         case 'dbreport_queryfield_save':
             ploopi_init_module('dbreport',false, false, false);
 
-            if (!ploopi_isactionallowed(_DBREPORT_ACTION_MANAGE)) ploopi_logout();
+            if (!ploopi_isactionallowed(dbreport::_ACTION_MANAGE)) ploopi_logout();
 
             include_once './modules/dbreport/classes/class_dbreport_query.php';
             include_once './modules/dbreport/classes/class_dbreport_queryfield.php';
@@ -250,7 +318,7 @@ if (ploopi_ismoduleallowed('dbreport'))
                     }
                 }
 
-                ploopi_redirect("admin.php?dbreport_op=query_modify&dbreport_query_id={$_GET['dbreport_query_id']}");
+                ploopi_redirect("admin.php?dbreport_op=query_modify&dbreport_query_id={$_GET['dbreport_query_id']}#dbreport_fields");
             }
 
             ploopi_redirect('admin.php');
@@ -259,7 +327,7 @@ if (ploopi_ismoduleallowed('dbreport'))
         case 'dbreport_queryfield_modify':
             ploopi_init_module('dbreport',false, false, false);
 
-            if (!ploopi_isactionallowed(_DBREPORT_ACTION_MANAGE)) ploopi_logout();
+            if (!ploopi_isactionallowed(dbreport::_ACTION_MANAGE)) ploopi_logout();
 
             include_once './modules/dbreport/op_queryfield_modify.php';
         break;
@@ -268,7 +336,7 @@ if (ploopi_ismoduleallowed('dbreport'))
         case 'dbreport_queryfield_delete':
             ploopi_init_module('dbreport',false, false, false);
 
-            if (!ploopi_isactionallowed(_DBREPORT_ACTION_MANAGE)) ploopi_logout();
+            if (!ploopi_isactionallowed(dbreport::_ACTION_MANAGE)) ploopi_logout();
 
             include_once './modules/dbreport/classes/class_dbreport_queryfield.php';
             $objDbrQueryField = new dbreport_queryfield();
@@ -278,7 +346,7 @@ if (ploopi_ismoduleallowed('dbreport'))
                 $objDbrQueryField->delete();
             }
 
-            if (isset($_GET['dbreport_query_id']) && is_numeric($_GET['dbreport_query_id'])) ploopi_redirect("admin.php?dbreport_op=query_modify&dbreport_query_id={$_GET['dbreport_query_id']}");
+            if (isset($_GET['dbreport_query_id']) && is_numeric($_GET['dbreport_query_id'])) ploopi_redirect("admin.php?dbreport_op=query_modify&dbreport_query_id={$_GET['dbreport_query_id']}#dbreport_fields");
             ploopi_redirect('admin.php');
         break;
 
@@ -286,7 +354,7 @@ if (ploopi_ismoduleallowed('dbreport'))
         case 'dbreport_queryfield_position':
             ploopi_init_module('dbreport',false, false, false);
 
-            if (!ploopi_isactionallowed(_DBREPORT_ACTION_MANAGE)) ploopi_logout();
+            if (!ploopi_isactionallowed(dbreport::_ACTION_MANAGE)) ploopi_logout();
 
             include_once './include/classes/query.php';
             include_once './modules/dbreport/classes/class_dbreport_query.php';
@@ -344,7 +412,7 @@ if (ploopi_ismoduleallowed('dbreport'))
                     }
                 }
 
-                ploopi_redirect("admin.php?dbreport_op=query_modify&dbreport_query_id={$_GET['dbreport_query_id']}");
+                ploopi_redirect("admin.php?dbreport_op=query_modify&dbreport_query_id={$_GET['dbreport_query_id']}#dbreport_fields");
             }
 
             ploopi_redirect('admin.php');
@@ -354,7 +422,7 @@ if (ploopi_ismoduleallowed('dbreport'))
         case 'dbreport_querytable_add':
             ploopi_init_module('dbreport',false, false, false);
 
-            if (!ploopi_isactionallowed(_DBREPORT_ACTION_MANAGE)) ploopi_logout();
+            if (!ploopi_isactionallowed(dbreport::_ACTION_MANAGE)) ploopi_logout();
 
             include_once './modules/dbreport/op_querytable_add.php';
         break;
@@ -363,7 +431,7 @@ if (ploopi_ismoduleallowed('dbreport'))
         case 'dbreport_querytable_save':
             ploopi_init_module('dbreport',false, false, false);
 
-            if (!ploopi_isactionallowed(_DBREPORT_ACTION_MANAGE)) ploopi_logout();
+            if (!ploopi_isactionallowed(dbreport::_ACTION_MANAGE)) ploopi_logout();
 
             include_once './modules/dbreport/classes/class_dbreport_query.php';
             include_once './modules/dbreport/classes/class_dbreport_querytable.php';
@@ -386,8 +454,8 @@ if (ploopi_ismoduleallowed('dbreport'))
 
                     // Sélection des relations en rapport avec la table qu'on ajoute
                     $objQuery = new ploopi_query_select();
-                    $objQuery->add_from('ploopi_mb_schema mbs');
-                    $objQuery->add_where('(mbs.tablesrc = %1$s AND mbs.tabledest IN (%2$t)) OR (mbs.tabledest = %1$s AND mbs.tablesrc IN (%2$t))', array($strTableName, implode(',', $arrTables)));
+                    $objQuery->add_from('ploopi_mb_relation mbr');
+                    $objQuery->add_where('(mbr.tablesrc = %1$s AND mbr.tabledest IN (%2$t)) OR (mbr.tabledest = %1$s AND mbr.tablesrc IN (%2$t))', array($strTableName, implode(',', $arrTables)));
                     $objRs = $objQuery->execute();
 
                     // Enregistrement des relations propres à la requête
@@ -395,7 +463,9 @@ if (ploopi_ismoduleallowed('dbreport'))
                     {
                         $objDbrQueryRelation = new dbreport_queryrelation();
                         $objDbrQueryRelation->fields['tablename_src'] = $row['tablesrc'];
+                        $objDbrQueryRelation->fields['fieldname_src'] = $row['fieldsrc'];
                         $objDbrQueryRelation->fields['tablename_dest'] = $row['tabledest'];
+                        $objDbrQueryRelation->fields['fieldname_dest'] = $row['fielddest'];
                         $objDbrQueryRelation->fields['id_query'] = $objDbrQuery->fields['id'];
                         $objDbrQueryRelation->save();
                     }
@@ -416,7 +486,7 @@ if (ploopi_ismoduleallowed('dbreport'))
         case 'dbreport_querytable_delete':
             ploopi_init_module('dbreport',false, false, false);
 
-            if (!ploopi_isactionallowed(_DBREPORT_ACTION_MANAGE)) ploopi_logout();
+            if (!ploopi_isactionallowed(dbreport::_ACTION_MANAGE)) ploopi_logout();
 
             include_once './modules/dbreport/classes/class_dbreport_query.php';
             include_once './modules/dbreport/classes/class_dbreport_querytable.php';
@@ -444,7 +514,7 @@ if (ploopi_ismoduleallowed('dbreport'))
         case 'dbreport_queryrelation_modify':
             ploopi_init_module('dbreport',false, false, false);
 
-            if (!ploopi_isactionallowed(_DBREPORT_ACTION_MANAGE)) ploopi_logout();
+            if (!ploopi_isactionallowed(dbreport::_ACTION_MANAGE)) ploopi_logout();
 
             include_once './modules/dbreport/classes/class_dbreport_query.php';
             include_once './modules/dbreport/classes/class_dbreport_queryrelation.php';
@@ -452,12 +522,18 @@ if (ploopi_ismoduleallowed('dbreport'))
             $objDbrQuery = new dbreport_query();
             $objDbrQueryRelation = new dbreport_queryrelation();
 
+
             if (isset($_GET['dbreport_query_id']) && is_numeric($_GET['dbreport_query_id']) && $objDbrQuery->open($_GET['dbreport_query_id']))
             {
-                if (isset($_GET['dbreport_queryrelation_tablesrc']) && isset($_GET['dbreport_queryrelation_tabledest']) && isset($_GET['dbreport_queryrelation_active']) && $objDbrQueryRelation->open($_GET['dbreport_query_id'], $_GET['dbreport_queryrelation_tablesrc'], $_GET['dbreport_queryrelation_tabledest']))
+                if (isset($_GET['dbreport_queryrelation_src']) && isset($_GET['dbreport_queryrelation_dest']) && isset($_GET['dbreport_queryrelation_active']))
                 {
-                   $objDbrQueryRelation->fields['active'] = $_GET['dbreport_queryrelation_active'];
-                   $objDbrQueryRelation->save();
+                   list($strTableSrc, $strFieldSrc) = explode(',', $_GET['dbreport_queryrelation_src']);
+                   list($strTableDest, $strFieldDest) = explode(',', $_GET['dbreport_queryrelation_dest']);
+
+                   if ($objDbrQueryRelation->open($_GET['dbreport_query_id'], $strTableSrc, $strFieldSrc, $strTableDest, $strFieldDest)) {
+                       $objDbrQueryRelation->fields['active'] = $_GET['dbreport_queryrelation_active'];
+                       $objDbrQueryRelation->save();
+                   }
                 }
                 ploopi_redirect("admin.php?dbreport_op=query_modify&dbreport_query_id={$objDbrQuery->fields['id']}");
             }
@@ -468,7 +544,7 @@ if (ploopi_ismoduleallowed('dbreport'))
         case 'dbreport_query_clone':
             ploopi_init_module('dbreport',false, false, false);
 
-            if (!ploopi_isactionallowed(_DBREPORT_ACTION_MANAGE)) ploopi_logout();
+            if (!ploopi_isactionallowed(dbreport::_ACTION_MANAGE)) ploopi_logout();
 
             include_once './modules/dbreport/classes/class_dbreport_query.php';
 

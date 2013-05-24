@@ -48,16 +48,16 @@ $arrColumns['right']['webservice'] =
 $arrColumns['actions_right']['actions'] =
     array(
         'label' => '&nbsp;',
-        'width' => ploopi_isactionallowed(_DBREPORT_ACTION_MANAGE) ? 85 : 22
+        'width' => ploopi_isactionallowed(dbreport::_ACTION_MANAGE) ? 85 : 22
     );
-    
+
 /*$arrColumns['actions_right']['exports'] =
     array(
         'label' => 'Exports',
         'width' => 145
     );
   */
-      
+
 $objQuery = new ploopi_query_select();
 $objQuery->add_from('ploopi_mod_dbreport_query');
 $objQuery->add_where('id_workspace IN (%e)', ploopi_viewworkspaces());
@@ -67,15 +67,15 @@ $objRs = $objQuery->execute();
 while ($row = $objRs->fetchrow())
 {
     $strActions = '<a title="Exécuter la requête" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_topopup(550, event, \'dbreport_query_export_popup\', \'admin-light.php\', \''.ploopi_queryencode("ploopi_op=dbreport_query_export&dbreport_query_id={$row['id']}").'\', \'POST\');"><img src="./modules/dbreport/img/ico_execute.png" /></a>';
-    
-    $booModify = ploopi_isactionallowed(_DBREPORT_ACTION_MANAGE) && (!$row['locked'] || ploopi_isactionallowed(_DBREPORT_ACTION_LOCK));
-    
+
+    $booModify = ploopi_isactionallowed(dbreport::_ACTION_MANAGE) && (!$row['locked'] || ploopi_isactionallowed(dbreport::_ACTION_LOCK));
+
     if ($booModify) $strActions .= '<a title="Modifier la requête" href="'.ploopi_urlencode("admin.php?dbreport_op=query_modify&dbreport_query_id={$row['id']}").'"><img src="./modules/dbreport/img/ico_modify.png" /></a>';
-        
-    if (ploopi_isactionallowed(_DBREPORT_ACTION_MANAGE)) $strActions .= '<a title="Cloner la requête" href="javascript:void(0);" onclick="if (confirm(\'Êtes vous certains de vouloir cloner cette requête ?\')) document.location.href=\''.ploopi_urlencode("admin-light.php?ploopi_op=dbreport_query_clone&dbreport_query_id={$row['id']}").'\';"><img src="./modules/dbreport/img/ico_clone.png" /></a>';
-    
+
+    if (ploopi_isactionallowed(dbreport::_ACTION_MANAGE)) $strActions .= '<a title="Cloner la requête" href="javascript:void(0);" onclick="if (confirm(\'Êtes vous certains de vouloir cloner cette requête ?\')) document.location.href=\''.ploopi_urlencode("admin-light.php?ploopi_op=dbreport_query_clone&dbreport_query_id={$row['id']}").'\';"><img src="./modules/dbreport/img/ico_clone.png" /></a>';
+
     if ($booModify) $strActions .= '<a title="Supprimer la requête" href="javascript:void(0);" onclick="if (confirm(\'Êtes vous certains de vouloir supprimer cette requête ?\')) document.location.href=\''.ploopi_urlencode("admin-light.php?ploopi_op=dbreport_query_delete&dbreport_query_id={$row['id']}").'\';"><img src="./modules/dbreport/img/ico_delete.png" /></a>';
-    
+
     $arrValues[] = array(
         'values' => array(
             'query' => array('label' => $row['label']),
@@ -90,7 +90,7 @@ while ($row = $objRs->fetchrow())
                     <a title="Export XLS" href="./admin-light.php?ploopi_op=dbreport_query_exec&dbreport_query_id='.$row['id'].'&dbreport_format=XLS"><img src="./modules/dbreport/img/mime/xls.png" /></a>
                     <a title="Export ODS" href="./admin-light.php?ploopi_op=dbreport_query_exec&dbreport_query_id='.$row['id'].'&dbreport_format=ODS"><img src="./modules/dbreport/img/mime/ods.png" /></a>
                     <a title="Export PDF" href="./admin-light.php?ploopi_op=dbreport_query_exec&dbreport_query_id='.$row['id'].'&dbreport_format=PDF"><img src="./modules/dbreport/img/mime/pdf.png" /></a>
-                    ' 
+                    '
             )
         ),
         'description' => $booModify ? 'Modifier la requête' : 'Exécuter la requête',
@@ -103,16 +103,16 @@ while ($row = $objRs->fetchrow())
 
 echo $skin->open_simplebloc('Liste des requêtes');
 
-if (ploopi_isactionallowed(_DBREPORT_ACTION_MANAGE))
+if (ploopi_isactionallowed(dbreport::_ACTION_MANAGE))
 {
     ?>
     <div class="ploopi_tabs">
-        <a href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_topopup(400, event, 'dbreport_query_add', 'admin-light.php', '<? echo ploopi_queryencode('ploopi_op=dbreport_query_add'); ?>', 'POST');"><img src="./modules/dbreport/img/ico_new.png" />Nouvelle requête</a> 
+        <a href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_topopup(400, event, 'dbreport_query_add', 'admin-light.php', '<? echo ploopi_queryencode('ploopi_op=dbreport_query_add'); ?>', 'POST');"><img src="./modules/dbreport/img/ico_new.png" /><span>Nouvelle requête</span></a>
     </div>
     <?
 }
 
 $skin->display_array($arrColumns, $arrValues, 'dbreport_query_list', array('sortable' => true, 'orderby_default' => 'query', 'limit' => 25));
-    
+
 echo $skin->close_simplebloc();
 ?>

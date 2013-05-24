@@ -47,16 +47,14 @@ $strFileName = "dbreport.{$strDbreportFormat}";
 
 ploopi_ob_clean();
 
-echo dbreport_getdata($strDbreportWsId, $_REQUEST, $strDbreportFormat, $strDbreportCode);
+echo dbreport::getData($strDbreportWsId, $_REQUEST, $strDbreportFormat, $strDbreportCode);
 
 
-header('Content-Type: ' . ploopi_getmimetype($strFileName));
+header('Content-Type: ' . ploopi_getmimetype($strFileName).'; charset=iso-8859-1');
 header('Content-Disposition: inline; Filename="'.$strFileName.'"');
 header('Cache-Control: private');
 header('Pragma: private');
 header('Content-Length: '.ob_get_length());
-header("Content-Encoding: None");
-header("X-Ploopi: Download"); // Permet d'indiquer au gestionnaire de buffer qu'il s'agit d'un téléchargement de fichier @see ploopi_ob_callback
+header('Content-Encoding: none');
 
-ploopi_die();
 ?>

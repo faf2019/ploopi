@@ -38,7 +38,6 @@ include_once './include/classes/query.php';
 include_once './modules/dbreport/classes/class_dbreport_query.php';
 
 ploopi_init_module('dbreport', false, false, false);
-global $arrDbReportTypes;
 
 ob_start();
 
@@ -65,7 +64,7 @@ if (isset($_POST['dbreport_query_id']) && is_numeric($_POST['dbreport_query_id']
             'post',
             array(
                 'class' => 'ploopi_generate_form dbreport_checkboxes',
-                'style_form' => 'height:250px;overflow-y:scroll;border-bottom:1px solid #aaa;background:#f8f8f8;padding:4px;'
+                'style_form' => 'height:350px;overflow-y:scroll;border-bottom:1px solid #aaa;background:#f8f8f8;padding:4px;'
             )
         );
 
@@ -85,7 +84,7 @@ if (isset($_POST['dbreport_query_id']) && is_numeric($_POST['dbreport_query_id']
 
             while($row2 = $objRs2->fetchrow())
             {
-                $objPanel->addField( new form_checkbox("<strong>".htmlentities($row2['label'])."</strong>".($row2['label'] != $row2['name'] ? "<span>&nbsp;(".htmlentities($row2['name']).")</span>" : '')."<em>".$arrDbReportTypes[dbreport_getbasictype($row2['type'])]."</em>", "{$row2['tablename']}.{$row2['name']}", false, 'dbreport_fieldnames[]', "{$row2['tablename']}.{$row2['name']}", array('class_form' => 'onclick')) );
+                $objPanel->addField( new form_checkbox("<strong>".htmlentities($row2['label'])."</strong>".($row2['label'] != $row2['name'] ? "<span>&nbsp;(".htmlentities($row2['name']).")</span>" : '')."<em>".dbreport::getType(dbreport::getBasicType($row2['type']))."</em>", "{$row2['tablename']}.{$row2['name']}", false, 'dbreport_fieldnames[]', "{$row2['tablename']}.{$row2['name']}", array('class_form' => 'onclick')) );
             }
         }
 

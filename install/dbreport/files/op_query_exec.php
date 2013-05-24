@@ -56,7 +56,7 @@ if (isset($_REQUEST['dbreport_format']) && isset($_REQUEST['dbreport_query_id'])
         {
             echo $objDbrQuery->getquery();
         }
-        elseif ($_REQUEST['dbreport_format'] == 'csv')
+        elseif ($_REQUEST['dbreport_format'] == 'csv' && empty($objDbrQuery->fields['transformation']))
         {
             // Traitement spécial CSV
             // PAS DE MISE EN CACHE

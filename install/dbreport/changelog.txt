@@ -1,3 +1,14 @@
+== Module DBREPORT - version 2.0.0 ====================================================
+
+2013-05-24  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Modification de la gestion des relations. Permet de gérer des cas plus complexes /!\ incompatibilité avec v1
+* Gestion simplifiée de la position des champs dans le requêteur
+* Ajout d'une liste de fonctions "Date" dans la configuration des champs
+* Possibilité d'activer une option "tableau croisé" pour l'export des données
+* Générateur de graphiques avec de nombreuses options et de nombreux formats
+* Aperçu automatique du code SQL généré
+
 == Module DBREPORT - version 1.0.8b ====================================================
 
 2013-03-22  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

@@ -60,7 +60,7 @@ class dbreport_query extends data_object
      *
      * @var ploopi_query_select
      */
-     private $objQuery;
+    private $objQuery;
 
     /**
      * Tableau contenant les champs de la requête
@@ -75,13 +75,6 @@ class dbreport_query extends data_object
      * @var array
      */
     private $arrResult;
-
-    /**
-     * True si la requête affiche une date (nécessite un post traitement)
-     *
-     * @var boolean
-     */
-    private $booHasDate;
 
     /**
      * Code d'erreur
@@ -111,6 +104,354 @@ class dbreport_query extends data_object
      */
     private static $_ERROR_PARAM    = 2;
 
+
+    /**
+     * Types de graphiques
+     *
+     * @var array
+     */
+
+    private static $_arrChartTypes = array(
+
+        'pie' => 'Secteurs',
+        'doughnut' => 'Secteurs (anneau)',
+
+        // 'stepLine' => 'Escaliers',
+
+        'bar' => 'Barres',
+        'stackedBar' => 'Barres cumulées',
+        'stackedBar100' => 'Barres cumulées à 100%',
+
+        'column' => 'Colonnes',
+        'stackedColumn' => 'Colonnes cumulées',
+        'stackedColumn100' => 'Colonnes cumulées à 100%',
+
+        'line' => 'Lignes',
+        'stackedLine' => 'Lignes cumulées',
+        'stackedLine100' => 'Lignes cumulées à 100%',
+
+        'spline' => 'Courbes',
+        'stackedSpline' => 'Courbes cumulées',
+        'stackedSpline100' => 'Courbes cumulées à 100%',
+
+        'area' => 'Zones droites',
+        'stackedArea' => 'Zones droites cumulées',
+        'stackedArea100' => 'Zones droites cumulées à 100%',
+
+        'splineArea' => 'Zones courbes',
+        'stackedSplineArea' => 'Zones courbes cumulées',
+        'stackedSplineArea100' => 'Zones courbes cumulées à 100%',
+
+    );
+
+    private static $_arrChartBasicTypes = array(
+        'bar' => 'bar',
+        'stackedBar' => 'bar',
+        'stackedBar100' => 'bar',
+        'column' => 'column',
+        'stackedColumn' => 'column',
+        'stackedColumn100' => 'column',
+        'line' => 'line',
+        'stackedLine' => 'line',
+        'stackedLine100' => 'line',
+        'spline' => 'spline',
+        'stackedSpline' => 'spline',
+        'stackedSpline100' => 'spline',
+        'area' => 'area',
+        'stackedArea' => 'area',
+        'stackedArea100' => 'area',
+        'splineArea' => 'areaspline',
+        'stackedSplineArea' => 'areaspline',
+        'stackedSplineArea100' => 'areaspline',
+        'pie' => 'pie',
+        'doughnut' => 'pie'
+    );
+
+     /*
+    private static $_arrChartTypes = array(
+        'bar' => 'Barres',
+        'stackedBar' => 'Barres cumulées',
+        'stackedBar100' => 'Barres cumulées à 100%',
+        'column' => 'Colonnes',
+        'stackedColumn' => 'Colonnes cumulées',
+        'stackedColumn100' => 'Colonnes cumulées à 100%',
+        'stepLine' => 'Escaliers',
+        'line' => 'Lignes',
+        'spline' => 'Courbes',
+        'area' => 'Zones (lignes)',
+        'splineArea' => 'Zones (courbes)',
+        'pie' => 'Secteurs',
+        'doughnut' => 'Secteurs (anneau)'
+    );
+    */
+
+    /**
+     * Polices
+     *
+     * @var array
+     */
+    private static $_arrChartFonts = array(
+        'Tahoma' => 'Tahoma',
+        'Verdana' => 'Verdana',
+        'Arial' => 'Arial',
+        'Helvetica' => 'Helvetica',
+        'Georgia' => 'Georgia',
+        'Trebuchet MS' => 'Trebuchet MS',
+        'Times New Roman' => 'Times New Roman',
+        'Courier New' => 'Courier New',
+        'Comic Sans MS' => 'Comic Sans MS'
+    );
+
+    /**
+     * Styles
+     *
+     * @var array
+     */
+    private static $_arrChartStyles = array(
+        'normal' => 'Normal',
+        'italic' => 'Italique',
+        'oblique' => 'Oblique'
+    );
+
+    /**
+     * Epaisseur
+     *
+     * @var array
+     */
+    private static $_arrChartWeights = array(
+        'lighter' => 'Fin',
+        'normal' => 'Normal',
+        'bold' => 'Epais',
+        'bolder' => 'Très épais '
+    );
+
+    /**
+     * Alignement horizontal
+     *
+     * @var array
+     */
+    private static $_arrChartAligns = array(
+        'left' => 'Gauche',
+        'center' => 'Centre',
+        'right' => 'Droite'
+    );
+
+    /**
+     * Alignement vertical
+     *
+     * @var array
+     */
+    private static $_arrChartValigns = array(
+        'top' => 'Haut',
+        'center' => 'Centre',
+        'bottom' => 'Bas'
+    );
+
+    /**
+     * Types de markers
+     *
+     * @var array
+     */
+    private static $_arrChartMarkers = array(
+        'circle' => 'Rond',
+        'square' => 'Carré',
+        'triangle' => 'Triangle',
+        'cross' => 'Croix'
+    );
+
+    /**
+     * Tris
+     *
+     * @var array
+     */
+    private static $_arrChartSorts = array(
+        'asc' => 'Ascendant',
+        'desc' => 'Descendant',
+        'asc_val' => 'Ascendant (val)',
+        'desc_val' => 'Descendant (val)'
+    );
+
+    /**
+     * Sets de couleurs
+     *
+     * @var array
+     */
+    private static $_arrChartColorSets = array(
+        'default' => array(
+            '219,77,76',
+            '219,132,78',
+            '237,166,55',
+            '167,167,55',
+            '134,170,101',
+            '138,171,175',
+            '75,179,211',
+            '105,200,255',
+            '190,190,190',
+            '50,50,50',
+        ),
+
+        'highcharts v3' => array(
+            '47,126,216',
+            '13,35,58',
+            '139,188,33',
+            '145,0,0',
+            '26,173,206',
+            '73,41,112',
+            '242,143,67',
+            '119,161,229',
+            '196,37,37',
+            '166,201,106',
+            '0,0,0',
+        ),
+
+        'highcharts v2' => array(
+            '69,114,167',
+            '170,70,67',
+            '137,165,78',
+            '128,105,155',
+            '61,150,174',
+            '219,132,61',
+            '146,168,205',
+            '164,125,124',
+            '181,202,146',
+            '0,0,0',
+        ),
+
+        'ipod' => array(
+            '133,105,207',
+            '13,159,216',
+            '138,215,73',
+            '238,206,0',
+            '248,152,31',
+            '248,14,39',
+            '246,64,174',
+            '120,118,121',
+            '0,0,0',
+        ),
+
+        'bujumbura' => array(
+            '190,66,14',
+            '190,109,14',
+            '107,79,46',
+            '204,160,102',
+            '224,215,82',
+            '165,190,14',
+            '65,151,227',
+            '170,168,169',
+            '0,0,0',
+        ),
+
+        'confetti' => array(
+            '109,176,143',
+            '242,194,94',
+            '114,168,178',
+            '160,172,98',
+            '209,125,101',
+            '156,127,149',
+            '238,229,160',
+            '178,178,178',
+            '110,110,110',
+        ),
+
+        'desert_flower' => array(
+            '178,78,3',
+            '242,286,97',
+            '159,116,255',
+            '148,169,152',
+            '219,173,0',
+            '247,234,0',
+            '253,186,230',
+            '224,5,161',
+        ),
+
+        'zombies' => array(
+            '40,118,56',
+            '160,219,69',
+            '152,229,208',
+            '19,156,178',
+            '71,78,208',
+            '191,55,199',
+            '238,164,209',
+            '227,41,53',
+            '252,209,8',
+            '248,251,108',
+            '170,168,169',
+            '0,0,0',
+        )
+    );
+
+
+    public static function getChartTypes() {
+        return self::$_arrChartTypes;
+    }
+
+    public static function getChartType($strType) {
+        return isset(self::$_arrChartTypes[$strType]) ? self::$_arrChartTypes[$strType] : '';
+    }
+
+    public static function getChartFonts() {
+        return self::$_arrChartFonts;
+    }
+
+    public static function getChartFont($strFont) {
+        return isset(self::$_arrChartFonts[$strFont]) ? self::$_arrChartFonts[$strFont] : '';
+    }
+
+    public static function getChartColorSets() {
+        return self::$_arrChartColorSets;
+    }
+
+    public static function getChartColorSet($strColorSet) {
+        return isset(self::$_arrChartColorSets[$strColorSet]) ? self::$_arrChartColorSets[$strColorSet] : array();
+    }
+
+    public static function getChartColorSetJson($strColorSet, $floOpacity = 1) {
+        $rowColorSet = self::getChartColorSet($strColorSet);
+        foreach($rowColorSet as $key => $value) $rowColorSet[$key] = "rgba({$value},{$floOpacity})";
+        return json_encode($rowColorSet);
+    }
+
+    public static function getChartMarkers() {
+        return self::$_arrChartMarkers;
+    }
+
+    public static function getChartMarker($strMarker) {
+        return isset(self::$_arrChartMarkers[$strType]) ? self::$_arrChartMarkers[$strType] : '';
+    }
+
+    public static function getChartAligns() {
+        return self::$_arrChartAligns;
+    }
+
+    public static function getChartAlign($strAlign) {
+        return isset(self::$_arrChartAligns[$strType]) ? self::$_arrChartAligns[$strAlign] : '';
+    }
+
+    public static function getChartValigns() {
+        return self::$_arrChartValigns;
+    }
+
+    public static function getChartValign($strValign) {
+        return isset(self::$_arrChartValigns[$strType]) ? self::$_arrChartValigns[$strValign] : '';
+    }
+
+    public static function getChartSorts() {
+        return self::$_arrChartSorts;
+    }
+
+    public static function getChartSort($strSort) {
+        return isset(self::$_arrChartSorts[$strSort]) ? self::$_arrChartSorts[$strSort] : '';
+    }
+
+    /**
+     * Configure MySQL en FR
+     */
+    private function _setFr()
+    {
+        global $db;
+        $db->query("SET lc_time_names = 'fr_FR'");
+    }
+
     /**
      * Constructeur de la classe
      */
@@ -121,7 +462,6 @@ class dbreport_query extends data_object
         $this->strSqlQuery = '';
         $this->objQuery = new ploopi_query_select();
         $this->arrResult = array();
-        $this->booHasDate = false;
         $this->intErrorCode = self::$_ERROR_OK;
     }
 
@@ -177,7 +517,7 @@ class dbreport_query extends data_object
 
         // Clonage de la relation avec "ploopi_mod_dbreport_querytable"
         $objQuerySel = new ploopi_query_select();
-        $objQuerySel->add_select('null, `tablename`, `id_module_type`, %d', $this->fields['id']);
+        $objQuerySel->add_select('null, `tablename`, `alias`, `id_module_type`, %d', $this->fields['id']);
         $objQuerySel->add_from("ploopi_mod_dbreport_querytable");
         $objQuerySel->add_where('id_query = %d', $intClonedId);
 
@@ -188,18 +528,31 @@ class dbreport_query extends data_object
 
         // Clonage de la relation avec "ploopi_mod_dbreport_queryfield"
         $objQuerySel = new ploopi_query_select();
-        $objQuerySel->add_select('null, `tablename`, `id_module_type`, `fieldname`, `label`, `function`, `visible`, `sort`, `criteria`, `type_criteria`, `or`, `type_or`, `intervals`, `operation`, `position`, `series`, %d', $this->fields['id']);
+        $objQuerySel->add_select('`id`, `tablename`, `id_module_type`, `fieldname`, `label`, `function`, `visible`, `sort`, `criteria`, `type_criteria`, `or`, `type_or`, `intervals`, `operation`, `position`, `series`');
         $objQuerySel->add_from("ploopi_mod_dbreport_queryfield");
         $objQuerySel->add_where('id_query = %d', $intClonedId);
+        $objRs = $objQuerySel->execute();
 
-        $objQueryIns = new ploopi_query_insert();
-        $objQueryIns->set_table("ploopi_mod_dbreport_queryfield");
-        $objQueryIns->add_raw($objQuerySel->get_sql());
-        $objQueryIns->execute();
+        $arrQueryFields = array();
+        // Pour chaque champ
+        while($row = $objRs->fetchrow()) {
+            $objQueryField = new dbreport_queryfield();
+            $objQueryField->fields = $row;
+            $objQueryField->fields['id_query'] = $this->fields['id'];
+            $objQueryField->fields['id'] = null;
+            $arrQueryFields[$row['id']] = $objQueryField->save();
+        }
+
+        // Traitement des champs liés (graphique)
+        foreach(array('pivot_x','pivot_y','pivot_val','chart_x','chart_y','chart_val') as $key) {
+            $this->fields[$key] = isset($arrQueryFields[$this->fields[$key]]) ? $arrQueryFields[$this->fields[$key]] : 0;
+        }
+
+        $this->save();
 
         // Clonage de la relation avec "ploopi_mod_dbreport_queryrelation"
         $objQuerySel = new ploopi_query_select();
-        $objQuerySel->add_select('%d, `tablename_src`, `tablename_dest`, `active`', $this->fields['id']);
+        $objQuerySel->add_select('%d, `tablename_src`, `fieldname_src`,`tablename_dest`, `fieldname_dest`,`active`', $this->fields['id']);
         $objQuerySel->add_from("ploopi_mod_dbreport_queryrelation");
         $objQuerySel->add_where('id_query = %d', $intClonedId);
 
@@ -229,7 +582,6 @@ class dbreport_query extends data_object
     public function generate($arrParam = null)
     {
         ploopi_init_module('dbreport', false, false, false);
-        global $arrDbReportOperations;
 
         /**
          * Génération de la requête SQL
@@ -248,7 +600,6 @@ class dbreport_query extends data_object
         $arrSqlHaving = array();
         $arrSqlQuery = array();
 
-        $this->booHasDate = false; // true si la requête contient un champ de type "date"
         $this->arrFields = array(); // tableau des champs de la requête
 
         /* Boucle sur les champs de la requête (avec le type de champ) */
@@ -274,11 +625,11 @@ class dbreport_query extends data_object
             $arrSelectParams = array();
 
             // Nom du champ dans la requête (init)
-            $strQueryField = "{$row['tablename']}.{$row['fieldname']}";
+            $strQueryField = "`{$row['tablename']}`.`{$row['fieldname']}`";
             //if ($row['type'] == 'date') $strQueryField = "CONCAT(SUBSTRING($strQueryField,9,2),'/',SUBSTRING($strQueryField,6,2),'/',SUBSTRING($strQueryField,1,4))";
             if ($row['function'] != '')  $strQueryField = str_replace('%', $strQueryField, $row['function']);
 
-            $strDefaultLabel = "{$row['tablename']}.{$row['fieldname']}";
+            $strDefaultLabel = "`{$row['tablename']}`.`{$row['fieldname']}`";
 
             /**
              * Construction de la clause SELECT
@@ -288,9 +639,6 @@ class dbreport_query extends data_object
 
             if ($row['visible'])
             {
-                // Détection de date dans la requête
-                if ($row['type'] == 'date' && !$this->booHasDate) $this->booHasDate = true;
-
                 switch($row['operation'])
                 {
                     case '':
@@ -404,15 +752,15 @@ class dbreport_query extends data_object
                         $strOpName = strtoupper($row['operation']);
 
                         // /!\ On change le label par défaut en incluant le nom de l'opération
-                        $strDefaultLabel = "{$arrDbReportOperations[$row['operation']]} de {$strDefaultLabel}";
+                        $strDefaultLabel = dbreport::getOperation($row['operation'])." de {$strDefaultLabel}";
 
                         $strSqlSelect .= "{$strOpName}({$strQueryField})";
 
                     break;
                 }
 
-                $strLabel = ($row['label']) ? $row['label'] : $strDefaultLabel;
-                $this->arrFields[$strLabel] = $row;
+                $row['query_label'] = $strLabel = ($row['label']) ? $row['label'] : $strDefaultLabel;
+                $this->arrFields[$row['id']] = $row;
 
                 // On ajoute la clause SELECT
                 $this->objQuery->add_select("{$strSqlSelect} AS `{$strLabel}`", $arrSelectParams);
@@ -423,6 +771,11 @@ class dbreport_query extends data_object
                     $strSqlOrderBy = ($row['label']) ? "`{$row['label']}`" : "`{$strDefaultLabel}`";
                     $this->objQuery->add_orderby($strSqlOrderBy.' '.strtoupper($row['sort']));
                 }
+            }
+            else {
+
+                // Gestion du tri pour un champ non visible
+                if ($row['sort'] != '') $this->objQuery->add_orderby($strQueryField.' '.strtoupper($row['sort']));
             }
             // FIN de if ($row['visible'])
 
@@ -671,11 +1024,8 @@ class dbreport_query extends data_object
                 }
             }
 
-            if ($strSqlWhere != '') $this->objQuery->add_where($strSqlWhere, $arrWhereParams); //$arrSqlWhere[] = $strSqlWhere;
-            if ($strSqlHaving != '')
-            {
-                $this->objQuery->add_having($strSqlHaving, $arrHavingParams); //$arrSqlHaving[] = $strSqlHaving;
-            }
+            if ($strSqlWhere != '') $this->objQuery->add_where($strSqlWhere, $arrWhereParams);
+            if ($strSqlHaving != '') $this->objQuery->add_having($strSqlHaving, $arrHavingParams);
 
         } // FIN while
 
@@ -690,28 +1040,42 @@ class dbreport_query extends data_object
         $objQuery->add_where('id_query = %d', $this->fields['id']);
         $objRs = $objQuery->execute();
 
-        while ($row = $objRs->fetchrow()) if ($row['tablename'] != '') $this->objQuery->add_from($row['tablename']); //$arrSqlFrom[$row['tablename']] = $row['tablename'];
+        $arrTables = array();
+        $arrJoins = array();
+
+        while ($row = $objRs->fetchrow()) if ($row['tablename'] != '') $arrTables[$row['tablename']] = 1;
 
         /**
          * Construction de la clause JOIN
          */
         $objQuery = new ploopi_query_select();
-        $objQuery->add_select('mbr.tablesrc, mbr.fieldsrc, mbr.tabledest, mbr.fielddest');
         $objQuery->add_from('ploopi_mod_dbreport_queryrelation qr');
-        $objQuery->add_from('ploopi_mb_relation mbr');
         $objQuery->add_where('qr.id_query = %d', $this->fields['id']);
         $objQuery->add_where('qr.active = 1');
-        $objQuery->add_where('qr.tablename_src = mbr.tablesrc');
-        $objQuery->add_where('qr.tablename_dest = mbr.tabledest');
         $objRs = $objQuery->execute();
 
         while ($row = $objRs->fetchrow())
         {
-            if ($row['tablesrc'] != '') $this->objQuery->add_from($row['tablesrc']); //$arrSqlFrom[$row['tablesrc']] = $row['tablesrc'];
-            if ($row['tabledest'] != '') $this->objQuery->add_from($row['tabledest']);  //$arrSqlFrom[$row['tabledest']] = $row['tabledest'];
-
-            $this->objQuery->add_where("{$row['tablesrc']}.{$row['fieldsrc']} = {$row['tabledest']}.{$row['fielddest']}"); //$arrSqlJoin[] = "{$row['tablesrc']}.{$row['fieldsrc']} = {$row['tabledest']}.{$row['fielddest']}";
+            $arrTables[$row['tablename_src']] = 1;
+            $arrTables[$row['tablename_dest']] = 1;
+            // Stockage des jointures suivant l'origine
+            $arrJoins[$row['tablename_src']][] = "`{$row['tablename_src']}`.`{$row['fieldname_src']}` = `{$row['tablename_dest']}`.`{$row['fieldname_dest']}`";
+            $arrJoins[$row['tablename_dest']][] = "`{$row['tablename_dest']}`.`{$row['fieldname_dest']}` = `{$row['tablename_src']}`.`{$row['fieldname_src']}`";
         }
+
+        if (!empty($arrTables)) {
+            // Table principale
+            $this->objQuery->add_from("`".key($arrTables)."`");
+
+            // Jointures INNER
+            while (next($arrTables) !== false) {
+                $strTable = key($arrTables);
+                if (!empty($arrJoins[$strTable])) {
+                    $this->objQuery->add_innerjoin("`{$strTable}` ON ".implode(' AND ', $arrJoins[$strTable]));
+                }
+            }
+        }
+
 
         $this->strSqlQuery = $this->objQuery->get_sql();
 
@@ -721,10 +1085,11 @@ class dbreport_query extends data_object
     /**
      * Exécute la requête
      *
-     * @param array $arrParam tableau optionnel de paramètres
+     * @param int $intCacheLifetime durée de vie du cache
+     * @param boolean $booGetRaw si true, n'applique pas la transformation
      * @return boolean true si la requête a pu être exécutée
      */
-    public function exec($intCacheLifetime = 0)
+    public function exec($intCacheLifetime = 0, $booGetRaw = false)
     {
         // Génération de la requête
         //if ($this->generate($arrParam))
@@ -736,22 +1101,57 @@ class dbreport_query extends data_object
             {
                 if (!ini_get('safe_mode')) ini_set('max_execution_time', 0);
                 // Exécution de la requête
+
+                $this->_setFr();
+
+                set_time_limit(0);
+                // Exécution de la requête
                 $objRs = $this->objQuery->execute();
 
-                // Récupération du résultat dans un tableau
-                if (!$this->booHasDate) $this->arrResult = $objRs->getarray();
-                else
-                {
-                    // Traitement particulier à cause du post-traitement nécessaire sur les données des champs de type "date"
-                    while ($row = $objRs->fetchrow())
+                $this->arrResult = $objRs->getarray();
+
+                if (!$booGetRaw) {
+                    // Tableau croisé ?
+                    if ($this->fields['transformation'] == 'pivot_table')
                     {
-                        // Recherche des champs de type date et traitement
-                        foreach($row as $strLabel => $strValue) if (isset($this->arrFields[$strLabel]) && $this->arrFields[$strLabel]['type'] == 'date') $row[$strLabel] =  empty($strValue) ? '' : implode(' ', ploopi_timestamp2local($strValue));
-                        $this->arrResult[] = $row;
+                        // Champs configurés ?
+                        if (!empty($this->fields['pivot_x']) && !empty($this->fields['pivot_y']) && !empty($this->fields['pivot_val']))
+                        {
+                            // Champs valides ?
+                            if (isset($this->arrFields[$this->fields['pivot_x']]) && isset($this->arrFields[$this->fields['pivot_y']]) && isset($this->arrFields[$this->fields['pivot_val']]))
+                            {
+
+                                $strPivotxField = $this->arrFields[$this->fields['pivot_x']]['label'];
+                                $strPivotyField = $this->arrFields[$this->fields['pivot_y']]['label'];
+                                $strPivotvalField = $this->arrFields[$this->fields['pivot_val']]['label'];
+
+                                // Construction du jeu de données
+                                $arrPivot = array();
+
+                                // Construction du tableau de valeurs pour l'abscisse
+                                $arrPivotX = array();
+                                foreach($this->arrResult as $row) $arrPivotX[$row[$strPivotxField]] = 1;
+
+                                // Ensuite on crée le tableau croisé
+                                foreach($this->arrResult as $row)
+                                {
+                                    if (!isset($arrPivot[$row[$strPivotyField]])) {
+                                        // Init Row
+                                        $arrPivot[$row[$strPivotyField]][$strPivotyField] = $row[$strPivotyField];
+                                        foreach(array_keys($arrPivotX) as $strPivotX) $arrPivot[$row[$strPivotyField]][$strPivotX] = null;
+                                    }
+                                    $arrPivot[$row[$strPivotyField]][$row[$strPivotxField]] = $row[$strPivotvalField];
+                                }
+
+                                $this->arrResult = $arrPivot;
+                                unset($arrPivot);
+                            }
+                        }
                     }
                 }
 
                 $objCache->save_var($this->arrResult);
+
             }
 
             return true;
@@ -771,11 +1171,11 @@ class dbreport_query extends data_object
     {
         if (!empty($this->strSqlQuery))
         {
+            $this->_setFr();
 
             set_time_limit(0);
             // Exécution de la requête
             return $this->objQuery->execute();
-
         }
 
         return false;
@@ -865,8 +1265,6 @@ class dbreport_query extends data_object
                 $line = '';
                 foreach($row as $key => $str) {
                     if ($line != '') $line .= ',';
-                    // Conversion date
-                    if (isset($this->arrFields[$key]) && $this->arrFields[$key]['type'] == 'date') $str = empty($str) ? '' : implode(' ', ploopi_timestamp2local($str));
                     $line .= '"'.str_replace('"', '""', $str).'"';
                 }
                 $line .= "\n";
@@ -874,6 +1272,7 @@ class dbreport_query extends data_object
                 $intSize += mb_strlen($line, '8bit');
             }
         }
+
 
 
         if (is_null($strFileName)) $strFileName = "dbreport.{$strFormat}";
@@ -884,8 +1283,7 @@ class dbreport_query extends data_object
         header('Pragma: private');
         header('Content-Length: '.$intSize);
         header('Content-Encoding: none');
-
-        die();
+        ploopi_die();
     }
 
 
@@ -1104,5 +1502,462 @@ class dbreport_query extends data_object
         return current($objCol->get_objects());
     }
 
+
+    /**
+     * Retourne les données de la requête dans un format exploitable pour la contruction d'un graphique
+     *
+     * @param boolean $booAutocomplete true pour compléter les données manquantes dans les séries
+     * @return array Tableau des données
+     */
+    private function _getChartData($booAutocomplete = true) {
+
+        $arrData = array('series' => array(), 'categories' => array());
+
+        $booLegend = $this->fields['chart_legend_display'] == 1;
+        $booIndex = $this->fields['chart_indexes_display'] == 1;
+
+        if ($this->fields['chart'] != '' && !empty($this->arrResult))
+        {
+            // Champs structurants : x,y,val
+            $strChartxField = $this->arrFields[$this->fields['chart_x']]['label'];
+            $strChartyField = !in_array($this->fields['chart'], array('pie', 'doughnut')) && isset($this->arrFields[$this->fields['chart_y']]['label']) ? $this->arrFields[$this->fields['chart_y']]['label'] : null;
+            $strChartvalField = $this->arrFields[$this->fields['chart_val']]['label'];
+
+            // Copie du résultat
+            $arrResult = $this->arrResult;
+
+            if ($booAutocomplete && isset($strChartyField)) {
+
+                // Calcul des séries pour X et Y
+                $arrValuesX = array();
+                $arrValuesY = array();
+                // Index des données (on cherche les données manquantes)
+                $arrIndex = array();
+
+                // Création des séries de valeurs pour X et Y
+                foreach($arrResult as $row) {
+                    $arrValuesX[$row[$strChartxField]] = 1;
+                    $arrValuesY[$row[$strChartyField]] = 1;
+                    $arrIndex[$row[$strChartxField]][$row[$strChartyField]] = 1;
+                }
+
+                // On complète ce qu'il manque
+                foreach(array_keys($arrValuesX) as $strValueX) {
+                    foreach(array_keys($arrValuesY) as $strValueY) {
+                        if (!isset($arrIndex[$strValueX][$strValueY])) {
+                            $arrResult[] = array(
+                                $strChartxField => $strValueX,
+                                $strChartyField => $strValueY,
+                                $strChartvalField => 0,
+                            );
+                        }
+                    }
+                }
+            }
+
+            // Calcul des totaux par série (Pour: calcul de %, tri des séries par valeur, limit)
+            $arrSeriesY = array();
+            $arrSeriesX = array();
+            foreach($arrResult as $row) {
+                if (isset($strChartxField)) {
+                    if (!isset($arrSeriesX[$row[$strChartxField]])) $arrSeriesX[$row[$strChartxField]] = 0;
+                    $arrSeriesX[$row[$strChartxField]] += $row[$strChartvalField];
+                }
+
+                if (isset($strChartyField)) {
+                    if (!isset($arrSeriesY[$row[$strChartyField]])) $arrSeriesY[$row[$strChartyField]] = 0;
+                    $arrSeriesY[$row[$strChartyField]] += $row[$strChartvalField];
+                }
+                else {
+                    if (!isset($arrSeriesY[0])) $arrSeriesY[0] = 0;
+                    $arrSeriesY[0] += $row[$strChartvalField];
+                }
+            }
+
+            $strChartSortX = $this->fields['chart_sort_x'];
+            $strChartSortY = $this->fields['chart_sort_y'];
+
+
+            // Sélection des données en fonction de la limite pour chaque dimension
+            if ($this->fields['chart_limit_x'] || $this->fields['chart_limit_y']) {
+                $intLimitX = $this->fields['chart_limit_x'];
+                $intLimitY = $this->fields['chart_limit_y'];
+
+                // Tri X
+                switch($strChartSortX) {
+                    case 'asc':
+                        ksort($arrSeriesX);
+                    break;
+
+                    case 'desc':
+                        krsort($arrSeriesX);
+                    break;
+
+                    case 'asc_val':
+                        asort($arrSeriesX);
+                    break;
+
+                    case 'desc_val':
+                        arsort($arrSeriesX);
+                    break;
+                }
+
+                if ($intLimitX) {
+                    $arrSeriesX = $intLimitX > 0 ? array_slice($arrSeriesX, 0, $intLimitX, true) : array_slice($arrSeriesX, $intLimitX, -$intLimitX, true);
+                }
+
+                // Tri Y
+                switch($strChartSortY) {
+                    case 'asc':
+                        ksort($arrSeriesY);
+                    break;
+
+                    case 'desc':
+                        krsort($arrSeriesY);
+                    break;
+
+                    case 'asc_val':
+                        asort($arrSeriesY);
+                    break;
+
+                    case 'desc_val':
+                        arsort($arrSeriesY);
+                    break;
+                }
+
+                if ($intLimitY) {
+                    $arrSeriesY = $intLimitY > 0 ? array_slice($arrSeriesY, 0, $intLimitY, true) : array_slice($arrSeriesY, $intLimitY, -$intLimitY, true);
+                }
+
+
+                // Suppression des données hors limite
+                foreach($arrResult as $key => $row) {
+                    if (isset($strChartxField) && $this->fields['chart_limit_x'] && !isset($arrSeriesX[$row[$strChartxField]])) unset($arrResult[$key]);
+                    elseif (isset($strChartyField) && $this->fields['chart_limit_y'] && !isset($arrSeriesY[$row[$strChartyField]])) unset($arrResult[$key]);
+                }
+            }
+            // Tri des données sur Y puis X, éventuellement par valeur sur X ou Y
+            usort($arrResult, function($a, $b) use ($strChartxField, $strChartyField, $strChartSortX, $strChartSortY, $arrSeriesX, $arrSeriesY) {
+                $intCmp = 0;
+                if (isset($strChartyField)) {
+                    switch($strChartSortY) {
+                        case 'asc':
+                            $intCmp = strnatcmp($a[$strChartyField], $b[$strChartyField]);
+                        break;
+
+                        case 'desc':
+                            $intCmp = strnatcmp($b[$strChartyField], $a[$strChartyField]);
+                        break;
+
+                        case 'asc_val':
+                            $intCmp = strnatcmp($arrSeriesY[$a[$strChartyField]], $arrSeriesY[$b[$strChartyField]]);
+                        break;
+
+                        case 'desc_val':
+                            $intCmp = strnatcmp($arrSeriesY[$b[$strChartyField]], $arrSeriesY[$a[$strChartyField]]);
+                        break;
+                    }
+                }
+
+                if ($intCmp == 0) {
+                    if (isset($strChartxField)) {
+                        switch($strChartSortX) {
+                            case 'asc':
+                                $intCmp = strnatcmp($a[$strChartxField], $b[$strChartxField]);
+                            break;
+
+                            case 'desc':
+                                $intCmp = strnatcmp($b[$strChartxField], $a[$strChartxField]);
+                            break;
+
+                            case 'asc_val':
+                                $intCmp = strnatcmp($arrSeriesX[$a[$strChartxField]], $arrSeriesX[$b[$strChartxField]]);
+                            break;
+
+                            case 'desc_val':
+                                $intCmp = strnatcmp($arrSeriesX[$b[$strChartxField]], $arrSeriesX[$a[$strChartxField]]);
+                            break;
+                        }
+                    }
+                }
+
+                return $intCmp;
+            });
+
+
+
+
+            $arrData['categories'] = array_keys($arrSeriesX);
+            $arrSeries = array();
+
+
+            foreach($arrResult as $key => $row) {
+
+                $strSerie = utf8_encode(isset($strChartyField) ? $row[$strChartyField] : $strChartxField);
+                // Nouvelle série ?
+                if (!isset($arrSeries[$strSerie])) $arrSeries[$strSerie] = sizeof($arrSeries);
+
+                $keySerie = $arrSeries[$strSerie];
+
+                if (empty($arrData['series'][$keySerie])) {
+                    $arrData['series'][$keySerie] = array(
+                        'name' => $strSerie,
+                        'data' => array(),
+                    );
+
+                    if ($this->fields['chart_indexes_display']) {
+                        $arrData['series'][$keySerie]['dataLabels'] = array(
+                            'enabled' => true,
+                            'color' => $this->fields['chart_indexes_font_color'],
+                            'style' => array(
+                                'fontSize' => $this->fields['chart_indexes_font_size'].'px',
+                                'fontFamily' => $this->fields['chart_font'],
+                            ),
+                            'rotation' => $this->fields['chart_indexes_rotation'],
+                            'x' => intval($this->fields['chart_indexes_x']),
+                            'y' => intval($this->fields['chart_indexes_y']),
+                            /*
+                            'align' => 'right',
+                            */
+                        );
+
+                        if ($this->fields['chart_indexes_format'] != '') {
+                            $arrData['series'][$keySerie]['dataLabels']['format'] = $this->fields['chart_indexes_format'];
+                        }
+
+                    }
+
+
+                }
+
+                $arrData['series'][$keySerie]['data'][] = array((string)$row[$strChartxField], floatval($row[$strChartvalField]));
+
+            }
+
+        }
+
+        return $arrData;
+
+    }
+
+
+    /**
+     * Rendu du graphique via la librairie highcharts
+     */
+
+    public function displayChart() {
+
+        // Type de graphique ok ?
+        if (empty(self::$_arrChartBasicTypes[$this->fields['chart']])) return;
+        // Dimension 1 ok ?
+        if (empty($this->fields['chart_x']) || !isset($this->arrFields[$this->fields['chart_x']])) return;
+        // Dimension 2 ok ?
+        if (empty($this->fields['chart_val']) || !isset($this->arrFields[$this->fields['chart_val']])) return;
+
+        // Lecture des données du graphique
+        $arrData = $this->_getChartData();
+
+        $strChartxField = $this->arrFields[$this->fields['chart_x']]['label'];
+        $strChartyField = !in_array($this->fields['chart'], array('pie', 'doughnut')) && isset($this->arrFields[$this->fields['chart_y']]['label']) ? $this->arrFields[$this->fields['chart_y']]['label'] : null;
+        $strChartvalField = $this->arrFields[$this->fields['chart_val']]['label'];
+
+        ?>
+
+        <div id="container" style="display:block; height: <? echo $this->fields['chart_height']; ?>px; width: <? echo $this->fields['chart_width']; ?>px;"></div>
+        <script type="text/javascript">
+
+
+        Event.observe(window, 'load', function() {
+            var chart = new Highcharts.Chart({
+
+                colors: <? echo $this->fields['chart_colorset'] ? self::getChartColorSetJson($this->fields['chart_colorset']) : "['{$this->fields['chart_color']}']"; ?>,
+                lang: {
+                    decimalPoint: '.',
+                    thousandsSep: ' ',
+                    downloadJPEG: '<? echo utf8_encode('Télécharger JPG'); ?>',
+                    downloadPDF: '<? echo utf8_encode('Télécharger PDF'); ?>',
+                    downloadPNG: '<? echo utf8_encode('Télécharger PNG'); ?>',
+                    downloadSVG: '<? echo utf8_encode('Télécharger SVG'); ?>',
+                    printChart: '<? echo utf8_encode('Imprimer'); ?>',
+                    contextButtonTitle: '<? echo utf8_encode('Menu contextuel'); ?>',
+                },
+                chart: {
+                    renderTo: 'container',
+                    type: '<? echo self::$_arrChartBasicTypes[$this->fields['chart']]; ?>',
+                    // margin: [ 50, 50, 100, 80],
+                    backgroundColor: '<? echo $this->fields['chart_background']; ?>',
+                    animation: <? echo $this->fields['chart_animation'] ? 'true' : 'false'; ?>,
+                    borderWidth: <? echo $this->fields['chart_border_width']; ?>,
+                    borderColor: '<? echo $this->fields['chart_border_color']; ?>',
+                },
+                title: {
+                    text: '<? echo utf8_encode(addslashes($this->fields['chart_title'])); ?>',
+                    style: {
+                        fontFamily: '<? echo $this->fields['chart_font']; ?>',
+                        fontSize: '<? echo $this->fields['chart_title_font_size']; ?>px',
+                        color: '<? echo $this->fields['chart_title_font_color']; ?>',
+                    }
+                },
+                subtitle: {
+                    text: '<? echo utf8_encode(addslashes($this->fields['chart_subtitle'])); ?>',
+                    style: {
+                        fontFamily: '<? echo $this->fields['chart_font']; ?>',
+                        fontSize: '<? echo $this->fields['chart_title_font_size']/2; ?>px',
+                        color: '<? echo $this->fields['chart_title_font_color']; ?>',
+                    }
+                },
+                legend: {
+                    backgroundColor: '#FFFFFF',
+                    reversed: false,
+                    enabled: <? echo $this->fields['chart_legend_display'] ? 'true' : 'false'; ?>,
+                    align: '<? echo $this->fields['chart_legend_align']; ?>',
+                    verticalAlign: '<? echo $this->fields['chart_legend_valign']; ?>',
+                    style: {
+                        fontFamily: '<? echo $this->fields['chart_font']; ?>',
+                        fontSize: '<? echo $this->fields['chart_legend_font_size']; ?>px',
+                        color: '<? echo $this->fields['chart_legend_font_color']; ?>',
+                    },
+                    // labelFormat: '{point.y:.2f}',
+
+                },
+                tooltip: {
+                    <? if ($this->fields['chart_tooltip_format'] != '') { ?>
+                    pointFormat: '<? echo addslashes($this->fields['chart_tooltip_format']); ?>',
+                    <? } ?>
+                    shared: true,
+                },
+                plotOptions: {
+                    series: {
+                        <? if (in_array($this->fields['chart'], array('stackedColumn', 'stackedBar', 'stackedLine', 'stackedSpline', 'stackedArea', 'stackedSplineArea'))) { ?>
+                        stacking: 'normal'
+                        <? } ?>
+                        <? if (in_array($this->fields['chart'], array('stackedColumn100', 'stackedBar100', 'stackedLine100', 'stackedSpline100', 'stackedArea100', 'stackedSplineArea100'))) { ?>
+                        stacking: 'percent'
+                        <? } ?>
+                    },
+                    pie: {
+                        animation: <? echo $this->fields['chart_animation'] ? 'true' : 'false'; ?>,
+                        allowPointSelect: true,
+                        shadow: true,
+                        center: ['50%', '50%'],
+                        <? if ($this->fields['chart'] == 'doughnut') { ?>
+                        size: '80%', // Donut
+                        innerSize: '50%', // Donut
+                        <? } ?>
+                    },
+                    spline: {
+                        animation: <? echo $this->fields['chart_animation'] ? 'true' : 'false'; ?>,
+                        lineWidth: <? echo $this->fields['chart_line_thickness']; ?>,
+                        marker: {
+                            enabled: true
+                        },
+                    },
+                    line: {
+                        animation: <? echo $this->fields['chart_animation'] ? 'true' : 'false'; ?>,
+                        lineWidth: <? echo $this->fields['chart_line_thickness']; ?>,
+                        marker: {
+                            enabled: true
+                        },
+                    },
+                    area: {
+                        animation: <? echo $this->fields['chart_animation'] ? 'true' : 'false'; ?>,
+                        lineWidth: <? echo $this->fields['chart_line_thickness']; ?>,
+                        marker: {
+                            enabled: true
+                        },
+                    },
+                    areaspline: {
+                        animation: <? echo $this->fields['chart_animation'] ? 'true' : 'false'; ?>,
+                        lineWidth: <? echo $this->fields['chart_line_thickness']; ?>,
+                        marker: {
+                            enabled: true
+                        },
+                    },
+                    bar: {
+                        animation: <? echo $this->fields['chart_animation'] ? 'true' : 'false'; ?>,
+                        borderWidth: 0,
+                    },
+                    column: {
+                        animation: <? echo $this->fields['chart_animation'] ? 'true' : 'false'; ?>,
+                        borderWidth: 0,
+                    },
+                },
+
+
+
+                xAxis: {
+                    categories: <? echo json_encode($arrData['categories']); ?>,
+                    title: {
+                        text: '<? echo utf8_encode(addslashes($strChartxField)); ?>',
+                        style: {
+                            fontFamily: '<? echo $this->fields['chart_font']; ?>',
+                            fontSize: '<? echo $this->fields['chart_axis_font_size']; ?>px',
+                            color: '<? echo $this->fields['chart_axis_font_color']; ?>',
+                        }
+                    },
+                    labels: {
+                        style: {
+                            fontFamily: '<? echo $this->fields['chart_font']; ?>',
+                            fontSize: '<? echo $this->fields['chart_axis_font_size']; ?>px',
+                            color: '<? echo $this->fields['chart_axis_font_color']; ?>',
+                        },
+                        formatter: function() {
+                            return '<? echo $this->fields['chart_value_x_prefix']; ?>' + this.value + '<? echo $this->fields['chart_value_x_suffix']; ?>';
+                        }
+
+                    },
+                    <? if ($this->fields['chart_interlaced_display']) { ?>
+                        alternateGridColor: '<? echo $this->fields['chart_interlaced_x_color']; ?>',
+                    <? } ?>
+                    gridLineColor: '<? echo $this->fields['chart_grid_color']; ?>',
+                    gridLineWidth: <? echo $this->fields['chart_grid_x_thickness']; ?>,
+                    lineColor: '<? echo $this->fields['chart_axis_color']; ?>',
+                    lineWidth: <? echo $this->fields['chart_axis_x_thickness']; ?>,
+                    tickColor: '<? echo $this->fields['chart_axis_color']; ?>',
+                    tickWidth: <? echo $this->fields['chart_axis_x_thickness']; ?>,
+
+                },
+                yAxis: {
+                    title: {
+                        text: '<? echo utf8_encode(addslashes($strChartvalField)); ?>',
+                        style: {
+                            fontFamily: '<? echo $this->fields['chart_font']; ?>',
+                            fontSize: '<? echo $this->fields['chart_axis_font_size']; ?>px',
+                            color: '<? echo $this->fields['chart_axis_font_color']; ?>',
+                        }
+                    },
+                    labels: {
+                        style: {
+                            fontFamily: '<? echo $this->fields['chart_font']; ?>',
+                            fontSize: '<? echo $this->fields['chart_axis_font_size']; ?>px',
+                            color: '<? echo $this->fields['chart_axis_font_color']; ?>',
+                        },
+                        formatter: function() {
+                            return '<? echo $this->fields['chart_value_y_prefix']; ?>' + this.value + '<? echo $this->fields['chart_value_y_suffix']; ?>';
+                        }
+                    },
+                    <? if ($this->fields['chart_interlaced_display']) { ?>
+                        alternateGridColor: '<? echo $this->fields['chart_interlaced_y_color']; ?>',
+                    <? } ?>
+                    gridLineColor: '<? echo $this->fields['chart_grid_color']; ?>',
+                    gridLineWidth: <? echo $this->fields['chart_grid_y_thickness']; ?>,
+                    lineColor: '<? echo $this->fields['chart_axis_color']; ?>',
+                    lineWidth: <? echo $this->fields['chart_axis_y_thickness']; ?>,
+                    tickColor: '<? echo $this->fields['chart_axis_color']; ?>',
+                    tickWidth: <? echo $this->fields['chart_axis_y_thickness']; ?>,
+
+                },
+                series: <? echo json_encode($arrData['series']); ?>,
+                credits: {
+                    enabled: true,
+                    href: 'http://www.ploopi.org',
+                    text: 'Ploopi / DbReport',
+                }
+            });
+        });
+
+        </script>
+        <?
+    }
 }
 ?>

@@ -35,10 +35,11 @@
 
 if ($booRewriteRuleFound = (strpos($arrParsedURI['path'], '/wsdbr') === 0))
 {
-    $ploopi_access_script = 'webservice';
+    self::$script = 'webservice';
+
     $_REQUEST['module'] = $_GET['module'] = 'dbreport';
-    
-    if ($booRewriteRuleFound = (preg_match('/wsdbr\/([^\/]*)/', $arrParsedURI['path'], $arrMatches) == 1)) 
+
+    if ($booRewriteRuleFound = (preg_match('/wsdbr\/([^\/]*)/', $arrParsedURI['path'], $arrMatches) == 1))
     {
         if (sizeof($arrMatches) == 2)
         {

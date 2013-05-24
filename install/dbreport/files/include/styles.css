@@ -25,7 +25,7 @@
     padding:2px 4px;
     font-size:13px;
     font-weight:bold;
-    border-bottom:1px solid #ccc;
+    border-bottom:1px solid #aaa;
     background-color:#ddd;
 }
 
@@ -33,17 +33,28 @@
     overflow:hidden;
 }
 
+.dbreport_checkboxes > form > div > fieldset > div {
+    position:relative;
+    overflow:auto;
+}
+
 .dbreport_checkboxes > form > div > fieldset > div > label {
-    float:right;
-    width:330px;
-    overflow:hidden;
+    display:block;
     text-align:left;
+    padding:2px 4px 2px 20px;
+    width:auto;
+    float:auto;
+}
+
+.dbreport_checkboxes > form > div > fieldset > div > label:hover {
+    background-color:rgba(0,0,0,0.1);
 }
 
 .dbreport_checkboxes > form > div > fieldset > div > input {
-    float:left;
-    width:15px;
-    margin:5px 0 0 2px;
+    position:absolute;
+    left:2px;
+    display:block;
+    float:auto;
 }
 
 .dbreport_checkboxes > form > div > fieldset > div > label > em {
@@ -59,7 +70,9 @@
 
 .dbreport_checkboxes > form > div > fieldset {
     padding:4px;
+    margin:4px 0 6px 0;
     border:1px solid #888;
+    border-radius:5px;
     background-color:#f0f0f0;
 }
 
@@ -67,20 +80,38 @@
     font-weight:bold;
 }
 
+
+.dbreport_panels > form > div > fieldset {
+    width:33%;
+    float:left;
+    clear:none;
+    margin:0;
+    padding:0;
+    border:0;
+    border-top:2px solid #ccc;
+}
+
+.dbreport_panels > form > div > fieldset:nth-child(3n+1) {
+    clear:both;
+}
+
+.dbreport_panels > form > div > fieldset > legend {
+    padding:8px 8px 8px 20px;
+}
+
+
 #dbreport_query_tables {
     overflow:auto;
 }
 
-#dbreport_query_fields {
-    border-top:1px solid #888;
-    margin-top:10px;
-}
 
 .dbreport_table {
     border:1px solid #aaa;
+    border-radius:3px;
     float:left;
     width:230px;
     margin:10px;
+    box-shadow:0 0 5px rgba(0,0,0,0.2);
 }
 
 .dbreport_table_title {
@@ -92,6 +123,13 @@
     background: -webkit-linear-gradient(top, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.25) 100%);
 }
 
+.dbreport_table_title > a {
+    border:1px solid rgba(0,0,0,0.4);
+    border-radius:5px;
+    padding:0 2px;
+    background-color:rgba(0,0,0,0.2);
+}
+
 .dbreport_table_fields {
     height:200px;
     overflow-y:scroll;
@@ -99,8 +137,52 @@
 
 .dbreport_table_field {
     padding:2px 4px;
+    word-wrap: break-word;
+    border-bottom:1px solid #ccc;
+}
+
+.dbreport_table_field:last-child {
+    border:0;
+}
+
+.dbreport_table_field:nth-child(even) {
+    background-color:rgba(0,0,0,0.1);
+}
+
+.dbreport_table_field:nth-child(odd) {
+    background-color:rgba(0,0,0,0.05);
 }
 
 .dbreport_table_field em, .dbreport_table_field span {
     margin-left:4px;
 }
+
+.dbreport_table_info {
+    color:#444;
+    background: linear-gradient(top, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.15) 20%, rgba(0,0,0,0.1) 100%);
+    background: -moz-linear-gradient(top, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.15) 20%, rgba(0,0,0,0.1) 100%);
+    background: -webkit-linear-gradient(top, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.15) 20%, rgba(0,0,0,0.1) 100%);
+    border-top:2px solid #aaa;
+}
+
+.dbreport_table_info > div {
+    padding:2px 4px;
+    font-size:0.8em;
+}
+
+
+.dbreport_format_howto {
+    border-collapse:collapse;
+    margin:4px;
+}
+
+.dbreport_format_howto td,
+.dbreport_format_howto th {
+    vertical-align:top;
+    border:1px solid #888;
+    text-align:left;
+    padding:2px 4px;
+}
+
+.dbreport_format_howto th {
+    background-color:#ccc;

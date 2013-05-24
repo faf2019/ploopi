@@ -57,11 +57,9 @@ if (isset($_POST['dbreport_query_id']) && is_numeric($_POST['dbreport_query_id']
         $objQuery = new ploopi_query_select();
         $objQuery->add_select('drt.tablename, mbt.label, mt.label as moduletype');
         $objQuery->add_from('ploopi_mod_dbreport_querytable drt');
-        $objQuery->add_from('ploopi_mb_table mbt');
-        $objQuery->add_from('ploopi_module_type mt');
+        $objQuery->add_innerjoin('ploopi_mb_table mbt ON drt.tablename = mbt.name');
+        $objQuery->add_innerjoin('ploopi_module_type mt ON mbt.id_module_type = mt.id');
         $objQuery->add_where('drt.id_query = %d', $_POST['dbreport_query_id']);
-        $objQuery->add_where('drt.tablename = mbt.name');
-        $objQuery->add_where('mbt.id_module_type = mt.id');
         $objRs = $objQuery->execute();
 
         // permet de déterminer si on peut choisir 1 table ou plusieurs
@@ -77,11 +75,9 @@ if (isset($_POST['dbreport_query_id']) && is_numeric($_POST['dbreport_query_id']
             $objQuery = new ploopi_query_select();
             $objQuery->add_select('distinct mbt.*, mt.label as moduletype');
             $objQuery->add_from('ploopi_mb_table mbt');
-            $objQuery->add_from('ploopi_mb_field mbf');
-            $objQuery->add_from('ploopi_module_type mt');
+            $objQuery->add_innerjoin('ploopi_mb_field mbf ON mbt.name = mbf.tablename');
+            $objQuery->add_innerjoin('ploopi_module_type mt ON mbt.id_module_type = mt.id');
             $objQuery->add_where('mbt.visible = 1');
-            $objQuery->add_where('mbt.name = mbf.tablename');
-            $objQuery->add_where('mbt.id_module_type = mt.id');
             $objQuery->add_where('mbt.id_module_type IN (%e)', implode(', ', $arrModuleTypes));
             $objQuery->add_orderby('mt.label, mbt.label');
             $objRs = $objQuery->execute();
@@ -105,7 +101,7 @@ if (isset($_POST['dbreport_query_id']) && is_numeric($_POST['dbreport_query_id']
             // Recherche des tables en relation avec les tables déjà choisies
             $objQuery = new ploopi_query_select();
             $objQuery->add_select('
-                distinct(mbr.tablesrc),
+                DISTINCT mbr.tablesrc,
                 mbr.tabledest,
                 tablesrc.visible as visiblesrc,
                 tabledest.visible as visibledest,
@@ -114,20 +110,22 @@ if (isset($_POST['dbreport_query_id']) && is_numeric($_POST['dbreport_query_id']
                 module_type_src.label as module_type_src,
                 module_type_dest.label as module_type_dest
             ');
-            $objQuery->add_from('
-                (ploopi_mod_dbreport_querytable drt,
-                 ploopi_mb_relation mbr,
-                 ploopi_mb_table as tablesrc,
-                 ploopi_mb_table as tabledest)
-            ');
+
+            $objQuery->add_from('ploopi_mb_relation mbr');
+
+            $objQuery->add_innerjoin('ploopi_mb_table as tablesrc ON tablesrc.name = mbr.tablesrc');
+            $objQuery->add_innerjoin('ploopi_mb_table as tabledest ON tabledest.name = mbr.tabledest');
+            $objQuery->add_innerjoin('ploopi_mod_dbreport_querytable drt ON drt.tablename = mbr.tablesrc OR drt.tablename = mbr.tabledest');
+
             $objQuery->add_leftjoin('ploopi_module_type as module_type_src ON module_type_src.id = tablesrc.id_module_type');
             $objQuery->add_leftjoin('ploopi_module_type as module_type_dest ON module_type_dest.id = tabledest.id_module_type');
+
             $objQuery->add_where('drt.id_query = %d', $_POST['dbreport_query_id']);
-            $objQuery->add_where('(drt.tablename = mbr.tablesrc OR drt.tablename = mbr.tabledest)');
-            $objQuery->add_where('tablesrc.name = mbr.tablesrc');
-            $objQuery->add_where('tabledest.name = mbr.tabledest');
             $objQuery->add_where('tablesrc.id_module_type IN (%e)', implode(', ', $arrModuleTypes));
             $objQuery->add_where('tabledest.id_module_type IN (%e)', implode(', ', $arrModuleTypes));
+
+            $objQuery->get_sql();
+
             $objRs = $objQuery->execute();
 
             while ($row = $objRs->fetchrow())

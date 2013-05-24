@@ -22,7 +22,7 @@
 
 /**
  * Gestion des modules associés aux requêtes
- * 
+ *
  * @package dbreport
  * @subpackage query_module_type
  * @copyright Ovensia
@@ -42,17 +42,17 @@ include_once './include/classes/data_object.php';
  *
  */
 class dbreport_query_module_type extends data_object
-{	
-    
-	/**
-	 * Constructeur de la classe
-	 *
-	 */
-    
-	public function __construct()
-	{
-		parent::__construct('ploopi_mod_dbreport_query_module_type', 'id_query', 'id_module_type');
-	}
- 
+{
+
+    /**
+     * Constructeur de la classe
+     *
+     */
+
+    public function __construct()
+    {
+        parent::__construct('ploopi_mod_dbreport_query_module_type', 'id_query', 'id_module_type');
+    }
+
 }
 ?>

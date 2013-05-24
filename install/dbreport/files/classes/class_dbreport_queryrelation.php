@@ -22,7 +22,7 @@
 
 /**
  * Gestion des relations d'une requête
- * 
+ *
  * @package dbreport
  * @subpackage queryrelation
  * @copyright Ovensia
@@ -45,15 +45,15 @@ include_once './modules/dbreport/classes/class_dbreport_query.php';
  */
 
 class dbreport_queryrelation extends data_object
-{	
+{
     /**
      * Constructeur de la classe
      */
-	public function __construct()
-	{
-		parent::__construct('ploopi_mod_dbreport_queryrelation', 'id_query', 'tablename_src', 'tablename_dest');
-	}
-	
+    public function __construct()
+    {
+        parent::__construct('ploopi_mod_dbreport_queryrelation', 'id_query', 'tablename_src', 'fieldname_src', 'tablename_dest', 'fieldname_dest');
+    }
+
     /**
      * Enregistrement du lien relation/requête
      *
@@ -63,10 +63,10 @@ class dbreport_queryrelation extends data_object
     {
         $objDbrQuery = new dbreport_query();
         if ($objDbrQuery->open($this->fields['id_query'])) $objDbrQuery->save();
-         
+
         return parent::save();
-    }	
-    
+    }
+
     /**
      * Suppression du lien relation/requête
      */
@@ -75,7 +75,7 @@ class dbreport_queryrelation extends data_object
         // Mise à jour de la requête
         $objDbrQuery = new dbreport_query();
         if ($objDbrQuery->open($this->fields['id_query'])) $objDbrQuery->save();
-        
+
         parent::delete();
     }
 }
