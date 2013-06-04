@@ -317,7 +317,9 @@ function ploopi_array2excel($arrArray, $booHeader = true, $strFileName = 'docume
         ),
         'alignment' => array(
             'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
-            'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER
+            'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
+            'wrap' => true,
+            'shrinkToFit' => true,
         )
     );
 
@@ -328,6 +330,8 @@ function ploopi_array2excel($arrArray, $booHeader = true, $strFileName = 'docume
         ),
         'alignment' => array(
             'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+            'wrap' => true,
+            'shrinkToFit' => true,
         ),
         'fill' => array(
             'type' => PHPExcel_Style_Fill::FILL_SOLID,
@@ -340,7 +344,7 @@ function ploopi_array2excel($arrArray, $booHeader = true, $strFileName = 'docume
 
         $rowTitleStyle['borders'] = array(
             'allborders' => array(
-                'style' => PHPExcel_Style_Border::BORDER_THIN ,
+                'style' => PHPExcel_Style_Border::BORDER_THIN,
                 'color' => array('rgb' => '000000')
             )
         );
@@ -371,13 +375,11 @@ function ploopi_array2excel($arrArray, $booHeader = true, $strFileName = 'docume
             foreach(array_keys(reset($arrArray)) as $strKey) $objWorkSheet->setCellValueByColumnAndRow($intCol++, 1, utf8_encode(isset($arrDataFormats[$strKey]['title']) ? $arrDataFormats[$strKey]['title'] : $strKey));
 
             // Calcul colonne type Excel "Bijective base-26"
-            $intCol--;
             $chrCol = ($intCol>25 ? chr(64+floor($intCol/26)) : '').chr(65+$intCol%26);
 
-            $objWorkSheet->duplicateStyleArray(
-                $rowTitleStyle,
-                "A1:{$chrCol}1"
-            );
+            $objWorkSheet->getStyle("A1:{$chrCol}1")->applyFromArray($rowTitleStyle);
+
+            $objWorkSheet->getRowDimension(1)->setRowHeight(24);
         }
 
         // Traitement des contenus
@@ -385,17 +387,30 @@ function ploopi_array2excel($arrArray, $booHeader = true, $strFileName = 'docume
         foreach($arrArray as $row)
         {
             $intCol = 0;
-            foreach($row as $strKey => $strValue)
+            foreach($row as $strKey => $mixValue)
             {
+                if (is_array($mixValue)) {
+                    $strValue = &$mixValue['content'];
+                }
+                else $strValue = &$mixValue;
                 // Conversion date
                 if (isset($arrDataFormats[$strKey]['type']) && in_array($arrDataFormats[$strKey]['type'], array('datetime', 'date'))) {
                     $strValue = PHPExcel_Shared_Date::PHPToExcel($strValue);
                 }
 
                 $objWorkSheet->setCellValueByColumnAndRow($intCol, $intLine, utf8_encode($strValue));
+                // Calcul colonne type Excel "Bijective base-26"
+                $chrCol = ($intCol>25 ? chr(64+floor($intCol/26)) : '').chr(65+$intCol%26);
+
+                if (is_array($mixValue)) {
+                    if (isset($mixValue['style'])) {
+                        $objWorkSheet->getStyle("{$chrCol}{$intLine}")->applyFromArray($mixValue['style']);
+                    }
+                }
 
                 $intCol++;
             }
+            $objWorkSheet->getRowDimension($intLine)->setRowHeight(-1);
             $intLine++;
         }
 
@@ -418,7 +433,7 @@ function ploopi_array2excel($arrArray, $booHeader = true, $strFileName = 'docume
 
                 $rowStyle['borders'] = array(
                     'allborders' => array(
-                        'style' => PHPExcel_Style_Border::BORDER_THIN ,
+                        'style' => PHPExcel_Style_Border::BORDER_THIN,
                         'color' => array('rgb' => '000000')
                     )
                 );
@@ -455,10 +470,7 @@ function ploopi_array2excel($arrArray, $booHeader = true, $strFileName = 'docume
             }
 
             // Application du style sur la colonne
-            $objWorkSheet->duplicateStyleArray(
-                $rowStyle,
-                "{$chrCol}2:{$chrCol}{$intLineMax}"
-            );
+            $objWorkSheet->getStyle("{$chrCol}2:{$chrCol}{$intLineMax}")->applyFromArray($rowStyle);
 
             // Largeur de colonne
             if (isset($arrDataFormats[$strKey]['width'])) $objWorkSheet->getColumnDimension(chr($intCol+65))->setWidth($arrDataFormats[$strKey]['width']);

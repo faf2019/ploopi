@@ -37,6 +37,7 @@
 
 include_once './include/classes/data_object.php';
 include_once './include/classes/data_object_collection.php';
+include_once './include/functions/filesystem.php';
 
 /**
  * Classe de gestion des documents (ne pas confondre avec le module DOC)
@@ -86,8 +87,8 @@ class documentsfile extends data_object
         if ($res = parent::open($id)) $this->oldname = $this->fields['name'];
         return($res);
     }
-    
-    
+
+
     /**
      * Ouvre un document avec son identifiant MD5
      *
@@ -102,7 +103,7 @@ class documentsfile extends data_object
         $db->query("SELECT id FROM ploopi_documents_file WHERE md5id = '".$db->addslashes($md5id)."'");
         if ($fields = $db->fetchrow()) return($this->open($fields['id']));
         else return false;
-    }    
+    }
 
     /**
      * Enregistre le document.
@@ -112,7 +113,7 @@ class documentsfile extends data_object
      */
     public function save()
     {
-    	global $db;
+        global $db;
         $error = 0;
         if (isset($this->fields['folder'])) unset($this->fields['folder']);
 
@@ -120,20 +121,20 @@ class documentsfile extends data_object
 
         if ($this->new) // insert
         {
-        	if ($this->tmpfile == 'none' && $this->file == 'none') $error = _PLOOPI_ERROR_EMPTYFILE;
+            if ($this->tmpfile == 'none' && $this->file == 'none') $error = _PLOOPI_ERROR_EMPTYFILE;
 
-        	if ($this->fields['size']>_PLOOPI_MAXFILESIZE) $error = _PLOOPI_ERROR_MAXFILESIZE;
+            if ($this->fields['size']>_PLOOPI_MAXFILESIZE) $error = _PLOOPI_ERROR_MAXFILESIZE;
 
-        	if (!$error)
+            if (!$error)
             {
                 $this->fields['extension'] = substr(strrchr($this->fields['name'], "."),1);
 
                 $id = parent::save();
-                
+
                 $this->fields['md5id'] = md5(sprintf("%s_%d", $this->fields['timestp_create'], $id));
-                
+
                 parent::save();
-                
+
                 $basepath = $this->getbasepath();
                 $filepath = $this->getfilepath();
 
@@ -327,8 +328,8 @@ class documentsfolder extends data_object
         $this->fields['timestp_modify'] = $this->fields['timestp_create'];
         $this->fields['parents']=0;
     }
-    
-    
+
+
     /**
      * Ouvre un dossier avec son identifiant MD5
      *
@@ -343,8 +344,8 @@ class documentsfolder extends data_object
         $db->query("SELECT id FROM ploopi_documents_folder WHERE md5id = '".$db->addslashes($md5id)."'");
         if ($fields = $db->fetchrow()) return($this->open($fields['id']));
         else return false;
-    }    
-    
+    }
+
     /**
      * Enregistre le dossier
      *
@@ -352,23 +353,23 @@ class documentsfolder extends data_object
      */
     function save()
     {
-    	if ($this->new)
-    	{
-	        $id = parent::save();
+        if ($this->new)
+        {
+            $id = parent::save();
             $this->fields['md5id'] = md5(sprintf("%s_%d", $this->fields['timestp_create'], $id));
-	        
-	        if ($this->fields['id_folder'] != 0)
-	        {
-	            $docfolder_parent = new documentsfolder();
-	            $docfolder_parent->open($this->fields['id_folder']);
-	            $this->fields['parents'] = "{$docfolder_parent->fields['parents']},{$this->fields['id_folder']}";
-	            $docfolder_parent->fields['nbelements'] = ploopi_documents_countelements($this->fields['id_folder']);
-	            $docfolder_parent->save();
-	        }
-    		
+
+            if ($this->fields['id_folder'] != 0)
+            {
+                $docfolder_parent = new documentsfolder();
+                $docfolder_parent->open($this->fields['id_folder']);
+                $this->fields['parents'] = "{$docfolder_parent->fields['parents']},{$this->fields['id_folder']}";
+                $docfolder_parent->fields['nbelements'] = ploopi_documents_countelements($this->fields['id_folder']);
+                $docfolder_parent->save();
+            }
+
             parent::save();
-    	}
-    	
+        }
+
         else $id= parent::save();
 
         return $id;
@@ -437,7 +438,7 @@ class documentsfolder extends data_object
 
         return $objDocChild;
     }
-    
+
     /**
      * Retourne l'arbre complet des dossiers et des fichiers sous forme d'un tableau d'objets
      * $arr[id_folder] => array('folders' => array(), 'files' => array());
@@ -449,8 +450,8 @@ class documentsfolder extends data_object
         $objDO = new data_object_collection('documentsfile');
         $objDO->add_orderby('name');
         $arrObjFile = $objDO->get_objects(true);
-        
-        // Lecture des dossiers        
+
+        // Lecture des dossiers
         $objDO = new data_object_collection('documentsfolder');
         $objDO->add_where('id_object = %d', $this->fields['id_object']);
         $objDO->add_where('id_record = %s', $this->fields['id_record']);
@@ -459,22 +460,22 @@ class documentsfolder extends data_object
         $objDO->add_where("parents LIKE %s", $this->fields['parents'].',%');
         $objDO->add_orderby('parents, name');
         $arrObjFolder = $objDO->get_objects();
-        
+
         // Construction de l'arbre
         $arrTree = array('folders' => array(), 'files' => array(), 'tree' => array());
-        
+
         // Premier noeud, le dossier courant
         $arrTree['folders'][$this->fields['id']] = $this;
-        
+
         // Gestion des dossiers
-        foreach($arrObjFolder as $objFolder) 
+        foreach($arrObjFolder as $objFolder)
         {
             $arrTree['folders'][$objFolder->fields['id']] = $objFolder;
             $arrTree['tree'][$objFolder->fields['id_folder']]['folders'][] = &$arrTree['folders'][$objFolder->fields['id']];
         }
 
         // Gestion des fichiers
-        foreach($arrObjFile as $objFile)  
+        foreach($arrObjFile as $objFile)
         {
             if (isset($arrTree['folders'][$objFile->fields['id_folder']]))
             {
@@ -482,13 +483,13 @@ class documentsfolder extends data_object
                 $arrTree['tree'][$objFile->fields['id_folder']]['files'][] = &$arrTree['files'][$objFile->fields['id']];
             }
         }
-        
+
         return $arrTree;
     }
-    
+
     /**
-     * Retourne un tableau contenant la liste des fichiers sour la forme $arr['id_file'] => array('file', 'folder', 'path') 
-     * 
+     * Retourne un tableau contenant la liste des fichiers sour la forme $arr['id_file'] => array('file', 'folder', 'path')
+     *
      * @return array tableau de chemins
      */
     public function getlist()
@@ -496,28 +497,28 @@ class documentsfolder extends data_object
         $arrTree = $this->gettree();
         return self::_getlist_rec($arrTree);
     }
-    
-    
+
+
     /**
-     * Retourne un tableau contenant la liste des fichiers sour la forme $arr['id_file'] => array('file', 'folder', 'path') 
-     * 
+     * Retourne un tableau contenant la liste des fichiers sour la forme $arr['id_file'] => array('file', 'folder', 'path')
+     *
      * @param array $arrTree arbre des dossiers/fichiers
      * @param int $intIdFolder identifiant du dossier courant
-     * @param string $strPath chemin relatif par rapport au dossier de départ 
+     * @param string $strPath chemin relatif par rapport au dossier de départ
      * @return array tableau de chemins
      */
-    
+
     private static function _getlist_rec(&$arrTree, $intIdFolder = null, $strPath = '')
     {
         $arrFiles = array();
-        
-        if (is_null($intIdFolder)) 
+
+        if (is_null($intIdFolder))
         {
             reset($arrTree['tree']);
             $intIdFolder = key($arrTree['tree']);
         }
         else $strPath .= $arrTree['folders'][$intIdFolder]->fields['name'].'/';
-        
+
         // Parcours des fichiers de la branche courante
         if (isset($arrTree['tree'][$intIdFolder]['files']))
         {
@@ -526,7 +527,7 @@ class documentsfolder extends data_object
                 $arrFiles[$objFile->fields['id']] = array('file' => $objFile, 'folder' => $arrTree['folders'][$intIdFolder], 'path' => $strPath.$objFile->fields['name']);
             }
         }
-        
+
         // Parcours des dossiers de la branche courante
         if (isset($arrTree['tree'][$intIdFolder]['folders']))
         {
@@ -535,51 +536,51 @@ class documentsfolder extends data_object
                 $arrFiles = $arrFiles + self::_getlist_rec($arrTree, $objFolder->fields['id'], $strPath);
             }
         }
-        
+
         return $arrFiles;
     }
-    
+
     /**
      * Retourne les fichiers du dossier
-     * 
+     *
      * @param bool $booRecursive true si la fonction doit retourner les fichiers des sous-dossiers
      * @return array tableau de "documentsfile"
-     * 
+     *
      */
     public function getfiles($booRecursive = false)
     {
-        
+
         $objDO = new data_object_collection('documentsfile');
         if (!$booRecursive) $objDO->add_where('id_folder = %d', $this->fields['id']);
         $objDO->add_orderby('name');
         $arrObjFile = $objDO->get_objects(true);
-        
+
         return $arrObjFile;
     }
-    
+
     /**
      * Retourne le dossier racine d'un objet
-     * 
+     *
      * @param int $id_object id de l'objet
      * @param string $id_record id de l'enregistrement
      * @param string $id_module id du module
      * @return documentsfolder dossier racine
      */
-    
+
     public static function getroot($id_object, $id_record, $id_module = null)
     {
         if (empty($id_module)) $id_module = $_SESSION['ploopi']['moduleid'];
-            
+
         $objDO = new data_object_collection('documentsfolder');
         $objDO->add_where('id_object = %d', $id_object);
         $objDO->add_where('id_record = %s', $id_record);
         $objDO->add_where('id_module = %d', $id_module);
         $objDO->add_where("parents = '0'");
-        
+
         $arrObjFolder = $objDO->get_objects();
-        
+
         return empty($arrObjFolder) ? null : current($arrObjFolder);
     }
-    
+
 }
 
