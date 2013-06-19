@@ -1043,7 +1043,7 @@ class form_datetime extends form_field
         $strOutput .= "</select>";
 
         $strOutput .= "<select name=\"{$this->_strName}_time_m\" id=\"{$this->_strId}_time_m\" tabindex=\"{$intTabindex}\"{$strProperties_M}{$strEvents}>";
-        for ($intM = 0; $intM < 59; $intM++ ) $strOutput .= sprintf('<option %s value="%2$02d">%2$02d</option>', $intM == intval($strMinute) ? 'selected="selected"' : '', $intM);
+        for ($intM = 0; $intM < 60; $intM++ ) $strOutput .= sprintf('<option %s value="%2$02d">%2$02d</option>', $intM == intval($strMinute) ? 'selected="selected"' : '', $intM);
         $strOutput .= "</select>";
 
         //$strOutput .= "<input type=\"text\" name=\"{$this->_strName}_time\" id=\"{$this->_strId}_time\" value=\"{$arrValues['time']}\" tabindex=\"{$intTabindex}\"{$strProperties}{$strMaxLength}{$strEvents} />";
