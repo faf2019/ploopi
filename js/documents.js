@@ -23,13 +23,13 @@
 
 function ploopi_documents_openfolder(query, event)
 {
-    ploopi_showpopup('', 400, event, 'click', 'ploopi_documents_openfolder_popup');
+    ploopi_showpopup('', 460, event, 'click', 'ploopi_documents_openfolder_popup');
     ploopi_xmlhttprequest_todiv('admin-light.php', query, 'ploopi_documents_openfolder_popup');
 }
 
 function ploopi_documents_openfile(query, event)
 {
-    ploopi_showpopup('', 400, event, 'click', 'ploopi_documents_openfile_popup');
+    ploopi_showpopup('', 460, event, 'click', 'ploopi_documents_openfile_popup');
     ploopi_xmlhttprequest_todiv('admin-light.php', query, 'ploopi_documents_openfile_popup');
 }
 
