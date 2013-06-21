@@ -284,6 +284,7 @@ switch($ploopi_op)
             $documentsfile->fields['id_workspace'] = $_SESSION['documents'][$documents_id]['id_workspace'];
         }
 
+        $documentsfile->fields['id_folder'] = $documentsfolder->fields['id'];
         $documentsfile->setvalues($_POST,'documentsfile_');
 
         if (isset($_POST['fck_documentsfile_description']))
@@ -291,7 +292,6 @@ switch($ploopi_op)
 
         if (isset($documentsfile->fields['timestp_file'])) $documentsfile->fields['timestp_file'] = ploopi_local2timestamp($documentsfile->fields['timestp_file']);
 
-        $documentsfile->fields['id_folder'] = $documentsfolder->fields['id'];
 
         if (!empty($_FILES['documentsfile_file']['name']))
         {
@@ -345,6 +345,7 @@ switch($ploopi_op)
         if (empty($_GET['documentsfile_id']))
         {
             $documentsfile->init_description();
+            $documentsfile->fields['id_folder'] = $_GET['currentfolder'];
             $title = "Nouveau Fichier";
         }
         else
@@ -383,6 +384,18 @@ switch($ploopi_op)
                     <p>
                         <label>Nouveau Fichier:</label>
                         <input type="file" class="text" name="documentsfile_file" tabindex="2">
+                    </p>
+                    <p>
+                        <label>Dossier Parent:</label>
+                        <select name="documentsfile_id_folder" tabindex="2">
+                        <?php
+                        foreach(ploopi_documents_listfolders($_SESSION['documents'][$_GET['documents_id']]['id_object'], $_SESSION['documents'][$_GET['documents_id']]['id_record'], $_SESSION['documents'][$_GET['documents_id']]['id_module']) as $row) {
+                            ?>
+                            <option value="<?php echo $row['id']; ?>" <?php if ($row['id'] == $documentsfile->fields['id_folder']) echo 'selected="selected"'; ?>><?php echo htmlentities($row['name']); ?></option>
+                            <?
+                        }
+                        ?>
+                        </select>
                     </p>
                     <?php
                 }
@@ -476,8 +489,8 @@ switch($ploopi_op)
         {
             $documentsfolder->delete();
 
-            if (!empty($_SESSION['documents']['callback_inc'])) include $_SESSION['documents']['callback_inc'];
-            if (!empty($_SESSION['documents']['callback_func'])) $_SESSION['documents']['callback_func']('deletefolder', $documentsfolder);
+            if (!empty($_SESSION['documents'][$_REQUEST['documents_id']]['callback_inc'])) include $_SESSION['documents'][$_REQUEST['documents_id']]['callback_inc'];
+            if (!empty($_SESSION['documents'][$_REQUEST['documents_id']]['callback_func'])) $_SESSION['documents'][$_REQUEST['documents_id']]['callback_func']('deletefolder', $documentsfolder);
         }
         ploopi_redirect("admin.php?ploopi_op=documents_browser&currentfolder={$_GET['currentfolder']}&documents_id={$_REQUEST['documents_id']}");
     break;

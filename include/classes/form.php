@@ -996,8 +996,9 @@ class form_datetime extends form_field
      */
     private static $_arrDefaultOptions = array(
         'style' => 'width:100px;margin-right:2px;',
-        'style_h' => 'width:45px;margin-right:2px;',
-        'style_m' => 'width:45px;'
+        'style_h' => 'width:50px;margin-right:2px;',
+        'style_m' => 'width:50px;margin-right:2px;',
+        'style_s' => 'width:50px;'
     );
 
     /**
@@ -1030,10 +1031,11 @@ class form_datetime extends form_field
         $strProperties = $this->generateProperties();
         $strProperties_H = $this->generateProperties(null, $this->_arrOptions['style_h']);
         $strProperties_M = $this->generateProperties(null, $this->_arrOptions['style_m']);
+        $strProperties_S = $this->generateProperties(null, $this->_arrOptions['style_s']);
 
         $strMaxLength = is_null($this->_arrOptions['maxlength']) || !is_numeric($this->_arrOptions['maxlength']) ? '' : " maxlength=\"{$this->_arrOptions['maxlength']}\"";
         $strDate = htmlentities($this->_arrValues['date']);
-        list($strHour, $strMinute) = explode(':', $this->_arrValues['time']);
+        list($strHour, $strMinute, $strSecond) = explode(':', $this->_arrValues['time']);
 
         $strOutput .= "<input type=\"text\" name=\"{$this->_strName}_date\" id=\"{$this->_strId}_date\" value=\"{$strDate}\" tabindex=\"{$intTabindex}\"{$strProperties}{$strMaxLength}{$strEvents} />";
         if (!$this->_arrOptions['readonly'] && !$this->_arrOptions['disabled']) $strOutput .= ploopi_open_calendar($this->_strId.'_date', false, null, 'display:block;float:left;margin-left:-35px;margin-top:5px;');
@@ -1044,6 +1046,10 @@ class form_datetime extends form_field
 
         $strOutput .= "<select name=\"{$this->_strName}_time_m\" id=\"{$this->_strId}_time_m\" tabindex=\"{$intTabindex}\"{$strProperties_M}{$strEvents}>";
         for ($intM = 0; $intM < 60; $intM++ ) $strOutput .= sprintf('<option %s value="%2$02d">%2$02d</option>', $intM == intval($strMinute) ? 'selected="selected"' : '', $intM);
+        $strOutput .= "</select>";
+
+        $strOutput .= "<select name=\"{$this->_strName}_time_s\" id=\"{$this->_strId}_time_s\" tabindex=\"{$intTabindex}\"{$strProperties_S}{$strEvents}>";
+        for ($intS = 0; $intS < 60; $intS++ ) $strOutput .= sprintf('<option %s value="%2$02d">%2$02d</option>', $intS == intval($strSecond) ? 'selected="selected"' : '', $intS);
         $strOutput .= "</select>";
 
         //$strOutput .= "<input type=\"text\" name=\"{$this->_strName}_time\" id=\"{$this->_strId}_time\" value=\"{$arrValues['time']}\" tabindex=\"{$intTabindex}\"{$strProperties}{$strMaxLength}{$strEvents} />";

@@ -358,6 +358,40 @@ function ploopi_documents_getfolders($id_object, $id_record, $id_module = -1)
 }
 
 /**
+ * Renvoie un tableau de dossiers attachés à un enregistrement d'un objet (liste récursive)
+ *
+ * @param int $id_object identifiant de l'objet
+ * @param string $id_record identifiant de l'enregistrement
+ * @param int $id_workspace identifiant de l'espace de travail (optionnel)
+ * @param int $id_module identifiant du module (optionnel)
+ * @return array tableau contenant le nom des dossiers
+ */
+
+function ploopi_documents_listfolders($id_object, $id_record, $id_module = -1)
+{
+    $arrFolders = ploopi_documents_getfolders($id_object, $id_record, $id_module);
+    return _ploopi_documents_listfolders_rec($arrFolders);
+}
+
+/**
+ * Dépendance "privée" de "ploopi_documents_listfolders"
+ */
+
+function _ploopi_documents_listfolders_rec($arrFolders, $key = 0)
+{
+    $arrFoldersRec = array();
+    
+    if (isset($arrFolders[$key])) {
+        foreach($arrFolders[$key] as $row) {
+            $arrFoldersRec[] = $row;
+            $arrFoldersRec = array_merge($arrFoldersRec, _ploopi_documents_listfolders_rec($arrFolders, $row['id']));
+        }
+    }
+    
+    return $arrFoldersRec;
+}
+
+/**
  * Sauvegarde un fichier dans un dossier attaché à un enregistrement d'un objet
  *
  * @param int $id_object identifiant de l'objet
