@@ -28,25 +28,44 @@
 
 function ploopi_skin_array_renderupdate(array_id)
 {
-
     greater = $('ploopi_explorer_values_inner_'+array_id).offsetHeight > $('ploopi_explorer_values_outer_'+array_id).offsetHeight;
 
     if (greater)
     {
-        // Récupération de la largeur de la scrollbar verticale
-        scrollbar_width = $('ploopi_explorer_values_outer_'+array_id).offsetWidth - $('ploopi_explorer_values_inner_'+array_id).offsetWidth;
+        // N'existe pas ?
+        if (!$('ploopi_explorer_spacer_'+array_id)) {
+            // Récupération de la largeur de la scrollbar verticale
+            scrollbar_width = $('ploopi_explorer_values_outer_'+array_id).offsetWidth - $('ploopi_explorer_values_inner_'+array_id).offsetWidth;
 
-        // Insertion d'un bloc de la largeur de la scrollbar dans la ligne de titre
-        $('ploopi_explorer_title_'+array_id).innerHTML = '<div style=\'float:right;width:'+scrollbar_width+'px;\'>&nbsp;</div>'+$('ploopi_explorer_title_'+array_id).innerHTML;
+            // Insertion d'un bloc de la largeur de la scrollbar dans la ligne de titre
+            $('ploopi_explorer_title_'+array_id).innerHTML = '<div id="ploopi_explorer_spacer_'+array_id+'" style=\'float:right;width:'+scrollbar_width+'px;\'>&nbsp;</div>'+$('ploopi_explorer_title_'+array_id).innerHTML;
 
-        columns = $('ploopi_explorer_main_'+array_id).getElementsByClassName('ploopi_explorer_column');
+            columns = $('ploopi_explorer_main_'+array_id).getElementsByClassName('ploopi_explorer_column');
 
-        for (j=0;j<columns.length;j++)
-        {
-            if (columns[j].style.right != '')
+            for (j=0;j<columns.length;j++)
             {
-                columns[j].style.right = (parseInt(columns[j].style.right)+scrollbar_width)+'px';
+                if (columns[j].style.right != '')
+                {
+                    columns[j].style.right = (parseInt(columns[j].style.right)+scrollbar_width)+'px';
+                }
             }
+        }
+    }
+    else {
+        if ($('ploopi_explorer_spacer_'+array_id)) {
+            scrollbar_width = $('ploopi_explorer_spacer_'+array_id).getWidth();
+            $('ploopi_explorer_spacer_'+array_id).remove();
+
+            columns = $('ploopi_explorer_main_'+array_id).getElementsByClassName('ploopi_explorer_column');
+
+            for (j=0;j<columns.length;j++)
+            {
+                if (columns[j].style.right != '')
+                {
+                    columns[j].style.right = (parseInt(columns[j].style.right)-scrollbar_width)+'px';
+                }
+            }
+
         }
     }
 
