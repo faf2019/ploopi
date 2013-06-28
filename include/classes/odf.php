@@ -76,6 +76,18 @@ class odf_varparser
         <style:style style:name="PLOOPI_IMG_CENTER" style:family="graphic" style:parent-style-name="Graphics">
             <style:graphic-properties style:horizontal-pos="center" style:horizontal-rel="paragraph" style:mirror="none" fo:margin-top="0.15cm" fo:margin-right="0.15cm" fo:margin-bottom="0.15cm" fo:margin-left="0.15cm" fo:clip="rect(0cm, 0cm, 0cm, 0cm)" draw:luminance="0%" draw:contrast="0%" draw:red="0%" draw:green="0%" draw:blue="0%" draw:gamma="100%" draw:color-inversion="false" draw:image-opacity="100%" draw:color-mode="standard"/>
         </style:style>
+
+        <style:style style:name="PLOOPI14" style:family="text">
+            <style:text-properties fo:font-size="14pt" style:font-size-asian="14pt" style:font-size-complex="14pt" />
+        </style:style>
+
+        <style:style style:name="PLOOPI16" style:family="text">
+            <style:text-properties fo:font-size="14pt" style:font-size-asian="14pt" style:font-size-complex="14pt" />
+        </style:style>
+
+        <style:style style:name="PLOOPI20" style:family="text">
+            <style:text-properties fo:font-size="14pt" style:font-size-asian="14pt" style:font-size-complex="14pt" />
+        </style:style>
     ';
 
     /**
@@ -398,7 +410,7 @@ class odf_blockparser
 
 /**
  * Conversion de balises HTML en version ODF
- * Pour le moment : strong, b, em, u, i, img ?
+ * Pour le moment : strong, b, em, u, i, img, h1, h2, h3 ?
  */
 
 class odf_html2odf
@@ -505,6 +517,24 @@ class odf_html2odf
                 $this->_result .= $content;
             break;
 
+            case 'h1':
+                $content = '<text:span text:style-name="PLOOPI20">';
+                $this->_stack[] = array('h1', $content);
+                $this->_result .= $content;
+            break;
+
+            case 'h2':
+                $content = '<text:span text:style-name="PLOOPI16">';
+                $this->_stack[] = array('h2', $content);
+                $this->_result .= $content;
+            break;
+
+            case 'h3':
+                $content = '<text:span text:style-name="PLOOPI14">';
+                $this->_stack[] = array('h3', $content);
+                $this->_result .= $content;
+            break;
+
             case 'hr':
                 // Astuce pour traiter les retours à la ligne :
                 // Fermer tous les span/a ouverts et les réouvrir
@@ -573,6 +603,14 @@ class odf_html2odf
 
             case 'i':
                 $this->_result .= '</text:span>';
+                array_pop($this->_stack);
+            break;
+
+            case 'h1':
+            case 'h2':
+            case 'h3':
+                $this->_result .= '</text:span>';
+                //$this->_result .= '</text:h>';
                 array_pop($this->_stack);
             break;
 
