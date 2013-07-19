@@ -70,7 +70,7 @@ if (ploopi_ismoduleallowed('weathertools'))
                     $arrConfig['proxy_port'] = _PLOOPI_INTERNETPROXY_PORT;
                     $arrConfig['proxy_user'] = _PLOOPI_INTERNETPROXY_USER;
                     $arrConfig['proxy_password'] = _PLOOPI_INTERNETPROXY_PASS;
-                    $arrConfig['proxy_auth_scheme'] = HTTP_Request2::AUTH_DIGEST;
+                    $arrConfig['proxy_auth_scheme'] = HTTP_Request2::AUTH_BASIC;
                     $objRequest->setConfig($arrConfig);
                 }
 
@@ -114,7 +114,7 @@ if (ploopi_ismoduleallowed('weathertools'))
                     $arrConfig['proxy_port'] = _PLOOPI_INTERNETPROXY_PORT;
                     $arrConfig['proxy_user'] = _PLOOPI_INTERNETPROXY_USER;
                     $arrConfig['proxy_password'] = _PLOOPI_INTERNETPROXY_PASS;
-                    $arrConfig['proxy_auth_scheme'] = HTTP_Request2::AUTH_DIGEST;
+                    $arrConfig['proxy_auth_scheme'] = HTTP_Request2::AUTH_BASIC;
                 }
 
                 $objResponse = $objRequest->send();
