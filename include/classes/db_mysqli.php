@@ -253,6 +253,7 @@ class ploopi_db
 
         if (!$this->isconnected()) return false;
 
+        /*
         if($query != '')
         {
             $this->num_queries++;
@@ -266,6 +267,23 @@ class ploopi_db
 
             if ($this->query_result === false) trigger_error($this->mysqli->error."<br /><b>query:</b> {$query}", E_USER_WARNING);
 
+        }*/
+
+        if($query != '')
+        {
+            $this->num_queries++;
+
+            $this->timer_start();
+
+            $this->query_result = null;
+            
+            if ($this->mysqli->real_query($query)) {
+                $this->query_result = $this->mysqli->store_result();
+                if ($this->log) $this->arrLog[] = array ('query' => $query, 'time' => $stop);
+            }
+            else trigger_error($this->mysqli->error."<br /><b>query:</b> {$query}", E_USER_WARNING);
+
+            $stop = $this->timer_stop();
 
         }
 
