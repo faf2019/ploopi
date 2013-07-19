@@ -661,7 +661,7 @@ if($_POST['stage']>=$stage)
     $arrConfig['proxy_port'] = $_SESSION['install']['<INTERNETPROXY_PORT>'];
     $arrConfig['proxy_user'] = $_SESSION['install']['<INTERNETPROXY_USER>'];
     $arrConfig['proxy_password'] = $_SESSION['install']['<INTERNETPROXY_PASS>'];
-    $arrConfig['proxy_auth_scheme'] = HTTP_Request2::AUTH_DIGEST;
+    $arrConfig['proxy_auth_scheme'] = HTTP_Request2::AUTH_BASIC;
     $objRequest->setConfig($arrConfig);
     $booFormHidden = '0';
   }
