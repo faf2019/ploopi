@@ -337,7 +337,18 @@ abstract class ploopi_loader
             break;
 
             case 'quick':
-                include_once './include/quick.php';
+                if (empty($_SESSION['ploopi']['mode']))
+                {
+                    self::getworkspaces();
+                    self::getmodules();
+                    
+                    if (!empty($_SESSION['ploopi']['hosts']['frontoffice'][0]))
+                    {
+                        $_SESSION['ploopi']['workspaceid'] = $_SESSION['ploopi']['frontoffice']['workspaceid'] = $_SESSION['ploopi']['hosts']['frontoffice'][0];
+                    }
+                }
+
+                include './include/op.php';                
             break;
         }
 
