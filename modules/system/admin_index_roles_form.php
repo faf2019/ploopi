@@ -79,10 +79,10 @@ $modules = $workspace->getmodules();
             <input type="hidden" name="role_id_module" value="<?php echo $role->fields['id_module']; ?>">
 
             <label><?php echo _SYSTEM_LABEL_LABEL; ?>:</label>
-            <input type="text" class="text" name="role_label" style="width:300px;margin-bottom:4px;display:block;" value="<?php echo htmlentities($role->fields['label']); ?>">
+            <input type="text" class="text" name="role_label" style="width:300px;margin-bottom:4px;display:block;" value="<?php echo ploopi_htmlentities($role->fields['label']); ?>">
 
             <label><?php echo _SYSTEM_LABEL_DESCRIPTION; ?>:</label>
-            <textarea class="text" name="role_description" style="width:300px;height:50px;margin-bottom:4px;display:block;"><?php echo htmlentities($role->fields['description']); ?></textarea>
+            <textarea class="text" name="role_description" style="width:300px;height:50px;margin-bottom:4px;display:block;"><?php echo ploopi_htmlentities($role->fields['description']); ?></textarea>
 
             <p class="ploopi_va">
                 <input type="checkbox" name="role_shared" id="role_shared" value="1" <?php if ($role->fields['shared']) echo 'checked'; ?>>

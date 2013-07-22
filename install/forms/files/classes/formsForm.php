@@ -1660,8 +1660,8 @@ class formsForm extends data_object
             $arrFormOptions
         );
 
-        $strDesc = $this->fields['description'] == '' ? '' : '<p>'.ploopi_nl2br(htmlentities($this->fields['description'])).'</p>';
-        $objForm->addField( new form_html('<h1>'.ploopi_nl2br(htmlentities($this->fields['label'])).$strDesc.'</h1>') );
+        $strDesc = $this->fields['description'] == '' ? '' : '<p>'.ploopi_nl2br(ploopi_htmlentities($this->fields['description'])).'</p>';
+        $objForm->addField( new form_html('<h1>'.ploopi_nl2br(ploopi_htmlentities($this->fields['label'])).$strDesc.'</h1>') );
 
         /**
          * Pré-traitement nécessaire pour les liaisons multiples de champs liés à des formulaires (en français : listes imbriquées)
@@ -1719,9 +1719,9 @@ class formsForm extends data_object
             if ($objField->fields['separator'])
             {
                 $strStyle = empty($objField->fields['interline']) ? '' : "margin-top:{$objField->fields['interline']}px;";
-                $strDesc = $objField->fields['description'] == '' ? '' : '<p>'.ploopi_nl2br(htmlentities($objField->fields['description'])).'</p>';
+                $strDesc = $objField->fields['description'] == '' ? '' : '<p>'.ploopi_nl2br(ploopi_htmlentities($objField->fields['description'])).'</p>';
 
-                $objPanel->addField( new form_html('<h'.$objField->fields['separator_level'].' id="field_'.$objField->fields['id'].'_form" style="'.$strStyle.$objField->fields['style_form'].'">'.ploopi_nl2br(htmlentities($objField->fields['name'])).$strDesc.'</h'.$objField->fields['separator_level'].'>') );
+                $objPanel->addField( new form_html('<h'.$objField->fields['separator_level'].' id="field_'.$objField->fields['id'].'_form" style="'.$strStyle.$objField->fields['style_form'].'">'.ploopi_nl2br(ploopi_htmlentities($objField->fields['name'])).$strDesc.'</h'.$objField->fields['separator_level'].'>') );
             }
             elseif ($objField->fields['html'])
             {
@@ -1748,7 +1748,7 @@ class formsForm extends data_object
 
                     $arrOptions = array(
                         'required' => $booRequired,
-                        'description' => ploopi_nl2br(htmlentities($objField->fields['description'])),
+                        'description' => ploopi_nl2br(ploopi_htmlentities($objField->fields['description'])),
                         'style' => $objField->fields['style_field'],
                         'style_form' => (empty($objField->fields['interline']) ? '' : "margin-top:{$objField->fields['interline']}px;") . $objField->fields['style_form'],
                         'class_form' => 'field'
@@ -1958,7 +1958,7 @@ class formsForm extends data_object
 
                             $objPanel->addField( new form_field(
                                 'input:text',
-                                htmlentities($objField->fields['name']),
+                                ploopi_htmlentities($objField->fields['name']),
                                 isset($arrFieldsContent[$objField->fields['id']]) ? current($arrFieldsContent[$objField->fields['id']]) : '',
                                 'field_'.$objField->fields['id'],
                                 'field_'.$objField->fields['id'],

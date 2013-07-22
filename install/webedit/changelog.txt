@@ -1,3 +1,9 @@
+== Module WebEdit - version 2.5.1d ============================================
+
+2013-07-23  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Correction d'un bug lié à la modification du comportement de htmlentities avec PHP 5.4
+
 == Module WebEdit - version 2.5.1c ============================================
 
 2013-05-22  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

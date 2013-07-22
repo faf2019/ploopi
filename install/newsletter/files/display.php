@@ -194,17 +194,17 @@ if(!empty($objNewsletter->fields['banniere_id']))
     $banniere = $arrNewsletterParam['host'].'index-quick.php?ploopi_op=newsletter_display_banniere&banniere_id='.$objNewsletter->fields['banniere_id'];
 }
 
-$background_color = (!empty($objNewsletter->fields['background_color'])) ? htmlentities($objNewsletter->fields['background_color']) : '#ffffff';
-$content_color = (!empty($objNewsletter->fields['content_color'])) ? htmlentities($objNewsletter->fields['content_color']) : '#ffffff';
-$text_color = (!empty($objNewsletter->fields['text_color'])) ? htmlentities($objNewsletter->fields['text_color']) : '#000000';
+$background_color = (!empty($objNewsletter->fields['background_color'])) ? ploopi_htmlentities($objNewsletter->fields['background_color']) : '#ffffff';
+$content_color = (!empty($objNewsletter->fields['content_color'])) ? ploopi_htmlentities($objNewsletter->fields['content_color']) : '#ffffff';
+$text_color = (!empty($objNewsletter->fields['text_color'])) ? ploopi_htmlentities($objNewsletter->fields['text_color']) : '#000000';
 
 // Chargement des tag à appliquer au template
 $template_newsletter->set_filenames(array('body' => $template_file));
 $template_newsletter->assign_vars(
     array(
         'TEMPLATE_PATH'                 => $template_path,
-        'TITLE'                         => htmlentities($objNewsletter->fields['title']),
-        'SUBJECT'                       => htmlentities($objNewsletter->fields['subject']),
+        'TITLE'                         => ploopi_htmlentities($objNewsletter->fields['title']),
+        'SUBJECT'                       => ploopi_htmlentities($objNewsletter->fields['subject']),
         'BANNIERE'                      => $banniere,
         'BACKGROUND_COLOR'              => $background_color,
         'CONTENT_COLOR'                 => $content_color,

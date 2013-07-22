@@ -277,7 +277,7 @@ if ($_SESSION['ploopi']['connected'])
                         $rs = $db->query("SELECT distinct(month) FROM ploopi_mod_webedit_counter WHERE id_article = {$intArticleId} AND year = {$intYearSel} ORDER BY month");
                         $arrSelectMonth = $db->getarray($rs, true);
 
-                        $strPopupTitle = "Statistiques de fréquentation de l'article &laquo; ".htmlentities($objArticle->fields['title'])." &raquo;";
+                        $strPopupTitle = "Statistiques de fréquentation de l'article &laquo; ".ploopi_htmlentities($objArticle->fields['title'])." &raquo;";
                     break;
 
                     case 'heading':
@@ -323,7 +323,7 @@ if ($_SESSION['ploopi']['connected'])
 
                         $arrSelectMonth = $db->getarray($rs, true);
 
-                        $strPopupTitle = "Statistiques de fréquentation de la rubrique &laquo; ".htmlentities($objHeading->fields['label'])." &raquo;";
+                        $strPopupTitle = "Statistiques de fréquentation de la rubrique &laquo; ".ploopi_htmlentities($objHeading->fields['label'])." &raquo;";
                     break;
                 }
 

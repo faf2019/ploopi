@@ -1,3 +1,9 @@
+== Module BOOKING - version 1.0.4c ====================================================
+
+2013-07-22  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+* Correction d'un bug lié à la modification du comportement de htmlentities avec PHP 5.4
+
 == Module BOOKING - version 1.0.4b ====================================================
 
 2013-04-03  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>

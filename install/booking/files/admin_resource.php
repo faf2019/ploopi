@@ -179,7 +179,7 @@ while ($row = $db->fetchrow())
                     'active' => array('label' => ($row['active']) ? 'oui' : 'non'),
                     'color' => 
                         array(
-                            'label' => '<div style="width:8px;height:8px;margin-left:4px;border:1px solid #a0a0a0;background-color:'.htmlentities($row['color']).'"></div>'
+                            'label' => '<div style="width:8px;height:8px;margin-left:4px;border:1px solid #a0a0a0;background-color:'.ploopi_htmlentities($row['color']).'"></div>'
                         ),
                     'actions' => array('label' => ($row['c']) ? '&nbsp;' : '<input type="checkbox" class="booking_element_checkbox" value="'.$row['id'].'">')
                 ),

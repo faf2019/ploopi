@@ -86,7 +86,7 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
         <div class="ploopi_form" style="padding:4px;">
             <p>
                 <label><?php echo _FORMS_GRAPHIC_LABEL; ?>:</label>
-                <input type="text" class="text" name="forms_graphic_label" value="<?php echo htmlentities($objGraphic->fields['label']); ?>">
+                <input type="text" class="text" name="forms_graphic_label" value="<?php echo ploopi_htmlentities($objGraphic->fields['label']); ?>">
             </p>
             <p>
                 <label><?php echo _FORMS_GRAPHIC_TYPE; ?>:</label>
@@ -96,7 +96,7 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
                 foreach($forms_graphic_types as $strKey => $strValue)
                 {
                      ?>
-                     <option value="<?php echo $strKey; ?>" <?php echo ($strKey == $objGraphic->fields['type']) ? 'selected="selected"' : ''; ?>><?php echo htmlentities($strValue); ?></option>
+                     <option value="<?php echo $strKey; ?>" <?php echo ($strKey == $objGraphic->fields['type']) ? 'selected="selected"' : ''; ?>><?php echo ploopi_htmlentities($strValue); ?></option>
                      <?php
                 }
                 ?>
@@ -104,7 +104,7 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
             </p>
             <p>
                 <label><?php echo _FORMS_GRAPHIC_DESCRIPTION; ?>:</label>
-                <textarea class="text" name="forms_graphic_description"><?php echo htmlentities($objGraphic->fields['description']); ?></textarea>
+                <textarea class="text" name="forms_graphic_description"><?php echo ploopi_htmlentities($objGraphic->fields['description']); ?></textarea>
             </p>
             <p>
                 <label>Afficher les données en pourcentage:</label>
@@ -139,7 +139,7 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
                             foreach($arrFonts as $key => $value)
                             {
                                 ?>
-                                <option <?php if ($objGraphic->fields['param_font'] == $key) echo 'selected="selected"'; ?> value="<?php echo $key; ?>"><?php echo htmlentities($value); ?></option>
+                                <option <?php if ($objGraphic->fields['param_font'] == $key) echo 'selected="selected"'; ?> value="<?php echo $key; ?>"><?php echo ploopi_htmlentities($value); ?></option>
                                 <?php
                             }
                             ?>
@@ -266,7 +266,7 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
                             foreach($arrMarks as $key => $value)
                             {
                                 ?>
-                                <option <?php if ($objGraphic->fields['param_mark_type'] == $key) echo 'selected="selected"'; ?> value="<?php echo $key; ?>"><?php echo htmlentities($value); ?></option>
+                                <option <?php if ($objGraphic->fields['param_mark_type'] == $key) echo 'selected="selected"'; ?> value="<?php echo $key; ?>"><?php echo ploopi_htmlentities($value); ?></option>
                                 <?php
                             }
                             ?>
@@ -308,7 +308,7 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
                                 if (!$arrField['separator'] && !$arrField['captcha'] && !$arrField['html'])
                                 {
                                     ?>
-                                     <option value="<?php echo $intIdField; ?>" <?php echo ($intIdField == $objGraphic->fields["pie_field"]) ? 'selected="selected"' : ''; ?>><?php echo htmlentities($arrField['name']); ?></option>
+                                     <option value="<?php echo $intIdField; ?>" <?php echo ($intIdField == $objGraphic->fields["pie_field"]) ? 'selected="selected"' : ''; ?>><?php echo ploopi_htmlentities($arrField['name']); ?></option>
                                     <?php
                                 }
                             }
@@ -336,7 +336,7 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
                             if (!$arrField['separator'] && !$arrField['captcha'] && !$arrField['html'] && $arrField['type'] == 'text' && $arrField['format'] == 'date')
                             {
                                 ?>
-                                 <option value="<?php echo $intIdField; ?>" <?php echo ($intIdField == $objGraphic->fields["timefield"]) ? 'selected="selected"' : ''; ?>>Champ "<?php echo htmlentities($arrField['name']); ?>"</option>
+                                 <option value="<?php echo $intIdField; ?>" <?php echo ($intIdField == $objGraphic->fields["timefield"]) ? 'selected="selected"' : ''; ?>>Champ "<?php echo ploopi_htmlentities($arrField['name']); ?>"</option>
                                 <?php
                             }
                         }
@@ -351,7 +351,7 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
                     foreach($forms_graphic_line_aggregation as $strKey => $strValue)
                     {
                          ?>
-                         <option value="<?php echo $strKey; ?>" <?php echo ($strKey == $objGraphic->fields['line_aggregation']) ? 'selected="selected"' : ''; ?>><?php echo htmlentities($strValue); ?></option>
+                         <option value="<?php echo $strKey; ?>" <?php echo ($strKey == $objGraphic->fields['line_aggregation']) ? 'selected="selected"' : ''; ?>><?php echo ploopi_htmlentities($strValue); ?></option>
                          <?php
                     }
                     ?>
@@ -380,7 +380,7 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
                                         if (!$arrField['separator'] && !$arrField['captcha'] && !$arrField['html'])
                                         {
                                             ?>
-                                             <option value="<?php echo $intIdField; ?>" <?php echo ($intIdField == $objGraphic->fields["line{$intI}_filter"]) ? 'selected="selected"' : ''; ?>><?php echo htmlentities($arrField['name']); ?></option>
+                                             <option value="<?php echo $intIdField; ?>" <?php echo ($intIdField == $objGraphic->fields["line{$intI}_filter"]) ? 'selected="selected"' : ''; ?>><?php echo ploopi_htmlentities($arrField['name']); ?></option>
                                             <?php
                                         }
                                     }
@@ -396,7 +396,7 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
                                     foreach($field_operators as $strKey => $strValue)
                                     {
                                          ?>
-                                         <option value="<?php echo $strKey; ?>" <?php echo ($strKey == $objGraphic->fields["line{$intI}_filter_op"]) ? 'selected="selected"' : ''; ?>><?php echo htmlentities($strValue); ?></option>
+                                         <option value="<?php echo $strKey; ?>" <?php echo ($strKey == $objGraphic->fields["line{$intI}_filter_op"]) ? 'selected="selected"' : ''; ?>><?php echo ploopi_htmlentities($strValue); ?></option>
                                          <?php
                                     }
                                     ?>
@@ -413,7 +413,7 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
                                         if (!$arrField['separator'] && !$arrField['captcha'] && !$arrField['html'])
                                         {
                                             ?>
-                                             <option value="<?php echo $intIdField; ?>" <?php echo ($intIdField == $objGraphic->fields["line{$intI}_field"]) ? 'selected="selected"' : ''; ?>><?php echo htmlentities($arrField['name']); ?></option>
+                                             <option value="<?php echo $intIdField; ?>" <?php echo ($intIdField == $objGraphic->fields["line{$intI}_field"]) ? 'selected="selected"' : ''; ?>><?php echo ploopi_htmlentities($arrField['name']); ?></option>
                                             <?php
                                         }
                                     }
@@ -428,7 +428,7 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
                                     foreach($forms_graphic_operation as $strKey => $strValue)
                                     {
                                          ?>
-                                         <option value="<?php echo $strKey; ?>" <?php echo ($strKey == $objGraphic->fields["line{$intI}_operation"]) ? 'selected="selected"' : ''; ?>><?php echo htmlentities($strValue); ?></option>
+                                         <option value="<?php echo $strKey; ?>" <?php echo ($strKey == $objGraphic->fields["line{$intI}_operation"]) ? 'selected="selected"' : ''; ?>><?php echo ploopi_htmlentities($strValue); ?></option>
                                          <?php
                                     }
                                     ?>

@@ -45,7 +45,7 @@ if (isset($_GET['dbreport_query_id']) && is_numeric($_GET['dbreport_query_id']) 
 {
     if ($objDbrQuery->fields['locked'] && !ploopi_isactionallowed(dbreport::_ACTION_LOCK)) ploopi_logout();
 
-    echo $skin->open_simplebloc('Modification de la requête &laquo; '.htmlentities($objDbrQuery->fields['label']).' &raquo;');
+    echo $skin->open_simplebloc('Modification de la requête &laquo; '.ploopi_htmlentities($objDbrQuery->fields['label']).' &raquo;');
     ?>
     <div class="ploopi_tabs">
         <a title="Ajouter des tables à la requête" style="font-weight:bold;" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_topopup(400, event, 'dbreport_querytable_add', 'admin-light.php', '<? echo ploopi_queryencode("ploopi_op=dbreport_querytable_add&dbreport_query_id={$_GET['dbreport_query_id']}"); ?>', 'POST');"><img src="./modules/dbreport/img/ico_add_table.png" /><span>Ajouter des tables</span></a>
@@ -122,7 +122,7 @@ if (isset($_GET['dbreport_query_id']) && is_numeric($_GET['dbreport_query_id']) 
                         if (!isset($arrTableToKeep[$rowTable['tablename']]))
                         {
                             ?>
-                            <a title="Supprimer la table &laquo; <? echo htmlentities($rowTable['label']);?> &raquo;" href="javascript:void(0);" onclick="javascript:if (confirm('Êtes-vous certain de vouloir supprimer cette table ?')) document.location.href='<? echo ploopi_urlencode("admin-light.php?ploopi_op=dbreport_querytable_delete&dbreport_query_id={$_GET['dbreport_query_id']}&dbreport_querytable_id={$rowTable['id']}"); ?>';"><img src="./modules/dbreport/img/ico_close.png" /></a>
+                            <a title="Supprimer la table &laquo; <? echo ploopi_htmlentities($rowTable['label']);?> &raquo;" href="javascript:void(0);" onclick="javascript:if (confirm('Êtes-vous certain de vouloir supprimer cette table ?')) document.location.href='<? echo ploopi_urlencode("admin-light.php?ploopi_op=dbreport_querytable_delete&dbreport_query_id={$_GET['dbreport_query_id']}&dbreport_querytable_id={$rowTable['id']}"); ?>';"><img src="./modules/dbreport/img/ico_close.png" /></a>
                             <?
                         }
                         ?>
@@ -140,7 +140,7 @@ if (isset($_GET['dbreport_query_id']) && is_numeric($_GET['dbreport_query_id']) 
                         while($row = $objRs->fetchrow())
                         {
                             ?>
-                            <div class="dbreport_table_field"><strong><? echo htmlentities($row['label']); ?></strong><? if ($row['label'] != $row['name']) echo "<span>(".htmlentities($row['name']).")</span>"; ?><br /><em style="color:#888;"><? echo dbreport::getType(dbreport::getBasicType($row['type'])); ?></em></div>
+                            <div class="dbreport_table_field"><strong><? echo ploopi_htmlentities($row['label']); ?></strong><? if ($row['label'] != $row['name']) echo "<span>(".ploopi_htmlentities($row['name']).")</span>"; ?><br /><em style="color:#888;"><? echo dbreport::getType(dbreport::getBasicType($row['type'])); ?></em></div>
                             <?
                         }
                         ?>

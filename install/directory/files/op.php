@@ -62,7 +62,7 @@ if ($_SESSION['ploopi']['connected'])
                 <div class="ploopi_form">
                     <p>
                         <label>Libellé:</label>
-                        <input type="text" class="text" name="directory_list_label" value="<?php echo htmlentities($directory_list->fields['label']); ?>">
+                        <input type="text" class="text" name="directory_list_label" value="<?php echo ploopi_htmlentities($directory_list->fields['label']); ?>">
                     </p>
                 </div>
                 <div style="padding:0 4px 4px 0;text-align:right">
@@ -170,7 +170,7 @@ if ($_SESSION['ploopi']['connected'])
                             ?>
                             <div class="directory_checkbox" onclick="javascript:directory_checklist('<?php echo $row['id']; ?>');">
                                 <input type="checkbox" class="directory_id_list" id="directory_id_list<?php echo $row['id']; ?>" name="directory_favorites_id_list[]" value="<?php echo $row['id']; ?>" onclick="javascript:directory_checklist('<?php echo $row['id']; ?>');" <?php if ($row['nbfav']>0) echo 'checked'; ?> />
-                                <span><?php echo htmlentities($row['label']); ?></span>
+                                <span><?php echo ploopi_htmlentities($row['label']); ?></span>
                             </div>
                             <?php
                         }
@@ -554,7 +554,7 @@ if ($_SESSION['ploopi']['connected'])
                             <label>Rubrique:</label>
                             <select class="select" name="directory_speeddialing_heading" tabindex="110">
                                 <option value="" style="font-style:italic;">(Nouvelle rubrique)</option>
-                                <?php foreach($arrHeadings as $strHeading) echo '<option '.($objSpeedDialing->fields['heading'] == $strHeading ? 'selected="selected" ' : '').'value="'.htmlentities($strHeading).'">'.htmlentities($strHeading).'</option>'; ?>
+                                <?php foreach($arrHeadings as $strHeading) echo '<option '.($objSpeedDialing->fields['heading'] == $strHeading ? 'selected="selected" ' : '').'value="'.ploopi_htmlentities($strHeading).'">'.ploopi_htmlentities($strHeading).'</option>'; ?>
                             </select>
                         </p>
                         <p>
@@ -563,15 +563,15 @@ if ($_SESSION['ploopi']['connected'])
                         </p>
                         <p>
                             <label>Libellé:</label>
-                            <input type="text" name="directory_speeddialing_label" value="<? echo htmlentities($objSpeedDialing->fields['label']); ?>" class="text" tabindex="115" />
+                            <input type="text" name="directory_speeddialing_label" value="<? echo ploopi_htmlentities($objSpeedDialing->fields['label']); ?>" class="text" tabindex="115" />
                         </p>
                         <p>
                             <label>Numéro:</label>
-                            <input type="text" name="directory_speeddialing_number" value="<? echo htmlentities($objSpeedDialing->fields['number']); ?>" class="text" style="width:90px;" maxlength="16" tabindex="116" />
+                            <input type="text" name="directory_speeddialing_number" value="<? echo ploopi_htmlentities($objSpeedDialing->fields['number']); ?>" class="text" style="width:90px;" maxlength="16" tabindex="116" />
                         </p>
                         <p>
                             <label>Abrégé:</label>
-                            <input type="text" name="directory_speeddialing_shortnumber" value="<? echo htmlentities($objSpeedDialing->fields['shortnumber']); ?>" class="text" style="width:60px;" maxlength="32" tabindex="117" />
+                            <input type="text" name="directory_speeddialing_shortnumber" value="<? echo ploopi_htmlentities($objSpeedDialing->fields['shortnumber']); ?>" class="text" style="width:60px;" maxlength="32" tabindex="117" />
                         </p>
                     </div>
                         <div style="padding:2px 4px;text-align:right;">

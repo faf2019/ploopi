@@ -59,7 +59,7 @@ elseif (!empty($_GET['directory_id_user']))
 }
 else ploopi_die();
 
-$strName = htmlentities(trim($usr->fields['lastname'].' '.$usr->fields['firstname']));
+$strName = ploopi_htmlentities(trim($usr->fields['lastname'].' '.$usr->fields['firstname']));
 ?>
 
 <h1 class="directory_title" style="background-color:#c0c0c0;border-bottom:1px solid #a0a0a0;">
@@ -92,56 +92,56 @@ $strName = htmlentities(trim($usr->fields['lastname'].' '.$usr->fields['firstnam
             <h2 class="directory_title" style="background-color:#d0d0d0;border-bottom:1px solid #a0a0a0;">Informations professionnelles</h2>
             <p>
                 <label style="font-weight:bold;"><?php echo _DIRECTORY_SERVICE; ?>:</label>
-                <span><?php echo htmlentities($usr->fields['service']); ?></span>
+                <span><?php echo ploopi_htmlentities($usr->fields['service']); ?></span>
             </p>
             <p>
                 <label style="font-weight:bold;"><?php echo _DIRECTORY_FUNCTION; ?>:</label>
-                <span><?php echo htmlentities($usr->fields['function']); ?></span>
+                <span><?php echo ploopi_htmlentities($usr->fields['function']); ?></span>
             </p>
             <p>
                 <label style="font-weight:bold;"><?php echo _DIRECTORY_RANK; ?>:</label>
-                <span><?php echo htmlentities($usr->fields['rank']); ?></span>
+                <span><?php echo ploopi_htmlentities($usr->fields['rank']); ?></span>
             </p>
             <p>
                 <label style="font-weight:bold;"><?php echo _DIRECTORY_NUMBER; ?>:</label>
-                <span><?php echo htmlentities($usr->fields['number']); ?></span>
+                <span><?php echo ploopi_htmlentities($usr->fields['number']); ?></span>
             </p>
             <p>
                 <label style="font-weight:bold;"><?php echo _DIRECTORY_PHONE; ?>:</label>
-                <span><?php echo htmlentities($usr->fields['phone']); ?></span>
+                <span><?php echo ploopi_htmlentities($usr->fields['phone']); ?></span>
             </p>
             <p>
                 <label style="font-weight:bold;"><?php echo _DIRECTORY_MOBILE; ?>:</label>
-                <span><?php echo htmlentities($usr->fields['mobile']); ?></span>
+                <span><?php echo ploopi_htmlentities($usr->fields['mobile']); ?></span>
             </p>
             <p>
                 <label style="font-weight:bold;"><?php echo _DIRECTORY_FAX; ?>:</label>
-                <span><?php echo htmlentities($usr->fields['fax']); ?></span>
+                <span><?php echo ploopi_htmlentities($usr->fields['fax']); ?></span>
             </p>
             <p>
                 <label style="font-weight:bold;"><?php echo _DIRECTORY_EMAIL; ?>:</label>
-                <span><a href="mailto:<?php echo htmlentities($usr->fields['email']); ?>"><?php echo htmlentities($usr->fields['email']); ?></a></span>
+                <span><a href="mailto:<?php echo ploopi_htmlentities($usr->fields['email']); ?>"><?php echo ploopi_htmlentities($usr->fields['email']); ?></a></span>
             </p>
 
             <h2 class="directory_title" style="background-color:#d0d0d0;border-bottom:1px solid #a0a0a0;">Lieu de travail</h2>
             <p>
                 <label style="font-weight:bold;"><?php echo _DIRECTORY_BUILDING; ?>:</label>
-                <span><?php echo htmlentities($usr->fields['building']); ?></span>
+                <span><?php echo ploopi_htmlentities($usr->fields['building']); ?></span>
             </p>
             <p>
                 <label style="font-weight:bold;"><?php echo _DIRECTORY_FLOOR; ?>:</label>
-                <span><?php echo htmlentities($usr->fields['floor']); ?></span>
+                <span><?php echo ploopi_htmlentities($usr->fields['floor']); ?></span>
             </p>
             <p>
                 <label style="font-weight:bold;"><?php echo _DIRECTORY_OFFICE; ?>:</label>
-                <span><?php echo htmlentities($usr->fields['office']); ?></span>
+                <span><?php echo ploopi_htmlentities($usr->fields['office']); ?></span>
             </p>
             <?php
             $arrAddress = array();
 
-            if (!empty($usr->fields['address'])) $arrAddress[] = ploopi_nl2br(htmlentities($usr->fields['address']));
-            if (!empty($usr->fields['postalcode']) || !empty($usr->fields['city'])) $arrAddress[] = ploopi_nl2br(htmlentities(trim($usr->fields['postalcode'].' '.$usr->fields['city'])));
-            if (!empty($usr->fields['country'])) $arrAddress[] = ploopi_nl2br(htmlentities($usr->fields['country']));
+            if (!empty($usr->fields['address'])) $arrAddress[] = ploopi_nl2br(ploopi_htmlentities($usr->fields['address']));
+            if (!empty($usr->fields['postalcode']) || !empty($usr->fields['city'])) $arrAddress[] = ploopi_nl2br(ploopi_htmlentities(trim($usr->fields['postalcode'].' '.$usr->fields['city'])));
+            if (!empty($usr->fields['country'])) $arrAddress[] = ploopi_nl2br(ploopi_htmlentities($usr->fields['country']));
             ?>
             <p>
                 <label style="font-weight:bold;"><?php echo _DIRECTORY_ADDRESS; ?>:</label>
@@ -152,7 +152,7 @@ $strName = htmlentities(trim($usr->fields['lastname'].' '.$usr->fields['firstnam
             <div id="directory_view_details" style="display:none;">
                 <p>
                     <label style="font-weight:bold;"><?php echo _DIRECTORY_COMMENTARY; ?>:</label>
-                    <span><?php echo ploopi_nl2br(htmlentities($usr->fields['comments'])); ?></span>
+                    <span><?php echo ploopi_nl2br(ploopi_htmlentities($usr->fields['comments'])); ?></span>
                 </p>
                 <?php
                 if (!empty($_GET['directory_id_contact']) && !empty($usr->fields['id_heading']))
@@ -180,7 +180,7 @@ $strName = htmlentities(trim($usr->fields['lastname'].' '.$usr->fields['firstnam
                                 $arrTitle[] = $arrHeadings['list'][$usr->fields['id_heading']]['label'];
                             }
         
-                            echo ploopi_nl2br(htmlentities(implode("\n", $arrTitle)));
+                            echo ploopi_nl2br(ploopi_htmlentities(implode("\n", $arrTitle)));
                             ?>
                         </span>
                     </p>

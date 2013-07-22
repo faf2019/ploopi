@@ -248,11 +248,11 @@ switch($ploopi_op)
                 <?
                 if (ploopi_isactionallowed(_PLANNING_ADD_EVENT))
                 {
-                    ?><input name="planning_event_object" type="text" class="text" value="<? echo htmlentities($objEvent->fields['object']); ?>"><?
+                    ?><input name="planning_event_object" type="text" class="text" value="<? echo ploopi_htmlentities($objEvent->fields['object']); ?>"><?
                 }
                 else
                 {
-                    ?><span><? echo htmlentities($objEvent->fields['object']); ?></span><?
+                    ?><span><? echo ploopi_htmlentities($objEvent->fields['object']); ?></span><?
                 }
                 ?>
             </p>
@@ -357,7 +357,7 @@ switch($ploopi_op)
                         foreach ($arrPlanningPeriodicity as $key => $value)
                         {
                             ?>
-                            <option value="<? echo $key; ?>"><? echo htmlentities($value); ?></option>
+                            <option value="<? echo $key; ?>"><? echo ploopi_htmlentities($value); ?></option>
                             <?
                         }
                         ?>

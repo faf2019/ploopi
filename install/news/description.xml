@@ -2,9 +2,9 @@
 <ploopi>
    <moduletype>
       <label>news</label>
-      <version>2.5.2f</version>
+      <version>2.5.3</version>
       <author>Netlor / Ovensia</author>
-      <date>20100119094800</date>
+      <date>20130722000000</date>
       <description>Gestion d'Actualités</description>
       <paramtype>
          <name>nbnewsdisplay</name>

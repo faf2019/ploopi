@@ -130,7 +130,7 @@ $_SESSION['ploopi']['newsletter'][$_SESSION['ploopi']['moduleid']]['list_receiv'
 <form action="<?php echo ploopi_urlencode('admin.php?op=newsletter_list_to&id_newsletter='.$_GET['id_newsletter']); ?>" method="post">
 <p class="ploopi_va" style="padding:4px;border-bottom:2px solid #c0c0c0;">
     <span><?php echo _NEWSLETTER_LABEL_EMAIL; ?> :</span>
-    <input class="text" ID="system_user" name="filter" type="text" size="15" maxlength="255" value="<?php echo htmlentities($filter); ?>">
+    <input class="text" ID="system_user" name="filter" type="text" size="15" maxlength="255" value="<?php echo ploopi_htmlentities($filter); ?>">
     <input type="submit" value="<?php echo _PLOOPI_FILTER; ?>" class="button">
     <input type="submit" name="reset" value="<?php echo _PLOOPI_RESET; ?>" class="button">
 </p>
@@ -185,7 +185,7 @@ while ($fields = $db->fetchrow($result))
   // date time d'envoi
   $arrNewsletterDateSend = ploopi_timestamp2local($fields['timestp_send']);
 
-  $values[$c]['values']['email']       = array('label' => htmlentities($fields['email_subscriber']));
+  $values[$c]['values']['email']       = array('label' => ploopi_htmlentities($fields['email_subscriber']));
   $values[$c]['values']['ip']          = array('label' => str_replace(',','<br/>',$fields['ip']));
   $values[$c]['values']['timestpsend']    = array('label' => $arrNewsletterDateSend['date'].' '.$arrNewsletterDateSend['time']);
   // Date d'inscription

@@ -118,38 +118,38 @@ if (!empty($_POST['historyoption']))
     <div style="margin:0; padding:0; float:left;width:49%;" class="ploopi_form">
         <p>
             <label>Entre le (date):</label>
-            <input type="text" class="text" name="filter_date" id="filter_date" style="width:100px;" value="<?php echo htmlentities($arrSearchPattern['date']); ?>"><?php ploopi_open_calendar('filter_date'); ?>
+            <input type="text" class="text" name="filter_date" id="filter_date" style="width:100px;" value="<?php echo ploopi_htmlentities($arrSearchPattern['date']); ?>"><?php ploopi_open_calendar('filter_date'); ?>
         </p>
         <p>
             <label>et le (date):</label>
-            <input type="text" class="text" name="filter_date2" id="filter_date2" style="width:100px;" value="<?php echo htmlentities($arrSearchPattern['date2']); ?>"><?php ploopi_open_calendar('filter_date2'); ?>
+            <input type="text" class="text" name="filter_date2" id="filter_date2" style="width:100px;" value="<?php echo ploopi_htmlentities($arrSearchPattern['date2']); ?>"><?php ploopi_open_calendar('filter_date2'); ?>
         </p>
         <p>
             <label>Utilisateur:</label>
-            <input type="text" class="text" name="filter_user" value="<?php echo htmlentities($arrSearchPattern['user']); ?>">
+            <input type="text" class="text" name="filter_user" value="<?php echo ploopi_htmlentities($arrSearchPattern['user']); ?>">
         </p>
         <p>
             <label>Espace de travail:</label>
-            <input type="text" class="text" name="filter_workspace" value="<?php echo htmlentities($arrSearchPattern['workspace']); ?>">
+            <input type="text" class="text" name="filter_workspace" value="<?php echo ploopi_htmlentities($arrSearchPattern['workspace']); ?>">
         </p>
     </div>
 
     <div style="margin:0; padding:0; float:left;width:50%;" class="ploopi_form">
         <p>
             <label>Module:</label>
-            <input type="text" class="text" name="filter_module" value="<?php echo htmlentities($arrSearchPattern['module']); ?>">
+            <input type="text" class="text" name="filter_module" value="<?php echo ploopi_htmlentities($arrSearchPattern['module']); ?>">
         </p>
         <p>
             <label>Action:</label>
-            <input type="text" class="text" name="filter_action" value="<?php echo htmlentities($arrSearchPattern['action']); ?>">
+            <input type="text" class="text" name="filter_action" value="<?php echo ploopi_htmlentities($arrSearchPattern['action']); ?>">
         </p>
         <p>
             <label>Enregistrement:</label>
-            <input type="text" class="text" name="filter_record" value="<?php echo htmlentities($arrSearchPattern['record']); ?>">
+            <input type="text" class="text" name="filter_record" value="<?php echo ploopi_htmlentities($arrSearchPattern['record']); ?>">
         </p>
         <p>
             <label>IP:</label>
-            <input type="text" class="text" name="filter_ip" value="<?php echo htmlentities($arrSearchPattern['ip']); ?>">
+            <input type="text" class="text" name="filter_ip" value="<?php echo ploopi_htmlentities($arrSearchPattern['ip']); ?>">
         </p>
     </div>
     <div style="clear:both;text-align:right;padding:4px;">
@@ -232,19 +232,19 @@ while($row = user_action_log::getdb()->fetchrow())
 {
     $date_local = ploopi_timestamp2local($row['timestp']);
 
-    $arrValues[$c]['values']['ip']     = array('label' => htmlentities($row['ip']));
+    $arrValues[$c]['values']['ip']     = array('label' => ploopi_htmlentities($row['ip']));
 
-    $arrValues[$c]['values']['timestp']    = array('label' => htmlentities("{$date_local['date']} {$date_local['time']}"), 'sort_label' => $row['timestp']);
+    $arrValues[$c]['values']['timestp']    = array('label' => ploopi_htmlentities("{$date_local['date']} {$date_local['time']}"), 'sort_label' => $row['timestp']);
 
-    $arrValues[$c]['values']['user']     = array('label' => htmlentities($row['user']));
+    $arrValues[$c]['values']['user']     = array('label' => ploopi_htmlentities($row['user']));
 
-    $arrValues[$c]['values']['workspace']     = array('label' => htmlentities($row['workspace']));
+    $arrValues[$c]['values']['workspace']     = array('label' => ploopi_htmlentities($row['workspace']));
     
-    $arrValues[$c]['values']['module']    = array('label' => htmlentities($row['module']));
+    $arrValues[$c]['values']['module']    = array('label' => ploopi_htmlentities($row['module']));
 
-    $arrValues[$c]['values']['action']    = array('label' => htmlentities($row['action']));
+    $arrValues[$c]['values']['action']    = array('label' => ploopi_htmlentities($row['action']));
 
-    $arrValues[$c]['values']['record']     = array('label' => htmlentities($row['id_record']));
+    $arrValues[$c]['values']['record']     = array('label' => ploopi_htmlentities($row['id_record']));
     $c++;
 }
 

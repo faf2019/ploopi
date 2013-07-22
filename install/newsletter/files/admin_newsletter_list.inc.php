@@ -106,7 +106,7 @@ while ($fields = $db->fetchrow($select_letter))
   $arrNewsletterDateCreate = ploopi_timestamp2local($fields['timestp']);
 
   //Passage des valeurs au tableau
-  $array_values[$c]['values']['title']  = array('label' => htmlentities($fields['title']));
+  $array_values[$c]['values']['title']  = array('label' => ploopi_htmlentities($fields['title']));
   $array_values[$c]['values']['create'] = array('label' => $arrNewsletterDateCreate['date'].' '.$arrNewsletterDateCreate['time'].'<br/>'.$fields['author']);
   $array_values[$c]['values']['status'] = array('label' => (defined('_NEWSLETTER_LABEL_STATUS_'.strtoupper($fields['status']))) ? constant('_NEWSLETTER_LABEL_STATUS_'.strtoupper($fields['status'])) : 'error');
   // Colonne Envoyé

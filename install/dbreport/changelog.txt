@@ -1,3 +1,9 @@
+== Module DBREPORT - version 2.0.0b ====================================================
+
+2013-07-22  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Correction d'un bug lié à la modification du comportement de htmlentities avec PHP 5.4
+
 == Module DBREPORT - version 2.0.0 ====================================================
 
 2013-05-24  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

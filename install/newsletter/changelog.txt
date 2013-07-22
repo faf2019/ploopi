@@ -1,3 +1,9 @@
+== Module NEWSLETTER - version 1.2.9 ==================================================
+
+2013-07-22  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Correction d'un bug lié à la modification du comportement de htmlentities avec PHP 5.4
+
 == Module NEWSLETTER - version 1.2.8 ==================================================
 
 2010-11-30  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

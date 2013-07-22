@@ -94,14 +94,14 @@ echo $skin->open_simplebloc($objForm->fields['label'].' ('._FORMS_VIEWLIST.')', 
                                 for ($i = $objField->fields['separator_level']; $i <= $intLevel; $i++) echo "</optgroup>";
                                 $strPadding = $intLevel > 1 ? str_repeat('&nbsp;', $intLevel-1) : '';
                                 ?>
-                                <optgroup label="<?php echo $strPadding.htmlentities($objField->fields['name']); ?>">
+                                <optgroup label="<?php echo $strPadding.ploopi_htmlentities($objField->fields['name']); ?>">
                                 <?php
                             }
                             else
                             {
                                 $booSel = (isset($arrFormFilter[$l]) && $arrFormFilter[$l]['field'] == $strKey) ? 'selected="selected"' : '';
                                 ?>
-                                <option <?php echo $booSel; ?> value="<?php echo $strKey; ?>"><?php echo htmlentities($objField->fields['name']); ?></option>
+                                <option <?php echo $booSel; ?> value="<?php echo $strKey; ?>"><?php echo ploopi_htmlentities($objField->fields['name']); ?></option>
                                 <?php
                             }
                         }
@@ -119,7 +119,7 @@ echo $skin->open_simplebloc($objForm->fields['label'].' ('._FORMS_VIEWLIST.')', 
                         }
                         ?>
                     </select>
-                    <input type="text" value="<?php if (isset($arrFormFilter[$l])) echo htmlentities($arrFormFilter[$l]['value']); ?>" size="80" class="text" name="filter_value_<?php echo $l; ?>">
+                    <input type="text" value="<?php if (isset($arrFormFilter[$l])) echo ploopi_htmlentities($arrFormFilter[$l]['value']); ?>" size="80" class="text" name="filter_value_<?php echo $l; ?>">
                 </p>
                 <?php
             }
@@ -275,7 +275,7 @@ echo $skin->open_simplebloc($objForm->fields['label'].' ('._FORMS_VIEWLIST.')', 
                                 while ($row = $db->fetchrow())
                                 {
                                     ?>
-                                    <option value="<?php echo $row['id']; ?>"><?php echo htmlentities($row['label']); ?></option>
+                                    <option value="<?php echo $row['id']; ?>"><?php echo ploopi_htmlentities($row['label']); ?></option>
                                     <?php
                                 }
                                 ?>
@@ -318,7 +318,7 @@ echo $skin->open_simplebloc($objForm->fields['label'].' ('._FORMS_VIEWLIST.')', 
                     <th>
                         <a <?php echo $style_col; ?> href="<?php echo ploopi_urlencode("admin.php?op=forms_viewreplies&forms_id={$objForm->fields['id']}&orderby={$strKey}&option={$new_option}"); ?>">
                         <p class="ploopi_va">
-                            <span><?php echo htmlentities($row['label']); ?></span>
+                            <span><?php echo ploopi_htmlentities($row['label']); ?></span>
                             <?
                             if ($_SESSION['forms'][$objForm->fields['id']]['orderby'] == $strKey)
                             { ?><img src="./modules/forms/img/<?php echo $sort_cell; ?>.png"><? }

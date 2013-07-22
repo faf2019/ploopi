@@ -97,8 +97,8 @@ function filesubmit(form)
         <p>
             <label>Séparateur:</label>
             <select class="select" name="directory_import_sep" tabindex="102" style="width:40px;">
-                <option value="<? echo htmlentities(',') ?>"><? echo htmlentities(',') ?></option>
-                <option value="<? echo htmlentities(';') ?>"><? echo htmlentities(';') ?></option>
+                <option value="<? echo ploopi_htmlentities(',') ?>"><? echo ploopi_htmlentities(',') ?></option>
+                <option value="<? echo ploopi_htmlentities(';') ?>"><? echo ploopi_htmlentities(';') ?></option>
             </select>
         </p>
     </div>

@@ -72,9 +72,9 @@ while ($rssEntry_fields = $db->fetchrow($rssentry_result))
 
       $template_body->assign_block_vars($rssEntry_fields['cattpltag'].'.rsscat', array(
             'TITLE' => strip_tags($rssEntry_fields['cattitle'],'<b><i>'),
-            'TITLE_CLEANED' => htmlentities(strip_tags($rssEntry_fields['cattitle'],'<b><i>')),
+            'TITLE_CLEANED' => ploopi_htmlentities(strip_tags($rssEntry_fields['cattitle'],'<b><i>')),
             'DESCRIPTION' => strip_tags($rssEntry_fields['catdescription'],'<b><i>'),
-            'DESCRIPTION_CLEANED' => htmlentities(strip_tags($rssEntry_fields['catdescription'],'<b><i>'))
+            'DESCRIPTION_CLEANED' => ploopi_htmlentities(strip_tags($rssEntry_fields['catdescription'],'<b><i>'))
             ));
       $intIdCatTmp = $rssEntry_fields['catid'];
       $intCpt = 0;
@@ -98,19 +98,19 @@ while ($rssEntry_fields = $db->fetchrow($rssentry_result))
 
       $template_body->assign_block_vars($rssEntry_fields['cattpltag'].'.rsscat.rssentry', array(
                   'FEED_TITLE' => strip_tags($arrRssFeedData['title'],'<b><i>'),
-                  'FEED_TITLE_CLEANED' => htmlentities(strip_tags($arrRssFeedData['title'],'<b><i>')),
+                  'FEED_TITLE_CLEANED' => ploopi_htmlentities(strip_tags($arrRssFeedData['title'],'<b><i>')),
                   'FEED_SUBTITLE' => strip_tags($arrRssFeedData['subtitle'],'<b><i>'),
-                  'FEED_SUBTITLE_CLEANED' => htmlentities(strip_tags($arrRssFeedData['subtitle'],'<b><i>')),
+                  'FEED_SUBTITLE_CLEANED' => ploopi_htmlentities(strip_tags($arrRssFeedData['subtitle'],'<b><i>')),
                   'FEED_LINK' => $arrRssFeedData['link'],
                   'TITLE' => strip_tags($rssEntry_fields['title'],'<b><i>'),
-                  'TITLE_CLEANED' => htmlentities(strip_tags($rssEntry_fields['title'],'<b><i>')),
+                  'TITLE_CLEANED' => ploopi_htmlentities(strip_tags($rssEntry_fields['title'],'<b><i>')),
                   'SUBTITLE' => strip_tags($rssEntry_fields['subtitle'],'<b><i>'),
-                  'SUBTITLE_CLEANED' => htmlentities(strip_tags($rssEntry_fields['subtitle'],'<b><i>')),
+                  'SUBTITLE_CLEANED' => ploopi_htmlentities(strip_tags($rssEntry_fields['subtitle'],'<b><i>')),
                   'PUBLISHED_DATE' => $published_date,
                   'PUBLISHED_TIME' => $published_time,
                   'LINK' => $rssEntry_fields['link'],
                   'CONTENT' => strip_tags($rssEntry_fields['content'], '<b><i><a>'),
-                  'CONTENT_CLEAN' => htmlentities(strip_tags($rssEntry_fields['content'], '<b><i><a>')),
+                  'CONTENT_CLEAN' => ploopi_htmlentities(strip_tags($rssEntry_fields['content'], '<b><i><a>')),
                   'CONTENT_CUT' => ploopi_strcut(strip_tags($rssEntry_fields['content']),200)
                   ));
     }

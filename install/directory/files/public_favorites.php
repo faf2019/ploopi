@@ -99,7 +99,7 @@ while ($row = $db->fetchrow()) $result[] = $row;
 $c = 0;
 foreach($result as $row)
 {
-    $email = ($row['email']) ? '<a href="mailto:'.htmlentities($row['email']).'" title="'.htmlentities(_DIRECTORY_SEND_EMAIL.': '.$row['email']).'"><img src="./modules/directory/img/ico_email.png"></a>' : '&nbsp;';
+    $email = ($row['email']) ? '<a href="mailto:'.ploopi_htmlentities($row['email']).'" title="'.ploopi_htmlentities(_DIRECTORY_SEND_EMAIL.': '.$row['email']).'"><img src="./modules/directory/img/ico_email.png"></a>' : '&nbsp;';
     $ticket = '&nbsp;';
 
     switch ($row['usertype'])

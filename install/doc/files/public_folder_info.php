@@ -57,7 +57,7 @@ if (!empty($currentfolder))
         </div>
         <div style="float:left;height:40px;">
             <p style="margin:0;padding:4px 8px;">
-                <strong><?php echo htmlentities($objFolder->fields['name']); ?></strong>
+                <strong><?php echo ploopi_htmlentities($objFolder->fields['name']); ?></strong>
                 <br />Dossier <?php echo $foldertypes[$objFolder->fields['foldertype']]; ?><?php if ($objFolder->fields['readonly']) echo ' protégé'; ?>
             </p>
         </div>

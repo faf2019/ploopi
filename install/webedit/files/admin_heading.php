@@ -172,10 +172,10 @@ if ($display_type == 'advanced')
                 if ($booIsAllowedEdit)
                 {
                     ?>
-                    <input type="text" class="text" name="webedit_heading_label"  value="<?php echo htmlentities($heading->fields['label']); ?>" tabindex="1" />
+                    <input type="text" class="text" name="webedit_heading_label"  value="<?php echo ploopi_htmlentities($heading->fields['label']); ?>" tabindex="1" />
                     <?php
                 }
-                else echo '<span>'.htmlentities($heading->fields['label']).'</span>';
+                else echo '<span>'.ploopi_htmlentities($heading->fields['label']).'</span>';
                 ?>
             </p>
             <p>
@@ -184,10 +184,10 @@ if ($display_type == 'advanced')
                 if ($booIsAllowedEdit)
                 {
                     ?>
-                    <textarea class="text" name="webedit_heading_description" tabindex="2"><?php echo htmlentities($heading->fields['description']); ?></textarea>
+                    <textarea class="text" name="webedit_heading_description" tabindex="2"><?php echo ploopi_htmlentities($heading->fields['description']); ?></textarea>
                     <?php
                 }
-                else echo '<span>'.ploopi_nl2br(htmlentities($heading->fields['description'])).'</span>';
+                else echo '<span>'.ploopi_nl2br(ploopi_htmlentities($heading->fields['description'])).'</span>';
                 ?>
             </p>
             <p>
@@ -218,7 +218,7 @@ if ($display_type == 'advanced')
                 {
                     if (isset($headings['list'][$headingid]['herited_template']) && $headings['list'][$headingid]['herited_template']) $webedit_template_name = $headings['list'][$headingid]['template'].' (hérité)';
                     else $webedit_template_name = $heading->fields['template'];
-                    echo '<span>'.htmlentities($webedit_template_name).'</span>';
+                    echo '<span>'.ploopi_htmlentities($webedit_template_name).'</span>';
                 }
                 ?>
             </p>
@@ -228,10 +228,10 @@ if ($display_type == 'advanced')
                 if ($booIsAllowedEdit)
                 {
                     ?>
-                    <input type="text" class="text" name="head_position" value="<?php echo htmlentities($heading->fields['position']); ?>" style="width:40px;" tabindex="4" />
+                    <input type="text" class="text" name="head_position" value="<?php echo ploopi_htmlentities($heading->fields['position']); ?>" style="width:40px;" tabindex="4" />
                     <?php
                 }
-                else echo '<span>'.htmlentities($heading->fields['position']).'</span>';
+                else echo '<span>'.ploopi_htmlentities($heading->fields['position']).'</span>';
                 ?>
 
             </p>
@@ -271,7 +271,7 @@ if ($display_type == 'advanced')
                     foreach($heading_sortmodes as $key => $value)
                     {
                         ?>
-                        <option <?php if ($heading->fields['sortmode'] == $key) echo 'selected'; ?> value="<?php echo htmlentities($key); ?>"><?php echo htmlentities($value); ?></option>
+                        <option <?php if ($heading->fields['sortmode'] == $key) echo 'selected'; ?> value="<?php echo ploopi_htmlentities($key); ?>"><?php echo ploopi_htmlentities($value); ?></option>
                         <?php
                     }
                     ?>
@@ -354,7 +354,7 @@ if ($display_type == 'advanced')
                             <input style="cursor:pointer;" type="radio" name="webedit_heading_content_type" value="url_redirect" id="heading_content_type_url_redirect" <?php if ($heading->fields['content_type'] == 'url_redirect') echo 'checked'; ?> />Redirection vers une URL
                         </span>
                         <span style="padding-left:20px;">
-                            <input type="text" class="text" name="webedit_heading_url" style="width:100%;" value="<?php echo htmlentities($heading->fields['url']); ?>" onkeyup="javascript:if (this.value.length>0 && !$('heading_content_type_url_redirect').checked) ploopi_checkbox_click(event, 'heading_content_type_url_redirect');" tabindex="8" />
+                            <input type="text" class="text" name="webedit_heading_url" style="width:100%;" value="<?php echo ploopi_htmlentities($heading->fields['url']); ?>" onkeyup="javascript:if (this.value.length>0 && !$('heading_content_type_url_redirect').checked) ploopi_checkbox_click(event, 'heading_content_type_url_redirect');" tabindex="8" />
                         </span>
                         <span style="cursor:pointer;" onclick="javascript:ploopi_checkbox_click(event, 'heading_content_type_headings');">
                             <input style="cursor:pointer;" type="radio" name="webedit_heading_content_type" value="headings" id="heading_content_type_headings" <?php if ($heading->fields['content_type'] == 'headings') echo 'checked'; ?> />Afficher le contenu des sous rubriques
@@ -403,7 +403,7 @@ if ($display_type == 'advanced')
                                 ?>
                                 Redirection vers une URL : <br />
                                 <?php
-                                echo htmlentities($heading->fields['url']);
+                                echo ploopi_htmlentities($heading->fields['url']);
                             break;
 
                             case 'headings':
@@ -424,10 +424,10 @@ if ($display_type == 'advanced')
                 if ($booIsAllowedEdit)
                 {
                     ?>
-                    <input type="text" style="width:100px;cursor:pointer" class="text color {hash:true}" name="webedit_heading_color" id="webedit_heading_color" value="<?php echo htmlentities($heading->fields['color']); ?>" tabindex="10" readonly="readonly" />
+                    <input type="text" style="width:100px;cursor:pointer" class="text color {hash:true}" name="webedit_heading_color" id="webedit_heading_color" value="<?php echo ploopi_htmlentities($heading->fields['color']); ?>" tabindex="10" readonly="readonly" />
                 <?php
                 }
-                else echo '<span>'.htmlentities($heading->fields['color']).'</span>';
+                else echo '<span>'.ploopi_htmlentities($heading->fields['color']).'</span>';
                 ?>
             </p>
             <p>
@@ -436,10 +436,10 @@ if ($display_type == 'advanced')
                 if ($booIsAllowedEdit)
                 {
                     ?>
-                    <input type="text" style="width:100px;" class="text" name="webedit_heading_posx"  value="<?php echo htmlentities($heading->fields['posx']); ?>" tabindex="11" />
+                    <input type="text" style="width:100px;" class="text" name="webedit_heading_posx"  value="<?php echo ploopi_htmlentities($heading->fields['posx']); ?>" tabindex="11" />
                     <?php
                 }
-                else echo '<span>'.htmlentities($heading->fields['posx']).'</span>';
+                else echo '<span>'.ploopi_htmlentities($heading->fields['posx']).'</span>';
                 ?>
             </p>
             <p>
@@ -448,10 +448,10 @@ if ($display_type == 'advanced')
                 if ($booIsAllowedEdit)
                 {
                     ?>
-                    <input type="text" style="width:100px;" class="text" name="webedit_heading_posy"  value="<?php echo htmlentities($heading->fields['posy']); ?>" tabindex="12" />
+                    <input type="text" style="width:100px;" class="text" name="webedit_heading_posy"  value="<?php echo ploopi_htmlentities($heading->fields['posy']); ?>" tabindex="12" />
                     <?php
                 }
-                else echo '<span>'.htmlentities($heading->fields['posy']).'</span>';
+                else echo '<span>'.ploopi_htmlentities($heading->fields['posy']).'</span>';
                 ?>
             </p>
             <p>
@@ -460,10 +460,10 @@ if ($display_type == 'advanced')
                 if ($booIsAllowedEdit)
                 {
                     ?>
-                    <input type="text" class="text" name="webedit_heading_free1"  value="<?php echo htmlentities($heading->fields['free1']); ?>" tabindex="13" />
+                    <input type="text" class="text" name="webedit_heading_free1"  value="<?php echo ploopi_htmlentities($heading->fields['free1']); ?>" tabindex="13" />
                     <?php
                 }
-                else echo '<span>'.htmlentities($heading->fields['free1']).'</span>';
+                else echo '<span>'.ploopi_htmlentities($heading->fields['free1']).'</span>';
                 ?>
             </p>
             <p>
@@ -472,10 +472,10 @@ if ($display_type == 'advanced')
                 if ($booIsAllowedEdit)
                 {
                     ?>
-                    <input type="text" class="text" name="webedit_heading_free2"  value="<?php echo htmlentities($heading->fields['free2']); ?>" tabindex="14" />
+                    <input type="text" class="text" name="webedit_heading_free2"  value="<?php echo ploopi_htmlentities($heading->fields['free2']); ?>" tabindex="14" />
                     <?php
                 }
-                else echo '<span>'.htmlentities($heading->fields['free2']).'</span>';
+                else echo '<span>'.ploopi_htmlentities($heading->fields['free2']).'</span>';
                 ?>
             </p>
 
@@ -498,10 +498,10 @@ else
                 if ($booIsAllowedEdit)
                 {
                     ?>
-                    <input type="text" class="text" name="webedit_heading_label"  value="<?php echo htmlentities($heading->fields['label']); ?>" tabindex="1" />
+                    <input type="text" class="text" name="webedit_heading_label"  value="<?php echo ploopi_htmlentities($heading->fields['label']); ?>" tabindex="1" />
                     <?php
                 }
-                else echo '<span>'.htmlentities($heading->fields['label']).'</span>';
+                else echo '<span>'.ploopi_htmlentities($heading->fields['label']).'</span>';
                 ?>
             </p>
             <p>
@@ -532,7 +532,7 @@ else
                 {
                     if (isset($headings['list'][$headingid]['herited_template']) && $headings['list'][$headingid]['herited_template']) $webedit_template_name = $headings['list'][$headingid]['template'].' (hérité)';
                     else $webedit_template_name = $heading->fields['template'];
-                    echo '<span>'.htmlentities($webedit_template_name).'</span>';
+                    echo '<span>'.ploopi_htmlentities($webedit_template_name).'</span>';
                 }
                 ?>
             </p>
@@ -542,10 +542,10 @@ else
                 if ($booIsAllowedEdit)
                 {
                     ?>
-                    <input type="text" class="text" name="head_position" value="<?php echo htmlentities($heading->fields['position']); ?>" style="width:40px;" tabindex="4" />
+                    <input type="text" class="text" name="head_position" value="<?php echo ploopi_htmlentities($heading->fields['position']); ?>" style="width:40px;" tabindex="4" />
                     <?php
                 }
-                else echo '<span>'.htmlentities($heading->fields['position']).'</span>';
+                else echo '<span>'.ploopi_htmlentities($heading->fields['position']).'</span>';
                 ?>
             </p>
             <p>
@@ -571,10 +571,10 @@ else
                 if ($booIsAllowedEdit)
                 {
                     ?>
-                    <textarea class="text" name="webedit_heading_description" tabindex="2"><?php echo htmlentities($heading->fields['description']); ?></textarea>
+                    <textarea class="text" name="webedit_heading_description" tabindex="2"><?php echo ploopi_htmlentities($heading->fields['description']); ?></textarea>
                     <?php
                 }
-                else echo '<span>'.ploopi_nl2br(htmlentities($heading->fields['description'])).'</span>';
+                else echo '<span>'.ploopi_nl2br(ploopi_htmlentities($heading->fields['description'])).'</span>';
                 ?>
             </p>
         </div>

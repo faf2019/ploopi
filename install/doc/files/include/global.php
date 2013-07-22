@@ -585,7 +585,7 @@ function doc_gettreeview($arrFolders = array(), $strPrefix = '', $arrExcludes = 
                 $strLink = 'javascript:void(0);';
                 if ($id == 0 || !doc_folder_contentisreadonly($arrFolders['list'][$id]))
                 {
-                    $strOnClick = "$('docfolder_id_folder').value='{$fields['id']}'; $('docfolder_id_folder_name').innerHTML='".addslashes(htmlentities($fields['name']))."'; ploopi_hidepopup('doc_popup_folderselect');";
+                    $strOnClick = "$('docfolder_id_folder').value='{$fields['id']}'; $('docfolder_id_folder_name').innerHTML='".addslashes(ploopi_htmlentities($fields['name']))."'; ploopi_hidepopup('doc_popup_folderselect');";
                 }
                 else
                 {
@@ -652,7 +652,7 @@ function doc_fckexplorer_displayfolders(&$arrFolders, $intIdFolder = 0, $strPath
         foreach($arrFolders['tree'][$intIdFolder] as $intIdChild)
         {
             ?>
-            <option value="<?php echo $intIdChild; ?>" label="<?php echo $arrFolders['list'][$intIdChild]['name']; ?>"><?php echo htmlentities("{$strPath} / {$arrFolders['list'][$intIdChild]['name']}"); ?></option>
+            <option value="<?php echo $intIdChild; ?>" label="<?php echo $arrFolders['list'][$intIdChild]['name']; ?>"><?php echo ploopi_htmlentities("{$strPath} / {$arrFolders['list'][$intIdChild]['name']}"); ?></option>
             <?php
             doc_fckexplorer_displayfolders($arrFolders, $intIdChild, "{$strPath} / {$arrFolders['list'][$intIdChild]['name']}");
         }

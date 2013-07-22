@@ -86,7 +86,7 @@ if ($_SESSION['ploopi']['connected'])
             
         $arrMenu[$row['id']] = 
             array(
-                'label' => htmlentities($row['name'].(empty($row['reference']) ? '' : " ({$row['reference']})")),
+                'label' => ploopi_htmlentities($row['name'].(empty($row['reference']) ? '' : " ({$row['reference']})")),
                 'label_extended' => $row['validator'] ? '<span>&nbsp;-&nbsp;</span><em><strong>Validateur</strong></em>' : '',
                 'type'  => 'select',
                 'style' => "background-color:{$row['color']};"
@@ -112,15 +112,15 @@ if ($_SESSION['ploopi']['connected'])
         </select>
             
         <label style="margin-left:10px;">Objet :</label>
-        <input type="text" class="text" name="booking_event_object" value="<? echo htmlentities($arrSearchPattern['booking_event_object']); ?>" style="width:200px;" />
+        <input type="text" class="text" name="booking_event_object" value="<? echo ploopi_htmlentities($arrSearchPattern['booking_event_object']); ?>" style="width:200px;" />
     </p>
     <p class="ploopi_va" style="padding:4px;border-bottom:1px solid #c0c0c0;">
         <label>Demande effectuée entre le :</label>
-        <input type="text" class="text" name="booking_event_from" id="booking_event_from" value="<? echo htmlentities($arrSearchPattern['booking_event_from']); ?>" style="width:70px;" />
+        <input type="text" class="text" name="booking_event_from" id="booking_event_from" value="<? echo ploopi_htmlentities($arrSearchPattern['booking_event_from']); ?>" style="width:70px;" />
         <a href="javascript:void(0);" onclick="javascript:ploopi_calendar_open('booking_event_from', event);"><img align="top" src="./img/calendar/calendar.gif" /></a>
         
         <label>et le :</label>
-        <input type="text" class="text" name="booking_event_to" id="booking_event_to" value="<? echo htmlentities($arrSearchPattern['booking_event_to']); ?>" style="width:70px;" />
+        <input type="text" class="text" name="booking_event_to" id="booking_event_to" value="<? echo ploopi_htmlentities($arrSearchPattern['booking_event_to']); ?>" style="width:70px;" />
         <a href="javascript:void(0);" onclick="javascript:ploopi_calendar_open('booking_event_to', event);"><img align="top" src="./img/calendar/calendar.gif" /></a>
         
         <input type="submit" class="button" value="Filtrer" />

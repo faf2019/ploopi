@@ -91,7 +91,7 @@ switch($_REQUEST['ploopi_op'])
         <div class=ploopi_form>
             <p>
                 <label>Intitulé:</label>
-                <input name="booking_resourcetype_name" type="text" class="text" value="<? echo htmlentities($objResourceType->fields['name']); ?>">
+                <input name="booking_resourcetype_name" type="text" class="text" value="<? echo ploopi_htmlentities($objResourceType->fields['name']); ?>">
             </p>
             <p onclick="javascript:ploopi_checkbox_click(event,'booking_resourcetype_active');">
                 <label for="booking_resourcetype_active">Actif:</label>

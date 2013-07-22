@@ -67,7 +67,7 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
 ?>
 
 <form name="form_field" action="<?php echo ploopi_urlencode('admin.php?'.implode('&', $arrParams)); ?>" method="post" onsubmit="javascript:return forms_field_validate(this);">
-<input type="hidden" name="field_values" value="<?php echo htmlentities($field->fields['values']); ?>">
+<input type="hidden" name="field_values" value="<?php echo ploopi_htmlentities($field->fields['values']); ?>">
 <div style="overflow:hidden">
     <div style="float:left;width:50%;">
         <div class="ploopi_form" style="padding:4px;">
@@ -87,7 +87,7 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
                     foreach($objForm->getGroups() as $intIdGroup => $objGroup)
                     {
                         ?>
-                        <option value="<? echo $intIdGroup; ?>" <? if ($field->fields['id_group'] == $intIdGroup) echo 'selected="selected"'; ?>><? echo htmlentities($objGroup->fields['label']); ?></option>
+                        <option value="<? echo $intIdGroup; ?>" <? if ($field->fields['id_group'] == $intIdGroup) echo 'selected="selected"'; ?>><? echo ploopi_htmlentities($objGroup->fields['label']); ?></option>
                         <?
                     }
                     ?>
@@ -95,11 +95,11 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
             </p>
             <p>
                 <label><?php echo _FORMS_FIELD_NAME; ?>:</label>
-                <input type="text" class="text" name="field_name" value="<?php echo htmlentities($field->fields['name']); ?>" />
+                <input type="text" class="text" name="field_name" value="<?php echo ploopi_htmlentities($field->fields['name']); ?>" />
             </p>
             <p>
                 <label><?php echo _FORMS_FIELD_FIELDNAME; ?>:</label>
-                <input type="text" class="text" name="field_fieldname" value="<?php echo htmlentities($field->fields['fieldname']); ?>" maxlength="64" />
+                <input type="text" class="text" name="field_fieldname" value="<?php echo ploopi_htmlentities($field->fields['fieldname']); ?>" maxlength="64" />
             </p>
             <p>
                 <label><?php echo _FORMS_FIELD_TYPE; ?>:</label>
@@ -115,11 +115,11 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
             </p>
             <p>
                 <label><?php echo _FORMS_FIELD_DESCRIPTION; ?>:</label>
-                <textarea class="text" style="height:40px;" name="field_description"><?php echo htmlentities($field->fields['description']); ?></textarea>
+                <textarea class="text" style="height:40px;" name="field_description"><?php echo ploopi_htmlentities($field->fields['description']); ?></textarea>
             </p>
             <p>
                 <label><?php echo _FORMS_FIELD_DEFAULTVALUE; ?>:</label>
-                <input type="text" class="text" size="30" name="field_defaultvalue" value="<?php echo htmlentities($field->fields['defaultvalue']); ?>" />
+                <input type="text" class="text" size="30" name="field_defaultvalue" value="<?php echo ploopi_htmlentities($field->fields['defaultvalue']); ?>" />
             </p>
         </div>
     </div>
@@ -142,7 +142,7 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
                 </p>
                 <p>
                     <label><?php echo _FORMS_FIELD_MAXLENGTH; ?>:</label>
-                    <input type="text" class="text" style="width:50px;" name="field_maxlength" value="<?php echo htmlentities($field->fields['maxlength']); ?>" />
+                    <input type="text" class="text" style="width:50px;" name="field_maxlength" value="<?php echo ploopi_htmlentities($field->fields['maxlength']); ?>" />
                 </p>
             </div>
 
@@ -217,13 +217,13 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
                         {
                             if (!empty($strTable)) echo '</optgroup>';
                             $strTable = $row['label'];
-                            echo '<optgroup label="'.htmlentities($strTable).'">';
+                            echo '<optgroup label="'.ploopi_htmlentities($strTable).'">';
                         }
 
                         $strFormat = isset($field_formats[$row['format']]) ? " ({$field_formats[$row['format']]})" : '';
                         ?>
                         <option value="<?php echo $row['id']; ?>" <?php if ($field->fields['values'] == $row['id']) echo 'selected="selected"'; ?>>
-                        <?php echo htmlentities("{$row['name']}{$strFormat}"); ?>
+                        <?php echo ploopi_htmlentities("{$row['name']}{$strFormat}"); ?>
                         </option>
                         <?php
                     }
@@ -271,7 +271,7 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
                     // Pour chaque fonction
                     foreach(formsArithmeticParser::getFunctionsDef() as $strFunction => $strDef)
                     {
-                        ?><option value="<?php echo $strFunction; ?>"><?php echo htmlentities($strDef); ?></option><?php
+                        ?><option value="<?php echo $strFunction; ?>"><?php echo ploopi_htmlentities($strDef); ?></option><?php
                     }
                     ?>
                     </select>
@@ -282,28 +282,28 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
                     // Pour chaque fonction
                     foreach(formsArithmeticParser::getOperatorsDef() as $strOperator => $strDef)
                     {
-                        ?><input type="button" class="button" value="<?php echo $strOperator; ?>" style="width:25px;margin-right:2px;" title="<?php echo htmlentities($strDef); ?>" onclick="javascript:forms_setoperator(this);" /><?php
+                        ?><input type="button" class="button" value="<?php echo $strOperator; ?>" style="width:25px;margin-right:2px;" title="<?php echo ploopi_htmlentities($strDef); ?>" onclick="javascript:forms_setoperator(this);" /><?php
                     }
                     ?><input type="button" class="button" value="(" style="width:25px;margin-right:2px;" onclick="javascript:forms_setoperator(this);" /><input type="button" class="button" value=")" style="width:25px;margin-right:2px;" onclick="javascript:forms_setoperator(this);" />
                 </p>
                 <p>
                     <label>&nbsp;</label>
-                    <textarea class="text" name="field_formula" id="field_formula"><?php echo htmlentities($field->fields['formula']); ?></textarea>
+                    <textarea class="text" name="field_formula" id="field_formula"><?php echo ploopi_htmlentities($field->fields['formula']); ?></textarea>
                 </p>
             </div>
 
             <div id="fieldstyles" class="ploopi_form" style="display:block;">
                 <p>
                     <label><?php echo _FORMS_FIELD_STYLE_FORM; ?>:</label>
-                    <input type="text" class="text" name="field_style_form" value="<?php echo htmlentities($field->fields['style_form']); ?>" />
+                    <input type="text" class="text" name="field_style_form" value="<?php echo ploopi_htmlentities($field->fields['style_form']); ?>" />
                 </p>
                 <p>
                     <label><?php echo _FORMS_FIELD_STYLE_FIELD; ?>:</label>
-                    <input type="text" class="text" name="field_style_field" value="<?php echo htmlentities($field->fields['style_field']); ?>" />
+                    <input type="text" class="text" name="field_style_field" value="<?php echo ploopi_htmlentities($field->fields['style_field']); ?>" />
                 </p>
                 <p>
                     <label><?php echo _FORMS_FIELD_EXPORT_WIDTH; ?>:</label>
-                    <input type="text" class="text" name="field_export_width" value="<?php echo htmlentities($field->fields['export_width']); ?>" />
+                    <input type="text" class="text" name="field_export_width" value="<?php echo ploopi_htmlentities($field->fields['export_width']); ?>" />
                 </p>
             </div>
 

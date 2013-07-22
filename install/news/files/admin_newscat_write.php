@@ -46,11 +46,11 @@ else echo $skin->open_simplebloc(str_replace("LABEL",$newscat->fields['title'],_
     <div style="padding:2px;">
         <p>
             <label><?php echo _NEWS_LABEL_TITLE; ?>:</label>
-            <input class="text" type="text" name="newscat_title" value="<?php echo htmlentities($newscat->fields['title']); ?>" tabindex="100" />
+            <input class="text" type="text" name="newscat_title" value="<?php echo ploopi_htmlentities($newscat->fields['title']); ?>" tabindex="100" />
         </p>
         <p>
             <label><?php echo _NEWS_LABEL_DESCRIPTION; ?>:</label>
-            <textarea class="text" name="newscat_description" tabindex="101"><?php echo htmlentities($newscat->fields['description']); ?></textarea>
+            <textarea class="text" name="newscat_description" tabindex="101"><?php echo ploopi_htmlentities($newscat->fields['description']); ?></textarea>
         </p>
     </div>
 </div>

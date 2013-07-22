@@ -111,13 +111,13 @@ else // creating
                     if ($readonly)
                     {
                         ?>
-                        <span><?php echo htmlentities($docfolder->fields['name']); ?></span>
+                        <span><?php echo ploopi_htmlentities($docfolder->fields['name']); ?></span>
                         <?php
                     }
                     else
                     {
                         ?>
-                        <input type="text" class="text" name="docfolder_name" id="docfolder_name" value="<?php echo htmlentities($docfolder->fields['name']); ?>" tabindex="1">
+                        <input type="text" class="text" name="docfolder_name" id="docfolder_name" value="<?php echo ploopi_htmlentities($docfolder->fields['name']); ?>" tabindex="1">
                         <?php
                     }
                     ?>
@@ -133,7 +133,7 @@ else // creating
                     if ($readonly || $addfolder)
                     {
                         ?>
-                        <span><a title="Aller au dossier" href="<? echo ploopi_urlencode("admin.php?op=doc_browser&currentfolder={$docfolder->fields['id_folder']}"); ?>"><?php echo htmlentities($strParent); ?></a></span>
+                        <span><a title="Aller au dossier" href="<? echo ploopi_urlencode("admin.php?op=doc_browser&currentfolder={$docfolder->fields['id_folder']}"); ?>"><?php echo ploopi_htmlentities($strParent); ?></a></span>
                         <?php
                     }
                     else
@@ -141,7 +141,7 @@ else // creating
                         ?>
                         <input type="hidden" name="docfolder_id_folder" id="docfolder_id_folder" value="<? echo $docfolder->fields['id_folder']; ?>" />
                         <a title="Choisir un autre dossier parent" href="javascript:void(0);" onclick="javascript:ploopi_showpopup(ploopi_xmlhttprequest('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=doc_folderselect&doc_excludes=<? echo $currentfolder; ?>&doc_id_folder='+$('docfolder_id_folder').value, false), 300, event, 'click', 'doc_popup_folderselect');" class="ploopi_va">
-                            <span style="width:auto;" id="docfolder_id_folder_name"><?php echo htmlentities($strParent); ?></span><img style="margin-left:6px;" src="./modules/doc/img/ico_folder.png" />
+                            <span style="width:auto;" id="docfolder_id_folder_name"><?php echo ploopi_htmlentities($strParent); ?></span><img style="margin-left:6px;" src="./modules/doc/img/ico_folder.png" />
                         </a>
                         <?php
                     }
@@ -154,7 +154,7 @@ else // creating
                     if ($readonly)
                     {
                         ?>
-                        <span><?php echo htmlentities($foldertypes[$docfolder->fields['foldertype']]); ?></span>
+                        <span><?php echo ploopi_htmlentities($foldertypes[$docfolder->fields['foldertype']]); ?></span>
                         <?php
                     }
                     else
@@ -165,7 +165,7 @@ else // creating
                             foreach($foldertypes as $key => $value)
                             {
                                 ?>
-                                <option <?php if ($docfolder->fields['foldertype'] == $key) echo 'selected'; ?> value="<?php echo $key; ?>"><?php echo htmlentities($value); ?></option>
+                                <option <?php if ($docfolder->fields['foldertype'] == $key) echo 'selected'; ?> value="<?php echo $key; ?>"><?php echo ploopi_htmlentities($value); ?></option>
                                 <?php
                             }
                             ?>
@@ -202,13 +202,13 @@ else // creating
                     if ($readonly)
                     {
                         ?>
-                        <span><?php echo ploopi_nl2br(htmlentities($docfolder->fields['description'])); ?></span>
+                        <span><?php echo ploopi_nl2br(ploopi_htmlentities($docfolder->fields['description'])); ?></span>
                         <?php
                     }
                     else
                     {
                         ?>
-                        <textarea class="text" name="docfolder_description" tabindex="6"><?php echo htmlentities($docfolder->fields['description']); ?></textarea>
+                        <textarea class="text" name="docfolder_description" tabindex="6"><?php echo ploopi_htmlentities($docfolder->fields['description']); ?></textarea>
                         <?php
                     }
                     ?>

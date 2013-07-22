@@ -2,9 +2,9 @@
 <ploopi>
     <moduletype>
         <label>wiki</label>
-        <version>1.2.2a</version>
+        <version>1.2.2b</version>
         <author>Ovensia</author>
-        <date>20130320000000</date>
+        <date>20130722000000</date>
         <description>Wiki</description>
         <action>
             <id_action>10</id_action>

@@ -86,7 +86,7 @@ foreach ($arrResources as $row)
         
     $arrMenu[$row['id']] = 
         array(
-            'label' => htmlentities($row['name'].(empty($row['reference']) ? '' : " ({$row['reference']})")),
+            'label' => ploopi_htmlentities($row['name'].(empty($row['reference']) ? '' : " ({$row['reference']})")),
             'label_extended' => $row['validator'] ? '<span>&nbsp;-&nbsp;</span><em><strong>Validateur</strong></em>' : '',
             'type'  => 'select',
             'style' => "background-color:{$row['color']};"
@@ -113,18 +113,18 @@ $arrOptions =
     </select>
         
     <label style="margin-left:10px;">Objet :</label>
-    <input type="text" class="text" name="booking_event_object" value="<? echo htmlentities($arrSearchPattern['booking_event_object']); ?>" style="width:200px;" />
+    <input type="text" class="text" name="booking_event_object" value="<? echo ploopi_htmlentities($arrSearchPattern['booking_event_object']); ?>" style="width:200px;" />
 </p>
 <p class="ploopi_va" style="padding:4px;border-bottom:1px solid #c0c0c0;">
     <label>Demandé par :</label>
-    <input type="text" class="text" name="booking_event_requestedby" value="<? echo htmlentities($arrSearchPattern['booking_event_requestedby']); ?>" style="width:150px;" />
+    <input type="text" class="text" name="booking_event_requestedby" value="<? echo ploopi_htmlentities($arrSearchPattern['booking_event_requestedby']); ?>" style="width:150px;" />
     
     <label style="margin-left:10px;">Entre le :</label>
-    <input type="text" class="text" name="booking_event_from" id="booking_event_from" value="<? echo htmlentities($arrSearchPattern['booking_event_from']); ?>" style="width:70px;" />
+    <input type="text" class="text" name="booking_event_from" id="booking_event_from" value="<? echo ploopi_htmlentities($arrSearchPattern['booking_event_from']); ?>" style="width:70px;" />
     <?php ploopi_open_calendar('booking_event_from'); ?>
     
     <label>et le :</label>
-    <input type="text" class="text" name="booking_event_to" id="booking_event_to" value="<? echo htmlentities($arrSearchPattern['booking_event_to']); ?>" style="width:70px;" />
+    <input type="text" class="text" name="booking_event_to" id="booking_event_to" value="<? echo ploopi_htmlentities($arrSearchPattern['booking_event_to']); ?>" style="width:70px;" />
     <?php ploopi_open_calendar('booking_event_to'); ?>
     
     <input type="submit" class="button" value="Filtrer" />

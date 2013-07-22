@@ -139,7 +139,7 @@ if ($_SESSION['ploopi']['connected'])
 
                     $strResource = $objResource->open($objEvent->fields['id_resource']) ? $objResource->fields['name'] : 'inconnu';
 
-                    $strMessage = "Nouvelle demande de réservation pour {$strResource} pour le motif suivant : <br /><br />".ploopi_nl2br(htmlentities($_POST['booking_event_object']));
+                    $strMessage = "Nouvelle demande de réservation pour {$strResource} pour le motif suivant : <br /><br />".ploopi_nl2br(ploopi_htmlentities($_POST['booking_event_object']));
                     $strTitle = "Nouvelle demande de réservation pour {$strResource} ";
 
                     // Envoi du ticket
@@ -234,7 +234,7 @@ if ($_SESSION['ploopi']['connected'])
                             $arrDateEnd_h = intval(substr($arrDateEnd['time'], 0, 2));
                             $arrDateEnd_m = intval(substr($arrDateEnd['time'], 2, 2));
 
-                            $strMessage = "Votre demande de réservation pour {$strResource} du {$arrDateBegin['date']} à ".substr($arrDateBegin['time'], 0, 5)." au {$arrDateEnd['date']} à ".substr($arrDateEnd['time'], 0, 5)." a été validée par {$_SESSION['ploopi']['user']['lastname']} {$_SESSION['ploopi']['user']['firstname']}<br /><br />".ploopi_nl2br(htmlentities($objEventDetail->fields['message']));
+                            $strMessage = "Votre demande de réservation pour {$strResource} du {$arrDateBegin['date']} à ".substr($arrDateBegin['time'], 0, 5)." au {$arrDateEnd['date']} à ".substr($arrDateEnd['time'], 0, 5)." a été validée par {$_SESSION['ploopi']['user']['lastname']} {$_SESSION['ploopi']['user']['firstname']}<br /><br />".ploopi_nl2br(ploopi_htmlentities($objEventDetail->fields['message']));
                             $strTitle = "Validation de votre demande de réservation pour {$strResource}";
                         }
 
@@ -260,7 +260,7 @@ if ($_SESSION['ploopi']['connected'])
                             $arrDateEnd_h = intval(substr($arrDateEnd['time'], 0, 2));
                             $arrDateEnd_m = intval(substr($arrDateEnd['time'], 2, 2));
 
-                            $strMessage = "Votre demande de réservation pour {$strResource} du {$arrDateBegin['date']} à ".substr($arrDateBegin['time'], 0, 5)." au {$arrDateEnd['date']} à ".substr($arrDateEnd['time'], 0, 5)." a été refusée par {$_SESSION['ploopi']['user']['lastname']} {$_SESSION['ploopi']['user']['firstname']} pour le motif suivant : <br /><br />".ploopi_nl2br(htmlentities($objEventDetail->fields['message']));
+                            $strMessage = "Votre demande de réservation pour {$strResource} du {$arrDateBegin['date']} à ".substr($arrDateBegin['time'], 0, 5)." au {$arrDateEnd['date']} à ".substr($arrDateEnd['time'], 0, 5)." a été refusée par {$_SESSION['ploopi']['user']['lastname']} {$_SESSION['ploopi']['user']['firstname']} pour le motif suivant : <br /><br />".ploopi_nl2br(ploopi_htmlentities($objEventDetail->fields['message']));
                             $strTitle = "Refus de votre demande de réservation pour {$strResource}";
 
                         }
@@ -284,7 +284,7 @@ if ($_SESSION['ploopi']['connected'])
                             $arrDateEnd_h = intval(substr($arrDateEnd['time'], 0, 2));
                             $arrDateEnd_m = intval(substr($arrDateEnd['time'], 2, 2));
 
-                            $strMessage = "Votre demande de réservation pour {$strResource} du {$arrDateBegin['date']} à ".substr($arrDateBegin['time'], 0, 5)." au {$arrDateEnd['date']} à ".substr($arrDateEnd['time'], 0, 5)." a été supprimée par {$_SESSION['ploopi']['user']['lastname']} {$_SESSION['ploopi']['user']['firstname']} pour le motif suivant : <br /><br />".ploopi_nl2br(htmlentities($objEventDetail->fields['message']));
+                            $strMessage = "Votre demande de réservation pour {$strResource} du {$arrDateBegin['date']} à ".substr($arrDateBegin['time'], 0, 5)." au {$arrDateEnd['date']} à ".substr($arrDateEnd['time'], 0, 5)." a été supprimée par {$_SESSION['ploopi']['user']['lastname']} {$_SESSION['ploopi']['user']['firstname']} pour le motif suivant : <br /><br />".ploopi_nl2br(ploopi_htmlentities($objEventDetail->fields['message']));
                             $strTitle = "Suppression de votre demande de réservation pour {$strResource}";
                         }
 
@@ -405,7 +405,7 @@ if ($_SESSION['ploopi']['connected'])
                                 <?
                             }
                             ?>
-                            <option value="<? echo $row['id']; ?>" style="border-left:2px;" <? if ($objEvent->fields['id_resource'] == $row['id']) echo 'selected="selected"'; ?>><? echo htmlentities($row['name']); ?></option>
+                            <option value="<? echo $row['id']; ?>" style="border-left:2px;" <? if ($objEvent->fields['id_resource'] == $row['id']) echo 'selected="selected"'; ?>><? echo ploopi_htmlentities($row['name']); ?></option>
                             <?
                         }
                         if ($strResourceType != '') echo '</optgroup>';
@@ -414,7 +414,7 @@ if ($_SESSION['ploopi']['connected'])
                 </p>
                 <p>
                     <label>Objet:</label>
-                    <input name="booking_event_object" type="text" class="text" value="<? echo htmlentities($objEvent->fields['object']); ?>">
+                    <input name="booking_event_object" type="text" class="text" value="<? echo ploopi_htmlentities($objEvent->fields['object']); ?>">
                 </p>
                 <p>
                     <label>Date de début:</label>
@@ -473,7 +473,7 @@ if ($_SESSION['ploopi']['connected'])
                         foreach ($arrBookingPeriodicity as $key => $value)
                         {
                             ?>
-                            <option value="<? echo $key; ?>"><? echo htmlentities($value); ?></option>
+                            <option value="<? echo $key; ?>"><? echo ploopi_htmlentities($value); ?></option>
                             <?
                         }
                         ?>
@@ -635,7 +635,7 @@ switch($ploopi_op)
                                         <?
                                     }
                                     ?>
-                                    <option value="<? echo $row['id']; ?>" style="border-left:2px;" <? if ($objEvent->fields['id_resource'] == $row['id']) echo 'selected="selected"'; ?>><? echo htmlentities($row['name']); ?></option>
+                                    <option value="<? echo $row['id']; ?>" style="border-left:2px;" <? if ($objEvent->fields['id_resource'] == $row['id']) echo 'selected="selected"'; ?>><? echo ploopi_htmlentities($row['name']); ?></option>
                                     <?
                                 }
                                 if ($strResourceType != '') echo '</optgroup>';
@@ -646,7 +646,7 @@ switch($ploopi_op)
                         else
                         {
                             ?>
-                            <span><? echo htmlentities($strResource); ?></span>
+                            <span><? echo ploopi_htmlentities($strResource); ?></span>
                             <?
                         }
                         ?>
@@ -654,13 +654,13 @@ switch($ploopi_op)
                     <p>
                         <label>Objet:</label>
                         <?
-                        if ($booModify) { ?><input name="booking_event_object" type="text" class="text" value="<? echo htmlentities($objEvent->fields['object']); ?>"><? }
-                        else echo '<span>'.htmlentities($objEvent->fields['object']).'</span>';
+                        if ($booModify) { ?><input name="booking_event_object" type="text" class="text" value="<? echo ploopi_htmlentities($objEvent->fields['object']); ?>"><? }
+                        else echo '<span>'.ploopi_htmlentities($objEvent->fields['object']).'</span>';
                         ?>
                     </p>
                     <p>
                         <label>Demandeur:</label>
-                        <span><? echo htmlentities("{$strUser} ({$strWorkspace})"); ?></span>
+                        <span><? echo ploopi_htmlentities("{$strUser} ({$strWorkspace})"); ?></span>
                     </p>
 
                     <?
@@ -669,7 +669,7 @@ switch($ploopi_op)
                         ?>
                         <p>
                             <label>Périodicité:</label>
-                            <span><? echo htmlentities($arrBookingPeriodicity[$objEvent->fields['periodicity']]); ?></span>
+                            <span><? echo ploopi_htmlentities($arrBookingPeriodicity[$objEvent->fields['periodicity']]); ?></span>
                         </p>
                         <?
                     }
@@ -876,15 +876,15 @@ switch($ploopi_op)
                                         <p>
                                             <label>Commentaire:</label>
                                             <?
-                                            if ($booModify) { ?><textarea style="height:60px;" class="text" name="_booking_event_message[<? echo $detail['id']; ?>]" id="_booking_event_message<? echo $detail['id']; ?>"><? echo htmlentities($detail['message']); ?></textarea><? }
-                                            else echo '<span>'.ploopi_nl2br(htmlentities($detail['message'])).'</span>';
+                                            if ($booModify) { ?><textarea style="height:60px;" class="text" name="_booking_event_message[<? echo $detail['id']; ?>]" id="_booking_event_message<? echo $detail['id']; ?>"><? echo ploopi_htmlentities($detail['message']); ?></textarea><? }
+                                            else echo '<span>'.ploopi_nl2br(ploopi_htmlentities($detail['message'])).'</span>';
                                             ?>
                                         </p>
                                         <p>
                                             <label>Destinataires complémentaires (adresses de courriel séparées par &laquo; , &raquo;:</label>
                                             <?
-                                            if ($booModify) { ?><textarea style="height:60px;" class="text" name="_booking_event_emails[<? echo $detail['id']; ?>]" id="_booking_event_emails<? echo $detail['id']; ?>"><? echo htmlentities($detail['emails']); ?></textarea><? }
-                                            else echo '<span>'.ploopi_nl2br(htmlentities($detail['emails'])).'</span>';
+                                            if ($booModify) { ?><textarea style="height:60px;" class="text" name="_booking_event_emails[<? echo $detail['id']; ?>]" id="_booking_event_emails<? echo $detail['id']; ?>"><? echo ploopi_htmlentities($detail['emails']); ?></textarea><? }
+                                            else echo '<span>'.ploopi_nl2br(ploopi_htmlentities($detail['emails'])).'</span>';
                                             ?>
                                         </p>
                                         <?

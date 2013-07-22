@@ -177,10 +177,10 @@ class newsletter extends data_object
     $content = ob_get_contents(); // recupération du contenu généré
     ob_end_clean(); // Nettoyage du buffer
 
-    //echo htmlentities($content).'<br/><br/><br/>';
+    //echo ploopi_htmlentities($content).'<br/><br/><br/>';
     // Convertion du contenu au format dompdf (<a href> etc.. avec host mais <img> en realpath)
     $content = $this->convert_dompdf($content);
-    //echo htmlentities($content).'<br/>';
+    //echo ploopi_htmlentities($content).'<br/>';
     //ploopi_die();
 
     /*

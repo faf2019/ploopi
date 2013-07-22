@@ -230,7 +230,7 @@ else
         <div>
             <p class="ploopi_va" style="white-space:nowrap;overflow:hidden;">
                 <img src="./img/mimetypes/<?php echo $ico; ?>" />
-                <strong><?php echo htmlentities("{$docfile->fields['name']} {$title}"); ?></strong>
+                <strong><?php echo ploopi_htmlentities("{$docfile->fields['name']} {$title}"); ?></strong>
             </p>
         </div>
     </div>
@@ -510,7 +510,7 @@ else
                     $array_values[$c]['values']['par']  = array('label' => $row['login'], 'style' => '');
                     $array_values[$c]['values']['modif']    = array('label' => "{$ldate_modify['date']} {$ldate_modify['time']}", 'style' => '');
                     $array_values[$c]['values']['fichier']  = array('label' => $row['name'], 'style' => '');
-                    $array_values[$c]['description'] = htmlentities("{$row['name']} ({$row['version']})");
+                    $array_values[$c]['description'] = ploopi_htmlentities("{$row['name']} ({$row['version']})");
                     $array_values[$c]['link'] = "admin.php?ploopi_op=doc_filedownload&docfile_md5id={$row['md5id']}&version={$row['version']}";
                     $array_values[$c]['style'] = '';
                     $c++;
@@ -619,11 +619,11 @@ else
                             <p>
                                 <label>Nom du Fichier:</label>
                                 <?php
-                                if ($readonly) echo htmlentities($docfile->fields['name']);
+                                if ($readonly) echo ploopi_htmlentities($docfile->fields['name']);
                                 else
                                 {
                                     ?>
-                                    <input type="text" class="text" name="docfile_name" value="<?php echo htmlentities($docfile->fields['name']); ?>">
+                                    <input type="text" class="text" name="docfile_name" value="<?php echo ploopi_htmlentities($docfile->fields['name']); ?>">
                                     <?php
                                 }
                                 ?>
@@ -639,7 +639,7 @@ else
                                 if ($readonly)
                                 {
                                     ?>
-                                    <span><a title="Aller au dossier" href="<? echo ploopi_urlencode("admin.php?op=doc_browser&currentfolder={$docfile->fields['id_folder']}"); ?>"><?php echo htmlentities($strParent); ?></a></span>
+                                    <span><a title="Aller au dossier" href="<? echo ploopi_urlencode("admin.php?op=doc_browser&currentfolder={$docfile->fields['id_folder']}"); ?>"><?php echo ploopi_htmlentities($strParent); ?></a></span>
                                     <?php
                                 }
                                 else
@@ -647,7 +647,7 @@ else
                                     ?>
                                     <input type="hidden" name="docfile_id_folder" id="docfolder_id_folder" value="<? echo $docfile->fields['id_folder']; ?>" />
                                     <a title="Choisir un autre dossier parent" href="javascript:void(0);" onclick="javascript:ploopi_showpopup(ploopi_xmlhttprequest('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=doc_folderselect&doc_id_folder='+$('docfolder_id_folder').value, false), 300, event, 'click', 'doc_popup_folderselect');" class="ploopi_va">
-                                        <span style="width:auto;" id="docfolder_id_folder_name"><?php echo htmlentities($strParent); ?></span><img style="margin-left:6px;" src="./modules/doc/img/ico_folder.png" />
+                                        <span style="width:auto;" id="docfolder_id_folder_name"><?php echo ploopi_htmlentities($strParent); ?></span><img style="margin-left:6px;" src="./modules/doc/img/ico_folder.png" />
                                     </a>
                                     <?php
                                 }
@@ -688,11 +688,11 @@ else
                             <p>
                                 <label>Commentaire:</label>
                                 <?php
-                                if ($readonly) echo ploopi_nl2br(htmlentities($docfile->fields['description']));
+                                if ($readonly) echo ploopi_nl2br(ploopi_htmlentities($docfile->fields['description']));
                                 else
                                 {
                                     ?>
-                                    <textarea class="text" name="docfile_description"><?php echo htmlentities($docfile->fields['description']); ?></textarea>
+                                    <textarea class="text" name="docfile_description"><?php echo ploopi_htmlentities($docfile->fields['description']); ?></textarea>
                                     <?php
                                 }
                                 ?>

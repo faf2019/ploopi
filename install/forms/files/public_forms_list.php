@@ -41,8 +41,8 @@ foreach($objDOC->get_objects() as $objForm)
         ?>
         <a class="forms_public_link" href="<? echo ploopi_urlencode("admin.php?op=forms_viewreplies&forms_id={$objForm->fields['id']}"); ?>">
         <div>
-            <h1><? echo htmlentities($objForm->fields['label']); ?></h1>
-            <div><? echo ploopi_nl2br(htmlentities($objForm->fields['description'])); ?></div>
+            <h1><? echo ploopi_htmlentities($objForm->fields['label']); ?></h1>
+            <div><? echo ploopi_nl2br(ploopi_htmlentities($objForm->fields['description'])); ?></div>
         </div>
         </a>
         <?

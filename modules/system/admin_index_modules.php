@@ -99,8 +99,8 @@ foreach ($ownmodules as $index => $module)
     if ($module['transverseview']) $viewmode .= ' '._SYSTEM_LABEL_TRANSVERSE;
 
     $values[$c]['values']['position'] = array('label' => "{$updown}{$module['position']}", 'sort_label' => $module['position']);
-    $values[$c]['values']['type'] = array('label' => htmlentities($module['label']));
-    $values[$c]['values']['name'] = array('label' => htmlentities($module['instancename']));
+    $values[$c]['values']['type'] = array('label' => ploopi_htmlentities($module['label']));
+    $values[$c]['values']['name'] = array('label' => ploopi_htmlentities($module['instancename']));
     $values[$c]['values']['viewmode'] = array('label' => $viewmode);
 
     if ($module['instanceworkspace'] == $workspaceid)
@@ -142,7 +142,7 @@ if ($op == 'modify' && !empty($_GET['moduleid']) && is_numeric($_GET['moduleid']
         <div style="padding:2px;">
             <p>
                 <label><?php echo _SYSTEM_LABEL_MODULENAME; ?>:</label>
-                <input type="text" class="text" name="module_label" id="module_label" value="<?php echo htmlentities($module->fields['label']); ?>" tabindex="1" />
+                <input type="text" class="text" name="module_label" id="module_label" value="<?php echo ploopi_htmlentities($module->fields['label']); ?>" tabindex="1" />
             </p>
             <p>
                 <label>&nbsp;</label>
@@ -256,8 +256,8 @@ foreach ($sharedmodules AS $instanceid => $instance)
 {
     if (!array_key_exists($instanceid,$ownmodules))
     {
-        $desc = sprintf("<span>%s / <b>%s</b> partagé par<b>&nbsp;</span><a href=\"%s\">%s</a></b>", htmlentities($instance['description']), htmlentities($instance['label']), ploopi_urlencode("admin.php?workspaceid={$instance['id_workspace']}"), htmlentities($instance['workspacelabel']));;
-        $values[$c]['values']['type'] = array('label' => htmlentities($instance['moduletype']));
+        $desc = sprintf("<span>%s / <b>%s</b> partagé par<b>&nbsp;</span><a href=\"%s\">%s</a></b>", ploopi_htmlentities($instance['description']), ploopi_htmlentities($instance['label']), ploopi_urlencode("admin.php?workspaceid={$instance['id_workspace']}"), ploopi_htmlentities($instance['workspacelabel']));;
+        $values[$c]['values']['type'] = array('label' => ploopi_htmlentities($instance['moduletype']));
         $values[$c]['values']['desc'] = array('label' => $desc);
         $values[$c]['values']['actions'] = array('label' => '<a href="'.ploopi_urlencode("admin.php?op=add&instance=SHARED,{$workspaceid},{$instanceid}").'">utiliser</a>', 'sort_label' => 0);
         $c++;
@@ -266,8 +266,8 @@ foreach ($sharedmodules AS $instanceid => $instance)
 
 foreach ($installedmodules AS $index => $moduletype)
 {
-    $values[$c]['values']['type'] = array('label' => htmlentities($moduletype['label']));
-    $values[$c]['values']['desc'] = array('label' => htmlentities($moduletype['description']));
+    $values[$c]['values']['type'] = array('label' => ploopi_htmlentities($moduletype['label']));
+    $values[$c]['values']['desc'] = array('label' => ploopi_htmlentities($moduletype['description']));
     $values[$c]['values']['actions'] = array('label' => '<a href="'.ploopi_urlencode("admin.php?op=add&instance=NEW,{$workspaceid},{$moduletype['id']}").'">instancier</a>', 'sort_label' => 1);
     $c++;
 }

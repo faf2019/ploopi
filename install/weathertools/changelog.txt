@@ -1,3 +1,9 @@
+== Module Wheathertools - version 1.1.5c ==================================================
+
+2013-07-22  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+* Correction d'un bug lié à la modification du comportement de htmlentities avec PHP 5.4
+
 == Module Wheathertools - version 1.1.5b ==================================================
 
 2013-07-19  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>

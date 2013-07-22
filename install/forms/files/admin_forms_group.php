@@ -61,11 +61,11 @@ if (!$objGroup->isnew()) $arrParams[] = "forms_group_id={$objGroup->fields['id']
         <div class="ploopi_form" style="padding:4px;">
             <p>
                 <label><?php echo _FORMS_GROUP_LABEL; ?>:</label>
-                <input type="text" class="text" name="forms_group_label" value="<?php echo htmlentities($objGroup->fields['label']); ?>">
+                <input type="text" class="text" name="forms_group_label" value="<?php echo ploopi_htmlentities($objGroup->fields['label']); ?>">
             </p>
             <p>
                 <label><?php echo _FORMS_GROUP_DESCRIPTION; ?>:</label>
-                <textarea class="text" name="forms_group_description"><?php echo htmlentities($objGroup->fields['description']); ?></textarea>
+                <textarea class="text" name="forms_group_description"><?php echo ploopi_htmlentities($objGroup->fields['description']); ?></textarea>
             </p>
             <p>
                 <label><?php echo _FORMS_GROUP_FORMULA; ?>:<br /><em>ex: (C1 AND C2) OR C3</em></label>
@@ -76,7 +76,7 @@ if (!$objGroup->isnew()) $arrParams[] = "forms_group_id={$objGroup->fields['id']
                 <input type="button" class="button" value="(" title="Insérer une parenthèse ouvrante" style="width:20px;" onclick="javascript:ploopi_insertatcursor($('forms_group_formula'), this.value); $('forms_group_formula').focus();" />
                 <input type="button" class="button" value=")" title="Insérer une parenthèse fermante" style="width:20px;" onclick="javascript:ploopi_insertatcursor($('forms_group_formula'), this.value); $('forms_group_formula').focus();" />
                 <br />
-                <input style="margin-top:2px;" type="text" class="text" name="forms_group_formula" id="forms_group_formula" value="<?php echo htmlentities($objGroup->fields['formula']); ?>">
+                <input style="margin-top:2px;" type="text" class="text" name="forms_group_formula" id="forms_group_formula" value="<?php echo ploopi_htmlentities($objGroup->fields['formula']); ?>">
                 <?
                 // Test de l'expression booléenne
                 include_once './modules/forms/classes/formsBooleanParser.php';
@@ -110,7 +110,7 @@ if (!$objGroup->isnew()) $arrParams[] = "forms_group_id={$objGroup->fields['id']
                         if (!$arrField['separator'] && !$arrField['captcha'] && !$arrField['html'])
                         {
                             ?>
-                             <option value="<?php echo $intIdField; ?>" <?php echo (isset($arrConditions[$intI]['field']) && $intIdField == $arrConditions[$intI]['field']) ? 'selected="selected"' : ''; ?>><?php echo htmlentities($arrField['name']); ?></option>
+                             <option value="<?php echo $intIdField; ?>" <?php echo (isset($arrConditions[$intI]['field']) && $intIdField == $arrConditions[$intI]['field']) ? 'selected="selected"' : ''; ?>><?php echo ploopi_htmlentities($arrField['name']); ?></option>
                             <?php
                         }
                     }
@@ -123,12 +123,12 @@ if (!$objGroup->isnew()) $arrParams[] = "forms_group_id={$objGroup->fields['id']
                     foreach($field_operators as $strKey => $strValue)
                     {
                          ?>
-                         <option value="<?php echo $strKey; ?>" <?php echo (isset($arrConditions[$intI]['op']) && $strKey == $arrConditions[$intI]['op']) ? 'selected="selected"' : ''; ?>><?php echo htmlentities($strValue); ?></option>
+                         <option value="<?php echo $strKey; ?>" <?php echo (isset($arrConditions[$intI]['op']) && $strKey == $arrConditions[$intI]['op']) ? 'selected="selected"' : ''; ?>><?php echo ploopi_htmlentities($strValue); ?></option>
                          <?php
                     }
                     ?>
                 </select>
-                <input style="width:46%;" type="text" class="text" name="_forms_group_cond[<?php echo $intI; ?>][value]" value="<? echo isset($arrConditions[$intI]['value']) ? htmlentities($arrConditions[$intI]['value']) : ''; ?>">
+                <input style="width:46%;" type="text" class="text" name="_forms_group_cond[<?php echo $intI; ?>][value]" value="<? echo isset($arrConditions[$intI]['value']) ? ploopi_htmlentities($arrConditions[$intI]['value']) : ''; ?>">
             </p>
             <?
         }

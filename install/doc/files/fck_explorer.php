@@ -86,7 +86,7 @@ echo $skin->open_simplebloc();
     foreach($arrFolders as $strModuleLabel => $arrSubFolders)
     {
         ?>
-        <optgroup label="<?php echo htmlentities($strModuleLabel); ?>"><?php echo htmlentities($strModuleLabel); ?></optgroup>
+        <optgroup label="<?php echo ploopi_htmlentities($strModuleLabel); ?>"><?php echo ploopi_htmlentities($strModuleLabel); ?></optgroup>
         <?php
         if (!$intDefaultFolder && isset($arrSubFolders['tree'][0][0])) $intDefaultFolder = $arrSubFolders['tree'][0][0];
         doc_fckexplorer_displayfolders($arrSubFolders);

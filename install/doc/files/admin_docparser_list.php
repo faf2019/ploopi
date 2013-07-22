@@ -59,13 +59,13 @@ else $docparser->init_description();
     <input type="hidden" name="docparser_id" id="docparser_id" value="<?php echo $docparser->fields['id']; ?>">
     <p class="ploopi_va">
         <label>Libellé:</label>
-        <input type="text" class="text" name="docparser_label" id="docparser_label" value="<?php echo htmlentities($docparser->fields['label']); ?>" tabindex="1" size="12" />
+        <input type="text" class="text" name="docparser_label" id="docparser_label" value="<?php echo ploopi_htmlentities($docparser->fields['label']); ?>" tabindex="1" size="12" />
 
         <label>Extension:</label>
-        <input type="text" class="text" name="docparser_extension" id="docparser_extension" value="<?php echo htmlentities($docparser->fields['extension']); ?>" tabindex="2" size="4" />
+        <input type="text" class="text" name="docparser_extension" id="docparser_extension" value="<?php echo ploopi_htmlentities($docparser->fields['extension']); ?>" tabindex="2" size="4" />
 
         <label>Commande:</label>
-        <input type="text" class="text" name="docparser_path" id="docparser_path" value="<?php echo htmlentities($docparser->fields['path']); ?>" tabindex="3" size="45" />
+        <input type="text" class="text" name="docparser_path" id="docparser_path" value="<?php echo ploopi_htmlentities($docparser->fields['path']); ?>" tabindex="3" size="45" />
 
         <input type="submit" class="button" value="Valider" tabindex="4" />
         <input type="button" class="button" value="Annuler" onclick="javascript:$('docparser_form').style.display = 'hidden';" />

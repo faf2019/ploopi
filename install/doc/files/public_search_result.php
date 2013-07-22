@@ -363,7 +363,7 @@ if (isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords']))
                 );
 
             $values[$c]['values']['dossier'] = array(
-                'label' =>'<img style="float:left;" src="./modules/doc/img/'.$icofolder.'.png" /><span style="display:block;margin-left:20px;">'.htmlentities($row['fd_name']).'</span>',
+                'label' =>'<img style="float:left;" src="./modules/doc/img/'.$icofolder.'.png" /><span style="display:block;margin-left:20px;">'.ploopi_htmlentities($row['fd_name']).'</span>',
                 'sort_label' => strtolower($row['fd_name'])
             );
 

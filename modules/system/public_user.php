@@ -121,11 +121,11 @@ if (isset($error))
                 <div class="ploopi_form">
                     <p>
                         <label><?php echo _SYSTEM_LABEL_LASTNAME; ?>:</label>
-                        <input type="text" class="text" name="user_lastname"  value="<?php echo htmlentities($user->fields['lastname']); ?>" tabindex="1" />
+                        <input type="text" class="text" name="user_lastname"  value="<?php echo ploopi_htmlentities($user->fields['lastname']); ?>" tabindex="1" />
                     </p>
                     <p>
                         <label><?php echo _SYSTEM_LABEL_FIRSTNAME; ?>:</label>
-                        <input type="text" class="text" name="user_firstname"  value="<?php echo htmlentities($user->fields['firstname']); ?>" tabindex="2" />
+                        <input type="text" class="text" name="user_firstname"  value="<?php echo ploopi_htmlentities($user->fields['firstname']); ?>" tabindex="2" />
                     </p>
                     <p>
                         <label><?php echo _SYSTEM_LABEL_CIVILITY; ?>:</label>
@@ -135,7 +135,7 @@ if (isset($error))
                             foreach ($ploopi_civility as $value)
                             {
                                 ?>
-                                <option value="<?php echo htmlentities($value); ?>" <?php if ($user->fields['civility'] == $value) echo 'selected'; ?>><?php echo htmlentities($value); ?></option>
+                                <option value="<?php echo ploopi_htmlentities($value); ?>" <?php if ($user->fields['civility'] == $value) echo 'selected'; ?>><?php echo ploopi_htmlentities($value); ?></option>
                                 <?php
                             }
                             ?>
@@ -148,35 +148,35 @@ if (isset($error))
                 <div class="ploopi_form">
                     <p>
                         <label><?php echo _SYSTEM_LABEL_SERVICE; ?>:</label>
-                        <input type="text" class="text" name="user_service"  value="<?php echo htmlentities($user->fields['service']); ?>" tabindex="4" />
+                        <input type="text" class="text" name="user_service"  value="<?php echo ploopi_htmlentities($user->fields['service']); ?>" tabindex="4" />
                     </p>
                     <p>
                         <label><?php echo _SYSTEM_LABEL_SERVICE2; ?>:</label>
-                        <input type="text" class="text" name="user_service2"  value="<?php echo htmlentities($user->fields['service2']); ?>" tabindex="4" />
+                        <input type="text" class="text" name="user_service2"  value="<?php echo ploopi_htmlentities($user->fields['service2']); ?>" tabindex="4" />
                     </p>
                     <p>
                         <label><?php echo _SYSTEM_LABEL_FUNCTION; ?>:</label>
-                        <input type="text" class="text" name="user_function"  value="<?php echo htmlentities($user->fields['function']); ?>" tabindex="5" />
+                        <input type="text" class="text" name="user_function"  value="<?php echo ploopi_htmlentities($user->fields['function']); ?>" tabindex="5" />
                     </p>
                     <p>
                         <label><?php echo _SYSTEM_LABEL_RANK; ?>:</label>
-                        <input type="text" class="text" name="user_rank"  value="<?php echo htmlentities($user->fields['rank']); ?>" tabindex="6" />
+                        <input type="text" class="text" name="user_rank"  value="<?php echo ploopi_htmlentities($user->fields['rank']); ?>" tabindex="6" />
                     </p>
                     <p>
                         <label><?php echo _SYSTEM_LABEL_NUMBER; ?>:</label>
-                        <input type="text" class="text" name="user_number"  value="<?php echo htmlentities($user->fields['number']); ?>" tabindex="7" />
+                        <input type="text" class="text" name="user_number"  value="<?php echo ploopi_htmlentities($user->fields['number']); ?>" tabindex="7" />
                     </p>
                     <p>
                         <label><?php echo _SYSTEM_LABEL_PHONE; ?>:</label>
-                        <input type="text" class="text" name="user_phone"  value="<?php echo htmlentities($user->fields['phone']); ?>" tabindex="8" />
+                        <input type="text" class="text" name="user_phone"  value="<?php echo ploopi_htmlentities($user->fields['phone']); ?>" tabindex="8" />
                     </p>
                     <p>
                         <label><?php echo _SYSTEM_LABEL_MOBILE; ?>:</label>
-                        <input type="text" class="text" name="user_mobile"  value="<?php echo htmlentities($user->fields['mobile']); ?>" tabindex="9" />
+                        <input type="text" class="text" name="user_mobile"  value="<?php echo ploopi_htmlentities($user->fields['mobile']); ?>" tabindex="9" />
                     </p>
                     <p>
                         <label><?php echo _SYSTEM_LABEL_FAX; ?>:</label>
-                        <input type="text" class="text" name="user_fax"  value="<?php echo htmlentities($user->fields['fax']); ?>" tabindex="10" />
+                        <input type="text" class="text" name="user_fax"  value="<?php echo ploopi_htmlentities($user->fields['fax']); ?>" tabindex="10" />
                     </p>
                 </div>
             </fieldset>
@@ -185,31 +185,31 @@ if (isset($error))
                 <div class="ploopi_form">
                     <p>
                         <label><?php echo _SYSTEM_LABEL_BUILDING; ?>:</label>
-                        <input type="text" class="text" name="user_building"  value="<?php echo htmlentities($user->fields['building']); ?>" tabindex="11" />
+                        <input type="text" class="text" name="user_building"  value="<?php echo ploopi_htmlentities($user->fields['building']); ?>" tabindex="11" />
                     </p>
                     <p>
                         <label><?php echo _SYSTEM_LABEL_FLOOR; ?>:</label>
-                        <input type="text" class="text" name="user_floor"  value="<?php echo htmlentities($user->fields['floor']); ?>" tabindex="12" />
+                        <input type="text" class="text" name="user_floor"  value="<?php echo ploopi_htmlentities($user->fields['floor']); ?>" tabindex="12" />
                     </p>
                     <p>
                         <label><?php echo _SYSTEM_LABEL_OFFICE; ?>:</label>
-                        <input type="text" class="text" name="user_office"  value="<?php echo htmlentities($user->fields['office']); ?>" tabindex="13" />
+                        <input type="text" class="text" name="user_office"  value="<?php echo ploopi_htmlentities($user->fields['office']); ?>" tabindex="13" />
                     </p>
                     <p>
                         <label><?php echo _SYSTEM_LABEL_ADDRESS; ?>:</label>
-                        <textarea class="text" name="user_address" tabindex="14"><?php echo htmlentities($user->fields['address']); ?></textarea>
+                        <textarea class="text" name="user_address" tabindex="14"><?php echo ploopi_htmlentities($user->fields['address']); ?></textarea>
                     </p>
                     <p>
                         <label><?php echo _SYSTEM_LABEL_POSTALCODE; ?>:</label>
-                        <input type="text" class="text" name="user_postalcode"  value="<?php echo htmlentities($user->fields['postalcode']); ?>" tabindex="15" />
+                        <input type="text" class="text" name="user_postalcode"  value="<?php echo ploopi_htmlentities($user->fields['postalcode']); ?>" tabindex="15" />
                     </p>
                     <p>
                         <label><?php echo _SYSTEM_LABEL_CITY; ?>:</label>
-                        <input type="text" class="text" name="user_city"  value="<?php echo htmlentities($user->fields['city']); ?>" tabindex="16" />
+                        <input type="text" class="text" name="user_city"  value="<?php echo ploopi_htmlentities($user->fields['city']); ?>" tabindex="16" />
                     </p>
                     <p>
                         <label><?php echo _SYSTEM_LABEL_COUNTRY; ?>:</label>
-                        <input type="text" class="text" name="user_country"  value="<?php echo htmlentities($user->fields['country']); ?>"  tabindex="17" />
+                        <input type="text" class="text" name="user_country"  value="<?php echo ploopi_htmlentities($user->fields['country']); ?>"  tabindex="17" />
                     </p>
                 </div>
             </fieldset>
@@ -239,7 +239,7 @@ if (isset($error))
                     </p>
                     <p>
                         <label><?php echo _SYSTEM_LABEL_EMAIL; ?>:</label>
-                        <input type="text" class="text" name="user_email"  value="<?php echo htmlentities($user->fields['email']); ?>" tabindex="25" />
+                        <input type="text" class="text" name="user_email"  value="<?php echo ploopi_htmlentities($user->fields['email']); ?>" tabindex="25" />
                     </p>
                     <p class="checkbox" onclick="javascript:ploopi_checkbox_click(event,'user_ticketsbyemail');">
                         <label><?php echo _SYSTEM_LABEL_TICKETSBYEMAIL; ?>:</label>
@@ -312,7 +312,7 @@ if (isset($error))
                         foreach ($arrZones as $key => $value)
                         {
                             ?>
-                            <option value="<?php echo htmlentities($key); ?>" <?php if ($user->fields['timezone'] == $key) echo 'selected'; ?>><?php echo htmlentities($value['label']); ?> (<?php echo $value['offset_display']; ?>)</option>
+                            <option value="<?php echo ploopi_htmlentities($key); ?>" <?php if ($user->fields['timezone'] == $key) echo 'selected'; ?>><?php echo ploopi_htmlentities($value['label']); ?> (<?php echo $value['offset_display']; ?>)</option>
                             <?php
                         }
                         ?>
@@ -320,7 +320,7 @@ if (isset($error))
                     </p>
                     <p>
                         <label><?php echo _SYSTEM_LABEL_COLOR; ?>:</label>
-                        <input type="text" style="width:100px;cursor:pointer;" class="text color {hash:true}" name="user_color" id="user_color" value="<?php echo htmlentities($user->fields['color']); ?>" tabindex="29" readonly="readonly" />
+                        <input type="text" style="width:100px;cursor:pointer;" class="text color {hash:true}" name="user_color" id="user_color" value="<?php echo ploopi_htmlentities($user->fields['color']); ?>" tabindex="29" readonly="readonly" />
                     </p>
                     <p>
                         <label><?php echo _SYSTEM_LABEL_PHOTO; ?>:</label>
@@ -343,7 +343,7 @@ if (isset($error))
                 <div class="ploopi_form">
                     <p>
                         <label><?php echo _SYSTEM_LABEL_COMMENTS; ?>:</label>
-                        <textarea class="text" name="user_comments" tabindex="30"><?php echo htmlentities($user->fields['comments']); ?></textarea>
+                        <textarea class="text" name="user_comments" tabindex="30"><?php echo ploopi_htmlentities($user->fields['comments']); ?></textarea>
                     </p>
                 </div>
             </fieldset>

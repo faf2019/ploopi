@@ -73,7 +73,7 @@ $record = weathertools_iptolocation();
         </p>
         <p>
             <label>Nom de station : </label>
-            <input type="text" class="text" name="weather_place_name" value="<? echo htmlentities($strWeatherPlaceName); ?>" />
+            <input type="text" class="text" name="weather_place_name" value="<? echo ploopi_htmlentities($strWeatherPlaceName); ?>" />
         </p>
     </div>
     <div style="padding:4px;text-align:right;">

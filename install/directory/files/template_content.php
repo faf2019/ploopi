@@ -91,17 +91,17 @@ switch($op)
         
         $template_body->assign_vars(
             array(
-                'DIRECTORY_SEARCH_LASTNAME' => htmlentities($arrFilter['directory_lastname']),
-                'DIRECTORY_SEARCH_FIRSTNAME' => htmlentities($arrFilter['directory_firstname']),
-                'DIRECTORY_SEARCH_PHONE' => htmlentities($arrFilter['directory_phone']),
-                'DIRECTORY_SEARCH_EMAIL' => htmlentities($arrFilter['directory_email']),
-                'DIRECTORY_SEARCH_NUMBER' => htmlentities($arrFilter['directory_number']),
-                'DIRECTORY_SEARCH_SERVICE' => htmlentities($arrFilter['directory_service']),
-                'DIRECTORY_SEARCH_FUNCTION' => htmlentities($arrFilter['directory_function']),
-                'DIRECTORY_SEARCH_RANK' => htmlentities($arrFilter['directory_rank']),
-                'DIRECTORY_SEARCH_COUNTRY' => htmlentities($arrFilter['directory_country']),
-                'DIRECTORY_SEARCH_CITY' => htmlentities($arrFilter['directory_city']),
-                'DIRECTORY_SEARCH_POSTALCODE' => htmlentities($arrFilter['directory_postalcode']),
+                'DIRECTORY_SEARCH_LASTNAME' => ploopi_htmlentities($arrFilter['directory_lastname']),
+                'DIRECTORY_SEARCH_FIRSTNAME' => ploopi_htmlentities($arrFilter['directory_firstname']),
+                'DIRECTORY_SEARCH_PHONE' => ploopi_htmlentities($arrFilter['directory_phone']),
+                'DIRECTORY_SEARCH_EMAIL' => ploopi_htmlentities($arrFilter['directory_email']),
+                'DIRECTORY_SEARCH_NUMBER' => ploopi_htmlentities($arrFilter['directory_number']),
+                'DIRECTORY_SEARCH_SERVICE' => ploopi_htmlentities($arrFilter['directory_service']),
+                'DIRECTORY_SEARCH_FUNCTION' => ploopi_htmlentities($arrFilter['directory_function']),
+                'DIRECTORY_SEARCH_RANK' => ploopi_htmlentities($arrFilter['directory_rank']),
+                'DIRECTORY_SEARCH_COUNTRY' => ploopi_htmlentities($arrFilter['directory_country']),
+                'DIRECTORY_SEARCH_CITY' => ploopi_htmlentities($arrFilter['directory_city']),
+                'DIRECTORY_SEARCH_POSTALCODE' => ploopi_htmlentities($arrFilter['directory_postalcode']),
                 'DIRECTORY_SEARCH_HEADING' => $arrFilter['directory_heading'],
                 'DIRECTORY_SEARCH_COMMENTS' => $arrFilter['directory_comments']
             )
@@ -179,9 +179,9 @@ switch($op)
                 $c++;
 
                 $arrAddress = array();
-                if (!empty($row['address'])) $arrAddress[] = ploopi_nl2br(htmlentities($row['address']));
-                if (!empty($row['postalcode']) || !empty($row['city'])) $arrAddress[] = ploopi_nl2br(htmlentities(trim($row['postalcode'].' '.$row['city'])));
-                if (!empty($row['country'])) $arrAddress[] = ploopi_nl2br(htmlentities($row['country']));
+                if (!empty($row['address'])) $arrAddress[] = ploopi_nl2br(ploopi_htmlentities($row['address']));
+                if (!empty($row['postalcode']) || !empty($row['city'])) $arrAddress[] = ploopi_nl2br(ploopi_htmlentities(trim($row['postalcode'].' '.$row['city'])));
+                if (!empty($row['country'])) $arrAddress[] = ploopi_nl2br(ploopi_htmlentities($row['country']));
                 
                 $objContact = new directory_contact();
                 $objContact->fields['id'] = $row['id'];
@@ -205,29 +205,29 @@ switch($op)
                     array(
                         'ID' => $row['id'],
                         'POSITION' => $row['position'],
-                        'CIVILITY' => htmlentities($row['civility']),
-                        'LASTNAME' => htmlentities($row['lastname']),
-                        'FIRSTNAME' => htmlentities($row['firstname']),
-                        'EMAIL' => htmlentities($row['email']),
-                        'PHONE' => htmlentities($row['phone']),
-                        'FAX' => htmlentities($row['fax']),
-                        'MOBILE' => htmlentities($row['mobile']),
-                        'SERVICE' => htmlentities($row['service']),
-                        'FUNCTION' => htmlentities($row['function']),
-                        'RANK' => htmlentities($row['rank']),
-                        'NUMBER' => htmlentities($row['number']),
-                        'POSTALCODE' => htmlentities($row['postalcode']),
-                        'ADDRESS' => htmlentities($row['address']),
-                        'CITY' => htmlentities($row['city']),
-                        'COUNTRY' => htmlentities($row['country']),
+                        'CIVILITY' => ploopi_htmlentities($row['civility']),
+                        'LASTNAME' => ploopi_htmlentities($row['lastname']),
+                        'FIRSTNAME' => ploopi_htmlentities($row['firstname']),
+                        'EMAIL' => ploopi_htmlentities($row['email']),
+                        'PHONE' => ploopi_htmlentities($row['phone']),
+                        'FAX' => ploopi_htmlentities($row['fax']),
+                        'MOBILE' => ploopi_htmlentities($row['mobile']),
+                        'SERVICE' => ploopi_htmlentities($row['service']),
+                        'FUNCTION' => ploopi_htmlentities($row['function']),
+                        'RANK' => ploopi_htmlentities($row['rank']),
+                        'NUMBER' => ploopi_htmlentities($row['number']),
+                        'POSTALCODE' => ploopi_htmlentities($row['postalcode']),
+                        'ADDRESS' => ploopi_htmlentities($row['address']),
+                        'CITY' => ploopi_htmlentities($row['city']),
+                        'COUNTRY' => ploopi_htmlentities($row['country']),
                         'ADDRESS_FULL' => implode('<br />', $arrAddress),
-                        'BUILDING' => htmlentities($row['building']),
-                        'FLOOR' => htmlentities($row['floor']),
-                        'OFFICE' => htmlentities($row['office']),
+                        'BUILDING' => ploopi_htmlentities($row['building']),
+                        'FLOOR' => ploopi_htmlentities($row['floor']),
+                        'OFFICE' => ploopi_htmlentities($row['office']),
                         'PHOTOPATH' => $row['photopath'],
-                        'COMMENTS' => ploopi_nl2br(htmlentities($row['comments'])),
-                        'HEADING' => htmlentities($row['label']),
-                        'HEADINGS' => htmlentities($strContactHeadings),
+                        'COMMENTS' => ploopi_nl2br(ploopi_htmlentities($row['comments'])),
+                        'HEADING' => ploopi_htmlentities($row['label']),
+                        'HEADINGS' => ploopi_htmlentities($strContactHeadings),
                         'ALTERNATE_STYLE' => $c%2,
                         'LINK' => ploopi_urlencode("index.php?headingid={$headingid}&template_moduleid={$template_moduleid}&op=contact&directory_contact_id={$row['id']}")
                     )
@@ -258,9 +258,9 @@ switch($op)
             else $strPhotopath = './modules/directory/img/nopic.gif';
 
             $arrAddress = array();
-            if (!empty($objContact->fields['address'])) $arrAddress[] = ploopi_nl2br(htmlentities($objContact->fields['address']));
-            if (!empty($objContact->fields['postalcode']) || !empty($objContact->fields['city'])) $arrAddress[] = ploopi_nl2br(htmlentities(trim($objContact->fields['postalcode'].' '.$objContact->fields['city'])));
-            if (!empty($objContact->fields['country'])) $arrAddress[] = ploopi_nl2br(htmlentities($objContact->fields['country']));
+            if (!empty($objContact->fields['address'])) $arrAddress[] = ploopi_nl2br(ploopi_htmlentities($objContact->fields['address']));
+            if (!empty($objContact->fields['postalcode']) || !empty($objContact->fields['city'])) $arrAddress[] = ploopi_nl2br(ploopi_htmlentities(trim($objContact->fields['postalcode'].' '.$objContact->fields['city'])));
+            if (!empty($objContact->fields['country'])) $arrAddress[] = ploopi_nl2br(ploopi_htmlentities($objContact->fields['country']));
 
             // Construction du lien sur l'annuaire détaillé de la rubrique
             $arrRequest = array();
@@ -275,51 +275,51 @@ switch($op)
             foreach(explode(';', $arrDirectoryHeadings['list'][$objContact->fields['id_heading']]['parents']) as $intHeadingId)
             {
                 $arrRequest['directory_heading_id'] = "directory_heading_id={$intHeadingId}";
-                if (isset($arrDirectoryHeadings['list'][$intHeadingId])) $arrDirectoryHeadingsLabel[$intHeadingId] = '<a title="Ouvrir l\'annuaire détaillé de '.htmlentities($arrDirectoryHeadings['list'][$intHeadingId]['label']).'" href="'.ploopi_urlencode('index.php?'.implode('&',$arrRequest)).'">'.htmlentities($arrDirectoryHeadings['list'][$intHeadingId]['label']).'</a>';
+                if (isset($arrDirectoryHeadings['list'][$intHeadingId])) $arrDirectoryHeadingsLabel[$intHeadingId] = '<a title="Ouvrir l\'annuaire détaillé de '.ploopi_htmlentities($arrDirectoryHeadings['list'][$intHeadingId]['label']).'" href="'.ploopi_urlencode('index.php?'.implode('&',$arrRequest)).'">'.ploopi_htmlentities($arrDirectoryHeadings['list'][$intHeadingId]['label']).'</a>';
             }
 
             $arrRequest['directory_heading_id'] = "directory_heading_id={$objContact->fields['id_heading']}";
-            $arrDirectoryHeadingsLabel[] = '<a title="Ouvrir l\'annuaire détaillé de '.htmlentities($arrDirectoryHeadings['list'][$objContact->fields['id_heading']]['label']).'" href="'.ploopi_urlencode('index.php?'.implode('&',$arrRequest)).'">'.htmlentities($arrDirectoryHeadings['list'][$objContact->fields['id_heading']]['label']).'</a>';
+            $arrDirectoryHeadingsLabel[] = '<a title="Ouvrir l\'annuaire détaillé de '.ploopi_htmlentities($arrDirectoryHeadings['list'][$objContact->fields['id_heading']]['label']).'" href="'.ploopi_urlencode('index.php?'.implode('&',$arrRequest)).'">'.ploopi_htmlentities($arrDirectoryHeadings['list'][$objContact->fields['id_heading']]['label']).'</a>';
 
             $arrHeadingAddress = array();
-            if (!empty($arrDirectoryHeadings['list'][$objContact->fields['id_heading']]['address'])) $arrHeadingAddress[] = ploopi_nl2br(htmlentities($arrDirectoryHeadings['list'][$objContact->fields['id_heading']]['address']));
-            if (!empty($arrDirectoryHeadings['list'][$objContact->fields['id_heading']]['postalcode']) || !empty($arrDirectoryHeadings['list'][$objContact->fields['id_heading']]['city'])) $arrHeadingAddress[] = ploopi_nl2br(htmlentities(trim($arrDirectoryHeadings['list'][$objContact->fields['id_heading']]['postalcode'].' '.$arrDirectoryHeadings['list'][$objContact->fields['id_heading']]['city'])));
-            if (!empty($arrDirectoryHeadings['list'][$objContact->fields['id_heading']]['country'])) $arrHeadingAddress[] = ploopi_nl2br(htmlentities($arrDirectoryHeadings['list'][$objContact->fields['id_heading']]['country']));
+            if (!empty($arrDirectoryHeadings['list'][$objContact->fields['id_heading']]['address'])) $arrHeadingAddress[] = ploopi_nl2br(ploopi_htmlentities($arrDirectoryHeadings['list'][$objContact->fields['id_heading']]['address']));
+            if (!empty($arrDirectoryHeadings['list'][$objContact->fields['id_heading']]['postalcode']) || !empty($arrDirectoryHeadings['list'][$objContact->fields['id_heading']]['city'])) $arrHeadingAddress[] = ploopi_nl2br(ploopi_htmlentities(trim($arrDirectoryHeadings['list'][$objContact->fields['id_heading']]['postalcode'].' '.$arrDirectoryHeadings['list'][$objContact->fields['id_heading']]['city'])));
+            if (!empty($arrDirectoryHeadings['list'][$objContact->fields['id_heading']]['country'])) $arrHeadingAddress[] = ploopi_nl2br(ploopi_htmlentities($arrDirectoryHeadings['list'][$objContact->fields['id_heading']]['country']));
 
             $template_body->assign_block_vars('directory_switch_contact',
                 array(
                     'POSITION' => $objContact->fields['position'],
-                    'CIVILITY' => htmlentities($objContact->fields['civility']),
-                    'LASTNAME' => htmlentities($objContact->fields['lastname']),
-                    'FIRSTNAME' => htmlentities($objContact->fields['firstname']),
-                    'EMAIL' => htmlentities($objContact->fields['email']),
-                    'PHONE' => htmlentities($objContact->fields['phone']),
-                    'FAX' => htmlentities($objContact->fields['fax']),
-                    'MOBILE' => htmlentities($objContact->fields['mobile']),
-                    'SERVICE' => htmlentities($objContact->fields['service']),
-                    'FUNCTION' => htmlentities($objContact->fields['function']),
-                    'RANK' => htmlentities($objContact->fields['rank']),
-                    'NUMBER' => htmlentities($objContact->fields['number']),
-                    'POSTALCODE' => htmlentities($objContact->fields['postalcode']),
-                    'ADDRESS' => ploopi_nl2br(htmlentities($objContact->fields['address'])),
-                    'CITY' => htmlentities($objContact->fields['city']),
-                    'COUNTRY' => htmlentities($objContact->fields['country']),
+                    'CIVILITY' => ploopi_htmlentities($objContact->fields['civility']),
+                    'LASTNAME' => ploopi_htmlentities($objContact->fields['lastname']),
+                    'FIRSTNAME' => ploopi_htmlentities($objContact->fields['firstname']),
+                    'EMAIL' => ploopi_htmlentities($objContact->fields['email']),
+                    'PHONE' => ploopi_htmlentities($objContact->fields['phone']),
+                    'FAX' => ploopi_htmlentities($objContact->fields['fax']),
+                    'MOBILE' => ploopi_htmlentities($objContact->fields['mobile']),
+                    'SERVICE' => ploopi_htmlentities($objContact->fields['service']),
+                    'FUNCTION' => ploopi_htmlentities($objContact->fields['function']),
+                    'RANK' => ploopi_htmlentities($objContact->fields['rank']),
+                    'NUMBER' => ploopi_htmlentities($objContact->fields['number']),
+                    'POSTALCODE' => ploopi_htmlentities($objContact->fields['postalcode']),
+                    'ADDRESS' => ploopi_nl2br(ploopi_htmlentities($objContact->fields['address'])),
+                    'CITY' => ploopi_htmlentities($objContact->fields['city']),
+                    'COUNTRY' => ploopi_htmlentities($objContact->fields['country']),
                     'ADDRESS_FULL' => implode('<br />', $arrAddress),
-                    'BUILDING' => htmlentities($objContact->fields['building']),
-                    'FLOOR' => htmlentities($objContact->fields['floor']),
-                    'OFFICE' => htmlentities($objContact->fields['office']),
-                    'HEADING' => htmlentities($arrDirectoryHeadings['list'][$objContact->fields['id_heading']]['label']),
+                    'BUILDING' => ploopi_htmlentities($objContact->fields['building']),
+                    'FLOOR' => ploopi_htmlentities($objContact->fields['floor']),
+                    'OFFICE' => ploopi_htmlentities($objContact->fields['office']),
+                    'HEADING' => ploopi_htmlentities($arrDirectoryHeadings['list'][$objContact->fields['id_heading']]['label']),
                     'HEADINGS' => implode('<br />', $arrDirectoryHeadingsLabel),
-                    'HEADING_PHONE' => htmlentities($arrDirectoryHeadings['list'][$objContact->fields['id_heading']]['phone']),
-                    'HEADING_FAX' => htmlentities($arrDirectoryHeadings['list'][$objContact->fields['id_heading']]['fax']),
-                    'HEADING_POSTALCODE' => htmlentities($arrDirectoryHeadings['list'][$objContact->fields['id_heading']]['postalcode']),
-                    'HEADING_ADDRESS' => ploopi_nl2br(htmlentities($arrDirectoryHeadings['list'][$objContact->fields['id_heading']]['address'])),
-                    'HEADING_CITY' => htmlentities($arrDirectoryHeadings['list'][$objContact->fields['id_heading']]['city']),
-                    'HEADING_COUNTRY' => htmlentities($arrDirectoryHeadings['list'][$objContact->fields['id_heading']]['country']),
-                    'HEADING_ADDRESS' => ploopi_nl2br(htmlentities($arrDirectoryHeadings['list'][$objContact->fields['id_heading']]['address'])),
+                    'HEADING_PHONE' => ploopi_htmlentities($arrDirectoryHeadings['list'][$objContact->fields['id_heading']]['phone']),
+                    'HEADING_FAX' => ploopi_htmlentities($arrDirectoryHeadings['list'][$objContact->fields['id_heading']]['fax']),
+                    'HEADING_POSTALCODE' => ploopi_htmlentities($arrDirectoryHeadings['list'][$objContact->fields['id_heading']]['postalcode']),
+                    'HEADING_ADDRESS' => ploopi_nl2br(ploopi_htmlentities($arrDirectoryHeadings['list'][$objContact->fields['id_heading']]['address'])),
+                    'HEADING_CITY' => ploopi_htmlentities($arrDirectoryHeadings['list'][$objContact->fields['id_heading']]['city']),
+                    'HEADING_COUNTRY' => ploopi_htmlentities($arrDirectoryHeadings['list'][$objContact->fields['id_heading']]['country']),
+                    'HEADING_ADDRESS' => ploopi_nl2br(ploopi_htmlentities($arrDirectoryHeadings['list'][$objContact->fields['id_heading']]['address'])),
                     'HEADING_ADDRESS_FULL' => implode('<br />', $arrHeadingAddress),
                     'PHOTOPATH' => $strPhotopath,
-                    'COMMENTS' => ploopi_nl2br(htmlentities($objContact->fields['comments']))
+                    'COMMENTS' => ploopi_nl2br(ploopi_htmlentities($objContact->fields['comments']))
                 )
             );
             
@@ -374,9 +374,9 @@ switch($op)
                 $c++;
 
                 $arrAddress = array();
-                if (!empty($row['address'])) $arrAddress[] = ploopi_nl2br(htmlentities($row['address']));
-                if (!empty($row['postalcode']) || !empty($row['city'])) $arrAddress[] = ploopi_nl2br(htmlentities(trim($row['postalcode'].' '.$row['city'])));
-                if (!empty($row['country'])) $arrAddress[] = ploopi_nl2br(htmlentities($row['country']));
+                if (!empty($row['address'])) $arrAddress[] = ploopi_nl2br(ploopi_htmlentities($row['address']));
+                if (!empty($row['postalcode']) || !empty($row['city'])) $arrAddress[] = ploopi_nl2br(ploopi_htmlentities(trim($row['postalcode'].' '.$row['city'])));
+                if (!empty($row['country'])) $arrAddress[] = ploopi_nl2br(ploopi_htmlentities($row['country']));
 
                 $objContact = new directory_contact();
                 $objContact->fields['id'] = $row['id'];
@@ -397,27 +397,27 @@ switch($op)
                     array(
                         'ID' => $row['id'],
                         'POSITION' => $row['position'],
-                        'CIVILITY' => htmlentities($row['civility']),
-                        'LASTNAME' => htmlentities($row['lastname']),
-                        'FIRSTNAME' => htmlentities($row['firstname']),
-                        'EMAIL' => htmlentities($row['email']),
-                        'PHONE' => htmlentities($row['phone']),
-                        'FAX' => htmlentities($row['fax']),
-                        'MOBILE' => htmlentities($row['mobile']),
-                        'SERVICE' => htmlentities($row['service']),
-                        'FUNCTION' => htmlentities($row['function']),
-                        'RANK' => htmlentities($row['rank']),
-                        'NUMBER' => htmlentities($row['number']),
-                        'POSTALCODE' => htmlentities($row['postalcode']),
-                        'ADDRESS' => htmlentities($row['address']),
-                        'CITY' => htmlentities($row['city']),
-                        'COUNTRY' => htmlentities($row['country']),
+                        'CIVILITY' => ploopi_htmlentities($row['civility']),
+                        'LASTNAME' => ploopi_htmlentities($row['lastname']),
+                        'FIRSTNAME' => ploopi_htmlentities($row['firstname']),
+                        'EMAIL' => ploopi_htmlentities($row['email']),
+                        'PHONE' => ploopi_htmlentities($row['phone']),
+                        'FAX' => ploopi_htmlentities($row['fax']),
+                        'MOBILE' => ploopi_htmlentities($row['mobile']),
+                        'SERVICE' => ploopi_htmlentities($row['service']),
+                        'FUNCTION' => ploopi_htmlentities($row['function']),
+                        'RANK' => ploopi_htmlentities($row['rank']),
+                        'NUMBER' => ploopi_htmlentities($row['number']),
+                        'POSTALCODE' => ploopi_htmlentities($row['postalcode']),
+                        'ADDRESS' => ploopi_htmlentities($row['address']),
+                        'CITY' => ploopi_htmlentities($row['city']),
+                        'COUNTRY' => ploopi_htmlentities($row['country']),
                         'ADDRESS_FULL' => implode('<br />', $arrAddress),
-                        'BUILDING' => htmlentities($row['building']),
-                        'FLOOR' => htmlentities($row['floor']),
-                        'OFFICE' => htmlentities($row['office']),
+                        'BUILDING' => ploopi_htmlentities($row['building']),
+                        'FLOOR' => ploopi_htmlentities($row['floor']),
+                        'OFFICE' => ploopi_htmlentities($row['office']),
                         'PHOTOPATH' => $row['photopath'],
-                        'COMMENTS' => ploopi_nl2br(htmlentities($row['comments'])),
+                        'COMMENTS' => ploopi_nl2br(ploopi_htmlentities($row['comments'])),
                         'ALTERNATE_STYLE' => $c%2,
                         'LINK' => ploopi_urlencode('index.php?'.implode('&',$arrRequest))
                     )
@@ -519,7 +519,7 @@ switch($op)
                 $template_body->assign_block_vars('directory_switch_speeddialing.heading',
                     array(
                         'ID' => urlencode(ploopi_convertaccents(strtolower(strtr(trim($strHeading), _PLOOPI_INDEXATION_WORDSEPARATORS, str_pad('', strlen(_PLOOPI_INDEXATION_WORDSEPARATORS), '-'))))),
-                        'LABEL' => htmlentities($strHeading)
+                        'LABEL' => ploopi_htmlentities($strHeading)
                     )
                 );
                 
@@ -527,9 +527,9 @@ switch($op)
 
             $template_body->assign_block_vars('directory_switch_speeddialing.heading.number',
                 array(
-                    'LABEL' => htmlentities($row['label']),
-                    'NUMBER' => htmlentities($row['number']),
-                    'SHORTNUMBER' => htmlentities($row['shortnumber'])
+                    'LABEL' => ploopi_htmlentities($row['label']),
+                    'NUMBER' => ploopi_htmlentities($row['number']),
+                    'SHORTNUMBER' => ploopi_htmlentities($row['shortnumber'])
                 )
             );
         }

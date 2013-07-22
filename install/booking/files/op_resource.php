@@ -112,11 +112,11 @@ switch($_REQUEST['ploopi_op'])
         <div class=ploopi_form>
             <p>
                 <label>Intitulé:</label>
-                <input name="booking_resource_name" type="text" class="text" value="<? echo htmlentities($objResource->fields['name']); ?>">
+                <input name="booking_resource_name" type="text" class="text" value="<? echo ploopi_htmlentities($objResource->fields['name']); ?>">
             </p>
             <p>
                 <label>Référence:</label>
-                <input name="booking_resource_reference" type="text" class="text" value="<? echo htmlentities($objResource->fields['reference']); ?>">
+                <input name="booking_resource_reference" type="text" class="text" value="<? echo ploopi_htmlentities($objResource->fields['reference']); ?>">
             </p>
             <p>
                 <label>Type de ressource:</label>
@@ -129,7 +129,7 @@ switch($_REQUEST['ploopi_op'])
                     while ($row = $db->fetchrow())
                     {
                         ?>
-                        <option value="<? echo $row['id']; ?>" <? if ($objResource->fields['id_resourcetype'] == $row['id']) echo 'selected="selected"'; ?>><? echo htmlentities($row['name']); ?></option>
+                        <option value="<? echo $row['id']; ?>" <? if ($objResource->fields['id_resourcetype'] == $row['id']) echo 'selected="selected"'; ?>><? echo ploopi_htmlentities($row['name']); ?></option>
                         <?
                     }
                     ?>
@@ -154,7 +154,7 @@ switch($_REQUEST['ploopi_op'])
             <p>
                 <label>Couleur planning:</label>
                 <span>
-                    <input name="booking_resource_color" id="booking_resource_color" class="text" type="text" value="<? echo htmlentities($objResource->fields['color']); ?>" style="width:60px;cursor:pointer;" readonly="readonly"/>
+                    <input name="booking_resource_color" id="booking_resource_color" class="text" type="text" value="<? echo ploopi_htmlentities($objResource->fields['color']); ?>" style="width:60px;cursor:pointer;" readonly="readonly"/>
                 </span>
                 <script type="text/javascript">new jscolor.color($('booking_resource_color'), {hash:true})</script>
             </p>

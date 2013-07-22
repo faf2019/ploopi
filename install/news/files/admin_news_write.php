@@ -47,7 +47,7 @@ else echo $skin->open_simplebloc(str_replace("LABEL",$news->fields['title'],_NEW
         <div style="padding:2px;">
             <p>
                 <label><?php echo _NEWS_LABEL_TITLE; ?>:</label>
-                <input class="text" type="text" name="news_title" value="<?php echo htmlentities($news->fields['title']); ?>">
+                <input class="text" type="text" name="news_title" value="<?php echo ploopi_htmlentities($news->fields['title']); ?>">
             </p>
             <p>
                 <label><?php echo _NEWS_LABEL_CATEGORY; ?>:</label>
@@ -59,7 +59,7 @@ else echo $skin->open_simplebloc(str_replace("LABEL",$news->fields['title'],_NEW
                 while ($fields = $db->fetchrow($answer))
                 {
                     ?>
-                    <option <?php if ($fields['id'] == $news->fields['id_cat']) echo 'selected="selected"'; ?> value="<?php echo $fields['id']; ?>"><?php echo htmlentities($fields['title']); ?></option>
+                    <option <?php if ($fields['id'] == $news->fields['id_cat']) echo 'selected="selected"'; ?> value="<?php echo $fields['id']; ?>"><?php echo ploopi_htmlentities($fields['title']); ?></option>
                     <?php
                 }
                 ?>
@@ -67,7 +67,7 @@ else echo $skin->open_simplebloc(str_replace("LABEL",$news->fields['title'],_NEW
             </p>
             <p>
                 <label><?php echo _NEWS_LABEL_SOURCE; ?>:</label>
-                <input class="text" type="text" name="news_source" value="<?php echo htmlentities($news->fields['source']); ?>">
+                <input class="text" type="text" name="news_source" value="<?php echo ploopi_htmlentities($news->fields['source']); ?>">
             </p>
             <p>
                 <label><?php echo _NEWS_LABEL_HOT; ?>:</label>
@@ -93,11 +93,11 @@ else echo $skin->open_simplebloc(str_replace("LABEL",$news->fields['title'],_NEW
             </p>
             <p>
                 <label><?php echo _NEWS_LABEL_URL; ?>:</label>
-                <input class="text" type="text" name="news_url" value="<?php echo htmlentities($news->fields['url']); ?>">
+                <input class="text" type="text" name="news_url" value="<?php echo ploopi_htmlentities($news->fields['url']); ?>">
             </p>
             <p>
                 <label><?php echo _NEWS_LABEL_URLTITLE; ?>:</label>
-                <input class="text" type="text" name="news_urltitle" value="<?php echo htmlentities($news->fields['urltitle']); ?>">
+                <input class="text" type="text" name="news_urltitle" value="<?php echo ploopi_htmlentities($news->fields['urltitle']); ?>">
             </p>
         </div>
     </div>

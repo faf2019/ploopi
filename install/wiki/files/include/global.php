@@ -93,13 +93,13 @@ function wiki_internal_links($arrMatches, $intIdModule = null)
         if ($objWikiPage->open($strPageId, $intIdModule))
         {
             $strLinkClass = 'wiki_link';
-            $strTitle = 'Ouvrir la page &laquo; '.htmlentities($strPageId).' &raquo;';
+            $strTitle = 'Ouvrir la page &laquo; '.ploopi_htmlentities($strPageId).' &raquo;';
             $strOp = '';
         }
         else
         {
             $strLinkClass = 'wiki_link_notfound';
-            $strTitle = 'Créer la page &laquo; '.htmlentities($strPageId).' &raquo;';
+            $strTitle = 'Créer la page &laquo; '.ploopi_htmlentities($strPageId).' &raquo;';
             $strOp = 'op=wiki_page_modify&';
         }
 
@@ -125,11 +125,11 @@ function wiki_links($arrMatches)
         switch($arrMatches[1][0]) // On regarde le 1er caractère du lien
         {
             case '#': // cas particulier : ancre
-                return '<span class="wiki_link_ext"><a title="Aller à l\'ancre &laquo; '.htmlentities(strip_tags($arrMatches[2])).' &raquo;" href="'.$arrMatches[1].'">'.$arrMatches[2].'</a><img src="./modules/wiki/img/ico_link_anchor.png" /></span>';
+                return '<span class="wiki_link_ext"><a title="Aller à l\'ancre &laquo; '.ploopi_htmlentities(strip_tags($arrMatches[2])).' &raquo;" href="'.$arrMatches[1].'">'.$arrMatches[2].'</a><img src="./modules/wiki/img/ico_link_anchor.png" /></span>';
             break;
 
             default: // autres cas : liens externes
-                return '<span class="wiki_link_ext"><a title="Ouvrir le lien externe &laquo; '.htmlentities(strip_tags($arrMatches[1])).' &raquo;" href="'.$arrMatches[1].'">'.$arrMatches[2].'</a><img src="./modules/wiki/img/ico_link_ext.png" /></span>';
+                return '<span class="wiki_link_ext"><a title="Ouvrir le lien externe &laquo; '.ploopi_htmlentities(strip_tags($arrMatches[1])).' &raquo;" href="'.$arrMatches[1].'">'.$arrMatches[2].'</a><img src="./modules/wiki/img/ico_link_ext.png" /></span>';
             break;
 
         }
@@ -223,7 +223,7 @@ function wiki_highlight($strContent, $strFormat = 'php')
         $objHL->setRenderer(new Text_Highlighter_Renderer_Html());
         $strContent = $objHL->highlight($strContent);
    }
-    else $strContent = '<pre>'.ploopi_nl2br(htmlentities($strContent)).'</pre>';
+    else $strContent = '<pre>'.ploopi_nl2br(ploopi_htmlentities($strContent)).'</pre>';
 
     return "<div class=\"hl-content\"><table><tr><td class=\"hl-num\">\n$strLines\n</td><td class=\"hl-src\">\n$strContent\n</td></tr></table></div>";
 }
@@ -284,16 +284,16 @@ function wiki_object_searchresult($template_body, $rowResult, $objArticle, $arrH
     $template_body->assign_block_vars('switch_search.result',
         array(
             'RELEVANCE' => sprintf("%.02f", $rowResult['relevance']),
-            'TITLE' => htmlentities($rowResult['id_record']),
+            'TITLE' => ploopi_htmlentities($rowResult['id_record']),
             'TITLE_RAW' => $rowResult['id_record'],
-            'AUTHOR' => htmlentities($objArticle->fields['author']),
+            'AUTHOR' => ploopi_htmlentities($objArticle->fields['author']),
             'AUTHOR_RAW' => $objArticle->fields['author'],
             'EXTRACT' => '',
-            'METATITLE' => htmlentities($rowResult['id_record']),
+            'METATITLE' => ploopi_htmlentities($rowResult['id_record']),
             'METATITLE_RAW' => $rowResult['id_record'],
-            'METAKEYWORDS' => htmlentities($objArticle->fields['metakeywords']),
+            'METAKEYWORDS' => ploopi_htmlentities($objArticle->fields['metakeywords']),
             'METAKEYWORDS_RAW' => $objArticle->fields['metakeywords'],
-            'METADESCRIPTION' => htmlentities($objArticle->fields['metadescription']),
+            'METADESCRIPTION' => ploopi_htmlentities($objArticle->fields['metadescription']),
             'METADESCRIPTION_RAW' => $objArticle->fields['metadescription'],
             'DATE' => ($objArticle->fields['timestp']!='') ? current(ploopi_timestamp2local($objArticle->fields['timestp'])) : '',
             'SIZE' => sprintf("%.02f", strlen($objWikiPage->fields['content'])/1024),

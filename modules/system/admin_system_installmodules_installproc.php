@@ -289,8 +289,8 @@ else
     foreach($rapport as $op_detail)
     {
         $bullet = ($op_detail['res']) ? 'green' : 'red';
-        $values[$c]['values']['operation'] = array('label' => htmlentities($op_detail['operation']));
-        $values[$c]['values']['detail'] = array('label' => htmlentities($op_detail['detail']));
+        $values[$c]['values']['operation'] = array('label' => ploopi_htmlentities($op_detail['operation']));
+        $values[$c]['values']['detail'] = array('label' => ploopi_htmlentities($op_detail['detail']));
         $values[$c]['values']['result'] = array('label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/p_{$bullet}.png\" />");
 
         $c++;

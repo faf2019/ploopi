@@ -169,7 +169,7 @@ switch($op)
                         <input class="text" type="text" name="webedit_article_title" value="<?php echo $article->fields['title']; ?>" tabindex="2" />
                         <?php
                     }
-                    else echo '<span>'.htmlentities($article->fields['title'], ENT_QUOTES).'</span>';
+                    else echo '<span>'.ploopi_htmlentities($article->fields['title'], ENT_QUOTES).'</span>';
                     ?>
                 </p>
                 <p>
@@ -178,10 +178,10 @@ switch($op)
                     if (!$readonly)
                     {
                         ?>
-                        <input class="text" type="text" name="webedit_article_author" value="<?php echo htmlentities($article->fields['author'], ENT_QUOTES); ?>" tabindex="3" />
+                        <input class="text" type="text" name="webedit_article_author" value="<?php echo ploopi_htmlentities($article->fields['author'], ENT_QUOTES); ?>" tabindex="3" />
                         <?php
                     }
-                    else echo '<span>'.htmlentities($article->fields['author']).'</span>';
+                    else echo '<span>'.ploopi_htmlentities($article->fields['author']).'</span>';
                     ?>
                 </p>
             </div>
@@ -200,7 +200,7 @@ switch($op)
                         <? ploopi_open_calendar('webedit_article_timestp'); ?>
                         <?php
                     }
-                    else echo '<span>'.htmlentities($article_timestp, ENT_QUOTES).'</span>';
+                    else echo '<span>'.ploopi_htmlentities($article_timestp, ENT_QUOTES).'</span>';
                     ?>
                 </p>
                 <p>
@@ -209,10 +209,10 @@ switch($op)
                     if (!$readonly)
                     {
                         ?>
-                        <input style="width:100px;" class="text" type="text" name="webedit_article_version" value="<?php echo htmlentities($article->fields['version'], ENT_QUOTES); ?>" tabindex="5" />
+                        <input style="width:100px;" class="text" type="text" name="webedit_article_version" value="<?php echo ploopi_htmlentities($article->fields['version'], ENT_QUOTES); ?>" tabindex="5" />
                         <?php
                     }
-                    else echo '<span>'.htmlentities($article->fields['version'], ENT_QUOTES).'</span>';
+                    else echo '<span>'.ploopi_htmlentities($article->fields['version'], ENT_QUOTES).'</span>';
                     ?>
                 </p>
                 <p>
@@ -221,10 +221,10 @@ switch($op)
                     if (ploopi_isadmin() && !$readonly)
                     {
                         ?>
-                        <input style="width:100px;" class="text" type="text" name="webedit_article_width" value="<?php echo htmlentities($article->fields['width'], ENT_QUOTES); ?>" tabindex="6" />
+                        <input style="width:100px;" class="text" type="text" name="webedit_article_width" value="<?php echo ploopi_htmlentities($article->fields['width'], ENT_QUOTES); ?>" tabindex="6" />
                         <?php
                     }
-                    else echo '<span>'.htmlentities($article->fields['width'], ENT_QUOTES).'</span>';
+                    else echo '<span>'.ploopi_htmlentities($article->fields['width'], ENT_QUOTES).'</span>';
                     ?>
                 </p>
                 <p>
@@ -233,10 +233,10 @@ switch($op)
                     if (ploopi_isadmin() && !$readonly)
                     {
                         ?>
-                        <input style="width:100px;" class="text" type="text" name="webedit_article_height" value="<?php echo htmlentities($article->fields['height'], ENT_QUOTES); ?>" tabindex="7" />
+                        <input style="width:100px;" class="text" type="text" name="webedit_article_height" value="<?php echo ploopi_htmlentities($article->fields['height'], ENT_QUOTES); ?>" tabindex="7" />
                         <?php
                     }
-                    else echo '<span>'.htmlentities($article->fields['height'], ENT_QUOTES).'</span>';
+                    else echo '<span>'.ploopi_htmlentities($article->fields['height'], ENT_QUOTES).'</span>';
                     ?>
                 </p>
                 <?php
@@ -322,7 +322,7 @@ switch($op)
                         <input class="text" type="text" name="webedit_article_title" value="<?php echo $article->fields['title']; ?>" tabindex="2" />
                         <?php
                     }
-                    else echo '<span>'.htmlentities($article->fields['title'], ENT_QUOTES).'</span>';
+                    else echo '<span>'.ploopi_htmlentities($article->fields['title'], ENT_QUOTES).'</span>';
                     ?>
                 </p>
                 <p>
@@ -331,10 +331,10 @@ switch($op)
                     if (!$readonly)
                     {
                         ?>
-                        <input class="text" type="text" name="webedit_article_author" value="<?php echo htmlentities($article->fields['author'], ENT_QUOTES); ?>" tabindex="3" />
+                        <input class="text" type="text" name="webedit_article_author" value="<?php echo ploopi_htmlentities($article->fields['author'], ENT_QUOTES); ?>" tabindex="3" />
                         <?php
                     }
-                    else echo '<span>'.htmlentities($article->fields['author']).'</span>';
+                    else echo '<span>'.ploopi_htmlentities($article->fields['author']).'</span>';
                     ?>
                 </p>
             </div>
@@ -352,7 +352,7 @@ switch($op)
                         <a href="javascript:void(0);" onclick="javascript:ploopi_calendar_open('webedit_article_timestp', event);"><img src="./img/calendar/calendar.gif" width="31" height="18" align="top" border="0"></a>
                         <?php
                     }
-                    else echo '<span>'.htmlentities($article_timestp, ENT_QUOTES).'</span>';
+                    else echo '<span>'.ploopi_htmlentities($article_timestp, ENT_QUOTES).'</span>';
                     ?>
                 </p>
             </div>

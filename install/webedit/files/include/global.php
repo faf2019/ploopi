@@ -516,7 +516,7 @@ function webedit_template_assign(&$arrHeadings, &$arrShares, &$nav, $hid, $var =
         {
             $id = $arrHeading['id'];
 
-            $strHtmlLabel = htmlentities($arrHeading['label']);
+            $strHtmlLabel = ploopi_htmlentities($arrHeading['label']);
 
             $depth = $arrHeading['depth'] - 1;
             if ($depth == 0) // root node
@@ -578,7 +578,7 @@ function webedit_template_assign(&$arrHeadings, &$arrShares, &$nav, $hid, $var =
                             'HEADING_LABEL' => $strHtmlLabel,
                             'HEADING_LABEL_RAW' => $arrHeading['label'],
                             'HEADING_POSITION' => $arrHeading['position'],
-                            'HEADING_DESCRIPTION' => htmlentities($arrHeading['description']),
+                            'HEADING_DESCRIPTION' => ploopi_htmlentities($arrHeading['description']),
                             'HEADING_DESCRIPTION_RAW' => $arrHeading['description'],
                             'HEADING_LINK' => $script,
                             'HEADING_LINK_TARGET' => ($arrHeading['url_window']) ? 'target="_blank"' : '',
@@ -596,7 +596,7 @@ function webedit_template_assign(&$arrHeadings, &$arrShares, &$nav, $hid, $var =
                         'LABEL' => $strHtmlLabel,
                         'LABEL_RAW' => $arrHeading['label'],
                         'POSITION' => $arrHeading['position'],
-                        'DESCRIPTION' => htmlentities($arrHeading['description']),
+                        'DESCRIPTION' => ploopi_htmlentities($arrHeading['description']),
                         'DESCRIPTION_RAW' => $arrHeading['description'],
                         'LINK' => $script,
                         'LINK_TARGET' => ($arrHeading['url_window']) ? 'target="_blank"' : '',
@@ -753,15 +753,15 @@ function webedit_template_assign_headings(&$arrHeadings, &$arrArticles, &$arrSha
 
                         $var_tpl_page =
                             array(
-                                'REFERENCE'     => htmlentities($row['reference']),
-                                'LABEL'         => htmlentities($row['title']),
+                                'REFERENCE'     => ploopi_htmlentities($row['reference']),
+                                'LABEL'         => ploopi_htmlentities($row['title']),
                                 'LABEL_RAW'     => $row['title'],
-                                'AUTHOR'        => htmlentities($row['author']),
+                                'AUTHOR'        => ploopi_htmlentities($row['author']),
                                 'AUTHOR_RAW'    => $row['author'],
-                                'VERSION'       => htmlentities($row['version']),
-                                'DATE'          => htmlentities($ldate_timestp['date']),
-                                'LASTUPDATE_DATE' => htmlentities($ldate_lastupdate['date']),
-                                'LASTUPDATE_TIME' => htmlentities($ldate_lastupdate['time']),
+                                'VERSION'       => ploopi_htmlentities($row['version']),
+                                'DATE'          => ploopi_htmlentities($ldate_timestp['date']),
+                                'LASTUPDATE_DATE' => ploopi_htmlentities($ldate_lastupdate['date']),
+                                'LASTUPDATE_TIME' => ploopi_htmlentities($ldate_lastupdate['time']),
                                 'DATE_PUB'   => $ldate_pub['date'],
                                 'DATE_UNPUB' => $ldate_unpub['date'],
                                 'TIMESTP_PUB'   => $ldate_pub['date'],
@@ -1425,7 +1425,7 @@ function webedit_headinglist2template(&$arrHeadings, &$arrShares, $template_body
             {
                 $template_body->assign_block_vars('switch_advanced_search.headings', array(
                     'ID' => $intId,
-                    'LABEL' => htmlentities($arrHeadings['list'][$intId]['label']),
+                    'LABEL' => ploopi_htmlentities($arrHeadings['list'][$intId]['label']),
                     'DEPTH' => $arrHeadings['list'][$intId]['depth'],
                     'SELECTED' => $intSel == $intId ? 'selected="selected"' : ''
                 ));

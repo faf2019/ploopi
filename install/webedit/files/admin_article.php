@@ -191,7 +191,7 @@ $keywords = array_slice($keywords, 0 , 20, true);
                         <input class="text" type="text" name="webedit_article_title" value="<?php echo $article->fields['title']; ?>" tabindex="2" />
                         <?php
                     }
-                    else echo '<span>'.htmlentities($article->fields['title'], ENT_QUOTES).'</span>';
+                    else echo '<span>'.ploopi_htmlentities($article->fields['title'], ENT_QUOTES).'</span>';
                     ?>
                 </p>
                 <p>
@@ -200,10 +200,10 @@ $keywords = array_slice($keywords, 0 , 20, true);
                     if (!$readonly)
                     {
                         ?>
-                        <input class="text" type="text" name="webedit_article_author" value="<?php echo htmlentities($article->fields['author'], ENT_QUOTES); ?>" tabindex="3" />
+                        <input class="text" type="text" name="webedit_article_author" value="<?php echo ploopi_htmlentities($article->fields['author'], ENT_QUOTES); ?>" tabindex="3" />
                         <?php
                     }
-                    else echo '<span>'.htmlentities($article->fields['author']).'</span>';
+                    else echo '<span>'.ploopi_htmlentities($article->fields['author']).'</span>';
                     ?>
                 </p>
                 <p>
@@ -216,7 +216,7 @@ $keywords = array_slice($keywords, 0 , 20, true);
                         <? ploopi_open_calendar('webedit_article_timestp'); ?>
                         <?php
                     }
-                    else echo '<span>'.htmlentities($article_timestp, ENT_QUOTES).'</span>';
+                    else echo '<span>'.ploopi_htmlentities($article_timestp, ENT_QUOTES).'</span>';
                     ?>
                 </p>
                 <p>
@@ -225,10 +225,10 @@ $keywords = array_slice($keywords, 0 , 20, true);
                     if (!$readonly)
                     {
                         ?>
-                        <input style="width:40px;" class="text" type="text" name="webedit_art_position" value="<?php echo htmlentities($article->fields['position'], ENT_QUOTES); ?>" tabindex="11" />
+                        <input style="width:40px;" class="text" type="text" name="webedit_art_position" value="<?php echo ploopi_htmlentities($article->fields['position'], ENT_QUOTES); ?>" tabindex="11" />
                         <?php
                     }
-                    else echo '<span>'.htmlentities($article->fields['position'], ENT_QUOTES).'</span>';
+                    else echo '<span>'.ploopi_htmlentities($article->fields['position'], ENT_QUOTES).'</span>';
                     ?>
                 </p>
                 <p>
@@ -254,7 +254,7 @@ $keywords = array_slice($keywords, 0 , 20, true);
                         <input class="text" type="text" name="webedit_article_metatitle" id="webedit_article_metatitle" value="<?php echo $article->fields['metatitle']; ?>" tabindex="2" />
                         <?php
                     }
-                    else echo '<span>'.htmlentities($article->fields['metatitle'], ENT_QUOTES).'</span>';
+                    else echo '<span>'.ploopi_htmlentities($article->fields['metatitle'], ENT_QUOTES).'</span>';
                     ?>
                 </p>
                 <p>
@@ -266,7 +266,7 @@ $keywords = array_slice($keywords, 0 , 20, true);
                         <input class="text" type="text" name="webedit_article_metakeywords" id="webedit_article_metakeywords" value="<?php echo $article->fields['metakeywords']; ?>" tabindex="2" />
                         <?php
                     }
-                    else echo '<span>'.htmlentities($article->fields['metakeywords'], ENT_QUOTES).'</span>';
+                    else echo '<span>'.ploopi_htmlentities($article->fields['metakeywords'], ENT_QUOTES).'</span>';
                     ?>
                 </p>
                 <?php
@@ -296,10 +296,10 @@ $keywords = array_slice($keywords, 0 , 20, true);
                     if (!$readonly)
                     {
                         ?>
-                        <textarea class="text" name="webedit_article_metadescription" style="height:50px;"><?php echo htmlentities($article->fields['metadescription'], ENT_QUOTES); ?></textarea>
+                        <textarea class="text" name="webedit_article_metadescription" style="height:50px;"><?php echo ploopi_htmlentities($article->fields['metadescription'], ENT_QUOTES); ?></textarea>
                         <?php
                     }
-                    else echo '<span>'.htmlentities($article->fields['metadescription']).'</span>';
+                    else echo '<span>'.ploopi_htmlentities($article->fields['metadescription']).'</span>';
                     ?>
                 </p>
             </div>
@@ -348,7 +348,7 @@ $keywords = array_slice($keywords, 0 , 20, true);
                         <input style="width:100px;" class="text" type="text" name="webedit_article_reference" value="<?php echo $article->fields['reference']; ?>" tabindex="1" />
                         <?php
                     }
-                    else echo '<span>'.htmlentities($article->fields['reference'], ENT_QUOTES).'</span>';
+                    else echo '<span>'.ploopi_htmlentities($article->fields['reference'], ENT_QUOTES).'</span>';
                     ?>
                 </p>
                 <p>
@@ -357,10 +357,10 @@ $keywords = array_slice($keywords, 0 , 20, true);
                     if (!$readonly)
                     {
                         ?>
-                        <input style="width:100px;" class="text" type="text" name="webedit_article_version" value="<?php echo htmlentities($article->fields['version'], ENT_QUOTES); ?>" tabindex="5" />
+                        <input style="width:100px;" class="text" type="text" name="webedit_article_version" value="<?php echo ploopi_htmlentities($article->fields['version'], ENT_QUOTES); ?>" tabindex="5" />
                         <?php
                     }
-                    else echo '<span>'.htmlentities($article->fields['version'], ENT_QUOTES).'</span>';
+                    else echo '<span>'.ploopi_htmlentities($article->fields['version'], ENT_QUOTES).'</span>';
                     ?>
                 </p>
                 <p>
@@ -382,11 +382,11 @@ $keywords = array_slice($keywords, 0 , 20, true);
                     if (!$readonly)
                     {
                         ?>
-                        <input style="width:100px;" class="text" type="text" name="webedit_article_timestp_published" id="webedit_article_timestp_published" value="<?php echo htmlentities($article_timestp_published, ENT_QUOTES); ?>" tabindex="13" />
+                        <input style="width:100px;" class="text" type="text" name="webedit_article_timestp_published" id="webedit_article_timestp_published" value="<?php echo ploopi_htmlentities($article_timestp_published, ENT_QUOTES); ?>" tabindex="13" />
                         <?php 
                         ploopi_open_calendar('webedit_article_timestp_published');
                     }
-                    else echo '<span>'.htmlentities($article_timestp_published, ENT_QUOTES).'</span>';
+                    else echo '<span>'.ploopi_htmlentities($article_timestp_published, ENT_QUOTES).'</span>';
                     ?>
                 </p>
                 <p>
@@ -395,11 +395,11 @@ $keywords = array_slice($keywords, 0 , 20, true);
                     if (!$readonly)
                     {
                         ?>
-                        <input style="width:100px;" class="text" type="text" name="webedit_article_timestp_unpublished" id="webedit_article_timestp_unpublished" value="<?php echo htmlentities($article_timestp_unpublished, ENT_QUOTES); ?>" tabindex="14" />
+                        <input style="width:100px;" class="text" type="text" name="webedit_article_timestp_unpublished" id="webedit_article_timestp_unpublished" value="<?php echo ploopi_htmlentities($article_timestp_unpublished, ENT_QUOTES); ?>" tabindex="14" />
                         <?php 
                         ploopi_open_calendar('webedit_article_timestp_unpublished');
                     }
-                    else echo '<span>'.htmlentities($article_timestp_unpublished, ENT_QUOTES).'</span>';
+                    else echo '<span>'.ploopi_htmlentities($article_timestp_unpublished, ENT_QUOTES).'</span>';
                     ?>
                 </p>
                 <div style="padding:2px;"><strong>Classification (nuage de tags):</strong></div>
@@ -409,10 +409,10 @@ $keywords = array_slice($keywords, 0 , 20, true);
                     if (!$readonly)
                     {
                         ?>
-                        <input class="text" type="text" name="webedit_article_tags" id="webedit_article_tags" value="<?php echo htmlentities($article->fields['tags'], ENT_QUOTES); ?>" />
+                        <input class="text" type="text" name="webedit_article_tags" id="webedit_article_tags" value="<?php echo ploopi_htmlentities($article->fields['tags'], ENT_QUOTES); ?>" />
                         <?php
                     }
-                    else echo '<span>'.htmlentities($article->fields['tags']).'</span>';
+                    else echo '<span>'.ploopi_htmlentities($article->fields['tags']).'</span>';
                     ?>
                 </p>
                 <?php
@@ -468,13 +468,13 @@ $keywords = array_slice($keywords, 0 , 20, true);
         </div>
         
         <div style="clear:both;">
-            <div><?php echo htmlentities("Code supplémentaire, non filtré, à insérer dans la balise <HEAD> (js, css, meta, title...) :"); ?> (<a href="javascript:void(0);" onclick="javascript:$('fck_webedit_article_headcontent').style.height=(parseInt($('fck_webedit_article_headcontent').style.height,10)+20)+'px';" title="Permet d'agrandir la zone de saisie de 20px">agrandir la zone</a>)</div>
+            <div><?php echo ploopi_htmlentities("Code supplémentaire, non filtré, à insérer dans la balise <HEAD> (js, css, meta, title...) :"); ?> (<a href="javascript:void(0);" onclick="javascript:$('fck_webedit_article_headcontent').style.height=(parseInt($('fck_webedit_article_headcontent').style.height,10)+20)+'px';" title="Permet d'agrandir la zone de saisie de 20px">agrandir la zone</a>)</div>
             <div>
             <?php
             if (!$readonly)
             {
                 ?>
-                <textarea id="fck_webedit_article_headcontent" name="fck_webedit_article_headcontent" class="text" style="width:99%;height:16px;"><?php echo htmlentities($article->fields['headcontent']); ?></textarea>
+                <textarea id="fck_webedit_article_headcontent" name="fck_webedit_article_headcontent" class="text" style="width:99%;height:16px;"><?php echo ploopi_htmlentities($article->fields['headcontent']); ?></textarea>
                 <?php
             }
             else
@@ -483,7 +483,7 @@ $keywords = array_slice($keywords, 0 , 20, true);
                 <div id="fck_webedit_article_headcontent" style="height:16px;">
                 <pre>
                 <?php
-                echo htmlentities($article->fields['headcontent']);
+                echo ploopi_htmlentities($article->fields['headcontent']);
                 ?>
                 </pre>
                 </div>
@@ -523,7 +523,7 @@ $keywords = array_slice($keywords, 0 , 20, true);
                         <input class="text" type="text" name="webedit_article_title" value="<?php echo $article->fields['title']; ?>" tabindex="2" />
                         <?php
                     }
-                    else echo '<span>'.htmlentities($article->fields['title'], ENT_QUOTES).'</span>';
+                    else echo '<span>'.ploopi_htmlentities($article->fields['title'], ENT_QUOTES).'</span>';
                     ?>
                 </p>
                 <p>
@@ -532,10 +532,10 @@ $keywords = array_slice($keywords, 0 , 20, true);
                     if (!$readonly)
                     {
                         ?>
-                        <input class="text" type="text" name="webedit_article_author" value="<?php echo htmlentities($article->fields['author'], ENT_QUOTES); ?>" tabindex="3" />
+                        <input class="text" type="text" name="webedit_article_author" value="<?php echo ploopi_htmlentities($article->fields['author'], ENT_QUOTES); ?>" tabindex="3" />
                         <?php
                     }
-                    else echo '<span>'.htmlentities($article->fields['author']).'</span>';
+                    else echo '<span>'.ploopi_htmlentities($article->fields['author']).'</span>';
                     ?>
                 </p>
                 <p>
@@ -566,7 +566,7 @@ $keywords = array_slice($keywords, 0 , 20, true);
                         <a href="javascript:void(0);" onclick="javascript:ploopi_calendar_open('webedit_article_timestp', event);"><img src="./img/calendar/calendar.gif" width="31" height="18" align="top" border="0"></a>
                         <?php
                     }
-                    else echo '<span>'.htmlentities($article_timestp, ENT_QUOTES).'</span>';
+                    else echo '<span>'.ploopi_htmlentities($article_timestp, ENT_QUOTES).'</span>';
                     ?>
                 </p>
                 <p>
@@ -575,10 +575,10 @@ $keywords = array_slice($keywords, 0 , 20, true);
                     if (!$readonly)
                     {
                         ?>
-                        <input style="width:40px;" class="text" type="text" name="webedit_art_position" value="<?php echo htmlentities($article->fields['position'], ENT_QUOTES); ?>" tabindex="11" />
+                        <input style="width:40px;" class="text" type="text" name="webedit_art_position" value="<?php echo ploopi_htmlentities($article->fields['position'], ENT_QUOTES); ?>" tabindex="11" />
                         <?php
                     }
-                    else echo '<span>'.htmlentities($article->fields['position'], ENT_QUOTES).'</span>';
+                    else echo '<span>'.ploopi_htmlentities($article->fields['position'], ENT_QUOTES).'</span>';
                     ?>
                 </p>
             </div>

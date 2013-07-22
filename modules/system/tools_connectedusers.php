@@ -68,8 +68,8 @@ while($row = $db->fetchrow())
 {
     $date_local = ploopi_timestamp2local($row['timestp']);
 
-    $values[$c]['values']['ip']     = array('label' => htmlentities($row['ip']));
-    $values[$c]['values']['domaine']    = array('label' => htmlentities($row['domain']));
+    $values[$c]['values']['ip']     = array('label' => ploopi_htmlentities($row['ip']));
+    $values[$c]['values']['domaine']    = array('label' => ploopi_htmlentities($row['domain']));
     if (is_null($row['login']))
     {
         $values[$c]['values']['login']  = array('label' => 'anonyme', 'style' => 'font-style:italic;');
@@ -77,12 +77,12 @@ while($row = $db->fetchrow())
     }
     else
     {
-        $values[$c]['values']['login']  = array('label' => htmlentities($row['login']));
-        $values[$c]['values']['name']   = array('label' => htmlentities("{$row['firstname']} {$row['lastname']}"));
+        $values[$c]['values']['login']  = array('label' => ploopi_htmlentities($row['login']));
+        $values[$c]['values']['name']   = array('label' => ploopi_htmlentities("{$row['firstname']} {$row['lastname']}"));
     }
-    $values[$c]['values']['workspace']  = array('label' => htmlentities($row['workspacelabel']));
-    $values[$c]['values']['module']     = array('label' => htmlentities($row['modulelabel']));
-    $values[$c]['values']['timestp']    = array('label' => htmlentities("{$date_local['date']} {$date_local['time']}"), 'sort_label' => $row['timestp']);
+    $values[$c]['values']['workspace']  = array('label' => ploopi_htmlentities($row['workspacelabel']));
+    $values[$c]['values']['module']     = array('label' => ploopi_htmlentities($row['modulelabel']));
+    $values[$c]['values']['timestp']    = array('label' => ploopi_htmlentities("{$date_local['date']} {$date_local['time']}"), 'sort_label' => $row['timestp']);
     $c++;
 
 }

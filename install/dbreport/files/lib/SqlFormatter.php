@@ -715,7 +715,7 @@ class SqlFormatter
             $token = $token[self::TOKEN_VALUE];
         }
         else {
-            $token = htmlentities($token[self::TOKEN_VALUE],ENT_COMPAT,'UTF-8');
+            $token = ploopi_htmlentities($token[self::TOKEN_VALUE],ENT_COMPAT,'UTF-8');
         }
 
         if($type===self::TOKEN_TYPE_BOUNDARY) {

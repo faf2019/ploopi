@@ -96,11 +96,11 @@ sort($objForm_tpl);
             <div class="ploopi_form" style="padding:4px;">
                 <p>
                     <label>*&nbsp;<?php echo _FORMS_LABEL; ?>:</label>
-                    <input type="text" class="text" name="forms_label" value="<?php echo htmlentities($objForm->fields['label']); ?>" />
+                    <input type="text" class="text" name="forms_label" value="<?php echo ploopi_htmlentities($objForm->fields['label']); ?>" />
                 </p>
                 <p>
                     <label>&nbsp;<?php echo _FORMS_TABLENAME; ?>:</label>
-                    <span><?php echo htmlentities($objForm->getDataTableName()); ?></span>
+                    <span><?php echo ploopi_htmlentities($objForm->getDataTableName()); ?></span>
                 </p>
                 <p>
                     <label><?php echo _FORMS_PUBDATESTART; ?>:</label>
@@ -114,7 +114,7 @@ sort($objForm_tpl);
                 </p>
                 <p>
                     <label><?php echo _FORMS_DESCRIPTION; ?>:</label>
-                    <textarea class="text" style="height:50px;" name="forms_description"><?php echo htmlentities($objForm->fields['description']); ?></textarea>
+                    <textarea class="text" style="height:50px;" name="forms_description"><?php echo ploopi_htmlentities($objForm->fields['description']); ?></textarea>
                 </p>
                 <p>
                     <label><?php echo _FORMS_TYPEFORM; ?>:</label>
@@ -135,7 +135,7 @@ sort($objForm_tpl);
                 <div id="forms_type_cms" <?php if ($objForm->fields['typeform'] != 'cms') echo 'style="display:none;"'; ?>>
                     <p>
                         <label><?php echo _FORMS_RESPONSE; ?>:</label>
-                        <textarea class="text" rows="3" name="forms_cms_response"><?php echo htmlentities($objForm->fields['cms_response']); ?></textarea>
+                        <textarea class="text" rows="3" name="forms_cms_response"><?php echo ploopi_htmlentities($objForm->fields['cms_response']); ?></textarea>
                     </p>
                 </div>
                 <?php
@@ -175,7 +175,7 @@ sort($objForm_tpl);
                     foreach($objForm_tpl as $tpl_name)
                     {
                         ?>
-                        <option <?php if ($objForm->fields['model'] == $tpl_name) echo 'selected'; ?> value="<?php echo htmlentities($tpl_name); ?>"><?php echo htmlentities($tpl_name); ?></option>
+                        <option <?php if ($objForm->fields['model'] == $tpl_name) echo 'selected'; ?> value="<?php echo ploopi_htmlentities($tpl_name); ?>"><?php echo ploopi_htmlentities($tpl_name); ?></option>
                         <?php
                     }
                     ?>
@@ -183,7 +183,7 @@ sort($objForm_tpl);
                 </p>
                 <p>
                     <label><?php echo _FORMS_STYLE; ?>:</label>
-                    <input type="text" class="text" name="forms_style" value="<?php echo htmlentities($objForm->fields['style']); ?>">
+                    <input type="text" class="text" name="forms_style" value="<?php echo ploopi_htmlentities($objForm->fields['style']); ?>">
                 </p>
                 <p>
                     <label><?php echo _FORMS_NBLINE; ?>:</label>
@@ -436,7 +436,7 @@ if (!$objForm->isnew())
                 <a style="margin-left:10px;" href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("admin.php?op=forms_field_delete&field_id={$row['id']}").'\',\''._PLOOPI_CONFIRM.'\')"><img src="./modules/forms/img/ico_trash.png"></a>
             ');
 
-            $array_values[$c]['description'] = 'Ouvrir le Séparateur "'.htmlentities($row['name']).'"';
+            $array_values[$c]['description'] = 'Ouvrir le Séparateur "'.ploopi_htmlentities($row['name']).'"';
             $array_values[$c]['link'] = ploopi_urlencode("admin.php?op=forms_separator_modify&forms_id={$objForm->fields['id']}&field_id={$row['id']}").'#addform';
             $array_values[$c]['style'] = 'background-color:#ddeeff';
 
@@ -481,7 +481,7 @@ if (!$objForm->isnew())
                 'options' => array('label' => implode(', ', $arrOptions)),
             );
 
-            $array_values[$c]['description'] = 'Ouvrir le Champ "'.htmlentities($row['name']).'"';
+            $array_values[$c]['description'] = 'Ouvrir le Champ "'.ploopi_htmlentities($row['name']).'"';
             $array_values[$c]['link'] = ploopi_urlencode("admin.php?op=forms_field_modify&forms_id={$objForm->fields['id']}&field_id={$row['id']}")."#addform";
         }
 
@@ -564,7 +564,7 @@ if (!$objForm->isnew())
             <a href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("admin-light.php?ploopi_op=forms_group_delete&forms_id={$objForm->fields['id']}&forms_group_id={$row['id']}").'\',\''._PLOOPI_CONFIRM.'\')"><img src="./modules/forms/img/ico_trash.png"></a>
         ');
 
-        $array_values[$c]['description'] = 'Ouvrir le Groupe &laquo; '.htmlentities($row['label']).' &raquo;';
+        $array_values[$c]['description'] = 'Ouvrir le Groupe &laquo; '.ploopi_htmlentities($row['label']).' &raquo;';
         $array_values[$c]['link'] = ploopi_urlencode("admin.php?op=forms_group_modify&forms_id={$objForm->fields['id']}&forms_group_id={$row['id']}").'#addgroup';
 
         if (isset($_GET['forms_group_id']) && $row['id'] == $_GET['forms_group_id']) $array_values[$c]['style'] = 'background-color:#ffe0e0;';
@@ -646,7 +646,7 @@ if (!$objForm->isnew())
             <a href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("admin-light.php?ploopi_op=forms_graphic_delete&forms_id={$objForm->fields['id']}&forms_graphic_id={$row['id']}").'\',\''._PLOOPI_CONFIRM.'\')"><img src="./modules/forms/img/ico_trash.png"></a>
         ');
 
-        $array_values[$c]['description'] = 'Ouvrir le Graphique &laquo; '.htmlentities($row['label']).' &raquo;';
+        $array_values[$c]['description'] = 'Ouvrir le Graphique &laquo; '.ploopi_htmlentities($row['label']).' &raquo;';
         $array_values[$c]['link'] = ploopi_urlencode("admin.php?op=forms_graphic_modify&forms_id={$objForm->fields['id']}&forms_graphic_id={$row['id']}").'#addgraphic';
 
         if (isset($_GET['forms_graphic_id']) && $row['id'] == $_GET['forms_graphic_id']) $array_values[$c]['style'] = 'background-color:#ffe0e0;';

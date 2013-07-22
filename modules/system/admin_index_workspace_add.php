@@ -193,9 +193,9 @@ echo $skin->open_simplebloc();
         $values[]['values'] =
             array(
                 'check' => array('label' => '<input type="checkbox" name="heritedmodule[]" value="SHARED,'.$instanceid.'" '.(isset($heritedmodules[$instanceid]) ? 'checked="checked"' : '').'>', 'sort_label' => isset($heritedmodules[$instanceid]) ? '0' : '1'),
-                'type' => array('label' => htmlentities($instance['moduletype'])),
-                'label' => array('label' => htmlentities($instance['label'])),
-                'description' => array('label' => htmlentities($instance['description']))
+                'type' => array('label' => ploopi_htmlentities($instance['moduletype'])),
+                'label' => array('label' => ploopi_htmlentities($instance['label'])),
+                'description' => array('label' => ploopi_htmlentities($instance['description']))
             );
       }
 
@@ -204,9 +204,9 @@ echo $skin->open_simplebloc();
         $values[]['values'] =
             array(
                 'check' => array('label' => '<input type="checkbox" name="heritedmodule[]" value="NEW,'.$moduletype['id'].'">', 'sort_label' => '9'),
-                'type' => array('label' => htmlentities($moduletype['label'])),
+                'type' => array('label' => ploopi_htmlentities($moduletype['label'])),
                 'label' => array('label' => '&nbsp;'),
-                'description' => array('label' => htmlentities($moduletype['description']))
+                'description' => array('label' => ploopi_htmlentities($moduletype['description']))
             );
       }
 

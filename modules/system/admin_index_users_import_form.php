@@ -76,8 +76,8 @@ $arrFields = array(
         <p>
             <label>Séparateur:</label>
             <select class="select" name="system_user_sep" tabindex="102" style="width:40px;">
-                <option value="<? echo htmlentities(',') ?>"><? echo htmlentities(',') ?></option>
-                <option value="<? echo htmlentities(';') ?>"><? echo htmlentities(';') ?></option>
+                <option value="<? echo ploopi_htmlentities(',') ?>"><? echo ploopi_htmlentities(',') ?></option>
+                <option value="<? echo ploopi_htmlentities(';') ?>"><? echo ploopi_htmlentities(';') ?></option>
             </select>
         </p>
     </div>
@@ -94,7 +94,7 @@ $arrFields = array(
             foreach($arrFields as $strField => $strLabel)
             {
                 ?>
-                <li><strong><? echo htmlentities($strField); ?></strong>: <? echo $strLabel ?></li>
+                <li><strong><? echo ploopi_htmlentities($strField); ?></strong>: <? echo $strLabel ?></li>
                 <?
             }
             ?>

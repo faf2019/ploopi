@@ -141,8 +141,8 @@ class wiki_page extends data_object
      */
     public function redirectLinks($strNewId)
     {
-        $strOldId = htmlentities($this->fields['id']);
-        $strNewId = htmlentities($strNewId);
+        $strOldId = ploopi_htmlentities($this->fields['id']);
+        $strNewId = ploopi_htmlentities($strNewId);
         $this->fields['content'] = str_replace("[[{$strOldId}]]", "[[{$strNewId}]]", $this->fields['content']);
         $this->index();
         return parent::save();

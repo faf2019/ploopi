@@ -182,7 +182,7 @@ switch($_SESSION['directory']['directoryTabItem'])
         $c = 0;
         while ($row = $db->fetchrow())
         {
-            $email = ($row['email']) ? '<a href="mailto:'.htmlentities($row['email']).'" title="'.htmlentities(_DIRECTORY_SEND_EMAIL.': '.$row['email']).'"><img src="./modules/directory/img/ico_email.png"></a>' : '';
+            $email = ($row['email']) ? '<a href="mailto:'.ploopi_htmlentities($row['email']).'" title="'.ploopi_htmlentities(_DIRECTORY_SEND_EMAIL.': '.$row['email']).'"><img src="./modules/directory/img/ico_email.png"></a>' : '';
 
             $actions = '
                 <a href="javascript:void(0);" onclick="javascript:directory_view(event, \'\', \''.$row['id'].'\');"><img title="Voir le Profil" src="./modules/directory/img/ico_open.png"></a>
@@ -262,7 +262,7 @@ switch($_SESSION['directory']['directoryTabItem'])
         $c = 0;
         while ($row = $db->fetchrow($res))
         {
-            $email = ($row['email']) ? '<a href="mailto:'.htmlentities($row['email']).'" title="'.htmlentities(_DIRECTORY_SEND_EMAIL.': '.$row['email']).'"><img src="./modules/directory/img/ico_email.png"></a>' : '';
+            $email = ($row['email']) ? '<a href="mailto:'.ploopi_htmlentities($row['email']).'" title="'.ploopi_htmlentities(_DIRECTORY_SEND_EMAIL.': '.$row['email']).'"><img src="./modules/directory/img/ico_email.png"></a>' : '';
             $ticket = '<a href="javascript:void(0);" onclick="javascript:ploopi_tickets_new(event, null, null, null, '.$row['id'].');"><img title="'._DIRECTORY_SEND_TICKET.'" src="./modules/directory/img/ico_ticket.png"></a>';
 
             $actions =  '<a href="javascript:void(0);" onclick="javascript:directory_view(event, \''.$row['id'].'\', \'\');"><img title="Voir le Profil" src="./modules/directory/img/ico_open.png"></a>';
@@ -482,7 +482,7 @@ switch($_SESSION['directory']['directoryTabItem'])
             $c = 0;
             foreach($result as $row)
             {
-                $email = ($row['email']) ? '<a href="mailto:'.htmlentities($row['email']).'" title="'.htmlentities(_DIRECTORY_SEND_EMAIL.': '.$row['email']).'"><img src="./modules/directory/img/ico_email.png"></a>' : '';
+                $email = ($row['email']) ? '<a href="mailto:'.ploopi_htmlentities($row['email']).'" title="'.ploopi_htmlentities(_DIRECTORY_SEND_EMAIL.': '.$row['email']).'"><img src="./modules/directory/img/ico_email.png"></a>' : '';
                 $ticket = '';
 
                 switch ($row['usertype'])
@@ -692,40 +692,40 @@ switch($_SESSION['directory']['directoryTabItem'])
                                     </p>
                                     <p>
                                         <label>Libellé:</label>
-                                        <input name="directory_heading_label" id="directory_heading_label" type="text" class="text" value="<?php echo htmlentities($objHeading->fields['label']); ?>" />
+                                        <input name="directory_heading_label" id="directory_heading_label" type="text" class="text" value="<?php echo ploopi_htmlentities($objHeading->fields['label']); ?>" />
                                     </p>
                                     <p>
                                         <label>Description:</label>
-                                        <textarea name="directory_heading_description" class="text" style="height:50px;"><?php echo htmlentities($objHeading->fields['description']); ?></textarea>
+                                        <textarea name="directory_heading_description" class="text" style="height:50px;"><?php echo ploopi_htmlentities($objHeading->fields['description']); ?></textarea>
                                     </p>
                                     <p>
                                         <label>Position:</label>
-                                        <input name="directory_heading_position" type="text" class="text" style="width:50px;" value="<?php echo htmlentities($objHeading->fields['position']); ?>" />
+                                        <input name="directory_heading_position" type="text" class="text" style="width:50px;" value="<?php echo ploopi_htmlentities($objHeading->fields['position']); ?>" />
                                         <input type="checkbox" class="checkbox" name="_directory_heading_forcepos" value="1" />Forcer la position
                                     </p>
                                     <p>
                                         <label>Téléphone:</label>
-                                        <input name="directory_heading_phone" type="text" class="text" value="<?php echo htmlentities($objHeading->fields['phone']); ?>" style="width:140px;" />
+                                        <input name="directory_heading_phone" type="text" class="text" value="<?php echo ploopi_htmlentities($objHeading->fields['phone']); ?>" style="width:140px;" />
                                     </p>
                                     <p>
                                         <label>Fax:</label>
-                                        <input name="directory_heading_fax" type="text" class="text" value="<?php echo htmlentities($objHeading->fields['fax']); ?>" style="width:140px;" />
+                                        <input name="directory_heading_fax" type="text" class="text" value="<?php echo ploopi_htmlentities($objHeading->fields['fax']); ?>" style="width:140px;" />
                                     </p>
                                     <p>
                                         <label>Adresse:</label>
-                                        <textarea name="directory_heading_address" class="text" style="height:50px;"><?php echo htmlentities($objHeading->fields['address']); ?></textarea>
+                                        <textarea name="directory_heading_address" class="text" style="height:50px;"><?php echo ploopi_htmlentities($objHeading->fields['address']); ?></textarea>
                                     </p>
                                     <p>
                                         <label>Code Postal:</label>
-                                        <input name="directory_heading_postalcode" type="text" class="text" value="<?php echo htmlentities($objHeading->fields['postalcode']); ?>" style="width:80px;" />
+                                        <input name="directory_heading_postalcode" type="text" class="text" value="<?php echo ploopi_htmlentities($objHeading->fields['postalcode']); ?>" style="width:80px;" />
                                     </p>
                                     <p>
                                         <label>Ville:</label>
-                                        <input name="directory_heading_city" type="text" class="text" value="<?php echo htmlentities($objHeading->fields['city']); ?>" />
+                                        <input name="directory_heading_city" type="text" class="text" value="<?php echo ploopi_htmlentities($objHeading->fields['city']); ?>" />
                                     </p>
                                     <p>
                                         <label>Pays:</label>
-                                        <input name="directory_heading_country" type="text" class="text" value="<?php echo htmlentities($objHeading->fields['country']); ?>" />
+                                        <input name="directory_heading_country" type="text" class="text" value="<?php echo ploopi_htmlentities($objHeading->fields['country']); ?>" />
                                     </p>
                                 </div>
                                 <?
@@ -745,17 +745,17 @@ switch($_SESSION['directory']['directoryTabItem'])
                             
                             
                             ?>
-                            <h1 class="directory_title"><?php echo htmlentities(implode(' > ', $arrTitle)); ?></h1>
+                            <h1 class="directory_title"><?php echo ploopi_htmlentities(implode(' > ', $arrTitle)); ?></h1>
                             <?php
                             if (!empty($objHeading->fields['description']))
                             {
-                                ?><div style="padding:4px;"><em><?php echo ploopi_nl2br(htmlentities($objHeading->fields['description'])); ?></em></div><?php
+                                ?><div style="padding:4px;"><em><?php echo ploopi_nl2br(ploopi_htmlentities($objHeading->fields['description'])); ?></em></div><?php
                             }
 
                             // Construction de la chaîne de téléphone
                             $arrPhone = array();
-                            if (!empty($objHeading->fields['phone'])) $arrPhone[] = htmlentities("Tel: ".$objHeading->fields['phone']);
-                            if (!empty($objHeading->fields['fax'])) $arrPhone[] = htmlentities("Fax: ".$objHeading->fields['fax']);
+                            if (!empty($objHeading->fields['phone'])) $arrPhone[] = ploopi_htmlentities("Tel: ".$objHeading->fields['phone']);
+                            if (!empty($objHeading->fields['fax'])) $arrPhone[] = ploopi_htmlentities("Fax: ".$objHeading->fields['fax']);
 
                             if (!empty($arrPhone))
                             {
@@ -764,9 +764,9 @@ switch($_SESSION['directory']['directoryTabItem'])
 
                             // Construction de la chaîne d'adresse
                             $arrAddress = array();
-                            if (!empty($objHeading->fields['address'])) $arrAddress[] = ploopi_nl2br(htmlentities($objHeading->fields['address']));
-                            if (!empty($objHeading->fields['postalcode']) || !empty($row['city'])) $arrAddress[] = ploopi_nl2br(htmlentities(trim($objHeading->fields['postalcode'].' '.$objHeading->fields['city'])));
-                            if (!empty($objHeading->fields['country'])) $arrAddress[] = ploopi_nl2br(htmlentities($objHeading->fields['country']));
+                            if (!empty($objHeading->fields['address'])) $arrAddress[] = ploopi_nl2br(ploopi_htmlentities($objHeading->fields['address']));
+                            if (!empty($objHeading->fields['postalcode']) || !empty($row['city'])) $arrAddress[] = ploopi_nl2br(ploopi_htmlentities(trim($objHeading->fields['postalcode'].' '.$objHeading->fields['city'])));
+                            if (!empty($objHeading->fields['country'])) $arrAddress[] = ploopi_nl2br(ploopi_htmlentities($objHeading->fields['country']));
 
                             if (!empty($arrAddress))
                             {
@@ -953,7 +953,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                                 $c = 0;
                                 while ($row = $db->fetchrow($rs))
                                 {
-                                    $email = ($row['email']) ? '<a href="mailto:'.htmlentities($row['email']).'" title="'.htmlentities(_DIRECTORY_SEND_EMAIL.': '.$row['email']).'"><img src="./modules/directory/img/ico_email.png"></a>' : '';
+                                    $email = ($row['email']) ? '<a href="mailto:'.ploopi_htmlentities($row['email']).'" title="'.ploopi_htmlentities(_DIRECTORY_SEND_EMAIL.': '.$row['email']).'"><img src="./modules/directory/img/ico_email.png"></a>' : '';
 
                                     $arrActions = array();
                                     $arrActions[] = '<a href="javascript:void(0);" onclick="javascript:directory_view(event, \'\', \''.$row['id'].'\');"><img title="Voir le Profil" src="./modules/directory/img/ico_open.png"></a>';
@@ -1060,7 +1060,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                     <span>Rubrique:</span>
                     <select class="select" name="directory_speeddialing_heading" style="width:150px;" tabindex="110">
                         <option value="" style="font-style:italic;">(Rubrique existante)</option>
-                        <?php foreach($arrHeadings as $strHeading) echo '<option value="'.htmlentities($strHeading).'">'.htmlentities($strHeading).'</option>'; ?>
+                        <?php foreach($arrHeadings as $strHeading) echo '<option value="'.ploopi_htmlentities($strHeading).'">'.ploopi_htmlentities($strHeading).'</option>'; ?>
                     </select>
                     <em>ou</em>
                     <input type="text" name="_directory_speeddialing_newheading" class="text" style="width:100px;" value="Nouvelle rubrique" tabindex="111" onfocus="javascript:this.value = '';" />

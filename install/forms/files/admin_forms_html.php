@@ -76,7 +76,7 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
                     foreach($objForm->getGroups() as $intIdGroup => $objGroup)
                     {
                         ?>
-                        <option value="<? echo $intIdGroup; ?>" <? if ($field->fields['id_group'] == $intIdGroup) echo 'selected="selected"'; ?>><? echo htmlentities($objGroup->fields['label']); ?></option>
+                        <option value="<? echo $intIdGroup; ?>" <? if ($field->fields['id_group'] == $intIdGroup) echo 'selected="selected"'; ?>><? echo ploopi_htmlentities($objGroup->fields['label']); ?></option>
                         <?
                     }
                     ?>

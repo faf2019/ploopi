@@ -82,7 +82,7 @@ while ($fields = $db->fetchrow($select_letter))
   $arrNewsletterDateCreate = ploopi_timestamp2local($fields['timestp']);
   $arrNewsletterDateSend = ploopi_timestamp2local($fields['send_timestp']);
 
-  $array_values[$c]['values']['title']  = array('label' => htmlentities($fields['title']));
+  $array_values[$c]['values']['title']  = array('label' => ploopi_htmlentities($fields['title']));
   $array_values[$c]['values']['create'] = array('label' => $arrNewsletterDateCreate['date'].' '.$arrNewsletterDateCreate['time'].'<br/>'.$fields['author']);
   $array_values[$c]['values']['send'] = array('label' => $arrNewsletterDateSend['date'].' '.$arrNewsletterDateSend['time'].'<br/>'.$fields['send_user']);
 

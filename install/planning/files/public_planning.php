@@ -421,7 +421,7 @@ if (sizeof($arrSize) == 2 && is_numeric($arrSize[0]) && is_numeric($arrSize[1]))
         switch($arrSearchPattern['planning_display_type'])
         {
             case 'month':
-                $strContent = '<div style="height:12px;overflow:hidden;"><time_begin> '.htmlentities(ploopi_strcut($arrEvent['object'],20)).'</div>';
+                $strContent = '<div style="height:12px;overflow:hidden;"><time_begin> '.ploopi_htmlentities(ploopi_strcut($arrEvent['object'],20)).'</div>';
             break;
 
             case 'week':
@@ -439,7 +439,7 @@ if (sizeof($arrSize) == 2 && is_numeric($arrSize[0]) && is_numeric($arrSize[1]))
                                 $arrResource = &$arrResources[$strTypeResource][$intIdResource];
 
                                 $strColor = !empty($arrResource['color']) ? "background:{$arrResource['color']}" : '';
-                                $strUsers .= '<img src="./modules/planning/img/ico_'.$strTypeResource.'.png" style="display:block;margin:0 1px;float:left;'.$strColor.';" title="'.htmlentities($arrResource['label']).'" />';
+                                $strUsers .= '<img src="./modules/planning/img/ico_'.$strTypeResource.'.png" style="display:block;margin:0 1px;float:left;'.$strColor.';" title="'.ploopi_htmlentities($arrResource['label']).'" />';
                             }
                         }
                     }
@@ -448,14 +448,14 @@ if (sizeof($arrSize) == 2 && is_numeric($arrSize[0]) && is_numeric($arrSize[1]))
                 if ($arrSearchPattern['planning_channels'])
                 {
                     $strContent = '
-                        <div style="margin:2px;">'.htmlentities($arrEvent['object']).'</div>
+                        <div style="margin:2px;">'.ploopi_htmlentities($arrEvent['object']).'</div>
                     ';
                 }
                 else
                 {
                     $strContent = '
                         <div style="margin:2px;float:right;padding:2px;border:1px solid #888;background:#fff">'.$strUsers.'</div>
-                        <div style="margin:2px;">'.htmlentities($arrEvent['object']).'</div>
+                        <div style="margin:2px;">'.ploopi_htmlentities($arrEvent['object']).'</div>
                     ';
                 }
             break;

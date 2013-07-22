@@ -250,9 +250,9 @@ function directory_template_display(&$template_body, &$arrHeadings, &$arrContact
             $template_body->assign_block_vars('directory_switch_full.line', array());
 
             $arrAddress = array();
-            if (!empty($row['address'])) $arrAddress[] = ploopi_nl2br(htmlentities($row['address']));
-            if (!empty($row['postalcode']) || !empty($row['city'])) $arrAddress[] = ploopi_nl2br(htmlentities(trim($row['postalcode'].' '.$row['city'])));
-            if (!empty($row['country'])) $arrAddress[] = ploopi_nl2br(htmlentities($row['country']));
+            if (!empty($row['address'])) $arrAddress[] = ploopi_nl2br(ploopi_htmlentities($row['address']));
+            if (!empty($row['postalcode']) || !empty($row['city'])) $arrAddress[] = ploopi_nl2br(ploopi_htmlentities(trim($row['postalcode'].' '.$row['city'])));
+            if (!empty($row['country'])) $arrAddress[] = ploopi_nl2br(ploopi_htmlentities($row['country']));
 
             $objContact = new directory_contact();
             $objContact->fields['id'] = $row['id'];
@@ -284,29 +284,29 @@ function directory_template_display(&$template_body, &$arrHeadings, &$arrContact
                 array(
                     'ID' => $row['id'],
                     'POSITION' => $row['position'],
-                    'CIVILITY' => htmlentities($row['civility']),
-                    'LASTNAME' => htmlentities($row['lastname']),
-                    'FIRSTNAME' => htmlentities($row['firstname']),
-                    'EMAIL' => htmlentities($row['email']),
-                    'PHONE' => htmlentities($row['phone']),
-                    'FAX' => htmlentities($row['fax']),
-                    'MOBILE' => htmlentities($row['mobile']),
-                    'SERVICE' => htmlentities($row['service']),
-                    'FUNCTION' => htmlentities($row['function']),
-                    'RANK' => htmlentities($row['rank']),
-                    'NUMBER' => htmlentities($row['number']),
-                    'POSTALCODE' => htmlentities($row['postalcode']),
-                    'ADDRESS' => htmlentities($row['address']),
-                    'CITY' => htmlentities($row['city']),
-                    'COUNTRY' => htmlentities($row['country']),
+                    'CIVILITY' => ploopi_htmlentities($row['civility']),
+                    'LASTNAME' => ploopi_htmlentities($row['lastname']),
+                    'FIRSTNAME' => ploopi_htmlentities($row['firstname']),
+                    'EMAIL' => ploopi_htmlentities($row['email']),
+                    'PHONE' => ploopi_htmlentities($row['phone']),
+                    'FAX' => ploopi_htmlentities($row['fax']),
+                    'MOBILE' => ploopi_htmlentities($row['mobile']),
+                    'SERVICE' => ploopi_htmlentities($row['service']),
+                    'FUNCTION' => ploopi_htmlentities($row['function']),
+                    'RANK' => ploopi_htmlentities($row['rank']),
+                    'NUMBER' => ploopi_htmlentities($row['number']),
+                    'POSTALCODE' => ploopi_htmlentities($row['postalcode']),
+                    'ADDRESS' => ploopi_htmlentities($row['address']),
+                    'CITY' => ploopi_htmlentities($row['city']),
+                    'COUNTRY' => ploopi_htmlentities($row['country']),
                     'ADDRESS_FULL' => implode('<br />', $arrAddress),
-                    'BUILDING' => htmlentities($row['building']),
-                    'FLOOR' => htmlentities($row['floor']),
-                    'OFFICE' => htmlentities($row['office']),
+                    'BUILDING' => ploopi_htmlentities($row['building']),
+                    'FLOOR' => ploopi_htmlentities($row['floor']),
+                    'OFFICE' => ploopi_htmlentities($row['office']),
                     'PHOTOPATH' => $row['photopath'],
-                    'COMMENTS' => ploopi_nl2br(htmlentities($row['comments'])),
-                    'HEADING' => htmlentities($arrHeadings['list'][$intHeadingId]['label']),
-                    'HEADINGS' => htmlentities($strContactHeadings),
+                    'COMMENTS' => ploopi_nl2br(ploopi_htmlentities($row['comments'])),
+                    'HEADING' => ploopi_htmlentities($arrHeadings['list'][$intHeadingId]['label']),
+                    'HEADINGS' => ploopi_htmlentities($strContactHeadings),
                     'ALTERNATE_STYLE' => $c%2,
                     'LINK' => ploopi_urlencode('index.php?'.implode('&',$arrRequest))
                 )
@@ -333,13 +333,13 @@ function directory_template_display(&$template_body, &$arrHeadings, &$arrContact
             $template_body->assign_block_vars('directory_switch_full.line.heading',
                 array(
                     'ID' => $intId,
-                    'LABEL' => htmlentities($arrHeadings['list'][$intId]['label']),
-                    'PHONE' => htmlentities($arrHeadings['list'][$intId]['phone']),
-                    'FAX' => htmlentities($arrHeadings['list'][$intId]['fax']),
-                    'POSTALCODE' => htmlentities($arrHeadings['list'][$intId]['postalcode']),
-                    'ADDRESS' => ploopi_nl2br(htmlentities($arrHeadings['list'][$intId]['address'])),
-                    'CITY' => htmlentities($arrHeadings['list'][$intId]['city']),
-                    'COUNTRY' => htmlentities($arrHeadings['list'][$intId]['country']),
+                    'LABEL' => ploopi_htmlentities($arrHeadings['list'][$intId]['label']),
+                    'PHONE' => ploopi_htmlentities($arrHeadings['list'][$intId]['phone']),
+                    'FAX' => ploopi_htmlentities($arrHeadings['list'][$intId]['fax']),
+                    'POSTALCODE' => ploopi_htmlentities($arrHeadings['list'][$intId]['postalcode']),
+                    'ADDRESS' => ploopi_nl2br(ploopi_htmlentities($arrHeadings['list'][$intId]['address'])),
+                    'CITY' => ploopi_htmlentities($arrHeadings['list'][$intId]['city']),
+                    'COUNTRY' => ploopi_htmlentities($arrHeadings['list'][$intId]['country']),
                     'DEPTH' => substr_count($arrHeadings['list'][$intId]['parents'], ';')+1,
                     'LINK' => ploopi_urlencode('index.php?'.implode('&',$arrRequest))
                 )
@@ -379,13 +379,13 @@ function directory_template_display_organigram(&$template_body, &$arrHeadings, $
             $template_body->assign_block_vars('directory_switch_organigram.heading',
                 array(
                     'ID' => $intId,
-                    'LABEL' => htmlentities($arrHeadings['list'][$intId]['label']),
-                    'PHONE' => htmlentities($arrHeadings['list'][$intId]['phone']),
-                    'FAX' => htmlentities($arrHeadings['list'][$intId]['fax']),
-                    'POSTALCODE' => htmlentities($arrHeadings['list'][$intId]['postalcode']),
-                    'ADDRESS' => ploopi_nl2br(htmlentities($arrHeadings['list'][$intId]['address'])),
-                    'CITY' => htmlentities($arrHeadings['list'][$intId]['city']),
-                    'COUNTRY' => htmlentities($arrHeadings['list'][$intId]['country']),
+                    'LABEL' => ploopi_htmlentities($arrHeadings['list'][$intId]['label']),
+                    'PHONE' => ploopi_htmlentities($arrHeadings['list'][$intId]['phone']),
+                    'FAX' => ploopi_htmlentities($arrHeadings['list'][$intId]['fax']),
+                    'POSTALCODE' => ploopi_htmlentities($arrHeadings['list'][$intId]['postalcode']),
+                    'ADDRESS' => ploopi_nl2br(ploopi_htmlentities($arrHeadings['list'][$intId]['address'])),
+                    'CITY' => ploopi_htmlentities($arrHeadings['list'][$intId]['city']),
+                    'COUNTRY' => ploopi_htmlentities($arrHeadings['list'][$intId]['country']),
                     'DEPTH' => substr_count($arrHeadings['list'][$intId]['parents'], ';')+1,
                     'LINK' => ploopi_urlencode('index.php?'.implode('&',$arrRequest))
                 )

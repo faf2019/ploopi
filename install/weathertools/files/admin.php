@@ -69,7 +69,7 @@ echo $skin->open_simplebloc();
     <div class=ploopi_form>
         <p>
             <label>Url du fichier (weather.noaa.gov) : </label>
-            <input type="text" class="text" name="weather_urlstations" value="<? echo htmlentities($strUrlStations); ?>" />
+            <input type="text" class="text" name="weather_urlstations" value="<? echo ploopi_htmlentities($strUrlStations); ?>" />
         </p>
     </div>
     <div style="padding:4px;text-align:right;">
@@ -120,7 +120,7 @@ echo $skin->open_simplebloc();
     <div class=ploopi_form>
         <p>
             <label>Url du fichier GEOIP : </label>
-            <input type="text" class="text" name="weather_urlgeoip" value="<? echo htmlentities($strUrlGeoIP); ?>" />
+            <input type="text" class="text" name="weather_urlgeoip" value="<? echo ploopi_htmlentities($strUrlGeoIP); ?>" />
         </p>
     </div>
     <div style="padding:4px;text-align:right;">
@@ -140,11 +140,11 @@ echo $skin->open_simplebloc();
     <div class=ploopi_form>
         <p>
             <label>Pays : </label>
-            <input type="text" class="text" name="weather_country_name" value="<? echo htmlentities($strWeatherCountryName); ?>" />
+            <input type="text" class="text" name="weather_country_name" value="<? echo ploopi_htmlentities($strWeatherCountryName); ?>" />
         </p>
         <p>
             <label>Nom de station : </label>
-            <input type="text" class="text" name="weather_place_name" value="<? echo htmlentities($strWeatherPlaceName); ?>" />
+            <input type="text" class="text" name="weather_place_name" value="<? echo ploopi_htmlentities($strWeatherPlaceName); ?>" />
         </p>
     </div>
     <div style="padding:4px;text-align:right;">

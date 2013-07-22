@@ -67,7 +67,7 @@ foreach($arrPageHistory as $strPageId) $arrUrlHistory[] = "<a href=\"".wiki_gene
         if ($objWikiPage->open($strPageId, $intIdModule))
         {
             $strLinkClass = 'wiki_link';
-            $strTitle = 'Ouvrir la page &laquo; '.htmlentities($strPageId).' &raquo;';
+            $strTitle = 'Ouvrir la page &laquo; '.ploopi_htmlentities($strPageId).' &raquo;';
 
             return '<span class="'.$strLinkClass.'"><a title="'.$strTitle.'" href="'.wiki_generatefronturl($strPageId, $headingid, $articleid, $article->fields['metatitle'], $arrParents).'">'.$arrMatches[1].'</a><img src="./modules/wiki/img/ico_link.png" /></span>';
         }

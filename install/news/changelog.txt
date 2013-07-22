@@ -1,3 +1,9 @@
+== Module NEWS - version 2.5.3 ====================================================
+
+2013-07-22  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Correction d'un bug lié à la modification du comportement de htmlentities avec PHP 5.4
+
 == Module NEWS - version 2.5.2f ====================================================
 
 2012-03-21  Xavier Toussaint ~ HeXad <xavier@hexad.fr>

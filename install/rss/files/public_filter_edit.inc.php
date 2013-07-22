@@ -98,11 +98,11 @@ else
         <div style="padding:2px;">
           <p>
             <label><?php echo _RSS_LABEL_TITLE; ?>:</label>
-            <input class="text" type="text" name="rssfilter_title" value="<?php echo htmlentities($objRssFilters->fields['title']); ?>" tabindex="100" />
+            <input class="text" type="text" name="rssfilter_title" value="<?php echo ploopi_htmlentities($objRssFilters->fields['title']); ?>" tabindex="100" />
           </p>
           <p>
             <label><?php echo _RSS_LABEL_LIMIT; ?>:</label>
-            <input class="text" type="text" name="rssfilter_limit" style="width:50px;" value="<?php echo htmlentities($objRssFilters->fields['limit']); ?>" tabindex="101" /><?php echo _RSS_COMMENT_O_NOLIMIT; ?>
+            <input class="text" type="text" name="rssfilter_limit" style="width:50px;" value="<?php echo ploopi_htmlentities($objRssFilters->fields['limit']); ?>" tabindex="101" /><?php echo _RSS_COMMENT_O_NOLIMIT; ?>
           </p>
           <p>
             <label><?php echo _RSS_LABEL_TPL_TAG; ?>:</label>

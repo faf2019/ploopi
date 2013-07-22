@@ -161,7 +161,7 @@ ploopi_setsessionvar('system_alphatabitem', $alphaTabItem);
 <form action="<?php echo ploopi_urlencode('admin.php'); ?>" method="post">
     <p class="ploopi_va" style="padding: 4px; border-bottom: 2px solid #c0c0c0;">
         <span><?php echo _SYSTEM_LABEL_USER; ?>:</span>
-        <input class="text" ID="system_user" name="pattern" type="text" size="15" maxlength="255" value="<?php echo htmlentities($pattern); ?>">
+        <input class="text" ID="system_user" name="pattern" type="text" size="15" maxlength="255" value="<?php echo ploopi_htmlentities($pattern); ?>">
         <input type="submit" value="<?php echo _PLOOPI_FILTER; ?>" class="button">
         <input type="submit" name="reset" value="<?php echo _PLOOPI_RESET; ?>" class="button">
     </p>
@@ -287,7 +287,7 @@ else
         if (!empty($groups))
         {
             $currentgroup = current($groups);
-            $values[$c]['values']['origin']     = array('label' => '<a href="'.ploopi_urlencode("admin.php?wspToolbarItem=tabUsers&usrTabItem=tabUserList&groupid={$currentgroup['id']}&alphaTabItem=".(ord(strtolower($fields['lastname']))-96)).'">'.htmlentities($currentgroup['label']).'</a>');
+            $values[$c]['values']['origin']     = array('label' => '<a href="'.ploopi_urlencode("admin.php?wspToolbarItem=tabUsers&usrTabItem=tabUserList&groupid={$currentgroup['id']}&alphaTabItem=".(ord(strtolower($fields['lastname']))-96)).'">'.ploopi_htmlentities($currentgroup['label']).'</a>');
             $service = $fields['service'];
         }
         else
@@ -296,9 +296,9 @@ else
             $service = ' ';
         }
 
-        $values[$c]['values']['name']       = array('label' => htmlentities("{$fields['lastname']}, {$fields['firstname']}"));
-        $values[$c]['values']['login']      = array('label' => htmlentities($fields['login']));
-        $values[$c]['values']['service']    = array('label' => htmlentities($service));
+        $values[$c]['values']['name']       = array('label' => ploopi_htmlentities("{$fields['lastname']}, {$fields['firstname']}"));
+        $values[$c]['values']['login']      = array('label' => ploopi_htmlentities($fields['login']));
+        $values[$c]['values']['service']    = array('label' => ploopi_htmlentities($service));
         $values[$c]['values']['actions']    = array('label' => '<a style="float:left;display:block;margin:2px;" href="'.ploopi_urlencode("admin.php?op=attach_user&userid={$fields['id']}&alphaTabItem={$alphaTabItem}").'"><img style="float:left;display:block;" src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_attach.png" title="'._SYSTEM_LABEL_ATTACH.'"></a>');
         $c++;
     }
@@ -312,13 +312,13 @@ if ($_SESSION['system']['level'] == _SYSTEM_WORKSPACES)
     <p class="ploopi_va" style="padding: 4px;">
         <span style="margin-right: 5px;">Légende:</span>
         <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/adminlevels/level_user.png" />
-        <span style="margin-right: 5px;"><?php echo htmlentities($ploopi_system_levels[_PLOOPI_ID_LEVEL_USER]); ?></span>
+        <span style="margin-right: 5px;"><?php echo ploopi_htmlentities($ploopi_system_levels[_PLOOPI_ID_LEVEL_USER]); ?></span>
         <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/adminlevels/level_groupmanager.png" />
-        <span style="margin-right: 5px;"><?php echo htmlentities($ploopi_system_levels[_PLOOPI_ID_LEVEL_GROUPMANAGER]); ?></span>
+        <span style="margin-right: 5px;"><?php echo ploopi_htmlentities($ploopi_system_levels[_PLOOPI_ID_LEVEL_GROUPMANAGER]); ?></span>
         <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/adminlevels/level_groupadmin.png" />
-        <span style="margin-right: 5px;"><?php echo htmlentities($ploopi_system_levels[_PLOOPI_ID_LEVEL_GROUPADMIN]); ?></span>
+        <span style="margin-right: 5px;"><?php echo ploopi_htmlentities($ploopi_system_levels[_PLOOPI_ID_LEVEL_GROUPADMIN]); ?></span>
         <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/adminlevels/level_systemadmin.png" />
-        <span style="margin-right: 5px;"><?php echo htmlentities($ploopi_system_levels[_PLOOPI_ID_LEVEL_SYSTEMADMIN]); ?></span>
+        <span style="margin-right: 5px;"><?php echo ploopi_htmlentities($ploopi_system_levels[_PLOOPI_ID_LEVEL_SYSTEMADMIN]); ?></span>
     </p>
     <?php
 }

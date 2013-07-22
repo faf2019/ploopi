@@ -68,24 +68,24 @@ $_SESSION['system']['directoryform'] = $arrFilter;
 <form action="<?php echo ploopi_urlencode('admin.php?sysToolbarItem=directory'); ?>" method="post">
 <p class="ploopi_va" style="padding:4px;">
     <label>Nom: </label>
-    <input type="text" class="text" name="ploopi_lastname" value="<?php echo htmlentities($arrFilter['ploopi_lastname']); ?>" style="width:120px;" tabindex="100" />
+    <input type="text" class="text" name="ploopi_lastname" value="<?php echo ploopi_htmlentities($arrFilter['ploopi_lastname']); ?>" style="width:120px;" tabindex="100" />
 
     <label>Prénom: </label>
-    <input type="text" class="text" name="ploopi_firstname" value="<?php echo htmlentities($arrFilter['ploopi_firstname']); ?>" style="width:120px;" tabindex="105" />
+    <input type="text" class="text" name="ploopi_firstname" value="<?php echo ploopi_htmlentities($arrFilter['ploopi_firstname']); ?>" style="width:120px;" tabindex="105" />
 
     <label>Login: </label>
-    <input type="text" class="text" name="ploopi_login" value="<?php echo htmlentities($arrFilter['ploopi_login']); ?>" style="width:120px;" tabindex="110" />
+    <input type="text" class="text" name="ploopi_login" value="<?php echo ploopi_htmlentities($arrFilter['ploopi_login']); ?>" style="width:120px;" tabindex="110" />
 
     <label>Email: </label>
-    <input type="text" class="text" name="ploopi_email" value="<?php echo htmlentities($arrFilter['ploopi_email']); ?>" style="width:200px;" tabindex="120" />
+    <input type="text" class="text" name="ploopi_email" value="<?php echo ploopi_htmlentities($arrFilter['ploopi_email']); ?>" style="width:200px;" tabindex="120" />
 
 </p>
 <p class="ploopi_va" style="padding:4px;border-bottom:1px solid #ccc;">
     <label>Groupe: </label>
-    <input type="text" class="text" name="ploopi_group" value="<?php echo htmlentities($arrFilter['ploopi_group']); ?>" style="width:150px;" tabindex="115" />
+    <input type="text" class="text" name="ploopi_group" value="<?php echo ploopi_htmlentities($arrFilter['ploopi_group']); ?>" style="width:150px;" tabindex="115" />
 
     <label>Espace de travail: </label>
-    <input type="text" class="text" name="ploopi_workspace" value="<?php echo htmlentities($arrFilter['ploopi_workspace']); ?>" style="width:150px;" tabindex="115" />
+    <input type="text" class="text" name="ploopi_workspace" value="<?php echo ploopi_htmlentities($arrFilter['ploopi_workspace']); ?>" style="width:150px;" tabindex="115" />
 
     <input type="submit" class="button" value="Filtrer" tabindex="150" />
     <input type="button" class="button" value="Réinitialiser" onclick="document.location.href='<?php echo ploopi_urlencode('admin.php?sysToolbarItem=directory&system_filter_reset'); ?>';" tabindex="160" />
@@ -637,10 +637,10 @@ if ($intNbRep <= $intMaxResponse && $intNbRep > 0)
                                     sprintf(
                                         "<a title=\"Accéder à ce rôle\" href=\"%s\">%s</a><span>&nbsp;(</span><a title=\"Accéder à ce module\" href=\"%s\">%s</a><span>)</span>",
                                         ploopi_urlencode("admin.php?system_level=work&workspaceid={$intIdWorkspace}&wspToolbarItem=tabRoles&op=modify_role&roleid={$intIdRole}"),
-                                        htmlentities($arrR['role_label']),
+                                        ploopi_htmlentities($arrR['role_label']),
                                         ploopi_urlencode("admin.php?system_level=work&workspaceid={$intIdWorkspace}&wspToolbarItem=tabModules&op=modify&moduleid={$arrR['id_module']}"),
-                                        htmlentities($arrR['module_label'])
-                                    ) : sprintf("%s (%s)", htmlentities($arrR['role_label']), htmlentities($arrR['module_label']));
+                                        ploopi_htmlentities($arrR['module_label'])
+                                    ) : sprintf("%s (%s)", ploopi_htmlentities($arrR['role_label']), ploopi_htmlentities($arrR['module_label']));
                         }
                     }
                 }
@@ -652,10 +652,10 @@ if ($intNbRep <= $intMaxResponse && $intNbRep > 0)
                             sprintf(
                                     "<a title=\"Accéder à ce rôle\" href=\"%s\">%s</a><span>&nbsp;(</span><a title=\"Accéder à ce module\" href=\"%s\">%s</a><span>)</span>",
                                     ploopi_urlencode("admin.php?system_level=work&workspaceid={$intIdWorkspace}&wspToolbarItem=tabRoles&op=modify_role&roleid={$intIdRole}"),
-                                    htmlentities($arrR['role_label']),
+                                    ploopi_htmlentities($arrR['role_label']),
                                     ploopi_urlencode("admin.php?system_level=work&workspaceid={$intIdWorkspace}&wspToolbarItem=tabModules&op=modify&moduleid={$arrR['id_module']}"),
-                                    htmlentities($arrR['module_label'])
-                                ) : sprintf("%s (%s)", htmlentities($arrR['role_label']), htmlentities($arrR['module_label']));
+                                    ploopi_htmlentities($arrR['module_label'])
+                                ) : sprintf("%s (%s)", ploopi_htmlentities($arrR['role_label']), ploopi_htmlentities($arrR['module_label']));
                 }
 
                 // Chaine contenant, pour un utilisateur et un espace, la liste des rôles
@@ -681,7 +681,7 @@ if ($intNbRep <= $intMaxResponse && $intNbRep > 0)
                     "<img style=\"float:left;\" src=\"%s\" /><span style=\"display:block;margin-left:20px;\"><a title=\"Accéder à cet espace\" href=\"%s\">%s</a>%s</span>",
                     "{$_SESSION['ploopi']['template_path']}/img/system/adminlevels/{$icon}.png",
                     ploopi_urlencode("admin.php?system_level=work&workspaceid={$intIdWorkspace}"),
-                    htmlentities($rowWorkspace['label']),
+                    ploopi_htmlentities($rowWorkspace['label']),
                     $strUserWspRoles
                 );
             }
@@ -694,12 +694,12 @@ if ($intNbRep <= $intMaxResponse && $intNbRep > 0)
                 $row['groups'][$intId] = sprintf(
                     "<a title=\"Accéder à ce groupe\" href=\"%s\">%s</a>",
                     ploopi_urlencode("admin.php?system_level=work&groupid={$intId}"),
-                    htmlentities($strLabel)
+                    ploopi_htmlentities($strLabel)
                 );
         }
 
-        $strUserLabel = htmlentities(sprintf("%s %s", $row['lastname'], $row['firstname']));
-        $strUserLogin = htmlentities($row['login']);
+        $strUserLabel = ploopi_htmlentities(sprintf("%s %s", $row['lastname'], $row['firstname']));
+        $strUserLogin = ploopi_htmlentities($row['login']);
 
         // si l'utilisateur est attaché à un groupe, on met un lien vers la fiche de l'utilisateur pour pouvoir la modifier
         if (!empty($row['groups']))
@@ -755,11 +755,11 @@ echo $skin->close_simplebloc();
 <p class="ploopi_va" style="padding:4px;">
     <span style="margin-right:5px;">Légende:</span>
     <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/adminlevels/level_user.png" />
-    <span style="margin-right:5px;"><?php echo htmlentities($ploopi_system_levels[_PLOOPI_ID_LEVEL_USER]); ?></span>
+    <span style="margin-right:5px;"><?php echo ploopi_htmlentities($ploopi_system_levels[_PLOOPI_ID_LEVEL_USER]); ?></span>
     <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/adminlevels/level_groupmanager.png" />
-    <span style="margin-right:5px;"><?php echo htmlentities($ploopi_system_levels[_PLOOPI_ID_LEVEL_GROUPMANAGER]); ?></span>
+    <span style="margin-right:5px;"><?php echo ploopi_htmlentities($ploopi_system_levels[_PLOOPI_ID_LEVEL_GROUPMANAGER]); ?></span>
     <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/adminlevels/level_groupadmin.png" />
-    <span style="margin-right:5px;"><?php echo htmlentities($ploopi_system_levels[_PLOOPI_ID_LEVEL_GROUPADMIN]); ?></span>
+    <span style="margin-right:5px;"><?php echo ploopi_htmlentities($ploopi_system_levels[_PLOOPI_ID_LEVEL_GROUPADMIN]); ?></span>
     <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/adminlevels/level_systemadmin.png" />
-    <span style="margin-right:5px;"><?php echo htmlentities($ploopi_system_levels[_PLOOPI_ID_LEVEL_SYSTEMADMIN]); ?></span>
+    <span style="margin-right:5px;"><?php echo ploopi_htmlentities($ploopi_system_levels[_PLOOPI_ID_LEVEL_SYSTEMADMIN]); ?></span>
 </p>

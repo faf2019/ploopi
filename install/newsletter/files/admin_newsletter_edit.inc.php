@@ -84,11 +84,11 @@ if (!$readonly)
         if (!$readonly)
         {
             ?>
-            <input type="text" class="text" name="newsletter_title"  value="<?php echo htmlentities($objLetter->fields['title']); ?>" tabindex="1" />
+            <input type="text" class="text" name="newsletter_title"  value="<?php echo ploopi_htmlentities($objLetter->fields['title']); ?>" tabindex="1" />
             <label>&nbsp;</label><span style="font-style:italic;"><?php echo _NEWSLETTER_LABEL_TITLE_EXPLAIN; ?></span>
             <?php
         }
-        else echo '<span>'.htmlentities($objLetter->fields['title']).'</span>';
+        else echo '<span>'.ploopi_htmlentities($objLetter->fields['title']).'</span>';
         ?>
     </p>
     <p>
@@ -97,11 +97,11 @@ if (!$readonly)
         if (!$readonly)
         {
             ?>
-            <input type="text" class="text" name="newsletter_subject"  value="<?php echo htmlentities($objLetter->fields['subject']); ?>" tabindex="2" />
+            <input type="text" class="text" name="newsletter_subject"  value="<?php echo ploopi_htmlentities($objLetter->fields['subject']); ?>" tabindex="2" />
             <label>&nbsp;</label><span style="font-style:italic;"><?php echo _NEWSLETTER_LABEL_SUBJECT_EXPLAIN; ?></span>
             <?php
         }
-        else echo '<span>'.htmlentities($objLetter->fields['subject']).'</span>';
+        else echo '<span>'.ploopi_htmlentities($objLetter->fields['subject']).'</span>';
         ?>
     </p>
     <p>
@@ -194,7 +194,7 @@ if (!$readonly)
         {
             ?>
             <input type="hidden" name="newsletter_banniere_id" id="newsletter_banniere_id"  value="<?php echo $objLetter->fields['banniere_id']; ?>" />
-            <input type="text" style="width:100px;float:left;" class="text" name="newsletter_banniere" id="newsletter_banniere" value="<?php echo htmlentities($strBanniere); ?>" tabindex="10" />
+            <input type="text" style="width:100px;float:left;" class="text" name="newsletter_banniere" id="newsletter_banniere" value="<?php echo ploopi_htmlentities($strBanniere); ?>" tabindex="10" />
             <img src="./modules/newsletter/img/ico_choosefile.png" title="Choisir un Fichier" alt="Choisir un Fichier" onclick="javascript:ploopi_documents_popup(<?php echo _NEWSLETTER_OBJECT_IMAGE; ?>, 0, <?php echo $_SESSION['ploopi']['moduleid']; ?>, 'newsletter_banniere', event);" style="cursor:pointer;margin-left:2px;margin-top:2px;float:left;" />
             <?php
             if (!empty($objLetter->fields['banniere_id']))
@@ -205,7 +205,7 @@ if (!$readonly)
             <img src="./modules/newsletter/img/ico_delete.png" title="<?php echo _PLOOPI_DELETE; ?>" alt="<?php echo _PLOOPI_DELETE; ?>" onclick="javascript:$('newsletter_banniere_id').value='';$('newsletter_banniere').value='';" style="cursor:pointer;margin-left:2px;margin-top:2px;float:left;" />
             <?php
         }
-        else echo '<span>'.htmlentities($objLetter->fields['background_color']).'</span>';
+        else echo '<span>'.ploopi_htmlentities($objLetter->fields['background_color']).'</span>';
         ?>
     </p>
     <?php
@@ -215,7 +215,7 @@ if (!$readonly)
         <p>
             <label>Aperçu:</label>
             <span>
-                <a alt="<?php echo htmlentities($strRubriqueFichier); ?>" href="<?php echo $doc->geturl(); ?>"><img style="width:100px;"src="<?php echo $doc->geturl(); ?>" title="<?php echo htmlentities($strRubriqueFichier); ?>" /></a>
+                <a alt="<?php echo ploopi_htmlentities($strRubriqueFichier); ?>" href="<?php echo $doc->geturl(); ?>"><img style="width:100px;"src="<?php echo $doc->geturl(); ?>" title="<?php echo ploopi_htmlentities($strRubriqueFichier); ?>" /></a>
             </span>
         </p>
         <?php
@@ -227,11 +227,11 @@ if (!$readonly)
         if (!$readonly)
         {
             ?>
-            <input type="text" style="width:100px;float:left;cursor:pointer;" class="text color {hash:true}" name="newsletter_background_color" id="newsletter_background_color" value="<?php echo htmlentities($objLetter->fields['background_color']); ?>" tabindex="10" readonly="readonly"/>
+            <input type="text" style="width:100px;float:left;cursor:pointer;" class="text color {hash:true}" name="newsletter_background_color" id="newsletter_background_color" value="<?php echo ploopi_htmlentities($objLetter->fields['background_color']); ?>" tabindex="10" readonly="readonly"/>
             <img src="./modules/newsletter/img/ico_delete.png" title="Effacer" alt="Effacer" onclick="javascript:$('newsletter_background_color').value='';" style="cursor:pointer;margin-left:2px;margin-top:2px;float:left;" />
             <?php
         }
-        else echo '<span>'.htmlentities($objLetter->fields['background_color']).'</span>';
+        else echo '<span>'.ploopi_htmlentities($objLetter->fields['background_color']).'</span>';
         ?>
     </p>
     <p>
@@ -240,11 +240,11 @@ if (!$readonly)
         if (!$readonly)
         {
             ?>
-            <input type="text" style="width:100px;float:left;cursor:pointer;" class="text color {hash:true}" name="newsletter_content_color" id="newsletter_content_color" value="<?php echo htmlentities($objLetter->fields['content_color']); ?>" tabindex="10" readonly="readonly"/>
+            <input type="text" style="width:100px;float:left;cursor:pointer;" class="text color {hash:true}" name="newsletter_content_color" id="newsletter_content_color" value="<?php echo ploopi_htmlentities($objLetter->fields['content_color']); ?>" tabindex="10" readonly="readonly"/>
             <img src="./modules/newsletter/img/ico_delete.png" title="Effacer" alt="Effacer" onclick="javascript:$('newsletter_content_color').value='';" style="cursor:pointer;margin-left:2px;margin-top:2px;float:left;" />
             <?php
         }
-        else echo '<span>'.htmlentities($objLetter->fields['content_color']).'</span>';
+        else echo '<span>'.ploopi_htmlentities($objLetter->fields['content_color']).'</span>';
         ?>
     </p>
     <p>
@@ -253,11 +253,11 @@ if (!$readonly)
         if (!$readonly)
         {
             ?>
-            <input type="text" style="width:100px;float:left;cursor:pointer;" class="text color {hash:true}" name="newsletter_text_color" id="newsletter_text_color" value="<?php echo htmlentities($objLetter->fields['text_color']); ?>" tabindex="10" readonly="readonly"/>
+            <input type="text" style="width:100px;float:left;cursor:pointer;" class="text color {hash:true}" name="newsletter_text_color" id="newsletter_text_color" value="<?php echo ploopi_htmlentities($objLetter->fields['text_color']); ?>" tabindex="10" readonly="readonly"/>
             <img src="./modules/newsletter/img/ico_delete.png" title="Effacer" alt="Effacer" onclick="javascript:$('newsletter_text_color').value='';" style="cursor:pointer;margin-left:2px;margin-top:2px;float:left;" />
             <?php
         }
-        else echo '<span>'.htmlentities($objLetter->fields['text_color']).'</span>';
+        else echo '<span>'.ploopi_htmlentities($objLetter->fields['text_color']).'</span>';
         ?>
     </p>
 

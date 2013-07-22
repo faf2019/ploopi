@@ -165,10 +165,10 @@ echo $skin->open_simplebloc();
                 if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPADMIN)
                 {
                     ?>
-                    <input type="text" class="text" name="workspace_label"  value="<?php echo htmlentities($workspace->fields['label']); ?>">
+                    <input type="text" class="text" name="workspace_label"  value="<?php echo ploopi_htmlentities($workspace->fields['label']); ?>">
                     <?php
                 }
-                else echo '<span>'.htmlentities($workspace->fields['label']).'</span>';
+                else echo '<span>'.ploopi_htmlentities($workspace->fields['label']).'</span>';
                 ?>
             </p>
             <?php
@@ -217,7 +217,7 @@ echo $skin->open_simplebloc();
                         foreach($templatelist_back as $index => $tpl_name)
                         {
                             ?>
-                            <option <?php if ($tpl_name == $workspace->fields['template']) echo 'selected="selected"'; ?>><?php echo htmlentities($tpl_name); ?></option>
+                            <option <?php if ($tpl_name == $workspace->fields['template']) echo 'selected="selected"'; ?>><?php echo ploopi_htmlentities($tpl_name); ?></option>
                             <?php
                         }
                         ?>
@@ -233,10 +233,10 @@ echo $skin->open_simplebloc();
                 if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPADMIN)
                 {
                     ?>
-                    <textarea class="text" name="workspace_backoffice_domainlist"><?php echo htmlentities($workspace->fields['backoffice_domainlist']); ?></textarea>
+                    <textarea class="text" name="workspace_backoffice_domainlist"><?php echo ploopi_htmlentities($workspace->fields['backoffice_domainlist']); ?></textarea>
                     <?php
                 }
-                else echo '<span>'.ploopi_nl2br(htmlentities($workspace->fields['backoffice_domainlist'])).'</span>';
+                else echo '<span>'.ploopi_nl2br(ploopi_htmlentities($workspace->fields['backoffice_domainlist'])).'</span>';
                 ?>
             </p>
             <p>
@@ -257,10 +257,10 @@ echo $skin->open_simplebloc();
                 if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPADMIN)
                 {
                     ?>
-                    <textarea class="text" name="workspace_frontoffice_domainlist"><?php echo htmlentities($workspace->fields['frontoffice_domainlist']); ?></textarea>
+                    <textarea class="text" name="workspace_frontoffice_domainlist"><?php echo ploopi_htmlentities($workspace->fields['frontoffice_domainlist']); ?></textarea>
                     <?php
                 }
-                else echo '<span>'.ploopi_nl2br(htmlentities($workspace->fields['backoffice_domainlist'])).'</span>';
+                else echo '<span>'.ploopi_nl2br(ploopi_htmlentities($workspace->fields['backoffice_domainlist'])).'</span>';
                 ?>
             </p>
             <?php
@@ -297,10 +297,10 @@ echo $skin->open_simplebloc();
                 if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPADMIN)
                 {
                     ?>
-                    <input type="text" class="text" name="workspace_title" value="<?php echo htmlentities($workspace->fields['title']); ?>">
+                    <input type="text" class="text" name="workspace_title" value="<?php echo ploopi_htmlentities($workspace->fields['title']); ?>">
                     <?php
                 }
-                else echo '<span>'.htmlentities($workspace->fields['title']).'</span>';
+                else echo '<span>'.ploopi_htmlentities($workspace->fields['title']).'</span>';
                 ?>
             </p>
             <p>
@@ -309,10 +309,10 @@ echo $skin->open_simplebloc();
                 if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPADMIN)
                 {
                     ?>
-                    <input type="text" class="text" name="workspace_meta_description" value="<?php echo htmlentities($workspace->fields['meta_description']); ?>">
+                    <input type="text" class="text" name="workspace_meta_description" value="<?php echo ploopi_htmlentities($workspace->fields['meta_description']); ?>">
                     <?php
                 }
-                else echo '<span>'.htmlentities($workspace->fields['meta_description']).'</span>';
+                else echo '<span>'.ploopi_htmlentities($workspace->fields['meta_description']).'</span>';
                 ?>
             </p>
             <p>
@@ -321,10 +321,10 @@ echo $skin->open_simplebloc();
                 if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPADMIN)
                 {
                     ?>
-                    <input type="text" class="text" name="workspace_meta_keywords" value="<?php echo htmlentities($workspace->fields['meta_keywords']); ?>">
+                    <input type="text" class="text" name="workspace_meta_keywords" value="<?php echo ploopi_htmlentities($workspace->fields['meta_keywords']); ?>">
                     <?php
                 }
-                else echo '<span>'.htmlentities($workspace->fields['meta_keywords']).'</span>';
+                else echo '<span>'.ploopi_htmlentities($workspace->fields['meta_keywords']).'</span>';
                 ?>
             </p>
             <p>
@@ -336,7 +336,7 @@ echo $skin->open_simplebloc();
                     <input type="text" class="text" name="workspace_meta_author" value="<?php echo $workspace->fields['meta_author']; ?>">
                     <?php
                 }
-                else echo '<span>'.htmlentities($workspace->fields['meta_author']).'</span>';
+                else echo '<span>'.ploopi_htmlentities($workspace->fields['meta_author']).'</span>';
                 ?>
             </p>
             <p>
@@ -345,10 +345,10 @@ echo $skin->open_simplebloc();
                 if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPADMIN)
                 {
                     ?>
-                    <input type="text" class="text" name="workspace_meta_copyright" value="<?php echo htmlentities($workspace->fields['meta_copyright']); ?>">
+                    <input type="text" class="text" name="workspace_meta_copyright" value="<?php echo ploopi_htmlentities($workspace->fields['meta_copyright']); ?>">
                     <?php
                 }
-                else echo '<span>'.htmlentities($workspace->fields['meta_copyright']).'</span>';
+                else echo '<span>'.ploopi_htmlentities($workspace->fields['meta_copyright']).'</span>';
                 ?>
             </p>
             <p>
@@ -357,10 +357,10 @@ echo $skin->open_simplebloc();
                 if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPADMIN)
                 {
                     ?>
-                    <input type="text" class="text" name="workspace_meta_robots" value="<?php echo htmlentities($workspace->fields['meta_robots']); ?>">
+                    <input type="text" class="text" name="workspace_meta_robots" value="<?php echo ploopi_htmlentities($workspace->fields['meta_robots']); ?>">
                     <?php
                 }
-                else echo '<span>'.htmlentities($workspace->fields['meta_robots']).'</span>';
+                else echo '<span>'.ploopi_htmlentities($workspace->fields['meta_robots']).'</span>';
                 ?>
             </p>
         </div>
@@ -376,10 +376,10 @@ echo $skin->open_simplebloc();
                 if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPADMIN)
                 {
                     ?>
-                    <input type="text" class="text" name="workspace_iprules"  value="<?php echo htmlentities($workspace->fields['iprules']); ?>">
+                    <input type="text" class="text" name="workspace_iprules"  value="<?php echo ploopi_htmlentities($workspace->fields['iprules']); ?>">
                     <?php
                 }
-                else echo '<span>'.htmlentities($workspace->fields['iprules']).'</span>';
+                else echo '<span>'.ploopi_htmlentities($workspace->fields['iprules']).'</span>';
                 ?>
 
             </p>

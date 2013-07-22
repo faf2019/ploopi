@@ -130,7 +130,7 @@ $_SESSION['ploopi']['newsletter'][$_SESSION['ploopi']['moduleid']]['subscribe'][
 <form action="<?php echo ploopi_urlencode('admin.php'); ?>" method="post">
 <p class="ploopi_va" style="padding:4px;border-bottom:2px solid #c0c0c0;">
     <span><?php echo _NEWSLETTER_LABEL_EMAIL; ?> :</span>
-    <input class="text" ID="system_user" name="filter" type="text" size="15" maxlength="255" value="<?php echo htmlentities($filter); ?>">
+    <input class="text" ID="system_user" name="filter" type="text" size="15" maxlength="255" value="<?php echo ploopi_htmlentities($filter); ?>">
     <input type="submit" value="<?php echo _PLOOPI_FILTER; ?>" class="button">
     <input type="submit" name="reset" value="<?php echo _PLOOPI_RESET; ?>" class="button">
 </p>
@@ -189,7 +189,7 @@ while ($fields = $db->fetchrow($result))
   // date time inscription
   $arrNewsletterDateSubscribe = ploopi_timestamp2local($fields['timestp_subscribe']);
 
-  $values[$c]['values']['email']       = array('label' => htmlentities($fields['email']));
+  $values[$c]['values']['email']       = array('label' => ploopi_htmlentities($fields['email']));
   $values[$c]['values']['active']      = array('label' => $action,'style' => 'text-align:center');
   $values[$c]['values']['ip']          = array('label' => str_replace(',','<br/>',$fields['ip']));
   $values[$c]['values']['timestp']    = array('label' => $arrNewsletterDateSubscribe['date'].' '.$arrNewsletterDateSubscribe['time']);

@@ -15,7 +15,7 @@ ploopi_ob_clean();
 <html>
     <head>
         <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-        <title>Graphique: <? echo htmlentities($objDbrQuery->fields['label']); ?></title>
+        <title>Graphique: <? echo ploopi_htmlentities($objDbrQuery->fields['label']); ?></title>
         <script src="./lib/protoaculous/protoaculous.min.js"></script>
         <script src="./modules/dbreport/lib/highcharts/adapters/prototype-adapter.js"></script>
         <script src="./modules/dbreport/lib/highcharts/highcharts.js"></script>

@@ -85,7 +85,7 @@ while ($fields = $db->fetchrow($select_letter))
   $arrNewsletterDateCreate = ploopi_timestamp2local($fields['timestp']);
   $arrNewsletterDateValid = ploopi_timestamp2local($fields['validated_timestp']);
 
-  $array_values[$c]['values']['title']  = array('label' => htmlentities($fields['title']));
+  $array_values[$c]['values']['title']  = array('label' => ploopi_htmlentities($fields['title']));
   $array_values[$c]['values']['create'] = array('label' => $arrNewsletterDateCreate['date'].' '.$arrNewsletterDateCreate['time'].'<br/>'.$fields['author']);
   $array_values[$c]['values']['valid'] = array('label' => $arrNewsletterDateValid['date'].' '.$arrNewsletterDateValid['time'].'<br/>'.$fields['validated_user']);
 

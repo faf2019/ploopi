@@ -47,7 +47,7 @@ else echo $skin->open_simplebloc(str_replace('LABEL',$rsscat->fields['title'],_R
     <div style="padding:2px;">
         <p>
             <label><?php echo _RSS_LABEL_TITLE; ?>:</label>
-            <input class="text" type="text" name="rsscat_title" value="<?php echo htmlentities($rsscat->fields['title']); ?>" tabindex="100" />
+            <input class="text" type="text" name="rsscat_title" value="<?php echo ploopi_htmlentities($rsscat->fields['title']); ?>" tabindex="100" />
         </p>
         <p>
             <label><?php echo _RSS_LABEL_LIMIT; ?>:</label>
@@ -62,7 +62,7 @@ else echo $skin->open_simplebloc(str_replace('LABEL',$rsscat->fields['title'],_R
 
         <p>
             <label><?php echo _RSS_LABEL_DESCRIPTION; ?>:</label>
-            <textarea class="text" name="rsscat_description" tabindex="103"><?php echo htmlentities($rsscat->fields['description']); ?></textarea>
+            <textarea class="text" name="rsscat_description" tabindex="103"><?php echo ploopi_htmlentities($rsscat->fields['description']); ?></textarea>
         </p>
     </div>
 </div>

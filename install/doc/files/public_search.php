@@ -76,7 +76,7 @@ $show_options = (
 
     <div style="float:left;height:40px;border-left:1px solid #e0e0e0;">
         <p style="margin:0;padding:4px;float:left;">
-            <input type="text" class="text" style="width:140px;" id="doc_search_keywords" value="<?php echo htmlentities($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords']); ?>" placeholder="Fichier / Mot Clé" />
+            <input type="text" class="text" style="width:140px;" id="doc_search_keywords" value="<?php echo ploopi_htmlentities($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords']); ?>" placeholder="Fichier / Mot Clé" />
             <input type="submit" class="flatbutton" value="Rechercher" />
         </p>
     </div>
@@ -115,11 +115,11 @@ $show_options = (
     </p>
     <p style="margin:0;padding:4px;float:left;">
         <strong>Propriétaire</strong>:
-        <br /><input type="text" class="text"  style="width:90px;" value="<?php echo htmlentities($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_user']); ?>" id="doc_search_user">
+        <br /><input type="text" class="text"  style="width:90px;" value="<?php echo ploopi_htmlentities($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_user']); ?>" id="doc_search_user">
     </p>
     <p style="margin:0;padding:4px;float:left;">
         <strong>Espace</strong>:
-        <br /><input type="text" class="text" style="width:90px;" value="<?php echo htmlentities($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_workspace']); ?>" id="doc_search_workspace">
+        <br /><input type="text" class="text" style="width:90px;" value="<?php echo ploopi_htmlentities($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_workspace']); ?>" id="doc_search_workspace">
     </p>
     <p style="margin:0;padding:4px;float:left;">
         <strong>Date (du)</strong>:
@@ -130,7 +130,7 @@ $show_options = (
     <p style="float:left;margin:0;padding:4px;">
         <strong>Date (au)</strong>:
         <br />
-        <input type="text" class="text" style="width:70px;" value="<?php echo htmlentities($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date2']); ?>" name="doc_search_date2" id="doc_search_date2">
+        <input type="text" class="text" style="width:70px;" value="<?php echo ploopi_htmlentities($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date2']); ?>" name="doc_search_date2" id="doc_search_date2">
         <a href="javascript:void(0);" onclick="javascript:ploopi_calendar_open('doc_search_date2', event);"><img src="./img/calendar/calendar.gif" width="31" height="18" align="top" border="0"></a>
     </p>
 </div>

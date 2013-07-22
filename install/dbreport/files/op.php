@@ -588,8 +588,8 @@ if (ploopi_ismoduleallowed('dbreport'))
                         {
                             ?>
                             <p>
-                                <label><?php echo htmlentities($strParam.' ('.$arrParam['label'].')'); ?>:</label>
-                                <input type="text" class="text" name="<?php echo htmlentities($strParam); ?>"  value="%"  />
+                                <label><?php echo ploopi_htmlentities($strParam.' ('.$arrParam['label'].')'); ?>:</label>
+                                <input type="text" class="text" name="<?php echo ploopi_htmlentities($strParam); ?>"  value="%"  />
                             </p>
                             <?
                         }

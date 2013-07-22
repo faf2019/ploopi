@@ -44,7 +44,7 @@ $idmoduletype = $_GET['idmoduletype'];
 
 if (!ini_get('safe_mode')) ini_set('max_execution_time', 0);
 
-echo $skin->open_simplebloc(_SYSTEM_LABEL_UPDATEREPORT.htmlentities(" - {$_GET['installmoduletype']} {$_GET['updatefrom']} => {$_GET['installmoduletype']} {$_GET['updateto']}"));
+echo $skin->open_simplebloc(_SYSTEM_LABEL_UPDATEREPORT.ploopi_htmlentities(" - {$_GET['installmoduletype']} {$_GET['updatefrom']} => {$_GET['installmoduletype']} {$_GET['updateto']}"));
 
 $select = "SELECT version FROM ploopi_module_type WHERE id = '".$db->addslashes($_GET['idmoduletype'])."' AND version = '".$db->addslashes($_GET['updateto'])."'";
 $db->query($select);

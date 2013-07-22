@@ -1,3 +1,9 @@
+== Module Wiki - version 1.2.2b ====================================================
+
+2013-07-22  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+* Correction d'un bug lié à la modification du comportement de htmlentities avec PHP 5.4
+
 == Module Wiki - version 1.2.2a ====================================================
 
 2013-03-20  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>

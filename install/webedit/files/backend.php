@@ -247,7 +247,7 @@ switch ($strbackendtype)
                     $item->setTitle(ploopi_xmlentities(utf8_encode($article['title']), true));
                     $item->setLink(_PLOOPI_BASEPATH.'/'.$url);
                     $item->setDate(ploopi_timestamp2unixtimestamp($article['timestp']));
-                    $item->setDescription(ploopi_nl2br(htmlentities($article['metadescription'])));
+                    $item->setDescription(ploopi_nl2br(ploopi_htmlentities($article['metadescription'])));
             
                     // Ajout de l'item dans le flux
                     $feed->addItem($item);

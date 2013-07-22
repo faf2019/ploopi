@@ -183,7 +183,7 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
         $objTplDirectory->assign_block_vars('system_trombi_user',
             array(
                 'ID' => $strUserName,
-                'LABEL' => htmlentities(ucfirst($strUserName)),
+                'LABEL' => ploopi_htmlentities(ucfirst($strUserName)),
                 'SELECTED' => $strUserName == $arrFilter['system_user'] ? 'selected="selected"' : ''
             )
         );
@@ -203,7 +203,7 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
             $objTplDirectory->assign_block_vars("system_trombi_{$strField}",
                 array(
                     'ID' => $row[$strField],
-                    'LABEL' => htmlentities(ucfirst($row[$strField])),
+                    'LABEL' => ploopi_htmlentities(ucfirst($row[$strField])),
                     'SELECTED' => $row[$strField] == $arrFilter["system_{$strField}"] ? 'selected="selected"' : ''
                 )
             );
@@ -218,26 +218,26 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
 
             $objTplDirectory->assign_vars(
                 array(
-                    'SYSTEM_TROMBI_LASTNAME' => htmlentities($arrFilter['system_lastname']),
-                    'SYSTEM_TROMBI_FIRSTNAME' => htmlentities($arrFilter['system_firstname']),
-                    'SYSTEM_TROMBI_SERVICE' => htmlentities($arrFilter['system_service']),
-                    'SYSTEM_TROMBI_SERVICE2' => htmlentities($arrFilter['system_service2']),
-                    'SYSTEM_TROMBI_PHONE' => htmlentities($arrFilter['system_phone']),
-                    'SYSTEM_TROMBI_FAX' => htmlentities($arrFilter['system_fax']),
-                    'SYSTEM_TROMBI_MOBILE' => htmlentities($arrFilter['system_mobile']),
-                    'SYSTEM_TROMBI_LOGIN' => htmlentities($arrFilter['system_login']),
-                    'SYSTEM_TROMBI_EMAIL' => htmlentities($arrFilter['system_email']),
+                    'SYSTEM_TROMBI_LASTNAME' => ploopi_htmlentities($arrFilter['system_lastname']),
+                    'SYSTEM_TROMBI_FIRSTNAME' => ploopi_htmlentities($arrFilter['system_firstname']),
+                    'SYSTEM_TROMBI_SERVICE' => ploopi_htmlentities($arrFilter['system_service']),
+                    'SYSTEM_TROMBI_SERVICE2' => ploopi_htmlentities($arrFilter['system_service2']),
+                    'SYSTEM_TROMBI_PHONE' => ploopi_htmlentities($arrFilter['system_phone']),
+                    'SYSTEM_TROMBI_FAX' => ploopi_htmlentities($arrFilter['system_fax']),
+                    'SYSTEM_TROMBI_MOBILE' => ploopi_htmlentities($arrFilter['system_mobile']),
+                    'SYSTEM_TROMBI_LOGIN' => ploopi_htmlentities($arrFilter['system_login']),
+                    'SYSTEM_TROMBI_EMAIL' => ploopi_htmlentities($arrFilter['system_email']),
                     'SYSTEM_TROMBI_WORKSPACE' => $arrFilter['system_workspace'],
-                    'SYSTEM_TROMBI_OFFICE' => htmlentities($arrFilter['system_office']),
-                    'SYSTEM_TROMBI_COMMENTS' => htmlentities($arrFilter['system_comments']),
-                    'SYSTEM_TROMBI_FUNCTION' => htmlentities($arrFilter['system_function']),
-                    'SYSTEM_TROMBI_NUMBER' => htmlentities($arrFilter['system_number']),
-                    'SYSTEM_TROMBI_RANK' => htmlentities($arrFilter['system_rank']),
-                    'SYSTEM_TROMBI_BUILDING' => htmlentities($arrFilter['system_building']),
-                    'SYSTEM_TROMBI_FLOOR' => htmlentities($arrFilter['system_floor']),
-                    'SYSTEM_TROMBI_COUNTRY' => htmlentities($arrFilter['system_country']),
-                    'SYSTEM_TROMBI_CITY' => htmlentities($arrFilter['system_city']),
-                    'SYSTEM_TROMBI_POSTALCODE' => htmlentities($arrFilter['system_postalcode'])
+                    'SYSTEM_TROMBI_OFFICE' => ploopi_htmlentities($arrFilter['system_office']),
+                    'SYSTEM_TROMBI_COMMENTS' => ploopi_htmlentities($arrFilter['system_comments']),
+                    'SYSTEM_TROMBI_FUNCTION' => ploopi_htmlentities($arrFilter['system_function']),
+                    'SYSTEM_TROMBI_NUMBER' => ploopi_htmlentities($arrFilter['system_number']),
+                    'SYSTEM_TROMBI_RANK' => ploopi_htmlentities($arrFilter['system_rank']),
+                    'SYSTEM_TROMBI_BUILDING' => ploopi_htmlentities($arrFilter['system_building']),
+                    'SYSTEM_TROMBI_FLOOR' => ploopi_htmlentities($arrFilter['system_floor']),
+                    'SYSTEM_TROMBI_COUNTRY' => ploopi_htmlentities($arrFilter['system_country']),
+                    'SYSTEM_TROMBI_CITY' => ploopi_htmlentities($arrFilter['system_city']),
+                    'SYSTEM_TROMBI_POSTALCODE' => ploopi_htmlentities($arrFilter['system_postalcode'])
                 )
             );
 
@@ -448,8 +448,8 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
                                     foreach($arrDetail as $intIdRole => $arrR)
                                         $arrUser[$row['id']]['roles'][$intIdRole] =
                                             sprintf("%s de %s",
-                                                htmlentities($arrR['role_label']),
-                                                htmlentities($arrR['module_label'])
+                                                ploopi_htmlentities($arrR['role_label']),
+                                                ploopi_htmlentities($arrR['module_label'])
                                             );
                                 }
                             }
@@ -460,8 +460,8 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
                             foreach($arrRoles['users'][$intIdWsp][$row['id']] as $intIdRole => $arrR)
                                 $arrUser[$row['id']]['roles'][$intIdRole] =
                                     sprintf("%s de %s",
-                                            htmlentities($arrR['role_label']),
-                                            htmlentities($arrR['module_label'])
+                                            ploopi_htmlentities($arrR['role_label']),
+                                            ploopi_htmlentities($arrR['module_label'])
                                         );
                         }
                     }
@@ -526,37 +526,37 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
 
                         $arrAddress = array();
 
-                        if (!empty($row['address'])) $arrAddress[] = ploopi_nl2br(htmlentities($row['address']));
-                        if (!empty($row['postalcode']) || !empty($row['city'])) $arrAddress[] = ploopi_nl2br(htmlentities(trim($row['postalcode'].' '.$row['city'])));
-                        if (!empty($row['country'])) $arrAddress[] = ploopi_nl2br(htmlentities($row['country']));
+                        if (!empty($row['address'])) $arrAddress[] = ploopi_nl2br(ploopi_htmlentities($row['address']));
+                        if (!empty($row['postalcode']) || !empty($row['city'])) $arrAddress[] = ploopi_nl2br(ploopi_htmlentities(trim($row['postalcode'].' '.$row['city'])));
+                        if (!empty($row['country'])) $arrAddress[] = ploopi_nl2br(ploopi_htmlentities($row['country']));
 
                         $objTplDirectory->assign_block_vars('system_trombi_switch_result.user',
                             array(
                                 'ID' => $row['id'],
-                                'LASTNAME' => htmlentities($row['lastname']),
-                                'FIRSTNAME' => htmlentities($row['firstname']),
-                                'LOGIN' => htmlentities($row['login']),
-                                'EMAIL' => htmlentities($row['email']),
-                                'PHONE' => htmlentities($row['phone']),
-                                'FAX' => htmlentities($row['fax']),
-                                'MOBILE' => htmlentities($row['mobile']),
-                                'SERVICE' => htmlentities($row['service']),
-                                'SERVICE2' => htmlentities($row['service2']),
+                                'LASTNAME' => ploopi_htmlentities($row['lastname']),
+                                'FIRSTNAME' => ploopi_htmlentities($row['firstname']),
+                                'LOGIN' => ploopi_htmlentities($row['login']),
+                                'EMAIL' => ploopi_htmlentities($row['email']),
+                                'PHONE' => ploopi_htmlentities($row['phone']),
+                                'FAX' => ploopi_htmlentities($row['fax']),
+                                'MOBILE' => ploopi_htmlentities($row['mobile']),
+                                'SERVICE' => ploopi_htmlentities($row['service']),
+                                'SERVICE2' => ploopi_htmlentities($row['service2']),
                                 'WORKSPACES' => implode('<br />', $row['workspaces']),
                                 'GROUPS' => implode('<br />', $row['groups']),
                                 'ROLES' => implode('<br />', $row['roles']),
-                                'FUNCTION' => htmlentities($row['function']),
-                                'RANK' => htmlentities($row['rank']),
-                                'NUMBER' => htmlentities($row['number']),
-                                'POSTALCODE' => htmlentities($row['postalcode']),
-                                'ADDRESS' => htmlentities($row['address']),
-                                'CITY' => htmlentities($row['city']),
-                                'COUNTRY' => htmlentities($row['country']),
+                                'FUNCTION' => ploopi_htmlentities($row['function']),
+                                'RANK' => ploopi_htmlentities($row['rank']),
+                                'NUMBER' => ploopi_htmlentities($row['number']),
+                                'POSTALCODE' => ploopi_htmlentities($row['postalcode']),
+                                'ADDRESS' => ploopi_htmlentities($row['address']),
+                                'CITY' => ploopi_htmlentities($row['city']),
+                                'COUNTRY' => ploopi_htmlentities($row['country']),
                                 'ADDRESS_FULL' => implode('<br />', $arrAddress),
-                                'BUILDING' => htmlentities($row['building']),
-                                'FLOOR' => htmlentities($row['floor']),
-                                'OFFICE' => htmlentities($row['office']),
-                                'COMMENTS' => ploopi_nl2br(htmlentities($row['comments'])),
+                                'BUILDING' => ploopi_htmlentities($row['building']),
+                                'FLOOR' => ploopi_htmlentities($row['floor']),
+                                'OFFICE' => ploopi_htmlentities($row['office']),
+                                'COMMENTS' => ploopi_nl2br(ploopi_htmlentities($row['comments'])),
                                 'PHOTOPATH' => $row['photopath']
                             )
                         );

@@ -57,7 +57,7 @@ while ($rssfilter_fields = $db->fetchrow($rssfilter_result))
 
       $template_body->assign_block_vars($objRssFilter->fields['tpl_tag'].'.rssfilter',array(
             'TITLE' => strip_tags($objRssFilter->fields['title'], '<b><i>'),
-            'TITLE_CLEANED' => htmlentities(strip_tags($objRssFilter->fields['title'], '<b><i>'))
+            'TITLE_CLEANED' => ploopi_htmlentities(strip_tags($objRssFilter->fields['title'], '<b><i>'))
             ));
     }
 
@@ -77,19 +77,19 @@ while ($rssfilter_fields = $db->fetchrow($rssfilter_result))
 
       $template_body->assign_block_vars($objRssFilter->fields['tpl_tag'].'.rssfilter.rssentry',array(
                   'FEED_TITLE' => strip_tags($fields['titlefeed'],'<b><i>'),
-                  'FEED_TITLE_CLEANED' => htmlentities(strip_tags($fields['titlefeed'],'<b><i>')),
+                  'FEED_TITLE_CLEANED' => ploopi_htmlentities(strip_tags($fields['titlefeed'],'<b><i>')),
                   'FEED_SUBTITLE' => strip_tags($fields['subtitlefeed'],'<b><i>'),
-                  'FEED_SUBTITLE_CLEANED' => htmlentities(strip_tags($fields['subtitlefeed'],'<b><i>')),
+                  'FEED_SUBTITLE_CLEANED' => ploopi_htmlentities(strip_tags($fields['subtitlefeed'],'<b><i>')),
                   'FEED_LINK' => $fields['linkfeed'],
                   'TITLE' => strip_tags($fields['title'], '<b><i>'),
-                  'TITLE_CLEANED' => htmlentities(strip_tags($fields['title'],'<b><i>')),
+                  'TITLE_CLEANED' => ploopi_htmlentities(strip_tags($fields['title'],'<b><i>')),
                   'SUBTITLE' => strip_tags($fields['subtitle'], '<b><i>'),
-                  'SUBTITLE_CLEANED' => htmlentities(strip_tags($fields['subtitle'],'<b><i>')),
+                  'SUBTITLE_CLEANED' => ploopi_htmlentities(strip_tags($fields['subtitle'],'<b><i>')),
                   'PUBLISHED_DATE' => $published_date,
                   'PUBLISHED_TIME' => $published_time,
                   'LINK' => $fields['link'],
                   'CONTENT' => strip_tags($fields['content'], '<b><i><a>'),
-                  'CONTENT_CLEANED' => htmlentities(strip_tags($fields['content'],'<b><i><a>')),
+                  'CONTENT_CLEANED' => ploopi_htmlentities(strip_tags($fields['content'],'<b><i><a>')),
                   'CONTENT_CUT' => ploopi_strcut(strip_tags($fields['content']),200)
                   ));
     }

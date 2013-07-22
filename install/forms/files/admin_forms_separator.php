@@ -78,7 +78,7 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
                     foreach($objForm->getGroups() as $intIdGroup => $objGroup)
                     {
                         ?>
-                        <option value="<? echo $intIdGroup; ?>" <? if ($field->fields['id_group'] == $intIdGroup) echo 'selected="selected"'; ?>><? echo htmlentities($objGroup->fields['label']); ?></option>
+                        <option value="<? echo $intIdGroup; ?>" <? if ($field->fields['id_group'] == $intIdGroup) echo 'selected="selected"'; ?>><? echo ploopi_htmlentities($objGroup->fields['label']); ?></option>
                         <?
                     }
                     ?>
@@ -98,15 +98,15 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
             </p>
             <p>
                 <label><?php echo _FORMS_FIELD_NAME; ?>: </label>
-                <input type="text" class="text" size="30" name="field_name" value="<?php echo htmlentities($field->fields['name']); ?>">
+                <input type="text" class="text" size="30" name="field_name" value="<?php echo ploopi_htmlentities($field->fields['name']); ?>">
             </p>
             <p>
                 <label><?php echo _FORMS_FIELD_DESCRIPTION; ?>: </label>
-                <textarea class="text" style="height:40px;" name="field_description"><?php echo htmlentities($field->fields['description']); ?></textarea>
+                <textarea class="text" style="height:40px;" name="field_description"><?php echo ploopi_htmlentities($field->fields['description']); ?></textarea>
             </p>
             <p>
                 <label><?php echo _FORMS_FIELD_STYLE_FORM; ?>:</label>
-                <input type="text" class="text" name="field_style_form" value="<?php echo htmlentities($field->fields['style_form']); ?>">
+                <input type="text" class="text" name="field_style_form" value="<?php echo ploopi_htmlentities($field->fields['style_form']); ?>">
             </p>
         </div>
     </div>

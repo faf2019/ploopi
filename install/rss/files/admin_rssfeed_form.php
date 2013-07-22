@@ -58,7 +58,7 @@ $a_categories = $db->getarray();
     <div style="padding:2px;">
         <p>
             <label><?php echo _RSS_LABEL_FEEDURL; ?>:</label>
-            <input class="text" type="text" name="rssfeed_url" value="<?php echo htmlentities($rssfeed->fields['url']); ?>" tabindex="100" />
+            <input class="text" type="text" name="rssfeed_url" value="<?php echo ploopi_htmlentities($rssfeed->fields['url']); ?>" tabindex="100" />
         </p>
         <p>
             <label><?php echo _RSS_LABEL_CATEGORY; ?>:</label>
@@ -68,7 +68,7 @@ $a_categories = $db->getarray();
                 foreach($a_categories as $row)
                 {
                     ?>
-                    <option <?php if ($rssfeed->fields['id_cat'] == $row['id']) echo 'selected'; ?> value="<?php echo $row['id']; ?>"><?php echo htmlentities($row['title']); ?></option>
+                    <option <?php if ($rssfeed->fields['id_cat'] == $row['id']) echo 'selected'; ?> value="<?php echo $row['id']; ?>"><?php echo ploopi_htmlentities($row['title']); ?></option>
                     <?php
                 }
                 ?>
