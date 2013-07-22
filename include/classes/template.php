@@ -70,7 +70,7 @@ class block
     {
         $this->menu[] = array( 
             'label' => $label,
-            'cleaned_label' => htmlentities(trim(str_replace('&nbsp;', ' ', strip_tags($label)))),
+            'cleaned_label' => ploopi_htmlentities(trim(str_replace('&nbsp;', ' ', strip_tags($label)))),
             'url' => $url,
             'selected' => $selected,
             'target' => $target

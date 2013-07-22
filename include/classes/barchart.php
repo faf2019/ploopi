@@ -133,7 +133,7 @@ class barchart
     public function setvalues($values, $dataset_label = null, $dataset_bgcolor = null, $dataset_color = null, $dataset_name = null)
     {
 
-        $this->datasets[(empty($dataset_name)) ? 'p'.sizeof($this->datasets) : htmlentities($dataset_name)] =
+        $this->datasets[(empty($dataset_name)) ? 'p'.sizeof($this->datasets) : ploopi_htmlentities($dataset_name)] =
             array(
                 'values' => $values,
                 'label' => $dataset_label,
@@ -380,7 +380,7 @@ class barchart
                                     $style .= 'cursor:help;';
     
                                     $title = (empty($dataset['label'])) ? '' : $dataset['label'].': ';
-                                    $title = 'title="'.htmlentities($title.strip_tags($this->legend[$key]).', '.$value).'"';
+                                    $title = 'title="'.ploopi_htmlentities($title.strip_tags($this->legend[$key]).', '.$value).'"';
                                 }
                                 else $title = '';
     

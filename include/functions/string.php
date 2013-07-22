@@ -44,6 +44,7 @@ function ploopi_nl2br($str)
    return preg_replace("/\r\n|\n|\r/", "<br />", $str);
 }
 
+
 /**
  * Coupe une chaîne à la longueur désirée et ajoute '...'
  *
@@ -243,6 +244,22 @@ function ploopi_xmlentities($str, $utf8 = false, $extended = true)
     $str = str_replace(array("&", ">", "<", "\"", "'", "\r"), array("&amp;", "&gt;", "&lt;", "&quot;", "&apos;", ""), $str);
 
     return $extended ? $utf8 ? ploopi_strtr($str, $asc2uni) : strtr($str, $asc2uni) : $str;
+}
+
+/**
+ * Convertit tous les caractères éligibles en entités HTML (via htmlentities) mais en ISO-8859-1 par défaut
+ *
+ * @param string $str chaîne brute
+ * @param int masque qui détermine la façon dans les guillemets sont gérés
+ * @param string $encoding définit l'encodage utilisé durant la conversion
+ * @return string chaîne convertie
+ */
+ 
+function ploopi_htmlentities($str, $flags = null, $encoding = 'ISO-8859-1') 
+{
+    if (is_null($flags)) $flags = ENT_COMPAT | ENT_HTML401;
+    
+    return htmlentities($str, $flags, $encoding);
 }
 
 

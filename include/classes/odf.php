@@ -754,7 +754,7 @@ class odf_parser
 
     public function set_var($key, $value, $clean = true, $html = false)
     {
-        if (!$html) $value = ploopi_nl2br(htmlentities($value));
+        if (!$html) $value = ploopi_nl2br(ploopi_htmlentities($value));
         if ($clean) $value = $this->clean_var($value);
 
         $this->vars['{'.$key.'}'] = $value;
@@ -791,7 +791,7 @@ class odf_parser
         {
             foreach($v as $key => $value)
             {
-                if (!$html) $value = ploopi_nl2br(htmlentities($value));
+                if (!$html) $value = ploopi_nl2br(ploopi_htmlentities($value));
                 if ($clean) $value = $this->clean_var($value);
                 $this->blockvars[$blockname][$k]['{'.$key.'}'] = $value;
             }
@@ -833,7 +833,7 @@ class odf_parser
                     $row['value'] = $this->add_image($row['value'], $row['width'], $row['height'], $row['align'], $row['anchortype']);
                 }
 
-                if (!$row['html']) $row['value'] = ploopi_nl2br(htmlentities($row['value']));
+                if (!$row['html']) $row['value'] = ploopi_nl2br(ploopi_htmlentities($row['value']));
                 if ($row['clean']) $row['value'] = $this->clean_var($row['value']);
 
                 $this->blockvars[$blockname][$k]['{'.$key.'}'] = $row['value'];

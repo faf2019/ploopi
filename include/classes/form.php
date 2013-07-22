@@ -378,9 +378,9 @@ class form_field extends form_element
         $strEvents = $this->generateEvents();
         $strProperties = $this->generateProperties();
         $strMaxLength = is_null($this->_arrOptions['maxlength']) || !is_numeric($this->_arrOptions['maxlength']) ? '' : " maxlength=\"{$this->_arrOptions['maxlength']}\"";
-        $strValue = htmlentities($this->_arrValues[0]);
+        $strValue = ploopi_htmlentities($this->_arrValues[0]);
 
-        $strPlaceHolder = $this->_arrOptions['placeholder'] != '' ? ' placeholder="'.htmlentities($this->_arrOptions['placeholder']).'"' : '';
+        $strPlaceHolder = $this->_arrOptions['placeholder'] != '' ? ' placeholder="'.ploopi_htmlentities($this->_arrOptions['placeholder']).'"' : '';
         switch($this->_strType)
         {
             case 'input:text':
@@ -438,7 +438,7 @@ class form_hidden extends form_field
         $strOutput = '';
 
         $strClass = is_null($this->_arrOptions['class']) ? '' : " {$this->_arrOptions['class']}";
-        $strValue = htmlentities($this->_arrValues[0]);
+        $strValue = ploopi_htmlentities($this->_arrValues[0]);
 
         $strOutput .= "<input type=\"hidden\" name=\"{$this->_strName}\" id=\"{$this->_strId}\" value=\"{$strValue}\"{$strClass} />";
 
@@ -461,8 +461,8 @@ class form_select_option extends form_element
     {
         $strId = is_null($this->_strId) ? '' : " id=\"{$this->_strId}\"";
         $strStyle = is_null($this->_arrOptions['style']) ? '' : " style=\"{$this->_arrOptions['style']}\"";
-        $strLabel = htmlentities($this->_strLabel);
-        $strValue = htmlentities($this->_arrValues[0]);
+        $strLabel = ploopi_htmlentities($this->_strLabel);
+        $strValue = ploopi_htmlentities($this->_arrValues[0]);
         $strSelected = $booSelected ? ' selected="selected"' : '';
 
         return "<option value=\"{$strValue}\"{$strId}{$strStyle}{$strSelected}>{$strLabel}</option>";
@@ -553,7 +553,7 @@ class form_select extends form_field
 
         foreach($arrValues as $mixKey => $mixValue)
         {
-            $mixKey = htmlentities($mixKey);
+            $mixKey = ploopi_htmlentities($mixKey);
             $booSelected = in_array($mixKey, $this->_arrSelected);
 
             if (is_object($mixValue) && $mixValue instanceof form_select_option)
@@ -566,7 +566,7 @@ class form_select extends form_field
                 {
                     if (isset($mixValue['label']))
                     {
-                        $strGroup = isset($mixValue['group']) ? htmlentities($mixValue['group']) : '';
+                        $strGroup = isset($mixValue['group']) ? ploopi_htmlentities($mixValue['group']) : '';
                         $mixValue = $mixValue['label'];
                     }
                     else
@@ -587,7 +587,7 @@ class form_select extends form_field
                 }
 
 
-                $mixValue = str_replace(' ', '&nbsp;', htmlentities($mixValue));
+                $mixValue = str_replace(' ', '&nbsp;', ploopi_htmlentities($mixValue));
 
                 $strSelected = $booSelected ? ' selected="selected"' : '';
                 $strOutput .= "<option value=\"{$mixKey}\"{$strSelected}>{$mixValue}</option>";
@@ -660,8 +660,8 @@ class form_checkbox_list extends form_field
         $intNumCheck = 0;
         foreach($arrValues = $this->_arrValues as $strKey => $strValue)
         {
-            $strValue = htmlentities($strValue);
-            $strKey = htmlentities($strKey);
+            $strValue = ploopi_htmlentities($strValue);
+            $strKey = ploopi_htmlentities($strKey);
 
             $strChecked = in_array($strKey, $this->arrSelected) ? ' checked="checked"' : '';
             $strOutput .= "<span class=\"checkbutton\"><input type=\"checkbox\" name=\"{$this->_strName}[]\" id=\"{$this->_strId}_{$intNumCheck}\" value=\"{$strKey}\" tabindex=\"{$intTabindex}\" {$strChecked}{$strProperties}{$strEvents}><label for=\"{$this->_strId}_{$intNumCheck}\">{$strValue}</label></span>";
@@ -712,7 +712,7 @@ class form_radio_list extends form_field
 
         parent::__construct('input:radio', $strLabel, $arrValues, $strName, $strId, is_null($arrOptions) ? self::$_arrDefaultOptions : array_merge(self::$_arrDefaultOptions, $arrOptions));
 
-        $this->_strSelected = htmlentities($strSelected);
+        $this->_strSelected = ploopi_htmlentities($strSelected);
     }
 
     /**
@@ -731,8 +731,8 @@ class form_radio_list extends form_field
         $intNumCheck = 0;
         foreach($arrValues = $this->_arrValues as $strKey => $strValue)
         {
-            $strValue = htmlentities($strValue);
-            $strKey = htmlentities($strKey);
+            $strValue = ploopi_htmlentities($strValue);
+            $strKey = ploopi_htmlentities($strKey);
 
             $strChecked = $strKey ==  $this->_strSelected ? ' checked="checked"' : '';
             $strOutput .= "<span class=\"checkbutton\"><input type=\"radio\" name=\"{$this->_strName}\" id=\"{$this->_strId}_{$intNumCheck}\" value=\"{$strKey}\" tabindex=\"{$intTabindex}\" {$strChecked}{$strProperties}{$strEvents}><label for=\"{$this->_strId}_{$intNumCheck}\">{$strValue}</label></span>";
@@ -788,7 +788,7 @@ class form_checkbox extends form_field
         $strEvents = $this->generateEvents();
         $strProperties = $this->generateProperties('onclick'.(is_null($this->_arrOptions['class']) ? '' : ' '.$this->_arrOptions['class']));
         $strChecked = $this->_booChecked ? ' checked="checked"' : '';
-        $strValue = htmlentities($this->_arrValues[0]);
+        $strValue = ploopi_htmlentities($this->_arrValues[0]);
 
         return $this->renderForm("<input type=\"checkbox\" name=\"{$this->_strName}\" id=\"{$this->_strId}\" value=\"{$strValue}\" title=\"{$this->_strLabel}\" tabindex=\"{$intTabindex}\" {$strChecked}{$strProperties}{$strEvents} />");
     }
@@ -837,7 +837,7 @@ class form_radio extends form_field
         $strEvents = $this->generateEvents();
         $strProperties = $this->generateProperties('radio'.(is_null($this->_arrOptions['class']) ? '' : ' '.$this->_arrOptions['class']));
         $strChecked = $this->_booChecked ? ' checked="checked"' : '';
-        $strValue = htmlentities($this->_arrValues[0]);
+        $strValue = ploopi_htmlentities($this->_arrValues[0]);
 
         return $this->renderForm("<input type=\"radio\" name=\"{$this->_strName}\" id=\"{$this->_strId}\" value=\"{$strValue}\" tabindex=\"{$intTabindex}\" {$strChecked}{$strProperties}{$strEvents} />");
     }
@@ -1034,7 +1034,7 @@ class form_datetime extends form_field
         $strProperties_S = $this->generateProperties(null, $this->_arrOptions['style_s']);
 
         $strMaxLength = is_null($this->_arrOptions['maxlength']) || !is_numeric($this->_arrOptions['maxlength']) ? '' : " maxlength=\"{$this->_arrOptions['maxlength']}\"";
-        $strDate = htmlentities($this->_arrValues['date']);
+        $strDate = ploopi_htmlentities($this->_arrValues['date']);
         list($strHour, $strMinute, $strSecond) = explode(':', $this->_arrValues['time']);
 
         $strOutput .= "<input type=\"text\" name=\"{$this->_strName}_date\" id=\"{$this->_strId}_date\" value=\"{$strDate}\" tabindex=\"{$intTabindex}\"{$strProperties}{$strMaxLength}{$strEvents} />";
@@ -1122,7 +1122,7 @@ class form_button extends form_element
 
         $strEvents = $this->generateEvents();
         $strProperties = $this->generateProperties();
-        $strValue = htmlentities($this->_arrValues[0]);
+        $strValue = ploopi_htmlentities($this->_arrValues[0]);
 
         switch($this->_strType)
         {

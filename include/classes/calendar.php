@@ -638,7 +638,7 @@ class calendar
                                             $intEventHeight = floor($floTimeLength * $intHourHeight);
             
                                             ?>
-                                            <div class="event" id="calendar_event<? echo $intId; ?>" style="top:<?php echo $intEventTop; ?>px;height:<?php echo $intEventHeight - 1; ?>px;width:<?php echo $intChannelWidth; ?>px;background-color:<?php echo htmlentities($this->arrEvents[$intId]->strColor); ?>;">
+                                            <div class="event" id="calendar_event<? echo $intId; ?>" style="top:<?php echo $intEventTop; ?>px;height:<?php echo $intEventHeight - 1; ?>px;width:<?php echo $intChannelWidth; ?>px;background-color:<?php echo ploopi_htmlentities($this->arrEvents[$intId]->strColor); ?>;">
                                                 
                                                 <div class="event_title" id="calendar_event<? echo $intId; ?>_handle"  style="overflow:hidden;height:16px;line-height:16px;<? echo !is_null($this->arrEvents[$intId]->arrOnDrop) ? 'cursor:move;' : ''; ?>">
                                                     <?
@@ -984,7 +984,7 @@ class calendar
                     $arrDateEnd = ploopi_timestamp2local($this->arrEvents[$intId]->intTimestpEnd);
                     ?>
                     <a class="event" href="<?php echo $this->arrEvents[$intId]->strHref; ?>" <?php if (!is_null($this->arrEvents[$intId]->strOnClick)) {?>onclick="<?php echo $this->arrEvents[$intId]->strOnClick; ?>"<?php } ?>>
-                        <div class="event_inner" style="background-color:<?php echo htmlentities($this->arrEvents[$intId]->strColor); ?>;" <?php if (!empty($this->arrEvents[$intId]->strStyle)) {?>style="<?php echo $this->arrEvents[$intId]->strStyle; ?>"<?php } ?>>
+                        <div class="event_inner" style="background-color:<?php echo ploopi_htmlentities($this->arrEvents[$intId]->strColor); ?>;" <?php if (!empty($this->arrEvents[$intId]->strStyle)) {?>style="<?php echo $this->arrEvents[$intId]->strStyle; ?>"<?php } ?>>
                             <?php
                             echo str_replace(
                                 array('<date_begin>', '<date_end>', '<time_begin>', '<time_end>'),

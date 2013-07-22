@@ -235,7 +235,7 @@ if ($_SESSION['ploopi']['connected'])
         'USER_LASTNAME'         => $_SESSION['ploopi']['user']['lastname'],
         'USER_EMAIL'            => $_SESSION['ploopi']['user']['email'],
 
-        'USER_WORKSPACE_LABEL'  => htmlentities(_PLOOPI_LABEL_MYWORKSPACE),
+        'USER_WORKSPACE_LABEL'  => ploopi_htmlentities(_PLOOPI_LABEL_MYWORKSPACE),
         'USER_WORKSPACE_URL'    => ploopi_urlencode("admin.php", _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
         'USER_WORKSPACE_SEL'    => ($_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_MYWORKSPACE) ? 'selected' : '',
 
@@ -259,7 +259,7 @@ if ($_SESSION['ploopi']['connected'])
         'MAINMENU_SHOWTICKETS_SEL'      => ($_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_MYWORKSPACE && !empty($_REQUEST['op']) && $_REQUEST['op'] == 'actions') ? 'selected' : '',
         'MAINMENU_SHOWSEARCH_SEL'       => ($_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_WORKSPACES) ? 'selected' : '',
 
-        'SEARCH_KEYWORDS'               => (!empty($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords'])) ? htmlentities($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords']) : '',
+        'SEARCH_KEYWORDS'               => (!empty($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords'])) ? ploopi_htmlentities($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords']) : '',
 
         'NEWTICKETS'                => $newtickets,
         'LAST_NEWTICKET'            => $lastticket,
@@ -318,14 +318,14 @@ $wsp = ploopi_loader::getworkspace();
 $template_body->assign_vars(array(
     'TEMPLATE_PATH'                 => $_SESSION['ploopi']['template_path'],
     'TEMPLATE_NAME'                 => $_SESSION['ploopi']['template_name'],
-    'WORKSPACE_LABEL'               => $_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_MYWORKSPACE ? htmlentities(_PLOOPI_LABEL_MYWORKSPACE) : htmlentities($wsp['label']),
-    'WORKSPACE_CODE'                => htmlentities($wsp['code']),
-    'WORKSPACE_TITLE'               => htmlentities($wsp['title']),
-    'WORKSPACE_META_DESCRIPTION'    => htmlentities($wsp['meta_description']),
-    'WORKSPACE_META_KEYWORDS'       => htmlentities($wsp['meta_keywords']),
-    'WORKSPACE_META_AUTHOR'         => htmlentities($wsp['meta_author']),
-    'WORKSPACE_META_COPYRIGHT'      => htmlentities($wsp['meta_copyright']),
-    'WORKSPACE_META_ROBOTS'         => htmlentities($wsp['meta_robots']),
+    'WORKSPACE_LABEL'               => $_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_MYWORKSPACE ? ploopi_htmlentities(_PLOOPI_LABEL_MYWORKSPACE) : ploopi_htmlentities($wsp['label']),
+    'WORKSPACE_CODE'                => ploopi_htmlentities($wsp['code']),
+    'WORKSPACE_TITLE'               => ploopi_htmlentities($wsp['title']),
+    'WORKSPACE_META_DESCRIPTION'    => ploopi_htmlentities($wsp['meta_description']),
+    'WORKSPACE_META_KEYWORDS'       => ploopi_htmlentities($wsp['meta_keywords']),
+    'WORKSPACE_META_AUTHOR'         => ploopi_htmlentities($wsp['meta_author']),
+    'WORKSPACE_META_COPYRIGHT'      => ploopi_htmlentities($wsp['meta_copyright']),
+    'WORKSPACE_META_ROBOTS'         => ploopi_htmlentities($wsp['meta_robots']),
     'SITE_CONNECTEDUSERS'           => $_SESSION['ploopi']['connectedusers'],
     'SITE_ANONYMOUSUSERS'           => $_SESSION['ploopi']['anonymoususers'],
     'ADDITIONAL_JAVASCRIPT'         => $ploopi_additional_javascript,

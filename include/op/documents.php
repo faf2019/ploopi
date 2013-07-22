@@ -218,7 +218,7 @@ switch($ploopi_op)
             <div class="documents_formcontent">
                 <p>
                     <label>Libellé:</label>
-                    <input type="text" class="text" name="documentsfolder_name" value="<?php echo htmlentities($documentsfolder->fields['name']); ?>">
+                    <input type="text" class="text" name="documentsfolder_name" value="<?php echo ploopi_htmlentities($documentsfolder->fields['name']); ?>">
                 </p>
                 <p>
                     <label>Description:</label>
@@ -379,7 +379,7 @@ switch($ploopi_op)
                     ?>
                     <p>
                         <label>Nom du Fichier:</label>
-                        <input type="input" class="text" name="documentsfile_name" value="<?php echo htmlentities($documentsfile->fields['name']); ?>" tabindex="2">
+                        <input type="input" class="text" name="documentsfile_name" value="<?php echo ploopi_htmlentities($documentsfile->fields['name']); ?>" tabindex="2">
                     </p>
                     <p>
                         <label>Nouveau Fichier:</label>
@@ -391,7 +391,7 @@ switch($ploopi_op)
                         <?php
                         foreach(ploopi_documents_listfolders($_SESSION['documents'][$_GET['documents_id']]['id_object'], $_SESSION['documents'][$_GET['documents_id']]['id_record'], $_SESSION['documents'][$_GET['documents_id']]['id_module']) as $row) {
                             ?>
-                            <option value="<?php echo $row['id']; ?>" <?php if ($row['id'] == $documentsfile->fields['id_folder']) echo 'selected="selected"'; ?>><?php echo htmlentities($row['name']); ?></option>
+                            <option value="<?php echo $row['id']; ?>" <?php if ($row['id'] == $documentsfile->fields['id_folder']) echo 'selected="selected"'; ?>><?php echo ploopi_htmlentities($row['name']); ?></option>
                             <?
                         }
                         ?>
@@ -402,11 +402,11 @@ switch($ploopi_op)
                 ?>
                 <p>
                     <label>Libellé:</label>
-                    <input class="text" name="documentsfile_label" value="<?php echo htmlentities($documentsfile->fields['label']); ?>" tabindex="3" style="width:250px;">
+                    <input class="text" name="documentsfile_label" value="<?php echo ploopi_htmlentities($documentsfile->fields['label']); ?>" tabindex="3" style="width:250px;">
                 </p>
                 <p>
                     <label>Référence:</label>
-                    <input class="text" name="documentsfile_ref" value="<?php echo htmlentities($documentsfile->fields['ref']); ?>" tabindex="4" style="width:250px;">
+                    <input class="text" name="documentsfile_ref" value="<?php echo ploopi_htmlentities($documentsfile->fields['ref']); ?>" tabindex="4" style="width:250px;">
                 </p>
                 <p>
                     <label>Date:</label>

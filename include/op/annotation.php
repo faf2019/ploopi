@@ -86,7 +86,7 @@ switch($ploopi_op)
                 <div class="ploopi_annotation_row_<?php echo $numrow = (!isset($numrow) || $numrow == 2) ? 1 : 2; ?>" style="padding:4px;">
                     <div style="float:right;"><?php echo "le {$ld['date']} à {$ld['time']}"; ?></div>
                     <div style="font-weight:bold;"><?php echo "{$fields['title']}"; ?></div>
-                    <div style="clear:both;padding-top:4px;"><?php echo ploopi_make_links(ploopi_nl2br(htmlentities($fields['content']))); ?></div>
+                    <div style="clear:both;padding-top:4px;"><?php echo ploopi_make_links(ploopi_nl2br(ploopi_htmlentities($fields['content']))); ?></div>
                     <?php
                     if ($fields['id_record'] != '')
                     {

@@ -77,19 +77,19 @@ switch($ploopi_op)
             if (isset($_GET['ploopi_tickets_id_object']))
             {
                 ?>
-                <input type="hidden" name="ploopi_tickets_id_object" value="<?php echo htmlentities($_GET['ploopi_tickets_id_object']); ?>">
+                <input type="hidden" name="ploopi_tickets_id_object" value="<?php echo ploopi_htmlentities($_GET['ploopi_tickets_id_object']); ?>">
                 <?php
             }
             if (isset($_GET['ploopi_tickets_id_record']))
             {
                 ?>
-                <input type="hidden" name="ploopi_tickets_id_record" value="<?php echo htmlentities($_GET['ploopi_tickets_id_record']); ?>">
+                <input type="hidden" name="ploopi_tickets_id_record" value="<?php echo ploopi_htmlentities($_GET['ploopi_tickets_id_record']); ?>">
                 <?php
             }
             if (isset($_GET['ploopi_tickets_object_label']))
             {
                 ?>
-                <input type="hidden" name="ploopi_tickets_object_label" value="<?php echo htmlentities($_GET['ploopi_tickets_object_label']); ?>">
+                <input type="hidden" name="ploopi_tickets_object_label" value="<?php echo ploopi_htmlentities($_GET['ploopi_tickets_object_label']); ?>">
                 <?php
             }
             ?>
@@ -111,7 +111,7 @@ switch($ploopi_op)
             if (isset($_GET['ploopi_tickets_object_label']))
             {
                 ?>
-                <div><b><?php echo _PLOOPI_LABEL_TICKET_LINKEDOBJECT; ?></b>: <?php echo htmlentities($_GET['ploopi_tickets_object_label']); ?></div>
+                <div><b><?php echo _PLOOPI_LABEL_TICKET_LINKEDOBJECT; ?></b>: <?php echo ploopi_htmlentities($_GET['ploopi_tickets_object_label']); ?></div>
                 <?php
             }
             ?>
@@ -197,7 +197,7 @@ switch($ploopi_op)
                 ?>
 
                 <div style="font-weight:bold;"><?php echo _PLOOPI_LABEL_TICKET_TITLE; ?></div>
-                <div><input type="text" name="ticket_title" class="text" value="<?php echo htmlentities($ticket->fields['title']); ?>" style="width:98%"></div>
+                <div><input type="text" name="ticket_title" class="text" value="<?php echo ploopi_htmlentities($ticket->fields['title']); ?>" style="width:98%"></div>
                 <div style="font-weight:bold;"><?php echo _PLOOPI_LABEL_TICKET_MESSAGE; ?></div>
                 <div>
                     <?php

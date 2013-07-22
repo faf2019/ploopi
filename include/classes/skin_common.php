@@ -186,7 +186,7 @@ class skin_common
 
         $title = $icon['title'];
 
-        $strHrefTitle = htmlentities(strip_tags($title));
+        $strHrefTitle = ploopi_htmlentities(strip_tags($title));
 
         if (!empty($icon['javascript'])) $onclick = $icon['javascript'];
         elseif ($confirm) $onclick = "ploopi_confirmlink('".ploopi_urlencode($icon['url'])."','{$icon['confirm']}')";
@@ -255,7 +255,7 @@ class skin_common
         if (!empty($tab['width'])) $style = "style=\"width:{$tab['width']}px;\"";
         else $style = '';
 
-        $strHrefTitle = htmlentities(strip_tags($tab['title']));
+        $strHrefTitle = ploopi_htmlentities(strip_tags($tab['title']));
 
         if ($sel) $res = "<a href=\"".ploopi_urlencode($tab['url'])."\" title=\"Accéder à l'onglet &laquo; {$strHrefTitle} &raquo;\"  class=\"selected\" {$style}>{$tab['title']}</a>";
         else  $res = "<a href=\"".ploopi_urlencode($tab['url'])."\" title=\"Accéder à l'onglet &laquo; {$strHrefTitle} &raquo;\"  {$style}>{$tab['title']}</a>";
@@ -779,7 +779,7 @@ class skin_common
                             if (!empty($v['link']) || !empty($v['onclick']))
                             {
                                 $onclick = (empty($v['onclick'])) ? '' : "onclick=\"{$v['onclick']}\"";
-                                $title = (empty($v['description'])) ? '' : 'title="'.htmlentities($v['description']).'"';
+                                $title = (empty($v['description'])) ? '' : 'title="'.ploopi_htmlentities($v['description']).'"';
                                 ?>
                                 <a class="ploopi_explorer_link" href="<?php echo $v['link']; ?>" <?php echo $title ; ?> <?php echo $onclick ; ?> <?php echo $option; ?>>
                                 <?php
@@ -983,7 +983,7 @@ class skin_common
         // Démarrage bufferisation
         ob_start();
         ?>
-        <input type="hidden" name="<?php echo $name; ?>" id="<?php echo $id; ?>" value="<?php if (!empty($selecteditem)) echo htmlentities($selecteditem); ?>" <?php if (!empty($arrOptions['onchange'])) echo 'onchange="javascript:'.$arrOptions['onchange'].'";'; ?>/>
+        <input type="hidden" name="<?php echo $name; ?>" id="<?php echo $id; ?>" value="<?php if (!empty($selecteditem)) echo ploopi_htmlentities($selecteditem); ?>" <?php if (!empty($arrOptions['onchange'])) echo 'onchange="javascript:'.$arrOptions['onchange'].'";'; ?>/>
 
         <div class="ploopi_selectbox" style="display:inline-block;<?php if (!empty($arrOptions['input_width'])) echo "width:{$arrOptions['input_width']};"; ?>">
             <div class="ploopi_selectbox_button" id="ploopi_selectbox_button<?php echo $id; ?>" onclick="javascript:$('ploopi_selectbox_list<?php echo $id; ?>').style.display='block';">
@@ -1022,7 +1022,7 @@ class skin_common
                             case 'select':
                                 ?>
                                 <li>
-                                    <a href="javascript:void(0);" <?php if (!empty($menu['onclick'])) echo 'onclick="javascript:'.$menu['onclick'].'"'; ?> onclick="javascript:$('ploopi_selectbox_button_content<?php echo $id; ?>').innerHTML = this.innerHTML; $('<?php echo $id; ?>').value = '<?php echo addslashes($key); ?>'; ploopi_dispatch_onchange('<?php echo $id; ?>');return false;" title="Accéder à <?php echo htmlentities($menu['label']); ?>">
+                                    <a href="javascript:void(0);" <?php if (!empty($menu['onclick'])) echo 'onclick="javascript:'.$menu['onclick'].'"'; ?> onclick="javascript:$('ploopi_selectbox_button_content<?php echo $id; ?>').innerHTML = this.innerHTML; $('<?php echo $id; ?>').value = '<?php echo addslashes($key); ?>'; ploopi_dispatch_onchange('<?php echo $id; ?>');return false;" title="Accéder à <?php echo ploopi_htmlentities($menu['label']); ?>">
                                         <?php
                                         if (!empty($menu['icon']))
                                         {
@@ -1040,7 +1040,7 @@ class skin_common
                             case 'link':
                                 ?>
                                 <li>
-                                    <a href="<?php echo $menu['link']; ?>" <?php if (!empty($menu['onclick'])) echo 'onclick="javascript:'.$menu['onclick'].'"'; ?> <?php if (!empty($menu['target'])) echo 'target="'.$menu['target'].'"'; ?> title="Accéder à <?php echo htmlentities($menu['label']); ?>">
+                                    <a href="<?php echo $menu['link']; ?>" <?php if (!empty($menu['onclick'])) echo 'onclick="javascript:'.$menu['onclick'].'"'; ?> <?php if (!empty($menu['target'])) echo 'target="'.$menu['target'].'"'; ?> title="Accéder à <?php echo ploopi_htmlentities($menu['label']); ?>">
                                         <?php
                                         if (!empty($menu['icon']))
                                         {
