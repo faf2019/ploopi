@@ -54,6 +54,7 @@ class dbreport_queryfield extends data_object
     public function __construct()
     {
         parent::__construct('ploopi_mod_dbreport_queryfield');
+        $this->fields['position'] = 0;
         $this->fields['operation'] = 'groupby';
         $this->_intOriginalPosition = 0;
     }
