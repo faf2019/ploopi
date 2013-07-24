@@ -3,7 +3,6 @@
 ploopi_init_module('dbreport',false, false, false);
 
 include_once './modules/dbreport/classes/class_dbreport_query.php';
-include_once './modules/dbreport/classes/class_dbreport_chart.php';
 
 $objDbrQuery = new dbreport_query();
 if (!isset($_GET['dbreport_query_id']) || !is_numeric($_GET['dbreport_query_id']) || !$objDbrQuery->open($_GET['dbreport_query_id'])) ploopi_die();
