@@ -257,11 +257,10 @@ function ploopi_xmlentities($str, $utf8 = false, $extended = true)
  
 function ploopi_htmlentities($str, $flags = null, $encoding = 'ISO-8859-1') 
 {
-    if (is_null($flags)) $flags = ENT_COMPAT | ENT_HTML401;
+    if (is_null($flags)) $flags = version_compare(phpversion(), '5.4', '<') ? ENT_COMPAT : ENT_COMPAT | ENT_HTML401;
     
     return htmlentities($str, $flags, $encoding);
 }
-
 
 /**
  * Encode une chaîne en UTF8
