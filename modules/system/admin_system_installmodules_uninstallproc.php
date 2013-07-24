@@ -56,7 +56,7 @@ if ($module_type->open($_GET['uninstallidmoduletype']))
     }
 
     // DELETE TABLES
-    $select = "SELECT * FROM ploopi_mb_table WHERE id_module_type = $uninstallidmoduletype";
+    $select = "SELECT * FROM ploopi_mb_table WHERE id_module_type = {$_GET['uninstallidmoduletype']}";
     $rs = $db->query($select);
     while ($fields = $db->fetchrow($rs))
     {

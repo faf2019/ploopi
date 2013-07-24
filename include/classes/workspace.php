@@ -544,12 +544,12 @@ class module_workspace extends data_object
 
         $workspaceid = $this->fields['id_workspace'];
 
-        $select =   "
-                    SELECT  min(position) as minpos,
-                            max(position) as maxpos
-                    FROM    ploopi_module_workspace
-                    WHERE   id_group = {$workspaceid}
-                    ";
+        $select = "
+            SELECT  min(position) as minpos,
+                    max(position) as maxpos
+            FROM    ploopi_module_workspace
+            WHERE   id_workspace = {$workspaceid}
+        ";
 
         $result = $db->query($select);
         $fields = $db->fetchrow($result);
