@@ -1,3 +1,11 @@
+== Module DBREPORT - version 2.0.0e ====================================================
+
+2013-07-25  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Ajout de fonctions de groupement pour les champs de requêtes (variance, écart type)
+* Correction d'un bug lors du clônage d'une requête
+* Correction d'un bug lors de la définition de l'alias par défaut d'un champ lors de la génération SQL de la requête
+
 == Module DBREPORT - version 2.0.0d ====================================================
 
 2013-07-24  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

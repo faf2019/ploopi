@@ -523,7 +523,7 @@ class dbreport_query extends data_object
 
         $objQueryIns = new ploopi_query_insert();
         $objQueryIns->set_table("ploopi_mod_dbreport_querytable");
-        $objQueryIns->add_raw($objQuerySel->get_sql());
+        $objQueryIns->add_raw(" ".$objQuerySel->get_sql());
         $objQueryIns->execute();
 
         // Clonage de la relation avec "ploopi_mod_dbreport_queryfield"
@@ -558,7 +558,7 @@ class dbreport_query extends data_object
 
         $objQueryIns = new ploopi_query_insert();
         $objQueryIns->set_table("ploopi_mod_dbreport_queryrelation");
-        $objQueryIns->add_raw($objQuerySel->get_sql());
+        $objQueryIns->add_raw(" ".$objQuerySel->get_sql());
         $objQueryIns->execute();
 
         // Clonage de la relation avec "ploopi_mod_dbreport_query_module_type"
@@ -569,7 +569,7 @@ class dbreport_query extends data_object
 
         $objQueryIns = new ploopi_query_insert();
         $objQueryIns->set_table("ploopi_mod_dbreport_query_module_type");
-        $objQueryIns->add_raw($objQuerySel->get_sql());
+        $objQueryIns->add_raw(" ".$objQuerySel->get_sql());
         $objQueryIns->execute();
     }
 
@@ -629,7 +629,7 @@ class dbreport_query extends data_object
             //if ($row['type'] == 'date') $strQueryField = "CONCAT(SUBSTRING($strQueryField,9,2),'/',SUBSTRING($strQueryField,6,2),'/',SUBSTRING($strQueryField,1,4))";
             if ($row['function'] != '')  $strQueryField = str_replace('%', $strQueryField, $row['function']);
 
-            $strDefaultLabel = "`{$row['tablename']}`.`{$row['fieldname']}`";
+            $strDefaultLabel = "{$row['tablename']}_{$row['fieldname']}";
 
             /**
              * Construction de la clause SELECT

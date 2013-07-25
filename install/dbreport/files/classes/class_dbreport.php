@@ -45,12 +45,16 @@ abstract class dbreport {
     // Liste des opérations
     private static $_arrOperations = array(
         'groupby' => 'Regroupement',
+        'intervals' => 'Regroupement par Intervalles',
         'sum' => 'Somme',
         'avg' => 'Moyenne',
         'min' => 'Min',
         'max' => 'Max',
         'count' => 'Compte',
-        'intervals' => 'Regroupement par Intervalles'
+        'stddev_pop' => 'Ecart type de la population',
+        'stddev_samp' => "Ecart type de l'échantillon",
+        'var_pop' => 'Variance de la population',
+        'var_samp' => "Variance de l'échantillon"
     );
 
     // Liste des ordres de tri
