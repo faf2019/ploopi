@@ -36,6 +36,7 @@
  */
 
 ploopi_init_module('doc');
+global $foldertypes;
 
 include_once './modules/doc/class_docfile.php';
 include_once './modules/doc/class_docfolder.php';

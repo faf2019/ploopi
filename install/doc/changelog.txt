@@ -1,3 +1,9 @@
+== Module DOC - version 4.7.1e ====================================================
+
+2013-07-25  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Correction d'un notice
+
 == Module DOC - version 4.7.1d ====================================================
 
 2013-07-22  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
@@ -692,4 +698,3 @@
  * Correction de plusieurs bugs lors de la création et la publication d'un dossier non vide
  * Correction d'un bug concernant l'action "Créer un Fichier" (non prise en compte)
  * Intégration d'AJAX pour fluidifier l'interface
-
