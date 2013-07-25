@@ -115,6 +115,11 @@ if (ploopi_ismoduleallowed('dbreport'))
                 if (isset($arrActiveModuleTypes[$row['id']])) $objPanel->addField( new form_hidden($row['id'], '_dbreport_query_id_module_type[]') );
             }
 
+            // Panel "Requête"
+
+            $objForm->addPanel($objPanel = new form_panel('dbreport_panel_query', 'Requête', array('style' => 'margin:0 4px;')));
+            $objPanel->addField( new form_field('input:text', 'Nombre de lignes max:', $objDbrQuery->fields['rowlimit'], 'dbreport_query_rowlimit') );
+
             // Panel "WebService" (modification uniquement)
             if (!$objDbrQuery->isnew())
             {

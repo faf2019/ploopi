@@ -299,7 +299,7 @@ if (isset($_GET['dbreport_query_id']) && is_numeric($_GET['dbreport_query_id']) 
         $arrColumns['right']['function'] =
             array(
                 'label' => 'Fonction',
-                'width' => 130,
+                'width' => 150,
             );
 
         $arrColumns['actions_right']['actions'] =
@@ -350,11 +350,15 @@ if (isset($_GET['dbreport_query_id']) && is_numeric($_GET['dbreport_query_id']) 
             $strStyle = '';
             if (!$booIndex && ($strCriteria != '' || $strOr != '')) $strStyle = 'color:red;';
 
+            $arrFunctions = array();
+            if (trim($row['function']) != '') $arrFunctions[] = $row['function'];
+            if (trim($row['function_group']) != '') $arrFunctions[] = $row['function_group'];
+
             $arrValues[] = array(
                 'values' => array(
                     'field' => array('label' => "[{$row['mt_label']}] {$row['table_name']}.{$row['field_name']} : <strong>{$row['label']}</strong>". (isset($arrLabels[$row['label']]) ? "<em style=\"color:#a60000;\">&nbsp;(Doublon d'intitulé)</em>" : '') ."<br /><em style=\"color:#888;\">".dbreport::getType(dbreport::getBasicType($row['type'])).'</em>'.$strIndex, 'style' => $strStyle),
                     'label' => array('label' => isset($arrLabels[$row['label']]) ? "<em style=\"color:#a60000;\">{$row['label']} (Doublon d'intitulé)</em>" : $row['label']),
-                    'function' => array('label' => $row['function']),
+                    'function' => array('label' => implode('<br />', $arrFunctions)),
                     'operation' => array('label' => dbreport::getOperation($row['operation'])),
                     'sort' => array('label' => dbreport::getSort($row['sort'])),
                     'visible' => array('label' => $row['visible'] ? 'Oui' : 'Non'),

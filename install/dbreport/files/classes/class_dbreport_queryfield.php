@@ -54,7 +54,7 @@ class dbreport_queryfield extends data_object
     public function __construct()
     {
         parent::__construct('ploopi_mod_dbreport_queryfield');
-        $this->fields['position'] = 0;
+        $this->fields['position'] = '';
         $this->fields['operation'] = 'groupby';
         $this->_intOriginalPosition = 0;
     }
@@ -96,7 +96,7 @@ class dbreport_queryfield extends data_object
         // Traitement de la position
 
         // Contrôle de validité de la position (min/max)
-        if (is_numeric($this->fields['position']) && $this->fields['position'] < 1) $this->fields['position'] = 1;
+        if (is_numeric($this->fields['position']) && $this->fields['position'] < 1 && !$booIsNew) $this->fields['position'] = 1;
         else
         {
             $objQuery = new ploopi_query_select();

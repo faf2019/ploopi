@@ -508,7 +508,7 @@ class dbreport_query extends data_object
         // Personnalisation du clone
         $this->new = true;
         $this->fields['label'] = 'Clone de '.$this->fields['label'];
-        $this->fields['ws_id'] = 'clone_de_'.$this->fields['ws_id'];
+        $this->fields['ws_id'] = $this->fields['ws_id'] != '' ? 'clone_de_'.$this->fields['ws_id'] : '';
         $this->fields['locked'] = 0;
         $this->fields['id'] = null;
 
@@ -626,7 +626,7 @@ class dbreport_query extends data_object
 
             // Nom du champ dans la requête (init)
             $strQueryField = "`{$row['tablename']}`.`{$row['fieldname']}`";
-            //if ($row['type'] == 'date') $strQueryField = "CONCAT(SUBSTRING($strQueryField,9,2),'/',SUBSTRING($strQueryField,6,2),'/',SUBSTRING($strQueryField,1,4))";
+
             if ($row['function'] != '')  $strQueryField = str_replace('%', $strQueryField, $row['function']);
 
             $strDefaultLabel = "{$row['tablename']}_{$row['fieldname']}";
@@ -748,6 +748,15 @@ class dbreport_query extends data_object
                         $this->objQuery->add_orderby(($row['label']) ? "`{$row['label']}`" : "`{$strDefaultLabel}`");
                     break;
 
+                    case 'count_distinct':
+                        $strOpName = 'COUNT';
+
+                        // /!\ On change le label par défaut en incluant le nom de l'opération
+                        $strDefaultLabel = dbreport::getOperation($row['operation'])." de {$strDefaultLabel}";
+
+                        $strSqlSelect .= "{$strOpName}(DISTINCT {$strQueryField})";
+                    break;
+
                     default: // AUTRES OPERATIONS
                         $strOpName = strtoupper($row['operation']);
 
@@ -755,12 +764,13 @@ class dbreport_query extends data_object
                         $strDefaultLabel = dbreport::getOperation($row['operation'])." de {$strDefaultLabel}";
 
                         $strSqlSelect .= "{$strOpName}({$strQueryField})";
-
                     break;
                 }
 
                 $row['query_label'] = $strLabel = ($row['label']) ? $row['label'] : $strDefaultLabel;
                 $this->arrFields[$row['id']] = $row;
+
+                if ($row['function_group'] != '')  $strSqlSelect = str_replace('%', $strSqlSelect, $row['function_group']);
 
                 // On ajoute la clause SELECT
                 $this->objQuery->add_select("{$strSqlSelect} AS `{$strLabel}`", $arrSelectParams);
@@ -773,6 +783,7 @@ class dbreport_query extends data_object
                 }
             }
             else {
+                if ($row['function_group'] != '')  $strQueryField = str_replace('%', $strQueryField, $row['function_group']);
 
                 // Gestion du tri pour un champ non visible
                 if ($row['sort'] != '') $this->objQuery->add_orderby($strQueryField.' '.strtoupper($row['sort']));
@@ -1076,6 +1087,7 @@ class dbreport_query extends data_object
             }
         }
 
+        if ($this->fields['rowlimit']) $this->objQuery->add_limit("0, {$this->fields['rowlimit']}");
 
         $this->strSqlQuery = $this->objQuery->get_sql();
 
@@ -1822,7 +1834,7 @@ class dbreport_query extends data_object
                 },
                 tooltip: {
                     <? if ($this->fields['chart_tooltip_format'] != '') { ?>
-                    pointFormat: '<? echo addslashes($this->fields['chart_tooltip_format']); ?>',
+                    pointFormat: '<? echo utf8_encode(addslashes($this->fields['chart_tooltip_format'])); ?>',
                     <? } ?>
                     shared: true,
                 },
@@ -1902,7 +1914,7 @@ class dbreport_query extends data_object
                             color: '<? echo $this->fields['chart_axis_font_color']; ?>',
                         },
                         formatter: function() {
-                            return '<? echo $this->fields['chart_value_x_prefix']; ?>' + this.value + '<? echo $this->fields['chart_value_x_suffix']; ?>';
+                            return '<? echo utf8_encode($this->fields['chart_value_x_prefix']); ?>' + this.value + '<? echo utf8_encode($this->fields['chart_value_x_suffix']); ?>';
                         }
 
                     },
@@ -1933,7 +1945,7 @@ class dbreport_query extends data_object
                             color: '<? echo $this->fields['chart_axis_font_color']; ?>',
                         },
                         formatter: function() {
-                            return '<? echo $this->fields['chart_value_y_prefix']; ?>' + this.value + '<? echo $this->fields['chart_value_y_suffix']; ?>';
+                            return '<? echo utf8_encode($this->fields['chart_value_y_prefix']); ?>' + this.value + '<? echo utf8_encode($this->fields['chart_value_y_suffix']); ?>';
                         }
                     },
                     <? if ($this->fields['chart_interlaced_display']) { ?>

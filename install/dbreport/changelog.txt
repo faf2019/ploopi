@@ -1,3 +1,12 @@
+== Module DBREPORT - version 2.0.1 ====================================================
+
+2013-07-25  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Ajout de la fonction de groupement "COUNT(DISTINCT)"
+* Ajout d'une limite de lignes par résultat (paramétrable)
+* Correction d'un bug d'encodage lors de la génération des graphiques (légendes, formats)
+* Ajout d'un paramètre permettant d'appliquer une fonction après groupement (en + de avant)
+
 == Module DBREPORT - version 2.0.0e ====================================================
 
 2013-07-25  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
