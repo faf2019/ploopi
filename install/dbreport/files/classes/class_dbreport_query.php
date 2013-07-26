@@ -1049,6 +1049,7 @@ class dbreport_query extends data_object
         $objQuery = new ploopi_query_select();
         $objQuery->add_from('ploopi_mod_dbreport_querytable');
         $objQuery->add_where('id_query = %d', $this->fields['id']);
+        $objQuery->add_orderby('id');
         $objRs = $objQuery->execute();
 
         $arrTables = array();
@@ -1067,23 +1068,32 @@ class dbreport_query extends data_object
 
         while ($row = $objRs->fetchrow())
         {
-            $arrTables[$row['tablename_src']] = 1;
-            $arrTables[$row['tablename_dest']] = 1;
             // Stockage des jointures suivant l'origine
-            $arrJoins[$row['tablename_src']][] = "`{$row['tablename_src']}`.`{$row['fieldname_src']}` = `{$row['tablename_dest']}`.`{$row['fieldname_dest']}`";
-            $arrJoins[$row['tablename_dest']][] = "`{$row['tablename_dest']}`.`{$row['fieldname_dest']}` = `{$row['tablename_src']}`.`{$row['fieldname_src']}`";
+            $arrJoins[$row['tablename_src']][$row['tablename_dest']][] = "`{$row['tablename_src']}`.`{$row['fieldname_src']}` = `{$row['tablename_dest']}`.`{$row['fieldname_dest']}`";
+            $arrJoins[$row['tablename_dest']][$row['tablename_src']][] = "`{$row['tablename_dest']}`.`{$row['fieldname_dest']}` = `{$row['tablename_src']}`.`{$row['fieldname_src']}`";
         }
 
         if (!empty($arrTables)) {
             // Table principale
             $this->objQuery->add_from("`".key($arrTables)."`");
 
-            // Jointures INNER
+            // Tables "connues" au moment d'ajouter une jointure
+            $arrKnownTables = array();
+            $arrKnownTables[] = key($arrTables);
+
+            // On parcourt les autres tables pour créer des jointures INNER
             while (next($arrTables) !== false) {
                 $strTable = key($arrTables);
-                if (!empty($arrJoins[$strTable])) {
-                    $this->objQuery->add_innerjoin("`{$strTable}` ON ".implode(' AND ', $arrJoins[$strTable]));
+
+                // Recherche des jointures entre la table courante et les tables connues
+                foreach($arrKnownTables as $strKnownTable) {
+                    if (!empty($arrJoins[$strTable][$strKnownTable])) {
+                        $this->objQuery->add_innerjoin("`{$strTable}` ON ".implode(' AND ', $arrJoins[$strTable][$strKnownTable]));
+                    }
                 }
+
+                // Une nouvelle table connue !
+                $arrKnownTables[] = $strTable;
             }
         }
 

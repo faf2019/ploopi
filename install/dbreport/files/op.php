@@ -306,11 +306,6 @@ if (ploopi_ismoduleallowed('dbreport'))
                         $objDbrQueryField->fields['id_query'] = $_GET['dbreport_query_id'];
                         $objDbrQueryField->fields['visible'] = 1;
                         $objDbrQueryField->save();
-
-                        $objDbrQueryTable = new dbreport_querytable();
-                        $objDbrQueryTable->fields['tablename'] = $strTableName;
-                        $objDbrQueryTable->fields['id_query'] = $_GET['dbreport_query_id'];
-                        $objDbrQueryTable->save();
                     }
                 }
                 else
