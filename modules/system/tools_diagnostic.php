@@ -147,7 +147,7 @@ if ($testpear)
     {
         ploopi_unset_error_handler();
         require_once 'PEAR/Info.php';
-        $packPEAR = new PEAR_Info(); // Class PEAR_Info for test if modules pear are installed
+        $packPEAR = new PEAR_Info(_PLOOPI_PEARPATH); // Class PEAR_Info for test if modules pear are installed
         ploopi_set_error_handler();
 
         $arrPearClasses = array(
