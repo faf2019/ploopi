@@ -875,7 +875,9 @@ function ploopi_logout($intErrorCode = null, $intSleep = 1, $booRedirect = true)
  */
 function ploopi_getparam($strParamName, $intModuleId = null)
 {
-    if (is_null($intModuleId)) $intModuleId = $_SESSION['ploopi']['moduleid'];
+    if (is_null($intModuleId) && isset($_SESSION['ploopi']['moduleid'])) $intModuleId = $_SESSION['ploopi']['moduleid'];
+    
+    if (is_null($intModuleId)) return null;
 
     return isset($_SESSION['ploopi']['modules'][$intModuleId][$strParamName]) ? $_SESSION['ploopi']['modules'][$intModuleId][$strParamName] : null;
 }
