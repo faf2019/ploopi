@@ -384,13 +384,6 @@ else
                         'options' => array('sort' => true)
                     );
 
-                $array_columns['right']['stem'] =
-                    array(
-                        'label' => 'Racine',
-                        'width' => '100',
-                        'options' => array('sort' => true)
-                    );
-
                 $array_columns['auto']['keyword'] =
                     array(
                         'label' => 'Mot Clé',
@@ -416,7 +409,6 @@ else
                     }
 
                     $array_values[$c]['values']['keyword']  = array('label' => $row['keyword']);
-                    $array_values[$c]['values']['stem']     = array('label' => $row['stem']);
                     $array_values[$c]['description'] = "{$c} - {$row['keyword']}";
                     $c++;
                 }

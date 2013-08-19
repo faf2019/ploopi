@@ -1,3 +1,10 @@
+== Module DOC - version 4.7.1f ====================================================
+
+2013-08-19  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Adaptation à la nouvelle version du moteur d'indexation
+* Nouvelle interface d'indexation en ligne de commande multi-processus (./cli module=doc op=reindex)
+
 == Module DOC - version 4.7.1e ====================================================
 
 2013-07-25  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

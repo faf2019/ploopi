@@ -103,64 +103,160 @@ switch($op)
             }
             unset($objCache);
         }        
-        break;
+    break;
+        
+    // Multi Process Reindex
+    case 'mpreindex':
+        set_time_limit(0);
+
+        include_once './modules/doc/class_docfile.php';
+
+        // On lit les paramètres complémentaires (nom du fichier, p, m)
+        if ($argc == 5) {
+            $file = explode('=', $argv[3]);
+            $limit = explode('=', $argv[4]);
+            
+            if ($file[0] == 'file' && isset($file[1]) && $limit[0] == 'limit' && isset($limit[1])) {
+
+                // Fichier de communication
+                $file = $file[1]; 
+                // Limite de traitement des événements
+                $limit = $limit[1];
+
+                // Possible d'écrire dans le fichier ?
+                if (is_writable($file)) {
+                        
+                    // Action
+                    $rs = $db->query("SELECT id FROM ploopi_mod_doc_file LIMIT {$limit}");
+                    $c = 0;
+                    
+                    while($row = $db->fetchrow($rs)) {
+
+                        $objDocFile = new docfile();
+                        $objDocFile->open($row['id']);
+                        $objDocFile->parse();
+
+                        // Ecriture de l'avancement
+                        $handle = fopen($file, 'w+');
+                        fwrite($handle, $c++);
+                        fclose($handle);
+
+                    }
+                    
+                    // Action terminée, suppression du fichier
+                    unlink($file);
+                }
+            }
+        }
+    break;
         
     case 'reindex':
-    default:
-        include_once './include/functions/search_index.php';
-        include_once './include/functions/filesystem.php';
-        include_once './include/functions/string.php';
-        include_once './modules/doc/class_docfile.php';
+        set_time_limit(0);
+
+        include_once './include/functions/system.php';
+
+        // Nombre de processus à paralléliser
+        $intNbProc = ploopi_getnbcore()*2;
+        // Nombre d'enregistrement à traiter par processus
+        $intPageSize = 50;
+        // Sélection de l'ensemble des documents
+        $rs = $db->query("SELECT id FROM ploopi_mod_doc_file");
+        // Nombre d'éléments à traiter
+        $intNbElt = $db->numrows();
+        // Page de démarrage
+        $intCurrentPage = 0;
+        // Nombre de page traitées
+        $intTermine = 0;
+        // Nb Page Max
+        $intNbPage = ceil($intNbElt/$intPageSize);
+
+        // Taille de la barre de progression (affichage)
+        $intSize = 45;
         
-        // Optimisation de la BDD
-        $db->query("OPTIMIZE TABLE `ploopi_mod_doc_keyword`");
-        $db->query("OPTIMIZE TABLE `ploopi_mod_doc_keyword_file`");
+        // Paramètre proc
+        foreach($argv as $arg) {
+            $arg = explode('=', $arg);
+            if ($arg[0] == 'proc' && isset($arg[1])) $intNbProc = max(1, intval($arg[1]));
+        }
+
+        $timer = new timer();
+        $timer->start();
+
+        printf("\n\n\033[1;33mIndexation des {$intNbElt} documents via {$intNbProc} processus\033[0m\n\n");
         
-        // Recherche des instances de modules de documents
-        $rs = $db->query("
-            SELECT      pm.id
-            
-            FROM        ploopi_module_type pmt
-            
-            INNER JOIN  ploopi_module pm
-            ON          pmt.id = pm.id_module_type
-            
-            WHERE   pmt.label = 'doc'
-        ");
+        $arrProcessus = array();
         
-        while ($row = $db->fetchrow($rs))
-        {
-            
-            $arrRecords = ploopi_search_get_records(_DOC_OBJECT_FILE, $row['id']);
-            
-            $sql = "
-                SELECT  f.id, f.md5id
-                FROM    ploopi_mod_doc_file f
-                WHERE   id_module = {$row['id']}
-            ";
+        $booFirst = true;
         
-            $rs_doc = $db->query($sql);
-            
-            $arrFiles = array();
-            
-            while($row_doc = $db->fetchrow($rs_doc))
-            {
-                $arrFiles[] = $row_doc['md5id'];
-                $doc = new docfile();
-                $doc->open($row_doc['id']);
-                echo strip_tags($doc->parse());
-                echo "script {$ploopi_timer}\n";
+        // Pour chaque page à traiter (et tant qu'un processus encore actif
+        while ($intCurrentPage < $intNbPage || !empty($arrProcessus)) {
+        
+            $booTermine = false;
+        
+            // Un processus est-il terminé ?
+            foreach($arrProcessus as $p => $file) {
+                if (!file_exists($file)) {
+                    $intTermine++;
+                    $booTermine = true;
+                    // printf("\033[1;33mProcessus {$p} terminé\033[0m\n\n");
+                    // Libération du processus
+                    unset($arrProcessus[$p]);
+                }
             }
-        
-            // Tableau des différences : contient les id de documents indexés mais qui n'existent plus
-            $arrDiff = array_diff($arrRecords, $arrFiles);
             
-            foreach($arrDiff as $id_record) ploopi_search_remove_index(_DOC_OBJECT_FILE, $id_record);
+            // Peut-on lancer de nouveaux processus ?
+            for ($p = 1; $p <= $intNbProc; $p++) {
+                // Encore des pages à traiter ?
+                if ($intCurrentPage < $intNbPage) {
+                    // Processus disponible ?
+                    if (!isset($arrProcessus[$p])) {
+                        // Création d'un fichier temporaire de communication
+                        $arrProcessus[$p] = tempnam(sys_get_temp_dir(), 'doc');
+                        if (is_writable(dirname($arrProcessus[$p]))) {
+                            $handle = fopen($arrProcessus[$p], 'w');
+                            fclose($handle);
+                            
+                            // Calcul de la limite à traiter
+                            $intLimit = $intCurrentPage*$intPageSize;
+                            
+                            // On lance un processus sans attendre la fin d'exécution, il va écrire son statut dans le fichier $tmpfile
+                            exec("{$argv[0]} module=doc op=mpreindex file={$arrProcessus[$p]} limit={$intLimit},{$intPageSize} >/dev/null 2>&1 &");
+                            
+                            // On passe à la page suivante
+                            $intCurrentPage++;
+                        }
+                    }
+                }
+            }
+
+            // Timer actuel arrondi
+            $floCurTime = round($timer->getexectime(),1);
+
+            $floPcent = $intTermine/$intNbPage;
+            $intBarSize = round($floPcent*$intSize);
+
+            if ($booTermine || $booFirst) {
+                // Projection de la durée du calcul en seconde
+                $intProjection = $floPcent ? round($floCurTime / $floPcent) : 0;
+            }
+            
+            // Calcul de l'heure de fin en H:i:s
+            $intProjH = floor($intProjection/3600);
+            $intProjM = floor(($intProjection%3600)/60);
+            $intProjS = floor($intProjection%60);
+            
+            echo "|".str_repeat("=", $intBarSize).str_repeat(" ", $intSize-$intBarSize)."| ".sprintf("%5s%% %ds (est:%2dh%02dm%02ds)\r", sprintf("%.01f", round($floPcent*100,1)), $floCurTime, $intProjH, $intProjM, $intProjS).$intNbPage;
+            
+            $booFirst = false;
+
+            // Permet au script de ne pas occuper 100% du cpu pour rien
+            // On va effectuer un contrôle par seconde uniquement
+            sleep(1);
         }
         
-        // Optimisation de la BDD
-        $db->query("OPTIMIZE TABLE `ploopi_mod_doc_keyword`");
-        $db->query("OPTIMIZE TABLE `ploopi_mod_doc_keyword_file`");
-        break;
+        printf("\n\n\033[1;33mTerminé\033[0m\n\n");
+
+    break;
+   
 }
 ?>
