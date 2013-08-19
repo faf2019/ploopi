@@ -31,8 +31,8 @@
  * @author Stéphane Escaich
  */
 
-define ('_PLOOPI_VERSION', '1.9.3.3');
-define ('_PLOOPI_REVISION', '130604');
+define ('_PLOOPI_VERSION', '1.9.3.4');
+define ('_PLOOPI_REVISION', '130819');
 
 define ('_PLOOPI_MSG_DBERROR',  'Database connection error, please contact administrator');
 define ('_SYSTEM_SYSTEMADMIN',  0);
@@ -162,3 +162,4 @@ switch(_PLOOPI_SERVER_OSTYPE)
 }
 
 if (defined('_PLOOPI_PEARPATH') && (strstr(ini_get('include_path'), _PLOOPI_PEARPATH) == false) && file_exists(_PLOOPI_PEARPATH)) ini_set('include_path', ini_get('include_path').(_PLOOPI_SERVER_OSTYPE == 'windows' ? ';' : ':')._PLOOPI_PEARPATH);
+

@@ -925,3 +925,12 @@ function ploopi_setsessionvar($strVarName, $mixVar = null, $intModuleId = null, 
         $_SESSION['ploopi'][$strModuleType][$intModuleId][$intWorkspaceId][$strVarName] = $mixVar;
     }
 }
+
+/**
+ * Retourne le nombre de coeurs du serveur apache
+ */
+
+function ploopi_getnbcore() {
+    return intval(`cat /proc/cpuinfo | grep processor | wc -l`);
+}
+
