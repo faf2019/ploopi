@@ -276,7 +276,7 @@ class ploopi_db
             $this->timer_start();
 
             $this->query_result = null;
-            
+
             if ($this->mysqli->real_query($query)) {
                 $this->query_result = $this->mysqli->store_result();
                 if ($this->log) $this->arrLog[] = array ('query' => $query, 'time' => $stop);
@@ -312,6 +312,11 @@ class ploopi_db
         if ($this->log) $this->arrLog[] = array ('query' => $queries, 'time' => $stop);
 
         if ($res === false) trigger_error($this->mysqli->error."<br /><b>queries:</b> {$queries}", E_USER_WARNING);
+        else {
+            do {
+                if ($result = $this->mysqli->use_result()) $result->free();
+            } while ($this->mysqli->next_result());
+        }
 
         return $res;
     }
