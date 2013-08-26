@@ -130,13 +130,15 @@ class formsField extends data_object
     {
         $booOpen = parent::open($intId);
 
-        $this->_intOriginalPosition = $this->fields['position'];
+        if ($booOpen) {
+            $this->_intOriginalPosition = $this->fields['position'];
 
-        if (!$this->fields['separator'] && !$this->fields['captcha'])
-        {
-            $this->_strOriginalFieldName = $this->fields['fieldname'];
-            $this->_strOriginalType = $this->getSqlType();
-            $this->_strOriginalFormula = $this->fields['formula'];
+            if (!$this->fields['separator'] && !$this->fields['captcha'])
+            {
+                $this->_strOriginalFieldName = $this->fields['fieldname'];
+                $this->_strOriginalType = $this->getSqlType();
+                $this->_strOriginalFormula = $this->fields['formula'];
+            }
         }
 
         return $booOpen;

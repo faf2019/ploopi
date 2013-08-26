@@ -506,7 +506,7 @@ class formsForm extends data_object
      * @return ploopi_query la requête préparée
      */
 
-    private function _getQuery($booWorkspaceFilter = false, $booBackupFilter = false, $arrFilter = array(), $arrOrderBy = array(), $intNumPage = 0, $booFieldNamesAsKey = false, $booExport = false, $booRawData = false, $booDelete = false)
+    public function getQuery($booWorkspaceFilter = false, $booBackupFilter = false, $arrFilter = array(), $arrOrderBy = array(), $intNumPage = 0, $booFieldNamesAsKey = false, $booExport = false, $booRawData = false, $booDelete = false)
     {
         // L'utilisateur est admin ?
         $booIsAdmin = ploopi_isactionallowed(_FORMS_ACTION_ADMIN, -1, $this->fields['id_module']);
@@ -824,13 +824,13 @@ class formsForm extends data_object
      * @return array données du formulaire
      */
 
-    private function _getData($booWorkspaceFilter = false, $booBackupFilter = false, $arrFilter = array(), $arrOrderBy = array(), $intNumPage = 0, $booFieldNamesAsKey = false, $booExport = false, $booRawData = false, $booDelete = false)
+    public function getData($booWorkspaceFilter = false, $booBackupFilter = false, $arrFilter = array(), $arrOrderBy = array(), $intNumPage = 0, $booFieldNamesAsKey = false, $booExport = false, $booRawData = false, $booDelete = false)
     {
         /**
          * Construction de la requête
          * @var ploopi_query
          */
-        $objQuery = $this->_getQuery($booWorkspaceFilter, $booBackupFilter, $arrFilter, $arrOrderBy, $intNumPage, $booFieldNamesAsKey, $booExport, $booRawData, $booDelete);
+        $objQuery = $this->getQuery($booWorkspaceFilter, $booBackupFilter, $arrFilter, $arrOrderBy, $intNumPage, $booFieldNamesAsKey, $booExport, $booRawData, $booDelete);
 
 
         if ($booDelete)
@@ -979,8 +979,8 @@ class formsForm extends data_object
          * Sélection page
          */
 
-        if ($this->fields['nbline'] > 0 && !$booUnlockPageLimit) list($arrData, $intNumRows) = $this->_getData(true, true, $arrFilter, $arrOrderBy, $_SESSION['forms'][$this->fields['id']]['page'], $booFieldNamesAsKey, $booExport, $booRawData, $booDelete);
-        else list($arrData, $intNumRows) = $this->_getData(true, true, $arrFilter, $arrOrderBy, 0, $booFieldNamesAsKey, $booExport, $booRawData, $booDelete);
+        if ($this->fields['nbline'] > 0 && !$booUnlockPageLimit) list($arrData, $intNumRows) = $this->getData(true, true, $arrFilter, $arrOrderBy, $_SESSION['forms'][$this->fields['id']]['page'], $booFieldNamesAsKey, $booExport, $booRawData, $booDelete);
+        else list($arrData, $intNumRows) = $this->getData(true, true, $arrFilter, $arrOrderBy, 0, $booFieldNamesAsKey, $booExport, $booRawData, $booDelete);
 
         return array($arrData, $intNumRows, $arrFormFilter);
     }
@@ -1299,7 +1299,7 @@ class formsForm extends data_object
          * Insertion des données en injection directe
          */
 
-        $db->query("INSERT INTO `{$this->_strTablename}` ".$this->_getQuery(false, false, array(), array(), 0, true)->get_sql());
+        $db->query("INSERT INTO `{$this->_strTablename}` ".$this->getQuery(false, false, array(), array(), 0, true)->get_sql());
     }
 
 
