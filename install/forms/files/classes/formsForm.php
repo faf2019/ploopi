@@ -1277,7 +1277,7 @@ class formsForm extends data_object
             $arrSqlIndexes[] = "ALTER TABLE `{$this->_strTablename}` ADD INDEX ( `{$objField->fields['fieldname']}` )";
         }
 
-        $db->query("CREATE TABLE `{$this->_strTablename}` (".implode(', ', $arrSqlFields).") TYPE=MyISAM;");
+        $db->query("CREATE TABLE `{$this->_strTablename}` (".implode(', ', $arrSqlFields).") ENGINE=MyISAM;");
 
         /**
          * Création des indexes
