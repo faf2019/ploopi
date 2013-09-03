@@ -424,7 +424,7 @@ function ploopi_htmlpurifier($strContent, $booTrusted = false)
     require_once './lib/htmlpurifier/HTMLPurifier.auto.php';
     $objConfig = HTMLPurifier_Config::createDefault();
     $objConfig->set('Cache.SerializerPath', $strCachePath);
-    $objConfig->set('Core.Encoding', 'ISO-8859-15');
+    // $objConfig->set('Core.Encoding', 'ISO-8859-15');
     $objConfig->set('Core.EscapeNonASCIICharacters', true);
     $objConfig->set('HTML.Doctype', 'XHTML 1.0 Strict');
 
@@ -438,10 +438,14 @@ function ploopi_htmlpurifier($strContent, $booTrusted = false)
 
     $objPurifier = new HTMLPurifier($objConfig);
 
-    $res = $objPurifier->purify($strContent);
+    $subst = mb_substitute_character();
+    mb_substitute_character('');
+    $res = mb_convert_encoding($objPurifier->purify(mb_convert_encoding($strContent, 'UTF-8', 'ISO-8850-15')), 'ISO-8850-15', 'UTF-8');
+    mb_substitute_character($subst);
 
     return $res;
 }
+
 
 /**
  * Convertit une couleur HTML/Hex en un tableau de composantes RVB (entier)
