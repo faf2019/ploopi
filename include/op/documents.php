@@ -261,6 +261,48 @@ switch($ploopi_op)
         ploopi_die();
     break;
 
+    case 'documents_savemultiplefile':
+        include_once './include/classes/documents.php';
+        $documentsfolder = new documentsfolder();
+
+        // Contrôle currentfolder
+        if (!isset($_GET['currentfolder']) || !$documentsfolder->openmd5($_GET['currentfolder'])) ploopi_die();
+        // Contrôle id instance
+        if (!isset($_GET['documents_id']) || !isset($_SESSION['documents'][$_GET['documents_id']])) ploopi_die();
+
+        $currentfolder = $_GET['currentfolder'];
+        $documents_id = $_GET['documents_id'];
+
+        // Fichiers fournis?
+        if (!empty($_FILES['documentsfile_files']['name']))
+        {
+            foreach(array_keys($_FILES['documentsfile_files']['name']) as $k) {
+                $documentsfile = new documentsfile();
+                $documentsfile->fields['id_object'] = $_SESSION['documents'][$documents_id]['id_object'];
+                $documentsfile->fields['id_record'] = $_SESSION['documents'][$documents_id]['id_record'];
+                $documentsfile->fields['id_module'] = $_SESSION['documents'][$documents_id]['id_module'];
+                $documentsfile->fields['id_user'] = $_SESSION['documents'][$documents_id]['id_user'];
+                $documentsfile->fields['id_workspace'] = $_SESSION['documents'][$documents_id]['id_workspace'];
+                $documentsfile->fields['id_folder'] = $documentsfolder->fields['id'];
+                $documentsfile->fields['timestp_file'] = ploopi_createtimestamp();
+                $documentsfile->fields['id_user_modify'] = $_SESSION['ploopi']['userid'];
+                $documentsfile->settmpfile($_FILES['documentsfile_files']['tmp_name'][$k]);
+                $documentsfile->fields['name'] = $_FILES['documentsfile_files']['name'][$k];
+                $documentsfile->fields['size'] = $_FILES['documentsfile_files']['size'][$k];
+                $error = $documentsfile->save();
+            }
+        }
+
+        ?>
+        <script type="text/javascript">
+            window.parent.ploopi_documents_browser('<?php echo ploopi_queryencode("ploopi_op=documents_browser&currentfolder={$currentfolder}&documents_id={$documents_id}"); ?>', '<?php echo $documents_id; ?>');
+            window.parent.ploopi_hidepopup('ploopi_documents_openfile_popup');
+        </script>
+        <?php
+        ploopi_die();
+
+    break;
+
     case 'documents_savefile':
         include_once './include/classes/documents.php';
         $documentsfile = new documentsfile();
@@ -331,6 +373,37 @@ switch($ploopi_op)
             window.parent.ploopi_hidepopup('ploopi_documents_openfile_popup');
         </script>
         <?php
+        ploopi_die();
+    break;
+
+    case 'documents_addmultiplefiles':
+        ob_start();
+
+        if (empty($_GET['currentfolder'])) return;
+        if (empty($_GET['documents_id'])) return;
+
+        $url = "admin-light.php?ploopi_op=documents_savemultiplefile&currentfolder={$_GET['currentfolder']}&documents_id={$_GET['documents_id']}";
+        ?>
+        <form id="documents_folderform" action="<?php echo ploopi_urlencode($url); ?>" method="post" target="documents_fileform_iframe" enctype="multipart/form-data">
+        <div class="ploopi_form">
+            <div class="documents_formcontent">
+                <p>
+                    <label>Choix multiple:<br /><em>(touches CTRL et SHIFT)</em></label>
+                    <input type="file" multiple="multiple" class="text" name="documentsfile_files[]" tabindex="1">
+                </p>
+            </div>
+            <div class="documents_formcontent" style="text-align:right;padding:4px;">
+                <input type="button" class="flatbutton" style="width:100px;" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:ploopi_hidepopup('ploopi_documents_openfile_popup');">
+                <input type="submit" class="flatbutton" style="width:100px;" value="<?php echo _PLOOPI_SAVE; ?>" tabindex="7">
+            </div>
+        </div>
+        </form>
+        <iframe name="documents_fileform_iframe" src="./img/blank.gif" style="display:none;"></iframe>
+        <?php
+        $content = ob_get_contents();
+        ob_end_clean();
+
+        echo $skin->create_popup("Ajout mutiple de fichiers", $content, 'ploopi_documents_openfile_popup');
         ploopi_die();
     break;
 

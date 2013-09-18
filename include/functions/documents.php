@@ -180,8 +180,10 @@ function ploopi_documents($id_object, $id_record, $rights = array(), $default_fo
     if (empty($params['ROOT_PLACE_IMG'])) $params['ROOT_PLACE_IMG'] = $_SESSION['ploopi']['template_path'] . '/img/documents/ico_home.png';
     if (empty($params['NEW_FOLDER'])) $params['NEW_FOLDER'] = 'Créer un nouveau Dossier';
     if (empty($params['NEW_FOLDER_IMG'])) $params['NEW_FOLDER_IMG'] = $_SESSION['ploopi']['template_path'] . '/img/documents/ico_newfolder.png';
-    if (empty($params['NEW_FILE'])) $params['NEW_FILE'] = 'Créer un nouveau Fichier';
+    if (empty($params['NEW_FILE'])) $params['NEW_FILE'] = 'Ajouter un Fichier';
     if (empty($params['NEW_FILE_IMG'])) $params['NEW_FILE_IMG'] = $_SESSION['ploopi']['template_path'] . '/img/documents/ico_newfile.png';
+    if (empty($params['NEW_FILES'])) $params['NEW_FILES'] = 'Ajouter plusieurs Fichiers';
+    if (empty($params['NEW_FILES_IMG'])) $params['NEW_FILES_IMG'] = $_SESSION['ploopi']['template_path'] . '/img/documents/ico_newfiles.png';
 
     $_SESSION['documents'][$documents_id] = array (
         'id_object'     => $id_object,
@@ -208,6 +210,8 @@ function ploopi_documents($id_object, $id_record, $rights = array(), $default_fo
         'new_folder_img'=> $params['NEW_FOLDER_IMG'],
         'new_file'      => $params['NEW_FILE'],
         'new_file_img'  => $params['NEW_FILE_IMG'],
+        'new_files'     => $params['NEW_FILES'],
+        'new_files_img' => $params['NEW_FILES_IMG'],
         // Pour le sélecteur de fichier
         'mode'          => $params['MODE'], // peut valoir 'selectfile'
         'target'        => $params['TARGET'], // id de champ ou fonction de callback
@@ -380,14 +384,14 @@ function ploopi_documents_listfolders($id_object, $id_record, $id_module = -1)
 function _ploopi_documents_listfolders_rec($arrFolders, $key = 0)
 {
     $arrFoldersRec = array();
-    
+
     if (isset($arrFolders[$key])) {
         foreach($arrFolders[$key] as $row) {
             $arrFoldersRec[] = $row;
             $arrFoldersRec = array_merge($arrFoldersRec, _ploopi_documents_listfolders_rec($arrFolders, $row['id']));
         }
     }
-    
+
     return $arrFoldersRec;
 }
 
@@ -519,6 +523,7 @@ function ploopi_documents_browser($currentfolder, $documents_id)
             <?php
             if ($_SESSION['documents'][$documents_id]['rights']['DOCUMENT_CREATE'])
             {
+                ?><a title="<?php echo $_SESSION['documents'][$documents_id]['new_files']; ?>" href="javascript:void(0);" style="float:right;" onclick="javascript:ploopi_documents_openfile('<?php echo ploopi_queryencode("ploopi_op=documents_addmultiplefiles&currentfolder={$currentfolder}&documents_id={$documents_id}&documentsfile_id="); ?>', event);"><img src="<?php echo $_SESSION['documents'][$documents_id]['new_files_img']; ?>"></a><?php
                 ?><a title="<?php echo $_SESSION['documents'][$documents_id]['new_file']; ?>" href="javascript:void(0);" style="float:right;" onclick="javascript:ploopi_documents_openfile('<?php echo ploopi_queryencode("ploopi_op=documents_openfile&currentfolder={$currentfolder}&documents_id={$documents_id}&documentsfile_id="); ?>', event);"><img src="<?php echo $_SESSION['documents'][$documents_id]['new_file_img']; ?>"></a><?php
             }
             if ($_SESSION['documents'][$documents_id]['rights']['FOLDER_CREATE'])

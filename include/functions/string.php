@@ -254,11 +254,11 @@ function ploopi_xmlentities($str, $utf8 = false, $extended = true)
  * @param string $encoding définit l'encodage utilisé durant la conversion
  * @return string chaîne convertie
  */
- 
-function ploopi_htmlentities($str, $flags = null, $encoding = 'ISO-8859-1') 
+
+function ploopi_htmlentities($str, $flags = null, $encoding = 'ISO-8859-1')
 {
     if (is_null($flags)) $flags = version_compare(phpversion(), '5.4', '<') ? ENT_COMPAT : ENT_COMPAT | ENT_HTML401;
-    
+
     return htmlentities($str, $flags, $encoding);
 }
 
@@ -440,7 +440,7 @@ function ploopi_htmlpurifier($strContent, $booTrusted = false)
 
     $subst = mb_substitute_character();
     mb_substitute_character('');
-    $res = mb_convert_encoding($objPurifier->purify(mb_convert_encoding($strContent, 'UTF-8', 'ISO-8850-15')), 'ISO-8850-15', 'UTF-8');
+    $res = mb_convert_encoding($objPurifier->purify(mb_convert_encoding($strContent, 'UTF-8', 'ISO-8859-15')), 'ISO-8859-15', 'UTF-8');
     mb_substitute_character($subst);
 
     return $res;

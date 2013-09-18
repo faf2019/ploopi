@@ -354,7 +354,14 @@ function ploopi_send_mail_smtp($from, $to, $subject, $message, $params = null, $
     {
         foreach($files as $filename)
         {
-            if (file_exists($filename) && is_readable($filename)) $objMessage->addAttachment($filename);
+            if (file_exists($filename) && is_readable($filename)) {
+                // Traitement spécial des images pour ajout du Content-ID
+                // http://pear.php.net/package/Mail_Mime/docs/latest/Mail_Mime/Mail_mime.html#methodaddHTMLImage
+                if (in_array(ploopi_file_getextension($filename), array('png', 'jpg', 'jpeg', 'gif'))) {
+                    $objMessage->addHTMLImage($filename, ploopi_getmimetype($filename), basename($filename), true, basename($filename));
+                }
+                else $objMessage->addAttachment($filename);
+            }
         }
     }
 
