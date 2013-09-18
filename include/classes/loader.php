@@ -70,9 +70,11 @@ abstract class ploopi_loader
          */
         if (!file_exists('./config/config.php'))
         {
-            header("Location: ./config/install.php");
-            ploopi_die();
+          include_once './include/functions/system.php' ;
+          header("Location: ./config/install.php");
+          ploopi_die();
         }
+        
         include_once './config/config.php'; // load config (mysql, path, etc.)
 
         /**
