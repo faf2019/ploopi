@@ -160,7 +160,7 @@ class ploopi_session
     {
         if (self::$booUseDb)
         {
-            //self::$objDb->query("DELETE FROM `ploopi_serializedvar` WHERE `id_session` = '".self::$objDb->addslashes($id)."'");
+            self::$objDb->query("DELETE FROM `ploopi_serializedvar` WHERE `id_session` = '".self::$objDb->addslashes($id)."'");
             self::$objDb->query("DELETE FROM `ploopi_session` WHERE `id` = '".self::$objDb->addslashes($id)."'");
         }
         else
