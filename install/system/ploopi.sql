@@ -1912,4 +1912,8 @@ ALTER TABLE `ploopi_ticket_watch` ADD INDEX ( `id_ticket` ) ;
 ALTER TABLE `ploopi_ticket_watch` ADD INDEX ( `id_user` ) ;
 ALTER TABLE `ploopi_ticket_watch` ADD INDEX ( `notify` ) ;
 
-UPDATE `ploopi_module_type` SET `version` = '1.9.2.2', `author` = 'Ovensia', `date` = '20121214000000', `description` = 'Noyau du système' WHERE `ploopi_module_type`.`id` = 1;
+ALTER TABLE ploopi_serializedvar DROP PRIMARY KEY;
+TRUNCATE TABLE `ploopi_serializedvar`;
+ALTER TABLE `ploopi_serializedvar` ADD PRIMARY KEY ( `id` , `id_session` );
+
+UPDATE `ploopi_module_type` SET `version` = '1.9.2.3', `author` = 'Ovensia', `date` = '20130513000000', `description` = 'Noyau du système' WHERE `ploopi_module_type`.`id` = 1;
