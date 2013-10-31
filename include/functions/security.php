@@ -109,7 +109,7 @@ function ploopi_filtervar($mixVar, $strVarName = null, $booUtf8 = false)
     {
         foreach($mixVar as $strKey => $mixValue)
         {
-            $mixVar[$strKey] = ploopi_filtervar($mixValue, $strKey, $booUtf8);
+            $mixVar[$strKey] = ploopi_filtervar($mixValue, is_null($strVarName) ? $strKey : $strVarName, $booUtf8);
         }
     }
     else
