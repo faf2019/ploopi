@@ -130,8 +130,8 @@ input.text {
 /* height:16px; */
 }
 
-input::-webkit-input-placeholder { color:#888; }
-input:-moz-placeholder { color:#888; }
+*::-webkit-input-placeholder { color:#888; }
+*:-moz-placeholder { color:#888; }
 
 select:focus,
 input:focus,
@@ -379,18 +379,11 @@ overflow:auto;
 }
 
 /* vertical alignement : IE / FF / Opera */
-p.ploopi_va {
+.ploopi_va {
     margin:0;
 }
 
-p.ploopi_va img,
-p.ploopi_va span,
-p.ploopi_va label,
-p.ploopi_va strong,
-p.ploopi_va em,
-p.ploopi_va input,
-p.ploopi_va select,
-p.ploopi_va a {
+.ploopi_va > * {
     display: inline-block;
     vertical-align: middle;
 }

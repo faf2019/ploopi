@@ -902,20 +902,6 @@ div.documents_formcontent {
   MAIN LAYOUT
 *******************/
 
-/*
-@font-face {
-    font-family: 'URWGothicLRegular';
-    src: url('../fonts/urwgothicl-book-webfont.eot');
-    src: url('../fonts/urwgothicl-book-webfont.eot?#iefix') format('embedded-opentype'),
-         url('../fonts/urwgothicl-book-webfont.woff') format('woff'),
-         url('../fonts/urwgothicl-book-webfont.ttf') format('truetype'),
-         url('../fonts/urwgothicl-book-webfont.svg#URWGothicLRegular') format('svg');
-    font-weight: normal;
-    font-style: normal;
-
-}
-*/
-
 @font-face {
     font-family: 'UbuntuRegular';
     src: url('../fonts/Ubuntu-R-webfont.eot');
@@ -927,9 +913,6 @@ div.documents_formcontent {
     font-style: normal;
 
 }
-
-/* @import url(http://fonts.googleapis.com/css?family=Ubuntu); */
-
 
 body, form, table, td, input, select, textarea, button {
     font: normal 12px 'UbuntuRegular', serif;
@@ -947,8 +930,8 @@ position: relative;
 
 body.popup {
 margin: 0;
+padding: 0;
 color: #303030;
-padding: 2px;
 }
 
 a {
@@ -1755,8 +1738,8 @@ input.text {
 /* height:16px; */
 }
 
-input::-webkit-input-placeholder { color:#888; }
-input:-moz-placeholder { color:#888; }
+*::-webkit-input-placeholder { color:#888; }
+*:-moz-placeholder { color:#888; }
 
 select:focus,
 input:focus,
@@ -2004,18 +1987,11 @@ overflow:auto;
 }
 
 /* vertical alignement : IE / FF / Opera */
-p.ploopi_va {
+.ploopi_va {
     margin:0;
 }
 
-p.ploopi_va img,
-p.ploopi_va span,
-p.ploopi_va label,
-p.ploopi_va strong,
-p.ploopi_va em,
-p.ploopi_va input,
-p.ploopi_va select,
-p.ploopi_va a {
+.ploopi_va > * {
     display: inline-block;
     vertical-align: middle;
 }

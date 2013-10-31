@@ -52,8 +52,8 @@ position: relative;
 
 body.popup {
 margin: 0;
+padding: 0;
 color: #303030;
-padding: 2px;
 }
 
 a {

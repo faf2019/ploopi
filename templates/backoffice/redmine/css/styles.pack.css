@@ -1679,18 +1679,11 @@ overflow:auto;
 }
 
 /* vertical alignement : IE / FF / Opera */
-p.ploopi_va {
+.ploopi_va {
     margin:0;
 }
 
-p.ploopi_va img,
-p.ploopi_va span,
-p.ploopi_va label,
-p.ploopi_va strong,
-p.ploopi_va em,
-p.ploopi_va input,
-p.ploopi_va select,
-p.ploopi_va a {
+.ploopi_va > * {
     display: inline-block;
     vertical-align: middle;
 }
@@ -2170,7 +2163,22 @@ background: url(../img/template/tabs.png) 0 -20px no-repeat;
     font-weight:normal;
 }
 
-.ploopi_generate_form label{
+
+.ploopi_generate_form > form > div > fieldset {
+    clear:both;
+    display:block;
+    margin: 0;
+    padding: 0.2em;
+    margin: 0.2em;
+    border:1px solid #ccc;
+}
+
+.ploopi_generate_form > form > div > fieldset > legend {
+    padding:0 4px;
+    font-weight:bold;
+}
+
+.ploopi_generate_form > form > div > fieldset > div > label{
     display:block;
     text-align:right;
     width:30%;
@@ -2182,11 +2190,11 @@ background: url(../img/template/tabs.png) 0 -20px no-repeat;
     user-select: none;
 }
 
-.ploopi_generate_form label.required{
+.ploopi_generate_form > form > div > fieldset > div > label.required{
     background:url(../img/forms/required.png) no-repeat right top;
 }
 
-.ploopi_generate_form label span{
+.ploopi_generate_form > form > div > fieldset > div > label > span{
     color:#666;
     display:block;
     font-weight:normal;
@@ -2194,11 +2202,12 @@ background: url(../img/template/tabs.png) 0 -20px no-repeat;
     width:100%;
 }
 
-.ploopi_generate_form input,
-.ploopi_generate_form select,
-.ploopi_generate_form textarea{
+.ploopi_generate_form > form > div > fieldset > div > input,
+.ploopi_generate_form > form > div > fieldset > div > select,
+.ploopi_generate_form > form > div > fieldset > div > textarea{
     float:left;
     border: 1px solid #b0b0b0;
+    -moz-border-radius:5px;
     background: #fff;
     color: #2c4056;
     padding: 3px;
@@ -2206,7 +2215,8 @@ background: url(../img/template/tabs.png) 0 -20px no-repeat;
     margin:2px 0 5px 0;
 }
 
-.ploopi_generate_form select option, .ploopi_generate_form select optgroup {
+.ploopi_generate_form > form > div > fieldset > div > select option,
+.ploopi_generate_form > form > div > fieldset > div > select optgroup {
     background: #f8f8f8;
 }
 
@@ -2225,7 +2235,7 @@ background: url(../img/template/tabs.png) 0 -20px no-repeat;
     color:#888;
 }
 
-.ploopi_generate_form span{
+.ploopi_generate_form > form > div > fieldset > div > span{
     display:block;
     float:left;
     margin:2px 0 5px 0;
@@ -2233,10 +2243,7 @@ background: url(../img/template/tabs.png) 0 -20px no-repeat;
 }
 
 
-.ploopi_generate_form span *{
-    width:auto;
-}
-.ploopi_generate_form span label{
+.ploopi_generate_form > form > div > fieldset > div > span > label{
     display:block;
     float:left;
     clear:none;
@@ -2245,22 +2252,8 @@ background: url(../img/template/tabs.png) 0 -20px no-repeat;
     width:auto;
 }
 
-.ploopi_generate_form span input{
+.ploopi_generate_form > form > div > fieldset > div > span > input{
     margin:2px 0;
-}
-
-.ploopi_generate_form fieldset {
-    clear:both;
-    display:block;
-    margin: 0;
-    padding: 0.2em;
-    margin: 0.2em;
-    border:1px solid #ccc;
-}
-
-.ploopi_generate_form fieldset legend {
-    padding:0 4px;
-    font-weight:bold;
 }
 
 .ploopi_generate_form .buttons {
@@ -2272,6 +2265,7 @@ background: url(../img/template/tabs.png) 0 -20px no-repeat;
 .ploopi_generate_form button {
     float:right;
     border: 1px solid #a0a0a0;
+    -moz-border-radius:5px;
     background:#d0d0d0;
     color: #2c4056;
     text-align:center;
@@ -2285,7 +2279,7 @@ background: url(../img/template/tabs.png) 0 -20px no-repeat;
 
 .ploopi_generate_form button:hover {
     border: 1px solid #707070;
-    background:#c0c0c0;
+    background:#c0c0c0
 }
 
 
