@@ -181,28 +181,26 @@ if ($_SESSION['ploopi']['connected'])
                     // Clone le formulaire
                     $objFormClone = clone $objForm;
 
-                    if (isset($_GET['data']) && $_GET['data'] == 'true')
-                    {
-                        $strSrcTable = $objForm->getDataTableName();
-                        $strCloneTable = $objFormClone->getDataTableName();
+                    $strSrcTable = $objForm->getDataTableName();
+                    $strCloneTable = $objFormClone->getDataTableName();
 
-                        // Extraction de la structure
-                        $db->query("SHOW CREATE TABLE `{$strSrcTable}`");
-                        if ($row = $db->fetchrow()) {
+                    // Extraction de la structure
+                    $db->query("SHOW CREATE TABLE `{$strSrcTable}`");
+                    if ($row = $db->fetchrow()) {
 
-                            $strCreateTable = preg_replace("@^CREATE TABLE `{$strSrcTable}`@i", "CREATE TABLE `{$strCloneTable}`", $row['Create Table']);
+                        $strCreateTable = preg_replace("@^CREATE TABLE `{$strSrcTable}`@i", "CREATE TABLE `{$strCloneTable}`", $row['Create Table']);
 
-                            // Suppression de la table de destination
-                            $db->query("DROP TABLE IF EXISTS `{$strCloneTable}`");
+                        // Suppression de la table de destination
+                        $db->query("DROP TABLE IF EXISTS `{$strCloneTable}`");
 
-                            // Création de la table de destination
-                            $db->query($strCreateTable);
+                        // Création de la table de destination
+                        $db->query($strCreateTable);
 
+                        if (isset($_GET['data']) && $_GET['data'] == 'true')
+                        {
                             // Copie des données
                             $db->query("INSERT INTO `{$strCloneTable}` SELECT * FROM `{$strSrcTable}`");
-
                         }
-
                     }
 
                     // Renvoi vers le clone
@@ -215,13 +213,20 @@ if ($_SESSION['ploopi']['connected'])
             case 'forms_import_file':
                 ploopi_init_module('forms');
 
-                if (!ploopi_isactionallowed(_FORMS_ACTION_ADMIN)) ploopi_redirect('admin.php');
+                // si non admin et non role import csv
+                if ((!ploopi_isactionallowed(_FORMS_ACTION_ADMIN)) && (!ploopi_isactionallowed(_FORMS_ACTION_IMPORT_CSV))) ploopi_redirect('admin.php');
 
                 include_once './modules/forms/classes/formsForm.php';
 
                 $objForm = new formsForm();
                 if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open($_GET['forms_id']))
                 {
+                    $strUrl = '';
+                    // Retour différencié en fonction de l'origine de la demande
+                    if (isset($_GET['origin']) && $_GET['origin'] == 'viewreplies') $strUrl = "admin.php?op=forms_viewreplies&forms_id={$_GET['forms_id']}&ploopi_mod_msg=";
+                    else $strUrl = "admin.php?op=forms_modify&forms_id={$_GET['forms_id']}&ploopi_mod_msg=";
+                    $strErrorCode = '';
+
                     if (!empty($_FILES['forms_import_file']) && file_exists($_FILES['forms_import_file']['tmp_name']))
                     {
                         // On fait sauter le timeout de php car le traitement peut être long
@@ -231,6 +236,7 @@ if ($_SESSION['ploopi']['connected'])
                         $arrData = array();
                         $arrKeys = array();
                         $intCount = 0;
+
 
                         // Import CSV
                         while (($arrLine = fgetcsv($ptrFileHandler)) !== false)
@@ -256,6 +262,7 @@ if ($_SESSION['ploopi']['connected'])
 
                                 if ($booValid)
                                 {
+                                    $strErrorCode = '_FORMS_MESS_OK_8';
                                     $objRecord->save();
                                     $intCount++;
                                 }
@@ -263,9 +270,9 @@ if ($_SESSION['ploopi']['connected'])
                         }
 
                         fclose($ptrFileHandler);
-
-                        ploopi_redirect("admin.php?op=forms_modify&forms_id={$_GET['forms_id']}&ploopi_mod_msg=_FORMS_MESS_OK_8");
                     }
+
+                    ploopi_redirect($strUrl.$strErrorCode);
                 }
 
                 ploopi_redirect('admin.php');
@@ -274,7 +281,8 @@ if ($_SESSION['ploopi']['connected'])
             case 'forms_import':
                 ploopi_init_module('forms');
 
-                if (!ploopi_isactionallowed(_FORMS_ACTION_ADMIN)) ploopi_redirect('admin.php');
+                // si non admin et non role import csv
+                if ((!ploopi_isactionallowed(_FORMS_ACTION_ADMIN)) && (!ploopi_isactionallowed(_FORMS_ACTION_IMPORT_CSV))) ploopi_die();
 
                 include_once './modules/forms/classes/formsForm.php';
 
@@ -284,7 +292,9 @@ if ($_SESSION['ploopi']['connected'])
                     $arrFields = array();
                     foreach($objForm->getFields() as $objField) $arrFields[] = $objField->fields['fieldname'];
 
-                    $objForm = new form('forms_import_form', ploopi_urlencode("admin-light.php?ploopi_op=forms_import_file&forms_id={$_POST['forms_id']}"));
+                    $strOrigin = isset($_POST['origin']) ? $_POST['origin'] : '';
+
+                    $objForm = new form('forms_import_form', ploopi_urlencode("admin-light.php?ploopi_op=forms_import_file&forms_id={$_POST['forms_id']}&origin={$strOrigin}"));
                     $objForm->addField( new form_field( 'input:file', 'Fichier:', '', 'forms_import_file', 'forms_import_file', array('description' => 'Format CSV') ) );
                     $objForm->addField( new form_htmlfield('Séparateur de champs:', 'Virgule') );
                     $objForm->addField( new form_htmlfield('Séparateur de texte:', 'Double-quote') );

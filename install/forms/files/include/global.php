@@ -67,7 +67,12 @@ define ("_FORMS_ACTION_BACKUP",     6);
 define ("_FORMS_ACTION_GRAPHICS",     7);
 
 /**
- * Action : Administer les formulaire
+ * Action : Importer des données CSV
+ */
+define ("_FORMS_ACTION_IMPORT_CSV",     8);
+
+/**
+ * Action : Administrer les formulaires
  */
 define ("_FORMS_ACTION_ADMIN",     99);
 

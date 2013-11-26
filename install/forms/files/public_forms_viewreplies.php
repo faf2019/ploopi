@@ -253,8 +253,18 @@ echo $skin->open_simplebloc($objForm->fields['label'].' ('._FORMS_VIEWLIST.')', 
                 ?>
                     <a class="forms_export_link" title="Impression ODS" href="<?php echo ploopi_urlencode("admin.php?ploopi_op=forms_print_array&forms_id={$objForm->fields['id']}&forms_export_format=ODS"); ?>"><img alt="Impression ODS" title="Impression ODS" src="./modules/forms/img/mime/ods.png">ODS</a>
                     <a class="forms_export_link" title="Impression PDF" href="<?php echo ploopi_urlencode("admin.php?ploopi_op=forms_print_array&forms_id={$objForm->fields['id']}&forms_export_format=PDF"); ?>"><img alt="Impression PDF" title="Impression PDF" src="./modules/forms/img/mime/pdf.png">PDF</a>
-                    <?
+                <?
                 }
+
+                /* BM et CL - 11/2013 : ajout import csv si role ad hoc (Confer constante _FORMS_ACTION_IMPORT_CSV (action de code 8)) */
+                if (ploopi_isactionallowed(_FORMS_ACTION_IMPORT_CSV)) {
+                    ?>
+                    <span style="margin-left:10px;" >Import : </span>
+                    <a class="forms_export_link" title="<?php echo _FORMS_IMPORT; ?> CSV" href="#" onclick="javascript:ploopi_xmlhttprequest_topopup(450, event, 'forms_import', 'admin-light.php', '<?php echo ploopi_queryencode("ploopi_op=forms_import&forms_id={$objForm->fields['id']}&origin=viewreplies"); ?>', 'post');">
+                    <img alt="<?php echo _FORMS_IMPORT; ?> title="<?php echo _FORMS_IMPORT; ?> CSV" src="./modules/forms/img/mime/csv.png">CSV</a>
+                    <?php
+                }
+                /* Fin BM */
 
                 if (ploopi_isactionallowed(_FORMS_ACTION_GRAPHICS))
                 {

@@ -1,3 +1,13 @@
+== Module FORMS - version 3.5.5 =====================================================
+
+2013-11-26  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+* Correction d'un bug lors du clonage d'un formulaire sans les données (ne créait pas la structure)
+
+2013-11-12  Bruno MORISSET ~ MI  <bruno.morisset@interieur.gouv.fr>
+
+* Déport de la fonction "import csv" admin vers utilisateur avec rôle ad hoc
+
 == Module FORMS - version 3.5.4a =====================================================
 
 2013-09-03  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
@@ -787,5 +797,3 @@
 
  * Ajout d'une option "Visible lors d'une intégration en objet WCE" sur un champ de formulaire (non opérationnel)
  * Correction d'un bug d'affichage du calendrier lors de la saisie d'un enregistrement de type "date"
-
-
