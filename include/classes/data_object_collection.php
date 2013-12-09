@@ -112,7 +112,14 @@ class data_object_collection
     public function add_from($strFrom) { $this->objQuery->add_from($strFrom); }
 
     /**
-     * Ajoute une clause WHERE à la collection
+     * Ajoute une clause INNER JOIN à la collection
+     *
+     * @param string $strInnerJoin Clause INNER JOIN
+     */
+    public function add_innerjoin($strInnerJoin, $mixValues = null) { $this->objQuery->add_innerjoin($strInnerJoin, $mixValues); }
+
+    /**
+     * Ajoute une clause WHERE à la requête
      *
      * @param string $strWhere clause sql non préparée
      * @param mixed $mixValues tableau des variables ou variable seule à insérer dans la clause sql
