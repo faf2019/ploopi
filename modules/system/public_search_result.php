@@ -198,15 +198,15 @@ if (!empty($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords']))
                     $strWorkspaceLabel = ($objWorkspace->open($row['id_workspace'])) ? $objWorkspace->fields['label'] : '';
 
                     $values[$c]['values']['relevance'] = array('label' => sprintf("<span style=\"width:12px;height:12px;float:left;border:1px solid #a0a0a0;background-color:#%s;margin-right:3px;\"></span>%d %%", $color, $row['relevance']), 'sort_label' => intval($row['relevance']));
-                    $values[$c]['values']['label'] = array('label' => $row['label']);
+                    $values[$c]['values']['label'] = array('label' => ploopi_htmlentities($row['label']));
                     $values[$c]['values']['timestp_lastindex'] = array('label' => $l_timestp_lastindex['date'], 'sort_label' => $row['timestp_lastindex']);
                     $values[$c]['values']['timestp_create'] = array('label' => $l_timestp_create['date'].' '.$l_timestp_create['time'], 'sort_label' => $row['timestp_create']);
-                    $values[$c]['values']['user'] = array('label' => $strUserName);
-                    $values[$c]['values']['workspace'] = array('label' => $strWorkspaceLabel);
-                    $values[$c]['values']['module'] = array('label' => $arrObjectTypes[$row['id_module']]['label']);
-                    $values[$c]['values']['object_type'] = array('label' => $arrObjectTypes[$row['id_module']]['objects'][$row['id_object']]['label']);
+                    $values[$c]['values']['user'] = array('label' => ploopi_htmlentities($strUserName));
+                    $values[$c]['values']['workspace'] = array('label' => ploopi_htmlentities($strWorkspaceLabel));
+                    $values[$c]['values']['module'] = array('label' => ploopi_htmlentities($arrObjectTypes[$row['id_module']]['label']));
+                    $values[$c]['values']['object_type'] = array('label' => ploopi_htmlentities($arrObjectTypes[$row['id_module']]['objects'][$row['id_object']]['label']));
 
-                    $values[$c]['description'] = $row['label'];
+                    $values[$c]['description'] = ploopi_htmlentities($row['label']);
                     $values[$c]['link'] = ploopi_urlencode("admin.php?ploopi_mainmenu=1&{$object_script}");
                     $values[$c]['style'] = '';
                 }

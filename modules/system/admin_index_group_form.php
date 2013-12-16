@@ -55,7 +55,7 @@
         {
 
             $sel = ($workspace_group->fields['adminlevel'] == $id) ? 'selected' : '';
-            echo "<option $sel value=\"$id\">$label</option>";
+            echo "<option $sel value=\"$id\">".ploopi_htmlentities($label)."</option>";
         }
     }
     ?>

@@ -261,7 +261,7 @@ if ($_SESSION['ploopi']['connected'])
                             <div class="ploopi_form">
                                 <p>
                                     <label><?php echo _SYSTEM_LABEL_LOGIN; ?>:</label>
-                                    <strong><?php echo $user->fields['login']; ?></strong>
+                                    <strong><?php echo ploopi_htmlentities($user->fields['login']); ?></strong>
                                 </p>
                                 <p>
                                     <label><?php echo _SYSTEM_LABEL_EMAIL; ?> *:</label>
@@ -950,8 +950,8 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                                 foreach($groups as $group)
                                 {
                                     ?>
-                                    <a class="system_roleusers_select" title="Sélectionner ce groupe et lui attribuer ce rôle" href="javascript:void(0);" onclick="javascript:system_roleusers_select(<?php echo $_GET['system_roleusers_roleid']; ?>, <?php echo $group['id']; ?>, 'group');">
-                                        <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_group.png"><span><?php echo "{$group['label']}"; ?></span></p>
+                                    <a class="system_roleusers_select" title="Sélectionner ce groupe et lui attribuer ce rôle" href="javascript:void(0);" onclick="javascript:system_roleusers_select(<?php echo ploopi_htmlentities($_GET['system_roleusers_roleid']); ?>, <?php echo $group['id']; ?>, 'group');">
+                                        <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_group.png"><span><?php echo ploopi_htmlentities("{$group['label']}"); ?></span></p>
                                     </a>
                                     <?php
                                 }
@@ -961,8 +961,8 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                                 foreach($users as $user)
                                 {
                                     ?>
-                                    <a class="system_roleusers_select" title="Sélectionner cet utilisateur et lui attribuer ce rôle" href="javascript:void(0);" onclick="javascript:system_roleusers_select(<?php echo $_GET['system_roleusers_roleid']; ?>, <?php echo $user['id']; ?>, 'user');">
-                                        <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span><?php echo "{$user['lastname']} {$user['firstname']} ({$user['login']})"; ?></span></p>
+                                    <a class="system_roleusers_select" title="Sélectionner cet utilisateur et lui attribuer ce rôle" href="javascript:void(0);" onclick="javascript:system_roleusers_select(<?php echo ploopi_htmlentities($_GET['system_roleusers_roleid']); ?>, <?php echo $user['id']; ?>, 'user');">
+                                        <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span><?php echo ploopi_htmlentities("{$user['lastname']} {$user['firstname']} ({$user['login']})"); ?></span></p>
                                     </a>
                                     <?php
                                 }

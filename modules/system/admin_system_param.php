@@ -51,7 +51,7 @@ usort($arrModules, create_function('$a,$b', 'return strcasecmp($a[\'label\'], $b
     {
         if (empty($idmodule)) $idmodule = $mod['id'];
         ?>
-            <option <?php if ($idmodule == $mod['id']) echo 'selected="selected"'; ?> value="<?php echo $mod['id']; ?>"><?php echo "{$mod['label']} ({$mod['moduletype']})"; ?></option>
+            <option <?php if ($idmodule == $mod['id']) echo 'selected="selected"'; ?> value="<?php echo $mod['id']; ?>"><?php echo ploopi_htmlentities("{$mod['label']} ({$mod['moduletype']})"); ?></option>
         <?php
     }
     ?>
@@ -82,18 +82,18 @@ if (isset($idmodule))
             {
                 ?>
                 <p>
-                    <label><?php echo $param['label']; ?>:</label>
+                    <label><?php echo ploopi_htmlentities($param['label']); ?>:</label>
 
                     <?php
                     if (!empty($param['choices']))
                     {
                         ?>
-                        <select class="select" name="<?php echo $name; ?>">
+                        <select class="select" name="<?php echo ploopi_htmlentities($name); ?>">
                         <?php
                         foreach($param['choices'] as $value => $displayed_value)
                         {
                             ?>
-                            <option <?php if ($param['value'] == $value) echo 'selected'; ?> value="<?php echo htmlspecialchars($value); ?>"><?php echo $displayed_value; ?></option>
+                            <option <?php if ($param['value'] == $value) echo 'selected'; ?> value="<?php echo ploopi_htmlentities($value); ?>"><?php echo ploopi_htmlentities($displayed_value); ?></option>
                             <?php
                         }
                         ?>
@@ -105,13 +105,13 @@ if (isset($idmodule))
                         if (strlen($param['value'])>200 || strpos($param['value'], "\n") !== false)
                         {
                             ?>
-                            <textarea class="text" name="<?php echo $name; ?>"><?php echo htmlspecialchars($param['value']); ?></textarea>
+                            <textarea class="text" name="<?php echo ploopi_htmlentities($name); ?>"><?php echo htmlspecialchars($param['value']); ?></textarea>
                             <?php
                         }
                         else
                         {
                             ?>
-                            <input class="text" type="text" name="<?php echo $name; ?>" value="<?php echo htmlspecialchars($param['value']); ?>" />
+                            <input class="text" type="text" name="<?php echo ploopi_htmlentities($name); ?>" value="<?php echo ploopi_htmlentities($param['value']); ?>" />
                             <?php
                         }
                     }

@@ -94,7 +94,7 @@ $arrFields = array(
             foreach($arrFields as $strField => $strLabel)
             {
                 ?>
-                <li><strong><? echo ploopi_htmlentities($strField); ?></strong>: <? echo $strLabel ?></li>
+                <li><strong><? echo ploopi_htmlentities($strField); ?></strong>: <? echo ploopi_htmlentities($strLabel); ?></li>
                 <?
             }
             ?>

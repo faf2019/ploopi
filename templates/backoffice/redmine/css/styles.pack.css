@@ -1506,6 +1506,12 @@ input.flatbutton[type='submit'], input.button[type='submit'], button[type='submi
 font-weight:bold;
 }
 
+*[disabled=disabled],
+*[readonly=readonly] {
+    color:#888;
+    cursor:not-allowed;
+}
+
 .toolbar {
 padding-bottom:2px;
 overflow:auto;

@@ -22,11 +22,17 @@ AddDefaultCharset ISO-8859-15
 </Files>
 
 <IfModule mod_php5.c>
-    AddType application/x-httpd-php .php
+    AddType application/x-httpd-php .php .php3 .php4 .php5
 
     php_flag magic_quotes_gpc Off
     php_flag register_globals Off
     php_value include_path .
+
+    php_flag session.use_trans_sid off
+    php_flag session.use_only_cookies Off
+    php_flag session.cookie_httponly On
+    # Recommandation de sécurité : mettre "On" si connexion chiffrée
+    php_flag session.cookie_secure Off
 
     php_value memory_limit 128M
     php_value post_max_size 32M
@@ -44,24 +50,25 @@ AddDefaultCharset ISO-8859-15
   ExpiresByType text/html A1
 </IfModule>
 
-<files *.svg.gz>
+<Files *.svg.gz>
     AddType "image/svg+xml" .gz
     AddEncoding gzip .gz
-</files>
+</Files>
 
-<files *.js.gz>
+<Files *.js.gz>
     AddType "text/javascript" .gz
     AddEncoding gzip .gz
-</files>
+</Files>
 
-<files *.css.gz>
+<Files *.css.gz>
     AddType "text/css" .gz
     AddEncoding gzip .gz
-</files>
+</Files>
 
-<ifModule mod_headers.c>
+
+<IfModule mod_headers.c>
   Header unset ETag
-</ifModule>
+</IfModule>
 
 FileETag None
 
@@ -90,9 +97,14 @@ FileETag None
     RewriteRule ^(.+) $1.gz [QSA,L]
 
     # Quelques restrictions d'acces
-    RewriteRule ^(modules|lib|templates|FCKeditor)/.*\.php$ - [F]
-    RewriteRule ^(bin|data|include|install|lang|pear|tools)/.*$ - [F]
+    # Dossiers interdits
+    RewriteRule ^(config|bin|data|doc|include|install|lang|tools)/.*$ - [F]
+    # Fichiers interdits dans un sous-dossier
+    RewriteRule ^[^/]*/(.*\.php[345]?|.*\.txt)$ - [F]
+    # Fichiers interdits à la racine
     RewriteRule ^(cli|cron)$ - [F]
+    # Fichiers interdits partout
+    RewriteRule \.(sh|log|sql|inc|bak|.*~)$ - [F]
 
     # Regles de reecriture pour la partie FrontOffice
     RewriteRule ^(.*)-h([0-9]*)a([0-9]*)\.[a-z0-9]*(.*)$ index.php?headingid=$2&articleid=$3$4 [L]
@@ -102,8 +114,16 @@ FileETag None
     RewriteRule ^(.*)-d([a-z0-9]{32})\.[a-zA-Z0-9]*(.*)$ index-quick.php?ploopi_op=doc_file_download&docfile_md5id=$2 [L]
     RewriteRule ^unsubscribe-([a-zA-Z0-9].*)\.html$ index.php?ploopi_op=webedit_unsubscribe&subscription_email=$1 [L]
 
+    # Interdiction complète d'exécuter autre chose que index.php
+    # Redirection de tout script php vers index.php, sauf exception ci-dessus
+    RewriteCond %{REQUEST_FILENAME} \.php[345]?$
+    # Exemple d'exception pour l'exécution d'un script particulier
+    # RewriteCond %{REQUEST_URI} !^/path/to/script\.php$
+    RewriteRule ^(.*) index.php [L]
+
+    # Redirection de toute demande non satisfaite vers index.php
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule ^(.*) index.php
-</IfModule>
+    RewriteRule ^(.*) index.php [L]
 
+</IfModule>

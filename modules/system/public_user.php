@@ -48,16 +48,15 @@ function user_validate(form)
         if (form.usernewpass_confirm.value == form.usernewpass.value && form.usernewpass.value == '') return true;
         else
         {
-            rep = ploopi_xmlhttprequest('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=ploopi_checkpasswordvalidity&password='+form.usernewpass.value, false, false, 'POST');
+            if (form.usernewpass_confirm.value != form.usernewpass.value) alert('<?php echo _SYSTEM_MSG_PASSWORDERROR_JS; ?>');
+            else {
+                if (form.useroldpass.value == '') alert('<?php echo _SYSTEM_MSG_PASSWORDERROR2_JS; ?>');
+                else {
+                    rep = ploopi_xmlhttprequest('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=ploopi_checkpasswordvalidity&password='+form.usernewpass.value, false, false, 'POST');
 
-            if (rep == 0)
-            {
-                alert('Le mot de passe est invalide\n\nil doit contenir au moins 8 caractères,\nun caractère minuscule,\nun caractère majuscule,\nun chiffre et un caractère de ponctuation');
-            }
-            else
-            {
-                if (form.usernewpass_confirm.value != form.usernewpass.value) alert('<?php echo _SYSTEM_MSG_PASSWORDERROR; ?>');
-                else return true;
+                    if (rep == 0) alert('Le mot de passe est invalide\n\nil doit contenir au moins 8 caractères,\nun caractère minuscule,\nun caractère majuscule,\nun chiffre et un caractère de ponctuation');
+                    else return true;
+                }
             }
         }
     }
@@ -93,20 +92,25 @@ $user_date_expire = (!empty($user->fields['date_expire'])) ? ploopi_timestamp2lo
 <form name="form_modify_user" action="<?php echo ploopi_urlencode('admin.php?op=save_user'); ?>" method="POST" enctype="multipart/form-data" onsubmit="javascript:return user_validate(this)">
 <div>
 <?php
-if (isset($error))
+$error = '';
+if (isset($_GET['error']))
 {
-    switch($error)
+    switch($_GET['error'])
     {
         case 'password':
-            $error = nl2br(_SYSTEM_MSG_PASSWORDERROR);
+            $error = ploopi_nl2br(_SYSTEM_MSG_PASSWORDERROR);
+        break;
+
+        case 'oldpassword':
+            $error = ploopi_nl2br(_SYSTEM_MSG_OLDPASSWORDERROR);
         break;
 
         case 'passrejected':
-            $error = nl2br(_SYSTEM_MSG_LOGINPASSWORDERROR);
+            $error = ploopi_nl2br(_SYSTEM_MSG_LOGINPASSWORDERROR);
         break;
 
         case 'login':
-            $error = nl2br(_SYSTEM_MSG_LOGINERROR);
+            $error = ploopi_nl2br(_SYSTEM_MSG_LOGINERROR);
         break;
     }
     ?>
@@ -223,20 +227,33 @@ if (isset($error))
                 <div class="ploopi_form">
                     <p>
                         <label><?php echo _SYSTEM_LABEL_LOGIN; ?>:</label>
-                        <strong><?php echo $user->fields['login']; ?></strong>
+                        <strong><?php echo ploopi_htmlentities($user->fields['login']); ?></strong>
                     </p>
                     <p>
-                        <label><?php echo _SYSTEM_LABEL_PASSWORD; ?>:</label>
-                        <input type="password" class="text" name="usernewpass" id="usernewpass" value="" tabindex="22" />
+                        <label>Ancien mot de passe:</label>
+                        <input type="password" class="text" name="useroldpass" id="useroldpass" value="" tabindex="22" style="width:180px;" />
                     </p>
+                    <p>
+                        <label>Nouveau mot de passe:</label>
+                        <input type="password" class="text" name="usernewpass" id="usernewpass" value="" tabindex="22" style="width:180px;" />
+                    </p>
+                    <div id="protopass"></div>
                     <p>
                         <label><?php echo _SYSTEM_LABEL_PASSWORD_CONFIRM; ?>:</label>
-                        <input type="password" class="text" name="usernewpass_confirm" id="usernewpass_confirm" value="" tabindex="23" />
+                        <input type="password" class="text" name="usernewpass_confirm" id="usernewpass_confirm" value="" tabindex="23" style="width:180px;" />
                     </p>
                     <p>
                         <label><?php echo _SYSTEM_LABEL_EXPIRATION_DATE; ?>:</label>
-                        <span><?php echo $user_date_expire['date']; ?></span>
+                        <input type="text" style="width:100px;" class="text" readonly="readonly" disabled="disabled" value="<?php echo ploopi_htmlentities($user_date_expire['date']); ?>" tabindex="24" />
                     </p>
+
+                    <? if (!empty($user->fields['password_validity'])) { ?>
+                    <p>
+                        <label>Date d'expiration du mot de passe:</label>
+                        <input type="text" style="width:100px;" class="text" readonly="readonly" disabled="disabled" value="<?php echo date('d/m/Y', ploopi_timestamp2unixtimestamp($user->fields['password_last_update'])+$user->fields['password_validity']*86400); ?>" tabindex="24" />
+                    </p>
+                    <? } ?>
+
                     <p>
                         <label><?php echo _SYSTEM_LABEL_EMAIL; ?>:</label>
                         <input type="text" class="text" name="user_email"  value="<?php echo ploopi_htmlentities($user->fields['email']); ?>" tabindex="25" />
@@ -312,7 +329,7 @@ if (isset($error))
                         foreach ($arrZones as $key => $value)
                         {
                             ?>
-                            <option value="<?php echo ploopi_htmlentities($key); ?>" <?php if ($user->fields['timezone'] == $key) echo 'selected'; ?>><?php echo ploopi_htmlentities($value['label']); ?> (<?php echo $value['offset_display']; ?>)</option>
+                            <option value="<?php echo ploopi_htmlentities($key); ?>" <?php if ($user->fields['timezone'] == $key) echo 'selected'; ?>><?php echo ploopi_htmlentities($value['label']); ?> (<?php echo ploopi_htmlentities($value['offset_display']); ?>)</option>
                             <?php
                         }
                         ?>
@@ -389,5 +406,45 @@ if (isset($error))
     );
     ?>
 </fieldset>
+
+
+<style>
+    #protopass {padding:0;margin:0;margin-left:30%;padding-left:0.5em;width:195px;} #protopass * {font-size:10px;}
+    #protopass .password-strength-bar {border-radius:2px;}
+</style>
+
+<script type="text/javascript">
+    Event.observe(window, 'load', function() {
+        $('useroldpass').value = '';
+        $('usernewpass').value = '';
+        $('usernewpass_confirm').value = '';
+
+
+        <? if (_PLOOPI_USE_COMPLEXE_PASSWORD) { ?>
+        var options = {
+            minchar: 8,
+            scores: [5, 10, 20, 30]
+        };
+        <? } else { ?>
+        var options = {
+            minchar: 6,
+            scores: [5, 10, 20, 30]
+        };
+        <? } ?>
+
+        new Protopass('usernewpass', 'protopass', options);
+
+        Event.observe($('usernewpass_confirm'), 'change', function() {
+
+            if ($('usernewpass').value == $('usernewpass_confirm').value) {
+                $('usernewpass_confirm').style.backgroundColor = $('usernewpass').style.backgroundColor = 'lightgreen';
+            } else {
+                $('usernewpass_confirm').style.backgroundColor = $('usernewpass').style.backgroundColor = 'indianred';
+            }
+        });
+
+    });
+</script>
+
 
 <?php echo $skin->close_simplebloc(); ?>

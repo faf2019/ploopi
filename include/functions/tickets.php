@@ -306,7 +306,7 @@ function ploopi_tickets_displayusers()
             <p class="ploopi_va" style="padding:2px;">
                 <a class="system_tickets_delete_user" href="javascript:void(0);" onclick="ploopi_xmlhttprequest_todiv('admin.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_select_user&remove_user_id=<?php echo $user->fields['id']; ?>', 'div_ticket_users_selected');">
                     <img src="./img/icon_delete.gif">
-                    <span><?php echo "{$user->fields['lastname']} {$user->fields['firstname']} ("._PLOOPI_LABEL_TICKET_DELETERECIPIENT.')'; ?></span>
+                    <span><?php echo ploopi_htmlentities("{$user->fields['lastname']} {$user->fields['firstname']}")." ("._PLOOPI_LABEL_TICKET_DELETERECIPIENT.')'; ?></span>
                 </a>
             </p>
             <?php

@@ -208,19 +208,4 @@ class ploopi_session
 
         return true;
     }
-
-    /**
-     * Détruit la session et regénère un identifiant de session
-     *
-     * @see session_regenerate_id
-     */
-
-    public static function destroy_id()
-    {
-        $previous_id = session_id();
-        session_regenerate_id(!self::$booUseDb);
-        ploopi_session::destroy($previous_id);
-        session_destroy();
-    }
-
 }

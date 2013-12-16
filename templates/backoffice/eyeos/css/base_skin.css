@@ -126,10 +126,6 @@ background: -moz-linear-gradient(45deg, rgba(255,255,255,0.8) 0%, rgba(255,255,2
 background: -webkit-linear-gradient(45deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.5) 100%);
 }
 
-input.text {
-/* height:16px; */
-}
-
 *::-webkit-input-placeholder { color:#888; }
 *:-moz-placeholder { color:#888; }
 
@@ -175,6 +171,11 @@ input[type='submit'], button[type='submit'] {
 font-weight:bold;
 }
 
+*[disabled=disabled],
+*[readonly=readonly] {
+    color:#888;
+    cursor:not-allowed;
+}
 
 .toolbar {
 padding-bottom:4px;

@@ -263,5 +263,5 @@ define ('_PLOOPI_INSTALL_END_OK', '<b>FELICITATION</b><br>'
                                    .'<br>'
                                    .'<br>vous pouvez vous connecter en utilisant votre compte "Administrateur"'
                                    .'<br>'
-                                   .'<br><a href="../index.php" class="link">Continuer</a>');
+                                   .'<br><a href="index.php" class="link">Continuer</a>');
 ?>

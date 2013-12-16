@@ -54,7 +54,7 @@ foreach ($_SESSION['ploopi']['workspaces'] as $group)
 {
     if (!empty($group['adminlevel']) && $group['id'] != _PLOOPI_SYSTEMGROUP)
     {
-        echo $skin->open_simplebloc("Espace « {$group['label']} »");
+        echo $skin->open_simplebloc(ploopi_htmlentities("Espace « {$group['label']} »"));
 
         $columns = array();
         $values = array();
@@ -62,17 +62,6 @@ foreach ($_SESSION['ploopi']['workspaces'] as $group)
 
         $columns['left']['module']       = array('label' => 'Module', 'width' => '250', 'options' => array('sort' => true));
         $columns['auto']['actions']     = array('label' => 'Actions');
-
-        /*
-         *
-        ?>
-        <TR bgcolor="<?php echo $skin->values['bgline1']; ?>">
-            <TD>Niveau Utilisateur :</TD>
-            <TD><?php echo $ploopi_system_levels[$group['adminlevel']]; ?></TD>
-        </TR>
-
-        <?php
-*/
 
         if (isset($group['modules']))
         {
@@ -85,13 +74,13 @@ foreach ($_SESSION['ploopi']['workspaces'] as $group)
                     foreach($arrActions[$_SESSION['ploopi']['modules'][$moduleid]['id_module_type']] as $id => $action)
                     {
                         $puce = ploopi_isactionallowed($id, $group['id'], $moduleid) ? $green : $red;
-                        $strActions .= "<p class=\"ploopi_va\">{$puce}<span>{$action['label']}</span></p>";
+                        $strActions .= "<p class=\"ploopi_va\">{$puce}<span>".ploopi_htmlentities($action['label'])."</span></p>";
                     }
                 }
 
                 if ($strActions == '') $strActions = 'Aucune action pour ce module';
 
-                $values[$c]['values']['module'] = array('label' => $_SESSION['ploopi']['modules'][$moduleid]['label']);
+                $values[$c]['values']['module'] = array('label' => ploopi_htmlentities($_SESSION['ploopi']['modules'][$moduleid]['label']));
                 $values[$c]['values']['actions'] = array('label' => $strActions);
 
                 $values[$c]['description'] = '';

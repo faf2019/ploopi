@@ -429,11 +429,11 @@ if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
                     }
                     ?></div>
 
-                    <div class="system_tickets_date"><?php echo $timestp['date']; ?> à <?php echo $timestp['time']; ?></div>
-                    <div class="system_tickets_sender"><?php echo $username; ?></div>
-                    <div class="system_tickets_date"><?php echo $lastreply_timestp['date']; ?> à <?php echo $lastreply_timestp['time']; ?></div>
-                    <div class="system_tickets_count"><?php echo $fields['count_read']; ?></div>
-                    <div class="system_tickets_count"><?php echo $fields['count_replies']; ?></div>
+                    <div class="system_tickets_date"><?php echo ploopi_htmlentities($timestp['date']); ?> à <?php echo ploopi_htmlentities($timestp['time']); ?></div>
+                    <div class="system_tickets_sender"><?php echo ploopi_htmlentities($username); ?></div>
+                    <div class="system_tickets_date"><?php echo ploopi_htmlentities($lastreply_timestp['date']); ?> à <?php echo ploopi_htmlentities($lastreply_timestp['time']); ?></div>
+                    <div class="system_tickets_count"><?php echo ploopi_htmlentities($fields['count_read']); ?></div>
+                    <div class="system_tickets_count"><?php echo ploopi_htmlentities($fields['count_replies']); ?></div>
                     <div class="system_tickets_attachment">
                         <?php
                         if ($fields['id_record'] != '')
@@ -485,7 +485,7 @@ if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
                                 ?>
                                     <div class="system_tickets_user_detail">
                                         <div style="clear:both;float:left;"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/p_<?php echo $puce; ?>.png"></div>
-                                        <div style="float:left;"><?php echo "{$dest['firstname']} {$dest['lastname']}{$strdate}"; ?></div>
+                                        <div style="float:left;"><?php echo ploopi_htmlentities("{$dest['firstname']} {$dest['lastname']}{$strdate}"); ?></div>
                                     </div>
                                 <?php
                             }
@@ -545,7 +545,7 @@ if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
                             if($boolRecordIsEnabled)
                             {
                                 ?>
-                                <a href="<?php echo ploopi_urlencode("admin.php?ploopi_mainmenu=1&{$object_script}"); ?>"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/link.png"><?php echo "{$fields['module_name']} / {$fields['object_name']} <b>\"{$fields['object_label']}\"</b>"; ?></a>
+                                <a href="<?php echo ploopi_urlencode("admin.php?ploopi_mainmenu=1&{$object_script}"); ?>"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/link.png"><?php echo ploopi_htmlentities("{$fields['module_name']} / {$fields['object_name']} ")."<b>\"".ploopi_htmlentities($fields['object_label'])."\"</b>"; ?></a>
                                 <?php
                             }
                             else

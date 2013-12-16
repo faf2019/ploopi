@@ -970,6 +970,20 @@ padding:2px;
 overflow:auto;
 }
 
+.loginbox_line label {
+display:block;
+}
+
+.loginbox_line input {
+display:block;
+box-sizing: border-box; /* css3 rec */
+-moz-box-sizing: border-box; /* ff2 */
+-ms-box-sizing: border-box; /* ie8 */
+-webkit-box-sizing: border-box; /* safari3 */
+-khtml-box-sizing: border-box; /* konqueror */
+width:100%;
+}
+
 .loginbox_title {
 background:#193c1c url(../img/template/bloc_titre_fond.png) top left repeat-x;
 color: #ffffff;
@@ -1597,6 +1611,12 @@ background:#aab7ab;
 
 input.flatbutton[type='submit'], input.button[type='submit'], button[type='submit'] {
 font-weight:bold;
+}
+
+*[disabled=disabled],
+*[readonly=readonly] {
+    color:#888;
+    cursor:not-allowed;
 }
 
 .toolbar {

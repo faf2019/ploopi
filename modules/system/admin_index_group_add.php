@@ -53,12 +53,12 @@ else
 <input type="hidden" name="group_id_group" value="<?php echo $group->fields['id']; ?>">
 
 <div class="ploopi_form_title">
-    <?php echo $parentlabel; ?> &raquo; <?php echo _SYSTEM_LABEL_GROUP_ADD; ?>
+    <?php echo ploopi_htmlentities($parentlabel); ?> &raquo; <?php echo _SYSTEM_LABEL_GROUP_ADD; ?>
 </div>
 <div class="ploopi_form" style="clear:both;padding:2px">
     <p>
         <label><?php echo _SYSTEM_LABEL_GROUP_NAME; ?>:</label>
-        <input type="text" class="text" name="group_label"  value="<?php echo "fils de {$parentlabel}"; ?>">
+        <input type="text" class="text" name="group_label"  value="<?php echo ploopi_htmlentities("fils de {$parentlabel}"); ?>">
     </p>
     <p>
         <label><?php echo _SYSTEM_LABEL_GROUP_SHARED; ?>:</label>

@@ -198,7 +198,7 @@ switch($op)
                             <a href="<?php echo ploopi_urlencode("admin.php?ploopi_mainmenu=1&{$object_script}"); ?>"><?php echo ploopi_htmlentities($annotation['object_label']); ?></a>
                         </div>
                         <div class="system_annotation_date">
-                            le <?php echo $ldate['date']; ?> à <?php echo $ldate['time']; ?>
+                            le <?php echo ploopi_htmlentities($ldate['date']); ?> à <?php echo ploopi_htmlentities($ldate['time']); ?>
                         </div>
 
                         <div  class="system_annotation_content"><?php echo ploopi_make_links(ploopi_nl2br(ploopi_htmlentities($annotation['content']))); ?></div>
@@ -220,7 +220,7 @@ switch($op)
                         ?>
                         </div>
                         <div class="system_annotation_module">
-                            <a href="<?php echo ploopi_urlencode("admin.php?ploopi_mainmenu=1&{$object_script}"); ?>"><b><?php echo $annotation['module_name']; ?></b>  / <?php echo ploopi_htmlentities($annotation['object_name']); ?></a>
+                            <a href="<?php echo ploopi_urlencode("admin.php?ploopi_mainmenu=1&{$object_script}"); ?>"><b><?php echo ploopi_htmlentities($annotation['module_name']); ?></b>  / <?php echo ploopi_htmlentities($annotation['object_name']); ?></a>
                         </div>
                     </div>
                     <?php

@@ -266,7 +266,7 @@ function system_build_tree($typetree, $from_wid = 1, $from_gid = 0)
                                     <div>
                                         {$node}<img style=\"display:block;float:left;\" src=\"{$_SESSION['ploopi']['template_path']}/img/treeview/{$icon}.png\" />
                                         <span style=\"display:block;margin-left:".($marginleft+20)."px;line-height:18px;\">
-                                            <a style=\"font-weight:{$style_sel};\" href=\"".ploopi_urlencode("admin.php?groupid={$group['id']}")."\">{$group['label']}</a>
+                                            <a style=\"font-weight:{$style_sel};\" href=\"".ploopi_urlencode("admin.php?groupid={$group['id']}")."\">".ploopi_htmlentities($group['label'])."</a>
                                         </span>
                                     </div>
                                     <div style=\"margin-left:{$marginleft}px;display:{$display};\" id=\"g{$group['id']}\">{$html_rec}</div>
@@ -333,7 +333,7 @@ function system_build_tree($typetree, $from_wid = 1, $from_gid = 0)
                                     <div>
                                         {$node}<img style=\"display:block;float:left;\" src=\"{$_SESSION['ploopi']['template_path']}/img/treeview/{$icon}.png\" />
                                         <span style=\"display:block;margin-left:".($marginleft+20)."px;line-height:18px;\">
-                                            <a style=\"font-weight:{$style_sel};\" href=\"".ploopi_urlencode("admin.php?workspaceid={$workspace['id']}")."\">{$workspace['label']}</a>
+                                            <a style=\"font-weight:{$style_sel};\" href=\"".ploopi_urlencode("admin.php?workspaceid={$workspace['id']}")."\">".ploopi_htmlentities($workspace['label'])."</a>
                                         </span>
                                     </div>
                                     <div style=\"margin-left:{$marginleft}px;display:{$display};\" id=\"w{$workspace['id']}\">{$html_rec}</div>
@@ -557,9 +557,9 @@ function system_tickets_displayresponses($parents, $tickets, $rootid)
         ?>
         <div class="system_tickets_response">
             <div class="system_tickets_head" onclick="javascript:system_tickets_display(<?php echo $fields['id']; ?>,<?php echo (empty($fields['status'])) ? 0 : 1; ?>, 0);">
-                <div  class="system_tickets_date"><?php echo $localdate['date']; ?> à <?php echo $localdate['time']; ?></div>
-                <div class="system_tickets_sender"><b><?php echo "{$fields['firstname']} {$fields['lastname']}"; ?></b></div>
-                <div class="system_tickets_title" id="tickets_title_<?php echo $fields['id']; ?>" <?php if (is_null($fields['status'])) echo 'style="font-weight:bold;"'; ?>><?php echo $fields['title']; ?></div>
+                <div  class="system_tickets_date"><?php echo ploopi_htmlentities($localdate['date']); ?> à <?php echo ploopi_htmlentities($localdate['time']); ?></div>
+                <div class="system_tickets_sender"><b><?php echo ploopi_htmlentities("{$fields['firstname']} {$fields['lastname']}"); ?></b></div>
+                <div class="system_tickets_title" id="tickets_title_<?php echo $fields['id']; ?>" <?php if (is_null($fields['status'])) echo 'style="font-weight:bold;"'; ?>><?php echo ploopi_htmlentities($fields['title']); ?></div>
             </div>
 
             <div class="system_tickets_response_detail" id="tickets_detail_<?php echo $fields['id'];?>">

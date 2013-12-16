@@ -49,6 +49,48 @@ function ploopi_htpasswd($pass)
 }
 
 /**
+ * Injecte le jeton courant dans une url existante
+ * Notamment utilisé lors de la redirection vers une URL interne après la phase d'identification de l'utilisation
+ */
+
+function ploopi_urltoken($url)
+{
+    // Analyse de l'url
+    $arrParsedURL = parse_url($url);
+
+
+    // Analyse des paramètres
+    $arrParams = array();
+    if (!empty($arrParsedURL['query'])) parse_str($arrParsedURL['query'], $arrParams);
+    // Détection de la présence d'une URL déjà chiffrée !
+    if (isset($arrParams['ploopi_url']) && $arrParams['ploopi_url'] != '') {
+        // On décode l'URL
+        require_once './include/classes/cipher.php';
+        parse_str(ploopi_cipher::singleton()->decrypt($arrParams['ploopi_url']), $arrParams);
+    }
+
+    $ploopi_mainmenu = $ploopi_workspaceid = $ploopi_moduleid = $ploopi_action = null;
+
+    // Détection de la présence de l'environnement ploopi (jeton inclus)
+    if (isset($arrParams['ploopi_env'])) {
+        $arrEnv = explode('-', $arrParams['ploopi_env']);
+
+        if (isset($arrEnv[0]) && is_numeric($arrEnv[0])) $ploopi_mainmenu = $arrEnv[0];
+
+        if (isset($arrEnv[1]) && is_numeric($arrEnv[1])) $ploopi_workspaceid = $arrEnv[1];
+
+        if (isset($arrEnv[2]) && is_numeric($arrEnv[2])) $ploopi_moduleid = $arrEnv[2];
+
+        if (isset($arrEnv[3])) $ploopi_action = $arrEnv[3];
+    }
+
+    echo ploopi_urlencode($url, $ploopi_mainmenu, $ploopi_workspaceid, $ploopi_moduleid, $ploopi_action);
+
+
+    return ploopi_urlencode($url, $ploopi_mainmenu, $ploopi_workspaceid, $ploopi_moduleid, $ploopi_action);
+}
+
+/**
  * Version spéciale de ploopi_urlencode qui nécessite que les paramètres soient déjà urlencodés (via la fonction urlencode())
  *
  * @see ploopi_urlencode
@@ -118,16 +160,12 @@ function ploopi_queryencode($query, $ploopi_mainmenu = null, $ploopi_workspaceid
 {
     $arrParams = array();
 
-    // on parse les paramètres de l'URL et on met tout ça dans un tableau associatif param => valeur
-    if (!empty($query))
-    {
-        //$query = str_replace('&amp;', '&', $query);
-
-        foreach(explode('&', $query) as $param)
-        {
-            $arrParam = explode('=', $param);
-            if (sizeof($arrParam) > 0) $arrParams[$arrParam[0]] = (isset($arrParam[1])) ? $arrParam[1] : null;
-        }
+    if (!empty($query)) parse_str($query, $arrParams);
+    // Détection de la présence d'une URL déjà chiffrée !
+    if (isset($arrParams['ploopi_url']) && $arrParams['ploopi_url'] != '') {
+        // On décode l'URL
+        require_once './include/classes/cipher.php';
+        parse_str(ploopi_cipher::singleton()->decrypt($arrParams['ploopi_url']), $arrParams);
     }
 
     // si les paramètres optionnels sont passés à la fonction, on les rajoute au tableau
@@ -145,14 +183,14 @@ function ploopi_queryencode($query, $ploopi_mainmenu = null, $ploopi_workspaceid
         if (!isset($arrParams['ploopi_action'])) $arrParams['ploopi_action'] = (is_null($ploopi_action)) ? $_SESSION['ploopi']['action'] : '';
 
         // on génère le "super" paramètre "ploopi_env" qui regroupe ploopi_mainmenu, ploopi_workspaceid, ploopi_moduleid, ploopi_action
-        $arrParams['ploopi_env'] =
-            sprintf(
-                "%s,%s,%s,%s",
-                $arrParams['ploopi_mainmenu'],
-                $arrParams['ploopi_workspaceid'],
-                $arrParams['ploopi_moduleid'],
-                $arrParams['ploopi_action']
-            );
+        $arrParams['ploopi_env'] = sprintf(
+            "%s-%s-%s-%s-%s",
+            $arrParams['ploopi_mainmenu'],
+            $arrParams['ploopi_workspaceid'],
+            $arrParams['ploopi_moduleid'],
+            $arrParams['ploopi_action'],
+            isset($_SESSION['ploopi']['token']) ? $_SESSION['ploopi']['token'] : ''
+        );
 
         // on supprime les paramètres superflus
         unset($arrParams['ploopi_mainmenu']);

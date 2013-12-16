@@ -153,7 +153,7 @@ echo $skin->open_simplebloc();
     ?>
 
         <div class="ploopi_form_title">
-            <?php echo $workspace->fields['label']; ?> &raquo;
+            <?php echo ploopi_htmlentities($workspace->fields['label']); ?> &raquo;
             <?php
             echo _SYSTEM_LABEL_WORKSPACE_MODIFY;
             ?>
@@ -177,11 +177,11 @@ echo $skin->open_simplebloc();
                 ?>
                 <p>
                     <label><?php echo _SYSTEM_LABEL_GROUP_CODE; ?>:</label>
-                    <input type="text" class="text" name="workspace_code"  value="<?php echo $workspace->fields['code']; ?>">
+                    <input type="text" class="text" name="workspace_code"  value="<?php echo ploopi_htmlentities($workspace->fields['code']); ?>">
                 </p>
                 <p>
                     <label><?php echo _SYSTEM_LABEL_GROUP_PRIORITY; ?>:</label>
-                    <input type="text" class="text" name="workspace_priority"  value="<?php echo $workspace->fields['priority']; ?>">
+                    <input type="text" class="text" name="workspace_priority"  value="<?php echo ploopi_htmlentities($workspace->fields['priority']); ?>">
                 </p>
                 <?php
             }
@@ -189,7 +189,7 @@ echo $skin->open_simplebloc();
         </div>
 
         <div class="ploopi_form_title">
-            <?php echo $workspace->fields['label']; ?> &raquo; <?php echo _SYSTEM_LABEL_ACCESS; ?>
+            <?php echo ploopi_htmlentities($workspace->fields['label']); ?> &raquo; <?php echo _SYSTEM_LABEL_ACCESS; ?>
         </div>
 
         <div class="ploopi_form" style="clear:both;padding:2px">
@@ -224,7 +224,7 @@ echo $skin->open_simplebloc();
                     </select>
                     <?php
                 }
-                else echo '<span>'.$workspace->fields['template'].'</span>';
+                else echo '<span>'.ploopi_htmlentities($workspace->fields['template']).'</span>';
                 ?>
             </p>
             <p>
@@ -287,7 +287,7 @@ echo $skin->open_simplebloc();
         </div>
 
         <div class="ploopi_form_title">
-            <?php echo $workspace->fields['label']; ?> &raquo; <?php echo _SYSTEM_LABEL_META; ?>
+            <?php echo ploopi_htmlentities($workspace->fields['label']); ?> &raquo; <?php echo _SYSTEM_LABEL_META; ?>
         </div>
 
         <div class="ploopi_form" id="system_meta" style="clear:both;padding:2px;">
@@ -333,7 +333,7 @@ echo $skin->open_simplebloc();
                 if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPADMIN)
                 {
                     ?>
-                    <input type="text" class="text" name="workspace_meta_author" value="<?php echo $workspace->fields['meta_author']; ?>">
+                    <input type="text" class="text" name="workspace_meta_author" value="<?php echo ploopi_htmlentities($workspace->fields['meta_author']); ?>">
                     <?php
                 }
                 else echo '<span>'.ploopi_htmlentities($workspace->fields['meta_author']).'</span>';
@@ -366,7 +366,7 @@ echo $skin->open_simplebloc();
         </div>
 
         <div class="ploopi_form_title">
-            <?php echo $workspace->fields['label']; ?> &raquo; <?php echo _SYSTEM_LABEL_FILTERING; ?>
+            <?php echo ploopi_htmlentities($workspace->fields['label']); ?> &raquo; <?php echo _SYSTEM_LABEL_FILTERING; ?>
         </div>
 
         <div class="ploopi_form" id="system_filtering" style="clear:both;padding:2px;">

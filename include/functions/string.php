@@ -247,7 +247,7 @@ function ploopi_xmlentities($str, $utf8 = false, $extended = true)
 }
 
 /**
- * Convertit tous les caractères éligibles en entités HTML (via htmlentities) mais en ISO-8859-1 par défaut
+ * Convertit tous les caractères éligibles en entités HTML (via htmlentities) mais en ISO-8859-1 par défaut et supprime les balises HTML.
  *
  * @param string $str chaîne brute
  * @param int masque qui détermine la façon dans les guillemets sont gérés
@@ -259,7 +259,7 @@ function ploopi_htmlentities($str, $flags = null, $encoding = 'ISO-8859-1')
 {
     if (is_null($flags)) $flags = version_compare(phpversion(), '5.4', '<') ? ENT_COMPAT : ENT_COMPAT | ENT_HTML401;
 
-    return htmlentities($str, $flags, $encoding);
+    return htmlentities(strip_tags($str), $flags, $encoding);
 }
 
 /**

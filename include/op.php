@@ -52,27 +52,32 @@ if (isset($ploopi_op))
 
             if (!$objCache->start())
             {
-                $arrDisallow = array(
-                    '/bin/',
-                    '/cgi/',
-                    '/config/',
-                    '/data/',
-                    '/doc/',
-                    '/FCKeditor/',
-                    '/img/',
-                    '/include/',
-                    '/install/',
-                    '/js/',
-                    '/lang/',
-                    '/lib/',
-                    '/modules/',
-                    '/templates/',
-                    '/tools/',
-                );
+                if (_PLOOPI_FRONTOFFICE) {
+                    $arrDisallow = array(
+                        '/bin/',
+                        '/cgi/',
+                        '/config/',
+                        '/data/',
+                        '/doc/',
+                        '/FCKeditor/',
+                        '/img/',
+                        '/include/',
+                        '/install/',
+                        '/js/',
+                        '/lang/',
+                        '/lib/',
+                        '/modules/',
+                        '/templates/',
+                        '/tools/',
+                    );
 
-                foreach($arrDisallow as &$strDisallow) $strDisallow = "Disallow "._PLOOPI_SELFPATH.$strDisallow;
+                    foreach($arrDisallow as &$strDisallow) $strDisallow = "Disallow "._PLOOPI_SELFPATH.$strDisallow;
 
-                echo "User-agent: *\nSitemap: "._PLOOPI_BASEPATH."/sitemap.xml\n".implode("\n", $arrDisallow);
+                    echo "User-agent: *\nSitemap: "._PLOOPI_BASEPATH."/sitemap.xml\n".implode("\n", $arrDisallow);
+                }
+                else {
+                    echo "User-agent: *\r\nDisallow: *";
+                }
 
                 $objCache->end();
             }
@@ -132,6 +137,7 @@ if (isset($ploopi_op))
                                     // ok on peut générer le nouveau mot de passe et l'enregistrer
                                     $strPass = ploopi_generatepassword();
                                     $objUser->setpassword($strPass);
+                                    $objUser->fields['password_force_update'] = 1;
                                     $objUser->save();
 
                                     // ok on peut envoyer le mail
@@ -212,9 +218,10 @@ if (isset($ploopi_op))
                 break;
             }
 
-            if (isset($intError)) ploopi_redirect("admin.php?ploopi_errorcode={$intError}");
-            elseif (isset($intMsg)) ploopi_redirect("admin.php?ploopi_msgcode={$intMsg}");
-            else ploopi_redirect('admin.php');
+            if (isset($intError)) $_SESSION['ploopi']['errorcode'] = $intError;
+            elseif (isset($intMsg)) $_SESSION['ploopi']['msgcode'] = $intMsg;
+
+            ploopi_redirect('admin.php');
         break;
 
         case 'calendar_open':
@@ -324,7 +331,7 @@ if (isset($ploopi_op))
                     for ($d=1; $d<=7; $d++)
                     {
                         ?>
-                        <div class="calendar_day"><?php echo $ploopi_days[$d][0]; ?></div>
+                        <div class="calendar_day"><?php echo ploopi_htmlentities($ploopi_days[$d][0]); ?></div>
                         <?php
                     }
                     ?>
@@ -347,7 +354,7 @@ if (isset($ploopi_op))
                         $localdate = ploopi_timestamp2local($ts);
                         $d = intval(substr($ts, 6, 2), 10);
                         ?>
-                        <div class="calendar_day"><a class="calendar_outmonth" href="javascript:void(0);" onclick="javascript:$('<?php echo $_SESSION['calendar']['inputfield_id']; ?>').value='<?php echo $localdate['date']; ?>';ploopi_hidepopup('ploopi_popup_calendar');ploopi_dispatch_onchange('<?php echo $_SESSION['calendar']['inputfield_id']; ?>');"><?php echo $d; ?></a></div>
+                        <div class="calendar_day"><a class="calendar_outmonth" href="javascript:void(0);" onclick="javascript:$('<?php echo ploopi_htmlentities($_SESSION['calendar']['inputfield_id']); ?>').value='<?php echo ploopi_htmlentities($localdate['date']); ?>';ploopi_hidepopup('ploopi_popup_calendar');ploopi_dispatch_onchange('<?php echo ploopi_htmlentities($_SESSION['calendar']['inputfield_id']); ?>');"><?php echo $d; ?></a></div>
                         <?php
                     }
                 }
@@ -376,7 +383,7 @@ if (isset($ploopi_op))
                     if ($currentday == $selectedday) $class = 'class="calendar_day_selected"';
                     elseif ($currentday == $today) $class = 'class="calendar_day_today"';
                     ?>
-                        <div class="calendar_day"><a <?php echo $class; ?> href="javascript:void(0);" onclick="javascript:$('<?php echo $_SESSION['calendar']['inputfield_id']; ?>').value='<?php echo $localdate['date']; ?>';ploopi_hidepopup('ploopi_popup_calendar');ploopi_dispatch_onchange('<?php echo $_SESSION['calendar']['inputfield_id']; ?>');"><?php echo $d; ?></a></div>
+                        <div class="calendar_day"><a <?php echo $class; ?> href="javascript:void(0);" onclick="javascript:$('<?php echo ploopi_htmlentities($_SESSION['calendar']['inputfield_id']); ?>').value='<?php echo ploopi_htmlentities($localdate['date']); ?>';ploopi_hidepopup('ploopi_popup_calendar');ploopi_dispatch_onchange('<?php echo ploopi_htmlentities($_SESSION['calendar']['inputfield_id']); ?>');"><?php echo $d; ?></a></div>
                     <?php
 
                     /**
@@ -399,7 +406,7 @@ if (isset($ploopi_op))
                         $localdate = ploopi_timestamp2local($ts);
                         $d = intval(substr($ts, 6, 2), 10);
                         ?>
-                        <div class="calendar_day"><a class="calendar_outmonth" href="javascript:void(0);" onclick="javascript:$('<?php echo $_SESSION['calendar']['inputfield_id']; ?>').value='<?php echo $localdate['date']; ?>';ploopi_hidepopup('ploopi_popup_calendar');ploopi_dispatch_onchange('<?php echo $_SESSION['calendar']['inputfield_id']; ?>');"><?php echo $d; ?></a></div>
+                        <div class="calendar_day"><a class="calendar_outmonth" href="javascript:void(0);" onclick="javascript:$('<?php echo ploopi_htmlentities($_SESSION['calendar']['inputfield_id']); ?>').value='<?php echo ploopi_htmlentities($localdate['date']); ?>';ploopi_hidepopup('ploopi_popup_calendar');ploopi_dispatch_onchange('<?php echo ploopi_htmlentities($_SESSION['calendar']['inputfield_id']); ?>');"><?php echo $d; ?></a></div>
                         <?php
                     }
 
@@ -410,7 +417,7 @@ if (isset($ploopi_op))
                 $localdate = ploopi_timestamp2local(sprintf("%04d%02d%02d000000", date('Y'), date('n'), date('j')));
                 ?>
                 <div class="calendar_row" style="height:1.2em;overflow:hidden;">
-                    <a style="display:block;float:left;line-height:1.2em;height:1.2em;" href="javascript:void(0);" onclick="javascript:$('<?php echo $_SESSION['calendar']['inputfield_id']; ?>').value='<?php echo $localdate['date']; ?>';ploopi_hidepopup('ploopi_popup_calendar');ploopi_dispatch_onchange('<?php echo $_SESSION['calendar']['inputfield_id']; ?>');">Aujourd'hui</a>
+                    <a style="display:block;float:left;line-height:1.2em;height:1.2em;" href="javascript:void(0);" onclick="javascript:$('<?php echo ploopi_htmlentities($_SESSION['calendar']['inputfield_id']); ?>').value='<?php echo ploopi_htmlentities($localdate['date']); ?>';ploopi_hidepopup('ploopi_popup_calendar');ploopi_dispatch_onchange('<?php echo ploopi_htmlentities($_SESSION['calendar']['inputfield_id']); ?>');">Aujourd'hui</a>
                     <a style="display:block;float:right;line-height:1.2em;height:1.2em;" href="javascript:void(0);" onclick="javascript:ploopi_hidepopup('ploopi_popup_calendar');">Fermer</a>
                 </div>
             </div>
@@ -626,7 +633,7 @@ if (isset($ploopi_op))
                         //else $sel = '';
                         $sel = '';
                         ?>
-                        <option <?php echo $sel; ?> value="<?php echo $key; ?>"><?php echo "{$value['module_label']} » {$value['label']}"; if (!empty($value['object_label'])) echo " » {$value['object_label']}"; ?></option>
+                        <option <?php echo $sel; ?> value="<?php echo $key; ?>"><?php echo ploopi_htmlentities("{$value['module_label']} » {$value['label']}"); if (!empty($value['object_label'])) echo ploopi_htmlentities(" » {$value['object_label']}"); ?></option>
                         <?php
                     }
                     ?>

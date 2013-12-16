@@ -276,7 +276,7 @@ else
 
         $values[$c]['values']['name']       = array('label' => ploopi_htmlentities("{$fields['lastname']}, {$fields['firstname']}"));
         $values[$c]['values']['login']      = array('label' => ploopi_htmlentities($fields['login']));
-        $values[$c]['values']['email']      = array('label' => empty($fields['email']) ? '' : '<a title="'.$fields['email'].'" href="mailto:'.$fields['email'].'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/email.gif" /></a>', 'sort_label' => $fields['email']);
+        $values[$c]['values']['email']      = array('label' => empty($fields['email']) ? '' : '<a title="'.ploopi_htmlentities($fields['email']).'" href="mailto:'.ploopi_htmlentities($fields['email']).'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/email.gif" /></a>', 'sort_label' => $fields['email']);
 
         $values[$c]['values']['origin']     = array('label' => '<a href="'.ploopi_urlencode("admin.php?wspToolbarItem=tabUsers&usrTabItem=tabUserList&groupid={$currentgroup['id']}&alphaTabItem=".(ord(strtolower($fields['lastname']))-96)).'">'.ploopi_htmlentities($currentgroup['label']).'</a>');
         $values[$c]['values']['service']    = array('label' => ploopi_htmlentities($fields['service']));

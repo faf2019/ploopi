@@ -134,7 +134,7 @@ if ($op == 'modify' && !empty($_GET['moduleid']) && is_numeric($_GET['moduleid']
     $module->open($_GET['moduleid']);
 
     echo '<a name="modify"></a>';
-    echo $skin->open_simplebloc(str_replace('<MODULE>',$module->fields['label'],_SYSTEM_LABEL_MODULE_PROPERTIES));
+    echo $skin->open_simplebloc(ploopi_htmlentities(str_replace('<MODULE>',$module->fields['label'],_SYSTEM_LABEL_MODULE_PROPERTIES)));
     ?>
 
     <form name="form_modify_module" action="<?php echo ploopi_urlencode("admin.php?op=save_module_props&moduleid={$module->fields['id']}"); ?>" method="post">
@@ -211,7 +211,7 @@ if ($op == 'modify' && !empty($_GET['moduleid']) && is_numeric($_GET['moduleid']
                     else $sel = '';
 
                     ?>
-                    <option <?php if ($module->fields['viewmode'] == $id) echo 'selected="selected"'; ?> value="<?php echo $id; ?>"><?php echo $viewmode; ?></option>
+                    <option <?php if ($module->fields['viewmode'] == $id) echo 'selected="selected"'; ?> value="<?php echo $id; ?>"><?php echo ploopi_htmlentities($viewmode); ?></option>
                     <?php
                 }
                 ?>

@@ -36,23 +36,9 @@
  */
 session_start();
 
-/**
- * On teste l'existence du fichier de configuration
- */
-if (file_exists('./config.php'))
-{
-  echo ('<div style="text-align:center;color:red;">Config exist !<br />You must delete ./config/install.php !</div>');
-  die();
-}
-
 define ('_PLOOPI_ERROR_REPORTING', E_ALL);
 
 define ('_PLOOPI_SERVER_OSTYPE', (substr(PHP_OS, 0, 3) == 'WIN') ? 'windows' : 'unix');
-
-/**
- * Init parameter for installation
- */
-chdir('..');
 
 //Inclusion/Requirement
 require_once './include/functions/errors.php';
@@ -839,7 +825,7 @@ if($_POST['stage']>=$stage)
 // Global tag for template
 $objInstallTemplate->assign_vars(array(
   'PAGE_TITLE'        => _PLOOPI_INSTALL_TITLE.' v'._PLOOPI_VERSION,
-  'TEMPLATE_PATH'     => '../templates/install',
+  'TEMPLATE_PATH'     => './templates/install',
   'JS_MESS'           => _PLOOPI_INSTALL_JAVASCRIPT,
   'JS_ERROR'          => _PLOOPI_INSTALL_ERROR_JAVASCRIPT,
   'ICON_ERROR'        => _PLOOPI_INSTALL_ICO_ERROR,

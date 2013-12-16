@@ -88,14 +88,14 @@ while($row = $db->fetchrow())
     }
     else $actions = '&nbsp;';
 
-    $values[$c]['values']['desc']       = array('label' => $row['description']);
-    $values[$c]['values']['module']     = array('label' => $row['module_label'], 'sort_label' => sprintf("%s_%s", $row['module_label'], $row['label']));
-    $values[$c]['values']['role']       = array('label' => $row['label']);
+    $values[$c]['values']['desc']       = array('label' => ploopi_htmlentities($row['description']));
+    $values[$c]['values']['module']     = array('label' => ploopi_htmlentities($row['module_label']), 'sort_label' => sprintf("%s_%s", $row['module_label'], $row['label']));
+    $values[$c]['values']['role']       = array('label' => ploopi_htmlentities($row['label']));
     $values[$c]['values']['shared']     = array('label' => '<img src="'.$_SESSION['ploopi']['template_path'].'/img/system/check_'.(($row['shared'] ? 'on' : 'off')).'.png">');
-    $values[$c]['values']['origine']    = array('label' => $row['origine']);
+    $values[$c]['values']['origine']    = array('label' => ploopi_htmlentities($row['origine']));
     $values[$c]['values']['actions']    = array('label' => $actions);
 
-    $values[$c]['description'] = $row['description'];
+    $values[$c]['description'] = ploopi_htmlentities($row['description']);
     if ($row['id_workspace'] == $workspaceid) $values[$c]['link'] = ploopi_urlencode("admin.php?op=modify_role&roleid={$row['id']}");
     $c++;
 }

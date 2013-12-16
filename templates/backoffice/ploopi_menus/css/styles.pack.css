@@ -949,7 +949,7 @@ background:#8fa090 url(../img/template/accueil_fond.png) top right no-repeat;
 margin:0 auto;
 width:1000px;
 min-width:1000px;
-height:350px;
+min-height:350px;
 overflow:auto;
 }
 
@@ -1026,6 +1026,20 @@ font-weight:bold;
 .loginbox_line {
 padding:2px;
 overflow:auto;
+}
+
+.loginbox_line label {
+display:block;
+}
+
+.loginbox_line input {
+display:block;
+box-sizing: border-box; /* css3 rec */
+-moz-box-sizing: border-box; /* ff2 */
+-ms-box-sizing: border-box; /* ie8 */
+-webkit-box-sizing: border-box; /* safari3 */
+-khtml-box-sizing: border-box; /* konqueror */
+width:100%;
 }
 
 .loginbox_title {
@@ -1742,6 +1756,12 @@ font-weight:bold;
 input.checkbox {
 padding:0;
 margin:0;
+}
+
+*[disabled=disabled],
+*[readonly=readonly] {
+    color:#888;
+    cursor:not-allowed;
 }
 
 .toolbar {

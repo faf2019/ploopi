@@ -79,16 +79,33 @@ switch($op)
 
         $user->setvalues($_POST,'user_');
 
-        // affectation nouveau password
-        $passwordok = true;
-        if (isset($_POST['usernewpass']) && isset($_POST['usernewpass_confirm']))
+        // Affectation nouveau mot de passe
+        $error = '';
+
+        if (isset($_POST['useroldpass']) && isset($_POST['usernewpass']) && isset($_POST['usernewpass_confirm']))
         {
-            if ($_POST['usernewpass']!='' && $_POST['usernewpass'] == $_POST['usernewpass_confirm'])
+            if ($_POST['usernewpass'] != '')
             {
-                $user->setpassword($_POST['usernewpass']);
-                if ($_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_generate_htpasswd']) system_generate_htpasswd($user->fields['login'], $_POST['usernewpass']);
+                // Vérification de l'ancien mot de passe
+                if (strcmp($user->fields['password'], user::generate_hash($_POST['useroldpass'], $user->fields['login'])) == 0)
+                {
+                    // Mots de passes équivalents
+                    if ($_POST['usernewpass'] == $_POST['usernewpass_confirm'])
+                    {
+                        // Complexité ok
+                        if (!_PLOOPI_USE_COMPLEXE_PASSWORD || ploopi_checkpasswordvalidity($_POST['usernewpass']))
+                        {
+                            // Affectation du mot de passe
+                            $user->setpassword($_POST['usernewpass']);
+                            // Mise à jour htpasswd
+                            if ($_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_generate_htpasswd']) system_generate_htpasswd($user->fields['login'], $_POST['usernewpass']);
+                        }
+                        else $error = 'passrejected';
+                    }
+                    else $error = 'password';
+                }
+                else $error = 'oldpassword';
             }
-            elseif ($_POST['usernewpass'] != $_POST['usernewpass_confirm']) $passwordok = false;
         }
 
         $user->save();
@@ -105,8 +122,8 @@ switch($op)
         // Suppression photo
         if (ploopi_getsessionvar("deletephoto_{$user->fields['id']}")) $user->deletephoto();
 
-        if ($passwordok) ploopi_redirect("admin.php?op=profile&reloadsession");
-        else ploopi_redirect("admin.php?op=profile&error=password");
+        if ($error) ploopi_redirect("admin.php?op=profile&error={$error}");
+        else ploopi_redirect("admin.php?op=profile&reloadsession");
     break;
 
     case 'profile':

@@ -101,7 +101,7 @@ if (isset($_GET['monitoring']))
 else
 {
     ?>
-    <input type="text" class="text" value="<?php echo (isset($_GET['monitoring'])) ? $_GET['monitoring'] : 2; ?>" size="2" id="system_monitoring_delay">
+    <input type="text" class="text" value="<?php echo (isset($_GET['monitoring'])) ? ploopi_htmlentities($_GET['monitoring']) : 2; ?>" size="2" id="system_monitoring_delay">
     <input type="button" class="button" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?op=connectedusers"); ?>&monitoring='+$('system_monitoring_delay').value;" value="Monitoring">
     <?php
 }

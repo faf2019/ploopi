@@ -156,6 +156,9 @@ function ploopi_ob_callback($buffer)
         }
     }
 
+    // Suppression d'un token inutilisé
+    if (($content_type != 'text/html' || $booDownloadFile) && isset($_SESSION['ploopi']['token']) && isset($_SESSION['ploopi']['tokens'][$_SESSION['ploopi']['token']])) unset($_SESSION['ploopi']['tokens'][$_SESSION['ploopi']['token']]);
+
     $ploopi_stats = array();
 
     if (isset($buffer)) $ploopi_stats['pagesize'] = strlen($buffer);
@@ -276,7 +279,9 @@ function ploopi_ob_callback($buffer)
 
 function ploopi_print_r($var, $return = false)
 {
-    $p = '<pre style="text-align:left; background-color:#fff; color:#000; padding:5px; border:1px solid #000;">'.(is_array($var) || is_object($var) ? print_r($var, true) : $var).'</pre>';
+    include_once './include/functions/string.php';
+
+    $p = '<pre style="text-align:left; background-color:#fff; color:#000; padding:5px; border:1px solid #000;">'.ploopi_htmlentities((is_array($var) || is_object($var) ? print_r($var, true) : $var)).'</pre>';
     if($return) return($p);
     else echo $p;
 }
@@ -835,12 +840,12 @@ function ploopi_array_map($func, $var)
 function ploopi_h404() { header("HTTP/1.0 404 Not Found"); }
 
 /**
- * Déconnecte l'utilisateur, nettoie la session et renvoie éventuellement un code d'erreur
+ * Déconnecte l'utilisateur, nettoie la session, initialise le code d'erreur
  *
- * @param int $errorcode code d'erreur
- * @param int $sleep durée d'attente avant la redirection en seconde
+ * @param int $intErrorCode code d'erreur
+ * @param int $intSleep durée d'attente avant la redirection en seconde
  */
-function ploopi_logout($intErrorCode = null, $intSleep = 1, $booRedirect = true)
+function ploopi_logout($intErrorCode = 0, $intSleep = 1, $booRedirect = true, $arrSession = array())
 {
     global $arrParsedURI;
 
@@ -848,21 +853,30 @@ function ploopi_logout($intErrorCode = null, $intSleep = 1, $booRedirect = true)
     $objConnectedUser = new connecteduser();
     if ($objConnectedUser->open(session_id())) $objConnectedUser->delete();
 
-    ploopi_session::destroy_id();
+    // Suppression des données de la session active
+    // Ecriture (suppression effective)
+    // Regénération d'un ID
+    // Nouvelle session
+    ploopi_session_reset();
+    //session_regenerate_id(true);
+    session_write_close();
+    session_start();
+
+    // Mise à jour de la session post logout
+    $_SESSION['ploopi']['errorcode'] = $intErrorCode;
+    $_SESSION['ploopi'] = array_merge($_SESSION['ploopi'], $arrSession);
+
 
     if ($intSleep > 0) sleep($intSleep);
 
-    // Préparation de l'url de redirection
-    require_once 'Net/URL2.php';
+    // Redirection ?
     if ($booRedirect && isset($_SERVER['HTTP_REFERER']))
     {
-        $objUrl = new Net_URL2($_SERVER['HTTP_REFERER']);
-        if (isset($intErrorCode)) $objUrl->setQueryVariable('ploopi_errorcode', $intErrorCode);
-        ploopi_redirect($objUrl->getURL(), false, false);
+        ploopi_redirect($_SERVER['HTTP_REFERER'], false, false);
     }
     else
     {
-        ploopi_redirect(basename($arrParsedURI['path']).(isset($intErrorCode) ? "?ploopi_errorcode={$intErrorCode}" : ''), false);
+        ploopi_redirect(basename($arrParsedURI['path']), false);
     }
 }
 
@@ -876,7 +890,7 @@ function ploopi_logout($intErrorCode = null, $intSleep = 1, $booRedirect = true)
 function ploopi_getparam($strParamName, $intModuleId = null)
 {
     if (is_null($intModuleId) && isset($_SESSION['ploopi']['moduleid'])) $intModuleId = $_SESSION['ploopi']['moduleid'];
-    
+
     if (is_null($intModuleId)) return null;
 
     return isset($_SESSION['ploopi']['modules'][$intModuleId][$strParamName]) ? $_SESSION['ploopi']['modules'][$intModuleId][$strParamName] : null;
@@ -933,4 +947,3 @@ function ploopi_setsessionvar($strVarName, $mixVar = null, $intModuleId = null, 
 function ploopi_getnbcore() {
     return intval(`cat /proc/cpuinfo | grep processor | wc -l`);
 }
-

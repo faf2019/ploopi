@@ -39,11 +39,14 @@ $user = new user();
 
 // Suppression de la variable de stockage de la photo temporaire
 if (isset($_SESSION['system']['user_photopath'])) unset($_SESSION['system']['user_photopath']);
-
+// Nouvel utilisateur
 if (empty($_GET['user_id']) || !is_numeric($_GET['user_id']) || !$user->open($_GET['user_id']))
 {
     $user->init_description();
     $user->fields['servertimezone'] = 1;
+    // Lecture des paramètres "système"
+    $user->fields['password_force_update'] = ploopi_getparam('system_password_force_update');
+    $user->fields['password_validity'] = ploopi_getparam('system_password_validity');
 
     // Récuération des données de l'utilisateur (problème lors de la création) => pour remplir le formulaire
     if (!empty($_SESSION['system']['save_user']))
@@ -95,6 +98,10 @@ if (isset($_REQUEST['error']))
     {
         case 'password':
             $error = ploopi_nl2br(_SYSTEM_MSG_PASSWORDERROR);
+        break;
+
+        case 'oldpassword':
+            $error = ploopi_nl2br(_SYSTEM_MSG_OLDPASSWORDERROR);
         break;
 
         case 'passrejected':
@@ -220,12 +227,6 @@ if (isset($_REQUEST['confirm']))
                 'description' => _SYSTEM_LABEL_ATTACH,
                 'link' => ploopi_urlencode("admin.php?op=attach_user&user_id={$row['id']}")
             );
-
-            /*
-        $values[$c]['values']['origin'] =
-            array(
-                'label' => '<a href="'.ploopi_urlencode("admin.php?wspToolbarItem=tabUsers&usrTabItem=tabUserList&groupid={$currentgroup['id']}&alphaTabItem=".(ord(strtolower($fields['lastname']))-96)).'">'.ploopi_htmlentities($currentgroup['label']).'</a>'
-            );*/
     }
 
     echo $skin->open_simplebloc('Choisir un utilisateur existant');
@@ -367,18 +368,55 @@ if (isset($_REQUEST['confirm']))
                         }
                         ?>
                     </p>
-                    <p>
-                        <label><?php echo _SYSTEM_LABEL_PASSWORD; ?>:</label>
-                        <input type="password" class="text" name="usernewpass" id="usernewpass" value="" tabindex="22" />
-                    </p>
+                    <?php
+                    if (!$user->new)
+                    {
+                        ?>
+                        <!--p>
+                            <label>Ancien mot de passe:</label>
+                            <input type="password" class="text" name="useroldpass" id="useroldpass" value="" tabindex="22" style="width:140px;" />
+                        </p-->
+                        <p>
+                            <label>Nouveau mot de passe:</label>
+                            <input type="password" class="text" name="usernewpass" id="usernewpass" value="" tabindex="22" style="width:180px;" />
+                        </p>
+                        <?
+                    }
+                    else {
+                        ?>
+                        <p>
+                            <label>Mot de passe:</label>
+                            <input type="password" class="text" name="usernewpass" id="usernewpass" value="" tabindex="22" style="width:180px;" />
+                        </p>
+                        <?
+                    }
+                    ?>
+                    <div id="protopass"></div>
+
                     <p>
                         <label><?php echo _SYSTEM_LABEL_PASSWORD_CONFIRM; ?>:</label>
-                        <input type="password" class="text" name="usernewpass_confirm" id="usernewpass_confirm" value="" tabindex="23" />
+                        <input type="password" class="text" name="usernewpass_confirm" id="usernewpass_confirm" value="" tabindex="23" style="width:180px;" />
+                    </p>
+                    <p class="checkbox" onclick="javascript:ploopi_checkbox_click(event,'user_password_force_update');">
+                        <label>Forcer le changement de mot de passe à la prochaine connexion:</label>
+                        <input type="checkbox" id="user_password_force_update" name="user_password_force_update" value="1" <?php if ($user->fields['password_force_update']) echo 'checked="checked"'; ?> tabindex="23" />
                     </p>
                     <p>
+                        <label>Durée de validité du mot de passe en jours <em>(0 = pas de limite)</em> :</label>
+                        <input type="text" class="text" style="width:60px;" name="user_password_validity" id="user_password_validity" value="<? echo htmlentities($user->fields['password_validity']); ?>" tabindex="23" />
+                    </p>
+
+                    <? if (!empty($user->fields['password_validity'])) { ?>
+                    <p>
+                        <label>Date d'expiration du mot de passe:</label>
+                        <input type="text" style="width:100px;" class="text" readonly="readonly" disabled="disabled" value="<?php echo date('d/m/Y', ploopi_timestamp2unixtimestamp($user->fields['password_last_update'])+$user->fields['password_validity']*86400); ?>" tabindex="24" />
+                    </p>
+                    <? } ?>
+
+                    <p>
                         <label><?php echo _SYSTEM_LABEL_EXPIRATION_DATE; ?>:</label>
-                        <input type="text" style="width:100px;" class="text" name="user_date_expire" id="user_date_expire" value="<?php echo $user_date_expire['date']; ?>" tabindex="24" />
-                        <a href="javascript:void(0);" onclick="javascript:ploopi_calendar_open('user_date_expire', event);"><img src="./img/calendar/calendar.gif" width="31" height="18" align="top" border="0"></a>
+                        <input type="text" style="width:100px;" class="text" name="user_date_expire" id="user_date_expire" value="<?php echo ploopi_htmlentities($user_date_expire['date']); ?>" tabindex="24" />
+                        <? ploopi_open_calendar('user_date_expire'); ?>
                     </p>
                     <p>
                         <label><?php echo _SYSTEM_LABEL_EMAIL; ?>:</label>
@@ -453,7 +491,7 @@ if (isset($_REQUEST['confirm']))
                         foreach ($arrZones as $key => $value)
                         {
                             ?>
-                            <option value="<?php echo ploopi_htmlentities($key); ?>" <?php if ($user->fields['timezone'] == $key) echo 'selected'; ?>><?php echo ploopi_htmlentities($value['label']); ?> (<?php echo $value['offset_display']; ?>)</option>
+                            <option value="<?php echo ploopi_htmlentities($key); ?>" <?php if ($user->fields['timezone'] == $key) echo 'selected'; ?>><?php echo ploopi_htmlentities($value['label']); ?> (<?php echo ploopi_htmlentities($value['offset_display']); ?>)</option>
                             <?php
                         }
                         ?>
@@ -490,7 +528,7 @@ if (isset($_REQUEST['confirm']))
                                 if ($id <= $_SESSION['ploopi']['adminlevel'])
                                 {
                                     $sel = ($workspace_user->fields['adminlevel'] == $id) ? 'selected' : '';
-                                    echo "<option $sel value=\"$id\">$label</option>";
+                                    echo "<option $sel value=\"$id\">".ploopi_htmlentities($label)."</option>";
                                 }
                                 // user / group admin
                             }
@@ -577,12 +615,39 @@ if (!$user->isnew())
 ?>
 
 
-<script type="text/javascript">
-    ploopi_window_onload_stock(
-        function() {
-            $('usernewpass').value = '';
-            $('usernewpass_confirm').value = '';
-        }
-    );
+<style>
+    #protopass {padding:0;margin:0;margin-left:30%;padding-left:0.5em;width:195px;} #protopass * {font-size:10px;}
+    #protopass .password-strength-bar {border-radius:2px;}
+</style>
 
+<script type="text/javascript">
+    Event.observe(window, 'load', function() {
+        $('usernewpass').value = '';
+        $('usernewpass_confirm').value = '';
+
+
+        <? if (_PLOOPI_USE_COMPLEXE_PASSWORD) { ?>
+        var options = {
+            minchar: 8,
+            scores: [5, 10, 20, 30]
+        };
+        <? } else { ?>
+        var options = {
+            minchar: 6,
+            scores: [5, 10, 20, 30]
+        };
+        <? } ?>
+
+        new Protopass('usernewpass', 'protopass', options);
+
+        Event.observe($('usernewpass_confirm'), 'change', function() {
+
+            if ($('usernewpass').value == $('usernewpass_confirm').value) {
+                $('usernewpass_confirm').style.backgroundColor = $('usernewpass').style.backgroundColor = 'lightgreen';
+            } else {
+                $('usernewpass_confirm').style.backgroundColor = $('usernewpass').style.backgroundColor = 'indianred';
+            }
+        });
+
+    });
 </script>

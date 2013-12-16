@@ -44,9 +44,9 @@ class ploopi_inputfilter
      * @param string $strSource
      * @return string
      */
-    public function process($strSource)
+    public static function process($strSource)
     {
-        return $strSource = preg_replace('/<\/?[\w]+[^>]*>/','',$this->decode($strSource));
+        return filter_var(strip_tags(self::decode($strSource)));
     }
 
     /**
@@ -57,7 +57,7 @@ class ploopi_inputfilter
      * @param   string  $strSource
      * @return  string  Plaintext string
      */
-    protected function decode($strSource)
+    private static function decode($strSource)
     {
         // url decode
         $strSource = html_entity_decode($strSource, ENT_QUOTES, "ISO-8859-1");

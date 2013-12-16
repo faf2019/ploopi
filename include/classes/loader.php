@@ -70,11 +70,12 @@ abstract class ploopi_loader
          */
         if (!file_exists('./config/config.php'))
         {
-          include_once './include/functions/system.php' ;
-          header("Location: ./config/install.php");
-          ploopi_die();
+            include_once './include/functions/system.php' ;
+            include_once './config/install.php' ;
+            //header("Location: ./config/install.php");
+            ploopi_die();
         }
-        
+
         include_once './config/config.php'; // load config (mysql, path, etc.)
 
         /**
@@ -143,7 +144,7 @@ abstract class ploopi_loader
         /**
          * Séquence de logout
          */
-        if (isset($_REQUEST['ploopi_logout'])) ploopi_logout(null, 0, false);
+        if (isset($_REQUEST['ploopi_logout'])) ploopi_logout(0, 0, false);
 
         /**
          * Pas de session, ou host différent => init session
@@ -195,8 +196,6 @@ abstract class ploopi_loader
                 $GLOBALS["_{$strGlobalVar}"]['ploopi_url'] = ploopi_filtervar($GLOBALS["_{$strGlobalVar}"]['ploopi_url']);
 
                 require_once './include/classes/cipher.php';
-                $objCipher = new ploopi_cipher();
-
                 $strPloopiUrl = ploopi_cipher::singleton()->decrypt($GLOBALS["_{$strGlobalVar}"]['ploopi_url']);
 
                 foreach(explode('&',$strPloopiUrl) as $strParam)
@@ -240,7 +239,6 @@ abstract class ploopi_loader
                 unset($strValue);
                 unset($strParam);
                 unset($strPloopiUrl);
-                unset($objCipher);
                 unset($GLOBALS["_{$strGlobalVar}"]['ploopi_url']);
             }
         }
@@ -306,6 +304,7 @@ abstract class ploopi_loader
         global $ploopi_days;
         global $ploopi_months;
         global $ploopi_errormsg;
+        global $ploopi_msg;
         global $ploopi_civility;
         global $ploopi_additional_head;
         global $ploopi_additional_javascript;
@@ -343,14 +342,14 @@ abstract class ploopi_loader
                 {
                     self::getworkspaces();
                     self::getmodules();
-                    
+
                     if (!empty($_SESSION['ploopi']['hosts']['frontoffice'][0]))
                     {
                         $_SESSION['ploopi']['workspaceid'] = $_SESSION['ploopi']['frontoffice']['workspaceid'] = $_SESSION['ploopi']['hosts']['frontoffice'][0];
                     }
                 }
 
-                include './include/op.php';                
+                include './include/op.php';
             break;
         }
 
@@ -499,7 +498,7 @@ abstract class ploopi_loader
                     SELECT      *
                     FROM        ploopi_user
                     WHERE       login = '".$db->addslashes($_REQUEST['ploopi_login'])."'
-                    AND         password = '".md5(_PLOOPI_SECRETKEY."/{$_REQUEST['ploopi_login']}/".md5($_REQUEST['ploopi_password']))."'
+                    AND         password = '".user::generate_hash($_REQUEST['ploopi_password'], $_REQUEST['ploopi_login'])."'
                     ";
 
             $db->query($sql);
@@ -507,6 +506,85 @@ abstract class ploopi_loader
             // Un seul utilisateur trouvé
             if ($db->numrows() == 1)
             {
+                $fields = $db->fetchrow();
+
+                // Vérification de la validité du compte
+                if (!empty($fields['date_expire']))
+                {
+                    // Compte expiré (définitif sauf intervention administrateur)
+                    if ($fields['date_expire'] <= ploopi_createtimestamp())
+                    {
+                        ploopi_create_user_action_log(_SYSTEM_ACTION_LOGIN_ERR, $_REQUEST['ploopi_login'],_PLOOPI_MODULE_SYSTEM,_PLOOPI_MODULE_SYSTEM);
+                        ploopi_logout(_PLOOPI_ERROR_ACCOUNTEXPIRE);
+                    }
+                }
+
+                // On force l'utilisateur à changer de mot de passe ?
+                // Le mot de passe est périmé ?
+                if (!empty($fields['password_force_update']) || (!empty($fields['password_validity']) && ploopi_timestamp2unixtimestamp($fields['password_last_update'])+$fields['password_validity']*86400 < time())) {
+
+                    $intErrorCode = 0;
+
+                    // Nouveau mot de passe ?
+                    if (isset($_REQUEST['ploopi_password_new']) && isset($_REQUEST['ploopi_password_new_confirm']) && $_REQUEST['ploopi_password_new'] != $_REQUEST['ploopi_password']) {
+
+                        // Mot de passe correctement saisi ?
+                        if ($_REQUEST['ploopi_password_new'] == $_REQUEST['ploopi_password_new_confirm']) {
+
+                            // Mot de passe valide ?
+                            if (!_PLOOPI_USE_COMPLEXE_PASSWORD || ploopi_checkpasswordvalidity($_REQUEST['ploopi_password_new'])) {
+
+                                // On peut mettre à jour la base de données
+                                $user = new user();
+                                $user->open($fields['id']);
+                                $user->setpassword($_REQUEST['ploopi_password_new']);
+                                $user->fields['password_force_update'] = 0;
+                                $user->save();
+                            }
+                            else $intErrorCode = _PLOOPI_ERROR_PASSWORDINVALID;
+                        }
+                        else $intErrorCode = _PLOOPI_ERROR_PASSWORDERROR;
+                    }
+                    else $intErrorCode = _PLOOPI_ERROR_PASSWORDRESET;
+
+                    if ($intErrorCode) {
+                        ploopi_create_user_action_log(_SYSTEM_ACTION_LOGIN_ERR, $_REQUEST['ploopi_login'], _PLOOPI_MODULE_SYSTEM,_PLOOPI_MODULE_SYSTEM);
+                        ploopi_logout($intErrorCode, 1, true, array('login' => $fields['login'], 'password' => $_REQUEST['ploopi_password']));
+                    }
+                }
+
+
+                $_SESSION['ploopi']['login'] = $fields['login'];
+                $_SESSION['ploopi']['password'] = $_REQUEST['ploopi_password'];
+                $_SESSION['ploopi']['userid'] = $fields['id'];
+                $_SESSION['ploopi']['user'] = $fields;
+                ploopi_create_user_action_log(_SYSTEM_ACTION_LOGIN_OK, $_REQUEST['ploopi_login'],_PLOOPI_MODULE_SYSTEM,_PLOOPI_MODULE_SYSTEM);
+
+                // Reset de la session + nouvel ID
+                ploopi_session_reset();
+                // Indique qu'il faut recharger la session
+                self::$initsession = true;
+
+                $_SESSION['ploopi']['login'] = $fields['login'];
+                $_SESSION['ploopi']['password'] = $_REQUEST['ploopi_password'];
+                $_SESSION['ploopi']['userid'] = $fields['id'];
+                $_SESSION['ploopi']['user'] = $fields;
+
+                // Vérification de la validité du profil
+                // Il faut récupérer la liste des champs à contrôler dans les paramètres du module system
+                $objParamDefault = new param_default();
+                if ($objParamDefault->open(1, 'system_user_required_fields') && !empty($objParamDefault->fields['value']))
+                {
+                    foreach(explode(',', $objParamDefault->fields['value']) as $strField)
+                    {
+                        $strField = trim($strField);
+                        if (isset($fields[$strField]) && $fields[$strField] == '') { $_SESSION['ploopi']['updateprofile'] = true; break; }
+                    }
+                }
+
+
+
+
                 // Gestion de la redirection après login (en fonction de l'url de provenance et du script d'authentification)
                 $arrReferer = isset($_SERVER['HTTP_REFERER']) ? parse_url($_SERVER['HTTP_REFERER']) : array(); // Provenance
                 $arrRequest = isset($_SERVER['REQUEST_URI']) ? parse_url($_SERVER['REQUEST_URI']) : array();  // Demande d'authentification
@@ -527,42 +605,7 @@ abstract class ploopi_loader
                 // on force la redirection sur le domaine+script courant
                 else $strLoginRedirect = _PLOOPI_BASEPATH.'/'.$strRequestScript;
 
-                $fields = $db->fetchrow();
 
-                if (!empty($fields['date_expire']))
-                {
-                    if ($fields['date_expire'] <= ploopi_createtimestamp())
-                    {
-                        ploopi_create_user_action_log(_SYSTEM_ACTION_LOGIN_ERR, $_REQUEST['ploopi_login'],_PLOOPI_MODULE_SYSTEM,_PLOOPI_MODULE_SYSTEM);
-                        ploopi_logout(_PLOOPI_ERROR_LOGINEXPIRE);
-                    }
-                }
-
-                $_SESSION['ploopi']['login'] = $fields['login'];
-                $_SESSION['ploopi']['password'] = $_REQUEST['ploopi_password'];
-                $_SESSION['ploopi']['userid'] = $fields['id'];
-                $_SESSION['ploopi']['user'] = $fields;
-                ploopi_create_user_action_log(_SYSTEM_ACTION_LOGIN_OK, $_REQUEST['ploopi_login'],_PLOOPI_MODULE_SYSTEM,_PLOOPI_MODULE_SYSTEM);
-
-                ploopi_session_reset();
-                self::$initsession = true;
-
-                $_SESSION['ploopi']['login'] = $fields['login'];
-                $_SESSION['ploopi']['password'] = $_REQUEST['ploopi_password'];
-                $_SESSION['ploopi']['userid'] = $fields['id'];
-                $_SESSION['ploopi']['user'] = $fields;
-
-                // Vérification de la validité du profil
-                // Il faut récupérer la liste des champs à contrôler dans les paramètres du module system
-                $objParamDefault = new param_default();
-                if ($objParamDefault->open(1, 'system_user_required_fields') && !empty($objParamDefault->fields['value']))
-                {
-                    foreach(explode(',', $objParamDefault->fields['value']) as $strField)
-                    {
-                        $strField = trim($strField);
-                        if (isset($fields[$strField]) && $fields[$strField] == '') { $_SESSION['ploopi']['updateprofile'] = true; break; }
-                    }
-                }
             }
             else
             {
@@ -762,7 +805,18 @@ abstract class ploopi_loader
 
         if (!$_SESSION['ploopi']['paramloaded']) self::getmodules();
 
+        // Génération du token en mode backoffice uniquement
+        if ($_SESSION['ploopi']['mode'] == 'backoffice')
+        {
+            $_SESSION['ploopi']['token'] = uniqid(rand());
+            $_SESSION['ploopi']['tokens'][$_SESSION['ploopi']['token']] = time();
+
+            // Injection du nouveau jeton
+            if (!empty($strLoginRedirect)) $strLoginRedirect = ploopi_urltoken($strLoginRedirect);
+        }
+
         if (!empty($strLoginRedirect)) ploopi_redirect($strLoginRedirect, false, false);
+
         unset($strLoginRedirect);
 
         // Indicateur global de connexion
@@ -774,27 +828,34 @@ abstract class ploopi_loader
 
         if ($_SESSION['ploopi']['mode'] == 'backoffice')
         {
+            $strToken = '';
+
+            if (isset($_REQUEST['ploopi_env']))
+            {
+                /**
+                 * ploopi_env contient ploopi_mainmenu (int), ploopi_workspaceid (int), ploopi_moduleid (int), ploopi_action (string) et le token (str) de la page appelante
+                 */
+                $arrEnv = explode('-', $_REQUEST['ploopi_env']);
+
+                if (isset($arrEnv[0]) && is_numeric($arrEnv[0])) $ploopi_mainmenu = $arrEnv[0];
+
+                if (isset($arrEnv[1]) && is_numeric($arrEnv[1])) $ploopi_workspaceid = $arrEnv[1];
+
+                if (isset($arrEnv[2]) && is_numeric($arrEnv[2])) $ploopi_moduleid = $arrEnv[2];
+
+                if (isset($arrEnv[3])) $ploopi_action = $arrEnv[3];
+
+                if (isset($arrEnv[4])) $strToken = $arrEnv[4];
+            }
+
+
             if ($_SESSION['ploopi']['connected'])
             {
-                if (isset($_REQUEST['ploopi_env']))
-                {
-                    /**
-                     * ploopi_env contient ploopi_mainmenu (int), ploopi_workspaceid (int), ploopi_moduleid (int), ploopi_action (string)
-                     */
-                    $arrEnv = explode(',', $_REQUEST['ploopi_env']);
-
-                    if (isset($arrEnv[0]) && is_numeric($arrEnv[0]))
-                        $ploopi_mainmenu = $arrEnv[0];
-
-                    if (isset($arrEnv[1]) && is_numeric($arrEnv[1]))
-                        $ploopi_workspaceid = $arrEnv[1];
-
-                    if (isset($arrEnv[2]) && is_numeric($arrEnv[2]))
-                        $ploopi_moduleid = $arrEnv[2];
-
-                    if (isset($arrEnv[3]))
-                        $ploopi_action = $arrEnv[3];
+                // Vérification de la validité du jeton
+                if (empty($strToken) || !isset($_SESSION['ploopi']['tokens'][$strToken])) {
+                    ploopi_logout(_PLOOPI_ERROR_INVALIDTOKEN);
                 }
+
 
                 if (isset($_REQUEST['ploopi_mainmenu']) && is_numeric($_REQUEST['ploopi_mainmenu']))
                     $ploopi_mainmenu = $_REQUEST['ploopi_mainmenu'];
@@ -935,6 +996,23 @@ abstract class ploopi_loader
 
             $_SESSION['ploopi']['moduleid'] = $_SESSION['ploopi']['backoffice']['moduleid'];
             $_SESSION['ploopi']['workspaceid'] = $_SESSION['ploopi']['backoffice']['workspaceid'];
+
+
+            $_SESSION['ploopi']['env'] = sprintf(
+                "%s-%s-%s-%s-%s",
+                $_SESSION['ploopi']['mainmenu'],
+                $_SESSION['ploopi']['workspaceid'],
+                $_SESSION['ploopi']['moduleid'],
+                $_SESSION['ploopi']['action'],
+                $_SESSION['ploopi']['token']
+            );
+
+
+            // Suppression des jetons périmés
+            $mint = time() - _PLOOPI_TOKENTIME;
+            foreach($_SESSION['ploopi']['tokens'] as $k => $t) if ($t < $mint) unset($_SESSION['ploopi']['tokens'][$k]);
+            // Limitation du nombre de jetons conservés
+            $_SESSION['ploopi']['tokens'] = array_slice($_SESSION['ploopi']['tokens'], -_PLOOPI_TOKENMAX, _PLOOPI_TOKENMAX);
         }
         else
         {
@@ -1043,16 +1121,6 @@ abstract class ploopi_loader
         }
 
         $_SESSION['ploopi']['uri'] = (empty($_SERVER['QUERY_STRING'])) ? '' : "admin.php?{$_SERVER['QUERY_STRING']}";
-        $_SESSION['ploopi']['env'] =
-            sprintf(
-                "%s,%s,%s,%s",
-                $_SESSION['ploopi']['mainmenu'],
-                $_SESSION['ploopi']['workspaceid'],
-                $_SESSION['ploopi']['moduleid'],
-                $_SESSION['ploopi']['action']
-            );
-
-
     }
 
     /**

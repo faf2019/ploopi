@@ -117,7 +117,7 @@ if ($_SESSION['ploopi']['connected'])
     foreach ($_SESSION['ploopi']['workspaces_allowed'] as $key)
     {
         $template_body->assign_block_vars('switch_user_logged_in.workspace',array(
-                'TITLE' => $_SESSION['ploopi']['workspaces'][$key]['label'],
+                'TITLE' => ploopi_htmlentities($_SESSION['ploopi']['workspaces'][$key]['label']),
                 'URL' => $key == $_SESSION['ploopi']['workspaceid'] && $_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_WORKSPACES && $_SESSION['ploopi']['moduleid'] != -1 ? ploopi_urlencode('admin.php') : ploopi_urlencode('admin.php?ploopi_switch_workspace', _PLOOPI_MENU_WORKSPACES, $key, '', ''),
                 'SELECTED' => ($_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_WORKSPACES && $key == $_SESSION['ploopi']['workspaceid']) ? 'selected' : ''
             )
@@ -141,7 +141,7 @@ if ($_SESSION['ploopi']['connected'])
             // CAS 1 : liste standard de modules
             $template_body->assign_block_vars('switch_user_logged_in.switch_blockmenu.block',array(
                     'ID' => $idmod,
-                    'TITLE' => $mod['title'],
+                    'TITLE' => ploopi_htmlentities($mod['title']),
                     'URL' => $mod['url'],
                     'DESCRIPTION' => '',
                     'SELECTED' => ($idmod == $_SESSION['ploopi']['moduleid']) ? 'selected' : ''
@@ -162,7 +162,7 @@ if ($_SESSION['ploopi']['connected'])
                 {
                     $template_body->assign_block_vars('switch_user_logged_in.switch_blockmenu.switch_blocksel',array(
                             'ID' => $idmod,
-                            'TITLE' => $mod['title'],
+                            'TITLE' => ploopi_htmlentities($mod['title']),
                             'URL' => $mod['url'],
                             'DESCRIPTION' => ''
                         )
@@ -229,11 +229,11 @@ if ($_SESSION['ploopi']['connected'])
         'PAGE_CONTENT'          => $page_content,
         'ADDITIONAL_HEAD'       => $ploopi_additional_head,
 
-        'USER_LOGIN'            => $_SESSION['ploopi']['login'],
-        'USER_PASSWORD'         => $_SESSION['ploopi']['password'],
-        'USER_FIRSTNAME'        => $_SESSION['ploopi']['user']['firstname'],
-        'USER_LASTNAME'         => $_SESSION['ploopi']['user']['lastname'],
-        'USER_EMAIL'            => $_SESSION['ploopi']['user']['email'],
+        'USER_LOGIN'            => ploopi_htmlentities($_SESSION['ploopi']['login']),
+        'USER_PASSWORD'         => ploopi_htmlentities($_SESSION['ploopi']['password']),
+        'USER_FIRSTNAME'        => ploopi_htmlentities($_SESSION['ploopi']['user']['firstname']),
+        'USER_LASTNAME'         => ploopi_htmlentities($_SESSION['ploopi']['user']['lastname']),
+        'USER_EMAIL'            => ploopi_htmlentities($_SESSION['ploopi']['user']['email']),
 
         'USER_WORKSPACE_LABEL'  => ploopi_htmlentities(_PLOOPI_LABEL_MYWORKSPACE),
         'USER_WORKSPACE_URL'    => ploopi_urlencode("admin.php", _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
@@ -266,8 +266,7 @@ if ($_SESSION['ploopi']['connected'])
         'SHOW_BLOCKMENU'            => (!empty($_SESSION['ploopi']['switchdisplay']['block_modules'])) ? $_SESSION['ploopi']['switchdisplay']['block_modules'] : 'block',
 
         'USER_DECONNECT'        => ploopi_urlencode("admin.php?ploopi_logout", null, null, null, null, false)
-        )
-    );
+    ));
 
     if ($newtickets) $template_body->assign_block_vars('switch_user_logged_in.switch_newtickets', array());
 
@@ -280,13 +279,33 @@ if ($_SESSION['ploopi']['connected'])
 }
 else
 {
-    $template_body->assign_block_vars('switch_user_logged_out', array());
-    if (!empty($_GET['ploopi_errorcode']))
+    $template_body->assign_block_vars('switch_user_logged_out', array(
+        'FORM_URL' => ploopi_urlencode('admin.php')
+    ));
+
+    if (!empty($_SESSION['ploopi']['errorcode']))
     {
         $template_body->assign_block_vars('switch_user_logged_out.switch_ploopierrormsg', array());
+
+        // Cas particulier : demande de changement de mot de passe
+        if (in_array($_SESSION['ploopi']['errorcode'], array( _PLOOPI_ERROR_PASSWORDRESET, _PLOOPI_ERROR_PASSWORDERROR, _PLOOPI_ERROR_PASSWORDINVALID)))
+        {
+            $template_body->assign_block_vars('switch_user_logged_out.switch_passwordreset', array());
+
+            if (_PLOOPI_USE_COMPLEXE_PASSWORD) {
+                $template_body->assign_block_vars('switch_user_logged_out.switch_passwordreset.switch_cp', array());
+            } else {
+                $template_body->assign_block_vars('switch_user_logged_out.switch_passwordreset.switch_np', array());
+            }
+
+            $template_body->assign_vars(array(
+                'USER_LOGIN'            => ploopi_htmlentities($_SESSION['ploopi']['login']),
+                'USER_PASSWORD'         => ploopi_htmlentities($_SESSION['ploopi']['password'])
+            ));
+        }
     }
 
-    if (!empty($_GET['ploopi_msgcode']))
+    if (!empty($_SESSION['ploopi']['msgcode']))
     {
         $template_body->assign_block_vars('switch_user_logged_out.switch_ploopimsg', array());
     }
@@ -329,8 +348,8 @@ $template_body->assign_vars(array(
     'SITE_CONNECTEDUSERS'           => $_SESSION['ploopi']['connectedusers'],
     'SITE_ANONYMOUSUSERS'           => $_SESSION['ploopi']['anonymoususers'],
     'ADDITIONAL_JAVASCRIPT'         => $ploopi_additional_javascript,
-    'PLOOPI_ERROR'                  => (!empty($_GET['ploopi_errorcode'])) ? $ploopi_errormsg[$_GET['ploopi_errorcode']] : '',
-    'PLOOPI_MSG'                    => (!empty($_GET['ploopi_msgcode'])) ? $ploopi_msg[$_GET['ploopi_msgcode']] : '',
+    'PLOOPI_ERROR'                  => (!empty($_SESSION['ploopi']['errorcode']) && isset($ploopi_errormsg[$_SESSION['ploopi']['errorcode']])) ? $ploopi_errormsg[$_SESSION['ploopi']['errorcode']] : '',
+    'PLOOPI_MSG'                    => (!empty($_SESSION['ploopi']['msgcode']) && isset($ploopi_msg[$_SESSION['ploopi']['msgcode']])) ? $ploopi_msg[$_SESSION['ploopi']['msgcode']] : '',
     'PLOOPI_VERSION'                => _PLOOPI_VERSION,
     'PLOOPI_REVISION'               => _PLOOPI_REVISION
 ));

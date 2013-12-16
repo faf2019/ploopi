@@ -181,7 +181,7 @@ function ploopi_annotation_refresh($id_annotation)
                 <div class="ploopi_annotation_row_<?php echo $numrow; ?>">
                     <div style="padding:2px 4px;">
                         <?php echo $private; ?>
-                        <div style="float:right;padding:0 4px;">par <strong><?php echo "{$fields['firstname']} {$fields['lastname']}"; ?></strong> le <?php echo $ldate['date']; ?> à <?php echo $ldate['time']; ?></div>
+                        <div style="float:right;padding:0 4px;">par <strong><?php echo ploopi_htmlentities("{$fields['firstname']} {$fields['lastname']}"); ?></strong> le <?php echo $ldate['date']; ?> à <?php echo $ldate['time']; ?></div>
                         <?php
                         if (isset($anno['tags']) && is_array($anno['tags']))
                         {

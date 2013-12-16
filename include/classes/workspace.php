@@ -625,7 +625,7 @@ class workspace_user extends data_object
             $admin_workspaceid = $this->fields['id_workspace'];
             $admin_moduleid = $fields['id'];
 
-            echo "<br /><strong>&laquo; {$fields['label']} &raquo;</strong> ({$fields['moduletype']})<br />";
+            echo "<br /><strong>&laquo; ".ploopi_htmlentities($fields['label'])." &raquo;</strong> (".ploopi_htmlentities($fields['moduletype']).")<br />";
             if (file_exists("./modules/{$fields['moduletype']}/include/admin_user_delete.php")) include "./modules/{$fields['moduletype']}/include/admin_user_delete.php";
         }
 
@@ -709,7 +709,7 @@ class workspace_group extends data_object
             $admin_workspaceid = $this->fields['id_workspace'];
             $admin_moduleid = $fields['id'];
 
-            echo "<br /><strong>&laquo; {$fields['label']} &raquo;</strong> ({$fields['moduletype']})<br />";
+            echo "<br /><strong>&laquo; ".ploopi_htmlentities($fields['label'])." &raquo;</strong> (".ploopi_htmlentities($fields['moduletype']).")<br />";
             if (file_exists("./modules/{$fields['moduletype']}/include/admin_org_delete.php")) include "./modules/{$fields['moduletype']}/include/admin_org_delete.php";
         }
         parent::delete();

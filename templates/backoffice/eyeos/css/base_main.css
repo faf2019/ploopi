@@ -93,13 +93,22 @@ top:50%;
 margin-left:-150px;
 margin-top:-210px;
 color:#fff;
+
 }
 
 #login {
 position:relative;
-background:transparent url(../img/template/login.png) no-repeat scroll 0 0;
 width:301px;
-height:220px;
+border-radius:15px;
+border:2px solid #fff;
+background: #3B6168;
+background: linear-gradient(top, #59939C 0%, #3B6168 10%, #3B6168 90%, #2D4A4F 100%);
+background: -moz-linear-gradient(top, #59939C 0%, #3B6168 10%, #3B6168 90%, #2D4A4F 100%);
+background: -webkit-linear-gradient(top, #59939C 0%, #3B6168 10%, #3B6168 90%, #2D4A4F 100%);
+background: -ms-linear-gradient(top, #59939C 0%, #3B6168 10%, #3B6168 90%, #2D4A4F 100%);
+z-index:2;
+box-shadow:0px 2px 3px rgba(0,0,0,0.5);
+padding-bottom:30px;
 }
 
 #login_form {
@@ -126,12 +135,17 @@ width:100%;
 padding-left:4px;
 padding-right:4px;
 margin-top:6px;
+box-sizing: border-box; /* css3 rec */
+-moz-box-sizing: border-box; /* ff2 */
+-ms-box-sizing: border-box; /* ie8 */
+-webkit-box-sizing: border-box; /* safari3 */
+-khtml-box-sizing: border-box; /* konqueror */
 }
 
 .login_btn_right {
 position:absolute;
 bottom:10px;
-right:10px;
+right:8px;
 z-index:2;
 }
 
@@ -195,14 +209,21 @@ opacity:0.7;
 opacity:1;
 }
 
+
 #lostpassword_form {
 position:absolute;
-left:0px;
-top:203px;
-height:220px;
-width:100%;
-background:transparent url(../img/template/new_user.png) no-repeat 0 0;
-z-index:1;
+left:5px;
+bottom:-230px;
+height:230px;
+width:290px;
+border-radius:0 0 15px 15px;
+border:2px solid #fff;
+background: #3B6168;
+background: linear-gradient(top, #3B6168 0%, #3B6168 90%, #2D4A4F 100%);
+background: -moz-linear-gradient(top, #3B6168 0%, #3B6168 90%, #2D4A4F 100%);
+background: -webkit-linear-gradient(top, #3B6168 0%, #3B6168 90%, #2D4A4F 100%);
+background: -ms-linear-gradient(top, #3B6168 0%, #3B6168 90%, #2D4A4F 100%);
+box-shadow: 0px 2px 3px rgba(0,0,0,0.5);
 }
 
 #login_statusbar {

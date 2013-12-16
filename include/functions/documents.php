@@ -548,7 +548,7 @@ function ploopi_documents_browser($currentfolder, $documents_id)
                     <a <?php if ($currentfolder == $row['md5id']) echo 'class="doc_pathselected"'; ?> href="javascript:void(0);" onclick="javascript:ploopi_documents_browser('<?php echo ploopi_queryencode("ploopi_op=documents_browser&currentfolder={$row['md5id']}&documents_id={$documents_id}&mode={$_SESSION['documents'][$documents_id]['mode']}"); ?>', '<?php echo $_SESSION['documents'][$documents_id]['documents_id']; ?>', true);">
                         <p class="ploopi_va">
                             <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/documents/ico_folder.png" />
-                            <span><?php echo $foldername; ?></span>
+                            <span><?php echo ploopi_htmlentities($foldername); ?></span>
                         </p>
                     </a>
                     <?php
@@ -743,7 +743,7 @@ function ploopi_documents_browser($currentfolder, $documents_id)
                 array(
                     'name' =>
                         array(
-                            'label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/documents/mimetypes/{$ico}\" /><span>&nbsp;{$row['name']}</span>",
+                            'label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/documents/mimetypes/{$ico}\" /><span>&nbsp;".ploopi_htmlentities($row['name'])."</span>",
                             'sort_label' => '2_'.$row['name']
                         ),
                     'type' =>
@@ -752,27 +752,27 @@ function ploopi_documents_browser($currentfolder, $documents_id)
                         ),
                     'timestp_modify' =>
                          array(
-                            'label' => "{$ldate['date']} {$ldate['time']}",
+                            'label' => ploopi_htmlentities("{$ldate['date']} {$ldate['time']}"),
                             'sort_label' => $row['timestp_modify']
                          ),
                     'timestp_file' =>
                         array(
-                            'label' => $ldate_file['date'],
+                            'label' => ploopi_htmlentities($ldate_file['date']),
                             'sort_label' => $row['timestp_file']
                         ),
                     'ref' =>
                         array(
-                            'label' => $row['ref'],
+                            'label' => ploopi_htmlentities($row['ref']),
                             'sort_label' => $row['ref']
                         ),
                     'label' =>
                         array(
-                            'label' => $row['label'],
+                            'label' => ploopi_htmlentities($row['label']),
                             'sort_label' => $row['label']
                         ),
                     'size' =>
                         array(
-                            'label' => "{$ksize} ko",
+                            'label' => ploopi_htmlentities("{$ksize} ko"),
                             'sort_label' => '2_'.$row['size']
                         )
                 );

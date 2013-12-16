@@ -1,8 +1,7 @@
 <?php
 /*
     Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
-    Copyright (c) 2009 Ovensia
+    Copyright (c) 2007-2013 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -161,6 +160,11 @@ global $ploopi_months;
 global $ploopi_errormsg;
 
 /**
+ * Tableau des messages
+ */
+global $ploopi_msg;
+
+/**
  * Tableau des civilités
  */
 global $ploopi_civility;
@@ -219,12 +223,18 @@ $ploopi_type_file =
         'video'         => 'Vidéo'
     );
 
-    
+
 $ploopi_errormsg[_PLOOPI_ERROR_NOWORKSPACEDEFINED]  = 'Aucun espace de travail n\'est défini pour cet utilisateur';
-$ploopi_errormsg[_PLOOPI_ERROR_LOGINERROR]          = 'Utilisateur ou Mot de passe incorrect';
-$ploopi_errormsg[_PLOOPI_ERROR_LOGINEXPIRE]         = 'Votre mot de passe a expiré';
+$ploopi_errormsg[_PLOOPI_ERROR_LOGINERROR]          = 'Utilisateur ou mot de passe incorrect';
+$ploopi_errormsg[_PLOOPI_ERROR_PASSWORDEXPIRE]      = 'Votre mot de passe a expiré';
+$ploopi_errormsg[_PLOOPI_ERROR_PASSWORDRESET]       = 'Vous devez redéfinir votre mot de passe';
+$ploopi_errormsg[_PLOOPI_ERROR_PASSWORDERROR]       = 'Les deux saisies ne correspondent pas';
+$ploopi_errormsg[_PLOOPI_ERROR_PASSWORDINVALID]     = 'Le mot de passe est invalide, il doit contenir au moins 8 caractères, un caractère minuscule, un caractère majuscule, un chiffre et un caractère de ponctuation';
+$ploopi_errormsg[_PLOOPI_ERROR_ACCOUNTEXPIRE]       = 'Votre identifiant a expiré';
 $ploopi_errormsg[_PLOOPI_ERROR_SESSIONEXPIRE]       = 'Votre session a expiré';
 $ploopi_errormsg[_PLOOPI_ERROR_SESSIONINVALID]      = 'Votre session est invalide';
+$ploopi_errormsg[_PLOOPI_ERROR_INVALIDTOKEN]        = 'Ce lien a expiré, vous devez vous reconnecter';
+
 
 $ploopi_errormsg[_PLOOPI_ERROR_LOSTPASSWORD_UNKNOWN]      = 'Ce compte est inconnu';
 $ploopi_errormsg[_PLOOPI_ERROR_LOSTPASSWORD_INVALID]      = 'Ce compte n\'a pas d\'adresse de courriel valide';

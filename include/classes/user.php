@@ -49,6 +49,12 @@ include_once './include/classes/data_object.php';
 
 class user extends data_object
 {
+	/**
+	 * Sauvegarde du précédent mot de passe pour détection de modification
+	 */
+	 
+	private $_strPreviousPassword = '';
+	
     /**
      * Constructeur de la classe
      *
@@ -60,6 +66,36 @@ class user extends data_object
         parent::data_object('ploopi_user');
         $this->fields['date_creation'] = ploopi_createtimestamp();
     }
+
+	/**
+	 * Ouverture utilisateur
+	 * @param int $id identifiant de l'utilisateur
+	 * @return boolean true si l'utilisateur existe
+	 */
+	
+	public function open($id) {
+	
+		$booOpened = parent::open($id);
+		
+		$this->_strPreviousPassword = $this->fields['password'];
+		
+		return $booOpened;
+	}
+	
+	/**
+	 * Enregistrement utilisateur
+	 * @return int identifiant de l'utilisateur
+	 */
+	 
+	public function save() {
+		
+		// Modification de mot de passe ?
+		if ($this->_strPreviousPassword != $this->fields['password']) {
+			$this->fields['password_last_update'] = ploopi_createtimestamp();
+		}
+	
+		return parent::save();
+	}
 
     /**
      * Supprime l'utilisateur et les données associées : validation, param, share, annotation, subscription, etc..
@@ -283,7 +319,7 @@ class user extends data_object
             $admin_workspaceid = $workspaceid;
             $admin_moduleid = $fields['id'];
 
-            echo "<br><b>« {$fields['label']} »</b> ({$fields['moduletype']})<br>";
+            echo "<br /><strong>« ".ploopi_htmlentities($fields['label'])." »</strong> (".ploopi_htmlentities($fields['moduletype']).")<br />";
             if (file_exists("./modules/{$fields['moduletype']}/include/admin_user_create.php")) include "./modules/{$fields['moduletype']}/include/admin_user_create.php";
         }
 
@@ -380,7 +416,16 @@ class user extends data_object
 
     public function setpassword($strPassword)
     {
-        $this->fields['password'] = md5(_PLOOPI_SECRETKEY."/{$this->fields['login']}/".md5($strPassword));
+        $this->fields['password'] = self::generate_hash($strPassword, $this->fields['login']);
+    }
+
+    /**
+     * Génère le hash à partir du mot de passe en clair et du login de l'utilisateur
+     */
+
+    public static function generate_hash($strPassword, $strLogin)
+    {
+        return md5(_PLOOPI_SECRETKEY."/{$strLogin}/".md5($strPassword));
     }
 
     /**

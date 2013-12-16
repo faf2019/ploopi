@@ -118,7 +118,7 @@ echo $skin->open_simplebloc();
         <input type="hidden" name="group_id" value="<?php echo $group->fields['id']; ?>">
 
             <div class="ploopi_form_title">
-                <?php echo $group->fields['label']; ?> &raquo;
+                <?php echo ploopi_htmlentities($group->fields['label']); ?> &raquo;
                 <?php
                     echo _SYSTEM_LABEL_GROUP_MODIFY;
                 ?>
@@ -126,7 +126,7 @@ echo $skin->open_simplebloc();
             <div class="ploopi_form" style="clear:both;padding:2px">
                 <p>
                     <label><?php echo _SYSTEM_LABEL_GROUP_NAME; ?>:</label>
-                    <input type="text" class="text" name="group_label"  value="<?php echo $group->fields['label']; ?>">
+                    <input type="text" class="text" name="group_label"  value="<?php echo ploopi_htmlentities($group->fields['label']); ?>">
                 </p>
                 <p>
                     <label><?php echo _SYSTEM_LABEL_GROUP_SHARED; ?>:</label>

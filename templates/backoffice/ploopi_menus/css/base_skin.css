@@ -177,6 +177,12 @@ padding:0;
 margin:0;
 }
 
+*[disabled=disabled],
+*[readonly=readonly] {
+    color:#888;
+    cursor:not-allowed;
+}
+
 .toolbar {
 clear:both;
 padding-bottom:2px;

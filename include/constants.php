@@ -31,8 +31,8 @@
  * @author Stéphane Escaich
  */
 
-define ('_PLOOPI_VERSION', '1.9.3.4');
-define ('_PLOOPI_REVISION', '130819');
+define ('_PLOOPI_VERSION', '1.9.3.5');
+define ('_PLOOPI_REVISION', '131216');
 
 define ('_PLOOPI_MSG_DBERROR',  'Database connection error, please contact administrator');
 define ('_SYSTEM_SYSTEMADMIN',  0);
@@ -43,9 +43,14 @@ define ('_SYSTEM_OBJECT_ANNOTATION',    1);
 
 define ('_PLOOPI_ERROR_NOWORKSPACEDEFINED',     1);
 define ('_PLOOPI_ERROR_LOGINERROR',             2);
-define ('_PLOOPI_ERROR_LOGINEXPIRE',            3);
+define ('_PLOOPI_ERROR_PASSWORDEXPIRE',         3);
 define ('_PLOOPI_ERROR_SESSIONEXPIRE',          4);
 define ('_PLOOPI_ERROR_SESSIONINVALID',         5);
+define ('_PLOOPI_ERROR_ACCOUNTEXPIRE',          6);
+define ('_PLOOPI_ERROR_INVALIDTOKEN',           7);
+define ('_PLOOPI_ERROR_PASSWORDRESET',          8);
+define ('_PLOOPI_ERROR_PASSWORDERROR',          9);
+define ('_PLOOPI_ERROR_PASSWORDINVALID',       10);
 define ('_PLOOPI_ERROR_LOSTPASSWORD_UNKNOWN',  11);
 define ('_PLOOPI_ERROR_LOSTPASSWORD_INVALID',  12);
 define ('_PLOOPI_ERROR_LOSTPASSWORD_MANYRESPONSES',  13);
@@ -162,4 +167,3 @@ switch(_PLOOPI_SERVER_OSTYPE)
 }
 
 if (defined('_PLOOPI_PEARPATH') && (strstr(ini_get('include_path'), _PLOOPI_PEARPATH) == false) && file_exists(_PLOOPI_PEARPATH)) ini_set('include_path', ini_get('include_path').(_PLOOPI_SERVER_OSTYPE == 'windows' ? ';' : ':')._PLOOPI_PEARPATH);
-

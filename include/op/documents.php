@@ -43,7 +43,7 @@ switch($ploopi_op)
         ob_start();
 
         ?>
-        <div id="ploopidocuments_<?php echo $documents_id; ?>">
+        <div id="ploopidocuments_<?php echo ploopi_htmlentities($documents_id); ?>">
             <?php ploopi_documents_browser($_SESSION['documents'][$documents_id]['currentfolder'], $documents_id); ?>
         </div>
         <?php
@@ -181,7 +181,7 @@ switch($ploopi_op)
         }
         ?>
         <script type="text/javascript">
-            window.parent.ploopi_documents_browser('<?php echo ploopi_queryencode("ploopi_op=documents_browser&currentfolder={$currentfolder}&documents_id={$documents_id}"); ?>', '<?php echo $documents_id; ?>');
+            window.parent.ploopi_documents_browser('<?php echo ploopi_queryencode("ploopi_op=documents_browser&currentfolder={$currentfolder}&documents_id={$documents_id}"); ?>', '<?php echo ploopi_htmlentities($documents_id); ?>');
             window.parent.ploopi_hidepopup('ploopi_documents_openfolder_popup');
         </script>
         <?php
@@ -295,7 +295,7 @@ switch($ploopi_op)
 
         ?>
         <script type="text/javascript">
-            window.parent.ploopi_documents_browser('<?php echo ploopi_queryencode("ploopi_op=documents_browser&currentfolder={$currentfolder}&documents_id={$documents_id}"); ?>', '<?php echo $documents_id; ?>');
+            window.parent.ploopi_documents_browser('<?php echo ploopi_queryencode("ploopi_op=documents_browser&currentfolder={$currentfolder}&documents_id={$documents_id}"); ?>', '<?php echo ploopi_htmlentities($documents_id); ?>');
             window.parent.ploopi_hidepopup('ploopi_documents_openfile_popup');
         </script>
         <?php
@@ -366,7 +366,7 @@ switch($ploopi_op)
             // Mise à jour du navigateur
             else {
                 ?>
-                window.parent.ploopi_documents_browser('<?php echo ploopi_queryencode("ploopi_op=documents_browser&currentfolder={$currentfolder}&documents_id={$documents_id}"); ?>', '<?php echo $documents_id; ?>');
+                window.parent.ploopi_documents_browser('<?php echo ploopi_queryencode("ploopi_op=documents_browser&currentfolder={$currentfolder}&documents_id={$documents_id}"); ?>', '<?php echo ploopi_htmlentities($documents_id); ?>');
                 <?
             }
             ?>
@@ -483,7 +483,7 @@ switch($ploopi_op)
                 </p>
                 <p>
                     <label>Date:</label>
-                    <input class="text" id="documentsfile_timestp_file" name="documentsfile_timestp_file" value="<?php echo $ldate['date']; ?>" readonly style="width:75px;" onclick="javascript:ploopi_calendar_open('documentsfile_timestp_file', event);" tabindex="5">
+                    <input class="text" id="documentsfile_timestp_file" name="documentsfile_timestp_file" value="<?php echo ploopi_htmlentities($ldate['date']); ?>" readonly style="width:75px;" onclick="javascript:ploopi_calendar_open('documentsfile_timestp_file', event);" tabindex="5">
                     <a href="javascript:void(0);" onclick="javascript:ploopi_calendar_open('documentsfile_timestp_file', event);"><img src="./img/calendar/calendar.gif" width="31" height="18" align="top" border="0"></a>
                 </p>
                 <p>

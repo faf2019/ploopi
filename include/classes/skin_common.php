@@ -779,7 +779,7 @@ class skin_common
                             if (!empty($v['link']) || !empty($v['onclick']))
                             {
                                 $onclick = (empty($v['onclick'])) ? '' : "onclick=\"{$v['onclick']}\"";
-                                $title = (empty($v['description'])) ? '' : 'title="'.ploopi_htmlentities($v['description']).'"';
+                                $title = (empty($v['description'])) ? '' : 'title="'.strip_tags($v['description']).'"';
                                 ?>
                                 <a class="ploopi_explorer_link" href="<?php echo $v['link']; ?>" <?php echo $title ; ?> <?php echo $onclick ; ?> <?php echo $option; ?>>
                                 <?php
@@ -940,7 +940,7 @@ class skin_common
                         <div>
                             {$node_link}<img src=\"{$node['icon']}\" />
                             <div style=\"display:block;margin-left:".($marginleft+20)."px;line-height:18px;font-weight:{$style_sel};\">
-                                <a href=\"{$link}\" {$onclick}>{$node['label']}</a>
+                                <a href=\"{$link}\" {$onclick}>".ploopi_htmlentities($node['label'])."</a>
                                 {$status}
                             </div>
                         </div>

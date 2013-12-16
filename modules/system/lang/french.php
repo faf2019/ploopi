@@ -133,8 +133,8 @@ define ('_SYSTEM_LABEL_ACTION', 'Action');
 define ('_SYSTEM_LABEL_USER', 'Utilisateur');
 define ('_SYSTEM_LABEL_GROUP', 'Groupe');
 define ('_SYSTEM_LABEL_PASSWORD', 'Mot de Passe');
-define ('_SYSTEM_LABEL_PASSWORD_CONFIRM', 'Confirmation du Mot de Passe');
-define ('_SYSTEM_LABEL_EXPIRATION_DATE', 'Date d\'Expiration');
+define ('_SYSTEM_LABEL_PASSWORD_CONFIRM', 'Confirmation du mot de Passe');
+define ('_SYSTEM_LABEL_EXPIRATION_DATE', 'Date d\'expiration du compte');
 define ('_SYSTEM_LABEL_TIMEZONE', 'Fuseau Horaire');
 define ('_SYSTEM_LABEL_ORIGIN', 'Origine');
 define ('_SYSTEM_LABEL_LEVEL', 'Niveau');
@@ -247,7 +247,11 @@ define ('_SYSTEM_MSG_CONFIRMUSERDETACH', 'Êtes-vous certain de vouloir\nsupprime
 define ('_SYSTEM_MSG_CONFIRMUSERDELETE', 'Êtes-vous certain de vouloir\nsupprimer cet Utilisateur ?');
 define ('_SYSTEM_MSG_CONFIRMROLEDELETE', 'Êtes-vous certain de vouloir\nsupprimer ce Rôle ?');
 define ('_SYSTEM_MSG_CONFIRMLOGDELETE', 'Êtes-vous certain de vouloir\nsupprimer les Logs ?');
-define ('_SYSTEM_MSG_PASSWORDERROR', 'Erreur lors de la saisie du mot de passe.\nVous devez saisir deux fois le mot de passe');
+define ('_SYSTEM_MSG_PASSWORDERROR_JS', 'Erreur lors de la saisie du mot de passe.\nVous devez saisir deux fois le mot de passe');
+define ('_SYSTEM_MSG_PASSWORDERROR2_JS', 'Vous devez saisir l\\\'ancien mot de de passe');
+
+define ('_SYSTEM_MSG_PASSWORDERROR', "Erreur lors de la saisie du mot de passe.\nVous devez saisir deux fois le mot de passe");
+define ('_SYSTEM_MSG_OLDPASSWORDERROR', "L'ancien mot de passe est invalide");
 define ('_SYSTEM_MSG_LOGINERROR', "Erreur lors de la création de l'utilisateur.\nCe login existe déjà.");
 define ('_SYSTEM_MSG_LOGINPASSWORDERROR', 'Erreur lors de la saisie du mot de passe.<BR>Votre mot de passe a été rejeté par le système');
 

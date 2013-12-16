@@ -1,26 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
-<!--
-    Eyeos ~ Template pour Ploopi
-    Copyright (c) 2007-2008 Ovensia
-
-    This file is part of Ploopi.
-
-    Ploopi is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-
-    Ploopi is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with Ploopi; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-    -->
-
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
 <head>
     <meta http-equiv="content-type" content="text/html; charset=iso-8859-15" />
@@ -89,7 +68,11 @@
         );
     }
 
-    ploopi_window_onload_stock(function() { if ($('ploopi_login')) $('ploopi_login').focus(); } );
+    Event.observe(window, 'load', function() {
+        if ($('ploopi_password_new')) $('ploopi_password_new').focus();
+        else if ($('ploopi_login')) $('ploopi_login').focus();
+    });
+
     <!-- END switch_user_logged_out -->
 
     <!-- BEGIN switch_user_logged_in -->
@@ -117,14 +100,13 @@
         timer = setTimeout("tpl_display_time()",50000);
     }
 
-    ploopi_window_onload_stock(
-        function() {
-            tpl_resize_content();
-            tpl_display_time();
-            Event.observe(window, 'resize', tpl_resize_content);
-            ploopi_tickets_refresh({LAST_NEWTICKET}, 30, '(', ')');
-        }
-    );
+    Event.observe(window, 'load', function() {
+        tpl_resize_content();
+        tpl_display_time();
+        Event.observe(window, 'resize', tpl_resize_content);
+        ploopi_tickets_refresh({LAST_NEWTICKET}, 30, '(', ')');
+    });
+
     <!-- END switch_user_logged_in -->
 
     //-->
@@ -139,64 +121,144 @@
 
     <!-- BEGIN switch_user_logged_out -->
     <div id="login_window">
-        <form id="login_form" action="admin.php" method="post">
+        <div style="position:relative;">
             <div id="login">
+                <form id="login_form" action="{switch_user_logged_out.FORM_URL}" method="post">
                 <div class="login_form_box">
                     <p>
                         <label for="ploopi_login">Identifiant:&nbsp;</label>
-                        <input type="text" class="text" id="ploopi_login" name="ploopi_login" size="20" title="Saisir votre identifiant" placeholder="Saisir votre identifiant" tabindex="1" />
+                        <input type="text" class="text" id="ploopi_login" name="ploopi_login" value="{USER_LOGIN}" title="Saisir votre identifiant" placeholder="Saisir votre identifiant" tabindex="1" />
                     </p>
                     <p>
                         <label for="ploopi_password">Mot de passe:&nbsp;</label>
-                        <input type="password" class="text" id="ploopi_password" name="ploopi_password" size="20" title="Saisir votre mot de passe" placeholder="Saisir votre mot de passe" tabindex="2" />
+                        <input type="password" class="text" id="ploopi_password" name="ploopi_password" value="{USER_PASSWORD}" title="Saisir votre mot de passe" placeholder="Saisir votre mot de passe" tabindex="2" />
                     </p>
-                    <!-- BEGIN switch_ploopimsg -->
-                    <div style="color:#ffff00;margin-top:10px;">
-                        <img src="{TEMPLATE_PATH}/img/system/information.png" style="display:block;float:left;padding:6px;" /><div style="margin-left:30px;">{PLOOPI_MSG}</div>
-                    </div>
-                    <!-- END switch_ploopimsg -->
-                    <!-- BEGIN switch_ploopierrormsg -->
-                    <div style="color:#ff8800;margin-top:10px;">
-                        <img src="{TEMPLATE_PATH}/img/system/attention.png" style="display:block;float:left;padding:6px;" /><div style="margin-left:30px;">{PLOOPI_ERROR}</div>
-                    </div>
-                    <!-- END switch_ploopierrormsg -->
-                </div>
-            </div>
-            <div class="login_btn_right">
-                <button type="submit">
-                    <span style="margin-right:4px;">Valider</span>
-                    <img src="{TEMPLATE_PATH}/img/template/enter.png">
-                </button>
-            </div>
-            <div class="login_btn_left">
-                <a href="javascript:void(0);" onclick="javascript:tpl_passwordlost();"><img src="{TEMPLATE_PATH}/img/template/lost.png" /><span style="margin-left:6px;">Mot de passe perdu</span></a>
-            </div>
-        </form>
+                    <div style="min-height:30px;">
+                        <!-- BEGIN switch_passwordreset -->
+                            <style>
+                                #protopass * {font-size:10px; }
+                                #protopass .password-strength-bar {border-radius:2px;}
+                            </style>
 
-        <form id="lostpassword_form" action="{PASSWORDLOST_URL}" method="post" style="display:none;" onsubmit="javascript:return tpl_passwordlost_submit();">
-            <div class="login_form_box">
-                <p>
-                    <label for="ploopi_lostpassword_login">Identifiant:&nbsp;</label>
-                    <input type="text" class="text" id="ploopi_lostpassword_login" name="ploopi_lostpassword_login" size="20" title="Saisissez votre identifiant" tabindex="11" />
-                </p>
-                <p>
-                    <label for="ploopi_lostpassword_email">(ou) Adresse Email:&nbsp;</label>
-                    <input type="text" class="text" id="ploopi_lostpassword_email" name="ploopi_lostpassword_email" size="20" title="Saisissez votre adresse email" tabindex="12" />
-                </p>
-                <div style="color:#ffff00;margin-top:10px;">
-                    <em><strong>ATTENTION</strong>, une demande de mot de passe génère un nouveau mot de passe automatique.</em>
+                            <span style="color:#ffff00;"><strong>Votre mot de passe a expiré.</strong><br />Vous devez en saisir un nouveau ci-dessous:</span>
+                            <p>
+                                <label for="ploopi_password">Nouveau mot de passe:&nbsp;</label>
+                                <input type="password" class="text" id="ploopi_password_new" name="ploopi_password_new" title="Saisir votre mot de passe" placeholder="Saisir votre mot de passe" tabindex="2" />
+                            </p>
+                            <div id="protopass"></div>
+                            <p>
+                                <label for="ploopi_password">Confirmation mot de passe:&nbsp;</label>
+                                <input type="password" class="text" id="ploopi_password_new_confirm" name="ploopi_password_new_confirm" title="Saisir votre mot de passe" placeholder="Saisir votre mot de passe" tabindex="2" />
+                            </p>
+
+                            <script type="text/javascript">
+                                var backupColor = $('ploopi_password_new').style.backgroundColor;
+
+                                function tpl_verif_pass() {
+                                    if ($('ploopi_password_new').value != '' && $('ploopi_password_new_confirm').value != '') {
+                                        if ($('ploopi_password_new').value == $('ploopi_password_new_confirm').value) {
+                                            $('ploopi_password_new_confirm').style.backgroundColor = $('ploopi_password_new').style.backgroundColor = 'lightgreen';
+                                        } else {
+                                            $('ploopi_password_new_confirm').style.backgroundColor = $('ploopi_password_new').style.backgroundColor = 'indianred';
+                                        }
+                                    }
+                                    else $('ploopi_password_new_confirm').style.backgroundColor = $('ploopi_password_new').style.backgroundColor = backupColor;
+                                }
+
+                                Event.observe(window, 'load', function() {
+
+                                    <!-- BEGIN switch_np -->
+                                        var options = {
+                                            minchar: 6,
+                                            scores: [5, 10, 20, 30]
+                                        };
+                                    <!-- END switch_np -->
+
+                                    <!-- BEGIN switch_cp -->
+                                        var options = {
+                                            minchar: 8,
+                                            scores: [5, 10, 20, 30]
+                                        };
+                                    <!-- END switch_cp -->
+
+
+                                    new Protopass('ploopi_password_new', 'protopass', options);
+
+                                    Event.observe($('ploopi_password_new'), 'change', function() { tpl_verif_pass(); });
+                                    Event.observe($('ploopi_password_new_confirm'), 'change', function() { tpl_verif_pass(); });
+
+                                    Event.observe($('login_form'), 'submit', function(e) {
+
+
+                                        if ($('ploopi_password_new').value == '' && $('ploopi_password_new_confirm').value == '') {
+                                            alert('Votre mot de passe a expiré.\nVous devez redéfinir votre mot de passe.');
+                                            e.stop();
+                                            return;
+                                        }
+
+                                        if ($('ploopi_password_new').value != $('ploopi_password_new_confirm').value) {
+                                            alert('Les deux saisies sont différentes.\nVous devez corriger votre saisie.');
+                                            e.stop();
+                                            return;
+                                        }
+                                    });
+
+                                });
+                            </script>
+                        <!-- END switch_passwordreset -->
+
+
+                        <!-- BEGIN switch_ploopimsg -->
+                        <div style="color:#ff8800;overflow:auto;">
+                            <img style="display:block;float:left;" src="{TEMPLATE_PATH}/img/system/information.png" /><span style="display:block;margin-left:24px;">{PLOOPI_MSG}</span>
+                        </div>
+                        <!-- END switch_ploopimsg -->
+
+                       <!-- BEGIN switch_ploopierrormsg -->
+                        <div style="color:#ff8800;overflow:auto;">
+                            <img style="display:block;float:left;" src="{TEMPLATE_PATH}/img/system/attention.png" /><span style="display:block;margin-left:24px;">{PLOOPI_ERROR}</span>
+                        </div>
+                        <!-- END switch_ploopierrormsg -->
+                    </div>
                 </div>
+
+                <div class="login_btn_right">
+                    <button type="submit">
+                        <span style="margin-right:4px;">Valider</span>
+                        <img src="{TEMPLATE_PATH}/img/template/enter.png">
+                    </button>
+                </div>
+                <div class="login_btn_left">
+                    <a href="javascript:void(0);" onclick="javascript:tpl_passwordlost();"><img src="{TEMPLATE_PATH}/img/template/lost.png" /><span style="margin-left:6px;">Mot de passe perdu</span></a>
+                </div>
+                </form>
             </div>
-            <div class="login_btn_right">
-                <button type="submit">
-                    <span style="margin-right:4px;">Envoyer</span>
-                    <img src="{TEMPLATE_PATH}/img/template/enter.png">
-                </button>
-            </div>
-            <div class="login_btn_left">
-                <a href="javascript:void(0);" onclick="javascript:tpl_passwordlost_cancel();"><img src="{TEMPLATE_PATH}/img/template/cancel.png" /><span style="margin-left:6px;">Annuler</span></a>
-            </div>
-        </form>
+            <form style="display:none;" id="lostpassword_form" action="{PASSWORDLOST_URL}" method="post" onsubmit="javascript:return tpl_passwordlost_submit();">
+                <div class="login_form_box">
+                    <p>
+                        <label for="ploopi_lostpassword_login">Identifiant:&nbsp;</label>
+                        <input type="text" class="text" id="ploopi_lostpassword_login" name="ploopi_lostpassword_login" size="20" title="Saisissez votre identifiant" tabindex="11" />
+                    </p>
+                    <p>
+                        <label for="ploopi_lostpassword_email">(ou) Adresse Email:&nbsp;</label>
+                        <input type="text" class="text" id="ploopi_lostpassword_email" name="ploopi_lostpassword_email" size="20" title="Saisissez votre adresse email" tabindex="12" />
+                    </p>
+                    <div style="color:#ffff00;margin-top:10px;">
+                        <em><strong>ATTENTION</strong>, une demande de mot de passe génère un nouveau mot de passe automatique.</em>
+                    </div>
+                </div>
+                <div class="login_btn_right">
+                    <button type="submit">
+                        <span style="margin-right:4px;">Envoyer</span>
+                        <img src="{TEMPLATE_PATH}/img/template/enter.png">
+                    </button>
+                </div>
+                <div class="login_btn_left">
+                    <a href="javascript:void(0);" onclick="javascript:tpl_passwordlost_cancel();"><img src="{TEMPLATE_PATH}/img/template/cancel.png" /><span style="margin-left:6px;">Annuler</span></a>
+                </div>
+            </form>
+        </div>
+
     </div>
     <div id="login_statusbar">
         Template:&nbsp;<a href="http://www.ovensia.fr">{TEMPLATE_NAME}</a> |&nbsp;Propulsé par&nbsp;<a href="http://www.ploopi.fr">Ploopi {PLOOPI_VERSION} ({PLOOPI_REVISION})</a>&nbsp;&#169;&nbsp;2009&nbsp;<a href="http://www.ovensia.fr">Ovensia</a>&nbsp;|&nbsp;<a href="http://www.ploopi.org/#Utilisation">Documentation utilisateur</a>&nbsp;|&nbsp;<a href="http://www.mozilla-europe.org/fr/products/firefox/">Préférez Firefox</a>
@@ -314,9 +376,11 @@
 
 <!-- BEGIN switch_mod_message -->
 <script type="text/javascript">
-$('ploopi_mod_mess').innerHTML = '{switch_mod_message.MSG4JS}';
-$('ploopi_mod_mess').className = '{switch_mod_message.MSG_CLASS}';
-ploopi_window_onload_stock( function() { $('ploopi_mod_mess').fade({ duration: 3.0 }); } );
+Event.observe(window, 'load', function() {
+    $('ploopi_mod_mess').innerHTML = '{switch_mod_message.MSG4JS}';
+    $('ploopi_mod_mess').className = '{switch_mod_message.MSG_CLASS}';
+    $('ploopi_mod_mess').fade({ duration: 3.0 });
+});
 </script>
 <!-- END switch_mod_message -->
 

@@ -35,7 +35,7 @@
  * Ouverture du bloc
  */
 
-echo $skin->open_simplebloc(_SYSTEM_UPDATE." - {$strSysVersion} vers "._PLOOPI_VERSION);
+echo $skin->open_simplebloc(_SYSTEM_UPDATE.ploopi_htmlentities(" - {$strSysVersion} vers ")._PLOOPI_VERSION);
 
 switch($op)
 {
@@ -75,14 +75,14 @@ switch($op)
             if (file_exists("{$strSysInstallPath}{$strSqlFile}") && is_readable("{$strSysInstallPath}{$strSqlFile}"))
             {
                 ?>
-                <div style="padding:4px;">Import du fichier <b><?php echo $strSqlFile ?></b></div>
+                <div style="padding:4px;">Import du fichier <b><?php echo ploopi_htmlentities($strSqlFile); ?></b></div>
                 <?php
                 $db->multiplequeries(file_get_contents("{$strSysInstallPath}{$strSqlFile}"));
             }
             else
             {
                 ?>
-                <div style="padding:4px;color:#a60000;">Impossible de lire le fichier <b><?php echo "{$strSysInstallPath}{$strSqlFile}" ?></b>, vérifiez les droits en lecture</div>
+                <div style="padding:4px;color:#a60000;">Impossible de lire le fichier <b><?php echo ploopi_htmlentities("{$strSysInstallPath}{$strSqlFile}") ?></b>, vérifiez les droits en lecture</div>
                 <?php
             }
         }
@@ -100,7 +100,7 @@ switch($op)
         ?>
         <div style="padding:4px;">
         Vous venez de mettre à jour Ploopi.
-        <br />Vous aviez la version <b><?php echo $strSysVersion; ?></b> et le système a été mis à jour en version <b><?php echo _PLOOPI_VERSION; ?></b>
+        <br />Vous aviez la version <b><?php echo ploopi_htmlentities($strSysVersion); ?></b> et le système a été mis à jour en version <b><?php echo _PLOOPI_VERSION; ?></b>
         <br />Pour terminer la mise à jour vous devez mettre à jour la base de données.
         </div>
 

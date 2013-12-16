@@ -75,6 +75,7 @@ switch($op)
         if (isset($_SESSION['system']['save_user'])) unset($_SESSION['system']['save_user']);
 
         if (!isset($_POST['user_ticketsbyemail'])) $user->fields['ticketsbyemail'] = 0;
+        if (!isset($_POST['user_password_force_update'])) $user->fields['password_force_update'] = 0;
         if (!isset($_POST['user_servertimezone'])) $user->fields['servertimezone'] = 0;
         if (!empty($_POST['user_date_expire'])) $_POST['user_date_expire'] = ploopi_local2timestamp($_POST['user_date_expire']);
 
@@ -91,6 +92,36 @@ switch($op)
             }
             elseif ($_POST['usernewpass'] != $_POST['usernewpass_confirm']) $passwordok = false;
         }
+
+
+        // Affectation nouveau mot de passe
+        $error = '';
+
+        if (($user->new || isset($_POST['useroldpass'])) && isset($_POST['usernewpass']) && isset($_POST['usernewpass_confirm']))
+        {
+            if ($user->new || $_POST['usernewpass'] != '')
+            {
+                // Mots de passes équivalents
+                if ($_POST['usernewpass'] == $_POST['usernewpass_confirm'])
+                {
+                    // Complexité ok
+                    if (!_PLOOPI_USE_COMPLEXE_PASSWORD || ploopi_checkpasswordvalidity($_POST['usernewpass']))
+                    {
+                        // Affectation du mot de passe
+                        $user->setpassword($_POST['usernewpass']);
+                        // Mise à jour htpasswd
+                        if ($_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_generate_htpasswd']) system_generate_htpasswd($user->fields['login'], $_POST['usernewpass']);
+                    }
+                    else $error = 'passrejected';
+                }
+                else $error = 'password';
+            }
+        }
+
+
+
+
+
 
         if ($user->new)
         {
@@ -496,7 +527,7 @@ switch($_SESSION['system']['usrTabItem'])
                             ?>
                             <p class="ploopi_va">
                                 <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/attention.png" style="margin-right:4px;" />
-                                <span><? echo $strMsg ?></span>
+                                <span><? echo ploopi_htmlentities($strMsg); ?></span>
                             </p>
                             <?
                         }

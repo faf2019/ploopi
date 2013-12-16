@@ -32,6 +32,7 @@
  */
 
 include_once './include/functions/ip.php';
+include_once './include/classes/session.php';
 
 /**
  * Réinitialise la session
@@ -47,7 +48,10 @@ function ploopi_session_reset()
     $strRemoteSystem = Net_UserAgent_Detect::getOSString();
     ploopi_set_error_handler();
 
-    // session_destroy();
+    // Suppression des données de la session active
+    // Regénération d'un ID
+    session_regenerate_id(true);
+
     $_SESSION['ploopi'] = array(
         'login' => '',
         'password' => '',
@@ -113,7 +117,12 @@ function ploopi_session_reset()
 
         'fingerprint'   => _PLOOPI_FINGERPRINT,
 
-        'timezone'      => timezone_name_get(date_timezone_get($objDatetime =  date_create()))
+        'timezone'      => timezone_name_get(date_timezone_get($objDatetime =  date_create())),
+
+        'msgcode'       => 0,
+        'errorcode'     => 0,
+        'token'         => '',
+        'tokens'        => array()
     );
 }
 

@@ -106,8 +106,6 @@ function ploopi_search_remove_index($id_object, $id_record, $id_module = -1)
 
     if ($id_module == -1 && !empty($_SESSION['ploopi']['moduleid'])) $id_module= $_SESSION['ploopi']['moduleid'];
     if (($id_element = ploopi_search_get_id($id_module,$id_object,$id_record)) != null) {
-		echo "\nDELETE FROM ploopi_index_element WHERE id = '{$id_element}'";
-	
 		$db->query("DELETE FROM ploopi_index_element WHERE id = '{$id_element}'");
 		$db->query("DELETE FROM ploopi_index_keyword_element WHERE id_element = '{$id_element}'");
 		$db->query("DELETE FROM ploopi_index_stem_element WHERE id_element = '{$id_element}'");

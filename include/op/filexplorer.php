@@ -56,7 +56,7 @@ switch($ploopi_op)
         <div id="filexplorer">
             <div class="documents_browser">
                 <div class="documents_path">
-                    <a title="Aller au Dossier Racine" href="javascript:void(0);" style="float:right;" onclick="javascript:ploopi_filexplorer_browser('<?php echo $_GET['filexplorer_id']; ?>', '<?php $cipher->crypt(''); ?>');"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/documents/ico_home.png"></a>
+                    <a title="Aller au Dossier Racine" href="javascript:void(0);" style="float:right;" onclick="javascript:ploopi_filexplorer_browser('<?php echo ploopi_htmlentities($_GET['filexplorer_id']); ?>', '<?php $cipher->crypt(''); ?>');"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/documents/ico_home.png"></a>
                     <div>Emplacement :</div>
                     <?php
                     $strShortCutPath = '';
@@ -64,10 +64,10 @@ switch($ploopi_op)
                     {
                         if ($strFolderName != '') $strShortCutPath .= _PLOOPI_SEP.$strFolderName;
                         ?>
-                        <a href="javascript:void(0);" onclick="javascript:ploopi_filexplorer_browser('<?php echo $_GET['filexplorer_id']; ?>', '<?php echo $cipher->crypt($strShortCutPath); ?>');">
+                        <a href="javascript:void(0);" onclick="javascript:ploopi_filexplorer_browser('<?php echo ploopi_htmlentities($_GET['filexplorer_id']); ?>', '<?php echo $cipher->crypt($strShortCutPath); ?>');">
                             <p class="ploopi_va">
                                 <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/documents/ico_folder.png" />
-                                <span><?php echo $strFolderName ? $strFolderName : 'Racine'; ?></span>
+                                <span><?php echo ploopi_htmlentities($strFolderName ? $strFolderName : 'Racine'); ?></span>
                             </p>
                         </a>
                         <?php
@@ -160,7 +160,7 @@ switch($ploopi_op)
                                     array(
                                         'name' =>
                                             array(
-                                                'label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/documents/{$strIcon}\" /><span>&nbsp;{$strFileName}</span>",
+                                                'label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/documents/{$strIcon}\" /><span>&nbsp;".ploopi_htmlentities($strFileName)."</span>",
                                                 'sort_label' => "{$intSortId}_{$strFileName}"
                                             ),
                                         'type' =>
@@ -170,12 +170,12 @@ switch($ploopi_op)
                                             ),
                                         'timestp_file' =>
                                             array(
-                                                'label' => substr($strDate,0,10),
+                                                'label' => ploopi_htmlentities(substr($strDate,0,10)),
                                                 'sort_label' => $arrStat['mtime']
                                             ),
                                         'size' =>
                                             array(
-                                                'label' => $boolIsFolder ? "{$intElements} element(s)" : sprintf("%s Ko", number_format(($arrStat['size']/1024),1,".", " ")),
+                                                'label' => ploopi_htmlentities($boolIsFolder ? "{$intElements} element(s)" : sprintf("%s Ko", number_format(($arrStat['size']/1024),1,".", " "))),
                                                 'sort_label' => $intSortId.'_'.($boolIsFolder ? sprintf("%020d", $intElements) : sprintf("%020d", $arrStat['size'])),
                                                 'style' => 'text-align:right;'
                                             )

@@ -131,9 +131,9 @@ while ($fields = $db->fetchrow($result))
 
     $ldate = ploopi_timestamp2local($fields['date']);
 
-    $values[$c]['values']['desc'] = array('label' => $fields['description']);
-    $values[$c]['values']['mtype'] = array('label' => $fields['label']);
-    $values[$c]['values']['author'] = array('label' => $fields['author']);
+    $values[$c]['values']['desc'] = array('label' => ploopi_htmlentities($fields['description']));
+    $values[$c]['values']['mtype'] = array('label' => ploopi_htmlentities($fields['label']));
+    $values[$c]['values']['author'] = array('label' => ploopi_htmlentities($fields['author']));
     $values[$c]['values']['version'] = array('label' => "<a title=\""._PLOOPI_UPDATE."\" href=\"javascript:ploopi_confirmlink('".ploopi_urlencode("admin.php?ploopi_op=updatedesc&moduletype={$fields['label']}&idmoduletype={$fields['id']}")."','"._SYSTEM_MSG_CONFIRMDESCUPDATE."')\">{$fields['version']}</a>");
     $values[$c]['values']['date'] = array('label' => $ldate['date'], 'sort_label' => $fields['date']);
     $values[$c]['values']['actions'] = array('label' => $has_actions, 'style' => 'text-align:center');
@@ -145,7 +145,7 @@ while ($fields = $db->fetchrow($result))
     else
         $values[$c]['values']['action'] = array('label' => "<a href=\"javascript:ploopi_confirmlink('".ploopi_urlencode("admin.php?op=uninstall&uninstallidmoduletype={$fields['id']}")."','"._SYSTEM_MSG_CONFIRMMODULEUNINSTAL."')\">"._SYSTEM_LABEL_UNINSTALL."</a>", 'style' => 'text-align:center;');
 
-    $values[$c]['description'] = $fields['description'];
+    $values[$c]['description'] = ploopi_htmlentities($fields['description']);
     $values[$c]['style'] = ($fields['id'] == _PLOOPI_MODULE_SYSTEM) ? 'background-color:#f0e0e0;' : '';
 
     $c++;
@@ -179,17 +179,17 @@ foreach($tabmoduletype_install as $label => $fields)
             {
                 $ldate = ploopi_timestamp2local($fields['date']);
 
-                $values[$c]['values']['desc'] = array('label' => $fields['description'], 'style' => '');
-                $values[$c]['values']['mtype'] = array('label' => $fields['label'], 'style' => '');
-                $values[$c]['values']['author'] = array('label' => $fields['author'], 'style' => '');
-                $values[$c]['values']['version'] = array('label' => $fields['version'], 'style' => '');
+                $values[$c]['values']['desc'] = array('label' => ploopi_htmlentities($fields['description']), 'style' => '');
+                $values[$c]['values']['mtype'] = array('label' => ploopi_htmlentities($fields['label']), 'style' => '');
+                $values[$c]['values']['author'] = array('label' => ploopi_htmlentities($fields['author']), 'style' => '');
+                $values[$c]['values']['version'] = array('label' => ploopi_htmlentities($fields['version']), 'style' => '');
                 $values[$c]['values']['date'] = array('label' => $ldate['date'], 'style' => '', 'sort_label' => $fields['date']);
                 $values[$c]['values']['action'] = array('label' => "<a href=\"".ploopi_urlencode("admin.php?op=update&idmoduletype={$tabmoduletype_installed[$label]['id']}&installmoduletype={$tabmoduletype_install[$label]['label']}&updatefrom={$tabmoduletype_installed[$label]['version']}&updateto={$fields['version']}")."\">"._SYSTEM_LABEL_UPDATE."</a>", 'style' => 'text-align:center;');
             }
             else
             {
                 $values[$c]['values']['desc'] = array('label' => 'Erreur dans la structure XML', 'style' => 'font-weight:bold;color:#a60000;');
-                $values[$c]['values']['mtype'] = array('label' => $fields['label']);
+                $values[$c]['values']['mtype'] = array('label' => ploopi_htmlentities($fields['label']));
                 $values[$c]['values']['author'] = array('label' => '&nbsp;');
                 $values[$c]['values']['version'] = array('label' => '&nbsp;');
                 $values[$c]['values']['date'] = array('label' => '&nbsp;');
@@ -223,17 +223,17 @@ foreach($tabmoduletype_install as $label => $fields)
         {
             $ldate = ploopi_timestamp2local($fields['date']);
 
-            $values[$c]['values']['desc'] = array('label' => $fields['description']);
-            $values[$c]['values']['mtype'] = array('label' => $fields['label']);
-            $values[$c]['values']['author'] = array('label' => $fields['author']);
-            $values[$c]['values']['version'] = array('label' => $fields['version']);
+            $values[$c]['values']['desc'] = array('label' => ploopi_htmlentities($fields['description']));
+            $values[$c]['values']['mtype'] = array('label' => ploopi_htmlentities($fields['label']));
+            $values[$c]['values']['author'] = array('label' => ploopi_htmlentities($fields['author']));
+            $values[$c]['values']['version'] = array('label' => ploopi_htmlentities($fields['version']));
             $values[$c]['values']['date'] = array('label' => $ldate['date'], 'sort_label' => $fields['date']);
             $values[$c]['values']['action'] = array('label' => "<a href=\"".ploopi_urlencode("admin.php?op=install&installmoduletype={$fields['label']}")."\">"._SYSTEM_LABEL_INSTALL."</a>", 'style' => 'text-align:center;');
         }
         else
         {
             $values[$c]['values']['desc'] = array('label' => 'Erreur dans la structure XML', 'style' => 'font-weight:bold;color:#a60000;');
-            $values[$c]['values']['mtype'] = array('label' => $fields['label']);
+            $values[$c]['values']['mtype'] = array('label' => ploopi_htmlentities($fields['label']));
             $values[$c]['values']['author'] = array('label' => '&nbsp;');
             $values[$c]['values']['version'] = array('label' => '&nbsp;');
             $values[$c]['values']['date'] = array('label' => '&nbsp;');

@@ -639,7 +639,7 @@ function ploopi_open_calendar($strInputFieldId, $booEcho = true, $strClass = nul
     $strStyle = $strStyle == null ? '' : " style=\"{$strStyle}\"";
 
     $strEcho = "
-        <a href=\"javascript:void(0);\" onclick=\"javascript:ploopi_xmlhttprequest_topopup(192, event, 'ploopi_popup_calendar', '{$strScript}-light.php?ploopi_op=calendar_open', 'selected_date='+$('{$strInputFieldId}').value+'&inputfield_id={$strInputFieldId}', 'POST', true);\" {$strClass}{$strStyle}>
+        <a href=\"javascript:void(0);\" onclick=\"javascript:ploopi_xmlhttprequest_topopup(192, event, 'ploopi_popup_calendar', '".ploopi_urlencode("{$strScript}-light.php?ploopi_op=calendar_open")."', 'selected_date='+$('{$strInputFieldId}').value+'&inputfield_id={$strInputFieldId}', 'POST', true);\" {$strClass}{$strStyle}>
         <img src=\"./img/calendar/calendar.gif\" />
         </a>
     ";

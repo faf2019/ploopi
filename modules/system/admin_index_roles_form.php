@@ -71,7 +71,7 @@ $modules = $workspace->getmodules();
 
             $module = &$modules[$role->fields['id_module']];
             ?>
-            <div style="font-weight:bold;margin-bottom:4px;"><?php echo "{$module['instancename']} ({$module['label']})"; ?></div>
+            <div style="font-weight:bold;margin-bottom:4px;"><?php echo ploopi_htmlentities("{$module['instancename']} ({$module['label']})"); ?></div>
 
             <form action="<?php echo ploopi_urlencode('admin.php'); ?>" method="post" onsubmit="return role_validate(this);">
             <input type="hidden" name="op" value="save_role">
@@ -100,8 +100,8 @@ $modules = $workspace->getmodules();
             {
                 ?>
                 <p class="ploopi_va">
-                    <input type="checkbox" class="role_action" id="role_action_<?php echo $action['id_action']; ?>" name="id_action[]" <?php echo (isset($actions_checked[$id])) ? 'checked' : ''; ?> value="<?php echo $action['id_action']; ?>">
-                    <span style="cursor:pointer;" onclick="javascript:$('role_action_<?php echo $action['id_action']; ?>').checked = !$('role_action_<?php echo $action['id_action']; ?>').checked;"><?php echo "{$action['id_action']} - {$action['label']}"; ?></span>
+                    <input type="checkbox" class="role_action" id="role_action_<?php echo $action['id_action']; ?>" name="id_action[]" <?php echo (isset($actions_checked[$id])) ? 'checked' : ''; ?> value="<?php echo ploopi_htmlentities($action['id_action']); ?>">
+                    <span style="cursor:pointer;" onclick="javascript:$('role_action_<?php echo $action['id_action']; ?>').checked = !$('role_action_<?php echo $action['id_action']; ?>').checked;"><?php echo ploopi_htmlentities("{$action['id_action']} - {$action['label']}"); ?></span>
                 </p>
                 <?php
             }
@@ -124,7 +124,7 @@ $modules = $workspace->getmodules();
                 foreach($modules as $module)
                 {
                     ?>
-                    <option value="<?php echo $module['instanceid']; ?>"><?php echo "{$module['instancename']} ({$module['label']})"; ?></option>
+                    <option value="<?php echo $module['instanceid']; ?>"><?php echo ploopi_htmlentities("{$module['instancename']} ({$module['label']})"); ?></option>
                     <?php
                 }
                 ?>

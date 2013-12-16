@@ -64,7 +64,7 @@ function system_user_validate(form, isnew)
         if (isnew)
         {
             if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_LOGIN; ?>",form.user_login,"string"))
-            if ((form.usernewpass_confirm.value != form.usernewpass.value) || form.usernewpass.value == '' || form.usernewpass_confirm.value == '') alert('<?php echo _SYSTEM_MSG_PASSWORDERROR; ?>');
+            if ((form.usernewpass_confirm.value != form.usernewpass.value) || form.usernewpass.value == '' || form.usernewpass_confirm.value == '') alert('<?php echo _SYSTEM_MSG_PASSWORDERROR_JS; ?>');
             else
             {
                 rep = ploopi_xmlhttprequest('admin.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=ploopi_checkpasswordvalidity&password='+form.usernewpass.value, false, false, 'POST');
@@ -80,7 +80,7 @@ function system_user_validate(form, isnew)
             if (form.usernewpass_confirm.value == form.usernewpass.value && form.usernewpass.value == '') return true;
             else
             {
-                if (form.usernewpass_confirm.value != form.usernewpass.value) alert('<?php echo _SYSTEM_MSG_PASSWORDERROR; ?>');
+                if (form.usernewpass_confirm.value != form.usernewpass.value) alert('<?php echo _SYSTEM_MSG_PASSWORDERROR_JS; ?>');
                 else
                 {
                     rep = ploopi_xmlhttprequest('admin.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=ploopi_checkpasswordvalidity&password='+form.usernewpass.value, false, false, 'POST');

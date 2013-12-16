@@ -72,7 +72,7 @@ switch($ploopi_op)
         <div id="tickets_new">
             <form method="post" action="<?php echo ploopi_urlencode('admin.php'); ?>" target="ploopi_tickets_send" onsubmit="javascript:return ploopi_tickets_validate(this);">
             <input type="hidden" name="ploopi_op" value="tickets_send">
-            <input type="hidden" name="ploopi_tickets_reload" value="<?php if (!empty($_GET['ploopi_tickets_reload'])) echo $_GET['ploopi_tickets_reload']; ?>">
+            <input type="hidden" name="ploopi_tickets_reload" value="<?php if (!empty($_GET['ploopi_tickets_reload'])) echo ploopi_htmlentities($_GET['ploopi_tickets_reload']); ?>">
             <?php
             if (isset($_GET['ploopi_tickets_id_object']))
             {
@@ -185,13 +185,13 @@ switch($ploopi_op)
             <div id="tickets_new">
                 <form method="post" action="<?php echo ploopi_urlencode('admin.php'); ?>" target="ploopi_tickets_send" onsubmit="javascript:return ploopi_tickets_validate(this);">
                 <input type="hidden" name="ploopi_op" value="<?php echo $nextop; ?>">
-                <input type="hidden" name="ticket_id" value="<?php echo $_GET['ticket_id']; ?>">
+                <input type="hidden" name="ticket_id" value="<?php echo ploopi_htmlentities($_GET['ticket_id']); ?>">
                 <input type="hidden" name="ploopi_tickets_reload" value="1">
                 <?php
                 if ($ploopi_op == 'tickets_replyto')
                 {
                     ?>
-                    <div><span><?php echo _PLOOPI_LABEL_TICKET_RECIPIENT; ?> : </span><span style="font-weight:bold;"><?php echo $strUserName; ?></span></div>
+                    <div><span><?php echo _PLOOPI_LABEL_TICKET_RECIPIENT; ?> : </span><span style="font-weight:bold;"><?php echo ploopi_htmlentities($strUserName); ?></span></div>
                     <?php
                 }
                 ?>
@@ -449,7 +449,7 @@ switch($ploopi_op)
                         {
                             ?>
                             <div class="system_tickets_select_workgroup">
-                                <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_workgroup.png"><span><?php echo $wsp['label']; ?></span></p>
+                                <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_workgroup.png"><span><?php echo ploopi_htmlentities($wsp['label']); ?></span></p>
                             </div>
                             <?php
                             if (!empty($wsp['users']))
@@ -460,7 +460,7 @@ switch($ploopi_op)
                                     
                                     ?>
                                     <a class="system_tickets_select_user" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_select_user&user_id=<?php echo $id_user; ?>', 'div_ticket_users_selected');">
-                                        <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span><?php echo "{$list['usr'][$id_user]['lastname']} {$list['usr'][$id_user]['firstname']}"; ?></span></p>
+                                        <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span><?php echo ploopi_htmlentities("{$list['usr'][$id_user]['lastname']} {$list['usr'][$id_user]['firstname']}"); ?></span></p>
                                     </a>
                                     <?php
                                 }
@@ -474,7 +474,7 @@ switch($ploopi_op)
                                     {
                                         ?>
                                         <a class="system_tickets_select_usergroup" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_select_user&group_id=<?php echo $id_grp; ?>', 'div_ticket_users_selected');">
-                                            <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_group.png"><span><?php echo $list['grp'][$id_grp]['label']; ?></span></p>
+                                            <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_group.png"><span><?php echo ploopi_htmlentities($list['grp'][$id_grp]['label']); ?></span></p>
                                         </a>
                                         <?php
                                         foreach($list['grp'][$id_grp]['users'] as $id_user)
@@ -482,7 +482,7 @@ switch($ploopi_op)
                                             if ($booEmptySearch) $booEmptySearch = false;
                                             ?>
                                             <a class="system_tickets_select_usergroup_user" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_select_user&user_id=<?php echo $id_user; ?>', 'div_ticket_users_selected');">
-                                                <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span><?php echo "{$list['usr'][$id_user]['lastname']} {$list['usr'][$id_user]['firstname']}"; ?></span></p>
+                                                <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span><?php echo ploopi_htmlentities("{$list['usr'][$id_user]['lastname']} {$list['usr'][$id_user]['firstname']}"); ?></span></p>
                                             </a>
                                             <?php
                                         }

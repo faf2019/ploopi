@@ -99,7 +99,7 @@ else
     foreach($arrErrors as $strError)
     {
         ?>
-        <p class="ploopi_va" style="padding:2px;"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/attention.png" style="margin-right:4px;" /><span class="error"><? echo $strError ?></span></p>
+        <p class="ploopi_va" style="padding:2px;"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/attention.png" style="margin-right:4px;" /><span class="error"><? echo ploopi_htmlentities($strError); ?></span></p>
         <?
     }
 }
@@ -117,7 +117,7 @@ if (!$booCriticalError)
     {
         $columns['left'][$strFieldName] =
             array(
-                'label' => $strFieldName,
+                'label' => ploopi_htmlentities($strFieldName),
                 'width' => 90,
                 'options' => array('sort' => true)
             );
@@ -130,7 +130,7 @@ if (!$booCriticalError)
         $intJ = 0;
         foreach($_SESSION['system']['user_import'][0] as $strFieldName)
         {
-            if (isset($_SESSION['system']['user_import'][$intI][$intJ])) $values[$intC]['values'][$strFieldName] = array('label' => $_SESSION['system']['user_import'][$intI][$intJ]);
+            if (isset($_SESSION['system']['user_import'][$intI][$intJ])) $values[$intC]['values'][$strFieldName] = array('label' => ploopi_htmlentities($_SESSION['system']['user_import'][$intI][$intJ]));
             $intJ++;
         }   
         $intC++;

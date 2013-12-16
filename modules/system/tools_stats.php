@@ -113,7 +113,7 @@ foreach($load as $key => $l)
     $load_color = system_serverload_getcolor(0,100,$l['res']['load']);
     $tpp_color = system_serverload_getcolor(0,500,$l['res']['tpp']);
 
-    $values[$c]['values']['title'] = array('label' => $l['title'], 'style' => 'text-align:right;');
+    $values[$c]['values']['title'] = array('label' => ploopi_htmlentities($l['title']), 'style' => 'text-align:right;');
     $values[$c]['values']['load'] = array('label' => $l['res']['load']. ' %', 'style' => "text-align:right;background-color:{$load_color}");
     $values[$c]['values']['tpp'] = array('label' => $l['res']['tpp'], 'style' => "text-align:right;background-color:{$tpp_color}");
     $values[$c]['values']['rps'] = array('label' => $l['res']['rps'], 'style' => 'text-align:right;');
@@ -173,14 +173,14 @@ $c = 0;
 while ($row = $db->fetchrow())
 {
     $ldate = ploopi_timestamp2local($row['ts']);
-    $values[$c]['values']['ts'] = array('label' => "{$ldate['date']} {$ldate['time']}", 'sort_label' => $row['ts']);
-    $values[$c]['values']['env'] = array('label' => "{$row['browser']} {$row['system']}");
-    $values[$c]['values']['exec'] = array('label' => $row['total_exec_time']);
-    $values[$c]['values']['sql'] = array('label' => $row['sql_exec_time']);
-    $values[$c]['values']['numq'] = array('label' => $row['numqueries']);
-    $values[$c]['values']['uri'] = array('label' => $row['request_uri']);
-    $values[$c]['values']['ip'] = array('label' => $row['remote_addr']);
-    $values[$c]['values']['ploopi'] = array('label' => "{$row['ploopi_userid']}/{$row['ploopi_workspaceid']}/{$row['ploopi_moduleid']}");
+    $values[$c]['values']['ts'] = array('label' => ploopi_htmlentities("{$ldate['date']} {$ldate['time']}"), 'sort_label' => $row['ts']);
+    $values[$c]['values']['env'] = array('label' => ploopi_htmlentities("{$row['browser']} {$row['system']}"));
+    $values[$c]['values']['exec'] = array('label' => ploopi_htmlentities($row['total_exec_time']));
+    $values[$c]['values']['sql'] = array('label' => ploopi_htmlentities($row['sql_exec_time']));
+    $values[$c]['values']['numq'] = array('label' => ploopi_htmlentities($row['numqueries']));
+    $values[$c]['values']['uri'] = array('label' => ploopi_htmlentities($row['request_uri']));
+    $values[$c]['values']['ip'] = array('label' => ploopi_htmlentities($row['remote_addr']));
+    $values[$c]['values']['ploopi'] = array('label' => ploopi_htmlentities("{$row['ploopi_userid']}/{$row['ploopi_workspaceid']}/{$row['ploopi_moduleid']}"));
 
     $values[$c]['description'] = '';
     $values[$c]['style'] = '';

@@ -440,7 +440,7 @@ switch ($_SESSION['system']['level'])
         
                                     ploopi_create_user_action_log(_SYSTEM_ACTION_USEMODULE, $module_type->fields['label']);
         
-                                    echo $skin->open_simplebloc(str_replace('<LABEL>',$module_type->fields['label'],_SYSTEM_LABEL_MODULEINSTANCIATION));
+                                    echo $skin->open_simplebloc(ploopi_htmlentities(str_replace('<LABEL>',$module_type->fields['label'],_SYSTEM_LABEL_MODULEINSTANCIATION)));
                                     ?>
                                     <TABLE CELLPADDING="2" CELLSPACING="1"><TR><TD>
                                     <?php
@@ -594,7 +594,7 @@ switch ($_SESSION['system']['level'])
 
                             ploopi_create_user_action_log(_SYSTEM_ACTION_DELETEMODULE, $module->fields['label']);
 
-                            echo $skin->open_simplebloc(str_replace('<LABEL>',$module->fields['label'],_SYSTEM_LABEL_MODULEDELETE));
+                            echo $skin->open_simplebloc(ploopi_htmlentities(str_replace('<LABEL>',$module->fields['label'],_SYSTEM_LABEL_MODULEDELETE)));
                             ?>
                             <TABLE CELLPADDING="2" CELLSPACING="1"><TR><TD>
                             <?php

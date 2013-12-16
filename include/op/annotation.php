@@ -53,7 +53,7 @@ switch($ploopi_op)
             $tag->open($_GET['id_tag']);
 
             ?>
-            <div style="padding:4px;">Le tag <b><?php echo $tag->fields['tag'] ; ?></b> a aussi été utilisé sur les annotation suivantes :</div>
+            <div style="padding:4px;">Le tag <b><?php echo ploopi_htmlentities($tag->fields['tag']); ; ?></b> a aussi été utilisé sur les annotation suivantes :</div>
             <div class="ploopi_annotation_popup_list">
             <?php
 
@@ -84,8 +84,8 @@ switch($ploopi_op)
                 $ld = ploopi_timestamp2local($fields['date_annotation']);
                 ?>
                 <div class="ploopi_annotation_row_<?php echo $numrow = (!isset($numrow) || $numrow == 2) ? 1 : 2; ?>" style="padding:4px;">
-                    <div style="float:right;"><?php echo "le {$ld['date']} à {$ld['time']}"; ?></div>
-                    <div style="font-weight:bold;"><?php echo "{$fields['title']}"; ?></div>
+                    <div style="float:right;"><?php echo ploopi_htmlentities("le {$ld['date']} à {$ld['time']}"); ?></div>
+                    <div style="font-weight:bold;"><?php echo ploopi_htmlentities("{$fields['title']}"); ?></div>
                     <div style="clear:both;padding-top:4px;"><?php echo ploopi_make_links(ploopi_nl2br(ploopi_htmlentities($fields['content']))); ?></div>
                     <?php
                     if ($fields['id_record'] != '')
@@ -104,7 +104,7 @@ switch($ploopi_op)
                                                     $fields['script']
                                         );
                         ?>
-                        <div style="clear:both;padding-top:4px;text-align:right;"><a href="<?php echo "admin.php?ploopi_mainmenu=1&{$object_script}"; ?>"><?php echo "{$fields['module_name']} / {$fields['object_name']} / {$fields['object_label']}"; ?></a></div>
+                        <div style="clear:both;padding-top:4px;text-align:right;"><a href="<?php echo "admin.php?ploopi_mainmenu=1&{$object_script}"; ?>"><?php echo ploopi_htmlentities("{$fields['module_name']} / {$fields['object_name']} / {$fields['object_label']}"); ?></a></div>
                         <?php
                     }
                     ?>
@@ -146,7 +146,7 @@ switch($ploopi_op)
             while ($fields = $db->fetchrow($rs))
             {
                 if ($c++) echo '|';
-                echo "{$fields['tag']};{$fields['c']}";
+                echo ploopi_htmlentities("{$fields['tag']};{$fields['c']}");
             }
         }
         ploopi_die();
@@ -184,7 +184,7 @@ switch($ploopi_op)
             $annotation->save();
             ?>
             <script type="text/javascript">
-                window.parent.ploopi_annotation('<?php echo $_POST['id_annotation']; ?>');
+                window.parent.ploopi_annotation('<?php echo ploopi_htmlentities($_POST['id_annotation']); ?>');
             </script>
         <?php
         }
