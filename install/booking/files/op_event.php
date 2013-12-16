@@ -371,6 +371,8 @@ if ($_SESSION['ploopi']['connected'])
             ob_start();
             ploopi_init_module('booking');
 
+            global $arrBookingColor;
+
             // Cas particulier du mode frontoffice, on teste la présence de moduleid
             if ($_SESSION['ploopi']['mode'] == 'frontoffice' && (empty($_GET['booking_moduleid']) || !is_numeric($_GET['booking_moduleid']) || !ploopi_isactionallowed(_BOOKING_ACTION_ASKFOREVENT, $_SESSION['ploopi']['workspaceid'], $_GET['booking_moduleid']))) ploopi_die();
 
@@ -401,7 +403,7 @@ if ($_SESSION['ploopi']['connected'])
                                 if ($strResourceType != '') echo '</optgroup>';
                                 $strResourceType = $row['rt_name'];
                                 ?>
-                                <optgroup label="<? echo $row['rt_name']; ?>">
+                                <optgroup label="<? echo ploopi_htmlentities($row['rt_name']); ?>">
                                 <?
                             }
                             ?>
@@ -418,7 +420,7 @@ if ($_SESSION['ploopi']['connected'])
                 </p>
                 <p>
                     <label>Date de début:</label>
-                    <input name="_booking_event_timestp_begin_d" id="_booking_event_timestp_begin_d" class="text" type="text" value="<? echo $strDate; ?>" style="width:80px;" onchange="javascript:$('_booking_event_timestp_end_d').value = this.value;" />
+                    <input name="_booking_event_timestp_begin_d" id="_booking_event_timestp_begin_d" class="text" type="text" value="<?php echo ploopi_htmlentities($strDate); ?>" style="width:80px;" onchange="javascript:$('_booking_event_timestp_end_d').value = this.value;" />
                     <?php ploopi_open_calendar('_booking_event_timestp_begin_d'); ?>
                 </p>
                 <p>
@@ -443,7 +445,7 @@ if ($_SESSION['ploopi']['connected'])
                 </p>
                 <p>
                     <label>Date de fin:</label>
-                    <input name="_booking_event_timestp_end_d" id="_booking_event_timestp_end_d" class="text" type="text" value="<? echo $strDate; ?>" style="width:80px; "/>
+                    <input name="_booking_event_timestp_end_d" id="_booking_event_timestp_end_d" class="text" type="text" value="<?php echo ploopi_htmlentities($strDate); ?>" style="width:80px; "/>
                     <?php ploopi_open_calendar('_booking_event_timestp_end_d'); ?>
                 </p>
                 <p>
@@ -473,7 +475,7 @@ if ($_SESSION['ploopi']['connected'])
                         foreach ($arrBookingPeriodicity as $key => $value)
                         {
                             ?>
-                            <option value="<? echo $key; ?>"><? echo ploopi_htmlentities($value); ?></option>
+                            <option value="<? echo ploopi_htmlentities($key); ?>"><? echo ploopi_htmlentities($value); ?></option>
                             <?
                         }
                         ?>
@@ -573,6 +575,8 @@ switch($ploopi_op)
         ob_start();
         ploopi_init_module('booking');
 
+        global $arrBookingColor;
+
         include_once './modules/booking/classes/class_booking_resource.php';
         include_once './modules/booking/classes/class_booking_resource_workspace.php';
         include_once './modules/booking/classes/class_booking_event.php';
@@ -631,7 +635,7 @@ switch($ploopi_op)
                                         if ($strResourceType != '') echo '</optgroup>';
                                         $strResourceType = $row['rt_name'];
                                         ?>
-                                        <optgroup label="<? echo $row['rt_name']; ?>">
+                                        <optgroup label="<? echo ploopi_htmlentities($row['rt_name']); ?>">
                                         <?
                                     }
                                     ?>
@@ -716,7 +720,7 @@ switch($ploopi_op)
                                         if ($booModify)
                                         {
                                             ?>
-                                            <input name="_booking_event_timestp_begin_d[<? echo $detail['id']; ?>]" id="_booking_event_timestp_begin_d<? echo $detail['id']; ?>" class="text" type="text" value="<? echo $arrDateBegin['date']; ?>" style="width:80px;" onchange="javascript:if ($('_booking_event_timestp_end_d<? echo $detail['id']; ?>').value == '') $('_booking_event_timestp_end_d<? echo $detail['id']; ?>').value = this.value;" />
+                                            <input name="_booking_event_timestp_begin_d[<? echo $detail['id']; ?>]" id="_booking_event_timestp_begin_d<? echo $detail['id']; ?>" class="text" type="text" value="<?php echo ploopi_htmlentities($arrDateBegin['date']); ?>" style="width:80px;" onchange="javascript:if ($('_booking_event_timestp_end_d<? echo $detail['id']; ?>').value == '') $('_booking_event_timestp_end_d<? echo $detail['id']; ?>').value = this.value;" />
                                             <?php ploopi_open_calendar("_booking_event_timestp_begin_d{$detail['id']}"); ?>
                                             <?
                                         }
@@ -725,7 +729,7 @@ switch($ploopi_op)
                                             ?>
                                             <span>
                                                 <?
-                                                echo $arrDateBegin['date'];
+                                                echo ploopi_htmlentities($arrDateBegin['date']);
                                                 echo '<strong style="margin-left:10px;">'.($detail['validated'] ? 'Validé' : ($detail['canceled'] ? 'Refusé' : 'Indeterminé')).'</strong>';
 
                                                 // Peuvent supprimer :
@@ -796,7 +800,7 @@ switch($ploopi_op)
                                         if ($booModify)
                                         {
                                             ?>
-                                            <input name="_booking_event_timestp_end_d[<? echo $detail['id']; ?>]" id="_booking_event_timestp_end_d<? echo $detail['id']; ?>" class="text" type="text" value="<? echo $arrDateEnd['date']; ?>" style="width:80px; "/>
+                                            <input name="_booking_event_timestp_end_d[<? echo $detail['id']; ?>]" id="_booking_event_timestp_end_d<? echo $detail['id']; ?>" class="text" type="text" value="<?php echo ploopi_htmlentities($arrDateEnd['date']); ?>" style="width:80px; "/>
                                             <?php ploopi_open_calendar("_booking_event_timestp_end_d{$detail['id']}"); ?>
                                             <?
                                         }
@@ -913,7 +917,7 @@ switch($ploopi_op)
                             ?>
                             <div style="margin-bottom:2px;"><strong style="color:#a60000;">Cette demande est verrouillée car son traitement est terminé</strong></div>
                             <div>
-                                <input type="button" class="button" value="Deverrouiller" onclick="javascript:booking_event_unlock('<? echo $_GET['booking_element_id']; ?>');"/>
+                                <input type="button" class="button" value="Deverrouiller" onclick="javascript:booking_event_unlock('<? echo ploopi_htmlentities($_GET['booking_element_id']); ?>');"/>
                                 <input type="button" class="button" value="Fermer" onclick="javascript:ploopi_hidepopup('popup_event');"/>
                             </div>
                             <?

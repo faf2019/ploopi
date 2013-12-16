@@ -128,7 +128,7 @@ $db->query("
 ");   
 
 $arrResWorkspaces = array();
-while ($row = $db->fetchrow()) $arrResWorkspaces[$row['id']][] = $row['label'];
+while ($row = $db->fetchrow()) $arrResWorkspaces[$row['id']][] = ploopi_htmlentities($row['label']);
 
 // Récupération des ressources
 $db->query("
@@ -160,17 +160,17 @@ while ($row = $db->fetchrow())
                 array(
                     'reference' => 
                         array(
-                            'label' => $row['reference'],
+                            'label' => ploopi_htmlentities($row['reference']),
                             'style' => ($row['active']) ? '' : 'color:#a60000;'
                         ),
                     'type' => 
                         array(
-                            'label' => $row['rt_name'],
+                            'label' => ploopi_htmlentities($row['rt_name']),
                             'style' => ($row['active']) ? '' : 'color:#a60000;'
                         ),
                     'name' => 
                         array(
-                            'label' => $row['name'],
+                            'label' => ploopi_htmlentities($row['name']),
                             'style' => ($row['active']) ? '' : 'color:#a60000;'
                         ),
                     'count' => array('label' => $row['c']),
@@ -183,7 +183,7 @@ while ($row = $db->fetchrow())
                         ),
                     'actions' => array('label' => ($row['c']) ? '&nbsp;' : '<input type="checkbox" class="booking_element_checkbox" value="'.$row['id'].'">')
                 ),
-            'description' => "Modifier la ressource '".$row['name']."'",
+            'description' => "Modifier la ressource '".ploopi_htmlentities($row['name'])."'",
             'link' => 'javascript:void(0);',
             'onclick' => "booking_element_open('resource', '{$row['id']}', event);"
         );

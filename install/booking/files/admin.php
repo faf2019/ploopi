@@ -58,7 +58,7 @@ $tabs['resource'] =
         'url' => "admin.php?booking_tab=resource"
     );
     
-echo $skin->create_pagetitle("{$_SESSION['ploopi']['modulelabel']} - Administration");
+echo $skin->create_pagetitle(ploopi_htmlentities("{$_SESSION['ploopi']['modulelabel']} - Administration"));
 echo $skin->create_tabs($tabs, $_SESSION['booking']['booking_tab']);        
    
 echo $skin->open_simplebloc();

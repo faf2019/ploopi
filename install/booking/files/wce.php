@@ -96,18 +96,18 @@ if (isset($object))
                         if ($strResourceType != '') echo '</div>';
                         $strResourceType = $row['rt_name']; 
                         ?>
-                        <a href="javascript:void(0);" onclick="javascript:with ($('booking_<?php echo $strResourceType; ?>_list')) { style.display = (style.display == 'block') ? 'none' : 'block'; }">
+                        <a href="javascript:void(0);" onclick="javascript:with ($('booking_<?php echo ploopi_htmlentities($strResourceType); ?>_list')) { style.display = (style.display == 'block') ? 'none' : 'block'; }">
                             <p class="ploopi_va" style="border-width:1px 0;border-style:solid;border-color:#bbb;background-color:#ddd;">
-                                <strong><? echo $strResourceType; ?></strong>
+                                <strong><? echo ploopi_htmlentities($strResourceType); ?></strong>
                             </p>
                         </a>
-                        <div id="booking_<?php echo $row['rt_name']; ?>_list" style="display:block;">
+                        <div id="booking_<?php echo ploopi_htmlentities($row['rt_name']); ?>_list" style="display:block;">
                         <?        
                     }
                     ?>
-                    <p class="checkbox" style="background-color:<? echo $row['color']; ?>;" onclick="javascript:ploopi_checkbox_click(event, 'booking_resource<? echo $row['id']; ?>');">
+                    <p class="checkbox" style="background-color:<? echo ploopi_htmlentities($row['color']); ?>;" onclick="javascript:ploopi_checkbox_click(event, 'booking_resource<? echo $row['id']; ?>');">
                         <input type="checkbox" name="booking_resources[<? echo $row['id']; ?>]" id="booking_resource<? echo $row['id']; ?>" value="<? echo $row['id']; ?>" <? if (!empty($arrSearchPattern['booking_resources'][$row['id']])) echo 'checked="checked"'; ?> onchange="javascript:$('booking_resource_list_form').onsubmit();" />
-                        <span><? echo $row['name']; ?><span>
+                        <span><? echo ploopi_htmlentities($row['name']); ?><span>
                     </p>
                     <?            
                 }
