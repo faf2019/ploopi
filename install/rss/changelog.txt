@@ -1,3 +1,10 @@
+== Module RSS - version 2.2.2 ====================================================
+
+2013-12-17  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+* Ajout de contrôles d'affichage pour éviter les injections XSS
+* Suppression de la liste déroulante dans le menu - problème d'ergonomie
+
 == Module RSS - version 2.2.1c ====================================================
 
 2013-07-22  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>

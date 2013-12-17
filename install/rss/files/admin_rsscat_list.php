@@ -45,14 +45,14 @@ $array_columns['auto']['desc'] =
         'label' => _RSS_LABEL_DESCRIPTION,
         'options' => array('sort' => true)
     );
-    
+
 $array_columns['left']['title'] =
     array(
         'label' => _RSS_LABEL_TITLE,
         'width' => 170,
         'options' => array('sort' => true)
     );
-    
+
 $array_columns['actions_right']['actions'] =
     array(
         'label' => _RSS_LABEL_ACTIONS,
@@ -69,7 +69,7 @@ $array_columns['right']['tpl_tag'] =
         'label' => _RSS_LABEL_TPL_TAG_SHORT,
         'width' => 100
     );
-    
+
 $select =   "
             SELECT  *
             FROM    ploopi_mod_rss_cat
@@ -92,30 +92,30 @@ while ($fields = $db->fetchrow($result))
 
     $array_values[$c]['values']['desc'] =
         array(
-            'label' => $fields['description']
+            'label' => ploopi_htmlentities($fields['description'])
         );
-        
+
     $array_values[$c]['values']['title'] =
         array(
-            'label' => $fields['title']
+            'label' => ploopi_htmlentities($fields['title'])
         );
 
     $array_values[$c]['values']['limit'] =
         array(
-            'label' => ($fields['limit'] == 0) ? '---' : $fields['limit']
+            'label' => ($fields['limit'] == 0) ? '---' : ploopi_htmlentities($fields['limit'])
         );
 
     $array_values[$c]['values']['tpl_tag'] =
         array(
-            'label' => $fields['tpl_tag']
+            'label' => ploopi_htmlentities($fields['tpl_tag'])
         );
-        
+
     $array_values[$c]['values']['actions'] =
         array(
             'label' => $actions
         );
 
-    $array_values[$c]['description'] = $fields['title'];
+    $array_values[$c]['description'] = strip_tags($fields['title']);
 
     if (ploopi_isactionallowed(_RSS_ACTION_CATMODIFY)) $array_values[$c]['link'] = ploopi_urlencode("admin.php?op=rsscat_modify&rsscat_id={$fields['id']}");
 

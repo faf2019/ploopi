@@ -61,7 +61,7 @@ if (ploopi_isactionallowed(_RSS_ACTION_FILTERADD))
 if (!empty($_GET['rssTabItem'])) $_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssTabItem'] = $_GET['rssTabItem'];
 if (!isset($_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssTabItem'])) $_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssTabItem'] = '';
 
-echo $skin->create_pagetitle($_SESSION['ploopi']['modulelabel']);
+echo $skin->create_pagetitle(ploopi_htmlentities($_SESSION['ploopi']['modulelabel']));
 echo $skin->create_tabs($tabs,$_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssTabItem']);
 
 switch($_SESSION['rss'][$_SESSION['ploopi']['moduleid']]['rssTabItem'])

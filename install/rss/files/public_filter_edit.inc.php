@@ -106,7 +106,7 @@ else
           </p>
           <p>
             <label><?php echo _RSS_LABEL_TPL_TAG; ?>:</label>
-            <input class="text" type="text" name="rssfilter_tpl_tag" style="width:200px;" value="<?php echo $objRssFilters->fields['tpl_tag'] ?>" tabindex="102" /><br/>
+            <input class="text" type="text" name="rssfilter_tpl_tag" style="width:200px;" value="<?php echo ploopi_htmlentities($objRssFilters->fields['tpl_tag']); ?>" tabindex="102" /><br/>)
             <label>&nbsp;</label><?php echo _RSS_COMMENT_FILTER_TPL_TAG; ?><br/>
             <label>&nbsp;</label><?php echo _RSS_COMMENT_WARNING_TPL_TAG; ?>
           </p>
@@ -131,7 +131,7 @@ else
 
               echo '<p class="ploopi_va" style="cursor:pointer;" onclick="javascript:ploopi_checkbox_click(event,\'rssfiltercat_id_cat_'.$i.'\');">';
               if($i == 1) echo '<label>'._RSS_LABEL_CATEGORY.':</label>'; else echo '<label>&nbsp;</label>';
-              echo '<input type="checkbox" value="'.$row['id'].'" id="rssfiltercat_id_cat_'.$i.'" name="rssfiltercat_id_cat[]" '.$strChecked.' />&nbsp;'.$row['title'];
+              echo '<input type="checkbox" value="'.$row['id'].'" id="rssfiltercat_id_cat_'.$i.'" name="rssfiltercat_id_cat[]" '.$strChecked.' />&nbsp;'.ploopi_htmlentities($row['title']);
               echo '</p>';
               $i++;
             }
@@ -156,7 +156,7 @@ else
 
               echo '<p class="ploopi_va" style="cursor:pointer;" onclick="javascript:ploopi_checkbox_click(event,\'rssfilterfeed_id_feed_'.$i.'\');">';
               if($i == 1) echo '<label>'._RSS_LABEL_FEEDS.':</label>'; else echo '<label>&nbsp;</label>';
-              echo '<input type="checkbox" value="'.$row['id'].'" id="rssfilterfeed_id_feed_'.$i.'" name="rssfilterfeed_id_feed[]" '.$strChecked.' />&nbsp;'.$row['title'];
+              echo '<input type="checkbox" value="'.$row['id'].'" id="rssfilterfeed_id_feed_'.$i.'" name="rssfilterfeed_id_feed[]" '.$strChecked.' />&nbsp;'.ploopi_htmlentities($row['title']);
               echo '</p>';
               $i++;
             }

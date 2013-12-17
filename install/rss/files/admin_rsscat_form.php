@@ -37,7 +37,7 @@
  */
 
 if ($rsscat->new) echo $skin->open_simplebloc(_RSS_LABEL_CATADD);
-else echo $skin->open_simplebloc(str_replace('LABEL',$rsscat->fields['title'],_RSS_LABEL_CATMODIFY));
+else echo $skin->open_simplebloc(ploopi_htmlentities(str_replace('LABEL',$rsscat->fields['title'],_RSS_LABEL_CATMODIFY)));
 ?>
 
 <form name="form_rsscat" action="<?php echo ploopi_urlencode('admin.php'); ?>" method="post" onsubmit="return rsscat_validate(this);">
@@ -51,11 +51,11 @@ else echo $skin->open_simplebloc(str_replace('LABEL',$rsscat->fields['title'],_R
         </p>
         <p>
             <label><?php echo _RSS_LABEL_LIMIT; ?>:</label>
-            <input class="text" type="text" name="rsscat_limit" style="width:50px;" value="<?php echo $rsscat->fields['limit']; ?>" tabindex="101" /><?php echo _RSS_COMMENT_O_NOLIMIT; ?>
+            <input class="text" type="text" name="rsscat_limit" style="width:50px;" value="<?php echo ploopi_htmlentities($rsscat->fields['limit']); ?>" tabindex="101" /><?php echo _RSS_COMMENT_O_NOLIMIT; ?>
         </p>
         <p>
             <label><?php echo _RSS_LABEL_TPL_TAG; ?>:</label>
-            <input class="text" type="text" name="rsscat_tpl_tag" style="width:200px;" value="<?php echo $rsscat->fields['tpl_tag']; ?>" tabindex="102" /><br/>
+            <input class="text" type="text" name="rsscat_tpl_tag" style="width:200px;" value="<?php echo ploopi_htmlentities($rsscat->fields['tpl_tag']); ?>" tabindex="102" /><br/>
             <label>&nbsp;</label><?php echo _RSS_COMMENT_CAT_TPL_TAG; ?><br/>
             <label>&nbsp;</label><?php echo _RSS_COMMENT_WARNING_TPL_TAG; ?>
         </p>

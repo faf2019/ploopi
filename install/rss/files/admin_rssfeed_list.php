@@ -123,23 +123,23 @@ while ($fields = $db->fetchrow($result))
         
     $array_values[$c]['values']['revisit'] =
         array(
-            'label' => (isset($rss_revisit_values[$fields['revisit']])) ? $rss_revisit_values[$fields['revisit']] : '',
+            'label' => (isset($rss_revisit_values[$fields['revisit']])) ? ploopi_htmlentities($rss_revisit_values[$fields['revisit']]) : '',
             'sort_label' => (isset($rss_revisit_values[$fields['revisit']])) ? $fields['revisit'] : ''
         );
         
     $array_values[$c]['values']['category'] =
         array(
-            'label' => $fields['titlecat']
+            'label' => ploopi_htmlentities($fields['titlecat'])
         );
 
     $array_values[$c]['values']['limit'] =
         array(
-            'label' => ($fields['limit'] == 0) ? '---' : $fields['limit']
+            'label' => ($fields['limit'] == 0) ? '---' : ploopi_htmlentities($fields['limit'])
         );
 
     $array_values[$c]['values']['tpl_tag'] =
         array(
-            'label' => $fields['tpl_tag']
+            'label' => ploopi_htmlentities($fields['tpl_tag'])
         );
         
     $array_values[$c]['values']['actions'] =
@@ -147,7 +147,7 @@ while ($fields = $db->fetchrow($result))
             'label' => $actions
         );
 
-    $array_values[$c]['description'] = $fields['title'];
+    $array_values[$c]['description'] = ploopi_htmlentities($fields['title']);
 
     if (ploopi_isactionallowed(_RSS_ACTION_FEEDMODIFY)) $array_values[$c]['link'] = ploopi_urlencode("admin.php?op=rssfeed_modify&rssfeed_id={$fields['id']}");
 

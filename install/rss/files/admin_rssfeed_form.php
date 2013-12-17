@@ -37,7 +37,7 @@
  */
 
 if ($rssfeed->new) echo $skin->open_simplebloc(_RSS_LABEL_FEEDADD);
-else echo $skin->open_simplebloc(str_replace('LABEL',$rssfeed->fields['title'],_RSS_LABEL_FEEDMODIFY));
+else echo $skin->open_simplebloc(ploopi_htmlentities(str_replace('LABEL',$rssfeed->fields['title'],_RSS_LABEL_FEEDMODIFY)));
 
 $sql =  "
         SELECT  *
@@ -81,7 +81,7 @@ $a_categories = $db->getarray();
                 foreach($rss_revisit_values as $key => $value)
                 {
                     ?>
-                    <option <?php if ($rssfeed->fields['revisit'] == $key) echo 'selected'; ?> value="<?php echo $key; ?>"><?php echo $value; ?></option>
+                    <option <?php if ($rssfeed->fields['revisit'] == $key) echo 'selected'; ?> value="<?php echo $key; ?>"><?php echo ploopi_htmlentities($value); ?></option>
                     <?php
                 }
                 ?>
@@ -89,11 +89,11 @@ $a_categories = $db->getarray();
         </p>
         <p>
             <label><?php echo _RSS_LABEL_FEEDLIMIT; ?>:</label>
-            <input class="text" type="text" name="rssfeed_limit" style="width:50px;" value="<?php echo $rssfeed->fields['limit']; ?>" tabindex="103" /><?php echo _RSS_COMMENT_O_NOLIMIT; ?>
+            <input class="text" type="text" name="rssfeed_limit" style="width:50px;" value="<?php echo ploopi_htmlentities($rssfeed->fields['limit']); ?>" tabindex="103" /><?php echo _RSS_COMMENT_O_NOLIMIT; ?>
         </p>
         <p>
             <label><?php echo _RSS_LABEL_TPL_TAG; ?>:</label>
-            <input class="text" type="text" name="rssfeed_tpl_tag" style="width:200px;" value="<?php echo $rssfeed->fields['tpl_tag'] ?>" tabindex="102" /><br/>
+            <input class="text" type="text" name="rssfeed_tpl_tag" style="width:200px;" value="<?php echo ploopi_htmlentities($rssfeed->fields['tpl_tag']); ?>" tabindex="102" /><br/>)
             <label>&nbsp;</label><?php echo _RSS_COMMENT_FEED_TPL_TAG; ?><br/>
             <label>&nbsp;</label><?php echo _RSS_COMMENT_WARNING_TPL_TAG; ?>
         </p>

@@ -77,11 +77,11 @@ if (ploopi_ismoduleallowed('rss'))
             $c = 0;
             foreach($arrCat as $cat)
             {
-                $array_values[$c]['values']['cat_title'] = array('label' => $cat['title']);
-                $array_values[$c]['values']['cat_nb'] = array('label' => $cat['nbfeeds']);
-                $array_values[$c]['values']['cat_limit'] = array('label' => $cat['limitcat']);
-                $array_values[$c]['description'] = $cat['title'];
-                if($cat['tpltagcat'] != '') $array_values[$c]['description'] .= ' (tag: '.$cat['tpltagcat'].')';
+                $array_values[$c]['values']['cat_title'] = array('label' => ploopi_htmlentities($cat['title']));
+                $array_values[$c]['values']['cat_nb'] = array('label' => ploopi_htmlentities($cat['nbfeeds']));
+                $array_values[$c]['values']['cat_limit'] = array('label' => ploopi_htmlentities($cat['limitcat']));
+                $array_values[$c]['description'] = ploopi_htmlentities($cat['title']);
+                if($cat['tpltagcat'] != '') $array_values[$c]['description'] .= ploopi_htmlentities(' (tag: '.$cat['tpltagcat'].')');
 
                 $array_values[$c]['link'] = "javascript:void(0);";
                 $array_values[$c]['onclick'] = "javascript:rss_explorer_catlist_choose({$cat['id']})";
@@ -134,8 +134,8 @@ if (ploopi_ismoduleallowed('rss'))
             foreach($arrFeed as $feed)
             {
                 $array_values[$c]['values']['feed_title'] = array('label' => strip_tags($feed['title'], '<b><i>'));
-                $array_values[$c]['values']['feed_limit'] = array('label' => $feed['limit']);
-                $array_values[$c]['description'] = $feed['title'];
+                $array_values[$c]['values']['feed_limit'] = array('label' => ploopi_htmlentities($feed['limit']));
+                $array_values[$c]['description'] = ploopi_htmlentities($feed['title']);
 
                 $array_values[$c]['link'] = "javascript:void(0);";
                 $array_values[$c]['onclick'] = "javascript:rss_explorer_feedlist_choose({$feed['id']})";
@@ -283,7 +283,7 @@ if (ploopi_ismoduleallowed('rss'))
 
             echo $skin->open_simplebloc();
             ?>
-            <h1>Actualités<?php echo $title; ?></h1>
+            <h1>Actualités<?php echo ploopi_htmlentities($title); ?></h1>
             <div id="rss_explorer_feed_content">
                 <?php
                 foreach($arrEntry as $entry)
@@ -317,7 +317,7 @@ if (ploopi_ismoduleallowed('rss'))
                             }
                             ?>
                             <b><?php echo strip_tags($entry['title'], '<b><i>'); ?></b>
-                            <br /><i><?php echo ploopi_unixtimestamp2local($entry['published']); ?> &#149; <?php echo $entry['titlefeed']; ?></i>
+                            <br /><i><?php echo ploopi_unixtimestamp2local($entry['published']); ?> &#149; <?php echo ploopi_htmlentities($entry['titlefeed']); ?></i>
                         <?php
                         if (!empty($entry['subtitle']))
                         {
@@ -388,12 +388,12 @@ if (ploopi_ismoduleallowed('rss'))
               if (ploopi_isactionallowed(_RSS_ACTION_FILTERDELETE)) $actions .= '<a title="Supprimer" href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("admin.php?op=rssfilter_delete&rssfilter_id={$filter['id']}").'\',\'Êtes-vous certain de vouloir supprimer ce filtre ?\');"><img alt="Supprimer" src="./modules/rss/img/ico_trash.png" /></a>';
               if (empty($actions)) $actions = '&nbsp;';
 
-              $array_values[$c]['values']['title'] = array('label' => $filter['title']);
+              $array_values[$c]['values']['title'] = array('label' => ploopi_htmlentities($filter['title']));
               $array_values[$c]['values']['condition'] = array('label' => (($filter['condition'] == 1) ? 'ET' : 'OU'));
               $array_values[$c]['values']['actions'] = array('label' => $actions);
 
-              $array_values[$c]['description'] = $filter['title'];
-              if($filter['tpl_tag'] != '') $array_values[$c]['description'] .= ' (tag: '.$filter['tpl_tag'].')';
+              $array_values[$c]['description'] = ploopi_htmlentities($filter['title']);
+              if($filter['tpl_tag'] != '') $array_values[$c]['description'] .= ploopi_htmlentities(' (tag: '.$filter['tpl_tag'].')');
 
               $array_values[$c]['link'] = "javascript:void(0);";
               $array_values[$c]['onclick'] = "javascript:rss_filter_list_choose({$filter['id']});";
@@ -479,10 +479,10 @@ if (ploopi_ismoduleallowed('rss'))
 
                 $strValue = ($arrElement['target']['compare'] == 'date') ? substr(ploopi_unixtimestamp2local($arrElement['value']),0,10) : $arrElement['value'];
 
-                $array_values[$c]['values']['condition'] = array('label' => $arrElement['target']['label'].' '.$arrElement['compare']['label'].' '.$strValue);
+                $array_values[$c]['values']['condition'] = array('label' => ploopi_htmlentities($arrElement['target']['label'].' '.$arrElement['compare']['label'].' '.$strValue));
                 $array_values[$c]['values']['actions'] = array('label' => $actions);
 
-                $array_values[$c]['description'] = $arrElement['target']['value'].' '.str_replace('%t',$arrElement['value'],$arrElement['compare']['sql']);
+                $array_values[$c]['description'] = ploopi_htmlentities($arrElement['target']['value'].' '.str_replace('%t',$arrElement['value'],$arrElement['compare']['sql']));
 
                 $c++;
               }
@@ -542,7 +542,7 @@ if (ploopi_ismoduleallowed('rss'))
 
                 $strSelected = ((isset($arrElement) && $strName == $arrElement['target']['value'])) ? 'selected' : '';
 
-                echo '<option value="'.$strName.'" '.$strSelected.'>'.$arrDetail['label'].'</option>';
+                echo '<option value="'.ploopi_htmlentities($strName).'" '.$strSelected.'>'.ploopi_htmlentities($arrDetail['label']).'</option>';
               }
               ?>
               </select>
@@ -554,12 +554,12 @@ if (ploopi_ismoduleallowed('rss'))
               foreach($arrTabCompare[$strTypeCompare] as $strName => $arrDetail)
               {
                 $strSelected = (isset($arrElement) && $strName == $arrElement['compare']['value']) ? $strSelected = 'selected' : '';
-                echo '<option value="'.$strName.'" '.$strSelected.'>'.$arrDetail['label'].'</option>';
+                echo '<option value="'.ploopi_htmlentities($strName).'" '.$strSelected.'>'.ploopi_htmlentities($arrDetail['label']).'</option>';
               }
               ?>
               </select>
               </div>
-              <div id="div_type_control"><input type="hidden" id="type_control" value="<?php echo $strTypeCompare; ?>" /></div>
+              <div id="div_type_control"><input type="hidden" id="type_control" value="<?php echo ploopi_htmlentities($strTypeCompare); ?>" /></div>
               <?php
               $strValue = '';
               if(isset($arrElement))
@@ -567,7 +567,7 @@ if (ploopi_ismoduleallowed('rss'))
                  $strValue = ($arrElement['target']['compare'] == 'date') ? substr(ploopi_unixtimestamp2local($arrElement['value']),0,10) : $arrElement['value'];
               }
               ?>
-              <input type="text" id="rss_element_value" name="rss_element_value" style="width:38%;float:left;margin-right: 4px;" value="<?php echo $strValue; ?>">
+              <input type="text" id="rss_element_value" name="rss_element_value" style="width:38%;float:left;margin-right: 4px;" value="<?php echo ploopi_htmlentities($strValue); ?>">
               <input type="submit" class="button" value="<?php echo _PLOOPI_SAVE; ?>" />
             </div>
             </form>
@@ -650,7 +650,7 @@ if (ploopi_ismoduleallowed('rss'))
                   <div class="rss_entry">
                       <a class="rss_entry<?php echo (++$numrow)%2; ?>" href="<?php echo $entry['link']; ?>" target="_blank">
                           <b><?php echo strip_tags($entry['title'], '<b><i>'); ?></b>
-                          <br /><i><?php echo ploopi_unixtimestamp2local($entry['published']); ?> &#149; <?php echo $entry['titlefeed']; ?></i>
+                          <br /><i><?php echo ploopi_unixtimestamp2local($entry['published']); ?> &#149; <?php echo ploopi_htmlentities($entry['titlefeed']); ?></i>
                       <?php
                       if (!empty($entry['subtitle']))
                       {
