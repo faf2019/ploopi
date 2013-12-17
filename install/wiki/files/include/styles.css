@@ -133,14 +133,9 @@ font-size:0.9em;
 color:#888;
 }
 
-.wiki_page_print {
-font-family: sans-serif;
-font-size: 14px;
-}
-
-.wiki_page_print_info {
-font-family: sans-serif;
-font-size: 12px;
+#wiki_page_print_info {
+font-size: 10px;
+color: #888;
 float: right;
 }
 
@@ -303,17 +298,39 @@ padding:2px 10px 1px 0;
     background-color: #999999;
     color: White
 }
+
 .wiki_page .hl-table {
     font-family: monospace;
     border: solid 1px Lightgrey;
 }
 
-body.wiki_print {
-    font: 11px tahoma, verdana, sans-serif;
+body.wiki_print,
+body.wiki_print * {
+    font-family: tahoma, verdana, sans-serif;
+}
+
+body.wiki_print,
+body.wiki_print table {
+    font-size: 11px;
+}
+
+body.wiki_print a,
+body.wiki_print a:visited {
+    color: #000099;
 }
 
 body.wiki_print .wiki_page {
     border:0;
     padding:0;
     margin:0;
+}
+
+body.wiki_print .hl-content {
+    margin-left:0;
+    margin-right:0;
+    width:99%;
+}
+
+body.wiki_print .hl-content * {
+    font-family: monospace;
 }

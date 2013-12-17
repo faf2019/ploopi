@@ -44,7 +44,7 @@ switch($strWikiMenu)
     
 }
 
-echo $skin->open_simplebloc($strTitle);
+echo $skin->open_simplebloc(ploopi_htmlentities($strTitle));
 ?>
 <div id="wiki_index">
     <?php

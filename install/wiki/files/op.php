@@ -44,31 +44,99 @@ if (ploopi_ismoduleallowed('wiki'))
 
     switch($ploopi_op)
     {
-    	case 'wiki_page_print':
-    		ploopi_init_module('wiki');
-    		include_once './modules/wiki/classes/class_wiki_page.php';
+        /*
+        case 'wiki_page_print':
+            ploopi_init_module('wiki');
+            include_once './modules/wiki/classes/class_wiki_page.php';
 
-    		$strWikiPageId = (empty($_GET['wiki_page_id'])) ? 'wiki' : $_GET['wiki_page_id'];
+            $strWikiPageId = (empty($_GET['wiki_page_id'])) ? 'wiki' : $_GET['wiki_page_id'];
 
             $objWikiPage = new wiki_page();
             if($objWikiPage->open($strWikiPageId))
             {
-	            ?>
-	            <html>
-	            <head>
-	            	<title><? echo $strWikiPageId; ?></title>
-	            	<link rel="stylesheet" type="text/css" href="./modules/wiki/include/styles.css" />
-					<script type="text/javascript">window.print();</script>
-	            </head>
-	            <body class="wiki_print">
-		            <div id="wiki_page"><? echo wiki_render($objWikiPage->fields['content']); ?></div>
-		            <div id="wiki_page_print_info">R&eacute;vision num&eacute;ro <? echo $objWikiPage->fields['revision']; ?> modifi&eacute; le <? echo implode(' à ', ploopi_timestamp2local($objWikiPage->fields['ts_modified'])); ?></div>
-	            </body>
-	            </html>
-				<?
+
+                // Création d'un fichier de stockage temporaire
+                $strHtmlFile = tempnam(sys_get_temp_dir(), 'wiki');
+
+                $strBasePath = _PLOOPI_BASEPATH;
+                if (substr($strBasePath, -1) != '/') $strBasePath .= '/';
+
+                ob_start();
+                ?>
+                <html>
+                <head>
+                    <title><? echo ploopi_htmlentities($strWikiPageId); ?></title>
+                    <link rel="stylesheet" type="text/css" href="./modules/wiki/include/styles.css" />
+                    <script type="text/javascript">window.print();</script>
+                </head>
+                <body class="wiki_print">
+                    <div id="wiki_page" class="wiki_page"><? echo str_replace('./modules/wiki', $strBasePath.'modules/wiki', wiki_render($objWikiPage->fields['content'])); ?></div>
+                    <div id="wiki_page_print_info">R&eacute;vision num&eacute;ro <? echo ploopi_htmlentities($objWikiPage->fields['revision']); ?> modifi&eacute; le <? echo implode(' à ', ploopi_timestamp2local($objWikiPage->fields['ts_modified'])); ?></div>
+                </body>
+                </html>
+                <?
+                file_put_contents($strHtmlFile, utf8_encode(ob_get_contents()));
+                ob_end_clean();
+
+                exec("pandoc -f html -t odt -o {$strHtmlFile}.odt {$strHtmlFile} ");
+
+                ploopi_die();
+
+                // ploopi_downloadfile($strHtmlFile.'.odt', 'wiki.odt', false, true, true);
+
+
+                // On envoie le contenu HTML
+                file_put_contents($strHtmlFile, utf8_encode(wiki_render($objWikiPage->fields['content'])));
+
+                exec("pandoc -f html -t odt -o {$strHtmlFile}.odt {$strHtmlFile} ");
+
+                ploopi_downloadfile($strHtmlFile.'.odt', 'wiki.odt', false, true, true);
+
+                // Création d'un fichier de stockage temporaire
+                $strTextileFile = tempnam(sys_get_temp_dir(), 'wiki').'.textile';
+
+                // On envoie le contenu Textile
+                file_put_contents($strTextileFile, utf8_encode($objWikiPage->fields['content']));
+
+                exec("pandoc -t odt -o {$strTextileFile}.odt {$strTextileFile} ");
+
+                // unlink($strTextileFile);
+
+                ploopi_downloadfile($strTextileFile.'.pdf', 'wiki.pdf', false, true, true);
+            }
+
+            ploopi_die();
+        break;
+        */
+
+        case 'wiki_page_print':
+            ploopi_init_module('wiki');
+            include_once './modules/wiki/classes/class_wiki_page.php';
+
+            $strWikiPageId = (empty($_GET['wiki_page_id'])) ? 'wiki' : $_GET['wiki_page_id'];
+
+            $objWikiPage = new wiki_page();
+            if($objWikiPage->open($strWikiPageId))
+            {
+                ?>
+                <html>
+                <head>
+                    <title><? echo ploopi_htmlentities($strWikiPageId); ?></title>
+                    <link rel="stylesheet" type="text/css" href="./modules/wiki/include/styles.css" />
+                    <style>@page { size : landscape }</style>
+                    <script type="text/javascript">window.onload = function() { print(); };</script>
+                </head>
+                <body class="wiki_print">
+                    <div id="wiki_page" class="wiki_page"><? echo wiki_render($objWikiPage->fields['content']); ?></div>
+                    <div id="wiki_page_print_info">R&eacute;vision num&eacute;ro <? echo ploopi_htmlentities($objWikiPage->fields['revision']); ?> modifi&eacute; le <? echo implode(' à ', ploopi_timestamp2local($objWikiPage->fields['ts_modified'])); ?></div>
+                </body>
+                </html>
+                <?
             }
             ploopi_die();
-    	break;
+        break;
+
+
 
         case 'wiki_help':
             ob_start();

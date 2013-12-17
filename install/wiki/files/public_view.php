@@ -75,7 +75,7 @@ if ($booExists)
 // Vérification du droit de modification
 if ($op == 'wiki_page_modify' && (!ploopi_isactionallowed(_WIKI_ACTION_PAGE_MODIFY) || $objWikiPage->fields['locked'])) $op = '';
 
-echo $skin->open_simplebloc($strWikiPageId);
+echo $skin->open_simplebloc(ploopi_htmlentities($strWikiPageId));
 ?>
 <div>
     <div class="ploopi_tabs">
@@ -257,7 +257,7 @@ echo $skin->open_simplebloc($strWikiPageId);
                     $strRev = "<strong>{$_GET['wiki_page_revision']}</strong> ({$strUser}, {$strLocalDate})";
 
                     ?>
-                    <div id="wiki_diff_title">Révision <? echo $strRev; ?>
+                    <div id="wiki_diff_title">Révision <? echo ploopi_htmlentities($strRev); ?>
                     <?
                     if (ploopi_isactionallowed(_WIKI_ACTION_PAGE_MODIFY) && !$objWikiPage->fields['locked'])
                     {
@@ -428,7 +428,7 @@ echo $skin->open_simplebloc($strWikiPageId);
                     $values[] = array(
                         'values' => array(
                             'revision' => array(
-                                'label' => $arrPageHistory['revision'],
+                                'label' => ploopi_htmlentities($arrPageHistory['revision']),
                                 'style' => 'text-align:right;'
                             ),
                             'diff1' => array(
@@ -438,13 +438,13 @@ echo $skin->open_simplebloc($strWikiPageId);
                                 'label' => '<input type="radio" name="wiki_history_diff2" style="margin-left:2px;" value="'.$arrPageHistory['revision'].'" tabindex="'.$intTabIndex++.'" '.($booChecked ? '' : 'checked="checked" ').'/>'
                             ),
                             'user' => array(
-                                'label' => is_null($arrPageHistory['lastname']) ? '<em>Utilisateur supprimé</em>' : trim("{$arrPageHistory['lastname']} {$arrPageHistory['firstname']}")
+                                'label' => is_null($arrPageHistory['lastname']) ? '<em>Utilisateur supprimé</em>' : ploopi_htmlentities(trim("{$arrPageHistory['lastname']} {$arrPageHistory['firstname']}"))
                             ),
                             'ts_modified' => array(
                                 'label' => implode(' ', $arrLocalDate)
                             )
                         ),
-                        'description' => "Ouvrir la révision {$arrPageHistory['revision']}",
+                        'description' => ploopi_htmlentities("Ouvrir la révision {$arrPageHistory['revision']}"),
                         'link' => ploopi_urlencode_trusted("admin.php?op=wiki_page_history&wiki_page_id=".urlencode($strWikiPageId)."&wiki_page_revision={$arrPageHistory['revision']}")
                     );
 
@@ -474,7 +474,7 @@ echo $skin->open_simplebloc($strWikiPageId);
                 ?>
                 <div id="wiki_modify">
                     <form action="<? echo ploopi_urlencode_trusted("admin-light.php?ploopi_op=wiki_page_save&wiki_page_id=".urlencode($strWikiPageId)); ?>" method="post">
-                        <textarea accesskey="e" class="wiki-edit text" style="width:99%;" id="wiki_page_content" name="fck_wiki_page_content" rows="25"><? echo $strPageContent; ?></textarea>
+                        <textarea accesskey="e" class="wiki-edit text" style="width:99%;" id="wiki_page_content" name="fck_wiki_page_content" rows="25"><? echo ploopi_htmlentities($strPageContent); ?></textarea>
                         <div style="text-align:right"><input type="button" class="button" value="Annuler" onclick="javascript:document.location.href='<? echo ploopi_urlencode_trusted("admin.php?wiki_page_id=".urlencode($strWikiPageId)); ?>';" /><input type="submit" class="button" value="Enregistrer" style="margin-left:4px;" /></div>
                     </form>
                 </div>

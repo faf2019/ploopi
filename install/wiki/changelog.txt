@@ -1,3 +1,10 @@
+== Module Wiki - version 1.2.3 ====================================================
+
+2013-12-17  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+* Ajout de contrôles d'affichage pour éviter les injections XSS
+* Amélioration de la version imprimable
+
 == Module Wiki - version 1.2.2b ====================================================
 
 2013-07-22  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
