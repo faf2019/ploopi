@@ -88,9 +88,9 @@ while ($fields = $db->fetchrow($result))
     if ($fields['hot']) $hot = 'Style="color:'.$skin->values['colsec'].';background-color:'.$skin->values['colprim'].'"';
     else $hot = '';
 
-    $news_values[$c]['values']['title'] = array('label' => $fields['titlenews']);
-    $news_values[$c]['values']['cat'] = array('label' => $titlecat);
-    $news_values[$c]['values']['date'] = array('label' => $localdate['date'], 'sort_label' => $fields['date_publish']);
+    $news_values[$c]['values']['title'] = array('label' => ploopi_htmlentities($fields['titlenews']));
+    $news_values[$c]['values']['cat'] = array('label' => ploopi_htmlentities($titlecat));
+    $news_values[$c]['values']['date'] = array('label' => ploopi_htmlentities($localdate['date']), 'sort_label' => $fields['date_publish']);
     $news_values[$c]['values']['published'] = array('label' => ($fields['published']) ? 'oui' : 'non', 'style' => ($fields['published']) ? 'color:#00AA00;' : 'color:#AA0000;');
 
     $arrActions = array();
@@ -119,7 +119,7 @@ while ($fields = $db->fetchrow($result))
         );
 
 
-    $news_values[$c]['description'] = $fields['titlenews'];
+    $news_values[$c]['description'] = ploopi_htmlentities($fields['titlenews']);
     $news_values[$c]['link'] = ploopi_urlencode("admin.php?op=modify_news&news_id={$fields['id']}");
     if (!empty($_GET['news_id']) && $_GET['news_id'] == $fields['id']) $news_values[$c]['style'] = 'background-color:#ffe0e0;';
     else $news_values[$c]['style'] = '';

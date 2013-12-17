@@ -47,8 +47,8 @@ if (!empty($_GET['news_id']) && is_numeric($_GET['news_id']) && $news->open($_GE
         $news->save();
     }
 
-    echo $skin->create_pagetitle($_SESSION['ploopi']['modulelabel']);
-    echo $skin->open_simplebloc($news->fields['title']);
+    echo $skin->create_pagetitle(ploopi_htmlentities($_SESSION['ploopi']['modulelabel']));
+    echo $skin->open_simplebloc(ploopi_htmlentities($news->fields['title']));
 
     $localdate = ploopi_timestamp2local($news->fields['date_publish']);
 
@@ -60,26 +60,26 @@ if (!empty($_GET['news_id']) && is_numeric($_GET['news_id']) && $news->open($_GE
     ?>
 
     <div class="news">
-        <div><b>Publié le</b> <?php echo $localdate['date']; ?> à <?php echo $localdate['time']; ?>
+        <div><b>Publié le</b> <?php echo ploopi_htmlentities($localdate['date']); ?> à <?php echo ploopi_htmlentities($localdate['time']); ?>
         <?php
         $user = new user();
         if ($user->open($news->fields['id_user'])) echo " par {$user->fields['firstname']} {$user->fields['lastname']}";
         ?>
         </div>
-        <div><b><?php echo _NEWS_LABEL_CATEGORY ?></b>:&nbsp;<?php echo $cat; ?></div>
-        <div><b><?php echo _NEWS_LABEL_SOURCE; ?></b>:&nbsp;<?php echo $source; ?></div>
+        <div><b><?php echo _NEWS_LABEL_CATEGORY ?></b>:&nbsp;<?php echo ploopi_htmlentities($cat); ?></div>
+        <div><b><?php echo _NEWS_LABEL_SOURCE; ?></b>:&nbsp;<?php echo ploopi_htmlentities($source); ?></div>
         <?php
         if ($news->fields['url']!='')
         {
             if ($news->fields['urltitle'] == '') $urltitle = _NEWS_LABEL_URL;
             else $urltitle = $news->fields['urltitle'];
             ?>
-                <div><b><?php echo _NEWS_LABEL_URL; ?></b>:&nbsp;<a target="_blank" href="<?php echo $news->fields['url']; ?>"><?php echo $urltitle; ?></a></div>
+                <div><b><?php echo _NEWS_LABEL_URL; ?></b>:&nbsp;<a target="_blank" href="<?php echo $news->fields['url']; ?>"><?php echo ploopi_htmlentities($urltitle); ?></a></div>
             <?php
         }
         ?>
         <div><b><?php echo _NEWS_LABEL_READS; ?></b>:&nbsp;<?php echo $news->fields['nbclick']; ?></div>
-        <div><?php echo $news->fields['content']; ?></div>
+        <div><?php echo ploopi_htmlentities($news->fields['content']); ?></div>
     </div>
     <div style="clear:both;border-top:1px solid #c0c0c0;">
         <?php ploopi_annotation(_NEWS_OBJECT_NEWS, $news->fields['id'], $news->fields['title']); ?>

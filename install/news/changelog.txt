@@ -1,3 +1,9 @@
+== Module NEWS - version 2.5.3a ====================================================
+
+2013-12-17  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Ajout de contrôles d'affichage pour éviter les injections XSS
+
 == Module NEWS - version 2.5.3 ====================================================
 
 2013-07-22  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

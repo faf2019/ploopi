@@ -63,12 +63,12 @@ while ($fields = $db->fetchrow($result))
 {
     $array_values[$c]['values']['desc'] =
         array(
-            'label' => $fields['description']
+            'label' => ploopi_htmlentities($fields['description'])
         );
         
     $array_values[$c]['values']['title'] =
         array(
-            'label' => $fields['title']
+            'label' => ploopi_htmlentities($fields['title'])
         );
         
     $array_values[$c]['values']['actions'] =
@@ -79,7 +79,7 @@ while ($fields = $db->fetchrow($result))
                         ');
 
 
-    $array_values[$c]['description'] = $fields['title'];
+    $array_values[$c]['description'] = ploopi_htmlentities($fields['title']);
     $array_values[$c]['link'] = ploopi_urlencode("admin.php?op=modify_newscat&newscat_id={$fields['id']}");
     if (!empty($_GET['newscat_id']) && $_GET['newscat_id'] == $fields['id']) $array_values[$c]['style'] = 'background-color:#ffe0e0;';
     else $array_values[$c]['style'] = '';

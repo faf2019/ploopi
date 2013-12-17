@@ -36,7 +36,7 @@
  */
 
 if ($newscat->new) echo $skin->open_simplebloc(_NEWSCAT_WRITE);
-else echo $skin->open_simplebloc(str_replace("LABEL",$newscat->fields['title'],_NEWSCAT_MODIFY));
+else echo $skin->open_simplebloc(ploopi_htmlentities(str_replace("LABEL",$newscat->fields['title'],_NEWSCAT_MODIFY)));
 ?>
 
 <form name="form_newscat" action="<?php echo ploopi_urlencode('admin.php'); ?>" method="post" onsubmit="return newscat_validate(this);">

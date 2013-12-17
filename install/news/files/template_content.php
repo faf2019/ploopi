@@ -44,22 +44,20 @@ if (isset($newsid))
     $news = new news();
     $news->open($newsid);
     $localdate = ploopi_timestamp2local($news->fields['date_publish']);
-    
+
     $template_body->assign_vars(array(
-                        'NEWS_ID' => $news->fields['id'],
-                        'NEWS_TITLE' => $news->fields['title'],
-                        'NEWS_RESUME' => $news->fields['resume'],
-                        'NEWS_CONTENT' => $news->fields['content'],
-                        'NEWS_SOURCE' => $news->fields['source'],
-                        'NEWS_HOT' => $news->fields['hot'],
-                        'NEWS_DATE' => $localdate['date'],
-                        'NEWS_TIME' => $localdate['time'],
-                        'NEWS_URL' => $news->fields['url'],
-                        'NEWS_URLTITLE' => $news->fields['urltitle'],
-                        'NEWS_NBCLICK' => $news->fields['nbclick']
-                        )
-                    );
+        'NEWS_ID' => $news->fields['id'],
+        'NEWS_TITLE' => ploopi_htmlentities($news->fields['title']),
+        'NEWS_RESUME' => ploopi_htmlentities($news->fields['resume']),
+        'NEWS_CONTENT' => $news->fields['content'],
+        'NEWS_SOURCE' => ploopi_htmlentities($news->fields['source']),
+        'NEWS_HOT' => $news->fields['hot'],
+        'NEWS_DATE' => $localdate['date'],
+        'NEWS_TIME' => $localdate['time'],
+        'NEWS_URL' => $news->fields['url'],
+        'NEWS_URLTITLE' => $news->fields['urltitle'],
+        'NEWS_NBCLICK' => $news->fields['nbclick']
+    ));
 }
 
 ?>
-

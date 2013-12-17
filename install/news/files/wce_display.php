@@ -88,27 +88,25 @@ if (file_exists("./templates/frontoffice/{$template_name}/news.tpl"))
 
 
         $template_news->assign_block_vars('news' , array(
-                            'ID' => $news_fields['id'],
-                            'TITLE' => $news_fields['title'],
-                            'SOURCE' => ($news_fields['source'] == '') ? _NEWS_LABEL_UNKNOWN : $news_fields['source'],
-                            'CONTENT' => $news_fields['content'],
-                            'HOT' => ($news_fields['hot']) ? 'hot' : '',
-                            'DATE' => $localdate['date'],
-                            'TIME' => $localdate['time'],
-                            'URL' => $news_fields['url'],
-                            'URLTITLE' => $news_fields['urltitle'],
-                            'NBCLICK' => $news_fields['nbclick'],
-                            'CATEGORY' => $category,
-                            'AUTHOR_FIRSTNAME' => $author_firstname,
-                            'AUTHOR_LASTNAME' => $author_lastname,
-                            'AUTHOR_LOGIN' => $author_login,
-                            'AUTHOR_EMAIL' => $author_email
-                            )
-                        );
+            'ID' => $news_fields['id'],
+            'TITLE' => ploopi_htmlentities($news_fields['title']),
+            'SOURCE' => ploopi_htmlentities(($news_fields['source'] == '') ? _NEWS_LABEL_UNKNOWN : $news_fields['source']),
+            'CONTENT' => $news_fields['content'],
+            'HOT' => ($news_fields['hot']) ? 'hot' : '',
+            'DATE' => $localdate['date'],
+            'TIME' => $localdate['time'],
+            'URL' => $news_fields['url'],
+            'URLTITLE' => ploopi_htmlentities($news_fields['urltitle']),
+            'NBCLICK' => $news_fields['nbclick'],
+            'CATEGORY' => ploopi_htmlentities($category),
+            'AUTHOR_FIRSTNAME' => ploopi_htmlentities($author_firstname),
+            'AUTHOR_LASTNAME' => ploopi_htmlentities($author_lastname),
+            'AUTHOR_LOGIN' => ploopi_htmlentities($author_login),
+            'AUTHOR_EMAIL' => ploopi_htmlentities($author_email)
+        ));
     }
 
 
     $template_news->pparse('news_display');
 }
 else echo "Fichier ./templates/frontoffice/{$template_name}/news.tpl manquant";
-

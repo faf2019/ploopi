@@ -55,8 +55,8 @@ while ($news_fields = $db->fetchrow($news_result))
 {
     $localdate = ploopi_timestamp2local($news_fields['date_publish']);
 
-    if ($news_fields['hot']) $block->addmenu("<b>{$news_fields['title']}</b><br />le {$localdate['date']} à {$localdate['time']}", ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&op=display_news&news_id={$news_fields['id']}"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && $news_id == $news_fields['id']);
-    else $block->addmenu("{$news_fields['title']}<br />le {$localdate['date']} à {$localdate['time']}", ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&op=display_news&news_id={$news_fields['id']}"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && $news_id == $news_fields['id']);
+    if ($news_fields['hot']) $block->addmenu("<strong>".ploopi_htmlentities($news_fields['title'])."</strong><br />le {$localdate['date']} à {$localdate['time']}", ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&op=display_news&news_id={$news_fields['id']}"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && $news_id == $news_fields['id']);
+    else $block->addmenu(ploopi_htmlentities($news_fields['title'])."<br />le {$localdate['date']} à {$localdate['time']}", ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&op=display_news&news_id={$news_fields['id']}"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && $news_id == $news_fields['id']);
 }
 
 $block->addmenu('<strong>'._NEWS_LABEL_ALLNEWS.'</strong>', ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && empty($news_id));

@@ -36,7 +36,7 @@
  */
 
 if ($news->new) echo $skin->open_simplebloc(_NEWS_WRITE);
-else echo $skin->open_simplebloc(str_replace("LABEL",$news->fields['title'],_NEWS_MODIFY));
+else echo $skin->open_simplebloc(ploopi_htmlentities(str_replace("LABEL",$news->fields['title'],_NEWS_MODIFY)));
 ?>
 
 <form name="form_news" action="<?php echo ploopi_urlencode('admin.php'); ?>" method="post" onsubmit="return news_validate(this);">
@@ -84,12 +84,12 @@ else echo $skin->open_simplebloc(str_replace("LABEL",$news->fields['title'],_NEW
             <?php $localdate = (!empty($news->fields['date_publish'])) ? ploopi_timestamp2local($news->fields['date_publish']) : array('date' => ploopi_getdate(), 'time' => ploopi_gettime()); ?>
             <p>
                 <label><?php echo _NEWS_LABEL_PUBLISHDATE; ?>:</label>
-                <input class="text" type="text" id="news_date_publish" name="news_date_publish" value="<?php echo $localdate['date']; ?>" style="width:100px;">
+                <input class="text" type="text" id="news_date_publish" name="news_date_publish" value="<?php echo ploopi_htmlentities($localdate['date']); ?>" style="width:100px;">
                 <?php ploopi_open_calendar('news_date_publish'); ?>
             </p>
             <p>
                 <label><?php echo _NEWS_LABEL_PUBLISHTIME; ?>:</label>
-                <input class="text" type="text" name="newsx_time_publish" value="<?php echo $localdate['time']; ?>" style="width:100px;">
+                <input class="text" type="text" name="newsx_time_publish" value="<?php echo ploopi_htmlentities($localdate['time']); ?>" style="width:100px;">
             </p>
             <p>
                 <label><?php echo _NEWS_LABEL_URL; ?>:</label>
