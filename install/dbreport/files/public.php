@@ -34,7 +34,7 @@ ploopi_init_module('dbreport');
 
 include_once './include/classes/query.php';
 
-echo $skin->create_pagetitle($_SESSION['ploopi']['modulelabel']);
+echo $skin->create_pagetitle(ploopi_htmlentities($_SESSION['ploopi']['modulelabel']));
 
 $strDbReportOp = isset($_REQUEST['dbreport_op']) ? $_REQUEST['dbreport_op'] : '';
 

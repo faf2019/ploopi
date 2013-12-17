@@ -78,8 +78,8 @@ while ($row = $objRs->fetchrow())
 
     $arrValues[] = array(
         'values' => array(
-            'query' => array('label' => $row['label']),
-            'webservice' => array('label' => $row['ws_id']),
+            'query' => array('label' => ploopi_htmlentities($row['label'])),
+            'webservice' => array('label' => ploopi_htmlentities($row['ws_id'])),
             'actions' => array('label' =>  $strActions),
             'exports' => array(
                 'label' => '

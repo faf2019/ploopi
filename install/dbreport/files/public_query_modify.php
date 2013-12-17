@@ -127,7 +127,7 @@ if (isset($_GET['dbreport_query_id']) && is_numeric($_GET['dbreport_query_id']) 
                         }
                         ?>
 
-                        <span><? echo $rowTable['label'];?></span>
+                        <span><? echo ploopi_htmlentities($rowTable['label']);?></span>
                     </div>
                     <div class="dbreport_table_fields">
                         <?
@@ -215,10 +215,10 @@ if (isset($_GET['dbreport_query_id']) && is_numeric($_GET['dbreport_query_id']) 
 
             $arrValues[] = array(
                 'values' => array(
-                    'tablesrc' => array('label' => $row['tablename_src'], 'sort_label' => "{$row['tablename_dest']}.{$row['fieldname_dest']}"),
-                    'tabledest' => array('label' => $row['tablename_dest']),
-                    'fieldsrc' => array('label' => $row['fieldname_src']),
-                    'fielddest' => array('label' => $row['fieldname_dest']),
+                    'tablesrc' => array('label' => ploopi_htmlentities($row['tablename_src']), 'sort_label' => "{$row['tablename_dest']}.{$row['fieldname_dest']}"),
+                    'tabledest' => array('label' => ploopi_htmlentities($row['tablename_dest'])),
+                    'fieldsrc' => array('label' => ploopi_htmlentities($row['fieldname_src'])),
+                    'fielddest' => array('label' => ploopi_htmlentities($row['fieldname_dest'])),
                     'active' => array('label' => $row['active'] ? 'Oui' : 'Non', 'style' => 'font-weight:bold;color:#'.($row['active'] ? '00a600' : 'a60000')),
                     'comment' => array('label' => $strComment, 'style' => $booMulti ? 'color:#a60000;' : 'color:#aaa;')
                 ),
@@ -351,26 +351,26 @@ if (isset($_GET['dbreport_query_id']) && is_numeric($_GET['dbreport_query_id']) 
             if (!$booIndex && ($strCriteria != '' || $strOr != '')) $strStyle = 'color:red;';
 
             $arrFunctions = array();
-            if (trim($row['function']) != '') $arrFunctions[] = $row['function'];
-            if (trim($row['function_group']) != '') $arrFunctions[] = $row['function_group'];
+            if (trim($row['function']) != '') $arrFunctions[] = ploopi_htmlentities($row['function']);
+            if (trim($row['function_group']) != '') $arrFunctions[] = ploopi_htmlentities($row['function_group']);
 
             $arrValues[] = array(
                 'values' => array(
-                    'field' => array('label' => "[{$row['mt_label']}] {$row['table_name']}.{$row['field_name']} : <strong>{$row['label']}</strong>". (isset($arrLabels[$row['label']]) ? "<em style=\"color:#a60000;\">&nbsp;(Doublon d'intitulé)</em>" : '') ."<br /><em style=\"color:#888;\">".dbreport::getType(dbreport::getBasicType($row['type'])).'</em>'.$strIndex, 'style' => $strStyle),
-                    'label' => array('label' => isset($arrLabels[$row['label']]) ? "<em style=\"color:#a60000;\">{$row['label']} (Doublon d'intitulé)</em>" : $row['label']),
+                    'field' => array('label' => ploopi_htmlentities("[{$row['mt_label']}] {$row['table_name']}.{$row['field_name']} : ")."<strong>".ploopi_htmlentities($row['label'])."</strong>". (isset($arrLabels[$row['label']]) ? "<em style=\"color:#a60000;\">&nbsp;(Doublon d'intitulé)</em>" : '') ."<br /><em style=\"color:#888;\">".dbreport::getType(dbreport::getBasicType($row['type'])).'</em>'.$strIndex, 'style' => $strStyle),
+                    'label' => array('label' => isset($arrLabels[$row['label']]) ? "<em style=\"color:#a60000;\">".ploopi_htmlentities($row['label'])." (Doublon d'intitulé)</em>" : ploopi_htmlentities($row['label'])),
                     'function' => array('label' => implode('<br />', $arrFunctions)),
-                    'operation' => array('label' => dbreport::getOperation($row['operation'])),
-                    'sort' => array('label' => dbreport::getSort($row['sort'])),
+                    'operation' => array('label' => ploopi_htmlentities(dbreport::getOperation($row['operation']))),
+                    'sort' => array('label' => ploopi_htmlentities(dbreport::getSort($row['sort']))),
                     'visible' => array('label' => $row['visible'] ? 'Oui' : 'Non'),
                     'series' => array('label' => $row['series'] ? 'Oui' : 'Non'),
-                    'criteria' => array('label' => $strCriteria, 'style' => $strStyle),
-                    'or' => array('label' => $strOr, 'style' => $strStyle),
+                    'criteria' => array('label' => ploopi_htmlentities($strCriteria), 'style' => $strStyle),
+                    'or' => array('label' => ploopi_htmlentities($strOr), 'style' => $strStyle),
                     'actions' => array(
                         'label' => '
                             <a title="Supprimer le champ" href="javascript:void(0);" onclick="javascript:if (confirm(\'Êtes vous certain de vouloir supprimer cette ligne ?\')) document.location.href=\''.ploopi_urlencode("admin-light.php?ploopi_op=dbreport_queryfield_delete&dbreport_query_id={$_GET['dbreport_query_id']}&dbreport_queryfield_id={$row['id']}").'\';"><img src="./modules/dbreport/img/ico_delete.png" /></a>
                         '
                     ),
-                    'position' => array('label' => $row['position'], 'sort_label' => $row['position'])
+                    'position' => array('label' => ploopi_htmlentities($row['position']), 'sort_label' => $row['position'])
                 ),
                 'description' => 'Modifier le champ',
                 'link' => 'javascript:void(0);',
