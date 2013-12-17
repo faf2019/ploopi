@@ -509,11 +509,11 @@ class formsArithmeticParser
             foreach($this->arrExpr as $strExpr) $strExpr->displayTree();
             echo ')';
         }
-        else if (!is_null($this->strVal)) echo $this->strVal;
+        else if (!is_null($this->strVal)) echo ploopi_htmlentities($this->strVal);
         else if (is_null($this->objExprB) && !is_null($this->objExprA)) $this->objExprA->displayTree();
         else if (is_null($this->objExprA) && !is_null($this->objExprB))
         {
-            if (!is_null($this->strOperator)) echo $this->strOperator;
+            if (!is_null($this->strOperator)) echo ploopi_htmlentities($this->strOperator);
             $this->objExprB->displayTree();
         }
         else if (!is_null($this->objExprA) && !is_null($this->objExprB))

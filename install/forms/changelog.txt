@@ -1,3 +1,9 @@
+== Module FORMS - version 3.5.5a =====================================================
+
+2013-12-17  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+* Ajout de contrôles d'affichage pour éviter les injections XSS
+
 == Module FORMS - version 3.5.5 =====================================================
 
 2013-11-26  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>

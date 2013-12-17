@@ -44,7 +44,7 @@ $arrStaticFields = formsForm::getStaticFields();
 // Lecture des titres de colonnes
 $arrTitles = $objForm->getTitles();
 
-echo $skin->open_simplebloc($objForm->fields['label'].' ('._FORMS_VIEWLIST.')', '100%');
+echo $skin->open_simplebloc(ploopi_htmlentities($objForm->fields['label'].' ('._FORMS_VIEWLIST.')'));
 ?>
 
 <div style="overflow:hidden;">
@@ -60,7 +60,7 @@ echo $skin->open_simplebloc($objForm->fields['label'].' ('._FORMS_VIEWLIST.')', 
         <a class="ploopi_form_title" href="javascript:void(0);" onclick="javascript:ploopi_switchdisplay('forms_filter_box');ploopi_xmlhttprequest('index-quick.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=forms_xml_switchdisplay&switch=forms_filter_box&display='+$('forms_filter_box').style.display, true);">
             Filtrage des données<sub style="font-weight:normal;">&nbsp;&nbsp;&nbsp;(cliquez pour ouvrir/fermer)</sub>
         </a>
-        <div id="forms_filter_box"  style="display:<?php echo $_SESSION['forms'][$_SESSION['ploopi']['moduleid']]['forms_filter_box']; ?>;">
+        <div id="forms_filter_box"  style="display:<?php echo ploopi_htmlentities($_SESSION['forms'][$_SESSION['ploopi']['moduleid']]['forms_filter_box']); ?>;">
             <form style="margin:0;" id="filtre_frm" action="<?php echo ploopi_urlencode('admin.php'); ?>" method="post">
             <input type="hidden" name="op" value="forms_filter">
             <input type="hidden" name="forms_id" value="<?php echo $objForm->fields['id']; ?>">
@@ -79,7 +79,7 @@ echo $skin->open_simplebloc($objForm->fields['label'].' ('._FORMS_VIEWLIST.')', 
                     {
                         $booSel = (isset($arrFormFilter[$l]) && $arrFormFilter[$l]['field'] == $strKey) ? 'selected="selected"' : '';
                         ?>
-                        <option <?php echo $booSel; ?> value="<?php echo $strKey; ?>"><?php echo $strValue; ?></option>
+                        <option <?php echo $booSel; ?> value="<?php echo ploopi_htmlentities($strKey); ?>"><?php echo ploopi_htmlentities($strValue); ?></option>
                         <?php
                     }
 
@@ -101,7 +101,7 @@ echo $skin->open_simplebloc($objForm->fields['label'].' ('._FORMS_VIEWLIST.')', 
                             {
                                 $booSel = (isset($arrFormFilter[$l]) && $arrFormFilter[$l]['field'] == $strKey) ? 'selected="selected"' : '';
                                 ?>
-                                <option <?php echo $booSel; ?> value="<?php echo $strKey; ?>"><?php echo ploopi_htmlentities($objField->fields['name']); ?></option>
+                                <option <?php echo $booSel; ?> value="<?php echo ploopi_htmlentities($strKey); ?>"><?php echo ploopi_htmlentities($objField->fields['name']); ?></option>
                                 <?php
                             }
                         }
@@ -115,7 +115,7 @@ echo $skin->open_simplebloc($objForm->fields['label'].' ('._FORMS_VIEWLIST.')', 
                         foreach($field_operators as $strKey => $strValue)
                         {
                             $booSel = (isset($arrFormFilter[$l]) && $arrFormFilter[$l]['op'] == $strKey) ? 'selected="selected"' : '';
-                            echo "<option {$booSel} value=\"{$strKey}\">{$strValue}</option>";
+                            echo "<option {$booSel} value=\"{$strKey}\">".ploopi_htmlentities($strValue)."</option>";
                         }
                         ?>
                     </select>
@@ -161,7 +161,7 @@ echo $skin->open_simplebloc($objForm->fields['label'].' ('._FORMS_VIEWLIST.')', 
         <a class="ploopi_form_title" href="javascript:void(0);" onclick="javascript:ploopi_switchdisplay('forms_archive_box');ploopi_xmlhttprequest('index-quick.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=forms_xml_switchdisplay&switch=forms_archive_box&display='+$('forms_archive_box').style.display, true);">
             Archivage automatique des données<sub style="font-weight:normal;">&nbsp;&nbsp;&nbsp;(cliquez pour ouvrir/fermer)</sub>
         </a>
-        <div id="forms_archive_box" style="display:<?php echo $_SESSION['forms'][$_SESSION['ploopi']['moduleid']]['forms_archive_box']; ?>;">
+        <div id="forms_archive_box" style="display:<?php echo ploopi_htmlentities($_SESSION['forms'][$_SESSION['ploopi']['moduleid']]['forms_archive_box']); ?>;">
             <form name="frm_modify" action="<?php echo ploopi_urlencode('admin.php'); ?>" method="post">
             <input type="hidden" name="op" value="forms_save">
             <input type="hidden" name="forms_id" value="<?php echo $objForm->fields['id']; ?>">
@@ -169,11 +169,11 @@ echo $skin->open_simplebloc($objForm->fields['label'].' ('._FORMS_VIEWLIST.')', 
                 <div class="ploopi_form">
                     <p>
                         <label>Archiver les données plus anciennes que :</label>
-                        <input type="text" class="text" style="width:30px;" name="forms_autobackup" value="<?php echo $objForm->fields['autobackup']; ?>"> jours (0 = aucun archivage)
+                        <input type="text" class="text" style="width:30px;" name="forms_autobackup" value="<?php echo ploopi_htmlentities($objForm->fields['autobackup']); ?>"> jours (0 = aucun archivage)
                     </p>
                     <p>
                         <label>Archiver les données jusqu'au :</label>
-                        <input type="text" class="text" style="width:70px;" name="forms_autobackup_date" id="forms_autobackup_date" value="<?php echo $autobackup_date['date']; ?>">&nbsp;
+                        <input type="text" class="text" style="width:70px;" name="forms_autobackup_date" id="forms_autobackup_date" value="<?php echo ploopi_htmlentities($autobackup_date['date']); ?>">&nbsp;
                         <?php echo ploopi_open_calendar('forms_autobackup_date'); ?>
                     </p>
                     <p>
@@ -363,7 +363,7 @@ echo $skin->open_simplebloc($objForm->fields['label'].' ('._FORMS_VIEWLIST.')', 
                     {
                         if (isset($rowData[$strFieldId]))
                         {
-                            $strValue = $rowData[$strFieldId];
+                            $strValue = ploopi_htmlentities($rowData[$strFieldId]);
 
                             if (is_numeric($strFieldId))
                             {

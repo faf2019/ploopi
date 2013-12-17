@@ -75,7 +75,7 @@ switch($op)
         if ($objForm->open($obj['object_id']))
         {
             ?>
-        	<div id="forms_response"><?php echo _FORMS_ERROR_CAPTCHA; ?></div>
+            <div id="forms_response"><?php echo _FORMS_ERROR_CAPTCHA; ?></div>
             <?php
         }
     break;

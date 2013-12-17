@@ -123,7 +123,7 @@ if (!$objGroup->isnew()) $arrParams[] = "forms_group_id={$objGroup->fields['id']
                     foreach($field_operators as $strKey => $strValue)
                     {
                          ?>
-                         <option value="<?php echo $strKey; ?>" <?php echo (isset($arrConditions[$intI]['op']) && $strKey == $arrConditions[$intI]['op']) ? 'selected="selected"' : ''; ?>><?php echo ploopi_htmlentities($strValue); ?></option>
+                         <option value="<?php echo ploopi_htmlentities($strKey); ?>" <?php echo (isset($arrConditions[$intI]['op']) && $strKey == $arrConditions[$intI]['op']) ? 'selected="selected"' : ''; ?>><?php echo ploopi_htmlentities($strValue); ?></option>
                          <?php
                     }
                     ?>

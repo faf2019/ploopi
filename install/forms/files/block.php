@@ -56,7 +56,7 @@ $objDOC->add_orderby('label');
 foreach($objDOC->get_objects() as $objForm)
 {
     if (!$objForm->fields['option_adminonly'] || ploopi_isactionallowed(_FORMS_ACTION_ADMIN, $_SESSION['ploopi']['workspaceid'], $menu_moduleid))
-        $block->addmenu($objForm->fields['label'], ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&op=forms_viewreplies&forms_id={$objForm->fields['id']}"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && $forms_id == $objForm->fields['id']);
+        $block->addmenu(ploopi_htmlentities($objForm->fields['label']), ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&op=forms_viewreplies&forms_id={$objForm->fields['id']}"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && $forms_id == $objForm->fields['id']);
 }
 
 $block->addmenu(_FORMS_LIST, ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && empty($forms_id));
@@ -66,4 +66,3 @@ if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN, $_SESSION['ploopi']['workspaceid
     $block->addmenu('<b>'._FORMS_ADMIN.'</b>', ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=admin"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'admin');
 }
 ?>
-

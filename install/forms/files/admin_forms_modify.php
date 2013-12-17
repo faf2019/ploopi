@@ -42,7 +42,7 @@ $objForm = new formsForm();
 if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']))
 {
     $objForm->open($_GET['forms_id']);
-    $title = _FORMS_MODIFICATION.' &laquo; '.$objForm->fields['label'].' &raquo;';
+    $title = _FORMS_MODIFICATION.' &laquo; '.ploopi_htmlentities($objForm->fields['label']).' &raquo;';
     $objForm->includeCss(); // permet la prévisu directe en popup ajax
 }
 else
@@ -104,12 +104,12 @@ sort($objForm_tpl);
                 </p>
                 <p>
                     <label><?php echo _FORMS_PUBDATESTART; ?>:</label>
-                    <input type="text" class="text" style="width:70px;" name="forms_pubdate_start" id="forms_pubdate_start" value="<?php echo $pubdate_start['date']; ?>">&nbsp;
+                    <input type="text" class="text" style="width:70px;" name="forms_pubdate_start" id="forms_pubdate_start" value="<?php echo ploopi_htmlentities($pubdate_start['date']); ?>">&nbsp;
                     <?php echo ploopi_open_calendar('forms_pubdate_start'); ?>
                 </p>
                 <p>
                     <label><?php echo _FORMS_PUBDATEEND; ?>:</label>
-                    <input type="text" class="text" style="width:70px;" name="forms_pubdate_end" id="forms_pubdate_end" value="<?php echo $pubdate_end['date']; ?>">&nbsp;
+                    <input type="text" class="text" style="width:70px;" name="forms_pubdate_end" id="forms_pubdate_end" value="<?php echo ploopi_htmlentities($pubdate_end['date']); ?>">&nbsp;
                     <?php echo ploopi_open_calendar('forms_pubdate_end'); ?>
                 </p>
                 <p>
@@ -123,7 +123,7 @@ sort($objForm_tpl);
                     foreach($form_types as $key => $value)
                     {
                         $sel = ($objForm->fields['typeform'] == $key) ? 'selected' : '';
-                        echo "<option $sel value=\"{$key}\">{$value}</option>";
+                        echo "<option $sel value=\"{$key}\">".ploopi_htmlentities($value)."</option>";
                     }
                     ?>
                     </select>
@@ -187,7 +187,7 @@ sort($objForm_tpl);
                 </p>
                 <p>
                     <label><?php echo _FORMS_NBLINE; ?>:</label>
-                    <input type="text" class="text" style="width:30px;"name="forms_nbline" value="<?php echo $objForm->fields['nbline']; ?>" />
+                    <input type="text" class="text" style="width:30px;"name="forms_nbline" value="<?php echo ploopi_htmlentities($objForm->fields['nbline']); ?>" />
                 </p>
                 <p>
                     <label style="cursor:pointer;" onclick="javascript:$('forms_option_displaydate').checked = !$('forms_option_displaydate').checked;"><?php echo _FORMS_OPTION_DISPLAY_DATE; ?>:</label>
@@ -223,11 +223,11 @@ sort($objForm_tpl);
                     ?>
                     <p>
                         <label>Archiver les données plus anciennes que :</label>
-                        <input type="text" class="text" style="width:30px;" name="forms_autobackup" value="<?php echo $objForm->fields['autobackup']; ?>">&nbsp;jours (0 = aucun archivage)
+                        <input type="text" class="text" style="width:30px;" name="forms_autobackup" value="<?php echo ploopi_htmlentities($objForm->fields['autobackup']); ?>">&nbsp;jours (0 = aucun archivage)
                     </p>
                     <p>
                         <label>Archiver les données jusqu'au :</label>
-                        <input type="text" class="text" style="width:70px;" name="forms_autobackup_date" id="forms_autobackup_date" value="<?php echo $autobackup_date['date']; ?>">&nbsp;
+                        <input type="text" class="text" style="width:70px;" name="forms_autobackup_date" id="forms_autobackup_date" value="<?php echo ploopi_htmlentities($autobackup_date['date']); ?>">&nbsp;
                         <?php echo ploopi_open_calendar('forms_autobackup_date'); ?>
                     </p>
                     <p>
@@ -475,10 +475,10 @@ if (!$objForm->isnew())
             if ($row['option_pagebreak']) $arrOptions[] = 'Saut de page';
 
             $array_values[$c]['values'] = array(
-                'name' => array('label' => $row['name']),
-                'group' => array('label' => $row['g_label']),
-                'type' => array('label' => $field_types[$row['type']].( ($row['type'] == 'text' && isset($field_formats[$row['format']])) ? " ( {$field_formats[$row['format']]} )" : '')),
-                'options' => array('label' => implode(', ', $arrOptions)),
+                'name' => array('label' => ploopi_htmlentities($row['name'])),
+                'group' => array('label' => ploopi_htmlentities($row['g_label'])),
+                'type' => array('label' => ploopi_htmlentities($field_types[$row['type']].( ($row['type'] == 'text' && isset($field_formats[$row['format']])) ? " ( {$field_formats[$row['format']]} )" : ''))),
+                'options' => array('label' => ploopi_htmlentities(implode(', ', $arrOptions))),
             );
 
             $array_values[$c]['description'] = 'Ouvrir le Champ "'.ploopi_htmlentities($row['name']).'"';
@@ -557,9 +557,9 @@ if (!$objForm->isnew())
     $c=0;
     while ($row = $db->fetchrow($rs_fields))
     {
-        $array_values[$c]['values']['label'] = array('label' =>  $row['label']);
-        $array_values[$c]['values']['description'] = array('label' =>  ploopi_nl2br($row['description']));
-        $array_values[$c]['values']['formula'] = array('label' =>  $row['formula']);
+        $array_values[$c]['values']['label'] = array('label' => ploopi_htmlentities($row['label']));
+        $array_values[$c]['values']['description'] = array('label' =>  ploopi_nl2br(ploopi_htmlentities($row['description'])));
+        $array_values[$c]['values']['formula'] = array('label' =>  ploopi_htmlentities($row['formula']));
         $array_values[$c]['values']['actions']  = array('label' => '
             <a href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("admin-light.php?ploopi_op=forms_group_delete&forms_id={$objForm->fields['id']}&forms_group_id={$row['id']}").'\',\''._PLOOPI_CONFIRM.'\')"><img src="./modules/forms/img/ico_trash.png"></a>
         ');
@@ -638,9 +638,9 @@ if (!$objForm->isnew())
     $c=0;
     while ($row = $db->fetchrow($rs_fields))
     {
-        $array_values[$c]['values']['label'] = array('label' =>  $row['label']);
-        $array_values[$c]['values']['description'] = array('label' =>  ploopi_nl2br($row['description']));
-        $array_values[$c]['values']['type'] = array('label' => isset($forms_graphic_types[$row['type']]) ? $forms_graphic_types[$row['type']] : '');
+        $array_values[$c]['values']['label'] = array('label' => ploopi_htmlentities($row['label']));
+        $array_values[$c]['values']['description'] = array('label' =>  ploopi_nl2br(ploopi_htmlentities($row['description'])));
+        $array_values[$c]['values']['type'] = array('label' => ploopi_htmlentities(isset($forms_graphic_types[$row['type']]) ? $forms_graphic_types[$row['type']] : ''));
         $array_values[$c]['values']['line_aggregation'] = array('label' => isset($forms_graphic_line_aggregation[$row['line_aggregation']]) ? $forms_graphic_line_aggregation[$row['line_aggregation']] : '');
         $array_values[$c]['values']['actions']  = array('label' => '
             <a href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("admin-light.php?ploopi_op=forms_graphic_delete&forms_id={$objForm->fields['id']}&forms_graphic_id={$row['id']}").'\',\''._PLOOPI_CONFIRM.'\')"><img src="./modules/forms/img/ico_trash.png"></a>

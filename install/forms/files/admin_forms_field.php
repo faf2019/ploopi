@@ -73,11 +73,11 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
         <div class="ploopi_form" style="padding:4px;">
             <p>
                 <label><?php echo _FORMS_FIELD_POSITION; ?>:</label>
-                <input type="text" class="text" style="width:30px;" name="field_position" value="<?php echo $field->fields['position']; ?>" />
+                <input type="text" class="text" style="width:30px;" name="field_position" value="<?php echo ploopi_htmlentities($field->fields['position']); ?>" />
             </p>
             <p>
                 <label><?php echo _FORMS_FIELD_INTERLINE; ?>:</label>
-                <input type="text" class="text" style="width:30px;" name="field_interline" value="<?php echo $field->fields['interline']; ?>" />
+                <input type="text" class="text" style="width:30px;" name="field_interline" value="<?php echo ploopi_htmlentities($field->fields['interline']); ?>" />
             </p>
             <p>
                 <label><?php echo _FORMS_FIELD_GROUP; ?>:</label>
@@ -108,7 +108,7 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
                 foreach($field_types as $key => $value)
                 {
                     $sel = ($field->fields['type'] == $key) ? 'selected' : '';
-                    echo "<option $sel value=\"{$key}\">{$value}</option>";
+                    echo "<option $sel value=\"{$key}\">".ploopi_htmlentities($value)."</option>";
                 }
                 ?>
                 </select>
@@ -135,7 +135,7 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
                     foreach($field_formats as $key => $value)
                     {
                         $sel = ($field->fields['format'] == $key) ? 'selected' : '';
-                        echo "<option $sel value=\"{$key}\">{$value}</option>";
+                        echo "<option $sel value=\"{$key}\">".ploopi_htmlentities($value)."</option>";
                     }
                     ?>
                     </select>
@@ -247,15 +247,15 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
                         if ($objField->fields['id'] != $field->fields['id'] && ($objField->fields['type'] == 'calculation' || in_array($objField->fields['format'], array('integer', 'float'))))
                         {
                             ?>
-                            <optgroup label="<?php echo "C{$objField->fields['position']} - {$objField->fields['name']}"; ?>">
-                            <option value="<?php echo $objField->fields['position']; ?>"><?php echo "Valeur"; ?></option>
-                            <option value="<?php echo $objField->fields['position']; ?>_CNT"><?php echo "Nombre"; ?></option>
-                            <option value="<?php echo $objField->fields['position']; ?>_SUM"><?php echo "Somme"; ?></option>
-                            <option value="<?php echo $objField->fields['position']; ?>_MIN"><?php echo "Min"; ?></option>
-                            <option value="<?php echo $objField->fields['position']; ?>_MAX"><?php echo "Max"; ?></option>
-                            <option value="<?php echo $objField->fields['position']; ?>_AVG"><?php echo "Moyenne"; ?></option>
-                            <option value="<?php echo $objField->fields['position']; ?>_STD"><?php echo "Ecart-type"; ?></option>
-                            <option value="<?php echo $objField->fields['position']; ?>_VAR"><?php echo "Variance"; ?></option>
+                            <optgroup label="<?php echo ploopi_htmlentities("C{$objField->fields['position']} - {$objField->fields['name']}"); ?>">
+                            <option value="<?php echo ploopi_htmlentities($objField->fields['position']); ?>"><?php echo "Valeur"; ?></option>
+                            <option value="<?php echo ploopi_htmlentities($objField->fields['position']); ?>_CNT"><?php echo "Nombre"; ?></option>
+                            <option value="<?php echo ploopi_htmlentities($objField->fields['position']); ?>_SUM"><?php echo "Somme"; ?></option>
+                            <option value="<?php echo ploopi_htmlentities($objField->fields['position']); ?>_MIN"><?php echo "Min"; ?></option>
+                            <option value="<?php echo ploopi_htmlentities($objField->fields['position']); ?>_MAX"><?php echo "Max"; ?></option>
+                            <option value="<?php echo ploopi_htmlentities($objField->fields['position']); ?>_AVG"><?php echo "Moyenne"; ?></option>
+                            <option value="<?php echo ploopi_htmlentities($objField->fields['position']); ?>_STD"><?php echo "Ecart-type"; ?></option>
+                            <option value="<?php echo ploopi_htmlentities($objField->fields['position']); ?>_VAR"><?php echo "Variance"; ?></option>
                             </optgroup>
                             <?php
                         }
@@ -271,7 +271,7 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
                     // Pour chaque fonction
                     foreach(formsArithmeticParser::getFunctionsDef() as $strFunction => $strDef)
                     {
-                        ?><option value="<?php echo $strFunction; ?>"><?php echo ploopi_htmlentities($strDef); ?></option><?php
+                        ?><option value="<?php echo ploopi_htmlentities($strFunction); ?>"><?php echo ploopi_htmlentities($strDef); ?></option><?php
                     }
                     ?>
                     </select>
@@ -282,7 +282,7 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
                     // Pour chaque fonction
                     foreach(formsArithmeticParser::getOperatorsDef() as $strOperator => $strDef)
                     {
-                        ?><input type="button" class="button" value="<?php echo $strOperator; ?>" style="width:25px;margin-right:2px;" title="<?php echo ploopi_htmlentities($strDef); ?>" onclick="javascript:forms_setoperator(this);" /><?php
+                        ?><input type="button" class="button" value="<?php echo ploopi_htmlentities($strOperator); ?>" style="width:25px;margin-right:2px;" title="<?php echo ploopi_htmlentities($strDef); ?>" onclick="javascript:forms_setoperator(this);" /><?php
                     }
                     ?><input type="button" class="button" value="(" style="width:25px;margin-right:2px;" onclick="javascript:forms_setoperator(this);" /><input type="button" class="button" value=")" style="width:25px;margin-right:2px;" onclick="javascript:forms_setoperator(this);" />
                 </p>

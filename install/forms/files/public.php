@@ -63,7 +63,7 @@ if ($op == 'forms_print')
         <form id="form"></form>
         </div>
         <script type="text/javascript">
-            $('form').innerHTML = window.opener.document.forms_form_<? echo $_GET['forms_id']; ?>.innerHTML;
+            $('form').innerHTML = window.opener.document.forms_form_<? echo ploopi_htmlentities($_GET['forms_id']); ?>.innerHTML;
             Event.observe(window, 'load', function() {
                 <?
                 for ($i=1; $i<=$objForm->getNbPanels();$i++)
@@ -85,7 +85,7 @@ if ($op == 'forms_print')
 
 $sqllimitgroup = ' AND ploopi_mod_forms_form.id_workspace IN ('.ploopi_viewworkspaces($_SESSION['ploopi']['moduleid']).')';
 
-echo $skin->create_pagetitle($_SESSION['ploopi']['modulelabel']);
+echo $skin->create_pagetitle(ploopi_htmlentities($_SESSION['ploopi']['modulelabel']));
 
 switch($op)
 {

@@ -129,7 +129,7 @@ switch($ploopi_op)
                 <script type="text/javascript">
                 ploopi = {};
                 Event.observe(window, 'load', function() {
-                    $('forms_form_<? echo $_REQUEST['forms_id']; ?>').innerHTML = $('forms_form_<? echo $_REQUEST['forms_id']; ?>').innerHTML.replace(/<(\/?)fieldset[^>]*>/ig, '').replace(/<legend[^>]*>.*<\/legend>/ig, '');
+                    $('forms_form_<? echo ploopi_htmlentities($_REQUEST['forms_id']); ?>').innerHTML = $('forms_form_<? echo ploopi_htmlentities($_REQUEST['forms_id']); ?>').innerHTML.replace(/<(\/?)fieldset[^>]*>/ig, '').replace(/<legend[^>]*>.*<\/legend>/ig, '');
                     window.print();
                     window.close();
                 });

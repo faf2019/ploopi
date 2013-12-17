@@ -62,11 +62,11 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
         <div style="padding:4px;">
             <p>
                 <label><?php echo _FORMS_FIELD_POSITION; ?>:</label>
-                <input type="text" class="text" style="width:30px;" name="field_position" value="<?php echo $field->fields['position']; ?>">
+                <input type="text" class="text" style="width:30px;" name="field_position" value="<?php echo ploopi_htmlentities($field->fields['position']); ?>">
             </p>
             <p>
                 <label><?php echo _FORMS_FIELD_INTERLINE; ?>:</label>
-                <input type="text" class="text" style="width:30px;" name="field_interline" value="<?php echo $field->fields['interline']; ?>">
+                <input type="text" class="text" style="width:30px;" name="field_interline" value="<?php echo ploopi_htmlentities($field->fields['interline']); ?>">
             </p>
             <p>
                 <label><?php echo _FORMS_FIELD_GROUP; ?>:</label>
