@@ -37,7 +37,7 @@
 
 ploopi_init_module('gallery');
 
-echo $skin->create_pagetitle($_SESSION['ploopi']['modulelabel']);
+echo $skin->create_pagetitle(ploopi_htmlentities($_SESSION['ploopi']['modulelabel']));
 
 $sqllimitgroup = ' AND id_workspace IN ('.ploopi_viewworkspaces($_SESSION['ploopi']['moduleid']).')';
 

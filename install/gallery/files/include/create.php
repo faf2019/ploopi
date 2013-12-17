@@ -74,11 +74,9 @@ $objGallery->fields['nb_line'] = 1;
 $objGallery->fields['thumb_width'] = 92;
 $objGallery->fields['thumb_height'] = 69;
 $objGallery->fields['thumb_color'] = '#000000';
-$objGallery->fields['thumb_transparence'] = 0;
 $objGallery->fields['view_width'] = 500;
 $objGallery->fields['view_height'] = 375;
 $objGallery->fields['view_color'] = '#FFFFFF';
-$objGallery->fields['view_transparence'] = 0;
 
 $objGallery->fields['create_id_user'] = 0;
 $objGallery->fields['create_user'] = '';
@@ -122,11 +120,9 @@ $objGallery->fields['nb_line'] = 4;
 $objGallery->fields['thumb_width'] = 92;
 $objGallery->fields['thumb_height'] = 69;
 $objGallery->fields['thumb_color'] = '#000000';
-$objGallery->fields['thumb_transparence'] = 0;
 $objGallery->fields['view_width'] = 500;
 $objGallery->fields['view_height'] = 375;
 $objGallery->fields['view_color'] = '#FFFFFF';
-$objGallery->fields['view_transparence'] = 0;
 
 $objGallery->fields['create_id_user'] = 0;
 $objGallery->fields['create_user'] = '';
@@ -170,107 +166,9 @@ $objGallery->fields['nb_line'] = 0;
 $objGallery->fields['thumb_width'] = 0;
 $objGallery->fields['thumb_height'] = 0;
 $objGallery->fields['thumb_color'] = '#FFFFFF';
-$objGallery->fields['thumb_transparence'] = 0;
 $objGallery->fields['view_width'] = 500;
 $objGallery->fields['view_height'] = 333;
 $objGallery->fields['view_color'] = '#BDBDBD';
-$objGallery->fields['view_transparence'] = 0;
-
-$objGallery->fields['create_id_user'] = 0;
-$objGallery->fields['create_user'] = '';
-$objGallery->fields['create_timestp'] = ploopi_createtimestamp();
-
-$objGallery->fields['id_module'] = $this->fields['id'];
-$objGallery->fields['id_workspace'] = $this->fields['id_workspace'];
-$objGallery->fields['id_user'] = 0;
-
-$objGallery->save();
-unset($objGallery);
-
-// GALERIE 4
-// Le template
-$objTpl = new gallery_tpl();
-$objTpl->setautosaveinfo(false);
-
-$objTpl->fields['block'] = 'gallery4';
-$objTpl->fields['description'] = 'Galerie avec utilisation de flip (plugin flash)';
-$objTpl->fields['note'] = '';
-$objTpl->fields['addtoheadcss'] = '';
-$objTpl->fields['addtoheadcssie'] = '';
-$objTpl->fields['id_module'] = $this->fields['id'];
-$objTpl->fields['id_workspace'] = $this->fields['id_workspace'];
-$objTpl->fields['id_user'] = 0;
-
-$objTpl->save();
-
-$idTpl = $objTpl->fields['id'];
-unset($objTpl);
-
-// La galerie
-$objGallery = new gallery();
-$objGallery->setautosaveinfo(false);
-
-$objGallery->fields['label'] = 'Galerie 4';
-$objGallery->fields['description'] = 'Quatrième exemple de galerie';
-$objGallery->fields['template'] = $idTpl;
-$objGallery->fields['nb_col'] = 0;
-$objGallery->fields['nb_line'] = 0;
-$objGallery->fields['thumb_width'] = 0;
-$objGallery->fields['thumb_height'] = 0;
-$objGallery->fields['thumb_color'] = '#FFFFFF';
-$objGallery->fields['thumb_transparence'] = 1;
-$objGallery->fields['view_width'] = 300;
-$objGallery->fields['view_height'] = 300;
-$objGallery->fields['view_color'] = '#FFFFFF';
-$objGallery->fields['view_transparence'] = 1;
-
-$objGallery->fields['create_id_user'] = 0;
-$objGallery->fields['create_user'] = '';
-$objGallery->fields['create_timestp'] = ploopi_createtimestamp();
-
-$objGallery->fields['id_module'] = $this->fields['id'];
-$objGallery->fields['id_workspace'] = $this->fields['id_workspace'];
-$objGallery->fields['id_user'] = 0;
-
-$objGallery->save();
-unset($objGallery);
-
-// GALERIE 5
-// Le template
-$objTpl = new gallery_tpl();
-$objTpl->setautosaveinfo(false);
-
-$objTpl->fields['block'] = 'gallery5';
-$objTpl->fields['description'] = 'Galerie avec utilisation de carousel (plugin flash)';
-$objTpl->fields['note'] = '';
-$objTpl->fields['addtoheadcss'] = '';
-$objTpl->fields['addtoheadcssie'] = '';
-$objTpl->fields['id_module'] = $this->fields['id'];
-$objTpl->fields['id_workspace'] = $this->fields['id_workspace'];
-$objTpl->fields['id_user'] = 0;
-
-$objTpl->save();
-
-$idTpl = $objTpl->fields['id'];
-unset($objTpl);
-
-// La galerie
-$objGallery = new gallery();
-$objGallery->setautosaveinfo(false);
-
-$objGallery->fields['label'] = 'Galerie 5';
-$objGallery->fields['description'] = 'Cinquième exemple de galerie';
-$objGallery->fields['template'] = $idTpl;
-$objGallery->fields['nb_col'] = 0;
-$objGallery->fields['nb_line'] = 0;
-$objGallery->fields['thumb_width'] = 0;
-$objGallery->fields['thumb_height'] = 0;
-$objGallery->fields['thumb_color'] = '#FFFFFF';
-$objGallery->fields['thumb_transparence'] = 1;
-$objGallery->fields['view_width'] = 50;
-$objGallery->fields['view_height'] = 50;
-$objGallery->fields['view_color'] = '#FFFFFF';
-$objGallery->fields['view_transparence'] = 1;
 
 $objGallery->fields['create_id_user'] = 0;
 $objGallery->fields['create_user'] = '';

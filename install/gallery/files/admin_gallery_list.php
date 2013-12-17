@@ -75,8 +75,8 @@ while ($fields = $db->fetchrow($resultSqlGallery))
     $open = ploopi_urlencode("admin.php?op=gallery_modify&id_gallery={$fields['id']}");
     $delete = ploopi_urlencode("admin.php?op=gallery_delete&id_gallery={$fields['id']}");
 
-    $array_values[$c]['values']['label']        = array('label' => $fields['label']);
-    $array_values[$c]['values']['desc']         = array('label' => $fields['description']);
+    $array_values[$c]['values']['label']        = array('label' => ploopi_htmlentities($fields['label']));
+    $array_values[$c]['values']['desc']         = array('label' => ploopi_htmlentities($fields['description']));
     $array_values[$c]['values']['actions']      = array('label' => '
         <a href="'.$clone.'" title="'._GALLERY_LIST_CLONE.'"><img src="./modules/gallery/img/ico_clone.png" alt="'._GALLERY_LIST_CLONE.'"></a>
         <a href="'.$open.'" title="'._GALLERY_LIST_MODIFY.'"><img src="./modules/gallery/img/ico_modify.png" alt="'._GALLERY_LIST_MODIFY.'"></a>

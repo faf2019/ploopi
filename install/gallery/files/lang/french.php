@@ -66,15 +66,11 @@ define('_GALLERY_EDIT_LABEL_NB_LINE',       'Nombre de lignes');
 define('_GALLERY_EDIT_LABEL_NB_THUMB',      'Nombre de vignettes par page');
 define('_GALLERY_EDIT_LABEL_SIZE_THUMB',    'Dimensions max. des vignettes');
 define('_GALLERY_EDIT_LABEL_COLOR_THUMB',   'Couleur de remplissage');
-define('_GALLERY_EDIT_LABEL_PNG_THUMB',     'Générer un fichier PNG');
 define('_GALLERY_EDIT_LABEL_SIZE_VIEW',     'Dimensions max. des images');
 define('_GALLERY_EDIT_LABEL_COLOR_VIEW',    'Couleur de remplissage');
-define('_GALLERY_EDIT_LABEL_PNG_VIEW',      'Générer un fichier PNG');
 define('_GALLERY_EDIT_LABEL_VIEW_ALL',      'Visualiser toutes les images des répertoires sélectionnés');
 define('_GALLERY_EDIT_LABEL_WIDTH_DETAIL',  'Avec le detail');
 define('_GALLERY_EDIT_LABEL_NO_DIR',        'Aucun répertoire \'public\' disponible');
-
-define('_GALLERY_EDIT_LABEL_PNG_EXPLAIN',   'La génération de fichiers PNG conservera la transparence des fichiers d\'origine (sauf sous ie6). Dans ce cas, les couleurs de remplissage sont inutiles.');
 
 define('_GALLERY_EDIT_LABEL_NO_PICT',       'Aucune image à afficher');
 

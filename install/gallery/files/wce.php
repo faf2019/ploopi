@@ -62,8 +62,6 @@ if (file_exists("./templates/frontoffice/{$template_name}/gallery.tpl"))
     
     if($objGallery->open($obj['object_id']))
     {
-        $color = ($objGallery->fields['view_transparence']) ? 'transparence' : str_replace('#','',$objGallery->fields['view_color']);
-        
         $booError = true;
 
         $strNameCurlTpl = 'gallery1';
@@ -164,8 +162,8 @@ if (file_exists("./templates/frontoffice/{$template_name}/gallery.tpl"))
                         $template_gallery->assign_block_vars($strNameCurlTpl, 
                             array(
                             'ID_GALLERY'    => $objGallery->fields['id'],
-                            'URL_VIEW'      => ploopi_urlencode('index-light.php?ploopi_op=gallery_get_photo&type=view&id_image='.$row['id'].'&version='.$row['version'].'&width='.$objGallery->fields['view_width'].'&height='.$objGallery->fields['view_height'].'&color='.$color),
-                            'URL_THUMB'     => ploopi_urlencode('index-light.php?ploopi_op=gallery_get_photo&type=thumb&id_image='.$row['id'].'&version='.$row['version'].'&width='.$objGallery->fields['thumb_width'].'&height='.$objGallery->fields['thumb_height'].'&color='.$color),
+                            'URL_VIEW'      => ploopi_urlencode('index-light.php?ploopi_op=gallery_get_photo&type=view&id_image='.$row['id'].'&version='.$row['version'].'&width='.$objGallery->fields['view_width'].'&height='.$objGallery->fields['view_height'].'&color='.str_replace('#','',$objGallery->fields['view_color'])),
+                            'URL_THUMB'     => ploopi_urlencode('index-light.php?ploopi_op=gallery_get_photo&type=thumb&id_image='.$row['id'].'&version='.$row['version'].'&width='.$objGallery->fields['thumb_width'].'&height='.$objGallery->fields['thumb_height'].'&color='.str_replace('#','',$objGallery->fields['thumb_color'])),
                             'NAME'          => $row['name'],
                             'DESCRIPTION'   => $row['description'],
                             'THUMB_WIDTH'   => $objGallery->fields['thumb_width'],
@@ -194,8 +192,8 @@ if (file_exists("./templates/frontoffice/{$template_name}/gallery.tpl"))
                         $booInitLine = false;
                         $template_gallery->assign_block_vars($strNameCurlTpl.'.line', 
                             array(
-                            'URL_VIEW'      => ploopi_urlencode('index-light.php?ploopi_op=gallery_get_photo&type=view&id_image='.$row['id'].'&version='.$row['version'].'&width='.$objGallery->fields['view_width'].'&height='.$objGallery->fields['view_height'].'&color='.$color),
-                            'URL_THUMB'     => ploopi_urlencode('index-light.php?ploopi_op=gallery_get_photo&type=thumb&id_image='.$row['id'].'&version='.$row['version'].'&width='.$objGallery->fields['thumb_width'].'&height='.$objGallery->fields['thumb_height'].'&color='.$color),
+                            'URL_VIEW'      => ploopi_urlencode('index-light.php?ploopi_op=gallery_get_photo&type=view&id_image='.$row['id'].'&version='.$row['version'].'&width='.$objGallery->fields['view_width'].'&height='.$objGallery->fields['view_height'].'&color='.str_replace('#','',$objGallery->fields['view_color'])),
+                            'URL_THUMB'     => ploopi_urlencode('index-light.php?ploopi_op=gallery_get_photo&type=thumb&id_image='.$row['id'].'&version='.$row['version'].'&width='.$objGallery->fields['thumb_width'].'&height='.$objGallery->fields['thumb_height'].'&color='.str_replace('#','',$objGallery->fields['thumb_color'])),
                             'NAME'          => $row['name'],
                             'DESCRIPTION'   => $row['description'],
                             'THUMB_WIDTH'   => $objGallery->fields['thumb_width'],
@@ -216,8 +214,8 @@ if (file_exists("./templates/frontoffice/{$template_name}/gallery.tpl"))
                     
                     $template_gallery->assign_block_vars($strNameCurlTpl.'.line.col', 
                         array(
-                        'URL_VIEW'      => ploopi_urlencode('index-light.php?ploopi_op=gallery_get_photo&type=view&id_image='.$row['id'].'&version='.$row['version'].'&width='.$objGallery->fields['view_width'].'&height='.$objGallery->fields['view_height'].'&color='.$color),
-                        'URL_THUMB'     => ploopi_urlencode('index-light.php?ploopi_op=gallery_get_photo&type=thumb&id_image='.$row['id'].'&version='.$row['version'].'&width='.$objGallery->fields['thumb_width'].'&height='.$objGallery->fields['thumb_height'].'&color='.$color),
+                        'URL_VIEW'      => ploopi_urlencode('index-light.php?ploopi_op=gallery_get_photo&type=view&id_image='.$row['id'].'&version='.$row['version'].'&width='.$objGallery->fields['view_width'].'&height='.$objGallery->fields['view_height'].'&color='.str_replace('#','',$objGallery->fields['view_color'])),
+                        'URL_THUMB'     => ploopi_urlencode('index-light.php?ploopi_op=gallery_get_photo&type=thumb&id_image='.$row['id'].'&version='.$row['version'].'&width='.$objGallery->fields['thumb_width'].'&height='.$objGallery->fields['thumb_height'].'&color='.str_replace('#','',$objGallery->fields['thumb_color'])),
                         'NAME'          => $row['name'],
                         'DESCRIPTION'   => $row['description'],
                         'THUMB_WIDTH'   => $objGallery->fields['thumb_width'],

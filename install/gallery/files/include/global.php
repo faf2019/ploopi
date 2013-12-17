@@ -61,7 +61,7 @@ function gallery_show_directories($arrData, $level = 0)
         if(isset($data['id']))
         {
             $id_directorie = 'id="gallery_treeview_dir_'.$data['id'].'"';
-            $name = $data['name'];
+            $name = ploopi_htmlentities($data['name']);
             $cursor = 'cursor: pointer;';
             $onClick = 'onclick="javascript:ploopi_checkbox_click(event, \'_gallery_directory_'.$id.'\');"';
         }

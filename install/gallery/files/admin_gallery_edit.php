@@ -31,7 +31,7 @@
  * @author Xavier Toussaint
  */
 
-$tabIndex = 1;
+$tabIndex = 0;
 
 $sqlGetTpl = $db->query("SELECT * FROM ploopi_mod_gallery_tpl WHERE id_module = {$_SESSION['ploopi']['moduleid']} {$sqllimitgroup} ORDER BY block");
 $arrBlockTpl = $db->getarray($sqlGetTpl);
@@ -87,11 +87,11 @@ else // NOUVELLE GALERIE
             <div class="ploopi_form">
                 <p>
                     <label style="width: 115px;"><?php echo _GALLERY_EDIT_LABEL_LABEL; ?><sup style="font-size:.7em">*</sup>:</label>
-                    <input type="text" class="text" name="gallery_label" value="<?php echo $objGallery->fields['label']; ?>" style="float: left; width: 180px;" tabindex="<?php echo $tabIndex++; ?>" />
+                    <input type="text" class="text" name="gallery_label" value="<?php echo ploopi_htmlentities($objGallery->fields['label']); ?>" style="float: left; width: 180px;" tabindex="<?php echo $tabIndex++; ?>" />
                 </p>
                 <p>
                     <label style="width: 115px;"><?php echo _GALLERY_EDIT_LABEL_DESCRIPTION; ?>:</label>
-                    <input type="text" class="text" name="gallery_description" value="<?php echo $objGallery->fields['description']; ?>" tabindex="<?php echo $tabIndex++; ?>" />
+                    <input type="text" class="text" name="gallery_description" value="<?php echo ploopi_htmlentities($objGallery->fields['description']); ?>" tabindex="<?php echo $tabIndex++; ?>" />
                 </p>
                 <div style="margin: 0 0 5px 121px; width: 420px;">
                     <fieldset class="fieldset">
@@ -101,11 +101,11 @@ else // NOUVELLE GALERIE
                                 <div id="gallery_caract_left">
                                     <p>
                                         <label style="float: left; width: 200px;"><?php echo _GALLERY_EDIT_LABEL_NB_LINE; ?>:</label>
-                                        <input type="text" class="text" name="gallery_nb_line" value="<?php echo $objGallery->fields['nb_line']; ?>" style="width: 50px;" tabindex="<?php echo $tabIndex++; ?>" />
+                                        <input type="text" class="text" name="gallery_nb_line" value="<?php echo ploopi_htmlentities($objGallery->fields['nb_line']); ?>" style="width: 50px;" tabindex="<?php echo $tabIndex++; ?>" />
                                     </p>
                                     <p>
                                         <label style="float: left; width: 200px;"><?php echo _GALLERY_EDIT_LABEL_NB_COL; ?>:</label>
-                                        <input type="text" class="text" name="gallery_nb_col" value="<?php echo $objGallery->fields['nb_col']; ?>" style="width: 50px;" tabindex="<?php echo $tabIndex++; ?>" />
+                                        <input type="text" class="text" name="gallery_nb_col" value="<?php echo ploopi_htmlentities($objGallery->fields['nb_col']); ?>" style="width: 50px;" tabindex="<?php echo $tabIndex++; ?>" />
                                         (0 = nb colonne infini)
                                     </p>
                                 </div>
@@ -115,43 +115,28 @@ else // NOUVELLE GALERIE
                         <div style="clear: both;">
                             <p>
                                 <label style="width: 200px;"><?php echo _GALLERY_EDIT_LABEL_SIZE_THUMB; ?>:</label>
-                                <input type="text" class="text" name="gallery_thumb_width" value="<?php echo $objGallery->fields['thumb_width']; ?>" style="width: 50px; float: left;" tabindex="<?php echo $tabIndex++; ?>" />
+                                <input type="text" class="text" name="gallery_thumb_width" value="<?php echo ploopi_htmlentities($objGallery->fields['thumb_width']); ?>" style="width: 50px; float: left;" tabindex="<?php echo $tabIndex++; ?>" />
                                 <label style="width: 10px; float: left;">&nbsp;X&nbsp;</label>
-                                <input type="text" class="text" name="gallery_thumb_height" value="<?php echo $objGallery->fields['thumb_height']; ?>" style="width: 50px; float: left;" tabindex="<?php echo $tabIndex++; ?>" />
+                                <input type="text" class="text" name="gallery_thumb_height" value="<?php echo ploopi_htmlentities($objGallery->fields['thumb_height']); ?>" style="width: 50px; float: left;" tabindex="<?php echo $tabIndex++; ?>" />
                                 &nbsp;pixels
                             </p>
                             <p>
                                 <label style="width: 200px;"><?php echo _GALLERY_EDIT_LABEL_COLOR_THUMB; ?>:</label>
-                                <input type="text" class="text color {hash:true}" name="gallery_thumb_color" id="gallery_thumb_color" value="<?php echo $objGallery->fields['thumb_color']; ?>" style="width: 55px; float: left; cursor:pointer;" readonly="readonly" tabindex="<?php echo $tabIndex++; ?>" />
-                            </p>
-                            <p>
-                                <label style="width: 200px;" for="gallery_thumb_transparence"><?php echo _GALLERY_EDIT_LABEL_PNG_THUMB; ?>:</label>
-                                <input type="hidden" name="gallery_thumb_transparence" value="0" />
-                                <input type="checkbox" class="checkbox" name="gallery_thumb_transparence" id="gallery_thumb_transparence" value="1" <?php if($objGallery->fields['thumb_transparence']) echo 'checked="checked"'; ?> tabindex="<?php echo $tabIndex++; ?>" />
+                                <input type="text" class="text color {hash:true}" name="gallery_thumb_color" id="gallery_thumb_color" value="<?php echo ploopi_htmlentities($objGallery->fields['thumb_color']); ?>" style="width: 55px; float: left; cursor:pointer;" readonly="readonly" tabindex="<?php echo $tabIndex++; ?>" />
                             </p>
                             <hr/>
                             <p>
                                 <label style="width: 200px;"><?php echo _GALLERY_EDIT_LABEL_SIZE_VIEW; ?>:</label>
-                                <input type="text" class="text" name="gallery_view_width" value="<?php echo $objGallery->fields['view_width']; ?>" style="width: 50px; float: left;" tabindex="<?php echo $tabIndex++; ?>" />
+                                <input type="text" class="text" name="gallery_view_width" value="<?php echo ploopi_htmlentities($objGallery->fields['view_width']); ?>" style="width: 50px; float: left;" tabindex="<?php echo $tabIndex++; ?>" />
                                 <label style="width: 10px; float: left;">&nbsp;X&nbsp;</label>
-                                <input type="text" class="text" name="gallery_view_height" value="<?php echo $objGallery->fields['view_height']; ?>" style="width: 50px; float: left;" tabindex="<?php echo $tabIndex++; ?>" />
+                                <input type="text" class="text" name="gallery_view_height" value="<?php echo ploopi_htmlentities($objGallery->fields['view_height']); ?>" style="width: 50px; float: left;" tabindex="<?php echo $tabIndex++; ?>" />
                                 &nbsp;pixels
                             </p>
                             <p>
                                 <label style="width: 200px;"><?php echo _GALLERY_EDIT_LABEL_COLOR_VIEW; ?>:</label>
-                                <input type="text" class="text color {hash:true}" name="gallery_view_color" id="gallery_view_color" value="<?php echo $objGallery->fields['view_color']; ?>" style="width: 55px; float: left; cursor:pointer;" readonly="readonly" tabindex="<?php echo $tabIndex++; ?>" />
-                            </p>
-                            <p>
-                                <label style="width: 200px;" for="gallery_view_transparence"><?php echo _GALLERY_EDIT_LABEL_PNG_VIEW; ?>:</label>
-                                <input type="hidden" name="gallery_view_transparence" value="0" />
-                                <input type="checkbox" class="checkbox" name="gallery_view_transparence" id="gallery_view_transparence" value="1" <?php if($objGallery->fields['view_transparence']) echo 'checked="checked"'; ?> tabindex="<?php echo $tabIndex++; ?>" />
+                                <input type="text" class="text color {hash:true}" name="gallery_view_color" id="gallery_view_color" value="<?php echo ploopi_htmlentities($objGallery->fields['view_color']); ?>" style="width: 55px; float: left; cursor:pointer;" readonly="readonly" tabindex="<?php echo $tabIndex++; ?>" />
                             </p>
                         </div>
-                        <hr/>
-                            <p style="font-size: 0.8em; font-style: italic; padding: 0; margin: 0; text-align: center;">
-                                <?php echo _GALLERY_EDIT_LABEL_PNG_EXPLAIN; ?>
-                            </p>
-
                     </fieldset>
                 </div>
                 <div style="margin: 0 0 5px 121px;">
@@ -169,11 +154,11 @@ else // NOUVELLE GALERIE
                             foreach ($arrBlockTpl as $tpl)
                             {
                                 $select = ($tpl['id'] == $objGallery->fields['template']) ? 'selected="selected"' : '';
-                                if($tpl['id'] == $objGallery->fields['template']) $note = nl2br($tpl['note']);
+                                if($tpl['id'] == $objGallery->fields['template']) $note = nl2br(ploopi_htmlentities($tpl['note']));
                                 ?>
-                                <option value="<?php echo $tpl['id']; ?>" <?php echo $select; ?>><?php echo $tpl['block'].' - '.$tpl['description']; ?></option>
+                                <option value="<?php echo $tpl['id']; ?>" <?php echo $select; ?>><?php echo ploopi_htmlentities($tpl['block'].' - '.$tpl['description']); ?></option>
                                 <?php
-                                $htmlNoteHidden .= '<div id="gallery_hidden_'.$tpl['id'].'" style="display: none;">'.nl2br($tpl['note']).'</div>';
+                                $htmlNoteHidden .= '<div id="gallery_hidden_'.$tpl['id'].'" style="display: none;">'.nl2br(ploopi_htmlentities($tpl['note'])).'</div>';
                             }
                             ?>
                             </select>

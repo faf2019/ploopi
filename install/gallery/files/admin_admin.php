@@ -31,7 +31,7 @@
  * @author Xavier Toussaint
  */
 
-$tabIndex = 1;
+$tabIndex = 0;
 
 include_once './modules/gallery/class/class_gallery_tpl.php';
 $objGalleryTpl = new gallery_tpl();
@@ -89,26 +89,26 @@ echo $skin->open_simplebloc();
     <div class="ploopi_form">
         <p>
             <label style="width: 160px;"><?php echo _GALLERY_TPL_LABEL_NAME; ?><sup style="font-size:.7em">*</sup>:</label>
-            <input type="text" class="text" name="gallery_tpl_block" value="<?php echo $objGalleryTpl->fields['block']; ?>" tabindex="<?php echo $tabIndex++; ?>" />
+            <input type="text" class="text" name="gallery_tpl_block" value="<?php echo ploopi_htmlentities($objGalleryTpl->fields['block']); ?>" tabindex="<?php echo $tabIndex++; ?>" />
         </p>
         <p>
             <label style="width: 160px;"><?php echo _GALLERY_TPL_LABEL_DESCRIPTION; ?>:</label>
-            <input type="text" class="text" name="gallery_tpl_description" value="<?php echo $objGalleryTpl->fields['description']; ?>" tabindex="<?php echo $tabIndex++; ?>" />
+            <input type="text" class="text" name="gallery_tpl_description" value="<?php echo ploopi_htmlentities($objGalleryTpl->fields['description']); ?>" tabindex="<?php echo $tabIndex++; ?>" />
         </p>
         <p>
             <label style="width: 160px;"><?php echo _GALLERY_TPL_LABEL_NOTE; ?>:</label>
-            <textarea class="text" name="gallery_tpl_note" tabindex="<?php echo $tabIndex++; ?>" ><?php echo $objGalleryTpl->fields['note']; ?></textarea>
+            <textarea class="text" name="gallery_tpl_note" ><?php echo ploopi_htmlentities($objGalleryTpl->fields['note']); ?></textarea>
         </p>
         <fieldset class="fieldset">
             <legend><?php echo _GALLERY_TPL_LEGEND_CSS; ?></legend>
             <div style="padding: 0 4px; margin: 0; font-style: italic;"><?php echo _GALLERY_TPL_TEXT_CSS; ?></div>
             <p>
                 <label style="width: 160px;"><?php echo _GALLERY_TPL_LABEL_CSS; ?>:</label>
-                <input type="text" class="text" name="gallery_tpl_addtoheadcss" value="<?php echo $objGalleryTpl->fields['addtoheadcss']; ?>" tabindex="<?php echo $tabIndex++; ?>" />
+                <input type="text" class="text" name="gallery_tpl_addtoheadcss" value="<?php echo ploopi_htmlentities($objGalleryTpl->fields['addtoheadcss']); ?>" tabindex="<?php echo $tabIndex++; ?>" />
             </p>
             <p>
                 <label style="width: 160px;"><?php echo _GALLERY_TPL_LABEL_CSS_IE; ?>:</label>
-                <input type="text" class="text" name="gallery_tpl_addtoheadcssie" value="<?php echo $objGalleryTpl->fields['addtoheadcssie']; ?>" tabindex="<?php echo $tabIndex++; ?>" />
+                <input type="text" class="text" name="gallery_tpl_addtoheadcssie" value="<?php echo ploopi_htmlentities($objGalleryTpl->fields['addtoheadcssie']); ?>" tabindex="<?php echo $tabIndex++; ?>" />
             </p>
         </fieldset>
     </div>
@@ -180,8 +180,8 @@ while ($fields = $db->fetchrow($resultSqlGalleryTpl))
     $open = ploopi_urlencode("admin.php?id_tpl={$fields['id']}");
     $delete = ploopi_urlencode("admin.php?op=gallery_tpl_delete&id_tpl={$fields['id']}");
 
-    $array_values[$c]['values']['block']        = array('label' => $fields['block']);
-    $array_values[$c]['values']['description']  = array('label' => $fields['description']);
+    $array_values[$c]['values']['block']        = array('label' => ploopi_htmlentities($fields['block']));
+    $array_values[$c]['values']['description']  = array('label' => ploopi_htmlentities($fields['description']));
     $array_values[$c]['values']['actions']      = array('label' => '
         <a href="'.$open.'" title="'._GALLERY_TPL_LIST_MODIFY.'"><img src="./modules/gallery/img/ico_modify.png" alt="'._GALLERY_TPL_LIST_MODIFY.'"></a>
         <a href="javascript:ploopi_confirmlink(\''.$delete.'\',\''._GALLERY_TPL_CONFIRM_DELETE.'\')"><img border="0" src="./modules/gallery/img/ico_trash.png"></a>');

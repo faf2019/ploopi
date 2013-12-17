@@ -43,7 +43,7 @@ switch($op)
         if (isset($_GET['id_gallery'])) $objGallery->open($_GET['id_gallery']);
         $objGallery->setvalues($_POST,'gallery_');
         $objGallery->save();
-
+        
         if(isset($_POST['_gallery_directory']))
             $objGallery->savedirectories($_POST['_gallery_directory']);
         else
