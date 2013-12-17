@@ -72,7 +72,7 @@ if(strpos($op,'ajax') !== false)
   include './modules/forum/public.ajax.php';
 
 // Titre
-echo $skin->create_pagetitle($_SESSION['ploopi']['modulelabel']);
+echo $skin->create_pagetitle(ploopi_htmlentities($_SESSION['ploopi']['modulelabel']));
 
 // Open Categorie (if it's possible) here because it's very useful and test right in same time
 if(isset($_GET['id_cat']))

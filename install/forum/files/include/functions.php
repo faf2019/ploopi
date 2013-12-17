@@ -39,7 +39,7 @@
  * @param Array $arrInfo Info for "Order By" and "Limit"
  * @return Array $arrReturn with 'page' and 'id'
  */
-function forum_GetSubjectPage($intIdSubject,$arrInfo)
+function forum_GetSubjectPage($intIdSubject,&$arrInfo)
 {
   global $strForumSqlLimitGroupMess;
   global $db;

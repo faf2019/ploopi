@@ -130,7 +130,7 @@ echo $skin->open_simplebloc();
     </button>
     <button type="button" class="<?php echo ($op !== 'subject_add' && $op !== 'subject_edit') ? 'button_navig' : 'button_navig_select'; ?>" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?op=subject&id_cat={$objForumCat->fields['id']}"); ?>'">
       <img style="border: none; margin: 0 0 -3px 0; padding: 0;" src="<?php echo _FORUM_IMG_16_FOLDER; ?>"/>
-      <?php echo  ploopi_strcut($objForumCat->fields['title'],30); ?>
+      <?php echo  ploopi_htmlentities(ploopi_strcut($objForumCat->fields['title'],30)); ?>
     </button>
     <?php
     if($op !== 'subject_add' && $op !== 'subject_edit')
@@ -138,7 +138,7 @@ echo $skin->open_simplebloc();
     ?>
     <button type="button" class="button_navig_select" onclick="javascript:document.location.href='<?php echo $strForumNavigReturn; ?>'">
       <img style="border: none; margin: 0 0 -3px 0; padding: 0;" src="<?php echo _FORUM_IMG_16_MESS; ?>"/>
-      <?php echo  ploopi_strcut($strForumNavigTitle,30); ?>
+      <?php echo  ploopi_htmlentities(ploopi_strcut($strForumNavigTitle,30)); ?>
     </button>
     <?php
     }
@@ -146,12 +146,12 @@ echo $skin->open_simplebloc();
   </div>
 
   <?php
-  echo $skin->open_simplebloc($strForumBlocTitle);
+  echo $skin->open_simplebloc(ploopi_htmlentities($strForumBlocTitle));
   ?>
   <form method="post" action="<?php echo ploopi_urlencode($strForumAction); ?>" onSubmit="javascript:return form_validate(this);">
   <div style="padding:2px; margin:0;">
     <div style="float:left;padding:8px 0 0 0; margin:0;clear:both;font-weight:bold;"><?php echo _FORUM_MESS_LABEL_TITLE;  ?>:</div>
-    <div style="clear:both;float:left;"><input type="text" id="forum_title" name="forum_title" class="text" value="<?php echo $objForumMess->fields['title']; ?>" style="width:380px" maxlength="255"/></div>
+    <div style="clear:both;float:left;"><input type="text" id="forum_title" name="forum_title" class="text" value="<?php echo ploopi_htmlentities($objForumMess->fields['title']); ?>" style="width:380px" maxlength="255"/></div>
     <?php
     if($booForumIsAdminModerGlb)
     {
@@ -171,10 +171,10 @@ echo $skin->open_simplebloc();
         <?php
         // TODO dans fckconfig.js si on active FCKConfig.EnterMode = 'br'; on est coincé dans les citations
         include_once './include/functions/fck.php';
-        
+
         $arrConfig['CustomConfigurationsPath'] = _PLOOPI_BASEPATH.'/modules/forum/fckeditor/fckconfig.js';
         $arrConfig['EditorAreaCSS'] = _PLOOPI_BASEPATH.'/modules/forum/fckeditor/fck_editorarea.css';
-        
+
         ploopi_fckeditor('fck_forum_content', $objForumMess->fields['content'], '100%', '300', $arrConfig);
         ?>
     </div>
@@ -184,7 +184,7 @@ echo $skin->open_simplebloc();
   ?>
   <div style="clear:both;float:right;padding:4px;">
     <input type="button" class="flatbutton" value="<?php echo _FORUM_RETURN; ?>" onclick="javascript:document.location.href='<?php echo $strForumNavigReturn; ?>';">
-    <input type="submit" class="flatbutton" value="<?php echo $strForumLabelButton; ?>">
+    <input type="submit" class="flatbutton" value="<?php echo ploopi_htmlentities($strForumLabelButton); ?>">
   </div>
   </form>
   <?php echo $skin->close_simplebloc();  ?>

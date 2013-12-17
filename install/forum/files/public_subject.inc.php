@@ -47,7 +47,7 @@ if(is_array($arrForumModerat) && count($arrForumModerat) > 0)
   foreach($arrForumModerat as $value)
   {
     if(empty($strForumModerator))
-      $strForumModerator = _FORUM_MODERATOR.':&nbsp;'.$value['login'];
+      $strForumModerator = _FORUM_MODERATOR.': '.ploopi_htmlentities($value['login']);
     else
       $strForumModerator .= ', '.$value['login'];
   }
@@ -180,7 +180,7 @@ echo $skin->open_simplebloc();
       <img style="border: none; margin: 0 0 -3px 0; padding: 0;" src="<?php echo _FORUM_IMG_16_FOLDER; ?>"/>&nbsp;<?php echo _FORUM_LABEL_CAT; ?>
     </button>
     <button type="button" class="button_navig_select" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?op=subject&id_cat={$objForumCat->fields['id']}"); ?>'">
-      <img style="border: none; margin: 0 0 -3px 0; padding: 0;" src="<?php echo _FORUM_IMG_16_FOLDER; ?>"/>&nbsp;<?php echo  ploopi_strcut($objForumCat->fields['title'],30); ?>
+      <img style="border: none; margin: 0 0 -3px 0; padding: 0;" src="<?php echo _FORUM_IMG_16_FOLDER; ?>"/>&nbsp;<?php echo ploopi_htmlentities(ploopi_strcut($objForumCat->fields['title'],30)); ?>
     </button>
   </div>
   <div style="overflow: auto; padding: 0; margin: 0 0 2px 0;">
@@ -206,7 +206,7 @@ echo $skin->open_simplebloc();
   ?>
   </div>
   <?php
-  echo $skin->open_simplebloc($objForumCat->fields['title']);
+  echo $skin->open_simplebloc(ploopi_htmlentities($objForumCat->fields['title']));
   ?>
   <div id="forum_main_subject" class="ploopi_explorer_main" style="visibility:visible;">
 
@@ -268,7 +268,7 @@ echo $skin->open_simplebloc();
           // date time last message
           $arrForumDateLastMess = ploopi_timestamp2local($arrForumLastMess['timestp']);
           // Last message (response or subject)
-          $strForumLastMess = $arrForumDateLastMess['date'].'&nbsp;'.$arrForumDateLastMess['time'].'<br/><font style="font-size:0.8em;">'._FORUM_BY.'&nbsp;'.$arrForumLastMess['author'].'</font>';
+          $strForumLastMess = $arrForumDateLastMess['date'].'&nbsp;'.$arrForumDateLastMess['time'].'<br/><font style="font-size:0.8em;">'._FORUM_BY.'&nbsp;'.ploopi_htmlentities($arrForumLastMess['author']).'</font>';
 
           $arrForumFields['nbMessValid'] = (isset($arrForumInfoMess[$arrForumFields['id']]['nbMessValid'])) ? $arrForumInfoMess[$arrForumFields['id']]['nbMessValid'] : 0;
           $arrForumFields['nbMessNoValid'] = (isset($arrForumInfoMess[$arrForumFields['id']]['nbMessNoValid'])) ? $arrForumInfoMess[$arrForumFields['id']]['nbMessNoValid'] : 0;
@@ -298,7 +298,7 @@ echo $skin->open_simplebloc();
           }
 
           // Title
-          $strForumTitle = ($arrForumFields['validated'] == 0) ? $strForumTitle = '<font color="red">'.$arrForumFields['title'].'</font>&nbsp;-&nbsp;<i>'._FORUM_STAY_VALIDATED.'</i>' : $arrForumFields['title'];
+          $strForumTitle = ($arrForumFields['validated'] == 0) ? $strForumTitle = '<font color="red">'.ploopi_htmlentities($arrForumFields['title']).'</font>&nbsp;-&nbsp;<i>'._FORUM_STAY_VALIDATED.'</i>' : ploopi_htmlentities($arrForumFields['title']);
 
           // date time subject
           $arrForumDateCreate = ploopi_timestamp2local($arrForumFields['timestp']);
@@ -332,11 +332,11 @@ echo $skin->open_simplebloc();
               <div class="ploopi_explorer_element">
                 <p>
                   <b><?php echo $strForumTitle; ?></b>
-                  <br/><font style="font-size:0.8em;"><?php echo $arrForumFields['author'].'&nbsp;('.$arrForumDateCreate['date'].'&nbsp;'.$arrForumDateCreate['time'].')'; ?></font>
+                  <br/><font style="font-size:0.8em;"><?php echo ploopi_htmlentities($arrForumFields['author']).'&nbsp;('.$arrForumDateCreate['date'].'&nbsp;'.$arrForumDateCreate['time'].')'; ?></font>
                   <?php
                     if(isset($_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['info']) && $_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['info']['id'] == $arrForumFields['id'])
                     {
-                      echo $_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['info']['mess'];
+                      echo ploopi_htmlentities($_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['info']['mess']);
                       unset($_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['info']);
                     }
                   ?>
@@ -396,4 +396,3 @@ echo $skin->open_simplebloc();
 <?php
 echo $skin->close_simplebloc();
 ?>
-

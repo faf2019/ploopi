@@ -46,7 +46,7 @@ if(is_array($arrForumModerat) && count($arrForumModerat) > 0)
   foreach($arrForumModerat as $value)
   {
     if(empty($strForumModerator))
-      $strForumModerator = _FORUM_MODERATOR.':&nbsp;'.$value['login'];
+      $strForumModerator = _FORUM_MODERATOR.':&nbsp;'.ploopi_htmlentities($value['login']);
     else
       $strForumModerator .= ', '.$value['login'];
   }
@@ -125,10 +125,10 @@ echo $skin->open_simplebloc();
       <img style="border: none; margin: 0 0 -3px 0; padding: 0;" src="<?php echo _FORUM_IMG_16_FOLDER; ?>"/>&nbsp;<?php echo _FORUM_LABEL_CAT; ?>
     </button>
     <button type="button" class="button_navig" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?op=subject&id_cat={$objForumCat->fields['id']}"); ?>'">
-      <img style="border: none; margin: 0 0 -3px 0; padding: 0;" src="<?php echo _FORUM_IMG_16_FOLDER; ?>"/>&nbsp;<?php echo  ploopi_strcut($objForumCat->fields['title'],30); ?>
+      <img style="border: none; margin: 0 0 -3px 0; padding: 0;" src="<?php echo _FORUM_IMG_16_FOLDER; ?>"/>&nbsp;<?php echo ploopi_htmlentities(ploopi_strcut($objForumCat->fields['title'],30)); ?>
     </button>
     <button type="button" class="button_navig_select" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?op=mess&id_cat={$objForumCat->fields['id']}&id_subject={$objForumSubject->fields['id']}"); ?>'">
-      <img style="border: none; margin: 0 0 -3px 0; padding: 0;" src="<?php echo _FORUM_IMG_16_MESS; ?>"/>&nbsp;<?php echo  ploopi_strcut($objForumSubject->fields['title'],30); ?>
+      <img style="border: none; margin: 0 0 -3px 0; padding: 0;" src="<?php echo _FORUM_IMG_16_MESS; ?>"/>&nbsp;<?php echo ploopi_htmlentities(ploopi_strcut($objForumSubject->fields['title'],30)); ?>
     </button>
   </div>
 
@@ -166,7 +166,7 @@ echo $skin->open_simplebloc();
   </div>
   <?php
   // Title of subject
-  echo $skin->open_simplebloc($objForumSubject->fields['title']);
+  echo $skin->open_simplebloc(ploopi_htmlentities($objForumSubject->fields['title']));
   ?>
   <div id="forum_main_mess" class="ploopi_explorer_main" style="visibility:visible;">
 
@@ -193,7 +193,7 @@ echo $skin->open_simplebloc();
           if($arrForumFields['validated'] == 1 || $arrForumFields['id_author'] == $_SESSION['ploopi']['user']['id'] || $booForumIsAdminModerGlb)
           {
             // Title
-            $strForumTitle = ($arrForumFields['validated'] == 0) ? '<font color="red">'.$arrForumFields['title'].'</font>&nbsp;-&nbsp;<i>'._FORUM_STAY_VALIDATED.'</i>' : $arrForumFields['title'];
+            $strForumTitle = ($arrForumFields['validated'] == 0) ? '<font color="red">'.ploopi_htmlentities($arrForumFields['title']).'</font>&nbsp;-&nbsp;<i>'._FORUM_STAY_VALIDATED.'</i>' : ploopi_htmlentities($arrForumFields['title']);
 
             ?>
             <!-- Title of message -->
@@ -227,7 +227,7 @@ echo $skin->open_simplebloc();
             <div id="idMess_main_<?php echo $arrForumFields['id']; ?>" class="ploopi_explorer_line_2">
               <!-- Author of message -->
               <div id="idMess_main_left_<?php echo $arrForumFields['id']; ?>" class="ploopi_explorer_element" style="width: 150px;float: left;text-align: left;">
-                <p><?php echo $arrForumFields['author']; ?></p>
+                <p><?php echo ploopi_htmlentities($arrForumFields['author']); ?></p>
                 <p><?php echo ($arrForumUserNbMess[$arrForumFields['id_author']]<=1) ? _FORUM_MESSAGE : _FORUM_MESSAGES; ?>&nbsp;:&nbsp;<?php echo $arrForumUserNbMess[$arrForumFields['id_author']]; ?></p>
               </div>
 
@@ -235,11 +235,11 @@ echo $skin->open_simplebloc();
               <div id="idMess_main_right_<?php echo $arrForumFields['id']; ?>" class="forum_mess_content">
                   <p>
                   <?php
-                  echo $arrForumFields['content'];
+                  echo ploopi_htmlentities($arrForumFields['content']);
 
                   if(isset($_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['info']) && $_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['info']['id'] == $arrForumFields['id'])
                   {
-                    echo $_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['info']['mess'];
+                    echo ploopi_htmlentities($_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['info']['mess']);
                     unset($_SESSION['ploopi']['forum'][$_SESSION['ploopi']['moduleid']]['info']);
                   }
                   ?>

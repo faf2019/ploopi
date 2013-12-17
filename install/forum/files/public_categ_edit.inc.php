@@ -82,9 +82,9 @@ $strForumHidden = ($objForumCat->fields['visible'] == 1) ? 'checked' : '';
     <form method="post" action="<?php echo ploopi_urlencode($strForumAction); ?>" onSubmit="javascript:return form_validate(this);">
     <div style="padding:2px; margin:0;">
       <div style="float:left;padding:8px 0 0 0; margin:0;clear:both;font-weight:bold;"><?php echo _FORUM_CAT_LABEL_TITLE; ?>:&nbsp;</div>
-      <div style="clear:both;"><input type="text" id="forum_title" name="forum_title" class="text" value="<?php echo $objForumCat->fields['title']; ?>" style="width:380px" maxlength="255"/></div>
+      <div style="clear:both;"><input type="text" id="forum_title" name="forum_title" class="text" value="<?php echo ploopi_htmlentities($objForumCat->fields['title']); ?>" style="width:380px" maxlength="255"/></div>
       <div style="float:left;padding:8px 0 0 0; margin:0;clear:both;font-weight:bold;"><?php echo _FORUM_CAT_LABEL_DESCRIPTION; ?>:&nbsp;</div>
-      <div style="clear:both;"><input type="text" id="forum_description" name="forum_description" class="text" value="<?php echo $objForumCat->fields['description']; ?>" style="width:380px" maxlength="255"/></div>
+      <div style="clear:both;"><input type="text" id="forum_description" name="forum_description" class="text" value="<?php echo ploopi_htmlentities($objForumCat->fields['description']); ?>" style="width:380px" maxlength="255"/></div>
       <div style="clear:both;padding:8px 0 0 0; margin:0;">
         <div style="font-weight:bold;width:190px;float:left;">
           <?php echo _FORUM_CAT_LABEL_VISIBLE; ?>
@@ -131,7 +131,7 @@ $strForumHidden = ($objForumCat->fields['visible'] == 1) ? 'checked' : '';
     </div>
     <div style="clear:both;float:right;padding:4px;">
       <input type="button" class="flatbutton" value="<?php echo _FORUM_RETURN; ?>" onclick="javascript:document.location.href='<?php echo ploopi_urlencode('admin.php?op=categ'); ?>';">
-      <input type="submit" class="flatbutton" value="<?php echo $strForumLabelButton; ?>">
+      <input type="submit" class="flatbutton" value="<?php echo ploopi_htmlentities($strForumLabelButton); ?>">
     </div>
     </form>
   </div>

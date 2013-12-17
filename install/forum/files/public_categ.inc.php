@@ -244,7 +244,7 @@ if($booForumActionAllowed)
             foreach($arrForumModerat as $value)
             {
               if($strForumModerator == '&nbsp;')
-                $strForumModerator = '--- &nbsp;'._FORUM_MODERATOR.':&nbsp;'.$value['login'];
+                $strForumModerator = '--- &nbsp;'._FORUM_MODERATOR.':&nbsp;'.ploopi_htmlentities($value['login']);
               else
                 $strForumModerator .= ', '.$value['login'];
             }
@@ -292,7 +292,7 @@ if($booForumActionAllowed)
             {
               $arrForumFieldsLastMess = $db->fetchrow($objForumSqlInfoLastMess);
               $arrForumDateLastMess = ploopi_timestamp2local($arrForumFieldsLastMess['timestp']);
-              $strForumLastMess = $arrForumDateLastMess['date'].'&nbsp;'.$arrForumDateLastMess['time'].'<br/><font style="font-size:0.8em;">'._FORUM_BY.'&nbsp;'.$arrForumFieldsLastMess['author'].'</font>';
+              $strForumLastMess = $arrForumDateLastMess['date'].'&nbsp;'.$arrForumDateLastMess['time'].'<br/><font style="font-size:0.8em;">'._FORUM_BY.'&nbsp;'.ploopi_htmlentities($arrForumFieldsLastMess['author']).'</font>';
             }
             else
               $strForumLastMess = '';
@@ -360,7 +360,7 @@ if($booForumActionAllowed)
                 <!-- Title -->
                 <div class="ploopi_explorer_element">
                   <p>
-                    <b><?php echo $arrForumFields['title']; ?></b>
+                    <b><?php echo ploopi_htmlentities($arrForumFields['title']); ?></b>
                     <font style="font-size:0.8em;padding:0;margin:0;">
                     <?php
                     if($arrForumFields['mustbe_validated'] == 1 && $arrForumFields['closed'] == 0)
@@ -370,7 +370,7 @@ if($booForumActionAllowed)
                       <?php
                     }
                     ?>
-                    <br/><?php echo $arrForumFields['description']; ?>
+                    <br/><?php echo ploopi_htmlentities($arrForumFields['description']); ?>
                     <br/><font style="text-align: center;font-style:italic;"><?php echo $strForumModerator; ?></font>
                     </font>
                   </p>
