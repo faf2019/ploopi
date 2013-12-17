@@ -86,10 +86,10 @@ function ploopi_search_getdb() {
 function ploopi_search_get_id($id_module, $id_object, $id_record)
 {
     $db = ploopi_search_getdb();
-	
-	$db->query("SELECT id FROM ploopi_index_element WHERE id_module = {$id_module} AND id_object = {$id_object} AND id_record = '".$db->addslashes($id_record)."'");
-	if ($row = $db->fetchrow()) return $row['id'];
-	else return null;
+
+    $db->query("SELECT id FROM ploopi_index_element WHERE id_module = {$id_module} AND id_object = {$id_object} AND id_record = '".$db->addslashes($id_record)."'");
+    if ($row = $db->fetchrow()) return $row['id'];
+    else return null;
 }
 
 /**
@@ -106,11 +106,11 @@ function ploopi_search_remove_index($id_object, $id_record, $id_module = -1)
 
     if ($id_module == -1 && !empty($_SESSION['ploopi']['moduleid'])) $id_module= $_SESSION['ploopi']['moduleid'];
     if (($id_element = ploopi_search_get_id($id_module,$id_object,$id_record)) != null) {
-		$db->query("DELETE FROM ploopi_index_element WHERE id = '{$id_element}'");
-		$db->query("DELETE FROM ploopi_index_keyword_element WHERE id_element = '{$id_element}'");
-		$db->query("DELETE FROM ploopi_index_stem_element WHERE id_element = '{$id_element}'");
-		$db->query("DELETE FROM ploopi_index_phonetic_element WHERE id_element = '{$id_element}'");
-	}
+        $db->query("DELETE FROM ploopi_index_element WHERE id = '{$id_element}'");
+        $db->query("DELETE FROM ploopi_index_keyword_element WHERE id_element = '{$id_element}'");
+        $db->query("DELETE FROM ploopi_index_stem_element WHERE id_element = '{$id_element}'");
+        $db->query("DELETE FROM ploopi_index_phonetic_element WHERE id_element = '{$id_element}'");
+    }
 }
 
 /**
@@ -196,12 +196,12 @@ function ploopi_search_create_index($id_object, $id_record, $label, &$content, $
 
                 if (!isset($words[$kw_clean])) $words[$kw_clean] = array('weight' => 1, 'meta' => 0);
                 else $words[$kw_clean]['weight']++;
-              
+
                 /*
                 if (!isset($words[$kw_stem]['words'][$kw_clean])) $words[$kw_stem]['words'][$kw_clean] = array('weight' => 1, 'meta' => 0);
                 else $words[$kw_stem]['words'][$kw_clean]['weight']++;
                 */
-                
+
                 $words_indexed++;
             }
         }
@@ -267,11 +267,11 @@ function ploopi_search_create_index($id_object, $id_record, $label, &$content, $
     $objElement->save();
 
     $id_element = $objElement->fields['id'];
-	
-	
+
+
     $stems = array();
     $phonetics = array();
-    
+
     for ($i = 1; ($i <= $max_kw && $kw_ratio >= _PLOOPI_INDEXATION_RATIOMIN) || $kw['meta']; $i++)
     {
         $kw_value = key($words);
@@ -289,7 +289,7 @@ function ploopi_search_create_index($id_object, $id_record, $label, &$content, $
                         'weight' => $kw['weight'],
                         'ratio' => $ratio,
                         'relevance' => $relevance
-                    );            
+                    );
                 }
                 else {
                     $stems[$kw_stem]['weight'] = min(999999, $stems[$kw_stem]['weight']+$kw['weight']);
@@ -304,7 +304,7 @@ function ploopi_search_create_index($id_object, $id_record, $label, &$content, $
                         'weight' => $kw['weight'],
                         'ratio' => $ratio,
                         'relevance' => $relevance
-                    );            
+                    );
                 }
                 else {
                     $phonetics[$kw_pho]['weight'] = min(999999, $phonetics[$kw_pho]['weight']+$kw['weight']);
@@ -320,7 +320,7 @@ function ploopi_search_create_index($id_object, $id_record, $label, &$content, $
         $kw = next($words);
         $kw_ratio = (empty($words_overall)) ? 1 : ($kw['weight']*100 / $words_overall);
     }
-    
+
     foreach($stems as $stem => $detail) {
         $db->query("INSERT INTO ploopi_index_stem_element(id_element, stem, weight, ratio, relevance) VALUES('{$id_element}', '{$stem}', {$detail['weight']}, {$detail['ratio']}, {$detail['relevance']})");
     }
@@ -419,12 +419,12 @@ function ploopi_search($keywords, $id_object = -1, $id_record = null, $id_module
         if (is_array($id_module)) $arrSearch[] = "e.id_module IN (".implode(',', $id_module).")";
         else $arrSearch[] = sprintf("e.id_module = %d", $id_module);
     }
-	/*
-	for($i=0;$i<=26;$i++) {
-		echo "
-		<br />INSERT INTO ploopi_index_keyword_element_{$i} SELECT * FROM ploopi_index_keyword_element WHERE keyword < '".(chr($i+97))."' AND keyword >= '".(chr($i+96))."';
-		";
-	}*/
+    /*
+    for($i=0;$i<=26;$i++) {
+        echo "
+        <br />INSERT INTO ploopi_index_keyword_element_{$i} SELECT * FROM ploopi_index_keyword_element WHERE keyword < '".(chr($i+97))."' AND keyword >= '".(chr($i+96))."';
+        ";
+    }*/
 
     $strSearch = (empty($arrSearch)) ? '' : ' WHERE '.implode(' AND ', $arrSearch);
 
@@ -443,7 +443,7 @@ function ploopi_search($keywords, $id_object = -1, $id_record = null, $id_module
 
                 {$strSearch}
 
-                ORDER BY {$orderby} {$sort}
+                ORDER BY    e.label
                 ";
 
         $db->query($sql);
@@ -463,9 +463,9 @@ function ploopi_search($keywords, $id_object = -1, $id_record = null, $id_module
     }
     else
     {
-    
+
         $arrSearchs = array('keyword' => array(), 'stem' => array(), 'phonetic' => array());
-        foreach($arrKeywords as $kw => $occ) 
+        foreach($arrKeywords as $kw => $occ)
         {
             $arrSearchs['keyword'][$kw] = 1;
 
@@ -474,18 +474,18 @@ function ploopi_search($keywords, $id_object = -1, $id_record = null, $id_module
             if ($stem != '') $arrSearchs['stem'][$stem] = 1;
             if ($pho != '') $arrSearchs['phonetic'][$pho] = 1;
         }
-        
+
         $intNbKw = sizeof($arrSearchs['keyword'])+sizeof($arrSearchs['stem'])+sizeof($arrSearchs['phonetic']);
 
 
-		global $ploopi_timer;
-		$t1 = $ploopi_timer->getexectime();
+        global $ploopi_timer;
+        $t1 = $ploopi_timer->getexectime();
 
         foreach($arrSearchs as $type => $detail) {
             foreach(array_keys($detail) as $kw) {
-			
-				$id = ord(substr($kw,0,1))-96;
-            
+
+                $id = ord(substr($kw,0,1))-96;
+
                 $sql =  "
                         SELECT       e.*,
                                     ke.relevance
@@ -494,7 +494,7 @@ function ploopi_search($keywords, $id_object = -1, $id_record = null, $id_module
                         INNER JOIN  ploopi_index_element e ON e.id = ke.id_element
 
                         {$strSearch}
-                        
+
                         AND         ke.{$type} = '{$kw}'
                         ";
 
@@ -742,56 +742,56 @@ function ploopi_search_get_records($id_object = null, $id_module = null)
 /**
  * Import de synonymes
  */
- 
+
 function ploopi_search_import_syn($file) {
 
-	set_time_limit(0);
+    set_time_limit(0);
 
     $db = ploopi_search_getdb();
-	$db->query("TRUNCATE ploopi_index_synonym");
-	
-	$handle = @fopen($file, 'r');
-	if ($handle) {
-		$line = 1;
-		$first = true;
-		while (($buffer = fgets($handle, 4096)) !== false) {
-			if ($line > 1) {
-				$parts = explode('|', iconv("UTF-8", "ISO-8859-1//TRANSLIT", trim($buffer))); // ploopi_iso8859_clean(utf8_decode()));
-				if ($first) {
-					$word = $parts[0];
-					$lines = $parts[1];
-					$synonyms = array();
-					$first = false;
-				}
-				else {
-					unset($parts[0]);
-					$synonyms = array_unique(array_merge($synonyms, $parts));
-					$lines--;
-					if ($lines == 0) {
-						$first = true;
-						foreach($synonyms as $synonym) {
-							$word = trim(preg_replace("@\(.*\)@","",$word));
-							$synonym = trim(preg_replace("@\(.*\)@","",$synonym));
-							
-							$word = str_replace(".","",$word);
-							$synonym = str_replace(".","",$synonym);
-							
-							$db->query("REPLACE INTO ploopi_index_synonym VALUES('".$db->addslashes($word)."','".$db->addslashes($synonym)."')");
-						}
-					}
-				}
-			}
-			$line++;
-		}
-		if (!feof($handle)) {
-			echo "Erreur: fgets() a échoué\n";
-		}
-		fclose($handle);
-	}	
+    $db->query("TRUNCATE ploopi_index_synonym");
+
+    $handle = @fopen($file, 'r');
+    if ($handle) {
+        $line = 1;
+        $first = true;
+        while (($buffer = fgets($handle, 4096)) !== false) {
+            if ($line > 1) {
+                $parts = explode('|', iconv("UTF-8", "ISO-8859-1//TRANSLIT", trim($buffer))); // ploopi_iso8859_clean(utf8_decode()));
+                if ($first) {
+                    $word = $parts[0];
+                    $lines = $parts[1];
+                    $synonyms = array();
+                    $first = false;
+                }
+                else {
+                    unset($parts[0]);
+                    $synonyms = array_unique(array_merge($synonyms, $parts));
+                    $lines--;
+                    if ($lines == 0) {
+                        $first = true;
+                        foreach($synonyms as $synonym) {
+                            $word = trim(preg_replace("@\(.*\)@","",$word));
+                            $synonym = trim(preg_replace("@\(.*\)@","",$synonym));
+
+                            $word = str_replace(".","",$word);
+                            $synonym = str_replace(".","",$synonym);
+
+                            $db->query("REPLACE INTO ploopi_index_synonym VALUES('".$db->addslashes($word)."','".$db->addslashes($synonym)."')");
+                        }
+                    }
+                }
+            }
+            $line++;
+        }
+        if (!feof($handle)) {
+            echo "Erreur: fgets() a échoué\n";
+        }
+        fclose($handle);
+    }
 }
 
 /*
 if (isset($_GET['import'])) {
-	ploopi_search_import_syn('/var/www/thes_fr.dat');
+    ploopi_search_import_syn('/var/www/thes_fr.dat');
 }
 */

@@ -124,16 +124,11 @@ function ploopi_array2html($arrArray, $booHeader = true, $strClassName = 'ploopi
 
     if (!empty($arrArray))
     {
-        // Fonction de formatage du contenu
-        $funcLineTH = create_function('$value', 'return "<th>$value</th>";');
-        $funcLineTD = create_function('$value', 'return "<td>$value</td>";');
-
-
         // Ajout de la ligne d'entête
-        if ($booHeader) $arrHTML[] = '<tr>'.implode('', ploopi_array_map($funcLineTH, array_keys(reset($arrArray)))).'</tr>';
+        if ($booHeader) $arrHTML[] = '<tr>'.implode('', ploopi_array_map(function($value) { return '<th>'.ploopi_htmlentities($value).'</th>'; }, array_keys(reset($arrArray)))).'</tr>';
 
         // Traitement des contenus
-        foreach($arrArray as $row) $arrHTML[] = '<tr>'.implode('', ploopi_array_map($funcLineTD, $row)).'</tr>';
+        foreach($arrArray as $row) $arrHTML[] = '<tr>'.implode('', ploopi_array_map(function($value) { return '<td>'.ploopi_htmlentities($value).'</td>'; }, $row)).'</tr>';
     }
 
     // contenu HTML

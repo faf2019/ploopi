@@ -60,7 +60,7 @@ class calendarEvent
      * Canal de rattachement
      */
     private $strChannelId;
-    
+
     /**
      * Options de l'événement
      *
@@ -68,8 +68,8 @@ class calendarEvent
      */
 
     private $arrOptions;
-        
-    
+
+
     /**
      * Constructeur de la classe
      *
@@ -80,7 +80,7 @@ class calendarEvent
      * @param string $strChannelId Id du canal de rattachement
      * @param array $arrOptions sarray('strColor', 'strOnClick', 'strHref', 'strOnClose', 'strStyle')
      * @return calendarEvent
-     *  
+     *
      * Informations détaillées pour $arrOption :
      * string 'strColor' Couleur au format #RRGGBB
      * string 'strLabel' Contenu à afficher au survol (popup)
@@ -97,7 +97,7 @@ class calendarEvent
         $this->strTitle = $strTitle;
         $this->strContent = $strContent;
         $this->strChannelId = $strChannelId;
-        
+
         $this->arrOptions = array(
             'strColor' => null,
             'strLabel' => null,
@@ -106,11 +106,11 @@ class calendarEvent
             'strOnClose' => null,
             'arrOnDrop' => null,
             'strStyle' => null
-        ); 
-        
+        );
+
         $this->setOptions($arrOptions);
     }
-    
+
     /**
      * Permet de définir les options :
      *
@@ -125,7 +125,7 @@ class calendarEvent
     public function getOptions()
     {
         return $this->arrOptions;
-    }    
+    }
 
     /**
      * Getter par défaut
@@ -151,27 +151,27 @@ class calendarChannel
      * Titre
      */
     private $strTitle;
-    
+
     /**
      * Couleur
      */
     private $strColor;
-    
-    
+
+
     /**
      * Constructeur de la classe
      *
      * @param string $strTitle Titre
      * @param string $strColor Couleur
-     * 
+     *
      * @return calendarChannel
-     */    
+     */
     public function __construct($strTitle = null, $strColor = null)
     {
         $this->strTitle = $strTitle;
         $this->strColor = $strColor;
     }
-    
+
     /**
      * Getter par défaut
      *
@@ -182,7 +182,7 @@ class calendarChannel
     {
         if (isset($this->{$strName})) return $this->{$strName};
         else return null;
-    }    
+    }
 }
 
 /**
@@ -229,14 +229,14 @@ class calendar
      */
 
     protected $arrEvents;
-    
+
     /**
      * Canaux d'affichage du calendrier
      *
      * @var array
      */
 
-    protected $arrChannels;    
+    protected $arrChannels;
 
     /**
      * Constructeur de la classe
@@ -265,12 +265,12 @@ class calendar
 
             'intHourBegin' => 6,
             'intHourEnd' => 21,
-        
+
             'booDisplayNumWeeks' => true,
             'booDisplayHours' => true,
             'booDisplayDaysLabel' => true,
             'booDisplayChannelsLabel' => true,
-        
+
             'intNumWeeksColWidth' => 25,
             'intHoursColWidth' => 25,
             'intDaysLabelHeight' => 20,
@@ -281,7 +281,7 @@ class calendar
 
         $this->arrEvents = array();
         $this->arrChannels = array();
-        
+
         $this->setEvents($arrEvents);
         $this->setChannels($arrChannels);
     }
@@ -325,17 +325,17 @@ class calendar
     {
         $this->arrEvents[] = $objEvent;
     }
-    
+
     public function setChannels($arrChannels = array())
     {
         $this->arrChannels = $this->arrChannels + $arrChannels;
     }
-    
+
     public function addChannel(calendarChannel $objChannel, $strId)
     {
         $this->arrChannels[$strId] = $objChannel;
     }
-    
+
     public function display()
     {
         ?>
@@ -381,22 +381,22 @@ class calendar
 
         // Nombre de jours dans l'intervalles (bornes comprises)
         $intNbDays = floor(($lastday - $firstday) / 86400) + 1;
-        
+
         // Nombre de canaux par jours
         $intNbChan = sizeof($this->arrChannels);
         if (!$intNbChan) $intNbChan = 1;
-        
+
         // Largeur total du planning = (NbJours * NbCanaux * LargeurCanal) + LargeurColonneHeures + NbSeparateurs
-        
+
         // Largeur d'un canal (sans bordure)
         $intChannelWidth = floor(($this->intWidth - $intNbDays*$intNbChan - ($this->arrOptions['intHoursColWidth'] * $this->arrOptions['booDisplayHours'])) / ($intNbDays*$intNbChan));
-        
+
         // Nombre d'heures par jour
         $intNbHours = $this->arrOptions['intHourEnd'] - $this->arrOptions['intHourBegin'];
 
         // Hauteur entre chaque séparateur d'heure
         $intHourHeight = floor(($this->intHeight - ($this->arrOptions['intDaysLabelHeight'] * $this->arrOptions['booDisplayDaysLabel']) - ($this->arrOptions['intChannelsLabelHeight'] * $this->arrOptions['booDisplayChannelsLabel'])) / $intNbHours);
-        
+
         // Largeur d'une journée (incluant les bordures des canaux)
         $intDayWidth = ($intChannelWidth * $intNbChan) + ($intNbChan - 1);
 
@@ -416,16 +416,16 @@ class calendar
         $strDayHeaderStyle = "width:".$intDayWidth."px;height:".($this->arrOptions['intDaysLabelHeight'] - 1)."px;";
         $strHourHeaderStyle = "height:".$intHourHeight."px;";
         $strChannelHeaderStyle = "width:".$intDayWidth."px;height:".($this->arrOptions['intChannelsLabelHeight'] - 1)."px;";
-        
+
         // Dimension finale du calendrier (au pixel)
         $intCalendarWidth = $intNbDays * $intDayWidth + ($this->arrOptions['intHoursColWidth'] * $this->arrOptions['booDisplayHours']) + $intNbDays;
         $intCalendarHeight = $intDayHeight + ($this->arrOptions['intDaysLabelHeight'] * $this->arrOptions['booDisplayDaysLabel']) + ($this->arrOptions['intChannelsLabelHeight'] * $this->arrOptions['booDisplayChannelsLabel']);
-        
+
         // Chaîne contenant le code javascript à éxécuter (draggables/droppables/fonctions)
         $strJsCode = '';
         ?>
         <div class="days_inner" style=width:<?php echo $intCalendarWidth; ?>px;height:<?php echo $intCalendarHeight; ?>px;">
-        
+
             <?php
             // Affichage des libellés de jours si demandé
             if ($this->arrOptions['booDisplayDaysLabel'])
@@ -440,18 +440,18 @@ class calendar
                         <div class="day_header" style="<?php echo "width:".($this->arrOptions['intHoursColWidth'] - 1)."px;height:".($this->arrOptions['intDaysLabelHeight'] - 1)."px;"; ?>">&nbsp;</div>
                         <?php
                     }
-    
+
                     // On boucle sur les jours à afficher (1 = premier jour de l'intervalle)
                     for ($d = 1; $d <= $intNbDays; $d++)
                     {
                         // Détermination de la date du jour à afficher
                         $dateday = mktime(0, 0, 0, $firstday_m, $firstday_d + $d - 1, $firstday_y);
-    
+
                         // Date locale
                         $ldate = substr(ploopi_unixtimestamp2local($dateday), 0, 5);
-    
+
                         $weekday = date('N', $dateday);
-    
+
                         $extra_class = '';
                         if (ploopi_holiday($dateday)) $extra_class = ' day_header_holiday';
                         else
@@ -481,7 +481,7 @@ class calendar
                         <div class="channel_header" style="font-size:0;<?php echo "width:".($this->arrOptions['intHoursColWidth'] - 1)."px;height:".($this->arrOptions['intChannelsLabelHeight'] - 1)."px;"; ?>">&nbsp;</div>
                         <?php
                     }
-    
+
                     // On boucle sur les jours à afficher (1 = premier jour de l'intervalle)
                     for ($d = 1; $d <= $intNbDays; $d++)
                     {
@@ -496,13 +496,13 @@ class calendar
                             $strBgColor = is_null($objChannel->strColor) ? '' : "background-color:{$objChannel->strColor};";
                             $channel_style = "{$strBgColor}width:{$intChannelWidth}px;height:".($this->arrOptions['intChannelsLabelHeight'] - 1)."px;left:{$intLeft}px;";
                             ?>
-                            
-                            <div class="channel" style="<?php echo $channel_style; ?>"><? echo $objChannel->strTitle; ?></div>
+
+                            <div class="channel" style="<?php echo $channel_style; ?>"><? echo ploopi_htmlentities($objChannel->strTitle); ?></div>
                             <?
                             // Position du prochain canal
                             $intLeft = $intLeft + $intChannelWidth + 1;
                             $intNumChan++;
-                            
+
                         }
                         ?>
                         </div>
@@ -512,7 +512,7 @@ class calendar
                 </div>
                 <?php
             }
-    
+
             ?>
             <div class="row">
             <?php
@@ -544,17 +544,17 @@ class calendar
             }
             ?>
             </div>
-    
+
             <div id="calendar_days" style="overflow:hidden;">
                 <?php
                 // Affichage des journées
-    
+
                 // On boucle sur les jours à afficher (1 = premier jour de l'intervalle)
                 for ($d = 1; $d <= $intNbDays; $d++)
                 {
                     // Détermination de la date du jour à afficher
                     $dateday = mktime(0, 0, 0, $firstday_m, $firstday_d + $d - 1, $firstday_y);
-    
+
                     $extra_class = '';
                     if (ploopi_holiday($dateday)) $extra_class = ' day_holiday';
                     else
@@ -583,11 +583,11 @@ class calendar
                             ?>
                             <?php
                         }
-                        
+
                         // Clé de date pour lire dans le tableau des événements
                         $strEventsKey = sprintf("%04d%02d%02d",date('Y', $dateday), date('n', $dateday), date('j', $dateday));
                         $strJsCode .= "calendar_days[$d] = '{$strEventsKey}';";
-                        
+
                         // Affichage des Canaux
                         $intNumChan = 0;
                         $intLeft = 0;
@@ -596,16 +596,16 @@ class calendar
                             $channel_style = "width:".$intChannelWidth."px;height:".($intDayHeight - 1)."px;left:{$intLeft}px;";
                             // $intLeft = $intLeft + $intWidth + 2; // border
                             $strJsCode .= "calendar_channels[$intNumChan] = $intLeft;";
-                            
+
                             ?>
-                            
+
                             <div class="channel" id="calendar_channel<? echo $d; ?>_<? echo $intNumChan; ?>" style="<?php echo $channel_style; ?>">
                                 <?
                                 if ($intNumChan > 0)
                                 {
                                     ?><div class="channelborder" style="height:<? echo $intDayHeight - 1; ?>px;"></div><?
                                 }
-                                
+
                                 // Affichage des événements
                                 if (!empty($arrEvents[$strEventsKey][$strChannelId]))
                                 {
@@ -615,31 +615,31 @@ class calendar
                                         {
                                             $arrDateBegin = ploopi_timestamp2local($this->arrEvents[$intId]->intTimestpBegin);
                                             $arrDateEnd = ploopi_timestamp2local($this->arrEvents[$intId]->intTimestpEnd);
-            
+
                                             // Détermination heure de début (ajustement de l'heure de début en fonction de la date de l'événement)
                                             $intTsDateBegin = ploopi_timestamp2unixtimestamp($this->arrEvents[$intId]->intTimestpBegin);
                                             $floTimeBegin = (substr($this->arrEvents[$intId]->intTimestpBegin, 0 ,8) == $strEventsKey) ? date('G', $intTsDateBegin) + (intval(date('i', $intTsDateBegin), 10) / 60) : 0 ;
-            
+
                                             // Détermination heure de fin (ajustement de l'heure de fin en fonction de la date de l'événement)
                                             $intTsDateEnd = ploopi_timestamp2unixtimestamp($this->arrEvents[$intId]->intTimestpEnd);
                                             $floTimeEnd = (substr($this->arrEvents[$intId]->intTimestpEnd, 0 ,8) == $strEventsKey) ? date('G', $intTsDateEnd) + (intval(date('i', $intTsDateEnd), 10) / 60) : 24;
-            
+
                                             // On adapte ensuite les heures de début/fin aux limites d'affichage du planning
                                             if ($floTimeBegin < $this->arrOptions['intHourBegin']) $floTimeBegin = $this->arrOptions['intHourBegin'];
                                             if ($floTimeEnd > $this->arrOptions['intHourEnd']) $floTimeEnd = $this->arrOptions['intHourEnd'];
-            
+
                                             // Durée de l'événement en heures
                                             $floTimeLength = $floTimeEnd - $floTimeBegin;
-            
+
                                             // Début de l'événement en pix
                                             $intEventTop = floor(($floTimeBegin - $this->arrOptions['intHourBegin']) * $intHourHeight);
-            
+
                                             // Hauteur de l'événement en pix
                                             $intEventHeight = floor($floTimeLength * $intHourHeight);
-            
+
                                             ?>
                                             <div class="event" id="calendar_event<? echo $intId; ?>" style="top:<?php echo $intEventTop; ?>px;height:<?php echo $intEventHeight - 1; ?>px;width:<?php echo $intChannelWidth; ?>px;background-color:<?php echo ploopi_htmlentities($this->arrEvents[$intId]->strColor); ?>;">
-                                                
+
                                                 <div class="event_title" id="calendar_event<? echo $intId; ?>_handle"  style="overflow:hidden;height:16px;line-height:16px;<? echo !is_null($this->arrEvents[$intId]->arrOnDrop) ? 'cursor:move;' : ''; ?>">
                                                     <?
                                                     if (!is_null($this->arrEvents[$intId]->strOnClose))
@@ -649,7 +649,7 @@ class calendar
                                                         <?
                                                     }
                                                     ?>
-                                                    <span><?php 
+                                                    <span><?php
                                                         echo str_replace(
                                                             array('<date_begin>', '<date_end>', '<time_begin>', '<time_end>'),
                                                             array(substr($arrDateBegin['date'], 0, 5), substr($arrDateEnd['date'], 0, 5), substr($arrDateBegin['time'], 0, 5), substr($arrDateEnd['time'], 0, 5)),
@@ -669,7 +669,7 @@ class calendar
                                             </div>
                                             <?php
                                             // Paramètres ondrop de l'événement
-                                            if (!is_null($this->arrEvents[$intId]->arrOnDrop)) 
+                                            if (!is_null($this->arrEvents[$intId]->arrOnDrop))
                                             {
                                                 // Création du draggable (événement)
                                                 $strJsCode .= "new Draggable('calendar_event{$intId}', { handle: 'calendar_event{$intId}_handle', snap: calendar_drag_snap, onEnd: calendar_drag_onend });";
@@ -677,10 +677,10 @@ class calendar
                                             }
                                         }
                                     }
-                                }                                
+                                }
                                 ?>
                             </div>
-                            
+
                             <?
                             // Position du prochain canal
                             $intLeft = $intLeft + $intChannelWidth + 1;
@@ -695,7 +695,7 @@ class calendar
                 ?>
             </div>
         </div>
-        
+
         <script type="text/javascript">
             var calendar_lastdroppable = null;
             var calendar_days = [];
@@ -1028,8 +1028,8 @@ class calendar
 
         return $arrEvents;
     }
-    
-    
+
+
     /**
      * Prépare les événement en les répartissant par jour dans un tableau associatif
      *
@@ -1057,5 +1057,5 @@ class calendar
         }
 
         return $arrEvents;
-    }    
+    }
 }

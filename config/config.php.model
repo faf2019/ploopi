@@ -274,7 +274,7 @@ switch($http_host)
          * Un chiffre trop faible peut être gênant en utilisation multi-onglet.
          */
 
-        define ('_PLOOPI_TOKENMAX', 50);
+        define ('_PLOOPI_TOKENMAX', 200);
 
         /**
          * Active ou non l'accès frontoffice.

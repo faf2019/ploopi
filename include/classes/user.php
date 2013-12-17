@@ -49,12 +49,12 @@ include_once './include/classes/data_object.php';
 
 class user extends data_object
 {
-	/**
-	 * Sauvegarde du précédent mot de passe pour détection de modification
-	 */
-	 
-	private $_strPreviousPassword = '';
-	
+    /**
+     * Sauvegarde du précédent mot de passe pour détection de modification
+     */
+
+    private $_strPreviousPassword = '';
+
     /**
      * Constructeur de la classe
      *
@@ -67,35 +67,35 @@ class user extends data_object
         $this->fields['date_creation'] = ploopi_createtimestamp();
     }
 
-	/**
-	 * Ouverture utilisateur
-	 * @param int $id identifiant de l'utilisateur
-	 * @return boolean true si l'utilisateur existe
-	 */
-	
-	public function open($id) {
-	
-		$booOpened = parent::open($id);
-		
-		$this->_strPreviousPassword = $this->fields['password'];
-		
-		return $booOpened;
-	}
-	
-	/**
-	 * Enregistrement utilisateur
-	 * @return int identifiant de l'utilisateur
-	 */
-	 
-	public function save() {
-		
-		// Modification de mot de passe ?
-		if ($this->_strPreviousPassword != $this->fields['password']) {
-			$this->fields['password_last_update'] = ploopi_createtimestamp();
-		}
-	
-		return parent::save();
-	}
+    /**
+     * Ouverture utilisateur
+     * @param int $id identifiant de l'utilisateur
+     * @return boolean true si l'utilisateur existe
+     */
+
+    public function open($id) {
+
+        $booOpened = parent::open($id);
+
+        if ($booOpened) $this->_strPreviousPassword = $this->fields['password'];
+
+        return $booOpened;
+    }
+
+    /**
+     * Enregistrement utilisateur
+     * @return int identifiant de l'utilisateur
+     */
+
+    public function save() {
+
+        // Modification de mot de passe ?
+        if ($this->_strPreviousPassword != $this->fields['password']) {
+            $this->fields['password_last_update'] = ploopi_createtimestamp();
+        }
+
+        return parent::save();
+    }
 
     /**
      * Supprime l'utilisateur et les données associées : validation, param, share, annotation, subscription, etc..
