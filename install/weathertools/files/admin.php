@@ -32,7 +32,7 @@
 
 ploopi_init_module('weathertools');
 
-echo $skin->create_pagetitle("{$_SESSION['ploopi']['modulelabel']} - Administration");
+echo $skin->create_pagetitle(ploopi_htmlentities("{$_SESSION['ploopi']['modulelabel']} - Administration"));
 echo $skin->open_simplebloc();
 ?>
 <div style="padding:4px;">
@@ -47,7 +47,7 @@ echo $skin->open_simplebloc();
     {
         ?>
         <div style="padding:4px;font-weight:bold;">
-            Import du fichier effectué. <? echo $_GET['weather_station_import']; ?> station(s) traitées.
+            Import du fichier effectué. <? echo ploopi_htmlentities($_GET['weather_station_import']); ?> station(s) traitées.
         </div>
         <?
     }
@@ -217,14 +217,14 @@ echo $skin->open_simplebloc();
                 array(
                     'values' =>
                         array(
-                            'icao' => array('label' => $row['icao']),
-                            'country_name' => array('label' => $row['country_name']),
-                            'place_name' => array('label' => $row['place_name']),
+                            'icao' => array('label' => ploopi_htmlentities($row['icao'])),
+                            'country_name' => array('label' => ploopi_htmlentities($row['country_name'])),
+                            'place_name' => array('label' => ploopi_htmlentities($row['place_name'])),
                             'latitude' => array('label' => number_format($row['station_latitude_wgs84'], 3, ',', ' ')." °", 'sort_label' => sprintf("%08.3f", $row['station_latitude_wgs84']), 'style' => 'text-align:right;'),
                             'longitude' => array('label' => number_format($row['station_longitude_wgs84'], 3, ',', ' ')." °", 'sort_label' => sprintf("%08.3f", $row['station_longitude_wgs84']),  'style' => 'text-align:right;'),
                             'altitude' => array('label' => number_format($row['station_elevation'], 0, ',', ' ')." m", 'sort_label' => sprintf("%05d", $row['station_elevation']), 'style' => 'text-align:right;')
                         ),
-                    'description' => "Afficher la météo pour '".$row['place_name']."'",
+                    'description' => ploopi_htmlentities("Afficher la météo pour '".$row['place_name']."'"),
                     'link' => 'javascript:void(0);',
                     'onclick' => "weathertools_open_bulletin('{$row['icao']}', event);"
                 );

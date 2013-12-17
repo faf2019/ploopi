@@ -32,7 +32,7 @@
 
 ploopi_init_module('weathertools');
 
-echo $skin->create_pagetitle("{$_SESSION['ploopi']['modulelabel']} - Consultation des données météo (METAR)");
+echo $skin->create_pagetitle(ploopi_htmlentities("{$_SESSION['ploopi']['modulelabel']} - Consultation des données météo (METAR)"));
 echo $skin->open_simplebloc('Recherche d\'une station météo');
 
 $record = weathertools_iptolocation();
@@ -56,7 +56,7 @@ $record = weathertools_iptolocation();
                 if (!empty($record->latitude))
                 {
                     ?>
-                    <option value="@" <? if ($strWeatherCountryName == '@') echo 'selected="selected"'; ?>>Stations les plus proches de <? printf("%s (%s)", $record->city, $record->country_name); ?></option>
+                    <option value="@" <? if ($strWeatherCountryName == '@') echo 'selected="selected"'; ?>>Stations les plus proches de <? printf("%s (%s)", ploopi_htmlentities($record->city), ploopi_htmlentities($record->country_name)); ?></option>
                     <?
                 }
                 ?>
@@ -65,7 +65,7 @@ $record = weathertools_iptolocation();
                 while ($row = $db->fetchrow($rs))
                 {
                     ?>
-                    <option <? if ($strWeatherCountryName == $row['country_name']) echo 'selected="selected"'; ?>><? echo $row['country_name']; ?></option>
+                    <option <? if ($strWeatherCountryName == $row['country_name']) echo 'selected="selected"'; ?>><? echo ploopi_htmlentities($row['country_name']); ?></option>
                     <?
                 }
                 ?>
@@ -176,15 +176,15 @@ $record = weathertools_iptolocation();
             array(
                 'values' =>
                     array(
-                        'icao' => array('label' => $row['icao']),
-                        'country_name' => array('label' => $row['country_name']),
-                        'place_name' => array('label' => $row['place_name']),
+                        'icao' => array('label' => ploopi_htmlentities($row['icao'])),
+                        'country_name' => array('label' => ploopi_htmlentities($row['country_name'])),
+                        'place_name' => array('label' => ploopi_htmlentities($row['place_name'])),
                         'latitude' => array('label' => number_format($row['station_latitude_wgs84'], 3, ',', ' ')." °", 'sort_label' => sprintf("%08.3f", $row['station_latitude_wgs84']), 'style' => 'text-align:right;'),
                         'longitude' => array('label' => number_format($row['station_longitude_wgs84'], 3, ',', ' ')." °", 'sort_label' => sprintf("%08.3f", $row['station_longitude_wgs84']),  'style' => 'text-align:right;'),
                         'altitude' => array('label' => number_format($row['station_elevation'], 0, ',', ' ')." m", 'sort_label' => sprintf("%05d", $row['station_elevation']), 'style' => 'text-align:right;'),
                         'distance' => array('label' => empty($record->latitude) ? '-' : $intDistance.' km', 'sort_label' => sprintf("%05d", $intDistance), 'style' => 'text-align:right;')
                     ),
-                'description' => "Afficher la météo pour '".$row['place_name']."'",
+                'description' => ploopi_htmlentities("Afficher la météo pour '".$row['place_name']."'"),
                 'link' => 'javascript:void(0);',
                 'onclick' => "weathertools_open_bulletin('{$row['icao']}', event);"
             );
