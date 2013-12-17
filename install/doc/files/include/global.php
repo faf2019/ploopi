@@ -50,7 +50,6 @@ define ('_DOC_ACTION_DELETEFOLDER', 5);
 define ('_DOC_ACTION_DELETEFILE',   6);
 define ('_DOC_ACTION_WORKFLOW_MANAGE',  7);
 define ('_DOC_ACTION_ADMIN',        9);
-define ('_DOC_ACTION_PARAM',        99);
 
 define('_DOC_OBJECT_FOLDER',    1);
 define('_DOC_OBJECT_FILE',      2);
@@ -652,7 +651,7 @@ function doc_fckexplorer_displayfolders(&$arrFolders, $intIdFolder = 0, $strPath
         foreach($arrFolders['tree'][$intIdFolder] as $intIdChild)
         {
             ?>
-            <option value="<?php echo $intIdChild; ?>" label="<?php echo $arrFolders['list'][$intIdChild]['name']; ?>"><?php echo ploopi_htmlentities("{$strPath} / {$arrFolders['list'][$intIdChild]['name']}"); ?></option>
+            <option value="<?php echo $intIdChild; ?>" label="<?php echo ploopi_htmlentities($arrFolders['list'][$intIdChild]['name']); ?>"><?php echo ploopi_htmlentities("{$strPath} / {$arrFolders['list'][$intIdChild]['name']}"); ?></option>
             <?php
             doc_fckexplorer_displayfolders($arrFolders, $intIdChild, "{$strPath} / {$arrFolders['list'][$intIdChild]['name']}");
         }

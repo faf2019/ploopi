@@ -107,7 +107,7 @@ $show_options = (
             foreach ($arrFileType as $strFileType => $strFileTypeLang)
             {
                 ?>
-                <option value="<?php echo $strFileType; ?>" <?php if ($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_filetype'] == $strFileType) echo 'selected'; ?>><?php echo $strFileTypeLang; ?></option>
+                <option value="<?php echo ploopi_htmlentities($strFileType); ?>" <?php if ($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_filetype'] == $strFileType) echo 'selected'; ?>><?php echo ploopi_htmlentities($strFileTypeLang); ?></option>
                 <?php
             }
             ?>
@@ -124,13 +124,13 @@ $show_options = (
     <p style="margin:0;padding:4px;float:left;">
         <strong>Date (du)</strong>:
         <br />
-        <input type="text" class="text" style="width:70px;" value="<?php echo $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date1']; ?>" name="doc_search_date1" id="doc_search_date1">
+        <input type="text" class="text" style="width:70px;" value="<?php echo ploopi_htmlentities($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date1']); ?>" name="doc_search_date1" id="doc_search_date1">
         <a href="javascript:void(0);" onclick="javascript:ploopi_calendar_open('doc_search_date1', event);"><img src="./img/calendar/calendar.gif" width="31" height="18" align="top" border="0"></a>
     </p>
     <p style="float:left;margin:0;padding:4px;">
         <strong>Date (au)</strong>:
         <br />
-        <input type="text" class="text" style="width:70px;" value="<?php echo ploopi_htmlentities($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date2']); ?>" name="doc_search_date2" id="doc_search_date2">
+        <input type="text" class="text" style="width:70px;" value="<?php echo ploopi_htmlentities(ploopi_htmlentities($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date2'])); ?>" name="doc_search_date2" id="doc_search_date2">
         <a href="javascript:void(0);" onclick="javascript:ploopi_calendar_open('doc_search_date2', event);"><img src="./img/calendar/calendar.gif" width="31" height="18" align="top" border="0"></a>
     </p>
 </div>

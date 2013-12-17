@@ -67,7 +67,7 @@ if (!empty($_GET['docfile_md5id']) && empty($currentfolder))
     else ploopi_redirect("admin.php?doc_error=unknown_file"); // Fichier inconnu => redirection
 }
 
-echo $skin->create_pagetitle($_SESSION['ploopi']['modulelabel']);
+echo $skin->create_pagetitle(ploopi_htmlentities($_SESSION['ploopi']['modulelabel']));
 echo $skin->open_simplebloc('Explorateur de documents');
 
 if (ploopi_getparam('doc_explorer_displaytreeview'))
@@ -127,7 +127,7 @@ else
                         }
                         ?>
                         <div class="doc_path" style="background:#fff;">
-                            <span class="error"><? echo $strMsg ?></span>
+                            <span class="error"><? echo ploopi_htmlentities($strMsg); ?></span>
                         </div>
                         <?
                     }
@@ -202,7 +202,7 @@ else
                                         }
                                         ?>
                                     </div>
-                                    <span style="margin-left:18px;"><?php echo $row['name']; ?></span>
+                                    <span style="margin-left:18px;"><?php echo ploopi_htmlentities($row['name']); ?></span>
                                 </a>
                                 <?php
                             }

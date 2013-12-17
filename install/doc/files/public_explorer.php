@@ -211,12 +211,12 @@ while ($row = $db->fetchrow($rs))
         $link = implode(' / ', $link_detail);
     }
 
-    $values[$c]['values']['label']      = array('label' => "<img src=\"./modules/doc/img/{$ico}\" /><span>&nbsp;{$row['name']} {$link}</span>", 'sort_label' => '0 '.strtolower($row['name'])." {$link}");
+    $values[$c]['values']['label']      = array('label' => "<img src=\"./modules/doc/img/{$ico}\" /><span>&nbsp;".ploopi_htmlentities($row['name'])." {$link}</span>", 'sort_label' => '0 '.strtolower($row['name'])." {$link}");
 
     if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_explorer_displaysize'])
         $values[$c]['values']['size'] =
             array(
-                'label' => "{$row['nbelements']} élément".($row['nbelements']>1 ? 's' : ''),
+                'label' => ploopi_htmlentities("{$row['nbelements']} élément".($row['nbelements']>1 ? 's' : '')),
                 'style' => 'text-align:right',
                 'sort_label' => sprintf("0 %016d", $row['nbelements'])
             );
@@ -224,21 +224,21 @@ while ($row = $db->fetchrow($rs))
     if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_explorer_displayuser'])
         $values[$c]['values']['user'] =
             array(
-                'label' => empty($row['user_id']) ? '<em>supprimé</em>' : "{$row['lastname']} {$row['firstname']}",
+                'label' => empty($row['user_id']) ? '<em>supprimé</em>' : ploopi_htmlentities("{$row['lastname']} {$row['firstname']}"),
                 'sort_label' => '0 '.(empty($row['user_id']) ? '' : strtolower("{$row['lastname']} {$row['firstname']}"))
             );
 
     if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_explorer_displayworkspace'])
         $values[$c]['values']['workspace'] =
             array(
-                'label' => empty($row['workspace_id']) ? '<em>supprimé</em>' : $row['label'],
+                'label' => empty($row['workspace_id']) ? '<em>supprimé</em>' : ploopi_htmlentities($row['label']),
                 'sort_label' => '0 '.(empty($row['workspace_id']) ? '' : strtolower($row['label']))
             );
 
     if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_explorer_displaydatetime'])
         $values[$c]['values']['date'] =
             array(
-                'label' => $ldate['date'].' '.substr($ldate['time'], 0, 5),
+                'label' => ploopi_htmlentities($ldate['date'].' '.substr($ldate['time'], 0, 5)),
                 'sort_label' => "0 {$row['timestp_modify']}"
             );
 
@@ -248,7 +248,7 @@ while ($row = $db->fetchrow($rs))
             'style' => 'text-align:center'
         );
 
-    $values[$c]['description'] = $row['description'];
+    $values[$c]['description'] = strip_tags($row['description']);
     $values[$c]['link'] = ploopi_urlencode("admin.php?op=doc_browser&currentfolder={$row['id']}");
     $values[$c]['style'] = ($row['published']) ? '' : 'background-color:#ffe0e0;';
     $c++;
@@ -325,14 +325,14 @@ while ($row = $db->fetchrow())
 
     $values[$c]['values']['label'] =
         array(
-            'label' => "<img src=\"./img/mimetypes/{$ico}\" /><span>&nbsp;{$row['name']}</span>",
+            'label' => "<img src=\"./img/mimetypes/{$ico}\" /><span>&nbsp;".ploopi_htmlentities($row['name'])."</span>",
             'sort_label' => '1 '.strtolower($row['name'])
         );
 
     if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_explorer_displaysize'])
         $values[$c]['values']['size'] =
             array(
-                'label' => "{$ksize} ko",
+                'label' => ploopi_htmlentities("{$ksize} ko"),
                 'style' => 'text-align:right',
                 'sort_label' => sprintf("1 %016d", $ksize*100)
             );
@@ -340,21 +340,21 @@ while ($row = $db->fetchrow())
     if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_explorer_displayuser'])
         $values[$c]['values']['user'] =
             array(
-                'label' => empty($row['user_id']) ? '<em>supprimé</em>' : "{$row['lastname']} {$row['firstname']}",
+                'label' => empty($row['user_id']) ? '<em>supprimé</em>' : ploopi_htmlentities("{$row['lastname']} {$row['firstname']}"),
                 'sort_label' => '1 '.(empty($row['user_id']) ? '' : strtolower("{$row['lastname']} {$row['firstname']}"))
             );
 
     if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_explorer_displayworkspace'])
         $values[$c]['values']['workspace'] =
             array(
-                'label' => empty($row['workspace_id']) ? '<em>supprimé</em>' : $row['label'],
+                'label' => empty($row['workspace_id']) ? '<em>supprimé</em>' : ploopi_htmlentities($row['label']),
                 'sort_label' => '1 '.(empty($row['workspace_id']) ? '' : strtolower($row['label']))
             );
 
     if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_explorer_displaydatetime'])
         $values[$c]['values']['date'] =
             array(
-                'label' => $ldate['date'].' '.substr($ldate['time'], 0, 5),
+                'label' => ploopi_htmlentities($ldate['date'].' '.substr($ldate['time'], 0, 5)),
                 'sort_label' => "1 {$row['timestp_modify']}"
             );
 
@@ -364,7 +364,7 @@ while ($row = $db->fetchrow())
             'style' => 'text-align:center'
         );
 
-    $values[$c]['description'] = $row['description'];
+    $values[$c]['description'] = strip_tags($row['description']);
     $values[$c]['link'] = ploopi_urlencode("admin.php?op=doc_fileform&currentfolder={$currentfolder}&docfile_md5id={$row['md5id']}&docfile_tab=open");
     $values[$c]['style'] = '';
     $c++;
@@ -442,7 +442,7 @@ while ($row = $db->fetchrow())
     ';
 
     $name = $row['name'];
-    if ($row['id_docfile']) $name .= ($row['dfname'] != $row['name']) ? " (nouvelle version de &laquo; {$row['dfname']} &raquo;)" : ' (nouvelle version)';
+    if ($row['id_docfile']) $name .= ($row['dfname'] != $row['name']) ? " (nouvelle version de &laquo; ".ploopi_htmlentities($row['dfname'])." &raquo;)" : ' (nouvelle version)';
 
     $values[$c]['values']['label'] =
         array(
@@ -460,14 +460,14 @@ while ($row = $db->fetchrow())
     if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_explorer_displayuser'])
         $values[$c]['values']['user'] =
             array(
-                'label' => empty($row['user_id']) ? '<em>supprimé</em>' : "{$row['lastname']} {$row['firstname']}",
+                'label' => empty($row['user_id']) ? '<em>supprimé</em>' : ploopi_htmlentities("{$row['lastname']} {$row['firstname']}"),
                 'sort_label' => '3 '.(empty($row['user_id']) ? '' : strtolower("{$row['lastname']} {$row['firstname']}"))
             );
 
     if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_explorer_displayworkspace'])
         $values[$c]['values']['workspace']  =
             array(
-                'label' => empty($row['workspace_id']) ? '<em>supprimé</em>' : $row['label'],
+                'label' => empty($row['workspace_id']) ? '<em>supprimé</em>' : ploopi_htmlentities($row['label']),
                 'sort_label' => '3 '.(empty($row['workspace_id']) ? '' : strtolower($row['label']))
             );
 
@@ -484,7 +484,7 @@ while ($row = $db->fetchrow())
             'style' => 'text-align:center'
         );
 
-    $values[$c]['description'] = $row['description'];
+    $values[$c]['description'] = strip_tags($row['description']);
     $values[$c]['link'] = ploopi_urlencode("admin-light.php?ploopi_op=doc_filedownload&docfiledraft_md5id={$row['md5id']}");
     $values[$c]['style'] = 'background-color:#ffe0e0;';
     $c++;

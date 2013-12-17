@@ -208,7 +208,7 @@ else
     ?>
 
     <div class="doc_fileinfo">
-        <a href="javascript:void(0);" onclick="javascript:ploopi_tickets_new(event, '<?php echo _DOC_OBJECT_FILE ?>','<?php echo $docfile->fields['md5id']; ?>', '<?php echo $docfile->fields['name']; ?>');" title="Envoyer en Pièce Jointe">
+        <a href="javascript:void(0);" onclick="javascript:ploopi_tickets_new(event, '<?php echo _DOC_OBJECT_FILE ?>','<?php echo $docfile->fields['md5id']; ?>', '<?php echo addslashes(ploopi_htmlentities($docfile->fields['name'])); ?>');" title="Envoyer en Pièce Jointe">
             <p class="ploopi_va">
                 <img src="./modules/doc/img/send.png" />
                 <span>Envoyer</span>
@@ -287,7 +287,7 @@ else
                 {
                     case 'highlighter':
                         ?>
-                        <div style="border:1px solid #c0c0c0;margin:4px;padding:4px;background-color:#ffffff;height:<?php echo $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_viewerheight']; ?>px;overflow:auto;">
+                        <div style="border:1px solid #c0c0c0;margin:4px;padding:4px;background-color:#ffffff;height:<?php echo ploopi_htmlentities($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_viewerheight']); ?>px;overflow:auto;">
                         <?php
                         require_once "Text/Highlighter.php";
                         require_once "Text/Highlighter/Renderer/Html.php";
@@ -312,7 +312,7 @@ else
                         <script type="text/javascript" src="./lib/swfobject/swfobject.js"></script>
                         <div id="doc_flash_player">Player</div>
                         <script type="text/javascript">
-                        var so = new SWFObject('<?php echo ploopi_urlencode("admin-light.php?ploopi_op=doc_fileview&docfile_md5id={$docfile->fields['md5id']}"); ?>','mpl','100%','<? echo $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_viewerheight']; ?>','9');
+                        var so = new SWFObject('<?php echo ploopi_urlencode("admin-light.php?ploopi_op=doc_fileview&docfile_md5id={$docfile->fields['md5id']}"); ?>','mpl','100%','<? echo ploopi_htmlentities($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_viewerheight']); ?>','9');
                         so.write('doc_flash_player');
                         </script>
                         <?
@@ -323,7 +323,7 @@ else
                         <script type="text/javascript" src="./lib/swfobject/swfobject.js"></script>
                         <div id="doc_jw_player">Player</div>
                         <script type="text/javascript">
-                        var so = new SWFObject('./lib/jw_player/player.swf','mpl','100%','<?php echo $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_viewerheight']; ?>','9');
+                        var so = new SWFObject('./lib/jw_player/player.swf','mpl','100%','<?php echo ploopi_htmlentities($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_viewerheight']); ?>','9');
                         so.addParam('allowscriptaccess','always');
                         so.addParam('allowfullscreen','true');
                         so.addParam('flashvars','file=<?php echo _PLOOPI_BASEPATH.'/'.ploopi_urlrewrite("index.php?ploopi_op=doc_file_download&docfile_md5id={$docfile->fields['md5id']}", doc_getrewriterules(), $docfile->fields['name'], null, true); ?>');
@@ -334,7 +334,7 @@ else
 
                     case 'div':
                         ?>
-                        <div style="border:1px solid #c0c0c0;margin:4px;padding:4px;background-color:#ffffff;height:<?php echo $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_viewerheight']; ?>px;overflow:auto;">
+                        <div style="border:1px solid #c0c0c0;margin:4px;padding:4px;background-color:#ffffff;height:<?php echo ploopi_htmlentities($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_viewerheight']); ?>px;overflow:auto;">
                         <?
                         $strFileContent = file_get_contents($docfile->getfilepath());
                         $strLines = implode(range(1, count(explode("\n", $strFileContent))), '<br />');
@@ -353,7 +353,7 @@ else
                     default:
                     case 'iframe':
                         ?>
-                        <div style="border:1px solid #c0c0c0;margin:4px;background-color:#f0f0f0;"><iframe src="<?php echo ploopi_urlencode("admin-light.php?ploopi_op=doc_fileview&docfile_md5id={$docfile->fields['md5id']}".($docfile_tab == 'pdf' && isset($arrRenderer[1]) && $arrRenderer[1] == 'unoconv' ? '&doc_viewmode=pdf' : '')); ?>" style="border:0;width:100%;margin:0;padding:0;height:<?php echo $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_viewerheight']; ?>px;"></iframe></div>
+                        <div style="border:1px solid #c0c0c0;margin:4px;background-color:#f0f0f0;"><iframe src="<?php echo ploopi_urlencode("admin-light.php?ploopi_op=doc_fileview&docfile_md5id={$docfile->fields['md5id']}".($docfile_tab == 'pdf' && isset($arrRenderer[1]) && $arrRenderer[1] == 'unoconv' ? '&doc_viewmode=pdf' : '')); ?>" style="border:0;width:100%;margin:0;padding:0;height:<?php echo ploopi_htmlentities($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_viewerheight']); ?>px;"></iframe></div>
                         <?
                     break;
                 }
@@ -408,8 +408,8 @@ else
                         $array_values[$c]['values']['weight']   = array('label' => $row['weight']);
                     }
 
-                    $array_values[$c]['values']['keyword']  = array('label' => $row['keyword']);
-                    $array_values[$c]['description'] = "{$c} - {$row['keyword']}";
+                    $array_values[$c]['values']['keyword']  = array('label' => ploopi_htmlentities($row['keyword']));
+                    $array_values[$c]['description'] = ploopi_htmlentities("{$c} - {$row['keyword']}");
                     $c++;
                 }
 
@@ -440,9 +440,9 @@ else
 
                 while ($row = $db->fetchrow())
                 {
-                    $array_values[$c]['values']['meta']     = array('label' => $row['meta'], 'style' => '');
-                    $array_values[$c]['values']['valeur']   = array('label' => $row['value'], 'style' => '');
-                    $array_values[$c]['description'] = $row['meta'];
+                    $array_values[$c]['values']['meta']     = array('label' => ploopi_htmlentities($row['meta']), 'style' => '');
+                    $array_values[$c]['values']['valeur']   = array('label' => ploopi_htmlentities($row['value']), 'style' => '');
+                    $array_values[$c]['description'] = ploopi_htmlentities($row['meta']);
                     $array_values[$c]['link'] = '';
                     $array_values[$c]['style'] = '';
                     $c++;
@@ -497,11 +497,11 @@ else
                 {
                     $ldate_modify = (!empty($row['timestp_modify'])) ? ploopi_timestamp2local($row['timestp_modify']) : array('date' => '', 'time' => '');
 
-                    $array_values[$c]['values']['vers']     = array('label' => $row['version'], 'style' => '');
+                    $array_values[$c]['values']['vers']     = array('label' => ploopi_htmlentities($row['version']), 'style' => '');
                     $array_values[$c]['values']['taille']   = array('label' => sprintf("%0.2f kio", ($row['size']/1024)), 'style' => '');
-                    $array_values[$c]['values']['par']  = array('label' => $row['login'], 'style' => '');
-                    $array_values[$c]['values']['modif']    = array('label' => "{$ldate_modify['date']} {$ldate_modify['time']}", 'style' => '');
-                    $array_values[$c]['values']['fichier']  = array('label' => $row['name'], 'style' => '');
+                    $array_values[$c]['values']['par']  = array('label' => ploopi_htmlentities($row['login']), 'style' => '');
+                    $array_values[$c]['values']['modif']    = array('label' => ploopi_htmlentities("{$ldate_modify['date']} {$ldate_modify['time']}"), 'style' => '');
+                    $array_values[$c]['values']['fichier']  = array('label' => ploopi_htmlentities($row['name']), 'style' => '');
                     $array_values[$c]['description'] = ploopi_htmlentities("{$row['name']} ({$row['version']})");
                     $array_values[$c]['link'] = "admin.php?ploopi_op=doc_filedownload&docfile_md5id={$row['md5id']}&version={$row['version']}";
                     $array_values[$c]['style'] = '';
@@ -605,7 +605,6 @@ else
                         else $user_modify_name = "<i>supprimé</i>";
 
                         $ldate_modify = (!empty($docfile->fields['timestp_modify'])) ? ploopi_timestamp2local($docfile->fields['timestp_modify']) : array('date' => '', 'time' => '');
-                        //echo $user->fields['login'];
                         ?>
                         <div class="ploopi_form" style="padding:2px;">
                             <p>
@@ -647,7 +646,7 @@ else
                             </p>
                             <p>
                                 <label>Version:</label>
-                                <span><?php echo $docfile->fields['version']; ?></span>
+                                <span><?php echo ploopi_htmlentities($docfile->fields['version']); ?></span>
                             </p>
                             <p>
                                 <label>Taille:</label>
@@ -655,15 +654,15 @@ else
                             </p>
                             <p>
                                 <label>Propriétaire:</label>
-                                <span><?php echo $user_name; ?></span>
+                                <span><?php echo ploopi_htmlentities($user_name); ?></span>
                             </p>
                             <p>
                                 <label>Modifié par:</label>
-                                <span><?php echo $user_modify_name; ?></span>
+                                <span><?php echo ploopi_htmlentities($user_modify_name); ?></span>
                             </p>
                             <p>
                                 <label>Dernière modification:</label>
-                                <span><?php echo "{$ldate_modify['date']} {$ldate_modify['time']}"; ?></span>
+                                <span><?php echo ploopi_htmlentities("{$ldate_modify['date']} {$ldate_modify['time']}"); ?></span>
                             </p>
                             <p class="checkbox" onclick="javascript:ploopi_checkbox_click(event, 'docfile_readonly');">
                                 <label>Contenu protégé:</label>
@@ -742,7 +741,7 @@ else
                 $objDocFolderSub->open($parents[$i])
                 ?>
                 <div style="padding:4px;font-weight:bold;border-bottom:1px solid #c0c0c0;">
-                Vous héritez de l'abonnement à &laquo; <a href="<? echo ploopi_urlencode("admin.php?op=doc_browser&currentfolder={$parents[$i]}"); ?>"><?php echo $objDocFolderSub->fields['name']; ?></a> &raquo;
+                Vous héritez de l'abonnement à &laquo; <a href="<? echo ploopi_urlencode("admin.php?op=doc_browser&currentfolder={$parents[$i]}"); ?>"><?php echo ploopi_htmlentities($objDocFolderSub->fields['name']); ?></a> &raquo;
                 </div>
                 <?php
             }

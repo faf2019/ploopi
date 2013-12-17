@@ -58,7 +58,7 @@ if (!empty($currentfolder))
         <div style="float:left;height:40px;">
             <p style="margin:0;padding:4px 8px;">
                 <strong><?php echo ploopi_htmlentities($objFolder->fields['name']); ?></strong>
-                <br />Dossier <?php echo $foldertypes[$objFolder->fields['foldertype']]; ?><?php if ($objFolder->fields['readonly']) echo ' protégé'; ?>
+                <br />Dossier <?php echo ploopi_htmlentities($foldertypes[$objFolder->fields['foldertype']]); ?><?php if ($objFolder->fields['readonly']) echo ' protégé'; ?>
             </p>
         </div>
         <div style="float:left;height:40px;border-left:1px solid #e0e0e0;">
@@ -68,7 +68,7 @@ if (!empty($currentfolder))
                 <?php
                 include_once './include/classes/user.php';
                 $user = new user();
-                if ($user->open($objFolder->fields['id_user'])) echo "{$user->fields['lastname']} {$user->fields['firstname']}";
+                if ($user->open($objFolder->fields['id_user'])) echo ploopi_htmlentities("{$user->fields['lastname']} {$user->fields['firstname']}");
                 else echo '<i>supprimé</i>';
                 ?>
             </p>
@@ -113,7 +113,7 @@ if (!empty($currentfolder))
                                 "SELECT label FROM ploopi_group WHERE id in (".implode(',',$arrShares['group']).") ORDER BY label"
                             );
 
-                            while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;{$row['label']}&nbsp;</span>";
+                            while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi_htmlentities($row['label'])."&nbsp;</span>";
                         }
                         if (!empty($arrShares['user']))
                         {
@@ -123,7 +123,7 @@ if (!empty($currentfolder))
                                 "SELECT concat(lastname, ' ', firstname) as name FROM ploopi_user WHERE id in (".implode(',',$arrShares['user']).") ORDER BY lastname, firstname"
                             );
 
-                            while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;{$row['name']}&nbsp;</span>";
+                            while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi_htmlentities($row['name'])."&nbsp;</span>";
                         }
                     }
                     else echo '<span>Aucun partage</span>';
@@ -158,7 +158,7 @@ if (!empty($currentfolder))
                                 "SELECT label FROM ploopi_group WHERE id in (".implode(',',$arrValidation['group']).") ORDER BY label"
                             );
 
-                            while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;{$row['label']}&nbsp;</span>";
+                            while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi_htmlentities($row['label'])."&nbsp;</span>";
                         }
                         if (!empty($arrValidation['user']))
                         {
@@ -168,7 +168,7 @@ if (!empty($currentfolder))
                                 "SELECT concat(lastname, ' ', firstname) as name FROM ploopi_user WHERE id in (".implode(',',$arrValidation['user']).") ORDER BY lastname, firstname"
                             );
 
-                            while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;{$row['name']}&nbsp;</span>";
+                            while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi_htmlentities($row['name'])."&nbsp;</span>";
                         }
                     }
                     else echo '<span>Aucune accréditation</span>';

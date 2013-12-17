@@ -44,6 +44,7 @@ include_once './include/classes/data_object.php';
 include_once './modules/doc/class_docfolder.php';
 
 include_once './include/functions/filesystem.php';
+include_once './include/functions/search_index.php';
 
 
 /**
@@ -541,7 +542,7 @@ class docfile extends data_object
                 break;
 
                 default:
-                    $exec = "hachoir-metadata --quiet --raw \"{$path}\"";
+                    $exec = "hachoir-metadata --raw \"{$path}\"";
                 break;
             }
 

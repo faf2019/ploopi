@@ -351,7 +351,7 @@ if (isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords']))
             );
 
             $values[$c]['values']['nom'] = array(
-                'label' => "<img src=\"./img/mimetypes/{$ico}\" /><span>&nbsp;{$row['name']}</span>",
+                'label' => "<img src=\"./img/mimetypes/{$ico}\" /><span>&nbsp;".ploopi_htmlentities($row['name'])."</span>",
                 'sort_label' => strtolower($row['name'])
             );
 
@@ -369,17 +369,17 @@ if (isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords']))
 
             if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_explorer_displayuser'])
                 $values[$c]['values']['propriétaire'] = array(
-                    'label' => empty($row['user_id']) ? '<em>supprimé</em>' : strtolower($row['login'])
+                    'label' => empty($row['user_id']) ? '<em>supprimé</em>' : ploopi_htmlentities($row['login'])
                 );
 
             if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_explorer_displayworkspace'])
                 $values[$c]['values']['espace'] = array(
-                    'label' => strtolower($row['label'])
+                    'label' => ploopi_htmlentities($row['label'])
                 );
 
             if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_explorer_displaydatetime'])
                 $values[$c]['values']['date'] = array(
-                    'label' => $ldate['date'].' '.substr($ldate['time'],0,5),
+                    'label' => ploopi_htmlentities($ldate['date'].' '.substr($ldate['time'],0,5)),
                     'sort_label' => $row['timestp_modify']
                 );
 
@@ -387,7 +387,7 @@ if (isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords']))
                 'label' => $tools
             );
 
-            $values[$c]['description'] = $row['description'];
+            $values[$c]['description'] = ploopi_htmlentities($row['description']);
             $values[$c]['link'] = ploopi_urlencode("admin.php?op=doc_fileform&currentfolder={$row['id_folder']}&docfile_md5id={$row['md5id']}&docfile_tab=open");
             $values[$c]['style'] = '';
 

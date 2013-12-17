@@ -238,7 +238,7 @@ else // creating
                                 <p>
                                     <label>RSS :</label>
                                     <span>
-                                    <a title="RSS - <?php echo $docfolder->fields['name']; ?>" href="<?php  echo ploopi_urlrewrite('./backend.php?format=rss&ploopi_moduleid='.$_SESSION['ploopi']['moduleid'].'&id_folder='.$docfolder->fields['id'], doc_getrewriterules(), $docfolder->fields['name'].'.xml',null,true); ?>" type="application/rss+xml" rel="alternate">
+                                    <a title="RSS - <?php echo ploopi_htmlentities($docfolder->fields['name']); ?>" href="<?php  echo ploopi_urlrewrite('./backend.php?format=rss&ploopi_moduleid='.$_SESSION['ploopi']['moduleid'].'&id_folder='.$docfolder->fields['id'], doc_getrewriterules(), $docfolder->fields['name'].'.xml',null,true); ?>" type="application/rss+xml" rel="alternate">
                                         <?php echo _PLOOPI_BASEPATH.ploopi_urlrewrite('/backend.php?format=rss&ploopi_moduleid='.$_SESSION['ploopi']['moduleid'].'&id_folder='.$docfolder->fields['id'], doc_getrewriterules(), $docfolder->fields['name'].'.xml',null,true); ?>
                                     </a>
                                     </span>
@@ -246,7 +246,7 @@ else // creating
                                 <p>
                                     <label>Atom :</label>
                                     <span>
-                                    <a title="Atom - <?php echo $docfolder->fields['name']; ?>" href="<?php  echo ploopi_urlrewrite('./backend.php?format=atom&ploopi_moduleid='.$_SESSION['ploopi']['moduleid'].'&id_folder='.$docfolder->fields['id'], doc_getrewriterules(), $docfolder->fields['name'].'.xml',null,true); ?>" type="application/atom+xml" rel="alternate">
+                                    <a title="Atom - <?php echo ploopi_htmlentities($docfolder->fields['name']); ?>" href="<?php  echo ploopi_urlrewrite('./backend.php?format=atom&ploopi_moduleid='.$_SESSION['ploopi']['moduleid'].'&id_folder='.$docfolder->fields['id'], doc_getrewriterules(), $docfolder->fields['name'].'.xml',null,true); ?>" type="application/atom+xml" rel="alternate">
                                         <?php echo _PLOOPI_BASEPATH.ploopi_urlrewrite('/backend.php?format=atom&ploopi_moduleid='.$_SESSION['ploopi']['moduleid'].'&id_folder='.$docfolder->fields['id'], doc_getrewriterules(), $docfolder->fields['name'].'.xml',null,true); ?>
                                     </a>
                                     </span>
