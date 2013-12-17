@@ -80,7 +80,7 @@ function filesubmit(form)
     foreach($arrDirectoryImportFields as $strKey => $strValue)
     {
         ?>
-        <li style="float:left;width:50%;"><strong><?php echo $strKey; ?>:</strong> <span><?php echo $strValue; ?></span></li>
+        <li style="float:left;width:50%;"><strong><?php echo ploopi_htmlentities($strKey); ?>:</strong> <span><?php echo ploopi_htmlentities($strValue); ?></span></li>
         <?
     }
     //onsubmit="javascript:$('directory_import_info').style.display='block'; ploopi_xmlhttprequest_submitform($('directory_import_form'), 'directory_import_info'); return false;">

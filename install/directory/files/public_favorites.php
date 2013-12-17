@@ -165,16 +165,16 @@ foreach($result as $row)
     }
 
     $arrValues[$c]['values']['type'] = array('label' => $level_display);
-    $arrValues[$c]['values']['name'] = array('label' => "{$row['lastname']} {$row['firstname']}");
-    $arrValues[$c]['values']['groups'] = array('label' => $workspaces_list);
-    $arrValues[$c]['values']['service'] = array('label' => ($row['service']) ? $row['service'] : '&nbsp;');
-    $arrValues[$c]['values']['function'] = array('label' => ($row['function']) ? $row['function'] : '&nbsp;');
-    $arrValues[$c]['values']['phone'] = array('label' => ($row['phone']) ? $row['phone'] : '&nbsp;');
+    $arrValues[$c]['values']['name'] = array('label' => ploopi_htmlentities("{$row['lastname']} {$row['firstname']}"));
+    $arrValues[$c]['values']['groups'] = array('label' => ploopi_htmlentities($workspaces_list));
+    $arrValues[$c]['values']['service'] = array('label' => ($row['service']) ? ploopi_htmlentities($row['service']) : '&nbsp;');
+    $arrValues[$c]['values']['function'] = array('label' => ($row['function']) ? ploopi_htmlentities($row['function']) : '&nbsp;');
+    $arrValues[$c]['values']['phone'] = array('label' => ($row['phone']) ? ploopi_htmlentities($row['phone']) : '&nbsp;');
     $arrValues[$c]['values']['email'] = array('label' => $email);
     $arrValues[$c]['values']['ticket'] = array('label' => $ticket);
     $arrValues[$c]['values']['actions'] = array('label' => $actions);
 
-    $arrValues[$c]['description'] = "{$row['lastname']} {$row['firstname']}";
+    $arrValues[$c]['description'] = ploopi_htmlentities("{$row['lastname']} {$row['firstname']}");
     $arrValues[$c]['style'] = '';
 
     $c++;

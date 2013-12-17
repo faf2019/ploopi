@@ -35,7 +35,7 @@
  * Habillage global de l'annuaire
  */
 
-echo $skin->open_simplebloc($title);
+echo $skin->open_simplebloc(ploopi_htmlentities($title));
 ?>
 <div style="padding:4px;background-color:#e0e0e0;border-bottom:2px solid #c0c0c0;">
 <?php echo $desc; ?>
@@ -112,35 +112,35 @@ switch($_SESSION['directory']['directoryTabItem'])
             <div class="ploopi_form" style="width:33%;float:left;">
                 <p>
                     <label style="font-weight:bold;"><?php echo _DIRECTORY_NAME; ?>:</label>
-                    <input type="text" class="text" size="20" name="lastname" value="<?php echo $_SESSION['directory']['search']['lastname']; ?>" tabindex="101" />
+                    <input type="text" class="text" size="20" name="lastname" value="<?php echo ploopi_htmlentities($_SESSION['directory']['search']['lastname']); ?>" tabindex="101" />
                 </p>
                 <p>
                     <label style="font-weight:bold;"><?php echo _DIRECTORY_FIRSTNAME; ?>:</label>
-                    <input type="text" class="text" size="20" name="firstname" value="<?php echo $_SESSION['directory']['search']['firstname']; ?>" tabindex="102" />
+                    <input type="text" class="text" size="20" name="firstname" value="<?php echo ploopi_htmlentities($_SESSION['directory']['search']['firstname']); ?>" tabindex="102" />
                 </p>
                 <p>
                     <label style="font-weight:bold;"><?php echo _DIRECTORY_FULLTEXT; ?>:</label>
-                    <input type="text" class="text" size="20" name="fulltext" value="<?php echo $_SESSION['directory']['search']['fulltext']; ?>" tabindex="107" />
+                    <input type="text" class="text" size="20" name="fulltext" value="<?php echo ploopi_htmlentities($_SESSION['directory']['search']['fulltext']); ?>" tabindex="107" />
                 </p>
             </div>
             <div class="ploopi_form" style="width:33%;float:left;">
                 <p>
                     <label style="font-weight:bold;"><?php echo _DIRECTORY_SERVICE; ?>:</label>
-                    <input type="text" class="text" size="20" name="service" value="<?php echo $_SESSION['directory']['search']['service']; ?>" tabindex="103" />
+                    <input type="text" class="text" size="20" name="service" value="<?php echo ploopi_htmlentities($_SESSION['directory']['search']['service']); ?>" tabindex="103" />
                 </p>
                 <p>
                     <label style="font-weight:bold;"><?php echo _DIRECTORY_FUNCTION; ?>:</label>
-                    <input type="text" class="text" size="20" name="service" value="<?php echo $_SESSION['directory']['search']['service']; ?>" tabindex="104" />
+                    <input type="text" class="text" size="20" name="service" value="<?php echo ploopi_htmlentities($_SESSION['directory']['search']['service']); ?>" tabindex="104" />
                 </p>
             </div>
             <div class="ploopi_form" style="width:33%;float:left;">
                 <p>
                     <label style="font-weight:bold;"><?php echo _DIRECTORY_CITY; ?>:</label>
-                    <input type="text" class="text" size="20" name="city" value="<?php echo $_SESSION['directory']['search']['city']; ?>" tabindex="105" />
+                    <input type="text" class="text" size="20" name="city" value="<?php echo ploopi_htmlentities($_SESSION['directory']['search']['city']); ?>" tabindex="105" />
                 </p>
                 <p>
                     <label style="font-weight:bold;"><?php echo _DIRECTORY_COUNTRY; ?>:</label>
-                    <input type="text" class="text" size="20" name="country" value="<?php echo $_SESSION['directory']['search']['country']; ?>" tabindex="106" />
+                    <input type="text" class="text" size="20" name="country" value="<?php echo ploopi_htmlentities($_SESSION['directory']['search']['country']); ?>" tabindex="106" />
                 </p>
                 <p>
                     <label>&nbsp;</label>
@@ -196,10 +196,10 @@ switch($_SESSION['directory']['directoryTabItem'])
                 else $actions .='<a href="javascript:void(0);" onclick="javascript:directory_addtofavorites(event, \'\', \''.$row['id'].'\');"><img title="Modifier les favoris" src="./modules/directory/img/ico_fav_modify.png"></a>';
             }
 
-            $arrValues[$c]['values']['name'] = array('label' => "{$row['lastname']} {$row['firstname']}");
-            $arrValues[$c]['values']['service'] = array('label' => $row['service']);
-            $arrValues[$c]['values']['function'] = array('label' => $row['function']);
-            $arrValues[$c]['values']['phone'] = array('label' => $row['phone']);
+            $arrValues[$c]['values']['name'] = array('label' => ploopi_htmlentities("{$row['lastname']} {$row['firstname']}"));
+            $arrValues[$c]['values']['service'] = array('label' => ploopi_htmlentities($row['service']));
+            $arrValues[$c]['values']['function'] = array('label' => ploopi_htmlentities($row['function']));
+            $arrValues[$c]['values']['phone'] = array('label' => ploopi_htmlentities($row['phone']));
             $arrValues[$c]['values']['email'] = array('label' => $email);
             $arrValues[$c]['values']['actions'] = array('label' => $actions);
 
@@ -289,11 +289,11 @@ switch($_SESSION['directory']['directoryTabItem'])
             // on met tout ça dans une chaine
             $workspaces_list = implode(', ',$workspaces_list);
 
-            $arrValues[$c]['values']['name'] = array('label' => "{$row['lastname']} {$row['firstname']}");
-            $arrValues[$c]['values']['groups'] = array('label' => $workspaces_list);
-            $arrValues[$c]['values']['service'] = array('label' => $row['service']);
-            $arrValues[$c]['values']['function'] = array('label' => $row['function']);
-            $arrValues[$c]['values']['phone'] = array('label' => $row['phone']);
+            $arrValues[$c]['values']['name'] = array('label' => ploopi_htmlentities("{$row['lastname']} {$row['firstname']}"));
+            $arrValues[$c]['values']['groups'] = array('label' => ploopi_htmlentities($workspaces_list));
+            $arrValues[$c]['values']['service'] = array('label' => ploopi_htmlentities($row['service']));
+            $arrValues[$c]['values']['function'] = array('label' => ploopi_htmlentities($row['function']));
+            $arrValues[$c]['values']['phone'] = array('label' => ploopi_htmlentities($row['phone']));
             $arrValues[$c]['values']['email'] = array('label' => $email);
             $arrValues[$c]['values']['ticket'] = array('label' => $ticket);
             $arrValues[$c]['values']['actions'] = array('label' => $actions);
@@ -345,7 +345,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                 foreach($arrLists as $row)
                 {
                     ?>
-                    <option <?php if ($id_list == $row['id']) echo 'selected'; ?> value="<?php echo $row['id']; ?>"><?php echo $row['label']; ?> (<?php echo $row['nbfav']; ?> fav)</option>
+                    <option <?php if ($id_list == $row['id']) echo 'selected'; ?> value="<?php echo $row['id']; ?>"><?php echo ploopi_htmlentities($row['label']); ?> (<?php echo ploopi_htmlentities($row['nbfav']); ?> fav)</option>
                     <?php
                 }
                 ?>
@@ -552,11 +552,11 @@ switch($_SESSION['directory']['directoryTabItem'])
                 }
 
                 $arrValues[$c]['values']['type'] = array('label' => $level_display);
-                $arrValues[$c]['values']['name'] = array('label' => "{$row['lastname']} {$row['firstname']}");
-                $arrValues[$c]['values']['groups'] = array('label' => $workspaces_list);
-                $arrValues[$c]['values']['service'] = array('label' => $row['service']);
-                $arrValues[$c]['values']['function'] = array('label' => $row['function']);
-                $arrValues[$c]['values']['phone'] = array('label' => $row['phone']);
+                $arrValues[$c]['values']['name'] = array('label' => ploopi_htmlentities("{$row['lastname']} {$row['firstname']}"));
+                $arrValues[$c]['values']['groups'] = array('label' => ploopi_htmlentities($workspaces_list));
+                $arrValues[$c]['values']['service'] = array('label' => ploopi_htmlentities($row['service']));
+                $arrValues[$c]['values']['function'] = array('label' => ploopi_htmlentities($row['function']));
+                $arrValues[$c]['values']['phone'] = array('label' => ploopi_htmlentities($row['phone']));
                 $arrValues[$c]['values']['email'] = array('label' => $email);
                 $arrValues[$c]['values']['ticket'] = array('label' => $ticket);
                 $arrValues[$c]['values']['actions'] = array('label' => $actions);
@@ -659,9 +659,9 @@ switch($_SESSION['directory']['directoryTabItem'])
                         {
                             ?>
                             <div class="ploopi_tabs">
-                                <a href="javascript:void(0);" onclick="javascript:if (confirm('Êtes vous certain de vouloir supprimer <?php printf("%s %s", $arrHeadingLabel[$intDepth][1], $arrHeadingLabel[$intDepth][2]); ?> (et les sous-rubriques attachées) ?')) document.location.href='<?php echo ploopi_urlencode("admin.php?ploopi_op=directory_heading_delete&directory_heading_id={$objHeading->fields['id']}"); ?>';return false;"><img src="./modules/directory/img/ico_delete.png">Supprimer</a>
-                                <a href="<?php echo ploopi_urlencode("admin.php?ploopi_op=directory_heading_add&directory_heading_id_heading={$objHeading->fields['id']}"); ?>"><img src="./modules/directory/img/ico_new.png">Ajouter <?php printf("%s %s", $arrHeadingLabel[$intDepth+1][0], $arrHeadingLabel[$intDepth+1][2]); ?></a>
-                                <?php if (ploopi_isadmin()) { ?><a href="<?php echo ploopi_urlencode("admin.php?ploopi_op=directory_heading_add&directory_heading_id_heading=0"); ?>"><img src="./modules/directory/img/ico_newroot.png">Ajouter <?php printf("%s %s", $arrHeadingLabel[1][0], $arrHeadingLabel[1][2]); ?></a><?php } ?>
+                                <a href="javascript:void(0);" onclick="javascript:if (confirm('Êtes vous certain de vouloir supprimer <?php printf("%s %s", ploopi_htmlentities($arrHeadingLabel[$intDepth][1]), ploopi_htmlentities($arrHeadingLabel[$intDepth][2])); ?> (et les sous-rubriques attachées) ?')) document.location.href='<?php echo ploopi_urlencode("admin.php?ploopi_op=directory_heading_delete&directory_heading_id={$objHeading->fields['id']}"); ?>';return false;"><img src="./modules/directory/img/ico_delete.png">Supprimer</a>
+                                <a href="<?php echo ploopi_urlencode("admin.php?ploopi_op=directory_heading_add&directory_heading_id_heading={$objHeading->fields['id']}"); ?>"><img src="./modules/directory/img/ico_new.png">Ajouter <?php printf("%s %s", ploopi_htmlentities($arrHeadingLabel[$intDepth+1][0]), ploopi_htmlentities($arrHeadingLabel[$intDepth+1][2])); ?></a>
+                                <?php if (ploopi_isadmin()) { ?><a href="<?php echo ploopi_urlencode("admin.php?ploopi_op=directory_heading_add&directory_heading_id_heading=0"); ?>"><img src="./modules/directory/img/ico_newroot.png">Ajouter <?php printf("%s %s", ploopi_htmlentities($arrHeadingLabel[1][0]), ploopi_htmlentities($arrHeadingLabel[1][2])); ?></a><?php } ?>
                             </div>
                             <?
                         }
@@ -688,7 +688,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                                 <div class="ploopi_form">
                                     <p>
                                         <label>Niveau:</label>
-                                        <span><?php echo $arrHeadingLabel[$intDepth][2]; ?></span>
+                                        <span><?php echo ploopi_htmlentities($arrHeadingLabel[$intDepth][2]); ?></span>
                                     </p>
                                     <p>
                                         <label>Libellé:</label>
@@ -796,7 +796,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                                                         "SELECT label FROM ploopi_group WHERE id in (".implode(',',$arrWfUsers['group']).") ORDER BY label"
                                                     );
                                 
-                                                    while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;{$row['label']}&nbsp;</span>";
+                                                    while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi_htmlentities($row['label'])."&nbsp;</span>";
                                                 }
                                                 if (!empty($arrWfUsers['user']))
                                                 {
@@ -806,7 +806,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                                                         "SELECT concat(lastname, ' ', firstname) as name FROM ploopi_user WHERE id in (".implode(',',$arrWfUsers['user']).") ORDER BY lastname, firstname"
                                                     );
                                 
-                                                    while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;{$row['name']}&nbsp;</span>";
+                                                    while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi_htmlentities($row['name'])."&nbsp;</span>";
                                                 }
                                             }
                                             else echo '<em>Aucune accréditation</em>';
@@ -856,7 +856,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                                                             "SELECT label FROM ploopi_group WHERE id in (".implode(',',$arrWfUsers['group']).") ORDER BY label"
                                                         );
                                     
-                                                        while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;{$row['label']}&nbsp;</span>";
+                                                        while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi_htmlentities($row['label'])."&nbsp;</span>";
                                                     }
                                                     if (!empty($arrWfUsers['user']))
                                                     {
@@ -866,7 +866,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                                                             "SELECT concat(lastname, ' ', firstname) as name FROM ploopi_user WHERE id in (".implode(',',$arrWfUsers['user']).") ORDER BY lastname, firstname"
                                                         );
                                     
-                                                        while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;{$row['name']}&nbsp;</span>";
+                                                        while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi_htmlentities($row['name'])."&nbsp;</span>";
                                                     }
                                                 }
                                                 else echo '<em>Aucune accréditation</em>';
@@ -926,7 +926,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                                 <a href="<? echo ploopi_urlencode("admin-light.php?ploopi_op=directory_export&directory_format=csv&directory_heading_id={$intHeadingId}"); ?>" style="margin-left:6px;display:block;float:right;" title="Export CSV"><img src="./modules/directory/img/mime/csv.png" /></a>
                                 <a href="<? echo ploopi_urlencode("admin-light.php?ploopi_op=directory_export&directory_format=xls&directory_heading_id={$intHeadingId}"); ?>" style="margin-left:6px;display:block;float:right;" title="Export XLS"><img src="./modules/directory/img/mime/xls.png" /></a>
                                 <a href="<? echo ploopi_urlencode("admin-light.php?ploopi_op=directory_export&directory_format=xml&directory_heading_id={$intHeadingId}"); ?>" style="margin-left:6px;display:block;float:right;" title="Export XML"><img src="./modules/directory/img/mime/xml.png" /></a>
-                                <span>Liste des contacts rattachés à <?php printf("%s %s", $arrHeadingLabel[$intDepth][1], $arrHeadingLabel[$intDepth][2]); ?></span>
+                                <span>Liste des contacts rattachés à <?php printf("%s %s", ploopi_htmlentities($arrHeadingLabel[$intDepth][1]), ploopi_htmlentities($arrHeadingLabel[$intDepth][2])); ?></span>
                             </div>
                             <?php
                             $arrColumns = array();
@@ -966,11 +966,11 @@ switch($_SESSION['directory']['directoryTabItem'])
                                         else $arrActions[] ='<a href="javascript:void(0);" onclick="javascript:directory_addtofavorites(event, \'\', \''.$row['id'].'\');"><img title="Modifier les favoris" src="./modules/directory/img/ico_fav_modify.png"></a>';
                                     }
 
-                                    $arrValues[$c]['values']['position'] = array('label' => $row['position']);
-                                    $arrValues[$c]['values']['name'] = array('label' => "{$row['lastname']} {$row['firstname']}");
-                                    $arrValues[$c]['values']['service'] = array('label' => $row['service']);
-                                    $arrValues[$c]['values']['function'] = array('label' => $row['function']);
-                                    $arrValues[$c]['values']['phone'] = array('label' => $row['phone']);
+                                    $arrValues[$c]['values']['position'] = array('label' => ploopi_htmlentities($row['position']));
+                                    $arrValues[$c]['values']['name'] = array('label' => ploopi_htmlentities("{$row['lastname']} {$row['firstname']}"));
+                                    $arrValues[$c]['values']['service'] = array('label' => ploopi_htmlentities($row['service']));
+                                    $arrValues[$c]['values']['function'] = array('label' => ploopi_htmlentities($row['function']));
+                                    $arrValues[$c]['values']['phone'] = array('label' => ploopi_htmlentities($row['phone']));
                                     $arrValues[$c]['values']['email'] = array('label' => $email);
                                     $arrValues[$c]['values']['actions'] = array('label' => implode('', $arrActions));
 
@@ -983,7 +983,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                             if (!$db->numrows($rs))
                             {
                                 ?>
-                                <div style="padding:4px;text-align:center;">Il n'y a pas de contact rattaché à <?php printf("%s %s", $arrHeadingLabel[$intDepth][1], $arrHeadingLabel[$intDepth][2]); ?></div>
+                                <div style="padding:4px;text-align:center;">Il n'y a pas de contact rattaché à <?php printf("%s %s", ploopi_htmlentities($arrHeadingLabel[$intDepth][1]), ploopi_htmlentities($arrHeadingLabel[$intDepth][2])); ?></div>
                                 <?php
                             }
                             ?>
@@ -997,13 +997,13 @@ switch($_SESSION['directory']['directoryTabItem'])
                         $arrHeadingLabel[1] = preg_split('/\//', $strHeadingLabel);
                         ?>
                         <div class="ploopi_tabs">
-                            <?php if (ploopi_isadmin()) { ?><a href="<?php echo ploopi_urlencode("admin.php?ploopi_op=directory_heading_add&directory_heading_id_heading=0"); ?>"><img src="./modules/directory/img/ico_newroot.png">Ajouter <?php printf("%s %s", $arrHeadingLabel[1][0], $arrHeadingLabel[1][2]); ?></a><?php } ?>
+                            <?php if (ploopi_isadmin()) { ?><a href="<?php echo ploopi_urlencode("admin.php?ploopi_op=directory_heading_add&directory_heading_id_heading=0"); ?>"><img src="./modules/directory/img/ico_newroot.png">Ajouter <?php printf("%s %s", ploopi_htmlentities($arrHeadingLabel[1][0]), ploopi_htmlentities($arrHeadingLabel[1][2])); ?></a><?php } ?>
                         </div>
                         <?php
                         if (empty($arrHeadings['list']))
                         {
                             ?>
-                            <div class="error" style="padding:10px;text-align:center;">Vous devez d'abord créer <?php printf("%s %s", $arrHeadingLabel[1][0], $arrHeadingLabel[1][2]); ?></div>
+                            <div class="error" style="padding:10px;text-align:center;">Vous devez d'abord créer <?php printf("%s %s", ploopi_htmlentities($arrHeadingLabel[1][0]), ploopi_htmlentities($arrHeadingLabel[1][2])); ?></div>
                             <?php
                         }
                         else
@@ -1107,11 +1107,11 @@ switch($_SESSION['directory']['directoryTabItem'])
                 while ($row = $db->fetchrow())
                 {
                                         
-                    $arrValues[$c]['values']['heading'] = array('label' => $row['heading'], 'sort_label' => strtoupper(ploopi_convertaccents(sprintf("%-255s_%-255s", $row['heading'], $row['label']))));
-                    $arrValues[$c]['values']['label'] = array('label' => $row['label'], 'sort_label' => strtoupper(ploopi_convertaccents($row['label'])));
-                    $arrValues[$c]['values']['shortnumber'] = array('label' => $row['shortnumber']);
-                    $arrValues[$c]['values']['number'] = array('label' => $row['number']);
-                    $arrValues[$c]['description'] = $row['label'];
+                    $arrValues[$c]['values']['heading'] = array('label' => ploopi_htmlentities($row['heading']), 'sort_label' => strtoupper(ploopi_convertaccents(sprintf("%-255s_%-255s", $row['heading'], $row['label']))));
+                    $arrValues[$c]['values']['label'] = array('label' => ploopi_htmlentities($row['label']), 'sort_label' => strtoupper(ploopi_convertaccents($row['label'])));
+                    $arrValues[$c]['values']['shortnumber'] = array('label' => ploopi_htmlentities($row['shortnumber']));
+                    $arrValues[$c]['values']['number'] = array('label' => ploopi_htmlentities($row['number']));
+                    $arrValues[$c]['description'] = ploopi_htmlentities($row['label']);
 
                     if (ploopi_isactionallowed(_DIRECTORY_ACTION_SPEEDDIALING))
                     {

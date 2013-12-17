@@ -384,7 +384,7 @@ if ($_SESSION['ploopi']['connected'])
                     ?>
                     <script type="text/javascript">
                         new function() {
-                            window.parent.ploopi_getelem('directory_contact_photo<?php echo $_GET['directory_photo_id']; ?>', window.parent.document).innerHTML = '<img src="<?php echo ploopi_urlencode('admin-light.php?ploopi_op=directory_get_photo&'.ploopi_createtimestamp()); ?>" />';
+                            window.parent.ploopi_getelem('directory_contact_photo<?php echo ploopi_htmlentities($_GET['directory_photo_id']); ?>', window.parent.document).innerHTML = '<img src="<?php echo ploopi_urlencode('admin-light.php?ploopi_op=directory_get_photo&'.ploopi_createtimestamp()); ?>" />';
                             window.parent.ploopi_hidepopup('popup_directory_choose_photo');
                         }
                     </script>
@@ -693,7 +693,7 @@ if ($_SESSION['ploopi']['connected'])
 
                         ?>
                         <div style="margin:4px;padding:4px;border:1px solid #c0c0c0;background:#e0e0e0;">
-                            <div><strong>Le fichier envoyé (<? echo $_FILES['directory_import_file']['name']; ?>) contient <? echo $intCount; ?> ligne(s) et <? echo sizeof($arrLineHeader) ?> colonnes dont <? echo sizeof($arrLineHeader) - sizeof($arrInvalidCols) ?> sont connues.</strong></div>
+                            <div><strong>Le fichier envoyé (<? echo ploopi_htmlentities($_FILES['directory_import_file']['name']); ?>) contient <? echo $intCount; ?> ligne(s) et <? echo sizeof($arrLineHeader) ?> colonnes dont <? echo sizeof($arrLineHeader) - sizeof($arrInvalidCols) ?> sont connues.</strong></div>
                             <?
                             if ($booDataError) echo '<div>Des erreurs de données ont été rencontrées</div>';
                             if (!empty($arrInvalidCols)) echo '<div>Les colonnes suivantes sont inconnues : '.implode(', ', $arrInvalidCols).'</div>';

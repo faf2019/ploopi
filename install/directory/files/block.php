@@ -53,7 +53,7 @@ if ($_SESSION["ploopi"]["workspaceid"] > 0)  // group selected
     if ($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_mygroup'])
     //if (ploopi_isactionallowed(_DIRECTORY_ACTION_MYGROUP,-1,$menu_moduleid))
     {
-        $block->addmenu((empty($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_mygroup'])) ? _DIRECTORY_MYGROUP : $_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_mygroup'],ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&directoryTabItem=tabMygroup"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && $_SESSION['directory']['directoryTabItem'] == 'tabMygroup');
+        $block->addmenu((empty($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_mygroup'])) ? _DIRECTORY_MYGROUP : ploopi_htmlentities($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_mygroup']),ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&directoryTabItem=tabMygroup"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && $_SESSION['directory']['directoryTabItem'] == 'tabMygroup');
     }
 }
 
@@ -64,7 +64,7 @@ if ($_SESSION["ploopi"]["workspaceid"] > 0)  // group selected
 /*
 if ($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_organizationchart'])
 {
-    $block->addmenu((empty($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_organizationchart'])) ? _DIRECTORY_ORGANIZATIONCHART : $_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_organizationchart'],ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&directoryTabItem=tabOrganizationChart"));
+    $block->addmenu((empty($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_organizationchart'])) ? _DIRECTORY_ORGANIZATIONCHART : ploopi_htmlentities($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_organizationchart']),ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&directoryTabItem=tabOrganizationChart"));
 }
 */
 
@@ -74,7 +74,7 @@ if ($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_organizationchart'
 
 if ($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_sharedcontacts'])
 {
-    $block->addmenu((empty($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_sharedcontacts'])) ? _DIRECTORY_SHAREDCONTACTS : $_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_sharedcontacts'],ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&directoryTabItem=tabSharedContacts"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && $_SESSION['directory']['directoryTabItem'] == 'tabSharedContacts');
+    $block->addmenu((empty($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_sharedcontacts'])) ? _DIRECTORY_SHAREDCONTACTS : ploopi_htmlentities($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_sharedcontacts']),ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&directoryTabItem=tabSharedContacts"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && $_SESSION['directory']['directoryTabItem'] == 'tabSharedContacts');
 }
 
 /**
@@ -83,7 +83,7 @@ if ($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_sharedcontacts'])
 
 if ($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_speeddialing'])
 {
-    $block->addmenu((empty($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_speeddialing'])) ? _DIRECTORY_SPEEDDIALING : $_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_speeddialing'],ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&directoryTabItem=tabSpeedDialing"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && $_SESSION['directory']['directoryTabItem'] == 'tabSpeedDialing');
+    $block->addmenu((empty($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_speeddialing'])) ? _DIRECTORY_SPEEDDIALING : ploopi_htmlentities($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_speeddialing']),ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&directoryTabItem=tabSpeedDialing"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && $_SESSION['directory']['directoryTabItem'] == 'tabSpeedDialing');
 }
 
 /**
@@ -92,7 +92,7 @@ if ($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_speeddialing'])
 
 if ($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_mycontacts'])
 {
-    $block->addmenu((empty($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_mycontacts'])) ? _DIRECTORY_MYCONTACTS : $_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_mycontacts'],ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&directoryTabItem=tabMycontacts"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && $_SESSION['directory']['directoryTabItem'] == 'tabMycontacts');
+    $block->addmenu((empty($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_mycontacts'])) ? _DIRECTORY_MYCONTACTS : ploopi_htmlentities($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_mycontacts']),ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&directoryTabItem=tabMycontacts"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && $_SESSION['directory']['directoryTabItem'] == 'tabMycontacts');
 }
 
 /**
@@ -101,7 +101,7 @@ if ($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_mycontacts'])
 
 if ($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_myfavorites'])
 {
-    $block->addmenu((empty($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_myfavorites'])) ? _DIRECTORY_FAVORITES : $_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_myfavorites'],ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&directoryTabItem=tabFavorites"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && $_SESSION['directory']['directoryTabItem'] == 'tabFavorites');
+    $block->addmenu((empty($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_myfavorites'])) ? _DIRECTORY_FAVORITES : ploopi_htmlentities($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_myfavorites']),ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&directoryTabItem=tabFavorites"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && $_SESSION['directory']['directoryTabItem'] == 'tabFavorites');
 }
 
 /**
@@ -110,6 +110,6 @@ if ($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_myfavorites'])
 
 if ($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_search'])
 {
-    $block->addmenu((empty($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_search'])) ? _DIRECTORY_SEARCH : $_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_search'],ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&directoryTabItem=tabSearch"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && $_SESSION['directory']['directoryTabItem'] == 'tabSearch');
+    $block->addmenu((empty($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_search'])) ? _DIRECTORY_SEARCH : ploopi_htmlentities($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_search']),ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&directoryTabItem=tabSearch"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && $_SESSION['directory']['directoryTabItem'] == 'tabSearch');
 }
 ?>
