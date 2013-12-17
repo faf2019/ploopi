@@ -123,7 +123,7 @@ switch ($strbackendtype)
             {
                 $link = $strBasePath.ploopi_urlrewrite("index.php?query_tag={$strTag}", webedit_getrewriterules());
                 //$class = ($strTag == $query_tag) ? 'tagcloud3D_selected' : 'tagcloud3D';
-                echo '<a href="'.$link.'" title="'.$strTag.'" rel="tag" style="font-size: '.$arrTag['size'].'pt;" >'.$strTag.'</a>';
+                echo '<a href="'.$link.'" title="'.$strTag.'" rel="tag" style="font-size: '.$arrTag['size'].'pt;" >'.ploopi_htmlentities($strTag).'</a>';
             } 
             echo '</tags>';
 

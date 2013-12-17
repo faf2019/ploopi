@@ -116,7 +116,7 @@ foreach($arrWf as $value)
                         "SELECT label FROM ploopi_group WHERE id in (".implode(',',$arrWfUsers['group']).") ORDER BY label"
                     );
 
-                    while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;{$row['label']}&nbsp;</span>";
+                    while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi_htmlentities($row['label'])."&nbsp;</span>";
                 }
                 if (!empty($arrWfUsers['user']))
                 {
@@ -126,7 +126,7 @@ foreach($arrWf as $value)
                         "SELECT concat(lastname, ' ', firstname) as name FROM ploopi_user WHERE id in (".implode(',',$arrWfUsers['user']).") ORDER BY lastname, firstname"
                     );
 
-                    while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;{$row['name']}&nbsp;</span>";
+                    while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi_htmlentities($row['name'])."&nbsp;</span>";
                 }
             }
             else echo '<em>Aucune accréditation</em>';
@@ -162,7 +162,7 @@ foreach($arrWf as $value)
                         "SELECT label FROM ploopi_group WHERE id in (".implode(',',$arrEditorUsers['group']).") ORDER BY label"
                     );
 
-                    while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;{$row['label']}&nbsp;</span>";
+                    while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi_htmlentities($row['label'])."&nbsp;</span>";
                 }
                 if (!empty($arrEditorUsers['user']))
                 {
@@ -172,7 +172,7 @@ foreach($arrWf as $value)
                         "SELECT concat(lastname, ' ', firstname) as name FROM ploopi_user WHERE id in (".implode(',',$arrEditorUsers['user']).") ORDER BY lastname, firstname"
                     );
 
-                    while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;{$row['name']}&nbsp;</span>";
+                    while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi_htmlentities($row['name'])."&nbsp;</span>";
                 }
             }
             else echo '<em>Aucune accréditation</em>';
@@ -254,13 +254,13 @@ if ($booIsAllowedEdit)
 
             $art_title = ($row['status'] == 'wait') ? "{$row['title']} *" : $row['title'];
 
-            $articles_values[$c]['values']['date'] = array('label' => $timestp_local['date'], 'style' => '', 'sort_label' => $row['timestp']);
-            $articles_values[$c]['values']['pos'] = array('label' => $row['position'], 'style' => '');
-            $articles_values[$c]['values']['ref'] = array('label' => $row['reference'], 'style' => '');
-            $articles_values[$c]['values']['titre'] = array('label' => "<img src=\"./modules/webedit/img/doc{$articles['list'][$row['id']]['new_version']}.png\"><span>{$art_title}</span>", 'style' => '');
-            $articles_values[$c]['values']['vers'] = array('label' => $row['version'], 'style' => '');
+            $articles_values[$c]['values']['date'] = array('label' => ploopi_htmlentities($timestp_local['date']), 'style' => '', 'sort_label' => $row['timestp']);
+            $articles_values[$c]['values']['pos'] = array('label' => ploopi_htmlentities($row['position']), 'style' => '');
+            $articles_values[$c]['values']['ref'] = array('label' => ploopi_htmlentities($row['reference']), 'style' => '');
+            $articles_values[$c]['values']['titre'] = array('label' => "<img src=\"./modules/webedit/img/doc{$articles['list'][$row['id']]['new_version']}.png\"><span>".ploopi_htmlentities($art_title)."</span>", 'style' => '');
+            $articles_values[$c]['values']['vers'] = array('label' => ploopi_htmlentities($row['version']), 'style' => '');
             $articles_values[$c]['values']['misenligne'] = array('label' => $published, 'style' => '');
-            $articles_values[$c]['values']['auteur'] = array('label' => $row['author'], 'style' => '');
+            $articles_values[$c]['values']['auteur'] = array('label' => ploopi_htmlentities($row['author']), 'style' => '');
 
             if (ploopi_isadmin() || $booWfVal || $booIsEditor || ($_SESSION['ploopi']['userid'] == $row['id_user'] && $articles['list'][$row['id']]['online_id'] == ''))
             {
@@ -268,7 +268,7 @@ if ($booIsAllowedEdit)
             }
             else $articles_values[$c]['values']['actions'] = array('label' => '&nbsp;', 'style' => '');
 
-            $articles_values[$c]['description'] = $row['title'];
+            $articles_values[$c]['description'] = ploopi_htmlentities($row['title']);
             $articles_values[$c]['link'] = ploopi_urlencode("admin.php?op=article_modify&articleid={$row['id']}");
             $articles_values[$c]['style'] = '';
 

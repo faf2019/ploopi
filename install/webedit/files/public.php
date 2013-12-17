@@ -57,7 +57,7 @@ switch($op)
     break;
 
     default:
-        echo $skin->create_pagetitle($_SESSION['ploopi']['modulelabel']);
+        echo $skin->create_pagetitle(ploopi_htmlentities($_SESSION['ploopi']['modulelabel']));
         echo $skin->open_simplebloc('Voir les articles');
         $options = '';
         if (!empty($_REQUEST['headingid'])) $options = "&headingid={$_REQUEST['headingid']}";

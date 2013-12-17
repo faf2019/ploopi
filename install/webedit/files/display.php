@@ -1891,9 +1891,9 @@ if ($_SESSION['ploopi']['connected'])
 else
 {
     $template_body->assign_block_vars('switch_user_logged_out', array());
-    if (!empty($_GET['ploopi_errorcode']))
+    if (!empty($_SESSION['ploopi']['errorcode']))
     {
-        $template_body->assign_block_vars('switch_user_logged_out.switch_ploopierrormsg', array('MESSAGE' => isset($ploopi_errormsg[$_GET['ploopi_errorcode']]) ? $ploopi_errormsg[$_GET['ploopi_errorcode']] : ''));
+        $template_body->assign_block_vars('switch_user_logged_out.switch_ploopierrormsg', array('MESSAGE' => isset($ploopi_errormsg[$_SESSION['ploopi']['errorcode']]) ? $ploopi_errormsg[$_SESSION['ploopi']['errorcode']] : ''));
     }
 }
 

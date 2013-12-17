@@ -35,7 +35,7 @@ switch($op)
     default:
         include_once './include/functions/search_index.php';
 
-        echo $skin->create_pagetitle($_SESSION['ploopi']['modulelabel']);
+        echo $skin->create_pagetitle(ploopi_htmlentities($_SESSION['ploopi']['modulelabel']));
         echo $skin->open_simplebloc('Réindexation');
 
         $db->query("SELECT count(*) as c FROM ploopi_mod_webedit_heading WHERE id_module = {$_SESSION['ploopi']['moduleid']}");
@@ -95,7 +95,7 @@ switch($op)
         if (!ini_get('safe_mode')) ini_set('max_execution_time', 0);
         include_once './modules/webedit/class_article.php';
 
-        echo $skin->create_pagetitle($_SESSION['ploopi']['modulelabel']);
+        echo $skin->create_pagetitle(ploopi_htmlentities($_SESSION['ploopi']['modulelabel']));
         echo $skin->open_simplebloc();
         ?>
         <div style="padding:4px;">

@@ -1,3 +1,9 @@
+== Module WebEdit - version 2.5.1e ============================================
+
+2013-12-17  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Ajout de contrôles d'affichage pour éviter les injections XSS
+
 == Module WebEdit - version 2.5.1d ============================================
 
 2013-07-23  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

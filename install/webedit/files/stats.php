@@ -30,7 +30,7 @@
  * @author Stéphane Escaich
  */
 
-echo $skin->create_pagetitle($_SESSION['ploopi']['modulelabel']);
+echo $skin->create_pagetitle(ploopi_htmlentities($_SESSION['ploopi']['modulelabel']));
 echo $skin->open_simplebloc('Statistiques');
 
 $intYearSel = (empty($_GET['webedit_yearsel']) || !is_numeric($_GET['webedit_yearsel'])) ? date('Y') : $_GET['webedit_yearsel'];
@@ -223,20 +223,20 @@ $arrHeadings = webedit_getheadings();
         
         $values[$c]['values']['article'] =
             array(
-                'label' => $row['title']
+                'label' => ploopi_htmlentities($row['title'])
             );
 
         $values[$c]['values']['heading'] =
             array(
-                'label' => $row['label']
+                'label' => ploopi_htmlentities($row['label'])
             );
 
         $values[$c]['values']['counter'] =
             array(
-                'label' => $row['counter']
+                'label' => ploopi_htmlentities($row['counter'])
             );
 
-        $values[$c]['description'] = $row['title'];
+        $values[$c]['description'] = ploopi_htmlentities($row['title']);
         $values[$c]['link'] = ploopi_urlrewrite("index.php?headingid={$row['id_heading']}&articleid={$row['id_article']}", webedit_getrewriterules(), $row['metatitle'], $arrParents);
 
         $c++;
@@ -316,15 +316,15 @@ $arrHeadings = webedit_getheadings();
         
         $values[$c]['values']['heading'] =
             array(
-                'label' => $row['label']
+                'label' => ploopi_htmlentities($row['label'])
             );
 
         $values[$c]['values']['counter'] =
             array(
-                'label' => $row['counter']
+                'label' => ploopi_htmlentities($row['counter'])
             );
 
-        $values[$c]['description'] = $row['label'];
+        $values[$c]['description'] = ploopi_htmlentities($row['label']);
         $values[$c]['link'] =  ploopi_urlrewrite($script = "index.php?headingid={$row['id']}", webedit_getrewriterules(),$row['label'], $arrParents);
 
         $c++;

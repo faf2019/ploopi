@@ -91,14 +91,14 @@ if(!$booIsAllowedEdit) $booIsAllowedEdit = ploopi_isactionallowed(_WEBEDIT_ACTIO
     {
         ?>
         <img src="./modules/webedit/img/base.png">
-        <span style="font-weight:bold;">Modification de la racine &laquo; <?php echo $heading->fields['label']; ?> &raquo;</span>
+        <span style="font-weight:bold;">Modification de la racine &laquo; <?php echo ploopi_htmlentities($heading->fields['label']); ?> &raquo;</span>
         <?
     }
     else
     {
         ?>
         <img src="./modules/webedit/img/folder.png">
-        <span style="font-weight:bold;">Modification de la rubrique &laquo; <?php echo $heading->fields['label']; ?> &raquo;</span>
+        <span style="font-weight:bold;">Modification de la rubrique &laquo; <?php echo ploopi_htmlentities($heading->fields['label']); ?> &raquo;</span>
         <?
     }
     ?>
@@ -280,7 +280,7 @@ if ($display_type == 'advanced')
                 }
                 else
                 {
-                    ?><span><?php echo $heading_sortmodes[$heading->fields['sortmode']]; ?></span><?php
+                    ?><span><?php echo ploopi_htmlentities($heading_sortmodes[$heading->fields['sortmode']]); ?></span><?php
                 }
                 ?>
             </p>
@@ -345,8 +345,8 @@ if ($display_type == 'advanced')
                                 }
                             }
                             ?>
-                            <input type="hidden" id="webedit_heading_linkedpage" name="webedit_heading_linkedpage" value="<?php echo $heading->fields['linkedpage']; ?>">
-                            <input type="text" readonly class="text" style="width:150px;" id="linkedpage_displayed" value="<?php echo $redirect_title; ?>">
+                            <input type="hidden" id="webedit_heading_linkedpage" name="webedit_heading_linkedpage" value="<?php echo ploopi_htmlentities($heading->fields['linkedpage']); ?>">
+                            <input type="text" readonly class="text" style="width:150px;" id="linkedpage_displayed" value="<?php echo ploopi_htmlentities($redirect_title); ?>">
                             <img src="./modules/webedit/img/ico_choose_article.png" style="display:block;float:left;cursor:pointer;margin:2px 4px;" title="Choisir un article" alt="Choisir" onclick="javascript:ploopi_showpopup(ploopi_xmlhttprequest('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=webedit_heading_selectredirect',false), 300, event, 'click', 'webedit_popup_selectredirect');" />
                             <img src="./modules/webedit/img/ico_clear_article.png" style="display:block;float:left;cursor:pointer;margin:2px 4px;" title="Effacer la redirection" alt="Choisir" onclick="javascript:ploopi_getelem('webedit_heading_linkedpage').value='';ploopi_getelem('linkedpage_displayed').value='';" />
                         </span>
@@ -396,7 +396,7 @@ if ($display_type == 'advanced')
                                 }
                                 else $redirect_title = '';
 
-                                echo $redirect_title;
+                                echo ploopi_htmlentities($redirect_title);
                             break;
 
                             case 'url_redirect':
@@ -486,9 +486,9 @@ if ($display_type == 'advanced')
 else
 {
     ?>
-    <input type="hidden" name="webedit_heading_url_window" value="<?php echo $heading->fields['url_window']; ?>" />
-    <input type="hidden" name="webedit_heading_feed_enabled" value="<?php echo $heading->fields['feed_enabled']; ?>" />
-    <input type="hidden" name="webedit_heading_subscription_enabled" value="<?php echo $heading->fields['subscription_enabled']; ?>" />
+    <input type="hidden" name="webedit_heading_url_window" value="<?php echo ploopi_htmlentities($heading->fields['url_window']); ?>" />
+    <input type="hidden" name="webedit_heading_feed_enabled" value="<?php echo ploopi_htmlentities($heading->fields['feed_enabled']); ?>" />
+    <input type="hidden" name="webedit_heading_subscription_enabled" value="<?php echo ploopi_htmlentities($heading->fields['subscription_enabled']); ?>" />
 
     <div class="ploopi_form" style="float:left;width:45%;">
         <div style="padding:2px;">
@@ -657,7 +657,7 @@ foreach($arrShares as $value) $arrSharesUsers[$value['type_share']][] = $value['
                         "SELECT label FROM ploopi_group WHERE id in (".implode(',',$arrWfUsers['group']).") ORDER BY label"
                     );
 
-                    while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;{$row['label']}&nbsp;</span>";
+                    while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi_htmlentities($row['label'])."&nbsp;</span>";
                 }
                 if (!empty($arrWfUsers['user']))
                 {
@@ -667,7 +667,7 @@ foreach($arrShares as $value) $arrSharesUsers[$value['type_share']][] = $value['
                         "SELECT concat(lastname, ' ', firstname) as name FROM ploopi_user WHERE id in (".implode(',',$arrWfUsers['user']).") ORDER BY lastname, firstname"
                     );
 
-                    while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;{$row['name']}&nbsp;</span>";
+                    while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi_htmlentities($row['name'])."&nbsp;</span>";
                 }
             }
             else echo '<em>Aucune accréditation</em>';
@@ -703,7 +703,7 @@ foreach($arrShares as $value) $arrSharesUsers[$value['type_share']][] = $value['
                         "SELECT label FROM ploopi_group WHERE id in (".implode(',',$arrEditorUsers['group']).") ORDER BY label"
                     );
 
-                    while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;{$row['label']}&nbsp;</span>";
+                    while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi_htmlentities($row['label'])."&nbsp;</span>";
                 }
                 if (!empty($arrEditorUsers['user']))
                 {
@@ -713,7 +713,7 @@ foreach($arrShares as $value) $arrSharesUsers[$value['type_share']][] = $value['
                         "SELECT concat(lastname, ' ', firstname) as name FROM ploopi_user WHERE id in (".implode(',',$arrEditorUsers['user']).") ORDER BY lastname, firstname"
                     );
 
-                    while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;{$row['name']}&nbsp;</span>";
+                    while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi_htmlentities($row['name'])."&nbsp;</span>";
                 }
             }
             else echo '<em>Aucune accréditation</em>';
@@ -776,7 +776,7 @@ foreach($arrShares as $value) $arrSharesUsers[$value['type_share']][] = $value['
                             "SELECT label FROM ploopi_group WHERE id in (".implode(',',$arrSharesUsers['group']).") ORDER BY label"
                         );
 
-                        while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;{$row['label']}&nbsp;</span>";
+                        while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi_htmlentities($row['label'])."&nbsp;</span>";
                     }
                     if (!empty($arrSharesUsers['user']))
                     {
@@ -786,7 +786,7 @@ foreach($arrShares as $value) $arrSharesUsers[$value['type_share']][] = $value['
                             "SELECT concat(lastname, ' ', firstname) as name FROM ploopi_user WHERE id in (".implode(',',$arrSharesUsers['user']).") ORDER BY lastname, firstname"
                         );
 
-                        while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;{$row['name']}&nbsp;</span>";
+                        while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi_htmlentities($row['name'])."&nbsp;</span>";
                     }
                 }
                 else echo '<em>Aucune accréditation</em>';
@@ -832,7 +832,7 @@ if ($booIsAllowedEdit)
             <?php
         }
         ?>
-        <b>Liste des articles de la rubrique &laquo; <?php echo $heading->fields['label'] ?> &raquo;</b>
+        <b>Liste des articles de la rubrique &laquo; <?php echo ploopi_htmlentities($heading->fields['label']); ?> &raquo;</b>
     </p>
     <?php
     $articles_columns = array();
@@ -870,13 +870,13 @@ if ($booIsAllowedEdit)
 
             $art_title = ($row['status'] == 'wait') ? "{$row['title']} *" : $row['title'];
 
-            $articles_values[$c]['values']['date'] = array('label' => $timestp_local['date'], 'style' => '', 'sort_label' => $row['timestp']);
-            $articles_values[$c]['values']['pos'] = array('label' => $row['position'], 'style' => '');
-            $articles_values[$c]['values']['ref'] = array('label' => $row['reference'], 'style' => '');
+            $articles_values[$c]['values']['date'] = array('label' => ploopi_htmlentities($timestp_local['date']), 'style' => '', 'sort_label' => $row['timestp']);
+            $articles_values[$c]['values']['pos'] = array('label' => ploopi_htmlentities($row['position']), 'style' => '');
+            $articles_values[$c]['values']['ref'] = array('label' => ploopi_htmlentities($row['reference']), 'style' => '');
             $articles_values[$c]['values']['titre'] = array('label' => "<img src=\"./modules/webedit/img/doc{$articles['list'][$row['id']]['new_version']}.png\"><span>{$art_title}</span>", 'style' => '');
-            $articles_values[$c]['values']['vers'] = array('label' => $row['version'], 'style' => '');
+            $articles_values[$c]['values']['vers'] = array('label' => ploopi_htmlentities($row['version']), 'style' => '');
             $articles_values[$c]['values']['misenligne'] = array('label' => $published, 'style' => '');
-            $articles_values[$c]['values']['auteur'] = array('label' => $row['author'], 'style' => '');
+            $articles_values[$c]['values']['auteur'] = array('label' => ploopi_htmlentities($row['author']), 'style' => '');
 
             if (ploopi_isadmin() || $booWfVal || $booIsEditor || ($_SESSION['ploopi']['userid'] == $row['id_user'] && $articles['list'][$row['id']]['online_id'] == ''))
             {
@@ -884,7 +884,7 @@ if ($booIsAllowedEdit)
             }
             else $articles_values[$c]['values']['actions'] = array('label' => '&nbsp;', 'style' => '');
 
-            $articles_values[$c]['description'] = $row['title'];
+            $articles_values[$c]['description'] = ploopi_htmlentities($row['title']);
             $articles_values[$c]['link'] = ploopi_urlencode("admin.php?op=article_modify&articleid={$row['id']}");
             $articles_values[$c]['style'] = '';
 
@@ -918,7 +918,7 @@ if (ploopi_isactionallowed(_WEBEDIT_ACTION_SUBSCRIBERS_MANAGE)) // Gestion des a
     ?>
     <div style="margin:0 4px 4px 4px;border-style:solid;border-width:1px 1px 0 1px;border-color:#c0c0c0;">
         <p class="ploopi_va" style="background-color:#e0e0e0;border-bottom:1px solid #c0c0c0;padding:4px 6px;overflow:auto;">
-            <b>Liste des abonnés frontoffice (anonymes) de la rubrique &laquo; <?php echo $heading->fields['label'] ?> &raquo;</b>
+            <b>Liste des abonnés frontoffice (anonymes) de la rubrique &laquo; <?php echo ploopi_htmlentities($heading->fields['label']); ?> &raquo;</b>
         </p>
         <?php
         $subscribers_columns = array();
@@ -946,7 +946,7 @@ if (ploopi_isactionallowed(_WEBEDIT_ACTION_SUBSCRIBERS_MANAGE)) // Gestion des a
         {
             $subscribers_values[$c]['values']['email'] =
                 array(
-                    'label' => $row['email'].($row['id_heading'] == 0 ? ' <em>(tout le site)</em>' : '')
+                    'label' => ploopi_htmlentities($row['email']).($row['id_heading'] == 0 ? ' <em>(tout le site)</em>' : '')
                 );
 
             $subscribers_values[$c]['values']['actions'] =
@@ -955,7 +955,7 @@ if (ploopi_isactionallowed(_WEBEDIT_ACTION_SUBSCRIBERS_MANAGE)) // Gestion des a
                     'style' => 'text-align:center;'
                 );
 
-            $subscribers_values[$c]['description'] = $row['email'];
+            $subscribers_values[$c]['description'] = ploopi_htmlentities($row['email']);
 
             $c++;
         }
@@ -973,7 +973,7 @@ for ($i = 0; $i < sizeof($parents); $i++)
     {
         ?>
         <div style="padding:2px 4px;font-weight:bold;">
-        Vous héritez de l'abonnement à &laquo; <a href="<?php echo ploopi_urlencode("admin.php?headingid={$parents[$i]}"); ?>"><?php echo $headings['list'][$parents[$i]]['label']; ?></a> &raquo;
+        Vous héritez de l'abonnement à &laquo; <a href="<?php echo ploopi_urlencode("admin.php?headingid={$parents[$i]}"); ?>"><?php echo ploopi_htmlentities($headings['list'][$parents[$i]]['label']); ?></a> &raquo;
         </div>
         <?php
     }

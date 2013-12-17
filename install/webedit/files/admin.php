@@ -767,7 +767,7 @@ switch($menu)
                     if ($headingid == 'b') $op = 'bloc_modify';
                 }
 
-                echo $skin->create_pagetitle($_SESSION['ploopi']['modulelabel']);
+                echo $skin->create_pagetitle(ploopi_htmlentities($_SESSION['ploopi']['modulelabel']));
                 echo $skin->open_simplebloc('Gestion du contenu');
 
                 ?>

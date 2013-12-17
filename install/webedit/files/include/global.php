@@ -718,9 +718,9 @@ function webedit_template_assign_headings(&$arrHeadings, &$arrArticles, &$arrSha
                 $template_body->assign_block_vars($localvar , array(
                     'DEPTH' => $depth,
                     'ID' => $arrHeading['id'],
-                    'LABEL' => $arrHeading['label'],
+                    'LABEL' => ploopi_htmlentities($arrHeading['label']),
                     'POSITION' => $arrHeading['position'],
-                    'DESCRIPTION' => $arrHeading['description'],
+                    'DESCRIPTION' => ploopi_htmlentities($arrHeading['description']),
                     'LINK' => $script,
                     'LINK_TARGET' => ($arrHeading['url_window']) ? 'target="_blank"' : '',
                     'POSX' => $arrHeading['posx'],
@@ -848,6 +848,7 @@ function webedit_getobjectcontent($matches)
 
             if($obj = $db->fetchrow($resobj))
             {
+
                 $obj['module_id'] = $id_object[1];
                 if (isset($id_object[2])) $obj['object_id'] = $id_object[2];
 
@@ -857,6 +858,7 @@ function webedit_getobjectcontent($matches)
 
                 ob_start();
                 // Module actif et disponible dans l'espace de travail
+
 
                 if ($_SESSION['ploopi']['modules'][$obj['module_id']]['active'] && (in_array($obj['module_id'], $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['modules']) || $obj['module_id'] == _PLOOPI_MODULE_SYSTEM))
                 {

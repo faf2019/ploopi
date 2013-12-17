@@ -171,7 +171,7 @@ class webedit_article_comment extends data_object
                     ?>
                     <div class="webedit_comment_row_<?php echo $numrow; ?>">
                         <div style="padding: 2px 0 0 8px;">
-                            <div style="float: left;">Par <strong><?php echo "{$fields['nickname']}"; ?></strong> le <?php echo $ldate['date']; ?> à <?php echo $ldate['time']; ?></div>
+                            <div style="float: left;">Par <strong><?php echo ploopi_htmlentities($fields['nickname']); ?></strong> le <?php echo $ldate['date']; ?> à <?php echo $ldate['time']; ?></div>
                             <?php 
                             if (ploopi_isactionallowed(_WEBEDIT_ACTION_COMMENT))
                             {
@@ -204,8 +204,8 @@ class webedit_article_comment extends data_object
                             }
                             ?>
                         </div>
-                        <div style="clear: both; margin:0; padding:0 0 0 8px;"><?php echo $fields['email']; ?></div>
-                        <div style="clear: both; padding:2px 4px;"><?php echo $fields['comment']; ?></div>                        
+                        <div style="clear: both; margin:0; padding:0 0 0 8px;"><?php echo ploopi_htmlentities($fields['email']); ?></div>
+                        <div style="clear: both; padding:2px 4px;"><?php echo ploopi_htmlentities($fields['comment']); ?></div>                        
                     </div>
                     <?php
                 }
