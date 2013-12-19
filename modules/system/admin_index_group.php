@@ -113,9 +113,7 @@ echo $skin->open_simplebloc();
         $templatelist_back = ploopi_getavailabletemplates('backoffice');
         $templatelist_front = ploopi_getavailabletemplates('frontoffice');
         ?>
-        <form name="" action="<?php echo ploopi_urlencode('admin.php'); ?>" method="POST" onsubmit="javascript:return system_group_validate(this);">
-        <input type="hidden" name="op" value="save_group">
-        <input type="hidden" name="group_id" value="<?php echo $group->fields['id']; ?>">
+        <form name="" action="<?php echo ploopi_urlencode("admin.php?op=save_group&group_id={$group->fields['id']}"); ?>" method="POST" onsubmit="javascript:return system_group_validate(this);">
 
             <div class="ploopi_form_title">
                 <?php echo ploopi_htmlentities($group->fields['label']); ?> &raquo;

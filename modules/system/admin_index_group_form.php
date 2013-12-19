@@ -38,9 +38,7 @@
  */
 ?>
 
-<FORM NAME="form_modify_group" ACTION="admin.php" METHOD="POST">
-<INPUT TYPE="HIDDEN" NAME="op" VALUE="save_group">
-<INPUT TYPE="HIDDEN" NAME="orgid" VALUE="<?php echo $org->fields['id']; ?>">
+<FORM NAME="form_modify_group" ACTION="<? echo ploopi_urlencode("admin.php?op=save_group&orgid={$org->fields['id']}"); ?>" METHOD="POST">
 <TABLE CELLPADDING="2" CELLSPACING="1" ALIGN="CENTER">
 <TR>
     <TD ALIGN=RIGHT><?php echo _SYSTEM_LABEL_LEVEL; ?>:&nbsp;</TD>

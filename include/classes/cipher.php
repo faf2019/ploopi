@@ -72,29 +72,29 @@ class ploopi_cipher
      */
 
     private $cipher;
-    
-    
-    private static $objInstance; 
+
+
+    private static $objInstance;
 
     /**
      * Constructeur de la classe
      *
      * @param string $key clé secrète
-     * @param unknown_type $iv vecteur d'initialisation
+     * @param string $iv vecteur d'initialisation
      * @return ploopi_cipher
      */
-    
-    public function __construct($key = '', $iv = '12345678')
+
+    public function __construct($key = _PLOOPI_SECRETKEY, $iv = _PLOOPI_CIPHER_IV)
     {
-        $this->key = (empty($key)) ? _PLOOPI_SECRETKEY : $key;
-        $this->iv = $iv;
-        $this->cipher = mcrypt_module_open(MCRYPT_BLOWFISH,'','cbc','');
+        $this->cipher = mcrypt_module_open(_PLOOPI_CIPHER,'','cbc','');
+        $this->key = substr($key, 0, mcrypt_enc_get_key_size($this->cipher));
+        $this->iv = substr($iv, 0, mcrypt_enc_get_block_size($this->cipher));
     }
 
     /**
      * Méthode singleton
      */
-    
+
     public static function singleton()
     {
         if (!isset(self::$objInstance)) {
@@ -102,10 +102,10 @@ class ploopi_cipher
             self::$objInstance = new $c;
         }
 
-        return self::$objInstance;        
+        return self::$objInstance;
     }
-    
-    
+
+
 
     /**
      * Chiffre une chaine
@@ -138,16 +138,16 @@ class ploopi_cipher
     function decrypt($strEncrypted)
     {
         if (empty($strEncrypted)) return(false);
-        
+
         include_once './include/functions/crypt.php';
 
         $strDecoded = ploopi_base64_decode($strEncrypted);
         mcrypt_generic_init($this->cipher, $this->key, $this->iv);
-        ploopi_unset_error_handler();        
+        ploopi_unset_error_handler();
         $strDecoded = strlen($strDecoded) > 0 ? gzuncompress(mdecrypt_generic($this->cipher, $strDecoded)) : '';
         ploopi_set_error_handler();
         mcrypt_generic_deinit($this->cipher);
-        
+
         return($strDecoded);
     }
 }

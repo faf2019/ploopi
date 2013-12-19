@@ -213,13 +213,8 @@ function ploopi_queryencode($query, $ploopi_mainmenu = null, $ploopi_workspaceid
 
     if (defined('_PLOOPI_URL_ENCODE') && _PLOOPI_URL_ENCODE)
     {
-        $strUrlMD5 = md5($strParams);
-        if (!isset($_SESSION['ploopi']['urlencode'][$strUrlMD5]))
-        {
-            require_once './include/classes/cipher.php';
-            return $_SESSION['ploopi']['urlencode'][$strUrlMD5] = "ploopi_url=".ploopi_rawurlencode(ploopi_cipher::singleton()->crypt($strParams));
-        }
-        else return $_SESSION['ploopi']['urlencode'][$strUrlMD5];
+        require_once './include/classes/cipher.php';
+        return "ploopi_url=".ploopi_rawurlencode(ploopi_cipher::singleton()->crypt($strParams));
     }
     else return $strParams;
 }

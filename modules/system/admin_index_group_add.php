@@ -48,9 +48,7 @@ else
 }
 ?>
 
-<form action="<?php echo ploopi_urlencode('admin.php'); ?>" method="POST" onsubmit="javascript:return system_group_validate(this);">
-<input type="hidden" name="op" value="save_group">
-<input type="hidden" name="group_id_group" value="<?php echo $group->fields['id']; ?>">
+<form action="<?php echo ploopi_urlencode("admin.php?op=save_group&group_id_group={$group->fields['id']}"); ?>" method="POST" onsubmit="javascript:return system_group_validate(this);">
 
 <div class="ploopi_form_title">
     <?php echo ploopi_htmlentities($parentlabel); ?> &raquo; <?php echo _SYSTEM_LABEL_GROUP_ADD; ?>

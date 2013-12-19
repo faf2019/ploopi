@@ -250,11 +250,11 @@ switch($_SESSION['system']['usrTabItem'])
             break;
 
             case 'save_group':
-                if (!empty($_POST['orgid']) && is_numeric($_POST['orgid']))
+                if (!empty($_GET['orgid']) && is_numeric($_GET['orgid']))
                 {
                     // modify adminlevel for current group/user
                     $workspace_group = new workspace_group();
-                    $workspace_group->open($workspaceid,$_POST['orgid']);
+                    $workspace_group->open($workspaceid,$_GET['orgid']);
                     $workspace_group->setvalues($_POST,'workspacegroup_');
                     $workspace_group->save();
                     ploopi_redirect("admin.php?reloadsession");

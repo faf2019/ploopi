@@ -85,13 +85,13 @@ switch ($_SESSION['system']['level'])
                     case 'save_group' :
                         $group = new group();
 
-                        if (!empty($_POST['group_id']) && is_numeric($_POST['group_id'])) $group->open($_POST['group_id']);
+                        if (!empty($_REQUEST['group_id']) && is_numeric($_REQUEST['group_id'])) $group->open($_REQUEST['group_id']);
 
-                        if (!empty($_POST['group_id_group']) && is_numeric($_POST['group_id_group']))
+                        if (!empty($_REQUEST['group_id_group']) && is_numeric($_REQUEST['group_id_group']))
                         {
                             $parent_group = new group();
-                            $parent_group->open($_POST['group_id_group']);
-                            $group->fields['parents'] = "{$parent_group->fields['parents']};{$_POST['group_id_group']}";
+                            $parent_group->open($_REQUEST['group_id_group']);
+                            $group->fields['parents'] = "{$parent_group->fields['parents']};{$_REQUEST['group_id_group']}";
                         }
 
                         $group->setvalues($_POST,'group_');
@@ -167,7 +167,7 @@ switch ($_SESSION['system']['level'])
     case _SYSTEM_WORKSPACES :
         $workspace = new workspace();
         if (!$workspace->open($workspaceid)) ploopi_redirect("admin.php?workspaceid=0");
-        
+
         $group = null;
 
         $currentworkspace = '';
@@ -215,7 +215,7 @@ switch ($_SESSION['system']['level'])
                 'url'       => "admin.php?wspToolbarItem=tabDirectory",
                 'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_directory.png"
             );
-        
+
         $toolbar['tabUsers'] =
             array(
                 'title'     => _SYSTEM_LABELICON_AUTHORIZATIONS,
@@ -249,6 +249,7 @@ switch ($_SESSION['system']['level'])
                         $group = new group();
 
                         $group->setvalues($_POST,'group_');
+                        $group->setvalues($_GET,'group_');
                         if (empty($_POST['group_shared'])) $group->fields['shared'] = 0;
                         $group->fields['id_group'] = 1;
                         $group->fields['id_workspace'] = $workspaceid;
@@ -437,23 +438,23 @@ switch ($_SESSION['system']['level'])
                                 $module_type = new module_type();
                                 if ($module_type->open($moduletype_id))
                                 {
-        
+
                                     ploopi_create_user_action_log(_SYSTEM_ACTION_USEMODULE, $module_type->fields['label']);
-        
+
                                     echo $skin->open_simplebloc(ploopi_htmlentities(str_replace('<LABEL>',$module_type->fields['label'],_SYSTEM_LABEL_MODULEINSTANCIATION)));
                                     ?>
                                     <TABLE CELLPADDING="2" CELLSPACING="1"><TR><TD>
                                     <?php
-        
+
                                     $module = $module_type->createinstance($workspace_id);
                                     if ($module_id = $module->save())
                                     {
-            
+
                                         $module_workspace = new module_workspace();
                                         $module_workspace->fields['id_module'] = $module_id;
                                         $module_workspace->fields['id_workspace'] = $workspace_id;
                                         $module_workspace->save();
-            
+
                                         if ($admin_redirect) ploopi_redirect("admin.php?reloadsession&tab=modules&op=modify&moduleid=$module_id#modify");
                                         else
                                         {
@@ -485,7 +486,7 @@ switch ($_SESSION['system']['level'])
                                 if ($module->open($module_id))
                                 {
                                     ploopi_create_user_action_log(_SYSTEM_ACTION_USEMODULE, $module->fields['label']);
-        
+
                                     $module_workspace = new module_workspace();
                                     $module_workspace->fields['id_module'] = $module_id;
                                     $module_workspace->fields['id_workspace'] = $workspace_id;
@@ -673,7 +674,7 @@ switch ($_SESSION['system']['level'])
             case 'tabDirectory':
                 include_once './modules/system/admin_system_directory.php';
             break;
-            
+
             case 'tabRoles':
                 include_once './modules/system/admin_index_roles.php';
             break;
@@ -690,4 +691,3 @@ switch ($_SESSION['system']['level'])
 
 }//switch
 ?>
-

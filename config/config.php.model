@@ -257,6 +257,39 @@ switch($http_host)
         define ('_PLOOPI_URL_ENCODE', <URL_ENCODE>);
 
         /**
+         * Mode de chiffrement des URL.
+         * Du plus rapide au moins rapide:
+         *
+         * MCRYPT_CAST_128
+         * MCRYPT_GOST
+         * MCRYPT_RIJNDAEL_128
+         * MCRYPT_CAST_256
+         * MCRYPT_TWOFISH
+         * MCRYPT_LOKI97
+         * MCRYPT_SAFERPLUS
+         * MCRYPT_SERPENT
+         * MCRYPT_XTEA
+         * MCRYPT_RC2
+         * MCRYPT_RIJNDAEL_256
+         * MCRYPT_BLOWFISH
+         * MCRYPT_DES
+         * MCRYPT_TRIPLEDES
+         *
+         * @see http://www.php.net/manual/fr/mcrypt.ciphers.php
+         */
+
+        define ('_PLOOPI_CIPHER', MCRYPT_RIJNDAEL_128);
+
+        /**
+         * Vecteur d'initialisation pour le chiffrement des URL.
+         * Le vecteur doit être une chaîne de 32 caractères (il est automatiquement ajusté au mode de chiffrement)
+         *
+         * @see http://www.php.net/manual/fr/mcrypt.ciphers.php
+         */
+
+        define ('_PLOOPI_CIPHER_IV', '12345678ABCDEFGHIJKLMNOPQRSTUVWX');
+
+        /**
          * Clé secrète utilisée pour le chiffrement des URL et des mots de passe
          */
 
