@@ -148,7 +148,7 @@
                 <!-- END switch_passwordreset -->
 
                 <div class="loginbox_line">
-                    <input type="submit" value="Connexion" class="flatbutton" style="width:100%;" title="Cliquez pour vous connecter" tabindex="3" />
+                    <input type="submit" value="Connexion" class="flatbutton" style="width:100%;" title="Cliquez pour vous connecter" tabindex="6" />
                 </div>
             </form>
             <div class="loginbox_line" style="text-align:right;">

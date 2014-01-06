@@ -207,7 +207,7 @@
 
 
                 <div class="loginbox_line">
-                    <input type="submit" value="Connexion" class="flatbutton" style="width:100%;" tabindex="3"/>
+                    <input type="submit" value="Connexion" class="flatbutton" style="width:100%;" tabindex="6"/>
                 </div>
             </form>
             <div class="loginbox_line" style="text-align:right;">

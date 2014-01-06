@@ -142,12 +142,12 @@
 
                             <span style="color:#ffff00;"><strong>Votre mot de passe a expiré.</strong><br />Vous devez en saisir un nouveau ci-dessous:</span>
                             <p>
-                                <label for="ploopi_password">Nouveau mot de passe:&nbsp;</label>
+                                <label for="ploopi_password_new">Nouveau mot de passe:&nbsp;</label>
                                 <input type="password" class="text" id="ploopi_password_new" name="ploopi_password_new" title="Saisir votre mot de passe" placeholder="Saisir votre mot de passe" tabindex="2" />
                             </p>
                             <div id="protopass"></div>
                             <p>
-                                <label for="ploopi_password">Confirmation mot de passe:&nbsp;</label>
+                                <label for="ploopi_password_new_confirm">Confirmation mot de passe:&nbsp;</label>
                                 <input type="password" class="text" id="ploopi_password_new_confirm" name="ploopi_password_new_confirm" title="Saisir votre mot de passe" placeholder="Saisir votre mot de passe" tabindex="2" />
                             </p>
 

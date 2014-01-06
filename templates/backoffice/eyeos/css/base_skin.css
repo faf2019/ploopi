@@ -695,6 +695,7 @@ select.ploopi_page_by {
  */
 
 .ploopi_selectbox {
+    display:inline-block;
     text-align: left;
 }
 
