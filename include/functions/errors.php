@@ -88,8 +88,6 @@ $ploopi_errorlevel =
 
 function ploopi_error_handler($errno, $errstr, $errfile, $errline, $vars)
 {
-    include_once './include/functions/string.php';
-
     global $ploopi_errors_msg;
     global $ploopi_errors_nb;
     global $ploopi_errors_level;
@@ -122,6 +120,8 @@ function ploopi_error_handler($errno, $errstr, $errfile, $errline, $vars)
 
         if ($ploopi_errors_msg == '') $ploopi_errors_msg  = (php_sapi_name() == 'cli' ? '' : "[{$_SERVER['HTTP_HOST']}] ")."le ".date("d-m-Y H:i:s (T)")."\n\nVersion PHP : ".PHP_VERSION."\nOS : ".php_uname()."\nPloopi : "._PLOOPI_VERSION.' '._PLOOPI_REVISION."\n\n";
 
+        $errstr = strip_tags($errstr);
+
         $ploopi_errors_msg .= "\nType d'erreur : {$ploopi_errortype[$errno]}\nMessage : $errstr\n";
 
         $arrTrace = debug_backtrace();
@@ -136,8 +136,8 @@ function ploopi_error_handler($errno, $errstr, $errfile, $errline, $vars)
                 $ploopi_errors_msg .= sprintf("Fichier : %s \nLigne : %s\n", $arrTrace[$key]['file'],  $arrTrace[$key]['line']);
                 if (_PLOOPI_DISPLAY_ERRORS)
                 {
-                    if (php_sapi_name() != 'cli') $strErrorStack .= sprintf("<div style=\"margin-left:10px;\">at <strong>%s</strong>  <em>line %d</em></div>", ploopi_htmlentities($arrTrace[$key]['file']),  $arrTrace[$key]['line']);
-                    else $strErrorStack .= sprintf("at %s line %d\n", ploopi_htmlentities($arrTrace[$key]['file']),  $arrTrace[$key]['line']);
+                    if (php_sapi_name() != 'cli') $strErrorStack .= sprintf("<div style=\"margin-left:10px;\">at <strong>%s</strong>  <em>line %d</em></div>", $arrTrace[$key]['file'],  $arrTrace[$key]['line']);
+                    else $strErrorStack .= sprintf("at %s line %d\n", $arrTrace[$key]['file'],  $arrTrace[$key]['line']);
                 }
             }
         }
@@ -150,8 +150,8 @@ function ploopi_error_handler($errno, $errstr, $errfile, $errline, $vars)
                 echo "
                     <div class=\"ploopi_error\">
                         <div>
-                        <strong>".ploopi_htmlentities($ploopi_errortype[$errno])."</strong>
-                        <br /><span>".ploopi_htmlentities($errstr)."</span>
+                        <strong>".$ploopi_errortype[$errno]."</strong>
+                        <br /><span>".htmlentities($errstr, ENT_COMPAT, 'ISO-8859-1')."</span>
                         </div>
                         {$strErrorStack}
                     </div>
