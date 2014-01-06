@@ -159,7 +159,7 @@ echo $skin->create_toolbar($toolbar,$_SESSION['system']['sysToolbarItem']);
                 case 'phpinfo':
                     echo $skin->open_simplebloc(_SYSTEM_LABEL_PHPINFO);
                     ?>
-                    <iframe id="system_tools_phpinfo" style="border:0;width:100%;height:400px;margin:0;padding:0;" src="<?php echo "admin-light.php?ploopi_op=system_tools_phpinfo"; ?>"></iframe>
+                    <iframe id="system_tools_phpinfo" style="border:0;width:100%;height:400px;margin:0;padding:0;" src="<?php echo ploopi_urlencode("admin-light.php?ploopi_op=system_tools_phpinfo"); ?>"></iframe>
                     <?php
                     echo $skin->close_simplebloc();
                 break;
