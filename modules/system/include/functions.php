@@ -53,67 +53,70 @@ function system_getwg()
 {
     global $db;
 
+    $workspaces = array('list' => array(), 'tree' => array(), 'workspaceid' => $_SESSION['ploopi']['workspaceid']);
+
     /**
-     * Construction de l'arbre des espaces s'il n'existe pas déjà, sinon on le lit en session
+     * Recherche de tous les espaces
      */
-    if (empty($_SESSION['system']['workspaces']) || (!empty($_SESSION['system']['workspaces']['workspaceid']) && $_SESSION['system']['workspaces']['workspaceid'] != $_SESSION['ploopi']['workspaceid']))
+
+    $select = "SELECT * FROM ploopi_workspace ORDER BY depth,label";
+
+    $result = $db->query($select);
+    while ($fields = $db->fetchrow($result))
     {
-        $workspaces = array('list' => array(), 'tree' => array(), 'workspaceid' => $_SESSION['ploopi']['workspaceid']);
+        /**
+         * true si l'espace est ajouté à l'arbre des espaces
+         */
+        $add = true;
 
         /**
-         * Recherche de tous les espaces
+         * Test du niveau d'accréditation (adminlevel) pour déterminer quels sont les espaces accessibles pour l'utilisateur
          */
-
-        $select = "SELECT * FROM ploopi_workspace ORDER BY depth,label";
-
-        $result = $db->query($select);
-        while ($fields = $db->fetchrow($result))
+        if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPMANAGER && $_SESSION['ploopi']['adminlevel'] < _PLOOPI_ID_LEVEL_SYSTEMADMIN)
         {
             /**
-             * true si l'espace est ajouté à l'arbre des espaces
+             * L'utilisateur n'est pas administrateur système => on filtre sur les espaces accessibles
              */
-            $add = true;
-
-            /**
-             * Test du niveau d'accréditation (adminlevel) pour déterminer quels sont les espaces accessibles pour l'utilisateur
-             */
-            if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPMANAGER && $_SESSION['ploopi']['adminlevel'] < _PLOOPI_ID_LEVEL_SYSTEMADMIN)
-            {
-                /**
-                 * L'utilisateur n'est pas administrateur système => on filtre sur les espaces accessibles
-                 */
-                $array_parents = explode(';',$fields['parents']);
-                if (!($fields['id'] == $_SESSION['ploopi']['workspaceid'] || in_array($_SESSION['ploopi']['workspaceid'],$array_parents))) $add = false;
-            }
-
-            if ($add)
-            {
-                /**
-                 * les propriétés "groups" & "groups_shared" sont remplies par la fonction qui traite les groupes "system_getgroups()"
-                 */
-                $fields['groups'] = array();
-                $fields['groups_shared'] = array();
-                $workspaces['list'][$fields['id']] = $fields;
-                $workspaces['tree'][$fields['id_workspace']][] = $fields['id'];
-            }
+            $array_parents = explode(';',$fields['parents']);
+            if (!($fields['id'] == $_SESSION['ploopi']['workspaceid'] || in_array($_SESSION['ploopi']['workspaceid'],$array_parents))) $add = false;
         }
 
-        $_SESSION['system']['workspaces'] = $workspaces;
+        if ($add)
+        {
+            /**
+             * les propriétés "groups" & "groups_shared" sont remplies par la fonction qui traite les groupes "system_getgroups()"
+             */
+            $fields['groups'] = array();
+            $fields['groups_shared'] = array();
+            $workspaces['list'][$fields['id']] = $fields;
+            $workspaces['tree'][$fields['id_workspace']][] = $fields['id'];
+        }
     }
-    else $workspaces = $_SESSION['system']['workspaces'];
 
     /**
      * Construction de l'arbre des groupes, complétion de l'arbre des espaces
      */
 
-    if (empty($_SESSION['system']['groups']) || (!empty($_SESSION['system']['groups']['workspaceid']) && $_SESSION['system']['groups']['workspaceid'] != $_SESSION['ploopi']['workspaceid']))
-    {
-        $groups = array('list' => array(), 'tree' => array(), 'workspace_tree' => array(), 'workspaceid' => $_SESSION['ploopi']['workspaceid']);
+    $groups = array('list' => array(), 'tree' => array(), 'workspace_tree' => array(), 'workspaceid' => $_SESSION['ploopi']['workspaceid']);
 
-        $select = "SELECT * FROM ploopi_group WHERE system = 0 ORDER BY depth,label";
-        $result = $db->query($select);
-        while ($fields = $db->fetchrow($result))
-        {
+    $select = "SELECT * FROM ploopi_group WHERE system = 0 ORDER BY depth,label";
+    $result = $db->query($select);
+    while ($fields = $db->fetchrow($result))
+    {
+        // Vérification du droit d'accès au groupe
+        $add = false;
+        // Espace d'appartenance du groupe (si existe)
+        if (!empty($fields['id_workspace']) && isset($workspaces['list'][$fields['id_workspace']])) $add = true;
+        // Espace d'appartenance des parents du groupe
+        if (!$add) {
+            foreach(array_reverse(explode(';', $fields['parents'])) as $idg) {
+                if (!$add && isset($groups['list'][$idg])) {
+                    if (!empty($groups['list'][$idg]['id_workspace']) && isset($workspaces['list'][$groups['list'][$idg]['id_workspace']])) $add = true;
+                }
+            }
+        }
+
+        if ($add) {
             $fields['parents_workspace'] = '';
             $fields['groups'] = array();
             $groups['list'][$fields['id']] = $fields;
@@ -129,72 +132,65 @@ function system_getwg()
                 //$groups['list'][$fields['id']]['parents_workspace'] = $workspaces['list'][$fields['id_workspace']]['parents'].";{$fields['id_workspace']};{$fields['id']}";
             }
         }
-
-        // $groups['workspace_tree'] contient l'arbre de rattachement des groupes aux espaces
-        // => mise à jour du lien parents pour chaque groupe rattaché à un espace (le lien parents contient les id des parents séparés par des ";"
-        foreach($groups['workspace_tree'] as $idw => $list_idg)
-        {
-            foreach($list_idg as $idg)
-            {
-                if (isset($workspaces['list'][$idw])) $groups['list'][$idg]['parents_workspace'] = $workspaces['list'][$idw]['parents'].";{$idw};{$idg}";
-            }
-        }
-
-        // Application de l'héritage du lien de parenté entre un espace et un groupe et aux sous groupes
-        // Ainsi, chaque groupe connaît ses espaces parents
-        foreach($groups['tree'] as $idg => $list_idg)
-        {
-            foreach($list_idg as $idg_child)
-            {
-                if (isset($groups['list'][$idg]))
-                {
-                    $groups['list'][$idg_child]['parents_workspace'] = $groups['list'][$idg]['parents_workspace'];
-                }
-            }
-        }
-
-        foreach($workspaces['list'] as $idw => $workspace)
-        {
-            // récupération des sous-groupes
-            // on met à jour le champ 'group' de workspaces pour y inclure les sous-groupes des groupes déjà rattachés
-            while (list($idg) = each($workspaces['list'][$idw]['groups']))
-            {
-                if (isset($groups['tree'][$idg]))
-                {
-                    foreach($groups['tree'][$idg] as $idg2)
-                    {
-                        $workspaces['list'][$idw]['groups'][$idg2] = 0;
-                        if ($groups['list'][$idg2]['shared']) $workspaces['list'][$idw]['groups_shared'][$idg2] = 0;
-                    }
-                }
-            }
-
-            // Héritage des partages
-            // Des groupes peuvent être partagés par les espaces parents => on les rattache aussi comme groupes de l'espace
-            if (isset($workspaces['tree'][$idw]) && !empty($workspaces['list'][$idw]['groups']))
-            {
-                foreach($workspaces['tree'][$idw] as $idw2)
-                {
-                    $workspaces['list'][$idw2]['groups_shared'] = system_mergegroups($workspaces['list'][$idw2]['groups_shared'], $workspaces['list'][$idw]['groups_shared']);
-                    $workspaces['list'][$idw2]['groups'] = system_mergegroups($workspaces['list'][$idw2]['groups'], $workspaces['list'][$idw2]['groups_shared']);
-                }
-            }
-
-            // application des partages de groupes aux groupes
-            $workspace = $workspaces['list'][$idw];
-            foreach(array_keys($workspace['groups']) as $idg)
-            {
-                $groups['list'][$idg]['groups'] = system_mergegroups($groups['list'][$idg]['groups'], $workspace['groups']);
-            }
-        }
-
-        $_SESSION['system']['groups'] = $groups;
-        $_SESSION['system']['workspaces'] = $workspaces;
     }
-    else $groups = $_SESSION['system']['groups'];
 
-    //ploopi_print_r($workspaces);
-    //ploopi_print_r($groups);
+    // $groups['workspace_tree'] contient l'arbre de rattachement des groupes aux espaces
+    // => mise à jour du lien parents pour chaque groupe rattaché à un espace (le lien parents contient les id des parents séparés par des ";"
+    foreach($groups['workspace_tree'] as $idw => $list_idg)
+    {
+        foreach($list_idg as $idg)
+        {
+            if (isset($workspaces['list'][$idw])) $groups['list'][$idg]['parents_workspace'] = $workspaces['list'][$idw]['parents'].";{$idw};{$idg}";
+        }
+    }
+
+    // Application de l'héritage du lien de parenté entre un espace et un groupe et aux sous groupes
+    // Ainsi, chaque groupe connaît ses espaces parents
+    foreach($groups['tree'] as $idg => $list_idg)
+    {
+        foreach($list_idg as $idg_child)
+        {
+            if (isset($groups['list'][$idg]))
+            {
+                $groups['list'][$idg_child]['parents_workspace'] = $groups['list'][$idg]['parents_workspace'];
+            }
+        }
+    }
+
+    foreach($workspaces['list'] as $idw => $workspace)
+    {
+        // récupération des sous-groupes
+        // on met à jour le champ 'group' de workspaces pour y inclure les sous-groupes des groupes déjà rattachés
+        while (list($idg) = each($workspaces['list'][$idw]['groups']))
+        {
+            if (isset($groups['tree'][$idg]))
+            {
+                foreach($groups['tree'][$idg] as $idg2)
+                {
+                    $workspaces['list'][$idw]['groups'][$idg2] = 0;
+                    if ($groups['list'][$idg2]['shared']) $workspaces['list'][$idw]['groups_shared'][$idg2] = 0;
+                }
+            }
+        }
+
+        // Héritage des partages
+        // Des groupes peuvent être partagés par les espaces parents => on les rattache aussi comme groupes de l'espace
+        if (isset($workspaces['tree'][$idw]) && !empty($workspaces['list'][$idw]['groups']))
+        {
+            foreach($workspaces['tree'][$idw] as $idw2)
+            {
+                $workspaces['list'][$idw2]['groups_shared'] = system_mergegroups($workspaces['list'][$idw2]['groups_shared'], $workspaces['list'][$idw]['groups_shared']);
+                $workspaces['list'][$idw2]['groups'] = system_mergegroups($workspaces['list'][$idw2]['groups'], $workspaces['list'][$idw2]['groups_shared']);
+            }
+        }
+
+        // application des partages de groupes aux groupes
+        $workspace = $workspaces['list'][$idw];
+        foreach(array_keys($workspace['groups']) as $idg)
+        {
+            $groups['list'][$idg]['groups'] = system_mergegroups($groups['list'][$idg]['groups'], $workspace['groups']);
+        }
+    }
 
     return(array(&$workspaces, &$groups));
 }
