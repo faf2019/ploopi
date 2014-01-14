@@ -575,7 +575,7 @@ if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
                         if (!($fields['needed_validation'] > 0 && $fields['sender_uid'] != $_SESSION['ploopi']['userid'] && !isset($tickets[$fields['id']]['dest'][$_SESSION['ploopi']['userid']]['status'][_PLOOPI_TICKETS_DONE])))
                         {
                             ?>
-                            <a href="javascript:ploopi_confirmlink('<?php echo "admin.php?ploopi_op=tickets_delete&ticket_id={$fields['id']}"; ?>','<?php echo addslashes(_PLOOPI_LABEL_TICKET_CONFIRMDELETE); ?>');"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/email_delete.png">Supprimer</a>
+                            <a href="javascript:ploopi_confirmlink('<?php echo ploopi_urlencode("admin.php?ploopi_op=tickets_delete&ticket_id={$fields['id']}"); ?>','<?php echo addslashes(_PLOOPI_LABEL_TICKET_CONFIRMDELETE); ?>');"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/email_delete.png">Supprimer</a>
                             <?php
                         }
                         ?>

@@ -386,7 +386,7 @@ switch($_SESSION['system']['usrTabItem'])
 
                             ?>
                             <div style="text-align:right;">
-                                <input type="button" class="button" value="<?php echo _PLOOPI_CONTINUE; ?>" onclick="javascript:document.location.href='<?php echo "admin.php?reloadsession"; ?>'">
+                                <input type="button" class="button" value="<?php echo _PLOOPI_CONTINUE; ?>" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?reloadsession"); ?>'">
                             </div>
                         </div>
                         <?php
@@ -443,7 +443,7 @@ switch($_SESSION['system']['usrTabItem'])
                                 if ($admin_redirect) ploopi_redirect("admin.php?reloadsession");
                                 ?>
                                 <div style="text-align:right;">
-                                    <input type="button" class="button" value="<?php echo _PLOOPI_CONTINUE; ?>" onclick="javascript:document.location.href='<?php echo "admin.php?reloadsession"; ?>'">
+                                    <input type="button" class="button" value="<?php echo _PLOOPI_CONTINUE; ?>" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?reloadsession"); ?>'">
                                 </div>
                             </div>
                             <?php
@@ -475,7 +475,7 @@ switch($_SESSION['system']['usrTabItem'])
                                 if ($admin_redirect) ploopi_redirect("admin.php?reloadsession");
                                 ?>
                                 <div style="text-align:right;">
-                                    <input type="button" class="button" value="<?php echo _PLOOPI_CONTINUE; ?>" onclick="javascript:document.location.href='<?php echo "admin.php?reloadsession"; ?>'">
+                                    <input type="button" class="button" value="<?php echo _PLOOPI_CONTINUE; ?>" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?reloadsession"); ?>'">
                                 </div>
                             </div>
                             <?php

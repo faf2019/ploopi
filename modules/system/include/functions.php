@@ -101,21 +101,37 @@ function system_getwg()
 
     $select = "SELECT * FROM ploopi_group WHERE system = 0 ORDER BY depth,label";
     $result = $db->query($select);
+
     while ($fields = $db->fetchrow($result))
     {
-        $fields['parents_workspace'] = '';
-        $fields['groups'] = array();
-        $groups['list'][$fields['id']] = $fields;
-        $groups['tree'][$fields['id_group']][] = $fields['id'];
-        // Groupe attaché à un espace (existant)
-        if (!empty($fields['id_workspace']) && isset($workspaces['list'][$fields['id_workspace']]))
-        {
-            $groups['workspace_tree'][$fields['id_workspace']][] = $fields['id'];
-            $workspaces['list'][$fields['id_workspace']]['groups'][$fields['id']] = 0;
-            if ($groups['list'][$fields['id']]['shared']) $workspaces['list'][$fields['id_workspace']]['groups_shared'][$fields['id']] = 0;
+        // Vérification du droit d'accès au groupe
+        $add = false;
+        // Espace d'appartenance du groupe (si existe)
+        if (!empty($fields['id_workspace']) && isset($workspaces['list'][$fields['id_workspace']])) $add = true;
+        // Espace d'appartenance des parents du groupe
+        if (!$add) {
+            foreach(array_reverse(explode(';', $fields['parents'])) as $idg) {
+                if (!$add && isset($groups['list'][$idg])) {
+                    if (!empty($groups['list'][$idg]['id_workspace']) && isset($workspaces['list'][$groups['list'][$idg]['id_workspace']])) $add = true;
+                }
+            }
+        }
 
-            // code remplacé par la boucle ci dessous... semble plus rapide...
-            //$groups['list'][$fields['id']]['parents_workspace'] = $workspaces['list'][$fields['id_workspace']]['parents'].";{$fields['id_workspace']};{$fields['id']}";
+        if ($add) {
+            $fields['parents_workspace'] = '';
+            $fields['groups'] = array();
+            $groups['list'][$fields['id']] = $fields;
+            $groups['tree'][$fields['id_group']][] = $fields['id'];
+            // Groupe attaché à un espace (existant / autorisé)
+            if (!empty($fields['id_workspace']) && isset($workspaces['list'][$fields['id_workspace']]))
+            {
+                $groups['workspace_tree'][$fields['id_workspace']][] = $fields['id'];
+                $workspaces['list'][$fields['id_workspace']]['groups'][$fields['id']] = 0;
+                if ($groups['list'][$fields['id']]['shared']) $workspaces['list'][$fields['id_workspace']]['groups_shared'][$fields['id']] = 0;
+
+                // code remplacé par la boucle ci dessous... semble plus rapide...
+                //$groups['list'][$fields['id']]['parents_workspace'] = $workspaces['list'][$fields['id_workspace']]['parents'].";{$fields['id_workspace']};{$fields['id']}";
+            }
         }
     }
 

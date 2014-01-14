@@ -127,7 +127,7 @@ echo $skin->create_toolbar($toolbar,$_SESSION['system']['sysToolbarItem']);
                             </TR>
                             <TR>
                                 <TD ALIGN="RIGHT">
-                                <INPUT TYPE="Button" CLASS="flatbutton" VALUE="<?php echo _PLOOPI_CONTINUE; ?>" OnClick="javascript:document.location.href='<?php echo "admin.php?reloadsession"; ?>'">
+                                <INPUT TYPE="Button" CLASS="flatbutton" VALUE="<?php echo _PLOOPI_CONTINUE; ?>" OnClick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?reloadsession"); ?>'">
                                 </TD>
                             </TR>
                             </TABLE>

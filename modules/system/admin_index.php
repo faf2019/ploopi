@@ -463,7 +463,7 @@ switch ($_SESSION['system']['level'])
                                                 </TR>
                                                 <TR>
                                                     <TD ALIGN="RIGHT">
-                                                    <INPUT TYPE="Button" CLASS="FlatButton" VALUE="<?php echo _PLOOPI_CONTINUE; ?>" OnClick="javascript:document.location.href='<?php echo "admin.php?reloadsession&tab=modules&op=modify&moduleid=$module_id#modify"; ?>'">
+                                                    <INPUT TYPE="Button" CLASS="FlatButton" VALUE="<?php echo _PLOOPI_CONTINUE; ?>" OnClick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?reloadsession&tab=modules&op=modify&moduleid={$module_id})")."#modify"; ?>'">
                                                     </TD>
                                                 </TR>
                                                 </TABLE>
@@ -610,7 +610,7 @@ switch ($_SESSION['system']['level'])
                                     </TR>
                                     <TR>
                                         <TD ALIGN="RIGHT">
-                                        <INPUT TYPE="Button" CLASS="FlatButton" VALUE="<?php echo _PLOOPI_CONTINUE; ?>" OnClick="javascript:document.location.href='<?php echo "admin.php?reloadsession"; ?>'">
+                                        <INPUT TYPE="Button" CLASS="FlatButton" VALUE="<?php echo _PLOOPI_CONTINUE; ?>" OnClick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?reloadsession"); ?>'">
                                         </TD>
                                     </TR>
                                     </TABLE>
