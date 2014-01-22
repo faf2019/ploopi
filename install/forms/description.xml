@@ -2,9 +2,9 @@
 <ploopi>
    <moduletype>
       <label>forms</label>
-      <version>3.5.1m</version>
+      <version>3.5.1n</version>
       <author>Ovensia / HeXad</author>
-      <date>20130121000000</date>
+      <date>20140122000000</date>
       <description>Gestion de Formulaires</description>
       <paramtype>
          <name>forms_export_csvextension</name>
