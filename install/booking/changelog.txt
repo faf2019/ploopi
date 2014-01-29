@@ -1,3 +1,9 @@
+== Module BOOKING - version 1.0.4e ====================================================
+
+2014-01-29  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+* Correction d'un bug dans la gestion du cookie de sauvegarde
+
 == Module BOOKING - version 1.0.4d ====================================================
 
 2013-07-22  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>

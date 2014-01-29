@@ -39,7 +39,7 @@ $arrSearchPattern = array();
 
 // Lecture cookie
 ploopi_unset_error_handler();
-if (isset($_COOKIE["booking_request{$_SESSION['ploopi']['moduleid']}"])) $arrSearchPattern = unserialize(gzuncompress($_COOKIE["booking_request{$_SESSION['ploopi']['moduleid']}"]));
+if (isset($_COOKIE["booking_request{$_SESSION['ploopi']['moduleid']}"])) $arrSearchPattern = unserialize(gzuncompress(base64_decode($_COOKIE["booking_request{$_SESSION['ploopi']['moduleid']}"])));
 ploopi_set_error_handler();
 
 // Lecture des paramètres
@@ -124,7 +124,7 @@ $arrSearchPattern['booking_year'] = date('Y', $arrSearchPattern['booking_virtual
 $arrSearchPattern['booking_day'] = date('j', $arrSearchPattern['booking_virtualdate']);
 
 // Sauvegarde cookie
-setcookie("booking_request{$_SESSION['ploopi']['moduleid']}", gzcompress(serialize($arrSearchPattern), 9));
+setcookie("booking_request{$_SESSION['ploopi']['moduleid']}", $str = base64_encode(gzcompress(serialize($arrSearchPattern), 9)));
 
 // Lecture des ressources
 $arrResources = booking_get_resources();
