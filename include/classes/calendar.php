@@ -710,6 +710,7 @@ class calendar
             }
 
             function calendar_drop_ondrop(draggable, droppable) {
+
                 // jour
                 day = droppable.id.substring(12,13);
                 // id de l'événement
@@ -721,8 +722,10 @@ class calendar
                 draggable.style.left = calendar_channels[calendar_events[event][0]]+'px';
 
                 // On calcule la demi-heure la plus proche en fonction des coordonnées
-                top = parseInt(draggable.style.top);
-                hour = Math.round((calendar_h_begin + top / calendar_h_height)*2)/2;
+
+                var top = parseInt(draggable.style.top);
+                var hour = Math.round((calendar_h_begin + top / calendar_h_height)*2)/2;
+
                 // On calcule la nouvelle position en fonction de la demi-heure la plus proche
                 draggable.style.top = (hour - calendar_h_begin)*calendar_h_height + 'px';
                 // On attache l'événement au nouveau jour
