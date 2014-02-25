@@ -52,7 +52,7 @@ function ploopi_session_reset()
     // Regénération d'un ID
     session_regenerate_id(true);
 
-    $_SESSION['ploopi'] = array(
+    $_SESSION = array('ploopi' => array(
         'login' => '',
         'password' => '',
         'userid' => '',
@@ -123,7 +123,7 @@ function ploopi_session_reset()
         'errorcode'     => 0,
         'token'         => '',
         'tokens'        => array()
-    );
+    ));
 }
 
 /**
