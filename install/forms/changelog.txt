@@ -1,3 +1,9 @@
+== Module FORMS - version 3.5.5b =====================================================
+
+2014-03-11  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+* Correction du lien de navigation page par page dans les données du formulaire
+
 == Module FORMS - version 3.5.5a =====================================================
 
 2013-12-17  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>

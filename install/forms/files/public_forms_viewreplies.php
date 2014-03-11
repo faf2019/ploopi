@@ -195,7 +195,7 @@ echo $skin->open_simplebloc(ploopi_htmlentities($objForm->fields['label'].' ('._
             if ($objForm->fields['nbline'] > 0 && $intNumRows > $objForm->fields['nbline'])
             {
                 include_once './include/functions/array.php';
-                echo '<span>Pages&nbsp;:&nbsp;</span>'.ploopi_array_getpages($intNumRows, $objForm->fields['nbline'], "admin.php?op=forms_viewreplies&forms_id={$objForm->fields['id']}&page={p}", $_SESSION['forms'][$objForm->fields['id']]['page']);
+                echo '<span>Pages&nbsp;:&nbsp;</span>'.ploopi_array_getpages($intNumRows, $objForm->fields['nbline'], ploopi_urlencode("admin.php?op=forms_viewreplies&forms_id={$objForm->fields['id']}")."&page={p}", $_SESSION['forms'][$objForm->fields['id']]['page']);
             }
 
             if ($_SESSION['ploopi']['action'] == 'public')
