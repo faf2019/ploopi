@@ -852,7 +852,8 @@ abstract class ploopi_loader
             if ($_SESSION['ploopi']['connected'])
             {
                 // Vérification de la validité du jeton
-                if (empty($strToken) || !isset($_SESSION['ploopi']['tokens'][$strToken])) {
+                // On autorise un jeton non valide ou non fourni à l'unique condition que la requête ne contienne aucun paramètre
+                if (!empty($_REQUEST) && ((empty($strToken) || !isset($_SESSION['ploopi']['tokens'][$strToken])))) {
                     ploopi_logout(_PLOOPI_ERROR_INVALIDTOKEN);
                 }
 

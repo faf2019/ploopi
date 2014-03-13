@@ -378,4 +378,6 @@ if(isset($_GET['ploopi_mod_error']) && defined($_GET['ploopi_mod_error']))
     );
 }
 
+unset($_SESSION['ploopi']['errorcode']);
+
 $template_body->pparse('body');
