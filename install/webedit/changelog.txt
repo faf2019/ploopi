@@ -1,3 +1,9 @@
+== Module WebEdit - version 2.5.1f ============================================
+
+2014-03-13  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Correction d'un bug avec l'intégration des objets dynamiques dans fckeditor
+
 == Module WebEdit - version 2.5.1e ============================================
 
 2013-12-17  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

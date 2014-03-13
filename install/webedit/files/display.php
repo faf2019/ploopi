@@ -323,7 +323,6 @@ if (!empty($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]
                 unset($template_moduleid);
             }
         }
-
     }
 }
 
@@ -1531,6 +1530,7 @@ else // affichage standard rubrique/page
                     $arrConfig = array();
                     $arrConfig['CustomConfigurationsPath'] = _PLOOPI_BASEPATH.'/modules/webedit/fckeditor/fckconfig.js';
                     $arrConfig['ToolbarLocation'] = 'Out:parent(xToolbar)';
+                    $arrConfig['PloopiEnv'] = $_SESSION['ploopi']['env'];
 
                     if (file_exists("{$template_path}/fckeditor/fck_editorarea.css")) $arrConfig['EditorAreaCSS'] = _PLOOPI_BASEPATH . substr($template_path,1) . '/fckeditor/fck_editorarea.css';
                     if (file_exists("{$template_path}/fckeditor/fcktemplates.xml")) $arrConfig['TemplatesXmlPath'] = _PLOOPI_BASEPATH . substr($template_path,1) . '/fckeditor/fcktemplates.xml';
