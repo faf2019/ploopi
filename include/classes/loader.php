@@ -835,7 +835,7 @@ abstract class ploopi_loader
                 /**
                  * ploopi_env contient ploopi_mainmenu (int), ploopi_workspaceid (int), ploopi_moduleid (int), ploopi_action (string) et le token (str) de la page appelante
                  */
-                $arrEnv = explode('-', $_REQUEST['ploopi_env']);
+                $arrEnv = explode('/', $_REQUEST['ploopi_env']);
 
                 if (isset($arrEnv[0]) && is_numeric($arrEnv[0])) $ploopi_mainmenu = $arrEnv[0];
 
@@ -1000,7 +1000,7 @@ abstract class ploopi_loader
 
 
             $_SESSION['ploopi']['env'] = sprintf(
-                "%s-%s-%s-%s-%s",
+                "%s/%s/%s/%s/%s",
                 $_SESSION['ploopi']['mainmenu'],
                 $_SESSION['ploopi']['workspaceid'],
                 $_SESSION['ploopi']['moduleid'],

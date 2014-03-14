@@ -73,7 +73,7 @@ function ploopi_urltoken($url)
 
     // Détection de la présence de l'environnement ploopi (jeton inclus)
     if (isset($arrParams['ploopi_env'])) {
-        $arrEnv = explode('-', $arrParams['ploopi_env']);
+        $arrEnv = explode('/', $arrParams['ploopi_env']);
 
         if (isset($arrEnv[0]) && is_numeric($arrEnv[0])) $ploopi_mainmenu = $arrEnv[0];
 
@@ -184,7 +184,7 @@ function ploopi_queryencode($query, $ploopi_mainmenu = null, $ploopi_workspaceid
 
         // on génère le "super" paramètre "ploopi_env" qui regroupe ploopi_mainmenu, ploopi_workspaceid, ploopi_moduleid, ploopi_action
         $arrParams['ploopi_env'] = sprintf(
-            "%s-%s-%s-%s-%s",
+            "%s/%s/%s/%s/%s",
             $arrParams['ploopi_mainmenu'],
             $arrParams['ploopi_workspaceid'],
             $arrParams['ploopi_moduleid'],
