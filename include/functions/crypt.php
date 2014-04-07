@@ -58,7 +58,6 @@ function ploopi_urltoken($url)
     // Analyse de l'url
     $arrParsedURL = parse_url($url);
 
-
     // Analyse des paramètres
     $arrParams = array();
     if (!empty($arrParsedURL['query'])) parse_str($arrParsedURL['query'], $arrParams);
@@ -83,9 +82,6 @@ function ploopi_urltoken($url)
 
         if (isset($arrEnv[3])) $ploopi_action = $arrEnv[3];
     }
-
-    echo ploopi_urlencode($url, $ploopi_mainmenu, $ploopi_workspaceid, $ploopi_moduleid, $ploopi_action);
-
 
     return ploopi_urlencode($url, $ploopi_mainmenu, $ploopi_workspaceid, $ploopi_moduleid, $ploopi_action);
 }

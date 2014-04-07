@@ -669,7 +669,6 @@ if (isset($ploopi_op))
                     if (file_exists($ploopi_mod_opfile)) include_once $ploopi_mod_opfile;
                 }
             }
-
         }
     }
 

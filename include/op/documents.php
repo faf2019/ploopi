@@ -290,6 +290,9 @@ switch($ploopi_op)
                 $documentsfile->fields['name'] = $_FILES['documentsfile_files']['name'][$k];
                 $documentsfile->fields['size'] = $_FILES['documentsfile_files']['size'][$k];
                 $error = $documentsfile->save();
+
+                if (!empty($_SESSION['documents'][$documents_id]['callback_inc'])) include_once $_SESSION['documents'][$documents_id]['callback_inc'];
+                if (!empty($_SESSION['documents'][$documents_id]['callback_func'])) $_SESSION['documents'][$documents_id]['callback_func']('savefile', $documentsfile, $k == sizeof($_FILES['documentsfile_files']['name'])-1);
             }
         }
 
@@ -346,7 +349,7 @@ switch($ploopi_op)
         $error = $documentsfile->save();
 
         if (!empty($_SESSION['documents'][$documents_id]['callback_inc'])) include $_SESSION['documents'][$documents_id]['callback_inc'];
-        if (!empty($_SESSION['documents'][$documents_id]['callback_func'])) $_SESSION['documents'][$documents_id]['callback_func']('savefile', $documentsfile);
+        if (!empty($_SESSION['documents'][$documents_id]['callback_func'])) $_SESSION['documents'][$documents_id]['callback_func']('savefile', $documentsfile, true);
         ?>
         <script type="text/javascript">
             <?
@@ -541,8 +544,8 @@ switch($ploopi_op)
         {
             $documentsfile->delete();
 
-            if (!empty($_SESSION['documents']['callback_inc'])) include $_SESSION['documents']['callback_inc'];
-            if (!empty($_SESSION['documents']['callback_func'])) $_SESSION['documents']['callback_func']('deletefile', $documentsfile);
+            if (!empty($_SESSION['documents'][$_REQUEST['documents_id']]['callback_inc'])) include $_SESSION['documents'][$_REQUEST['documents_id']]['callback_inc'];
+            if (!empty($_SESSION['documents'][$_REQUEST['documents_id']]['callback_func'])) $_SESSION['documents'][$_REQUEST['documents_id']]['callback_func']('deletefile', $documentsfile);
         }
 
         ploopi_redirect("admin.php?ploopi_op=documents_browser&currentfolder={$_GET['currentfolder']}&documents_id={$_REQUEST['documents_id']}");
@@ -562,8 +565,8 @@ switch($ploopi_op)
         {
             $documentsfolder->delete();
 
-            if (!empty($_SESSION['documents'][$_REQUEST['documents_id']]['callback_inc'])) include $_SESSION['documents'][$_REQUEST['documents_id']]['callback_inc'];
-            if (!empty($_SESSION['documents'][$_REQUEST['documents_id']]['callback_func'])) $_SESSION['documents'][$_REQUEST['documents_id']]['callback_func']('deletefolder', $documentsfolder);
+            if (!empty($_SESSION['documents'][$_REQUEST['documents_id']]['callback_inc'])) include_once $_SESSION['documents'][$_REQUEST['documents_id']]['callback_inc'];
+            if (!empty($_SESSION['documents'][$_REQUEST['documents_id']]['callback_func'])) $_SESSION['documents'][$_REQUEST['documents_id']]['callback_func']('deletefolder', $documentsfolder, true);
         }
         ploopi_redirect("admin.php?ploopi_op=documents_browser&currentfolder={$_GET['currentfolder']}&documents_id={$_REQUEST['documents_id']}");
     break;

@@ -346,6 +346,13 @@ function ploopi_send_mail_smtp($from, $to, $subject, $message, $params = null, $
     $arrHeaders['X-Mailer'] = 'PHP/Ploopi';
     $arrHeaders['Organization'] = mb_encode_mimeheader(isset($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['label']) ? $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['label'] : $arrHeaders['X-Sender']);
 
+    $arrMimeParams = array(
+        'text_encoding' => '7bit',
+        'text_charset'  => mb_internal_encoding(),
+        'html_charset'  => mb_internal_encoding(),
+        'head_charset'  => mb_internal_encoding()
+    );
+
     // Création du message
     $objMessage = new Mail_mime();
 
@@ -379,11 +386,15 @@ function ploopi_send_mail_smtp($from, $to, $subject, $message, $params = null, $
                         '@<![\s\S]*?--[ \t\n\r]*>@xmsi'      // Strip multi-line comments including CDATA
                     ), '', $message)
                 )
-            )
+            ),
+            ENT_COMPAT,
+            mb_internal_encoding()
         )
     );
 
-    $mail = $objMail->send($str_to, $objMessage->headers($arrHeaders), $objMessage->get());
+    $body = $objMessage->get($arrMimeParams);
+    $headers = $objMessage->headers($arrHeaders);
+    $mail = $objMail->send($str_to, $headers, $body);
 
     return PEAR::isError($mail) ? $mail->getMessage() : true;
 }
