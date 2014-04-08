@@ -414,17 +414,14 @@ function ploopi_search($keywords, $id_object = -1, $id_record = null, $id_module
 
     if ($id_object != -1) $arrSearch[] = sprintf("e.id_object = %d", $id_object);
 
-    if (!empty($id_module))
-    {
-        if (is_array($id_module)) $arrSearch[] = "e.id_module IN (".implode(',', $id_module).")";
-        else $arrSearch[] = sprintf("e.id_module = %d", $id_module);
-    }
-    /*
-    for($i=0;$i<=26;$i++) {
-        echo "
-        <br />INSERT INTO ploopi_index_keyword_element_{$i} SELECT * FROM ploopi_index_keyword_element WHERE keyword < '".(chr($i+97))."' AND keyword >= '".(chr($i+96))."';
-        ";
-    }*/
+    if (!is_array($id_module)) $id_module = array($id_module);
+
+    // Prise en compte de la vue sur les données pour chaque module
+    $arrViewFilter = array();
+    foreach($id_module as $idm) $arrViewFilter[] = "(e.id_module = {$idm} AND e.id_workspace IN (".ploopi_viewworkspaces($idm)."))";
+
+    // Intégration du filtre sur la vue dans le filtre global
+    if (!empty($arrViewFilter)) $arrSearch[] = '('.implode(' OR ', $arrViewFilter).')';
 
     $strSearch = (empty($arrSearch)) ? '' : ' WHERE '.implode(' AND ', $arrSearch);
 
