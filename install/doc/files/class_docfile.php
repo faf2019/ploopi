@@ -23,7 +23,7 @@
 
 /**
  * Gestion des fichiers
- *
+ *cd mod
  * @package doc
  * @subpackage file
  * @copyright Netlor, Ovensia
@@ -38,13 +38,14 @@
 include_once './include/classes/data_object.php';
 
 /**
- * Inclusion de la classe docfolder.
+ * Inclusion des dépendances
  */
 
 include_once './modules/doc/class_docfolder.php';
-
+include_once './modules/doc/class_docmeta.php';
 include_once './include/functions/filesystem.php';
 include_once './include/functions/search_index.php';
+include_once './include/functions/string.php';
 
 
 /**
@@ -486,8 +487,6 @@ class docfile extends data_object
 
     function parse($debug = false)
     {
-        include_once './modules/doc/class_docmeta.php';
-
         global $db;
 
         global $ploopi_timer;
