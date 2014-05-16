@@ -65,14 +65,17 @@ function ploopi_urltoken($url)
     if (isset($arrParams['ploopi_url']) && $arrParams['ploopi_url'] != '') {
         // On décode l'URL
         require_once './include/classes/cipher.php';
-        parse_str(ploopi_cipher::singleton()->decrypt($arrParams['ploopi_url']), $arrParams);
+        parse_str($query = ploopi_cipher::singleton()->decrypt($arrParams['ploopi_url']), $arrParams);
+
+        // On reconstruit l'URL complète décodée
+        $url = (isset($arrParsedURL['scheme']) ? "{$arrParsedURL['scheme']}://" : '').(isset($arrParsedURL['host']) ? $arrParsedURL['host'] : '').(isset($arrParsedURL['port']) ? ":{$arrParsedURL['port']}" : '')."{$arrParsedURL['path']}".(empty($query) ? '' : "?{$query}").(isset($arrParsedURL['fragment']) ? "#{$arrParsedURL['fragment']}" : '');
     }
 
     $ploopi_mainmenu = $ploopi_workspaceid = $ploopi_moduleid = $ploopi_action = null;
 
     // Détection de la présence de l'environnement ploopi (jeton inclus)
     if (isset($arrParams['ploopi_env'])) {
-        $arrEnv = explode('/', $arrParams['ploopi_env']);
+        $arrEnv = preg_split('@[/,]@', $arrParams['ploopi_env']);
 
         if (isset($arrEnv[0]) && is_numeric($arrEnv[0])) $ploopi_mainmenu = $arrEnv[0];
 
@@ -85,6 +88,7 @@ function ploopi_urltoken($url)
 
     return ploopi_urlencode($url, $ploopi_mainmenu, $ploopi_workspaceid, $ploopi_moduleid, $ploopi_action);
 }
+
 
 /**
  * Version spéciale de ploopi_urlencode qui nécessite que les paramètres soient déjà urlencodés (via la fonction urlencode())
