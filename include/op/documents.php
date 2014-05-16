@@ -291,8 +291,10 @@ switch($ploopi_op)
                 $documentsfile->fields['size'] = $_FILES['documentsfile_files']['size'][$k];
                 $error = $documentsfile->save();
 
-                if (!empty($_SESSION['documents'][$documents_id]['callback_inc'])) include_once $_SESSION['documents'][$documents_id]['callback_inc'];
-                if (!empty($_SESSION['documents'][$documents_id]['callback_func'])) $_SESSION['documents'][$documents_id]['callback_func']('savefile', $documentsfile, $k == sizeof($_FILES['documentsfile_files']['name'])-1);
+                if (!$error) {
+                    if (!empty($_SESSION['documents'][$documents_id]['callback_inc'])) include_once $_SESSION['documents'][$documents_id]['callback_inc'];
+                    if (!empty($_SESSION['documents'][$documents_id]['callback_func'])) $_SESSION['documents'][$documents_id]['callback_func']('savefile', $documentsfile, $k == sizeof($_FILES['documentsfile_files']['name'])-1);
+                }
             }
         }
 
@@ -348,34 +350,36 @@ switch($ploopi_op)
 
         $error = $documentsfile->save();
 
-        if (!empty($_SESSION['documents'][$documents_id]['callback_inc'])) include $_SESSION['documents'][$documents_id]['callback_inc'];
-        if (!empty($_SESSION['documents'][$documents_id]['callback_func'])) $_SESSION['documents'][$documents_id]['callback_func']('savefile', $documentsfile, true);
-        ?>
-        <script type="text/javascript">
-            <?
-            // Sélection directe d'un fichier
-            if (isset($_GET['selectfile'])) {
-
-                if ($_SESSION['documents'][$documents_id]['mode'] == 'tofield')
-                {
-                    echo "dest = $('{$_SESSION['documents'][$documents_id]['target']}'); if (dest.type) dest.value='{$documentsfile->fields['name']}'; else dest.innerHTML='{$documentsfile->fields['name']}'; ploopi_getelem('{$_SESSION['documents'][$documents_id]['target']}_id').value='{$documentsfile->fields['id']}';ploopi_hidepopup('ploopi_documents_popup');";
-                }
-                elseif ($_SESSION['documents'][$documents_id]['mode'] == 'tocallback')
-                {
-                    echo "window.parent.{$_SESSION['documents'][$documents_id]['target']}({$documentsfile->fields['id']}, '".addslashes($documentsfile->fields['name'])."', '".ploopi_urlencode("admin-light.php?ploopi_op=documents_downloadfile&documentsfile_id={$documentsfile->fields['md5id']}")."');";
-                }
-
-            }
-            // Mise à jour du navigateur
-            else {
-                ?>
-                window.parent.ploopi_documents_browser('<?php echo ploopi_queryencode("ploopi_op=documents_browser&currentfolder={$currentfolder}&documents_id={$documents_id}"); ?>', '<?php echo ploopi_htmlentities($documents_id); ?>');
-                <?
-            }
+        if (!$error) {
+            if (!empty($_SESSION['documents'][$documents_id]['callback_inc'])) include $_SESSION['documents'][$documents_id]['callback_inc'];
+            if (!empty($_SESSION['documents'][$documents_id]['callback_func'])) $_SESSION['documents'][$documents_id]['callback_func']('savefile', $documentsfile, true);
             ?>
-            window.parent.ploopi_hidepopup('ploopi_documents_openfile_popup');
-        </script>
-        <?php
+            <script type="text/javascript">
+                <?
+                // Sélection directe d'un fichier
+                if (isset($_GET['selectfile'])) {
+
+                    if ($_SESSION['documents'][$documents_id]['mode'] == 'tofield')
+                    {
+                        echo "dest = $('{$_SESSION['documents'][$documents_id]['target']}'); if (dest.type) dest.value='{$documentsfile->fields['name']}'; else dest.innerHTML='{$documentsfile->fields['name']}'; ploopi_getelem('{$_SESSION['documents'][$documents_id]['target']}_id').value='{$documentsfile->fields['id']}';ploopi_hidepopup('ploopi_documents_popup');";
+                    }
+                    elseif ($_SESSION['documents'][$documents_id]['mode'] == 'tocallback')
+                    {
+                        echo "window.parent.{$_SESSION['documents'][$documents_id]['target']}({$documentsfile->fields['id']}, '".addslashes($documentsfile->fields['name'])."', '".ploopi_urlencode("admin-light.php?ploopi_op=documents_downloadfile&documentsfile_id={$documentsfile->fields['md5id']}")."');";
+                    }
+
+                }
+                // Mise à jour du navigateur
+                else {
+                    ?>
+                    window.parent.ploopi_documents_browser('<?php echo ploopi_queryencode("ploopi_op=documents_browser&currentfolder={$currentfolder}&documents_id={$documents_id}"); ?>', '<?php echo ploopi_htmlentities($documents_id); ?>');
+                    <?
+                }
+                ?>
+                window.parent.ploopi_hidepopup('ploopi_documents_openfile_popup');
+            </script>
+            <?php
+        }
         ploopi_die();
     break;
 
