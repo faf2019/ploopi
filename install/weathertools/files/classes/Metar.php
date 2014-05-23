@@ -1407,7 +1407,7 @@ class Services_Weather_Metar extends Services_Weather_Common
                 } else {
                     switch ($key) {
                         case "station":
-                            $newVal = $location["name"];
+                            $newVal = isset($location["name"]) ? $location["name"] : '';
                             break;
                         case "update":
                         case "validFrom":
