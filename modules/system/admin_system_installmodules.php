@@ -173,7 +173,7 @@ foreach($tabmoduletype_install as $label => $fields)
 {
     if (isset($tabmoduletype_installed[$label])) // new module version if already defined in installed module and greater version
     {
-        if ($tabmoduletype_install[$label]['version'] > $tabmoduletype_installed[$label]['version'])
+        if (version_compare($tabmoduletype_install[$label]['version'], $tabmoduletype_installed[$label]['version']) > 0)
         {
             if (empty($fields['error']))
             {
