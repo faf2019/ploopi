@@ -857,6 +857,9 @@ abstract class ploopi_loader
                     ploopi_logout(_PLOOPI_ERROR_INVALIDTOKEN);
                 }
 
+                // Mise à jour de la validité du jeon
+                unset($_SESSION['ploopi']['tokens'][$strToken]);
+                $_SESSION['ploopi']['tokens'][$strToken] = time();
 
                 if (isset($_REQUEST['ploopi_mainmenu']) && is_numeric($_REQUEST['ploopi_mainmenu']))
                     $ploopi_mainmenu = $_REQUEST['ploopi_mainmenu'];
