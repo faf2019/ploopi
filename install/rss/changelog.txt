@@ -1,5 +1,11 @@
 == Module RSS - version 2.2.2 ====================================================
 
+2014-06-20  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+* Correction d'un bug de traitement si le flux rss est indisponible
+
+== Module RSS - version 2.2.2 ====================================================
+
 2013-12-17  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
 * Ajout de contrôles d'affichage pour éviter les injections XSS

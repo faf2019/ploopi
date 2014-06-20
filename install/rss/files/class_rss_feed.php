@@ -80,13 +80,13 @@ class rss_feed extends data_object
             {
                 $xmlrss->parse();
                 $feed = $xmlrss->getfeed();
-                
+
                 $this->fields['title'] = (empty($feed['title'])) ? '' : $feed['title'];
                 $this->fields['subtitle'] = (empty($feed['subtitle'])) ? '' : $feed['subtitle'];
                 $this->fields['link'] = (empty($feed['link'])) ? '' : $feed['link'];
                 $this->fields['updated'] = (empty($feed['updated'])) ? '' : $feed['updated'];
                 $this->fields['author'] = (empty($feed['autor'])) ? '' : $feed['autor'];
-                
+
                 $this->fields['tpl_tag'] = ploopi_convertaccents(strtolower(strtr(trim($this->fields['tpl_tag']), _PLOOPI_INDEXATION_WORDSEPARATORS, str_pad('', strlen(_PLOOPI_INDEXATION_WORDSEPARATORS), '_'))));
 
                 if($this->fields['tpl_tag'] =='' || $this->fields['tpl_tag'] == 'rss_') $this->fields['tpl_tag'] = NULL;
@@ -101,7 +101,7 @@ class rss_feed extends data_object
                 $this->fields['author'] = '';
             }
         }
-        
+
         return parent::save();
     }
 
@@ -113,18 +113,18 @@ class rss_feed extends data_object
     function delete()
     {
         global $db;
-        
+
         include_once './modules/rss/class_rss_entry.php';
-        
+
         $wk = ploopi_viewworkspaces($_SESSION['ploopi']['moduleid']);
-        
+
         $rssentry_result = $db->query("
             SELECT      entry.id
             FROM        ploopi_mod_rss_entry entry
             WHERE       entry.id_workspace = {$wk}
             AND         entry.id_feed = {$this->fields['id']}
         ");
-        
+
         while($rssentry_row = $db->fetchrow($rssentry_result))
         {
             $objEntry = new rss_entry();
@@ -132,7 +132,7 @@ class rss_feed extends data_object
             $objEntry->delete();
             unset($objEntry);
         }
-        
+
         return parent::delete();
     }
 
@@ -159,49 +159,55 @@ class rss_feed extends data_object
 
         global $db;
 
-        $xmlrss = new xmlrss($this->fields['url'], $this->fields['id_module']);
-        if (!$xmlrss->geterror())
-        {
-            $xmlrss->parse();
+        try {
 
+            $xmlrss = new xmlrss($this->fields['url'], $this->fields['id_module']);
             if (!$xmlrss->geterror())
             {
-                $feed = $xmlrss->getfeed();
-                foreach($feed['entries'] as $entry)
-                {
-                    $rss_entry = new rss_entry();
-                    if (!empty($entry['id']))
-                    {
-                        $entryid = md5($entry['id']);
-                        if (!$rss_entry->open($entryid))
-                        {
-                            if (empty($entry['published'])) $entry['published'] = mktime();
-                            $published_day = ploopi_unixtimestamp2local($entry['published']);
-                            $published_day = substr($published_day, 0, 10);
-                            $published_day = ploopi_timestamp2unixtimestamp(ploopi_local2timestamp($published_day));
+                $xmlrss->parse();
 
-                            $rss_entry->fields['id_feed'] = $this->fields['id'];
-                            $rss_entry->fields['id'] = $entryid;
-                            $rss_entry->fields['title'] = $entry['title'];
-                            $rss_entry->fields['subtitle'] = $entry['subtitle'];
-                            $rss_entry->fields['author'] = $entry['author'];
-                            $rss_entry->fields['link'] = $entry['link'];
-                            $rss_entry->fields['content'] = $entry['content'];
-                            $rss_entry->fields['published'] = $entry['published'];
-                            $rss_entry->fields['published_day'] = $published_day;
-                            $rss_entry->fields['timestp'] = ploopi_createtimestamp();
-                            $rss_entry->fields['id_user'] = $this->fields['id_user'];
-                            $rss_entry->fields['id_workspace'] = $this->fields['id_workspace'];
-                            $rss_entry->fields['id_module'] = $this->fields['id_module'];
-                            
-                            $rss_entry->save();
+                if (!$xmlrss->geterror())
+                {
+                    $feed = $xmlrss->getfeed();
+                    foreach($feed['entries'] as $entry)
+                    {
+                        $rss_entry = new rss_entry();
+                        if (!empty($entry['id']))
+                        {
+                            $entryid = md5($entry['id']);
+                            if (!$rss_entry->open($entryid))
+                            {
+                                if (empty($entry['published'])) $entry['published'] = mktime();
+                                $published_day = ploopi_unixtimestamp2local($entry['published']);
+                                $published_day = substr($published_day, 0, 10);
+                                $published_day = ploopi_timestamp2unixtimestamp(ploopi_local2timestamp($published_day));
+
+                                $rss_entry->fields['id_feed'] = $this->fields['id'];
+                                $rss_entry->fields['id'] = $entryid;
+                                $rss_entry->fields['title'] = $entry['title'];
+                                $rss_entry->fields['subtitle'] = $entry['subtitle'];
+                                $rss_entry->fields['author'] = $entry['author'];
+                                $rss_entry->fields['link'] = $entry['link'];
+                                $rss_entry->fields['content'] = $entry['content'];
+                                $rss_entry->fields['published'] = $entry['published'];
+                                $rss_entry->fields['published_day'] = $published_day;
+                                $rss_entry->fields['timestp'] = ploopi_createtimestamp();
+                                $rss_entry->fields['id_user'] = $this->fields['id_user'];
+                                $rss_entry->fields['id_workspace'] = $this->fields['id_workspace'];
+                                $rss_entry->fields['id_module'] = $this->fields['id_module'];
+
+                                $rss_entry->save();
+                            }
                         }
                     }
                 }
             }
-        }
 
-        if (!$xmlrss->geterror()) $this->fields['error'] += 1;
+            if (!$xmlrss->geterror()) $this->fields['error'] += 1;
+        }
+        catch(exception $e) {
+            $this->fields['error'] += 1;
+        }
 
         // update lastvisit
         $this->fields['lastvisit'] = ploopi_createtimestamp();

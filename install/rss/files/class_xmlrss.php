@@ -99,6 +99,8 @@ class xmlrss
         {
             $objRequest = new HTTP_Request2($url);
 
+
+
             $arrConfig['timeout'] = '500';
 
             if (_PLOOPI_INTERNETPROXY_HOST != '')
@@ -112,17 +114,23 @@ class xmlrss
 
             $objRequest->setConfig($arrConfig);
 
-            $objResponse = $objRequest->send();
-
-            if ($objResponse->getStatus() != '200' && $objResponse->getStatus() != '')
-            {
+            try {
+                $objResponse = $objRequest->send();
+                if ($objResponse->getStatus() != '200' && $objResponse->getStatus() != '')
+                {
+                    $this->error = true;
+                    $this->error_msg = sprintf("Erreur HTTP %s", $objResponse->getStatus());
+                }
+                else
+                {
+                    $this->content = $objResponse->getBody();
+                }
+            }
+            catch(exception $e) {
                 $this->error = true;
-                $this->error_msg = sprintf("Erreur HTTP %s", $objResponse->getStatus());
+                $this->error_msg = "Erreur de connexion";
             }
-            else
-            {
-                $this->content = $objResponse->getBody();
-            }
+
         }
     }
 
