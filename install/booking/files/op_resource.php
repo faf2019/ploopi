@@ -137,8 +137,7 @@ switch($_REQUEST['ploopi_op'])
             </p>
             <p>
                 <label>Géré par:</label>
-                <span>
-                    <div id="booking_treeview">
+                <div id="booking_treeview">
                     <?
                     // Espaces concernés par la ressource
                     $arrResWorkspaces = $objResource->getworkspaces();
@@ -148,8 +147,7 @@ switch($_REQUEST['ploopi_op'])
 
                     echo booking_display_workspaces($arrWorkspacesTree, 'booking_resourceworkspace_id_workspace[]', $arrResWorkspaces);
                     ?>
-                    </div>
-                </span>
+                </div>
             </p>
             <p>
                 <label>Couleur planning:</label>

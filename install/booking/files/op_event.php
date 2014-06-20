@@ -106,13 +106,15 @@ if ($_SESSION['ploopi']['connected'])
                             {
                                 if (!isset($arrUsers[$arrUser['id']])) // Utilisateur non sélectionné
                                 {
-                                    // S'il s'agit d'un administrateyr système, on le sélectionne automatiquement
+                                    // S'il s'agit d'un administrateur système, on le sélectionne automatiquement
+                                    /*
                                     if ($arrUser['adminlevel'] >= _PLOOPI_ID_LEVEL_SYSTEMADMIN)
                                     {
                                         $arrUsers[$arrUser['id']] = $arrUser;
                                     }
                                     else
                                     {
+                                    */
                                         $objUser = new user();
 
                                         if ($objUser->open($arrUser['id']))
@@ -126,7 +128,7 @@ if ($_SESSION['ploopi']['connected'])
                                                 $arrUsers[$arrUser['id']] = $arrUser;
                                             }
                                         }
-                                    }
+                                    /* } */
                                 }
                             }
                         }
@@ -752,7 +754,7 @@ switch($ploopi_op)
                                                 if ($objEvent->fields['managed'] == 0  && $booValidator && ($detail['validated'] == 1 || $detail['canceled'] == 1))
                                                 {
                                                     ?>
-                                                    <strong style="margin-left:10px;">(<a href="javascript:void(0);" onclick="javascript:if (confirm('Attention cette action va annuler cette validation.\nVoulez vous continuer ?')) document.location.href = '<? echo "admin-light.php?ploopi_op=booking_event_detail_cancel&booking_event_detail_id={$detail['id']}"; ?>';" style="color:#a60000;" title="Annuler cette validation">Annuler</a>)</strong>
+                                                    <strong style="margin-left:10px;">(<a href="javascript:void(0);" onclick="javascript:if (confirm('Attention cette action va annuler cette validation.\nVoulez vous continuer ?')) document.location.href = '<? echo ploopi_urlencode("admin-light.php?ploopi_op=booking_event_detail_cancel&booking_event_detail_id={$detail['id']}"); ?>';" style="color:#a60000;" title="Annuler cette validation">Annuler</a>)</strong>
                                                     <?
                                                 }
 

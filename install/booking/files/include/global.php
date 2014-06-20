@@ -57,9 +57,9 @@ define ('_BOOKING_ACTION_VALIDATE',             20);
 define ('_BOOKING_ACTION_ASKFOREVENT',          30);
 
 
-global $arrBookingPeriodicity; 
+global $arrBookingPeriodicity;
 
-$arrBookingPeriodicity = 
+$arrBookingPeriodicity =
     array(
         'day' => 'Quotidienne',
         'week' => 'Hebdomadaire',
@@ -67,28 +67,28 @@ $arrBookingPeriodicity =
         'year' => 'Annuelle'
     );
 
-global $arrBookingSize; 
+global $arrBookingSize;
 
-$arrBookingSize = 
+$arrBookingSize =
     array(
         '800x500',
         '1000x625',
         '1200x750'
     );
 
-global $arrBookingColor; 
+global $arrBookingColor;
 
-$arrBookingColor = 
+$arrBookingColor =
     array(
         'validated' => '#66ff66',
         'canceled'  => '#ff8844',
         'deleted'  => '#ff4444',
         'unknown' => '#ffff88'
     );
-    
-    
+
+
 /**
- * Renvoie la liste des espaces de travail fils 
+ * Renvoie la liste des espaces de travail fils
  *
  * @param int $idw identifiant de l'espace de travail parent
  * @return array tableau des espaces fils : array('list' => array(), 'tree' => array())
@@ -99,24 +99,24 @@ function booking_get_workspaces($idw = 0)
     global $db;
 
     if (!$idw) $idw = $_SESSION['ploopi']['workspaceid'];
-    
+
     $objWorkspace = new workspace();
     $objWorkspace->open($idw);
     $parents = "{$objWorkspace->fields['parents']};{$idw}";
-    
+
     $arrWorkspaces = array(
-        'list' => array(), 
+        'list' => array(),
         'tree' => array()
     );
-    
+
     // on recherche les groupes dont on est le groupe père (les fils en fait) et qui ont accès au module
     $result = $db->query("
-        SELECT  w.* 
+        SELECT  w.*
         FROM    ploopi_workspace w,
                 ploopi_module_workspace mw
         WHERE   (w.parents = '{$parents}' OR w.parents LIKE '{$parents};%' OR w.id = {$idw})
         AND     w.id = mw.id_workspace
-        AND     mw.id_module = {$_SESSION['ploopi']['moduleid']} 
+        AND     mw.id_module = {$_SESSION['ploopi']['moduleid']}
         ORDER   BY w.depth, w.label
     ");
 
@@ -124,14 +124,14 @@ function booking_get_workspaces($idw = 0)
     while ($fields = $db->fetchrow($result))
     {
         $fields['children'] = 0;
-        
+
         $arrWorkspaces['list'][$fields['id']] = $fields;
 
         // astuce pour trouver le premier noeud
         if (empty($arrWorkspaces['tree'])) $arrWorkspaces['tree'][0][] = $fields['id'];
         else $arrWorkspaces['tree'][$fields['id_workspace']][] = $fields['id'];
-        
-        // mise à jour du nombre de fils pour chaque espace        
+
+        // mise à jour du nombre de fils pour chaque espace
         $parent = $fields['id_workspace'];
         while (isset($arrWorkspaces['list'][$parent]))
         {
@@ -157,7 +157,7 @@ function booking_get_workspaces($idw = 0)
 function booking_display_workspaces(&$arrWorkspaces, $fieldname, &$widsel = array(), $wid = 0)
 {
     $treeview = '';
-    
+
     if (!empty($arrWorkspaces['tree'][$wid]))
     {
         foreach($arrWorkspaces['tree'][$wid] as $wid_child)
@@ -166,9 +166,9 @@ function booking_display_workspaces(&$arrWorkspaces, $fieldname, &$widsel = arra
             $checked = (in_array($wid_child, $widsel)) ? 'checked' : '';
 
             $subtree = booking_display_workspaces($arrWorkspaces, $fieldname, $widsel, $wid_child);
-            
+
             $has_children = !empty($arrWorkspaces['tree'][$wid_child]);
-            
+
             $is_opened = false;
             if (!empty($widsel))
             {
@@ -182,8 +182,8 @@ function booking_display_workspaces(&$arrWorkspaces, $fieldname, &$widsel = arra
                     */
                 }
             }
-            
-            if ($has_children) 
+
+            if ($has_children)
             {
                 $link_start = "<a style=\"display:block;margin-left:20px;padding-left:4px;\" id=\"booking_tnode_{$wid_child}\" href=\"javascript:void(0);\" onclick=\"javascript:ploopi_switchdisplay('booking_subtree_{$wid_child}');\">";
                 $link_stop = "</a>";
@@ -193,11 +193,11 @@ function booking_display_workspaces(&$arrWorkspaces, $fieldname, &$widsel = arra
                 $link_start = "<div style=\"margin-left:20px;padding-left:4px;\">";
                 $link_stop = "</div>";
             }
-            
+
             $display = ($is_opened) ? 'block' : 'none';
-            
+
             $option = (empty($arrWorkspaces['list'][$wid_child]['children'])) ? '' : " <sub>({$arrWorkspaces['list'][$wid_child]['children']})</sub>";
-            
+
             $treeview .=    "
                             <div style=\"clear:both;line-height:20px;\">
                                 <div style=\"float:left;width:20px;\"><input type=\"checkbox\" name=\"{$fieldname}\" value=\"{$wid_child}\" {$checked}></div>
@@ -213,7 +213,7 @@ function booking_display_workspaces(&$arrWorkspaces, $fieldname, &$widsel = arra
                             ";
         }
     }
-    
+
     return $treeview;
 }
 
@@ -221,7 +221,7 @@ function booking_display_workspaces(&$arrWorkspaces, $fieldname, &$widsel = arra
 /**
  * Retourne les resources actives
  *
- * @param boolean $strict true si on ne veut que les resources gérées par l'espace courant 
+ * @param boolean $strict true si on ne veut que les resources gérées par l'espace courant
  * @param int $moduleid identifiant du module
  * @param int $moduleid identifiant de l'espace de travail
  * @return array tableau des resources actives
@@ -230,12 +230,12 @@ function booking_display_workspaces(&$arrWorkspaces, $fieldname, &$widsel = arra
 function booking_get_resources($strict = false, $moduleid = -1, $workspaceid = -1)
 {
     global $db;
-    
+
     if ($moduleid == -1) $moduleid = $_SESSION['ploopi']['moduleid'];
     if ($workspaceid == -1) $workspaceid = $_SESSION['ploopi']['workspaceid'];
-    
+
     $arrResources = array();
-    
+
     if (!$strict || ploopi_isactionallowed(_BOOKING_ACTION_VALIDATE, $workspaceid, $moduleid))
     {
         // Recherche des resources actives
@@ -243,63 +243,63 @@ function booking_get_resources($strict = false, $moduleid = -1, $workspaceid = -
             SELECT      r.*,
                         rt.name as rt_name,
                         w.label as w_label
-                        
+
             FROM        (ploopi_mod_booking_resource r,
                         ploopi_mod_booking_resourcetype rt)
-            
+
             LEFT JOIN   ploopi_workspace w
             ON          w.id = r.id_workspace
-            
+
             WHERE       r.id_resourcetype = rt.id
             AND         r.active = 1
             AND         rt.active = 1
             AND         r.id_module = {$moduleid}
-            
+
             GROUP BY    r.id
-            
+
             ORDER BY    rt_name, name
         ");
-        
+
         while ($row = $db->fetchrow()) $arrResources[$row['id']] = $row;
-        
+
         // Récupération des espaces gestionnaires
         $db->query("
             SELECT      r.id,
                         w.id as w_id
-                        
+
             FROM        (ploopi_mod_booking_resource r,
                         ploopi_mod_booking_resourcetype rt,
                         ploopi_mod_booking_resource_workspace rw,
                         ploopi_workspace w)
-            
+
             WHERE       r.id_resourcetype = rt.id
             AND         r.active = 1
             AND         rt.active = 1
             AND         rw.id_resource = r.id
             AND         w.id = rw.id_workspace
             AND         r.id_module = {$moduleid}
-            
+
             ORDER BY    r.id, w.depth
-        ");   
-        
-        while ($row = $db->fetchrow()) 
+        ");
+
+        while ($row = $db->fetchrow())
         {
             $arrResources[$row['id']]['workspaces'][$row['w_id']] = $row['w_id'];
         }
-    
-            
-        foreach($arrResources as $key => $res) 
+
+
+        foreach($arrResources as $key => $res)
         {
             $booWorkspaceValidator = in_array($workspaceid, $res['workspaces']);
-            
+
             // Validateur oui/non ?
             $arrResources[$key]['validator'] = ($booWorkspaceValidator && ploopi_isactionallowed(_BOOKING_ACTION_VALIDATE)) ? 1 : 0;
-            
+
             // Application du filtre "strict" : On ne renvoit que les ressources gérées par l'espace courant
             if ($strict && !$booWorkspaceValidator) unset($arrResources[$key]);
         }
     }
-     
+
     return $arrResources;
 }
 
@@ -322,26 +322,26 @@ function booking_get_resources($strict = false, $moduleid = -1, $workspaceid = -
 function booking_get_events($mixId = null, $extended = false, $strict = false, $validated = null, $managed = null, $object = '', $requestedby = '', $from = '', $to = '', $moduleid = -1)
 {
     global $db;
-    
+
     if ($moduleid == -1) $moduleid = $_SESSION['ploopi']['moduleid'];
-    
+
     $arrResources = booking_get_resources(true, $moduleid);
-    
+
     $arrWhere = array();
-    
+
     if (is_array($mixId)) $arrWhere[] = ' e.id_resource IN ('.implode(',', $mixId).')';
     elseif (is_numeric($mixId)) $arrWhere[] = " e.id_resource = '{$mixId}'";
-    
+
     switch($validated)
     {
         case '0':   $arrWhere[] = " ed.canceled = 0 AND ed.validated = 0 "; break;
         case '1':   $arrWhere[] = " ed.validated = 1 "; break;
         case '-1':  $arrWhere[] = " ed.canceled = 1 "; break;
     }
-    
+
     // On cherche les événements de l'utilisateur courant (sauf si pas connecté) et ceux qui sont validés et ceux dont l'utilisateur gère la resource :
     $arrWhereDetail = array();
-    
+
     if ($_SESSION['ploopi']['modules'][$moduleid]['booking_eventfilter']) // Option du module permettant de passer outre le filtrage
     {
         if ($_SESSION['ploopi']['connected']) $arrWhereDetail[] = "e.id_user = {$_SESSION['ploopi']['userid']}";
@@ -351,10 +351,10 @@ function booking_get_events($mixId = null, $extended = false, $strict = false, $
     {
         $arrWhereDetail[] = 'ed.canceled != 1';
     }
-    
+
     if (!empty($arrResources)) $arrWhereDetail[] = "e.id_resource IN (".implode(',', array_keys($arrResources)).")";
     if (!empty($arrWhereDetail)) $arrWhere[] = '('.implode(' OR ', $arrWhereDetail).')';
-    
+
     // Recherche des événements
     if ($extended)
     {
@@ -363,9 +363,9 @@ function booking_get_events($mixId = null, $extended = false, $strict = false, $
         if ($requestedby != '') $arrWhere[] = " (u.lastname LIKE '%".$db->addslashes($requestedby)."%' OR u.firstname LIKE '%".$db->addslashes($requestedby)."%' OR w.label LIKE '%".$db->addslashes($requestedby)."%')";
         if ($from != '') $arrWhere[] = " e.timestp_request >= '".ploopi_local2timestamp($from)."' ";
         if ($to != '') $arrWhere[] = " e.timestp_request <= '".substr(ploopi_local2timestamp($to), 0, 8)."235959' ";
-        
+
         $strWhere = ' AND '.implode(' AND ', $arrWhere);
-        
+
         $db->query("
             SELECT      e.*,
                         ed.id as ed_id,
@@ -380,14 +380,14 @@ function booking_get_events($mixId = null, $extended = false, $strict = false, $
                         w.label as w_label,
                         u.firstname as u_firstname,
                         u.lastname as u_lastname
-                        
+
             FROM        (ploopi_mod_booking_event e,
                         ploopi_mod_booking_event_detail ed,
                         ploopi_mod_booking_resource r,
                         ploopi_mod_booking_resourcetype rt,
                         ploopi_workspace w,
                         ploopi_user u)
-                        
+
             WHERE       e.id = ed.id_event
             AND         e.id_resource = r.id
             AND         e.id_module = {$moduleid}
@@ -395,14 +395,14 @@ function booking_get_events($mixId = null, $extended = false, $strict = false, $
             AND         e.id_workspace = w.id
             AND         e.id_user = u.id
             {$strWhere}
-            
+
             ORDER BY    ed.timestp_begin, ed.timestp_end
         ");
     }
     else
     {
        $strWhere = ' AND '.implode(' AND ', $arrWhere);
-        
+
         $db->query("
             SELECT      e.*,
                         ed.id as ed_id,
@@ -412,20 +412,20 @@ function booking_get_events($mixId = null, $extended = false, $strict = false, $
                         ed.canceled,
                         r.color,
                         r.reference
-                        
+
             FROM        ploopi_mod_booking_event e,
                         ploopi_mod_booking_event_detail ed,
                         ploopi_mod_booking_resource r
-                        
+
             WHERE       e.id = ed.id_event
             AND         e.id_resource = r.id
             AND         e.id_module = {$moduleid}
             {$strWhere}
-            
+
             ORDER BY    ed.timestp_begin, ed.timestp_end
         ");
-    }    
-            
+    }
+
     return $db->getarray();
 }
 ?>

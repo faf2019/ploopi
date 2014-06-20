@@ -55,11 +55,12 @@
 
 #booking_treeview {
 height:200px;
-overflow:auto;
-overflow-x:hidden;
+margin-left:32%;
+margin-right:5px;
+margin-top:-16px;
 border:1px solid #c0c0c0;
-width:300px;
-background-color:#f0f0f0;
+clear:none;
+background-color:#f8f8f8;
 }
 
 #booking_treeview a {
@@ -124,4 +125,3 @@ margin:0;
 .booking_event_ressource_list p:hover {
 background-color:#eee;
 }
-

@@ -1,3 +1,9 @@
+== Module BOOKING - version 1.0.5 ====================================================
+
+2014-06-20  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+* L'administrateur système n'est plus inclus automatiquement dans les destinataires de tickets lors de la demande de réservation d'une ressource.
+
 == Module BOOKING - version 1.0.4e ====================================================
 
 2014-01-29  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
