@@ -31,17 +31,14 @@ FCKConfig.ShiftEnterMode = 'p' ;    // p | div | br
 FCKConfig.LinkArticle = true;
 
 FCKConfig.LinkBrowser = true ;
-FCKConfig.LinkBrowserURL = '../../../../admin-light.php?ploopi_op=doc_selectfile';
 FCKConfig.LinkBrowserWindowWidth  = 600 ;   // 70% ;
 FCKConfig.LinkBrowserWindowHeight = 350 ;   // 70% ;
 
 FCKConfig.ImageBrowser = true ;
-FCKConfig.ImageBrowserURL = '../../../../admin-light.php?ploopi_op=doc_selectimage';
 FCKConfig.ImageBrowserWindowWidth  = 600 ;  // 70% ;
 FCKConfig.ImageBrowserWindowHeight = 350 ;  // 70% ;
 
 FCKConfig.FlashBrowser = true ;
-FCKConfig.FlashBrowserURL = '../../../../admin-light.php?ploopi_op=doc_selectflash';
 FCKConfig.FlashBrowserWindowWidth  = 600 ;  // 70% ;
 FCKConfig.FlashBrowserWindowHeight = 350 ;  // 70% ;
 
