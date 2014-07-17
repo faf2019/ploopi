@@ -83,6 +83,7 @@ switch ($_SESSION['system']['level'])
                 switch($op)
                 {
                     case 'save_group' :
+
                         $group = new group();
 
                         if (!empty($_REQUEST['group_id']) && is_numeric($_REQUEST['group_id'])) $group->open($_REQUEST['group_id']);
@@ -94,8 +95,8 @@ switch ($_SESSION['system']['level'])
                             $group->fields['parents'] = "{$parent_group->fields['parents']};{$_REQUEST['group_id_group']}";
                         }
 
-                        $group->setvalues($_POST,'group_');
-                        if (empty($_POST['group_shared'])) $group->fields['shared'] = 0;
+                        $group->setvalues($_REQUEST,'group_');
+                        if (empty($_REQUEST['group_shared'])) $group->fields['shared'] = 0;
 
                         $group_id = $group->save();
 
@@ -104,6 +105,7 @@ switch ($_SESSION['system']['level'])
 
                         unset($_SESSION['system']['groups']);
                         unset($_SESSION['system']['workspaces']);
+
 
                         ploopi_redirect("admin.php?groupid={$group_id}&reloadsession");
                     break;
