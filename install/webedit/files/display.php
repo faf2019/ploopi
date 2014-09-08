@@ -58,6 +58,7 @@ include_once './modules/webedit/class_heading.php';
 
 global $template_body;
 global $template_path;
+global $template_name;
 global $webedit_mode;
 global $article;
 global $articleid;

@@ -1,3 +1,9 @@
+== Module WebEdit - version 2.5.1h ============================================
+
+2014-09-08  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Correction d'un bug dans le rendu frontoffice. La variable $template_name était manquante.
+
 == Module WebEdit - version 2.5.1g ============================================
 
 2014-03-13  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
