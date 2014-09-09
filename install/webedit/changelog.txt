@@ -1,3 +1,9 @@
+== Module WebEdit - version 2.5.1i ============================================
+
+2014-09-09  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Contournement d'un bug de FckEditor lorsqu'il est intégré dans une zone avec scrolling vertical (uniquement lorsque le menu est déporté). Le menu a été réintégré à la fenêtre d'édition. Il n'est donc plus déporté.
+
 == Module WebEdit - version 2.5.1h ============================================
 
 2014-09-08  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
