@@ -89,13 +89,13 @@
   licence : GPL v2
   copyright : The phpBB Group
 
-* Protoaculous 1.9.0 (prototype 1.7.0 + scriptaculous 1.9.0)
+* Protoaculous 2.0.0 (prototype 1.7.1 + scriptaculous 1.9.0)
   path : ./lib/protoaculous
   url : http://groups.google.com/group/prototype-core
   licence : ?
   copyright : ?
 
-    * prototype 1.7.0
+    * prototype 1.7.1
       path : ./lib/prototype
       url : http://www.prototypejs.org
       license : MIT
