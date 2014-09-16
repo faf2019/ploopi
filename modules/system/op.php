@@ -40,6 +40,8 @@ if ($_SESSION['ploopi']['connected'])
     switch($ploopi_op)
     {
         case 'system_update_profile_save':
+            ploopi_init_module('system', false, false, false);
+
             $user = new user();
             $user->open($_SESSION['ploopi']['userid']);
 
@@ -47,12 +49,66 @@ if ($_SESSION['ploopi']['connected'])
             unset($_POST['user_login']);
 
             $user->setvalues($_POST,'user_');
+
+
+            // Affectation nouveau mot de passe
+            $error = '';
+
+            if (isset($_POST['useroldpass']) && isset($_POST['usernewpass']) && isset($_POST['usernewpass_confirm']))
+            {
+                if ($_POST['usernewpass'] != '')
+                {
+                    // Vérification de l'ancien mot de passe
+                    if (strcmp($user->fields['password'], user::generate_hash($_POST['useroldpass'], $user->fields['login'])) == 0)
+                    {
+                        // Mots de passes équivalents
+                        if ($_POST['usernewpass'] == $_POST['usernewpass_confirm'])
+                        {
+                            // Complexité ok
+                            if (!_PLOOPI_USE_COMPLEXE_PASSWORD || ploopi_checkpasswordvalidity($_POST['usernewpass']))
+                            {
+                                // Affectation du mot de passe
+                                $user->setpassword($_POST['usernewpass']);
+                                // Mise à jour htpasswd
+                                if ($_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_generate_htpasswd']) system_generate_htpasswd($user->fields['login'], $_POST['usernewpass']);
+                            }
+                            else $error = 'passrejected';
+                        }
+                        else $error = 'password';
+                    }
+                    else $error = 'oldpassword';
+                }
+            }
+
             $user->save();
 
             ob_start();
             ?>
             <div style="padding:10px;text-align:center;"><strong>Profil enregistré !</strong></div>
             <?
+            if ($error) {
+                switch($error)
+                {
+                    case 'password':
+                        $msg = ploopi_nl2br(_SYSTEM_MSG_PASSWORDERROR);
+                    break;
+
+                    case 'oldpassword':
+                        $msg = ploopi_nl2br(_SYSTEM_MSG_OLDPASSWORDERROR);
+                    break;
+
+                    case 'passrejected':
+                        $msg = ploopi_nl2br(_SYSTEM_MSG_LOGINPASSWORDERROR);
+                    break;
+
+                    case 'login':
+                        $msg = ploopi_nl2br(_SYSTEM_MSG_LOGINERROR);
+                    break;
+                }
+                ?>
+                <div style="padding:10px;text-align:center;"><strong class="error">Erreur lors de l'enregistrement du mot de passe !<br /><? echo $msg; ?></strong></div>
+                <?
+            }
             $content = ob_get_contents();
             ob_end_clean();
 
@@ -154,9 +210,22 @@ if ($_SESSION['ploopi']['connected'])
                 <? if (in_array('country', $arrRequiredFields)) { ?>
                 if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_COUNTRY; ?>", form.user_country, 'string'))
                 <? } ?>
+                {
+                    if (form.usernewpass_confirm.value == form.usernewpass.value && form.usernewpass.value == '') return true;
+                    else
+                    {
+                        if (form.usernewpass_confirm.value != form.usernewpass.value) alert('<?php echo _SYSTEM_MSG_PASSWORDERROR_JS; ?>');
+                        else {
+                            if (form.useroldpass.value == '') alert('<?php echo _SYSTEM_MSG_PASSWORDERROR2_JS; ?>');
+                            else {
+                                rep = ploopi_xmlhttprequest('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=ploopi_checkpasswordvalidity&password='+encodeURIComponent(form.usernewpass.value), false, false, 'POST');
 
-                    return true;
-
+                                if (rep == 0) alert('Le mot de passe est invalide\n\nil doit contenir au moins 8 caractères,\nun caractère minuscule,\nun caractère majuscule,\nun chiffre et un caractère de ponctuation');
+                                else return true;
+                            }
+                        }
+                    }
+                }
                 return false;
             }
             </script>
@@ -250,6 +319,20 @@ if ($_SESSION['ploopi']['connected'])
                                 </p>
                             </div>
                         </fieldset>
+                        <fieldset class="fieldset">
+                            <legend>Messagerie</legend>
+                            <div class="ploopi_form">
+                                <p>
+                                    <label><?php echo _SYSTEM_LABEL_EMAIL; ?> *:</label>
+                                    <input type="text" class="text" name="user_email"  value="<?php echo ploopi_htmlentities($user->fields['email']); ?>" tabindex="25" />
+                                </p>
+                                <p class="checkbox" onclick="javascript:ploopi_checkbox_click(event,'user_ticketsbyemail');">
+                                    <label><?php echo _SYSTEM_LABEL_TICKETSBYEMAIL; ?>:</label>
+                                    <input style="width:16px;" type="checkbox" id="user_ticketsbyemail" name="user_ticketsbyemail" value="1" <?php if ($user->fields['ticketsbyemail']) echo 'checked'; ?> tabindex="26" />
+                                </p>
+                            </div>
+                        </fieldset>
+
                     </div>
                 </div>
 
@@ -264,12 +347,17 @@ if ($_SESSION['ploopi']['connected'])
                                     <strong><?php echo ploopi_htmlentities($user->fields['login']); ?></strong>
                                 </p>
                                 <p>
-                                    <label><?php echo _SYSTEM_LABEL_EMAIL; ?> *:</label>
-                                    <input type="text" class="text" name="user_email"  value="<?php echo ploopi_htmlentities($user->fields['email']); ?>" tabindex="25" />
+                                    <label>Ancien mot de passe:</label>
+                                    <input type="password" class="text" name="useroldpass" id="useroldpass" value="" tabindex="22" style="width:180px;" />
                                 </p>
-                                <p class="checkbox" onclick="javascript:ploopi_checkbox_click(event,'user_ticketsbyemail');">
-                                    <label><?php echo _SYSTEM_LABEL_TICKETSBYEMAIL; ?>:</label>
-                                    <input style="width:16px;" type="checkbox" id="user_ticketsbyemail" name="user_ticketsbyemail" value="1" <?php if ($user->fields['ticketsbyemail']) echo 'checked'; ?> tabindex="26" />
+                                <p>
+                                    <label>Nouveau mot de passe:</label>
+                                    <input type="password" class="text" name="usernewpass" id="usernewpass" value="" tabindex="22" style="width:180px;" />
+                                </p>
+                                <div id="protopass"></div>
+                                <p>
+                                    <label><?php echo _SYSTEM_LABEL_PASSWORD_CONFIRM; ?>:</label>
+                                    <input type="password" class="text" name="usernewpass_confirm" id="usernewpass_confirm" value="" tabindex="23" style="width:180px;" />
                                 </p>
                             </div>
                         </fieldset>
@@ -316,8 +404,40 @@ if ($_SESSION['ploopi']['connected'])
             </div>
             </form>
 
+            <style>
+                #protopass {padding:0;margin:0;margin-left:30%;padding-left:0.5em;width:195px;} #protopass * {font-size:10px;}
+                #protopass .password-strength-bar {border-radius:2px;}
+            </style>
+
+            <script type="text/javascript">
+                $('useroldpass').value = '';
+                $('usernewpass').value = '';
+                $('usernewpass_confirm').value = '';
 
 
+                <? if (_PLOOPI_USE_COMPLEXE_PASSWORD) { ?>
+                var options = {
+                    minchar: 8,
+                    scores: [5, 10, 20, 30]
+                };
+                <? } else { ?>
+                var options = {
+                    minchar: 6,
+                    scores: [5, 10, 20, 30]
+                };
+                <? } ?>
+
+                new Protopass('usernewpass', 'protopass', options);
+
+                Event.observe($('usernewpass_confirm'), 'change', function() {
+
+                    if ($('usernewpass').value == $('usernewpass_confirm').value) {
+                        $('usernewpass_confirm').style.backgroundColor = $('usernewpass').style.backgroundColor = 'lightgreen';
+                    } else {
+                        $('usernewpass_confirm').style.backgroundColor = $('usernewpass').style.backgroundColor = 'indianred';
+                    }
+                });
+            </script>
             <?
             $content = ob_get_contents();
             ob_end_clean();
