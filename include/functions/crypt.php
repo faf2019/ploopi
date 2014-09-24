@@ -220,22 +220,18 @@ function ploopi_queryencode($query, $ploopi_mainmenu = null, $ploopi_workspaceid
 }
 
 /**
- * Encode une chaîne en MIME base64 avec compatibilité du codage pour les URL (métode url-safe base64)
- * thx to massimo dot scamarcia at gmail dot com
- * Php version of perl's MIME::Base64::URLSafe, that provides an url-safe base64 string encoding/decoding (compatible with python base64's urlsafe methods)
+ * Encode une chaîne en MIME base64 avec compatibilité du codage pour les URL (méthode url-safe base64)
  *
  * @param string $str chaîne à coder
  * @return string chaîne codée
  *
- * @copyright massimo dot scamarcia at gmail dot com
- *
  * @see base64_encode
  */
 
-function ploopi_base64_encode($str) { return strtr(base64_encode($str), '+/=', '-_,'); }
+function ploopi_base64_encode($str) { return rtrim(strtr(base64_encode($str), '+/', '-_'), '='); }
 
 /**
- * Décode une chaîne en MIME base64 (métode url-safe base64)
+ * Décode une chaîne en MIME base64 (méthode url-safe base64)
  *
  * @param string $str chaîne à décoder
  * @return string chaîne décodée
@@ -243,7 +239,7 @@ function ploopi_base64_encode($str) { return strtr(base64_encode($str), '+/=', '
  * @see base64_decode
  */
 
-function ploopi_base64_decode($str) { return base64_decode(strtr($str, '-_,', '+/=' )); }
+function ploopi_base64_decode($str) { return base64_decode(str_pad(strtr($str, '-_', '+/'), strlen($str) % 4, '=', STR_PAD_RIGHT)); }
 
 /**
  * Sérialise et compresse une variable
