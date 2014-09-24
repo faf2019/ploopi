@@ -169,11 +169,19 @@ $columns['right']['version'] = array('label' => _SYSTEM_LABEL_VERSION, 'width' =
 $columns['right']['author'] = array('label' => _SYSTEM_LABEL_AUTHOR, 'width' => '130', 'options' => array('sort' => true));
 $columns['left']['mtype'] = array('label' => _SYSTEM_LABEL_MODULETYPE, 'width' => '130', 'options' => array('sort' => true));
 
+
 foreach($tabmoduletype_install as $label => $fields)
 {
     if (isset($tabmoduletype_installed[$label])) // new module version if already defined in installed module and greater version
     {
-        if (version_compare($tabmoduletype_install[$label]['version'], $tabmoduletype_installed[$label]['version']) > 0)
+        // Correction version (temporaire en attente de nouvelle déclaration)
+        $v_install = explode('.', preg_replace('@([0-9]+)([a-zA-Z]+)@','$1.$2', $tabmoduletype_install[$label]['version']));
+        $v_installed = explode('.', preg_replace('@([0-9]+)([a-zA-Z]+)@','$1.$2', $tabmoduletype_installed[$label]['version']));
+
+        foreach($v_install as $k => $v) if (!is_numeric($v)) $v_install[$k] = ord($v);
+        foreach($v_installed as $k => $v) if (!is_numeric($v)) $v_installed[$k] = ord($v);
+
+        if (version_compare(implode('.', $v_install), implode('.', $v_installed)) > 0)
         {
             if (empty($fields['error']))
             {
