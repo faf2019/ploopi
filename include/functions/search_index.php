@@ -114,6 +114,47 @@ function ploopi_search_remove_index($id_object, $id_record, $id_module = -1)
 }
 
 /**
+ * Supprime l'index d'un module
+ *
+ * @param int $id_module identifiant du module
+ */
+
+function ploopi_search_remove_index_module($id_module = -1)
+{
+    $db = ploopi_search_getdb();
+
+    if ($id_module == -1 && !empty($_SESSION['ploopi']['moduleid'])) $id_module = $_SESSION['ploopi']['moduleid'];
+
+    $db->query("
+        DELETE se.*
+        FROM ploopi_index_stem_element se, ploopi_index_element e
+        WHERE se.id_element = e.id
+        AND e.id_module = {$id_module}
+    ");
+
+    $db->query("
+        DELETE ke.*
+        FROM ploopi_index_keyword_element ke, ploopi_index_element e
+        WHERE ke.id_element = e.id
+        AND e.id_module = {$id_module}
+    ");
+
+    $db->query("
+        DELETE pe.*
+        FROM ploopi_index_phonetic_element pe, ploopi_index_element e
+        WHERE pe.id_element = e.id
+        AND e.id_module = {$id_module}
+    ");
+
+    $db->query("
+        DELETE e.*
+        FROM ploopi_index_element e
+        WHERE e.id_module = {$id_module}
+    ");
+}
+
+
+/**
  * Création de l'index d'un enregistrement d'un objet
  *
  * @param int $id_object identifiant de l'objet
@@ -418,7 +459,7 @@ function ploopi_search($keywords, $id_object = -1, $id_record = null, $id_module
 
     // Prise en compte de la vue sur les données pour chaque module
     $arrViewFilter = array();
-    foreach($id_module as $idm) $arrViewFilter[] = "(e.id_module = {$idm} AND e.id_workspace IN (".ploopi_viewworkspaces($idm)."))";
+    foreach($id_module as $idm) $arrViewFilter[] = "(e.id_module = {$idm} AND e.id_workspace IN (-1,0,".ploopi_viewworkspaces($idm)."))";
 
     // Intégration du filtre sur la vue dans le filtre global
     if (!empty($arrViewFilter)) $arrSearch[] = '('.implode(' OR ', $arrViewFilter).')';
