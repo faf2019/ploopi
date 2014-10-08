@@ -38,10 +38,10 @@
  */
 include_once './include/functions/system.php';
 
-if (isset($_REQUEST['ploopi_op'])) $ploopi_op = $_REQUEST['ploopi_op'];
-
-if (isset($ploopi_op))
+if (isset($_REQUEST['ploopi_op']))
 {
+    $ploopi_op = $_REQUEST['ploopi_op'];
+
     switch($ploopi_op)
     {
         case 'ploopi_robots':
