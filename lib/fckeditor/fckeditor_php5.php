@@ -155,7 +155,7 @@ class FCKeditor
      */
     public function CreateHtml()
     {
-        $HtmlValue = htmlspecialchars( $this->Value, ENT_COMPAT | ENT_HTML401, 'ISO-8859-15') ;
+        $HtmlValue = htmlspecialchars( $this->Value, version_compare(phpversion(), '5.4', '<') ? ENT_COMPAT : ENT_COMPAT | ENT_HTML401, 'ISO-8859-15') ;
         //$HtmlValue = htmlspecialchars( $this->Value ) ;
 
         $Html = '' ;
