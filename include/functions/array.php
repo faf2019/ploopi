@@ -148,10 +148,9 @@ function ploopi_array2html($arrArray, $booHeader = true, $strClassName = 'ploopi
  */
 function ploopi_array2xls($arrArray, $booHeader = true, $strFileName = 'document.xls', $strSheetName = 'Feuille', $arrDataFormats = null, $arrOptions = null)
 {
-    ploopi_unset_error_handler();
-    // Attention deprecated php 5.3
+     // Ajout dossier complémentaire PEAR (version corrigée pour php 5.4)
+    ini_set('include_path', ini_get('include_path').':'.realpath('.').'/lib/PEAR');
     require_once 'Spreadsheet/Excel/Writer.php';
-    ploopi_set_error_handler();
 
     $workbook = new Spreadsheet_Excel_Writer();
     $worksheet = $workbook->addWorksheet();
@@ -280,7 +279,7 @@ function ploopi_array2xls($arrArray, $booHeader = true, $strFileName = 'document
  * @param string $strFileName nom du fichier
  * @param string $strSheetName nom de la feuille dans le document XLS
  * @param array $arrDataFormats formats des colonnes ('title', 'type', 'width')
- * @param array $arrOptions Options de configuration de l'export ('landscape', 'fitpage_width', 'fitpage_height', 'tofile', 'setborder', 'writer')
+ * @param array $arrOptions Options de configuration de l'export ('landscape', 'fitpage_width', 'fitpage_height', 'tofile', 'setborder', 'writer', 'headers')
  * @return binary contenu XLS
  */
 
@@ -363,22 +362,40 @@ function ploopi_array2excel($arrArray, $booHeader = true, $strFileName = 'docume
     {
         $intLineMax = sizeof($arrArray)+1;
 
+        $intLine = 1;
+        $intMaxCol = sizeof(array_keys(reset($arrArray)))-1;
+        // Calcul colonne type Excel "Bijective base-26"
+        $chrMaxCol = ($intMaxCol>25 ? chr(64+floor($intMaxCol/26)) : '').chr(65+$intMaxCol%26);
+
+        if (!empty($arrOptions['headers'])) {
+            foreach($arrOptions['headers'] as $strHeader) {
+
+                $objWorkSheet->setCellValueByColumnAndRow(0, $intLine, utf8_encode($strHeader));
+
+                $objWorkSheet->getStyle("A{$intLine}:{$chrMaxCol}{$intLine}")->applyFromArray($rowTitleStyle);
+                $objWorkSheet->mergeCells("A{$intLine}:{$chrMaxCol}{$intLine}");
+                //On fusionne la plage
+                $intLine++;
+            }
+        }
+
         // Ajout de la ligne d'entête
         if ($booHeader)
         {
-            $intCol = 0;
-            foreach(array_keys(reset($arrArray)) as $strKey) $objWorkSheet->setCellValueByColumnAndRow($intCol++, 1, utf8_encode(isset($arrDataFormats[$strKey]['title']) ? $arrDataFormats[$strKey]['title'] : $strKey));
+            $intCol = -1;
+            foreach(array_keys(reset($arrArray)) as $strKey) $objWorkSheet->setCellValueByColumnAndRow(++$intCol, $intLine, utf8_encode(isset($arrDataFormats[$strKey]['title']) ? $arrDataFormats[$strKey]['title'] : $strKey));
 
             // Calcul colonne type Excel "Bijective base-26"
             $chrCol = ($intCol>25 ? chr(64+floor($intCol/26)) : '').chr(65+$intCol%26);
 
-            $objWorkSheet->getStyle("A1:{$chrCol}1")->applyFromArray($rowTitleStyle);
+            $objWorkSheet->getStyle("A{$intLine}:{$chrCol}{$intLine}")->applyFromArray($rowTitleStyle);
 
             $objWorkSheet->getRowDimension(1)->setRowHeight(24);
+
+            $intLine++;
         }
 
         // Traitement des contenus
-        $intLine = 2;
         foreach($arrArray as $row)
         {
             $intCol = 0;
@@ -405,10 +422,13 @@ function ploopi_array2excel($arrArray, $booHeader = true, $strFileName = 'docume
 
                 $intCol++;
             }
-            $objWorkSheet->getRowDimension($intLine)->setRowHeight(-1);
+
+            //$objWorkSheet->getRowDimension($intLine)->setRowHeight(-1);
             $intLine++;
         }
 
+        $objWorkSheet->getDefaultRowDimension()->setRowHeight(-1);
+        //$objWorkSheet->getColumnDimension(A)->setAutoSize(true);
         // Traitement des contenus
         $intCol = 0;
 
