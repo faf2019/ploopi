@@ -182,18 +182,36 @@ class odf_varparser
 
     private function cdata($parser, $data)
     {
-        $tag = &$this->xmltags[sizeof($this->xmltags)-1];
+        $s = sizeof($this->xmltags)-1;
+        $tag = $this->xmltags[$s];
 
         // remplacement des variables template
         $data = str_replace(array_keys($this->vars), array_values($this->vars), ploopi_xmlentities($data, true));
 
-        // traitement des retours chariot (CR LF), fonction de la balise contenant
-        // $data = preg_replace("/\r\n|\n|\r/", "</{$tag[0]}><{$tag[0]} {$tag[1]}>", $data);
-        $data = str_replace(
-            array("[ploopi-br]", "[ploopi-hr]"),
-            array("</{$tag[0]}><{$tag[0]} {$tag[1]}>", "</{$tag[0]}><{$tag[0]} text:style-name=\"PLOOPI_PAGE\">"),
-            $data
-        );
+        // Cas d'un retour chariot dans le contenu
+        if (strpos($data, '[ploopi-br]') !== false)
+        {
+            $paragraph = '';
+
+            // Si le tag courant n'est pas un paragraphe
+            if ($tag[0] != 'text:p') {
+                // Recherche du dernier paragraphe ouvert
+                for($i = $s; $i >= 0; $i--) {
+                    if ($this->xmltags[$i][0] == 'text:p') {
+                        $paragraph = "</{$this->xmltags[$i][0]}><{$this->xmltags[$i][0]} {$this->xmltags[$i][1]}>";
+                        break;
+                    }
+                }
+            }
+
+            $data = str_replace('[ploopi-br]', "</{$tag[0]}>{$paragraph}<{$tag[0]} {$tag[1]}>", $data);
+        }
+
+        // Cas d'un saut de page dans le contenu
+        if (strpos($data, '[ploopi-hr]') !== false)
+        {
+            $data = str_replace('[ploopi-hr]', "</{$tag[0]}><{$tag[0]} text:style-name=\"PLOOPI_PAGE\">", $data);
+        }
 
         $this->parsed_data .= $data;
     }
