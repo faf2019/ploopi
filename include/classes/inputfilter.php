@@ -62,12 +62,10 @@ class ploopi_inputfilter
         // url decode
         $strSource = html_entity_decode($strSource, ENT_QUOTES, "ISO-8859-1");
         // convert decimal
-        $strSource = preg_replace('/&#(\d+);/me', "chr(\\1)", $strSource); // decimal notation
+        $strSource = preg_replace_callback('/&#(\d+);/m', function($matches) { return chr($matches[1]); }, $strSource);
         // convert hex
-        $strSource = preg_replace('/&#x([a-f0-9]+);/mei', "chr(0x\\1)", $strSource); // hex notation
+        $strSource = preg_replace_callback('/&#x([a-f0-9]+);/mi', function($matches) { return chr((int)"0x{$matches[1]}"); }, $strSource);
 
         return $strSource;
     }
-
-
 }
