@@ -65,6 +65,12 @@
   licence : MIT
   copyright : PersonalGrid Corporation <http://personalgrid.com/>
 
+* PEAR / Spreadsheet_Excel_Writer
+  path : ./lib/pear
+  url : http://pear.php.net/package/Spreadsheet_Excel_Writer
+  licence : LGPL
+  copyright : ?
+
 * PhpJs
   path : ./js/php.js
   url : http://phpjs.org
