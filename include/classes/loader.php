@@ -1233,8 +1233,8 @@ abstract class ploopi_loader
             );
 
             $workspaces[$fields['id']]['parents_array'] = preg_split('/;/',$workspaces[$fields['id']]['parents']);
-            $workspaces[$fields['id']]['frontoffice_domain_array'] = preg_split("/\r\n/",preg_replace('/\s*/','', $fields['frontoffice_domainlist']));
-            $workspaces[$fields['id']]['backoffice_domain_array'] = preg_split("/\r\n/",preg_replace('/\s*/','', $fields['backoffice_domainlist']));
+            $workspaces[$fields['id']]['frontoffice_domain_array'] = preg_split("/[\s,;]+/", $fields['frontoffice_domainlist']);
+            $workspaces[$fields['id']]['backoffice_domain_array'] = preg_split("/[\s,;]+/", $fields['backoffice_domainlist']);
 
             if (trim($workspaces[$fields['id']]['frontoffice_domainlist']) == '')
             {
