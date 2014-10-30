@@ -55,8 +55,8 @@ $workspaces = array();
 
 while ($fields = $db->fetchrow())
 {
-    $frontoffice_domain_array = preg_split("/\r\n/",preg_replace('/\s*/','', $fields['frontoffice_domainlist']));
-    $backoffice_domain_array = preg_split("/\r\n/",preg_replace('/\s*/','', $fields['backoffice_domainlist']));
+    $frontoffice_domain_array = preg_split("/[\s,;]+/", $fields['frontoffice_domainlist']);
+    $backoffice_domain_array = preg_split("/[\s,;]+/", $fields['backoffice_domainlist']);
 
     $workspaces[$fields['id']] = $fields;
     $workspaces[$fields['id']]['parents_array'] = preg_split('/;/',$workspaces[$fields['id']]['parents']);
