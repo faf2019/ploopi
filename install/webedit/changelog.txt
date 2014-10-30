@@ -1,3 +1,7 @@
+== Module WebEdit - version 2.5.0g ============================================
+
+* Correction d'un bug empêchant la création de racines au delà de 255 modules instanciés.
+
 == Module WebEdit - version 2.5.0f ============================================
 
 2013-03-19  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
