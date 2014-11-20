@@ -55,7 +55,7 @@ class webedit_heading extends data_object
      *
      * @return webedit_heading
      */
-    
+
     function webedit_heading()
     {
         parent::data_object('ploopi_mod_webedit_heading');
@@ -91,13 +91,13 @@ class webedit_heading extends data_object
             $a = new webedit_article('draft');
             if($a->open($row['id'])) $a->delete();
         }
-        
+
         // Changement de position des autres rubriques
-        $db->query("UPDATE ploopi_mod_webedit_heading SET position = position - 1 WHERE position > {$this->fields['position']} AND id_heading = {$this->fields['id_heading']}");
+        $db->query("UPDATE ploopi_mod_webedit_heading SET position = position - 1 WHERE position > {$this->fields['position']} AND id_module = {$this->fields['id_module']}");
 
         // Supprime les redirections vers cette rubrique
         $db->query("UPDATE ploopi_mod_webedit_heading SET linkedpage = 0 WHERE linkedpage = 'h{{$this->fields['id_heading']}}'");
-        
+
         parent::delete();
     }
 }

@@ -1,3 +1,9 @@
+== Module WebEdit - version 2.5.3 ============================================
+
+2014-11-20  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Correction d'un bug à la suppression d'une racine (problème de calcul de position)
+
 == Module WebEdit - version 2.5.2 ============================================
 
 2014-10-30  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
