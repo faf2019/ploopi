@@ -1,3 +1,9 @@
+== Module BOOKING - version 1.0.6 ====================================================
+
+2014-11-20  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+* Petite modification sur le css de rendu des événements en frontoffice
+
 == Module BOOKING - version 1.0.5 ====================================================
 
 2014-06-20  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>

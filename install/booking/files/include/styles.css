@@ -125,3 +125,28 @@ margin:0;
 .booking_event_ressource_list p:hover {
 background-color:#eee;
 }
+
+
+.booking_event_color_month {
+float:right;
+margin:1px;
+width:10px;
+height:10px;
+}
+
+.booking_event_color_month + div {
+height:12px;
+overflow:hidden;
+}
+
+.booking_event_color {
+margin:2px;
+border:1px solid #000;
+text-align:center;
+}
+
+.booking_event_color + div {
+margin:2px;
+color:red;
+height:25px;
+}

@@ -388,11 +388,11 @@ foreach($arrEvents as $event)
 
     if ($arrSearchPattern['booking_display_type'] == 'month')
     {
-        $strContent = '<div style="float:right;margin:1px;width:10px;height:10px;background-color:'.$strBgColor.';"></div><div style="height:12px;overflow:hidden;"><time_begin> '.ploopi_htmlentities(ploopi_strcut($event['object'],20)).'</div>';
+        $strContent = '<div class="booking_event_color_month" style="background-color:'.$strBgColor.';"></div><div><time_begin> '.ploopi_htmlentities(ploopi_strcut($event['object'],20)).'</div>';
     }
     else
     {
-        $strContent = '<div style="margin:2px;background-color:'.$strBgColor.';border:1px solid #000;text-align:center;">'.$strStatus.'</div><div style="margin:2px;">'.ploopi_htmlentities($event['object']).'</div>';
+        $strContent = '<div class="booking_event_color" style="background-color:'.$strBgColor.';">'.$strStatus.'</div><div>'.ploopi_htmlentities($event['object']).'</div>';
     }
 
     $objCalendar->addevent(
