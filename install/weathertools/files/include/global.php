@@ -516,6 +516,17 @@ function weathertools_extract_metar_data($arrMetarContent)
 
 function weathertools_get_bulletin($arrMetarData)
 {
+    // Vérification des données :
+    if (!is_array($arrMetarData['station'])) {
+        $arrMetarData['station'] = array(
+            'place_name' => '',
+            'country_name' => '',
+            'station_latitude_wgs84' => '',
+            'station_longitude_wgs84' => '',
+            'station_elevation' => ''
+        );
+    }
+
     $arrWeatherBulletin = array();
 
     $arrWeatherBulletin['station'] =
