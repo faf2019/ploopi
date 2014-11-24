@@ -199,3 +199,25 @@ function ploopi_unset_error_handler()
     restore_error_handler();
     error_reporting(0);
 }
+
+/**
+ * Ecrit un message dans le syslog avec le contexte (utilisateur, espace, module, ip, sid, host, uri)
+ * @param int $priority
+ * @param string $message
+ */
+function ploopi_syslog($priority, $message)
+{
+    include_once './include/functions/ip.php';
+
+    $arrIp = ploopi_getip();
+
+    $u = isset($_SESSION['ploopi']['userid']) ? $_SESSION['ploopi']['userid'] : '';
+    $w = isset($_SESSION['ploopi']['workspaceid']) ? $_SESSION['ploopi']['workspaceid'] : '';
+    $m = isset($_SESSION['ploopi']['moduleid']) ? $_SESSION['ploopi']['moduleid'] : '';
+    $ip = empty($arrIp) ? '' : current($arrIp);
+    $sid = session_id();
+    $uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
+    $host = isset($_SERVER['HTTP_HOST'])? $_SERVER['HTTP_HOST'] : '';
+
+    syslog($priority, "ploopi:{$message} - u:{$u} w:{$w} m:{$m} ip:{$ip} sid:{$sid} host:{$host} uri:{$uri} ");
+}

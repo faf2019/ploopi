@@ -149,7 +149,11 @@ abstract class ploopi_loader
         /**
          * Pas de session, ou host différent => init session
          */
-        if (empty($_SESSION) || (!empty($_SESSION['ploopi']['host']) && $_SESSION['ploopi']['host'] != $_SERVER['HTTP_HOST']))  { ploopi_session_reset(); self::$initsession = true; }
+        if (empty($_SESSION) || (!empty($_SESSION['ploopi']['host']) && $_SESSION['ploopi']['host'] != $_SERVER['HTTP_HOST']))  {
+            if (!empty($_SESSION)) ploopi_syslog(LOG_INFO, 'Réinitialisation de session liée à un changement de domaine');
+            ploopi_session_reset();
+            self::$initsession = true;
+        }
 
         /**
          * Mise à jour des données de la session
@@ -284,6 +288,16 @@ abstract class ploopi_loader
     }
 
     /**
+     * Indique dans les entêtes si l'utilisateur est connecté
+     */
+
+    public static function setheader_connected()
+    {
+        header('Ploopi-Connected: '.(empty($_SESSION['ploopi']['connected']) ? 0 : 1));
+    }
+
+
+    /**
      * Dispatcher en fonction du point d'entrée
      *
      * @package ploopi
@@ -348,6 +362,8 @@ abstract class ploopi_loader
                         $_SESSION['ploopi']['workspaceid'] = $_SESSION['ploopi']['frontoffice']['workspaceid'] = $_SESSION['ploopi']['hosts']['frontoffice'][0];
                     }
                 }
+
+                self::setheader_connected();
 
                 include './include/op.php';
             break;
@@ -494,19 +510,24 @@ abstract class ploopi_loader
 
         if ((!empty($_REQUEST['ploopi_login']) && !empty($_REQUEST['ploopi_password'])))
         {
-            $sql =  "
-                    SELECT      *
-                    FROM        ploopi_user
-                    WHERE       login = '".$db->addslashes($_REQUEST['ploopi_login'])."'
-                    AND         password = '".user::generate_hash($_REQUEST['ploopi_password'], $_REQUEST['ploopi_login'])."'
-                    ";
 
-            $db->query($sql);
+            $db->query("
+                SELECT      *
+                FROM        ploopi_user
+                WHERE       login = '".$db->addslashes($_REQUEST['ploopi_login'])."'
+            ");
 
             // Un seul utilisateur trouvé
             if ($db->numrows() == 1)
             {
+
                 $fields = $db->fetchrow();
+
+                if ($fields['password'] != user::generate_hash($_REQUEST['ploopi_password'], $_REQUEST['ploopi_login'])) {
+                    ploopi_create_user_action_log(_SYSTEM_ACTION_LOGIN_ERR, $_REQUEST['ploopi_login'], _PLOOPI_MODULE_SYSTEM, _PLOOPI_MODULE_SYSTEM);
+                    ploopi_syslog(LOG_INFO, "Mot de passe incorrect pour {$_REQUEST['ploopi_login']}");
+                    ploopi_logout(_PLOOPI_ERROR_LOGINERROR);
+                }
 
                 // Vérification de la validité du compte
                 if (!empty($fields['date_expire']))
@@ -515,6 +536,7 @@ abstract class ploopi_loader
                     if ($fields['date_expire'] <= ploopi_createtimestamp())
                     {
                         ploopi_create_user_action_log(_SYSTEM_ACTION_LOGIN_ERR, $_REQUEST['ploopi_login'],_PLOOPI_MODULE_SYSTEM,_PLOOPI_MODULE_SYSTEM);
+                        ploopi_syslog(LOG_INFO, "Validité du compte expirée pour {$_REQUEST['ploopi_login']}");
                         ploopi_logout(_PLOOPI_ERROR_ACCOUNTEXPIRE);
                     }
                 }
@@ -549,6 +571,7 @@ abstract class ploopi_loader
 
                     if ($intErrorCode) {
                         ploopi_create_user_action_log(_SYSTEM_ACTION_LOGIN_ERR, $_REQUEST['ploopi_login'], _PLOOPI_MODULE_SYSTEM,_PLOOPI_MODULE_SYSTEM);
+                        ploopi_syslog(LOG_INFO, 'Erreur lors du changement de mot de passe');
                         ploopi_logout($intErrorCode, 1, true, array('login' => $fields['login'], 'password' => $_REQUEST['ploopi_password']));
                     }
                 }
@@ -609,7 +632,8 @@ abstract class ploopi_loader
             }
             else
             {
-                ploopi_create_user_action_log(_SYSTEM_ACTION_LOGIN_ERR, $_REQUEST['ploopi_login'],_PLOOPI_MODULE_SYSTEM,_PLOOPI_MODULE_SYSTEM);
+                ploopi_create_user_action_log(_SYSTEM_ACTION_LOGIN_ERR, $_REQUEST['ploopi_login'], _PLOOPI_MODULE_SYSTEM, _PLOOPI_MODULE_SYSTEM);
+                ploopi_syslog(LOG_INFO, "Utilisateur inconnu ({$_REQUEST['ploopi_login']})");
                 ploopi_logout(_PLOOPI_ERROR_LOGINERROR);
             }
         }
@@ -789,6 +813,7 @@ abstract class ploopi_loader
 
                 if (!$_SESSION['ploopi']['frontoffice']['connected'] && !$_SESSION['ploopi']['backoffice']['connected'] || (!$_SESSION['ploopi']['backoffice']['connected'] && $_SESSION['ploopi']['mode'] == 'backoffice'))
                 {
+                    ploopi_syslog(LOG_INFO, 'Aucun espace de travail pour cet utilisateur');
                     ploopi_logout(_PLOOPI_ERROR_NOWORKSPACEDEFINED);
                 }
 
@@ -821,6 +846,7 @@ abstract class ploopi_loader
 
         // Indicateur global de connexion
         $_SESSION['ploopi']['connected'] = isset($_SESSION['ploopi'][$_SESSION['ploopi']['mode']]['connected']) && $_SESSION['ploopi'][$_SESSION['ploopi']['mode']]['connected'];
+        self::setheader_connected();
 
         ///////////////////////////////////////////////////////////////////////////
         // ADMIN SWITCHES
@@ -854,6 +880,8 @@ abstract class ploopi_loader
                 // Vérification de la validité du jeton
                 // On autorise un jeton non valide ou non fourni à l'unique condition que la requête ne contienne aucun paramètre
                 if (!empty($_REQUEST) && ((empty($strToken) || !isset($_SESSION['ploopi']['tokens'][$strToken])))) {
+                    if (empty($strToken)) ploopi_syslog(LOG_INFO, 'Jeton absent');
+                    else ploopi_syslog(LOG_INFO, 'Jeton non valide');
                     ploopi_logout(_PLOOPI_ERROR_INVALIDTOKEN);
                 }
 
@@ -1174,6 +1202,8 @@ abstract class ploopi_loader
         }
 
         if (isset($_REQUEST['ploopi_moduleid']) && is_numeric($_REQUEST['ploopi_moduleid'])) $_SESSION['ploopi']['moduleid'] = $_REQUEST['ploopi_moduleid'];
+
+        self::setheader_connected();
     }
 
     /**

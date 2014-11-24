@@ -23,7 +23,7 @@
 /**
  * Ouverture d'un popup pour envoyer un nouveau message
  */
- 
+
 function ploopi_tickets_new(event, id_object, id_record, object_label, id_user, reload, x, y)
 {
     var data = '';
@@ -55,32 +55,32 @@ function ploopi_tickets_refresh(lastnewticket, timeout, str_left, str_right)
     if (typeof(str_right) == 'undefined') str_right = '';
 
     new PeriodicalExecuter( function(pe) {
-        new Ajax.Request('index-quick.php?ploopi_op=tickets_getnum',
-            {
-                method:     'get',
-                encoding:   'iso-8859-15',
-                onSuccess:  function(transport) {
-                                 var res = transport.responseText.split(',');
-                                 if (res.length == 2)
-                                 {
-                                     var nb = parseInt(res[0],10);
-                                     var last = parseInt(res[1],10);
+        new Ajax.Request('index-quick.php?ploopi_op=tickets_getnum', {
+            method:     'get',
+            encoding:   'iso-8859-15',
+            onSuccess:  function(transport) {
+                if (transport.getHeader('Ploopi-Connected') != '1') {
+                    console.log('Not connected');
+                    pe.stop();
+                }
 
-                                     $('tpl_ploopi_tickets_new').innerHTML =  str_left+nb+str_right;
+                var res = transport.responseText.split(',');
+                if (res.length == 2) {
+                    var nb = parseInt(res[0],10);
+                    var last = parseInt(res[1],10);
 
-                                     if (last > intPloopiLastNewTicket && !boolAlert)
-                                     {
-                                         ploopi_tickets_alert();
-                                         boolAlert = true;
-                                     }
-                                     intPloopiLastNewTicket = last;
-                                 }
-                            }
+                    $('tpl_ploopi_tickets_new').innerHTML =  str_left+nb+str_right;
+
+                    if (last > intPloopiLastNewTicket && !boolAlert)
+                    {
+                        ploopi_tickets_alert();
+                        boolAlert = true;
+                    }
+                    intPloopiLastNewTicket = last;
+                }
             }
-        );
-    }
-    ,timeout
-    );
+        });
+    }, timeout);
 }
 
 /**
@@ -97,7 +97,7 @@ function ploopi_tickets_select_users(query, filtertype, filter, dest)
             onSuccess:  function(transport) {
                ploopi_innerHTML(dest, transport.responseText);
             }
-        } 
+        }
     );
 }
 
@@ -140,7 +140,7 @@ function ploopi_tickets_selectusers_keypress(e)
             ploopi_tickets_selectusers_prevent(e);
             ploopi_dispatch_onclick('ploopi_ticket_search_btn');
         break;
-        
+
         default:
         break;
     }
@@ -157,19 +157,19 @@ function ploopi_ticket_validateTo(field_label, field_object)
 
     if (field_object)
     {
-    	
+
         field_value = field_object.value;
 
         ok = (field_value.replace(/(^\s*)|(\s*$)/g,'').length > 0)
     }
     else
     {
-    	ok = false;
+        ok = false;
     }
-    
+
     if (!ok)
     {
-    	msg = lstmsg[4];
+        msg = lstmsg[4];
         alert(msg.replace(reg,field_label));
     }
 
