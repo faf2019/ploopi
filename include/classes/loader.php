@@ -880,9 +880,17 @@ abstract class ploopi_loader
                 // Vérification de la validité du jeton
                 // On autorise un jeton non valide ou non fourni à l'unique condition que la requête ne contienne aucun paramètre
                 if (!empty($_REQUEST) && ((empty($strToken) || !isset($_SESSION['ploopi']['tokens'][$strToken])))) {
-                    if (empty($strToken)) ploopi_syslog(LOG_INFO, 'Jeton absent');
-                    else ploopi_syslog(LOG_INFO, 'Jeton non valide');
-                    ploopi_logout(_PLOOPI_ERROR_INVALIDTOKEN);
+                    if (empty($strToken)) {
+                        ploopi_syslog(LOG_INFO, 'Jeton absent');
+                        echo 'Jeton absent, redirection en cours...';
+                    }
+                    else {
+                        ploopi_syslog(LOG_INFO, 'Jeton non valide');
+                        echo 'Jeton non valide, redirection en cours...';
+                    }
+
+                    ploopi_redirect('admin.php', true, true, 2);
+                    ploopi_die();
                 }
 
                 // Mise à jour de la validité du jeon
