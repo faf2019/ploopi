@@ -57,12 +57,10 @@ if (isset($object))
     global $headingid;
     global $template_name;
     global $template_path;
+    global $skin;
     
-    if (file_exists("{$template_path}/class_skin.php"))
+    if (!empty($skin))
     {
-        include_once "{$template_path}/class_skin.php";
-        $skin = new skin();
-        
         // Url de base de l'article
         // $url = webedit_get_url();
         $url = "index.php?headingid={$headingid}&articleid={$articleid}";
