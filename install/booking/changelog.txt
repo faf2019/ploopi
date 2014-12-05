@@ -1,3 +1,9 @@
+== Module BOOKING - version 1.0.7 ====================================================
+
+2014-12-05  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+* Correction d'un bug avec la classe skin en intégration webedit
+
 == Module BOOKING - version 1.0.6 ====================================================
 
 2014-11-20  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
