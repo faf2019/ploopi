@@ -207,6 +207,7 @@ function ploopi_unset_error_handler()
  */
 function ploopi_syslog($priority, $message)
 {
+    include_once './include/classes/cipher.php';
     include_once './include/functions/ip.php';
 
     $arrIp = ploopi_getip();
@@ -218,6 +219,7 @@ function ploopi_syslog($priority, $message)
     $sid = session_id();
     $uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
     $host = isset($_SERVER['HTTP_HOST'])? $_SERVER['HTTP_HOST'] : '';
+    $get = isset($_GET) ? urldecode(http_build_query($_GET)) : '';
 
-    syslog($priority, "ploopi:{$message} - u:{$u} w:{$w} m:{$m} ip:{$ip} sid:{$sid} host:{$host} uri:{$uri} ");
+    syslog($priority, "ploopi:{$message} - u:{$u} w:{$w} m:{$m} ip:{$ip} sid:{$sid} host:{$host} uri:{$uri} get:{$get}");
 }
