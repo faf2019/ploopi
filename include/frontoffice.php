@@ -32,7 +32,9 @@
  * @author Stéphane Escaich
  */
 
+global $skin;
 $skin = null;
+
 if (!empty($_SESSION['ploopi']['frontoffice']['template_path']) && file_exists("{$_SESSION['ploopi']['frontoffice']['template_path']}/class_skin.php"))
 {
     include_once "{$_SESSION['ploopi']['frontoffice']['template_path']}/class_skin.php";
