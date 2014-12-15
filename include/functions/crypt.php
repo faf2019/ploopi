@@ -121,7 +121,7 @@ function ploopi_urlencode($url, $ploopi_mainmenu = null, $ploopi_workspaceid = n
     if (isset($_SESSION['ploopi']['mode']) && $_SESSION['ploopi']['mode'] == 'frontoffice') $addenv = false;
 
     $arrParsedURL = parse_url($url);
-
+    
     if (!isset($arrParsedURL['path'])) return(false);
 
     // Attention la variable 'HTTP_X_SSL_REQUEST' permet de détecter un frontend gérant le chiffrage SSL, cette solution n'est pas exhaustive
@@ -161,6 +161,7 @@ function ploopi_queryencode($query, $ploopi_mainmenu = null, $ploopi_workspaceid
     $arrParams = array();
 
     if (!empty($query)) parse_str($query, $arrParams);
+
     // Détection de la présence d'une URL déjà chiffrée !
     if (isset($arrParams['ploopi_url']) && $arrParams['ploopi_url'] != '') {
         // On décode l'URL
@@ -199,17 +200,8 @@ function ploopi_queryencode($query, $ploopi_mainmenu = null, $ploopi_workspaceid
         unset($arrParams['ploopi_action']);
     }
 
-    // on génère la chaine de paramètres
-    foreach($arrParams as $strKey => $strValue)
-    {
-        // urlencode les paramètres
-        if (!$trusted) $strValue = ploopi_rawurlencode($strValue);
+    $strParams = http_build_query($arrParams);
 
-        $arrParams[$strKey] = (is_null($strValue) || $strValue == '') ? $strKey : "{$strKey}={$strValue}";
-    }
-
-    //$strParams = implode('&amp;', $arrParams);
-    $strParams = implode('&', $arrParams);
 
     if (defined('_PLOOPI_URL_ENCODE') && _PLOOPI_URL_ENCODE)
     {

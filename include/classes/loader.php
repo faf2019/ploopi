@@ -206,6 +206,8 @@ abstract class ploopi_loader
                 {
                     if (strstr($strParam, '=')) list($strKey, $strValue) = explode('=',$strParam);
                     else {$strKey = $strParam; $strValue = '';}
+                    
+                    $strKey = urldecode($strKey);
 
                     // Variable structurée ?
                     // Traitement des variables de type var[dimension1][dimension2]=value
