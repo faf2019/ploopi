@@ -296,6 +296,12 @@ switch($http_host)
         define ('_PLOOPI_SECRETKEY', '<SECRETKEY>');
 
         /**
+         * Active ou non les jetons
+         */
+
+        define ('_PLOOPI_TOKEN', true);
+
+        /**
          * Durée maximum de validité d'un jeton.
          * Passé ce délai, le jeton est considérée comme invalide et l'utilisateur est déconnecté.
          */

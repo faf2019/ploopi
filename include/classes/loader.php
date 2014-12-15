@@ -831,7 +831,7 @@ abstract class ploopi_loader
         if (!$_SESSION['ploopi']['paramloaded']) self::getmodules();
 
         // Génération du token en mode backoffice uniquement
-        if ($_SESSION['ploopi']['mode'] == 'backoffice')
+        if (_PLOOPI_TOKEN && $_SESSION['ploopi']['mode'] == 'backoffice')
         {
             $_SESSION['ploopi']['token'] = uniqid(rand());
             $_SESSION['ploopi']['tokens'][$_SESSION['ploopi']['token']] = time();
@@ -871,31 +871,33 @@ abstract class ploopi_loader
 
                 if (isset($arrEnv[3])) $ploopi_action = $arrEnv[3];
 
-                if (isset($arrEnv[4])) $strToken = $arrEnv[4];
+                if (_PLOOPI_TOKEN && isset($arrEnv[4])) $strToken = $arrEnv[4];
             }
 
 
             if ($_SESSION['ploopi']['connected'])
             {
-                // Vérification de la validité du jeton
-                // On autorise un jeton non valide ou non fourni à l'unique condition que la requête ne contienne aucun paramètre
-                if (!empty($_REQUEST) && ((empty($strToken) || !isset($_SESSION['ploopi']['tokens'][$strToken])))) {
-                    if (empty($strToken)) {
-                        ploopi_syslog(LOG_INFO, 'Jeton absent');
-                        echo 'Jeton absent, redirection en cours...';
-                    }
-                    else {
-                        ploopi_syslog(LOG_INFO, 'Jeton non valide');
-                        echo 'Jeton non valide, redirection en cours...';
+                if (_PLOOPI_TOKEN) {
+                    // Vérification de la validité du jeton
+                    // On autorise un jeton non valide ou non fourni à l'unique condition que la requête ne contienne aucun paramètre
+                    if (!empty($_REQUEST) && ((empty($strToken) || !isset($_SESSION['ploopi']['tokens'][$strToken])))) {
+                        if (empty($strToken)) {
+                            ploopi_syslog(LOG_INFO, 'Jeton absent');
+                            echo 'Jeton absent, redirection en cours...';
+                        }
+                        else {
+                            ploopi_syslog(LOG_INFO, 'Jeton non valide');
+                            echo 'Jeton non valide, redirection en cours...';
+                        }
+
+                        ploopi_redirect('admin.php', true, true, 2);
+                        ploopi_die();
                     }
 
-                    ploopi_redirect('admin.php', true, true, 2);
-                    ploopi_die();
+                    // Mise à jour de la validité du jeon
+                    unset($_SESSION['ploopi']['tokens'][$strToken]);
+                    $_SESSION['ploopi']['tokens'][$strToken] = time();
                 }
-
-                // Mise à jour de la validité du jeon
-                unset($_SESSION['ploopi']['tokens'][$strToken]);
-                $_SESSION['ploopi']['tokens'][$strToken] = time();
 
                 if (isset($_REQUEST['ploopi_mainmenu']) && is_numeric($_REQUEST['ploopi_mainmenu']))
                     $ploopi_mainmenu = $_REQUEST['ploopi_mainmenu'];
@@ -1038,21 +1040,32 @@ abstract class ploopi_loader
             $_SESSION['ploopi']['workspaceid'] = $_SESSION['ploopi']['backoffice']['workspaceid'];
 
 
-            $_SESSION['ploopi']['env'] = sprintf(
-                "%s/%s/%s/%s/%s",
-                $_SESSION['ploopi']['mainmenu'],
-                $_SESSION['ploopi']['workspaceid'],
-                $_SESSION['ploopi']['moduleid'],
-                $_SESSION['ploopi']['action'],
-                $_SESSION['ploopi']['token']
-            );
+            if (_PLOOPI_TOKEN) {
+                $_SESSION['ploopi']['env'] = sprintf(
+                    "%s/%s/%s/%s/%s",
+                    $_SESSION['ploopi']['mainmenu'],
+                    $_SESSION['ploopi']['workspaceid'],
+                    $_SESSION['ploopi']['moduleid'],
+                    $_SESSION['ploopi']['action'],
+                    $_SESSION['ploopi']['token']
+                );
 
+                // Suppression des jetons périmés
+                $mint = time() - _PLOOPI_TOKENTIME;
+                foreach($_SESSION['ploopi']['tokens'] as $k => $t) if ($t < $mint) unset($_SESSION['ploopi']['tokens'][$k]);
+                // Limitation du nombre de jetons conservés
+                $_SESSION['ploopi']['tokens'] = array_slice($_SESSION['ploopi']['tokens'], -_PLOOPI_TOKENMAX, _PLOOPI_TOKENMAX);
 
-            // Suppression des jetons périmés
-            $mint = time() - _PLOOPI_TOKENTIME;
-            foreach($_SESSION['ploopi']['tokens'] as $k => $t) if ($t < $mint) unset($_SESSION['ploopi']['tokens'][$k]);
-            // Limitation du nombre de jetons conservés
-            $_SESSION['ploopi']['tokens'] = array_slice($_SESSION['ploopi']['tokens'], -_PLOOPI_TOKENMAX, _PLOOPI_TOKENMAX);
+            } else {
+                $_SESSION['ploopi']['env'] = sprintf(
+                    "%s/%s/%s/%s",
+                    $_SESSION['ploopi']['mainmenu'],
+                    $_SESSION['ploopi']['workspaceid'],
+                    $_SESSION['ploopi']['moduleid'],
+                    $_SESSION['ploopi']['action']
+                );
+            }
+
         }
         else
         {
