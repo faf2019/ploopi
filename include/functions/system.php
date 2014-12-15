@@ -156,9 +156,6 @@ function ploopi_ob_callback($buffer)
         }
     }
 
-    // Suppression d'un token inutilisé
-    if (($content_type != 'text/html' || $booDownloadFile) && isset($_SESSION['ploopi']['token']) && isset($_SESSION['ploopi']['tokens'][$_SESSION['ploopi']['token']])) unset($_SESSION['ploopi']['tokens'][$_SESSION['ploopi']['token']]);
-
     $ploopi_stats = array();
 
     if (isset($buffer)) $ploopi_stats['pagesize'] = strlen($buffer);
