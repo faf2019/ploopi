@@ -324,7 +324,7 @@ border-bottom:1px solid #d0d0d0;
 }
 
 .ploopi_calendar_m div.day_header {
-	float:left;
+    float:left;
     position:relative;
     margin:0 0 1px 1px;
     display:inline; /* IE hack pour margin */
@@ -425,10 +425,10 @@ border-bottom:1px solid #d0d0d0;
 }
 
 .ploopi_calendar_d div.days_inner {
-    border-width: 1px 1px 0 0;
-    border-color:#a0a0a0;
+    border-width: 1px 0 0 0;
+    border-color:#616161;
     border-style:solid;
-    background:#a0a0a0;
+    background:#616161;
 }
 
 .ploopi_calendar_d div.day {
@@ -450,7 +450,7 @@ border-bottom:1px solid #d0d0d0;
 .ploopi_calendar_d div.channel_header {
     float:left;
     position:relative;
-    margin:0 0 1px 1px;
+    margin:0 0 0 1px;
     display:inline; /* IE hack pour margin */
     background-color:#d0d0d0;
 }
@@ -506,15 +506,14 @@ border-bottom:1px solid #d0d0d0;
 
 .ploopi_calendar_d div.day div.tick {
     position:absolute;
-    border-top:1px solid #e0e0e0;
+    border-top:1px solid rgba(0,0,0,0.08);
     z-index:100;
 }
 
 .ploopi_calendar_d div.day div.tick-half {
     position:absolute;
-    border-top:1px solid #e0e0e0;
+    border-top:1px solid rgba(0,0,0,0.03);
     z-index:100;
-    opacity:0.5;
 }
 
 .ploopi_calendar_d div.hours div.tick {
@@ -523,9 +522,24 @@ border-bottom:1px solid #d0d0d0;
     z-index:100;
 }
 
+.ploopi_calendar_d div.day div.now_tick {
+    position:relative;
+    border-top:1px solid red;
+    z-index:1001;
+}
+
+.ploopi_calendar_d div.day div.now_text {
+    position:absolute;
+    top:-1.2em;
+    right:1px;
+    color:red;
+    font-size:0.9em;
+    z-index:1001;
+}
+
 .ploopi_calendar_d div.day .channel {
     display:block;
-	position:absolute;
+    position:absolute;
 }
 
 .ploopi_calendar_d div.day .channelborder {
@@ -556,7 +570,7 @@ border-bottom:1px solid #d0d0d0;
 }
 
 .ploopi_calendar_d div.day .event div.event_title img {
-	margin:2px;
+    margin:2px;
 }
 
 .ploopi_calendar_d div.day .event a.event_inner {
