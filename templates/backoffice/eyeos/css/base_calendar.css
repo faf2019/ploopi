@@ -122,7 +122,7 @@
 }
 
 .ploopi_calendar_m div.day_header {
-    float:left;
+	float:left;
     position:relative;
     margin:0 0 1px 1px;
     display:inline; /* IE hack pour margin */
@@ -223,10 +223,10 @@
 }
 
 .ploopi_calendar_d div.days_inner {
-    border-width: 1px 0 0 0;
-    border-color:#616161;
+    border-width: 1px 1px 0 0;
+    border-color:#a0a0a0;
     border-style:solid;
-    background:#616161;
+    background:#a0a0a0;
 }
 
 .ploopi_calendar_d div.day {
@@ -248,7 +248,7 @@
 .ploopi_calendar_d div.channel_header {
     float:left;
     position:relative;
-    margin:0 0 0 1px;
+    margin:0 0 1px 1px;
     display:inline; /* IE hack pour margin */
     background-color:#d0d0d0;
 }
@@ -304,13 +304,13 @@
 
 .ploopi_calendar_d div.day div.tick {
     position:absolute;
-    border-top:1px solid rgba(0,0,0,0.08);
+    border-top:1px solid #e0e0e0;
     z-index:100;
 }
 
 .ploopi_calendar_d div.day div.tick-half {
     position:absolute;
-    border-top:1px solid rgba(0,0,0,0.03);
+    border-top:1px solid #e0e0e0;
     z-index:100;
 }
 
@@ -337,7 +337,7 @@
 
 .ploopi_calendar_d div.day .channel {
     display:block;
-    position:absolute;
+	position:absolute;
 }
 
 .ploopi_calendar_d div.day .channelborder {
@@ -368,7 +368,7 @@
 }
 
 .ploopi_calendar_d div.day .event div.event_title img {
-    margin:2px;
+	margin:2px;
 }
 
 .ploopi_calendar_d div.day .event a.event_inner {
