@@ -424,7 +424,7 @@ if ($display_type == 'advanced')
                 if ($booIsAllowedEdit)
                 {
                     ?>
-                    <input type="text" style="width:100px;cursor:pointer" class="text color {hash:true}" name="webedit_heading_color" id="webedit_heading_color" value="<?php echo ploopi_htmlentities($heading->fields['color']); ?>" tabindex="10" readonly="readonly" />
+                    <input type="text" style="width:100px;cursor:pointer" class="text color {hash:true}" name="webedit_heading_color" id="webedit_heading_color" value="<?php echo ploopi_htmlentities($heading->fields['color']); ?>" tabindex="10" />
                 <?php
                 }
                 else echo '<span>'.ploopi_htmlentities($heading->fields['color']).'</span>';
