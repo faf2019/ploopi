@@ -51,7 +51,7 @@ if(!empty($_GET['email_subscrib']))
         <input type="hidden" name="subscrib_active" value="0">
         <p><!-- Email inscription -->
           <label><?php echo _NEWSLETTER_LABEL_EMAIL; ?>&nbsp;:</label>
-          <input class="text" id="subscrib_email" name="subscrib_email" type="text" size="50" maxlength="255" value="<?php echo $objSubscriber->fields['email']; ?>">
+          <input class="text" id="subscrib_email" name="subscrib_email" type="text" size="50" maxlength="255" value="<?php echo ploopi_htmlentities($objSubscriber->fields['email']); ?>">
         </p>
         <p class="ploopi_va" style="cursor:pointer;" onclick="javascript:ploopi_checkbox_click(event,'subscrib_active');"><!-- Email activé ou pas pour l'envoi -->
           <label><?php echo _NEWSLETTER_LABEL_ACTIVE; ?>&nbsp;:</label>
@@ -63,7 +63,7 @@ if(!empty($_GET['email_subscrib']))
         </p>
         <p class="ploopi_va"><!-- date/heure d'inscription -->
           <label><?php echo _NEWSLETTER_LABEL_TIMESTP_SUBSCRIBE; ?>&nbsp;:</label>
-          <?php echo $arrNewsletterDateSubscribe['date'].' '.$arrNewsletterDateSubscribe['time']; ?>
+          <?php echo ploopi_htmlentities($arrNewsletterDateSubscribe['date'].' '.$arrNewsletterDateSubscribe['time']); ?>
         </p>
         <div style="padding:2px;text-align:right;">
           <input type="submit" value="<?php echo _PLOOPI_SAVE; ?>" class="button">
@@ -191,8 +191,8 @@ while ($fields = $db->fetchrow($result))
 
   $values[$c]['values']['email']       = array('label' => ploopi_htmlentities($fields['email']));
   $values[$c]['values']['active']      = array('label' => $action,'style' => 'text-align:center');
-  $values[$c]['values']['ip']          = array('label' => str_replace(',','<br/>',$fields['ip']));
-  $values[$c]['values']['timestp']    = array('label' => $arrNewsletterDateSubscribe['date'].' '.$arrNewsletterDateSubscribe['time']);
+  $values[$c]['values']['ip']          = array('label' => str_replace(',','<br/>',ploopi_htmlentities($fields['ip'])));
+  $values[$c]['values']['timestp']    = array('label' => ploopi_htmlentities($arrNewsletterDateSubscribe['date'].' '.$arrNewsletterDateSubscribe['time']));
 
   // en fonction des actions autorisées
   $action = '';

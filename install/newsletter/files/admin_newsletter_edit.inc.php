@@ -119,7 +119,7 @@ if (!$readonly)
         else
         {
           ?>
-          <input type="hidden" name="newsletter_status"  value="<?php echo $objLetter->fields['status']; ?>"/>
+          <input type="hidden" name="newsletter_status"  value="<?php echo ploopi_htmlentities($objLetter->fields['status']); ?>"/>
           <span>
           <?php
           echo (defined('_NEWSLETTER_LABEL_STATUS_'.strtoupper($objLetter->fields['status']))) ? constant('_NEWSLETTER_LABEL_STATUS_'.strtoupper($objLetter->fields['status'])): '';

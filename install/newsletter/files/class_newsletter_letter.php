@@ -97,7 +97,7 @@ class newsletter extends data_object
     if($this->fields['status'] == 'wait')
     {
       $arrNewsletterTo = newsletter_ListValid($this->fields['id'],-1,false);
-      
+
       ploopi_subscription_notify(_NEWSLETTER_OBJECT_NEWSLETTER, $this->fields['id'], _NEWSLETTER_ACTION_WAIT_VALID, $this->fields['title'], array_keys($arrNewsletterTo));
     }
 
@@ -221,7 +221,7 @@ class newsletter extends data_object
     $arrNewsletterParam = $objNewsletterParam->get_param($this->fields['id_module']);
     unset($objNewsletterParam);
 
-    
+
     if (ploopi_init_module('webedit', false, false, false))
     {
       include_once './modules/webedit/class_article.php';
@@ -251,7 +251,7 @@ class newsletter extends data_object
             if (!empty($md5) && $objDocFile->openmd5($md5)) // clé md5 présente & document trouvé
             {
                 $arrSearch[] = $matches[1][$key];
-                $arrReplace[] = $arrNewsletterParam['host'].ploopi_urlrewrite(html_entity_decode($matches[1][$key]), doc_getrewriterules(), $objDocFile->fields['name'], null, true);
+                $arrReplace[] = $arrNewsletterParam['host'].ploopi_urlrewrite(ploopi_html_entity_decode($matches[1][$key]), doc_getrewriterules(), $objDocFile->fields['name'], null, true);
             }
         }
 
@@ -263,7 +263,7 @@ class newsletter extends data_object
             if (!empty($md5) && $objDocFile->openmd5($md5)) // clé md5 présente & document trouvé
             {
                 $arrSearch[] = $matches[1][$key];
-                $arrReplace[] = $arrNewsletterParam['host'].ploopi_urlrewrite(html_entity_decode($matches[1][$key]), doc_getrewriterules(), $objDocFile->fields['name'], null, true);
+                $arrReplace[] = $arrNewsletterParam['host'].ploopi_urlrewrite(ploopi_html_entity_decode($matches[1][$key]), doc_getrewriterules(), $objDocFile->fields['name'], null, true);
             }
         }
     }
@@ -321,7 +321,7 @@ class newsletter extends data_object
             if (!empty($md5) && $objDocFile->openmd5($md5)) // clé md5 présente & document trouvé
             {
                 $arrSearch[] = $matches[1][$key];
-                $arrReplace[] = $arrNewsletterParam['host'].ploopi_urlrewrite(html_entity_decode($matches[1][$key]), doc_getrewriterules(), $objDocFile->fields['name'], null, true);
+                $arrReplace[] = $arrNewsletterParam['host'].ploopi_urlrewrite(ploopi_html_entity_decode($matches[1][$key]), doc_getrewriterules(), $objDocFile->fields['name'], null, true);
             }
         }
 

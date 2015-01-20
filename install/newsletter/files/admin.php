@@ -302,7 +302,7 @@ switch ($strNewsletterMenuBlock)
           unset($objNewsletterParam);
         }
 
-        echo $skin->create_pagetitle(str_replace("LABEL",$_SESSION['ploopi']['modulelabel'],_NEWSLETTER_PAGE_TITLE));
+        echo $skin->create_pagetitle(ploopi_htmlentities(str_replace("LABEL",$_SESSION['ploopi']['modulelabel'],_NEWSLETTER_PAGE_TITLE)));
         echo $skin->create_tabs($tabs,$_SESSION['newsletter'][$_SESSION['ploopi']['moduleid']]['newsletterTabAdmin']);
 
         //Inclusion en fonction du bouton selectionné

@@ -53,22 +53,22 @@ if(ploopi_isactionallowed(_NEWSLETTER_ACTION_PARAM))
     <div style="padding:2px;">
       <p><!-- Host de la newsletter (pour les liens image, la désinscrition, la vue en ligne) -->
         <label><? echo _NEWSLETTER_LABEL_HOST; ?>:</label>
-        <input type="text" class="text" name="host"  value="<? echo $arrNewsletterParam['host']; ?>" tabindex="1" />
+        <input type="text" class="text" name="host"  value="<?php echo ploopi_htmlentities($arrNewsletterParam['host']); ?>" tabindex="1" />
         <label>&nbsp;</label><span style="font-style:italic;"><?php echo _NEWSLETTER_LABEL_HOST_EXPLAIN; ?></span>
       </p>
       <p><!-- Nom utilisé comme expéditeur au mail -->
         <label><? echo _NEWSLETTER_LABEL_FROM_NAME; ?>:</label>
-        <input type="text" class="text" name="from_name"  value="<? echo $arrNewsletterParam['from_name']; ?>" tabindex="2" />
+        <input type="text" class="text" name="from_name"  value="<?php echo ploopi_htmlentities($arrNewsletterParam['from_name']); ?>" tabindex="2" />
         <label>&nbsp;</label><span style="font-style:italic;"><?php echo _NEWSLETTER_LABEL_FROM_NAME_EXPLAIN; ?></span>
       </p>
       <p><!-- Email utilisé comme expéditeur au mail -->
         <label><? echo _NEWSLETTER_LABEL_FROM_EMAIL; ?>:</label>
-        <input type="text" class="text" name="from_email"  value="<? echo $arrNewsletterParam['from_email']; ?>" tabindex="3" />
+        <input type="text" class="text" name="from_email"  value="<?php echo ploopi_htmlentities($arrNewsletterParam['from_email']); ?>" tabindex="3" />
         <label>&nbsp;</label><span style="font-style:italic;"><?php echo _NEWSLETTER_LABEL_FROM_EMAIL_EXPLAIN; ?></span>
       </p>
       <p><!-- Pour l'envoi du mail par bloc de X email -->
         <label><? echo _NEWSLETTER_LABEL_SEND_BY; ?>:</label>
-        <input type="text" class="text" name="send_by"  value="<? echo $arrNewsletterParam['send_by']; ?>" tabindex="4" />
+        <input type="text" class="text" name="send_by"  value="<?php echo ploopi_htmlentities($arrNewsletterParam['send_by']); ?>" tabindex="4" />
         <label>&nbsp;</label><span style="font-style:italic;"><?php echo _NEWSLETTER_LABEL_SEND_BY_EXPLAIN; ?></span>
         <label>&nbsp;</label><span style="font-style:italic;"><?php echo _NEWSLETTER_LABEL_SEND_BY_WARNING; ?></span>
       </p>
