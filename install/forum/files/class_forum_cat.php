@@ -90,7 +90,7 @@ class forum_cat extends data_object
     }
 
     //***** Search Index *****//
-    ploopi_search_create_index(_FORUM_OBJECT_CAT, $this->fields['id'], $this->fields['title'], strip_tags(html_entity_decode($this->fields['title'].' '.$this->fields['description'])), '', true, $this->fields['timestp'], $this->fields['lastupdate_timestp']);
+    ploopi_search_create_index(_FORUM_OBJECT_CAT, $this->fields['id'], $this->fields['title'], strip_tags(ploopi_html_entity_decode($this->fields['title'].' '.$this->fields['description'])), '', true, $this->fields['timestp'], $this->fields['lastupdate_timestp']);
 
     parent::save();
   }

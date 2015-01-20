@@ -123,8 +123,8 @@ class forum_mess extends data_object
       if($this->fields['id_subject'] == $this->fields['id']) // it is a subject
       {
         // create search index
-        ploopi_search_create_index(_FORUM_OBJECT_SUBJECT, $this->fields['id'], $this->fields['title'], strip_tags(html_entity_decode($this->fields['title'])), '', true, $this->fields['timestp'], $this->fields['lastupdate_timestp']);
-        ploopi_search_create_index(_FORUM_OBJECT_MESSAGE, $this->fields['id'], $this->fields['title'], strip_tags(html_entity_decode($this->fields['title'].' '.$this->fields['content'])), '', true, $this->fields['timestp'], $this->fields['lastupdate_timestp']);
+        ploopi_search_create_index(_FORUM_OBJECT_SUBJECT, $this->fields['id'], $this->fields['title'], strip_tags(ploopi_html_entity_decode($this->fields['title'])), '', true, $this->fields['timestp'], $this->fields['lastupdate_timestp']);
+        ploopi_search_create_index(_FORUM_OBJECT_MESSAGE, $this->fields['id'], $this->fields['title'], strip_tags(ploopi_html_entity_decode($this->fields['title'].' '.$this->fields['content'])), '', true, $this->fields['timestp'], $this->fields['lastupdate_timestp']);
         // Log
         if($booForumNew) // Create
           ploopi_create_user_action_log(_FORUM_ACTION_ADD_SUBJECT, ploopi_strcut($this->fields['title'],200).'(id='.$this->fields['id'].')');
@@ -139,7 +139,7 @@ class forum_mess extends data_object
       else
       {
         // create search index
-        ploopi_search_create_index(_FORUM_OBJECT_MESSAGE, $this->fields['id'], $this->fields['title'], strip_tags(html_entity_decode($this->fields['title'].' '.$this->fields['content'])), '', true, $this->fields['timestp'], $this->fields['lastupdate_timestp']);
+        ploopi_search_create_index(_FORUM_OBJECT_MESSAGE, $this->fields['id'], $this->fields['title'], strip_tags(ploopi_html_entity_decode($this->fields['title'].' '.$this->fields['content'])), '', true, $this->fields['timestp'], $this->fields['lastupdate_timestp']);
         // Log
         if($booForumNew) // Create
           ploopi_create_user_action_log(_FORUM_ACTION_ADD_MESSAGE, ploopi_strcut($this->fields['title'],200).'(id='.$this->fields['id'].')');
