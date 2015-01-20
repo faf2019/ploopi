@@ -63,7 +63,7 @@ switch($op)
             while ($row = $db->fetchrow($rs))
             {
                 $ts = ploopi_unixtimestamp2timestamp($row['published']);
-                ploopi_search_create_index(_RSS_OBJECT_NEWS_ENTRY, sprintf("%06d%06d%s", $row['id_cat'], $row['id_feed'], $row['id']), $row['title'], strip_tags(html_entity_decode($row['content'])), strip_tags(html_entity_decode("{$row['title']} {$row['subtitle']} {$row['author']}")), true, $ts, $ts, $row['id_user'], $row['id_workspace'], $row['id_module'] );
+                ploopi_search_create_index(_RSS_OBJECT_NEWS_ENTRY, sprintf("%06d%06d%s", $row['id_cat'], $row['id_feed'], $row['id']), $row['title'], strip_tags(ploopi_html_entity_decode($row['content'])), strip_tags(ploopi_html_entity_decode("{$row['title']} {$row['subtitle']} {$row['author']}")), true, $ts, $ts, $row['id_user'], $row['id_workspace'], $row['id_module'] );
             }
         }
 
@@ -133,27 +133,27 @@ switch($op)
     break;
 }
 
-$tabs['tabFeedList'] = array(   
+$tabs['tabFeedList'] = array(
     'title' => _RSS_LABEL_FEEDLIST,
     'url' => "admin.php?rssTabItem=tabFeedList"
 );
 
 if (ploopi_isactionallowed(_RSS_ACTION_FEEDADD))
 {
-    $tabs['tabFeedAdd'] = array(    
+    $tabs['tabFeedAdd'] = array(
         'title' => _RSS_LABEL_FEEDADD,
         'url' => "admin.php?rssTabItem=tabFeedAdd"
     );
 }
 
-$tabs['tabCatList'] = array(    
+$tabs['tabCatList'] = array(
     'title' => _RSS_LABEL_CATLIST,
     'url' => "admin.php?rssTabItem=tabCatList"
 );
 
 if (ploopi_isactionallowed(_RSS_ACTION_CATADD))
 {
-    $tabs['tabCatAdd'] = array( 
+    $tabs['tabCatAdd'] = array(
         'title' => _RSS_LABEL_CATADD,
         'url' => "admin.php?rssTabItem=tabCatAdd"
     );
@@ -161,7 +161,7 @@ if (ploopi_isactionallowed(_RSS_ACTION_CATADD))
 
 if (ploopi_isadmin())
 {
-    $tabs['tabTools'] = array(  
+    $tabs['tabTools'] = array(
         'title' => _RSS_LABEL_TOOLS,
         'url' => "admin.php?rssTabItem=tabTools"
     );

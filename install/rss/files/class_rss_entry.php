@@ -72,7 +72,7 @@ class rss_entry extends data_object
         $rss_feed = new rss_feed();
         $rss_feed->open($this->fields['id_feed']);
 
-        ploopi_search_create_index(_RSS_OBJECT_NEWS_ENTRY, sprintf("%06d%06d%s", $rss_feed->fields['id_cat'], $this->fields['id_feed'], $this->fields['id']), $this->fields['title'], strip_tags(html_entity_decode($this->fields['content'])), strip_tags(html_entity_decode("{$this->fields['title']} {$this->fields['subtitle']} {$this->fields['author']}")), true, $ts, $ts, $this->fields['id_user'], $this->fields['id_workspace'], $this->fields['id_module']);
+        ploopi_search_create_index(_RSS_OBJECT_NEWS_ENTRY, sprintf("%06d%06d%s", $rss_feed->fields['id_cat'], $this->fields['id_feed'], $this->fields['id']), $this->fields['title'], strip_tags(ploopi_html_entity_decode($this->fields['content'])), strip_tags(ploopi_html_entity_decode("{$this->fields['title']} {$this->fields['subtitle']} {$this->fields['author']}")), true, $ts, $ts, $this->fields['id_user'], $this->fields['id_workspace'], $this->fields['id_module']);
         return parent::save();
     }
 
