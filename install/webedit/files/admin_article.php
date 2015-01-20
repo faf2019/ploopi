@@ -118,7 +118,7 @@ switch($op)
     break;
 }
 
-$content = strip_tags(html_entity_decode($article->fields['content']));
+$content = strip_tags(ploopi_html_entity_decode($article->fields['content']));
 
 list($keywords, $words_indexed, $words_overall) = ploopi_getwords($content);
 

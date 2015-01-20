@@ -592,7 +592,7 @@ if ($query_string != '' || $advanced_search) // recherche intégrale
                             }
                             else
                             {
-                                $cleaned_content = strip_tags(html_entity_decode($objArticle->fields['content_cleaned']));
+                                $cleaned_content = strip_tags(ploopi_html_entity_decode($objArticle->fields['content_cleaned']));
 
                                 // Gestion des url par mode de rendu
                                 switch($webedit_mode)
@@ -694,7 +694,7 @@ elseif($query_tag != '') // recherche par tag
     {
         if (!$arrHeadings['list'][$row['id_heading']]['private'] || isset($arrShares[$arrHeadings['list'][$row['id_heading']]['herited_private']]) || isset($_SESSION['webedit']['allowedheading'][$_SESSION['ploopi']['moduleid']][$arrHeadings['list'][$row['id_heading']]['herited_private']]) || $webedit_mode == 'edit') // Rubrique non privée ou accessible par l'utilisateur
         {
-            $size = sprintf("%.02f", strlen(strip_tags(html_entity_decode($row['content_cleaned'])))/1024);
+            $size = sprintf("%.02f", strlen(strip_tags(ploopi_html_entity_decode($row['content_cleaned'])))/1024);
 
             switch($webedit_mode)
             {

@@ -251,7 +251,7 @@ class webedit_article extends data_object
         $db->query("DELETE FROM ploopi_mod_webedit_docfile WHERE id_article = {$this->fields['id']}");
 
         // Recherche des liens vers des documents (du module doc)
-        preg_match_all('/index-quick\.php[^\"]+docfile_md5id=([a-z0-9]{32})/i', html_entity_decode($this->fields['content']), $arrMatches);
+        preg_match_all('/index-quick\.php[^\"]+docfile_md5id=([a-z0-9]{32})/i', ploopi_html_entity_decode($this->fields['content']), $arrMatches);
 
         if (!empty($arrMatches[1]) && file_exists('./modules/doc/class_docfile.php'))
         {
@@ -281,7 +281,7 @@ class webedit_article extends data_object
         $db->query("DELETE FROM ploopi_mod_webedit_article_object WHERE id_article = {$this->fields['id']}");
 
         // Recherche des objets insérés
-        if (preg_match_all('@\[\[(\d+),(\d+)(,([^/]+))?/([^\]]*)\]\]@i',  html_entity_decode($this->fields['content']), $arrMatches) !== false)
+        if (preg_match_all('@\[\[(\d+),(\d+)(,([^/]+))?/([^\]]*)\]\]@i', ploopi_html_entity_decode($this->fields['content']), $arrMatches) !== false)
         {
             foreach(array_keys($arrMatches[0]) as $intKey)
             {
@@ -289,7 +289,7 @@ class webedit_article extends data_object
                 {
                     // Association des objets à l'article
                     $objArticleObject = new webedit_article_object();
-                    if (!$objArticleObject->open($this->fields['id'], $arrMatches[1][$intKey], $_SESSION['ploopi']['modules'][$arrMatches[2][$intKey]]['id_module_type'], $arrMatches[2][$intKey], $arrMatches[4][$intKey])) 
+                    if (!$objArticleObject->open($this->fields['id'], $arrMatches[1][$intKey], $_SESSION['ploopi']['modules'][$arrMatches[2][$intKey]]['id_module_type'], $arrMatches[2][$intKey], $arrMatches[4][$intKey]))
                     {
                         $objArticleObject->fields['id_article'] = $this->fields['id'];
                         $objArticleObject->fields['id_wce_object'] = $arrMatches[1][$intKey];
@@ -301,7 +301,7 @@ class webedit_article extends data_object
                 }
             }
         }
-        
+
 
         // suppression des liens article-tags existants
         $sql = "DELETE FROM ploopi_mod_webedit_article_tag WHERE id_article = {$this->fields['id']}";
@@ -329,7 +329,7 @@ class webedit_article extends data_object
             $objArticleTag->save();
         }
 
-        ploopi_search_create_index(_WEBEDIT_OBJECT_ARTICLE_PUBLIC, $this->fields['id'], $this->fields['title'], strip_tags(html_entity_decode($this->fields['content'])), "{$this->fields['metatitle']} {$this->fields['metakeywords']} {$this->fields['metadescription']}", true, $this->fields['timestp'], $this->fields['lastupdate_timestp']);
+        ploopi_search_create_index(_WEBEDIT_OBJECT_ARTICLE_PUBLIC, $this->fields['id'], $this->fields['title'], strip_tags(ploopi_html_entity_decode($this->fields['content'])), "{$this->fields['metatitle']} {$this->fields['metakeywords']} {$this->fields['metadescription']}", true, $this->fields['timestp'], $this->fields['lastupdate_timestp']);
     }
 
     /**

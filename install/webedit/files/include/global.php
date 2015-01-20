@@ -991,7 +991,7 @@ function webedit_replace_links($objArticle, $mode, &$arrHeadings)
                 {
                     $arrSearch[] = $arrMatches[1][$key];
                     // ATTENTION ! _PLOOPI_BASEPATH est nécessaire pour la lecture des vidéos flash (chemin absolu sinon ne fonctionne pas)
-                    $arrReplace[] = _PLOOPI_BASEPATH.'/'.ploopi_urlrewrite(html_entity_decode($arrMatches[1][$key]), doc_getrewriterules(), $objDocFile->fields['name'], null, true);
+                    $arrReplace[] = _PLOOPI_BASEPATH.'/'.ploopi_urlrewrite(ploopi_html_entity_decode($arrMatches[1][$key]), doc_getrewriterules(), $objDocFile->fields['name'], null, true);
                 }
             }
         }
