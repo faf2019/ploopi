@@ -87,7 +87,7 @@ function wiki_internal_links($arrMatches, $intIdModule = null)
 
     if (!empty($arrMatches[1]))
     {
-        $strPageId = ploopi_iso8859_clean(html_entity_decode(strip_tags($arrMatches[1])));
+        $strPageId = ploopi_iso8859_clean(ploopi_html_entity_decode(strip_tags($arrMatches[1])));
 
         $objWikiPage = new wiki_page();
         if ($objWikiPage->open($strPageId, $intIdModule))
@@ -139,6 +139,15 @@ function wiki_links($arrMatches)
 }
 
 /**
+ * Fonction de callback pour la création de liens sur les adresse email
+ */
+
+function wiki_make_links_cb($arrMatches)
+{
+    return stripslashes((strlen($arrMatches[4]) > 0 ? $arrMatches[1].'<a href="mailto:'.$arrMatches[3].'">'.$arrMatches[3].'</a>' : $arrMatches[1].$arrMatches[3]));
+}
+
+/**
  * Rend les liens simples et les adresses de courriel cliquables
  *
  * @param string $text le texte à traiter
@@ -146,15 +155,13 @@ function wiki_links($arrMatches)
  */
 function wiki_make_links($strContent)
 {
-    return preg_replace(array(
-             '@(^|([^\'":!<>]\s*))([hf][tps]{2,4}:\/\/[^\s<>"\'()]{4,})@mi',
-            '/(^|([\s]))(([_A-Za-z0-9-]+)(\\.[_A-Za-z0-9-]+)*@([A-Za-z0-9-]+)(\\.[A-Za-z0-9-]+)*)/miex'
-        ),
-    array(
-            '$2<a href="$3">$3</a>',
-           "stripslashes((strlen('\\4')>0?'\\1<a href=\"mailto:\\3\">\\3</a>':'\\1\\3'))"
-    ),
-    $strContent);
+    // Liens
+    $strContent = preg_replace('@(^|([^\'":!<>]\s*))([hf][tps]{2,4}:\/\/[^\s<>"\'()]{4,})@mi', '$2<a href="$3">$3</a>', $strContent);
+
+    // Adresses email
+    $strContent = preg_replace_callback ('/(^|([\s]))(([_A-Za-z0-9-]+)(\\.[_A-Za-z0-9-]+)*@([A-Za-z0-9-]+)(\\.[A-Za-z0-9-]+)*)/mi', 'wiki_make_links_cb', $strContent);
+
+    return $strContent;
 }
 
 /**

@@ -61,7 +61,7 @@ foreach($arrPageHistory as $strPageId) $arrUrlHistory[] = "<a href=\"".wiki_gene
 
     if (!empty($arrMatches[1]))
     {
-        $strPageId = ploopi_iso8859_clean(html_entity_decode(strip_tags($arrMatches[1])));
+        $strPageId = ploopi_iso8859_clean(ploopi_html_entity_decode(strip_tags($arrMatches[1])));
 
         $objWikiPage = new wiki_page();
         if ($objWikiPage->open($strPageId, $intIdModule))

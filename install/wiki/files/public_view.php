@@ -507,7 +507,7 @@ echo $skin->open_simplebloc(ploopi_htmlentities($strWikiPageId));
                     _WIKI_ACTION_PAGE_MODIFY,
                     _WIKI_ACTION_PAGE_DELETE
                 ),
-                "à &laquo; {$strWikiPageId} &raquo;"
+                "à « {$strWikiPageId} »"
             );
         ?>
     </div>

@@ -1,3 +1,15 @@
+== Module Wiki - version 1.2.5 ====================================================
+
+2015-01-20  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Correction d'un bug lié à la modification du comportement de html_entity_decode avec PHP 5.4
+
+== Module Wiki - version 1.2.4 ====================================================
+
+2014-12-22  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+* Modification de la fonction wiki_make_links pour corriger un problème de compatibilité avec PHP 5.5
+
 == Module Wiki - version 1.2.3 ====================================================
 
 2013-12-17  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>

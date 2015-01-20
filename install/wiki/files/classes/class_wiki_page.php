@@ -229,6 +229,6 @@ class wiki_page extends data_object
     public function index()
     {
         $this->remove_index();
-        ploopi_search_create_index(_WIKI_OBJECT_PAGE, $this->fields['id'], $this->fields['id'], strip_tags(html_entity_decode(wiki_render($this->fields['content']))), $this->fields['id'], true, $this->fields['ts_created'], $this->fields['ts_modified']);
+        ploopi_search_create_index(_WIKI_OBJECT_PAGE, $this->fields['id'], $this->fields['id'], strip_tags(ploopi_html_entity_decode(wiki_render($this->fields['content']))), $this->fields['id'], true, $this->fields['ts_created'], $this->fields['ts_modified']);
     }
 }
