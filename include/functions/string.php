@@ -262,6 +262,23 @@ function ploopi_htmlentities($str, $flags = null, $encoding = 'ISO-8859-1')
     return htmlentities(strip_tags($str), $flags, $encoding);
 }
 
+
+/**
+ *  Convertit toutes les entités HTML en caractères normaux (via html_entity_decode) mais en ISO-8859-1 par défaut.
+ *
+ * @param string $str chaîne brute
+ * @param int masque qui détermine la façon dans les guillemets sont gérés
+ * @param string $encoding définit l'encodage utilisé durant la conversion
+ * @return string chaîne convertie
+ */
+
+function ploopi_html_entity_decode($str, $flags = null, $encoding = 'ISO-8859-1')
+{
+    if (is_null($flags)) $flags = version_compare(phpversion(), '5.4', '<') ? ENT_COMPAT : ENT_COMPAT | ENT_HTML401;
+
+    return html_entity_decode($str, $flags, $encoding);
+}
+
 /**
  * Encode une chaîne en UTF8
  *

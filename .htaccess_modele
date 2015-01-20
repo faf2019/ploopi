@@ -37,6 +37,7 @@ AddDefaultCharset ISO-8859-15
     php_value memory_limit 128M
     php_value post_max_size 32M
     php_value upload_max_filesize 32M
+    php_value max_input_vars 5000
     php_value output_buffering Off
     php_value short_open_tag on
 
