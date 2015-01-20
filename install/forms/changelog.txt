@@ -1,3 +1,9 @@
+== Module FORMS - version 3.5.6 =====================================================
+
+2015-01-20  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+* Correction d'un bug lié à la modification du comportement de html_entity_decode avec PHP 5.4
+
 == Module FORMS - version 3.5.5c =====================================================
 
 2014-06-30  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
