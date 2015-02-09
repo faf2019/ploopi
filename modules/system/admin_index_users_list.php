@@ -143,12 +143,7 @@ switch ($_SESSION['system']['level'])
 {
     case _SYSTEM_WORKSPACES :
         $strSql = "
-            SELECT      ploopi_user.id,
-                        ploopi_user.lastname,
-                        ploopi_user.firstname,
-                        ploopi_user.login,
-                        ploopi_user.email,
-                        ploopi_user.service,
+            SELECT      ploopi_user.*,
                         ploopi_workspace.id as idref,
                         ploopi_workspace.label as label,
                         ploopi_workspace_user.adminlevel
@@ -170,13 +165,7 @@ switch ($_SESSION['system']['level'])
 
     case _SYSTEM_GROUPS :
         $strSql = "
-            SELECT      ploopi_user.id,
-                        ploopi_user.lastname,
-                        ploopi_user.firstname,
-                        ploopi_user.login,
-                        ploopi_user.email,
-                        ploopi_user.service,
-                        ploopi_user.function,
+            SELECT      ploopi_user.*,
                         ploopi_group.id as idref,
                         ploopi_group.label as label
 

@@ -656,6 +656,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                 )
             );
 
+
             ploopi_ob_clean();
 
             switch($strTypeDoc)
