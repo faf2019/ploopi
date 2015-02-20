@@ -344,7 +344,8 @@ abstract class ploopi_loader
             break;
 
             case 'webservice':
-                self::startlight();
+                if (isset($_REQUEST['ploopi_login'])) self::start();
+                else self::startlight();
                 include_once './include/webservice.php';
             break;
 
@@ -513,12 +514,13 @@ abstract class ploopi_loader
         if ((!empty($_REQUEST['ploopi_login']) && !empty($_REQUEST['ploopi_password'])))
         {
 
+
             $db->query("
                 SELECT      *
                 FROM        ploopi_user
                 WHERE       login = '".$db->addslashes($_REQUEST['ploopi_login'])."'
             ");
-
+            
             // Un seul utilisateur trouvé
             if ($db->numrows() == 1)
             {
@@ -607,29 +609,27 @@ abstract class ploopi_loader
                     }
                 }
 
+                if (empty($_REQUEST['noredir'])) {
+                    // Gestion de la redirection après login (en fonction de l'url de provenance et du script d'authentification)
+                    $arrReferer = isset($_SERVER['HTTP_REFERER']) ? parse_url($_SERVER['HTTP_REFERER']) : array(); // Provenance
+                    $arrRequest = isset($_SERVER['REQUEST_URI']) ? parse_url($_SERVER['REQUEST_URI']) : array();  // Demande d'authentification
 
+                    $strRefererHost = isset($arrReferer['host']) ? $arrReferer['host'] : '';
+                    $strRequestHost = $_SERVER['HTTP_HOST'];
 
+                    $strRefererScript = isset($arrReferer['path']) ? str_replace(_PLOOPI_BASEPATH, '', $arrReferer['path']) : '';
+                    $strRequestScript = isset($arrRequest['path']) ? str_replace(_PLOOPI_BASEPATH, '', $arrRequest['path']) : '';
 
-                // Gestion de la redirection après login (en fonction de l'url de provenance et du script d'authentification)
-                $arrReferer = isset($_SERVER['HTTP_REFERER']) ? parse_url($_SERVER['HTTP_REFERER']) : array(); // Provenance
-                $arrRequest = isset($_SERVER['REQUEST_URI']) ? parse_url($_SERVER['REQUEST_URI']) : array();  // Demande d'authentification
+                    $strLoginRedirect = '';
 
-                $strRefererHost = isset($arrReferer['host']) ? $arrReferer['host'] : '';
-                $strRequestHost = $_SERVER['HTTP_HOST'];
-
-                $strRefererScript = isset($arrReferer['path']) ? basename($arrReferer['path']) : '';
-                $strRequestScript = isset($arrRequest['path']) ? basename($arrRequest['path']) : '';
-
-                $strLoginRedirect = '';
-
-                // Même domaine, même script, redirection acceptée
-                if ($strRefererHost == $strRequestHost && ($strRefererScript == $strRequestScript || $strRequestScript != 'admin.php'))
-                {
-                    $strLoginRedirect = $_SERVER['HTTP_REFERER'];
+                    // Même domaine, même script, redirection acceptée
+                    if ($strRefererHost == $strRequestHost && ($strRefererScript == $strRequestScript || $strRequestScript != 'admin.php'))
+                    {
+                        $strLoginRedirect = $_SERVER['HTTP_REFERER'];
+                    }
+                    // on force la redirection sur le domaine+script courant
+                    else $strLoginRedirect = _PLOOPI_BASEPATH.'/'.$strRequestScript;
                 }
-                // on force la redirection sur le domaine+script courant
-                else $strLoginRedirect = _PLOOPI_BASEPATH.'/'.$strRequestScript;
-
 
             }
             else
@@ -662,11 +662,6 @@ abstract class ploopi_loader
 
         switch(self::$script)
         {
-            case 'admin':
-            case 'admin-light':
-                $_SESSION['ploopi']['mode'] = 'backoffice';
-            break;
-
             case 'index':
             case 'index-light':
                 if ((!empty($_GET['webedit_mode'])) && isset($_SESSION['ploopi']['backoffice']['connected']) && $_SESSION['ploopi']['backoffice']['connected'] && isset($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['backoffice']['moduleid']]) && $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['backoffice']['moduleid']]['moduletype'] == 'webedit')
@@ -715,6 +710,11 @@ abstract class ploopi_loader
 
             break;
 
+            case 'admin':
+            case 'admin-light':
+            default:
+                $_SESSION['ploopi']['mode'] = 'backoffice';
+            break;
         }
 
         if (self::$initsession)
@@ -1076,21 +1076,24 @@ abstract class ploopi_loader
         }
 
 
-        self::$workspace = array();
-        $objWorkspace = new workspace();
-        $objWorkspace->open($_SESSION['ploopi']['workspaceid']);
-        self::$workspace = $objWorkspace->fields;
+        if (in_array(self::$script, array('admin', 'admin-light', 'index', 'index-light'))) {
+            self::$workspace = array();
+            $objWorkspace = new workspace();
+            $objWorkspace->open($_SESSION['ploopi']['workspaceid']);
+            self::$workspace = $objWorkspace->fields;
 
-        ///////////////////////////////////////////////////////////////////////////
-        // CHOOSE TEMPLATE
-        ///////////////////////////////////////////////////////////////////////////
+            ///////////////////////////////////////////////////////////////////////////
+            // CHOOSE TEMPLATE
+            ///////////////////////////////////////////////////////////////////////////
 
-        $template_name = self::$workspace['template'];
+            $template_name = self::$workspace['template'];
 
-        if (empty($template_name) || !file_exists("./templates/backoffice/{$template_name}")) $template_name = _PLOOPI_DEFAULT_TEMPLATE;
+            if (empty($template_name) || !file_exists("./templates/backoffice/{$template_name}")) $template_name = _PLOOPI_DEFAULT_TEMPLATE;
 
-        $_SESSION['ploopi']['template_name'] = $template_name;
-        $_SESSION['ploopi']['template_path'] = "./templates/backoffice/{$_SESSION['ploopi']['template_name']}";
+            $_SESSION['ploopi']['template_name'] = $template_name;
+            $_SESSION['ploopi']['template_path'] = "./templates/backoffice/{$_SESSION['ploopi']['template_name']}";
+        }
+        
 
         // shortcuts for admin & workspaceid
         if (isset($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['adminlevel'])) $_SESSION['ploopi']['adminlevel'] = $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['adminlevel'];

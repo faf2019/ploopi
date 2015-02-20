@@ -251,6 +251,12 @@ switch($http_host)
         define ('_PLOOPI_ACTIVELOG', true);
 
         /**
+         * Active ou non le filtrage des VARIABLES (true très recommandé !)
+         */
+
+        define ('_PLOOPI_FILTER_VARS', true);
+
+        /**
          * Active ou non le chiffrement des URL
          */
 

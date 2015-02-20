@@ -455,7 +455,7 @@ class ploopi_db
 
         $array = array();
 
-        if ($this->numrows())
+        if ($this->numrows($query_id))
         {
             $this->dataseek($query_id, 0);
             while ($fields = $this->fetchrow($query_id))

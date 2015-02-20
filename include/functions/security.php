@@ -118,7 +118,7 @@ function ploopi_filtervar($mixVar, $strVarName = null, $booUtf8 = false)
 
         if ($booUtf8) $mixVar = utf8_decode($mixVar);
 
-        if (substr($strVarName,0,4) != 'fck_') $mixVar = ploopi_inputfilter::process($mixVar);
+        if ((!defined(_PLOOPI_FILTER_VARS) || _PLOOPI_FILTER_VARS) && substr($strVarName,0,4) != 'fck_') $mixVar = ploopi_inputfilter::process($mixVar);
     }
 
     return $mixVar;

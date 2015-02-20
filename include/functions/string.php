@@ -378,23 +378,25 @@ function ploopi_iso8859_clean($str, $booTranslit = true)
 
 function ploopi_make_links($text)
 {
-    $text = preg_replace(
-                array(
-                        '!(^|([^\'"]\s*))([hf][tps]{2,4}:\/\/[^\s<>"\'()]{4,})!mi',
-                        '!<a href="([^"]+)[\.:,\]]">!',
-                        '!([\.:,\]])</a>!',
-                        '/(([_A-Za-z0-9-]+)(\\.[_A-Za-z0-9-]+)*@([A-Za-z0-9-]+)(\\.[A-Za-z0-9-]+)*)/iex'
-                    ),
-                array(
-                        '$2<a href="$3">$3</a>',
-                        '<a href="$1">',
-                        '</a>$1',
-                       "stripslashes((strlen('\\2')>0?'<a href=\"mailto:\\0\">\\0</a>':'\\0'))"
-                    ),
-                $text);
+    $text = preg_replace(array(
+        '!(^|([^\'"]\s*))([hf][tps]{2,4}:\/\/[^\s<>"\'()]{4,})!mi',
+        '!<a href="([^"]+)[\.:,\]]">!',
+        '!([\.:,\]])</a>!',
+    ), array(
+        '$2<a href="$3">$3</a>',
+        '<a href="$1">',
+        '</a>$1',
+    ),
+    $text);
+
+    $text = preg_replace_callback('/(([_A-Za-z0-9-\+]+)(\\.[_A-Za-z0-9-]+)*@([A-Za-z0-9-]+)(\\.[A-Za-z0-9-]+)*)/i', function($matches) {
+        return stripslashes(strlen($matches[2])> 0 ? '<a href="mailto:'.$matches[0].'">'.$matches[0].'</a>' : $matches[0]);
+    }, $text);
+
 
     return $text;
 }
+
 
 /**
  * Encode et affiche une variable au format JSON et modifie les entêtes du document. Compatible x-json
@@ -414,7 +416,7 @@ function ploopi_print_json($var, $utf8encode = true, $use_xjson = true)
     if ($utf8encode) $var = ploopi_array_map('ploopi_utf8encode', $var);
 
     $json = json_encode($var);
-    header("Content-Type: text/x-json");
+    header("Content-Type: text/x-json; charset=utf-8");
     if ($use_xjson === false || strlen($json) > 1024) echo $json;
     else header("X-Json: {$json}");
 }
