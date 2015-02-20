@@ -1,3 +1,9 @@
+== Module DOC - version 4.8.0 ====================================================
+
+2015-02-20  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Nouveau webservice wsdoc permettant d'effectuer des opérations sur les dossiers et fichiers.
+
 == Module DOC - version 4.7.2a ====================================================
 
 2014-04-10  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

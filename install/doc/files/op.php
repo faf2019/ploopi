@@ -38,7 +38,7 @@
  */
 
 if ($_SESSION['ploopi']['connected'])
-{
+{    
     /**
      * On vérifie qu'on est bien dans le module DOC.
      * Ces opérations ne peuvent être effectuées que depuis le module DOC.
@@ -1118,4 +1118,9 @@ switch($ploopi_op)
     break;
 }
 
+// Point d'entrée vers le webservice
+if ($ploopi_op == 'doc_webservice') {
+    include_once './modules/doc/webservice.php';
+    ploopi_die();
+}
 ?>

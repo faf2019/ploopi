@@ -2,9 +2,9 @@
 <ploopi>
     <moduletype>
         <label>doc</label>
-        <version>4.7.2a</version>
+        <version>4.8.0</version>
         <author>Ovensia / HeXad</author>
-        <date>20140410000000</date>
+        <date>20150220000000</date>
         <description>Gestion de Documents</description>
         <paramtype>
             <name>doc_viewfoldersinblock</name>
@@ -248,6 +248,10 @@
         <action>
             <id_action>7</id_action>
             <label>Gérer les Validateurs</label>
+        </action>
+        <action>
+            <id_action>8</id_action>
+            <label>Accéder au webservice</label>
         </action>
         <action>
             <id_action>9</id_action>

@@ -49,6 +49,7 @@ define ('_DOC_ACTION_MODIFYFILE',   4);
 define ('_DOC_ACTION_DELETEFOLDER', 5);
 define ('_DOC_ACTION_DELETEFILE',   6);
 define ('_DOC_ACTION_WORKFLOW_MANAGE',  7);
+define ('_DOC_ACTION_WEBSERVICE',   8);
 define ('_DOC_ACTION_ADMIN',        9);
 
 define('_DOC_OBJECT_FOLDER',    1);
@@ -696,13 +697,11 @@ function doc_folder_isenabled($row)
 }
 
 
-/**
- * Retourne true si le contenu du dossier n'est pas modifiable
- * Règle générale : Si l'attribut "readonly" est actif, seul le propriétaire, le super admin ou celui qui a le rôle d'admin du module peuvent écrire dans le dossier.
- */
-function doc_folder_contentisreadonly($row, $action = null)
+function doc_folder_contentisreadonly($row, $action = null, $id_module = -1)
 {
-    $booActionIsOk = is_null($action) || ploopi_isactionallowed($action);
+    if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];
+
+    $booActionIsOk = is_null($action) || ploopi_isactionallowed($action, -1, $id_module);
 
     $root = empty($row['id']);
 
@@ -712,7 +711,7 @@ function doc_folder_contentisreadonly($row, $action = null)
     // - propriétaire du dossier & actionOK
     // - admin du module
     // - super admin
-    return !((((!$root && !$row['readonly']) || $row['id_user'] == $_SESSION['ploopi']['userid'] || ($root && ploopi_getparam('doc_rootwritable'))) && $booActionIsOk) || ploopi_isadmin() || ploopi_isactionallowed(_DOC_ACTION_ADMIN));
+    return !((((!$root && !$row['readonly']) || $row['id_user'] == $_SESSION['ploopi']['userid'] || ($root && ploopi_getparam('doc_rootwritable', $id_module))) && $booActionIsOk) || ploopi_isadmin() || ploopi_isactionallowed(_DOC_ACTION_ADMIN, -1, $id_module));
 }
 
 
