@@ -1,3 +1,9 @@
+== Module WebEdit - version 2.5.6 ============================================
+
+2015-03-02  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Correction d'un bug dans l'affichage du champ "Code supplémentaire" à cause d'un filtrage excessif du contenu.
+
 == Module WebEdit - version 2.5.5 ============================================
 
 2015-01-20  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

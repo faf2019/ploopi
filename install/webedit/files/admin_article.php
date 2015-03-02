@@ -471,10 +471,12 @@ $keywords = array_slice($keywords, 0 , 20, true);
             <div><?php echo ploopi_htmlentities("Code supplémentaire, non filtré, à insérer dans la balise <HEAD> (js, css, meta, title...) :"); ?> (<a href="javascript:void(0);" onclick="javascript:$('fck_webedit_article_headcontent').style.height=(parseInt($('fck_webedit_article_headcontent').style.height,10)+20)+'px';" title="Permet d'agrandir la zone de saisie de 20px">agrandir la zone</a>)</div>
             <div>
             <?php
+            $strHeadContent = htmlentities($article->fields['headcontent'], version_compare(phpversion(), '5.4', '<') ? ENT_COMPAT : ENT_COMPAT | ENT_HTML401, 'ISO-8859-1');
+
             if (!$readonly)
             {
                 ?>
-                <textarea id="fck_webedit_article_headcontent" name="fck_webedit_article_headcontent" class="text" style="width:99%;height:16px;"><?php echo ploopi_htmlentities($article->fields['headcontent']); ?></textarea>
+                <textarea id="fck_webedit_article_headcontent" name="fck_webedit_article_headcontent" class="text" style="width:99%;height:16px;"><?php echo $strHeadContent; ?></textarea>
                 <?php
             }
             else
@@ -483,7 +485,7 @@ $keywords = array_slice($keywords, 0 , 20, true);
                 <div id="fck_webedit_article_headcontent" style="height:16px;">
                 <pre>
                 <?php
-                echo ploopi_htmlentities($article->fields['headcontent']);
+                echo $strHeadContent;
                 ?>
                 </pre>
                 </div>
