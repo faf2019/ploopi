@@ -177,7 +177,7 @@ switch($ploopi_op)
             $documentsfolder->save();
 
             if (!empty($_SESSION['documents'][$documents_id]['callback_inc'])) include $_SESSION['documents'][$documents_id]['callback_inc'];
-            if (!empty($_SESSION['documents'][$documents_id]['callback_func'])) $_SESSION['documents'][$documents_id]['callback_func']('savefolder', $documentsfolder);
+            if (!empty($_SESSION['documents'][$documents_id]['callback_func'])) $_SESSION['documents'][$documents_id]['callback_func']('savefolder', $documentsfolder, true);
         }
         ?>
         <script type="text/javascript">
@@ -549,7 +549,7 @@ switch($ploopi_op)
             $documentsfile->delete();
 
             if (!empty($_SESSION['documents'][$_REQUEST['documents_id']]['callback_inc'])) include $_SESSION['documents'][$_REQUEST['documents_id']]['callback_inc'];
-            if (!empty($_SESSION['documents'][$_REQUEST['documents_id']]['callback_func'])) $_SESSION['documents'][$_REQUEST['documents_id']]['callback_func']('deletefile', $documentsfile);
+            if (!empty($_SESSION['documents'][$_REQUEST['documents_id']]['callback_func'])) $_SESSION['documents'][$_REQUEST['documents_id']]['callback_func']('deletefile', $documentsfile, true);
         }
 
         ploopi_redirect("admin.php?ploopi_op=documents_browser&currentfolder={$_GET['currentfolder']}&documents_id={$_REQUEST['documents_id']}");

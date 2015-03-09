@@ -129,6 +129,8 @@ function ploopi_ob_callback($buffer)
     global $ploopi_timer;
     global $db;
 
+    if (!strlen(trim($buffer))) return '';
+
     // On essaye de récupérer le content-type du contenu du buffer
     $content_type = 'text/html';
     $headers = headers_list();
@@ -219,8 +221,6 @@ function ploopi_ob_callback($buffer)
         $log->fields['page_size'] = $ploopi_stats['pagesize'];
         $log->save();
     }
-
-    session_write_close();
 
     if ($content_type == 'text/html' && !$booDownloadFile)
     {
