@@ -1,3 +1,9 @@
+== Module DOC - version 4.8.1 ====================================================
+
+2015-03-09  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Correction d'un bug sur la fonctionnalité de téléchargement de fichier en mode déconnecté
+
 == Module DOC - version 4.8.0 ====================================================
 
 2015-02-20  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

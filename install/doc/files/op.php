@@ -38,7 +38,7 @@
  */
 
 if ($_SESSION['ploopi']['connected'])
-{    
+{
     /**
      * On vérifie qu'on est bien dans le module DOC.
      * Ces opérations ne peuvent être effectuées que depuis le module DOC.
@@ -1099,7 +1099,6 @@ switch($ploopi_op)
 
     case 'doc_file_view':
     case 'doc_file_download':
-        include_once './include/start/constants.php';
         include_once './include/classes/data_object.php';
         include_once './include/functions/date.php';
         include_once './include/functions/filesystem.php';
