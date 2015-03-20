@@ -67,7 +67,6 @@ if ($_SESSION['ploopi']['connected'])
         break;
 
         case 'booking_event_save':
-            ploopi_init_module('booking', false, false, false);
 
             include_once './modules/booking/classes/class_booking_event.php';
             include_once './modules/booking/classes/class_booking_event_detail.php';
@@ -79,6 +78,7 @@ if ($_SESSION['ploopi']['connected'])
 
                 $objEvent->setvalues($_POST, 'booking_event_');
                 $objEvent->setdetails($_POST, '_booking_event_');
+
 
                 $objEvent->setuwm();
                 if ($_SESSION['ploopi']['mode'] == 'frontoffice') $objEvent->fields['id_module'] = $_GET['booking_moduleid'];
@@ -374,6 +374,7 @@ if ($_SESSION['ploopi']['connected'])
             ploopi_init_module('booking');
 
             global $arrBookingColor;
+            global $arrBookingPeriodicity;
 
             // Cas particulier du mode frontoffice, on teste la présence de moduleid
             if ($_SESSION['ploopi']['mode'] == 'frontoffice' && (empty($_GET['booking_moduleid']) || !is_numeric($_GET['booking_moduleid']) || !ploopi_isactionallowed(_BOOKING_ACTION_ASKFOREVENT, $_SESSION['ploopi']['workspaceid'], $_GET['booking_moduleid']))) ploopi_die();
@@ -421,12 +422,9 @@ if ($_SESSION['ploopi']['connected'])
                     <input name="booking_event_object" type="text" class="text" value="<? echo ploopi_htmlentities($objEvent->fields['object']); ?>">
                 </p>
                 <p>
-                    <label>Date de début:</label>
+                    <label>Date/heure de début:</label>
                     <input name="_booking_event_timestp_begin_d" id="_booking_event_timestp_begin_d" class="text" type="text" value="<?php echo ploopi_htmlentities($strDate); ?>" style="width:80px;" onchange="javascript:$('_booking_event_timestp_end_d').value = this.value;" />
-                    <?php ploopi_open_calendar('_booking_event_timestp_begin_d'); ?>
-                </p>
-                <p>
-                    <label>Heure de début:</label>
+                    <span style="float:left;width:auto;margin:0;padding:1px;"><?php ploopi_open_calendar('_booking_event_timestp_begin_d'); ?></span>
                     <select name="_booking_event_timestp_begin_h" id="_booking_event_timestp_begin_h" class="select" style="width:60px;">
                     <?
                     for ($i = 0; $i < 24; $i++)
@@ -446,12 +444,9 @@ if ($_SESSION['ploopi']['connected'])
                     </select>
                 </p>
                 <p>
-                    <label>Date de fin:</label>
+                    <label>Date/heure de fin:</label>
                     <input name="_booking_event_timestp_end_d" id="_booking_event_timestp_end_d" class="text" type="text" value="<?php echo ploopi_htmlentities($strDate); ?>" style="width:80px; "/>
-                    <?php ploopi_open_calendar('_booking_event_timestp_end_d'); ?>
-                </p>
-                <p>
-                    <label>Heure de fin:</label>
+                    <span style="float:left;width:auto;margin:0;padding:1px;"><?php ploopi_open_calendar('_booking_event_timestp_end_d'); ?></span>
                     <select name="_booking_event_timestp_end_h" id="_booking_event_timestp_end_h" class="select" style="width:60px;">
                     <?
                     for ($i = 0; $i < 24; $i++)
@@ -482,16 +477,22 @@ if ($_SESSION['ploopi']['connected'])
                         }
                         ?>
                     </select>
+                    <em style="float:left;">&nbsp;&nbsp;jusqu'au:&nbsp;&nbsp;</em>
+                    <input name="_booking_event_periodicity_end_date" id="_booking_event_periodicity_end_date" class="text" type="text" value="" style="width:80px; "/>
+                    <span style="float:left;width:auto;margin:0;padding:1px;"><?php ploopi_open_calendar('_booking_event_periodicity_end_date'); ?></span>
                 </p>
                 <p>
-                    <label><em>se termine le</em>:</label>
-                    <input name="_booking_event_periodicity_end_date" id="_booking_event_periodicity_end_date" class="text" type="text" value="" style="width:80px; "/>
-                    <?php ploopi_open_calendar('_booking_event_periodicity_end_date'); ?>
+                    <label>Commentaire:</label>
+                    <textarea style="height:60px;" class="text" name="_booking_event_message" id="_booking_event_message" placeholder="Indiquez éventuellement les autres ressources nécessaires"></textarea>
+                </p>
+                <p>
+                    <label>Destinataires complémentaires (adresses de courriel séparées par &laquo; , &raquo;:</label>
+                    <textarea style="height:60px;" class="text" name="_booking_event_emails" id="_booking_event_emails" placeholder="Indiquez éventuellement les adresses de courriel des personnes à avertir lors de la validation"></textarea>
                 </p>
             </div>
             <div style="padding:4px;text-align:right;">
                 <input type="reset" class="button" value="Réinitialiser" />
-                <input type="submit" class="button" value="Enregistrer" />(demande_réservation)
+                <input type="submit" class="button" value="Enregistrer" />
             </div>
             </form>
             <?
@@ -609,14 +610,30 @@ switch($ploopi_op)
                 if ($objResource->open($objEvent->fields['id_resource'])) $strResource = $objResource->fields['name'].(empty($objResource->fields['reference']) ? '' : " ({$objResource->fields['reference']})");
                 else $strResource = 'inconnue';
 
+                // Validateur ?
                 $booValidator = ($_SESSION['ploopi']['mode'] == 'backoffice') && ploopi_isactionallowed(_BOOKING_ACTION_VALIDATE) && $objResourceWorkspace->open($objEvent->fields['id_resource'], $_SESSION['ploopi']['workspaceid']);
 
-                // Modification possible si "traitement non terminé" et "backoffice"
+                // Modification possible si "traitement non terminé" (managed=0) et "backoffice"
                 // Penser à gérer également les droits de modif
                 $booModify = ($objEvent->fields['managed'] == 0 && $booValidator);
+
+                // Récupération des détails de l'événement
+                $arrDetails = $objEvent->getdetails();
+
+                // True si au moins un événement modifiable
+                $booModifyEventGlobal = $booModify;
+
+                // On boucle sur l'affichage des détails d'événement
+                // Pour savoir si au moins un élément est modifiable
+                foreach($arrDetails as $detail)
+                {
+                    $booValidate = ($objEvent->fields['managed'] == 0 && $booValidator && $detail['canceled'] == 0 && $detail['validated'] == 0);
+                    $booModifyEvent = $booValidate || ($objEvent->fields['managed'] == 0 && $detail['canceled'] == 0 && $detail['validated'] == 0 && $_SESSION['ploopi']['userid'] == $objEvent->fields['id_user']);
+                    $booModifyEventGlobal = $booModifyEventGlobal || $booModifyEvent;
+                }
                 ?>
 
-                <? if ($booModify) { ?><form action="<? echo ploopi_urlencode("admin-light.php?ploopi_op=booking_event_validate&booking_event_id={$objEvent->fields['id']}"); ?>" method="post"><? } ?>
+                <? if ($booModifyEventGlobal) { ?><form action="<? echo ploopi_urlencode("admin-light.php?ploopi_op=booking_event_validate&booking_event_id={$objEvent->fields['id']}"); ?>" method="post"><? } ?>
 
                 <div class=ploopi_form>
                     <p>
@@ -681,12 +698,10 @@ switch($ploopi_op)
                     }
                     ?>
                     <div style="background-color:#c0c0c0;margin:1px;padding:4px;font-weight:bold;">Détail des événements associés à cette demande:</div>
-                        <?
-                        // Récupération des détails de l'événement
-                        $arrDetails = $objEvent->getdetails();
-                        ?>
                         <div>
                         <?
+                        // True si au moins un événement modifiable
+                        $booModifyEventGlobal = $booModify;
                         /* <div <? if (sizeof($arrDetails) >2) {?>style="height:300px;overflow:auto;<? } ?>"> */
 
                         // On boucle sur l'affichage des détail d'événement
@@ -697,7 +712,10 @@ switch($ploopi_op)
                             {
                                 //$booModify = ($objEvent->fields['managed'] == 0 && $_SESSION['ploopi']['mode'] == 'backoffice' && (!isset($arrId[1]) || (isset($arrId[1]) && $arrId[1] == $detail['id'])));
                                 //$booModify = ($objEvent->fields['managed'] == 0 && $_SESSION['ploopi']['mode'] == 'backoffice' && $detail['canceled'] == 0 && $detail['validated'] == 0 && (!isset($arrId[1]) || (isset($arrId[1]) && $arrId[1] == $detail['id'])));
-                                $booModify = ($objEvent->fields['managed'] == 0 && $booValidator && $detail['canceled'] == 0 && $detail['validated'] == 0);
+                                $booValidate = ($objEvent->fields['managed'] == 0 && $booValidator && $detail['canceled'] == 0 && $detail['validated'] == 0);
+                                $booModifyEvent = $booValidate || ($objEvent->fields['managed'] == 0 && $detail['canceled'] == 0 && $detail['validated'] == 0 && $_SESSION['ploopi']['userid'] == $objEvent->fields['id_user']);
+                                $booModifyEventGlobal = $booModifyEventGlobal || $booModifyEvent;
+
 
                                 // Date de début/fin au format local
                                 $arrDateBegin = ploopi_timestamp2local($detail['timestp_begin']);
@@ -717,13 +735,29 @@ switch($ploopi_op)
                                 ?>
                                 <div style="<? echo $strBorderColor; ?>;margin:1px;<? echo $strBgcolor; ?>" id="booking_event_bg<? echo $detail['id']; ?>">
                                     <p>
-                                        <label>Date de début:</label>
+                                        <label>Date/heure de début:</label>
                                         <?
-                                        if ($booModify)
+                                        if ($booModifyEvent)
                                         {
                                             ?>
                                             <input name="_booking_event_timestp_begin_d[<? echo $detail['id']; ?>]" id="_booking_event_timestp_begin_d<? echo $detail['id']; ?>" class="text" type="text" value="<?php echo ploopi_htmlentities($arrDateBegin['date']); ?>" style="width:80px;" onchange="javascript:if ($('_booking_event_timestp_end_d<? echo $detail['id']; ?>').value == '') $('_booking_event_timestp_end_d<? echo $detail['id']; ?>').value = this.value;" />
-                                            <?php ploopi_open_calendar("_booking_event_timestp_begin_d{$detail['id']}"); ?>
+                                            <span style="float:left;width:auto;margin:0;padding:1px;"><?php ploopi_open_calendar("_booking_event_timestp_begin_d{$detail['id']}"); ?></span>
+                                            <select name="_booking_event_timestp_begin_h[<? echo $detail['id']; ?>]" id="_booking_event_timestp_begin_h<? echo $detail['id']; ?>" class="select" style="width:60px;">
+                                            <?
+                                            for ($i = 0; $i < 24; $i++)
+                                            {
+                                                ?><option value="<? echo $i; ?>" <? if ($arrDateBegin_h == $i) echo 'selected="selected"'; ?>><? echo sprintf("%02d h", $i); ?></option><?
+                                            }
+                                            ?>
+                                            </select>
+                                            <select name="_booking_event_timestp_begin_m[<? echo $detail['id']; ?>]" id="_booking_event_timestp_begin_m<? echo $detail['id']; ?>" class="select" style="width:45px;">
+                                            <?
+                                            for ($i = 0; $i < 12; $i++)
+                                            {
+                                                ?><option value="<? echo $i*5; ?>" <? if ($arrDateBegin_m == $i*5) echo 'selected="selected"'; ?>><? echo sprintf("%02d", $i*5); ?></option><?
+                                            }
+                                            ?>
+                                            </select>
                                             <?
                                         }
                                         else
@@ -731,7 +765,8 @@ switch($ploopi_op)
                                             ?>
                                             <span>
                                                 <?
-                                                echo ploopi_htmlentities($arrDateBegin['date']);
+                                                echo ploopi_htmlentities($arrDateBegin['date']).' '.substr($arrDateBegin['time'], 0, 5);
+
                                                 echo '<strong style="margin-left:10px;">'.($detail['validated'] ? 'Validé' : ($detail['canceled'] ? 'Refusé' : 'Indeterminé')).'</strong>';
 
                                                 // Peuvent supprimer :
@@ -765,61 +800,13 @@ switch($ploopi_op)
                                         ?>
                                     </p>
                                     <p>
-                                        <label>Heure de début:</label>
+                                        <label>Date/heure de fin:</label>
                                         <?
-                                        if ($booModify)
-                                        {
-                                            ?>
-                                            <select name="_booking_event_timestp_begin_h[<? echo $detail['id']; ?>]" id="_booking_event_timestp_begin_h<? echo $detail['id']; ?>" class="select" style="width:60px;">
-                                            <?
-                                            for ($i = 0; $i < 24; $i++)
-                                            {
-                                                ?><option value="<? echo $i; ?>" <? if ($arrDateBegin_h == $i) echo 'selected="selected"'; ?>><? echo sprintf("%02d h", $i); ?></option><?
-                                            }
-                                            ?>
-                                            </select>
-                                            <select name="_booking_event_timestp_begin_m[<? echo $detail['id']; ?>]" id="_booking_event_timestp_begin_m<? echo $detail['id']; ?>" class="select" style="width:45px;">
-                                            <?
-                                            for ($i = 0; $i < 12; $i++)
-                                            {
-                                                ?><option value="<? echo $i*5; ?>" <? if ($arrDateBegin_m == $i*5) echo 'selected="selected"'; ?>><? echo sprintf("%02d", $i*5); ?></option><?
-                                            }
-                                            ?>
-                                            </select>
-                                            <?
-                                        }
-                                        else
-                                        {
-                                            ?>
-                                            <span><? echo substr($arrDateBegin['time'], 0, 5); ?></span>
-                                            <?
-                                        }
-                                        ?>
-                                    </p>
-                                    <p>
-                                        <label>Date de fin:</label>
-                                        <?
-                                        if ($booModify)
+                                        if ($booModifyEvent)
                                         {
                                             ?>
                                             <input name="_booking_event_timestp_end_d[<? echo $detail['id']; ?>]" id="_booking_event_timestp_end_d<? echo $detail['id']; ?>" class="text" type="text" value="<?php echo ploopi_htmlentities($arrDateEnd['date']); ?>" style="width:80px; "/>
-                                            <?php ploopi_open_calendar("_booking_event_timestp_end_d{$detail['id']}"); ?>
-                                            <?
-                                        }
-                                        else
-                                        {
-                                            ?>
-                                            <span><? echo $arrDateEnd['date']; ?></span>
-                                            <?
-                                        }
-                                        ?>
-                                    </p>
-                                    <p>
-                                        <label>Heure de fin:</label>
-                                        <?
-                                        if ($booModify)
-                                        {
-                                            ?>
+                                            <span style="float:left;width:auto;margin:0;padding:1px;"><?php ploopi_open_calendar("_booking_event_timestp_end_d{$detail['id']}"); ?></span>
                                             <select name="_booking_event_timestp_end_h[<? echo $detail['id']; ?>]" id="_booking_event_timestp_end_h<? echo $detail['id']; ?>" class="select" style="width:60px;">
                                             <?
                                             for ($i = 0; $i < 24; $i++)
@@ -841,61 +828,54 @@ switch($ploopi_op)
                                         else
                                         {
                                             ?>
-                                            <span><? echo substr($arrDateEnd['time'], 0, 5); ?></span>
+                                            <span><? echo $arrDateEnd['date']; ?>&nbsp;<? echo substr($arrDateEnd['time'], 0, 5); ?></span>
                                             <?
                                         }
                                         ?>
                                     </p>
 
                                     <?
-                                    if ($booModify)
+                                    if ($booValidate)
                                     {
                                         ?>
-                                        <p style="font-weight:bold;">
-                                            Décision :
-                                            <?  // calcul de la différence entre le moment actuel et la date de fin mission
-                                                // si mission est passée, on ne peut plus la supprimer
-                                                  $diff=time()-ploopi_timestamp2unixtimestamp($detail['timestp_end']);
-                                                  //echo ("diff" .$diff. " et" . ((($diff/24)/3600 )+1));
-                                                  if ( (((($diff/24)/3600 )+1))<1 )
-                                                  {
+                                        <div style="font-weight:bold;padding-left:10px;" class="ploopi_va">
+                                            <strong>Décision :</strong>
+                                            <?
+                                            // calcul de la différence entre le moment actuel et la date de fin mission
+                                            // si mission est passée, on ne peut plus la supprimer
+                                            $diff=time()-ploopi_timestamp2unixtimestamp($detail['timestp_end']);
+                                            if (($diff/24/3600)+1 < 1) {
+                                                ?>
+                                                <input type="radio" class="checkbox" name="_booking_event_validated[<? echo $detail['id']; ?>]" id="_booking_event_validated<? echo $detail['id']; ?>_9" value="9" onchange="javascript:$('booking_event_bg<? echo $detail['id']; ?>').style.backgroundColor = '<? echo $arrBookingColor['deleted']; ?>';" />
+                                                <a href="javascript:void(0);" onclick="javascript:ploopi_checkbox_click(event, '_booking_event_validated<? echo $detail['id']; ?>_9');">Supprimer</a>
+                                                <?
+                                            }
                                             ?>
-                                            <input type="radio" class="checkbox" name="_booking_event_validated[<? echo $detail['id']; ?>]" id="_booking_event_validated<? echo $detail['id']; ?>_9" value="9" onchange="javascript:$('booking_event_bg<? echo $detail['id']; ?>').style.backgroundColor = '<? echo $arrBookingColor['deleted']; ?>';" />
-                                            <a href="javascript:void(0);" onclick="javascript:ploopi_checkbox_click(event, '_booking_event_validated<? echo $detail['id']; ?>_9');">Supprimer</a>
-                                            <? } ?>
-
                                             <input type="radio" class="checkbox" name="_booking_event_validated[<? echo $detail['id']; ?>]" id="_booking_event_validated<? echo $detail['id']; ?>_0" value="0" onchange="javascript:$('booking_event_bg<? echo $detail['id']; ?>').style.backgroundColor = '<? echo $arrBookingColor['canceled']; ?>';" <? if ($detail['canceled']) echo 'checked="checked"'; ?> />
                                             <a href="javascript:void(0);" onclick="javascript:ploopi_checkbox_click(event, '_booking_event_validated<? echo $detail['id']; ?>_0');">Refuser</a>
 
                                             <input type="radio" class="checkbox" name="_booking_event_validated[<? echo $detail['id']; ?>]" id="_booking_event_validated<? echo $detail['id']; ?>_1" value="1" onchange="javascript:$('booking_event_bg<? echo $detail['id']; ?>').style.backgroundColor = '<? echo $arrBookingColor['validated']; ?>';" <? if ($detail['validated']) echo 'checked="checked"'; ?> />
                                             <a href="javascript:void(0);" onclick="javascript:ploopi_checkbox_click(event, '_booking_event_validated<? echo $detail['id']; ?>_1');">Valider</a>
-                                        </p>
+                                        </div>
                                         <?
                                     }
-                                    ?>
 
-                                    <?
                                     // seuls les validateurs et propriétaires peuvent voire "commentaire" et "emails"
-                                    if ($booValidator || ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['userid'] == $objEvent->fields['id_user']))
-                                    {
-                                        ?>
-                                        <p>
-                                            <label>Commentaire:</label>
-                                            <?
-                                            if ($booModify) { ?><textarea style="height:60px;" class="text" name="_booking_event_message[<? echo $detail['id']; ?>]" id="_booking_event_message<? echo $detail['id']; ?>"><? echo ploopi_htmlentities($detail['message']); ?></textarea><? }
-                                            else echo '<span>'.ploopi_nl2br(ploopi_htmlentities($detail['message'])).'</span>';
-                                            ?>
-                                        </p>
-                                        <p>
-                                            <label>Destinataires complémentaires (adresses de courriel séparées par &laquo; , &raquo;:</label>
-                                            <?
-                                            if ($booModify) { ?><textarea style="height:60px;" class="text" name="_booking_event_emails[<? echo $detail['id']; ?>]" id="_booking_event_emails<? echo $detail['id']; ?>"><? echo ploopi_htmlentities($detail['emails']); ?></textarea><? }
-                                            else echo '<span>'.ploopi_nl2br(ploopi_htmlentities($detail['emails'])).'</span>';
-                                            ?>
-                                        </p>
-                                        <?
-                                    }
                                     ?>
+                                    <p>
+                                        <label>Commentaire:</label>
+                                        <?
+                                        if ($booModifyEvent) { ?><textarea style="height:60px;" class="text" name="_booking_event_message[<? echo $detail['id']; ?>]" id="_booking_event_message<? echo $detail['id']; ?>"><? echo ploopi_htmlentities($detail['message']); ?></textarea><? }
+                                        else echo '<span>'.ploopi_nl2br(ploopi_htmlentities($detail['message'])).'</span>';
+                                        ?>
+                                    </p>
+                                    <p>
+                                        <label>Destinataires complémentaires (adresses de courriel séparées par &laquo; , &raquo;:</label>
+                                        <?
+                                        if ($booModifyEvent) { ?><textarea style="height:60px;" class="text" name="_booking_event_emails[<? echo $detail['id']; ?>]" id="_booking_event_emails<? echo $detail['id']; ?>"><? echo ploopi_htmlentities($detail['emails']); ?></textarea><? }
+                                        else echo '<span>'.ploopi_nl2br(ploopi_htmlentities($detail['emails'])).'</span>';
+                                        ?>
+                                    </p>
                                 </div>
                                 <?
                             }
@@ -905,26 +885,24 @@ switch($ploopi_op)
                 </div>
                 <div style="padding:4px;text-align:right;">
                     <?
-                    if ($_SESSION['ploopi']['mode'] == 'backoffice' && ploopi_isactionallowed(_BOOKING_ACTION_VALIDATE))
-                    {
-                        if ($objEvent->fields['managed'] == 0)
-                        {
-                            ?>
-                            <input type="reset" class="button" value="Réinitialiser" />
-                            <input type="submit" class="button" value="Enregistrer" />(demande_validation)
-                            <?
-                        }
-                        else
-                        {
-                            ?>
-                            <div style="margin-bottom:2px;"><strong style="color:#a60000;">Cette demande est verrouillée car son traitement est terminé</strong></div>
-                            <div>
-                                <input type="button" class="button" value="Deverrouiller" onclick="javascript:booking_event_unlock('<? echo ploopi_htmlentities($_GET['booking_element_id']); ?>');"/>
-                                <input type="button" class="button" value="Fermer" onclick="javascript:ploopi_hidepopup('popup_event');"/>
-                            </div>
-                            <?
-                        }
+                    // Enregistrement et/ou validation
+                    if ($booModifyEventGlobal) {
+                        ?>
+                        <input type="reset" class="button" value="Réinitialiser" />
+                        <input type="submit" class="button" value="Enregistrer" />
+                        <?
                     }
+                    // Déverrouillage
+                    elseif ($objEvent->fields['managed'] == 1 && ploopi_isactionallowed(_BOOKING_ACTION_VALIDATE)) {
+                        ?>
+                        <div style="margin-bottom:2px;"><strong style="color:#a60000;">Cette demande est verrouillée car son traitement est terminé</strong></div>
+                        <div>
+                            <input type="button" class="button" value="Deverrouiller" onclick="javascript:booking_event_unlock('<? echo ploopi_htmlentities($_GET['booking_element_id']); ?>');"/>
+                            <input type="button" class="button" value="Fermer" onclick="javascript:ploopi_hidepopup('popup_event');"/>
+                        </div>
+                        <?
+                    }
+                    // Tout autre cas
                     else
                     {
                         ?>

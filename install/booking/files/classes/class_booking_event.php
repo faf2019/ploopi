@@ -22,7 +22,7 @@
 
 /**
  * Gestion des ressources
- * 
+ *
  * @package booking
  * @subpackage event
  * @copyright Ovensia
@@ -39,7 +39,7 @@ include_once './include/classes/data_object.php';
 
 /**
  * Classe d'accès à la table 'ploopi_mod_booking_event'
- * 
+ *
  * @package booking
  * @subpackage event
  * @author Stéphane Escaich
@@ -48,37 +48,37 @@ include_once './include/classes/data_object.php';
 
 class booking_event extends data_object
 {
-    
+
     private $details;
-    
+
     /**
      * Constructeur de la classe
      *
      * @return booking_event
      */
-    
+
     public function booking_event()
     {
         parent::data_object('ploopi_mod_booking_event', 'id');
         $this->details = array();
     }
-    
+
     /**
      * Enregistre l'événement
      *
      * @return int id de la ressource
      */
-    
+
     public function save()
     {
 
-        if ($this->new) 
+        if ($this->new)
         {
             $this->fields['timestp_request'] = ploopi_createtimestamp();
         }
-        
+
         echo $intIdEvent = parent::save();
-        
+
         // Si il faut enregistrer des "event_detail"
         if (!empty($this->details))
         {
@@ -87,54 +87,56 @@ class booking_event extends data_object
             $objEventDetail = new booking_event_detail();
             $objEventDetail->fields['timestp_begin'] = ploopi_local2timestamp($this->details['timestp_begin_d'], sprintf("%02d:%02d:00", $this->details['timestp_begin_h'], $this->details['timestp_begin_m']));
             $objEventDetail->fields['timestp_end'] = ploopi_local2timestamp($this->details['timestp_end_d'], sprintf("%02d:%02d:00", $this->details['timestp_end_h'], $this->details['timestp_end_m']));
+            $objEventDetail->fields['message'] = $this->details['message'];
+            $objEventDetail->fields['emails'] = $this->details['emails'];
             $objEventDetail->fields['id_event'] = $intIdEvent;
             $objEventDetail->save();
-            
-            
-             
+
+
+
             if (!empty($this->fields['periodicity']) && !empty($this->details['periodicity_end_date'])) // Périodicité définie
             {
                 // Timestp unix de la date de début du premier événement
                 $intUxTsEventBegin = ploopi_timestamp2unixtimestamp($objEventDetail->fields['timestp_begin']);
-                
+
                 // Timestp unix de la date de fin du premier événement
                 $intUxTsEventEnd = ploopi_timestamp2unixtimestamp($objEventDetail->fields['timestp_end']);
-                
+
                 // Timestp unix de la date de fin de périodicité
                 $intUxTsPeriodEnd = ploopi_timestamp2unixtimestamp(substr(ploopi_local2timestamp($this->details['periodicity_end_date']), 0, 8).'235959');
-                
+
                 // Date de début du premier événement : Version tableau
-                $arrBegin = 
+                $arrBegin =
                     array(
                         'd' => date('j', $intUxTsEventBegin),
-                        'm' => date('n', $intUxTsEventBegin),        
+                        'm' => date('n', $intUxTsEventBegin),
                         'y' => date('Y', $intUxTsEventBegin),
                         'ho' => date('G', $intUxTsEventBegin),
                         'mi' => intval(date('i', $intUxTsEventBegin), 10),
                         'se' => intval(date('s', $intUxTsEventBegin), 10)
                     );
-                
+
                 // Date de fin du premier événement : Version tableau
-                $arrENd = 
+                $arrENd =
                     array(
                         'd' => date('j', $intUxTsEventEnd),
-                        'm' => date('n', $intUxTsEventEnd),        
+                        'm' => date('n', $intUxTsEventEnd),
                         'y' => date('Y', $intUxTsEventEnd),
                         'ho' => date('G', $intUxTsEventEnd),
                         'mi' => intval(date('i', $intUxTsEventEnd), 10),
                         'se' => intval(date('s', $intUxTsEventEnd), 10)
                     );
-                    
+
                 switch($this->fields['periodicity'])
                 {
                     case 'day':
                     case 'week':
                         // durée de la période en jours
                         $d = $period = $this->fields['periodicity'] == 'week' ? 7 : 1;
-                        
+
                         // Timestp du début du nouvel événément à tester
                         $intUxTs = mktime($arrBegin['ho'], $arrBegin['mi'], $arrBegin['se'], $arrBegin['m'], $arrBegin['d'] + $d, $arrBegin['y']);
-                        
+
                         // Si la date du nouvel événement est compatible avec la date de fin de périodicité
                         while ($intUxTs < $intUxTsPeriodEnd)
                         {
@@ -148,15 +150,15 @@ class booking_event extends data_object
                             $intUxTs = mktime($arrBegin['ho'], $arrBegin['mi'], $arrBegin['se'], $arrBegin['m'], $arrBegin['d'] + $d, $arrBegin['y']);
                         }
                     break;
-                    
+
                     case 'month':
                     case 'year':
                         // durée de la période en mois
                         $m = $period = $this->fields['periodicity'] == 'year' ? 12 : 1;
-                        
+
                         // Timestp du début du nouvel événément à tester
                         $intUxTs = mktime($arrBegin['ho'], $arrBegin['mi'], $arrBegin['se'], $arrBegin['m'] + $m, $arrBegin['d'], $arrBegin['y']);
-                        
+
                         // Si la date du nouvel événement est compatible avec la date de fin de périodicité
                         while ($intUxTs < $intUxTsPeriodEnd)
                         {
@@ -173,15 +175,15 @@ class booking_event extends data_object
                 }
             }
         }
-        
+
         return($intIdEvent);
     }
-    
+
     public function setdetails($values, $prefix)
     {
         // Détermine le longueur du préfixe des variables
         $intPrefixLength = strlen($prefix);
-        
+
         foreach ($values as $key => $value)
         {
             $strPref = substr($key, 0, $intPrefixLength);
@@ -191,12 +193,12 @@ class booking_event extends data_object
                 $this->details[$strProperty] = $value;
             }
         }
-    }  
+    }
 
     public function getdetails()
     {
         global $db;
-        
+
         // Recherche des détails liés à l'événement
         $db->query("SELECT * FROM ploopi_mod_booking_event_detail WHERE id_event = {$this->fields['id']} ORDER BY timestp_begin, timestp_end");
         return $db->getarray();
