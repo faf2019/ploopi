@@ -66,20 +66,6 @@ if (empty($user->fields['timezone'])) $user->fields['timezone'] = $server_timezo
 
 $user_date_expire = (!empty($user->fields['date_expire'])) ? ploopi_timestamp2local($user->fields['date_expire']) : array('date' => '');
 
-if ($_SESSION['system']['level'] == _SYSTEM_WORKSPACES)
-{
-    $workspace_user = new workspace_user();
-    if (!empty($workspaceid) && !empty($_GET['user_id']))
-    {
-        $workspace_user->open($workspaceid, $_GET['user_id']);
-    }
-    else
-    {
-        $workspace_user->init_description();
-        $workspace_user->fields['id_user'] = -1;
-    }
-}
-
 $arrFormurl[] = 'op=save_user';
 if (isset($_REQUEST['confirm'])) $arrFormurl[] = 'confirm';
 if (!$user->new)  $arrFormurl[] = "user_id={$user->fields['id']}";
@@ -480,24 +466,30 @@ if (isset($_REQUEST['confirm']))
                     <?php
                     if ($_SESSION['system']['level'] == _SYSTEM_WORKSPACES)
                     {
-                        ?>
-                        <p style="margin-top:2px;padding:4px 0;border:2px solid #a0a0a0;background-color:#c0c0c0;">
-                            <label style="font-weight:bold;"><?php echo _SYSTEM_LABEL_LEVEL; ?>:</label>
-                            <select class="select" name="userworkspace_adminlevel" tabindex="30">
-                            <?php
-                            foreach ($ploopi_system_levels as $id => $label)
-                            {
-                                if ($id <= $_SESSION['ploopi']['adminlevel'])
-                                {
-                                    $sel = ($workspace_user->fields['adminlevel'] == $id) ? 'selected' : '';
-                                    echo "<option $sel value=\"$id\">$label</option>";
-                                }
-                                // user / group admin
-                            }
+                        $workspace_user = new workspace_user();
+                        if (!empty($workspaceid) && !empty($_GET['user_id']) && $workspace_user->open($workspaceid, $_GET['user_id']))
+                        {
                             ?>
-                            </select>
-                        </p>
-                    <?php
+                            <p style="margin-top:2px;padding:4px 0;border:2px solid #a0a0a0;background-color:#c0c0c0;">
+                                <label style="font-weight:bold;"><?php echo _SYSTEM_LABEL_LEVEL; ?>:</label>
+                                <select class="select" name="userworkspace_adminlevel" tabindex="30">
+                                <?php
+
+
+                                foreach ($ploopi_system_levels as $id => $label)
+                                {
+                                    if ($id <= $_SESSION['ploopi']['adminlevel'])
+                                    {
+                                        $sel = ($workspace_user->fields['adminlevel'] == $id) ? 'selected' : '';
+                                        echo "<option $sel value=\"$id\">".ploopi_htmlentities($label)."</option>";
+                                    }
+                                    // user / group admin
+                                }
+                                ?>
+                                </select>
+                            </p>
+                            <?php
+                        }
                     }
                     ?>
                 </div>

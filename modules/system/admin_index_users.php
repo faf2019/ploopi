@@ -121,12 +121,12 @@ switch($op)
         {
             // modify adminlevel for current workspace/user
             $workspace_user = new workspace_user();
-            $workspace_user->open($workspaceid, $user->fields['id']);
+            if ($workspace_user->open($workspaceid, $user->fields['id'])) {
+                if (!empty($_POST['userworkspace_adminlevel']) && $workspace_user->fields['adminlevel'] != $_POST['userworkspace_adminlevel']) $reload = '&reloadsession';
+                $workspace_user->setvalues($_POST,'userworkspace_');
+                $workspace_user->save();
+            }
 
-            if (!empty($_POST['userworkspace_adminlevel']) && $workspace_user->fields['adminlevel'] != $_POST['userworkspace_adminlevel']) $reload = '&reloadsession';
-
-            $workspace_user->setvalues($_POST,'userworkspace_');
-            $workspace_user->save();
         }
 
         if ($_SESSION['system']['level'] == _SYSTEM_GROUPS && !empty($groupid))
