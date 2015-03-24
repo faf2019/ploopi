@@ -61,6 +61,14 @@ class data_object
     private $tablename;
 
     /**
+     * Nom de la table (intégration SQL)
+     *
+     * @var string
+     */
+
+    private $tablename_quoted;
+
+    /**
      * Tableau indexé des champs qui composent la clé primaire
      *
      * @var array
@@ -147,6 +155,7 @@ class data_object
         $numargs = func_num_args();
         $this->classname = get_class($this) ;
         $this->tablename = func_get_arg(0);
+        $this->tablename_quoted = '`'.str_replace('.', '`.`', $this->tablename).'`';
         $this->idfields = array();
         $this->id = array();
         $this->fields = array();
@@ -259,7 +268,7 @@ class data_object
         {
             for ($i = 0; $i < $numargs; $i++) $id[$i] = $args[$i];
 
-            $this->sql = "SELECT * FROM `{$this->tablename}` WHERE `{$this->idfields[0]}` = '".$this->db->addslashes($id[0])."'";
+            $this->sql = "SELECT * FROM {$this->tablename_quoted} WHERE `{$this->idfields[0]}` = '".$this->db->addslashes($id[0])."'";
 
             for ($i = 1; $i < $numargs; $i++) $this->sql .= " AND `{$this->idfields[$i]}` = '".$this->db->addslashes($id[$i])."'";
 
@@ -309,12 +318,12 @@ class data_object
             $arrValues = array();
             foreach ($this->fields as $key => $value)
             {
-                $arrValues[] = (is_null($value)) ? "`{$this->tablename}`.`{$key}` = null" : "`{$this->tablename}`.`{$key}` = '".$this->db->addslashes($value)."'";
+                $arrValues[] = (is_null($value)) ? "{$this->tablename_quoted}.`{$key}` = null" : "{$this->tablename_quoted}.`{$key}` = '".$this->db->addslashes($value)."'";
             }
 
             $listvalues = (empty($arrValues)) ? '' : 'SET '.implode(', ', $arrValues);
 
-            $this->sql = "INSERT INTO `{$this->tablename}` {$listvalues}"; // construction de la requète
+            $this->sql = "INSERT INTO {$this->tablename_quoted} {$listvalues}"; // construction de la requète
             $this->db->query($this->sql);
 
             // get "static" key
@@ -334,14 +343,14 @@ class data_object
             $arrValues = array();
             foreach ($this->fields as $key => $value)
             {
-                $arrValues[] = (is_null($value)) ? "`{$this->tablename}`.`{$key}` = null" : "`{$this->tablename}`.`{$key}` = '".$this->db->addslashes($value)."'";
+                $arrValues[] = (is_null($value)) ? "{$this->tablename_quoted}.`{$key}` = null" : "{$this->tablename_quoted}.`{$key}` = '".$this->db->addslashes($value)."'";
             }
 
             $listvalues = (empty($arrValues)) ? '' : implode(', ', $arrValues);
 
             // build request
-            $this->sql = "UPDATE `{$this->tablename}` SET {$listvalues} WHERE `{$this->tablename}`.`{$this->idfields[0]}` = '".$this->db->addslashes($this->id[$this->idfields[0]])."'";
-            for ($i = 1; $i < sizeof($this->idfields); $i++) $this->sql .= " AND `{$this->tablename}`.`{$this->idfields[$i]}` = '".$this->db->addslashes($this->id[$this->idfields[$i]])."'";
+            $this->sql = "UPDATE {$this->tablename_quoted} SET {$listvalues} WHERE {$this->tablename_quoted}.`{$this->idfields[0]}` = '".$this->db->addslashes($this->id[$this->idfields[0]])."'";
+            for ($i = 1; $i < sizeof($this->idfields); $i++) $this->sql .= " AND {$this->tablename_quoted}.`{$this->idfields[$i]}` = '".$this->db->addslashes($this->id[$this->idfields[$i]])."'";
 
             $this->db->query($this->sql);
         }
@@ -365,8 +374,8 @@ class data_object
         $numargs = func_num_args();
         if ($numargs > 0) for ($i = 0; $i < $numargs; $i++) $this->fields[$this->idfields[$i]] = func_get_arg($i);
 
-        $this->sql = "DELETE FROM `{$this->tablename}` WHERE `{$this->tablename}`.`{$this->idfields[0]}` = '".$this->db->addslashes($this->fields[$this->idfields[0]])."'";
-        for ($i = 1; $i < sizeof($this->idfields); $i++) $this->sql .= " AND `{$this->tablename}`.`{$this->idfields[$i]}` = '".$this->db->addslashes($this->fields[$this->idfields[$i]])."'";
+        $this->sql = "DELETE FROM {$this->tablename_quoted} WHERE {$this->tablename_quoted}.`{$this->idfields[0]}` = '".$this->db->addslashes($this->fields[$this->idfields[0]])."'";
+        for ($i = 1; $i < sizeof($this->idfields); $i++) $this->sql .= " AND {$this->tablename_quoted}.`{$this->idfields[$i]}` = '".$this->db->addslashes($this->fields[$this->idfields[$i]])."'";
 
         $this->db->query($this->sql);
     }
@@ -377,7 +386,7 @@ class data_object
 
     public function init_description()
     {
-        $this->sql = "DESCRIBE `{$this->tablename}`";
+        $this->sql = "DESCRIBE {$this->tablename_quoted}";
         $result = $this->db->query($this->sql);
         while ($fields = $this->db->fetchrow($result)) $this->fields[$fields['Field']] = '';
     }
@@ -409,11 +418,11 @@ class data_object
             if ($key != '' && !is_null($value))
             {
                 if ($listvalues != '') $listvalues .= ', ';
-                $listvalues .= "`{$this->tablename}`.`{$key}` = '".$this->db->addslashes($value)."'";
+                $listvalues .= "{$this->tablename_quoted}.`{$key}` = '".$this->db->addslashes($value)."'";
             }
         }
 
-        return ("INSERT INTO `{$this->tablename}` SET {$listvalues}");
+        return ("INSERT INTO {$this->tablename_quoted} SET {$listvalues}");
     }
 
     /**
@@ -438,7 +447,7 @@ class data_object
 
     public function getsqlstructure()
     {
-        $sql = "CREATE TABLE `{$this->tablename}` (";
+        $sql = "CREATE TABLE {$this->tablename_quoted} (";
 
         $fields = '';
 
