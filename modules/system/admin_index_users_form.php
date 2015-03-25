@@ -481,7 +481,7 @@ if (isset($_REQUEST['confirm']))
                                     if ($id <= $_SESSION['ploopi']['adminlevel'])
                                     {
                                         $sel = ($workspace_user->fields['adminlevel'] == $id) ? 'selected' : '';
-                                        echo "<option $sel value=\"$id\">".ploopi_htmlentities($label)."</option>";
+                                        echo "<option $sel value=\"$id\">".htmlentities($label)."</option>";
                                     }
                                     // user / group admin
                                 }
