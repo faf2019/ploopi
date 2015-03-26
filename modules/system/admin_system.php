@@ -47,7 +47,7 @@ $row = $db->fetchrow();
  * Si les versions ne concordent pas, on propose une mise à jour du système.
  */
 
-if (strcmp(_PLOOPI_VERSION, $row['version']) > 0)
+if (version_compare(_PLOOPI_VERSION, $row['version']) > 0)
 {
     $strSysVersion = $row['version'];
     $toolbar['systemupdate'] =

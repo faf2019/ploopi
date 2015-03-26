@@ -59,7 +59,7 @@ switch($op)
                     $matches = array();
                     if (preg_match("@^update_ploopi_(.*).sql@i", $file, $matches))
                     {
-                        if (!empty($matches[1]) && strcmp($matches[1],$strSysVersion)>0)
+                        if (!empty($matches[1]) && version_compare($matches[1], $strSysVersion)>0)
                         {
                             $arrUpdates[$matches[1]] = $matches[0];
                         }
@@ -68,7 +68,8 @@ switch($op)
             }
         }
 
-        ksort($arrUpdates);
+        // Tri par version
+        uksort($arrUpdates, 'version_compare');
 
         foreach($arrUpdates as $strSqlFile)
         {
