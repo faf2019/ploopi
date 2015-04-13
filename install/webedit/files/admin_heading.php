@@ -880,7 +880,7 @@ if ($booIsAllowedEdit)
 
             if (ploopi_isadmin() || $booWfVal || $booIsEditor || ($_SESSION['ploopi']['userid'] == $row['id_user'] && $articles['list'][$row['id']]['online_id'] == ''))
             {
-                $articles_values[$c]['values']['actions'] = array('label' =>  "<a style=\"display:block;float:right;\" title=\"Supprimer\" href=\"javascript:ploopi_confirmlink('admin.php?op=article_delete&articleid={$row['id']}','Êtes-vous certain de vouloir supprimer l\'article &laquo; ".addslashes($row['title'])." &raquo; ?');\"><img style=\"border:0px;\" src=\"./modules/webedit/img/doc_del.png\"></a>", 'style' => '');
+                $articles_values[$c]['values']['actions'] = array('label' =>  "<a style=\"display:block;float:right;\" title=\"Supprimer\" href=\"javascript:ploopi_confirmlink('".ploopi_urlencode("admin.php?op=article_delete&articleid={$row['id']}")."','Êtes-vous certain de vouloir supprimer l\'article &laquo; ".addslashes($row['title'])." &raquo; ?');\"><img style=\"border:0px;\" src=\"./modules/webedit/img/doc_del.png\"></a>", 'style' => '');
             }
             else $articles_values[$c]['values']['actions'] = array('label' => '&nbsp;', 'style' => '');
 
@@ -951,7 +951,7 @@ if (ploopi_isactionallowed(_WEBEDIT_ACTION_SUBSCRIBERS_MANAGE)) // Gestion des a
 
             $subscribers_values[$c]['values']['actions'] =
                 array(
-                    'label' => "<img style=\"cursor:pointer;\" title=\"Supprimer cet abonné\" alt=\"Supprimer\" onclick=\"javascript:ploopi_confirmlink('admin-light.php?ploopi_op=webedit_subscriber_delete&webedit_subscriber_email={$row['email']}&webedit_subscriber_id_heading={$row['id_heading']}','Êtes-vous certain de vouloir supprimer cet abonné ?');\" src=\"./modules/webedit/img/ico_trash.png\"></a>",
+                    'label' => "<img style=\"cursor:pointer;\" title=\"Supprimer cet abonné\" alt=\"Supprimer\" onclick=\"javascript:ploopi_confirmlink('".ploopi_urlencode("admin-light.php?ploopi_op=webedit_subscriber_delete&webedit_subscriber_email={$row['email']}&webedit_subscriber_id_heading={$row['id_heading']}")."','Êtes-vous certain de vouloir supprimer cet abonné ?');\" src=\"./modules/webedit/img/ico_trash.png\"></a>",
                     'style' => 'text-align:center;'
                 );
 

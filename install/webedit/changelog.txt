@@ -1,3 +1,11 @@
+== Module WebEdit - version 2.5.7 ============================================
+
+2015-04-13  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Ajout d'un jeton manquant sur la fonctionnalité de suppression d'un abonné
+* Ajout d'un jeton manquant sur la fonctionnalité de suppression d'un article
+* Correction d'un bug à l'affichage du message d'abonnement/désabonnement
+
 == Module WebEdit - version 2.5.6 ============================================
 
 2015-03-02  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

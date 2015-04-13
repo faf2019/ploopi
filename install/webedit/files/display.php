@@ -66,6 +66,7 @@ global $headingid;
 
 global $ploopi_additional_head;
 global $ploopi_additional_javascript;
+global $webedit_subscription_messages;
 
 $ploopi_additional_head = '';
 $ploopi_additional_javascript = '';
