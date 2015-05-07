@@ -245,6 +245,17 @@ abstract class ploopi_query
 
 
     /**
+     * Retourne le nombre de lignes affectées lors de la dernières requête INSERT, UPDATE, REPLACE, DELETE
+     *
+     * @return integer nombre de lignes affectées lors de la dernières requête INSERT, UPDATE, REPLACE, DELETE
+     */
+    public function affectedrows()
+    {
+        return $this->objDb->affectedrows();
+    }
+
+
+    /**
      * Permet de redéfinir la connexion à la BDD au réveil de l'objet  (utile notamment après désérialisation)
      */
     public function __wakeup()

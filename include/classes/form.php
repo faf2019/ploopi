@@ -187,7 +187,8 @@ abstract class form_element
             self::_getProperty('style',  is_null($strStyle) ? $this->_arrOptions['style'] : $strStyle).
             self::_getProperty('class',  is_null($strClass) ? $this->_arrOptions['class'] : $strClass).
             self::_getProperty('readonly',  $this->_arrOptions['readonly'] ? 'readonly' : null).
-            self::_getProperty('disabled',  $this->_arrOptions['disabled'] ? 'disabled' : null);
+            self::_getProperty('disabled',  $this->_arrOptions['disabled'] ? 'disabled' : null).
+            self::_getProperty('autocomplete',  isset($this->_arrOptions['autocomplete']) && !$this->_arrOptions['autocomplete'] ? 'off' : null);
     }
 
     /**
@@ -295,6 +296,7 @@ class form_field extends form_element
         'required' => false,
         'datatype' => 'string',
         'maxlength' => null,
+        'autocomplete' => true,
         'readonly' => false,
         'disabled' => false,
         'accesskey' => null,

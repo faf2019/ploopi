@@ -31,6 +31,9 @@
  * @author Stéphane Escaich
  */
 
+global $block;
+global $menu_moduleid;
+
 $arrBlocks = array();
 
 switch ($_SESSION['ploopi']['mainmenu'])

@@ -340,6 +340,19 @@ class ploopi_db
     }
 
     /**
+     * Renvoie le nombre de lignes affectées par la dernière requête
+     *
+     * @return mixed nombre de lignes affectées par la dernière requête
+     */
+
+    public function affectedrows()
+    {
+        if (!$this->isconnected()) return false;
+
+        return $this->mysqli->affected_rows;
+    }
+
+    /**
      * Renvoie l'enregistrement courant de la dernière requête ou du recordset passé en paramètre
      *
      * @param resource $query_id recordset (optionnel), sinon prend le recordset de la dernière requête exécutée
