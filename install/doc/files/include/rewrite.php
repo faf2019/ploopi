@@ -34,7 +34,7 @@
 if ($booRewriteRuleFound = (strpos($arrParsedURI['path'], '/wsdoc') === 0))
 {
     // Choix du point d'entrée dans Ploopi
-    self::$script = 'webservice';;
+    self::$script = 'webservice';
 
     // On indique le module utilisé
     $_REQUEST['module'] = $_GET['module'] = 'doc';
@@ -55,7 +55,7 @@ if (preg_match('/^\/documents\/([a-z0-9]{32})\/(.*)\.[a-zA-Z0-9]*(.*)/', $arrPar
 {
     if (!empty($arrMatches[2]))
     {
-        $ploopi_access_script = 'quick';
+        self::$script = 'quick';
         $_REQUEST['ploopi_op'] = $_GET['ploopi_op'] = 'doc_file_download';
         $_REQUEST['docfile_md5id'] = $_GET['docfile_md5id'] = $arrMatches[1];
         $booRewriteRuleFound = true;
@@ -66,7 +66,7 @@ elseif (preg_match('/^\/media\/([a-z0-9]{32})\/(.*)\.[a-zA-Z0-9]*(.*)/', $arrPar
 {
     if (!empty($arrMatches[2]))
     {
-        $ploopi_access_script = 'quick';
+        self::$script = 'quick';
         $_REQUEST['ploopi_op'] = $_GET['ploopi_op'] = 'doc_file_view';
         $_REQUEST['docfile_md5id'] = $_GET['docfile_md5id'] = $arrMatches[1];
         $booRewriteRuleFound = true;
@@ -77,7 +77,7 @@ elseif (preg_match('/^\/doc\/(rss|atom)\/(.*)-m([0-9]*)f([0-9]*)\.xml/', $arrPar
 {
     if (!empty($arrMatches[1]) && !empty($arrMatches[3]))
     {
-        $ploopi_access_script = 'backend';
+        self::$script = 'backend';
         $_REQUEST['format'] = $_GET['format'] = $arrMatches[1];
         $_REQUEST['ploopi_moduleid'] = $_GET['ploopi_moduleid'] = $arrMatches[3];
         $_REQUEST['id_folder'] = $_GET['id_folder'] = $arrMatches[4];

@@ -1,3 +1,9 @@
+== Module DOC - version 4.8.2 ====================================================
+
+2015-05-07  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Correction d'un bug sur la prise en compte des URLs publiques de documents
+
 == Module DOC - version 4.8.1 ====================================================
 
 2015-03-09  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
