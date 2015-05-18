@@ -1,3 +1,9 @@
+== Module GALLERY - version 0.1.6 =====================================================
+
+2015-05-18  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Contrôle de l'existence du module associé lors de l'affichage des dossiers
+
 == Module GALLERY - version 0.1.5 =====================================================
 
 2013-12-17  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

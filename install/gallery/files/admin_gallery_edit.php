@@ -198,12 +198,15 @@ else // NOUVELLE GALERIE
                     <legend><?php echo _GALLERY_LEGEND_DIRECTORIES; ?>&nbsp;<a href="javascript:void(0);" onclick="javascript:gallery_show_preview_rep('all')" style="font-style: italic;" title="<?php echo _GALLERY_EDIT_LABEL_VIEW_ALL; ?>"><img src="./modules/gallery/img/view.png"></a></legend>
                     <div>
                         <?php
-                        $sqlDirectories = "SELECT *
-                            FROM ploopi_mod_doc_folder
-                            WHERE foldertype = 'public'
-                            AND waiting_validation = '0'
-                            {$sqllimitgroup}
-                            ORDER BY name";
+                        $sqlDirectories = "
+                            SELECT      f.*
+                            FROM        ploopi_mod_doc_folder f
+                            INNER JOIN  ploopi_module m ON m.id = f.id_module
+                            WHERE       f.foldertype = 'public'
+                            AND         f.waiting_validation = '0'
+                            AND         f.id_workspace IN (".ploopi_viewworkspaces($_SESSION['ploopi']['moduleid']).")
+                            ORDER BY    f.name
+                        ";
 
                         $reqDirectories = $db->query($sqlDirectories);
                         if($db->numrows($reqDirectories))
