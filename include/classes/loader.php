@@ -206,7 +206,7 @@ abstract class ploopi_loader
                 {
                     if (strstr($strParam, '=')) list($strKey, $strValue) = explode('=',$strParam);
                     else {$strKey = $strParam; $strValue = '';}
-                    
+
                     $strKey = urldecode($strKey);
 
                     // Variable structurée ?
@@ -275,9 +275,10 @@ abstract class ploopi_loader
         header('Last-Modified: ' . gmdate("D, d M Y H:i:s"));
 
         // HTTP/1.1
-        header('Cache-Control: no-store, no-cache, must-revalidate');
-        header('Cache-Control: post-check=0, pre-check=0', false);
-        header('Cache-Control: max-age=0', false);
+        header('Cache-Control: private_no_expire, must-revalidate');
+        //header('Cache-Control: no-store, no-cache, must-revalidate');
+        //header('Cache-Control: post-check=0, pre-check=0', false);
+        //header('Cache-Control: max-age=0', false);
 
         // HTTP/1.0
         header('Pragma: no-cache');
@@ -520,12 +521,17 @@ abstract class ploopi_loader
                 FROM        ploopi_user
                 WHERE       login = '".$db->addslashes($_REQUEST['ploopi_login'])."'
             ");
-            
+
             // Un seul utilisateur trouvé
             if ($db->numrows() == 1)
             {
-
                 $fields = $db->fetchrow();
+                
+                if ($fields['disabled']) {
+                    ploopi_create_user_action_log(_SYSTEM_ACTION_LOGIN_ERR, $_REQUEST['ploopi_login'],_PLOOPI_MODULE_SYSTEM,_PLOOPI_MODULE_SYSTEM);
+                    ploopi_syslog(LOG_INFO, "Le compte {$_REQUEST['ploopi_login']} est désactivé");
+                    ploopi_logout(_PLOOPI_ERROR_ACCOUNTEXPIRE);
+                }
 
                 if ($fields['password'] != user::generate_hash($_REQUEST['ploopi_password'], $_REQUEST['ploopi_login'])) {
                     ploopi_create_user_action_log(_SYSTEM_ACTION_LOGIN_ERR, $_REQUEST['ploopi_login'], _PLOOPI_MODULE_SYSTEM, _PLOOPI_MODULE_SYSTEM);
@@ -1093,7 +1099,7 @@ abstract class ploopi_loader
             $_SESSION['ploopi']['template_name'] = $template_name;
             $_SESSION['ploopi']['template_path'] = "./templates/backoffice/{$_SESSION['ploopi']['template_name']}";
         }
-        
+
 
         // shortcuts for admin & workspaceid
         if (isset($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['adminlevel'])) $_SESSION['ploopi']['adminlevel'] = $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['adminlevel'];

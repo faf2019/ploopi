@@ -502,6 +502,7 @@ class skin_common
                     if (!empty($array['columns']['right'])) $columns += $array['columns']['right'];
                     if (!empty($array['columns']['left'])) $columns += $array['columns']['left'];
                     if (!empty($array['columns']['actions_right'])) $columns += $array['columns']['actions_right'];
+                    if (!empty($array['columns']['actions_left'])) $columns += $array['columns']['actions_left'];
 
                     if (isset($columns[$_SESSION['ploopi']['arrays'][$strArrayId]['orderby']]))
                     {
@@ -632,6 +633,20 @@ class skin_common
 
         $w = 0;
 
+        // plus la colonne optionnelle de auche (actions)
+        if (!empty($array['columns']['actions_left']))
+        {
+            foreach($array['columns']['actions_left'] as $id => $c)
+            {
+                $w += $c['width'];
+                ?>
+                <div style="left:<?php echo $w; ?>px;" class="ploopi_explorer_column" id="ploopi_explorer_column_<?php echo $strArrayId; ?>_<?php echo $i; ?>"></div>
+                <?php
+                $i++;
+            }
+        }
+
+
         // puis les colonnes de données de gauche (optionnelles)
         if (!empty($array['columns']['left']))
         {
@@ -676,6 +691,17 @@ class skin_common
                         }
                         ?>
                         <a href="<?php echo (!empty($c['url'])) ? $c['url'] : 'javascript:void(0);'; ?>" <?php if (!empty($c['onclick'])) echo "onclick=\"javascript:{$c['onclick']}\""; ?>" style="width:<?php echo $c['width']; ?>px;float:right;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element ploopi_explorer_element_right <? echo $class; ?>"><p><span><?php echo $c['label']; ?>&nbsp;</span><?php echo $img; ?></p></a>
+                        <?php
+                    }
+                }
+
+                // titres des colonnes d'action (à gauche)
+                if (!empty($array['columns']['actions_left']))
+                {
+                    foreach($array['columns']['actions_left'] as $id => $c)
+                    {
+                        ?>
+                        <a href="<?php echo (!empty($c['url'])) ? $c['url'] : 'javascript:void(0);'; ?>" <?php if (!empty($c['onclick'])) echo "onclick=\"javascript:{$c['onclick']}\""; ?>" style="width:<?php echo $c['width']; ?>px;float:left;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element"><p><span><?php echo $c['label']; ?>&nbsp;</span></p></a>
                         <?php
                     }
                 }
@@ -773,6 +799,19 @@ class skin_common
                                     <?php
                                 }
                             }
+
+                            if (!empty($array['columns']['actions_left']))
+                            {
+                                foreach($array['columns']['actions_left'] as $id => $c)
+                                {
+                                    if (!isset($v['values'][$id]['label']) || $v['values'][$id]['label'] == '') $v['values'][$id]['label'] = '&nbsp;';
+                                    ?>
+                                    <div class="ploopi_explorer_tools" style="width:<?php echo $c['width']; ?>px;float:left;<?php if (!empty($v['values'][$id]['style'])) echo $v['values'][$id]['style']; ?>"><?php echo $v['values'][$id]['label']; ?></div>
+                                    <?php
+                                }
+                            }
+
+
 
                             $option = (empty($v['option'])) ? '' : $v['option'];
 

@@ -404,6 +404,10 @@ if (isset($_REQUEST['confirm']))
                         <input type="text" style="width:100px;" class="text" name="user_date_expire" id="user_date_expire" value="<?php echo ploopi_htmlentities($user_date_expire['date']); ?>" tabindex="24" />
                         <? ploopi_open_calendar('user_date_expire'); ?>
                     </p>
+                    <p class="checkbox" onclick="javascript:ploopi_checkbox_click(event,'user_disabled');">
+                        <label>Compte désactivé:</label>
+                        <input type="checkbox" id="user_disabled" name="user_disabled" value="1" <?php if ($user->fields['disabled']) echo 'checked="checked"'; ?> tabindex="24" />
+                    </p>
                     <p>
                         <label><?php echo _SYSTEM_LABEL_EMAIL; ?>:</label>
                         <input type="text" class="text" name="user_email"  value="<?php echo ploopi_htmlentities($user->fields['email']); ?>" tabindex="25" />

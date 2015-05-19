@@ -76,6 +76,7 @@ switch($op)
 
         if (!isset($_POST['user_ticketsbyemail'])) $user->fields['ticketsbyemail'] = 0;
         if (!isset($_POST['user_password_force_update'])) $user->fields['password_force_update'] = 0;
+        if (!isset($_POST['user_disabled'])) $user->fields['disabled'] = 0;
         if (!isset($_POST['user_servertimezone'])) $user->fields['servertimezone'] = 0;
         if (!empty($_POST['user_date_expire'])) $_POST['user_date_expire'] = ploopi_local2timestamp($_POST['user_date_expire']);
 

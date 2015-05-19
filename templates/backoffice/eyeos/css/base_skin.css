@@ -601,7 +601,7 @@ a.ploopi_explorer_link {
 
 a.ploopi_explorer_link:hover {
     text-decoration:none;
-    background-color:#e8e8e8;
+    background-color:rgba(0,0,0,0.05);
 }
 
 div.ploopi_explorer_line_1 {
@@ -814,7 +814,6 @@ background: url(../img/template/tabs.png) 0 -20px no-repeat;
     overflow:hidden;
 }
 
-.ploopi_generate_form p,
 .ploopi_generate_form h1,
 .ploopi_generate_form h2,
 .ploopi_generate_form h3,

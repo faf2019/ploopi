@@ -661,21 +661,10 @@ if ($intNbRep <= $intMaxResponse && $intNbRep > 0)
                 // Chaine contenant, pour un utilisateur et un espace, la liste des rôles
                 $strUserWspRoles = empty($arrUserWspRoles) ? '' : '<span>&nbsp;:&nbsp;</span>'.implode('<span>,&nbsp;</span>', $arrUserWspRoles);
 
-                switch($rowWorkspace['adminlevel'])
-                {
-                    case _PLOOPI_ID_LEVEL_USER:
-                        $icon = 'level_user';
-                    break;
-                    case _PLOOPI_ID_LEVEL_GROUPMANAGER:
-                        $icon = 'level_groupmanager';
-                    break;
-                    case _PLOOPI_ID_LEVEL_GROUPADMIN:
-                        $icon = 'level_groupadmin';
-                    break;
-                    case _PLOOPI_ID_LEVEL_SYSTEMADMIN:
-                        $icon = 'level_systemadmin';
-                    break;
-                }
+                if ($rowWorkspace['adminlevel'] >= _PLOOPI_ID_LEVEL_SYSTEMADMIN) $icon = 'level_systemadmin';
+                elseif($rowWorkspace['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPADMIN) $icon = 'level_groupadmin';
+                elseif($rowWorkspace['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPMANAGER) $icon = 'level_groupmanager';
+                else $icon = 'level_user';
 
                 $row['workspaces'][$intIdWorkspace] = sprintf(
                     "<img style=\"float:left;\" src=\"%s\" /><span style=\"display:block;margin-left:20px;\"><a title=\"Accéder à cet espace\" href=\"%s\">%s</a>%s</span>",

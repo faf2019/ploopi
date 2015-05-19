@@ -301,6 +301,25 @@ function ploopi_array2excel($arrArray, $booHeader = true, $strFileName = 'docume
 
     $arrOptions = empty($arrOptions) ? $arrDefautOptions : array_merge($arrDefautOptions, $arrOptions);
 
+
+    // Uniformisation des formats
+    if (!empty($arrArray)) {
+        foreach(array_keys(reset($arrArray)) as $strKey) {
+            if (!isset($arrDataFormats[$strKey])) {
+                $arrDataFormats[$strKey] = array(
+                    'type' => '',
+                    'title' => $strKey
+                );
+            }
+        }
+    }
+
+    foreach($arrDataFormats as $strKey => $row) {
+        if (!isset($row['type'])) $arrDataFormats[$strKey]['type'] = '';
+        if (!isset($row['title'])) $arrDataFormats[$strKey]['title'] = $strKey;
+    }
+
+
     // Style par défaut pour toute la feuille
     $rowDefaultStyle = array(
         'font'  => array(
@@ -383,7 +402,7 @@ function ploopi_array2excel($arrArray, $booHeader = true, $strFileName = 'docume
         if ($booHeader)
         {
             $intCol = -1;
-            foreach(array_keys(reset($arrArray)) as $strKey) $objWorkSheet->setCellValueByColumnAndRow(++$intCol, $intLine, utf8_encode(isset($arrDataFormats[$strKey]['title']) ? $arrDataFormats[$strKey]['title'] : $strKey));
+            foreach(array_keys(reset($arrArray)) as $strKey) $objWorkSheet->setCellValueByColumnAndRow(++$intCol, $intLine, utf8_encode($arrDataFormats[$strKey]['title']));
 
             // Calcul colonne type Excel "Bijective base-26"
             $chrCol = ($intCol>25 ? chr(64+floor($intCol/26)) : '').chr(65+$intCol%26);
@@ -410,9 +429,18 @@ function ploopi_array2excel($arrArray, $booHeader = true, $strFileName = 'docume
                     $strValue = PHPExcel_Shared_Date::PHPToExcel($strValue);
                 }
 
-                $objWorkSheet->setCellValueByColumnAndRow($intCol, $intLine, utf8_encode($strValue));
                 // Calcul colonne type Excel "Bijective base-26"
                 $chrCol = ($intCol>25 ? chr(64+floor($intCol/26)) : '').chr(65+$intCol%26);
+
+                switch($arrDataFormats[$strKey]['type']) {
+                    case 'string':
+                        $objWorkSheet->setCellValueExplicit("{$chrCol}{$intLine}", utf8_encode($strValue), PHPExcel_Cell_DataType::TYPE_STRING);
+                    break;
+
+                    default:
+                        $objWorkSheet->setCellValueByColumnAndRow($intCol, $intLine, utf8_encode($strValue));
+                    break;
+                }
 
                 if (is_array($mixValue)) {
                     if (isset($mixValue['style'])) {

@@ -212,7 +212,7 @@ switch($http_host)
          * @link http://fr.php.net/manual/fr/errorfunc.constants.php
          */
 
-        define ('_PLOOPI_ERROR_REPORTING', E_ALL ^ E_STRICT);
+        define ('_PLOOPI_ERROR_REPORTING', version_compare(phpversion(), '5.4', '<') ? E_ALL : E_ALL ^ E_STRICT);
 
         /**
          * Active ou on l'envoi d'un mail si une erreur est rencontrée.
