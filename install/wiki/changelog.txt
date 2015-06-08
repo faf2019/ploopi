@@ -1,3 +1,11 @@
+== Module Wiki - version 1.3.0 ====================================================
+
+2015-06-08  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Génération automatique d'un index du contenu lorsqu'une page contient au moins 5 titres (h1,h2...)
+* Correction d'un bug lors de l'édition d'un contenu avec des balises
+* Correction d'un bug dans la gestion de l'historique avec plusieurs instances
+
 == Module Wiki - version 1.2.5 ====================================================
 
 2015-01-20  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

@@ -58,17 +58,18 @@ $objWikiPage = new wiki_page();
 $booExists = $objWikiPage->open($strWikiPageId);
 
 // Gestion de l'historique des visites
-if (!isset($_SESSION['wiki']['history'])) $_SESSION['wiki']['history'] = array();
+if (!isset($_SESSION['wiki']['history'][$_SESSION['ploopi']['moduleid']])) $_SESSION['wiki']['history'][$_SESSION['ploopi']['moduleid']] = array();
+$S = &$_SESSION['wiki']['history'][$_SESSION['ploopi']['moduleid']];
 
 $arrUrlHistory = array();
-foreach($_SESSION['wiki']['history'] as $strPageId) $arrUrlHistory[] = "<a href=\"".ploopi_urlencode_trusted("admin.php?wiki_page_id=".urlencode($strPageId))."\">{$strPageId}</a>";
+foreach($S as $strPageId) $arrUrlHistory[] = "<a href=\"".ploopi_urlencode_trusted("admin.php?wiki_page_id=".urlencode($strPageId))."\">{$strPageId}</a>";
 
 if ($booExists)
 {
-    if (empty($_SESSION['wiki']['history']) || $_SESSION['wiki']['history'][0] != $strWikiPageId)
+    if (empty($S) || $S[0] != $strWikiPageId)
     {
-        array_unshift($_SESSION['wiki']['history'], $strWikiPageId);
-        if (sizeof($_SESSION['wiki']['history']) > 5) array_pop($_SESSION['wiki']['history']);
+        array_unshift($S, $strWikiPageId);
+        if (sizeof($S) > 5) array_pop($S);
     }
 }
 
@@ -474,7 +475,7 @@ echo $skin->open_simplebloc(ploopi_htmlentities($strWikiPageId));
                 ?>
                 <div id="wiki_modify">
                     <form action="<? echo ploopi_urlencode_trusted("admin-light.php?ploopi_op=wiki_page_save&wiki_page_id=".urlencode($strWikiPageId)); ?>" method="post">
-                        <textarea accesskey="e" class="wiki-edit text" style="width:99%;" id="wiki_page_content" name="fck_wiki_page_content" rows="25"><? echo ploopi_htmlentities($strPageContent); ?></textarea>
+                        <textarea accesskey="e" class="wiki-edit text" style="width:99%;" id="wiki_page_content" name="fck_wiki_page_content" rows="25"><? echo ploopi_htmlentities($strPageContent, null, 'ISO-8859-1', false); ?></textarea>
                         <div style="text-align:right"><input type="button" class="button" value="Annuler" onclick="javascript:document.location.href='<? echo ploopi_urlencode_trusted("admin.php?wiki_page_id=".urlencode($strWikiPageId)); ?>';" /><input type="submit" class="button" value="Enregistrer" style="margin-left:4px;" /></div>
                     </form>
                 </div>
@@ -494,6 +495,7 @@ echo $skin->open_simplebloc(ploopi_htmlentities($strWikiPageId));
         default:
             ?>
             <div id="wiki_page" class="wiki_page"><? echo wiki_render($objWikiPage->fields['content']); ?></div>
+            <script type="text/javascript">Event.observe(window, 'load', function() { wiki_toc(); });</script>
             <?
         break;
     }

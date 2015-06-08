@@ -23,7 +23,6 @@ background-color:transparent;
 }
 
 .wiki_page h1 {
-border-bottom:1px solid #bbb;
 color:#444;
 font-size:20px;
 margin:0 0 10px;
@@ -31,14 +30,12 @@ padding:2px 10px 1px 0;
 }
 
 .wiki_page h2 {
-border-bottom:1px solid #bbb;
 color:#444;
 font-size:16px;
 margin:0 0 10px;
 padding:2px 10px 1px 0;
 }
 .wiki_page h3 {
-border-bottom:1px dotted #bbb;
 color:#444;
 font-size:13px;
 margin-bottom:5px;
@@ -207,7 +204,7 @@ padding:2px 10px 1px 0;
 .wiki_page .hl-content {
     margin: 1em 1em 1em 1.6em;
     border: 1px solid #dadada;
-    width:95%;
+    max-width:95%;
     overflow-x: auto;
     background-color: #fafafa;
 }
@@ -333,4 +330,44 @@ body.wiki_print .hl-content {
 
 body.wiki_print .hl-content * {
     font-family: monospace;
+}
+
+
+.wiki_page_toc {
+    float:right;
+    margin:10px;
+    padding:10px;
+    width:200px;
+    border-radius:5px;
+    background-color:rgba(255,255,200,0.7);
+}
+
+.wiki_page_toc a {
+    display:block;
+    padding:2px 0;
+    color:#666;
+}
+
+.wiki_page_toc a:hover {
+    display:block;
+    padding:2px 0;
+    color:#a33;
+}
+
+.wiki_page_toc > a {
+    font-weight:bold;
+}
+
+.wiki_page_toc ul {
+    padding-left:16px;
+    margin:0;
+    color:#666;
+}
+
+.wiki_page_toc > ul > li {
+    font-weight:bold;
+}
+
+.wiki_page_content {
+    overflow:auto;
 }
