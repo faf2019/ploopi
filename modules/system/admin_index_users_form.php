@@ -114,6 +114,7 @@ if (isset($_REQUEST['confirm']))
                 lastname,
                 firstname,
                 email,
+                entity,
                 service,
                 office,
                 function
@@ -138,6 +139,13 @@ if (isset($_REQUEST['confirm']))
     $arrColumns['left']['login'] =
         array(
             'label' => _SYSTEM_LABEL_LOGIN,
+            'width' => 100,
+            'options' => array('sort' => true)
+        );
+
+    $arrColumns['left']['entity'] =
+        array(
+            'label' => _SYSTEM_LABEL_ENTITY,
             'width' => 100,
             'options' => array('sort' => true)
         );
@@ -196,6 +204,10 @@ if (isset($_REQUEST['confirm']))
                         'origin' =>
                             array(
                                 'label' => ploopi_htmlentities($currentGroup['label'])
+                            ),
+                        'entity' =>
+                            array(
+                                'label' => ploopi_htmlentities($row['entity'])
                             ),
                         'service' =>
                             array(
@@ -257,6 +269,10 @@ if (isset($_REQUEST['confirm']))
             <fieldset class="fieldset">
                 <legend>Informations professionnelles</legend>
                 <div class="ploopi_form">
+                    <p>
+                        <label><?php echo _SYSTEM_LABEL_ENTITY; ?>:</label>
+                        <input type="text" class="text" name="user_entity"  value="<?php echo ploopi_htmlentities($user->fields['entity']); ?>" tabindex="4" />
+                    </p>
                     <p>
                         <label><?php echo _SYSTEM_LABEL_SERVICE; ?>:</label>
                         <input type="text" class="text" name="user_service"  value="<?php echo ploopi_htmlentities($user->fields['service']); ?>" tabindex="4" />
@@ -624,7 +640,7 @@ if (!$user->isnew())
 
         <? if (_PLOOPI_USE_COMPLEXE_PASSWORD) { ?>
         var options = {
-            minchar: 8,
+            minchar: <? echo _PLOOPI_COMPLEXE_PASSWORD_MIN_SIZE; ?>,
             scores: [5, 10, 20, 30]
         };
         <? } else { ?>

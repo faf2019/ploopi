@@ -229,11 +229,12 @@ $ploopi_errormsg[_PLOOPI_ERROR_LOGINERROR]          = 'Utilisateur ou mot de pas
 $ploopi_errormsg[_PLOOPI_ERROR_PASSWORDEXPIRE]      = 'Votre mot de passe a expiré';
 $ploopi_errormsg[_PLOOPI_ERROR_PASSWORDRESET]       = 'Vous devez redéfinir votre mot de passe';
 $ploopi_errormsg[_PLOOPI_ERROR_PASSWORDERROR]       = 'Les deux saisies ne correspondent pas';
-$ploopi_errormsg[_PLOOPI_ERROR_PASSWORDINVALID]     = 'Le mot de passe est invalide, il doit contenir au moins 8 caractères, un caractère minuscule, un caractère majuscule, un chiffre et un caractère de ponctuation';
+$ploopi_errormsg[_PLOOPI_ERROR_PASSWORDINVALID]     = 'Le mot de passe est invalide, il doit contenir au moins '._PLOOPI_COMPLEXE_PASSWORD_MIN_SIZE.' caractères, un caractère minuscule, un caractère majuscule, un chiffre et un caractère de ponctuation';
 $ploopi_errormsg[_PLOOPI_ERROR_ACCOUNTEXPIRE]       = 'Votre identifiant a expiré';
 $ploopi_errormsg[_PLOOPI_ERROR_SESSIONEXPIRE]       = 'Votre session a expiré';
 $ploopi_errormsg[_PLOOPI_ERROR_SESSIONINVALID]      = 'Votre session est invalide';
 $ploopi_errormsg[_PLOOPI_ERROR_INVALIDTOKEN]        = 'Ce lien a expiré, vous devez vous reconnecter';
+$ploopi_errormsg[_PLOOPI_ERROR_ACCOUNTJAILED]       = 'Trop de tentatives de connexion ont échoué. Ce compte est suspendu. Vous pourrez tenter une nouvelle connexion plus tard.';
 
 
 $ploopi_errormsg[_PLOOPI_ERROR_LOSTPASSWORD_UNKNOWN]      = 'Ce compte est inconnu';

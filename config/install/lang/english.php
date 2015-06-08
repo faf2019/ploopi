@@ -191,7 +191,7 @@ define ('_PLOOPI_INSTALL_ADMIN_MAIL_JS',     'Email administrator');
 define ('_PLOOPI_INSTALL_SYS_MAIL',          'Email System:');
 define ('_PLOOPI_INSTALL_SYS_MAIL_JS',       'Email System');
 define ('_PLOOPI_INSTALL_URL_ENCODE',        'Encoding URL visible:');
-define ('_PLOOPI_INSTALL_SESSION_BDD',       'Storing Sessions in DB:');
+define ('_PLOOPI_INSTALL_SESSION_HANDLER',   'Session handler:');
 
 define ('_PLOOPI_INSTALL_FRONT_OFFICE',      '« FrontOffice » setting');
 define ('_PLOOPI_INSTALL_FRONT_ACTIVE',      'Activation:');

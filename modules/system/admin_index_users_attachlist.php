@@ -192,7 +192,8 @@ $db->query("
                 u.lastname,
                 u.firstname,
                 u.login,
-                u.service
+                u.service,
+                u.entity
 
     FROM        ploopi_user u,
                 ploopi_group_user gu
@@ -215,7 +216,8 @@ if ($_SESSION['system']['level'] == _SYSTEM_GROUPS)
                     u.lastname,
                     u.firstname,
                     u.login,
-                    u.service
+                    u.service,
+                    u.entity
 
         FROM        ploopi_user u
 
@@ -256,6 +258,13 @@ else
             'options' => array('sort' => true)
         );
 
+    $columns['right']['entity'] =
+        array(
+            'label' => _SYSTEM_LABEL_ENTITY,
+            'width' => 100,
+            'options' => array('sort' => true)
+        );
+
     $columns['right']['origin'] =
         array(
             'label' => _SYSTEM_LABEL_ORIGIN,
@@ -288,17 +297,16 @@ else
         {
             $currentgroup = current($groups);
             $values[$c]['values']['origin']     = array('label' => '<a href="'.ploopi_urlencode("admin.php?wspToolbarItem=tabUsers&usrTabItem=tabUserList&groupid={$currentgroup['id']}&alphaTabItem=".(ord(strtolower($fields['lastname']))-96)).'">'.ploopi_htmlentities($currentgroup['label']).'</a>');
-            $service = $fields['service'];
         }
         else
         {
             $values[$c]['values']['origin']     = array('label' => 'non rattaché', 'style' => 'font-style:italic;');
-            $service = ' ';
         }
 
         $values[$c]['values']['name']       = array('label' => ploopi_htmlentities("{$fields['lastname']}, {$fields['firstname']}"));
         $values[$c]['values']['login']      = array('label' => ploopi_htmlentities($fields['login']));
-        $values[$c]['values']['service']    = array('label' => ploopi_htmlentities($service));
+        $values[$c]['values']['service']    = array('label' => ploopi_htmlentities($fields['service']));
+        $values[$c]['values']['entity']    = array('label' => ploopi_htmlentities($fields['entity']));
         $values[$c]['values']['actions']    = array('label' => '<a style="float:left;display:block;margin:2px;" href="'.ploopi_urlencode("admin.php?op=attach_user&userid={$fields['id']}&alphaTabItem={$alphaTabItem}").'"><img style="float:left;display:block;" src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_attach.png" title="'._SYSTEM_LABEL_ATTACH.'"></a>');
         $c++;
     }

@@ -151,7 +151,17 @@ switch($http_host)
         define ('_PLOOPI_SESSIONTIME','3600'); // time in second
 
         /**
+         * Choix du gestionnaire de session
+         * php : gestionnaire natif de php, indispensable pour l'usage de la fonctionnalité d'upload_progress intégrée à php 5.4
+         * db : gestionnaire propre à Ploopi qui stocke les sessions en base de données. Incompatible avec upload_progress.
+         * file : gestionnaire propre à Ploopi qui stock les sessions dans le dossier "data". Incompatible avec upload_progress.
+         */
+
+        define ('_PLOOPI_SESSION_HANDLER', '<SESSION_HANDLER>'); // php, db, file
+
+        /**
          * Niveau de compression des sessions de 0 à 9.
+         * Uniquement pour les gestionnaires propres à Ploopi.
          * 0 = aucune compression (consommation CPU allégée)
          * 9 = maximum compression (consommation place allégée)
          */
@@ -159,14 +169,8 @@ switch($http_host)
         define ('_PLOOPI_SESSION_COMPRESSION', 1); // level of gzip compression (0:none - 9:maximum)
 
         /**
-         * Active ou non le gestionnaire interne de session utilisant la base de données.
-         * Attention, l'activation de cette fonctionnalité peut dégrader les performances de l'application (impact faible)
-         */
-
-        define ('_PLOOPI_USE_DBSESSION', <USE_DBSESSION>); // true if session stored into database
-
-        /**
          * Le serveur de base de données pour les sessions.
+         * Uniquement pour le gestionnaire de session "db"
          * Il peut aussi inclure le numéro de port.
          * C'est-à-dire "hostname:port" ou le chemin vers le socket local, c'est-à-dire ":/path/to/socket" pour localhost.
          */
@@ -353,6 +357,24 @@ switch($http_host)
          */
 
          define ('_PLOOPI_USE_COMPLEXE_PASSWORD', false);
+
+        /**
+         * Longueur minimale d'un mot de passe complexe (utile uniquement si le paramètre _PLOOPI_USE_COMPLEXE_PASSWORD est activé)
+         */
+
+         define ('_PLOOPI_COMPLEXE_PASSWORD_MIN_SIZE', 8);
+
+        /**
+         * Nombre de tentatives de connexion autorisées avant blocage
+         */
+
+         define ('_PLOOPI_MAX_CONNECTION_ATTEMPS', 3);
+
+        /**
+         * Durée de blocage lors d'un trop grand nombre de tentatives de connexion, en secondes
+         */
+
+         define ('_PLOOPI_JAILING_TIME', 600);
 
         /**
          * Permet d'activer la compression gzip du buffer de sortie

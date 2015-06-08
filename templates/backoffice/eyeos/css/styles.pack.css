@@ -1665,6 +1665,11 @@ a.ploopi_share_delete_user img {
   SKIN
 *******************/
 
+input[type='checkbox'],
+input[type='radio'] {
+    cursor:pointer;
+}
+
 .ploopi_popup {
 position:absolute;
 top:0px;

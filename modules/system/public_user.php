@@ -31,40 +31,47 @@
  * @author Stéphane Escaich
  */
 
+$booReadonly = ploopi_getparam('system_profile_edit_allowed') == '0';
+
+$strDisabled = $booReadonly ? 'disabled="disabled"' : '';
+
 /**
  * Fonction javascript de validation
  */
-?>
-<script type="text/javascript">
-function user_validate(form)
-{
-    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_LASTNAME; ?>",form.user_lastname,"string"))
-    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_FIRSTNAME; ?>",form.user_firstname,"string"))
-    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_PHONE; ?>",form.user_phone,"emptyphone"))
-    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_MOBILE; ?>",form.user_mobile,"emptyphone"))
-    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_FAX; ?>",form.user_fax,"emptyphone"))
-    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_EMAIL; ?>",form.user_email,"emptyemail"))
-    {
-        if (form.usernewpass_confirm.value == form.usernewpass.value && form.usernewpass.value == '') return true;
-        else
-        {
-            if (form.usernewpass_confirm.value != form.usernewpass.value) alert('<?php echo _SYSTEM_MSG_PASSWORDERROR_JS; ?>');
-            else {
-                if (form.useroldpass.value == '') alert('<?php echo _SYSTEM_MSG_PASSWORDERROR2_JS; ?>');
-                else {
-                    rep = ploopi_xmlhttprequest('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=ploopi_checkpasswordvalidity&password='+encodeURIComponent(form.usernewpass.value), false, false, 'POST');
 
-                    if (rep == 0) alert('Le mot de passe est invalide\n\nil doit contenir au moins 8 caractères,\nun caractère minuscule,\nun caractère majuscule,\nun chiffre et un caractère de ponctuation');
-                    else return true;
+if (!$booReadonly) {
+    ?>
+    <script type="text/javascript">
+    function user_validate(form)
+    {
+        if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_LASTNAME; ?>",form.user_lastname,"string"))
+        if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_FIRSTNAME; ?>",form.user_firstname,"string"))
+        if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_PHONE; ?>",form.user_phone,"emptyphone"))
+        if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_MOBILE; ?>",form.user_mobile,"emptyphone"))
+        if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_FAX; ?>",form.user_fax,"emptyphone"))
+        if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_EMAIL; ?>",form.user_email,"emptyemail"))
+        {
+            if (form.usernewpass_confirm.value == form.usernewpass.value && form.usernewpass.value == '') return true;
+            else
+            {
+                if (form.usernewpass_confirm.value != form.usernewpass.value) alert('<?php echo _SYSTEM_MSG_PASSWORDERROR_JS; ?>');
+                else {
+                    if (form.useroldpass.value == '') alert('<?php echo _SYSTEM_MSG_PASSWORDERROR2_JS; ?>');
+                    else {
+                        rep = ploopi_xmlhttprequest('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=ploopi_checkpasswordvalidity&password='+encodeURIComponent(form.usernewpass.value), false, false, 'POST');
+
+                        if (rep == 0) alert('Le mot de passe est invalide\n\nil doit contenir au moins 8 caractères,\nun caractère minuscule,\nun caractère majuscule,\nun chiffre et un caractère de ponctuation');
+                        else return true;
+                    }
                 }
             }
         }
+        return false;
     }
-    return false;
+    </script>
+    <?
 }
-</script>
 
-<?php
 // Suppression de la variable de stockage de la photo temporaire
 if (isset($_SESSION['system']['user_photopath'])) unset($_SESSION['system']['user_photopath']);
 
@@ -87,9 +94,10 @@ $server_timezoneid = timezone_name_get($server_timezone);
 if (empty($user->fields['timezone'])) $user->fields['timezone'] = $server_timezoneid;
 
 $user_date_expire = (!empty($user->fields['date_expire'])) ? ploopi_timestamp2local($user->fields['date_expire']) : array('date' => '');
-?>
 
-<form name="form_modify_user" action="<?php echo ploopi_urlencode('admin.php?op=save_user'); ?>" method="POST" enctype="multipart/form-data" onsubmit="javascript:return user_validate(this)">
+
+if (!$booReadonly) { ?><form name="form_modify_user" action="<?php echo ploopi_urlencode('admin.php?op=save_user'); ?>" method="POST" enctype="multipart/form-data" onsubmit="javascript:return user_validate(this)"><? } ?>
+
 <div>
 <?php
 $error = '';
@@ -125,15 +133,15 @@ if (isset($_GET['error']))
                 <div class="ploopi_form">
                     <p>
                         <label><?php echo _SYSTEM_LABEL_LASTNAME; ?>:</label>
-                        <input type="text" class="text" name="user_lastname"  value="<?php echo ploopi_htmlentities($user->fields['lastname']); ?>" tabindex="1" />
+                        <input type="text" class="text" name="user_lastname"  value="<?php echo ploopi_htmlentities($user->fields['lastname']); ?>" <? echo $strDisabled; ?> tabindex="1" />
                     </p>
                     <p>
                         <label><?php echo _SYSTEM_LABEL_FIRSTNAME; ?>:</label>
-                        <input type="text" class="text" name="user_firstname"  value="<?php echo ploopi_htmlentities($user->fields['firstname']); ?>" tabindex="2" />
+                        <input type="text" class="text" name="user_firstname"  value="<?php echo ploopi_htmlentities($user->fields['firstname']); ?>" <? echo $strDisabled; ?> tabindex="2" />
                     </p>
                     <p>
                         <label><?php echo _SYSTEM_LABEL_CIVILITY; ?>:</label>
-                        <select class="select" name="user_civility" style="width:100px;" tabindex="3">
+                        <select class="select" name="user_civility" style="width:100px;" <? echo $strDisabled; ?> tabindex="3">
                             <option value=""></option>
                             <?php
                             foreach ($ploopi_civility as $value)
@@ -151,36 +159,40 @@ if (isset($_GET['error']))
                 <legend>Informations professionnelles</legend>
                 <div class="ploopi_form">
                     <p>
+                        <label><?php echo _SYSTEM_LABEL_ENTITY; ?>:</label>
+                        <input type="text" class="text" name="user_entity"  value="<?php echo ploopi_htmlentities($user->fields['entity']); ?>" <? echo $strDisabled; ?> tabindex="4" />
+                    </p>
+                    <p>
                         <label><?php echo _SYSTEM_LABEL_SERVICE; ?>:</label>
-                        <input type="text" class="text" name="user_service"  value="<?php echo ploopi_htmlentities($user->fields['service']); ?>" tabindex="4" />
+                        <input type="text" class="text" name="user_service"  value="<?php echo ploopi_htmlentities($user->fields['service']); ?>" <? echo $strDisabled; ?> tabindex="4" />
                     </p>
                     <p>
                         <label><?php echo _SYSTEM_LABEL_SERVICE2; ?>:</label>
-                        <input type="text" class="text" name="user_service2"  value="<?php echo ploopi_htmlentities($user->fields['service2']); ?>" tabindex="4" />
+                        <input type="text" class="text" name="user_service2"  value="<?php echo ploopi_htmlentities($user->fields['service2']); ?>" <? echo $strDisabled; ?> tabindex="4" />
                     </p>
                     <p>
                         <label><?php echo _SYSTEM_LABEL_FUNCTION; ?>:</label>
-                        <input type="text" class="text" name="user_function"  value="<?php echo ploopi_htmlentities($user->fields['function']); ?>" tabindex="5" />
+                        <input type="text" class="text" name="user_function"  value="<?php echo ploopi_htmlentities($user->fields['function']); ?>" <? echo $strDisabled; ?> tabindex="5" />
                     </p>
                     <p>
                         <label><?php echo _SYSTEM_LABEL_RANK; ?>:</label>
-                        <input type="text" class="text" name="user_rank"  value="<?php echo ploopi_htmlentities($user->fields['rank']); ?>" tabindex="6" />
+                        <input type="text" class="text" name="user_rank"  value="<?php echo ploopi_htmlentities($user->fields['rank']); ?>" <? echo $strDisabled; ?> tabindex="6" />
                     </p>
                     <p>
                         <label><?php echo _SYSTEM_LABEL_NUMBER; ?>:</label>
-                        <input type="text" class="text" name="user_number"  value="<?php echo ploopi_htmlentities($user->fields['number']); ?>" tabindex="7" />
+                        <input type="text" class="text" name="user_number"  value="<?php echo ploopi_htmlentities($user->fields['number']); ?>" <? echo $strDisabled; ?> tabindex="7" />
                     </p>
                     <p>
                         <label><?php echo _SYSTEM_LABEL_PHONE; ?>:</label>
-                        <input type="text" class="text" name="user_phone"  value="<?php echo ploopi_htmlentities($user->fields['phone']); ?>" tabindex="8" />
+                        <input type="text" class="text" name="user_phone"  value="<?php echo ploopi_htmlentities($user->fields['phone']); ?>" <? echo $strDisabled; ?> tabindex="8" />
                     </p>
                     <p>
                         <label><?php echo _SYSTEM_LABEL_MOBILE; ?>:</label>
-                        <input type="text" class="text" name="user_mobile"  value="<?php echo ploopi_htmlentities($user->fields['mobile']); ?>" tabindex="9" />
+                        <input type="text" class="text" name="user_mobile"  value="<?php echo ploopi_htmlentities($user->fields['mobile']); ?>" <? echo $strDisabled; ?> tabindex="9" />
                     </p>
                     <p>
                         <label><?php echo _SYSTEM_LABEL_FAX; ?>:</label>
-                        <input type="text" class="text" name="user_fax"  value="<?php echo ploopi_htmlentities($user->fields['fax']); ?>" tabindex="10" />
+                        <input type="text" class="text" name="user_fax"  value="<?php echo ploopi_htmlentities($user->fields['fax']); ?>" <? echo $strDisabled; ?> tabindex="10" />
                     </p>
                 </div>
             </fieldset>
@@ -189,31 +201,31 @@ if (isset($_GET['error']))
                 <div class="ploopi_form">
                     <p>
                         <label><?php echo _SYSTEM_LABEL_BUILDING; ?>:</label>
-                        <input type="text" class="text" name="user_building"  value="<?php echo ploopi_htmlentities($user->fields['building']); ?>" tabindex="11" />
+                        <input type="text" class="text" name="user_building"  value="<?php echo ploopi_htmlentities($user->fields['building']); ?>" <? echo $strDisabled; ?> tabindex="11" />
                     </p>
                     <p>
                         <label><?php echo _SYSTEM_LABEL_FLOOR; ?>:</label>
-                        <input type="text" class="text" name="user_floor"  value="<?php echo ploopi_htmlentities($user->fields['floor']); ?>" tabindex="12" />
+                        <input type="text" class="text" name="user_floor"  value="<?php echo ploopi_htmlentities($user->fields['floor']); ?>" <? echo $strDisabled; ?> tabindex="12" />
                     </p>
                     <p>
                         <label><?php echo _SYSTEM_LABEL_OFFICE; ?>:</label>
-                        <input type="text" class="text" name="user_office"  value="<?php echo ploopi_htmlentities($user->fields['office']); ?>" tabindex="13" />
+                        <input type="text" class="text" name="user_office"  value="<?php echo ploopi_htmlentities($user->fields['office']); ?>" <? echo $strDisabled; ?> tabindex="13" />
                     </p>
                     <p>
                         <label><?php echo _SYSTEM_LABEL_ADDRESS; ?>:</label>
-                        <textarea class="text" name="user_address" tabindex="14"><?php echo ploopi_htmlentities($user->fields['address']); ?></textarea>
+                        <textarea class="text" name="user_address" <? echo $strDisabled; ?> tabindex="14"><?php echo ploopi_htmlentities($user->fields['address']); ?></textarea>
                     </p>
                     <p>
                         <label><?php echo _SYSTEM_LABEL_POSTALCODE; ?>:</label>
-                        <input type="text" class="text" name="user_postalcode"  value="<?php echo ploopi_htmlentities($user->fields['postalcode']); ?>" tabindex="15" />
+                        <input type="text" class="text" name="user_postalcode"  value="<?php echo ploopi_htmlentities($user->fields['postalcode']); ?>" <? echo $strDisabled; ?> tabindex="15" />
                     </p>
                     <p>
                         <label><?php echo _SYSTEM_LABEL_CITY; ?>:</label>
-                        <input type="text" class="text" name="user_city"  value="<?php echo ploopi_htmlentities($user->fields['city']); ?>" tabindex="16" />
+                        <input type="text" class="text" name="user_city"  value="<?php echo ploopi_htmlentities($user->fields['city']); ?>" <? echo $strDisabled; ?> tabindex="16" />
                     </p>
                     <p>
                         <label><?php echo _SYSTEM_LABEL_COUNTRY; ?>:</label>
-                        <input type="text" class="text" name="user_country"  value="<?php echo ploopi_htmlentities($user->fields['country']); ?>"  tabindex="17" />
+                        <input type="text" class="text" name="user_country"  value="<?php echo ploopi_htmlentities($user->fields['country']); ?>" <? echo $strDisabled; ?> tabindex="17" />
                     </p>
                 </div>
             </fieldset>
@@ -231,16 +243,16 @@ if (isset($_GET['error']))
                     </p>
                     <p>
                         <label>Ancien mot de passe:</label>
-                        <input type="password" class="text" name="useroldpass" id="useroldpass" value="" tabindex="22" style="width:180px;" />
+                        <input type="password" class="text" name="useroldpass" id="useroldpass" value="" <? echo $strDisabled; ?> tabindex="22" style="width:180px;" />
                     </p>
                     <p>
                         <label>Nouveau mot de passe:</label>
-                        <input type="password" class="text" name="usernewpass" id="usernewpass" value="" tabindex="22" style="width:180px;" />
+                        <input type="password" class="text" name="usernewpass" id="usernewpass" value="" <? echo $strDisabled; ?> tabindex="22" style="width:180px;" />
                     </p>
                     <div id="protopass"></div>
                     <p>
                         <label><?php echo _SYSTEM_LABEL_PASSWORD_CONFIRM; ?>:</label>
-                        <input type="password" class="text" name="usernewpass_confirm" id="usernewpass_confirm" value="" tabindex="23" style="width:180px;" />
+                        <input type="password" class="text" name="usernewpass_confirm" id="usernewpass_confirm" value="" <? echo $strDisabled; ?> tabindex="23" style="width:180px;" />
                     </p>
                     <p>
                         <label><?php echo _SYSTEM_LABEL_EXPIRATION_DATE; ?>:</label>
@@ -256,11 +268,11 @@ if (isset($_GET['error']))
 
                     <p>
                         <label><?php echo _SYSTEM_LABEL_EMAIL; ?>:</label>
-                        <input type="text" class="text" name="user_email"  value="<?php echo ploopi_htmlentities($user->fields['email']); ?>" tabindex="25" />
+                        <input type="text" class="text" name="user_email" value="<?php echo ploopi_htmlentities($user->fields['email']); ?>" <? echo $strDisabled; ?> tabindex="25" />
                     </p>
                     <p class="checkbox" onclick="javascript:ploopi_checkbox_click(event,'user_ticketsbyemail');">
                         <label><?php echo _SYSTEM_LABEL_TICKETSBYEMAIL; ?>:</label>
-                        <input style="width:16px;" type="checkbox" id="user_ticketsbyemail" name="user_ticketsbyemail" value="1" <?php if ($user->fields['ticketsbyemail']) echo 'checked'; ?> tabindex="26" />
+                        <input style="width:16px;" type="checkbox" id="user_ticketsbyemail" name="user_ticketsbyemail" value="1" <?php if ($user->fields['ticketsbyemail']) echo 'checked'; ?> <? echo $strDisabled; ?> tabindex="26" />
                     </p>
 
                     <?php
@@ -276,7 +288,7 @@ if (isset($_GET['error']))
                     <p class="checkbox" onclick="javascript:ploopi_checkbox_click(event,'user_servertimezone');">
                         <label><?php echo _SYSTEM_LABEL_SERVERTIMEZONE; ?>:</label>
                         <span>
-                            <input style="width:16px;" type="checkbox" id="user_servertimezone" name="user_servertimezone" value="1" <?php if ($user->fields['servertimezone']) echo 'checked'; ?> tabindex="27" onchange="$('user_timezone_choice').style.display = (this.checked) ? 'none' : 'block';"/>
+                            <input style="width:16px;" type="checkbox" id="user_servertimezone" name="user_servertimezone" value="1" <?php if ($user->fields['servertimezone']) echo 'checked'; ?> <? echo $strDisabled; ?> tabindex="27" onchange="$('user_timezone_choice').style.display = (this.checked) ? 'none' : 'block';"/>
                             <?php echo "{$server_timezoneid} (". (($offset == 0) ? 'UTC' : sprintf("UTC %s%02dh%02d",$s, $hh, $mm)). ")"; ?>
                         </span>
                     </p>
@@ -324,7 +336,7 @@ if (isset($_GET['error']))
                         ksort($arrZones);
 
                         ?>
-                        <select class="select" name="user_timezone"  tabindex="28">
+                        <select class="select" name="user_timezone" <? echo $strDisabled; ?> tabindex="28">
                         <?php
                         foreach ($arrZones as $key => $value)
                         {
@@ -335,17 +347,26 @@ if (isset($_GET['error']))
                         ?>
                         </select>
                     </p>
+                    <? if ($booReadonly) { ?>
                     <p>
                         <label><?php echo _SYSTEM_LABEL_COLOR; ?>:</label>
-                        <input type="text" style="width:100px;cursor:pointer;" class="text color {hash:true}" name="user_color" id="user_color" value="<?php echo ploopi_htmlentities($user->fields['color']); ?>" tabindex="29" readonly="readonly" />
+                        <input type="text" style="width:100px;background-color:<? echo $user->fields['color']; ?>" class="text" name="user_color" id="user_color" value="<?php echo ploopi_htmlentities($user->fields['color']); ?>" <? echo $strDisabled; ?> tabindex="29" />
                     </p>
+                    <? } else { ?>
+                    <p>
+                        <label><?php echo _SYSTEM_LABEL_COLOR; ?>:</label>
+                        <input type="text" style="width:100px;cursor:pointer;" class="text color {hash:true}" name="user_color" id="user_color" value="<?php echo ploopi_htmlentities($user->fields['color']); ?>" tabindex="29" />
+                    </p>
+                    <? } ?>
+
                     <p>
                         <label><?php echo _SYSTEM_LABEL_PHOTO; ?>:</label>
                         <span>
                         <?
                         $booPhotoExists = file_exists($user->getphotopath());
-                        ?>
-                        <a href="javascript:void(0);" onclick="javascript:system_choose_photo(event, '<?php echo $user->fields['id']; ?>');"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/btn_edit.png" /></a>
+
+                        if (!$booReadonly) { ?><a href="javascript:void(0);" onclick="javascript:system_choose_photo(event, '<?php echo $user->fields['id']; ?>');"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/btn_edit.png" /></a><? } ?>
+
                         <? if ($booPhotoExists) { ?> <a href="javascript:void(0);" onclick="javascript:$('system_user_photo').innerHTML = ''; system_delete_photo('<?php echo $user->fields['id']; ?>');"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/btn_delete.png" /></a><? } ?>
                         <br /><span id="system_user_photo">
                         <?php
@@ -360,19 +381,54 @@ if (isset($_GET['error']))
                 <div class="ploopi_form">
                     <p>
                         <label><?php echo _SYSTEM_LABEL_COMMENTS; ?>:</label>
-                        <textarea class="text" name="user_comments" tabindex="30"><?php echo ploopi_htmlentities($user->fields['comments']); ?></textarea>
+                        <textarea class="text" name="user_comments" <? echo $strDisabled; ?> tabindex="30"><?php echo ploopi_htmlentities($user->fields['comments']); ?></textarea>
                     </p>
                 </div>
             </fieldset>
         </div>
     </div>
 </div>
-<div style="clear:both;text-align:right;padding:4px;">
-    <input type="submit" class="flatbutton" value="<?php echo _PLOOPI_SAVE; ?>">
-</div>
-</form>
+<? if (!$booReadonly) { ?>
+    <div style="clear:both;text-align:right;padding:4px;">
+        <input type="submit" class="flatbutton" value="<?php echo _PLOOPI_SAVE; ?>">
+    </div>
+    </form>
 
-<fieldset class="fieldset" style="padding:0px;margin:4px;">
+    <script type="text/javascript">
+        Event.observe(window, 'load', function() {
+            $('useroldpass').value = '';
+            $('usernewpass').value = '';
+            $('usernewpass_confirm').value = '';
+
+
+            <? if (_PLOOPI_USE_COMPLEXE_PASSWORD) { ?>
+            var options = {
+                minchar: <? echo _PLOOPI_COMPLEXE_PASSWORD_MIN_SIZE; ?>,
+                scores: [5, 10, 20, 30]
+            };
+            <? } else { ?>
+            var options = {
+                minchar: 6,
+                scores: [5, 10, 20, 30]
+            };
+            <? } ?>
+
+            new Protopass('usernewpass', 'protopass', options);
+
+            Event.observe($('usernewpass_confirm'), 'change', function() {
+
+                if ($('usernewpass').value == $('usernewpass_confirm').value) {
+                    $('usernewpass_confirm').style.backgroundColor = $('usernewpass').style.backgroundColor = 'lightgreen';
+                } else {
+                    $('usernewpass_confirm').style.backgroundColor = $('usernewpass').style.backgroundColor = 'indianred';
+                }
+            });
+
+        });
+    </script>
+<? } ?>
+
+<fieldset class="fieldset" style="clear:both;padding:0px;margin:4px;">
     <legend>Documents liés à l'utilisateur</legend>
     <?php
     ploopi_documents(
@@ -413,38 +469,6 @@ if (isset($_GET['error']))
     #protopass .password-strength-bar {border-radius:2px;}
 </style>
 
-<script type="text/javascript">
-    Event.observe(window, 'load', function() {
-        $('useroldpass').value = '';
-        $('usernewpass').value = '';
-        $('usernewpass_confirm').value = '';
-
-
-        <? if (_PLOOPI_USE_COMPLEXE_PASSWORD) { ?>
-        var options = {
-            minchar: 8,
-            scores: [5, 10, 20, 30]
-        };
-        <? } else { ?>
-        var options = {
-            minchar: 6,
-            scores: [5, 10, 20, 30]
-        };
-        <? } ?>
-
-        new Protopass('usernewpass', 'protopass', options);
-
-        Event.observe($('usernewpass_confirm'), 'change', function() {
-
-            if ($('usernewpass').value == $('usernewpass_confirm').value) {
-                $('usernewpass_confirm').style.backgroundColor = $('usernewpass').style.backgroundColor = 'lightgreen';
-            } else {
-                $('usernewpass_confirm').style.backgroundColor = $('usernewpass').style.backgroundColor = 'indianred';
-            }
-        });
-
-    });
-</script>
 
 
 <?php echo $skin->close_simplebloc(); ?>

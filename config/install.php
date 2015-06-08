@@ -105,7 +105,7 @@ if(!isset($_SESSION['install'])) {
     '<TMPPATH>'         => '/tmp',            // ok
     '<CGI>'             => false,             // ok
     '<CGIPATH>'         => './cgi',           // ok
-    '<USE_DBSESSION>'   => true,              // ok
+    '<SESSION_HANDLER>' => 'db',              // ok
     '<URL_ENCODE>'      => true,              // ok
     '<SECRETKEY>'       => 'ma phrase secrete', // ok
     '<FRONTOFFICE>'     => true,              // ok
@@ -408,7 +408,7 @@ if($_POST['stage']>=$stage)
   if(isset($_POST['email_admin']))   $_SESSION['install']['<ADMIN_MAIL>'] = trim($_POST['email_admin']);
   if(isset($_POST['email_sys']))     $_SESSION['install']['<SYS_MAIL>'] = trim($_POST['email_sys']);
   if(isset($_POST['url_encode']))    $_SESSION['install']['<URL_ENCODE>'] = ($_POST['url_encode']=='true' ? true : false);
-  if(isset($_POST['session_bdd']))   $_SESSION['install']['<USE_DBSESSION>'] = ($_POST['session_bdd']=='true' ? true : false);
+  if(isset($_POST['session_handler']))   $_SESSION['install']['<SESSION_HANDLER>'] = $_POST['session_handler'];
   if(isset($_POST['front_active']))  $_SESSION['install']['<FRONTOFFICE>'] = ($_POST['front_active']=='true' ? true : false);
   if(isset($_POST['front_rewrite'])) $_SESSION['install']['<REWRITERULE>'] = ($_POST['front_rewrite']=='true' ? true : false);
   if(isset($_POST['proxy_host']))    $_SESSION['install']['<INTERNETPROXY_HOST>'] = trim($_POST['proxy_host']);
@@ -445,10 +445,6 @@ if($_POST['stage']>=$stage)
   { $strInstallUrlEncodeTrue = 'selected';$strUrlEncodeFalse = ''; }
   else
   { $strInstallUrlEncodeTrue = '';$strUrlEncodeFalse = 'selected'; }
-  if($_SESSION['install']['<USE_DBSESSION>']==true)
-  { $strInstallSessionBddTrue = 'selected';$strInstallSessionBddFalse = ''; }
-  else
-  { $strInstallSessionBddTrue = '';$strInstallSessionBddFalse = 'selected'; }
   if($_SESSION['install']['<FRONTOFFICE>']==true)
   { $strInstallFrontEncodeTrue = 'selected';$strInstallFrontEncodeFalse = ''; }
   else
@@ -609,10 +605,11 @@ if($_POST['stage']>=$stage)
                                                    <option value="false" '.$strInstallUrlEncodeFalse.'>'._PLOOPI_INSTALL_NO.'</option>
                                                  </select>'
                                     ),
-                               array('label' => _PLOOPI_INSTALL_SESSION_BDD,
-                                     'input' => '<select name="session_bdd" id="session_bdd" tabindex="%tabIndex%">
-                                                   <option value="true" '.$strInstallSessionBddTrue.'>'._PLOOPI_INSTALL_YES.'</option>
-                                                   <option value="false" '.$strInstallSessionBddFalse.'>'._PLOOPI_INSTALL_NO.'</option>
+                               array('label' => _PLOOPI_INSTALL_SESSION_HANDLER,
+                                     'input' => '<select name="session_handler" id="session_handler" tabindex="%tabIndex%">
+                                                    <option value="db"'.($_SESSION['install']['<SESSION_HANDLER>'] == 'db' ? 'selected="selected"' : '').'>db</option>
+                                                    <option value="file"'.($_SESSION['install']['<SESSION_HANDLER>'] == 'file' ? 'selected="selected"' : '').'>file</option>
+                                                    <option value="php"'.($_SESSION['install']['<SESSION_HANDLER>'] == 'php' ? 'selected="selected"' : '').'>php</option>
                                                  </select>'
                                     )
                              )

@@ -293,7 +293,7 @@ else
             $template_body->assign_block_vars('switch_user_logged_out.switch_passwordreset', array());
 
             if (_PLOOPI_USE_COMPLEXE_PASSWORD) {
-                $template_body->assign_block_vars('switch_user_logged_out.switch_passwordreset.switch_cp', array());
+                $template_body->assign_block_vars('switch_user_logged_out.switch_passwordreset.switch_cp', array('MIN_SIZE' => _PLOOPI_COMPLEXE_PASSWORD_MIN_SIZE));
             } else {
                 $template_body->assign_block_vars('switch_user_logged_out.switch_passwordreset.switch_np', array());
             }
@@ -321,7 +321,7 @@ else
  * Gestion du cas où on demande à l'utilisateur de compléter son profil
  */
 
-if (!empty($_SESSION['ploopi']['updateprofile'])) {
+if (!empty($_SESSION['ploopi']['updateprofile']) && ploopi_getparam('system_profile_edit_allowed', _PLOOPI_MODULE_SYSTEM) == '1') {
     $ploopi_additional_javascript .= "
         Event.observe(window, 'load', function() {
             ploopi_showpopup('', 750, null, true, 'system_popup_update_profile')

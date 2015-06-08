@@ -43,7 +43,7 @@ $arrFields = array(
     'login'         =>  "Identifiant utilisateur (obligatoire)",
     'password'      =>  "Mot de passe (obligatoire)",
     'adminlevel'    =>  "Niveau du compte. S'il n'est pas renseigné, il sera affecté au niveau le plus bas",
-    'email'         =>  "Adresse mèl",
+    'email'         =>  "Adresse de courriel",
     'phone'         =>  "Numéro de Téléphone",
     'fax'           =>  "Numéro de Fax",
     'mobile'        =>  "Numéro de Portable",
@@ -58,6 +58,7 @@ $arrFields = array(
     'floor'         =>  "Etage",
     'office'        =>  "Bureau",
 
+    'entity'        =>  "Organisme",
     'service'       =>  "Service",
     'function'      =>  "Fonction",
     'rank'          =>  "Grade",

@@ -176,7 +176,7 @@
 
                                     <!-- BEGIN switch_cp -->
                                         var options = {
-                                            minchar: 8,
+                                            minchar: {switch_user_logged_out.switch_passwordreset.switch_cp.MIN_SIZE},
                                             scores: [5, 10, 20, 30]
                                         };
                                     <!-- END switch_cp -->

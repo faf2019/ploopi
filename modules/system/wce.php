@@ -220,6 +220,7 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
                 array(
                     'SYSTEM_TROMBI_LASTNAME' => ploopi_htmlentities($arrFilter['system_lastname']),
                     'SYSTEM_TROMBI_FIRSTNAME' => ploopi_htmlentities($arrFilter['system_firstname']),
+                    'SYSTEM_TROMBI_ENTITY' => ploopi_htmlentities($arrFilter['system_entity']),
                     'SYSTEM_TROMBI_SERVICE' => ploopi_htmlentities($arrFilter['system_service']),
                     'SYSTEM_TROMBI_SERVICE2' => ploopi_htmlentities($arrFilter['system_service2']),
                     'SYSTEM_TROMBI_PHONE' => ploopi_htmlentities($arrFilter['system_phone']),
@@ -245,6 +246,7 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
                 array(
                     'SYSTEM_TROMBI_JS_LASTNAME' => addslashes($arrFilter['system_lastname']),
                     'SYSTEM_TROMBI_JS_FIRSTNAME' => addslashes($arrFilter['system_firstname']),
+                    'SYSTEM_TROMBI_JS_ENTITY' => addslashes($arrFilter['system_entity']),
                     'SYSTEM_TROMBI_JS_SERVICE' => addslashes($arrFilter['system_service']),
                     'SYSTEM_TROMBI_JS_SERVICE2' => addslashes($arrFilter['system_service2']),
                     'SYSTEM_TROMBI_JS_PHONE' => addslashes($arrFilter['system_phone']),

@@ -192,7 +192,7 @@ define ('_PLOOPI_INSTALL_ADMIN_MAIL_JS',     'Mèl Administrateur');
 define ('_PLOOPI_INSTALL_SYS_MAIL',          'Mèl Système:');
 define ('_PLOOPI_INSTALL_SYS_MAIL_JS',       'Mèl Système');
 define ('_PLOOPI_INSTALL_URL_ENCODE',        'Encodage des URL visibles:');
-define ('_PLOOPI_INSTALL_SESSION_BDD',       'Stocker les Sessions en BDD:');
+define ('_PLOOPI_INSTALL_SESSION_HANDLER',   'Gestionnaire de session:');
 
 define ('_PLOOPI_INSTALL_FRONT_OFFICE',      'Paramétrage « FrontOffice »');
 define ('_PLOOPI_INSTALL_FRONT_ACTIVE',      'Activation:');

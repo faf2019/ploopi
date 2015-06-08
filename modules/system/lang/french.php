@@ -152,6 +152,7 @@ define ('_SYSTEM_LABEL_TICKETSBYEMAIL', 'Copie des messages par Courriel');
 define ('_SYSTEM_LABEL_SERVERTIMEZONE', 'Synchronisé avec le fuseau horaire du serveur');
 define ('_SYSTEM_LABEL_FUNCTION', 'Fonction');
 define ('_SYSTEM_LABEL_RANK', 'Grade/Niveau');
+define ('_SYSTEM_LABEL_ENTITY', 'Organisme');
 define ('_SYSTEM_LABEL_SERVICE', 'Service');
 define ('_SYSTEM_LABEL_SERVICE2', 'Bureau');
 define ('_SYSTEM_LABEL_COLOR', 'Couleur');

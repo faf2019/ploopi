@@ -113,22 +113,27 @@ abstract class ploopi_loader
          */
         include_once './include/classes/session.php' ;
 
+
         /**
          * Initialisation du gestionnaire de session
          */
 
-        session_set_save_handler(
-            array('ploopi_session', 'open'),
-            array('ploopi_session', 'close'),
-            array('ploopi_session', 'read'),
-            array('ploopi_session', 'write'),
-            array('ploopi_session', 'destroy'),
-            array('ploopi_session', 'gc')
-        );
+        if (_PLOOPI_SESSION_HANDLER != 'php') {
+
+            session_set_save_handler(
+                array('ploopi_session', 'open'),
+                array('ploopi_session', 'close'),
+                array('ploopi_session', 'read'),
+                array('ploopi_session', 'write'),
+                array('ploopi_session', 'destroy'),
+                array('ploopi_session', 'gc')
+            );
+        }
 
         /**
          * Démarrage de la session
          */
+        session_name(base64_encode(_PLOOPI_SELFPATH));
         session_start();
 
         /**
@@ -160,12 +165,10 @@ abstract class ploopi_loader
          */
         ploopi_session_update();
 
-
         /**
          * Initialisation du header par défaut
          */
         self::setheader();
-
 
         include_once './include/classes/cache.php' ;
         ploopi_cache::init();
@@ -526,17 +529,42 @@ abstract class ploopi_loader
             if ($db->numrows() == 1)
             {
                 $fields = $db->fetchrow();
-                
+
+                // Trop de tentatives de connexion : mise en prison pendant _PLOOPI_JAILING_TIME
+                if ($fields['jailed_since'] > 0 && $fields['jailed_since'] + _PLOOPI_JAILING_TIME > ploopi_createtimestamp()) {
+                    ploopi_create_user_action_log(_SYSTEM_ACTION_LOGIN_ERR, $_REQUEST['ploopi_login'],_PLOOPI_MODULE_SYSTEM,_PLOOPI_MODULE_SYSTEM);
+                    ploopi_syslog(LOG_INFO, "Le compte {$_REQUEST['ploopi_login']} est suspendu pendant "._PLOOPI_JAILING_TIME."s suite à un trop grand nombre de tentatives de connexion");
+                    ploopi_logout(_PLOOPI_ERROR_ACCOUNTJAILED);
+                }
+
+                // Compte désactivé
                 if ($fields['disabled']) {
                     ploopi_create_user_action_log(_SYSTEM_ACTION_LOGIN_ERR, $_REQUEST['ploopi_login'],_PLOOPI_MODULE_SYSTEM,_PLOOPI_MODULE_SYSTEM);
                     ploopi_syslog(LOG_INFO, "Le compte {$_REQUEST['ploopi_login']} est désactivé");
                     ploopi_logout(_PLOOPI_ERROR_ACCOUNTEXPIRE);
                 }
 
+                // Mot de passe erronné
                 if ($fields['password'] != user::generate_hash($_REQUEST['ploopi_password'], $_REQUEST['ploopi_login'])) {
+                    $objUser = new user();
+                    $objUser->open($fields['id']);
+                    $objUser->fields['failed_attemps']++;
+                    // Nombre de tentatives echouées trop élevé ? => case prison
+                    if (_PLOOPI_MAX_CONNECTION_ATTEMPS && $objUser->fields['failed_attemps'] >= _PLOOPI_MAX_CONNECTION_ATTEMPS) {
+                        $objUser->fields['jailed_since'] = ploopi_createtimestamp();
+                    }
+                    $objUser->save();
+
                     ploopi_create_user_action_log(_SYSTEM_ACTION_LOGIN_ERR, $_REQUEST['ploopi_login'], _PLOOPI_MODULE_SYSTEM, _PLOOPI_MODULE_SYSTEM);
                     ploopi_syslog(LOG_INFO, "Mot de passe incorrect pour {$_REQUEST['ploopi_login']}");
                     ploopi_logout(_PLOOPI_ERROR_LOGINERROR);
+                }
+                elseif (!empty($fields['failed_attemps']) || !empty($fields['jailed_since'])) {
+                    $objUser = new user();
+                    $objUser->open($fields['id']);
+                    $objUser->fields['failed_attemps'] = 0;
+                    $objUser->fields['jailed_since'] = 0;
+                    $objUser->save();
                 }
 
                 // Vérification de la validité du compte
@@ -567,11 +595,11 @@ abstract class ploopi_loader
                             if (!_PLOOPI_USE_COMPLEXE_PASSWORD || ploopi_checkpasswordvalidity($_REQUEST['ploopi_password_new'])) {
 
                                 // On peut mettre à jour la base de données
-                                $user = new user();
-                                $user->open($fields['id']);
-                                $user->setpassword($_REQUEST['ploopi_password_new']);
-                                $user->fields['password_force_update'] = 0;
-                                $user->save();
+                                $objUser = new user();
+                                $objUser->open($fields['id']);
+                                $objUser->setpassword($_REQUEST['ploopi_password_new']);
+                                $objUser->fields['password_force_update'] = 0;
+                                $objUser->save();
                             }
                             else $intErrorCode = _PLOOPI_ERROR_PASSWORDINVALID;
                         }
@@ -620,17 +648,16 @@ abstract class ploopi_loader
                     $arrReferer = isset($_SERVER['HTTP_REFERER']) ? parse_url($_SERVER['HTTP_REFERER']) : array(); // Provenance
                     $arrRequest = isset($_SERVER['REQUEST_URI']) ? parse_url($_SERVER['REQUEST_URI']) : array();  // Demande d'authentification
 
-                    $strRefererHost = isset($arrReferer['host']) ? $arrReferer['host'] : '';
+                    $strRefererHost = isset($arrReferer['host']) ? $arrReferer['host'].(isset($arrReferer['port']) && $arrReferer['port'] != 80 ? ':'.$arrReferer['port'] : '') : '';
                     $strRequestHost = $_SERVER['HTTP_HOST'];
 
-                    $strRefererScript = isset($arrReferer['path']) ? str_replace(_PLOOPI_BASEPATH, '', $arrReferer['path']) : '';
-                    $strRequestScript = isset($arrRequest['path']) ? str_replace(_PLOOPI_BASEPATH, '', $arrRequest['path']) : '';
+                    $strRefererScript = isset($arrReferer['path']) ? ltrim(str_replace(dirname($_SERVER['PHP_SELF']), '', $arrReferer['path']), '/') : '';
+                    $strRequestScript = isset($arrRequest['path']) ? ltrim(str_replace(dirname($_SERVER['PHP_SELF']), '', $arrRequest['path']), '/') : '';
 
                     $strLoginRedirect = '';
 
                     // Même domaine, même script, redirection acceptée
-                    if ($strRefererHost == $strRequestHost && ($strRefererScript == $strRequestScript || $strRequestScript != 'admin.php'))
-                    {
+                    if ($strRefererHost == $strRequestHost && ($strRefererScript == $strRequestScript || $strRequestScript != 'admin.php')) {
                         $strLoginRedirect = $_SERVER['HTTP_REFERER'];
                     }
                     // on force la redirection sur le domaine+script courant

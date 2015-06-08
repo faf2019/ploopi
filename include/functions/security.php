@@ -41,8 +41,11 @@
  * @return boolean true si le mot de passe est suffisamment solide
  */
 
-function ploopi_checkpasswordvalidity($password, $min_length = 8, $max_length = 20)
+function ploopi_checkpasswordvalidity($password, $min_length = 0, $max_length = 20)
 {
+    if (empty($min_length)) $min_length = _PLOOPI_COMPLEXE_PASSWORD_MIN_SIZE;
+    $password = ploopi_convertaccents($password);
+
     return $validity = (
         strlen($password) >= $min_length &&
         strlen($password) <= $max_length &&

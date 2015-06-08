@@ -31,8 +31,8 @@
  * @author Stéphane Escaich
  */
 
-define ('_PLOOPI_VERSION', '1.9.3.15');
-define ('_PLOOPI_REVISION', '150518');
+define ('_PLOOPI_VERSION', '1.9.5.0');
+define ('_PLOOPI_REVISION', '150608');
 
 define ('_PLOOPI_MSG_DBERROR',  'Database connection error, please contact administrator');
 define ('_SYSTEM_SYSTEMADMIN',  0);
@@ -54,6 +54,8 @@ define ('_PLOOPI_ERROR_PASSWORDINVALID',       10);
 define ('_PLOOPI_ERROR_LOSTPASSWORD_UNKNOWN',  11);
 define ('_PLOOPI_ERROR_LOSTPASSWORD_INVALID',  12);
 define ('_PLOOPI_ERROR_LOSTPASSWORD_MANYRESPONSES',  13);
+define ('_PLOOPI_ERROR_ACCOUNTJAILED',  14);
+
 
 define ('_PLOOPI_MSG_MAILSENT',             1);
 define ('_PLOOPI_MSG_PASSWORDSENT',         2);

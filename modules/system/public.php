@@ -71,6 +71,10 @@ switch($op)
     break;
 
     case 'save_user':
+
+        // Protection contre modification
+        if (ploopi_getparam('system_profile_edit_allowed') == '0') ploopi_redirect("admin.php?op=profile");
+
         $user = new user();
         $user->open($_SESSION['ploopi']['userid']);
 

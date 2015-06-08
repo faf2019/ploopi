@@ -72,10 +72,11 @@ function ploopi_array2xml($arrArray, $strRootName = 'data', $strDefaultTagName =
  *
  * @param array $arrArray tableau de données
  * @param array $arrOptions options du format CSV : booHeader:true si la ligne d'entête doit être ajoutée (nom des colonnes), strFieldSep:séparateur de champs, strLineSep:séparateur de lignes, strTextSep:caractère d'encapsulation des contenus
+ * @param array $arrTitles nom des colonnes (optionnel)
  * @return string contenu CSV
  */
 
-function ploopi_array2csv($arrArray, $arrOptions = array())
+function ploopi_array2csv($arrArray, $arrOptions = array(), $arrTitles = array())
 {
     $arrDefaultOptions = array(
         'booHeader' => true,
@@ -98,7 +99,10 @@ function ploopi_array2csv($arrArray, $arrOptions = array())
         $funcLineEchap = create_function('$value', 'return \''.$arrOptions['strTextSep'].'\'.str_replace(\''.$arrOptions['strTextSep'].'\', \''.$arrOptions['strTextSep'].$arrOptions['strTextSep'].'\', $value).\''.$arrOptions['strTextSep'].'\';');
 
         // Ajout de la ligne d'entête
-        if ($arrOptions['booHeader']) $arrCSV[] = implode($arrOptions['strFieldSep'], ploopi_array_map($funcLineEchap, array_keys(reset($arrArray))));
+        if ($arrOptions['booHeader']) {
+            if (!empty($arrTitles)) $arrCSV[] = implode($arrOptions['strFieldSep'], ploopi_array_map($funcLineEchap, $arrTitles));
+            else $arrCSV[] = implode($arrOptions['strFieldSep'], ploopi_array_map($funcLineEchap, array_keys(reset($arrArray))));
+        }
 
         // Traitement des contenus
         foreach($arrArray as $row) $arrCSV[] = implode($arrOptions['strFieldSep'], ploopi_array_map($funcLineEchap, $row));

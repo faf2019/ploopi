@@ -88,7 +88,7 @@ class ploopi_session
         ini_set('session.gc_probability', 10);
         ini_set('session.gc_maxlifetime', _PLOOPI_SESSIONTIME);
 
-        if (defined('_PLOOPI_USE_DBSESSION') && _PLOOPI_USE_DBSESSION)
+        if (_PLOOPI_SESSION_HANDLER == 'db')
         {
             self::set_usedb(true);
             if (_PLOOPI_DB_SERVER != _PLOOPI_SESSION_DB_SERVER || _PLOOPI_DB_DATABASE != _PLOOPI_SESSION_DB_DATABASE)
