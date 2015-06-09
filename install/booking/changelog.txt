@@ -1,3 +1,9 @@
+== Module BOOKING - version 1.0.9 ====================================================
+
+2015-06-09  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+* Possibilité de modifier manuellement la couleur d'une ressource
+
 == Module BOOKING - version 1.0.8 ====================================================
 
 2015-03-20  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>

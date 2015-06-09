@@ -152,7 +152,7 @@ switch($_REQUEST['ploopi_op'])
             <p>
                 <label>Couleur planning:</label>
                 <span>
-                    <input name="booking_resource_color" id="booking_resource_color" class="text" type="text" value="<? echo ploopi_htmlentities($objResource->fields['color']); ?>" style="width:60px;cursor:pointer;" readonly="readonly"/>
+                    <input name="booking_resource_color" id="booking_resource_color" class="text" type="text" value="<? echo ploopi_htmlentities($objResource->fields['color']); ?>" style="width:60px;cursor:pointer;" />
                 </span>
                 <script type="text/javascript">new jscolor.color($('booking_resource_color'), {hash:true})</script>
             </p>
