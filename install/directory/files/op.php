@@ -234,6 +234,8 @@ if ($_SESSION['ploopi']['connected'])
             break;
 
             case 'directory_contact_save':
+                ploopi_init_module('directory', false, false, false);
+
                 include_once './modules/directory/class_directory_contact.php';
                 include_once './modules/directory/class_directory_heading.php';
 
@@ -263,6 +265,8 @@ if ($_SESSION['ploopi']['connected'])
                 $directory_contact->setuwm();
                 $directory_contact->save($booForcePos);
 
+                ploopi_create_user_action_log(empty($_GET['directory_contact_id']) ? _DIRECTORY_ACTION_CONTACT_ADD : _DIRECTORY_ACTION_CONTACT_MODIFY, "{$directory_contact->fields['lastname']} {$directory_contact->fields['firstname']} (id:{$directory_contact->fields['id']})");
+
                 // Photo ?
                 if (!empty($_SESSION['directory']['contact_photopath']))
                 {
@@ -283,12 +287,16 @@ if ($_SESSION['ploopi']['connected'])
             break;
 
             case 'directory_contact_delete':
+                ploopi_init_module('directory', false, false, false);
                 include_once './modules/directory/class_directory_contact.php';
 
                 if (!empty($_GET['directory_contact_id']) && is_numeric($_GET['directory_contact_id']))
                 {
                     $directory_contact = new directory_contact();
-                    if ($directory_contact->open($_GET['directory_contact_id'])) $directory_contact->delete();
+                    if ($directory_contact->open($_GET['directory_contact_id'])) {
+                        ploopi_create_user_action_log(_DIRECTORY_ACTION_CONTACT_DELETE, "{$directory_contact->fields['lastname']} {$directory_contact->fields['firstname']} (id:{$directory_contact->fields['id']})");
+                        $directory_contact->delete();
+                    }
                 }
                 ploopi_redirect('admin.php');
             break;
@@ -429,12 +437,15 @@ if ($_SESSION['ploopi']['connected'])
             break;
 
             case 'directory_heading_delete':
+                ploopi_init_module('directory', false, false, false);
                 include_once './modules/directory/class_directory_heading.php';
 
                 $objHeading = new directory_heading();
                 if (empty($_GET['directory_heading_id']) || !is_numeric($_GET['directory_heading_id']) || !$objHeading->open($_GET['directory_heading_id'])) ploopi_redirect('admin.php');
 
                 $intIdParent = $objHeading->fields['id_heading'];
+
+                ploopi_create_user_action_log(_DIRECTORY_ACTION_HEADING_DELETE, "{$objHeading->fields['label']} (id:{$objHeading->fields['id']}, pos:{$objHeading->fields['position']})");
 
                 $objHeading->delete();
 
@@ -464,6 +475,8 @@ if ($_SESSION['ploopi']['connected'])
 
                 $objHeadingChild->save();
 
+                ploopi_create_user_action_log(_DIRECTORY_ACTION_HEADING_ADD, "{$objHeadingChild->fields['label']} (id:{$objHeadingChild->fields['id']}, pos:{$objHeadingChild->fields['position']})");
+
                 ploopi_redirect("admin.php?op=directory_heading_add&directory_heading_id={$objHeadingChild->fields['id']}&op=directory_modify");
             break;
 
@@ -477,6 +490,8 @@ if ($_SESSION['ploopi']['connected'])
 
                 $objHeading->setvalues($_POST, 'directory_heading_');
                 $objHeading->save(!empty($_POST['_directory_heading_forcepos']));
+
+                ploopi_create_user_action_log(_DIRECTORY_ACTION_HEADING_MODIFY, "{$objHeading->fields['label']} (id:{$objHeading->fields['id']}, pos:{$objHeading->fields['position']})");
 
                 if (ploopi_isactionallowed(_DIRECTORY_ACTION_MANAGERS)) ploopi_validation_save(_DIRECTORY_OBJECT_HEADING, $objHeading->fields['id']);
 
@@ -522,6 +537,8 @@ if ($_SESSION['ploopi']['connected'])
                 if (empty($_POST['directory_speeddialing_heading']) && isset($_POST['_directory_speeddialing_newheading'])) $objSpeedDialing->fields['heading'] = $_POST['_directory_speeddialing_newheading'];
 
                 $objSpeedDialing->save();
+
+                ploopi_create_user_action_log(empty($_GET['directory_speeddialing_id']) ? _DIRECTORY_ACTION_SPEEDDIALING_ADD : _DIRECTORY_ACTION_SPEEDDIALING_MODIFY, "{$objSpeedDialing->fields['heading']} / {$objSpeedDialing->fields['label']} (id:{$objSpeedDialing->fields['id']})");
 
                 ploopi_redirect("admin.php");
             break;
@@ -597,7 +614,10 @@ if ($_SESSION['ploopi']['connected'])
 
                 $objSpeedDialing = new directory_speeddialing();
 
-                if (!empty($_GET['directory_speeddialing_id']) && is_numeric($_GET['directory_speeddialing_id']) && $objSpeedDialing->open($_GET['directory_speeddialing_id'])) $objSpeedDialing->delete();
+                if (!empty($_GET['directory_speeddialing_id']) && is_numeric($_GET['directory_speeddialing_id']) && $objSpeedDialing->open($_GET['directory_speeddialing_id'])) {
+                    ploopi_create_user_action_log(_DIRECTORY_ACTION_SPEEDDIALING_DELETE, "{$objSpeedDialing->fields['heading']} / {$objSpeedDialing->fields['label']} (id:{$objSpeedDialing->fields['id']})");
+                    $objSpeedDialing->delete();
+                }
 
                 ploopi_redirect("admin.php");
             break;
@@ -788,5 +808,3 @@ switch($ploopi_op)
         ploopi_die();
     break;
 }
-?>
-

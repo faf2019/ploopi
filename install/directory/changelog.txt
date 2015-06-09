@@ -1,3 +1,10 @@
+== Module DIRECTORY - version 2.3.9 ====================================================
+
+2015-06-09  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+* Ajout d'actions pour gérer le log des modifications
+* Ajout d'entrées automatiques dans le log de modification des contacts partagés et des numéros abrégés
+
 == Module DIRECTORY - version 2.3.8c ====================================================
 
 2013-12-17  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
