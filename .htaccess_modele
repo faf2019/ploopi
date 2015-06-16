@@ -44,7 +44,7 @@ AddDefaultCharset ISO-8859-15
     php_value date.timezone Europe/Paris
 
     php_flag session.upload_progress.enabled On
-    php_flag session.upload_progress.cleanup Off
+    php_flag session.upload_progress.cleanup On
     php_value session.upload_progress.name PHP_SESSION_UPLOAD_PROGRESS
     php_value session.upload_progress.freq 1%
     php_value session.upload_progress.min_freq 1
