@@ -954,3 +954,8 @@ background: url(../img/template/tabs.png) 0 -20px no-repeat;
     text-align:left;
     background-color:#fff;
 }
+
+.ploopi_validate_error,
+.ploopi_validate_error:focus {
+    background:#ffaaaa !important;
+}

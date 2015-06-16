@@ -391,7 +391,7 @@ abstract class ploopi_query_sud extends ploopi_query
      */
     public function add_limit($strLimit)
     {
-        $this->strLimit = $strLimit;
+        $this->strLimit = implode(', ', array_map('intval', explode(',', $strLimit)));
     }
 
     /**

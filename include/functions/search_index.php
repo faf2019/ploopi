@@ -455,7 +455,8 @@ function ploopi_search($keywords, $id_object = -1, $id_record = null, $id_module
 
     if ($id_object != -1) $arrSearch[] = sprintf("e.id_object = %d", $id_object);
 
-    if (!is_array($id_module)) $id_module = array($id_module);
+    if (empty($id_module)) $id_module = array();
+    elseif (!is_array($id_module)) $id_module = array($id_module);
 
     // Prise en compte de la vue sur les données pour chaque module
     $arrViewFilter = array();

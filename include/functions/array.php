@@ -45,26 +45,24 @@ function ploopi_array2json($arrArray, $booForceUTF8 = true)
  * @return string contenu XML
  */
 
+/**
+ * Retourne le contenu d'un tableau multidimensionnel au format XML
+ *
+ * @param array $arrArray tableau de données
+ * @param string $strRootName nom du noeud racine
+ * @param string $strDefaultTagName nom des noeuds 'anonymes'
+ * @param string $strEncoding charset utilisé
+ * @return string contenu XML
+ */
+
 function ploopi_array2xml($arrArray, $strRootName = 'data', $strDefaultTagName = 'row', $strEncoding = 'ISO-8859-1')
 {
-    require_once 'XML/Serializer.php';
-
-    // Configuration du serializer XML
-    $objSerializer = new XML_Serializer(
-        array (
-           'addDecl' => true,
-           'encoding' => $strEncoding,
-           'indent' => '  ',
-           'rootName' => $strRootName,
-           'defaultTagName' => $strDefaultTagName,
-        )
-    );
-
-    // Sérialisation & détection d'erreur
-    if (PEAR::isError($objSerializer->serialize(ploopi_array_cleankeys($arrArray)))) return false;
-
-    // Contenu XML
-    return $objSerializer->getSerializedData();
+    include_once './lib/array2xml/Array2Xml.php';
+    $arrArray = ploopi_array_map('utf8_encode', $arrArray);
+    
+    Array2XML::init('1.0', $strEncoding);
+    $xml = Array2XML::createXML($strRootName, array($strDefaultTagName => $arrArray));
+    return $xml->saveXML();    
 }
 
 /**

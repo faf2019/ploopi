@@ -50,5 +50,3 @@ lstmsg[11] = "<?php echo _PLOOPI_JS_PHONE_ERROR ?>";
 lstmsg[12] = "<?php echo _PLOOPI_JS_CAPTCHA_ERROR ?>";
 lstmsg[13] = "<?php echo _PLOOPI_JS_WEB_ERROR ?>";
 lstmsg[14] = "<?php echo _PLOOPI_JS_ONECHECK_ERROR ?>";
-
-var error_bgcolor = "<?php echo (isset($skin->values['colerror'])) ? $skin->values['colerror'] : "#FFAAAA"; ?>";

@@ -2648,6 +2648,12 @@ background: url(../img/template/tabs.png) 0 -20px no-repeat;
     text-align:left;
     background-color:#fff;
 }
+
+.ploopi_validate_error,
+.ploopi_validate_error:focus {
+    background:#ffaaaa !important;
+}
+
 /*
     Copyright (c) 2007-2008 Ovensia
     Contributors hold Copyright (c) to their code submissions.

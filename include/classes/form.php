@@ -76,6 +76,9 @@ abstract class form_element
     private static $_arrTypes = array(
         'input:hidden',
         'input:text',
+        'input:number',
+        'input:email',
+        'input:date',
         'input:password',
         'input:file',
         'textarea',
@@ -140,6 +143,11 @@ abstract class form_element
      */
     private $_arrOptions;
 
+    /**
+     * Object form "parent"
+     */
+    protected $_objParentForm;
+
 
     /**
      * Petit raccourci pour inclure les propriétés de balises
@@ -186,8 +194,8 @@ abstract class form_element
         return
             self::_getProperty('style',  is_null($strStyle) ? $this->_arrOptions['style'] : $strStyle).
             self::_getProperty('class',  is_null($strClass) ? $this->_arrOptions['class'] : $strClass).
-            self::_getProperty('readonly',  $this->_arrOptions['readonly'] ? 'readonly' : null).
-            self::_getProperty('disabled',  $this->_arrOptions['disabled'] ? 'disabled' : null).
+            self::_getProperty('readonly',  $this->_objParentForm->getOptions()['readonly'] || $this->_arrOptions['readonly'] ? 'readonly' : null).
+            self::_getProperty('disabled',  $this->_objParentForm->getOptions()['disabled'] || $this->_arrOptions['disabled'] ? 'disabled' : null).
             self::_getProperty('autocomplete',  isset($this->_arrOptions['autocomplete']) && !$this->_arrOptions['autocomplete'] ? 'off' : null);
     }
 
@@ -211,7 +219,7 @@ abstract class form_element
         $this->_arrValues = $arrValues;
         $this->_strLabel = $strLabel;
         $this->_strName = $strName;
-        $this->_strId = $strId;
+        $this->_strId = empty($strId) ? uniqid('ploopi_element_') : $strId;
         $this->_arrOptions = $arrOptions;
     }
 
@@ -251,7 +259,15 @@ abstract class form_element
         $this->_arrOptions = array_merge($this->_arrOptions, $arrOptions);
     }
 
-    /**
+     /**
+     * Affecte le lien vers le formulaire "parent"
+     */
+    public function setParentForm(form $objParentForm)
+    {
+        $this->_objParentForm = &$objParentForm;
+    }
+
+   /**
      * Méthode abstraite de rendu d'un libellé. Cette méthode doit être redéfinie dans les classes filles
      *
      * @param int $intTabindex tabindex de l'élément dans le formulaire
@@ -312,7 +328,9 @@ class form_field extends form_element
         'onmousemove' => null,
         'onmouseout' => null,
         'onmouseover' => null,
-        'onmouseup' => null
+        'onmouseup' => null,
+        'min' => null,
+        'max' => null
     );
 
     /**
@@ -333,6 +351,9 @@ class form_field extends form_element
         {
             case 'input:hidden':
             case 'input:text':
+            case 'input:number':
+            case 'input:email':
+            case 'input:date':
             case 'input:password':
             case 'input:button':
             case 'input:submit':
@@ -385,9 +406,22 @@ class form_field extends form_element
         $strPlaceHolder = $this->_arrOptions['placeholder'] != '' ? ' placeholder="'.ploopi_htmlentities($this->_arrOptions['placeholder']).'"' : '';
         switch($this->_strType)
         {
+            case 'input:number':
+                $strMinMax = '';
+                if (isset($this->_arrOptions['min']) && is_numeric($this->_arrOptions['min'])) $strMinMax .= " min=\"{$this->_arrOptions['min']}\"";
+                if (isset($this->_arrOptions['max']) && is_numeric($this->_arrOptions['max'])) $strMinMax .= " min=\"{$this->_arrOptions['max']}\"";
+
+                $strOutput .= "<input type=\"number\" name=\"{$this->_strName}\" id=\"{$this->_strId}\" value=\"{$strValue}\" tabindex=\"{$intTabindex}\"{$strProperties}{$strMaxLength}{$strEvents}{$strPlaceHolder}{$strMinMax} />";
+            break;
+
+            case 'input:email':
+                $strOutput .= "<input type=\"email\" name=\"{$this->_strName}\" id=\"{$this->_strId}\" value=\"{$strValue}\" tabindex=\"{$intTabindex}\"{$strProperties}{$strMaxLength}{$strEvents}{$strPlaceHolder} />";
+            break;
+
+            case 'input:date':
             case 'input:text':
                 $strOutput .= "<input type=\"text\" name=\"{$this->_strName}\" id=\"{$this->_strId}\" value=\"{$strValue}\" tabindex=\"{$intTabindex}\"{$strProperties}{$strMaxLength}{$strEvents}{$strPlaceHolder} />";
-                if ($this->_arrOptions['datatype'] == 'date' && !$this->_arrOptions['readonly'] && !$this->_arrOptions['disabled']) $strOutput .= ploopi_open_calendar($this->_strId, false, null, 'display:block;float:left;margin-left:-35px;margin-top:5px;');
+                if ($this->_arrOptions['datatype'] == 'date' && !$this->_arrOptions['readonly'] && !$this->_arrOptions['disabled'] && !$this->_objParentForm->getOptions()['readonly'] && !$this->_objParentForm->getOptions()['disabled']) $strOutput .= ploopi_open_calendar($this->_strId, false, null, 'display:block;float:left;margin-left:-35px;margin-top:5px;');
             break;
 
             case 'input:password':
@@ -1040,7 +1074,7 @@ class form_datetime extends form_field
         list($strHour, $strMinute, $strSecond) = explode(':', $this->_arrValues['time']);
 
         $strOutput .= "<input type=\"text\" name=\"{$this->_strName}_date\" id=\"{$this->_strId}_date\" value=\"{$strDate}\" tabindex=\"{$intTabindex}\"{$strProperties}{$strMaxLength}{$strEvents} />";
-        if (!$this->_arrOptions['readonly'] && !$this->_arrOptions['disabled']) $strOutput .= ploopi_open_calendar($this->_strId.'_date', false, null, 'display:block;float:left;margin-left:-35px;margin-top:5px;');
+        if (!$this->_arrOptions['readonly'] && !$this->_arrOptions['disabled'] && !$this->_objParentForm->getOptions()['readonly'] && !$this->_objParentForm->getOptions()['disabled']) $strOutput .= ploopi_open_calendar($this->_strId.'_date', false, null, 'display:block;float:left;margin-left:-35px;margin-top:5px;');
 
         $strOutput .= "<select name=\"{$this->_strName}_time_h\" id=\"{$this->_strId}_time_h\" tabindex=\"{$intTabindex}\"{$strProperties_H}{$strEvents}>";
         for ($intH = 0; $intH < 24; $intH++ ) $strOutput .= sprintf('<option %s value="%2$02d">%2$02d</option>', $intH == intval($strHour) ? 'selected="selected"' : '', $intH);
@@ -1207,11 +1241,10 @@ class form_panel
      */
     private $_arrOptions;
 
-    /*
+    /**
      * Object form "parent"
      */
     private $_objParentForm;
-
 
     static private $_arrDefaultOptions = array(
         'style'     => null,
@@ -1219,7 +1252,6 @@ class form_panel
     );
 
     const strDefaultPanel = 'ploopi_panel_default';
-
 
     /**
      * Constructeur du panel
@@ -1234,7 +1266,7 @@ class form_panel
         // init Champs
         $this->_arrFields = array();
 
-        $this->_strId = $strId;
+        $this->_strId = empty($strId) ? uniqid('ploopi_panel_') : $strId;
         $this->_strLabel = $strLabel;
         $this->_objParentForm = null;
 
@@ -1251,6 +1283,8 @@ class form_panel
     public function addField(form_field $objField)
     {
         if ($objField->_strType == 'input:file' && !is_null($this->_objParentForm) && get_class($this->_objParentForm) == 'form') $this->_objParentForm->setOptions(array('enctype' => 'multipart/form-data'));
+
+        $objField->setParentForm($this->_objParentForm);
 
         $this->_arrFields[] = &$objField;
     }
@@ -1404,7 +1438,9 @@ class form
         'class'         => 'ploopi_generate_form',                  // class par défaut du formulaire (partie champs)
         'style'         => null,                                    // style appliqué au formulaire (partie champs)
         'class_form'    => null,                                    // class par défaut du formulaire (global, balise form)
-        'style_form'    => null                                     // style appliqué au formulaire (global, balise form)
+        'style_form'    => null,                                    // style appliqué au formulaire (global, balise form)
+        'readonly'      => false,
+        'disabled'      => false
     );
 
     /**
@@ -1423,7 +1459,7 @@ class form
         $this->_arrButtons = array();
         $this->_arrJs = array();
 
-        $this->_strId = $strId;
+        $this->_strId = empty($strId) ? uniqid('ploopi_form_') : $strId;
         $this->_strAction = $strAction;
         $this->_strMethod = $strMethod;
 
@@ -1461,6 +1497,8 @@ class form
      */
     public function addButton(form_button $objButton)
     {
+        $objButton->setParentForm($this);
+
         $this->_arrButtons[] = &$objButton;
     }
 
@@ -1537,27 +1575,37 @@ class form
             if($objPanel->getNbFields()) $strOutputPanels .= $objPanel->render($intTabindex);
         }
 
-        $strTarget = is_null($this->_arrOptions['target']) ? '' : " target=\"{$this->_arrOptions['target']}\"";
-        $strEnctype = is_null($this->_arrOptions['enctype']) ? ($booHasFile ? ' enctype="multipart/form-data"' : '') : " enctype=\"{$this->_arrOptions['enctype']}\"";
-        $strOnsubmit = is_null($this->_arrOptions['onsubmit']) ? 'onsubmit="javascript:return ploopi.'.$this->getFormValidateFunc().'(this);"' : " onsubmit=\"javascript:{$this->_arrOptions['onsubmit']}\"";
         $strButtonStyle = is_null($this->_arrOptions['button_style']) ? '' : " style=\"{$this->_arrOptions['button_style']}\"";
         $strClass = is_null($this->_arrOptions['class']) ? '' : " class=\"{$this->_arrOptions['class']}\"";
         $strStyle = is_null($this->_arrOptions['style']) ? '' : " style=\"{$this->_arrOptions['style']}\"";
         $strClassForm = is_null($this->_arrOptions['class_form']) ? '' : " class=\"{$this->_arrOptions['class_form']}\"";
         $strStyleForm = is_null($this->_arrOptions['style_form']) ? '' : " style=\"{$this->_arrOptions['style_form']}\"";
 
-        /*
-         * Génération du script de validation
-         * Attention, nécessité de passer par eval() pour les appels AJAX
-         */
+        // Formulaire readonly/disabled ?
+        if ($this->_arrOptions['readonly'] || $this->_arrOptions['disabled']) {
+            /*
+             * Génération du form
+             */
 
-        $strOutput = '<script type="text/javascript">'.$this->renderJS().'</script>';
+            $strOutput = "<div{$strClass}{$strStyle}><form id=\"{$this->_strId}\" name=\"{$this->_strId}\"><div {$strClassForm}{$strStyleForm}>";
+        }
+        else {
+            $strTarget = is_null($this->_arrOptions['target']) ? '' : " target=\"{$this->_arrOptions['target']}\"";
+            $strEnctype = is_null($this->_arrOptions['enctype']) ? ($booHasFile ? ' enctype="multipart/form-data"' : '') : " enctype=\"{$this->_arrOptions['enctype']}\"";
+            $strOnsubmit = is_null($this->_arrOptions['onsubmit']) ? 'onsubmit="javascript:return ploopi.'.$this->getFormValidateFunc().'(this);"' : " onsubmit=\"javascript:{$this->_arrOptions['onsubmit']}\"";
 
-        /*
-         * Génération du form
-         */
+            /*
+             * Génération du script de validation
+             * Attention, nécessité de passer par eval() pour les appels AJAX
+             */
+            $strOutput = '<script type="text/javascript">'.$this->renderJS().'</script>';
 
-        $strOutput .= "<div{$strClass}{$strStyle}><form id=\"{$this->_strId}\" name=\"{$this->_strId}\" action=\"{$this->_strAction}\" method=\"{$this->_strMethod}\"{$strOnsubmit}{$strTarget}{$strEnctype}><div {$strClassForm}{$strStyleForm}>";
+            /*
+             * Génération du form
+             */
+
+            $strOutput .= "<div{$strClass}{$strStyle}><form id=\"{$this->_strId}\" name=\"{$this->_strId}\" action=\"{$this->_strAction}\" method=\"{$this->_strMethod}\"{$strOnsubmit}{$strTarget}{$strEnctype}><div {$strClassForm}{$strStyleForm}>";
+        }
 
 
         /*
@@ -1573,10 +1621,15 @@ class form
 
         $strLegend = is_null($this->_arrOptions['legend']) ? '' : "<em".(is_null($this->_arrOptions['legend_style']) ? '' : " style=\"{$this->_arrOptions['legend_style']}\"").">{$this->_arrOptions['legend']}</em>";
 
-        $strOutput .= "</div><div{$strButtonStyle} class=\"buttons\">{$strLegend}";
-        foreach(array_reverse($this->_arrButtons) as $objButton) $strOutput .= $objButton->render($intTabindex++);
+        $strOutput .= '</div>';
 
-        $strOutput .= '</div></form></div>';
+        if (!empty($this->_arrButtons)) {
+            $strOutput .= "<div{$strButtonStyle} class=\"buttons\">{$strLegend}";
+            foreach(array_reverse($this->_arrButtons) as $objButton) $strOutput .= $objButton->render($intTabindex++);
+            $strOutput .= '</div>';
+        }
+
+        $strOutput .= '</form></div>';
 
 
         return $strOutput;
@@ -1651,6 +1704,7 @@ class form
 
         // Génération de la fonction globale de validation pour tout le formulaire
         $strOutput .= "\nploopi.".$this->getFormValidateFunc()." = function(form) {";
+        $strOutput .= "\nploopi_validatereset(form);";
         foreach($this->_arrPanels as $objPanel) $strOutput .= "\nif (ploopi.".$objPanel->getFormValidateFunc()."(form))";
         $strOutput .= "\nreturn true; return false; }";
 

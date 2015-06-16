@@ -493,10 +493,17 @@ function ploopi_validatefield(field_label, field_object, field_type)
         alert(msg.replace(reg,field_label));
         if (field_type != 'checked')
         {
-            field_object.style.background = error_bgcolor;
+            field_object.addClassName('ploopi_validate_error');
             field_object.focus();
         }
     }
 
     return (ok);
+}
+
+function ploopi_validatereset(form)
+{
+    form.select('input,textarea,select').each(function(item) {
+        item.removeClassName('ploopi_validate_error');
+    });
 }

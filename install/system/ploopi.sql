@@ -23,7 +23,6 @@ CREATE TABLE IF NOT EXISTS ploopi_annotation (
   KEY id_module_type (id_module_type)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
-
 DROP TABLE IF EXISTS ploopi_annotation_tag;
 CREATE TABLE IF NOT EXISTS ploopi_annotation_tag (
   id_annotation int(10) unsigned NOT NULL DEFAULT '0',
@@ -943,7 +942,7 @@ CREATE TABLE IF NOT EXISTS ploopi_module_type (
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
 
 INSERT INTO ploopi_module_type (id, `label`, system, publicparam, description, version, author, `date`) VALUES
-(1, 'system', 1, 0, 'Noyau du système', '1.9.5.0', 'Ovensia', '20150608000000');
+(1, 'system', 1, 0, 'Noyau du système', '1.9.5.1', 'Ovensia', '20150616000000');
 
 DROP TABLE IF EXISTS ploopi_module_workspace;
 CREATE TABLE IF NOT EXISTS ploopi_module_workspace (
