@@ -113,7 +113,6 @@ abstract class ploopi_loader
          */
         include_once './include/classes/session.php' ;
 
-
         /**
          * Initialisation du gestionnaire de session
          */
@@ -1464,5 +1463,19 @@ abstract class ploopi_loader
      */
 
     public static function getworkspace() { return self::$workspace; }
+
+
+    /**
+     * Retourne le type de script
+     *
+     * @package ploopi
+     * @subpackage loader
+     * @copyright Ovensia
+     * @license GNU General Public License (GPL)
+     * @author Stéphane Escaich
+     * @return array
+     */
+
+    public static function getscript() { return self::$script; }
 
 }
