@@ -133,7 +133,7 @@ abstract class ploopi_loader
         /**
          * Démarrage de la session
          */
-        session_name(base64_encode(_PLOOPI_SELFPATH));
+        session_name('ploopi'.md5(_PLOOPI_BASEPATH));
         session_start();
 
         /**
