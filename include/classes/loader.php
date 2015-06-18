@@ -109,15 +109,15 @@ abstract class ploopi_loader
         if(!$db->isconnected()) trigger_error(_PLOOPI_MSG_DBERROR, E_USER_ERROR);
 
         /**
-         * Gestionnaire interne de session
-         */
-        include_once './include/classes/session.php' ;
-
-        /**
          * Initialisation du gestionnaire de session
          */
 
         if (_PLOOPI_SESSION_HANDLER != 'php') {
+
+            /**
+             * Gestionnaire interne de session
+             */
+            include_once './include/classes/session.php' ;
 
             session_set_save_handler(
                 array('ploopi_session', 'open'),
@@ -127,12 +127,13 @@ abstract class ploopi_loader
                 array('ploopi_session', 'destroy'),
                 array('ploopi_session', 'gc')
             );
+
+            session_name('ploopi'.md5(_PLOOPI_BASEPATH));
         }
 
         /**
          * Démarrage de la session
          */
-        session_name('ploopi'.md5(_PLOOPI_BASEPATH));
         session_start();
 
         /**
