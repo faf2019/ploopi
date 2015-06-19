@@ -86,13 +86,16 @@ function ploopi_showpopup(popup_content, w, e, centered, id, pposx, pposy, enabl
     if(e) // event ok
     {
         if (e.pageX || e.pageY) {
-            posx = e.pageX-ploopi_hooks[0].cumulativeOffset().left;
-            posy = e.pageY-ploopi_hooks[0].cumulativeOffset().top;
+            var coordScroll = ploopi_hooks[0].cumulativeScrollOffset();
+            var hookScroll = document.viewport.getScrollOffsets();
+            posx = e.pageX-ploopi_hooks[0].cumulativeOffset().left + coordScroll.left + hookScroll.left;
+            posy = e.pageY-ploopi_hooks[0].cumulativeOffset().top + coordScroll.top + hookScroll.top;
         }
         else if (e.clientX || e.clientY) {
-            var coordScroll = document.viewport.getScrollOffsets();
-            posx = e.clientX + coordScroll.left;
-            posy = e.clientY + coordScroll.top;
+            var coordScroll = ploopi_hooks[0].cumulativeScrollOffset();
+            var hookScroll = document.viewport.getScrollOffsets();
+            posx = e.clientX + coordScroll.left + hookScroll.left;
+            posy = e.clientY + coordScroll.top + hookScroll.top;
         }
     }
     else
@@ -104,9 +107,10 @@ function ploopi_showpopup(popup_content, w, e, centered, id, pposx, pposy, enabl
 
            default:
            case true:
-                var coordScroll = document.viewport.getScrollOffsets();
-                if (!posx) posx = parseInt(document.viewport.getWidth()/2)-parseInt(w/2)+coordScroll.left;
-                if (!posy) posy = parseInt(coordScroll.top)+20;
+                var coordScroll = ploopi_hooks[0].cumulativeScrollOffset();
+                var hookScroll = document.viewport.getScrollOffsets();
+                if (!posx) posx = parseInt(document.viewport.getWidth()/2)-parseInt(w/2)+coordScroll.left+hookScroll.left;
+                if (!posy) posy = coordScroll.top + hookScroll.left + 20;
             break;
         }
     }
