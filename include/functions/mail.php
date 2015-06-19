@@ -211,7 +211,7 @@ function ploopi_send_mail($from, $to, $subject, $message, $cc = null, $bcc = nul
     }
 
      // send mail
-    mail($str_to, $subject, $msg, $headers);
+    return mail($str_to, $subject, $msg, $headers);
 
 }
 
