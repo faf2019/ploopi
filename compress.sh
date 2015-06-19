@@ -28,6 +28,17 @@ do
             java -jar ../yuicompressor/build/yuicompressor$YUIVER.jar --charset ISO-8859-15 $i | gzip > $i.gz
             export ta=`stat -c "%s" $i`
             export tb=`stat -c "%s" $i.gz`
+            if [ $tb -eq 20 ]
+            then
+                java -jar ../yuicompressor/build/yuicompressor$YUIVER.jar --charset UTF-8 $i | gzip > $i.gz
+                gzip -c -f $i > $i.gz
+                export tb=`stat -c "%s" $i.gz`
+                if [ $tb -eq 20 ]
+                then
+                    gzip -c -f $i > $i.gz
+                    export tb=`stat -c "%s" $i.gz`
+                fi
+            fi
             echo "Résultat : $ta => $tb"
         done
     fi
@@ -35,18 +46,30 @@ done
 
 echo "COMPRESSION DES FICHIERS js/css DES MODULES"
 
-for i in $( find ./modules ./templates/frontoffice \( \( -name '*.js' -or -name '*.css' \) -and -not -name 'fck*' \) -type f )
+for i in $( find ./modules ./templates/frontoffice \( \( -name '*.js' -or -name '*.css' \) -and -not -name 'fck*'  -and -not -name 'ck*' \) -type f )
 do
     echo "Compression : $i => $i.gz"
     java -jar ../yuicompressor/build/yuicompressor$YUIVER.jar --charset ISO-8859-15 $i | gzip > $i.gz
     export ta=`stat -c "%s" $i`
     export tb=`stat -c "%s" $i.gz`
+    if [ $tb -eq 20 ]
+    then
+        java -jar ../yuicompressor/build/yuicompressor$YUIVER.jar --charset UTF-8 $i | gzip > $i.gz
+        gzip -c -f $i > $i.gz
+        export tb=`stat -c "%s" $i.gz`
+        if [ $tb -eq 20 ]
+        then
+            gzip -c -f $i > $i.gz
+            export tb=`stat -c "%s" $i.gz`
+        fi
+    fi
+
     echo "Résultat : $ta => $tb"
 done
 
 echo "COMPRESSION DES FICHIERS js/css DE FCKEDITOR"
 
-for i in $( find ./modules ./templates/frontoffice \( -name 'fck*.js' -or -name 'fck*.css' \) -type f )
+for i in $( find ./modules ./templates/frontoffice \( -name 'fck*.js' -or -name 'fck*.css' or -name 'ck*.js' -or -name 'ck*.css' \) -type f )
 do
     echo "Compression : $i => $i.gz"
 
