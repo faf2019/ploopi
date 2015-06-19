@@ -41,47 +41,62 @@
  * @param int $id_module identifiant du module
  */
 
-function ploopi_create_user_action_log($id_action, $id_record, $id_module_type = -1, $id_module = -1)
+function ploopi_create_user_action_log($id_action, $id_record, $id_module_type = 0, $id_module = 0, $id_workspace = 0)
 {
     include_once './include/classes/log.php';
     include_once './include/classes/mb.php';
 
     global $db;
 
-    if ($id_module_type == -1) $id_module_type = $_SESSION['ploopi']['moduletypeid'];
-    if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];
-
-
-
     $user_action_log = new user_action_log();
-
-    $user_action_log->fields['user'] = isset($_SESSION['ploopi']['user']) ? trim("{$_SESSION['ploopi']['user']['firstname']} {$_SESSION['ploopi']['user']['lastname']} ({$_SESSION['ploopi']['user']['login']})") : '';
-
-    $user_action_log->fields['workspace'] = isset($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]) ? $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['label'] : '';
-
-    if (isset($_SESSION['ploopi']['modules'][$id_module]))
-    {
-        $user_action_log->fields['module'] = $_SESSION['ploopi']['modules'][$id_module]['label'];
-        $user_action_log->fields['module_type'] = $_SESSION['ploopi']['modules'][$id_module]['moduletype'];
-
-        $action = new mb_action();
-        if ($action->open($id_module_type, $id_action)) $user_action_log->fields['action'] = $action->fields['label'];
-        else $user_action_log->fields['action'] = '';
-    }
-    else
-    {
-        $user_action_log->fields['module'] = '';
-        $user_action_log->fields['module_type'] = '';
-        $user_action_log->fields['action'] = '';
-    }
-
-    $user_action_log->fields['id_user'] = isset($_SESSION['ploopi']['userid']) ? $_SESSION['ploopi']['userid'] : 0;
-    $user_action_log->fields['id_action'] = $id_action;
-    $user_action_log->fields['id_workspace'] = isset($_SESSION['ploopi']['workspaceid']) ? $_SESSION['ploopi']['workspaceid'] : 0;
+    $user_action_log->fields['user'] = '';
+    $user_action_log->fields['workspace'] = '';
+    $user_action_log->fields['module'] = '';
+    $user_action_log->fields['module_type'] = '';
+    $user_action_log->fields['action'] = '';
+    $user_action_log->fields['id_user'] = 0;
+    $user_action_log->fields['id_workspace'] = $id_workspace;
     $user_action_log->fields['id_module_type'] = $id_module_type;
     $user_action_log->fields['id_module'] = $id_module;
+    $user_action_log->fields['id_action'] = $id_action;
     $user_action_log->fields['id_record'] = $id_record;
-    $user_action_log->fields['ip'] = (empty($_SESSION['ploopi']['remote_ip'])) ? '' : implode(',', $_SESSION['ploopi']['remote_ip']);
+
+    if (isset($_SESSION)) {
+        if ($id_module_type == 0) $id_module_type = $_SESSION['ploopi']['moduletypeid'];
+        if ($id_module == 0) $id_module = $_SESSION['ploopi']['moduleid'];
+        if ($id_workspace == 0) $id_workspace = $_SESSION['ploopi']['workspaceid'];
+
+        $user_action_log->fields['user'] = isset($_SESSION['ploopi']['user']) ? trim("{$_SESSION['ploopi']['user']['firstname']} {$_SESSION['ploopi']['user']['lastname']} ({$_SESSION['ploopi']['user']['login']})") : '';
+        $user_action_log->fields['workspace'] = isset($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]) ? $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['label'] : '';
+
+        if (isset($_SESSION['ploopi']['modules'][$id_module]))
+        {
+            $user_action_log->fields['module'] = $_SESSION['ploopi']['modules'][$id_module]['label'];
+            $user_action_log->fields['module_type'] = $_SESSION['ploopi']['modules'][$id_module]['moduletype'];
+        }
+
+        $user_action_log->fields['id_user'] = isset($_SESSION['ploopi']['userid']) ? $_SESSION['ploopi']['userid'] : 0;
+        $user_action_log->fields['id_workspace'] = $id_workspace;
+    }
+    else {
+        include_once './include/classes/module.php';
+        include_once './include/classes/workspace.php';
+
+        $module = new module();
+        if ($module->open($id_module)) $user_action_log->fields['module'] = $module->fields['label'];
+
+        $module_type = new module_type();
+        if ($module_type->open($id_module_type)) $user_action_log->fields['module_type'] = $module_type->fields['label'];
+
+        $workspace = new workspace();
+        if ($workspace->open($id_workspace)) $user_action_log->fields['workspace'] = $workspace->fields['label'];
+    }
+
+    $action = new mb_action();
+    if ($action->open($id_module_type, $id_action)) $user_action_log->fields['action'] = $action->fields['label'];
+    else $user_action_log->fields['action'] = '';
+
+    $user_action_log->fields['ip'] = (empty($_SESSION['ploopi']['remote_ip'])) ? php_sapi_name() : implode(',', $_SESSION['ploopi']['remote_ip']);
     $user_action_log->fields['timestp'] = ploopi_createtimestamp();
     $user_action_log->save();
 }

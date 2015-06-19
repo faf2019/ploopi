@@ -56,7 +56,7 @@ class ploopi_session
 {
     private static $booCompress = true;
 
-    private static $booUseDb = false;
+    private static $booUseDb = null;
 
     private static $objDb = null;
 
@@ -75,19 +75,22 @@ class ploopi_session
 
     public static function set_usedb($booUseDb) { self::$booUseDb = $booUseDb; }
 
-    public static function get_usedb() { return self::$booUseDb; }
+    public static function get_usedb() {
+        if (is_null(self::$booUseDb)) self::_initdb();
+        return self::$booUseDb;
+    }
 
     public static function set_db($objDb) { self::$objDb = $objDb; }
 
-    public static function get_db() { return self::$objDb; }
+    public static function get_db() {
+        if (is_null(self::$booUseDb)) self::_initdb();
+        return self::$objDb;
+    }
 
     public static function get_id() { return session_id(); }
 
-    public static function open()
+    private static function _initdb()
     {
-        ini_set('session.gc_probability', 10);
-        ini_set('session.gc_maxlifetime', _PLOOPI_SESSIONTIME);
-
         if (_PLOOPI_SESSION_HANDLER == 'db')
         {
             self::set_usedb(true);
@@ -102,6 +105,15 @@ class ploopi_session
                 self::set_db($db);
             }
         }
+    }
+
+    public static function open()
+    {
+        ini_set('session.gc_probability', 10);
+        ini_set('session.gc_maxlifetime', _PLOOPI_SESSIONTIME);
+
+        self::_initdb();
+
     }
 
     public static function close() { }
