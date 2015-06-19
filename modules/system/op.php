@@ -84,6 +84,7 @@ if ($_SESSION['ploopi']['connected'])
             }
 
             $user->save();
+            $_SESSION['ploopi']['user'] = $user->fields;
 
             ob_start();
             ?>
