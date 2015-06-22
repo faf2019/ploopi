@@ -98,7 +98,7 @@ function weathertools_getmap($type_map, $moduleid = null, $cache_length = 1800)
             ploopi_makedir($strCachePath);
 
             $ptrFd = fopen("{$strCacheFile}.raw", 'wb');
-            fwrite($ptrFd, $objRequest->getBody());
+            fwrite($ptrFd, $objResponse->getBody());
             fclose($ptrFd);
 
             $intFileTs = filemtime("{$strCacheFile}.raw");
