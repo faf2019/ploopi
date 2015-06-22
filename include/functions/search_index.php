@@ -619,7 +619,7 @@ function ploopi_getwords($content, $usecommonwords = true, $getstem = false, $so
     for ($kw = strtok($content, _PLOOPI_INDEXATION_WORDSEPARATORS); $kw !== false; $kw = strtok(_PLOOPI_INDEXATION_WORDSEPARATORS))
     {
         // remove empty characters
-        $kw = trim(mb_strtolower($kw),"\x0..\x20\xa0");
+        $kw = trim(strtolower($kw),"\x0..\x20\xa0");
 
         // only keep "normal" characters
         $kw_clean = preg_replace("/[^a-zA-Z0-9]/","",ploopi_convertaccents($kw));
