@@ -32,6 +32,11 @@
  */
 
 /**
+ * Inclusion des dépendances
+ */
+include_once './include/classes/session.php';
+
+/**
  * Classe d'accès à la table ploopi_log.
  *
  * @package ploopi
