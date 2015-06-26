@@ -74,7 +74,7 @@ function ploopi_array2xml($arrArray, $strRootName = 'data', $strDefaultTagName =
  * @return string contenu CSV
  */
 
-function ploopi_array2csv($arrArray, $arrOptions = array(), $arrTitles = array())
+function ploopi_array2csv($arrArray, $arrOptions = array())
 {
     $arrDefaultOptions = array(
         'booHeader' => true,
@@ -94,16 +94,19 @@ function ploopi_array2csv($arrArray, $arrOptions = array(), $arrTitles = array()
         if ($arrOptions['booClean']) $arrArray = ploopi_array_map('ploopi_iso8859_clean', $arrArray);
 
         // Fonction d'échappement & formatage du contenu
-        $funcLineEchap = create_function('$value', 'return \''.$arrOptions['strTextSep'].'\'.str_replace(\''.$arrOptions['strTextSep'].'\', \''.$arrOptions['strTextSep'].$arrOptions['strTextSep'].'\', $value).\''.$arrOptions['strTextSep'].'\';');
-
-        // Ajout de la ligne d'entête
-        if ($arrOptions['booHeader']) {
-            if (!empty($arrTitles)) $arrCSV[] = implode($arrOptions['strFieldSep'], ploopi_array_map($funcLineEchap, $arrTitles));
-            else $arrCSV[] = implode($arrOptions['strFieldSep'], ploopi_array_map($funcLineEchap, array_keys(reset($arrArray))));
+        $funcLineEchap = null;
+        
+        if ($arrOptions['strTextSep'] != '') {
+            $funcLineEchap = create_function('$value', 'return \''.$arrOptions['strTextSep'].'\'.str_replace(\''.$arrOptions['strTextSep'].'\', \''.$arrOptions['strTextSep'].$arrOptions['strTextSep'].'\', $value).\''.$arrOptions['strTextSep'].'\';');
+        } elseif ($arrOptions['strFieldSep'] != '') {
+            $funcLineEchap = create_function('$value', 'return str_replace(\''.$arrOptions['strFieldSep'].'\', \'\\'.$arrOptions['strFieldSep'].'\', $value);');
         }
 
+        // Ajout de la ligne d'entête
+        if ($arrOptions['booHeader']) $arrCSV[] = implode($arrOptions['strFieldSep'], is_null($funcLineEchap) ? array_keys(reset($arrArray)) : ploopi_array_map($funcLineEchap, array_keys(reset($arrArray))));
+
         // Traitement des contenus
-        foreach($arrArray as $row) $arrCSV[] = implode($arrOptions['strFieldSep'], ploopi_array_map($funcLineEchap, $row));
+        foreach($arrArray as $row) $arrCSV[] = implode($arrOptions['strFieldSep'], is_null($funcLineEchap) ? $row : ploopi_array_map($funcLineEchap, $row));
     }
 
     // contenu CSV
