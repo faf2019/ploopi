@@ -620,23 +620,21 @@ abstract class ploopi_loader
                     $arrReferer = isset($_SERVER['HTTP_REFERER']) ? parse_url($_SERVER['HTTP_REFERER']) : array(); // Provenance
                     $arrRequest = isset($_SERVER['REQUEST_URI']) ? parse_url($_SERVER['REQUEST_URI']) : array();  // Demande d'authentification
 
-                    $strRefererHost = isset($arrReferer['host']) ? $arrReferer['host'] : '';
+                    $strRefererHost = isset($arrReferer['host']) ? $arrReferer['host'].(isset($arrReferer['port']) && $arrReferer['port'] != 80 ? ':'.$arrReferer['port'] : '') : '';
                     $strRequestHost = $_SERVER['HTTP_HOST'];
 
-                    $strRefererScript = isset($arrReferer['path']) ? str_replace(_PLOOPI_BASEPATH, '', $arrReferer['path']) : '';
-                    $strRequestScript = isset($arrRequest['path']) ? str_replace(_PLOOPI_BASEPATH, '', $arrRequest['path']) : '';
+                    $strRefererScript = isset($arrReferer['path']) ? ltrim(str_replace(dirname($_SERVER['PHP_SELF']), '', $arrReferer['path']), '/') : '';
+                    $strRequestScript = isset($arrRequest['path']) ? ltrim(str_replace(dirname($_SERVER['PHP_SELF']), '', $arrRequest['path']), '/') : '';
 
                     $strLoginRedirect = '';
 
                     // Même domaine, même script, redirection acceptée
-                    if ($strRefererHost == $strRequestHost && ($strRefererScript == $strRequestScript || $strRequestScript != 'admin.php'))
-                    {
+                    if ($strRefererHost == $strRequestHost && ($strRefererScript == $strRequestScript || $strRequestScript != 'admin.php')) {
                         $strLoginRedirect = $_SERVER['HTTP_REFERER'];
                     }
                     // on force la redirection sur le domaine+script courant
                     else $strLoginRedirect = _PLOOPI_BASEPATH.'/'.$strRequestScript;
                 }
-
             }
             else
             {
