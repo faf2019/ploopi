@@ -540,8 +540,12 @@ switch($menu)
                         if (empty($_POST['webedit_article_comments_allowed'])) $article->fields['comments_allowed'] = 0;
 
                     }
-                    else $article->setvalues($_POST,'webedit_article_');
-
+                    else {
+                        $article->setvalues($_POST, 'webedit_article_');
+                        if (!empty($_POST['webedit_article_timestp_published'])) $article->fields['timestp_published'] = ploopi_local2timestamp($_POST['webedit_article_timestp_published']);
+                        if (!empty($_POST['webedit_article_timestp_unpublished'])) $article->fields['timestp_unpublished'] = ploopi_local2timestamp($_POST['webedit_article_timestp_unpublished']);
+                        if (!empty($_POST['webedit_article_timestp'])) $article->fields['timestp'] = ploopi_local2timestamp($_POST['webedit_article_timestp']);
+                    }
 
                     // récupère les validateurs
                     $arrWfUsers = array('group' => array(), 'user' => array());
