@@ -1,3 +1,9 @@
+== Module WebEdit - version 2.6.0 ============================================
+
+2015-07-07  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Correction d'un bug à l'enregistrement des dates lors de la publication d'un article "à valider"
+
 == Module WebEdit - version 2.5.7 ============================================
 
 2015-04-13  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
