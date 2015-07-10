@@ -1,3 +1,11 @@
+== Module BOOKING - version 1.1.0 ====================================================
+
+2015-07-10  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+* Ajout d'un bouton de suppression des événements en frontoffice (propriétaire uniquement, non validé...)
+* Correction d'URLs non valides en frontoffice (jetons manquants, contenus erronés, mauvaises redirections)
+* Ajout de la possibilité de modifier manuellement le code couleur d'une ressource
+
 == Module BOOKING - version 1.0.8 ====================================================
 
 2015-03-20  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>

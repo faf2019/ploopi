@@ -42,6 +42,7 @@ switch($ploopi_op)
         if (empty($_REQUEST['booking_resources'])) $_REQUEST['booking_resources'] = array();
     case 'booking_refresh':
         ploopi_init_module('booking');
+        global $arrBookingColor;
         include_once './modules/booking/wce_display.php';
         ploopi_die();
     break;

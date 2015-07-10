@@ -366,7 +366,8 @@ if ($_SESSION['ploopi']['connected'])
 
             $objEvent->save();
 
-            ploopi_redirect("admin.php");
+            if ($_SESSION['ploopi']['mode'] == 'frontoffice') ploopi_redirect($_SESSION['booking'][$_GET['booking_moduleid']]['article_url']);
+            else ploopi_redirect('admin.php');
         break;
 
         case 'booking_event_add':
@@ -631,9 +632,11 @@ switch($ploopi_op)
                     $booModifyEvent = $booValidate || ($objEvent->fields['managed'] == 0 && $detail['canceled'] == 0 && $detail['validated'] == 0 && $_SESSION['ploopi']['userid'] == $objEvent->fields['id_user']);
                     $booModifyEventGlobal = $booModifyEventGlobal || $booModifyEvent;
                 }
+
+                $strUrl = $_SESSION['ploopi']['mode'] == 'frontoffice' ? ploopi_urlencode("index-light.php?ploopi_op=booking_event_validate&booking_event_id={$objEvent->fields['id']}&booking_moduleid={$_GET['booking_moduleid']}") : ploopi_urlencode("admin-light.php?ploopi_op=booking_event_validate&booking_event_id={$objEvent->fields['id']}");
                 ?>
 
-                <? if ($booModifyEventGlobal) { ?><form action="<? echo ploopi_urlencode("admin-light.php?ploopi_op=booking_event_validate&booking_event_id={$objEvent->fields['id']}"); ?>" method="post"><? } ?>
+                <? if ($booModifyEventGlobal) { ?><form action="<? echo $strUrl; ?>" method="post"><? } ?>
 
                 <div class=ploopi_form>
                     <p>
@@ -887,6 +890,13 @@ switch($ploopi_op)
                     <?
                     // Enregistrement et/ou validation
                     if ($booModifyEventGlobal) {
+                        if ($objEvent->fields['managed'] == 0 && (($_SESSION['ploopi']['userid'] == $objEvent->fields['id_user'] && $detail['validated'] == 0 && $detail['canceled'] == 0)))
+                        {
+                            $strUrl = ploopi_urlencode($_SESSION['ploopi']['mode'] == 'backoffice' ? "admin-light.php?ploopi_op=booking_event_detail_delete&booking_event_detail_id={$detail['id']}" : "index-light.php?ploopi_op=booking_event_detail_delete&booking_moduleid={$_GET['booking_moduleid']}&booking_event_detail_id={$detail['id']}");
+                            ?>
+                                <input type="button" class="button" value="Supprimer" title="Supprimer cette réservation" style="color:#a60000;font-weight:bold;" onclick="javascript:if (confirm('Attention cette action va supprimer définitivement la demande de réservation.\nVoulez vous continuer ?')) document.location.href = '<? echo $strUrl; ?>';" />
+                            <?
+                        }
                         ?>
                         <input type="reset" class="button" value="Réinitialiser" />
                         <input type="submit" class="button" value="Enregistrer" />
@@ -894,10 +904,17 @@ switch($ploopi_op)
                     }
                     // Déverrouillage
                     elseif ($objEvent->fields['managed'] == 1 && ploopi_isactionallowed(_BOOKING_ACTION_VALIDATE)) {
+
+                        if ($_SESSION['ploopi']['mode'] == 'frontoffice') {
+                            $strUrl = "ploopi_xmlhttprequest_todiv('index-light.php','".ploopi_queryencode("ploopi_op=booking_event_unlock&booking_element_id={$_GET['booking_element_id']}&booking_moduleid={$_GET['booking_moduleid']}")."', 'popup_event');";
+                        } else {
+                            $strUrl = "ploopi_xmlhttprequest_todiv('admin-light.php','".ploopi_queryencode("ploopi_op=booking_event_unlock&booking_element_id={$_GET['booking_element_id']}")."', 'popup_event');";
+                        }
+
                         ?>
                         <div style="margin-bottom:2px;"><strong style="color:#a60000;">Cette demande est verrouillée car son traitement est terminé</strong></div>
                         <div>
-                            <input type="button" class="button" value="Deverrouiller" onclick="javascript:booking_event_unlock('<? echo ploopi_htmlentities($_GET['booking_element_id']); ?>');"/>
+                            <input type="button" class="button" value="Deverrouiller" onclick="javascript:<? echo $strUrl; ?>"/>
                             <input type="button" class="button" value="Fermer" onclick="javascript:ploopi_hidepopup('popup_event');"/>
                         </div>
                         <?
