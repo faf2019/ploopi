@@ -752,6 +752,7 @@ elseif (!empty($intTemplateModuleId)) // contenu d'un module
 {
     $template_body->assign_block_vars("switch_content_module_{$_SESSION['ploopi']['modules'][$intTemplateModuleId]['moduletype']}", array());
 
+    global $template_moduleid;
     $template_moduleid = $intTemplateModuleId;
     include_once "./modules/{$_SESSION['ploopi']['modules'][$intTemplateModuleId]['moduletype']}/template_content.php";
     unset($template_moduleid);
