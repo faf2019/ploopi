@@ -52,16 +52,16 @@ $op = empty($_REQUEST['op']) ? '' : $_REQUEST['op'];
 switch($op)
 {
     case 'search':
-        
+
         // Récupération des paramètres
         $arrFilter = array();
-        
+
         // On ne veut pas les caractères % et | dans la recherche avec LIKE
         $pattern = '/%|_/';
-        
+
         // Lecture SESSION
         if (isset($_SESSION['directory']['tpl_search'])) $arrFilter = $_SESSION['directory']['tpl_search'];
-        
+
         $arrParams = array(
             'directory_lastname',
             'directory_firstname',
@@ -77,7 +77,7 @@ switch($op)
             'directory_heading',
             'directory_comments'
         );
-        
+
         foreach($arrParams as $strParam)
         {
             // Lecture Param
@@ -85,10 +85,10 @@ switch($op)
             // Affectation de valeur par défaut si non défini
             if (!isset($arrFilter[$strParam])) $arrFilter[$strParam] = '';
         }
-        
+
         // Enregistrement SESSION
         $_SESSION['directory']['tpl_search'] = $arrFilter;
-        
+
         $template_body->assign_vars(
             array(
                 'DIRECTORY_SEARCH_LASTNAME' => ploopi_htmlentities($arrFilter['directory_lastname']),
@@ -105,46 +105,46 @@ switch($op)
                 'DIRECTORY_SEARCH_HEADING' => $arrFilter['directory_heading'],
                 'DIRECTORY_SEARCH_COMMENTS' => $arrFilter['directory_comments']
             )
-        );        
-        
-        
+        );
+
+
         $arrDirectoryHeadings = directory_getheadings();
-        
+
         $template_body->assign_block_vars('directory_switch_result', array());
 
         // Construction de la requête de recherche
         $arrWhere = array();
         $arrWhere[] = 'c.id_heading > 0';
         $arrWhere[] = 'h.id = c.id_heading';
-        
+
         if ($arrFilter['directory_heading'] != '') // Recherche sur rubrique (un peu spécial)
         {
             $arrHeadingId = array();
-            
+
             // recherche sur libellé de rubrique
             $ptrRs = $db->query("
                 SELECT      h.*
-    
+
                 FROM        ploopi_mod_directory_heading h
-    
+
                 WHERE       label LIKE '%".$db->addslashes($arrFilter['directory_heading'])."%'
             ");
-            
-            // rubriques répondant au libellé 
+
+            // rubriques répondant au libellé
             while ($row = $db->fetchrow($ptrRs)) $arrHeadingId[] = $row['id'];
-            
+
             // recherche des rubriques filles et complétion du tableau de rubriques de recherche
             $intHid = current($arrHeadingId);
             while ($intHid !== false)
             {
-                if (!empty($arrDirectoryHeadings['tree'][$intHid])) foreach($arrDirectoryHeadings['tree'][$intHid] as $intNewHid) $arrHeadingId[] = $intNewHid; 
+                if (!empty($arrDirectoryHeadings['tree'][$intHid])) foreach($arrDirectoryHeadings['tree'][$intHid] as $intNewHid) $arrHeadingId[] = $intNewHid;
                 $intHid = next($arrHeadingId);
             }
-            
+
             if (!empty($arrHeadingId)) $arrWhere[] = 'c.id_heading IN ('.implode(',', $arrHeadingId).')';
             else $arrWhere[] = 'c.id_heading = -1';
         }
-        
+
 
         if (!empty($arrFilter['directory_lastname'])) $arrWhere[] = "c.lastname LIKE '".$db->addslashes($arrFilter['directory_lastname'])."%'";
         if (!empty($arrFilter['directory_firstname'])) $arrWhere[] = "c.firstname LIKE '".$db->addslashes($arrFilter['directory_firstname'])."%'";
@@ -158,7 +158,7 @@ switch($op)
         if (!empty($arrFilter['directory_city'])) $arrWhere[] = "c.city LIKE '%".$db->addslashes($arrFilter['directory_city'])."%'";
         if (!empty($arrFilter['directory_postalcode'])) $arrWhere[] = "c.postalcode LIKE '".$db->addslashes($arrFilter['directory_postalcode'])."%'";
         if (!empty($arrFilter['directory_comments'])) $arrWhere[] = "c.comments LIKE '%".$db->addslashes($arrFilter['directory_comments'])."%'";
-        
+
         // Exécution de la requête principale permettant de lister les utilisateurs selon le filtre
         $ptrRs = $db->query("
             SELECT      c.*, h.label
@@ -182,21 +182,21 @@ switch($op)
                 if (!empty($row['address'])) $arrAddress[] = ploopi_nl2br(ploopi_htmlentities($row['address']));
                 if (!empty($row['postalcode']) || !empty($row['city'])) $arrAddress[] = ploopi_nl2br(ploopi_htmlentities(trim($row['postalcode'].' '.$row['city'])));
                 if (!empty($row['country'])) $arrAddress[] = ploopi_nl2br(ploopi_htmlentities($row['country']));
-                
+
                 $objContact = new directory_contact();
                 $objContact->fields['id'] = $row['id'];
 
                 if (file_exists($objContact->getphotopath())) $row['photopath'] = ploopi_urlencode("index-light.php?ploopi_op=directory_contact_getphoto&directory_contact_id={$row['id']}");
                 else $row['photopath'] = './modules/directory/img/nopic.gif';
-                
+
                 // Récupération des rubriques du contact
                 $arrContactHeadings = array();
-                
+
                 foreach(preg_split('/;/', $arrDirectoryHeadings['list'][$row['id_heading']]['parents']) as $intIdHeading)
                 {
                     if (isset($arrDirectoryHeadings['list'][$intIdHeading])) $arrContactHeadings[] = $arrDirectoryHeadings['list'][$intIdHeading]['label'];
                 }
-                
+
                 $arrContactHeadings[] = $row['label'];
                 $strContactHeadings = implode(' > ', $arrContactHeadings);
 
@@ -322,39 +322,39 @@ switch($op)
                     'COMMENTS' => ploopi_nl2br(ploopi_htmlentities($objContact->fields['comments']))
                 )
             );
-            
-            
+
+
             // Lecture des documents
             include_once './include/classes/documents.php';
-            
+
             // Lecture du dossier racine de la mini ged associée à l'utilisateur
             $objRootFolder = documentsfolder::getroot(
-                _DIRECTORY_OBJECT_CONTACT, 
+                _DIRECTORY_OBJECT_CONTACT,
                 $objContact->fields['id'],
                 $template_moduleid
             );
-            
+
             if (!empty($objRootFolder))
             {
                 $template_body->assign_block_vars('directory_switch_contact.switch_files', array());
-                
+
                 $arrFiles = $objRootFolder->getlist();
-                
+
                 foreach($arrFiles as $intIdFile => $rowFile)
                 {
                     // Découpage du chemin pour modifier le fichier
                     $arrPath = explode('/', $rowFile['path']);
                     $strFileName = $arrPath[sizeof($arrPath)-1];
                     array_pop($arrPath);
-                    
+
                     $template_body->assign_block_vars('directory_switch_contact.switch_files.file', array(
                         'FILENAME' => $strFileName,
                         'PATH' => implode(' &raquo; ', $arrPath),
                         'URL' => $rowFile['file']->geturl()
                     ));
                 }
-            }    
-                        
+            }
+
 
             // Recherche des personnes du même service
             $ptrRs = $db->query("
@@ -433,8 +433,8 @@ switch($op)
      */
     case 'full':
         // Reset de la recherche
-        unset($_SESSION['directory']['tpl_search']);         
-                
+        unset($_SESSION['directory']['tpl_search']);
+
         $intHeadingId = isset($_GET['directory_heading_id']) && is_numeric($_GET['directory_heading_id']) ? $_GET['directory_heading_id'] : 0;
 
         // Récupération des rubriques
@@ -468,7 +468,7 @@ switch($op)
 
                 $template_body->assign_block_vars('directory_switch_full.switch_selected_heading.heading',
                     array(
-                        'LABEL' => isset($arrDirectoryHeadings['list'][$intId]) ? $arrDirectoryHeadings['list'][$intId]['label'] : '',
+                        'LABEL' => isset($arrDirectoryHeadings['list'][$intId]) ? ploopi_htmlentities($arrDirectoryHeadings['list'][$intId]['label']) : '',
                         'LINK' => ploopi_urlencode('index.php?'.implode('&',$arrRequest))
                     )
                 );
@@ -477,14 +477,14 @@ switch($op)
 
         directory_template_display($template_body, $arrDirectoryHeadings, $arrContacts, $intHeadingId);
     break;
-    
+
     /**
      * Affichage de l'organigramme
      */
     case 'organigram':
         // Reset de la recherche
-        unset($_SESSION['directory']['tpl_search']);         
-        
+        unset($_SESSION['directory']['tpl_search']);
+
         // Récupération des rubriques
         $arrDirectoryHeadings = directory_getheadings();
 
@@ -492,37 +492,37 @@ switch($op)
 
         directory_template_display_organigram($template_body, $arrDirectoryHeadings);
     break;
-    
+
     /**
      * Affichage des numéros abrégés
      */
     case 'speeddialing':
         // Reset de la recherche
-        unset($_SESSION['directory']['tpl_search']);         
-        
+        unset($_SESSION['directory']['tpl_search']);
+
         $template_body->assign_block_vars('directory_switch_speeddialing', array());
-        
+
         $db->query("
-            SELECT      * 
+            SELECT      *
             FROM        ploopi_mod_directory_speeddialing
             ORDER BY    heading, label
         ");
-        
+
         $strHeading = null;
-        
-        while ($row = $db->fetchrow()) 
+
+        while ($row = $db->fetchrow())
         {
             if ($row['heading'] != $strHeading) // Nouvelle rubrique
             {
                 $strHeading = $row['heading'];
-                
+
                 $template_body->assign_block_vars('directory_switch_speeddialing.heading',
                     array(
                         'ID' => urlencode(ploopi_convertaccents(strtolower(strtr(trim($strHeading), _PLOOPI_INDEXATION_WORDSEPARATORS, str_pad('', strlen(_PLOOPI_INDEXATION_WORDSEPARATORS), '-'))))),
                         'LABEL' => ploopi_htmlentities($strHeading)
                     )
                 );
-                
+
             }
 
             $template_body->assign_block_vars('directory_switch_speeddialing.heading.number',
@@ -533,7 +533,7 @@ switch($op)
                 )
             );
         }
-        
+
     break;
 }
 

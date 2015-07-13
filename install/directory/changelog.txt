@@ -1,3 +1,9 @@
+== Module DIRECTORY - version 2.3.10 ====================================================
+
+2015-07-13  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+* Ajout d'un contrôle d'affichage pour éviter les injections XSS dans l'intégration frontoffice
+
 == Module DIRECTORY - version 2.3.9 ====================================================
 
 2015-06-09  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
