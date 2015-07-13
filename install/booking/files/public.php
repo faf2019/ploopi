@@ -119,4 +119,19 @@ switch($_SESSION['booking']['$booking_menu'])
         );
     break;
 }
-?>
+
+if (!empty($_REQUEST['error'])) {
+    ?>
+    <script type="text/javascript">
+        Event.observe(window, 'load', function() {
+            <?
+            switch($_REQUEST['error']) {
+                case 'collision': ?> alert('Il y a déjà une autre réservation validée pour cette ressource aux dates demandées.\nVotre demande n\'a pas pu être enregistrée.'); <? break;
+                case 'collision2': ?> alert('Il y a déjà une autre réservation validée pour cette ressource aux dates demandées.\nVotre demande n\'a pas pu être correctement enregistrée.'); <? break;
+            }
+            ?>
+        });
+    </script>
+    <?
+}
+

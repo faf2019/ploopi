@@ -1,3 +1,9 @@
+== Module BOOKING - version 1.1.1 ====================================================
+
+2015-07-13  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+* Ajout d'un contrôle de non collision de demandes de réservation lors de l'enregistrement (ajout/modification/validation)
+
 == Module BOOKING - version 1.1.0 ====================================================
 
 2015-07-10  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
