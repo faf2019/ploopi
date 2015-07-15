@@ -220,8 +220,8 @@ switch($op)
                             $intLimit = $intCurrentPage*$intPageSize;
 
                             // On lance un processus sans attendre la fin d'exécution, il va écrire son statut dans le fichier $tmpfile
-                            exec("{$argv[0]} module=doc op=mpreindex file={$arrProcessus[$p]} limit={$intLimit},{$intPageSize} >/dev/null 2>&1 &");
-
+                            exec('php ./'.basename($argv[0])." module=doc op=mpreindex file={$arrProcessus[$p]} limit={$intLimit},{$intPageSize} >/dev/null 2>&1 &");
+                            
                             // On passe à la page suivante
                             $intCurrentPage++;
                         }
