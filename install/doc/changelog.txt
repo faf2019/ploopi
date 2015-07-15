@@ -1,3 +1,9 @@
+== Module DOC - version 4.9.0 ====================================================
+
+2015-07-15  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Meilleure gestion de l'appel aux sous-processus selon le type d'appel au script principal (appel au binaire php, appel depuis un dossier différent)
+
 == Module DOC - version 4.8.2 ====================================================
 
 2015-05-07  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
