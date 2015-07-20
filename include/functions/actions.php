@@ -166,34 +166,51 @@ function ploopi_get_user_action_log($id_record, $id_object = -1, $id_action = -1
 /**
  * Renvoie un tableau des utilisateurs qui peuvent exécuter une action
  *
- * @param int $id_action identifiant de l'action
- * @param int $id_module_type identifiant du type de module
+ * @param mixed $id_action identifiant de l'action
+ * @param integer $id_module identifiant du module (optionnel)
+ * @param mixed $id_workspace identifiant de l'espace (optionnel)
  * @return array tableau des utilisateurs (tableau indexé d'id)
  */
 
-function ploopi_actions_getusers($id_action, $id_module_type = -1)
+function ploopi_actions_getusers($id_action, $id_module = -1, $id_workspace = -1)
 {
     global $db;
 
-    if ($id_module_type == -1) $id_module_type = $_SESSION['ploopi']['moduletypeid'];
+    if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];
+    if ($id_workspace == -1) $id_workspace = $_SESSION['ploopi']['workspaceid'];
+    if (!is_array($id_action)) $id_action = array($id_action);
+    if (!is_array($id_workspace)) $id_workspace = array($id_workspace);
 
-    $sql =  "
-            SELECT  wur.id_user
-            FROM    ploopi_workspace_user_role wur
+    $id_action = array_map('intval', $id_action);
+    $id_module = intval($id_module);
+    $id_workspace = array_map('intval', $id_workspace);
 
-            INNER JOIN  ploopi_role_action ra ON ra.id_role = wur.id_role
+    $rs = $db->query($sql = "
+        SELECT *
 
-            WHERE   ra.id_action = {$id_action}
-            AND     ra.id_module_type = {$id_module_type}
-            ";
+        FROM (
+            SELECT      u.*, wu.id_workspace
+            FROM        ploopi_user u
+            INNER JOIN  ploopi_workspace_user wu ON wu.id_user = u.id AND wu.id_workspace IN (".implode(',', $id_workspace).")
+            LEFT JOIN   ploopi_workspace_user_role wur ON wur.id_user = u.id AND wur.id_workspace = wu.id_workspace
+            LEFT JOIN   ploopi_role r ON r.id = wur.id_role AND r.id_module = {$id_module}
+            LEFT JOIN   ploopi_role_action ra ON ra.id_role = r.id AND ra.id_action IN (".implode(',', $id_action).")
+            WHERE       wu.adminlevel = "._PLOOPI_ID_LEVEL_SYSTEMADMIN." OR NOT ISNULL(ra.id_role)
 
-    $result = $db->query($sql);
-    $users = array();
-    while ($fields = $db->fetchrow($result))
-    {
-        $users[] = $fields['id_user'];
-    }
+            UNION
 
-    return($users);
+            SELECT      u.*, wg.id_workspace
+            FROM        ploopi_user u
+            INNER JOIN  ploopi_group_user gu ON gu.id_user = u.id
+            INNER JOIN  ploopi_workspace_group wg ON wg.id_group = gu.id_group AND wg.id_workspace IN (".implode(',', $id_workspace).")
+            LEFT JOIN   ploopi_workspace_group_role wgr ON wgr.id_group = gu.id_group AND wgr.id_workspace = wg.id_workspace
+            LEFT JOIN   ploopi_role r ON r.id = wgr.id_role AND r.id_module = {$id_module}
+            LEFT JOIN   ploopi_role_action ra ON ra.id_role = r.id AND ra.id_action IN (".implode(',', $id_action).")
+            WHERE       wg.adminlevel = "._PLOOPI_ID_LEVEL_SYSTEMADMIN." OR NOT ISNULL(ra.id_role)
+        ) as us
 
+        GROUP BY us.id
+    ");
+
+    return $db->getarray($rs, true);
 }

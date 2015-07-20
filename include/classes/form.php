@@ -191,11 +191,13 @@ abstract class form_element
      */
     protected function generateProperties($strClass = null, $strStyle = null)
     {
+        $arrParentOptions = $this->_objParentForm->getOptions();
+
         return
             self::_getProperty('style',  is_null($strStyle) ? $this->_arrOptions['style'] : $strStyle).
             self::_getProperty('class',  is_null($strClass) ? $this->_arrOptions['class'] : $strClass).
-            self::_getProperty('readonly',  $this->_objParentForm->getOptions()['readonly'] || $this->_arrOptions['readonly'] ? 'readonly' : null).
-            self::_getProperty('disabled',  $this->_objParentForm->getOptions()['disabled'] || $this->_arrOptions['disabled'] ? 'disabled' : null).
+            self::_getProperty('readonly',  $arrParentOptions['readonly'] || $this->_arrOptions['readonly'] ? 'readonly' : null).
+            self::_getProperty('disabled',  $arrParentOptions['disabled'] || $this->_arrOptions['disabled'] ? 'disabled' : null).
             self::_getProperty('autocomplete',  isset($this->_arrOptions['autocomplete']) && !$this->_arrOptions['autocomplete'] ? 'off' : null);
     }
 
@@ -420,8 +422,9 @@ class form_field extends form_element
 
             case 'input:date':
             case 'input:text':
+                $arrParentOptions = $this->_objParentForm->getOptions();
                 $strOutput .= "<input type=\"text\" name=\"{$this->_strName}\" id=\"{$this->_strId}\" value=\"{$strValue}\" tabindex=\"{$intTabindex}\"{$strProperties}{$strMaxLength}{$strEvents}{$strPlaceHolder} />";
-                if ($this->_arrOptions['datatype'] == 'date' && !$this->_arrOptions['readonly'] && !$this->_arrOptions['disabled'] && !$this->_objParentForm->getOptions()['readonly'] && !$this->_objParentForm->getOptions()['disabled']) $strOutput .= ploopi_open_calendar($this->_strId, false, null, 'display:block;float:left;margin-left:-35px;margin-top:5px;');
+                if ($this->_arrOptions['datatype'] == 'date' && !$this->_arrOptions['readonly'] && !$this->_arrOptions['disabled'] && !$arrParentOptions['readonly'] && !$arrParentOptions['disabled']) $strOutput .= ploopi_open_calendar($this->_strId, false, null, 'display:block;float:left;margin-left:-35px;margin-top:5px;');
             break;
 
             case 'input:password':
@@ -1068,13 +1071,14 @@ class form_datetime extends form_field
         $strProperties_H = $this->generateProperties(null, $this->_arrOptions['style_h']);
         $strProperties_M = $this->generateProperties(null, $this->_arrOptions['style_m']);
         $strProperties_S = $this->generateProperties(null, $this->_arrOptions['style_s']);
+        $arrParentOptions = $this->_objParentForm->getOptions();
 
         $strMaxLength = is_null($this->_arrOptions['maxlength']) || !is_numeric($this->_arrOptions['maxlength']) ? '' : " maxlength=\"{$this->_arrOptions['maxlength']}\"";
         $strDate = ploopi_htmlentities($this->_arrValues['date']);
         list($strHour, $strMinute, $strSecond) = explode(':', $this->_arrValues['time']);
 
         $strOutput .= "<input type=\"text\" name=\"{$this->_strName}_date\" id=\"{$this->_strId}_date\" value=\"{$strDate}\" tabindex=\"{$intTabindex}\"{$strProperties}{$strMaxLength}{$strEvents} />";
-        if (!$this->_arrOptions['readonly'] && !$this->_arrOptions['disabled'] && !$this->_objParentForm->getOptions()['readonly'] && !$this->_objParentForm->getOptions()['disabled']) $strOutput .= ploopi_open_calendar($this->_strId.'_date', false, null, 'display:block;float:left;margin-left:-35px;margin-top:5px;');
+        if (!$this->_arrOptions['readonly'] && !$this->_arrOptions['disabled'] && !$arrParentOptions['readonly'] && !$arrParentOptions['disabled']) $strOutput .= ploopi_open_calendar($this->_strId.'_date', false, null, 'display:block;float:left;margin-left:-35px;margin-top:5px;');
 
         $strOutput .= "<select name=\"{$this->_strName}_time_h\" id=\"{$this->_strId}_time_h\" tabindex=\"{$intTabindex}\"{$strProperties_H}{$strEvents}>";
         for ($intH = 0; $intH < 24; $intH++ ) $strOutput .= sprintf('<option %s value="%2$02d">%2$02d</option>', $intH == intval($strHour) ? 'selected="selected"' : '', $intH);

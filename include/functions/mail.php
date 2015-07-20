@@ -57,6 +57,8 @@ function ploopi_send_mail($from, $to, $subject, $message, $cc = null, $bcc = nul
     // replyto : Array('name','address')
     // files : Array
 
+    mb_internal_encoding('ISO-8859-15');
+
     $crlf = "\r\n";
 
     $str_to = '';
@@ -238,6 +240,8 @@ function ploopi_send_mail_smtp($from, $to, $subject, $message, $params = null, $
 {
     require_once 'Mail.php';
     require_once 'Mail/mime.php';
+
+    mb_internal_encoding('ISO-8859-15');
 
     $objMail = Mail::factory('smtp', array (
         'host' => isset($params['host']) ? $params['host'] : 'localhost',
