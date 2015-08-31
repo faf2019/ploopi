@@ -437,7 +437,7 @@ if ($intNbRep <= $intMaxResponse && $intNbRep > 0)
 
     $arrResult['columns']['left']['login'] = array(
         'label' => 'Login',
-        'width' => '130',
+        'width' => '150',
         'options' => array('sort' => true)
     );
 

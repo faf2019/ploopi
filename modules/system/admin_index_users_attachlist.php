@@ -254,28 +254,28 @@ else
     $columns['right']['service'] =
         array(
             'label' => _SYSTEM_LABEL_SERVICE,
-            'width' => 100,
+            'width' => 150,
             'options' => array('sort' => true)
         );
 
     $columns['right']['entity'] =
         array(
             'label' => _SYSTEM_LABEL_ENTITY,
-            'width' => 100,
+            'width' => 150,
             'options' => array('sort' => true)
         );
 
     $columns['right']['origin'] =
         array(
             'label' => _SYSTEM_LABEL_ORIGIN,
-            'width' => 100,
+            'width' => 150,
             'options' => array('sort' => true)
         );
 
     $columns['right']['login'] =
         array(
             'label' => _SYSTEM_LABEL_LOGIN,
-            'width' => 110,
+            'width' => 150,
             'options' => array('sort' => true)
         );
 
