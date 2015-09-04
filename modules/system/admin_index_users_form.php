@@ -72,7 +72,117 @@ $user_date_expire = (!empty($user->fields['date_expire'])) ? ploopi_timestamp2lo
 $arrFormurl[] = 'op=save_user';
 if (isset($_REQUEST['confirm'])) $arrFormurl[] = 'confirm';
 if (!$user->new)  $arrFormurl[] = "user_id={$user->fields['id']}";
+
+$arrRequiredFields = explode(',', ploopi_getparam('system_user_required_fields', _PLOOPI_MODULE_SYSTEM));
 ?>
+<script type="text/javascript">
+function system_user_validate(form, isnew)
+{
+    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_LASTNAME; ?>",form.user_lastname,"string"))
+    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_FIRSTNAME; ?>",form.user_firstname,"string"))
+    <? if (in_array('civility', $arrRequiredFields)) { ?>
+    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_CIVILITY; ?>", form.user_civility, 'select'))
+    <? } ?>
+
+    <? if (in_array('entity', $arrRequiredFields)) { ?>
+    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_ENTITY; ?>", form.user_entity, 'string'))
+    <? } ?>
+    <? if (in_array('service', $arrRequiredFields)) { ?>
+    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_SERVICE; ?>", form.user_service, 'string'))
+    <? } ?>
+    <? if (in_array('service2', $arrRequiredFields)) { ?>
+    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_SERVICE2; ?>", form.user_service2, 'string'))
+    <? } ?>
+    <? if (in_array('function', $arrRequiredFields)) { ?>
+    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_FUNCTION; ?>", form.user_function, 'string'))
+    <? } ?>
+    <? if (in_array('rank', $arrRequiredFields)) { ?>
+    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_RANK; ?>", form.user_rank, 'string'))
+    <? } ?>
+    <? if (in_array('number', $arrRequiredFields)) { ?>
+    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_NUMBER; ?>", form.user_number, 'string'))
+    <? } ?>
+
+    <? if (in_array('phone', $arrRequiredFields)) { ?>
+    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_PHONE; ?>",form.user_phone,"phone"))
+    <? } else { ?>
+    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_PHONE; ?>",form.user_phone,"emptyphone"))
+    <? } ?>
+    <? if (in_array('mobile', $arrRequiredFields)) { ?>
+    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_MOBILE; ?>",form.user_mobile,"phone"))
+    <? } else { ?>
+    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_MOBILE; ?>",form.user_mobile,"emptyphone"))
+    <? } ?>
+    <? if (in_array('fax', $arrRequiredFields)) { ?>
+    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_FAX; ?>",form.user_fax,"phone"))
+    <? } else { ?>
+    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_FAX; ?>",form.user_fax,"emptyphone"))
+    <? } ?>
+
+    <? if (in_array('email', $arrRequiredFields)) { ?>
+    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_EMAIL; ?>",form.user_email,"email"))
+    <? } else { ?>
+    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_EMAIL; ?>",form.user_email,"emptyemail"))
+    <? } ?>
+
+    <? if (in_array('building', $arrRequiredFields)) { ?>
+    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_BUILDING; ?>", form.user_building, 'string'))
+    <? } ?>
+    <? if (in_array('floor', $arrRequiredFields)) { ?>
+    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_FLOOR; ?>", form.user_floor, 'string'))
+    <? } ?>
+    <? if (in_array('office', $arrRequiredFields)) { ?>
+    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_OFFICE; ?>", form.user_office, 'string'))
+    <? } ?>
+    <? if (in_array('address', $arrRequiredFields)) { ?>
+    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_ADDRESS; ?>", form.user_address, 'string'))
+    <? } ?>
+    <? if (in_array('postalcode', $arrRequiredFields)) { ?>
+    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_POSTALCODE; ?>", form.user_postalcode, 'string'))
+    <? } ?>
+    <? if (in_array('city', $arrRequiredFields)) { ?>
+    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_CITY; ?>", form.user_city, 'string'))
+    <? } ?>
+    <? if (in_array('country', $arrRequiredFields)) { ?>
+    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_COUNTRY; ?>", form.user_country, 'string'))
+    <? } ?>
+    {
+        if (isnew)
+        {
+            if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_LOGIN; ?>",form.user_login,"string"))
+            if ((form.usernewpass_confirm.value != form.usernewpass.value) || form.usernewpass.value == '' || form.usernewpass_confirm.value == '') alert('<?php echo _SYSTEM_MSG_PASSWORDERROR_JS; ?>');
+            else
+            {
+                rep = ploopi_xmlhttprequest('admin.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=ploopi_checkpasswordvalidity&password='+encodeURIComponent(form.usernewpass.value), false, false, 'POST');
+                if (rep == 0)
+                {
+                    alert('Le mot de passe est invalide\n\nil doit contenir au moins 8 caractères,\nun caractère minuscule,\nun caractère majuscule,\nun chiffre et un caractère de ponctuation');
+                }
+                else return true;
+            }
+        }
+        else
+        {
+            if (form.usernewpass_confirm.value == form.usernewpass.value && form.usernewpass.value == '') return true;
+            else
+            {
+                if (form.usernewpass_confirm.value != form.usernewpass.value) alert('<?php echo _SYSTEM_MSG_PASSWORDERROR_JS; ?>');
+                else
+                {
+                    rep = ploopi_xmlhttprequest('admin.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=ploopi_checkpasswordvalidity&password='+encodeURIComponent(form.usernewpass.value), false, false, 'POST');
+                    if (rep == 0)
+                    {
+                        alert('Le mot de passe est invalide\n\nil doit contenir au moins 8 caractères,\nun caractère minuscule,\nun caractère majuscule,\nun chiffre et un caractère de ponctuation\nex:Pl00p!Rocks');
+                    }
+                    else return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+</script>
+
 <form name="form_modify_user" action="<?php echo ploopi_urlencode('admin.php?'.implode('&',$arrFormurl)); ?>" method="POST" enctype="multipart/form-data" onsubmit="javascript:return system_user_validate(this, <?php echo ($user->new) ? 'true' : 'false'; ?>)">
 <?php
 
@@ -243,15 +353,15 @@ if (isset($_REQUEST['confirm']))
                 <legend>Informations personnelles</legend>
                 <div class="ploopi_form">
                     <p>
-                        <label><?php if ($user->new) echo '<em>*&nbsp;</em>'; echo _SYSTEM_LABEL_LASTNAME; ?><sup style="font-size:.7em">&nbsp;1</sup>:</label>
+                        <label><?php if ($user->new) echo '<em>*&nbsp;</em>'; echo _SYSTEM_LABEL_LASTNAME; ?><sup style="font-size:.7em">&nbsp;1</sup> *:</label>
                         <input type="text" class="text" name="user_lastname"  value="<?php echo ploopi_htmlentities($user->fields['lastname']); ?>" tabindex="1" />
                     </p>
                     <p>
-                        <label><?php if ($user->new) echo '<em>*&nbsp;</em>'; echo _SYSTEM_LABEL_FIRSTNAME; ?><sup style="font-size:.7em">&nbsp;1</sup>:</label>
+                        <label><?php if ($user->new) echo '<em>*&nbsp;</em>'; echo _SYSTEM_LABEL_FIRSTNAME; ?><sup style="font-size:.7em">&nbsp;1</sup> *:</label>
                         <input type="text" class="text" name="user_firstname"  value="<?php echo ploopi_htmlentities($user->fields['firstname']); ?>" tabindex="2" />
                     </p>
                     <p>
-                        <label><?php echo _SYSTEM_LABEL_CIVILITY; ?>:</label>
+                        <label><?php echo _SYSTEM_LABEL_CIVILITY; ?><? if (in_array('civility', $arrRequiredFields)) echo ' *'; ?>:</label>
                         <select class="select" name="user_civility" style="width:100px;" tabindex="3">
                             <option value=""></option>
                             <?php
@@ -269,40 +379,41 @@ if (isset($_REQUEST['confirm']))
             <fieldset class="fieldset">
                 <legend>Informations professionnelles</legend>
                 <div class="ploopi_form">
+
                     <p>
-                        <label><?php echo _SYSTEM_LABEL_ENTITY; ?>:</label>
+                        <label><?php echo _SYSTEM_LABEL_ENTITY; ?><? if (in_array('entity', $arrRequiredFields)) echo ' *'; ?>:</label>
                         <input type="text" class="text" name="user_entity"  value="<?php echo ploopi_htmlentities($user->fields['entity']); ?>" tabindex="4" />
                     </p>
                     <p>
-                        <label><?php echo _SYSTEM_LABEL_SERVICE; ?>:</label>
+                        <label><?php echo _SYSTEM_LABEL_SERVICE; ?><? if (in_array('service', $arrRequiredFields)) echo ' *'; ?>:</label>
                         <input type="text" class="text" name="user_service"  value="<?php echo ploopi_htmlentities($user->fields['service']); ?>" tabindex="4" />
                     </p>
                     <p>
-                        <label><?php echo _SYSTEM_LABEL_SERVICE2; ?>:</label>
+                        <label><?php echo _SYSTEM_LABEL_SERVICE2; ?><? if (in_array('service2', $arrRequiredFields)) echo ' *'; ?>:</label>
                         <input type="text" class="text" name="user_service2"  value="<?php echo ploopi_htmlentities($user->fields['service2']); ?>" tabindex="4" />
                     </p>
                     <p>
-                        <label><?php echo _SYSTEM_LABEL_FUNCTION; ?>:</label>
+                        <label><?php echo _SYSTEM_LABEL_FUNCTION; ?><? if (in_array('function', $arrRequiredFields)) echo ' *'; ?>:</label>
                         <input type="text" class="text" name="user_function"  value="<?php echo ploopi_htmlentities($user->fields['function']); ?>" tabindex="5" />
                     </p>
                     <p>
-                        <label><?php echo _SYSTEM_LABEL_RANK; ?>:</label>
+                        <label><?php echo _SYSTEM_LABEL_RANK; ?><? if (in_array('rank', $arrRequiredFields)) echo ' *'; ?>:</label>
                         <input type="text" class="text" name="user_rank"  value="<?php echo ploopi_htmlentities($user->fields['rank']); ?>" tabindex="6" />
                     </p>
                     <p>
-                        <label><?php echo _SYSTEM_LABEL_NUMBER; ?>:</label>
+                        <label><?php echo _SYSTEM_LABEL_NUMBER; ?><? if (in_array('number', $arrRequiredFields)) echo ' *'; ?>:</label>
                         <input type="text" class="text" name="user_number"  value="<?php echo ploopi_htmlentities($user->fields['number']); ?>" tabindex="7" />
                     </p>
                     <p>
-                        <label><?php echo _SYSTEM_LABEL_PHONE; ?>:</label>
+                        <label><?php echo _SYSTEM_LABEL_PHONE; ?><? if (in_array('phone', $arrRequiredFields)) echo ' *'; ?>:</label>
                         <input type="text" class="text" name="user_phone"  value="<?php echo ploopi_htmlentities($user->fields['phone']); ?>" tabindex="8" />
                     </p>
                     <p>
-                        <label><?php echo _SYSTEM_LABEL_MOBILE; ?>:</label>
+                        <label><?php echo _SYSTEM_LABEL_MOBILE; ?><? if (in_array('mobile', $arrRequiredFields)) echo ' *'; ?>:</label>
                         <input type="text" class="text" name="user_mobile"  value="<?php echo ploopi_htmlentities($user->fields['mobile']); ?>" tabindex="9" />
                     </p>
                     <p>
-                        <label><?php echo _SYSTEM_LABEL_FAX; ?>:</label>
+                        <label><?php echo _SYSTEM_LABEL_FAX; ?><? if (in_array('fax', $arrRequiredFields)) echo ' *'; ?>:</label>
                         <input type="text" class="text" name="user_fax"  value="<?php echo ploopi_htmlentities($user->fields['fax']); ?>" tabindex="10" />
                     </p>
                 </div>
@@ -311,31 +422,31 @@ if (isset($_REQUEST['confirm']))
                 <legend>Lieu de travail</legend>
                 <div class="ploopi_form">
                     <p>
-                        <label><?php echo _SYSTEM_LABEL_BUILDING; ?>:</label>
+                        <label><?php echo _SYSTEM_LABEL_BUILDING; ?><? if (in_array('building', $arrRequiredFields)) echo ' *'; ?>:</label>
                         <input type="text" class="text" name="user_building"  value="<?php echo ploopi_htmlentities($user->fields['building']); ?>" tabindex="11" />
                     </p>
                     <p>
-                        <label><?php echo _SYSTEM_LABEL_FLOOR; ?>:</label>
+                        <label><?php echo _SYSTEM_LABEL_FLOOR; ?><? if (in_array('floor', $arrRequiredFields)) echo ' *'; ?>:</label>
                         <input type="text" class="text" name="user_floor"  value="<?php echo ploopi_htmlentities($user->fields['floor']); ?>" tabindex="12" />
                     </p>
                     <p>
-                        <label><?php echo _SYSTEM_LABEL_OFFICE; ?>:</label>
+                        <label><?php echo _SYSTEM_LABEL_OFFICE; ?><? if (in_array('office', $arrRequiredFields)) echo ' *'; ?>:</label>
                         <input type="text" class="text" name="user_office"  value="<?php echo ploopi_htmlentities($user->fields['office']); ?>" tabindex="13" />
                     </p>
                     <p>
-                        <label><?php echo _SYSTEM_LABEL_ADDRESS; ?>:</label>
+                        <label><?php echo _SYSTEM_LABEL_ADDRESS; ?><? if (in_array('address', $arrRequiredFields)) echo ' *'; ?>:</label>
                         <textarea class="text" name="user_address" tabindex="14"><?php echo ploopi_htmlentities($user->fields['address']); ?></textarea>
                     </p>
                     <p>
-                        <label><?php echo _SYSTEM_LABEL_POSTALCODE; ?>:</label>
+                        <label><?php echo _SYSTEM_LABEL_POSTALCODE; ?><? if (in_array('postalcode', $arrRequiredFields)) echo ' *'; ?>:</label>
                         <input type="text" class="text" name="user_postalcode"  value="<?php echo ploopi_htmlentities($user->fields['postalcode']); ?>" tabindex="15" />
                     </p>
                     <p>
-                        <label><?php echo _SYSTEM_LABEL_CITY; ?>:</label>
+                        <label><?php echo _SYSTEM_LABEL_CITY; ?><? if (in_array('city', $arrRequiredFields)) echo ' *'; ?>:</label>
                         <input type="text" class="text" name="user_city"  value="<?php echo ploopi_htmlentities($user->fields['city']); ?>" tabindex="16" />
                     </p>
                     <p>
-                        <label><?php echo _SYSTEM_LABEL_COUNTRY; ?>:</label>
+                        <label><?php echo _SYSTEM_LABEL_COUNTRY; ?><? if (in_array('country', $arrRequiredFields)) echo ' *'; ?>:</label>
                         <input type="text" class="text" name="user_country"  value="<?php echo ploopi_htmlentities($user->fields['country']); ?>"  tabindex="17" />
                     </p>
                 </div>
@@ -425,7 +536,7 @@ if (isset($_REQUEST['confirm']))
                         <input type="checkbox" id="user_disabled" name="user_disabled" value="1" <?php if ($user->fields['disabled']) echo 'checked="checked"'; ?> tabindex="24" />
                     </p>
                     <p>
-                        <label><?php echo _SYSTEM_LABEL_EMAIL; ?>:</label>
+                        <label><?php echo _SYSTEM_LABEL_EMAIL; ?><? if (in_array('email', $arrRequiredFields)) echo ' *'; ?>:</label>
                         <input type="text" class="text" name="user_email"  value="<?php echo ploopi_htmlentities($user->fields['email']); ?>" tabindex="25" />
                     </p>
                     <p class="checkbox" onclick="javascript:ploopi_checkbox_click(event,'user_ticketsbyemail');">
@@ -565,7 +676,7 @@ if (isset($_REQUEST['confirm']))
     </div>
 </div>
 <div style="clear:both;padding:4px;text-align:right;">
-    <em><?php if ($user->isnew()) echo '<sup>(1)</sup> Champs utilisés pour tester la présence de l\'utilisateur / '; ?>* Champs obligatoires</em>&nbsp;
+    <em><?php if ($user->isnew()) echo '<sup>(1)</sup> Champs utilisés pour tester la présence de l\'utilisateur / '; ?>(*) Champs obligatoires</em>&nbsp;
     <?php
     if (isset($_REQUEST['confirm']))
     {

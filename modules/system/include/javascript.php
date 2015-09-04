@@ -52,50 +52,6 @@ function system_workspace_validate(form)
     return(false);
 }
 
-function system_user_validate(form, isnew)
-{
-    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_LASTNAME; ?>",form.user_lastname,"string"))
-    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_FIRSTNAME; ?>",form.user_firstname,"string"))
-    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_PHONE; ?>",form.user_phone,"emptyphone"))
-    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_MOBILE; ?>",form.user_mobile,"emptyphone"))
-    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_FAX; ?>",form.user_fax,"emptyphone"))
-    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_EMAIL; ?>",form.user_email,"emptyemail"))
-    {
-        if (isnew)
-        {
-            if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_LOGIN; ?>",form.user_login,"string"))
-            if ((form.usernewpass_confirm.value != form.usernewpass.value) || form.usernewpass.value == '' || form.usernewpass_confirm.value == '') alert('<?php echo _SYSTEM_MSG_PASSWORDERROR_JS; ?>');
-            else
-            {
-                rep = ploopi_xmlhttprequest('admin.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=ploopi_checkpasswordvalidity&password='+encodeURIComponent(form.usernewpass.value), false, false, 'POST');
-                if (rep == 0)
-                {
-                    alert('Le mot de passe est invalide\n\nil doit contenir au moins 8 caractères,\nun caractère minuscule,\nun caractère majuscule,\nun chiffre et un caractère de ponctuation');
-                }
-                else return true;
-            }
-        }
-        else
-        {
-            if (form.usernewpass_confirm.value == form.usernewpass.value && form.usernewpass.value == '') return true;
-            else
-            {
-                if (form.usernewpass_confirm.value != form.usernewpass.value) alert('<?php echo _SYSTEM_MSG_PASSWORDERROR_JS; ?>');
-                else
-                {
-                    rep = ploopi_xmlhttprequest('admin.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=ploopi_checkpasswordvalidity&password='+encodeURIComponent(form.usernewpass.value), false, false, 'POST');
-                    if (rep == 0)
-                    {
-                        alert('Le mot de passe est invalide\n\nil doit contenir au moins 8 caractères,\nun caractère minuscule,\nun caractère majuscule,\nun chiffre et un caractère de ponctuation\nex:Pl00p!Rocks');
-                    }
-                    else return true;
-                }
-            }
-        }
-    }
-    return false;
-}
-
 function role_validate(form)
 {
     if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_LABEL; ?>",form.role_label,"string"))

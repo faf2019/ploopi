@@ -343,7 +343,7 @@ if ($_SESSION['ploopi']['connected'])
                             <legend>Messagerie</legend>
                             <div class="ploopi_form">
                                 <p>
-                                    <label><?php echo _SYSTEM_LABEL_EMAIL; ?> *:</label>
+                                    <label><?php echo _SYSTEM_LABEL_EMAIL; ?><? if (in_array('email', $arrRequiredFields)) echo ' *'; ?>:</label>
                                     <input type="text" class="text" name="user_email"  value="<?php echo ploopi_htmlentities($user->fields['email']); ?>" <? echo $strDisabled; ?> tabindex="25" />
                                 </p>
                                 <p class="checkbox" onclick="javascript:ploopi_checkbox_click(event,'user_ticketsbyemail');">
