@@ -132,7 +132,7 @@ switch ($_SESSION['system']['level'])
                     break;
 
                     case 'delete' :
-                        if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPADMIN)
+                        if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPMANAGER)
                         {
                             $sizeof_groups = sizeof($group->getchildren());
                             $sizeof_users = sizeof($group->getusers());
