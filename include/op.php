@@ -67,7 +67,7 @@ if (isset($_REQUEST['ploopi_op']))
                         '/lang/',
                         '/lib/',
                         '/modules/',
-                        '/templates/',
+                        // '/templates/', (pose problème pour l'indexation Googlebot)
                         '/tools/',
                     );
 
