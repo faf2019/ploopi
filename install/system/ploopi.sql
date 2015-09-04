@@ -1429,3 +1429,5 @@ CREATE TABLE IF NOT EXISTS ploopi_workspace_user_role (
   KEY id_role (id_role),
   KEY id_user (id_user)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+UPDATE `ploopi_module_type` SET `version` = '1.9.5.3', `author` = 'Ovensia', `date` = '20150904000000', `description` = 'Noyau du système' WHERE `ploopi_module_type`.`id` = 1;
