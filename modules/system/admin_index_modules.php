@@ -85,7 +85,7 @@ foreach ($ownmodules as $index => $module)
     else
     {
         $modify = '<img style="margin:0 2px;" src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_noway.png">';
-        if ($module['adminrestricted']) $delete = '<img style="margin:0 2px;" src="./modules/system/img/ico_noway.gif">';
+        if ($module['adminrestricted']) $delete = '<img style="margin:0 2px;" src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_noway.png">';
         else $delete = '<a href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("admin.php?op=unlinkinstance&moduleid={$module['instanceid']}").'\',\''._SYSTEM_MSG_CONFIRMMODULEDETACH.'\')"><img style="margin:0 2px;" src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_cut.png"></a>';
     }
 

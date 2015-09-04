@@ -141,7 +141,8 @@ function system_getwg()
     {
         foreach($list_idg as $idg)
         {
-            if (isset($workspaces['list'][$idw])) $groups['list'][$idg]['parents_workspace'] = $workspaces['list'][$idw]['parents'].";{$idw};{$idg}";
+            //if (isset($workspaces['list'][$idw])) $groups['list'][$idg]['parents_workspace'] = $workspaces['list'][$idw]['parents'].";{$idw};{$idg}";
+            if (isset($workspaces['list'][$idw])) $groups['list'][$idg]['parents_workspace'] = $workspaces['list'][$idw]['parents'].";{$idw}";
         }
     }
 
@@ -208,7 +209,6 @@ function system_getwg()
 
 function system_build_tree($typetree, $from_wid = 1, $from_gid = 0)
 {
-
     global $workspaces;
     global $groups;
     global $workspaceid;
@@ -301,11 +301,15 @@ function system_build_tree($typetree, $from_wid = 1, $from_gid = 0)
                     $workspace = $workspaces['list'][$wid];
                     $isworkspacesel = (!empty($workspaceid) && ($workspaceid == $wid));
 
-                    $gselparents = (isset($workspacesel)) ? explode(';',$workspacesel['parents'].';'.$workspacesel['id']) : explode(';',$groupsel['parents_workspace'].';g'.$groupsel['id']);
+                    $wselparents = (isset($workspacesel)) ? explode(';',$workspacesel['parents'].';'.$workspacesel['id']) : explode(';',$groupsel['parents_workspace']);
+                    //echo $workspace['label'];
+                    //ploopi_print_r($groupsel);
+                    //ploopi_print_r($wselparents);
+                    //$gselparents = (isset($workspacesel)) ? explode(';',$workspacesel['parents'].';'.$workspacesel['id']) : explode(';',$groupsel['parents_workspace'].';g'.$groupsel['id']);
                     $currentparents = explode(';',$workspace['parents'].';'.$workspace['id']);
 
                     // workspace opened if parents array intersects
-                    $isworkspaceopened = sizeof(array_intersect_assoc($gselparents, $currentparents)) == sizeof($currentparents);
+                    $isworkspaceopened = sizeof(array_intersect_assoc($wselparents, $currentparents)) == sizeof($currentparents);
 
                     $islast = (!isset($workspaces['tree'][$from_wid]) || $c == sizeof($workspaces['tree'][$from_wid])-1);
 

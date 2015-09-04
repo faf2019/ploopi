@@ -206,7 +206,7 @@ while ($fields = $db->fetchrow($result))
     if ($_SESSION['ploopi']['adminlevel'] >= $fields['adminlevel'])
         $manage_grp =   '<a href="'.ploopi_urlencode("admin.php?op=modify_group&orgid={$fields['id']}").'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_edit.png" title="'._SYSTEM_LABEL_MODIFY.'"></a>'.$action;
     else
-        $manage_grp =   '<img src="'.$_SESSION['ploopi']['template_path'].'/img/ico_noway.gif" title=""><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_noway.png" title="">';
+        $manage_grp =   '<img style="margin:0 2px;" src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_noway.png"><img style="margin:0 2px;" src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_noway.png">';
 
     $values[$c]['values']['actions']        = array('label' => $manage_grp);
 
