@@ -63,8 +63,21 @@ $arrFields = array(
     'function'      =>  "Fonction",
     'rank'          =>  "Grade",
 
+    'date_expire'   => "Date d'expiration du compte (AAAAMMJJHHMMSS)",
+    'service2'      => "Bureau",
+    'ticketsbyemail' => "Copie des messages par Courriel (1/0)",
+    'servertimezone' => "Synchronisé avec le fuseau horaire du serveur (1/0)",
+    'timezone'      => "Fuseau horaire spécifique (<a href=\"http://php.net/manual/fr/timezones.php)\" target=\"_new\">http://php.net/manual/fr/timezones.php</a>)",
+    'color'         => "Code couleur (#0F0F0F)",
+    'civility'      => "Civilité (M/Mme/Mlle)",
+    'password_force_update' => "Forcer le changement du mot de passe à la prochaine connexion (1/0)",
+    'password_validity'     => "Durée de validité du mot de passe en jours (0 = illimité)",
+    'disabled'      => "Compte désactivé",
+
+
     'comments'      =>  "Commentaires"
 );
+
 ?>
 <form action="<?php echo ploopi_urlencode('admin.php?ploopi_op=system_user_import'); ?>" method="post" enctype="multipart/form-data">
 
@@ -95,7 +108,7 @@ $arrFields = array(
             foreach($arrFields as $strField => $strLabel)
             {
                 ?>
-                <li><strong><? echo ploopi_htmlentities($strField); ?></strong>: <? echo ploopi_htmlentities($strLabel); ?></li>
+                <li><strong><? echo $strField; ?></strong>: <? echo $strLabel; ?></li>
                 <?
             }
             ?>
