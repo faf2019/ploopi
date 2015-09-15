@@ -198,6 +198,7 @@ abstract class form_element
             self::_getProperty('class',  is_null($strClass) ? $this->_arrOptions['class'] : $strClass).
             self::_getProperty('readonly',  $arrParentOptions['readonly'] || $this->_arrOptions['readonly'] ? 'readonly' : null).
             self::_getProperty('disabled',  $arrParentOptions['disabled'] || $this->_arrOptions['disabled'] ? 'disabled' : null).
+            self::_getProperty('autofocus',  $this->_arrOptions['autofocus'] ? 'autofocus' : null).
             self::_getProperty('autocomplete',  isset($this->_arrOptions['autocomplete']) && !$this->_arrOptions['autocomplete'] ? 'off' : null);
     }
 
@@ -307,6 +308,7 @@ class form_field extends form_element
     private static $_arrDefaultOptions = array(
         'description' => '',
         'placeholder' => '',
+        'autofocus' => false,
         'style' => null,
         'style_form' => null,
         'class' => null,
@@ -1116,6 +1118,7 @@ class form_button extends form_element
         'style'     => null,
         'class' => null,
         'readonly' => false,
+        'autofocus' => false,
         'disabled' => false,
         'onclick'   => null
     );
