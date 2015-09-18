@@ -515,7 +515,7 @@ class form_select extends form_field
 
         parent::__construct('select', $strLabel, $arrValues, $strName, $strId, is_null($arrOptions) ? self::$_arrDefaultOptions : array_merge(self::$_arrDefaultOptions, $arrOptions));
 
-        $this->_arrSelected = ploopi_array_map('htmlentities', $arrSelected);
+        $this->_arrSelected = ploopi_array_map('ploopi_htmlentities', $arrSelected);
     }
 
     /**
@@ -643,7 +643,7 @@ class form_checkbox_list extends form_field
 
         parent::__construct('input:checkbox', $strLabel, $arrValues, $strName, $strId, is_null($arrOptions) ? self::$_arrDefaultOptions : array_merge(self::$_arrDefaultOptions, $arrOptions));
 
-        $this->arrSelected = ploopi_array_map('htmlentities', $arrSelected);
+        $this->arrSelected = ploopi_array_map('ploopi_htmlentities', $arrSelected);
     }
 
     /**
