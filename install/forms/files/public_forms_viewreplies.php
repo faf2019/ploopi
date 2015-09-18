@@ -115,7 +115,7 @@ echo $skin->open_simplebloc(ploopi_htmlentities($objForm->fields['label'].' ('._
                         foreach($field_operators as $strKey => $strValue)
                         {
                             $booSel = (isset($arrFormFilter[$l]) && $arrFormFilter[$l]['op'] == $strKey) ? 'selected="selected"' : '';
-                            echo "<option {$booSel} value=\"{$strKey}\">".ploopi_htmlentities($strValue)."</option>";
+                            echo "<option {$booSel} value=\"{$strKey}\">".$strValue."</option>";
                         }
                         ?>
                     </select>
