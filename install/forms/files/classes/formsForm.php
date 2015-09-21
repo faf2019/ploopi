@@ -1598,8 +1598,6 @@ class formsForm extends data_object
 
                 foreach($arrValues as $intFieldId => $strValue) if (is_numeric($intFieldId)) $arrFieldsContent[$intFieldId] = explode('||', $strValue);
 
-                ploopi_print_r($arrValues);
-
                 if (isset($arrValues['panel'])) $intDefaultPanel = $arrValues['panel'];
             }
         }
