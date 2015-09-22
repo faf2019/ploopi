@@ -83,6 +83,15 @@ class formsForm extends data_object
      * @var Nom de la table associée au formulaire
      */
     private $_strTablename = null;
+    
+    private static $_arrOperators = array(
+        'eq' => '=',
+        'gt' => '>',
+        'lt' => '<',
+        'ge' => '>=',
+        'le' => '<=',
+        'ne' => '<>'
+    );
 
     /**
      * Champs statiques d'un formulaire (date de validation, utilisateur, groupe, ip)
@@ -715,7 +724,16 @@ class formsForm extends data_object
                         case '<>':
                             $objQuery->add_where("{$strFieldName} {$row['op']} %s", $arrValues[0]);
                         break;
-
+                        
+                        case 'eq':
+                        case 'gt':
+                        case 'lt':
+                        case 'ge':
+                        case 'le':
+                        case 'ne':
+                            $objQuery->add_where("{$strFieldName} ".self::$_arrOperators[$row['op']]." %s", $arrValues[0]);
+                        break;
+                        
                         case 'in':
                             $objQuery->add_where("{$strFieldName} in (%t)", array($arrValues));
                         break;

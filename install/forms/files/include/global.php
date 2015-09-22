@@ -145,12 +145,12 @@ $field_formats = array(
 );
 
 $field_operators = array(
-    '=' => '=',
-    '>' => '>',
-    '<' => '<',
-    '>=' => '>=',
-    '<=' => '<=',
-    '<>' => '<>',
+    'eq' => '=',
+    'gt' => '>',
+    'lt' => '<',
+    'ge' => '>=',
+    'le' => '<=',
+    'ne' => '<>',
     'between' => 'Entre',
     'like' => 'Contient',
     'begin' => 'Commence par',
