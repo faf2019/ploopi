@@ -84,6 +84,15 @@ class formsForm extends data_object
      */
     private $_strTablename = null;
 
+    private static $_arrOperators = array(
+        'eq' => '=',
+        'gt' => '>',
+        'lt' => '<',
+        'ge' => '>=',
+        'le' => '<=',
+        'ne' => '<>'
+    );
+
     /**
      * Champs statiques d'un formulaire (date de validation, utilisateur, groupe, ip)
      */
@@ -714,6 +723,15 @@ class formsForm extends data_object
                         case '<=':
                         case '<>':
                             $objQuery->add_where("{$strFieldName} {$row['op']} %s", $arrValues[0]);
+                        break;
+
+                        case 'eq':
+                        case 'gt':
+                        case 'lt':
+                        case 'ge':
+                        case 'le':
+                        case 'ne':
+                            $objQuery->add_where("{$strFieldName} ".self::$_arrOperators[$row['op']]." %s", $arrValues[0]);
                         break;
 
                         case 'in':
@@ -1597,8 +1615,6 @@ class formsForm extends data_object
                 ploopi_set_error_handler();
 
                 foreach($arrValues as $intFieldId => $strValue) if (is_numeric($intFieldId)) $arrFieldsContent[$intFieldId] = explode('||', $strValue);
-
-                ploopi_print_r($arrValues);
 
                 if (isset($arrValues['panel'])) $intDefaultPanel = $arrValues['panel'];
             }

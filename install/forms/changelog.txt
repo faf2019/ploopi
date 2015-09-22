@@ -1,3 +1,11 @@
+== Module FORMS - version 3.6.0 =====================================================
+
+2015-09-22  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+* Correction d'un bug dans la prise en compte des filtres < > >= <=
+* Correction d'un bug d'affichage (print_r)
+* Correction d'un bug dans l'affichage des opérations de filtres sur les données des formulaires
+
 == Module FORMS - version 3.5.6 =====================================================
 
 2015-01-20  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
