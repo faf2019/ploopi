@@ -67,6 +67,7 @@ if ($_SESSION['ploopi']['connected'])
         break;
 
         case 'booking_event_save':
+            ploopi_init_module('booking', false, false, false);
 
             include_once './modules/booking/classes/class_booking_event.php';
             include_once './modules/booking/classes/class_booking_event_detail.php';
