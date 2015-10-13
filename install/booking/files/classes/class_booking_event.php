@@ -203,5 +203,11 @@ class booking_event extends data_object
         $db->query("SELECT * FROM ploopi_mod_booking_event_detail WHERE id_event = {$this->fields['id']} ORDER BY timestp_begin, timestp_end");
         return $db->getarray();
     }
+
+    public function getrawdetails()
+    {
+        return $this->details;
+    }
+
 }
 ?>

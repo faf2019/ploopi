@@ -142,8 +142,13 @@ if ($_SESSION['ploopi']['connected'])
 
                     $strResource = $objResource->open($objEvent->fields['id_resource']) ? $objResource->fields['name'] : 'inconnu';
 
-                    $strMessage = "Nouvelle demande de réservation pour {$strResource} pour le motif suivant : <br /><br />".ploopi_nl2br(ploopi_htmlentities($_POST['booking_event_object']));
-                    $strTitle = "Nouvelle demande de réservation pour {$strResource} ";
+
+                    $rowDetails = $objEvent->getrawdetails();
+                    $strBegin = $rowDetails['timestp_begin_d'].' à '.sprintf("%02dh%02d", $rowDetails['timestp_begin_h'], $rowDetails['timestp_begin_m']);
+                    $strEnd = $rowDetails['timestp_end_d'].' à '.sprintf("%02dh%02d", $rowDetails['timestp_end_h'], $rowDetails['timestp_end_m']);
+
+                    $strTitle = "Demande de réservation pour {$strResource} du {$strBegin} au {$strEnd}";
+                    $strMessage = "Nouvelle demande de réservation pour {$strResource} pour la période du {$strBegin} au {$strEnd} pour le motif suivant : <br /><br />".ploopi_nl2br(ploopi_htmlentities($_POST['booking_event_object'])).'<br /><br />Observations:<br /><br />'.ploopi_nl2br(ploopi_htmlentities($rowDetails['message']));
 
                     // Envoi du ticket
                     ploopi_tickets_send($strTitle, $strMessage);
