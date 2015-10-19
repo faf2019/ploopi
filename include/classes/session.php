@@ -60,14 +60,16 @@ class ploopi_session
 
     private static $objDb = null;
 
+    private static $fpLock = null;
+
     /**
      * Tableau contenant les variables serialisées
      */
     private static $arrSv = null;
 
-    private static function get_basepath() { return _PLOOPI_PATHDATA._PLOOPI_SEP.'session'; }
+    private static function get_basepath() { return _PLOOPI_PATHDATA.'/session'; }
 
-    public static function get_path() { return self::get_basepath()._PLOOPI_SEP.self::get_id(); }
+    public static function get_path() { return self::get_basepath().'/'.self::get_id(); }
 
     private static function compress(&$data) { return self::$booCompress ? @gzcompress($data, defined('_PLOOPI_SESSION_COMPRESSION') ? _PLOOPI_SESSION_COMPRESSION : -1) : $data; }
 
@@ -117,11 +119,15 @@ class ploopi_session
     {
         if (self::$booUseDb)
         {
+            self::$objDb->query("SELECT GET_LOCK('ploopi_lock_{$id}', 10)");
             return (self::$objDb->query("SELECT `data` FROM `ploopi_session` WHERE `id` = '".self::$objDb->addslashes($id)."'") && $arrRecord = self::$objDb->fetchrow()) ? self::uncompress($arrRecord['data']) : '';
         }
         else
         {
-            return file_exists(self::get_path()._PLOOPI_SEP.'data') ? self::uncompress(file_get_contents(self::get_path()._PLOOPI_SEP.'data')) : false;
+            ploopi_makedir(self::get_path());
+            self::$fpLock = fopen(self::get_path().'/lock', "w");
+            flock(self::$fpLock, LOCK_EX);
+            return file_exists(self::get_path().'/data') ? self::uncompress(file_get_contents(self::get_path().'/data')) : false;
         }
     }
 
@@ -138,12 +144,15 @@ class ploopi_session
         if (self::$booUseDb)
         {
             self::$objDb->query("REPLACE INTO `ploopi_session` VALUES ('".self::$objDb->addslashes($id)."', '".self::$objDb->addslashes(time())."', '".self::$objDb->addslashes(self::compress($data))."')");
+            self::$objDb->query("SELECT RELEASE_LOCK('ploopi_lock_{$id}')");
         }
         else
         {
             ploopi_makedir(self::get_path());
-            fwrite($resHandle = fopen(self::get_path()._PLOOPI_SEP.'data', 'wb'), self::compress($data));
+            fwrite($resHandle = fopen(self::get_path().'/data', 'wb'), self::compress($data));
             fclose($resHandle);
+            flock(self::$fpLock, LOCK_UN);
+            fclose(self::$fpLock);
         }
 
         return true;
@@ -197,10 +206,10 @@ class ploopi_session
             {
                 if (!in_array($strIdSession, array('.', '..')))
                 {
-                    $strSessionData = self::get_basepath()._PLOOPI_SEP.$strIdSession._PLOOPI_SEP.'data';
+                    $strSessionData = self::get_basepath().'/'.$strIdSession.'/data';
                     if (filemtime($strSessionData) < $intDeletetime)
                     {
-                        ploopi_deletedir(self::get_basepath()._PLOOPI_SEP.$strIdSession);
+                        ploopi_deletedir(self::get_basepath().'/'.$strIdSession);
                     }
                 }
             }
