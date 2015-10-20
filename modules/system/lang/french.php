@@ -37,7 +37,7 @@
 
 define ('_SYSTEM_PAGE_TITLE', 'Administration');
 define ('_SYSTEM_LABEL_SYSTEM', 'SYSTEME');
-define ('_SYSTEM_LABELICON_SYSTEMUPDATE', 'Mise à jour Système');
+define ('_SYSTEM_LABELICON_SYSTEMUPDATE', 'Mise à jour');
 define ('_SYSTEM_LABELICON_INSTALLMODULES', 'Installation');
 define ('_SYSTEM_LABELICON_MODULES', 'Modules');
 define ('_SYSTEM_LABELICON_PARAMS', 'Paramètres');

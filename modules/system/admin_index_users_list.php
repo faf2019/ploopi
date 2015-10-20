@@ -191,7 +191,7 @@ $values = array();
 $columns['left']['login'] =
     array(
         'label' => _SYSTEM_LABEL_LOGIN,
-        'width' => 110,
+        'width' => 150,
         'options' => array('sort' => true)
     );
 
@@ -205,14 +205,14 @@ $columns['auto']['name'] =
 $columns['right']['service'] =
     array(
         'label' => _SYSTEM_LABEL_SERVICE,
-        'width' => 100,
+        'width' => 150,
         'options' => array('sort' => true)
     );
 
 $columns['right']['origin'] =
     array(
         'label' => _SYSTEM_LABEL_ORIGIN,
-        'width' => 100,
+        'width' => 150,
         'options' => array('sort' => true)
     );
 
@@ -220,7 +220,7 @@ if ($_SESSION['system']['level'] == _SYSTEM_WORKSPACES)
     $columns['right']['adminlevel'] =
         array(
             'label' => 'Niv.',
-            'width' => 50,
+            'width' => 60,
             'options' => array('sort' => true)
         );
 
@@ -290,12 +290,12 @@ else
                     break;
                 }
 
-                $values[$c]['values']['adminlevel'] = array('label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/adminlevels/{$icon}.png\" />", 'sort_label' => $fields['adminlevel']);
+                $values[$c]['values']['adminlevel'] = array('label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/adminlevels/{$icon}.png\" />", 'style' => 'text-align:center;', 'sort_label' => $fields['adminlevel']);
 
                 if ($_SESSION['ploopi']['adminlevel'] >= $fields['adminlevel'])
                     $manage_user =  '<a href="'.ploopi_urlencode("admin.php?op=modify_user&user_id={$fields['id']}").'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_edit.png" title="'._SYSTEM_LABEL_MODIFY.'"></a>'.$action;
                 else
-                    $manage_user =  '<img src="./modules/system/img/ico_noway.gif" title="">&nbsp;&nbsp;<img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_noway.png" alt="">';
+                    $manage_user =  '<img style="margin:0 2px;" src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_noway.png"><img style="margin:0 2px;" src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_noway.png">';
 
                 $values[$c]['values']['actions']        = array('label' => $manage_user);
 

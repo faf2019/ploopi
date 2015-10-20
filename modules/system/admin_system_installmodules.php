@@ -96,9 +96,9 @@ $columns['right']['wce']        = array('label' => _SYSTEM_LABEL_WCEOBJECTS, 'wi
 $columns['right']['metabase']   = array('label' => _SYSTEM_LABEL_METABASE, 'width' => '80');
 $columns['right']['actions']    = array('label' => _SYSTEM_LABEL_ACTIONS, 'width' => '60');
 $columns['right']['date']       = array('label' => _SYSTEM_LABEL_DATE, 'width' => '80', 'options' => array('sort' => true));
-$columns['right']['version']    = array('label' => _SYSTEM_LABEL_VERSION, 'width' => '75', 'options' => array('sort' => true));
+$columns['right']['version']    = array('label' => _SYSTEM_LABEL_VERSION, 'width' => '90', 'options' => array('sort' => true));
 $columns['right']['author']     = array('label' => _SYSTEM_LABEL_AUTHOR, 'width' => '130', 'options' => array('sort' => true));
-$columns['left']['mtype']       = array('label' => _SYSTEM_LABEL_MODULETYPE, 'width' => '130', 'options' => array('sort' => true));
+$columns['left']['mtype']       = array('label' => _SYSTEM_LABEL_MODULETYPE, 'width' => '150', 'options' => array('sort' => true));
 
 // get all modules installed in a table
 $select =   "
@@ -165,9 +165,9 @@ $c = 0;
 $columns['auto']['desc'] = array('label' => _SYSTEM_LABEL_DESCRIPTION, 'options' => array('sort' => true));
 $columns['right']['action'] = array('label' => _SYSTEM_LABEL_UPDATE, 'width' => '130', 'style' => 'text-align:center;');
 $columns['right']['date'] = array('label' => _SYSTEM_LABEL_DATE, 'width' => '80', 'options' => array('sort' => true));
-$columns['right']['version'] = array('label' => _SYSTEM_LABEL_VERSION, 'width' => '75', 'options' => array('sort' => true));
+$columns['right']['version'] = array('label' => _SYSTEM_LABEL_VERSION, 'width' => '90', 'options' => array('sort' => true));
 $columns['right']['author'] = array('label' => _SYSTEM_LABEL_AUTHOR, 'width' => '130', 'options' => array('sort' => true));
-$columns['left']['mtype'] = array('label' => _SYSTEM_LABEL_MODULETYPE, 'width' => '130', 'options' => array('sort' => true));
+$columns['left']['mtype'] = array('label' => _SYSTEM_LABEL_MODULETYPE, 'width' => '150', 'options' => array('sort' => true));
 
 
 foreach($tabmoduletype_install as $label => $fields)
@@ -219,9 +219,9 @@ $c = 0;
 $columns['auto']['desc'] = array('label' => _SYSTEM_LABEL_DESCRIPTION, 'options' => array('sort' => true));
 $columns['right']['action'] = array('label' => _SYSTEM_LABEL_INSTALL, 'width' => '130', 'style' => 'text-align:center;');
 $columns['right']['date'] = array('label' => _SYSTEM_LABEL_DATE, 'width' => '80', 'options' => array('sort' => true));;
-$columns['right']['version'] = array('label' => _SYSTEM_LABEL_VERSION, 'width' => '75', 'options' => array('sort' => true));
+$columns['right']['version'] = array('label' => _SYSTEM_LABEL_VERSION, 'width' => '90', 'options' => array('sort' => true));
 $columns['right']['author'] = array('label' => _SYSTEM_LABEL_AUTHOR, 'width' => '130', 'options' => array('sort' => true));
-$columns['left']['mtype'] = array('label' => _SYSTEM_LABEL_MODULETYPE, 'width' => '130', 'options' => array('sort' => true));
+$columns['left']['mtype'] = array('label' => _SYSTEM_LABEL_MODULETYPE, 'width' => '150', 'options' => array('sort' => true));
 
 foreach($tabmoduletype_install as $label => $fields)
 {

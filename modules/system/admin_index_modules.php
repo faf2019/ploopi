@@ -57,12 +57,12 @@ $columns['auto']['name']        = array('label' => _SYSTEM_LABEL_MODULENAME, 'op
 
 $columns['left']['position']    = array('label' => _SYSTEM_LABEL_MODULEPOSITION, 'width' => '75', 'options' => array('sort' => true));
 $columns['left']['type']        = array('label' => _SYSTEM_LABEL_MODULETYPE, 'width' => '150', 'options' => array('sort' => true));
-$columns['right']['actions']    = array('label' => _SYSTEM_LABEL_ACTION, 'width' => '50');
-$columns['right']['herited']    = array('label' => 'Her.', 'width' => '55', 'options' => array('sort' => true));
-$columns['right']['shared']     = array('label' => 'Par.', 'width' => '55', 'options' => array('sort' => true));
-$columns['right']['visible']     = array('label' => 'Vis.', 'width' => '55', 'options' => array('sort' => true));
-$columns['right']['active']     = array('label' => 'Act.', 'width' => '55', 'options' => array('sort' => true));
-$columns['right']['viewmode']   = array('label' => _SYSTEM_LABEL_VIEWMODE, 'width' => '80', 'options' => array('sort' => true));
+$columns['right']['actions']    = array('label' => _SYSTEM_LABEL_ACTION, 'width' => '55');
+$columns['right']['herited']    = array('label' => 'Her.', 'width' => '70', 'options' => array('sort' => true));
+$columns['right']['shared']     = array('label' => 'Par.', 'width' => '70', 'options' => array('sort' => true));
+$columns['right']['visible']     = array('label' => 'Vis.', 'width' => '70', 'options' => array('sort' => true));
+$columns['right']['active']     = array('label' => 'Act.', 'width' => '70', 'options' => array('sort' => true));
+$columns['right']['viewmode']   = array('label' => _SYSTEM_LABEL_VIEWMODE, 'width' => '100', 'options' => array('sort' => true));
 
 foreach ($ownmodules as $index => $module)
 {
@@ -85,7 +85,7 @@ foreach ($ownmodules as $index => $module)
     else
     {
         $modify = '<img style="margin:0 2px;" src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_noway.png">';
-        if ($module['adminrestricted']) $delete = '<img style="margin:0 2px;" src="./modules/system/img/ico_noway.gif">';
+        if ($module['adminrestricted']) $delete = '<img style="margin:0 2px;" src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_noway.png">';
         else $delete = '<a href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("admin.php?op=unlinkinstance&moduleid={$module['instanceid']}").'\',\''._SYSTEM_MSG_CONFIRMMODULEDETACH.'\')"><img style="margin:0 2px;" src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_cut.png"></a>';
     }
 

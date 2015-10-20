@@ -61,12 +61,14 @@ $sql =  "
 
         INNER JOIN  ploopi_workspace w ON w.id = r.id_workspace
 
-        WHERE       (r.id_workspace = {$workspaceid}
-        OR          (r.id_workspace IN ({$parents}) AND r.shared = 1))
+        INNER JOIN  ploopi_module_workspace mw ON mw.id_workspace = {$workspaceid} AND mw.id_module = m.id
 
+        WHERE       ((r.id_workspace = {$workspaceid}
+        OR          (r.id_workspace IN ({$parents}) AND r.shared = 1)))
+
+        GROUP BY    r.id
         ORDER BY    module_type, m.label
         ";
-
 $db->query($sql);
 
 $columns = array();
@@ -74,10 +76,10 @@ $values = array();
 $c = 0;
 
 $columns['auto']['desc']        = array('label' => 'Description', 'options' => array('sort' => true));
-$columns['left']['module']      = array('label' => 'Module', 'width' => '120', 'options' => array('sort' => true));
+$columns['left']['module']      = array('label' => 'Module', 'width' => '150', 'options' => array('sort' => true));
 $columns['left']['role']        = array('label' => 'Rôle', 'width' => '200', 'options' => array('sort' => true));
 $columns['right']['shared']     = array('label' => 'Partagé', 'width' => '65');
-$columns['right']['origine']    = array('label' => 'Origine', 'width' => '120', 'options' => array('sort' => true));
+$columns['right']['origine']    = array('label' => 'Origine', 'width' => '150', 'options' => array('sort' => true));
 
 while($row = $db->fetchrow())
 {

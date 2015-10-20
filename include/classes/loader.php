@@ -526,7 +526,7 @@ abstract class ploopi_loader
             if ($db->numrows() == 1)
             {
                 $fields = $db->fetchrow();
-                
+
                 if ($fields['disabled']) {
                     ploopi_create_user_action_log(_SYSTEM_ACTION_LOGIN_ERR, $_REQUEST['ploopi_login'],_PLOOPI_MODULE_SYSTEM,_PLOOPI_MODULE_SYSTEM);
                     ploopi_syslog(LOG_INFO, "Le compte {$_REQUEST['ploopi_login']} est désactivé");
@@ -1435,5 +1435,19 @@ abstract class ploopi_loader
      */
 
     public static function getworkspace() { return self::$workspace; }
+
+
+    /**
+     * Retourne le type de script
+     *
+     * @package ploopi
+     * @subpackage loader
+     * @copyright Ovensia
+     * @license GNU General Public License (GPL)
+     * @author Stéphane Escaich
+     * @return array
+     */
+
+    public static function getscript() { return self::$script; }
 
 }
