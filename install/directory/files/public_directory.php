@@ -164,7 +164,7 @@ switch($_SESSION['directory']['directoryTabItem'])
         $arrValues = array();
 
         $arrColumns['auto']['name'] = array('label' => _DIRECTORY_NAME, 'options' => array('sort' => true));
-        $arrColumns['right']['email'] = array('label' => _DIRECTORY_EMAIL,     'width' => 50, 'options' => array('sort' => true));
+        $arrColumns['right']['email'] = array('label' => _DIRECTORY_EMAIL,     'width' => 60, 'options' => array('sort' => true));
         $arrColumns['right']['phone'] = array('label' => _DIRECTORY_PHONE,     'width' => 100, 'options' => array('sort' => true));
         $arrColumns['right']['function'] = array('label' => _DIRECTORY_FUNCTION, 'width' => 120, 'options' => array('sort' => true));
         $arrColumns['right']['service'] = array('label' => _DIRECTORY_SERVICE, 'width' => 120, 'options' => array('sort' => true));
@@ -217,19 +217,19 @@ switch($_SESSION['directory']['directoryTabItem'])
         $arrColumns = array();
         $arrValues = array();
 
-        
+
         $arrColumns['auto']['name'] = array('label' => _DIRECTORY_NAME, 'options' => array('sort' => true));
-        $arrColumns['right']['email'] = array('label' => _DIRECTORY_EMAIL,     'width' => 50, 'options' => array('sort' => true));
+        $arrColumns['right']['email'] = array('label' => _DIRECTORY_EMAIL,     'width' => 60, 'options' => array('sort' => true));
         $arrColumns['right']['ticket'] = array('label' => _DIRECTORY_TICKET,     'width' => 55);
         $arrColumns['right']['phone'] = array('label' => _DIRECTORY_PHONE,     'width' => 100, 'options' => array('sort' => true));
         $arrColumns['right']['function'] = array('label' => _DIRECTORY_FUNCTION, 'width' => 150, 'options' => array('sort' => true));
         $arrColumns['right']['service'] = array('label' => _DIRECTORY_SERVICE, 'width' => 150, 'options' => array('sort' => true));
-        
+
         if (ploopi_getparam('directory_display_workspaces'))
-        {        
+        {
             $arrColumns['right']['groups'] = array('label' => _DIRECTORY_GROUPS,    'width' => 150, 'options' => array('sort' => true));
         }
-        
+
         $arrColumns['actions_right']['actions'] = array('label' => '&nbsp;', 'width' => '42');
 
         // il faut chercher les groupes rattachés à l'espace !
@@ -388,17 +388,17 @@ switch($_SESSION['directory']['directoryTabItem'])
 
         $arrColumns['left']['type'] = array('label' => _DIRECTORY_TYPE,        'width' => 90, 'options' => array('sort' => true));
         $arrColumns['auto']['name'] = array('label' => _DIRECTORY_NAME,        'options' => array('sort' => true));
-        $arrColumns['right']['email'] = array('label' => _DIRECTORY_EMAIL,     'width' => 50, 'options' => array('sort' => true));
+        $arrColumns['right']['email'] = array('label' => _DIRECTORY_EMAIL,     'width' => 60, 'options' => array('sort' => true));
         $arrColumns['right']['ticket'] = array('label' => _DIRECTORY_TICKET,     'width' => 55);
         $arrColumns['right']['phone'] = array('label' => _DIRECTORY_PHONE,     'width' => 100, 'options' => array('sort' => true));
         $arrColumns['right']['function'] = array('label' => _DIRECTORY_FUNCTION, 'width' => 150, 'options' => array('sort' => true));
         $arrColumns['right']['service'] = array('label' => _DIRECTORY_SERVICE, 'width' => 150, 'options' => array('sort' => true));
 
         if (ploopi_getparam('directory_display_workspaces'))
-        {        
+        {
             $arrColumns['right']['groups'] = array('label' => _DIRECTORY_GROUPS,    'width' => 150, 'options' => array('sort' => true));
         }
-        
+
         $arrColumns['actions_right']['actions'] = array('label' => '&nbsp;', 'width' => '42');
 
         $result = array();
@@ -620,7 +620,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                         $arrWfUsers = array();
                         $arrWf = ploopi_validation_get(_DIRECTORY_OBJECT_HEADING, $intHeadingId);
                         $intWfHeadingId = $intHeadingId;
-                        
+
                         if (empty($arrWf)) // pas de validateur pour cette rubrique, on recherche sur les parents
                         {
                             $parents = explode(';', $arrHeadings['list'][$intHeadingId]['parents']);
@@ -634,27 +634,27 @@ switch($_SESSION['directory']['directoryTabItem'])
                                 }
                             }
                         }
-                        
+
                         $objUser = new user();
                         $objUser->open($_SESSION['ploopi']['userid']);
                         $arrGroups = $objUser->getgroups(true);
-                        
+
                         /**
                          * L'utilisateur connecté est-il gestionnaire de la rubrique (admin ou validateur) ?
                          */
                         $booModify = ploopi_isadmin() || $arrHeadings['list'][$intHeadingId]['isvalidator'];
-                        
-                        foreach($arrWf as $value) 
+
+                        foreach($arrWf as $value)
                         {
                             if (!$booModify)
                             {
                                 if ($value['type_validation'] == 'user' && $value['id_validation'] == $_SESSION['ploopi']['userid']) $booModify = true;
                                 if ($value['type_validation'] == 'group' && isset($arrGroups[$value['id_validation']])) $booModify = true;
                             }
-                                
+
                             $arrWfUsers[$value['type_validation']][] = $value['id_validation'];
                         }
-                        
+
                         if ($booModify) // Version modifiable
                         {
                             ?>
@@ -665,8 +665,8 @@ switch($_SESSION['directory']['directoryTabItem'])
                             </div>
                             <?
                         }
-                        
-                        
+
+
                         if ($op == 'directory_modify') // interface débloquée
                         {
                             if ($booModify)
@@ -681,7 +681,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                                 <form method="post" action="<?php echo ploopi_urlencode("admin.php?ploopi_op=directory_heading_save&directory_heading_id={$objHeading->fields['id']}"); ?>">
                                 <?
                             }
-                            
+
                             if ($booModify) // Gestionnaire uniquement
                             {
                                 ?>
@@ -731,7 +731,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                                 <?
                             }
                         }
-                        
+
                         if (!$booModify || empty($op)) // Version non modifiable
                         {
                             $arrParents = preg_split('/;/', $arrHeadings['list'][$intHeadingId]['parents']);
@@ -742,8 +742,8 @@ switch($_SESSION['directory']['directoryTabItem'])
                                     $arrTitle[] = $arrHeadings['list'][$intId]['label'];
 
                             $arrTitle[] = $objHeading->fields['label'];
-                            
-                            
+
+
                             ?>
                             <h1 class="directory_title"><?php echo ploopi_htmlentities(implode(' > ', $arrTitle)); ?></h1>
                             <?php
@@ -771,10 +771,10 @@ switch($_SESSION['directory']['directoryTabItem'])
                             if (!empty($arrAddress))
                             {
                                 ?><div style="padding:4px;"><?php echo implode('<br />', $arrAddress); ?></div><?php
-                            }                            
-                            
+                            }
+
                         }
-                        
+
                         if ($op == 'directory_modify') // interface débloquée
                         {
                             if (ploopi_isactionallowed(_DIRECTORY_ACTION_MANAGERS)) // Gestion des gestionnaires
@@ -783,7 +783,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                                 <div style="clear:both;padding:4px;">
                                     <fieldset class="fieldset" style="padding:6px;">
                                         <legend><strong>Gestionnaires <?php if ($intWfHeadingId != $intHeadingId) echo "<em>(Hérités de &laquo; <a href=\"".ploopi_urlencode("admin.php?directory_heading_id={$intWfHeadingId}")."\">{$arrHeadings['list'][$intWfHeadingId]['label']}</a> &raquo;)</em>"; ?></strong></legend>
-                                
+
                                         <p class="ploopi_va" style="padding:0 2px 2px 2px;">
                                             <?php
                                             if (!empty($arrWfUsers))
@@ -791,21 +791,21 @@ switch($_SESSION['directory']['directoryTabItem'])
                                                 if (!empty($arrWfUsers['group']))
                                                 {
                                                     $strIcon = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/ico_group.png\">";
-                                
+
                                                     $db->query(
                                                         "SELECT label FROM ploopi_group WHERE id in (".implode(',',$arrWfUsers['group']).") ORDER BY label"
                                                     );
-                                
+
                                                     while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi_htmlentities($row['label'])."&nbsp;</span>";
                                                 }
                                                 if (!empty($arrWfUsers['user']))
                                                 {
                                                     $strIcon = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/ico_user.png\">";
-                                
+
                                                     $db->query(
                                                         "SELECT concat(lastname, ' ', firstname) as name FROM ploopi_user WHERE id in (".implode(',',$arrWfUsers['user']).") ORDER BY lastname, firstname"
                                                     );
-                                
+
                                                     while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi_htmlentities($row['name'])."&nbsp;</span>";
                                                 }
                                             }
@@ -821,7 +821,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                                 </div>
                                 <?php
                             }
-                            
+
                             if ($booModify || ploopi_isactionallowed(_DIRECTORY_ACTION_MANAGERS))
                             {
                                 ?>
@@ -851,21 +851,21 @@ switch($_SESSION['directory']['directoryTabItem'])
                                                     if (!empty($arrWfUsers['group']))
                                                     {
                                                         $strIcon = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/ico_group.png\">";
-                                    
+
                                                         $db->query(
                                                             "SELECT label FROM ploopi_group WHERE id in (".implode(',',$arrWfUsers['group']).") ORDER BY label"
                                                         );
-                                    
+
                                                         while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi_htmlentities($row['label'])."&nbsp;</span>";
                                                     }
                                                     if (!empty($arrWfUsers['user']))
                                                     {
                                                         $strIcon = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/ico_user.png\">";
-                                    
+
                                                         $db->query(
                                                             "SELECT concat(lastname, ' ', firstname) as name FROM ploopi_user WHERE id in (".implode(',',$arrWfUsers['user']).") ORDER BY lastname, firstname"
                                                         );
-                                    
+
                                                         while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi_htmlentities($row['name'])."&nbsp;</span>";
                                                     }
                                                 }
@@ -890,7 +890,7 @@ switch($_SESSION['directory']['directoryTabItem'])
 
                         }
                         ?>
-                        
+
                         <div style="border-top:1px solid #a0a0a0;">
                             <?php
                             if ($booModify) // Version modifiable
@@ -934,7 +934,7 @@ switch($_SESSION['directory']['directoryTabItem'])
 
                             $arrColumns['left']['position'] = array('label' => 'P.',     'width' => 35, 'options' => array('sort' => true));
                             $arrColumns['auto']['name'] = array('label' => _DIRECTORY_NAME, 'options' => array('sort' => true));
-                            $arrColumns['right']['email'] = array('label' => _DIRECTORY_EMAIL,     'width' => 50, 'options' => array('sort' => true));
+                            $arrColumns['right']['email'] = array('label' => _DIRECTORY_EMAIL,     'width' => 60, 'options' => array('sort' => true));
                             $arrColumns['right']['phone'] = array('label' => _DIRECTORY_PHONE,     'width' => 100, 'options' => array('sort' => true));
                             $arrColumns['right']['function'] = array('label' => _DIRECTORY_FUNCTION, 'width' => 120, 'options' => array('sort' => true));
                             $arrColumns['right']['service'] = array('label' => _DIRECTORY_SERVICE, 'width' => 120, 'options' => array('sort' => true));
@@ -1036,7 +1036,7 @@ switch($_SESSION['directory']['directoryTabItem'])
     case 'tabSpeedDialing':
         $objSpeedDialing = new directory_speeddialing();
         $objSpeedDialing->init_description();
-        
+
         $arrHeadings = $db->getarray(
             $db->query("
                 SELECT      distinct(ds.heading)
@@ -1044,7 +1044,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                 ORDER BY    ds.label
             "), true
         );
-        
+
         if (ploopi_isactionallowed(_DIRECTORY_ACTION_SPEEDDIALING))
         {
             ?>
@@ -1071,8 +1071,8 @@ switch($_SESSION['directory']['directoryTabItem'])
                     <span>Abrégé:</span>
                     <input type="text" name="directory_speeddialing_shortnumber" class="text" style="width:60px;" maxlength="16" tabindex="117" />
                     <input type="button" class="button" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php"); ?>';" tabindex="121" />
-                    <input type="submit" class="button" value="<?php echo _PLOOPI_SAVE; ?>" tabindex="120" />                
-                    
+                    <input type="submit" class="button" value="<?php echo _PLOOPI_SAVE; ?>" tabindex="120" />
+
                 </p>
                 </form>
             </div>
@@ -1106,7 +1106,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                 $c = 0;
                 while ($row = $db->fetchrow())
                 {
-                                        
+
                     $arrValues[$c]['values']['heading'] = array('label' => ploopi_htmlentities($row['heading']), 'sort_label' => strtoupper(ploopi_convertaccents(sprintf("%-255s_%-255s", $row['heading'], $row['label']))));
                     $arrValues[$c]['values']['label'] = array('label' => ploopi_htmlentities($row['label']), 'sort_label' => strtoupper(ploopi_convertaccents($row['label'])));
                     $arrValues[$c]['values']['shortnumber'] = array('label' => ploopi_htmlentities($row['shortnumber']));
@@ -1137,7 +1137,7 @@ switch($_SESSION['directory']['directoryTabItem'])
             ?>
         </div>
         <?php
-        
+
     break;
 }
 ?>

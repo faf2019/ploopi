@@ -1,3 +1,9 @@
+== Module DIRECTORY - version 2.3.11 ====================================================
+
+2015-10-21  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+* Modification mineure sur la taille des colonnes dans les tableaux d'utilisateurs/contacts
+
 == Module DIRECTORY - version 2.3.10 ====================================================
 
 2015-07-13  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
