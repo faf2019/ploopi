@@ -447,6 +447,30 @@ class skin_common
                 }
             }
 
+            if (!empty($array['columns']['actions_left']))
+            {
+                foreach($array['columns']['actions_left'] as $id => $c)
+                {
+                    if (!empty($c['options']['sort']))
+                    {
+                        $array['columns']['actions_right'][$id]['onclick'] = "ploopi_skin_array_refresh('{$strArrayId}', '{$id}');";
+                        $array['sortable_columns'][] = $id;
+                    }
+                }
+            }
+
+            if (!empty($array['columns']['actions_right']))
+            {
+                foreach($array['columns']['actions_right'] as $id => $c)
+                {
+                    if (!empty($c['options']['sort']))
+                    {
+                        $array['columns']['actions_right'][$id]['onclick'] = "ploopi_skin_array_refresh('{$strArrayId}', '{$id}');";
+                        $array['sortable_columns'][] = $id;
+                    }
+                }
+            }
+
         }
 
         $objSV = new serializedvar($strArrayId);
@@ -672,14 +696,26 @@ class skin_common
                 {
                     foreach($array['columns']['actions_right'] as $id => $c)
                     {
+                        $img = '';
+                        $class = '';
+                        if ($array['orderby'] == $id)
+                        {
+                            $img = $sort_img;
+                            if (empty($c['style'])) $c['style'] = '';
+                            $class = 'ploopi_explorer_element_selected';
+                        }
+                        elseif (!empty($c['options']['sort'])) {
+                            $img = $sortable_img;
+                        }
+
                         if (!empty($c['url']) || !empty($c['onclick'])) {
                             ?>
-                            <a href="<?php echo (!empty($c['url'])) ? $c['url'] : 'javascript:void(0);'; ?>" <?php if (!empty($c['onclick'])) echo "onclick=\"javascript:{$c['onclick']}\""; ?>" style="width:<?php echo $c['width']; ?>px;float:right;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element"><p><span><?php echo $c['label']; ?>&nbsp;</span></p></a>
+                            <a href="<?php echo (!empty($c['url'])) ? $c['url'] : 'javascript:void(0);'; ?>" <?php if (!empty($c['onclick'])) echo "onclick=\"javascript:{$c['onclick']}\""; ?>" style="width:<?php echo $c['width']; ?>px;float:right;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element"><p><span><?php echo $c['label']; ?>&nbsp;</span><?php echo $img; ?></p></a>
                             <?
                         }
                         else {
                             ?>
-                            <span style="width:<?php echo $c['width']; ?>px;float:right;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element"><p><span><?php echo $c['label']; ?>&nbsp;</span></p></span>
+                            <span style="width:<?php echo $c['width']; ?>px;float:right;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element"><p><span><?php echo $c['label']; ?>&nbsp;</span><?php echo $img; ?></p></span>
                             <?
                         }
                     }
@@ -720,9 +756,28 @@ class skin_common
                 {
                     foreach($array['columns']['actions_left'] as $id => $c)
                     {
-                        ?>
-                        <a href="<?php echo (!empty($c['url'])) ? $c['url'] : 'javascript:void(0);'; ?>" <?php if (!empty($c['onclick'])) echo "onclick=\"javascript:{$c['onclick']}\""; ?>" style="width:<?php echo $c['width']; ?>px;float:left;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element"><p><span><?php echo $c['label']; ?>&nbsp;</span></p></a>
-                        <?php
+                        $img = '';
+                        $class = '';
+                        if ($array['orderby'] == $id)
+                        {
+                            $img = $sort_img;
+                            if (empty($c['style'])) $c['style'] = '';
+                            $class = 'ploopi_explorer_element_selected';
+                        }
+                        elseif (!empty($c['options']['sort'])) {
+                            $img = $sortable_img;
+                        }
+
+                        if (!empty($c['url']) || !empty($c['onclick'])) {
+                            ?>
+                            <a href="<?php echo (!empty($c['url'])) ? $c['url'] : 'javascript:void(0);'; ?>" <?php if (!empty($c['onclick'])) echo "onclick=\"javascript:{$c['onclick']}\""; ?>" style="width:<?php echo $c['width']; ?>px;float:left;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element <? echo $class; ?>"><p><span><?php echo $c['label']; ?>&nbsp;</span><?php echo $img; ?></p></a>
+                            <?
+                        }
+                        else {
+                            ?>
+                            <span style="width:<?php echo $c['width']; ?>px;float:left;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element <? echo $class; ?>"><p><span><?php echo $c['label']; ?>&nbsp;</span><?php echo $img; ?></p></span>
+                            <?
+                        }
                     }
                 }
 
@@ -830,7 +885,7 @@ class skin_common
                         // alternance des couleurs (une ligne sur 2) : on joue sur les css
                         $color = (empty($color) || $color == 1) ? 2 : 1;
                         ?>
-                        <div <?php if (!empty($v['id'])) echo "id=\"{$v['id']}\""; ?> class="ploopi_explorer_line_<?php echo $color; ?>" <?php if (!empty($v['style'])) echo "style=\"{$v['style']}\""; ?>>
+                        <div <?php if (!empty($v['id'])) echo "id=\"{$v['id']}\""; ?> class="ploopi_explorer_line_<?php echo $color; ?><?php if (!empty($v['class'])) echo " {$v['class']}"; ?>" <?php if (!empty($v['style'])) echo "style=\"{$v['style']}\""; ?>>
                             <?php
                             if (!empty($array['columns']['actions_right']))
                             {
