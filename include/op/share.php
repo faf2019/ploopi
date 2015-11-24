@@ -128,7 +128,9 @@ switch($ploopi_op)
         }
 
         // Tri des espaces par priorité/label
-        uasort($list['workspaces'], function ($a,$b) { return sprintf("%03d_%s", intval($b['priority']), $b['label']) < sprintf("%03d_%s", intval($a['priority']), $a['label']); });
+        uasort($list['workspaces'], function ($a,$b) {
+            return $a['priority'] == $b['priority'] ? strcmp($a['label'],$b['label']) : $a['priority'] >= $b['priority'];
+        });
 
         if (!empty($list['workspaces'])) {
 
