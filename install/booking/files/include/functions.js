@@ -59,8 +59,8 @@ function booking_element_open(type_element, id, e, width, center)
 {
     if (typeof(width) == 'undefined') width = 450;
     if (typeof(center) == 'undefined') center = false;
-    
-    if (center) 
+
+    if (center)
     {
         var posy = 250;
         if (e.pageY) posy = e.pageY;
@@ -102,14 +102,24 @@ function booking_resource_validate(form)
     return false;
 }
 
+function booking_subresource_validate(form)
+{
+    if (ploopi_validatefield('Intitulé',form.booking_subresource_name, 'string'))
+    if (ploopi_validatefield('Ressource',form.booking_subresource_id_resource, 'selected'))
+        return true;
+
+    return false;
+}
+
+
 /**
  * AJOUT D'UN EVENEMENT
  */
- 
+
 function booking_event_add(e, date)
 {
     ploopi_showpopup(ploopi_ajaxloader_content, '450', e, 'click', 'popup_event');
-    ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=booking_event_add&booking_resource_date='+date, 'popup_event');   
+    ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=booking_event_add&booking_resource_date='+date, 'popup_event');
 }
 
 function booking_event_validate(form)
@@ -126,7 +136,7 @@ function booking_event_validate(form)
 /**
  * NAVIGATION CALENDRIER
  */
- 
+
 function booking_nextmonth()
 {
     if ($('booking_month').value < 12) $('booking_month').selectedIndex++;
@@ -190,17 +200,33 @@ function booking_prevday()
 /**
  * FRONTOFFICE
  */
- 
+
 function booking_front_event_add(e, date, moduleid)
 {
     ploopi_showpopup(ploopi_ajaxloader_content, '450', e, 'click', 'popup_event');
     ploopi_xmlhttprequest_todiv('index-light.php', 'ploopi_op=booking_event_add&booking_moduleid='+moduleid+'&booking_resource_date='+date, 'popup_event');
-    
+
 }
- 
+
 function booking_front_element_open(type_element, id, e, moduleid)
 {
     ploopi_showpopup(ploopi_ajaxloader_content, 450, e, 'click', 'popup_'+type_element);
     ploopi_xmlhttprequest_todiv('index-light.php','ploopi_op=booking_'+type_element+'_open&booking_element_id='+id+'&booking_moduleid='+moduleid, 'popup_'+type_element);
 }
- 
+
+
+
+function booking_resource_onchange(res)
+{
+    $$('#booking_subresources > p').each(function(item) {
+        item.remove();
+    });
+
+    booking_json_sr.each(function(row) {
+        if (row.id_resource == res.value) {
+            $('booking_subresources').insert(
+                '<p class="ploopi_checkbox"><label for="booking_sr_'+row.id+'">'+row.name+':</label><input type="checkbox" name="booking_sr[]" value="'+row.id+'" id="booking_sr_'+row.id+'" /></p>'
+            );
+        }
+    });
+}

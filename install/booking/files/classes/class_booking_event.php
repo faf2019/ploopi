@@ -51,6 +51,8 @@ class booking_event extends data_object
 
     private $details;
 
+    private $subresources;
+
     /**
      * Constructeur de la classe
      *
@@ -61,6 +63,21 @@ class booking_event extends data_object
     {
         parent::data_object('ploopi_mod_booking_event', 'id');
         $this->details = array();
+        $this->subresources = array();
+    }
+
+    public function open($intId) {
+        global $db;
+
+        $res = parent::open($intId);
+        $this->subresources = array();
+
+        if ($res) {
+            $db->query("SELECT id_subresource FROM ploopi_mod_booking_event_subresource WHERE id_event = {$this->fields['id']}");
+            while ($row = $db->fetchrow()) $this->subresources[] = $row['id_subresource'];
+        }
+
+        return $res;
     }
 
     /**
@@ -71,6 +88,7 @@ class booking_event extends data_object
 
     public function save()
     {
+        global $db;
 
         if ($this->new)
         {
@@ -176,6 +194,18 @@ class booking_event extends data_object
             }
         }
 
+        $db->query("DELETE FROM ploopi_mod_booking_event_subresource WHERE id_event = {$this->fields['id']}");
+        // Si il faut enregistrer des "event_detail"
+        if (!empty($this->subresources))
+        {
+            foreach($this->subresources as $intIdSR) {
+                if (!empty($intIdSR) && is_numeric($intIdSR)) {
+                    $db->query($sql = "REPLACE INTO ploopi_mod_booking_event_subresource VALUES({$this->fields['id']}, {$intIdSR})");
+                    echo $sql;
+                }
+            }
+        }
+
         return($intIdEvent);
     }
 
@@ -184,8 +214,6 @@ class booking_event extends data_object
      */
     public function isvalid()
     {
-        ploopi_print_r($this->fields);
-        ploopi_print_r($this->details);
 
         if (!empty($this->details)) {
 
@@ -206,8 +234,6 @@ class booking_event extends data_object
                 $this->details['timestp_end_d'], //to
                 $this->fields['id_module'] // moduleid
             );
-
-            ploopi_print_r($arrEvents);
 
             if (!empty($arrEvents)) {
 
@@ -334,8 +360,6 @@ class booking_event extends data_object
                                 $this->fields['id_module'] // moduleid
                             );
 
-                            ploopi_print_r($arrEvents);
-
                             // Recherche plus précise de collisions
                             foreach($arrEvents as $row) {
                                 $timestp_begin = date('YmdHis', $intUxTs);
@@ -374,6 +398,7 @@ class booking_event extends data_object
         }
     }
 
+
     public function getdetails()
     {
         global $db;
@@ -381,6 +406,19 @@ class booking_event extends data_object
         // Recherche des détails liés à l'événement
         $db->query("SELECT * FROM ploopi_mod_booking_event_detail WHERE id_event = {$this->fields['id']} ORDER BY timestp_begin, timestp_end");
         return $db->getarray();
+    }
+
+    public function getrawdetails()
+    {
+        return $this->details;
+    }
+
+    public function setsubresources($subresources) {
+        $this->subresources = $subresources;
+    }
+
+    public function getsubresources() {
+        return $this->subresources;
     }
 }
 ?>

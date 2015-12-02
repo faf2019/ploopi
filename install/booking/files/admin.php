@@ -46,21 +46,24 @@ if (empty($_SESSION['booking']['booking_tab'])) $_SESSION['booking']['booking_ta
  * Définition des onglets
  */
 $tabs = array();
-$tabs['resourcetype'] = 
-    array(
-        'title' => 'Types de ressources', 
-        'url' => "admin.php?booking_tab=resourcetype"
-    );
-    
-$tabs['resource'] = 
-    array(
-        'title' => 'Ressources', 
-        'url' => "admin.php?booking_tab=resource"
-    );
-    
+$tabs['resourcetype'] =  array(
+    'title' => 'Types de ressources',
+    'url' => "admin.php?booking_tab=resourcetype"
+);
+
+$tabs['resource'] = array(
+    'title' => 'Ressources',
+    'url' => "admin.php?booking_tab=resource"
+);
+
+$tabs['subresource'] = array(
+    'title' => 'Sous-Ressources',
+    'url' => "admin.php?booking_tab=subresource"
+);
+
 echo $skin->create_pagetitle(ploopi_htmlentities("{$_SESSION['ploopi']['modulelabel']} - Administration"));
-echo $skin->create_tabs($tabs, $_SESSION['booking']['booking_tab']);        
-   
+echo $skin->create_tabs($tabs, $_SESSION['booking']['booking_tab']);
+
 echo $skin->open_simplebloc();
 
 
@@ -69,10 +72,14 @@ switch($_SESSION['booking']['booking_tab'])
     case 'resourcetype':
         include_once './modules/booking/admin_resourcetype.php';
     break;
-    
+
     case 'resource':
         include_once './modules/booking/admin_resource.php';
-    break;   
+    break;
+
+    case 'subresource':
+        include_once './modules/booking/admin_subresource.php';
+    break;
 }
 
 

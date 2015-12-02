@@ -79,7 +79,7 @@ if ($_SESSION['ploopi']['connected'])
 
                 $objEvent->setvalues($_POST, 'booking_event_');
                 $objEvent->setdetails($_POST, '_booking_event_');
-
+                $objEvent->setsubresources(isset($_POST['booking_sr']) ? $_POST['booking_sr'] : array());
 
                 $objEvent->setuwm();
                 if ($_SESSION['ploopi']['mode'] == 'frontoffice') $objEvent->fields['id_module'] = $_GET['booking_moduleid'];
@@ -160,8 +160,12 @@ if ($_SESSION['ploopi']['connected'])
 
                     $strResource = $objResource->open($objEvent->fields['id_resource']) ? $objResource->fields['name'] : 'inconnu';
 
-                    $strMessage = "Nouvelle demande de réservation pour {$strResource} pour le motif suivant : <br /><br />".ploopi_nl2br(ploopi_htmlentities($_POST['booking_event_object']));
-                    $strTitle = "Nouvelle demande de réservation pour {$strResource} ";
+                    $rowDetails = $objEvent->getrawdetails();
+                    $strBegin = $rowDetails['timestp_begin_d'].' à '.sprintf("%02dh%02d", $rowDetails['timestp_begin_h'], $rowDetails['timestp_begin_m']);
+                    $strEnd = $rowDetails['timestp_end_d'].' à '.sprintf("%02dh%02d", $rowDetails['timestp_end_h'], $rowDetails['timestp_end_m']);
+
+                    $strTitle = "Demande de réservation pour {$strResource} du {$strBegin} au {$strEnd}";
+                    $strMessage = "Nouvelle demande de réservation pour {$strResource} pour la période du {$strBegin} au {$strEnd} pour le motif suivant : <br /><br />".ploopi_nl2br(ploopi_htmlentities($_POST['booking_event_object'])).'<br /><br />Observations:<br /><br />'.ploopi_nl2br(ploopi_htmlentities($rowDetails['message']));
 
                     // Envoi du ticket
                     ploopi_tickets_send($strTitle, $strMessage);
@@ -202,6 +206,7 @@ if ($_SESSION['ploopi']['connected'])
             else ploopi_redirect("admin.php");
 
             $objEvent->setvalues($_POST, 'booking_event_');
+            $objEvent->setsubresources(isset($_POST['booking_sr']) ? $_POST['booking_sr'] : array());
 
             if (!empty($_POST['_booking_event_timestp_begin_d']) && is_array($_POST['_booking_event_timestp_begin_d']))
             {
@@ -433,17 +438,26 @@ if ($_SESSION['ploopi']['connected'])
 
             $arrResources = ($_SESSION['ploopi']['mode'] == 'frontoffice') ? booking_get_resources(false, $_GET['booking_moduleid']) : booking_get_resources();
 
+            $db->query("SELECT * FROM ploopi_mod_booking_subresource WHERE id_resource IN (".implode(',', array_keys($arrResources)).") AND active = 1 ORDER BY name");
+            ?>
+            <script type="text/javascript">
+                booking_json_sr = <? echo json_encode(ploopi_array_map('ploopi_utf8encode', $db->getarray())); ?>;
+            </script>
+            <?
+
             $objEvent = new booking_event();
             $objEvent->init_description();
             // Si une ressource est passée en paramètre, on la sélectionne par défaut
             if (!empty($_GET['booking_resource_id']) && is_numeric($_GET['booking_resource_id'])) $objEvent->fields['id_resource'] = $_GET['booking_resource_id'];
+
+
 
             ?>
             <form action="<? echo ploopi_urlencode($_SESSION['ploopi']['mode'] == 'frontoffice' ? "index-light.php?ploopi_op=booking_event_save&booking_event_id={$objEvent->fields['id']}&booking_moduleid={$_GET['booking_moduleid']}" : "admin-light.php?ploopi_op=booking_event_save&booking_event_id={$objEvent->fields['id']}"); ?>" method="post" onsubmit="javascript:return booking_event_validate(this);">
             <div class=ploopi_form>
                 <p>
                     <label>Ressource:</label>
-                    <select class="select" name="booking_event_id_resource">
+                    <select class="select" name="booking_event_id_resource" onchange="javascript:booking_resource_onchange(this);">
                         <option value="">(choisir)</option>
                         <?
                         $strResourceType = '';
@@ -465,6 +479,7 @@ if ($_SESSION['ploopi']['connected'])
                         ?>
                     </select>
                 </p>
+                <div style="padding:0;" id="booking_subresources"></div>
                 <p>
                     <label>Objet:</label>
                     <input name="booking_event_object" type="text" class="text" value="<? echo ploopi_htmlentities($objEvent->fields['object']); ?>">
@@ -681,6 +696,18 @@ switch($ploopi_op)
                 }
 
                 $strUrl = $_SESSION['ploopi']['mode'] == 'frontoffice' ? ploopi_urlencode("index-light.php?ploopi_op=booking_event_validate&booking_event_id={$objEvent->fields['id']}&booking_moduleid={$_GET['booking_moduleid']}") : ploopi_urlencode("admin-light.php?ploopi_op=booking_event_validate&booking_event_id={$objEvent->fields['id']}");
+
+                if ($booModify) $arrResources = booking_get_resources();
+                else $arrResources = array($objEvent->fields['id_resource'] => 1);
+
+                if (!empty($arrResources)) {
+                    $db->query("SELECT * FROM ploopi_mod_booking_subresource WHERE id_resource IN (".implode(',', array_keys($arrResources)).") AND active = 1 ORDER BY name");
+                    ?>
+                    <script type="text/javascript">
+                        booking_json_sr = <? echo json_encode(ploopi_array_map('ploopi_utf8encode', $db->getarray())); ?>;
+                    </script>
+                    <?
+                }
                 ?>
 
                 <? if ($booModifyEventGlobal) { ?><form action="<? echo $strUrl; ?>" method="post"><? } ?>
@@ -691,9 +718,8 @@ switch($ploopi_op)
                         <?
                         if ($booModify)
                         {
-                            $arrResources = booking_get_resources();
                             ?>
-                            <select class="select" name="booking_event_id_resource">
+                            <select class="select" name="booking_event_id_resource" id="booking_event_id_resource" onchange="javascript:booking_resource_onchange(this);">
                                 <option value="">(choisir)</option>
                                 <?
                                 $strResourceType = '';
@@ -724,6 +750,52 @@ switch($ploopi_op)
                         }
                         ?>
                     </p>
+                    <div style="padding:0;" id="booking_subresources"></div>
+                    <?
+                    if ($booModify)
+                    {
+                        ?>
+                        <script type="text/javascript">
+                            booking_resource_onchange($('booking_event_id_resource')[$('booking_event_id_resource').selectedIndex]);
+                            <?
+                            foreach($objEvent->getsubresources() as $intIdSR) {
+                                ?>
+                                $('booking_sr_<? echo $intIdSR; ?>').checked = true;
+                                <?
+                            }
+                            ?>
+                        </script>
+                        <?
+                    }
+                    else {
+                        $subresources = $objEvent->getsubresources();
+                        if (!empty($subresources)) {
+                            ?>
+                            <script type="text/javascript">
+                                $('booking_subresources').insert(
+                                    '<p><label>Sous-ressources</label><span id="booking_subresources_ct"></span>'
+                                );
+
+                                booking_json_sr.each(function(row) {
+                                    if (row.id_resource == <? echo intval($objEvent->fields['id_resource']); ?>) {
+                                        console.log(row);
+                                        $('booking_subresources_ct').insert(
+                                            '<span>'+row.name+'</span>'
+                                        );
+                                    }
+                                });
+                                <?
+                                foreach($objEvent->getsubresources() as $intIdSR) {
+                                    ?>
+                                    $('booking_sr_<? echo $intIdSR; ?>').checked = true;
+                                    <?
+                                }
+                                ?>
+                            </script>
+                            <?
+                        }
+                    }
+                    ?>
                     <p>
                         <label>Objet:</label>
                         <?

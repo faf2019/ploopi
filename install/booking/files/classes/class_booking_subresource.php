@@ -21,10 +21,10 @@
 */
 
 /**
- * Gestion des ressources
+ * Gestion des sous-sous-ressources
  *
  * @package booking
- * @subpackage resource
+ * @subpackage subsubresource
  * @copyright Ovensia
  * @author Stéphane Escaich
  * @version  $Revision$
@@ -37,32 +37,32 @@
 include_once './include/classes/data_object.php';
 
 /**
- * Classe d'accès à la table 'ploopi_mod_booking_resource'
+ * Classe d'accès à la table 'ploopi_mod_booking_subresource'
  *
  * @package booking
- * @subpackage resource
+ * @subpackage subresource
  * @author Stéphane Escaich
  * @copyright OVENSIA
  */
 
-class booking_resource extends data_object
+class booking_subresource extends data_object
 {
     /**
      * Constructeur de la classe
      *
-     * @return booking_resource
+     * @return booking_subresource
      */
 
-    public function booking_resource()
+    public function __construct()
     {
-        parent::data_object('ploopi_mod_booking_resource', 'id');
+        parent::data_object('ploopi_mod_booking_subresource', 'id');
     }
 
 
     /**
-     * Enregistre la ressource
+     * Enregistre la sous-ressource
      *
-     * @return int id de la ressource
+     * @return int id de la sous-ressource
      */
 
     public function save()
@@ -71,44 +71,5 @@ class booking_resource extends data_object
 
         return parent::save();
     }
-
-    /**
-     * Enregistre la ressource
-     */
-
-    public function delete()
-    {
-        global $db;
-
-        if ($this->new) $this->setuwm();
-
-        return parent::save();
-    }
-
-    /**
-     * Retourne la liste des espaces gestionnaires de la ressource dans un tableau
-     *
-     * @return array tableau contenant les espaces
-     */
-
-    public function getworkspaces()
-    {
-
-        global $db;
-
-        if (!empty($this->fields['id']))
-        {
-            $rs = $db->query("
-                SELECT  id_workspace
-                FROM    ploopi_mod_booking_resource_workspace
-                WHERE   id_resource = {$this->fields['id']}
-            ");
-
-            return $db->getarray($rs, true);
-        }
-        else return array();
-
-    }
-
 }
 ?>

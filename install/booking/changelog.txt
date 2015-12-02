@@ -1,3 +1,9 @@
+== Module BOOKING - version 1.2.0 ====================================================
+
+2015-12-02  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+* Gestion des sous-ressources
+
 == Module BOOKING - version 1.1.1 ====================================================
 
 2015-07-13  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>

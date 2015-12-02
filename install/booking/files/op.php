@@ -22,7 +22,7 @@
 
 /**
  * Opérations du module Booking
- * 
+ *
  * @package booking
  * @subpackage op
  * @copyright Ovensia
@@ -42,36 +42,41 @@ if ($_SESSION['ploopi']['mode'] == 'backoffice' && ploopi_ismoduleallowed('booki
      * Opérations sur les types de ressources
      */
     include_once './modules/booking/op_resourcetype.php';
-    
+
     /**
      * Opérations sur les ressources
      */
     include_once './modules/booking/op_resource.php';
-    
+
+    /**
+     * Opérations sur les sous-ressources
+     */
+    include_once './modules/booking/op_subresource.php';
+
     /**
      * Opérations sur les événements
      */
     include_once './modules/booking/op_event.php';
-    
+
     /**
      * Opérations sur le planning
      */
-    include_once './modules/booking/op_planning.php';    
-    
+    include_once './modules/booking/op_planning.php';
+
 }
 else // on n'est pas dans le module, peut être une requête frontoffice ?
 {
-    if ($_SESSION['ploopi']['mode'] == 'frontoffice' && !empty($_GET['booking_moduleid']) && is_numeric($_GET['booking_moduleid']) && ploopi_ismoduleallowed('booking', $_GET['booking_moduleid'])) 
+    if ($_SESSION['ploopi']['mode'] == 'frontoffice' && !empty($_GET['booking_moduleid']) && is_numeric($_GET['booking_moduleid']) && ploopi_ismoduleallowed('booking', $_GET['booking_moduleid']))
     {
         $booking_moduleid = $_GET['booking_moduleid'];
-        
+
         include_once './modules/booking/op_event.php';
-        
+
         /**
          * Opérations sur le planning
          */
         include_once './modules/booking/op_wce_planning.php';
-            
+
         ploopi_die();
     }
 }
