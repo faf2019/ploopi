@@ -71,7 +71,7 @@ class annotation extends data_object
     {
         global $db;
 
-        $this->fields['id_element'] = ploopi_search_generate_id($this->fields['id_module'], $this->fields['id_object'], $this->fields['id_record']);
+        $this->fields['id_element'] = md5(sprintf("%04d%04d%s", $this->fields['id_module'], $this->fields['id_object'], $this->fields['id_record']));
 
         $id_annotation = parent::save();
 
