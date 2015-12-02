@@ -229,6 +229,22 @@ switch($http_host)
         define ('_PLOOPI_MAIL_ERRORS', false);
 
         /**
+         * Active ou on l'écriture des erreurs dans un fichier de log.
+         * Le chemin du fichier de log est défini par la constante _PLOOPI_LOG_ERRORS_FILE.
+         *
+         * @see _PLOOPI_LOG_ERRORS_FILE
+         */
+
+        define ('_PLOOPI_LOG_ERRORS', true);
+
+        /**
+         * Fichier contenant les erreurs générées depuis Ploopi
+         *
+         * @see _PLOOPI_LOG_ERRORS
+         */
+        define ('_PLOOPI_LOG_ERRORS_FILE', '/tmp/ploopi_error.log');
+
+        /**
          * Adresse destinatrice des mails d'erreurs.
          * Plusieurs destinataires peuvent être saisis.
          * Chaque adresse doit être séparée par une virgule.

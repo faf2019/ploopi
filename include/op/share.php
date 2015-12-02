@@ -54,7 +54,7 @@ switch($ploopi_op)
                 ?>
                 <p class="ploopi_va" style="padding:2px;">
                     <a class="ploopi_share_delete_user" href="javascript:void(0);" onclick="ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_select_user&share_id=<? echo urlencode($_GET['share_id']); ?>&remove_group_id=<?php echo $group->fields['id']; ?>', 'div_share_users_selected_<? echo ploopi_htmlentities($_GET['share_id']); ?>');">
-                        <img src="./img/icon_delete.gif">
+                        <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/btn_delete.png" />
                         <span>Groupe &laquo; </span><strong><?php echo ploopi_htmlentities($group->fields['label']); ?></strong><span></span> &raquo; (Cliquez pour supprimer)</span>
                     </a>
                 </p>
@@ -72,7 +72,7 @@ switch($ploopi_op)
                 ?>
                 <p class="ploopi_va" style="padding:2px;">
                     <a class="ploopi_share_delete_user" href="javascript:void(0);" onclick="ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_select_user&share_id=<? echo urlencode($_GET['share_id']); ?>&remove_user_id=<?php echo $user->fields['id']; ?>', 'div_share_users_selected_<? echo ploopi_htmlentities($_GET['share_id']); ?>');">
-                        <img src="./img/icon_delete.gif">
+                        <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/btn_delete.png" />
                         <strong><?php echo ploopi_htmlentities("{$user->fields['lastname']} {$user->fields['firstname']}"); ?></strong><span>&nbsp;(Cliquez pour supprimer)</span>
                     </a>
                 </p>
@@ -97,6 +97,8 @@ switch($ploopi_op)
         $list['groups'] = array();
         $list['users'] = array();
 
+        $filter = isset($_REQUEST['ploopi_share_userfilter']) ? $_REQUEST['ploopi_share_userfilter'] : '';
+
         // Recherche des espaces de travail qui supportent ce module, selon la vue inverse
         $rs = $db->query("
             SELECT  w.*
@@ -112,20 +114,37 @@ switch($ploopi_op)
         while ($row = $db->fetchrow($rs))
         {
             $list['workspaces'][$row['id']]['label'] = $row['label'];
+            $list['workspaces'][$row['id']]['priority'] = $row['priority'];
             $list['workspaces'][$row['id']]['groups'] = array();
             $list['workspaces'][$row['id']]['users'] = array();
             $workspace->fields['id'] = $row['id'];
-            foreach ($workspace->getgroups() as $grp)
+            $groups = $workspace->getgroups();
+            usort($groups, function($a,$b) { return strcmp($a['label'], $b['label']); });
+            foreach ($groups as $grp)
             {
-                $list['workspaces'][$row['id']]['groups'][] = $grp['id'];
+                $list['workspaces'][$row['id']]['groups'][$grp['id']] = $grp['id'];
                 $list['groups'][$grp['id']]['label'] = $grp['label'];
             }
         }
 
+        // Tri des espaces par priorité/label
+        uasort($list['workspaces'], function ($a,$b) { return sprintf("%03d_%s", intval($b['priority']), $b['label']) < sprintf("%03d_%s", intval($a['priority']), $a['label']); });
+
         if (!empty($list['workspaces'])) {
 
-            $cleanedfilter = $db->addslashes($_GET['ploopi_share_userfilter']);
-            $userfilter = "(u.login LIKE '%{$cleanedfilter}%' OR u.firstname LIKE '%{$cleanedfilter}%' OR u.lastname LIKE '%{$cleanedfilter}%')";
+            $arrFilter = explode(' ', strtolower(ploopi_convertaccents($filter)));
+
+            $words = '';
+            foreach($arrFilter as $word)
+            {
+                if ($words != '') $words .= ' ';
+                $word = trim($word);
+                if ($word != '') $words .= '+'.$db->addslashes($word).'*';
+            }
+
+            $userfilter = $words ? "(MATCH(u.lastname, u.firstname, u.login) AGAINST ('{$words}' IN BOOLEAN MODE))" : '1=1';
+
+            $groupfilter = $words ? "(MATCH(g.label) AGAINST ('{$words}' IN BOOLEAN MODE))" : '1=1';
 
             // recherche des utilisateurs
             $query_u =  "
@@ -177,7 +196,31 @@ switch($ploopi_op)
                 $list['users'][$fields['id']] = array('id' => $fields['id'], 'login' => $fields['login'], 'lastname' => $fields['lastname'], 'firstname' => $fields['firstname']);
                 $list['groups'][$fields['id_group']]['users'][$fields['id']] = $fields['id'];
             }
+
+            // Matching groupe/recherche
+            $db->query("SELECT id FROM ploopi_group g WHERE {$groupfilter} AND id IN (".implode(',', array_keys($list['groups'])).")");
+            while ($row = $db->fetchrow()) $list['groups'][$row['id']]['match'] = 1;
+
+            // Suppression des groupes vides et qui ne matchent pas la recherche
+            foreach($list['groups'] as $id_group => $group) {
+
+
+                // groupe vide
+                if (empty($group['users'])) {
+                    // groupe ne matchant pas la recherche
+                    if (empty($group['match'])) unset($list['groups'][$id_group]);
+                    // if ($filter != '' && strpos(strtolower(ploopi_convertaccents($group['label'])), strtolower(ploopi_convertaccents($filter))) === false) unset($list['groups'][$id_group]);
+                }
+            }
+
+            // Suppression des espaces vides (ni groupe, ni utilisateur
+            foreach($list['workspaces'] as $id_workspace => $workspace) {
+                foreach($workspace['groups'] as $id_group) if (!isset($list['groups'][$id_group])) unset($list['workspaces'][$id_workspace]['groups'][$id_group]);
+
+                if (empty($list['workspaces'][$id_workspace]['groups']) && empty($list['workspaces'][$id_workspace]['users'])) unset($list['workspaces'][$id_workspace]);
+            }
         }
+
 
         if (!sizeof($list['users']) && !sizeof($list['groups']))
         {
@@ -196,47 +239,44 @@ switch($ploopi_op)
                 // pour chaque espace de travail
                 foreach($list['workspaces'] as $id_workspace => $workspace)
                 {
-                    if (!(empty($workspace['users']) && empty($workspace['groups'])))
+                    ?>
+                    <div class="ploopi_share_select_workgroup">
+                        <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_workgroup.png"><span><?php echo ploopi_htmlentities($workspace['label']); ?></span></p>
+                    </div>
+                    <?php
+                    if (!empty($workspace['users']))
                     {
-                        ?>
-                        <div class="ploopi_share_select_workgroup">
-                            <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_workgroup.png"><span><?php echo ploopi_htmlentities($workspace['label']); ?></span></p>
-                        </div>
-                        <?php
-                        if (!empty($workspace['users']))
+                        foreach($workspace['users'] as $id_user)
                         {
-                            foreach($workspace['users'] as $id_user)
-                            {
-                                $user = &$list['users'][$id_user];
-                                ?>
-                                <a class="ploopi_share_select_user" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_select_user&share_id=<?php echo urlencode($_GET['share_id']); ?>&user_id=<?php echo $id_user; ?>', 'div_share_users_selected_<?php echo ploopi_htmlentities($_GET['share_id']); ?>');">
-                                    <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span><?php echo ploopi_htmlentities("{$user['lastname']} {$user['firstname']}"); ?></span></p>
-                                </a>
-                                <?php
-                            }
+                            $user = &$list['users'][$id_user];
+                            ?>
+                            <a class="ploopi_share_select_user" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_select_user&share_id=<?php echo urlencode($_GET['share_id']); ?>&user_id=<?php echo $id_user; ?>', 'div_share_users_selected_<?php echo ploopi_htmlentities($_GET['share_id']); ?>');">
+                                <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span><?php echo ploopi_htmlentities("{$user['lastname']} {$user['firstname']}"); ?></span></p>
+                            </a>
+                            <?php
                         }
+                    }
 
-                        if (!empty($workspace['groups']))
+                    if (!empty($workspace['groups']))
+                    {
+                        foreach($workspace['groups'] as $id_grp)
                         {
-                            foreach($workspace['groups'] as $id_grp)
+                            $group = &$list['groups'][$id_grp];
+                            ?>
+                            <a class="ploopi_share_select_usergroup" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_select_user&share_id=<?php echo urlencode($_GET['share_id']); ?>&group_id=<?php echo $id_grp; ?>', 'div_share_users_selected_<?php echo ploopi_htmlentities($_GET['share_id']); ?>');">
+                                <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_group.png"><span><?php echo ploopi_htmlentities($list['groups'][$id_grp]['label']);  ?></span></p>
+                            </a>
+                            <?php
+                            if (!empty($list['groups'][$id_grp]['users']))
                             {
-                                $group = &$list['groups'][$id_grp];
-                                ?>
-                                <a class="ploopi_share_select_usergroup" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_select_user&share_id=<?php echo urlencode($_GET['share_id']); ?>&group_id=<?php echo $id_grp; ?>', 'div_share_users_selected_<?php echo ploopi_htmlentities($_GET['share_id']); ?>');">
-                                    <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_group.png"><span><?php echo ploopi_htmlentities($list['groups'][$id_grp]['label']);  ?></span></p>
-                                </a>
-                                <?php
-                                if (!empty($list['groups'][$id_grp]['users']))
+                                foreach($list['groups'][$id_grp]['users'] as $id_user)
                                 {
-                                    foreach($list['groups'][$id_grp]['users'] as $id_user)
-                                    {
-                                        $user = &$list['users'][$id_user];
-                                        ?>
-                                        <a class="ploopi_share_select_usergroup_user" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_select_user&share_id=<?php echo urlencode($_GET['share_id']); ?>&user_id=<?php echo $id_user; ?>', 'div_share_users_selected_<?php echo ploopi_htmlentities($_GET['share_id']); ?>');">
-                                            <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span><?php echo ploopi_htmlentities("{$user['lastname']} {$user['firstname']}"); ?></span></p>
-                                        </a>
-                                        <?php
-                                    }
+                                    $user = &$list['users'][$id_user];
+                                    ?>
+                                    <a class="ploopi_share_select_usergroup_user" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_select_user&share_id=<?php echo urlencode($_GET['share_id']); ?>&user_id=<?php echo $id_user; ?>', 'div_share_users_selected_<?php echo ploopi_htmlentities($_GET['share_id']); ?>');">
+                                        <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span><?php echo ploopi_htmlentities("{$user['lastname']} {$user['firstname']}"); ?></span></p>
+                                    </a>
+                                    <?php
                                 }
                             }
                         }
@@ -247,6 +287,7 @@ switch($ploopi_op)
             </div>
             <div class="ploopi_share_select_legend">
                 <p class="ploopi_va">
+                    <strong>Légende:&nbsp;</strong>
                     <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_workgroup.png"><span>Espace de Travail</span>
                     <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_group.png"><span>Groupe d'Utilisateur</span>
                     <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span>Utilisateur</span>

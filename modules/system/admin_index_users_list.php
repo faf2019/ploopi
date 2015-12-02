@@ -228,7 +228,7 @@ if ($_SESSION['system']['level'] == _SYSTEM_WORKSPACES)
     $columns['right']['adminlevel'] =
         array(
             'label' => 'Niv.',
-            'width' => 50,
+            'width' => 60,
             'options' => array('sort' => true)
         );
 
@@ -299,7 +299,7 @@ else
                     break;
                 }
 
-                $values[$c]['values']['adminlevel'] = array('label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/adminlevels/{$icon}.png\" />", 'sort_label' => $fields['adminlevel']);
+                $values[$c]['values']['adminlevel'] = array('label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/adminlevels/{$icon}.png\" />", 'style' => 'text-align:center;', 'sort_label' => $fields['adminlevel']);
 
                 if ($_SESSION['ploopi']['adminlevel'] >= $fields['adminlevel'])
                     $manage_user =  '<a href="'.ploopi_urlencode("admin.php?op=modify_user&user_id={$fields['id']}").'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_edit.png" title="'._SYSTEM_LABEL_MODIFY.'"></a>'.$action;

@@ -61,24 +61,25 @@ function ploopi_die($var = null, $flush = true)
 
     $strHost = (php_sapi_name() != 'cli') ? $_SERVER['HTTP_HOST'] : '';
 
-    if (
-        !empty($ploopi_errors_level) &&
-        $ploopi_errors_level &&
-        defined('_PLOOPI_MAIL_ERRORS') &&
-        _PLOOPI_MAIL_ERRORS  &&
-        defined('_PLOOPI_SYSMAIL') &&
-        _PLOOPI_SYSMAIL != ''
-        )
+    if (!empty($ploopi_errors_level) && $ploopi_errors_level)
     {
-        mail(
-            _PLOOPI_SYSMAIL,
-            "[{$ploopi_errorlevel[$ploopi_errors_level]}] sur [{$strHost}]",
-            "{$ploopi_errors_nb} erreur(s) sur {$ploopi_errors_msg}".
-            "\n_SERVER:\n".print_r($_SERVER, true).
-            "\n_POST:\n".print_r($_POST, true).
-            "\n_GET:\n".print_r($_GET, true),
-            "From: ".trim(current(explode(',', _PLOOPI_ADMINMAIL)))
-        );
+        if (defined('_PLOOPI_MAIL_ERRORS') && _PLOOPI_MAIL_ERRORS  && defined('_PLOOPI_SYSMAIL') && _PLOOPI_SYSMAIL != '')
+        {
+            mail(
+                _PLOOPI_SYSMAIL,
+                "[{$ploopi_errorlevel[$ploopi_errors_level]}] sur [{$strHost}]",
+                "{$ploopi_errors_nb} erreur(s) sur {$ploopi_errors_msg}".
+                "\n_SERVER:\n".print_r($_SERVER, true).
+                "\n_POST:\n".print_r($_POST, true).
+                "\n_GET:\n".print_r($_GET, true),
+                "From: ".trim(current(explode(',', _PLOOPI_ADMINMAIL)))
+            );
+        }
+
+        if (defined('_PLOOPI_LOG_ERRORS') && _PLOOPI_LOG_ERRORS && defined('_PLOOPI_LOG_ERRORS_FILE') && _PLOOPI_LOG_ERRORS_FILE != '')
+        {
+            file_put_contents(_PLOOPI_LOG_ERRORS_FILE, "=============================================\n".$ploopi_errors_msg, FILE_APPEND);
+        }
     }
 
     if (!is_null($var))

@@ -1072,4 +1072,53 @@ class ploopi_recordset
     {
         return $this->objDb->getjson($this->resRs, $booUtf8);
     }
+
+
+    /**
+     * Retourne au format CSV le contenu du recordset
+     *
+     * @param array $arrOptions options du format CSV : booHeader:true si la ligne d'entête doit être ajoutée (nom des colonnes), strFieldSep:séparateur de champs, strLineSep:séparateur de lignes, strTextSep:caractère d'encapsulation des contenus
+     * @return string une chaîne au format CSV contenant les enregistrements du recordset ou false si le recordset n'est pas valide
+     */
+    public function getcsv($arrOptions = array()) {
+
+        $arrDefaultOptions = array(
+            'booHeader' => true,
+            'strFieldSep' => ',',
+            'strLineSep' => "\n",
+            'strTextSep' => '"',
+            'booClean' => true
+        );
+
+        $arrOptions = array_merge($arrDefaultOptions, $arrOptions);
+
+        // Fonction d'échappement & formatage du contenu
+        $funcLineEchap = null;
+
+        if ($arrOptions['strTextSep'] != '') {
+            $funcLineEchap = create_function('$value', 'return \''.$arrOptions['strTextSep'].'\'.str_replace(\''.$arrOptions['strTextSep'].'\', \''.$arrOptions['strTextSep'].$arrOptions['strTextSep'].'\', $value).\''.$arrOptions['strTextSep'].'\';');
+        } elseif ($arrOptions['strFieldSep'] != '') {
+            $funcLineEchap = create_function('$value', 'return str_replace(\''.$arrOptions['strFieldSep'].'\', \'\\'.$arrOptions['strFieldSep'].'\', $value);');
+        }
+
+        $booHeader = false;
+        $strCsv = '';
+
+        while ($row = $this->fetchrow()) {
+
+            if ($arrOptions['booClean']) $row = ploopi_array_map('ploopi_iso8859_clean', $row);
+
+            // Ajout de la ligne d'entête
+            if ($arrOptions['booHeader'] && !$booHeader) {
+                $booHeader = true;
+                $strCsv = implode($arrOptions['strFieldSep'], is_null($funcLineEchap) ? array_keys($row) : ploopi_array_map($funcLineEchap, array_keys($row))).$arrOptions['strLineSep'];
+            }
+
+            $strCsv .= implode($arrOptions['strFieldSep'], is_null($funcLineEchap) ? $row : ploopi_array_map($funcLineEchap, $row)).$arrOptions['strLineSep'];
+
+        }
+
+        return $strCsv;
+    }
+
 }

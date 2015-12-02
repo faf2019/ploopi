@@ -75,22 +75,36 @@ switch ($_SESSION['ploopi']['mainmenu'])
                 {
                     if ($_SESSION['ploopi']['modules'][$menu_moduleid]['active'] && $_SESSION['ploopi']['modules'][$menu_moduleid]['visible'])
                     {
-                        $blockpath = "./modules/{$_SESSION['ploopi']['modules'][$menu_moduleid]['moduletype']}/block.php";
+                        $strmtype = $_SESSION['ploopi']['modules'][$menu_moduleid]['moduletype'];
+                        $blockpath = "./modules/{$strmtype}/block.php";
 
                         if (file_exists($blockpath))
                         {
-                            $arrBlocks[$menu_moduleid] =
-                                array(
-                                    'title'=> $_SESSION['ploopi']['modules'][$menu_moduleid]['label'],
-                                    'description' => '',
-                                    'url' => ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public"),
-                                    'file' => $blockpath
-                                );
+                            $strClassPath = "./modules/{$strmtype}/classes/{$strmtype}.php";
 
-                            $block = new block();
-                            include($blockpath);
-                            $arrBlocks[$menu_moduleid]['menu'] = $block->getmenu();
-                            $arrBlocks[$menu_moduleid]['content'] = $block->getcontent();
+                            $booAllowed = true;
+                            if (file_exists($strClassPath))
+                            {
+                                include_once $strClassPath;
+
+                                if (method_exists($strmtype, 'isAllowed') && !$strmtype::isAllowed($_SESSION['ploopi']['workspaceid'], $menu_moduleid)) $booAllowed = false;
+                            }
+
+                            if ($booAllowed)
+                            {
+                                $arrBlocks[$menu_moduleid] =
+                                    array(
+                                        'title'=> $_SESSION['ploopi']['modules'][$menu_moduleid]['label'],
+                                        'description' => '',
+                                        'url' => ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public"),
+                                        'file' => $blockpath
+                                    );
+
+                                $block = new block();
+                                include($blockpath);
+                                $arrBlocks[$menu_moduleid]['menu'] = $block->getmenu();
+                                $arrBlocks[$menu_moduleid]['content'] = $block->getcontent();
+                            }
                         }
                     }
                 }

@@ -56,7 +56,7 @@ switch($ploopi_op)
                 ?>
                 <p class="ploopi_va" style="padding:2px;">
                     <a class="ploopi_validation_delete_user" href="javascript:void(0);" onclick="ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=validation_select_user&validation_id=<?php echo urlencode($_GET['validation_id']); ?>&remove_group_id=<?php echo $group->fields['id']; ?>', 'div_validation_users_selected_<?php echo ploopi_htmlentities($_GET['validation_id']); ?>');">
-                        <img src="./img/icon_delete.gif">
+                        <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/btn_delete.png" />
                         <span>Groupe &laquo; </span><strong><?php echo ploopi_htmlentities($group->fields['label']); ?></strong><span></span> &raquo; (Cliquez pour supprimer)</span>
                     </a>
                 </p>
@@ -74,7 +74,7 @@ switch($ploopi_op)
                 ?>
                 <p class="ploopi_va" style="padding:2px;">
                     <a class="ploopi_validation_delete_user" href="javascript:void(0);" onclick="ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=validation_select_user&validation_id=<?php echo urlencode($_GET['validation_id']); ?>&remove_user_id=<?php echo $user->fields['id']; ?>', 'div_validation_users_selected_<?php echo ploopi_htmlentities($_GET['validation_id']); ?>');">
-                        <img src="./img/icon_delete.gif">
+                        <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/btn_delete.png" />
                         <strong><?php echo ploopi_htmlentities("{$user->fields['lastname']} {$user->fields['firstname']}"); ?></strong><span>&nbsp;(Cliquez pour supprimer)</span>
                     </a>
                 </p>

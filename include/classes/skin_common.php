@@ -447,6 +447,30 @@ class skin_common
                 }
             }
 
+            if (!empty($array['columns']['actions_left']))
+            {
+                foreach($array['columns']['actions_left'] as $id => $c)
+                {
+                    if (!empty($c['options']['sort']))
+                    {
+                        $array['columns']['actions_right'][$id]['onclick'] = "ploopi_skin_array_refresh('{$strArrayId}', '{$id}');";
+                        $array['sortable_columns'][] = $id;
+                    }
+                }
+            }
+
+            if (!empty($array['columns']['actions_right']))
+            {
+                foreach($array['columns']['actions_right'] as $id => $c)
+                {
+                    if (!empty($c['options']['sort']))
+                    {
+                        $array['columns']['actions_right'][$id]['onclick'] = "ploopi_skin_array_refresh('{$strArrayId}', '{$id}');";
+                        $array['sortable_columns'][] = $id;
+                    }
+                }
+            }
+
         }
 
         $objSV = new serializedvar($strArrayId);
@@ -484,6 +508,7 @@ class skin_common
         if ($array == false) return;
 
         $sort_img = '';
+        $sortable_img = "<img src=\"{$this->values['path']}/arrays/arrows.png\" style=\"opacity:0.5\" />";
 
         // index temporaire (pour tri à l'affichage)
         $array['index'] = array();
@@ -537,15 +562,16 @@ class skin_common
             foreach($array['values'] as $key => $value)
             {
                 $label = isset($value['values'][$array['orderby']]['sort_label']) ? 'sort_label' : 'label';
-                $idx = is_numeric($value['values'][$array['orderby']][$label]) ? sprintf("%064s_%06s", $value['values'][$array['orderby']][$label], $c++) : sprintf("%s_%06s", strtoupper(ploopi_convertaccents($value['values'][$array['orderby']][$label])), $c++);
-
+                $idx = sprintf("%s_%06s", strtoupper(ploopi_convertaccents($value['values'][$array['orderby']][$label])), $c++);
                 $array['index'][$idx] = $key;
             }
 
-            if ($array['sort'] == 'ASC') ksort($array['index'], SORT_STRING);
-            else krsort($array['index'], SORT_STRING);
+            $flag = isset($value['values'][$array['orderby']]['sort_flag']) ? $value['values'][$array['orderby']]['sort_flag'] : SORT_STRING;
 
-            $sort_img = ($array['sort'] == 'DESC') ? "<img src=\"{$this->values['path']}/arrays/arrow_down.png\">" : "<img src=\"{$this->values['path']}/arrays/arrow_up.png\">";
+            if ($array['sort'] == 'ASC') ksort($array['index'], $flag);
+            else krsort($array['index'], $flag);
+
+            $sort_img = ($array['sort'] == 'DESC') ? "<img src=\"{$this->values['path']}/arrays/arrow_down.png\" />" : "<img src=\"{$this->values['path']}/arrays/arrow_up.png\" />";
 
         }
         else $array['index'] = array_keys($array['values']);
@@ -633,7 +659,7 @@ class skin_common
 
         $w = 0;
 
-        // plus la colonne optionnelle de auche (actions)
+        // plus la colonne optionnelle de gauche (actions)
         if (!empty($array['columns']['actions_left']))
         {
             foreach($array['columns']['actions_left'] as $id => $c)
@@ -670,9 +696,28 @@ class skin_common
                 {
                     foreach($array['columns']['actions_right'] as $id => $c)
                     {
-                        ?>
-                        <a href="<?php echo (!empty($c['url'])) ? $c['url'] : 'javascript:void(0);'; ?>" <?php if (!empty($c['onclick'])) echo "onclick=\"javascript:{$c['onclick']}\""; ?>" style="width:<?php echo $c['width']; ?>px;float:right;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element"><p><span><?php echo $c['label']; ?>&nbsp;</span></p></a>
-                        <?php
+                        $img = '';
+                        $class = '';
+                        if ($array['orderby'] == $id)
+                        {
+                            $img = $sort_img;
+                            if (empty($c['style'])) $c['style'] = '';
+                            $class = 'ploopi_explorer_element_selected';
+                        }
+                        elseif (!empty($c['options']['sort'])) {
+                            $img = $sortable_img;
+                        }
+
+                        if (!empty($c['url']) || !empty($c['onclick'])) {
+                            ?>
+                            <a href="<?php echo (!empty($c['url'])) ? $c['url'] : 'javascript:void(0);'; ?>" <?php if (!empty($c['onclick'])) echo "onclick=\"javascript:{$c['onclick']}\""; ?>" style="width:<?php echo $c['width']; ?>px;float:right;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element"><p><span><?php echo $c['label']; ?>&nbsp;</span><?php echo $img; ?></p></a>
+                            <?
+                        }
+                        else {
+                            ?>
+                            <span style="width:<?php echo $c['width']; ?>px;float:right;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element"><p><span><?php echo $c['label']; ?>&nbsp;</span><?php echo $img; ?></p></span>
+                            <?
+                        }
                     }
                 }
 
@@ -689,9 +734,20 @@ class skin_common
                             if (empty($c['style'])) $c['style'] = '';
                             $class = 'ploopi_explorer_element_selected';
                         }
-                        ?>
-                        <a href="<?php echo (!empty($c['url'])) ? $c['url'] : 'javascript:void(0);'; ?>" <?php if (!empty($c['onclick'])) echo "onclick=\"javascript:{$c['onclick']}\""; ?>" style="width:<?php echo $c['width']; ?>px;float:right;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element ploopi_explorer_element_right <? echo $class; ?>"><p><span><?php echo $c['label']; ?>&nbsp;</span><?php echo $img; ?></p></a>
-                        <?php
+                        elseif (!empty($c['options']['sort'])) {
+                            $img = $sortable_img;
+                        }
+
+                        if (!empty($c['url']) || !empty($c['onclick'])) {
+                            ?>
+                            <a href="<?php echo (!empty($c['url'])) ? $c['url'] : 'javascript:void(0);'; ?>" <?php if (!empty($c['onclick'])) echo "onclick=\"javascript:{$c['onclick']}\""; ?>" style="width:<?php echo $c['width']; ?>px;float:right;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element ploopi_explorer_element_right <? echo $class; ?>"><p><span><?php echo $c['label']; ?>&nbsp;</span><?php echo $img; ?></p></a>
+                            <?
+                        }
+                        else {
+                            ?>
+                            <span style="width:<?php echo $c['width']; ?>px;float:right;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element ploopi_explorer_element_right <? echo $class; ?>"><p><span><?php echo $c['label']; ?>&nbsp;</span><?php echo $img; ?></p></span>
+                            <?
+                        }
                     }
                 }
 
@@ -700,9 +756,28 @@ class skin_common
                 {
                     foreach($array['columns']['actions_left'] as $id => $c)
                     {
-                        ?>
-                        <a href="<?php echo (!empty($c['url'])) ? $c['url'] : 'javascript:void(0);'; ?>" <?php if (!empty($c['onclick'])) echo "onclick=\"javascript:{$c['onclick']}\""; ?>" style="width:<?php echo $c['width']; ?>px;float:left;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element"><p><span><?php echo $c['label']; ?>&nbsp;</span></p></a>
-                        <?php
+                        $img = '';
+                        $class = '';
+                        if ($array['orderby'] == $id)
+                        {
+                            $img = $sort_img;
+                            if (empty($c['style'])) $c['style'] = '';
+                            $class = 'ploopi_explorer_element_selected';
+                        }
+                        elseif (!empty($c['options']['sort'])) {
+                            $img = $sortable_img;
+                        }
+
+                        if (!empty($c['url']) || !empty($c['onclick'])) {
+                            ?>
+                            <a href="<?php echo (!empty($c['url'])) ? $c['url'] : 'javascript:void(0);'; ?>" <?php if (!empty($c['onclick'])) echo "onclick=\"javascript:{$c['onclick']}\""; ?>" style="width:<?php echo $c['width']; ?>px;float:left;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element <? echo $class; ?>"><p><span><?php echo $c['label']; ?>&nbsp;</span><?php echo $img; ?></p></a>
+                            <?
+                        }
+                        else {
+                            ?>
+                            <span style="width:<?php echo $c['width']; ?>px;float:left;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element <? echo $class; ?>"><p><span><?php echo $c['label']; ?>&nbsp;</span><?php echo $img; ?></p></span>
+                            <?
+                        }
                     }
                 }
 
@@ -719,9 +794,20 @@ class skin_common
                             if (empty($c['style'])) $c['style'] = '';
                             $class = 'ploopi_explorer_element_selected';
                         }
-                        ?>
-                        <a href="<?php echo (!empty($c['url'])) ? $c['url'] : 'javascript:void(0);'; ?>" <?php if (!empty($c['onclick'])) echo "onclick=\"javascript:{$c['onclick']}\""; ?>" style="width:<?php echo $c['width']; ?>px;float:left;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element <? echo $class; ?>"><p><span><?php echo $c['label']; ?>&nbsp;</span><?php echo $img; ?></p></a>
-                        <?php
+                        elseif (!empty($c['options']['sort'])) {
+                            $img = $sortable_img;
+                        }
+
+                        if (!empty($c['url']) || !empty($c['onclick'])) {
+                            ?>
+                            <a href="<?php echo (!empty($c['url'])) ? $c['url'] : 'javascript:void(0);'; ?>" <?php if (!empty($c['onclick'])) echo "onclick=\"javascript:{$c['onclick']}\""; ?>" style="width:<?php echo $c['width']; ?>px;float:left;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element <? echo $class; ?>"><p><span><?php echo $c['label']; ?>&nbsp;</span><?php echo $img; ?></p></a>
+                            <?
+                        }
+                        else {
+                            ?>
+                            <span style="width:<?php echo $c['width']; ?>px;float:left;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element <? echo $class; ?>"><p><span><?php echo $c['label']; ?>&nbsp;</span><?php echo $img; ?></p></span>
+                            <?
+                        }
                     }
                 }
 
@@ -738,9 +824,21 @@ class skin_common
                             if (empty($c['style'])) $c['style'] = '';
                             $class = 'ploopi_explorer_element_selected';
                         }
-                        ?>
-                        <a href="<?php echo (!empty($c['url'])) ? $c['url'] : 'javascript:void(0);'; ?>" <?php if (!empty($c['onclick'])) echo "onclick=\"javascript:{$c['onclick']}\""; ?>" style="overflow:auto;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element <? echo $class; ?>"><p><span><?php echo $c['label']; ?>&nbsp;</span><?php echo $img; ?></p></a>
-                        <?php
+                        elseif (!empty($c['options']['sort'])) {
+                            $img = $sortable_img;
+                        }
+
+                        if (!empty($c['url']) || !empty($c['onclick'])) {
+                            ?>
+                            <a href="<?php echo (!empty($c['url'])) ? $c['url'] : 'javascript:void(0);'; ?>" <?php if (!empty($c['onclick'])) echo "onclick=\"javascript:{$c['onclick']}\""; ?>" style="overflow:auto;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element <? echo $class; ?>"><p><span><?php echo $c['label']; ?>&nbsp;</span><?php echo $img; ?></p></a>
+                            <?
+                        }
+                        else {
+                            ?>
+                            <span style="overflow:auto;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element <? echo $class; ?>"><p><span><?php echo $c['label']; ?>&nbsp;</span><?php echo $img; ?></p></span>
+                            <?
+                        }
+
                     }
                 }
                 ?>
@@ -787,7 +885,7 @@ class skin_common
                         // alternance des couleurs (une ligne sur 2) : on joue sur les css
                         $color = (empty($color) || $color == 1) ? 2 : 1;
                         ?>
-                        <div <?php if (!empty($v['id'])) echo "id=\"{$v['id']}\""; ?> class="ploopi_explorer_line_<?php echo $color; ?>" <?php if (!empty($v['style'])) echo "style=\"{$v['style']}\""; ?>>
+                        <div <?php if (!empty($v['id'])) echo "id=\"{$v['id']}\""; ?> class="ploopi_explorer_line_<?php echo $color; ?><?php if (!empty($v['class'])) echo " {$v['class']}"; ?>" <?php if (!empty($v['style'])) echo "style=\"{$v['style']}\""; ?>>
                             <?php
                             if (!empty($array['columns']['actions_right']))
                             {

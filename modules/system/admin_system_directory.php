@@ -66,7 +66,7 @@ if (!isset($arrFilter['ploopi_email'])) $arrFilter['ploopi_email'] = '';
 $_SESSION['system']['directoryform'] = $arrFilter;
 ?>
 <form action="<?php echo ploopi_urlencode('admin.php?sysToolbarItem=directory'); ?>" method="post">
-<p class="ploopi_va" style="padding:4px;">
+<p class="ploopi_va" style="padding:4px;line-height:30px;">
     <label>Nom: </label>
     <input type="text" class="text" name="ploopi_lastname" value="<?php echo ploopi_htmlentities($arrFilter['ploopi_lastname']); ?>" style="width:120px;" tabindex="100" />
 
@@ -79,8 +79,6 @@ $_SESSION['system']['directoryform'] = $arrFilter;
     <label>Email: </label>
     <input type="text" class="text" name="ploopi_email" value="<?php echo ploopi_htmlentities($arrFilter['ploopi_email']); ?>" style="width:200px;" tabindex="120" />
 
-</p>
-<p class="ploopi_va" style="padding:4px;border-bottom:1px solid #ccc;">
     <label>Groupe: </label>
     <input type="text" class="text" name="ploopi_group" value="<?php echo ploopi_htmlentities($arrFilter['ploopi_group']); ?>" style="width:150px;" tabindex="115" />
 
@@ -633,7 +631,7 @@ if ($intNbRep <= $intMaxResponse && $intNbRep > 0)
                         if (!empty($row['groups']) && in_array($intIdGrp, array_keys($row['groups'])))
                         {
                             foreach($arrDetail as $intIdRole => $arrR)
-                                $arrUserWspRoles[$intIdRole] = $_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPADMIN ?
+                                $arrUserWspRoles[$intIdRole] = $_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_SYSTEMADMIN ?
                                     sprintf(
                                         "<a title=\"Accéder à ce rôle\" href=\"%s\">%s</a><span>&nbsp;(</span><a title=\"Accéder à ce module\" href=\"%s\">%s</a><span>)</span>",
                                         ploopi_urlencode("admin.php?system_level=work&workspaceid={$intIdWorkspace}&wspToolbarItem=tabRoles&op=modify_role&roleid={$intIdRole}"),
@@ -648,7 +646,7 @@ if ($intNbRep <= $intMaxResponse && $intNbRep > 0)
                 if (isset($arrRoles['users'][$intIdWorkspace][$intUserId]))
                 {
                     foreach($arrRoles['users'][$intIdWorkspace][$intUserId] as $intIdRole => $arrR)
-                        $arrUserWspRoles[$intIdRole] = $_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPADMIN ?
+                        $arrUserWspRoles[$intIdRole] = $_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_SYSTEMADMIN ?
                             sprintf(
                                     "<a title=\"Accéder à ce rôle\" href=\"%s\">%s</a><span>&nbsp;(</span><a title=\"Accéder à ce module\" href=\"%s\">%s</a><span>)</span>",
                                     ploopi_urlencode("admin.php?system_level=work&workspaceid={$intIdWorkspace}&wspToolbarItem=tabRoles&op=modify_role&roleid={$intIdRole}"),
