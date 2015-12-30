@@ -883,6 +883,21 @@ abstract class ploopi_loader
 
             if ($_SESSION['ploopi']['connected'])
             {
+                if (isset($_REQUEST['ploopi_mainmenu']) && is_numeric($_REQUEST['ploopi_mainmenu']))
+                    $ploopi_mainmenu = $_REQUEST['ploopi_mainmenu'];
+
+                if (isset($_REQUEST['ploopi_workspaceid']) && is_numeric($_REQUEST['ploopi_workspaceid']))
+                    $ploopi_workspaceid = $_REQUEST['ploopi_workspaceid'];
+
+                if (isset($_REQUEST['ploopi_moduleid']) && is_numeric($_REQUEST['ploopi_moduleid']))
+                    $ploopi_moduleid = $_REQUEST['ploopi_moduleid'];
+
+                if (isset($_REQUEST['ploopi_action']))
+                    $ploopi_action = $_REQUEST['ploopi_action'];
+
+                if (isset($_REQUEST['ploopi_token']))
+                    $strToken = $_REQUEST['ploopi_token'];
+
                 if (_PLOOPI_TOKEN) {
                     // Vérification de la validité du jeton
                     // On autorise un jeton non valide ou non fourni à l'unique condition que la requête ne contienne aucun paramètre
@@ -900,22 +915,10 @@ abstract class ploopi_loader
                         ploopi_die();
                     }
 
-                    // Mise à jour de la validité du jeon
+                    // Mise à jour de la validité du jeton
                     unset($_SESSION['ploopi']['tokens'][$strToken]);
                     $_SESSION['ploopi']['tokens'][$strToken] = time();
                 }
-
-                if (isset($_REQUEST['ploopi_mainmenu']) && is_numeric($_REQUEST['ploopi_mainmenu']))
-                    $ploopi_mainmenu = $_REQUEST['ploopi_mainmenu'];
-
-                if (isset($_REQUEST['ploopi_workspaceid']) && is_numeric($_REQUEST['ploopi_workspaceid']))
-                    $ploopi_workspaceid = $_REQUEST['ploopi_workspaceid'];
-
-                if (isset($_REQUEST['ploopi_moduleid']) && is_numeric($_REQUEST['ploopi_moduleid']))
-                    $ploopi_moduleid = $_REQUEST['ploopi_moduleid'];
-
-                if (isset($_REQUEST['ploopi_action']))
-                    $ploopi_action = $_REQUEST['ploopi_action'];
 
                 // Cas particulier de la connexion ou du transfert front/back
                 if (empty($ploopi_mainmenu) && empty($_SESSION['ploopi']['mainmenu'])) $ploopi_mainmenu = _PLOOPI_MENU_WORKSPACES;
