@@ -98,7 +98,7 @@ foreach ($ownmodules as $index => $module)
 
     if ($module['transverseview']) $viewmode .= ' '._SYSTEM_LABEL_TRANSVERSE;
 
-    $values[$c]['values']['position'] = array('label' => "{$updown}{$module['position']}", 'sort_label' => $module['position']);
+    $values[$c]['values']['position'] = array('label' => "{$updown}{$module['position']}", 'sort_label' => $module['position'], 'sort_flag' => SORT_NUMERIC);
     $values[$c]['values']['type'] = array('label' => ploopi_htmlentities($module['label']));
     $values[$c]['values']['name'] = array('label' => ploopi_htmlentities($module['instancename']));
     $values[$c]['values']['viewmode'] = array('label' => $viewmode);
