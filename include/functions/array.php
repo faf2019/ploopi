@@ -432,7 +432,7 @@ function ploopi_array2excel($arrArray, $booHeader = true, $strFileName = 'docume
                 else $strValue = &$mixValue;
                 // Conversion date
                 if (isset($arrDataFormats[$strKey]['type']) && in_array($arrDataFormats[$strKey]['type'], array('datetime', 'date'))) {
-                    $strValue = PHPExcel_Shared_Date::PHPToExcel($strValue);
+                    $strValue = PHPExcel_Shared_Date::PHPToExcel($strValue + date('Z', $strValue));
                 }
 
                 // Calcul colonne type Excel "Bijective base-26"
