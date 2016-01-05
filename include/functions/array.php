@@ -59,10 +59,10 @@ function ploopi_array2xml($arrArray, $strRootName = 'data', $strDefaultTagName =
 {
     include_once './lib/array2xml/Array2Xml.php';
     $arrArray = ploopi_array_map('utf8_encode', $arrArray);
-    
+
     Array2XML::init('1.0', $strEncoding);
     $xml = Array2XML::createXML($strRootName, array($strDefaultTagName => $arrArray));
-    return $xml->saveXML();    
+    return $xml->saveXML();
 }
 
 /**
@@ -95,7 +95,7 @@ function ploopi_array2csv($arrArray, $arrOptions = array())
 
         // Fonction d'échappement & formatage du contenu
         $funcLineEchap = null;
-        
+
         if ($arrOptions['strTextSep'] != '') {
             $funcLineEchap = create_function('$value', 'return \''.$arrOptions['strTextSep'].'\'.str_replace(\''.$arrOptions['strTextSep'].'\', \''.$arrOptions['strTextSep'].$arrOptions['strTextSep'].'\', $value).\''.$arrOptions['strTextSep'].'\';');
         } elseif ($arrOptions['strFieldSep'] != '') {
@@ -431,7 +431,7 @@ function ploopi_array2excel($arrArray, $booHeader = true, $strFileName = 'docume
                 else $strValue = &$mixValue;
                 // Conversion date
                 if (isset($arrDataFormats[$strKey]['type']) && in_array($arrDataFormats[$strKey]['type'], array('datetime', 'date'))) {
-                    $strValue = PHPExcel_Shared_Date::PHPToExcel($strValue);
+                    $strValue = PHPExcel_Shared_Date::PHPToExcel($strValue + date('Z', $strValue));
                 }
 
                 // Calcul colonne type Excel "Bijective base-26"
