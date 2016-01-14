@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="iso-8859-1" standalone="no" ?>
+<ploopi>
+    <ploopi_mb_object>
+    <row>
+        <id>1</id>
+        <label>Fichier</label>
+        <script>ploopi_workspaceid=&lt;IDWORKSPACE&gt;&amp;ploopi_moduleid=&lt;IDMODULE&gt;&amp;ploopi_action=public&amp;espacedoc_menu=recherche&amp;espacedoc_recherche_tab=theme&amp;espacedoc_document_id=&lt;IDRECORD&gt;</script>
+    </row>
+    </ploopi_mb_object>
+</ploopi>
+
