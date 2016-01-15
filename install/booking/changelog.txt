@@ -1,3 +1,17 @@
+== Module BOOKING - version 1.2.2 ====================================================
+
+2016-01-15  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+* Corrections sur l'affichage du popup des ressources
+* Correction d'un notice
+
+== Module BOOKING - version 1.2.1 ====================================================
+
+2016-01-14  Jean-Pierre PAWLAK ~ SGAMI-EST/DSIC  <jean-pierre.pawlak@interieur.gouv.fr>
+
+* Nouveaux paramètres de module : Visualisation du calendrier par défaut, Multi-colonnes par défaut
+* Cochage/décochage de l'ensemble des ressources d'un type sur la pop-up du planning
+
 == Module BOOKING - version 1.2.0 ====================================================
 
 2015-12-02  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>

@@ -59,15 +59,24 @@ if (isset($_REQUEST['booking_day'])) $arrSearchPattern['booking_day'] = $_REQUES
 $booDateModify = isset($_REQUEST['booking_month']) || isset($_REQUEST['booking_year']) || isset($_REQUEST['booking_week']) || isset($_REQUEST['booking_day']);
 
 // Init des valeurs par défaut
-if (!isset($arrSearchPattern['booking_display_type'])) $arrSearchPattern['booking_display_type'] = 'month';
+// JPP Remplacé 
+// if (!isset($arrSearchPattern['booking_display_type'])) $arrSearchPattern['booking_display_type'] = 'month';
+// JPP Début remplacement
+$param_display_type = ploopi_getparam('booking_default_display_type');
+if (!isset($arrSearchPattern['booking_display_type'])) $arrSearchPattern['booking_display_type'] = empty( $param_display_type) ? 'month' : $param_display_type;
+// JPP Fin remplacement
 if (!isset($arrSearchPattern['booking_size'])) $arrSearchPattern['booking_size'] = $arrBookingSize[0];
 if (!isset($arrSearchPattern['booking_resources'])) $arrSearchPattern['booking_resources'] = array();
 if (!isset($arrSearchPattern['booking_validated'])) $arrSearchPattern['booking_validated'] = '';
-if (!isset($arrSearchPattern['booking_channels'])) $arrSearchPattern['booking_channels'] = 1;
+// JPP Remplacé 
+// if (!isset($arrSearchPattern['booking_channels'])) $arrSearchPattern['booking_channels'] = 1;
+// JPP Début remplacement
+$param_booking_channels = ploopi_getparam('booking_default_channels');
+if (!isset($arrSearchPattern['booking_channels'])) $arrSearchPattern['booking_channels'] = empty($param_booking_channels) ? 1 : $param_booking_channels;
+// JPP Fin remplacement
 
 // Init de la date "virtuelle"
 if (!isset($arrSearchPattern['booking_virtualdate'])) $arrSearchPattern['booking_virtualdate'] = time();
-
 
 if ($booDateModify) // modification de la date de visualisation
 {

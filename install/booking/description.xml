@@ -2,9 +2,9 @@
 <ploopi>
     <moduletype>
         <label>booking</label>
-        <version>1.2.0</version>
+        <version>1.2.2</version>
         <author>Ovensia</author>
-        <date>20151202000000</date>
+        <date>20160115000000</date>
         <description>Gestion de réservation</description>
       <paramtype>
          <name>booking_front_planning_width</name>
@@ -23,6 +23,44 @@
       <paramtype>
          <name>booking_eventfilter</name>
          <label>Visualiser seulement les événements validés</label>
+         <default_value>1</default_value>
+         <public>1</public>
+         <description/>
+         <paramchoice>
+            <value>1</value>
+            <displayed_value>oui</displayed_value>
+         </paramchoice>
+         <paramchoice>
+            <value>0</value>
+            <displayed_value>non</displayed_value>
+         </paramchoice>
+      </paramtype>
+      <paramtype>
+         <name>booking_default_display_type</name>
+         <label>Visualisation par défaut</label>
+         <default_value>month</default_value>
+         <public>1</public>
+         <description/>
+         <paramchoice>
+            <value>month</value>
+            <displayed_value>Mensuelle</displayed_value>
+         </paramchoice>
+         <paramchoice>
+            <value>week</value>
+            <displayed_value>Hebdomadaire</displayed_value>
+         </paramchoice>
+         <paramchoice>
+            <value>day</value>
+            <displayed_value>Journalière</displayed_value>
+         </paramchoice>
+          <paramchoice>
+            <value>today</value>
+            <displayed_value>Aujourd'hui</displayed_value>
+         </paramchoice>
+     </paramtype>
+      <paramtype>
+         <name>booking_default_channels</name>
+         <label>Multi-colonnes par défaut</label>
          <default_value>1</default_value>
          <public>1</public>
          <description/>
