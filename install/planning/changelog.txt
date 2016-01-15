@@ -1,3 +1,9 @@
+== Module Planning - version 0.8.3 ====================================================
+
+2016-01-15  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+* Correction d'un notice
+
 == Module Planning - version 0.8.2 ====================================================
 
 2014-12-22  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>

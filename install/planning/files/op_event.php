@@ -131,6 +131,7 @@ switch($ploopi_op)
         include_once './modules/planning/classes/class_planning_event.php';
         include_once './modules/planning/classes/class_planning_event_detail.php';
 
+        global $arrPlanningPeriodicity;
 
         $arrResources = ($_SESSION['ploopi']['mode'] == 'frontoffice') ? planning_get_resources(false, $_GET['planning_moduleid']) : planning_get_resources();
 
