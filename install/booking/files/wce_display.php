@@ -34,6 +34,8 @@
 
 include_once './include/classes/calendar.php';
 
+global $arrBookingColor;
+
 // INIT PATTERN de recherche
 $arrSearchPattern = array();
 

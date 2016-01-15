@@ -1,3 +1,9 @@
+== Module BOOKING - version 1.0.13 ====================================================
+
+2016-01-15  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+* Correction d'un notice
+
 == Module BOOKING - version 1.0.12 ====================================================
 
 2015-10-13  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
