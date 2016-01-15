@@ -131,6 +131,7 @@ switch($ploopi_op)
         include_once './modules/planning/classes/class_planning_event.php';
         include_once './modules/planning/classes/class_planning_event_detail.php';
 
+        global $arrPlanningPeriodicity;
 
         $arrResources = ($_SESSION['ploopi']['mode'] == 'frontoffice') ? planning_get_resources(false, $_GET['planning_moduleid']) : planning_get_resources();
 
@@ -203,7 +204,7 @@ switch($ploopi_op)
                                 <em class="ploopi_checkbox" onclick="javascript:ploopi_checkbox_click(event, '_planning_eventresource_id<? echo $strResourceType[0].$row['id']; ?>');">
                                     <input type="checkbox" name="_planning_eventresource_id[<? echo $strResourceType; ?>][<? echo $row['id']; ?>]" id="_planning_eventresource_id<? echo $strResourceType[0].$row['id']; ?>" value="<? echo $row['id']; ?>" <? if ($booChecked) echo 'checked="checked"'; ?>/>
                                     <img style="background-color:<? echo $row['color']; ?>;" src="./modules/planning/img/ico_<? echo $strResourceType; ?>.png" />
-                                    <? echo $row['label']; ?>
+                                    <? echo ploopi_htmlentities($row['label']); ?>
                                 </em>
                                 <?
                             }
@@ -231,7 +232,7 @@ switch($ploopi_op)
                                     ?>
                                     <em style="display:block;">
                                         <img style="background-color:<? echo $row['color']; ?>;" src="./modules/planning/img/ico_<? echo $strResourceType; ?>.png" />
-                                        <? echo $row['label']; ?>
+                                        <? echo ploopi_htmlentities($row['label']); ?>
                                     </em>
                                     <?
                                 }
@@ -262,13 +263,13 @@ switch($ploopi_op)
                 if (ploopi_isactionallowed(_PLANNING_ADD_EVENT))
                 {
                     ?>
-                    <input name="_planning_event_timestp_begin_d" id="_planning_event_timestp_begin_d" class="text" type="text" value="<? echo $arrDateTimeBegin['date']; ?>" style="width:80px;" <? if ($ploopi_op == 'planning_event_add') { ?>onchange="javascript:$('_planning_event_timestp_end_d').value = this.value;"<? } ?> />
+                    <input name="_planning_event_timestp_begin_d" id="_planning_event_timestp_begin_d" class="text" type="text" value="<?php echo ploopi_htmlentities($arrDateTimeBegin['date']); ?>" style="width:80px;" <? if ($ploopi_op == 'planning_event_add') { ?>onchange="javascript:$('_planning_event_timestp_end_d').value = this.value;"<? } ?> />
                     <?php ploopi_open_calendar('_planning_event_timestp_begin_d'); ?>
                     <?
                 }
                 else
                 {
-                    ?><span><? echo $arrDateTimeBegin['date']; ?></span><?
+                    ?><span><? echo ploopi_htmlentities($arrDateTimeBegin['date']); ?></span><?
                 }
                 ?>
 
@@ -299,7 +300,7 @@ switch($ploopi_op)
                 }
                 else
                 {
-                    ?><span><? echo $arrDateTimeBegin['time'][0].':'.$arrDateTimeBegin['time'][1]; ?></span><?
+                    ?><span><? echo ploopi_htmlentities($arrDateTimeBegin['time'][0].':'.$arrDateTimeBegin['time'][1]); ?></span><?
                 }
                 ?>
             </p>
@@ -309,7 +310,7 @@ switch($ploopi_op)
                 ?>
                 <p>
                     <label>Date de fin:</label>
-                    <input name="_planning_event_timestp_end_d" id="_planning_event_timestp_end_d" class="text" type="text" value="<? echo $arrDateTimeEnd['date']; ?>" style="width:80px; "/>
+                    <input name="_planning_event_timestp_end_d" id="_planning_event_timestp_end_d" class="text" type="text" value="<?php echo ploopi_htmlentities($arrDateTimeEnd['date']); ?>" style="width:80px; "/>
                     <?php ploopi_open_calendar('_planning_event_timestp_end_d'); ?>
                 </p>
                 <?
@@ -341,7 +342,7 @@ switch($ploopi_op)
                 }
                 else
                 {
-                    ?><span><? echo $arrDateTimeEnd['time'][0].':'.$arrDateTimeEnd['time'][1]; ?></span><?
+                    ?><span><? echo ploopi_htmlentities($arrDateTimeEnd['time'][0].':'.$arrDateTimeEnd['time'][1]); ?></span><?
                 }
                 ?>
             </p>
@@ -357,7 +358,7 @@ switch($ploopi_op)
                         foreach ($arrPlanningPeriodicity as $key => $value)
                         {
                             ?>
-                            <option value="<? echo $key; ?>"><? echo ploopi_htmlentities($value); ?></option>
+                            <option value="<?php echo ploopi_htmlentities($key); ?>"><? echo ploopi_htmlentities($value); ?></option>
                             <?
                         }
                         ?>

@@ -96,7 +96,7 @@ switch($ploopi_op) {
                         if($objGroup->open($intIdGroup))
                         {
                             $arrWho[] = "<img src='./modules/planning/img/ico_group.png'>";
-                            $arrWho[] = $objGroup->fields['label'];
+                            $arrWho[] = ploopi_htmlentities($objGroup->fields['label']);
                         }
                     }
 
@@ -108,7 +108,7 @@ switch($ploopi_op) {
                         {
                             $strColor = !empty($objUser->fields['color']) ? "background:{$objUser->fields['color']}" : '';
                             $arrWho[] = '<img src="./modules/planning/img/ico_user.png" style="'.$strColor.';">';
-                            $arrWho[] = sprintf("%s %s",$objUser->fields['firstname'],$objUser->fields['lastname']);
+                            $arrWho[] = ploopi_htmlentities(sprintf("%s %s",$objUser->fields['firstname'],$objUser->fields['lastname']));
                         }
                     }
 
@@ -117,7 +117,7 @@ switch($ploopi_op) {
 
                     $values[$i]['values']['event'] =
                         array(
-                            'label'        => '<strong>'.$arrEventBegin['date'].'</strong>&nbsp;->&nbsp;'.substr($arrEventBegin['time'], 0, 2).'h'.substr($arrEventBegin['time'], 3, 2).'&nbsp;&agrave;&nbsp;'.substr($arrEventEnd['time'], 0, 2).'h'.substr($arrEventEnd['time'], 3, 2).'<br />'.$row['object'].'<br />'.implode(' ', $arrWho),
+                            'label'        => '<strong>'.ploopi_htmlentities($arrEventBegin['date']).'</strong>&nbsp;->&nbsp;'.substr($arrEventBegin['time'], 0, 2).'h'.substr($arrEventBegin['time'], 3, 2).'&nbsp;&agrave;&nbsp;'.substr($arrEventEnd['time'], 0, 2).'h'.substr($arrEventEnd['time'], 3, 2).'<br />'.ploopi_htmlentities($row['object']).'<br />'.implode(' ', $arrWho),
                             'style'        => 'text-align:left;',
                             'sort_label'   => $row['timestp_begin']
                         );

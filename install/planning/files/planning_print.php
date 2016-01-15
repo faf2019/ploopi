@@ -84,12 +84,12 @@ $strGroupEventLabel = "";
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
     <head>
-        <title><? echo $strPrintType ?></title>
+        <title><? echo ploopi_htmlentities($strPrintType); ?></title>
         <link rel="stylesheet" type="text/css" href="./modules/planning/include/styles_print.css" />
         <script type="text/javascript">window.onload = function() { window.print(); }</script>
     </head>
     <body>
-        <h1><? echo $strPrintType ?></h1>
+        <h1><? echo ploopi_htmlentities($strPrintType); ?></h1>
 
         <?
         foreach($arrEvents as $event)
@@ -106,7 +106,7 @@ $strGroupEventLabel = "";
             ?>
                <h3>
                     <?
-                        echo $arrEventBegin['date'];
+                        echo ploopi_htmlentities($arrEventBegin['date']);
                         $strDateEvent = $arrEventBegin['date'];
                     ?>
                 </h3>
@@ -154,7 +154,7 @@ $strGroupEventLabel = "";
                     }
                     ?>
                 </span><br />
-                <span class="planning_event_object">Objet: <? echo $event['object']; ?> </span>
+                <span class="planning_event_object">Objet: <? echo ploopi_htmlentities($event['object']); ?> </span>
             </div>
         <?
         }

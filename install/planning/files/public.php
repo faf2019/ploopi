@@ -30,7 +30,7 @@
  * @author Stéphane Escaich
  */
 
-echo $skin->create_pagetitle($_SESSION['ploopi']['modulelabel']);
+echo $skin->create_pagetitle(ploopi_htmlentities($_SESSION['ploopi']['modulelabel']));
 echo $skin->open_simplebloc('Planning');
 ?>
 <div id="planning_main">
@@ -61,7 +61,7 @@ foreach ($arrResources as $strResourceType => $arrResourceType)
         <a href="javascript:void(0);" onclick="javascript:with ($('planning_<?php echo $strResourceType; ?>_list')) { style.display = (style.display == 'block') ? 'none' : 'block'; }">
             <p class="ploopi_va" style="border-width:1px 0;border-style:solid;border-color:#bbb;background-color:#ddd;">
                 <img src="<? echo "{$_SESSION['ploopi']['template_path']}/img/system/ico_{$strResourceType}.png"; ?>" />
-                <strong><? echo $strResourceTitle; ?></strong>
+                <strong><? echo ploopi_htmlentities($strResourceTitle); ?></strong>
             </p>
         </a>
         <div id="planning_<?php echo $strResourceType; ?>_list" style="display:block;">
@@ -71,7 +71,7 @@ foreach ($arrResources as $strResourceType => $arrResourceType)
                 ?>
                 <p class="checkbox" style="background-color:<? echo $row['color']; ?>;" onclick="javascript:ploopi_checkbox_click(event, 'planning_resource<? echo $strResourceType[0].$row['id']; ?>');">
                     <input type="checkbox" name="planning_resources[<? echo $strResourceType; ?>][<? echo $row['id']; ?>]" id="planning_resource<? echo $strResourceType[0].$row['id']; ?>" value="<? echo $row['id']; ?>" <? if (!empty($arrSearchPattern['planning_resources'][$strResourceType][$row['id']])) echo 'checked="checked"'; ?> onchange="javascript:$('planning_resource_list_form').onsubmit();" />
-                    <span><? echo $row['label']; ?><span>
+                    <span><? echo ploopi_htmlentities($row['label']); ?><span>
                 </p>
                 <?
             }

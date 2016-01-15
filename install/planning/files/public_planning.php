@@ -193,144 +193,145 @@ switch($arrSearchPattern['planning_display_type'])
 
 }
 ?>
+<div style="overflow:auto;">
+    <p class="ploopi_va" style="padding:2px;float:left;">
+        <label>Affichage :</label>
+        <input type="image" alt="Aujourd'hui" src="./modules/planning/img/ico_today<? if ($arrSearchPattern['planning_display_type'] != 'today') echo'_notsel'; ?>.png" title="Aujourd'hui" onclick="javascript:ploopi_xmlhttprequest_todiv('admin-light.php', '<? echo ploopi_queryencode('ploopi_op=planning_refresh&planning_display_type=today'); ?>', 'planning_main');" />
+        <input type="image" alt="Quotidien" src="./modules/planning/img/ico_day<? if ($arrSearchPattern['planning_display_type'] != 'day') echo'_notsel'; ?>.png" title="Journée" onclick="javascript:ploopi_xmlhttprequest_todiv('admin-light.php', '<? echo ploopi_queryencode('ploopi_op=planning_refresh&planning_display_type=day'); ?>', 'planning_main');" />
+        <input type="image" alt="Hebdomadaire" src="./modules/planning/img/ico_week<? if ($arrSearchPattern['planning_display_type'] != 'week') echo'_notsel'; ?>.png" title="Semaine" onclick="javascript:ploopi_xmlhttprequest_todiv('admin-light.php', '<? echo ploopi_queryencode('ploopi_op=planning_refresh&planning_display_type=week'); ?>', 'planning_main');" />
+        <input type="image" alt="Mensuel" src="./modules/planning/img/ico_month<? if ($arrSearchPattern['planning_display_type'] != 'month') echo'_notsel'; ?>.png" title="Mois" onclick="javascript:ploopi_xmlhttprequest_todiv('admin-light.php', '<? echo ploopi_queryencode('ploopi_op=planning_refresh&planning_display_type=month'); ?>', 'planning_main');" />
+        <a href="javascript:void(0);" onclick="javascript:ploopi_openwin('<? echo ploopi_urlencode("admin-light.php?ploopi_op=planning_print") ?>', 800, 600)"><img src="./modules/planning/img/ico_printer.png" title="Imprimer"/></a>
 
-<p class="ploopi_va" style="padding:2px;float:left;">
-    <label>Affichage :</label>
-    <input type="image" alt="Aujourd'hui" src="./modules/planning/img/ico_today<? if ($arrSearchPattern['planning_display_type'] != 'today') echo'_notsel'; ?>.png" title="Aujourd'hui" onclick="javascript:ploopi_xmlhttprequest_todiv('admin-light.php', '<? echo ploopi_queryencode('ploopi_op=planning_refresh&planning_display_type=today'); ?>', 'planning_main');" />
-    <input type="image" alt="Quotidien" src="./modules/planning/img/ico_day<? if ($arrSearchPattern['planning_display_type'] != 'day') echo'_notsel'; ?>.png" title="Journée" onclick="javascript:ploopi_xmlhttprequest_todiv('admin-light.php', '<? echo ploopi_queryencode('ploopi_op=planning_refresh&planning_display_type=day'); ?>', 'planning_main');" />
-    <input type="image" alt="Hebdomadaire" src="./modules/planning/img/ico_week<? if ($arrSearchPattern['planning_display_type'] != 'week') echo'_notsel'; ?>.png" title="Semaine" onclick="javascript:ploopi_xmlhttprequest_todiv('admin-light.php', '<? echo ploopi_queryencode('ploopi_op=planning_refresh&planning_display_type=week'); ?>', 'planning_main');" />
-    <input type="image" alt="Mensuel" src="./modules/planning/img/ico_month<? if ($arrSearchPattern['planning_display_type'] != 'month') echo'_notsel'; ?>.png" title="Mois" onclick="javascript:ploopi_xmlhttprequest_todiv('admin-light.php', '<? echo ploopi_queryencode('ploopi_op=planning_refresh&planning_display_type=month'); ?>', 'planning_main');" />
-    <a href="javascript:void(0);" onclick="javascript:ploopi_openwin('<? echo ploopi_urlencode("admin-light.php?ploopi_op=planning_print") ?>', 800, 600)"><img src="./modules/planning/img/ico_printer.png" title="Imprimer"/></a>
+        <label for="booking_channels">Multi Col:</label>
+        <input type="checkbox" id="planning_channels" <?php if ($arrSearchPattern['planning_channels']) echo 'checked="checked"'; ?> onclick="javascript:ploopi_xmlhttprequest_todiv('admin-light.php', '<? echo ploopi_queryencode('ploopi_op=planning_refresh&planning_channels='.($arrSearchPattern['planning_channels'] ? 0 : 1)); ?>', 'planning_main');"/>
 
-    <label for="booking_channels">Multi Col:</label>
-    <input type="checkbox" id="planning_channels" <?php if ($arrSearchPattern['planning_channels']) echo 'checked="checked"'; ?> onclick="javascript:ploopi_xmlhttprequest_todiv('admin-light.php', '<? echo ploopi_queryencode('ploopi_op=planning_refresh&planning_channels='.($arrSearchPattern['planning_channels'] ? 0 : 1)); ?>', 'planning_main');"/>
-
-    <label>Taille :</label>
-    <select class="select" name="planning_size" id="planning_size" onchange="javascript:ploopi_xmlhttprequest_todiv('<? echo ploopi_urlencode('admin-light.php?ploopi_op=planning_refresh'); ?>', 'planning_size='+this.value, 'planning_main');">
-    <?
-    foreach($arrPlanningSize as $strSize)
-    {
-        ?><option value="<? echo $strSize; ?>" <? if ($arrSearchPattern['planning_size'] == $strSize) echo 'selected="selected"'; ?>><? echo $strSize; ?></option><?
-    }
-    ?>
-    </select>
-</p>
-<form style="float:left;" id="planning_form_view" action="<? echo ploopi_urlencode('admin-light.php?ploopi_op=planning_refresh'); ?>" method="post" onsubmit="javascript:ploopi_xmlhttprequest_submitform($('planning_form_view'), 'planning_main');return false;">
-<p class="ploopi_va" style="padding:2px;float:left;">
-    <label>Période :</label>
-    <?
-    switch($arrSearchPattern['planning_display_type'])
-    {
-        case 'today':
-        case 'day':
-            ?>
-            <select class="select" name="planning_day" id="planning_day" onchange="javascript:if ($('planning_form_view').onsubmit()) $('planning_form_view').submit();">
-            <?
-            for ($intDay = 1; $intDay <= date('t', mktime(0, 0, 0, $arrSearchPattern['planning_month'], 1, $arrSearchPattern['planning_year'])); $intDay++)
-            {
-                ?>
-                <option value="<? echo $intDay; ?>" <? if ($arrSearchPattern['planning_day'] == $intDay) echo 'selected="selected";' ?>><? echo $intDay; ?></option>
-                <?
-            }
-            ?>
-            </select>
-            <?
-
-        case 'month':
-            ?>
-            <select class="select" name="planning_month" id="planning_month" onchange="javascript:if ($('planning_form_view').onsubmit()) $('planning_form_view').submit();">
-            <?
-            foreach ($ploopi_months as $intMonth => $strMonth)
-            {
-                ?>
-                <option value="<? echo $intMonth; ?>" <? if ($arrSearchPattern['planning_month'] == $intMonth) echo 'selected="selected";' ?>><? echo $strMonth; ?></option>
-                <?
-            }
-            ?>
-            </select>
-            <?
-        break;
-
-        case 'week':
-            ?>
-            <select class="select" name="planning_week" id="planning_week" onchange="javascript:if ($('planning_form_view').onsubmit()) $('planning_form_view').submit();">
-            <?
-            // Détermination du numéro de semaine max de l'année (on se positionne sur le 31/12)
-            $intMaxWeek = date('W', mktime(0, 0, 0, 12, 31, $arrSearchPattern['planning_year']));
-            if ($intMaxWeek == 1) $intMaxWeek = 52;
-
-            $date_firstweek = ploopi_numweek2unixtimestamp(1, $arrSearchPattern['planning_year']);
-            for ($intWeek = 1; $intWeek <= $intMaxWeek; $intWeek++)
-            {
-                // Date de début de la semaine en cours d'affichage dans la liste
-                $date_week = mktime(0, 0, 0, date('n', $date_firstweek), date('j', $date_firstweek)+(($intWeek - 1) * 7), date('Y', $date_firstweek));
-                //$date_week = mktime(0, 0, 0, 12, 29 + $d + (($intWeek - 1) * 7), $intSelYear - 1);
-                ?>
-                <option value="<? echo $intWeek; ?>" <? if ($arrSearchPattern['planning_week'] == $intWeek) echo 'selected="selected";' ?>><? printf("Semaine %02d - %s", $intWeek, substr(ploopi_unixtimestamp2local($date_week),0,5)); ?></option>
-                <?
-            }
-            ?>
-            </select>
-            <?
-        break;
-    }
-    ?>
-
-    <select class="select" name="planning_year" id="planning_year" onchange="javascript:if ($('planning_form_view').onsubmit()) $('planning_form_view').submit();">
-    <?
-    for ($intY = $arrSearchPattern['planning_year']-5; $intY <= $arrSearchPattern['planning_year']+5; $intY++)
-    {
-        ?>
-        <option value="<? echo $intY; ?>" <? if ($arrSearchPattern['planning_year'] == $intY) echo 'selected="selected";' ?>><? echo $intY; ?></option>
+        <label>Taille :</label>
+        <select class="select" name="planning_size" id="planning_size" onchange="javascript:ploopi_xmlhttprequest_todiv('<? echo ploopi_urlencode('admin-light.php?ploopi_op=planning_refresh'); ?>', 'planning_size='+this.value, 'planning_main');">
         <?
-    }
-    ?>
-    </select>
-
-    <?
-    switch($arrSearchPattern['planning_display_type'])
-    {
-        case 'month':
-            ?>
-            <input type="button" class="button" value="&laquo;&laquo;" title="Mois précédent" onclick="javascript:planning_prevmonth();" />
-            <input type="button" class="button" value="&raquo;&raquo;" title="Mois suivant" onclick="javascript:planning_nextmonth();" />
-            <?
-        break;
-
-        case 'week':
-            ?>
-            <input type="hidden" name="planning_week_previousyear" id="planning_week_previousyear" value="0" />
-            <input type="button" class="button" value="&laquo;&laquo;" title="Semaine précédente" onclick="javascript:planning_prevweek();" />
-            <input type="button" class="button" value="&raquo;&raquo;" title="Semaine suivante" onclick="javascript:planning_nextweek();" />
-            <?
-        break;
-
-        case 'today':
-        case 'day':
-            ?>
-            <input type="hidden" name="planning_week_previousmonth" id="planning_week_previousmonth" value="0" />
-            <input type="hidden" name="planning_display_type" value="day" />
-            <input type="button" class="button" value="&laquo;&laquo;" title="Jour précédent" onclick="javascript:planning_prevday();" />
-            <input type="button" class="button" value="&raquo;&raquo;" title="Jour suivant" onclick="javascript:planning_nextday();" />
-            <?
-        break;
-
-    }
-
-    $date_today = mktime();
-
-    if ($date_today >= $date_begin && $date_today <= $date_end) $date_sel = $date_today;
-    else $date_sel = $date_begin;
-
-    if (ploopi_isactionallowed(_PLANNING_ADD_EVENT))
-    {
+        foreach($arrPlanningSize as $strSize)
+        {
+            ?><option value="<? echo $strSize; ?>" <? if ($arrSearchPattern['planning_size'] == $strSize) echo 'selected="selected"'; ?>><? echo $strSize; ?></option><?
+        }
         ?>
-        <input type="button" class="button" value="Ajouter un événement" style="margin:0 10px;" onclick="javascript:ploopi_xmlhttprequest_topopup('450', event, 'popup_planning_event', 'admin-light.php', '<? echo ploopi_queryencode("ploopi_op=planning_event_add&&planning_resource_date={$date_sel}"); ?>');" />
-        <?
-    }
-    ?>
+        </select>
     </p>
-</form>
+    <form style="float:left;" id="planning_form_view" action="<? echo ploopi_urlencode('admin-light.php?ploopi_op=planning_refresh'); ?>" method="post" onsubmit="javascript:ploopi_xmlhttprequest_submitform($('planning_form_view'), 'planning_main');return false;">
+    <p class="ploopi_va" style="padding:2px;float:left;">
+        <label>Période :</label>
+        <?
+        switch($arrSearchPattern['planning_display_type'])
+        {
+            case 'today':
+            case 'day':
+                ?>
+                <select class="select" name="planning_day" id="planning_day" onchange="javascript:if ($('planning_form_view').onsubmit()) $('planning_form_view').submit();">
+                <?
+                for ($intDay = 1; $intDay <= date('t', mktime(0, 0, 0, $arrSearchPattern['planning_month'], 1, $arrSearchPattern['planning_year'])); $intDay++)
+                {
+                    ?>
+                    <option value="<? echo $intDay; ?>" <? if ($arrSearchPattern['planning_day'] == $intDay) echo 'selected="selected";' ?>><? echo $intDay; ?></option>
+                    <?
+                }
+                ?>
+                </select>
+                <?
+
+            case 'month':
+                ?>
+                <select class="select" name="planning_month" id="planning_month" onchange="javascript:if ($('planning_form_view').onsubmit()) $('planning_form_view').submit();">
+                <?
+                foreach ($ploopi_months as $intMonth => $strMonth)
+                {
+                    ?>
+                    <option value="<? echo $intMonth; ?>" <? if ($arrSearchPattern['planning_month'] == $intMonth) echo 'selected="selected";' ?>><? echo $strMonth; ?></option>
+                    <?
+                }
+                ?>
+                </select>
+                <?
+            break;
+
+            case 'week':
+                ?>
+                <select class="select" name="planning_week" id="planning_week" onchange="javascript:if ($('planning_form_view').onsubmit()) $('planning_form_view').submit();">
+                <?
+                // Détermination du numéro de semaine max de l'année (on se positionne sur le 31/12)
+                $intMaxWeek = date('W', mktime(0, 0, 0, 12, 31, $arrSearchPattern['planning_year']));
+                if ($intMaxWeek == 1) $intMaxWeek = 52;
+
+                $date_firstweek = ploopi_numweek2unixtimestamp(1, $arrSearchPattern['planning_year']);
+                for ($intWeek = 1; $intWeek <= $intMaxWeek; $intWeek++)
+                {
+                    // Date de début de la semaine en cours d'affichage dans la liste
+                    $date_week = mktime(0, 0, 0, date('n', $date_firstweek), date('j', $date_firstweek)+(($intWeek - 1) * 7), date('Y', $date_firstweek));
+                    //$date_week = mktime(0, 0, 0, 12, 29 + $d + (($intWeek - 1) * 7), $intSelYear - 1);
+                    ?>
+                    <option value="<? echo $intWeek; ?>" <? if ($arrSearchPattern['planning_week'] == $intWeek) echo 'selected="selected";' ?>><? printf("Semaine %02d - %s", $intWeek, substr(ploopi_unixtimestamp2local($date_week),0,5)); ?></option>
+                    <?
+                }
+                ?>
+                </select>
+                <?
+            break;
+        }
+        ?>
+
+        <select class="select" name="planning_year" id="planning_year" onchange="javascript:if ($('planning_form_view').onsubmit()) $('planning_form_view').submit();">
+        <?
+        for ($intY = $arrSearchPattern['planning_year']-5; $intY <= $arrSearchPattern['planning_year']+5; $intY++)
+        {
+            ?>
+            <option value="<? echo $intY; ?>" <? if ($arrSearchPattern['planning_year'] == $intY) echo 'selected="selected";' ?>><? echo $intY; ?></option>
+            <?
+        }
+        ?>
+        </select>
+
+        <?
+        switch($arrSearchPattern['planning_display_type'])
+        {
+            case 'month':
+                ?>
+                <input type="button" class="button" value="&laquo;&laquo;" title="Mois précédent" onclick="javascript:planning_prevmonth();" />
+                <input type="button" class="button" value="&raquo;&raquo;" title="Mois suivant" onclick="javascript:planning_nextmonth();" />
+                <?
+            break;
+
+            case 'week':
+                ?>
+                <input type="hidden" name="planning_week_previousyear" id="planning_week_previousyear" value="0" />
+                <input type="button" class="button" value="&laquo;&laquo;" title="Semaine précédente" onclick="javascript:planning_prevweek();" />
+                <input type="button" class="button" value="&raquo;&raquo;" title="Semaine suivante" onclick="javascript:planning_nextweek();" />
+                <?
+            break;
+
+            case 'today':
+            case 'day':
+                ?>
+                <input type="hidden" name="planning_week_previousmonth" id="planning_week_previousmonth" value="0" />
+                <input type="hidden" name="planning_display_type" value="day" />
+                <input type="button" class="button" value="&laquo;&laquo;" title="Jour précédent" onclick="javascript:planning_prevday();" />
+                <input type="button" class="button" value="&raquo;&raquo;" title="Jour suivant" onclick="javascript:planning_nextday();" />
+                <?
+            break;
+
+        }
+
+        $date_today = mktime();
+
+        if ($date_today >= $date_begin && $date_today <= $date_end) $date_sel = $date_today;
+        else $date_sel = $date_begin;
+
+        if (ploopi_isactionallowed(_PLANNING_ADD_EVENT))
+        {
+            ?>
+            <input type="button" class="button" value="Ajouter un événement" style="margin:0 10px;" onclick="javascript:ploopi_xmlhttprequest_topopup('450', event, 'popup_planning_event', 'admin-light.php', '<? echo ploopi_queryencode("ploopi_op=planning_event_add&&planning_resource_date={$date_sel}"); ?>');" />
+            <?
+        }
+        ?>
+        </p>
+    </form>
+</div>
 
 <?
 if (sizeof($arrSize) == 2 && is_numeric($arrSize[0]) && is_numeric($arrSize[1]))
@@ -525,7 +526,7 @@ if (sizeof($arrSize) == 2 && is_numeric($arrSize[0]) && is_numeric($arrSize[1]))
         }
     }
     ?>
-    <div style="width:100%;overflow:auto;clear:both;" id="planning_display">
+    <div style="width:100%;overflow:auto;" id="planning_display">
         <?
         $objCalendar->display();
         ?>
