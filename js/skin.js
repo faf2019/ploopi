@@ -123,7 +123,22 @@ function ploopi_skin_treeview_shownode(node_id, query, script)
     }
 }
 
-function ploopi_skin_array_refresh(array_id, array_orderby, array_page)
+function ploopi_skin_array_refresh(array_id, array_orderby, array_page, callback)
 {
-    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=ploopi_skin_array_refresh&array_id='+array_id+'&array_orderby='+array_orderby+'&array_page='+array_page+'&ploopi_randomize='+Math.random(),'ploopi_explorer_main_'+array_id);
+    new Ajax.Request('admin-light.php', {
+        method: 'GET',
+        parameters: {
+            ploopi_env: _PLOOPI_ENV,
+            ploopi_op: 'ploopi_skin_array_refresh',
+            array_id: array_id,
+            array_orderby: array_orderby,
+            array_page: array_page,
+            ploopi_randomize: Math.random()
+        },
+        encoding:   'iso-8859-15',
+        onSuccess:  function(transport) {
+            ploopi_innerHTML('ploopi_explorer_main_'+array_id, transport.responseText);
+            if (callback != '') eval(callback+'()');
+        }
+    });
 }

@@ -2046,4 +2046,4 @@ UPDATE `ploopi_user` SET `password_last_update` = NOW() + 0;
 
 ALTER TABLE `ploopi_user` ADD `disabled` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '0', ADD INDEX ( `disabled` );
 
-UPDATE `ploopi_module_type` SET `version` = '1.9.4.5', `author` = 'Ovensia', `date` = '20160105000000', `description` = 'Noyau du système' WHERE `ploopi_module_type`.`id` = 1;
+UPDATE `ploopi_module_type` SET `version` = '1.9.4.6', `author` = 'Ovensia', `date` = '20160116000000', `description` = 'Noyau du système' WHERE `ploopi_module_type`.`id` = 1;

@@ -382,7 +382,7 @@ class skin_common
      * $array_values[$c]['values']['colonne2'] = array('label' => 'valeur2', 'style' => 'text-align:right');
      * $array_values[$c]['values']['colonneauto'] = array('label' => 'valeur3', 'sort_label' => '3');
      *
-     * $skin->display_array($array_columns, $array_values, 'id_tableau', array('height' => 200, 'sortable' => true, 'orderby_default' => 'valeur3', 'sort_default' => 'DESC'));
+     * $skin->display_array($array_columns, $array_values, 'id_tableau', array('height' => 200, 'sortable' => true, 'orderby_default' => 'valeur3', 'sort_default' => 'DESC', 'callback' => 'jsfunc'));
      * ?>
      * </code>
      */
@@ -405,6 +405,7 @@ class skin_common
 
         if (empty($arrOptions['page'])) $arrOptions['page'] = 1;
         if (empty($arrOptions['limit'])) $arrOptions['limit'] = 0;
+        if (empty($arrOptions['callback'])) $arrOptions['callback'] = '';
 
         $array = array('columns' => &$arrColumns, 'values' => &$arrValues, 'options' => &$arrOptions, 'orderby' => &$orderby, 'sort' => &$sort);
 
@@ -417,7 +418,7 @@ class skin_common
                 {
                     if (!empty($c['options']['sort']))
                     {
-                        $array['columns']['left'][$id]['onclick'] = "ploopi_skin_array_refresh('{$strArrayId}', '{$id}');";
+                        $array['columns']['left'][$id]['onclick'] = "ploopi_skin_array_refresh('{$strArrayId}', '{$id}', '', '{$array['options']['callback']}');";
                         $array['sortable_columns'][] = $id;
                     }
                 }
@@ -429,7 +430,7 @@ class skin_common
                 {
                     if (!empty($c['options']['sort']))
                     {
-                        $array['columns']['auto'][$id]['onclick'] = "ploopi_skin_array_refresh('{$strArrayId}', '{$id}');";
+                        $array['columns']['auto'][$id]['onclick'] = "ploopi_skin_array_refresh('{$strArrayId}', '{$id}', '', '{$array['options']['callback']}');";
                         $array['sortable_columns'][] = $id;
                     }
                 }
@@ -441,7 +442,7 @@ class skin_common
                 {
                     if (!empty($c['options']['sort']))
                     {
-                        $array['columns']['right'][$id]['onclick'] = "ploopi_skin_array_refresh('{$strArrayId}', '{$id}');";
+                        $array['columns']['right'][$id]['onclick'] = "ploopi_skin_array_refresh('{$strArrayId}', '{$id}', '', '{$array['options']['callback']}');";
                         $array['sortable_columns'][] = $id;
                     }
                 }
@@ -453,7 +454,7 @@ class skin_common
                 {
                     if (!empty($c['options']['sort']))
                     {
-                        $array['columns']['actions_right'][$id]['onclick'] = "ploopi_skin_array_refresh('{$strArrayId}', '{$id}');";
+                        $array['columns']['actions_right'][$id]['onclick'] = "ploopi_skin_array_refresh('{$strArrayId}', '{$id}', '', '{$array['options']['callback']}');";
                         $array['sortable_columns'][] = $id;
                     }
                 }
@@ -465,7 +466,7 @@ class skin_common
                 {
                     if (!empty($c['options']['sort']))
                     {
-                        $array['columns']['actions_right'][$id]['onclick'] = "ploopi_skin_array_refresh('{$strArrayId}', '{$id}');";
+                        $array['columns']['actions_right'][$id]['onclick'] = "ploopi_skin_array_refresh('{$strArrayId}', '{$id}', '', '{$array['options']['callback']}');";
                         $array['sortable_columns'][] = $id;
                     }
                 }
@@ -484,9 +485,9 @@ class skin_common
     }
 
 
-    private function array_page($strArrayId, $intPage, $strPage, $intSel = 0)
+    private function array_page($strArrayId, $intPage, $strPage, $intSel = 0, $callback = '')
     {
-        return $intSel == $intPage ? str_replace('{p}', $strPage, '<strong>{p}</strong>') : str_replace(array('{p}', '{id}'), array($strPage, $intPage), '<a href="javascript:void(0);" onclick="javascript:ploopi_skin_array_refresh(\''.$strArrayId.'\', \'\', \'{id}\');">{p}</a>');
+        return $intSel == $intPage ? str_replace('{p}', $strPage, '<strong>{p}</strong>') : str_replace(array('{p}', '{id}'), array($strPage, $intPage), '<a href="javascript:void(0);" onclick="javascript:ploopi_skin_array_refresh(\''.$strArrayId.'\', \'\', \'{id}\', \''.$callback.'\');">{p}</a>');
     }
 
     /**
@@ -597,10 +598,10 @@ class skin_common
             $arrPages = array();
 
             // Fleche page précédente
-            if ($array['options']['page'] > 1) $arrPages[] = $this->array_page($strArrayId, $array['options']['page']-1, '&laquo;');
+            if ($array['options']['page'] > 1) $arrPages[] = $this->array_page($strArrayId, $array['options']['page']-1, '&laquo;', 0, $array['options']['callback']);
 
             // On affiche toujours la premiere page
-            $arrPages[] = $this->array_page($strArrayId, 1, 1, $array['options']['page']);
+            $arrPages[] = $this->array_page($strArrayId, 1, 1, $array['options']['page'], $array['options']['callback']);
 
             // Affichage "..." après première page
             if ($array['options']['page'] > 4) $arrPages[] = '...';
@@ -608,17 +609,17 @@ class skin_common
             // Boucle sur les pages autour de la page sélectionnée (-2 à +2 si existe)
             for ($i = $array['options']['page'] - 2; $i <= $array['options']['page'] + 2; $i++)
             {
-                if ($i>1 && $i<$intNbPages) $arrPages[] = $this->array_page($strArrayId, $i, $i, $array['options']['page']);
+                if ($i>1 && $i<$intNbPages) $arrPages[] = $this->array_page($strArrayId, $i, $i, $array['options']['page'], $array['options']['callback']);
             }
 
             // Affichage "..." avant dernière page
             if ($array['options']['page'] < $intNbPages - 3) $arrPages[] = '...';
 
             // Dernière page
-            if ($intNbPages>1) $arrPages[] = $this->array_page($strArrayId, $intNbPages, $intNbPages, $array['options']['page']);
+            if ($intNbPages>1) $arrPages[] = $this->array_page($strArrayId, $intNbPages, $intNbPages, $array['options']['page'], $array['options']['callback']);
 
             // Fleche page suivante
-            if ($array['options']['page'] < $intNbPages) $arrPages[] = $this->array_page($strArrayId, $array['options']['page']+1, '&raquo;');
+            if ($array['options']['page'] < $intNbPages) $arrPages[] = $this->array_page($strArrayId, $array['options']['page']+1, '&raquo;', 0, $array['options']['callback']);
 
             ?>
             <div class="ploopi_explorer_multipage" style="border-bottom:1px solid #c0c0c0;padding:2px 4px;text-align:right;">
