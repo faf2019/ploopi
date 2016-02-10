@@ -79,6 +79,10 @@ function weathertools_getmap($type_map, $moduleid = null, $cache_length = 1800)
     {
         $objRequest = new HTTP_Request2("{$strUrl}?".ploopi_createtimestamp());
 
+        $arrConfig = array();
+        $arrConfig['timeout'] = 1;
+        $arrConfig['connect_timeout'] = 1;
+
         if (_PLOOPI_INTERNETPROXY_HOST != '')
         {
             $arrConfig['proxy_host'] = _PLOOPI_INTERNETPROXY_HOST;
@@ -86,8 +90,9 @@ function weathertools_getmap($type_map, $moduleid = null, $cache_length = 1800)
             $arrConfig['proxy_user'] = _PLOOPI_INTERNETPROXY_USER;
             $arrConfig['proxy_password'] = _PLOOPI_INTERNETPROXY_PASS;
             $arrConfig['proxy_auth_scheme'] = HTTP_Request2::AUTH_BASIC;
-            $objRequest->setConfig($arrConfig);
         }
+
+        $objRequest->setConfig($arrConfig);
 
         $objResponse = $objRequest->send();
 

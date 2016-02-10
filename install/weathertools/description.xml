@@ -2,9 +2,9 @@
 <ploopi>
    <moduletype>
       <label>weathertools</label>
-      <version>1.1.7</version>
+      <version>1.1.8</version>
       <author>Ovensia</author>
-      <date>20150622000000</date>
+      <date>20150210000000</date>
       <description>Fonctions météo (lecture METAR, affichage météo, stations les plus proches d'un point, cartes de vigilance)</description>
       <paramtype>
          <name>weathertools_station_list_url</name>
