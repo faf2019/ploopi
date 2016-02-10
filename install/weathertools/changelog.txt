@@ -1,3 +1,9 @@
+== Module Wheathertools - version 1.2.0 ==================================================
+
+2016-02-10  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+* Ajout d'un timeout (1s) sur le téléchargement des cartes de vigilance
+
 == Module Wheathertools - version 1.1.7 ==================================================
 
 2015-06-22  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
