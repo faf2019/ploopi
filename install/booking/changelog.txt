@@ -1,3 +1,12 @@
+== Module BOOKING - version 1.2.3 ====================================================
+
+2016-02-12  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+* Corrections d'un bug lors de la suppression d'une ressource
+* Affichage d'un popup d'avertissement sur la réservation d'une ressource déjà réservée
+* Envoi d'un ticket sur la modification d'une réservation 
+* Insertion des sous-ressources dans le contenu des tickets envoyés (demande de réservation, modification...)
+
 == Module BOOKING - version 1.2.2 ====================================================
 
 2016-01-15  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>

@@ -73,19 +73,6 @@ class booking_resource extends data_object
     }
 
     /**
-     * Enregistre la ressource
-     */
-
-    public function delete()
-    {
-        global $db;
-
-        if ($this->new) $this->setuwm();
-
-        return parent::save();
-    }
-
-    /**
      * Retourne la liste des espaces gestionnaires de la ressource dans un tableau
      *
      * @return array tableau contenant les espaces
@@ -108,6 +95,50 @@ class booking_resource extends data_object
         }
         else return array();
 
+    }
+
+    /**
+     * Retourne la liste des utilisateurs gestionnaires de la ressource dans un tableau
+     *
+     * @return array tableau contenant les utilisateurs
+     */
+
+    public function getusers()
+    {
+        $arrUsers = array();
+
+        // On récupère les espaces gestionnaires de la ressource
+        $arrWorkspaces = $this->getworkspaces();
+
+        foreach($arrWorkspaces as $intIdWsp)
+        {
+            $objWorkspace = new workspace();
+            if ($objWorkspace->open($intIdWsp))
+            {
+                // On récupère les utilisateurs des espaces gestionnaires
+                foreach($objWorkspace->getusers(true) as $arrUser)
+                {
+                    if (!isset($arrUsers[$arrUser['id']])) // Utilisateur non sélectionné
+                    {
+                        $objUser = new user();
+
+                        if ($objUser->open($arrUser['id']))
+                        {
+                            // S'il n'est pas administrateur système, on vérifie les actions dont il dispose
+                            $arrActions = $objUser->getactions(null, true);
+
+                            // Si l'utilisateur dispose de l'action de validation sur le module booking dans l'espace gestionnaire
+                            if (isset($arrActions[$intIdWsp][$objEvent->fields['id_module']][_BOOKING_ACTION_VALIDATE]))
+                            {
+                                $arrUsers[$arrUser['id']] = $arrUser;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return $arrUsers;
     }
 
 }

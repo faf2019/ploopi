@@ -212,7 +212,7 @@ class booking_event extends data_object
     /**
      * Détermine si un événement est valide, c'est à dire qu'il n'y a pas de collision avec un événement déjà validé
      */
-    public function isvalid()
+    public function isvalid($booValidated = true)
     {
 
         if (!empty($this->details)) {
@@ -226,7 +226,7 @@ class booking_event extends data_object
                 $this->fields['id_resource'],
                 true,
                 false,
-                1,
+                $booValidated ? 1 : null,
                 null, // managed
                 '', // object
                 '', //requestedby

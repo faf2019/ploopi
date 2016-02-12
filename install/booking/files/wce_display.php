@@ -445,3 +445,18 @@ if (!empty($_REQUEST['error'])) {
     </script>
     <?
 }
+
+
+if (!empty($_REQUEST['warning'])) {
+    ?>
+    <script type="text/javascript">
+        Event.observe(window, 'load', function() {
+            <?
+            switch($_REQUEST['warning']) {
+                case 'collision': ?> alert('Il y a déjà une autre réservation pour cette ressource aux dates demandées.\nVotre demande a tout de même été enregistrée.'); <? break;
+            }
+            ?>
+        });
+    </script>
+    <?
+}
