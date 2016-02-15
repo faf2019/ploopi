@@ -84,9 +84,9 @@ class ploopi_cipher
      * @return ploopi_cipher
      */
 
-    public function __construct($key = _PLOOPI_SECRETKEY, $iv = _PLOOPI_CIPHER_IV)
+    public function __construct($key = _PLOOPI_SECRETKEY, $iv = _PLOOPI_CIPHER_IV, $c = _PLOOPI_CIPHER)
     {
-        $this->cipher = mcrypt_module_open(_PLOOPI_CIPHER,'','cbc','');
+        $this->cipher = mcrypt_module_open($c,'','cbc','');
         $this->key = substr($key, 0, mcrypt_enc_get_key_size($this->cipher));
         $this->iv = substr($iv, 0, mcrypt_enc_get_block_size($this->cipher));
     }

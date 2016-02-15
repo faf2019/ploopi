@@ -37,7 +37,8 @@ global $template_name;
 $op = empty($_REQUEST['op']) ? '' : $_REQUEST['op'];
 
 // Nb lignes max par pages (sinon index)
-$intMaxLines = 25;
+$intMaxLines = ploopi_getparam('system_trombi_maxlines', 1);
+
 // Lettre sélectionnée dans l'index
 $strIndexSel = '';
 
@@ -65,6 +66,7 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
     // Lecture Params
     if (isset($_POST['system_lastname']) && !preg_match($pattern, $_POST['system_lastname'])) $arrFilter['system_lastname'] = $_POST['system_lastname'];
     if (isset($_POST['system_firstname']) && !preg_match($pattern, $_POST['system_firstname'])) $arrFilter['system_firstname'] = $_POST['system_firstname'];
+    if (isset($_POST['system_entity']) && !preg_match($pattern, $_POST['system_entity'])) $arrFilter['system_entity'] = $_POST['system_entity'];
     if (isset($_POST['system_service']) && !preg_match($pattern, $_POST['system_service'])) $arrFilter['system_service'] = $_POST['system_service'];
     if (isset($_POST['system_service2']) && !preg_match($pattern, $_POST['system_service2'])) $arrFilter['system_service2'] = $_POST['system_service2'];
     if (isset($_POST['system_phone']) && !preg_match($pattern, $_POST['system_phone'])) $arrFilter['system_phone'] = $_POST['system_phone'];
@@ -88,6 +90,7 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
     // Affectation de valeurs par défaut si non défini
     if (!isset($arrFilter['system_lastname'])) $arrFilter['system_lastname'] = '';
     if (!isset($arrFilter['system_firstname'])) $arrFilter['system_firstname'] = '';
+    if (!isset($arrFilter['system_entity'])) $arrFilter['system_entity'] = '';
     if (!isset($arrFilter['system_service'])) $arrFilter['system_service'] = '';
     if (!isset($arrFilter['system_service2'])) $arrFilter['system_service2'] = '';
     if (!isset($arrFilter['system_phone'])) $arrFilter['system_phone'] = '';

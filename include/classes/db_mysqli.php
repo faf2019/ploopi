@@ -295,31 +295,39 @@ class ploopi_db
      * Exécute plusieurs requêtes SQL
      *
      * @param string $queries requêtes
-     * @return boolean true si les requêtes ont pu être exécutées, false sinon
+     * @return mixed un pointeur sur le recordset (resource) ou false si la requête n'a pas pu être exécutée
      */
-    public function multiplequeries($queries)
+
+    public function multiplequeries($query = '')
     {
-        if (empty($queries)) return false;
+        if (empty($query)) return false;
 
         if (!$this->isconnected()) return false;
 
-        $this->timer_start();
+        if($query != '')
+        {
+            $this->num_queries++;
 
-        $res = $this->mysqli->multi_query($queries);
+            $this->timer_start();
 
-        $stop = $this->timer_stop();
+            $this->query_result = null;
 
-        if ($this->log) $this->arrLog[] = array ('query' => $queries, 'time' => $stop);
+            if ($this->mysqli->multi_query($query)) {
+                do {
+                    $this->query_result = $this->mysqli->store_result();
+                } while ($this->mysqli->next_result());
 
-        if ($res === false) trigger_error($this->mysqli->error."<br /><b>queries:</b> {$queries}", E_USER_WARNING);
-        else {
-            do {
-                if ($result = $this->mysqli->use_result()) $result->free();
-            } while ($this->mysqli->next_result());
+                if ($this->log) $this->arrLog[] = array ('query' => $query, 'time' => $stop);
+            }
+            else trigger_error($this->mysqli->error."<br /><b>query:</b> {$query}", E_USER_WARNING);
+
+            $stop = $this->timer_stop();
+
         }
 
-        return $res;
+        return $this->query_result;
     }
+
 
     /**
      * Renvoie le nombre d'enregistrement de la dernière requête ou du recordset passé en paramètre

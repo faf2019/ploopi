@@ -1,7 +1,7 @@
 <?php
 /*
     Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2009 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -31,8 +31,8 @@
  * @author Stéphane Escaich
  */
 
-define ('_PLOOPI_VERSION', '1.9.5.6');
-define ('_PLOOPI_REVISION', '160105');
+define ('_PLOOPI_VERSION', '1.9.5.7');
+define ('_PLOOPI_REVISION', '160215');
 
 define ('_PLOOPI_MSG_DBERROR',  'Database connection error, please contact administrator');
 define ('_SYSTEM_SYSTEMADMIN',  0);
