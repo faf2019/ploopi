@@ -86,8 +86,11 @@ if ($_SESSION['ploopi']['connected'])
                 if ($_SESSION['ploopi']['mode'] == 'frontoffice') $objEvent->fields['id_module'] = $_GET['booking_moduleid'];
 
 
+                $booError = !$objEvent->isvalid();
+                $booWarning = !$objEvent->isvalid(false);
+
                 // Non valide, collision avec un autre événement
-                if (!$objEvent->isvalid()) {
+                if ($booError) {
                     $intTs = ploopi_timestamp2unixtimestamp(ploopi_local2timestamp($_POST['_booking_event_timestp_begin_d']));
 
                     // Tableau des paramètres complémentaires pour la redirection dans le planning
@@ -128,9 +131,11 @@ if ($_SESSION['ploopi']['connected'])
                     $strEnd = $rowDetails['timestp_end_d'].' à '.sprintf("%02dh%02d", $rowDetails['timestp_end_h'], $rowDetails['timestp_end_m']);
 
                     $arrSR = array();
-                    foreach($_POST['booking_sr'] as $intIdSR) {
-                        $objSR = new booking_subresource();
-                        if ($objSR->open($intIdSR)) $arrSR[] = $objSR->fields['name'];
+                    if (!empty($_POST['booking_sr'])) {
+                        foreach($_POST['booking_sr'] as $intIdSR) {
+                            $objSR = new booking_subresource();
+                            if ($objSR->open($intIdSR)) $arrSR[] = $objSR->fields['name'];
+                        }
                     }
 
                     $strSR = empty($arrSR) ? '' : ' (incluant: '.implode(', ', $arrSR).')';
@@ -153,7 +158,7 @@ if ($_SESSION['ploopi']['connected'])
                 $arrParams[] = "booking_day=".date('j', $intTs);
 
                 // Attention, collision avec un autre événement
-                if (!$objEvent->isvalid(false)) $arrParams[] = 'warning=collision';
+                if ($booWarning) $arrParams[] = 'warning=collision';
 
                 if ($_SESSION['ploopi']['mode'] == 'frontoffice') ploopi_redirect($_SESSION['booking'][$_GET['booking_moduleid']]['article_url'].'&'.implode('&', $arrParams));
                 else ploopi_redirect('admin.php?'.implode('&', $arrParams));
@@ -186,9 +191,11 @@ if ($_SESSION['ploopi']['connected'])
             $strResource = $objResource->open($objEvent->fields['id_resource']) ? $objResource->fields['name'] : 'inconnu';
 
             $arrSR = array();
-            foreach($_POST['booking_sr'] as $intIdSR) {
-                $objSR = new booking_subresource();
-                if ($objSR->open($intIdSR)) $arrSR[] = $objSR->fields['name'];
+            if (!empty($_POST['booking_sr'])) {
+                foreach($_POST['booking_sr'] as $intIdSR) {
+                    $objSR = new booking_subresource();
+                    if ($objSR->open($intIdSR)) $arrSR[] = $objSR->fields['name'];
+                }
             }
 
             $strSR = empty($arrSR) ? '' : ' (incluant: '.implode(', ', $arrSR).')';

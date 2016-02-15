@@ -1,3 +1,10 @@
+== Module BOOKING - version 1.2.4 ====================================================
+
+2016-02-15  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+* Correction d'un bug lors de la détection des collisions de demandes non validées
+* Correction d'un bug dans la méthode booking_resource::getusers (récupération des utilisateurs gestionnaires de la ressource)
+
 == Module BOOKING - version 1.2.3 ====================================================
 
 2016-02-12  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>

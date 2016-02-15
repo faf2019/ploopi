@@ -95,7 +95,7 @@ class booking_event extends data_object
             $this->fields['timestp_request'] = ploopi_createtimestamp();
         }
 
-        echo $intIdEvent = parent::save();
+        $intIdEvent = parent::save();
 
         // Si il faut enregistrer des "event_detail"
         if (!empty($this->details))
@@ -214,7 +214,6 @@ class booking_event extends data_object
      */
     public function isvalid($booValidated = true)
     {
-
         if (!empty($this->details)) {
 
             // timestp mysql de la demande principale
@@ -239,8 +238,10 @@ class booking_event extends data_object
 
                 // Recherche plus précise de collisions
                 foreach($arrEvents as $row) {
-                    if (($timestp_begin >= $row['timestp_begin'] && $timestp_begin < $row['timestp_end']) || ($timestp_end > $row['timestp_begin'] && $timestp_end <= $row['timestp_end']) || ($timestp_begin <= $row['timestp_begin'] && $timestp_end >= $row['timestp_end'])) {
+
+                    if ($row['id'] != $this->fields['id'] && ($timestp_begin >= $row['timestp_begin'] && $timestp_begin < $row['timestp_end']) || ($timestp_end > $row['timestp_begin'] && $timestp_end <= $row['timestp_end']) || ($timestp_begin <= $row['timestp_begin'] && $timestp_end >= $row['timestp_end'])) {
                         // Collision détectée
+                        echo "je sors";
                         return false;
                     }
                 }
@@ -295,8 +296,6 @@ class booking_event extends data_object
                         {
                             $intUxTs2 = mktime($arrEnd['ho'], $arrEnd['mi'], $arrEnd['se'], $arrEnd['m'], $arrEnd['d'] + $d, $arrEnd['y']);
 
-                            echo '<br />'.date('d/m/Y', $intUxTs).' -> '.date('d/m/Y', $intUxTs2);
-
                             // Recherche des événments validés dans l'intervalle
                             $arrEvents = booking_get_events(
                                 $this->fields['id_resource'],
@@ -316,9 +315,6 @@ class booking_event extends data_object
                             foreach($arrEvents as $row) {
                                 $timestp_begin = date('YmdHis', $intUxTs);
                                 $timestp_end = date('YmdHis', $intUxTs2);
-
-                                ploopi_print_r($row);
-                                echo '<br />'.$timestp_begin.' -> '.$timestp_end.' // '.$row['timestp_begin'].' -> '.$row['timestp_end'];
 
                                 if (($timestp_begin >= $row['timestp_begin'] && $timestp_begin < $row['timestp_end']) || ($timestp_end > $row['timestp_begin'] && $timestp_end <= $row['timestp_end']) || ($timestp_begin <= $row['timestp_begin'] && $timestp_end >= $row['timestp_end'])) {
                                     // Collision détectée

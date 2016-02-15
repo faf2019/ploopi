@@ -128,7 +128,7 @@ class booking_resource extends data_object
                             $arrActions = $objUser->getactions(null, true);
 
                             // Si l'utilisateur dispose de l'action de validation sur le module booking dans l'espace gestionnaire
-                            if (isset($arrActions[$intIdWsp][$objEvent->fields['id_module']][_BOOKING_ACTION_VALIDATE]))
+                            if (isset($arrActions[$intIdWsp][$this->fields['id_module']][_BOOKING_ACTION_VALIDATE]))
                             {
                                 $arrUsers[$arrUser['id']] = $arrUser;
                             }
