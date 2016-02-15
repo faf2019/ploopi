@@ -1717,273 +1717,275 @@ class formsForm extends data_object
         // Pour chaque champs du formulaire
         foreach($this->getFields(true) as $objField)
         {
-            // Regroupement des champs par groupes conditionnels
-            if (!empty($objField->fields['id_group'])) $arrGroups[$objField->fields['id_group']][] = $objField->fields['id'];
+            if ($strRenderMode != 'frontoffice' || $objField->fields['option_wceview'] == 1) {
+                // Regroupement des champs par groupes conditionnels
+                if (!empty($objField->fields['id_group'])) $arrGroups[$objField->fields['id_group']][] = $objField->fields['id'];
 
-            if ($objField->fields['option_pagebreak'] || is_null($objPanel))
-            {
-                $intS = sizeof($arrPanels);
-
-                $arrPanels[] = 'panel_'.($intS+1);
-                $arrOptions = array('style' => '');
-                if ($objField->fields['option_pagebreak']) $arrOptions['style'] .= 'page-break-before:always;';
-                if ($intS) $arrOptions['style'] .= 'display:none;';
-
-                $objForm->addPanel($objPanel = new form_panel($arrPanels[$intS], 'Page '.($intS+1), $arrOptions));
-            }
-
-            if ($objField->fields['separator'])
-            {
-                $strStyle = empty($objField->fields['interline']) ? '' : "margin-top:{$objField->fields['interline']}px;";
-                $strDesc = $objField->fields['description'] == '' ? '' : '<p>'.ploopi_nl2br(ploopi_htmlentities($objField->fields['description'])).'</p>';
-
-                $objPanel->addField( new form_html('<h'.$objField->fields['separator_level'].' id="field_'.$objField->fields['id'].'_form" style="'.$strStyle.$objField->fields['style_form'].'">'.ploopi_nl2br(ploopi_htmlentities($objField->fields['name'])).$strDesc.'</h'.$objField->fields['separator_level'].'>') );
-            }
-            elseif ($objField->fields['html'])
-            {
-                $strStyle = empty($objField->fields['interline']) ? '' : "margin-top:{$objField->fields['interline']}px;";
-
-                $objPanel->addField( new form_html('<div class="xhtml" id="field_'.$objField->fields['id'].'_form" style="'.$strStyle.'">'.$objField->fields['xhtmlcontent_cleaned'].'</div>') );
-            }
-            elseif ($objField->fields['option_formview'] && (!$objField->fields['option_adminonly'] || $booIsAdmin))
-            {
-                if($objField->fields['captcha'])
+                if ($objField->fields['option_pagebreak'] || is_null($objPanel))
                 {
-                    $objPanel->addField( new form_html('<div>Les CAPTCHAs ne sont pas gérés</div>') );
+                    $intS = sizeof($arrPanels);
+
+                    $arrPanels[] = 'panel_'.($intS+1);
+                    $arrOptions = array('style' => '');
+                    if ($objField->fields['option_pagebreak']) $arrOptions['style'] .= 'page-break-before:always;';
+                    if ($intS) $arrOptions['style'] .= 'display:none;';
+
+                    $objForm->addPanel($objPanel = new form_panel($arrPanels[$intS], 'Page '.($intS+1), $arrOptions));
                 }
-                else
+
+                if ($objField->fields['separator'])
                 {
-                    $strFieldType = '';
-                    $strDataType = 'string';
-                    $intMaxLength = 255;
+                    $strStyle = empty($objField->fields['interline']) ? '' : "margin-top:{$objField->fields['interline']}px;";
+                    $strDesc = $objField->fields['description'] == '' ? '' : '<p>'.ploopi_nl2br(ploopi_htmlentities($objField->fields['description'])).'</p>';
 
-                    // Requis ? car général :
-                    $booRequired = $objField->fields['option_needed'] == 1;
-                    // Exceptions :
-                    if ($objField->fields['type'] == 'file' && current($arrFieldsContent[$objField->fields['id']]) != '') $booRequired = false;
+                    $objPanel->addField( new form_html('<h'.$objField->fields['separator_level'].' id="field_'.$objField->fields['id'].'_form" style="'.$strStyle.$objField->fields['style_form'].'">'.ploopi_nl2br(ploopi_htmlentities($objField->fields['name'])).$strDesc.'</h'.$objField->fields['separator_level'].'>') );
+                }
+                elseif ($objField->fields['html'])
+                {
+                    $strStyle = empty($objField->fields['interline']) ? '' : "margin-top:{$objField->fields['interline']}px;";
 
-                    $arrOptions = array(
-                        'required' => $booRequired,
-                        'description' => ploopi_nl2br(ploopi_htmlentities($objField->fields['description'])),
-                        'style' => $objField->fields['style_field'],
-                        'style_form' => (empty($objField->fields['interline']) ? '' : "margin-top:{$objField->fields['interline']}px;") . $objField->fields['style_form'],
-                        'class_form' => 'field'
-                    );
-
-                    // Le champ fait partie d'un groupe conditionnel ? Si oui, on ne l'affiche pas
-                    if ($objField->fields['id_group'] != 0) $arrOptions['style_form'] .= "display:none;";
-
-                    // Traitement automatique (sauvegarde des données) sur l'événement onchange
-                    $arrOptions['onchange'] = "ploopi.{$strFormId}_onchange();";
-
-                    if (!$booModify) $arrOptions['disabled'] = true;
-
-                    switch($objField->fields['type'])
+                    $objPanel->addField( new form_html('<div class="xhtml" id="field_'.$objField->fields['id'].'_form" style="'.$strStyle.'">'.$objField->fields['xhtmlcontent_cleaned'].'</div>') );
+                }
+                elseif ($objField->fields['option_formview'] && (!$objField->fields['option_adminonly'] || $booIsAdmin))
+                {
+                    if($objField->fields['captcha'])
                     {
-                        case 'text':
-                            if (empty($strFocus)) $strFocus = 'field_'.$objField->fields['id'];
+                        $objPanel->addField( new form_html('<div>Les CAPTCHAs ne sont pas gérés</div>') );
+                    }
+                    else
+                    {
+                        $strFieldType = '';
+                        $strDataType = 'string';
+                        $intMaxLength = 255;
 
-                            switch($objField->fields['format'])
-                            {
-                                case 'integer':
-                                    $strFieldType = 'input:text';
-                                    $strDataType = 'int';
-                                    $intMaxLength = 10;
-                                break;
+                        // Requis ? car général :
+                        $booRequired = $objField->fields['option_needed'] == 1;
+                        // Exceptions :
+                        if ($objField->fields['type'] == 'file' && current($arrFieldsContent[$objField->fields['id']]) != '') $booRequired = false;
 
-                                case 'float':
-                                    $strFieldType = 'input:text';
-                                    $strDataType = 'float';
-                                    $intMaxLength = 16;
-                                break;
+                        $arrOptions = array(
+                            'required' => $booRequired,
+                            'description' => ploopi_nl2br(ploopi_htmlentities($objField->fields['description'])),
+                            'style' => $objField->fields['style_field'],
+                            'style_form' => (empty($objField->fields['interline']) ? '' : "margin-top:{$objField->fields['interline']}px;") . $objField->fields['style_form'],
+                            'class_form' => 'field'
+                        );
 
-                                case 'date':
-                                    $strFieldType = 'input:text';
-                                    $strDataType = 'date';
-                                    $intMaxLength = 10;
-                                break;
+                        // Le champ fait partie d'un groupe conditionnel ? Si oui, on ne l'affiche pas
+                        if ($objField->fields['id_group'] != 0) $arrOptions['style_form'] .= "display:none;";
 
-                                case 'time':
-                                    $strFieldType = 'input:text';
-                                    $strDataType = 'time';
-                                    $intMaxLength = 5;
-                                break;
+                        // Traitement automatique (sauvegarde des données) sur l'événement onchange
+                        $arrOptions['onchange'] = "ploopi.{$strFormId}_onchange();";
 
-                                case 'email':
-                                    $strFieldType = 'input:text';
-                                    $strDataType = 'email';
-                                    $intMaxLength = 255;
-                                break;
+                        if (!$booModify) $arrOptions['disabled'] = true;
 
-                                default:
-                                    $strFieldType = 'input:text';
-                                    $strDataType = 'string';
-                                    $intMaxLength = 255;
-                                break;
-                            }
-                        break;
-
-                        case 'tablelink':
-                            /**
-                              * On ne doit afficher les données que si le lien est unique vers la table ou si c'est le premier champ lié
-                              * (les valeurs des autres champs sont déterminées en fonction des choix déjà effectués sur les précédents champs)
-                              */
-                            if (isset($arrLinkedFields['fields'][$objField->fields['values']]))
-                            {
+                        switch($objField->fields['type'])
+                        {
+                            case 'text':
                                 if (empty($strFocus)) $strFocus = 'field_'.$objField->fields['id'];
 
-                                $objLinkedField = $arrLinkedFields['fields'][$objField->fields['values']];
+                                switch($objField->fields['format'])
+                                {
+                                    case 'integer':
+                                        $strFieldType = 'input:text';
+                                        $strDataType = 'int';
+                                        $intMaxLength = 10;
+                                    break;
 
-                                // Initialisation de la liste des paramètres vers le formulaire X
-                                if (!isset($arrParams[$objLinkedField->fields['id_form']])) $arrParams[$objLinkedField->fields['id_form']] = array();
+                                    case 'float':
+                                        $strFieldType = 'input:text';
+                                        $strDataType = 'float';
+                                        $intMaxLength = 16;
+                                    break;
 
-                                // Lecture des valeurs du champs lié en fonction des paramètres déjà saisis
-                                $arrValues = array('' => '') + $objLinkedField->getValues($arrParams[$objLinkedField->fields['id_form']]);
+                                    case 'date':
+                                        $strFieldType = 'input:text';
+                                        $strDataType = 'date';
+                                        $intMaxLength = 10;
+                                    break;
 
-                                // Mise à jour des paramètres déjà saisis pour le prochain champ imbriqué dans la boucle
-                                $arrParams[$objLinkedField->fields['id_form']][$objLinkedField->fields['fieldname']] = current($arrFieldsContent[$objField->fields['id']]);
+                                    case 'time':
+                                        $strFieldType = 'input:text';
+                                        $strDataType = 'time';
+                                        $intMaxLength = 5;
+                                    break;
 
-                                $arrOptions['onchange'] .= "forms_field_tablelink_onchange({$objField->fields['id']}, ".json_encode(array_keys($arrLinkedFields['forms'][$objLinkedField->fields['id_form']])).",'".ploopi_urlencode('admin-light.php?ploopi_op=forms_tablelink_values')."');";
+                                    case 'email':
+                                        $strFieldType = 'input:text';
+                                        $strDataType = 'email';
+                                        $intMaxLength = 255;
+                                    break;
+
+                                    default:
+                                        $strFieldType = 'input:text';
+                                        $strDataType = 'string';
+                                        $intMaxLength = 255;
+                                    break;
+                                }
+                            break;
+
+                            case 'tablelink':
+                                /**
+                                  * On ne doit afficher les données que si le lien est unique vers la table ou si c'est le premier champ lié
+                                  * (les valeurs des autres champs sont déterminées en fonction des choix déjà effectués sur les précédents champs)
+                                  */
+                                if (isset($arrLinkedFields['fields'][$objField->fields['values']]))
+                                {
+                                    if (empty($strFocus)) $strFocus = 'field_'.$objField->fields['id'];
+
+                                    $objLinkedField = $arrLinkedFields['fields'][$objField->fields['values']];
+
+                                    // Initialisation de la liste des paramètres vers le formulaire X
+                                    if (!isset($arrParams[$objLinkedField->fields['id_form']])) $arrParams[$objLinkedField->fields['id_form']] = array();
+
+                                    // Lecture des valeurs du champs lié en fonction des paramètres déjà saisis
+                                    $arrValues = array('' => '') + $objLinkedField->getValues($arrParams[$objLinkedField->fields['id_form']]);
+
+                                    // Mise à jour des paramètres déjà saisis pour le prochain champ imbriqué dans la boucle
+                                    $arrParams[$objLinkedField->fields['id_form']][$objLinkedField->fields['fieldname']] = current($arrFieldsContent[$objField->fields['id']]);
+
+                                    $arrOptions['onchange'] .= "forms_field_tablelink_onchange({$objField->fields['id']}, ".json_encode(array_keys($arrLinkedFields['forms'][$objLinkedField->fields['id_form']])).",'".ploopi_urlencode('admin-light.php?ploopi_op=forms_tablelink_values')."');";
+
+                                    $objPanel->addField( new form_select(
+                                        $objField->fields['name'],
+                                        $arrValues,
+                                        current($arrFieldsContent[$objField->fields['id']]),
+                                        'field_'.$objField->fields['id'],
+                                        'field_'.$objField->fields['id'],
+                                        $arrOptions
+                                    ));
+                                }
+                            break;
+
+                            case 'color':
+                                if (empty($strFocus)) $strFocus = 'field_'.$objField->fields['id'];
+
+                                $arrValues = explode('||',$objField->fields['values']);
+                                $arrSelectOptions = array();
+                                $arrSelectOptions[] = new form_select_option('', '');
+                                foreach($arrValues as $strValue) $arrSelectOptions[] = new form_select_option(' ', $strValue, null, array('style' => "background-color:{$strValue}"));
+                                $arrOptions['onchange'] .= "this.style.backgroundColor = this[this.selectedIndex].style.backgroundColor;";
 
                                 $objPanel->addField( new form_select(
                                     $objField->fields['name'],
-                                    $arrValues,
+                                    $arrSelectOptions,
                                     current($arrFieldsContent[$objField->fields['id']]),
                                     'field_'.$objField->fields['id'],
                                     'field_'.$objField->fields['id'],
                                     $arrOptions
                                 ));
-                            }
-                        break;
+                            break;
 
-                        case 'color':
-                            if (empty($strFocus)) $strFocus = 'field_'.$objField->fields['id'];
+                            case 'select':
+                                if (empty($strFocus)) $strFocus = 'field_'.$objField->fields['id'];
 
-                            $arrValues = explode('||',$objField->fields['values']);
-                            $arrSelectOptions = array();
-                            $arrSelectOptions[] = new form_select_option('', '');
-                            foreach($arrValues as $strValue) $arrSelectOptions[] = new form_select_option(' ', $strValue, null, array('style' => "background-color:{$strValue}"));
-                            $arrOptions['onchange'] .= "this.style.backgroundColor = this[this.selectedIndex].style.backgroundColor;";
+                                $arrValues = explode('||',$objField->fields['values']);
+                                $arrValues = empty($arrValues) ? array() : array_combine($arrValues, $arrValues);
 
-                            $objPanel->addField( new form_select(
-                                $objField->fields['name'],
-                                $arrSelectOptions,
-                                current($arrFieldsContent[$objField->fields['id']]),
-                                'field_'.$objField->fields['id'],
-                                'field_'.$objField->fields['id'],
-                                $arrOptions
-                            ));
-                        break;
+                                $objPanel->addField( new form_select(
+                                    $objField->fields['name'],
+                                    array('' => '') + $arrValues,
+                                    current($arrFieldsContent[$objField->fields['id']]),
+                                    'field_'.$objField->fields['id'],
+                                    'field_'.$objField->fields['id'],
+                                    $arrOptions
+                                ));
+                            break;
 
-                        case 'select':
-                            if (empty($strFocus)) $strFocus = 'field_'.$objField->fields['id'];
+                            case 'checkbox':
+                                $arrValues = explode('||',$objField->fields['values']);
 
-                            $arrValues = explode('||',$objField->fields['values']);
-                            $arrValues = empty($arrValues) ? array() : array_combine($arrValues, $arrValues);
+                                $objPanel->addField( new form_checkbox_list(
+                                    $objField->fields['name'],
+                                    array_combine($arrValues, $arrValues),
+                                    $arrFieldsContent[$objField->fields['id']],
+                                    'field_'.$objField->fields['id'],
+                                    'field_'.$objField->fields['id'],
+                                    $arrOptions
+                                ));
+                            break;
 
-                            $objPanel->addField( new form_select(
-                                $objField->fields['name'],
-                                array('' => '') + $arrValues,
-                                current($arrFieldsContent[$objField->fields['id']]),
-                                'field_'.$objField->fields['id'],
-                                'field_'.$objField->fields['id'],
-                                $arrOptions
-                            ));
-                        break;
+                            case 'radio':
+                                $arrValues = explode('||',$objField->fields['values']);
+                                $objPanel->addField( new form_radio_list(
+                                    $objField->fields['name'],
+                                    array_combine($arrValues, $arrValues),
+                                    current($arrFieldsContent[$objField->fields['id']]),
+                                    'field_'.$objField->fields['id'],
+                                    'field_'.$objField->fields['id'],
+                                    $arrOptions
+                                ));
+                            break;
 
-                        case 'checkbox':
-                            $arrValues = explode('||',$objField->fields['values']);
+                            case 'textarea':
+                                if (empty($strFocus)) $strFocus = 'field_'.$objField->fields['id'];
 
-                            $objPanel->addField( new form_checkbox_list(
-                                $objField->fields['name'],
-                                array_combine($arrValues, $arrValues),
-                                $arrFieldsContent[$objField->fields['id']],
-                                'field_'.$objField->fields['id'],
-                                'field_'.$objField->fields['id'],
-                                $arrOptions
-                            ));
-                        break;
+                                $objPanel->addField( new form_field(
+                                    'textarea',
+                                    $objField->fields['name'],
+                                    current($arrFieldsContent[$objField->fields['id']]),
+                                    'field_'.$objField->fields['id'],
+                                    'field_'.$objField->fields['id'],
+                                    $arrOptions
+                                ));
+                            break;
 
-                        case 'radio':
-                            $arrValues = explode('||',$objField->fields['values']);
-                            $objPanel->addField( new form_radio_list(
-                                $objField->fields['name'],
-                                array_combine($arrValues, $arrValues),
-                                current($arrFieldsContent[$objField->fields['id']]),
-                                'field_'.$objField->fields['id'],
-                                'field_'.$objField->fields['id'],
-                                $arrOptions
-                            ));
-                        break;
+                            case 'file':
+                                if (empty($strFocus)) $strFocus = 'field_'.$objField->fields['id'];
 
-                        case 'textarea':
-                            if (empty($strFocus)) $strFocus = 'field_'.$objField->fields['id'];
+                                $objPanel->addField( new form_field(
+                                    'input:file',
+                                    $objField->fields['name'],
+                                    current($arrFieldsContent[$objField->fields['id']]),
+                                    'field_'.$objField->fields['id'],
+                                    'field_'.$objField->fields['id'],
+                                    $arrOptions
+                                ));
+                            break;
 
-                            $objPanel->addField( new form_field(
-                                'textarea',
-                                $objField->fields['name'],
-                                current($arrFieldsContent[$objField->fields['id']]),
-                                'field_'.$objField->fields['id'],
-                                'field_'.$objField->fields['id'],
-                                $arrOptions
-                            ));
-                        break;
+                            case 'autoincrement':
+                                $strFieldType = 'input:text';
+                                $strDataType = 'string';
+                                $arrOptions['disabled'] = true;
+                                $arrOptions['required'] = false;
+                            break;
 
-                        case 'file':
-                            if (empty($strFocus)) $strFocus = 'field_'.$objField->fields['id'];
+                            case 'calculation':
+                                $strFieldType = 'input:text';
+                                $strDataType = 'string';
+                                $arrOptions['disabled'] = true;
+                                $arrOptions['required'] = false;
+                            break;
 
-                            $objPanel->addField( new form_field(
-                                'input:file',
-                                $objField->fields['name'],
-                                current($arrFieldsContent[$objField->fields['id']]),
-                                'field_'.$objField->fields['id'],
-                                'field_'.$objField->fields['id'],
-                                $arrOptions
-                            ));
-                        break;
+                            case 'color':
+                                $strFieldType = 'input:text';
+                                $strDataType = 'color';
+                            break;
 
-                        case 'autoincrement':
-                            $strFieldType = 'input:text';
-                            $strDataType = 'string';
-                            $arrOptions['disabled'] = true;
-                            $arrOptions['required'] = false;
-                        break;
+                            default:
+                                $strFieldType = 'input:text';
+                                $strDataType = 'string';
+                            break;
+                        }
 
-                        case 'calculation':
-                            $strFieldType = 'input:text';
-                            $strDataType = 'string';
-                            $arrOptions['disabled'] = true;
-                            $arrOptions['required'] = false;
-                        break;
+                        switch($strFieldType)
+                        {
+                            case 'input:text':
+                                if (!empty($objField->fields['maxlength'])) $intMaxLength = $objField->fields['maxlength'];
 
-                        case 'color':
-                            $strFieldType = 'input:text';
-                            $strDataType = 'color';
-                        break;
-
-                        default:
-                            $strFieldType = 'input:text';
-                            $strDataType = 'string';
-                        break;
-                    }
-
-                    switch($strFieldType)
-                    {
-                        case 'input:text':
-                            if (!empty($objField->fields['maxlength'])) $intMaxLength = $objField->fields['maxlength'];
-
-                            $objPanel->addField( new form_field(
-                                'input:text',
-                                ploopi_htmlentities($objField->fields['name']),
-                                isset($arrFieldsContent[$objField->fields['id']]) ? current($arrFieldsContent[$objField->fields['id']]) : '',
-                                'field_'.$objField->fields['id'],
-                                'field_'.$objField->fields['id'],
-                                $arrOptions + array(
-                                    'datatype' => $strDataType,
-                                    'maxlength' => $intMaxLength,
-                                )
-                            ));
-                        break;
+                                $objPanel->addField( new form_field(
+                                    'input:text',
+                                    ploopi_htmlentities($objField->fields['name']),
+                                    isset($arrFieldsContent[$objField->fields['id']]) ? current($arrFieldsContent[$objField->fields['id']]) : '',
+                                    'field_'.$objField->fields['id'],
+                                    'field_'.$objField->fields['id'],
+                                    $arrOptions + array(
+                                        'datatype' => $strDataType,
+                                        'maxlength' => $intMaxLength,
+                                    )
+                                ));
+                            break;
+                        }
                     }
                 }
             }

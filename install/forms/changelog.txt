@@ -1,3 +1,9 @@
+== Module FORMS - version 3.6.1 =====================================================
+
+2016-02-15  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+* Correction d'un bug dans la prise en compte de l'option de visibilité des champs sur les formulaires publics
+
 == Module FORMS - version 3.6.0 =====================================================
 
 2015-09-22  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
