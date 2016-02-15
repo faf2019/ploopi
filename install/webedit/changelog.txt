@@ -1,3 +1,9 @@
+== Module WebEdit - version 2.6.2 ============================================
+
+2016-02-15  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Corrections sur la gestion de l'enregistrement des modifications de position + mise en place d'un système d'autocorrection des positions existantes
+
 == Module WebEdit - version 2.6.1 ============================================
 
 2015-07-13  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

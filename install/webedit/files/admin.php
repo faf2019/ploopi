@@ -192,11 +192,12 @@ switch($menu)
                         $heading = new webedit_heading();
                         if (is_numeric($headingid) && $heading->open($headingid))
                         {
-                            $newposition = $_POST['head_position'];
+                            $newposition = intval($_POST['head_position']);
+
                             if ($newposition != $heading->fields['position']) // nouvelle position définie
                             {
                                 // contrôle de position (on vérifie que la position proposée est possible)
-                                if ($newposition<1) $newposition=1;
+                                if ($newposition < 1) $newposition = 1;
                                 else
                                 {
                                     $select = "Select max(position) as maxpos from ploopi_mod_webedit_heading where id_heading = {$heading->fields['id_heading']} AND id_module = {$_SESSION['ploopi']['moduleid']}";
@@ -206,19 +207,18 @@ switch($menu)
                                 }
 
                                 // mise à jour des positions
-                                $db->query("update ploopi_mod_webedit_heading set position=0 where position={$heading->fields['position']} AND id_heading = {$heading->fields['id_heading']} AND id_module = {$_SESSION['ploopi']['moduleid']}");
                                 if ($newposition > $heading->fields['position'])
                                 {
-                                    $db->query("update ploopi_mod_webedit_heading set position=position-1 where position BETWEEN ".($heading->fields['position']+1)." AND {$newposition} AND id_heading = {$heading->fields['id_heading']} AND id_module = {$_SESSION['ploopi']['moduleid']}");
+                                    $db->query("UPDATE ploopi_mod_webedit_heading SET position = position - 1 WHERE position BETWEEN ".($heading->fields['position']+1)." AND {$newposition} AND id_heading = {$heading->fields['id_heading']} AND id != {$heading->fields['id']} AND id_module = {$_SESSION['ploopi']['moduleid']}");
                                 }
                                 else
                                 {
-                                    $db->query("update ploopi_mod_webedit_heading set position=position+1 where position BETWEEN {$newposition} AND ".($heading->fields['position']-1)." AND id_heading = {$heading->fields['id_heading']} AND id_module = {$_SESSION['ploopi']['moduleid']}");
+                                    $db->query("UPDATE ploopi_mod_webedit_heading SET position = position + 1 WHERE position BETWEEN {$newposition} AND ".($heading->fields['position']-1)." AND id_heading = {$heading->fields['id_heading']} AND id != {$heading->fields['id']} AND id_module = {$_SESSION['ploopi']['moduleid']}");
                                 }
-                                $db->query("update ploopi_mod_webedit_heading set position={$newposition} where position=0 AND id_heading = {$heading->fields['id_heading']} AND id_module = {$_SESSION['ploopi']['moduleid']}");
+
+                                // Mise à jour de la nouvelle position.
                                 $heading->fields['position'] = $newposition;
                             }
-
                             $heading->setvalues($_POST,'webedit_heading_');
 
                             // Contrôle si pas de boucle infinie en redirection de page/rubrique
@@ -256,6 +256,26 @@ switch($menu)
                             ploopi_validation_save(_WEBEDIT_OBJECT_HEADING, $heading->fields['id']);
                             ploopi_validation_save(_WEBEDIT_OBJECT_HEADING_BACK_EDITOR, $heading->fields['id']);
                         }
+                    }
+
+                    if (_PLOOPI_SQL_LAYER == 'mysqli') {
+                        $db->multiplequeries("
+                            SET @pos:=0;
+                            SET @heading:=0;
+
+                            DROP TABLE IF EXISTS heading_pos;
+                            CREATE TEMPORARY TABLE heading_pos AS
+                            SELECT id, position, id_heading, IF(id_heading!=@heading, @pos:=1, @pos:=@pos+1) as newpos, IF(id_heading!=@heading, @heading:=id_heading, 0) as nan
+                            FROM ploopi_mod_webedit_heading
+                            WHERE id_heading != 0
+                            ORDER BY id_heading, position;
+
+                            UPDATE ploopi_mod_webedit_heading h, heading_pos hp
+                            SET h.position = hp.newpos
+                            WHERE h.id = hp.id;
+
+                            DROP TABLE IF EXISTS heading_pos;
+                        ");
                     }
 
                     ploopi_redirect("admin.php?headingid={$headingid}");
@@ -468,28 +488,31 @@ switch($menu)
                             // modification de la position d'un article
                             if (isset($_POST['webedit_art_position']))
                             {
-                                $newposition = $_POST['webedit_art_position'];
+                                $newposition = intval($_POST['webedit_art_position']);
+
                                 if ($newposition != $article->fields['position']) // nouvelle position définie
                                 {
-                                    if ($newposition<1) $newposition=1;
+                                    // Contrôle min/max
+                                    if ($newposition < 1) $newposition = 1;
                                     else
                                     {
-                                        $select = "Select max(position) as maxpos from {$tablename} where id_heading = {$headingid}";
+                                        $select = "Select max(position) as maxpos from {$tablename} WHERE id_heading = {$headingid}";
                                         $db->query($select);
                                         $fields = $db->fetchrow();
                                         if ($newposition > $fields['maxpos']) $newposition = $fields['maxpos'];
                                     }
 
-                                    $db->query("update {$tablename} set position=0 where position={$article->fields['position']} AND id_heading = {$article->fields['id_heading']}");
+                                    // Impact autres articles
                                     if ($newposition > $article->fields['position'])
                                     {
-                                        $db->query("update {$tablename} set position=position-1 where position BETWEEN ".($article->fields['position']-1)." AND {$newposition} AND id_heading = {$article->fields['id_heading']}");
+                                        $db->query("UPDATE {$tablename} SET position = position-1 WHERE position BETWEEN ".($article->fields['position']+1)." AND {$newposition} AND id_heading = {$article->fields['id_heading']} AND id != {$article->fields['id']}");
                                     }
                                     else
                                     {
-                                        $db->query("update {$tablename} set position=position+1 where position BETWEEN {$newposition} AND ".($article->fields['position']-1)." AND id_heading = {$article->fields['id_heading']}");
+                                        $db->query("UPDATE {$tablename} SET position = position+1 WHERE position BETWEEN {$newposition} AND ".($article->fields['position']-1)." AND id_heading = {$article->fields['id_heading']} AND id != {$article->fields['id']}");
                                     }
-                                    $db->query("update {$tablename} set position={$newposition} where position=0 AND id_heading = {$article->fields['id_heading']}");
+
+                                    // Mise à jour de la nouvelle position.
                                     $article->fields['position'] = $newposition;
                                 }
                             }
@@ -689,6 +712,41 @@ switch($menu)
 
                     if (!empty($_POST['articleid'])) ploopi_create_user_action_log(_WEBEDIT_ACTION_ARTICLE_EDIT, $articleid);
                     else ploopi_create_user_action_log(_WEBEDIT_ACTION_ARTICLE_EDIT, $articleid);
+
+                    if (_PLOOPI_SQL_LAYER == 'mysqli') {
+                        $db->multiplequeries("
+                            SET @pos:=0;
+                            SET @heading:=0;
+
+                            DROP TABLE IF EXISTS article_pos;
+                            CREATE TEMPORARY TABLE article_pos AS
+                            SELECT id, position, id_heading, IF(id_heading!=@heading, @pos:=1, @pos:=@pos+1) as newpos, IF(id_heading!=@heading, @heading:=id_heading, 0) as nan
+                            FROM ploopi_mod_webedit_article_draft
+                            WHERE id_heading != 0
+                            ORDER BY id_heading, position;
+
+                            UPDATE ploopi_mod_webedit_article_draft ad, article_pos ap
+                            SET ad.position = ap.newpos
+                            WHERE ad.id = ap.id;
+
+                            SET @pos:=0;
+                            SET @heading:=0;
+
+                            DROP TABLE IF EXISTS article_pos;
+                            CREATE TEMPORARY TABLE article_pos AS
+                            SELECT id, position, id_heading, IF(id_heading!=@heading, @pos:=1, @pos:=@pos+1) as newpos, IF(id_heading!=@heading, @heading:=id_heading, 0) as nan
+                            FROM ploopi_mod_webedit_article
+                            WHERE id_heading != 0
+                            ORDER BY id_heading, position;
+
+                            UPDATE ploopi_mod_webedit_article ad, article_pos ap
+                            SET ad.position = ap.newpos
+                            WHERE ad.id = ap.id;
+
+                            DROP TABLE IF EXISTS article_pos;
+                        ");
+                    }
+
                     ploopi_redirect("admin.php?op=article_modify&articleid={$articleid}");
                 }
                 else ploopi_redirect('admin.php');
