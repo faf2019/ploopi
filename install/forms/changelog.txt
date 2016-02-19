@@ -1,3 +1,9 @@
+== Module FORMS - version 3.6.2 =====================================================
+
+2016-02-19  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+* Correction d'un bug lors de l'enregistrement d'un champ de type "Numéro auto" (perte de la valeur)
+
 == Module FORMS - version 3.6.1 =====================================================
 
 2016-02-15  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>

@@ -103,6 +103,7 @@ if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open
                     $objQuery->add_from($objForm->getDataTableName());
                     $strValue = current($objQuery->execute()->getarray(true)) + 1;
                 }
+                else $strValue = $objRecord->fields[$objField->fields['fieldname']];
             break;
 
             case 'calculation':
