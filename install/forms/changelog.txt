@@ -1,3 +1,13 @@
+== Module FORMS - version 3.5.12 =====================================================
+
+2016-02-19  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+* Correction d'un bug dans la mise en oeuvre des groupes conditionnels
+* Correction d'un bug d'affichage dans la liste des opérateurs des groupes conditionnels
+* Ajout de l'option "visible en frontoffice" pour les séparateurs
+* Affichage de l'option "Frontoffice" dans la liste des champs du formulaire
+* Ajout de la propriété autocomplete="off" sur les champs de formulaire (impact sur la fonction "réinitialiser" qui permet de supprimer le remplissage automatique des champs géré par le navigateur)
+
 == Module FORMS - version 3.5.11 =====================================================
 
 2016-02-19  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>

@@ -384,7 +384,7 @@ if (!$objForm->isnew())
 
     $array_columns['right']['options'] = array(
         'label' => _FORMS_OPTIONS,
-        'width' => 160,
+        'width' => 250,
         'options' => array('sort' => true)
     );
 
@@ -422,6 +422,7 @@ if (!$objForm->isnew())
         {
             $arrOptions = array();
             if ($row['option_pagebreak']) $arrOptions[] = 'Saut de page';
+            if ($row['option_wceview']) $arrOptions[] = 'Frontoffice';
 
             $array_values[$c]['values'] = array(
                 'name' => array('label' => $row['name']),
@@ -445,6 +446,7 @@ if (!$objForm->isnew())
         {
             $arrOptions = array();
             if ($row['option_pagebreak']) $arrOptions[] = 'Saut de page';
+            if ($row['option_wceview']) $arrOptions[] = 'Frontoffice';
 
             $array_values[$c]['values'] = array(
                 'name' => array('label' => _FORMS_FIELD_XHTMLCONTENT),
@@ -473,6 +475,7 @@ if (!$objForm->isnew())
             if ($row['option_needed']) $arrOptions[] = 'Requis';
             if ($row['option_adminonly']) $arrOptions[] = 'Admin';
             if ($row['option_pagebreak']) $arrOptions[] = 'Saut de page';
+            if ($row['option_wceview']) $arrOptions[] = 'Frontoffice';
 
             $array_values[$c]['values'] = array(
                 'name' => array('label' => ploopi_htmlentities($row['name'])),
