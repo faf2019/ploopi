@@ -1926,7 +1926,11 @@ class formsForm extends data_object
                                     current($arrFieldsContent[$objField->fields['id']]),
                                     'field_'.$objField->fields['id'],
                                     'field_'.$objField->fields['id'],
-                                    $arrOptions
+                                    $arrOptions + array(
+                                        'autocorrect' => false,
+                                        'autocapitalize' => false,
+                                        'spellcheck' => false
+                                    )
                                 ));
                             break;
 
@@ -1982,6 +1986,10 @@ class formsForm extends data_object
                                     $arrOptions + array(
                                         'datatype' => $strDataType,
                                         'maxlength' => $intMaxLength,
+                                        'autocomplete' => false,
+                                        'autocorrect' => false,
+                                        'autocapitalize' => false,
+                                        'spellcheck' => false
                                     )
                                 ));
                             break;
@@ -2125,6 +2133,9 @@ class formsForm extends data_object
 
                         // Les opérateurs de base
                         default:
+                            global $field_operators;
+                            if (isset($field_operators[$row['op']])) $row['op'] = $field_operators[$row['op']];
+
                             if ($row['op'] == '=') $row['op'] = '==';
                             if ($row['op'] == '<>') $row['op'] = '!=';
 

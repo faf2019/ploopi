@@ -113,6 +113,16 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
     <p style="clear:both;padding:0 0 4px 4px;" class="ploopi_va">
         <input type="checkbox" class="checkbox" name="field_option_pagebreak" id="field_option_pagebreak" value="1" <?php if ($field->fields['option_pagebreak']) echo 'checked'; ?> />
         <span style="cursor:pointer;margin-right:15px;" onclick="javascript:$('field_option_pagebreak').checked = !$('field_option_pagebreak').checked;"><?php echo _FORMS_FIELD_PAGEBREAK; ?></span>
+
+        <?php
+        if ($objForm->fields['typeform'] == 'cms')
+        {
+            ?>
+            <input type="checkbox" class="checkbox" name="field_option_wceview" id="field_option_wceview" value="1" <?php if ($field->fields['option_wceview']) echo 'checked'; ?> />
+            <span style="cursor:pointer;margin-right:15px;" onclick="javascript:$('field_option_wceview').checked = !$('field_option_wceview').checked;"><?php echo _FORMS_FIELD_WCEVIEW; ?></span>
+            <?php
+        }
+        ?>
     </p>
 </div>
 
