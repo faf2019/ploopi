@@ -199,7 +199,10 @@ abstract class form_element
             self::_getProperty('readonly',  $arrParentOptions['readonly'] || $this->_arrOptions['readonly'] ? 'readonly' : null).
             self::_getProperty('disabled',  $arrParentOptions['disabled'] || $this->_arrOptions['disabled'] ? 'disabled' : null).
             self::_getProperty('autofocus',  $this->_arrOptions['autofocus'] ? 'autofocus' : null).
-            self::_getProperty('autocomplete',  isset($this->_arrOptions['autocomplete']) && !$this->_arrOptions['autocomplete'] ? 'off' : null);
+            self::_getProperty('autocomplete',  isset($this->_arrOptions['autocomplete']) && !$this->_arrOptions['autocomplete'] ? 'off' : null).
+            self::_getProperty('autocorrect',  isset($this->_arrOptions['autocorrect']) && !$this->_arrOptions['autocorrect'] ? 'off' : null).
+            self::_getProperty('autocapitalize',  isset($this->_arrOptions['autocapitalize']) && !$this->_arrOptions['autocapitalize'] ? 'off' : null).
+            self::_getProperty('spellcheck',  isset($this->_arrOptions['spellcheck']) && !$this->_arrOptions['spellcheck'] ? 'false' : null);
     }
 
     /**
@@ -317,6 +320,9 @@ class form_field extends form_element
         'datatype' => 'string',
         'maxlength' => null,
         'autocomplete' => true,
+        'autocorrect' => true,
+        'autocapitalize' => true,
+        'spellcheck' => true,
         'readonly' => false,
         'disabled' => false,
         'accesskey' => null,
