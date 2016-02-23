@@ -1,3 +1,9 @@
+== Module BOOKING - version 1.2.5 ====================================================
+
+2016-02-23  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+* Envoi d'un ticket lors de la suppression d'une demande de réservation
+
 == Module BOOKING - version 1.2.4 ====================================================
 
 2016-02-15  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>

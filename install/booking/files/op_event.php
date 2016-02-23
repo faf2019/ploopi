@@ -259,10 +259,17 @@ if ($_SESSION['ploopi']['connected'])
 
                                     if ($objEventDetail->isvalid($objEvent)) {
                                         // envoyer un ticket, demande validée
-                                        $_SESSION['ploopi']['tickets']['users_selected'][] = $objEvent->fields['id_user'];
 
-                                        $strMessage = "Votre demande de réservation pour {$strResource}{$strSR} du {$arrDateBegin['date']} à ".substr($arrDateBegin['time'], 0, 5)." au {$arrDateEnd['date']} à ".substr($arrDateEnd['time'], 0, 5)." a été validée par {$_SESSION['ploopi']['user']['lastname']} {$_SESSION['ploopi']['user']['firstname']}<br /><br />".ploopi_nl2br(ploopi_htmlentities($objEventDetail->fields['message']));
-                                        $strTitle = "Validation de votre demande de réservation pour {$strResource}{$strSR}";
+                                        // On récupère les utilisateurs gestionnaires de la ressource
+                                        $arrUsers = $objResource->getusers();
+
+                                        // Selection des destinataires du ticket
+                                        foreach(array_keys($arrUsers) as $intIdUser) $_SESSION['ploopi']['tickets']['users_selected'][] = $intIdUser;
+
+                                        if (!in_array($objEvent->fields['id_user'], $_SESSION['ploopi']['tickets']['users_selected'])) $_SESSION['ploopi']['tickets']['users_selected'][] = $objEvent->fields['id_user'];
+
+                                        $strMessage = "La demande de réservation pour {$strResource}{$strSR} du {$arrDateBegin['date']} à ".substr($arrDateBegin['time'], 0, 5)." au {$arrDateEnd['date']} à ".substr($arrDateEnd['time'], 0, 5)." a été validée par {$_SESSION['ploopi']['user']['lastname']} {$_SESSION['ploopi']['user']['firstname']}<br /><br />".ploopi_nl2br(ploopi_htmlentities($objEventDetail->fields['message']));
+                                        $strTitle = "Validation de la demande de réservation pour {$strResource}{$strSR}";
                                     }
                                     else $booError = true;
                                 break;
@@ -273,20 +280,34 @@ if ($_SESSION['ploopi']['connected'])
                                     $objEventDetail->fields['validated'] = 0;
 
                                     // envoyer un ticket, demande annulée
-                                    $_SESSION['ploopi']['tickets']['users_selected'][] = $objEvent->fields['id_user'];
 
-                                    $strMessage = "Votre demande de réservation pour {$strResource}{$strSR} du {$arrDateBegin['date']} à ".substr($arrDateBegin['time'], 0, 5)." au {$arrDateEnd['date']} à ".substr($arrDateEnd['time'], 0, 5)." a été refusée par {$_SESSION['ploopi']['user']['lastname']} {$_SESSION['ploopi']['user']['firstname']} pour le motif suivant : <br /><br />".ploopi_nl2br(ploopi_htmlentities($objEventDetail->fields['message']));
-                                    $strTitle = "Refus de votre demande de réservation pour {$strResource}{$strSR}";
+                                    // On récupère les utilisateurs gestionnaires de la ressource
+                                    $arrUsers = $objResource->getusers();
+
+                                    // Selection des destinataires du ticket
+                                    foreach(array_keys($arrUsers) as $intIdUser) $_SESSION['ploopi']['tickets']['users_selected'][] = $intIdUser;
+
+                                    if (!in_array($objEvent->fields['id_user'], $_SESSION['ploopi']['tickets']['users_selected'])) $_SESSION['ploopi']['tickets']['users_selected'][] = $objEvent->fields['id_user'];
+
+                                    $strMessage = "La demande de réservation pour {$strResource}{$strSR} du {$arrDateBegin['date']} à ".substr($arrDateBegin['time'], 0, 5)." au {$arrDateEnd['date']} à ".substr($arrDateEnd['time'], 0, 5)." a été refusée par {$_SESSION['ploopi']['user']['lastname']} {$_SESSION['ploopi']['user']['firstname']} pour le motif suivant : <br /><br />".ploopi_nl2br(ploopi_htmlentities($objEventDetail->fields['message']));
+                                    $strTitle = "Refus de la demande de réservation pour {$strResource}{$strSR}";
                                 break;
 
                                 // Suppression de la demande
                                 case '9':
 
                                     // envoyer un ticket, demande annulée
-                                    $_SESSION['ploopi']['tickets']['users_selected'][] = $objEvent->fields['id_user'];
 
-                                    $strMessage = "Votre demande de réservation pour {$strResource}{$strSR} du {$arrDateBegin['date']} à ".substr($arrDateBegin['time'], 0, 5)." au {$arrDateEnd['date']} à ".substr($arrDateEnd['time'], 0, 5)." a été supprimée par {$_SESSION['ploopi']['user']['lastname']} {$_SESSION['ploopi']['user']['firstname']} pour le motif suivant : <br /><br />".ploopi_nl2br(ploopi_htmlentities($objEventDetail->fields['message']));
-                                    $strTitle = "Suppression de votre demande de réservation pour {$strResource}{$strSR}";
+                                    // On récupère les utilisateurs gestionnaires de la ressource
+                                    $arrUsers = $objResource->getusers();
+
+                                    // Selection des destinataires du ticket
+                                    foreach(array_keys($arrUsers) as $intIdUser) $_SESSION['ploopi']['tickets']['users_selected'][] = $intIdUser;
+
+                                    if (!in_array($objEvent->fields['id_user'], $_SESSION['ploopi']['tickets']['users_selected'])) $_SESSION['ploopi']['tickets']['users_selected'][] = $objEvent->fields['id_user'];
+
+                                    $strMessage = "La demande de réservation pour {$strResource}{$strSR} du {$arrDateBegin['date']} à ".substr($arrDateBegin['time'], 0, 5)." au {$arrDateEnd['date']} à ".substr($arrDateEnd['time'], 0, 5)." a été supprimée par {$_SESSION['ploopi']['user']['lastname']} {$_SESSION['ploopi']['user']['firstname']} pour le motif suivant : <br /><br />".ploopi_nl2br(ploopi_htmlentities($objEventDetail->fields['message']));
+                                    $strTitle = "Suppression de la demande de réservation pour {$strResource}{$strSR}";
                                 break;
                             }
                         }
@@ -595,6 +616,8 @@ if ($_SESSION['ploopi']['connected'])
         case 'booking_event_detail_delete':
             include_once './modules/booking/classes/class_booking_event.php';
             include_once './modules/booking/classes/class_booking_event_detail.php';
+            include_once './modules/booking/classes/class_booking_resource.php';
+            include_once './modules/booking/classes/class_booking_subresource.php';
 
             $objEventDetail = new booking_event_detail();
 
@@ -604,6 +627,43 @@ if ($_SESSION['ploopi']['connected'])
                 $objEvent = new booking_event();
                 if ($objEvent->open($objEventDetail->fields['id_event']) && $objEvent->fields['id_user'] == $_SESSION['ploopi']['userid'])
                 {
+                    $objResource = new booking_resource();
+                    $strResource = $objResource->open($objEvent->fields['id_resource']) ? $objResource->fields['name'] : 'inconnu';
+
+
+                    $rowDetailsB = ploopi_timestamp2local($objEventDetail->fields['timestp_begin']);
+                    $rowDetailsE = ploopi_timestamp2local($objEventDetail->fields['timestp_end']);
+
+                    $strBegin = $rowDetailsB['date'].' à '.sprintf("%02dh%02d", substr($rowDetailsB['time'], 0, 2), substr($rowDetailsB['time'], 3, 2));
+                    $strEnd = $rowDetailsE['date'].' à '.sprintf("%02dh%02d", substr($rowDetailsE['time'], 0, 2), substr($rowDetailsE['time'], 3, 2));
+
+                    $arrSR = array();
+                    foreach($objEvent->getsubresources() as $intIdSR) {
+                        $objSR = new booking_subresource();
+                        if ($objSR->open($intIdSR)) $arrSR[] = $objSR->fields['name'];
+                    }
+
+                    $strSR = empty($arrSR) ? '' : ' (incluant: '.implode(', ', $arrSR).')';
+
+                    $_SESSION['ploopi']['tickets']['users_selected'] = array();
+
+                    // On récupère les utilisateurs gestionnaires de la ressource
+                    $arrUsers = $objResource->getusers();
+
+                    // Selection des destinataires du ticket
+                    foreach(array_keys($arrUsers) as $intIdUser) $_SESSION['ploopi']['tickets']['users_selected'][] = $intIdUser;
+
+                    if (!in_array($objEvent->fields['id_user'], $_SESSION['ploopi']['tickets']['users_selected'])) $_SESSION['ploopi']['tickets']['users_selected'][] = $objEvent->fields['id_user'];
+
+                    $strMessage = "La demande de réservation pour {$strResource}{$strSR} du {$strBegin} au {$strEnd} a été supprimée par {$_SESSION['ploopi']['user']['lastname']} {$_SESSION['ploopi']['user']['firstname']}";
+                    $strTitle = "Suppression de la demande de réservation pour {$strResource}{$strSR}";
+
+                    // Envoi d'un ticket à l'initiateur de la demande
+                    ploopi_tickets_send(
+                        $strTitle,
+                        $strMessage
+                    );
+
                     $objEventDetail->delete();
                 }
             }
