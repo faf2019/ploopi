@@ -640,23 +640,26 @@ class calendar
                                             ?>
                                             <div class="event" id="calendar_event<? echo $intId; ?>" style="top:<?php echo $intEventTop; ?>px;height:<?php echo $intEventHeight - 1; ?>px;width:<?php echo $intChannelWidth; ?>px;background-color:<?php echo ploopi_htmlentities($this->arrEvents[$intId]->strColor); ?>;">
 
-                                                <div class="event_title" id="calendar_event<? echo $intId; ?>_handle"  style="overflow:hidden;height:16px;line-height:16px;<? echo !is_null($this->arrEvents[$intId]->arrOnDrop) ? 'cursor:move;' : ''; ?>">
-                                                    <?
-                                                    if (!is_null($this->arrEvents[$intId]->strOnClose))
-                                                    {
-                                                        ?>
-                                                        <a href="javascript:void(0);" onclick="javascript:<? echo $this->arrEvents[$intId]->strOnClose; ?>;"><img align="right" src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/calendar/close.png" /></a>
+                                                <? if ($this->arrEvents[$intId]->strTitle != '') { ?>
+                                                    <div class="event_title" id="calendar_event<? echo $intId; ?>_handle"  style="overflow:hidden;height:16px;line-height:16px;<? echo !is_null($this->arrEvents[$intId]->arrOnDrop) ? 'cursor:move;' : ''; ?>">
                                                         <?
-                                                    }
-                                                    ?>
-                                                    <span><?php
-                                                        echo str_replace(
-                                                            array('<date_begin>', '<date_end>', '<time_begin>', '<time_end>'),
-                                                            array(substr($arrDateBegin['date'], 0, 5), substr($arrDateEnd['date'], 0, 5), substr($arrDateBegin['time'], 0, 5), substr($arrDateEnd['time'], 0, 5)),
-                                                            $this->arrEvents[$intId]->strTitle
-                                                        );
-                                                    ?></span>
-                                                </div>
+                                                        if (!is_null($this->arrEvents[$intId]->strOnClose))
+                                                        {
+                                                            ?>
+                                                            <a href="javascript:void(0);" onclick="javascript:<? echo $this->arrEvents[$intId]->strOnClose; ?>;"><img align="right" src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/calendar/close.png" /></a>
+                                                            <?
+                                                        }
+                                                        ?>
+                                                        <span><?php
+                                                            echo str_replace(
+                                                                array('<date_begin>', '<date_end>', '<time_begin>', '<time_end>'),
+                                                                array(substr($arrDateBegin['date'], 0, 5), substr($arrDateEnd['date'], 0, 5), substr($arrDateBegin['time'], 0, 5), substr($arrDateEnd['time'], 0, 5)),
+                                                                $this->arrEvents[$intId]->strTitle
+                                                            );
+                                                        ?></span>
+                                                    </div>
+                                                <? } ?>
+
                                                 <a class="event_inner" href="<?php echo $this->arrEvents[$intId]->strHref; ?>" <?php if (!is_null($this->arrEvents[$intId]->strOnClick)) {?>onclick="<?php echo $this->arrEvents[$intId]->strOnClick; ?>"<?php } ?> style="height:<?php echo $intEventHeight - 20; ?>px;<?php if (!empty($this->arrEvents[$intId]->strStyle)) echo $this->arrEvents[$intId]->strStyle; ?>">
                                                     <?php
                                                     echo str_replace(
