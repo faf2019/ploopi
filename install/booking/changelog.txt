@@ -1,3 +1,9 @@
+== Module BOOKING - version 1.2.6 ====================================================
+
+2016-03-14  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+* Désactivation de l'affichage détaillé des réservations en mode multi-colonne et en affichage hebdomadaire (contribution JPP@MI)
+
 == Module BOOKING - version 1.2.5 ====================================================
 
 2016-02-23  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>

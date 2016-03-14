@@ -34,6 +34,9 @@
 
 include_once './include/classes/calendar.php';
 
+// INIT Nombre de colonnes
+$channelsCount = 0;
+
 // INIT PATTERN de recherche
 $arrSearchPattern = array();
 
@@ -59,7 +62,7 @@ if (isset($_REQUEST['booking_day'])) $arrSearchPattern['booking_day'] = $_REQUES
 $booDateModify = isset($_REQUEST['booking_month']) || isset($_REQUEST['booking_year']) || isset($_REQUEST['booking_week']) || isset($_REQUEST['booking_day']);
 
 // Init des valeurs par défaut
-// JPP Remplacé 
+// JPP Remplacé
 // if (!isset($arrSearchPattern['booking_display_type'])) $arrSearchPattern['booking_display_type'] = 'month';
 // JPP Début remplacement
 $param_display_type = ploopi_getparam('booking_default_display_type');
@@ -68,7 +71,7 @@ if (!isset($arrSearchPattern['booking_display_type'])) $arrSearchPattern['bookin
 if (!isset($arrSearchPattern['booking_size'])) $arrSearchPattern['booking_size'] = $arrBookingSize[0];
 if (!isset($arrSearchPattern['booking_resources'])) $arrSearchPattern['booking_resources'] = array();
 if (!isset($arrSearchPattern['booking_validated'])) $arrSearchPattern['booking_validated'] = '';
-// JPP Remplacé 
+// JPP Remplacé
 // if (!isset($arrSearchPattern['booking_channels'])) $arrSearchPattern['booking_channels'] = 1;
 // JPP Début remplacement
 $param_booking_channels = ploopi_getparam('booking_default_channels');
@@ -373,6 +376,7 @@ if ($arrSearchPattern['booking_channels'])
     }
 
     $objCalendar->setChannels($arrChannels);
+    $channelsCount = count($arrChannels);
 }
 else
 {
@@ -394,21 +398,40 @@ foreach($arrEvents as $event)
         $strContent = '<div style="margin:2px;background-color:'.$strBgColor.';border:1px solid #000;text-align:center;">'.$strStatus.'</div><div style="margin:2px;">'.ploopi_htmlentities($event['object']).'</div>';
     }
 
-    $objCalendar->addEvent(
-        new calendarEvent(
-            $event['timestp_begin'],
-            $event['timestp_end'],
-            '<time_begin> / <time_end>',
-            $strContent,
-            $arrSearchPattern['booking_channels'] ? $event['id_resource'] : '',
-            array(
-                'strColor' => $event['color'],
-                'strOnClick' => "booking_element_open('event', '{$event['id']},{$event['ed_id']}', event);",
-                'strHref' => 'javascript:void(0);',
-                'strLabel' => ''
+    if ($arrSearchPattern['booking_display_type'] == 'week' && ($channelsCount > 1)) {
+        $objCalendar->addEvent(
+            new calendarEvent(
+                $event['timestp_begin'],
+                $event['timestp_end'],
+                '',
+                '',
+                $arrSearchPattern['booking_channels'] ? $event['id_resource'] : '',
+                array(
+                    'strColor' => $event['color'],
+                    'strOnClick' => "booking_element_open('event', '{$event['id']},{$event['ed_id']}', event);",
+                    'strHref' => 'javascript:void(0);',
+                    'strLabel' => ''
+                )
             )
-        )
-    );
+        );
+    }
+    else {
+        $objCalendar->addEvent(
+            new calendarEvent(
+                $event['timestp_begin'],
+                $event['timestp_end'],
+                '<time_begin> / <time_end>',
+                $strContent,
+                $arrSearchPattern['booking_channels'] ? $event['id_resource'] : '',
+                array(
+                    'strColor' => $event['color'],
+                    'strOnClick' => "booking_element_open('event', '{$event['id']},{$event['ed_id']}', event);",
+                    'strHref' => 'javascript:void(0);',
+                    'strLabel' => ''
+                )
+            )
+        );
+    }
 }
 
 ?>

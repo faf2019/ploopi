@@ -36,6 +36,9 @@ include_once './include/classes/calendar.php';
 
 global $arrBookingColor;
 
+// INIT Nombre de colonnes
+$channelsCount = 0;
+
 // INIT PATTERN de recherche
 $arrSearchPattern = array();
 
@@ -385,6 +388,7 @@ if ($arrSearchPattern['booking_channels'])
     }
 
     $objCalendar->setChannels($arrChannels);
+    $channelsCount = count($arrChannels);
 }
 else
 {
@@ -406,21 +410,40 @@ foreach($arrEvents as $event)
         $strContent = '<div class="booking_event_color" style="background-color:'.$strBgColor.';">'.$strStatus.'</div><div>'.ploopi_htmlentities($event['object']).'</div>';
     }
 
-    $objCalendar->addevent(
-        new calendarEvent(
-            $event['timestp_begin'],
-            $event['timestp_end'],
-            '<time_begin> / <time_end>',
-            $strContent,
-            $arrSearchPattern['booking_channels'] ? $event['id_resource'] : '',
-            array(
-                'strColor' => $event['color'],
-                'strOnClick' => "booking_front_element_open('event', '{$event['id']},{$event['ed_id']}', event, '{$booking_moduleid}');",
-                'strHref' => 'javascript:void(0);',
-                'strLabel' => ''
+    if ($arrSearchPattern['booking_display_type'] == 'week' && ($channelsCount > 1)) {
+        $objCalendar->addevent(
+            new calendarEvent(
+                $event['timestp_begin'],
+                $event['timestp_end'],
+                '',
+                '',
+                $arrSearchPattern['booking_channels'] ? $event['id_resource'] : '',
+                array(
+                    'strColor' => $event['color'],
+                    'strOnClick' => "booking_front_element_open('event', '{$event['id']},{$event['ed_id']}', event, '{$booking_moduleid}');",
+                    'strHref' => 'javascript:void(0);',
+                    'strLabel' => ''
+                )
             )
-        )
-    );
+        );
+    }
+    else {
+        $objCalendar->addevent(
+            new calendarEvent(
+                $event['timestp_begin'],
+                $event['timestp_end'],
+                '<time_begin> / <time_end>',
+                $strContent,
+                $arrSearchPattern['booking_channels'] ? $event['id_resource'] : '',
+                array(
+                    'strColor' => $event['color'],
+                    'strOnClick' => "booking_front_element_open('event', '{$event['id']},{$event['ed_id']}', event, '{$booking_moduleid}');",
+                    'strHref' => 'javascript:void(0);',
+                    'strLabel' => ''
+                )
+            )
+        );
+    }
 }
 
 ?>
