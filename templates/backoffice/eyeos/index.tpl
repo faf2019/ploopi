@@ -261,7 +261,7 @@
 
     </div>
     <div id="login_statusbar">
-        Template:&nbsp;<a href="http://www.ovensia.fr">{TEMPLATE_NAME}</a> |&nbsp;Propulsé par&nbsp;<a href="http://www.ploopi.fr">Ploopi {PLOOPI_VERSION} ({PLOOPI_REVISION})</a>&nbsp;&#169;&nbsp;2009&nbsp;<a href="http://www.ovensia.fr">Ovensia</a>&nbsp;|&nbsp;<a href="http://www.ploopi.org/#Utilisation">Documentation utilisateur</a>&nbsp;|&nbsp;<a href="http://www.mozilla-europe.org/fr/products/firefox/">Préférez Firefox</a>
+        Template:&nbsp;<a href="http://www.ovensia.fr">{TEMPLATE_NAME}</a> |&nbsp;Propulsé par&nbsp;<a href="http://www.ploopi.fr">Ploopi</a>&nbsp;&#169;&nbsp;2016&nbsp;<a href="http://www.ovensia.fr">Ovensia</a>&nbsp;|&nbsp;<a href="http://www.ploopi.org/#Utilisation">Documentation utilisateur</a>&nbsp;|&nbsp;<a href="http://www.mozilla-europe.org/fr/products/firefox/">Préférez Firefox</a>
     </div>
     <!-- END switch_user_logged_out -->
 
@@ -301,7 +301,7 @@
             <li>
                 <a class="menu" href="javascript:void(0);" title="A propos de Ploopi"><img style="margin-top:8px;" src="{TEMPLATE_PATH}/img/template/icons/about.png" /></a>
                 <div>
-                    <a href="http://www.ploopi.fr">Propulsé par <strong>Ploopi {PLOOPI_VERSION} ({PLOOPI_REVISION})</strong></a>
+                    <a href="http://www.ploopi.fr">Propulsé par <strong>Ploopi</strong></a>
                     <a href="http://www.mozilla-europe.org/fr/products/firefox/">Ce template ne fonctionne pas avec IE6. <strong>Préférez Firefox</strong></a>
                     <a href="http://www.ploopi.org/#Utilisation"><strong>Documentation utilisateur</strong></a>
                     <p><strong>Informations Utilisateur :</strong>
