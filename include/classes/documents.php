@@ -38,6 +38,7 @@
 include_once './include/classes/data_object.php';
 include_once './include/classes/data_object_collection.php';
 include_once './include/functions/filesystem.php';
+include_once './include/functions/documents.php';
 
 /**
  * Classe de gestion des documents (ne pas confondre avec le module DOC)
