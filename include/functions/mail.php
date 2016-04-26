@@ -31,6 +31,8 @@
  * @author Stéphane Escaich
  */
 
+include_once './include/functions/filesystem.php';
+
 /**
  * Envoie un mail. Gère les emetteurs multiples, les destinataires multiples, le CC multiple, le BCC multiple, le REPLYTO multiple, les pièces jointes, les messages au format HTML.
  *
@@ -346,9 +348,9 @@ function ploopi_send_mail_smtp($from, $to, $subject, $message, $params = null, $
 
     $arrHeaders['Date'] = date('r');
     $arrHeaders['X-Priority'] = 1;
-    $arrHeaders['X-Sender'] = mb_encode_mimeheader(empty($_SERVER['HTTP_HOST']) ? $_SERVER['SERVER_NAME'] : $_SERVER['HTTP_HOST']);
+    $arrHeaders['X-Sender'] = mb_encode_mimeheader(empty($_SERVER['HTTP_HOST']) ? (empty($_SERVER['SERVER_NAME']) ? 'cli' : $_SERVER['SERVER_NAME']) : $_SERVER['HTTP_HOST']);
     $arrHeaders['X-Mailer'] = 'PHP/Ploopi';
-    $arrHeaders['Organization'] = mb_encode_mimeheader(isset($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['label']) ? $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['label'] : $arrHeaders['X-Sender']);
+    $arrHeaders['Organization'] = mb_encode_mimeheader(isset($_SESSION) && isset($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['label']) ? $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['label'] : $arrHeaders['X-Sender']);
 
     $arrMimeParams = array(
         'text_encoding' => '7bit',

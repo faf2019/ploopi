@@ -192,7 +192,7 @@ foreach($tabmoduletype_install as $label => $fields)
                 $values[$c]['values']['author'] = array('label' => ploopi_htmlentities($fields['author']), 'style' => '');
                 $values[$c]['values']['version'] = array('label' => ploopi_htmlentities($fields['version']), 'style' => '');
                 $values[$c]['values']['date'] = array('label' => $ldate['date'], 'style' => '', 'sort_label' => $fields['date']);
-                $values[$c]['values']['action'] = array('label' => "<a href=\"".ploopi_urlencode("admin.php?op=update&idmoduletype={$tabmoduletype_installed[$label]['id']}&installmoduletype={$tabmoduletype_install[$label]['label']}&updatefrom={$tabmoduletype_installed[$label]['version']}&updateto={$fields['version']}")."\">"._SYSTEM_LABEL_UPDATE."</a>", 'style' => 'text-align:center;');
+                $values[$c]['values']['action'] = array('label' => "<a href=\"".ploopi_urlencode("admin.php?op=update&idmoduletype={$tabmoduletype_installed[$label]['id']}&updatefrom={$tabmoduletype_installed[$label]['version']}&updateto={$fields['version']}")."\">"._SYSTEM_LABEL_UPDATE."</a>", 'style' => 'text-align:center;');
             }
             else
             {

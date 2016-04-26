@@ -38,7 +38,7 @@ include_once './modules/system/xmlparser_mod.php';
 include_once './modules/system/xmlparser_mb.php';
 include_once './include/classes/xml2array.php';
 
-if (empty($_GET['installmoduletype'])) ploopi_redirect('admin.php');
+if (empty($_GET['installmoduletype']) || !preg_match('@^([a-z0-9_\-])+$@i', $_GET['installmoduletype'])) ploopi_redirect('admin.php');
 
 if (!ini_get('safe_mode')) ini_set('max_execution_time', 0);
 
