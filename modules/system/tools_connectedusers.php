@@ -36,7 +36,7 @@
  */
 echo $skin->open_simplebloc(_SYSTEM_LABEL_CONNECTEDUSERS);
 
-if (isset($_GET['monitoring'])) header("Refresh: {$_GET['monitoring']}; URL=".ploopi_urlencode("admin.php?op=connectedusers&monitoring={$_GET['monitoring']}"));
+if (isset($_GET['monitoring'])) header("Refresh: ".intval($_GET['monitoring'])."; URL=".ploopi_urlencode("admin.php?op=connectedusers&monitoring={$_GET['monitoring']}"));
 
 $columns = array();
 $values = array();

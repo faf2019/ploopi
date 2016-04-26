@@ -37,14 +37,16 @@
 include_once './modules/system/xmlparser_mb.php';
 include_once './include/classes/xml2array.php';
 
-if (empty($_GET['installmoduletype']) || empty($_GET['idmoduletype']) || empty($_GET['updatefrom']) || empty($_GET['updateto']) || !is_numeric($_GET['idmoduletype'])) ploopi_redirect("admin.php");
+if (empty($_GET['idmoduletype']) || empty($_GET['updatefrom']) || empty($_GET['updateto']) || !is_numeric($_GET['idmoduletype'])) ploopi_redirect("admin.php");
 
-global $idmoduletype;
-$idmoduletype = $_GET['idmoduletype'];
+$objModuleType = new module_type();
+if (!$objModuleType->open($_GET['idmoduletype'])) ploopi_redirect("admin.php");
+
+$strModuleType = $objModuleType->fields['label'];
 
 if (!ini_get('safe_mode')) ini_set('max_execution_time', 0);
 
-echo $skin->open_simplebloc(_SYSTEM_LABEL_UPDATEREPORT.ploopi_htmlentities(" - {$_GET['installmoduletype']} {$_GET['updatefrom']} => {$_GET['installmoduletype']} {$_GET['updateto']}"));
+echo $skin->open_simplebloc(_SYSTEM_LABEL_UPDATEREPORT.ploopi_htmlentities(" - {$strModuleType} {$_GET['updatefrom']} => {$_GET['updateto']}"));
 
 $select = "SELECT version FROM ploopi_module_type WHERE id = '".$db->addslashes($_GET['idmoduletype'])."' AND version = '".$db->addslashes($_GET['updateto'])."'";
 $db->query($select);
@@ -56,9 +58,9 @@ if ($db->numrows())
 }
 else
 {
-    ploopi_create_user_action_log(_SYSTEM_ACTION_UPDATEMODULE, "{$_GET['installmoduletype']} {$_GET['updatefrom']} => {$_GET['installmoduletype']} {$_GET['updateto']}");
+    ploopi_create_user_action_log(_SYSTEM_ACTION_UPDATEMODULE, "{$strModuleType} {$_GET['updatefrom']} => {$strModuleType} {$_GET['updateto']}");
 
-    $modpath = "./install/{$_GET['installmoduletype']}";
+    $modpath = "./install/{$strModuleType}";
 
     $sqlpath =      "{$modpath}/update";
     $xmlfile_desc = "{$modpath}/description.xml";
@@ -66,7 +68,7 @@ else
     $xmlfile_mod =  "{$modpath}/data_mod.xml";
     $mbfile =       "{$modpath}/mb.xml";
     $srcfiles =     "{$modpath}/files";
-    $destfiles =    "./modules/{$_GET['installmoduletype']}";
+    $destfiles =    "./modules/{$strModuleType}";
 
     $arrSqlUpdates = array();
 
@@ -80,7 +82,7 @@ else
                 $matches = array();
                 if (preg_match("@^update_(.*).sql@i", $file, $matches))
                 {
-                    if (!empty($matches[1]) && strcmp($matches[1], $_GET['updatefrom']) > 0 && strcmp($matches[1], $_GET['updateto']) <= 0)
+                    if (!empty($matches[1]) && version_compare($matches[1], $_GET['updatefrom']) > 0 && version_compare($matches[1], $_GET['updateto']) <= 0)
                     {
                         $arrSqlUpdates[$matches[1]] = $matches[0];
                     }
@@ -89,7 +91,7 @@ else
         }
     }
 
-    ksort($arrSqlUpdates);
+    uksort($arrSqlUpdates, 'version_compare');
 
     $critical_error = false;
 
@@ -129,163 +131,6 @@ else
 
         $critical_error = $module_type->update_description($xmlfile_desc, $rapport);
 
-        /*
-        $testok = true;
-        $detail = '';
-
-        if (file_exists($xmlfile_desc))
-        {
-            $fp = fopen($xmlfile_desc, 'r');
-            $data = fread ($fp, filesize ($xmlfile_desc));
-            fclose($fp);
-
-            $x2a = new xml2array();
-            $xmlarray = $x2a->parse($data);
-            if ($xmlarray)
-            {
-                $pt = &$xmlarray['root']['ploopi'][0]['moduletype'][0];
-
-                include_once './include/classes/module.php';
-                include_once './include/classes/param.php';
-                include_once './include/classes/mb.php';
-
-                $module_type = new module_type();
-                $module_type->open($_GET['idmoduletype']);
-
-                $module_type->delete_params();
-
-                $module_type->fields =
-                    array(
-                        'id'            => $_GET['idmoduletype'],
-                        'label'         => $pt['label'][0],
-                        'version'       => $pt['version'][0],
-                        'author'        => $pt['author'][0],
-                        'date'          => $pt['date'][0],
-                        'description'   => $pt['description'][0]
-                    );
-
-                $module_type->save();
-
-                if (!empty($pt['paramtype']))
-                {
-                    foreach($pt['paramtype'] as $key => $value)
-                    {
-                        if (empty($value['default_value'][0])) $value['default_value'][0] = '';
-
-                        $param_type = new param_type();
-                        $param_type->fields =
-                            array(
-                                'id_module_type'    => $module_type->fields['id'],
-                                'name'              => $value['name'][0],
-                                'label'             => $value['label'][0],
-                                'default_value'     => $value['default_value'][0],
-                                'public'            => $value['public'][0],
-                                'description'       => $value['description'][0]
-                            );
-
-                        $param_type->save();
-
-                        // on recherche les paramètres mal initialisés (ploopi_param_default manquant)
-                        $sql =  "
-                                SELECT      m.id
-
-                                FROM        ploopi_module m
-
-                                LEFT JOIN   ploopi_param_default pd
-                                ON          pd.id_module = m.id
-                                AND         pd.name = '".$db->addslashes($value['name'][0])."'
-
-                                WHERE       m.id_module_type = {$module_type->fields['id']}
-                                AND         ISNULL(pd.name)
-                                ";
-
-                        $rs_paramdefault = $db->query($sql);
-
-                        while ($row = $db->fetchrow($rs_paramdefault))
-                        {
-                            $param_default = new param_default();
-                            $param_default->fields =
-                                array(
-                                    'id_module'         => $row['id'],
-                                    'name'              => $value['name'][0],
-                                    'value'             => is_null($value['default_value'][0]) ? '' : $value['default_value'][0],
-                                    'id_module_type'    => $module_type->fields['id']
-                                );
-
-                            $param_default->save();
-                        }
-
-                        if (!empty($value['paramchoice']))
-                        {
-                            foreach($value['paramchoice'] as $ckey => $cvalue)
-                            {
-                                $param_choice = new param_choice();
-                                $param_choice->fields =
-                                    array(
-                                        'id_module_type'    => $module_type->fields['id'],
-                                        'name'              => $param_type->fields['name'],
-                                        'value'             => $cvalue['value'][0],
-                                        'displayed_value'   => $cvalue['displayed_value'][0]
-                                    );
-                                $param_choice->save();
-                            }
-                        }
-                    }
-                }
-
-                if (!empty($pt['cms_object']))
-                {
-                    foreach($pt['cms_object'] as $key => $value)
-                    {
-                        $mb_cms_object = new mb_cms_object();
-                        $mb_cms_object->fields =
-                            array(
-                                'id_module_type'    => $module_type->fields['id'],
-                                'label' => $value['label'][0],
-                                'script' => $value['script'][0],
-                                'select_id' => $value['select_id'][0],
-                                'select_label' => $value['select_label'][0],
-                                'select_table' => $value['select_table'][0]
-                            );
-                        $mb_cms_object->save();
-                    }
-                }
-
-                if (!empty($pt['action']))
-                {
-                    foreach($pt['action'] as $key => $value)
-                    {
-                        $mb_action = new mb_action();
-                        $mb_action->fields =
-                            array(
-                                'id_module_type'    => $module_type->fields['id'],
-                                'id_action' => $value['id_action'][0],
-                                'label' => $value['label'][0],
-                                'id_object' => (isset($value['id_object'][0])) ? $value['id_object'][0] : 0,
-                                'role_enabled' => (isset($value['role_enabled'][0])) ? $value['role_enabled'][0] : 1
-                            );
-                        $mb_action->save();
-                    }
-                }
-
-                $detail = "Fichier '{$xmlfile_desc}' importé.";
-            }
-            else
-            {
-                $detail = "Fichier '{$xmlfile_desc}' mal formé. Vérifiez la structure XML du document.";
-                $testok = false;
-                $critical_error = true;
-            }
-        }
-        else
-        {
-            $detail = "Fichier '{$xmlfile_desc}' non trouvé.";
-            $testok = false;
-            $critical_error = true;
-        }
-
-        $rapport[] = array('operation' => 'Chargement des paramètres/actions', 'detail' => $detail, 'res' => $testok);
-        */
 
         if (!$critical_error)
         {
@@ -313,7 +158,7 @@ else
             $testok = true;
             $detail = '';
 
-            ploopi_create_user_action_log(_SYSTEM_ACTION_UPDATEMETABASE, $_GET['installmoduletype']);
+            ploopi_create_user_action_log(_SYSTEM_ACTION_UPDATEMETABASE, $strModuleType);
 
             $db->query("DELETE FROM ploopi_mb_field WHERE id_module_type = {$_GET['idmoduletype']}");
             $db->query("DELETE FROM ploopi_mb_relation WHERE id_module_type = {$_GET['idmoduletype']}");
