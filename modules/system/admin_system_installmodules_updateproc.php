@@ -39,7 +39,8 @@ include_once './include/classes/xml2array.php';
 
 if (empty($_GET['idmoduletype']) || empty($_GET['updatefrom']) || empty($_GET['updateto']) || !is_numeric($_GET['idmoduletype'])) ploopi_redirect("admin.php");
 
-global $idmoduletype = $_GET['idmoduletype'];
+global $idmoduletype;
+$idmoduletype = $_GET['idmoduletype'];
 
 $objModuleType = new module_type();
 if (!$objModuleType->open($_GET['idmoduletype'])) ploopi_redirect("admin.php");
