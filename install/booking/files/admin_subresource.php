@@ -92,6 +92,7 @@ $db->query("
 
     INNER JOIN  ploopi_mod_booking_resource r ON r.id = sr.id_resource
 
+    WHERE       sr.id_module = {$_SESSION['ploopi']['moduleid']}
 ");
 
 while ($row = $db->fetchrow())
