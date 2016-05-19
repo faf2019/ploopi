@@ -39,6 +39,8 @@
 switch($_REQUEST['ploopi_op'])
 {
     case 'booking_resource_delete':
+        ploopi_init_module('booking', false, false, false);
+
         if (!empty($_GET['booking_element_list']))
         {
             include_once './modules/booking/classes/class_booking_resource.php';
@@ -54,6 +56,8 @@ switch($_REQUEST['ploopi_op'])
     break;
 
     case 'booking_resource_save':
+        ploopi_init_module('booking', false, false, false);
+
         include_once './modules/booking/classes/class_booking_resource.php';
         include_once './modules/booking/classes/class_booking_resource_workspace.php';
 

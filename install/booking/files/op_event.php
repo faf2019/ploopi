@@ -41,6 +41,8 @@ if ($_SESSION['ploopi']['connected'])
     switch($ploopi_op)
     {
         case 'booking_event_planning_delete':
+            ploopi_init_module('booking', false, false, false);
+
             if (!empty($_GET['booking_event_id']))
             {
                 include_once './modules/booking/classes/class_booking_event.php';
@@ -52,6 +54,8 @@ if ($_SESSION['ploopi']['connected'])
         break;
 
         case 'booking_event_delete':
+            ploopi_init_module('booking', false, false, false);
+
             if (!empty($_GET['booking_element_list']))
             {
                 include_once './modules/booking/classes/class_booking_event.php';
@@ -122,6 +126,7 @@ if ($_SESSION['ploopi']['connected'])
                     $objEvent->save();
 
                     // Selection des destinataires du ticket
+                    $_SESSION['ploopi']['tickets']['users_selected'] = array();
                     foreach(array_keys($arrUsers) as $intIdUser) $_SESSION['ploopi']['tickets']['users_selected'][] = $intIdUser;
 
                     $strResource = $objResource->fields['name'];
@@ -572,6 +577,8 @@ if ($_SESSION['ploopi']['connected'])
          * Permet de déverrouiller un événement déjà traité
          */
         case 'booking_event_unlock':
+            ploopi_init_module('booking', false, false, false);
+
             include_once './modules/booking/classes/class_booking_event.php';
 
             $objEvent = new booking_event();
@@ -593,6 +600,7 @@ if ($_SESSION['ploopi']['connected'])
         break;
 
         case 'booking_event_detail_cancel':
+            ploopi_init_module('booking', false, false, false);
 
             include_once './modules/booking/classes/class_booking_event.php';
             include_once './modules/booking/classes/class_booking_event_detail.php';
@@ -614,6 +622,8 @@ if ($_SESSION['ploopi']['connected'])
 
 
         case 'booking_event_detail_delete':
+            ploopi_init_module('booking', false, false, false);
+
             include_once './modules/booking/classes/class_booking_event.php';
             include_once './modules/booking/classes/class_booking_event_detail.php';
             include_once './modules/booking/classes/class_booking_resource.php';

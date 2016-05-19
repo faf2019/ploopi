@@ -39,6 +39,7 @@
 switch($_REQUEST['ploopi_op'])
 {
     case 'booking_subresource_delete':
+        ploopi_init_module('booking', false, false, false);
         if (!empty($_GET['booking_element_list']))
         {
             include_once './modules/booking/classes/class_booking_subresource.php';
@@ -54,6 +55,7 @@ switch($_REQUEST['ploopi_op'])
     break;
 
     case 'booking_subresource_save':
+        ploopi_init_module('booking', false, false, false);
         include_once './modules/booking/classes/class_booking_subresource.php';
 
         $objSubresource = new booking_subresource();

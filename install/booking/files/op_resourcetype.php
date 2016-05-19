@@ -22,7 +22,7 @@
 
 /**
  * Opérations sur les types de ressources
- * 
+ *
  * @package booking
  * @subpackage op
  * @copyright Ovensia
@@ -39,6 +39,8 @@
 switch($_REQUEST['ploopi_op'])
 {
     case 'booking_resourcetype_delete':
+        ploopi_init_module('booking', false, false, false);
+
         if (!empty($_GET['booking_element_list']))
         {
             include_once './modules/booking/classes/class_booking_resourcetype.php';
@@ -54,22 +56,25 @@ switch($_REQUEST['ploopi_op'])
     break;
 
     case 'booking_resourcetype_save':
+        ploopi_init_module('booking', false, false, false);
+
         include_once './modules/booking/classes/class_booking_resourcetype.php';
-        
+
         $objResourceType = new booking_resourcetype();
 
         if (!empty($_GET['booking_resourcetype_id']) && is_numeric($_GET['booking_resourcetype_id'])) $objResourceType->open($_GET['booking_resourcetype_id']);
         $objResourceType->setvalues($_POST, 'booking_resourcetype_');
-        
+
         if (!isset($_POST['booking_resourcetype_active'])) $objResourceType->fields['active'] = 0;
-        
+
         $objResourceType->save();
-        
+
         ploopi_redirect("admin.php?booking_tab=resourcetype");
     break;
 
     case 'booking_resourcetype_add':
     case 'booking_resourcetype_open':
+        ploopi_init_module('booking');
         ob_start();
         include_once './modules/booking/classes/class_booking_resourcetype.php';
 
