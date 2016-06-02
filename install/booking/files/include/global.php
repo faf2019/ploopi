@@ -361,8 +361,8 @@ function booking_get_events($mixId = null, $extended = false, $strict = false, $
         if ($managed == '1' || $managed == '0') $arrWhere[] = " e.managed = '".$db->addslashes($managed)."' ";
         if ($object != '') $arrWhere[] = " e.object LIKE '%".$db->addslashes($object)."%' ";
         if ($requestedby != '') $arrWhere[] = " (u.lastname LIKE '%".$db->addslashes($requestedby)."%' OR u.firstname LIKE '%".$db->addslashes($requestedby)."%' OR w.label LIKE '%".$db->addslashes($requestedby)."%')";
-        if ($from != '') $arrWhere[] = " e.timestp_request >= '".ploopi_local2timestamp($from)."' ";
-        if ($to != '') $arrWhere[] = " e.timestp_request <= '".substr(ploopi_local2timestamp($to), 0, 8)."235959' ";
+        if ($from != '') $arrWhere[] = " ed.timestp_begin >= '".ploopi_local2timestamp($from)."' ";
+        if ($to != '') $arrWhere[] = " ed.timestp_end <= '".substr(ploopi_local2timestamp($to), 0, 8)."235959' ";
 
         $strWhere = ' AND '.implode(' AND ', $arrWhere);
 

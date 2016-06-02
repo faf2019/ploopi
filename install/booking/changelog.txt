@@ -1,3 +1,9 @@
+== Module BOOKING - version 1.0.14 ====================================================
+
+2016-06-02  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+* Correction d'un bug dans la fonction de recherche d'événement sur les intervalles de dates
+
 == Module BOOKING - version 1.0.13 ====================================================
 
 2016-01-15  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
