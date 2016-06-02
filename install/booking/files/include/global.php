@@ -361,12 +361,12 @@ function booking_get_events($mixId = null, $extended = false, $strict = false, $
         if ($managed == '1' || $managed == '0') $arrWhere[] = " e.managed = '".$db->addslashes($managed)."' ";
         if ($object != '') $arrWhere[] = " e.object LIKE '%".$db->addslashes($object)."%' ";
         if ($requestedby != '') $arrWhere[] = " (u.lastname LIKE '%".$db->addslashes($requestedby)."%' OR u.firstname LIKE '%".$db->addslashes($requestedby)."%' OR w.label LIKE '%".$db->addslashes($requestedby)."%')";
-        if ($from != '') $arrWhere[] = " e.timestp_request >= '".ploopi_local2timestamp($from)."' ";
-        if ($to != '') $arrWhere[] = " e.timestp_request <= '".substr(ploopi_local2timestamp($to), 0, 8)."235959' ";
+        if ($from != '') $arrWhere[] = " ed.timestp_begin >= '".ploopi_local2timestamp($from)."' ";
+        if ($to != '') $arrWhere[] = " ed.timestp_end <= '".substr(ploopi_local2timestamp($to), 0, 8)."235959' ";
 
         $strWhere = ' AND '.implode(' AND ', $arrWhere);
 
-        $db->query("
+        $db->query($sql = "
             SELECT      e.*,
                         ed.id as ed_id,
                         ed.timestp_begin,
@@ -381,27 +381,26 @@ function booking_get_events($mixId = null, $extended = false, $strict = false, $
                         u.firstname as u_firstname,
                         u.lastname as u_lastname
 
-            FROM        (ploopi_mod_booking_event e,
-                        ploopi_mod_booking_event_detail ed,
-                        ploopi_mod_booking_resource r,
-                        ploopi_mod_booking_resourcetype rt,
-                        ploopi_workspace w,
-                        ploopi_user u)
+            FROM        ploopi_mod_booking_event e
 
-            WHERE       e.id = ed.id_event
-            AND         e.id_resource = r.id
-            AND         e.id_module = {$moduleid}
-            AND         r.id_resourcetype = rt.id
-            AND         e.id_workspace = w.id
-            AND         e.id_user = u.id
+            INNER JOIN  ploopi_mod_booking_event_detail ed ON e.id = ed.id_event
+            INNER JOIN  ploopi_mod_booking_resource r ON e.id_resource = r.id
+            INNER JOIN   ploopi_mod_booking_resourcetype rt ON r.id_resourcetype = rt.id
+
+            LEFT JOIN   ploopi_workspace w ON e.id_workspace = w.id
+            LEFT JOIN   ploopi_user u ON e.id_user = u.id
+
+            WHERE       e.id_module = {$moduleid}
             {$strWhere}
 
             ORDER BY    ed.timestp_begin, ed.timestp_end
         ");
+
+        echo $sql;
     }
     else
     {
-       $strWhere = ' AND '.implode(' AND ', $arrWhere);
+        $strWhere = ' AND '.implode(' AND ', $arrWhere);
 
         $db->query("
             SELECT      e.*,
@@ -413,13 +412,12 @@ function booking_get_events($mixId = null, $extended = false, $strict = false, $
                         r.color,
                         r.reference
 
-            FROM        ploopi_mod_booking_event e,
-                        ploopi_mod_booking_event_detail ed,
-                        ploopi_mod_booking_resource r
+            FROM        ploopi_mod_booking_event e
 
-            WHERE       e.id = ed.id_event
-            AND         e.id_resource = r.id
-            AND         e.id_module = {$moduleid}
+            INNER JOIN  ploopi_mod_booking_event_detail ed ON e.id = ed.id_event
+            INNER JOIN  ploopi_mod_booking_resource r ON e.id_resource = r.id
+
+            WHERE       e.id_module = {$moduleid}
             {$strWhere}
 
             ORDER BY    ed.timestp_begin, ed.timestp_end

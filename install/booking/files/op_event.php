@@ -89,7 +89,6 @@ if ($_SESSION['ploopi']['connected'])
                 $objEvent->setuwm();
                 if ($_SESSION['ploopi']['mode'] == 'frontoffice') $objEvent->fields['id_module'] = $_GET['booking_moduleid'];
 
-
                 $booError = !$objEvent->isvalid();
                 $booWarning = !$objEvent->isvalid(false);
 
