@@ -35,6 +35,7 @@
 include_once './include/classes/calendar.php';
 
 global $arrBookingColor;
+global $arrBookingSize;
 
 // INIT Nombre de colonnes
 $channelsCount = 0;
@@ -42,7 +43,16 @@ $channelsCount = 0;
 // INIT PATTERN de recherche
 $arrSearchPattern = array();
 
-if (isset($_SESSION['booking'][$booking_moduleid]['booking_request'])) $arrSearchPattern = $_SESSION['booking'][$booking_moduleid]['booking_request'];
+if (isset($_COOKIE["booking_front_request{$booking_moduleid}"])) {
+    ploopi_unset_error_handler();
+    $arrSearchPattern = @unserialize(@gzuncompress(@base64_decode($_COOKIE["booking_front_request{$booking_moduleid}"])));
+    ploopi_set_error_handler();
+} else {
+    // Si pas de cookie alors on peut charger la valeur par défaut dans les paramètres (pré-cochage ou non)
+    if (ploopi_getparam('booking_default_all_checked', $booking_moduleid)) {
+        foreach(booking_get_resources(false, $booking_moduleid) as $key) { $arrSearchPattern['booking_resources'][$key['id']] = $key['id'];}
+    }
+}
 
 // Lecture des paramètres
 if (isset($_REQUEST['booking_display_type'])) $arrSearchPattern['booking_display_type'] = $_REQUEST['booking_display_type'];
@@ -61,21 +71,13 @@ if (isset($_REQUEST['booking_day'])) $arrSearchPattern['booking_day'] = $_REQUES
 $booDateModify = isset($_REQUEST['booking_month']) || isset($_REQUEST['booking_year']) || isset($_REQUEST['booking_week']) || isset($_REQUEST['booking_day']);
 
 // Init des valeurs par défaut
-// JPP Remplacé
-// if (!isset($arrSearchPattern['booking_display_type'])) $arrSearchPattern['booking_display_type'] = 'month';
-// JPP Début remplacement
 $param_display_type = ploopi_getparam('booking_default_display_type',$booking_moduleid);
 if (!isset($arrSearchPattern['booking_display_type'])) $arrSearchPattern['booking_display_type'] = empty($param_display_type) ? 'month' : $param_display_type;
-// JPP Fin remplacement
 if (!isset($arrSearchPattern['booking_size'])) $arrSearchPattern['booking_size'] = $arrBookingSize[0];
 if (!isset($arrSearchPattern['booking_resources'])) $arrSearchPattern['booking_resources'] = array();
 if (!isset($arrSearchPattern['booking_validated'])) $arrSearchPattern['booking_validated'] = '';
-// JPP Remplacé
-// if (!isset($arrSearchPattern['booking_channels'])) $arrSearchPattern['booking_channels'] = 1;
-// JPP Début remplacement
 $param_booking_channels = ploopi_getparam('booking_default_channels',$booking_moduleid);
 if (!isset($arrSearchPattern['booking_channels'])) $arrSearchPattern['booking_channels'] = empty($param_booking_channels) ? 1 : $param_booking_channels;
-// JPP Fin remplacement
 
 // Init de la date "virtuelle"
 if (!isset($arrSearchPattern['booking_virtualdate'])) $arrSearchPattern['booking_virtualdate'] = time();
@@ -134,8 +136,12 @@ $arrSearchPattern['booking_month'] =  date('n', $arrSearchPattern['booking_virtu
 $arrSearchPattern['booking_year'] = date('Y', $arrSearchPattern['booking_virtualdate']);
 $arrSearchPattern['booking_day'] = date('j', $arrSearchPattern['booking_virtualdate']);
 
+ploopi_print_r($arrSearchPattern);
 
-$_SESSION['booking'][$booking_moduleid]['booking_request'] = $arrSearchPattern;
+echo _PLOOPI_BASEPATH;
+
+// Sauvegarde cookie
+setcookie("booking_front_request{$booking_moduleid}", $str = base64_encode(gzcompress(serialize($arrSearchPattern), 9)), time()+86400*30, _PLOOPI_BASEPATH);
 
 // Lecture des ressources
 $arrResources = booking_get_resources(false, $booking_moduleid);

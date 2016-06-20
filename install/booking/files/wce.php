@@ -86,8 +86,9 @@ if (isset($object))
 
                 <div id="booking_ressource_list">
                 <form id="booking_resource_list_form" action="<? echo ploopi_urlencode("index-light.php?ploopi_op=booking_setresources&booking_moduleid={$booking_moduleid}"); ?>" method="post" onsubmit="javascript:ploopi_xmlhttprequest_submitform($('booking_resource_list_form'), 'booking_main'); return false;">
-				<?
+                <?
                 $strResourceType = '';
+
                 foreach ($arrResources as $row)
                 {
                     if ($row['rt_name'] != $strResourceType) // nouveau type de ressource => affichage séparateur
@@ -95,25 +96,30 @@ if (isset($object))
                         if ($strResourceType != '') echo '</div>';
                         $strResourceType = $row['rt_name'];
                         ?>
-						<div style="float:left;height:18px;margin:0;">
-							<input type="checkbox" style="display:inline;" onclick="ploopi_checkall(booking_resource_list_form, 'booking_resource<? echo $row['rt_name']; ?>', this.checked, true);$('booking_resource_list_form').onsubmit();" />
-						</div>
-                        <a href="javascript:void(0);" onclick="javascript:with ($('booking_<?php echo ploopi_htmlentities($strResourceType); ?>_list')) { style.display = (style.display == 'block') ? 'none' : 'block'; }">
-							<div class="ploopi_va" style="border-width:1px 0;border-style:solid;border-color:#bbb;background-color:#ddd;height:18px;">
-								<strong><? echo ploopi_htmlentities($strResourceType); ?></strong>
-                            </div>
-                        </a>
+
+                        <div style="border-width:1px 0;border-style:solid;border-color:#bbb;background-color:#ddd;overflow:auto;clear:both;padding:2px;">
+                            <input id="booking_rt<? echo $row['id_resourcetype']; ?>" style="display:block;float:left;margin:0;" type="checkbox" onclick="ploopi_checkall(booking_resource_list_form, 'booking_resource<? echo $row['id_resourcetype']; ?>', this.checked, true);$('booking_resource_list_form').onsubmit();" />
+                            <a style="display:block;margin-left:20px;" href="javascript:void(0);" onclick="javascript:with ($('booking_<?php echo $strResourceType; ?>_list')) { style.display = (style.display == 'block') ? 'none' : 'block'; }">
+                                <strong><? echo ploopi_htmlentities($strResourceType); ?></strong>
+                            </a>
+                        </div>
+                        <script type="text/javascript">
+                            Event.observe(window, 'load', function() { booking_rt_autocheck(<? echo $row['id_resourcetype']; ?>); });
+                        </script>
+
                         <div id="booking_<?php echo ploopi_htmlentities($row['rt_name']); ?>_list" style="display:block;">
                         <?
                     }
                     ?>
-                    <p class="checkbox" style="background-color:<? echo ploopi_htmlentities($row['color']); ?>;" onclick="javascript:ploopi_checkbox_click(event, 'booking_resource<? echo $row['id']; ?>');">
-                        <input type="checkbox" name="booking_resources[<? echo $row['id']; ?>]" id="booking_resource<? echo $row['rt_name'].$row['id']; ?>" value="<? echo $row['id']; ?>" <? if (!empty($arrSearchPattern['booking_resources'][$row['id']])) echo 'checked="checked"'; ?> onchange="javascript:$('booking_resource_list_form').onsubmit();" />
+                    <p class="checkbox" style="background-color:<? echo ploopi_htmlentities($row['color']); ?>;" onclick="javascript:ploopi_checkbox_click(event, 'booking_resource<? echo $row['id_resourcetype'].$row['id']; ?>');">
+                        <input type="checkbox" name="booking_resources[<? echo $row['id']; ?>]" id="booking_resource<? echo $row['id_resourcetype'].$row['id']; ?>" class="booking_rt<? echo $row['id_resourcetype']; ?>" value="<? echo $row['id']; ?>" <? if (!empty($arrSearchPattern['booking_resources'][$row['id']])) echo 'checked="checked"'; ?> onchange="javascript:booking_rt_autocheck(<? echo $row['id_resourcetype']; ?>); $('booking_resource_list_form').onsubmit();" />
                         <span><? echo ploopi_htmlentities($row['name']); ?><span>
                     </p>
+
                     <?
                 }
                 if ($strResourceType != '') echo '</div>';
+
                 ?>
                 </form>
                 </div>

@@ -230,3 +230,7 @@ function booking_resource_onchange(res)
         }
     });
 }
+
+function booking_rt_autocheck(id_rt) {
+    $('booking_rt'+id_rt).checked = $$('.booking_rt'+id_rt+':checked').length == $$('.booking_rt'+id_rt).length;
+}

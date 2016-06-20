@@ -2,9 +2,9 @@
 <ploopi>
     <moduletype>
         <label>booking</label>
-        <version>1.2.9</version>
+        <version>1.2.10</version>
         <author>Ovensia</author>
-        <date>20160602000000</date>
+        <date>20160610000000</date>
         <description>Gestion de réservation</description>
       <paramtype>
          <name>booking_front_planning_width</name>
@@ -62,6 +62,36 @@
          <name>booking_default_channels</name>
          <label>Multi-colonnes par défaut</label>
          <default_value>1</default_value>
+         <public>1</public>
+         <description/>
+         <paramchoice>
+            <value>1</value>
+            <displayed_value>oui</displayed_value>
+         </paramchoice>
+         <paramchoice>
+            <value>0</value>
+            <displayed_value>non</displayed_value>
+         </paramchoice>
+      </paramtype>
+      <paramtype>
+         <name>booking_default_all_checked</name>
+         <label>Tout cocher par défaut</label>
+         <default_value>0</default_value>
+         <public>1</public>
+         <description/>
+         <paramchoice>
+            <value>1</value>
+            <displayed_value>oui</displayed_value>
+         </paramchoice>
+         <paramchoice>
+            <value>0</value>
+            <displayed_value>non</displayed_value>
+         </paramchoice>
+      </paramtype>
+      <paramtype>
+         <name>booking_default_no_collision</name>
+         <label>Refuser les réservations en collision</label>
+         <default_value>0</default_value>
          <public>1</public>
          <description/>
          <paramchoice>

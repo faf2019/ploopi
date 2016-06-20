@@ -1,3 +1,11 @@
+== Module BOOKING - version 1.2.10 ===================================================
+
+2016-06-10  Jean-Pierre PAWLAK ~ SGAMI-EST/DSIC  <jean-pierre.pawlak@interieur.gouv.fr>
+
+* Nouveaux paramètres de module : Interdire les collisions (même si non validé), Cocher toutes les ressources si aucune
+* Adaptation des coches de types de ressources lorsque tous les coches des ressources du type sont dans le même état
+* Corrections sur la gestion du cookie en frontoffice et backoffice
+
 == Module BOOKING - version 1.2.9 ====================================================
 
 2016-06-02  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
