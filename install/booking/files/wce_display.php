@@ -136,12 +136,9 @@ $arrSearchPattern['booking_month'] =  date('n', $arrSearchPattern['booking_virtu
 $arrSearchPattern['booking_year'] = date('Y', $arrSearchPattern['booking_virtualdate']);
 $arrSearchPattern['booking_day'] = date('j', $arrSearchPattern['booking_virtualdate']);
 
-ploopi_print_r($arrSearchPattern);
-
-echo _PLOOPI_BASEPATH;
-
 // Sauvegarde cookie
-setcookie("booking_front_request{$booking_moduleid}", $str = base64_encode(gzcompress(serialize($arrSearchPattern), 9)), time()+86400*30, _PLOOPI_BASEPATH);
+
+setcookie("booking_front_request{$booking_moduleid}", $str = base64_encode(gzcompress(serialize($arrSearchPattern), 9)), time()+86400*30, dirname($_SERVER['PHP_SELF']));
 
 // Lecture des ressources
 $arrResources = booking_get_resources(false, $booking_moduleid);

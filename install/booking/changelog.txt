@@ -1,3 +1,9 @@
+== Module BOOKING - version 1.2.11 ====================================================
+
+2016-06-20  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+* Correction d'un bug sur le chemin utilisé pour les cookies
+
 == Module BOOKING - version 1.2.10 ===================================================
 
 2016-06-10  Jean-Pierre PAWLAK ~ SGAMI-EST/DSIC  <jean-pierre.pawlak@interieur.gouv.fr>
