@@ -111,6 +111,7 @@ $strResourceType = '';
     <?php ploopi_open_calendar('booking_event_to'); ?>
 
     <input type="submit" class="button" value="Filtrer" />
+    <input type="submit" class="button" name="xls" value="Extraction XLS" />
 </p>
 </form>
 
@@ -145,6 +146,67 @@ if (!empty($arrResources))
             );
     }
 
+
+    if (isset($_REQUEST['xls'])) {
+
+        // Préparation des données pour l'export XLS
+        $arrData = array();
+        foreach($arrRequests as $row) {
+
+            $arrDateBegin = ploopi_timestamp2local($row['timestp_begin']);
+            $arrDateEnd = ploopi_timestamp2local($row['timestp_end']);
+
+            if ($arrDateBegin['date'] == $arrDateEnd['date']) // Un seul jour
+                $strDateTime = sprintf("Le %s\r\nde %s à %s", $arrDateBegin['date'], substr($arrDateBegin['time'], 0, 5), substr($arrDateEnd['time'], 0 ,5));
+            else
+                $strDateTime = sprintf("Du %s à %s\r\nau %s à %s", $arrDateBegin['date'], substr($arrDateBegin['time'], 0, 5), $arrDateEnd['date'], substr($arrDateEnd['time'], 0, 5));
+
+
+            if (!empty($row['periodicity']) && !empty($arrBookingPeriodicity[$row['periodicity']]))
+            {
+                $strDateTime .= "\r\nPériodicité : {$arrBookingPeriodicity[$row['periodicity']]}\r\nOccurences : ".sizeof($row['details']);
+            }
+
+            $arrData[] = array(
+                'resourcetype' => $row['rt_name'],
+                'resource' => $row['r_name'],
+                'subresources' => $row['subresources'],
+                'object' => $row['object'],
+                'datetime' => $strDateTime,
+                'user' => trim("{$row['u_lastname']} {$row['u_firstname']}"),
+                'workspace' => $row['w_label'],
+                'timestp_request' => current(ploopi_timestamp2local($row['timestp_request'])),
+                'managed' => $row['managed'] ? 'Oui' : 'Non',
+            );
+        }
+
+        include_once './include/functions/array.php';
+
+        ploopi_ob_clean();
+
+        ploopi_array2xls(
+            $arrData,
+            true,
+            'booking_suivi_demandes.xls',
+            'pieces',
+            array(
+                'resourcetype' => array('width' => 20, 'title' => 'Type'),
+                'resource' => array('width' => 20, 'title' => 'Ressource'),
+                'subresources' => array('width' => 25, 'title' => 'Sous-ressources'),
+                'object' => array('width' => 40, 'title' => 'Objet'),
+                'datetime' => array('width' => 40, 'title' => 'Durée / Période'),
+                'user' => array('width' => 25, 'title' => 'Demandé par'),
+                'workspace' => array('width' => 25, 'title' => 'Espace'),
+                'timestp_request' => array('width' => 20, 'title' => 'Date demande'),
+                'managed' => array('width' => 10, 'title' => 'Traité'),
+            )
+        );
+
+
+        ploopi_die();
+
+    }
+
     // Préparation du tableau d'affichage
     $arrResult =
         array(
@@ -163,6 +225,13 @@ if (!empty($arrResources))
     $arrResult['columns']['left']['resource'] =
         array(
             'label' => 'Ressource',
+            'width' => 180,
+            'options' => array('sort' => true)
+        );
+
+    $arrResult['columns']['left']['subresources'] =
+        array(
+            'label' => 'Sous-Ressources',
             'width' => 180,
             'options' => array('sort' => true)
         );
@@ -224,6 +293,7 @@ if (!empty($arrResources))
                     array(
                         'resourcetype' => array('label' => ploopi_htmlentities($row['rt_name'])),
                         'resource' => array('label' => ploopi_htmlentities($row['r_name'])),
+                        'subresources' => array('label' => ploopi_htmlentities($row['subresources'])),
                         'object' => array('label' => ploopi_htmlentities($row['object'])),
                         'managed' =>
                             array(

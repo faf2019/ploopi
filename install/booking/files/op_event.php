@@ -80,7 +80,7 @@ if ($_SESSION['ploopi']['connected'])
 
             if (!empty($_POST['_booking_event_timestp_begin_d']) && !empty($_POST['booking_event_object']))
             {
-		$booking_no_collision = 0;
+                $booking_no_collision = 0;
                 $objEvent = new booking_event();
 
                 $objEvent->setvalues($_POST, 'booking_event_');
@@ -89,15 +89,15 @@ if ($_SESSION['ploopi']['connected'])
 
                 $objEvent->setuwm();
                 if ($_SESSION['ploopi']['mode'] == 'frontoffice') {
-		    $objEvent->fields['id_module'] = $_GET['booking_moduleid'];
-		    $booking_no_collision = ploopi_getparam('booking_default_no_collision',$objEvent->fields['id_module']); 
-		} else {
-		    $booking_no_collision = ploopi_getparam('booking_default_no_collision'); 
-		}
+                    $objEvent->fields['id_module'] = $_GET['booking_moduleid'];
+                    $booking_no_collision = ploopi_getparam('booking_default_no_collision',$objEvent->fields['id_module']);
+                } else {
+                    $booking_no_collision = ploopi_getparam('booking_default_no_collision');
+                }
 
                 $booError = !$objEvent->isvalid();
                 $booWarning = !$objEvent->isvalid(false);
-		if ($booking_no_collision) $booError = $booWarning;
+                if ($booking_no_collision) $booError = $booWarning;
 
                 // Non valide, collision avec un autre événement
                 if ($booError) {
@@ -838,13 +838,6 @@ switch($ploopi_op)
                                         );
                                     }
                                 });
-                                <?
-                                foreach($objEvent->getsubresources() as $intIdSR) {
-                                    ?>
-                                    $('booking_sr_<? echo $intIdSR; ?>').checked = true;
-                                    <?
-                                }
-                                ?>
                             </script>
                             <?
                         }

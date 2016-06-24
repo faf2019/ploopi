@@ -190,7 +190,7 @@ switch($arrSearchPattern['booking_display_type'])
         <input type="image" alt="Mensuel" src="./modules/booking/img/ico_month<? if ($arrSearchPattern['booking_display_type'] != 'month') echo'_notsel'; ?>.png" title="Mois" onclick="javascript:ploopi_xmlhttprequest_todiv('index-light.php', '<? echo ploopi_queryencode("ploopi_op=booking_refresh&booking_moduleid={$booking_moduleid}&booking_display_type=month"); ?>', 'booking_main');" />
 
         <label for="booking_channels">Multi Col:</label>
-        <input type="checkbox" name="booking_channels" id="booking_channels" <?php if ($arrSearchPattern['booking_channels']) echo 'checked="checked"'; ?> onclick="javascript:ploopi_xmlhttprequest_todiv('index-light.php', '<? echo ploopi_queryencode("ploopi_op=booking_refresh&booking_moduleid={$booking_moduleid}&booking_channels=".($arrSearchPattern['booking_channels'] ? 0 : 1)); ?>', 'booking_main');"/>
+        <input type="checkbox" autocomplete="off" name="booking_channels" id="booking_channels" <?php if ($arrSearchPattern['booking_channels']) echo 'checked="checked"'; ?> onclick="javascript:ploopi_xmlhttprequest_todiv('index-light.php', '<? echo ploopi_queryencode("ploopi_op=booking_refresh&booking_moduleid={$booking_moduleid}&booking_channels=".($arrSearchPattern['booking_channels'] ? 0 : 1)); ?>', 'booking_main');"/>
     </p>
 
     <form style="float:left;" id="booking_form_view" action="<? echo ploopi_urlencode("index-light.php?ploopi_op=booking_refresh&booking_moduleid={$booking_moduleid}"); ?>" method="post" onsubmit="javascript:ploopi_xmlhttprequest_submitform(this, 'booking_main');return false;">

@@ -379,13 +379,17 @@ function booking_get_events($mixId = null, $extended = false, $strict = false, $
                         rt.name as rt_name,
                         w.label as w_label,
                         u.firstname as u_firstname,
-                        u.lastname as u_lastname
+                        u.lastname as u_lastname,
+                        GROUP_CONCAT(DISTINCT s.name SEPARATOR ', ') as subresources
 
             FROM        ploopi_mod_booking_event e
 
             INNER JOIN  ploopi_mod_booking_event_detail ed ON e.id = ed.id_event
             INNER JOIN  ploopi_mod_booking_resource r ON e.id_resource = r.id
-            INNER JOIN   ploopi_mod_booking_resourcetype rt ON r.id_resourcetype = rt.id
+            INNER JOIN  ploopi_mod_booking_resourcetype rt ON r.id_resourcetype = rt.id
+
+            LEFT JOIN   ploopi_mod_booking_event_subresource es ON es.id_event = e.id
+            LEFT JOIN   ploopi_mod_booking_subresource s ON s.id = es.id_subresource
 
             LEFT JOIN   ploopi_workspace w ON e.id_workspace = w.id
             LEFT JOIN   ploopi_user u ON e.id_user = u.id
@@ -393,10 +397,10 @@ function booking_get_events($mixId = null, $extended = false, $strict = false, $
             WHERE       e.id_module = {$moduleid}
             {$strWhere}
 
+            GROUP BY    ed.id
             ORDER BY    ed.timestp_begin, ed.timestp_end
         ");
 
-        echo $sql;
     }
     else
     {
