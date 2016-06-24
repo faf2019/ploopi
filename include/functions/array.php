@@ -154,7 +154,7 @@ function ploopi_array2html($arrArray, $booHeader = true, $strClassName = 'ploopi
 function ploopi_array2xls($arrArray, $booHeader = true, $strFileName = 'document.xls', $strSheetName = 'Feuille', $arrDataFormats = null, $arrOptions = null)
 {
      // Ajout dossier complémentaire PEAR (version corrigée pour php 5.4)
-    ini_set('include_path', ini_get('include_path').':'.realpath('.').'/lib/PEAR');
+    ini_set('include_path', realpath('.').'/lib/PEAR'.':'.ini_get('include_path'));
     require_once 'Spreadsheet/Excel/Writer.php';
 
     $workbook = new Spreadsheet_Excel_Writer();
