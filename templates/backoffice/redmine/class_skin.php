@@ -58,9 +58,9 @@ class skin extends skin_common
      * @return skin
      */
 
-    function skin()
+    function __construct()
     {
-        parent::skin_common('redmine');
+        parent::__construct('redmine');
     }
 
     /**
@@ -78,7 +78,7 @@ class skin extends skin_common
 
         return $res;
     }
-    
+
     /**
      * Créé un bas de bloc (ferme le dernier bloc ouvert)
      *
@@ -88,6 +88,6 @@ class skin extends skin_common
     function close_simplebloc()
     {
         return '</div></div>';
-    }    
+    }
 }
 ?>

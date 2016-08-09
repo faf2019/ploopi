@@ -57,3 +57,35 @@
     margin:0;
     padding:2px 4px;
 }
+
+.system_trombi_index {
+    padding:2px;
+    overflow:auto;
+}
+
+.system_trombi_index > a {
+    border-left:1px solid #888;
+    border-top:1px solid #888;
+    border-bottom:1px solid #888;
+    display:block;
+    float:left;
+    padding:1px 0px;
+    margin-left:0;
+    border-radius:0 10px 0 0;
+    width:20px;
+    text-align:center;
+}
+
+.system_trombi_index > a:hover {
+    background-color:#eee;
+    text-decoration:none;
+}
+
+.system_trombi_index > a.selected {
+    background-color:#ccc;
+    font-weight:bold;
+}
+
+.system_trombi_index > a:last-child {
+    border-right:1px solid #888;
+}

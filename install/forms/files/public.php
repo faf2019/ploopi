@@ -63,21 +63,21 @@ if ($op == 'forms_print')
         <form id="form"></form>
         </div>
         <script type="text/javascript">
-            $('form').innerHTML = window.opener.document.forms_form_<? echo ploopi_htmlentities($_GET['forms_id']); ?>.innerHTML;
+            $('form').innerHTML = window.opener.document.forms_form_<?php echo ploopi_htmlentities($_GET['forms_id']); ?>.innerHTML;
             Event.observe(window, 'load', function() {
-                <?
+                <?php
                 for ($i=1; $i<=$objForm->getNbPanels();$i++)
                 {
                     ?>
-                    $('panel_<? echo $i; ?>').style.display = 'block';
-                    <?
+                    $('panel_<?php echo $i; ?>').style.display = 'block';
+                    <?php
                 }
                 ?>
                 window.print();
                 window.close();
             });
         </script>
-        <?
+        <?php
     }
     return;
 }

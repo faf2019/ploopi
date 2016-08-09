@@ -56,9 +56,7 @@ class ploopi_log extends data_object
 
     public function __construct()
     {
-        parent::__construct(
-            'ploopi_log'
-        );
+        parent::__construct('ploopi_log');
 
         if (ploopi_session::get_usedb()) $this->setdb($this->getdb());
     }
@@ -91,10 +89,7 @@ class connecteduser extends data_object
 
     public function __construct()
     {
-        parent::__construct(
-            'ploopi_connecteduser',
-            'sid'
-        );
+        parent::__construct('ploopi_connecteduser', 'sid');
     }
 }
 
@@ -119,12 +114,7 @@ class user_action_log extends data_object
 
     public function __construct()
     {
-        parent::__construct(
-            'ploopi_user_action_log',
-            'id_user',
-            'id_action',
-            'id_module_type'
-        );
+        parent::__construct('ploopi_user_action_log', 'id_user', 'id_action', 'id_module_type');
 
         if (ploopi_session::get_usedb()) $this->setdb($this->getdb());
     }

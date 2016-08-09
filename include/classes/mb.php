@@ -49,9 +49,9 @@ include_once './include/classes/data_object.php';
 
 class mb_schema extends data_object
 {
-    function mb_schema()
+    function __construct()
     {
-        parent::data_object('ploopi_mb_schema','tablesrc','tabledest','id_module_type');
+        parent::__construct('ploopi_mb_schema','tablesrc','tabledest','id_module_type');
     }
 }
 
@@ -73,9 +73,9 @@ class mb_relation extends data_object
      * @return mb_relation
      */
 
-    function mb_relation()
+    function __construct()
     {
-        parent::data_object('ploopi_mb_relation','tablesrc','fieldsrc','tabledest','fielddest','id_module_type');
+        parent::__construct('ploopi_mb_relation','tablesrc','fieldsrc','tabledest','fielddest','id_module_type');
     }
 }
 
@@ -97,9 +97,9 @@ class mb_table extends data_object
      * @return mb_table
      */
 
-    function mb_table()
+    function __construct()
     {
-        parent::data_object('ploopi_mb_table','name','id_module_type');
+        parent::__construct('ploopi_mb_table','name','id_module_type');
     }
 
     /**
@@ -135,9 +135,9 @@ class mb_field extends data_object
      * @return mb_field
      */
 
-    function mb_field()
+    function __construct()
     {
-        parent::data_object('ploopi_mb_field','tablename','name');
+        parent::__construct('ploopi_mb_field','tablename','name');
     }
 }
 
@@ -159,9 +159,9 @@ class mb_object extends data_object
      * @return mb_object
      */
 
-    function mb_object()
+    function __construct()
     {
-        parent::data_object('ploopi_mb_object', 'id', 'id_module_type');
+        parent::__construct('ploopi_mb_object', 'id', 'id_module_type');
     }
 }
 
@@ -183,9 +183,9 @@ class mb_wce_object extends data_object
      * @return mb_wce_object
      */
 
-    function mb_wce_object()
+    function __construct()
     {
-        parent::data_object('ploopi_mb_wce_object');
+        parent::__construct('ploopi_mb_wce_object');
     }
 
 }
@@ -208,9 +208,9 @@ class mb_action extends data_object
      * @return mb_action
      */
 
-    function mb_action()
+    function __construct()
     {
-        parent::data_object('ploopi_mb_action','id_module_type','id_action');
+        parent::__construct('ploopi_mb_action','id_module_type','id_action');
     }
 
     /**

@@ -58,11 +58,11 @@ class skin extends skin_common
      * @return skin
      */
 
-    function skin()
+    public function __construct()
     {
-        parent::skin_common('eyeos');
+        parent::__construct('eyeos');
     }
-    
+
     /**
      * Crée une barre d'onglets
      *
@@ -75,7 +75,7 @@ class skin extends skin_common
     {
 
         $res = "<div class=\"tabs\"><div class=\"tabs_inner\">";
-        
+
         if (!isset($tabs[$tabsel])) $tabsel = -1;
 
         foreach($tabs AS $key => $value)
@@ -87,6 +87,6 @@ class skin extends skin_common
         $res .= "</div></div>";
 
         return $res;
-    }    
+    }
 }
 ?>

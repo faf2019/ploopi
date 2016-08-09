@@ -51,9 +51,9 @@ class role extends data_object
      * @return role
      */
 
-    public function role()
+    public function __construct()
     {
-        parent::data_object('ploopi_role');
+        parent::__construct('ploopi_role');
     }
 
     /**
@@ -155,9 +155,9 @@ class role_action extends data_object
      * @return role_action
      */
 
-    public function role_action()
+    public function __construct()
     {
-        parent::data_object('ploopi_role_action','id_role','id_action','id_module_type');
+        parent::__construct('ploopi_role_action','id_role','id_action','id_module_type');
     }
 
 }

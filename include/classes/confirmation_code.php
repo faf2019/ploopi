@@ -53,9 +53,9 @@ class confirmation_code extends data_object
      *
      * @return confirmation_code
      */
-    function confirmation_code()
+    function __construct()
     {
-        parent::data_object('ploopi_confirmation_code', 'action');
+        parent::__construct('ploopi_confirmation_code', 'action');
     }
 
     /**

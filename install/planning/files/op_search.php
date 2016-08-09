@@ -13,7 +13,7 @@ switch($ploopi_op) {
         {
             ?>
             <div style="padding:4px;">Vous devez sélectionner au moins un utilisateur ou un groupe.</div>
-            <?
+            <?php
         }
         else
         {

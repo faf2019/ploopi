@@ -310,12 +310,14 @@ class ploopi_db
 
             $this->timer_start();
 
-            $this->query_result = null;
+            $this->query_result = array();
 
             if ($this->mysqli->multi_query($query)) {
-                do {
-                    $this->query_result = $this->mysqli->store_result();
-                } while ($this->mysqli->next_result());
+                $this->query_result[] = $this->mysqli->store_result();
+                while ($this->mysqli->more_results()) {
+                    $this->mysqli->next_result();
+                    $this->query_result[] = $this->mysqli->store_result();
+                }
 
                 if ($this->log) $this->arrLog[] = array ('query' => $query, 'time' => $stop);
             }

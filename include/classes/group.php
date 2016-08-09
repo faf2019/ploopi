@@ -54,10 +54,10 @@ class group extends data_object
      *
      * @return group
      */
-    
-    public function group()
+
+    public function __construct()
     {
-        parent::data_object('ploopi_group');
+        parent::__construct('ploopi_group');
     }
 
     /**
@@ -65,7 +65,7 @@ class group extends data_object
      *
      * @return int identifiant du groupe
      */
-    
+
     public function save()
     {
         $this->fields['depth'] = sizeof(explode(';',$this->fields['parents']));
@@ -75,7 +75,7 @@ class group extends data_object
     /**
      * Supprime le groupe
      */
-    
+
     public function delete()
     {
         global $db;
@@ -110,7 +110,7 @@ class group extends data_object
      *
      * @return array tableau des groupes frères du groupe (identifiants)
      */
-    
+
     public function getbrothers()
     {
         global $db;
@@ -196,9 +196,9 @@ class group extends data_object
         ");
 
         $fields = $db->fetchrow($result);
-        
+
         return $fields['c'];
-    }   
+    }
 
     /**
      * Crée un double du groupe
@@ -237,11 +237,11 @@ class group extends data_object
     /**
      * Retourne un tableau des actions autorisées pour ce groupe.
      * $actions[id_workspace][id_module][$fields['id_action']]
-     * 
+     *
      * @param array $actions tableau d'actions déjà existant (optionnel)
      * @return array tableau des actions
      */
-    
+
     public function getactions($actions = null)
     {
         global $db;
@@ -261,7 +261,7 @@ class group extends data_object
         $result = $db->query($select);
 
         while ($fields = $db->fetchrow($result)) $actions[$fields['id_workspace']][$fields['id_module']][$fields['id_action']] = true;
-        
+
         return $actions;
     }
 }
@@ -283,8 +283,8 @@ class group_user extends data_object
      *
      * @return group_user
      */
-    function group_user()
+    public function __construct()
     {
-        parent::data_object('ploopi_group_user','id_group','id_user');
+        parent::__construct('ploopi_group_user','id_group','id_user');
     }
 }

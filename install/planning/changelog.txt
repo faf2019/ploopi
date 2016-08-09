@@ -1,3 +1,9 @@
+== Module Planning - version 1.0.0 ====================================================
+
+2016-08-08  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+* Version pour Ploopi 1.9.7+ / PHP 7+
+
 == Module Planning - version 0.9.0 ====================================================
 
 2016-01-15  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
@@ -126,9 +132,9 @@
  * Affichages quotidien/hebdomadaire/mensuel
  * Multi-utilisateur / Multi-groupe
  * Support du glisser/déposer (hebdomadaire et quotidien seulement)
- 
+
 Roadmap 1.0
- 
+
    * Support IE6 (ahemmmm)
    * Gestion des droits de modification/publication entre utilisateurs
    * Alertes par tickets (relance, ajout d'un événement pour un autre utilisateurs, etc.)

@@ -56,9 +56,9 @@ class annotation extends data_object
      * @return annotation
      */
 
-    public function annotation()
+    public function __construct()
     {
-        parent::data_object('ploopi_annotation','id');
+        parent::__construct('ploopi_annotation','id');
     }
 
     /**
@@ -153,7 +153,7 @@ class annotation_tag extends data_object
 
     public function annotation_tag()
     {
-        parent::data_object('ploopi_annotation_tag','id_annotation','id_tag');
+        parent::__construct('ploopi_annotation_tag','id_annotation','id_tag');
     }
 
     /**
@@ -204,6 +204,6 @@ class tag extends data_object
 
     public function tag()
     {
-        parent::data_object('ploopi_tag','id');
+        parent::__construct('ploopi_tag','id');
     }
 }

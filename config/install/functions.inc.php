@@ -133,33 +133,6 @@ function ploopi_str_replace($myString, $toReplace,$controlType=false) {
 }
 
 /**
- * Detect all databases supported by Ploopi that are compiled into the current
- * PHP installation.
- *
- * @param array $tab_DB list of database install must support
- * @return An array of database types compiled into PHP.
- *
- * @version 1.0
- * @since
- *
- * @category database
- */
-function ploopi_detect_database_available($tab_DB) {
-  $databases = array();
-
-  foreach ($tab_DB as $type) {
-    if (file_exists('./install.'. $type .'.inc.php')) {
-      include_once './install.'. $type .'.inc.php';
-      $function = $type .'_dispo';
-      if ($function()) {
-        $databases[$type] = $type;
-      }
-    }
-  }
-  return $databases;
-}
-
-/**
  * Get the apache version
  *
  * @return string (empty if false)

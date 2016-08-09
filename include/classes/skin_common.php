@@ -52,7 +52,7 @@ class skin_common
      * @return skin_common
      */
 
-    public function skin_common($skin)
+    public function __construct($skin)
     {
         $this->values = array();
         $this->values['path'] = "./templates/{$_SESSION['ploopi']['mode']}/{$skin}/img";
@@ -271,7 +271,7 @@ class skin_common
      * @return string code html du popup
      */
 
-    function create_popup($title, $content, $popupid = 'ploopi_popup')
+    public function create_popup($title, $content, $popupid = 'ploopi_popup')
     {
         $strOptionAnchor = ($_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_focus_popup']) ? "document.location.href = '#anchor_{$popupid}';" : '';
 
@@ -307,7 +307,7 @@ class skin_common
      * @return string code html du popup
      */
 
-    function open_popup($title, $content, $popupid = 'ploopi_popup', $arrOptions = array())
+    public function open_popup($title, $content, $popupid = 'ploopi_popup', $arrOptions = array())
     {
         $arrDefaultOptions = array(
             'intWidth' => 200,
@@ -712,12 +712,12 @@ class skin_common
                         if (!empty($c['url']) || !empty($c['onclick'])) {
                             ?>
                             <a href="<?php echo (!empty($c['url'])) ? $c['url'] : 'javascript:void(0);'; ?>" <?php if (!empty($c['onclick'])) echo "onclick=\"javascript:{$c['onclick']}\""; ?>" style="width:<?php echo $c['width']; ?>px;float:right;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element"><p><span><?php echo $c['label']; ?>&nbsp;</span><?php echo $img; ?></p></a>
-                            <?
+                            <?php
                         }
                         else {
                             ?>
                             <span style="width:<?php echo $c['width']; ?>px;float:right;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element"><p><span><?php echo $c['label']; ?>&nbsp;</span><?php echo $img; ?></p></span>
-                            <?
+                            <?php
                         }
                     }
                 }
@@ -741,13 +741,13 @@ class skin_common
 
                         if (!empty($c['url']) || !empty($c['onclick'])) {
                             ?>
-                            <a href="<?php echo (!empty($c['url'])) ? $c['url'] : 'javascript:void(0);'; ?>" <?php if (!empty($c['onclick'])) echo "onclick=\"javascript:{$c['onclick']}\""; ?>" style="width:<?php echo $c['width']; ?>px;float:right;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element ploopi_explorer_element_right <? echo $class; ?>"><p><span><?php echo $c['label']; ?>&nbsp;</span><?php echo $img; ?></p></a>
-                            <?
+                            <a href="<?php echo (!empty($c['url'])) ? $c['url'] : 'javascript:void(0);'; ?>" <?php if (!empty($c['onclick'])) echo "onclick=\"javascript:{$c['onclick']}\""; ?>" style="width:<?php echo $c['width']; ?>px;float:right;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element ploopi_explorer_element_right <?php echo $class; ?>"><p><span><?php echo $c['label']; ?>&nbsp;</span><?php echo $img; ?></p></a>
+                            <?php
                         }
                         else {
                             ?>
-                            <span style="width:<?php echo $c['width']; ?>px;float:right;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element ploopi_explorer_element_right <? echo $class; ?>"><p><span><?php echo $c['label']; ?>&nbsp;</span><?php echo $img; ?></p></span>
-                            <?
+                            <span style="width:<?php echo $c['width']; ?>px;float:right;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element ploopi_explorer_element_right <?php echo $class; ?>"><p><span><?php echo $c['label']; ?>&nbsp;</span><?php echo $img; ?></p></span>
+                            <?php
                         }
                     }
                 }
@@ -771,13 +771,13 @@ class skin_common
 
                         if (!empty($c['url']) || !empty($c['onclick'])) {
                             ?>
-                            <a href="<?php echo (!empty($c['url'])) ? $c['url'] : 'javascript:void(0);'; ?>" <?php if (!empty($c['onclick'])) echo "onclick=\"javascript:{$c['onclick']}\""; ?>" style="width:<?php echo $c['width']; ?>px;float:left;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element <? echo $class; ?>"><p><span><?php echo $c['label']; ?>&nbsp;</span><?php echo $img; ?></p></a>
-                            <?
+                            <a href="<?php echo (!empty($c['url'])) ? $c['url'] : 'javascript:void(0);'; ?>" <?php if (!empty($c['onclick'])) echo "onclick=\"javascript:{$c['onclick']}\""; ?>" style="width:<?php echo $c['width']; ?>px;float:left;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element <?php echo $class; ?>"><p><span><?php echo $c['label']; ?>&nbsp;</span><?php echo $img; ?></p></a>
+                            <?php
                         }
                         else {
                             ?>
-                            <span style="width:<?php echo $c['width']; ?>px;float:left;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element <? echo $class; ?>"><p><span><?php echo $c['label']; ?>&nbsp;</span><?php echo $img; ?></p></span>
-                            <?
+                            <span style="width:<?php echo $c['width']; ?>px;float:left;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element <?php echo $class; ?>"><p><span><?php echo $c['label']; ?>&nbsp;</span><?php echo $img; ?></p></span>
+                            <?php
                         }
                     }
                 }
@@ -801,13 +801,13 @@ class skin_common
 
                         if (!empty($c['url']) || !empty($c['onclick'])) {
                             ?>
-                            <a href="<?php echo (!empty($c['url'])) ? $c['url'] : 'javascript:void(0);'; ?>" <?php if (!empty($c['onclick'])) echo "onclick=\"javascript:{$c['onclick']}\""; ?>" style="width:<?php echo $c['width']; ?>px;float:left;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element <? echo $class; ?>"><p><span><?php echo $c['label']; ?>&nbsp;</span><?php echo $img; ?></p></a>
-                            <?
+                            <a href="<?php echo (!empty($c['url'])) ? $c['url'] : 'javascript:void(0);'; ?>" <?php if (!empty($c['onclick'])) echo "onclick=\"javascript:{$c['onclick']}\""; ?>" style="width:<?php echo $c['width']; ?>px;float:left;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element <?php echo $class; ?>"><p><span><?php echo $c['label']; ?>&nbsp;</span><?php echo $img; ?></p></a>
+                            <?php
                         }
                         else {
                             ?>
-                            <span style="width:<?php echo $c['width']; ?>px;float:left;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element <? echo $class; ?>"><p><span><?php echo $c['label']; ?>&nbsp;</span><?php echo $img; ?></p></span>
-                            <?
+                            <span style="width:<?php echo $c['width']; ?>px;float:left;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element <?php echo $class; ?>"><p><span><?php echo $c['label']; ?>&nbsp;</span><?php echo $img; ?></p></span>
+                            <?php
                         }
                     }
                 }
@@ -831,13 +831,13 @@ class skin_common
 
                         if (!empty($c['url']) || !empty($c['onclick'])) {
                             ?>
-                            <a href="<?php echo (!empty($c['url'])) ? $c['url'] : 'javascript:void(0);'; ?>" <?php if (!empty($c['onclick'])) echo "onclick=\"javascript:{$c['onclick']}\""; ?>" style="overflow:auto;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element <? echo $class; ?>"><p><span><?php echo $c['label']; ?>&nbsp;</span><?php echo $img; ?></p></a>
-                            <?
+                            <a href="<?php echo (!empty($c['url'])) ? $c['url'] : 'javascript:void(0);'; ?>" <?php if (!empty($c['onclick'])) echo "onclick=\"javascript:{$c['onclick']}\""; ?>" style="overflow:auto;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element <?php echo $class; ?>"><p><span><?php echo $c['label']; ?>&nbsp;</span><?php echo $img; ?></p></a>
+                            <?php
                         }
                         else {
                             ?>
-                            <span style="overflow:auto;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element <? echo $class; ?>"><p><span><?php echo $c['label']; ?>&nbsp;</span><?php echo $img; ?></p></span>
-                            <?
+                            <span style="overflow:auto;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element <?php echo $class; ?>"><p><span><?php echo $c['label']; ?>&nbsp;</span><?php echo $img; ?></p></span>
+                            <?php
                         }
 
                     }

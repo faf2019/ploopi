@@ -91,36 +91,36 @@ switch($_REQUEST['ploopi_op'])
             break;
         }
         ?>
-        <form action="<? echo ploopi_urlencode("admin-light.php?ploopi_op=booking_subresource_save&booking_subresource_id={$objSubresource->fields['id']}"); ?>" method="post" onsubmit="javascript:return booking_subresource_validate(this);">
+        <form action="<?php echo ploopi_urlencode("admin-light.php?ploopi_op=booking_subresource_save&booking_subresource_id={$objSubresource->fields['id']}"); ?>" method="post" onsubmit="javascript:return booking_subresource_validate(this);">
         <div class=ploopi_form>
             <p>
                 <label>Intitulé:</label>
-                <input name="booking_subresource_name" type="text" class="text" value="<? echo ploopi_htmlentities($objSubresource->fields['name']); ?>">
+                <input name="booking_subresource_name" type="text" class="text" value="<?php echo ploopi_htmlentities($objSubresource->fields['name']); ?>">
             </p>
             <p>
                 <label>Référence:</label>
-                <input name="booking_subresource_reference" type="text" class="text" value="<? echo ploopi_htmlentities($objSubresource->fields['reference']); ?>">
+                <input name="booking_subresource_reference" type="text" class="text" value="<?php echo ploopi_htmlentities($objSubresource->fields['reference']); ?>">
             </p>
             <p>
                 <label>Ressource liée:</label>
-                <?
+                <?php
                 $db->query("SELECT * FROM ploopi_mod_booking_resource WHERE id_module = {$_SESSION['ploopi']['moduleid']} ORDER BY name");
                 ?>
-                <select name="booking_subresource_id_resource" class="select" <? if ($_REQUEST['ploopi_op'] == 'booking_subresource_open') echo 'disabled="disabled"'; ?>>
+                <select name="booking_subresource_id_resource" class="select" <?php if ($_REQUEST['ploopi_op'] == 'booking_subresource_open') echo 'disabled="disabled"'; ?>>
                     <option value="">(Choisir)</option>
-                    <?
+                    <?php
                     while ($row = $db->fetchrow())
                     {
                         ?>
-                        <option value="<? echo $row['id']; ?>" <? if ($objSubresource->fields['id_resource'] == $row['id']) echo 'selected="selected"'; ?>><? echo ploopi_htmlentities($row['name']); ?></option>
-                        <?
+                        <option value="<?php echo $row['id']; ?>" <?php if ($objSubresource->fields['id_resource'] == $row['id']) echo 'selected="selected"'; ?>><?php echo ploopi_htmlentities($row['name']); ?></option>
+                        <?php
                     }
                     ?>
                 </select>
             </p>
             <p onclick="javascript:ploopi_checkbox_click(event,'booking_subresource_active');">
                 <label for="booking_subresource_active">Actif:</label>
-                <input name="booking_subresource_active" id="booking_subresource_active" type="checkbox" class="checkbox" value="1" <? if ($objSubresource->fields['active']) echo 'checked'; ?> tabindex="111" />
+                <input name="booking_subresource_active" id="booking_subresource_active" type="checkbox" class="checkbox" value="1" <?php if ($objSubresource->fields['active']) echo 'checked'; ?> tabindex="111" />
             </p>
         </div>
         <div style="padding:4px;text-align:right;">
@@ -128,7 +128,7 @@ switch($_REQUEST['ploopi_op'])
             <input type="submit" class="button" value="Enregistrer" />
         </div>
         </form>
-        <?
+        <?php
         $content = ob_get_contents();
         ob_end_clean();
 

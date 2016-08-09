@@ -56,16 +56,16 @@ class webedit_heading extends data_object
      * @return webedit_heading
      */
 
-    function webedit_heading()
+    public function __construct()
     {
-        parent::data_object('ploopi_mod_webedit_heading');
+        parent::__construct('ploopi_mod_webedit_heading');
     }
 
     /**
      * Supprime la rubrique et sont contenu (articles, sous-rubriques)
      */
 
-    function delete()
+    public function delete()
     {
         include_once './modules/webedit/class_article.php';
 
@@ -101,4 +101,3 @@ class webedit_heading extends data_object
         parent::delete();
     }
 }
-?>

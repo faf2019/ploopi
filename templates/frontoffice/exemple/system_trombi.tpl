@@ -22,9 +22,19 @@
         </p>
     </form>
 
+
     <!-- BEGIN system_trombi_switch_result -->
     <div class="system_trombi_result">
     <h1>Résultat de la recherche :</h1>
+        <!-- BEGIN switch_index -->
+            <div class="system_trombi_index">
+            <!-- BEGIN index -->
+                <a class="{system_trombi_switch_result.switch_index.index.SELECTED}" title="{system_trombi_switch_result.switch_index.index.COUNT} utilisateur(s)" href="{system_trombi_switch_result.switch_index.index.URL}">{system_trombi_switch_result.switch_index.index.LETTER}</a>
+            <!-- END index -->
+            </div>
+        <!-- END switch_index -->
+
+
         <table cellspacing="0" cellpadding="0" border="1">
             <tr class="system_trombi_title">
                 <th>Nom</th>
@@ -34,7 +44,7 @@
                 <th>Téléphone</th>
             </tr>
             <!-- BEGIN user -->
-                <tr class="system_trombi_user" onmouseover="javascript:this.style.backgroundColor='#e0e0ff';" onmouseout="javascript:this.style.backgroundColor='#ffffff';" onclick="javascript:ploopi_showpopup($('system_trombi_form{system_trombi_switch_result.user.ID}').innerHTML, 500, event, false, 'system_trombi_popup');" title="Ouvrir la fiche détaillée de {system_trombi_switch_result.user.LASTNAME} {system_trombi_switch_result.user.FIRSTNAME}">
+                <tr class="system_trombi_user" onmouseover="javascript:this.style.backgroundColor='#e0e0ff';" onmouseout="javascript:this.style.backgroundColor='#ffffff';" onclick="javascript:ploopi_showpopup($('system_trombi_form{system_trombi_switch_result.user.ID}').innerHTML, 500, event, false, 'system_trombi_popup'); new PeriodicalExecuter(function(pe) { new Draggable('system_trombi_popup', { zindex:99999, handle: $$('#system_trombi_popup h1')[0]}); pe.stop(); }, 0.5 );" title="Ouvrir la fiche détaillée de {system_trombi_switch_result.user.LASTNAME} {system_trombi_switch_result.user.FIRSTNAME}">
                     <td>{system_trombi_switch_result.user.LASTNAME}</td>
                     <td>{system_trombi_switch_result.user.FIRSTNAME}</td>
                     <td>{system_trombi_switch_result.user.WORKSPACES}</td>
@@ -128,7 +138,7 @@
                             <div style="padding:4px;">
                                 {system_trombi_switch_result.user.ROLES}
                             </div>
-                            
+
                             <!-- BEGIN switch_files -->
                             <h2>Documents</h2>
                             <div style="padding:4px;">
@@ -137,7 +147,7 @@
                                 <!-- END file -->
                             </div>
                             <!-- END switch_files -->
-                            
+
                         </div>
                     </div>
                 </div>

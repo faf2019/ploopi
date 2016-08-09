@@ -50,9 +50,9 @@ class validation extends data_object
      *
      * @return validation
      */
-    
-    public function validation()
+
+    public function __construct()
     {
-        parent::data_object('ploopi_validation','id');
+        parent::__construct('ploopi_validation','id');
     }
 }

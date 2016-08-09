@@ -52,7 +52,7 @@ class webedit_calendar_blog extends calendar
     {
         global $ploopi_days;
         global $ploopi_months;
-        
+
         // Préparation des événéments
         $arrEvents = $this->_prepare_events();
 
@@ -82,12 +82,12 @@ class webedit_calendar_blog extends calendar
         // Dimension finale du calendrier (au pixel)
         $calendar_width = ($day_width * 7);
         $calendar_height = ($day_height * ($nbweeks)) + 18;
-        
+
         ?>
         <div class="<?php echo $this->arrOptions['class_name']; ?>" id="calendar_blog">
             <div class="month_inner" style="width: <?php echo $calendar_width; ?>px; height:<?php echo $calendar_height; ?>px;">
                 <div class="row_title" style="height: 14px; width: <?php echo $calendar_width-2; ?>px;">
-                    <?php 
+                    <?php
                     if(!empty($this->arrOptions['urlmonthnext']))
                     {
                         ?>
@@ -98,53 +98,53 @@ class webedit_calendar_blog extends calendar
                     {
                         ?>
                         <div style="float: right;">&nbsp;&nbsp;&nbsp;</div>
-                        <?php 
+                        <?php
                     }
-                    
+
                     if(!empty($this->arrOptions['urlmonthbefore']))
                     {
                         ?>
                         <a href="javascript:void(0);" onclick="javascript:window.location.href='<?php echo $this->arrOptions['urlmonthbefore']; ?>'" style="float: left; cursor: pointer;"title="Visualiser les articles pour <?php echo $ploopi_months[intval($this->arrOptions['monthbefore'])].' '.$this->arrOptions['yearbefore']; ?>">&nbsp;&lt;&nbsp;</a>
-                        <?php 
+                        <?php
                     }
                     else
                     {
                         ?>
                         <div style="float: left;">&nbsp;&nbsp;&nbsp;</div>
-                        <?php 
+                        <?php
                     }
-                    
+
                     ?>
                     <div><?php echo $ploopi_months[intval($this->arrOptions['month'])].' '.$this->arrOptions['year']; ?></div>
                 </div>
-                <?php  
+                <?php
                 // Boucle n°1 : Si le 1er jour du mois n'est pas un lundi, on affiche la fin du mois précédent
                 if ($weekday > 1)
                 {
                     ?>
                     <div class="row">
-                    <?php    
+                    <?php
                     for ($c = 1; $c < $weekday; $c++)
                     {
                         $strTs = mktime(0, 0, 0, $this->arrOptions['month'], 1+$c-$weekday, $this->arrOptions['year']);
 
                         // Jour du mois
                         $d = date('j', $strTs);
-    
+
                         // Date au format local
                         $date = substr(ploopi_unixtimestamp2local($strTs), 0, 10);
                         $extra_class = '';
                         $extra_title = '';
                         $onclick = '';
-                        
+
                         if (ploopi_holiday($strTs)) $extra_class = ' day_holiday';
                         else
                         {
                             if ($c > 5) $extra_class = ' day_weekend';
                         }
-                        
+
                         $strEventsKey = substr(ploopi_unixtimestamp2timestamp($strTs), 0, 8);
-                        
+
                         if(!empty($arrEvents[$strEventsKey]))
                         {
                             $onclick = '';
@@ -153,16 +153,16 @@ class webedit_calendar_blog extends calendar
                                 foreach($arrDayEvents as $intId)
                                 {
                                     if (!empty($this->arrEvents[$intId]))
-                                    {                            
+                                    {
                                         $extra_title .=  ' - '.$this->arrEvents[$intId]->strTitle;
                                         if(empty($onclick))
-                                        {   
+                                        {
                                             $onclick = 'onClick="javascript:window.location.href=\''.$this->arrEvents[$intId]->strHref.'\';return(0);"';
                                             $extra_class .= ' day_num_grayed_event';
                                         }
                                     }
                                 }
-                            }                            
+                            }
                         }
                         ?>
                         <div class="day_num_grayed<?php echo $extra_class; ?>" title="<?php echo $date ?>" style="<?php echo $day_style; ?>" <?php echo $onclick; ?>>
@@ -176,7 +176,7 @@ class webedit_calendar_blog extends calendar
                 {
                     // Arrivé en fin de semaine, on se repositionne au début
                     if ($weekday == 8) $weekday = 1;
-    
+
                     // Chaque début de semaine = une nouvelle ligne
                     if ($weekday == 1)
                     {
@@ -184,15 +184,15 @@ class webedit_calendar_blog extends calendar
                         <div class="row">
                         <?php
                     }
-    
+
                     // Date au format local
                     $date = current(ploopi_timestamp2local($ts = sprintf("%04d%02d%02d000000",$this->arrOptions['year'], $this->arrOptions['month'], $d)));
                     $dateday = ploopi_timestamp2unixtimestamp($ts);
-    
+
                     $extra_class = '';
                     $extra_title = '';
                     $onclick = '';
-                    
+
                     if (ploopi_holiday($dateday)) $extra_class = ' day_holiday';
                     else
                     {
@@ -207,51 +207,51 @@ class webedit_calendar_blog extends calendar
                             foreach($arrDayEvents as $intId)
                             {
                                 if (!empty($this->arrEvents[$intId]))
-                                {                            
+                                {
                                     $extra_title .=  ' - '.$this->arrEvents[$intId]->strTitle;
                                     if(empty($onclick))
-                                    {   
+                                    {
                                         $onclick = 'onClick="javascript:window.location.href=\''.$this->arrEvents[$intId]->strHref.'\';return(0);"';
                                         $extra_class .= ' day_event';
                                     }
                                 }
                             }
-                        }                            
+                        }
                     }
                     ?>
-                    <div class="day_num<? echo $extra_class; ?>" title="<?php echo $date.$extra_title ?>" style="<?php echo $day_style; ?>" <?php echo $onclick;?>>
+                    <div class="day_num<?php echo $extra_class; ?>" title="<?php echo $date.$extra_title ?>" style="<?php echo $day_style; ?>" <?php echo $onclick;?>>
                         <?php echo $d; ?>
                     </div>
                     <?php
                     // Si fin de semaine, fin de ligne
                     if ($weekday == 7) echo '</div>';
-    
+
                     $weekday++;
                 }
-                
+
                 // Boucle n°3 : Si le mois ne se termine pas un dimanche, on affiche le début du mois suivant
                 if ($weekday <= 7)
                 {
                     for ($c = $weekday; $c <= 7 ; $c++)
                     {
                         $strTs = mktime(0, 0, 0, $this->arrOptions['month']+1, 1+$c-$weekday, $this->arrOptions['year']);
-    
+
                         // Jour du mois
                         $d = date('j', $strTs);
-    
+
                         // Date au format local
                         $date = substr(ploopi_unixtimestamp2local($strTs), 0, 10);
-    
+
                         $extra_class = '';
                         $extra_title = '';
                         $onclick = '';
-                        
+
                         if (ploopi_holiday($strTs)) $extra_class = ' day_holiday';
                         else
                         {
                             if ($c > 5) $extra_class = ' day_weekend';
                         }
-                        
+
                         $strEventsKey = substr(ploopi_unixtimestamp2timestamp($strTs), 0, 8);
                         if(!empty($arrEvents[$strEventsKey]))
                         {
@@ -261,19 +261,19 @@ class webedit_calendar_blog extends calendar
                                 foreach($arrDayEvents as $intId)
                                 {
                                     if (!empty($this->arrEvents[$intId]))
-                                    {                            
+                                    {
                                         $extra_title .=  ' - '.$this->arrEvents[$intId]->strTitle;
                                         if(empty($onclick))
-                                        {   
+                                        {
                                             $onclick = 'onClick="javascript:window.location.href=\''.$this->arrEvents[$intId]->strHref.'\';return(0);"';
                                             $extra_class .= ' day_num_grayed_event';
                                         }
                                     }
                                 }
-                            }                            
+                            }
                         }
                         ?>
-                        <div class="day_num_grayed<? echo $extra_class; ?>" title="<?php echo $date.$extra_title ?>" style="<?php echo $day_style; ?>"<?php echo $onclick; ?>>
+                        <div class="day_num_grayed<?php echo $extra_class; ?>" title="<?php echo $date.$extra_title ?>" style="<?php echo $day_style; ?>"<?php echo $onclick; ?>>
                             <?php echo $d; ?>
                         </div>
                     <?php
@@ -288,4 +288,3 @@ class webedit_calendar_blog extends calendar
         <?php
     }
 }
-?>

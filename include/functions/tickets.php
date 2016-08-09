@@ -61,7 +61,7 @@ function ploopi_tickets_selectusers($id_user = null)
         </select>
         <input type="text" id="ploopi_ticket_userfilter" class="text" />
         <?php /* Ne pas modifier, genère une erreur curieuse sinon... */ $strUrl = ploopi_queryencode("ploopi_op=tickets_search_users"); ?>
-        <img id="ploopi_ticket_search_btn" style="cursor:pointer;" onclick="javascript:ploopi_tickets_select_users('<? echo $strUrl; ?>', ploopi_getelem('ploopi_ticket_typefilter').value, ploopi_getelem('ploopi_ticket_userfilter').value, 'div_ticket_search_result');" src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/tickets/search.png">
+        <img id="ploopi_ticket_search_btn" style="cursor:pointer;" onclick="javascript:ploopi_tickets_select_users('<?php echo $strUrl; ?>', ploopi_getelem('ploopi_ticket_typefilter').value, ploopi_getelem('ploopi_ticket_userfilter').value, 'div_ticket_search_result');" src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/tickets/search.png">
     </p>
     <div id="div_ticket_search_result" style="padding:2px 0 6px 0;">
     </div>

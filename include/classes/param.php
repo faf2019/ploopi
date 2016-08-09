@@ -75,7 +75,7 @@ class param
      *
      * @var array
      */
-    
+
     private $arrParam;
 
     /**
@@ -83,14 +83,14 @@ class param
      *
      * @return param
      */
-    
-    public function param()
+
+    public function __construct()
     {
         $this->moduleid = -1;
     }
 
     /*******************************************************************************************************
-    
+
     *******************************************************************************************************/
 
     /**
@@ -209,7 +209,7 @@ class param
      *
      * @param array $values tableau associatif contenant les nouvelles valeurs des paramètres
      */
-    
+
     public function setvalues($values)
     {
         foreach($values as $name => $value)
@@ -240,11 +240,11 @@ class param
     {
         return((isset($this->arrParam[$param])) ? $this->arrParam[$param]['value'] : null);
     }
-    
+
     /**
      * Enregistre les parametres du module
      */
-    
+
     public function save()
     {
         global $db;
@@ -301,9 +301,9 @@ class param_default extends data_object
      * @return param_default
      */
 
-    public function param_default()
+    public function __construct()
     {
-        parent::data_object('ploopi_param_default', 'id_module', 'name');
+        parent::__construct('ploopi_param_default', 'id_module', 'name');
     }
 }
 
@@ -324,9 +324,9 @@ class param_type extends data_object
      *
      * @return param_default
      */
-    public function param_type()
+    public function __construct()
     {
-        parent::data_object('ploopi_param_type', 'id_module_type', 'name');
+        parent::__construct('ploopi_param_type', 'id_module_type', 'name');
     }
 
     /**
@@ -395,9 +395,9 @@ class param_choice extends data_object
      * @return param_choice
      */
 
-    public function param_choice()
+    public function __construct()
     {
-        parent::data_object('ploopi_param_choice','id_module_type','name');
+        parent::__construct('ploopi_param_choice','id_module_type','name');
     }
 
 }

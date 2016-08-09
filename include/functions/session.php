@@ -40,13 +40,7 @@ include_once './include/classes/session.php';
 
 function ploopi_session_reset()
 {
-    require_once 'Net/UserAgent/Detect.php';
-
-    // Désactivation du handler d'erreur à cause d'un bug non corrigé de la classe Detect ( http://pear.php.net/bugs/bug.php?id=15764 )
-    ploopi_unset_error_handler();
-    $strRemoteBrowser = Net_UserAgent_Detect::getBrowserString();
-    $strRemoteSystem = Net_UserAgent_Detect::getOSString();
-    ploopi_set_error_handler();
+    $ua_info = parse_user_agent();
 
     // Suppression des données de la session active
     // Regénération d'un ID
@@ -68,8 +62,8 @@ function ploopi_session_reset()
         'mode' => '',
 
         'remote_ip' => ploopi_getip(),
-        'remote_browser' => $strRemoteBrowser,
-        'remote_system' => $strRemoteSystem,
+        'remote_browser' => $ua_info['browser'].' '.$ua_info['version'],
+        'remote_system' => $ua_info['platform'],
 
         'host' => $_SERVER['HTTP_HOST'],
         'scriptname' => basename($_SERVER['PHP_SELF']),

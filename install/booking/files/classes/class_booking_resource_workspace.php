@@ -46,7 +46,7 @@ class booking_resource_workspace extends data_object {
     
     public function booking_resource_workspace() {
         
-        parent::data_object(
+        parent::__construct(
             'ploopi_mod_booking_resource_workspace', 
             'id_resource',
             'id_workspace'

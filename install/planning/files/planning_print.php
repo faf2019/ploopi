@@ -1,4 +1,4 @@
-<?
+<?php
 $strPrintType = "";
 
 // Lecture cookie de recherche
@@ -84,14 +84,14 @@ $strGroupEventLabel = "";
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
     <head>
-        <title><? echo ploopi_htmlentities($strPrintType); ?></title>
+        <title><?php echo ploopi_htmlentities($strPrintType); ?></title>
         <link rel="stylesheet" type="text/css" href="./modules/planning/include/styles_print.css" />
         <script type="text/javascript">window.onload = function() { window.print(); }</script>
     </head>
     <body>
-        <h1><? echo ploopi_htmlentities($strPrintType); ?></h1>
+        <h1><?php echo ploopi_htmlentities($strPrintType); ?></h1>
 
-        <?
+        <?php
         foreach($arrEvents as $event)
         {
         //  ploopi_print_r($event);
@@ -105,17 +105,17 @@ $strGroupEventLabel = "";
             {
             ?>
                <h3>
-                    <?
+                    <?php
                         echo ploopi_htmlentities($arrEventBegin['date']);
                         $strDateEvent = $arrEventBegin['date'];
                     ?>
                 </h3>
-             <?
+             <?php
              }
              ?>
             <div class="planning_print_event">
                 <span class="planning_event_who">RDV pour :
-             <?
+             <?php
              $arrWho = array();
 
             if(isset($event['res']['user']))
@@ -145,18 +145,18 @@ $strGroupEventLabel = "";
             echo implode(', ', $arrWho);
             ?>
                 </span><br />
-                <span class="planning_event_time">De : <? echo substr($arrEventBegin['time'], 0, 2) ?>h<? echo substr($arrEventBegin['time'], 3, 2) ?> à <? echo substr($arrEventEnd['time'], 0, 2) ?>h<? echo substr($arrEventEnd['time'], 3, 2) ?></span>
+                <span class="planning_event_time">De : <?php echo substr($arrEventBegin['time'], 0, 2) ?>h<?php echo substr($arrEventBegin['time'], 3, 2) ?> à <?php echo substr($arrEventEnd['time'], 0, 2) ?>h<?php echo substr($arrEventEnd['time'], 3, 2) ?></span>
                 <span class="planning_event_time">
-                    <?
+                    <?php
                     if($arrEventEnd['date'] != $arrEventBegin['date'])
                     {
                         echo " le ".$arrEventEnd['date'];
                     }
                     ?>
                 </span><br />
-                <span class="planning_event_object">Objet: <? echo ploopi_htmlentities($event['object']); ?> </span>
+                <span class="planning_event_object">Objet: <?php echo ploopi_htmlentities($event['object']); ?> </span>
             </div>
-        <?
+        <?php
         }
         ?>
     </body>

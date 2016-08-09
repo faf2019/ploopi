@@ -602,6 +602,7 @@ a.ploopi_explorer_link {
     display:block;
     overflow:hidden;
     text-decoration:none;
+    outline:none;
 }
 
 a.ploopi_explorer_link:hover {

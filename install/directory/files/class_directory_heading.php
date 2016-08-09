@@ -48,9 +48,9 @@ class directory_heading extends data_object
     private $plans;
     private $position;
 
-    public function directory_heading()
+    public function __construct()
     {
-        parent::data_object('ploopi_mod_directory_heading', 'id');
+        parent::__construct('ploopi_mod_directory_heading', 'id');
         $this->position = 0;
     }
 
@@ -85,12 +85,12 @@ class directory_heading extends data_object
                             FROM    ploopi_mod_directory_heading
                             WHERE   id_heading = {$this->fields['id_heading']}
                         ");
-    
+
                         $row = $db->fetchrow();
-    
+
                         if ($this->fields['position'] > $row['maxpos']) $this->fields['position'] = $row['maxpos'];
                     }
-    
+
                     // Mise à jour de la position des autres rubriques
                     if ($this->fields['position'] > $this->position)
                     {

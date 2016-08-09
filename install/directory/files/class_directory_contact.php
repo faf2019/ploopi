@@ -50,38 +50,38 @@ include_once './include/classes/data_object.php';
 class directory_contact extends data_object
 {
     private $intPosition;
-    
+
     /**
      * Constructeur de la classe
      *
      * @return directory_contact
      */
-    
+
     public function __construct()
     {
         parent::__construct('ploopi_mod_directory_contact');
         $this->fields['position'] = $this->intPosition = 0;
     }
-    
+
     /**
      * Ouvre le contact
      */
-    public function open($intId)
+    public function open(...$args)
     {
-        $res = parent::open($intId);
+        $res = parent::open($args[0]);
         // Sauvegarde de la position actuelle
         if ($res) $this->intPosition = $this->fields['position'];
-        
+
         return $res;
     }
-    
+
     /**
      * Enregistre le contact
      */
     public function save($booForcePos = false)
     {
         global $db;
-        
+
         if (!$booForcePos)
         {
             // Recherche position max
@@ -89,7 +89,7 @@ class directory_contact extends data_object
             $intMaxPos = ($row = $db->fetchrow()) ? $row['pos'] : 0;
             if ($this->fields['position'] > $intMaxPos) $this->fields['position'] = $intMaxPos;
             if ($this->fields['position'] < 1) $this->fields['position'] = 1;
-            
+
             // Nouveau contact
             if ($this->isnew())
             {
@@ -110,10 +110,10 @@ class directory_contact extends data_object
                 }
             }
         }
-        
+
         return parent::save();
     }
-    
+
 
     /**
      * Supprime le contact et les favoris associés
@@ -122,13 +122,13 @@ class directory_contact extends data_object
     public function delete()
     {
         global $db;
-                
+
         $db->query("UPDATE ploopi_mod_directory_contact SET position = position - 1 WHERE position > {$this->fields['position']} AND id_heading = {$this->fields['id_heading']}");
-        
+
         $db->query("DELETE FROM ploopi_mod_directory_favorites WHERE id_contact = {$this->fields['id']}");
-        
+
         $this->deletephoto();
-        
+
         parent::delete();
     }
 
@@ -136,13 +136,13 @@ class directory_contact extends data_object
     {
         return (_PLOOPI_PATHDATA._PLOOPI_SEP.'directory'._PLOOPI_SEP.$this->fields['id'].'.png');
     }
-    
+
     public function deletephoto()
     {
         $strPhotoPath = $this->getphotopath();
-        
+
         if (file_exists($strPhotoPath)) unlink($strPhotoPath);
     }
-    
+
 }
 ?>

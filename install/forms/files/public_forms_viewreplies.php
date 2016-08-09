@@ -253,7 +253,7 @@ echo $skin->open_simplebloc(ploopi_htmlentities($objForm->fields['label'].' ('._
                 ?>
                     <a class="forms_export_link" title="Impression ODS" href="<?php echo ploopi_urlencode("admin.php?ploopi_op=forms_print_array&forms_id={$objForm->fields['id']}&forms_export_format=ODS"); ?>"><img alt="Impression ODS" title="Impression ODS" src="./modules/forms/img/mime/ods.png">ODS</a>
                     <a class="forms_export_link" title="Impression PDF" href="<?php echo ploopi_urlencode("admin.php?ploopi_op=forms_print_array&forms_id={$objForm->fields['id']}&forms_export_format=PDF"); ?>"><img alt="Impression PDF" title="Impression PDF" src="./modules/forms/img/mime/pdf.png">PDF</a>
-                <?
+                <?php
                 }
 
                 /* BM et CL - 11/2013 : ajout import csv si role ad hoc (Confer constante _FORMS_ACTION_IMPORT_CSV (action de code 8)) */
@@ -329,9 +329,9 @@ echo $skin->open_simplebloc(ploopi_htmlentities($objForm->fields['label'].' ('._
                         <a <?php echo $style_col; ?> href="<?php echo ploopi_urlencode("admin.php?op=forms_viewreplies&forms_id={$objForm->fields['id']}&orderby={$strKey}&option={$new_option}"); ?>">
                         <p class="ploopi_va">
                             <span><?php echo ploopi_htmlentities($row['label']); ?></span>
-                            <?
+                            <?php
                             if ($_SESSION['forms'][$objForm->fields['id']]['orderby'] == $strKey)
-                            { ?><img src="./modules/forms/img/<?php echo $sort_cell; ?>.png"><? }
+                            { ?><img src="./modules/forms/img/<?php echo $sort_cell; ?>.png"><?php }
                             ?>
                         </p>
                         </a>

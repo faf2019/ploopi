@@ -355,7 +355,7 @@ switch($ploopi_op)
             if (!empty($_SESSION['documents'][$documents_id]['callback_func'])) $_SESSION['documents'][$documents_id]['callback_func']('savefile', $documentsfile, true);
             ?>
             <script type="text/javascript">
-                <?
+                <?php
                 // Sélection directe d'un fichier
                 if (isset($_GET['selectfile'])) {
 
@@ -373,7 +373,7 @@ switch($ploopi_op)
                 else {
                     ?>
                     window.parent.ploopi_documents_browser('<?php echo ploopi_queryencode("ploopi_op=documents_browser&currentfolder={$currentfolder}&documents_id={$documents_id}"); ?>', '<?php echo ploopi_htmlentities($documents_id); ?>');
-                    <?
+                    <?php
                 }
                 ?>
                 window.parent.ploopi_hidepopup('ploopi_documents_openfile_popup');
@@ -472,7 +472,7 @@ switch($ploopi_op)
                         foreach(ploopi_documents_listfolders($_SESSION['documents'][$_GET['documents_id']]['id_object'], $_SESSION['documents'][$_GET['documents_id']]['id_record'], $_SESSION['documents'][$_GET['documents_id']]['id_module']) as $row) {
                             ?>
                             <option value="<?php echo $row['id']; ?>" <?php if ($row['id'] == $documentsfile->fields['id_folder']) echo 'selected="selected"'; ?>><?php echo ploopi_htmlentities($row['name']); ?></option>
-                            <?
+                            <?php
                         }
                         ?>
                         </select>

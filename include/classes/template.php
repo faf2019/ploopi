@@ -51,7 +51,7 @@ class block
      *
      * @return block
      */
-    public function block()
+    public function __construct()
     {
         $this->menu = array();
         $this->content = '';
@@ -68,7 +68,7 @@ class block
 
     public function addmenu($label, $url, $selected = false, $target = '')
     {
-        $this->menu[] = array( 
+        $this->menu[] = array(
             'label' => $label,
             'cleaned_label' => ploopi_htmlentities(trim(str_replace('&nbsp;', ' ', strip_tags($label)))),
             'url' => $url,

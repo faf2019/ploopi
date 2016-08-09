@@ -1,19 +1,23 @@
 P R E R E Q U I S
 - - - - - - - - -
 
-Avant de démarrer l'installation de PLOOPI, vous devez vérifier que vous disposez des éléments suivants :
+Installation des paquets
 
-    * Debian Squeeze ou Wheezy (probablement d'autres distributions également)
-    * Apache 1.3x ou 2.x
-    * PHP 5.x
-    * MySQL 5.x
+sudo apt-get install --yes --force-yes apache2 mysql-server php php-mysql php-gd php-zip php-mcrypt php-cli php-pear composer
 
-Certaines extensions de php sont également obligatoires pour un fonctionnement optimal :
 
-    * php5-mcrypt
-    * php5-gd
-    * php5-dev (pour pecl)
-    * php-pear : détail des classes ci-après
+Mise à jour de PEAR
+
+sudo pear channel-update pear.php.net
+sudo pear channel-discover pear.horde.org
+sudo pear channel-update pear.horde.org
+
+sudo pear install --alldeps PEAR_info Cache_Lite HTTP_Request2 horde/Horde_Text_Diff-2.0.1 XML_Serializer-0.20.2
+sudo pear upgrade-all
+
+Installation des composants via composer (à la racine du portail)
+composer update
+
 
 Vous pouvez très facilement installer les paquets prérequis pour un bon fonctionnement de PLOOPI sous Debian (en root) :
 
@@ -23,14 +27,7 @@ sudo apt-get update
 # Installation des paquets
 sudo apt-get install --yes --force-yes apache2 mysql-server php5 php5-mysql php5-gd php5-cli php5-mcrypt php5-xcache php-pear php5-dev make unoconv openoffice.org-writer
 
-# *Option* config pear via proxy
-sudo pear config-set http_proxy http://login:password@ip_du_proxy:port_du_proxy
 
-# Mise à jour de PEAR
-sudo pear channel-update pear.php.net
-sudo pear channel-discover pear.horde.org
-sudo pear upgrade PEAR
-sudo pear upgrade-all
 
 # Installation des librairies
 sudo pear install --alldeps PEAR_info Cache_Lite HTTP_Request2 Net_UserAgent_Detect Text_Highlighter-0.7.3 horde/Horde_Text_Diff-2.0.1 XML_Serializer-0.20.2

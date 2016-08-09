@@ -112,35 +112,6 @@ switch($http_host)
         define ('_PLOOPI_MAXFILESIZE', '16777216');
 
         /**
-         * Active ou non l'utilisation d'un CGI pour l'upload avancés des fichiers.
-         * Cette fonctionnalité permet notamment de suivre précisément l'état de l'upload avec par exemple une barre d'avancement.
-         * Pour activer cette fonctionnalité, vous devez au préalable configuer correctement Apache pour que le cgi puisse s'éxecuter correctement.
-         *
-         *    ScriptAlias /cgi/ /var/www/monploopi/cgi/
-         *    <Directory "/var/www/monploopi/cgi/">
-         *        AllowOverride None
-         *        Options ExecCGI -MultiViews +SymLinksIfOwnerMatch
-         *        Order allow,deny
-         *        Allow from all
-         *    </Directory>
-         */
-
-        define ('_PLOOPI_USE_CGIUPLOAD', <CGI>);
-
-        /**
-         * Chemin relatif du dossier contenant les scripts CGI de Ploopi
-         */
-
-        define ('_PLOOPI_CGI_PATH', '<CGIPATH>');
-
-        /**
-         * Chemin absolu du dossier temporaire utilisé lors de l'upload de fichiers par le CGI.
-         * Ce chemin doit être accessible en écriture par le processus qui exécute Apache.
-         */
-
-        define ('_PLOOPI_CGI_UPLOADTMP', realpath('<TMPPATH>'));
-
-        /**
          * Durée maximum d'une session en secondes.
          * Si vous utilisez le gestionnaire de session interne de Ploopi, c'est la seule valeur prise en compte.
          * Si vous n'utilisez pas le gestionnaire interne, vérifiez la valeur de la directive session.gc_maxlifetime du fichier php.ini
@@ -211,12 +182,11 @@ switch($http_host)
         /**
          * Définit le niveau de sensibilité du gestionnaire d'erreur.
          * Valeurs possibles : E_ALL, E_ERROR,  E_WARNING,  E_PARSE,  E_NOTICE
-         * Attention, pour PHP 5.4, pensez à ajouter ^ E_STRICT
          *
          * @link http://fr.php.net/manual/fr/errorfunc.constants.php
          */
 
-        define ('_PLOOPI_ERROR_REPORTING', version_compare(phpversion(), '5.4', '<') ? E_ALL : E_ALL ^ E_STRICT);
+        define ('_PLOOPI_ERROR_REPORTING', E_ALL);
 
         /**
          * Active ou on l'envoi d'un mail si une erreur est rencontrée.
@@ -316,6 +286,14 @@ switch($http_host)
         define ('_PLOOPI_CIPHER_IV', '12345678ABCDEFGHIJKLMNOPQRSTUVWX');
 
         /**
+         * Algorithme utilisé pour la génération des valeurs de hachage (stockage des mots de passe).
+         * Recommandé : sha256, sha384, sha512, whirlpool
+         * Compatibilité Ploopi < 1.9.7 : md5
+         */
+
+        define ('_PLOOPI_HASH_ALGO', 'sha256');
+
+        /**
          * Clé secrète utilisée pour le chiffrement des URL et des mots de passe
          */
 
@@ -366,7 +344,7 @@ switch($http_host)
          * Template backoffice par défaut (si le template utilisé n'existe pas)
          */
 
-        define ('_PLOOPI_DEFAULT_TEMPLATE', 'ploopi');
+        define ('_PLOOPI_DEFAULT_TEMPLATE', 'eyeos');
 
         /**
          * Force l'utilisateur à utiliser un mot de passe complexe

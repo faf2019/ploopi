@@ -58,9 +58,9 @@ class skin extends skin_common
      * @return skin
      */
 
-    function skin()
+    function __construct()
     {
-        parent::skin_common('ovensia');
+        parent::__construct('ovensia');
     }
 
 }

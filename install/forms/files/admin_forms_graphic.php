@@ -302,7 +302,7 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
                         <label>Champ :</label>
                         <select class="select" name="forms_graphic_pie_field">
                             <option value="">(aucun)</option>
-                            <?
+                            <?php
                             foreach($arrFields as $intIdField => $arrField)
                             {
                                 if (!$arrField['separator'] && !$arrField['captcha'] && !$arrField['html'])
@@ -330,7 +330,7 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
                     <label>Trame de temps:</label>
                     <select class="select" name="forms_graphic_timefield">
                         <option value="0">Date de validation</option>
-                        <?
+                        <?php
                         foreach($arrFields as $intIdField => $arrField)
                         {
                             if (!$arrField['separator'] && !$arrField['captcha'] && !$arrField['html'] && $arrField['type'] == 'text' && $arrField['format'] == 'date')
@@ -374,7 +374,7 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
                                 <label>Filtre :</label>
                                 <select class="select" name="forms_graphic_line<?php echo $intI; ?>_filter">
                                     <option value="">(aucun)</option>
-                                    <?
+                                    <?php
                                     foreach($arrFields as $intIdField => $arrField)
                                     {
                                         if (!$arrField['separator'] && !$arrField['captcha'] && !$arrField['html'])
@@ -407,7 +407,7 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
                                 <label>Champ affiché :</label>
                                 <select class="select" name="forms_graphic_line<?php echo $intI; ?>_field">
                                     <option value="">(aucun)</option>
-                                    <?
+                                    <?php
                                     foreach($arrFields as $intIdField => $arrField)
                                     {
                                         if (!$arrField['separator'] && !$arrField['captcha'] && !$arrField['html'])

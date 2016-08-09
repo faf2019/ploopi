@@ -25,6 +25,13 @@
     <!-- BEGIN system_trombi_switch_result -->
     <div class="system_trombi_result">
     <h1>Résultat de la recherche :</h1>
+        <!-- BEGIN switch_index -->
+            <div class="system_trombi_index">
+            <!-- BEGIN index -->
+                <a class="{system_trombi_switch_result.switch_index.index.SELECTED}" title="{system_trombi_switch_result.switch_index.index.COUNT} utilisateur(s)" href="{system_trombi_switch_result.switch_index.index.URL}">{system_trombi_switch_result.switch_index.index.LETTER}</a>
+            <!-- END index -->
+            </div>
+        <!-- END switch_index -->
         <table cellspacing="0" cellpadding="0" border="1">
             <tr class="system_trombi_title">
                 <th>Nom</th>
@@ -128,7 +135,7 @@
                             <div style="padding:4px;">
                                 {system_trombi_switch_result.user.ROLES}
                             </div>
-                            
+
                             <!-- BEGIN switch_files -->
                             <h2>Documents</h2>
                             <div style="padding:4px;">
@@ -137,7 +144,7 @@
                                 <!-- END file -->
                             </div>
                             <!-- END switch_files -->
-                            
+
                         </div>
                     </div>
                 </div>

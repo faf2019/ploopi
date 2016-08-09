@@ -39,18 +39,18 @@ foreach($objDOC->get_objects() as $objForm)
     if (!$objForm->fields['option_adminonly'] || ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
     {
         ?>
-        <a class="forms_public_link" href="<? echo ploopi_urlencode("admin.php?op=forms_viewreplies&forms_id={$objForm->fields['id']}"); ?>">
+        <a class="forms_public_link" href="<?php echo ploopi_urlencode("admin.php?op=forms_viewreplies&forms_id={$objForm->fields['id']}"); ?>">
         <div>
-            <h1><? echo ploopi_htmlentities($objForm->fields['label']); ?></h1>
-            <div><? echo ploopi_nl2br(ploopi_htmlentities($objForm->fields['description'])); ?></div>
+            <h1><?php echo ploopi_htmlentities($objForm->fields['label']); ?></h1>
+            <div><?php echo ploopi_nl2br(ploopi_htmlentities($objForm->fields['description'])); ?></div>
         </div>
         </a>
-        <?
+        <?php
     }
 }
 ?>
 
 
-<?
+<?php
 echo $skin->close_simplebloc();
 ?>

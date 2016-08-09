@@ -68,15 +68,15 @@ class docfolder extends data_object
 
     public function __construct()
     {
-        parent::data_object('ploopi_mod_doc_folder');
+        parent::__construct('ploopi_mod_doc_folder');
         $this->fields['timestp_create'] = ploopi_createtimestamp();
         $this->fields['timestp_modify'] = $this->fields['timestp_create'];
         $this->fields['parents'] = 0;
     }
 
-    public function open($intId)
+    public function open(...$args)
     {
-        if ($res = parent::open($intId))
+        if ($res = parent::open($args))
         {
             $this->id_folder = $this->fields['id_folder'];
             $this->parents = $this->fields['parents'];

@@ -54,16 +54,6 @@ function doc_file_validate(form, newfile, tovalidate, sid, cgipath)
         else res = true;
     }
 
-    if (res && sid)
-    {
-        if (ploopi_xmlhttprequest(cgipath+'/upload.cgi', 'test') == 'ok') setTimeout('doc_upload(\''+sid+'\');',250);
-        else
-        {
-            alert('Problème de configuration CGI. Envoi du fichier impossible.');
-            res = false;
-        }
-    }
-
     return res;
 }
 

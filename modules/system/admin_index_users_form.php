@@ -80,72 +80,72 @@ function system_user_validate(form, isnew)
 {
     if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_LASTNAME; ?>",form.user_lastname,"string"))
     if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_FIRSTNAME; ?>",form.user_firstname,"string"))
-    <? if (in_array('civility', $arrRequiredFields)) { ?>
+    <?php if (in_array('civility', $arrRequiredFields)) { ?>
     if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_CIVILITY; ?>", form.user_civility, 'select'))
-    <? } ?>
+    <?php } ?>
 
-    <? if (in_array('entity', $arrRequiredFields)) { ?>
+    <?php if (in_array('entity', $arrRequiredFields)) { ?>
     if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_ENTITY; ?>", form.user_entity, 'string'))
-    <? } ?>
-    <? if (in_array('service', $arrRequiredFields)) { ?>
+    <?php } ?>
+    <?php if (in_array('service', $arrRequiredFields)) { ?>
     if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_SERVICE; ?>", form.user_service, 'string'))
-    <? } ?>
-    <? if (in_array('service2', $arrRequiredFields)) { ?>
+    <?php } ?>
+    <?php if (in_array('service2', $arrRequiredFields)) { ?>
     if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_SERVICE2; ?>", form.user_service2, 'string'))
-    <? } ?>
-    <? if (in_array('function', $arrRequiredFields)) { ?>
+    <?php } ?>
+    <?php if (in_array('function', $arrRequiredFields)) { ?>
     if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_FUNCTION; ?>", form.user_function, 'string'))
-    <? } ?>
-    <? if (in_array('rank', $arrRequiredFields)) { ?>
+    <?php } ?>
+    <?php if (in_array('rank', $arrRequiredFields)) { ?>
     if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_RANK; ?>", form.user_rank, 'string'))
-    <? } ?>
-    <? if (in_array('number', $arrRequiredFields)) { ?>
+    <?php } ?>
+    <?php if (in_array('number', $arrRequiredFields)) { ?>
     if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_NUMBER; ?>", form.user_number, 'string'))
-    <? } ?>
+    <?php } ?>
 
-    <? if (in_array('phone', $arrRequiredFields)) { ?>
+    <?php if (in_array('phone', $arrRequiredFields)) { ?>
     if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_PHONE; ?>",form.user_phone,"phone"))
-    <? } else { ?>
+    <?php } else { ?>
     if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_PHONE; ?>",form.user_phone,"emptyphone"))
-    <? } ?>
-    <? if (in_array('mobile', $arrRequiredFields)) { ?>
+    <?php } ?>
+    <?php if (in_array('mobile', $arrRequiredFields)) { ?>
     if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_MOBILE; ?>",form.user_mobile,"phone"))
-    <? } else { ?>
+    <?php } else { ?>
     if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_MOBILE; ?>",form.user_mobile,"emptyphone"))
-    <? } ?>
-    <? if (in_array('fax', $arrRequiredFields)) { ?>
+    <?php } ?>
+    <?php if (in_array('fax', $arrRequiredFields)) { ?>
     if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_FAX; ?>",form.user_fax,"phone"))
-    <? } else { ?>
+    <?php } else { ?>
     if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_FAX; ?>",form.user_fax,"emptyphone"))
-    <? } ?>
+    <?php } ?>
 
-    <? if (in_array('email', $arrRequiredFields)) { ?>
+    <?php if (in_array('email', $arrRequiredFields)) { ?>
     if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_EMAIL; ?>",form.user_email,"email"))
-    <? } else { ?>
+    <?php } else { ?>
     if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_EMAIL; ?>",form.user_email,"emptyemail"))
-    <? } ?>
+    <?php } ?>
 
-    <? if (in_array('building', $arrRequiredFields)) { ?>
+    <?php if (in_array('building', $arrRequiredFields)) { ?>
     if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_BUILDING; ?>", form.user_building, 'string'))
-    <? } ?>
-    <? if (in_array('floor', $arrRequiredFields)) { ?>
+    <?php } ?>
+    <?php if (in_array('floor', $arrRequiredFields)) { ?>
     if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_FLOOR; ?>", form.user_floor, 'string'))
-    <? } ?>
-    <? if (in_array('office', $arrRequiredFields)) { ?>
+    <?php } ?>
+    <?php if (in_array('office', $arrRequiredFields)) { ?>
     if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_OFFICE; ?>", form.user_office, 'string'))
-    <? } ?>
-    <? if (in_array('address', $arrRequiredFields)) { ?>
+    <?php } ?>
+    <?php if (in_array('address', $arrRequiredFields)) { ?>
     if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_ADDRESS; ?>", form.user_address, 'string'))
-    <? } ?>
-    <? if (in_array('postalcode', $arrRequiredFields)) { ?>
+    <?php } ?>
+    <?php if (in_array('postalcode', $arrRequiredFields)) { ?>
     if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_POSTALCODE; ?>", form.user_postalcode, 'string'))
-    <? } ?>
-    <? if (in_array('city', $arrRequiredFields)) { ?>
+    <?php } ?>
+    <?php if (in_array('city', $arrRequiredFields)) { ?>
     if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_CITY; ?>", form.user_city, 'string'))
-    <? } ?>
-    <? if (in_array('country', $arrRequiredFields)) { ?>
+    <?php } ?>
+    <?php if (in_array('country', $arrRequiredFields)) { ?>
     if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_COUNTRY; ?>", form.user_country, 'string'))
-    <? } ?>
+    <?php } ?>
     {
         if (isnew)
         {
@@ -361,7 +361,7 @@ if (isset($_REQUEST['confirm']))
                         <input type="text" class="text" name="user_firstname"  value="<?php echo ploopi_htmlentities($user->fields['firstname']); ?>" tabindex="2" />
                     </p>
                     <p>
-                        <label><?php echo _SYSTEM_LABEL_CIVILITY; ?><? if (in_array('civility', $arrRequiredFields)) echo ' *'; ?>:</label>
+                        <label><?php echo _SYSTEM_LABEL_CIVILITY; ?><?php if (in_array('civility', $arrRequiredFields)) echo ' *'; ?>:</label>
                         <select class="select" name="user_civility" style="width:100px;" tabindex="3">
                             <option value=""></option>
                             <?php
@@ -381,39 +381,39 @@ if (isset($_REQUEST['confirm']))
                 <div class="ploopi_form">
 
                     <p>
-                        <label><?php echo _SYSTEM_LABEL_ENTITY; ?><? if (in_array('entity', $arrRequiredFields)) echo ' *'; ?>:</label>
+                        <label><?php echo _SYSTEM_LABEL_ENTITY; ?><?php if (in_array('entity', $arrRequiredFields)) echo ' *'; ?>:</label>
                         <input type="text" class="text" name="user_entity"  value="<?php echo ploopi_htmlentities($user->fields['entity']); ?>" tabindex="4" />
                     </p>
                     <p>
-                        <label><?php echo _SYSTEM_LABEL_SERVICE; ?><? if (in_array('service', $arrRequiredFields)) echo ' *'; ?>:</label>
+                        <label><?php echo _SYSTEM_LABEL_SERVICE; ?><?php if (in_array('service', $arrRequiredFields)) echo ' *'; ?>:</label>
                         <input type="text" class="text" name="user_service"  value="<?php echo ploopi_htmlentities($user->fields['service']); ?>" tabindex="4" />
                     </p>
                     <p>
-                        <label><?php echo _SYSTEM_LABEL_SERVICE2; ?><? if (in_array('service2', $arrRequiredFields)) echo ' *'; ?>:</label>
+                        <label><?php echo _SYSTEM_LABEL_SERVICE2; ?><?php if (in_array('service2', $arrRequiredFields)) echo ' *'; ?>:</label>
                         <input type="text" class="text" name="user_service2"  value="<?php echo ploopi_htmlentities($user->fields['service2']); ?>" tabindex="4" />
                     </p>
                     <p>
-                        <label><?php echo _SYSTEM_LABEL_FUNCTION; ?><? if (in_array('function', $arrRequiredFields)) echo ' *'; ?>:</label>
+                        <label><?php echo _SYSTEM_LABEL_FUNCTION; ?><?php if (in_array('function', $arrRequiredFields)) echo ' *'; ?>:</label>
                         <input type="text" class="text" name="user_function"  value="<?php echo ploopi_htmlentities($user->fields['function']); ?>" tabindex="5" />
                     </p>
                     <p>
-                        <label><?php echo _SYSTEM_LABEL_RANK; ?><? if (in_array('rank', $arrRequiredFields)) echo ' *'; ?>:</label>
+                        <label><?php echo _SYSTEM_LABEL_RANK; ?><?php if (in_array('rank', $arrRequiredFields)) echo ' *'; ?>:</label>
                         <input type="text" class="text" name="user_rank"  value="<?php echo ploopi_htmlentities($user->fields['rank']); ?>" tabindex="6" />
                     </p>
                     <p>
-                        <label><?php echo _SYSTEM_LABEL_NUMBER; ?><? if (in_array('number', $arrRequiredFields)) echo ' *'; ?>:</label>
+                        <label><?php echo _SYSTEM_LABEL_NUMBER; ?><?php if (in_array('number', $arrRequiredFields)) echo ' *'; ?>:</label>
                         <input type="text" class="text" name="user_number"  value="<?php echo ploopi_htmlentities($user->fields['number']); ?>" tabindex="7" />
                     </p>
                     <p>
-                        <label><?php echo _SYSTEM_LABEL_PHONE; ?><? if (in_array('phone', $arrRequiredFields)) echo ' *'; ?>:</label>
+                        <label><?php echo _SYSTEM_LABEL_PHONE; ?><?php if (in_array('phone', $arrRequiredFields)) echo ' *'; ?>:</label>
                         <input type="text" class="text" name="user_phone"  value="<?php echo ploopi_htmlentities($user->fields['phone']); ?>" tabindex="8" />
                     </p>
                     <p>
-                        <label><?php echo _SYSTEM_LABEL_MOBILE; ?><? if (in_array('mobile', $arrRequiredFields)) echo ' *'; ?>:</label>
+                        <label><?php echo _SYSTEM_LABEL_MOBILE; ?><?php if (in_array('mobile', $arrRequiredFields)) echo ' *'; ?>:</label>
                         <input type="text" class="text" name="user_mobile"  value="<?php echo ploopi_htmlentities($user->fields['mobile']); ?>" tabindex="9" />
                     </p>
                     <p>
-                        <label><?php echo _SYSTEM_LABEL_FAX; ?><? if (in_array('fax', $arrRequiredFields)) echo ' *'; ?>:</label>
+                        <label><?php echo _SYSTEM_LABEL_FAX; ?><?php if (in_array('fax', $arrRequiredFields)) echo ' *'; ?>:</label>
                         <input type="text" class="text" name="user_fax"  value="<?php echo ploopi_htmlentities($user->fields['fax']); ?>" tabindex="10" />
                     </p>
                 </div>
@@ -422,31 +422,31 @@ if (isset($_REQUEST['confirm']))
                 <legend>Lieu de travail</legend>
                 <div class="ploopi_form">
                     <p>
-                        <label><?php echo _SYSTEM_LABEL_BUILDING; ?><? if (in_array('building', $arrRequiredFields)) echo ' *'; ?>:</label>
+                        <label><?php echo _SYSTEM_LABEL_BUILDING; ?><?php if (in_array('building', $arrRequiredFields)) echo ' *'; ?>:</label>
                         <input type="text" class="text" name="user_building"  value="<?php echo ploopi_htmlentities($user->fields['building']); ?>" tabindex="11" />
                     </p>
                     <p>
-                        <label><?php echo _SYSTEM_LABEL_FLOOR; ?><? if (in_array('floor', $arrRequiredFields)) echo ' *'; ?>:</label>
+                        <label><?php echo _SYSTEM_LABEL_FLOOR; ?><?php if (in_array('floor', $arrRequiredFields)) echo ' *'; ?>:</label>
                         <input type="text" class="text" name="user_floor"  value="<?php echo ploopi_htmlentities($user->fields['floor']); ?>" tabindex="12" />
                     </p>
                     <p>
-                        <label><?php echo _SYSTEM_LABEL_OFFICE; ?><? if (in_array('office', $arrRequiredFields)) echo ' *'; ?>:</label>
+                        <label><?php echo _SYSTEM_LABEL_OFFICE; ?><?php if (in_array('office', $arrRequiredFields)) echo ' *'; ?>:</label>
                         <input type="text" class="text" name="user_office"  value="<?php echo ploopi_htmlentities($user->fields['office']); ?>" tabindex="13" />
                     </p>
                     <p>
-                        <label><?php echo _SYSTEM_LABEL_ADDRESS; ?><? if (in_array('address', $arrRequiredFields)) echo ' *'; ?>:</label>
+                        <label><?php echo _SYSTEM_LABEL_ADDRESS; ?><?php if (in_array('address', $arrRequiredFields)) echo ' *'; ?>:</label>
                         <textarea class="text" name="user_address" tabindex="14"><?php echo ploopi_htmlentities($user->fields['address']); ?></textarea>
                     </p>
                     <p>
-                        <label><?php echo _SYSTEM_LABEL_POSTALCODE; ?><? if (in_array('postalcode', $arrRequiredFields)) echo ' *'; ?>:</label>
+                        <label><?php echo _SYSTEM_LABEL_POSTALCODE; ?><?php if (in_array('postalcode', $arrRequiredFields)) echo ' *'; ?>:</label>
                         <input type="text" class="text" name="user_postalcode"  value="<?php echo ploopi_htmlentities($user->fields['postalcode']); ?>" tabindex="15" />
                     </p>
                     <p>
-                        <label><?php echo _SYSTEM_LABEL_CITY; ?><? if (in_array('city', $arrRequiredFields)) echo ' *'; ?>:</label>
+                        <label><?php echo _SYSTEM_LABEL_CITY; ?><?php if (in_array('city', $arrRequiredFields)) echo ' *'; ?>:</label>
                         <input type="text" class="text" name="user_city"  value="<?php echo ploopi_htmlentities($user->fields['city']); ?>" tabindex="16" />
                     </p>
                     <p>
-                        <label><?php echo _SYSTEM_LABEL_COUNTRY; ?><? if (in_array('country', $arrRequiredFields)) echo ' *'; ?>:</label>
+                        <label><?php echo _SYSTEM_LABEL_COUNTRY; ?><?php if (in_array('country', $arrRequiredFields)) echo ' *'; ?>:</label>
                         <input type="text" class="text" name="user_country"  value="<?php echo ploopi_htmlentities($user->fields['country']); ?>"  tabindex="17" />
                     </p>
                 </div>
@@ -493,7 +493,7 @@ if (isset($_REQUEST['confirm']))
                             <label>Nouveau mot de passe:</label>
                             <input type="password" class="text" name="usernewpass" id="usernewpass" value="" tabindex="22" style="width:180px;" />
                         </p>
-                        <?
+                        <?php
                     }
                     else {
                         ?>
@@ -501,7 +501,7 @@ if (isset($_REQUEST['confirm']))
                             <label>Mot de passe:</label>
                             <input type="password" class="text" name="usernewpass" id="usernewpass" value="" tabindex="22" style="width:180px;" />
                         </p>
-                        <?
+                        <?php
                     }
                     ?>
                     <div id="protopass"></div>
@@ -516,27 +516,27 @@ if (isset($_REQUEST['confirm']))
                     </p>
                     <p>
                         <label>Durée de validité du mot de passe en jours <em>(0 = pas de limite)</em> :</label>
-                        <input type="text" class="text" style="width:60px;" name="user_password_validity" id="user_password_validity" value="<? echo htmlentities($user->fields['password_validity']); ?>" tabindex="23" />
+                        <input type="text" class="text" style="width:60px;" name="user_password_validity" id="user_password_validity" value="<?php echo htmlentities($user->fields['password_validity']); ?>" tabindex="23" />
                     </p>
 
-                    <? if (!empty($user->fields['password_validity'])) { ?>
+                    <?php if (!empty($user->fields['password_validity'])) { ?>
                     <p>
                         <label>Date d'expiration du mot de passe:</label>
                         <input type="text" style="width:100px;" class="text" readonly="readonly" disabled="disabled" value="<?php echo date('d/m/Y', ploopi_timestamp2unixtimestamp($user->fields['password_last_update'])+$user->fields['password_validity']*86400); ?>" tabindex="24" />
                     </p>
-                    <? } ?>
+                    <?php } ?>
 
                     <p>
                         <label><?php echo _SYSTEM_LABEL_EXPIRATION_DATE; ?>:</label>
                         <input type="text" style="width:100px;" class="text" name="user_date_expire" id="user_date_expire" value="<?php echo ploopi_htmlentities($user_date_expire['date']); ?>" tabindex="24" />
-                        <? ploopi_open_calendar('user_date_expire'); ?>
+                        <?php ploopi_open_calendar('user_date_expire'); ?>
                     </p>
                     <p class="checkbox" onclick="javascript:ploopi_checkbox_click(event,'user_disabled');">
                         <label>Compte désactivé:</label>
                         <input type="checkbox" id="user_disabled" name="user_disabled" value="1" <?php if ($user->fields['disabled']) echo 'checked="checked"'; ?> tabindex="24" />
                     </p>
                     <p>
-                        <label><?php echo _SYSTEM_LABEL_EMAIL; ?><? if (in_array('email', $arrRequiredFields)) echo ' *'; ?>:</label>
+                        <label><?php echo _SYSTEM_LABEL_EMAIL; ?><?php if (in_array('email', $arrRequiredFields)) echo ' *'; ?>:</label>
                         <input type="text" class="text" name="user_email"  value="<?php echo ploopi_htmlentities($user->fields['email']); ?>" tabindex="25" />
                     </p>
                     <p class="checkbox" onclick="javascript:ploopi_checkbox_click(event,'user_ticketsbyemail');">
@@ -616,16 +616,16 @@ if (isset($_REQUEST['confirm']))
                     </p>
                     <p>
                         <label><?php echo _SYSTEM_LABEL_COLOR; ?>:</label>
-                        <input type="text" style="width:100px;cursor:pointer;" class="text color {hash:true}" name="user_color" id="user_color" value="<?php echo ploopi_htmlentities($user->fields['color']); ?>" tabindex="29" readonly="readonly" />
+                        <input type="text" style="width:100px;cursor:pointer;" class="text jscolor {hash:true}" name="user_color" id="user_color" value="<?php echo ploopi_htmlentities($user->fields['color']); ?>" tabindex="29" readonly="readonly" />
                     </p>
                     <p>
                         <label><?php echo _SYSTEM_LABEL_PHOTO; ?>:</label>
                         <span>
-                        <?
+                        <?php
                         $booPhotoExists = file_exists($user->getphotopath());
                         ?>
                         <a href="javascript:void(0);" onclick="javascript:system_choose_photo(event, '<?php echo $user->fields['id']; ?>');"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/btn_edit.png" /></a>
-                        <? if ($booPhotoExists) { ?> <a href="javascript:void(0);" onclick="javascript:$('system_user_photo').innerHTML = ''; system_delete_photo('<?php echo $user->fields['id']; ?>');"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/btn_delete.png" /></a><? } ?>
+                        <?php if ($booPhotoExists) { ?> <a href="javascript:void(0);" onclick="javascript:$('system_user_photo').innerHTML = ''; system_delete_photo('<?php echo $user->fields['id']; ?>');"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/btn_delete.png" /></a><?php } ?>
                         <br /><span id="system_user_photo">
                         <?php
                         if ($booPhotoExists) { ?><img src="<?php echo ploopi_urlencode("admin-light.php?ploopi_op=ploopi_get_userphoto&ploopi_user_id={$user->fields['id']}"); ?>" /><?php } ?>
@@ -749,17 +749,17 @@ if (!$user->isnew())
         $('usernewpass_confirm').value = '';
 
 
-        <? if (_PLOOPI_USE_COMPLEXE_PASSWORD) { ?>
+        <?php if (_PLOOPI_USE_COMPLEXE_PASSWORD) { ?>
         var options = {
-            minchar: <? echo _PLOOPI_COMPLEXE_PASSWORD_MIN_SIZE; ?>,
+            minchar: <?php echo _PLOOPI_COMPLEXE_PASSWORD_MIN_SIZE; ?>,
             scores: [5, 10, 20, 30]
         };
-        <? } else { ?>
+        <?php } else { ?>
         var options = {
             minchar: 6,
             scores: [5, 10, 20, 30]
         };
-        <? } ?>
+        <?php } ?>
 
         new Protopass('usernewpass', 'protopass', options);
 

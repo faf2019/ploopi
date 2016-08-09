@@ -61,9 +61,9 @@ class user extends data_object
      * @return user
      */
 
-    public function user()
+    public function __construct()
     {
-        parent::data_object('ploopi_user');
+        parent::__construct('ploopi_user');
         $this->fields['date_creation'] = ploopi_createtimestamp();
     }
 
@@ -73,9 +73,9 @@ class user extends data_object
      * @return boolean true si l'utilisateur existe
      */
 
-    public function open($id) {
+    public function open(...$args) {
 
-        $booOpened = parent::open($id);
+        $booOpened = parent::open($args);
 
         if ($booOpened) $this->_strPreviousPassword = $this->fields['password'];
 
@@ -425,7 +425,7 @@ class user extends data_object
 
     public static function generate_hash($strPassword, $strLogin)
     {
-        return md5(_PLOOPI_SECRETKEY."/{$strLogin}/".md5($strPassword));
+        return hash(_PLOOPI_HASH_ALGO, _PLOOPI_SECRETKEY."/{$strLogin}/".hash(_PLOOPI_HASH_ALGO, $strPassword));
     }
 
     /**

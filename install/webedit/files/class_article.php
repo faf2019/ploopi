@@ -78,10 +78,10 @@ class webedit_article extends data_object
      * @return webedit_article
      */
 
-    function webedit_article($type = '')
+    public function __construct($type = '')
     {
-        if ($type == 'draft') parent::data_object('ploopi_mod_webedit_article_draft');
-        else parent::data_object('ploopi_mod_webedit_article');
+        if ($type == 'draft') parent::__construct('ploopi_mod_webedit_article_draft');
+        else parent::__construct('ploopi_mod_webedit_article');
 
         $this->original_content = '';
         $this->fields['status'] = 'edit';
@@ -95,9 +95,9 @@ class webedit_article extends data_object
      * @return boolean true si l'article a été ouvert
      */
 
-    function open($id)
+    public function open(...$args)
     {
-        $res = parent::open($id);
+        $res = parent::open($args);
 
         if ($res) $this->original_content = $this->fields['content'];
 
@@ -113,7 +113,7 @@ class webedit_article extends data_object
      * @author Stéphane Escaich
      */
 
-    function save()
+    public function save()
     {
         if (empty($this->fields['metatitle'])) $this->fields['metatitle'] = $this->fields['title'];
 
@@ -151,7 +151,7 @@ class webedit_article extends data_object
      * Supprime l'article et les données associées (sauvegardes, index du moteur de recherche)
      */
 
-    function delete()
+    public function delete()
     {
         global $db;
 
@@ -184,7 +184,7 @@ class webedit_article extends data_object
      * @return boolean true s'il s'agit d'une première publication
      */
 
-    function publish()
+    public function publish()
     {
         global $db;
 
@@ -243,7 +243,7 @@ class webedit_article extends data_object
         return -1;
     }
 
-    function index()
+    public function index()
     {
         global $db;
 
@@ -338,7 +338,7 @@ class webedit_article extends data_object
      * @return true si l'accès est autorisé
      */
 
-    function isenabled()
+    public function isenabled()
     {
         include_once './modules/webedit/class_heading.php';
 
@@ -358,7 +358,7 @@ class webedit_article extends data_object
      * @return string url de l'article
      */
 
-    function geturl()
+    public function geturl()
     {
         ploopi_init_module('webedit', false, false, false);
         return(ploopi_urlrewrite("index.php?headingid={$this->fields['id_heading']}&articleid={$this->fields['id']}", webedit_getrewriterules(), $this->fields['metatitle']));
@@ -370,7 +370,7 @@ class webedit_article extends data_object
      * @return array tableau des tags
      */
 
-    function gettags()
+    public function gettags()
     {
         global $db;
         if (!$this->new)
@@ -391,4 +391,3 @@ class webedit_article extends data_object
     }
 
 }
-?>

@@ -61,7 +61,7 @@ class booking_event extends data_object
 
     public function booking_event()
     {
-        parent::data_object('ploopi_mod_booking_event', 'id');
+        parent::__construct('ploopi_mod_booking_event', 'id');
         $this->details = array();
         $this->subresources = array();
     }

@@ -99,28 +99,28 @@ function ploopi_share_selectusers($id_object = -1, $id_record = -1, $id_module =
     <a class="ploopi_share_title" href="javascript:void(0);" onclick="javascript:ploopi_switchdisplay('ploopi_share_<?php echo $strShareId; ?>');">
         <p class="ploopi_va">
             <img src="<?php echo empty($strPathIcon) ? "{$_SESSION['ploopi']['template_path']}/img/share/share.png" : $strPathIcon; ?>">
-            <span><? echo $strTitle; ?></span>
+            <span><?php echo $strTitle; ?></span>
         </p>
     </a>
     <div id="ploopi_share_<?php echo $strShareId; ?>" style="display:block;">
         <div class="ploopi_share_search_form">
             <p class="ploopi_va">
                 <span>Recherche groupes/utilisateurs:&nbsp;</span>
-                <input type="text" id="ploopi_share_userfilter" class="text" onkeyup="javascript:if (event.keyCode == 13) { ploopi_ajaxloader('div_share_search_result_<?php echo $strShareId; ?>'); ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_search_users&share_id=<? echo $strShareId; ?>&ploopi_share_userfilter='+ploopi_getelem('ploopi_share_userfilter').value,'div_share_search_result_<?php echo $strShareId; ?>'); }" />
-                <img onmouseover="javascript:this.style.cursor='pointer';" onclick="javascript:ploopi_ajaxloader('div_share_search_result_<?php echo $strShareId; ?>'); ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_search_users&share_id=<? echo $strShareId; ?>&ploopi_share_userfilter='+ploopi_getelem('ploopi_share_userfilter').value,'div_share_search_result_<?php echo $strShareId; ?>');" style="border:0px" src="<?php echo "{$_SESSION['ploopi']['template_path']}/img/share/search.png"; ?>">
+                <input type="text" id="ploopi_share_userfilter" class="text" onkeyup="javascript:if (event.keyCode == 13) { ploopi_ajaxloader('div_share_search_result_<?php echo $strShareId; ?>'); ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_search_users&share_id=<?php echo $strShareId; ?>&ploopi_share_userfilter='+ploopi_getelem('ploopi_share_userfilter').value,'div_share_search_result_<?php echo $strShareId; ?>'); }" />
+                <img onmouseover="javascript:this.style.cursor='pointer';" onclick="javascript:ploopi_ajaxloader('div_share_search_result_<?php echo $strShareId; ?>'); ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_search_users&share_id=<?php echo $strShareId; ?>&ploopi_share_userfilter='+ploopi_getelem('ploopi_share_userfilter').value,'div_share_search_result_<?php echo $strShareId; ?>');" style="border:0px" src="<?php echo "{$_SESSION['ploopi']['template_path']}/img/share/search.png"; ?>">
             </p>
         </div>
         <div id="div_share_search_result_<?php echo $strShareId; ?>"></div>
 
         <div class="ploopi_share_title">Sélection actuelle :</div>
-        <div class="ploopi_share_authorizedlist" id="div_share_users_selected_<? echo $strShareId; ?>"><?php if (empty($_SESSION['ploopi']['share'][$strShareId])) echo 'Aucune autorisation'; ?></div>
+        <div class="ploopi_share_authorizedlist" id="div_share_users_selected_<?php echo $strShareId; ?>"><?php if (empty($_SESSION['ploopi']['share'][$strShareId])) echo 'Aucune autorisation'; ?></div>
         <?php
         if (!empty($_SESSION['ploopi']['share'][$strShareId]))
         {
             ?>
             <script type="text/javascript">
-                ploopi_ajaxloader('div_share_users_selected_<? echo $strShareId; ?>');
-                ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_select_user&share_id=<? echo $strShareId; ?>', 'div_share_users_selected_<? echo $strShareId; ?>')
+                ploopi_ajaxloader('div_share_users_selected_<?php echo $strShareId; ?>');
+                ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_select_user&share_id=<?php echo $strShareId; ?>', 'div_share_users_selected_<?php echo $strShareId; ?>')
             </script>
             <?php
         }

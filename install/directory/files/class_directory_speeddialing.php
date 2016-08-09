@@ -53,10 +53,10 @@ class directory_speeddialing extends data_object
      *
      * @return directory_speeddialing
      */
-    
-    function __construct()
+
+    public function __construct()
     {
-        parent::data_object('ploopi_mod_directory_speeddialing');
+        parent::__construct('ploopi_mod_directory_speeddialing');
     }
 }
 ?>

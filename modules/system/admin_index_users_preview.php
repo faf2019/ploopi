@@ -87,28 +87,28 @@ if ($booCriticalError) $arrErrors[] = "Erreur critique, impossible d'importer le
 
 ?>
 <div style="padding:2px;border-bottom:1px solid #a0a0a0;background-color:#e0e0e0;"><strong>Import d'un fichier CSV contenant des utilisateurs :</strong></div>
-<?
+<?php
 if (empty($arrErrors))
 {
     ?>
     <p class="ploopi_va" style="padding:2px;"><span>Le fichier semble conforme</span></p>
-    <?
+    <?php
 }
 else
 {
     foreach($arrErrors as $strError)
     {
         ?>
-        <p class="ploopi_va" style="padding:2px;"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/attention.png" style="margin-right:4px;" /><span class="error"><? echo ploopi_htmlentities($strError); ?></span></p>
-        <?
+        <p class="ploopi_va" style="padding:2px;"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/attention.png" style="margin-right:4px;" /><span class="error"><?php echo ploopi_htmlentities($strError); ?></span></p>
+        <?php
     }
 }
 
 if (!$booCriticalError)
 {
     ?>
-    <div style="padding:2px;border-bottom:1px solid #a0a0a0;background-color:#e0e0e0;"><strong>Aperçu de l'import (<a href="<? echo ploopi_urlencode("admin.php?usrTabItem=tabUserImport&op=import"); ?>">Confirmer l'import</a>):</strong></div>
-    <?
+    <div style="padding:2px;border-bottom:1px solid #a0a0a0;background-color:#e0e0e0;"><strong>Aperçu de l'import (<a href="<?php echo ploopi_urlencode("admin.php?usrTabItem=tabUserImport&op=import"); ?>">Confirmer l'import</a>):</strong></div>
+    <?php
     
     $columns = array();
     $values = array();

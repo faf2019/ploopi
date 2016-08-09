@@ -129,7 +129,7 @@ switch($ploopi_op)
                 <script type="text/javascript">
                 ploopi = {};
                 Event.observe(window, 'load', function() {
-                    $('forms_form_<? echo ploopi_htmlentities($_REQUEST['forms_id']); ?>').innerHTML = $('forms_form_<? echo ploopi_htmlentities($_REQUEST['forms_id']); ?>').innerHTML.replace(/<(\/?)fieldset[^>]*>/ig, '').replace(/<legend[^>]*>.*<\/legend>/ig, '');
+                    $('forms_form_<?php echo ploopi_htmlentities($_REQUEST['forms_id']); ?>').innerHTML = $('forms_form_<?php echo ploopi_htmlentities($_REQUEST['forms_id']); ?>').innerHTML.replace(/<(\/?)fieldset[^>]*>/ig, '').replace(/<legend[^>]*>.*<\/legend>/ig, '');
                     window.print();
                     window.close();
                 });
@@ -138,10 +138,10 @@ switch($ploopi_op)
                 <link href="./modules/forms/templates/default/print.css" rel="stylesheet" type="text/css">
                 </head>
                 <body>
-                <? $objForm->render($_REQUEST['record_id'], 'print'); ?>
+                <?php $objForm->render($_REQUEST['record_id'], 'print'); ?>
                 </body>
             </html>
-            <?
+            <?php
         }
         ploopi_die();
     break;
@@ -741,7 +741,7 @@ if ($_SESSION['ploopi']['connected'])
                         <a class="forms_export_link" href="<?php echo $strUrl; ?>"><img src="./modules/forms/img/mime/png.png" /> Télécharger l'image</a>
                     </p>
                     <img style="margin:4px;display:block;clear:both;" src="<?php echo $strUrl; ?>" />
-                    <?
+                    <?php
                 }
                 else
                 {

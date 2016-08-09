@@ -42,6 +42,19 @@ define ('_DIRECTORY_ACTION_CONTACTS',         1);
 define ('_DIRECTORY_ACTION_MANAGERS',         2);
 define ('_DIRECTORY_ACTION_SPEEDDIALING',     3);
 
+define ('_DIRECTORY_ACTION_HEADING_ADD',      10);
+define ('_DIRECTORY_ACTION_HEADING_DELETE',   11);
+define ('_DIRECTORY_ACTION_HEADING_MODIFY',   12);
+
+define ('_DIRECTORY_ACTION_CONTACT_ADD',      15);
+define ('_DIRECTORY_ACTION_CONTACT_DELETE',   16);
+define ('_DIRECTORY_ACTION_CONTACT_MODIFY',   17);
+
+define ('_DIRECTORY_ACTION_SPEEDDIALING_ADD',      20);
+define ('_DIRECTORY_ACTION_SPEEDDIALING_DELETE',   21);
+define ('_DIRECTORY_ACTION_SPEEDDIALING_MODIFY',   22);
+
+
 define ('_DIRECTORY_OBJECT_HEADING',        1);
 define ('_DIRECTORY_OBJECT_CONTACT',        2);
 
@@ -80,14 +93,14 @@ $arrDirectoryImportFields = array(
 function directory_getheadings($intIdHeading = 0)
 {
     global $db;
-    
+
     $booIsAdmin = ploopi_isadmin();
     if (!$booIsAdmin)
     {
         // Lecture du profil utilisateur (groupes notamment)
         $objUser = new user();
-        $arrGroups = $objUser->open($_SESSION['ploopi']['userid']) ? $objUser->getgroups(true) : array(); 
-        
+        $arrGroups = $objUser->open($_SESSION['ploopi']['userid']) ? $objUser->getgroups(true) : array();
+
         // Tous les validateurs pour toutes les rubriques !
         $arrVal = ploopi_validation_get(_DIRECTORY_OBJECT_HEADING);
 
@@ -99,7 +112,7 @@ function directory_getheadings($intIdHeading = 0)
             if (($row['type_validation'] == 'user' && $row['id_validation'] == $_SESSION['ploopi']['userid']) || ($row['type_validation'] == 'group' && isset($arrGroups[$row['id_validation']]))) $arrValidation[$row['id_record']] = true;
         }
     }
-    
+
     $arrHeadings =
         array(
             'list' => array(),
@@ -128,7 +141,7 @@ function directory_getheadings($intIdHeading = 0)
             $arrHeadings['tree'][$fields['id_heading']][] = $fields['id'];
         }
     }
-    
+
     return $arrHeadings;
 }
 
@@ -180,32 +193,32 @@ function directory_gettreeview($headings = array(), $booPopup = false)
     {
         $arrParents = preg_split('/;/', $fields['parents']);
         $icon = 'ico_heading.png';
-        
+
         if ($booPopup)
         {
             $strNodePrefix = 'pop_';
             $strNodeId = $strNodePrefix.$fields['id'];
-            
+
             foreach($arrParents as &$strNodeParentId) $strNodeParentId = $strNodePrefix.$strNodeParentId;
-            
+
             $strNodeOnClick = "ploopi_skin_treeview_shownode('{$strNodeId}', '".ploopi_queryencode("ploopi_op=directory_heading_detail&directory_heading_id={$fields['id']}&directory_option=popup")."', 'admin-light.php');";
-            
-            $strLink = 'javascript:void(0);'; 
+
+            $strLink = 'javascript:void(0);';
             $strOnClick = $fields['isvalidator'] ? 'javascript:directory_heading_choose(\''.$fields['id'].'\', \''.addslashes($fields['label']).'\');' : "javascript:alert('Vous ne disposez pas des autorisations nécessaires');";
 
             if (!$fields['isvalidator']) $icon = 'ico_heading_false.png';
         }
-        else 
+        else
         {
             $strNodePrefix = '';
             $strNodeId = $fields['id'];
-            
+
             $strNodeOnClick = "ploopi_skin_treeview_shownode('{$strNodeId}', '".ploopi_queryencode("ploopi_op=directory_heading_detail&directory_heading_id={$fields['id']}")."', 'admin-light.php');";
-            
-            $strLink = ploopi_urlencode("admin.php?directory_heading_id={$fields['id']}"); 
-            $strOnClick = ''; 
+
+            $strLink = ploopi_urlencode("admin.php?directory_heading_id={$fields['id']}");
+            $strOnClick = '';
         }
-        
+
         $treeview['list'][$strNodeId] =
             array(
                 'id' => $strNodeId,
@@ -238,7 +251,7 @@ function directory_template_display(&$template_body, &$arrHeadings, &$arrContact
 {
     global $template_moduleid;
     global $headingid;
-    
+
     // Gestion des contacts de la rubrique
     if (isset($arrContacts[$intHeadingId]))
     {
@@ -262,15 +275,15 @@ function directory_template_display(&$template_body, &$arrHeadings, &$arrContact
 
             // Récupération des rubriques du contact
             $arrContactHeadings = array();
-            
+
             foreach(preg_split('/;/', $arrHeadings['list'][$intHeadingId]['parents']) as $intHid)
             {
                 if (isset($arrHeadings['list'][$intHid])) $arrContactHeadings[] = $arrHeadings['list'][$intHid]['label'];
             }
-            
+
             $arrContactHeadings[] = $arrHeadings['list'][$intHeadingId]['label'];
-            $strContactHeadings = implode(' > ', $arrContactHeadings);            
-            
+            $strContactHeadings = implode(' > ', $arrContactHeadings);
+
             // Construction du lien sur la fiche contact
             $arrRequest = array();
 
@@ -362,7 +375,7 @@ function directory_template_display_organigram(&$template_body, &$arrHeadings, $
 {
     global $template_moduleid;
     global $headingid;
-    
+
     if (isset($arrHeadings['tree'][$intHeadingId]))
     {
         foreach($arrHeadings['tree'][$intHeadingId] as $intId)

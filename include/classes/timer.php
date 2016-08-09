@@ -51,7 +51,7 @@ class timer
      * @return timer
      */
 
-    public function timer()
+    public function __construct()
     {
         $this->start = 0;
     }

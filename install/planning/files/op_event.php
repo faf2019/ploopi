@@ -177,19 +177,19 @@ switch($ploopi_op)
         if (ploopi_isactionallowed(_PLANNING_ADD_EVENT))
         {
             ?>
-            <form id="planning_add_form" action="<? echo ploopi_urlencode("admin-light.php?".implode('&', $arrParams)); ?>" method="post" onsubmit="javascript:ploopi_xmlhttprequest_submitform($('planning_add_form'), 'planning_main', planning_event_validate); return false;">
-            <?
+            <form id="planning_add_form" action="<?php echo ploopi_urlencode("admin-light.php?".implode('&', $arrParams)); ?>" method="post" onsubmit="javascript:ploopi_xmlhttprequest_submitform($('planning_add_form'), 'planning_main', planning_event_validate); return false;">
+            <?php
         }
         ?>
         <div class="ploopi_form">
             <p>
                 <label>Utilisateur / Groupe:</label>
-                <?
+                <?php
                 if (ploopi_isactionallowed(_PLANNING_ADD_EVENT))
                 {
                     ?>
                     <span class="planning_event_ressource_list">
-                        <?
+                        <?php
                         $arrResources = planning_get_resources();
 
                         // Récupération des ressources associées à l'événement
@@ -201,23 +201,23 @@ switch($ploopi_op)
                             {
                                 $booChecked = isset($arrEventDetailRessources[$strResourceType][$row['id']]);
                                 ?>
-                                <em class="ploopi_checkbox" onclick="javascript:ploopi_checkbox_click(event, '_planning_eventresource_id<? echo $strResourceType[0].$row['id']; ?>');">
-                                    <input type="checkbox" name="_planning_eventresource_id[<? echo $strResourceType; ?>][<? echo $row['id']; ?>]" id="_planning_eventresource_id<? echo $strResourceType[0].$row['id']; ?>" value="<? echo $row['id']; ?>" <? if ($booChecked) echo 'checked="checked"'; ?>/>
-                                    <img style="background-color:<? echo $row['color']; ?>;" src="./modules/planning/img/ico_<? echo $strResourceType; ?>.png" />
-                                    <? echo ploopi_htmlentities($row['label']); ?>
+                                <em class="ploopi_checkbox" onclick="javascript:ploopi_checkbox_click(event, '_planning_eventresource_id<?php echo $strResourceType[0].$row['id']; ?>');">
+                                    <input type="checkbox" name="_planning_eventresource_id[<?php echo $strResourceType; ?>][<?php echo $row['id']; ?>]" id="_planning_eventresource_id<?php echo $strResourceType[0].$row['id']; ?>" value="<?php echo $row['id']; ?>" <?php if ($booChecked) echo 'checked="checked"'; ?>/>
+                                    <img style="background-color:<?php echo $row['color']; ?>;" src="./modules/planning/img/ico_<?php echo $strResourceType; ?>.png" />
+                                    <?php echo ploopi_htmlentities($row['label']); ?>
                                 </em>
-                                <?
+                                <?php
                             }
                         }
                         ?>
                     </span>
-                    <?
+                    <?php
                 }
                 else
                 {
                     ?>
                     <span>
-                        <?
+                        <?php
                         $arrResources = planning_get_resources();
 
                         // Récupération des ressources associées à l'événement
@@ -231,80 +231,80 @@ switch($ploopi_op)
                                 {
                                     ?>
                                     <em style="display:block;">
-                                        <img style="background-color:<? echo $row['color']; ?>;" src="./modules/planning/img/ico_<? echo $strResourceType; ?>.png" />
-                                        <? echo ploopi_htmlentities($row['label']); ?>
+                                        <img style="background-color:<?php echo $row['color']; ?>;" src="./modules/planning/img/ico_<?php echo $strResourceType; ?>.png" />
+                                        <?php echo ploopi_htmlentities($row['label']); ?>
                                     </em>
-                                    <?
+                                    <?php
                                 }
                             }
                         }
                         ?>
                     </span>
-                    <?
+                    <?php
                 }
                 ?>
             </p>
             <p>
                 <label>Objet:</label>
-                <?
+                <?php
                 if (ploopi_isactionallowed(_PLANNING_ADD_EVENT))
                 {
-                    ?><input name="planning_event_object" type="text" class="text" value="<? echo ploopi_htmlentities($objEvent->fields['object']); ?>"><?
+                    ?><input name="planning_event_object" type="text" class="text" value="<?php echo ploopi_htmlentities($objEvent->fields['object']); ?>"><?php
                 }
                 else
                 {
-                    ?><span><? echo ploopi_htmlentities($objEvent->fields['object']); ?></span><?
+                    ?><span><?php echo ploopi_htmlentities($objEvent->fields['object']); ?></span><?php
                 }
                 ?>
             </p>
             <p>
-                <label>Date<? if ($ploopi_op == 'planning_event_add') echo ' de début'; ?>:</label>
-                <?
+                <label>Date<?php if ($ploopi_op == 'planning_event_add') echo ' de début'; ?>:</label>
+                <?php
                 if (ploopi_isactionallowed(_PLANNING_ADD_EVENT))
                 {
                     ?>
-                    <input name="_planning_event_timestp_begin_d" id="_planning_event_timestp_begin_d" class="text" type="text" value="<?php echo ploopi_htmlentities($arrDateTimeBegin['date']); ?>" style="width:80px;" <? if ($ploopi_op == 'planning_event_add') { ?>onchange="javascript:$('_planning_event_timestp_end_d').value = this.value;"<? } ?> />
+                    <input name="_planning_event_timestp_begin_d" id="_planning_event_timestp_begin_d" class="text" type="text" value="<?php echo ploopi_htmlentities($arrDateTimeBegin['date']); ?>" style="width:80px;" <?php if ($ploopi_op == 'planning_event_add') { ?>onchange="javascript:$('_planning_event_timestp_end_d').value = this.value;"<?php } ?> />
                     <?php ploopi_open_calendar('_planning_event_timestp_begin_d'); ?>
-                    <?
+                    <?php
                 }
                 else
                 {
-                    ?><span><? echo ploopi_htmlentities($arrDateTimeBegin['date']); ?></span><?
+                    ?><span><?php echo ploopi_htmlentities($arrDateTimeBegin['date']); ?></span><?php
                 }
                 ?>
 
             </p>
             <p>
                 <label>Heure de début:</label>
-                <?
+                <?php
                 if (ploopi_isactionallowed(_PLANNING_ADD_EVENT))
                 {
                     ?>
                     <select name="_planning_event_timestp_begin_h" id="_planning_event_timestp_begin_h" class="select" style="width:60px;">
-                    <?
+                    <?php
                     for ($i = 0; $i < 24; $i++)
                     {
-                        ?><option <? if ($arrDateTimeBegin['time'][0] == $i) echo 'selected="selected"';  ?> value="<? echo $i; ?>"><? echo sprintf("%02d h", $i); ?></option><?
+                        ?><option <?php if ($arrDateTimeBegin['time'][0] == $i) echo 'selected="selected"';  ?> value="<?php echo $i; ?>"><?php echo sprintf("%02d h", $i); ?></option><?php
                     }
                     ?>
                     </select>
                     <select name="_planning_event_timestp_begin_m" id="_planning_event_timestp_begin_m" class="select" style="width:45px;">
-                    <?
+                    <?php
                     for ($i = 0; $i < 12; $i++)
                     {
-                        ?><option <? if ($arrDateTimeBegin['time'][1] == $i*5) echo 'selected="selected"';  ?> value="<? echo $i*5; ?>"><? echo sprintf("%02d", $i*5); ?></option><?
+                        ?><option <?php if ($arrDateTimeBegin['time'][1] == $i*5) echo 'selected="selected"';  ?> value="<?php echo $i*5; ?>"><?php echo sprintf("%02d", $i*5); ?></option><?php
                     }
                     ?>
                     </select>
-                    <?
+                    <?php
                 }
                 else
                 {
-                    ?><span><? echo ploopi_htmlentities($arrDateTimeBegin['time'][0].':'.$arrDateTimeBegin['time'][1]); ?></span><?
+                    ?><span><?php echo ploopi_htmlentities($arrDateTimeBegin['time'][0].':'.$arrDateTimeBegin['time'][1]); ?></span><?php
                 }
                 ?>
             </p>
-            <?
+            <?php
             if ($ploopi_op == 'planning_event_add')
             {
                 ?>
@@ -313,40 +313,40 @@ switch($ploopi_op)
                     <input name="_planning_event_timestp_end_d" id="_planning_event_timestp_end_d" class="text" type="text" value="<?php echo ploopi_htmlentities($arrDateTimeEnd['date']); ?>" style="width:80px; "/>
                     <?php ploopi_open_calendar('_planning_event_timestp_end_d'); ?>
                 </p>
-                <?
+                <?php
             }
             ?>
             <p>
                 <label>Heure de fin:</label>
-                <?
+                <?php
                 if (ploopi_isactionallowed(_PLANNING_ADD_EVENT))
                 {
                     ?>
                     <select name="_planning_event_timestp_end_h" id="_planning_event_timestp_end_h" class="select" style="width:60px;">
-                    <?
+                    <?php
                     for ($i = 0; $i < 24; $i++)
                     {
-                        ?><option <? if ($arrDateTimeEnd['time'][0] == $i) echo 'selected="selected"';  ?> value="<? echo $i; ?>"><? echo sprintf("%02d h", $i); ?></option><?
+                        ?><option <?php if ($arrDateTimeEnd['time'][0] == $i) echo 'selected="selected"';  ?> value="<?php echo $i; ?>"><?php echo sprintf("%02d h", $i); ?></option><?php
                     }
                     ?>
                     </select>
                     <select name="_planning_event_timestp_end_m" id="_planning_event_timestp_end_h" class="select" style="width:45px;">
-                    <?
+                    <?php
                     for ($i = 0; $i < 12; $i++)
                     {
-                        ?><option <? if ($arrDateTimeEnd['time'][1] == $i*5) echo 'selected="selected"';  ?> value="<? echo $i*5; ?>"><? echo sprintf("%02d", $i*5); ?></option><?
+                        ?><option <?php if ($arrDateTimeEnd['time'][1] == $i*5) echo 'selected="selected"';  ?> value="<?php echo $i*5; ?>"><?php echo sprintf("%02d", $i*5); ?></option><?php
                     }
                     ?>
                     </select>
-                    <?
+                    <?php
                 }
                 else
                 {
-                    ?><span><? echo ploopi_htmlentities($arrDateTimeEnd['time'][0].':'.$arrDateTimeEnd['time'][1]); ?></span><?
+                    ?><span><?php echo ploopi_htmlentities($arrDateTimeEnd['time'][0].':'.$arrDateTimeEnd['time'][1]); ?></span><?php
                 }
                 ?>
             </p>
-            <?
+            <?php
             if ($ploopi_op == 'planning_event_add')
             {
                 ?>
@@ -354,12 +354,12 @@ switch($ploopi_op)
                     <label>Périodicité:</label>
                     <select name="planning_event_periodicity" class="select" style="width:100px;">
                         <option value="">(Aucune)</option>
-                        <?
+                        <?php
                         foreach ($arrPlanningPeriodicity as $key => $value)
                         {
                             ?>
-                            <option value="<?php echo ploopi_htmlentities($key); ?>"><? echo ploopi_htmlentities($value); ?></option>
-                            <?
+                            <option value="<?php echo ploopi_htmlentities($key); ?>"><?php echo ploopi_htmlentities($value); ?></option>
+                            <?php
                         }
                         ?>
                     </select>
@@ -369,30 +369,30 @@ switch($ploopi_op)
                     <input name="_planning_event_periodicity_end_date" id="_planning_event_periodicity_end_date" class="text" type="text" value="" style="width:80px; "/>
                     <?php ploopi_open_calendar('_planning_event_periodicity_end_date'); ?>
                 </p>
-                <?
+                <?php
             }
             ?>
         </div>
-        <?
+        <?php
         if (ploopi_isactionallowed(_PLANNING_ADD_EVENT))
         {
             ?>
             <div style="padding:4px;text-align:right;">
                 <input type="reset" class="button" value="Réinitialiser" />
-                <?
+                <?php
                 if ($ploopi_op == 'planning_event_detail_open')
                 {
-                    ?><input type="button" class="button" value="Supprimer" style="font-weight:bold;color:#a60000" onclick="javascript:if (confirm('Êtes vous certain de vouloir supprimer cet événement ?')) ploopi_xmlhttprequest_todiv('admin-light.php', '<? echo ploopi_queryencode("ploopi_op=planning_event_detail_delete&planning_event_detail_id={$_GET['planning_event_detail_id']}"); ?>', 'planning_main'); ploopi_hidepopup('popup_planning_event');" /><?
+                    ?><input type="button" class="button" value="Supprimer" style="font-weight:bold;color:#a60000" onclick="javascript:if (confirm('Êtes vous certain de vouloir supprimer cet événement ?')) ploopi_xmlhttprequest_todiv('admin-light.php', '<?php echo ploopi_queryencode("ploopi_op=planning_event_detail_delete&planning_event_detail_id={$_GET['planning_event_detail_id']}"); ?>', 'planning_main'); ploopi_hidepopup('popup_planning_event');" /><?php
                 }
                 ?>
                 <input type="submit" class="button" value="Enregistrer" />
             </div>
             </form>
-            <div style="border-top:1px solid #aaa;"><? ploopi_annotation(_PLANNING_OBJECT_EVENT, $objEventDetail->fields['id'], $objEvent->fields['object']); ?></div>
-            <?
+            <div style="border-top:1px solid #aaa;"><?php ploopi_annotation(_PLANNING_OBJECT_EVENT, $objEventDetail->fields['id'], $objEvent->fields['object']); ?></div>
+            <?php
         }
         ?>
-        <?
+        <?php
         $content = ob_get_contents();
         ob_end_clean();
 

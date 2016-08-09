@@ -42,7 +42,7 @@ include_once './include/classes/data_object.php';
  */
 include_once './modules/forms/classes/formsForm.php';
 include_once './modules/forms/classes/formsField.php';
-include_once './modules/forms/jpgraph/jpgraph.php';
+//include_once './modules/forms/jpgraph/jpgraph.php';
 
 
 /**

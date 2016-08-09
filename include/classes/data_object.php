@@ -147,7 +147,7 @@ class data_object
      *
      */
 
-    public function data_object()
+    public function __construct()
     {
         global $db;
         // arg(0) : tablename
@@ -256,10 +256,8 @@ class data_object
      * @return int nombre d'enregistrements
      */
 
-    public function open() // id0, id1, id2, etc...
+    public function open(...$args) // id0, id1, id2, etc...
     {
-        $args = func_get_args();
-
         if(sizeof($args) == 1 && is_array($args[0])) $args = $args[0];
 
         $numargs = sizeof($args);

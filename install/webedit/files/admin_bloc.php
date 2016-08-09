@@ -197,7 +197,7 @@ switch($op)
                     {
                         ?>
                         <input style="width:100px;" class="text" type="text" name="webedit_article_timestp" id="webedit_article_timestp" value="<?php echo ploopi_htmlentities($article_timestp); ?>" tabindex="4" />
-                        <? ploopi_open_calendar('webedit_article_timestp'); ?>
+                        <?php ploopi_open_calendar('webedit_article_timestp'); ?>
                         <?php
                     }
                     else echo '<span>'.ploopi_htmlentities($article_timestp, ENT_QUOTES).'</span>';

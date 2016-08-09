@@ -54,12 +54,12 @@ class docfilehistory extends data_object
      *
      * @return docfilehistory
      */
-    
-    function docfilehistory()
+
+    function __construct()
     {
-        parent::data_object('ploopi_mod_doc_file_history', 'id_docfile', 'version');
+        parent::__construct('ploopi_mod_doc_file_history', 'id_docfile', 'version');
     }
-    
+
     /**
      * Retourne le chemin physique de stockage des documents et le crée s'il n'existe pas
      *
@@ -80,7 +80,7 @@ class docfilehistory extends data_object
      *
      * @return string chemin physique de stockage du document
      */
-        
+
     function getfilepath()
     {
         return($this->getbasepath()._PLOOPI_SEP."{$this->fields['id_docfile']}_{$this->fields['version']}.{$this->fields['extension']}");

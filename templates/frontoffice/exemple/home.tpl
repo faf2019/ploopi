@@ -180,7 +180,7 @@
                     {bloc1.CONTENT}
                     </div>
                     <!-- END bloc1 -->
-                    
+
                     <!-- BEGIN bloc2 -->
                     <div class="minibloc">
                     {bloc2.CONTENT}
@@ -245,9 +245,9 @@
                             </a>
                         <!-- END result -->
 
-	                    <!-- BEGIN switch_notfound -->
-	                    <p>Aucun résultat pour cette recherche</p>
-	                    <!-- END switch_notfound -->
+                        <!-- BEGIN switch_notfound -->
+                        <p>Aucun résultat pour cette recherche</p>
+                        <!-- END switch_notfound -->
                     </div>
                     <!-- END switch_search -->
 
@@ -331,9 +331,9 @@
                                         if (ploopi_validatefield('Nom', form.comment_nickname, 'string'))
                                         if (ploopi_validatefield('Email', form.comment_email, 'emptyemail'))
                                         if (ploopi_validatefield('Commentaire', form.comment_comment, 'string'))
-                                    	if (ploopi_validatefield('Code', form.captcha_code_{switch_content_page.sw_comment.IDCAPTCHA}, 'captcha', '{PAGE_URL_CONTROLCAPTCHA}', 'img_captcha_{switch_content_page.sw_comment.IDCAPTCHA}', '{PAGE_URL_UPDATECAPTCHA}'))
+                                        if (ploopi_validatefield('Code', form.captcha_code_{switch_content_page.sw_comment.IDCAPTCHA}, 'captcha', '{PAGE_URL_CONTROLCAPTCHA}', 'img_captcha_{switch_content_page.sw_comment.IDCAPTCHA}', '{PAGE_URL_UPDATECAPTCHA}'))
                                           return(true);
-                                        
+
                                         return(false);
                                     }
 
@@ -345,7 +345,7 @@
                     <!-- END switch_content_page -->
 
                     <!-- BEGIN switch_content_blog -->
-                        <!-- BEGIN article -->   
+                        <!-- BEGIN article -->
                             <span style="font-weight: bold; font-size: 18px;">{switch_content_blog.article.PAGE_TITLE}</span>
                             <!-- BEGIN switch_tags -->
                                 <p id="page_tags"><span>tags :</span>
@@ -354,7 +354,7 @@
                                     <!-- END tag -->
                                 </p>
                             <!-- END switch_tags -->
-                            <div style="clear:both;"> 
+                            <div style="clear:both;">
                             {switch_content_blog.article.PAGE_CONTENT}
                             </div>
                             <div style="clear: both; font-size: 9px; padding: 5px 20px 0 0; text-align: center;">
@@ -392,7 +392,7 @@
                             <div style="clear: both;"><hr/></div>
                             <!-- END sw_separator -->
                         <!-- END article -->
-                        
+
                         <div style="overflow: hidden; clear: both;">
                             <!-- BEGIN page_after -->
                             <a href="javascript:void(0);" onclick="javascript:window.location.href='{switch_content_blog.page_after.URL}'; return false;" style="float: right; padding: 10px 10px 0 0;">pages suivantes&nbsp;&gt;&gt;</a>
@@ -400,7 +400,7 @@
                             <!-- BEGIN page_before -->
                             <a href="javascript:void(0);" onclick="javascript:window.location.href='{switch_content_blog.page_before.URL}'; return false;" style="float: left; padding: 10px 0 0 0;">&lt;&lt;&nbsp;pages précédentes</a>
                             <!-- END page_before -->
-                        </div>    
+                        </div>
                     <!-- END switch_content_blog -->
 
                     <!-- BEGIN switch_content_message -->
@@ -487,7 +487,7 @@
 
         <div id="footer">
             Designed by <a href="http://andreasviklund.com">Andreas Viklund</a> & <a href="http://netlor.fr">netlor</a> // Powered by <a href="http://www.ploopi.fr">PLOOPI</a> // <a href="admin.php">Online Management</a>
-		    <br />[ page: <PLOOPI_PAGE_SIZE> ko | exec: <PLOOPI_EXEC_TIME> ms | sql: <PLOOPI_NUMQUERIES> req (<PLOOPI_SQL_P100> %) | session: <PLOOPI_SESSION_SIZE> ko | mem: <PLOOPI_PHP_MEMORY> ko ]
+            <br />[ page: <PLOOPI_PAGE_SIZE> ko | exec: <PLOOPI_EXEC_TIME> ms | sql: <PLOOPI_NUMQUERIES> req (<PLOOPI_SQL_P100> %) | session: <PLOOPI_SESSION_SIZE> ko | mem: <PLOOPI_PHP_MEMORY> ko ]
         </div>
 
     </div>

@@ -135,7 +135,7 @@ function ploopi_create_site(&$arrInstallInfos)
     }
   }
   $strAdminPassword = empty($_SESSION['install']['<ADMIN_PASSWORD>']) ? 'admin' : $_SESSION['install']['<ADMIN_PASSWORD>'];
-  $intRequest = $objPDO->exec("UPDATE `ploopi_user` SET `login` = '{$_SESSION['install']['<ADMIN_LOGIN>']}', `password` = '".md5("{$_SESSION['install']['<SECRETKEY>']}/{$_SESSION['install']['<ADMIN_LOGIN>']}/".md5($strAdminPassword))."', email = '{$_SESSION['install']['<ADMIN_MAIL>']}' WHERE  `login` = 'admin'");
+  $intRequest = $objPDO->exec("UPDATE `ploopi_user` SET `login` = '{$_SESSION['install']['<ADMIN_LOGIN>']}', `password` = '".hash('sha256', "{$_SESSION['install']['<SECRETKEY>']}/{$_SESSION['install']['<ADMIN_LOGIN>']}/".hash('sha256', $strAdminPassword))."', email = '{$_SESSION['install']['<ADMIN_MAIL>']}' WHERE  `login` = 'admin'");
   if($intRequest === false)
   {
     $arrInstallInfos[] = array('id' => 'div_error_end', 'state' => false, 'title' => _PLOOPI_INSTALL_ERR_INSTALL_WARNING.'<br/>'.$arrErrors[0].'<br/>'.$arrErrors[1].'<br/>'.$arrErrors[2]);

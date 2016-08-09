@@ -53,7 +53,6 @@ class webedit_article_object extends data_object
      *
      * @return webedit_article_object
      */
-    
-    public function __construct() { parent::data_object('ploopi_mod_webedit_article_object', 'id_article', 'id_wce_object', 'id_module_type', 'id_module', 'id_record'); }
+
+    public function __construct() { parent::__construct('ploopi_mod_webedit_article_object', 'id_article', 'id_wce_object', 'id_module_type', 'id_module', 'id_record'); }
 }
-?>

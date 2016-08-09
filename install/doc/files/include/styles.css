@@ -284,63 +284,6 @@ a.doc_fckexplorer_file:hover {
     background-color:#a0a0a0;
 }
 
-.hl-default {
-    color: Black;
-}
-.hl-code {
-    color: Gray;
-}
-.hl-brackets {
-    color: Olive;
-}
-.hl-comment {
-    color: Orange;
-}
-.hl-quotes {
-    color: Darkred;
-}
-.hl-string {
-    color: Red;
-}
-.hl-identifier {
-    color: Blue;
-}
-.hl-builtin {
-    color: Teal;
-}
-.hl-reserved {
-    color: Green;
-}
-.hl-inlinedoc {
-    color: Blue;
-}
-.hl-var {
-    color: Darkblue;
-}
-.hl-url {
-    color: Blue;
-}
-.hl-special {
-    color: Navy;
-}
-.hl-number {
-    color: Maroon;
-}
-.hl-inlinetags {
-    color: Blue;
-}
-.hl-main {
-}
-.hl-gutter {
-    background-color: #999999;
-    color: White
-}
-.hl-table {
-    font-family: courier;
-    font-size: 12px;
-    border: solid 1px Lightgrey;
-}
-
 div.doc_main_thumbs {
     clear: both;
     overflow: hidden;
@@ -407,7 +350,8 @@ div.doc_thumb a p {
     width:100%;
 }
 
-.doc_hl-content table pre {
+.doc_hl-content table pre,
+.doc_hl-content table code {
     padding:0;
     margin:0;
     border:0;

@@ -107,7 +107,7 @@ if (!empty($directory_contact->fields['id'])) ploopi_setsessionvar("deletephoto_
                     </p>
                 </div>
             </fieldset>
-            <?
+            <?php
             //ploopi_print_r(ploopi_validation_get(_DIRECTORY_OBJECT_HEADING, '', -1, $_SESSION['ploopi']['userid'], 'user'));
             //ploopi_print_r(ploopi_validation_get(_DIRECTORY_OBJECT_HEADING, '', -1, $_SESSION['ploopi']['userid'], 'group'));
             
@@ -128,13 +128,13 @@ if (!empty($directory_contact->fields['id'])) ploopi_setsessionvar("deletephoto_
                         </p>
                         <p>
                             <label>Rubrique parent:</label>
-                            <input type="hidden" value="<? echo $directory_contact->fields['id_heading']; ?>" name="directory_heading_id" id="directory_heading_id" />
-                            <input type="text" class="text" value="<? echo ploopi_htmlentities($objDirectoryHeading->fields['label']); ?>" id="directory_heading_id_label" tabindex="115" style="width:55%;" readonly />
+                            <input type="hidden" value="<?php echo $directory_contact->fields['id_heading']; ?>" name="directory_heading_id" id="directory_heading_id" />
+                            <input type="text" class="text" value="<?php echo ploopi_htmlentities($objDirectoryHeading->fields['label']); ?>" id="directory_heading_id_label" tabindex="115" style="width:55%;" readonly />
                             <a href="javascript:void(0);" onclick="javascript:directory_heading_choose_popup(event, $('directory_heading_id').value);" ><img src="./modules/directory/img/ico_heading.png" title="Modifier la rubrique de rattachement" tabindex="116" /></a>
                         </p>
                     </div>
                 </fieldset>
-                <?
+                <?php
             }
             ?>
         </div>
@@ -189,8 +189,8 @@ if (!empty($directory_contact->fields['id'])) ploopi_setsessionvar("deletephoto_
                         <label><?php echo _DIRECTORY_PHOTO; ?>:</label>
                         <span>
                             <a href="javascript:void(0);" onclick="javascript:directory_choose_photo(event, '<?php echo $directory_contact->fields['id']; ?>', '<?php echo $strPhotoId; ?>');"><img title="Charger une nouvelle photo" src="./modules/directory/img/ico_new.png" /></a>
-                            <?
-                            if ($booPhotoExists) { ?><a href="javascript:void(0);" onclick="javascript:directory_delete_photo('<?php echo $directory_contact->fields['id']; ?>'); $('directory_contact_photo<?php echo $strPhotoId; ?>').innerHTML = '';"><img title="Supprimer la photo" src="./modules/directory/img/ico_delete.png" /></a><? } ?>
+                            <?php
+                            if ($booPhotoExists) { ?><a href="javascript:void(0);" onclick="javascript:directory_delete_photo('<?php echo $directory_contact->fields['id']; ?>'); $('directory_contact_photo<?php echo $strPhotoId; ?>').innerHTML = '';"><img title="Supprimer la photo" src="./modules/directory/img/ico_delete.png" /></a><?php } ?>
                             <br /><span id="directory_contact_photo<?php echo $strPhotoId; ?>">
                             <?php
                             if ($booPhotoExists) { ?><img src="<?php echo ploopi_urlencode("admin-light.php?ploopi_op=directory_contact_getphoto&directory_contact_id={$directory_contact->fields['id']}"); ?>" /><?php } ?>

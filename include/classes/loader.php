@@ -65,6 +65,8 @@ abstract class ploopi_loader
          */
         ob_start(create_function('$buffer', 'return ploopi_ob_callback($buffer);'));
 
+        include_once './vendor/autoload.php';
+
         /**
          * Chargement du fichier de configuration
          */
@@ -128,7 +130,7 @@ abstract class ploopi_loader
                 array('ploopi_session', 'gc')
             );
 
-            session_name('ploopi'.md5(_PLOOPI_BASEPATH));
+            session_name('ploopi'.hash('sha256', _PLOOPI_BASEPATH));
         }
 
         /**
@@ -796,6 +798,10 @@ abstract class ploopi_loader
                 $_SESSION['ploopi']['frontoffice']['connected'] = 0;
                 $_SESSION['ploopi']['backoffice']['connected'] = 0;
 
+                //var_dump($_SESSION['ploopi']['backoffice']);
+                //var_dump($_SESSION['ploopi']['mode']);
+                //var_dump($_SESSION['ploopi']['connected']);
+
                 foreach ($user_workspaces as $wid => $fields)
                 {
                     // workspace frontoffice ?
@@ -853,7 +859,9 @@ abstract class ploopi_loader
                 }
 
                 // sorting workspaces by priority/label
-                uksort ($_SESSION['ploopi']['workspaces'], create_function('$a,$b', 'return (sprintf("%03d_%s", intval($_SESSION[\'ploopi\'][\'workspaces\'][$b][\'priority\']), $_SESSION[\'ploopi\'][\'workspaces\'][$b][\'label\']) < sprintf("%03d_%s", intval($_SESSION[\'ploopi\'][\'workspaces\'][$a][\'priority\']), $_SESSION[\'ploopi\'][\'workspaces\'][$a][\'label\']));'));
+                uksort ($_SESSION['ploopi']['workspaces'], function($a, $b) {
+                    return (sprintf("%03d_%s", intval($_SESSION['ploopi']['workspaces'][$b]['priority']), $_SESSION['ploopi']['workspaces'][$b]['label']) < sprintf("%03d_%s", intval($_SESSION['ploopi']['workspaces'][$a]['priority']), $_SESSION['ploopi']['workspaces'][$a]['label']));
+                });
 
                 // create a list with allowed workspaces only
                 $_SESSION['ploopi']['workspaces_allowed'] = array();
@@ -865,6 +873,7 @@ abstract class ploopi_loader
 
         if (!$_SESSION['ploopi']['paramloaded']) self::getmodules();
 
+
         // Génération du token en mode backoffice uniquement
         if (_PLOOPI_TOKEN && $_SESSION['ploopi']['mode'] == 'backoffice')
         {
@@ -875,9 +884,11 @@ abstract class ploopi_loader
             if (!empty($strLoginRedirect)) $strLoginRedirect = ploopi_urltoken($strLoginRedirect);
         }
 
+
         if (!empty($strLoginRedirect)) ploopi_redirect($strLoginRedirect, false, false);
 
         unset($strLoginRedirect);
+
 
         // Indicateur global de connexion
         $_SESSION['ploopi']['connected'] = isset($_SESSION['ploopi'][$_SESSION['ploopi']['mode']]['connected']) && $_SESSION['ploopi'][$_SESSION['ploopi']['mode']]['connected'];

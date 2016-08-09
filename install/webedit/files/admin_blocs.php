@@ -192,7 +192,7 @@ foreach($arrWf as $value)
     </fieldset>
 </div>
 
-<?
+<?php
 if ($booIsAllowedEdit)
 {
     ?>

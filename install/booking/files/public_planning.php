@@ -174,65 +174,65 @@ switch($arrSearchPattern['booking_display_type'])
 <div style="padding:4px;">
     <p class="ploopi_va" style="padding:2px;float:left;">
         <label>Affichage :</label>
-        <input type="image" alt="Aujourd'hui" src="./modules/booking/img/ico_today<? if ($arrSearchPattern['booking_display_type'] != 'today') echo'_notsel'; ?>.png" title="Aujourd'hui" onclick="javascript:ploopi_xmlhttprequest_todiv('admin-light.php', '<? echo ploopi_queryencode('ploopi_op=booking_refresh&booking_display_type=today'); ?>', 'booking_main');" />
-        <input type="image" alt="Quotidien" src="./modules/booking/img/ico_day<? if ($arrSearchPattern['booking_display_type'] != 'day') echo'_notsel'; ?>.png" title="Journée" onclick="javascript:ploopi_xmlhttprequest_todiv('admin-light.php', '<? echo ploopi_queryencode('ploopi_op=booking_refresh&booking_display_type=day'); ?>', 'booking_main');" />
-        <input type="image" alt="Hebdomadaire" src="./modules/booking/img/ico_week<? if ($arrSearchPattern['booking_display_type'] != 'week') echo'_notsel'; ?>.png" title="Semaine" onclick="javascript:ploopi_xmlhttprequest_todiv('admin-light.php', '<? echo ploopi_queryencode('ploopi_op=booking_refresh&booking_display_type=week'); ?>', 'booking_main');" />
-        <input type="image" alt="Mensuel" src="./modules/booking/img/ico_month<? if ($arrSearchPattern['booking_display_type'] != 'month') echo'_notsel'; ?>.png" title="Mois" onclick="javascript:ploopi_xmlhttprequest_todiv('admin-light.php', '<? echo ploopi_queryencode('ploopi_op=booking_refresh&booking_display_type=month'); ?>', 'booking_main');" />
+        <input type="image" alt="Aujourd'hui" src="./modules/booking/img/ico_today<?php if ($arrSearchPattern['booking_display_type'] != 'today') echo'_notsel'; ?>.png" title="Aujourd'hui" onclick="javascript:ploopi_xmlhttprequest_todiv('admin-light.php', '<?php echo ploopi_queryencode('ploopi_op=booking_refresh&booking_display_type=today'); ?>', 'booking_main');" />
+        <input type="image" alt="Quotidien" src="./modules/booking/img/ico_day<?php if ($arrSearchPattern['booking_display_type'] != 'day') echo'_notsel'; ?>.png" title="Journée" onclick="javascript:ploopi_xmlhttprequest_todiv('admin-light.php', '<?php echo ploopi_queryencode('ploopi_op=booking_refresh&booking_display_type=day'); ?>', 'booking_main');" />
+        <input type="image" alt="Hebdomadaire" src="./modules/booking/img/ico_week<?php if ($arrSearchPattern['booking_display_type'] != 'week') echo'_notsel'; ?>.png" title="Semaine" onclick="javascript:ploopi_xmlhttprequest_todiv('admin-light.php', '<?php echo ploopi_queryencode('ploopi_op=booking_refresh&booking_display_type=week'); ?>', 'booking_main');" />
+        <input type="image" alt="Mensuel" src="./modules/booking/img/ico_month<?php if ($arrSearchPattern['booking_display_type'] != 'month') echo'_notsel'; ?>.png" title="Mois" onclick="javascript:ploopi_xmlhttprequest_todiv('admin-light.php', '<?php echo ploopi_queryencode('ploopi_op=booking_refresh&booking_display_type=month'); ?>', 'booking_main');" />
 
         <label for="booking_channels">Multi Col:</label>
-        <input type="checkbox" name="booking_channels" id="booking_channels" <?php if ($arrSearchPattern['booking_channels']) echo 'checked="checked"'; ?> onclick="javascript:ploopi_xmlhttprequest_todiv('admin-light.php', '<? echo ploopi_queryencode('ploopi_op=booking_refresh&booking_channels='.($arrSearchPattern['booking_channels'] ? 0 : 1)); ?>', 'booking_main');"/>
+        <input type="checkbox" name="booking_channels" id="booking_channels" <?php if ($arrSearchPattern['booking_channels']) echo 'checked="checked"'; ?> onclick="javascript:ploopi_xmlhttprequest_todiv('admin-light.php', '<?php echo ploopi_queryencode('ploopi_op=booking_refresh&booking_channels='.($arrSearchPattern['booking_channels'] ? 0 : 1)); ?>', 'booking_main');"/>
 
         <label>Taille :</label>
-        <select class="select" name="booking_size" id="booking_size" onchange="javascript:ploopi_xmlhttprequest_todiv('<? echo ploopi_urlencode('admin-light.php?ploopi_op=booking_refresh'); ?>', 'booking_size='+this.value, 'booking_main');">
-        <?
+        <select class="select" name="booking_size" id="booking_size" onchange="javascript:ploopi_xmlhttprequest_todiv('<?php echo ploopi_urlencode('admin-light.php?ploopi_op=booking_refresh'); ?>', 'booking_size='+this.value, 'booking_main');">
+        <?php
         foreach($arrBookingSize as $strSize)
         {
-            ?><option value="<? echo $strSize; ?>" <? if ($arrSearchPattern['booking_size'] == $strSize) echo 'selected="selected"'; ?>><? echo $strSize; ?></option><?
+            ?><option value="<?php echo $strSize; ?>" <?php if ($arrSearchPattern['booking_size'] == $strSize) echo 'selected="selected"'; ?>><?php echo $strSize; ?></option><?php
         }
         ?>
         </select>
     </p>
 
-    <form style="float:left;" id="booking_form_view" action="<? echo ploopi_urlencode('admin-light.php?ploopi_op=booking_refresh'); ?>" method="post" onsubmit="javascript:ploopi_xmlhttprequest_submitform(this, 'booking_main');return false;">
+    <form style="float:left;" id="booking_form_view" action="<?php echo ploopi_urlencode('admin-light.php?ploopi_op=booking_refresh'); ?>" method="post" onsubmit="javascript:ploopi_xmlhttprequest_submitform(this, 'booking_main');return false;">
     <p class="ploopi_va" style="padding:2px;float:left;">
         <label>Période :</label>
-        <?
+        <?php
         switch($arrSearchPattern['booking_display_type'])
         {
             case 'today':
             case 'day':
                 ?>
                 <select class="select" name="booking_day" id="booking_day" onchange="javascript:if ($('booking_form_view').onsubmit()) $('booking_form_view').submit();">
-                <?
+                <?php
                 for ($intDay = 1; $intDay <= date('t', mktime(0, 0, 0, $arrSearchPattern['booking_month'], 1, $arrSearchPattern['booking_year'])); $intDay++)
                 {
                     ?>
-                    <option value="<? echo $intDay; ?>" <? if ($arrSearchPattern['booking_day'] == $intDay) echo 'selected="selected";' ?>><? echo $intDay; ?></option>
-                    <?
+                    <option value="<?php echo $intDay; ?>" <?php if ($arrSearchPattern['booking_day'] == $intDay) echo 'selected="selected";' ?>><?php echo $intDay; ?></option>
+                    <?php
                 }
                 ?>
                 </select>
-                <?
+                <?php
 
             case 'month':
                 ?>
                 <select class="select" name="booking_month" id="booking_month" onchange="javascript:if ($('booking_form_view').onsubmit()) $('booking_form_view').submit();">
-                <?
+                <?php
                 foreach ($ploopi_months as $intMonth => $strMonth)
                 {
                     ?>
-                    <option value="<? echo $intMonth; ?>" <? if ($arrSearchPattern['booking_month'] == $intMonth) echo 'selected="selected";' ?>><? echo $strMonth; ?></option>
-                    <?
+                    <option value="<?php echo $intMonth; ?>" <?php if ($arrSearchPattern['booking_month'] == $intMonth) echo 'selected="selected";' ?>><?php echo $strMonth; ?></option>
+                    <?php
                 }
                 ?>
                 </select>
-                <?
+                <?php
             break;
 
             case 'week':
                 ?>
                 <select class="select" name="booking_week" id="booking_week" onchange="javascript:if ($('booking_form_view').onsubmit()) $('booking_form_view').submit();">
-                <?
+                <?php
                 // Détermination du numéro de semaine max de l'année (on se positionne sur le 31/12)
                 $intMaxWeek = date('W', mktime(0, 0, 0, 12, 31, $arrSearchPattern['booking_year']));
                 if ($intMaxWeek == 1) $intMaxWeek = 52;
@@ -244,35 +244,35 @@ switch($arrSearchPattern['booking_display_type'])
                     $date_week = mktime(0, 0, 0, date('n', $date_firstweek), date('j', $date_firstweek)+(($intWeek - 1) * 7), date('Y', $date_firstweek));
                     //$date_week = mktime(0, 0, 0, 12, 29 + $d + (($intWeek - 1) * 7), $intSelYear - 1);
                     ?>
-                    <option value="<? echo $intWeek; ?>" <? if ($arrSearchPattern['booking_week'] == $intWeek) echo 'selected="selected";' ?>><? printf("Semaine %02d - %s", $intWeek, substr(ploopi_unixtimestamp2local($date_week),0,5)); ?></option>
-                    <?
+                    <option value="<?php echo $intWeek; ?>" <?php if ($arrSearchPattern['booking_week'] == $intWeek) echo 'selected="selected";' ?>><?php printf("Semaine %02d - %s", $intWeek, substr(ploopi_unixtimestamp2local($date_week),0,5)); ?></option>
+                    <?php
                 }
                 ?>
                 </select>
-                <?
+                <?php
             break;
         }
         ?>
 
         <select class="select" name="booking_year" id="booking_year" onchange="javascript:if ($('booking_form_view').onsubmit()) $('booking_form_view').submit();">
-        <?
+        <?php
         for ($intY = $arrSearchPattern['booking_year']-5; $intY <= $arrSearchPattern['booking_year']+5; $intY++)
         {
             ?>
-            <option value="<? echo $intY; ?>" <? if ($arrSearchPattern['booking_year'] == $intY) echo 'selected="selected";' ?>><? echo $intY; ?></option>
-            <?
+            <option value="<?php echo $intY; ?>" <?php if ($arrSearchPattern['booking_year'] == $intY) echo 'selected="selected";' ?>><?php echo $intY; ?></option>
+            <?php
         }
         ?>
         </select>
 
-        <?
+        <?php
         switch($arrSearchPattern['booking_display_type'])
         {
             case 'month':
                 ?>
                 <input type="button" class="button" value="&laquo;&laquo;" title="Mois précédent" onclick="javascript:booking_prevmonth();" />
                 <input type="button" class="button" value="&raquo;&raquo;" title="Mois suivant" onclick="javascript:booking_nextmonth();" />
-                <?
+                <?php
             break;
 
             case 'week':
@@ -280,7 +280,7 @@ switch($arrSearchPattern['booking_display_type'])
                 <input type="hidden" name="booking_week_previousyear" id="booking_week_previousyear" value="0" />
                 <input type="button" class="button" value="&laquo;&laquo;" title="Semaine précédente" onclick="javascript:booking_prevweek();" />
                 <input type="button" class="button" value="&raquo;&raquo;" title="Semaine suivante" onclick="javascript:booking_nextweek();" />
-                <?
+                <?php
             break;
 
             case 'today':
@@ -290,26 +290,26 @@ switch($arrSearchPattern['booking_display_type'])
                 <input type="hidden" name="booking_display_type" value="day" />
                 <input type="button" class="button" value="&laquo;&laquo;" title="Jour précédent" onclick="javascript:booking_prevday();" />
                 <input type="button" class="button" value="&raquo;&raquo;" title="Jour suivant" onclick="javascript:booking_nextday();" />
-                <?
+                <?php
             break;
 
         }
 
-        $date_today = mktime();
+        $date_today = time();
 
         if ($date_today >= $date_begin && $date_today <= $date_end) $date_sel = $date_today;
         else $date_sel = $date_begin;
 
         if (ploopi_isactionallowed(_BOOKING_ACTION_ASKFOREVENT))
         {
-            ?><input type="button" class="button" value="Réserver" style="font-weight:bold;margin:0 6px;" onclick="javascript:booking_event_add(event, '<? echo $date_sel; ?>');" /><?
+            ?><input type="button" class="button" value="Réserver" style="font-weight:bold;margin:0 6px;" onclick="javascript:booking_event_add(event, '<?php echo $date_sel; ?>');" /><?php
         }
 
         ?>
         </p>
     </form>
 </div>
-<?
+<?php
 switch($arrSearchPattern['booking_display_type'])
 {
     case 'month':
@@ -436,7 +436,7 @@ foreach($arrEvents as $event)
 
 ?>
 <div style="width:100%;overflow:auto;clear:both;" id="planning_display">
-    <?
+    <?php
     $objCalendar->display();
     ?>
 </div>

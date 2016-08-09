@@ -1,3 +1,9 @@
+== Module DOC - version 4.10.0 ====================================================
+
+2016-08-08  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Version pour Ploopi 1.9.7+ / PHP 7+
+
 == Module DOC - version 4.9.0 ====================================================
 
 2015-07-15  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

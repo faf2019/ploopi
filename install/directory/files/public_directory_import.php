@@ -76,12 +76,12 @@ function filesubmit(form)
     <br />Cela signifie qu'elle contient certains ou tous les champs de la liste ci-dessous :
     
     <ul style="overflow:auto;">
-    <?
+    <?php
     foreach($arrDirectoryImportFields as $strKey => $strValue)
     {
         ?>
         <li style="float:left;width:50%;"><strong><?php echo ploopi_htmlentities($strKey); ?>:</strong> <span><?php echo ploopi_htmlentities($strValue); ?></span></li>
-        <?
+        <?php
     }
     //onsubmit="javascript:$('directory_import_info').style.display='block'; ploopi_xmlhttprequest_submitform($('directory_import_form'), 'directory_import_info'); return false;">
     //onsubmit="javascript:filesubmit('toto');" 
@@ -97,8 +97,8 @@ function filesubmit(form)
         <p>
             <label>Séparateur:</label>
             <select class="select" name="directory_import_sep" tabindex="102" style="width:40px;">
-                <option value="<? echo ploopi_htmlentities(',') ?>"><? echo ploopi_htmlentities(',') ?></option>
-                <option value="<? echo ploopi_htmlentities(';') ?>"><? echo ploopi_htmlentities(';') ?></option>
+                <option value="<?php echo ploopi_htmlentities(',') ?>"><?php echo ploopi_htmlentities(',') ?></option>
+                <option value="<?php echo ploopi_htmlentities(';') ?>"><?php echo ploopi_htmlentities(';') ?></option>
             </select>
         </p>
     </div>

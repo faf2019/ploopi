@@ -54,10 +54,10 @@ class directory_favorites extends data_object
      *
      * @return directory_favorites
      */
-    
-    function directory_favorites()
+
+    public function __construct()
     {
-        parent::data_object('ploopi_mod_directory_favorites','id_contact','id_user','id_ploopi_user', 'id_list');
+        parent::__construct('ploopi_mod_directory_favorites','id_contact','id_user','id_ploopi_user', 'id_list');
     }
 }
 ?>

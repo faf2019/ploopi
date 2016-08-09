@@ -55,7 +55,7 @@ class booking_resource extends data_object
 
     public function booking_resource()
     {
-        parent::data_object('ploopi_mod_booking_resource', 'id');
+        parent::__construct('ploopi_mod_booking_resource', 'id');
     }
 
 

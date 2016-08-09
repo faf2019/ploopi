@@ -1,4 +1,4 @@
-<?
+<?php
 ploopi_init_module('wiki');
 include_once './modules/wiki/classes/class_wiki_page.php';
 
@@ -57,7 +57,7 @@ foreach($arrPageHistory as $strPageId) $arrUrlHistory[] = "<a href=\"".wiki_gene
     Pages visitées : <?php echo implode(' &raquo; ', $arrUrlHistory); ?>
 </div>
 
-<div id="wiki_page" class="wiki_page wiki_page_front"><? echo wiki_render($objWikiPage->fields['content'], function($arrMatches) use($intIdModule, $articleid, $headingid, $article, $arrParents) {
+<div id="wiki_page" class="wiki_page wiki_page_front"><?php echo wiki_render($objWikiPage->fields['content'], function($arrMatches) use($intIdModule, $articleid, $headingid, $article, $arrParents) {
 
     if (!empty($arrMatches[1]))
     {

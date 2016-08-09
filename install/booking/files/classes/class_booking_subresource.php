@@ -55,7 +55,7 @@ class booking_subresource extends data_object
 
     public function __construct()
     {
-        parent::data_object('ploopi_mod_booking_subresource', 'id');
+        parent::__construct('ploopi_mod_booking_subresource', 'id');
     }
 
 

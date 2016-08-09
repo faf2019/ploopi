@@ -278,7 +278,7 @@ sort($objForm_tpl);
         </div>
 
         <div style="clear:both;border-top:1px solid #a0a0a0;overflow:auto;">
-        <? ploopi_share_selectusers(_FORMS_OBJECT_FORM, $objForm->fields['id'], -1, 'Envoi des réponses par message à...', 'forms_send_email', './modules/forms/img/mail.png'); ?>
+        <?php ploopi_share_selectusers(_FORMS_OBJECT_FORM, $objForm->fields['id'], -1, 'Envoi des réponses par message à...', 'forms_send_email', './modules/forms/img/mail.png'); ?>
         </div>
 
 

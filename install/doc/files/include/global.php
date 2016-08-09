@@ -62,6 +62,7 @@ define('_DOC_ERROR_EMPTYFILE',          102);
 
 global $doc_arrDocViewableFormats;
 
+// http://highlightjs.readthedocs.io/en/latest/css-classes-reference.html
 $doc_arrDocViewableFormats =
     array(
         'pdf'   => 'iframe',
@@ -90,34 +91,55 @@ $doc_arrDocViewableFormats =
 
         'csv'   => 'div',
         'txt'   => 'div',
-        'svg'   => 'highlighter:xml',
+        'conf'  => 'highlighter:apache',
+        'bat'   => 'highlighter:bat',
+        'cmd'   => 'highlighter:cmd',
+        'lua'   => 'highlighter:lua',
         'xml'   => 'highlighter:xml',
         'dtd'   => 'highlighter:dtd',
         'css'   => 'highlighter:css',
+        'cs'    => 'highlighter:cs',
         'php'   => 'highlighter:php',
-        'py'    => 'highlighter:python',
-        'pl'    => 'highlighter:perl',
-        'c'     => 'highlighter:cpp',
+        'py'    => 'highlighter:py',
+        'pl'    => 'highlighter:pl',
+        'basic' => 'highlighter:basic',
+        'c'     => 'highlighter:c',
         'cpp'   => 'highlighter:cpp',
+        'php'   => 'highlighter:php',
+        'php3'  => 'highlighter:php',
+        'php4'  => 'highlighter:php',
+        'php5'  => 'highlighter:php',
+        'php7'  => 'highlighter:php',
         'java'  => 'highlighter:java',
-        'js'    => 'highlighter:javascript',
-        'vbs'   => 'highlighter:vbscript',
-        'rb'    => 'highlighter:ruby',
+        'jsp'   => 'highlighter:jsp',
+        'js'    => 'highlighter:js',
+        'json'  => 'highlighter:json',
+        'vbs'   => 'highlighter:vbs',
+        'rb'    => 'highlighter:rb',
+        'rs'    => 'highlighter:rs',
         'diff'  => 'highlighter:diff',
+        'patch' => 'highlighter:patch',
         'html'  => 'highlighter:html',
         'htm'   => 'highlighter:html',
+        'rss'   => 'highlighter:rss',
         'bat'   => 'div',
         'sh'    => 'highlighter:sh',
-        'mysql' => 'highlighter:mysql',
+        'bash'  => 'highlighter:sh',
+        'mysql' => 'highlighter:sql',
         'sql'   => 'highlighter:sql',
+        'md'    => 'highlighter:md',
         'jpg'   => 'iframe',
         'jpeg'  => 'iframe',
         'gif'   => 'iframe',
         'png'   => 'iframe',
-        'flv'   => 'jw_player',
-        'aac'   => 'jw_player',
-        'mp3'   => 'jw_player',
-        'mp4'   => 'jw_player',
+        'svg'   => 'iframe',
+        'aac'   => 'video',
+        'mp3'   => 'video',
+        'wav'   => 'video',
+        'mp4'   => 'video',
+        'h264'  => 'video',
+        'h265'  => 'video',
+        'webm'  => 'video',
         'ogv'   => 'video',
         'ogg'   => 'video',
         'mpg'   => 'video',
@@ -304,33 +326,25 @@ function doc_resetvalidation($id_module = -1)
  * @return int taille maximale en ko
  *
  * @see _PLOOPI_MAXFILESIZE
- * @see _PLOOPI_USE_CGIUPLOAD
  */
 function doc_max_filesize()
 {
     $ploopi_maxfilesize = sprintf('%d', _PLOOPI_MAXFILESIZE/1024);
 
-    if (_PLOOPI_USE_CGIUPLOAD) return($ploopi_maxfilesize);
-    else
-    {
-        $upload_max_filesize =  intval(ini_get('upload_max_filesize')*1024);
-        $post_max_size = intval(ini_get('post_max_size')*1024);
-        return(min($upload_max_filesize, $post_max_size, $ploopi_maxfilesize));
-    }
+    $upload_max_filesize =  intval(ini_get('upload_max_filesize')*1024);
+    $post_max_size = intval(ini_get('post_max_size')*1024);
+    return(min($upload_max_filesize, $post_max_size, $ploopi_maxfilesize));
 }
 
 /**
  * Retourne la taille maximale qu'un formulaire peut accepter en POST
  *
  * @return int taille maximale en ko
- *
- * @see _PLOOPI_USE_CGIUPLOAD
  */
 
 function doc_max_formsize()
 {
-    if (_PLOOPI_USE_CGIUPLOAD) return(0);
-    else return(intval(ini_get('post_max_size')*1024));
+    return(intval(ini_get('post_max_size')*1024));
 }
 
 /**

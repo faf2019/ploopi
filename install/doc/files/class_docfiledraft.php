@@ -60,9 +60,9 @@ class docfiledraft extends data_object
      * @return docfiledraft
      */
 
-    function docfiledraft()
+    function __construct()
     {
-        parent::data_object('ploopi_mod_doc_file_draft');
+        parent::__construct('ploopi_mod_doc_file_draft');
         $this->fields['timestp_create'] = ploopi_createtimestamp();
 
         $this->oldname = '';
@@ -76,7 +76,7 @@ class docfiledraft extends data_object
      * @param string $md5id identifiant MD5 du document
      * @return boolean true si le document a été ouvert
      */
-    
+
     function openmd5($md5id)
     {
         global $db;
@@ -109,7 +109,7 @@ class docfiledraft extends data_object
         if ($this->new) // insert
         {
             if ($this->tmpfile == 'none' && $this->sharedfile == null) $error = _DOC_ERROR_EMPTYFILE;
-            
+
             if ($this->fields['size'] > _PLOOPI_MAXFILESIZE && $this->sharedfile == null) $error = _DOC_ERROR_MAXFILESIZE;
 
             if (!$error)
@@ -164,13 +164,13 @@ class docfiledraft extends data_object
         ploopi_makedir($basepath);
         return($basepath);
     }
-    
+
     /**
      * Retourne le chemin physique de stockage du document
      *
      * @return string chemin physique de stockage du document
      */
-    
+
     function getfilepath()
     {
         return($this->getbasepath()._PLOOPI_SEP."{$this->fields['id']}.{$this->fields['extension']}");
@@ -181,7 +181,7 @@ class docfiledraft extends data_object
      *
      * @see docfile
      */
-    
+
     function publish()
     {
         include_once './modules/doc/class_docfile.php';

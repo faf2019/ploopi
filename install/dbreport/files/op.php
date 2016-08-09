@@ -583,7 +583,7 @@ if (ploopi_ismoduleallowed('dbreport'))
                         ?>
                         <div style="padding:2px;"><b>Paramètres :</b></div>
                         <div class="ploopi_form">
-                        <?
+                        <?php
                         foreach($arrParams as $strParam => $arrParam)
                         {
                             ?>
@@ -591,7 +591,7 @@ if (ploopi_ismoduleallowed('dbreport'))
                                 <label><?php echo ploopi_htmlentities($strParam.' ('.$arrParam['label'].')'); ?>:</label>
                                 <input type="text" class="text" name="<?php echo ploopi_htmlentities($strParam); ?>"  value="%"  />
                             </p>
-                            <?
+                            <?php
                         }
                         ?></div><?php
                     }

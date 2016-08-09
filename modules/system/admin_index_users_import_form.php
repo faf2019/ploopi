@@ -90,8 +90,8 @@ $arrFields = array(
         <p>
             <label>Séparateur:</label>
             <select class="select" name="system_user_sep" tabindex="102" style="width:40px;">
-                <option value="<? echo ploopi_htmlentities(',') ?>"><? echo ploopi_htmlentities(',') ?></option>
-                <option value="<? echo ploopi_htmlentities(';') ?>"><? echo ploopi_htmlentities(';') ?></option>
+                <option value="<?php echo ploopi_htmlentities(',') ?>"><?php echo ploopi_htmlentities(',') ?></option>
+                <option value="<?php echo ploopi_htmlentities(';') ?>"><?php echo ploopi_htmlentities(';') ?></option>
             </select>
         </p>
     </div>
@@ -104,12 +104,12 @@ $arrFields = array(
         La première ligne doit être une ligne de description des colonnes.<br>
         Cela signifie qu'elle contient certains ou tous les champs de la liste ci-dessous :<br>
         <ul>
-            <?
+            <?php
             foreach($arrFields as $strField => $strLabel)
             {
                 ?>
-                <li><strong><? echo $strField; ?></strong>: <? echo $strLabel; ?></li>
-                <?
+                <li><strong><?php echo $strField; ?></strong>: <?php echo $strLabel; ?></li>
+                <?php
             }
             ?>
         </ul>

@@ -64,7 +64,7 @@ class planning_event_detail extends data_object
     
     public function __construct()
     {
-        parent::data_object(
+        parent::__construct(
             'ploopi_mod_planning_event_detail', 
             'id'
         );

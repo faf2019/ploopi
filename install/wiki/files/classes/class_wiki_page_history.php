@@ -56,16 +56,20 @@ class wiki_page_history extends data_object
 
     public function __construct()
     {
-        parent::data_object(
+        parent::__construct(
             'ploopi_mod_wiki_page_history',
             'id_page',
             'revision',
             'id_module'
         );
     }
-    
-    public function open($strIdPage, $intRevision, $intIdModule = null)
+
+    public function open(...$args)
     {
+        $strIdPage = $args[0];
+        $intRevision = $args[1];
+        $intIdModule = isset($args[2]) ? $args[2] : null;
+
         return parent::open($strIdPage, $intRevision, is_null($intIdModule) ? $_SESSION['ploopi']['moduleid'] : $intIdModule);
     }
 }

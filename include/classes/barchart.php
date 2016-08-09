@@ -97,7 +97,7 @@ class barchart
      * @see barchart::setoptions
      */
 
-    public function barchart($width, $height, $options = array())
+    public function __construct($width, $height, $options = array())
     {
         $this->width = $width;
         $this->height = $height;
@@ -114,7 +114,7 @@ class barchart
                 'class_name' => 'ploopi_barchart', // class de style (css) utilisée
                 'bar_arrange' => 'merge', // type d'arrangement des barres : merge, stack, side_by_side
                 'padding' => 0, // marge utilisée à l'affichage
-				'yaxis_pos'=> 0 // positionnement personnalisé de l'axe des ordonnées
+                'yaxis_pos'=> 0 // positionnement personnalisé de l'axe des ordonnées
             );
 
         $this->setoptions($options);
@@ -206,75 +206,75 @@ class barchart
 
         $pow = $value_max_root = $value_max_margin = $value_max_rounded1 = 0;
         $scale_div = $sliced_range = 1;
-                            
+
         if ($this->value_max)
         {
             $pow = floor(log10($this->value_max));
-    
+
             if( $this->options['autofit_scale'] )
             {
                 $autofit_scale_inc = 1 ;
-    
+
                 $value_max_1st= floor($this->value_max / pow(10,$pow)) ;
                 $value_max_2nd = floor(($this->value_max - $value_max_1st * pow(10,$pow) ) / pow(10, ($pow-1))) ;
                 $value_max_3rd = floor(($this->value_max - $value_max_1st * pow(10,$pow) - $value_max_2nd * pow(10, ($pow-1)) ) / pow(10, ($pow-2))) ;
 
 
-				$value_max_root = $value_max_1st * pow(10,$pow) + $value_max_2nd * pow(10, ($pow-1)) ;
-				$value_max_margin = round( floor( $value_max_root * 0.15 ) / 10 , 1 ) ;
-				$value_max_rounded1 = $value_max_root + $value_max_3rd * pow(10, ($pow-2)) ;
+                $value_max_root = $value_max_1st * pow(10,$pow) + $value_max_2nd * pow(10, ($pow-1)) ;
+                $value_max_margin = round( floor( $value_max_root * 0.15 ) / 10 , 1 ) ;
+                $value_max_rounded1 = $value_max_root + $value_max_3rd * pow(10, ($pow-2)) ;
             }
         }
-        
-		/* Les tables div_range1 à 5 représentent le nombre de divisions de l'échelle, suivies des seuils de passage à l'échelle supérieure pour les valeurs comprises entre 10 et 20. Ces valeurs sont modifiables en fonction des goûts esthétiques de chacun.	*/
-		
-		$div_range1 = array(5,6,10,10.1);
-		$div_range2 = array(4,6,10.11,12.1);
-		$div_range3 = array(5,6,12.11,15.2);
-		$div_range4 = array(6,5,15.21,18.2);
-		$div_range5 = array(4,5,18.21,20.3);
 
-		$whole_range = array($div_range1,$div_range2,$div_range3,$div_range4,$div_range5);
+        /* Les tables div_range1 à 5 représentent le nombre de divisions de l'échelle, suivies des seuils de passage à l'échelle supérieure pour les valeurs comprises entre 10 et 20. Ces valeurs sont modifiables en fonction des goûts esthétiques de chacun.    */
 
-		$this->value_max = $this->value_max / pow(10, ($pow-1)) ;
-		$value_max_root = $value_max_root / pow(10, ($pow-1)) ;
-		$value_max_margin = $value_max_margin / pow(10, ($pow-1)) ;
-		$value_max_rounded1 = $value_max_rounded1 / pow(10, ($pow-1)) ;
+        $div_range1 = array(5,6,10,10.1);
+        $div_range2 = array(4,6,10.11,12.1);
+        $div_range3 = array(5,6,12.11,15.2);
+        $div_range4 = array(6,5,15.21,18.2);
+        $div_range5 = array(4,5,18.21,20.3);
 
-		if ($this->value_max <= 20 )
-		{
-			foreach($whole_range as $real_range)
-			{
-			
-				if( $this->value_max <= $real_range[sizeof($real_range)-1]  && $this->value_max >= $real_range[sizeof($real_range)-2] )
-				{
-					foreach ( array_slice($real_range,0,sizeof($whole_range[1])-3) as $sliced_range)
-					{
-						for ($myval = $value_max_root ; $myval < $real_range[sizeof($real_range)-1] ; $myval++)
-						{
-							if ( fmod ($myval,$sliced_range) == 0 && $value_max_rounded1 < $myval + $value_max_margin )
-							{
-								$scale_div = $sliced_range ;
-								$this->value_max = $myval  ;
-								break 2;
-							}
-						}
-					}
-					break;
-				}
-			
-			}
-			$scale_div = $sliced_range ;
-		}
-		else
-		{
-			$this->value_max = (( $value_max_2nd < 5 && $value_max_1st < 4 ) ? ( $value_max_1st * pow(10,$pow) + 5 * pow(10,$pow-1) ) / pow(10, 2 - $pow) : ( ($value_max_1st >= 8) ? pow(10,  $pow + 1 )  : ( $value_max_1st + 1 )* pow(10,$pow) ) * pow(10,$pow -2)) / pow(10, 2 * $pow - 3)  ;
-			$scale_div = ( $value_max_2nd < 5 && $value_max_1st < 4 ) ? $this->value_max / 5  : (( $value_max_1st == 7 ) ?  4 : ( ($value_max_1st >= 8) ? 5 : $value_max_1st + 1 ))  ;
-		}
+        $whole_range = array($div_range1,$div_range2,$div_range3,$div_range4,$div_range5);
 
-	    $this->value_max =  $this->value_max * pow(10, ($pow-1)) ;
+        $this->value_max = $this->value_max / pow(10, ($pow-1)) ;
+        $value_max_root = $value_max_root / pow(10, ($pow-1)) ;
+        $value_max_margin = $value_max_margin / pow(10, ($pow-1)) ;
+        $value_max_rounded1 = $value_max_rounded1 / pow(10, ($pow-1)) ;
 
-			
+        if ($this->value_max <= 20 )
+        {
+            foreach($whole_range as $real_range)
+            {
+
+                if( $this->value_max <= $real_range[sizeof($real_range)-1]  && $this->value_max >= $real_range[sizeof($real_range)-2] )
+                {
+                    foreach ( array_slice($real_range,0,sizeof($whole_range[1])-3) as $sliced_range)
+                    {
+                        for ($myval = $value_max_root ; $myval < $real_range[sizeof($real_range)-1] ; $myval++)
+                        {
+                            if ( fmod ($myval,$sliced_range) == 0 && $value_max_rounded1 < $myval + $value_max_margin )
+                            {
+                                $scale_div = $sliced_range ;
+                                $this->value_max = $myval  ;
+                                break 2;
+                            }
+                        }
+                    }
+                    break;
+                }
+
+            }
+            $scale_div = $sliced_range ;
+        }
+        else
+        {
+            $this->value_max = (( $value_max_2nd < 5 && $value_max_1st < 4 ) ? ( $value_max_1st * pow(10,$pow) + 5 * pow(10,$pow-1) ) / pow(10, 2 - $pow) : ( ($value_max_1st >= 8) ? pow(10,  $pow + 1 )  : ( $value_max_1st + 1 )* pow(10,$pow) ) * pow(10,$pow -2)) / pow(10, 2 * $pow - 3)  ;
+            $scale_div = ( $value_max_2nd < 5 && $value_max_1st < 4 ) ? $this->value_max / 5  : (( $value_max_1st == 7 ) ?  4 : ( ($value_max_1st >= 8) ? 5 : $value_max_1st + 1 ))  ;
+        }
+
+        $this->value_max =  $this->value_max * pow(10, ($pow-1)) ;
+
+
 
         /**
          * Définition de la largeur de grille si elle n'existe pas déjà
@@ -304,8 +304,8 @@ class barchart
                     <?php
                     for ($t = 1; $t < $this->value_max / $this->options['grid_width'] + $autofit_scale_inc ; $t++)
                     {
-						$vscale_value=$t * $this->options['grid_width'];
-						$vscale_value = ( $this->options['yaxis_pos'] ) ? $this->options['yaxis_pos'] + $vscale_value / $this->value_max : $vscale_value  ;
+                        $vscale_value=$t * $this->options['grid_width'];
+                        $vscale_value = ( $this->options['yaxis_pos'] ) ? $this->options['yaxis_pos'] + $vscale_value / $this->value_max : $vscale_value  ;
                         ?>
                         <div style="bottom:<?php echo floor(($t * $this->options['grid_width'] * $this->height) / $this->value_max) -5 ; ?>px;"><?php echo $vscale_value; ?></div>
                         <?php
@@ -328,35 +328,35 @@ class barchart
                             <?php
                         }
                     }
-    				
-					$this->value_max -= ( $this->options['yaxis_pos'] ) ? $this->options['yaxis_pos'] : 0 ;
- 
+
+                    $this->value_max -= ( $this->options['yaxis_pos'] ) ? $this->options['yaxis_pos'] : 0 ;
+
                     $dataset_index = 0;
                     foreach($this->datasets as $dataset_name => $dataset)
                     {
                         $c = 0;
-    
+
                         $bar_color = (empty($dataset['bgcolor'])) ? '' : "background-color:{$dataset['bgcolor']};";
                         $bar_color .= (empty($dataset['color'])) ? '' : "color:{$dataset['color']};";
-    
+
                         foreach($dataset['values'] as $key => $value)
                         {
-							#$value -= ( $this->options['yaxis_pos'] && $value > $this->options['yaxis_pos'] ) ? $this->options['yaxis_pos'] : 0 ;
-							#Correction bug 197% dispo
+                            #$value -= ( $this->options['yaxis_pos'] && $value > $this->options['yaxis_pos'] ) ? $this->options['yaxis_pos'] : 0 ;
+                            #Correction bug 197% dispo
 
-							$value -= ( $this->options['yaxis_pos'] ) ? (( $value > $this->options['yaxis_pos'] ) ? $this->options['yaxis_pos'] : $value ) : 0 ;
+                            $value -= ( $this->options['yaxis_pos'] ) ? (( $value > $this->options['yaxis_pos'] ) ? $this->options['yaxis_pos'] : $value ) : 0 ;
 
                             if (!empty($value) && is_numeric($value))
                             {
                                 if( $this->options['bar_arrange'] == 'stack' )
                                 {
                                     if (!isset($previous_values[$key])) $previous_values[$key] = 0;
-    
+
                                     $display_bottom = $previous_values[$key];
                                     $previous_values[$key] += $value;
                                 }
                                 else $display_bottom = 0;
-    
+
                                 if( $this->options['bar_arrange'] == 'side_by_side' )
                                 {
                                     $col_width = $column_width - ceil(($this->options['padding'] * 2) / sizeof($this->datasets));
@@ -367,33 +367,33 @@ class barchart
                                     $col_width = $column_width - $this->options['padding'] * 2;
                                     $column_left = $c * ($column_width+1) + $this->options['padding'];
                                 }
-    
+
                                 $display_bottom = floor(($display_bottom * $this->height) / $this->value_max);
                                 $column_height = floor(($value * $this->height) / $this->value_max);
-    
+
                                 $style = sprintf("height:%dpx;width:%dpx;left:%dpx;bottom:%dpx;%s", $column_height, $col_width, $column_left, $display_bottom, $bar_color);
-    
-								$value += ( $value>0 ) ? $this->options['yaxis_pos'] : 0 ;
+
+                                $value += ( $value>0 ) ? $this->options['yaxis_pos'] : 0 ;
 
                                 if ($this->options['display_titles'])
                                 {
                                     $style .= 'cursor:help;';
-    
+
                                     $title = (empty($dataset['label'])) ? '' : $dataset['label'].': ';
                                     $title = 'title="'.ploopi_htmlentities($title.strip_tags($this->legend[$key]).', '.$value).'"';
                                 }
                                 else $title = '';
-    
+
                                 ?>
                                 <li class="<?php echo $dataset_name; ?>" style="<?php echo $style; ?>" <?php echo $title ?>>
                                     <?php if ($this->options['display_values']) echo $value; //affichage des valeurs rendu optionnel ?>
                                 </li>
                                 <?php
                             }
-    
+
                             $c++;
                         }
-    
+
                         $dataset_index += 1;
                     }
                     ?>
@@ -406,7 +406,7 @@ class barchart
                         <?php
                             $ticks_column_width = $column_width+1;
                             if ($this->options['bar_arrange'] == 'side_by_side') $ticks_column_width *= sizeof($this->datasets);
-    
+
                             foreach($this->legend as $key => $label)
                             {
                                 //alignement automatique de l'échelle horizontale ?>
@@ -426,14 +426,14 @@ class barchart
                 ?>
                 <div class="caption">
                 <?php
-                /* 
+                /*
                  * légende en bas à droite du graph, avec alignement automatique du texte (en fonction de la longueur de chaîne):
                  * si les descriptions de la légende sont de longueur différente, le texte et la légende seront alognés en fonction
                  * de la chaîne la plus longue
                  */
-                
+
                     $max_label_strl = 0;
-    
+
                     foreach($this->datasets as $dataset)
                     {
                      $max_label_strl = (strlen($dataset['label']) > $max_label_strl) ? strlen($dataset['label']) : $max_label_strl  ;

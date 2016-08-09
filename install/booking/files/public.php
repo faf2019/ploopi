@@ -58,11 +58,11 @@ switch($_SESSION['booking']['$booking_menu'])
         echo $skin->open_simplebloc('Planning des réservations');
         ?>
         <div id="booking_main">
-        <?
+        <?php
         include_once './modules/booking/public_planning.php';
         ?>
         </div>
-        <?
+        <?php
         echo $skin->close_simplebloc();
 
         /**
@@ -72,8 +72,8 @@ switch($_SESSION['booking']['$booking_menu'])
 
         ?>
         <div id="booking_ressource_list">
-        <form id="booking_resource_list_form" action="<? echo ploopi_urlencode('admin-light.php?ploopi_op=booking_setresources'); ?>" method="post" onsubmit="javascript:ploopi_xmlhttprequest_submitform($('booking_resource_list_form'), 'booking_main'); return false;">
-        <?
+        <form id="booking_resource_list_form" action="<?php echo ploopi_urlencode('admin-light.php?ploopi_op=booking_setresources'); ?>" method="post" onsubmit="javascript:ploopi_xmlhttprequest_submitform($('booking_resource_list_form'), 'booking_main'); return false;">
+        <?php
         $strResourceType = '';
 
         foreach ($arrResources as $row)
@@ -85,28 +85,28 @@ switch($_SESSION['booking']['$booking_menu'])
                 ?>
 
                 <div style="border-width:1px 0;border-style:solid;border-color:#bbb;background-color:#ddd;overflow:auto;clear:both;padding:2px;">
-                    <input style="display:block;float:left;margin:0;" type="checkbox" onclick="ploopi_checkall(booking_resource_list_form, 'booking_resource<? echo $row['rt_name']; ?>', this.checked, true);$('booking_resource_list_form').onsubmit();" />
+                    <input style="display:block;float:left;margin:0;" type="checkbox" onclick="ploopi_checkall(booking_resource_list_form, 'booking_resource<?php echo $row['rt_name']; ?>', this.checked, true);$('booking_resource_list_form').onsubmit();" />
                     <a style="display:block;margin-left:20px;" href="javascript:void(0);" onclick="javascript:with ($('booking_<?php echo $strResourceType; ?>_list')) { style.display = (style.display == 'block') ? 'none' : 'block'; }">
-                        <strong><? echo ploopi_htmlentities($strResourceType); ?></strong>
+                        <strong><?php echo ploopi_htmlentities($strResourceType); ?></strong>
                     </a>
                 </div>
 
                 <div id="booking_<?php echo ploopi_htmlentities($row['rt_name']); ?>_list" style="display:block;">
-                <?
+                <?php
             }
             ?>
-            <p class="checkbox" style="background-color:<? echo ploopi_htmlentities($row['color']); ?>;" onclick="javascript:ploopi_checkbox_click(event, 'booking_resource<? echo $row['rt_name'].$row['id']; ?>');">
-                <input type="checkbox" name="booking_resources[<? echo $row['id']; ?>]" id="booking_resource<? echo $row['rt_name'].$row['id']; ?>" value="<? echo $row['id']; ?>" <? if (!empty($arrSearchPattern['booking_resources'][$row['id']])) echo 'checked="checked"'; ?> onchange="javascript:$('booking_resource_list_form').onsubmit();" />
-                <span><? echo ploopi_htmlentities($row['name']); ?><span>
+            <p class="checkbox" style="background-color:<?php echo ploopi_htmlentities($row['color']); ?>;" onclick="javascript:ploopi_checkbox_click(event, 'booking_resource<?php echo $row['rt_name'].$row['id']; ?>');">
+                <input type="checkbox" name="booking_resources[<?php echo $row['id']; ?>]" id="booking_resource<?php echo $row['rt_name'].$row['id']; ?>" value="<?php echo $row['id']; ?>" <?php if (!empty($arrSearchPattern['booking_resources'][$row['id']])) echo 'checked="checked"'; ?> onchange="javascript:$('booking_resource_list_form').onsubmit();" />
+                <span><?php echo ploopi_htmlentities($row['name']); ?><span>
             </p>
 
-            <?
+            <?php
         }
         if ($strResourceType != '') echo '</div>';
         ?>
         </form>
         </div>
-        <?
+        <?php
         $content = ob_get_contents();
         ob_end_clean();
 
@@ -128,27 +128,27 @@ if (!empty($_REQUEST['error'])) {
     ?>
     <script type="text/javascript">
         Event.observe(window, 'load', function() {
-            <?
+            <?php
             switch($_REQUEST['error']) {
-                case 'collision': ?> alert('Il y a déjà une autre réservation validée pour cette ressource aux dates demandées.\nVotre demande n\'a pas pu être enregistrée.'); <? break;
-                case 'collision2': ?> alert('Il y a déjà une autre réservation validée pour cette ressource aux dates demandées.\nVotre demande n\'a pas pu être correctement enregistrée.'); <? break;
+                case 'collision': ?> alert('Il y a déjà une autre réservation validée pour cette ressource aux dates demandées.\nVotre demande n\'a pas pu être enregistrée.'); <?php break;
+                case 'collision2': ?> alert('Il y a déjà une autre réservation validée pour cette ressource aux dates demandées.\nVotre demande n\'a pas pu être correctement enregistrée.'); <?php break;
             }
             ?>
         });
     </script>
-    <?
+    <?php
 }
 
 if (!empty($_REQUEST['warning'])) {
     ?>
     <script type="text/javascript">
         Event.observe(window, 'load', function() {
-            <?
+            <?php
             switch($_REQUEST['warning']) {
-                case 'collision': ?> alert('Il y a déjà une autre réservation pour cette ressource aux dates demandées.\nVotre demande a tout de même été enregistrée.'); <? break;
+                case 'collision': ?> alert('Il y a déjà une autre réservation pour cette ressource aux dates demandées.\nVotre demande a tout de même été enregistrée.'); <?php break;
             }
             ?>
         });
     </script>
-    <?
+    <?php
 }

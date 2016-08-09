@@ -1379,8 +1379,8 @@ CREATE TABLE IF NOT EXISTS ploopi_workspace (
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
 
 INSERT INTO ploopi_workspace (id, id_workspace, `label`, code, system, protected, parents, iprules, macrules, template, depth, mustdefinerule, backoffice, frontoffice, backoffice_domainlist, title, meta_description, meta_keywords, meta_author, meta_copyright, meta_robots, frontoffice_domainlist, priority) VALUES
-(2, 1, 'Espace Principal', '', 0, 0, '0;1', '', '', 'dims', 2, 0, 1, 0, '*\r\n', '', '', '', '', '', '', '*', 1),
-(1, 0, 'system', NULL, 1, 0, '0', NULL, NULL, 'dims', 1, 0, 1, 0, NULL, '', '', '', '', '', 'index, follow, all', '', 0);
+(2, 1, 'Espace Principal', '', 0, 0, '0;1', '', '', 'eyeos', 2, 0, 1, 0, '*\r\n', '', '', '', '', '', '', '*', 1),
+(1, 0, 'system', NULL, 1, 0, '0', NULL, NULL, 'eyeos', 1, 0, 1, 0, NULL, '', '', '', '', '', 'index, follow, all', '', 0);
 
 DROP TABLE IF EXISTS ploopi_workspace_group;
 CREATE TABLE IF NOT EXISTS ploopi_workspace_group (
@@ -1436,4 +1436,4 @@ ALTER TABLE `ploopi_workspace` ADD INDEX ( `code` );
 INSERT INTO `ploopi_param_type` (`id_module_type`, `name`, `default_value`, `public`, `description`, `label`) VALUES ('1', 'system_trombi_maxlines', '25', '0', NULL, 'Nombre de réponses maxi dans la recherche (sinon index alphabétique)');
 INSERT INTO `ploopi_param_default` (`id_module`, `name`, `value`, `id_module_type`) VALUES ('1', 'system_trombi_maxlines', '25', '1');
 
-UPDATE `ploopi_module_type` SET `version` = '1.9.5.9', `author` = 'Ovensia', `date` = '20160426000000', `description` = 'Noyau du système' WHERE `ploopi_module_type`.`id` = 1;
+UPDATE `ploopi_module_type` SET `version` = '1.9.7.0', `author` = 'Ovensia', `date` = '20160602000000', `description` = 'Noyau du système' WHERE `ploopi_module_type`.`id` = 1;

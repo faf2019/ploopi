@@ -50,9 +50,9 @@ class subscription extends data_object
      * @return subscription
      */
 
-    public function subscription()
+    public function __construct()
     {
-        parent::data_object('ploopi_subscription','id');
+        parent::__construct('ploopi_subscription','id');
     }
 
     /**
@@ -113,8 +113,8 @@ class subscription_action extends data_object
      * @return subscription_action
      */
 
-    public function subscription_action()
+    public function __construct()
     {
-        parent::data_object('ploopi_subscription_action', 'id_subscription', 'id_action');
+        parent::__construct('ploopi_subscription_action', 'id_subscription', 'id_action');
     }
 }

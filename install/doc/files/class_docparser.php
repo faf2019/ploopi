@@ -55,9 +55,9 @@ class docparser extends data_object
      * @return docparser
      */
 
-    function docparser()
+    function __construct()
     {
-        parent::data_object('ploopi_mod_doc_parser','id');
+        parent::__construct('ploopi_mod_doc_parser','id');
     }
 
 }

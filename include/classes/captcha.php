@@ -1,4 +1,4 @@
-<?
+<?php
 /*
   Copyright (c) 2006-2007 Sylvain BRISON (génération image)
   Copyright (c) 2009 Drew Phillips (gestion du son)
@@ -44,7 +44,7 @@ class ploopi_captcha extends data_object
      */
     function __construct()
     {
-        parent::data_object('ploopi_captcha','id');
+        parent::__construct('ploopi_captcha','id');
         $this->gc(); // Suppression des anciens captcha 
     }
     

@@ -50,9 +50,9 @@ class index_element extends data_object
      * @return index_element
      */
 
-    public function index_element()
+    public function __construct()
     {
-        parent::data_object('ploopi_index_element', 'id');
+        parent::__construct('ploopi_index_element', 'id');
         $this->setdb(ploopi_search_getdb());
     }
 }
@@ -75,9 +75,9 @@ class index_keyword_element extends data_object
      * @return index_keyword_element
      */
 
-    public function index_keyword_element()
+    public function __construct()
     {
-        parent::data_object('ploopi_index_keyword_element', 'id_keyword', 'id_element');
+        parent::__construct('ploopi_index_keyword_element', 'id_keyword', 'id_element');
         $this->setdb(ploopi_search_getdb());
     }
 }
@@ -100,9 +100,9 @@ class index_keyword extends data_object
      * @return index_keyword
      */
 
-    public function index_keyword()
+    public function __construct()
     {
-        parent::data_object('ploopi_index_keyword', 'id');
+        parent::__construct('ploopi_index_keyword', 'id');
         $this->setdb(ploopi_search_getdb());
     }
 
@@ -137,9 +137,9 @@ class index_stem_element extends data_object
      * @return index_stem_element
      */
 
-    public function index_stem_element()
+    public function __construct()
     {
-        parent::data_object('ploopi_index_stem_element', 'id_stem', 'id_element');
+        parent::__construct('ploopi_index_stem_element', 'id_stem', 'id_element');
         $this->setdb(ploopi_search_getdb());
     }
 }
@@ -162,9 +162,9 @@ class index_stem extends data_object
      * @return index_stem
      */
 
-    public function index_stem()
+    public function __construct()
     {
-        parent::data_object('ploopi_index_stem', 'id');
+        parent::__construct('ploopi_index_stem', 'id');
         $this->setdb(ploopi_search_getdb());
     }
 }

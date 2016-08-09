@@ -61,9 +61,9 @@ class documentsfile extends data_object
      *
      * @return documentsfile
      */
-    public function documentsfile()
+    public function __construct()
     {
-        parent::data_object('ploopi_documents_file');
+        parent::__construct('ploopi_documents_file');
         $this->fields['id_user'] = 0;
         $this->fields['timestp_create'] = ploopi_createtimestamp();
         $this->fields['timestp_modify'] = $this->fields['timestp_create'];
@@ -83,9 +83,9 @@ class documentsfile extends data_object
      * @param int $id identifiant du document
      * @return boolean true si le document a été ouvert
      */
-    public function open($id)
+    public function open(...$args)
     {
-        if ($res = parent::open($id)) $this->oldname = $this->fields['name'];
+        if ($res = parent::open($args[0])) $this->oldname = $this->fields['name'];
         return($res);
     }
 
@@ -322,9 +322,9 @@ class documentsfolder extends data_object
      *
      * @return documentsfolder
      */
-    function documentsfolder()
+    function __construct()
     {
-        parent::data_object('ploopi_documents_folder');
+        parent::__construct('ploopi_documents_folder');
         $this->fields['timestp_create'] = ploopi_createtimestamp();
         $this->fields['timestp_modify'] = $this->fields['timestp_create'];
         $this->fields['parents']=0;

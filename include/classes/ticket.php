@@ -51,9 +51,9 @@ class ticket extends data_object
      * @return subscription_action
      */
 
-    public function ticket()
+    public function __construct()
     {
-        parent::data_object('ploopi_ticket', 'id');
+        parent::__construct('ploopi_ticket', 'id');
     }
 
     /**
@@ -132,7 +132,7 @@ class ticket_watch extends data_object
 
     public function ticket_watch()
     {
-        parent::data_object('ploopi_ticket_watch', 'id_ticket', 'id_user');
+        parent::__construct('ploopi_ticket_watch', 'id_ticket', 'id_user');
     }
 }
 
@@ -156,7 +156,7 @@ class ticket_status extends data_object
 
     public function ticket_status()
     {
-        parent::data_object('ploopi_ticket_status', 'id_ticket', 'id_user', 'status');
+        parent::__construct('ploopi_ticket_status', 'id_ticket', 'id_user', 'status');
     }
 
     /**
@@ -193,6 +193,6 @@ class ticket_dest extends data_object
 
     public function ticket_dest()
     {
-        parent::data_object('ploopi_ticket_dest','id_user','id_ticket');
+        parent::__construct('ploopi_ticket_dest','id_user','id_ticket');
     }
 }

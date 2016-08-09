@@ -87,14 +87,14 @@ if (ploopi_getparam('doc_explorer_displaytreeview'))
             </div>
         </div>
         <div id="doc_browser">
-    <?
+    <?php
 
 }
 else
 {
     ?>
     <div id="doc_main_notreeview">
-    <?
+    <?php
 }
 ?>
         <div id="doc_browser_inner">
@@ -127,9 +127,9 @@ else
                         }
                         ?>
                         <div class="doc_path" style="background:#fff;">
-                            <span class="error"><? echo ploopi_htmlentities($strMsg); ?></span>
+                            <span class="error"><?php echo ploopi_htmlentities($strMsg); ?></span>
                         </div>
-                        <?
+                        <?php
                     }
                     ?>
                     <div class="doc_path">
@@ -250,12 +250,12 @@ else
             }
             ?>
         </div>
-    <?
+    <?php
     if (ploopi_getparam('doc_explorer_displaytreeview'))
     {
         ?>
     </div>
-        <?
+        <?php
     }
     ?>
 </div>

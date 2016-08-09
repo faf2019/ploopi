@@ -39,8 +39,8 @@ echo $skin->open_simplebloc(_SYSTEM_LABEL_DIAGNOSTIC);
 $columns = array();
 $values = array();
 
-$columns['left']['function']    = array('label' => _SYSTEM_LABEL_FUNCTION, 'width' => '200', 'options' => array('sort' => true));
-$columns['left']['desc']        = array('label' => _SYSTEM_LABEL_DESCRIPTION, 'width' => '250', 'options' => array('sort' => true));
+$columns['left']['function']    = array('label' => _SYSTEM_LABEL_FUNCTION, 'width' => '250', 'options' => array('sort' => true));
+$columns['left']['desc']        = array('label' => _SYSTEM_LABEL_DESCRIPTION, 'width' => '350', 'options' => array('sort' => true));
 $columns['right']['result']     = array('label' => _SYSTEM_LABEL_RESULT, 'width' => '80', 'options' => array('sort' => true));
 $columns['auto']['comment']     = array('label' => _SYSTEM_LABEL_COMMENTARY, 'options' => array('sort' => true));
 
@@ -230,7 +230,7 @@ $upload_max_filesize =  intval(ini_get('upload_max_filesize')*1024);
 $post_max_size = intval(ini_get('post_max_size')*1024);
 
 // Test la taille max d'upload de fichier
-$fmax = (_PLOOPI_USE_CGIUPLOAD) ? $ploopi_maxfilesize : min($ploopi_maxfilesize, $upload_max_filesize, $post_max_size);
+$fmax = min($ploopi_maxfilesize, $upload_max_filesize, $post_max_size);
 
 $testok = 1;
 if ($fmax < 2048) $testok = 3; // 2 Mo
@@ -255,8 +255,6 @@ switch($testok)
         $comment = 'Vous pouvez uploader des fichiers d\'un poids maximum inférieur 2 Mio.';
     break;
 }
-
-if (_PLOOPI_USE_CGIUPLOAD) $comment .= "\nLe mode CGIUPLOAD est activé. Attention car il nécessite une configuration particulière d'Apache";
 
 if ($testok>1) $comment .= "\nSi vous voulez modifier cette limite vous pouvez modifier les paramètres suivants:\n- upload_max_filesize (PHP / php.ini) : {$upload_max_filesize} kio\n- post_max_size (PHP / php.ini) : {$post_max_size} kio\n- _PLOOPI_MAXFILESIZE (PLOOPI / config.php) : {$ploopi_maxfilesize} kio";
 
@@ -321,11 +319,17 @@ if ($testpear)
     }
 
 
-    $objResponse = $objRequest->send();
+    try {
+        $objResponse = $objRequest->send();
 
-    $strStatus = $objResponse->getStatus();
+        $strStatus = $objResponse->getStatus();
 
-    $res = $strStatus == '200' || $objResponse->getStatus() == '';
+        $res = $strStatus == '200' || $objResponse->getStatus() == '';
+    }
+    catch (HTTP_Request2_Exception $e) {
+        $res = false;
+    }
+
 }
 else $res = false;
 

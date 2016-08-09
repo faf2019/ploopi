@@ -92,14 +92,14 @@ if(!$booIsAllowedEdit) $booIsAllowedEdit = ploopi_isactionallowed(_WEBEDIT_ACTIO
         ?>
         <img src="./modules/webedit/img/base.png">
         <span style="font-weight:bold;">Modification de la racine &laquo; <?php echo ploopi_htmlentities($heading->fields['label']); ?> &raquo;</span>
-        <?
+        <?php
     }
     else
     {
         ?>
         <img src="./modules/webedit/img/folder.png">
         <span style="font-weight:bold;">Modification de la rubrique &laquo; <?php echo ploopi_htmlentities($heading->fields['label']); ?> &raquo;</span>
-        <?
+        <?php
     }
     ?>
 </p>
@@ -742,7 +742,7 @@ foreach($arrShares as $value) $arrSharesUsers[$value['type_share']][] = $value['
             if (ploopi_isactionallowed(_WEBEDIT_ACTION_ACCESS_MANAGE))
             {
                 ?>
-                <input type="checkbox" name="webedit_heading_private" id="webedit_heading_private" value="1" <? if ($heading->fields['private']) echo 'checked="checked"'; ?> onchange="javascript:$('heading_private_form').style.display = (this.checked) ? 'block' : 'none';"/>
+                <input type="checkbox" name="webedit_heading_private" id="webedit_heading_private" value="1" <?php if ($heading->fields['private']) echo 'checked="checked"'; ?> onchange="javascript:$('heading_private_form').style.display = (this.checked) ? 'block' : 'none';"/>
                 <?php
             }
             else
@@ -750,14 +750,14 @@ foreach($arrShares as $value) $arrSharesUsers[$value['type_share']][] = $value['
             ?>
         </p>
 
-        <div style="clear:both;padding: 4px 0px;display:<? echo $heading->fields['private'] ? 'block' : 'none'; ?>;" id="heading_private_form">
+        <div style="clear:both;padding: 4px 0px;display:<?php echo $heading->fields['private'] ? 'block' : 'none'; ?>;" id="heading_private_form">
             <p class="ploopi_checkbox" style="padding:0 0 0 2px;">
                 <label for="heading_private">Toujours visible dans le menu :</label>
                 <?php
                 if (ploopi_isactionallowed(_WEBEDIT_ACTION_ACCESS_MANAGE))
                 {
                     ?>
-                    <input type="checkbox" name="webedit_heading_private_visible" id="webedit_heading_private_visible" value="1" <? if ($heading->fields['private_visible']) echo 'checked="checked"'; ?> />
+                    <input type="checkbox" name="webedit_heading_private_visible" id="webedit_heading_private_visible" value="1" <?php if ($heading->fields['private_visible']) echo 'checked="checked"'; ?> />
                     <?php
                 }
                 else
@@ -808,7 +808,7 @@ foreach($arrShares as $value) $arrSharesUsers[$value['type_share']][] = $value['
     </fieldset>
 </div>
 
-<?
+<?php
 if ($booIsAllowedEdit)
 {
     ?>

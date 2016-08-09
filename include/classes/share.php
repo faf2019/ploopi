@@ -50,8 +50,8 @@ class share extends data_object
      *
      * @return share
      */
-    public function share()
+    public function __construct()
     {
-        parent::data_object('ploopi_share','id');
+        parent::__construct('ploopi_share','id');
     }
 }

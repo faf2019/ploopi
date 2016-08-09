@@ -53,10 +53,9 @@ class webedit_article_tag extends data_object
      *
      * @return webedit_article_tag
      */
-    
-    function webedit_article_tag()
+
+    function __construct()
     {
-        parent::data_object('ploopi_mod_webedit_article_tag', 'id_article', 'id_tag');
+        parent::__construct('ploopi_mod_webedit_article_tag', 'id_article', 'id_tag');
     }
 }
-?>

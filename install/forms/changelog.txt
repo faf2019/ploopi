@@ -1,3 +1,9 @@
+== Module FORMS - version 3.7.0 =====================================================
+
+2016-08-08  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+* Version pour Ploopi 1.9.7+ / PHP 7+
+
 == Module FORMS - version 3.6.3 =====================================================
 
 2016-02-23  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>

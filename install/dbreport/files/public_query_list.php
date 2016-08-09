@@ -107,9 +107,9 @@ if (ploopi_isactionallowed(dbreport::_ACTION_MANAGE))
 {
     ?>
     <div class="ploopi_tabs">
-        <a href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_topopup(400, event, 'dbreport_query_add', 'admin-light.php', '<? echo ploopi_queryencode('ploopi_op=dbreport_query_add'); ?>', 'POST');"><img src="./modules/dbreport/img/ico_new.png" /><span>Nouvelle requête</span></a>
+        <a href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_topopup(400, event, 'dbreport_query_add', 'admin-light.php', '<?php echo ploopi_queryencode('ploopi_op=dbreport_query_add'); ?>', 'POST');"><img src="./modules/dbreport/img/ico_new.png" /><span>Nouvelle requête</span></a>
     </div>
-    <?
+    <?php
 }
 
 $skin->display_array($arrColumns, $arrValues, 'dbreport_query_list', array('sortable' => true, 'orderby_default' => 'query', 'limit' => 25));

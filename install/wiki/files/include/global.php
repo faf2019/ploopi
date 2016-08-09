@@ -175,8 +175,7 @@ function wiki_make_links($strContent)
  */
 function wiki_render($strContent, $cbInternalLinks = 'wiki_internal_links')
 {
-    include_once './lib/textile/classTextile.php';
-    $objTextile = new Textile;
+    $objTextile = new \Netcarver\Textile\Parser();
 
     // Pré-traitement du formatage de code
     // Extraction des zones à formater
@@ -197,7 +196,7 @@ function wiki_render($strContent, $cbInternalLinks = 'wiki_internal_links')
     //$strContent = str_replace($arrSearch, $arrReplace, $strContent);
 
     // Renderer textile
-    $strTextile = utf8_decode($objTextile->TextileThis(utf8_encode($strContent)));
+    $strTextile = utf8_decode($objTextile->textileThis(utf8_encode($strContent)));
 
     // Traitement des liens externes
     $strTextile = preg_replace_callback ('/<a[^>]*href="(.*)"[^>]*>(.*)<\/a>/i', 'wiki_links', $strTextile);
@@ -206,7 +205,7 @@ function wiki_render($strContent, $cbInternalLinks = 'wiki_internal_links')
 
     // Post-traitement du formatage de code
     $strTextile = str_replace($arrReplace, $arrHighlight, $strTextile);
-    
+
     return $strTextile;
 }
 
@@ -222,6 +221,7 @@ function wiki_highlight($strContent, $strFormat = 'php')
 
     $strLines = implode(range(1, count(explode("\n", $strContent))), '<br />');
 
+    /*
     if (in_array($strFormat, $arrAllowedFormats))
     {
         require_once 'Text/Highlighter.php';
@@ -229,10 +229,13 @@ function wiki_highlight($strContent, $strFormat = 'php')
         $objHL = Text_Highlighter::factory($strFormat);
         $objHL->setRenderer(new Text_Highlighter_Renderer_Html());
         $strContent = $objHL->highlight($strContent);
-   }
+    }
     else $strContent = '<pre>'.ploopi_nl2br(ploopi_htmlentities($strContent)).'</pre>';
+    */
 
-    return "<div class=\"hl-content\"><table><tr><td class=\"hl-num\">\n$strLines\n</td><td class=\"hl-src\">\n$strContent\n</td></tr></table></div>";
+    $strContent = ploopi_htmlentities($strContent, null, null, false);
+
+    return "<div class=\"hl-content\"><table><tr><td class=\"hl-num\">\n$strLines\n</td><td class=\"hl-src\"><pre><code class=\"{$strFormat}\">{$strContent}</code></pre></td></tr></table></div>";
 }
 
 

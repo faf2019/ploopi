@@ -71,9 +71,9 @@ class ploopi_session
 
     public static function get_path() { return self::get_basepath().'/'.self::get_id(); }
 
-    private static function compress(&$data) { return self::$booCompress ? @gzcompress($data, defined('_PLOOPI_SESSION_COMPRESSION') ? _PLOOPI_SESSION_COMPRESSION : -1) : $data; }
+    private static function compress($data) { return self::$booCompress ? @gzcompress($data, defined('_PLOOPI_SESSION_COMPRESSION') ? _PLOOPI_SESSION_COMPRESSION : -1) : $data; }
 
-    private static function uncompress(&$data) { return self::$booCompress && $data != '' ? @gzuncompress($data) : $data; }
+    private static function uncompress($data) { return self::$booCompress && $data != '' ? @gzuncompress($data) : $data; }
 
     public static function set_usedb($booUseDb) { self::$booUseDb = $booUseDb; }
 
@@ -116,9 +116,10 @@ class ploopi_session
 
         self::_initdb();
 
+        return true;
     }
 
-    public static function close() { }
+    public static function close() { return true; }
 
     /**
      * Chargement de la session depuis la base de données.
@@ -137,9 +138,9 @@ class ploopi_session
         else
         {
             ploopi_makedir(self::get_path());
-            self::$fpLock = fopen(self::get_path().'/lock', "w");
+            self::$fpLock = fopen(self::get_path().'.lock', "w");
             flock(self::$fpLock, LOCK_EX);
-            return file_exists(self::get_path().'/data') ? self::uncompress(file_get_contents(self::get_path().'/data')) : false;
+            return file_exists(self::get_path().'/data') ? self::uncompress(file_get_contents(self::get_path().'/data')) : '';
         }
     }
 
@@ -151,7 +152,7 @@ class ploopi_session
      * @param string $data données de la session
      */
 
-    public static function write($id, &$data)
+    public static function write($id, $data)
     {
         if (self::$booUseDb)
         {

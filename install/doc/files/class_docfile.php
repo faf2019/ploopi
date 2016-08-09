@@ -72,9 +72,9 @@ class docfile extends data_object
      * @return docfile
      */
 
-    function docfile()
+    function __construct()
     {
-        parent::data_object('ploopi_mod_doc_file');
+        parent::__construct('ploopi_mod_doc_file');
         $this->fields['id_user'] = 0;
         $this->fields['timestp_create'] = ploopi_createtimestamp();
         $this->fields['timestp_modify'] = $this->fields['timestp_create'];
@@ -96,9 +96,9 @@ class docfile extends data_object
      * @return unknown
      */
 
-    function open($id)
+    function open(...$args)
     {
-        $res = parent::open($id);
+        $res = parent::open($args);
         $this->oldname = $this->fields['name'];
         return $res;
     }

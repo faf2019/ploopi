@@ -1785,122 +1785,122 @@ class dbreport_query extends data_object
 
         ?>
 
-        <div id="container" style="display:block; height: <? echo $this->fields['chart_height']; ?>px; width: <? echo $this->fields['chart_width']; ?>px;"></div>
+        <div id="container" style="display:block; height: <?php echo $this->fields['chart_height']; ?>px; width: <?php echo $this->fields['chart_width']; ?>px;"></div>
         <script type="text/javascript">
 
 
         Event.observe(window, 'load', function() {
             var chart = new Highcharts.Chart({
 
-                colors: <? echo $this->fields['chart_colorset'] ? self::getChartColorSetJson($this->fields['chart_colorset']) : "['{$this->fields['chart_color']}']"; ?>,
+                colors: <?php echo $this->fields['chart_colorset'] ? self::getChartColorSetJson($this->fields['chart_colorset']) : "['{$this->fields['chart_color']}']"; ?>,
                 lang: {
                     decimalPoint: '.',
                     thousandsSep: ' ',
-                    downloadJPEG: '<? echo utf8_encode('Télécharger JPG'); ?>',
-                    downloadPDF: '<? echo utf8_encode('Télécharger PDF'); ?>',
-                    downloadPNG: '<? echo utf8_encode('Télécharger PNG'); ?>',
-                    downloadSVG: '<? echo utf8_encode('Télécharger SVG'); ?>',
-                    printChart: '<? echo utf8_encode('Imprimer'); ?>',
-                    contextButtonTitle: '<? echo utf8_encode('Menu contextuel'); ?>',
+                    downloadJPEG: '<?php echo utf8_encode('Télécharger JPG'); ?>',
+                    downloadPDF: '<?php echo utf8_encode('Télécharger PDF'); ?>',
+                    downloadPNG: '<?php echo utf8_encode('Télécharger PNG'); ?>',
+                    downloadSVG: '<?php echo utf8_encode('Télécharger SVG'); ?>',
+                    printChart: '<?php echo utf8_encode('Imprimer'); ?>',
+                    contextButtonTitle: '<?php echo utf8_encode('Menu contextuel'); ?>',
                 },
                 chart: {
                     renderTo: 'container',
-                    type: '<? echo addslashes(strip_tags(self::$_arrChartBasicTypes[$this->fields['chart']])); ?>',
+                    type: '<?php echo addslashes(strip_tags(self::$_arrChartBasicTypes[$this->fields['chart']])); ?>',
                     // margin: [ 50, 50, 100, 80],
-                    backgroundColor: '<? echo addslashes(strip_tags($this->fields['chart_background'])); ?>',
-                    animation: <? echo $this->fields['chart_animation'] ? 'true' : 'false'; ?>,
-                    borderWidth: <? echo $this->fields['chart_border_width']; ?>,
-                    borderColor: '<? echo addslashes(strip_tags($this->fields['chart_border_color'])); ?>',
+                    backgroundColor: '<?php echo addslashes(strip_tags($this->fields['chart_background'])); ?>',
+                    animation: <?php echo $this->fields['chart_animation'] ? 'true' : 'false'; ?>,
+                    borderWidth: <?php echo $this->fields['chart_border_width']; ?>,
+                    borderColor: '<?php echo addslashes(strip_tags($this->fields['chart_border_color'])); ?>',
                 },
                 title: {
-                    text: '<? echo utf8_encode(addslashes(strip_tags($this->fields['chart_title']))); ?>',
+                    text: '<?php echo utf8_encode(addslashes(strip_tags($this->fields['chart_title']))); ?>',
                     style: {
-                        fontFamily: '<? echo addslashes(strip_tags($this->fields['chart_font'])); ?>',
-                        fontSize: '<? echo $this->fields['chart_title_font_size']; ?>px',
-                        color: '<? echo addslashes(strip_tags($this->fields['chart_title_font_color'])); ?>',
+                        fontFamily: '<?php echo addslashes(strip_tags($this->fields['chart_font'])); ?>',
+                        fontSize: '<?php echo $this->fields['chart_title_font_size']; ?>px',
+                        color: '<?php echo addslashes(strip_tags($this->fields['chart_title_font_color'])); ?>',
                     }
                 },
                 subtitle: {
-                    text: '<? echo utf8_encode(addslashes(strip_tags($this->fields['chart_subtitle']))); ?>',
+                    text: '<?php echo utf8_encode(addslashes(strip_tags($this->fields['chart_subtitle']))); ?>',
                     style: {
-                        fontFamily: '<? echo addslashes(strip_tags($this->fields['chart_font'])); ?>',
-                        fontSize: '<? echo $this->fields['chart_title_font_size']/2; ?>px',
-                        color: '<? echo addslashes(strip_tags($this->fields['chart_title_font_color'])); ?>',
+                        fontFamily: '<?php echo addslashes(strip_tags($this->fields['chart_font'])); ?>',
+                        fontSize: '<?php echo $this->fields['chart_title_font_size']/2; ?>px',
+                        color: '<?php echo addslashes(strip_tags($this->fields['chart_title_font_color'])); ?>',
                     }
                 },
                 legend: {
                     backgroundColor: '#FFFFFF',
                     reversed: false,
-                    enabled: <? echo $this->fields['chart_legend_display'] ? 'true' : 'false'; ?>,
-                    align: '<? echo addslashes(strip_tags($this->fields['chart_legend_align'])); ?>',
-                    verticalAlign: '<? echo addslashes(strip_tags($this->fields['chart_legend_valign'])); ?>',
+                    enabled: <?php echo $this->fields['chart_legend_display'] ? 'true' : 'false'; ?>,
+                    align: '<?php echo addslashes(strip_tags($this->fields['chart_legend_align'])); ?>',
+                    verticalAlign: '<?php echo addslashes(strip_tags($this->fields['chart_legend_valign'])); ?>',
                     style: {
-                        fontFamily: '<? echo addslashes(strip_tags($this->fields['chart_font'])); ?>',
-                        fontSize: '<? echo $this->fields['chart_legend_font_size']; ?>px',
-                        color: '<? echo addslashes(strip_tags($this->fields['chart_legend_font_color'])); ?>',
+                        fontFamily: '<?php echo addslashes(strip_tags($this->fields['chart_font'])); ?>',
+                        fontSize: '<?php echo $this->fields['chart_legend_font_size']; ?>px',
+                        color: '<?php echo addslashes(strip_tags($this->fields['chart_legend_font_color'])); ?>',
                     },
                     // labelFormat: '{point.y:.2f}',
 
                 },
                 tooltip: {
-                    <? if ($this->fields['chart_tooltip_format'] != '') { ?>
-                    pointFormat: '<? echo utf8_encode(addslashes(strip_tags($this->fields['chart_tooltip_format']))); ?>',
-                    <? } ?>
+                    <?php if ($this->fields['chart_tooltip_format'] != '') { ?>
+                    pointFormat: '<?php echo utf8_encode(addslashes(strip_tags($this->fields['chart_tooltip_format']))); ?>',
+                    <?php } ?>
                     shared: true,
                 },
                 plotOptions: {
                     series: {
-                        <? if (in_array($this->fields['chart'], array('stackedColumn', 'stackedBar', 'stackedLine', 'stackedSpline', 'stackedArea', 'stackedSplineArea'))) { ?>
+                        <?php if (in_array($this->fields['chart'], array('stackedColumn', 'stackedBar', 'stackedLine', 'stackedSpline', 'stackedArea', 'stackedSplineArea'))) { ?>
                         stacking: 'normal'
-                        <? } ?>
-                        <? if (in_array($this->fields['chart'], array('stackedColumn100', 'stackedBar100', 'stackedLine100', 'stackedSpline100', 'stackedArea100', 'stackedSplineArea100'))) { ?>
+                        <?php } ?>
+                        <?php if (in_array($this->fields['chart'], array('stackedColumn100', 'stackedBar100', 'stackedLine100', 'stackedSpline100', 'stackedArea100', 'stackedSplineArea100'))) { ?>
                         stacking: 'percent'
-                        <? } ?>
+                        <?php } ?>
                     },
                     pie: {
-                        animation: <? echo $this->fields['chart_animation'] ? 'true' : 'false'; ?>,
+                        animation: <?php echo $this->fields['chart_animation'] ? 'true' : 'false'; ?>,
                         allowPointSelect: true,
                         shadow: true,
                         center: ['50%', '50%'],
-                        <? if ($this->fields['chart'] == 'doughnut') { ?>
+                        <?php if ($this->fields['chart'] == 'doughnut') { ?>
                         size: '80%', // Donut
                         innerSize: '50%', // Donut
-                        <? } ?>
+                        <?php } ?>
                     },
                     spline: {
-                        animation: <? echo $this->fields['chart_animation'] ? 'true' : 'false'; ?>,
-                        lineWidth: <? echo $this->fields['chart_line_thickness']; ?>,
+                        animation: <?php echo $this->fields['chart_animation'] ? 'true' : 'false'; ?>,
+                        lineWidth: <?php echo $this->fields['chart_line_thickness']; ?>,
                         marker: {
                             enabled: true
                         },
                     },
                     line: {
-                        animation: <? echo $this->fields['chart_animation'] ? 'true' : 'false'; ?>,
-                        lineWidth: <? echo $this->fields['chart_line_thickness']; ?>,
+                        animation: <?php echo $this->fields['chart_animation'] ? 'true' : 'false'; ?>,
+                        lineWidth: <?php echo $this->fields['chart_line_thickness']; ?>,
                         marker: {
                             enabled: true
                         },
                     },
                     area: {
-                        animation: <? echo $this->fields['chart_animation'] ? 'true' : 'false'; ?>,
-                        lineWidth: <? echo $this->fields['chart_line_thickness']; ?>,
+                        animation: <?php echo $this->fields['chart_animation'] ? 'true' : 'false'; ?>,
+                        lineWidth: <?php echo $this->fields['chart_line_thickness']; ?>,
                         marker: {
                             enabled: true
                         },
                     },
                     areaspline: {
-                        animation: <? echo $this->fields['chart_animation'] ? 'true' : 'false'; ?>,
-                        lineWidth: <? echo $this->fields['chart_line_thickness']; ?>,
+                        animation: <?php echo $this->fields['chart_animation'] ? 'true' : 'false'; ?>,
+                        lineWidth: <?php echo $this->fields['chart_line_thickness']; ?>,
                         marker: {
                             enabled: true
                         },
                     },
                     bar: {
-                        animation: <? echo $this->fields['chart_animation'] ? 'true' : 'false'; ?>,
+                        animation: <?php echo $this->fields['chart_animation'] ? 'true' : 'false'; ?>,
                         borderWidth: 0,
                     },
                     column: {
-                        animation: <? echo $this->fields['chart_animation'] ? 'true' : 'false'; ?>,
+                        animation: <?php echo $this->fields['chart_animation'] ? 'true' : 'false'; ?>,
                         borderWidth: 0,
                     },
                 },
@@ -1908,68 +1908,68 @@ class dbreport_query extends data_object
 
 
                 xAxis: {
-                    categories: <? echo json_encode($arrData['categories']); ?>,
+                    categories: <?php echo json_encode($arrData['categories']); ?>,
                     title: {
-                        text: '<? echo utf8_encode(addslashes(strip_tags($strChartxField))); ?>',
+                        text: '<?php echo utf8_encode(addslashes(strip_tags($strChartxField))); ?>',
                         style: {
-                            fontFamily: '<? echo addslashes(strip_tags($this->fields['chart_font'])); ?>',
-                            fontSize: '<? echo $this->fields['chart_axis_font_size']; ?>px',
-                            color: '<? echo addslashes(strip_tags($this->fields['chart_axis_font_color'])); ?>',
+                            fontFamily: '<?php echo addslashes(strip_tags($this->fields['chart_font'])); ?>',
+                            fontSize: '<?php echo $this->fields['chart_axis_font_size']; ?>px',
+                            color: '<?php echo addslashes(strip_tags($this->fields['chart_axis_font_color'])); ?>',
                         }
                     },
                     labels: {
                         style: {
-                            fontFamily: '<? echo addslashes(strip_tags($this->fields['chart_font'])); ?>',
-                            fontSize: '<? echo $this->fields['chart_axis_font_size']; ?>px',
-                            color: '<? echo addslashes(strip_tags($this->fields['chart_axis_font_color'])); ?>',
+                            fontFamily: '<?php echo addslashes(strip_tags($this->fields['chart_font'])); ?>',
+                            fontSize: '<?php echo $this->fields['chart_axis_font_size']; ?>px',
+                            color: '<?php echo addslashes(strip_tags($this->fields['chart_axis_font_color'])); ?>',
                         },
                         formatter: function() {
-                            return '<? echo utf8_encode(addslashes(strip_tags($this->fields['chart_value_x_prefix']))); ?>' + this.value + '<? echo utf8_encode(addslashes(strip_tags($this->fields['chart_value_x_suffix']))); ?>';
+                            return '<?php echo utf8_encode(addslashes(strip_tags($this->fields['chart_value_x_prefix']))); ?>' + this.value + '<?php echo utf8_encode(addslashes(strip_tags($this->fields['chart_value_x_suffix']))); ?>';
                         }
 
                     },
-                    <? if ($this->fields['chart_interlaced_display']) { ?>
-                        alternateGridColor: '<? echo addslashes(strip_tags($this->fields['chart_interlaced_x_color'])); ?>',
-                    <? } ?>
-                    gridLineColor: '<? echo addslashes(strip_tags($this->fields['chart_grid_color'])); ?>',
-                    gridLineWidth: <? echo $this->fields['chart_grid_x_thickness']; ?>,
-                    lineColor: '<? echo addslashes(strip_tags($this->fields['chart_axis_color'])); ?>',
-                    lineWidth: <? echo $this->fields['chart_axis_x_thickness']; ?>,
-                    tickColor: '<? echo addslashes(strip_tags($this->fields['chart_axis_color'])); ?>',
-                    tickWidth: <? echo $this->fields['chart_axis_x_thickness']; ?>,
+                    <?php if ($this->fields['chart_interlaced_display']) { ?>
+                        alternateGridColor: '<?php echo addslashes(strip_tags($this->fields['chart_interlaced_x_color'])); ?>',
+                    <?php } ?>
+                    gridLineColor: '<?php echo addslashes(strip_tags($this->fields['chart_grid_color'])); ?>',
+                    gridLineWidth: <?php echo $this->fields['chart_grid_x_thickness']; ?>,
+                    lineColor: '<?php echo addslashes(strip_tags($this->fields['chart_axis_color'])); ?>',
+                    lineWidth: <?php echo $this->fields['chart_axis_x_thickness']; ?>,
+                    tickColor: '<?php echo addslashes(strip_tags($this->fields['chart_axis_color'])); ?>',
+                    tickWidth: <?php echo $this->fields['chart_axis_x_thickness']; ?>,
 
                 },
                 yAxis: {
                     title: {
-                        text: '<? echo utf8_encode(addslashes(strip_tags($strChartvalField))); ?>',
+                        text: '<?php echo utf8_encode(addslashes(strip_tags($strChartvalField))); ?>',
                         style: {
-                            fontFamily: '<? echo addslashes(strip_tags($this->fields['chart_font'])); ?>',
-                            fontSize: '<? echo $this->fields['chart_axis_font_size']; ?>px',
-                            color: '<? echo addslashes(strip_tags($this->fields['chart_axis_font_color'])); ?>',
+                            fontFamily: '<?php echo addslashes(strip_tags($this->fields['chart_font'])); ?>',
+                            fontSize: '<?php echo $this->fields['chart_axis_font_size']; ?>px',
+                            color: '<?php echo addslashes(strip_tags($this->fields['chart_axis_font_color'])); ?>',
                         }
                     },
                     labels: {
                         style: {
-                            fontFamily: '<? echo addslashes(strip_tags($this->fields['chart_font'])); ?>',
-                            fontSize: '<? echo $this->fields['chart_axis_font_size']; ?>px',
-                            color: '<? echo addslashes(strip_tags($this->fields['chart_axis_font_color'])); ?>',
+                            fontFamily: '<?php echo addslashes(strip_tags($this->fields['chart_font'])); ?>',
+                            fontSize: '<?php echo $this->fields['chart_axis_font_size']; ?>px',
+                            color: '<?php echo addslashes(strip_tags($this->fields['chart_axis_font_color'])); ?>',
                         },
                         formatter: function() {
-                            return '<? echo utf8_encode(addslashes(strip_tags($this->fields['chart_value_y_prefix']))); ?>' + this.value + '<? echo utf8_encode(addslashes(strip_tags($this->fields['chart_value_y_suffix']))); ?>';
+                            return '<?php echo utf8_encode(addslashes(strip_tags($this->fields['chart_value_y_prefix']))); ?>' + this.value + '<?php echo utf8_encode(addslashes(strip_tags($this->fields['chart_value_y_suffix']))); ?>';
                         }
                     },
-                    <? if ($this->fields['chart_interlaced_display']) { ?>
-                        alternateGridColor: '<? echo addslashes(strip_tags($this->fields['chart_interlaced_y_color'])); ?>',
-                    <? } ?>
-                    gridLineColor: '<? echo addslashes(strip_tags($this->fields['chart_grid_color'])); ?>',
-                    gridLineWidth: <? echo $this->fields['chart_grid_y_thickness']; ?>,
-                    lineColor: '<? echo addslashes(strip_tags($this->fields['chart_axis_color'])); ?>',
-                    lineWidth: <? echo $this->fields['chart_axis_y_thickness']; ?>,
-                    tickColor: '<? echo addslashes(strip_tags($this->fields['chart_axis_color'])); ?>',
-                    tickWidth: <? echo $this->fields['chart_axis_y_thickness']; ?>,
+                    <?php if ($this->fields['chart_interlaced_display']) { ?>
+                        alternateGridColor: '<?php echo addslashes(strip_tags($this->fields['chart_interlaced_y_color'])); ?>',
+                    <?php } ?>
+                    gridLineColor: '<?php echo addslashes(strip_tags($this->fields['chart_grid_color'])); ?>',
+                    gridLineWidth: <?php echo $this->fields['chart_grid_y_thickness']; ?>,
+                    lineColor: '<?php echo addslashes(strip_tags($this->fields['chart_axis_color'])); ?>',
+                    lineWidth: <?php echo $this->fields['chart_axis_y_thickness']; ?>,
+                    tickColor: '<?php echo addslashes(strip_tags($this->fields['chart_axis_color'])); ?>',
+                    tickWidth: <?php echo $this->fields['chart_axis_y_thickness']; ?>,
 
                 },
-                series: <? echo json_encode($arrData['series']); ?>,
+                series: <?php echo json_encode($arrData['series']); ?>,
                 credits: {
                     enabled: true,
                     href: 'http://www.ploopi.org',
@@ -1979,7 +1979,7 @@ class dbreport_query extends data_object
         });
 
         </script>
-        <?
+        <?php
     }
 }
 ?>

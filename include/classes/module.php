@@ -54,9 +54,9 @@ class module extends data_object
      *
      * @return module
      */
-    function module()
+    public function __construct()
     {
-        parent::data_object('ploopi_module','id');
+        parent::__construct('ploopi_module','id');
     }
 
     /**
@@ -65,7 +65,7 @@ class module extends data_object
      * @return int identifiant du module
      */
 
-    function save()
+    public function save()
     {
         global $db;
 
@@ -98,7 +98,7 @@ class module extends data_object
      * Supprime l'instance de module et les données associées : rôles, partages, abonnements, validation, etc...
      */
 
-    function delete()
+    public function delete()
     {
         include_once './include/classes/workspace.php';
 
@@ -164,7 +164,7 @@ class module extends data_object
      * @return array tableau des espaces de travail
      */
 
-    function getallworkspaces()
+    public function getallworkspaces()
     {
         global $db;
 
@@ -192,7 +192,7 @@ class module extends data_object
      * @return array tableau des rôles
      */
 
-    function getroles($shared = false)
+    public function getroles($shared = false)
     {
         global $db;
 
@@ -221,7 +221,7 @@ class module extends data_object
      * @param int $workspaceid identifiant de l'espace de travail
      */
 
-    function unlink($workspaceid)
+    public function unlink($workspaceid)
     {
         global $db;
 
@@ -255,16 +255,16 @@ class module_type extends data_object
      * @return module_type
      */
 
-    function module_type()
+    public function __construct()
     {
-        parent::data_object('ploopi_module_type');
+        parent::__construct('ploopi_module_type');
     }
 
     /**
      * Supprime le type de module et les données associées : paramètres, modules, actions, métabase, etc..
      */
 
-    function delete()
+    public function delete()
     {
         include_once './include/classes/mb.php';
         include_once './include/classes/param.php';
@@ -320,7 +320,7 @@ class module_type extends data_object
      * Supprime les paramètres du type de module. Utilisé notamment pour la mise à jour des modules.
      */
 
-    function delete_params()
+    public function delete_params()
     {
         include_once './include/classes/mb.php';
         include_once './include/classes/param.php';
@@ -367,7 +367,7 @@ class module_type extends data_object
      * @see module
      */
 
-    function createinstance($workspaceid)
+    public function createinstance($workspaceid)
     {
         $position = 0;
 
@@ -390,7 +390,7 @@ class module_type extends data_object
      * @return array tableau des actions
      */
 
-    function getactions($role_enabled = true)
+    public function getactions($role_enabled = true)
     {
         global $db;
 
@@ -411,11 +411,11 @@ class module_type extends data_object
         return $actions;
     }
 
-    function update_metabase($xmlfile_desc, $rapport = array())
+    public function update_metabase($xmlfile_desc, $rapport = array())
     {
     }
 
-    function update_description($xmlfile_desc, &$rapport = array())
+    public function update_description($xmlfile_desc, &$rapport = array())
     {
         include_once './include/classes/param.php';
         include_once './include/classes/mb.php';

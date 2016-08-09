@@ -56,9 +56,9 @@ class workspace extends data_object
      * @return workspace
      */
 
-    public function workspace()
+    public function __construct()
     {
-        parent::data_object('ploopi_workspace');
+        parent::__construct('ploopi_workspace');
     }
 
     /**
@@ -489,9 +489,9 @@ class module_workspace extends data_object
      * @return module_workspace
      */
 
-    public function module_workspace()
+    public function __construct()
     {
-        parent::data_object('ploopi_module_workspace','id_workspace','id_module');
+        parent::__construct('ploopi_module_workspace','id_workspace','id_module');
     }
 
     /**
@@ -592,9 +592,9 @@ class workspace_user extends data_object
      * @return workspace_user
      */
 
-    public function workspace_user()
+    public function __construct()
     {
-        parent::data_object('ploopi_workspace_user','id_workspace','id_user');
+        parent::__construct('ploopi_workspace_user','id_workspace','id_user');
         $this->fields['adminlevel'] = _PLOOPI_ID_LEVEL_USER;
     }
 
@@ -652,9 +652,9 @@ class workspace_user_role extends data_object
      * @return workspace_user_role
      */
 
-    public function workspace_user_role()
+    public function __construct()
     {
-        parent::data_object('ploopi_workspace_user_role','id_user','id_workspace','id_role');
+        parent::__construct('ploopi_workspace_user_role','id_user','id_workspace','id_role');
     }
 }
 
@@ -677,9 +677,9 @@ class workspace_group extends data_object
      * @return workspace_group
      */
 
-    function workspace_group()
+    public function __construct()
     {
-        parent::data_object('ploopi_workspace_group','id_workspace','id_group');
+        parent::__construct('ploopi_workspace_group','id_workspace','id_group');
         $this->fields['adminlevel'] = _PLOOPI_ID_LEVEL_USER;
     }
 
@@ -734,8 +734,8 @@ class workspace_group_role extends data_object
      * @return workspace_group_role
      */
 
-    public function workspace_group_role()
+    public function __construct()
     {
-        parent::data_object('ploopi_workspace_group_role','id_group','id_workspace','id_role');
+        parent::__construct('ploopi_workspace_group_role','id_group','id_workspace','id_role');
     }
 }

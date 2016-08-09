@@ -69,7 +69,7 @@ if (!$objGroup->isnew()) $arrParams[] = "forms_group_id={$objGroup->fields['id']
             </p>
             <p>
                 <label><?php echo _FORMS_GROUP_FORMULA; ?>:<br /><em>ex: (C1 AND C2) OR C3</em></label>
-                <? for ($i=1;$i<=5;$i++) { ?> <input type="button" class="button" value="C<? echo $i; ?>" title="Insérer la condition C<? echo $i; ?>" style="width:30px;" onclick="javascript:ploopi_insertatcursor($('forms_group_formula'), this.value); $('forms_group_formula').focus();" /> <? } ?>
+                <?php for ($i=1;$i<=5;$i++) { ?> <input type="button" class="button" value="C<?php echo $i; ?>" title="Insérer la condition C<?php echo $i; ?>" style="width:30px;" onclick="javascript:ploopi_insertatcursor($('forms_group_formula'), this.value); $('forms_group_formula').focus();" /> <?php } ?>
                 <input type="button" class="button" value="AND" title="Insérer l'opérateur AND" style="width:40px;" onclick="javascript:ploopi_insertatcursor($('forms_group_formula'), ' '+this.value+' '); $('forms_group_formula').focus();" />
                 <input type="button" class="button" value="OR" title="Insérer l'opérateur OR" style="width:40px;" onclick="javascript:ploopi_insertatcursor($('forms_group_formula'), ' '+this.value+' '); $('forms_group_formula').focus();" />
                 <input type="button" class="button" value="NOT" title="Insérer l'opérateur NOT" style="width:40px;" onclick="javascript:ploopi_insertatcursor($('forms_group_formula'), ' '+this.value+' '); $('forms_group_formula').focus();" />
@@ -77,7 +77,7 @@ if (!$objGroup->isnew()) $arrParams[] = "forms_group_id={$objGroup->fields['id']
                 <input type="button" class="button" value=")" title="Insérer une parenthèse fermante" style="width:20px;" onclick="javascript:ploopi_insertatcursor($('forms_group_formula'), this.value); $('forms_group_formula').focus();" />
                 <br />
                 <input style="margin-top:2px;" type="text" class="text" name="forms_group_formula" id="forms_group_formula" value="<?php echo ploopi_htmlentities($objGroup->fields['formula']); ?>">
-                <?
+                <?php
                 // Test de l'expression booléenne
                 include_once './modules/forms/classes/formsBooleanParser.php';
                 try {
@@ -91,7 +91,7 @@ if (!$objGroup->isnew()) $arrParams[] = "forms_group_id={$objGroup->fields['id']
 
     <div style="float:left;width:49%;">
         <div class="ploopi_form" style="padding:4px;">
-        <?
+        <?php
         include_once './include/functions/crypt.php';
 
         $arrConditions = $objGroup->getConditions();
@@ -104,7 +104,7 @@ if (!$objGroup->isnew()) $arrParams[] = "forms_group_id={$objGroup->fields['id']
                 <br />
                 <select class="select" style="width:30%;" name="_forms_group_cond[<?php echo $intI; ?>][field]">
                     <option value="">(Champ)</option>
-                    <?
+                    <?php
                     foreach($arrFields as $intIdField => $arrField)
                     {
                         if (!$arrField['separator'] && !$arrField['captcha'] && !$arrField['html'])
@@ -128,9 +128,9 @@ if (!$objGroup->isnew()) $arrParams[] = "forms_group_id={$objGroup->fields['id']
                     }
                     ?>
                 </select>
-                <input style="width:46%;" type="text" class="text" name="_forms_group_cond[<?php echo $intI; ?>][value]" value="<? echo isset($arrConditions[$intI]['value']) ? ploopi_htmlentities($arrConditions[$intI]['value']) : ''; ?>">
+                <input style="width:46%;" type="text" class="text" name="_forms_group_cond[<?php echo $intI; ?>][value]" value="<?php echo isset($arrConditions[$intI]['value']) ? ploopi_htmlentities($arrConditions[$intI]['value']) : ''; ?>">
             </p>
-            <?
+            <?php
         }
         ?>
 

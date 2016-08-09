@@ -1,43 +1,30 @@
- == Ploopi - version 1.9.3 ===================================================
+ == Ploopi - version 1.9.7 ===================================================
 
-2013-03-04 Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2016-08-08 Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Base de données : nouveau connecteur mysqli pour MySQL
-* Base de données : désactivation par défaut du log interne de requêtes (au lieu de activé par défaut)
-* Sessions : cure de minceur, suppression de certaines données. /!\ IMPACT DEV : nécessité de lire certaines données directement dans la base. (Suppression de ploopi/workspaces/$wid/[children,parents,brothers,list_parents,list_children,list_brothers] et ploopi/params)
-* Erreurs : intégration du la version de l'OS et de Ploopi dans les messages d'erreur
-* Config : ajout d'une constante de configuration permettant de distinguer les messages émis par la plateforme, des messages d'erreur du système (PLOOPI_ADMINMAIL / _PLOOPI_SYSMAIL)
-* Urls : prise en compte des variables structures dans les urls chiffrées (?toto[titi]=tata)
-* Loader : réorganisation complète de la phase de démarrage 
-* Classe "ploopi_form" : nouveau type de champ "datetime"
-* Classe "ploopi_form" : possibilité de contrôler un champ "hidden"
-* Classe "ploopi_form" : affichage du placeholder HTML5
-* Classe "odf" : gestion de l'alignement des images (partiel : gauche, centré, droite)
-* Classe "odf" : gestion de l'ancrage des images (paragraphe, page...)
-* Classe "odf" : gestion plus pointue des images dans les tableaux
-* Classe "odf" : gestion de certaines balises html, permettant une mise en forme simple (b, strong, i, u)
-* Classe "odf" : remplacement de HTTP_Request par HTTP_Request2
-* Classe "ploopi_session" : le niveau de compression des sessions est paramétrable (pour abritrer cpu/taille)
-* Fonctions "array" : nouvelle fonction ploopi_array2excel permettant d'exporter un tableau vers XLS (95) natif et XLSX (2003/2007) natif via PhpExcel
-* Fonctions "array" : nouvelle fonction ploopi_array2ods permettant d'exporter un tableau vers ODS natif (/!\ très basique !)
-* Fonctions "date" : nouvelles fonctions pour gérer facilement le format DATETIME MySQL
-* Fonctions "document" : meilleure gestion du multi-instanciation de la mini-GED intégrée
-* Fonctions "document" : initialiseur pour appel javascript (ploopi_documents_getselectfilejs)
-* Fonctions "document" : nouveaux paramètres (HEIGHT, MODE, TARGET, UNIQID)
-* Fonctions "document" : possibilité de déposer un document depuis le mode "selection"
-* Fonctions "mail" : nouveau paramètre "port" pour ploopi_send_mail_smtp
-* Fonctions "search_index" : meilleur contrôle des paramètres
-* Fonctions "search_index" : amélioration de l'algorithme de recherche et d'indexation en intégrant la fonction "phonetique"
-* Sécurité : correction d'un problème de filtrage dans le formulaire de recherche global
-* Sécurité : correction d'un problème de filtrage sur la variable ploopi_action
-* Module Système : modification des exports XLS (utilisation phpExcel), ajout du format XLSX
-* Module Système : modification des contrôles dans les outils de diagnotic
-* Templates : mise à jour du template backoffice "Eyeos"
-* Lib / SimplePie : mise à jour vers 1.3.1
-* Lib / Textile : mise à jour vers 2.5
-* Lib / HTML Purifier : mise à jour vers 4.5.0
-* Lib / JsColor : mise à jour vers 1.4.0
-* Lib / PHPExcel : intégration de la version 1.7.8
-* Lib / phonetic : intégration de la fonction "phonetique" en français
-* PEAR : nouvelles dépendances avec HTTP/Request2, Horde_Text_Diff-2.0.1
-
+* Nombreuses corrections pour compatibilité avec PHP 7.0
+* Mise à jour du fichier .htaccess
+* Mise à jour de la procédure d'installation
+* Mise à jour du contenu du fichier de configuration
+* Lib / Protoaculous : mise à jour vers prototype 1.7.3 (Compilation manuelle)
+* Lib / Textile : mise à jour vers 3.5 (via Composer)
+* Lib / HTML Purifier : mise à jour vers 4.8.0 (via Composer)
+* Lib / FeedWriter : mise à jour vers 1.0 (via Composer)
+* Lib / JsColor : mise à jour vers 2.0.4 (via Composer)
+* Lib / SwfObject : mise à jour vers 2.3 (via Composer)
+* Lib / PHPExcel : intégration de la version 1.8 (via Composer)
+* Lib / Ajout de la librairie phpuseragentparser 0.5.1 (via Composer)
+* Lib / Ajout de la librairie highlight 9.5.0 (via Composer)
+* Lib / Suppression de la dépendance avec Net_UserAgent_Detect (Pear)
+* Lib / Suppression de la dépendance avec Text_Highlighter (Pear)
+* Lib / Suppression de la dépendance avec Spreadsheet_Excel_Writer (Pear)
+* Lib / Suppression de la dépendance avec dompdf
+* Lib / Suppression de la dépendance avec cupload
+* Lib / Suppression de la dépendance avec inputfilter
+* Lib / Suppression de la dépendance avec jwplayer
+* Lib / Suppression de la dépendance avec livepipe
+* Lib / Suppression de la dépendance avec simplepie
+* Suppression des modules non maintenus/utilisés: CHAT, RSS, GALLERY, NEWLETTER, FORUM, ESPACEDOC
+* Remplacement définitif du connecteur "mysql" par "mysqli"
+* Possibilité de paramétrage de l'algorithme de hashage utilisé pour le stockage des mots de passe (_PLOOPI_HASH_ALGO dans config.php)
+* SHA-256 utilisé par défaut pour le stockage des mots de passe. Utilisation possible mais non recommandée de MD5 pour rétrocompatibilité.

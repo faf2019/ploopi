@@ -1,0 +1,42 @@
+{
+    "repositories": [
+        {
+            "type":"package",
+            "package": {
+              "name": "EastDesire/jscolor",
+              "version":"2.0.4",
+              "source": {
+                  "url": "https://github.com/EastDesire/jscolor.git",
+                  "type": "git",
+                  "reference":"master"
+                }
+            }
+        },
+        {
+            "type":"package",
+            "package": {
+              "name": "swfobject/swfobject",
+              "version":"2.3",
+              "source": {
+                  "url": "https://github.com/swfobject/swfobject.git",
+                  "type": "git",
+                  "reference":"master"
+                }
+            }
+        }
+
+    ],
+    "require": {
+        "EastDesire/jscolor": "2.0.4",
+        "swfobject/swfobject": "2.3",
+        "donatj/phpuseragentparser": "^0.5.1",
+        "phpoffice/phpexcel": "^1.8",
+        "netcarver/textile": "^3.5",
+        "ezyang/htmlpurifier": "^4.8",
+        "mibe/feedwriter": "^1.0",
+        "openlss/lib-array2xml": "^0.0.10",
+        "box/spout": "^2.5",
+        "components/highlightjs": "^9.5",
+        "ckeditor/ckeditor": "^4.5"
+    }
+}

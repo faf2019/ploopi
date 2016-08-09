@@ -54,17 +54,17 @@ class directory_list extends data_object
      *
      * @return directory_list
      */
-    
-    function directory_list()
+
+    public function __construct()
     {
-        parent::data_object('ploopi_mod_directory_list');
+        parent::__construct('ploopi_mod_directory_list');
     }
 
     /**
      * Supprime la liste de favoris et les favoris associés
      */
 
-    function delete()
+    public function delete()
     {
         global $db;
         $db->query("DELETE FROM ploopi_mod_directory_favorites WHERE id_list = {$this->fields['id']}");

@@ -112,29 +112,29 @@ switch($_REQUEST['ploopi_op'])
             break;
         }
         ?>
-        <form action="<? echo ploopi_urlencode("admin-light.php?ploopi_op=booking_resource_save&booking_resource_id={$objResource->fields['id']}"); ?>" method="post" onsubmit="javascript:return booking_resource_validate(this);">
+        <form action="<?php echo ploopi_urlencode("admin-light.php?ploopi_op=booking_resource_save&booking_resource_id={$objResource->fields['id']}"); ?>" method="post" onsubmit="javascript:return booking_resource_validate(this);">
         <div class=ploopi_form>
             <p>
                 <label>Intitulé:</label>
-                <input name="booking_resource_name" type="text" class="text" value="<? echo ploopi_htmlentities($objResource->fields['name']); ?>">
+                <input name="booking_resource_name" type="text" class="text" value="<?php echo ploopi_htmlentities($objResource->fields['name']); ?>">
             </p>
             <p>
                 <label>Référence:</label>
-                <input name="booking_resource_reference" type="text" class="text" value="<? echo ploopi_htmlentities($objResource->fields['reference']); ?>">
+                <input name="booking_resource_reference" type="text" class="text" value="<?php echo ploopi_htmlentities($objResource->fields['reference']); ?>">
             </p>
             <p>
                 <label>Type de ressource:</label>
-                <?
+                <?php
                 $db->query("SELECT * FROM ploopi_mod_booking_resourcetype WHERE id_module = {$_SESSION['ploopi']['moduleid']} ORDER BY name");
                 ?>
                 <select name="booking_resource_id_resourcetype" class="select">
                     <option value="">(Choisir)</option>
-                    <?
+                    <?php
                     while ($row = $db->fetchrow())
                     {
                         ?>
-                        <option value="<? echo $row['id']; ?>" <? if ($objResource->fields['id_resourcetype'] == $row['id']) echo 'selected="selected"'; ?>><? echo ploopi_htmlentities($row['name']); ?></option>
-                        <?
+                        <option value="<?php echo $row['id']; ?>" <?php if ($objResource->fields['id_resourcetype'] == $row['id']) echo 'selected="selected"'; ?>><?php echo ploopi_htmlentities($row['name']); ?></option>
+                        <?php
                     }
                     ?>
                 </select>
@@ -142,7 +142,7 @@ switch($_REQUEST['ploopi_op'])
             <p>
                 <label>Géré par:</label>
                 <div id="booking_treeview">
-                    <?
+                    <?php
                     // Espaces concernés par la ressource
                     $arrResWorkspaces = $objResource->getworkspaces();
 
@@ -156,7 +156,7 @@ switch($_REQUEST['ploopi_op'])
             <p>
                 <label>Couleur planning:</label>
                 <span>
-                    <input name="booking_resource_color" id="booking_resource_color" class="text" type="text" value="<? echo ploopi_htmlentities($objResource->fields['color']); ?>" style="width:60px;cursor:pointer;" />
+                    <input name="booking_resource_color" id="booking_resource_color" class="text" type="text" value="<?php echo ploopi_htmlentities($objResource->fields['color']); ?>" style="width:60px;cursor:pointer;" />
                 </span>
 
 
@@ -164,7 +164,7 @@ switch($_REQUEST['ploopi_op'])
             </p>
             <p onclick="javascript:ploopi_checkbox_click(event,'booking_resource_active');">
                 <label for="booking_resource_active">Actif:</label>
-                <input name="booking_resource_active" id="booking_resource_active" type="checkbox" class="checkbox" value="1" <? if ($objResource->fields['active']) echo 'checked'; ?> tabindex="111" />
+                <input name="booking_resource_active" id="booking_resource_active" type="checkbox" class="checkbox" value="1" <?php if ($objResource->fields['active']) echo 'checked'; ?> tabindex="111" />
             </p>
         </div>
         <div style="padding:4px;text-align:right;">
@@ -172,7 +172,7 @@ switch($_REQUEST['ploopi_op'])
             <input type="submit" class="button" value="Enregistrer" />
         </div>
         </form>
-        <?
+        <?php
         $content = ob_get_contents();
         ob_end_clean();
 

@@ -187,7 +187,7 @@ function ploopi_search_remove_index_module($id_module = -1)
  * @link http://pecl.php.net/package/stem
  */
 
-function ploopi_search_create_index($id_object, $id_record, $label, &$content, $meta = '', $usecommonwords = true, $timestp_create = 0, $timestp_modify = 0, $id_user = -1, $id_workspace = -1, $id_module = -1)
+function ploopi_search_create_index($id_object, $id_record, $label, $content, $meta = '', $usecommonwords = true, $timestp_create = 0, $timestp_modify = 0, $id_user = -1, $id_workspace = -1, $id_module = -1)
 {
     global $ploopi_timer;
 

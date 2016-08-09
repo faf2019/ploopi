@@ -76,8 +76,8 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
                     foreach($objForm->getGroups() as $intIdGroup => $objGroup)
                     {
                         ?>
-                        <option value="<? echo $intIdGroup; ?>" <? if ($field->fields['id_group'] == $intIdGroup) echo 'selected="selected"'; ?>><? echo ploopi_htmlentities($objGroup->fields['label']); ?></option>
-                        <?
+                        <option value="<?php echo $intIdGroup; ?>" <?php if ($field->fields['id_group'] == $intIdGroup) echo 'selected="selected"'; ?>><?php echo ploopi_htmlentities($objGroup->fields['label']); ?></option>
+                        <?php
                     }
                     ?>
                 </select>
@@ -89,7 +89,7 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
             <p>
                 <label><?php echo _FORMS_FIELD_XHTMLCONTENT; ?>: </label>
                 <span>
-                <?
+                <?php
                 include_once './include/functions/fck.php';
 
                 $arrConfig['CustomConfigurationsPath'] = _PLOOPI_BASEPATH.'/modules/forms/fckeditor/fckconfig.js';

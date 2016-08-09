@@ -517,28 +517,28 @@ switch($_SESSION['system']['usrTabItem'])
                 ?>
                 <div style="padding:2px;border-bottom:1px solid #a0a0a0;background-color:#e0e0e0;"><strong>Import d'un fichier CSV contenant des utilisateurs :</strong></div>
                 <div style="padding:4px;">Traitement terminé</div>
-                <?
+                <?php
                 if (!empty($_SESSION['system']['user_import_errors']))
                 {
                     ?>
                     <div style="padding:4px;">
-                        <?
+                        <?php
                         foreach($_SESSION['system']['user_import_errors'] as $strMsg)
                         {
                             ?>
                             <p class="ploopi_va">
                                 <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/attention.png" style="margin-right:4px;" />
-                                <span><? echo ploopi_htmlentities($strMsg); ?></span>
+                                <span><?php echo ploopi_htmlentities($strMsg); ?></span>
                             </p>
-                            <?
+                            <?php
                         }
                         ?>
                     </div>
-                    <?
+                    <?php
                 }
                 ?>
-                <div style="padding:4px;"><input type="button" class="button" value="Retour" onclick="javascript:document.location.href='<? echo ploopi_urlencode("admin.php?usrTabItem=tabUserImport"); ?>';" /></div>
-                <?
+                <div style="padding:4px;"><input type="button" class="button" value="Retour" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?usrTabItem=tabUserImport"); ?>';" /></div>
+                <?php
             break;
 
             case 'import':

@@ -74,6 +74,7 @@ if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open
     /**
      * Traitement des champs et mise à jour de l'enregistrement
      */
+
     foreach($arrFields as $objField)
     {
         $strValue = '';

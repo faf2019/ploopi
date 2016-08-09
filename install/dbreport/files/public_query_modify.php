@@ -48,18 +48,18 @@ if (isset($_GET['dbreport_query_id']) && is_numeric($_GET['dbreport_query_id']) 
     echo $skin->open_simplebloc('Modification de la requête &laquo; '.ploopi_htmlentities($objDbrQuery->fields['label']).' &raquo;');
     ?>
     <div class="ploopi_tabs">
-        <a title="Ajouter des tables à la requête" style="font-weight:bold;" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_topopup(400, event, 'dbreport_querytable_add', 'admin-light.php', '<? echo ploopi_queryencode("ploopi_op=dbreport_querytable_add&dbreport_query_id={$_GET['dbreport_query_id']}"); ?>', 'POST');"><img src="./modules/dbreport/img/ico_add_table.png" /><span>Ajouter des tables</span></a>
-        <a title="Ajouter des champs à la requête" style="font-weight:bold;" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_topopup(650, event, 'dbreport_queryfield_add', 'admin-light.php', '<? echo ploopi_queryencode("ploopi_op=dbreport_queryfield_add&dbreport_query_id={$_GET['dbreport_query_id']}"); ?>', 'POST');"><img src="./modules/dbreport/img/ico_add_field.png" /><span>Ajouter des champs</span></a>
-        <a title="Paramètres de la requête" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_topopup(400, event, 'dbreport_query_modify', 'admin-light.php', '<? echo ploopi_queryencode("ploopi_op=dbreport_query_modify&dbreport_query_id={$_GET['dbreport_query_id']}"); ?>', 'POST');"><img src="./modules/dbreport/img/ico_param.png" /><span>Paramètres</span></a>
-        <a title="Exécuter / Exporter la requête" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_topopup(550, event, 'dbreport_query_export_popup', 'admin-light.php', '<? echo ploopi_queryencode("ploopi_op=dbreport_query_export&dbreport_query_id={$_GET['dbreport_query_id']}");?>', 'POST');"><img src="./modules/dbreport/img/ico_execute.png" /><span>Exécuter / Exporter</span></a>
-        <a title="Cloner la requête" href="javascript:void(0);" onclick="if (confirm('Êtes vous certains de vouloir cloner cette requête ?')) document.location.href='<? echo ploopi_urlencode("admin-light.php?ploopi_op=dbreport_query_clone&dbreport_query_id={$_GET['dbreport_query_id']}"); ?>';"><img src="./modules/dbreport/img/ico_clone.png" /><span>Cloner</span></a>
+        <a title="Ajouter des tables à la requête" style="font-weight:bold;" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_topopup(400, event, 'dbreport_querytable_add', 'admin-light.php', '<?php echo ploopi_queryencode("ploopi_op=dbreport_querytable_add&dbreport_query_id={$_GET['dbreport_query_id']}"); ?>', 'POST');"><img src="./modules/dbreport/img/ico_add_table.png" /><span>Ajouter des tables</span></a>
+        <a title="Ajouter des champs à la requête" style="font-weight:bold;" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_topopup(650, event, 'dbreport_queryfield_add', 'admin-light.php', '<?php echo ploopi_queryencode("ploopi_op=dbreport_queryfield_add&dbreport_query_id={$_GET['dbreport_query_id']}"); ?>', 'POST');"><img src="./modules/dbreport/img/ico_add_field.png" /><span>Ajouter des champs</span></a>
+        <a title="Paramètres de la requête" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_topopup(400, event, 'dbreport_query_modify', 'admin-light.php', '<?php echo ploopi_queryencode("ploopi_op=dbreport_query_modify&dbreport_query_id={$_GET['dbreport_query_id']}"); ?>', 'POST');"><img src="./modules/dbreport/img/ico_param.png" /><span>Paramètres</span></a>
+        <a title="Exécuter / Exporter la requête" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_topopup(550, event, 'dbreport_query_export_popup', 'admin-light.php', '<?php echo ploopi_queryencode("ploopi_op=dbreport_query_export&dbreport_query_id={$_GET['dbreport_query_id']}");?>', 'POST');"><img src="./modules/dbreport/img/ico_execute.png" /><span>Exécuter / Exporter</span></a>
+        <a title="Cloner la requête" href="javascript:void(0);" onclick="if (confirm('Êtes vous certains de vouloir cloner cette requête ?')) document.location.href='<?php echo ploopi_urlencode("admin-light.php?ploopi_op=dbreport_query_clone&dbreport_query_id={$_GET['dbreport_query_id']}"); ?>';"><img src="./modules/dbreport/img/ico_clone.png" /><span>Cloner</span></a>
         <a title="Retour à la liste des requêtes" href="<?php echo ploopi_urlencode('admin.php'); ?>"><img src="./modules/dbreport/img/ico_back.png" /><span>Retour à la liste des requêtes</span></a>
     </div>
 
     <div>
         <h1 class="dbreport_title">Tables</h1>
         <div style="box-shadow:inset 0 0 6px rgba(0,0,0,0.2);border-bottom:1px solid #aaa;overflow:auto;">
-            <?
+            <?php
             // Sélection des relations de la requete courante
             $objQuery = new ploopi_query_select();
             $objQuery->add_select('mbs.tablesrc, mbs.tabledest');
@@ -117,20 +117,20 @@ if (isset($_GET['dbreport_query_id']) && is_numeric($_GET['dbreport_query_id']) 
                 ?>
                 <div class="dbreport_table">
                     <div class="dbreport_table_title">
-                        <?
+                        <?php
                         // Peut-on supprimer la table ?
                         if (!isset($arrTableToKeep[$rowTable['tablename']]))
                         {
                             ?>
-                            <a title="Supprimer la table &laquo; <? echo ploopi_htmlentities($rowTable['label']);?> &raquo;" href="javascript:void(0);" onclick="javascript:if (confirm('Êtes-vous certain de vouloir supprimer cette table ?')) document.location.href='<? echo ploopi_urlencode("admin-light.php?ploopi_op=dbreport_querytable_delete&dbreport_query_id={$_GET['dbreport_query_id']}&dbreport_querytable_id={$rowTable['id']}"); ?>';"><img src="./modules/dbreport/img/ico_close.png" /></a>
-                            <?
+                            <a title="Supprimer la table &laquo; <?php echo ploopi_htmlentities($rowTable['label']);?> &raquo;" href="javascript:void(0);" onclick="javascript:if (confirm('Êtes-vous certain de vouloir supprimer cette table ?')) document.location.href='<?php echo ploopi_urlencode("admin-light.php?ploopi_op=dbreport_querytable_delete&dbreport_query_id={$_GET['dbreport_query_id']}&dbreport_querytable_id={$rowTable['id']}"); ?>';"><img src="./modules/dbreport/img/ico_close.png" /></a>
+                            <?php
                         }
                         ?>
 
-                        <span><? echo ploopi_htmlentities($rowTable['label']);?></span>
+                        <span><?php echo ploopi_htmlentities($rowTable['label']);?></span>
                     </div>
                     <div class="dbreport_table_fields">
-                        <?
+                        <?php
                         $objQuery = new ploopi_query_select();
                         $objQuery->add_from('ploopi_mb_field');
                         $objQuery->add_where('tablename = %s', $rowTable['tablename']);
@@ -140,16 +140,16 @@ if (isset($_GET['dbreport_query_id']) && is_numeric($_GET['dbreport_query_id']) 
                         while($row = $objRs->fetchrow())
                         {
                             ?>
-                            <div class="dbreport_table_field"><strong><? echo ploopi_htmlentities($row['label']); ?></strong><? if ($row['label'] != $row['name']) echo "<span>(".ploopi_htmlentities($row['name']).")</span>"; ?><br /><em style="color:#888;"><? echo dbreport::getType(dbreport::getBasicType($row['type'])); ?></em></div>
-                            <?
+                            <div class="dbreport_table_field"><strong><?php echo ploopi_htmlentities($row['label']); ?></strong><?php if ($row['label'] != $row['name']) echo "<span>(".ploopi_htmlentities($row['name']).")</span>"; ?><br /><em style="color:#888;"><?php echo dbreport::getType(dbreport::getBasicType($row['type'])); ?></em></div>
+                            <?php
                         }
                         ?>
                     </div>
                     <div class="dbreport_table_info">
-                        <div><strong>Lignes : </strong><span><? echo number_format($rowTableInfo['Rows']/1000, 2, '.', ' '); ?> k&nbsp;&nbsp;</span><strong>Volume : </strong><span><? echo number_format($rowTableInfo['Data_length']/(1024*1024), 2, '.', ' '); ?> Mo</span></div>
+                        <div><strong>Lignes : </strong><span><?php echo number_format($rowTableInfo['Rows']/1000, 2, '.', ' '); ?> k&nbsp;&nbsp;</span><strong>Volume : </strong><span><?php echo number_format($rowTableInfo['Data_length']/(1024*1024), 2, '.', ' '); ?> Mo</span></div>
                     </div>
                 </div>
-                <?
+                <?php
             }
             ?>
         </div>
@@ -169,7 +169,7 @@ if (isset($_GET['dbreport_query_id']) && is_numeric($_GET['dbreport_query_id']) 
     ?>
     <div>
         <h1 class="dbreport_title">Relations</h1>
-        <?
+        <?php
         $arrColumns = array();
         $arrValues = array();
 
@@ -235,7 +235,7 @@ if (isset($_GET['dbreport_query_id']) && is_numeric($_GET['dbreport_query_id']) 
             <div style="background-color:#eee;border-bottom:1px solid #aaa;padding:2px 4px;">
                 Aucune relation pour cette requête
             </div>
-            <?
+            <?php
         }
         ?>
     </div>
@@ -244,7 +244,7 @@ if (isset($_GET['dbreport_query_id']) && is_numeric($_GET['dbreport_query_id']) 
     <div class="dbreport_query_block">
         <a name="dbreport_fields"></a>
         <h1 class="dbreport_title">Champs / Propriétés</h1>
-        <?
+        <?php
         $arrColumns = array();
         $arrValues = array();
 
@@ -391,7 +391,7 @@ if (isset($_GET['dbreport_query_id']) && is_numeric($_GET['dbreport_query_id']) 
             <div style="background-color:#eee;border-bottom:1px solid #aaa;padding:2px 4px;">
                 Aucun champ pour cette requête
             </div>
-            <?
+            <?php
         }
         ?>
     </div>
@@ -400,7 +400,7 @@ if (isset($_GET['dbreport_query_id']) && is_numeric($_GET['dbreport_query_id']) 
         <a name="dbreport_trans"></a>
         <h1 class="dbreport_title">Transformation</h1>
         <div style="border-bottom:1px solid #aaa;padding:4px;">
-            <?
+            <?php
             if (sizeof($arrVisibleFields) >= 3) {
 
 
@@ -430,7 +430,7 @@ if (isset($_GET['dbreport_query_id']) && is_numeric($_GET['dbreport_query_id']) 
                 }
                 ?>
                 Vous pourriez créer un tableau croisé avec au moins 3 champs visibles.
-                <?
+                <?php
             }
             ?>
         </div>
@@ -440,7 +440,7 @@ if (isset($_GET['dbreport_query_id']) && is_numeric($_GET['dbreport_query_id']) 
         <a name="dbreport_chart"></a>
         <h1 class="dbreport_title">Représentation graphique</h1>
         <div style="border-bottom:1px solid #aaa;padding:4px;">
-            <?
+            <?php
             if (sizeof($arrVisibleFields) >= 2) {
 
                 $objForm = new form(
@@ -536,7 +536,7 @@ if (isset($_GET['dbreport_query_id']) && is_numeric($_GET['dbreport_query_id']) 
                 }
                 ?>
                 Vous pourriez créer un graphique avec au moins 2 champs visibles.
-                <?
+                <?php
             }
             ?>
         </div>
@@ -554,14 +554,14 @@ if (isset($_GET['dbreport_query_id']) && is_numeric($_GET['dbreport_query_id']) 
         <div style="overflow:auto;">
             <h1 class="dbreport_title">Aperçu SQL</h1>
             <div style="background-color:#fff;border:1px solid #ccc;border-radius:5px;padding:0 10px;margin:5px;">
-                <?
+                <?php
                 include_once './modules/dbreport/lib/SqlFormatter.php';
 
                 echo utf8_decode(SqlFormatter::format(utf8_encode($objDbrQuery->getquery())));
                 ?>
             </div>
         </div>
-        <?
+        <?php
     }
 }
 else

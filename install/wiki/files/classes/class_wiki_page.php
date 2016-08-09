@@ -64,7 +64,7 @@ class wiki_page extends data_object
 
     public function __construct()
     {
-        parent::data_object(
+        parent::__construct(
             'ploopi_mod_wiki_page',
             'id',
             'id_module'
@@ -81,8 +81,11 @@ class wiki_page extends data_object
      *
      * @return boolean true si la page existe
      */
-    public function open($strIdPage, $intIdModule = null)
+    public function open(...$args)
     {
+        $strIdPage = $args[0];
+        $intIdModule = isset($args[1]) ? $args[1] : null;
+
         if (!parent::open($strIdPage, is_null($intIdModule) ? $_SESSION['ploopi']['moduleid'] : $intIdModule))
         {
             parent::init_description();

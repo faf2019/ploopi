@@ -55,9 +55,9 @@ class docmeta extends data_object
      * @return docmeta
      */
 
-    function docmeta()
+    function __construct()
     {
-        parent::data_object('ploopi_mod_doc_meta', 'id_file', 'meta');
+        parent::__construct('ploopi_mod_doc_meta', 'id_file', 'meta');
     }
 }
 ?>

@@ -154,7 +154,7 @@ class ploopi_db
      * @return mixed false si problème de connexion, id de connexion sinon
      */
 
-    public function ploopi_db($server, $user, $password = '', $database = '', $persistency = false, $log = false)
+    public function __construct($server, $user, $password = '', $database = '', $persistency = false, $log = false)
     {
         $this->persistency = $persistency;
         $this->user = $user;

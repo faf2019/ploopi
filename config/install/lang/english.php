@@ -208,7 +208,7 @@ define ('_PLOOPI_INSTALL_PROXY_PASS',        'Password - Proxy');
 /*********
 * Stage 4
 *********/
-define ('_PLOOPI_INSTALL_DATA_BASE',         'Setting up the database %1s');
+define ('_PLOOPI_INSTALL_DATA_BASE',         'Setting up the database');
 define ('_PLOOPI_INSTALL_DATA_BASE_MESS',    '%1s / %2s');
 define ('_PLOOPI_INSTALL_DATA_BASE_WARNING', '%1s');
 define ('_PLOOPI_INSTALL_DB_TYPE',           '<sup>* </sup>Base Type:');

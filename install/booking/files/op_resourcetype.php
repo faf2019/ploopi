@@ -92,15 +92,15 @@ switch($_REQUEST['ploopi_op'])
             break;
         }
         ?>
-        <form action="<? echo ploopi_urlencode("admin-light.php?ploopi_op=booking_resourcetype_save&booking_resourcetype_id={$objResourceType->fields['id']}"); ?>" method="post" onsubmit="javascript:return booking_resourcetype_validate(this);">
+        <form action="<?php echo ploopi_urlencode("admin-light.php?ploopi_op=booking_resourcetype_save&booking_resourcetype_id={$objResourceType->fields['id']}"); ?>" method="post" onsubmit="javascript:return booking_resourcetype_validate(this);">
         <div class=ploopi_form>
             <p>
                 <label>Intitulé:</label>
-                <input name="booking_resourcetype_name" type="text" class="text" value="<? echo ploopi_htmlentities($objResourceType->fields['name']); ?>">
+                <input name="booking_resourcetype_name" type="text" class="text" value="<?php echo ploopi_htmlentities($objResourceType->fields['name']); ?>">
             </p>
             <p onclick="javascript:ploopi_checkbox_click(event,'booking_resourcetype_active');">
                 <label for="booking_resourcetype_active">Actif:</label>
-                <input name="booking_resourcetype_active" id="booking_resourcetype_active" type="checkbox" class="checkbox" value="1" <? if ($objResourceType->fields['active']) echo 'checked'; ?> tabindex="111" />
+                <input name="booking_resourcetype_active" id="booking_resourcetype_active" type="checkbox" class="checkbox" value="1" <?php if ($objResourceType->fields['active']) echo 'checked'; ?> tabindex="111" />
             </p>
         </div>
         <div style="padding:4px;text-align:right;">
@@ -108,7 +108,7 @@ switch($_REQUEST['ploopi_op'])
             <input type="submit" class="button" value="Enregistrer" />
         </div>
         </form>
-        <?
+        <?php
         $content = ob_get_contents();
         ob_end_clean();
 

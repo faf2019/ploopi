@@ -58,9 +58,9 @@ class skin extends skin_common
      * @return skin
      */
 
-    function skin()
+    function __construct()
     {
-        parent::skin_common('ploopi_menus');
+        parent::__construct('ploopi_menus');
     }
 
 }

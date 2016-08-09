@@ -459,7 +459,7 @@ class calendar
                             if ($weekday > 5) $extra_class = ' day_header_weekend';
                         }
                         ?>
-                        <div class="day_header<? echo $extra_class; ?>" style="<?php echo $strDayHeaderStyle; ?>">
+                        <div class="day_header<?php echo $extra_class; ?>" style="<?php echo $strDayHeaderStyle; ?>">
                             <div class="day_header_label"><?php echo $ploopi_days[$weekday].' '.$ldate; ?></div>
                         </div>
                         <?php
@@ -487,7 +487,7 @@ class calendar
                     {
                         ?>
                         <div class="channel_header" style="<?php echo $strChannelHeaderStyle; ?>;">
-                        <?
+                        <?php
                         // Affichage des Canaux
                         $intNumChan = 0;
                         $intLeft = 0;
@@ -497,8 +497,8 @@ class calendar
                             $channel_style = "{$strBgColor}width:{$intChannelWidth}px;height:".($this->arrOptions['intChannelsLabelHeight'] - 1)."px;left:{$intLeft}px;";
                             ?>
 
-                            <div class="channel" style="<?php echo $channel_style; ?>"><? echo ploopi_htmlentities($objChannel->strTitle); ?></div>
-                            <?
+                            <div class="channel" style="<?php echo $channel_style; ?>"><?php echo ploopi_htmlentities($objChannel->strTitle); ?></div>
+                            <?php
                             // Position du prochain canal
                             $intLeft = $intLeft + $intChannelWidth + 1;
                             $intNumChan++;
@@ -563,7 +563,7 @@ class calendar
                         if ($weekday > 5) $extra_class = ' day_weekend';
                     }
                     ?>
-                    <div class="day<? echo $extra_class; ?>" id="calendar_day<? echo $d; ?>" style="<?php echo $strDayStyle; ?>">
+                    <div class="day<?php echo $extra_class; ?>" id="calendar_day<?php echo $d; ?>" style="<?php echo $strDayStyle; ?>">
                         <?php
                         $c = 0;
                         // Affichage des heures + demi-heures
@@ -573,12 +573,12 @@ class calendar
                             $intHalfHourPx = floor($intHourPx + $intHourHeight / 2);
                             ?>
                             <div class="tick" style="top:<?php echo $intHalfHourPx; ?>px;width:<?php echo $intDayWidth-1; ?>px;"></div>
-                            <?
+                            <?php
                             if ($h > $this->arrOptions['intHourBegin'])
                             {
                                 ?>
                                 <div class="tick-half" style="top:<?php echo $intHourPx; ?>px;width:<?php echo $intDayWidth-1; ?>px;"></div>
-                                <?
+                                <?php
                             }
                             ?>
                             <?php
@@ -599,11 +599,11 @@ class calendar
 
                             ?>
 
-                            <div class="channel" id="calendar_channel<? echo $d; ?>_<? echo $intNumChan; ?>" style="<?php echo $channel_style; ?>">
-                                <?
+                            <div class="channel" id="calendar_channel<?php echo $d; ?>_<?php echo $intNumChan; ?>" style="<?php echo $channel_style; ?>">
+                                <?php
                                 if ($intNumChan > 0)
                                 {
-                                    ?><div class="channelborder" style="height:<? echo $intDayHeight - 1; ?>px;"></div><?
+                                    ?><div class="channelborder" style="height:<?php echo $intDayHeight - 1; ?>px;"></div><?php
                                 }
 
                                 // Affichage des événements
@@ -638,16 +638,16 @@ class calendar
                                             $intEventHeight = floor($floTimeLength * $intHourHeight);
 
                                             ?>
-                                            <div class="event" id="calendar_event<? echo $intId; ?>" style="top:<?php echo $intEventTop; ?>px;height:<?php echo $intEventHeight - 1; ?>px;width:<?php echo $intChannelWidth; ?>px;background-color:<?php echo ploopi_htmlentities($this->arrEvents[$intId]->strColor); ?>;">
+                                            <div class="event" id="calendar_event<?php echo $intId; ?>" style="top:<?php echo $intEventTop; ?>px;height:<?php echo $intEventHeight - 1; ?>px;width:<?php echo $intChannelWidth; ?>px;background-color:<?php echo ploopi_htmlentities($this->arrEvents[$intId]->strColor); ?>;">
 
-                                                <? if ($this->arrEvents[$intId]->strTitle != '') { ?>
-                                                    <div class="event_title" id="calendar_event<? echo $intId; ?>_handle"  style="overflow:hidden;height:16px;line-height:16px;<? echo !is_null($this->arrEvents[$intId]->arrOnDrop) ? 'cursor:move;' : ''; ?>">
-                                                        <?
+                                                <?php if ($this->arrEvents[$intId]->strTitle != '') { ?>
+                                                    <div class="event_title" id="calendar_event<?php echo $intId; ?>_handle"  style="overflow:hidden;height:16px;line-height:16px;<?php echo !is_null($this->arrEvents[$intId]->arrOnDrop) ? 'cursor:move;' : ''; ?>">
+                                                        <?php
                                                         if (!is_null($this->arrEvents[$intId]->strOnClose))
                                                         {
                                                             ?>
-                                                            <a href="javascript:void(0);" onclick="javascript:<? echo $this->arrEvents[$intId]->strOnClose; ?>;"><img align="right" src="<? echo $_SESSION['ploopi']['template_path']; ?>/img/calendar/close.png" /></a>
-                                                            <?
+                                                            <a href="javascript:void(0);" onclick="javascript:<?php echo $this->arrEvents[$intId]->strOnClose; ?>;"><img align="right" src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/calendar/close.png" /></a>
+                                                            <?php
                                                         }
                                                         ?>
                                                         <span><?php
@@ -658,7 +658,7 @@ class calendar
                                                             );
                                                         ?></span>
                                                     </div>
-                                                <? } ?>
+                                                <?php } ?>
 
                                                 <a class="event_inner" href="<?php echo $this->arrEvents[$intId]->strHref; ?>" <?php if (!is_null($this->arrEvents[$intId]->strOnClick)) {?>onclick="<?php echo $this->arrEvents[$intId]->strOnClick; ?>"<?php } ?> style="height:<?php echo $intEventHeight - 20; ?>px;<?php if (!empty($this->arrEvents[$intId]->strStyle)) echo $this->arrEvents[$intId]->strStyle; ?>">
                                                     <?php
@@ -684,7 +684,7 @@ class calendar
                                 ?>
                             </div>
 
-                            <?
+                            <?php
                             // Position du prochain canal
                             $intLeft = $intLeft + $intChannelWidth + 1;
                             $intNumChan++;
@@ -704,8 +704,8 @@ class calendar
             var calendar_days = [];
             var calendar_events = [];
             var calendar_channels = [];
-            var calendar_h_begin = <? echo $this->arrOptions['intHourBegin']; ?>;
-            var calendar_h_height = <? echo $intHourHeight; ?>;
+            var calendar_h_begin = <?php echo $this->arrOptions['intHourBegin']; ?>;
+            var calendar_h_height = <?php echo $intHourHeight; ?>;
 
             function calendar_drop_onhover(draggable, droppable, pcent) {
                 if (droppable != calendar_lastdroppable) droppable.highlight();
@@ -764,7 +764,7 @@ class calendar
                 calendar_drop_ondrop(draggable.element, calendar_lastdroppable, event);
             }
 
-            <? echo $strJsCode; ?>
+            <?php echo $strJsCode; ?>
         </script>
         <?php
     }
@@ -875,7 +875,7 @@ class calendar
                         if ($c > 5) $extra_class = ' day_weekend';
                     }
                     ?>
-                    <div class="day<? echo $extra_class; ?>" title="<?php echo $date ?>" style="<?php echo $strDayStyle; ?>">
+                    <div class="day<?php echo $extra_class; ?>" title="<?php echo $date ?>" style="<?php echo $strDayStyle; ?>">
                         <div class="day_num_grayed"><?php echo $d; ?></div>
                         <?php
                         $strEventsKey = substr(ploopi_unixtimestamp2timestamp($strTs), 0, 8);
@@ -921,7 +921,7 @@ class calendar
                     if ($weekday > 5) $extra_class = ' day_weekend';
                 }
                 ?>
-                <div class="day<? echo $extra_class; ?>" title="<?php echo $date ?>" style="<?php echo $strDayStyle; ?>">
+                <div class="day<?php echo $extra_class; ?>" title="<?php echo $date ?>" style="<?php echo $strDayStyle; ?>">
                     <div class="day_num"><?php echo $d; ?></div>
                     <?php
                     $strEventsKey = sprintf("%04d%02d%02d",$this->arrOptions['intYear'], $this->arrOptions['intMonth'], $d);
@@ -955,7 +955,7 @@ class calendar
                         if ($c > 5) $extra_class = ' day_weekend';
                     }
                     ?>
-                    <div class="day<? echo $extra_class; ?>" title="<?php echo $date ?>" style="<?php echo $strDayStyle; ?>">
+                    <div class="day<?php echo $extra_class; ?>" title="<?php echo $date ?>" style="<?php echo $strDayStyle; ?>">
                         <div class="day_num_grayed"><?php echo $d; ?></div>
                         <?php
                         $strEventsKey = substr(ploopi_unixtimestamp2timestamp($strTs), 0, 8);

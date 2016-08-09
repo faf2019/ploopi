@@ -126,9 +126,9 @@ class formsField extends data_object
      * Ouvre un champ
      * @see include/classes/data_object::open()
      */
-    public function open($intId)
+    public function open(...$args)
     {
-        $booOpen = parent::open($intId);
+        $booOpen = parent::open($args);
 
         if ($booOpen) {
             $this->_intOriginalPosition = $this->fields['position'];

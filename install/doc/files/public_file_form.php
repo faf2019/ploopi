@@ -32,7 +32,6 @@
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  *
- * @see _PLOOPI_USE_CGIUPLOAD
  * @see _DOC_OBJECT_FILE
  * @see _PLOOPI_PATHSHARED
  *
@@ -95,22 +94,9 @@ if ($newfile)
 
             doc_getvalidation();
             $wf_validator = in_array($currentfolder, $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['validation']['folders']);
-
-            if (_PLOOPI_USE_CGIUPLOAD)
-            {
-                $sid = doc_guid();
-                ?>
-                <form method="post" enctype="multipart/form-data" action="<?php echo _PLOOPI_CGI_PATH; ?>/upload.cgi?sid=<?php echo $sid; ?>" onsubmit="javascript:return doc_file_validate(this,<?php echo ($newfile) ? 'true' : 'false'; ?>,<?php echo (!empty($wfusers) && !$wf_validator) ? 'true' : 'false'; ?>, '<?php echo $sid; ?>', '<?php echo _PLOOPI_CGI_PATH; ?>');">
-                <input type="hidden" name="redirect" value="../<?php echo ploopi_urlencode("admin.php?ploopi_op=doc_filesave&currentfolder={$currentfolder}&doc_mode=host"); ?>">
-                <?php
-            }
-            else
-            {
-                ?>
-                <form method="post" enctype="multipart/form-data" action="<?php echo ploopi_urlencode("admin.php?ploopi_op=doc_filesave&currentfolder={$currentfolder}"); ?>"  onsubmit="javascript:return doc_file_validate(this,<?php echo ($newfile) ? 'true' : 'false'; ?>,<?php echo (!empty($wfusers) && !$wf_validator) ? 'true' : 'false'; ?>);">
-                <?php
-            }
             ?>
+
+            <form method="post" enctype="multipart/form-data" action="<?php echo ploopi_urlencode("admin.php?ploopi_op=doc_filesave&currentfolder={$currentfolder}"); ?>"  onsubmit="javascript:return doc_file_validate(this,<?php echo ($newfile) ? 'true' : 'false'; ?>,<?php echo (!empty($wfusers) && !$wf_validator) ? 'true' : 'false'; ?>);">
             <input type="hidden" name="doc_mode" id="doc_mode" value="host">
             <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo $max_filesize*1024; ?>">
             <div style="padding:2px;">
@@ -245,7 +231,7 @@ else
             <strong>URL publique du fichier :</strong>
             <a title="URL publique permettant de télécharger ce fichier" href="<?php echo $strPublicUrl; ?>"><?php echo $strPublicUrl; ?></a>
         </p>
-        <?
+        <?php
     }
     ?>
 
@@ -254,7 +240,7 @@ else
         <a <?php if ($docfile_tab == 'keywords') echo 'style="font-weight:bold;"'; ?> href="<?php echo ploopi_urlencode("admin.php?op=doc_fileform&currentfolder={$currentfolder}&docfile_md5id={$docfile->fields['md5id']}&docfile_tab=keywords"); ?>" title="Mots clés"><img src="./modules/doc/img/ico_keywords.png"><span>Mots clés</span></a>
         <a <?php if ($docfile_tab == 'meta') echo 'style="font-weight:bold;"'; ?> href="<?php echo ploopi_urlencode("admin.php?op=doc_fileform&currentfolder={$currentfolder}&docfile_md5id={$docfile->fields['md5id']}&docfile_tab=meta"); ?>" title="Métadonnées / Propriétés"><img src="./modules/doc/img/ico_meta.png"><span>Métadonnées</span></a>
         <a <?php if ($docfile_tab == 'modify') echo 'style="font-weight:bold;"'; ?> href="<?php echo ploopi_urlencode("admin.php?op=doc_fileform&currentfolder={$currentfolder}&docfile_md5id={$docfile->fields['md5id']}&docfile_tab=modify"); ?>" title="Modifier le fichier"><img src="./modules/doc/img/ico_main.png"><span>Modifier</span></a>
-        <?
+        <?php
         if (ploopi_getsessionvar('unoconv') === true || ploopi_getsessionvar('jodconv') === true)
         {
             $arrRenderer = doc_getrenderer($docfile->fields['extension']);
@@ -262,7 +248,7 @@ else
             {
                 ?>
                 <a <?php if ($docfile_tab == 'pdf') echo 'style="font-weight:bold;"'; ?> href="<?php echo ploopi_urlencode("admin.php?op=doc_fileform&currentfolder={$currentfolder}&docfile_md5id={$docfile->fields['md5id']}&docfile_tab=pdf"); ?>" title="Voir le contenu"><img src="./modules/doc/img/pdf.png"><span>Voir en PDF</span></a>
-                <?
+                <?php
             }
         }
         ?>
@@ -287,23 +273,16 @@ else
                 {
                     case 'highlighter':
                         ?>
+                        <link rel="stylesheet" href="./vendor/components/highlightjs/styles/vs.css">
+                        <script src="./vendor/components/highlightjs/highlight.pack.min.js"></script>
+                        <script>hljs.initHighlightingOnLoad();</script>
                         <div style="border:1px solid #c0c0c0;margin:4px;padding:4px;background-color:#ffffff;height:<?php echo ploopi_htmlentities($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_viewerheight']); ?>px;overflow:auto;">
                         <?php
-                        require_once "Text/Highlighter.php";
-                        require_once "Text/Highlighter/Renderer/Html.php";
-                        $objHL = Text_Highlighter::factory($arrRenderer[1]);
-
-                        $objHL->setRenderer(new Text_Highlighter_Renderer_Html());
-
-                        $ptrHandle = fopen($docfile->getfilepath(), "rb");
-                        $strFileContent = '';
-                        while (!feof($ptrHandle)) $strFileContent .= fread($ptrHandle, 8192);
-                        fclose($ptrHandle);
-
+                        $strFileContent = file_get_contents($docfile->getfilepath());
+                        $strFileContent = mb_convert_encoding($strFileContent, 'ISO-8859-15', mb_detect_encoding($strFileContent,  mb_detect_order(), true));
                         $strLines = implode(range(1, count(explode("\n", $strFileContent))), '<br />');
-                        echo "<div class=\"doc_hl-content\"><table><tr><td class=\"doc_hl-num\">\n$strLines\n</td><td class=\"doc_hl-src\">\n".$objHL->highlight($strFileContent)."\n</td></tr></table></div>"
-                        ?>
-                        </div>
+                        echo "<div class=\"doc_hl-content\"><table><tr><td class=\"doc_hl-num\">\n$strLines\n</td><td><pre><code class=\"{$arrRenderer[1]}\">".$strFileContent."\n</code></pre></td></tr></table></div>"
+                        ?></div>
                         <?php
                     break;
 
@@ -312,22 +291,8 @@ else
                         <script type="text/javascript" src="./lib/swfobject/swfobject.js"></script>
                         <div id="doc_flash_player">Player</div>
                         <script type="text/javascript">
-                        var so = new SWFObject('<?php echo ploopi_urlencode("admin-light.php?ploopi_op=doc_fileview&docfile_md5id={$docfile->fields['md5id']}"); ?>','mpl','100%','<? echo ploopi_htmlentities($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_viewerheight']); ?>','9');
+                        var so = new SWFObject('<?php echo ploopi_urlencode("admin-light.php?ploopi_op=doc_fileview&docfile_md5id={$docfile->fields['md5id']}"); ?>','mpl','100%','<?php echo ploopi_htmlentities($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_viewerheight']); ?>','9');
                         so.write('doc_flash_player');
-                        </script>
-                        <?
-                    break;
-
-                    case 'jw_player':
-                        ?>
-                        <script type="text/javascript" src="./lib/swfobject/swfobject.js"></script>
-                        <div id="doc_jw_player">Player</div>
-                        <script type="text/javascript">
-                        var so = new SWFObject('./lib/jw_player/player.swf','mpl','100%','<?php echo ploopi_htmlentities($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_viewerheight']); ?>','9');
-                        so.addParam('allowscriptaccess','always');
-                        so.addParam('allowfullscreen','true');
-                        so.addParam('flashvars','file=<?php echo _PLOOPI_BASEPATH.'/'.ploopi_urlrewrite("index.php?ploopi_op=doc_file_download&docfile_md5id={$docfile->fields['md5id']}", doc_getrewriterules(), $docfile->fields['name'], null, true); ?>');
-                        so.write('doc_jw_player');
                         </script>
                         <?php
                     break;
@@ -335,26 +300,27 @@ else
                     case 'div':
                         ?>
                         <div style="border:1px solid #c0c0c0;margin:4px;padding:4px;background-color:#ffffff;height:<?php echo ploopi_htmlentities($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_viewerheight']); ?>px;overflow:auto;">
-                        <?
+                        <?php
                         $strFileContent = file_get_contents($docfile->getfilepath());
                         $strLines = implode(range(1, count(explode("\n", $strFileContent))), '<br />');
                         echo "<div class=\"doc_hl-content\"><table><tr><td class=\"doc_hl-num\">\n$strLines\n</td><td class=\"doc_hl-src\">\n<pre>{$strFileContent}\n</pre></td></tr></table></div>"
                         ?>
                         </div>
-                        <?
+                        <?php
                     break;
 
                     case 'video':
+                        /* <?php echo ploopi_urlrewrite("index.php?ploopi_op=doc_file_download&docfile_md5id={$docfile->fields['md5id']}", doc_getrewriterules(), $docfile->fields['name'], null, true); ?> */
                         ?>
-                         <video id='v1' src="<?php echo ploopi_urlrewrite("index.php?ploopi_op=doc_file_download&docfile_md5id={$docfile->fields['md5id']}", doc_getrewriterules(), $docfile->fields['name'], null, true); ?>" controls="true"><div style="padding:10px;">Votre navigateur ne supporte pas la balise "video".<br /><a href="<? echo ploopi_urlrewrite("index.php?ploopi_op=doc_file_download&docfile_md5id={$docfile->fields['md5id']}", doc_getrewriterules(), $docfile->fields['name'], null, true); ?>">Cliquez sur ce lien pour télécharger le document</a></div></video>
-                        <?
+                        <video id='v1' src="<?php echo ploopi_urlencode("admin-light.php?ploopi_op=doc_filedownload&docfile_md5id={$docfile->fields['md5id']}"); ?>" controls="true"><div style="padding:10px;">Votre navigateur ne supporte pas la balise "video".<br /><a href="<?php echo ploopi_urlencode("admin-light.php?ploopi_op=doc_filedownload&docfile_md5id={$docfile->fields['md5id']}"); ?>">Cliquez sur ce lien pour télécharger le document</a></div></video>
+                        <?php
                     break;
 
                     default:
                     case 'iframe':
                         ?>
                         <div style="border:1px solid #c0c0c0;margin:4px;background-color:#f0f0f0;"><iframe src="<?php echo ploopi_urlencode("admin-light.php?ploopi_op=doc_fileview&docfile_md5id={$docfile->fields['md5id']}".($docfile_tab == 'pdf' && isset($arrRenderer[1]) && $arrRenderer[1] == 'unoconv' ? '&doc_viewmode=pdf' : '')); ?>" style="border:0;width:100%;margin:0;padding:0;height:<?php echo ploopi_htmlentities($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_viewerheight']); ?>px;"></iframe></div>
-                        <?
+                        <?php
                     break;
                 }
             break;
@@ -519,22 +485,8 @@ else
                     {
                         doc_getvalidation();
                         $wf_validator = in_array($currentfolder, $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['validation']['folders']);
-
-                        if (_PLOOPI_USE_CGIUPLOAD)
-                        {
-                            $sid = doc_guid();
-                            ?>
-                            <form method="post" enctype="multipart/form-data" action="<?php echo _PLOOPI_CGI_PATH; ?>/upload.cgi?sid=<?php echo $sid; ?>" onsubmit="javascript:return doc_file_validate(this,<?php echo ($newfile) ? 'true' : 'false'; ?>,<?php echo (!empty($wfusers) && !$wf_validator) ? 'true' : 'false'; ?>, '<?php echo $sid; ?>', '<?php echo _PLOOPI_CGI_PATH; ?>');">
-                            <input type="hidden" name="redirect" value="../<?php echo ploopi_urlencode("admin.php?ploopi_op=doc_filesave&currentfolder={$currentfolder}&docfile_md5id={$docfile->fields['md5id']}"); ?>">
-                            <?php
-                        }
-                        else
-                        {
-                            ?>
-                            <form method="post" enctype="multipart/form-data" action="<?php echo ploopi_urlencode("admin.php?ploopi_op=doc_filesave&currentfolder={$currentfolder}&docfile_md5id={$docfile->fields['md5id']}"); ?>" onsubmit="javascript:return doc_file_validate(this,<?php echo ($newfile) ? 'true' : 'false'; ?>,<?php echo (!empty($wfusers) && !$wf_validator) ? 'true' : 'false'; ?>);">
-                            <?php
-                        }
                         ?>
+                        <form method="post" enctype="multipart/form-data" action="<?php echo ploopi_urlencode("admin.php?ploopi_op=doc_filesave&currentfolder={$currentfolder}&docfile_md5id={$docfile->fields['md5id']}"); ?>" onsubmit="javascript:return doc_file_validate(this,<?php echo ($newfile) ? 'true' : 'false'; ?>,<?php echo (!empty($wfusers) && !$wf_validator) ? 'true' : 'false'; ?>);">
                         <input type="hidden" name="doc_mode" id="doc_mode" value="host">
                         <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo $max_filesize*1024; ?>">
                         <?php
@@ -630,13 +582,13 @@ else
                                 if ($readonly)
                                 {
                                     ?>
-                                    <span><a title="Aller au dossier" href="<? echo ploopi_urlencode("admin.php?op=doc_browser&currentfolder={$docfile->fields['id_folder']}"); ?>"><?php echo ploopi_htmlentities($strParent); ?></a></span>
+                                    <span><a title="Aller au dossier" href="<?php echo ploopi_urlencode("admin.php?op=doc_browser&currentfolder={$docfile->fields['id_folder']}"); ?>"><?php echo ploopi_htmlentities($strParent); ?></a></span>
                                     <?php
                                 }
                                 else
                                 {
                                     ?>
-                                    <input type="hidden" name="docfile_id_folder" id="docfolder_id_folder" value="<? echo $docfile->fields['id_folder']; ?>" />
+                                    <input type="hidden" name="docfile_id_folder" id="docfolder_id_folder" value="<?php echo $docfile->fields['id_folder']; ?>" />
                                     <a title="Choisir un autre dossier parent" href="javascript:void(0);" onclick="javascript:ploopi_showpopup(ploopi_xmlhttprequest('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=doc_folderselect&doc_id_folder='+$('docfolder_id_folder').value, false), 300, event, 'click', 'doc_popup_folderselect');" class="ploopi_va">
                                         <span style="width:auto;" id="docfolder_id_folder_name"><?php echo ploopi_htmlentities($strParent); ?></span><img style="margin-left:6px;" src="./modules/doc/img/ico_folder.png" />
                                     </a>
@@ -719,7 +671,7 @@ else
     {
         ?>
         <div style="padding:4px;" class="error">ERREUR: le fichier n'existe plus</div>
-        <?
+        <?php
     }
     ?>
 
@@ -741,7 +693,7 @@ else
                 $objDocFolderSub->open($parents[$i])
                 ?>
                 <div style="padding:4px;font-weight:bold;border-bottom:1px solid #c0c0c0;">
-                Vous héritez de l'abonnement à &laquo; <a href="<? echo ploopi_urlencode("admin.php?op=doc_browser&currentfolder={$parents[$i]}"); ?>"><?php echo ploopi_htmlentities($objDocFolderSub->fields['name']); ?></a> &raquo;
+                Vous héritez de l'abonnement à &laquo; <a href="<?php echo ploopi_urlencode("admin.php?op=doc_browser&currentfolder={$parents[$i]}"); ?>"><?php echo ploopi_htmlentities($objDocFolderSub->fields['name']); ?></a> &raquo;
                 </div>
                 <?php
             }

@@ -1,3 +1,9 @@
+== Module Wiki - version 1.4.0 ====================================================
+
+2016-08-08  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Version pour Ploopi 1.9.7+ / PHP 7+
+
 == Module Wiki - version 1.3.0 ====================================================
 
 2015-06-08  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

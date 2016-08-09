@@ -1,48 +1,23 @@
-* Cupload 1.0
-  path : ./lib/cupload
-  url : http://www.pkconcept.net
-  license : MPL
-  copyright : P.E. Baroiller
-
-* DomPDF 0.5.1
-  path : ./lib/dompdf
-  url : http://code.google.com/p/dompdf/
-  license : LGPL 2.1
-  copyright : Benj Carson
-
 * FCKEditor 2.6.4.1
   path : ./lib/fckeditor
   url : http://www.fckeditor.net
   license : GPL / LGPL / MPL
   copyright : Frederico Caldeira Knabben
 
-* FeedWriter 0.1
-  path : ./lib/feedwriter
-  url : http://www.phpclasses.org/package/4548-PHP-Parse-RSS-and-ATOM-feeds.html
+* FeedWriter 1.0
+  path : ./vendor/mibe/feedwriter
   url : http://ajaxray.com/blog/php-universal-feed-parser-lightweight-php-class-for-parsing-rss-and-atom-feeds
   license : GPL v2
   copyright : Anis Uddin Ahmad
 
-* HTML Purifier 4.5.0
-  path : ./lib/htmlpurifier
+* HTML Purifier 4.8.0
+  path : ./vendor/ezyang/htmlpurifier
   url : http://htmlpurifier.org
   license : GPL v2
   copyright : Edward Z. Yang
 
-* Inputfilter  1.2.2_php4/php5
-  path : ./lib/inputfilter
-  url : http://www.phpclasses.org/browse/package/2189.html
-  license : GPL v2
-  copyright : Daniel Morris
-
-* JodConverter
-  path : ./lib/jodconverter
-  url : http://artofsolving.com/opensource/jodconverter
-  licence : LGPL
-  copyright : artofsolving
-
-* JsColor 1.4.0
-  path : ./lib/jscolor
+* JsColor 2.0.4
+  path : ./vendor/EastDesire/jscolor
   url : http://jscolor.com/
   licence : LGPL v3
   copyright : Jan Odvarko, http://odvarko.cz
@@ -53,41 +28,11 @@
   licence : GPL v2
   copyright : Nicolas Martin & Olivier Meunier and contributors
 
-* JW FLV Player 4.5
-  path : ./lib/jw_player
-  url : http://www.longtailvideo.com/players/jw-flv-player/
-  licence : CC by-nc-sa 2.0 (Attribution-Noncommercial-Share Alike 2.0 Generic)
-  copyright : Longtail Video
-
-* LivePipe UI
-  path : ./lib/livepipe
-  url : http://livepipe.net/core
-  licence : MIT
-  copyright : PersonalGrid Corporation <http://personalgrid.com/>
-
-* PEAR / Spreadsheet_Excel_Writer
-  path : ./lib/pear
-  url : http://pear.php.net/package/Spreadsheet_Excel_Writer
-  licence : LGPL
-  copyright : ?
-
-* PhpJs
-  path : ./js/php.js
-  url : http://phpjs.org
-  licence : GPL v2
-  copyright : Kevin van Zonneveld
-
 * Phonetic
   path : ./lib/phonetic
   url : http://www.roudoudou.com/php/phonetic.php
   licence :  CC 2.0 - Paternité - Pas d'Utilisation Commerciale
   copyright : Édouard BERGÉ
-
-* PHP Universal Feed Generator
-  path : ./lib/feedwriter
-  url : http://www.ajaxray.com/projects/rss
-  license : BSD (? cf http://code.google.com/p/orchidframework/)
-  copyright : Anis uddin Ahmad <anisniit@gmail.com>
 
 * PHPBB / Template class 1.10.2.5
   path : ./lib/template
@@ -95,44 +40,32 @@
   licence : GPL v2
   copyright : The phpBB Group
 
-* Protoaculous 2.0.0 (prototype 1.7.1 + scriptaculous 1.9.0)
-  path : ./lib/protoaculous
-  url : http://groups.google.com/group/prototype-core
-  licence : ?
-  copyright : ?
+* Prototype 1.7.3
+  path : ./lib/prototype
+  url : http://www.prototypejs.org
+  license : MIT
+  copyright : Sam Stephenson
 
-    * prototype 1.7.1
-      path : ./lib/prototype
-      url : http://www.prototypejs.org
-      license : MIT
-      copyright : Sam Stephenson
+* Scriptaculous 1.9.0
+  path : ./lib/protaculous
+  url : http://script.aculo.us
+  license : MIT
+  copyright : Thomas Fuchs
 
-    * scriptaculous 1.9.0
-      path : ./lib/protaculous
-      url : http://script.aculo.us
-      license : MIT
-      copyright : Thomas Fuchs
-
- * SimplePie 1.3.1
-  path : ./lib/simplepie
-  url :  http://simplepie.org/
-  licence : BSD
-  copyright : Ryan Parman & Geoffrey Sneddon
-
- * SWFObject 1.5
+* SWFObject 2.3
   path : ./lib/swfobject
   url :  http://blog.deconcept.com/swfobject/
   licence : MIT
   copyright : Geoff Stearns
 
- * Tango icon set
+* Tango icon set
    path : ./templates/*
    url : http://tango.freedesktop.org
    license : CC SA
    copyright : ?
 
-* Textile 2.5
-  path : ./lib/textile
+* Textile 3.5
+  path : ./vendor/netcarver/textile
   url : http://textile.thresholdstate.com/
   url : http://textile.sitemonks.com/
   url : http://github.com/netcarver

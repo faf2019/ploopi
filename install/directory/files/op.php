@@ -234,6 +234,8 @@ if ($_SESSION['ploopi']['connected'])
             break;
 
             case 'directory_contact_save':
+                ploopi_init_module('directory', false, false, false);
+
                 include_once './modules/directory/class_directory_contact.php';
                 include_once './modules/directory/class_directory_heading.php';
 
@@ -263,6 +265,8 @@ if ($_SESSION['ploopi']['connected'])
                 $directory_contact->setuwm();
                 $directory_contact->save($booForcePos);
 
+                ploopi_create_user_action_log(empty($_GET['directory_contact_id']) ? _DIRECTORY_ACTION_CONTACT_ADD : _DIRECTORY_ACTION_CONTACT_MODIFY, "{$directory_contact->fields['lastname']} {$directory_contact->fields['firstname']} (id:{$directory_contact->fields['id']})");
+
                 // Photo ?
                 if (!empty($_SESSION['directory']['contact_photopath']))
                 {
@@ -283,12 +287,16 @@ if ($_SESSION['ploopi']['connected'])
             break;
 
             case 'directory_contact_delete':
+                ploopi_init_module('directory', false, false, false);
                 include_once './modules/directory/class_directory_contact.php';
 
                 if (!empty($_GET['directory_contact_id']) && is_numeric($_GET['directory_contact_id']))
                 {
                     $directory_contact = new directory_contact();
-                    if ($directory_contact->open($_GET['directory_contact_id'])) $directory_contact->delete();
+                    if ($directory_contact->open($_GET['directory_contact_id'])) {
+                        ploopi_create_user_action_log(_DIRECTORY_ACTION_CONTACT_DELETE, "{$directory_contact->fields['lastname']} {$directory_contact->fields['firstname']} (id:{$directory_contact->fields['id']})");
+                        $directory_contact->delete();
+                    }
                 }
                 ploopi_redirect('admin.php');
             break;
@@ -429,12 +437,15 @@ if ($_SESSION['ploopi']['connected'])
             break;
 
             case 'directory_heading_delete':
+                ploopi_init_module('directory', false, false, false);
                 include_once './modules/directory/class_directory_heading.php';
 
                 $objHeading = new directory_heading();
                 if (empty($_GET['directory_heading_id']) || !is_numeric($_GET['directory_heading_id']) || !$objHeading->open($_GET['directory_heading_id'])) ploopi_redirect('admin.php');
 
                 $intIdParent = $objHeading->fields['id_heading'];
+
+                ploopi_create_user_action_log(_DIRECTORY_ACTION_HEADING_DELETE, "{$objHeading->fields['label']} (id:{$objHeading->fields['id']}, pos:{$objHeading->fields['position']})");
 
                 $objHeading->delete();
 
@@ -464,6 +475,8 @@ if ($_SESSION['ploopi']['connected'])
 
                 $objHeadingChild->save();
 
+                ploopi_create_user_action_log(_DIRECTORY_ACTION_HEADING_ADD, "{$objHeadingChild->fields['label']} (id:{$objHeadingChild->fields['id']}, pos:{$objHeadingChild->fields['position']})");
+
                 ploopi_redirect("admin.php?op=directory_heading_add&directory_heading_id={$objHeadingChild->fields['id']}&op=directory_modify");
             break;
 
@@ -477,6 +490,8 @@ if ($_SESSION['ploopi']['connected'])
 
                 $objHeading->setvalues($_POST, 'directory_heading_');
                 $objHeading->save(!empty($_POST['_directory_heading_forcepos']));
+
+                ploopi_create_user_action_log(_DIRECTORY_ACTION_HEADING_MODIFY, "{$objHeading->fields['label']} (id:{$objHeading->fields['id']}, pos:{$objHeading->fields['position']})");
 
                 if (ploopi_isactionallowed(_DIRECTORY_ACTION_MANAGERS)) ploopi_validation_save(_DIRECTORY_OBJECT_HEADING, $objHeading->fields['id']);
 
@@ -523,6 +538,8 @@ if ($_SESSION['ploopi']['connected'])
 
                 $objSpeedDialing->save();
 
+                ploopi_create_user_action_log(empty($_GET['directory_speeddialing_id']) ? _DIRECTORY_ACTION_SPEEDDIALING_ADD : _DIRECTORY_ACTION_SPEEDDIALING_MODIFY, "{$objSpeedDialing->fields['heading']} / {$objSpeedDialing->fields['label']} (id:{$objSpeedDialing->fields['id']})");
+
                 ploopi_redirect("admin.php");
             break;
 
@@ -563,15 +580,15 @@ if ($_SESSION['ploopi']['connected'])
                         </p>
                         <p>
                             <label>Libellé:</label>
-                            <input type="text" name="directory_speeddialing_label" value="<? echo ploopi_htmlentities($objSpeedDialing->fields['label']); ?>" class="text" tabindex="115" />
+                            <input type="text" name="directory_speeddialing_label" value="<?php echo ploopi_htmlentities($objSpeedDialing->fields['label']); ?>" class="text" tabindex="115" />
                         </p>
                         <p>
                             <label>Numéro:</label>
-                            <input type="text" name="directory_speeddialing_number" value="<? echo ploopi_htmlentities($objSpeedDialing->fields['number']); ?>" class="text" style="width:90px;" maxlength="16" tabindex="116" />
+                            <input type="text" name="directory_speeddialing_number" value="<?php echo ploopi_htmlentities($objSpeedDialing->fields['number']); ?>" class="text" style="width:90px;" maxlength="16" tabindex="116" />
                         </p>
                         <p>
                             <label>Abrégé:</label>
-                            <input type="text" name="directory_speeddialing_shortnumber" value="<? echo ploopi_htmlentities($objSpeedDialing->fields['shortnumber']); ?>" class="text" style="width:60px;" maxlength="32" tabindex="117" />
+                            <input type="text" name="directory_speeddialing_shortnumber" value="<?php echo ploopi_htmlentities($objSpeedDialing->fields['shortnumber']); ?>" class="text" style="width:60px;" maxlength="32" tabindex="117" />
                         </p>
                     </div>
                         <div style="padding:2px 4px;text-align:right;">
@@ -597,7 +614,10 @@ if ($_SESSION['ploopi']['connected'])
 
                 $objSpeedDialing = new directory_speeddialing();
 
-                if (!empty($_GET['directory_speeddialing_id']) && is_numeric($_GET['directory_speeddialing_id']) && $objSpeedDialing->open($_GET['directory_speeddialing_id'])) $objSpeedDialing->delete();
+                if (!empty($_GET['directory_speeddialing_id']) && is_numeric($_GET['directory_speeddialing_id']) && $objSpeedDialing->open($_GET['directory_speeddialing_id'])) {
+                    ploopi_create_user_action_log(_DIRECTORY_ACTION_SPEEDDIALING_DELETE, "{$objSpeedDialing->fields['heading']} / {$objSpeedDialing->fields['label']} (id:{$objSpeedDialing->fields['id']})");
+                    $objSpeedDialing->delete();
+                }
 
                 ploopi_redirect("admin.php");
             break;
@@ -640,12 +660,12 @@ if ($_SESSION['ploopi']['connected'])
                         }
                         ?>
                         <div style="margin:4px;padding:4px;border:1px solid #c0c0c0;background:#e0e0e0;">
-                            <div><? echo $intCount; ?> contact(s) importés, <? echo $intDoublon; ?> doublons détecté(s).</div>
+                            <div><?php echo $intCount; ?> contact(s) importés, <?php echo $intDoublon; ?> doublons détecté(s).</div>
                             <div style="text-align:right;">
-                                <input type="button" class="button" value="Continuer" onclick="javascript:document.location.href='<? echo ploopi_urlencode('admin.php'); ?>';" style="font-weight:bold;" />
+                                <input type="button" class="button" value="Continuer" onclick="javascript:document.location.href='<?php echo ploopi_urlencode('admin.php'); ?>';" style="font-weight:bold;" />
                             </div>
                         </div>
-                        <?
+                        <?php
                     }
                 }
                 else
@@ -693,29 +713,29 @@ if ($_SESSION['ploopi']['connected'])
 
                         ?>
                         <div style="margin:4px;padding:4px;border:1px solid #c0c0c0;background:#e0e0e0;">
-                            <div><strong>Le fichier envoyé (<? echo ploopi_htmlentities($_FILES['directory_import_file']['name']); ?>) contient <? echo $intCount; ?> ligne(s) et <? echo sizeof($arrLineHeader) ?> colonnes dont <? echo sizeof($arrLineHeader) - sizeof($arrInvalidCols) ?> sont connues.</strong></div>
-                            <?
+                            <div><strong>Le fichier envoyé (<?php echo ploopi_htmlentities($_FILES['directory_import_file']['name']); ?>) contient <?php echo $intCount; ?> ligne(s) et <?php echo sizeof($arrLineHeader) ?> colonnes dont <?php echo sizeof($arrLineHeader) - sizeof($arrInvalidCols) ?> sont connues.</strong></div>
+                            <?php
                             if ($booDataError) echo '<div>Des erreurs de données ont été rencontrées</div>';
                             if (!empty($arrInvalidCols)) echo '<div>Les colonnes suivantes sont inconnues : '.implode(', ', $arrInvalidCols).'</div>';
                             ?>
 
                             <div>Aperçu du fichier :</div>
-                            <div style="overflow:auto;border:1px solid #c0c0c0;margin:4px;padding:4px;background:#fff;"><? echo ploopi_array2html($arrDataExcerpt); ?></div>
+                            <div style="overflow:auto;border:1px solid #c0c0c0;margin:4px;padding:4px;background:#fff;"><?php echo ploopi_array2html($arrDataExcerpt); ?></div>
                             <div style="text-align:right;">
-                                <input type="button" class="button" value="Annuler" onclick="javascript:document.location.href='<? echo ploopi_urlencode('admin.php'); ?>';"/>
-                                <?
+                                <input type="button" class="button" value="Annuler" onclick="javascript:document.location.href='<?php echo ploopi_urlencode('admin.php'); ?>';"/>
+                                <?php
                                 if (sizeof($arrData) && isset($arrData[0]['lastname']) && isset($arrData[0]['firstname'])) // Données valides
                                 {
                                     // Sauvegarde des données importées en SESSION
                                     ploopi_setsessionvar('contact_import', $arrData);
                                     ?>
-                                    <input type="button" class="button" value="Continuer" style="font-weight:bold;" onclick="javascript:ploopi_xmlhttprequest_todiv('admin-light.php', '<? echo ploopi_queryencode("ploopi_op=directory_import&directory_step=2&directory_heading_id={$_GET['directory_heading_id']}"); ?>', 'directory_import_info');" />
-                                    <?
+                                    <input type="button" class="button" value="Continuer" style="font-weight:bold;" onclick="javascript:ploopi_xmlhttprequest_todiv('admin-light.php', '<?php echo ploopi_queryencode("ploopi_op=directory_import&directory_step=2&directory_heading_id={$_GET['directory_heading_id']}"); ?>', 'directory_import_info');" />
+                                    <?php
                                 }
                                 ?>
                             </div>
                         </div>
-                        <?
+                        <?php
                     }
                 }
 
@@ -788,5 +808,3 @@ switch($ploopi_op)
         ploopi_die();
     break;
 }
-?>
-

@@ -55,9 +55,9 @@ class webedit_counter extends data_object
      * @return webedit_article
      */
 
-    function webedit_counter()
+    public function __construct()
     {
-        parent::data_object('ploopi_mod_webedit_counter', 'year', 'month', 'day', 'id_article');
+        parent::__construct('ploopi_mod_webedit_counter', 'year', 'month', 'day', 'id_article');
     }
 
     /**
@@ -66,10 +66,9 @@ class webedit_counter extends data_object
      * @return boolean true si l'enregistrement a été correctement exécuté
      */
 
-    function hit()
+    public function hit()
     {
         $this->fields['hits'] = (!isset($this->fields['hits'])) ? 1 : $this->fields['hits']+1;
         return(parent::save());
     }
 }
-?>

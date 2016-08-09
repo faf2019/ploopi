@@ -1,1 +1,0 @@
-ALTER TABLE `ploopi_mod_rss_filter_element` CHANGE `id_filters` `id_filter` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0'

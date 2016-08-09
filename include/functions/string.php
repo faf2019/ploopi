@@ -255,9 +255,11 @@ function ploopi_xmlentities($str, $utf8 = false, $extended = true)
  * @return string chaîne convertie
  */
 
-function ploopi_htmlentities($str, $flags = null, $encoding = 'ISO-8859-1', $booStripTags = true)
+function ploopi_htmlentities($str, $flags = null, $encoding = null, $booStripTags = true)
 {
-    if (is_null($flags)) $flags = version_compare(phpversion(), '5.4', '<') ? ENT_COMPAT : ENT_COMPAT | ENT_HTML401;
+
+    if (is_null($encoding)) $encoding = 'ISO-8859-15';
+    if (is_null($flags)) $flags = ENT_COMPAT | ENT_HTML401;
 
     return htmlentities($booStripTags ? strip_tags($str) : $str, $flags, $encoding);
 }
@@ -440,7 +442,6 @@ function ploopi_htmlpurifier($strContent, $booTrusted = false)
     $strCachePath = _PLOOPI_PATHDATA._PLOOPI_SEP.'cache';
     if (!file_exists($strCachePath)) ploopi_makedir($strCachePath);
 
-    require_once './lib/htmlpurifier/HTMLPurifier.auto.php';
     $objConfig = HTMLPurifier_Config::createDefault();
     $objConfig->set('Cache.SerializerPath', $strCachePath);
     // $objConfig->set('Core.Encoding', 'ISO-8859-15');

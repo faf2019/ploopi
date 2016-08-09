@@ -49,16 +49,6 @@ if ($_SESSION['ploopi']['connected'])
 
         switch($ploopi_op)
         {
-            case 'doc_getstatus':
-                /**
-                 * @ignore UPLOAD_PATH
-                 */
-                if (substr(_PLOOPI_CGI_UPLOADTMP, -1, 1) != '/') define ('UPLOAD_PATH', _PLOOPI_CGI_UPLOADTMP.'/');
-                else define ('UPLOAD_PATH', _PLOOPI_CGI_UPLOADTMP);
-                include_once './lib/cupload/status.php';
-                ploopi_die();
-            break;
-
             case 'doc_help':
                 include_once './modules/doc/public_legend.php';
                 ploopi_die();
@@ -137,44 +127,6 @@ if ($_SESSION['ploopi']['connected'])
 
 
                 if ($readonly) ploopi_redirect("admin.php?doc_browser&currentfolder={$currentfolder}");
-
-
-                // En mode CGI, il faut récupérer les infos des fichiers uploadés (via le fichier lock)
-                // Cf class Cupload
-                // On écrit tout dans $_FILES pour retomber sur nos pieds dans la suite des traitements
-                if ($_REQUEST['doc_mode'] == 'host' && _PLOOPI_USE_CGIUPLOAD && !empty($_POST['sid']))
-                {
-                    if (!empty($_GET['error']) && $_GET['error'] == 'notwritable')
-                    {
-                        //alert("Problème lors de l'envoi du fichier\nvérifiez le paramètrage du dossier temporaire d'upload");
-                        ploopi_redirect("admin.php?doc_fileform&currentfolder={$currentfolder}&error=1");
-                    }
-
-                    define ('UPLOAD_PATH', _PLOOPI_CGI_UPLOADTMP.'/');
-                    include './lib/cupload/Cupload.class.php';
-
-                    $_sId = $_POST['sid'];
-                    $uploader = new CUploadSentinel;
-                    $uploader->__init($_sId);
-
-                    if (!empty($uploader->files))
-                    {
-                        foreach($uploader->files as $key => $file)
-                        {
-                            $_FILES[$file['name']] =
-                                array(
-                                    'name'      =>  $file['filename'],
-                                    'type'      =>  $file['mime'],
-                                    'tmp_name'  =>  UPLOAD_PATH.$file['tmpname'],
-                                    'error'     =>  0,
-                                    'size'      =>  $file['size']
-                                );
-                        }
-                    }
-
-                    $uploader->clear();
-                }
-
 
 
                 // WORKFLOW

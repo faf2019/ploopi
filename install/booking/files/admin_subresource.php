@@ -40,7 +40,7 @@
     <a href="javascript:void(0);" onclick="javascript:booking_element_add('subresource', event);"><img src="./modules/booking/img/ico_new.png">Ajouter un élément</a>
 </div>
 
-<?
+<?php
 
 $arrResult =
     array(

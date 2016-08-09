@@ -133,14 +133,14 @@ else // creating
                     if ($readonly || $addfolder)
                     {
                         ?>
-                        <span><a title="Aller au dossier" href="<? echo ploopi_urlencode("admin.php?op=doc_browser&currentfolder={$docfolder->fields['id_folder']}"); ?>"><?php echo ploopi_htmlentities($strParent); ?></a></span>
+                        <span><a title="Aller au dossier" href="<?php echo ploopi_urlencode("admin.php?op=doc_browser&currentfolder={$docfolder->fields['id_folder']}"); ?>"><?php echo ploopi_htmlentities($strParent); ?></a></span>
                         <?php
                     }
                     else
                     {
                         ?>
-                        <input type="hidden" name="docfolder_id_folder" id="docfolder_id_folder" value="<? echo $docfolder->fields['id_folder']; ?>" />
-                        <a title="Choisir un autre dossier parent" href="javascript:void(0);" onclick="javascript:ploopi_showpopup(ploopi_xmlhttprequest('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=doc_folderselect&doc_excludes=<? echo $currentfolder; ?>&doc_id_folder='+$('docfolder_id_folder').value, false), 300, event, 'click', 'doc_popup_folderselect');" class="ploopi_va">
+                        <input type="hidden" name="docfolder_id_folder" id="docfolder_id_folder" value="<?php echo $docfolder->fields['id_folder']; ?>" />
+                        <a title="Choisir un autre dossier parent" href="javascript:void(0);" onclick="javascript:ploopi_showpopup(ploopi_xmlhttprequest('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=doc_folderselect&doc_excludes=<?php echo $currentfolder; ?>&doc_id_folder='+$('docfolder_id_folder').value, false), 300, event, 'click', 'doc_popup_folderselect');" class="ploopi_va">
                             <span style="width:auto;" id="docfolder_id_folder_name"><?php echo ploopi_htmlentities($strParent); ?></span><img style="margin-left:6px;" src="./modules/doc/img/ico_folder.png" />
                         </a>
                         <?php

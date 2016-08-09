@@ -301,7 +301,7 @@ switch($ploopi_op)
         <script type="text/javascript">
             window.parent.location.href = '<?php echo ploopi_urlencode('admin.php?ploopi_mainmenu='._PLOOPI_MENU_MYWORKSPACE.'&op=tickets'); ?>';
         </script>
-        <?
+        <?php
         ploopi_die();
     break;
 

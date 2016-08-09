@@ -1,3 +1,9 @@
+== Module DIRECTORY - version 2.5.0 ====================================================
+
+2016-08-08  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+* Version pour Ploopi 1.9.7+ / PHP 7+
+
 == Module DIRECTORY - version 2.4.0 ====================================================
 
 2015-07-13  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>

@@ -33,7 +33,7 @@
 echo $skin->open_simplebloc('Réindexation des pages');
 ?>
 <div id="wiki_index">
-<?
+<?php
     ploopi_init_module('cus');
     set_time_limit(0);
 
@@ -53,6 +53,6 @@ echo $skin->open_simplebloc('Réindexation des pages');
 
 
     ?>
-    Résultat de l'indexation : <? echo $intI; ?> page(s) traitée(s)
+    Résultat de l'indexation : <?php echo $intI; ?> page(s) traitée(s)
 </div>
 <?php echo $skin->close_simplebloc(); ?>
