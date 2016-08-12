@@ -46,11 +46,12 @@ function webedit_article_validate(form, article_type, article_status, validator)
         if (article_status == 'wait') return true;
         else
         {
-            var fck_instance = $('webedit_frame_editor').contentWindow.FCKeditorAPI.GetInstance('fck_webedit_article_content');
-    
+
+            var fck_instance = $('webedit_frame_editor').contentWindow.CKEDITOR.instances['editor'];
+
             // get fckeditor content
-            $('fck_webedit_article_content').value = fck_instance.GetData(true)
-    
+            $('fck_webedit_article_content').value = fck_instance.getData();
+
             if (ploopi_validatefield('Titre', form.webedit_article_title, 'string'))
             if ($('fck_webedit_article_content').value == '')
             {
@@ -83,7 +84,7 @@ function webedit_bloc_validate(form, article_type, article_status, validator)
         else
         {
             var fck_instance = FCKeditorAPI.GetInstance('fck_webedit_article_content');
-   
+
             if (ploopi_validatefield('Identifiant', form.webedit_article_title, 'string'))
             if (fck_instance.GetData(true) == null || fck_instance.GetData(true) == '')
             {
@@ -116,12 +117,12 @@ function webedit_backup_reload(bloc)
         var content = ploopi_xmlhttprequest('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=webedit_getbackup&backup_timestp='+$('article_backup').value+'&backup_id_article='+$('articleid').value);
 
         var fck_instance = null;
-        
+
         if (typeof(bloc) == 'undefined') bloc = false;
-        
+
         if (bloc) fck_instance = FCKeditorAPI.GetInstance('fck_webedit_article_content');
         else fck_instance = $('webedit_frame_editor').contentWindow.FCKeditorAPI.GetInstance('fck_webedit_article_content');
-        
+
         fck_instance.SetData(content);
     }
 }
@@ -217,26 +218,26 @@ function webedit_stats_refresh(article_id, heading_id, year, month)
 
 function webedit_comment_publish(id_comment, id_article, publish)
 {
-	publish = (publish == true) ? '1' : '0';
-	
-	new Ajax.Request('admin-light.php?ploopi_env='+_PLOOPI_ENV+'&ploopi_op=webedit_comment_publish&id_comment='+id_comment+'&publish='+publish, {
-		method: 'get',
-		onSuccess: function() {
-			new Ajax.Updater('webeditcomment_'+id_article, 'admin-light.php?ploopi_env='+_PLOOPI_ENV+'&ploopi_op=webedit_comment_refresh&id_article='+id_article, { method: 'get' });
-		}
-	});
+    publish = (publish == true) ? '1' : '0';
+
+    new Ajax.Request('admin-light.php?ploopi_env='+_PLOOPI_ENV+'&ploopi_op=webedit_comment_publish&id_comment='+id_comment+'&publish='+publish, {
+        method: 'get',
+        onSuccess: function() {
+            new Ajax.Updater('webeditcomment_'+id_article, 'admin-light.php?ploopi_env='+_PLOOPI_ENV+'&ploopi_op=webedit_comment_refresh&id_article='+id_article, { method: 'get' });
+        }
+    });
 }
 
 function webedit_comment_delete(id_comment,id_article)
 {
     if (confirm('Êtes vous certain de vouloir supprimer ce commentaire ?'))
     {
-    	new Ajax.Request('admin-light.php?ploopi_env='+_PLOOPI_ENV+'&ploopi_op=webedit_comment_delete&id_comment='+id_comment, {
-    		method: 'get',
-    		onSuccess: function() {
-    			new Ajax.Updater('webeditcomment_'+id_article, 'admin-light.php?ploopi_env='+_PLOOPI_ENV+'&ploopi_op=webedit_comment_refresh&id_article='+id_article, { method: 'get' });
-    		}
-    	});
+        new Ajax.Request('admin-light.php?ploopi_env='+_PLOOPI_ENV+'&ploopi_op=webedit_comment_delete&id_comment='+id_comment, {
+            method: 'get',
+            onSuccess: function() {
+                new Ajax.Updater('webeditcomment_'+id_article, 'admin-light.php?ploopi_env='+_PLOOPI_ENV+'&ploopi_op=webedit_comment_refresh&id_article='+id_article, { method: 'get' });
+            }
+        });
     }
 }
 

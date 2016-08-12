@@ -105,32 +105,3 @@ do
     export tb=`stat -c "%s" $i.gz`
     echo "Résultat : $ta => $tb"
 done
-
-for i in $( find ./lib/jscolor \( -name '*.js' -or -name '*.css' \) -type f )
-do
-    echo "Compression : $i => $i.gz";
-
-    if [ `file $i | grep -c 'UTF-8'` -eq '1' ]
-        then java -jar ../yuicompressor/build/yuicompressor$YUIVER.jar --charset UTF-8 $i | gzip > $i.gz
-        else java -jar ../yuicompressor/build/yuicompressor$YUIVER.jar --charset ISO-8859-1 $i | gzip > $i.gz
-    fi
-
-    export ta=`stat -c "%s" $i`
-    export tb=`stat -c "%s" $i.gz`
-    echo "Résultat : $ta => $tb"
-done
-
-for i in $( find ./lib/livepipe \( -name '*.js' -or -name '*.css' \) -type f )
-do
-    echo "Compression : $i => $i.gz";
-
-    if [ `file $i | grep -c 'UTF-8'` -eq '1' ]
-        then java -jar ../yuicompressor/build/yuicompressor$YUIVER.jar --charset UTF-8 $i | gzip > $i.gz
-        else java -jar ../yuicompressor/build/yuicompressor$YUIVER.jar --charset ISO-8859-1 $i | gzip > $i.gz
-    fi
-
-    export ta=`stat -c "%s" $i`
-    export tb=`stat -c "%s" $i.gz`
-    echo "Résultat : $ta => $tb"
-done
-

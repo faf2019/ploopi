@@ -526,6 +526,7 @@ if (isset($_REQUEST['ploopi_op']))
             break;
 
             case 'ploopi_getobjects':
+                /*
                 ob_start();
                 ?>
                 <script language="javascript">
@@ -536,12 +537,10 @@ if (isset($_REQUEST['ploopi_op']))
 
                 window.onload = function ()
                 {
-                    /* First of all, translate the dialog box texts */
                     oEditor.FCKLanguageManager.TranslatePage( document ) ;
 
                     LoadSelected() ;
 
-                    /* Show the "Ok" button. */
                     window.parent.SetOkButton( true ) ;
                 };
 
@@ -651,6 +650,44 @@ if (isset($_REQUEST['ploopi_op']))
 
                 $template_body->pparse('body');
                 ploopi_die();
+                */
+                ploopi_ob_clean();
+
+                $select_object = "
+                    SELECT  ploopi_mb_wce_object.*,
+                            ploopi_module.label as module_label,
+                            ploopi_module.id as module_id
+
+                    FROM    ploopi_mb_wce_object,
+                            ploopi_module,
+                            ploopi_module_workspace
+
+                    WHERE   ploopi_mb_wce_object.id_module_type = ploopi_module.id_module_type
+                      AND   ((ploopi_module_workspace.id_module = ploopi_module.id AND ploopi_module_workspace.id_workspace = {$_SESSION['ploopi']['workspaceid']}) OR ploopi_mb_wce_object.id_module_type = 1)
+                    ORDER BY module_label, label
+                ";
+
+                $result_object = $db->query($select_object);
+                while ($fields_object = $db->fetchrow($result_object))
+                {
+                    if ($fields_object['select_label'] != '')
+                    {
+                        $select = "select {$fields_object['select_id']}, {$fields_object['select_label']} from {$fields_object['select_table']} where id_module = {$fields_object['module_id']} ORDER BY {$fields_object['select_label']}";
+                        $db->query($select);
+
+                        while ($fields = $db->fetchrow())
+                        {
+                            $fields_object['object_label'] = $fields[$fields_object['select_label']];
+                            $array_modules["{$fields_object['id']},{$fields_object['module_id']},{$fields[$fields_object['select_id']]}"] = "{$fields_object['module_label']} » {$fields_object['label']} » {$fields_object['object_label']}";
+                        }
+                    }
+                    else $array_modules["{$fields_object['id']},{$fields_object['module_id']}"] = "{$fields_object['module_label']} » {$fields_object['label']}";
+                }
+
+                ploopi_print_json($array_modules, true, false);
+
+                ploopi_die();
+
             break;
         }
 

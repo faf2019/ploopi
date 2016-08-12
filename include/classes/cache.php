@@ -31,8 +31,6 @@
  * @author Stéphane Escaich
  */
 
-require_once 'Cache/Lite/Output.php';
-
 /**
  * Classe de gestion du cache
  *

@@ -293,14 +293,10 @@ switch($arrSearchPattern['booking_display_type'])
 
         }
 
-        $date_today = mktime();
-
-        if ($date_today >= $date_begin && $date_today <= $date_end) $date_sel = $date_today;
-        else $date_sel = $date_begin;
 
         if ($_SESSION['ploopi']['connected'] && ploopi_isactionallowed(_BOOKING_ACTION_ASKFOREVENT, $_SESSION['ploopi']['workspaceid'], $booking_moduleid))
         {
-            $date_today = mktime();
+            $date_today = time();
 
             if ($date_today >= $date_begin && $date_today <= $date_end) $date_sel = $date_today;
             else $date_sel = $date_begin;

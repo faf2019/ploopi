@@ -1528,6 +1528,56 @@ else // affichage standard rubrique/page
                     if (!isset($_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['display_type'])) $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['display_type'] = 'beginner';
 
                     ob_start();
+                    ?>
+                    <script src="./vendor/ckeditor/ckeditor/ckeditor.js"></script>
+                    <div id="editor"><? echo $article->fields['content']; ?></div>
+                    <script>
+
+                        // Ajout d'un plugin externe
+                        CKEDITOR.plugins.addExternal('tag', '<? echo _PLOOPI_BASEPATH.'/modules/webedit/ckeditor/plugins/tag/'; ?>', 'plugin.js');
+
+                        /*
+                        // http://docs.ckeditor.com/#!/guide/plugin_sdk_styles
+                        CKEDITOR.plugins.add( 'tag', {
+                            init: function( editor ) {
+                                var pluginDirectory = '<? echo _PLOOPI_BASEPATH.'/modules/webedit/ckeditor/plugins/tag/'; ?>';
+                                editor.addContentsCss( pluginDirectory + 'styles.css' );
+                            }
+                        } );
+                        */
+
+                        // http://docs.ckeditor.com/#!/guide/dev_file_browser_api
+                        CKEDITOR.replace( 'editor', {
+                            customConfig: '<? echo _PLOOPI_BASEPATH.'/modules/webedit/ckeditor/config.js'; ?>',
+                            filebrowserBrowseUrl: '<? echo _PLOOPI_BASEPATH.'/admin-light.php?'.ploopi_queryencode('ploopi_op=doc_selectfile'); ?>',
+                            filebrowserImageBrowseUrl: '<? echo _PLOOPI_BASEPATH.'/admin-light.php?'.ploopi_queryencode('ploopi_op=doc_selectimage'); ?>',
+                            // Url de choix des objets
+                            objectBrowserUrl: '<? echo _PLOOPI_BASEPATH.'/admin-light.php?'.ploopi_queryencode('ploopi_op=ploopi_getobjects'); ?>',
+                            // Chargement de styles complémentaires (on remet le fichier par défaut en 1er)
+                            // Puis on ajoute la feuille de style des plugins...
+                            contentsCss: [
+                                CKEDITOR.basePath+'contents.css',
+                                '<? echo _PLOOPI_BASEPATH; ?>/modules/webedit/ckeditor/plugins/tag/styles.css',
+                            ],
+                                <?
+                            if ($_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['display_type'] == 'beginner') {
+                                ?>
+                                toolbar: [
+                                    ['Bold','Italic','Underline','Strike','Subscript','Superscript','-','RemoveFormat' ],
+                                    ['Styles','Format','Font','FontSize'],
+                                    ['TextColor','BGColor'],
+                                    ['Link','Unlink'],
+                                    ['Image']
+                                ]
+                                <?
+                            }
+                            ?>
+                        });
+                    </script>
+
+                    <?
+                    $editor = ob_get_contents();
+                    /*
 
                     include_once './include/functions/fck.php';
 
@@ -1546,6 +1596,8 @@ else // affichage standard rubrique/page
                     ploopi_fckeditor('fck_webedit_article_content', $article->fields['content'], '100%', '500', $arrConfig, $arrProperties);
 
                     $editor = ob_get_contents();
+                    */
+
                     ob_end_clean();
                 }
             }

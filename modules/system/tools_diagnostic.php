@@ -119,65 +119,6 @@ foreach($array_path as $key => $path)
 
 /* TEST 2 - config PHP */
 
-$testpear = (file_exists(_PLOOPI_PEARPATH.'/PEAR.php'));
-
-$comment = ($testpear) ? 'PEAR est correctement configuré.' : 'Vous devez modifier le chemin vers PEAR.';
-$bullet = ($testpear) ? 'green' : 'red';
-
-$values[$c]['values']['function']   = array('label' => "PEAR");
-$values[$c]['values']['desc']       = array('label' => ploopi_nl2br("Le framework PEAR est indispensable au bon fonctionnement de Ploopi."), 'style' => '');
-$values[$c]['values']['comment']    = array('label' => ploopi_nl2br($comment), 'style' => '');
-$values[$c]['values']['result']     = array('label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/p_{$bullet}.png\" />", 'style' => '');
-$c++;
-
-if ($testpear)
-{
-    $testpearinfo = (file_exists(_PLOOPI_PEARPATH.'/PEAR/Info.php'));
-
-    $comment = ($testpearinfo) ? 'PEAR_info est installé.' : "Vous devez installer la classe PEAR PEAR_info.\nPour l'installer, faites &laquo; pear install --alldeps PEAR_info &raquo;.";
-    $bullet = ($testpearinfo) ? 'green' : 'red';
-
-    $values[$c]['values']['function']   = array('label' => "PEAR - PEAR_info");
-    $values[$c]['values']['desc']       = array('label' => ploopi_nl2br("Informations sur PEAR.\nAffichage des dépendances."), 'style' => '');
-    $values[$c]['values']['comment']    = array('label' => ploopi_nl2br($comment), 'style' => '');
-    $values[$c]['values']['result']     = array('label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/p_{$bullet}.png\" />", 'style' => '');
-    $c++;
-
-    if ($testpearinfo)
-    {
-        ploopi_unset_error_handler();
-        require_once 'PEAR/Info.php';
-        $packPEAR = new PEAR_Info(_PLOOPI_PEARPATH); // Class PEAR_Info for test if modules pear are installed
-        ploopi_set_error_handler();
-
-        $arrPearClasses = array(
-            'Cache_Lite' => array('Gestion du cache.', '1.7.15', null),
-            'HTTP_Request2' => array('Gestion des connexions sortantes.', '2.1.1', null),
-            'Text_Highlighter' => array('Gestion de la colorisation syntaxique.', '0.7.3', null),
-            'Net_UserAgent_Detect' => array('Détection du UserAgent.', '2.5.2', null),
-            'Horde_Text_Diff' => array('Gestion du différentiel.', '2', 'pear.horde.org'),
-            'XML_Serializer' => array('Génération XML', '0.20.2', '')
-        );
-
-
-        foreach($arrPearClasses as $strPearClass => $desc)
-        {
-            ploopi_unset_error_handler();
-            $testok = $packPEAR->packageInstalled($strPearClass, $desc[1], $desc[2]);
-            ploopi_set_error_handler();
-
-            $comment = ($testok) ? "{$strPearClass} est installé." : "Vous devez installer la classe PEAR {$strPearClass}.\nPour l'installer, faites &laquo; pear install --alldeps {$strPearClass} &raquo;.";
-            $bullet = ($testok) ? 'green' : 'orange';
-
-            $values[$c]['values']['function']   = array('label' => "PEAR - {$strPearClass}");
-            $values[$c]['values']['desc']       = array('label' => ploopi_nl2br($desc[0]));
-            $values[$c]['values']['comment']    = array('label' => ploopi_nl2br($comment));
-            $values[$c]['values']['result']     = array('label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/p_{$bullet}.png\" />");
-            $c++;
-        }
-    }
-}
-
 $testok = !get_magic_quotes_gpc();
 
 $comment = ($testok) ? 'La directive est correctement configurée.' : 'Vous devriez modifier la valeur de cette directive.';
@@ -299,39 +240,33 @@ $c++;
 
 /* TEST 3 - Connectivité internet */
 $testurl = 'http://www.ploopi.org';
-if ($testpear)
+
+$comment = 'Connexion internet ouverte.';
+$testok = true;
+
+$objRequest = new HTTP_Request2($testurl);
+
+if (_PLOOPI_INTERNETPROXY_HOST != '')
 {
-    $comment = 'Connexion internet ouverte.';
-    $testok = true;
-
-    require_once 'HTTP/Request2.php';
-
-    $objRequest = new HTTP_Request2($testurl);
-
-    if (_PLOOPI_INTERNETPROXY_HOST != '')
-    {
-        $arrConfig['proxy_host'] = _PLOOPI_INTERNETPROXY_HOST;
-        $arrConfig['proxy_port'] = _PLOOPI_INTERNETPROXY_PORT;
-        $arrConfig['proxy_user'] = _PLOOPI_INTERNETPROXY_USER;
-        $arrConfig['proxy_password'] = _PLOOPI_INTERNETPROXY_PASS;
-        $arrConfig['proxy_auth_scheme'] = HTTP_Request2::AUTH_BASIC;
-        $objRequest->setConfig($arrConfig);
-    }
-
-
-    try {
-        $objResponse = $objRequest->send();
-
-        $strStatus = $objResponse->getStatus();
-
-        $res = $strStatus == '200' || $objResponse->getStatus() == '';
-    }
-    catch (HTTP_Request2_Exception $e) {
-        $res = false;
-    }
-
+    $arrConfig['proxy_host'] = _PLOOPI_INTERNETPROXY_HOST;
+    $arrConfig['proxy_port'] = _PLOOPI_INTERNETPROXY_PORT;
+    $arrConfig['proxy_user'] = _PLOOPI_INTERNETPROXY_USER;
+    $arrConfig['proxy_password'] = _PLOOPI_INTERNETPROXY_PASS;
+    $arrConfig['proxy_auth_scheme'] = HTTP_Request2::AUTH_BASIC;
+    $objRequest->setConfig($arrConfig);
 }
-else $res = false;
+
+
+try {
+    $objResponse = $objRequest->send();
+
+    $strStatus = $objResponse->getStatus();
+
+    $res = $strStatus == '200' || $objResponse->getStatus() == '';
+}
+catch (HTTP_Request2_Exception $e) {
+    $res = false;
+}
 
 if (!$res)
 {

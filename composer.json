@@ -1,4 +1,19 @@
 {
+    "name": "ovensia/ploopi",
+    "description": "Ploopi - plateforme de gestion web - contenus, wiki, documents, planning",
+    "keywords": ["PHP","ploopi","web editor","documents","planning","agenda","booking","wiki"],
+    "homepage": "http://svn.ploopi.org/trunk",
+    "type": "project",
+    "license": "GPL-2.0",
+    "authors": [
+        {
+            "name": "Stéphane Escaich"
+        },
+        {
+            "name": "Audrey Gilbert"
+        }
+    ],
+    "minimum-stability": "dev",
     "repositories": [
         {
             "type":"package",
@@ -37,6 +52,11 @@
         "openlss/lib-array2xml": "^0.0.10",
         "box/spout": "^2.5",
         "components/highlightjs": "^9.5",
-        "ckeditor/ckeditor": "^4.5"
+        "ckeditor/ckeditor": "^4.5",
+        "pear/pear": "dev-master",
+        "pear/http_request2": "^2.3",
+        "pear/xml_serializer": "^0.21.0",
+        "pear/cache_lite": "^1.8"
+        "php-unoconv/php-unoconv": "^0.3.0",
     }
 }

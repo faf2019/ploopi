@@ -3,6 +3,9 @@
 2016-08-08  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
 
 * Version pour Ploopi 1.9.7+ / PHP 7+
+* Suppression de la dépendance à fckeditor
+* Intégration de ckeditor comme éditeur de contenu
+* Nouveau plugin d'intégration d'objets dynamiques
 
 == Module WebEdit - version 2.6.2 ============================================
 
