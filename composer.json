@@ -56,7 +56,7 @@
         "pear/pear": "dev-master",
         "pear/http_request2": "^2.3",
         "pear/xml_serializer": "^0.21.0",
-        "pear/cache_lite": "^1.8"
-        "php-unoconv/php-unoconv": "^0.3.0",
+        "pear/cache_lite": "^1.8",
+        "php-unoconv/php-unoconv": "^0.3.0"
     }
 }
