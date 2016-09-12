@@ -535,6 +535,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                     // Traitement spécial XLS (date)
                     if ($strTypeDoc == 'xls' || $strTypeDoc == 'xlsx' || $strTypeDoc == 'ods' || $strTypeDoc == 'sxc' || $strTypeDoc == 'pdf') {
                         $row['date_creation'] = ploopi_timestamp2unixtimestamp($row['date_creation']);
+                        $row['last_connection'] = ploopi_timestamp2unixtimestamp($row['last_connection']);
                     }
 
 
@@ -561,7 +562,11 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                         'postalcode' => $row['postalcode'],
                         'city' => $row['city'],
                         'country' => $row['country'],
-                        'date_creation' => $row['date_creation']
+                        'date_creation' => $row['date_creation'],
+
+                        'last_connection' => $row['last_connection']
+
+
                     );
 
                     // Traitement spécial vCard
@@ -682,6 +687,11 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                 ),
                 'date_creation' => array(
                     'title' => 'Date de création',
+                    'type' => 'datetime',
+                    'width' => 35
+                ),
+                'last_connection' => array(
+                    'title' => 'Dernière connexion',
                     'type' => 'datetime',
                     'width' => 35
                 )
