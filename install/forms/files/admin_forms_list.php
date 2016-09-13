@@ -82,19 +82,19 @@ $c=0;
 
 while ($fields = $db->fetchrow())
 {
-    $pubdate_start = ($fields['pubdate_start']) ? ploopi_timestamp2local($fields['pubdate_start']) : array('date' => '');
-    $pubdate_end = ($fields['pubdate_end']) ? ploopi_timestamp2local($fields['pubdate_end']) : array('date' => '');
+    $pubdate_start = ($fields['pubdate_start']) ? ovensia\ploopi\date::timestamp2local($fields['pubdate_start']) : array('date' => '');
+    $pubdate_end = ($fields['pubdate_end']) ? ovensia\ploopi\date::timestamp2local($fields['pubdate_end']) : array('date' => '');
 
-    $open = ploopi_urlencode("admin.php?op=forms_modify&forms_id={$fields['id']}");
-    $clone = ploopi_urlencode("admin.php?ploopi_op=forms_clone&forms_id={$fields['id']}");
-    $delete = ploopi_urlencode("admin.php?ploopi_op=forms_delete&forms_id={$fields['id']}");
-    $view = ploopi_urlencode("admin.php?ploopi_action=public&op=forms_viewreplies&forms_id={$fields['id']}");
+    $open = ovensia\ploopi\crypt::urlencode("admin.php?op=forms_modify&forms_id={$fields['id']}");
+    $clone = ovensia\ploopi\crypt::urlencode("admin.php?ploopi_op=forms_clone&forms_id={$fields['id']}");
+    $delete = ovensia\ploopi\crypt::urlencode("admin.php?ploopi_op=forms_delete&forms_id={$fields['id']}");
+    $view = ovensia\ploopi\crypt::urlencode("admin.php?ploopi_action=public&op=forms_viewreplies&forms_id={$fields['id']}");
 
-    $array_values[$c]['values']['label']        = array('label' => ploopi_htmlentities($fields['label']));
-    $array_values[$c]['values']['desc']         = array('label' => ploopi_htmlentities($fields['description']));
-    $array_values[$c]['values']['typeform']     = array('label' => ploopi_htmlentities(isset($form_types[$fields['typeform']]) ? $form_types[$fields['typeform']] : ''));
-    $array_values[$c]['values']['date_start']   = array('label' => ploopi_htmlentities($pubdate_start['date']));
-    $array_values[$c]['values']['date_end']     = array('label' => ploopi_htmlentities($pubdate_end['date']));
+    $array_values[$c]['values']['label']        = array('label' => ovensia\ploopi\str::htmlentities($fields['label']));
+    $array_values[$c]['values']['desc']         = array('label' => ovensia\ploopi\str::htmlentities($fields['description']));
+    $array_values[$c]['values']['typeform']     = array('label' => ovensia\ploopi\str::htmlentities(isset($form_types[$fields['typeform']]) ? $form_types[$fields['typeform']] : ''));
+    $array_values[$c]['values']['date_start']   = array('label' => ovensia\ploopi\str::htmlentities($pubdate_start['date']));
+    $array_values[$c]['values']['date_end']     = array('label' => ovensia\ploopi\str::htmlentities($pubdate_end['date']));
     $array_values[$c]['values']['actions']      = array('label' => '
         <a href="'.$open.'" title="Modifier le formulaire"><img src="./modules/forms/img/ico_modify.png" alt="Modifier le formulaire"></a>
         <a href="javascript:void(0);" onclick="javascript:if (confirm(\'Attention cette action va cloner ce formulaire.\nÊtes vous certain de vouloir continuer ?\')) document.location.href=\''.$clone.'&data=\'+confirm(\'Copier les données ?\');" title="Cloner le formulaire"><img src="./modules/forms/img/ico_clone.png" alt="Cloner le formulaire"></a>

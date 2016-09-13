@@ -47,8 +47,8 @@ if (isset($_REQUEST['ploopi_moduleid']) && is_numeric($_REQUEST['ploopi_moduleid
         if (file_exists($backend_filepath = "./modules/{$row['labeltype']}/backend.php"))
         {
             include_once $backend_filepath;
-            ploopi_die();
+            ovensia\ploopi\system::kill();
         }
     }
 }
-ploopi_h404();
+ovensia\ploopi\output::h404();

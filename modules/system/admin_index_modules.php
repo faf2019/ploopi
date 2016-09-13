@@ -79,19 +79,19 @@ foreach ($ownmodules as $index => $module)
     // owner
     if ($module['instanceworkspace'] == $workspaceid)
     {
-        $modify = '<a href="'.ploopi_urlencode("admin.php?op=modify&moduleid={$module['instanceid']}").'#modify"><img style="margin:0 2px;" src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_edit.png"></a>';
-        $delete = '<a href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("admin.php?op=delete&moduleid={$module['instanceid']}").'\',\''._SYSTEM_MSG_CONFIRMMODULEDELETE.'\')"><img style="margin:0 2px;" src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_delete.png"></a>';
+        $modify = '<a href="'.ovensia\ploopi\crypt::urlencode("admin.php?op=modify&moduleid={$module['instanceid']}").'#modify"><img style="margin:0 2px;" src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_edit.png"></a>';
+        $delete = '<a href="javascript:ploopi_confirmlink(\''.ovensia\ploopi\crypt::urlencode("admin.php?op=delete&moduleid={$module['instanceid']}").'\',\''._SYSTEM_MSG_CONFIRMMODULEDELETE.'\')"><img style="margin:0 2px;" src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_delete.png"></a>';
     }
     else
     {
         $modify = '<img style="margin:0 2px;" src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_noway.png">';
         if ($module['adminrestricted']) $delete = '<img style="margin:0 2px;" src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_noway.png">';
-        else $delete = '<a href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("admin.php?op=unlinkinstance&moduleid={$module['instanceid']}").'\',\''._SYSTEM_MSG_CONFIRMMODULEDETACH.'\')"><img style="margin:0 2px;" src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_cut.png"></a>';
+        else $delete = '<a href="javascript:ploopi_confirmlink(\''.ovensia\ploopi\crypt::urlencode("admin.php?op=unlinkinstance&moduleid={$module['instanceid']}").'\',\''._SYSTEM_MSG_CONFIRMMODULEDETACH.'\')"><img style="margin:0 2px;" src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_cut.png"></a>';
     }
 
     $updown =   '
-                <a href="'.ploopi_urlencode("admin.php?op=movedown&moduleid={$module['instanceid']}").'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/arrow_down.png"></a>
-                <a href="'.ploopi_urlencode("admin.php?op=moveup&moduleid={$module['instanceid']}").'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/arrow_up.png"></a>
+                <a href="'.ovensia\ploopi\crypt::urlencode("admin.php?op=movedown&moduleid={$module['instanceid']}").'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/arrow_down.png"></a>
+                <a href="'.ovensia\ploopi\crypt::urlencode("admin.php?op=moveup&moduleid={$module['instanceid']}").'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/arrow_up.png"></a>
                 ';
 
     $viewmode = $ploopi_viewmodes[$module['viewmode']];
@@ -99,17 +99,17 @@ foreach ($ownmodules as $index => $module)
     if ($module['transverseview']) $viewmode .= ' '._SYSTEM_LABEL_TRANSVERSE;
 
     $values[$c]['values']['position'] = array('label' => "{$updown}{$module['position']}", 'sort_label' => $module['position'], 'sort_flag' => SORT_NUMERIC);
-    $values[$c]['values']['type'] = array('label' => ploopi_htmlentities($module['label']));
-    $values[$c]['values']['name'] = array('label' => ploopi_htmlentities($module['instancename']));
+    $values[$c]['values']['type'] = array('label' => ovensia\ploopi\str::htmlentities($module['label']));
+    $values[$c]['values']['name'] = array('label' => ovensia\ploopi\str::htmlentities($module['instancename']));
     $values[$c]['values']['viewmode'] = array('label' => $viewmode);
 
     if ($module['instanceworkspace'] == $workspaceid)
     {
-        $values[$c]['values']['active'] = array('label' => '<a href="'.ploopi_urlencode("admin.php?op=switch_active&moduleid={$module['instanceid']}").'">'.$active.'</a>', 'sort_label' => ($module['active']) ? 1 : 0);
-        $values[$c]['values']['visible'] = array('label' => '<a href="'.ploopi_urlencode("admin.php?op=switch_visible&moduleid={$module['instanceid']}").'">'.$visible.'</a>', 'sort_label' => ($module['visible']) ? 1 : 0);
-        $values[$c]['values']['public'] = array('label' => '<a href="'.ploopi_urlencode("admin.php?op=switch_public&moduleid={$module['instanceid']}").'">'.$public.'</a>', 'sort_label' => ($module['public']) ? 1 : 0);
-        $values[$c]['values']['shared'] = array('label' => '<a href="'.ploopi_urlencode("admin.php?op=switch_shared&moduleid={$module['instanceid']}").'">'.$shared.'</a>', 'sort_label' => ($module['shared']) ? 1 : 0);
-        $values[$c]['values']['herited'] = array('label' => '<a href="'.ploopi_urlencode("admin.php?op=switch_herited&moduleid={$module['instanceid']}").'">'.$herited.'</a>', 'sort_label' => ($module['herited']) ? 1 : 0);
+        $values[$c]['values']['active'] = array('label' => '<a href="'.ovensia\ploopi\crypt::urlencode("admin.php?op=switch_active&moduleid={$module['instanceid']}").'">'.$active.'</a>', 'sort_label' => ($module['active']) ? 1 : 0);
+        $values[$c]['values']['visible'] = array('label' => '<a href="'.ovensia\ploopi\crypt::urlencode("admin.php?op=switch_visible&moduleid={$module['instanceid']}").'">'.$visible.'</a>', 'sort_label' => ($module['visible']) ? 1 : 0);
+        $values[$c]['values']['public'] = array('label' => '<a href="'.ovensia\ploopi\crypt::urlencode("admin.php?op=switch_public&moduleid={$module['instanceid']}").'">'.$public.'</a>', 'sort_label' => ($module['public']) ? 1 : 0);
+        $values[$c]['values']['shared'] = array('label' => '<a href="'.ovensia\ploopi\crypt::urlencode("admin.php?op=switch_shared&moduleid={$module['instanceid']}").'">'.$shared.'</a>', 'sort_label' => ($module['shared']) ? 1 : 0);
+        $values[$c]['values']['herited'] = array('label' => '<a href="'.ovensia\ploopi\crypt::urlencode("admin.php?op=switch_herited&moduleid={$module['instanceid']}").'">'.$herited.'</a>', 'sort_label' => ($module['herited']) ? 1 : 0);
     }
     else
     {
@@ -130,19 +130,19 @@ echo $skin->close_simplebloc();
 
 if ($op == 'modify' && !empty($_GET['moduleid']) && is_numeric($_GET['moduleid']))
 {
-    $module = new module();
+    $module = new ovensia\ploopi\module();
     $module->open($_GET['moduleid']);
 
     echo '<a name="modify"></a>';
-    echo $skin->open_simplebloc(str_replace('<MODULE>',ploopi_htmlentities($module->fields['label']),_SYSTEM_LABEL_MODULE_PROPERTIES));
+    echo $skin->open_simplebloc(str_replace('<MODULE>',ovensia\ploopi\str::htmlentities($module->fields['label']),_SYSTEM_LABEL_MODULE_PROPERTIES));
     ?>
 
-    <form name="form_modify_module" action="<?php echo ploopi_urlencode("admin.php?op=save_module_props&moduleid={$module->fields['id']}"); ?>" method="post">
+    <form name="form_modify_module" action="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?op=save_module_props&moduleid={$module->fields['id']}"); ?>" method="post">
     <div class="ploopi_form">
         <div style="padding:2px;">
             <p>
                 <label><?php echo _SYSTEM_LABEL_MODULENAME; ?>:</label>
-                <input type="text" class="text" name="module_label" id="module_label" value="<?php echo ploopi_htmlentities($module->fields['label']); ?>" tabindex="1" />
+                <input type="text" class="text" name="module_label" id="module_label" value="<?php echo ovensia\ploopi\str::htmlentities($module->fields['label']); ?>" tabindex="1" />
             </p>
             <p>
                 <label>&nbsp;</label>
@@ -191,7 +191,7 @@ if ($op == 'modify' && !empty($_GET['moduleid']) && is_numeric($_GET['moduleid']
             </p>
             <p>
                 <label>&nbsp;</label>
-                <span><a href="<?php echo ploopi_urlencode("admin.php?op=apply_heritage&moduleid={$module->fields['id']}"); ?>"><?php echo _SYSTEM_APPLYHERITAGE; ?></a><br /><em><?php echo _SYSTEM_EXPLAIN_HERITED; ?></em></span>
+                <span><a href="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?op=apply_heritage&moduleid={$module->fields['id']}"); ?>"><?php echo _SYSTEM_APPLYHERITAGE; ?></a><br /><em><?php echo _SYSTEM_EXPLAIN_HERITED; ?></em></span>
             </p>
             <p class="checkbox" onclick="javascript:ploopi_checkbox_click(event, 'module_adminrestricted');">
                 <label><?php echo _SYSTEM_LABEL_ADMINRESTRICTED; ?>:</label>
@@ -211,7 +211,7 @@ if ($op == 'modify' && !empty($_GET['moduleid']) && is_numeric($_GET['moduleid']
                     else $sel = '';
 
                     ?>
-                    <option <?php if ($module->fields['viewmode'] == $id) echo 'selected="selected"'; ?> value="<?php echo $id; ?>"><?php echo ploopi_htmlentities($viewmode); ?></option>
+                    <option <?php if ($module->fields['viewmode'] == $id) echo 'selected="selected"'; ?> value="<?php echo $id; ?>"><?php echo ovensia\ploopi\str::htmlentities($viewmode); ?></option>
                     <?php
                 }
                 ?>
@@ -256,19 +256,19 @@ foreach ($sharedmodules AS $instanceid => $instance)
 {
     if (!array_key_exists($instanceid,$ownmodules))
     {
-        $desc = sprintf("<span>%s / <b>%s</b> partagé par<b>&nbsp;</span><a href=\"%s\">%s</a></b>", ploopi_htmlentities($instance['description']), ploopi_htmlentities($instance['label']), ploopi_urlencode("admin.php?workspaceid={$instance['id_workspace']}"), ploopi_htmlentities($instance['workspacelabel']));;
-        $values[$c]['values']['type'] = array('label' => ploopi_htmlentities($instance['moduletype']));
+        $desc = sprintf("<span>%s / <b>%s</b> partagé par<b>&nbsp;</span><a href=\"%s\">%s</a></b>", ovensia\ploopi\str::htmlentities($instance['description']), ovensia\ploopi\str::htmlentities($instance['label']), ovensia\ploopi\crypt::urlencode("admin.php?workspaceid={$instance['id_workspace']}"), ovensia\ploopi\str::htmlentities($instance['workspacelabel']));;
+        $values[$c]['values']['type'] = array('label' => ovensia\ploopi\str::htmlentities($instance['moduletype']));
         $values[$c]['values']['desc'] = array('label' => $desc);
-        $values[$c]['values']['actions'] = array('label' => '<a href="'.ploopi_urlencode("admin.php?op=add&instance=SHARED,{$workspaceid},{$instanceid}").'">utiliser</a>', 'sort_label' => 0);
+        $values[$c]['values']['actions'] = array('label' => '<a href="'.ovensia\ploopi\crypt::urlencode("admin.php?op=add&instance=SHARED,{$workspaceid},{$instanceid}").'">utiliser</a>', 'sort_label' => 0);
         $c++;
     }
 }
 
 foreach ($installedmodules AS $index => $moduletype)
 {
-    $values[$c]['values']['type'] = array('label' => ploopi_htmlentities($moduletype['label']));
-    $values[$c]['values']['desc'] = array('label' => ploopi_htmlentities($moduletype['description']));
-    $values[$c]['values']['actions'] = array('label' => '<a href="'.ploopi_urlencode("admin.php?op=add&instance=NEW,{$workspaceid},{$moduletype['id']}").'">instancier</a>', 'sort_label' => 1);
+    $values[$c]['values']['type'] = array('label' => ovensia\ploopi\str::htmlentities($moduletype['label']));
+    $values[$c]['values']['desc'] = array('label' => ovensia\ploopi\str::htmlentities($moduletype['description']));
+    $values[$c]['values']['actions'] = array('label' => '<a href="'.ovensia\ploopi\crypt::urlencode("admin.php?op=add&instance=NEW,{$workspaceid},{$moduletype['id']}").'">instancier</a>', 'sort_label' => 1);
     $c++;
 }
 

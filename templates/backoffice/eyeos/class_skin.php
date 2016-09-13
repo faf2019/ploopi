@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -32,11 +32,10 @@
  * @see skin_common
  */
 
-/**
- * inclusion de la classe parent
- */
 
-include_once './include/classes/skin_common.php';
+namespace ovensia\ploopi;
+
+use ovensia\ploopi;
 
 /**
  * Gestion de l'affichage du skin 'eyeos'

@@ -78,15 +78,13 @@ $arrPlanningSize =
 
 function planning_get_resources()
 {
-    include_once './include/classes/workspace.php';
-
     $arrResource = array('user' => array(), 'group' => array());
 
-    $arrWorkspaces = explode(',', ploopi_viewworkspaces());
+    $arrWorkspaces = explode(',', ovensia\ploopi\system::viewworkspaces());
 
     foreach($arrWorkspaces as $intIdWorkspace)
     {
-        $objWorkspace = new workspace();
+        $objWorkspace = new ovensia\ploopi\workspace();
         if ($objWorkspace->open($intIdWorkspace))
         {
             foreach($objWorkspace->getusers(true) as $arrUser)
@@ -97,7 +95,7 @@ function planning_get_resources()
                     'color' => $arrUser['color']
                 );
             }
-            if (ploopi_getparam('planning_display_groups'))
+            if (ovensia\ploopi\param::get('planning_display_groups'))
             {
                 foreach($objWorkspace->getgroups() as $arrGroup)
                 {
@@ -141,7 +139,7 @@ function planning_get_events($arrResources, $intTimepstpBegin = null, $intTimeps
         ON          ".implode(' AND ', $arrWhere['ed'])."
 
         WHERE       e.id_module = {$_SESSION['ploopi']['moduleid']}
-        AND         e.id_workspace IN (".ploopi_viewworkspaces().")
+        AND         e.id_workspace IN (".ovensia\ploopi\system::viewworkspaces().")
 
         ORDER BY    ed.timestp_begin, ed.timestp_end
     ");
@@ -215,9 +213,9 @@ function planning_getcookie()
     $arrSearchPattern = array();
 
     // Lecture cookie
-    ploopi_unset_error_handler();
+    ovensia\ploopi\error::unset_handler();
     if (isset($_COOKIE["planning_request{$_SESSION['ploopi']['moduleid']}"])) $arrSearchPattern = unserialize(gzuncompress(base64_decode($_COOKIE["planning_request{$_SESSION['ploopi']['moduleid']}"])));
-    ploopi_set_error_handler();
+    ovensia\ploopi\error::set_handler();
 
     return $arrSearchPattern;
 }

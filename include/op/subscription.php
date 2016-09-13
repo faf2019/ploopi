@@ -33,21 +33,19 @@
 switch($ploopi_op)
 {
     case 'subscription':
-        if (empty($_GET['ploopi_subscription_id'])) ploopi_die();
+        if (empty($_GET['ploopi_subscription_id'])) ovensia\ploopi\system::kill();
 
-        ploopi_subscription_refresh($_GET['ploopi_subscription_id'], (empty($_GET['next'])) ? '' : $_GET['next']);
-        ploopi_die();
+        ovensia\ploopi\subscription::display_refresh($_GET['ploopi_subscription_id'], (empty($_GET['next'])) ? '' : $_GET['next']);
+        ovensia\ploopi\system::kill();
     break;
 
     case 'subscription_save':
         $strNext = '';
         if (!empty($_POST['ploopi_subscription_id']))
         {
-            include_once './include/classes/subscription.php';
-
             if (!empty($_POST['ploopi_subscription_action']))
             {
-                $objSubscription = new subscription();
+                $objSubscription = new ovensia\ploopi\subscription();
 
                 if ($objSubscription->open($_POST['ploopi_subscription_id'])) // abonnement existant
                 {
@@ -73,7 +71,7 @@ switch($ploopi_op)
                     $objSubscription->save();
                     foreach($_POST['ploopi_subscription_action'] as $intActionId)
                     {
-                        $objSubscriptionAction = new subscription_action();
+                        $objSubscriptionAction = new ovensia\ploopi\subscription_action();
                         $objSubscriptionAction->fields['id_action'] = $intActionId;
                         $objSubscriptionAction->fields['id_subscription'] = $_POST['ploopi_subscription_id'];
                         $objSubscriptionAction->save();
@@ -83,7 +81,7 @@ switch($ploopi_op)
             }
             else
             {
-                $objSubscription = new subscription();
+                $objSubscription = new ovensia\ploopi\subscription();
                 if ($objSubscription->open($_POST['ploopi_subscription_id'])) // abonnement existant
                 {
                     $objSubscription->delete(); // on le supprime
@@ -94,10 +92,10 @@ switch($ploopi_op)
 
         ?>
         <script type="text/javascript">
-            window.parent.ploopi_subscription('<?php echo ploopi_htmlentities($_POST['ploopi_subscription_id']); ?>', '<?php echo $strNext ?>');
+            window.parent.ovensia\ploopi\subscription::display('<?php echo ovensia\ploopi\str::htmlentities($_POST['ploopi_subscription_id']); ?>', '<?php echo $strNext ?>');
         </script>
         <?php
 
-        ploopi_die();
+        ovensia\ploopi\system::kill();
     break;
 }

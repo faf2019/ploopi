@@ -43,7 +43,7 @@ if ($_SESSION['ploopi']['connected'])
      * On vérifie qu'on est bien dans le module DOC.
      * Ces opérations ne peuvent être effectuées que depuis le module DOC.
      */
-    if (ploopi_ismoduleallowed('doc'))
+    if (ovensia\ploopi\acl::ismoduleallowed('doc'))
     {
         $currentfolder = (isset($_REQUEST['currentfolder'])) ? $_REQUEST['currentfolder'] : 0;
 
@@ -51,19 +51,19 @@ if ($_SESSION['ploopi']['connected'])
         {
             case 'doc_help':
                 include_once './modules/doc/public_legend.php';
-                ploopi_die();
+                ovensia\ploopi\system::kill();
             break;
 
             case 'doc_search_next':
-                ploopi_init_module('doc');
+                ovensia\ploopi\module::init('doc');
                 include_once './modules/doc/public_search_result.php';
-                ploopi_die();
+                ovensia\ploopi\system::kill();
             break;
 
             case 'doc_folder_detail':
                 if (isset($_GET['doc_folder_id']) && is_numeric($_GET['doc_folder_id']))
                 {
-                    ploopi_init_module('doc');
+                    ovensia\ploopi\module::init('doc');
 
                     // Dossiers à exclure dans le choix
                     $arrExcludes = array();
@@ -76,20 +76,20 @@ if ($_SESSION['ploopi']['connected'])
 
                     echo $skin->display_treeview($arrTreeview['list'], $arrTreeview['tree'], $strPrefix.$currentfolder, $strPrefix.$_GET['doc_folder_id']);
                 }
-                ploopi_die();
+                ovensia\ploopi\system::kill();
             break;
 
             /**
              * Enregistrement d'un document (ou ensemble de document si ajout)
              */
             case 'doc_filesave':
-                if (empty($_REQUEST['doc_mode'])) ploopi_redirect("admin.php?doc_fileform&currentfolder={$currentfolder}");
+                if (empty($_REQUEST['doc_mode'])) ovensia\ploopi\output::redirect("admin.php?doc_fileform&currentfolder={$currentfolder}");
 
                 include_once './modules/doc/class_docfile.php';
                 include_once './modules/doc/class_docfolder.php';
                 include_once './modules/doc/class_docfiledraft.php';
 
-                ploopi_init_module('doc');
+                ovensia\ploopi\module::init('doc');
 
                 // Brouillon nécessitant validation ?
                 $draft = false;
@@ -120,13 +120,13 @@ if ($_SESSION['ploopi']['connected'])
                 {
                     $docfile = new docfile();
                     // Ouverture du fichier
-                    if (empty($_GET['docfile_md5id']) || !$docfile->openmd5($_GET['docfile_md5id'])) ploopi_redirect('admin.php');
+                    if (empty($_GET['docfile_md5id']) || !$docfile->openmd5($_GET['docfile_md5id'])) ovensia\ploopi\output::redirect('admin.php');
 
                     $readonly = doc_file_isreadonly($docfile->fields, _DOC_ACTION_MODIFYFILE);
                 }
 
 
-                if ($readonly) ploopi_redirect("admin.php?doc_browser&currentfolder={$currentfolder}");
+                if ($readonly) ovensia\ploopi\output::redirect("admin.php?doc_browser&currentfolder={$currentfolder}");
 
 
                 // WORKFLOW
@@ -135,12 +135,12 @@ if ($_SESSION['ploopi']['connected'])
                 $arrWfUsers = array('group' => array(), 'user' => array());
                 $arrWfUsersOnly = array(); // utilisateurs uniquement (groupes compris)
 
-                $objUser = new user();
+                $objUser = new ovensia\ploopi\user();
                 $objUser->open($_SESSION['ploopi']['userid']);
                 $arrGroups = $objUser->getgroups(true);
 
                 $booWfVal = false;
-                foreach(ploopi_validation_get(_DOC_OBJECT_FOLDER, $currentfolder) as $value)
+                foreach(ovensia\ploopi\validation::get(_DOC_OBJECT_FOLDER, $currentfolder) as $value)
                 {
                     if ($value['type_validation'] == 'user' && $value['id_validation'] == $_SESSION['ploopi']['userid']) $booWfVal = true;
                     if ($value['type_validation'] == 'group' && isset($arrGroups[$value['id_validation']])) $booWfVal = true;
@@ -150,7 +150,7 @@ if ($_SESSION['ploopi']['connected'])
                     if ($value['type_validation'] == 'user') $arrWfUsersOnly[] = $value['id_validation'];
                     if ($value['type_validation'] == 'group')
                     {
-                        $objGroup = new group();
+                        $objGroup = new ovensia\ploopi\group();
                         if ($objGroup->open($value['id_validation'])) $arrWfUsersOnly = array_merge($arrWfUsersOnly, array_keys($objGroup->getusers()));
                     }
                 }
@@ -227,7 +227,7 @@ if ($_SESSION['ploopi']['connected'])
                                 // Création d'un dossier de travail temporaire
                                 $tmpfoldername = md5(uniqid(rand(), true));
                                 $uncompress_path = doc_getpath()._PLOOPI_SEP.'zip'._PLOOPI_SEP.$tmpfoldername;
-                                if (!is_dir($uncompress_path)) ploopi_makedir($uncompress_path);
+                                if (!is_dir($uncompress_path)) ovensia\ploopi\fs::makedir($uncompress_path);
 
                                 if (is_writeable($uncompress_path))
                                 {
@@ -296,7 +296,7 @@ if ($_SESSION['ploopi']['connected'])
                                         if ($draft)
                                         {
                                             $_SESSION['ploopi']['tickets']['users_selected'] = $arrWfUsersOnly;
-                                            ploopi_tickets_send(
+                                            ovensia\ploopi\ticket::send(
                                                 "Demande de validation du document <strong>\"{$docfile->fields['name']}\"</strong> (module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']})",
                                                 "Ceci est un message automatique envoyé suite à une demande de validation du document \"{$docfile->fields['name']}\" du module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']}<br /><br />Vous pouvez accéder à ce document pour le valider en cliquant sur le lien ci-dessous.",
                                                 true,
@@ -313,15 +313,15 @@ if ($_SESSION['ploopi']['connected'])
                                             $arrSubscribers = $docfolder->getSubscribers(array(_DOC_ACTION_ADDFILE, _DOC_ACTION_MODIFYFILE));
 
                                             // on envoie le ticket de notification d'action sur l'objet
-                                            if (!empty($arrSubscribers)) ploopi_subscription_notify(_DOC_OBJECT_FILE, $docfile->fields['md5id'], _DOC_ACTION_ADDFILE, $docfile->fields['name'], array_keys($arrSubscribers), 'Cet objet à été créé');
+                                            if (!empty($arrSubscribers)) ovensia\ploopi\subscription::notify(_DOC_OBJECT_FILE, $docfile->fields['md5id'], _DOC_ACTION_ADDFILE, $docfile->fields['name'], array_keys($arrSubscribers), 'Cet objet à été créé');
                                         }
 
-                                        ploopi_create_user_action_log(_DOC_ACTION_ADDFILE, $docfile->fields['id']);
+                                        ovensia\ploopi\user_action_log::record(_DOC_ACTION_ADDFILE, $docfile->fields['id']);
                                     }
                                 }
                             }
                             // Suppression du dossier temporaire
-                            if(isset($uncompress_path) && is_dir($uncompress_path)) ploopi_deletedir($uncompress_path);
+                            if(isset($uncompress_path) && is_dir($uncompress_path)) ovensia\ploopi\fs::deletedir($uncompress_path);
                         }
                     }
                 }
@@ -332,7 +332,7 @@ if ($_SESSION['ploopi']['connected'])
                 {
                     $docfile = new docfile();
                     // Ouverture du fichier
-                    if (empty($_GET['docfile_md5id']) || !$docfile->openmd5($_GET['docfile_md5id'])) ploopi_redirect('admin.php');
+                    if (empty($_GET['docfile_md5id']) || !$docfile->openmd5($_GET['docfile_md5id'])) ovensia\ploopi\output::redirect('admin.php');
                     $docfile_id = $docfile->fields['id'];
 
                     // On va d'abord vérifier si le fichier est déplacé
@@ -418,10 +418,10 @@ if ($_SESSION['ploopi']['connected'])
                             $arrSubscribers = $docfolder->getSubscribers(array(_DOC_ACTION_MODIFYFILE, _DOC_ACTION_DELETEFILE));
 
                             // on envoie le ticket de notification d'action sur l'objet
-                            if (!empty($arrSubscribers)) ploopi_subscription_notify(_DOC_OBJECT_FILE, $docfile->fields['md5id'], _DOC_ACTION_DELETEFILE, $docfile->fields['name'], array_keys($arrSubscribers), 'Cet objet à été supprimé');
+                            if (!empty($arrSubscribers)) ovensia\ploopi\subscription::notify(_DOC_OBJECT_FILE, $docfile->fields['md5id'], _DOC_ACTION_DELETEFILE, $docfile->fields['name'], array_keys($arrSubscribers), 'Cet objet à été supprimé');
                         }
 
-                        ploopi_create_user_action_log(_DOC_ACTION_DELETEFILE, $docfile->fields['id']);
+                        ovensia\ploopi\user_action_log::record(_DOC_ACTION_DELETEFILE, $docfile->fields['id']);
 
 
                         // Crée le brouillon et supprime le fichier d'origine
@@ -434,7 +434,7 @@ if ($_SESSION['ploopi']['connected'])
                         if ($draft)
                         {
                             $_SESSION['ploopi']['tickets']['users_selected'] = $arrWfUsersOnly;
-                            ploopi_tickets_send(
+                            ovensia\ploopi\ticket::send(
                                 "Demande de validation du document <strong>\"{$docfile->fields['name']}\"</strong> (module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']})",
                                 "Ceci est un message automatique envoyé suite à une demande de validation du document \"{$docfile->fields['name']}\" du module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']}<br /><br />Vous pouvez accéder à ce document pour le valider en cliquant sur le lien ci-dessous.",
                                 true,
@@ -453,18 +453,18 @@ if ($_SESSION['ploopi']['connected'])
                             $arrSubscribers = $docfolder->getSubscribers(array(_DOC_ACTION_MODIFYFILE));
 
                             // on envoie le ticket de notification d'action sur l'objet
-                            if (!empty($arrSubscribers)) ploopi_subscription_notify(_DOC_OBJECT_FILE, $docfile->fields['md5id'], _DOC_ACTION_MODIFYFILE, $docfile->fields['name'], array_keys($arrSubscribers), 'Cet objet à été modifié');
+                            if (!empty($arrSubscribers)) ovensia\ploopi\subscription::notify(_DOC_OBJECT_FILE, $docfile->fields['md5id'], _DOC_ACTION_MODIFYFILE, $docfile->fields['name'], array_keys($arrSubscribers), 'Cet objet à été modifié');
                         }
-                        ploopi_create_user_action_log(_DOC_ACTION_MODIFYFILE, $docfile_id);
+                        ovensia\ploopi\user_action_log::record(_DOC_ACTION_MODIFYFILE, $docfile_id);
                     }
                 }
 
-                ploopi_redirect("admin.php?doc_browser&currentfolder={$currentfolder}");
+                ovensia\ploopi\output::redirect("admin.php?doc_browser&currentfolder={$currentfolder}");
             break;
 
             case 'doc_filedownloadzip':
 
-                ploopi_init_module('doc');
+                ovensia\ploopi\module::init('doc');
                 $error = true;
 
                 if (!empty($_GET['docfile_md5id']))
@@ -485,7 +485,7 @@ if ($_SESSION['ploopi']['connected'])
                     // Création d'un dossier de travail temporaire
                     $tmpfoldername = md5(uniqid(rand(), true));
                     $zip_path = doc_getpath()._PLOOPI_SEP.'zip'._PLOOPI_SEP.$tmpfoldername;
-                    if (!is_dir($zip_path)) ploopi_makedir($zip_path);
+                    if (!is_dir($zip_path)) ovensia\ploopi\fs::makedir($zip_path);
 
                     if (file_exists($docfile->getfilepath()) && is_writeable($zip_path))
                     {
@@ -499,22 +499,22 @@ if ($_SESSION['ploopi']['connected'])
                         }
 
                         // Téléchargement du fichier zip
-                        ploopi_downloadfile($zip_path._PLOOPI_SEP.$zip_filename, $zip_filename, true, true, false);
+                        ovensia\ploopi\fs::downloadfile($zip_path._PLOOPI_SEP.$zip_filename, $zip_filename, true, true, false);
 
                         // Suppression du dossier temporaire
-                        if(isset($zip_path) && is_dir($zip_path)) ploopi_deletedir($zip_path);
+                        if(isset($zip_path) && is_dir($zip_path)) ovensia\ploopi\fs::deletedir($zip_path);
 
                         // Vidage buffer
-                        ploopi_die(null, true);
+                        ovensia\ploopi\system::kill(null, true);
                     }
                 }
 
-                ploopi_redirect("admin.php");
+                ovensia\ploopi\output::redirect("admin.php");
             break;
 
             case 'doc_filedownload':
             case 'doc_fileview':
-                ploopi_init_module('doc');
+                ovensia\ploopi\module::init('doc');
                 if (!empty($_GET['docfile_md5id']))
                 {
                     include_once './modules/doc/class_docfile.php';
@@ -526,43 +526,28 @@ if ($_SESSION['ploopi']['connected'])
                         include_once './modules/doc/class_docfilehistory.php';
                         $docfilehistory = new docfilehistory();
                         $docfilehistory->open($docfile->fields['id'], $_GET['version']);
-                        if (file_exists($docfilehistory->getfilepath())) ploopi_downloadfile($docfilehistory->getfilepath(), $docfilehistory->fields['name'], false, ($ploopi_op != 'doc_fileview'));
+                        if (file_exists($docfilehistory->getfilepath())) ovensia\ploopi\fs::downloadfile($docfilehistory->getfilepath(), $docfilehistory->fields['name'], false, ($ploopi_op != 'doc_fileview'));
                     }
                     else
                     {
                         if (file_exists($docfile->getfilepath()))
                         {
-                            if ($ploopi_op == 'doc_fileview' && !empty($_GET['doc_viewmode']) && $_GET['doc_viewmode'] == 'pdf' && (ploopi_getsessionvar('unoconv') === true || ploopi_getsessionvar('jodconv') === true))
+                            if ($ploopi_op == 'doc_fileview' && !empty($_GET['doc_viewmode']) && $_GET['doc_viewmode'] == 'pdf' && ovensia\ploopi\session::getvar('unoconv') === true)
                             {
                                 // Conversion PDF demandée
-
-                                /*
-                                 Exemple de convertisseurs:
-                                 unoconv : /usr/bin/unoconv
-                                 jodconverter : http://localhost:8080/converter
-                                */
+                                $strUnoconvPath = ovensia\ploopi\param::get('system_unoconv', _PLOOPI_MODULE_SYSTEM);
 
                                 // Fichier temporaire
                                 $strTmpPath = _PLOOPI_PATHDATA.'/tmp';
                                 $strTmpFile = $strTmpPath.'/'.uniqid().'.pdf';
-                                ploopi_makedir($strTmpPath);
+                                ovensia\ploopi\fs::makedir($strTmpPath);
 
-                                if (ploopi_getsessionvar('unoconv') === true)
-                                {
-                                    $strUnoconvPath = ploopi_getparam('system_unoconv', _PLOOPI_MODULE_SYSTEM);
-                                    exec("{$strUnoconvPath} -v --stdout -f pdf ".$docfile->getfilepath()." > {$strTmpFile}", $output);
-                                    ploopi_downloadfile($strTmpFile, $docfile->fields['name'].'.pdf', true, false);
-                                }
-                                elseif (ploopi_getsessionvar('jodconv') === true)
-                                {
-                                    include_once './include/classes/odf.php';
-                                    $objOdfConverter = new odf_converter(ploopi_getparam('system_jodwebservice', _PLOOPI_MODULE_SYSTEM));
-                                    file_put_contents($strTmpFile, $objOdfConverter->convert(file_get_contents($docfile->getfilepath()), ploopi_getmimetype($docfile->fields['name']), 'application/pdf'));
-                                    ploopi_downloadfile($strTmpFile, $docfile->fields['name'].'.pdf', true, false);
-                                }
+                                exec($cmd = "export HOME=/tmp && {$strUnoconvPath} -v --stdout -f pdf ".$docfile->getfilepath()." > {$strTmpFile}");
+
+                                ovensia\ploopi\fs::downloadfile($strTmpFile, $docfile->fields['name'].'.pdf', true, false);
 
                             }
-                            else ploopi_downloadfile($docfile->getfilepath(), $docfile->fields['name'], false, ($ploopi_op != 'doc_fileview'));
+                            else ovensia\ploopi\fs::downloadfile($docfile->getfilepath(), $docfile->fields['name'], false, ($ploopi_op != 'doc_fileview'));
                         }
                     }
                 }
@@ -572,28 +557,28 @@ if ($_SESSION['ploopi']['connected'])
                     include_once './modules/doc/class_docfiledraft.php';
                     $docfiledraft = new docfiledraft();
                     $docfiledraft->openmd5($_GET['docfiledraft_md5id']);
-                    if (file_exists($docfiledraft->getfilepath())) ploopi_downloadfile($docfiledraft->getfilepath(),$docfiledraft->fields['name']);
+                    if (file_exists($docfiledraft->getfilepath())) ovensia\ploopi\fs::downloadfile($docfiledraft->getfilepath(),$docfiledraft->fields['name']);
                 }
 
-                ploopi_die();
+                ovensia\ploopi\system::kill();
             break;
 
             case 'doc_filedraftdelete':
                 if (!empty($_GET['docfiledraft_md5id']))
                 {
-                    ploopi_init_module('doc');
+                    ovensia\ploopi\module::init('doc');
                     include_once './modules/doc/class_docfiledraft.php';
                     $docfiledraft = new docfiledraft();
                     if ($docfiledraft->openmd5($_GET['docfiledraft_md5id']))
                     {
                         $error = $docfiledraft->delete();
                     }
-                    ploopi_redirect("admin.php?op=doc_browser&currentfolder=$currentfolder&error=$error");
+                    ovensia\ploopi\output::redirect("admin.php?op=doc_browser&currentfolder=$currentfolder&error=$error");
                 }
             break;
 
             case 'doc_filedelete':
-                ploopi_init_module('doc');
+                ovensia\ploopi\module::init('doc');
 
                 if (!empty($_GET['docfile_md5id']))
                 {
@@ -616,22 +601,22 @@ if ($_SESSION['ploopi']['connected'])
                                 $arrSubscribers = $docfolder->getSubscribers(array(_DOC_ACTION_MODIFYFILE, _DOC_ACTION_DELETEFILE));
 
                                 // on envoie le ticket de notification d'action sur l'objet
-                                if (!empty($arrSubscribers)) ploopi_subscription_notify(_DOC_OBJECT_FILE, $docfile->fields['md5id'], _DOC_ACTION_DELETEFILE, $docfile->fields['name'], array_keys($arrSubscribers), 'Cet objet à été supprimé');
+                                if (!empty($arrSubscribers)) ovensia\ploopi\subscription::notify(_DOC_OBJECT_FILE, $docfile->fields['md5id'], _DOC_ACTION_DELETEFILE, $docfile->fields['name'], array_keys($arrSubscribers), 'Cet objet à été supprimé');
                             }
 
-                            ploopi_create_user_action_log(_DOC_ACTION_DELETEFILE, $docfile->fields['id']);
-                            ploopi_redirect("admin.php?op=doc_browser&currentfolder={$currentfolder}&error={$error}");
+                            ovensia\ploopi\user_action_log::record(_DOC_ACTION_DELETEFILE, $docfile->fields['id']);
+                            ovensia\ploopi\output::redirect("admin.php?op=doc_browser&currentfolder={$currentfolder}&error={$error}");
                         }
                     }
                 }
 
-                ploopi_redirect("admin.php?op=doc_browser&currentfolder={$currentfolder}");
+                ovensia\ploopi\output::redirect("admin.php?op=doc_browser&currentfolder={$currentfolder}");
             break;
 
             case 'doc_fileindex':
                 if (!empty($_GET['docfile_md5id']))
                 {
-                    ploopi_init_module('doc');
+                    ovensia\ploopi\module::init('doc');
                     include_once './modules/doc/class_docfile.php';
                     $docfile = new docfile();
                     if ($docfile->openmd5($_GET['docfile_md5id']))
@@ -640,13 +625,13 @@ if ($_SESSION['ploopi']['connected'])
                         $docfile->save();
                     }
                 }
-                ploopi_redirect("admin.php?op=doc_fileform&currentfolder={$currentfolder}&docfile_md5id={$_GET['docfile_md5id']}");
+                ovensia\ploopi\output::redirect("admin.php?op=doc_fileform&currentfolder={$currentfolder}&docfile_md5id={$_GET['docfile_md5id']}");
             break;
 
             case 'doc_filepublish':
                 if (!empty($_GET['docfiledraft_md5id']))
                 {
-                    ploopi_init_module('doc');
+                    ovensia\ploopi\module::init('doc');
                     include_once './modules/doc/class_docfiledraft.php';
                     doc_getvalidation();
 
@@ -656,13 +641,13 @@ if ($_SESSION['ploopi']['connected'])
                         if ($docfiledraft->openmd5($_GET['docfiledraft_md5id'])) $docfiledraft->publish();
                     }
                 }
-                ploopi_redirect("admin.php?op=doc_browser&currentfolder={$currentfolder}");
+                ovensia\ploopi\output::redirect("admin.php?op=doc_browser&currentfolder={$currentfolder}");
             break;
 
             case 'doc_folderpublish':
                 if (!empty($_GET['docfolder_id']))
                 {
-                    ploopi_init_module('doc');
+                    ovensia\ploopi\module::init('doc');
                     doc_getvalidation();
 
                     if (in_array($currentfolder, $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['validation']['folders']));
@@ -677,16 +662,16 @@ if ($_SESSION['ploopi']['connected'])
                             $arrSubscribers = $docfolder->getSubscribers(array(_DOC_ACTION_MODIFYFOLDER));
 
                             // on envoie le ticket de notification d'action sur l'objet
-                            if (!empty($arrSubscribers)) ploopi_subscription_notify(_DOC_OBJECT_FOLDER, $docfolder->fields['id'], _DOC_ACTION_MODIFYFOLDER, $docfolder->fields['name'], array_keys($arrSubscribers), 'Cet objet à été publié');
+                            if (!empty($arrSubscribers)) ovensia\ploopi\subscription::notify(_DOC_OBJECT_FOLDER, $docfolder->fields['id'], _DOC_ACTION_MODIFYFOLDER, $docfolder->fields['name'], array_keys($arrSubscribers), 'Cet objet à été publié');
                         }
                     }
                 }
 
-                ploopi_redirect("admin.php?op=doc_browser&currentfolder={$currentfolder}");
+                ovensia\ploopi\output::redirect("admin.php?op=doc_browser&currentfolder={$currentfolder}");
             break;
 
             case 'doc_folderdelete':
-                ploopi_init_module('doc');
+                ovensia\ploopi\module::init('doc');
 
                 if (!empty($_GET['docfolder_id']))
                 {
@@ -698,30 +683,30 @@ if ($_SESSION['ploopi']['connected'])
 
                         $currentfolder = $docfolder->fields['id_folder'];
 
-                        if (!doc_folder_isreadonly($docfolder->fields, _DOC_ACTION_DELETEFOLDER) && ($docfolder->fields['nbelements'] == 0 || ploopi_isadmin() || ploopi_isactionallowed(_DOC_ACTION_ADMIN)))
+                        if (!doc_folder_isreadonly($docfolder->fields, _DOC_ACTION_DELETEFOLDER) && ($docfolder->fields['nbelements'] == 0 || ovensia\ploopi\acl::isadmin() || ovensia\ploopi\acl::isactionallowed(_DOC_ACTION_ADMIN)))
                         {
                             // On va chercher les abonnés
                             $arrSubscribers = $docfolder->getSubscribers(array(_DOC_ACTION_DELETEFOLDER, _DOC_ACTION_MODIFYFOLDER));
 
                             // on envoie le ticket de notification d'action sur l'objet
-                            if (!empty($arrSubscribers)) ploopi_subscription_notify(_DOC_OBJECT_FOLDER, $docfolder->fields['id'], _DOC_ACTION_DELETEFOLDER, $docfolder->fields['name'], array_keys($arrSubscribers), 'Cet objet à été supprimé');
+                            if (!empty($arrSubscribers)) ovensia\ploopi\subscription::notify(_DOC_OBJECT_FOLDER, $docfolder->fields['id'], _DOC_ACTION_DELETEFOLDER, $docfolder->fields['name'], array_keys($arrSubscribers), 'Cet objet à été supprimé');
 
                             $docfolder->delete();
-                            ploopi_create_user_action_log(_DOC_ACTION_DELETEFOLDER, $docfolder->fields['id']);
+                            ovensia\ploopi\user_action_log::record(_DOC_ACTION_DELETEFOLDER, $docfolder->fields['id']);
                         }
                     }
 
-                    ploopi_redirect("admin.php?op=doc_browser&currentfolder={$currentfolder}");
+                    ovensia\ploopi\output::redirect("admin.php?op=doc_browser&currentfolder={$currentfolder}");
                 }
             break;
 
             case 'doc_foldersave':
-                ploopi_init_module('doc');
+                ovensia\ploopi\module::init('doc');
 
                 include_once './modules/doc/class_docfolder.php';
 
                 // Contrôle de données (le dossier ne peut pas être son propre parent)
-                if (isset($_POST['docfolder_id_folder']) && isset($_GET['docfolder_id']) && $_POST['docfolder_id_folder'] == $_GET['docfolder_id'])  ploopi_die();
+                if (isset($_POST['docfolder_id_folder']) && isset($_GET['docfolder_id']) && $_POST['docfolder_id_folder'] == $_GET['docfolder_id'])  ovensia\ploopi\system::kill();
 
 
                 if (isset($_POST['docfolder_id_folder'])) $currentfolder = $_POST['docfolder_id_folder'];
@@ -730,12 +715,12 @@ if ($_SESSION['ploopi']['connected'])
                 $arrWfUsers = array('group' => array(), 'user' => array());
                 $arrWfUsersOnly = array(); // utilisateurs uniquement (groupes compris)
 
-                $objUser = new user();
+                $objUser = new ovensia\ploopi\user();
                 $objUser->open($_SESSION['ploopi']['userid']);
                 $arrGroups = $objUser->getgroups(true);
 
                 $booWfVal = false;
-                foreach(ploopi_validation_get(_DOC_OBJECT_FOLDER, $currentfolder) as $value)
+                foreach(ovensia\ploopi\validation::get(_DOC_OBJECT_FOLDER, $currentfolder) as $value)
                 {
                     if ($value['type_validation'] == 'user' && $value['id_validation'] == $_SESSION['ploopi']['userid']) $booWfVal = true;
                     if ($value['type_validation'] == 'group' && isset($arrGroups[$value['id_validation']])) $booWfVal = true;
@@ -745,7 +730,7 @@ if ($_SESSION['ploopi']['connected'])
                     if ($value['type_validation'] == 'user') $arrWfUsersOnly[] = $value['id_validation'];
                     if ($value['type_validation'] == 'group')
                     {
-                        $objGroup = new group();
+                        $objGroup = new ovensia\ploopi\group();
                         if ($objGroup->open($value['id_validation'])) $arrWfUsersOnly = array_merge($arrWfUsersOnly, array_keys($objGroup->getusers()));
                     }
                 }
@@ -781,7 +766,7 @@ if ($_SESSION['ploopi']['connected'])
                                 $docfolder->fields['published'] = 0;
 
                                 $_SESSION['ploopi']['tickets']['users_selected'] = $arrWfUsersOnly;
-                                ploopi_tickets_send("Demande de validation du dossier <strong>\"{$docfolder->fields['name']}\"</strong> (module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']})", "Ceci est un message automatique envoyé suite à une demande de validation du dossier \"{$docfolder->fields['name']}\" du module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']}<br /><br />Vous pouvez accéder à ce dossier pour le valider en cliquant sur le lien ci-dessous.", true, 0, _DOC_OBJECT_FILEDRAFT, $currentfolder, $docfolder->fields['name']);
+                                ovensia\ploopi\ticket::send("Demande de validation du dossier <strong>\"{$docfolder->fields['name']}\"</strong> (module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']})", "Ceci est un message automatique envoyé suite à une demande de validation du dossier \"{$docfolder->fields['name']}\" du module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']}<br /><br />Vous pouvez accéder à ce dossier pour le valider en cliquant sur le lien ci-dessous.", true, 0, _DOC_OBJECT_FILEDRAFT, $currentfolder, $docfolder->fields['name']);
                             }
                             else
                             {
@@ -798,18 +783,18 @@ if ($_SESSION['ploopi']['connected'])
                             $arrSubscribers = $docfolder->getSubscribers(array(_DOC_ACTION_MODIFYFOLDER));
 
                             // on envoie le ticket de notification d'action sur l'objet
-                            if (!empty($arrSubscribers)) ploopi_subscription_notify(_DOC_OBJECT_FOLDER, $docfolder->fields['id'], _DOC_ACTION_MODIFYFOLDER, $docfolder->fields['name'], array_keys($arrSubscribers), 'Cet objet à été modifié');
+                            if (!empty($arrSubscribers)) ovensia\ploopi\subscription::notify(_DOC_OBJECT_FOLDER, $docfolder->fields['id'], _DOC_ACTION_MODIFYFOLDER, $docfolder->fields['name'], array_keys($arrSubscribers), 'Cet objet à été modifié');
 
                             // SHARES
-                            ploopi_share_save(_DOC_OBJECT_FOLDER, $docfolder->fields['id'], -1, 'doc_share_folder');
+                            ovensia\ploopi\share::add(_DOC_OBJECT_FOLDER, $docfolder->fields['id'], -1, 'doc_share_folder');
                             doc_resetshare();
 
                             // WORKFLOW
-                            ploopi_validation_save(_DOC_OBJECT_FOLDER, $docfolder->fields['id'], -1, 'doc_validation_folder');
+                            ovensia\ploopi\validation::add(_DOC_OBJECT_FOLDER, $docfolder->fields['id'], -1, 'doc_validation_folder');
                             doc_resetvalidation();
 
                             // LOG
-                            ploopi_create_user_action_log(_DOC_ACTION_MODIFYFOLDER, $docfolder->fields['id']);
+                            ovensia\ploopi\user_action_log::record(_DOC_ACTION_MODIFYFOLDER, $docfolder->fields['id']);
                         }
                     }
                 }
@@ -829,7 +814,7 @@ if ($_SESSION['ploopi']['connected'])
                             $docfolder->fields['published'] = 0;
 
                             $_SESSION['ploopi']['tickets']['users_selected'] = $arrWfUsersOnly;
-                            ploopi_tickets_send("Demande de validation du dossier <strong>\"{$docfolder->fields['name']}\"</strong> (module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']})", "Ceci est un message automatique envoyé suite à une demande de validation du dossier \"{$docfolder->fields['name']}\" du module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']}<br /><br />Vous pouvez accéder à ce dossier pour le valider en cliquant sur le lien ci-dessous.", true, 0, _DOC_OBJECT_FILEDRAFT, $currentfolder, $docfolder->fields['name']);
+                            ovensia\ploopi\ticket::send("Demande de validation du dossier <strong>\"{$docfolder->fields['name']}\"</strong> (module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']})", "Ceci est un message automatique envoyé suite à une demande de validation du dossier \"{$docfolder->fields['name']}\" du module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']}<br /><br />Vous pouvez accéder à ce dossier pour le valider en cliquant sur le lien ci-dessous.", true, 0, _DOC_OBJECT_FILEDRAFT, $currentfolder, $docfolder->fields['name']);
                         }
                         else
                         {
@@ -847,27 +832,27 @@ if ($_SESSION['ploopi']['connected'])
                         $arrSubscribers = $docfolder->getSubscribers(array(_DOC_ACTION_ADDFOLDER, _DOC_ACTION_MODIFYFOLDER));
 
                         // on envoie le ticket de notification d'action sur l'objet
-                        if (!empty($arrSubscribers)) ploopi_subscription_notify(_DOC_OBJECT_FOLDER, $docfolder->fields['id'], _DOC_ACTION_ADDFOLDER, $docfolder->fields['name'], array_keys($arrSubscribers), 'Cet objet à été créé');
+                        if (!empty($arrSubscribers)) ovensia\ploopi\subscription::notify(_DOC_OBJECT_FOLDER, $docfolder->fields['id'], _DOC_ACTION_ADDFOLDER, $docfolder->fields['name'], array_keys($arrSubscribers), 'Cet objet à été créé');
 
                         // SHARES
-                        ploopi_share_save(_DOC_OBJECT_FOLDER, $docfolder->fields['id'], -1, 'doc_share_folder');
+                        ovensia\ploopi\share::add(_DOC_OBJECT_FOLDER, $docfolder->fields['id'], -1, 'doc_share_folder');
                         doc_resetshare();
 
                         // WORKFLOW
-                        ploopi_validation_save(_DOC_OBJECT_FOLDER, $docfolder->fields['id'], -1, 'doc_validation_folder');
+                        ovensia\ploopi\validation::add(_DOC_OBJECT_FOLDER, $docfolder->fields['id'], -1, 'doc_validation_folder');
                         doc_resetvalidation();
 
                         // LOG
-                        ploopi_create_user_action_log(_DOC_ACTION_ADDFOLDER, $docfolder->fields['id']);
+                        ovensia\ploopi\user_action_log::record(_DOC_ACTION_ADDFOLDER, $docfolder->fields['id']);
                     }
                 }
 
-                ploopi_redirect("admin.php?op=doc_folderform&currentfolder={$currentfolder}");
+                ovensia\ploopi\output::redirect("admin.php?op=doc_folderform&currentfolder={$currentfolder}");
             break;
 
             case 'doc_folderselect':
                 ob_start();
-                ploopi_init_module('doc');
+                ovensia\ploopi\module::init('doc');
 
                 // Dossiers à exclure dans le choix (le dossier actuel)
                 $arrExcludes = array();
@@ -888,7 +873,7 @@ if ($_SESSION['ploopi']['connected'])
                 ob_end_clean();
 
                 echo $skin->create_popup('Choix d\'un dossier parent', $content, 'doc_popup_folderselect');
-                ploopi_die();
+                ovensia\ploopi\system::kill();
             break;
         }
     }
@@ -919,8 +904,7 @@ if ($_SESSION['ploopi']['connected'])
                 // on cherche les fichiers du dossier "idfolder"
                 // en vérifiant au passage que le module est accessible et que le dossier est public
 
-                include_once './include/functions/system.php';
-                $arrModules = ploopi_getmoduleid('doc', false);
+                $arrModules = ovensia\ploopi\module::getid('doc', false);
                 $arrFiles = array();
 
                 if (!empty($arrModules))
@@ -957,19 +941,25 @@ if ($_SESSION['ploopi']['connected'])
                             break;
                         }
 
-                        if (empty($arrFilter) || in_array(ploopi_file_getextension($row['name']),$arrFilter)) $arrFiles[] = $row;
+                        if (empty($arrFilter) || in_array(ovensia\ploopi\fs::file_getextension($row['name']),$arrFilter)) $arrFiles[] = $row;
                     }
                 }
 
-                ploopi_print_json($arrFiles);
+                ovensia\ploopi\str::print_json($arrFiles);
             }
 
-            ploopi_die();
+            ovensia\ploopi\system::kill();
         break;
 
         case 'doc_selectfile':
         case 'doc_selectimage':
         case 'doc_selectflash':
+            // http://docs.ckeditor.com/#!/guide/dev_file_browser_api
+            // Important, paramètres fournis par ckeditor :
+            // CKEditor (= editor)
+            // CKEditorFuncNum (= 0)
+            // langCode (= fr)
+
             ob_start();
             include_once './modules/doc/fck_explorer.php';
             $main_content = ob_get_contents();
@@ -983,11 +973,11 @@ if ($_SESSION['ploopi']['connected'])
             );
 
             $template_body->pparse('body');
-            ploopi_die();
+            ovensia\ploopi\system::kill();
         break;
 
         case 'doc_explorer':
-            ploopi_init_module('doc');
+            ovensia\ploopi\module::init('doc');
 
             include_once './modules/doc/class_docfolder.php';
 
@@ -1000,7 +990,7 @@ if ($_SESSION['ploopi']['connected'])
             }
 
             include_once './modules/doc/public_explorer.php';
-            ploopi_die();
+            ovensia\ploopi\system::kill();
         break;
     }
 }
@@ -1021,18 +1011,16 @@ switch($ploopi_op)
             $width = (!empty($_GET['width']) && is_numeric($_GET['width'])) ? $_GET['width'] : 111;
             $height = (!empty($_GET['height']) && is_numeric($_GET['height'])) ? $_GET['height'] : 90;
 
-            include_once './include/classes/cache.php';
-            ploopi_ob_clean();
+            ovensia\ploopi\buffer::clean();
 
-            $objCache = new ploopi_cache(md5('doc_thumb_'.$_GET['docfile_md5id'].'_'.$_GET['version']), $intTimeCache); // Attribution d'un groupe spécifique pour le cache pour permettre un clean précis
+            $objCache = new ovensia\ploopi\cache(md5('doc_thumb_'.$_GET['docfile_md5id'].'_'.$_GET['version']), $intTimeCache); // Attribution d'un groupe spécifique pour le cache pour permettre un clean précis
             $objCache->set_groupe('module_doc_'.$_SESSION['ploopi']['workspaceid'].'_'.$_SESSION['ploopi']['moduleid']);
 
             if(!$objCache->start()) // si pas de cache on le crée
             {
-                ploopi_init_module('doc', false, false, false);
+                ovensia\ploopi\module::init('doc', false, false, false);
 
                 include_once './modules/doc/class_docfile.php';
-                include './include/classes/mimethumb.php';
 
                 $objDoc = new docfile();
                 $objThumb = new mimethumb($width, $height, 0, 'png', 'transparent');
@@ -1046,32 +1034,29 @@ switch($ploopi_op)
                 header("Content-Type: image/png");
             }
         }
-        ploopi_die();
+        ovensia\ploopi\system::kill();
     break;
 
     case 'doc_file_view':
     case 'doc_file_download':
-        include_once './include/classes/data_object.php';
-        include_once './include/functions/date.php';
-        include_once './include/functions/filesystem.php';
         include_once './modules/doc/class_docfile.php';
 
-        ploopi_init_module('doc', false, false, false);
+        ovensia\ploopi\module::init('doc', false, false, false);
 
         $docfile = new docfile();
         $docfolder = new docfolder();
         if (!empty($_GET['docfile_md5id']) && $docfile->openmd5($_GET['docfile_md5id']) && $docfolder->open($docfile->fields['id_folder']) && $docfolder->fields['foldertype'] == 'public' && file_exists($docfile->getfilepath()))
         {
-            ploopi_downloadfile($docfile->getfilepath(),$docfile->fields['name'], false, $ploopi_op == 'doc_file_download');
+            ovensia\ploopi\fs::downloadfile($docfile->getfilepath(),$docfile->fields['name'], false, $ploopi_op == 'doc_file_download');
         }
 
-        ploopi_die();
+        ovensia\ploopi\system::kill();
     break;
 }
 
 // Point d'entrée vers le webservice
 if ($ploopi_op == 'doc_webservice') {
     include_once './modules/doc/webservice.php';
-    ploopi_die();
+    ovensia\ploopi\system::kill();
 }
 ?>

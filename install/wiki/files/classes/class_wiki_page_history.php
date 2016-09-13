@@ -33,11 +33,6 @@
  */
 
 /**
- * Inclusion de la classe parent
- */
-include_once './include/classes/data_object.php';
-
-/**
  * Classe d'accès à la table 'ploopi_mod_wiki_page_history'
  *
  * @package wiki
@@ -46,7 +41,7 @@ include_once './include/classes/data_object.php';
  * @copyright Ovensia
  */
 
-class wiki_page_history extends data_object
+class wiki_page_history extends ovensia\ploopi\data_object
 {
     /**
      * Constructeur de la classe

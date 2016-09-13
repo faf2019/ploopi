@@ -31,12 +31,6 @@
  */
 
 /**
- * Inclusion de la classe parent.
- */
-
-include_once './include/classes/data_object.php';
-
-/**
  * Classe d'accès à la table ploopi_mod_directory_speeddialing
  *
  * @package directory
@@ -46,7 +40,7 @@ include_once './include/classes/data_object.php';
  * @author Stéphane Escaich
  */
 
-class directory_speeddialing extends data_object
+class directory_speeddialing extends ovensia\ploopi\data_object
 {
     /**
      * Constructeur de la classe

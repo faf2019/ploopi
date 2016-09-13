@@ -66,7 +66,7 @@ function startElement_mod($parser, $name, $attribs)
 
     if($name == 'row' && !$newrow) // new row in table
     {
-        $dataobject = new data_object($datatype);
+        $dataobject = new ovensia\ploopi\data_object($datatype);
         $newrow = true;
     }
 

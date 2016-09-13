@@ -36,7 +36,7 @@
  */
 echo $skin->open_simplebloc(_SYSTEM_LABEL_CONNECTEDUSERS);
 
-if (isset($_GET['monitoring'])) header("Refresh: ".intval($_GET['monitoring'])."; URL=".ploopi_urlencode("admin.php?op=connectedusers&monitoring={$_GET['monitoring']}"));
+if (isset($_GET['monitoring'])) header("Refresh: ".intval($_GET['monitoring'])."; URL=".ovensia\ploopi\crypt::urlencode("admin.php?op=connectedusers&monitoring={$_GET['monitoring']}"));
 
 $columns = array();
 $values = array();
@@ -66,10 +66,10 @@ $db->query($sql);
 
 while($row = $db->fetchrow())
 {
-    $date_local = ploopi_timestamp2local($row['timestp']);
+    $date_local = ovensia\ploopi\date::timestamp2local($row['timestp']);
 
-    $values[$c]['values']['ip']     = array('label' => ploopi_htmlentities($row['ip']));
-    $values[$c]['values']['domaine']    = array('label' => ploopi_htmlentities($row['domain']));
+    $values[$c]['values']['ip']     = array('label' => ovensia\ploopi\str::htmlentities($row['ip']));
+    $values[$c]['values']['domaine']    = array('label' => ovensia\ploopi\str::htmlentities($row['domain']));
     if (is_null($row['login']))
     {
         $values[$c]['values']['login']  = array('label' => 'anonyme', 'style' => 'font-style:italic;');
@@ -77,12 +77,12 @@ while($row = $db->fetchrow())
     }
     else
     {
-        $values[$c]['values']['login']  = array('label' => ploopi_htmlentities($row['login']));
-        $values[$c]['values']['name']   = array('label' => ploopi_htmlentities("{$row['firstname']} {$row['lastname']}"));
+        $values[$c]['values']['login']  = array('label' => ovensia\ploopi\str::htmlentities($row['login']));
+        $values[$c]['values']['name']   = array('label' => ovensia\ploopi\str::htmlentities("{$row['firstname']} {$row['lastname']}"));
     }
-    $values[$c]['values']['workspace']  = array('label' => ploopi_htmlentities($row['workspacelabel']));
-    $values[$c]['values']['module']     = array('label' => ploopi_htmlentities($row['modulelabel']));
-    $values[$c]['values']['timestp']    = array('label' => ploopi_htmlentities("{$date_local['date']} {$date_local['time']}"), 'sort_label' => $row['timestp']);
+    $values[$c]['values']['workspace']  = array('label' => ovensia\ploopi\str::htmlentities($row['workspacelabel']));
+    $values[$c]['values']['module']     = array('label' => ovensia\ploopi\str::htmlentities($row['modulelabel']));
+    $values[$c]['values']['timestp']    = array('label' => ovensia\ploopi\str::htmlentities("{$date_local['date']} {$date_local['time']}"), 'sort_label' => $row['timestp']);
     $c++;
 
 }
@@ -95,14 +95,14 @@ $skin->display_array($columns, $values, 'array_connectedusers', array('sortable'
 if (isset($_GET['monitoring']))
 {
     ?>
-    <input type="button" class="button" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?op=connectedusers"); ?>'" value="Arrêter le  monitoring">
+    <input type="button" class="button" onclick="javascript:document.location.href='<?php echo ovensia\ploopi\crypt::urlencode("admin.php?op=connectedusers"); ?>'" value="Arrêter le  monitoring">
     <?php
 }
 else
 {
     ?>
-    <input type="text" class="text" value="<?php echo (isset($_GET['monitoring'])) ? ploopi_htmlentities($_GET['monitoring']) : 2; ?>" size="2" id="system_monitoring_delay">
-    <input type="button" class="button" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?op=connectedusers"); ?>&monitoring='+$('system_monitoring_delay').value;" value="Monitoring">
+    <input type="text" class="text" value="<?php echo (isset($_GET['monitoring'])) ? ovensia\ploopi\str::htmlentities($_GET['monitoring']) : 2; ?>" size="2" id="system_monitoring_delay">
+    <input type="button" class="button" onclick="javascript:document.location.href='<?php echo ovensia\ploopi\crypt::urlencode("admin.php?op=connectedusers"); ?>&monitoring='+$('system_monitoring_delay').value;" value="Monitoring">
     <?php
 }
 ?>

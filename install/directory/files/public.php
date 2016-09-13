@@ -34,7 +34,7 @@
 /**
  * Initialisation du module
  */
-ploopi_init_module('directory');
+ovensia\ploopi\module::init('directory');
 
 global $arrDirectoryImportFields;
 
@@ -54,7 +54,7 @@ switch($op)
     case 'directory_view':
         if ((!empty($_GET['directory_id_contact']) && is_numeric($_GET['directory_id_contact'])) || (!empty($_GET['directory_id_user']) && is_numeric($_GET['directory_id_user'])))
         {
-            ploopi_init_module('directory');
+            ovensia\ploopi\module::init('directory');
             include './modules/directory/public_directory_view.php';
         }
         return;
@@ -64,7 +64,7 @@ switch($op)
 if (!empty($_GET['directoryTabItem'])) $_SESSION['directory']['directoryTabItem'] = $_GET['directoryTabItem'];
 if (empty($_SESSION['directory']['directoryTabItem'])) $_SESSION['directory']['directoryTabItem'] = 'tabFavorites';
 
-echo $skin->create_pagetitle(ploopi_htmlentities($_SESSION['ploopi']['modulelabel']));
+echo $skin->create_pagetitle(ovensia\ploopi\str::htmlentities($_SESSION['ploopi']['modulelabel']));
 
 $desc = $title = '';
 switch($_SESSION['directory']['directoryTabItem'])

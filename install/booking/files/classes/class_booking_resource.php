@@ -31,10 +31,6 @@
  * @modifiedby $LastChangedBy$
  * @lastmodified $Date$
  */
-/**
- * Inclusion de la classe parent
- */
-include_once './include/classes/data_object.php';
 
 /**
  * Classe d'accès à la table 'ploopi_mod_booking_resource'
@@ -45,7 +41,7 @@ include_once './include/classes/data_object.php';
  * @copyright OVENSIA
  */
 
-class booking_resource extends data_object
+class booking_resource extends ovensia\ploopi\data_object
 {
     /**
      * Constructeur de la classe
@@ -53,7 +49,7 @@ class booking_resource extends data_object
      * @return booking_resource
      */
 
-    public function booking_resource()
+    public function __construct()
     {
         parent::__construct('ploopi_mod_booking_resource', 'id');
     }
@@ -112,7 +108,7 @@ class booking_resource extends data_object
 
         foreach($arrWorkspaces as $intIdWsp)
         {
-            $objWorkspace = new workspace();
+            $objWorkspace = new ovensia\ploopi\workspace();
             if ($objWorkspace->open($intIdWsp))
             {
                 // On récupère les utilisateurs des espaces gestionnaires
@@ -120,7 +116,7 @@ class booking_resource extends data_object
                 {
                     if (!isset($arrUsers[$arrUser['id']])) // Utilisateur non sélectionné
                     {
-                        $objUser = new user();
+                        $objUser = new ovensia\ploopi\user();
 
                         if ($objUser->open($arrUser['id']))
                         {

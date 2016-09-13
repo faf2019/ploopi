@@ -32,12 +32,6 @@
  */
 
 /**
- * Inclusion de la classe parent.
- */
-
-include_once './include/classes/data_object.php';
-
-/**
  * Classe d'accès à la table ploopi_mod_directory_list
  *
  * @package directory
@@ -47,7 +41,7 @@ include_once './include/classes/data_object.php';
  * @author Stéphane Escaich
  */
 
-class directory_list extends data_object
+class directory_list extends ovensia\ploopi\data_object
 {
     /**
      * Constructeur de la classe

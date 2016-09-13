@@ -33,7 +33,7 @@
  */
 
 // Admin oui/non ?
-$booIsAdmin = ploopi_isactionallowed(_FORMS_ACTION_ADMIN);
+$booIsAdmin = ovensia\ploopi\acl::isactionallowed(_FORMS_ACTION_ADMIN);
 
 // Nombre de lignes (visibles dans le profil actuel)
 $intTotalNumRows = $objForm->getNumRows(true);
@@ -44,13 +44,13 @@ $arrStaticFields = formsForm::getStaticFields();
 // Lecture des titres de colonnes
 $arrTitles = $objForm->getTitles();
 
-echo $skin->open_simplebloc(ploopi_htmlentities($objForm->fields['label'].' ('._FORMS_VIEWLIST.')'));
+echo $skin->open_simplebloc(ovensia\ploopi\str::htmlentities($objForm->fields['label'].' ('._FORMS_VIEWLIST.')'));
 ?>
 
 <div style="overflow:hidden;">
 
     <?php
-    if (ploopi_isactionallowed(_FORMS_ACTION_FILTER))
+    if (ovensia\ploopi\acl::isactionallowed(_FORMS_ACTION_FILTER))
     {
         // Lecture des champs dynamiques et séparateurs du formulaire
         $arrFields = $objForm->getFields(true);
@@ -60,8 +60,8 @@ echo $skin->open_simplebloc(ploopi_htmlentities($objForm->fields['label'].' ('._
         <a class="ploopi_form_title" href="javascript:void(0);" onclick="javascript:ploopi_switchdisplay('forms_filter_box');ploopi_xmlhttprequest('index-quick.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=forms_xml_switchdisplay&switch=forms_filter_box&display='+$('forms_filter_box').style.display, true);">
             Filtrage des données<sub style="font-weight:normal;">&nbsp;&nbsp;&nbsp;(cliquez pour ouvrir/fermer)</sub>
         </a>
-        <div id="forms_filter_box"  style="display:<?php echo ploopi_htmlentities($_SESSION['forms'][$_SESSION['ploopi']['moduleid']]['forms_filter_box']); ?>;">
-            <form style="margin:0;" id="filtre_frm" action="<?php echo ploopi_urlencode('admin.php'); ?>" method="post">
+        <div id="forms_filter_box"  style="display:<?php echo ovensia\ploopi\str::htmlentities($_SESSION['forms'][$_SESSION['ploopi']['moduleid']]['forms_filter_box']); ?>;">
+            <form style="margin:0;" id="filtre_frm" action="<?php echo ovensia\ploopi\crypt::urlencode('admin.php'); ?>" method="post">
             <input type="hidden" name="op" value="forms_filter">
             <input type="hidden" name="forms_id" value="<?php echo $objForm->fields['id']; ?>">
 
@@ -79,7 +79,7 @@ echo $skin->open_simplebloc(ploopi_htmlentities($objForm->fields['label'].' ('._
                     {
                         $booSel = (isset($arrFormFilter[$l]) && $arrFormFilter[$l]['field'] == $strKey) ? 'selected="selected"' : '';
                         ?>
-                        <option <?php echo $booSel; ?> value="<?php echo ploopi_htmlentities($strKey); ?>"><?php echo ploopi_htmlentities($strValue); ?></option>
+                        <option <?php echo $booSel; ?> value="<?php echo ovensia\ploopi\str::htmlentities($strKey); ?>"><?php echo ovensia\ploopi\str::htmlentities($strValue); ?></option>
                         <?php
                     }
 
@@ -94,14 +94,14 @@ echo $skin->open_simplebloc(ploopi_htmlentities($objForm->fields['label'].' ('._
                                 for ($i = $objField->fields['separator_level']; $i <= $intLevel; $i++) echo "</optgroup>";
                                 $strPadding = $intLevel > 1 ? str_repeat('&nbsp;', $intLevel-1) : '';
                                 ?>
-                                <optgroup label="<?php echo $strPadding.ploopi_htmlentities($objField->fields['name']); ?>">
+                                <optgroup label="<?php echo $strPadding.ovensia\ploopi\str::htmlentities($objField->fields['name']); ?>">
                                 <?php
                             }
                             else
                             {
                                 $booSel = (isset($arrFormFilter[$l]) && $arrFormFilter[$l]['field'] == $strKey) ? 'selected="selected"' : '';
                                 ?>
-                                <option <?php echo $booSel; ?> value="<?php echo ploopi_htmlentities($strKey); ?>"><?php echo ploopi_htmlentities($objField->fields['name']); ?></option>
+                                <option <?php echo $booSel; ?> value="<?php echo ovensia\ploopi\str::htmlentities($strKey); ?>"><?php echo ovensia\ploopi\str::htmlentities($objField->fields['name']); ?></option>
                                 <?php
                             }
                         }
@@ -119,7 +119,7 @@ echo $skin->open_simplebloc(ploopi_htmlentities($objForm->fields['label'].' ('._
                         }
                         ?>
                     </select>
-                    <input type="text" value="<?php if (isset($arrFormFilter[$l])) echo ploopi_htmlentities($arrFormFilter[$l]['value']); ?>" size="80" class="text" name="filter_value_<?php echo $l; ?>">
+                    <input type="text" value="<?php if (isset($arrFormFilter[$l])) echo ovensia\ploopi\str::htmlentities($arrFormFilter[$l]['value']); ?>" size="80" class="text" name="filter_value_<?php echo $l; ?>">
                 </p>
                 <?php
             }
@@ -134,14 +134,14 @@ echo $skin->open_simplebloc(ploopi_htmlentities($objForm->fields['label'].' ('._
             ?>
             <p>
                 <?php
-                if (ploopi_isactionallowed(_FORMS_ACTION_DELETE))
+                if (ovensia\ploopi\acl::isactionallowed(_FORMS_ACTION_DELETE))
                 {
                     ?>
                     <input type="button" class="flatbutton" value="Supprimer les données filtrées" onclick="javascript:if (confirm('Attention, cette action va supprimer définitivement les données filtrées, continuer ?')) {$('filtre_frm').op.value='forms_deletedata';$('filtre_frm').submit();}">
                     <?php
                 }
                 ?>
-                <input type="button" class="flatbutton" value="<?php echo _PLOOPI_RESET; ?>" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?op=forms_viewreplies&forms_id={$objForm->fields['id']}&reset"); ?>'">
+                <input type="button" class="flatbutton" value="<?php echo _PLOOPI_RESET; ?>" onclick="javascript:document.location.href='<?php echo ovensia\ploopi\crypt::urlencode("admin.php?op=forms_viewreplies&forms_id={$objForm->fields['id']}&reset"); ?>'">
                 <input type="submit" class="flatbutton" style="font-weight:bold" value="<?php echo _PLOOPI_FILTER; ?>">
             </p>
             </form>
@@ -154,27 +154,27 @@ echo $skin->open_simplebloc(ploopi_htmlentities($objForm->fields['label'].' ('._
     <?php
     if (!isset($_SESSION['forms'][$_SESSION['ploopi']['moduleid']]['forms_archive_box'])) $_SESSION['forms'][$_SESSION['ploopi']['moduleid']]['forms_archive_box'] = 'none';
 
-    if (ploopi_isactionallowed(_FORMS_ACTION_BACKUP))
+    if (ovensia\ploopi\acl::isactionallowed(_FORMS_ACTION_BACKUP))
     {
-        $autobackup_date = ($objForm->fields['autobackup_date']) ? ploopi_timestamp2local($objForm->fields['autobackup_date']) : array('date' => '');
+        $autobackup_date = ($objForm->fields['autobackup_date']) ? ovensia\ploopi\date::timestamp2local($objForm->fields['autobackup_date']) : array('date' => '');
         ?>
         <a class="ploopi_form_title" href="javascript:void(0);" onclick="javascript:ploopi_switchdisplay('forms_archive_box');ploopi_xmlhttprequest('index-quick.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=forms_xml_switchdisplay&switch=forms_archive_box&display='+$('forms_archive_box').style.display, true);">
             Archivage automatique des données<sub style="font-weight:normal;">&nbsp;&nbsp;&nbsp;(cliquez pour ouvrir/fermer)</sub>
         </a>
-        <div id="forms_archive_box" style="display:<?php echo ploopi_htmlentities($_SESSION['forms'][$_SESSION['ploopi']['moduleid']]['forms_archive_box']); ?>;">
-            <form name="frm_modify" action="<?php echo ploopi_urlencode('admin.php'); ?>" method="post">
+        <div id="forms_archive_box" style="display:<?php echo ovensia\ploopi\str::htmlentities($_SESSION['forms'][$_SESSION['ploopi']['moduleid']]['forms_archive_box']); ?>;">
+            <form name="frm_modify" action="<?php echo ovensia\ploopi\crypt::urlencode('admin.php'); ?>" method="post">
             <input type="hidden" name="op" value="forms_save">
             <input type="hidden" name="forms_id" value="<?php echo $objForm->fields['id']; ?>">
 
                 <div class="ploopi_form">
                     <p>
                         <label>Archiver les données plus anciennes que :</label>
-                        <input type="text" class="text" style="width:30px;" name="forms_autobackup" value="<?php echo ploopi_htmlentities($objForm->fields['autobackup']); ?>"> jours (0 = aucun archivage)
+                        <input type="text" class="text" style="width:30px;" name="forms_autobackup" value="<?php echo ovensia\ploopi\str::htmlentities($objForm->fields['autobackup']); ?>"> jours (0 = aucun archivage)
                     </p>
                     <p>
                         <label>Archiver les données jusqu'au :</label>
-                        <input type="text" class="text" style="width:70px;" name="forms_autobackup_date" id="forms_autobackup_date" value="<?php echo ploopi_htmlentities($autobackup_date['date']); ?>">&nbsp;
-                        <?php echo ploopi_open_calendar('forms_autobackup_date'); ?>
+                        <input type="text" class="text" style="width:70px;" name="forms_autobackup_date" id="forms_autobackup_date" value="<?php echo ovensia\ploopi\str::htmlentities($autobackup_date['date']); ?>">&nbsp;
+                        <?php echo ovensia\ploopi\date::open_calendar('forms_autobackup_date'); ?>
                     </p>
                     <p>
                         <label>&nbsp;</label>
@@ -194,17 +194,16 @@ echo $skin->open_simplebloc(ploopi_htmlentities($objForm->fields['label'].' ('._
             <?php
             if ($objForm->fields['nbline'] > 0 && $intNumRows > $objForm->fields['nbline'])
             {
-                include_once './include/functions/array.php';
-                echo '<span>Pages&nbsp;:&nbsp;</span>'.ploopi_array_getpages($intNumRows, $objForm->fields['nbline'], ploopi_urlencode("admin.php?op=forms_viewreplies&forms_id={$objForm->fields['id']}")."&page={p}", $_SESSION['forms'][$objForm->fields['id']]['page']);
+                echo '<span>Pages&nbsp;:&nbsp;</span>'.ovensia\ploopi\arr::getpages($intNumRows, $objForm->fields['nbline'], ovensia\ploopi\crypt::urlencode("admin.php?op=forms_viewreplies&forms_id={$objForm->fields['id']}")."&page={p}", $_SESSION['forms'][$objForm->fields['id']]['page']);
             }
 
             if ($_SESSION['ploopi']['action'] == 'public')
             {
                 // Recherche du nombre de lignes déjà saisies pour le jour ou l'utilisateur
-                if (!$objForm->getNumRowsOnly() &&  ploopi_isactionallowed(_FORMS_ACTION_ADDREPLY))
+                if (!$objForm->getNumRowsOnly() &&  ovensia\ploopi\acl::isactionallowed(_FORMS_ACTION_ADDREPLY))
                 {
                     ?>
-                    <input type="button" class="flatbutton" style="margin-left:10px;font-weight:bold" value="Ajouter un enregistrement" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?op=forms_reply_add&forms_id={$objForm->fields['id']}"); ?>'">
+                    <input type="button" class="flatbutton" style="margin-left:10px;font-weight:bold" value="Ajouter un enregistrement" onclick="javascript:document.location.href='<?php echo ovensia\ploopi\crypt::urlencode("admin.php?op=forms_reply_add&forms_id={$objForm->fields['id']}"); ?>'">
                     <?php
                 }
             }
@@ -223,50 +222,50 @@ echo $skin->open_simplebloc(ploopi_htmlentities($objForm->fields['label'].' ('._
         <div style="clear:both;">
             <p class="ploopi_va">
                 <?php
-                if (ploopi_isactionallowed(_FORMS_ACTION_EXPORT))
+                if (ovensia\ploopi\acl::isactionallowed(_FORMS_ACTION_EXPORT))
                 {
                     ?>
                     Export :
-                    <a class="forms_export_link" title="<?php echo _FORMS_EXPORT; ?> XLS" href="<?php echo ploopi_urlencode("admin.php?ploopi_op=forms_export&forms_id={$objForm->fields['id']}&forms_export_format=XLS"); ?>"><img alt="<?php echo _FORMS_EXPORT; ?> title="<?php echo _FORMS_EXPORT; ?> XLS" src="./modules/forms/img/mime/xls.png">XLS</a>
-                    <a class="forms_export_link" title="<?php echo _FORMS_EXPORT; ?> XLSX" href="<?php echo ploopi_urlencode("admin.php?ploopi_op=forms_export&forms_id={$objForm->fields['id']}&forms_export_format=XLSX"); ?>"><img alt="<?php echo _FORMS_EXPORT; ?> title="<?php echo _FORMS_EXPORT; ?> XLSX" src="./modules/forms/img/mime/xls.png">XLSX</a>
+                    <a class="forms_export_link" title="<?php echo _FORMS_EXPORT; ?> XLS" href="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?ploopi_op=forms_export&forms_id={$objForm->fields['id']}&forms_export_format=XLS"); ?>"><img alt="<?php echo _FORMS_EXPORT; ?> title="<?php echo _FORMS_EXPORT; ?> XLS" src="./modules/forms/img/mime/xls.png">XLS</a>
+                    <a class="forms_export_link" title="<?php echo _FORMS_EXPORT; ?> XLSX" href="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?ploopi_op=forms_export&forms_id={$objForm->fields['id']}&forms_export_format=XLSX"); ?>"><img alt="<?php echo _FORMS_EXPORT; ?> title="<?php echo _FORMS_EXPORT; ?> XLSX" src="./modules/forms/img/mime/xls.png">XLSX</a>
                     <?php
-                    if (ploopi_getparam('system_jodwebservice', _PLOOPI_MODULE_SYSTEM) != '')
+                    if (ovensia\ploopi\param::get('system_jodwebservice', _PLOOPI_MODULE_SYSTEM) != '')
                     {
                     ?>
-                        <a class="forms_export_link" title="<?php echo _FORMS_EXPORT; ?> ODS" href="<?php echo ploopi_urlencode("admin.php?ploopi_op=forms_export&forms_id={$objForm->fields['id']}&forms_export_format=ODS"); ?>"><img alt="<?php echo _FORMS_EXPORT; ?> title="<?php echo _FORMS_EXPORT; ?> ODS" src="./modules/forms/img/mime/ods.png">ODS</a>
-                        <a class="forms_export_link" title="<?php echo _FORMS_EXPORT; ?> PDF" href="<?php echo ploopi_urlencode("admin.php?ploopi_op=forms_export&forms_id={$objForm->fields['id']}&forms_export_format=PDF"); ?>"><img alt="<?php echo _FORMS_EXPORT; ?> title="<?php echo _FORMS_EXPORT; ?> PDF" src="./modules/forms/img/mime/pdf.png">PDF</a>
+                        <a class="forms_export_link" title="<?php echo _FORMS_EXPORT; ?> ODS" href="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?ploopi_op=forms_export&forms_id={$objForm->fields['id']}&forms_export_format=ODS"); ?>"><img alt="<?php echo _FORMS_EXPORT; ?> title="<?php echo _FORMS_EXPORT; ?> ODS" src="./modules/forms/img/mime/ods.png">ODS</a>
+                        <a class="forms_export_link" title="<?php echo _FORMS_EXPORT; ?> PDF" href="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?ploopi_op=forms_export&forms_id={$objForm->fields['id']}&forms_export_format=PDF"); ?>"><img alt="<?php echo _FORMS_EXPORT; ?> title="<?php echo _FORMS_EXPORT; ?> PDF" src="./modules/forms/img/mime/pdf.png">PDF</a>
                         <?php
                     }
                     ?>
-                    <a class="forms_export_link" title="<?php echo _FORMS_EXPORT; ?> CSV" href="<?php echo ploopi_urlencode("admin.php?ploopi_op=forms_export&forms_id={$objForm->fields['id']}&forms_export_format=CSV"); ?>"><img alt="<?php echo _FORMS_EXPORT; ?> title="<?php echo _FORMS_EXPORT; ?> CSV" src="./modules/forms/img/mime/csv.png">CSV</a>
-                    <a class="forms_export_link" title="<?php echo _FORMS_EXPORT; ?> HTML" href="<?php echo ploopi_urlencode("admin.php?ploopi_op=forms_export&forms_id={$objForm->fields['id']}&forms_export_format=HTML"); ?>"><img alt="<?php echo _FORMS_EXPORT; ?> title="<?php echo _FORMS_EXPORT; ?> HTML" src="./modules/forms/img/mime/html.png">HTML</a>
-                    <a class="forms_export_link" title="<?php echo _FORMS_EXPORT; ?> XML" href="<?php echo ploopi_urlencode("admin.php?ploopi_op=forms_export&forms_id={$objForm->fields['id']}&forms_export_format=XML"); ?>"><img alt="<?php echo _FORMS_EXPORT; ?> title="<?php echo _FORMS_EXPORT; ?> XML" src="./modules/forms/img/mime/xml.png">XML</a>
+                    <a class="forms_export_link" title="<?php echo _FORMS_EXPORT; ?> CSV" href="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?ploopi_op=forms_export&forms_id={$objForm->fields['id']}&forms_export_format=CSV"); ?>"><img alt="<?php echo _FORMS_EXPORT; ?> title="<?php echo _FORMS_EXPORT; ?> CSV" src="./modules/forms/img/mime/csv.png">CSV</a>
+                    <a class="forms_export_link" title="<?php echo _FORMS_EXPORT; ?> HTML" href="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?ploopi_op=forms_export&forms_id={$objForm->fields['id']}&forms_export_format=HTML"); ?>"><img alt="<?php echo _FORMS_EXPORT; ?> title="<?php echo _FORMS_EXPORT; ?> HTML" src="./modules/forms/img/mime/html.png">HTML</a>
+                    <a class="forms_export_link" title="<?php echo _FORMS_EXPORT; ?> XML" href="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?ploopi_op=forms_export&forms_id={$objForm->fields['id']}&forms_export_format=XML"); ?>"><img alt="<?php echo _FORMS_EXPORT; ?> title="<?php echo _FORMS_EXPORT; ?> XML" src="./modules/forms/img/mime/xml.png">XML</a>
                     <?php
                 }
                 ?>
                 <span style="margin-left:10px;" >Impression :</span>
-                <a class="forms_export_link" title="Impression XLS" href="<?php echo ploopi_urlencode("admin.php?ploopi_op=forms_print_array&forms_id={$objForm->fields['id']}&forms_export_format=XLS"); ?>"><img alt="Impression XLS" title="Impression XLS" src="./modules/forms/img/mime/xls.png">XLS</a>
-                <a class="forms_export_link" title="Impression XLSX" href="<?php echo ploopi_urlencode("admin.php?ploopi_op=forms_print_array&forms_id={$objForm->fields['id']}&forms_export_format=XLSX"); ?>"><img alt="Impression XLSX" title="Impression XLSX" src="./modules/forms/img/mime/xls.png">XLSX</a>
+                <a class="forms_export_link" title="Impression XLS" href="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?ploopi_op=forms_print_array&forms_id={$objForm->fields['id']}&forms_export_format=XLS"); ?>"><img alt="Impression XLS" title="Impression XLS" src="./modules/forms/img/mime/xls.png">XLS</a>
+                <a class="forms_export_link" title="Impression XLSX" href="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?ploopi_op=forms_print_array&forms_id={$objForm->fields['id']}&forms_export_format=XLSX"); ?>"><img alt="Impression XLSX" title="Impression XLSX" src="./modules/forms/img/mime/xls.png">XLSX</a>
                 <?php
-                if (ploopi_getparam('system_jodwebservice', _PLOOPI_MODULE_SYSTEM) != '')
+                if (ovensia\ploopi\param::get('system_jodwebservice', _PLOOPI_MODULE_SYSTEM) != '')
                 {
                 ?>
-                    <a class="forms_export_link" title="Impression ODS" href="<?php echo ploopi_urlencode("admin.php?ploopi_op=forms_print_array&forms_id={$objForm->fields['id']}&forms_export_format=ODS"); ?>"><img alt="Impression ODS" title="Impression ODS" src="./modules/forms/img/mime/ods.png">ODS</a>
-                    <a class="forms_export_link" title="Impression PDF" href="<?php echo ploopi_urlencode("admin.php?ploopi_op=forms_print_array&forms_id={$objForm->fields['id']}&forms_export_format=PDF"); ?>"><img alt="Impression PDF" title="Impression PDF" src="./modules/forms/img/mime/pdf.png">PDF</a>
+                    <a class="forms_export_link" title="Impression ODS" href="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?ploopi_op=forms_print_array&forms_id={$objForm->fields['id']}&forms_export_format=ODS"); ?>"><img alt="Impression ODS" title="Impression ODS" src="./modules/forms/img/mime/ods.png">ODS</a>
+                    <a class="forms_export_link" title="Impression PDF" href="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?ploopi_op=forms_print_array&forms_id={$objForm->fields['id']}&forms_export_format=PDF"); ?>"><img alt="Impression PDF" title="Impression PDF" src="./modules/forms/img/mime/pdf.png">PDF</a>
                 <?php
                 }
 
                 /* BM et CL - 11/2013 : ajout import csv si role ad hoc (Confer constante _FORMS_ACTION_IMPORT_CSV (action de code 8)) */
-                if (ploopi_isactionallowed(_FORMS_ACTION_IMPORT_CSV)) {
+                if (ovensia\ploopi\acl::isactionallowed(_FORMS_ACTION_IMPORT_CSV)) {
                     ?>
                     <span style="margin-left:10px;" >Import : </span>
-                    <a class="forms_export_link" title="<?php echo _FORMS_IMPORT; ?> CSV" href="#" onclick="javascript:ploopi_xmlhttprequest_topopup(450, event, 'forms_import', 'admin-light.php', '<?php echo ploopi_queryencode("ploopi_op=forms_import&forms_id={$objForm->fields['id']}&origin=viewreplies"); ?>', 'post');">
+                    <a class="forms_export_link" title="<?php echo _FORMS_IMPORT; ?> CSV" href="#" onclick="javascript:ploopi_xmlhttprequest_topopup(450, event, 'forms_import', 'admin-light.php', '<?php echo ovensia\ploopi\crypt::queryencode("ploopi_op=forms_import&forms_id={$objForm->fields['id']}&origin=viewreplies"); ?>', 'post');">
                     <img alt="<?php echo _FORMS_IMPORT; ?> title="<?php echo _FORMS_IMPORT; ?> CSV" src="./modules/forms/img/mime/csv.png">CSV</a>
                     <?php
                 }
                 /* Fin BM */
 
-                if (ploopi_isactionallowed(_FORMS_ACTION_GRAPHICS))
+                if (ovensia\ploopi\acl::isactionallowed(_FORMS_ACTION_GRAPHICS))
                 {
                     $db->query("
                         SELECT  *
@@ -285,7 +284,7 @@ echo $skin->open_simplebloc(ploopi_htmlentities($objForm->fields['label'].' ('._
                                 while ($row = $db->fetchrow())
                                 {
                                     ?>
-                                    <option value="<?php echo $row['id']; ?>"><?php echo ploopi_htmlentities($row['label']); ?></option>
+                                    <option value="<?php echo $row['id']; ?>"><?php echo ovensia\ploopi\str::htmlentities($row['label']); ?></option>
                                     <?php
                                 }
                                 ?>
@@ -326,9 +325,9 @@ echo $skin->open_simplebloc(ploopi_htmlentities($objForm->fields['label'].' ('._
 
                     ?>
                     <th>
-                        <a <?php echo $style_col; ?> href="<?php echo ploopi_urlencode("admin.php?op=forms_viewreplies&forms_id={$objForm->fields['id']}&orderby={$strKey}&option={$new_option}"); ?>">
+                        <a <?php echo $style_col; ?> href="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?op=forms_viewreplies&forms_id={$objForm->fields['id']}&orderby={$strKey}&option={$new_option}"); ?>">
                         <p class="ploopi_va">
-                            <span><?php echo ploopi_htmlentities($row['label']); ?></span>
+                            <span><?php echo ovensia\ploopi\str::htmlentities($row['label']); ?></span>
                             <?php
                             if ($_SESSION['forms'][$objForm->fields['id']]['orderby'] == $strKey)
                             { ?><img src="./modules/forms/img/<?php echo $sort_cell; ?>.png"><?php }
@@ -363,7 +362,7 @@ echo $skin->open_simplebloc(ploopi_htmlentities($objForm->fields['label'].' ('._
                     {
                         if (isset($rowData[$strFieldId]))
                         {
-                            $strValue = ploopi_htmlentities($rowData[$strFieldId]);
+                            $strValue = ovensia\ploopi\str::htmlentities($rowData[$strFieldId]);
 
                             if (is_numeric($strFieldId))
                             {
@@ -371,7 +370,7 @@ echo $skin->open_simplebloc(ploopi_htmlentities($objForm->fields['label'].' ('._
                                 {
 
                                     case 'file':
-                                        if ($strValue != '') $strValue = $strValue.'<a href="'.ploopi_urlencode("admin.php?ploopi_op=forms_download_file&forms_id={$objForm->fields['id']}&record_id={$intReplyId}&field_id={$strFieldId}").'"><img style="border:0px" src="./modules/forms/img/link.gif"></a>';
+                                        if ($strValue != '') $strValue = $strValue.'<a href="'.ovensia\ploopi\crypt::urlencode("admin.php?ploopi_op=forms_download_file&forms_id={$objForm->fields['id']}&record_id={$intReplyId}&field_id={$strFieldId}").'"><img style="border:0px" src="./modules/forms/img/link.gif"></a>';
                                     break;
 
                                     case 'color':
@@ -379,7 +378,7 @@ echo $skin->open_simplebloc(ploopi_htmlentities($objForm->fields['label'].' ('._
                                     break;
 
                                     default:
-                                        $strValue = ploopi_make_links(str_replace('||','<br />',$strValue));
+                                        $strValue = ovensia\ploopi\str::make_links(str_replace('||','<br />',$strValue));
                                     break;
                                 }
                             }
@@ -399,11 +398,11 @@ echo $skin->open_simplebloc(ploopi_htmlentities($objForm->fields['label'].' ('._
                 {
                     ?>
                     <td align="left" nowrap>
-                        <a title="Ouvrir" href="<?php echo ploopi_urlencode("admin.php?op=forms_reply_display&forms_id={$objForm->fields['id']}&record_id={$intReplyId}"); ?>"><img alt="ouvrir" border="0" src="./modules/forms/img/ico_display.png"></a>
+                        <a title="Ouvrir" href="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?op=forms_reply_display&forms_id={$objForm->fields['id']}&record_id={$intReplyId}"); ?>"><img alt="ouvrir" border="0" src="./modules/forms/img/ico_display.png"></a>
                         <?php
                         // Droit de modif d'un enregistrement
-                        if (ploopi_isadmin() || (
-                                ploopi_isactionallowed(_FORMS_ACTION_ADDREPLY) && (
+                        if (ovensia\ploopi\acl::isadmin() || (
+                                ovensia\ploopi\acl::isactionallowed(_FORMS_ACTION_ADDREPLY) && (
                                     ($objForm->fields['option_modify'] == 'user' && $rowData['user_id'] == $_SESSION['ploopi']['userid']) ||
                                     ($objForm->fields['option_modify'] == 'group' && $rowData['workspace_id'] == $_SESSION['ploopi']['workspaceid'])  ||
                                     ($objForm->fields['option_modify'] == 'all')
@@ -411,12 +410,12 @@ echo $skin->open_simplebloc(ploopi_htmlentities($objForm->fields['label'].' ('._
                             ))
                         {
                             ?>
-                            <a title="Modifier" href="<?php echo ploopi_urlencode("admin.php?op=forms_reply_modify&forms_id={$objForm->fields['id']}&record_id={$intReplyId}"); ?>"><img alt="ouvrir" border="0" src="./modules/forms/img/ico_modify.png"></a>
+                            <a title="Modifier" href="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?op=forms_reply_modify&forms_id={$objForm->fields['id']}&record_id={$intReplyId}"); ?>"><img alt="ouvrir" border="0" src="./modules/forms/img/ico_modify.png"></a>
                             <?php
                         }
                         // Droit de suppression d'un enregistrement
-                        if (ploopi_isadmin() || (
-                                ploopi_isactionallowed(_FORMS_ACTION_DELETE) && (
+                        if (ovensia\ploopi\acl::isadmin() || (
+                                ovensia\ploopi\acl::isactionallowed(_FORMS_ACTION_DELETE) && (
                                     ($objForm->fields['option_modify'] == 'user' && $rowData['user_id'] == $_SESSION['ploopi']['userid']) ||
                                     ($objForm->fields['option_modify'] == 'group' && $rowData['workspace_id'] == $_SESSION['ploopi']['workspaceid'])  ||
                                     ($objForm->fields['option_modify'] == 'all')
@@ -424,7 +423,7 @@ echo $skin->open_simplebloc(ploopi_htmlentities($objForm->fields['label'].' ('._
                             ))
                         {
                             ?>
-                            <a title="Supprimer" href="javascript:ploopi_confirmlink('<?php echo ploopi_urlencode("admin-light.php?ploopi_op=forms_reply_delete&forms_id={$objForm->fields['id']}&record_id={$intReplyId}"); ?>','<?php echo _PLOOPI_CONFIRM; ?>')"><img alt="supprimer" border="0" src="./modules/forms/img/ico_trash.png"></a>
+                            <a title="Supprimer" href="javascript:ploopi_confirmlink('<?php echo ovensia\ploopi\crypt::urlencode("admin-light.php?ploopi_op=forms_reply_delete&forms_id={$objForm->fields['id']}&record_id={$intReplyId}"); ?>','<?php echo _PLOOPI_CONFIRM; ?>')"><img alt="supprimer" border="0" src="./modules/forms/img/ico_trash.png"></a>
                             <?php
                         }
                         ?>

@@ -38,7 +38,7 @@
 switch ($_SESSION['system']['level'])
 {
     case _SYSTEM_GROUPS :
-        $group = new group();
+        $group = new ovensia\ploopi\group();
         $group->open($groupid);
         $workspace = null;
 
@@ -84,13 +84,13 @@ switch ($_SESSION['system']['level'])
                 {
                     case 'save_group' :
 
-                        $group = new group();
+                        $group = new ovensia\ploopi\group();
 
                         if (!empty($_REQUEST['group_id']) && is_numeric($_REQUEST['group_id'])) $group->open($_REQUEST['group_id']);
 
                         if (!empty($_REQUEST['group_id_group']) && is_numeric($_REQUEST['group_id_group']))
                         {
-                            $parent_group = new group();
+                            $parent_group = new ovensia\ploopi\group();
                             $parent_group->open($_REQUEST['group_id_group']);
                             $group->fields['parents'] = "{$parent_group->fields['parents']};{$_REQUEST['group_id_group']}";
                         }
@@ -100,14 +100,14 @@ switch ($_SESSION['system']['level'])
 
                         $group_id = $group->save();
 
-                        if ($group->new) ploopi_create_user_action_log(_SYSTEM_ACTION_CREATEGROUP, "{$group->fields['label']} ({$group_id})");
-                        else ploopi_create_user_action_log(_SYSTEM_ACTION_MODIFYGROUP, "{$group->fields['label']} ({$group_id})");
+                        if ($group->new) ovensia\ploopi\user_action_log::record(_SYSTEM_ACTION_CREATEGROUP, "{$group->fields['label']} ({$group_id})");
+                        else ovensia\ploopi\user_action_log::record(_SYSTEM_ACTION_MODIFYGROUP, "{$group->fields['label']} ({$group_id})");
 
                         unset($_SESSION['system']['groups']);
                         unset($_SESSION['system']['workspaces']);
 
 
-                        ploopi_redirect("admin.php?groupid={$group_id}&reloadsession");
+                        ovensia\ploopi\output::redirect("admin.php?groupid={$group_id}&reloadsession");
                     break;
 
                     case 'child' :
@@ -122,13 +122,13 @@ switch ($_SESSION['system']['level'])
                         {
                             $clone = $group->createclone();
                             $groupid = $clone->save();
-                            ploopi_create_user_action_log(_SYSTEM_ACTION_CLONEGROUP, "{$clone->fields['label']} ({$groupid})");
+                            ovensia\ploopi\user_action_log::record(_SYSTEM_ACTION_CLONEGROUP, "{$clone->fields['label']} ({$groupid})");
 
                             unset($_SESSION['system']['groups']);
                             unset($_SESSION['system']['workspaces']);
-                            ploopi_redirect("admin.php?groupid={$groupid}");
+                            ovensia\ploopi\output::redirect("admin.php?groupid={$groupid}");
                         }
-                        else ploopi_redirect('admin.php');
+                        else ovensia\ploopi\output::redirect('admin.php');
                     break;
 
                     case 'delete' :
@@ -138,17 +138,17 @@ switch ($_SESSION['system']['level'])
                             $sizeof_users = sizeof($group->getusers());
                             if (!$sizeof_groups && !$sizeof_users)
                             {
-                                ploopi_create_user_action_log(_SYSTEM_ACTION_DELETEGROUP, "{$group->fields['label']} ({$group->fields['id_group']})");
+                                ovensia\ploopi\user_action_log::record(_SYSTEM_ACTION_DELETEGROUP, "{$group->fields['label']} ({$group->fields['id_group']})");
                                 $group->delete();
 
                                 unset($_SESSION['system']['groups']);
                                 unset($_SESSION['system']['workspaces']);
 
-                                if(!empty($group->fields['id_workspace'])) ploopi_redirect("admin.php?workspaceid={$group->fields['id_workspace']}");
-                                else ploopi_redirect("admin.php?groupid={$group->fields['id_group']}");
+                                if(!empty($group->fields['id_workspace'])) ovensia\ploopi\output::redirect("admin.php?workspaceid={$group->fields['id_workspace']}");
+                                else ovensia\ploopi\output::redirect("admin.php?groupid={$group->fields['id_group']}");
                             }
                         }
-                        ploopi_redirect('admin.php');
+                        ovensia\ploopi\output::redirect('admin.php');
                     break;
 
                     default :
@@ -167,8 +167,8 @@ switch ($_SESSION['system']['level'])
     break;
 
     case _SYSTEM_WORKSPACES :
-        $workspace = new workspace();
-        if (!$workspace->open($workspaceid)) ploopi_redirect("admin.php?workspaceid=0");
+        $workspace = new ovensia\ploopi\workspace();
+        if (!$workspace->open($workspaceid)) ovensia\ploopi\output::redirect("admin.php?workspaceid=0");
 
         $group = null;
 
@@ -237,7 +237,7 @@ switch ($_SESSION['system']['level'])
 
         if (!empty($_GET['wspToolbarItem']))  $_SESSION['system']['wspToolbarItem'] = $_GET['wspToolbarItem'];
         if (!isset($_SESSION['system']['wspToolbarItem'])) $_SESSION['system']['wspToolbarItem'] = '';
-        echo $skin->create_toolbar($toolbar,$_SESSION['system']['wspToolbarItem']);
+        echo $skin->create_toolbar($toolbar, $_SESSION['system']['wspToolbarItem']);
 
         switch($_SESSION['system']['wspToolbarItem'])
         {
@@ -248,7 +248,7 @@ switch ($_SESSION['system']['level'])
                 switch($op)
                 {
                     case 'save_group' :
-                        $group = new group();
+                        $group = new ovensia\ploopi\group();
 
                         $group->setvalues($_POST,'group_');
                         $group->setvalues($_GET,'group_');
@@ -259,30 +259,30 @@ switch ($_SESSION['system']['level'])
 
                         $group_id = $group->save();
 
-                        ploopi_create_user_action_log(_SYSTEM_ACTION_CREATEGROUP, "{$group->fields['label']} (id:{$group_id})");
+                        ovensia\ploopi\user_action_log::record(_SYSTEM_ACTION_CREATEGROUP, "{$group->fields['label']} (id:{$group_id})");
 
                         $group->attachtogroup($workspaceid);
 
-                        ploopi_create_user_action_log(_SYSTEM_ACTION_ATTACHGROUP, "{$group->fields['label']} (id:{$group_id}) => {$workspace->fields['label']} (id:{$workspaceid})");
+                        ovensia\ploopi\user_action_log::record(_SYSTEM_ACTION_ATTACHGROUP, "{$group->fields['label']} (id:{$group_id}) => {$workspace->fields['label']} (id:{$workspaceid})");
 
                         unset($_SESSION['system']['groups']);
                         unset($_SESSION['system']['workspaces']);
 
-                        ploopi_redirect("admin.php?groupid={$group_id}&reloadsession");
+                        ovensia\ploopi\output::redirect("admin.php?groupid={$group_id}&reloadsession");
                     break;
 
                     case 'save_workspace' :
                         // Il faut être admin d'espace ou mieux pour pouvoir sauvegarder un espace de travail
-                        if ($_SESSION['ploopi']['adminlevel'] <= _PLOOPI_ID_LEVEL_GROUPMANAGER) ploopi_redirect("admin.php?workspaceid={$workspace_id}");
+                        if ($_SESSION['ploopi']['adminlevel'] <= _PLOOPI_ID_LEVEL_GROUPMANAGER) ovensia\ploopi\output::redirect("admin.php?workspaceid={$workspace_id}");
 
-                        $workspace = new workspace();
+                        $workspace = new ovensia\ploopi\workspace();
                         if (!empty($_GET['workspace_id']) && is_numeric($_GET['workspace_id'])) $workspace->open($_GET['workspace_id']);
 
                         $workspace->setvalues($_POST,'workspace_');
 
                         if (!empty($_GET['workspace_id_workspace']))
                         {
-                            $parent_workspace = new workspace();
+                            $parent_workspace = new ovensia\ploopi\workspace();
                             $parent_workspace->open($_GET['workspace_id_workspace']);
                             $workspace->fields['parents'] = "{$parent_workspace->fields['parents']};{$_GET['workspace_id_workspace']}";
                             $workspace->fields['id_workspace'] = $_GET['workspace_id_workspace'];
@@ -294,8 +294,8 @@ switch ($_SESSION['system']['level'])
 
                         $workspace_id = $workspace->save();
 
-                        if ($workspace->new) ploopi_create_user_action_log(_SYSTEM_ACTION_CREATEWORKSPACE, "{$workspace->fields['label']} ({$workspace_id})");
-                        else ploopi_create_user_action_log(_SYSTEM_ACTION_MODIFYWORKSPACE, "{$workspace->fields['label']} ({$workspace_id})");
+                        if ($workspace->new) ovensia\ploopi\user_action_log::record(_SYSTEM_ACTION_CREATEWORKSPACE, "{$workspace->fields['label']} ({$workspace_id})");
+                        else ovensia\ploopi\user_action_log::record(_SYSTEM_ACTION_MODIFYWORKSPACE, "{$workspace->fields['label']} ({$workspace_id})");
 
                         system_updateparents();
 
@@ -308,15 +308,15 @@ switch ($_SESSION['system']['level'])
                                 if ($instancetype == 'NEW')
                                 {
                                     $moduletype_id = $data[1];
-                                    $module_type = new module_type();
+                                    $module_type = new ovensia\ploopi\module_type();
                                     $module_type->open($moduletype_id);
 
-                                    ploopi_create_user_action_log(_SYSTEM_ACTION_USEMODULE, $module_type->fields['label']);
+                                    ovensia\ploopi\user_action_log::record(_SYSTEM_ACTION_USEMODULE, $module_type->fields['label']);
 
                                     $module = $module_type->createinstance($workspace_id);
                                     $module_id = $module->save();
 
-                                    $module_workspace = new module_workspace();
+                                    $module_workspace = new ovensia\ploopi\module_workspace();
                                     $module_workspace->fields['id_module'] = $module_id;
                                     $module_workspace->fields['id_workspace'] = $workspace_id;
                                     $module_workspace->save();
@@ -324,12 +324,12 @@ switch ($_SESSION['system']['level'])
                                 elseif ($instancetype == 'SHARED')
                                 {
                                     $module_id = $data[1];
-                                    $module = new module();
+                                    $module = new ovensia\ploopi\module();
                                     $module->open($module_id);
 
-                                    ploopi_create_user_action_log(_SYSTEM_ACTION_USEMODULE, $module->fields['label']);
+                                    ovensia\ploopi\user_action_log::record(_SYSTEM_ACTION_USEMODULE, $module->fields['label']);
 
-                                    $module_workspace = new module_workspace();
+                                    $module_workspace = new ovensia\ploopi\module_workspace();
                                     $module_workspace->fields['id_module'] = $module_id;
                                     $module_workspace->fields['id_workspace'] = $workspace_id;
                                     $module_workspace->save();
@@ -340,7 +340,7 @@ switch ($_SESSION['system']['level'])
                         unset($_SESSION['system']['groups']);
                         unset($_SESSION['system']['workspaces']);
 
-                        ploopi_redirect("admin.php?workspaceid={$workspace_id}&reloadsession");
+                        ovensia\ploopi\output::redirect("admin.php?workspaceid={$workspace_id}&reloadsession");
                     break;
 
                     case 'groupchild':
@@ -354,7 +354,7 @@ switch ($_SESSION['system']['level'])
                     case 'clone' :
                         $clone = $workspace->createclone();
                         $workspaceid = $clone->save();
-                        ploopi_create_user_action_log(_SYSTEM_ACTION_CLONEGROUP, "{$clone->fields['label']} ($workspaceid)");
+                        ovensia\ploopi\user_action_log::record(_SYSTEM_ACTION_CLONEGROUP, "{$clone->fields['label']} ($workspaceid)");
 
                         // get father
 
@@ -365,7 +365,7 @@ switch ($_SESSION['system']['level'])
                             // inherit shared modules from father to clone (brother) of current group
                             foreach($modules as $moduleid => $module)
                             {
-                                $module_workspace = new module_workspace();
+                                $module_workspace = new ovensia\ploopi\module_workspace();
                                 $module_workspace->fields['id_workspace'] = $workspaceid;
                                 $module_workspace->fields['id_module'] = $moduleid;
                                 $module_workspace->save();
@@ -375,7 +375,7 @@ switch ($_SESSION['system']['level'])
                         unset($_SESSION['system']['groups']);
                         unset($_SESSION['system']['workspaces']);
 
-                        ploopi_redirect("admin.php?workspaceid=$workspaceid");
+                        ovensia\ploopi\output::redirect("admin.php?workspaceid=$workspaceid");
                     break;
 
                     case 'delete' :
@@ -387,7 +387,7 @@ switch ($_SESSION['system']['level'])
 
                             foreach ($modules AS $moduleid => $moduleinfos)
                             {
-                                $module = new module();
+                                $module = new ovensia\ploopi\module();
                                 $module->open($moduleid);
 
                                 // Si le module appartient au groupe, on supprime le module
@@ -402,15 +402,15 @@ switch ($_SESSION['system']['level'])
                             }
 
                             $idfather = $workspace->fields['id_workspace'];
-                            ploopi_create_user_action_log(_SYSTEM_ACTION_DELETEGROUP, "{$workspace->fields['label']} ({$workspace->fields['id_workspace']})");
+                            ovensia\ploopi\user_action_log::record(_SYSTEM_ACTION_DELETEGROUP, "{$workspace->fields['label']} ({$workspace->fields['id_workspace']})");
                             $workspace->delete();
 
                             unset($_SESSION['system']['groups']);
                             unset($_SESSION['system']['workspaces']);
 
-                            ploopi_redirect("admin.php?workspaceid=$idfather");
+                            ovensia\ploopi\output::redirect("admin.php?workspaceid=$idfather");
                         }
-                        else ploopi_redirect('admin.php');
+                        else ovensia\ploopi\output::redirect('admin.php');
                     break;
 
                     default :
@@ -423,7 +423,7 @@ switch ($_SESSION['system']['level'])
                 switch ($op)
                 {
                     case 'add' :
-                        if (empty($_GET['instance'])) ploopi_redirect('admin.php');
+                        if (empty($_GET['instance'])) ovensia\ploopi\output::redirect('admin.php');
 
                         global $admin_redirect;
                         $admin_redirect = true;
@@ -437,13 +437,13 @@ switch ($_SESSION['system']['level'])
                             if (isset($data[2]) && is_numeric($data[2]))
                             {
                                 $moduletype_id = $data[2];
-                                $module_type = new module_type();
+                                $module_type = new ovensia\ploopi\module_type();
                                 if ($module_type->open($moduletype_id))
                                 {
 
-                                    ploopi_create_user_action_log(_SYSTEM_ACTION_USEMODULE, $module_type->fields['label']);
+                                    ovensia\ploopi\user_action_log::record(_SYSTEM_ACTION_USEMODULE, $module_type->fields['label']);
 
-                                    echo $skin->open_simplebloc(ploopi_htmlentities(str_replace('<LABEL>',$module_type->fields['label'],_SYSTEM_LABEL_MODULEINSTANCIATION)));
+                                    echo $skin->open_simplebloc(ovensia\ploopi\str::htmlentities(str_replace('<LABEL>',$module_type->fields['label'],_SYSTEM_LABEL_MODULEINSTANCIATION)));
                                     ?>
                                     <TABLE CELLPADDING="2" CELLSPACING="1"><TR><TD>
                                     <?php
@@ -452,12 +452,12 @@ switch ($_SESSION['system']['level'])
                                     if ($module_id = $module->save())
                                     {
 
-                                        $module_workspace = new module_workspace();
+                                        $module_workspace = new ovensia\ploopi\module_workspace();
                                         $module_workspace->fields['id_module'] = $module_id;
                                         $module_workspace->fields['id_workspace'] = $workspace_id;
                                         $module_workspace->save();
 
-                                        if ($admin_redirect) ploopi_redirect("admin.php?reloadsession&tab=modules&op=modify&moduleid=$module_id#modify");
+                                        if ($admin_redirect) ovensia\ploopi\output::redirect("admin.php?reloadsession&tab=modules&op=modify&moduleid=$module_id#modify");
                                         else
                                         {
                                             ?>
@@ -465,7 +465,7 @@ switch ($_SESSION['system']['level'])
                                                 </TR>
                                                 <TR>
                                                     <TD ALIGN="RIGHT">
-                                                    <INPUT TYPE="Button" CLASS="FlatButton" VALUE="<?php echo _PLOOPI_CONTINUE; ?>" OnClick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?reloadsession&tab=modules&op=modify&moduleid={$module_id})")."#modify"; ?>'">
+                                                    <INPUT TYPE="Button" CLASS="FlatButton" VALUE="<?php echo _PLOOPI_CONTINUE; ?>" OnClick="javascript:document.location.href='<?php echo ovensia\ploopi\crypt::urlencode("admin.php?reloadsession&tab=modules&op=modify&moduleid={$module_id})")."#modify"; ?>'">
                                                     </TD>
                                                 </TR>
                                                 </TABLE>
@@ -473,33 +473,33 @@ switch ($_SESSION['system']['level'])
                                             echo $skin->close_simplebloc();
                                         }
                                     }
-                                    else ploopi_redirect('admin.php');
+                                    else ovensia\ploopi\output::redirect('admin.php');
                                 }
-                                else ploopi_redirect('admin.php');
+                                else ovensia\ploopi\output::redirect('admin.php');
                             }
-                            else ploopi_redirect('admin.php');
+                            else ovensia\ploopi\output::redirect('admin.php');
                         }
                         elseif ($instancetype == 'SHARED')
                         {
                             if (isset($data[2]) && is_numeric($data[2]))
                             {
                                 $module_id = $data[2];
-                                $module = new module();
+                                $module = new ovensia\ploopi\module();
                                 if ($module->open($module_id))
                                 {
-                                    ploopi_create_user_action_log(_SYSTEM_ACTION_USEMODULE, $module->fields['label']);
+                                    ovensia\ploopi\user_action_log::record(_SYSTEM_ACTION_USEMODULE, $module->fields['label']);
 
-                                    $module_workspace = new module_workspace();
+                                    $module_workspace = new ovensia\ploopi\module_workspace();
                                     $module_workspace->fields['id_module'] = $module_id;
                                     $module_workspace->fields['id_workspace'] = $workspace_id;
                                     $module_workspace->save();
-                                    if ($admin_redirect) ploopi_redirect("admin.php?reloadsession");
+                                    if ($admin_redirect) ovensia\ploopi\output::redirect("admin.php?reloadsession");
                                 }
-                                else ploopi_redirect('admin.php');
+                                else ovensia\ploopi\output::redirect('admin.php');
                             }
-                            else ploopi_redirect('admin.php');
+                            else ovensia\ploopi\output::redirect('admin.php');
                         }
-                        else ploopi_redirect("admin.php?reloadsession");
+                        else ovensia\ploopi\output::redirect("admin.php?reloadsession");
                     break;
 
                     case 'switch_active':
@@ -509,9 +509,9 @@ switch ($_SESSION['system']['level'])
                     case 'switch_herited':
                         if (!empty($_GET['moduleid']) && is_numeric($_GET['moduleid']))
                         {
-                            $module = new module();
+                            $module = new ovensia\ploopi\module();
                             $module->open($_GET['moduleid']);
-                            ploopi_create_user_action_log(_SYSTEM_ACTION_PARAMMODULE, $module->fields['label']);
+                            ovensia\ploopi\user_action_log::record(_SYSTEM_ACTION_PARAMMODULE, $module->fields['label']);
 
                             if ($op == 'switch_active') $module->fields['active'] = ($module->fields['active']+1)%2;
                             if ($op == 'switch_visible') $module->fields['visible'] = ($module->fields['visible']+1)%2;
@@ -520,53 +520,53 @@ switch ($_SESSION['system']['level'])
                             if ($op == 'switch_herited') $module->fields['herited'] = ($module->fields['herited']+1)%2;
 
                             $module->save();
-                            ploopi_redirect("admin.php?reloadsession");
+                            ovensia\ploopi\output::redirect("admin.php?reloadsession");
                         }
-                        else ploopi_redirect('admin.php');
+                        else ovensia\ploopi\output::redirect('admin.php');
                     break;
 
                     case 'moveup' :
                         if (!empty($_GET['moduleid']) && is_numeric($_GET['moduleid']))
                         {
-                            $module_workspace = new module_workspace();
+                            $module_workspace = new ovensia\ploopi\module_workspace();
                             $module_workspace->open($workspaceid,$_GET['moduleid']);
                             $module_workspace->changeposition('up');
-                            ploopi_redirect("admin.php?reloadsession");
+                            ovensia\ploopi\output::redirect("admin.php?reloadsession");
                         }
-                        else ploopi_redirect('admin.php');
+                        else ovensia\ploopi\output::redirect('admin.php');
                     break;
 
                     case 'movedown' :
                         if (!empty($_GET['moduleid']) && is_numeric($_GET['moduleid']))
                         {
-                            $module_workspace = new module_workspace();
+                            $module_workspace = new ovensia\ploopi\module_workspace();
                             $module_workspace->open($workspaceid,$_GET['moduleid']);
                             $module_workspace->changeposition('down');
-                            ploopi_redirect("admin.php?reloadsession");
+                            ovensia\ploopi\output::redirect("admin.php?reloadsession");
                         }
-                        else ploopi_redirect('admin.php');
+                        else ovensia\ploopi\output::redirect('admin.php');
                     break;
 
                     case 'unlinkinstance' :
                         if (!empty($_GET['moduleid']) && is_numeric($_GET['moduleid']))
                         {
-                            $module = new module();
+                            $module = new ovensia\ploopi\module();
                             $module->open($_GET['moduleid']);
-                            ploopi_create_user_action_log(_SYSTEM_ACTION_UNLINKMODULE, $module->fields['label']);
+                            ovensia\ploopi\user_action_log::record(_SYSTEM_ACTION_UNLINKMODULE, $module->fields['label']);
 
-                            $module_workspace = new module_workspace();
+                            $module_workspace = new ovensia\ploopi\module_workspace();
                             $module_workspace->open($workspaceid,$_GET['moduleid']);
                             $module_workspace->delete();
-                            ploopi_redirect("admin.php?reloadsession");
+                            ovensia\ploopi\output::redirect("admin.php?reloadsession");
                         }
-                        else ploopi_redirect('admin.php');
+                        else ovensia\ploopi\output::redirect('admin.php');
                     break;
 
                     case 'save_module_props' :
-                        $module = new module();
+                        $module = new ovensia\ploopi\module();
                         if (!empty($_GET['moduleid']) && is_numeric($_GET['moduleid']) && $module->open($_GET['moduleid']))
                         {
-                            ploopi_create_user_action_log(_SYSTEM_ACTION_CONFIGUREMODULE, $module->fields['label']);
+                            ovensia\ploopi\user_action_log::record(_SYSTEM_ACTION_CONFIGUREMODULE, $module->fields['label']);
 
                             $module->setvalues($_POST,'module_');
 
@@ -581,9 +581,9 @@ switch ($_SESSION['system']['level'])
                             if (!$module->fields['shared']) $module->fields['herited'] = 0;
                             $module->save();
 
-                            ploopi_redirect("admin.php?moduleid={$module->fields['id']}&reloadsession");
+                            ovensia\ploopi\output::redirect("admin.php?moduleid={$module->fields['id']}&reloadsession");
                         }
-                        else ploopi_redirect('admin.php');
+                        else ovensia\ploopi\output::redirect('admin.php');
                     break;
 
                     case 'delete' :
@@ -592,19 +592,19 @@ switch ($_SESSION['system']['level'])
                             global $admin_redirect;
                             $admin_redirect = true;
 
-                            $module = new module();
+                            $module = new ovensia\ploopi\module();
                             $module->open($_GET['moduleid']);
 
-                            ploopi_create_user_action_log(_SYSTEM_ACTION_DELETEMODULE, $module->fields['label']);
+                            ovensia\ploopi\user_action_log::record(_SYSTEM_ACTION_DELETEMODULE, $module->fields['label']);
 
-                            echo $skin->open_simplebloc(ploopi_htmlentities(str_replace('<LABEL>',$module->fields['label'],_SYSTEM_LABEL_MODULEDELETE)));
+                            echo $skin->open_simplebloc(ovensia\ploopi\str::htmlentities(str_replace('<LABEL>',$module->fields['label'],_SYSTEM_LABEL_MODULEDELETE)));
                             ?>
                             <TABLE CELLPADDING="2" CELLSPACING="1"><TR><TD>
                             <?php
 
                             $module->delete();
 
-                            if ($admin_redirect) ploopi_redirect("admin.php?reloadsession");
+                            if ($admin_redirect) ovensia\ploopi\output::redirect("admin.php?reloadsession");
                             else
                             {
                                 ?>
@@ -612,7 +612,7 @@ switch ($_SESSION['system']['level'])
                                     </TR>
                                     <TR>
                                         <TD ALIGN="RIGHT">
-                                        <INPUT TYPE="Button" CLASS="FlatButton" VALUE="<?php echo _PLOOPI_CONTINUE; ?>" OnClick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?reloadsession"); ?>'">
+                                        <INPUT TYPE="Button" CLASS="FlatButton" VALUE="<?php echo _PLOOPI_CONTINUE; ?>" OnClick="javascript:document.location.href='<?php echo ovensia\ploopi\crypt::urlencode("admin.php?reloadsession"); ?>'">
                                         </TD>
                                     </TR>
                                     </TABLE>
@@ -629,13 +629,13 @@ switch ($_SESSION['system']['level'])
 
                             foreach($children as $idchildren)
                             {
-                                $module_workspace = new module_workspace();
+                                $module_workspace = new ovensia\ploopi\module_workspace();
                                 $module_workspace->open($idchildren,$_GET['moduleid']);
                                 $module_workspace->save();
                             }
-                            ploopi_redirect("admin.php?op=modify&moduleid={$_GET['moduleid']}#modify");
+                            ovensia\ploopi\output::redirect("admin.php?op=modify&moduleid={$_GET['moduleid']}#modify");
                         }
-                        else ploopi_redirect('admin.php');
+                        else ovensia\ploopi\output::redirect('admin.php');
                     break;
 
                     case 'modify':
@@ -647,7 +647,7 @@ switch ($_SESSION['system']['level'])
             break;
 
             case 'tabParams' :
-                $param_module = new param();
+                $param_module = new ovensia\ploopi\param();
 
                 switch($op)
                 {
@@ -655,15 +655,15 @@ switch ($_SESSION['system']['level'])
 
                         if (!empty($_POST['idmodule']) && is_numeric($_POST['idmodule']))
                         {
-                            $module = new module();
+                            $module = new ovensia\ploopi\module();
                             $module->open($_POST['idmodule']);
-                            ploopi_create_user_action_log(_SYSTEM_ACTION_PARAMMODULE, $module->fields['label']);
+                            ovensia\ploopi\user_action_log::record(_SYSTEM_ACTION_PARAMMODULE, $module->fields['label']);
 
                             $param_module->open($_POST['idmodule'], $workspaceid);
                             $param_module->setvalues($_POST);
                             $param_module->save();
 
-                            ploopi_redirect("admin.php?idmodule={$_POST['idmodule']}&reloadsession");
+                            ovensia\ploopi\output::redirect("admin.php?idmodule={$_POST['idmodule']}&reloadsession");
                         }
                     break;
 

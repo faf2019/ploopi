@@ -38,7 +38,7 @@ echo $skin->open_simplebloc();
 
 if (empty($group))
 {
-    $group = new group();
+    $group = new ovensia\ploopi\group();
     $group->init_description();
     $parentlabel = $workspace->fields['label'];
 }
@@ -48,15 +48,15 @@ else
 }
 ?>
 
-<form action="<?php echo ploopi_urlencode("admin.php?op=save_group&group_id_group={$group->fields['id']}"); ?>" method="POST" onsubmit="javascript:return system_group_validate(this);">
+<form action="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?op=save_group&group_id_group={$group->fields['id']}"); ?>" method="POST" onsubmit="javascript:return system_group_validate(this);">
 
 <div class="ploopi_form_title">
-    <?php echo ploopi_htmlentities($parentlabel); ?> &raquo; <?php echo _SYSTEM_LABEL_GROUP_ADD; ?>
+    <?php echo ovensia\ploopi\str::htmlentities($parentlabel); ?> &raquo; <?php echo _SYSTEM_LABEL_GROUP_ADD; ?>
 </div>
 <div class="ploopi_form" style="clear:both;padding:2px">
     <p>
         <label><?php echo _SYSTEM_LABEL_GROUP_NAME; ?>:</label>
-        <input type="text" class="text" name="group_label"  value="<?php echo ploopi_htmlentities("fils de {$parentlabel}"); ?>">
+        <input type="text" class="text" name="group_label"  value="<?php echo ovensia\ploopi\str::htmlentities("fils de {$parentlabel}"); ?>">
     </p>
     <p>
         <label><?php echo _SYSTEM_LABEL_GROUP_SHARED; ?>:</label>

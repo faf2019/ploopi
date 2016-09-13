@@ -21,6 +21,10 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+namespace ovensia\ploopi;
+
+use ovensia\ploopi;
+
 /**
  * Gestion des vignettes en fonction des types mime
  *
@@ -29,11 +33,10 @@
  * @copyright HeXad
  * @license GNU General Public License (GPL)
  * @author Xavier Toussaint
- * 
+ *
  * Dependance : include/functions/image.php !
  */
 
-include_once './include/functions/image.php';
 
 // NB: ploopi_resizeimage contient header("Content-Type: image/...");
 
@@ -43,56 +46,56 @@ class mimethumb
      * Passage en mode debug
      */
     private $booDebug = false;
-    
+
     /**
      * longueur de la vignette
      */
     private $intWidth = 100;
-    
+
     /**
      * hauteur de la vignette
      */
     private $intHeight = 100;
-    
+
     /**
      * Coefficient d'agrandissement/reduction à appliquer à l'image
      */
     private $floatCoef = 0;
-    
+
     /**
      * format d'export de la vignette
      */
     private $strExport = 'png';
-    
+
     /**
      * extension du fichier input
      */
     private $strExtension;
-    
+
     /**
      * MimeType, fileType et group du fichier à traiter (si connu)
      */
     private $strTypeMime = '';
     private $strFileType = '';
     private $strGroupType = '';
-    
+
     /**
      * couleur de la bordure de la vignette (#aaff99, 'transparent', '' (defaut))
      */
     private $strBorderColor = '';
-    
+
     /**
      * Chemin+nom du fichier à traiter
      */
     private $strPathFile;
-    
-    
+
+
     /*
      * Param pour la version CLI.php !
      */
     private $intIdModule;
     private $intIdWorkspace;
-    
+
     /**
      * Constructeur de la classe
      *
@@ -110,7 +113,7 @@ class mimethumb
         if(!empty($extensionExport)) $this->setExport($extensionExport);
         if(!empty($bgcolor)) $this->setBorder($bgcolor);
     }
-    
+
     /**
      * Paramétrage de la longueur
      *
@@ -122,7 +125,7 @@ class mimethumb
         $this->intWidth = (is_numeric($width)) ? round($width) : 100;
         return true;
     }
-    
+
     /**
      * Paramétrage de la hauteur
      *
@@ -136,7 +139,7 @@ class mimethumb
     }
 
     /**
-     * Paramétrage du coefficient 
+     * Paramétrage du coefficient
      *
      * @param int $height hauteur de la vignette
      * @return true
@@ -146,7 +149,7 @@ class mimethumb
         $this->floatCoef = (is_numeric($coef)) ? $coef : 0;
         return true;
     }
-    
+
     /**
      * Paramétrage du format d'export
      *
@@ -158,7 +161,7 @@ class mimethumb
     {
         $extensionExport = strtolower($extensionExport);
         $this->strExport = (in_array($extensionExport, array('jpg', 'jpeg', 'png', 'gif'))) ? $extensionExport : 'png';
-        
+
         // Contrôle la qualité UNIQUEMENT pour le jpg/jpeg
         $quality = (is_int($quality) && $quality>0 && $quality<=100) ? $quality : 75;
         // formate le format d'export
@@ -167,10 +170,10 @@ class mimethumb
             $this->strExport = array($this->strExport,$quality);
             if($this->strBorderColor == 'transparent') $this->strBorderColor = '#ffffff';
         }
-        
+
         return true;
     }
-    
+
     /**
      * Paramétrage de la couleur de bordure (si non indiqué pas de bordure)
      *
@@ -184,14 +187,14 @@ class mimethumb
         $this->strBorderColor = (preg_match('/^#?[0-9a-f]{6}$/i',$bgcolor) || $bgcolor == 'transparent') ? $bgcolor : '';
         // Ajoute le # si besoin
         if(substr($this->strBorderColor,0,1) != '#' && $this->strBorderColor != 'transparent') $this->strBorderColor = '#'.$this->strBorderColor;
-        
+
         // Supprime la transparence si c'est du jpg
         if(($this->strExport == 'jpg' || $this->strExport != 'jpeg') && $this->strBorderColor == 'transparent') $this->strBorderColor == '#ffffff';
     }
-    
+
     /**
      * Paramétrage de idmodule et idworkspave pour la version cli de jodconverter
-     * 
+     *
      * @param idmodule
      * @param idworkspace
      */
@@ -200,7 +203,7 @@ class mimethumb
         $this->intIdModule = $idmodule;
         $this->intIdWorkspace = $idworspace;
     }
-    
+
     /**
      * Retourne une vignette du fichier passé en paramètre
      *
@@ -211,12 +214,12 @@ class mimethumb
     {
         global $db;
         $booviewthumb = false;
-        
+
         $strParam = array();
         if(empty($pathfile) || !file_exists($pathfile)) return false;
-        
+
         $this->strPathFile = $pathfile;
-        $this->strExtension = ploopi_file_getextension($pathfile);
+        $this->strExtension = fs::file_getextension($pathfile);
 
         // Recupération du type mime
         $sqlMime = $db->query("SELECT `mimetype`, `filetype`, `group` FROM ploopi_mimetype WHERE ext = '{$this->strExtension}'");
@@ -244,7 +247,7 @@ class mimethumb
                 case 'ODG':
                     $booviewthumb = $this->_thumbOpenOffice();
                 break;
-                
+
                 case 'SXW':
                 case 'RTF':
                 case 'DOC':
@@ -252,32 +255,32 @@ class mimethumb
                 case 'WPD':
                     $booviewthumb = $this->_thumbJodconverter('ODT');
                 break;
-                
+
                 case 'SXC':
                 case 'XLS':
                 case 'XLSX':
                 case 'TSV':
                     $booviewthumb = $this->_thumbJodconverter('ODS');
                 break;
-                    
+
                 case 'SXI':
                 case 'PPT':
                 case 'PPTX':
                 case 'PPS':
                     $booviewthumb = $this->_thumbJodconverter('ODP');
                 break;
-    
+
                 case 'JPG':
                 case 'JPEG':
                 case 'PNG':
                 case 'GIF':
                     $booviewthumb = $this->_thumbImage();
                 break;
-                
+
                 case 'SVG':
                     $booviewthumb = $this->_thumbSvg();
                 break;
-                
+
                 case 'AVI':
                 case 'FLV':
                 case 'MP4':
@@ -287,10 +290,10 @@ class mimethumb
                 case 'M2V':
                     $booviewthumb = $this->_thumbVideo();
                 break;
-                
+
                 // Imagick !
                 default:
-                    if(class_exists('Imagick')) 
+                    if(class_exists('Imagick'))
                     {
                         switch(strtoupper($this->strExtension))
                         {
@@ -316,7 +319,7 @@ class mimethumb
                 break;
             }
         }
-        
+
         // Si pas d'image...
         if(!$booviewthumb) $this->getMimeTypeDefault();
         return true;
@@ -331,10 +334,10 @@ class mimethumb
     {
         if(!empty($this->strFileType) && file_exists("./img/mimetypes/thumb_{$this->strFileType}.png"))
         {
-            ploopi_resizeimage("./img/mimetypes/thumb_{$this->strFileType}.png", $this->floatCoef, $this->intWidth, $this->intHeight, $this->strExport, 0, '', $this->strBorderColor);
+            image::resize("./img/mimetypes/thumb_{$this->strFileType}.png", $this->floatCoef, $this->intWidth, $this->intHeight, $this->strExport, 0, '', $this->strBorderColor);
             return true;
         }
-        ploopi_resizeimage('./img/mimetypes/thumb_default.png', $this->floatCoef, $this->intWidth, $this->intHeight, $this->strExport, 0, '', $this->strBorderColor);
+        image::resize('./img/mimetypes/thumb_default.png', $this->floatCoef, $this->intWidth, $this->intHeight, $this->strExport, 0, '', $this->strBorderColor);
         return false;
     }
 
@@ -346,7 +349,7 @@ class mimethumb
     public function getMimeTypeIco()
     {
         @header("Content-Type: image/png");
-        
+
         if(!empty($this->strFileType) && file_exists("./img/mimetypes/thumb_{$this->strFileType}.png"))
         {
             echo file_get_contents("./img/mimetypes/ico_{$this->strFileType}.png");
@@ -355,7 +358,7 @@ class mimethumb
         echo file_get_contents('./img/mimetypes/ico_default.png');
         return false;
     }
-    
+
     /**
      * simple resize via ploopi_resizeimage d'une image (jpeg / jpg / gig / png)
      *
@@ -364,18 +367,18 @@ class mimethumb
     private function _thumbImage()
     {
         try {
-            ploopi_resizeimage($this->strPathFile, $this->floatCoef, $this->intWidth, $this->intHeight, $this->strExport, 0, '', $this->strBorderColor);
+            image::resize($this->strPathFile, $this->floatCoef, $this->intWidth, $this->intHeight, $this->strExport, 0, '', $this->strBorderColor);
         } catch (Exception $e) {
             if($this->booDebug)
             {
                 echo 'thumb_image <br/>'.$e->getMessage();
-                ploopi_die();
+                system::kill();
             }
             return false;
         }
         return true;
     }
-    
+
     /**
      * Convertion de format + génération de vignette via imagick
      *
@@ -385,39 +388,39 @@ class mimethumb
     {
         // Pour les fichier plain-text il faut avoir une extension 'text' sinon Imagick ne le reconnait pas...
         $fileTempo='';
-        
+
         if($this->strGroupType === 'text')
         {
             $pathTemp = _PLOOPI_PATHDATA._PLOOPI_SEP.'tmp'._PLOOPI_SEP;
-            if (!is_dir($pathTemp)) ploopi_makedir($pathTemp);
+            if (!is_dir($pathTemp)) fs::makedir($pathTemp);
 
             $fileTempo = $pathTemp.md5(uniqid(rand(), true)).'.text';
-            
+
             if(_PLOOPI_SERVER_OSTYPE == 'unix')
                 symlink($this->strPathFile,$fileTempo); // Sous nux on crée juste un lien symbolique (+ rapide)
             else
                 copy($this->strPathFile,$fileTempo); // Sous win les liens symbolique n'existe que pour vista,2003 ou > ...
-                
+
             $this->strPathFile = $fileTempo.'[0]';
         }
-        
+
         // Create Imagick object
         try {
-            
+
             $thumb = new Imagick($this->strPathFile);
             $color = new ImagickPixel( "white" );
-            
+
             $thumb->setResolution(72,72);
             $thumb->setImageColorspace(1);
             $thumb->setBackgroundColor($color);
-            
+
             if(!empty($arrParam))
             {
                 foreach ($arrParam as $strParam)
                     eval($strParam);
             }
-            
-            
+
+
             if(is_array($this->strExport)) // si array c'est que array(jpg, qualité)
             {
                 $thumb->setCompression(Imagick::COMPRESSION_JPEG);
@@ -428,44 +431,44 @@ class mimethumb
             {
                 $thumb->setFormat($this->strExport);
             }
-            
+
             // Détermination de la taille de l'image destination en fonction du coef de redimensionnement
             if (!$this->floatCoef && (!$this->intWidth || !$this->intHeight))
             {
                 if ($this->intWidth) $this->setCoef($thumb->getImageWidth()/$this->intWidth);
                 if ($this->intHeight && $thumb->getImageHeight()/$this->intHeight > $this->floatCoef) $this->setCoef($thumb->getImageHeight()/$this->intHeight);
-                
+
                 if (!$this->intWidth)    $this->setWith(round($thumb->getImageWidth()/$this->floatCoef));
                 if (!$this->intHeight)   $this->setHeight(round($thumb->getImageHeight()/$this->floatCoef));
             }
-            
+
             if ($this->floatCoef && !$this->intWidth && !$this->intHeight)
             {
                 $this->setWith(round($thumb->getImageWidth()/$this->floatCoef));
                 $this->setHeight(round($thumb->getImageHeight()/$this->floatCoef));
             }
-            
+
             $thumb->thumbnailImage($this->intWidth,$this->intHeight,true);
-            
+
             $intWithTmp = $thumb->getImageWidth();
             $intHeightTmp = $thumb->getImageHeight();
-            
+
             // Ajoute la bordure
             if(!empty($this->strBorderColor))
             {
                 $BorderColor = new ImagickPixel( $this->strBorderColor );
                 $thumb->borderImage($BorderColor, ($this->intWidth-$intWithTmp)/2,($this->intHeight-$intHeightTmp)/2);
-            }   
-            
+            }
+
             @header("Content-Type: image/{$this->strExport}");
             echo $thumb->getImage();
-            
+
             if(!empty($fileTempo) && file_exists($fileTempo)) unlink($fileTempo);
         } catch (Exception $e) {
             if($this->booDebug)
             {
                 echo 'thumb_imagick <br/>'.$e->getMessage();
-                ploopi_die();
+                system::kill();
             }
             if(!empty($fileTempo) && file_exists($fileTempo)) unlink($fileTempo);
             return false;
@@ -473,7 +476,7 @@ class mimethumb
         if(!empty($fileTempo) && file_exists($fileTempo)) unlink($fileTempo);
         return true;
     }
-    
+
     /**
      * Ouverture des fichiers openoffice (zip) + extraction du thumbnail + ploopi_resizeimage
      *
@@ -485,8 +488,8 @@ class mimethumb
             // Pour OpenOffice, les thumbs sont déjà dans le fichier qui est un zip
             $tmpfoldername = md5(uniqid(rand(), true));
             $zip_path = _PLOOPI_PATHDATA._PLOOPI_SEP.'zip'._PLOOPI_SEP.$tmpfoldername._PLOOPI_SEP;
-            if (!is_dir($zip_path)) ploopi_makedir($zip_path);
-    
+            if (!is_dir($zip_path)) fs::makedir($zip_path);
+
             $zip = new ZipArchive;
             if ($zip->open($this->strPathFile) === true && $zip->extractTo($zip_path,'Thumbnails/thumbnail.png'))
             {
@@ -495,26 +498,26 @@ class mimethumb
                 if(file_exists($zip_path.'Thumbnails/thumbnail.png'))
                 {
                     // On mets une couleur de fond car les thumbs inclus sont sur fond transparent !!!
-                    ploopi_resizeimage($zip_path.'Thumbnails/thumbnail.png', $this->floatCoef, $this->intWidth, $this->intHeight, $this->strExport, 0, '', $this->strBorderColor, '#ffffff');
+                    image::resize($zip_path.'Thumbnails/thumbnail.png', $this->floatCoef, $this->intWidth, $this->intHeight, $this->strExport, 0, '', $this->strBorderColor, '#ffffff');
                 }
                 else
                 {
-                    if(isset($zip_path) && is_dir($zip_path)) ploopi_deletedir($zip_path);
-                    return false;                    
+                    if(isset($zip_path) && is_dir($zip_path)) fs::deletedir($zip_path);
+                    return false;
                 }
             }
-            if(isset($zip_path) && is_dir($zip_path)) ploopi_deletedir($zip_path);
+            if(isset($zip_path) && is_dir($zip_path)) fs::deletedir($zip_path);
         } catch (Exception $e) {
             if($this->booDebug)
             {
                 echo 'thumb_openoffice <br/>'.$e->getMessage();
-                ploopi_die();
+                system::kill();
             }
             return false;
         }
         return true;
     }
-    
+
     /**
      * Transformation de document via jodconverter + génération d'une vignette via imagick
      * Taille maxi du fichier 512ko avec jod webservice
@@ -527,16 +530,16 @@ class mimethumb
     {
         try {
             $pathTemp = _PLOOPI_PATHDATA._PLOOPI_SEP.'tmp'._PLOOPI_SEP;
-            if (!is_dir($pathTemp)) ploopi_makedir($pathTemp);
-            
+            if (!is_dir($pathTemp)) fs::makedir($pathTemp);
+
             $fileTempo = $pathTemp.md5(uniqid(rand(), true)).'.'.$formExport;
 
             // Besoin pour l'appel en cli
             $system_jobservice = '';
 
-            if(function_exists('ploopi_getparam'))
+            if(function_exists('param::get'))
             {
-                $system_jobservice = ploopi_getparam('system_jodwebservice', _PLOOPI_MODULE_SYSTEM);
+                $system_jobservice = param::get('system_jodwebservice', _PLOOPI_MODULE_SYSTEM);
             }
             else // en mode cli.php recup si webservice ou pas dans les param du module
             {
@@ -545,17 +548,17 @@ class mimethumb
                 $objParam->open(_PLOOPI_MODULE_SYSTEM);
                 $system_jobservice = $objParam->getparam('system_jodwebservice');
             }
-            
-            if(!empty($system_jobservice) && ploopi_is_url($system_jobservice))
+
+            if(!empty($system_jobservice) && str::is_url($system_jobservice))
             {
                 if(filesize($this->strPathFile) > 1024*1024) return false;
-                
+
                 include_once './include/classes/odf.php';
-                
+
                 $objJOD = new odf_converter($system_jobservice);
-                
-                $inputType = ploopi_getmimetype('file.'.$this->strExtension);
-                $outputType = ploopi_getmimetype('file.'.$formExport);
+
+                $inputType = fs::getmimetype('file.'.$this->strExtension);
+                $outputType = fs::getmimetype('file.'.$formExport);
 
                 $content = $objJOD->convert(file_get_contents($this->strPathFile), $inputType, $outputType);
 
@@ -575,7 +578,7 @@ class mimethumb
                 // On verif que le démon est lancé
                 exec("ps -f -A | grep -E '^(.*)soffice(.*)accept\=socket\,host\=127\.0\.0\.1\,port\=8100'",$arrResult);
                 if(empty($arrResult)) return false; // Pas d'instance du serveur openoffice ! On sort
-                
+
                 // Les fichier type text/plain css et cie doivent etre vu comme des fichier .text
                 $fileTempoTXT = '';
                 if($this->strGroupType === 'text')
@@ -584,7 +587,7 @@ class mimethumb
                     symlink($this->strPathFile,$fileTempoTXT); // Sous nux on crée juste un lien symbolique (+ rapide)
                     $this->strPathFile = $fileTempoTXT;
                 }
-                
+
                 // Les pps doivent etre lu comme des ppt (en webservice le type/mime est forcé a ppt)
                 $fileTempoPPT = '';
                 if(strtoupper($this->strExtension) == 'PPS')
@@ -593,32 +596,32 @@ class mimethumb
                     symlink($this->strPathFile,$fileTempoPPT); // Sous nux on crée juste un lien symbolique (+ rapide)
                     $this->strPathFile = $fileTempoPPT;
                 }
-                
-	            exec('java -jar '.realpath('./lib/jodconverter/lib/jodconverter-cli-2.2.2.jar').' '.$this->strPathFile.' '.$fileTempo.' > /dev/null');
-                    
+
+                exec('java -jar '.realpath('./lib/jodconverter/lib/jodconverter-cli-2.2.2.jar').' '.$this->strPathFile.' '.$fileTempo.' > /dev/null');
+
                 if(!empty($fileTempoTXT) && is_link($fileTempoTXT)) unlink($fileTempoTXT);
-	            if(!empty($fileTempoPPT) && is_link($fileTempoPPT)) unlink($fileTempoPPT);
+                if(!empty($fileTempoPPT) && is_link($fileTempoPPT)) unlink($fileTempoPPT);
                 if(!file_exists($fileTempo)) return false;
             }
             $this->strPathFile = $fileTempo;
             $booResult = $this->_thumbOpenOffice();
-            
+
             if(file_exists($fileTempo)) unlink($fileTempo);
-            
+
             if(!$booResult) return false;
-            
+
         } catch (Exception $e) {
             if($this->booDebug)
             {
                 echo 'thumb_jodconverter <br/>'.$e->getMessage();
-                ploopi_die();
+                system::kill();
             }
             if(!empty($fileTempoPPT) && file_exists($fileTempoPPT)) unlink($fileTempoPPT);
             return false;
         }
         return true;
     }
-    
+
     /**
      * Conversion des fichier svg via inkscape + génération de la vignette via ploopi_resizeimage
      *
@@ -630,28 +633,28 @@ class mimethumb
 
         try {
             $pathTemp = _PLOOPI_PATHDATA._PLOOPI_SEP.'tmp'._PLOOPI_SEP;
-            if (!is_dir($pathTemp)) ploopi_makedir($pathTemp);
-                        
+            if (!is_dir($pathTemp)) fs::makedir($pathTemp);
+
             $fileTempo = $pathTemp.md5(uniqid(rand(), true)).'.png';
             $strParamExport = " --without-gui -f{$this->strPathFile} -e{$fileTempo} -h400";
 
             shell_exec("inkscape {$strParamExport}");
 
-            ploopi_resizeimage($fileTempo, $this->floatCoef, $this->intWidth, $this->intHeight, $this->strExport, 0, '', $this->strBorderColor);
+            image::resize($fileTempo, $this->floatCoef, $this->intWidth, $this->intHeight, $this->strExport, 0, '', $this->strBorderColor);
             if(file_exists($fileTempo)) unlink($fileTempo);
-           
+
         } catch (Exception $e) {
             if($this->booDebug)
             {
                 echo 'thumb_svg <br/>'.$e->getMessage();
-                ploopi_die();
+                system::kill();
             }
             return false;
-            
+
         }
         return true;
     }
-    
+
     /**
      * crée des vignettes vidéo
      *
@@ -661,21 +664,21 @@ class mimethumb
     {
         try {
             $pathTemp = _PLOOPI_PATHDATA._PLOOPI_SEP.'tmp'._PLOOPI_SEP;
-            if (!is_dir($pathTemp)) ploopi_makedir($pathTemp);
-                        
+            if (!is_dir($pathTemp)) fs::makedir($pathTemp);
+
             $fileTempo = $pathTemp.md5(uniqid(rand(), true)).'.png';
-            
+
             exec("ffmpeg -i {$this->strPathFile} -vcodec png -f image2 -vframes 1 -an -ss 00:00:05 -y $fileTempo",$arrReturn);
-            
+
             if(!file_exists($fileTempo)) return false;
-                
-            if (filesize($fileTempo) == 0) 
+
+            if (filesize($fileTempo) == 0)
             {
                 unlink($fileTempo);
                 return false;
             }
-        
-            ploopi_resizeimage($fileTempo, $this->floatCoef, $this->intWidth, $this->intHeight, $this->strExport, 0, '', $this->strBorderColor);
+
+            image::resize($fileTempo, $this->floatCoef, $this->intWidth, $this->intHeight, $this->strExport, 0, '', $this->strBorderColor);
             unlink($fileTempo);
             return true;
 
@@ -683,7 +686,7 @@ class mimethumb
             if($this->booDebug)
             {
                 echo 'thumb_svg <br/>'.$e->getMessage();
-                ploopi_die();
+                system::kill();
             }
             return false;
         }

@@ -53,10 +53,10 @@ if (!isset($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_date2'])) $_SESSIO
 echo $skin->create_pagetitle(_SYSTEM_LABEL_SEARCH);
 echo $skin->open_simplebloc('Formulaire de recherche');
 ?>
-<form action="<?php echo ploopi_urlencode('admin.php?op=search_next'); ?>" onsubmit="javascript:system_search_next();return false;" method="post">
+<form action="<?php echo ovensia\ploopi\crypt::urlencode('admin.php?op=search_next'); ?>" onsubmit="javascript:system_search_next();return false;" method="post">
 <div class="dims_va" style="padding:4px;">
     <span>Mots Clés:</span>
-    <input type="text" class="text" name="system_search_keywords" id="system_search_keywords" value="<?php echo ploopi_htmlentities($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords']); ?>" />
+    <input type="text" class="text" name="system_search_keywords" id="system_search_keywords" value="<?php echo ovensia\ploopi\str::htmlentities($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords']); ?>" />
 
     <span>Module:</span>
     <select class="select" name="system_search_module" id="system_search_module" />
@@ -71,7 +71,7 @@ echo $skin->open_simplebloc('Formulaire de recherche');
         {
             $arrAvailableModules[] = $modid;
             ?>
-            <option value="<?php echo $modid; ?>" <?php if ($modid == $_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_module']) echo 'selected'; ?>><?php echo ploopi_htmlentities($arrMod['label']); ?></option>
+            <option value="<?php echo $modid; ?>" <?php if ($modid == $_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_module']) echo 'selected'; ?>><?php echo ovensia\ploopi\str::htmlentities($arrMod['label']); ?></option>
             <?php
         }
     }

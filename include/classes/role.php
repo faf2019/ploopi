@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,6 +20,10 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+namespace ovensia\ploopi;
+
+use ovensia\ploopi;
+
 /**
  * Gestion des rôles.
  *
@@ -30,8 +33,6 @@
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
-
-include_once './include/classes/data_object.php';
 
 /**
  * Classe d'accès à la table ploopi_role
@@ -133,31 +134,6 @@ class role extends data_object
         while ($row = $db->fetchrow($result)) $arrActions[$row['id_action']] = $row;
 
         return $arrActions;
-    }
-
-}
-
-/**
- * Classe d'accès à la table ploopi_role_action
- *
- * @package ploopi
- * @subpackage role
- * @copyright Netlor, Ovensia
- * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
- */
-
-class role_action extends data_object
-{
-    /**
-     * Constructeur de la classe
-     *
-     * @return role_action
-     */
-
-    public function __construct()
-    {
-        parent::__construct('ploopi_role_action','id_role','id_action','id_module_type');
     }
 
 }

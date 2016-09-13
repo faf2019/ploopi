@@ -22,7 +22,7 @@
 
 /**
  * Gestion des types de ressources
- * 
+ *
  * @package booking
  * @subpackage resourcetype
  * @author Stéphane Escaich
@@ -30,13 +30,8 @@
  */
 
 /**
- * Inclusion de la classe parent
- */
-include_once './include/classes/data_object.php';
-
-/**
  * Classe d'accès à la table 'ploopi_mod_booking_resourcetype'
- * 
+ *
  * @package booking
  * @subpackage resourcetype
  * @copyright Ovensia
@@ -46,30 +41,30 @@ include_once './include/classes/data_object.php';
  * @lastmodified $Date$
  */
 
-class booking_resourcetype extends data_object
+class booking_resourcetype extends ovensia\ploopi\data_object
 {
     /**
      * Constructeur de la classe
      *
      * @return booking_resourcetype
      */
-    
-    public function booking_resourcetype()
+
+    public function __construct()
     {
         parent::__construct('ploopi_mod_booking_resourcetype', 'id');
     }
-    
+
 
     /**
      * Enregistre le type de ressource
      *
      * @return int id du type de ressource
      */
-    
+
     public function save()
     {
         if ($this->new) $this->setuwm();
-        
+
         return parent::save();
     }
 }

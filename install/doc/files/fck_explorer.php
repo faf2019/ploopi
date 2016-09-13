@@ -35,17 +35,14 @@
  * On commence par tester si une instance du module DOC est présente.
  */
 
-include_once './include/functions/system.php';
-$arrModules = ploopi_getmoduleid('doc', false);
-if (empty($arrModules))
-{
-    ploopi_die('<div class="error">Module DOC absent</div>');
-}
+$arrModules = ovensia\ploopi\module::getid('doc', false);
+
+if (empty($arrModules)) ovensia\ploopi\system::kill('<div class="error">Module DOC absent</div>');
 
 /**
  * Initialisation du module DOC
  */
-ploopi_init_module('doc');
+ovensia\ploopi\module::init('doc');
 
 $db->query("
     SELECT  m.label,
@@ -76,7 +73,8 @@ while ($fields = $db->fetchrow())
 
 echo $skin->open_simplebloc();
 ?>
-
+<input type="hidden" id="CKEditor" value="<? echo isset($_REQUEST['CKEditor']) ? $_REQUEST['CKEditor'] : ''; ?>" />
+<input type="hidden" id="CKEditorFuncNum" value="<? echo isset($_REQUEST['CKEditorFuncNum']) ? $_REQUEST['CKEditorFuncNum'] : ''; ?>" />
 <div style="padding:4px;border-bottom:1px solid #a0a0a0;">
     Dossier :
     <select class="select" name="doc_choosefolder" id="doc_choosefolder" onchange="javascript:doc_fckexplorer_switch_folder(this.value, '<?php echo $ploopi_op; ?>');">
@@ -86,7 +84,7 @@ echo $skin->open_simplebloc();
     foreach($arrFolders as $strModuleLabel => $arrSubFolders)
     {
         ?>
-        <optgroup label="<?php echo ploopi_htmlentities($strModuleLabel); ?>"><?php echo ploopi_htmlentities($strModuleLabel); ?></optgroup>
+        <optgroup label="<?php echo ovensia\ploopi\str::htmlentities($strModuleLabel); ?>"><?php echo ovensia\ploopi\str::htmlentities($strModuleLabel); ?></optgroup>
         <?php
         if (!$intDefaultFolder && isset($arrSubFolders['tree'][0][0])) $intDefaultFolder = $arrSubFolders['tree'][0][0];
         doc_fckexplorer_displayfolders($arrSubFolders);

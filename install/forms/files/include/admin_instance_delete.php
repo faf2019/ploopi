@@ -33,13 +33,11 @@
 /**
  * Initialisation du module
  */
-ploopi_init_module('forms', false, false, false);
+ovensia\ploopi\module::init('forms', false, false, false);
 
-include_once './include/classes/data_object_collection.php';
 include_once './modules/forms/classes/formsForm.php';
 
-
-$objDOC = new data_object_collection('formsForm');
+$objDOC = new ovensia\ploopi\data_object_collection('formsForm');
 $objDOC->add_where('id_module = %d', $admin_moduleid);
 foreach($objDOC->get_objects() as $objForm) $objForm->delete();
 ?>

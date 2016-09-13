@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -41,7 +40,6 @@
  * inclusion des classes pour le moteur de template
  */
 
-include_once './include/classes/template.php';
 include_once './lib/template/template.php';
 
 /**
@@ -50,9 +48,9 @@ include_once './lib/template/template.php';
  */
 
 include_once "{$_SESSION['ploopi']['template_path']}/class_skin.php";
-$skin = new skin();
+$skin = new ovensia\ploopi\skin();
 
-$template_body = new Template($_SESSION['ploopi']['template_path']);
+$template_body = new \Template($_SESSION['ploopi']['template_path']);
 
 $template_filename = 'index.tpl';
 
@@ -61,7 +59,7 @@ else if (isset($_SESSION['ploopi']['remote_pda']) && $_SESSION['ploopi']['remote
 
 if (!file_exists("{$_SESSION['ploopi']['template_path']}/{$template_filename}") || ! is_readable("{$_SESSION['ploopi']['template_path']}/{$template_filename}")) {
 
-    ploopi_die(
+    ovensia\ploopi\system::kill(
         str_replace(
             array('<FILE>', '<TEMPLATE>'),
             array($template_filename, $_SESSION['ploopi']['template_path']),
@@ -117,8 +115,8 @@ if ($_SESSION['ploopi']['connected'])
     foreach ($_SESSION['ploopi']['workspaces_allowed'] as $key)
     {
         $template_body->assign_block_vars('switch_user_logged_in.workspace',array(
-                'TITLE' => ploopi_htmlentities($_SESSION['ploopi']['workspaces'][$key]['label']),
-                'URL' => $key == $_SESSION['ploopi']['workspaceid'] && $_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_WORKSPACES && $_SESSION['ploopi']['moduleid'] != -1 ? ploopi_urlencode('admin.php') : ploopi_urlencode('admin.php?ploopi_switch_workspace', _PLOOPI_MENU_WORKSPACES, $key, '', ''),
+                'TITLE' => ovensia\ploopi\str::htmlentities($_SESSION['ploopi']['workspaces'][$key]['label']),
+                'URL' => $key == $_SESSION['ploopi']['workspaceid'] && $_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_WORKSPACES && $_SESSION['ploopi']['moduleid'] != -1 ? ovensia\ploopi\crypt::urlencode('admin.php') : ovensia\ploopi\crypt::urlencode('admin.php?ploopi_switch_workspace', _PLOOPI_MENU_WORKSPACES, $key, '', ''),
                 'SELECTED' => ($_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_WORKSPACES && $key == $_SESSION['ploopi']['workspaceid']) ? 'selected' : ''
             )
         );
@@ -141,7 +139,7 @@ if ($_SESSION['ploopi']['connected'])
             // CAS 1 : liste standard de modules
             $template_body->assign_block_vars('switch_user_logged_in.switch_blockmenu.block',array(
                     'ID' => $idmod,
-                    'TITLE' => ploopi_htmlentities($mod['title']),
+                    'TITLE' => ovensia\ploopi\str::htmlentities($mod['title']),
                     'URL' => $mod['url'],
                     'DESCRIPTION' => '',
                     'SELECTED' => ($idmod == $_SESSION['ploopi']['moduleid']) ? 'selected' : ''
@@ -162,7 +160,7 @@ if ($_SESSION['ploopi']['connected'])
                 {
                     $template_body->assign_block_vars('switch_user_logged_in.switch_blockmenu.switch_blocksel',array(
                             'ID' => $idmod,
-                            'TITLE' => ploopi_htmlentities($mod['title']),
+                            'TITLE' => ovensia\ploopi\str::htmlentities($mod['title']),
                             'URL' => $mod['url'],
                             'DESCRIPTION' => ''
                         )
@@ -223,20 +221,20 @@ if ($_SESSION['ploopi']['connected'])
     $page_content = ob_get_contents();
     ob_end_clean();
 
-    list($newtickets, $lastticket) = ploopi_tickets_getnew();
+    list($newtickets, $lastticket) = ovensia\ploopi\ticket::getnew();
 
     $template_body->assign_vars(array(
         'PAGE_CONTENT'          => $page_content,
         'ADDITIONAL_HEAD'       => $ploopi_additional_head,
 
-        'USER_LOGIN'            => ploopi_htmlentities($_SESSION['ploopi']['login']),
-        'USER_PASSWORD'         => ploopi_htmlentities($_SESSION['ploopi']['password']),
-        'USER_FIRSTNAME'        => ploopi_htmlentities($_SESSION['ploopi']['user']['firstname']),
-        'USER_LASTNAME'         => ploopi_htmlentities($_SESSION['ploopi']['user']['lastname']),
-        'USER_EMAIL'            => ploopi_htmlentities($_SESSION['ploopi']['user']['email']),
+        'USER_LOGIN'            => ovensia\ploopi\str::htmlentities($_SESSION['ploopi']['login']),
+        'USER_PASSWORD'         => ovensia\ploopi\str::htmlentities($_SESSION['ploopi']['password']),
+        'USER_FIRSTNAME'        => ovensia\ploopi\str::htmlentities($_SESSION['ploopi']['user']['firstname']),
+        'USER_LASTNAME'         => ovensia\ploopi\str::htmlentities($_SESSION['ploopi']['user']['lastname']),
+        'USER_EMAIL'            => ovensia\ploopi\str::htmlentities($_SESSION['ploopi']['user']['email']),
 
-        'USER_WORKSPACE_LABEL'  => ploopi_htmlentities(_PLOOPI_LABEL_MYWORKSPACE),
-        'USER_WORKSPACE_URL'    => ploopi_urlencode("admin.php", _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
+        'USER_WORKSPACE_LABEL'  => ovensia\ploopi\str::htmlentities(_PLOOPI_LABEL_MYWORKSPACE),
+        'USER_WORKSPACE_URL'    => ovensia\ploopi\crypt::urlencode("admin.php", _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
         'USER_WORKSPACE_SEL'    => ($_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_MYWORKSPACE) ? 'selected' : '',
 
         'MAINMENU_PROFILE'          => _PLOOPI_LABEL_MYPROFILE,
@@ -245,13 +243,13 @@ if ($_SESSION['ploopi']['connected'])
         'MAINMENU_SEARCH'           => _PLOOPI_LABEL_SEARCH,
         'MAINMENU_DISCONNECTION'    => _PLOOPI_LABEL_DISCONNECTION,
 
-        'POPUP_PROFLE'              => ploopi_queryencode("ploopi_op=system_update_profile"),
+        'POPUP_PROFLE'              => ovensia\ploopi\crypt::queryencode("ploopi_op=system_update_profile"),
 
-        'MAINMENU_SHOWPROFILE_URL'      => ploopi_urlencode('admin.php?op=profile', _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
-        'MAINMENU_SHOWANNOTATIONS_URL'  => ploopi_urlencode('admin.php?op=annotation', _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
-        'MAINMENU_SHOWTICKETS_URL'      => ploopi_urlencode('admin.php?op=tickets', _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
-        'MAINMENU_SHOWDATA_URL'         => ploopi_urlencode('admin.php?op=actions', _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
-        'MAINMENU_SHOWSEARCH_URL'       => ploopi_urlencode('admin.php?op=search', _PLOOPI_MENU_WORKSPACES, null, _PLOOPI_MODULE_SEARCH, 'public'),
+        'MAINMENU_SHOWPROFILE_URL'      => ovensia\ploopi\crypt::urlencode('admin.php?op=profile', _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
+        'MAINMENU_SHOWANNOTATIONS_URL'  => ovensia\ploopi\crypt::urlencode('admin.php?op=annotation', _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
+        'MAINMENU_SHOWTICKETS_URL'      => ovensia\ploopi\crypt::urlencode('admin.php?op=tickets', _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
+        'MAINMENU_SHOWDATA_URL'         => ovensia\ploopi\crypt::urlencode('admin.php?op=actions', _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
+        'MAINMENU_SHOWSEARCH_URL'       => ovensia\ploopi\crypt::urlencode('admin.php?op=search', _PLOOPI_MENU_WORKSPACES, null, _PLOOPI_MODULE_SEARCH, 'public'),
 
         'MAINMENU_SHOWPROFILE_SEL'      => ($_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_MYWORKSPACE && !empty($_REQUEST['op']) && $_REQUEST['op'] == 'profile') ? 'selected' : '',
         'MAINMENU_SHOWANNOTATIONS_SEL'  => ($_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_MYWORKSPACE && !empty($_REQUEST['op']) && $_REQUEST['op'] == 'annotation') ? 'selected' : '',
@@ -259,13 +257,13 @@ if ($_SESSION['ploopi']['connected'])
         'MAINMENU_SHOWTICKETS_SEL'      => ($_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_MYWORKSPACE && !empty($_REQUEST['op']) && $_REQUEST['op'] == 'actions') ? 'selected' : '',
         'MAINMENU_SHOWSEARCH_SEL'       => ($_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_WORKSPACES) ? 'selected' : '',
 
-        'SEARCH_KEYWORDS'               => (!empty($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords'])) ? ploopi_htmlentities($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords']) : '',
+        'SEARCH_KEYWORDS'               => (!empty($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords'])) ? ovensia\ploopi\str::htmlentities($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords']) : '',
 
         'NEWTICKETS'                => $newtickets,
         'LAST_NEWTICKET'            => $lastticket,
         'SHOW_BLOCKMENU'            => (!empty($_SESSION['ploopi']['switchdisplay']['block_modules'])) ? $_SESSION['ploopi']['switchdisplay']['block_modules'] : 'block',
 
-        'USER_DECONNECT'        => ploopi_urlencode("admin.php?ploopi_logout", null, null, null, null, false)
+        'USER_DECONNECT'        => ovensia\ploopi\crypt::urlencode("admin.php?ploopi_logout", null, null, null, null, false)
     ));
 
     if ($newtickets) $template_body->assign_block_vars('switch_user_logged_in.switch_newtickets', array());
@@ -280,7 +278,7 @@ if ($_SESSION['ploopi']['connected'])
 else
 {
     $template_body->assign_block_vars('switch_user_logged_out', array(
-        'FORM_URL' => ploopi_urlencode('admin.php')
+        'FORM_URL' => ovensia\ploopi\crypt::urlencode('admin.php')
     ));
 
     if (!empty($_SESSION['ploopi']['errorcode']))
@@ -299,8 +297,8 @@ else
             }
 
             $template_body->assign_vars(array(
-                'USER_LOGIN'            => ploopi_htmlentities($_SESSION['ploopi']['login']),
-                'USER_PASSWORD'         => ploopi_htmlentities($_SESSION['ploopi']['password'])
+                'USER_LOGIN'            => ovensia\ploopi\str::htmlentities($_SESSION['ploopi']['login']),
+                'USER_PASSWORD'         => ovensia\ploopi\str::htmlentities($_SESSION['ploopi']['password'])
             ));
         }
     }
@@ -311,7 +309,7 @@ else
     }
 
     $template_body->assign_vars(array(
-        'PASSWORDLOST_URL'              => ploopi_urlencode('admin.php?ploopi_op=ploopi_lostpassword')
+        'PASSWORDLOST_URL'              => ovensia\ploopi\crypt::urlencode('admin.php?ploopi_op=ploopi_lostpassword')
         )
     );
 
@@ -321,30 +319,30 @@ else
  * Gestion du cas où on demande à l'utilisateur de compléter son profil
  */
 
-if (!empty($_SESSION['ploopi']['updateprofile']) && ploopi_getparam('system_profile_edit_allowed', _PLOOPI_MODULE_SYSTEM) == '1') {
+if (!empty($_SESSION['ploopi']['updateprofile']) && ovensia\ploopi\param::get('system_profile_edit_allowed', _PLOOPI_MODULE_SYSTEM) == '1') {
     $ploopi_additional_javascript .= "
         Event.observe(window, 'load', function() {
             ploopi_showpopup('', 750, null, true, 'system_popup_update_profile')
-            ploopi_xmlhttprequest_todiv('admin-light.php', '".ploopi_queryencode("ploopi_op=system_update_profile")."', 'system_popup_update_profile');
+            ploopi_xmlhttprequest_todiv('admin-light.php', '".ovensia\ploopi\crypt::queryencode("ploopi_op=system_update_profile")."', 'system_popup_update_profile');
         });
     ";
 
     $_SESSION['ploopi']['updateprofile'] = false;
 }
 
-$wsp = ploopi_loader::getworkspace();
+$wsp = self::getworkspace();
 
 $template_body->assign_vars(array(
     'TEMPLATE_PATH'                 => $_SESSION['ploopi']['template_path'],
     'TEMPLATE_NAME'                 => $_SESSION['ploopi']['template_name'],
-    'WORKSPACE_LABEL'               => $_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_MYWORKSPACE ? ploopi_htmlentities(_PLOOPI_LABEL_MYWORKSPACE) : ploopi_htmlentities($wsp['label']),
-    'WORKSPACE_CODE'                => ploopi_htmlentities($wsp['code']),
-    'WORKSPACE_TITLE'               => ploopi_htmlentities($wsp['title']),
-    'WORKSPACE_META_DESCRIPTION'    => ploopi_htmlentities($wsp['meta_description']),
-    'WORKSPACE_META_KEYWORDS'       => ploopi_htmlentities($wsp['meta_keywords']),
-    'WORKSPACE_META_AUTHOR'         => ploopi_htmlentities($wsp['meta_author']),
-    'WORKSPACE_META_COPYRIGHT'      => ploopi_htmlentities($wsp['meta_copyright']),
-    'WORKSPACE_META_ROBOTS'         => ploopi_htmlentities($wsp['meta_robots']),
+    'WORKSPACE_LABEL'               => $_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_MYWORKSPACE ? ovensia\ploopi\str::htmlentities(_PLOOPI_LABEL_MYWORKSPACE) : ovensia\ploopi\str::htmlentities($wsp['label']),
+    'WORKSPACE_CODE'                => ovensia\ploopi\str::htmlentities($wsp['code']),
+    'WORKSPACE_TITLE'               => ovensia\ploopi\str::htmlentities($wsp['title']),
+    'WORKSPACE_META_DESCRIPTION'    => ovensia\ploopi\str::htmlentities($wsp['meta_description']),
+    'WORKSPACE_META_KEYWORDS'       => ovensia\ploopi\str::htmlentities($wsp['meta_keywords']),
+    'WORKSPACE_META_AUTHOR'         => ovensia\ploopi\str::htmlentities($wsp['meta_author']),
+    'WORKSPACE_META_COPYRIGHT'      => ovensia\ploopi\str::htmlentities($wsp['meta_copyright']),
+    'WORKSPACE_META_ROBOTS'         => ovensia\ploopi\str::htmlentities($wsp['meta_robots']),
     'SITE_CONNECTEDUSERS'           => $_SESSION['ploopi']['connectedusers'],
     'SITE_ANONYMOUSUSERS'           => $_SESSION['ploopi']['anonymoususers'],
     'ADDITIONAL_JAVASCRIPT'         => $ploopi_additional_javascript,

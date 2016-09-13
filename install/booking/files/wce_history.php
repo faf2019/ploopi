@@ -65,7 +65,7 @@ if ($_SESSION['ploopi']['connected'])
     $strResourceType = '';
 
     ?>
-    <form id="booking_form_view" action="<?php echo ploopi_urlencode("{$url}"); ?>" method="post">
+    <form id="booking_form_view" action="<?php echo ovensia\ploopi\crypt::urlencode("{$url}"); ?>" method="post">
     <p class="ploopi_va" style="padding:4px;">
         <label>Ressource :</label>
         <select name="booking_resource_id" id="booking_resource_id">
@@ -78,11 +78,11 @@ if ($_SESSION['ploopi']['connected'])
                     if ($strResourceType != '') echo '</optgroup>';
                     $strResourceType = $row['rt_name'];
                     ?>
-                    <optgroup label="<?php echo ploopi_htmlentities($row['rt_name']); ?>">
+                    <optgroup label="<?php echo ovensia\ploopi\str::htmlentities($row['rt_name']); ?>">
                     <?php
                 }
                 ?>
-                <option value="<?php echo $row['id']; ?>" <?php if ($arrSearchPattern['booking_resource_id'] == $row['id']) echo 'selected="selected"'; ?>  style="background-color:<?php echo ploopi_htmlentities($row['color']); ?>;"><?php echo ploopi_htmlentities($row['name'].(empty($row['reference']) ? '' : " ({$row['reference']})")); ?><?php echo $row['validator'] ? '&nbsp;-&nbsp;Validateur' : ''; ?></option>
+                <option value="<?php echo $row['id']; ?>" <?php if ($arrSearchPattern['booking_resource_id'] == $row['id']) echo 'selected="selected"'; ?>  style="background-color:<?php echo ovensia\ploopi\str::htmlentities($row['color']); ?>;"><?php echo ovensia\ploopi\str::htmlentities($row['name'].(empty($row['reference']) ? '' : " ({$row['reference']})")); ?><?php echo $row['validator'] ? '&nbsp;-&nbsp;Validateur' : ''; ?></option>
                 <?php
             }
 
@@ -97,15 +97,15 @@ if ($_SESSION['ploopi']['connected'])
         </select>
 
         <label style="margin-left:10px;">Objet :</label>
-        <input type="text" class="text" name="booking_event_object" value="<?php echo ploopi_htmlentities($arrSearchPattern['booking_event_object']); ?>" style="width:200px;" />
+        <input type="text" class="text" name="booking_event_object" value="<?php echo ovensia\ploopi\str::htmlentities($arrSearchPattern['booking_event_object']); ?>" style="width:200px;" />
     </p>
     <p class="ploopi_va" style="padding:4px;border-bottom:1px solid #c0c0c0;">
         <label>Demande effectuée entre le :</label>
-        <input type="text" class="text" name="booking_event_from" id="booking_event_from" value="<?php echo ploopi_htmlentities($arrSearchPattern['booking_event_from']); ?>" style="width:70px;" />
+        <input type="text" class="text" name="booking_event_from" id="booking_event_from" value="<?php echo ovensia\ploopi\str::htmlentities($arrSearchPattern['booking_event_from']); ?>" style="width:70px;" />
         <a href="javascript:void(0);" onclick="javascript:ploopi_calendar_open('booking_event_from', event);"><img align="top" src="./img/calendar/calendar.gif" /></a>
 
         <label>et le :</label>
-        <input type="text" class="text" name="booking_event_to" id="booking_event_to" value="<?php echo ploopi_htmlentities($arrSearchPattern['booking_event_to']); ?>" style="width:70px;" />
+        <input type="text" class="text" name="booking_event_to" id="booking_event_to" value="<?php echo ovensia\ploopi\str::htmlentities($arrSearchPattern['booking_event_to']); ?>" style="width:70px;" />
         <a href="javascript:void(0);" onclick="javascript:ploopi_calendar_open('booking_event_to', event);"><img align="top" src="./img/calendar/calendar.gif" /></a>
 
         <input type="submit" class="button" value="Filtrer" />
@@ -195,8 +195,8 @@ if ($_SESSION['ploopi']['connected'])
         // Affectation des données dans le tableau
         foreach($arrRequests as $row)
         {
-            $arrDateBegin = ploopi_timestamp2local($row['timestp_begin']);
-            $arrDateEnd = ploopi_timestamp2local($row['timestp_end']);
+            $arrDateBegin = ovensia\ploopi\date::timestamp2local($row['timestp_begin']);
+            $arrDateEnd = ovensia\ploopi\date::timestamp2local($row['timestp_end']);
 
             if ($arrDateBegin['date'] == $arrDateEnd['date']) // Un seul jour
                 $strDateTime = sprintf("Le %s<br />de %s à %s", $arrDateBegin['date'], substr($arrDateBegin['time'], 0, 5), substr($arrDateEnd['time'], 0 ,5));
@@ -213,9 +213,9 @@ if ($_SESSION['ploopi']['connected'])
                 array(
                     'values' =>
                         array(
-                            'resourcetype' => array('label' => ploopi_htmlentities($row['rt_name'])),
-                            'resource' => array('label' => ploopi_htmlentities($row['r_name'])),
-                            'object' => array('label' => ploopi_htmlentities($row['object'])),
+                            'resourcetype' => array('label' => ovensia\ploopi\str::htmlentities($row['rt_name'])),
+                            'resource' => array('label' => ovensia\ploopi\str::htmlentities($row['r_name'])),
+                            'object' => array('label' => ovensia\ploopi\str::htmlentities($row['object'])),
                             'managed' =>
                                 array(
                                     'label' => $row['managed'] ? 'Oui' : '<strong>Non</strong>',
@@ -228,11 +228,11 @@ if ($_SESSION['ploopi']['connected'])
                                 ),
                             'timestp_request' =>
                                 array(
-                                    'label' => ploopi_htmlentities(current(ploopi_timestamp2local($row['timestp_request']))),
+                                    'label' => ovensia\ploopi\str::htmlentities(current(ovensia\ploopi\date::timestamp2local($row['timestp_request']))),
                                     'sort_label' => $row['timestp_request']
                                 )
                         ),
-                    'description' => "Ouvrir la demande '".ploopi_htmlentities($row['object'])."'",
+                    'description' => "Ouvrir la demande '".ovensia\ploopi\str::htmlentities($row['object'])."'",
                     'link' => 'javascript:void(0);',
                     'onclick' => "booking_front_element_open('event', '{$row['id']}', event, '{$booking_moduleid}');"
                 );

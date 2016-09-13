@@ -277,7 +277,7 @@ class captcha extends ploopi_captcha
         if($this->debug)
         { 
             $this->handleF = fopen('/tmp/captchadebug.log', 'a');
-            fwrite($this->handleF, date('r').' - CONSTR - '.$arg."\r\n".ploopi_print_r($this->captchasession->fields,true)."\r\n");
+            fwrite($this->handleF, date('r').' - CONSTR - '.$arg."\r\n".output::print_r($this->captchasession->fields,true)."\r\n");
             fclose($this->handleF);
         }
     }
@@ -294,7 +294,7 @@ class captcha extends ploopi_captcha
         // Vérifie si l'utilisateur a le droit de (re)générer un cryptogramme
         if (isset($this->captchasession->fields['cptuse']) && $this->captchasession->fields['cptuse'] >= $this->captchausemax)
         {
-           ploopi_ob_clean();
+           buffer::clean();
            header("Content-type: image/png");
            readfile('./img/captcha/erreur1.png'); 
            exit;
@@ -309,7 +309,7 @@ class captcha extends ploopi_captcha
                 switch ($this->usertimererror)
                 {
                     case 2:     // Image message d'erreur 
-                        ploopi_ob_clean();
+                        buffer::clean();
                         header("Content-type: image/png");
                         readfile('./img/captcha/erreur2.png'); 
                         exit;
@@ -355,7 +355,7 @@ class captcha extends ploopi_captcha
         if($this->debug)
         { 
             $this->handleF = fopen('/tmp/captchadebug.log', 'a');
-            fwrite($this->handleF, date('r').' - CREATCODE - '.ploopi_print_r($this->captchasession->fields,true)."\r\n");
+            fwrite($this->handleF, date('r').' - CREATCODE - '.output::print_r($this->captchasession->fields,true)."\r\n");
             fclose($this->handleF);
         }
         
@@ -463,7 +463,7 @@ class captcha extends ploopi_captcha
         if($this->debug)
         { 
             $this->handleF = fopen('/tmp/captchadebug.log', 'a');
-            fwrite($this->handleF, date('r').' - CREATCAPT 1 - '.ploopi_print_r($this->captchasession->fields,true)."\r\n");
+            fwrite($this->handleF, date('r').' - CREATCAPT 1 - '.output::print_r($this->captchasession->fields,true)."\r\n");
             fclose($this->handleF);
         }
         
@@ -473,7 +473,7 @@ class captcha extends ploopi_captcha
         if($this->debug)
         { 
             $this->handleF = fopen('/tmp/captchadebug.log', 'a');
-            fwrite($this->handleF, date('r').' - CREATCAPT 2 - '.ploopi_print_r($this->captchasession->fields,true)."\r\n");
+            fwrite($this->handleF, date('r').' - CREATCAPT 2 - '.output::print_r($this->captchasession->fields,true)."\r\n");
             fclose($this->handleF);
         }
         
@@ -608,11 +608,11 @@ class captcha extends ploopi_captcha
         if($this->debug)
         { 
             $this->handleF = fopen('/tmp/captchadebug.log', 'a');
-            fwrite($this->handleF, date('r').' - CREATCAPT 3 - '.ploopi_print_r($this->captchasession->fields,true)."\r\n");
+            fwrite($this->handleF, date('r').' - CREATCAPT 3 - '.output::print_r($this->captchasession->fields,true)."\r\n");
             fclose($this->handleF);
         }
         
-        ploopi_ob_clean();
+        buffer::clean();
 
         header('Content-Description: File Transfer');
         header('Content-Transfer-Encoding: binary');
@@ -644,7 +644,7 @@ class captcha extends ploopi_captcha
         if($this->debug)
         { 
             $this->handleF = fopen('/tmp/captchadebug.log', 'a');
-            fwrite($this->handleF, date('r').' - CREATCAPT 4 - '.ploopi_print_r($this->captchasession->fields,true)."\r\n");
+            fwrite($this->handleF, date('r').' - CREATCAPT 4 - '.output::print_r($this->captchasession->fields,true)."\r\n");
             fclose($this->handleF);
         }
         
@@ -755,7 +755,7 @@ class captcha_sound extends ploopi_captcha
                 fclose($fp);
             }
 
-            ploopi_ob_clean();
+            buffer::clean();
             
             header('Content-Type: application/octet-stream');
             header('Content-Description: File Transfer');

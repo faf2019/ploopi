@@ -31,7 +31,7 @@
  * @author Stéphane Escaich
  */
 
-if (empty($_REQUEST['module'])) ploopi_die();
+if (empty($_REQUEST['module'])) ovensia\ploopi\system::kill();
 
 $webservice_path = "./modules/{$_REQUEST['module']}";
 $webservice_rootfile = "{$webservice_path}/webservice.php";

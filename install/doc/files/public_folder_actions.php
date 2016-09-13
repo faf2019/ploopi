@@ -56,19 +56,19 @@ if ($objFolder->fields['foldertype'] != 'private')
     $parents = explode(',', $objFolder->fields['parents']);
     for ($i = 0; $i < sizeof($parents); $i++)
     {
-        if (ploopi_subscription_subscribed(_DOC_OBJECT_FOLDER, $parents[$i]))
+        if (ovensia\ploopi\subscription::subscribed(_DOC_OBJECT_FOLDER, $parents[$i]))
         {
             $objDocFolderSub = new docfolder();
             $objDocFolderSub->open($parents[$i])
             ?>
             <div style="padding:4px;font-weight:bold;border-bottom:1px solid #c0c0c0;">
-            Vous héritez de l'abonnement à &laquo; <a href="<?php echo ploopi_urlencode("admin.php?op=doc_browser&currentfolder={$parents[$i]}"); ?>"><?php echo ploopi_htmlentities($objDocFolderSub->fields['name']); ?></a> &raquo;
+            Vous héritez de l'abonnement à &laquo; <a href="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?op=doc_browser&currentfolder={$parents[$i]}"); ?>"><?php echo ovensia\ploopi\str::htmlentities($objDocFolderSub->fields['name']); ?></a> &raquo;
             </div>
             <?php
         }
     }
 
-    ploopi_subscription(_DOC_OBJECT_FOLDER, $objFolder->fields['id'], $arrAllowedActions);
+    ovensia\ploopi\subscription::display(_DOC_OBJECT_FOLDER, $objFolder->fields['id'], $arrAllowedActions);
 }
 ?>
 </div>
@@ -76,4 +76,4 @@ if ($objFolder->fields['foldertype'] != 'private')
 /**
  * Affichage du bloc d'annotations
  */
-if (ploopi_getparam('doc_viewannotations')) ploopi_annotation(_DOC_OBJECT_FOLDER, $objFolder->fields['id'], $objFolder->fields['name']); ?>
+if (ovensia\ploopi\param::get('doc_viewannotations')) ovensia\ploopi\annotation::display(_DOC_OBJECT_FOLDER, $objFolder->fields['id'], $objFolder->fields['name']); ?>

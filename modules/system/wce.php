@@ -37,7 +37,7 @@ global $template_name;
 $op = empty($_REQUEST['op']) ? '' : $_REQUEST['op'];
 
 // Nb lignes max par pages (sinon index)
-$intMaxLines = ploopi_getparam('system_trombi_maxlines', 1);
+$intMaxLines = ovensia\ploopi\param::get('system_trombi_maxlines', 1);
 
 // Lettre sélectionnée dans l'index
 $strIndexSel = '';
@@ -131,7 +131,7 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
         array(
             'SYSTEM_TROMBI_HEADINGID' => (empty($_REQUEST['headingid'])) ? '' : $_REQUEST['headingid'],
             'SYSTEM_TROMBI_ARTICLEID' => (empty($_REQUEST['articleid'])) ? '' : $_REQUEST['articleid'],
-            'SYSTEM_TROMBI_FORMACTION' => ploopi_urlencode($strFormActionParams)
+            'SYSTEM_TROMBI_FORMACTION' => ovensia\ploopi\crypt::urlencode($strFormActionParams)
         )
     );
 
@@ -186,7 +186,7 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
         $objTplDirectory->assign_block_vars('system_trombi_user',
             array(
                 'ID' => $strUserName,
-                'LABEL' => ploopi_htmlentities(ucfirst($strUserName)),
+                'LABEL' => ovensia\ploopi\str::htmlentities(ucfirst($strUserName)),
                 'SELECTED' => $strUserName == $arrFilter['system_user'] ? 'selected="selected"' : ''
             )
         );
@@ -194,7 +194,7 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
 
     // Construction de la liste des données brutes pour traitement via JS
     $rs = $db->query("SELECT service, service2, office, function, number, rank, building, floor, country, city, postalcode FROM ploopi_user");
-    $objTplDirectory->assign_var('SYSTEM_TROMBI_JSDATA', json_encode(ploopi_array_map('ploopi_utf8encode', ploopi_array_map('ucfirst', $db->getarray()))));
+    $objTplDirectory->assign_var('SYSTEM_TROMBI_JSDATA', json_encode(ovensia\ploopi\arr::map('ovensia\ploopi\str::utf8encode', ovensia\ploopi\arr::map('ucfirst', $db->getarray()))));
 
     // Construction des autres listes génériques
     foreach(array('service', 'service2', 'login', 'email', 'office', 'function', 'number', 'rank', 'building', 'floor', 'country', 'city', 'postalcode') as $strField)
@@ -206,7 +206,7 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
             $objTplDirectory->assign_block_vars("system_trombi_{$strField}",
                 array(
                     'ID' => $row[$strField],
-                    'LABEL' => ploopi_htmlentities(ucfirst($row[$strField])),
+                    'LABEL' => ovensia\ploopi\str::htmlentities(ucfirst($row[$strField])),
                     'SELECTED' => $row[$strField] == $arrFilter["system_{$strField}"] ? 'selected="selected"' : ''
                 )
             );
@@ -221,27 +221,27 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
 
             $objTplDirectory->assign_vars(
                 array(
-                    'SYSTEM_TROMBI_LASTNAME' => ploopi_htmlentities($arrFilter['system_lastname']),
-                    'SYSTEM_TROMBI_FIRSTNAME' => ploopi_htmlentities($arrFilter['system_firstname']),
-                    'SYSTEM_TROMBI_ENTITY' => ploopi_htmlentities($arrFilter['system_entity']),
-                    'SYSTEM_TROMBI_SERVICE' => ploopi_htmlentities($arrFilter['system_service']),
-                    'SYSTEM_TROMBI_SERVICE2' => ploopi_htmlentities($arrFilter['system_service2']),
-                    'SYSTEM_TROMBI_PHONE' => ploopi_htmlentities($arrFilter['system_phone']),
-                    'SYSTEM_TROMBI_FAX' => ploopi_htmlentities($arrFilter['system_fax']),
-                    'SYSTEM_TROMBI_MOBILE' => ploopi_htmlentities($arrFilter['system_mobile']),
-                    'SYSTEM_TROMBI_LOGIN' => ploopi_htmlentities($arrFilter['system_login']),
-                    'SYSTEM_TROMBI_EMAIL' => ploopi_htmlentities($arrFilter['system_email']),
+                    'SYSTEM_TROMBI_LASTNAME' => ovensia\ploopi\str::htmlentities($arrFilter['system_lastname']),
+                    'SYSTEM_TROMBI_FIRSTNAME' => ovensia\ploopi\str::htmlentities($arrFilter['system_firstname']),
+                    'SYSTEM_TROMBI_ENTITY' => ovensia\ploopi\str::htmlentities($arrFilter['system_entity']),
+                    'SYSTEM_TROMBI_SERVICE' => ovensia\ploopi\str::htmlentities($arrFilter['system_service']),
+                    'SYSTEM_TROMBI_SERVICE2' => ovensia\ploopi\str::htmlentities($arrFilter['system_service2']),
+                    'SYSTEM_TROMBI_PHONE' => ovensia\ploopi\str::htmlentities($arrFilter['system_phone']),
+                    'SYSTEM_TROMBI_FAX' => ovensia\ploopi\str::htmlentities($arrFilter['system_fax']),
+                    'SYSTEM_TROMBI_MOBILE' => ovensia\ploopi\str::htmlentities($arrFilter['system_mobile']),
+                    'SYSTEM_TROMBI_LOGIN' => ovensia\ploopi\str::htmlentities($arrFilter['system_login']),
+                    'SYSTEM_TROMBI_EMAIL' => ovensia\ploopi\str::htmlentities($arrFilter['system_email']),
                     'SYSTEM_TROMBI_WORKSPACE' => $arrFilter['system_workspace'],
-                    'SYSTEM_TROMBI_OFFICE' => ploopi_htmlentities($arrFilter['system_office']),
-                    'SYSTEM_TROMBI_COMMENTS' => ploopi_htmlentities($arrFilter['system_comments']),
-                    'SYSTEM_TROMBI_FUNCTION' => ploopi_htmlentities($arrFilter['system_function']),
-                    'SYSTEM_TROMBI_NUMBER' => ploopi_htmlentities($arrFilter['system_number']),
-                    'SYSTEM_TROMBI_RANK' => ploopi_htmlentities($arrFilter['system_rank']),
-                    'SYSTEM_TROMBI_BUILDING' => ploopi_htmlentities($arrFilter['system_building']),
-                    'SYSTEM_TROMBI_FLOOR' => ploopi_htmlentities($arrFilter['system_floor']),
-                    'SYSTEM_TROMBI_COUNTRY' => ploopi_htmlentities($arrFilter['system_country']),
-                    'SYSTEM_TROMBI_CITY' => ploopi_htmlentities($arrFilter['system_city']),
-                    'SYSTEM_TROMBI_POSTALCODE' => ploopi_htmlentities($arrFilter['system_postalcode'])
+                    'SYSTEM_TROMBI_OFFICE' => ovensia\ploopi\str::htmlentities($arrFilter['system_office']),
+                    'SYSTEM_TROMBI_COMMENTS' => ovensia\ploopi\str::htmlentities($arrFilter['system_comments']),
+                    'SYSTEM_TROMBI_FUNCTION' => ovensia\ploopi\str::htmlentities($arrFilter['system_function']),
+                    'SYSTEM_TROMBI_NUMBER' => ovensia\ploopi\str::htmlentities($arrFilter['system_number']),
+                    'SYSTEM_TROMBI_RANK' => ovensia\ploopi\str::htmlentities($arrFilter['system_rank']),
+                    'SYSTEM_TROMBI_BUILDING' => ovensia\ploopi\str::htmlentities($arrFilter['system_building']),
+                    'SYSTEM_TROMBI_FLOOR' => ovensia\ploopi\str::htmlentities($arrFilter['system_floor']),
+                    'SYSTEM_TROMBI_COUNTRY' => ovensia\ploopi\str::htmlentities($arrFilter['system_country']),
+                    'SYSTEM_TROMBI_CITY' => ovensia\ploopi\str::htmlentities($arrFilter['system_city']),
+                    'SYSTEM_TROMBI_POSTALCODE' => ovensia\ploopi\str::htmlentities($arrFilter['system_postalcode'])
                 )
             );
 
@@ -411,7 +411,7 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
 
             foreach ($arrUser as $row)
             {
-                $objUser = new user();
+                $objUser = new ovensia\ploopi\user();
                 $objUser->fields['id'] = $row['id'];
 
                 // récupération et tri des espaces de travail de l'utilisateur
@@ -432,7 +432,7 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
 
                     if (file_exists($objUser->getphotopath()))
                     {
-                        $arrUser[$row['id']]['photopath'] = ploopi_urlencode("admin-light.php?ploopi_op=ploopi_get_userphoto&ploopi_user_id={$row['id']}");
+                        $arrUser[$row['id']]['photopath'] = ovensia\ploopi\crypt::urlencode("admin-light.php?ploopi_op=ploopi_get_userphoto&ploopi_user_id={$row['id']}");
                     }
                     else $arrUser[$row['id']]['photopath'] = './img/blank.gif';
 
@@ -453,8 +453,8 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
                                     foreach($arrDetail as $intIdRole => $arrR)
                                         $arrUser[$row['id']]['roles'][$intIdRole] =
                                             sprintf("%s de %s",
-                                                ploopi_htmlentities($arrR['role_label']),
-                                                ploopi_htmlentities($arrR['module_label'])
+                                                ovensia\ploopi\str::htmlentities($arrR['role_label']),
+                                                ovensia\ploopi\str::htmlentities($arrR['module_label'])
                                             );
                                 }
                             }
@@ -465,8 +465,8 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
                             foreach($arrRoles['users'][$intIdWsp][$row['id']] as $intIdRole => $arrR)
                                 $arrUser[$row['id']]['roles'][$intIdRole] =
                                     sprintf("%s de %s",
-                                            ploopi_htmlentities($arrR['role_label']),
-                                            ploopi_htmlentities($arrR['module_label'])
+                                            ovensia\ploopi\str::htmlentities($arrR['role_label']),
+                                            ovensia\ploopi\str::htmlentities($arrR['module_label'])
                                         );
                         }
                     }
@@ -516,7 +516,7 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
                             'LETTER' => $strIndex,
                             'COUNT' => $intCount,
                             'SELECTED' => $strIndexSel == $strIndex ? 'selected' : '',
-                            'URL' => ploopi_urlencode('index.php?'.implode('&',$arrUrlParams+array('' => "idx={$strIndex}"))),
+                            'URL' => ovensia\ploopi\crypt::urlencode('index.php?'.implode('&',$arrUrlParams+array('' => "idx={$strIndex}"))),
                         ));
                     }
                 }
@@ -531,45 +531,43 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
 
                         $arrAddress = array();
 
-                        if (!empty($row['address'])) $arrAddress[] = ploopi_nl2br(ploopi_htmlentities($row['address']));
-                        if (!empty($row['postalcode']) || !empty($row['city'])) $arrAddress[] = ploopi_nl2br(ploopi_htmlentities(trim($row['postalcode'].' '.$row['city'])));
-                        if (!empty($row['country'])) $arrAddress[] = ploopi_nl2br(ploopi_htmlentities($row['country']));
+                        if (!empty($row['address'])) $arrAddress[] = ovensia\ploopi\str::nl2br(ovensia\ploopi\str::htmlentities($row['address']));
+                        if (!empty($row['postalcode']) || !empty($row['city'])) $arrAddress[] = ovensia\ploopi\str::nl2br(ovensia\ploopi\str::htmlentities(trim($row['postalcode'].' '.$row['city'])));
+                        if (!empty($row['country'])) $arrAddress[] = ovensia\ploopi\str::nl2br(ovensia\ploopi\str::htmlentities($row['country']));
 
                         $objTplDirectory->assign_block_vars('system_trombi_switch_result.user',
                             array(
                                 'ID' => $row['id'],
-                                'LASTNAME' => ploopi_htmlentities($row['lastname']),
-                                'FIRSTNAME' => ploopi_htmlentities($row['firstname']),
-                                'LOGIN' => ploopi_htmlentities($row['login']),
-                                'EMAIL' => ploopi_htmlentities($row['email']),
-                                'PHONE' => ploopi_htmlentities($row['phone']),
-                                'FAX' => ploopi_htmlentities($row['fax']),
-                                'MOBILE' => ploopi_htmlentities($row['mobile']),
-                                'SERVICE' => ploopi_htmlentities($row['service']),
-                                'SERVICE2' => ploopi_htmlentities($row['service2']),
+                                'LASTNAME' => ovensia\ploopi\str::htmlentities($row['lastname']),
+                                'FIRSTNAME' => ovensia\ploopi\str::htmlentities($row['firstname']),
+                                'LOGIN' => ovensia\ploopi\str::htmlentities($row['login']),
+                                'EMAIL' => ovensia\ploopi\str::htmlentities($row['email']),
+                                'PHONE' => ovensia\ploopi\str::htmlentities($row['phone']),
+                                'FAX' => ovensia\ploopi\str::htmlentities($row['fax']),
+                                'MOBILE' => ovensia\ploopi\str::htmlentities($row['mobile']),
+                                'SERVICE' => ovensia\ploopi\str::htmlentities($row['service']),
+                                'SERVICE2' => ovensia\ploopi\str::htmlentities($row['service2']),
                                 'WORKSPACES' => implode('<br />', $row['workspaces']),
                                 'GROUPS' => implode('<br />', $row['groups']),
                                 'ROLES' => implode('<br />', $row['roles']),
-                                'FUNCTION' => ploopi_htmlentities($row['function']),
-                                'RANK' => ploopi_htmlentities($row['rank']),
-                                'NUMBER' => ploopi_htmlentities($row['number']),
-                                'POSTALCODE' => ploopi_htmlentities($row['postalcode']),
-                                'ADDRESS' => ploopi_htmlentities($row['address']),
-                                'CITY' => ploopi_htmlentities($row['city']),
-                                'COUNTRY' => ploopi_htmlentities($row['country']),
+                                'FUNCTION' => ovensia\ploopi\str::htmlentities($row['function']),
+                                'RANK' => ovensia\ploopi\str::htmlentities($row['rank']),
+                                'NUMBER' => ovensia\ploopi\str::htmlentities($row['number']),
+                                'POSTALCODE' => ovensia\ploopi\str::htmlentities($row['postalcode']),
+                                'ADDRESS' => ovensia\ploopi\str::htmlentities($row['address']),
+                                'CITY' => ovensia\ploopi\str::htmlentities($row['city']),
+                                'COUNTRY' => ovensia\ploopi\str::htmlentities($row['country']),
                                 'ADDRESS_FULL' => implode('<br />', $arrAddress),
-                                'BUILDING' => ploopi_htmlentities($row['building']),
-                                'FLOOR' => ploopi_htmlentities($row['floor']),
-                                'OFFICE' => ploopi_htmlentities($row['office']),
-                                'COMMENTS' => ploopi_nl2br(ploopi_htmlentities($row['comments'])),
+                                'BUILDING' => ovensia\ploopi\str::htmlentities($row['building']),
+                                'FLOOR' => ovensia\ploopi\str::htmlentities($row['floor']),
+                                'OFFICE' => ovensia\ploopi\str::htmlentities($row['office']),
+                                'COMMENTS' => ovensia\ploopi\str::nl2br(ovensia\ploopi\str::htmlentities($row['comments'])),
                                 'PHOTOPATH' => $row['photopath']
                             )
                         );
 
-                        include_once './include/classes/documents.php';
-
                         // Lecture du dossier racine de la mini ged associée à l'utilisateur
-                        $objRootFolder = documentsfolder::getroot(
+                        $objRootFolder = ovensia\ploopi\documentsfolder::getroot(
                             _SYSTEM_OBJECT_USER,
                             $row['id'],
                             $obj['module_id']

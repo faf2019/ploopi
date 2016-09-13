@@ -32,11 +32,10 @@
  * @see skin_common
  */
 
-/**
- * inclusion de la classe parent
- */
 
-include_once './include/classes/skin_common.php';
+namespace ovensia\ploopi;
+
+use ovensia\ploopi;
 
 /**
  * Gestion de l'affichage du skin 'ovensia_officiel'

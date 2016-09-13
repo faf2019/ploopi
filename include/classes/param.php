@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -20,6 +19,10 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+
+namespace ovensia\ploopi;
+
+use ovensia\ploopi;
 
 /**
  * Gestion des paramètres des modules.
@@ -281,123 +284,124 @@ class param
             }
         }
     }
-}
 
-/**
- * Classe d'accès à la table ploopi_param_default
- *
- * @package ploopi
- * @subpackage param
- * @copyright Netlor, Ovensia
- * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
- */
 
-class param_default extends data_object
-{
-    /**
-     * Constructeur de la classe
-     *
-     * @return param_default
-     */
-
-    public function __construct()
-    {
-        parent::__construct('ploopi_param_default', 'id_module', 'name');
-    }
-}
-
-/**
- * Classe d'accès à la table ploopi_param_type
- *
- * @package ploopi
- * @subpackage param
- * @copyright Netlor, Ovensia
- * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
- */
-
-class param_type extends data_object
-{
-    /**
-     * Constructeur de la classe
-     *
-     * @return param_default
-     */
-    public function __construct()
-    {
-        parent::__construct('ploopi_param_type', 'id_module_type', 'name');
-    }
 
     /**
-     * Enter description here...
-     *
-     * @param unknown_type $preserve_data
+     * Chargement des paramètres des modules
      */
-    public function delete($preserve_data = false)
+
+    public static function load()
     {
         global $db;
 
-        $delete = "DELETE FROM ploopi_param_choice WHERE id_module_type = {$this->fields['id_module_type']} AND name = '".$db->addslashes($this->fields['name'])."'";
-        $db->query($delete);
+        $arrParams = array();
 
-        if (!$preserve_data)
+        $listmodules = implode(',',array_keys($_SESSION['ploopi']['modules']));
+
+        // On récupère les paramètres par défaut
+        $db->query("
+            SELECT      pd.id_module,
+                        pt.name,
+                        pt.label,
+                        pd.value
+
+            FROM        ploopi_param_default pd
+
+            INNER JOIN  ploopi_param_type pt
+            ON          pt.name = pd.name
+            AND         pt.id_module_type = pd.id_module_type
+
+            WHERE       pd.id_module IN ({$listmodules})
+        ");
+
+        while ($fields = $db->fetchrow())
         {
-            $delete = "DELETE FROM ploopi_param_default WHERE id_module_type = {$this->fields['id_module_type']} AND name = '".$db->addslashes($this->fields['name'])."'";
-            $db->query($delete);
-
-            $delete = "DELETE FROM ploopi_param_workspace WHERE id_module_type = {$this->fields['id_module_type']} AND name = '".$db->addslashes($this->fields['name'])."'";
-            $db->query($delete);
-
-            $delete = "DELETE FROM ploopi_param_user WHERE id_module_type = {$this->fields['id_module_type']} AND name = '".$db->addslashes($this->fields['name'])."'";
-            $db->query($delete);
+            $arrParams[$fields['id_module']]['default'][$fields['name']] = $fields['value'];
         }
 
-        parent::delete();
+        // On récupère les paramètres "espace de travail"
+        $db->query("
+            SELECT      pg.id_module,
+                        pt.name,
+                        pt.label,
+                        pg.value,
+                        pg.id_workspace
+
+            FROM        ploopi_param_workspace pg
+
+            INNER JOIN  ploopi_param_type pt
+            ON          pt.name = pg.name
+            AND         pt.id_module_type = pg.id_module_type
+
+            WHERE       pg.id_module IN ({$listmodules})
+        ");
+
+        while ($fields = $db->fetchrow())
+        {
+            $arrParams[$fields['id_module']]['workspace'][$fields['id_workspace']][$fields['name']] = $fields['value'];
+        }
+
+        // On récupère les paramètres utilisateur
+        if (!empty($_SESSION['ploopi']['userid']))
+        {
+            $db->query("
+                SELECT      pu.id_module,
+                            pt.name,
+                            pt.label,
+                            pu.value
+
+                FROM        ploopi_param_user pu
+
+                INNER JOIN  ploopi_param_type pt
+                ON          pt.name = pu.name
+                AND         pt.id_module_type = pu.id_module_type
+
+                WHERE       pu.id_module IN ({$listmodules})
+                AND         pu.id_user = {$_SESSION['ploopi']['userid']}
+            ");
+
+            while ($fields = $db->fetchrow())
+            {
+                $arrParams[$fields['id_module']]['user'][$fields['name']] = $fields['value'];
+            }
+        }
+
+
+        // load params
+        foreach($arrParams as $param_idmodule => $param_type)
+        {
+            if (!empty($param_type['default']))
+                foreach($param_type['default'] as $param_name => $param_value)
+                    $_SESSION['ploopi']['modules'][$param_idmodule][$param_name] = $param_value;
+
+            if (!empty($param_type['workspace'][$_SESSION['ploopi']['backoffice']['workspaceid']]))
+                foreach($param_type['workspace'][$_SESSION['ploopi']['backoffice']['workspaceid']] as $param_name => $param_value)
+                    $_SESSION['ploopi']['modules'][$param_idmodule][$param_name] = $param_value;
+
+            if (!empty($param_type['user']))
+                foreach($param_type['user'] as $param_name => $param_value)
+                    $_SESSION['ploopi']['modules'][$param_idmodule][$param_name] = $param_value;
+        }
     }
+
+
+
+
 
     /**
-     * Retourne un tableau contenant la liste des choix possibles pour le paramètre
+     * Retourne un paramètre de module
      *
-     * @return array tableau associatif contenant la liste des choix possibles pour le paramètre
+     * @param string $strParamName nom du paramètre à lire
+     * @param int $intModuleId identifiant du module (optionnel, le module courant si non défini)
+     * @return string valeur du paramètre
      */
-
-    public function getallchoices()
+    public static function get($strParamName, $intModuleId = null)
     {
-        global $db;
+        if (is_null($intModuleId) && isset($_SESSION['ploopi']['moduleid'])) $intModuleId = $_SESSION['ploopi']['moduleid'];
 
-        $arrParamChoice = array();
+        if (is_null($intModuleId)) return null;
 
-        $select = "SELECT * FROM ploopi_param_choice WHERE id_module_type = {$this->fields['id_module_type']} AND name = '".$db->addslashes($this->fields['name'])."'";
-        $db->query($select);
-
-        while ($fields = $db->fetchrow()) $arrParamChoice[$fields['value']] = $fields['displayed_value'];
-
-        return($arrParamChoice);
+        return isset($_SESSION['ploopi']['modules'][$intModuleId][$strParamName]) ? $_SESSION['ploopi']['modules'][$intModuleId][$strParamName] : null;
     }
-}
-
-/**
- * Classe d'accès à la table ploopi_param_choice
- *
- * @package ploopi
- * @subpackage param
- * @copyright Netlor, Ovensia
- * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
- */
-
-class param_choice extends data_object
-{
-    /**
-     * Constructeur de la classe
-     *
-     * @return param_choice
-     */
-
-    public function __construct()
-    {
-        parent::__construct('ploopi_param_choice','id_module_type','name');
-    }
-
 }

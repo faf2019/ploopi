@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,8 +20,13 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+namespace ovensia\ploopi;
+
+use ovensia\ploopi;
+
 /**
- * Gestion internet des documents
+ * Gestion d'un bloc de document associé à un enregistrement d'un objet.
+ * Permet notamment de gérer des pièces jointes à n'importe quel objet de ploopi.
  *
  * @package ploopi
  * @subpackage document
@@ -31,557 +35,788 @@
  * @author Stéphane Escaich
  */
 
-/**
- * Inclusion de la classe parent.
- */
 
-include_once './include/classes/data_object.php';
-include_once './include/classes/data_object_collection.php';
-include_once './include/functions/filesystem.php';
-include_once './include/functions/documents.php';
-
-/**
- * Classe de gestion des documents (ne pas confondre avec le module DOC)
- *
- * @package ploopi
- * @subpackage document
- * @copyright Netlor, Ovensia
- * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
- */
-
-class documentsfile extends data_object
-{
-    private $oldname;
-    private $tmpfile;
-    private $file;
+abstract class documents {
 
     /**
-     * Constructeur de la classe
+     * Renvoie l'identifiant d'un bloc de documents pour un enregistrement d'un objet
      *
-     * @return documentsfile
+     * @param int $id_object identifiant de l'objet
+     * @param string $id_record identifiant de l'enregistrement
+     * @param int $id_module identifiant du module
+     * @return string identifiant du bloc de documents
+     *
+     * @see md5
      */
-    public function __construct()
-    {
-        parent::__construct('ploopi_documents_file');
-        $this->fields['id_user'] = 0;
-        $this->fields['timestp_create'] = ploopi_createtimestamp();
-        $this->fields['timestp_modify'] = $this->fields['timestp_create'];
-        $this->fields['description']='';
-        $this->fields['size'] = 0;
-        $this->fields['nbclick'] = 0;
-        $this->fields['name'] = '';
 
-        $this->oldname = '';
-        $this->tmpfile = 'none';
-        $this->file = 'none';
+    public static function getid($id_object, $id_record, $id_module = -1)
+    {
+        if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];
+
+        return md5("{$id_module}_{$id_object}_".addslashes($id_record));
     }
 
     /**
-     * Ouvre un document
+     * Retourne le code d'appel javascript du popup de création de fichier
      *
-     * @param int $id identifiant du document
-     * @return boolean true si le document a été ouvert
+     * @param int $id_object identifiant de l'objet
+     * @param string $id_record identifiant de l'enregistrement
+     * @param array $rights tableau définissant les droits 'DOCUMENT_CREATE':boolean, 'DOCUMENT_MODIFY':boolean, 'DOCUMENT_DELETE':boolean, 'FOLDER_CREATE':boolean, 'FOLDER_MODIFY':boolean, 'FOLDER_DELETE': boolean, 'SEARCH': boolean
+     * @param array $default_folders tableau définissant les sous-dossiers par défaut à créer
+     * @param array $params tableau définissant les paramètres du bloc 'ROOT_NAME':string, 'ATTACHEMENT':boolean, 'FIELDS':array
+     * @param int $width largeur du popup
+     * @param int $id_user identifiant de l'utilisateur
+     * @param int $id_workspace identifiant de l'espace
+     * @param int $id_module identifiant du module
+     *
+     * @return string code d'appel javascript
      */
-    public function open(...$args)
+
+    public static function getopenfilejs($id_object, $id_record, $rights = array(), $default_folders = array(), $params = array(), $width = 600, $id_user = -1, $id_workspace = -1, $id_module = -1)
     {
-        if ($res = parent::open($args[0])) $this->oldname = $this->fields['name'];
-        return($res);
+        // Important : il faut définir un mode de fonctionnement et une cible dans le paramètre $params
+        // Mode : tofield / tocallback
+        // Target : champ de destination (tofield) ou fonction de callback tocallback)
+
+        // Instanciation de la ged
+        $documents_id = self::insert($id_object, $id_record, $rights, $default_folders, $params, false, $id_user, $id_workspace, $id_module);
+
+        $query = crypt::queryencode("ploopi_op=documents_openfile&currentfolder={$_SESSION['documents'][$documents_id]['currentfolder']}&documents_id={$documents_id}&selectfile");
+
+        return "ovensia\ploopi\documents::openfile('{$query}', event)";
+    }
+
+    /**
+     * Retourne le code d'appel javascript du popup de sélection de fichier
+     *
+     * @param int $id_object identifiant de l'objet
+     * @param string $id_record identifiant de l'enregistrement
+     * @param array $rights tableau définissant les droits 'DOCUMENT_CREATE':boolean, 'DOCUMENT_MODIFY':boolean, 'DOCUMENT_DELETE':boolean, 'FOLDER_CREATE':boolean, 'FOLDER_MODIFY':boolean, 'FOLDER_DELETE': boolean, 'SEARCH': boolean
+     * @param array $default_folders tableau définissant les sous-dossiers par défaut à créer
+     * @param array $params tableau définissant les paramètres du bloc 'ROOT_NAME':string, 'ATTACHEMENT':boolean, 'FIELDS':array
+     * @param int $width largeur du popup
+     * @param int $id_user identifiant de l'utilisateur
+     * @param int $id_workspace identifiant de l'espace
+     * @param int $id_module identifiant du module
+     *
+     * @return string code d'appel javascript
+     */
+
+    public static function getselectfilejs($id_object, $id_record, $rights = array(), $default_folders = array(), $params = array(), $width = 600, $id_user = -1, $id_workspace = -1, $id_module = -1)
+    {
+        // Important : il faut définir un mode de fonctionnement et une cible dans le paramètre $params
+        // Mode : tofield / tocallback
+        // Target : champ de destination (tofield) ou fonction de callback tocallback)
+
+        // Instanciation de la ged
+        $documents_id = self::insert($id_object, $id_record, $rights, $default_folders, $params, false, $id_user, $id_workspace, $id_module);
+
+        $query = crypt::queryencode("ploopi_op=documents_selectfile&documents_id={$documents_id}");
+
+        return "ovensia\ploopi\documents::selectfile('{$query}', event, {$width})";
     }
 
 
     /**
-     * Ouvre un document avec son identifiant MD5
+     * Insère un bloc de documents pour un enregistrement d'un objet
      *
-     * @param string $md5id identifiant MD5 du document
-     * @return boolean true si le document a été ouvert
+     * @param int $id_object identifiant de l'objet
+     * @param string $id_record identifiant de l'enregistrement
+     * @param array $rights tableau définissant les droits 'DOCUMENT_CREATE':boolean, 'DOCUMENT_MODIFY':boolean, 'DOCUMENT_DELETE':boolean, 'FOLDER_CREATE':boolean, 'FOLDER_MODIFY':boolean, 'FOLDER_DELETE': boolean, 'SEARCH': boolean
+     * @param array $default_folders tableau définissant les sous-dossiers par défaut à créer
+     * @param array $params tableau définissant les paramètres du bloc 'ROOT_NAME':string, 'ATTACHEMENT':boolean, 'FIELDS':array
+     * @param bool $load_doc true si on souhaite afficher directement les documents
+     * @param int $id_user identifiant de l'utilisateur
+     * @param int $id_workspace identifiant de l'espace
+     * @param int $id_module identifiant du module
+     *
+     * @return string identifiant de l'instance
      */
 
-    function openmd5($md5id)
+    public static function insert($id_object, $id_record, $rights = array(), $default_folders = array(), $params = array(), $load_doc = true, $id_user = -1, $id_workspace = -1, $id_module = -1)
     {
         global $db;
 
-        $db->query("SELECT id FROM ploopi_documents_file WHERE md5id = '".$db->addslashes($md5id)."'");
-        if ($fields = $db->fetchrow()) return($this->open($fields['id']));
+        if ($id_user == -1) $id_user = $_SESSION['ploopi']['userid'];
+        if ($id_workspace == -1) $id_workspace = $_SESSION['ploopi']['workspaceid'];
+        if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];
+
+        // generate documents id
+        $documents_id = self::getid($id_object, $id_record, $id_module).(isset($params['UNIQID']) ? $params['UNIQID'] : '');
+
+        // permet de mettre des droits par défaut si le paramètre est incomplet
+        $rights =
+            array_merge(
+                array(
+                    'DOCUMENT_CREATE' => true,
+                    'DOCUMENT_MODIFY' => true,
+                    'DOCUMENT_DELETE' => true,
+                    'FOLDER_CREATE' => true,
+                    'FOLDER_MODIFY' => true,
+                    'FOLDER_DELETE' => true,
+                    'SEARCH' => true
+                ),
+                (is_array($rights)) ? $rights : array()
+            );
+
+        if (empty($params['ROOT_NAME'])) $params['ROOT_NAME'] = 'Racine';
+        if (empty($params['ATTACHEMENT'])) $params['ATTACHEMENT'] = true;
+        if (empty($params['FIELDS'])) $params['FIELDS'] = array();
+        if (empty($params['FIELDS_SIZE'])) $params['FIELDS_SIZE'] = array();
+        if (empty($params['CALLBACK_FUNC'])) $params['CALLBACK_FUNC'] = null;
+        if (empty($params['CALLBACK_INC'])) $params['CALLBACK_INC'] = null;
+        if (empty($params['DEFAULT_FOLDER'])) $params['DEFAULT_FOLDER'] = '';
+        if (empty($params['LIMIT'])) $params['LIMIT'] = 0;
+        if (empty($params['MODE'])) $params['MODE'] = '';
+        if (empty($params['TARGET'])) $params['TARGET'] = '';
+
+        // permet de modifier le champ sur lequel va s'effectuer le tri du tableau
+        if (empty($params['ORDER_BY'])) $params['ORDER_BY'] = 'name';
+
+        // permet de modifier l'ordre de tri du tableau (croissant/décroissant)
+        if (empty($params['SORT'])) $params['SORT'] = 'ASC';
+
+        // hauteur fixe de la fenêtre
+        if (empty($params['HEIGHT'])) $params['HEIGHT'] = 0;
+
+        // permet de paramétrer le libellé et l'icone des boutons de la mini-ged
+        if (empty($params['ROOT_PLACE'])) $params['ROOT_PLACE'] = 'Aller au Dossier Racine';
+        if (empty($params['ROOT_PLACE_IMG'])) $params['ROOT_PLACE_IMG'] = $_SESSION['ploopi']['template_path'] . '/img/documents/ico_home.png';
+        if (empty($params['NEW_FOLDER'])) $params['NEW_FOLDER'] = 'Créer un nouveau Dossier';
+        if (empty($params['NEW_FOLDER_IMG'])) $params['NEW_FOLDER_IMG'] = $_SESSION['ploopi']['template_path'] . '/img/documents/ico_newfolder.png';
+        if (empty($params['NEW_FILE'])) $params['NEW_FILE'] = 'Ajouter un Fichier';
+        if (empty($params['NEW_FILE_IMG'])) $params['NEW_FILE_IMG'] = $_SESSION['ploopi']['template_path'] . '/img/documents/ico_newfile.png';
+        if (empty($params['NEW_FILES'])) $params['NEW_FILES'] = 'Ajouter plusieurs Fichiers';
+        if (empty($params['NEW_FILES_IMG'])) $params['NEW_FILES_IMG'] = $_SESSION['ploopi']['template_path'] . '/img/documents/ico_newfiles.png';
+
+        $_SESSION['documents'][$documents_id] = array (
+            'id_object'     => $id_object,
+            'id_record'     => $id_record,
+            'id_user'       => $id_user,
+            'id_workspace'  => $id_workspace,
+            'id_module'     => $id_module,
+            'documents_id'  => $documents_id,
+            'root_name'     => $params['ROOT_NAME'],
+            'attachement'   => $params['ATTACHEMENT'],
+            'fields'        => $params['FIELDS'],
+            'fields_size'   => $params['FIELDS_SIZE'],
+            'callback_func' => $params['CALLBACK_FUNC'], // Fonction de callback php appelée suite à l'ajout d'un fichier/dossier
+            'callback_inc'  => $params['CALLBACK_INC'], // Inclusion nécessaire au callback php
+            'default_folder'=> $params['DEFAULT_FOLDER'],
+            'order_by'      => $params['ORDER_BY'],
+            'sort'          => $params['SORT'],
+            'rights'        => $rights,
+            'limit'         => $params['LIMIT'],
+            'height'        => $params['HEIGHT'],
+            'root_place'    => $params['ROOT_PLACE'],
+            'root_place_img'=> $params['ROOT_PLACE_IMG'],
+            'new_folder'    => $params['NEW_FOLDER'],
+            'new_folder_img'=> $params['NEW_FOLDER_IMG'],
+            'new_file'      => $params['NEW_FILE'],
+            'new_file_img'  => $params['NEW_FILE_IMG'],
+            'new_files'     => $params['NEW_FILES'],
+            'new_files_img' => $params['NEW_FILES_IMG'],
+            // Pour le sélecteur de fichier
+            'mode'          => $params['MODE'], // peut valoir 'selectfile'
+            'target'        => $params['TARGET'], // id de champ ou fonction de callback
+        );
+
+        // on va chercher la racine
+        $db->query("SELECT md5id FROM ploopi_documents_folder WHERE id_folder = 0 AND id_object = '{$_SESSION['documents'][$documents_id]['id_object']}' AND id_module = '{$_SESSION['documents'][$documents_id]['id_module']}' AND id_record = '".addslashes($_SESSION['documents'][$documents_id]['id_record'])."'");
+
+        if ($row = $db->fetchrow()) $currentfolder = $row['md5id'];
+        else // racine inexistante, il faut la créer
+        {
+            $documentsfolder = new documentsfolder();
+            $documentsfolder->fields['name'] = $params['ROOT_NAME'];
+            $documentsfolder->fields['id_folder'] = 0;
+            $documentsfolder->fields['id_object'] = $_SESSION['documents'][$documents_id]['id_object'];
+            $documentsfolder->fields['id_record'] = $_SESSION['documents'][$documents_id]['id_record'];
+            $documentsfolder->fields['id_module'] = $_SESSION['documents'][$documents_id]['id_module'];
+            $documentsfolder->fields['id_user'] = $_SESSION['documents'][$documents_id]['id_user'];
+            $documentsfolder->fields['id_workspace'] = $_SESSION['documents'][$documents_id]['id_workspace'];
+            $id =  $documentsfolder->save();
+            $currentfolder = $documentsfolder->fields['md5id'];
+
+            if (is_array($default_folders))
+            {
+                foreach ($default_folders as $foldername)
+                {
+                    $documentsfolder = new documentsfolder();
+                    $documentsfolder->fields['id_folder'] = $id;
+                    $documentsfolder->fields['id_object'] = $_SESSION['documents'][$documents_id]['id_object'];
+                    $documentsfolder->fields['id_record'] = $_SESSION['documents'][$documents_id]['id_record'];
+                    $documentsfolder->fields['id_module'] = $_SESSION['documents'][$documents_id]['id_module'];
+                    $documentsfolder->fields['id_user'] = $_SESSION['documents'][$documents_id]['id_user'];
+                    $documentsfolder->fields['id_workspace'] = $_SESSION['documents'][$documents_id]['id_workspace'];
+                    $documentsfolder->fields['name'] = $foldername;
+                    $documentsfolder->fields['system'] = 1;
+                    $documentsfolder->save();
+                }
+            }
+        }
+
+        $_SESSION['documents'][$documents_id]['currentfolder'] = $currentfolder;
+
+        if ($load_doc)
+        {
+            ?>
+            <div id="ploopidocuments_<?php echo $documents_id; ?>">
+                <?php self::browser($currentfolder, $documents_id); ?>
+            </div>
+            <?php
+        }
+
+        return $documents_id;
+    }
+
+    /**
+     * Renvoie le dossier de stockage des documents
+     *
+     * @param boolean indique si le dossier doit être créé
+     * @return string chemin physique relatif du dossier de stockage
+     */
+
+    public static function getpath($createpath = false)
+    {
+        $path = _PLOOPI_PATHDATA._PLOOPI_SEP."documents";
+
+        if ($createpath)
+        {
+            // test for existing _PLOOPI_PATHDATA path
+            if (!is_dir(_PLOOPI_PATHDATA)) mkdir(_PLOOPI_PATHDATA);
+
+            if ($path != '' && !is_dir($path)) mkdir($path);
+        }
+
+        return($path);
+    }
+
+    /**
+     * Renvoie le nombre d'éléments d'un dossier
+     *
+     * @param int $id_folder identifiant du dossier
+     * @return int nombre d'élément du dossier
+     */
+
+    public static function countelements($id_folder)
+    {
+        global $db;
+
+        $c = 0;
+
+        $db->query("SELECT count(id) as c FROM ploopi_documents_folder WHERE id_folder = {$id_folder}");
+        if ($row = $db->fetchrow()) $c += $row['c'];
+
+        $db->query("SELECT count(id) as c FROM ploopi_documents_file WHERE id_folder = {$id_folder}");
+        if ($row = $db->fetchrow()) $c += $row['c'];
+
+        return($c);
+    }
+
+    /**
+     * Renvoie un tableau de fichiers attachés à enregistrement d'un objet
+     *
+     * @param int $id_object identifiant de l'objet
+     * @param string $id_record identifiant de l'enregistrement
+     * @param int $id_folder identifiant du sous-dossier (optionnel)
+     * @param int $id_workspace identifiant de l'espace de travail (optionnel)
+     * @param int $id_module identifiant du module (optionnel)
+     * @return array tableau contenant le nom des fichiers
+     */
+
+    public static function getfiles($id_object, $id_record, $id_folder = 0, $id_module = -1)
+    {
+        global $db;
+
+        if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];
+
+        $files = array();
+
+        if ($id_folder == 0) $db->query("SELECT * FROM ploopi_documents_file WHERE id_module = {$id_module} AND id_object = '{$id_object}' AND id_record = '{$id_record}' ORDER BY name");
+        else $db->query("SELECT * FROM ploopi_documents_file WHERE id_module = {$id_module} AND id_object = '{$id_object}' AND id_record = '{$id_record}' and id_folder = {$id_folder} ORDER BY name");
+        while ($row = $db->fetchrow()) $files[] = $row;
+
+        return($files);
+    }
+
+    /**
+     * Renvoie un tableau de dossiers attachés à un enregistrement d'un objet
+     *
+     * @param int $id_object identifiant de l'objet
+     * @param string $id_record identifiant de l'enregistrement
+     * @param int $id_workspace identifiant de l'espace de travail (optionnel)
+     * @param int $id_module identifiant du module (optionnel)
+     * @return array tableau contenant le nom des dossiers
+     */
+
+    public static function getfolders($id_object, $id_record, $id_module = -1)
+    {
+        global $db;
+
+        if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];
+
+        $folders = array();
+
+        $db->query("SELECT * FROM ploopi_documents_folder WHERE id_module = {$id_module} AND id_object = '{$id_object}' AND id_record = '{$id_record}' ORDER BY parents, name");
+
+        while ($row = $db->fetchrow()) $folders[$row['id_folder']][] = $row;
+
+        return($folders);
+    }
+
+    /**
+     * Renvoie un tableau de dossiers attachés à un enregistrement d'un objet (liste récursive)
+     *
+     * @param int $id_object identifiant de l'objet
+     * @param string $id_record identifiant de l'enregistrement
+     * @param int $id_workspace identifiant de l'espace de travail (optionnel)
+     * @param int $id_module identifiant du module (optionnel)
+     * @return array tableau contenant le nom des dossiers
+     */
+
+    public static function listfolders($id_object, $id_record, $id_module = -1)
+    {
+        $arrFolders = self::getfolders($id_object, $id_record, $id_module);
+        return self::_listfolders_rec($arrFolders);
+    }
+
+    /**
+     * Dépendance "privée" de "documents::listfolders"
+     */
+
+    private static function _listfolders_rec($arrFolders, $key = 0)
+    {
+        $arrFoldersRec = array();
+
+        if (isset($arrFolders[$key])) {
+            foreach($arrFolders[$key] as $row) {
+                $arrFoldersRec[] = $row;
+                $arrFoldersRec = array_merge($arrFoldersRec, self::_listfolders_rec($arrFolders, $row['id']));
+            }
+        }
+
+        return $arrFoldersRec;
+    }
+
+    /**
+     * Sauvegarde un fichier dans un dossier attaché à un enregistrement d'un objet
+     *
+     * @param int $id_object identifiant de l'objet
+     * @param string $id_record identifiant de l'enregistrement
+     * @param string $file chemin du fichier
+     * @param string $filename nom du fichier
+     * @param int $id_folder identifiant du dossier
+     * @param string $label libellé du fichier (optionnel)
+     * @param string $description description du fichier (optionnel)
+     * @param string $ref référence du fichier (optionnel)
+     * @param int $id_user identifiant du l'utilisateur (optionnel)
+     * @param int $id_workspace identifiant de l'espace de travail (optionnel)
+     * @param int $id_module identifiant du module (optionnel)
+     *
+     * @copyright Ovensia
+     */
+
+    public static function savefile($id_object, $id_record, $file, $filename, $id_folder, $label = '', $description = '', $ref = '', $id_user = null, $id_workspace = null, $id_module = null)
+    {
+        if (file_exists($file))
+        {
+            $documentsfile = new documentsfile();
+
+            if (empty($id_user)) $id_user = $_SESSION['ploopi']['userid'];
+            if (empty($id_workspace)) $id_workspace = $_SESSION['ploopi']['workspaceid'];
+            if (empty($id_module)) $id_module = $_SESSION['ploopi']['moduleid'];
+
+            $documentsfile->fields['id_object'] = $id_object;
+            $documentsfile->fields['id_record'] = $id_record;
+
+            $documentsfile->fields['name'] = $filename;
+            $documentsfile->fields['size'] = filesize($file);
+            $documentsfile->fields['extension'] = fs::file_getextension($filename);
+            $documentsfile->fields['label'] = $label;
+            $documentsfile->fields['description'] = $description;
+            $documentsfile->fields['ref'] = $ref;
+
+            $documentsfile->fields['timestp_file'] = date::createtimestamp();
+            $documentsfile->fields['timestp_create'] = $documentsfile->fields['timestp_file'];
+            $documentsfile->fields['timestp_modify'] = $documentsfile->fields['timestp_file'];
+
+            $documentsfile->fields['id_user'] = $id_user;
+            $documentsfile->fields['id_workspace'] = $id_workspace;
+            $documentsfile->fields['id_module'] = $id_module;
+
+            $documentsfile->fields['id_folder'] = $id_folder;
+
+            $documentsfile->fields['id_user_modify'] = $documentsfile->fields['id_user'];
+
+            $documentsfile->setfile($file);
+
+            return $documentsfile->save() ? null : $documentsfile->fields['id'];
+        }
         else return false;
     }
 
     /**
-     * Enregistre le document.
-     * Gère la sauvegarde physique du fichier, le renommage.
+     * Sauvegarde un dossier attaché à un enregistrement d'un objet
      *
-     * @return int identifiant du document
-     */
-    public function save()
-    {
-        global $db;
-        $error = 0;
-        if (isset($this->fields['folder'])) unset($this->fields['folder']);
-
-        if (!isset($this->oldname)) $this->oldname = '';
-
-        if ($this->new) // insert
-        {
-            if ($this->tmpfile == 'none' && $this->file == 'none') $error = _PLOOPI_ERROR_EMPTYFILE;
-
-            if ($this->fields['size']>_PLOOPI_MAXFILESIZE) $error = _PLOOPI_ERROR_MAXFILESIZE;
-
-            if (!$error)
-            {
-                $this->fields['extension'] = substr(strrchr($this->fields['name'], "."),1);
-
-                $id = parent::save();
-
-                $this->fields['md5id'] = md5(sprintf("%s_%d", $this->fields['timestp_create'], $id));
-
-                parent::save();
-
-                $basepath = $this->getbasepath();
-                $filepath = $this->getfilepath();
-
-                if (file_exists($filepath) && !is_writable($filepath)) $error = _PLOOPI_ERROR_FILENOTWRITABLE;
-
-                if (!$error && is_writable($basepath))
-                {
-                    if ($this->tmpfile != 'none')
-                    {
-                        if (!move_uploaded_file($this->tmpfile, $filepath)) $error = _PLOOPI_ERROR_FILENOTWRITABLE;
-                    }
-
-                    if ($this->file != 'none')
-                    {
-                        if (!copy($this->file, $filepath)) $error = _PLOOPI_ERROR_FILENOTWRITABLE;
-                    }
-
-                    if (!$error) chmod($filepath, 0640);
-                }
-                else $error = _PLOOPI_ERROR_FILENOTWRITABLE;
-            }
-
-        }
-        else // update
-        {
-            if (!empty($this->tmpfile) && $this->tmpfile != 'none')
-            {
-                if ($this->fields['size']>_PLOOPI_MAXFILESIZE) $error = _PLOOPI_ERROR_MAXFILESIZE;
-
-                if (!$error)
-                {
-                    $this->fields['extension'] = substr(strrchr($this->fields['name'], "."),1);
-
-                    $basepath = $this->getbasepath();
-                    $filepath = $this->getfilepath();
-
-                    if (file_exists($filepath) && !is_writable($filepath)) $error = _PLOOPI_ERROR_FILENOTWRITABLE;
-
-                    if (!$error)
-                    {
-                        // on copie le nouveau
-                        if (!$error && is_writable($basepath))
-                        {
-                            if ($this->tmpfile != 'none')
-                            {
-                                if (move_uploaded_file($this->tmpfile, $filepath)) chmod($filepath, 0640);
-                                else $error = _PLOOPI_ERROR_FILENOTWRITABLE;
-                            }
-                        }
-                        else $error = _PLOOPI_ERROR_FILENOTWRITABLE;
-                    }
-                }
-
-                $this->fields['timestp_modify'] = ploopi_createtimestamp();
-
-                $this->oldname = $this->fields['name'];
-            }
-
-            // renommage
-            if ($this->oldname != $this->fields['name'])
-            {
-                // renommage avec modification de type
-                if (($newext = substr(strrchr($this->fields['name'], "."),1)) != $this->fields['extension'])
-                {
-                    $basepath = $this->getbasepath();
-                    $filepath = $this->getfilepath();
-                    $newfilepath = substr($filepath,0,strlen($filepath)-strlen($this->fields['extension'])).$newext;
-
-                    if (file_exists($filepath) && is_writable($basepath))
-                    {
-                        rename($filepath, $newfilepath);
-                        $this->fields['extension'] = $newext;
-                        parent::save();
-                    }
-                    else $error = _PLOOPI_ERROR_FILENOTWRITABLE;
-                }
-                else parent::save();
-            }
-            else parent::save();
-        }
-
-        if ($this->fields['id_folder'] != 0)
-        {
-            $docfolder_parent = new documentsfolder();
-            $docfolder_parent->open($this->fields['id_folder']);
-            $docfolder_parent->fields['nbelements'] = ploopi_documents_countelements($this->fields['id_folder']);
-            $docfolder_parent->save();
-        }
-
-        return $error;
-    }
-
-    /**
-     * Supprime le document (physiquement et dans la base de données)
-     */
-    public function delete()
-    {
-        $filepath = $this->getfilepath();
-        if (file_exists($filepath)) unlink($filepath);
-
-        parent::delete();
-
-        if ($this->fields['id_folder'] != 0)
-        {
-            $docfolder_parent = new documentsfolder();
-            $docfolder_parent->open($this->fields['id_folder']);
-            $docfolder_parent->fields['nbelements'] = ploopi_documents_countelements($this->fields['id_folder']);
-            $docfolder_parent->save();
-        }
-    }
-
-    /**
-     * Retourne le chemin physique de stockage du document.
-     * Crée le dossier si nécessaire.
-     *
-     * @return string chemin de stockage du document
-     */
-    public function getbasepath()
-    {
-        $basepath = ploopi_documents_getpath()._PLOOPI_SEP.substr($this->fields['timestp_create'],0,8);
-        ploopi_makedir($basepath);
-        return $basepath;
-    }
-
-    /**
-     * Retourne le chemin physique complet du fichier.
-     *
-     * @return string chemin du fichier
-     */
-    public function getfilepath()
-    {
-        return $this->getbasepath()._PLOOPI_SEP."{$this->fields['id']}.{$this->fields['extension']}";
-    }
-
-    /**
-     * Retourne l'URL permettant de télécharger le document
-     *
-     * @param boolean $attachement true si le fichier doit être "attaché"
-     * @return string URL de téléchargement
-     */
-    public function geturl($attachement = true)
-    {
-        return ploopi_urlencode("admin-light.php?ploopi_op=documents_downloadfile&documentsfile_id={$this->fields['md5id']}&attachement={$attachement}");
-    }
-
-    /**
-     * Permet de définir l'emplacement du fichier manuellement (ajout uniquement)
-     *
-     * @param string $file chemin du fichier
-     */
-
-    public function setfile($file)
-    {
-        $this->file = $file;
-    }
-
-    /**
-     * Permet de définir l'emplacement du fichier temporaire (après upload)
-     *
-     * @param string $file chemin du fichier
-     */
-
-    public function settmpfile($file)
-    {
-        $this->tmpfile = $file;
-    }
-
-}
-
-/**
- * Classe de gestion des fichiers (ne pas confondre avec le module DOC)
- *
- * @package ploopi
- * @subpackage document
- * @copyright Netlor, Ovensia
- * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
- */
-
-class documentsfolder extends data_object
-{
-    /**
-     * Contructeur de la classe
-     *
-     * @return documentsfolder
-     */
-    function __construct()
-    {
-        parent::__construct('ploopi_documents_folder');
-        $this->fields['timestp_create'] = ploopi_createtimestamp();
-        $this->fields['timestp_modify'] = $this->fields['timestp_create'];
-        $this->fields['parents']=0;
-    }
-
-
-    /**
-     * Ouvre un dossier avec son identifiant MD5
-     *
-     * @param string $md5id identifiant MD5 du dossier
-     * @return boolean true si le dossier a été ouvert
-     */
-
-    function openmd5($md5id)
-    {
-        global $db;
-
-        $db->query("SELECT id FROM ploopi_documents_folder WHERE md5id = '".$db->addslashes($md5id)."'");
-        if ($fields = $db->fetchrow()) return($this->open($fields['id']));
-        else return false;
-    }
-
-    /**
-     * Enregistre le dossier
-     *
-     * @return int identifiant du dossier
-     */
-    function save()
-    {
-        if ($this->new)
-        {
-            $id = parent::save();
-            $this->fields['md5id'] = md5(sprintf("%s_%d", $this->fields['timestp_create'], $id));
-
-            if ($this->fields['id_folder'] != 0)
-            {
-                $docfolder_parent = new documentsfolder();
-                $docfolder_parent->open($this->fields['id_folder']);
-                $this->fields['parents'] = "{$docfolder_parent->fields['parents']},{$this->fields['id_folder']}";
-                $docfolder_parent->fields['nbelements'] = ploopi_documents_countelements($this->fields['id_folder']);
-                $docfolder_parent->save();
-            }
-
-            parent::save();
-        }
-
-        else $id= parent::save();
-
-        return $id;
-    }
-
-    /**
-     * Supprime le dossier et son contenu.
-     * Met à jour les informations du dossier parent.
-     */
-    function delete()
-    {
-        global $db;
-
-        // on recherche tous les fichiers pour les supprimer
-        $rs = $db->query("SELECT id FROM ploopi_documents_file WHERE id_folder = {$this->fields['id']}");
-        while($row = $db->fetchrow($rs))
-        {
-            $file = new documentsfile();
-            $file->open($row['id']);
-            $file->delete();
-        }
-
-        // on recherche tous les dossiers fils pour les supprimer
-        $rs = $db->query("SELECT id FROM ploopi_documents_folder WHERE id_folder = {$this->fields['id']}");
-        while($row = $db->fetchrow($rs))
-        {
-            $folder = new documentsfolder();
-            $folder->open($row['id']);
-            $folder->delete();
-        }
-
-        parent::delete();
-
-        if ($this->fields['id_folder'] != 0)
-        {
-            $docfolder_parent = new documentsfolder();
-            $docfolder_parent->open($this->fields['id_folder']);
-            $docfolder_parent->fields['nbelements'] = ploopi_documents_countelements($this->fields['id_folder']);
-            $docfolder_parent->save();
-        }
-
-    }
-
-    /**
-     * Crée un sous-dossier
-     *
+     * @param int $id_object identifiant de l'objet
+     * @param string $id_record identifiant de l'enregistrement
      * @param string $name nom du dossier
-     * @param string $description description du dossier
-     * @return documentsfolder dossier fils
-     */
-
-    function create_child($name, $description = '')
-    {
-        $objDocChild = new documentsfolder();
-        $objDocChild->fields['id_record'] = $this->fields['id_record'];
-        $objDocChild->fields['id_object'] = $this->fields['id_object'];
-        $objDocChild->fields['id_module'] = $this->fields['id_module'];
-        $objDocChild->fields['id_workspace'] = $this->fields['id_workspace'];
-        $objDocChild->fields['id_user'] = $this->fields['id_user'];
-        $objDocChild->fields['name'] = $name;
-        $objDocChild->fields['description'] = $description;
-        $objDocChild->fields['timestp_create'] = $objDocChild->fields['timestp_modify'] = ploopi_createtimestamp();
-        $objDocChild->fields['nbelements'] = 0;
-        $objDocChild->fields['parents'] = "{$this->fields['parents']},{$this->fields['id']}";
-        $objDocChild->fields['id_folder'] = $this->fields['id'];
-
-        return $objDocChild;
-    }
-
-    /**
-     * Retourne l'arbre complet des dossiers et des fichiers sous forme d'un tableau d'objets
-     * $arr[id_folder] => array('folders' => array(), 'files' => array());
-     * @return array
-     */
-    public function gettree()
-    {
-        // Lecture des fichiers
-        $objDO = new data_object_collection('documentsfile');
-        $objDO->add_orderby('name');
-        $arrObjFile = $objDO->get_objects(true);
-
-        // Lecture des dossiers
-        $objDO = new data_object_collection('documentsfolder');
-        $objDO->add_where('id_object = %d', $this->fields['id_object']);
-        $objDO->add_where('id_record = %s', $this->fields['id_record']);
-        $objDO->add_where('id_module = %d', $this->fields['id_module']);
-        //$objDO->add_where("parents LIKE %s OR parents = %s", array($this->fields['parents'].',%', $this->fields['parents']));
-        $objDO->add_where("parents LIKE %s", $this->fields['parents'].',%');
-        $objDO->add_orderby('parents, name');
-        $arrObjFolder = $objDO->get_objects();
-
-        // Construction de l'arbre
-        $arrTree = array('folders' => array(), 'files' => array(), 'tree' => array());
-
-        // Premier noeud, le dossier courant
-        $arrTree['folders'][$this->fields['id']] = $this;
-
-        // Gestion des dossiers
-        foreach($arrObjFolder as $objFolder)
-        {
-            $arrTree['folders'][$objFolder->fields['id']] = $objFolder;
-            $arrTree['tree'][$objFolder->fields['id_folder']]['folders'][] = &$arrTree['folders'][$objFolder->fields['id']];
-        }
-
-        // Gestion des fichiers
-        foreach($arrObjFile as $objFile)
-        {
-            if (isset($arrTree['folders'][$objFile->fields['id_folder']]))
-            {
-                $arrTree['files'][$objFile->fields['id']] = $objFile;
-                $arrTree['tree'][$objFile->fields['id_folder']]['files'][] = &$arrTree['files'][$objFile->fields['id']];
-            }
-        }
-
-        return $arrTree;
-    }
-
-    /**
-     * Retourne un tableau contenant la liste des fichiers sour la forme $arr['id_file'] => array('file', 'folder', 'path')
+     * @param int $id_folder identifiant du dossier
+     * @param string $label libellé du fichier (optionnel)
+     * @param string $description description du fichier (optionnel)
+     * @param bool $system 1 si c'est un dossier "système" (optionnel)
+     * @param int $id_user identifiant du l'utilisateur (optionnel)
+     * @param int $id_workspace identifiant de l'espace de travail (optionnel)
+     * @param int $id_module identifiant du module (optionnel)
      *
-     * @return array tableau de chemins
-     */
-    public function getlist()
-    {
-        $arrTree = $this->gettree();
-        return self::_getlist_rec($arrTree);
-    }
-
-
-    /**
-     * Retourne un tableau contenant la liste des fichiers sour la forme $arr['id_file'] => array('file', 'folder', 'path')
-     *
-     * @param array $arrTree arbre des dossiers/fichiers
-     * @param int $intIdFolder identifiant du dossier courant
-     * @param string $strPath chemin relatif par rapport au dossier de départ
-     * @return array tableau de chemins
+     * @copyright Ovensia
      */
 
-    private static function _getlist_rec(&$arrTree, $intIdFolder = null, $strPath = '')
+    public static function savefolder($id_object, $id_record, $name, $id_folder, $description = '', $system = 0, $id_user = null, $id_workspace = null, $id_module = null)
     {
-        $arrFiles = array();
+        $documentsfolder = new documentsfolder();
 
-        if (is_null($intIdFolder))
-        {
-            reset($arrTree['tree']);
-            $intIdFolder = key($arrTree['tree']);
-        }
-        else $strPath .= $arrTree['folders'][$intIdFolder]->fields['name'].'/';
-
-        // Parcours des fichiers de la branche courante
-        if (isset($arrTree['tree'][$intIdFolder]['files']))
-        {
-            foreach($arrTree['tree'][$intIdFolder]['files'] as $objFile)
-            {
-                $arrFiles[$objFile->fields['id']] = array('file' => $objFile, 'folder' => $arrTree['folders'][$intIdFolder], 'path' => $strPath.$objFile->fields['name']);
-            }
-        }
-
-        // Parcours des dossiers de la branche courante
-        if (isset($arrTree['tree'][$intIdFolder]['folders']))
-        {
-            foreach($arrTree['tree'][$intIdFolder]['folders'] as $objFolder)
-            {
-                $arrFiles = $arrFiles + self::_getlist_rec($arrTree, $objFolder->fields['id'], $strPath);
-            }
-        }
-
-        return $arrFiles;
-    }
-
-    /**
-     * Retourne les fichiers du dossier
-     *
-     * @param bool $booRecursive true si la fonction doit retourner les fichiers des sous-dossiers
-     * @return array tableau de "documentsfile"
-     *
-     */
-    public function getfiles($booRecursive = false)
-    {
-
-        $objDO = new data_object_collection('documentsfile');
-        if (!$booRecursive) $objDO->add_where('id_folder = %d', $this->fields['id']);
-        $objDO->add_orderby('name');
-        $arrObjFile = $objDO->get_objects(true);
-
-        return $arrObjFile;
-    }
-
-    /**
-     * Retourne le dossier racine d'un objet
-     *
-     * @param int $id_object id de l'objet
-     * @param string $id_record id de l'enregistrement
-     * @param string $id_module id du module
-     * @return documentsfolder dossier racine
-     */
-
-    public static function getroot($id_object, $id_record, $id_module = null)
-    {
+        if (empty($id_user)) $id_user = $_SESSION['ploopi']['userid'];
+        if (empty($id_workspace)) $id_workspace = $_SESSION['ploopi']['workspaceid'];
         if (empty($id_module)) $id_module = $_SESSION['ploopi']['moduleid'];
 
-        $objDO = new data_object_collection('documentsfolder');
-        $objDO->add_where('id_object = %d', $id_object);
-        $objDO->add_where('id_record = %s', $id_record);
-        $objDO->add_where('id_module = %d', $id_module);
-        $objDO->add_where("parents = '0'");
+        $documentsfolder->fields['id_object'] = $id_object;
+        $documentsfolder->fields['id_record'] = $id_record;
 
-        $arrObjFolder = $objDO->get_objects();
+        $documentsfolder->fields['name'] = $name;
+        $documentsfolder->fields['description'] = $description;
+        $documentsfolder->fields['system'] = $system;
 
-        return empty($arrObjFolder) ? null : current($arrObjFolder);
+        $documentsfolder->fields['timestp_create'] = date::createtimestamp();
+        $documentsfolder->fields['timestp_modify'] = $documentsfolder->fields['timestp_create'];
+
+        $documentsfolder->fields['id_user'] = $id_user;
+        $documentsfolder->fields['id_workspace'] = $id_workspace;
+        $documentsfolder->fields['id_module'] = $id_module;
+
+        $documentsfolder->fields['id_folder'] = $id_folder;
+
+        $documentsfolder->fields['id_user_modify'] = $documentsfolder->fields['id_user'];
+
+        return $documentsfolder->save();
+    }
+
+    /**
+     * Affiche l'explorateur de documents
+     *
+     * @param int $currentfolder identifiant du dossier parcouru
+     */
+
+    public static function browser($currentfolder, $documents_id)
+    {
+        // Vérification paramètres
+        if (!isset($_SESSION['documents'][$documents_id])) return;
+
+        global $db;
+        global $skin;
+        ?>
+        <div class="documents_browser">
+
+            <div class="documents_path">
+                <?php
+                if ($_SESSION['documents'][$documents_id]['rights']['DOCUMENT_CREATE'])
+                {
+                    ?><a title="<?php echo $_SESSION['documents'][$documents_id]['new_files']; ?>" href="javascript:void(0);" style="float:right;" onclick="javascript:ploopi_documents_openfile('<?php echo crypt::queryencode("ploopi_op=documents_addmultiplefiles&currentfolder={$currentfolder}&documents_id={$documents_id}&documentsfile_id="); ?>', event);"><img src="<?php echo $_SESSION['documents'][$documents_id]['new_files_img']; ?>"></a><?php
+                    ?><a title="<?php echo $_SESSION['documents'][$documents_id]['new_file']; ?>" href="javascript:void(0);" style="float:right;" onclick="javascript:ploopi_documents_openfile('<?php echo crypt::queryencode("ploopi_op=documents_openfile&currentfolder={$currentfolder}&documents_id={$documents_id}&documentsfile_id="); ?>', event);"><img src="<?php echo $_SESSION['documents'][$documents_id]['new_file_img']; ?>"></a><?php
+                }
+                if ($_SESSION['documents'][$documents_id]['rights']['FOLDER_CREATE'])
+                {
+                    ?><a title="<?php echo $_SESSION['documents'][$documents_id]['new_folder']; ?>" href="javascript:void(0);" style="float:right;" onclick="javascript:ploopi_documents_openfolder('<?php echo crypt::queryencode("ploopi_op=documents_openfolder&currentfolder={$currentfolder}&documents_id={$documents_id}&documentsfolder_id="); ?>', event);"><img src="<?php echo $_SESSION['documents'][$documents_id]['new_folder_img']; ?>"></a><?php
+                }
+                ?>
+                <a title="<?php echo $_SESSION['documents'][$documents_id]['root_place']; ?>" href="javascript:void(0);" style="float:right;" onclick="javascript:documents::browser('<?php echo crypt::queryencode("ploopi_op=documents_browser&documents_id={$documents_id}&mode={$_SESSION['documents'][$documents_id]['mode']}"); ?>', '<?php echo $documents_id; ?>', true);"><img src="<?php echo $_SESSION['documents'][$documents_id]['root_place_img']; ?>"></a>
+
+                <div>Emplacement :</div>
+                <?php
+                $documentsfolder = new documentsfolder();
+                if (!empty($currentfolder) && $documentsfolder->openmd5($currentfolder))
+                {
+                    $db->query("SELECT id, md5id, name, id_folder FROM ploopi_documents_folder WHERE id in ({$documentsfolder->fields['parents']},{$documentsfolder->fields['id']}) ORDER by id");
+
+                    while ($row = $db->fetchrow())
+                    {
+                        // change root name
+                        $foldername = (!$row['id_folder']) ? $_SESSION['documents'][$documents_id]['root_name'] : $row['name'];
+                        ?>
+                        <a <?php if ($currentfolder == $row['md5id']) echo 'class="doc_pathselected"'; ?> href="javascript:void(0);" onclick="javascript:documents::browser('<?php echo crypt::queryencode("ploopi_op=documents_browser&currentfolder={$row['md5id']}&documents_id={$documents_id}&mode={$_SESSION['documents'][$documents_id]['mode']}"); ?>', '<?php echo $_SESSION['documents'][$documents_id]['documents_id']; ?>', true);">
+                            <p class="ploopi_va">
+                                <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/documents/ico_folder.png" />
+                                <span><?php echo str::htmlentities($foldername); ?></span>
+                            </p>
+                        </a>
+                        <?php
+                    }
+                }
+                ?>
+            </div>
+            <?php
+
+            $documents_columns = array();
+
+            $documents_columns['auto']['name'] =
+                array(
+                    'label' => 'Nom',
+                    'options' => array('sort' => true)
+                );
+
+            if (empty($_SESSION['documents'][$documents_id]['fields']) || in_array('type', $_SESSION['documents'][$documents_id]['fields']))
+            {
+                $documents_columns['right']['type'] =
+                    array(
+                        'label' => 'Type',
+                        'width' => empty($_SESSION['documents'][$documents_id]['fields_size']['type']) ? 65 : $_SESSION['documents'][$documents_id]['fields_size']['type'],
+                        'options' => array('sort' => true)
+                    );
+            }
+
+            if (empty($_SESSION['documents'][$documents_id]['fields']) || in_array('timestp_modify', $_SESSION['documents'][$documents_id]['fields']))
+            {
+                $documents_columns['right']['timestp_modify'] =
+                    array(
+                        'label' => 'Date Modif',
+                        'width' => empty($_SESSION['documents'][$documents_id]['fields_size']['timestp_modify']) ? 130 : $_SESSION['documents'][$documents_id]['fields_size']['timestp_modify'],
+                        'options' => array('sort' => true)
+                    );
+            }
+
+            if (empty($_SESSION['documents'][$documents_id]['fields']) || in_array('timestp_file', $_SESSION['documents'][$documents_id]['fields']))
+            {
+                $documents_columns['right']['timestp_file'] =
+                    array(
+                        'label' => 'Date',
+                        'width' => empty($_SESSION['documents'][$documents_id]['fields_size']['timestp_file']) ? 80 : $_SESSION['documents'][$documents_id]['fields_size']['timestp_file'],
+                        'options' => array('sort' => true)
+                    );
+            }
+
+            if (empty($_SESSION['documents'][$documents_id]['fields']) || in_array('ref', $_SESSION['documents'][$documents_id]['fields']))
+            {
+                $documents_columns['right']['ref'] =
+                    array(
+                        'label' => 'Ref',
+                        'width' => empty($_SESSION['documents'][$documents_id]['fields_size']['ref']) ? 100 : $_SESSION['documents'][$documents_id]['fields_size']['ref'],
+                        'options' => array('sort' => true)
+                    );
+            }
+
+            if (empty($_SESSION['documents'][$documents_id]['fields']) || in_array('label', $_SESSION['documents'][$documents_id]['fields']))
+            {
+                $documents_columns['right']['label'] =
+                    array(
+                        'label' => 'Libellé',
+                        'width' => empty($_SESSION['documents'][$documents_id]['fields_size']['label']) ? 150 : $_SESSION['documents'][$documents_id]['fields_size']['label'],
+                        'options' => array('sort' => true)
+                    );
+            }
+
+            if (empty($_SESSION['documents'][$documents_id]['fields']) || in_array('size', $_SESSION['documents'][$documents_id]['fields']))
+            {
+                $documents_columns['right']['size'] =
+                    array(
+                        'label' => 'Taille',
+                        'width' => empty($_SESSION['documents'][$documents_id]['fields_size']['size']) ? 90 : $_SESSION['documents'][$documents_id]['fields_size']['size'],
+                        'options' => array('sort' => true)
+                    );
+            }
+
+            if (empty($_SESSION['documents'][$documents_id]['mode']))
+                $documents_columns['actions_right']['actions'] =
+                    array(
+                        'label' => 'Actions',
+                        'width' => 85
+                    );
+
+            $documents_values = array();
+
+            // DISPLAY FOLDERS
+            $sql =  "
+                    SELECT      f.*,
+                                u.login
+                    FROM        ploopi_documents_folder f
+                    LEFT JOIN   ploopi_user u
+                    ON          f.id_user = u.id
+                    WHERE       f.id_folder = {$documentsfolder->fields['id']}
+                    ";
+
+            $db->query($sql);
+
+            $i = 0;
+            while ($row = $db->fetchrow())
+            {
+                $ldate = date::timestamp2local($row['timestp_modify']);
+
+                $documents_values[$i]['values'] =
+                    array(
+                        'name' =>
+                            array(
+                                'label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/documents/ico_folder".($row['system'] ? '_locked' : '').".png\" /><span>&nbsp;{$row['name']}</span>",
+                                'sort_label' => '1_'.$row['name']
+                            ),
+                        'type' =>
+                            array(
+                                'label' => 'Dossier'
+                            ),
+                        'timestp_modify' =>
+                             array(
+                                'label' => "{$ldate['date']} {$ldate['time']}",
+                                'sort_label' => $row['timestp_modify']
+                             ),
+                        'timestp_file' =>
+                            array(
+                                'label' => '&nbsp;'
+                            ),
+                        'ref' =>
+                            array(
+                                'label' => '&nbsp;'
+                            ),
+                        'label' =>
+                            array(
+                                'label' => '&nbsp;',
+                            ),
+                        'size' =>
+                            array(
+                                'label' => "{$row['nbelements']} element(s)",
+                                'sort_label' => '1_'.$row['nbelements']
+                            )
+                    );
+
+                $actions = '';
+                if ($_SESSION['documents'][$documents_id]['rights']['FOLDER_DELETE']) $actions .= '<a title="Supprimer" style="display:block;float:right;" href="javascript:void(0);" onclick="javascript:if (confirm(\'Attention, cette action va supprimer définitivement le dossier et son contenu\')) ploopi_documents_deletefolder(\''.crypt::queryencode("ploopi_op=documents_deletefolder&currentfolder={$currentfolder}&documents_id={$documents_id}&documentsfolder_id={$row['md5id']}").'\',\''.$_SESSION['documents'][$documents_id]['documents_id'].'\');"><img src="'.$_SESSION['ploopi']['template_path'].'/img/documents/ico_trash.png" /></a>';
+                if ($_SESSION['documents'][$documents_id]['rights']['FOLDER_MODIFY']) $actions .= '<a title="Modifier" style="display:block;float:right;" href="javascript:void(0);" onclick="javascript:ploopi_documents_openfolder(\''.crypt::queryencode("ploopi_op=documents_openfolder&currentfolder={$currentfolder}&documents_id={$documents_id}&documentsfolder_id={$row['md5id']}").'\',event);"><img src="'.$_SESSION['ploopi']['template_path'].'/img/documents/ico_modify.png" /></a>';
+
+                if ($actions == '') $actions = '&nbsp;';
+
+                $documents_values[$i]['values']['actions'] =
+                    array(
+                        'label' => (empty($_SESSION['documents'][$documents_id]['mode']) && !$row['system']) ? $actions : '&nbsp;',
+                    );
+
+                $documents_values[$i]['description'] = '';
+                $documents_values[$i]['link'] = 'javascript:void(0);';
+                $documents_values[$i]['option'] = 'onclick="javascript:documents::browser(\''.crypt::queryencode("ploopi_op=documents_browser&currentfolder={$row['md5id']}&documents_id={$documents_id}&mode={$_SESSION['documents'][$documents_id]['mode']}").'\',\''.$documents_id.'\',true);"';
+                $documents_values[$i]['style'] = '';
+
+                $i++;
+            }
+
+            // DISPLAY FILES
+            $sql =  "
+                    SELECT      f.*,
+                                u.login,
+                                mt.filetype
+
+                    FROM        ploopi_documents_file f
+
+                    LEFT JOIN   ploopi_user u
+                    ON          f.id_user = u.id
+
+                    LEFT JOIN   ploopi_mimetype mt
+                    ON          mt.ext = f.extension
+
+                    WHERE       f.id_folder = {$documentsfolder->fields['id']}
+                    ";
+
+            $db->query($sql);
+
+            while ($row = $db->fetchrow())
+            {
+                $ksize = sprintf("%.02f",$row['size']/1024);
+                $ldate = date::timestamp2local($row['timestp_modify']);
+
+                $ldate_file = ($row['timestp_file'] != 0) ? date::timestamp2local($row['timestp_file']) : array('date' => '');
+
+                $ico = (file_exists("{$_SESSION['ploopi']['template_path']}/img/documents/mimetypes/ico_{$row['filetype']}.png")) ? "ico_{$row['filetype']}.png" : 'ico_default.png';
+
+                $actions = '';
+
+                if ($_SESSION['documents'][$documents_id]['rights']['DOCUMENT_DELETE']) $actions .= '<a title="Supprimer" style="display:block;float:right;" href="javascript:if (confirm(\'Attention, cette action va supprimer définitivement le fichier\')) ploopi_documents_deletefile(\''.crypt::queryencode("ploopi_op=documents_deletefile&currentfolder={$currentfolder}&documents_id={$documents_id}&documentsfile_id={$row['md5id']}").'\',\''.$_SESSION['documents'][$documents_id]['documents_id'].'\');"><img src="'.$_SESSION['ploopi']['template_path'].'/img/documents/ico_trash.png" /></a>';
+                if ($_SESSION['documents'][$documents_id]['rights']['DOCUMENT_MODIFY']) $actions .= '<a title="Modifier" style="display:block;float:right;" href="javascript:void(0);" onclick="javascript:ploopi_documents_openfile(\''.crypt::queryencode("ploopi_op=documents_openfile&currentfolder={$currentfolder}&documents_id={$documents_id}&documentsfile_id={$row['md5id']}").'\',event);"><img src="'.$_SESSION['ploopi']['template_path'].'/img/documents/ico_modify.png" /></a>';
+
+                $documents_values[$i]['values'] =
+                    array(
+                        'name' =>
+                            array(
+                                'label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/documents/mimetypes/{$ico}\" /><span>&nbsp;".str::htmlentities($row['name'])."</span>",
+                                'sort_label' => '2_'.$row['name']
+                            ),
+                        'type' =>
+                            array(
+                                'label' => 'Fichier'
+                            ),
+                        'timestp_modify' =>
+                             array(
+                                'label' => str::htmlentities("{$ldate['date']} {$ldate['time']}"),
+                                'sort_label' => $row['timestp_modify']
+                             ),
+                        'timestp_file' =>
+                            array(
+                                'label' => str::htmlentities($ldate_file['date']),
+                                'sort_label' => $row['timestp_file']
+                            ),
+                        'ref' =>
+                            array(
+                                'label' => str::htmlentities($row['ref']),
+                                'sort_label' => $row['ref']
+                            ),
+                        'label' =>
+                            array(
+                                'label' => str::htmlentities($row['label']),
+                                'sort_label' => $row['label']
+                            ),
+                        'size' =>
+                            array(
+                                'label' => str::htmlentities("{$ksize} ko"),
+                                'sort_label' => '2_'.$row['size']
+                            )
+                    );
+
+                $documents_values[$i]['values']['actions'] =
+                    array(
+                        'label' => $actions.'<a title="Télécharger" style="display:block;float:right;" href="'.crypt::urlencode("admin.php?ploopi_op=documents_downloadfile&documentsfile_id={$row['md5id']}").'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/documents/ico_download.png" /></a>
+                                             <a title="Télécharger (ZIP)" style="display:block;float:right;" href="'.crypt::urlencode("admin.php?ploopi_op=documents_downloadfile_zip&documentsfile_id={$row['md5id']}").'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/documents/ico_download_zip.png" /></a>',
+                    );
+
+                $documents_values[$i]['description'] = '';
+
+                if ($_SESSION['documents'][$documents_id]['mode'] == 'tofield')
+                {
+                    $documents_values[$i]['link'] = 'javascript:void(0);';
+                    $documents_values[$i]['onclick'] = "javascript:dest = $('{$_SESSION['documents'][$documents_id]['target']}'); if (dest.type) dest.value='{$row['name']}'; else dest.innerHTML='{$row['name']}'; ploopi_getelem('{$_SESSION['documents'][$documents_id]['target']}_id').value='{$row['id']}';ploopi_hidepopup('ploopi_documents_popup');";
+                }
+                elseif ($_SESSION['documents'][$documents_id]['mode'] == 'tocallback')
+                {
+                    $documents_values[$i]['link'] = 'javascript:void(0);';
+                    $documents_values[$i]['onclick'] = "javascript:{$_SESSION['documents'][$documents_id]['target']}({$row['id']}, '".addslashes($row['name'])."', '".crypt::urlencode("admin-light.php?ploopi_op=documents_downloadfile&documentsfile_id={$row['md5id']}")."', '{$row['md5id']}');";
+                }
+                else $documents_values[$i]['link'] = crypt::urlencode("admin-light.php?ploopi_op=documents_downloadfile&documentsfile_id={$row['md5id']}&attachement=".$_SESSION['documents'][$documents_id]['attachement']);
+
+                $documents_values[$i]['style'] = '';
+
+                $i++;
+            }
+
+            $skin->display_array(
+                $documents_columns,
+                $documents_values,
+                "ploopi_documents_array_{$documents_id}",
+                array(
+                    'sortable' => true,
+                    'orderby_default' => $_SESSION['documents'][$documents_id]['order_by'],
+                    'sort_default' => $_SESSION['documents'][$documents_id]['sort'],
+                    'limit' => $_SESSION['documents'][$documents_id]['limit'],
+                    'height' => $_SESSION['documents'][$documents_id]['height']
+                )
+            );
+
+            ?>
+        </div>
+        <?php
     }
 
 }
-

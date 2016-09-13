@@ -37,24 +37,23 @@ switch($ploopi_op)
     case 'webedit_unsubscribe':
         // Désabonnement par mail
 
-        ploopi_init_module('webedit');
+        ovensia\ploopi\module::init('webedit');
 
         if (!empty($_GET['subscription_email']))
         {
-            include_once './include/functions/crypt.php';
             $db->query("DELETE FROM ploopi_mod_webedit_heading_subscriber WHERE md5(email) = '".$db->addslashes($_GET['subscription_email'])."'");
         }
-        //ploopi_redirect('index.php', false);
+        //ovensia\ploopi\output::redirect('index.php', false);
     break;
 
     case 'webedit_subscribe':
-        ploopi_init_module('webedit');
+        ovensia\ploopi\module::init('webedit');
 
         $return = -1;
 
         if (!empty($_GET['headingid']) && is_numeric($_GET['headingid']) && isset($_POST['subscription_headingid']) && is_numeric($_POST['subscription_headingid']))
         {
-            if (!empty($_POST['subscription_email']) && ploopi_checkemail($_POST['subscription_email']))
+            if (!empty($_POST['subscription_email']) && ovensia\ploopi\mail::check($_POST['subscription_email']))
             {
                 include_once './modules/webedit/class_heading_subscriber.php';
 
@@ -79,18 +78,18 @@ switch($ploopi_op)
         }
         else $return = _WEBEDIT_SUBSCRIPTION_ERROR_PARAM;
 
-        ploopi_redirect("index.php?".(empty($_GET['webedit_mode']) ? '' : "webedit_mode={$_GET['webedit_mode']}&")."headingid={$_GET['headingid']}".(empty($_GET['articleid']) ? '' : "&articleid={$_GET['articleid']}")."&subscription_return={$return}");
+        ovensia\ploopi\output::redirect("index.php?".(empty($_GET['webedit_mode']) ? '' : "webedit_mode={$_GET['webedit_mode']}&")."headingid={$_GET['headingid']}".(empty($_GET['articleid']) ? '' : "&articleid={$_GET['articleid']}")."&subscription_return={$return}");
     break;
 
     case 'webedit_sitemap':
-        ploopi_init_module('webedit', false, false, false);
+        ovensia\ploopi\module::init('webedit', false, false, false);
         webedit_sitemap();
-        ploopi_die();
+        ovensia\ploopi\system::kill();
     break;
 
     case 'webedit_backend':
         include_once './modules/webedit/backend.php';
-        ploopi_die();
+        ovensia\ploopi\system::kill();
     break;
 
     case 'webedit_save_comment':
@@ -98,8 +97,7 @@ switch($ploopi_op)
         {
 
             // Ultime verif du captcha
-            include_once './include/classes/captcha.php';
-            $objcaptcha = new captcha($_GET['id_captcha']);
+            $objcaptcha = new ovensia\ploopi\captcha($_GET['id_captcha']);
             if(!$objcaptcha->verifCaptcha($_POST['captcha_code'],true)) return '0';
 
             include_once './modules/webedit/class_article_comment.php';
@@ -116,7 +114,7 @@ switch($ploopi_op)
 
         $arrHeadings = webedit_getheadings();
         if (isset($arrHeadings['list'][$_GET['headingid']])) foreach(preg_split('/;/', $arrHeadings['list'][$_GET['headingid']]['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
-        ploopi_redirect(ploopi_urlrewrite("index.php?headingid={$_GET['headingid']}".(empty($_GET['articleid']) ? '' : "&articleid={$_GET['articleid']}")."&comment_return={$return}",webedit_getrewriterules(),$arrHeadings['list'][$_GET['headingid']]['label'], $arrParents));
+        ovensia\ploopi\output::redirect(ovensia\ploopi\str::urlrewrite("index.php?headingid={$_GET['headingid']}".(empty($_GET['articleid']) ? '' : "&articleid={$_GET['articleid']}")."&comment_return={$return}",webedit_getrewriterules(),$arrHeadings['list'][$_GET['headingid']]['label'], $arrParents));
     break;
 }
 
@@ -129,14 +127,14 @@ if ($_SESSION['ploopi']['connected'])
     {
 
         case 'webedit_subscriber_delete':
-            ploopi_init_module('webedit', false, false, false);
+            ovensia\ploopi\module::init('webedit', false, false, false);
             include_once './modules/webedit/class_heading_subscriber.php';
-            if (ploopi_isactionallowed(_WEBEDIT_ACTION_SUBSCRIBERS_MANAGE) && !empty($_GET['webedit_subscriber_email']) && isset($_GET['webedit_subscriber_id_heading']) && is_numeric($_GET['webedit_subscriber_id_heading']))
+            if (ovensia\ploopi\acl::isactionallowed(_WEBEDIT_ACTION_SUBSCRIBERS_MANAGE) && !empty($_GET['webedit_subscriber_email']) && isset($_GET['webedit_subscriber_id_heading']) && is_numeric($_GET['webedit_subscriber_id_heading']))
             {
                 $heading_subscriber = new webedit_heading_subscriber();
                 if($heading_subscriber->open($_GET['webedit_subscriber_id_heading'], $_GET['webedit_subscriber_email'])) $heading_subscriber->delete();
             }
-            ploopi_redirect('admin.php');
+            ovensia\ploopi\output::redirect('admin.php');
         break;
 
         case 'webedit_selectlink':
@@ -166,7 +164,7 @@ if ($_SESSION['ploopi']['connected'])
             );
 
             $template_body->pparse('body');
-            ploopi_die();
+            ovensia\ploopi\system::kill();
         break;
     }
 
@@ -174,12 +172,12 @@ if ($_SESSION['ploopi']['connected'])
      * On vérifie qu'on est bien dans le module WebEdit.
      * Ces opérations ne peuvent être effectuées que depuis le module WebEdit.
      */
-    if (ploopi_ismoduleallowed('webedit'))
+    if (ovensia\ploopi\acl::ismoduleallowed('webedit'))
     {
         switch($_REQUEST['ploopi_op'])
         {
             case 'webedit_detail_heading':
-                ploopi_init_module('webedit');
+                ovensia\ploopi\module::init('webedit');
                 if (!empty($_GET['hid']))
                 {
                     $option = (empty($_GET['option'])) ? '' : $_GET['option'];
@@ -187,17 +185,17 @@ if ($_SESSION['ploopi']['connected'])
                     $treeview = webedit_gettreeview(webedit_getheadings(), webedit_getarticles(), $option);
                     echo $skin->display_treeview($treeview['list'], $treeview['tree'], null, $_GET['hid']);
                 }
-                ploopi_die();
+                ovensia\ploopi\system::kill();
             break;
 
             case 'webedit_switchdisplay_treeview':
                 if (!empty($_GET['display'])) $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['treeview_display'] = $_GET['display'];
-                ploopi_die();
+                ovensia\ploopi\system::kill();
             break;
 
             case 'webedit_heading_selectredirect':
                 ob_start();
-                ploopi_init_module('webedit');
+                ovensia\ploopi\module::init('webedit');
                 ?>
                 <div style="padding:4px;height:150px;overflow:auto;">
                 <?php
@@ -211,12 +209,12 @@ if ($_SESSION['ploopi']['connected'])
 
                 echo $skin->create_popup('Choix d\'une page', $content, 'webedit_popup_selectredirect');
 
-                ploopi_die();
+                ovensia\ploopi\system::kill();
             break;
 
             case 'webedit_article_selectheading':
                 ob_start();
-                ploopi_init_module('webedit');
+                ovensia\ploopi\module::init('webedit');
                 ?>
                 <div style="padding:4px;height:150px;overflow:auto;">
                 <?php
@@ -232,7 +230,7 @@ if ($_SESSION['ploopi']['connected'])
 
                 echo $skin->create_popup('Choix d\'une rubrique de rattachement', $content, 'webedit_popup_selectheading');
 
-                ploopi_die();
+                ovensia\ploopi\system::kill();
             break;
 
             case 'webedit_getbackup':
@@ -243,17 +241,17 @@ if ($_SESSION['ploopi']['connected'])
                 {
                     echo $article_backup->fields['content'];
                 }
-                ploopi_die();
+                ovensia\ploopi\system::kill();
             break;
 
             case 'webedit_article_stats':
-                ploopi_init_module('webedit');
+                ovensia\ploopi\module::init('webedit');
 
                 // pas le droit => stop
-                if (!ploopi_isactionallowed(_WEBEDIT_ACTION_STATS)) ploopi_die();
+                if (!ovensia\ploopi\acl::isactionallowed(_WEBEDIT_ACTION_STATS)) ovensia\ploopi\system::kill();
 
                 // ni article, ni rubrique => stop
-                if ( (empty($_POST['webedit_article_id']) || !is_numeric($_POST['webedit_article_id'])) && (empty($_POST['webedit_heading_id']) || !is_numeric($_POST['webedit_heading_id'])) ) ploopi_die();
+                if ( (empty($_POST['webedit_article_id']) || !is_numeric($_POST['webedit_article_id'])) && (empty($_POST['webedit_heading_id']) || !is_numeric($_POST['webedit_heading_id'])) ) ovensia\ploopi\system::kill();
 
                 $type_stat = (empty($_POST['webedit_article_id']) || !is_numeric($_POST['webedit_article_id'])) ? 'heading' : 'article';
 
@@ -266,7 +264,7 @@ if ($_SESSION['ploopi']['connected'])
                         include_once './modules/webedit/class_article.php';
 
                         $objArticle = new webedit_article();
-                        if (empty($_POST['webedit_article_id']) || !is_numeric($_POST['webedit_article_id']) || !$objArticle->open($_POST['webedit_article_id'])) ploopi_die();
+                        if (empty($_POST['webedit_article_id']) || !is_numeric($_POST['webedit_article_id']) || !$objArticle->open($_POST['webedit_article_id'])) ovensia\ploopi\system::kill();
 
                         $intArticleId = $_POST['webedit_article_id'];
                         $intHeadingId = 'null';
@@ -277,14 +275,14 @@ if ($_SESSION['ploopi']['connected'])
                         $rs = $db->query("SELECT distinct(month) FROM ploopi_mod_webedit_counter WHERE id_article = {$intArticleId} AND year = {$intYearSel} ORDER BY month");
                         $arrSelectMonth = $db->getarray($rs, true);
 
-                        $strPopupTitle = "Statistiques de fréquentation de l'article &laquo; ".ploopi_htmlentities($objArticle->fields['title'])." &raquo;";
+                        $strPopupTitle = "Statistiques de fréquentation de l'article &laquo; ".ovensia\ploopi\str::htmlentities($objArticle->fields['title'])." &raquo;";
                     break;
 
                     case 'heading':
                         include_once './modules/webedit/class_heading.php';
 
                         $objHeading = new webedit_heading();
-                        if (empty($_POST['webedit_heading_id']) || !is_numeric($_POST['webedit_heading_id']) || !$objHeading->open($_POST['webedit_heading_id'])) ploopi_die();
+                        if (empty($_POST['webedit_heading_id']) || !is_numeric($_POST['webedit_heading_id']) || !$objHeading->open($_POST['webedit_heading_id'])) ovensia\ploopi\system::kill();
 
                         $intArticleId = 'null';
                         $intHeadingId = $_POST['webedit_heading_id'];
@@ -323,7 +321,7 @@ if ($_SESSION['ploopi']['connected'])
 
                         $arrSelectMonth = $db->getarray($rs, true);
 
-                        $strPopupTitle = "Statistiques de fréquentation de la rubrique &laquo; ".ploopi_htmlentities($objHeading->fields['label'])." &raquo;";
+                        $strPopupTitle = "Statistiques de fréquentation de la rubrique &laquo; ".ovensia\ploopi\str::htmlentities($objHeading->fields['label'])." &raquo;";
                     break;
                 }
 
@@ -363,8 +361,6 @@ if ($_SESSION['ploopi']['connected'])
                         </p>
                     </div>
                     <?php
-                    include_once './include/classes/barchart.php';
-
                     // 1er Diagramme : année par mois
 
                     $dataset = array();
@@ -418,7 +414,7 @@ if ($_SESSION['ploopi']['connected'])
 
                     while ($row = $db->fetchrow()) $dataset[$row['month']] = $row['counter'];
 
-                    $objBarChartYear = new barchart(550, 150, array('padding' => 1));
+                    $objBarChartYear = new ovensia\ploopi\barchart(550, 150, array('padding' => 1));
                     $objBarChartYear->setvalues($dataset, 'Fréquentation mensuelle', '#1E64A1', '#f0f0f0');
                     $objBarChartYear->setlegend($legend);
 
@@ -480,7 +476,7 @@ if ($_SESSION['ploopi']['connected'])
 
                     while ($row = $db->fetchrow()) $dataset[$row['day']] = $row['counter'];
 
-                    $objBarChartMonth = new barchart(550, 150, array('padding' => 1));
+                    $objBarChartMonth = new ovensia\ploopi\barchart(550, 150, array('padding' => 1));
                     $objBarChartMonth->setvalues($dataset, 'Fréquentation quotidienne', '#4FA11E', '#f0f0f0');
                     $objBarChartMonth->setlegend($legend);
 
@@ -501,26 +497,26 @@ if ($_SESSION['ploopi']['connected'])
 
                 echo $skin->create_popup($strPopupTitle, $content, 'popup_webedit_article_stats');
 
-                ploopi_die();
+                ovensia\ploopi\system::kill();
             break;
         case 'webedit_comment_refresh':
             if (isset($_GET['id_article']))
             {
-                ploopi_init_module('webedit',false,false,false);
+                ovensia\ploopi\module::init('webedit',false,false,false);
 
                 include_once './modules/webedit/class_article_comment.php';
 
                 $objComment = new webedit_article_comment();
                 $objComment->admin_comment_refresh($_GET['id_article']);
             }
-            ploopi_die();
+            ovensia\ploopi\system::kill();
             break;
         case 'webedit_comment_publish':
             if (isset($_GET['id_comment']) && isset($_GET['publish']))
             {
-                ploopi_init_module('webedit',false,false,false);
+                ovensia\ploopi\module::init('webedit',false,false,false);
 
-                if(!ploopi_isactionallowed(_WEBEDIT_ACTION_COMMENT)) ploopi_die();
+                if(!ovensia\ploopi\acl::isactionallowed(_WEBEDIT_ACTION_COMMENT)) ovensia\ploopi\system::kill();
 
                 include_once './modules/webedit/class_article_comment.php';
 
@@ -528,21 +524,21 @@ if ($_SESSION['ploopi']['connected'])
                 if($objComment->open($_GET['id_comment']))
                     $objComment->publish($_GET['publish']==1);
             }
-            ploopi_die();
+            ovensia\ploopi\system::kill();
             break;
         case 'webedit_comment_delete':
             if (isset($_GET['id_comment']))
             {
-                ploopi_init_module('webedit',false,false,false);
+                ovensia\ploopi\module::init('webedit',false,false,false);
 
-                if(!ploopi_isactionallowed(_WEBEDIT_ACTION_COMMENT)) ploopi_die();
+                if(!ovensia\ploopi\acl::isactionallowed(_WEBEDIT_ACTION_COMMENT)) ovensia\ploopi\system::kill();
 
                 include_once './modules/webedit/class_article_comment.php';
 
                 $objComment = new webedit_article_comment();
                 if($objComment->open($_GET['id_comment'])) $objComment->delete();
             }
-            ploopi_die();
+            ovensia\ploopi\system::kill();
             break;
         case 'webedit_comment_show':
             if (isset($_GET['id_article']))
@@ -550,7 +546,7 @@ if ($_SESSION['ploopi']['connected'])
                 if (isset($_SESSION['ploopi']['comment']['show'][$_GET['id_article']])) unset($_SESSION['ploopi']['comment']['show'][$_GET['id_article']]);
                 else $_SESSION['ploopi']['comment']['show'][$_GET['id_article']] = 1;
             }
-            ploopi_die();
+            ovensia\ploopi\system::kill();
             break;
         }
     }

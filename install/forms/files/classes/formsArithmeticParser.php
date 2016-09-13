@@ -424,10 +424,10 @@ class formsArithmeticParser
             $res = null;
 
             // Evaluation via le parser PHP
-            ploopi_unset_error_handler();
+            ovensia\ploopi\error::unset_handler();
             // Evaluation de l'expression
             eval("\$res = {$this->strFunc}(".implode(',', $v).");");
-            ploopi_set_error_handler();
+            ovensia\ploopi\error::set_handler();
 
             if(is_null($res)) throw new Exception ("Erreur lors de l'évaluation de l'expression {$this->strFunc}(".implode(',', $v).");");
 
@@ -509,11 +509,11 @@ class formsArithmeticParser
             foreach($this->arrExpr as $strExpr) $strExpr->displayTree();
             echo ')';
         }
-        else if (!is_null($this->strVal)) echo ploopi_htmlentities($this->strVal);
+        else if (!is_null($this->strVal)) echo ovensia\ploopi\str::htmlentities($this->strVal);
         else if (is_null($this->objExprB) && !is_null($this->objExprA)) $this->objExprA->displayTree();
         else if (is_null($this->objExprA) && !is_null($this->objExprB))
         {
-            if (!is_null($this->strOperator)) echo ploopi_htmlentities($this->strOperator);
+            if (!is_null($this->strOperator)) echo ovensia\ploopi\str::htmlentities($this->strOperator);
             $this->objExprB->displayTree();
         }
         else if (!is_null($this->objExprA) && !is_null($this->objExprB))

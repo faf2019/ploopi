@@ -31,12 +31,6 @@
  */
 
 /**
- * Inclusion de la classe parent.
- */
-
-include_once './include/classes/data_object.php';
-
-/**
  * Classe d'accès à la table ploopi_mod_webedit_heading_subscriber
  *
  * @package webedit
@@ -46,7 +40,7 @@ include_once './include/classes/data_object.php';
  * @author Stéphane Escaich
  */
 
-class webedit_heading_subscriber extends data_object
+class webedit_heading_subscriber extends ovensia\ploopi\data_object
 {
     /**
      * Contructeur de la classe

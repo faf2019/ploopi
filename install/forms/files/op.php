@@ -45,7 +45,7 @@ switch($ploopi_op)
         {
             $strVarName = formsForm::getVarName($_POST['forms_form_id']).'_'.(isset($_POST['forms_mode']) ? $_POST['forms_mode'] : 'save');
             // Lecture des valeurs pré-enregistrées du formulaire
-            // $arrValues = ploopi_getsessionvar($strVarName);
+            // $arrValues = ovensia\ploopi\session::getvar($strVarName);
 
             // Sauvegarde des nouvelles valeurs du formulaire
             foreach($_POST as $strKey => $mixValue)
@@ -61,18 +61,18 @@ switch($ploopi_op)
             if (isset($_POST['forms_panel'])) $arrValues['panel'] = $_POST['forms_panel'];
 
             // Sauvegarde en session
-            ploopi_setsessionvar($strVarName, $arrValues);
+            ovensia\ploopi\session::setvar($strVarName, $arrValues);
             // Sauvegarde en cookie (json + gz + base64), 30 jours
-            setcookie($strVarName, ploopi_base64_encode(gzcompress(json_encode(ploopi_array_map('utf8_encode', $arrValues)), 9)), time()+86400*30);
+            setcookie($strVarName, ovensia\ploopi\crypt::base64_encode(gzcompress(json_encode(ovensia\ploopi\arr::map('utf8_encode', $arrValues)), 9)), time()+86400*30);
         }
-        ploopi_die();
+        ovensia\ploopi\system::kill();
     break;
 
     case 'forms_tablelink_values':
         include_once './modules/forms/classes/formsForm.php';
         include_once './modules/forms/classes/formsField.php';
 
-        //ploopi_die($_GET);
+        //ovensia\ploopi\system::kill($_GET);
 
         if (!empty($_GET['forms_fields']) && !empty($_GET['forms_params']) && !empty($_GET['forms_requested']))
         {
@@ -100,12 +100,12 @@ switch($ploopi_op)
                 $objFieldValues = new formsField();
                 if ($objFieldValues->open($objField->fields['values']))
                 {
-                    ploopi_print_json(array_keys($objFieldValues->getValues($arrParams)));
+                    ovensia\ploopi\str::print_json(array_keys($objFieldValues->getValues($arrParams)));
                 }
             }
         }
 
-        ploopi_die();
+        ovensia\ploopi\system::kill();
     break;
 
     case 'forms_reply_save':
@@ -129,7 +129,7 @@ switch($ploopi_op)
                 <script type="text/javascript">
                 ploopi = {};
                 Event.observe(window, 'load', function() {
-                    $('forms_form_<?php echo ploopi_htmlentities($_REQUEST['forms_id']); ?>').innerHTML = $('forms_form_<?php echo ploopi_htmlentities($_REQUEST['forms_id']); ?>').innerHTML.replace(/<(\/?)fieldset[^>]*>/ig, '').replace(/<legend[^>]*>.*<\/legend>/ig, '');
+                    $('forms_form_<?php echo ovensia\ploopi\str::htmlentities($_REQUEST['forms_id']); ?>').innerHTML = $('forms_form_<?php echo ovensia\ploopi\str::htmlentities($_REQUEST['forms_id']); ?>').innerHTML.replace(/<(\/?)fieldset[^>]*>/ig, '').replace(/<legend[^>]*>.*<\/legend>/ig, '');
                     window.print();
                     window.close();
                 });
@@ -143,7 +143,7 @@ switch($ploopi_op)
             </html>
             <?php
         }
-        ploopi_die();
+        ovensia\ploopi\system::kill();
     break;
 }
 
@@ -158,7 +158,7 @@ if ($_SESSION['ploopi']['connected'])
      * On vérifie qu'on est bien dans le module FORMS.
      */
 
-    if (ploopi_ismoduleallowed('forms'))
+    if (ovensia\ploopi\acl::ismoduleallowed('forms'))
     {
         switch($ploopi_op)
         {
@@ -167,12 +167,11 @@ if ($_SESSION['ploopi']['connected'])
              */
 
             case 'forms_clone':
-                ploopi_init_module('forms');
+                ovensia\ploopi\module::init('forms');
 
 
-                if (!ploopi_isactionallowed(_FORMS_ACTION_ADMIN)) ploopi_redirect('admin.php');
+                if (!ovensia\ploopi\acl::isactionallowed(_FORMS_ACTION_ADMIN)) ovensia\ploopi\output::redirect('admin.php');
 
-                include_once './include/classes/query.php';
                 include_once './modules/forms/classes/formsForm.php';
 
                 $objForm = new formsForm();
@@ -204,17 +203,17 @@ if ($_SESSION['ploopi']['connected'])
                     }
 
                     // Renvoi vers le clone
-                    ploopi_redirect("admin.php?op=forms_modify&forms_id={$objFormClone->fields['id']}");
+                    ovensia\ploopi\output::redirect("admin.php?op=forms_modify&forms_id={$objFormClone->fields['id']}");
                 }
 
-                ploopi_redirect('admin.php');
+                ovensia\ploopi\output::redirect('admin.php');
             break;
 
             case 'forms_import_file':
-                ploopi_init_module('forms');
+                ovensia\ploopi\module::init('forms');
 
                 // si non admin et non role import csv
-                if ((!ploopi_isactionallowed(_FORMS_ACTION_ADMIN)) && (!ploopi_isactionallowed(_FORMS_ACTION_IMPORT_CSV))) ploopi_redirect('admin.php');
+                if ((!ovensia\ploopi\acl::isactionallowed(_FORMS_ACTION_ADMIN)) && (!ovensia\ploopi\acl::isactionallowed(_FORMS_ACTION_IMPORT_CSV))) ovensia\ploopi\output::redirect('admin.php');
 
                 include_once './modules/forms/classes/formsForm.php';
 
@@ -272,17 +271,17 @@ if ($_SESSION['ploopi']['connected'])
                         fclose($ptrFileHandler);
                     }
 
-                    ploopi_redirect($strUrl.$strErrorCode);
+                    ovensia\ploopi\output::redirect($strUrl.$strErrorCode);
                 }
 
-                ploopi_redirect('admin.php');
+                ovensia\ploopi\output::redirect('admin.php');
             break;
 
             case 'forms_import':
-                ploopi_init_module('forms');
+                ovensia\ploopi\module::init('forms');
 
                 // si non admin et non role import csv
-                if ((!ploopi_isactionallowed(_FORMS_ACTION_ADMIN)) && (!ploopi_isactionallowed(_FORMS_ACTION_IMPORT_CSV))) ploopi_die();
+                if ((!ovensia\ploopi\acl::isactionallowed(_FORMS_ACTION_ADMIN)) && (!ovensia\ploopi\acl::isactionallowed(_FORMS_ACTION_IMPORT_CSV))) ovensia\ploopi\system::kill();
 
                 include_once './modules/forms/classes/formsForm.php';
 
@@ -294,24 +293,24 @@ if ($_SESSION['ploopi']['connected'])
 
                     $strOrigin = isset($_POST['origin']) ? $_POST['origin'] : '';
 
-                    $objForm = new form('forms_import_form', ploopi_urlencode("admin-light.php?ploopi_op=forms_import_file&forms_id={$_POST['forms_id']}&origin={$strOrigin}"));
-                    $objForm->addField( new form_field( 'input:file', 'Fichier:', '', 'forms_import_file', 'forms_import_file', array('description' => 'Format CSV') ) );
-                    $objForm->addField( new form_htmlfield('Séparateur de champs:', 'Virgule') );
-                    $objForm->addField( new form_htmlfield('Séparateur de texte:', 'Double-quote') );
-                    $objForm->addField( new form_htmlfield('Colonnes:', implode(', ', $arrFields)) );
-                    $objForm->addButton( new form_button('input:button', 'Fermer', null, null, array('onclick' => "ploopi_hidepopup('forms_import');")) );
-                    $objForm->addButton( new form_button('input:submit', 'Importer', null, null, array('style' => 'margin-left:2px;')) );
+                    $objForm = new ovensia\ploopi\form('forms_import_form', ovensia\ploopi\crypt::urlencode("admin-light.php?ploopi_op=forms_import_file&forms_id={$_POST['forms_id']}&origin={$strOrigin}"));
+                    $objForm->addField( new ovensia\ploopi\form_field( 'input:file', 'Fichier:', '', 'forms_import_file', 'forms_import_file', array('description' => 'Format CSV') ) );
+                    $objForm->addField( new ovensia\ploopi\form_htmlfield('Séparateur de champs:', 'Virgule') );
+                    $objForm->addField( new ovensia\ploopi\form_htmlfield('Séparateur de texte:', 'Double-quote') );
+                    $objForm->addField( new ovensia\ploopi\form_htmlfield('Colonnes:', implode(', ', $arrFields)) );
+                    $objForm->addButton( new ovensia\ploopi\form_button('input:button', 'Fermer', null, null, array('onclick' => "ploopi_hidepopup('forms_import');")) );
+                    $objForm->addButton( new ovensia\ploopi\form_button('input:submit', 'Importer', null, null, array('style' => 'margin-left:2px;')) );
 
                     echo $skin->create_popup('Import de données CSV', $objForm->render(), 'forms_import');
                 }
 
-                ploopi_die();
+                ovensia\ploopi\system::kill();
             break;
 
             case 'forms_preview':
-                ploopi_init_module('forms');
+                ovensia\ploopi\module::init('forms');
 
-                if (!ploopi_isactionallowed(_FORMS_ACTION_ADMIN)) ploopi_redirect('admin.php');
+                if (!ovensia\ploopi\acl::isactionallowed(_FORMS_ACTION_ADMIN)) ovensia\ploopi\output::redirect('admin.php');
 
                 include_once './modules/forms/classes/formsForm.php';
 
@@ -321,16 +320,16 @@ if ($_SESSION['ploopi']['connected'])
                     echo $skin->create_popup('Aperçu du formulaire', $objForm->render(null, 'preview', false, false), 'forms_preview');
                 }
 
-                ploopi_die();
+                ovensia\ploopi\system::kill();
             break;
 
             case 'forms_field_save':
             case 'forms_separator_save':
             case 'forms_html_save':
             case 'forms_captcha_save':
-                ploopi_init_module('forms');
+                ovensia\ploopi\module::init('forms');
 
-                if (!ploopi_isactionallowed(_FORMS_ACTION_ADMIN)) ploopi_redirect('admin.php');
+                if (!ovensia\ploopi\acl::isactionallowed(_FORMS_ACTION_ADMIN)) ovensia\ploopi\output::redirect('admin.php');
 
                 include_once './modules/forms/classes/formsField.php';
 
@@ -366,7 +365,7 @@ if ($_SESSION['ploopi']['connected'])
                             $field->fields['xhtmlcontent_cleaned'] = $field->fields['xhtmlcontent'];
 
                             // filtre activé ? nettoyage contenu XHTML
-                            if (!$field->fields['option_disablexhtmlfilter']) $field->fields['xhtmlcontent_cleaned'] = ploopi_htmlpurifier($field->fields['xhtmlcontent_cleaned'], true);
+                            if (!$field->fields['option_disablexhtmlfilter']) $field->fields['xhtmlcontent_cleaned'] = ovensia\ploopi\str::htmlpurifier($field->fields['xhtmlcontent_cleaned'], true);
                         }
                     }
                     else
@@ -384,23 +383,23 @@ if ($_SESSION['ploopi']['connected'])
 
                     $field->save();
 
-                    ploopi_redirect("admin.php?op=forms_modify&forms_id={$_GET['forms_id']}&ploopi_mod_msg=_FORMS_MESS_OK_3");
+                    ovensia\ploopi\output::redirect("admin.php?op=forms_modify&forms_id={$_GET['forms_id']}&ploopi_mod_msg=_FORMS_MESS_OK_3");
                 }
-                else ploopi_redirect('admin.php?ploopi_mod_error=_FORMS_ERROR_2');
+                else ovensia\ploopi\output::redirect('admin.php?ploopi_mod_error=_FORMS_ERROR_2');
             break;
 
             case 'forms_save':
-                ploopi_init_module('forms');
+                ovensia\ploopi\module::init('forms');
 
-                if (!ploopi_isactionallowed(_FORMS_ACTION_ADMIN)) ploopi_redirect('admin.php');
+                if (!ovensia\ploopi\acl::isactionallowed(_FORMS_ACTION_ADMIN)) ovensia\ploopi\output::redirect('admin.php');
 
                 include_once './modules/forms/classes/formsForm.php';
 
                 $forms = new formsForm();
                 if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id'])) $forms->open($_GET['forms_id']);
                 $forms->setvalues($_POST,'forms_');
-                $forms->fields['pubdate_start'] = ploopi_local2timestamp($forms->fields['pubdate_start']);
-                $forms->fields['pubdate_end'] = ploopi_local2timestamp($forms->fields['pubdate_end']);
+                $forms->fields['pubdate_start'] = ovensia\ploopi\date::local2timestamp($forms->fields['pubdate_start']);
+                $forms->fields['pubdate_end'] = ovensia\ploopi\date::local2timestamp($forms->fields['pubdate_end']);
                 if (!isset($_POST['forms_option_onlyone'])) $forms->fields['option_onlyone'] = 0;
                 if (!isset($_POST['forms_option_onlyoneday'])) $forms->fields['option_onlyoneday'] = 0;
                 if (!isset($_POST['forms_option_displayuser'])) $forms->fields['option_displayuser'] = 0;
@@ -422,33 +421,33 @@ if ($_SESSION['ploopi']['connected'])
                 if ($forms->fields['nbline'] > 500) $forms->fields['nbline'] = 500;
                 if ($forms->fields['nbline'] <= 0) $forms->fields['nbline'] = 100;
 
-                if (!empty($forms->fields['autobackup_date'])) $forms->fields['autobackup_date'] = ploopi_local2timestamp($forms->fields['autobackup_date']);
+                if (!empty($forms->fields['autobackup_date'])) $forms->fields['autobackup_date'] = ovensia\ploopi\date::local2timestamp($forms->fields['autobackup_date']);
 
 
                 $forms->setuwm();
                 $forms->save();
 
-                ploopi_share_save(_FORMS_OBJECT_FORM, $forms->fields['id'], -1, 'forms_send_email');
+                ovensia\ploopi\share::add(_FORMS_OBJECT_FORM, $forms->fields['id'], -1, 'forms_send_email');
 
-                ploopi_redirect("admin.php?formsTabItem=formlist&op=forms_modify&forms_id={$forms->fields['id']}&ploopi_mod_msg=_FORMS_MESS_OK_1");
+                ovensia\ploopi\output::redirect("admin.php?formsTabItem=formlist&op=forms_modify&forms_id={$forms->fields['id']}&ploopi_mod_msg=_FORMS_MESS_OK_1");
             break;
 
             case 'forms_delete':
-                ploopi_init_module('forms');
+                ovensia\ploopi\module::init('forms');
 
-                if (!ploopi_isactionallowed(_FORMS_ACTION_ADMIN)) ploopi_redirect('admin.php');
+                if (!ovensia\ploopi\acl::isactionallowed(_FORMS_ACTION_ADMIN)) ovensia\ploopi\output::redirect('admin.php');
 
                 include_once './modules/forms/classes/formsForm.php';
 
                 $forms = new formsForm();
                 if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $forms->open($_GET['forms_id'])) $forms->delete();
-                ploopi_redirect('admin.php?ploopi_mod_msg=_FORMS_MESS_OK_2');
+                ovensia\ploopi\output::redirect('admin.php?ploopi_mod_msg=_FORMS_MESS_OK_2');
             break;
 
             case 'forms_field_delete':
-                ploopi_init_module('forms');
+                ovensia\ploopi\module::init('forms');
 
-                if (!ploopi_isactionallowed(_FORMS_ACTION_ADMIN)) ploopi_redirect('admin.php');
+                if (!ovensia\ploopi\acl::isactionallowed(_FORMS_ACTION_ADMIN)) ovensia\ploopi\output::redirect('admin.php');
 
                 include_once './modules/forms/classes/formsField.php';
 
@@ -456,17 +455,17 @@ if ($_SESSION['ploopi']['connected'])
                 {
                     $field = new formsField();
                     if ($field->open($_GET['field_id'])) $field->delete();
-                    ploopi_redirect("admin.php?op=forms_modify&forms_id={$field->fields['id_form']}&ploopi_mod_msg=_FORMS_MESS_OK_4");
+                    ovensia\ploopi\output::redirect("admin.php?op=forms_modify&forms_id={$field->fields['id_form']}&ploopi_mod_msg=_FORMS_MESS_OK_4");
                 }
-                else ploopi_redirect('admin.php?ploopi_mod_msg=_FORMS_MESS_OK_4');
+                else ovensia\ploopi\output::redirect('admin.php?ploopi_mod_msg=_FORMS_MESS_OK_4');
             break;
 
 
             case 'forms_field_moveup':
             case 'forms_field_movedown':
-                ploopi_init_module('forms');
+                ovensia\ploopi\module::init('forms');
 
-                if (!ploopi_isactionallowed(_FORMS_ACTION_ADMIN)) ploopi_redirect('admin.php');
+                if (!ovensia\ploopi\acl::isactionallowed(_FORMS_ACTION_ADMIN)) ovensia\ploopi\output::redirect('admin.php');
 
                 include_once './modules/forms/classes/formsField.php';
 
@@ -497,15 +496,15 @@ if ($_SESSION['ploopi']['connected'])
                             $db->query("update ploopi_mod_forms_field set position=".$field->fields['position']." where position=0 and id_form = {$field->fields['id_form']}");
                         }
                     }
-                    ploopi_redirect("admin.php?op=forms_modify&forms_id={$field->fields['id_form']}&ploopi_mod_msg=_FORMS_MESS_OK_7");
+                    ovensia\ploopi\output::redirect("admin.php?op=forms_modify&forms_id={$field->fields['id_form']}&ploopi_mod_msg=_FORMS_MESS_OK_7");
                 }
-                else ploopi_redirect('admin.php?ploopi_mod_error=_FORMS_ERROR_2');
+                else ovensia\ploopi\output::redirect('admin.php?ploopi_mod_error=_FORMS_ERROR_2');
             break;
 
             case 'forms_graphic_save':
-                ploopi_init_module('forms');
+                ovensia\ploopi\module::init('forms');
 
-                if (!ploopi_isactionallowed(_FORMS_ACTION_ADMIN)) ploopi_redirect('admin.php');
+                if (!ovensia\ploopi\acl::isactionallowed(_FORMS_ACTION_ADMIN)) ovensia\ploopi\output::redirect('admin.php');
 
                 include_once './modules/forms/classes/formsGraphic.php';
 
@@ -523,17 +522,17 @@ if ($_SESSION['ploopi']['connected'])
 
                     $objGraphic->save();
 
-                    ploopi_redirect("admin.php?op=forms_modify&forms_id={$objGraphic->fields['id_form']}&ploopi_mod_msg=_FORMS_MESS_OK_5");
+                    ovensia\ploopi\output::redirect("admin.php?op=forms_modify&forms_id={$objGraphic->fields['id_form']}&ploopi_mod_msg=_FORMS_MESS_OK_5");
                 }
-                else ploopi_redirect('admin.php?ploopi_mod_error=_FORMS_ERROR_2');
+                else ovensia\ploopi\output::redirect('admin.php?ploopi_mod_error=_FORMS_ERROR_2');
 
-                ploopi_die();
+                ovensia\ploopi\system::kill();
             break;
 
             case 'forms_graphic_delete':
-                ploopi_init_module('forms');
+                ovensia\ploopi\module::init('forms');
 
-                if (!ploopi_isactionallowed(_FORMS_ACTION_ADMIN)) ploopi_redirect('admin.php');
+                if (!ovensia\ploopi\acl::isactionallowed(_FORMS_ACTION_ADMIN)) ovensia\ploopi\output::redirect('admin.php');
 
                 include_once './modules/forms/classes/formsGraphic.php';
 
@@ -541,20 +540,18 @@ if ($_SESSION['ploopi']['connected'])
                 if (!empty($_GET['forms_graphic_id']) && is_numeric($_GET['forms_graphic_id']) && $objGraphic->open($_GET['forms_graphic_id']))
                 {
                     $objGraphic->delete();
-                    ploopi_redirect("admin.php?op=forms_modify&forms_id={$objGraphic->fields['id_form']}&ploopi_mod_msg=_FORMS_MESS_OK_6");
+                    ovensia\ploopi\output::redirect("admin.php?op=forms_modify&forms_id={$objGraphic->fields['id_form']}&ploopi_mod_msg=_FORMS_MESS_OK_6");
                 }
-                else ploopi_redirect('admin.php?ploopi_mod_error=_FORMS_ERROR_2');
+                else ovensia\ploopi\output::redirect('admin.php?ploopi_mod_error=_FORMS_ERROR_2');
             break;
 
 
 
 
             case 'forms_group_save':
-                include_once './include/functions/crypt.php';
+                ovensia\ploopi\module::init('forms');
 
-                ploopi_init_module('forms');
-
-                if (!ploopi_isactionallowed(_FORMS_ACTION_ADMIN)) ploopi_redirect('admin.php');
+                if (!ovensia\ploopi\acl::isactionallowed(_FORMS_ACTION_ADMIN)) ovensia\ploopi\output::redirect('admin.php');
 
                 include_once './modules/forms/classes/formsGroup.php';
 
@@ -567,20 +564,20 @@ if ($_SESSION['ploopi']['connected'])
                     if ($objGroup->isnew()) $objGroup->fields['id_form'] = $_GET['forms_id'];
 
                     $objGroup->setvalues($_POST,'forms_group_');
-                    $objGroup->fields['conditions'] = isset($_POST['_forms_group_cond']) ? ploopi_serialize($_POST['_forms_group_cond']) : '';
+                    $objGroup->fields['conditions'] = isset($_POST['_forms_group_cond']) ? ovensia\ploopi\crypt::serialize($_POST['_forms_group_cond']) : '';
                     $objGroup->save();
 
-                    ploopi_redirect("admin.php?op=forms_modify&forms_id={$objGroup->fields['id_form']}&ploopi_mod_msg=_FORMS_MESS_OK_9");
+                    ovensia\ploopi\output::redirect("admin.php?op=forms_modify&forms_id={$objGroup->fields['id_form']}&ploopi_mod_msg=_FORMS_MESS_OK_9");
                 }
-                else ploopi_redirect('admin.php?ploopi_mod_error=_FORMS_ERROR_2');
+                else ovensia\ploopi\output::redirect('admin.php?ploopi_mod_error=_FORMS_ERROR_2');
 
-                ploopi_die();
+                ovensia\ploopi\system::kill();
             break;
 
             case 'forms_group_delete':
-                ploopi_init_module('forms');
+                ovensia\ploopi\module::init('forms');
 
-                if (!ploopi_isactionallowed(_FORMS_ACTION_ADMIN)) ploopi_redirect('admin.php');
+                if (!ovensia\ploopi\acl::isactionallowed(_FORMS_ACTION_ADMIN)) ovensia\ploopi\output::redirect('admin.php');
 
                 include_once './modules/forms/classes/formsGroup.php';
 
@@ -588,14 +585,14 @@ if ($_SESSION['ploopi']['connected'])
                 if (!empty($_GET['forms_group_id']) && is_numeric($_GET['forms_group_id']) && $objGroup->open($_GET['forms_group_id']))
                 {
                     $objGroup->delete();
-                    ploopi_redirect("admin.php?op=forms_modify&forms_id={$objGroup->fields['id_form']}&ploopi_mod_msg=_FORMS_MESS_OK_10");
+                    ovensia\ploopi\output::redirect("admin.php?op=forms_modify&forms_id={$objGroup->fields['id_form']}&ploopi_mod_msg=_FORMS_MESS_OK_10");
                 }
-                else ploopi_redirect('admin.php?ploopi_mod_error=_FORMS_ERROR_2');
+                else ovensia\ploopi\output::redirect('admin.php?ploopi_mod_error=_FORMS_ERROR_2');
             break;
 
 
             case 'forms_reply_delete':
-                ploopi_init_module('forms');
+                ovensia\ploopi\module::init('forms');
 
                 include_once './modules/forms/classes/formsForm.php';
                 include_once './modules/forms/classes/formsRecord.php';
@@ -607,8 +604,8 @@ if ($_SESSION['ploopi']['connected'])
 
                     if (!empty($_GET['record_id']) && is_numeric($_GET['record_id']) && $objRecord->open($_GET['record_id']))
                     {
-                        if (ploopi_isadmin() || (
-                            ploopi_isactionallowed(_FORMS_ACTION_DELETE) && (
+                        if (ovensia\ploopi\acl::isadmin() || (
+                            ovensia\ploopi\acl::isactionallowed(_FORMS_ACTION_DELETE) && (
                                 ($objForm->fields['option_modify'] == 'user' && $objRecord->fields['user_id'] == $_SESSION['ploopi']['userid']) ||
                                 ($objForm->fields['option_modify'] == 'group' && $objRecord->fields['workspace_id'] == $_SESSION['ploopi']['workspaceid'])  ||
                                 ($objForm->fields['option_modify'] == 'all')
@@ -649,10 +646,10 @@ if ($_SESSION['ploopi']['connected'])
                         }
                     }
 
-                    ploopi_redirect("admin.php?op=forms_viewreplies&forms_id={$_GET['forms_id']}");
+                    ovensia\ploopi\output::redirect("admin.php?op=forms_viewreplies&forms_id={$_GET['forms_id']}");
                 }
 
-                ploopi_redirect('admin.php');
+                ovensia\ploopi\output::redirect('admin.php');
             break;
 
 
@@ -674,17 +671,17 @@ if ($_SESSION['ploopi']['connected'])
                     {
                         if (!empty($objRecord->fields[$objField->fields['fieldname']]))
                         {
-                            ploopi_downloadfile(
+                            ovensia\ploopi\fs::downloadfile(
                                 formsField::getFilePath($_GET['forms_id'], _PLOOPI_SEP.$_GET['record_id'], $objRecord->fields[$objField->fields['fieldname']]),
                                 $objRecord->fields[$objField->fields['fieldname']]
                             );
                         }
                     }
                     // On ne passe ici qu'en cas d'échec de téléchargement
-                    ploopi_redirect("admin.php?op=forms_viewreplies&forms_id={$_GET['forms_id']}");
+                    ovensia\ploopi\output::redirect("admin.php?op=forms_viewreplies&forms_id={$_GET['forms_id']}");
                 }
                 // Formulaire invalide
-                ploopi_redirect('admin.php');
+                ovensia\ploopi\output::redirect('admin.php');
             break;
 
             case 'forms_xml_switchdisplay':
@@ -693,24 +690,24 @@ if ($_SESSION['ploopi']['connected'])
                     $switch = (!isset($_GET['switch'])) ? 'empty' : $_GET['switch'];
                     $_SESSION['forms'][$_SESSION['ploopi']['moduleid']][$switch] = $_GET['display'];
                 }
-                ploopi_die();
+                ovensia\ploopi\system::kill();
             break;
 
             case 'forms_export':
-                ploopi_init_module('forms');
-                if (ploopi_isactionallowed(_FORMS_ACTION_EXPORT) && !empty($_GET['forms_id']) && is_numeric($_GET['forms_id'])) include './modules/forms/op_export.php';
+                ovensia\ploopi\module::init('forms');
+                if (ovensia\ploopi\acl::isactionallowed(_FORMS_ACTION_EXPORT) && !empty($_GET['forms_id']) && is_numeric($_GET['forms_id'])) include './modules/forms/op_export.php';
             break;
 
             case 'forms_print_array':
-                ploopi_init_module('forms');
+                ovensia\ploopi\module::init('forms');
                 if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id'])) include './modules/forms/op_print.php';
             break;
 
             case 'forms_delete_data':
-                ploopi_init_module('forms');
+                ovensia\ploopi\module::init('forms');
                 include_once './modules/forms/classes/formsForm.php';
 
-                if (ploopi_isactionallowed(_FORMS_ACTION_BACKUP))
+                if (ovensia\ploopi\acl::isactionallowed(_FORMS_ACTION_BACKUP))
                 {
                     ?>
                     <div style="background:#f0f0f0;border:1px solid #c0c0c0;padding:2px;"><strong>Suppression des données</strong>
@@ -718,14 +715,14 @@ if ($_SESSION['ploopi']['connected'])
                     $objForm = new formsForm();
                     if (!empty($_GET['form_id']) && $objForm->open($_GET['form_id']) && !empty($_GET['form_delete_date']))
                     {
-                        $objForm->deleteToDate(ploopi_local2timestamp($_GET['form_delete_date'], '23:59:59'));
+                        $objForm->deleteToDate(ovensia\ploopi\date::local2timestamp($_GET['form_delete_date'], '23:59:59'));
                     }
                     ?>
                     <br /><a href="javascript:void(0);" onmouseup="javascript:ploopi_hidepopup('forms_deletedata');document.location.reload();">Fermer</a>
                     </div>
                     <?php
                 }
-                ploopi_die();
+                ovensia\ploopi\system::kill();
             break;
 
             case 'forms_graphic_display':
@@ -735,7 +732,7 @@ if ($_SESSION['ploopi']['connected'])
                 <?php
                 if (isset($_POST['forms_graphic_id']) && isset($_POST['forms_graphic_width']))
                 {
-                    $strUrl = ploopi_urlencode("admin-light.php?ploopi_op=forms_graphic_generate&forms_graphic_id={$_POST['forms_graphic_id']}&forms_graphic_width={$_POST['forms_graphic_width']}&forms_rand=".microtime());
+                    $strUrl = ovensia\ploopi\crypt::urlencode("admin-light.php?ploopi_op=forms_graphic_generate&forms_graphic_id={$_POST['forms_graphic_id']}&forms_graphic_width={$_POST['forms_graphic_width']}&forms_rand=".microtime());
                     ?>
                     <p class="ploopi_va" style="padding:4px;background:#eee;border-bottom:1px solid #ccc;">
                         <a class="forms_export_link" href="<?php echo $strUrl; ?>"><img src="./modules/forms/img/mime/png.png" /> Télécharger l'image</a>
@@ -752,7 +749,7 @@ if ($_SESSION['ploopi']['connected'])
                 <?php
                 $strContent = ob_get_contents();
                 ob_end_clean();
-                ploopi_die($skin->create_popup('Graphique', $strContent, 'forms_popup_graphic'));
+                ovensia\ploopi\system::kill($skin->create_popup('Graphique', $strContent, 'forms_popup_graphic'));
             break;
 
             case 'forms_graphic_generate':
@@ -766,7 +763,7 @@ if ($_SESSION['ploopi']['connected'])
 
                     $objGraphic->render($intWidth);
                 }
-                ploopi_die();
+                ovensia\ploopi\system::kill();
             break;
 
         }

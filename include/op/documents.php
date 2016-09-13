@@ -43,22 +43,20 @@ switch($ploopi_op)
         ob_start();
 
         ?>
-        <div id="ploopidocuments_<?php echo ploopi_htmlentities($documents_id); ?>">
-            <?php ploopi_documents_browser($_SESSION['documents'][$documents_id]['currentfolder'], $documents_id); ?>
+        <div id="ploopidocuments_<?php echo ovensia\ploopi\str::htmlentities($documents_id); ?>">
+            <?php ovensia\ploopi\documents::browser($_SESSION['documents'][$documents_id]['currentfolder'], $documents_id); ?>
         </div>
         <?php
 
         $content = ob_get_contents();
         ob_end_clean();
 
-        ploopi_die($skin->create_popup('Explorateur de fichiers', $content, 'ploopi_documents_popup'));
+        ovensia\ploopi\system::kill($skin->create_popup('Explorateur de fichiers', $content, 'ploopi_documents_popup'));
     break;
 
 
 
     case 'documents_browser':
-        include_once './include/classes/documents.php';
-
         // Vérification de l'id de l'instance
         if (!isset($_REQUEST['documents_id'])) return;
 
@@ -71,18 +69,16 @@ switch($ploopi_op)
         if (isset($_REQUEST['currentfolder'])) $currentfolder = $_REQUEST['currentfolder'];
         else $currentfolder = $_SESSION['documents'][$documents_id]['currentfolder'];
 
-        ploopi_documents_browser($currentfolder, $documents_id);
+        ovensia\ploopi\documents::browser($currentfolder, $documents_id);
 
-        ploopi_die();
+        ovensia\ploopi\system::kill();
     break;
 
 
     case 'documents_downloadfile':
         if (!empty($_GET['documentsfile_id']))
         {
-            include_once './include/classes/documents.php';
-
-            $documentsfile = new documentsfile();
+            $documentsfile = new ovensia\ploopi\documentsfile();
 
             if ($documentsfile->openmd5($_GET['documentsfile_id']))
             {
@@ -90,27 +86,25 @@ switch($ploopi_op)
 
                 if (isset($_GET['attachement']) && ($_GET['attachement'] == 0 || $_GET['attachement'] == 'false')) $attachement = false;
 
-                if (file_exists($documentsfile->getfilepath())) ploopi_downloadfile($documentsfile->getfilepath(),$documentsfile->fields['name'], false, $attachement);
+                if (file_exists($documentsfile->getfilepath())) ovensia\ploopi\fs::downloadfile($documentsfile->getfilepath(),$documentsfile->fields['name'], false, $attachement);
             }
         }
 
         echo "Le fichier n'existe pas";
-        ploopi_redirect('admin.php', true, true, 2);
+        ovensia\ploopi\output::redirect('admin.php', true, true, 2);
     break;
 
     case 'documents_downloadfile_zip':
 
         if (!empty($_GET['documentsfile_id']))
         {
-            include_once './include/classes/documents.php';
-
-            $documentsfile = new documentsfile();
+            $documentsfile = new ovensia\ploopi\documentsfile();
             if ($documentsfile->openmd5($_GET['documentsfile_id']))
             {
 
                 $tmpfoldername = md5(uniqid(rand(), true));
-                $zip_path = ploopi_documents_getpath()._PLOOPI_SEP.'zip'._PLOOPI_SEP.$tmpfoldername;
-                if (!is_dir($zip_path)) ploopi_makedir($zip_path);
+                $zip_path = ovensia\ploopi\documents::getpath()._PLOOPI_SEP.'zip'._PLOOPI_SEP.$tmpfoldername;
+                if (!is_dir($zip_path)) ovensia\ploopi\fs::makedir($zip_path);
 
                 if (file_exists($documentsfile->getfilepath()) && is_writeable($zip_path))
                 {
@@ -124,30 +118,29 @@ switch($ploopi_op)
                     }
 
                     // Téléchargement du fichier zip
-                    ploopi_downloadfile($zip_path._PLOOPI_SEP.$zip_filename, $zip_filename, true, true, false);
+                    ovensia\ploopi\fs::downloadfile($zip_path._PLOOPI_SEP.$zip_filename, $zip_filename, true, true, false);
 
                     // Suppression du dossier temporaire
-                    if(isset($zip_path) && is_dir($zip_path)) ploopi_deletedir($zip_path);
+                    if(isset($zip_path) && is_dir($zip_path)) ovensia\ploopi\fs::deletedir($zip_path);
 
                     // Vidage buffer
-                    ploopi_die(null, true);
+                    ovensia\ploopi\system::kill(null, true);
                 }
             }
         }
 
         echo "Le fichier n'existe pas";
-        ploopi_redirect('admin.php', true, true, 2);
+        ovensia\ploopi\output::redirect('admin.php', true, true, 2);
     break;
 
     case 'documents_savefolder':
-        include_once './include/classes/documents.php';
-        $documentsfolder = new documentsfolder();
-        $documentsfolder_parent = new documentsfolder();
+        $documentsfolder = new ovensia\ploopi\documentsfolder();
+        $documentsfolder_parent = new ovensia\ploopi\documentsfolder();
 
         // Contrôle currentfolder
-        if (!isset($_GET['currentfolder']) || !$documentsfolder_parent->openmd5($_GET['currentfolder'])) ploopi_die();
+        if (!isset($_GET['currentfolder']) || !$documentsfolder_parent->openmd5($_GET['currentfolder'])) ovensia\ploopi\system::kill();
         // Contrôle id instance
-        if (!isset($_GET['documents_id']) || !isset($_SESSION['documents'][$_GET['documents_id']])) ploopi_die();
+        if (!isset($_GET['documents_id']) || !isset($_SESSION['documents'][$_GET['documents_id']])) ovensia\ploopi\system::kill();
 
         $currentfolder = $_GET['currentfolder'];
         $documents_id = $_GET['documents_id'];
@@ -181,11 +174,11 @@ switch($ploopi_op)
         }
         ?>
         <script type="text/javascript">
-            window.parent.ploopi_documents_browser('<?php echo ploopi_queryencode("ploopi_op=documents_browser&currentfolder={$currentfolder}&documents_id={$documents_id}"); ?>', '<?php echo ploopi_htmlentities($documents_id); ?>');
+            window.parent.ovensia\ploopi\documents::browser('<?php echo ovensia\ploopi\crypt::queryencode("ploopi_op=documents_browser&currentfolder={$currentfolder}&documents_id={$documents_id}"); ?>', '<?php echo ovensia\ploopi\str::htmlentities($documents_id); ?>');
             window.parent.ploopi_hidepopup('ploopi_documents_openfolder_popup');
         </script>
         <?php
-        ploopi_die();
+        ovensia\ploopi\system::kill();
     break;
 
     case 'documents_openfolder':
@@ -194,8 +187,7 @@ switch($ploopi_op)
         if (empty($_GET['documents_id'])) return;
 
         ob_start();
-        include_once './include/classes/documents.php';
-        $documentsfolder = new documentsfolder();
+        $documentsfolder = new ovensia\ploopi\documentsfolder();
 
 
         if (empty($_GET['documentsfolder_id']))
@@ -213,38 +205,28 @@ switch($ploopi_op)
         if (!empty($_GET['documentsfolder_id'])) $url .= "&documentsfolder_id={$_GET['documentsfolder_id']}";
 
         ?>
-        <form id="documents_folderform" action="<?php echo ploopi_urlencode($url); ?>" method="post" target="documents_folderform_iframe" enctype="multipart/form-data">
+        <form id="documents_folderform" action="<?php echo ovensia\ploopi\crypt::urlencode($url); ?>" method="post" target="documents_folderform_iframe" enctype="multipart/form-data">
         <div class="ploopi_form">
             <div class="documents_formcontent">
                 <p>
                     <label>Libellé:</label>
-                    <input type="text" class="text" name="documentsfolder_name" value="<?php echo ploopi_htmlentities($documentsfolder->fields['name']); ?>">
+                    <input type="text" class="text" name="documentsfolder_name" value="<?php echo ovensia\ploopi\str::htmlentities($documentsfolder->fields['name']); ?>">
                 </p>
                 <p>
                     <label>Description:</label>
-                    <span>
-                    <?php
-                    include_once './lib/fckeditor/fckeditor.php' ;
-
-                    $oFCKeditor = new FCKeditor('fck_documentsfolder_description') ;
-
-                    $oFCKeditor->BasePath = './lib/fckeditor/';
-
-                    // default value
-                    $oFCKeditor->Value = $documentsfolder->fields['description'];
-
-                    // width & height
-                    $oFCKeditor->Width='100%';
-                    $oFCKeditor->Height='150';
-
-                    $oFCKeditor->Config['CustomConfigurationsPath'] = _PLOOPI_BASEPATH.'/js/documents/fckconfig.js';
-                    $oFCKeditor->Config['BaseHref'] = _PLOOPI_BASEPATH.'/';
-
-                    // render
-                    $oFCKeditor->Create('FCKeditor_DocFileDesc') ;
-                    ?>
-                    </span>
+                    <span></span>
                 </p>
+                <textarea name="fck_documentsfolder_description" id="<? echo $id = 'editor'.uniqid(); ?>"><? echo $documentsfolder->fields['description']; ?></textarea>
+                <script>
+                    var script = document.createElement('script');
+                    script.onload = function () {
+                        CKEDITOR.replace( '<? echo $id; ?>', {
+                            customConfig: '<? echo _PLOOPI_BASEPATH.'/js/documents/config.js'; ?>'
+                        });
+                    };
+                    script.src = './vendor/ckeditor/ckeditor/ckeditor.js';
+                    document.head.appendChild(script);
+                </script>
             </div>
             <div class="documents_formcontent" style="text-align:right;padding:4px;">
                 <input type="button" class="flatbutton" style="width:100px;" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:ploopi_hidepopup('ploopi_documents_openfolder_popup');">
@@ -258,17 +240,16 @@ switch($ploopi_op)
         ob_end_clean();
 
         echo $skin->create_popup($title, $content, 'ploopi_documents_openfolder_popup');
-        ploopi_die();
+        ovensia\ploopi\system::kill();
     break;
 
     case 'documents_savemultiplefile':
-        include_once './include/classes/documents.php';
-        $documentsfolder = new documentsfolder();
+        $documentsfolder = new ovensia\ploopi\documentsfolder();
 
         // Contrôle currentfolder
-        if (!isset($_GET['currentfolder']) || !$documentsfolder->openmd5($_GET['currentfolder'])) ploopi_die();
+        if (!isset($_GET['currentfolder']) || !$documentsfolder->openmd5($_GET['currentfolder'])) ovensia\ploopi\system::kill();
         // Contrôle id instance
-        if (!isset($_GET['documents_id']) || !isset($_SESSION['documents'][$_GET['documents_id']])) ploopi_die();
+        if (!isset($_GET['documents_id']) || !isset($_SESSION['documents'][$_GET['documents_id']])) ovensia\ploopi\system::kill();
 
         $currentfolder = $_GET['currentfolder'];
         $documents_id = $_GET['documents_id'];
@@ -277,14 +258,14 @@ switch($ploopi_op)
         if (!empty($_FILES['documentsfile_files']['name']))
         {
             foreach(array_keys($_FILES['documentsfile_files']['name']) as $k) {
-                $documentsfile = new documentsfile();
+                $documentsfile = new ovensia\ploopi\documentsfile();
                 $documentsfile->fields['id_object'] = $_SESSION['documents'][$documents_id]['id_object'];
                 $documentsfile->fields['id_record'] = $_SESSION['documents'][$documents_id]['id_record'];
                 $documentsfile->fields['id_module'] = $_SESSION['documents'][$documents_id]['id_module'];
                 $documentsfile->fields['id_user'] = $_SESSION['documents'][$documents_id]['id_user'];
                 $documentsfile->fields['id_workspace'] = $_SESSION['documents'][$documents_id]['id_workspace'];
                 $documentsfile->fields['id_folder'] = $documentsfolder->fields['id'];
-                $documentsfile->fields['timestp_file'] = ploopi_createtimestamp();
+                $documentsfile->fields['timestp_file'] = ovensia\ploopi\date::createtimestamp();
                 $documentsfile->fields['id_user_modify'] = $_SESSION['ploopi']['userid'];
                 $documentsfile->settmpfile($_FILES['documentsfile_files']['tmp_name'][$k]);
                 $documentsfile->fields['name'] = $_FILES['documentsfile_files']['name'][$k];
@@ -300,23 +281,22 @@ switch($ploopi_op)
 
         ?>
         <script type="text/javascript">
-            window.parent.ploopi_documents_browser('<?php echo ploopi_queryencode("ploopi_op=documents_browser&currentfolder={$currentfolder}&documents_id={$documents_id}"); ?>', '<?php echo ploopi_htmlentities($documents_id); ?>');
+            window.parent.ovensia\ploopi\documents::browser('<?php echo ovensia\ploopi\crypt::queryencode("ploopi_op=documents_browser&currentfolder={$currentfolder}&documents_id={$documents_id}"); ?>', '<?php echo ovensia\ploopi\str::htmlentities($documents_id); ?>');
             window.parent.ploopi_hidepopup('ploopi_documents_openfile_popup');
         </script>
         <?php
-        ploopi_die();
+        ovensia\ploopi\system::kill();
 
     break;
 
     case 'documents_savefile':
-        include_once './include/classes/documents.php';
-        $documentsfile = new documentsfile();
-        $documentsfolder = new documentsfolder();
+        $documentsfile = new ovensia\ploopi\documentsfile();
+        $documentsfolder = new ovensia\ploopi\documentsfolder();
 
         // Contrôle currentfolder
-        if (!isset($_GET['currentfolder']) || !$documentsfolder->openmd5($_GET['currentfolder'])) ploopi_die();
+        if (!isset($_GET['currentfolder']) || !$documentsfolder->openmd5($_GET['currentfolder'])) ovensia\ploopi\system::kill();
         // Contrôle id instance
-        if (!isset($_GET['documents_id']) || !isset($_SESSION['documents'][$_GET['documents_id']])) ploopi_die();
+        if (!isset($_GET['documents_id']) || !isset($_SESSION['documents'][$_GET['documents_id']])) ovensia\ploopi\system::kill();
 
         $currentfolder = $_GET['currentfolder'];
         $documents_id = $_GET['documents_id'];
@@ -337,7 +317,7 @@ switch($ploopi_op)
         if (isset($_POST['fck_documentsfile_description']))
             $documentsfile->fields['description'] = $_POST['fck_documentsfile_description'];
 
-        if (isset($documentsfile->fields['timestp_file'])) $documentsfile->fields['timestp_file'] = ploopi_local2timestamp($documentsfile->fields['timestp_file']);
+        if (isset($documentsfile->fields['timestp_file'])) $documentsfile->fields['timestp_file'] = ovensia\ploopi\date::local2timestamp($documentsfile->fields['timestp_file']);
 
 
         if (!empty($_FILES['documentsfile_file']['name']))
@@ -365,14 +345,14 @@ switch($ploopi_op)
                     }
                     elseif ($_SESSION['documents'][$documents_id]['mode'] == 'tocallback')
                     {
-                        echo "window.parent.{$_SESSION['documents'][$documents_id]['target']}({$documentsfile->fields['id']}, '".addslashes($documentsfile->fields['name'])."', '".ploopi_urlencode("admin-light.php?ploopi_op=documents_downloadfile&documentsfile_id={$documentsfile->fields['md5id']}")."');";
+                        echo "window.parent.{$_SESSION['documents'][$documents_id]['target']}({$documentsfile->fields['id']}, '".addslashes($documentsfile->fields['name'])."', '".ovensia\ploopi\crypt::urlencode("admin-light.php?ploopi_op=documents_downloadfile&documentsfile_id={$documentsfile->fields['md5id']}")."');";
                     }
 
                 }
                 // Mise à jour du navigateur
                 else {
                     ?>
-                    window.parent.ploopi_documents_browser('<?php echo ploopi_queryencode("ploopi_op=documents_browser&currentfolder={$currentfolder}&documents_id={$documents_id}"); ?>', '<?php echo ploopi_htmlentities($documents_id); ?>');
+                    window.parent.ovensia\ploopi\documents::browser('<?php echo ovensia\ploopi\crypt::queryencode("ploopi_op=documents_browser&currentfolder={$currentfolder}&documents_id={$documents_id}"); ?>', '<?php echo ovensia\ploopi\str::htmlentities($documents_id); ?>');
                     <?php
                 }
                 ?>
@@ -380,7 +360,7 @@ switch($ploopi_op)
             </script>
             <?php
         }
-        ploopi_die();
+        ovensia\ploopi\system::kill();
     break;
 
     case 'documents_addmultiplefiles':
@@ -391,7 +371,7 @@ switch($ploopi_op)
 
         $url = "admin-light.php?ploopi_op=documents_savemultiplefile&currentfolder={$_GET['currentfolder']}&documents_id={$_GET['documents_id']}";
         ?>
-        <form id="documents_folderform" action="<?php echo ploopi_urlencode($url); ?>" method="post" target="documents_fileform_iframe" enctype="multipart/form-data">
+        <form id="documents_folderform" action="<?php echo ovensia\ploopi\crypt::urlencode($url); ?>" method="post" target="documents_fileform_iframe" enctype="multipart/form-data">
         <div class="ploopi_form">
             <div class="documents_formcontent">
                 <p>
@@ -411,13 +391,12 @@ switch($ploopi_op)
         ob_end_clean();
 
         echo $skin->create_popup("Ajout mutiple de fichiers", $content, 'ploopi_documents_openfile_popup');
-        ploopi_die();
+        ovensia\ploopi\system::kill();
     break;
 
     case 'documents_openfile':
         ob_start();
-        include_once './include/classes/documents.php';
-        $documentsfile = new documentsfile();
+        $documentsfile = new ovensia\ploopi\documentsfile();
 
         if (empty($_GET['currentfolder'])) return;
         if (empty($_GET['documents_id'])) return;
@@ -434,14 +413,14 @@ switch($ploopi_op)
             $title = "Modification du Fichier";
         }
 
-        $ldate = ($documentsfile->fields['timestp_file']!=0 && $documentsfile->fields['timestp_file']!='') ? ploopi_timestamp2local($documentsfile->fields['timestp_file']) : array('date' => '');
+        $ldate = ($documentsfile->fields['timestp_file']!=0 && $documentsfile->fields['timestp_file']!='') ? ovensia\ploopi\date::timestamp2local($documentsfile->fields['timestp_file']) : array('date' => '');
 
         $url = "admin-light.php?ploopi_op=documents_savefile&currentfolder={$_GET['currentfolder']}&documents_id={$_GET['documents_id']}";
         if (!empty($_GET['documentsfile_id'])) $url .= "&documentsfile_id={$_GET['documentsfile_id']}";
         if (isset($_GET['selectfile'])) $url .= "&selectfile";
 
         ?>
-        <form id="documents_folderform" action="<?php echo ploopi_urlencode($url); ?>" method="post" target="documents_fileform_iframe" enctype="multipart/form-data" onsubmit="javascript:return ploopi_documents_validate(this)">
+        <form id="documents_folderform" action="<?php echo ovensia\ploopi\crypt::urlencode($url); ?>" method="post" target="documents_fileform_iframe" enctype="multipart/form-data" onsubmit="javascript:return ploopi_documents_validate(this)">
         <div class="ploopi_form">
             <div class="documents_formcontent">
                 <?php
@@ -459,7 +438,7 @@ switch($ploopi_op)
                     ?>
                     <p>
                         <label>Nom du Fichier:</label>
-                        <input type="input" class="text" name="documentsfile_name" value="<?php echo ploopi_htmlentities($documentsfile->fields['name']); ?>" tabindex="2">
+                        <input type="input" class="text" name="documentsfile_name" value="<?php echo ovensia\ploopi\str::htmlentities($documentsfile->fields['name']); ?>" tabindex="2">
                     </p>
                     <p>
                         <label>Nouveau Fichier:</label>
@@ -469,9 +448,9 @@ switch($ploopi_op)
                         <label>Dossier Parent:</label>
                         <select name="documentsfile_id_folder" tabindex="2">
                         <?php
-                        foreach(ploopi_documents_listfolders($_SESSION['documents'][$_GET['documents_id']]['id_object'], $_SESSION['documents'][$_GET['documents_id']]['id_record'], $_SESSION['documents'][$_GET['documents_id']]['id_module']) as $row) {
+                        foreach(ovensia\ploopi\documents::listfolders($_SESSION['documents'][$_GET['documents_id']]['id_object'], $_SESSION['documents'][$_GET['documents_id']]['id_record'], $_SESSION['documents'][$_GET['documents_id']]['id_module']) as $row) {
                             ?>
-                            <option value="<?php echo $row['id']; ?>" <?php if ($row['id'] == $documentsfile->fields['id_folder']) echo 'selected="selected"'; ?>><?php echo ploopi_htmlentities($row['name']); ?></option>
+                            <option value="<?php echo $row['id']; ?>" <?php if ($row['id'] == $documentsfile->fields['id_folder']) echo 'selected="selected"'; ?>><?php echo ovensia\ploopi\str::htmlentities($row['name']); ?></option>
                             <?php
                         }
                         ?>
@@ -482,43 +461,36 @@ switch($ploopi_op)
                 ?>
                 <p>
                     <label>Libellé:</label>
-                    <input class="text" name="documentsfile_label" value="<?php echo ploopi_htmlentities($documentsfile->fields['label']); ?>" tabindex="3" style="width:250px;">
+                    <input class="text" name="documentsfile_label" value="<?php echo ovensia\ploopi\str::htmlentities($documentsfile->fields['label']); ?>" tabindex="3" style="width:250px;">
                 </p>
                 <p>
                     <label>Référence:</label>
-                    <input class="text" name="documentsfile_ref" value="<?php echo ploopi_htmlentities($documentsfile->fields['ref']); ?>" tabindex="4" style="width:250px;">
+                    <input class="text" name="documentsfile_ref" value="<?php echo ovensia\ploopi\str::htmlentities($documentsfile->fields['ref']); ?>" tabindex="4" style="width:250px;">
                 </p>
                 <p>
                     <label>Date:</label>
-                    <input class="text" id="documentsfile_timestp_file" name="documentsfile_timestp_file" value="<?php echo ploopi_htmlentities($ldate['date']); ?>" readonly style="width:75px;" onclick="javascript:ploopi_calendar_open('documentsfile_timestp_file', event);" tabindex="5">
+                    <input class="text" id="documentsfile_timestp_file" name="documentsfile_timestp_file" value="<?php echo ovensia\ploopi\str::htmlentities($ldate['date']); ?>" readonly style="width:75px;" onclick="javascript:ploopi_calendar_open('documentsfile_timestp_file', event);" tabindex="5">
                     <a href="javascript:void(0);" onclick="javascript:ploopi_calendar_open('documentsfile_timestp_file', event);"><img src="./img/calendar/calendar.gif" width="31" height="18" align="top" border="0"></a>
                 </p>
+
                 <p>
                     <label>Description:</label>
-                    <span>
-                    <?php
-                    include_once './lib/fckeditor/fckeditor.php' ;
-
-                    $oFCKeditor = new FCKeditor('fck_documentsfile_description') ;
-
-                    $oFCKeditor->BasePath = './lib/fckeditor/';
-
-                    // default value
-                    $oFCKeditor->Value = $documentsfile->fields['description'];
-
-                    // width & height
-                    $oFCKeditor->Width='100%';
-                    $oFCKeditor->Height='150';
-
-                    $oFCKeditor->Config['CustomConfigurationsPath'] = _PLOOPI_BASEPATH.'/js/documents/fckconfig.js';
-                    $oFCKeditor->Config['BaseHref'] = _PLOOPI_BASEPATH.'/';
-
-                    // render
-                    $oFCKeditor->Create('FCKeditor_DocFileDesc') ;
-                    ?>
-                    </span>
+                    <span></span>
                 </p>
+
+                <textarea name="fck_documentsfile_description" id="<? echo $id = 'editor'.uniqid(); ?>"><? echo $documentsfile->fields['description']; ?></textarea>
+                <script>
+                    var script = document.createElement('script');
+                    script.onload = function () {
+                        CKEDITOR.replace( '<? echo $id; ?>', {
+                            customConfig: '<? echo _PLOOPI_BASEPATH.'/js/documents/config.js'; ?>'
+                        });
+                    };
+                    script.src = './vendor/ckeditor/ckeditor/ckeditor.js';
+                    document.head.appendChild(script);
+                </script>
             </div>
+
             <div class="documents_formcontent" style="text-align:right;padding:4px;">
                 <input type="button" class="flatbutton" style="width:100px;" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:ploopi_hidepopup('ploopi_documents_openfile_popup');">
                 <input type="submit" class="flatbutton" style="width:100px;" value="<?php echo _PLOOPI_SAVE; ?>" tabindex="7">
@@ -531,7 +503,7 @@ switch($ploopi_op)
         ob_end_clean();
 
         echo $skin->create_popup($title, $content, 'ploopi_documents_openfile_popup');
-        ploopi_die();
+        ovensia\ploopi\system::kill();
     break;
 
     case 'documents_deletefile':
@@ -540,9 +512,7 @@ switch($ploopi_op)
 
         if (!isset($_GET['currentfolder'])) return;
 
-        include_once './include/classes/documents.php';
-
-        $documentsfile = new documentsfile();
+        $documentsfile = new ovensia\ploopi\documentsfile();
 
         if (!empty($_GET['documentsfile_id']) && $documentsfile->openmd5($_GET['documentsfile_id']))
         {
@@ -552,7 +522,7 @@ switch($ploopi_op)
             if (!empty($_SESSION['documents'][$_REQUEST['documents_id']]['callback_func'])) $_SESSION['documents'][$_REQUEST['documents_id']]['callback_func']('deletefile', $documentsfile, true);
         }
 
-        ploopi_redirect("admin.php?ploopi_op=documents_browser&currentfolder={$_GET['currentfolder']}&documents_id={$_REQUEST['documents_id']}");
+        ovensia\ploopi\output::redirect("admin.php?ploopi_op=documents_browser&currentfolder={$_GET['currentfolder']}&documents_id={$_REQUEST['documents_id']}");
     break;
 
     case 'documents_deletefolder':
@@ -561,9 +531,7 @@ switch($ploopi_op)
 
         if (!isset($_GET['currentfolder'])) return;
 
-        include_once './include/classes/documents.php';
-
-        $documentsfolder = new documentsfolder();
+        $documentsfolder = new ovensia\ploopi\documentsfolder();
 
         if (!empty($_GET['documentsfolder_id']) && $documentsfolder->openmd5($_GET['documentsfolder_id']))
         {
@@ -572,6 +540,6 @@ switch($ploopi_op)
             if (!empty($_SESSION['documents'][$_REQUEST['documents_id']]['callback_inc'])) include_once $_SESSION['documents'][$_REQUEST['documents_id']]['callback_inc'];
             if (!empty($_SESSION['documents'][$_REQUEST['documents_id']]['callback_func'])) $_SESSION['documents'][$_REQUEST['documents_id']]['callback_func']('deletefolder', $documentsfolder, true);
         }
-        ploopi_redirect("admin.php?ploopi_op=documents_browser&currentfolder={$_GET['currentfolder']}&documents_id={$_REQUEST['documents_id']}");
+        ovensia\ploopi\output::redirect("admin.php?ploopi_op=documents_browser&currentfolder={$_GET['currentfolder']}&documents_id={$_REQUEST['documents_id']}");
     break;
 }

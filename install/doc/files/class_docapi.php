@@ -1,5 +1,4 @@
 <?php
-include_once './include/classes/query.php';
 include_once './modules/doc/class_docfile.php';
 include_once './modules/doc/class_docfolder.php';
 
@@ -162,17 +161,17 @@ class docapi {
 
     public function printResult($strFormat = 'json') {
         // Nettoyage du buffer
-        // ploopi_ob_clean();
+        // ovensia\ploopi\buffer::clean();
 
         switch($strFormat) {
             case 'internal':
-                ploopi_print_r($this->getResult());
+                ovensia\ploopi\output::print_r($this->getResult());
             break;
 
             case 'json':
             default:
                 header('Content-disposition: inline; filename="wsdoc.json"');
-                ploopi_print_json($this->getResult(), true, false);
+                ovensia\ploopi\str::print_json($this->getResult(), true, false);
             break;
         }
     }
@@ -188,7 +187,7 @@ class docapi {
             return false;
         }
 
-        if (!ploopi_isactionallowed(_DOC_ACTION_WEBSERVICE, -1, $arrParams['module_id'])) {
+        if (!ovensia\ploopi\acl::isactionallowed(_DOC_ACTION_WEBSERVICE, -1, $arrParams['module_id'])) {
             $this->_setError(self::_ERROR_USER_NOT_ALLOWED);
             return false;
         }
@@ -202,7 +201,7 @@ class docapi {
 
     public function actionListModules($arrParams) {
 
-        $objQuery = new ploopi_query_select();
+        $objQuery = new ovensia\ploopi\query_select();
         $objQuery->add_select('m.*');
         $objQuery->add_from('ploopi_module m');
         $objQuery->add_innerjoin('ploopi_module_type mt ON mt.id = m.id_module_type');
@@ -211,7 +210,7 @@ class docapi {
         $arrData = array();
         while ($row = $objRs->fetchrow()) {
             // Vérification des autorisations d'accès au webservice
-            if (ploopi_isactionallowed(_DOC_ACTION_WEBSERVICE, -1, $row['id'])) $arrData[] = $row;
+            if (ovensia\ploopi\acl::isactionallowed(_DOC_ACTION_WEBSERVICE, -1, $row['id'])) $arrData[] = $row;
         }
 
         $this->_setData($arrData);
@@ -251,7 +250,7 @@ class docapi {
         $arrWhere['folder'] = "f.id_folder = {$intFolderId}";
 
         // Utilisateur "standard"
-        if (!$wf_validator && !ploopi_isadmin() && !ploopi_isactionallowed(_DOC_ACTION_ADMIN, -1, $intModuleId))
+        if (!$wf_validator && !ovensia\ploopi\acl::isadmin() && !ovensia\ploopi\acl::isactionallowed(_DOC_ACTION_ADMIN, -1, $intModuleId))
         {
             // Publié (ou propriétaire)
             $arrWhere['published'] = "(f.published = 1 OR f.id_user = {$_SESSION['ploopi']['userid']})";
@@ -261,7 +260,7 @@ class docapi {
             // Partagé
             if (!empty($_SESSION['doc'][$intModuleId]['share']['folders'])) $arrWhere['visibility']['shared'] = "(f.foldertype = 'shared' AND f.id IN (".implode(',', $_SESSION['doc'][$intModuleId]['share']['folders'])."))";
             // Public
-            $arrWhere['visibility']['public'] = "(f.foldertype = 'public' AND f.id_workspace IN (".ploopi_viewworkspaces($intModuleId)."))";
+            $arrWhere['visibility']['public'] = "(f.foldertype = 'public' AND f.id_workspace IN (".ovensia\ploopi\system::viewworkspaces($intModuleId)."))";
 
             // Synthèse visibilité
             $arrWhere['visibility'] = '('.implode(' OR ', $arrWhere['visibility']).')';
@@ -301,7 +300,7 @@ class docapi {
         $arrWhere['module'] = "f.id_module = {$intModuleId}";
 
         // Dossier : /!\ l'admin system voit tous les fichiers dans 'racine'
-        $arrWhere['folder'] = ($intFolderId || ploopi_isadmin() || ploopi_isactionallowed(_DOC_ACTION_ADMIN, -1, $intModuleId)) ? "f.id_folder = {$intFolderId}" : "f.id_folder = {$intFolderId} AND f.id_user = {$_SESSION['ploopi']['userid']}";
+        $arrWhere['folder'] = ($intFolderId || ovensia\ploopi\acl::isadmin() || ovensia\ploopi\acl::isactionallowed(_DOC_ACTION_ADMIN, -1, $intModuleId)) ? "f.id_folder = {$intFolderId}" : "f.id_folder = {$intFolderId} AND f.id_user = {$_SESSION['ploopi']['userid']}";
 
         $strWhere = implode(' AND ', $arrWhere);
 
@@ -594,7 +593,7 @@ class docapi {
         }
 
         // Vérification que dossier vide (ou droit spécial)
-        if ($objDocFolder->fields['nbelements'] > 0 && !ploopi_isadmin() && !ploopi_isactionallowed(_DOC_ACTION_ADMIN, -1, $arrParams['module_id'])) {
+        if ($objDocFolder->fields['nbelements'] > 0 && !ovensia\ploopi\acl::isadmin() && !ovensia\ploopi\acl::isactionallowed(_DOC_ACTION_ADMIN, -1, $arrParams['module_id'])) {
             $this->_setError(self::_ERROR_FOLDER_NOT_EMPTY);
             return $this;
         }

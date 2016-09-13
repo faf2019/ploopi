@@ -2,10 +2,8 @@
 switch($ploopi_op) {
     case 'planning_search':
 
-        ploopi_init_module('planning');
+        ovensia\ploopi\module::init('planning');
 
-
-        include_once './include/classes/query.php';
 
         $arrSearchPattern = planning_getcookie();
 
@@ -20,10 +18,10 @@ switch($ploopi_op) {
 
             $strQueryString = isset($_POST['query_string']) ? $_POST['query_string'] : '';
 
-            list($arrWords) = ploopi_getwords($strQueryString, false);
+            list($arrWords) = ovensia\ploopi\str::getwords($strQueryString, false);
 
 
-            $objQuery = new ploopi_query_select();
+            $objQuery = new ovensia\ploopi\query_select();
 
             $objQuery->add_select('event.object');
             $objQuery->add_select('detail.timestp_begin');
@@ -83,8 +81,8 @@ switch($ploopi_op) {
                 // On vérifie l'intersection entre les utilisateurs de l'événement et les utilisateurs à afficher (idem pour les groupes)
                 if (array_intersect($arrSearchResult[$id]['resources']['group'], $arrSearchPattern['planning_resources']['group']) || array_intersect($arrSearchResult[$id]['resources']['user'], $arrSearchPattern['planning_resources']['user']))
                 {
-                    $arrEventBegin = ploopi_timestamp2local($row['timestp_begin']);
-                    $arrEventEnd = ploopi_timestamp2local($row['timestp_end']);
+                    $arrEventBegin = ovensia\ploopi\date::timestamp2local($row['timestp_begin']);
+                    $arrEventEnd = ovensia\ploopi\date::timestamp2local($row['timestp_end']);
 
                     // Construction de la liste des utilisateurs/groupes à afficher
                     $arrWho = array();
@@ -92,39 +90,39 @@ switch($ploopi_op) {
                     // Pour chaque groupe associé à l'événement
                     foreach($arrSearchResult[$id]['resources']['group'] as $intIdGroup)
                     {
-                        $objGroup = new group();
+                        $objGroup = new ovensia\ploopi\group();
                         if($objGroup->open($intIdGroup))
                         {
                             $arrWho[] = "<img src='./modules/planning/img/ico_group.png'>";
-                            $arrWho[] = ploopi_htmlentities($objGroup->fields['label']);
+                            $arrWho[] = ovensia\ploopi\str::htmlentities($objGroup->fields['label']);
                         }
                     }
 
                     // Pour chaque utilisateur associé à l'événement
                     foreach($arrSearchResult[$id]['resources']['user'] as $intIdUser)
                     {
-                        $objUser = new user();
+                        $objUser = new ovensia\ploopi\user();
                         if($objUser->open($intIdUser))
                         {
                             $strColor = !empty($objUser->fields['color']) ? "background:{$objUser->fields['color']}" : '';
                             $arrWho[] = '<img src="./modules/planning/img/ico_user.png" style="'.$strColor.';">';
-                            $arrWho[] = ploopi_htmlentities(sprintf("%s %s",$objUser->fields['firstname'],$objUser->fields['lastname']));
+                            $arrWho[] = ovensia\ploopi\str::htmlentities(sprintf("%s %s",$objUser->fields['firstname'],$objUser->fields['lastname']));
                         }
                     }
 
                     // Conversion de la date de début au format Unix (pour utiliser la fonction date)
-                    $intUnixEventBegin = ploopi_timestamp2unixtimestamp($row['timestp_begin']);
+                    $intUnixEventBegin = ovensia\ploopi\date::timestamp2unixtimestamp($row['timestp_begin']);
 
                     $values[$i]['values']['event'] =
                         array(
-                            'label'        => '<strong>'.ploopi_htmlentities($arrEventBegin['date']).'</strong>&nbsp;->&nbsp;'.substr($arrEventBegin['time'], 0, 2).'h'.substr($arrEventBegin['time'], 3, 2).'&nbsp;&agrave;&nbsp;'.substr($arrEventEnd['time'], 0, 2).'h'.substr($arrEventEnd['time'], 3, 2).'<br />'.ploopi_htmlentities($row['object']).'<br />'.implode(' ', $arrWho),
+                            'label'        => '<strong>'.ovensia\ploopi\str::htmlentities($arrEventBegin['date']).'</strong>&nbsp;->&nbsp;'.substr($arrEventBegin['time'], 0, 2).'h'.substr($arrEventBegin['time'], 3, 2).'&nbsp;&agrave;&nbsp;'.substr($arrEventEnd['time'], 0, 2).'h'.substr($arrEventEnd['time'], 3, 2).'<br />'.ovensia\ploopi\str::htmlentities($row['object']).'<br />'.implode(' ', $arrWho),
                             'style'        => 'text-align:left;',
                             'sort_label'   => $row['timestp_begin']
                         );
 
                     $values[$i]['description'] = 'Aller sur l\'événement';
                     $values[$i]['link'] = 'javascript:void(0);';
-                    $values[$i]['onclick'] = "ploopi_xmlhttprequest_todiv('admin-light.php', '".ploopi_queryencode('ploopi_op=planning_refresh&planning_display_type=day&planning_day='.date('j',$intUnixEventBegin).'&planning_month='.date('n',$intUnixEventBegin).'&planning_year='.date('Y',$intUnixEventBegin))."', 'planning_main');";
+                    $values[$i]['onclick'] = "ploopi_xmlhttprequest_todiv('admin-light.php', '".ovensia\ploopi\crypt::queryencode('ploopi_op=planning_refresh&planning_display_type=day&planning_day='.date('j',$intUnixEventBegin).'&planning_month='.date('n',$intUnixEventBegin).'&planning_year='.date('Y',$intUnixEventBegin))."', 'planning_main');";
 
 
                     $i += 1;
@@ -134,6 +132,6 @@ switch($ploopi_op) {
             $skin->display_array($columns, $values, 'event_list', array('sortable' => true, 'orderby_default' => 'event', 'sort_default' => 'DESC', 'limit' => 5));
         }
 
-        ploopi_die();
+        ovensia\ploopi\system::kill();
         break;
 }

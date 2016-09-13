@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,6 +20,10 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+namespace ovensia\ploopi;
+
+use ovensia\ploopi;
+
 /**
  * Gestion deslogs
  *
@@ -32,11 +35,6 @@
  */
 
 /**
- * Inclusion des dépendances
- */
-include_once './include/classes/session.php';
-
-/**
  * Classe d'accès à la table ploopi_log.
  *
  * @package ploopi
@@ -46,7 +44,7 @@ include_once './include/classes/session.php';
  * @author Stéphane Escaich
  */
 
-class ploopi_log extends data_object
+class log extends data_object
 {
     /**
      * Constructeur de la classe
@@ -58,71 +56,12 @@ class ploopi_log extends data_object
     {
         parent::__construct('ploopi_log');
 
-        if (ploopi_session::get_usedb()) $this->setdb($this->getdb());
+        if (session::get_usedb()) $this->setdb($this->getdb());
     }
 
-    public function getdb()
+    public static function getdb()
     {
-        if (ploopi_session::get_usedb()) return ploopi_session::get_db();
+        if (session::get_usedb()) return session::get_db();
         else { global $db; return $db; }
     }
-}
-
-/**
- * Classe d'accès à la table ploopi_connecteduser.
- * Gestion des utilisateurs connectés.
- *
- * @package ploopi
- * @subpackage log
- * @copyright Netlor, Ovensia
- * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
- */
-
-class connecteduser extends data_object
-{
-    /**
-     * Constructeur de la classe
-     *
-     * @return connecteduser
-     */
-
-    public function __construct()
-    {
-        parent::__construct('ploopi_connecteduser', 'sid');
-    }
-}
-
-/**
- * Classe d'accès à la table user_action_log.
- * Gestion des actions utilisateurs.
- *
- * @package ploopi
- * @subpackage log
- * @copyright Netlor, Ovensia
- * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
- */
-
-class user_action_log extends data_object
-{
-    /**
-     * Constructeur de la classe
-     *
-     * @return user_action_log
-     */
-
-    public function __construct()
-    {
-        parent::__construct('ploopi_user_action_log', 'id_user', 'id_action', 'id_module_type');
-
-        if (ploopi_session::get_usedb()) $this->setdb($this->getdb());
-    }
-
-    public function getdb()
-    {
-        if (ploopi_session::get_usedb()) return ploopi_session::get_db();
-        else { global $db; return $db; }
-    }
-
 }

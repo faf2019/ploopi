@@ -22,7 +22,7 @@
 
 /**
  * Gestion des événements/ressources
- * 
+ *
  * @package planning
  * @subpackage event_detail_resource
  * @copyright Ovensia
@@ -33,31 +33,26 @@
  */
 
 /**
- * Inclusion de la classe parent
- */
-include_once './include/classes/data_object.php';
-
-/**
  * Classe d'accès à la table 'ploopi_mod_planning_event_detail'
- * 
+ *
  * @package planning
  * @subpackage event_detail_resource
  * @author Stéphane Escaich
  * @copyright Ovensia
  */
 
-class planning_event_detail_resource extends data_object
+class planning_event_detail_resource extends ovensia\ploopi\data_object
 {
     /**
      * Constructeur de la classe
      *
      * @return planning_event_detail_resource
      */
-    
+
     public function __construct()
     {
         parent::__construct(
-            'ploopi_mod_planning_event_detail_resource', 
+            'ploopi_mod_planning_event_detail_resource',
             'id_event_detail',
             'id_resource',
             'type_resource'

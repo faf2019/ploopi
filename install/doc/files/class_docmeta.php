@@ -32,12 +32,6 @@
  */
 
 /**
- * Inclusion de la classe parent.
- */
-
-include_once './include/classes/data_object.php';
-
-/**
  * Classe d'accès à la table ploopi_mod_doc_meta
  *
  * @package doc
@@ -47,7 +41,7 @@ include_once './include/classes/data_object.php';
  * @author Stéphane Escaich
  */
 
-class docmeta extends data_object
+class docmeta extends ovensia\ploopi\data_object
 {
     /**
      * Constructeur de la classe

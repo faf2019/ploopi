@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2009 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -20,6 +20,10 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+namespace ovensia\ploopi;
+
+use ovensia\ploopi;
+
 /**
  * Gestion d'une collection d'objets de type "data_object"
  *
@@ -29,8 +33,6 @@
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
-
-require_once './include/classes/query.php';
 
 /**
  * Classe permettant de gérer une collection d'objets de type "data_object"
@@ -88,17 +90,17 @@ class data_object_collection
         else { global $db; $this->objDb = &$db; }
 
         //On vérifie que la classe existe
-        if (empty($this->strClassName) || !class_exists($this->strClassName)) throw new Exception("data_object_collection : classe '{$this->strClassName}' inconnue");
+        if (empty($this->strClassName) || !class_exists($this->strClassName)) trigger_error("data_object_collection : classe '{$this->strClassName}' inconnue");
 
         //On tente de créer une instance de la classe
-        ploopi_unset_error_handler();
+        error::unset_handler();
         $objDoDescription = new $this->strClassName();
-        ploopi_set_error_handler();
+        error::set_handler();
 
         //On vérifie le type de l'objet obtenu et s'il hérite de "data_object"
-        if (empty($objDoDescription) || !is_subclass_of($objDoDescription, 'data_object')) throw new Exception("data_object_collection : la classe '{$this->strClassName}' n'est pas héritée de 'data_object'");
+        if (empty($objDoDescription) || !is_subclass_of($objDoDescription, __NAMESPACE__.'\\data_object')) trigger_error("data_object_collection : la classe '{$this->strClassName}' n'est pas héritée de 'data_object'");
 
-        $this->objQuery = new ploopi_query_select($this->objDb);
+        $this->objQuery = new query_select($this->objDb);
         $this->objQuery->add_select('`'.$objDoDescription->gettablename().'`.*');
         $this->objQuery->add_from('`'.$objDoDescription->gettablename().'`');
     }
@@ -107,7 +109,7 @@ class data_object_collection
      * Ajoute une clause FROM à la collection
      *
      * @param string $strFrom clause from
-     * @see ploopi_query
+     * @see query
      */
     public function add_from($strFrom) { $this->objQuery->add_from($strFrom); }
 
@@ -123,7 +125,7 @@ class data_object_collection
      *
      * @param string $strWhere clause sql non préparée
      * @param mixed $mixValues tableau des variables ou variable seule à insérer dans la clause sql
-     * @see ploopi_query
+     * @see query
      */
     public function add_where($strWhere, $mixValues = null) { $this->objQuery->add_where($strWhere, $mixValues); }
 
@@ -131,7 +133,7 @@ class data_object_collection
      * Ajoute une clause ORDER BY à la collection
      *
      * @param string $strOrderBy clause sql
-     * @see ploopi_query
+     * @see query
      */
     public function add_orderby($strOrderBy) { $this->objQuery->add_orderby($strOrderBy); }
 

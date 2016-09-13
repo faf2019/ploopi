@@ -20,6 +20,10 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+namespace ovensia\ploopi;
+
+use ovensia\ploopi;
+
 /**
  * Gestion des codes de confirmation (demandes par email)
  *
@@ -69,7 +73,7 @@ class confirmation_code extends data_object
         if ($this->new)
         {
             if (empty($this->fields['code'])) $this->fields['code'] = md5(uniqid(rand(), true));
-            if (empty($this->fields['timestp'])) $this->fields['timestp'] = ploopi_createtimestamp();
+            if (empty($this->fields['timestp'])) $this->fields['timestp'] = date::createtimestamp();
         }
         return(parent::save());
     }

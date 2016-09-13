@@ -34,35 +34,34 @@
 /**
  * Includes
  */
-include_once './include/classes/data_object_collection.php';
 include_once './modules/forms/classes/formsForm.php';
 
 /**
  * Initialisation du module
  */
-ploopi_init_module('forms', false, false, false);
+ovensia\ploopi\module::init('forms', false, false, false);
 
 $forms_id = isset($_GET['forms_id']) ? $_GET['forms_id'] : '';
 
-$intTsToday = ploopi_createtimestamp();
+$intTsToday = ovensia\ploopi\date::createtimestamp();
 
-$objDOC = new data_object_collection('formsForm');
+$objDOC = new ovensia\ploopi\data_object_collection('formsForm');
 $objDOC->add_where("id_module = %d", $menu_moduleid);
 $objDOC->add_where("(pubdate_start <= %s OR pubdate_start = '')", $intTsToday);
 $objDOC->add_where("(pubdate_end >= %s OR pubdate_end = '')", $intTsToday);
-$objDOC->add_where("id_workspace IN (%e)", array(explode(',', ploopi_viewworkspaces($menu_moduleid))));
+$objDOC->add_where("id_workspace IN (%e)", array(explode(',', ovensia\ploopi\system::viewworkspaces($menu_moduleid))));
 $objDOC->add_orderby('label');
 
 foreach($objDOC->get_objects() as $objForm)
 {
-    if (!$objForm->fields['option_adminonly'] || ploopi_isactionallowed(_FORMS_ACTION_ADMIN, $_SESSION['ploopi']['workspaceid'], $menu_moduleid))
-        $block->addmenu(ploopi_htmlentities($objForm->fields['label']), ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&op=forms_viewreplies&forms_id={$objForm->fields['id']}"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && $forms_id == $objForm->fields['id']);
+    if (!$objForm->fields['option_adminonly'] || ovensia\ploopi\acl::isactionallowed(_FORMS_ACTION_ADMIN, $_SESSION['ploopi']['workspaceid'], $menu_moduleid))
+        $block->addmenu(ovensia\ploopi\str::htmlentities($objForm->fields['label']), ovensia\ploopi\crypt::urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&op=forms_viewreplies&forms_id={$objForm->fields['id']}"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && $forms_id == $objForm->fields['id']);
 }
 
-$block->addmenu(_FORMS_LIST, ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && empty($forms_id));
+$block->addmenu(_FORMS_LIST, ovensia\ploopi\crypt::urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && empty($forms_id));
 
-if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN, $_SESSION['ploopi']['workspaceid'], $menu_moduleid))
+if (ovensia\ploopi\acl::isactionallowed(_FORMS_ACTION_ADMIN, $_SESSION['ploopi']['workspaceid'], $menu_moduleid))
 {
-    $block->addmenu('<b>'._FORMS_ADMIN.'</b>', ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=admin"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'admin');
+    $block->addmenu('<b>'._FORMS_ADMIN.'</b>', ovensia\ploopi\crypt::urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=admin"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'admin');
 }
 ?>

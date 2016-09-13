@@ -35,7 +35,7 @@
  * Initialisation du module
  */
 
-ploopi_init_module('system', false, false, false);
+ovensia\ploopi\module::init('system', false, false, false);
 
 ?>
 function system_group_validate(form)

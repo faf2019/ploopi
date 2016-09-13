@@ -21,7 +21,7 @@
 */
 
 /**
- * Gestion des espaces attachés aux ressources 
+ * Gestion des espaces attachés aux ressources
  *
  * @package booking
  * @subpackage resource_workspace
@@ -36,22 +36,22 @@
  * Classe "resource_workspace"
  */
 
-class booking_resource_workspace extends data_object {
-    
+class booking_resource_workspace extends ovensia\ploopi\data_object {
+
     /**
      * Constructeur de la classe
      *
      * @return agrid_resource_workspace
      */
-    
-    public function booking_resource_workspace() {
-        
+
+    public function __construct() {
+
         parent::__construct(
-            'ploopi_mod_booking_resource_workspace', 
+            'ploopi_mod_booking_resource_workspace',
             'id_resource',
             'id_workspace'
         );
-        
+
     }
 
 }

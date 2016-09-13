@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,6 +20,10 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+namespace ovensia\ploopi;
+
+use ovensia\ploopi;
+
 /**
  * Gestion des espaces de travail
  *
@@ -30,8 +33,6 @@
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
-
-include_once './include/classes/data_object.php';
 
 /**
  * Classe d'accès à la table ploopi_workspace
@@ -468,274 +469,5 @@ class workspace extends data_object
             while($module = $db->fetchrow($result)) $modules[$module['id']] = $module;
         }
         return $modules;
-    }
-}
-
-/**
- * Classe d'accès à la table ploopi_module_workspace
- *
- * @package ploopi
- * @subpackage workspace
- * @copyright Netlor, Ovensia
- * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
- */
-
-class module_workspace extends data_object
-{
-    /**
-     * Constructeur de la classe
-     *
-     * @return module_workspace
-     */
-
-    public function __construct()
-    {
-        parent::__construct('ploopi_module_workspace','id_workspace','id_module');
-    }
-
-    /**
-     * Enregistre les infos sur la relation module / espace de rattachement (position par exemple)
-     */
-
-    public function save()
-    {
-        global $db;
-
-        if ($this->new)
-        {
-            $select =   "
-                        SELECT MAX(ploopi_module_workspace.position) AS position
-                        FROM ploopi_module_workspace
-                        WHERE ploopi_module_workspace.id_workspace = {$this->fields['id_workspace']}
-                        ";
-
-            $result = $db->query($select);
-            $fields = $db->fetchrow($result);
-            $this->fields['position'] = $fields['position'] + 1;
-        }
-
-        parent::save();
-    }
-
-    /**
-     * Supprime la relation module / espace de rattachement
-     */
-
-    public function delete()
-    {
-        global $db;
-
-        $update = "UPDATE ploopi_module_workspace SET position=position-1 WHERE id_workspace = {$this->fields['id_workspace']} AND position > {$this->fields['position']}";
-        $db->query($update);
-
-        parent::delete();
-    }
-
-    /**
-     * Modifie la position de la relation module / espace de rattachement
-     *
-     * @param string $direction sens du mouvement 'down' / 'up'
-     */
-
-    public function changeposition($direction)
-    {
-        global $db;
-
-        $workspaceid = $this->fields['id_workspace'];
-
-        $select = "
-            SELECT  min(position) as minpos,
-                    max(position) as maxpos
-            FROM    ploopi_module_workspace
-            WHERE   id_workspace = {$workspaceid}
-        ";
-
-        $result = $db->query($select);
-        $fields = $db->fetchrow($result);
-        $minpos = $fields['minpos'];
-        $maxpos = $fields['maxpos'];
-        $position = $this->fields['position'];
-        $move = 0;
-
-        if ($direction == 'down' && $position != $maxpos) $move = 1;
-
-        if ($direction == 'up' && $position != $minpos) $move = -1;
-
-        if ($move!=0)
-        {
-            $update = "UPDATE ploopi_module_workspace SET position = 0 WHERE id_workspace = {$workspaceid} AND position = ".($position+$move);
-            $db->query($update);
-            $update = "UPDATE ploopi_module_workspace SET position = ".($position+$move)." WHERE id_workspace = {$workspaceid} AND position = {$position}";
-            $db->query($update);
-            $update = "UPDATE ploopi_module_workspace SET position = {$position} WHERE id_workspace = {$workspaceid} AND position = 0";
-            $db->query($update);
-        }
-    }
-}
-
-/**
- * Classe d'accès à la table ploopi_workspace_user
- *
- * @package ploopi
- * @subpackage workspace
- * @copyright Netlor, Ovensia
- * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
- */
-
-class workspace_user extends data_object
-{
-    /**
-     * Constructeur de la classe
-     *
-     * @return workspace_user
-     */
-
-    public function __construct()
-    {
-        parent::__construct('ploopi_workspace_user','id_workspace','id_user');
-        $this->fields['adminlevel'] = _PLOOPI_ID_LEVEL_USER;
-    }
-
-    /**
-     * Supprime la relation utilisateur / espace de rattachement
-     */
-
-    public function delete()
-    {
-        global $db;
-
-        // search for modules
-        $select =   "
-                    SELECT  m.id, m.label, mt.label as moduletype
-                    FROM    ploopi_module_workspace mw,
-                            ploopi_module m,
-                            ploopi_module_type mt
-                    WHERE   mw.id_workspace = {$this->fields['id_workspace']}
-                    AND     mw.id_module = m.id
-                    AND     m.id_module_type = mt.id
-                    ";
-
-        $rs_modules = $db->query($select);
-
-        while ($fields = $db->fetchrow($rs_modules))
-        {
-            $admin_userid = $this->fields['id_user'];
-            $admin_workspaceid = $this->fields['id_workspace'];
-            $admin_moduleid = $fields['id'];
-
-            echo "<br /><strong>&laquo; ".ploopi_htmlentities($fields['label'])." &raquo;</strong> (".ploopi_htmlentities($fields['moduletype']).")<br />";
-            if (file_exists("./modules/{$fields['moduletype']}/include/admin_user_delete.php")) include "./modules/{$fields['moduletype']}/include/admin_user_delete.php";
-        }
-
-        parent::delete();
-    }
-
-}
-
-/**
- * Classe d'accès à la table ploopi_workspace_user_role
- *
- * @package ploopi
- * @subpackage workspace
- * @copyright Netlor, Ovensia
- * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
- */
-
-class workspace_user_role extends data_object
-{
-    /**
-     * Constructeur de la classe
-     *
-     * @return workspace_user_role
-     */
-
-    public function __construct()
-    {
-        parent::__construct('ploopi_workspace_user_role','id_user','id_workspace','id_role');
-    }
-}
-
-/**
- * Classe d'accès à la table ploopi_workspace_group
- *
- * @package ploopi
- * @subpackage workspace
- * @copyright Netlor, Ovensia
- * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
- */
-
-class workspace_group extends data_object
-{
-
-    /**
-     * Constructeur de la classe
-     *
-     * @return workspace_group
-     */
-
-    public function __construct()
-    {
-        parent::__construct('ploopi_workspace_group','id_workspace','id_group');
-        $this->fields['adminlevel'] = _PLOOPI_ID_LEVEL_USER;
-    }
-
-    /**
-     * Supprime la relation groupe / espace de rattachement
-     */
-
-    public function delete()
-    {
-        global $db;
-
-        // search for modules
-        $select =   "
-                    SELECT  m.id, m.label, mt.label as moduletype
-                    FROM    ploopi_module_workspace mw,
-                            ploopi_module m,
-                            ploopi_module_type mt
-                    WHERE   mw.id_workspace = {$this->fields['id_workspace']}
-                    AND     mw.id_module = m.id
-                    AND     m.id_module_type = mt.id
-                    ";
-
-        $db->query($select);
-        while ($fields = $db->fetchrow())
-        {
-            $admin_groupid = $this->fields['id_group'];
-            $admin_workspaceid = $this->fields['id_workspace'];
-            $admin_moduleid = $fields['id'];
-
-            echo "<br /><strong>&laquo; ".ploopi_htmlentities($fields['label'])." &raquo;</strong> (".ploopi_htmlentities($fields['moduletype']).")<br />";
-            if (file_exists("./modules/{$fields['moduletype']}/include/admin_org_delete.php")) include "./modules/{$fields['moduletype']}/include/admin_org_delete.php";
-        }
-        parent::delete();
-    }
-}
-
-/**
- * Classe d'accès à la table ploopi_workspace_group_role
- *
- * @package ploopi
- * @subpackage workspace
- * @copyright Netlor, Ovensia
- * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
- */
-
-class workspace_group_role extends data_object
-{
-    /**
-     * Constructeur de la classe
-     *
-     * @return workspace_group_role
-     */
-
-    public function __construct()
-    {
-        parent::__construct('ploopi_workspace_group_role','id_group','id_workspace','id_role');
     }
 }

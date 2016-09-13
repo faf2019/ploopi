@@ -31,18 +31,6 @@
  */
 
 /**
- * Inclusion de la classe parent.
- */
-
-include_once './include/classes/data_object.php';
-
-/**
- * Inclusion des dépendances
- */
-
-include_once './include/classes/query.php';
-
-/**
  * Classe d'accès à la table ploopi_mod_forms_group
  *
  * @package forms
@@ -52,7 +40,7 @@ include_once './include/classes/query.php';
  * @author Stéphane Escaich
  */
 
-class formsGroup extends data_object
+class formsGroup extends ovensia\ploopi\data_object
 {
     /**
      * Constructeur de la classe
@@ -80,7 +68,7 @@ class formsGroup extends data_object
     public function delete()
     {
         // Suppression de la dépendance
-        $objQuery = new ploopi_query_update();
+        $objQuery = new ovensia\ploopi\query_update();
         $objQuery->add_from('ploopi_mod_forms_field');
         $objQuery->add_set('id_group = 0');
         $objQuery->add_where('id_group = %d', $this->fields['id']);
@@ -93,7 +81,7 @@ class formsGroup extends data_object
      * Retourne les conditions sous forme d'un tableau
      */
 
-    public function getConditions() { return ploopi_unserialize($this->fields['conditions']); }
+    public function getConditions() { return ovensia\ploopi\crypt::unserialize($this->fields['conditions']); }
 
 }
 ?>

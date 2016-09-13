@@ -53,6 +53,8 @@ if (isset($_POST['ploopi_login']) && !preg_match($pattern, $_POST['ploopi_login'
 if (isset($_POST['ploopi_group']) && !preg_match($pattern, $_POST['ploopi_group'])) $arrFilter['ploopi_group'] = $_POST['ploopi_group'];
 if (isset($_POST['ploopi_workspace']) && !preg_match($pattern, $_POST['ploopi_workspace'])) $arrFilter['ploopi_workspace'] = $_POST['ploopi_workspace'];
 if (isset($_POST['ploopi_email']) && !preg_match($pattern, $_POST['ploopi_email'])) $arrFilter['ploopi_email'] = $_POST['ploopi_email'];
+if (isset($_POST['ploopi_last_connection_1'])) $arrFilter['ploopi_last_connection_1'] = $_POST['ploopi_last_connection_1'];
+if (isset($_POST['ploopi_last_connection_2'])) $arrFilter['ploopi_last_connection_2'] = $_POST['ploopi_last_connection_2'];
 
 // Affectation de valeurs par défaut si non défini
 if (!isset($arrFilter['ploopi_lastname'])) $arrFilter['ploopi_lastname'] = '';
@@ -61,38 +63,45 @@ if (!isset($arrFilter['ploopi_login'])) $arrFilter['ploopi_login'] = '';
 if (!isset($arrFilter['ploopi_group'])) $arrFilter['ploopi_group'] = '';
 if (!isset($arrFilter['ploopi_workspace'])) $arrFilter['ploopi_workspace'] = '';
 if (!isset($arrFilter['ploopi_email'])) $arrFilter['ploopi_email'] = '';
+if (!isset($arrFilter['ploopi_last_connection_1'])) $arrFilter['ploopi_last_connection_1'] = '';
+if (!isset($arrFilter['ploopi_last_connection_2'])) $arrFilter['ploopi_last_connection_2'] = '';
 
 // Enregistrement SESSION
 $_SESSION['system']['directoryform'] = $arrFilter;
 ?>
-<form action="<?php echo ploopi_urlencode('admin.php?sysToolbarItem=directory'); ?>" method="post">
-<p class="ploopi_va" style="padding:4px;line-height:30px;">
+<form action="<?php echo ovensia\ploopi\crypt::urlencode('admin.php?sysToolbarItem=directory'); ?>" method="post">
+<div class="ploopi_va" style="padding:6px;">
     <label>Nom: </label>
-    <input type="text" class="text" name="ploopi_lastname" value="<?php echo ploopi_htmlentities($arrFilter['ploopi_lastname']); ?>" style="width:120px;" tabindex="100" />
+    <input type="text" class="text" name="ploopi_lastname" value="<?php echo ovensia\ploopi\str::htmlentities($arrFilter['ploopi_lastname']); ?>" style="width:100px;" tabindex="100" />
 
     <label>Prénom: </label>
-    <input type="text" class="text" name="ploopi_firstname" value="<?php echo ploopi_htmlentities($arrFilter['ploopi_firstname']); ?>" style="width:120px;" tabindex="105" />
+    <input type="text" class="text" name="ploopi_firstname" value="<?php echo ovensia\ploopi\str::htmlentities($arrFilter['ploopi_firstname']); ?>" style="width:100px;" tabindex="105" />
 
     <label>Login: </label>
-    <input type="text" class="text" name="ploopi_login" value="<?php echo ploopi_htmlentities($arrFilter['ploopi_login']); ?>" style="width:120px;" tabindex="110" />
+    <input type="text" class="text" name="ploopi_login" value="<?php echo ovensia\ploopi\str::htmlentities($arrFilter['ploopi_login']); ?>" style="width:100px;" tabindex="110" />
 
-    <label>Email: </label>
-    <input type="text" class="text" name="ploopi_email" value="<?php echo ploopi_htmlentities($arrFilter['ploopi_email']); ?>" style="width:200px;" tabindex="120" />
+    <label>Courriel: </label>
+    <input type="text" class="text" name="ploopi_email" value="<?php echo ovensia\ploopi\str::htmlentities($arrFilter['ploopi_email']); ?>" style="width:150px;" tabindex="120" />
 
     <label>Groupe: </label>
-    <input type="text" class="text" name="ploopi_group" value="<?php echo ploopi_htmlentities($arrFilter['ploopi_group']); ?>" style="width:150px;" tabindex="115" />
+    <input type="text" class="text" name="ploopi_group" value="<?php echo ovensia\ploopi\str::htmlentities($arrFilter['ploopi_group']); ?>" style="width:100px;" tabindex="115" />
 
-    <label>Espace de travail: </label>
-    <input type="text" class="text" name="ploopi_workspace" value="<?php echo ploopi_htmlentities($arrFilter['ploopi_workspace']); ?>" style="width:150px;" tabindex="115" />
+    <label>Espace: </label>
+    <input type="text" class="text" name="ploopi_workspace" value="<?php echo ovensia\ploopi\str::htmlentities($arrFilter['ploopi_workspace']); ?>" style="width:100px;" tabindex="115" />
+
+    <label>Connexion entre le: </label>
+    <input type="text" class="text" name="ploopi_last_connection_1" id="ploopi_last_connection_1" value="<?php echo ovensia\ploopi\str::htmlentities($arrFilter['ploopi_last_connection_1']); ?>" style="width:100px;" tabindex="116" />
+    <? ovensia\ploopi\date::open_calendar('ploopi_last_connection_1'); ?>
+    <label>et le: </label>
+    <input type="text" class="text" name="ploopi_last_connection_2" id="ploopi_last_connection_2" value="<?php echo ovensia\ploopi\str::htmlentities($arrFilter['ploopi_last_connection_2']); ?>" style="width:100px;" tabindex="117" />
+    <? ovensia\ploopi\date::open_calendar('ploopi_last_connection_2'); ?>
 
     <input type="submit" class="button" value="Filtrer" tabindex="150" />
-    <input type="button" class="button" value="Réinitialiser" onclick="document.location.href='<?php echo ploopi_urlencode('admin.php?sysToolbarItem=directory&system_filter_reset'); ?>';" tabindex="160" />
-</p>
+    <input type="submit" class="button" name="delete" value="Supprimer" style="color:#a60000" tabindex="155" onclick="if (!confirm('Attention vous allez supprimer définitivement les utilisateurs correspondant à ce filtre.\nContinuer ?')) return false;" />
+    <input type="button" class="button" value="Réinitialiser" onclick="document.location.href='<?php echo ovensia\ploopi\crypt::urlencode('admin.php?sysToolbarItem=directory&system_filter_reset'); ?>';" tabindex="160" />
+</div>
 </form>
-
-
 <?php
-include_once './include/classes/query.php';
 
 // On charge un maximum de données dans des tableaux pour simplifier les recherches par la suite
 // et pour résoudre des cas complexes (retrouver un utilisateur dans un espace attaché à un sous-groupe d'utilisateur dans un sous-espace de travail)
@@ -104,14 +113,14 @@ $arrWorkspaces = array();
 // Espaces selon le filtre de recherche
 $arrFilteredWorkspaces = array();
 
-$objQuery = new ploopi_query_select();
+$objQuery = new ovensia\ploopi\query_select();
 $objQuery->add_select('w.*');
 $objQuery->add_from('ploopi_workspace w');
 // ICI, on n'applique pas le filtre sur le nom pour pouvoir lire l'arbre complet (au cas ou l'espace ou le groupe que l'on cherche soit dans un sous-espace)
 
 if ($_SESSION['system']['level'] == 'work') // Visualisation depuis un espace de travail, filtrage sur les sous-espaces
 {
-    $objWorkspace = new workspace();
+    $objWorkspace = new ovensia\ploopi\workspace();
     if ($objWorkspace->open($workspaceid))
     {
         $objQuery->add_where('(w.id = %d OR w.parents = %s OR w.parents LIKE %s)', array(
@@ -138,7 +147,7 @@ while ($row = $objRs->fetchrow())
 // Chargement des ID de tous les sous-espaces de travail de l'espace courant en fonction du filtre de recherche par espace
 if ($arrFilter['ploopi_workspace'] != '')
 {
-    $objQuery = new ploopi_query_select();
+    $objQuery = new ovensia\ploopi\query_select();
     $objQuery->add_select('w.*');
     $objQuery->add_from('ploopi_workspace w');
     $objQuery->add_where('label LIKE %s', "%{$arrFilter['ploopi_workspace']}%");
@@ -155,7 +164,7 @@ $arrGroups = array();
 // Groupes selon le filtre de recherche
 $arrFilteredGroups = array();
 
-$objQuery = new ploopi_query_select();
+$objQuery = new ovensia\ploopi\query_select();
 $objQuery->add_select('*');
 $objQuery->add_from('ploopi_group');
 
@@ -166,7 +175,7 @@ while ($row = $objRs->fetchrow()) $arrGroups[$row['id']] = array('desc' => $row,
 if ($arrFilter['ploopi_group'] != '')
 {
     // Chargement des groupes autorisés
-    $objQuery = new ploopi_query_select();
+    $objQuery = new ovensia\ploopi\query_select();
     $objQuery->add_select('id');
     $objQuery->add_from('ploopi_group');
     $objQuery->add_where('label LIKE %s', "%{$arrFilter['ploopi_group']}%");
@@ -214,14 +223,14 @@ foreach($arrGroups as $intId => $row)
 }
 
 // On construit pour chaque espace, la liste des sous-groupes directs et indirect
-$objQuery = new ploopi_query_select();
+$objQuery = new ovensia\ploopi\query_select();
 $objQuery->add_select('wg.*');
 $objQuery->add_from('ploopi_workspace_group wg');
 if (!empty($arrFilteredWorkspaces) && $arrFilter['ploopi_workspace'] != '') $objQuery->add_where('wg.id_workspace IN (%e)', array($arrFilteredWorkspaces));
 
 if ($_SESSION['system']['level'] == 'work') // Visualisation depuis un espace de travail, filtrage sur les sous-espaces
 {
-    $objWorkspace = new workspace();
+    $objWorkspace = new ovensia\ploopi\workspace();
     if ($objWorkspace->open($workspaceid))
     {
         $objQuery->add_from('ploopi_workspace w');
@@ -276,7 +285,7 @@ foreach($arrWorkspaces as $intId => $row)
 
 
 // Sélection des utilisateurs
-$objQuery = new ploopi_query_select();
+$objQuery = new ovensia\ploopi\query_select();
 $objQuery->add_from('ploopi_user u');
 
 // Filtrages basiques (utilisateur)
@@ -284,6 +293,8 @@ if ($arrFilter['ploopi_lastname'] != '') $objQuery->add_where('u.lastname LIKE %
 if ($arrFilter['ploopi_firstname'] != '') $objQuery->add_where('u.firstname LIKE %s', "%{$arrFilter['ploopi_firstname']}%");
 if ($arrFilter['ploopi_login'] != '') $objQuery->add_where('u.login LIKE %s', "%{$arrFilter['ploopi_login']}%");
 if ($arrFilter['ploopi_email'] != '') $objQuery->add_where('u.email LIKE %s', "%{$arrFilter['ploopi_email']}%");
+if ($arrFilter['ploopi_last_connection_1'] != '') $objQuery->add_where('u.last_connection >= %s', ovensia\ploopi\date::local2timestamp($arrFilter['ploopi_last_connection_1'], '00:00:00'));
+if ($arrFilter['ploopi_last_connection_2'] != '') $objQuery->add_where('u.last_connection <= %s', ovensia\ploopi\date::local2timestamp($arrFilter['ploopi_last_connection_2'], '23:59:59'));
 
 // Filtrage sur les espaces/groupes "visibles"
 $objQuery->add_leftjoin('ploopi_workspace_user wu ON wu.id_user = u.id');
@@ -323,7 +334,7 @@ else
     else $arrQueryGroups = $arrFilteredGroups;
 }
 
-//ploopi_print_r($arrWorkspaces[current($arrFilteredWorkspaces)]);
+//ovensia\ploopi\output::print_r($arrWorkspaces[current($arrFilteredWorkspaces)]);
 
 if (empty($arrQueryWorkspaces)) $arrQueryWorkspaces[] = -1;
 if (empty($arrQueryGroups)) $arrQueryGroups[] = -1;
@@ -363,10 +374,28 @@ $objQuery->add_orderby('u.lastname, u.firstname');
 $objQueryCount->add_select('COUNT(DISTINCT u.id) as c');
 
 // Sauvegarde de la dernière requête SQL pour export
-ploopi_setsessionvar('directory_sql', $objQuery->get_sql());
+ovensia\ploopi\session::setvar('directory_sql', $objQuery->get_sql());
 
 // Lecture du nombre de réponses
 $intNbRep = current($objQueryCount->execute()->fetchrow());
+
+if (isset($_REQUEST['delete'])) {
+
+    // Exécution de la requête principale permettant de lister les utilisateurs selon le filtre
+    $objRs = $objQuery->execute();
+    while ($row = $objRs->fetchrow()) {
+        $objUser = new ovensia\ploopi\user();
+        if ($objUser->open($row['id']))
+        {
+            if ($_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_generate_htpasswd']) ovensia\ploopi\crypt::htpasswd($objUser->fields['login'], '', true);
+            ovensia\ploopi\user_action_log::record(_SYSTEM_ACTION_DELETEUSER, "{$objUser->fields['login']} - {$objUser->fields['lastname']} {$objUser->fields['firstname']} (id:{$objUser->fields['id']})");
+            $objUser->delete();
+        }
+    }
+
+    ovensia\ploopi\output::redirect('admin.php?sysToolbarItem=directory');
+}
+
 ?>
 
 <div style="padding:4px;background-color:#e0e0e0;border-bottom:1px solid #ccc;">
@@ -374,7 +403,7 @@ $intNbRep = current($objQueryCount->execute()->fetchrow());
     if ($_SESSION['system']['level'] == 'system')
     {
         ?>
-        <span>Vous pouvez retrouver ici l'ensemble des utilisateurs du sytème avec leur profil complet.<br />Vous ne pouvez cependant pas les gérer. Pour cela vous devez accéder à l'<a href="<?php echo ploopi_urlencode('admin.php?system_level=work'); ?>">interface d'administration des espaces de travail</a>.</span>
+        <span>Vous pouvez retrouver ici l'ensemble des utilisateurs du sytème avec leur profil complet.<br />Vous ne pouvez cependant pas les gérer. Pour cela vous devez accéder à l'<a href="<?php echo ovensia\ploopi\crypt::urlencode('admin.php?system_level=work'); ?>">interface d'administration des espaces de travail</a>.</span>
         <?php
     }
     else
@@ -403,19 +432,19 @@ $intNbRep = current($objQueryCount->execute()->fetchrow());
 
 
 <div class="ploopi_tabs">
-    <a href="<?php echo ploopi_urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=vcf"); ?>"><img src="./img/export/vcf.png"><span>vCard <sup>VCF</sup></span></a>
-    <a href="<?php echo ploopi_urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=xml"); ?>"><img src="./img/export/xml.png"><span>Brut <sup>XML</sup></span></a>
-    <a href="<?php echo ploopi_urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=csv"); ?>"><img src="./img/export/csv.png"><span>Brut <sup>CSV</sup></span></a>
+    <a href="<?php echo ovensia\ploopi\crypt::urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=vcf"); ?>"><img src="./img/export/vcf.png"><span>vCard <sup>VCF</sup></span></a>
+    <a href="<?php echo ovensia\ploopi\crypt::urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=xml"); ?>"><img src="./img/export/xml.png"><span>Brut <sup>XML</sup></span></a>
+    <a href="<?php echo ovensia\ploopi\crypt::urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=csv"); ?>"><img src="./img/export/csv.png"><span>Brut <sup>CSV</sup></span></a>
     <?php
-    if (ploopi_getparam('system_jodwebservice') != '') {
+    if (ovensia\ploopi\param::get('system_unoconv') != '') {
         ?>
-        <a href="<?php echo ploopi_urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=pdf"); ?>"><img src="./img/export/pdf.png"><span>Adobe &trade; <sup>PDF</sup></span></a>
-        <a href="<?php echo ploopi_urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=ods"); ?>"><img src="./img/export/ods.png"><span>OpenOffice &trade; <sup>ODS</sup></span></a>
+        <a href="<?php echo ovensia\ploopi\crypt::urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=pdf"); ?>"><img src="./img/export/pdf.png"><span>Adobe &trade; <sup>PDF</sup></span></a>
+        <a href="<?php echo ovensia\ploopi\crypt::urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=ods"); ?>"><img src="./img/export/ods.png"><span>OpenOffice &trade; <sup>ODS</sup></span></a>
         <?php
     }
     ?>
-    <a href="<?php echo ploopi_urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=xls"); ?>"><img src="./img/export/xls.png"><span>MS Excel &trade; <sup>XLS</sup></span></a>
-    <a href="<?php echo ploopi_urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=xlsx"); ?>"><img src="./img/export/xls.png"><span>MS Excel &trade; <sup>XLSX</sup></span></a>
+    <a href="<?php echo ovensia\ploopi\crypt::urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=xls"); ?>"><img src="./img/export/xls.png"><span>MS Excel &trade; <sup>XLS</sup></span></a>
+    <a href="<?php echo ovensia\ploopi\crypt::urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=xlsx"); ?>"><img src="./img/export/xls.png"><span>MS Excel &trade; <sup>XLSX</sup></span></a>
 </div>
 
 <?php
@@ -468,7 +497,7 @@ if ($intNbRep <= $intMaxResponse && $intNbRep > 0)
 
 
     // Requête permettant de connaître les groupes attachés aux utilisateurs
-    $objQuery = new ploopi_query_select();
+    $objQuery = new ovensia\ploopi\query_select();
     $objQuery->add_select('gu.*');
     $objQuery->add_from('ploopi_group_user gu');
     $objQuery->add_where('gu.id_user IN (%e)', array(array_keys($arrUser)));
@@ -482,7 +511,7 @@ if ($intNbRep <= $intMaxResponse && $intNbRep > 0)
     }
 
     // Requête permettant de connaître les "adminlevel" des groupes rattachés aux espaces de la recherche
-    $objQuery = new ploopi_query_select();
+    $objQuery = new ovensia\ploopi\query_select();
     $objQuery->add_select('wg.*');
     $objQuery->add_from('ploopi_workspace_group wg');
     $objQuery->add_where('wg.id_workspace IN (%e)', array(array_keys($arrWorkspaces)));
@@ -545,7 +574,7 @@ if ($intNbRep <= $intMaxResponse && $intNbRep > 0)
     }
 
     // Récupération des espaces des utilisateurs trouvés (via les rattachements directs)
-    $objQuery = new ploopi_query_select();
+    $objQuery = new ovensia\ploopi\query_select();
     $objQuery->add_select('wu.*');
     $objQuery->add_from('ploopi_workspace_user wu');
     $objQuery->add_where('wu.id_user IN (%e)', array(array_keys($arrUser)));
@@ -569,7 +598,7 @@ if ($intNbRep <= $intMaxResponse && $intNbRep > 0)
     if (!empty($arrGroupsId))
     {
         // recherche des rôles "groupe"
-        $objQuery = new ploopi_query_select();
+        $objQuery = new ovensia\ploopi\query_select();
         $objQuery->add_select('wgr.id_group, wgr.id_workspace');
         $objQuery->add_select('r.id, r.id_module, r.label as role_label');
         $objQuery->add_select('m.label as module_label');
@@ -585,7 +614,7 @@ if ($intNbRep <= $intMaxResponse && $intNbRep > 0)
     }
 
     // recherche des rôles "utilisateur"
-    $objQuery = new ploopi_query_select();
+    $objQuery = new ovensia\ploopi\query_select();
     $objQuery->add_select('wur.id_user, wur.id_workspace');
     $objQuery->add_select('r.id, r.id_module, r.label as role_label');
     $objQuery->add_select('m.label as module_label');
@@ -634,11 +663,11 @@ if ($intNbRep <= $intMaxResponse && $intNbRep > 0)
                                 $arrUserWspRoles[$intIdRole] = $_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_SYSTEMADMIN ?
                                     sprintf(
                                         "<a title=\"Accéder à ce rôle\" href=\"%s\">%s</a><span>&nbsp;(</span><a title=\"Accéder à ce module\" href=\"%s\">%s</a><span>)</span>",
-                                        ploopi_urlencode("admin.php?system_level=work&workspaceid={$intIdWorkspace}&wspToolbarItem=tabRoles&op=modify_role&roleid={$intIdRole}"),
-                                        ploopi_htmlentities($arrR['role_label']),
-                                        ploopi_urlencode("admin.php?system_level=work&workspaceid={$intIdWorkspace}&wspToolbarItem=tabModules&op=modify&moduleid={$arrR['id_module']}"),
-                                        ploopi_htmlentities($arrR['module_label'])
-                                    ) : sprintf("%s (%s)", ploopi_htmlentities($arrR['role_label']), ploopi_htmlentities($arrR['module_label']));
+                                        ovensia\ploopi\crypt::urlencode("admin.php?system_level=work&workspaceid={$intIdWorkspace}&wspToolbarItem=tabRoles&op=modify_role&roleid={$intIdRole}"),
+                                        ovensia\ploopi\str::htmlentities($arrR['role_label']),
+                                        ovensia\ploopi\crypt::urlencode("admin.php?system_level=work&workspaceid={$intIdWorkspace}&wspToolbarItem=tabModules&op=modify&moduleid={$arrR['id_module']}"),
+                                        ovensia\ploopi\str::htmlentities($arrR['module_label'])
+                                    ) : sprintf("%s (%s)", ovensia\ploopi\str::htmlentities($arrR['role_label']), ovensia\ploopi\str::htmlentities($arrR['module_label']));
                         }
                     }
                 }
@@ -649,11 +678,11 @@ if ($intNbRep <= $intMaxResponse && $intNbRep > 0)
                         $arrUserWspRoles[$intIdRole] = $_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_SYSTEMADMIN ?
                             sprintf(
                                     "<a title=\"Accéder à ce rôle\" href=\"%s\">%s</a><span>&nbsp;(</span><a title=\"Accéder à ce module\" href=\"%s\">%s</a><span>)</span>",
-                                    ploopi_urlencode("admin.php?system_level=work&workspaceid={$intIdWorkspace}&wspToolbarItem=tabRoles&op=modify_role&roleid={$intIdRole}"),
-                                    ploopi_htmlentities($arrR['role_label']),
-                                    ploopi_urlencode("admin.php?system_level=work&workspaceid={$intIdWorkspace}&wspToolbarItem=tabModules&op=modify&moduleid={$arrR['id_module']}"),
-                                    ploopi_htmlentities($arrR['module_label'])
-                                ) : sprintf("%s (%s)", ploopi_htmlentities($arrR['role_label']), ploopi_htmlentities($arrR['module_label']));
+                                    ovensia\ploopi\crypt::urlencode("admin.php?system_level=work&workspaceid={$intIdWorkspace}&wspToolbarItem=tabRoles&op=modify_role&roleid={$intIdRole}"),
+                                    ovensia\ploopi\str::htmlentities($arrR['role_label']),
+                                    ovensia\ploopi\crypt::urlencode("admin.php?system_level=work&workspaceid={$intIdWorkspace}&wspToolbarItem=tabModules&op=modify&moduleid={$arrR['id_module']}"),
+                                    ovensia\ploopi\str::htmlentities($arrR['module_label'])
+                                ) : sprintf("%s (%s)", ovensia\ploopi\str::htmlentities($arrR['role_label']), ovensia\ploopi\str::htmlentities($arrR['module_label']));
                 }
 
                 // Chaine contenant, pour un utilisateur et un espace, la liste des rôles
@@ -667,8 +696,8 @@ if ($intNbRep <= $intMaxResponse && $intNbRep > 0)
                 $row['workspaces'][$intIdWorkspace] = sprintf(
                     "<img style=\"float:left;\" src=\"%s\" /><span style=\"display:block;margin-left:20px;\"><a title=\"Accéder à cet espace\" href=\"%s\">%s</a>%s</span>",
                     "{$_SESSION['ploopi']['template_path']}/img/system/adminlevels/{$icon}.png",
-                    ploopi_urlencode("admin.php?system_level=work&workspaceid={$intIdWorkspace}"),
-                    ploopi_htmlentities($rowWorkspace['label']),
+                    ovensia\ploopi\crypt::urlencode("admin.php?system_level=work&workspaceid={$intIdWorkspace}"),
+                    ovensia\ploopi\str::htmlentities($rowWorkspace['label']),
                     $strUserWspRoles
                 );
             }
@@ -680,13 +709,13 @@ if ($intNbRep <= $intMaxResponse && $intNbRep > 0)
             foreach($row['groups'] as $intId => $strLabel)
                 $row['groups'][$intId] = sprintf(
                     "<a title=\"Accéder à ce groupe\" href=\"%s\">%s</a>",
-                    ploopi_urlencode("admin.php?system_level=work&groupid={$intId}"),
-                    ploopi_htmlentities($strLabel)
+                    ovensia\ploopi\crypt::urlencode("admin.php?system_level=work&groupid={$intId}"),
+                    ovensia\ploopi\str::htmlentities($strLabel)
                 );
         }
 
-        $strUserLabel = ploopi_htmlentities(sprintf("%s %s", $row['lastname'], $row['firstname']));
-        $strUserLogin = ploopi_htmlentities($row['login']);
+        $strUserLabel = ovensia\ploopi\str::htmlentities(sprintf("%s %s", $row['lastname'], $row['firstname']));
+        $strUserLogin = ovensia\ploopi\str::htmlentities($row['login']);
 
         // si l'utilisateur est attaché à un groupe, on met un lien vers la fiche de l'utilisateur pour pouvoir la modifier
         if (!empty($row['groups']))
@@ -694,13 +723,13 @@ if ($intNbRep <= $intMaxResponse && $intNbRep > 0)
             reset($row['groups']);
             $strUserLabel = sprintf(
                 "<a title=\"Accéder à cet utilisateur\" href=\"%s\">%s</a>",
-                ploopi_urlencode("admin.php?system_level=work&groupid=".key($row['groups'])."&wspToolbarItem=tabUsers&op=modify_user&user_id={$intUserId}"),
+                ovensia\ploopi\crypt::urlencode("admin.php?system_level=work&groupid=".key($row['groups'])."&wspToolbarItem=tabUsers&op=modify_user&user_id={$intUserId}"),
                 $strUserLabel
             );
 
             $strUserLogin = sprintf(
                 "<a title=\"Accéder à cet utilisateur\" href=\"%s\">%s</a>",
-                ploopi_urlencode("admin.php?system_level=work&groupid=".key($row['groups'])."&wspToolbarItem=tabUsers&op=modify_user&user_id={$intUserId}"),
+                ovensia\ploopi\crypt::urlencode("admin.php?system_level=work&groupid=".key($row['groups'])."&wspToolbarItem=tabUsers&op=modify_user&user_id={$intUserId}"),
                 $strUserLogin
             );
 
@@ -719,7 +748,7 @@ if ($intNbRep <= $intMaxResponse && $intNbRep > 0)
                     'label' => (empty($row['workspaces'])) ? '<em>Pas d\'espace</em>' : implode('', $row['workspaces']),
                     'sort_label' => implode(',', $arrSortLabelWorkspaces)
                 ),
-                'actions' => array('label' => '<a href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("admin.php?ploopi_op=system_delete_user&system_user_id={$intUserId}").'\',\''._SYSTEM_MSG_CONFIRMUSERDELETE.'\')"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_delete.png" title="'._SYSTEM_LABEL_DELETE.'"></a>')
+                'actions' => array('label' => '<a href="javascript:ploopi_confirmlink(\''.ovensia\ploopi\crypt::urlencode("admin.php?ploopi_op=system_delete_user&system_user_id={$intUserId}").'\',\''._SYSTEM_MSG_CONFIRMUSERDELETE.'\')"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_delete.png" title="'._SYSTEM_LABEL_DELETE.'"></a>')
             )
         );
     }
@@ -731,7 +760,7 @@ if ($intNbRep <= $intMaxResponse && $intNbRep > 0)
         array(
             'sortable' => true,
             'orderby_default' => 'login',
-            'limit' => 25
+            'limit' => 50
         )
     );
 }
@@ -742,11 +771,11 @@ echo $skin->close_simplebloc();
 <p class="ploopi_va" style="padding:4px;">
     <span style="margin-right:5px;">Légende:</span>
     <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/adminlevels/level_user.png" />
-    <span style="margin-right:5px;"><?php echo ploopi_htmlentities($ploopi_system_levels[_PLOOPI_ID_LEVEL_USER]); ?></span>
+    <span style="margin-right:5px;"><?php echo ovensia\ploopi\str::htmlentities($ploopi_system_levels[_PLOOPI_ID_LEVEL_USER]); ?></span>
     <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/adminlevels/level_groupmanager.png" />
-    <span style="margin-right:5px;"><?php echo ploopi_htmlentities($ploopi_system_levels[_PLOOPI_ID_LEVEL_GROUPMANAGER]); ?></span>
+    <span style="margin-right:5px;"><?php echo ovensia\ploopi\str::htmlentities($ploopi_system_levels[_PLOOPI_ID_LEVEL_GROUPMANAGER]); ?></span>
     <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/adminlevels/level_groupadmin.png" />
-    <span style="margin-right:5px;"><?php echo ploopi_htmlentities($ploopi_system_levels[_PLOOPI_ID_LEVEL_GROUPADMIN]); ?></span>
+    <span style="margin-right:5px;"><?php echo ovensia\ploopi\str::htmlentities($ploopi_system_levels[_PLOOPI_ID_LEVEL_GROUPADMIN]); ?></span>
     <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/adminlevels/level_systemadmin.png" />
-    <span style="margin-right:5px;"><?php echo ploopi_htmlentities($ploopi_system_levels[_PLOOPI_ID_LEVEL_SYSTEMADMIN]); ?></span>
+    <span style="margin-right:5px;"><?php echo ovensia\ploopi\str::htmlentities($ploopi_system_levels[_PLOOPI_ID_LEVEL_SYSTEMADMIN]); ?></span>
 </p>

@@ -36,7 +36,7 @@ $heading = new webedit_heading();
 $heading->open($headingid);
 
 
-$objUser = new user();
+$objUser = new ovensia\ploopi\user();
 $objUser->open($_SESSION['ploopi']['userid']);
 $arrGroups = $objUser->getgroups(true);
 
@@ -44,14 +44,14 @@ $arrGroups = $objUser->getgroups(true);
 $intEditorHeadingId = 0;
 $arrEditorUsers = array();
 $booEditorHeadingIdIsRoot = true;
-$arrEditor = ploopi_validation_get(_WEBEDIT_OBJECT_HEADING_BACK_EDITOR, $headingid);
+$arrEditor = ovensia\ploopi\validation::get(_WEBEDIT_OBJECT_HEADING_BACK_EDITOR, $headingid);
 if (empty($arrEditor)) // pas de partages pour cette rubrique, on recherche sur les parents
 {
     $booEditorHeadingIdIsRoot = false;
     $arrParents = explode(';', $heading->fields['parents']);
     for ($i = sizeof($arrParents)-1; $i >= 0; $i--)
     {
-        $arrEditor = ploopi_validation_get(_WEBEDIT_OBJECT_HEADING_BACK_EDITOR, $arrParents[$i]);
+        $arrEditor = ovensia\ploopi\validation::get(_WEBEDIT_OBJECT_HEADING_BACK_EDITOR, $arrParents[$i]);
         if (!empty($arrEditor))
         {
             $intEditorHeadingId = $arrParents[$i];
@@ -75,12 +75,12 @@ foreach($arrEditor as $value)
 }
 
 // Si l'utilisateur connecté n'est pas un "Rédacteur" on verif ses droits pour l'action _WEBEDIT_ACTION_CATEGORY_EDIT
-if(!$booIsAllowedEdit) $booIsAllowedEdit = ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT);
+if(!$booIsAllowedEdit) $booIsAllowedEdit = ovensia\ploopi\acl::isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT);
 ?>
 
 <p class="ploopi_va" style="background-color:#e0e0e0;padding:6px;border-bottom:1px solid #c0c0c0;">
     <?php
-    if (ploopi_isactionallowed(_WEBEDIT_ACTION_STATS))
+    if (ovensia\ploopi\acl::isactionallowed(_WEBEDIT_ACTION_STATS))
     {
         ?>
         <img style="display:block;float:right;cursor:pointer;" src="./modules/webedit/img/chart.png" alt="Statistiques" title="Statistiques de visites de cette rubrique" onclick="javascript:webedit_stats_open(null, <?php echo $heading->fields['id']; ?>, event);">
@@ -91,24 +91,24 @@ if(!$booIsAllowedEdit) $booIsAllowedEdit = ploopi_isactionallowed(_WEBEDIT_ACTIO
     {
         ?>
         <img src="./modules/webedit/img/base.png">
-        <span style="font-weight:bold;">Modification de la racine &laquo; <?php echo ploopi_htmlentities($heading->fields['label']); ?> &raquo;</span>
+        <span style="font-weight:bold;">Modification de la racine &laquo; <?php echo ovensia\ploopi\str::htmlentities($heading->fields['label']); ?> &raquo;</span>
         <?php
     }
     else
     {
         ?>
         <img src="./modules/webedit/img/folder.png">
-        <span style="font-weight:bold;">Modification de la rubrique &laquo; <?php echo ploopi_htmlentities($heading->fields['label']); ?> &raquo;</span>
+        <span style="font-weight:bold;">Modification de la rubrique &laquo; <?php echo ovensia\ploopi\str::htmlentities($heading->fields['label']); ?> &raquo;</span>
         <?php
     }
     ?>
 </p>
 <div id="webedit_heading_toolbar">
     <?php
-    if (ploopi_isactionallowed(_WEBEDIT_ACTION_ARTICLE_EDIT) || $booIsAllowedEdit)
+    if (ovensia\ploopi\acl::isactionallowed(_WEBEDIT_ACTION_ARTICLE_EDIT) || $booIsAllowedEdit)
     {
         ?>
-        <p class="ploopi_va" style="float:left;padding:6px;cursor:pointer;" title="Ajouter un article" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?op=article_addnew"); ?>';" >
+        <p class="ploopi_va" style="float:left;padding:6px;cursor:pointer;" title="Ajouter un article" onclick="javascript:document.location.href='<?php echo ovensia\ploopi\crypt::urlencode("admin.php?op=article_addnew"); ?>';" >
             <img src="./modules/webedit/img/doc_add.png">
             <span>Ajouter un article</span>
         </p>
@@ -116,31 +116,31 @@ if(!$booIsAllowedEdit) $booIsAllowedEdit = ploopi_isactionallowed(_WEBEDIT_ACTIO
     }
 
     //if ($booIsAllowedEdit) Modifié par SE le 01/06/2010 (demande SZSIC)
-    if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
+    if (ovensia\ploopi\acl::isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
     {
         ?>
-        <p class="ploopi_va" style="float:left;padding:6px;cursor:pointer;" title="Ajouter une sous-rubrique" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?op=heading_addnew"); ?>';" >
+        <p class="ploopi_va" style="float:left;padding:6px;cursor:pointer;" title="Ajouter une sous-rubrique" onclick="javascript:document.location.href='<?php echo ovensia\ploopi\crypt::urlencode("admin.php?op=heading_addnew"); ?>';" >
             <img src="./modules/webedit/img/folder_add.png">
             <span>Ajouter une sous-rubrique</span>
         </p>
         <?php
     }
     // Ici on ne controle pas si c'est un rédacteur car ils n'ont de toutes les façons pas le droit de créer des racines !
-    if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT) && $heading->fields['depth'] == 1) // root (Interdit au rédacteur !)
+    if (ovensia\ploopi\acl::isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT) && $heading->fields['depth'] == 1) // root (Interdit au rédacteur !)
     {
         ?>
-        <p class="ploopi_va" style="float:left;padding:6px;cursor:pointer;" title="Ajouter une racine" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?op=heading_addroot"); ?>';" >
+        <p class="ploopi_va" style="float:left;padding:6px;cursor:pointer;" title="Ajouter une racine" onclick="javascript:document.location.href='<?php echo ovensia\ploopi\crypt::urlencode("admin.php?op=heading_addroot"); ?>';" >
             <img src="./modules/webedit/img/base_add.png">
             <span>Ajouter une racine</span>
         </p>
         <?php
     }
 
-    //if (ploopi_isactionallowed(_WEBEDIT_ACTION_DELETECAT) && $heading->fields['id_heading'] != 0)
-    if ((ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT) || ($booIsEditor && !$booEditorHeadingIdIsRoot)) && !($heading->fields['id_heading'] == 0 && $heading->fields['position'] == 1) )
+    //if (ovensia\ploopi\acl::isactionallowed(_WEBEDIT_ACTION_DELETECAT) && $heading->fields['id_heading'] != 0)
+    if ((ovensia\ploopi\acl::isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT) || ($booIsEditor && !$booEditorHeadingIdIsRoot)) && !($heading->fields['id_heading'] == 0 && $heading->fields['position'] == 1) )
     {
         ?>
-        <p class="ploopi_va" style="float:left;padding:6px;cursor:pointer;" title="Supprimer cette rubrique" onclick="javascript:ploopi_confirmlink('<?php echo ploopi_urlencode("admin.php?op=heading_delete"); ?>','<?php echo _PLOOPI_CONFIRM; ?>');" >
+        <p class="ploopi_va" style="float:left;padding:6px;cursor:pointer;" title="Supprimer cette rubrique" onclick="javascript:ploopi_confirmlink('<?php echo ovensia\ploopi\crypt::urlencode("admin.php?op=heading_delete"); ?>','<?php echo _PLOOPI_CONFIRM; ?>');" >
             <img src="./modules/webedit/img/folder_del.png">
             <span>Supprimer cette rubrique</span>
         </p>
@@ -153,7 +153,7 @@ if(!$booIsAllowedEdit) $booIsAllowedEdit = ploopi_isactionallowed(_WEBEDIT_ACTIO
 if ($booIsAllowedEdit)
 {
     ?>
-    <form style="margin:0;" action="<?php echo ploopi_urlencode('admin.php?op=heading_save'); ?>" method="post" onsubmit="javascript:return webedit_heading_validate(this);">
+    <form style="margin:0;" action="<?php echo ovensia\ploopi\crypt::urlencode('admin.php?op=heading_save'); ?>" method="post" onsubmit="javascript:return webedit_heading_validate(this);">
     <?php
 }
 ?>
@@ -172,10 +172,10 @@ if ($display_type == 'advanced')
                 if ($booIsAllowedEdit)
                 {
                     ?>
-                    <input type="text" class="text" name="webedit_heading_label"  value="<?php echo ploopi_htmlentities($heading->fields['label']); ?>" tabindex="1" />
+                    <input type="text" class="text" name="webedit_heading_label"  value="<?php echo ovensia\ploopi\str::htmlentities($heading->fields['label']); ?>" tabindex="1" />
                     <?php
                 }
-                else echo '<span>'.ploopi_htmlentities($heading->fields['label']).'</span>';
+                else echo '<span>'.ovensia\ploopi\str::htmlentities($heading->fields['label']).'</span>';
                 ?>
             </p>
             <p>
@@ -184,10 +184,10 @@ if ($display_type == 'advanced')
                 if ($booIsAllowedEdit)
                 {
                     ?>
-                    <textarea class="text" name="webedit_heading_description" tabindex="2"><?php echo ploopi_htmlentities($heading->fields['description']); ?></textarea>
+                    <textarea class="text" name="webedit_heading_description" tabindex="2"><?php echo ovensia\ploopi\str::htmlentities($heading->fields['description']); ?></textarea>
                     <?php
                 }
-                else echo '<span>'.ploopi_nl2br(ploopi_htmlentities($heading->fields['description'])).'</span>';
+                else echo '<span>'.ovensia\ploopi\str::nl2br(ovensia\ploopi\str::htmlentities($heading->fields['description'])).'</span>';
                 ?>
             </p>
             <p>
@@ -218,7 +218,7 @@ if ($display_type == 'advanced')
                 {
                     if (isset($headings['list'][$headingid]['herited_template']) && $headings['list'][$headingid]['herited_template']) $webedit_template_name = $headings['list'][$headingid]['template'].' (hérité)';
                     else $webedit_template_name = $heading->fields['template'];
-                    echo '<span>'.ploopi_htmlentities($webedit_template_name).'</span>';
+                    echo '<span>'.ovensia\ploopi\str::htmlentities($webedit_template_name).'</span>';
                 }
                 ?>
             </p>
@@ -228,10 +228,10 @@ if ($display_type == 'advanced')
                 if ($booIsAllowedEdit)
                 {
                     ?>
-                    <input type="text" class="text" name="head_position" value="<?php echo ploopi_htmlentities($heading->fields['position']); ?>" style="width:40px;" tabindex="4" />
+                    <input type="text" class="text" name="head_position" value="<?php echo ovensia\ploopi\str::htmlentities($heading->fields['position']); ?>" style="width:40px;" tabindex="4" />
                     <?php
                 }
-                else echo '<span>'.ploopi_htmlentities($heading->fields['position']).'</span>';
+                else echo '<span>'.ovensia\ploopi\str::htmlentities($heading->fields['position']).'</span>';
                 ?>
 
             </p>
@@ -271,7 +271,7 @@ if ($display_type == 'advanced')
                     foreach($heading_sortmodes as $key => $value)
                     {
                         ?>
-                        <option <?php if ($heading->fields['sortmode'] == $key) echo 'selected'; ?> value="<?php echo ploopi_htmlentities($key); ?>"><?php echo ploopi_htmlentities($value); ?></option>
+                        <option <?php if ($heading->fields['sortmode'] == $key) echo 'selected'; ?> value="<?php echo ovensia\ploopi\str::htmlentities($key); ?>"><?php echo ovensia\ploopi\str::htmlentities($value); ?></option>
                         <?php
                     }
                     ?>
@@ -280,7 +280,7 @@ if ($display_type == 'advanced')
                 }
                 else
                 {
-                    ?><span><?php echo ploopi_htmlentities($heading_sortmodes[$heading->fields['sortmode']]); ?></span><?php
+                    ?><span><?php echo ovensia\ploopi\str::htmlentities($heading_sortmodes[$heading->fields['sortmode']]); ?></span><?php
                 }
                 ?>
             </p>
@@ -345,8 +345,8 @@ if ($display_type == 'advanced')
                                 }
                             }
                             ?>
-                            <input type="hidden" id="webedit_heading_linkedpage" name="webedit_heading_linkedpage" value="<?php echo ploopi_htmlentities($heading->fields['linkedpage']); ?>">
-                            <input type="text" readonly class="text" style="width:150px;" id="linkedpage_displayed" value="<?php echo ploopi_htmlentities($redirect_title); ?>">
+                            <input type="hidden" id="webedit_heading_linkedpage" name="webedit_heading_linkedpage" value="<?php echo ovensia\ploopi\str::htmlentities($heading->fields['linkedpage']); ?>">
+                            <input type="text" readonly class="text" style="width:150px;" id="linkedpage_displayed" value="<?php echo ovensia\ploopi\str::htmlentities($redirect_title); ?>">
                             <img src="./modules/webedit/img/ico_choose_article.png" style="display:block;float:left;cursor:pointer;margin:2px 4px;" title="Choisir un article" alt="Choisir" onclick="javascript:ploopi_showpopup(ploopi_xmlhttprequest('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=webedit_heading_selectredirect',false), 300, event, 'click', 'webedit_popup_selectredirect');" />
                             <img src="./modules/webedit/img/ico_clear_article.png" style="display:block;float:left;cursor:pointer;margin:2px 4px;" title="Effacer la redirection" alt="Choisir" onclick="javascript:ploopi_getelem('webedit_heading_linkedpage').value='';ploopi_getelem('linkedpage_displayed').value='';" />
                         </span>
@@ -354,7 +354,7 @@ if ($display_type == 'advanced')
                             <input style="cursor:pointer;" type="radio" name="webedit_heading_content_type" value="url_redirect" id="heading_content_type_url_redirect" <?php if ($heading->fields['content_type'] == 'url_redirect') echo 'checked'; ?> />Redirection vers une URL
                         </span>
                         <span style="padding-left:20px;">
-                            <input type="text" class="text" name="webedit_heading_url" style="width:100%;" value="<?php echo ploopi_htmlentities($heading->fields['url']); ?>" onkeyup="javascript:if (this.value.length>0 && !$('heading_content_type_url_redirect').checked) ploopi_checkbox_click(event, 'heading_content_type_url_redirect');" tabindex="8" />
+                            <input type="text" class="text" name="webedit_heading_url" style="width:100%;" value="<?php echo ovensia\ploopi\str::htmlentities($heading->fields['url']); ?>" onkeyup="javascript:if (this.value.length>0 && !$('heading_content_type_url_redirect').checked) ploopi_checkbox_click(event, 'heading_content_type_url_redirect');" tabindex="8" />
                         </span>
                         <span style="cursor:pointer;" onclick="javascript:ploopi_checkbox_click(event, 'heading_content_type_headings');">
                             <input style="cursor:pointer;" type="radio" name="webedit_heading_content_type" value="headings" id="heading_content_type_headings" <?php if ($heading->fields['content_type'] == 'headings') echo 'checked'; ?> />Afficher le contenu des sous rubriques
@@ -396,14 +396,14 @@ if ($display_type == 'advanced')
                                 }
                                 else $redirect_title = '';
 
-                                echo ploopi_htmlentities($redirect_title);
+                                echo ovensia\ploopi\str::htmlentities($redirect_title);
                             break;
 
                             case 'url_redirect':
                                 ?>
                                 Redirection vers une URL : <br />
                                 <?php
-                                echo ploopi_htmlentities($heading->fields['url']);
+                                echo ovensia\ploopi\str::htmlentities($heading->fields['url']);
                             break;
 
                             case 'headings':
@@ -424,10 +424,10 @@ if ($display_type == 'advanced')
                 if ($booIsAllowedEdit)
                 {
                     ?>
-                    <input type="text" style="width:100px;cursor:pointer" class="text color {hash:true}" name="webedit_heading_color" id="webedit_heading_color" value="<?php echo ploopi_htmlentities($heading->fields['color']); ?>" tabindex="10" />
+                    <input type="text" style="width:100px;cursor:pointer" class="text color {hash:true}" name="webedit_heading_color" id="webedit_heading_color" value="<?php echo ovensia\ploopi\str::htmlentities($heading->fields['color']); ?>" tabindex="10" />
                 <?php
                 }
-                else echo '<span>'.ploopi_htmlentities($heading->fields['color']).'</span>';
+                else echo '<span>'.ovensia\ploopi\str::htmlentities($heading->fields['color']).'</span>';
                 ?>
             </p>
             <p>
@@ -436,10 +436,10 @@ if ($display_type == 'advanced')
                 if ($booIsAllowedEdit)
                 {
                     ?>
-                    <input type="text" style="width:100px;" class="text" name="webedit_heading_posx"  value="<?php echo ploopi_htmlentities($heading->fields['posx']); ?>" tabindex="11" />
+                    <input type="text" style="width:100px;" class="text" name="webedit_heading_posx"  value="<?php echo ovensia\ploopi\str::htmlentities($heading->fields['posx']); ?>" tabindex="11" />
                     <?php
                 }
-                else echo '<span>'.ploopi_htmlentities($heading->fields['posx']).'</span>';
+                else echo '<span>'.ovensia\ploopi\str::htmlentities($heading->fields['posx']).'</span>';
                 ?>
             </p>
             <p>
@@ -448,10 +448,10 @@ if ($display_type == 'advanced')
                 if ($booIsAllowedEdit)
                 {
                     ?>
-                    <input type="text" style="width:100px;" class="text" name="webedit_heading_posy"  value="<?php echo ploopi_htmlentities($heading->fields['posy']); ?>" tabindex="12" />
+                    <input type="text" style="width:100px;" class="text" name="webedit_heading_posy"  value="<?php echo ovensia\ploopi\str::htmlentities($heading->fields['posy']); ?>" tabindex="12" />
                     <?php
                 }
-                else echo '<span>'.ploopi_htmlentities($heading->fields['posy']).'</span>';
+                else echo '<span>'.ovensia\ploopi\str::htmlentities($heading->fields['posy']).'</span>';
                 ?>
             </p>
             <p>
@@ -460,10 +460,10 @@ if ($display_type == 'advanced')
                 if ($booIsAllowedEdit)
                 {
                     ?>
-                    <input type="text" class="text" name="webedit_heading_free1"  value="<?php echo ploopi_htmlentities($heading->fields['free1']); ?>" tabindex="13" />
+                    <input type="text" class="text" name="webedit_heading_free1"  value="<?php echo ovensia\ploopi\str::htmlentities($heading->fields['free1']); ?>" tabindex="13" />
                     <?php
                 }
-                else echo '<span>'.ploopi_htmlentities($heading->fields['free1']).'</span>';
+                else echo '<span>'.ovensia\ploopi\str::htmlentities($heading->fields['free1']).'</span>';
                 ?>
             </p>
             <p>
@@ -472,10 +472,10 @@ if ($display_type == 'advanced')
                 if ($booIsAllowedEdit)
                 {
                     ?>
-                    <input type="text" class="text" name="webedit_heading_free2"  value="<?php echo ploopi_htmlentities($heading->fields['free2']); ?>" tabindex="14" />
+                    <input type="text" class="text" name="webedit_heading_free2"  value="<?php echo ovensia\ploopi\str::htmlentities($heading->fields['free2']); ?>" tabindex="14" />
                     <?php
                 }
-                else echo '<span>'.ploopi_htmlentities($heading->fields['free2']).'</span>';
+                else echo '<span>'.ovensia\ploopi\str::htmlentities($heading->fields['free2']).'</span>';
                 ?>
             </p>
 
@@ -486,9 +486,9 @@ if ($display_type == 'advanced')
 else
 {
     ?>
-    <input type="hidden" name="webedit_heading_url_window" value="<?php echo ploopi_htmlentities($heading->fields['url_window']); ?>" />
-    <input type="hidden" name="webedit_heading_feed_enabled" value="<?php echo ploopi_htmlentities($heading->fields['feed_enabled']); ?>" />
-    <input type="hidden" name="webedit_heading_subscription_enabled" value="<?php echo ploopi_htmlentities($heading->fields['subscription_enabled']); ?>" />
+    <input type="hidden" name="webedit_heading_url_window" value="<?php echo ovensia\ploopi\str::htmlentities($heading->fields['url_window']); ?>" />
+    <input type="hidden" name="webedit_heading_feed_enabled" value="<?php echo ovensia\ploopi\str::htmlentities($heading->fields['feed_enabled']); ?>" />
+    <input type="hidden" name="webedit_heading_subscription_enabled" value="<?php echo ovensia\ploopi\str::htmlentities($heading->fields['subscription_enabled']); ?>" />
 
     <div class="ploopi_form" style="float:left;width:45%;">
         <div style="padding:2px;">
@@ -498,10 +498,10 @@ else
                 if ($booIsAllowedEdit)
                 {
                     ?>
-                    <input type="text" class="text" name="webedit_heading_label"  value="<?php echo ploopi_htmlentities($heading->fields['label']); ?>" tabindex="1" />
+                    <input type="text" class="text" name="webedit_heading_label"  value="<?php echo ovensia\ploopi\str::htmlentities($heading->fields['label']); ?>" tabindex="1" />
                     <?php
                 }
-                else echo '<span>'.ploopi_htmlentities($heading->fields['label']).'</span>';
+                else echo '<span>'.ovensia\ploopi\str::htmlentities($heading->fields['label']).'</span>';
                 ?>
             </p>
             <p>
@@ -532,7 +532,7 @@ else
                 {
                     if (isset($headings['list'][$headingid]['herited_template']) && $headings['list'][$headingid]['herited_template']) $webedit_template_name = $headings['list'][$headingid]['template'].' (hérité)';
                     else $webedit_template_name = $heading->fields['template'];
-                    echo '<span>'.ploopi_htmlentities($webedit_template_name).'</span>';
+                    echo '<span>'.ovensia\ploopi\str::htmlentities($webedit_template_name).'</span>';
                 }
                 ?>
             </p>
@@ -542,10 +542,10 @@ else
                 if ($booIsAllowedEdit)
                 {
                     ?>
-                    <input type="text" class="text" name="head_position" value="<?php echo ploopi_htmlentities($heading->fields['position']); ?>" style="width:40px;" tabindex="4" />
+                    <input type="text" class="text" name="head_position" value="<?php echo ovensia\ploopi\str::htmlentities($heading->fields['position']); ?>" style="width:40px;" tabindex="4" />
                     <?php
                 }
-                else echo '<span>'.ploopi_htmlentities($heading->fields['position']).'</span>';
+                else echo '<span>'.ovensia\ploopi\str::htmlentities($heading->fields['position']).'</span>';
                 ?>
             </p>
             <p>
@@ -571,10 +571,10 @@ else
                 if ($booIsAllowedEdit)
                 {
                     ?>
-                    <textarea class="text" name="webedit_heading_description" tabindex="2"><?php echo ploopi_htmlentities($heading->fields['description']); ?></textarea>
+                    <textarea class="text" name="webedit_heading_description" tabindex="2"><?php echo ovensia\ploopi\str::htmlentities($heading->fields['description']); ?></textarea>
                     <?php
                 }
-                else echo '<span>'.ploopi_nl2br(ploopi_htmlentities($heading->fields['description'])).'</span>';
+                else echo '<span>'.ovensia\ploopi\str::nl2br(ovensia\ploopi\str::htmlentities($heading->fields['description'])).'</span>';
                 ?>
             </p>
         </div>
@@ -588,7 +588,7 @@ else
 
 // récupère les validateurs
 $arrWfUsers = array();
-$arrWf = ploopi_validation_get(_WEBEDIT_OBJECT_HEADING, $headingid);
+$arrWf = ovensia\ploopi\validation::get(_WEBEDIT_OBJECT_HEADING, $headingid);
 $intWfHeadingId = $headingid;
 
 if (empty($arrWf)) // pas de validateur pour cette rubrique, on recherche sur les parents
@@ -596,7 +596,7 @@ if (empty($arrWf)) // pas de validateur pour cette rubrique, on recherche sur le
     $arrParents = explode(';', $heading->fields['parents']);
     for ($i = sizeof($arrParents)-1; $i >= 0; $i--)
     {
-        $arrWf = ploopi_validation_get(_WEBEDIT_OBJECT_HEADING, $arrParents[$i]);
+        $arrWf = ovensia\ploopi\validation::get(_WEBEDIT_OBJECT_HEADING, $arrParents[$i]);
         if (!empty($arrWf))
         {
             $intWfHeadingId = $arrParents[$i];
@@ -620,14 +620,14 @@ foreach($arrWf as $value)
 // récupère les partages
 $arrSharesUsers = array();
 $intSharesHeadingId = 0;
-$arrShares = ploopi_share_get(-1, _WEBEDIT_OBJECT_HEADING, $headingid);
+$arrShares = ovensia\ploopi\share::get(-1, _WEBEDIT_OBJECT_HEADING, $headingid);
 
 if (empty($arrShares)) // pas de partages pour cette rubrique, on recherche sur les parents
 {
     $arrParents = explode(';', $heading->fields['parents']);
     for ($i = sizeof($arrParents)-1; $i >= 0; $i--)
     {
-        $arrShares = ploopi_share_get(-1, _WEBEDIT_OBJECT_HEADING, $arrParents[$i]);
+        $arrShares = ovensia\ploopi\share::get(-1, _WEBEDIT_OBJECT_HEADING, $arrParents[$i]);
         if (!empty($arrShares))
         {
             $intSharesHeadingId = $arrParents[$i];
@@ -645,7 +645,7 @@ foreach($arrShares as $value) $arrSharesUsers[$value['type_share']][] = $value['
     <fieldset class="fieldset" style="padding:6px;">
         <legend><strong>Validateurs</strong> (utilisateurs qui peuvent publier)</legend>
 
-        <p class="ploopi_va" style="padding:0 2px 2px 2px;"><span>Validateurs </span><?php if ($intWfHeadingId && $intWfHeadingId != $headingid) echo "<em>&nbsp;héritées de &laquo;&nbsp;</em><a href=\"".ploopi_urlencode("admin.php?headingid={$intWfHeadingId}")."\">{$headings['list'][$intWfHeadingId]['label']}</a><em>&nbsp;&raquo;</em>"; ?><span>:</span>
+        <p class="ploopi_va" style="padding:0 2px 2px 2px;"><span>Validateurs </span><?php if ($intWfHeadingId && $intWfHeadingId != $headingid) echo "<em>&nbsp;héritées de &laquo;&nbsp;</em><a href=\"".ovensia\ploopi\crypt::urlencode("admin.php?headingid={$intWfHeadingId}")."\">{$headings['list'][$intWfHeadingId]['label']}</a><em>&nbsp;&raquo;</em>"; ?><span>:</span>
             <?php
             if (!empty($arrWfUsers))
             {
@@ -657,7 +657,7 @@ foreach($arrShares as $value) $arrSharesUsers[$value['type_share']][] = $value['
                         "SELECT label FROM ploopi_group WHERE id in (".implode(',',$arrWfUsers['group']).") ORDER BY label"
                     );
 
-                    while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi_htmlentities($row['label'])."&nbsp;</span>";
+                    while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;".ovensia\ploopi\str::htmlentities($row['label'])."&nbsp;</span>";
                 }
                 if (!empty($arrWfUsers['user']))
                 {
@@ -667,7 +667,7 @@ foreach($arrShares as $value) $arrSharesUsers[$value['type_share']][] = $value['
                         "SELECT concat(lastname, ' ', firstname) as name FROM ploopi_user WHERE id in (".implode(',',$arrWfUsers['user']).") ORDER BY lastname, firstname"
                     );
 
-                    while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi_htmlentities($row['name'])."&nbsp;</span>";
+                    while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;".ovensia\ploopi\str::htmlentities($row['name'])."&nbsp;</span>";
                 }
             }
             else echo '<em>Aucune accréditation</em>';
@@ -675,11 +675,11 @@ foreach($arrShares as $value) $arrSharesUsers[$value['type_share']][] = $value['
         </p>
 
         <?php
-        if (ploopi_isactionallowed(_WEBEDIT_ACTION_WORKFLOW_MANAGE) && ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
+        if (ovensia\ploopi\acl::isactionallowed(_WEBEDIT_ACTION_WORKFLOW_MANAGE) && ovensia\ploopi\acl::isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
         {
             ?>
             <div style="border:1px solid #c0c0c0;overflow:hidden;">
-            <?php ploopi_validation_selectusers(_WEBEDIT_OBJECT_HEADING, $heading->fields['id'], -1, _WEBEDIT_ACTION_ARTICLE_PUBLISH, $intWfHeadingId == $headingid ? 'Modifier la listes des validateurs :' : 'Définir une nouvelle liste de validateurs :'); ?>
+            <?php ovensia\ploopi\validation::selectusers(_WEBEDIT_OBJECT_HEADING, $heading->fields['id'], -1, _WEBEDIT_ACTION_ARTICLE_PUBLISH, $intWfHeadingId == $headingid ? 'Modifier la listes des validateurs :' : 'Définir une nouvelle liste de validateurs :'); ?>
             </div>
             <?php
         }
@@ -691,7 +691,7 @@ foreach($arrShares as $value) $arrSharesUsers[$value['type_share']][] = $value['
     <fieldset class="fieldset" style="padding:6px;">
         <legend><strong>Rédacteurs</strong> (utilisateurs qui peuvent gérer cette branche)</legend>
 
-        <p class="ploopi_va" style="padding:0 2px 2px 2px;"><span>Rédacteurs </span><?php if ($intEditorHeadingId && $intEditorHeadingId != $headingid) echo "<em>&nbsp;héritées de &laquo;&nbsp;</em><a href=\"".ploopi_urlencode("admin.php?headingid={$intEditorHeadingId}")."\">{$headings['list'][$intEditorHeadingId]['label']}</a><em>&nbsp;&raquo;</em>"; ?><span>:</span>
+        <p class="ploopi_va" style="padding:0 2px 2px 2px;"><span>Rédacteurs </span><?php if ($intEditorHeadingId && $intEditorHeadingId != $headingid) echo "<em>&nbsp;héritées de &laquo;&nbsp;</em><a href=\"".ovensia\ploopi\crypt::urlencode("admin.php?headingid={$intEditorHeadingId}")."\">{$headings['list'][$intEditorHeadingId]['label']}</a><em>&nbsp;&raquo;</em>"; ?><span>:</span>
             <?php
             if (!empty($arrEditorUsers))
             {
@@ -703,7 +703,7 @@ foreach($arrShares as $value) $arrSharesUsers[$value['type_share']][] = $value['
                         "SELECT label FROM ploopi_group WHERE id in (".implode(',',$arrEditorUsers['group']).") ORDER BY label"
                     );
 
-                    while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi_htmlentities($row['label'])."&nbsp;</span>";
+                    while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;".ovensia\ploopi\str::htmlentities($row['label'])."&nbsp;</span>";
                 }
                 if (!empty($arrEditorUsers['user']))
                 {
@@ -713,7 +713,7 @@ foreach($arrShares as $value) $arrSharesUsers[$value['type_share']][] = $value['
                         "SELECT concat(lastname, ' ', firstname) as name FROM ploopi_user WHERE id in (".implode(',',$arrEditorUsers['user']).") ORDER BY lastname, firstname"
                     );
 
-                    while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi_htmlentities($row['name'])."&nbsp;</span>";
+                    while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;".ovensia\ploopi\str::htmlentities($row['name'])."&nbsp;</span>";
                 }
             }
             else echo '<em>Aucune accréditation</em>';
@@ -721,11 +721,11 @@ foreach($arrShares as $value) $arrSharesUsers[$value['type_share']][] = $value['
         </p>
 
         <?php
-        if (ploopi_isactionallowed(_WEBEDIT_ACTION_HEADING_BACK_EDITOR_MANAGE) && ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
+        if (ovensia\ploopi\acl::isactionallowed(_WEBEDIT_ACTION_HEADING_BACK_EDITOR_MANAGE) && ovensia\ploopi\acl::isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
         {
             ?>
             <div style="border:1px solid #c0c0c0;overflow:hidden;">
-            <?php ploopi_validation_selectusers(_WEBEDIT_OBJECT_HEADING_BACK_EDITOR, $heading->fields['id'], -1,_WEBEDIT_ACTION_HEADING_BACK_EDITOR, $intEditorHeadingId == $headingid ? 'Modifier la listes des rédacteurs :' : 'Définir une nouvelle liste de rédacteurs :'); ?>
+            <?php ovensia\ploopi\validation::selectusers(_WEBEDIT_OBJECT_HEADING_BACK_EDITOR, $heading->fields['id'], -1,_WEBEDIT_ACTION_HEADING_BACK_EDITOR, $intEditorHeadingId == $headingid ? 'Modifier la listes des rédacteurs :' : 'Définir une nouvelle liste de rédacteurs :'); ?>
             </div>
             <?php
         }
@@ -739,7 +739,7 @@ foreach($arrShares as $value) $arrSharesUsers[$value['type_share']][] = $value['
         <p class="ploopi_checkbox" style="padding: 0 0 0 2px;">
             <label for="heading_private">Rubrique privée (accès avec un compte utilisateur):</label>
             <?php
-            if (ploopi_isactionallowed(_WEBEDIT_ACTION_ACCESS_MANAGE))
+            if (ovensia\ploopi\acl::isactionallowed(_WEBEDIT_ACTION_ACCESS_MANAGE))
             {
                 ?>
                 <input type="checkbox" name="webedit_heading_private" id="webedit_heading_private" value="1" <?php if ($heading->fields['private']) echo 'checked="checked"'; ?> onchange="javascript:$('heading_private_form').style.display = (this.checked) ? 'block' : 'none';"/>
@@ -754,7 +754,7 @@ foreach($arrShares as $value) $arrSharesUsers[$value['type_share']][] = $value['
             <p class="ploopi_checkbox" style="padding:0 0 0 2px;">
                 <label for="heading_private">Toujours visible dans le menu :</label>
                 <?php
-                if (ploopi_isactionallowed(_WEBEDIT_ACTION_ACCESS_MANAGE))
+                if (ovensia\ploopi\acl::isactionallowed(_WEBEDIT_ACTION_ACCESS_MANAGE))
                 {
                     ?>
                     <input type="checkbox" name="webedit_heading_private_visible" id="webedit_heading_private_visible" value="1" <?php if ($heading->fields['private_visible']) echo 'checked="checked"'; ?> />
@@ -764,7 +764,7 @@ foreach($arrShares as $value) $arrSharesUsers[$value['type_share']][] = $value['
                     echo ($heading->fields['private_visible']) ? 'oui' : 'non';
                 ?>
             </p>
-            <p class="ploopi_va" style="padding:6px 2px 2px 2px;"><span>Autorisations d'accès </span><?php if ($intSharesHeadingId && $intSharesHeadingId != $headingid) echo "<em>&nbsp;héritées de &laquo;&nbsp;</em><a href=\"".ploopi_urlencode("admin.php?headingid={$intSharesHeadingId}")."\">{$headings['list'][$intSharesHeadingId]['label']}</a><em>&nbsp;&raquo;</em>"; ?><span>:</span>
+            <p class="ploopi_va" style="padding:6px 2px 2px 2px;"><span>Autorisations d'accès </span><?php if ($intSharesHeadingId && $intSharesHeadingId != $headingid) echo "<em>&nbsp;héritées de &laquo;&nbsp;</em><a href=\"".ovensia\ploopi\crypt::urlencode("admin.php?headingid={$intSharesHeadingId}")."\">{$headings['list'][$intSharesHeadingId]['label']}</a><em>&nbsp;&raquo;</em>"; ?><span>:</span>
                 <?php
                 if (!empty($arrSharesUsers))
                 {
@@ -776,7 +776,7 @@ foreach($arrShares as $value) $arrSharesUsers[$value['type_share']][] = $value['
                             "SELECT label FROM ploopi_group WHERE id in (".implode(',',$arrSharesUsers['group']).") ORDER BY label"
                         );
 
-                        while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi_htmlentities($row['label'])."&nbsp;</span>";
+                        while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;".ovensia\ploopi\str::htmlentities($row['label'])."&nbsp;</span>";
                     }
                     if (!empty($arrSharesUsers['user']))
                     {
@@ -786,19 +786,19 @@ foreach($arrShares as $value) $arrSharesUsers[$value['type_share']][] = $value['
                             "SELECT concat(lastname, ' ', firstname) as name FROM ploopi_user WHERE id in (".implode(',',$arrSharesUsers['user']).") ORDER BY lastname, firstname"
                         );
 
-                        while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi_htmlentities($row['name'])."&nbsp;</span>";
+                        while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;".ovensia\ploopi\str::htmlentities($row['name'])."&nbsp;</span>";
                     }
                 }
                 else echo '<em>Aucune accréditation</em>';
                 ?>
             </p>
             <?php
-            if (ploopi_isactionallowed(_WEBEDIT_ACTION_ACCESS_MANAGE))
+            if (ovensia\ploopi\acl::isactionallowed(_WEBEDIT_ACTION_ACCESS_MANAGE))
             {
                 ?>
                 <div style="border:1px solid #c0c0c0;overflow:hidden;">
                 <?php
-                    ploopi_share_selectusers(_WEBEDIT_OBJECT_HEADING, $heading->fields['id'], -1, ($intSharesHeadingId && $intSharesHeadingId == $headingid) ? 'Modifier la listes des autorisations d\'accès:' : 'Définir une nouvelle liste d\'autorisations d\'accès:');
+                    ovensia\ploopi\share::selectusers(_WEBEDIT_OBJECT_HEADING, $heading->fields['id'], -1, ($intSharesHeadingId && $intSharesHeadingId == $headingid) ? 'Modifier la listes des autorisations d\'accès:' : 'Définir une nouvelle liste d\'autorisations d\'accès:');
                 ?>
                 </div>
                 <?php
@@ -824,15 +824,15 @@ if ($booIsAllowedEdit)
 <div style="margin:0 4px 4px 4px;border-style:solid;border-width:1px 1px 0 1px;border-color:#c0c0c0;">
     <p class="ploopi_va" style="background-color:#e0e0e0;border-bottom:1px solid #c0c0c0;padding:4px 6px;overflow:auto;">
         <?php
-        if (ploopi_isactionallowed(_WEBEDIT_ACTION_ARTICLE_EDIT) || $booIsEditor)
+        if (ovensia\ploopi\acl::isactionallowed(_WEBEDIT_ACTION_ARTICLE_EDIT) || $booIsEditor)
         {
             ?>
-                <a style="float:right;text-decoration:none;" href="<?php echo ploopi_urlencode("admin.php?op=article_addnew"); ?>">&nbsp;Ajouter un article</a>
+                <a style="float:right;text-decoration:none;" href="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?op=article_addnew"); ?>">&nbsp;Ajouter un article</a>
                 <img style="float:right;border:0px;" src="./modules/webedit/img/doc_add.png">
             <?php
         }
         ?>
-        <b>Liste des articles de la rubrique &laquo; <?php echo ploopi_htmlentities($heading->fields['label']); ?> &raquo;</b>
+        <b>Liste des articles de la rubrique &laquo; <?php echo ovensia\ploopi\str::htmlentities($heading->fields['label']); ?> &raquo;</b>
     </p>
     <?php
     $articles_columns = array();
@@ -859,33 +859,33 @@ if ($booIsAllowedEdit)
             $row = $articles['list'][$idart];
 
             $color = (!isset($color) || $color == 2) ? 1 : 2;
-            $ldate = (!empty($row['timestp'])) ? ploopi_timestamp2local($row['timestp']) : array('date' => '', 'time' => '');
+            $ldate = (!empty($row['timestp'])) ? ovensia\ploopi\date::timestamp2local($row['timestp']) : array('date' => '', 'time' => '');
 
-            $timestp_local = (!empty($row['timestp'])) ? ploopi_timestamp2local($row['timestp']) : array('date' => '');
-            $timestp_published_local = (!empty($row['timestp_published'])) ? ploopi_timestamp2local($row['timestp_published']) : array('date' => '');
-            $timestp_unpublished_local = (!empty($row['timestp_unpublished'])) ? ploopi_timestamp2local($row['timestp_unpublished']) : array('date' => '');
+            $timestp_local = (!empty($row['timestp'])) ? ovensia\ploopi\date::timestamp2local($row['timestp']) : array('date' => '');
+            $timestp_published_local = (!empty($row['timestp_published'])) ? ovensia\ploopi\date::timestamp2local($row['timestp_published']) : array('date' => '');
+            $timestp_unpublished_local = (!empty($row['timestp_unpublished'])) ? ovensia\ploopi\date::timestamp2local($row['timestp_unpublished']) : array('date' => '');
 
             $published = (!empty($timestp_published_local['date'])) ? "à partir du {$timestp_published_local['date']}" : '';
             $published .= (!empty($timestp_unpublished_local['date'])) ? (empty($published) ? '' : '<br />')."jusqu'au {$timestp_unpublished_local['date']}" : '';
 
             $art_title = ($row['status'] == 'wait') ? "{$row['title']} *" : $row['title'];
 
-            $articles_values[$c]['values']['date'] = array('label' => ploopi_htmlentities($timestp_local['date']), 'style' => '', 'sort_label' => $row['timestp']);
-            $articles_values[$c]['values']['pos'] = array('label' => ploopi_htmlentities($row['position']), 'style' => '');
-            $articles_values[$c]['values']['ref'] = array('label' => ploopi_htmlentities($row['reference']), 'style' => '');
+            $articles_values[$c]['values']['date'] = array('label' => ovensia\ploopi\str::htmlentities($timestp_local['date']), 'style' => '', 'sort_label' => $row['timestp']);
+            $articles_values[$c]['values']['pos'] = array('label' => ovensia\ploopi\str::htmlentities($row['position']), 'style' => '');
+            $articles_values[$c]['values']['ref'] = array('label' => ovensia\ploopi\str::htmlentities($row['reference']), 'style' => '');
             $articles_values[$c]['values']['titre'] = array('label' => "<img src=\"./modules/webedit/img/doc{$articles['list'][$row['id']]['new_version']}.png\"><span>{$art_title}</span>", 'style' => '');
-            $articles_values[$c]['values']['vers'] = array('label' => ploopi_htmlentities($row['version']), 'style' => '');
+            $articles_values[$c]['values']['vers'] = array('label' => ovensia\ploopi\str::htmlentities($row['version']), 'style' => '');
             $articles_values[$c]['values']['misenligne'] = array('label' => $published, 'style' => '');
-            $articles_values[$c]['values']['auteur'] = array('label' => ploopi_htmlentities($row['author']), 'style' => '');
+            $articles_values[$c]['values']['auteur'] = array('label' => ovensia\ploopi\str::htmlentities($row['author']), 'style' => '');
 
-            if (ploopi_isadmin() || $booWfVal || $booIsEditor || ($_SESSION['ploopi']['userid'] == $row['id_user'] && $articles['list'][$row['id']]['online_id'] == ''))
+            if (ovensia\ploopi\acl::isadmin() || $booWfVal || $booIsEditor || ($_SESSION['ploopi']['userid'] == $row['id_user'] && $articles['list'][$row['id']]['online_id'] == ''))
             {
-                $articles_values[$c]['values']['actions'] = array('label' =>  "<a style=\"display:block;float:right;\" title=\"Supprimer\" href=\"javascript:ploopi_confirmlink('".ploopi_urlencode("admin.php?op=article_delete&articleid={$row['id']}")."','Êtes-vous certain de vouloir supprimer l\'article &laquo; ".addslashes($row['title'])." &raquo; ?');\"><img style=\"border:0px;\" src=\"./modules/webedit/img/doc_del.png\"></a>", 'style' => '');
+                $articles_values[$c]['values']['actions'] = array('label' =>  "<a style=\"display:block;float:right;\" title=\"Supprimer\" href=\"javascript:ploopi_confirmlink('".ovensia\ploopi\crypt::urlencode("admin.php?op=article_delete&articleid={$row['id']}")."','Êtes-vous certain de vouloir supprimer l\'article &laquo; ".addslashes($row['title'])." &raquo; ?');\"><img style=\"border:0px;\" src=\"./modules/webedit/img/doc_del.png\"></a>", 'style' => '');
             }
             else $articles_values[$c]['values']['actions'] = array('label' => '&nbsp;', 'style' => '');
 
-            $articles_values[$c]['description'] = ploopi_htmlentities($row['title']);
-            $articles_values[$c]['link'] = ploopi_urlencode("admin.php?op=article_modify&articleid={$row['id']}");
+            $articles_values[$c]['description'] = ovensia\ploopi\str::htmlentities($row['title']);
+            $articles_values[$c]['link'] = ovensia\ploopi\crypt::urlencode("admin.php?op=article_modify&articleid={$row['id']}");
             $articles_values[$c]['style'] = '';
 
             $c++;
@@ -913,12 +913,12 @@ if ($booIsAllowedEdit)
 </div>
 
 <?php
-if (ploopi_isactionallowed(_WEBEDIT_ACTION_SUBSCRIBERS_MANAGE)) // Gestion des abonnés ?
+if (ovensia\ploopi\acl::isactionallowed(_WEBEDIT_ACTION_SUBSCRIBERS_MANAGE)) // Gestion des abonnés ?
 {
     ?>
     <div style="margin:0 4px 4px 4px;border-style:solid;border-width:1px 1px 0 1px;border-color:#c0c0c0;">
         <p class="ploopi_va" style="background-color:#e0e0e0;border-bottom:1px solid #c0c0c0;padding:4px 6px;overflow:auto;">
-            <b>Liste des abonnés frontoffice (anonymes) de la rubrique &laquo; <?php echo ploopi_htmlentities($heading->fields['label']); ?> &raquo;</b>
+            <b>Liste des abonnés frontoffice (anonymes) de la rubrique &laquo; <?php echo ovensia\ploopi\str::htmlentities($heading->fields['label']); ?> &raquo;</b>
         </p>
         <?php
         $subscribers_columns = array();
@@ -946,16 +946,16 @@ if (ploopi_isactionallowed(_WEBEDIT_ACTION_SUBSCRIBERS_MANAGE)) // Gestion des a
         {
             $subscribers_values[$c]['values']['email'] =
                 array(
-                    'label' => ploopi_htmlentities($row['email']).($row['id_heading'] == 0 ? ' <em>(tout le site)</em>' : '')
+                    'label' => ovensia\ploopi\str::htmlentities($row['email']).($row['id_heading'] == 0 ? ' <em>(tout le site)</em>' : '')
                 );
 
             $subscribers_values[$c]['values']['actions'] =
                 array(
-                    'label' => "<img style=\"cursor:pointer;\" title=\"Supprimer cet abonné\" alt=\"Supprimer\" onclick=\"javascript:ploopi_confirmlink('".ploopi_urlencode("admin-light.php?ploopi_op=webedit_subscriber_delete&webedit_subscriber_email={$row['email']}&webedit_subscriber_id_heading={$row['id_heading']}")."','Êtes-vous certain de vouloir supprimer cet abonné ?');\" src=\"./modules/webedit/img/ico_trash.png\"></a>",
+                    'label' => "<img style=\"cursor:pointer;\" title=\"Supprimer cet abonné\" alt=\"Supprimer\" onclick=\"javascript:ploopi_confirmlink('".ovensia\ploopi\crypt::urlencode("admin-light.php?ploopi_op=webedit_subscriber_delete&webedit_subscriber_email={$row['email']}&webedit_subscriber_id_heading={$row['id_heading']}")."','Êtes-vous certain de vouloir supprimer cet abonné ?');\" src=\"./modules/webedit/img/ico_trash.png\"></a>",
                     'style' => 'text-align:center;'
                 );
 
-            $subscribers_values[$c]['description'] = ploopi_htmlentities($row['email']);
+            $subscribers_values[$c]['description'] = ovensia\ploopi\str::htmlentities($row['email']);
 
             $c++;
         }
@@ -969,11 +969,11 @@ if (ploopi_isactionallowed(_WEBEDIT_ACTION_SUBSCRIBERS_MANAGE)) // Gestion des a
 $parents = explode(';', $heading->fields['parents']);
 for ($i = 0; $i < sizeof($parents); $i++)
 {
-    if (ploopi_subscription_subscribed(_WEBEDIT_OBJECT_HEADING, $parents[$i]))
+    if (ovensia\ploopi\subscription::subscribed(_WEBEDIT_OBJECT_HEADING, $parents[$i]))
     {
         ?>
         <div style="padding:2px 4px;font-weight:bold;">
-        Vous héritez de l'abonnement à &laquo; <a href="<?php echo ploopi_urlencode("admin.php?headingid={$parents[$i]}"); ?>"><?php echo ploopi_htmlentities($headings['list'][$parents[$i]]['label']); ?></a> &raquo;
+        Vous héritez de l'abonnement à &laquo; <a href="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?headingid={$parents[$i]}"); ?>"><?php echo ovensia\ploopi\str::htmlentities($headings['list'][$parents[$i]]['label']); ?></a> &raquo;
         </div>
         <?php
     }
@@ -985,8 +985,9 @@ $arrAllowedActions = array(
     _WEBEDIT_ACTION_CATEGORY_EDIT
 );
 
-ploopi_subscription(_WEBEDIT_OBJECT_HEADING, $headingid, $arrAllowedActions, "à &laquo; {$heading->fields['label']} &raquo;");
+
+ovensia\ploopi\subscription::display(_WEBEDIT_OBJECT_HEADING, $headingid, $arrAllowedActions, "à « {$heading->fields['label']} »");
 ?>
 <div style="border-top:1px solid #c0c0c0;">
-<?php ploopi_annotation(_WEBEDIT_OBJECT_HEADING, $headingid, $heading->fields['label']); ?>
+<?php ovensia\ploopi\annotation::display(_WEBEDIT_OBJECT_HEADING, $headingid, $heading->fields['label']); ?>
 </div>

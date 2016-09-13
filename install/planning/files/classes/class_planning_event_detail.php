@@ -22,7 +22,7 @@
 
 /**
  * Gestion des ressources
- * 
+ *
  * @package planning
  * @subpackage event_detail
  * @copyright Ovensia
@@ -33,11 +33,6 @@
  */
 
 /**
- * Inclusion de la classe parent
- */
-include_once './include/classes/data_object.php';
-
-/**
  * Inclusion des autres classes utilisées
  */
 include_once './modules/planning/classes/class_planning_event_detail_resource.php';
@@ -45,50 +40,50 @@ include_once './modules/planning/classes/class_planning_event_detail_resource.ph
 
 /**
  * Classe d'accès à la table 'ploopi_mod_planning_event_detail'
- * 
+ *
  * @package planning
  * @subpackage event_detail
  * @author Stéphane Escaich
  * @copyright Ovensia
  */
 
-class planning_event_detail extends data_object
+class planning_event_detail extends ovensia\ploopi\data_object
 {
     private $arrResource;
-    
+
     /**
      * Constructeur de la classe
      *
      * @return planning_event_detail
      */
-    
+
     public function __construct()
     {
         parent::__construct(
-            'ploopi_mod_planning_event_detail', 
+            'ploopi_mod_planning_event_detail',
             'id'
         );
-        
+
         $this->initresources();
     }
-    
-    public function open($id)
+
+    public function open(...$args)
     {
-        if (parent::open($id))
+        if (parent::open($args[0]))
         {
             global $db;
-            
-            $this->initresources();     
-            
+
+            $this->initresources();
+
             // Recherche des ressources liées à l'événement
             $db->query("SELECT * FROM ploopi_mod_planning_event_detail_resource WHERE id_event_detail = {$this->fields['id']} ORDER BY type_resource, id_resource");
             while ($row = $db->fetchrow()) $this->arrResource[$row['type_resource']][$row['id_resource']] = $row['id_resource'];
-            
+
             return true;
         }
         else return false;
     }
-    
+
     public function save()
     {
         if (!$this->isnew())
@@ -97,7 +92,7 @@ class planning_event_detail extends data_object
             // Suppression des resources associées au détail
             $db->query("DELETE FROM ploopi_mod_planning_event_detail_resource WHERE id_event_detail = {$this->fields['id']}");
         }
-        
+
         // Problème entre heure de début et fin
         if ($this->fields['timestp_begin'] > $this->fields['timestp_end'])
         {
@@ -105,9 +100,9 @@ class planning_event_detail extends data_object
             $this->fields['timestp_begin'] = $this->fields['timestp_end'];
             $this->fields['timestp_end'] = $intTs;
         }
-        
+
         $res = parent::save();
-        
+
         if (!empty($this->arrResource) && is_array($this->arrResource))
         {
             foreach($this->arrResource['user'] as $intResourceId)
@@ -129,10 +124,10 @@ class planning_event_detail extends data_object
                 $objEventDetailResource->save();
             }
         }
-        
+
         return $res;
     }
-    
+
     /**
      * Supprime un détail en vérifiant que l'événement peut être supprimé ou non (planning_event)
      *
@@ -141,19 +136,19 @@ class planning_event_detail extends data_object
     public function delete()
     {
         global $db;
-        
+
         // Suppression des ressources liées
         $db->query("
             DELETE FROM ploopi_mod_planning_event_detail_resource WHERE id_event_detail = {$this->fields['id']}
         ");
-        
-        
+
+
         // Recherche si l'événement contient d'autres détails.
         // S'il n'en contient pas, on le supprime
         $db->query("
             SELECT id FROM ploopi_mod_planning_event_detail WHERE id_event = {$this->fields['id_event']} AND id != {$this->fields['id']}
         ");
-        
+
         // Pas d'autres détails rattachés
         if ($db->numrows() == 0)
         {
@@ -162,23 +157,23 @@ class planning_event_detail extends data_object
             $objEvent->open($this->fields['id_event']);
             $objEvent->delete();
         }
-        
+
         return(parent::delete());
     }
-    
+
     /**
      * Affecte les ressources concernées
-     * 
+     *
      * @param array $arrResource tableau des ressources (groupes/utilisateurs)
      * @param boolean $booVerify true s'il faut vérifier le contenu de la variable
      */
-    
+
     public function setresources($arrResource, $booVerify = true)
     {
         if ($booVerify)
         {
             $this->initresources();
-            
+
             if (is_array($arrResource))
             {
                 foreach($arrResource as $strResourceType => $arrTypeResource)
@@ -188,15 +183,15 @@ class planning_event_detail extends data_object
                         switch($strResourceType)
                         {
                             case 'user': // utilisateur
-                                $objUser = new user();
+                                $objUser = new ovensia\ploopi\user();
                                 if ($objUser->open($intIdResource)) // utilisateur existe
                                 {
                                     $this->arrResource['user'][$intIdResource] = $intIdResource;
                                 }
                             break;
-                            
+
                             case 'group': // groupe
-                                $objGroup = new group();
+                                $objGroup = new ovensia\ploopi\group();
                                 if ($objGroup->open($intIdResource)) // groupe existe
                                 {
                                     $this->arrResource['group'][$intIdResource] =$intIdResource;
@@ -208,18 +203,18 @@ class planning_event_detail extends data_object
             }
         }
         else $this->arrResource = $arrResource;
-    } 
-    
+    }
+
     /**
      * Retourne un tableau contenant les ressources
-     * 
+     *
      * @return array tableau des ressources
      */
     public function getresources()
     {
         return $this->arrResource;
-    }    
-    
+    }
+
     /**
      * Initialise le tableau des ressources
      */
@@ -228,7 +223,7 @@ class planning_event_detail extends data_object
         $this->arrResource = array(
             'user' => array(),
             'group' => array()
-        );       
+        );
     }
-    
+
 }

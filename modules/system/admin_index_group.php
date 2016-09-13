@@ -92,7 +92,8 @@ echo $skin->open_simplebloc();
                 }
             }
 
-            echo $skin->create_toolbar($toolbar_group, $x=0, false, true);
+            $null = null;
+            echo $skin->create_toolbar($toolbar_group, $null, false, true);
             ?>
         </div>
     </div>
@@ -110,13 +111,13 @@ echo $skin->open_simplebloc();
             $parentid = '';
         }
 
-        $templatelist_back = ploopi_getavailabletemplates('backoffice');
-        $templatelist_front = ploopi_getavailabletemplates('frontoffice');
+        $templatelist_back = ovensia\ploopi\system::getavailabletemplates('backoffice');
+        $templatelist_front = ovensia\ploopi\system::getavailabletemplates('frontoffice');
         ?>
-        <form name="" action="<?php echo ploopi_urlencode("admin.php?op=save_group&group_id={$group->fields['id']}"); ?>" method="POST" onsubmit="javascript:return system_group_validate(this);">
+        <form name="" action="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?op=save_group&group_id={$group->fields['id']}"); ?>" method="POST" onsubmit="javascript:return system_group_validate(this);">
 
             <div class="ploopi_form_title">
-                <?php echo ploopi_htmlentities($group->fields['label']); ?> &raquo;
+                <?php echo ovensia\ploopi\str::htmlentities($group->fields['label']); ?> &raquo;
                 <?php
                     echo _SYSTEM_LABEL_GROUP_MODIFY;
                 ?>
@@ -124,7 +125,7 @@ echo $skin->open_simplebloc();
             <div class="ploopi_form" style="clear:both;padding:2px">
                 <p>
                     <label><?php echo _SYSTEM_LABEL_GROUP_NAME; ?>:</label>
-                    <input type="text" class="text" name="group_label"  value="<?php echo ploopi_htmlentities($group->fields['label']); ?>">
+                    <input type="text" class="text" name="group_label"  value="<?php echo ovensia\ploopi\str::htmlentities($group->fields['label']); ?>">
                 </p>
                 <p>
                     <label><?php echo _SYSTEM_LABEL_GROUP_SHARED; ?>:</label>
@@ -141,6 +142,6 @@ echo $skin->open_simplebloc();
 echo $skin->close_simplebloc();
 
 echo $skin->open_simplebloc();
-ploopi_annotation(_SYSTEM_OBJECT_GROUP, $group->fields['id'], $group->fields['label']);
+ovensia\ploopi\annotation::display(_SYSTEM_OBJECT_GROUP, $group->fields['id'], $group->fields['label']);
 echo $skin->close_simplebloc();
 ?>

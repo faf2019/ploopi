@@ -102,7 +102,7 @@ if (!empty($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords']))
         $arrObjectTypes[$row['module_id']]['objects'][$row['id']] = array('label' => $row['label'], 'script' => $row['script']);
     }
 
-    $arrRelevance = ploopi_search($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords'], -1, '', (empty($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_module'])) ? $arrAvailableModules : $_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_module']);
+    $arrRelevance = ovensia\ploopi\search_index::search($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords'], -1, '', (empty($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_module'])) ? $arrAvailableModules : $_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_module']);
 
     if (empty($arrRelevance))
     {
@@ -146,11 +146,11 @@ if (!empty($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords']))
             {
                 $type = $arrObjectTypes[$row['id_module']]['type'];
 
-                $objUser = new user();
+                $objUser = new ovensia\ploopi\user();
                 $strUserName = ($objUser->open($row['id_user'])) ? "{$objUser->fields['firstname']} {$objUser->fields['lastname']}" : '';
 
                 // inclusion des fonctions/constantes proposées par le module
-                ploopi_init_module($type, false, false, false);
+                ovensia\ploopi\module::init($type, false, false, false);
 
                 // on cherche si on fonction de validation d'objet existe pour ce module
                 $boolRecordIsEnabled = true;
@@ -177,8 +177,8 @@ if (!empty($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords']))
 
                     $color = sprintf("%02X%02X%02X",$red,$green,$blue);
 
-                    $l_timestp_lastindex = ploopi_timestamp2local($row['timestp_lastindex']);
-                    $l_timestp_create = ploopi_timestamp2local($row['timestp_create']);
+                    $l_timestp_lastindex = ovensia\ploopi\date::timestamp2local($row['timestp_lastindex']);
+                    $l_timestp_create = ovensia\ploopi\date::timestamp2local($row['timestp_create']);
 
                     $object_script = str_replace(
                         array(
@@ -194,20 +194,20 @@ if (!empty($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords']))
                         $arrObjectTypes[$row['id_module']]['objects'][$row['id_object']]['script']
                     );
 
-                    $objWorkspace = new workspace();
+                    $objWorkspace = new ovensia\ploopi\workspace();
                     $strWorkspaceLabel = ($objWorkspace->open($row['id_workspace'])) ? $objWorkspace->fields['label'] : '';
 
-                    $values[$c]['values']['relevance'] = array('label' => sprintf("<span style=\"width:12px;height:12px;float:left;border:1px solid #a0a0a0;background-color:#%s;margin-right:3px;\"></span>%d %%", $color, $row['relevance']), 'sort_label' => intval($row['relevance']));
-                    $values[$c]['values']['label'] = array('label' => ploopi_htmlentities($row['label']));
+                    $values[$c]['values']['relevance'] = array('label' => sprintf("<span style=\"width:12px;height:12px;float:left;border:1px solid #a0a0a0;background-color:#%s;margin-right:3px;\"></span>%d %%", $color, $row['relevance']), 'sort_label' => intval($row['relevance']), 'sort_flag' => SORT_NUMERIC);
+                    $values[$c]['values']['label'] = array('label' => ovensia\ploopi\str::htmlentities($row['label']));
                     $values[$c]['values']['timestp_lastindex'] = array('label' => $l_timestp_lastindex['date'], 'sort_label' => $row['timestp_lastindex']);
                     $values[$c]['values']['timestp_create'] = array('label' => $l_timestp_create['date'].' '.$l_timestp_create['time'], 'sort_label' => $row['timestp_create']);
-                    $values[$c]['values']['user'] = array('label' => ploopi_htmlentities($strUserName));
-                    $values[$c]['values']['workspace'] = array('label' => ploopi_htmlentities($strWorkspaceLabel));
-                    $values[$c]['values']['module'] = array('label' => ploopi_htmlentities($arrObjectTypes[$row['id_module']]['label']));
-                    $values[$c]['values']['object_type'] = array('label' => ploopi_htmlentities($arrObjectTypes[$row['id_module']]['objects'][$row['id_object']]['label']));
+                    $values[$c]['values']['user'] = array('label' => ovensia\ploopi\str::htmlentities($strUserName));
+                    $values[$c]['values']['workspace'] = array('label' => ovensia\ploopi\str::htmlentities($strWorkspaceLabel));
+                    $values[$c]['values']['module'] = array('label' => ovensia\ploopi\str::htmlentities($arrObjectTypes[$row['id_module']]['label']));
+                    $values[$c]['values']['object_type'] = array('label' => ovensia\ploopi\str::htmlentities($arrObjectTypes[$row['id_module']]['objects'][$row['id_object']]['label']));
 
-                    $values[$c]['description'] = ploopi_htmlentities($row['label']);
-                    $values[$c]['link'] = ploopi_urlencode("admin.php?ploopi_mainmenu=1&{$object_script}");
+                    $values[$c]['description'] = ovensia\ploopi\str::htmlentities($row['label']);
+                    $values[$c]['link'] = ovensia\ploopi\crypt::urlencode("admin.php?ploopi_mainmenu=1&{$object_script}");
                     $values[$c]['style'] = '';
                 }
 

@@ -47,13 +47,13 @@ $skin = null;
 if (!empty($_SESSION['ploopi']['frontoffice']['template_path']) && file_exists("{$_SESSION['ploopi']['frontoffice']['template_path']}/class_skin.php"))
 {
     include_once "{$_SESSION['ploopi']['frontoffice']['template_path']}/class_skin.php";
-    $skin = new skin();
+    $skin = new ovensia\ploopi\skin();
 }
 
 /**
  * Initialisation du module WebEdit
  */
 
-ploopi_init_module('webedit', false, false, false);
+ovensia\ploopi\module::init('webedit', false, false, false);
 
 include './modules/webedit/display.php';

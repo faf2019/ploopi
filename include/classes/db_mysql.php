@@ -21,6 +21,8 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+use ovensia\ploopi;
+
 /**
  * Gestion de la connexion à la base MySQL.
  *
@@ -30,8 +32,6 @@
  * @license GNU General var License (GPL)
  * @author Stéphane Escaich
  */
-
-include_once './include/functions/system.php';
 
 
 /**
@@ -613,7 +613,7 @@ class ploopi_db
 
     public function addslashes($var)
     {
-        if ($this->isconnected()) return(ploopi_array_map(array($this, 'escape_string'), $var));
+        if ($this->isconnected()) return(arr::map(array($this, 'escape_string'), $var));
         else return(false);
     }
 
@@ -626,11 +626,8 @@ class ploopi_db
 
     public function timer_start()
     {
-        if (class_exists('timer'))
-        {
-            $this->db_timer = new timer();
-            $this->db_timer->start();
-        }
+        $this->db_timer = new timer();
+        $this->db_timer->start();
     }
 
     /**
@@ -644,12 +641,8 @@ class ploopi_db
 
     public function timer_stop()
     {
-        $floExt = 0;
-        if (class_exists('timer'))
-        {
-            $floExt = $this->db_timer->getexectime();
-            $this->exectime_queries += $floExt;
-        }
+        $floExt = $this->db_timer->getexectime();
+        $this->exectime_queries += $floExt;
 
         return $floExt;
     }

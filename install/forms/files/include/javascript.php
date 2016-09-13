@@ -35,18 +35,18 @@
 /**
  * Initialisation du module
  */
-if (ploopi_ismoduleallowed('forms'))
+if (ovensia\ploopi\acl::ismoduleallowed('forms'))
 {
-    ploopi_init_module('forms', false, false, false);
+    ovensia\ploopi\module::init('forms', false, false, false);
     ?>
 
     var verifcolor = false;
 
     function forms_validate(form)
     {
-        if (ploopi_validatefield('<?php echo addslashes(ploopi_html_entity_decode(_FORMS_LABEL)); ?>',form.forms_label,"string"))
-        if (ploopi_validatefield('<?php echo addslashes(ploopi_html_entity_decode(_FORMS_PUBDATESTART)); ?>',form.forms_pubdate_start,"emptydate"))
-        if (ploopi_validatefield('<?php echo addslashes(ploopi_html_entity_decode(_FORMS_PUBDATEEND)); ?>',form.forms_pubdate_end,"emptydate"))
+        if (ploopi_validatefield('<?php echo addslashes(ovensia\ploopi\str::html_entity_decode(_FORMS_LABEL)); ?>',form.forms_label,"string"))
+        if (ploopi_validatefield('<?php echo addslashes(ovensia\ploopi\str::html_entity_decode(_FORMS_PUBDATESTART)); ?>',form.forms_pubdate_start,"emptydate"))
+        if (ploopi_validatefield('<?php echo addslashes(ovensia\ploopi\str::html_entity_decode(_FORMS_PUBDATEEND)); ?>',form.forms_pubdate_end,"emptydate"))
             return(true);
 
         return(false);
@@ -75,7 +75,7 @@ if (ploopi_ismoduleallowed('forms'))
 
     function forms_graphic_validate(form)
     {
-        if (ploopi_validatefield('<?php echo addslashes(ploopi_html_entity_decode(_FORMS_GRAPHIC_LABEL)); ?>',form.forms_graphic_label,"string"))
+        if (ploopi_validatefield('<?php echo addslashes(ovensia\ploopi\str::html_entity_decode(_FORMS_GRAPHIC_LABEL)); ?>',form.forms_graphic_label,"string"))
             return(true);
 
         return(false);
@@ -83,7 +83,7 @@ if (ploopi_ismoduleallowed('forms'))
 
     function forms_group_validate(form)
     {
-        if (ploopi_validatefield('<?php echo addslashes(ploopi_html_entity_decode(_FORMS_GROUP_LABEL)); ?>',form.forms_group_label,"string"))
+        if (ploopi_validatefield('<?php echo addslashes(ovensia\ploopi\str::html_entity_decode(_FORMS_GROUP_LABEL)); ?>',form.forms_group_label,"string"))
             return(true);
 
         return(false);

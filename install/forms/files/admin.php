@@ -36,7 +36,7 @@
  * Initialisation du module
  */
 
-ploopi_init_module('forms');
+ovensia\ploopi\module::init('forms');
 
 global $field_types;
 global $field_formats;
@@ -50,7 +50,7 @@ global $forms_graphic_operation;
  * On vérifie que l'utilisateur connecté est admin du module
  */
 
-if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
+if (ovensia\ploopi\acl::isactionallowed(_FORMS_ACTION_ADMIN))
 {
     include_once './modules/forms/classes/formsForm.php';
     include_once './modules/forms/classes/formsField.php';
@@ -62,7 +62,7 @@ if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
     if (!empty($_GET['formsTabItem'])) $_SESSION['forms']['formsTabItem'] = $_GET['formsTabItem'];
     if (!isset($_SESSION['forms']['formsTabItem'])) $_SESSION['forms']['formsTabItem'] = '';
 
-    $sqllimitgroup = ' AND ploopi_mod_forms_form.id_workspace IN ('.ploopi_viewworkspaces($_SESSION['ploopi']['moduleid']).')';
+    $sqllimitgroup = ' AND ploopi_mod_forms_form.id_workspace IN ('.ovensia\ploopi\system::viewworkspaces($_SESSION['ploopi']['moduleid']).')';
 
     $tabs['formlist'] =
         array(
@@ -76,7 +76,7 @@ if (ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
             'url' => "admin.php?formsTabItem=formadd"
         );
 
-    echo $skin->create_pagetitle(ploopi_htmlentities($_SESSION['ploopi']['modulelabel']));
+    echo $skin->create_pagetitle(ovensia\ploopi\str::htmlentities($_SESSION['ploopi']['modulelabel']));
     echo $skin->create_tabs($tabs, $_SESSION['forms']['formsTabItem']);
 
 

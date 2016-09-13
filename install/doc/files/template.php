@@ -34,9 +34,9 @@
  * Initialisation du module
  */
 
-ploopi_init_module('doc');
+ovensia\ploopi\module::init('doc');
 
-$strListDocWorkspace = ploopi_viewworkspaces($template_moduleid,'doc');
+$strListDocWorkspace = ovensia\ploopi\system::viewworkspaces($template_moduleid,'doc');
 
 $strDocSelect =  "
                 SELECT      f.id, f.name, f.id_module
@@ -57,13 +57,13 @@ if($db->numrows($sqlDocResult)) $template_body->assign_block_vars('switch_docfee
 while($docFields = $db->fetchrow($sqlDocResult))
 {
     $template_body->assign_block_vars('switch_docfeed.rss' , array(
-        'URL' => ploopi_urlrewrite('./backend.php?format=rss&ploopi_moduleid='.$docFields['id_module'].'&id_folder='.$docFields['id'], doc_getrewriterules(), $docFields['name'].'.xml',null,true),
+        'URL' => ovensia\ploopi\str::urlrewrite('./backend.php?format=rss&ploopi_moduleid='.$docFields['id_module'].'&id_folder='.$docFields['id'], doc_getrewriterules(), $docFields['name'].'.xml',null,true),
         'TITLE' => $docFields['name']
         )
     );
     
     $template_body->assign_block_vars('switch_docfeed.atom' , array(
-        'URL' => ploopi_urlrewrite('./backend.php?format=atom&ploopi_moduleid='.$docFields['id_module'].'&id_folder='.$docFields['id'], doc_getrewriterules(), $docFields['name'].'.xml',null,true),
+        'URL' => ovensia\ploopi\str::urlrewrite('./backend.php?format=atom&ploopi_moduleid='.$docFields['id_module'].'&id_folder='.$docFields['id'], doc_getrewriterules(), $docFields['name'].'.xml',null,true),
         'TITLE' => $docFields['name']
         )
     );

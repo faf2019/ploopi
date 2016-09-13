@@ -33,30 +33,28 @@
 include_once './modules/doc/class_docfolder.php';
 
 // Contrôles
-if(empty($_GET['id_folder'])) { echo ''; ploopi_die(); }
+if(empty($_GET['id_folder'])) { echo ''; ovensia\ploopi\system::kill(); }
 
 $objFolder = new docfolder();
 if(!$objFolder->open($_GET['id_folder'])
-    || $objFolder->fields['foldertype'] != 'public' 
-    || !$objFolder->fields['allow_feeds'] 
+    || $objFolder->fields['foldertype'] != 'public'
+    || !$objFolder->fields['allow_feeds']
     || !$objFolder->fields['published'])
 {
     // Erreur, flux retourne faux !
-    ploopi_h404();
-    ploopi_die();
+    ovensia\ploopi\output::h404();
+    ovensia\ploopi\system::kill();
 }
 
 // Format du flux (RSS / ATOM)
 $format = (empty($_GET['format'])) ? 'atom' : strtolower($_GET['format']);
 
 // Mise en cache
-include_once './include/classes/cache.php';
-
-$objCache = new ploopi_cache(md5('doc_feeds_folder_'.$format.'_'.$_GET['id_folder']), 300);
+$objCache = new ovensia\ploopi\cache(md5('doc_feeds_folder_'.$format.'_'.$_GET['id_folder']), 300);
 $objCache->set_groupe('module_doc_feeds_'.$objFolder->fields['id_workspace'].'_'.$objFolder->fields['id_module']);  // Attribution d'un groupe spécifique pour le cache pour permettre un clean précis
 
 // Vidage du buffer
-ploopi_ob_clean();
+ovensia\ploopi\buffer::clean();
 
 if (!$objCache->start())
 {
@@ -64,21 +62,21 @@ if (!$objCache->start())
      * Inclusions des fonctions sur les dates et les chaînes (l'appel via backend.php est minimal, les fonctions ne sont donc pas déjà incluses)
      */
     include_once './include/start/functions.php';
-    
+
     /**
      * FeedWriter qui permet de générer le flux
      */
     include_once './lib/feedwriter/FeedWriter.php';
 
-    ploopi_init_module('doc', false, false, false);
+    ovensia\ploopi\module::init('doc', false, false, false);
 
-    $intTsToday = ploopi_createtimestamp();
-    
+    $intTsToday = ovensia\ploopi\date::createtimestamp();
+
     switch($format)
     {
         case 'rss';
             $objDocFeed = new FeedWriter(RSS2);
-            $objDocFeed->setLink(_PLOOPI_BASEPATH.'/'.ploopi_urlrewrite('backend.php?format=rss&ploopi_moduleid='.$objFolder->fields['id_module'].'&id_folder='.$objFolder->fields['id'], doc_getrewriterules(), $objFolder->fields['name'].'.xml',null,true));
+            $objDocFeed->setLink(_PLOOPI_BASEPATH.'/'.ovensia\ploopi\str::urlrewrite('backend.php?format=rss&ploopi_moduleid='.$objFolder->fields['id_module'].'&id_folder='.$objFolder->fields['id'], doc_getrewriterules(), $objFolder->fields['name'].'.xml',null,true));
             $objDocFeed->setChannelElement('language', 'fr-fr');
             $objDocFeed->setChannelElement('pubDate', date(DATE_RSS , time()));
             $objDocFeed->setChannelElement('lastBuildDate', date(DATE_RSS , time()));
@@ -87,102 +85,102 @@ if (!$objCache->start())
         default:
             case 'atom';
             $objDocFeed = new FeedWriter(ATOM);
-            $objDocFeed->setLink(_PLOOPI_BASEPATH.'/'.ploopi_urlrewrite('backend.php?format=atom&ploopi_moduleid='.$objFolder->fields['id_module'].'&id_folder='.$objFolder->fields['id'], doc_getrewriterules(), $objFolder->fields['name'].'.xml',null,true));
+            $objDocFeed->setLink(_PLOOPI_BASEPATH.'/'.ovensia\ploopi\str::urlrewrite('backend.php?format=atom&ploopi_moduleid='.$objFolder->fields['id_module'].'&id_folder='.$objFolder->fields['id'], doc_getrewriterules(), $objFolder->fields['name'].'.xml',null,true));
             $objDocFeed->setChannelElement('updated', date(DATE_ATOM , time()));
             break;
     }
-    
+
     $objDocFeed->setTitle(utf8_encode($objFolder->fields['name']));
     $objDocFeed->setDescription(utf8_encode($objFolder->fields['description']));
-    
+
     if(!empty($_SESSION['ploopi']['workspaces'][$objFolder->fields['id_workspace']]['meta_author']))
     {
-        $meta_author = ploopi_xmlentities(utf8_encode($_SESSION['ploopi']['workspaces'][$objFolder->fields['id_workspace']]['meta_author']), true);
+        $meta_author = ovensia\ploopi\str::xmlentities(utf8_encode($_SESSION['ploopi']['workspaces'][$objFolder->fields['id_workspace']]['meta_author']), true);
         $objDocFeed->setChannelElement('author', array('name '=> $meta_author));
     }
-    
+
     // On recherche tous les dossiers enfants publics du dossier selectionné
     $select = "
         SELECT      id, name
         FROM        ploopi_mod_doc_folder
-        
-        WHERE       (parents LIKE '%,{$objFolder->fields['id']},%' 
+
+        WHERE       (parents LIKE '%,{$objFolder->fields['id']},%'
         OR          parents LIKE '%,{$objFolder->fields['id']}'
         OR          id = '{$objFolder->fields['id']}')
         AND         foldertype = 'public'
         AND         published = 1
     ";
     $sql_folder = $db->query($select);
-    
+
     if(!$db->numrows($sql_folder))
     {
         // Aucun fichier, flux retourne faux !
-        ploopi_h404();
-        ploopi_die();
+        ovensia\ploopi\output::h404();
+        ovensia\ploopi\system::kill();
     }
-    
+
     $arrFolder = $db->getarray($sql_folder,true);
     $strFolderSql = implode(',',array_keys($arrFolder));
-    
+
     $limit = '';
     if(isset($_SESSION['ploopi']['modules'][$objFolder->fields['id_module']]['doc_nbDocFeed']))
         $limit = 'LIMIT '.$_SESSION['ploopi']['modules'][$objFolder->fields['id_module']]['doc_nbDocFeed'];
-    
+
     $select = "
         SELECT      f.id, f.md5id, f.name, f.description, f.timestp_modify,
                     f.size, f.version, f.id_folder,
                     u.lastname, u.firstname
-                    
+
         FROM        ploopi_mod_doc_file f
-        
+
         LEFT JOIN   ploopi_user u
         ON          u.id = f.id_user
-        
+
         WHERE       f.id_folder IN ({$strFolderSql})
-        
+
         ORDER BY    f.timestp_modify DESC
 
         {$limit}
     ";
 
     $sql_file = $db->query($select);
-    
+
     if(!$db->numrows($sql_file))
     {
         // Aucun fichier, flux retourne faux !
-        ploopi_h404();
-        ploopi_die();
+        ovensia\ploopi\output::h404();
+        ovensia\ploopi\system::kill();
     }
 
     while ($file = $db->fetchrow($sql_file))
     {
         // Création d'un nouvel item
-        $link = _PLOOPI_BASEPATH.'/'.ploopi_urlrewrite("index.php?ploopi_op=doc_file_download&docfile_md5id={$file['md5id']}", doc_getrewriterules(), $file['name'], null, true);
-        $img  = _PLOOPI_BASEPATH.'/'.ploopi_urlencode("index-light.php?ploopi_op=doc_getthumbnail&docfile_md5id={$file['md5id']}&version={$file['version']}");
-        
+        $link = _PLOOPI_BASEPATH.'/'.ovensia\ploopi\str::urlrewrite("index.php?ploopi_op=doc_file_download&docfile_md5id={$file['md5id']}", doc_getrewriterules(), $file['name'], null, true);
+        $img  = _PLOOPI_BASEPATH.'/'.ovensia\ploopi\crypt::urlencode("index-light.php?ploopi_op=doc_getthumbnail&docfile_md5id={$file['md5id']}&version={$file['version']}");
+
         $objDocItem = $objDocFeed->createNewItem();
-        
+
         $title =  $file['name'];
         $title .=  ($file['id_folder'] != $objFolder->fields['id']) ? ' / '.$arrFolder[$file['id_folder']] : '';
         $title .= ' / '.sprintf("%0.2f kio", ($file['size']/1024));
         $title .= ' / '.$file['lastname'].' '. $file['firstname'];
-        
-        $objDocItem->setTitle(utf8_encode(ploopi_xmlentities($title)));
+
+        $objDocItem->setTitle(utf8_encode(ovensia\ploopi\str::xmlentities($title)));
         $objDocItem->setLink($link);
-        
+
         $description = '<a href="'.$link.'"><img src="'.$img.'" align="left" hspace="20" alt="'.$file['name'].'" border="0" /></a>';
         $description .='<div>';
-        $description .=ploopi_nl2br(ploopi_xmlentities($file['description']));
+        $description .=ovensia\ploopi\str::nl2br(ovensia\ploopi\str::xmlentities($file['description']));
         $description .='</div>';
-        
-        $objDocItem->setDescription(utf8_encode($description)); // Pas de ploopi_xmlentities car on affiche du html !
 
-        $objDocItem->setDate(ploopi_timestamp2unixtimestamp($file['timestp_modify']));
-        
+        $objDocItem->setDescription(utf8_encode($description)); // Pas de ovensia\ploopi\str::xmlentities car on affiche du html !
+
+        $objDocItem->setDate(ovensia\ploopi\date::timestamp2unixtimestamp($file['timestp_modify']));
+
         // Ajout de l'item dans le flux
         $objDocFeed->addItem($objDocItem);
     }
-    
+
     // Génération du flux
     $objDocFeed->generateFeed();
 

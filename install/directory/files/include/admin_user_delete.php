@@ -35,7 +35,7 @@
  * Intialisation du module
  */
 
-ploopi_init_module('directory', false, false, false);
+ovensia\ploopi\module::init('directory', false, false, false);
 
 global $admin_redirect;
 

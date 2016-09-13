@@ -85,9 +85,7 @@ switch($sort)
 }
 
 // vérification du droit de visualisation des personnes concernées
-include_once './include/classes/user.php';
-
-$usr=new user();
+$usr=new ovensia\ploopi\user();
 $usr->open($_SESSION['ploopi']['userid']);
 
 // liste des users visibles par le user courant
@@ -246,7 +244,7 @@ if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
             for ($p = 1; $p <= $nbpage; $p++)
             {
                 ?>
-                <a class="system_tickets_page<?php if ($p==$page) echo '_sel'; ?>" href="<?php echo ploopi_urlencode("admin.php?op=tickets&page={$p}"); ?>"><?php echo $p; ?></a>
+                <a class="system_tickets_page<?php if ($p==$page) echo '_sel'; ?>" href="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?op=tickets&page={$p}"); ?>"><?php echo $p; ?></a>
                 <?php
             }
             ?>
@@ -262,19 +260,19 @@ if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
             </p>
         </a>
 
-        <a id="system_tickets_button" href="<?php echo ploopi_urlencode("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets&filtertype=incomingbox"); ?>" <?php if ($filtertype=='incomingbox') echo 'style="font-weight:bold;"'; ?>>
+        <a id="system_tickets_button" href="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets&filtertype=incomingbox"); ?>" <?php if ($filtertype=='incomingbox') echo 'style="font-weight:bold;"'; ?>>
             <p class="ploopi_va">
                <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/tickets/incomingbox.png" /><span>&nbsp;<?php echo _SYSTEM_LABEL_TICKETS_INCOMINGBOX; ?></span>
             </p>
         </a>
 
-        <a id="system_tickets_button" href="<?php echo ploopi_urlencode("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets&filtertype=sendbox"); ?>" <?php if ($filtertype=='sendbox') echo 'style="font-weight:bold;"'; ?>>
+        <a id="system_tickets_button" href="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets&filtertype=sendbox"); ?>" <?php if ($filtertype=='sendbox') echo 'style="font-weight:bold;"'; ?>>
             <p class="ploopi_va">
                <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/tickets/sendbox.png" /><span>&nbsp;<?php echo _SYSTEM_LABEL_TICKETS_SENDBOX; ?></span>
             </p>
         </a>
 
-        <a id="system_tickets_button" href="<?php echo ploopi_urlencode("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets&filtertype=all"); ?>" <?php if ($filtertype=='all') echo 'style="font-weight:bold;"'; ?>>
+        <a id="system_tickets_button" href="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets&filtertype=all"); ?>" <?php if ($filtertype=='all') echo 'style="font-weight:bold;"'; ?>>
             <p class="ploopi_va">
                <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/tickets/alltickets.png" /><span>&nbsp;<?php echo _SYSTEM_LABEL_TICKETS_ALL; ?></span>
             </p>
@@ -282,8 +280,8 @@ if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
 
         <div style="clear:both;text-align:right;">
             <b>Tri:</b>
-            <a <?php if ($sort=='dateticket') echo 'style="font-weight:bold;"'; ?> href="<?php echo ploopi_urlencode("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets&sort=dateticket"); ?>">Date des messages</a>&nbsp;-
-            <a <?php if ($sort=='datereply') echo 'style="font-weight:bold;"'; ?> href="<?php echo ploopi_urlencode("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets&sort=datereply"); ?>">Date des réponses</a>&nbsp;
+            <a <?php if ($sort=='dateticket') echo 'style="font-weight:bold;"'; ?> href="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets&sort=dateticket"); ?>">Date des messages</a>&nbsp;-
+            <a <?php if ($sort=='datereply') echo 'style="font-weight:bold;"'; ?> href="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets&sort=datereply"); ?>">Date des réponses</a>&nbsp;
         </div>
 
         <?php
@@ -291,15 +289,15 @@ if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
          * Ancien filtage
         <div style="clear:both;">
             <b>Filtre:</b>
-            <a <?php if ($filtertype=='incomingbox') echo 'style="font-weight:bold;"'; ?> href="<?php echo ploopi_urlencode("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets&filtertype=incomingbox"); ?>"><?php echo _SYSTEM_LABEL_TICKETS_INCOMINGBOX; ?></a>&nbsp;-
-            <a <?php if ($filtertype=='sendbox') echo 'style="font-weight:bold;"'; ?> href="<?php echo ploopi_urlencode("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets&filtertype=sendbox"); ?>"><?php echo _SYSTEM_LABEL_TICKETS_SENDBOX; ?></a>&nbsp;-
-            <a <?php if ($filtertype=='all') echo 'style="font-weight:bold;"'; ?> href="<?php echo ploopi_urlencode("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets&filtertype=all"); ?>">Tous</a>&nbsp;-
-            <a <?php if ($filtertype=='waitingvalidation') echo 'style="font-weight:bold;"'; ?> href="<?php echo ploopi_urlencode("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets&filtertype=waitingvalidation"); ?>"><?php echo _SYSTEM_LABEL_TICKETS_WAITINGVALIDATION; ?></a>&nbsp;-
-            <a <?php if ($filtertype=='tovalidate') echo 'style="font-weight:bold;"'; ?> href="<?php echo ploopi_urlencode("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets&filtertype=tovalidate"); ?>"><?php echo _SYSTEM_LABEL_TICKETS_TOVALIDATE; ?></a>
+            <a <?php if ($filtertype=='incomingbox') echo 'style="font-weight:bold;"'; ?> href="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets&filtertype=incomingbox"); ?>"><?php echo _SYSTEM_LABEL_TICKETS_INCOMINGBOX; ?></a>&nbsp;-
+            <a <?php if ($filtertype=='sendbox') echo 'style="font-weight:bold;"'; ?> href="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets&filtertype=sendbox"); ?>"><?php echo _SYSTEM_LABEL_TICKETS_SENDBOX; ?></a>&nbsp;-
+            <a <?php if ($filtertype=='all') echo 'style="font-weight:bold;"'; ?> href="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets&filtertype=all"); ?>">Tous</a>&nbsp;-
+            <a <?php if ($filtertype=='waitingvalidation') echo 'style="font-weight:bold;"'; ?> href="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets&filtertype=waitingvalidation"); ?>"><?php echo _SYSTEM_LABEL_TICKETS_WAITINGVALIDATION; ?></a>&nbsp;-
+            <a <?php if ($filtertype=='tovalidate') echo 'style="font-weight:bold;"'; ?> href="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets&filtertype=tovalidate"); ?>"><?php echo _SYSTEM_LABEL_TICKETS_TOVALIDATE; ?></a>
             &nbsp;&nbsp;
             <b>Tri:</b>
-            <a <?php if ($sort=='dateticket') echo 'style="font-weight:bold;"'; ?> href="<?php echo ploopi_urlencode("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets&sort=dateticket"); ?>">Date des messages</a>&nbsp;-
-            <a <?php if ($sort=='datereply') echo 'style="font-weight:bold;"'; ?> href="<?php echo ploopi_urlencode("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets&sort=datereply"); ?>">Date des réponses</a>&nbsp;
+            <a <?php if ($sort=='dateticket') echo 'style="font-weight:bold;"'; ?> href="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets&sort=dateticket"); ?>">Date des messages</a>&nbsp;-
+            <a <?php if ($sort=='datereply') echo 'style="font-weight:bold;"'; ?> href="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets&sort=datereply"); ?>">Date des réponses</a>&nbsp;
         </div>
         */
         ?>
@@ -321,11 +319,11 @@ if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
     <div>Titre</div>
 </div>
 
-<form name="form_tickets_delete" action="<?php echo ploopi_urlencode('admin.php'); ?>" method="post">
+<form name="form_tickets_delete" action="<?php echo ovensia\ploopi\crypt::urlencode('admin.php'); ?>" method="post">
 <input type="hidden" name="ploopi_op" value="tickets_delete">
     <?php
 
-    $todaydate = ploopi_timestamp2local(ploopi_createtimestamp());
+    $todaydate = ovensia\ploopi\date::timestamp2local(ovensia\ploopi\date::createtimestamp());
     if (!sizeof($tickets))
     {
         $color = (!isset($color) || $color == $skin->values['bgline2']) ? $skin->values['bgline1'] : $skin->values['bgline2'];
@@ -359,10 +357,10 @@ if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
         );
 
         $color = (!isset($color) || $color == $skin->values['bgline2']) ? $skin->values['bgline1'] : $skin->values['bgline2'];
-        $timestp = ploopi_timestamp2local($fields['timestp']);
+        $timestp = ovensia\ploopi\date::timestamp2local($fields['timestp']);
         $timestp['date'] = ($todaydate['date'] == $timestp['date'])  ? "Aujourd'hui" : $timestp['date'];
         $fields['lastreply_timestp'];
-        $lastreply_timestp = ploopi_timestamp2local($fields['lastreply_timestp']);
+        $lastreply_timestp = ovensia\ploopi\date::timestamp2local($fields['lastreply_timestp']);
         $lastreply_timestp['date'] = ($todaydate['date'] == $lastreply_timestp['date'])  ? "Aujourd'hui" : $lastreply_timestp['date'];
 
         ?>
@@ -429,11 +427,11 @@ if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
                     }
                     ?></div>
 
-                    <div class="system_tickets_date"><?php echo ploopi_htmlentities($timestp['date']); ?> à <?php echo ploopi_htmlentities($timestp['time']); ?></div>
-                    <div class="system_tickets_sender"><?php echo ploopi_htmlentities($username); ?></div>
-                    <div class="system_tickets_date"><?php echo ploopi_htmlentities($lastreply_timestp['date']); ?> à <?php echo ploopi_htmlentities($lastreply_timestp['time']); ?></div>
-                    <div class="system_tickets_count"><?php echo ploopi_htmlentities($fields['count_read']); ?></div>
-                    <div class="system_tickets_count"><?php echo ploopi_htmlentities($fields['count_replies']); ?></div>
+                    <div class="system_tickets_date"><?php echo ovensia\ploopi\str::htmlentities($timestp['date']); ?> à <?php echo ovensia\ploopi\str::htmlentities($timestp['time']); ?></div>
+                    <div class="system_tickets_sender"><?php echo ovensia\ploopi\str::htmlentities($username); ?></div>
+                    <div class="system_tickets_date"><?php echo ovensia\ploopi\str::htmlentities($lastreply_timestp['date']); ?> à <?php echo ovensia\ploopi\str::htmlentities($lastreply_timestp['time']); ?></div>
+                    <div class="system_tickets_count"><?php echo ovensia\ploopi\str::htmlentities($fields['count_read']); ?></div>
+                    <div class="system_tickets_count"><?php echo ovensia\ploopi\str::htmlentities($fields['count_replies']); ?></div>
                     <div class="system_tickets_attachment">
                         <?php
                         if ($fields['id_record'] != '')
@@ -466,13 +464,13 @@ if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
 
                                 if ($done = isset($tickets[$fields['id']]['dest'][$iddest]['status'][_PLOOPI_TICKETS_DONE]))
                                 {
-                                    $ldate = ploopi_timestamp2local($tickets[$fields['id']]['dest'][$iddest]['status'][_PLOOPI_TICKETS_DONE]);
+                                    $ldate = ovensia\ploopi\date::timestamp2local($tickets[$fields['id']]['dest'][$iddest]['status'][_PLOOPI_TICKETS_DONE]);
                                     $strdate = "<br />(validé le {$ldate['date']} à {$ldate['time']})";
                                     $puce = 'green';
                                 }
                                 elseif ($opened = isset($tickets[$fields['id']]['dest'][$iddest]['status'][_PLOOPI_TICKETS_OPENED]))
                                 {
-                                    $ldate = ploopi_timestamp2local($tickets[$fields['id']]['dest'][$iddest]['status'][_PLOOPI_TICKETS_OPENED]);
+                                    $ldate = ovensia\ploopi\date::timestamp2local($tickets[$fields['id']]['dest'][$iddest]['status'][_PLOOPI_TICKETS_OPENED]);
                                     $strdate = "<br />(lu le {$ldate['date']} à {$ldate['time']})";
                                     $puce = 'blue';
                                 }
@@ -485,7 +483,7 @@ if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
                                 ?>
                                     <div class="system_tickets_user_detail">
                                         <div style="clear:both;float:left;"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/p_<?php echo $puce; ?>.png"></div>
-                                        <div style="float:left;"><?php echo ploopi_htmlentities("{$dest['firstname']} {$dest['lastname']}{$strdate}"); ?></div>
+                                        <div style="float:left;"><?php echo ovensia\ploopi\str::htmlentities("{$dest['firstname']} {$dest['lastname']}{$strdate}"); ?></div>
                                     </div>
                                 <?php
                             }
@@ -497,17 +495,17 @@ if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
 
                     <div class="system_tickets_message">
                         <?php
-                        echo ploopi_make_links($fields['message']);
+                        echo ovensia\ploopi\str::make_links($fields['message']);
                         if ($fields['lastedit_timestp'])
                         {
-                            $lastedit_local = ploopi_timestamp2local($fields['lastedit_timestp']);
+                            $lastedit_local = ovensia\ploopi\date::timestamp2local($fields['lastedit_timestp']);
                             echo "<i>Dernière modification le {$lastedit_local['date']} à {$lastedit_local['time']}</i>";
                         }
 
                         if ($fields['needed_validation'] > 0 && $_SESSION['ploopi']['userid'] == $tickets[$fields['id']]['id_user'] && !isset($tickets[$fields['id']]['dest'][$_SESSION['ploopi']['userid']]['status'][_PLOOPI_TICKETS_DONE]))
                         {
                             ?>
-                            <a href="<?php echo ploopi_urlencode("admin-light.php?ploopi_op=tickets_validate&ticket_id={$fields['id']}"); ?>" class="system_tickets_tovalidate">
+                            <a href="<?php echo ovensia\ploopi\crypt::urlencode("admin-light.php?ploopi_op=tickets_validate&ticket_id={$fields['id']}"); ?>" class="system_tickets_tovalidate">
                                 <div class="system_tickets_tovalidate_msg">
                                     <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/attention.png">
                                     <span>L'expéditeur vous demande de valider ce message</span>
@@ -527,7 +525,7 @@ if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
                 if ($fields['id_record'] != '')
                 {
                     // on cherche si on fonction de validation d'objet existe pour ce module
-                    ploopi_init_module($fields['module_type']);
+                    ovensia\ploopi\module::init($fields['module_type']);
 
                     $boolRecordIsEnabled = true;
                     $funcRecordIsEnabled = "{$fields['module_type']}_record_isenabled";
@@ -545,7 +543,7 @@ if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
                             if($boolRecordIsEnabled)
                             {
                                 ?>
-                                <a href="<?php echo ploopi_urlencode("admin.php?ploopi_mainmenu=1&{$object_script}"); ?>"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/link.png"><?php echo ploopi_htmlentities("{$fields['module_name']} / {$fields['object_name']} ")."<b>\"".ploopi_htmlentities($fields['object_label'])."\"</b>"; ?></a>
+                                <a href="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?ploopi_mainmenu=1&{$object_script}"); ?>"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/link.png"><?php echo ovensia\ploopi\str::htmlentities("{$fields['module_name']} / {$fields['object_name']} ")."<b>\"".ovensia\ploopi\str::htmlentities($fields['object_label'])."\"</b>"; ?></a>
                                 <?php
                             }
                             else
@@ -575,7 +573,7 @@ if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
                         if (!($fields['needed_validation'] > 0 && $fields['sender_uid'] != $_SESSION['ploopi']['userid'] && !isset($tickets[$fields['id']]['dest'][$_SESSION['ploopi']['userid']]['status'][_PLOOPI_TICKETS_DONE])))
                         {
                             ?>
-                            <a href="javascript:ploopi_confirmlink('<?php echo ploopi_urlencode("admin.php?ploopi_op=tickets_delete&ticket_id={$fields['id']}"); ?>','<?php echo addslashes(_PLOOPI_LABEL_TICKET_CONFIRMDELETE); ?>');"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/email_delete.png">Supprimer</a>
+                            <a href="javascript:ploopi_confirmlink('<?php echo ovensia\ploopi\crypt::urlencode("admin.php?ploopi_op=tickets_delete&ticket_id={$fields['id']}"); ?>','<?php echo addslashes(_PLOOPI_LABEL_TICKET_CONFIRMDELETE); ?>');"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/email_delete.png">Supprimer</a>
                             <?php
                         }
                         ?>

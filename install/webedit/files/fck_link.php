@@ -57,7 +57,7 @@ if ($webedit_idm)
     /**
      * Initialisation du module
      */
-    ploopi_init_module('webedit');
+    ovensia\ploopi\module::init('webedit');
 
     /**
      * Inclusion des classes du module
@@ -75,7 +75,7 @@ if ($webedit_idm)
             $option = (empty($_GET['option'])) ? '' : $_GET['option'];
             $treeview = webedit_gettreeview(webedit_getheadings($webedit_idm), webedit_getarticles($webedit_idm), $option);
             echo $skin->display_treeview($treeview['list'], $treeview['tree'], null, $_GET['hid']);
-            ploopi_die();
+            ovensia\ploopi\system::kill();
         break;
 
         case 'webedit_selectlink':

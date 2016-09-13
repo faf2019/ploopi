@@ -35,7 +35,7 @@
  * Habillage global de l'annuaire
  */
 
-echo $skin->open_simplebloc(ploopi_htmlentities($title));
+echo $skin->open_simplebloc(ovensia\ploopi\str::htmlentities($title));
 ?>
 <div style="padding:4px;background-color:#e0e0e0;border-bottom:2px solid #c0c0c0;">
 <?php echo $desc; ?>
@@ -108,39 +108,39 @@ switch($_SESSION['directory']['directoryTabItem'])
 
         ?>
         <div class="directory_search">
-            <form action="<?php echo ploopi_urlencode('admin.php?op=search'); ?>" method="post">
+            <form action="<?php echo ovensia\ploopi\crypt::urlencode('admin.php?op=search'); ?>" method="post">
             <div class="ploopi_form" style="width:33%;float:left;">
                 <p>
                     <label style="font-weight:bold;"><?php echo _DIRECTORY_NAME; ?>:</label>
-                    <input type="text" class="text" size="20" name="lastname" value="<?php echo ploopi_htmlentities($_SESSION['directory']['search']['lastname']); ?>" tabindex="101" />
+                    <input type="text" class="text" size="20" name="lastname" value="<?php echo ovensia\ploopi\str::htmlentities($_SESSION['directory']['search']['lastname']); ?>" tabindex="101" />
                 </p>
                 <p>
                     <label style="font-weight:bold;"><?php echo _DIRECTORY_FIRSTNAME; ?>:</label>
-                    <input type="text" class="text" size="20" name="firstname" value="<?php echo ploopi_htmlentities($_SESSION['directory']['search']['firstname']); ?>" tabindex="102" />
+                    <input type="text" class="text" size="20" name="firstname" value="<?php echo ovensia\ploopi\str::htmlentities($_SESSION['directory']['search']['firstname']); ?>" tabindex="102" />
                 </p>
                 <p>
                     <label style="font-weight:bold;"><?php echo _DIRECTORY_FULLTEXT; ?>:</label>
-                    <input type="text" class="text" size="20" name="fulltext" value="<?php echo ploopi_htmlentities($_SESSION['directory']['search']['fulltext']); ?>" tabindex="107" />
+                    <input type="text" class="text" size="20" name="fulltext" value="<?php echo ovensia\ploopi\str::htmlentities($_SESSION['directory']['search']['fulltext']); ?>" tabindex="107" />
                 </p>
             </div>
             <div class="ploopi_form" style="width:33%;float:left;">
                 <p>
                     <label style="font-weight:bold;"><?php echo _DIRECTORY_SERVICE; ?>:</label>
-                    <input type="text" class="text" size="20" name="service" value="<?php echo ploopi_htmlentities($_SESSION['directory']['search']['service']); ?>" tabindex="103" />
+                    <input type="text" class="text" size="20" name="service" value="<?php echo ovensia\ploopi\str::htmlentities($_SESSION['directory']['search']['service']); ?>" tabindex="103" />
                 </p>
                 <p>
                     <label style="font-weight:bold;"><?php echo _DIRECTORY_FUNCTION; ?>:</label>
-                    <input type="text" class="text" size="20" name="service" value="<?php echo ploopi_htmlentities($_SESSION['directory']['search']['service']); ?>" tabindex="104" />
+                    <input type="text" class="text" size="20" name="service" value="<?php echo ovensia\ploopi\str::htmlentities($_SESSION['directory']['search']['service']); ?>" tabindex="104" />
                 </p>
             </div>
             <div class="ploopi_form" style="width:33%;float:left;">
                 <p>
                     <label style="font-weight:bold;"><?php echo _DIRECTORY_CITY; ?>:</label>
-                    <input type="text" class="text" size="20" name="city" value="<?php echo ploopi_htmlentities($_SESSION['directory']['search']['city']); ?>" tabindex="105" />
+                    <input type="text" class="text" size="20" name="city" value="<?php echo ovensia\ploopi\str::htmlentities($_SESSION['directory']['search']['city']); ?>" tabindex="105" />
                 </p>
                 <p>
                     <label style="font-weight:bold;"><?php echo _DIRECTORY_COUNTRY; ?>:</label>
-                    <input type="text" class="text" size="20" name="country" value="<?php echo ploopi_htmlentities($_SESSION['directory']['search']['country']); ?>" tabindex="106" />
+                    <input type="text" class="text" size="20" name="country" value="<?php echo ovensia\ploopi\str::htmlentities($_SESSION['directory']['search']['country']); ?>" tabindex="106" />
                 </p>
                 <p>
                     <label>&nbsp;</label>
@@ -182,12 +182,12 @@ switch($_SESSION['directory']['directoryTabItem'])
         $c = 0;
         while ($row = $db->fetchrow())
         {
-            $email = ($row['email']) ? '<a href="mailto:'.ploopi_htmlentities($row['email']).'" title="'.ploopi_htmlentities(_DIRECTORY_SEND_EMAIL.': '.$row['email']).'"><img src="./modules/directory/img/ico_email.png"></a>' : '';
+            $email = ($row['email']) ? '<a href="mailto:'.ovensia\ploopi\str::htmlentities($row['email']).'" title="'.ovensia\ploopi\str::htmlentities(_DIRECTORY_SEND_EMAIL.': '.$row['email']).'"><img src="./modules/directory/img/ico_email.png"></a>' : '';
 
             $actions = '
                 <a href="javascript:void(0);" onclick="javascript:directory_view(event, \'\', \''.$row['id'].'\');"><img title="Voir le Profil" src="./modules/directory/img/ico_open.png"></a>
                 <a href="javascript:void(0);" onclick="javascript:directory_modify(event, \''.$row['id'].'\');"><img title="Modifier le Contact" src="./modules/directory/img/ico_modify.png"></a>
-                <a href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("admin.php?ploopi_op=directory_contact_delete&directory_contact_id={$row['id']}").'\',\''._DIRECTORY_CONFIRM_DELETECONTACT.'\')"><img title="Supprimer" src="./modules/directory/img/ico_delete.png"></a>
+                <a href="javascript:ploopi_confirmlink(\''.ovensia\ploopi\crypt::urlencode("admin.php?ploopi_op=directory_contact_delete&directory_contact_id={$row['id']}").'\',\''._DIRECTORY_CONFIRM_DELETECONTACT.'\')"><img title="Supprimer" src="./modules/directory/img/ico_delete.png"></a>
             ';
 
             if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_myfavorites'])
@@ -196,17 +196,17 @@ switch($_SESSION['directory']['directoryTabItem'])
                 else $actions .='<a href="javascript:void(0);" onclick="javascript:directory_addtofavorites(event, \'\', \''.$row['id'].'\');"><img title="Modifier les favoris" src="./modules/directory/img/ico_fav_modify.png"></a>';
             }
 
-            $arrValues[$c]['values']['name'] = array('label' => ploopi_htmlentities("{$row['lastname']} {$row['firstname']}"));
-            $arrValues[$c]['values']['service'] = array('label' => ploopi_htmlentities($row['service']));
-            $arrValues[$c]['values']['function'] = array('label' => ploopi_htmlentities($row['function']));
-            $arrValues[$c]['values']['phone'] = array('label' => ploopi_htmlentities($row['phone']));
+            $arrValues[$c]['values']['name'] = array('label' => ovensia\ploopi\str::htmlentities("{$row['lastname']} {$row['firstname']}"));
+            $arrValues[$c]['values']['service'] = array('label' => ovensia\ploopi\str::htmlentities($row['service']));
+            $arrValues[$c]['values']['function'] = array('label' => ovensia\ploopi\str::htmlentities($row['function']));
+            $arrValues[$c]['values']['phone'] = array('label' => ovensia\ploopi\str::htmlentities($row['phone']));
             $arrValues[$c]['values']['email'] = array('label' => $email);
             $arrValues[$c]['values']['actions'] = array('label' => $actions);
 
             $c++;
         }
 
-        $skin->display_array($arrColumns, $arrValues, 'array_directory', array('sortable' => true, 'orderby_default' => 'name', 'limit' => ploopi_getparam('directory_pagesize')));
+        $skin->display_array($arrColumns, $arrValues, 'array_directory', array('sortable' => true, 'orderby_default' => 'name', 'limit' => ovensia\ploopi\param::get('directory_pagesize')));
     break;
 
     /**
@@ -225,17 +225,14 @@ switch($_SESSION['directory']['directoryTabItem'])
         $arrColumns['right']['function'] = array('label' => _DIRECTORY_FUNCTION, 'width' => 150, 'options' => array('sort' => true));
         $arrColumns['right']['service'] = array('label' => _DIRECTORY_SERVICE, 'width' => 150, 'options' => array('sort' => true));
 
-        if (ploopi_getparam('directory_display_workspaces'))
+        if (ovensia\ploopi\param::get('directory_display_workspaces'))
         {
             $arrColumns['right']['groups'] = array('label' => _DIRECTORY_GROUPS,    'width' => 150, 'options' => array('sort' => true));
         }
 
         $arrColumns['actions_right']['actions'] = array('label' => '&nbsp;', 'width' => '42');
 
-        // il faut chercher les groupes rattachés à l'espace !
-        include_once './include/classes/workspace.php';
-
-        $workspace = new workspace();
+        $workspace = new ovensia\ploopi\workspace();
         $workspace->fields['id'] = $_SESSION['ploopi']['workspaceid'];
 
         $groups = $workspace->getgroups(true);
@@ -262,20 +259,20 @@ switch($_SESSION['directory']['directoryTabItem'])
         $c = 0;
         while ($row = $db->fetchrow($res))
         {
-            $email = ($row['email']) ? '<a href="mailto:'.ploopi_htmlentities($row['email']).'" title="'.ploopi_htmlentities(_DIRECTORY_SEND_EMAIL.': '.$row['email']).'"><img src="./modules/directory/img/ico_email.png"></a>' : '';
+            $email = ($row['email']) ? '<a href="mailto:'.ovensia\ploopi\str::htmlentities($row['email']).'" title="'.ovensia\ploopi\str::htmlentities(_DIRECTORY_SEND_EMAIL.': '.$row['email']).'"><img src="./modules/directory/img/ico_email.png"></a>' : '';
             $ticket = '<a href="javascript:void(0);" onclick="javascript:ploopi_tickets_new(event, null, null, null, '.$row['id'].');"><img title="'._DIRECTORY_SEND_TICKET.'" src="./modules/directory/img/ico_ticket.png"></a>';
 
             $actions =  '<a href="javascript:void(0);" onclick="javascript:directory_view(event, \''.$row['id'].'\', \'\');"><img title="Voir le Profil" src="./modules/directory/img/ico_open.png"></a>';
 
             if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_myfavorites'])
             {
-                //if (!isset($favorites["user_{$row['id']}"])) $actions .='<a href="'.ploopi_urlencode("admin.php?op=directory_favorites_add&user_id={$row['id']}").'"><img title="Ajouter aux favoris" src="./modules/directory/img/ico_fav_add.png"></a>';
+                //if (!isset($favorites["user_{$row['id']}"])) $actions .='<a href="'.ovensia\ploopi\crypt::urlencode("admin.php?op=directory_favorites_add&user_id={$row['id']}").'"><img title="Ajouter aux favoris" src="./modules/directory/img/ico_fav_add.png"></a>';
                 if (!isset($favorites["user_{$row['id']}"])) $actions .='<a href="javascript:void(0);" onclick="javascript:directory_addtofavorites(event, \''.$row['id'].'\');"><img title="Ajouter aux favoris" src="./modules/directory/img/ico_fav_add.png"></a>';
                 else $actions .='<a href="javascript:void(0);" onclick="javascript:directory_addtofavorites(event, \''.$row['id'].'\');"><img title="Modifier les favoris" src="./modules/directory/img/ico_fav_modify.png"></a>';
             }
 
             // on va chercher les espaces auxquels l'utilisateur peut accéder
-            $user = new user();
+            $user = new ovensia\ploopi\user();
             $user->open($row['id']);
             $user_ws = $user->getworkspaces();
 
@@ -289,11 +286,11 @@ switch($_SESSION['directory']['directoryTabItem'])
             // on met tout ça dans une chaine
             $workspaces_list = implode(', ',$workspaces_list);
 
-            $arrValues[$c]['values']['name'] = array('label' => ploopi_htmlentities("{$row['lastname']} {$row['firstname']}"));
-            $arrValues[$c]['values']['groups'] = array('label' => ploopi_htmlentities($workspaces_list));
-            $arrValues[$c]['values']['service'] = array('label' => ploopi_htmlentities($row['service']));
-            $arrValues[$c]['values']['function'] = array('label' => ploopi_htmlentities($row['function']));
-            $arrValues[$c]['values']['phone'] = array('label' => ploopi_htmlentities($row['phone']));
+            $arrValues[$c]['values']['name'] = array('label' => ovensia\ploopi\str::htmlentities("{$row['lastname']} {$row['firstname']}"));
+            $arrValues[$c]['values']['groups'] = array('label' => ovensia\ploopi\str::htmlentities($workspaces_list));
+            $arrValues[$c]['values']['service'] = array('label' => ovensia\ploopi\str::htmlentities($row['service']));
+            $arrValues[$c]['values']['function'] = array('label' => ovensia\ploopi\str::htmlentities($row['function']));
+            $arrValues[$c]['values']['phone'] = array('label' => ovensia\ploopi\str::htmlentities($row['phone']));
             $arrValues[$c]['values']['email'] = array('label' => $email);
             $arrValues[$c]['values']['ticket'] = array('label' => $ticket);
             $arrValues[$c]['values']['actions'] = array('label' => $actions);
@@ -301,7 +298,7 @@ switch($_SESSION['directory']['directoryTabItem'])
             $c++;
         }
 
-        $skin->display_array($arrColumns, $arrValues, 'array_directory', array('sortable' => true, 'orderby_default' => 'name', 'limit' => ploopi_getparam('directory_pagesize')));
+        $skin->display_array($arrColumns, $arrValues, 'array_directory', array('sortable' => true, 'orderby_default' => 'name', 'limit' => ovensia\ploopi\param::get('directory_pagesize')));
 
     break;
 
@@ -345,7 +342,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                 foreach($arrLists as $row)
                 {
                     ?>
-                    <option <?php if ($id_list == $row['id']) echo 'selected'; ?> value="<?php echo $row['id']; ?>"><?php echo ploopi_htmlentities($row['label']); ?> (<?php echo ploopi_htmlentities($row['nbfav']); ?> fav)</option>
+                    <option <?php if ($id_list == $row['id']) echo 'selected'; ?> value="<?php echo $row['id']; ?>"><?php echo ovensia\ploopi\str::htmlentities($row['label']); ?> (<?php echo ovensia\ploopi\str::htmlentities($row['nbfav']); ?> fav)</option>
                     <?php
                 }
                 ?>
@@ -356,7 +353,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                 <span onclick="javascript:directory_list_modify(event);" style="cursor:pointer;display:<?php echo ($id_list>0) ? 'inline' : 'none'; ?>;" id="directory_list_modify_link" >
                     <img src="./modules/directory/img/ico_modify.png" title="Modifier la liste sélectionnée"  /><span style="margin:0 10px 0 2px;">Modifier la liste sélectionnée</span>
                 </span>
-                <span onclick="javascript:ploopi_confirmlink('<?php echo ploopi_urlencode("admin.php?ploopi_op=directory_list_delete")."&directory_favorites_id_list="; ?>'+$('directory_favorites_id_list').value, 'Êtes vous certain de vouloir supprimer cette liste ?');" style="cursor:pointer;display:<?php echo ($id_list>0) ? 'inline' : 'none'; ?>;" id="directory_list_delete_link">
+                <span onclick="javascript:ploopi_confirmlink('<?php echo ovensia\ploopi\crypt::urlencode("admin.php?ploopi_op=directory_list_delete")."&directory_favorites_id_list="; ?>'+$('directory_favorites_id_list').value, 'Êtes vous certain de vouloir supprimer cette liste ?');" style="cursor:pointer;display:<?php echo ($id_list>0) ? 'inline' : 'none'; ?>;" id="directory_list_delete_link">
                     <img src="./modules/directory/img/ico_delete.png" title="Supprimer la liste sélectionnée" /><span style="margin:0 10px 0 2px;">Supprimer la liste sélectionnée</span>
                 </span>
 
@@ -394,7 +391,7 @@ switch($_SESSION['directory']['directoryTabItem'])
         $arrColumns['right']['function'] = array('label' => _DIRECTORY_FUNCTION, 'width' => 150, 'options' => array('sort' => true));
         $arrColumns['right']['service'] = array('label' => _DIRECTORY_SERVICE, 'width' => 150, 'options' => array('sort' => true));
 
-        if (ploopi_getparam('directory_display_workspaces'))
+        if (ovensia\ploopi\param::get('directory_display_workspaces'))
         {
             $arrColumns['right']['groups'] = array('label' => _DIRECTORY_GROUPS,    'width' => 150, 'options' => array('sort' => true));
         }
@@ -482,7 +479,7 @@ switch($_SESSION['directory']['directoryTabItem'])
             $c = 0;
             foreach($result as $row)
             {
-                $email = ($row['email']) ? '<a href="mailto:'.ploopi_htmlentities($row['email']).'" title="'.ploopi_htmlentities(_DIRECTORY_SEND_EMAIL.': '.$row['email']).'"><img src="./modules/directory/img/ico_email.png"></a>' : '';
+                $email = ($row['email']) ? '<a href="mailto:'.ovensia\ploopi\str::htmlentities($row['email']).'" title="'.ovensia\ploopi\str::htmlentities(_DIRECTORY_SEND_EMAIL.': '.$row['email']).'"><img src="./modules/directory/img/ico_email.png"></a>' : '';
                 $ticket = '';
 
                 switch ($row['usertype'])
@@ -499,7 +496,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                         }
 
                         // on va chercher les espaces auxquels l'utilisateur peut accéder
-                        $user = new user();
+                        $user = new ovensia\ploopi\user();
                         $user->open($row['id']);
                         $user_ws = $user->getworkspaces();
 
@@ -552,11 +549,11 @@ switch($_SESSION['directory']['directoryTabItem'])
                 }
 
                 $arrValues[$c]['values']['type'] = array('label' => $level_display);
-                $arrValues[$c]['values']['name'] = array('label' => ploopi_htmlentities("{$row['lastname']} {$row['firstname']}"));
-                $arrValues[$c]['values']['groups'] = array('label' => ploopi_htmlentities($workspaces_list));
-                $arrValues[$c]['values']['service'] = array('label' => ploopi_htmlentities($row['service']));
-                $arrValues[$c]['values']['function'] = array('label' => ploopi_htmlentities($row['function']));
-                $arrValues[$c]['values']['phone'] = array('label' => ploopi_htmlentities($row['phone']));
+                $arrValues[$c]['values']['name'] = array('label' => ovensia\ploopi\str::htmlentities("{$row['lastname']} {$row['firstname']}"));
+                $arrValues[$c]['values']['groups'] = array('label' => ovensia\ploopi\str::htmlentities($workspaces_list));
+                $arrValues[$c]['values']['service'] = array('label' => ovensia\ploopi\str::htmlentities($row['service']));
+                $arrValues[$c]['values']['function'] = array('label' => ovensia\ploopi\str::htmlentities($row['function']));
+                $arrValues[$c]['values']['phone'] = array('label' => ovensia\ploopi\str::htmlentities($row['phone']));
                 $arrValues[$c]['values']['email'] = array('label' => $email);
                 $arrValues[$c]['values']['ticket'] = array('label' => $ticket);
                 $arrValues[$c]['values']['actions'] = array('label' => $actions);
@@ -564,7 +561,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                 $c++;
             }
 
-            $skin->display_array($arrColumns, $arrValues, 'array_directory', array('sortable' => true, 'orderby_default' => 'name', 'limit' => ploopi_getparam('directory_pagesize')));
+            $skin->display_array($arrColumns, $arrValues, 'array_directory', array('sortable' => true, 'orderby_default' => 'name', 'limit' => ovensia\ploopi\param::get('directory_pagesize')));
         }
     break;
 
@@ -594,7 +591,7 @@ switch($_SESSION['directory']['directoryTabItem'])
         <div class="directory_shared_main">
             <div class="directory_shared_treeview" id="directory_shared_treeview">
                 <div class="ploopi_tabs">
-                    <a href="<?php echo ploopi_urlencode("admin.php?directory_heading_id={$intHeadingId}&op=directory_heading_viewall"); ?>"><img src="./modules/directory/img/ico_viewall.png">Voir toutes les rubriques</a>
+                    <a href="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?directory_heading_id={$intHeadingId}&op=directory_heading_viewall"); ?>"><img src="./modules/directory/img/ico_viewall.png">Voir toutes les rubriques</a>
                 </div>
                 <div style="padding:10px;">
                     <?php echo $skin->display_treeview($arrTreeview['list'], $arrTreeview['tree'], $intHeadingId, null, $op == 'directory_heading_viewall'); ?>
@@ -618,7 +615,7 @@ switch($_SESSION['directory']['directoryTabItem'])
 
                         // On récupère les gestionnaires
                         $arrWfUsers = array();
-                        $arrWf = ploopi_validation_get(_DIRECTORY_OBJECT_HEADING, $intHeadingId);
+                        $arrWf = ovensia\ploopi\validation::get(_DIRECTORY_OBJECT_HEADING, $intHeadingId);
                         $intWfHeadingId = $intHeadingId;
 
                         if (empty($arrWf)) // pas de validateur pour cette rubrique, on recherche sur les parents
@@ -626,7 +623,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                             $parents = explode(';', $arrHeadings['list'][$intHeadingId]['parents']);
                             for ($i = sizeof($parents)-1; $i >= 0; $i--)
                             {
-                                $arrWf = ploopi_validation_get(_DIRECTORY_OBJECT_HEADING, $parents[$i]);
+                                $arrWf = ovensia\ploopi\validation::get(_DIRECTORY_OBJECT_HEADING, $parents[$i]);
                                 if (!empty($arrWf))
                                 {
                                     $intWfHeadingId = $parents[$i];
@@ -635,14 +632,14 @@ switch($_SESSION['directory']['directoryTabItem'])
                             }
                         }
 
-                        $objUser = new user();
+                        $objUser = new ovensia\ploopi\user();
                         $objUser->open($_SESSION['ploopi']['userid']);
                         $arrGroups = $objUser->getgroups(true);
 
                         /**
                          * L'utilisateur connecté est-il gestionnaire de la rubrique (admin ou validateur) ?
                          */
-                        $booModify = ploopi_isadmin() || $arrHeadings['list'][$intHeadingId]['isvalidator'];
+                        $booModify = ovensia\ploopi\acl::isadmin() || $arrHeadings['list'][$intHeadingId]['isvalidator'];
 
                         foreach($arrWf as $value)
                         {
@@ -659,9 +656,9 @@ switch($_SESSION['directory']['directoryTabItem'])
                         {
                             ?>
                             <div class="ploopi_tabs">
-                                <a href="javascript:void(0);" onclick="javascript:if (confirm('Êtes vous certain de vouloir supprimer <?php printf("%s %s", ploopi_htmlentities($arrHeadingLabel[$intDepth][1]), ploopi_htmlentities($arrHeadingLabel[$intDepth][2])); ?> (et les sous-rubriques attachées) ?')) document.location.href='<?php echo ploopi_urlencode("admin.php?ploopi_op=directory_heading_delete&directory_heading_id={$objHeading->fields['id']}"); ?>';return false;"><img src="./modules/directory/img/ico_delete.png">Supprimer</a>
-                                <a href="<?php echo ploopi_urlencode("admin.php?ploopi_op=directory_heading_add&directory_heading_id_heading={$objHeading->fields['id']}"); ?>"><img src="./modules/directory/img/ico_new.png">Ajouter <?php printf("%s %s", ploopi_htmlentities($arrHeadingLabel[$intDepth+1][0]), ploopi_htmlentities($arrHeadingLabel[$intDepth+1][2])); ?></a>
-                                <?php if (ploopi_isadmin()) { ?><a href="<?php echo ploopi_urlencode("admin.php?ploopi_op=directory_heading_add&directory_heading_id_heading=0"); ?>"><img src="./modules/directory/img/ico_newroot.png">Ajouter <?php printf("%s %s", ploopi_htmlentities($arrHeadingLabel[1][0]), ploopi_htmlentities($arrHeadingLabel[1][2])); ?></a><?php } ?>
+                                <a href="javascript:void(0);" onclick="javascript:if (confirm('Êtes vous certain de vouloir supprimer <?php printf("%s %s", ovensia\ploopi\str::htmlentities($arrHeadingLabel[$intDepth][1]), ovensia\ploopi\str::htmlentities($arrHeadingLabel[$intDepth][2])); ?> (et les sous-rubriques attachées) ?')) document.location.href='<?php echo ovensia\ploopi\crypt::urlencode("admin.php?ploopi_op=directory_heading_delete&directory_heading_id={$objHeading->fields['id']}"); ?>';return false;"><img src="./modules/directory/img/ico_delete.png">Supprimer</a>
+                                <a href="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?ploopi_op=directory_heading_add&directory_heading_id_heading={$objHeading->fields['id']}"); ?>"><img src="./modules/directory/img/ico_new.png">Ajouter <?php printf("%s %s", ovensia\ploopi\str::htmlentities($arrHeadingLabel[$intDepth+1][0]), ovensia\ploopi\str::htmlentities($arrHeadingLabel[$intDepth+1][2])); ?></a>
+                                <?php if (ovensia\ploopi\acl::isadmin()) { ?><a href="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?ploopi_op=directory_heading_add&directory_heading_id_heading=0"); ?>"><img src="./modules/directory/img/ico_newroot.png">Ajouter <?php printf("%s %s", ovensia\ploopi\str::htmlentities($arrHeadingLabel[1][0]), ovensia\ploopi\str::htmlentities($arrHeadingLabel[1][2])); ?></a><?php } ?>
                             </div>
                             <?php
                         }
@@ -672,13 +669,13 @@ switch($_SESSION['directory']['directoryTabItem'])
                             if ($booModify)
                             {
                                 ?>
-                                <form method="post" action="<?php echo ploopi_urlencode("admin.php?ploopi_op=directory_heading_save&directory_heading_id={$objHeading->fields['id']}"); ?>" onsubmit="javascript:return directory_heading_validate(this);">
+                                <form method="post" action="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?ploopi_op=directory_heading_save&directory_heading_id={$objHeading->fields['id']}"); ?>" onsubmit="javascript:return directory_heading_validate(this);">
                                 <?php
                             }
-                            elseif (ploopi_isactionallowed(_DIRECTORY_ACTION_MANAGERS))
+                            elseif (ovensia\ploopi\acl::isactionallowed(_DIRECTORY_ACTION_MANAGERS))
                             {
                                 ?>
-                                <form method="post" action="<?php echo ploopi_urlencode("admin.php?ploopi_op=directory_heading_save&directory_heading_id={$objHeading->fields['id']}"); ?>">
+                                <form method="post" action="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?ploopi_op=directory_heading_save&directory_heading_id={$objHeading->fields['id']}"); ?>">
                                 <?php
                             }
 
@@ -688,44 +685,44 @@ switch($_SESSION['directory']['directoryTabItem'])
                                 <div class="ploopi_form">
                                     <p>
                                         <label>Niveau:</label>
-                                        <span><?php echo ploopi_htmlentities($arrHeadingLabel[$intDepth][2]); ?></span>
+                                        <span><?php echo ovensia\ploopi\str::htmlentities($arrHeadingLabel[$intDepth][2]); ?></span>
                                     </p>
                                     <p>
                                         <label>Libellé:</label>
-                                        <input name="directory_heading_label" id="directory_heading_label" type="text" class="text" value="<?php echo ploopi_htmlentities($objHeading->fields['label']); ?>" />
+                                        <input name="directory_heading_label" id="directory_heading_label" type="text" class="text" value="<?php echo ovensia\ploopi\str::htmlentities($objHeading->fields['label']); ?>" />
                                     </p>
                                     <p>
                                         <label>Description:</label>
-                                        <textarea name="directory_heading_description" class="text" style="height:50px;"><?php echo ploopi_htmlentities($objHeading->fields['description']); ?></textarea>
+                                        <textarea name="directory_heading_description" class="text" style="height:50px;"><?php echo ovensia\ploopi\str::htmlentities($objHeading->fields['description']); ?></textarea>
                                     </p>
                                     <p>
                                         <label>Position:</label>
-                                        <input name="directory_heading_position" type="text" class="text" style="width:50px;" value="<?php echo ploopi_htmlentities($objHeading->fields['position']); ?>" />
+                                        <input name="directory_heading_position" type="text" class="text" style="width:50px;" value="<?php echo ovensia\ploopi\str::htmlentities($objHeading->fields['position']); ?>" />
                                         <input type="checkbox" class="checkbox" name="_directory_heading_forcepos" value="1" />Forcer la position
                                     </p>
                                     <p>
                                         <label>Téléphone:</label>
-                                        <input name="directory_heading_phone" type="text" class="text" value="<?php echo ploopi_htmlentities($objHeading->fields['phone']); ?>" style="width:140px;" />
+                                        <input name="directory_heading_phone" type="text" class="text" value="<?php echo ovensia\ploopi\str::htmlentities($objHeading->fields['phone']); ?>" style="width:140px;" />
                                     </p>
                                     <p>
                                         <label>Fax:</label>
-                                        <input name="directory_heading_fax" type="text" class="text" value="<?php echo ploopi_htmlentities($objHeading->fields['fax']); ?>" style="width:140px;" />
+                                        <input name="directory_heading_fax" type="text" class="text" value="<?php echo ovensia\ploopi\str::htmlentities($objHeading->fields['fax']); ?>" style="width:140px;" />
                                     </p>
                                     <p>
                                         <label>Adresse:</label>
-                                        <textarea name="directory_heading_address" class="text" style="height:50px;"><?php echo ploopi_htmlentities($objHeading->fields['address']); ?></textarea>
+                                        <textarea name="directory_heading_address" class="text" style="height:50px;"><?php echo ovensia\ploopi\str::htmlentities($objHeading->fields['address']); ?></textarea>
                                     </p>
                                     <p>
                                         <label>Code Postal:</label>
-                                        <input name="directory_heading_postalcode" type="text" class="text" value="<?php echo ploopi_htmlentities($objHeading->fields['postalcode']); ?>" style="width:80px;" />
+                                        <input name="directory_heading_postalcode" type="text" class="text" value="<?php echo ovensia\ploopi\str::htmlentities($objHeading->fields['postalcode']); ?>" style="width:80px;" />
                                     </p>
                                     <p>
                                         <label>Ville:</label>
-                                        <input name="directory_heading_city" type="text" class="text" value="<?php echo ploopi_htmlentities($objHeading->fields['city']); ?>" />
+                                        <input name="directory_heading_city" type="text" class="text" value="<?php echo ovensia\ploopi\str::htmlentities($objHeading->fields['city']); ?>" />
                                     </p>
                                     <p>
                                         <label>Pays:</label>
-                                        <input name="directory_heading_country" type="text" class="text" value="<?php echo ploopi_htmlentities($objHeading->fields['country']); ?>" />
+                                        <input name="directory_heading_country" type="text" class="text" value="<?php echo ovensia\ploopi\str::htmlentities($objHeading->fields['country']); ?>" />
                                     </p>
                                 </div>
                                 <?php
@@ -745,17 +742,17 @@ switch($_SESSION['directory']['directoryTabItem'])
 
 
                             ?>
-                            <h1 class="directory_title"><?php echo ploopi_htmlentities(implode(' > ', $arrTitle)); ?></h1>
+                            <h1 class="directory_title"><?php echo ovensia\ploopi\str::htmlentities(implode(' > ', $arrTitle)); ?></h1>
                             <?php
                             if (!empty($objHeading->fields['description']))
                             {
-                                ?><div style="padding:4px;"><em><?php echo ploopi_nl2br(ploopi_htmlentities($objHeading->fields['description'])); ?></em></div><?php
+                                ?><div style="padding:4px;"><em><?php echo ovensia\ploopi\str::nl2br(ovensia\ploopi\str::htmlentities($objHeading->fields['description'])); ?></em></div><?php
                             }
 
                             // Construction de la chaîne de téléphone
                             $arrPhone = array();
-                            if (!empty($objHeading->fields['phone'])) $arrPhone[] = ploopi_htmlentities("Tel: ".$objHeading->fields['phone']);
-                            if (!empty($objHeading->fields['fax'])) $arrPhone[] = ploopi_htmlentities("Fax: ".$objHeading->fields['fax']);
+                            if (!empty($objHeading->fields['phone'])) $arrPhone[] = ovensia\ploopi\str::htmlentities("Tel: ".$objHeading->fields['phone']);
+                            if (!empty($objHeading->fields['fax'])) $arrPhone[] = ovensia\ploopi\str::htmlentities("Fax: ".$objHeading->fields['fax']);
 
                             if (!empty($arrPhone))
                             {
@@ -764,9 +761,9 @@ switch($_SESSION['directory']['directoryTabItem'])
 
                             // Construction de la chaîne d'adresse
                             $arrAddress = array();
-                            if (!empty($objHeading->fields['address'])) $arrAddress[] = ploopi_nl2br(ploopi_htmlentities($objHeading->fields['address']));
-                            if (!empty($objHeading->fields['postalcode']) || !empty($row['city'])) $arrAddress[] = ploopi_nl2br(ploopi_htmlentities(trim($objHeading->fields['postalcode'].' '.$objHeading->fields['city'])));
-                            if (!empty($objHeading->fields['country'])) $arrAddress[] = ploopi_nl2br(ploopi_htmlentities($objHeading->fields['country']));
+                            if (!empty($objHeading->fields['address'])) $arrAddress[] = ovensia\ploopi\str::nl2br(ovensia\ploopi\str::htmlentities($objHeading->fields['address']));
+                            if (!empty($objHeading->fields['postalcode']) || !empty($row['city'])) $arrAddress[] = ovensia\ploopi\str::nl2br(ovensia\ploopi\str::htmlentities(trim($objHeading->fields['postalcode'].' '.$objHeading->fields['city'])));
+                            if (!empty($objHeading->fields['country'])) $arrAddress[] = ovensia\ploopi\str::nl2br(ovensia\ploopi\str::htmlentities($objHeading->fields['country']));
 
                             if (!empty($arrAddress))
                             {
@@ -777,12 +774,12 @@ switch($_SESSION['directory']['directoryTabItem'])
 
                         if ($op == 'directory_modify') // interface débloquée
                         {
-                            if (ploopi_isactionallowed(_DIRECTORY_ACTION_MANAGERS)) // Gestion des gestionnaires
+                            if (ovensia\ploopi\acl::isactionallowed(_DIRECTORY_ACTION_MANAGERS)) // Gestion des gestionnaires
                             {
                                 ?>
                                 <div style="clear:both;padding:4px;">
                                     <fieldset class="fieldset" style="padding:6px;">
-                                        <legend><strong>Gestionnaires <?php if ($intWfHeadingId != $intHeadingId) echo "<em>(Hérités de &laquo; <a href=\"".ploopi_urlencode("admin.php?directory_heading_id={$intWfHeadingId}")."\">{$arrHeadings['list'][$intWfHeadingId]['label']}</a> &raquo;)</em>"; ?></strong></legend>
+                                        <legend><strong>Gestionnaires <?php if ($intWfHeadingId != $intHeadingId) echo "<em>(Hérités de &laquo; <a href=\"".ovensia\ploopi\crypt::urlencode("admin.php?directory_heading_id={$intWfHeadingId}")."\">{$arrHeadings['list'][$intWfHeadingId]['label']}</a> &raquo;)</em>"; ?></strong></legend>
 
                                         <p class="ploopi_va" style="padding:0 2px 2px 2px;">
                                             <?php
@@ -796,7 +793,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                                                         "SELECT label FROM ploopi_group WHERE id in (".implode(',',$arrWfUsers['group']).") ORDER BY label"
                                                     );
 
-                                                    while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi_htmlentities($row['label'])."&nbsp;</span>";
+                                                    while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;".ovensia\ploopi\str::htmlentities($row['label'])."&nbsp;</span>";
                                                 }
                                                 if (!empty($arrWfUsers['user']))
                                                 {
@@ -806,7 +803,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                                                         "SELECT concat(lastname, ' ', firstname) as name FROM ploopi_user WHERE id in (".implode(',',$arrWfUsers['user']).") ORDER BY lastname, firstname"
                                                     );
 
-                                                    while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi_htmlentities($row['name'])."&nbsp;</span>";
+                                                    while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;".ovensia\ploopi\str::htmlentities($row['name'])."&nbsp;</span>";
                                                 }
                                             }
                                             else echo '<em>Aucune accréditation</em>';
@@ -814,7 +811,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                                         </p>
                                         <div style="clear:both;padding:4px;">
                                             <div style="border:1px solid #c0c0c0;overflow:hidden;">
-                                            <?php ploopi_validation_selectusers(_DIRECTORY_OBJECT_HEADING, $intHeadingId, -1, _DIRECTORY_ACTION_CONTACTS, sprintf("Gestionnaires de %s %s", $arrHeadingLabel[$intDepth][1], $arrHeadingLabel[$intDepth][2])); ?>
+                                            <?php ovensia\ploopi\validation::selectusers(_DIRECTORY_OBJECT_HEADING, $intHeadingId, -1, _DIRECTORY_ACTION_CONTACTS, sprintf("Gestionnaires de %s %s", $arrHeadingLabel[$intDepth][1], $arrHeadingLabel[$intDepth][2])); ?>
                                             </div>
                                         </div>
                                     </fieldset>
@@ -822,11 +819,11 @@ switch($_SESSION['directory']['directoryTabItem'])
                                 <?php
                             }
 
-                            if ($booModify || ploopi_isactionallowed(_DIRECTORY_ACTION_MANAGERS))
+                            if ($booModify || ovensia\ploopi\acl::isactionallowed(_DIRECTORY_ACTION_MANAGERS))
                             {
                                 ?>
                                 <div style="text-align:right;padding:4px;">
-                                    <input type="button" class="button" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?directory_heading_id={$intHeadingId}"); ?>';">
+                                    <input type="button" class="button" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<?php echo ovensia\ploopi\crypt::urlencode("admin.php?directory_heading_id={$intHeadingId}"); ?>';">
                                     <input type="reset" class="button" value="<?php echo _PLOOPI_RESET; ?>">
                                     <input type="submit" class="button" value="<?php echo _PLOOPI_SAVE; ?>">
                                 </div>
@@ -835,13 +832,13 @@ switch($_SESSION['directory']['directoryTabItem'])
                             }
                         }
 
-                        if (!$booModify || !ploopi_isactionallowed(_DIRECTORY_ACTION_MANAGERS) || empty($op)) // Version non modifiable
+                        if (!$booModify || !ovensia\ploopi\acl::isactionallowed(_DIRECTORY_ACTION_MANAGERS) || empty($op)) // Version non modifiable
                         {
                             ?>
                             <div class="directory_shared_managers">
                                 <div style="float:left;">
                                     <em>
-                                        <strong>Gestionnaires <?php if ($intWfHeadingId != $intHeadingId) echo "(Hérités de &laquo; <a href=\"".ploopi_urlencode("admin.php?directory_heading_id={$intWfHeadingId}")."\">{$arrHeadings['list'][$intWfHeadingId]['label']}</a> &raquo;)"; ?></strong>:
+                                        <strong>Gestionnaires <?php if ($intWfHeadingId != $intHeadingId) echo "(Hérités de &laquo; <a href=\"".ovensia\ploopi\crypt::urlencode("admin.php?directory_heading_id={$intWfHeadingId}")."\">{$arrHeadings['list'][$intWfHeadingId]['label']}</a> &raquo;)"; ?></strong>:
 
                                         <div style="clear:both;padding:4px;">
                                             <p class="ploopi_va" style="padding:0 2px 2px 2px;">
@@ -856,7 +853,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                                                             "SELECT label FROM ploopi_group WHERE id in (".implode(',',$arrWfUsers['group']).") ORDER BY label"
                                                         );
 
-                                                        while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi_htmlentities($row['label'])."&nbsp;</span>";
+                                                        while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;".ovensia\ploopi\str::htmlentities($row['label'])."&nbsp;</span>";
                                                     }
                                                     if (!empty($arrWfUsers['user']))
                                                     {
@@ -866,7 +863,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                                                             "SELECT concat(lastname, ' ', firstname) as name FROM ploopi_user WHERE id in (".implode(',',$arrWfUsers['user']).") ORDER BY lastname, firstname"
                                                         );
 
-                                                        while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi_htmlentities($row['name'])."&nbsp;</span>";
+                                                        while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;".ovensia\ploopi\str::htmlentities($row['name'])."&nbsp;</span>";
                                                     }
                                                 }
                                                 else echo '<em>Aucune accréditation</em>';
@@ -876,11 +873,11 @@ switch($_SESSION['directory']['directoryTabItem'])
                                     </em>
                                 </div>
                                 <?php
-                                if (($booModify || ploopi_isactionallowed(_DIRECTORY_ACTION_MANAGERS)) && empty($op)) // interface bloquée
+                                if (($booModify || ovensia\ploopi\acl::isactionallowed(_DIRECTORY_ACTION_MANAGERS)) && empty($op)) // interface bloquée
                                 {
                                     ?>
                                         <div style="clear:both;text-align:right;">
-                                        <input type="button" class="button" value="Modifier" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?directory_heading_id={$intHeadingId}&op=directory_modify"); ?>';">
+                                        <input type="button" class="button" value="Modifier" onclick="javascript:document.location.href='<?php echo ovensia\ploopi\crypt::urlencode("admin.php?directory_heading_id={$intHeadingId}&op=directory_modify"); ?>';">
                                         </div>
                                     <?php
                                 }
@@ -923,10 +920,10 @@ switch($_SESSION['directory']['directoryTabItem'])
                             }
                             ?>
                             <div class="ploopi_form_title">
-                                <a href="<?php echo ploopi_urlencode("admin-light.php?ploopi_op=directory_export&directory_format=csv&directory_heading_id={$intHeadingId}"); ?>" style="margin-left:6px;display:block;float:right;" title="Export CSV"><img src="./modules/directory/img/mime/csv.png" /></a>
-                                <a href="<?php echo ploopi_urlencode("admin-light.php?ploopi_op=directory_export&directory_format=xls&directory_heading_id={$intHeadingId}"); ?>" style="margin-left:6px;display:block;float:right;" title="Export XLS"><img src="./modules/directory/img/mime/xls.png" /></a>
-                                <a href="<?php echo ploopi_urlencode("admin-light.php?ploopi_op=directory_export&directory_format=xml&directory_heading_id={$intHeadingId}"); ?>" style="margin-left:6px;display:block;float:right;" title="Export XML"><img src="./modules/directory/img/mime/xml.png" /></a>
-                                <span>Liste des contacts rattachés à <?php printf("%s %s", ploopi_htmlentities($arrHeadingLabel[$intDepth][1]), ploopi_htmlentities($arrHeadingLabel[$intDepth][2])); ?></span>
+                                <a href="<?php echo ovensia\ploopi\crypt::urlencode("admin-light.php?ploopi_op=directory_export&directory_format=csv&directory_heading_id={$intHeadingId}"); ?>" style="margin-left:6px;display:block;float:right;" title="Export CSV"><img src="./modules/directory/img/mime/csv.png" /></a>
+                                <a href="<?php echo ovensia\ploopi\crypt::urlencode("admin-light.php?ploopi_op=directory_export&directory_format=xls&directory_heading_id={$intHeadingId}"); ?>" style="margin-left:6px;display:block;float:right;" title="Export XLS"><img src="./modules/directory/img/mime/xls.png" /></a>
+                                <a href="<?php echo ovensia\ploopi\crypt::urlencode("admin-light.php?ploopi_op=directory_export&directory_format=xml&directory_heading_id={$intHeadingId}"); ?>" style="margin-left:6px;display:block;float:right;" title="Export XML"><img src="./modules/directory/img/mime/xml.png" /></a>
+                                <span>Liste des contacts rattachés à <?php printf("%s %s", ovensia\ploopi\str::htmlentities($arrHeadingLabel[$intDepth][1]), ovensia\ploopi\str::htmlentities($arrHeadingLabel[$intDepth][2])); ?></span>
                             </div>
                             <?php
                             $arrColumns = array();
@@ -953,12 +950,12 @@ switch($_SESSION['directory']['directoryTabItem'])
                                 $c = 0;
                                 while ($row = $db->fetchrow($rs))
                                 {
-                                    $email = ($row['email']) ? '<a href="mailto:'.ploopi_htmlentities($row['email']).'" title="'.ploopi_htmlentities(_DIRECTORY_SEND_EMAIL.': '.$row['email']).'"><img src="./modules/directory/img/ico_email.png"></a>' : '';
+                                    $email = ($row['email']) ? '<a href="mailto:'.ovensia\ploopi\str::htmlentities($row['email']).'" title="'.ovensia\ploopi\str::htmlentities(_DIRECTORY_SEND_EMAIL.': '.$row['email']).'"><img src="./modules/directory/img/ico_email.png"></a>' : '';
 
                                     $arrActions = array();
                                     $arrActions[] = '<a href="javascript:void(0);" onclick="javascript:directory_view(event, \'\', \''.$row['id'].'\');"><img title="Voir le Profil" src="./modules/directory/img/ico_open.png"></a>';
                                     if ($booModify) $arrActions[] = '<a href="javascript:void(0);" onclick="javascript:directory_modify(event, \''.$row['id'].'\');"><img title="Modifier le Contact" src="./modules/directory/img/ico_modify.png"></a>';
-                                    if ($booModify) $arrActions[] = '<a href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("admin.php?ploopi_op=directory_contact_delete&directory_contact_id={$row['id']}").'\',\''._DIRECTORY_CONFIRM_DELETECONTACT.'\')"><img title="Supprimer" src="./modules/directory/img/ico_delete.png"></a>';
+                                    if ($booModify) $arrActions[] = '<a href="javascript:ploopi_confirmlink(\''.ovensia\ploopi\crypt::urlencode("admin.php?ploopi_op=directory_contact_delete&directory_contact_id={$row['id']}").'\',\''._DIRECTORY_CONFIRM_DELETECONTACT.'\')"><img title="Supprimer" src="./modules/directory/img/ico_delete.png"></a>';
 
                                     if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_myfavorites'])
                                     {
@@ -966,11 +963,11 @@ switch($_SESSION['directory']['directoryTabItem'])
                                         else $arrActions[] ='<a href="javascript:void(0);" onclick="javascript:directory_addtofavorites(event, \'\', \''.$row['id'].'\');"><img title="Modifier les favoris" src="./modules/directory/img/ico_fav_modify.png"></a>';
                                     }
 
-                                    $arrValues[$c]['values']['position'] = array('label' => ploopi_htmlentities($row['position']));
-                                    $arrValues[$c]['values']['name'] = array('label' => ploopi_htmlentities("{$row['lastname']} {$row['firstname']}"));
-                                    $arrValues[$c]['values']['service'] = array('label' => ploopi_htmlentities($row['service']));
-                                    $arrValues[$c]['values']['function'] = array('label' => ploopi_htmlentities($row['function']));
-                                    $arrValues[$c]['values']['phone'] = array('label' => ploopi_htmlentities($row['phone']));
+                                    $arrValues[$c]['values']['position'] = array('label' => ovensia\ploopi\str::htmlentities($row['position']));
+                                    $arrValues[$c]['values']['name'] = array('label' => ovensia\ploopi\str::htmlentities("{$row['lastname']} {$row['firstname']}"));
+                                    $arrValues[$c]['values']['service'] = array('label' => ovensia\ploopi\str::htmlentities($row['service']));
+                                    $arrValues[$c]['values']['function'] = array('label' => ovensia\ploopi\str::htmlentities($row['function']));
+                                    $arrValues[$c]['values']['phone'] = array('label' => ovensia\ploopi\str::htmlentities($row['phone']));
                                     $arrValues[$c]['values']['email'] = array('label' => $email);
                                     $arrValues[$c]['values']['actions'] = array('label' => implode('', $arrActions));
 
@@ -978,12 +975,12 @@ switch($_SESSION['directory']['directoryTabItem'])
                                 }
                             }
 
-                            $skin->display_array($arrColumns, $arrValues, 'array_directory', array('sortable' => true, 'orderby_default' => 'position', 'limit' => ploopi_getparam('directory_pagesize')));
+                            $skin->display_array($arrColumns, $arrValues, 'array_directory', array('sortable' => true, 'orderby_default' => 'position', 'limit' => ovensia\ploopi\param::get('directory_pagesize')));
 
                             if (!$db->numrows($rs))
                             {
                                 ?>
-                                <div style="padding:4px;text-align:center;">Il n'y a pas de contact rattaché à <?php printf("%s %s", ploopi_htmlentities($arrHeadingLabel[$intDepth][1]), ploopi_htmlentities($arrHeadingLabel[$intDepth][2])); ?></div>
+                                <div style="padding:4px;text-align:center;">Il n'y a pas de contact rattaché à <?php printf("%s %s", ovensia\ploopi\str::htmlentities($arrHeadingLabel[$intDepth][1]), ovensia\ploopi\str::htmlentities($arrHeadingLabel[$intDepth][2])); ?></div>
                                 <?php
                             }
                             ?>
@@ -997,13 +994,13 @@ switch($_SESSION['directory']['directoryTabItem'])
                         $arrHeadingLabel[1] = preg_split('/\//', $strHeadingLabel);
                         ?>
                         <div class="ploopi_tabs">
-                            <?php if (ploopi_isadmin()) { ?><a href="<?php echo ploopi_urlencode("admin.php?ploopi_op=directory_heading_add&directory_heading_id_heading=0"); ?>"><img src="./modules/directory/img/ico_newroot.png">Ajouter <?php printf("%s %s", ploopi_htmlentities($arrHeadingLabel[1][0]), ploopi_htmlentities($arrHeadingLabel[1][2])); ?></a><?php } ?>
+                            <?php if (ovensia\ploopi\acl::isadmin()) { ?><a href="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?ploopi_op=directory_heading_add&directory_heading_id_heading=0"); ?>"><img src="./modules/directory/img/ico_newroot.png">Ajouter <?php printf("%s %s", ovensia\ploopi\str::htmlentities($arrHeadingLabel[1][0]), ovensia\ploopi\str::htmlentities($arrHeadingLabel[1][2])); ?></a><?php } ?>
                         </div>
                         <?php
                         if (empty($arrHeadings['list']))
                         {
                             ?>
-                            <div class="error" style="padding:10px;text-align:center;">Vous devez d'abord créer <?php printf("%s %s", ploopi_htmlentities($arrHeadingLabel[1][0]), ploopi_htmlentities($arrHeadingLabel[1][2])); ?></div>
+                            <div class="error" style="padding:10px;text-align:center;">Vous devez d'abord créer <?php printf("%s %s", ovensia\ploopi\str::htmlentities($arrHeadingLabel[1][0]), ovensia\ploopi\str::htmlentities($arrHeadingLabel[1][2])); ?></div>
                             <?php
                         }
                         else
@@ -1045,7 +1042,7 @@ switch($_SESSION['directory']['directoryTabItem'])
             "), true
         );
 
-        if (ploopi_isactionallowed(_DIRECTORY_ACTION_SPEEDDIALING))
+        if (ovensia\ploopi\acl::isactionallowed(_DIRECTORY_ACTION_SPEEDDIALING))
         {
             ?>
             <a class="ploopi_form_title" href="javascript:void(0);" onclick="javascript:$('directory_addnumber').style.display='block';">
@@ -1055,12 +1052,12 @@ switch($_SESSION['directory']['directoryTabItem'])
                 </p>
             </a>
             <div id="directory_addnumber" style="display:none;border-bottom:1px solid #c0c0c0;overflow:auto;">
-                <form action="<?php echo ploopi_urlencode("admin.php?ploopi_op=directory_speeddialing_save&directory_speeddialing_id={$objSpeedDialing->fields['id']}"); ?>" method="post" onsubmit="return directory_speeddialing_validate(this);">
+                <form action="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?ploopi_op=directory_speeddialing_save&directory_speeddialing_id={$objSpeedDialing->fields['id']}"); ?>" method="post" onsubmit="return directory_speeddialing_validate(this);">
                 <p class="ploopi_va" style="padding:4px;">
                     <span>Rubrique:</span>
                     <select class="select" name="directory_speeddialing_heading" style="width:150px;" tabindex="110">
                         <option value="" style="font-style:italic;">(Rubrique existante)</option>
-                        <?php foreach($arrHeadings as $strHeading) echo '<option value="'.ploopi_htmlentities($strHeading).'">'.ploopi_htmlentities($strHeading).'</option>'; ?>
+                        <?php foreach($arrHeadings as $strHeading) echo '<option value="'.ovensia\ploopi\str::htmlentities($strHeading).'">'.ovensia\ploopi\str::htmlentities($strHeading).'</option>'; ?>
                     </select>
                     <em>ou</em>
                     <input type="text" name="_directory_speeddialing_newheading" class="text" style="width:100px;" value="Nouvelle rubrique" tabindex="111" onfocus="javascript:this.value = '';" />
@@ -1070,7 +1067,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                     <input type="text" name="directory_speeddialing_number" class="text" style="width:90px;" maxlength="32" tabindex="116" />
                     <span>Abrégé:</span>
                     <input type="text" name="directory_speeddialing_shortnumber" class="text" style="width:60px;" maxlength="16" tabindex="117" />
-                    <input type="button" class="button" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php"); ?>';" tabindex="121" />
+                    <input type="button" class="button" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<?php echo ovensia\ploopi\crypt::urlencode("admin.php"); ?>';" tabindex="121" />
                     <input type="submit" class="button" value="<?php echo _PLOOPI_SAVE; ?>" tabindex="120" />
 
                 </p>
@@ -1091,7 +1088,7 @@ switch($_SESSION['directory']['directoryTabItem'])
             $arrColumns['auto']['label'] = array('label' => 'Libellé', 'options' => array('sort' => true));
             $arrColumns['right']['shortnumber'] = array('label' => 'Abrégé', 'width' => 90, 'options' => array('sort' => true));
             $arrColumns['right']['number'] = array('label' => 'Numéro', 'width' => 120, 'options' => array('sort' => true));
-            if (ploopi_isactionallowed(_DIRECTORY_ACTION_SPEEDDIALING))
+            if (ovensia\ploopi\acl::isactionallowed(_DIRECTORY_ACTION_SPEEDDIALING))
             {
                 $arrColumns['actions_right']['actions'] = array('label' => '&nbsp;', 'width' => 42);
             }
@@ -1107,17 +1104,17 @@ switch($_SESSION['directory']['directoryTabItem'])
                 while ($row = $db->fetchrow())
                 {
 
-                    $arrValues[$c]['values']['heading'] = array('label' => ploopi_htmlentities($row['heading']), 'sort_label' => strtoupper(ploopi_convertaccents(sprintf("%-255s_%-255s", $row['heading'], $row['label']))));
-                    $arrValues[$c]['values']['label'] = array('label' => ploopi_htmlentities($row['label']), 'sort_label' => strtoupper(ploopi_convertaccents($row['label'])));
-                    $arrValues[$c]['values']['shortnumber'] = array('label' => ploopi_htmlentities($row['shortnumber']));
-                    $arrValues[$c]['values']['number'] = array('label' => ploopi_htmlentities($row['number']));
-                    $arrValues[$c]['description'] = ploopi_htmlentities($row['label']);
+                    $arrValues[$c]['values']['heading'] = array('label' => ovensia\ploopi\str::htmlentities($row['heading']), 'sort_label' => strtoupper(ovensia\ploopi\str::convertaccents(sprintf("%-255s_%-255s", $row['heading'], $row['label']))));
+                    $arrValues[$c]['values']['label'] = array('label' => ovensia\ploopi\str::htmlentities($row['label']), 'sort_label' => strtoupper(ovensia\ploopi\str::convertaccents($row['label'])));
+                    $arrValues[$c]['values']['shortnumber'] = array('label' => ovensia\ploopi\str::htmlentities($row['shortnumber']));
+                    $arrValues[$c]['values']['number'] = array('label' => ovensia\ploopi\str::htmlentities($row['number']));
+                    $arrValues[$c]['description'] = ovensia\ploopi\str::htmlentities($row['label']);
 
-                    if (ploopi_isactionallowed(_DIRECTORY_ACTION_SPEEDDIALING))
+                    if (ovensia\ploopi\acl::isactionallowed(_DIRECTORY_ACTION_SPEEDDIALING))
                     {
                         $arrActions = array();
                         $arrActions[] = '<a href="javascript:void(0);" onclick="javascript:directory_speeddialing_modify(event, \''.$row['id'].'\');"><img title="Modifier le numéro" src="./modules/directory/img/ico_modify.png"></a>';
-                        $arrActions[] = '<a href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("admin-light.php?ploopi_op=directory_speeddialing_delete&directory_speeddialing_id={$row['id']}").'\',\''._DIRECTORY_CONFIRM_DELETENUMBER.'\')"><img title="Supprimer" src="./modules/directory/img/ico_delete.png"></a>';
+                        $arrActions[] = '<a href="javascript:ploopi_confirmlink(\''.ovensia\ploopi\crypt::urlencode("admin-light.php?ploopi_op=directory_speeddialing_delete&directory_speeddialing_id={$row['id']}").'\',\''._DIRECTORY_CONFIRM_DELETENUMBER.'\')"><img title="Supprimer" src="./modules/directory/img/ico_delete.png"></a>';
                         $arrValues[$c]['values']['actions'] = array('label' => implode('', $arrActions));
                         $arrValues[$c]['link'] = 'javascript:void(0);';
                         $arrValues[$c]['onclick'] = 'directory_speeddialing_modify(event, \''.$row['id'].'\');';
@@ -1126,7 +1123,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                 }
             }
 
-            $skin->display_array($arrColumns, $arrValues, 'array_directory_speeddialing', array('sortable' => true, 'orderby_default' => 'heading', 'limit' => ploopi_getparam('directory_pagesize')));
+            $skin->display_array($arrColumns, $arrValues, 'array_directory_speeddialing', array('sortable' => true, 'orderby_default' => 'heading', 'limit' => ovensia\ploopi\param::get('directory_pagesize')));
 
             if (!$db->numrows($rs))
             {

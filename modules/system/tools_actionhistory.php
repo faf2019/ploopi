@@ -53,14 +53,14 @@ $arrSearchPattern['ip'] = (isset($_POST['filter_ip'])) ? $_POST['filter_ip'] : '
 
 $arrWhere = array();
 
-if (!empty($arrSearchPattern['date']))    $arrWhere[] = "ploopi_user_action_log.timestp >= '".user_action_log::getdb()->addslashes(ploopi_local2timestamp($arrSearchPattern['date']))."'";
-if (!empty($arrSearchPattern['date2']))   $arrWhere[] = "ploopi_user_action_log.timestp <= '".user_action_log::getdb()->addslashes(ploopi_timestamp_add(ploopi_local2timestamp($arrSearchPattern['date2']),0,0,0,0,1))."'";
-if (!empty($arrSearchPattern['user']))    $arrWhere[] = "ploopi_user_action_log.user LIKE '%".user_action_log::getdb()->addslashes($arrSearchPattern['user'])."%'";
-if (!empty($arrSearchPattern['workspace'])) $arrWhere[] = "ploopi_user_action_log.workspace LIKE '%".user_action_log::getdb()->addslashes($arrSearchPattern['workspace'])."%'";
-if (!empty($arrSearchPattern['module']))  $arrWhere[] = "ploopi_user_action_log.module LIKE '%".user_action_log::getdb()->addslashes($arrSearchPattern['module'])."%'";
-if (!empty($arrSearchPattern['action']))  $arrWhere[] = "ploopi_user_action_log.action LIKE '%".user_action_log::getdb()->addslashes($arrSearchPattern['action'])."%'";
-if (!empty($arrSearchPattern['record']))  $arrWhere[] = "ploopi_user_action_log.id_record LIKE '%".user_action_log::getdb()->addslashes($arrSearchPattern['record'])."%'";
-if (!empty($arrSearchPattern['ip']))      $arrWhere[] = "ploopi_user_action_log.ip LIKE '".user_action_log::getdb()->addslashes($arrSearchPattern['ip'])."%'";
+if (!empty($arrSearchPattern['date']))    $arrWhere[] = "ploopi_user_action_log.timestp >= '".ovensia\ploopi\user_action_log::getdb()->addslashes(ovensia\ploopi\date::local2timestamp($arrSearchPattern['date']))."'";
+if (!empty($arrSearchPattern['date2']))   $arrWhere[] = "ploopi_user_action_log.timestp <= '".ovensia\ploopi\user_action_log::getdb()->addslashes(ovensia\ploopi\date::timestamp_add(ovensia\ploopi\date::local2timestamp($arrSearchPattern['date2']),0,0,0,0,1))."'";
+if (!empty($arrSearchPattern['user']))    $arrWhere[] = "ploopi_user_action_log.user LIKE '%".ovensia\ploopi\user_action_log::getdb()->addslashes($arrSearchPattern['user'])."%'";
+if (!empty($arrSearchPattern['workspace'])) $arrWhere[] = "ploopi_user_action_log.workspace LIKE '%".ovensia\ploopi\user_action_log::getdb()->addslashes($arrSearchPattern['workspace'])."%'";
+if (!empty($arrSearchPattern['module']))  $arrWhere[] = "ploopi_user_action_log.module LIKE '%".ovensia\ploopi\user_action_log::getdb()->addslashes($arrSearchPattern['module'])."%'";
+if (!empty($arrSearchPattern['action']))  $arrWhere[] = "ploopi_user_action_log.action LIKE '%".ovensia\ploopi\user_action_log::getdb()->addslashes($arrSearchPattern['action'])."%'";
+if (!empty($arrSearchPattern['record']))  $arrWhere[] = "ploopi_user_action_log.id_record LIKE '%".ovensia\ploopi\user_action_log::getdb()->addslashes($arrSearchPattern['record'])."%'";
+if (!empty($arrSearchPattern['ip']))      $arrWhere[] = "ploopi_user_action_log.ip LIKE '".ovensia\ploopi\user_action_log::getdb()->addslashes($arrSearchPattern['ip'])."%'";
 
 $strWhere = (empty($arrWhere)) ? '' : ' WHERE '.implode(' AND ', $arrWhere);
 
@@ -74,13 +74,13 @@ if (!empty($_POST['historyoption']))
                     FROM            ploopi_user_action_log
                     {$strWhere}
                     ";
-            user_action_log::getdb()->query($sql);
+            ovensia\ploopi\user_action_log::getdb()->query($sql);
 
-            ploopi_redirect("admin.php?op=actionhistory");
+            ovensia\ploopi\output::redirect("admin.php?op=actionhistory");
         break;
 
         case 'exportcsv':
-            ploopi_ob_clean();
+            ovensia\ploopi\buffer::clean();
 
             $sql =  "
                     SELECT          ploopi_user_action_log.*
@@ -89,7 +89,7 @@ if (!empty($_POST['historyoption']))
                     ORDER BY        ploopi_user_action_log.timestp DESC
                     ";
 
-            user_action_log::getdb()->query($sql);
+            ovensia\ploopi\user_action_log::getdb()->query($sql);
 
             header("Cache-control: private");
             header("Content-type: text/x-csv");
@@ -97,59 +97,59 @@ if (!empty($_POST['historyoption']))
             header("Pragma: public");
 
             echo "\"date\";\"time\";\"ip\";\"id_user\";\"user\";\"id_workspace\";\"workspace\";\"id_module\";\"module\";\"id_action\";\"action\";\"record\"\r\n";
-            while($row = user_action_log::getdb()->fetchrow())
+            while($row = ovensia\ploopi\user_action_log::getdb()->fetchrow())
             {
                 foreach($row as &$value) $value = str_replace('"', '\"', $value);
-                $date_local = ploopi_timestamp2local($row['timestp']);
+                $date_local = ovensia\ploopi\date::timestamp2local($row['timestp']);
                 
                 echo "\"{$date_local['date']}\";\"{$date_local['time']}\";\"{$row['ip']}\";\"{$row['id_user']}\";\"{$row['user']}\";\"{$row['id_workspace']}\";\"{$row['workspace']}\";{$row['id_module']};\"{$row['module']}\";\"{$row['id_action']}\";\"{$row['action']}\";\"".addslashes($row['id_record'])."\"\r\n";
             }
 
-            ploopi_die();
+            ovensia\ploopi\system::kill();
         break;
     }
 }
 ?>
 
-<form action="<?php echo ploopi_urlencode('admin.php'); ?>" method="post" id="form_loghistory">
+<form action="<?php echo ovensia\ploopi\crypt::urlencode('admin.php'); ?>" method="post" id="form_loghistory">
 <input type="hidden" name="op" value="actionhistory">
 <input type="hidden" name="historyoption" id="historyoption" value="">
 <div style="margin: 0;border-bottom:2px solid #c0c0c0;padding:4px; with: 99%;">
     <div style="margin:0; padding:0; float:left;width:49%;" class="ploopi_form">
         <p>
             <label>Entre le (date):</label>
-            <input type="text" class="text" name="filter_date" id="filter_date" style="width:100px;" value="<?php echo ploopi_htmlentities($arrSearchPattern['date']); ?>"><?php ploopi_open_calendar('filter_date'); ?>
+            <input type="text" class="text" name="filter_date" id="filter_date" style="width:100px;" value="<?php echo ovensia\ploopi\str::htmlentities($arrSearchPattern['date']); ?>"><?php ovensia\ploopi\date::open_calendar('filter_date'); ?>
         </p>
         <p>
             <label>et le (date):</label>
-            <input type="text" class="text" name="filter_date2" id="filter_date2" style="width:100px;" value="<?php echo ploopi_htmlentities($arrSearchPattern['date2']); ?>"><?php ploopi_open_calendar('filter_date2'); ?>
+            <input type="text" class="text" name="filter_date2" id="filter_date2" style="width:100px;" value="<?php echo ovensia\ploopi\str::htmlentities($arrSearchPattern['date2']); ?>"><?php ovensia\ploopi\date::open_calendar('filter_date2'); ?>
         </p>
         <p>
             <label>Utilisateur:</label>
-            <input type="text" class="text" name="filter_user" value="<?php echo ploopi_htmlentities($arrSearchPattern['user']); ?>">
+            <input type="text" class="text" name="filter_user" value="<?php echo ovensia\ploopi\str::htmlentities($arrSearchPattern['user']); ?>">
         </p>
         <p>
             <label>Espace de travail:</label>
-            <input type="text" class="text" name="filter_workspace" value="<?php echo ploopi_htmlentities($arrSearchPattern['workspace']); ?>">
+            <input type="text" class="text" name="filter_workspace" value="<?php echo ovensia\ploopi\str::htmlentities($arrSearchPattern['workspace']); ?>">
         </p>
     </div>
 
     <div style="margin:0; padding:0; float:left;width:50%;" class="ploopi_form">
         <p>
             <label>Module:</label>
-            <input type="text" class="text" name="filter_module" value="<?php echo ploopi_htmlentities($arrSearchPattern['module']); ?>">
+            <input type="text" class="text" name="filter_module" value="<?php echo ovensia\ploopi\str::htmlentities($arrSearchPattern['module']); ?>">
         </p>
         <p>
             <label>Action:</label>
-            <input type="text" class="text" name="filter_action" value="<?php echo ploopi_htmlentities($arrSearchPattern['action']); ?>">
+            <input type="text" class="text" name="filter_action" value="<?php echo ovensia\ploopi\str::htmlentities($arrSearchPattern['action']); ?>">
         </p>
         <p>
             <label>Enregistrement:</label>
-            <input type="text" class="text" name="filter_record" value="<?php echo ploopi_htmlentities($arrSearchPattern['record']); ?>">
+            <input type="text" class="text" name="filter_record" value="<?php echo ovensia\ploopi\str::htmlentities($arrSearchPattern['record']); ?>">
         </p>
         <p>
             <label>IP:</label>
-            <input type="text" class="text" name="filter_ip" value="<?php echo ploopi_htmlentities($arrSearchPattern['ip']); ?>">
+            <input type="text" class="text" name="filter_ip" value="<?php echo ovensia\ploopi\str::htmlentities($arrSearchPattern['ip']); ?>">
         </p>
     </div>
     <div style="clear:both;text-align:right;padding:4px;">
@@ -166,8 +166,8 @@ $sql =  "
         {$strWhere}
         ";
 
-user_action_log::getdb()->query($sql);
-$row = user_action_log::getdb()->fetchrow();
+ovensia\ploopi\user_action_log::getdb()->query($sql);
+$row = ovensia\ploopi\user_action_log::getdb()->fetchrow();
 $intCount = $row['c'];
 ?>
 <div style="padding:4px;border-bottom:1px solid #c0c0c0;background:#e0e0e0;"><b><?php echo $intCount; ?> élément(s) trouvés</b> <?php if ($intCount > $intLimit) { ?>- Affichage des <?php echo $intLimit; ?> premiers enregistrements - Utilisez les filtres ci-dessus pour des résultats plus précis <?php } ?></div>
@@ -180,7 +180,7 @@ $sql =  "
         LIMIT       0, {$intLimit}
         ";
 
-user_action_log::getdb()->query($sql);
+ovensia\ploopi\user_action_log::getdb()->query($sql);
 
 $arrColumns = array();
 $arrValues = array();
@@ -228,23 +228,23 @@ $arrColumns['auto']['record'] = array(
 
 $c = 0;
 
-while($row = user_action_log::getdb()->fetchrow())
+while($row = ovensia\ploopi\user_action_log::getdb()->fetchrow())
 {
-    $date_local = ploopi_timestamp2local($row['timestp']);
+    $date_local = ovensia\ploopi\date::timestamp2local($row['timestp']);
 
-    $arrValues[$c]['values']['ip']     = array('label' => ploopi_htmlentities($row['ip']));
+    $arrValues[$c]['values']['ip']     = array('label' => ovensia\ploopi\str::htmlentities($row['ip']));
 
-    $arrValues[$c]['values']['timestp']    = array('label' => ploopi_htmlentities("{$date_local['date']} {$date_local['time']}"), 'sort_label' => $row['timestp']);
+    $arrValues[$c]['values']['timestp']    = array('label' => ovensia\ploopi\str::htmlentities("{$date_local['date']} {$date_local['time']}"), 'sort_label' => $row['timestp']);
 
-    $arrValues[$c]['values']['user']     = array('label' => ploopi_htmlentities($row['user']));
+    $arrValues[$c]['values']['user']     = array('label' => ovensia\ploopi\str::htmlentities($row['user']));
 
-    $arrValues[$c]['values']['workspace']     = array('label' => ploopi_htmlentities($row['workspace']));
+    $arrValues[$c]['values']['workspace']     = array('label' => ovensia\ploopi\str::htmlentities($row['workspace']));
     
-    $arrValues[$c]['values']['module']    = array('label' => ploopi_htmlentities($row['module']));
+    $arrValues[$c]['values']['module']    = array('label' => ovensia\ploopi\str::htmlentities($row['module']));
 
-    $arrValues[$c]['values']['action']    = array('label' => ploopi_htmlentities($row['action']));
+    $arrValues[$c]['values']['action']    = array('label' => ovensia\ploopi\str::htmlentities($row['action']));
 
-    $arrValues[$c]['values']['record']     = array('label' => ploopi_htmlentities($row['id_record']));
+    $arrValues[$c]['values']['record']     = array('label' => ovensia\ploopi\str::htmlentities($row['id_record']));
     $c++;
 }
 

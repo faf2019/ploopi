@@ -62,7 +62,7 @@ if (!isset($_SESSION['wiki']['history'][$_SESSION['ploopi']['moduleid']])) $_SES
 $S = &$_SESSION['wiki']['history'][$_SESSION['ploopi']['moduleid']];
 
 $arrUrlHistory = array();
-foreach($S as $strPageId) $arrUrlHistory[] = "<a href=\"".ploopi_urlencode_trusted("admin.php?wiki_page_id=".urlencode($strPageId))."\">{$strPageId}</a>";
+foreach($S as $strPageId) $arrUrlHistory[] = "<a href=\"".ovensia\ploopi\crypt::urlencode_trusted("admin.php?wiki_page_id=".urlencode($strPageId))."\">{$strPageId}</a>";
 
 if ($booExists)
 {
@@ -74,21 +74,21 @@ if ($booExists)
 }
 
 // Vérification du droit de modification
-if ($op == 'wiki_page_modify' && (!ploopi_isactionallowed(_WIKI_ACTION_PAGE_MODIFY) || $objWikiPage->fields['locked'])) $op = '';
+if ($op == 'wiki_page_modify' && (!ovensia\ploopi\acl::isactionallowed(_WIKI_ACTION_PAGE_MODIFY) || $objWikiPage->fields['locked'])) $op = '';
 
-echo $skin->open_simplebloc(ploopi_htmlentities($strWikiPageId));
+echo $skin->open_simplebloc(ovensia\ploopi\str::htmlentities($strWikiPageId));
 ?>
 <div>
     <div class="ploopi_tabs">
     <?php
-        if (ploopi_isactionallowed(_WIKI_ACTION_PAGE_MODIFY))
+        if (ovensia\ploopi\acl::isactionallowed(_WIKI_ACTION_PAGE_MODIFY))
         {
             if ($booExists)
             {
                 if ($objWikiPage->fields['locked'])
                 {
                     ?>
-                    <a href="<?php echo ploopi_urlencode_trusted("admin.php?op=wiki_page_history&wiki_page_id=".urlencode($strWikiPageId)); ?>" <?php if ($op == 'wiki_page_history') echo 'style="font-weight:bold;" '; ?>>
+                    <a href="<?php echo ovensia\ploopi\crypt::urlencode_trusted("admin.php?op=wiki_page_history&wiki_page_id=".urlencode($strWikiPageId)); ?>" <?php if ($op == 'wiki_page_history') echo 'style="font-weight:bold;" '; ?>>
                         <img src="./modules/wiki/img/ico_history.png" /><span>Historique</span>
                     </a>
                     <a style="cursor:not-allowed;color:#777;">
@@ -98,10 +98,10 @@ echo $skin->open_simplebloc(ploopi_htmlentities($strWikiPageId));
                         <img src="./modules/wiki/img/ico_rename.png" /><span>Renommer</span>
                     </a>
                     <?php
-                    if (ploopi_isactionallowed(_WIKI_ACTION_PAGE_LOCK))
+                    if (ovensia\ploopi\acl::isactionallowed(_WIKI_ACTION_PAGE_LOCK))
                     {
                         ?>
-                        <a href="<?php echo ploopi_urlencode_trusted("admin-light.php?ploopi_op=wiki_page_unlock&wiki_page_id=".urlencode($strWikiPageId)); ?>">
+                        <a href="<?php echo ovensia\ploopi\crypt::urlencode_trusted("admin-light.php?ploopi_op=wiki_page_unlock&wiki_page_id=".urlencode($strWikiPageId)); ?>">
                             <img src="./modules/wiki/img/ico_unlock.png" /><span>Déverrouiller</span>
                         </a>
                         <?php
@@ -114,7 +114,7 @@ echo $skin->open_simplebloc(ploopi_htmlentities($strWikiPageId));
                         <img src="./modules/wiki/img/ico_modify.png" /><span>Modifier</span>
                     </a>
                     <?php
-                    if (!ploopi_isactionallowed(_WIKI_ACTION_PAGE_LOCK))
+                    if (!ovensia\ploopi\acl::isactionallowed(_WIKI_ACTION_PAGE_LOCK))
                     {
                         ?>
                         <img src="./modules/wiki/img/ico_lock.png" style="margin-left:4px;"/>
@@ -122,7 +122,7 @@ echo $skin->open_simplebloc(ploopi_htmlentities($strWikiPageId));
                         <?php
                     }
                     ?>
-                    <a href="<?php echo ploopi_urlencode_trusted("admin.php?wiki_page_id=".urlencode($strWikiPageId)); ?>" <?php if ($op == '') echo 'style="font-weight:bold;" '; ?>>
+                    <a href="<?php echo ovensia\ploopi\crypt::urlencode_trusted("admin.php?wiki_page_id=".urlencode($strWikiPageId)); ?>" <?php if ($op == '') echo 'style="font-weight:bold;" '; ?>>
                         <img src="./modules/wiki/img/ico_view.png" /><span>Visualiser</span>
                     </a>
                     <?php
@@ -130,32 +130,32 @@ echo $skin->open_simplebloc(ploopi_htmlentities($strWikiPageId));
                 else
                 {
                     ?>
-                    <a href="<?php echo ploopi_urlencode_trusted("admin.php?op=wiki_page_history&wiki_page_id=".urlencode($strWikiPageId)); ?>" <?php if ($op == 'wiki_page_history') echo 'style="font-weight:bold;" '; ?>>
+                    <a href="<?php echo ovensia\ploopi\crypt::urlencode_trusted("admin.php?op=wiki_page_history&wiki_page_id=".urlencode($strWikiPageId)); ?>" <?php if ($op == 'wiki_page_history') echo 'style="font-weight:bold;" '; ?>>
                         <img src="./modules/wiki/img/ico_history.png" /><span>Historique</span>
                     </a>
-                    <a href="javascript:void(0);" onclick="if (confirm('Êtes vous certain de vouloir supprimer cette page ?')) document.location.href='<?php echo ploopi_urlencode_trusted("admin-light.php?ploopi_op=wiki_page_delete&wiki_page_id=".urlencode($strWikiPageId)); ?>'; return false;">
+                    <a href="javascript:void(0);" onclick="if (confirm('Êtes vous certain de vouloir supprimer cette page ?')) document.location.href='<?php echo ovensia\ploopi\crypt::urlencode_trusted("admin-light.php?ploopi_op=wiki_page_delete&wiki_page_id=".urlencode($strWikiPageId)); ?>'; return false;">
                         <img src="./modules/wiki/img/ico_delete.png" /><span>Supprimer</span>
                     </a>
-                    <a href="<?php echo ploopi_urlencode_trusted("admin.php?op=wiki_page_rename&wiki_page_id=".urlencode($strWikiPageId)); ?>" <?php if ($op == 'wiki_page_rename') echo 'style="font-weight:bold;" '; ?>>
+                    <a href="<?php echo ovensia\ploopi\crypt::urlencode_trusted("admin.php?op=wiki_page_rename&wiki_page_id=".urlencode($strWikiPageId)); ?>" <?php if ($op == 'wiki_page_rename') echo 'style="font-weight:bold;" '; ?>>
                         <img src="./modules/wiki/img/ico_rename.png" /><span>Renommer</span>
                     </a>
                     <?php
-                    if (ploopi_isactionallowed(_WIKI_ACTION_PAGE_LOCK))
+                    if (ovensia\ploopi\acl::isactionallowed(_WIKI_ACTION_PAGE_LOCK))
                     {
                         ?>
-                        <a href="<?php echo ploopi_urlencode_trusted("admin-light.php?ploopi_op=wiki_page_lock&wiki_page_id=".urlencode($strWikiPageId)); ?>">
+                        <a href="<?php echo ovensia\ploopi\crypt::urlencode_trusted("admin-light.php?ploopi_op=wiki_page_lock&wiki_page_id=".urlencode($strWikiPageId)); ?>">
                             <img src="./modules/wiki/img/ico_lock.png" /><span>Verrouiller</span>
                         </a>
                         <?php
                     }
                     ?>
-                    <a href="javascript:void(0);" onclick="javascript:ploopi_openwin('<?php echo ploopi_urlencode("admin-light.php?ploopi_op=wiki_page_print&wiki_page_id={$strWikiPageId}") ?>', 800, 600)">
+                    <a href="javascript:void(0);" onclick="javascript:ploopi_openwin('<?php echo ovensia\ploopi\crypt::urlencode("admin-light.php?ploopi_op=wiki_page_print&wiki_page_id={$strWikiPageId}") ?>', 800, 600)">
                         <img src="./modules/wiki/img/ico_printer.png" /><span>Imprimer</span>
                     </a>
-                    <a href="<?php echo ploopi_urlencode_trusted("admin.php?op=wiki_page_modify&wiki_page_id=".urlencode($strWikiPageId)); ?>" <?php if ($op == 'wiki_page_modify') echo 'style="font-weight:bold;" '; ?>>
+                    <a href="<?php echo ovensia\ploopi\crypt::urlencode_trusted("admin.php?op=wiki_page_modify&wiki_page_id=".urlencode($strWikiPageId)); ?>" <?php if ($op == 'wiki_page_modify') echo 'style="font-weight:bold;" '; ?>>
                         <img src="./modules/wiki/img/ico_modify.png" /><span>Modifier</span>
                     </a>
-                    <a href="<?php echo ploopi_urlencode_trusted("admin.php?wiki_page_id=".urlencode($strWikiPageId)); ?>" <?php if ($op == '') echo 'style="font-weight:bold;" '; ?>>
+                    <a href="<?php echo ovensia\ploopi\crypt::urlencode_trusted("admin.php?wiki_page_id=".urlencode($strWikiPageId)); ?>" <?php if ($op == '') echo 'style="font-weight:bold;" '; ?>>
                         <img src="./modules/wiki/img/ico_view.png" /><span>Visualiser</span>
                     </a>
                     <?php
@@ -174,7 +174,7 @@ echo $skin->open_simplebloc(ploopi_htmlentities($strWikiPageId));
                     <img src="./modules/wiki/img/ico_rename.png" />Renommer
                 </a>
                 <?php
-                if (ploopi_isactionallowed(_WIKI_ACTION_PAGE_LOCK))
+                if (ovensia\ploopi\acl::isactionallowed(_WIKI_ACTION_PAGE_LOCK))
                 {
                     ?>
                     <a style="cursor:not-allowed;color:#777;">
@@ -186,10 +186,10 @@ echo $skin->open_simplebloc(ploopi_htmlentities($strWikiPageId));
                 <a style="cursor:not-allowed;color:#777;">
                     <img src="./modules/wiki/img/ico_printer.png" />Imprimer
                 </a>
-                <a href="<?php echo ploopi_urlencode_trusted("admin.php?op=wiki_page_modify&wiki_page_id=".urlencode($strWikiPageId)); ?>" <?php if ($op == 'wiki_page_modify') echo 'style="font-weight:bold;" '; ?>>
+                <a href="<?php echo ovensia\ploopi\crypt::urlencode_trusted("admin.php?op=wiki_page_modify&wiki_page_id=".urlencode($strWikiPageId)); ?>" <?php if ($op == 'wiki_page_modify') echo 'style="font-weight:bold;" '; ?>>
                     <img src="./modules/wiki/img/ico_modify.png" />Modifier
                 </a>
-                <a href="<?php echo ploopi_urlencode_trusted("admin.php?wiki_page_id=".urlencode($strWikiPageId)); ?>" <?php if ($op == '') echo 'style="font-weight:bold;" '; ?>>
+                <a href="<?php echo ovensia\ploopi\crypt::urlencode_trusted("admin.php?wiki_page_id=".urlencode($strWikiPageId)); ?>" <?php if ($op == '') echo 'style="font-weight:bold;" '; ?>>
                     <img src="./modules/wiki/img/ico_view.png" />Visualiser
                 </a>
                 <?php
@@ -201,10 +201,10 @@ echo $skin->open_simplebloc(ploopi_htmlentities($strWikiPageId));
             if ($booExists)
             {
                 ?>
-                <a href="<?php echo ploopi_urlencode_trusted("admin.php?op=wiki_page_history&wiki_page_id=".urlencode($strWikiPageId)); ?>" <?php if ($op == 'wiki_page_history') echo 'style="font-weight:bold;" '; ?>>
+                <a href="<?php echo ovensia\ploopi\crypt::urlencode_trusted("admin.php?op=wiki_page_history&wiki_page_id=".urlencode($strWikiPageId)); ?>" <?php if ($op == 'wiki_page_history') echo 'style="font-weight:bold;" '; ?>>
                     <img src="./modules/wiki/img/ico_history.png" />Historique
                 </a>
-                <a href="<?php echo ploopi_urlencode_trusted("admin.php?wiki_page_id=".urlencode($strWikiPageId)); ?>" <?php if ($op == '') echo 'style="font-weight:bold;" '; ?>>
+                <a href="<?php echo ovensia\ploopi\crypt::urlencode_trusted("admin.php?wiki_page_id=".urlencode($strWikiPageId)); ?>" <?php if ($op == '') echo 'style="font-weight:bold;" '; ?>>
                     <img src="./modules/wiki/img/ico_view.png" />Visualiser
                 </a>
                 <?php
@@ -215,7 +215,7 @@ echo $skin->open_simplebloc(ploopi_htmlentities($strWikiPageId));
                 <a style="cursor:not-allowed;color:#777;">
                     <img src="./modules/wiki/img/ico_history.png" />Historique
                 </a>
-                <a href="<?php echo ploopi_urlencode_trusted("admin.php?wiki_page_id=".urlencode($strWikiPageId)); ?>" <?php if ($op == '') echo 'style="font-weight:bold;" '; ?>>
+                <a href="<?php echo ovensia\ploopi\crypt::urlencode_trusted("admin.php?wiki_page_id=".urlencode($strWikiPageId)); ?>" <?php if ($op == '') echo 'style="font-weight:bold;" '; ?>>
                     <img src="./modules/wiki/img/ico_view.png" />Visualiser
                 </a>
                 <?php
@@ -232,15 +232,13 @@ echo $skin->open_simplebloc(ploopi_htmlentities($strWikiPageId));
     switch($op)
     {
         case 'wiki_page_rename':
-            include_once './include/classes/form.php';
+            $objForm = new ovensia\ploopi\form( 'wiki_form_page_rename', ovensia\ploopi\crypt::urlencode_trusted("admin.php?ploopi_op=wiki_page_rename&wiki_page_id=".urlencode($strWikiPageId)), 'post', array('legend' => '* Champs obligatoires') );
 
-            $objForm = new form( 'wiki_form_page_rename', ploopi_urlencode_trusted("admin.php?ploopi_op=wiki_page_rename&wiki_page_id=".urlencode($strWikiPageId)), 'post', array('legend' => '* Champs obligatoires') );
+            $objForm->addField( new ovensia\ploopi\form_field('input:text', 'Titre:', $objWikiPage->fields['id'], 'wiki_page_newid', null, array('required' => true)) );
+            $objForm->addField( new ovensia\ploopi\form_checkbox('Rediriger les liens existants:', 1, true, 'wiki_page_rename_redirect', 'wiki_page_rename_redirect', array('class_form' => 'ploopi_checkbox')) );
 
-            $objForm->addField( new form_field('input:text', 'Titre:', $objWikiPage->fields['id'], 'wiki_page_newid', null, array('required' => true)) );
-            $objForm->addField( new form_checkbox('Rediriger les liens existants:', 1, true, 'wiki_page_rename_redirect', 'wiki_page_rename_redirect', array('class_form' => 'ploopi_checkbox')) );
-
-            $objForm->addButton( new form_button('input:reset', 'Réinitialiser') );
-            $objForm->addButton( new form_button('input:submit', 'Enregistrer', null, null, array('style' => 'margin-left:2px;')) );
+            $objForm->addButton( new ovensia\ploopi\form_button('input:reset', 'Réinitialiser') );
+            $objForm->addButton( new ovensia\ploopi\form_button('input:submit', 'Enregistrer', null, null, array('style' => 'margin-left:2px;')) );
 
             echo $objForm->render();
         break;
@@ -251,18 +249,18 @@ echo $skin->open_simplebloc(ploopi_htmlentities($strWikiPageId));
                 $objWikiPageHistory = new wiki_page_history();
                 if ($objWikiPageHistory->open($strWikiPageId, $_GET['wiki_page_revision']))
                 {
-                    $objUser = new user();
+                    $objUser = new ovensia\ploopi\user();
                     $strUser = $objUser->open($objWikiPageHistory->fields['id_user']) ? trim("{$objUser->fields['lastname']} {$objUser->fields['firstname']}") : '<em>Utilisateur supprimé</em>';
 
-                    $strLocalDate = implode(' ', ploopi_timestamp2local($objWikiPageHistory->fields['ts_modified']));
+                    $strLocalDate = implode(' ', ovensia\ploopi\date::timestamp2local($objWikiPageHistory->fields['ts_modified']));
                     $strRev = "<strong>{$_GET['wiki_page_revision']}</strong> ({$strUser}, {$strLocalDate})";
 
                     ?>
-                    <div id="wiki_diff_title">Révision <?php echo ploopi_htmlentities($strRev); ?>
+                    <div id="wiki_diff_title">Révision <?php echo ovensia\ploopi\str::htmlentities($strRev); ?>
                     <?php
-                    if (ploopi_isactionallowed(_WIKI_ACTION_PAGE_MODIFY) && !$objWikiPage->fields['locked'])
+                    if (ovensia\ploopi\acl::isactionallowed(_WIKI_ACTION_PAGE_MODIFY) && !$objWikiPage->fields['locked'])
                     {
-                        ?> - <a href="<?php echo ploopi_urlencode_trusted("admin.php?op=wiki_page_modify&wiki_page_id=".urlencode($strWikiPageId)."&wiki_page_revision={$_GET['wiki_page_revision']}"); ?>">Revenir à cette version</a><?php
+                        ?> - <a href="<?php echo ovensia\ploopi\crypt::urlencode_trusted("admin.php?op=wiki_page_modify&wiki_page_id=".urlencode($strWikiPageId)."&wiki_page_revision={$_GET['wiki_page_revision']}"); ?>">Revenir à cette version</a><?php
                     } ?> :</div>
                     <div id="wiki_page" class="wiki_page"><?php echo wiki_render($objWikiPageHistory->fields['content']); ?></div>
                     <?php
@@ -280,10 +278,10 @@ echo $skin->open_simplebloc(ploopi_htmlentities($strWikiPageId));
                     $objWikiPageHistory = new wiki_page_history();
                     if ($objWikiPageHistory->open($strWikiPageId, $_POST['wiki_history_diff1'])) $strContent1 = $objWikiPageHistory->fields['content'];
 
-                    $objUser = new user();
+                    $objUser = new ovensia\ploopi\user();
                     $strUser = $objUser->open($objWikiPageHistory->fields['id_user']) ? trim("{$objUser->fields['lastname']} {$objUser->fields['firstname']}") : '<em>Utilisateur supprimé</em>';
 
-                    $strLocalDate = implode(' ', ploopi_timestamp2local($objWikiPageHistory->fields['ts_modified']));
+                    $strLocalDate = implode(' ', ovensia\ploopi\date::timestamp2local($objWikiPageHistory->fields['ts_modified']));
 
                     $strRevision = "&op=wiki_page_history&wiki_page_revision={$_POST['wiki_history_diff1']}";
                 }
@@ -291,15 +289,15 @@ echo $skin->open_simplebloc(ploopi_htmlentities($strWikiPageId));
                 {
                     $strContent1 = $objWikiPage->fields['content'];
 
-                    $objUser = new user();
+                    $objUser = new ovensia\ploopi\user();
                     $strUser = $objUser->open($objWikiPage->fields['id_user']) ? trim("{$objUser->fields['lastname']} {$objUser->fields['firstname']}") : '<em>Utilisateur supprimé</em>';
 
-                    $strLocalDate = implode(' ', ploopi_timestamp2local($objWikiPage->fields['ts_modified']));
+                    $strLocalDate = implode(' ', ovensia\ploopi\date::timestamp2local($objWikiPage->fields['ts_modified']));
 
                     $strRevision = '';
                 }
 
-                $strRevLink1 = "<a href=\"".ploopi_urlencode_trusted("admin.php?wiki_page_id=".urlencode($strWikiPageId).$strRevision)."\"><strong>{$_POST['wiki_history_diff1']}</strong> ({$strUser}, {$strLocalDate})</a>";
+                $strRevLink1 = "<a href=\"".ovensia\ploopi\crypt::urlencode_trusted("admin.php?wiki_page_id=".urlencode($strWikiPageId).$strRevision)."\"><strong>{$_POST['wiki_history_diff1']}</strong> ({$strUser}, {$strLocalDate})</a>";
 
                 // Infos sur la revision "2"
                 if ($_POST['wiki_history_diff2'] != $objWikiPage->fields['revision'])
@@ -307,10 +305,10 @@ echo $skin->open_simplebloc(ploopi_htmlentities($strWikiPageId));
                     $objWikiPageHistory = new wiki_page_history();
                     if ($objWikiPageHistory->open($strWikiPageId, $_POST['wiki_history_diff2'])) $strContent2 = $objWikiPageHistory->fields['content'];
 
-                    $objUser = new user();
+                    $objUser = new ovensia\ploopi\user();
                     $strUser = $objUser->open($objWikiPageHistory->fields['id_user']) ? trim("{$objUser->fields['lastname']} {$objUser->fields['firstname']}") : '<em>Utilisateur supprimé</em>';
 
-                    $strLocalDate = implode(' ', ploopi_timestamp2local($objWikiPageHistory->fields['ts_modified']));
+                    $strLocalDate = implode(' ', ovensia\ploopi\date::timestamp2local($objWikiPageHistory->fields['ts_modified']));
 
                     $strRevision = "&op=wiki_page_history&wiki_page_revision={$_POST['wiki_history_diff2']}";
                 }
@@ -318,15 +316,15 @@ echo $skin->open_simplebloc(ploopi_htmlentities($strWikiPageId));
                 {
                     $strContent2 = $objWikiPage->fields['content'];
 
-                    $objUser = new user();
+                    $objUser = new ovensia\ploopi\user();
                     $strUser = $objUser->open($objWikiPage->fields['id_user']) ? trim("{$objUser->fields['lastname']} {$objUser->fields['firstname']}") : '<em>Utilisateur supprimé</em>';
 
-                    $strLocalDate = implode(' ', ploopi_timestamp2local($objWikiPage->fields['ts_modified']));
+                    $strLocalDate = implode(' ', ovensia\ploopi\date::timestamp2local($objWikiPage->fields['ts_modified']));
 
                     $strRevision = '';
                 }
 
-                $strRevLink2 = "<a href=\"".ploopi_urlencode_trusted("admin.php?wiki_page_id=".urlencode($strWikiPageId).$strRevision)."\"><strong>{$_POST['wiki_history_diff2']}</strong> ({$strUser}, {$strLocalDate})</a>";
+                $strRevLink2 = "<a href=\"".ovensia\ploopi\crypt::urlencode_trusted("admin.php?wiki_page_id=".urlencode($strWikiPageId).$strRevision)."\"><strong>{$_POST['wiki_history_diff2']}</strong> ({$strUser}, {$strLocalDate})</a>";
 
                 include_once "Horde/String.php";
                 include_once "Horde/Text/Diff.php";
@@ -347,7 +345,7 @@ echo $skin->open_simplebloc(ploopi_htmlentities($strWikiPageId));
                     $strDiff = $objRenderer->render($objTextDiff);
                 }
 
-                echo '<div id="wiki_diff_title">Différences entre les révisions '.$strRevLink2.' et '.$strRevLink1.' :</div><div id="wiki_diff">'.ploopi_nl2br($strDiff).'</div><div id="wiki_diff_legend"<span>Légende:</span>&nbsp;<ins>Texte ajouté</ins>&nbsp;<del>Texte supprimé</del></div>';
+                echo '<div id="wiki_diff_title">Différences entre les révisions '.$strRevLink2.' et '.$strRevLink1.' :</div><div id="wiki_diff">'.ovensia\ploopi\str::nl2br($strDiff).'</div><div id="wiki_diff_legend"<span>Légende:</span>&nbsp;<ins>Texte ajouté</ins>&nbsp;<del>Texte supprimé</del></div>';
             }
             else
             {
@@ -390,9 +388,9 @@ echo $skin->open_simplebloc(ploopi_htmlentities($strWikiPageId));
                         'options' => array('sort' => true)
                     );
 
-                $objUser = new user();
+                $objUser = new ovensia\ploopi\user();
 
-                $arrLocalDate = ploopi_timestamp2local($objWikiPage->fields['ts_modified']);
+                $arrLocalDate = ovensia\ploopi\date::timestamp2local($objWikiPage->fields['ts_modified']);
 
                 $values[] = array(
                     'values' => array(
@@ -414,7 +412,7 @@ echo $skin->open_simplebloc(ploopi_htmlentities($strWikiPageId));
                         )
                     ),
                     'description' => "Ouvrir la dernière révision ({$objWikiPage->fields['revision']})",
-                    'link' => ploopi_urlencode_trusted("admin.php?wiki_page_id=".urlencode($strWikiPageId))
+                    'link' => ovensia\ploopi\crypt::urlencode_trusted("admin.php?wiki_page_id=".urlencode($strWikiPageId))
                 );
 
                 $intTabIndex = 101;
@@ -423,13 +421,13 @@ echo $skin->open_simplebloc(ploopi_htmlentities($strWikiPageId));
 
                 foreach($objWikiPage->getHistory() as $arrPageHistory)
                 {
-                    $arrLocalDate = ploopi_timestamp2local($arrPageHistory['ts_modified']);
+                    $arrLocalDate = ovensia\ploopi\date::timestamp2local($arrPageHistory['ts_modified']);
                     $booLast = $arrPageHistory['revision'] == 1;
 
                     $values[] = array(
                         'values' => array(
                             'revision' => array(
-                                'label' => ploopi_htmlentities($arrPageHistory['revision']),
+                                'label' => ovensia\ploopi\str::htmlentities($arrPageHistory['revision']),
                                 'style' => 'text-align:right;'
                             ),
                             'diff1' => array(
@@ -439,21 +437,21 @@ echo $skin->open_simplebloc(ploopi_htmlentities($strWikiPageId));
                                 'label' => '<input type="radio" name="wiki_history_diff2" style="margin-left:2px;" value="'.$arrPageHistory['revision'].'" tabindex="'.$intTabIndex++.'" '.($booChecked ? '' : 'checked="checked" ').'/>'
                             ),
                             'user' => array(
-                                'label' => is_null($arrPageHistory['lastname']) ? '<em>Utilisateur supprimé</em>' : ploopi_htmlentities(trim("{$arrPageHistory['lastname']} {$arrPageHistory['firstname']}"))
+                                'label' => is_null($arrPageHistory['lastname']) ? '<em>Utilisateur supprimé</em>' : ovensia\ploopi\str::htmlentities(trim("{$arrPageHistory['lastname']} {$arrPageHistory['firstname']}"))
                             ),
                             'ts_modified' => array(
                                 'label' => implode(' ', $arrLocalDate)
                             )
                         ),
-                        'description' => ploopi_htmlentities("Ouvrir la révision {$arrPageHistory['revision']}"),
-                        'link' => ploopi_urlencode_trusted("admin.php?op=wiki_page_history&wiki_page_id=".urlencode($strWikiPageId)."&wiki_page_revision={$arrPageHistory['revision']}")
+                        'description' => ovensia\ploopi\str::htmlentities("Ouvrir la révision {$arrPageHistory['revision']}"),
+                        'link' => ovensia\ploopi\crypt::urlencode_trusted("admin.php?op=wiki_page_history&wiki_page_id=".urlencode($strWikiPageId)."&wiki_page_revision={$arrPageHistory['revision']}")
                     );
 
                     if (!$booChecked) $booChecked = true;
                 }
 
                 ?>
-                <form action="<?php echo ploopi_urlencode_trusted("admin.php?op=wiki_page_history&wiki_page_id=".urlencode($strWikiPageId)); ?>" method="post">
+                <form action="<?php echo ovensia\ploopi\crypt::urlencode_trusted("admin.php?op=wiki_page_history&wiki_page_id=".urlencode($strWikiPageId)); ?>" method="post">
                 <?php $skin->display_array($columns, $values, 'wiki_history', array('sortable' => true, 'orderby_default' => 'revision', 'sort_default' => 'DESC')); ?>
                 <div style="text-align:right;"><input type="submit" class="button" value="Voir les différences" style="margin:4px;"/></div>
                 </form>
@@ -462,7 +460,7 @@ echo $skin->open_simplebloc(ploopi_htmlentities($strWikiPageId));
         break;
 
         case 'wiki_page_modify':
-            if (ploopi_isactionallowed(_WIKI_ACTION_PAGE_MODIFY))
+            if (ovensia\ploopi\acl::isactionallowed(_WIKI_ACTION_PAGE_MODIFY))
             {
                 $strPageContent = $objWikiPage->fields['content'];
 
@@ -474,21 +472,21 @@ echo $skin->open_simplebloc(ploopi_htmlentities($strWikiPageId));
                 }
                 ?>
                 <div id="wiki_modify">
-                    <form action="<?php echo ploopi_urlencode_trusted("admin-light.php?ploopi_op=wiki_page_save&wiki_page_id=".urlencode($strWikiPageId)); ?>" method="post">
-                        <textarea accesskey="e" class="wiki-edit text" style="width:99%;" id="wiki_page_content" name="fck_wiki_page_content" rows="25"><?php echo ploopi_htmlentities($strPageContent, null, 'ISO-8859-1', false); ?></textarea>
-                        <div style="text-align:right"><input type="button" class="button" value="Annuler" onclick="javascript:document.location.href='<?php echo ploopi_urlencode_trusted("admin.php?wiki_page_id=".urlencode($strWikiPageId)); ?>';" /><input type="submit" class="button" value="Enregistrer" style="margin-left:4px;" /></div>
+                    <form action="<?php echo ovensia\ploopi\crypt::urlencode_trusted("admin-light.php?ploopi_op=wiki_page_save&wiki_page_id=".urlencode($strWikiPageId)); ?>" method="post">
+                        <textarea accesskey="e" class="wiki-edit text" style="width:99%;" id="wiki_page_content" name="fck_wiki_page_content" rows="25"><?php echo ovensia\ploopi\str::htmlentities($strPageContent, null, 'ISO-8859-1', false); ?></textarea>
+                        <div style="text-align:right"><input type="button" class="button" value="Annuler" onclick="javascript:document.location.href='<?php echo ovensia\ploopi\crypt::urlencode_trusted("admin.php?wiki_page_id=".urlencode($strWikiPageId)); ?>';" /><input type="submit" class="button" value="Enregistrer" style="margin-left:4px;" /></div>
                     </form>
                 </div>
                 <script type="text/javascript">
                     //<![CDATA[
                     var toolbar = new jsToolBar($('wiki_page_content'));
-                    toolbar.setHelpLink('Formatage du texte: <a href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_topopup(350, event, \'popup_wiki_help\', \'<?php echo ploopi_urlencode('admin-light.php?ploopi_op=wiki_help'); ?>\');"; return false;">Aide</a>');
+                    toolbar.setHelpLink('Formatage du texte: <a href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_topopup(350, event, \'popup_wiki_help\', \'<?php echo ovensia\ploopi\crypt::urlencode('admin-light.php?ploopi_op=wiki_help'); ?>\');"; return false;">Aide</a>');
                     toolbar.draw();
                     //]]>
                 </script>
                 <?php
             }
-            else ploopi_redirect('admin.php');
+            else ovensia\ploopi\output::redirect('admin.php');
         break;
 
         // consultation
@@ -502,7 +500,7 @@ echo $skin->open_simplebloc(ploopi_htmlentities($strWikiPageId));
     ?>
     <div style="border-top:1px solid #ccc;">
         <?php
-            ploopi_subscription(
+            ovensia\ploopi\subscription::display(
                 _WIKI_OBJECT_PAGE,
                 $strWikiPageId,
                 array(
@@ -514,7 +512,7 @@ echo $skin->open_simplebloc(ploopi_htmlentities($strWikiPageId));
         ?>
     </div>
     <div style="border-top:1px solid #ccc;">
-        <?php ploopi_annotation(_WIKI_OBJECT_PAGE, $strWikiPageId, $strWikiPageId); ?>
+        <?php ovensia\ploopi\annotation::display(_WIKI_OBJECT_PAGE, $strWikiPageId, $strWikiPageId); ?>
     </div>
 </div>
 <?php echo $skin->close_simplebloc(); ?>

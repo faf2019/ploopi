@@ -34,17 +34,12 @@
 /**
  * On vérifie le contenu de la variable GET
  */
-if (empty($_GET['uninstallidmoduletype'])) ploopi_redirect('admin.php');
+if (empty($_GET['uninstallidmoduletype'])) ovensia\ploopi\output::redirect('admin.php');
 
-/**
- * Inclusion des classes de gestion de modules
- */
-include_once './include/classes/module.php';
-
-$module_type = new module_type();
+$module_type = new ovensia\ploopi\module_type();
 if ($module_type->open($_GET['uninstallidmoduletype']))
 {
-    ploopi_create_user_action_log(_SYSTEM_ACTION_UNINSTALLMODULE, $module_type->fields['label']);
+    ovensia\ploopi\user_action_log::record(_SYSTEM_ACTION_UNINSTALLMODULE, $module_type->fields['label']);
 
     if (!empty($module_type->fields['label']))
     {
@@ -52,7 +47,7 @@ if ($module_type->open($_GET['uninstallidmoduletype']))
 
         // DELETE FILES
         $filestodelete = "./modules/".$module_type->fields['label'];
-        if (file_exists($filestodelete)) ploopi_deletedir($filestodelete);
+        if (file_exists($filestodelete)) ovensia\ploopi\fs::deletedir($filestodelete);
     }
 
     // DELETE TABLES
@@ -66,5 +61,5 @@ if ($module_type->open($_GET['uninstallidmoduletype']))
     // DELETE MODULE TYPE, MODULES, ACTIONS, etc...
     $module_type->delete();
 }
-else ploopi_redirect('admin.php');
+else ovensia\ploopi\output::redirect('admin.php');
 ?>

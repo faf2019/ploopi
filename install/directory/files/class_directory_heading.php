@@ -31,18 +31,12 @@
  */
 
 /**
- * Inclusion de la classe parent.
- */
-
-include_once './include/classes/data_object.php';
-
-/**
  * Inclusion de la classe contact.
  */
 
 include_once './modules/directory/class_directory_contact.php';
 
-class directory_heading extends data_object
+class directory_heading extends ovensia\ploopi\data_object
 {
     private $modules;
     private $plans;
@@ -54,11 +48,11 @@ class directory_heading extends data_object
         $this->position = 0;
     }
 
-    public function open($rubrique_id)
+    public function open(...$args)
     {
         $this->position = 0;
 
-        if ($ret = parent::open($rubrique_id))
+        if ($ret = parent::open($args[0]))
         {
             $this->position = $this->fields['position'];
         }
@@ -127,7 +121,6 @@ class directory_heading extends data_object
 
     public function delete()
     {
-        include_once './include/functions/validation.php';
         include_once './modules/directory/include/global.php';
 
         global $db;
@@ -144,7 +137,7 @@ class directory_heading extends data_object
         $db->query("UPDATE ploopi_mod_directory_heading SET position = position - 1 WHERE position > {$this->fields['position']} AND id_heading = {$this->fields['id_heading']}");
 
         // Suppression des gestionnaires (workflow)
-        ploopi_validation_delete(_DIRECTORY_OBJECT_HEADING, $this->fields['id']);
+        ovensia\ploopi\validation::remove(_DIRECTORY_OBJECT_HEADING, $this->fields['id']);
 
         // Effacer les fils
         $rs_headings = $db->query("SELECT id FROM ploopi_mod_directory_heading WHERE id_heading = {$this->fields['id']}");

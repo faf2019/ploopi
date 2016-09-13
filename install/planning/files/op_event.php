@@ -47,11 +47,11 @@ switch($ploopi_op)
             $objEventDetail->delete();
         }
 
-        ploopi_redirect('admin-light.php?ploopi_op=planning_refresh');
+        ovensia\ploopi\output::redirect('admin-light.php?ploopi_op=planning_refresh');
     break;
 
     case 'planning_event_save':
-        ploopi_init_module('planning', false, false, false);
+        ovensia\ploopi\module::init('planning', false, false, false);
 
         include_once './modules/planning/classes/class_planning_event.php';
         include_once './modules/planning/classes/class_planning_event_detail.php';
@@ -70,8 +70,8 @@ switch($ploopi_op)
                     $objEvent->save();
 
                     $objEventDetail->setresources($_POST['_planning_eventresource_id']);
-                    $objEventDetail->fields['timestp_begin'] = ploopi_local2timestamp($_POST['_planning_event_timestp_begin_d'], sprintf("%02d:%02d:00", $_POST['_planning_event_timestp_begin_h'], $_POST['_planning_event_timestp_begin_m']));
-                    $objEventDetail->fields['timestp_end'] = ploopi_local2timestamp($_POST['_planning_event_timestp_begin_d'], sprintf("%02d:%02d:00", $_POST['_planning_event_timestp_end_h'], $_POST['_planning_event_timestp_end_m']));
+                    $objEventDetail->fields['timestp_begin'] = ovensia\ploopi\date::local2timestamp($_POST['_planning_event_timestp_begin_d'], sprintf("%02d:%02d:00", $_POST['_planning_event_timestp_begin_h'], $_POST['_planning_event_timestp_begin_m']));
+                    $objEventDetail->fields['timestp_end'] = ovensia\ploopi\date::local2timestamp($_POST['_planning_event_timestp_begin_d'], sprintf("%02d:%02d:00", $_POST['_planning_event_timestp_end_h'], $_POST['_planning_event_timestp_end_m']));
                     $objEventDetail->save();
                 }
             }
@@ -91,12 +91,12 @@ switch($ploopi_op)
             }
         }
 
-        ploopi_redirect('admin-light.php?ploopi_op=planning_refresh');
+        ovensia\ploopi\output::redirect('admin-light.php?ploopi_op=planning_refresh');
     break;
 
 
     case 'planning_event_detail_quicksave';
-        ploopi_init_module('planning', false, false, false);
+        ovensia\ploopi\module::init('planning', false, false, false);
 
         include_once './modules/planning/classes/class_planning_event_detail.php';
 
@@ -106,8 +106,8 @@ switch($ploopi_op)
 
             if (is_numeric($_GET['planning_event_detail_id']) && $objEventDetail->open($_GET['planning_event_detail_id']))
             {
-                $arrDateEnd = ploopi_gettimestampdetail($objEventDetail->fields['timestp_end']);
-                $arrDateBegin = ploopi_gettimestampdetail($objEventDetail->fields['timestp_begin']);
+                $arrDateEnd = ovensia\ploopi\date::gettimestampdetail($objEventDetail->fields['timestp_end']);
+                $arrDateBegin = ovensia\ploopi\date::gettimestampdetail($objEventDetail->fields['timestp_begin']);
 
                 $intDuration =  ($arrDateEnd[_PLOOPI_DATE_HOUR] + $arrDateEnd[_PLOOPI_DATE_MINUTE]/60) - ($arrDateBegin[_PLOOPI_DATE_HOUR] + $arrDateBegin[_PLOOPI_DATE_MINUTE]/60);
                 $intHourEnd = $_GET['calendar_event_hour'] + $intDuration;
@@ -119,14 +119,14 @@ switch($ploopi_op)
             }
         }
 
-        ploopi_redirect('admin-light.php?ploopi_op=planning_refresh');
+        ovensia\ploopi\output::redirect('admin-light.php?ploopi_op=planning_refresh');
     break;
 
     case 'planning_event_detail_open':
     case 'planning_event_add':
         ob_start();
 
-        ploopi_init_module('planning', false, false, false);
+        ovensia\ploopi\module::init('planning', false, false, false);
 
         include_once './modules/planning/classes/class_planning_event.php';
         include_once './modules/planning/classes/class_planning_event_detail.php';
@@ -158,14 +158,14 @@ switch($ploopi_op)
             case 'planning_event_detail_open':
                 if (!empty($_GET['planning_event_detail_id']) && is_numeric($_GET['planning_event_detail_id']) && $objEventDetail->open($_GET['planning_event_detail_id']))
                 {
-                    if (!$objEvent->open($objEventDetail->fields['id_event'])) ploopi_die();
+                    if (!$objEvent->open($objEventDetail->fields['id_event'])) ovensia\ploopi\system::kill();
                 }
-                else ploopi_die();
+                else ovensia\ploopi\system::kill();
 
                 $strPopupTitle = "Modification d'un événement";
 
-                $arrDateTimeBegin = ploopi_timestamp2local($objEventDetail->fields['timestp_begin']);
-                $arrDateTimeEnd = ploopi_timestamp2local($objEventDetail->fields['timestp_end']);
+                $arrDateTimeBegin = ovensia\ploopi\date::timestamp2local($objEventDetail->fields['timestp_begin']);
+                $arrDateTimeEnd = ovensia\ploopi\date::timestamp2local($objEventDetail->fields['timestp_end']);
                 $arrDateTimeBegin['time'] = preg_split('/:/', $arrDateTimeBegin['time']);
                 $arrDateTimeEnd['time'] = preg_split('/:/', $arrDateTimeEnd['time']);
 
@@ -174,10 +174,10 @@ switch($ploopi_op)
             break;
         }
 
-        if (ploopi_isactionallowed(_PLANNING_ADD_EVENT))
+        if (ovensia\ploopi\acl::isactionallowed(_PLANNING_ADD_EVENT))
         {
             ?>
-            <form id="planning_add_form" action="<?php echo ploopi_urlencode("admin-light.php?".implode('&', $arrParams)); ?>" method="post" onsubmit="javascript:ploopi_xmlhttprequest_submitform($('planning_add_form'), 'planning_main', planning_event_validate); return false;">
+            <form id="planning_add_form" action="<?php echo ovensia\ploopi\crypt::urlencode("admin-light.php?".implode('&', $arrParams)); ?>" method="post" onsubmit="javascript:ploopi_xmlhttprequest_submitform($('planning_add_form'), 'planning_main', planning_event_validate); return false;">
             <?php
         }
         ?>
@@ -185,7 +185,7 @@ switch($ploopi_op)
             <p>
                 <label>Utilisateur / Groupe:</label>
                 <?php
-                if (ploopi_isactionallowed(_PLANNING_ADD_EVENT))
+                if (ovensia\ploopi\acl::isactionallowed(_PLANNING_ADD_EVENT))
                 {
                     ?>
                     <span class="planning_event_ressource_list">
@@ -204,7 +204,7 @@ switch($ploopi_op)
                                 <em class="ploopi_checkbox" onclick="javascript:ploopi_checkbox_click(event, '_planning_eventresource_id<?php echo $strResourceType[0].$row['id']; ?>');">
                                     <input type="checkbox" name="_planning_eventresource_id[<?php echo $strResourceType; ?>][<?php echo $row['id']; ?>]" id="_planning_eventresource_id<?php echo $strResourceType[0].$row['id']; ?>" value="<?php echo $row['id']; ?>" <?php if ($booChecked) echo 'checked="checked"'; ?>/>
                                     <img style="background-color:<?php echo $row['color']; ?>;" src="./modules/planning/img/ico_<?php echo $strResourceType; ?>.png" />
-                                    <?php echo ploopi_htmlentities($row['label']); ?>
+                                    <?php echo ovensia\ploopi\str::htmlentities($row['label']); ?>
                                 </em>
                                 <?php
                             }
@@ -232,7 +232,7 @@ switch($ploopi_op)
                                     ?>
                                     <em style="display:block;">
                                         <img style="background-color:<?php echo $row['color']; ?>;" src="./modules/planning/img/ico_<?php echo $strResourceType; ?>.png" />
-                                        <?php echo ploopi_htmlentities($row['label']); ?>
+                                        <?php echo ovensia\ploopi\str::htmlentities($row['label']); ?>
                                     </em>
                                     <?php
                                 }
@@ -247,29 +247,29 @@ switch($ploopi_op)
             <p>
                 <label>Objet:</label>
                 <?php
-                if (ploopi_isactionallowed(_PLANNING_ADD_EVENT))
+                if (ovensia\ploopi\acl::isactionallowed(_PLANNING_ADD_EVENT))
                 {
-                    ?><input name="planning_event_object" type="text" class="text" value="<?php echo ploopi_htmlentities($objEvent->fields['object']); ?>"><?php
+                    ?><input name="planning_event_object" type="text" class="text" value="<?php echo ovensia\ploopi\str::htmlentities($objEvent->fields['object']); ?>"><?php
                 }
                 else
                 {
-                    ?><span><?php echo ploopi_htmlentities($objEvent->fields['object']); ?></span><?php
+                    ?><span><?php echo ovensia\ploopi\str::htmlentities($objEvent->fields['object']); ?></span><?php
                 }
                 ?>
             </p>
             <p>
                 <label>Date<?php if ($ploopi_op == 'planning_event_add') echo ' de début'; ?>:</label>
                 <?php
-                if (ploopi_isactionallowed(_PLANNING_ADD_EVENT))
+                if (ovensia\ploopi\acl::isactionallowed(_PLANNING_ADD_EVENT))
                 {
                     ?>
-                    <input name="_planning_event_timestp_begin_d" id="_planning_event_timestp_begin_d" class="text" type="text" value="<?php echo ploopi_htmlentities($arrDateTimeBegin['date']); ?>" style="width:80px;" <?php if ($ploopi_op == 'planning_event_add') { ?>onchange="javascript:$('_planning_event_timestp_end_d').value = this.value;"<?php } ?> />
-                    <?php ploopi_open_calendar('_planning_event_timestp_begin_d'); ?>
+                    <input name="_planning_event_timestp_begin_d" id="_planning_event_timestp_begin_d" class="text" type="text" value="<?php echo ovensia\ploopi\str::htmlentities($arrDateTimeBegin['date']); ?>" style="width:80px;" <?php if ($ploopi_op == 'planning_event_add') { ?>onchange="javascript:$('_planning_event_timestp_end_d').value = this.value;"<?php } ?> />
+                    <?php ovensia\ploopi\date::open_calendar('_planning_event_timestp_begin_d'); ?>
                     <?php
                 }
                 else
                 {
-                    ?><span><?php echo ploopi_htmlentities($arrDateTimeBegin['date']); ?></span><?php
+                    ?><span><?php echo ovensia\ploopi\str::htmlentities($arrDateTimeBegin['date']); ?></span><?php
                 }
                 ?>
 
@@ -277,7 +277,7 @@ switch($ploopi_op)
             <p>
                 <label>Heure de début:</label>
                 <?php
-                if (ploopi_isactionallowed(_PLANNING_ADD_EVENT))
+                if (ovensia\ploopi\acl::isactionallowed(_PLANNING_ADD_EVENT))
                 {
                     ?>
                     <select name="_planning_event_timestp_begin_h" id="_planning_event_timestp_begin_h" class="select" style="width:60px;">
@@ -300,7 +300,7 @@ switch($ploopi_op)
                 }
                 else
                 {
-                    ?><span><?php echo ploopi_htmlentities($arrDateTimeBegin['time'][0].':'.$arrDateTimeBegin['time'][1]); ?></span><?php
+                    ?><span><?php echo ovensia\ploopi\str::htmlentities($arrDateTimeBegin['time'][0].':'.$arrDateTimeBegin['time'][1]); ?></span><?php
                 }
                 ?>
             </p>
@@ -310,8 +310,8 @@ switch($ploopi_op)
                 ?>
                 <p>
                     <label>Date de fin:</label>
-                    <input name="_planning_event_timestp_end_d" id="_planning_event_timestp_end_d" class="text" type="text" value="<?php echo ploopi_htmlentities($arrDateTimeEnd['date']); ?>" style="width:80px; "/>
-                    <?php ploopi_open_calendar('_planning_event_timestp_end_d'); ?>
+                    <input name="_planning_event_timestp_end_d" id="_planning_event_timestp_end_d" class="text" type="text" value="<?php echo ovensia\ploopi\str::htmlentities($arrDateTimeEnd['date']); ?>" style="width:80px; "/>
+                    <?php ovensia\ploopi\date::open_calendar('_planning_event_timestp_end_d'); ?>
                 </p>
                 <?php
             }
@@ -319,7 +319,7 @@ switch($ploopi_op)
             <p>
                 <label>Heure de fin:</label>
                 <?php
-                if (ploopi_isactionallowed(_PLANNING_ADD_EVENT))
+                if (ovensia\ploopi\acl::isactionallowed(_PLANNING_ADD_EVENT))
                 {
                     ?>
                     <select name="_planning_event_timestp_end_h" id="_planning_event_timestp_end_h" class="select" style="width:60px;">
@@ -342,7 +342,7 @@ switch($ploopi_op)
                 }
                 else
                 {
-                    ?><span><?php echo ploopi_htmlentities($arrDateTimeEnd['time'][0].':'.$arrDateTimeEnd['time'][1]); ?></span><?php
+                    ?><span><?php echo ovensia\ploopi\str::htmlentities($arrDateTimeEnd['time'][0].':'.$arrDateTimeEnd['time'][1]); ?></span><?php
                 }
                 ?>
             </p>
@@ -358,7 +358,7 @@ switch($ploopi_op)
                         foreach ($arrPlanningPeriodicity as $key => $value)
                         {
                             ?>
-                            <option value="<?php echo ploopi_htmlentities($key); ?>"><?php echo ploopi_htmlentities($value); ?></option>
+                            <option value="<?php echo ovensia\ploopi\str::htmlentities($key); ?>"><?php echo ovensia\ploopi\str::htmlentities($value); ?></option>
                             <?php
                         }
                         ?>
@@ -367,14 +367,14 @@ switch($ploopi_op)
                 <p>
                     <label><em>se termine le</em>:</label>
                     <input name="_planning_event_periodicity_end_date" id="_planning_event_periodicity_end_date" class="text" type="text" value="" style="width:80px; "/>
-                    <?php ploopi_open_calendar('_planning_event_periodicity_end_date'); ?>
+                    <?php ovensia\ploopi\date::open_calendar('_planning_event_periodicity_end_date'); ?>
                 </p>
                 <?php
             }
             ?>
         </div>
         <?php
-        if (ploopi_isactionallowed(_PLANNING_ADD_EVENT))
+        if (ovensia\ploopi\acl::isactionallowed(_PLANNING_ADD_EVENT))
         {
             ?>
             <div style="padding:4px;text-align:right;">
@@ -382,13 +382,13 @@ switch($ploopi_op)
                 <?php
                 if ($ploopi_op == 'planning_event_detail_open')
                 {
-                    ?><input type="button" class="button" value="Supprimer" style="font-weight:bold;color:#a60000" onclick="javascript:if (confirm('Êtes vous certain de vouloir supprimer cet événement ?')) ploopi_xmlhttprequest_todiv('admin-light.php', '<?php echo ploopi_queryencode("ploopi_op=planning_event_detail_delete&planning_event_detail_id={$_GET['planning_event_detail_id']}"); ?>', 'planning_main'); ploopi_hidepopup('popup_planning_event');" /><?php
+                    ?><input type="button" class="button" value="Supprimer" style="font-weight:bold;color:#a60000" onclick="javascript:if (confirm('Êtes vous certain de vouloir supprimer cet événement ?')) ploopi_xmlhttprequest_todiv('admin-light.php', '<?php echo ovensia\ploopi\crypt::queryencode("ploopi_op=planning_event_detail_delete&planning_event_detail_id={$_GET['planning_event_detail_id']}"); ?>', 'planning_main'); ploopi_hidepopup('popup_planning_event');" /><?php
                 }
                 ?>
                 <input type="submit" class="button" value="Enregistrer" />
             </div>
             </form>
-            <div style="border-top:1px solid #aaa;"><?php ploopi_annotation(_PLANNING_OBJECT_EVENT, $objEventDetail->fields['id'], $objEvent->fields['object']); ?></div>
+            <div style="border-top:1px solid #aaa;"><?php ovensia\ploopi\annotation::display(_PLANNING_OBJECT_EVENT, $objEventDetail->fields['id'], $objEvent->fields['object']); ?></div>
             <?php
         }
         ?>
@@ -397,7 +397,7 @@ switch($ploopi_op)
         ob_end_clean();
 
         echo $skin->create_popup($strPopupTitle, $content, 'popup_planning_event');
-        ploopi_die();
+        ovensia\ploopi\system::kill();
     break;
 
     case 'planning_event_detail_delete':
@@ -416,8 +416,8 @@ switch($ploopi_op)
                 $objEventDetail->delete();
             }
         }
-        if (ploopi_urlencode($_SESSION['ploopi']['mode'] == 'backoffice')) ploopi_redirect("admin.php");
-        else ploopi_redirect($_SESSION['planning'][$_GET['planning_moduleid']]['article_url']);
+        if (ovensia\ploopi\crypt::urlencode($_SESSION['ploopi']['mode'] == 'backoffice')) ovensia\ploopi\output::redirect("admin.php");
+        else ovensia\ploopi\output::redirect($_SESSION['planning'][$_GET['planning_moduleid']]['article_url']);
     break;
 }
 ?>

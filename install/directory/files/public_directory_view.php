@@ -51,24 +51,24 @@ if (!empty($_GET['directory_id_contact']))
 }
 elseif (!empty($_GET['directory_id_user']))
 {
-    ploopi_init_module('system');
-    $usr = new user();
+    ovensia\ploopi\module::init('system');
+    $usr = new ovensia\ploopi\user();
     $usr->open($_GET['directory_id_user']);
     $popup_title = _DIRECTORY_VIEWUSER;
     $booContact = false;
 }
-else ploopi_die();
+else ovensia\ploopi\system::kill();
 
-$strName = ploopi_htmlentities(trim($usr->fields['lastname'].' '.$usr->fields['firstname']));
+$strName = ovensia\ploopi\str::htmlentities(trim($usr->fields['lastname'].' '.$usr->fields['firstname']));
 ?>
 
 <h1 class="directory_title" style="background-color:#c0c0c0;border-bottom:1px solid #a0a0a0;">
     <?php
     if (!$booPrintable)
     {
-        ?><a href="javascript:void(0);" onclick="javascript:ploopi_openwin('<?php echo ploopi_urlencode('admin-light.php?op=directory_view&directory_id_user='.(empty($_GET['directory_id_user']) ? '' : $_GET['directory_id_user']).'&directory_id_contact='.(empty($_GET['directory_id_contact']) ? '' : $_GET['directory_id_contact']).'&directory_print'); ?>',550,400);return false;"><img style="display:block;float:right" src="./modules/directory/img/ico_print.png" title="Imprimer" alt="Imprimer" /></a><?php
+        ?><a href="javascript:void(0);" onclick="javascript:ploopi_openwin('<?php echo ovensia\ploopi\crypt::urlencode('admin-light.php?op=directory_view&directory_id_user='.(empty($_GET['directory_id_user']) ? '' : $_GET['directory_id_user']).'&directory_id_contact='.(empty($_GET['directory_id_contact']) ? '' : $_GET['directory_id_contact']).'&directory_print'); ?>',550,400);return false;"><img style="display:block;float:right" src="./modules/directory/img/ico_print.png" title="Imprimer" alt="Imprimer" /></a><?php
     }
-    echo ploopi_htmlentities($strName);
+    echo ovensia\ploopi\str::htmlentities($strName);
     ?>
 </h1>
 <div>
@@ -78,11 +78,11 @@ $strName = ploopi_htmlentities(trim($usr->fields['lastname'].' '.$usr->fields['f
         {
             if (!empty($_GET['directory_id_user']))
             {
-                ?><img title="Photo de <?php echo ploopi_htmlentities($strName); ?>" src="<?php echo ploopi_urlencode("admin-light.php?ploopi_op=ploopi_get_userphoto&ploopi_user_id={$usr->fields['id']}"); ?>" style="border:1px solid #404040;display:block;margin:5px auto;" /><?php
+                ?><img title="Photo de <?php echo ovensia\ploopi\str::htmlentities($strName); ?>" src="<?php echo ovensia\ploopi\crypt::urlencode("admin-light.php?ploopi_op=ploopi_get_userphoto&ploopi_user_id={$usr->fields['id']}"); ?>" style="border:1px solid #404040;display:block;margin:5px auto;" /><?php
             }
             else
             {
-                ?><img title="Photo de <?php echo ploopi_htmlentities($strName); ?>" src="<?php echo ploopi_urlencode("admin-light.php?ploopi_op=directory_contact_getphoto&directory_contact_id={$usr->fields['id']}"); ?>" style="border:1px solid #404040;display:block;margin:5px auto;" /><?php
+                ?><img title="Photo de <?php echo ovensia\ploopi\str::htmlentities($strName); ?>" src="<?php echo ovensia\ploopi\crypt::urlencode("admin-light.php?ploopi_op=directory_contact_getphoto&directory_contact_id={$usr->fields['id']}"); ?>" style="border:1px solid #404040;display:block;margin:5px auto;" /><?php
             }
         }
         ?>
@@ -92,56 +92,56 @@ $strName = ploopi_htmlentities(trim($usr->fields['lastname'].' '.$usr->fields['f
             <h2 class="directory_title" style="background-color:#d0d0d0;border-bottom:1px solid #a0a0a0;">Informations professionnelles</h2>
             <p>
                 <label style="font-weight:bold;"><?php echo _DIRECTORY_SERVICE; ?>:</label>
-                <span><?php echo ploopi_htmlentities($usr->fields['service']); ?></span>
+                <span><?php echo ovensia\ploopi\str::htmlentities($usr->fields['service']); ?></span>
             </p>
             <p>
                 <label style="font-weight:bold;"><?php echo _DIRECTORY_FUNCTION; ?>:</label>
-                <span><?php echo ploopi_htmlentities($usr->fields['function']); ?></span>
+                <span><?php echo ovensia\ploopi\str::htmlentities($usr->fields['function']); ?></span>
             </p>
             <p>
                 <label style="font-weight:bold;"><?php echo _DIRECTORY_RANK; ?>:</label>
-                <span><?php echo ploopi_htmlentities($usr->fields['rank']); ?></span>
+                <span><?php echo ovensia\ploopi\str::htmlentities($usr->fields['rank']); ?></span>
             </p>
             <p>
                 <label style="font-weight:bold;"><?php echo _DIRECTORY_NUMBER; ?>:</label>
-                <span><?php echo ploopi_htmlentities($usr->fields['number']); ?></span>
+                <span><?php echo ovensia\ploopi\str::htmlentities($usr->fields['number']); ?></span>
             </p>
             <p>
                 <label style="font-weight:bold;"><?php echo _DIRECTORY_PHONE; ?>:</label>
-                <span><?php echo ploopi_htmlentities($usr->fields['phone']); ?></span>
+                <span><?php echo ovensia\ploopi\str::htmlentities($usr->fields['phone']); ?></span>
             </p>
             <p>
                 <label style="font-weight:bold;"><?php echo _DIRECTORY_MOBILE; ?>:</label>
-                <span><?php echo ploopi_htmlentities($usr->fields['mobile']); ?></span>
+                <span><?php echo ovensia\ploopi\str::htmlentities($usr->fields['mobile']); ?></span>
             </p>
             <p>
                 <label style="font-weight:bold;"><?php echo _DIRECTORY_FAX; ?>:</label>
-                <span><?php echo ploopi_htmlentities($usr->fields['fax']); ?></span>
+                <span><?php echo ovensia\ploopi\str::htmlentities($usr->fields['fax']); ?></span>
             </p>
             <p>
                 <label style="font-weight:bold;"><?php echo _DIRECTORY_EMAIL; ?>:</label>
-                <span><a href="mailto:<?php echo ploopi_htmlentities($usr->fields['email']); ?>"><?php echo ploopi_htmlentities($usr->fields['email']); ?></a></span>
+                <span><a href="mailto:<?php echo ovensia\ploopi\str::htmlentities($usr->fields['email']); ?>"><?php echo ovensia\ploopi\str::htmlentities($usr->fields['email']); ?></a></span>
             </p>
 
             <h2 class="directory_title" style="background-color:#d0d0d0;border-bottom:1px solid #a0a0a0;">Lieu de travail</h2>
             <p>
                 <label style="font-weight:bold;"><?php echo _DIRECTORY_BUILDING; ?>:</label>
-                <span><?php echo ploopi_htmlentities($usr->fields['building']); ?></span>
+                <span><?php echo ovensia\ploopi\str::htmlentities($usr->fields['building']); ?></span>
             </p>
             <p>
                 <label style="font-weight:bold;"><?php echo _DIRECTORY_FLOOR; ?>:</label>
-                <span><?php echo ploopi_htmlentities($usr->fields['floor']); ?></span>
+                <span><?php echo ovensia\ploopi\str::htmlentities($usr->fields['floor']); ?></span>
             </p>
             <p>
                 <label style="font-weight:bold;"><?php echo _DIRECTORY_OFFICE; ?>:</label>
-                <span><?php echo ploopi_htmlentities($usr->fields['office']); ?></span>
+                <span><?php echo ovensia\ploopi\str::htmlentities($usr->fields['office']); ?></span>
             </p>
             <?php
             $arrAddress = array();
 
-            if (!empty($usr->fields['address'])) $arrAddress[] = ploopi_nl2br(ploopi_htmlentities($usr->fields['address']));
-            if (!empty($usr->fields['postalcode']) || !empty($usr->fields['city'])) $arrAddress[] = ploopi_nl2br(ploopi_htmlentities(trim($usr->fields['postalcode'].' '.$usr->fields['city'])));
-            if (!empty($usr->fields['country'])) $arrAddress[] = ploopi_nl2br(ploopi_htmlentities($usr->fields['country']));
+            if (!empty($usr->fields['address'])) $arrAddress[] = ovensia\ploopi\str::nl2br(ovensia\ploopi\str::htmlentities($usr->fields['address']));
+            if (!empty($usr->fields['postalcode']) || !empty($usr->fields['city'])) $arrAddress[] = ovensia\ploopi\str::nl2br(ovensia\ploopi\str::htmlentities(trim($usr->fields['postalcode'].' '.$usr->fields['city'])));
+            if (!empty($usr->fields['country'])) $arrAddress[] = ovensia\ploopi\str::nl2br(ovensia\ploopi\str::htmlentities($usr->fields['country']));
             ?>
             <p>
                 <label style="font-weight:bold;"><?php echo _DIRECTORY_ADDRESS; ?>:</label>
@@ -152,7 +152,7 @@ $strName = ploopi_htmlentities(trim($usr->fields['lastname'].' '.$usr->fields['f
             <div id="directory_view_details" style="display:none;">
                 <p>
                     <label style="font-weight:bold;"><?php echo _DIRECTORY_COMMENTARY; ?>:</label>
-                    <span><?php echo ploopi_nl2br(ploopi_htmlentities($usr->fields['comments'])); ?></span>
+                    <span><?php echo ovensia\ploopi\str::nl2br(ovensia\ploopi\str::htmlentities($usr->fields['comments'])); ?></span>
                 </p>
                 <?php
                 if (!empty($_GET['directory_id_contact']) && !empty($usr->fields['id_heading']))
@@ -180,7 +180,7 @@ $strName = ploopi_htmlentities(trim($usr->fields['lastname'].' '.$usr->fields['f
                                 $arrTitle[] = $arrHeadings['list'][$usr->fields['id_heading']]['label'];
                             }
 
-                            echo ploopi_nl2br(ploopi_htmlentities(implode("\n", $arrTitle)));
+                            echo ovensia\ploopi\str::nl2br(ovensia\ploopi\str::htmlentities(implode("\n", $arrTitle)));
                             ?>
                         </span>
                     </p>
@@ -200,7 +200,7 @@ $strName = ploopi_htmlentities(trim($usr->fields['lastname'].' '.$usr->fields['f
                                 $groups_list = array();
                                 $groups_list_id = array();
 
-                                foreach($user_gp as $gp) $groups_list[sprintf("%04d%s", $gp['depth'], $gp['label'])] = ploopi_htmlentities($gp['label']);
+                                foreach($user_gp as $gp) $groups_list[sprintf("%04d%s", $gp['depth'], $gp['label'])] = ovensia\ploopi\str::htmlentities($gp['label']);
 
                                 // on trie par profondeur + libellé
                                 ksort($groups_list);
@@ -219,7 +219,7 @@ $strName = ploopi_htmlentities(trim($usr->fields['lastname'].' '.$usr->fields['f
 
                             // on met les libellés dans un tableau
                             $workspaces_list = array();
-                            foreach($user_ws as $ws) $workspaces_list[sprintf("%04d%s", $ws['depth'], $ws['label'])] = ploopi_htmlentities($ws['label']);
+                            foreach($user_ws as $ws) $workspaces_list[sprintf("%04d%s", $ws['depth'], $ws['label'])] = ovensia\ploopi\str::htmlentities($ws['label']);
 
                             // on trie par profondeur + libellé
                             ksort($workspaces_list);
@@ -261,7 +261,7 @@ $strName = ploopi_htmlentities(trim($usr->fields['lastname'].' '.$usr->fields['f
                                         AND         wgr.id_workspace IN (".implode(',', array_keys($user_ws)).")
                                     ");
 
-                                    while ($row = $db->fetchrow()) $arrRoles["{$row['id_workspace']}_{$row['id']}"] = sprintf("%s : <strong>%s</strong> dans le module <strong>%s</strong>", ploopi_htmlentities($user_ws[$row['id_workspace']]['label']), ploopi_htmlentities($row['role_label']), ploopi_htmlentities($row['module_label']));
+                                    while ($row = $db->fetchrow()) $arrRoles["{$row['id_workspace']}_{$row['id']}"] = sprintf("%s : <strong>%s</strong> dans le module <strong>%s</strong>", ovensia\ploopi\str::htmlentities($user_ws[$row['id_workspace']]['label']), ovensia\ploopi\str::htmlentities($row['role_label']), ovensia\ploopi\str::htmlentities($row['module_label']));
 
                                     // recherche des rôles "utilisateur"
                                     $db->query("
@@ -282,7 +282,7 @@ $strName = ploopi_htmlentities(trim($usr->fields['lastname'].' '.$usr->fields['f
                                         AND         wur.id_workspace IN (".implode(',', array_keys($user_ws)).")
                                     ");
 
-                                    while ($row = $db->fetchrow()) $arrRoles["{$row['id_workspace']}_{$row['id']}"] = sprintf("%s : <strong>%s</strong> dans le module <strong>%s</strong>", ploopi_htmlentities($user_ws[$row['id_workspace']]['label']), ploopi_htmlentities($row['role_label']), ploopi_htmlentities($row['module_label']));
+                                    while ($row = $db->fetchrow()) $arrRoles["{$row['id_workspace']}_{$row['id']}"] = sprintf("%s : <strong>%s</strong> dans le module <strong>%s</strong>", ovensia\ploopi\str::htmlentities($user_ws[$row['id_workspace']]['label']), ovensia\ploopi\str::htmlentities($row['role_label']), ovensia\ploopi\str::htmlentities($row['module_label']));
                                 }
                             }
 
@@ -309,10 +309,8 @@ $strName = ploopi_htmlentities(trim($usr->fields['lastname'].' '.$usr->fields['f
                     <label style="font-weight:bold;">Documents:</label>
                     <span style="overflow:hidden;">
                         <?php
-                        include_once './include/classes/documents.php';
-
                         // Lecture du dossier racine de la mini ged associée à l'utilisateur ou au contact courant
-                        $objRootFolder = documentsfolder::getroot(
+                        $objRootFolder = ovensia\ploopi\documentsfolder::getroot(
                             $booContact ? _DIRECTORY_OBJECT_CONTACT : _SYSTEM_OBJECT_USER,
                             $usr->fields['id'],
                             $booContact ? null : 1 // Il faut prendre l'id du module actuel ou l'id du module système
@@ -366,6 +364,6 @@ else
      */
 
     echo $skin->create_popup($popup_title, $content, 'popup_directory_view');
-    ploopi_die();
+    ovensia\ploopi\system::kill();
 }
 ?>

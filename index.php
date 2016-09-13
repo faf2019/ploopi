@@ -43,8 +43,7 @@ define('_PLOOPI_DIRNAME',  dirname(__FILE__));
 
 include_once './include/classes/loader.php';
 
-ploopi_loader::boot();
-ploopi_loader::dispatch();
-
-ploopi_die();
+ovensia\ploopi\loader::boot();
+ovensia\ploopi\loader::dispatch();
+ovensia\ploopi\system::kill();
 ?>

@@ -21,6 +21,10 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+namespace ovensia\ploopi;
+
+use ovensia\ploopi;
+
 /**
  * Gestion du chiffrement/déchiffrement
  *
@@ -47,7 +51,7 @@
  * @see _PLOOPI_SECRETKEY
  */
 
-class ploopi_cipher
+class cipher
 {
     /**
      * Clé secrète
@@ -118,10 +122,8 @@ class ploopi_cipher
     {
         if (!empty($str))
         {
-            include_once './include/functions/crypt.php';
-
             mcrypt_generic_init($this->cipher, $this->key, $this->iv);
-            $encrypted = ploopi_base64_encode(mcrypt_generic($this->cipher, gzcompress($str)));
+            $encrypted = crypt::base64_encode(mcrypt_generic($this->cipher, gzcompress($str)));
             mcrypt_generic_deinit($this->cipher);
             return($encrypted);
         }
@@ -139,13 +141,11 @@ class ploopi_cipher
     {
         if (empty($strEncrypted)) return(false);
 
-        include_once './include/functions/crypt.php';
-
-        $strDecoded = ploopi_base64_decode($strEncrypted);
+        $strDecoded = crypt::base64_decode($strEncrypted);
         mcrypt_generic_init($this->cipher, $this->key, $this->iv);
-        ploopi_unset_error_handler();
+        error::unset_handler();
         $strDecoded = strlen($strDecoded) > 0 ? gzuncompress(mdecrypt_generic($this->cipher, $strDecoded)) : '';
-        ploopi_set_error_handler();
+        error::set_handler();
         mcrypt_generic_deinit($this->cipher);
 
         return($strDecoded);

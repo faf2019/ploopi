@@ -31,12 +31,6 @@
  */
 
 /**
- * Inclusions
- */
-
-include_once './include/classes/data_object.php';
-
-/**
  * Classe d'accès à un enregistrement de formulaire
  *
  * @package forms
@@ -46,7 +40,7 @@ include_once './include/classes/data_object.php';
  * @author Stéphane Escaich
  */
 
-class formsRecord extends data_object
+class formsRecord extends ovensia\ploopi\data_object
 {
     public function __construct(&$objForm)
     {
@@ -57,7 +51,7 @@ class formsRecord extends data_object
     {
         if ($this->isnew())
         {
-            $this->fields['date_validation'] = ploopi_createtimestamp();
+            $this->fields['date_validation'] = ovensia\ploopi\date::createtimestamp();
             $this->fields['user_id'] = isset($_SESSION['ploopi']['user']['id']) ? $_SESSION['ploopi']['user']['id'] : '';
             $this->fields['user_login'] = isset($_SESSION['ploopi']['user']['login']) ? $_SESSION['ploopi']['user']['login'] : '';
             $this->fields['user_firstname'] = isset($_SESSION['ploopi']['user']['firstname']) ? $_SESSION['ploopi']['user']['firstname'] : '';

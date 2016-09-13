@@ -32,12 +32,6 @@
  */
 
 /**
- * Inclusion de la classe parent.
- */
-
-include_once './include/classes/data_object.php';
-
-/**
  * Classe d'accès à la table ploopi_mod_doc_file_draft.
  * Gère l'enregistrement physique, la publication.
  *
@@ -48,7 +42,7 @@ include_once './include/classes/data_object.php';
  * @author Stéphane Escaich
  */
 
-class docfiledraft extends data_object
+class docfiledraft extends ovensia\ploopi\data_object
 {
     var $oldname;
     var $tmpfile;
@@ -63,7 +57,7 @@ class docfiledraft extends data_object
     function __construct()
     {
         parent::__construct('ploopi_mod_doc_file_draft');
-        $this->fields['timestp_create'] = ploopi_createtimestamp();
+        $this->fields['timestp_create'] = ovensia\ploopi\date::createtimestamp();
 
         $this->oldname = '';
         $this->tmpfile = null;
@@ -161,7 +155,7 @@ class docfiledraft extends data_object
     function getbasepath()
     {
         $basepath = doc_getpath($this->fields['id_module'])._PLOOPI_SEP.'drafts'._PLOOPI_SEP.$this->fields['id'];
-        ploopi_makedir($basepath);
+        ovensia\ploopi\fs::makedir($basepath);
         return($basepath);
     }
 

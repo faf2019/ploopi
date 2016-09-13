@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2012 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -20,6 +20,8 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+use ovensia\ploopi;
+
 /**
  * Gestion de la connexion à la base MySQL.
  *
@@ -29,9 +31,6 @@
  * @license GNU General var License (GPL)
  * @author Stéphane Escaich
  */
-
-include_once './include/functions/system.php';
-
 
 /**
  * Classe MySQL d'accès aux données.
@@ -190,6 +189,9 @@ class ploopi_db
         if ($this->mysqli->connect_errno) {
             trigger_error($this->mysqli->connect_error, E_USER_WARNING);
             $this->mysqli = null;
+        }
+        else {
+            $this->mysqli->set_charset('latin1');
         }
     }
 
@@ -621,7 +623,7 @@ class ploopi_db
     {
         if (!$this->isconnected()) return false;
 
-        return ploopi_array_map(array($this, 'escape_string'), $var);
+        return ovensia\ploopi\arr::map(array($this, 'escape_string'), $var);
     }
 
     /**
@@ -633,11 +635,8 @@ class ploopi_db
 
     public function timer_start()
     {
-        if (class_exists('timer'))
-        {
-            $this->db_timer = new timer();
-            $this->db_timer->start();
-        }
+        $this->db_timer = new ovensia\ploopi\timer();
+        $this->db_timer->start();
     }
 
     /**
@@ -652,11 +651,8 @@ class ploopi_db
     public function timer_stop()
     {
         $intExt = 0;
-        if (class_exists('timer'))
-        {
-            $intExt = $this->db_timer->getexectime();
-            $this->exectime_queries += $intExt;
-        }
+        $intExt = $this->db_timer->getexectime();
+        $this->exectime_queries += $intExt;
 
         return $intExt;
     }

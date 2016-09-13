@@ -1,9 +1,12 @@
 {
     "name": "ovensia/ploopi",
     "description": "Ploopi - plateforme de gestion web - contenus, wiki, documents, planning",
-    "keywords": ["PHP","ploopi","web editor","documents","planning","agenda","booking","wiki"],
-    "homepage": "http://svn.ploopi.org/trunk",
+    "keywords": ["PHP","ploopi","cms","content management system","editor","documents","planning","agenda","booking","wiki","webedit","forms","dbreport"],
+    "homepage": "http://www.ploopi.org",
     "type": "project",
+    "version": "1.9.7-dev",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "license": "GPL-2.0",
     "authors": [
         {
@@ -13,19 +16,14 @@
             "name": "Audrey Gilbert"
         }
     ],
-    "minimum-stability": "dev",
     "repositories": [
         {
-            "type":"package",
-            "package": {
-              "name": "EastDesire/jscolor",
-              "version":"2.0.4",
-              "source": {
-                  "url": "https://github.com/EastDesire/jscolor.git",
-                  "type": "git",
-                  "reference":"master"
-                }
-            }
+            "type": "pear",
+            "url": "https://pear.horde.org"
+        },
+        {
+            "type": "pear",
+            "url": "https://pear.php.net"
         },
         {
             "type":"package",
@@ -38,10 +36,26 @@
                   "reference":"master"
                 }
             }
+        },
+        {
+            "type":"package",
+            "package": {
+              "name": "EastDesire/jscolor",
+              "version":"2.0.4",
+              "source": {
+                  "url": "https://github.com/EastDesire/jscolor.git",
+                  "type": "git",
+                  "reference":"master"
+                }
+            }
         }
-
     ],
     "require": {
+        "php": ">=7.0.0",
+        "ext-mcrypt": "*",
+        "ext-gd": "*",
+        "ext-zip": "*",
+        "ext-curl": "*",
         "EastDesire/jscolor": "2.0.4",
         "swfobject/swfobject": "2.3",
         "donatj/phpuseragentparser": "^0.5.1",
@@ -53,10 +67,10 @@
         "box/spout": "^2.5",
         "components/highlightjs": "^9.5",
         "ckeditor/ckeditor": "^4.5",
-        "pear/pear": "dev-master",
-        "pear/http_request2": "^2.3",
-        "pear/xml_serializer": "^0.21.0",
-        "pear/cache_lite": "^1.8",
-        "php-unoconv/php-unoconv": "^0.3.0"
+        "pear-pear.php.net/HTTP_Request2": "^2.3",
+        "pear-pear.php.net/XML_Serializer": "^0.21.0",
+        "pear-pear.php.net/Cache_Lite": "^1.8",
+        "pear-pear.horde.org/Horde_Text_Diff": "2.1.2",
+        "elasticsearch/elasticsearch": "^2.2"
     }
 }

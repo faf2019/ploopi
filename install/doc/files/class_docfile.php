@@ -23,7 +23,6 @@
 
 /**
  * Gestion des fichiers
- *cd mod
  * @package doc
  * @subpackage file
  * @copyright Netlor, Ovensia
@@ -32,21 +31,11 @@
  */
 
 /**
- * Inclusion de la classe parent.
- */
-
-include_once './include/classes/data_object.php';
-
-/**
  * Inclusion des dépendances
  */
 
 include_once './modules/doc/class_docfolder.php';
 include_once './modules/doc/class_docmeta.php';
-include_once './include/functions/filesystem.php';
-include_once './include/functions/search_index.php';
-include_once './include/functions/string.php';
-
 
 /**
  * Classe d'accès à la table ploopi_mod_doc_file.
@@ -59,7 +48,7 @@ include_once './include/functions/string.php';
  * @author Stéphane Escaich
  */
 
-class docfile extends data_object
+class docfile extends ovensia\ploopi\data_object
 {
     var $oldname;
     var $tmpfile;
@@ -76,7 +65,7 @@ class docfile extends data_object
     {
         parent::__construct('ploopi_mod_doc_file');
         $this->fields['id_user'] = 0;
-        $this->fields['timestp_create'] = ploopi_createtimestamp();
+        $this->fields['timestp_create'] = ovensia\ploopi\date::createtimestamp();
         $this->fields['timestp_modify'] = $this->fields['timestp_create'];
         $this->fields['description']='';
         $this->fields['size'] = 0;
@@ -256,7 +245,7 @@ class docfile extends data_object
                     }
                 }
 
-                $this->fields['timestp_modify'] = ploopi_createtimestamp();
+                $this->fields['timestp_modify'] = ovensia\ploopi\date::createtimestamp();
 
                 $this->oldname = $this->fields['name'];
             }
@@ -327,7 +316,7 @@ class docfile extends data_object
             if ($booEmptyDir) @rmdir($basepath);
         }
 
-        ploopi_search_remove_index(_DOC_OBJECT_FILE, $this->fields['md5id']);
+        ovensia\ploopi\search_index::remove(_DOC_OBJECT_FILE, $this->fields['md5id']);
 
         // delete existing meta for current file
         $db->query("DELETE FROM ploopi_mod_doc_meta WHERE id_file = {$this->fields['id']}");
@@ -374,7 +363,7 @@ class docfile extends data_object
     function getbasepath()
     {
         $basepath = doc_getpath($this->fields['id_module'])._PLOOPI_SEP.substr($this->fields['timestp_create'],0,8);
-        ploopi_makedir($basepath);
+        ovensia\ploopi\fs::makedir($basepath);
         return($basepath);
     }
 
@@ -635,12 +624,12 @@ class docfile extends data_object
                 unset($array_result);
             }
 
-            $res_txt .= "<div style=\"background-color:#e0e0f0;border-bottom:1px solid #c0c0c0;padding:1px;\">".ploopi_strcut($content,200)."</div>\n";
+            $res_txt .= "<div style=\"background-color:#e0e0f0;border-bottom:1px solid #c0c0c0;padding:1px;\">".ovensia\ploopi\str::cut($content,200)."</div>\n";
 
             $metakeywords_str .= " {$this->fields['name']} {$this->fields['description']}";
 
-            ploopi_search_remove_index(_DOC_OBJECT_FILE, $this->fields['md5id'], $this->fields['id_module']);
-            ploopi_search_create_index(
+            ovensia\ploopi\search_index::remove(_DOC_OBJECT_FILE, $this->fields['md5id'], $this->fields['id_module']);
+            ovensia\ploopi\search_index::add(
                 _DOC_OBJECT_FILE,
                 $this->fields['md5id'],
                 $this->fields['name'],

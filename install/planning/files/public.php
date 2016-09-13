@@ -30,7 +30,7 @@
  * @author Stéphane Escaich
  */
 
-echo $skin->create_pagetitle(ploopi_htmlentities($_SESSION['ploopi']['modulelabel']));
+echo $skin->create_pagetitle(ovensia\ploopi\str::htmlentities($_SESSION['ploopi']['modulelabel']));
 echo $skin->open_simplebloc('Planning');
 ?>
 <div id="planning_main">
@@ -45,7 +45,7 @@ echo $skin->close_simplebloc();
 ob_start();
 ?>
 <div id="planning_ressource_list">
-<form id="planning_resource_list_form" action="<?php echo ploopi_urlencode('admin-light.php?ploopi_op=planning_setresources'); ?>" method="post" onsubmit="javascript:ploopi_xmlhttprequest_submitform($('planning_resource_list_form'), 'planning_main'); return false;">
+<form id="planning_resource_list_form" action="<?php echo ovensia\ploopi\crypt::urlencode('admin-light.php?ploopi_op=planning_setresources'); ?>" method="post" onsubmit="javascript:ploopi_xmlhttprequest_submitform($('planning_resource_list_form'), 'planning_main'); return false;">
 <?php
 foreach ($arrResources as $strResourceType => $arrResourceType)
 {
@@ -61,7 +61,7 @@ foreach ($arrResources as $strResourceType => $arrResourceType)
         <a href="javascript:void(0);" onclick="javascript:with ($('planning_<?php echo $strResourceType; ?>_list')) { style.display = (style.display == 'block') ? 'none' : 'block'; }">
             <p class="ploopi_va" style="border-width:1px 0;border-style:solid;border-color:#bbb;background-color:#ddd;">
                 <img src="<?php echo "{$_SESSION['ploopi']['template_path']}/img/system/ico_{$strResourceType}.png"; ?>" />
-                <strong><?php echo ploopi_htmlentities($strResourceTitle); ?></strong>
+                <strong><?php echo ovensia\ploopi\str::htmlentities($strResourceTitle); ?></strong>
             </p>
         </a>
         <div id="planning_<?php echo $strResourceType; ?>_list" style="display:block;">
@@ -71,7 +71,7 @@ foreach ($arrResources as $strResourceType => $arrResourceType)
                 ?>
                 <p class="checkbox" style="background-color:<?php echo $row['color']; ?>;" onclick="javascript:ploopi_checkbox_click(event, 'planning_resource<?php echo $strResourceType[0].$row['id']; ?>');">
                     <input type="checkbox" name="planning_resources[<?php echo $strResourceType; ?>][<?php echo $row['id']; ?>]" id="planning_resource<?php echo $strResourceType[0].$row['id']; ?>" value="<?php echo $row['id']; ?>" <?php if (!empty($arrSearchPattern['planning_resources'][$strResourceType][$row['id']])) echo 'checked="checked"'; ?> onchange="javascript:$('planning_resource_list_form').onsubmit();" />
-                    <span><?php echo ploopi_htmlentities($row['label']); ?><span>
+                    <span><?php echo ovensia\ploopi\str::htmlentities($row['label']); ?><span>
                 </p>
                 <?php
             }
@@ -83,7 +83,7 @@ foreach ($arrResources as $strResourceType => $arrResourceType)
 ?>
 </form>
 
-<form id="planning_search_form" action="<?php echo ploopi_urlencode('admin-light.php?ploopi_op=planning_search'); ?>" method="post" onsubmit="javascript:ploopi_xmlhttprequest_submitform($('planning_search_form'), 'planning_search_result'); return false;">
+<form id="planning_search_form" action="<?php echo ovensia\ploopi\crypt::urlencode('admin-light.php?ploopi_op=planning_search'); ?>" method="post" onsubmit="javascript:ploopi_xmlhttprequest_submitform($('planning_search_form'), 'planning_search_result'); return false;">
 <p class="ploopi_va" style="border-width:1px 0;border-style:solid;border-color:#bbb;background-color:#ddd;">
     <img src="./modules/planning/img/ico_search.png" />
     <strong>Rechercher un événement</strong>

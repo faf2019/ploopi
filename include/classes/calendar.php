@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2008 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -20,6 +20,10 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+namespace ovensia\ploopi;
+
+use ovensia\ploopi;
+
 /**
  * Gestion de calendrier
  *
@@ -29,161 +33,6 @@
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
-
-
-/**
- * Classe de gestion des événements du calendrier
- */
-class calendarEvent
-{
-    /**
-     * Heure de début au format timestamp
-     */
-    private $intTimestpBegin;
-
-    /**
-     * Heure de fin au format timestamp
-     */
-    private $intTimestpEnd;
-
-    /**
-     * Titre
-     */
-    private $strTitle;
-
-    /**
-     * Contenu
-     */
-    private $strContent;
-
-    /**
-     * Canal de rattachement
-     */
-    private $strChannelId;
-
-    /**
-     * Options de l'événement
-     *
-     * @var array
-     */
-
-    private $arrOptions;
-
-
-    /**
-     * Constructeur de la classe
-     *
-     * @param int $intTimestpBegin Heure de début au format timestamp
-     * @param int $intTimestpEnd Heure de fin au format timestamp
-     * @param string $strTitle Titre
-     * @param string $strContent Contenu
-     * @param string $strChannelId Id du canal de rattachement
-     * @param array $arrOptions sarray('strColor', 'strOnClick', 'strHref', 'strOnClose', 'strStyle')
-     * @return calendarEvent
-     *
-     * Informations détaillées pour $arrOption :
-     * string 'strColor' Couleur au format #RRGGBB
-     * string 'strLabel' Contenu à afficher au survol (popup)
-     * string 'strOnClick' Fonction javascript à exécuter sur l'événement "onclick"
-     * string 'strHref' Lien href sur l'événement
-     * string 'strOnClose' Fonction javascript à exécuter sur l'événement "onclose"
-     * string 'strStyle' Styles complémentaires à appliquer
-     */
-
-    public function __construct($intTimestpBegin, $intTimestpEnd, $strTitle, $strContent, $strChannelId = null, $arrOptions = array())
-    {
-        $this->intTimestpBegin = $intTimestpBegin;
-        $this->intTimestpEnd = $intTimestpEnd;
-        $this->strTitle = $strTitle;
-        $this->strContent = $strContent;
-        $this->strChannelId = $strChannelId;
-
-        $this->arrOptions = array(
-            'strColor' => null,
-            'strLabel' => null,
-            'strHref' => null,
-            'strOnClick' => null,
-            'strOnClose' => null,
-            'arrOnDrop' => null,
-            'strStyle' => null
-        );
-
-        $this->setOptions($arrOptions);
-    }
-
-    /**
-     * Permet de définir les options :
-     *
-     * @param array $arrOptions tableau des options à modifier
-     */
-
-    public function setOptions($arrOptions)
-    {
-        $this->arrOptions = array_merge($this->arrOptions, $arrOptions);
-    }
-
-    public function getOptions()
-    {
-        return $this->arrOptions;
-    }
-
-    /**
-     * Getter par défaut
-     *
-     * @param string $strName nom de la propriété à lire
-     * @return string valeur de la propriété si elle existe
-     */
-    public function __get($strName)
-    {
-        if (isset($this->{$strName})) return $this->{$strName};
-        elseif (isset($this->arrOptions[$strName])) return $this->arrOptions[$strName];
-        else return null;
-    }
-}
-
-/**
- * Classe de gestion des canaux du calendrier
- */
-
-class calendarChannel
-{
-    /**
-     * Titre
-     */
-    private $strTitle;
-
-    /**
-     * Couleur
-     */
-    private $strColor;
-
-
-    /**
-     * Constructeur de la classe
-     *
-     * @param string $strTitle Titre
-     * @param string $strColor Couleur
-     *
-     * @return calendarChannel
-     */
-    public function __construct($strTitle = null, $strColor = null)
-    {
-        $this->strTitle = $strTitle;
-        $this->strColor = $strColor;
-    }
-
-    /**
-     * Getter par défaut
-     *
-     * @param string $strName nom de la propriété à lire
-     * @return string valeur de la propriété si elle existe
-     */
-    public function __get($strName)
-    {
-        if (isset($this->{$strName})) return $this->{$strName};
-        else return null;
-    }
-}
 
 /**
  * Classe d'affichage d'un calendrier/agenda
@@ -369,7 +218,7 @@ class calendar
         $arrEvents = $this->_prepare_events();
 
         // 1er jour de l'intervalle (timestp unix)
-        $firstday = ploopi_timestamp2unixtimestamp(sprintf("%0-14s", $this->arrOptions['strDateBegin']));
+        $firstday = date::timestamp2unixtimestamp(sprintf("%0-14s", $this->arrOptions['strDateBegin']));
 
         // jour/mois/année du 1er jour
         $firstday_d = date('j', $firstday);
@@ -377,7 +226,7 @@ class calendar
         $firstday_y = date('Y', $firstday);
 
         // Dernier jour de l'intervalle (timestp unix)
-        $lastday = ploopi_timestamp2unixtimestamp(sprintf("%0-14s", $this->arrOptions['strDateEnd']));
+        $lastday = date::timestamp2unixtimestamp(sprintf("%0-14s", $this->arrOptions['strDateEnd']));
 
         // Nombre de jours dans l'intervalles (bornes comprises)
         $intNbDays = floor(($lastday - $firstday) / 86400) + 1;
@@ -448,12 +297,12 @@ class calendar
                         $dateday = mktime(0, 0, 0, $firstday_m, $firstday_d + $d - 1, $firstday_y);
 
                         // Date locale
-                        $ldate = substr(ploopi_unixtimestamp2local($dateday), 0, 5);
+                        $ldate = substr(date::unixtimestamp2local($dateday), 0, 5);
 
                         $weekday = date('N', $dateday);
 
                         $extra_class = '';
-                        if (ploopi_holiday($dateday)) $extra_class = ' day_header_holiday';
+                        if (date::holiday($dateday)) $extra_class = ' day_header_holiday';
                         else
                         {
                             if ($weekday > 5) $extra_class = ' day_header_weekend';
@@ -497,7 +346,7 @@ class calendar
                             $channel_style = "{$strBgColor}width:{$intChannelWidth}px;height:".($this->arrOptions['intChannelsLabelHeight'] - 1)."px;left:{$intLeft}px;";
                             ?>
 
-                            <div class="channel" style="<?php echo $channel_style; ?>"><?php echo ploopi_htmlentities($objChannel->strTitle); ?></div>
+                            <div class="channel" style="<?php echo $channel_style; ?>"><?php echo str::htmlentities($objChannel->strTitle); ?></div>
                             <?php
                             // Position du prochain canal
                             $intLeft = $intLeft + $intChannelWidth + 1;
@@ -556,7 +405,7 @@ class calendar
                     $dateday = mktime(0, 0, 0, $firstday_m, $firstday_d + $d - 1, $firstday_y);
 
                     $extra_class = '';
-                    if (ploopi_holiday($dateday)) $extra_class = ' day_holiday';
+                    if (date::holiday($dateday)) $extra_class = ' day_holiday';
                     else
                     {
                         $weekday = date('N', $dateday);
@@ -613,15 +462,15 @@ class calendar
                                     {
                                         if (!empty($this->arrEvents[$intId]))
                                         {
-                                            $arrDateBegin = ploopi_timestamp2local($this->arrEvents[$intId]->intTimestpBegin);
-                                            $arrDateEnd = ploopi_timestamp2local($this->arrEvents[$intId]->intTimestpEnd);
+                                            $arrDateBegin = date::timestamp2local($this->arrEvents[$intId]->intTimestpBegin);
+                                            $arrDateEnd = date::timestamp2local($this->arrEvents[$intId]->intTimestpEnd);
 
                                             // Détermination heure de début (ajustement de l'heure de début en fonction de la date de l'événement)
-                                            $intTsDateBegin = ploopi_timestamp2unixtimestamp($this->arrEvents[$intId]->intTimestpBegin);
+                                            $intTsDateBegin = date::timestamp2unixtimestamp($this->arrEvents[$intId]->intTimestpBegin);
                                             $floTimeBegin = (substr($this->arrEvents[$intId]->intTimestpBegin, 0 ,8) == $strEventsKey) ? date('G', $intTsDateBegin) + (intval(date('i', $intTsDateBegin), 10) / 60) : 0 ;
 
                                             // Détermination heure de fin (ajustement de l'heure de fin en fonction de la date de l'événement)
-                                            $intTsDateEnd = ploopi_timestamp2unixtimestamp($this->arrEvents[$intId]->intTimestpEnd);
+                                            $intTsDateEnd = date::timestamp2unixtimestamp($this->arrEvents[$intId]->intTimestpEnd);
                                             $floTimeEnd = (substr($this->arrEvents[$intId]->intTimestpEnd, 0 ,8) == $strEventsKey) ? date('G', $intTsDateEnd) + (intval(date('i', $intTsDateEnd), 10) / 60) : 24;
 
                                             // On adapte ensuite les heures de début/fin aux limites d'affichage du planning
@@ -638,7 +487,7 @@ class calendar
                                             $intEventHeight = floor($floTimeLength * $intHourHeight);
 
                                             ?>
-                                            <div class="event" id="calendar_event<?php echo $intId; ?>" style="top:<?php echo $intEventTop; ?>px;height:<?php echo $intEventHeight - 1; ?>px;width:<?php echo $intChannelWidth; ?>px;background-color:<?php echo ploopi_htmlentities($this->arrEvents[$intId]->strColor); ?>;">
+                                            <div class="event" id="calendar_event<?php echo $intId; ?>" style="top:<?php echo $intEventTop; ?>px;height:<?php echo $intEventHeight - 1; ?>px;width:<?php echo $intChannelWidth; ?>px;background-color:<?php echo str::htmlentities($this->arrEvents[$intId]->strColor); ?>;">
 
                                                 <?php if ($this->arrEvents[$intId]->strTitle != '') { ?>
                                                     <div class="event_title" id="calendar_event<?php echo $intId; ?>_handle"  style="overflow:hidden;height:16px;line-height:16px;<?php echo !is_null($this->arrEvents[$intId]->arrOnDrop) ? 'cursor:move;' : ''; ?>">
@@ -866,10 +715,10 @@ class calendar
                     $d = date('j', $strTs);
 
                     // Date au format local
-                    $date = substr(ploopi_unixtimestamp2local($strTs), 0, 10);
+                    $date = substr(date::unixtimestamp2local($strTs), 0, 10);
 
                     $extra_class = '';
-                    if (ploopi_holiday($strTs)) $extra_class = ' day_holiday';
+                    if (date::holiday($strTs)) $extra_class = ' day_holiday';
                     else
                     {
                         if ($c > 5) $extra_class = ' day_weekend';
@@ -878,7 +727,7 @@ class calendar
                     <div class="day<?php echo $extra_class; ?>" title="<?php echo $date ?>" style="<?php echo $strDayStyle; ?>">
                         <div class="day_num_grayed"><?php echo $d; ?></div>
                         <?php
-                        $strEventsKey = substr(ploopi_unixtimestamp2timestamp($strTs), 0, 8);
+                        $strEventsKey = substr(date::unixtimestamp2timestamp($strTs), 0, 8);
                         if (!empty($arrEvents[$strEventsKey])) $this->_display_month_events($arrEvents[$strEventsKey]);
                         ?>
                     </div>
@@ -911,11 +760,11 @@ class calendar
                 }
 
                 // Date au format local
-                $date = current(ploopi_timestamp2local($ts = sprintf("%04d%02d%02d000000",$this->arrOptions['intYear'], $this->arrOptions['intMonth'], $d)));
-                $dateday = ploopi_timestamp2unixtimestamp($ts);
+                $date = current(date::timestamp2local($ts = sprintf("%04d%02d%02d000000",$this->arrOptions['intYear'], $this->arrOptions['intMonth'], $d)));
+                $dateday = date::timestamp2unixtimestamp($ts);
 
                 $extra_class = '';
-                if (ploopi_holiday($dateday)) $extra_class = ' day_holiday';
+                if (date::holiday($dateday)) $extra_class = ' day_holiday';
                 else
                 {
                     if ($weekday > 5) $extra_class = ' day_weekend';
@@ -946,10 +795,10 @@ class calendar
                     $d = date('j', $strTs);
 
                     // Date au format local
-                    $date = substr(ploopi_unixtimestamp2local($strTs), 0, 10);
+                    $date = substr(date::unixtimestamp2local($strTs), 0, 10);
 
                     $extra_class = '';
-                    if (ploopi_holiday($strTs)) $extra_class = ' day_holiday';
+                    if (date::holiday($strTs)) $extra_class = ' day_holiday';
                     else
                     {
                         if ($c > 5) $extra_class = ' day_weekend';
@@ -958,7 +807,7 @@ class calendar
                     <div class="day<?php echo $extra_class; ?>" title="<?php echo $date ?>" style="<?php echo $strDayStyle; ?>">
                         <div class="day_num_grayed"><?php echo $d; ?></div>
                         <?php
-                        $strEventsKey = substr(ploopi_unixtimestamp2timestamp($strTs), 0, 8);
+                        $strEventsKey = substr(date::unixtimestamp2timestamp($strTs), 0, 8);
                         if (!empty($arrEvents[$strEventsKey])) $this->_display_month_events($arrEvents[$strEventsKey]);
                         ?>
                         </div>
@@ -986,11 +835,11 @@ class calendar
             {
                 if (!empty($this->arrEvents[$intId]))
                 {
-                    $arrDateBegin = ploopi_timestamp2local($this->arrEvents[$intId]->intTimestpBegin);
-                    $arrDateEnd = ploopi_timestamp2local($this->arrEvents[$intId]->intTimestpEnd);
+                    $arrDateBegin = date::timestamp2local($this->arrEvents[$intId]->intTimestpBegin);
+                    $arrDateEnd = date::timestamp2local($this->arrEvents[$intId]->intTimestpEnd);
                     ?>
                     <a class="event" href="<?php echo $this->arrEvents[$intId]->strHref; ?>" <?php if (!is_null($this->arrEvents[$intId]->strOnClick)) {?>onclick="<?php echo $this->arrEvents[$intId]->strOnClick; ?>"<?php } ?>>
-                        <div class="event_inner" style="background-color:<?php echo ploopi_htmlentities($this->arrEvents[$intId]->strColor); ?>;" <?php if (!empty($this->arrEvents[$intId]->strStyle)) {?>style="<?php echo $this->arrEvents[$intId]->strStyle; ?>"<?php } ?>>
+                        <div class="event_inner" style="background-color:<?php echo str::htmlentities($this->arrEvents[$intId]->strColor); ?>;" <?php if (!empty($this->arrEvents[$intId]->strStyle)) {?>style="<?php echo $this->arrEvents[$intId]->strStyle; ?>"<?php } ?>>
                             <?php
                             echo str_replace(
                                 array('<date_begin>', '<date_end>', '<time_begin>', '<time_end>'),
@@ -1026,7 +875,7 @@ class calendar
                 // Si l'événement tient sur plusieurs jours on l'affecte pour chaque jour
                 do {
                     $arrEvents[substr($currentday, 0, 8)][$objEvent->strChannelId][] = $key;
-                    $currentday = ploopi_timestamp_add($currentday, 0, 0, 0, 0, 1, 0);
+                    $currentday = date::timestamp_add($currentday, 0, 0, 0, 0, 1, 0);
                 } while ($currentday <= $objEvent->intTimestpEnd);
             }
 
@@ -1056,7 +905,7 @@ class calendar
                 // Si l'événement tient sur plusieurs jours on l'affecte pour chaque jour
                 do {
                     $arrEvents[substr($currentday, 0, 8)][] = $key;
-                    $currentday = ploopi_timestamp_add($currentday, 0, 0, 0, 0, 1, 0);
+                    $currentday = date::timestamp_add($currentday, 0, 0, 0, 0, 1, 0);
                 } while ($currentday <= $objEvent->intTimestpEnd);
             }
 

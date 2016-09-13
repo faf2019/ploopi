@@ -32,12 +32,6 @@
  */
 
 /**
- * Inclusion de la classe parent.
- */
-
-include_once './include/classes/data_object.php';
-
-/**
  * Classe d'accès à la table ploopi_mod_webedit_article_backup
  *
  * @package webedit
@@ -47,7 +41,7 @@ include_once './include/classes/data_object.php';
  * @author Stéphane Escaich
  */
 
-class webedit_article_backup extends data_object
+class webedit_article_backup extends ovensia\ploopi\data_object
 {
     /**
      * Contructeur de la classe

@@ -34,10 +34,6 @@
  * Inclusions
  */
 
-include_once './include/classes/data_object.php';
-include_once './include/classes/data_object_collection.php';
-include_once './include/classes/query.php';
-
 include_once './modules/forms/classes/formsForm.php';
 include_once './modules/forms/classes/formsRecord.php';
 include_once './modules/forms/classes/formsArithmeticParser.php';
@@ -52,7 +48,7 @@ include_once './modules/forms/classes/formsArithmeticParser.php';
  * @author Stéphane Escaich
  */
 
-class formsField extends data_object
+class formsField extends ovensia\ploopi\data_object
 {
 
     private $_strOriginalFieldName;
@@ -80,7 +76,7 @@ class formsField extends data_object
 
     private static function _updateFormulas($arrPositions)
     {
-        $objCol = new data_object_collection('formsField');
+        $objCol = new ovensia\ploopi\data_object_collection('formsField');
         $objCol->add_where("type = 'calculation'");
         $objCol->add_where("formula != ''");
         foreach($objCol->get_objects() as $objField)
@@ -149,7 +145,7 @@ class formsField extends data_object
      */
     public function openByPos($intPos)
     {
-        $objCol = new data_object_collection('formsField');
+        $objCol = new ovensia\ploopi\data_object_collection('formsField');
         $objCol->add_where('position = %d', $intPos);
         $objField = current($objCol->get_objects());
         return $objField === false ? false : $this->open($objField->fields['id']);
@@ -368,9 +364,9 @@ class formsField extends data_object
              * Ajout d'un préfixe obligatoire "form_"
              */
 
-            $strFieldName = substr('_'.trim(preg_replace("/[^[:alnum:]]+/", "_", ploopi_convertaccents(strtolower(trim($this->fields['name'])))), '_'), 0, 60);
+            $strFieldName = substr('_'.trim(preg_replace("/[^[:alnum:]]+/", "_", ovensia\ploopi\str::convertaccents(strtolower(trim($this->fields['name'])))), '_'), 0, 60);
         }
-        else $strFieldName = $strFieldName = substr('_'.trim(preg_replace("/[^[:alnum:]]+/", "_", ploopi_convertaccents(strtolower(trim($this->fields['fieldname'])))), '_'), 0, 60);
+        else $strFieldName = $strFieldName = substr('_'.trim(preg_replace("/[^[:alnum:]]+/", "_", ovensia\ploopi\str::convertaccents(strtolower(trim($this->fields['fieldname'])))), '_'), 0, 60);
 
 
         // Fix spécial doublon
@@ -379,7 +375,7 @@ class formsField extends data_object
         /**
          * Vérification de l'unicité
          */
-        $objQuery = new ploopi_query_select();
+        $objQuery = new ovensia\ploopi\query_select();
         $objQuery->add_select('count(*) as c');
         $objQuery->add_from('ploopi_mod_forms_field');
         if (!$this->isnew()) $objQuery->add_where('id != %d', $this->fields['id']);
@@ -470,7 +466,7 @@ class formsField extends data_object
         $objForm = new formsForm();
         if ($objForm->open($this->fields['id_form']))
         {
-            $objQuery = new ploopi_query_select();
+            $objQuery = new ovensia\ploopi\query_select();
             $objQuery->add_from($objForm->getDataTableName());
             $objQuery->add_select(($booDistinct ? 'DISTINCT ' : '').$this->fields['fieldname']);
             $objQuery->add_orderby($this->fields['fieldname']);
@@ -492,7 +488,7 @@ class formsField extends data_object
         $objForm = new formsForm();
         if ($objForm->open($this->fields['id_form']))
         {
-            $objQuery = new ploopi_query_select();
+            $objQuery = new ovensia\ploopi\query_select();
             $objQuery->add_from($objForm->getDataTableName());
             switch(strtoupper($strFunction))
             {

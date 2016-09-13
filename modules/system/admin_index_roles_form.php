@@ -53,7 +53,7 @@ $modules = $workspace->getmodules();
 
             if ($op == 'modify_role')
             {
-                if (empty($_GET['roleid']) || !is_numeric($_GET['roleid'])) ploopi_redirect('admin.php');
+                if (empty($_GET['roleid']) || !is_numeric($_GET['roleid'])) ovensia\ploopi\output::redirect('admin.php');
 
                 // ouverture du role
                 $role->open($_GET['roleid']);
@@ -61,7 +61,7 @@ $modules = $workspace->getmodules();
             }
             else
             {
-                if (empty($_POST['role_id_module']) || !is_numeric($_POST['role_id_module']) || !isset($modules[$_POST['role_id_module']])) ploopi_redirect('admin.php');
+                if (empty($_POST['role_id_module']) || !is_numeric($_POST['role_id_module']) || !isset($modules[$_POST['role_id_module']])) ovensia\ploopi\output::redirect('admin.php');
 
                 // nouveau role
                 $role->init_description();
@@ -71,18 +71,18 @@ $modules = $workspace->getmodules();
 
             $module = &$modules[$role->fields['id_module']];
             ?>
-            <div style="font-weight:bold;margin-bottom:4px;"><?php echo ploopi_htmlentities("{$module['instancename']} ({$module['label']})"); ?></div>
+            <div style="font-weight:bold;margin-bottom:4px;"><?php echo ovensia\ploopi\str::htmlentities("{$module['instancename']} ({$module['label']})"); ?></div>
 
-            <form action="<?php echo ploopi_urlencode('admin.php'); ?>" method="post" onsubmit="return role_validate(this);">
+            <form action="<?php echo ovensia\ploopi\crypt::urlencode('admin.php'); ?>" method="post" onsubmit="return role_validate(this);">
             <input type="hidden" name="op" value="save_role">
             <input type="hidden" name="roleid" value="<?php echo $role->fields['id']; ?>">
             <input type="hidden" name="role_id_module" value="<?php echo $role->fields['id_module']; ?>">
 
             <label><?php echo _SYSTEM_LABEL_LABEL; ?>:</label>
-            <input type="text" class="text" name="role_label" style="width:300px;margin-bottom:4px;display:block;" value="<?php echo ploopi_htmlentities($role->fields['label']); ?>">
+            <input type="text" class="text" name="role_label" style="width:300px;margin-bottom:4px;display:block;" value="<?php echo ovensia\ploopi\str::htmlentities($role->fields['label']); ?>">
 
             <label><?php echo _SYSTEM_LABEL_DESCRIPTION; ?>:</label>
-            <textarea class="text" name="role_description" style="width:300px;height:50px;margin-bottom:4px;display:block;"><?php echo ploopi_htmlentities($role->fields['description']); ?></textarea>
+            <textarea class="text" name="role_description" style="width:300px;height:50px;margin-bottom:4px;display:block;"><?php echo ovensia\ploopi\str::htmlentities($role->fields['description']); ?></textarea>
 
             <p class="ploopi_va">
                 <input type="checkbox" name="role_shared" id="role_shared" value="1" <?php if ($role->fields['shared']) echo 'checked'; ?>>
@@ -91,23 +91,23 @@ $modules = $workspace->getmodules();
             <div style="margin:4px 0;font-weight:bold;">Choix des Actions : <a href="javascript:void(0);" onclick="javascript:system_checkall('input.role_action', true);">cocher tout</a> / <a href="javascript:void(0);" onclick="javascript:system_checkall('input.role_action', false);">décocher tout</a></div>
 
             <?php
-            $module_type = new module_type();
+            $module_type = new ovensia\ploopi\module_type();
             $module_type->open($module['id_module_type']);
             $actions = $module_type->getactions();
 
-            //ploopi_print_r($actions);
+            //ovensia\ploopi\output::print_r($actions);
             foreach ($actions as $id => $action)
             {
                 ?>
                 <p class="ploopi_va">
-                    <input type="checkbox" class="role_action" id="role_action_<?php echo $action['id_action']; ?>" name="id_action[]" <?php echo (isset($actions_checked[$id])) ? 'checked' : ''; ?> value="<?php echo ploopi_htmlentities($action['id_action']); ?>">
-                    <span style="cursor:pointer;" onclick="javascript:$('role_action_<?php echo $action['id_action']; ?>').checked = !$('role_action_<?php echo $action['id_action']; ?>').checked;"><?php echo ploopi_htmlentities("{$action['id_action']} - {$action['label']}"); ?></span>
+                    <input type="checkbox" class="role_action" id="role_action_<?php echo $action['id_action']; ?>" name="id_action[]" <?php echo (isset($actions_checked[$id])) ? 'checked' : ''; ?> value="<?php echo ovensia\ploopi\str::htmlentities($action['id_action']); ?>">
+                    <span style="cursor:pointer;" onclick="javascript:$('role_action_<?php echo $action['id_action']; ?>').checked = !$('role_action_<?php echo $action['id_action']; ?>').checked;"><?php echo ovensia\ploopi\str::htmlentities("{$action['id_action']} - {$action['label']}"); ?></span>
                 </p>
                 <?php
             }
             ?>
             <div style="padding:4px 2px;">
-                <input type="button" class="button" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?roleTabItem=tabRoleManagement"); ?>';">
+                <input type="button" class="button" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<?php echo ovensia\ploopi\crypt::urlencode("admin.php?roleTabItem=tabRoleManagement"); ?>';">
                 <input type="submit" class="button" value="<?php echo _PLOOPI_SAVE; ?>">
             </div>
             </form>
@@ -116,7 +116,7 @@ $modules = $workspace->getmodules();
 
         default:
             ?>
-            <form action="<?php echo ploopi_urlencode('admin.php'); ?>" method="post">
+            <form action="<?php echo ovensia\ploopi\crypt::urlencode('admin.php'); ?>" method="post">
             <input type="hidden" name="op" value="add_role">
             <div style="margin-bottom:4px;">
                 <select class="select" name="role_id_module">
@@ -124,14 +124,14 @@ $modules = $workspace->getmodules();
                 foreach($modules as $module)
                 {
                     ?>
-                    <option value="<?php echo $module['instanceid']; ?>"><?php echo ploopi_htmlentities("{$module['instancename']} ({$module['label']})"); ?></option>
+                    <option value="<?php echo $module['instanceid']; ?>"><?php echo ovensia\ploopi\str::htmlentities("{$module['instancename']} ({$module['label']})"); ?></option>
                     <?php
                 }
                 ?>
                 </select>
             </div>
             <div style="padding:4px 2px;">
-                <input type="button" class="button" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?roleTabItem=tabRoleManagement"); ?>';">
+                <input type="button" class="button" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<?php echo ovensia\ploopi\crypt::urlencode("admin.php?roleTabItem=tabRoleManagement"); ?>';">
                 <input type="submit" class="button" value="Suivant">
             </div>
             </form>

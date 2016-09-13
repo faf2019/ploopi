@@ -41,7 +41,7 @@ if ($_SESSION['ploopi']['connected'])
      * On verifie qu'on est bien dans le module Directory
      */
 
-    if (ploopi_ismoduleallowed('directory'))
+    if (ovensia\ploopi\acl::ismoduleallowed('directory'))
     {
         switch($ploopi_op)
         {
@@ -62,7 +62,7 @@ if ($_SESSION['ploopi']['connected'])
                 <div class="ploopi_form">
                     <p>
                         <label>Libellé:</label>
-                        <input type="text" class="text" name="directory_list_label" value="<?php echo ploopi_htmlentities($directory_list->fields['label']); ?>">
+                        <input type="text" class="text" name="directory_list_label" value="<?php echo ovensia\ploopi\str::htmlentities($directory_list->fields['label']); ?>">
                     </p>
                 </div>
                 <div style="padding:0 4px 4px 0;text-align:right">
@@ -85,7 +85,7 @@ if ($_SESSION['ploopi']['connected'])
                 $content = ob_get_contents();
                 ob_end_clean();
                 echo $skin->create_popup($title , $content, 'popup_directory_list_form');
-                ploopi_die();
+                ovensia\ploopi\system::kill();
             break;
 
             case 'directory_list_save':
@@ -99,7 +99,7 @@ if ($_SESSION['ploopi']['connected'])
                 $directory_list->setvalues($_POST, 'directory_list_');
                 $directory_favorites_id_list = $directory_list->save();
 
-                ploopi_redirect("admin.php?directoryTabItem=tabFavorites&directory_favorites_id_list={$directory_favorites_id_list}");
+                ovensia\ploopi\output::redirect("admin.php?directoryTabItem=tabFavorites&directory_favorites_id_list={$directory_favorites_id_list}");
             break;
 
             case 'directory_getlists':
@@ -111,7 +111,7 @@ if ($_SESSION['ploopi']['connected'])
                 {
                     $where = "AND f.id_contact = {$_GET['directory_favorites_id_contact']}";
                 }
-                else ploopi_die();
+                else ovensia\ploopi\system::kill();
 
                 // get lists
                $sql =  "
@@ -140,7 +140,7 @@ if ($_SESSION['ploopi']['connected'])
                 $intUserId = empty($_GET['directory_favorites_id_user']) ? 0 : $_GET['directory_favorites_id_user'];
                 $intContactId = empty($_GET['directory_favorites_id_contact']) ? 0 : $_GET['directory_favorites_id_contact'];
                 ?>
-                <form action="<?php echo ploopi_urlencode("admin.php?ploopi_op=directory_favorites_add&directory_favorites_id_user={$intUserId}&directory_favorites_id_contact={$intContactId}"); ?>" method="post">
+                <form action="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?ploopi_op=directory_favorites_add&directory_favorites_id_user={$intUserId}&directory_favorites_id_contact={$intContactId}"); ?>" method="post">
                     <div style="padding:4px;background-color:#e0e0e0;border-bottom:1px solid #c0c0c0;">
                         <span style="font-weight:bold;">Modifier les rattachements :</span>
                         <br /><i>Choix d'une ou plusieurs listes</i>
@@ -150,7 +150,7 @@ if ($_SESSION['ploopi']['connected'])
                     {
                         ?>
                         <div style="padding:4px;">
-                            <a href="<?php echo ploopi_urlencode("admin.php?directoryTabItem=tabFavorites"); ?>"><i>Attention, vous devez ajouter au moins une liste pour gérer vos favoris !</i></a>
+                            <a href="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?directoryTabItem=tabFavorites"); ?>"><i>Attention, vous devez ajouter au moins une liste pour gérer vos favoris !</i></a>
                         </div>
                         <?php
                     }
@@ -170,7 +170,7 @@ if ($_SESSION['ploopi']['connected'])
                             ?>
                             <div class="directory_checkbox" onclick="javascript:directory_checklist('<?php echo $row['id']; ?>');">
                                 <input type="checkbox" class="directory_id_list" id="directory_id_list<?php echo $row['id']; ?>" name="directory_favorites_id_list[]" value="<?php echo $row['id']; ?>" onclick="javascript:directory_checklist('<?php echo $row['id']; ?>');" <?php if ($row['nbfav']>0) echo 'checked'; ?> />
-                                <span><?php echo ploopi_htmlentities($row['label']); ?></span>
+                                <span><?php echo ovensia\ploopi\str::htmlentities($row['label']); ?></span>
                             </div>
                             <?php
                         }
@@ -189,22 +189,22 @@ if ($_SESSION['ploopi']['connected'])
                     </div>
                 </form>
                 <?php
-                ploopi_die();
+                ovensia\ploopi\system::kill();
             break;
 
             case 'directory_favorites':
-                ploopi_init_module('directory');
+                ovensia\ploopi\module::init('directory');
                 include_once './modules/directory/public_favorites.php';
-                ploopi_die();
+                ovensia\ploopi\system::kill();
             break;
 
             case 'directory_view':
                 if ((!empty($_GET['directory_id_contact']) && is_numeric($_GET['directory_id_contact'])) || (!empty($_GET['directory_id_user']) && is_numeric($_GET['directory_id_user'])))
                 {
-                    ploopi_init_module('directory');
+                    ovensia\ploopi\module::init('directory');
                     include './modules/directory/public_directory_view.php';
                 }
-                ploopi_die();
+                ovensia\ploopi\system::kill();
             break;
 
             case 'directory_modify':
@@ -212,7 +212,7 @@ if ($_SESSION['ploopi']['connected'])
                 {
                     ob_start();
 
-                    ploopi_init_module('directory');
+                    ovensia\ploopi\module::init('directory');
                     include_once './modules/directory/class_directory_contact.php';
 
                     $directory_contact = new directory_contact();
@@ -230,11 +230,11 @@ if ($_SESSION['ploopi']['connected'])
                     echo $skin->create_popup("Modification d'un contact", $content, 'popup_directory_modify');
                 }
 
-                ploopi_die();
+                ovensia\ploopi\system::kill();
             break;
 
             case 'directory_contact_save':
-                ploopi_init_module('directory', false, false, false);
+                ovensia\ploopi\module::init('directory', false, false, false);
 
                 include_once './modules/directory/class_directory_contact.php';
                 include_once './modules/directory/class_directory_heading.php';
@@ -265,40 +265,40 @@ if ($_SESSION['ploopi']['connected'])
                 $directory_contact->setuwm();
                 $directory_contact->save($booForcePos);
 
-                ploopi_create_user_action_log(empty($_GET['directory_contact_id']) ? _DIRECTORY_ACTION_CONTACT_ADD : _DIRECTORY_ACTION_CONTACT_MODIFY, "{$directory_contact->fields['lastname']} {$directory_contact->fields['firstname']} (id:{$directory_contact->fields['id']})");
+                ovensia\ploopi\user_action_log::record(empty($_GET['directory_contact_id']) ? _DIRECTORY_ACTION_CONTACT_ADD : _DIRECTORY_ACTION_CONTACT_MODIFY, "{$directory_contact->fields['lastname']} {$directory_contact->fields['firstname']} (id:{$directory_contact->fields['id']})");
 
                 // Photo ?
                 if (!empty($_SESSION['directory']['contact_photopath']))
                 {
-                    ploopi_makedir(_PLOOPI_PATHDATA._PLOOPI_SEP.'directory');
+                    ovensia\ploopi\fs::makedir(_PLOOPI_PATHDATA._PLOOPI_SEP.'directory');
 
                     // photo temporaire présente => copie dans le dossier définitif
                     rename($_SESSION['directory']['contact_photopath'], $directory_contact->getphotopath());
                     unset($_SESSION['directory']['contact_photopath']);
                 }
 
-                if (ploopi_getsessionvar("deletephoto_{$_GET['directory_contact_id']}"))
+                if (ovensia\ploopi\session::getvar("deletephoto_{$_GET['directory_contact_id']}"))
                 {
-                    ploopi_setsessionvar("deletephoto_{$_GET['directory_contact_id']}", 0);
+                    ovensia\ploopi\session::setvar("deletephoto_{$_GET['directory_contact_id']}", 0);
                     $directory_contact->deletephoto();
                 }
 
-                ploopi_redirect('admin.php');
+                ovensia\ploopi\output::redirect('admin.php');
             break;
 
             case 'directory_contact_delete':
-                ploopi_init_module('directory', false, false, false);
+                ovensia\ploopi\module::init('directory', false, false, false);
                 include_once './modules/directory/class_directory_contact.php';
 
                 if (!empty($_GET['directory_contact_id']) && is_numeric($_GET['directory_contact_id']))
                 {
                     $directory_contact = new directory_contact();
                     if ($directory_contact->open($_GET['directory_contact_id'])) {
-                        ploopi_create_user_action_log(_DIRECTORY_ACTION_CONTACT_DELETE, "{$directory_contact->fields['lastname']} {$directory_contact->fields['firstname']} (id:{$directory_contact->fields['id']})");
+                        ovensia\ploopi\user_action_log::record(_DIRECTORY_ACTION_CONTACT_DELETE, "{$directory_contact->fields['lastname']} {$directory_contact->fields['firstname']} (id:{$directory_contact->fields['id']})");
                         $directory_contact->delete();
                     }
                 }
-                ploopi_redirect('admin.php');
+                ovensia\ploopi\output::redirect('admin.php');
             break;
 
             case 'directory_favorites_add':
@@ -336,7 +336,7 @@ if ($_SESSION['ploopi']['connected'])
                         }
                     }
                 }
-                ploopi_redirect('admin.php');
+                ovensia\ploopi\output::redirect('admin.php');
             break;
 
             case 'directory_list_delete':
@@ -347,17 +347,17 @@ if ($_SESSION['ploopi']['connected'])
                     $directory_list = new directory_list();
                     if ($directory_list->open($_GET['directory_favorites_id_list'])) $directory_list->delete();
                 }
-                ploopi_redirect("admin.php?directoryTabItem=tabFavorites");
+                ovensia\ploopi\output::redirect("admin.php?directoryTabItem=tabFavorites");
             break;
 
             case 'directory_choose_photo':
-                if (empty($_GET['directory_photo_id'])) ploopi_die();
+                if (empty($_GET['directory_photo_id'])) ovensia\ploopi\system::kill();
 
                 // Popup de choix d'une photo pour un utilisateur
                 ob_start();
-                ploopi_init_module('directory');
+                ovensia\ploopi\module::init('directory');
                 ?>
-                <form action="<?php echo ploopi_urlencode("admin.php?ploopi_op=directory_send_photo&directory_photo_id={$_GET['directory_photo_id']}"); ?>" method="post" enctype="multipart/form-data" target="directory_contact_photo_iframe">
+                <form action="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?ploopi_op=directory_send_photo&directory_photo_id={$_GET['directory_photo_id']}"); ?>" method="post" enctype="multipart/form-data" target="directory_contact_photo_iframe">
                 <p class="ploopi_va" style="padding:2px;">
                     <label><?php echo _DIRECTORY_PHOTO; ?>: </label>
                     <input type="file" name="directory_contact_photo" />
@@ -370,7 +370,7 @@ if ($_SESSION['ploopi']['connected'])
                 ob_end_clean();
 
                 echo $skin->create_popup("Chargement d'une nouvelle photo", $content, 'popup_directory_choose_photo');
-                ploopi_die();
+                ovensia\ploopi\system::kill();
             break;
 
             case 'directory_send_photo':
@@ -379,47 +379,47 @@ if ($_SESSION['ploopi']['connected'])
                 if (!empty($_GET['directory_photo_id']))
                 {
                     // reset suppression
-                    ploopi_setsessionvar("deletephoto_{$_GET['directory_photo_id']}", 0);
+                    ovensia\ploopi\session::setvar("deletephoto_{$_GET['directory_photo_id']}", 0);
 
                     // On vérifie qu'un fichier a bien été uploadé
                     if (!empty($_FILES['directory_contact_photo']['tmp_name']))
                     {
                         $strTmpPath = _PLOOPI_PATHDATA._PLOOPI_SEP.'tmp';
-                        ploopi_makedir($strTmpPath);
+                        ovensia\ploopi\fs::makedir($strTmpPath);
                         $_SESSION['directory']['contact_photopath'] = tempnam($strTmpPath, '');
-                        ploopi_resizeimage($_FILES['directory_contact_photo']['tmp_name'], 0, 100, 150, 'png', 0, $_SESSION['directory']['contact_photopath']);
+                        ovensia\ploopi\image::resize($_FILES['directory_contact_photo']['tmp_name'], 0, 100, 150, 'png', 0, $_SESSION['directory']['contact_photopath']);
                     }
                     ?>
                     <script type="text/javascript">
                         new function() {
-                            window.parent.ploopi_getelem('directory_contact_photo<?php echo ploopi_htmlentities($_GET['directory_photo_id']); ?>', window.parent.document).innerHTML = '<img src="<?php echo ploopi_urlencode('admin-light.php?ploopi_op=directory_get_photo&'.ploopi_createtimestamp()); ?>" />';
+                            window.parent.ploopi_getelem('directory_contact_photo<?php echo ovensia\ploopi\str::htmlentities($_GET['directory_photo_id']); ?>', window.parent.document).innerHTML = '<img src="<?php echo ovensia\ploopi\crypt::urlencode('admin-light.php?ploopi_op=directory_get_photo&'.ovensia\ploopi\date::createtimestamp()); ?>" />';
                             window.parent.ploopi_hidepopup('popup_directory_choose_photo');
                         }
                     </script>
                     <?php
                 }
-                ploopi_die();
+                ovensia\ploopi\system::kill();
             break;
 
             case 'directory_delete_photo':
                 // demande de suppression d'une photo
                 if (!empty($_GET['directory_contact_id']) && is_numeric($_GET['directory_contact_id']))
                 {
-                    ploopi_setsessionvar("deletephoto_{$_GET['directory_contact_id']}", 1);
+                    ovensia\ploopi\session::setvar("deletephoto_{$_GET['directory_contact_id']}", 1);
                     $_SESSION['directory']['contact_photopath'] = '';
                 }
-                ploopi_die();
+                ovensia\ploopi\system::kill();
             break;
 
             case 'directory_get_photo':
                 // Envoi de la photo temporaire vers le client
-                if (!empty($_SESSION['directory']['contact_photopath'])) ploopi_downloadfile($_SESSION['directory']['contact_photopath'], 'contact.png', false, false);
-                ploopi_die();
+                if (!empty($_SESSION['directory']['contact_photopath'])) ovensia\ploopi\fs::downloadfile($_SESSION['directory']['contact_photopath'], 'contact.png', false, false);
+                ovensia\ploopi\system::kill();
             break;
 
             // Gestion des rubriques
             case 'directory_heading_detail':
-                ploopi_init_module('directory');
+                ovensia\ploopi\module::init('directory');
                 if (!empty($_GET['directory_heading_id']))
                 {
                     if (!empty($_GET['directory_option']) && $_GET['directory_option'] == 'popup')
@@ -433,27 +433,27 @@ if ($_SESSION['ploopi']['connected'])
                         echo $skin->display_treeview($treeview['list'], $treeview['tree'], null, $_GET['directory_heading_id']);
                     }
                 }
-                ploopi_die();
+                ovensia\ploopi\system::kill();
             break;
 
             case 'directory_heading_delete':
-                ploopi_init_module('directory', false, false, false);
+                ovensia\ploopi\module::init('directory', false, false, false);
                 include_once './modules/directory/class_directory_heading.php';
 
                 $objHeading = new directory_heading();
-                if (empty($_GET['directory_heading_id']) || !is_numeric($_GET['directory_heading_id']) || !$objHeading->open($_GET['directory_heading_id'])) ploopi_redirect('admin.php');
+                if (empty($_GET['directory_heading_id']) || !is_numeric($_GET['directory_heading_id']) || !$objHeading->open($_GET['directory_heading_id'])) ovensia\ploopi\output::redirect('admin.php');
 
                 $intIdParent = $objHeading->fields['id_heading'];
 
-                ploopi_create_user_action_log(_DIRECTORY_ACTION_HEADING_DELETE, "{$objHeading->fields['label']} (id:{$objHeading->fields['id']}, pos:{$objHeading->fields['position']})");
+                ovensia\ploopi\user_action_log::record(_DIRECTORY_ACTION_HEADING_DELETE, "{$objHeading->fields['label']} (id:{$objHeading->fields['id']}, pos:{$objHeading->fields['position']})");
 
                 $objHeading->delete();
 
-                ploopi_redirect("admin.php?directoryTabItem=tabSharedContacts&directory_heading_id={$intIdParent}");
+                ovensia\ploopi\output::redirect("admin.php?directoryTabItem=tabSharedContacts&directory_heading_id={$intIdParent}");
             break;
 
             case 'directory_heading_add':
-                ploopi_init_module('directory', false, false, false);
+                ovensia\ploopi\module::init('directory', false, false, false);
                 include_once './modules/directory/class_directory_heading.php';
 
                 $objHeading = new directory_heading();
@@ -475,33 +475,33 @@ if ($_SESSION['ploopi']['connected'])
 
                 $objHeadingChild->save();
 
-                ploopi_create_user_action_log(_DIRECTORY_ACTION_HEADING_ADD, "{$objHeadingChild->fields['label']} (id:{$objHeadingChild->fields['id']}, pos:{$objHeadingChild->fields['position']})");
+                ovensia\ploopi\user_action_log::record(_DIRECTORY_ACTION_HEADING_ADD, "{$objHeadingChild->fields['label']} (id:{$objHeadingChild->fields['id']}, pos:{$objHeadingChild->fields['position']})");
 
-                ploopi_redirect("admin.php?op=directory_heading_add&directory_heading_id={$objHeadingChild->fields['id']}&op=directory_modify");
+                ovensia\ploopi\output::redirect("admin.php?op=directory_heading_add&directory_heading_id={$objHeadingChild->fields['id']}&op=directory_modify");
             break;
 
             case 'directory_heading_save':
-                ploopi_init_module('directory', false, false, false);
+                ovensia\ploopi\module::init('directory', false, false, false);
                 include_once './modules/directory/class_directory_heading.php';
 
                 $objHeading = new directory_heading();
 
-                if (empty($_GET['directory_heading_id']) || !is_numeric($_GET['directory_heading_id']) || !$objHeading->open($_GET['directory_heading_id'])) ploopi_redirect('admin.php');
+                if (empty($_GET['directory_heading_id']) || !is_numeric($_GET['directory_heading_id']) || !$objHeading->open($_GET['directory_heading_id'])) ovensia\ploopi\output::redirect('admin.php');
 
                 $objHeading->setvalues($_POST, 'directory_heading_');
                 $objHeading->save(!empty($_POST['_directory_heading_forcepos']));
 
-                ploopi_create_user_action_log(_DIRECTORY_ACTION_HEADING_MODIFY, "{$objHeading->fields['label']} (id:{$objHeading->fields['id']}, pos:{$objHeading->fields['position']})");
+                ovensia\ploopi\user_action_log::record(_DIRECTORY_ACTION_HEADING_MODIFY, "{$objHeading->fields['label']} (id:{$objHeading->fields['id']}, pos:{$objHeading->fields['position']})");
 
-                if (ploopi_isactionallowed(_DIRECTORY_ACTION_MANAGERS)) ploopi_validation_save(_DIRECTORY_OBJECT_HEADING, $objHeading->fields['id']);
+                if (ovensia\ploopi\acl::isactionallowed(_DIRECTORY_ACTION_MANAGERS)) ovensia\ploopi\validation::add(_DIRECTORY_OBJECT_HEADING, $objHeading->fields['id']);
 
-                ploopi_redirect("admin.php?directory_heading_id={$_GET['directory_heading_id']}");
+                ovensia\ploopi\output::redirect("admin.php?directory_heading_id={$_GET['directory_heading_id']}");
             break;
 
             case 'directory_heading_choose':
                 ob_start();
 
-                ploopi_init_module('directory', false, false, false);
+                ovensia\ploopi\module::init('directory', false, false, false);
 
                 // Récupération des rubriques
                 $arrHeadings = directory_getheadings();
@@ -518,12 +518,12 @@ if ($_SESSION['ploopi']['connected'])
 
                 echo $skin->create_popup("Choix d'une rubrique", $content, 'popup_directory_heading_choose');
 
-                ploopi_die();
+                ovensia\ploopi\system::kill();
             break;
 
             case 'directory_speeddialing_save':
-                ploopi_init_module('directory', false, false, false);
-                if (!ploopi_isactionallowed(_DIRECTORY_ACTION_SPEEDDIALING)) ploopi_redirect("admin.php");
+                ovensia\ploopi\module::init('directory', false, false, false);
+                if (!ovensia\ploopi\acl::isactionallowed(_DIRECTORY_ACTION_SPEEDDIALING)) ovensia\ploopi\output::redirect("admin.php");
 
                 include_once './modules/directory/class_directory_speeddialing.php';
 
@@ -538,24 +538,24 @@ if ($_SESSION['ploopi']['connected'])
 
                 $objSpeedDialing->save();
 
-                ploopi_create_user_action_log(empty($_GET['directory_speeddialing_id']) ? _DIRECTORY_ACTION_SPEEDDIALING_ADD : _DIRECTORY_ACTION_SPEEDDIALING_MODIFY, "{$objSpeedDialing->fields['heading']} / {$objSpeedDialing->fields['label']} (id:{$objSpeedDialing->fields['id']})");
+                ovensia\ploopi\user_action_log::record(empty($_GET['directory_speeddialing_id']) ? _DIRECTORY_ACTION_SPEEDDIALING_ADD : _DIRECTORY_ACTION_SPEEDDIALING_MODIFY, "{$objSpeedDialing->fields['heading']} / {$objSpeedDialing->fields['label']} (id:{$objSpeedDialing->fields['id']})");
 
-                ploopi_redirect("admin.php");
+                ovensia\ploopi\output::redirect("admin.php");
             break;
 
             case 'directory_speeddialing_modify':
-                ploopi_init_module('directory', false, false, false);
-                if (!ploopi_isactionallowed(_DIRECTORY_ACTION_SPEEDDIALING)) ploopi_redirect("admin.php");
+                ovensia\ploopi\module::init('directory', false, false, false);
+                if (!ovensia\ploopi\acl::isactionallowed(_DIRECTORY_ACTION_SPEEDDIALING)) ovensia\ploopi\output::redirect("admin.php");
 
                 if ((!empty($_GET['directory_speeddialing_id']) && is_numeric($_GET['directory_speeddialing_id'])))
                 {
                     ob_start();
 
-                    ploopi_init_module('directory', false, false, false);
+                    ovensia\ploopi\module::init('directory', false, false, false);
                     include_once './modules/directory/class_directory_speeddialing.php';
 
                     $objSpeedDialing = new directory_speeddialing();
-                    if (empty($_GET['directory_speeddialing_id']) || !is_numeric($_GET['directory_speeddialing_id']) || !$objSpeedDialing->open($_GET['directory_speeddialing_id'])) ploopi_die();
+                    if (empty($_GET['directory_speeddialing_id']) || !is_numeric($_GET['directory_speeddialing_id']) || !$objSpeedDialing->open($_GET['directory_speeddialing_id'])) ovensia\ploopi\system::kill();
 
                     $arrHeadings = $db->getarray(
                         $db->query("
@@ -565,13 +565,13 @@ if ($_SESSION['ploopi']['connected'])
                         "), true
                     );
                     ?>
-                    <form action="<?php echo ploopi_urlencode("admin.php?ploopi_op=directory_speeddialing_save&directory_speeddialing_id={$objSpeedDialing->fields['id']}"); ?>" method="post" onsubmit="return directory_speeddialing_validate(this);">
+                    <form action="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?ploopi_op=directory_speeddialing_save&directory_speeddialing_id={$objSpeedDialing->fields['id']}"); ?>" method="post" onsubmit="return directory_speeddialing_validate(this);">
                     <div class="ploopi_form">
                         <p>
                             <label>Rubrique:</label>
                             <select class="select" name="directory_speeddialing_heading" tabindex="110">
                                 <option value="" style="font-style:italic;">(Nouvelle rubrique)</option>
-                                <?php foreach($arrHeadings as $strHeading) echo '<option '.($objSpeedDialing->fields['heading'] == $strHeading ? 'selected="selected" ' : '').'value="'.ploopi_htmlentities($strHeading).'">'.ploopi_htmlentities($strHeading).'</option>'; ?>
+                                <?php foreach($arrHeadings as $strHeading) echo '<option '.($objSpeedDialing->fields['heading'] == $strHeading ? 'selected="selected" ' : '').'value="'.ovensia\ploopi\str::htmlentities($strHeading).'">'.ovensia\ploopi\str::htmlentities($strHeading).'</option>'; ?>
                             </select>
                         </p>
                         <p>
@@ -580,19 +580,19 @@ if ($_SESSION['ploopi']['connected'])
                         </p>
                         <p>
                             <label>Libellé:</label>
-                            <input type="text" name="directory_speeddialing_label" value="<?php echo ploopi_htmlentities($objSpeedDialing->fields['label']); ?>" class="text" tabindex="115" />
+                            <input type="text" name="directory_speeddialing_label" value="<?php echo ovensia\ploopi\str::htmlentities($objSpeedDialing->fields['label']); ?>" class="text" tabindex="115" />
                         </p>
                         <p>
                             <label>Numéro:</label>
-                            <input type="text" name="directory_speeddialing_number" value="<?php echo ploopi_htmlentities($objSpeedDialing->fields['number']); ?>" class="text" style="width:90px;" maxlength="16" tabindex="116" />
+                            <input type="text" name="directory_speeddialing_number" value="<?php echo ovensia\ploopi\str::htmlentities($objSpeedDialing->fields['number']); ?>" class="text" style="width:90px;" maxlength="16" tabindex="116" />
                         </p>
                         <p>
                             <label>Abrégé:</label>
-                            <input type="text" name="directory_speeddialing_shortnumber" value="<?php echo ploopi_htmlentities($objSpeedDialing->fields['shortnumber']); ?>" class="text" style="width:60px;" maxlength="32" tabindex="117" />
+                            <input type="text" name="directory_speeddialing_shortnumber" value="<?php echo ovensia\ploopi\str::htmlentities($objSpeedDialing->fields['shortnumber']); ?>" class="text" style="width:60px;" maxlength="32" tabindex="117" />
                         </p>
                     </div>
                         <div style="padding:2px 4px;text-align:right;">
-                        <input type="button" class="button" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php"); ?>';" tabindex="121" />
+                        <input type="button" class="button" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<?php echo ovensia\ploopi\crypt::urlencode("admin.php"); ?>';" tabindex="121" />
                         <input type="submit" class="button" value="<?php echo _PLOOPI_SAVE; ?>" tabindex="120" />
                     </div>
                     </form>
@@ -603,35 +603,35 @@ if ($_SESSION['ploopi']['connected'])
                     echo $skin->create_popup("Modification d'un numéro", $content, 'popup_directory_speeddialing_modify');
                 }
 
-                ploopi_die();
+                ovensia\ploopi\system::kill();
             break;
 
             case 'directory_speeddialing_delete':
-                ploopi_init_module('directory', false, false, false);
-                if (!ploopi_isactionallowed(_DIRECTORY_ACTION_SPEEDDIALING)) ploopi_redirect("admin.php");
+                ovensia\ploopi\module::init('directory', false, false, false);
+                if (!ovensia\ploopi\acl::isactionallowed(_DIRECTORY_ACTION_SPEEDDIALING)) ovensia\ploopi\output::redirect("admin.php");
 
                 include_once './modules/directory/class_directory_speeddialing.php';
 
                 $objSpeedDialing = new directory_speeddialing();
 
                 if (!empty($_GET['directory_speeddialing_id']) && is_numeric($_GET['directory_speeddialing_id']) && $objSpeedDialing->open($_GET['directory_speeddialing_id'])) {
-                    ploopi_create_user_action_log(_DIRECTORY_ACTION_SPEEDDIALING_DELETE, "{$objSpeedDialing->fields['heading']} / {$objSpeedDialing->fields['label']} (id:{$objSpeedDialing->fields['id']})");
+                    ovensia\ploopi\user_action_log::record(_DIRECTORY_ACTION_SPEEDDIALING_DELETE, "{$objSpeedDialing->fields['heading']} / {$objSpeedDialing->fields['label']} (id:{$objSpeedDialing->fields['id']})");
                     $objSpeedDialing->delete();
                 }
 
-                ploopi_redirect("admin.php");
+                ovensia\ploopi\output::redirect("admin.php");
             break;
 
             case 'directory_import':
-                ploopi_init_module('directory', false, false, false);
+                ovensia\ploopi\module::init('directory', false, false, false);
 
-                if (empty($_GET['directory_heading_id']) && !is_numeric($_GET['directory_heading_id'])) ploopi_die();
+                if (empty($_GET['directory_heading_id']) && !is_numeric($_GET['directory_heading_id'])) ovensia\ploopi\system::kill();
 
                 if (isset($_GET['directory_step']) && $_GET['directory_step'] == '2')
                 {
                     include_once './modules/directory/class_directory_contact.php';
 
-                    $arrData = ploopi_getsessionvar('contact_import');
+                    $arrData = ovensia\ploopi\session::getvar('contact_import');
                     if (!empty($arrData))
                     {
                         $intCount = $intDoublon = 0;
@@ -662,7 +662,7 @@ if ($_SESSION['ploopi']['connected'])
                         <div style="margin:4px;padding:4px;border:1px solid #c0c0c0;background:#e0e0e0;">
                             <div><?php echo $intCount; ?> contact(s) importés, <?php echo $intDoublon; ?> doublons détecté(s).</div>
                             <div style="text-align:right;">
-                                <input type="button" class="button" value="Continuer" onclick="javascript:document.location.href='<?php echo ploopi_urlencode('admin.php'); ?>';" style="font-weight:bold;" />
+                                <input type="button" class="button" value="Continuer" onclick="javascript:document.location.href='<?php echo ovensia\ploopi\crypt::urlencode('admin.php'); ?>';" style="font-weight:bold;" />
                             </div>
                         </div>
                         <?php
@@ -670,13 +670,11 @@ if ($_SESSION['ploopi']['connected'])
                 }
                 else
                 {
-                    include_once './include/functions/array.php';
-
                     $arrLineHeader = array();
                     $arrData = array();
                     $arrDataExcerpt = array();
                     $booDataError = false;
-                    ploopi_setsessionvar('contact_import', $arrData);
+                    ovensia\ploopi\session::setvar('contact_import', $arrData);
 
                     $intCount = 0;
                     if (!empty($_FILES['directory_import_file']) && !empty($_FILES['directory_import_file']['name']))
@@ -713,23 +711,23 @@ if ($_SESSION['ploopi']['connected'])
 
                         ?>
                         <div style="margin:4px;padding:4px;border:1px solid #c0c0c0;background:#e0e0e0;">
-                            <div><strong>Le fichier envoyé (<?php echo ploopi_htmlentities($_FILES['directory_import_file']['name']); ?>) contient <?php echo $intCount; ?> ligne(s) et <?php echo sizeof($arrLineHeader) ?> colonnes dont <?php echo sizeof($arrLineHeader) - sizeof($arrInvalidCols) ?> sont connues.</strong></div>
+                            <div><strong>Le fichier envoyé (<?php echo ovensia\ploopi\str::htmlentities($_FILES['directory_import_file']['name']); ?>) contient <?php echo $intCount; ?> ligne(s) et <?php echo sizeof($arrLineHeader) ?> colonnes dont <?php echo sizeof($arrLineHeader) - sizeof($arrInvalidCols) ?> sont connues.</strong></div>
                             <?php
                             if ($booDataError) echo '<div>Des erreurs de données ont été rencontrées</div>';
                             if (!empty($arrInvalidCols)) echo '<div>Les colonnes suivantes sont inconnues : '.implode(', ', $arrInvalidCols).'</div>';
                             ?>
 
                             <div>Aperçu du fichier :</div>
-                            <div style="overflow:auto;border:1px solid #c0c0c0;margin:4px;padding:4px;background:#fff;"><?php echo ploopi_array2html($arrDataExcerpt); ?></div>
+                            <div style="overflow:auto;border:1px solid #c0c0c0;margin:4px;padding:4px;background:#fff;"><?php echo ovensia\ploopi\arr::tohtml($arrDataExcerpt); ?></div>
                             <div style="text-align:right;">
-                                <input type="button" class="button" value="Annuler" onclick="javascript:document.location.href='<?php echo ploopi_urlencode('admin.php'); ?>';"/>
+                                <input type="button" class="button" value="Annuler" onclick="javascript:document.location.href='<?php echo ovensia\ploopi\crypt::urlencode('admin.php'); ?>';"/>
                                 <?php
                                 if (sizeof($arrData) && isset($arrData[0]['lastname']) && isset($arrData[0]['firstname'])) // Données valides
                                 {
                                     // Sauvegarde des données importées en SESSION
-                                    ploopi_setsessionvar('contact_import', $arrData);
+                                    ovensia\ploopi\session::setvar('contact_import', $arrData);
                                     ?>
-                                    <input type="button" class="button" value="Continuer" style="font-weight:bold;" onclick="javascript:ploopi_xmlhttprequest_todiv('admin-light.php', '<?php echo ploopi_queryencode("ploopi_op=directory_import&directory_step=2&directory_heading_id={$_GET['directory_heading_id']}"); ?>', 'directory_import_info');" />
+                                    <input type="button" class="button" value="Continuer" style="font-weight:bold;" onclick="javascript:ploopi_xmlhttprequest_todiv('admin-light.php', '<?php echo ovensia\ploopi\crypt::queryencode("ploopi_op=directory_import&directory_step=2&directory_heading_id={$_GET['directory_heading_id']}"); ?>', 'directory_import_info');" />
                                     <?php
                                 }
                                 ?>
@@ -740,14 +738,13 @@ if ($_SESSION['ploopi']['connected'])
                 }
 
 
-                ploopi_die();
+                ovensia\ploopi\system::kill();
             break;
 
             case 'directory_export':
-                ploopi_init_module('directory', false, false, false);
-                include_once './include/functions/array.php';
+                ovensia\ploopi\module::init('directory', false, false, false);
 
-                if (empty($_GET['directory_heading_id']) || !is_numeric($_GET['directory_heading_id']) || !isset($_GET['directory_format'])) ploopi_die();
+                if (empty($_GET['directory_heading_id']) || !is_numeric($_GET['directory_heading_id']) || !isset($_GET['directory_format'])) ovensia\ploopi\system::kill();
 
                 $sql =  "
                     SELECT  ".implode(',', array_keys($arrDirectoryImportFields))."
@@ -759,35 +756,35 @@ if ($_SESSION['ploopi']['connected'])
 
                 $strFormat = strtolower($_GET['directory_format']);
 
-                ploopi_ob_clean();
+                ovensia\ploopi\buffer::clean();
 
                 switch($_GET['directory_format'])
                 {
                     case 'xls':
-                        echo ploopi_array2excel($db->getarray());
+                        echo ovensia\ploopi\arr::toexcel($db->getarray());
                     break;
 
                     case 'csv':
-                        echo ploopi_array2csv($db->getarray());
+                        echo ovensia\ploopi\arr::tocsv($db->getarray());
                     break;
 
                     default:
                         $strFormat = 'xml';
                     case 'xml':
-                        echo ploopi_array2xml($db->getarray(), 'contacts', 'contact');
+                        echo ovensia\ploopi\arr::toxml($db->getarray(), 'contacts', 'contact');
                     break;
                 }
 
                 $strFileName = "contacts.{$strFormat}";
 
-                header('Content-Type: ' . ploopi_getmimetype($strFileName) . '; charset=ISO-8859-15');
+                header('Content-Type: ' . ovensia\ploopi\fs::getmimetype($strFileName) . '; charset=ISO-8859-15');
                 header('Content-Disposition: attachment; Filename="'.$strFileName.'"');
                 header('Cache-Control: private');
                 header('Pragma: private');
                 header('Content-Length: '.ob_get_length());
                 header("Content-Encoding: None");
 
-                ploopi_die();
+                ovensia\ploopi\system::kill();
             break;
         }
     }
@@ -803,8 +800,8 @@ switch($ploopi_op)
         if (!empty($_GET['directory_contact_id']) && is_numeric($_GET['directory_contact_id']) && $directory_contact->open($_GET['directory_contact_id']))
         {
             $strPhotoPath = $directory_contact->getphotopath();
-            if (file_exists($strPhotoPath)) ploopi_downloadfile($strPhotoPath, 'contact.png', false, false);
+            if (file_exists($strPhotoPath)) ovensia\ploopi\fs::downloadfile($strPhotoPath, 'contact.png', false, false);
         }
-        ploopi_die();
+        ovensia\ploopi\system::kill();
     break;
 }

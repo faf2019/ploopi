@@ -34,7 +34,7 @@
 switch($ploopi_op)
 {
     case 'share_select_user':
-        if (empty($_GET['share_id'])) ploopi_die();
+        if (empty($_GET['share_id'])) ovensia\ploopi\system::kill();
 
         if (!isset($_SESSION['ploopi']['share'][$_GET['share_id']])) $_SESSION['ploopi']['share'][$_GET['share_id']] = array('users_selected' => array(), 'groups_selected' => array());
 
@@ -46,16 +46,14 @@ switch($ploopi_op)
 
         foreach($_SESSION['ploopi']['share'][$_GET['share_id']]['groups_selected'] as $group_id)
         {
-            include_once './include/classes/group.php';
-
-            $group = new group();
+            $group = new ovensia\ploopi\group();
             if ($group->open($group_id))
             {
                 ?>
                 <p class="ploopi_va" style="padding:2px;">
-                    <a class="ploopi_share_delete_user" href="javascript:void(0);" onclick="ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_select_user&share_id=<?php echo urlencode($_GET['share_id']); ?>&remove_group_id=<?php echo $group->fields['id']; ?>', 'div_share_users_selected_<?php echo ploopi_htmlentities($_GET['share_id']); ?>');">
+                    <a class="ploopi_share_delete_user" href="javascript:void(0);" onclick="ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_select_user&share_id=<?php echo urlencode($_GET['share_id']); ?>&remove_group_id=<?php echo $group->fields['id']; ?>', 'div_share_users_selected_<?php echo ovensia\ploopi\str::htmlentities($_GET['share_id']); ?>');">
                         <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/btn_delete.png" />
-                        <span>Groupe &laquo; </span><strong><?php echo ploopi_htmlentities($group->fields['label']); ?></strong><span></span> &raquo; (Cliquez pour supprimer)</span>
+                        <span>Groupe &laquo; </span><strong><?php echo ovensia\ploopi\str::htmlentities($group->fields['label']); ?></strong><span></span> &raquo; (Cliquez pour supprimer)</span>
                     </a>
                 </p>
                 <?php
@@ -64,33 +62,28 @@ switch($ploopi_op)
 
         foreach($_SESSION['ploopi']['share'][$_GET['share_id']]['users_selected'] as $user_id)
         {
-            include_once './include/classes/user.php';
-
-            $user = new user();
+            $user = new ovensia\ploopi\user();
             if ($user->open($user_id))
             {
                 ?>
                 <p class="ploopi_va" style="padding:2px;">
-                    <a class="ploopi_share_delete_user" href="javascript:void(0);" onclick="ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_select_user&share_id=<?php echo urlencode($_GET['share_id']); ?>&remove_user_id=<?php echo $user->fields['id']; ?>', 'div_share_users_selected_<?php echo ploopi_htmlentities($_GET['share_id']); ?>');">
+                    <a class="ploopi_share_delete_user" href="javascript:void(0);" onclick="ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_select_user&share_id=<?php echo urlencode($_GET['share_id']); ?>&remove_user_id=<?php echo $user->fields['id']; ?>', 'div_share_users_selected_<?php echo ovensia\ploopi\str::htmlentities($_GET['share_id']); ?>');">
                         <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/btn_delete.png" />
-                        <strong><?php echo ploopi_htmlentities("{$user->fields['lastname']} {$user->fields['firstname']}"); ?></strong><span>&nbsp;(Cliquez pour supprimer)</span>
+                        <strong><?php echo ovensia\ploopi\str::htmlentities("{$user->fields['lastname']} {$user->fields['firstname']}"); ?></strong><span>&nbsp;(Cliquez pour supprimer)</span>
                     </a>
                 </p>
                 <?php
             }
         }
 
-        ploopi_die();
+        ovensia\ploopi\system::kill();
     break;
 
     case 'share_search_users':
-        if (empty($_GET['share_id'])) ploopi_die();
+        if (empty($_GET['share_id'])) ovensia\ploopi\system::kill();
 
-        include_once './include/classes/group.php';
-        include_once './include/classes/workspace.php';
-
-        $group = new group();
-        $workspace = new workspace();
+        $group = new ovensia\ploopi\group();
+        $workspace = new ovensia\ploopi\workspace();
 
         $list = array();
         $list['workspaces'] = array();
@@ -105,7 +98,7 @@ switch($ploopi_op)
             FROM    ploopi_workspace w,
                     ploopi_module_workspace mw
             WHERE   w.id = mw.id_workspace
-            AND     w.id IN (".ploopi_viewworkspaces_inv().")
+            AND     w.id IN (".ovensia\ploopi\system::viewworkspaces_inv().")
             AND     mw.id_module = {$_SESSION['ploopi']['moduleid']}
             ORDER BY w.depth, w.label
         ");
@@ -132,7 +125,7 @@ switch($ploopi_op)
 
         if (!empty($list['workspaces'])) {
 
-            $arrFilter = explode(' ', strtolower(ploopi_convertaccents($filter)));
+            $arrFilter = explode(' ', strtolower(ovensia\ploopi\str::convertaccents($filter)));
 
             $words = '';
             foreach($arrFilter as $word)
@@ -198,8 +191,10 @@ switch($ploopi_op)
             }
 
             // Matching groupe/recherche
-            $db->query("SELECT id FROM ploopi_group g WHERE {$groupfilter} AND id IN (".implode(',', array_keys($list['groups'])).")");
-            while ($row = $db->fetchrow()) $list['groups'][$row['id']]['match'] = 1;
+            if (!empty($list['groups'])) {
+                $db->query("SELECT id FROM ploopi_group g WHERE {$groupfilter} AND id IN (".implode(',', array_keys($list['groups'])).")");
+                while ($row = $db->fetchrow()) $list['groups'][$row['id']]['match'] = 1;
+            }
 
             // Suppression des groupes vides et qui ne matchent pas la recherche
             foreach($list['groups'] as $id_group => $group) {
@@ -209,7 +204,7 @@ switch($ploopi_op)
                 if (empty($group['users'])) {
                     // groupe ne matchant pas la recherche
                     if (empty($group['match'])) unset($list['groups'][$id_group]);
-                    // if ($filter != '' && strpos(strtolower(ploopi_convertaccents($group['label'])), strtolower(ploopi_convertaccents($filter))) === false) unset($list['groups'][$id_group]);
+                    // if ($filter != '' && strpos(strtolower(ovensia\ploopi\str::convertaccents($group['label'])), strtolower(ovensia\ploopi\str::convertaccents($filter))) === false) unset($list['groups'][$id_group]);
                 }
             }
 
@@ -241,7 +236,7 @@ switch($ploopi_op)
                 {
                     ?>
                     <div class="ploopi_share_select_workgroup">
-                        <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_workgroup.png"><span><?php echo ploopi_htmlentities($workspace['label']); ?></span></p>
+                        <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_workgroup.png"><span><?php echo ovensia\ploopi\str::htmlentities($workspace['label']); ?></span></p>
                     </div>
                     <?php
                     if (!empty($workspace['users']))
@@ -250,8 +245,8 @@ switch($ploopi_op)
                         {
                             $user = &$list['users'][$id_user];
                             ?>
-                            <a class="ploopi_share_select_user" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_select_user&share_id=<?php echo urlencode($_GET['share_id']); ?>&user_id=<?php echo $id_user; ?>', 'div_share_users_selected_<?php echo ploopi_htmlentities($_GET['share_id']); ?>');">
-                                <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span><?php echo ploopi_htmlentities("{$user['lastname']} {$user['firstname']}"); ?></span></p>
+                            <a class="ploopi_share_select_user" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_select_user&share_id=<?php echo urlencode($_GET['share_id']); ?>&user_id=<?php echo $id_user; ?>', 'div_share_users_selected_<?php echo ovensia\ploopi\str::htmlentities($_GET['share_id']); ?>');">
+                                <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span><?php echo ovensia\ploopi\str::htmlentities("{$user['lastname']} {$user['firstname']}"); ?></span></p>
                             </a>
                             <?php
                         }
@@ -263,8 +258,8 @@ switch($ploopi_op)
                         {
                             $group = &$list['groups'][$id_grp];
                             ?>
-                            <a class="ploopi_share_select_usergroup" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_select_user&share_id=<?php echo urlencode($_GET['share_id']); ?>&group_id=<?php echo $id_grp; ?>', 'div_share_users_selected_<?php echo ploopi_htmlentities($_GET['share_id']); ?>');">
-                                <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_group.png"><span><?php echo ploopi_htmlentities($list['groups'][$id_grp]['label']);  ?></span></p>
+                            <a class="ploopi_share_select_usergroup" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_select_user&share_id=<?php echo urlencode($_GET['share_id']); ?>&group_id=<?php echo $id_grp; ?>', 'div_share_users_selected_<?php echo ovensia\ploopi\str::htmlentities($_GET['share_id']); ?>');">
+                                <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_group.png"><span><?php echo ovensia\ploopi\str::htmlentities($list['groups'][$id_grp]['label']);  ?></span></p>
                             </a>
                             <?php
                             if (!empty($list['groups'][$id_grp]['users']))
@@ -273,8 +268,8 @@ switch($ploopi_op)
                                 {
                                     $user = &$list['users'][$id_user];
                                     ?>
-                                    <a class="ploopi_share_select_usergroup_user" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_select_user&share_id=<?php echo urlencode($_GET['share_id']); ?>&user_id=<?php echo $id_user; ?>', 'div_share_users_selected_<?php echo ploopi_htmlentities($_GET['share_id']); ?>');">
-                                        <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span><?php echo ploopi_htmlentities("{$user['lastname']} {$user['firstname']}"); ?></span></p>
+                                    <a class="ploopi_share_select_usergroup_user" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_select_user&share_id=<?php echo urlencode($_GET['share_id']); ?>&user_id=<?php echo $id_user; ?>', 'div_share_users_selected_<?php echo ovensia\ploopi\str::htmlentities($_GET['share_id']); ?>');">
+                                        <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span><?php echo ovensia\ploopi\str::htmlentities("{$user['lastname']} {$user['firstname']}"); ?></span></p>
                                     </a>
                                     <?php
                                 }
@@ -296,6 +291,6 @@ switch($ploopi_op)
             <?php
         }
 
-        ploopi_die();
+        ovensia\ploopi\system::kill();
     break;
 }

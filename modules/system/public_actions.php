@@ -54,7 +54,7 @@ foreach ($_SESSION['ploopi']['workspaces'] as $group)
 {
     if (!empty($group['adminlevel']) && $group['id'] != _PLOOPI_SYSTEMGROUP)
     {
-        echo $skin->open_simplebloc(ploopi_htmlentities("Espace « {$group['label']} »"));
+        echo $skin->open_simplebloc(ovensia\ploopi\str::htmlentities("Espace « {$group['label']} »"));
 
         $columns = array();
         $values = array();
@@ -73,14 +73,14 @@ foreach ($_SESSION['ploopi']['workspaces'] as $group)
                 {
                     foreach($arrActions[$_SESSION['ploopi']['modules'][$moduleid]['id_module_type']] as $id => $action)
                     {
-                        $puce = ploopi_isactionallowed($id, $group['id'], $moduleid) ? $green : $red;
-                        $strActions .= "<p class=\"ploopi_va\">{$puce}<span>".ploopi_htmlentities($action['label'])."</span></p>";
+                        $puce = ovensia\ploopi\acl::isactionallowed($id, $group['id'], $moduleid) ? $green : $red;
+                        $strActions .= "<p class=\"ploopi_va\">{$puce}<span>".ovensia\ploopi\str::htmlentities($action['label'])."</span></p>";
                     }
                 }
 
                 if ($strActions == '') $strActions = 'Aucune action pour ce module';
 
-                $values[$c]['values']['module'] = array('label' => ploopi_htmlentities($_SESSION['ploopi']['modules'][$moduleid]['label']));
+                $values[$c]['values']['module'] = array('label' => ovensia\ploopi\str::htmlentities($_SESSION['ploopi']['modules'][$moduleid]['label']));
                 $values[$c]['values']['actions'] = array('label' => $strActions);
 
                 $values[$c]['description'] = '';

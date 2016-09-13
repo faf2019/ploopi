@@ -34,7 +34,7 @@
 /**
  * Initialisation du module
  */
-ploopi_init_module('webedit');
+ovensia\ploopi\module::init('webedit');
 
 global $article_status;
 global $heading_sortmodes;
@@ -57,7 +57,7 @@ switch($op)
     break;
 
     default:
-        echo $skin->create_pagetitle(ploopi_htmlentities($_SESSION['ploopi']['modulelabel']));
+        echo $skin->create_pagetitle(ovensia\ploopi\str::htmlentities($_SESSION['ploopi']['modulelabel']));
         echo $skin->open_simplebloc('Voir les articles');
         $options = '';
         if (!empty($_REQUEST['headingid'])) $options = "&headingid={$_REQUEST['headingid']}";

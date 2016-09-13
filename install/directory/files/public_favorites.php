@@ -53,7 +53,7 @@ $arrColumns['right']['phone'] = array('label' => _DIRECTORY_PHONE,     'width' =
 $arrColumns['right']['function'] = array('label' => _DIRECTORY_FUNCTION, 'width' => 150, 'options' => array('sort' => true));
 $arrColumns['right']['service'] = array('label' => _DIRECTORY_SERVICE, 'width' => 150, 'options' => array('sort' => true));
 
-if (ploopi_getparam('directory_display_workspaces'))
+if (ovensia\ploopi\param::get('directory_display_workspaces'))
 {        
     $arrColumns['right']['groups'] = array('label' => _DIRECTORY_GROUPS,    'width' => 150, 'options' => array('sort' => true));
 }
@@ -99,7 +99,7 @@ while ($row = $db->fetchrow()) $result[] = $row;
 $c = 0;
 foreach($result as $row)
 {
-    $email = ($row['email']) ? '<a href="mailto:'.ploopi_htmlentities($row['email']).'" title="'.ploopi_htmlentities(_DIRECTORY_SEND_EMAIL.': '.$row['email']).'"><img src="./modules/directory/img/ico_email.png"></a>' : '&nbsp;';
+    $email = ($row['email']) ? '<a href="mailto:'.ovensia\ploopi\str::htmlentities($row['email']).'" title="'.ovensia\ploopi\str::htmlentities(_DIRECTORY_SEND_EMAIL.': '.$row['email']).'"><img src="./modules/directory/img/ico_email.png"></a>' : '&nbsp;';
     $ticket = '&nbsp;';
 
     switch ($row['usertype'])
@@ -114,7 +114,7 @@ foreach($result as $row)
             $level_display = (empty($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_users'])) ? _DIRECTORY_USERS : $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_users'];
 
             // on va chercher les espaces auxquels l'utilisateur peut accéder
-            $user = new user();
+            $user = new ovensia\ploopi\user();
             $user->open($row['id']);
             $user_ws = $user->getworkspaces();
 
@@ -165,16 +165,16 @@ foreach($result as $row)
     }
 
     $arrValues[$c]['values']['type'] = array('label' => $level_display);
-    $arrValues[$c]['values']['name'] = array('label' => ploopi_htmlentities("{$row['lastname']} {$row['firstname']}"));
-    $arrValues[$c]['values']['groups'] = array('label' => ploopi_htmlentities($workspaces_list));
-    $arrValues[$c]['values']['service'] = array('label' => ($row['service']) ? ploopi_htmlentities($row['service']) : '&nbsp;');
-    $arrValues[$c]['values']['function'] = array('label' => ($row['function']) ? ploopi_htmlentities($row['function']) : '&nbsp;');
-    $arrValues[$c]['values']['phone'] = array('label' => ($row['phone']) ? ploopi_htmlentities($row['phone']) : '&nbsp;');
+    $arrValues[$c]['values']['name'] = array('label' => ovensia\ploopi\str::htmlentities("{$row['lastname']} {$row['firstname']}"));
+    $arrValues[$c]['values']['groups'] = array('label' => ovensia\ploopi\str::htmlentities($workspaces_list));
+    $arrValues[$c]['values']['service'] = array('label' => ($row['service']) ? ovensia\ploopi\str::htmlentities($row['service']) : '&nbsp;');
+    $arrValues[$c]['values']['function'] = array('label' => ($row['function']) ? ovensia\ploopi\str::htmlentities($row['function']) : '&nbsp;');
+    $arrValues[$c]['values']['phone'] = array('label' => ($row['phone']) ? ovensia\ploopi\str::htmlentities($row['phone']) : '&nbsp;');
     $arrValues[$c]['values']['email'] = array('label' => $email);
     $arrValues[$c]['values']['ticket'] = array('label' => $ticket);
     $arrValues[$c]['values']['actions'] = array('label' => $actions);
 
-    $arrValues[$c]['description'] = ploopi_htmlentities("{$row['lastname']} {$row['firstname']}");
+    $arrValues[$c]['description'] = ovensia\ploopi\str::htmlentities("{$row['lastname']} {$row['firstname']}");
     $arrValues[$c]['style'] = '';
 
     $c++;

@@ -108,15 +108,15 @@ while ($row = $db->fetchrow())
                 array(
                     'name' => 
                         array(
-                            'label' => ploopi_htmlentities($row['name']),
+                            'label' => ovensia\ploopi\str::htmlentities($row['name']),
                             'style' => ($row['active']) ? '' : 'color:#a60000;'
                         ),
                     'count' => array('label' => $row['c']),
-                    'workspace' => array('label' => ploopi_htmlentities($row['w_label'])),
+                    'workspace' => array('label' => ovensia\ploopi\str::htmlentities($row['w_label'])),
                     'active' => array('label' => ($row['active']) ? 'oui' : 'non'),
                     'actions' => array('label' => ($row['c']) ? '&nbsp;' : '<input type="checkbox" class="booking_element_checkbox" value="'.$row['id'].'">')
                 ),
-            'description' => "Modifier le type de ressource '".ploopi_htmlentities($row['name'])."'",
+            'description' => "Modifier le type de ressource '".ovensia\ploopi\str::htmlentities($row['name'])."'",
             'link' => 'javascript:void(0);',
             'onclick' => "booking_element_open('resourcetype', '{$row['id']}', event);"
         );

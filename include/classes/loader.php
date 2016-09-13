@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2013 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -20,13 +20,45 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+namespace ovensia\ploopi;
 
-abstract class ploopi_loader
+use ovensia\ploopi;
+
+abstract class loader
 {
     private static $initsession = false;
     private static $script = 'index'; // index/admin/light/quick/webservice/backend...
     private static $workspaces = array();
     private static $workspace = array(); // workspace sélectionné
+
+
+    private static $_arrLoaded = array();
+
+    private static function _classToFile($strClassName) {
+        return realpath('.').'/include/classes/'.implode('/', array_slice(explode('\\', $strClassName),2)).'.php';
+    }
+
+    private static function _autoload($strClassName)
+    {
+        // Classe déjà chargée
+        if (in_array($strClassName, self::$_arrLoaded)) return true;
+
+
+        if (strpos($strClassName, 'ovensia\\ploopi\\') === 0) {
+            // Sinon, on essaye d'inclure le fichier selon les règles de nommage
+            // echo '<br />called: '.$strClassName; // Désactiver le buffer !
+            $strClassFile = self::_classToFile($strClassName);
+
+            // Inclusion du fichier de classe
+            include_once $strClassFile;
+
+            self::$_arrLoaded[] = $strClassName;
+
+            return true;
+        }
+
+        return false;
+    }
 
     /**
      * Partie commune des scripts de chargement de l'environnement Ploopi
@@ -60,22 +92,23 @@ abstract class ploopi_loader
         $ploopi_timer->start();
 
         /**
-         * Création du buffer principal.
-         * On utilise une astuce pour contourner le fait que la fonction ploopi_ob_callback n'existe pas encore.
+         * Autload
          */
-        ob_start(create_function('$buffer', 'return ploopi_ob_callback($buffer);'));
-
+        spl_autoload_register(array(__CLASS__, '_autoload'));
         include_once './vendor/autoload.php';
+
+        /**
+         * Création du buffer principal.
+         */
+        ob_start(array(__NAMESPACE__.'\\buffer', 'callback'));
 
         /**
          * Chargement du fichier de configuration
          */
         if (!file_exists('./config/config.php'))
         {
-            include_once './include/functions/system.php' ;
             include_once './config/install.php' ;
-            //header("Location: ./config/install.php");
-            ploopi_die();
+            system::kill();
         }
 
         include_once './config/config.php'; // load config (mysql, path, etc.)
@@ -83,8 +116,7 @@ abstract class ploopi_loader
         /**
          * Initialisation du gestionnaire d'erreur
          */
-        include_once './include/functions/errors.php';
-        ploopi_set_error_handler();
+        error::set_handler();
 
         /**
          * Chargement des constantes, globales
@@ -92,23 +124,20 @@ abstract class ploopi_loader
         include_once './include/constants.php';
 
         /**
-         * Chargements des classes et fonctions principales
-         * Attention de bien garder ces inclusions. Sinon problèmes avec ploopi_die et la gestion du buffer.
-         */
-        include_once './include/classes/data_object.php';
-        include_once './include/classes/log.php' ;
-        include_once './include/functions/date.php';
-        include_once './include/functions/session.php';
-        include_once './include/functions/system.php';
-
-        /**
          * Connexion à la base de données
          */
         if (file_exists('./include/classes/db_'._PLOOPI_SQL_LAYER.'.php')) include_once './include/classes/db_'._PLOOPI_SQL_LAYER.'.php';
 
 
-        $db = new ploopi_db(_PLOOPI_DB_SERVER, _PLOOPI_DB_LOGIN, _PLOOPI_DB_PASSWORD, _PLOOPI_DB_DATABASE);
+        $db = new \ploopi_db(_PLOOPI_DB_SERVER, _PLOOPI_DB_LOGIN, _PLOOPI_DB_PASSWORD, _PLOOPI_DB_DATABASE);
         if(!$db->isconnected()) trigger_error(_PLOOPI_MSG_DBERROR, E_USER_ERROR);
+
+
+        // Chargement des dépendances pour l'écriture du log dans le buffer (cas particulier, autoloader non fonctionnel)
+        if (defined('_PLOOPI_ACTIVELOG') && _PLOOPI_ACTIVELOG && isset($db))
+        {
+            include_once './include/classes/log.php';
+        }
 
         /**
          * Initialisation du gestionnaire de session
@@ -119,15 +148,14 @@ abstract class ploopi_loader
             /**
              * Gestionnaire interne de session
              */
-            include_once './include/classes/session.php' ;
 
             session_set_save_handler(
-                array('ploopi_session', 'open'),
-                array('ploopi_session', 'close'),
-                array('ploopi_session', 'read'),
-                array('ploopi_session', 'write'),
-                array('ploopi_session', 'destroy'),
-                array('ploopi_session', 'gc')
+                array(__NAMESPACE__.'\session', 'open'),
+                array(__NAMESPACE__.'\session', 'close'),
+                array(__NAMESPACE__.'\session', 'read'),
+                array(__NAMESPACE__.'\session', 'write'),
+                array(__NAMESPACE__.'\session', 'destroy'),
+                array(__NAMESPACE__.'\session', 'gc')
             );
 
             session_name('ploopi'.hash('sha256', _PLOOPI_BASEPATH));
@@ -151,29 +179,28 @@ abstract class ploopi_loader
         /**
          * Séquence de logout
          */
-        if (isset($_REQUEST['ploopi_logout'])) ploopi_logout(0, 0, false);
+        if (isset($_REQUEST['ploopi_logout'])) system::logout(0, 0, false);
 
         /**
          * Pas de session, ou host différent => init session
          */
         if (empty($_SESSION) || (!empty($_SESSION['ploopi']['host']) && $_SESSION['ploopi']['host'] != $_SERVER['HTTP_HOST']))  {
-            if (!empty($_SESSION)) ploopi_syslog(LOG_INFO, 'Réinitialisation de session liée à un changement de domaine');
-            ploopi_session_reset();
+            if (!empty($_SESSION)) error::syslog(LOG_INFO, 'Réinitialisation de session liée à un changement de domaine');
+            session::reset();
             self::$initsession = true;
         }
 
         /**
          * Mise à jour des données de la session
          */
-        ploopi_session_update();
+        session::update();
 
         /**
          * Initialisation du header par défaut
          */
         self::setheader();
 
-        include_once './include/classes/cache.php' ;
-        ploopi_cache::init();
+        cache::init();
 
     }
 
@@ -193,8 +220,6 @@ abstract class ploopi_loader
 
     public static function importgpr()
     {
-        include_once './include/functions/security.php';
-
         /**
          * Traitement du paramètre spécial 'ploopi_url' via POST/GET
          */
@@ -202,10 +227,9 @@ abstract class ploopi_loader
         {
             if (!empty($GLOBALS["_{$strGlobalVar}"]['ploopi_url']))
             {
-                $GLOBALS["_{$strGlobalVar}"]['ploopi_url'] = ploopi_filtervar($GLOBALS["_{$strGlobalVar}"]['ploopi_url']);
+                $GLOBALS["_{$strGlobalVar}"]['ploopi_url'] = security::filtervar($GLOBALS["_{$strGlobalVar}"]['ploopi_url']);
 
-                require_once './include/classes/cipher.php';
-                $strPloopiUrl = ploopi_cipher::singleton()->decrypt($GLOBALS["_{$strGlobalVar}"]['ploopi_url']);
+                $strPloopiUrl = cipher::singleton()->decrypt($GLOBALS["_{$strGlobalVar}"]['ploopi_url']);
 
                 foreach(explode('&',$strPloopiUrl) as $strParam)
                 {
@@ -256,11 +280,11 @@ abstract class ploopi_loader
         unset($strGlobalVar);
         unset($_REQUEST['ploopi_url']);
 
-        $_GET = ploopi_filtervar($_GET, null, !empty($_POST['ploopi_xhr']));;
-        $_POST = ploopi_filtervar($_POST, null, !empty($_POST['ploopi_xhr']));
-        $_REQUEST = ploopi_filtervar($_REQUEST, null, !empty($_POST['ploopi_xhr']));
-        $_COOKIE = ploopi_filtervar($_COOKIE);
-        $_SERVER = ploopi_filtervar($_SERVER);
+        $_GET = security::filtervar($_GET, null, !empty($_POST['ploopi_xhr']));;
+        $_POST = security::filtervar($_POST, null, !empty($_POST['ploopi_xhr']));
+        $_REQUEST = security::filtervar($_REQUEST, null, !empty($_POST['ploopi_xhr']));
+        $_COOKIE = security::filtervar($_COOKIE);
+        $_SERVER = security::filtervar($_SERVER);
     }
 
     /**
@@ -456,8 +480,8 @@ abstract class ploopi_loader
 
             if (!$booRewriteRuleFound)
             {
-                ploopi_h404();
-                ploopi_die('Page non trouvée');
+                output::h404();
+                system::kill('Page non trouvée');
             }
         }
     }
@@ -481,39 +505,6 @@ abstract class ploopi_loader
         global $ploopi_system_levels;
 
         /**
-         * Chargement fonctions génériques
-         */
-
-        include_once './include/functions/actions.php';
-        include_once './include/functions/annotation.php';
-        include_once './include/functions/crypt.php';
-        include_once './include/functions/date.php';
-        include_once './include/functions/documents.php';
-        include_once './include/functions/filesystem.php';
-        include_once './include/functions/filexplorer.php';
-        include_once './include/functions/image.php';
-        include_once './include/functions/ip.php';
-        include_once './include/functions/mail.php';
-        include_once './include/functions/search_index.php';
-        include_once './include/functions/security.php';
-        include_once './include/functions/session.php';
-        include_once './include/functions/share.php';
-        include_once './include/functions/system.php';
-        include_once './include/functions/string.php';
-        include_once './include/functions/subscription.php';
-        include_once './include/functions/tickets.php';
-        include_once './include/functions/validation.php';
-
-        /**
-         * Chargement des classes principales
-         */
-
-        include_once './include/classes/user.php';
-        include_once './include/classes/group.php';
-        include_once './include/classes/workspace.php';
-        include_once './include/classes/param.php';
-
-        /**
          * Gestion de la connexion d'un utilisateur
          */
 
@@ -533,17 +524,17 @@ abstract class ploopi_loader
                 $fields = $db->fetchrow();
 
                 // Trop de tentatives de connexion : mise en prison pendant _PLOOPI_JAILING_TIME
-                if ($fields['jailed_since'] > 0 && $fields['jailed_since'] + _PLOOPI_JAILING_TIME > ploopi_createtimestamp()) {
-                    ploopi_create_user_action_log(_SYSTEM_ACTION_LOGIN_ERR, $_REQUEST['ploopi_login'],_PLOOPI_MODULE_SYSTEM,_PLOOPI_MODULE_SYSTEM);
-                    ploopi_syslog(LOG_INFO, "Le compte {$_REQUEST['ploopi_login']} est suspendu pendant "._PLOOPI_JAILING_TIME."s suite à un trop grand nombre de tentatives de connexion");
-                    ploopi_logout(_PLOOPI_ERROR_ACCOUNTJAILED);
+                if ($fields['jailed_since'] > 0 && $fields['jailed_since'] + _PLOOPI_JAILING_TIME > date::createtimestamp()) {
+                    user_action_log::record(_SYSTEM_ACTION_LOGIN_ERR, $_REQUEST['ploopi_login'],_PLOOPI_MODULE_SYSTEM,_PLOOPI_MODULE_SYSTEM);
+                    error::syslog(LOG_INFO, "Le compte {$_REQUEST['ploopi_login']} est suspendu pendant "._PLOOPI_JAILING_TIME."s suite à un trop grand nombre de tentatives de connexion");
+                    system::logout(_PLOOPI_ERROR_ACCOUNTJAILED);
                 }
 
                 // Compte désactivé
                 if ($fields['disabled']) {
-                    ploopi_create_user_action_log(_SYSTEM_ACTION_LOGIN_ERR, $_REQUEST['ploopi_login'],_PLOOPI_MODULE_SYSTEM,_PLOOPI_MODULE_SYSTEM);
-                    ploopi_syslog(LOG_INFO, "Le compte {$_REQUEST['ploopi_login']} est désactivé");
-                    ploopi_logout(_PLOOPI_ERROR_ACCOUNTEXPIRE);
+                    user_action_log::record(_SYSTEM_ACTION_LOGIN_ERR, $_REQUEST['ploopi_login'],_PLOOPI_MODULE_SYSTEM,_PLOOPI_MODULE_SYSTEM);
+                    error::syslog(LOG_INFO, "Le compte {$_REQUEST['ploopi_login']} est désactivé");
+                    system::logout(_PLOOPI_ERROR_ACCOUNTEXPIRE);
                 }
 
                 // Mot de passe erronné
@@ -553,13 +544,13 @@ abstract class ploopi_loader
                     $objUser->fields['failed_attemps']++;
                     // Nombre de tentatives echouées trop élevé ? => case prison
                     if (_PLOOPI_MAX_CONNECTION_ATTEMPS && $objUser->fields['failed_attemps'] >= _PLOOPI_MAX_CONNECTION_ATTEMPS) {
-                        $objUser->fields['jailed_since'] = ploopi_createtimestamp();
+                        $objUser->fields['jailed_since'] = date::createtimestamp();
                     }
                     $objUser->save();
 
-                    ploopi_create_user_action_log(_SYSTEM_ACTION_LOGIN_ERR, $_REQUEST['ploopi_login'], _PLOOPI_MODULE_SYSTEM, _PLOOPI_MODULE_SYSTEM);
-                    ploopi_syslog(LOG_INFO, "Mot de passe incorrect pour {$_REQUEST['ploopi_login']}");
-                    ploopi_logout(_PLOOPI_ERROR_LOGINERROR);
+                    user_action_log::record(_SYSTEM_ACTION_LOGIN_ERR, $_REQUEST['ploopi_login'], _PLOOPI_MODULE_SYSTEM, _PLOOPI_MODULE_SYSTEM);
+                    error::syslog(LOG_INFO, "Mot de passe incorrect pour {$_REQUEST['ploopi_login']}");
+                    system::logout(_PLOOPI_ERROR_LOGINERROR);
                 }
                 elseif (!empty($fields['failed_attemps']) || !empty($fields['jailed_since'])) {
                     $objUser = new user();
@@ -573,17 +564,17 @@ abstract class ploopi_loader
                 if (!empty($fields['date_expire']))
                 {
                     // Compte expiré (définitif sauf intervention administrateur)
-                    if ($fields['date_expire'] <= ploopi_createtimestamp())
+                    if ($fields['date_expire'] <= date::createtimestamp())
                     {
-                        ploopi_create_user_action_log(_SYSTEM_ACTION_LOGIN_ERR, $_REQUEST['ploopi_login'],_PLOOPI_MODULE_SYSTEM,_PLOOPI_MODULE_SYSTEM);
-                        ploopi_syslog(LOG_INFO, "Validité du compte expirée pour {$_REQUEST['ploopi_login']}");
-                        ploopi_logout(_PLOOPI_ERROR_ACCOUNTEXPIRE);
+                        user_action_log::record(_SYSTEM_ACTION_LOGIN_ERR, $_REQUEST['ploopi_login'],_PLOOPI_MODULE_SYSTEM,_PLOOPI_MODULE_SYSTEM);
+                        error::syslog(LOG_INFO, "Validité du compte expirée pour {$_REQUEST['ploopi_login']}");
+                        system::logout(_PLOOPI_ERROR_ACCOUNTEXPIRE);
                     }
                 }
 
                 // On force l'utilisateur à changer de mot de passe ?
                 // Le mot de passe est périmé ?
-                if (!empty($fields['password_force_update']) || (!empty($fields['password_validity']) && ploopi_timestamp2unixtimestamp($fields['password_last_update'])+$fields['password_validity']*86400 < time())) {
+                if (!empty($fields['password_force_update']) || (!empty($fields['password_validity']) && date::timestamp2unixtimestamp($fields['password_last_update'])+$fields['password_validity']*86400 < time())) {
 
                     $intErrorCode = 0;
 
@@ -594,7 +585,7 @@ abstract class ploopi_loader
                         if ($_REQUEST['ploopi_password_new'] == $_REQUEST['ploopi_password_new_confirm']) {
 
                             // Mot de passe valide ?
-                            if (!_PLOOPI_USE_COMPLEXE_PASSWORD || ploopi_checkpasswordvalidity($_REQUEST['ploopi_password_new'])) {
+                            if (!_PLOOPI_USE_COMPLEXE_PASSWORD || security::checkpasswordvalidity($_REQUEST['ploopi_password_new'])) {
 
                                 // On peut mettre à jour la base de données
                                 $objUser = new user();
@@ -610,9 +601,9 @@ abstract class ploopi_loader
                     else $intErrorCode = _PLOOPI_ERROR_PASSWORDRESET;
 
                     if ($intErrorCode) {
-                        ploopi_create_user_action_log(_SYSTEM_ACTION_LOGIN_ERR, $_REQUEST['ploopi_login'], _PLOOPI_MODULE_SYSTEM,_PLOOPI_MODULE_SYSTEM);
-                        ploopi_syslog(LOG_INFO, 'Erreur lors du changement de mot de passe');
-                        ploopi_logout($intErrorCode, 1, true, array('login' => $fields['login'], 'password' => $_REQUEST['ploopi_password']));
+                        user_action_log::record(_SYSTEM_ACTION_LOGIN_ERR, $_REQUEST['ploopi_login'], _PLOOPI_MODULE_SYSTEM,_PLOOPI_MODULE_SYSTEM);
+                        error::syslog(LOG_INFO, 'Erreur lors du changement de mot de passe');
+                        system::logout($intErrorCode, 1, true, array('login' => $fields['login'], 'password' => $_REQUEST['ploopi_password']));
                     }
                 }
 
@@ -621,10 +612,16 @@ abstract class ploopi_loader
                 $_SESSION['ploopi']['password'] = $_REQUEST['ploopi_password'];
                 $_SESSION['ploopi']['userid'] = $fields['id'];
                 $_SESSION['ploopi']['user'] = $fields;
-                ploopi_create_user_action_log(_SYSTEM_ACTION_LOGIN_OK, $_REQUEST['ploopi_login'],_PLOOPI_MODULE_SYSTEM,_PLOOPI_MODULE_SYSTEM);
+
+                user_action_log::record(_SYSTEM_ACTION_LOGIN_OK, $_REQUEST['ploopi_login'],_PLOOPI_MODULE_SYSTEM,_PLOOPI_MODULE_SYSTEM);
+
+                $objUser = new user();
+                $objUser->open($fields['id']);
+                $objUser->fields['last_connection'] = date::createtimestamp();
+                $objUser->save();
 
                 // Reset de la session + nouvel ID
-                ploopi_session_reset();
+                session::reset();
                 // Indique qu'il faut recharger la session
                 self::$initsession = true;
 
@@ -669,9 +666,9 @@ abstract class ploopi_loader
             }
             else
             {
-                ploopi_create_user_action_log(_SYSTEM_ACTION_LOGIN_ERR, $_REQUEST['ploopi_login'], _PLOOPI_MODULE_SYSTEM, _PLOOPI_MODULE_SYSTEM);
-                ploopi_syslog(LOG_INFO, "Utilisateur inconnu ({$_REQUEST['ploopi_login']})");
-                ploopi_logout(_PLOOPI_ERROR_LOGINERROR);
+                user_action_log::record(_SYSTEM_ACTION_LOGIN_ERR, $_REQUEST['ploopi_login'], _PLOOPI_MODULE_SYSTEM, _PLOOPI_MODULE_SYSTEM);
+                error::syslog(LOG_INFO, "Utilisateur inconnu ({$_REQUEST['ploopi_login']})");
+                system::logout(_PLOOPI_ERROR_LOGINERROR);
             }
         }
 
@@ -765,7 +762,7 @@ abstract class ploopi_loader
                 //include './include/start/load_param.php';
 
                 $user = new user();
-                if (!$user->open($_SESSION['ploopi']['userid'])) ploopi_logout();
+                if (!$user->open($_SESSION['ploopi']['userid'])) system::logout();
 
                 $booRedirectProfile = false;
 
@@ -818,9 +815,9 @@ abstract class ploopi_loader
                         $workspace = new workspace();
                         $workspace->fields = self::$workspaces[$wid];
 
-                        $iprules = ploopi_getiprules($fields['iprules']);
+                        $iprules = ip::getrules($fields['iprules']);
 
-                        if (ploopi_isipvalid($iprules))
+                        if (ip::isvalid($iprules))
                         {
                             if (!empty($fields['groups']))
                             {
@@ -854,8 +851,8 @@ abstract class ploopi_loader
 
                 if (!$_SESSION['ploopi']['frontoffice']['connected'] && !$_SESSION['ploopi']['backoffice']['connected'] || (!$_SESSION['ploopi']['backoffice']['connected'] && $_SESSION['ploopi']['mode'] == 'backoffice'))
                 {
-                    ploopi_syslog(LOG_INFO, 'Aucun espace de travail pour cet utilisateur');
-                    ploopi_logout(_PLOOPI_ERROR_NOWORKSPACEDEFINED);
+                    error::syslog(LOG_INFO, 'Aucun espace de travail pour cet utilisateur');
+                    system::logout(_PLOOPI_ERROR_NOWORKSPACEDEFINED);
                 }
 
                 // sorting workspaces by priority/label
@@ -881,11 +878,11 @@ abstract class ploopi_loader
             $_SESSION['ploopi']['tokens'][$_SESSION['ploopi']['token']] = time();
 
             // Injection du nouveau jeton
-            if (!empty($strLoginRedirect)) $strLoginRedirect = ploopi_urltoken($strLoginRedirect);
+            if (!empty($strLoginRedirect)) $strLoginRedirect = crypt::urltoken($strLoginRedirect);
         }
 
 
-        if (!empty($strLoginRedirect)) ploopi_redirect($strLoginRedirect, false, false);
+        if (!empty($strLoginRedirect)) output::redirect($strLoginRedirect, false, false);
 
         unset($strLoginRedirect);
 
@@ -928,16 +925,16 @@ abstract class ploopi_loader
                     // On autorise un jeton non valide ou non fourni à l'unique condition que la requête ne contienne aucun paramètre
                     if (!empty($_REQUEST) && ((empty($strToken) || !isset($_SESSION['ploopi']['tokens'][$strToken])))) {
                         if (empty($strToken)) {
-                            ploopi_syslog(LOG_INFO, 'Jeton absent');
+                            error::syslog(LOG_INFO, 'Jeton absent');
                             echo 'Jeton absent, redirection en cours...';
                         }
                         else {
-                            ploopi_syslog(LOG_INFO, 'Jeton non valide');
+                            error::syslog(LOG_INFO, 'Jeton non valide');
                             echo 'Jeton non valide, redirection en cours...';
                         }
 
-                        ploopi_redirect('admin.php', true, true, 2);
-                        ploopi_die();
+                        output::redirect('admin.php', true, true, 2);
+                        system::kill();
                     }
 
                     // Mise à jour de la validité du jeon
@@ -969,7 +966,7 @@ abstract class ploopi_loader
 
                     $_SESSION['ploopi']['backoffice']['workspaceid'] = $_SESSION['ploopi']['workspaces_allowed'][0];
 
-                    if ($_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_WORKSPACES) ploopi_loadparams();
+                    if ($_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_WORKSPACES) param::load();
 
                     $_SESSION['ploopi']['backoffice']['moduleid'] = '';
                     $_SESSION['ploopi']['action'] = 'public';
@@ -1012,7 +1009,7 @@ abstract class ploopi_loader
                         $_SESSION['ploopi']['modulelabel'] = '';
 
                         // load params
-                        ploopi_loadparams();
+                        param::load();
                     }
 
                     ///////////////////////////////////////////////////////////////////////////
@@ -1029,7 +1026,7 @@ abstract class ploopi_loader
                             if (is_null($intAutoconnectModuleId) && $_SESSION['ploopi']['modules'][$intModuleId]['active'] && $_SESSION['ploopi']['modules'][$intModuleId]['autoconnect']) $intAutoconnectModuleId = $intModuleId;
                         }
 
-                        if (is_null($intAutoconnectModuleId) && ploopi_ismanager()) $intAutoconnectModuleId = _PLOOPI_MODULE_SYSTEM;
+                        if (is_null($intAutoconnectModuleId) && acl::ismanager()) $intAutoconnectModuleId = _PLOOPI_MODULE_SYSTEM;
 
                         if (!is_null($intAutoconnectModuleId))
                         {
@@ -1177,18 +1174,18 @@ abstract class ploopi_loader
         ///////////////////////////////////////////////////////////////////////////
         if (session_id() != '')
         {
-            $timestplimit = ploopi_timestamp_add(ploopi_createtimestamp(), 0, 0, -min( _PLOOPI_SESSIONTIME,  86400));
+            $timestplimit = date::timestamp_add(date::createtimestamp(), 0, 0, -min( _PLOOPI_SESSIONTIME,  86400));
             $db->query("DELETE FROM ploopi_connecteduser WHERE timestp < {$timestplimit}");
             $objConnectedUser = new connecteduser();
             $objConnectedUser->open(session_id());
             $objConnectedUser->fields['sid'] = session_id();
             $objConnectedUser->fields['ip'] = implode(',', $_SESSION['ploopi']['remote_ip']);
             $objConnectedUser->fields['domain'] = (empty($_SESSION['ploopi']['host'])) ? '' : $_SESSION['ploopi']['host'];
-            $objConnectedUser->fields['timestp'] = ploopi_createtimestamp();
+            $objConnectedUser->fields['timestp'] = date::createtimestamp();
             $objConnectedUser->fields['user_id'] = $_SESSION['ploopi']['userid'];
             $objConnectedUser->fields['workspace_id'] = $_SESSION['ploopi']['workspaceid'];
             $objConnectedUser->fields['module_id'] = $_SESSION['ploopi']['moduleid'];
-            $objConnectedUser->fields['timestp'] = ploopi_createtimestamp();
+            $objConnectedUser->fields['timestp'] = date::createtimestamp();
             $objConnectedUser->save();
             $db->query("SELECT count(*) as c FROM ploopi_connecteduser WHERE user_id > 0");
             $row = $db->fetchrow();
@@ -1219,7 +1216,7 @@ abstract class ploopi_loader
         {
             session_destroy();
             echo "<html><body><div style=\"text-align:center;\"><br /><br /><h1>Erreur de sécurité</h1>reconnectez vous ou fermez votre navigateur ou contactez l'administrateur système<br /><br /><b>erreur : $ploopi_errornum</b><br /><br /><a href=\"admin.php\">continuer</a></div></body></html>";
-            ploopi_die();
+            system::kill();
         }
 
         $_SESSION['ploopi']['uri'] = (empty($_SERVER['QUERY_STRING'])) ? '' : "admin.php?{$_SERVER['QUERY_STRING']}";
@@ -1259,13 +1256,13 @@ abstract class ploopi_loader
             case 'frontoffice':
                 if (isset($_SESSION['ploopi']['hosts']['frontoffice'][0]))
                     $_SESSION['ploopi']['workspaceid'] = $_SESSION['ploopi']['hosts']['frontoffice'][0];
-                else ploopi_die();
+                else system::kill();
             break;
 
             case 'backoffice':
                 if (isset($_SESSION['ploopi']['hosts']['backoffice'][0]))
                     $_SESSION['ploopi']['workspaceid'] = $_SESSION['ploopi']['hosts']['backoffice'][0];
-                else ploopi_die();
+                else system::kill();
 
                 self::getmodules();
             break;
@@ -1401,8 +1398,8 @@ abstract class ploopi_loader
             }
         }
 
-        //ploopi_print_r($_SESSION['ploopi']['workspaces']);
-        //ploopi_print_r($workspaces);
+        //output::print_r($_SESSION['ploopi']['workspaces']);
+        //output::print_r($workspaces);
         //die();
 
     }
@@ -1458,7 +1455,7 @@ abstract class ploopi_loader
 
         $listmodules = implode(',',array_keys($_SESSION['ploopi']['modules']));
 
-        ploopi_loadparams();
+        param::load();
 
         $_SESSION['ploopi']['paramloaded'] = true;
     }

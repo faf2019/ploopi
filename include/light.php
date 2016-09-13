@@ -40,12 +40,12 @@ if ($_SESSION['ploopi']['mode'] == 'backoffice')
         include_once './lib/template/template.php';
         include_once "{$_SESSION['ploopi']['template_path']}/class_skin.php";
 
-        $skin = new skin();
-        $template_body = new Template($_SESSION['ploopi']['template_path']);
+        $skin = new ovensia\ploopi\skin();
+        $template_body = new \Template($_SESSION['ploopi']['template_path']);
 
         if (!file_exists("{$_SESSION['ploopi']['template_path']}/light.tpl") || ! is_readable("{$_SESSION['ploopi']['template_path']}/light.tpl")) {
 
-            ploopi_die(
+            ovensia\ploopi\system::kill(
                 str_replace(
                     array('<FILE>', '<TEMPLATE>'),
                     array('light.tpl', $_SESSION['ploopi']['template_path']),

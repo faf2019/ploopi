@@ -32,11 +32,6 @@
  * @lastmodified $Date$
  */
 
-/**
- * Inclusion de la classe parent
- */
-include_once './include/classes/data_object.php';
-
 include_once './modules/booking/classes/class_booking_event.php';
 
 /**
@@ -48,7 +43,7 @@ include_once './modules/booking/classes/class_booking_event.php';
  * @copyright Ovensia
  */
 
-class booking_event_detail extends data_object
+class booking_event_detail extends ovensia\ploopi\data_object
 {
     /**
      * Constructeur de la classe
@@ -56,7 +51,7 @@ class booking_event_detail extends data_object
      * @return booking_event_detail
      */
 
-    public function booking_event_detail()
+    public function __construct()
     {
         parent::__construct('ploopi_mod_booking_event_detail', 'id');
     }
@@ -106,12 +101,12 @@ class booking_event_detail extends data_object
             null, // managed
             '', // object
             '', //requestedby
-            current(ploopi_timestamp2local($this->fields['timestp_begin'])), //from
-            current(ploopi_timestamp2local($this->fields['timestp_end'])), //to
+            current(ovensia\ploopi\date::timestamp2local($this->fields['timestp_begin'])), //from
+            current(ovensia\ploopi\date::timestamp2local($this->fields['timestp_end'])), //to
             $objEvent->fields['id_module'] // moduleid
         );
 
-        ploopi_print_r($arrEvents);
+        ovensia\ploopi\output::print_r($arrEvents);
 
         if (!empty($arrEvents)) {
 

@@ -20,6 +20,11 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+
+namespace ovensia\ploopi;
+
+use ovensia\ploopi;
+
 /**
  * Gestion du skin 'exemple'
  *
@@ -31,12 +36,6 @@
  *
  * @see skin_common
  */
-
-/**
- * inclusion de la classe parent
- */
-
-include_once './include/classes/skin_common.php';
 
 /**
  * Gestion de l'affichage du skin 'exemple'

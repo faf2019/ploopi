@@ -31,12 +31,6 @@
  */
 
 /**
- * Inclusion de la classe parent.
- */
-
-include_once './include/classes/calendar.php';
-
-/**
  * Classe d'accès à la table ploopi_mod_webedit_article_backup
  *
  * @package webedit
@@ -46,7 +40,7 @@ include_once './include/classes/calendar.php';
  * @author Stéphane Escaich
  */
 
-class webedit_calendar_blog extends calendar
+class webedit_calendar_blog extends ovensia\ploopi\calendar
 {
     public function display()
     {
@@ -132,18 +126,18 @@ class webedit_calendar_blog extends calendar
                         $d = date('j', $strTs);
 
                         // Date au format local
-                        $date = substr(ploopi_unixtimestamp2local($strTs), 0, 10);
+                        $date = substr(ovensia\ploopi\date::unixtimestamp2local($strTs), 0, 10);
                         $extra_class = '';
                         $extra_title = '';
                         $onclick = '';
 
-                        if (ploopi_holiday($strTs)) $extra_class = ' day_holiday';
+                        if (ovensia\ploopi\date::holiday($strTs)) $extra_class = ' day_holiday';
                         else
                         {
                             if ($c > 5) $extra_class = ' day_weekend';
                         }
 
-                        $strEventsKey = substr(ploopi_unixtimestamp2timestamp($strTs), 0, 8);
+                        $strEventsKey = substr(ovensia\ploopi\date::unixtimestamp2timestamp($strTs), 0, 8);
 
                         if(!empty($arrEvents[$strEventsKey]))
                         {
@@ -186,14 +180,14 @@ class webedit_calendar_blog extends calendar
                     }
 
                     // Date au format local
-                    $date = current(ploopi_timestamp2local($ts = sprintf("%04d%02d%02d000000",$this->arrOptions['year'], $this->arrOptions['month'], $d)));
-                    $dateday = ploopi_timestamp2unixtimestamp($ts);
+                    $date = current(ovensia\ploopi\date::timestamp2local($ts = sprintf("%04d%02d%02d000000",$this->arrOptions['year'], $this->arrOptions['month'], $d)));
+                    $dateday = ovensia\ploopi\date::timestamp2unixtimestamp($ts);
 
                     $extra_class = '';
                     $extra_title = '';
                     $onclick = '';
 
-                    if (ploopi_holiday($dateday)) $extra_class = ' day_holiday';
+                    if (ovensia\ploopi\date::holiday($dateday)) $extra_class = ' day_holiday';
                     else
                     {
                         if ($weekday > 5) $extra_class = ' day_weekend';
@@ -240,19 +234,19 @@ class webedit_calendar_blog extends calendar
                         $d = date('j', $strTs);
 
                         // Date au format local
-                        $date = substr(ploopi_unixtimestamp2local($strTs), 0, 10);
+                        $date = substr(ovensia\ploopi\date::unixtimestamp2local($strTs), 0, 10);
 
                         $extra_class = '';
                         $extra_title = '';
                         $onclick = '';
 
-                        if (ploopi_holiday($strTs)) $extra_class = ' day_holiday';
+                        if (ovensia\ploopi\date::holiday($strTs)) $extra_class = ' day_holiday';
                         else
                         {
                             if ($c > 5) $extra_class = ' day_weekend';
                         }
 
-                        $strEventsKey = substr(ploopi_unixtimestamp2timestamp($strTs), 0, 8);
+                        $strEventsKey = substr(ovensia\ploopi\date::unixtimestamp2timestamp($strTs), 0, 8);
                         if(!empty($arrEvents[$strEventsKey]))
                         {
                             $onclick = '';

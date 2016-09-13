@@ -21,8 +21,13 @@ AddDefaultCharset ISO-8859-15
   ErrorDocument 404 "The requested file favicon.ico was not found."
 </Files>
 
-<IfModule mod_php5.c>
+<IfModule mod_php7.c>
     AddType application/x-httpd-php .php .php3 .php4 .php5
+
+    php_flag display_startup_errors off
+    php_flag display_errors off
+    php_flag html_errors on
+    php_flag log_errors on
 
     php_flag magic_quotes_gpc Off
     php_flag register_globals Off
@@ -34,7 +39,7 @@ AddDefaultCharset ISO-8859-15
     # Recommandation de sécurité : mettre "On" si connexion chiffrée
     php_flag session.cookie_secure Off
 
-    php_value memory_limit 128M
+    php_value memory_limit 256M
     php_value post_max_size 32M
     php_value upload_max_filesize 32M
     php_value max_input_vars 5000

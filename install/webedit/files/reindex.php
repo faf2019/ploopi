@@ -33,9 +33,7 @@
 switch($op)
 {
     default:
-        include_once './include/functions/search_index.php';
-
-        echo $skin->create_pagetitle(ploopi_htmlentities($_SESSION['ploopi']['modulelabel']));
+        echo $skin->create_pagetitle(ovensia\ploopi\str::htmlentities($_SESSION['ploopi']['modulelabel']));
         echo $skin->open_simplebloc('Réindexation');
 
         $db->query("SELECT count(*) as c FROM ploopi_mod_webedit_heading WHERE id_module = {$_SESSION['ploopi']['moduleid']}");
@@ -50,7 +48,8 @@ switch($op)
         $db->query("SELECT count(*) as c FROM ploopi_mod_webedit_tag WHERE id_module = {$_SESSION['ploopi']['moduleid']}");
         $arrStats['tags'] = ($row = $db->fetchrow()) ? $row['c'] : 0;
 
-        $idxdb = ploopi_search_getdb();
+        /*
+        $idxdb = ovensia\ploopi\search_index::getdb();
         $idxdb->query(
             "
             SELECT  count(*) as c
@@ -62,12 +61,13 @@ switch($op)
             AND     ke.id_element = e.id
             "
         );
-
-        $arrStats['keywords'] = ($row = $idxdb->fetchrow()) ? $row['c'] : 0;
+        */
+        // $arrStats['keywords'] = ($row = $idxdb->fetchrow()) ? $row['c'] : 0;
+        $arrStats['keywords'] = 0;
 
         ?>
         <div style="padding:4px;">
-            <input type="button" class="button" value="Réindexer le contenu du site" onclick="javascript:document.location.href='<?php echo ploopi_urlencode('admin.php?webedit_menu=reindex&op=reindex'); ?>';" />
+            <input type="button" class="button" value="Réindexer le contenu du site" onclick="javascript:document.location.href='<?php echo ovensia\ploopi\crypt::urlencode('admin.php?webedit_menu=reindex&op=reindex'); ?>';" />
         </div>
         <div style="padding:4px;">
             Le site contient :
@@ -95,7 +95,7 @@ switch($op)
         if (!ini_get('safe_mode')) ini_set('max_execution_time', 0);
         include_once './modules/webedit/class_article.php';
 
-        echo $skin->create_pagetitle(ploopi_htmlentities($_SESSION['ploopi']['modulelabel']));
+        echo $skin->create_pagetitle(ovensia\ploopi\str::htmlentities($_SESSION['ploopi']['modulelabel']));
         echo $skin->open_simplebloc();
         ?>
         <div style="padding:4px;">
@@ -116,7 +116,7 @@ switch($op)
         ?>
         indexation terminée en <?php printf("%.02fs", $ploopi_timer->getexectime() - $index_start); ?>
         <?php if (isset($_REQUEST['force'])) echo "<br />Mode 'force' activé"; ?>
-        <br /><a title="Retour" href="<?php echo ploopi_urlencode('admin.php?webedit_menu=reindex'); ?>">Retour</a>
+        <br /><a title="Retour" href="<?php echo ovensia\ploopi\crypt::urlencode('admin.php?webedit_menu=reindex'); ?>">Retour</a>
         </div>
         <?php
         echo $skin->close_simplebloc();

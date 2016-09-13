@@ -38,7 +38,7 @@
 /**
  * Initialisation du module
  */
-ploopi_init_module('webedit');
+ovensia\ploopi\module::init('webedit');
 
 global $article_status;
 global $heading_sortmodes;
@@ -50,11 +50,11 @@ $menu = (empty($_REQUEST['webedit_menu'])) ? '' : $_REQUEST['webedit_menu'];
 switch($menu)
 {
     case 'stats':
-        if (ploopi_isactionallowed(_WEBEDIT_ACTION_STATS)) include_once './modules/webedit/stats.php';
+        if (ovensia\ploopi\acl::isactionallowed(_WEBEDIT_ACTION_STATS)) include_once './modules/webedit/stats.php';
     break;
 
     case 'reindex':
-        if (ploopi_isactionallowed(_WEBEDIT_ACTION_REINDEX)) include_once './modules/webedit/reindex.php';
+        if (ovensia\ploopi\acl::isactionallowed(_WEBEDIT_ACTION_REINDEX)) include_once './modules/webedit/reindex.php';
     break;
 
     default:
@@ -103,7 +103,7 @@ switch($menu)
             // GLOBAL Actions
             // ===============
             case 'heading_addroot':
-                if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
+                if (ovensia\ploopi\acl::isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
                 {
 
                     $heading_new = new webedit_heading();
@@ -123,16 +123,16 @@ switch($menu)
 
                     $headingid = $heading_new->save();
 
-                    ploopi_create_user_action_log(_WEBEDIT_ACTION_CATEGORY_EDIT, $headingid);
+                    ovensia\ploopi\user_action_log::record(_WEBEDIT_ACTION_CATEGORY_EDIT, $headingid);
 
-                    ploopi_redirect("admin.php?headingid={$headingid}");
+                    ovensia\ploopi\output::redirect("admin.php?headingid={$headingid}");
                 }
-                else ploopi_redirect('admin.php');
+                else ovensia\ploopi\output::redirect('admin.php');
             break;
 
             case 'heading_addnew':
                 $heading = new webedit_heading();
-                if ((ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT) || webedit_isEditor($headingid)) && is_numeric($headingid) && $heading->open($headingid))
+                if ((ovensia\ploopi\acl::isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT) || webedit_isEditor($headingid)) && is_numeric($headingid) && $heading->open($headingid))
                 {
                     $heading_new = new webedit_heading();
                     $heading_new->fields['label'] = "Sous rubrique de '{$heading->fields['label']}'";
@@ -159,33 +159,33 @@ switch($menu)
                     // on cherche la liste des abonnés à chacun des objets pour construire une liste globale d'abonnés
                     $arrUsers = array();
                     foreach ($arrHeadingList as $intObjectId)
-                        $arrUsers += ploopi_subscription_getusers(_WEBEDIT_OBJECT_HEADING, $intObjectId, array(_WEBEDIT_ACTION_CATEGORY_EDIT));
+                        $arrUsers += ovensia\ploopi\subscription::getusers(_WEBEDIT_OBJECT_HEADING, $intObjectId, array(_WEBEDIT_ACTION_CATEGORY_EDIT));
 
                     // on envoie le ticket de notification d'action sur l'objet
-                    ploopi_subscription_notify(_WEBEDIT_OBJECT_HEADING, $heading->fields['id'], _WEBEDIT_ACTION_CATEGORY_EDIT, $heading->fields['label'], array_keys($arrUsers), 'Cet objet à été créé');
+                    ovensia\ploopi\subscription::notify(_WEBEDIT_OBJECT_HEADING, $heading->fields['id'], _WEBEDIT_ACTION_CATEGORY_EDIT, $heading->fields['label'], array_keys($arrUsers), 'Cet objet à été créé');
 
                     /* FIN ABONNEMENT */
 
-                    ploopi_create_user_action_log(_WEBEDIT_ACTION_CATEGORY_EDIT, $headingid);
+                    ovensia\ploopi\user_action_log::record(_WEBEDIT_ACTION_CATEGORY_EDIT, $headingid);
 
-                    ploopi_redirect("admin.php?headingid={$headingid}");
+                    ovensia\ploopi\output::redirect("admin.php?headingid={$headingid}");
                 }
-                else ploopi_redirect('admin.php');
+                else ovensia\ploopi\output::redirect('admin.php');
             break;
 
             case 'heading_save':
-                if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT) || webedit_isEditor($headingid))
+                if (ovensia\ploopi\acl::isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT) || webedit_isEditor($headingid))
                 {
                     if ($headingid == 'b') // Blocs
                     {
                         /* DEBUT ABONNEMENT */
-                        $arrUsers = ploopi_subscription_getusers(_WEBEDIT_OBJECT_HEADING, $headingid, array(_WEBEDIT_ACTION_CATEGORY_EDIT));
+                        $arrUsers = ovensia\ploopi\subscription::getusers(_WEBEDIT_OBJECT_HEADING, $headingid, array(_WEBEDIT_ACTION_CATEGORY_EDIT));
                         // on envoie le ticket de notification d'action sur l'objet
-                        ploopi_subscription_notify(_WEBEDIT_OBJECT_HEADING, 'b', _WEBEDIT_ACTION_CATEGORY_EDIT, 'Blocs', array_keys($arrUsers), 'Cet objet à été modifié');
+                        ovensia\ploopi\subscription::notify(_WEBEDIT_OBJECT_HEADING, 'b', _WEBEDIT_ACTION_CATEGORY_EDIT, 'Blocs', array_keys($arrUsers), 'Cet objet à été modifié');
                         /* FIN ABONNEMENT */
 
-                        ploopi_validation_save(_WEBEDIT_OBJECT_HEADING, $headingid);
-                        ploopi_validation_save(_WEBEDIT_OBJECT_HEADING_BACK_EDITOR, $headingid);
+                        ovensia\ploopi\validation::add(_WEBEDIT_OBJECT_HEADING, $headingid);
+                        ovensia\ploopi\validation::add(_WEBEDIT_OBJECT_HEADING_BACK_EDITOR, $headingid);
                     }
                     else
                     {
@@ -242,19 +242,19 @@ switch($menu)
                             // on cherche la liste des abonnés à chacun des objets pour construire une liste globale d'abonnés
                             $arrUsers = array();
                             foreach ($arrHeadingList as $intObjectId)
-                                $arrUsers += ploopi_subscription_getusers(_WEBEDIT_OBJECT_HEADING, $intObjectId, array(_WEBEDIT_ACTION_CATEGORY_EDIT));
+                                $arrUsers += ovensia\ploopi\subscription::getusers(_WEBEDIT_OBJECT_HEADING, $intObjectId, array(_WEBEDIT_ACTION_CATEGORY_EDIT));
 
                             // on envoie le ticket de notification d'action sur l'objet
-                            ploopi_subscription_notify(_WEBEDIT_OBJECT_HEADING, $heading->fields['id'], _WEBEDIT_ACTION_CATEGORY_EDIT, $heading->fields['label'], array_keys($arrUsers), 'Cet objet à été modifié');
+                            ovensia\ploopi\subscription::notify(_WEBEDIT_OBJECT_HEADING, $heading->fields['id'], _WEBEDIT_ACTION_CATEGORY_EDIT, $heading->fields['label'], array_keys($arrUsers), 'Cet objet à été modifié');
 
                             /* FIN ABONNEMENT */
 
                             // Enregistrement des partages si la rubrique est privée
                             if (!$heading->fields['private']) unset($_SESSION['ploopi']['share']['users_selected']);
-                            ploopi_share_save(_WEBEDIT_OBJECT_HEADING, $heading->fields['id']);
+                            ovensia\ploopi\share::add(_WEBEDIT_OBJECT_HEADING, $heading->fields['id']);
 
-                            ploopi_validation_save(_WEBEDIT_OBJECT_HEADING, $heading->fields['id']);
-                            ploopi_validation_save(_WEBEDIT_OBJECT_HEADING_BACK_EDITOR, $heading->fields['id']);
+                            ovensia\ploopi\validation::add(_WEBEDIT_OBJECT_HEADING, $heading->fields['id']);
+                            ovensia\ploopi\validation::add(_WEBEDIT_OBJECT_HEADING_BACK_EDITOR, $heading->fields['id']);
                         }
                     }
 
@@ -278,9 +278,9 @@ switch($menu)
                         ");
                     }
 
-                    ploopi_redirect("admin.php?headingid={$headingid}");
+                    ovensia\ploopi\output::redirect("admin.php?headingid={$headingid}");
                 }
-                else ploopi_redirect('admin.php');
+                else ovensia\ploopi\output::redirect('admin.php');
 
             break;
 
@@ -288,7 +288,7 @@ switch($menu)
                 $heading = new webedit_heading();
 
                 // Pour rédacteur on verif qu'on est pas à la racine du redacteur en controlant si il est bien rédacteur du heading parents (ou plus loin)
-                if ($heading->open($headingid) && (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT) || (webedit_isEditor($headingid) && webedit_isEditor($heading->fields['id_heading']))))
+                if ($heading->open($headingid) && (ovensia\ploopi\acl::isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT) || (webedit_isEditor($headingid) && webedit_isEditor($heading->fields['id_heading']))))
                 {
                     if (!($heading->fields['id_heading'] == 0 && $heading->fields['position'] == 1))
                     {
@@ -300,18 +300,18 @@ switch($menu)
                         // on cherche la liste des abonnés à chacun des objets pour construire une liste globale d'abonnés
                         $arrUsers = array();
                         foreach ($arrHeadingList as $intObjectId)
-                            $arrUsers += ploopi_subscription_getusers(_WEBEDIT_OBJECT_HEADING, $intObjectId, array(_WEBEDIT_ACTION_CATEGORY_EDIT));
+                            $arrUsers += ovensia\ploopi\subscription::getusers(_WEBEDIT_OBJECT_HEADING, $intObjectId, array(_WEBEDIT_ACTION_CATEGORY_EDIT));
 
                         // on envoie le ticket de notification d'action sur l'objet
-                        ploopi_subscription_notify(_WEBEDIT_OBJECT_HEADING, $heading->fields['id'], _WEBEDIT_ACTION_CATEGORY_EDIT, $heading->fields['label'], array_keys($arrUsers), 'Cet objet à été supprimé');
+                        ovensia\ploopi\subscription::notify(_WEBEDIT_OBJECT_HEADING, $heading->fields['id'], _WEBEDIT_ACTION_CATEGORY_EDIT, $heading->fields['label'], array_keys($arrUsers), 'Cet objet à été supprimé');
 
                         /* FIN ABONNEMENT */
 
                         $heading->delete();
-                        ploopi_create_user_action_log(_WEBEDIT_ACTION_CATEGORY_EDIT, $headingid);
-                        ploopi_redirect("admin.php?headingid={$heading->fields['id_heading']}");
+                        ovensia\ploopi\user_action_log::record(_WEBEDIT_ACTION_CATEGORY_EDIT, $headingid);
+                        ovensia\ploopi\output::redirect("admin.php?headingid={$heading->fields['id_heading']}");
                     }
-                    else ploopi_redirect('admin.php');
+                    else ovensia\ploopi\output::redirect('admin.php');
                 }
             break;
 
@@ -320,7 +320,7 @@ switch($menu)
             break;
 
             case 'bloc_save':
-                if ((ploopi_isactionallowed(_WEBEDIT_ACTION_ARTICLE_EDIT) || webedit_isEditor($headingid) || webedit_isValidator($headingid)) && $type == 'draft')
+                if ((ovensia\ploopi\acl::isactionallowed(_WEBEDIT_ACTION_ARTICLE_EDIT) || webedit_isEditor($headingid) || webedit_isValidator($headingid)) && $type == 'draft')
                 {
 
                     $tablename = 'ploopi_mod_webedit_article_draft';
@@ -358,9 +358,9 @@ switch($menu)
 
                         if (isset($_POST['fck_webedit_article_content'])) $article->fields['content'] = $_POST['fck_webedit_article_content'];
 
-                        $article->fields['timestp'] = ploopi_local2timestamp($_POST['webedit_article_timestp']);
+                        $article->fields['timestp'] = ovensia\ploopi\date::local2timestamp($_POST['webedit_article_timestp']);
 
-                        $article->fields['lastupdate_timestp'] = ploopi_createtimestamp();
+                        $article->fields['lastupdate_timestp'] = ovensia\ploopi\date::createtimestamp();
                         $article->fields['lastupdate_id_user'] = $_SESSION['ploopi']['userid'];
 
                         if (empty($_POST['webedit_article_disabledfilter'])) $article->fields['disabledfilter'] = 0;
@@ -371,10 +371,10 @@ switch($menu)
                     // récupère les validateurs
                     $arrWfUsers = array('group' => array(), 'user' => array());
                     $arrWfUsersOnly = array(); // utilisateurs uniquement (groupes compris)
-                    $arrWf = ploopi_validation_get(_WEBEDIT_OBJECT_HEADING, $headingid);
+                    $arrWf = ovensia\ploopi\validation::get(_WEBEDIT_OBJECT_HEADING, $headingid);
                     $intWfHeadingId = $headingid;
 
-                    $objUser = new user();
+                    $objUser = new ovensia\ploopi\user();
                     $objUser->open($_SESSION['ploopi']['userid']);
                     $arrGroups = $objUser->getgroups(true);
 
@@ -389,7 +389,7 @@ switch($menu)
                         if ($value['type_validation'] == 'user') $arrWfUsersOnly[] = $value['id_validation'];
                         if ($value['type_validation'] == 'group')
                         {
-                            $objGroup = new group();
+                            $objGroup = new ovensia\ploopi\group();
                             if ($objGroup->open($value['id_validation'])) $arrWfUsersOnly = array_merge($arrWfUsersOnly, array_keys($objGroup->getusers()));
                         }
                     }
@@ -397,11 +397,11 @@ switch($menu)
                     $articleid = $article->save();
 
                     // action "publier" et l'utilisateur est un validateur => OK
-                    if (isset($_POST['publish']) && ($booWfVal || ploopi_isadmin()))
+                    if (isset($_POST['publish']) && ($booWfVal || ovensia\ploopi\acl::isadmin()))
                     {
                         $strTypeTicket = ($article->publish()) ? 'published_new' : 'published';
 
-                        ploopi_create_user_action_log(_WEBEDIT_ACTION_ARTICLE_PUBLISH, $articleid);
+                        ovensia\ploopi\user_action_log::record(_WEBEDIT_ACTION_ARTICLE_PUBLISH, $articleid);
                     }
 
 
@@ -430,11 +430,11 @@ switch($menu)
                     }
 
                     // on cherche la liste des abonnés à chacun des objets pour construire une liste globale d'abonnés
-                    $arrUsers = ploopi_subscription_getusers(_WEBEDIT_OBJECT_HEADING, $headingid, array($intActionId));
-                    $arrUsers += ploopi_subscription_getusers(_WEBEDIT_OBJECT_ARTICLE_ADMIN, $articleid, array($intActionId));
+                    $arrUsers = ovensia\ploopi\subscription::getusers(_WEBEDIT_OBJECT_HEADING, $headingid, array($intActionId));
+                    $arrUsers += ovensia\ploopi\subscription::getusers(_WEBEDIT_OBJECT_ARTICLE_ADMIN, $articleid, array($intActionId));
 
                     // on envoie le ticket de notification d'action sur l'objet
-                    ploopi_subscription_notify(_WEBEDIT_OBJECT_ARTICLE_ADMIN, $articleid, $intActionId, $article->fields['title'], array_keys($arrUsers), $strMsg);
+                    ovensia\ploopi\subscription::notify(_WEBEDIT_OBJECT_ARTICLE_ADMIN, $articleid, $intActionId, $article->fields['title'], array_keys($arrUsers), $strMsg);
 
                     /* FIN ABONNEMENT */
 
@@ -442,20 +442,20 @@ switch($menu)
                     if ($sendtickets && !$booWfVal)
                     {
                         $_SESSION['ploopi']['tickets']['users_selected'] = $arrWfUsersOnly;
-                        ploopi_tickets_send("Demande de validation de l'article <strong>\"{$article->fields['title']}\"</strong> (module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']})", "Ceci est un message automatique envoyé suite à une demande de validation de l'article \"{$article->fields['title']}\" du module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']}<br /><br />Vous pouvez accéder à cet article pour le valider en cliquant sur le lien ci-dessous.", true, 0, _WEBEDIT_OBJECT_ARTICLE_ADMIN, $article->fields['id'], $article->fields['title']);
+                        ovensia\ploopi\ticket::send("Demande de validation de l'article <strong>\"{$article->fields['title']}\"</strong> (module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']})", "Ceci est un message automatique envoyé suite à une demande de validation de l'article \"{$article->fields['title']}\" du module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']}<br /><br />Vous pouvez accéder à cet article pour le valider en cliquant sur le lien ci-dessous.", true, 0, _WEBEDIT_OBJECT_ARTICLE_ADMIN, $article->fields['id'], $article->fields['title']);
                     }
 
-                    if (!empty($_POST['articleid'])) ploopi_create_user_action_log(_WEBEDIT_ACTION_ARTICLE_EDIT, $articleid);
-                    else ploopi_create_user_action_log(_WEBEDIT_ACTION_ARTICLE_EDIT, $articleid);
+                    if (!empty($_POST['articleid'])) ovensia\ploopi\user_action_log::record(_WEBEDIT_ACTION_ARTICLE_EDIT, $articleid);
+                    else ovensia\ploopi\user_action_log::record(_WEBEDIT_ACTION_ARTICLE_EDIT, $articleid);
 
-                    ploopi_redirect("admin.php?op=bloc_modify&articleid={$articleid}");
+                    ovensia\ploopi\output::redirect("admin.php?op=bloc_modify&articleid={$articleid}");
                 }
-                else ploopi_redirect('admin.php');
+                else ovensia\ploopi\output::redirect('admin.php');
             break;
 
             case 'article_save':
 
-                if ((ploopi_isactionallowed(_WEBEDIT_ACTION_ARTICLE_EDIT) || webedit_isEditor($headingid) || webedit_isValidator($headingid)) && $type == 'draft')
+                if ((ovensia\ploopi\acl::isactionallowed(_WEBEDIT_ACTION_ARTICLE_EDIT) || webedit_isEditor($headingid) || webedit_isValidator($headingid)) && $type == 'draft')
                 {
                     $tablename = 'ploopi_mod_webedit_article_draft';
 
@@ -554,12 +554,12 @@ switch($menu)
                         if (isset($_POST['fck_webedit_article_headcontent'])) $article->fields['headcontent'] = $_POST['fck_webedit_article_headcontent'];
                         if (isset($_POST['fck_webedit_article_content'])) $article->fields['content'] = $_POST['fck_webedit_article_content'];
 
-                        $article->fields['timestp'] = ploopi_local2timestamp($_POST['webedit_article_timestp']);
+                        $article->fields['timestp'] = ovensia\ploopi\date::local2timestamp($_POST['webedit_article_timestp']);
 
-                        if (!empty($_POST['webedit_article_timestp_published'])) $article->fields['timestp_published'] = ploopi_local2timestamp($_POST['webedit_article_timestp_published']);
-                        if (!empty($_POST['webedit_article_timestp_unpublished'])) $article->fields['timestp_unpublished'] = ploopi_local2timestamp($_POST['webedit_article_timestp_unpublished']);
+                        if (!empty($_POST['webedit_article_timestp_published'])) $article->fields['timestp_published'] = ovensia\ploopi\date::local2timestamp($_POST['webedit_article_timestp_published']);
+                        if (!empty($_POST['webedit_article_timestp_unpublished'])) $article->fields['timestp_unpublished'] = ovensia\ploopi\date::local2timestamp($_POST['webedit_article_timestp_unpublished']);
 
-                        $article->fields['lastupdate_timestp'] = ploopi_createtimestamp();
+                        $article->fields['lastupdate_timestp'] = ovensia\ploopi\date::createtimestamp();
                         $article->fields['lastupdate_id_user'] = $_SESSION['ploopi']['userid'];
 
                         if (empty($_POST['webedit_article_disabledfilter'])) $article->fields['disabledfilter'] = 0;
@@ -569,16 +569,16 @@ switch($menu)
                     }
                     else {
                         $article->setvalues($_POST, 'webedit_article_');
-                        if (!empty($_POST['webedit_article_timestp_published'])) $article->fields['timestp_published'] = ploopi_local2timestamp($_POST['webedit_article_timestp_published']);
-                        if (!empty($_POST['webedit_article_timestp_unpublished'])) $article->fields['timestp_unpublished'] = ploopi_local2timestamp($_POST['webedit_article_timestp_unpublished']);
-                        if (!empty($_POST['webedit_article_timestp'])) $article->fields['timestp'] = ploopi_local2timestamp($_POST['webedit_article_timestp']);
+                        if (!empty($_POST['webedit_article_timestp_published'])) $article->fields['timestp_published'] = ovensia\ploopi\date::local2timestamp($_POST['webedit_article_timestp_published']);
+                        if (!empty($_POST['webedit_article_timestp_unpublished'])) $article->fields['timestp_unpublished'] = ovensia\ploopi\date::local2timestamp($_POST['webedit_article_timestp_unpublished']);
+                        if (!empty($_POST['webedit_article_timestp'])) $article->fields['timestp'] = ovensia\ploopi\date::local2timestamp($_POST['webedit_article_timestp']);
                     }
 
 
                     // récupère les validateurs
                     $arrWfUsers = array('group' => array(), 'user' => array());
                     $arrWfUsersOnly = array(); // utilisateurs uniquement (groupes compris)
-                    $arrWf = ploopi_validation_get(_WEBEDIT_OBJECT_HEADING, $headingid);
+                    $arrWf = ovensia\ploopi\validation::get(_WEBEDIT_OBJECT_HEADING, $headingid);
                     $intWfHeadingId = $headingid;
 
                     $objHeading = new webedit_heading();
@@ -589,7 +589,7 @@ switch($menu)
                         $arrParents = explode(';', $objHeading->fields['parents']);
                         for ($i = sizeof($arrParents)-1; $i >= 0; $i--)
                         {
-                            $arrWf = ploopi_validation_get(_WEBEDIT_OBJECT_HEADING, $arrParents[$i]);
+                            $arrWf = ovensia\ploopi\validation::get(_WEBEDIT_OBJECT_HEADING, $arrParents[$i]);
                             if (!empty($arrWf))
                             {
                                 $intWfHeadingId = $arrParents[$i];
@@ -598,7 +598,7 @@ switch($menu)
                         }
                     }
 
-                    $objUser = new user();
+                    $objUser = new ovensia\ploopi\user();
                     $objUser->open($_SESSION['ploopi']['userid']);
                     $arrGroups = $objUser->getgroups(true);
 
@@ -613,17 +613,17 @@ switch($menu)
                         if ($value['type_validation'] == 'user') $arrWfUsersOnly[] = $value['id_validation'];
                         if ($value['type_validation'] == 'group')
                         {
-                            $objGroup = new group();
+                            $objGroup = new ovensia\ploopi\group();
                             if ($objGroup->open($value['id_validation'])) $arrWfUsersOnly = array_merge($arrWfUsersOnly, array_keys($objGroup->getusers()));
                         }
                     }
 
                     // action "publier" et l'utilisateur est un validateur => OK
-                    if (isset($_POST['publish']) && ($booWfVal || ploopi_isadmin()))
+                    if (isset($_POST['publish']) && ($booWfVal || ovensia\ploopi\acl::isadmin()))
                     {
                         $strTypeTicket = ($article->publish()) ? 'published_new' : 'published';
 
-                        ploopi_create_user_action_log(_WEBEDIT_ACTION_ARTICLE_PUBLISH, $articleid);
+                        ovensia\ploopi\user_action_log::record(_WEBEDIT_ACTION_ARTICLE_PUBLISH, $articleid);
 
                     }
 
@@ -679,9 +679,9 @@ switch($menu)
                                     break;
                                 }
 
-                                $mail_content .= "\n\nVous pouvez vous désabonner en cliquant sur le lien suivant : "._PLOOPI_BASEPATH.'/'.ploopi_urlrewrite('index.php?ploopi_op=webedit_unsubscribe&subscription_email='.md5($row['email']), webedit_getrewriterules());
+                                $mail_content .= "\n\nVous pouvez vous désabonner en cliquant sur le lien suivant : "._PLOOPI_BASEPATH.'/'.ovensia\ploopi\str::urlrewrite('index.php?ploopi_op=webedit_unsubscribe&subscription_email='.md5($row['email']), webedit_getrewriterules());
 
-                                ploopi_send_mail($from, $row['email'], $mail_title, $mail_content, null, null, null, null, false);
+                                ovensia\ploopi\mail::send($from, $row['email'], $mail_title, $mail_content, null, null, null, null, false);
                             }
                         break;
 
@@ -694,12 +694,12 @@ switch($menu)
                     // on cherche la liste des abonnés à chacun des objets pour construire une liste globale d'abonnés
                     $arrUsers = array();
                     foreach ($arrHeadingList as $intObjectId)
-                        $arrUsers += ploopi_subscription_getusers(_WEBEDIT_OBJECT_HEADING, $intObjectId, array($intActionId));
+                        $arrUsers += ovensia\ploopi\subscription::getusers(_WEBEDIT_OBJECT_HEADING, $intObjectId, array($intActionId));
 
-                    $arrUsers += ploopi_subscription_getusers(_WEBEDIT_OBJECT_ARTICLE_ADMIN, $articleid, array($intActionId));
+                    $arrUsers += ovensia\ploopi\subscription::getusers(_WEBEDIT_OBJECT_ARTICLE_ADMIN, $articleid, array($intActionId));
 
                     // on envoie le ticket de notification d'action sur l'objet
-                    ploopi_subscription_notify(_WEBEDIT_OBJECT_ARTICLE_ADMIN, $articleid, $intActionId, $article->fields['title'], array_keys($arrUsers), $strMsg);
+                    ovensia\ploopi\subscription::notify(_WEBEDIT_OBJECT_ARTICLE_ADMIN, $articleid, $intActionId, $article->fields['title'], array_keys($arrUsers), $strMsg);
 
                     /* FIN ABONNEMENT */
 
@@ -707,11 +707,11 @@ switch($menu)
                     if ($sendtickets && !$booWfVal)
                     {
                         $_SESSION['ploopi']['tickets']['users_selected'] = $arrWfUsersOnly;
-                        ploopi_tickets_send("Demande de validation de l'article <strong>\"{$article->fields['title']}\"</strong> (module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']})", "Ceci est un message automatique envoyé suite à une demande de validation de l'article \"{$article->fields['title']}\" du module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']}<br /><br />Vous pouvez accéder à cet article pour le valider en cliquant sur le lien ci-dessous.", true, 0, _WEBEDIT_OBJECT_ARTICLE_ADMIN, $article->fields['id'], $article->fields['title']);
+                        ovensia\ploopi\ticket::send("Demande de validation de l'article <strong>\"{$article->fields['title']}\"</strong> (module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']})", "Ceci est un message automatique envoyé suite à une demande de validation de l'article \"{$article->fields['title']}\" du module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']}<br /><br />Vous pouvez accéder à cet article pour le valider en cliquant sur le lien ci-dessous.", true, 0, _WEBEDIT_OBJECT_ARTICLE_ADMIN, $article->fields['id'], $article->fields['title']);
                     }
 
-                    if (!empty($_POST['articleid'])) ploopi_create_user_action_log(_WEBEDIT_ACTION_ARTICLE_EDIT, $articleid);
-                    else ploopi_create_user_action_log(_WEBEDIT_ACTION_ARTICLE_EDIT, $articleid);
+                    if (!empty($_POST['articleid'])) ovensia\ploopi\user_action_log::record(_WEBEDIT_ACTION_ARTICLE_EDIT, $articleid);
+                    else ovensia\ploopi\user_action_log::record(_WEBEDIT_ACTION_ARTICLE_EDIT, $articleid);
 
                     if (_PLOOPI_SQL_LAYER == 'mysqli') {
                         $db->multiplequeries("
@@ -747,13 +747,13 @@ switch($menu)
                         ");
                     }
 
-                    ploopi_redirect("admin.php?op=article_modify&articleid={$articleid}");
+                    ovensia\ploopi\output::redirect("admin.php?op=article_modify&articleid={$articleid}");
                 }
-                else ploopi_redirect('admin.php');
+                else ovensia\ploopi\output::redirect('admin.php');
             break;
 
             case 'article_delete':
-                if ((ploopi_isactionallowed(_WEBEDIT_ACTION_ARTICLE_EDIT) || webedit_isEditor($headingid)) && $type == 'draft')
+                if ((ovensia\ploopi\acl::isactionallowed(_WEBEDIT_ACTION_ARTICLE_EDIT) || webedit_isEditor($headingid)) && $type == 'draft')
                 {
                     $article = new webedit_article($type);
                     if (!empty($_GET['articleid']) && is_numeric($_GET['articleid']) && $article->open($_GET['articleid']))
@@ -770,20 +770,20 @@ switch($menu)
                         // on cherche la liste des abonnés à chacun des objets pour construire une liste globale d'abonnés
                         $arrUsers = array();
                         foreach ($arrHeadingList as $intObjectId)
-                            $arrUsers += ploopi_subscription_getusers(_WEBEDIT_OBJECT_HEADING, $intObjectId, array(_WEBEDIT_ACTION_ARTICLE_EDIT, _WEBEDIT_ACTION_ARTICLE_PUBLISH));
+                            $arrUsers += ovensia\ploopi\subscription::getusers(_WEBEDIT_OBJECT_HEADING, $intObjectId, array(_WEBEDIT_ACTION_ARTICLE_EDIT, _WEBEDIT_ACTION_ARTICLE_PUBLISH));
 
-                        $arrUsers += ploopi_subscription_getusers(_WEBEDIT_OBJECT_ARTICLE_ADMIN, $_GET['articleid'], array(_WEBEDIT_ACTION_ARTICLE_EDIT, _WEBEDIT_ACTION_ARTICLE_PUBLISH));
+                        $arrUsers += ovensia\ploopi\subscription::getusers(_WEBEDIT_OBJECT_ARTICLE_ADMIN, $_GET['articleid'], array(_WEBEDIT_ACTION_ARTICLE_EDIT, _WEBEDIT_ACTION_ARTICLE_PUBLISH));
 
                         // on envoie le ticket de notification d'action sur l'objet
-                        ploopi_subscription_notify(_WEBEDIT_OBJECT_ARTICLE_ADMIN, $articleid, _WEBEDIT_ACTION_ARTICLE_EDIT, $article->fields['title'], array_keys($arrUsers), 'Cet objet à été supprimé');
+                        ovensia\ploopi\subscription::notify(_WEBEDIT_OBJECT_ARTICLE_ADMIN, $articleid, _WEBEDIT_ACTION_ARTICLE_EDIT, $article->fields['title'], array_keys($arrUsers), 'Cet objet à été supprimé');
 
                         /* FIN ABONNEMENT */
 
                         $article->delete();
-                        ploopi_create_user_action_log(_WEBEDIT_ACTION_ARTICLE_EDIT, $_GET['articleid']);
+                        ovensia\ploopi\user_action_log::record(_WEBEDIT_ACTION_ARTICLE_EDIT, $_GET['articleid']);
                     }
                 }
-                ploopi_redirect('admin.php');
+                ovensia\ploopi\output::redirect('admin.php');
             break;
 
             case 'display_iframe':
@@ -823,19 +823,19 @@ switch($menu)
                         }
                         else // article inconnu
                         {
-                            ploopi_redirect('admin.php');
+                            ovensia\ploopi\output::redirect('admin.php');
                         }
                     }
 
                     if ($headingid == 'b') $op = 'bloc_modify';
                 }
 
-                echo $skin->create_pagetitle(ploopi_htmlentities($_SESSION['ploopi']['modulelabel']));
+                echo $skin->create_pagetitle(ovensia\ploopi\str::htmlentities($_SESSION['ploopi']['modulelabel']));
                 echo $skin->open_simplebloc('Gestion du contenu');
 
                 ?>
                 <div id="webedit_header">
-                    <form action="<?php echo ploopi_urlencode('admin.php?op='.$op); ?>" method="post" id="webedit_form_display_type">
+                    <form action="<?php echo ovensia\ploopi\crypt::urlencode('admin.php?op='.$op); ?>" method="post" id="webedit_form_display_type">
                         <input type="hidden" name="webedit_display_type" id="webedit_display_type" value="<?php echo $display_type; ?>" />
 
                         <p class="ploopi_checkbox" style="float:right;margin-left:6px;" onclick="javascript:webedit_switch_display_type('advanced');">
@@ -876,8 +876,8 @@ switch($menu)
                                 'description' => 'Blocs',
                                 'parents' => array('h0'),
                                 'node_link' => '',
-                                'node_onclick' => "ploopi_skin_treeview_shownode('hb', '".ploopi_queryencode("ploopi_op=webedit_detail_heading&hid=r0&option=")."', 'admin-light.php')",
-                                'link' => ploopi_urlencode("admin.php?headingid=b"),
+                                'node_onclick' => "ploopi_skin_treeview_shownode('hb', '".ovensia\ploopi\crypt::queryencode("ploopi_op=webedit_detail_heading&hid=r0&option=")."', 'admin-light.php')",
+                                'link' => ovensia\ploopi\crypt::urlencode("admin.php?headingid=b"),
                                 'onclick' => '',
                                 'icon' => './modules/webedit/img/blocs.png'
                             );
@@ -900,7 +900,7 @@ switch($menu)
                                         'parents' => array('h0', 'hb'),
                                         'node_link' => '',
                                         'node_onclick' => '',
-                                        'link' => ploopi_urlencode("admin.php?headingid=b&op=bloc_modify&articleid={$article['id']}"),
+                                        'link' => ovensia\ploopi\crypt::urlencode("admin.php?headingid=b&op=bloc_modify&articleid={$article['id']}"),
                                         'onclick' => '',
                                         'icon' => "./modules/webedit/img/doc{$article['new_version']}.png"
                                     );

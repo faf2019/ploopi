@@ -103,23 +103,23 @@ while ($row = $db->fetchrow())
                 array(
                     'reference' =>
                         array(
-                            'label' => ploopi_htmlentities($row['reference']),
+                            'label' => ovensia\ploopi\str::htmlentities($row['reference']),
                             'style' => ($row['active']) ? '' : 'color:#a60000;'
                         ),
                     'resource' =>
                         array(
-                            'label' => ploopi_htmlentities($row['res_name']),
+                            'label' => ovensia\ploopi\str::htmlentities($row['res_name']),
                             'style' => ($row['active']) ? '' : 'color:#a60000;'
                         ),
                     'name' =>
                         array(
-                            'label' => ploopi_htmlentities($row['name']),
+                            'label' => ovensia\ploopi\str::htmlentities($row['name']),
                             'style' => ($row['active']) ? '' : 'color:#a60000;'
                         ),
                     'active' => array('label' => ($row['active']) ? 'oui' : 'non'),
                     'actions' => array('label' => '<input type="checkbox" class="booking_element_checkbox" value="'.$row['id'].'">')
                 ),
-            'description' => "Modifier la sous-ressource '".ploopi_htmlentities($row['name'])."'",
+            'description' => "Modifier la sous-ressource '".ovensia\ploopi\str::htmlentities($row['name'])."'",
             'link' => 'javascript:void(0);',
             'onclick' => "booking_element_open('subresource', '{$row['id']}', event);"
         );

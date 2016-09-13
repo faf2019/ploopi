@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,6 +20,10 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+namespace ovensia\ploopi;
+
+use ovensia\ploopi;
+
 /**
  * Gestion des utilisateurs
  *
@@ -31,11 +34,6 @@
  * @author Stéphane Escaich
  */
 
-/**
- * Inclusion de la classe parent.
- */
-
-include_once './include/classes/data_object.php';
 
 /**
  * Classe d'accès à la table ploopi_user
@@ -64,7 +62,7 @@ class user extends data_object
     public function __construct()
     {
         parent::__construct('ploopi_user');
-        $this->fields['date_creation'] = ploopi_createtimestamp();
+        $this->fields['date_creation'] = date::createtimestamp();
     }
 
     /**
@@ -91,7 +89,7 @@ class user extends data_object
 
         // Modification de mot de passe ?
         if ($this->_strPreviousPassword != $this->fields['password']) {
-            $this->fields['password_last_update'] = ploopi_createtimestamp();
+            $this->fields['password_last_update'] = date::createtimestamp();
         }
 
         return parent::save();
@@ -243,7 +241,7 @@ class user extends data_object
     {
         global $db;
 
-        ploopi_init_module('system', false, false, false);
+        module::init('system', false, false, false);
 
         $select =   "
             SELECT      g.*
@@ -319,7 +317,7 @@ class user extends data_object
             $admin_workspaceid = $workspaceid;
             $admin_moduleid = $fields['id'];
 
-            echo "<br /><strong>« ".ploopi_htmlentities($fields['label'])." »</strong> (".ploopi_htmlentities($fields['moduletype']).")<br />";
+            echo "<br /><strong>« ".str::htmlentities($fields['label'])." »</strong> (".str::htmlentities($fields['moduletype']).")<br />";
             if (file_exists("./modules/{$fields['moduletype']}/include/admin_user_create.php")) include "./modules/{$fields['moduletype']}/include/admin_user_create.php";
         }
 

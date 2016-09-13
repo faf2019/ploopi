@@ -30,7 +30,7 @@ switch($arrSearchPattern['planning_display_type'])
 
     case 'week':
         // On détermine les dates de la semaine courante
-        $date_begin = ploopi_numweek2unixtimestamp($arrSearchPattern['planning_week'], $arrSearchPattern['planning_year']);
+        $date_begin = ovensia\ploopi\date::numweek2unixtimestamp($arrSearchPattern['planning_week'], $arrSearchPattern['planning_year']);
         $date_end = mktime(0, 0, 0, date('n', $date_begin), date('j', $date_begin)+6, date('Y', $date_begin));
 
         // Détermination du numéro de semaine max de l'année (on se positionne sur le 31/12)
@@ -38,7 +38,7 @@ switch($arrSearchPattern['planning_display_type'])
 
         if ($intMaxWeek == 1) $intMaxWeek = 52;
 
-        $date_firstweek = ploopi_numweek2unixtimestamp(1, $arrSearchPattern['planning_year']);
+        $date_firstweek = ovensia\ploopi\date::numweek2unixtimestamp(1, $arrSearchPattern['planning_year']);
 
         for ($intWeek = 1; $intWeek <= $intMaxWeek; $intWeek++)
         {
@@ -46,7 +46,7 @@ switch($arrSearchPattern['planning_display_type'])
             $date_week = mktime(0, 0, 0, date('n', $date_firstweek), date('j', $date_firstweek)+(($intWeek - 1) * 7), date('Y', $date_firstweek));
             if ($arrSearchPattern['planning_week'] == $intWeek)
             {
-                $strPrintType = sprintf("Planning de la semaine %02d - %s", $intWeek, substr(ploopi_unixtimestamp2local($date_week),0,5));
+                $strPrintType = sprintf("Planning de la semaine %02d - %s", $intWeek, substr(ovensia\ploopi\date::unixtimestamp2local($date_week),0,5));
             }
         }
     break;
@@ -61,7 +61,7 @@ switch($arrSearchPattern['planning_display_type'])
     break;
 }
 
-//ploopi_print_r($arrSearchPattern);
+//ovensia\ploopi\output::print_r($arrSearchPattern);
 
 // Recherche des événements
 $arrEvents = array();
@@ -69,11 +69,11 @@ $arrEvents = array();
 // Recherche des événements
 $arrEvents = planning_get_events(
     $arrSearchPattern['planning_resources'],
-    ploopi_unixtimestamp2timestamp($date_begin),
-    ploopi_unixtimestamp2timestamp(mktime(0, 0, 0, date('n', $date_end), date('j', $date_end)+1, date('Y', $date_end)))
+    ovensia\ploopi\date::unixtimestamp2timestamp($date_begin),
+    ovensia\ploopi\date::unixtimestamp2timestamp(mktime(0, 0, 0, date('n', $date_end), date('j', $date_end)+1, date('Y', $date_end)))
     );
 
-//ploopi_print_r($arrEvents);
+//ovensia\ploopi\output::print_r($arrEvents);
 
 $strDateEvent = "";
 $strUserEventFirstname = "";
@@ -84,20 +84,20 @@ $strGroupEventLabel = "";
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
     <head>
-        <title><?php echo ploopi_htmlentities($strPrintType); ?></title>
+        <title><?php echo ovensia\ploopi\str::htmlentities($strPrintType); ?></title>
         <link rel="stylesheet" type="text/css" href="./modules/planning/include/styles_print.css" />
         <script type="text/javascript">window.onload = function() { window.print(); }</script>
     </head>
     <body>
-        <h1><?php echo ploopi_htmlentities($strPrintType); ?></h1>
+        <h1><?php echo ovensia\ploopi\str::htmlentities($strPrintType); ?></h1>
 
         <?php
         foreach($arrEvents as $event)
         {
-        //  ploopi_print_r($event);
+        //  ovensia\ploopi\output::print_r($event);
 
-            $arrEventBegin = ploopi_timestamp2local($event['timestp_begin']);
-            $arrEventEnd = ploopi_timestamp2local($event['timestp_end']);
+            $arrEventBegin = ovensia\ploopi\date::timestamp2local($event['timestp_begin']);
+            $arrEventEnd = ovensia\ploopi\date::timestamp2local($event['timestp_end']);
 
 
 
@@ -106,7 +106,7 @@ $strGroupEventLabel = "";
             ?>
                <h3>
                     <?php
-                        echo ploopi_htmlentities($arrEventBegin['date']);
+                        echo ovensia\ploopi\str::htmlentities($arrEventBegin['date']);
                         $strDateEvent = $arrEventBegin['date'];
                     ?>
                 </h3>
@@ -122,7 +122,7 @@ $strGroupEventLabel = "";
             {
                 foreach($event['res']['user'] as $id_user)
                 {
-                    $objUser = new user();
+                    $objUser = new ovensia\ploopi\user();
                     if($objUser->open($id_user))
                     {
                         $arrWho[] = sprintf("%s %s",$objUser->fields['firstname'],$objUser->fields['lastname']);
@@ -134,7 +134,7 @@ $strGroupEventLabel = "";
             {
                 foreach($event['res']['group'] as $id_group)
                 {
-                    $objGroup = new group();
+                    $objGroup = new ovensia\ploopi\group();
                     if($objGroup->open($id_group))
                     {
                         $arrWho[] = $objGroup->fields['label'];
@@ -154,7 +154,7 @@ $strGroupEventLabel = "";
                     }
                     ?>
                 </span><br />
-                <span class="planning_event_object">Objet: <?php echo ploopi_htmlentities($event['object']); ?> </span>
+                <span class="planning_event_object">Objet: <?php echo ovensia\ploopi\str::htmlentities($event['object']); ?> </span>
             </div>
         <?php
         }

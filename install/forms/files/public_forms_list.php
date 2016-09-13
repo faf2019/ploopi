@@ -21,28 +21,27 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-include_once './include/classes/data_object_collection.php';
 include_once './modules/forms/classes/formsForm.php';
 
 echo $skin->open_simplebloc(_FORMS_LIST);
 
-$intTsToday = ploopi_createtimestamp();
+$intTsToday = ovensia\ploopi\date::createtimestamp();
 
-$objDOC = new data_object_collection('formsForm');
+$objDOC = new ovensia\ploopi\data_object_collection('formsForm');
 $objDOC->add_where("id_module = %d", $_SESSION['ploopi']['moduleid']);
 $objDOC->add_where("(pubdate_start <= %s OR pubdate_start = '')", $intTsToday);
 $objDOC->add_where("(pubdate_end >= %s OR pubdate_end = '')", $intTsToday);
-$objDOC->add_where("id_workspace IN (%e)", array(explode(',', ploopi_viewworkspaces($_SESSION['ploopi']['moduleid']))));
+$objDOC->add_where("id_workspace IN (%e)", array(explode(',', ovensia\ploopi\system::viewworkspaces($_SESSION['ploopi']['moduleid']))));
 
 foreach($objDOC->get_objects() as $objForm)
 {
-    if (!$objForm->fields['option_adminonly'] || ploopi_isactionallowed(_FORMS_ACTION_ADMIN))
+    if (!$objForm->fields['option_adminonly'] || ovensia\ploopi\acl::isactionallowed(_FORMS_ACTION_ADMIN))
     {
         ?>
-        <a class="forms_public_link" href="<?php echo ploopi_urlencode("admin.php?op=forms_viewreplies&forms_id={$objForm->fields['id']}"); ?>">
+        <a class="forms_public_link" href="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?op=forms_viewreplies&forms_id={$objForm->fields['id']}"); ?>">
         <div>
-            <h1><?php echo ploopi_htmlentities($objForm->fields['label']); ?></h1>
-            <div><?php echo ploopi_nl2br(ploopi_htmlentities($objForm->fields['description'])); ?></div>
+            <h1><?php echo ovensia\ploopi\str::htmlentities($objForm->fields['label']); ?></h1>
+            <div><?php echo ovensia\ploopi\str::nl2br(ovensia\ploopi\str::htmlentities($objForm->fields['description'])); ?></div>
         </div>
         </a>
         <?php

@@ -56,17 +56,17 @@ $arrParams[] = "forms_id={$_GET['forms_id']}";
 if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
 ?>
 
-<form name="form_field" action="<?php echo ploopi_urlencode('admin.php?'.implode('&', $arrParams)); ?>" method="post" onsubmit="javascript:return field_validate(this);">
+<form name="form_field" action="<?php echo ovensia\ploopi\crypt::urlencode('admin.php?'.implode('&', $arrParams)); ?>" method="post" onsubmit="javascript:return field_validate(this);">
 <div style="overflow:hidden">
     <div class="ploopi_form">
         <div style="padding:4px;">
             <p>
                 <label><?php echo _FORMS_FIELD_POSITION; ?>:</label>
-                <input type="text" class="text" style="width:30px;" name="field_position" value="<?php echo ploopi_htmlentities($field->fields['position']); ?>">
+                <input type="text" class="text" style="width:30px;" name="field_position" value="<?php echo ovensia\ploopi\str::htmlentities($field->fields['position']); ?>">
             </p>
             <p>
                 <label><?php echo _FORMS_FIELD_INTERLINE; ?>:</label>
-                <input type="text" class="text" style="width:30px;" name="field_interline" value="<?php echo ploopi_htmlentities($field->fields['interline']); ?>">
+                <input type="text" class="text" style="width:30px;" name="field_interline" value="<?php echo ovensia\ploopi\str::htmlentities($field->fields['interline']); ?>">
             </p>
             <p>
                 <label><?php echo _FORMS_FIELD_GROUP; ?>:</label>
@@ -76,7 +76,7 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
                     foreach($objForm->getGroups() as $intIdGroup => $objGroup)
                     {
                         ?>
-                        <option value="<?php echo $intIdGroup; ?>" <?php if ($field->fields['id_group'] == $intIdGroup) echo 'selected="selected"'; ?>><?php echo ploopi_htmlentities($objGroup->fields['label']); ?></option>
+                        <option value="<?php echo $intIdGroup; ?>" <?php if ($field->fields['id_group'] == $intIdGroup) echo 'selected="selected"'; ?>><?php echo ovensia\ploopi\str::htmlentities($objGroup->fields['label']); ?></option>
                         <?php
                     }
                     ?>
@@ -90,12 +90,12 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
                 <label><?php echo _FORMS_FIELD_XHTMLCONTENT; ?>: </label>
                 <span>
                 <?php
-                include_once './include/functions/fck.php';
-
+                /*
                 $arrConfig['CustomConfigurationsPath'] = _PLOOPI_BASEPATH.'/modules/forms/fckeditor/fckconfig.js';
                 $arrConfig['EditorAreaCSS'] = _PLOOPI_BASEPATH.'/modules/forms/fckeditor/fck_editorarea.css';
 
                 ploopi_fckeditor('fck_field_xhtmlcontent', $field->fields['xhtmlcontent'], '100%', '350', $arrConfig);
+                */
                 ?>
                 </span>
             </p>
@@ -108,7 +108,7 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
 </div>
 
 <div style="clear:both;background-color:#d0d0d0;border-top:1px solid #a0a0a0;padding:4px;overflow:auto;text-align:right;">
-    <input type="button" class="flatbutton" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?op=forms_modify&forms_id={$_GET['forms_id']}"); ?>'">
+    <input type="button" class="flatbutton" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<?php echo ovensia\ploopi\crypt::urlencode("admin.php?op=forms_modify&forms_id={$_GET['forms_id']}"); ?>'">
     <input type="submit" class="flatbutton" value="<?php echo _PLOOPI_SAVE; ?>">
 </div>
 </form>

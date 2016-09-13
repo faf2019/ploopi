@@ -34,9 +34,8 @@
  */
 
 /**
- * inclusions fonctions système (ploopi_die...)
+ * inclusions fonctions système (ovensia\ploopi\system::kill...)
  */
-include_once './include/functions/system.php';
 
 if (isset($_REQUEST['ploopi_op']))
 {
@@ -45,10 +44,9 @@ if (isset($_REQUEST['ploopi_op']))
     switch($ploopi_op)
     {
         case 'ploopi_robots':
-            include_once './include/classes/cache.php';
 
             // Mise en cache
-            $objCache = new ploopi_cache(_PLOOPI_BASEPATH.'/robots.txt', 300);
+            $objCache = new ovensia\ploopi\cache(_PLOOPI_BASEPATH.'/robots.txt', 300);
 
             if (!$objCache->start())
             {
@@ -83,13 +81,13 @@ if (isset($_REQUEST['ploopi_op']))
             }
 
             header('Content-Type: text/plain');
-            ploopi_die();
+            ovensia\ploopi\system::kill();
         break;
 
         case 'ploopi_lostpassword':
         case 'ploopi_lostpassword_confirm':
 
-            if (!isset($_REQUEST['ploopi_lostpassword_login']) && !isset($_REQUEST['ploopi_lostpassword_email'])) ploopi_die();
+            if (!isset($_REQUEST['ploopi_lostpassword_login']) && !isset($_REQUEST['ploopi_lostpassword_email'])) ovensia\ploopi\system::kill();
 
             $arrWhere = array();
             if (!empty($_REQUEST['ploopi_lostpassword_login'])) $arrWhere[] = "login = '".$db->addslashes($_REQUEST['ploopi_lostpassword_login'])."'";
@@ -117,8 +115,7 @@ if (isset($_REQUEST['ploopi_op']))
                     if (!empty($row['email']))
                     {
 
-                        include_once './include/classes/user.php';
-                        $objUser = new user();
+                        $objUser = new ovensia\ploopi\user();
                         $objUser->open($row['id']);
 
                         // confirmation de modification de mdp
@@ -127,21 +124,20 @@ if (isset($_REQUEST['ploopi_op']))
                             // si code de confirmation fourni
                             if (!empty($_GET['ploopi_lostpassword_confirmcode']))
                             {
-                                include_once './include/classes/confirmation_code.php';
-                                $confirmation_code = new confirmation_code();
+                                $confirmation_code = new ovensia\ploopi\confirmation_code();
 
                                 // si action en cours avec le bon code de confirmation
                                 if ($confirmation_code->open("ploopi_lostpassword{$objUser->fields['id']}") && $confirmation_code->fields['code'] == $_GET['ploopi_lostpassword_confirmcode'])
                                 {
 
                                     // ok on peut générer le nouveau mot de passe et l'enregistrer
-                                    $strPass = ploopi_generatepassword();
+                                    $strPass = ovensia\ploopi\security::generatepassword();
                                     $objUser->setpassword($strPass);
                                     $objUser->fields['password_force_update'] = 1;
                                     $objUser->save();
 
                                     // ok on peut envoyer le mail
-                                    ploopi_send_mail(
+                                    ovensia\ploopi\mail::send(
                                         array(
                                             array(
                                                     'name' => $_SERVER['HTTP_HOST'],
@@ -170,22 +166,20 @@ if (isset($_REQUEST['ploopi_op']))
                         }
                         else
                         {
-                            include_once './include/classes/confirmation_code.php';
-
-                            $confirmation_code = new confirmation_code();
+                            $confirmation_code = new ovensia\ploopi\confirmation_code();
                             $strAction = "ploopi_lostpassword{$objUser->fields['id']}";
 
                             if ($confirmation_code->open($strAction))
                             {
                                 $confirmation_code->delete();
-                                $confirmation_code = new confirmation_code();
+                                $confirmation_code = new ovensia\ploopi\confirmation_code();
                             }
 
-                            $confirmation_code = new confirmation_code();
+                            $confirmation_code = new ovensia\ploopi\confirmation_code();
                             $confirmation_code->fields['action'] = $strAction;
                             $confirmation_code->save();
 
-                            ploopi_send_mail(
+                            ovensia\ploopi\mail::send(
                                 array(
                                     array(
                                             'name' => $_SERVER['HTTP_HOST'],
@@ -199,7 +193,7 @@ if (isset($_REQUEST['ploopi_op']))
                                     )
                                 ),
                                 "{$_SERVER['HTTP_HOST']} : modification de votre mot de passe",
-                                "Bonjour,\n\nvous recevez ce message car vous avez effectué une demande de mot de passe sur le site {$_SERVER['HTTP_HOST']}.\n\nVous devez confirmer cette demande en cliquant sur le lien suivant:\n\n"._PLOOPI_BASEPATH."/".ploopi_urlencode("admin.php?ploopi_op=ploopi_lostpassword_confirm&ploopi_lostpassword_login={$_REQUEST['ploopi_lostpassword_login']}&ploopi_lostpassword_email={$_REQUEST['ploopi_lostpassword_email']}&ploopi_lostpassword_confirmcode={$confirmation_code->fields['code']}"),
+                                "Bonjour,\n\nvous recevez ce message car vous avez effectué une demande de mot de passe sur le site {$_SERVER['HTTP_HOST']}.\n\nVous devez confirmer cette demande en cliquant sur le lien suivant:\n\n"._PLOOPI_BASEPATH."/".ovensia\ploopi\crypt::urlencode("admin.php?ploopi_op=ploopi_lostpassword_confirm&ploopi_lostpassword_login={$_REQUEST['ploopi_lostpassword_login']}&ploopi_lostpassword_email={$_REQUEST['ploopi_lostpassword_email']}&ploopi_lostpassword_confirmcode={$confirmation_code->fields['code']}"),
                                 null,
                                 null,
                                 null,
@@ -221,7 +215,7 @@ if (isset($_REQUEST['ploopi_op']))
             if (isset($intError)) $_SESSION['ploopi']['errorcode'] = $intError;
             elseif (isset($intMsg)) $_SESSION['ploopi']['msgcode'] = $intMsg;
 
-            ploopi_redirect('admin.php');
+            ovensia\ploopi\output::redirect('admin.php');
         break;
 
         case 'calendar_open':
@@ -232,7 +226,7 @@ if (isset($_REQUEST['ploopi_op']))
 
             if (!empty($_REQUEST['inputfield_id'])) $_SESSION['calendar']['inputfield_id'] = $_REQUEST['inputfield_id'];
 
-            if (empty($_SESSION['calendar']['inputfield_id'])) ploopi_die();
+            if (empty($_SESSION['calendar']['inputfield_id'])) ovensia\ploopi\system::kill();
 
             if (!empty($_REQUEST['selected_date']))
             {
@@ -314,12 +308,12 @@ if (isset($_REQUEST['ploopi_op']))
             <div id="calendar">
                 <div class="calendar_row">
                     <div class="calendar_arrow" style="float:right;">
-                        <a href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('<?php echo $strScript; ?>-light.php', '<?php echo ploopi_queryencode("ploopi_op=calendar_open&calendar_month={$next_month}&calendar_year={$next_year}"); ?>', 'ploopi_popup_calendar');"><img style="border:0;" src="<?php echo $strIconsPath; ?>/img/calendar/next.png"></a>
-                        <a href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('<?php echo $strScript; ?>-light.php', '<?php echo ploopi_queryencode("ploopi_op=calendar_open&calendar_month={$month}&calendar_year=".($year+1)); ?>', 'ploopi_popup_calendar');"><img style="border:0;" src="<?php echo $strIconsPath; ?>/img/calendar/nextx2.png"></a>
+                        <a href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('<?php echo $strScript; ?>-light.php', '<?php echo ovensia\ploopi\crypt::queryencode("ploopi_op=calendar_open&calendar_month={$next_month}&calendar_year={$next_year}"); ?>', 'ploopi_popup_calendar');"><img style="border:0;" src="<?php echo $strIconsPath; ?>/img/calendar/next.png"></a>
+                        <a href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('<?php echo $strScript; ?>-light.php', '<?php echo ovensia\ploopi\crypt::queryencode("ploopi_op=calendar_open&calendar_month={$month}&calendar_year=".($year+1)); ?>', 'ploopi_popup_calendar');"><img style="border:0;" src="<?php echo $strIconsPath; ?>/img/calendar/nextx2.png"></a>
                     </div>
                     <div class="calendar_arrow" style="float:left;">
-                        <a href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('<?php echo $strScript; ?>-light.php', '<?php echo ploopi_queryencode("ploopi_op=calendar_open&calendar_month={$month}&calendar_year=".($year-1)); ?>', 'ploopi_popup_calendar');"><img style="border:0;" src="<?php echo $strIconsPath; ?>/img/calendar/prevx2.png"></a>
-                        <a href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('<?php echo $strScript; ?>-light.php', '<?php echo ploopi_queryencode("ploopi_op=calendar_open&calendar_month={$prev_month}&calendar_year={$prev_year}"); ?>', 'ploopi_popup_calendar');"><img style="border:0;" src="<?php echo $strIconsPath; ?>/img/calendar/prev.png"></a>
+                        <a href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('<?php echo $strScript; ?>-light.php', '<?php echo ovensia\ploopi\crypt::queryencode("ploopi_op=calendar_open&calendar_month={$month}&calendar_year=".($year-1)); ?>', 'ploopi_popup_calendar');"><img style="border:0;" src="<?php echo $strIconsPath; ?>/img/calendar/prevx2.png"></a>
+                        <a href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('<?php echo $strScript; ?>-light.php', '<?php echo ovensia\ploopi\crypt::queryencode("ploopi_op=calendar_open&calendar_month={$prev_month}&calendar_year={$prev_year}"); ?>', 'ploopi_popup_calendar');"><img style="border:0;" src="<?php echo $strIconsPath; ?>/img/calendar/prev.png"></a>
                     </div>
                     <div class="calendar_month">
                         <?php echo "{$ploopi_months[$month]}<br />{$year}"; ?>
@@ -331,7 +325,7 @@ if (isset($_REQUEST['ploopi_op']))
                     for ($d=1; $d<=7; $d++)
                     {
                         ?>
-                        <div class="calendar_day"><?php echo ploopi_htmlentities($ploopi_days[$d][0]); ?></div>
+                        <div class="calendar_day"><?php echo ovensia\ploopi\str::htmlentities($ploopi_days[$d][0]); ?></div>
                         <?php
                     }
                     ?>
@@ -339,7 +333,7 @@ if (isset($_REQUEST['ploopi_op']))
                 <?php
                 if ($weekday > 1)
                 {
-                    $w = date('W', ploopi_timestamp2unixtimestamp(sprintf("%04d%02d01000000", $year, $month)));
+                    $w = date('W', ovensia\ploopi\date::timestamp2unixtimestamp(sprintf("%04d%02d01000000", $year, $month)));
                     ?>
                     <div class="calendar_row">
                     <div class="calendar_week">s<?php echo $w; ?></div>
@@ -350,11 +344,11 @@ if (isset($_REQUEST['ploopi_op']))
                          * Affichage des derniers jours du mois précédent
                          */
 
-                        $ts = ploopi_timestamp_add(sprintf("%04d%02d01000000", $year, $month), 0, 0, 0, 0, $c-$weekday);
-                        $localdate = ploopi_timestamp2local($ts);
+                        $ts = ovensia\ploopi\date::timestamp_add(sprintf("%04d%02d01000000", $year, $month), 0, 0, 0, 0, $c-$weekday);
+                        $localdate = ovensia\ploopi\date::timestamp2local($ts);
                         $d = intval(substr($ts, 6, 2), 10);
                         ?>
-                        <div class="calendar_day"><a class="calendar_outmonth" href="javascript:void(0);" onclick="javascript:$('<?php echo ploopi_htmlentities($_SESSION['calendar']['inputfield_id']); ?>').value='<?php echo ploopi_htmlentities($localdate['date']); ?>';ploopi_hidepopup('ploopi_popup_calendar');ploopi_dispatch_onchange('<?php echo ploopi_htmlentities($_SESSION['calendar']['inputfield_id']); ?>');"><?php echo $d; ?></a></div>
+                        <div class="calendar_day"><a class="calendar_outmonth" href="javascript:void(0);" onclick="javascript:$('<?php echo ovensia\ploopi\str::htmlentities($_SESSION['calendar']['inputfield_id']); ?>').value='<?php echo ovensia\ploopi\str::htmlentities($localdate['date']); ?>';ploopi_hidepopup('ploopi_popup_calendar');ploopi_dispatch_onchange('<?php echo ovensia\ploopi\str::htmlentities($_SESSION['calendar']['inputfield_id']); ?>');"><?php echo $d; ?></a></div>
                         <?php
                     }
                 }
@@ -371,19 +365,19 @@ if (isset($_REQUEST['ploopi_op']))
                      */
                     if ($weekday == 1)
                     {
-                        $w = date('W', ploopi_timestamp2unixtimestamp(sprintf("%04d%02d%02d000000", $year, $month, $d)));
+                        $w = date('W', ovensia\ploopi\date::timestamp2unixtimestamp(sprintf("%04d%02d%02d000000", $year, $month, $d)));
                         ?>
                         <div class="calendar_row">
                         <div class="calendar_week">s<?php echo $w; ?></div>
                         <?php
                     }
-                    $localdate = ploopi_timestamp2local(sprintf("%04d%02d%02d000000", $year, $month, $d));
+                    $localdate = ovensia\ploopi\date::timestamp2local(sprintf("%04d%02d%02d000000", $year, $month, $d));
                     $class = '';
                     $currentday = mktime(0,0,0,$month, $d, $year);
                     if ($currentday == $selectedday) $class = 'class="calendar_day_selected"';
                     elseif ($currentday == $today) $class = 'class="calendar_day_today"';
                     ?>
-                        <div class="calendar_day"><a <?php echo $class; ?> href="javascript:void(0);" onclick="javascript:$('<?php echo ploopi_htmlentities($_SESSION['calendar']['inputfield_id']); ?>').value='<?php echo ploopi_htmlentities($localdate['date']); ?>';ploopi_hidepopup('ploopi_popup_calendar');ploopi_dispatch_onchange('<?php echo ploopi_htmlentities($_SESSION['calendar']['inputfield_id']); ?>');"><?php echo $d; ?></a></div>
+                        <div class="calendar_day"><a <?php echo $class; ?> href="javascript:void(0);" onclick="javascript:$('<?php echo ovensia\ploopi\str::htmlentities($_SESSION['calendar']['inputfield_id']); ?>').value='<?php echo ovensia\ploopi\str::htmlentities($localdate['date']); ?>';ploopi_hidepopup('ploopi_popup_calendar');ploopi_dispatch_onchange('<?php echo ovensia\ploopi\str::htmlentities($_SESSION['calendar']['inputfield_id']); ?>');"><?php echo $d; ?></a></div>
                     <?php
 
                     /**
@@ -402,11 +396,11 @@ if (isset($_REQUEST['ploopi_op']))
                     for ($c = $weekday; $c <= 7 ; $c++)
                     {
 
-                        $ts = ploopi_timestamp_add(sprintf("%04d%02d01000000", $year, $month), 0, 0, 0, 1, $c-$weekday);
-                        $localdate = ploopi_timestamp2local($ts);
+                        $ts = ovensia\ploopi\date::timestamp_add(sprintf("%04d%02d01000000", $year, $month), 0, 0, 0, 1, $c-$weekday);
+                        $localdate = ovensia\ploopi\date::timestamp2local($ts);
                         $d = intval(substr($ts, 6, 2), 10);
                         ?>
-                        <div class="calendar_day"><a class="calendar_outmonth" href="javascript:void(0);" onclick="javascript:$('<?php echo ploopi_htmlentities($_SESSION['calendar']['inputfield_id']); ?>').value='<?php echo ploopi_htmlentities($localdate['date']); ?>';ploopi_hidepopup('ploopi_popup_calendar');ploopi_dispatch_onchange('<?php echo ploopi_htmlentities($_SESSION['calendar']['inputfield_id']); ?>');"><?php echo $d; ?></a></div>
+                        <div class="calendar_day"><a class="calendar_outmonth" href="javascript:void(0);" onclick="javascript:$('<?php echo ovensia\ploopi\str::htmlentities($_SESSION['calendar']['inputfield_id']); ?>').value='<?php echo ovensia\ploopi\str::htmlentities($localdate['date']); ?>';ploopi_hidepopup('ploopi_popup_calendar');ploopi_dispatch_onchange('<?php echo ovensia\ploopi\str::htmlentities($_SESSION['calendar']['inputfield_id']); ?>');"><?php echo $d; ?></a></div>
                         <?php
                     }
 
@@ -414,10 +408,10 @@ if (isset($_REQUEST['ploopi_op']))
 
                 }
 
-                $localdate = ploopi_timestamp2local(sprintf("%04d%02d%02d000000", date('Y'), date('n'), date('j')));
+                $localdate = ovensia\ploopi\date::timestamp2local(sprintf("%04d%02d%02d000000", date('Y'), date('n'), date('j')));
                 ?>
                 <div class="calendar_row" style="height:1.2em;overflow:hidden;">
-                    <a style="display:block;float:left;line-height:1.2em;height:1.2em;" href="javascript:void(0);" onclick="javascript:$('<?php echo ploopi_htmlentities($_SESSION['calendar']['inputfield_id']); ?>').value='<?php echo ploopi_htmlentities($localdate['date']); ?>';ploopi_hidepopup('ploopi_popup_calendar');ploopi_dispatch_onchange('<?php echo ploopi_htmlentities($_SESSION['calendar']['inputfield_id']); ?>');">Aujourd'hui</a>
+                    <a style="display:block;float:left;line-height:1.2em;height:1.2em;" href="javascript:void(0);" onclick="javascript:$('<?php echo ovensia\ploopi\str::htmlentities($_SESSION['calendar']['inputfield_id']); ?>').value='<?php echo ovensia\ploopi\str::htmlentities($localdate['date']); ?>';ploopi_hidepopup('ploopi_popup_calendar');ploopi_dispatch_onchange('<?php echo ovensia\ploopi\str::htmlentities($_SESSION['calendar']['inputfield_id']); ?>');">Aujourd'hui</a>
                     <a style="display:block;float:right;line-height:1.2em;height:1.2em;" href="javascript:void(0);" onclick="javascript:ploopi_hidepopup('ploopi_popup_calendar');">Fermer</a>
                 </div>
             </div>
@@ -426,7 +420,7 @@ if (isset($_REQUEST['ploopi_op']))
             ob_end_clean();
 
             echo $skin->create_popup("Choix d'une date", $content, 'ploopi_popup_calendar');
-            ploopi_die();
+            ovensia\ploopi\system::kill();
         break;
 
         case 'ploopi_get_userphoto':
@@ -435,16 +429,16 @@ if (isset($_REQUEST['ploopi_op']))
             if (!empty($_GET['ploopi_user_id']) && is_numeric($_GET['ploopi_user_id']) && $objUser->open($_GET['ploopi_user_id']))
             {
                 $strPhotoPath = $objUser->getphotopath();
-                if (file_exists($strPhotoPath)) ploopi_downloadfile($strPhotoPath, 'user.png', false, false);
+                if (file_exists($strPhotoPath)) ovensia\ploopi\fs::downloadfile($strPhotoPath, 'user.png', false, false);
             }
-            ploopi_die();
+            ovensia\ploopi\system::kill();
         break;
 
         /*
          * Traitement des captchas
          */
+         /*
         case 'ploopi_get_captcha':
-            include_once './include/classes/captcha.php';
 
             $idcaptcha = (isset($_GET['id_captcha']) && !empty($_GET['id_captcha'])) ? $_GET['id_captcha'] : '';
 
@@ -465,9 +459,8 @@ if (isset($_REQUEST['ploopi_op']))
             );
 
             $objCaptcha->createCaptcha();
-            ploopi_die();
+            ovensia\ploopi\system::kill();
         break;
-
         case 'ploopi_get_captcha_sound':
             include_once './include/classes/captcha.php';
 
@@ -476,7 +469,7 @@ if (isset($_REQUEST['ploopi_op']))
             $objCaptchaSound = new captcha_sound($idcaptcha);
 
             $objCaptchaSound->outputAudioFile();
-            ploopi_die();
+            ovensia\ploopi\system::kill();
         break;
 
         case 'ploopi_get_captcha_verif':
@@ -491,8 +484,9 @@ if (isset($_REQUEST['ploopi_op']))
             else
                 echo 0;
 
-            ploopi_die();
+            ovensia\ploopi\system::kill();
         break;
+        */
     }
 
     if ($_SESSION['ploopi']['connected'])
@@ -510,19 +504,19 @@ if (isset($_REQUEST['ploopi_op']))
         {
             case 'ploopi_switchdisplay':
                 if (!empty($_GET['id'])) $_SESSION['ploopi']['switchdisplay'][$_GET['id']] = $_GET['display'];
-                ploopi_die();
+                ovensia\ploopi\system::kill();
             break;
 
             case 'ploopi_checkpasswordvalidity':
-                if (!isset($_POST['password'])) ploopi_die();
-                if (_PLOOPI_USE_COMPLEXE_PASSWORD) echo ploopi_checkpasswordvalidity($_POST['password']);
+                if (!isset($_POST['password'])) ovensia\ploopi\system::kill();
+                if (_PLOOPI_USE_COMPLEXE_PASSWORD) echo ovensia\ploopi\security::checkpasswordvalidity($_POST['password']);
                 else echo true;
-                ploopi_die();
+                ovensia\ploopi\system::kill();
             break;
 
             case 'ploopi_skin_array_refresh':
                 if (!empty($_GET['array_id'])) $skin->display_array_refresh($_GET['array_id'], empty($_GET['array_orderby']) ? null : $_GET['array_orderby'], empty($_GET['array_page']) ? null : $_GET['array_page']);
-                ploopi_die();
+                ovensia\ploopi\system::kill();
             break;
 
             case 'ploopi_getobjects':
@@ -632,7 +626,7 @@ if (isset($_REQUEST['ploopi_op']))
                         //else $sel = '';
                         $sel = '';
                         ?>
-                        <option <?php echo $sel; ?> value="<?php echo $key; ?>"><?php echo ploopi_htmlentities("{$value['module_label']} » {$value['label']}"); if (!empty($value['object_label'])) echo ploopi_htmlentities(" » {$value['object_label']}"); ?></option>
+                        <option <?php echo $sel; ?> value="<?php echo $key; ?>"><?php echo ovensia\ploopi\str::htmlentities("{$value['module_label']} » {$value['label']}"); if (!empty($value['object_label'])) echo ovensia\ploopi\str::htmlentities(" » {$value['object_label']}"); ?></option>
                         <?php
                     }
                     ?>
@@ -649,9 +643,9 @@ if (isset($_REQUEST['ploopi_op']))
                 );
 
                 $template_body->pparse('body');
-                ploopi_die();
+                ovensia\ploopi\system::kill();
                 */
-                ploopi_ob_clean();
+                ovensia\ploopi\buffer::clean();
 
                 $select_object = "
                     SELECT  ploopi_mb_wce_object.*,
@@ -684,9 +678,9 @@ if (isset($_REQUEST['ploopi_op']))
                     else $array_modules["{$fields_object['id']},{$fields_object['module_id']}"] = "{$fields_object['module_label']} » {$fields_object['label']}";
                 }
 
-                ploopi_print_json($array_modules, true, false);
+                ovensia\ploopi\str::print_json($array_modules, true, false);
 
-                ploopi_die();
+                ovensia\ploopi\system::kill();
 
             break;
         }

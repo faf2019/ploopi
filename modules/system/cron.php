@@ -31,10 +31,8 @@
  */
 
 
-include_once './include/functions/date.php';
-
 // semaine dernière
-$strTsDelete = ploopi_timestamp_add(ploopi_createtimestamp(), 0, 0, 0, 0, -7, 0);
+$strTsDelete = ovensia\ploopi\date::timestamp_add(ovensia\ploopi\date::createtimestamp(), 0, 0, 0, 0, -7, 0);
 
 // suppression des données périmées
 $db->query("DELETE FROM `ploopi_log` WHERE ts < {$strTsDelete}");

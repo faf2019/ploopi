@@ -128,7 +128,7 @@ switch($http_host)
          * file : gestionnaire propre à Ploopi qui stock les sessions dans le dossier "data". Incompatible avec upload_progress.
          */
 
-        define ('_PLOOPI_SESSION_HANDLER', '<SESSION_HANDLER>'); // php, db, file
+        define ('_PLOOPI_SESSION_HANDLER', '<SESSION_HANDLER>'); // php, db, memcached, file
 
         /**
          * Niveau de compression des sessions de 0 à 9.
@@ -166,6 +166,20 @@ switch($http_host)
 
         define ('_PLOOPI_SESSION_DB_DATABASE', _PLOOPI_DB_DATABASE);
 
+        /**
+         * Le serveur memcached utilisé
+         */
+        define ('_PLOOPI_MEMCACHED_SERVER', 'localhost');
+
+        /**
+         * Le port utilisé pour la connexion au serveur memcached
+         */
+        define ('_PLOOPI_MEMCACHED_PORT', '11211');
+
+        /**
+         * Le serveur elasticsearch utilisé
+         */
+        define ('_PLOOPI_ELASTICSEARCH_HOST', 'localhost:9200');
 
         /**
          * Active ou non l'affichage des erreurs.
@@ -375,12 +389,6 @@ switch($http_host)
          */
 
         define ('_PLOOPI_USE_OUTPUT_COMPRESSION', true);
-
-        /**
-         * Chemin absolu vers le dossier contenant les librairies PEAR
-         */
-
-        define ('_PLOOPI_PEARPATH', '<PEARPATH>');
 
         /**
          * Nom d'hôte du serveur proxy pour l'accès internet

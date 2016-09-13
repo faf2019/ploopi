@@ -35,7 +35,7 @@
  * Initialisation du module
  */
 
-ploopi_init_module('doc', false, false, false);
+ovensia\ploopi\module::init('doc', false, false, false);
 
 $op = isset($_REQUEST['op']) ? $_REQUEST['op'] : '';
 $currentfolder = isset($_REQUEST['currentfolder']) ? $_REQUEST['currentfolder'] : '';
@@ -60,7 +60,7 @@ if ($_SESSION['ploopi']['modules'][$menu_moduleid]['doc_viewfoldersinblock'])
     $arrWhere['folder'] = "f.id_folder = 0";
 
     // Utilisateur "standard"
-    if (!ploopi_isadmin() && !ploopi_isactionallowed(_DOC_ACTION_ADMIN, $_SESSION['ploopi']['workspaceid'], $menu_moduleid))
+    if (!ovensia\ploopi\acl::isadmin() && !ovensia\ploopi\acl::isactionallowed(_DOC_ACTION_ADMIN, $_SESSION['ploopi']['workspaceid'], $menu_moduleid))
     {
         // Publié (ou propriétaire)
         $arrWhere['published'] = "(f.published = 1 OR f.id_user = {$_SESSION['ploopi']['userid']})";
@@ -70,7 +70,7 @@ if ($_SESSION['ploopi']['modules'][$menu_moduleid]['doc_viewfoldersinblock'])
         // Partagé
         if (!empty($_SESSION['doc'][$menu_moduleid]['share']['folders'])) $arrWhere['visibility']['shared'] = "(f.foldertype = 'shared' AND f.id IN (".implode(',', $_SESSION['doc'][$menu_moduleid]['share']['folders'])."))";
         // Public
-        $arrWhere['visibility']['public'] = "(f.foldertype = 'public' AND f.id_workspace IN (".ploopi_viewworkspaces($menu_moduleid)."))";
+        $arrWhere['visibility']['public'] = "(f.foldertype = 'public' AND f.id_workspace IN (".ovensia\ploopi\system::viewworkspaces($menu_moduleid)."))";
 
         // Synthèse visibilité
         $arrWhere['visibility'] = '('.implode(' OR ', $arrWhere['visibility']).')';
@@ -106,10 +106,10 @@ if ($_SESSION['ploopi']['modules'][$menu_moduleid]['doc_viewfoldersinblock'])
             if ($row['foldertype'] == 'shared') $ico .= '_shared';
             if ($row['foldertype'] == 'public') $ico .= '_public';
             if ($row['readonly']) $ico .= '_locked';
-            $block->addmenu("<img style=\"display:block;float:left;\" src=\"./modules/doc/img/{$ico}.png\" /><div style=\"margin-left:20px;word-wrap:break-word;\">".ploopi_htmlentities($row['name'])."</div>", ploopi_urlencode("admin.php?ploopi_moduleid=$menu_moduleid&ploopi_action=public&currentfolder={$row['id']}"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && $currentfolder == $row['id']);
+            $block->addmenu("<img style=\"display:block;float:left;\" src=\"./modules/doc/img/{$ico}.png\" /><div style=\"margin-left:20px;word-wrap:break-word;\">".ovensia\ploopi\str::htmlentities($row['name'])."</div>", ovensia\ploopi\crypt::urlencode("admin.php?ploopi_moduleid=$menu_moduleid&ploopi_action=public&currentfolder={$row['id']}"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && $currentfolder == $row['id']);
 
         }
-        else $block->addmenu(ploopi_htmlentities($row['name']), ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&currentfolder={$row['id']}"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && $currentfolder == $row['id']);
+        else $block->addmenu(ovensia\ploopi\str::htmlentities($row['name']), ovensia\ploopi\crypt::urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&currentfolder={$row['id']}"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && $currentfolder == $row['id']);
 
     }
 
@@ -122,7 +122,7 @@ if ($_SESSION['ploopi']['modules'][$menu_moduleid]['doc_viewfoldersinblock'])
 if ($_SESSION['ploopi']['modules'][$menu_moduleid]['doc_displayroot'])
 {
     $label = (empty($_SESSION['ploopi']['modules'][$menu_moduleid]['doc_rootlabel'])) ? _DOC_MYDOCUMENTS : $_SESSION['ploopi']['modules'][$menu_moduleid]['doc_rootlabel'];
-    $block->addmenu(ploopi_htmlentities($label), ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && $op != 'doc_search' && empty($currentfolder));
+    $block->addmenu(ovensia\ploopi\str::htmlentities($label), ovensia\ploopi\crypt::urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && $op != 'doc_search' && empty($currentfolder));
 }
 
 /**
@@ -131,6 +131,6 @@ if ($_SESSION['ploopi']['modules'][$menu_moduleid]['doc_displayroot'])
 
 if ($_SESSION['ploopi']['modules'][$menu_moduleid]['doc_displaysearch'])
 {
-    $block->addmenu(_DOC_SEARCH, ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&op=doc_search&currentfolder=0"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && $op == 'doc_search');
+    $block->addmenu(_DOC_SEARCH, ovensia\ploopi\crypt::urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&op=doc_search&currentfolder=0"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && $op == 'doc_search');
 }
 ?>

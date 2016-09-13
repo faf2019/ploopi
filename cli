@@ -63,7 +63,7 @@ include_once './include/constants.php';
  * Attention de bien garder ces inclusions. Sinon problèmes avec ploopi_die et la gestion du buffer.
  */
 include_once './include/classes/data_object.php';
-include_once './include/functions/date.php';
+include_once './include/classes/date.php';
 include_once './include/functions/system.php';
 
 /**

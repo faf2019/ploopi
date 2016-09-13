@@ -37,8 +37,7 @@
  * Initialisation du module
  */
 
-ploopi_init_module('system');
-include_once './include/classes/user.php';
+ovensia\ploopi\module::init('system');
 
 if (!isset($op)) $op = '';
 
@@ -49,14 +48,14 @@ switch($op)
 
         $template_body->assign_block_vars('switch_content_module_system.switch_tickets.menu' , array(
                                 'LABEL' => 'Messages reçus',
-                                'URL' => ploopi_urlencode("index.php?modcontent={$template_moduleid}&op=showtickets&menu=received"),
+                                'URL' => ovensia\ploopi\crypt::urlencode("index.php?modcontent={$template_moduleid}&op=showtickets&menu=received"),
                                 'SELECTED' => (!isset($_GET['menu']) || (isset($_GET['menu']) && $_GET['menu'] == 'received')) ? 'sel' : 'notsel'
                                 )
                             );
 
         $template_body->assign_block_vars('switch_content_module_system.switch_tickets.menu' , array(
                                 'LABEL' => 'Messages envoyés',
-                                'URL' => ploopi_urlencode("index.php?modcontent={$template_moduleid}&op=showtickets&menu=sent"),
+                                'URL' => ovensia\ploopi\crypt::urlencode("index.php?modcontent={$template_moduleid}&op=showtickets&menu=sent"),
                                 'SELECTED' => (isset($_GET['menu']) && $_GET['menu'] == 'sent') ? 'sel' : 'notsel'
                                 )
                             );
@@ -95,7 +94,7 @@ switch($op)
 
             while ($fields = $db->fetchrow($rs))
             {
-                $ld = ploopi_timestamp2local($fields['timestp']);
+                $ld = ovensia\ploopi\date::timestamp2local($fields['timestp']);
                 if (!$fields['opened']) $puce = '#ff2020';
                 elseif (!$fields['done']) $puce = '#2020ff';
                 else $puce = '#20ff20';
@@ -103,7 +102,7 @@ switch($op)
                 $template_body->assign_block_vars('switch_content_module_system.switch_tickets.tickets' , array(
                                     'ID' => $fields['id'],
                                     'TITLE' => $fields['title'],
-                                    'MESSAGE' => ploopi_nl2br($fields['message']),
+                                    'MESSAGE' => ovensia\ploopi\str::nl2br($fields['message']),
                                     'DATE' => $ld['date'],
                                     'TIME' => $ld['time'],
                                     'COLOR' => $puce,
@@ -176,7 +175,7 @@ switch($op)
             foreach($tickets as $id => $ticket)
             {
                 $fields = $ticket['fields'];
-                $ld = ploopi_timestamp2local($fields['timestp']);
+                $ld = ovensia\ploopi\date::timestamp2local($fields['timestp']);
 
                 $ticket_status = 2; // 0 = nothing done // 1 = opened // 2 = done
 
@@ -204,7 +203,7 @@ switch($op)
                 $template_body->assign_block_vars('switch_content_module_system.switch_tickets.tickets' , array(
                                     'ID' => $fields['id'],
                                     'TITLE' => $fields['title'],
-                                    'MESSAGE' => ploopi_nl2br($fields['message']),
+                                    'MESSAGE' => ovensia\ploopi\str::nl2br($fields['message']),
                                     'DATE' => $ld['date'],
                                     'TIME' => $ld['time'],
                                     'COLOR' => $puce,
@@ -240,7 +239,7 @@ switch($op)
     case 'saveprofile':
     case 'showprofile':
         $template_body->assign_block_vars("switch_content_module_system.switch_profile", array());
-        $user = new user();
+        $user = new ovensia\ploopi\user();
         $user->open($_SESSION['ploopi']['userid']);
 
         if ($op == 'saveprofile')
@@ -250,7 +249,7 @@ switch($op)
             if ($userx_password!='' && $userx_password == $userx_passwordconfirm) $user->fields['password'] = md5($userx_password);
             elseif ($userx_password != $userx_passwordconfirm) $passwordok = false;
             $user->save();
-            ploopi_redirect('./?modcontent='._PLOOPI_MODULE_SYSTEM.'&op=showprofile&reloadsession&ok='.$passwordok);
+            ovensia\ploopi\output::redirect('./?modcontent='._PLOOPI_MODULE_SYSTEM.'&op=showprofile&reloadsession&ok='.$passwordok);
         }
 
         if (isset($ok))

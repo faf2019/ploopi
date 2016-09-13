@@ -35,8 +35,6 @@
  * Inclusion des classes de gestion des roles
  */
 
-include_once './include/classes/role.php';
-
 switch($op)
 {
     case 'delete_role':
@@ -44,11 +42,11 @@ switch($op)
         {
             $role = new role();
             $role->open($_GET['roleid']);
-            ploopi_create_user_action_log(_SYSTEM_ACTION_DELETEROLE, "{$role->fields['label']} ({$role->fields['id']})");
+            ovensia\ploopi\user_action_log::record(_SYSTEM_ACTION_DELETEROLE, "{$role->fields['label']} ({$role->fields['id']})");
             $role->delete();
-            ploopi_redirect("admin.php?roleTabItem=tabRoleManagement&reloadsession");
+            ovensia\ploopi\output::redirect("admin.php?roleTabItem=tabRoleManagement&reloadsession");
         }
-        ploopi_redirect("admin.php?roleTabItem=tabRoleManagement");
+        ovensia\ploopi\output::redirect("admin.php?roleTabItem=tabRoleManagement");
     break;
 
     case 'save_role':
@@ -63,15 +61,15 @@ switch($op)
         $role->setvalues($_POST,'role_');
         if (empty($_POST['role_shared'])) $role->fields['shared'] = 0;
 
-        $module = new module();
+        $module = new ovensia\ploopi\module();
         if ($module->open($_POST['role_id_module']))
         {
             $role->save($_POST['id_action'], $module->fields['id_module_type']);
-            ploopi_create_user_action_log(($isnew) ?_SYSTEM_ACTION_CREATEROLE : _SYSTEM_ACTION_MODIFYROLE, "{$role->fields['label']} ({$role->fields['id']})");
-            ploopi_redirect("admin.php?roleTabItem=tabRoleManagement&reloadsession");
+            ovensia\ploopi\user_action_log::record(($isnew) ?_SYSTEM_ACTION_CREATEROLE : _SYSTEM_ACTION_MODIFYROLE, "{$role->fields['label']} ({$role->fields['id']})");
+            ovensia\ploopi\output::redirect("admin.php?roleTabItem=tabRoleManagement&reloadsession");
         }
 
-        ploopi_redirect("admin.php?roleTabItem=tabRoleManagement");
+        ovensia\ploopi\output::redirect("admin.php?roleTabItem=tabRoleManagement");
     break;
 }
 
@@ -89,7 +87,7 @@ $tabs['tabRoleAdd'] = array (
     'url' => "admin.php?roleTabItem=tabRoleAdd"
 );
 
-$tabs['tabRoleUsers'] = array ( 
+$tabs['tabRoleUsers'] = array (
     'title' => _SYSTEM_LABELTAB_ROLEUSERS,
     'url' => "admin.php?roleTabItem=tabRoleUsers"
 );

@@ -55,17 +55,17 @@ $arrParams[] = "ploopi_op=forms_group_save";
 $arrParams[] = "forms_id={$objForm->fields['id']}";
 if (!$objGroup->isnew()) $arrParams[] = "forms_group_id={$objGroup->fields['id']}";
 ?>
-<form name="form_field" action="<?php echo ploopi_urlencode('admin.php?'.implode('&', $arrParams)); ?>" method="post" onsubmit="javascript:return forms_group_validate(this);">
+<form name="form_field" action="<?php echo ovensia\ploopi\crypt::urlencode('admin.php?'.implode('&', $arrParams)); ?>" method="post" onsubmit="javascript:return forms_group_validate(this);">
 <div style="overflow:hidden">
     <div style="float:left;width:50%;">
         <div class="ploopi_form" style="padding:4px;">
             <p>
                 <label><?php echo _FORMS_GROUP_LABEL; ?>:</label>
-                <input type="text" class="text" name="forms_group_label" value="<?php echo ploopi_htmlentities($objGroup->fields['label']); ?>">
+                <input type="text" class="text" name="forms_group_label" value="<?php echo ovensia\ploopi\str::htmlentities($objGroup->fields['label']); ?>">
             </p>
             <p>
                 <label><?php echo _FORMS_GROUP_DESCRIPTION; ?>:</label>
-                <textarea class="text" name="forms_group_description"><?php echo ploopi_htmlentities($objGroup->fields['description']); ?></textarea>
+                <textarea class="text" name="forms_group_description"><?php echo ovensia\ploopi\str::htmlentities($objGroup->fields['description']); ?></textarea>
             </p>
             <p>
                 <label><?php echo _FORMS_GROUP_FORMULA; ?>:<br /><em>ex: (C1 AND C2) OR C3</em></label>
@@ -76,7 +76,7 @@ if (!$objGroup->isnew()) $arrParams[] = "forms_group_id={$objGroup->fields['id']
                 <input type="button" class="button" value="(" title="Insérer une parenthèse ouvrante" style="width:20px;" onclick="javascript:ploopi_insertatcursor($('forms_group_formula'), this.value); $('forms_group_formula').focus();" />
                 <input type="button" class="button" value=")" title="Insérer une parenthèse fermante" style="width:20px;" onclick="javascript:ploopi_insertatcursor($('forms_group_formula'), this.value); $('forms_group_formula').focus();" />
                 <br />
-                <input style="margin-top:2px;" type="text" class="text" name="forms_group_formula" id="forms_group_formula" value="<?php echo ploopi_htmlentities($objGroup->fields['formula']); ?>">
+                <input style="margin-top:2px;" type="text" class="text" name="forms_group_formula" id="forms_group_formula" value="<?php echo ovensia\ploopi\str::htmlentities($objGroup->fields['formula']); ?>">
                 <?php
                 // Test de l'expression booléenne
                 include_once './modules/forms/classes/formsBooleanParser.php';
@@ -92,8 +92,6 @@ if (!$objGroup->isnew()) $arrParams[] = "forms_group_id={$objGroup->fields['id']
     <div style="float:left;width:49%;">
         <div class="ploopi_form" style="padding:4px;">
         <?php
-        include_once './include/functions/crypt.php';
-
         $arrConditions = $objGroup->getConditions();
 
         for ($intI = 1; $intI <= 5; $intI++)
@@ -110,7 +108,7 @@ if (!$objGroup->isnew()) $arrParams[] = "forms_group_id={$objGroup->fields['id']
                         if (!$arrField['separator'] && !$arrField['captcha'] && !$arrField['html'])
                         {
                             ?>
-                             <option value="<?php echo $intIdField; ?>" <?php echo (isset($arrConditions[$intI]['field']) && $intIdField == $arrConditions[$intI]['field']) ? 'selected="selected"' : ''; ?>><?php echo ploopi_htmlentities($arrField['name']); ?></option>
+                             <option value="<?php echo $intIdField; ?>" <?php echo (isset($arrConditions[$intI]['field']) && $intIdField == $arrConditions[$intI]['field']) ? 'selected="selected"' : ''; ?>><?php echo ovensia\ploopi\str::htmlentities($arrField['name']); ?></option>
                             <?php
                         }
                     }
@@ -123,12 +121,12 @@ if (!$objGroup->isnew()) $arrParams[] = "forms_group_id={$objGroup->fields['id']
                     foreach($field_operators as $strKey => $strValue)
                     {
                          ?>
-                         <option value="<?php echo ploopi_htmlentities($strKey, null, 'ISO-8859-1', false); ?>" <?php echo (isset($arrConditions[$intI]['op']) && $strKey == $arrConditions[$intI]['op']) ? 'selected="selected"' : ''; ?>><?php echo ploopi_htmlentities($strValue, null, 'ISO-8859-1', false); ?></option>
+                         <option value="<?php echo ovensia\ploopi\str::htmlentities($strKey, null, 'ISO-8859-1', false); ?>" <?php echo (isset($arrConditions[$intI]['op']) && $strKey == $arrConditions[$intI]['op']) ? 'selected="selected"' : ''; ?>><?php echo ovensia\ploopi\str::htmlentities($strValue, null, 'ISO-8859-1', false); ?></option>
                          <?php
                     }
                     ?>
                 </select>
-                <input style="width:46%;" type="text" class="text" name="_forms_group_cond[<?php echo $intI; ?>][value]" value="<?php echo isset($arrConditions[$intI]['value']) ? ploopi_htmlentities($arrConditions[$intI]['value']) : ''; ?>">
+                <input style="width:46%;" type="text" class="text" name="_forms_group_cond[<?php echo $intI; ?>][value]" value="<?php echo isset($arrConditions[$intI]['value']) ? ovensia\ploopi\str::htmlentities($arrConditions[$intI]['value']) : ''; ?>">
             </p>
             <?php
         }
@@ -139,7 +137,7 @@ if (!$objGroup->isnew()) $arrParams[] = "forms_group_id={$objGroup->fields['id']
 </div>
 
 <div style="clear:both;background-color:#d0d0d0;border-top:1px solid #a0a0a0;padding:4px;overflow:auto;text-align:right;">
-    <input type="button" class="flatbutton" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?op=forms_modify&forms_id={$objForm->fields['id']}"); ?>'">
+    <input type="button" class="flatbutton" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<?php echo ovensia\ploopi\crypt::urlencode("admin.php?op=forms_modify&forms_id={$objForm->fields['id']}"); ?>'">
     <input type="submit" class="flatbutton" value="<?php echo _PLOOPI_SAVE; ?>">
 </div>
 </form>

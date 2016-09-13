@@ -34,11 +34,9 @@
  * Initialisation du module
  */
 
-ploopi_init_module('planning');
+ovensia\ploopi\module::init('planning');
 global $arrPlanningPeriodicity;
 global $arrPlanningSize;
-
-include_once './include/classes/calendar.php';
 
 // Recherche des ressources
 $arrResources = planning_get_resources();
@@ -59,7 +57,7 @@ if (isset($_REQUEST['op']) && $_REQUEST['op'] == 'display_event' && !empty($_REQ
         $arrSearchPattern['planning_month'] = intval(substr($objEventDetail->fields['timestp_begin'], 4, 2));
         $arrSearchPattern['planning_day'] = intval(substr($objEventDetail->fields['timestp_begin'], 6, 2));
         $arrSearchPattern['planning_year'] = intval(substr($objEventDetail->fields['timestp_begin'], 0, 4));
-        $arrSearchPattern['planning_week'] = date('W', ploopi_timestamp2unixtimestamp($objEventDetail->fields['timestp_begin']));
+        $arrSearchPattern['planning_week'] = date('W', ovensia\ploopi\date::timestamp2unixtimestamp($objEventDetail->fields['timestp_begin']));
 
         $arrSearchPattern['planning_resources'] = $objEventDetail->getresources();
 
@@ -139,7 +137,7 @@ if ($booDateModify) // modification de la date de visualisation
         break;
 
         case 'week':
-            $arrSearchPattern['planning_virtualdate'] = ploopi_numweek2unixtimestamp($arrSearchPattern['planning_week'], $arrSearchPattern['planning_year']);
+            $arrSearchPattern['planning_virtualdate'] = ovensia\ploopi\date::numweek2unixtimestamp($arrSearchPattern['planning_week'], $arrSearchPattern['planning_year']);
         break;
 
     }
@@ -180,7 +178,7 @@ switch($arrSearchPattern['planning_display_type'])
 
     case 'week':
         // On détermine les dates de la semaine courante
-        $date_begin = ploopi_numweek2unixtimestamp($arrSearchPattern['planning_week'], $arrSearchPattern['planning_year']);
+        $date_begin = ovensia\ploopi\date::numweek2unixtimestamp($arrSearchPattern['planning_week'], $arrSearchPattern['planning_year']);
         $date_end = mktime(0, 0, 0, date('n', $date_begin), date('j', $date_begin)+6, date('Y', $date_begin));
     break;
 
@@ -196,17 +194,17 @@ switch($arrSearchPattern['planning_display_type'])
 <div style="overflow:auto;">
     <p class="ploopi_va" style="padding:2px;float:left;">
         <label>Affichage :</label>
-        <input type="image" alt="Aujourd'hui" src="./modules/planning/img/ico_today<?php if ($arrSearchPattern['planning_display_type'] != 'today') echo'_notsel'; ?>.png" title="Aujourd'hui" onclick="javascript:ploopi_xmlhttprequest_todiv('admin-light.php', '<?php echo ploopi_queryencode('ploopi_op=planning_refresh&planning_display_type=today'); ?>', 'planning_main');" />
-        <input type="image" alt="Quotidien" src="./modules/planning/img/ico_day<?php if ($arrSearchPattern['planning_display_type'] != 'day') echo'_notsel'; ?>.png" title="Journée" onclick="javascript:ploopi_xmlhttprequest_todiv('admin-light.php', '<?php echo ploopi_queryencode('ploopi_op=planning_refresh&planning_display_type=day'); ?>', 'planning_main');" />
-        <input type="image" alt="Hebdomadaire" src="./modules/planning/img/ico_week<?php if ($arrSearchPattern['planning_display_type'] != 'week') echo'_notsel'; ?>.png" title="Semaine" onclick="javascript:ploopi_xmlhttprequest_todiv('admin-light.php', '<?php echo ploopi_queryencode('ploopi_op=planning_refresh&planning_display_type=week'); ?>', 'planning_main');" />
-        <input type="image" alt="Mensuel" src="./modules/planning/img/ico_month<?php if ($arrSearchPattern['planning_display_type'] != 'month') echo'_notsel'; ?>.png" title="Mois" onclick="javascript:ploopi_xmlhttprequest_todiv('admin-light.php', '<?php echo ploopi_queryencode('ploopi_op=planning_refresh&planning_display_type=month'); ?>', 'planning_main');" />
-        <a href="javascript:void(0);" onclick="javascript:ploopi_openwin('<?php echo ploopi_urlencode("admin-light.php?ploopi_op=planning_print") ?>', 800, 600)"><img src="./modules/planning/img/ico_printer.png" title="Imprimer"/></a>
+        <input type="image" alt="Aujourd'hui" src="./modules/planning/img/ico_today<?php if ($arrSearchPattern['planning_display_type'] != 'today') echo'_notsel'; ?>.png" title="Aujourd'hui" onclick="javascript:ploopi_xmlhttprequest_todiv('admin-light.php', '<?php echo ovensia\ploopi\crypt::queryencode('ploopi_op=planning_refresh&planning_display_type=today'); ?>', 'planning_main');" />
+        <input type="image" alt="Quotidien" src="./modules/planning/img/ico_day<?php if ($arrSearchPattern['planning_display_type'] != 'day') echo'_notsel'; ?>.png" title="Journée" onclick="javascript:ploopi_xmlhttprequest_todiv('admin-light.php', '<?php echo ovensia\ploopi\crypt::queryencode('ploopi_op=planning_refresh&planning_display_type=day'); ?>', 'planning_main');" />
+        <input type="image" alt="Hebdomadaire" src="./modules/planning/img/ico_week<?php if ($arrSearchPattern['planning_display_type'] != 'week') echo'_notsel'; ?>.png" title="Semaine" onclick="javascript:ploopi_xmlhttprequest_todiv('admin-light.php', '<?php echo ovensia\ploopi\crypt::queryencode('ploopi_op=planning_refresh&planning_display_type=week'); ?>', 'planning_main');" />
+        <input type="image" alt="Mensuel" src="./modules/planning/img/ico_month<?php if ($arrSearchPattern['planning_display_type'] != 'month') echo'_notsel'; ?>.png" title="Mois" onclick="javascript:ploopi_xmlhttprequest_todiv('admin-light.php', '<?php echo ovensia\ploopi\crypt::queryencode('ploopi_op=planning_refresh&planning_display_type=month'); ?>', 'planning_main');" />
+        <a href="javascript:void(0);" onclick="javascript:ploopi_openwin('<?php echo ovensia\ploopi\crypt::urlencode("admin-light.php?ploopi_op=planning_print") ?>', 800, 600)"><img src="./modules/planning/img/ico_printer.png" title="Imprimer"/></a>
 
         <label for="booking_channels">Multi Col:</label>
-        <input type="checkbox" id="planning_channels" <?php if ($arrSearchPattern['planning_channels']) echo 'checked="checked"'; ?> onclick="javascript:ploopi_xmlhttprequest_todiv('admin-light.php', '<?php echo ploopi_queryencode('ploopi_op=planning_refresh&planning_channels='.($arrSearchPattern['planning_channels'] ? 0 : 1)); ?>', 'planning_main');"/>
+        <input type="checkbox" id="planning_channels" <?php if ($arrSearchPattern['planning_channels']) echo 'checked="checked"'; ?> onclick="javascript:ploopi_xmlhttprequest_todiv('admin-light.php', '<?php echo ovensia\ploopi\crypt::queryencode('ploopi_op=planning_refresh&planning_channels='.($arrSearchPattern['planning_channels'] ? 0 : 1)); ?>', 'planning_main');"/>
 
         <label>Taille :</label>
-        <select class="select" name="planning_size" id="planning_size" onchange="javascript:ploopi_xmlhttprequest_todiv('<?php echo ploopi_urlencode('admin-light.php?ploopi_op=planning_refresh'); ?>', 'planning_size='+this.value, 'planning_main');">
+        <select class="select" name="planning_size" id="planning_size" onchange="javascript:ploopi_xmlhttprequest_todiv('<?php echo ovensia\ploopi\crypt::urlencode('admin-light.php?ploopi_op=planning_refresh'); ?>', 'planning_size='+this.value, 'planning_main');">
         <?php
         foreach($arrPlanningSize as $strSize)
         {
@@ -215,7 +213,7 @@ switch($arrSearchPattern['planning_display_type'])
         ?>
         </select>
     </p>
-    <form style="float:left;" id="planning_form_view" action="<?php echo ploopi_urlencode('admin-light.php?ploopi_op=planning_refresh'); ?>" method="post" onsubmit="javascript:ploopi_xmlhttprequest_submitform($('planning_form_view'), 'planning_main');return false;">
+    <form style="float:left;" id="planning_form_view" action="<?php echo ovensia\ploopi\crypt::urlencode('admin-light.php?ploopi_op=planning_refresh'); ?>" method="post" onsubmit="javascript:ploopi_xmlhttprequest_submitform($('planning_form_view'), 'planning_main');return false;">
     <p class="ploopi_va" style="padding:2px;float:left;">
         <label>Période :</label>
         <?php
@@ -259,14 +257,14 @@ switch($arrSearchPattern['planning_display_type'])
                 $intMaxWeek = date('W', mktime(0, 0, 0, 12, 31, $arrSearchPattern['planning_year']));
                 if ($intMaxWeek == 1) $intMaxWeek = 52;
 
-                $date_firstweek = ploopi_numweek2unixtimestamp(1, $arrSearchPattern['planning_year']);
+                $date_firstweek = ovensia\ploopi\date::numweek2unixtimestamp(1, $arrSearchPattern['planning_year']);
                 for ($intWeek = 1; $intWeek <= $intMaxWeek; $intWeek++)
                 {
                     // Date de début de la semaine en cours d'affichage dans la liste
                     $date_week = mktime(0, 0, 0, date('n', $date_firstweek), date('j', $date_firstweek)+(($intWeek - 1) * 7), date('Y', $date_firstweek));
                     //$date_week = mktime(0, 0, 0, 12, 29 + $d + (($intWeek - 1) * 7), $intSelYear - 1);
                     ?>
-                    <option value="<?php echo $intWeek; ?>" <?php if ($arrSearchPattern['planning_week'] == $intWeek) echo 'selected="selected";' ?>><?php printf("Semaine %02d - %s", $intWeek, substr(ploopi_unixtimestamp2local($date_week),0,5)); ?></option>
+                    <option value="<?php echo $intWeek; ?>" <?php if ($arrSearchPattern['planning_week'] == $intWeek) echo 'selected="selected";' ?>><?php printf("Semaine %02d - %s", $intWeek, substr(ovensia\ploopi\date::unixtimestamp2local($date_week),0,5)); ?></option>
                     <?php
                 }
                 ?>
@@ -322,10 +320,10 @@ switch($arrSearchPattern['planning_display_type'])
         if ($date_today >= $date_begin && $date_today <= $date_end) $date_sel = $date_today;
         else $date_sel = $date_begin;
 
-        if (ploopi_isactionallowed(_PLANNING_ADD_EVENT))
+        if (ovensia\ploopi\acl::isactionallowed(_PLANNING_ADD_EVENT))
         {
             ?>
-            <input type="button" class="button" value="Ajouter un événement" style="margin:0 10px;" onclick="javascript:ploopi_xmlhttprequest_topopup('450', event, 'popup_planning_event', 'admin-light.php', '<?php echo ploopi_queryencode("ploopi_op=planning_event_add&&planning_resource_date={$date_sel}"); ?>');" />
+            <input type="button" class="button" value="Ajouter un événement" style="margin:0 10px;" onclick="javascript:ploopi_xmlhttprequest_topopup('450', event, 'popup_planning_event', 'admin-light.php', '<?php echo ovensia\ploopi\crypt::queryencode("ploopi_op=planning_event_add&&planning_resource_date={$date_sel}"); ?>');" />
             <?php
         }
         ?>
@@ -339,7 +337,7 @@ if (sizeof($arrSize) == 2 && is_numeric($arrSize[0]) && is_numeric($arrSize[1]))
     switch($arrSearchPattern['planning_display_type'])
     {
         case 'month':
-            $objCalendar = new calendar($arrSize[0], $arrSize[1], 'month');
+            $objCalendar = new ovensia\ploopi\calendar($arrSize[0], $arrSize[1], 'month');
 
             $objCalendar->setoptions(
                 array(
@@ -350,24 +348,24 @@ if (sizeof($arrSize) == 2 && is_numeric($arrSize[0]) && is_numeric($arrSize[1]))
         break;
 
         case 'week':
-            $objCalendar = new calendar($arrSize[0], $arrSize[1], 'days');
+            $objCalendar = new ovensia\ploopi\calendar($arrSize[0], $arrSize[1], 'days');
 
             $objCalendar->setoptions(
                 array(
-                    'strDateBegin' => substr(ploopi_unixtimestamp2timestamp($date_begin), 0, 8),
-                    'strDateEnd' => substr(ploopi_unixtimestamp2timestamp($date_end), 0, 8)
+                    'strDateBegin' => substr(ovensia\ploopi\date::unixtimestamp2timestamp($date_begin), 0, 8),
+                    'strDateEnd' => substr(ovensia\ploopi\date::unixtimestamp2timestamp($date_end), 0, 8)
                 )
             );
         break;
 
         default:
         case 'day':
-            $objCalendar = new calendar($arrSize[0], $arrSize[1], 'days');
+            $objCalendar = new ovensia\ploopi\calendar($arrSize[0], $arrSize[1], 'days');
 
             $objCalendar->setoptions(
                 array(
-                    'strDateBegin' => substr(ploopi_unixtimestamp2timestamp($date_begin), 0, 8),
-                    'strDateEnd' => substr(ploopi_unixtimestamp2timestamp($date_end), 0, 8)
+                    'strDateBegin' => substr(ovensia\ploopi\date::unixtimestamp2timestamp($date_begin), 0, 8),
+                    'strDateEnd' => substr(ovensia\ploopi\date::unixtimestamp2timestamp($date_end), 0, 8)
                 )
             );
         break;
@@ -388,8 +386,8 @@ if (sizeof($arrSize) == 2 && is_numeric($arrSize[0]) && is_numeric($arrSize[1]))
     // Recherche des événements
     $arrEvents = planning_get_events(
         $arrSearchPattern['planning_resources'],
-        ploopi_unixtimestamp2timestamp($date_begin),
-        ploopi_unixtimestamp2timestamp(mktime(0, 0, 0, date('n', $date_end), date('j', $date_end)+1, date('Y', $date_end)))
+        ovensia\ploopi\date::unixtimestamp2timestamp($date_begin),
+        ovensia\ploopi\date::unixtimestamp2timestamp(mktime(0, 0, 0, date('n', $date_end), date('j', $date_end)+1, date('Y', $date_end)))
     );
 
     if ($arrSearchPattern['planning_channels']) // Mode multi-canaux
@@ -404,7 +402,7 @@ if (sizeof($arrSize) == 2 && is_numeric($arrSize[0]) && is_numeric($arrSize[1]))
                     $arrResource = &$arrResources[$strTypeResource][$intIdResource];
 
                     $strChannelId = $strTypeResource[0].$intIdResource;
-                    if (empty($arrChannels[$strChannelId])) $arrChannels[$strChannelId] = new calendarChannel(in_array($arrSearchPattern['planning_display_type'], array('day', 'today')) ? $arrResource['label'] : '', $arrResource['color']);
+                    if (empty($arrChannels[$strChannelId])) $arrChannels[$strChannelId] = new ovensia\ploopi\calendarChannel(in_array($arrSearchPattern['planning_display_type'], array('day', 'today')) ? $arrResource['label'] : '', $arrResource['color']);
                 }
             }
         }
@@ -413,7 +411,7 @@ if (sizeof($arrSize) == 2 && is_numeric($arrSize[0]) && is_numeric($arrSize[1]))
     }
     else
     {
-        $objCalendar->addChannel(new calendarChannel(''), '');
+        $objCalendar->addChannel(new ovensia\ploopi\calendarChannel(''), '');
     }
 
     // Affectation de la liste des événements au calendrier
@@ -422,7 +420,7 @@ if (sizeof($arrSize) == 2 && is_numeric($arrSize[0]) && is_numeric($arrSize[1]))
         switch($arrSearchPattern['planning_display_type'])
         {
             case 'month':
-                $strContent = '<div style="height:12px;overflow:hidden;"><time_begin> '.ploopi_htmlentities(ploopi_strcut($arrEvent['object'],20)).'</div>';
+                $strContent = '<div style="height:12px;overflow:hidden;"><time_begin> '.ovensia\ploopi\str::htmlentities(ovensia\ploopi\str::cut($arrEvent['object'],20)).'</div>';
             break;
 
             case 'week':
@@ -440,7 +438,7 @@ if (sizeof($arrSize) == 2 && is_numeric($arrSize[0]) && is_numeric($arrSize[1]))
                                 $arrResource = &$arrResources[$strTypeResource][$intIdResource];
 
                                 $strColor = !empty($arrResource['color']) ? "background:{$arrResource['color']}" : '';
-                                $strUsers .= '<img src="./modules/planning/img/ico_'.$strTypeResource.'.png" style="display:block;margin:0 1px;float:left;'.$strColor.';" title="'.ploopi_htmlentities($arrResource['label']).'" />';
+                                $strUsers .= '<img src="./modules/planning/img/ico_'.$strTypeResource.'.png" style="display:block;margin:0 1px;float:left;'.$strColor.';" title="'.ovensia\ploopi\str::htmlentities($arrResource['label']).'" />';
                             }
                         }
                     }
@@ -449,14 +447,14 @@ if (sizeof($arrSize) == 2 && is_numeric($arrSize[0]) && is_numeric($arrSize[1]))
                 if ($arrSearchPattern['planning_channels'])
                 {
                     $strContent = '
-                        <div style="margin:2px;">'.ploopi_htmlentities($arrEvent['object']).'</div>
+                        <div style="margin:2px;">'.ovensia\ploopi\str::htmlentities($arrEvent['object']).'</div>
                     ';
                 }
                 else
                 {
                     $strContent = '
                         <div style="margin:2px;float:right;padding:2px;border:1px solid #888;background:#fff">'.$strUsers.'</div>
-                        <div style="margin:2px;">'.ploopi_htmlentities($arrEvent['object']).'</div>
+                        <div style="margin:2px;">'.ovensia\ploopi\str::htmlentities($arrEvent['object']).'</div>
                     ';
                 }
             break;
@@ -466,16 +464,16 @@ if (sizeof($arrSize) == 2 && is_numeric($arrSize[0]) && is_numeric($arrSize[1]))
         // Options standards pour tous (onclick)
         $arrOptions = array(
             'strHref' => 'javascript:void(0);',
-            'strOnClick' => "ploopi_xmlhttprequest_topopup('450', event, 'popup_planning_event', 'admin-light.php', '".ploopi_queryencode("ploopi_op=planning_event_detail_open&planning_event_detail_id={$arrEvent['ed_id']}")."');", // onclick
+            'strOnClick' => "ploopi_xmlhttprequest_topopup('450', event, 'popup_planning_event', 'admin-light.php', '".ovensia\ploopi\crypt::queryencode("ploopi_op=planning_event_detail_open&planning_event_detail_id={$arrEvent['ed_id']}")."');", // onclick
         );
 
         // Options avancées pour ceux qui peuvent modifier le planning
-        if (ploopi_isactionallowed(_PLANNING_ADD_EVENT))
+        if (ovensia\ploopi\acl::isactionallowed(_PLANNING_ADD_EVENT))
         {
             $arrOptions = array_merge($arrOptions, array(
-                'strOnClose' => "if (confirm('Êtes vous certain de vouloir supprimer cet événement ?')) ploopi_xmlhttprequest_todiv('admin-light.php', '".ploopi_queryencode("ploopi_op=planning_event_detail_delete&planning_event_detail_id={$arrEvent['ed_id']}")."', 'planning_main'); ploopi_hidepopup('popup_planning_event');",
+                'strOnClose' => "if (confirm('Êtes vous certain de vouloir supprimer cet événement ?')) ploopi_xmlhttprequest_todiv('admin-light.php', '".ovensia\ploopi\crypt::queryencode("ploopi_op=planning_event_detail_delete&planning_event_detail_id={$arrEvent['ed_id']}")."', 'planning_main'); ploopi_hidepopup('popup_planning_event');",
                 'arrOnDrop' => array(
-                    'url' => ploopi_urlencode("admin-light.php?ploopi_op=planning_event_detail_quicksave&planning_event_detail_id={$arrEvent['ed_id']}"),
+                    'url' => ovensia\ploopi\crypt::urlencode("admin-light.php?ploopi_op=planning_event_detail_quicksave&planning_event_detail_id={$arrEvent['ed_id']}"),
                     'element_id' => 'planning_main'
                 )
             ));
@@ -495,7 +493,7 @@ if (sizeof($arrSize) == 2 && is_numeric($arrSize[0]) && is_numeric($arrSize[1]))
                             $arrResource = &$arrResources[$strTypeResource][$intIdResource];
 
                             $objCalendar->addevent(
-                                new calendarEvent(
+                                new ovensia\ploopi\calendarEvent(
                                     $arrEvent['timestp_begin'],
                                     $arrEvent['timestp_end'],
                                     '<time_begin> / <time_end>',
@@ -514,7 +512,7 @@ if (sizeof($arrSize) == 2 && is_numeric($arrSize[0]) && is_numeric($arrSize[1]))
         else
         {
             $objCalendar->addevent(
-                new calendarEvent(
+                new ovensia\ploopi\calendarEvent(
                     $arrEvent['timestp_begin'],
                     $arrEvent['timestp_end'],
                     '<time_begin> / <time_end>',

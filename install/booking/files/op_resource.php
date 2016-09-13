@@ -39,7 +39,7 @@
 switch($_REQUEST['ploopi_op'])
 {
     case 'booking_resource_delete':
-        ploopi_init_module('booking', false, false, false);
+        ovensia\ploopi\module::init('booking', false, false, false);
 
         if (!empty($_GET['booking_element_list']))
         {
@@ -52,11 +52,11 @@ switch($_REQUEST['ploopi_op'])
                 if ($objResource->open($elementid)) $objResource->delete();
             }
         }
-        ploopi_redirect('admin.php');
+        ovensia\ploopi\output::redirect('admin.php');
     break;
 
     case 'booking_resource_save':
-        ploopi_init_module('booking', false, false, false);
+        ovensia\ploopi\module::init('booking', false, false, false);
 
         include_once './modules/booking/classes/class_booking_resource.php';
         include_once './modules/booking/classes/class_booking_resource_workspace.php';
@@ -88,13 +88,13 @@ switch($_REQUEST['ploopi_op'])
         }
 
 
-        ploopi_redirect("admin.php?booking_tab=resource");
+        ovensia\ploopi\output::redirect("admin.php?booking_tab=resource");
     break;
 
     case 'booking_resource_add':
     case 'booking_resource_open':
         ob_start();
-        ploopi_init_module('booking');
+        ovensia\ploopi\module::init('booking');
 
         include_once './modules/booking/classes/class_booking_resource.php';
 
@@ -112,15 +112,15 @@ switch($_REQUEST['ploopi_op'])
             break;
         }
         ?>
-        <form action="<?php echo ploopi_urlencode("admin-light.php?ploopi_op=booking_resource_save&booking_resource_id={$objResource->fields['id']}"); ?>" method="post" onsubmit="javascript:return booking_resource_validate(this);">
+        <form action="<?php echo ovensia\ploopi\crypt::urlencode("admin-light.php?ploopi_op=booking_resource_save&booking_resource_id={$objResource->fields['id']}"); ?>" method="post" onsubmit="javascript:return booking_resource_validate(this);">
         <div class=ploopi_form>
             <p>
                 <label>Intitulé:</label>
-                <input name="booking_resource_name" type="text" class="text" value="<?php echo ploopi_htmlentities($objResource->fields['name']); ?>">
+                <input name="booking_resource_name" type="text" class="text" value="<?php echo ovensia\ploopi\str::htmlentities($objResource->fields['name']); ?>">
             </p>
             <p>
                 <label>Référence:</label>
-                <input name="booking_resource_reference" type="text" class="text" value="<?php echo ploopi_htmlentities($objResource->fields['reference']); ?>">
+                <input name="booking_resource_reference" type="text" class="text" value="<?php echo ovensia\ploopi\str::htmlentities($objResource->fields['reference']); ?>">
             </p>
             <p>
                 <label>Type de ressource:</label>
@@ -133,7 +133,7 @@ switch($_REQUEST['ploopi_op'])
                     while ($row = $db->fetchrow())
                     {
                         ?>
-                        <option value="<?php echo $row['id']; ?>" <?php if ($objResource->fields['id_resourcetype'] == $row['id']) echo 'selected="selected"'; ?>><?php echo ploopi_htmlentities($row['name']); ?></option>
+                        <option value="<?php echo $row['id']; ?>" <?php if ($objResource->fields['id_resourcetype'] == $row['id']) echo 'selected="selected"'; ?>><?php echo ovensia\ploopi\str::htmlentities($row['name']); ?></option>
                         <?php
                     }
                     ?>
@@ -156,11 +156,18 @@ switch($_REQUEST['ploopi_op'])
             <p>
                 <label>Couleur planning:</label>
                 <span>
-                    <input name="booking_resource_color" id="booking_resource_color" class="text" type="text" value="<?php echo ploopi_htmlentities($objResource->fields['color']); ?>" style="width:60px;cursor:pointer;" />
+                    <input name="booking_resource_color" id="booking_resource_color" class="text" type="text" value="<?php echo ovensia\ploopi\str::htmlentities($objResource->fields['color']); ?>" style="width:60px;cursor:pointer;" />
                 </span>
 
 
-                <script type="text/javascript">new jscolor.color($('booking_resource_color'), {hash:true})</script>
+                <script type="text/javascript">
+                    try {
+                        new jscolor($('booking_resource_color'), {hash:true})
+                    }
+                    catch(e) {
+                        console.log(e);
+                    }
+                </script>
             </p>
             <p onclick="javascript:ploopi_checkbox_click(event,'booking_resource_active');">
                 <label for="booking_resource_active">Actif:</label>
@@ -181,7 +188,7 @@ switch($_REQUEST['ploopi_op'])
         $titre = ($_REQUEST['ploopi_op'] == 'booking_resource_add') ? 'Ajout' : 'Modification';
 
         echo $skin->create_popup("{$titre} d'une ressource", $content, 'popup_resource');
-        ploopi_die();
+        ovensia\ploopi\system::kill();
     break;
 }
 ?>

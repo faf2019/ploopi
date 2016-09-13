@@ -32,12 +32,6 @@
  */
 
 /**
- * Inclusion de la classe parent.
- */
-
-include_once './include/classes/data_object.php';
-
-/**
  * Inclusion de la classe article_backup qui permet de gérer la sauvegarde des versions antérieures.
  */
 
@@ -67,7 +61,7 @@ include_once './modules/webedit/class_article_object.php';
  * @author Stéphane Escaich
  */
 
-class webedit_article extends data_object
+class webedit_article extends ovensia\ploopi\data_object
 {
     private $original_content;
 
@@ -117,20 +111,20 @@ class webedit_article extends data_object
     {
         if (empty($this->fields['metatitle'])) $this->fields['metatitle'] = $this->fields['title'];
 
-        if (empty($this->fields['timestp'])) $this->fields['timestp'] = ploopi_createtimestamp();
+        if (empty($this->fields['timestp'])) $this->fields['timestp'] = ovensia\ploopi\date::createtimestamp();
 
         $this->fields['content'] = preg_replace('/<span[^>]*contenteditable="false"[^>]*>\[\[(.*)\]\]<\/span>/i', '[[$1]]', $this->fields['content']);
 
         $this->fields['content_cleaned'] = $this->fields['content'];
 
         // filtre activé ?
-        if (!$this->fields['disabledfilter']) $this->fields['content_cleaned'] = ploopi_htmlpurifier($this->fields['content_cleaned'], true);
+        if (!$this->fields['disabledfilter']) $this->fields['content_cleaned'] = ovensia\ploopi\str::htmlpurifier($this->fields['content_cleaned'], true);
 
         // Nettoyage des tags
         // Note : les tags ne sont réellement enregistrés qu'à la publication
         if (!empty($this->fields['tags']))
         {
-            list($tags) = ploopi_getwords($this->fields['tags'], true, false, false);
+            list($tags) = ovensia\ploopi\str::getwords($this->fields['tags'], true, false, false);
             $this->fields['tags'] = implode(' ', array_keys($tags));
         }
 
@@ -140,7 +134,7 @@ class webedit_article extends data_object
             $article_backup = new webedit_article_backup();
             $article_backup->fields['id_article'] = $this->fields['id'];
             $article_backup->fields['content'] = $this->fields['content'];
-            $article_backup->fields['timestp'] = ploopi_createtimestamp();
+            $article_backup->fields['timestp'] = ovensia\ploopi\date::createtimestamp();
             $article_backup->setuwm();
             $article_backup->save();
         }
@@ -172,7 +166,7 @@ class webedit_article extends data_object
             $db->query("DELETE FROM ploopi_mod_webedit_article_comment WHERE id_article = {$this->fields['id']}");
 
             // suppression de l'index
-            ploopi_search_remove_index(_WEBEDIT_OBJECT_ARTICLE_PUBLIC, $this->fields['id']);
+            ovensia\ploopi\search_index::remove(_WEBEDIT_OBJECT_ARTICLE_PUBLIC, $this->fields['id']);
         }
 
         parent::delete();
@@ -251,7 +245,7 @@ class webedit_article extends data_object
         $db->query("DELETE FROM ploopi_mod_webedit_docfile WHERE id_article = {$this->fields['id']}");
 
         // Recherche des liens vers des documents (du module doc)
-        preg_match_all('/index-quick\.php[^\"]+docfile_md5id=([a-z0-9]{32})/i', ploopi_html_entity_decode($this->fields['content']), $arrMatches);
+        preg_match_all('/index-quick\.php[^\"]+docfile_md5id=([a-z0-9]{32})/i', ovensia\ploopi\str::html_entity_decode($this->fields['content']), $arrMatches);
 
         if (!empty($arrMatches[1]) && file_exists('./modules/doc/class_docfile.php'))
         {
@@ -281,7 +275,7 @@ class webedit_article extends data_object
         $db->query("DELETE FROM ploopi_mod_webedit_article_object WHERE id_article = {$this->fields['id']}");
 
         // Recherche des objets insérés
-        if (preg_match_all('@\[\[(\d+),(\d+)(,([^/]+))?/([^\]]*)\]\]@i', ploopi_html_entity_decode($this->fields['content']), $arrMatches) !== false)
+        if (preg_match_all('@\[\[(\d+),(\d+)(,([^/]+))?/([^\]]*)\]\]@i', ovensia\ploopi\str::html_entity_decode($this->fields['content']), $arrMatches) !== false)
         {
             foreach(array_keys($arrMatches[0]) as $intKey)
             {
@@ -308,7 +302,7 @@ class webedit_article extends data_object
         $db->query($sql);
 
         // récupération des tags
-        list($tags) = ploopi_getwords($this->fields['tags'], true, false, false);
+        list($tags) = ovensia\ploopi\str::getwords($this->fields['tags'], true, false, false);
         $tags = array_keys($tags);
         foreach($tags as $tag)
         {
@@ -329,7 +323,7 @@ class webedit_article extends data_object
             $objArticleTag->save();
         }
 
-        ploopi_search_create_index(_WEBEDIT_OBJECT_ARTICLE_PUBLIC, $this->fields['id'], $this->fields['title'], strip_tags(ploopi_html_entity_decode($this->fields['content'])), "{$this->fields['metatitle']} {$this->fields['metakeywords']} {$this->fields['metadescription']}", true, $this->fields['timestp'], $this->fields['lastupdate_timestp']);
+        ovensia\ploopi\search_index::add(_WEBEDIT_OBJECT_ARTICLE_PUBLIC, $this->fields['id'], $this->fields['title'], strip_tags(ovensia\ploopi\str::html_entity_decode($this->fields['content'])), "{$this->fields['metatitle']} {$this->fields['metakeywords']} {$this->fields['metadescription']}", true, $this->fields['timestp'], $this->fields['lastupdate_timestp']);
     }
 
     /**
@@ -344,7 +338,7 @@ class webedit_article extends data_object
 
         $heading = new webedit_heading();
 
-        $today = ploopi_createtimestamp();
+        $today = ovensia\ploopi\date::createtimestamp();
         return (
             ($this->fields['timestp_published'] <= $today || empty($this->fields['timestp_published'])) &&
             ($this->fields['timestp_unpublished'] >= $today || empty($this->fields['timestp_unpublished'])) &&
@@ -360,8 +354,8 @@ class webedit_article extends data_object
 
     public function geturl()
     {
-        ploopi_init_module('webedit', false, false, false);
-        return(ploopi_urlrewrite("index.php?headingid={$this->fields['id_heading']}&articleid={$this->fields['id']}", webedit_getrewriterules(), $this->fields['metatitle']));
+        ovensia\ploopi\module::init('webedit', false, false, false);
+        return(ovensia\ploopi\str::urlrewrite("index.php?headingid={$this->fields['id_heading']}&articleid={$this->fields['id']}", webedit_getrewriterules(), $this->fields['metatitle']));
     }
 
     /**

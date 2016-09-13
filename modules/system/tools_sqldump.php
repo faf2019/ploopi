@@ -35,7 +35,7 @@
 /**
  * Nettoyage des buffers actifs
  */
-ploopi_ob_clean();
+ovensia\ploopi\buffer::clean();
 
 if (!ini_get('safe_mode')) @set_time_limit(0);
 $crlf = "\n";
@@ -56,7 +56,7 @@ function system_get_table_def($fp, $db, $table, $crlf)
     $schema_create .= "DROP TABLE IF EXISTS {$table};{$crlf}";
     $schema_create .= "CREATE TABLE {$table} ({$crlf}";
 
-    //$result = mysql_db_query($db, "SHOW FIELDS FROM $table") or mysql_ploopi_die();
+    //$result = mysql_db_query($db, "SHOW FIELDS FROM $table") or mysql_ovensia\ploopi\system::kill();
     $result = $db->query("SHOW FIELDS FROM {$table}");
     while($row = $db->fetchrow($result))
     {
@@ -71,7 +71,7 @@ function system_get_table_def($fp, $db, $table, $crlf)
         $schema_create .= ",{$crlf}";
     }
     $schema_create = preg_replace("/,".$crlf."$/", "", $schema_create);
-    //$result = mysql_db_query($db, "SHOW KEYS FROM $table") or mysql_ploopi_die();
+    //$result = mysql_db_query($db, "SHOW KEYS FROM $table") or mysql_ovensia\ploopi\system::kill();
     $result = $db->query("SHOW KEYS FROM {$table}");
     while($row = $db->fetchrow($result))
     {
@@ -152,7 +152,7 @@ else
      */
 
     $filepath = _PLOOPI_PATHDATA._PLOOPI_SEP.'tmp';
-    ploopi_makedir($filepath);
+    ovensia\ploopi\fs::makedir($filepath);
 
     $filename_sql = tempnam($filepath, 'dump_sql');
     $filename_zip = tempnam($filepath, 'dump_zip');
@@ -203,10 +203,10 @@ else
 
         unlink($filename_zip);
 
-        ploopi_downloadfile($filename_zip, 'dump.zip', true, true);
+        ovensia\ploopi\fs::downloadfile($filename_zip, 'dump.zip', true, true);
     }
 }
 
 
-ploopi_die();
+ovensia\ploopi\system::kill();
 ?>

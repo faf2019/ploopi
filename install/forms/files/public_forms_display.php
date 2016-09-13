@@ -35,8 +35,8 @@
  * On récupère les dates de publication du formulaire
  */
 
-$pubdate_start = ($objForm->fields['pubdate_start']) ? ploopi_timestamp2local($objForm->fields['pubdate_start']) : array('date' => '');
-$pubdate_end = ($objForm->fields['pubdate_end']) ? ploopi_timestamp2local($objForm->fields['pubdate_end']) : array('date' => '');
+$pubdate_start = ($objForm->fields['pubdate_start']) ? ovensia\ploopi\date::timestamp2local($objForm->fields['pubdate_start']) : array('date' => '');
+$pubdate_end = ($objForm->fields['pubdate_end']) ? ovensia\ploopi\date::timestamp2local($objForm->fields['pubdate_end']) : array('date' => '');
 
 switch($op)
 {

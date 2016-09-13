@@ -35,12 +35,12 @@
  * Ouverture du bloc
  */
 
-echo ploopi_htmlentities($skin->open_simplebloc());
+echo ovensia\ploopi\str::htmlentities($skin->open_simplebloc());
 ?>
 
-<form name="" action="<?php echo ploopi_urlencode("admin.php?op=save_workspace&workspace_id_workspace={$workspace->fields['id']}"); ?>" method="post" onsubmit="javascript:return system_workspace_validate(this);">
+<form name="" action="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?op=save_workspace&workspace_id_workspace={$workspace->fields['id']}"); ?>" method="post" onsubmit="javascript:return system_workspace_validate(this);">
 <div class="ploopi_form_title">
-    <?php echo ploopi_htmlentities($workspace->fields['label']); ?> &raquo;
+    <?php echo ovensia\ploopi\str::htmlentities($workspace->fields['label']); ?> &raquo;
     <?php
      echo _SYSTEM_LABEL_WORKSPACE_ADD;
     ?>
@@ -48,22 +48,22 @@ echo ploopi_htmlentities($skin->open_simplebloc());
 <div class="ploopi_form" style="clear:both;padding:2px">
     <p>
         <label><?php echo _SYSTEM_LABEL_GROUP_NAME; ?>:</label>
-        <input type="text" class="text" name="workspace_label"  value="fils de <?php echo ploopi_htmlentities($workspace->fields['label']); ?>">
+        <input type="text" class="text" name="workspace_label"  value="fils de <?php echo ovensia\ploopi\str::htmlentities($workspace->fields['label']); ?>">
     </p>
     <?php
-        $templatelist_back = ploopi_getavailabletemplates('backoffice');
-        $templatelist_front = ploopi_getavailabletemplates('frontoffice');
+        $templatelist_back = ovensia\ploopi\system::getavailabletemplates('backoffice');
+        $templatelist_front = ovensia\ploopi\system::getavailabletemplates('frontoffice');
 
         if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPADMIN)
         {
             ?>
             <p>
                 <label><?php echo _SYSTEM_LABEL_GROUP_CODE; ?>:</label>
-                <input type="text" class="text" name="workspace_code"  value="<?php echo ploopi_htmlentities($workspace->fields['code']); ?>">
+                <input type="text" class="text" name="workspace_code"  value="<?php echo ovensia\ploopi\str::htmlentities($workspace->fields['code']); ?>">
             </p>
             <p>
                 <label><?php echo _SYSTEM_LABEL_GROUP_PRIORITY; ?>:</label>
-                <input type="text" class="text" name="workspace_priority"  value="<?php echo ploopi_htmlentities(pow(10, $workspace->fields['depth']-1)); ?>">
+                <input type="text" class="text" name="workspace_priority"  value="<?php echo ovensia\ploopi\str::htmlentities(pow(10, $workspace->fields['depth']-1)); ?>">
             </p>
             <?php
         }
@@ -71,7 +71,7 @@ echo ploopi_htmlentities($skin->open_simplebloc());
 </div>
 
 <div class="ploopi_form_title">
-    <?php echo ploopi_htmlentities($workspace->fields['label']); ?> &raquo; <?php echo _SYSTEM_LABEL_ACCESS; ?>
+    <?php echo ovensia\ploopi\str::htmlentities($workspace->fields['label']); ?> &raquo; <?php echo _SYSTEM_LABEL_ACCESS; ?>
 </div>
 
 <div class="ploopi_form" style="clear:both;padding:2px">
@@ -94,7 +94,7 @@ echo ploopi_htmlentities($skin->open_simplebloc());
     </p>
     <p>
         <label><?php echo _SYSTEM_LABEL_GROUP_ADMINDOMAINLIST; ?>:</label>
-        <textarea class="text" name="workspace_backoffice_domainlist"><?php echo ploopi_htmlentities($workspace->fields['backoffice_domainlist']); ?></textarea>
+        <textarea class="text" name="workspace_backoffice_domainlist"><?php echo ovensia\ploopi\str::htmlentities($workspace->fields['backoffice_domainlist']); ?></textarea>
     </p>
     <p>
         <label><?php echo _SYSTEM_LABEL_GROUP_WEB; ?>:</label>
@@ -102,57 +102,57 @@ echo ploopi_htmlentities($skin->open_simplebloc());
     </p>
     <p>
         <label><?php echo _SYSTEM_LABEL_GROUP_WEBDOMAINLIST; ?>:</label>
-        <textarea class="text" name="workspace_frontoffice_domainlist"><?php echo ploopi_htmlentities($workspace->fields['frontoffice_domainlist']); ?></textarea>
+        <textarea class="text" name="workspace_frontoffice_domainlist"><?php echo ovensia\ploopi\str::htmlentities($workspace->fields['frontoffice_domainlist']); ?></textarea>
     </p>
 
 </div>
 
 <div class="ploopi_form_title">
-    <?php echo ploopi_htmlentities($workspace->fields['label']); ?> &raquo; <?php echo _SYSTEM_LABEL_META; ?>
+    <?php echo ovensia\ploopi\str::htmlentities($workspace->fields['label']); ?> &raquo; <?php echo _SYSTEM_LABEL_META; ?>
 </div>
 <div class="ploopi_form" id="system_meta" style="clear:both;padding:2px;">
     <p>
         <label>Titre:</label>
-        <input type="text" class="text" name="workspace_title" value="<?php echo ploopi_htmlentities($workspace->fields['title']); ?>">
+        <input type="text" class="text" name="workspace_title" value="<?php echo ovensia\ploopi\str::htmlentities($workspace->fields['title']); ?>">
     </p>
     <p>
         <label>Description:</label>
-        <input type="text" class="text" name="workspace_meta_description" value="<?php echo ploopi_htmlentities($workspace->fields['meta_description']); ?>">
+        <input type="text" class="text" name="workspace_meta_description" value="<?php echo ovensia\ploopi\str::htmlentities($workspace->fields['meta_description']); ?>">
     </p>
     <p>
         <label>Mots Clés:</label>
-        <input type="text" class="text" name="workspace_meta_keywords" value="<?php echo ploopi_htmlentities($workspace->fields['meta_keywords']); ?>">
+        <input type="text" class="text" name="workspace_meta_keywords" value="<?php echo ovensia\ploopi\str::htmlentities($workspace->fields['meta_keywords']); ?>">
     </p>
     <p>
         <label>Auteur:</label>
-        <input type="text" class="text" name="workspace_meta_author" value="<?php echo ploopi_htmlentities($workspace->fields['meta_author']); ?>">
+        <input type="text" class="text" name="workspace_meta_author" value="<?php echo ovensia\ploopi\str::htmlentities($workspace->fields['meta_author']); ?>">
     </p>
     <p>
         <label>Copyright:</label>
-        <input type="text" class="text" name="workspace_meta_copyright" value="<?php echo ploopi_htmlentities($workspace->fields['meta_copyright']); ?>">
+        <input type="text" class="text" name="workspace_meta_copyright" value="<?php echo ovensia\ploopi\str::htmlentities($workspace->fields['meta_copyright']); ?>">
     </p>
     <p>
         <label>Robots:</label>
-        <input type="text" class="text" name="workspace_meta_robots" value="<?php echo ploopi_htmlentities($workspace->fields['meta_robots']); ?>">
+        <input type="text" class="text" name="workspace_meta_robots" value="<?php echo ovensia\ploopi\str::htmlentities($workspace->fields['meta_robots']); ?>">
     </p>
 </div>
 
 <div class="ploopi_form_title">
-    <?php echo ploopi_htmlentities($workspace->fields['label']); ?> &raquo; <?php echo _SYSTEM_LABEL_FILTERING; ?>
+    <?php echo ovensia\ploopi\str::htmlentities($workspace->fields['label']); ?> &raquo; <?php echo _SYSTEM_LABEL_FILTERING; ?>
 </div>
 <div class="ploopi_form" id="system_filtering" style="clear:both;padding:2px;">
     <p>
         <label><?php echo _SYSTEM_LABEL_GROUP_ALLOWEDIP; ?>:</label>
-        <input type="text" class="text" name="workspace_iprules"  value="<?php echo ploopi_htmlentities($workspace->fields['iprules']); ?>">
+        <input type="text" class="text" name="workspace_iprules"  value="<?php echo ovensia\ploopi\str::htmlentities($workspace->fields['iprules']); ?>">
     </p>
 </div>
 
 <div class="ploopi_form_title">
-    <?php echo ploopi_htmlentities($workspace->fields['label']); ?> &raquo; <?php echo _SYSTEM_LABEL_USEDMODULES; ?>
+    <?php echo ovensia\ploopi\str::htmlentities($workspace->fields['label']); ?> &raquo; <?php echo _SYSTEM_LABEL_USEDMODULES; ?>
 </div>
 <div class="ploopi_form">
     <?php
-    $child = new workspace();
+    $child = new ovensia\ploopi\workspace();
     $child->fields['parents'] = $workspace->fields['parents'].';'.$workspace->fields['id'];
     $sharedmodules = $child->getsharedmodules(false);
     $heritedmodules = $child->getsharedmodules(true);
@@ -193,9 +193,9 @@ echo ploopi_htmlentities($skin->open_simplebloc());
         $values[]['values'] =
             array(
                 'check' => array('label' => '<input type="checkbox" name="heritedmodule[]" value="SHARED,'.$instanceid.'" '.(isset($heritedmodules[$instanceid]) ? 'checked="checked"' : '').'>', 'sort_label' => isset($heritedmodules[$instanceid]) ? '0' : '1'),
-                'type' => array('label' => ploopi_htmlentities($instance['moduletype'])),
-                'label' => array('label' => ploopi_htmlentities($instance['label'])),
-                'description' => array('label' => ploopi_htmlentities($instance['description']))
+                'type' => array('label' => ovensia\ploopi\str::htmlentities($instance['moduletype'])),
+                'label' => array('label' => ovensia\ploopi\str::htmlentities($instance['label'])),
+                'description' => array('label' => ovensia\ploopi\str::htmlentities($instance['description']))
             );
       }
 
@@ -204,9 +204,9 @@ echo ploopi_htmlentities($skin->open_simplebloc());
         $values[]['values'] =
             array(
                 'check' => array('label' => '<input type="checkbox" name="heritedmodule[]" value="NEW,'.$moduletype['id'].'">', 'sort_label' => '9'),
-                'type' => array('label' => ploopi_htmlentities($moduletype['label'])),
+                'type' => array('label' => ovensia\ploopi\str::htmlentities($moduletype['label'])),
                 'label' => array('label' => '&nbsp;'),
-                'description' => array('label' => ploopi_htmlentities($moduletype['description']))
+                'description' => array('label' => ovensia\ploopi\str::htmlentities($moduletype['description']))
             );
       }
 

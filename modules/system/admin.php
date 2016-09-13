@@ -34,18 +34,14 @@
 /**
  * Si l'utilisateur n'est pas gestionnaire, il n'a rien à faire ici => []
  */
-if (!ploopi_ismanager()) ploopi_redirect('admin.php?ploopi_logout');
+if (!ovensia\ploopi\acl::ismanager()) ovensia\ploopi\output::redirect('admin.php?ploopi_logout');
 else
 {
     /**
      * Initialisation du module
      */
 
-    ploopi_init_module('system');
-
-    include_once './include/classes/group.php';
-    include_once './include/classes/user.php';
-    include_once './include/classes/module.php';
+    ovensia\ploopi\module::init('system');
 
     if (!empty($_REQUEST['system_level'])) $_SESSION['system']['level'] = $_REQUEST['system_level'];
     if (empty($_SESSION['system']['level'])) $_SESSION['system']['level'] = _SYSTEM_WORKSPACES;
@@ -139,7 +135,7 @@ else
                         break;
                     }
                 }
-                ploopi_die();
+                ovensia\ploopi\system::kill();
             }
 
             echo $skin->create_pagetitle(_SYSTEM_PAGE_TITLE);
@@ -180,7 +176,7 @@ else
                 <?php
                 echo $skin->close_simplebloc();
             }
-            else ploopi_redirect("admin.php?system_level="._SYSTEM_WORKSPACES);
+            else ovensia\ploopi\output::redirect("admin.php?system_level="._SYSTEM_WORKSPACES);
         break;
     }
 

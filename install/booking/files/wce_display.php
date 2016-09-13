@@ -32,8 +32,6 @@
  * @lastmodified $Date$
  */
 
-include_once './include/classes/calendar.php';
-
 global $arrBookingColor;
 
 // INIT Nombre de colonnes
@@ -64,7 +62,7 @@ $booDateModify = isset($_REQUEST['booking_month']) || isset($_REQUEST['booking_y
 // JPP Remplacé
 // if (!isset($arrSearchPattern['booking_display_type'])) $arrSearchPattern['booking_display_type'] = 'month';
 // JPP Début remplacement
-$param_display_type = ploopi_getparam('booking_default_display_type',$booking_moduleid);
+$param_display_type = ovensia\ploopi\param::get('booking_default_display_type',$booking_moduleid);
 if (!isset($arrSearchPattern['booking_display_type'])) $arrSearchPattern['booking_display_type'] = empty($param_display_type) ? 'month' : $param_display_type;
 // JPP Fin remplacement
 if (!isset($arrSearchPattern['booking_size'])) $arrSearchPattern['booking_size'] = $arrBookingSize[0];
@@ -73,7 +71,7 @@ if (!isset($arrSearchPattern['booking_validated'])) $arrSearchPattern['booking_v
 // JPP Remplacé
 // if (!isset($arrSearchPattern['booking_channels'])) $arrSearchPattern['booking_channels'] = 1;
 // JPP Début remplacement
-$param_booking_channels = ploopi_getparam('booking_default_channels',$booking_moduleid);
+$param_booking_channels = ovensia\ploopi\param::get('booking_default_channels',$booking_moduleid);
 if (!isset($arrSearchPattern['booking_channels'])) $arrSearchPattern['booking_channels'] = empty($param_booking_channels) ? 1 : $param_booking_channels;
 // JPP Fin remplacement
 
@@ -110,7 +108,7 @@ if ($booDateModify) // modification de la date de visualisation
         break;
 
         case 'week':
-            $arrSearchPattern['booking_virtualdate'] = ploopi_numweek2unixtimestamp($arrSearchPattern['booking_week'], $arrSearchPattern['booking_year']);
+            $arrSearchPattern['booking_virtualdate'] = ovensia\ploopi\date::numweek2unixtimestamp($arrSearchPattern['booking_week'], $arrSearchPattern['booking_year']);
         break;
 
     }
@@ -161,7 +159,7 @@ switch($arrSearchPattern['booking_display_type'])
 
     case 'week':
         // On détermine les dates de la semaine courante
-        $date_begin = ploopi_numweek2unixtimestamp($arrSearchPattern['booking_week'], $arrSearchPattern['booking_year']);
+        $date_begin = ovensia\ploopi\date::numweek2unixtimestamp($arrSearchPattern['booking_week'], $arrSearchPattern['booking_year']);
         $date_end = mktime(0, 0, 0, date('n', $date_begin), date('j', $date_begin)+6, date('Y', $date_begin));
     break;
 
@@ -181,16 +179,16 @@ switch($arrSearchPattern['booking_display_type'])
 <div style="padding:4px;">
     <p class="ploopi_va" style="padding:2px;float:left;">
         <label>Affichage :</label>
-        <input type="image" alt="Aujourd'hui" src="./modules/booking/img/ico_today<?php if ($arrSearchPattern['booking_display_type'] != 'today') echo'_notsel'; ?>.png" title="Aujourd'hui" onclick="javascript:ploopi_xmlhttprequest_todiv('index-light.php', '<?php echo ploopi_queryencode("ploopi_op=booking_refresh&booking_moduleid={$booking_moduleid}&booking_display_type=today"); ?>', 'booking_main');" />
-        <input type="image" alt="Quotidien" src="./modules/booking/img/ico_day<?php if ($arrSearchPattern['booking_display_type'] != 'day') echo'_notsel'; ?>.png" title="Journée" onclick="javascript:ploopi_xmlhttprequest_todiv('index-light.php', '<?php echo ploopi_queryencode("ploopi_op=booking_refresh&booking_moduleid={$booking_moduleid}&booking_display_type=day"); ?>', 'booking_main');" />
-        <input type="image" alt="Hebdomadaire" src="./modules/booking/img/ico_week<?php if ($arrSearchPattern['booking_display_type'] != 'week') echo'_notsel'; ?>.png" title="Semaine" onclick="javascript:ploopi_xmlhttprequest_todiv('index-light.php', '<?php echo ploopi_queryencode("ploopi_op=booking_refresh&booking_moduleid={$booking_moduleid}&booking_display_type=week"); ?>', 'booking_main');" />
-        <input type="image" alt="Mensuel" src="./modules/booking/img/ico_month<?php if ($arrSearchPattern['booking_display_type'] != 'month') echo'_notsel'; ?>.png" title="Mois" onclick="javascript:ploopi_xmlhttprequest_todiv('index-light.php', '<?php echo ploopi_queryencode("ploopi_op=booking_refresh&booking_moduleid={$booking_moduleid}&booking_display_type=month"); ?>', 'booking_main');" />
+        <input type="image" alt="Aujourd'hui" src="./modules/booking/img/ico_today<?php if ($arrSearchPattern['booking_display_type'] != 'today') echo'_notsel'; ?>.png" title="Aujourd'hui" onclick="javascript:ploopi_xmlhttprequest_todiv('index-light.php', '<?php echo ovensia\ploopi\crypt::queryencode("ploopi_op=booking_refresh&booking_moduleid={$booking_moduleid}&booking_display_type=today"); ?>', 'booking_main');" />
+        <input type="image" alt="Quotidien" src="./modules/booking/img/ico_day<?php if ($arrSearchPattern['booking_display_type'] != 'day') echo'_notsel'; ?>.png" title="Journée" onclick="javascript:ploopi_xmlhttprequest_todiv('index-light.php', '<?php echo ovensia\ploopi\crypt::queryencode("ploopi_op=booking_refresh&booking_moduleid={$booking_moduleid}&booking_display_type=day"); ?>', 'booking_main');" />
+        <input type="image" alt="Hebdomadaire" src="./modules/booking/img/ico_week<?php if ($arrSearchPattern['booking_display_type'] != 'week') echo'_notsel'; ?>.png" title="Semaine" onclick="javascript:ploopi_xmlhttprequest_todiv('index-light.php', '<?php echo ovensia\ploopi\crypt::queryencode("ploopi_op=booking_refresh&booking_moduleid={$booking_moduleid}&booking_display_type=week"); ?>', 'booking_main');" />
+        <input type="image" alt="Mensuel" src="./modules/booking/img/ico_month<?php if ($arrSearchPattern['booking_display_type'] != 'month') echo'_notsel'; ?>.png" title="Mois" onclick="javascript:ploopi_xmlhttprequest_todiv('index-light.php', '<?php echo ovensia\ploopi\crypt::queryencode("ploopi_op=booking_refresh&booking_moduleid={$booking_moduleid}&booking_display_type=month"); ?>', 'booking_main');" />
 
         <label for="booking_channels">Multi Col:</label>
-        <input type="checkbox" name="booking_channels" id="booking_channels" <?php if ($arrSearchPattern['booking_channels']) echo 'checked="checked"'; ?> onclick="javascript:ploopi_xmlhttprequest_todiv('index-light.php', '<?php echo ploopi_queryencode("ploopi_op=booking_refresh&booking_moduleid={$booking_moduleid}&booking_channels=".($arrSearchPattern['booking_channels'] ? 0 : 1)); ?>', 'booking_main');"/>
+        <input type="checkbox" name="booking_channels" id="booking_channels" <?php if ($arrSearchPattern['booking_channels']) echo 'checked="checked"'; ?> onclick="javascript:ploopi_xmlhttprequest_todiv('index-light.php', '<?php echo ovensia\ploopi\crypt::queryencode("ploopi_op=booking_refresh&booking_moduleid={$booking_moduleid}&booking_channels=".($arrSearchPattern['booking_channels'] ? 0 : 1)); ?>', 'booking_main');"/>
     </p>
 
-    <form style="float:left;" id="booking_form_view" action="<?php echo ploopi_urlencode("index-light.php?ploopi_op=booking_refresh&booking_moduleid={$booking_moduleid}"); ?>" method="post" onsubmit="javascript:ploopi_xmlhttprequest_submitform(this, 'booking_main');return false;">
+    <form style="float:left;" id="booking_form_view" action="<?php echo ovensia\ploopi\crypt::urlencode("index-light.php?ploopi_op=booking_refresh&booking_moduleid={$booking_moduleid}"); ?>" method="post" onsubmit="javascript:ploopi_xmlhttprequest_submitform(this, 'booking_main');return false;">
     <p class="ploopi_va" style="padding:2px;float:left;">
         <label>Période :</label>
         <?php
@@ -235,14 +233,14 @@ switch($arrSearchPattern['booking_display_type'])
                 $intMaxWeek = date('W', mktime(0, 0, 0, 12, 31, $arrSearchPattern['booking_year']));
                 if ($intMaxWeek == 1) $intMaxWeek = 52;
 
-                $date_firstweek = ploopi_numweek2unixtimestamp(1, $arrSearchPattern['booking_year']);
+                $date_firstweek = ovensia\ploopi\date::numweek2unixtimestamp(1, $arrSearchPattern['booking_year']);
                 for ($intWeek = 1; $intWeek <= $intMaxWeek; $intWeek++)
                 {
                     // Date de début de la semaine en cours d'affichage dans la liste
                     $date_week = mktime(0, 0, 0, date('n', $date_firstweek), date('j', $date_firstweek)+(($intWeek - 1) * 7), date('Y', $date_firstweek));
                     //$date_week = mktime(0, 0, 0, 12, 29 + $d + (($intWeek - 1) * 7), $intSelYear - 1);
                     ?>
-                    <option value="<?php echo $intWeek; ?>" <?php if ($arrSearchPattern['booking_week'] == $intWeek) echo 'selected="selected";' ?>><?php printf("Semaine %02d - %s", $intWeek, substr(ploopi_unixtimestamp2local($date_week),0,5)); ?></option>
+                    <option value="<?php echo $intWeek; ?>" <?php if ($arrSearchPattern['booking_week'] == $intWeek) echo 'selected="selected";' ?>><?php printf("Semaine %02d - %s", $intWeek, substr(ovensia\ploopi\date::unixtimestamp2local($date_week),0,5)); ?></option>
                     <?php
                 }
                 ?>
@@ -294,7 +292,7 @@ switch($arrSearchPattern['booking_display_type'])
         }
 
 
-        if ($_SESSION['ploopi']['connected'] && ploopi_isactionallowed(_BOOKING_ACTION_ASKFOREVENT, $_SESSION['ploopi']['workspaceid'], $booking_moduleid))
+        if ($_SESSION['ploopi']['connected'] && ovensia\ploopi\acl::isactionallowed(_BOOKING_ACTION_ASKFOREVENT, $_SESSION['ploopi']['workspaceid'], $booking_moduleid))
         {
             $date_today = time();
 
@@ -316,7 +314,7 @@ switch($arrSearchPattern['booking_display_type'])
 switch($arrSearchPattern['booking_display_type'])
 {
     case 'month':
-        $objCalendar = new calendar($arrSize[0], $arrSize[1], 'month');
+        $objCalendar = new ovensia\ploopi\calendar($arrSize[0], $arrSize[1], 'month');
 
         $objCalendar->setoptions(
             array(
@@ -327,24 +325,24 @@ switch($arrSearchPattern['booking_display_type'])
     break;
 
     case 'week':
-        $objCalendar = new calendar($arrSize[0], $arrSize[1], 'days');
+        $objCalendar = new ovensia\ploopi\calendar($arrSize[0], $arrSize[1], 'days');
 
         $objCalendar->setoptions(
             array(
-                'strDateBegin' => substr(ploopi_unixtimestamp2timestamp($date_begin), 0, 8),
-                'strDateEnd' => substr(ploopi_unixtimestamp2timestamp($date_end), 0, 8)
+                'strDateBegin' => substr(ovensia\ploopi\date::unixtimestamp2timestamp($date_begin), 0, 8),
+                'strDateEnd' => substr(ovensia\ploopi\date::unixtimestamp2timestamp($date_end), 0, 8)
             )
         );
     break;
 
     default:
     case 'day':
-        $objCalendar = new calendar($arrSize[0], $arrSize[1], 'days');
+        $objCalendar = new ovensia\ploopi\calendar($arrSize[0], $arrSize[1], 'days');
 
         $objCalendar->setoptions(
             array(
-                'strDateBegin' => substr(ploopi_unixtimestamp2timestamp($date_begin), 0, 8),
-                'strDateEnd' => substr(ploopi_unixtimestamp2timestamp($date_end), 0, 8)
+                'strDateBegin' => substr(ovensia\ploopi\date::unixtimestamp2timestamp($date_begin), 0, 8),
+                'strDateEnd' => substr(ovensia\ploopi\date::unixtimestamp2timestamp($date_end), 0, 8)
             )
         );
     break;
@@ -380,7 +378,7 @@ if ($arrSearchPattern['booking_channels'])
     $arrChannels = array();
     foreach($arrSearchPattern['booking_resources'] as $intIdResource)
     {
-        if (empty($arrChannels[$intIdResource])) $arrChannels[$intIdResource] = new calendarChannel(in_array($arrSearchPattern['booking_display_type'], array('day', 'today')) ? $arrResources[$intIdResource]['name'] : '', $arrResources[$intIdResource]['color']);
+        if (empty($arrChannels[$intIdResource])) $arrChannels[$intIdResource] = new ovensia\ploopi\calendarChannel(in_array($arrSearchPattern['booking_display_type'], array('day', 'today')) ? $arrResources[$intIdResource]['name'] : '', $arrResources[$intIdResource]['color']);
     }
 
     $objCalendar->setChannels($arrChannels);
@@ -388,7 +386,7 @@ if ($arrSearchPattern['booking_channels'])
 }
 else
 {
-    $objCalendar->addChannel(new calendarChannel(''), '');
+    $objCalendar->addChannel(new ovensia\ploopi\calendarChannel(''), '');
 }
 
 // Affectation de la liste des événements au calendrier
@@ -399,16 +397,16 @@ foreach($arrEvents as $event)
 
     if ($arrSearchPattern['booking_display_type'] == 'month')
     {
-        $strContent = '<div class="booking_event_color_month" style="background-color:'.$strBgColor.';"></div><div><time_begin> '.ploopi_htmlentities(ploopi_strcut($event['object'],20)).'</div>';
+        $strContent = '<div class="booking_event_color_month" style="background-color:'.$strBgColor.';"></div><div><time_begin> '.ovensia\ploopi\str::htmlentities(ovensia\ploopi\str::cut($event['object'],20)).'</div>';
     }
     else
     {
-        $strContent = '<div class="booking_event_color" style="background-color:'.$strBgColor.';">'.$strStatus.'</div><div>'.ploopi_htmlentities($event['object']).'</div>';
+        $strContent = '<div class="booking_event_color" style="background-color:'.$strBgColor.';">'.$strStatus.'</div><div>'.ovensia\ploopi\str::htmlentities($event['object']).'</div>';
     }
 
     if ($arrSearchPattern['booking_display_type'] == 'week' && ($channelsCount > 1)) {
         $objCalendar->addevent(
-            new calendarEvent(
+            new ovensia\ploopi\calendarEvent(
                 $event['timestp_begin'],
                 $event['timestp_end'],
                 '',
@@ -425,7 +423,7 @@ foreach($arrEvents as $event)
     }
     else {
         $objCalendar->addevent(
-            new calendarEvent(
+            new ovensia\ploopi\calendarEvent(
                 $event['timestp_begin'],
                 $event['timestp_end'],
                 '<time_begin> / <time_end>',

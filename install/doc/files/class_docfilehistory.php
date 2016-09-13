@@ -32,12 +32,6 @@
  */
 
 /**
- * Inclusion de la classe parent.
- */
-
-include_once './include/classes/data_object.php';
-
-/**
  * Classe d'accès à la table ploopi_mod_doc_file_history
  *
  * @package doc
@@ -47,7 +41,7 @@ include_once './include/classes/data_object.php';
  * @author Stéphane Escaich
  */
 
-class docfilehistory extends data_object
+class docfilehistory extends ovensia\ploopi\data_object
 {
     /**
      * Constructeur de la classe
@@ -71,7 +65,7 @@ class docfilehistory extends data_object
     function getbasepath()
     {
         $basepath = doc_getpath($this->fields['id_module'])._PLOOPI_SEP.substr($this->fields['timestp_create'],0,8);
-        ploopi_makedir($basepath);
+        ovensia\ploopi\fs::makedir($basepath);
         return($basepath);
     }
 

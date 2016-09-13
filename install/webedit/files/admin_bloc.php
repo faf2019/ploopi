@@ -34,11 +34,11 @@ $article = new webedit_article($type);
 
 // récupère les validateurs
 $arrWfUsers = array('group' => array(), 'user' => array());
-$arrWf = ploopi_validation_get(_WEBEDIT_OBJECT_HEADING, $headingid);
+$arrWf = ovensia\ploopi\validation::get(_WEBEDIT_OBJECT_HEADING, $headingid);
 $intWfHeadingId = $headingid;
 
 
-$objUser = new user();
+$objUser = new ovensia\ploopi\user();
 $objUser->open($_SESSION['ploopi']['userid']);
 $arrGroups = $objUser->getgroups(true);
 
@@ -46,11 +46,11 @@ $arrGroups = $objUser->getgroups(true);
  * L'utilisateur connecté est-il validateur ?
  */
 $booWfVal = false;
-foreach($arrWf as $value) 
+foreach($arrWf as $value)
 {
     if ($value['type_validation'] == 'user' && $value['id_validation'] == $_SESSION['ploopi']['userid']) $booWfVal = true;
     if ($value['type_validation'] == 'group' && isset($arrGroups[$value['id_validation']])) $booWfVal = true;
-    
+
     $arrWfUsers[$value['type_validation']][] = $value['id_validation'];
 }
 
@@ -61,7 +61,7 @@ switch($op)
         // force switching to draft
         $type = $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['type'] = 'draft';
 
-        $user = new user();
+        $user = new ovensia\ploopi\user();
         $user->open($_SESSION['ploopi']['userid']);
 
         $article->init_description();
@@ -73,7 +73,7 @@ switch($op)
 
         $article_timestp_published = $article_timestp_unpublished = $lastupdate_timestp = $lastupdate_user = '';
 
-        $article_timestp = current(ploopi_timestamp2local(ploopi_createtimestamp()));
+        $article_timestp = current(ovensia\ploopi\date::timestamp2local(ovensia\ploopi\date::createtimestamp()));
 
         $isnewversion = 0;
 
@@ -83,19 +83,19 @@ switch($op)
         $article->open($articleid);
         $title = "Modification du bloc '{$article->fields['title']}'";
 
-        $ldate = ($article->fields['timestp']) ? ploopi_timestamp2local($article->fields['timestp']) : array('date' => '');
+        $ldate = ($article->fields['timestp']) ? ovensia\ploopi\date::timestamp2local($article->fields['timestp']) : array('date' => '');
         $article_timestp = $ldate['date'];
 
-        $ldate = ($article->fields['timestp_published']) ? ploopi_timestamp2local($article->fields['timestp_published']) : array('date' => '');
+        $ldate = ($article->fields['timestp_published']) ? ovensia\ploopi\date::timestamp2local($article->fields['timestp_published']) : array('date' => '');
         $article_timestp_published = $ldate['date'];
 
-        $ldate = ($article->fields['timestp_unpublished']) ? ploopi_timestamp2local($article->fields['timestp_unpublished']) : array('date' => '');
+        $ldate = ($article->fields['timestp_unpublished']) ? ovensia\ploopi\date::timestamp2local($article->fields['timestp_unpublished']) : array('date' => '');
         $article_timestp_unpublished = $ldate['date'];
 
-        $ldate = ($article->fields['lastupdate_timestp']) ? ploopi_timestamp2local($article->fields['lastupdate_timestp']) : array('date' => '', 'time' => '');
+        $ldate = ($article->fields['lastupdate_timestp']) ? ovensia\ploopi\date::timestamp2local($article->fields['lastupdate_timestp']) : array('date' => '', 'time' => '');
         $lastupdate_timestp = "{$ldate['date']} {$ldate['time']}";
 
-        $user = new user();
+        $user = new ovensia\ploopi\user();
         if ($user->open($article->fields['lastupdate_id_user'])) $lastupdate_user = "{$user->fields['firstname']} {$user->fields['lastname']} ({$user->fields['login']})";
         else $lastupdate_user = '';
 
@@ -107,7 +107,7 @@ switch($op)
 <div style="background-color:#e0e0e0;padding:4px;border-bottom:1px solid #c0c0c0;">
     <p class="ploopi_va" style="font-weight:bold;">
         <?php
-        if ($type != 'draft' && ploopi_isactionallowed(_WEBEDIT_ACTION_STATS))
+        if ($type != 'draft' && ovensia\ploopi\acl::isactionallowed(_WEBEDIT_ACTION_STATS))
         {
             ?>
             <img style="display:block;float:right;cursor:pointer;" src="./modules/webedit/img/chart.png" alt="Statistiques" title="Statistiques de visites de cet article" onclick="javascript:webedit_stats_open(<?php echo $article->fields['id']; ?>, null, event);">
@@ -116,7 +116,7 @@ switch($op)
         ?>
         <img src="./modules/webedit/img/doc<?php echo $isnewversion; ?>.png">
         <?php
-        echo "<span>".ploopi_htmlentities($title)." - </span>";
+        echo "<span>".ovensia\ploopi\str::htmlentities($title)." - </span>";
 
         if ($type == 'draft')
         {
@@ -141,12 +141,12 @@ switch($op)
                 <span>Version en Ligne : non modifiable&nbsp;</span>
             <?php
         }
-        $readonly = (!((ploopi_isactionallowed(_WEBEDIT_ACTION_ARTICLE_EDIT) || webedit_isEditor($headingid)) && $type == 'draft' && ($article->fields['status'] == 'edit' || ($booWfVal) && ploopi_isactionallowed(_WEBEDIT_ACTION_ARTICLE_PUBLISH))));
+        $readonly = (!((ovensia\ploopi\acl::isactionallowed(_WEBEDIT_ACTION_ARTICLE_EDIT) || webedit_isEditor($headingid)) && $type == 'draft' && ($article->fields['status'] == 'edit' || ($booWfVal) && ovensia\ploopi\acl::isactionallowed(_WEBEDIT_ACTION_ARTICLE_PUBLISH))));
         ?>
     </p>
 </div>
 
-<form name="form_webedit_article" style="margin:0;" action="<?php echo ploopi_urlencode('admin.php'); ?>" method="post" onsubmit="javascript:return webedit_bloc_validate(this,'<?php echo $type; ?>','<?php echo ploopi_htmlentities($article->fields['status']); ?>', <?php echo $booWfVal ? 'true' : 'false'; ?>);">
+<form name="form_webedit_article" style="margin:0;" action="<?php echo ovensia\ploopi\crypt::urlencode('admin.php'); ?>" method="post" onsubmit="javascript:return webedit_bloc_validate(this,'<?php echo $type; ?>','<?php echo ovensia\ploopi\str::htmlentities($article->fields['status']); ?>', <?php echo $booWfVal ? 'true' : 'false'; ?>);">
 <input type="hidden" name="op" value="bloc_save">
 <input type="hidden" name="articleid" id="articleid" value="<?php echo $article->fields['id']; ?>">
 
@@ -166,10 +166,10 @@ switch($op)
                     if (!$readonly)
                     {
                         ?>
-                        <input class="text" type="text" name="webedit_article_title" value="<?php echo ploopi_htmlentities($article->fields['title']); ?>" tabindex="2" />
+                        <input class="text" type="text" name="webedit_article_title" value="<?php echo ovensia\ploopi\str::htmlentities($article->fields['title']); ?>" tabindex="2" />
                         <?php
                     }
-                    else echo '<span>'.ploopi_htmlentities($article->fields['title'], ENT_QUOTES).'</span>';
+                    else echo '<span>'.ovensia\ploopi\str::htmlentities($article->fields['title'], ENT_QUOTES).'</span>';
                     ?>
                 </p>
                 <p>
@@ -178,10 +178,10 @@ switch($op)
                     if (!$readonly)
                     {
                         ?>
-                        <input class="text" type="text" name="webedit_article_author" value="<?php echo ploopi_htmlentities($article->fields['author']); ?>" tabindex="3" />
+                        <input class="text" type="text" name="webedit_article_author" value="<?php echo ovensia\ploopi\str::htmlentities($article->fields['author']); ?>" tabindex="3" />
                         <?php
                     }
-                    else echo '<span>'.ploopi_htmlentities($article->fields['author']).'</span>';
+                    else echo '<span>'.ovensia\ploopi\str::htmlentities($article->fields['author']).'</span>';
                     ?>
                 </p>
             </div>
@@ -196,11 +196,11 @@ switch($op)
                     if (!$readonly)
                     {
                         ?>
-                        <input style="width:100px;" class="text" type="text" name="webedit_article_timestp" id="webedit_article_timestp" value="<?php echo ploopi_htmlentities($article_timestp); ?>" tabindex="4" />
-                        <?php ploopi_open_calendar('webedit_article_timestp'); ?>
+                        <input style="width:100px;" class="text" type="text" name="webedit_article_timestp" id="webedit_article_timestp" value="<?php echo ovensia\ploopi\str::htmlentities($article_timestp); ?>" tabindex="4" />
+                        <?php ovensia\ploopi\date::open_calendar('webedit_article_timestp'); ?>
                         <?php
                     }
-                    else echo '<span>'.ploopi_htmlentities($article_timestp, ENT_QUOTES).'</span>';
+                    else echo '<span>'.ovensia\ploopi\str::htmlentities($article_timestp, ENT_QUOTES).'</span>';
                     ?>
                 </p>
                 <p>
@@ -209,34 +209,34 @@ switch($op)
                     if (!$readonly)
                     {
                         ?>
-                        <input style="width:100px;" class="text" type="text" name="webedit_article_version" value="<?php echo ploopi_htmlentities($article->fields['version']); ?>" tabindex="5" />
+                        <input style="width:100px;" class="text" type="text" name="webedit_article_version" value="<?php echo ovensia\ploopi\str::htmlentities($article->fields['version']); ?>" tabindex="5" />
                         <?php
                     }
-                    else echo '<span>'.ploopi_htmlentities($article->fields['version'], ENT_QUOTES).'</span>';
+                    else echo '<span>'.ovensia\ploopi\str::htmlentities($article->fields['version'], ENT_QUOTES).'</span>';
                     ?>
                 </p>
                 <p>
                     <label>Largeur (px):</label>
                     <?php
-                    if (ploopi_isadmin() && !$readonly)
+                    if (ovensia\ploopi\acl::isadmin() && !$readonly)
                     {
                         ?>
-                        <input style="width:100px;" class="text" type="text" name="webedit_article_width" value="<?php echo ploopi_htmlentities($article->fields['width']); ?>" tabindex="6" />
+                        <input style="width:100px;" class="text" type="text" name="webedit_article_width" value="<?php echo ovensia\ploopi\str::htmlentities($article->fields['width']); ?>" tabindex="6" />
                         <?php
                     }
-                    else echo '<span>'.ploopi_htmlentities($article->fields['width'], ENT_QUOTES).'</span>';
+                    else echo '<span>'.ovensia\ploopi\str::htmlentities($article->fields['width'], ENT_QUOTES).'</span>';
                     ?>
                 </p>
                 <p>
                     <label>Hauteur (px):</label>
                     <?php
-                    if (ploopi_isadmin() && !$readonly)
+                    if (ovensia\ploopi\acl::isadmin() && !$readonly)
                     {
                         ?>
-                        <input style="width:100px;" class="text" type="text" name="webedit_article_height" value="<?php echo ploopi_htmlentities($article->fields['height']); ?>" tabindex="7" />
+                        <input style="width:100px;" class="text" type="text" name="webedit_article_height" value="<?php echo ovensia\ploopi\str::htmlentities($article->fields['height']); ?>" tabindex="7" />
                         <?php
                     }
-                    else echo '<span>'.ploopi_htmlentities($article->fields['height'], ENT_QUOTES).'</span>';
+                    else echo '<span>'.ovensia\ploopi\str::htmlentities($article->fields['height'], ENT_QUOTES).'</span>';
                     ?>
                 </p>
                 <?php
@@ -272,10 +272,10 @@ switch($op)
                         <?php
                         while ($row = $db->fetchrow())
                         {
-                            $ldate = ($row['timestp']) ? ploopi_timestamp2local($row['timestp']) : array('date' => '', 'time' => '');
+                            $ldate = ($row['timestp']) ? ovensia\ploopi\date::timestamp2local($row['timestp']) : array('date' => '', 'time' => '');
                             $size = sprintf("%.02f",($row['l']/1024));
                             ?>
-                            <option value="<?php echo ploopi_htmlentities($row['timestp']); ?>"><?php echo ploopi_htmlentities("{$ldate['date']} {$ldate['time']} par {$row['login']} - {$size} kio"); ?></option>
+                            <option value="<?php echo ovensia\ploopi\str::htmlentities($row['timestp']); ?>"><?php echo ovensia\ploopi\str::htmlentities("{$ldate['date']} {$ldate['time']} par {$row['login']} - {$size} kio"); ?></option>
                             <?php
                         }
                         ?>
@@ -290,7 +290,7 @@ switch($op)
                 ?>
             </div>
         </div>
-        
+
         <div style="clear:both;">
             <div>
                 <label for="webedit_article_disabledfilter" style="cursor:pointer;">Désactiver le validateur XHTML 1.0 Strict (inclusion javascript, styles):</label>
@@ -310,7 +310,7 @@ switch($op)
     else
     {
         ?>
-        <input type="hidden" name="webedit_article_disabledfilter" value="<?php echo ploopi_htmlentities($article->fields['disabledfilter']); ?>" />
+        <input type="hidden" name="webedit_article_disabledfilter" value="<?php echo ovensia\ploopi\str::htmlentities($article->fields['disabledfilter']); ?>" />
         <div class="ploopi_form" style="float:left; width:54%;">
             <div style="padding:2px;">
                 <p>
@@ -319,10 +319,10 @@ switch($op)
                     if (!$readonly)
                     {
                         ?>
-                        <input class="text" type="text" name="webedit_article_title" value="<?php echo ploopi_htmlentities($article->fields['title']); ?>" tabindex="2" />
+                        <input class="text" type="text" name="webedit_article_title" value="<?php echo ovensia\ploopi\str::htmlentities($article->fields['title']); ?>" tabindex="2" />
                         <?php
                     }
-                    else echo '<span>'.ploopi_htmlentities($article->fields['title'], ENT_QUOTES).'</span>';
+                    else echo '<span>'.ovensia\ploopi\str::htmlentities($article->fields['title'], ENT_QUOTES).'</span>';
                     ?>
                 </p>
                 <p>
@@ -331,10 +331,10 @@ switch($op)
                     if (!$readonly)
                     {
                         ?>
-                        <input class="text" type="text" name="webedit_article_author" value="<?php echo ploopi_htmlentities($article->fields['author']); ?>" tabindex="3" />
+                        <input class="text" type="text" name="webedit_article_author" value="<?php echo ovensia\ploopi\str::htmlentities($article->fields['author']); ?>" tabindex="3" />
                         <?php
                     }
-                    else echo '<span>'.ploopi_htmlentities($article->fields['author']).'</span>';
+                    else echo '<span>'.ovensia\ploopi\str::htmlentities($article->fields['author']).'</span>';
                     ?>
                 </p>
             </div>
@@ -348,11 +348,11 @@ switch($op)
                     if (!$readonly)
                     {
                         ?>
-                        <input style="width:100px;" class="text" type="text" name="webedit_article_timestp" id="webedit_article_timestp" value="<?php echo ploopi_htmlentities($article_timestp); ?>" tabindex="4" />
+                        <input style="width:100px;" class="text" type="text" name="webedit_article_timestp" id="webedit_article_timestp" value="<?php echo ovensia\ploopi\str::htmlentities($article_timestp); ?>" tabindex="4" />
                         <a href="javascript:void(0);" onclick="javascript:ploopi_calendar_open('webedit_article_timestp', event);"><img src="./img/calendar/calendar.gif" width="31" height="18" align="top" border="0"></a>
                         <?php
                     }
-                    else echo '<span>'.ploopi_htmlentities($article_timestp, ENT_QUOTES).'</span>';
+                    else echo '<span>'.ovensia\ploopi\str::htmlentities($article_timestp, ENT_QUOTES).'</span>';
                     ?>
                 </p>
             </div>
@@ -367,7 +367,7 @@ switch($op)
     <fieldset class="fieldset" style="padding:6px;">
         <legend><strong>Validateurs</strong> (utilisateurs qui peuvent publier)</legend>
 
-        <p class="ploopi_va" style="padding:0 2px 2px 2px;"><span>Validateurs </span><?php if ($intWfHeadingId != $headingid) echo "<em>&nbsp;héritées de &laquo;&nbsp;</em><a href=\"".ploopi_urlencode("admin.php?headingid={$intWfHeadingId}")."\">{$headings['list'][$intWfHeadingId]['label']}</a><em>&nbsp;&raquo;</em>"; ?><span>:</span>
+        <p class="ploopi_va" style="padding:0 2px 2px 2px;"><span>Validateurs </span><?php if ($intWfHeadingId != $headingid) echo "<em>&nbsp;héritées de &laquo;&nbsp;</em><a href=\"".ovensia\ploopi\crypt::urlencode("admin.php?headingid={$intWfHeadingId}")."\">{$headings['list'][$intWfHeadingId]['label']}</a><em>&nbsp;&raquo;</em>"; ?><span>:</span>
             <?php
             if (!empty($arrWfUsers))
             {
@@ -379,7 +379,7 @@ switch($op)
                         "SELECT label FROM ploopi_group WHERE id in (".implode(',',$arrWfUsers['group']).") ORDER BY label"
                     );
 
-                    while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi_htmlentities($row['label'])."&nbsp;</span>";
+                    while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;".ovensia\ploopi\str::htmlentities($row['label'])."&nbsp;</span>";
                 }
                 if (!empty($arrWfUsers['user']))
                 {
@@ -389,7 +389,7 @@ switch($op)
                         "SELECT concat(lastname, ' ', firstname) as name FROM ploopi_user WHERE id in (".implode(',',$arrWfUsers['user']).") ORDER BY lastname, firstname"
                     );
 
-                    while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi_htmlentities($row['name'])."&nbsp;</span>";
+                    while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;".ovensia\ploopi\str::htmlentities($row['name'])."&nbsp;</span>";
                 }
             }
             else echo '<em>Aucune accréditation</em>';
@@ -404,7 +404,7 @@ switch($op)
     if ($op != 'bloc_addnew')
     {
         ?>
-        <strong>&nbsp;-&nbsp;Dernière modification le </strong><?php echo $lastupdate_timestp; ?><strong> par </strong><?php echo ploopi_htmlentities($lastupdate_user); ?>
+        <strong>&nbsp;-&nbsp;Dernière modification le </strong><?php echo $lastupdate_timestp; ?><strong> par </strong><?php echo ovensia\ploopi\str::htmlentities($lastupdate_user); ?>
         <?php
     }
 
@@ -418,7 +418,7 @@ switch($op)
         {
             ?>
             Statut:&nbsp;
-            <?php 
+            <?php
             if(!$readonly)
             {
                 ?>
@@ -427,7 +427,7 @@ switch($op)
                     foreach($article_status as $key => $value)
                     {
                         ?>
-                        <option <?php echo ($key == $article->fields['status']) ? 'selected' : ''; ?> value="<?php echo $key; ?>"><?php echo ploopi_htmlentities($value); ?></option>
+                        <option <?php echo ($key == $article->fields['status']) ? 'selected' : ''; ?> value="<?php echo $key; ?>"><?php echo ovensia\ploopi\str::htmlentities($value); ?></option>
                         <?php
                     }
                     ?>
@@ -435,16 +435,16 @@ switch($op)
                 <?php
             }
             else
-                echo ploopi_htmlentities($article_status[$article->fields['status']]);
-                
-            if ($op != 'article_addnew' && ($booWfVal || ploopi_isadmin()))
+                echo ovensia\ploopi\str::htmlentities($article_status[$article->fields['status']]);
+
+            if ($op != 'article_addnew' && ($booWfVal || ovensia\ploopi\acl::isadmin()))
             {
                 ?>
                 <input class="flatbutton" style="font-weight:bold;" type="submit" name="publish" value="Publier">
                 <?php
             }
-            
-            if(!$readonly) 
+
+            if(!$readonly)
             {
                 ?>
                 <input class="flatbutton" type="submit" value="Enregistrer">
@@ -454,10 +454,10 @@ switch($op)
         ?>
         </div>
     <?php
-    if ($op != 'article_addnew' && (ploopi_isadmin() || $booWfVal || ($_SESSION['ploopi']['userid'] == $article->fields['id_user'] && $articles['list'][$articleid]['online_id'] == '')))
+    if ($op != 'article_addnew' && (ovensia\ploopi\acl::isadmin() || $booWfVal || ($_SESSION['ploopi']['userid'] == $article->fields['id_user'] && $articles['list'][$articleid]['online_id'] == '')))
     {
         ?>
-        <input class="flatbutton" type="button" value="<?php echo _PLOOPI_DELETE; ?>" onclick="javascript:ploopi_confirmlink('<?php echo ploopi_urlencode("admin.php?op=article_delete&articleid={$article->fields['id']}"); ?>','Êtes-vous certain de vouloir supprimer l\'article &laquo; <?php echo addslashes($article->fields['title']); ?> &raquo; ?');">
+        <input class="flatbutton" type="button" value="<?php echo _PLOOPI_DELETE; ?>" onclick="javascript:ploopi_confirmlink('<?php echo ovensia\ploopi\crypt::urlencode("admin.php?op=article_delete&articleid={$article->fields['id']}"); ?>','Êtes-vous certain de vouloir supprimer l\'article &laquo; <?php echo addslashes($article->fields['title']); ?> &raquo; ?');">
         <?php
     }
     if ($type == 'draft')
@@ -466,14 +466,14 @@ switch($op)
         if ($article_online->open($article->fields['id']))
         {
             ?>
-            <input type="button" class="flatbutton" value="Voir la Version en Ligne" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?op=bloc_modify&articleid={$articleid}&type=online"); ?>';">
+            <input type="button" class="flatbutton" value="Voir la Version en Ligne" onclick="javascript:document.location.href='<?php echo ovensia\ploopi\crypt::urlencode("admin.php?op=bloc_modify&articleid={$articleid}&type=online"); ?>';">
             <?php
         }
     }
     else
     {
         ?>
-        <input type="button" class="flatbutton" value="Modifier le Brouillon" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?op=bloc_modify&articleid={$articleid}&type=draft"); ?>';">
+        <input type="button" class="flatbutton" value="Modifier le Brouillon" onclick="javascript:document.location.href='<?php echo ovensia\ploopi\crypt::urlencode("admin.php?op=bloc_modify&articleid={$articleid}&type=draft"); ?>';">
         Cette version n'est pas modifiable, vous devez d'abord modifier le brouillon puis publier l'article.
         <?php
     }
@@ -485,12 +485,10 @@ switch($op)
     <?php
     if (!$readonly)
     {
-        include_once './include/functions/fck.php';
-
         $arrConfig = array();
         $arrConfig['CustomConfigurationsPath'] = _PLOOPI_BASEPATH.'/modules/webedit/fckeditor/fckconfig_bloc.js';
         $arrConfig['ToolbarLocation'] = 'Out:xToolbar';
-        
+
         $arrProperties = array();
         $arrProperties['ToolbarSet'] = $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['display_type'] == 'beginner' ? 'Beginner': 'Default';
 
@@ -514,7 +512,7 @@ switch($op)
         <?php
         if ($type == 'draft')
         {
-            if ($op != 'article_addnew' && ($booWfVal || ploopi_isadmin()))
+            if ($op != 'article_addnew' && ($booWfVal || ovensia\ploopi\acl::isadmin()))
             {
                 ?>
                 <input class="flatbutton" style="font-weight:bold;" type="submit" name="publish" value="Publier">
@@ -528,11 +526,11 @@ switch($op)
         </div>
         <?php
     }
-    
-    if ($op != 'article_addnew' && (ploopi_isadmin() || $booWfVal || ($_SESSION['ploopi']['userid'] == $article->fields['id_user'] && $articles['list'][$articleid]['online_id'] == '')))
+
+    if ($op != 'article_addnew' && (ovensia\ploopi\acl::isadmin() || $booWfVal || ($_SESSION['ploopi']['userid'] == $article->fields['id_user'] && $articles['list'][$articleid]['online_id'] == '')))
     {
         ?>
-        <input class="flatbutton" type="button" value="<?php echo _PLOOPI_DELETE; ?>" onclick="javascript:ploopi_confirmlink('<?php echo ploopi_urlencode("admin.php?op=article_delete&articleid={$article->fields['id']}"); ?>','Êtes-vous certain de vouloir supprimer l\'article &laquo; <?php echo addslashes($article->fields['title']); ?> &raquo; ?');">
+        <input class="flatbutton" type="button" value="<?php echo _PLOOPI_DELETE; ?>" onclick="javascript:ploopi_confirmlink('<?php echo ovensia\ploopi\crypt::urlencode("admin.php?op=article_delete&articleid={$article->fields['id']}"); ?>','Êtes-vous certain de vouloir supprimer l\'article &laquo; <?php echo addslashes($article->fields['title']); ?> &raquo; ?');">
         <?php
     }
     if ($type == 'draft')
@@ -541,14 +539,14 @@ switch($op)
         if ($article_online->open($article->fields['id']))
         {
             ?>
-            <input type="button" class="flatbutton" value="Voir la Version en Ligne" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?op=bloc_modify&articleid={$articleid}&type=online"); ?>';">
+            <input type="button" class="flatbutton" value="Voir la Version en Ligne" onclick="javascript:document.location.href='<?php echo ovensia\ploopi\crypt::urlencode("admin.php?op=bloc_modify&articleid={$articleid}&type=online"); ?>';">
             <?php
         }
     }
     else
     {
         ?>
-        <input type="button" class="flatbutton" value="Modifier le Brouillon" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?op=bloc_modify&articleid={$articleid}&type=draft"); ?>';">
+        <input type="button" class="flatbutton" value="Modifier le Brouillon" onclick="javascript:document.location.href='<?php echo ovensia\ploopi\crypt::urlencode("admin.php?op=bloc_modify&articleid={$articleid}&type=draft"); ?>';">
         Cette version n'est pas modifiable, vous devez d'abord modifier le brouillon puis publier l'article.
         <?php
     }
@@ -563,10 +561,10 @@ if ($op != 'bloc_addnew')
     <div style="clear:both;">
         <?php $arrAllowedActions = array(_WEBEDIT_ACTION_ARTICLE_EDIT, _WEBEDIT_ACTION_ARTICLE_PUBLISH);?>
         <div style="border-bottom:1px solid #c0c0c0;">
-        <?php ploopi_subscription(_WEBEDIT_OBJECT_ARTICLE_ADMIN, $article->fields['id'], $arrAllowedActions, "à &laquo; {$article->fields['title']} &raquo;"); ?>
+        <?php ovensia\ploopi\subscription::display(_WEBEDIT_OBJECT_ARTICLE_ADMIN, $article->fields['id'], $arrAllowedActions, "à &laquo; {$article->fields['title']} &raquo;"); ?>
         </div>
         <div style="border-bottom:1px solid #c0c0c0;">
-        <?php ploopi_annotation(_WEBEDIT_OBJECT_ARTICLE_ADMIN, $article->fields['id'], $article->fields['title']); ?>
+        <?php ovensia\ploopi\annotation::display(_WEBEDIT_OBJECT_ARTICLE_ADMIN, $article->fields['id'], $article->fields['title']); ?>
         </div>
     </div>
     <?php

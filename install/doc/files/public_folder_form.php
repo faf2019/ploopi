@@ -53,7 +53,7 @@ $addfolder = isset($_GET['addfolder']) ? $_GET['addfolder'] : 0;
 
 if (!$addfolder && $docfolder->open($currentfolder)) // modifying
 {
-    foreach(ploopi_validation_get(_DOC_OBJECT_FOLDER, $docfolder->fields['id_folder']) as $value) $wfusers[] = $value['id_validation'];
+    foreach(ovensia\ploopi\validation::get(_DOC_OBJECT_FOLDER, $docfolder->fields['id_folder']) as $value) $wfusers[] = $value['id_validation'];
 
     $wf_validator = in_array($docfolder->fields['id_folder'], $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['validation']['folders']);
 
@@ -76,7 +76,7 @@ else // creating
 {
     if (!empty($currentfolder)) // si pas le dossier racine, on cherche les validateurs
     {
-        foreach(ploopi_validation_get(_DOC_OBJECT_FOLDER, $currentfolder) as $value) $wfusers[] = $value['id_validation'];
+        foreach(ovensia\ploopi\validation::get(_DOC_OBJECT_FOLDER, $currentfolder) as $value) $wfusers[] = $value['id_validation'];
         $wf_validator = in_array($currentfolder, $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['validation']['folders']);
     }
     else $wf_validator = false;
@@ -98,7 +98,7 @@ else // creating
         if (!$readonly)
         {
             ?>
-            <form name="docfolder_form" action="<?php echo ploopi_urlencode("admin.php?ploopi_op=doc_foldersave&currentfolder={$currentfolder}".($newfolder ? '' : "&docfolder_id={$currentfolder}")); ?>"  onsubmit="javascript:return doc_folder_validate(this, <?php echo (!empty($wfusers) && !$wf_validator) ? 'true' : 'false'; ?>);" method="post" enctype="multipart/form-data">
+            <form name="docfolder_form" action="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?ploopi_op=doc_foldersave&currentfolder={$currentfolder}".($newfolder ? '' : "&docfolder_id={$currentfolder}")); ?>"  onsubmit="javascript:return doc_folder_validate(this, <?php echo (!empty($wfusers) && !$wf_validator) ? 'true' : 'false'; ?>);" method="post" enctype="multipart/form-data">
             <?php
         }
         ?>
@@ -111,13 +111,13 @@ else // creating
                     if ($readonly)
                     {
                         ?>
-                        <span><?php echo ploopi_htmlentities($docfolder->fields['name']); ?></span>
+                        <span><?php echo ovensia\ploopi\str::htmlentities($docfolder->fields['name']); ?></span>
                         <?php
                     }
                     else
                     {
                         ?>
-                        <input type="text" class="text" name="docfolder_name" id="docfolder_name" value="<?php echo ploopi_htmlentities($docfolder->fields['name']); ?>" tabindex="1">
+                        <input type="text" class="text" name="docfolder_name" id="docfolder_name" value="<?php echo ovensia\ploopi\str::htmlentities($docfolder->fields['name']); ?>" tabindex="1">
                         <?php
                     }
                     ?>
@@ -133,7 +133,7 @@ else // creating
                     if ($readonly || $addfolder)
                     {
                         ?>
-                        <span><a title="Aller au dossier" href="<?php echo ploopi_urlencode("admin.php?op=doc_browser&currentfolder={$docfolder->fields['id_folder']}"); ?>"><?php echo ploopi_htmlentities($strParent); ?></a></span>
+                        <span><a title="Aller au dossier" href="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?op=doc_browser&currentfolder={$docfolder->fields['id_folder']}"); ?>"><?php echo ovensia\ploopi\str::htmlentities($strParent); ?></a></span>
                         <?php
                     }
                     else
@@ -141,7 +141,7 @@ else // creating
                         ?>
                         <input type="hidden" name="docfolder_id_folder" id="docfolder_id_folder" value="<?php echo $docfolder->fields['id_folder']; ?>" />
                         <a title="Choisir un autre dossier parent" href="javascript:void(0);" onclick="javascript:ploopi_showpopup(ploopi_xmlhttprequest('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=doc_folderselect&doc_excludes=<?php echo $currentfolder; ?>&doc_id_folder='+$('docfolder_id_folder').value, false), 300, event, 'click', 'doc_popup_folderselect');" class="ploopi_va">
-                            <span style="width:auto;" id="docfolder_id_folder_name"><?php echo ploopi_htmlentities($strParent); ?></span><img style="margin-left:6px;" src="./modules/doc/img/ico_folder.png" />
+                            <span style="width:auto;" id="docfolder_id_folder_name"><?php echo ovensia\ploopi\str::htmlentities($strParent); ?></span><img style="margin-left:6px;" src="./modules/doc/img/ico_folder.png" />
                         </a>
                         <?php
                     }
@@ -154,7 +154,7 @@ else // creating
                     if ($readonly)
                     {
                         ?>
-                        <span><?php echo ploopi_htmlentities($foldertypes[$docfolder->fields['foldertype']]); ?></span>
+                        <span><?php echo ovensia\ploopi\str::htmlentities($foldertypes[$docfolder->fields['foldertype']]); ?></span>
                         <?php
                     }
                     else
@@ -165,7 +165,7 @@ else // creating
                             foreach($foldertypes as $key => $value)
                             {
                                 ?>
-                                <option <?php if ($docfolder->fields['foldertype'] == $key) echo 'selected'; ?> value="<?php echo $key; ?>"><?php echo ploopi_htmlentities($value); ?></option>
+                                <option <?php if ($docfolder->fields['foldertype'] == $key) echo 'selected'; ?> value="<?php echo $key; ?>"><?php echo ovensia\ploopi\str::htmlentities($value); ?></option>
                                 <?php
                             }
                             ?>
@@ -178,7 +178,7 @@ else // creating
                     <label>Contenu protégé:<br /><em>(Les autres utilisateurs ne peuvent pas déposer de fichier)</em></label>
                     <?php
                     if ($readonly)
-                    //if ($readonly || ($docfolder->fields['id_user'] != $_SESSION['ploopi']['userid'] && !ploopi_isadmin() && !ploopi_isactionallowed(_DOC_ACTION_ADMIN)))
+                    //if ($readonly || ($docfolder->fields['id_user'] != $_SESSION['ploopi']['userid'] && !ovensia\ploopi\acl::isadmin() && !ovensia\ploopi\acl::isactionallowed(_DOC_ACTION_ADMIN)))
                     {
                         ?>
                         <span><?php echo ($docfolder->fields['readonly']) ? 'oui' : 'non'; ?></span>
@@ -202,13 +202,13 @@ else // creating
                     if ($readonly)
                     {
                         ?>
-                        <span><?php echo ploopi_nl2br(ploopi_htmlentities($docfolder->fields['description'])); ?></span>
+                        <span><?php echo ovensia\ploopi\str::nl2br(ovensia\ploopi\str::htmlentities($docfolder->fields['description'])); ?></span>
                         <?php
                     }
                     else
                     {
                         ?>
-                        <textarea class="text" name="docfolder_description" tabindex="6"><?php echo ploopi_htmlentities($docfolder->fields['description']); ?></textarea>
+                        <textarea class="text" name="docfolder_description" tabindex="6"><?php echo ovensia\ploopi\str::htmlentities($docfolder->fields['description']); ?></textarea>
                         <?php
                     }
                     ?>
@@ -238,16 +238,16 @@ else // creating
                                 <p>
                                     <label>RSS :</label>
                                     <span>
-                                    <a title="RSS - <?php echo ploopi_htmlentities($docfolder->fields['name']); ?>" href="<?php  echo ploopi_urlrewrite('./backend.php?format=rss&ploopi_moduleid='.$_SESSION['ploopi']['moduleid'].'&id_folder='.$docfolder->fields['id'], doc_getrewriterules(), $docfolder->fields['name'].'.xml',null,true); ?>" type="application/rss+xml" rel="alternate">
-                                        <?php echo _PLOOPI_BASEPATH.ploopi_urlrewrite('/backend.php?format=rss&ploopi_moduleid='.$_SESSION['ploopi']['moduleid'].'&id_folder='.$docfolder->fields['id'], doc_getrewriterules(), $docfolder->fields['name'].'.xml',null,true); ?>
+                                    <a title="RSS - <?php echo ovensia\ploopi\str::htmlentities($docfolder->fields['name']); ?>" href="<?php  echo ovensia\ploopi\str::urlrewrite('./backend.php?format=rss&ploopi_moduleid='.$_SESSION['ploopi']['moduleid'].'&id_folder='.$docfolder->fields['id'], doc_getrewriterules(), $docfolder->fields['name'].'.xml',null,true); ?>" type="application/rss+xml" rel="alternate">
+                                        <?php echo _PLOOPI_BASEPATH.ovensia\ploopi\str::urlrewrite('/backend.php?format=rss&ploopi_moduleid='.$_SESSION['ploopi']['moduleid'].'&id_folder='.$docfolder->fields['id'], doc_getrewriterules(), $docfolder->fields['name'].'.xml',null,true); ?>
                                     </a>
                                     </span>
                                 </p>
                                 <p>
                                     <label>Atom :</label>
                                     <span>
-                                    <a title="Atom - <?php echo ploopi_htmlentities($docfolder->fields['name']); ?>" href="<?php  echo ploopi_urlrewrite('./backend.php?format=atom&ploopi_moduleid='.$_SESSION['ploopi']['moduleid'].'&id_folder='.$docfolder->fields['id'], doc_getrewriterules(), $docfolder->fields['name'].'.xml',null,true); ?>" type="application/atom+xml" rel="alternate">
-                                        <?php echo _PLOOPI_BASEPATH.ploopi_urlrewrite('/backend.php?format=atom&ploopi_moduleid='.$_SESSION['ploopi']['moduleid'].'&id_folder='.$docfolder->fields['id'], doc_getrewriterules(), $docfolder->fields['name'].'.xml',null,true); ?>
+                                    <a title="Atom - <?php echo ovensia\ploopi\str::htmlentities($docfolder->fields['name']); ?>" href="<?php  echo ovensia\ploopi\str::urlrewrite('./backend.php?format=atom&ploopi_moduleid='.$_SESSION['ploopi']['moduleid'].'&id_folder='.$docfolder->fields['id'], doc_getrewriterules(), $docfolder->fields['name'].'.xml',null,true); ?>" type="application/atom+xml" rel="alternate">
+                                        <?php echo _PLOOPI_BASEPATH.ovensia\ploopi\str::urlrewrite('/backend.php?format=atom&ploopi_moduleid='.$_SESSION['ploopi']['moduleid'].'&id_folder='.$docfolder->fields['id'], doc_getrewriterules(), $docfolder->fields['name'].'.xml',null,true); ?>
                                     </a>
                                     </span>
                                 </p>
@@ -271,17 +271,17 @@ else // creating
     <?php
     if (!$readonly)
     {
-        if (ploopi_isactionallowed(_DOC_ACTION_WORKFLOW_MANAGE))
+        if (ovensia\ploopi\acl::isactionallowed(_DOC_ACTION_WORKFLOW_MANAGE))
         {
             ?>
             <div id="doc_validation" style="clear:both;<?php echo ($docfolder->fields['foldertype'] == 'private') ? 'display:none;' : 'display:block;'; ?>">
-                <?php ploopi_validation_selectusers(_DOC_OBJECT_FOLDER, ($newfolder) ? '' : $docfolder->fields['id'], -1, -1, null, 'doc_validation_folder'); ?>
+                <?php ovensia\ploopi\validation::selectusers(_DOC_OBJECT_FOLDER, ($newfolder) ? '' : $docfolder->fields['id'], -1, -1, null, 'doc_validation_folder'); ?>
             </div>
             <?php
         }
         ?>
         <div id="doc_share" style="clear:both;<?php echo ($docfolder->fields['foldertype'] == 'shared') ? 'display:block;' : 'display:none;'; ?>">
-            <?php ploopi_share_selectusers(_DOC_OBJECT_FOLDER, ($newfolder) ? '' : $docfolder->fields['id'], -1, null, 'doc_share_folder'); ?>
+            <?php ovensia\ploopi\share::selectusers(_DOC_OBJECT_FOLDER, ($newfolder) ? '' : $docfolder->fields['id'], -1, null, 'doc_share_folder'); ?>
         </div>
         <div id="doc_private" style="clear:both;<?php echo ($docfolder->fields['foldertype'] == 'private') ? 'display:block;' : 'display:none;'; ?>">
             <div style="margin:4px;border:1px solid #c0c0c0;padding:4px;background-color:#f8f8f8;">
@@ -293,7 +293,7 @@ else // creating
     }
     ?>
     <div style="clear:both;float:right;padding:4px;">
-        <input type="button" class="flatbutton" value="<?php echo _PLOOPI_BACK; ?>" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?op=doc_browser&currentfolder={$currentfolder}"); ?>'">
+        <input type="button" class="flatbutton" value="<?php echo _PLOOPI_BACK; ?>" onclick="javascript:document.location.href='<?php echo ovensia\ploopi\crypt::urlencode("admin.php?op=doc_browser&currentfolder={$currentfolder}"); ?>'">
         <?php
         if (!$readonly)
         {

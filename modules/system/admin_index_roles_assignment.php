@@ -84,11 +84,11 @@ $columns['right']['origine']    = array('label' => 'Origine', 'width' => '150', 
 
 while($row = $db->fetchrow())
 {
-    $values[$c]['values']['desc']       = array('label' => ploopi_htmlentities($row['description']));
-    $values[$c]['values']['module']     = array('label' => ploopi_htmlentities($row['module_label']), 'sort_label' => sprintf("%s_%s", $row['module_label'], $row['label']));
-    $values[$c]['values']['role']       = array('label' => ploopi_htmlentities($row['label']));
+    $values[$c]['values']['desc']       = array('label' => ovensia\ploopi\str::htmlentities($row['description']));
+    $values[$c]['values']['module']     = array('label' => ovensia\ploopi\str::htmlentities($row['module_label']), 'sort_label' => sprintf("%s_%s", $row['module_label'], $row['label']));
+    $values[$c]['values']['role']       = array('label' => ovensia\ploopi\str::htmlentities($row['label']));
     $values[$c]['values']['shared']     = array('label' => '<img src="'.$_SESSION['ploopi']['template_path'].'/img/system/p_'.(($row['shared'] ? 'green' : 'red')).'.png">');
-    $values[$c]['values']['origine']    = array('label' => ploopi_htmlentities($row['origine']));
+    $values[$c]['values']['origine']    = array('label' => ovensia\ploopi\str::htmlentities($row['origine']));
 
     if ($op == 'assign_role' && !empty($_GET['roleid']) && is_numeric($_GET['roleid']) && $_GET['roleid'] == $row['id'])
     {
@@ -97,7 +97,7 @@ while($row = $db->fetchrow())
     }
 
     $values[$c]['description'] = 'Attribuer ce rôle';
-    $values[$c]['link'] = ploopi_urlencode("admin.php?op=assign_role&roleid={$row['id']}");
+    $values[$c]['link'] = ovensia\ploopi\crypt::urlencode("admin.php?op=assign_role&roleid={$row['id']}");
     $c++;
 }
 
@@ -107,13 +107,13 @@ echo $skin->close_simplebloc();
 
 if ($op == 'assign_role' && !empty($_GET['roleid']) && is_numeric($_GET['roleid']))
 {
-    echo $skin->open_simplebloc("Gestion des attributions du rôle &laquo; ".ploopi_htmlentities($arrRole['label'])." &raquo; du module &laquo; ".ploopi_htmlentities($arrRole['module_label'])." &raquo;");
+    echo $skin->open_simplebloc("Gestion des attributions du rôle &laquo; ".ovensia\ploopi\str::htmlentities($arrRole['label'])." &raquo; du module &laquo; ".ovensia\ploopi\str::htmlentities($arrRole['module_label'])." &raquo;");
     ?>
 
     <p class="ploopi_va" style="padding:4px; background-color:#e0e0e0; border-bottom:1px solid #c0c0c0;">
         <span style="font-weight:bold;">Rechercher un utilisateur ou un groupe :</span>
         <input type="text" id="system_roleusers_filter" class="text">
-        <img style="cursor:pointer;" onclick="javascript:system_roleusers_search(<?php echo ploopi_htmlentities($_GET['roleid']); ?>);" src="<?php echo "{$_SESSION['ploopi']['template_path']}/img/validation/search.png"; ?>">
+        <img style="cursor:pointer;" onclick="javascript:system_roleusers_search(<?php echo ovensia\ploopi\str::htmlentities($_GET['roleid']); ?>);" src="<?php echo "{$_SESSION['ploopi']['template_path']}/img/validation/search.png"; ?>">
     </p>
 
     <div id="system_roleusers_search_result"></div>

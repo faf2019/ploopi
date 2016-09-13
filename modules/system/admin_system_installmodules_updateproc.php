@@ -35,21 +35,20 @@
  * Inclusion des parsers XML
  */
 include_once './modules/system/xmlparser_mb.php';
-include_once './include/classes/xml2array.php';
 
-if (empty($_GET['idmoduletype']) || empty($_GET['updatefrom']) || empty($_GET['updateto']) || !is_numeric($_GET['idmoduletype'])) ploopi_redirect("admin.php");
+if (empty($_GET['idmoduletype']) || empty($_GET['updatefrom']) || empty($_GET['updateto']) || !is_numeric($_GET['idmoduletype'])) ovensia\ploopi\output::redirect("admin.php");
 
 global $idmoduletype;
 $idmoduletype = $_GET['idmoduletype'];
 
-$objModuleType = new module_type();
-if (!$objModuleType->open($_GET['idmoduletype'])) ploopi_redirect("admin.php");
+$objModuleType = new ovensia\ploopi\module_type();
+if (!$objModuleType->open($_GET['idmoduletype'])) ovensia\ploopi\output::redirect("admin.php");
 
 $strModuleType = $objModuleType->fields['label'];
 
 if (!ini_get('safe_mode')) ini_set('max_execution_time', 0);
 
-echo $skin->open_simplebloc(_SYSTEM_LABEL_UPDATEREPORT.ploopi_htmlentities(" - {$strModuleType} {$_GET['updatefrom']} => {$_GET['updateto']}"));
+echo $skin->open_simplebloc(_SYSTEM_LABEL_UPDATEREPORT.ovensia\ploopi\str::htmlentities(" - {$strModuleType} {$_GET['updatefrom']} => {$_GET['updateto']}"));
 
 
 $select = "SELECT version FROM ploopi_module_type WHERE id = '".$db->addslashes($strModuleType)."' AND version = '".$db->addslashes($_GET['updateto'])."'";
@@ -62,7 +61,7 @@ if ($db->numrows())
 }
 else
 {
-    ploopi_create_user_action_log(_SYSTEM_ACTION_UPDATEMODULE, "{$strModuleType} {$_GET['updatefrom']} => {$strModuleType} {$_GET['updateto']}");
+    ovensia\ploopi\user_action_log::record(_SYSTEM_ACTION_UPDATEMODULE, "{$strModuleType} {$_GET['updatefrom']} => {$strModuleType} {$_GET['updateto']}");
 
     $modpath = "./install/{$strModuleType}";
 
@@ -110,7 +109,7 @@ else
     {
         if (is_writable(realpath($destfiles)))
         {
-            ploopi_copydir($srcfiles , $destfiles);
+            ovensia\ploopi\fs::copydir($srcfiles , $destfiles);
             $detail = 'Fichiers copiés';
         }
         else
@@ -130,7 +129,7 @@ else
         // OPERATION 2 : Chargement des paramètres/actions
         // =============
 
-        $module_type = new module_type();
+        $module_type = new ovensia\ploopi\module_type();
         $module_type->open($_GET['idmoduletype']);
 
         $critical_error = $module_type->update_description($xmlfile_desc, $rapport);
@@ -161,7 +160,7 @@ else
             $testok = true;
             $detail = '';
 
-            ploopi_create_user_action_log(_SYSTEM_ACTION_UPDATEMETABASE, $strModuleType);
+            ovensia\ploopi\user_action_log::record(_SYSTEM_ACTION_UPDATEMETABASE, $strModuleType);
 
             $db->query("DELETE FROM ploopi_mb_field WHERE id_module_type = {$_GET['idmoduletype']}");
             $db->query("DELETE FROM ploopi_mb_relation WHERE id_module_type = {$_GET['idmoduletype']}");
@@ -210,7 +209,7 @@ else
 }
 ?>
 <div style="padding:4px;text-align:right;">
-    <form action="<?php echo ploopi_urlencode("admin.php?sysToolbarItem=install&reloadsession"); ?>" method="post">
+    <form action="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?sysToolbarItem=install&reloadsession"); ?>" method="post">
     <input type="submit" class="flatbutton" value="<?php echo _PLOOPI_CONTINUE; ?>">
     </form>
 </div>

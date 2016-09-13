@@ -36,7 +36,7 @@
 
 if (!ini_get('safe_mode')) ini_set('max_execution_time', 0);
 
-ploopi_init_module('doc');
+ovensia\ploopi\module::init('doc');
 
 switch($op)
 {
@@ -44,10 +44,8 @@ switch($op)
         @include_once 'Cache/Lite.php';
         if(!class_exists('Cache_Lite')) return false;
 
-        include_once './include/functions/filesystem.php';
         include_once './modules/doc/class_docfile.php';
         include_once './modules/doc/class_docfiledraft.php';
-        include './include/classes/mimethumb.php';
 
         // Vignettes des fichiers
         $sql = 'SELECT md5id, name, version, id_workspace, id_module FROM ploopi_mod_doc_file';
@@ -153,10 +151,8 @@ switch($op)
     case 'reindex':
         set_time_limit(0);
 
-        include_once './include/functions/system.php';
-
         // Nombre de processus à paralléliser
-        $intNbProc = ploopi_getnbcore()*2;
+        $intNbProc = ovensia\ploopi\system::getnbcore()*2;
         // Nombre d'enregistrement à traiter par processus
         $intPageSize = 50;
         // Sélection de l'ensemble des documents

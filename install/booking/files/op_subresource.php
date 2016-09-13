@@ -39,7 +39,7 @@
 switch($_REQUEST['ploopi_op'])
 {
     case 'booking_subresource_delete':
-        ploopi_init_module('booking', false, false, false);
+        ovensia\ploopi\module::init('booking', false, false, false);
         if (!empty($_GET['booking_element_list']))
         {
             include_once './modules/booking/classes/class_booking_subresource.php';
@@ -51,11 +51,11 @@ switch($_REQUEST['ploopi_op'])
                 if ($objSubresource->open($elementid)) $objSubresource->delete();
             }
         }
-        ploopi_redirect('admin.php');
+        ovensia\ploopi\output::redirect('admin.php');
     break;
 
     case 'booking_subresource_save':
-        ploopi_init_module('booking', false, false, false);
+        ovensia\ploopi\module::init('booking', false, false, false);
         include_once './modules/booking/classes/class_booking_subresource.php';
 
         $objSubresource = new booking_subresource();
@@ -67,13 +67,13 @@ switch($_REQUEST['ploopi_op'])
 
         $objSubresource->save();
 
-        ploopi_redirect("admin.php?booking_tab=subresource");
+        ovensia\ploopi\output::redirect("admin.php?booking_tab=subresource");
     break;
 
     case 'booking_subresource_add':
     case 'booking_subresource_open':
         ob_start();
-        ploopi_init_module('booking');
+        ovensia\ploopi\module::init('booking');
 
         include_once './modules/booking/classes/class_booking_subresource.php';
 
@@ -91,15 +91,15 @@ switch($_REQUEST['ploopi_op'])
             break;
         }
         ?>
-        <form action="<?php echo ploopi_urlencode("admin-light.php?ploopi_op=booking_subresource_save&booking_subresource_id={$objSubresource->fields['id']}"); ?>" method="post" onsubmit="javascript:return booking_subresource_validate(this);">
+        <form action="<?php echo ovensia\ploopi\crypt::urlencode("admin-light.php?ploopi_op=booking_subresource_save&booking_subresource_id={$objSubresource->fields['id']}"); ?>" method="post" onsubmit="javascript:return booking_subresource_validate(this);">
         <div class=ploopi_form>
             <p>
                 <label>Intitulé:</label>
-                <input name="booking_subresource_name" type="text" class="text" value="<?php echo ploopi_htmlentities($objSubresource->fields['name']); ?>">
+                <input name="booking_subresource_name" type="text" class="text" value="<?php echo ovensia\ploopi\str::htmlentities($objSubresource->fields['name']); ?>">
             </p>
             <p>
                 <label>Référence:</label>
-                <input name="booking_subresource_reference" type="text" class="text" value="<?php echo ploopi_htmlentities($objSubresource->fields['reference']); ?>">
+                <input name="booking_subresource_reference" type="text" class="text" value="<?php echo ovensia\ploopi\str::htmlentities($objSubresource->fields['reference']); ?>">
             </p>
             <p>
                 <label>Ressource liée:</label>
@@ -112,7 +112,7 @@ switch($_REQUEST['ploopi_op'])
                     while ($row = $db->fetchrow())
                     {
                         ?>
-                        <option value="<?php echo $row['id']; ?>" <?php if ($objSubresource->fields['id_resource'] == $row['id']) echo 'selected="selected"'; ?>><?php echo ploopi_htmlentities($row['name']); ?></option>
+                        <option value="<?php echo $row['id']; ?>" <?php if ($objSubresource->fields['id_resource'] == $row['id']) echo 'selected="selected"'; ?>><?php echo ovensia\ploopi\str::htmlentities($row['name']); ?></option>
                         <?php
                     }
                     ?>
@@ -137,7 +137,7 @@ switch($_REQUEST['ploopi_op'])
         $titre = ($_REQUEST['ploopi_op'] == 'booking_subresource_add') ? 'Ajout' : 'Modification';
 
         echo $skin->create_popup("{$titre} d'une sous-ressource", $content, 'popup_subresource');
-        ploopi_die();
+        ovensia\ploopi\system::kill();
     break;
 }
 ?>

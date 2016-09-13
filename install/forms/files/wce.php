@@ -36,7 +36,7 @@
  * Initialisation du module
  */
 
-ploopi_init_module('forms');
+ovensia\ploopi\module::init('forms');
 
 include_once './modules/forms/classes/formsForm.php';
 include_once './modules/forms/classes/formsField.php';

@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,6 +20,10 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+namespace ovensia\ploopi;
+
+use ovensia\ploopi;
+
 /**
  * Gestion des groupes d'utilisateurs.
  *
@@ -30,12 +33,6 @@
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
-
-/**
- * Inclusion de la classe parent.
- */
-
-include_once './include/classes/data_object.php';
 
 /**
  * Classe d'accès à la table ploopi_group
@@ -263,28 +260,5 @@ class group extends data_object
         while ($fields = $db->fetchrow($result)) $actions[$fields['id_workspace']][$fields['id_module']][$fields['id_action']] = true;
 
         return $actions;
-    }
-}
-
-/**
- * Classe d'accès à la table ploopi_group_user
- *
- * @package ploopi
- * @subpackage group
- * @copyright Netlor, Ovensia
- * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
- */
-
-class group_user extends data_object
-{
-    /**
-     * Constructeur de la classe
-     *
-     * @return group_user
-     */
-    public function __construct()
-    {
-        parent::__construct('ploopi_group_user','id_group','id_user');
     }
 }

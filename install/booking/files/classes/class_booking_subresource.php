@@ -31,10 +31,6 @@
  * @modifiedby $LastChangedBy$
  * @lastmodified $Date$
  */
-/**
- * Inclusion de la classe parent
- */
-include_once './include/classes/data_object.php';
 
 /**
  * Classe d'accès à la table 'ploopi_mod_booking_subresource'
@@ -45,7 +41,7 @@ include_once './include/classes/data_object.php';
  * @copyright OVENSIA
  */
 
-class booking_subresource extends data_object
+class booking_subresource extends ovensia\ploopi\data_object
 {
     /**
      * Constructeur de la classe

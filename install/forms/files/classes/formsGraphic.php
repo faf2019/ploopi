@@ -31,13 +31,6 @@
  */
 
 /**
- * Inclusion de la classe parent.
- */
-
-include_once './include/classes/data_object.php';
-
-
-/**
  * Inclusion des dépendances
  */
 include_once './modules/forms/classes/formsForm.php';
@@ -55,7 +48,7 @@ include_once './modules/forms/classes/formsField.php';
  * @author Stéphane Escaich
  */
 
-class formsGraphic extends data_object
+class formsGraphic extends ovensia\ploopi\data_object
 {
     private static $_arrDefaultOptions = array(
         // GLOBAL
@@ -158,7 +151,7 @@ class formsGraphic extends data_object
         imagerectangle($resImg, 0, 0, $intGraphWidth-1, $intGraphHeight-1, $black);
         imagettftext($resImg, 20, 0, 20, 200, $black, "./modules/forms/fonts/verdana.ttf",  $strMsg);
 
-        ploopi_ob_clean();
+        ovensia\ploopi\buffer::clean();
         header('Content-Type: image/png');
         header('Content-Disposition: attachment; Filename="erreur.png"');
         header('Cache-Control: private');
@@ -166,7 +159,7 @@ class formsGraphic extends data_object
         header('Content-Encoding: None');
 
         imagepng($resImg);
-        ploopi_die();
+        ovensia\ploopi\system::kill();
     }
 
     /**
@@ -300,7 +293,7 @@ class formsGraphic extends data_object
                     $arrCount = array();         // Tableau des compteurs (pour moyenne notamment)
                     $arrTotal = array();         // tableau contenant le total pour chaque indice (permet de calculer les valeurs en pourcentage)
 
-                    $intTsNow = ploopi_createtimestamp();
+                    $intTsNow = ovensia\ploopi\date::createtimestamp();
 
                     /**
                      * Lecture du champ qui sert de référence pour la base de temps
@@ -342,10 +335,10 @@ class formsGraphic extends data_object
                             {
 
                                 $arrDataModel[$intI] = 0;
-                                $arrLabels[$intI] = date("H\h\n(d)", ploopi_timestamp2unixtimestamp($intTs));
+                                $arrLabels[$intI] = date("H\h\n(d)", ovensia\ploopi\date::timestamp2unixtimestamp($intTs));
                                 $arrTotal[$intI] = 0; // Valeur totale pour chaque indice
 
-                                $intTs = ploopi_timestamp_add($intTs, 1);
+                                $intTs = ovensia\ploopi\date::timestamp_add($intTs, 1);
 
                                 $intI++;
                             }
@@ -357,7 +350,7 @@ class formsGraphic extends data_object
                             }
 
                             /*
-                            $intTsMin = ploopi_unixtimestamp2timestamp(mktime(date('G') - 23, 0, 0));
+                            $intTsMin = ovensia\ploopi\date::unixtimestamp2timestamp(mktime(date('G') - 23, 0, 0));
                             for ($intI = 0; $intI < 24; $intI++)
                             {
                                 $arrDataModel[$intI] = 0;
@@ -380,10 +373,10 @@ class formsGraphic extends data_object
                             while ($intTs < $intTsMax)
                             {
                                 $arrDataModel[$intI] = 0;
-                                $arrLabels[$intI] = date("d\nm", ploopi_timestamp2unixtimestamp($intTs));
+                                $arrLabels[$intI] = date("d\nm", ovensia\ploopi\date::timestamp2unixtimestamp($intTs));
                                 $arrTotal[$intI] = 0; // Valeur totale pour chaque indice
 
-                                $intTs = ploopi_timestamp_add($intTs, 0, 0, 0, 0, 1);
+                                $intTs = ovensia\ploopi\date::timestamp_add($intTs, 0, 0, 0, 0, 1);
 
                                 $intI++;
                             }
@@ -424,10 +417,10 @@ class formsGraphic extends data_object
                             while ($intTs < $intTsMax)
                             {
                                 $arrDataModel[$intI] = 0;
-                                $arrLabels[$intI] = date("  m\nY", ploopi_timestamp2unixtimestamp($intTs));
+                                $arrLabels[$intI] = date("  m\nY", ovensia\ploopi\date::timestamp2unixtimestamp($intTs));
                                 $arrTotal[$intI] = 0; // Valeur totale pour chaque indice
 
-                                $intTs = ploopi_timestamp_add($intTs, 0, 0, 0, 1, 0);
+                                $intTs = ovensia\ploopi\date::timestamp_add($intTs, 0, 0, 0, 1, 0);
 
                                 $intI++;
                             }
@@ -469,8 +462,8 @@ class formsGraphic extends data_object
                                 {
                                     if (isset($arrFormFields[$this->fields["line{$intI}_filter"]]) && isset($arrLine[$arrFormFields[$this->fields["line{$intI}_filter"]]->fields['fieldname']]))
                                     {
-                                        $strVal1 = strtoupper(ploopi_convertaccents(trim($arrLine[$arrFormFields[$this->fields["line{$intI}_filter"]]->fields['fieldname']])));
-                                        $strVal2 = strtoupper(ploopi_convertaccents(trim($this->fields["line{$intI}_filter_value"])));
+                                        $strVal1 = strtoupper(ovensia\ploopi\str::convertaccents(trim($arrLine[$arrFormFields[$this->fields["line{$intI}_filter"]]->fields['fieldname']])));
+                                        $strVal2 = strtoupper(ovensia\ploopi\str::convertaccents(trim($this->fields["line{$intI}_filter_value"])));
 
                                         switch($this->fields["line{$intI}_filter_op"])
                                         {
@@ -524,16 +517,16 @@ class formsGraphic extends data_object
                                     {
                                         case 'hour':
                                             $intIndice = self::__diffDate(
-                                                ploopi_timestamp2unixtimestamp($intTsMin),
-                                                ploopi_timestamp2unixtimestamp(substr($arrLine[$strTimeField], 0, 10).'0000'),
+                                                ovensia\ploopi\date::timestamp2unixtimestamp($intTsMin),
+                                                ovensia\ploopi\date::timestamp2unixtimestamp(substr($arrLine[$strTimeField], 0, 10).'0000'),
                                                 'h'
                                             );
                                         break;
 
                                         case 'day':
                                             $intIndice = self::__diffDate(
-                                                ploopi_timestamp2unixtimestamp($intTsMin),
-                                                ploopi_timestamp2unixtimestamp(substr($arrLine[$strTimeField], 0, 8).'000000'),
+                                                ovensia\ploopi\date::timestamp2unixtimestamp($intTsMin),
+                                                ovensia\ploopi\date::timestamp2unixtimestamp(substr($arrLine[$strTimeField], 0, 8).'000000'),
                                                 'd'
                                             );
                                         break;
@@ -544,8 +537,8 @@ class formsGraphic extends data_object
 
                                         case 'month':
                                             $intIndice = self::__diffDate(
-                                                ploopi_timestamp2unixtimestamp($intTsMin),
-                                                ploopi_timestamp2unixtimestamp(substr($arrLine[$strTimeField], 0, 6).'01000000'),
+                                                ovensia\ploopi\date::timestamp2unixtimestamp($intTsMin),
+                                                ovensia\ploopi\date::timestamp2unixtimestamp(substr($arrLine[$strTimeField], 0, 6).'01000000'),
                                                 'm'
                                             );
                                         break;
@@ -796,7 +789,7 @@ class formsGraphic extends data_object
             }
 
             // Vidage du buffer de Ploopi
-            ploopi_ob_clean();
+            ovensia\ploopi\buffer::clean();
 
             // Génération du graphique
             $objGraph->Stroke();

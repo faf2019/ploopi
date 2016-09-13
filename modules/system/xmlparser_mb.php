@@ -31,11 +31,6 @@
  * @author Stéphane Escaich
  */
 
-/**
- * Inclusion de classes de gestion de la métabase
- */
-include_once './include/classes/mb.php';
-
 $globaldata = '';
 $datatype = '';
 $newrow = false;
@@ -68,7 +63,7 @@ function startElement_mb($parser, $name, $attribs)
         switch($datatype)
         {
             case 'ploopi_mb_table':
-                $dataobject = new mb_table();
+                $dataobject = new ovensia\ploopi\mb_table();
             break;
 
             case 'ploopi_mb_field':
@@ -76,15 +71,15 @@ function startElement_mb($parser, $name, $attribs)
             break;
 
             case 'ploopi_mb_schema':
-                $dataobject = new mb_schema();
+                $dataobject = new ovensia\ploopi\mb_schema();
             break;
 
             case 'ploopi_mb_relation':
-                $dataobject = new mb_relation();
+                $dataobject = new ovensia\ploopi\mb_relation();
             break;
 
             default:
-                $dataobject = new data_object($datatype);
+                $dataobject = new ovensia\ploopi\data_object($datatype);
             break;
         }
         $newrow = true;

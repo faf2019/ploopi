@@ -100,7 +100,7 @@ function booking_get_workspaces($idw = 0)
 
     if (!$idw) $idw = $_SESSION['ploopi']['workspaceid'];
 
-    $objWorkspace = new workspace();
+    $objWorkspace = new ovensia\ploopi\workspace();
     $objWorkspace->open($idw);
     $parents = "{$objWorkspace->fields['parents']};{$idw}";
 
@@ -236,7 +236,7 @@ function booking_get_resources($strict = false, $moduleid = -1, $workspaceid = -
 
     $arrResources = array();
 
-    if (!$strict || ploopi_isactionallowed(_BOOKING_ACTION_VALIDATE, $workspaceid, $moduleid))
+    if (!$strict || ovensia\ploopi\acl::isactionallowed(_BOOKING_ACTION_VALIDATE, $workspaceid, $moduleid))
     {
         // Recherche des resources actives
         $db->query("
@@ -293,7 +293,7 @@ function booking_get_resources($strict = false, $moduleid = -1, $workspaceid = -
             $booWorkspaceValidator = in_array($workspaceid, $res['workspaces']);
 
             // Validateur oui/non ?
-            $arrResources[$key]['validator'] = ($booWorkspaceValidator && ploopi_isactionallowed(_BOOKING_ACTION_VALIDATE)) ? 1 : 0;
+            $arrResources[$key]['validator'] = ($booWorkspaceValidator && ovensia\ploopi\acl::isactionallowed(_BOOKING_ACTION_VALIDATE)) ? 1 : 0;
 
             // Application du filtre "strict" : On ne renvoit que les ressources gérées par l'espace courant
             if ($strict && !$booWorkspaceValidator) unset($arrResources[$key]);
@@ -361,8 +361,8 @@ function booking_get_events($mixId = null, $extended = false, $strict = false, $
         if ($managed == '1' || $managed == '0') $arrWhere[] = " e.managed = '".$db->addslashes($managed)."' ";
         if ($object != '') $arrWhere[] = " e.object LIKE '%".$db->addslashes($object)."%' ";
         if ($requestedby != '') $arrWhere[] = " (u.lastname LIKE '%".$db->addslashes($requestedby)."%' OR u.firstname LIKE '%".$db->addslashes($requestedby)."%' OR w.label LIKE '%".$db->addslashes($requestedby)."%')";
-        if ($from != '') $arrWhere[] = " e.timestp_request >= '".ploopi_local2timestamp($from)."' ";
-        if ($to != '') $arrWhere[] = " e.timestp_request <= '".substr(ploopi_local2timestamp($to), 0, 8)."235959' ";
+        if ($from != '') $arrWhere[] = " e.timestp_request >= '".ovensia\ploopi\date::local2timestamp($from)."' ";
+        if ($to != '') $arrWhere[] = " e.timestp_request <= '".substr(ovensia\ploopi\date::local2timestamp($to), 0, 8)."235959' ";
 
         $strWhere = ' AND '.implode(' AND ', $arrWhere);
 

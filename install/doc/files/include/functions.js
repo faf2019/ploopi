@@ -145,11 +145,26 @@ function doc_fckexplorer_set_folder(idfolder, ploopi_op)
 }
 
 
-function doc_fckexplorer_selectfile(fileUrl)
+function doc_fckexplorer_selectfile(fileUrl, text)
 {
-    window.opener.SetUrl(fileUrl);
-    window.close() ;
-}
+    window.opener.CKEDITOR.tools.callFunction( $('CKEditorFuncNum').value, fileUrl, function() {
+        // Get the reference to a dialog window.
+        var dialog = this.getDialog();
+        // Check if this is the Image Properties dialog window.
+        if ( dialog.getName() == 'image' ) {
+            // Get the reference to a text field that stores the "alt" attribute.
+            var element = dialog.getContentElement( 'info', 'txtAlt' );
+            // Assign the new value.
+            if ( element )
+                element.setValue( text );
+        }
+        // Return "false" to stop further execution. In such case CKEditor will ignore the second argument ("fileUrl")
+        // and the "onSelect" function assigned to the button that called the file manager (if defined).
+        // return false;
+    });
+
+    window.close();
+};
 
 function doc_fckexplorer_switch_folder(idfolder, ploopi_op)
 {
@@ -172,15 +187,24 @@ function doc_fckexplorer_switch_folder(idfolder, ploopi_op)
 
                         if (ploopi_op == 'doc_selectimage')
                         {
-                            fb.innerHTML +=     '<a class="doc_fckexplorer_vignette" href="javascript:void(0);" onclick="javascript:var title = ploopi_getelem(\'txtAttTitle\',opener.document);var alt = ploopi_getelem(\'txtAlt\',opener.document); if (title) title.value=\''+ploopi_addslashes(json[i]['name'])+'\';if (alt) alt.value=\''+ploopi_addslashes(json[i]['name'])+'\';doc_fckexplorer_selectfile(\''+json[i]['url']+'\');">'+
+                            /*
+                            fb.innerHTML +=     '<a class="doc_fckexplorer_vignette" href="javascript:void(0);" onclick="javascript:var title = ploopi_getelem(\'cke_80_textInput\',opener.document);var alt = ploopi_getelem(\'cke_80_textInput\',opener.document); if (title) title.value=\''+ploopi_addslashes(json[i]['name'])+'\';if (alt) alt.value=\''+ploopi_addslashes(json[i]['name'])+'\';doc_fckexplorer_selectfile(\''+json[i]['url']+'\');">'+
                                                     '<img style="height:75px;" src="index-quick.php?ploopi_op=doc_image_get&docfile_md5id='+json[i]['md5id']+'&version='+json[i]['version']+'&width=125&height=75" />'+
                                                     '<div style="font-weight:bold;">'+json[i]['name']+'</div>'+
                                                     '<div>'+filesize+' ko</div>'+
                                                 '</a>';
+                            */
+
+                            fb.innerHTML +=     '<a class="doc_fckexplorer_vignette" href="javascript:void(0);" onclick="javascript:doc_fckexplorer_selectfile(\''+json[i]['url']+'\', \''+json[i]['name']+'\');">'+
+                                                    '<img style="height:75px;" src="index-quick.php?ploopi_op=doc_image_get&docfile_md5id='+json[i]['md5id']+'&version='+json[i]['version']+'&width=125&height=75" />'+
+                                                    '<div style="font-weight:bold;">'+json[i]['name']+'</div>'+
+                                                    '<div>'+filesize+' ko</div>'+
+                                                '</a>';
+
                         }
                         else if (ploopi_op == 'doc_selectflash')
                         {
-                            fb.innerHTML +=     '<a class="doc_fckexplorer_vignette" href="javascript:void(0);" onclick="javascript:var title = ploopi_getelem(\'txtAttTitle\',opener.document); if (title) title.value=\''+ploopi_addslashes(json[i]['name'])+'\';doc_fckexplorer_selectfile(\''+json[i]['url']+'\');">'+
+                            fb.innerHTML +=     '<a class="doc_fckexplorer_vignette" href="javascript:void(0);" onclick="javascript:doc_fckexplorer_selectfile(\''+json[i]['url']+'\', \''+json[i]['name']+'\');">'+
                                                     '<img style="height:75px;" src="index-quick.php?ploopi_op=doc_image_get&docfile_md5id='+json[i]['md5id']+'&version='+json[i]['version']+'&width=125&height=75" />'+
                                                     '<div style="font-weight:bold;">'+json[i]['name']+'</div>'+
                                                     '<div>'+filesize+' ko</div>'+

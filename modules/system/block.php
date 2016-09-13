@@ -34,7 +34,7 @@
  * Initialisation du module
  */ 
 
-ploopi_init_module('system', false, false, false);
+ovensia\ploopi\module::init('system', false, false, false);
 
 if (!empty($_REQUEST['system_level'])) $_SESSION['system']['level'] = $_REQUEST['system_level'];
 if (empty($_SESSION['system']['level'])) $_SESSION['system']['level'] = _SYSTEM_WORKSPACES;
@@ -42,13 +42,13 @@ if (empty($_SESSION['system']['level'])) $_SESSION['system']['level'] = _SYSTEM_
 if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_SYSTEMADMIN)
     $block->addmenu(
         _PLOOPI_ADMIN_SYSTEM, 
-        ploopi_urlencode("admin.php?ploopi_moduleid="._PLOOPI_MODULE_SYSTEM."&ploopi_action=admin&system_level=system"), 
+        ovensia\ploopi\crypt::urlencode("admin.php?ploopi_moduleid="._PLOOPI_MODULE_SYSTEM."&ploopi_action=admin&system_level=system"), 
         ($_SESSION['ploopi']['moduleid'] == _PLOOPI_MODULE_SYSTEM && $_SESSION['system']['level'] == 'system')
     );
 
 $block->addmenu(
     _PLOOPI_ADMIN_WORKSPACES, 
-    ploopi_urlencode("admin.php?ploopi_moduleid="._PLOOPI_MODULE_SYSTEM."&ploopi_action=admin&system_level="._SYSTEM_WORKSPACES), 
+    ovensia\ploopi\crypt::urlencode("admin.php?ploopi_moduleid="._PLOOPI_MODULE_SYSTEM."&ploopi_action=admin&system_level="._SYSTEM_WORKSPACES), 
     ($_SESSION['ploopi']['moduleid'] == _PLOOPI_MODULE_SYSTEM && $_SESSION['system']['level'] == _SYSTEM_WORKSPACES)
 );
 ?>

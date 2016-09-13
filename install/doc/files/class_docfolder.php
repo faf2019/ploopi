@@ -32,14 +32,6 @@
  */
 
 /**
- * Inclusion de la classe parent.
- */
-
-include_once './include/classes/data_object.php';
-include_once './include/classes/data_object_collection.php';
-
-
-/**
  * Inclusion de la classe docfile.
  */
 
@@ -55,7 +47,7 @@ include_once './modules/doc/class_docfile.php';
  * @author Stéphane Escaich
  */
 
-class docfolder extends data_object
+class docfolder extends ovensia\ploopi\data_object
 {
     private $id_folder = 0;
     private $parents = '';
@@ -69,7 +61,7 @@ class docfolder extends data_object
     public function __construct()
     {
         parent::__construct('ploopi_mod_doc_folder');
-        $this->fields['timestp_create'] = ploopi_createtimestamp();
+        $this->fields['timestp_create'] = ovensia\ploopi\date::createtimestamp();
         $this->fields['timestp_modify'] = $this->fields['timestp_create'];
         $this->fields['parents'] = 0;
     }
@@ -119,7 +111,7 @@ class docfolder extends data_object
         // Cas d'un changement de parent, il faut mettre à jour en cascade tous les enfants
         if ($this->fields['id_folder'] != $this->id_folder)
         {
-            $objCol = new data_object_collection('docfolder');
+            $objCol = new ovensia\ploopi\data_object_collection('docfolder');
             $objCol->add_where('parents LIKE %s', "{$this->parents},{$this->fields['id']}%");
             foreach($objCol->get_objects() as $objChildFolder) $objChildFolder->save();
 
@@ -159,10 +151,10 @@ class docfolder extends data_object
     {
         $booFolderEnabled = false;
 
-        if ($this->fields['id_user'] == $_SESSION['ploopi']['userid'] || ploopi_isadmin() || ploopi_isactionallowed(_DOC_ACTION_ADMIN)) $booFolderEnabled = true;
+        if ($this->fields['id_user'] == $_SESSION['ploopi']['userid'] || ovensia\ploopi\acl::isadmin() || ovensia\ploopi\acl::isactionallowed(_DOC_ACTION_ADMIN)) $booFolderEnabled = true;
         else
         {
-            if ($this->fields['foldertype'] == 'public' && in_array($this->fields['id_workspace'], explode(',', ploopi_viewworkspaces()))) $booFolderEnabled = true;
+            if ($this->fields['foldertype'] == 'public' && in_array($this->fields['id_workspace'], explode(',', ovensia\ploopi\system::viewworkspaces()))) $booFolderEnabled = true;
             else
             {
                 doc_getshare();
@@ -230,13 +222,13 @@ class docfolder extends data_object
 
             // on cherche la liste des abonnés à chacun des objets pour construire une liste globale d'abonnés
             foreach ($arrFolderList as $intObjectId)
-                $arrSubscribers += ploopi_subscription_getusers(_DOC_OBJECT_FOLDER, $intObjectId, $arrActions);
+                $arrSubscribers += ovensia\ploopi\subscription::getusers(_DOC_OBJECT_FOLDER, $intObjectId, $arrActions);
 
             // Si dossier partagé, on vérifie que l'abonné est dans les partages
             if ($this->fields['foldertype'] == 'shared')
             {
                 // On récupère les utilisateurs pour lesquels le dossier est partagé
-                $arrShareUsers = ploopi_share_get(-1, _DOC_OBJECT_FOLDER, $intObjectId);
+                $arrShareUsers = ovensia\ploopi\share::get(-1, _DOC_OBJECT_FOLDER, $intObjectId);
 
                 // Tableau résultat des utilisateurs abonnés et pour lesquels le dossier est partagé
                 $arrShareSubscribers = array();
