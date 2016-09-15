@@ -593,6 +593,11 @@ abstract class ploopi_loader
                 $_SESSION['ploopi']['user'] = $fields;
                 ploopi_create_user_action_log(_SYSTEM_ACTION_LOGIN_OK, $_REQUEST['ploopi_login'],_PLOOPI_MODULE_SYSTEM,_PLOOPI_MODULE_SYSTEM);
 
+                $objUser = new user();
+                $objUser->open($fields['id']);
+                $objUser->fields['last_connection'] = ploopi_createtimestamp();
+                $objUser->save();
+
                 // Reset de la session + nouvel ID
                 ploopi_session_reset();
                 // Indique qu'il faut recharger la session
