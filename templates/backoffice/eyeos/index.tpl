@@ -79,6 +79,12 @@
     function tpl_resize_content() {
         var height = document.viewport.getHeight() - $('statusbar').getHeight() - $('dock').getHeight();
         $('pagecontent').style.height = height+'px';
+        $$('.blockmenu').each(function(item) {
+            item.setStyle({
+                'max-height': height+'px',
+                'overflow': 'auto'
+            });
+        });
     }
 
     function tpl_display_time()
