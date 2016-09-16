@@ -136,7 +136,7 @@ class ploopi_cache
         if (self::$_booActivated)
         {
             $this->_objCache->_setFileName($this->_strCacheId, $this->_strCacheGroup);
-            if (file_exists($this->_file)) return($this->_objCache->lastModified());
+            if (file_exists($this->_objCache->_file)) return($this->_objCache->lastModified());
             else return 0;
         }
 
