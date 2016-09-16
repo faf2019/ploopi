@@ -296,6 +296,14 @@ switch($http_host)
         define ('_PLOOPI_CIPHER_IV', '12345678ABCDEFGHIJKLMNOPQRSTUVWX');
 
         /**
+         * Algorithme utilisé pour la génération des valeurs de hachage (stockage des mots de passe).
+         * Recommandé : sha256, sha384, sha512, whirlpool
+         * Uniquement pour rétro compatibilité: md5
+         */
+
+        define ('_PLOOPI_HASH_ALGO', 'sha256');
+
+        /**
          * Clé secrète utilisée pour le chiffrement des URL et des mots de passe
          */
 

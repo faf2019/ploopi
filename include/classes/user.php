@@ -425,7 +425,7 @@ class user extends data_object
 
     public static function generate_hash($strPassword, $strLogin)
     {
-        return md5(_PLOOPI_SECRETKEY."/{$strLogin}/".md5($strPassword));
+        return hash(_PLOOPI_HASH_ALGO, _PLOOPI_SECRETKEY."/{$strLogin}/".hash(_PLOOPI_HASH_ALGO, $strPassword));
     }
 
     /**
