@@ -1,3 +1,9 @@
+== Module BOOKING - version 1.0.15 ====================================================
+
+2016-09-27  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+* Correction de la détection de collisions avec les événements sur plusieurs jours
+
 == Module BOOKING - version 1.0.14 ====================================================
 
 2016-06-02  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
