@@ -107,7 +107,7 @@ abstract class loader
          */
         if (!file_exists('./config/config.php'))
         {
-            include_once './config/install.php' ;
+            include_once './config/install/install.php' ;
             system::kill();
         }
 

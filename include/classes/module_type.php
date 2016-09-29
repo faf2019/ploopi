@@ -53,9 +53,6 @@ class module_type extends data_object
 
     public function delete()
     {
-        include_once './include/classes/mb.php';
-        include_once './include/classes/param.php';
-
         global $db;
         // delete params
 
@@ -109,9 +106,6 @@ class module_type extends data_object
 
     public function delete_params()
     {
-        include_once './include/classes/mb.php';
-        include_once './include/classes/param.php';
-
         global $db;
 
         if ($this->fields['id']!=-1)
@@ -204,10 +198,6 @@ class module_type extends data_object
 
     public function update_description($xmlfile_desc, &$rapport = array())
     {
-        include_once './include/classes/param.php';
-        include_once './include/classes/mb.php';
-        include_once './include/classes/xml2array.php';
-
         global $db;
 
         $testok = true;

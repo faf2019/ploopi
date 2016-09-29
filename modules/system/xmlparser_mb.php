@@ -67,7 +67,7 @@ function startElement_mb($parser, $name, $attribs)
             break;
 
             case 'ploopi_mb_field':
-                $dataobject = new mb_field();
+                $dataobject = new ovensia\ploopi\mb_field();
             break;
 
             case 'ploopi_mb_schema':

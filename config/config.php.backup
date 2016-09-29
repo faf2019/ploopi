@@ -45,7 +45,7 @@ switch($http_host)
 {
     default:
         /**
-         * Type de SGBD utilisé. Seul MySQLi est supporté pour le moment.
+         * Type de SGBD utilisé. Seul MySQL est supporté pour le moment.
          */
 
         define ('_PLOOPI_SQL_LAYER','mysqli');
@@ -56,31 +56,31 @@ switch($http_host)
          * C'est-à-dire "hostname:port" ou le chemin vers le socket local, c'est-à-dire ":/path/to/socket" pour localhost.
          */
 
-        define ('_PLOOPI_DB_SERVER','<DB_SERVER>');
+        define ('_PLOOPI_DB_SERVER','localhost');
 
         /**
          * Le nom de l'utilisateur pour la connexion à la base de données
          */
 
-        define ('_PLOOPI_DB_LOGIN','<DB_LOGIN>');
+        define ('_PLOOPI_DB_LOGIN','root');
 
         /**
          * Le mot de passe pour la connexion à la base de données
          */
 
-        define ('_PLOOPI_DB_PASSWORD','<DB_PASSWORD>');
+        define ('_PLOOPI_DB_PASSWORD','root');
 
         /**
          * Le nom de la base de données
          */
 
-        define ('_PLOOPI_DB_DATABASE','<DB_DATABASE>');
+        define ('_PLOOPI_DB_DATABASE','ploopidev');
 
         /**
-         * Le chemin physique vers le dossier de stockage des documents (fichiers, images, etc..)
+         * Le chemin physique vers le dossier des données (fichiers, images, etc..)
          */
 
-        define ('_PLOOPI_PATHDATA', realpath('<DATAPATH>'));
+        define ('_PLOOPI_PATHDATA', '/var/www/data');
 
         /**
          * Le chemin physique vers le dossier partagé (ftp)
@@ -99,7 +99,7 @@ switch($http_host)
          * @see _PLOOPI_PATHCACHE
          */
 
-        define ('_PLOOPI_USE_CACHE', false);
+        define ('_PLOOPI_USE_CACHE', true);
 
         /**
          * Taille maximum autorisée pour un fichier uploadé (octets).
@@ -128,7 +128,7 @@ switch($http_host)
          * file : gestionnaire propre à Ploopi qui stock les sessions dans le dossier "data". Incompatible avec upload_progress.
          */
 
-        define ('_PLOOPI_SESSION_HANDLER', 'php'); // php, db, memcached, file
+        define ('_PLOOPI_SESSION_HANDLER', 'memcached'); // php, db, memcached, file
 
         /**
          * Niveau de compression des sessions de 0 à 9.
@@ -179,7 +179,7 @@ switch($http_host)
         /**
          * Le serveur elasticsearch utilisé
          */
-        define ('_PLOOPI_ELASTICSEARCH_HOST', '<ELASTIC_HOST>');
+        define ('_PLOOPI_ELASTICSEARCH_HOST', 'localhost:9200');
 
         /**
          * Active ou non l'affichage des erreurs.
@@ -191,7 +191,7 @@ switch($http_host)
          * @link http://fr.php.net/manual/fr/errorfunc.configuration.php#ini.display-errors
          */
 
-        define ('_PLOOPI_DISPLAY_ERRORS', false);
+        define ('_PLOOPI_DISPLAY_ERRORS', true);
 
         /**
          * Définit le niveau de sensibilité du gestionnaire d'erreur.
@@ -236,7 +236,7 @@ switch($http_host)
          * @see _PLOOPI_MAIL_ERRORS
          */
 
-        define ('_PLOOPI_SYSMAIL', '<SYS_MAIL>');
+        define ('_PLOOPI_SYSMAIL', '');
 
         /**
          * Adresse émettrice des mails du portail incluant erreurs, alertes, tickets
@@ -245,14 +245,14 @@ switch($http_host)
          * Si plusieurs adresses, seule la première est prise en compte.
          */
 
-        define ('_PLOOPI_ADMINMAIL', '<ADMIN_MAIL>');
+        define ('_PLOOPI_ADMINMAIL', '');
 
         /**
          * Active ou non le log interne
          * Attention, en fonction du trafic du site, veillez à vider la table 'ploopi_log' régulièrement
          */
 
-        define ('_PLOOPI_ACTIVELOG', false);
+        define ('_PLOOPI_ACTIVELOG', true);
 
         /**
          * Active ou non le filtrage des VARIABLES (true très recommandé !)
@@ -264,7 +264,7 @@ switch($http_host)
          * Active ou non le chiffrement des URL
          */
 
-        define ('_PLOOPI_URL_ENCODE', true);
+        define ('_PLOOPI_URL_ENCODE', false);
 
         /**
          * Mode de chiffrement des URL.
@@ -288,7 +288,7 @@ switch($http_host)
          * @see http://www.php.net/manual/fr/mcrypt.ciphers.php
          */
 
-        define ('_PLOOPI_CIPHER', <CIPHER>);
+        define ('_PLOOPI_CIPHER', MCRYPT_RIJNDAEL_128);
 
         /**
          * Vecteur d'initialisation pour le chiffrement des URL.
@@ -302,16 +302,16 @@ switch($http_host)
         /**
          * Algorithme utilisé pour la génération des valeurs de hachage (stockage des mots de passe).
          * Recommandé : sha256, sha384, sha512, whirlpool
-         * Compatibilité Ploopi < 1.9.7 : md5
+         * Uniquement pour rétro compatibilité: md5
          */
 
-        define ('_PLOOPI_HASH_ALGO', '<HASH_ALGO>');
+        define ('_PLOOPI_HASH_ALGO', 'md5');
 
         /**
          * Clé secrète utilisée pour le chiffrement des URL et des mots de passe
          */
 
-        define ('_PLOOPI_SECRETKEY', '<SECRETKEY>');
+        define ('_PLOOPI_SECRETKEY', 'ma phrase secrete');
 
         /**
          * Active ou non les jetons
@@ -400,19 +400,19 @@ switch($http_host)
          * Port du serveur proxy pour l'accès internet
          */
 
-        define ('_PLOOPI_INTERNETPROXY_PORT', '');
+        define ('_PLOOPI_INTERNETPROXY_PORT', '0');
 
         /**
          * Nom d'utilisateur du serveur proxy pour l'accès internet
          */
 
-        define ('_PLOOPI_INTERNETPROXY_USER', '');
+        define ('_PLOOPI_INTERNETPROXY_USER', 'root');
 
         /**
          * Mot de passe du serveur proxy pour l'accès internet
          */
 
-        define ('_PLOOPI_INTERNETPROXY_PASS', '');
+        define ('_PLOOPI_INTERNETPROXY_PASS', 'DQUTVd4d');
 
         /**
          * Liste des séparateurs de mots (fonctions d'indexation)
@@ -480,7 +480,7 @@ switch($http_host)
          * Nombre de coeurs affectés au rendu des pages (permet d'ajuster le calcul de la charge).
          */
 
-        define ('_PLOOPI_LOAD_NBCORE', <NBCORE>);
+        define ('_PLOOPI_LOAD_NBCORE', 1);
 
 
     break;

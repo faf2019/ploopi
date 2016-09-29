@@ -47,9 +47,6 @@ abstract class search_index
 
         try {
 
-            echo _PLOOPI_ELASTICSEARCH_HOST;
-            die();
-
             $client = \Elasticsearch\ClientBuilder::create()->setHosts([_PLOOPI_ELASTICSEARCH_HOST])->build();
 
             // TEST UNIQUEMENT
