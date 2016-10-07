@@ -42,14 +42,14 @@ switch($ploopi_op)
         if (empty($_REQUEST['planning_resources'])) $_REQUEST['planning_resources'] = array();
     case 'planning_refresh':
         include_once './modules/planning/public_planning.php';
-        ovensia\ploopi\system::kill();
+        ploopi\system::kill();
     break;
 
     case 'planning_print':
-        ovensia\ploopi\module::init('planning');
-        ovensia\ploopi\buffer::clean();
+        ploopi\module::init('planning');
+        ploopi\buffer::clean();
         include_once './modules/planning/planning_print.php';
-        ovensia\ploopi\system::kill();
+        ploopi\system::kill();
     break; 
 }
 ?>

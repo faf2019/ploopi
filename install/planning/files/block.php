@@ -34,8 +34,8 @@
  * Initialisation du module
  */
 
-ovensia\ploopi\module::init('planning', false, false, false);
+ploopi\module::init('planning', false, false, false);
 
-$block->addmenu('Planning', ovensia\ploopi\crypt::urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public');
+$block->addmenu('Planning', ploopi\crypt::urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public');
 ?>
 

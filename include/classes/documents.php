@@ -20,9 +20,9 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-namespace ovensia\ploopi;
+namespace ploopi;
 
-use ovensia\ploopi;
+use ploopi;
 
 /**
  * Gestion d'un bloc de document associé à un enregistrement d'un objet.
@@ -30,7 +30,7 @@ use ovensia\ploopi;
  *
  * @package ploopi
  * @subpackage document
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -83,7 +83,7 @@ abstract class documents {
 
         $query = crypt::queryencode("ploopi_op=documents_openfile&currentfolder={$_SESSION['documents'][$documents_id]['currentfolder']}&documents_id={$documents_id}&selectfile");
 
-        return "ovensia\ploopi\documents::openfile('{$query}', event)";
+        return "ploopi\documents::openfile('{$query}', event)";
     }
 
     /**
@@ -113,7 +113,7 @@ abstract class documents {
 
         $query = crypt::queryencode("ploopi_op=documents_selectfile&documents_id={$documents_id}");
 
-        return "ovensia\ploopi\documents::selectfile('{$query}', event, {$width})";
+        return "ploopi\documents::selectfile('{$query}', event, {$width})";
     }
 
 
@@ -135,7 +135,7 @@ abstract class documents {
 
     public static function insert($id_object, $id_record, $rights = array(), $default_folders = array(), $params = array(), $load_doc = true, $id_user = -1, $id_workspace = -1, $id_module = -1)
     {
-        global $db;
+        $db = loader::getdb();
 
         if ($id_user == -1) $id_user = $_SESSION['ploopi']['userid'];
         if ($id_workspace == -1) $id_workspace = $_SESSION['ploopi']['workspaceid'];
@@ -301,7 +301,7 @@ abstract class documents {
 
     public static function countelements($id_folder)
     {
-        global $db;
+        $db = loader::getdb();
 
         $c = 0;
 
@@ -327,7 +327,7 @@ abstract class documents {
 
     public static function getfiles($id_object, $id_record, $id_folder = 0, $id_module = -1)
     {
-        global $db;
+        $db = loader::getdb();
 
         if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];
 
@@ -352,7 +352,7 @@ abstract class documents {
 
     public static function getfolders($id_object, $id_record, $id_module = -1)
     {
-        global $db;
+        $db = loader::getdb();
 
         if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];
 
@@ -513,7 +513,7 @@ abstract class documents {
         // Vérification paramètres
         if (!isset($_SESSION['documents'][$documents_id])) return;
 
-        global $db;
+        $db = loader::getdb();
         global $skin;
         ?>
         <div class="documents_browser">

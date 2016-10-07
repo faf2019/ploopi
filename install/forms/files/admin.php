@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2011 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Copyright (c) 2010 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
@@ -27,7 +26,7 @@
  *
  * @package forms
  * @subpackage admin
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -36,7 +35,7 @@
  * Initialisation du module
  */
 
-ovensia\ploopi\module::init('forms');
+ploopi\module::init('forms');
 
 global $field_types;
 global $field_formats;
@@ -50,7 +49,7 @@ global $forms_graphic_operation;
  * On vérifie que l'utilisateur connecté est admin du module
  */
 
-if (ovensia\ploopi\acl::isactionallowed(_FORMS_ACTION_ADMIN))
+if (ploopi\acl::isactionallowed(_FORMS_ACTION_ADMIN))
 {
     include_once './modules/forms/classes/formsForm.php';
     include_once './modules/forms/classes/formsField.php';
@@ -62,7 +61,7 @@ if (ovensia\ploopi\acl::isactionallowed(_FORMS_ACTION_ADMIN))
     if (!empty($_GET['formsTabItem'])) $_SESSION['forms']['formsTabItem'] = $_GET['formsTabItem'];
     if (!isset($_SESSION['forms']['formsTabItem'])) $_SESSION['forms']['formsTabItem'] = '';
 
-    $sqllimitgroup = ' AND ploopi_mod_forms_form.id_workspace IN ('.ovensia\ploopi\system::viewworkspaces($_SESSION['ploopi']['moduleid']).')';
+    $sqllimitgroup = ' AND ploopi_mod_forms_form.id_workspace IN ('.ploopi\system::viewworkspaces($_SESSION['ploopi']['moduleid']).')';
 
     $tabs['formlist'] =
         array(
@@ -76,7 +75,7 @@ if (ovensia\ploopi\acl::isactionallowed(_FORMS_ACTION_ADMIN))
             'url' => "admin.php?formsTabItem=formadd"
         );
 
-    echo $skin->create_pagetitle(ovensia\ploopi\str::htmlentities($_SESSION['ploopi']['modulelabel']));
+    echo $skin->create_pagetitle(ploopi\str::htmlentities($_SESSION['ploopi']['modulelabel']));
     echo $skin->create_tabs($tabs, $_SESSION['forms']['formsTabItem']);
 
 

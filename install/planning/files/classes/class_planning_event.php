@@ -46,7 +46,7 @@ include_once './modules/planning/classes/class_planning_event_detail.php';
  * @copyright OVENSIA
  */
 
-class planning_event extends ovensia\ploopi\data_object
+class planning_event extends ploopi\data_object
 {
 
     private $arrDetail;
@@ -80,7 +80,7 @@ class planning_event extends ovensia\ploopi\data_object
 
         if ($this->new)
         {
-            $this->fields['timestp_request'] = ovensia\ploopi\date::createtimestamp();
+            $this->fields['timestp_request'] = ploopi\date::createtimestamp();
             parent::save();
 
             // Si il faut enregistrer des "event_detail"
@@ -88,8 +88,8 @@ class planning_event extends ovensia\ploopi\data_object
             {
 
                 $objEventDetail = new planning_event_detail();
-                $objEventDetail->fields['timestp_begin'] = ovensia\ploopi\date::local2timestamp($this->arrDetails['timestp_begin_d'], sprintf("%02d:%02d:00", $this->arrDetails['timestp_begin_h'], $this->arrDetails['timestp_begin_m']));
-                $objEventDetail->fields['timestp_end'] = ovensia\ploopi\date::local2timestamp($this->arrDetails['timestp_end_d'], sprintf("%02d:%02d:00", $this->arrDetails['timestp_end_h'], $this->arrDetails['timestp_end_m']));
+                $objEventDetail->fields['timestp_begin'] = ploopi\date::local2timestamp($this->arrDetails['timestp_begin_d'], sprintf("%02d:%02d:00", $this->arrDetails['timestp_begin_h'], $this->arrDetails['timestp_begin_m']));
+                $objEventDetail->fields['timestp_end'] = ploopi\date::local2timestamp($this->arrDetails['timestp_end_d'], sprintf("%02d:%02d:00", $this->arrDetails['timestp_end_h'], $this->arrDetails['timestp_end_m']));
                 $objEventDetail->fields['id_event'] = $this->fields['id'];
                 $objEventDetail->setresources($this->arrResource, false);
                 $objEventDetail->save();
@@ -97,13 +97,13 @@ class planning_event extends ovensia\ploopi\data_object
                 if (!empty($this->fields['periodicity']) && !empty($this->arrDetails['periodicity_end_date'])) // Périodicité définie
                 {
                     // Timestp unix de la date de début du premier événement
-                    $intUxTsEventBegin = ovensia\ploopi\date::timestamp2unixtimestamp($objEventDetail->fields['timestp_begin']);
+                    $intUxTsEventBegin = ploopi\date::timestamp2unixtimestamp($objEventDetail->fields['timestp_begin']);
 
                     // Timestp unix de la date de fin du premier événement
-                    $intUxTsEventEnd = ovensia\ploopi\date::timestamp2unixtimestamp($objEventDetail->fields['timestp_end']);
+                    $intUxTsEventEnd = ploopi\date::timestamp2unixtimestamp($objEventDetail->fields['timestp_end']);
 
                     // Timestp unix de la date de fin de périodicité
-                    $intUxTsPeriodEnd = ovensia\ploopi\date::timestamp2unixtimestamp(substr(ovensia\ploopi\date::local2timestamp($this->arrDetails['periodicity_end_date']), 0, 8).'235959');
+                    $intUxTsPeriodEnd = ploopi\date::timestamp2unixtimestamp(substr(ploopi\date::local2timestamp($this->arrDetails['periodicity_end_date']), 0, 8).'235959');
 
                     // Date de début du premier événement : Version tableau
                     $arrBegin =
@@ -141,8 +141,8 @@ class planning_event extends ovensia\ploopi\data_object
                             while ($intUxTs < $intUxTsPeriodEnd)
                             {
                                 $objEventDetail = new planning_event_detail();
-                                $objEventDetail->fields['timestp_begin'] = ovensia\ploopi\date::unixtimestamp2timestamp($intUxTs);
-                                $objEventDetail->fields['timestp_end'] = ovensia\ploopi\date::unixtimestamp2timestamp(mktime($arrENd['ho'], $arrENd['mi'], $arrENd['se'], $arrENd['m'], $arrENd['d'] + $d, $arrENd['y']));
+                                $objEventDetail->fields['timestp_begin'] = ploopi\date::unixtimestamp2timestamp($intUxTs);
+                                $objEventDetail->fields['timestp_end'] = ploopi\date::unixtimestamp2timestamp(mktime($arrENd['ho'], $arrENd['mi'], $arrENd['se'], $arrENd['m'], $arrENd['d'] + $d, $arrENd['y']));
                                 $objEventDetail->fields['id_event'] = $this->fields['id'];
                                 $objEventDetail->setresources($this->arrResource, false);
                                 $objEventDetail->save();
@@ -164,8 +164,8 @@ class planning_event extends ovensia\ploopi\data_object
                             while ($intUxTs < $intUxTsPeriodEnd)
                             {
                                 $objEventDetail = new planning_event_detail();
-                                $objEventDetail->fields['timestp_begin'] = ovensia\ploopi\date::unixtimestamp2timestamp($intUxTs);
-                                $objEventDetail->fields['timestp_end'] = ovensia\ploopi\date::unixtimestamp2timestamp(mktime($arrENd['ho'], $arrENd['mi'], $arrENd['se'], $arrENd['m'] + $m, $arrENd['d'], $arrENd['y']));
+                                $objEventDetail->fields['timestp_begin'] = ploopi\date::unixtimestamp2timestamp($intUxTs);
+                                $objEventDetail->fields['timestp_end'] = ploopi\date::unixtimestamp2timestamp(mktime($arrENd['ho'], $arrENd['mi'], $arrENd['se'], $arrENd['m'] + $m, $arrENd['d'], $arrENd['y']));
                                 $objEventDetail->fields['id_event'] = $this->fields['id'];
                                 $objEventDetail->setresources($this->arrResource, false);
                                 $objEventDetail->save();
@@ -230,7 +230,7 @@ class planning_event extends ovensia\ploopi\data_object
                         switch($strResourceType)
                         {
                             case 'user': // utilisateur
-                                $objUser = new ovensia\ploopi\user();
+                                $objUser = new ploopi\user();
                                 if ($objUser->open($intIdResource)) // utilisateur existe
                                 {
                                     $this->arrResource['user'][$intIdResource] = $intIdResource;
@@ -238,7 +238,7 @@ class planning_event extends ovensia\ploopi\data_object
                             break;
 
                             case 'group': // groupe
-                                $objGroup = new ovensia\ploopi\group();
+                                $objGroup = new ploopi\group();
                                 if ($objGroup->open($intIdResource)) // groupe existe
                                 {
                                     $this->arrResource['group'][$intIdResource] =$intIdResource;
@@ -259,7 +259,7 @@ class planning_event extends ovensia\ploopi\data_object
      */
     public function getdetails()
     {
-        global $db;
+        $db = ploopi\loader::getdb();
 
         // Recherche des détails liés à l'événement
         $db->query("SELECT * FROM ploopi_mod_planning_event_detail WHERE id_event = {$this->fields['id']} ORDER BY timestp_begin, timestp_end");

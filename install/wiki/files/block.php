@@ -34,13 +34,13 @@
  * Initialisation du module
  */
 
-ovensia\ploopi\module::init('wiki', false, false, false);
+ploopi\module::init('wiki', false, false, false);
 
 $strWikiMenu = isset($_GET['wiki_menu']) ? $_GET['wiki_menu'] : '';
 
-$block->addmenu('Page de démarrage', ovensia\ploopi\crypt::urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && $strWikiMenu == '');
-$block->addmenu('Index par titre', ovensia\ploopi\crypt::urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&wiki_menu=index_title"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && $strWikiMenu == 'index_title');
-$block->addmenu('Index par date', ovensia\ploopi\crypt::urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&wiki_menu=index_date"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && $strWikiMenu == 'index_date');
-if (ovensia\ploopi\acl::isadmin()) $block->addmenu('<strong>Réindexer</strong>', ovensia\ploopi\crypt::urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&wiki_menu=reindex"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && $strWikiMenu == 'reindex');
+$block->addmenu('Page de démarrage', ploopi\crypt::urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && $strWikiMenu == '');
+$block->addmenu('Index par titre', ploopi\crypt::urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&wiki_menu=index_title"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && $strWikiMenu == 'index_title');
+$block->addmenu('Index par date', ploopi\crypt::urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&wiki_menu=index_date"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && $strWikiMenu == 'index_date');
+if (ploopi\acl::isadmin()) $block->addmenu('<strong>Réindexer</strong>', ploopi\crypt::urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&wiki_menu=reindex"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && $strWikiMenu == 'reindex');
 ?>
 

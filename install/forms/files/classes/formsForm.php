@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2011 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Copyright (c) 2010 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
@@ -52,7 +52,7 @@ include_once './modules/forms/classes/formsArithmeticParser.php';
  * @author Stéphane Escaich
  */
 
-class formsForm extends ovensia\ploopi\data_object
+class formsForm extends ploopi\data_object
 {
     /**
      * Tableau des champs du formulaire
@@ -92,7 +92,7 @@ class formsForm extends ovensia\ploopi\data_object
     {
         if (empty(self::$_arrStaticFields))
         {
-            ovensia\ploopi\module::init('forms');
+            ploopi\module::init('forms');
             self::$_arrStaticFields = array(
                 'date_validation' => _FORMS_DATEVALIDATION,
                 'user_login' => _FORMS_USER,
@@ -112,7 +112,7 @@ class formsForm extends ovensia\ploopi\data_object
         if (empty($strDate)) return '';
 
         $arrDate = explode(' ', $strDate);
-        $intTs = ovensia\ploopi\date::timestamp2unixtimestamp(ovensia\ploopi\date::local2timestamp($arrDate[0], isset($arrDate[1]) ? $arrDate[1] : '00:00:00'));
+        $intTs = ploopi\date::timestamp2unixtimestamp(ploopi\date::local2timestamp($arrDate[0], isset($arrDate[1]) ? $arrDate[1] : '00:00:00'));
 
         return empty($intTs) ? '' : $intTs;
     }
@@ -172,7 +172,7 @@ class formsForm extends ovensia\ploopi\data_object
         $arrFields = array();
 
         // Clonage des groupes
-        $objDoc = new ovensia\ploopi\data_object_collection('formsGroup');
+        $objDoc = new ploopi\data_object_collection('formsGroup');
         $objDoc->add_where('id_form = %d', $intOldId);
         foreach($objDoc->get_objects() as $obj)
         {
@@ -184,7 +184,7 @@ class formsForm extends ovensia\ploopi\data_object
         }
 
         // Clonage des champs
-        $objDoc = new ovensia\ploopi\data_object_collection('formsField');
+        $objDoc = new ploopi\data_object_collection('formsField');
         $objDoc->add_where('id_form = %d', $intOldId);
         $objDoc->add_orderby('position');
         foreach($objDoc->get_objects() as $obj)
@@ -200,7 +200,7 @@ class formsForm extends ovensia\ploopi\data_object
         }
 
         // Clonage des graphiques
-        $objDoc = new ovensia\ploopi\data_object_collection('formsGraphic');
+        $objDoc = new ploopi\data_object_collection('formsGraphic');
         $objDoc->add_where('id_form = %d', $intOldId);
         foreach($objDoc->get_objects() as $obj)
         {
@@ -219,7 +219,7 @@ class formsForm extends ovensia\ploopi\data_object
             $arrConditions = $objGroup->getConditions();
             foreach($arrConditions as $key => $row) if (isset($arrFields[$arrConditions[$key]['field']])) $arrConditions[$key]['field'] = $arrFields[$arrConditions[$key]['field']]->fields['id'];
 
-            $objGroup->fields['conditions'] = ovensia\ploopi\crypt::serialize($arrConditions);
+            $objGroup->fields['conditions'] = ploopi\crypt::serialize($arrConditions);
             $objGroup->save();
         }
     }
@@ -297,7 +297,7 @@ class formsForm extends ovensia\ploopi\data_object
             break;
 
             case 'asc':
-                $objWorkspace = new ovensia\ploopi\workspace();
+                $objWorkspace = new ploopi\workspace();
                 $objWorkspace->open($_SESSION['ploopi']['workspaceid']);
                 $arrWorkspaces = array_keys($objWorkspace->getChildren());
                 $arrWorkspaces[] = $_SESSION['ploopi']['workspaceid'];
@@ -339,7 +339,7 @@ class formsForm extends ovensia\ploopi\data_object
 
     public function getGraphics()
     {
-        $objDOC = new ovensia\ploopi\data_object_collection('formsGraphic');
+        $objDOC = new ploopi\data_object_collection('formsGraphic');
         $objDOC->add_where('id_form = %d', $this->fields['id']);
         return $objDOC->get_objects(true);
     }
@@ -352,7 +352,7 @@ class formsForm extends ovensia\ploopi\data_object
 
     public function getGroups()
     {
-        $objDOC = new ovensia\ploopi\data_object_collection('formsGroup');
+        $objDOC = new ploopi\data_object_collection('formsGroup');
         $objDOC->add_where('id_form = %d', $this->fields['id']);
         return $objDOC->get_objects(true);
     }
@@ -370,7 +370,7 @@ class formsForm extends ovensia\ploopi\data_object
         {
             if (is_null($this->_arrFieldsWithSep))
             {
-                $objDOC = new ovensia\ploopi\data_object_collection('formsField');
+                $objDOC = new ploopi\data_object_collection('formsField');
                 $objDOC->add_where('id_form = %d', $this->fields['id']);
                 $objDOC->add_orderby('position');
 
@@ -383,7 +383,7 @@ class formsForm extends ovensia\ploopi\data_object
         {
             if (is_null($this->_arrFields))
             {
-                $objDOC = new ovensia\ploopi\data_object_collection('formsField');
+                $objDOC = new ploopi\data_object_collection('formsField');
                 $objDOC->add_where('id_form = %d', $this->fields['id']);
                 $objDOC->add_where('`separator` = 0');
                 $objDOC->add_where('`html` = 0');
@@ -458,12 +458,12 @@ class formsForm extends ovensia\ploopi\data_object
     {
         if (!$this->fields['option_onlyone'] && !$this->fields['option_onlyoneday']) return 0;
 
-        $objQuery = new ovensia\ploopi\query_select();
+        $objQuery = new ploopi\query_select();
         $objQuery->add_select('count(*) as c');
         $objQuery->add_from($this->getDataTableName());
 
         if ($this->fields['option_onlyone']) $objQuery->add_where('user_id = %d', $_SESSION['ploopi']['userid']);
-        if ($this->fields['option_onlyoneday']) $objQuery->add_where('LEFT(date_validation,8) = %s', substr(ovensia\ploopi\date::createtimestamp(), 0, 8));
+        if ($this->fields['option_onlyoneday']) $objQuery->add_where('LEFT(date_validation,8) = %s', substr(ploopi\date::createtimestamp(), 0, 8));
 
         return current($objQuery->execute()->getarray(true));
     }
@@ -477,7 +477,7 @@ class formsForm extends ovensia\ploopi\data_object
 
     public function getNumRows($booWorkspaceFilter = false)
     {
-        $objQuery = new ovensia\ploopi\query_select();
+        $objQuery = new ploopi\query_select();
         $objQuery->add_select('count(*) as c');
         $objQuery->add_from($this->getDataTableName());
 
@@ -507,7 +507,7 @@ class formsForm extends ovensia\ploopi\data_object
     public function getQuery($booWorkspaceFilter = false, $booBackupFilter = false, $arrFilter = array(), $arrOrderBy = array(), $intNumPage = 0, $booFieldNamesAsKey = false, $booExport = false, $booRawData = false, $booDelete = false)
     {
         // L'utilisateur est admin ?
-        $booIsAdmin = ovensia\ploopi\acl::isactionallowed(_FORMS_ACTION_ADMIN, -1, $this->fields['id_module']);
+        $booIsAdmin = ploopi\acl::isactionallowed(_FORMS_ACTION_ADMIN, -1, $this->fields['id_module']);
 
         /**
          * Tableau contenant les champs du formulaire
@@ -517,7 +517,7 @@ class formsForm extends ovensia\ploopi\data_object
         /**
          * Structure de base de la requête de consultation des données du formulaire
          */
-        $objQuery = $booDelete ? new ovensia\ploopi\query_delete() : new ovensia\ploopi\query_select();
+        $objQuery = $booDelete ? new ploopi\query_delete() : new ploopi\query_select();
 
         $objQuery->add_from('`'.$this->getDataTableName().'` rec');
 
@@ -529,7 +529,7 @@ class formsForm extends ovensia\ploopi\data_object
              */
 
             // Seul l'admin peut exporter le champ ID, par contre on en a besoin en visu
-            if (!$booExport || ovensia\ploopi\acl::isactionallowed(_FORMS_ACTION_ADMIN, -1, $this->fields['id_module'])) $objQuery->add_select('rec.`#id` as `id`');
+            if (!$booExport || ploopi\acl::isactionallowed(_FORMS_ACTION_ADMIN, -1, $this->fields['id_module'])) $objQuery->add_select('rec.`#id` as `id`');
 
             if ($booExport || $this->fields['option_displaydate'])
             {
@@ -581,8 +581,8 @@ class formsForm extends ovensia\ploopi\data_object
         {
             if (empty($_SESSION['forms'][$this->fields['id']]['unlockbackup']))
             {
-                if ($this->fields['autobackup'] > 0) $objQuery->add_where('rec.date_validation >= %s', ovensia\ploopi\date::timestamp_add(ovensia\ploopi\date::createtimestamp(), 0, 0, 0, 0, -$this->fields['autobackup']));
-                if (!empty($this->fields['autobackup_date'])) $objQuery->add_where('rec.date_validation >= %s', ovensia\ploopi\date::timestamp_add($this->fields['autobackup_date'], 0, 0, 0, 0, 1, 0));
+                if ($this->fields['autobackup'] > 0) $objQuery->add_where('rec.date_validation >= %s', ploopi\date::timestamp_add(ploopi\date::createtimestamp(), 0, 0, 0, 0, -$this->fields['autobackup']));
+                if (!empty($this->fields['autobackup_date'])) $objQuery->add_where('rec.date_validation >= %s', ploopi\date::timestamp_add($this->fields['autobackup_date'], 0, 0, 0, 0, 1, 0));
             }
         }
 
@@ -656,7 +656,7 @@ class formsForm extends ovensia\ploopi\data_object
                         switch ($arrObjField[$strIdField]->fields['format'])
                         {
                             case 'date':
-                                foreach($arrValues as $key => $null) $arrValues[$key] = substr(ovensia\ploopi\date::local2timestamp($arrValues[$key]), 0, 8);
+                                foreach($arrValues as $key => $null) $arrValues[$key] = substr(ploopi\date::local2timestamp($arrValues[$key]), 0, 8);
                             break;
 
                             case 'time':
@@ -682,11 +682,11 @@ class formsForm extends ovensia\ploopi\data_object
                             {
                                 $arrDT = explode(' ', $value);
                                 // Date et heure
-                                if (sizeof($arrDT) >= 2) $arrValues[$key] = ovensia\ploopi\date::local2timestamp($arrDT[0], $arrDT[1]);
+                                if (sizeof($arrDT) >= 2) $arrValues[$key] = ploopi\date::local2timestamp($arrDT[0], $arrDT[1]);
                                 // Date seule
                                 else
                                 {
-                                    $arrValues[$key] = ovensia\ploopi\date::local2timestamp($arrDT[0]);
+                                    $arrValues[$key] = ploopi\date::local2timestamp($arrDT[0]);
                                     // Cas particulier: recherche exacte sur date seule
                                     if ($row['op'] == '=')
                                     {
@@ -804,7 +804,7 @@ class formsForm extends ovensia\ploopi\data_object
         $arrObjFields = $this->getFields();
 
         // Lecture des données
-        $objQuery = new ovensia\ploopi\query_select();
+        $objQuery = new ploopi\query_select();
         $objQuery->add_from('`'.$this->getDataTableName().'` rec');
         $objQuery->add_orderby('`#id`');
 
@@ -867,8 +867,8 @@ class formsForm extends ovensia\ploopi\data_object
     public function deleteData()
     {
         $_SESSION['forms'][$this->fields['id']] = array();
-        ovensia\ploopi\session::setvar('filter', null);
-        ovensia\ploopi\session::setvar('formfilter', null);
+        ploopi\session::setvar('filter', null);
+        ploopi\session::setvar('formfilter', null);
 
         $this->prepareData(false, false, false, false, true);
 
@@ -909,7 +909,7 @@ class formsForm extends ovensia\ploopi\data_object
      */
     public function deleteToDate($intTs)
     {
-        $objQuery = new ovensia\ploopi\query_delete();
+        $objQuery = new ploopi\query_delete();
         $objQuery->add_from('`'.$this->getDataTableName().'`');
         $objQuery->add_where('`date_validation` <= %d', $intTs);
         $objQuery->execute();
@@ -931,8 +931,8 @@ class formsForm extends ovensia\ploopi\data_object
         if (isset($_GET['reset']))
         {
             $_SESSION['forms'][$this->fields['id']] = array();
-            ovensia\ploopi\session::setvar('filter', null);
-            ovensia\ploopi\session::setvar('formfilter', null);
+            ploopi\session::setvar('filter', null);
+            ploopi\session::setvar('formfilter', null);
         }
         if (isset($_GET['page'])) $_SESSION['forms'][$this->fields['id']]['page'] = $_GET['page'];
         if (isset($_GET['orderby'])) $_SESSION['forms'][$this->fields['id']]['orderby'] = $_GET['orderby'];
@@ -952,15 +952,15 @@ class formsForm extends ovensia\ploopi\data_object
         $arrFilter = array();
         $arrFormFilter = array();
 
-        if (ovensia\ploopi\acl::isactionallowed(_FORMS_ACTION_FILTER))
+        if (ploopi\acl::isactionallowed(_FORMS_ACTION_FILTER))
         {
             if ($ploopi_op != 'forms_filter') // Lecture session
             {
-                $arrFilter = ovensia\ploopi\session::getvar('filter');
+                $arrFilter = ploopi\session::getvar('filter');
                 if (!is_array($arrFilter)) $arrFilter = array();
 
                 // Tableau spécifique pour le formulaire
-                $arrFormFilter = ovensia\ploopi\session::getvar('formfilter');
+                $arrFormFilter = ploopi\session::getvar('formfilter');
                 if (!is_array($arrFormFilter)) $arrFormFilter = array();
             }
 
@@ -972,8 +972,8 @@ class formsForm extends ovensia\ploopi\data_object
                 $intI++;
             }
 
-            ovensia\ploopi\session::setvar('filter', $arrFilter);
-            ovensia\ploopi\session::setvar('formfilter', $arrFormFilter);
+            ploopi\session::setvar('filter', $arrFilter);
+            ploopi\session::setvar('formfilter', $arrFormFilter);
         }
 
         /**
@@ -1021,16 +1021,16 @@ class formsForm extends ovensia\ploopi\data_object
 
         $strFormat = strtolower($strFormat);
 
-        ovensia\ploopi\buffer::clean();
+        ploopi\buffer::clean();
 
         switch($strFormat)
         {
             case 'csv':
                 // Lecture des paramètres CSV
-                $strFormat = ovensia\ploopi\param::get('forms_export_csvextension', $this->fields['id_module']);
-                $strFieldSep = str_replace('(tab)',"\t", ovensia\ploopi\param::get('forms_export_fieldseparator', $this->fields['id_module']));
-                $strLineSep = str_replace(array('(cr)', '(lf)'), array("\r", "\n"), ovensia\ploopi\param::get('forms_export_lineseparator', $this->fields['id_module']));
-                $strTextSep = ovensia\ploopi\param::get('forms_export_textseparator', $this->fields['id_module']);
+                $strFormat = ploopi\param::get('forms_export_csvextension', $this->fields['id_module']);
+                $strFieldSep = str_replace('(tab)',"\t", ploopi\param::get('forms_export_fieldseparator', $this->fields['id_module']));
+                $strLineSep = str_replace(array('(cr)', '(lf)'), array("\r", "\n"), ploopi\param::get('forms_export_lineseparator', $this->fields['id_module']));
+                $strTextSep = ploopi\param::get('forms_export_textseparator', $this->fields['id_module']);
 
                 if (empty($strFormat)) $strFormat = 'csv';
                 if (empty($strFieldSep)) $strFieldSep = ',';
@@ -1043,7 +1043,7 @@ class formsForm extends ovensia\ploopi\data_object
                     'strTextSep' => $strTextSep,
                 );
 
-                echo ovensia\ploopi\arr::tocsv($arrData, $arrOptions);
+                echo ploopi\arr::tocsv($arrData, $arrOptions);
             break;
 
             case 'xlsx':
@@ -1134,19 +1134,19 @@ class formsForm extends ovensia\ploopi\data_object
                 {
                     case 'xlsx':
                         $arrOptions['writer'] = 'excel2007';
-                        echo ovensia\ploopi\arr::toexcel($arrData, true, 'document.xlsx', 'Feuille', $arrTitles, $arrOptions);
+                        echo ploopi\arr::toexcel($arrData, true, 'document.xlsx', 'Feuille', $arrTitles, $arrOptions);
                     break;
 
                     case 'xls':
                         $arrOptions['writer'] = 'excel5';
-                        echo ovensia\ploopi\arr::toexcel($arrData, true, 'document.xls', 'Feuille', $arrTitles, $arrOptions);
+                        echo ploopi\arr::toexcel($arrData, true, 'document.xls', 'Feuille', $arrTitles, $arrOptions);
                     break;
 
                     default:
-                        if (ovensia\ploopi\param::get('system_jodwebservice', _PLOOPI_MODULE_SYSTEM) != '')
+                        if (ploopi\param::get('system_jodwebservice', _PLOOPI_MODULE_SYSTEM) != '')
                         {
                             // Init de l'interface avec le convertisseur
-                            $objOdfConverter = new ovensia\ploopi\odf_converter(ovensia\ploopi\param::get('system_jodwebservice', _PLOOPI_MODULE_SYSTEM));
+                            $objOdfConverter = new ploopi\odf_converter(ploopi\param::get('system_jodwebservice', _PLOOPI_MODULE_SYSTEM));
 
                             // Détermination du type mime du format demandé
                             switch($strFormat)
@@ -1166,7 +1166,7 @@ class formsForm extends ovensia\ploopi\data_object
 
                             // Génération XLS + Conversion
                             $arrOptions['writer'] = 'excel2007';
-                            echo $objOdfConverter->convert(ovensia\ploopi\arr::toexcel($arrData, true, 'document.pdf', 'Feuille', $arrTitles, $arrOptions), 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', $strOuputMime);
+                            echo $objOdfConverter->convert(ploopi\arr::toexcel($arrData, true, 'document.pdf', 'Feuille', $arrTitles, $arrOptions), 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', $strOuputMime);
                         }
                     break;
                 }
@@ -1174,27 +1174,27 @@ class formsForm extends ovensia\ploopi\data_object
             break;
 
             case 'xml':
-                echo ovensia\ploopi\arr::toxml($arrData);
+                echo ploopi\arr::toxml($arrData);
             break;
 
             case 'html':
-                echo ovensia\ploopi\arr::tohtml($arrData);
+                echo ploopi\arr::tohtml($arrData);
             break;
 
             default:
-                ovensia\ploopi\system::kill();
+                ploopi\system::kill();
             break;
         }
 
         $strFileName = "export.{$strFormat}";
 
-        header('Content-Type: ' . ovensia\ploopi\fs::getmimetype($strFileName));
+        header('Content-Type: ' . ploopi\fs::getmimetype($strFileName));
         header('Content-Disposition: attachment; Filename="'.$strFileName.'"');
         header('Cache-Control: private');
         header('Pragma: private');
         header('Content-Length: '.ob_get_length());
         header('Content-Encoding: None');
-        ovensia\ploopi\system::kill();
+        ploopi\system::kill();
 
     }
 
@@ -1205,7 +1205,7 @@ class formsForm extends ovensia\ploopi\data_object
 
     private function _dropTable()
     {
-        global $db;
+        $db = ploopi\loader::getdb();
 
         $db->query("DROP TABLE IF EXISTS `".$this->getDataTableName()."`");
     }
@@ -1216,7 +1216,7 @@ class formsForm extends ovensia\ploopi\data_object
 
     public function generateTable()
     {
-        global $db;
+        $db = ploopi\loader::getdb();
 
         $this->_setDataTableName();
 
@@ -1295,7 +1295,7 @@ class formsForm extends ovensia\ploopi\data_object
 
     public function exportToTable()
     {
-        global $db;
+        $db = ploopi\loader::getdb();
 
         $this->generateTable();
 
@@ -1309,30 +1309,30 @@ class formsForm extends ovensia\ploopi\data_object
 
     public function removeMetabase()
     {
-        $objModule = new ovensia\ploopi\module();
+        $objModule = new ploopi\module();
         if (!$objModule->open($this->fields['id_module'])) return;
 
         $this->_setDataTableName();
 
-        $objQuery = new ovensia\ploopi\query_delete();
+        $objQuery = new ploopi\query_delete();
         $objQuery->add_from('ploopi_mb_schema');
         $objQuery->add_where('tablesrc = %s', $this->_strTablename);
         $objQuery->add_where('id_module_type = %d', $objModule->fields['id_module_type']);
         $objQuery->execute();
 
-        $objQuery = new ovensia\ploopi\query_delete();
+        $objQuery = new ploopi\query_delete();
         $objQuery->add_from('ploopi_mb_relation');
         $objQuery->add_where('tablesrc = %s', $this->_strTablename);
         $objQuery->add_where('id_module_type = %d', $objModule->fields['id_module_type']);
         $objQuery->execute();
 
-        $objQuery = new ovensia\ploopi\query_delete();
+        $objQuery = new ploopi\query_delete();
         $objQuery->add_from('ploopi_mb_field');
         $objQuery->add_where('tablename = %s', $this->_strTablename);
         $objQuery->add_where('id_module_type = %d', $objModule->fields['id_module_type']);
         $objQuery->execute();
 
-        $objQuery = new ovensia\ploopi\query_delete();
+        $objQuery = new ploopi\query_delete();
         $objQuery->add_from('ploopi_mb_table');
         $objQuery->add_where('name = %s', $this->_strTablename);
         $objQuery->add_where('id_module_type = %d', $objModule->fields['id_module_type']);
@@ -1346,7 +1346,7 @@ class formsForm extends ovensia\ploopi\data_object
 
     public function updateMetabase()
     {
-        $objModule = new ovensia\ploopi\module();
+        $objModule = new ploopi\module();
         if (!$objModule->open($this->fields['id_module'])) return;
 
         $this->_setDataTableName();
@@ -1355,7 +1355,7 @@ class formsForm extends ovensia\ploopi\data_object
 
         $intIdModType = $_SESSION['ploopi']['modules'][$this->fields['id_module']]['id_module_type'];
 
-        $objMbTable = new ovensia\ploopi\mb_table();
+        $objMbTable = new ploopi\mb_table();
         $objMbTable->fields['name'] = $this->_strTablename;
         $objMbTable->fields['label'] = $this->fields['label'];
         $objMbTable->fields['visible'] = 1;
@@ -1363,13 +1363,13 @@ class formsForm extends ovensia\ploopi\data_object
         $objMbTable->save();
 
         // Relations avec user/workspace
-        $objMbSchema = new ovensia\ploopi\mb_schema();
+        $objMbSchema = new ploopi\mb_schema();
         $objMbSchema->fields['tablesrc'] = $this->_strTablename;
         $objMbSchema->fields['tabledest'] = 'ploopi_user';
         $objMbSchema->fields['id_module_type'] = $objModule->fields['id_module_type'];
         $objMbSchema->save();
 
-        $objMbRelation = new ovensia\ploopi\mb_relation();
+        $objMbRelation = new ploopi\mb_relation();
         $objMbRelation->fields['tablesrc'] = $this->_strTablename;
         $objMbRelation->fields['fieldsrc'] = 'user_id';
         $objMbRelation->fields['tabledest'] = 'ploopi_user';
@@ -1377,13 +1377,13 @@ class formsForm extends ovensia\ploopi\data_object
         $objMbRelation->fields['id_module_type'] = $objModule->fields['id_module_type'];
         $objMbRelation->save();
 
-        $objMbSchema = new ovensia\ploopi\mb_schema();
+        $objMbSchema = new ploopi\mb_schema();
         $objMbSchema->fields['tablesrc'] = $this->_strTablename;
         $objMbSchema->fields['tabledest'] = 'ploopi_workspace';
         $objMbSchema->fields['id_module_type'] = $objModule->fields['id_module_type'];
         $objMbSchema->save();
 
-        $objMbRelation = new ovensia\ploopi\mb_relation();
+        $objMbRelation = new ploopi\mb_relation();
         $objMbRelation->fields['tablesrc'] = $this->_strTablename;
         $objMbRelation->fields['fieldsrc'] = 'workspace_id';
         $objMbRelation->fields['tabledest'] = 'ploopi_workspace';
@@ -1453,7 +1453,7 @@ class formsForm extends ovensia\ploopi\data_object
                             if ($objLinkedForm->open($objLinkedField->fields['id_form']))
                             {
                                 // Sauvegarde de la relation
-                                $objMbSchema = new ovensia\ploopi\mb_schema();
+                                $objMbSchema = new ploopi\mb_schema();
                                 if (!$objMbSchema->open($this->_strTablename, $objLinkedForm->getDataTableName(), $intIdModType))
                                 {
                                     $objMbSchema->fields['tablesrc'] = $this->_strTablename;
@@ -1462,7 +1462,7 @@ class formsForm extends ovensia\ploopi\data_object
                                     $objMbSchema->save();
                                 }
 
-                                $objMbRelation = new ovensia\ploopi\mb_relation();
+                                $objMbRelation = new ploopi\mb_relation();
                                 $objMbRelation->fields['tablesrc'] = $this->_strTablename;
                                 $objMbRelation->fields['fieldsrc'] = $objField->fields['fieldname'];
                                 $objMbRelation->fields['tabledest'] = $objLinkedForm->getDataTableName();
@@ -1522,7 +1522,7 @@ class formsForm extends ovensia\ploopi\data_object
         $intDefaultPanel = 1;
 
         // L'utilisateur est admin ?
-        $booIsAdmin = ovensia\ploopi\acl::isactionallowed(_FORMS_ACTION_ADMIN, -1, $this->fields['id_module']);
+        $booIsAdmin = ploopi\acl::isactionallowed(_FORMS_ACTION_ADMIN, -1, $this->fields['id_module']);
 
         // Contenu du formulaire
         $arrFieldsContent = array();
@@ -1540,7 +1540,7 @@ class formsForm extends ovensia\ploopi\data_object
 
                     $arrFieldsContent[$objField->fields['id']] = explode('||', $objRecord->fields[$objField->fields['fieldname']]);
 
-                    if ($objField->fields['format'] == 'date') $arrFieldsContent[$objField->fields['id']][0] = empty($arrFieldsContent[$objField->fields['id']][0]) ? '' : current(ovensia\ploopi\date::timestamp2local("{$arrFieldsContent[$objField->fields['id']][0]}000000"));
+                    if ($objField->fields['format'] == 'date') $arrFieldsContent[$objField->fields['id']][0] = empty($arrFieldsContent[$objField->fields['id']][0]) ? '' : current(ploopi\date::timestamp2local("{$arrFieldsContent[$objField->fields['id']][0]}000000"));
 
                     if ($objField->fields['type'] == 'calculation') $arrFieldsContent[$objField->fields['id']][0] .= " (calculé lors de l'enregistrement)";
                 }
@@ -1569,12 +1569,12 @@ class formsForm extends ovensia\ploopi\data_object
                         switch($arrFieldsContent[$objField->fields['id']][0])
                         {
                             case '=date()':
-                                $localdate = ovensia\ploopi\date::timestamp2local(ovensia\ploopi\date::createtimestamp());
+                                $localdate = ploopi\date::timestamp2local(ploopi\date::createtimestamp());
                                 $arrFieldsContent[$objField->fields['id']][0] = $localdate['date'];
                             break;
 
                             case '=time()':
-                                $localdate = ovensia\ploopi\date::timestamp2local(ovensia\ploopi\date::createtimestamp());
+                                $localdate = ploopi\date::timestamp2local(ploopi\date::createtimestamp());
                                 $arrFieldsContent[$objField->fields['id']][0] = $localdate['time'];
                             break;
                         }
@@ -1596,9 +1596,9 @@ class formsForm extends ovensia\ploopi\data_object
 
                 $arrValues = array();
 
-                ovensia\ploopi\error::unset_handler();
-                if (isset($_COOKIE[$strVarName])) $arrValues = ovensia\ploopi\arr::map('utf8_decode', json_decode(gzuncompress(ovensia\ploopi\crypt::base64_decode($_COOKIE[$strVarName])), true));
-                ovensia\ploopi\error::set_handler();
+                ploopi\error::unset_handler();
+                if (isset($_COOKIE[$strVarName])) $arrValues = ploopi\arr::map('utf8_decode', json_decode(gzuncompress(ploopi\crypt::base64_decode($_COOKIE[$strVarName])), true));
+                ploopi\error::set_handler();
 
                 foreach($arrValues as $intFieldId => $strValue) if (is_numeric($intFieldId)) $arrFieldsContent[$intFieldId] = explode('||', $strValue);
 
@@ -1615,7 +1615,7 @@ class formsForm extends ovensia\ploopi\data_object
         switch($strRenderMode)
         {
             case 'modify':
-                $strUrl = ovensia\ploopi\crypt::urlencode("admin.php?ploopi_op=forms_reply_save&forms_id={$this->fields['id']}");
+                $strUrl = ploopi\crypt::urlencode("admin.php?ploopi_op=forms_reply_save&forms_id={$this->fields['id']}");
                 if (!empty($objRecord)) $strUrl .= "&forms_record_id={$intIdRecord}";
             break;
 
@@ -1644,7 +1644,7 @@ class formsForm extends ovensia\ploopi\data_object
                 $arrUrlParams[] = "ploopi_op=forms_reply_save";
                 $arrUrlParams[] = "forms_id={$this->fields['id']}";
 
-                $strUrl = ovensia\ploopi\crypt::urlencode('index.php?'.implode('&',$arrUrlParams));
+                $strUrl = ploopi\crypt::urlencode('index.php?'.implode('&',$arrUrlParams));
             break;
 
         }
@@ -1655,15 +1655,15 @@ class formsForm extends ovensia\ploopi\data_object
         $booModify = $strRenderMode == 'modify' || $strRenderMode == 'frontoffice';
 
         // Instanciation de l'objet formulaire (affichage)
-        $objForm = new ovensia\ploopi\form(
+        $objForm = new ploopi\form(
             $strFormId,
             $strUrl,
             'post',
             $arrFormOptions
         );
 
-        $strDesc = $this->fields['description'] == '' ? '' : '<p>'.ovensia\ploopi\str::nl2br(ovensia\ploopi\str::htmlentities($this->fields['description'])).'</p>';
-        $objForm->addField( new ovensia\ploopi\form_html('<h1>'.ovensia\ploopi\str::nl2br(ovensia\ploopi\str::htmlentities($this->fields['label'])).$strDesc.'</h1>') );
+        $strDesc = $this->fields['description'] == '' ? '' : '<p>'.ploopi\str::nl2br(ploopi\str::htmlentities($this->fields['description'])).'</p>';
+        $objForm->addField( new ploopi\form_html('<h1>'.ploopi\str::nl2br(ploopi\str::htmlentities($this->fields['label'])).$strDesc.'</h1>') );
 
         /**
          * Pré-traitement nécessaire pour les liaisons multiples de champs liés à des formulaires (en français : listes imbriquées)
@@ -1716,27 +1716,27 @@ class formsForm extends ovensia\ploopi\data_object
                     if ($objField->fields['option_pagebreak']) $arrOptions['style'] .= 'page-break-before:always;';
                     if ($intS) $arrOptions['style'] .= 'display:none;';
 
-                    $objForm->addPanel($objPanel = new ovensia\ploopi\form_panel($arrPanels[$intS], 'Page '.($intS+1), $arrOptions));
+                    $objForm->addPanel($objPanel = new ploopi\form_panel($arrPanels[$intS], 'Page '.($intS+1), $arrOptions));
                 }
 
                 if ($objField->fields['separator'])
                 {
                     $strStyle = empty($objField->fields['interline']) ? '' : "margin-top:{$objField->fields['interline']}px;";
-                    $strDesc = $objField->fields['description'] == '' ? '' : '<p>'.ovensia\ploopi\str::nl2br(ovensia\ploopi\str::htmlentities($objField->fields['description'])).'</p>';
+                    $strDesc = $objField->fields['description'] == '' ? '' : '<p>'.ploopi\str::nl2br(ploopi\str::htmlentities($objField->fields['description'])).'</p>';
 
-                    $objPanel->addField( new ovensia\ploopi\form_html('<h'.$objField->fields['separator_level'].' id="field_'.$objField->fields['id'].'_form" style="'.$strStyle.$objField->fields['style_form'].'">'.ovensia\ploopi\str::nl2br(ovensia\ploopi\str::htmlentities($objField->fields['name'])).$strDesc.'</h'.$objField->fields['separator_level'].'>') );
+                    $objPanel->addField( new ploopi\form_html('<h'.$objField->fields['separator_level'].' id="field_'.$objField->fields['id'].'_form" style="'.$strStyle.$objField->fields['style_form'].'">'.ploopi\str::nl2br(ploopi\str::htmlentities($objField->fields['name'])).$strDesc.'</h'.$objField->fields['separator_level'].'>') );
                 }
                 elseif ($objField->fields['html'])
                 {
                     $strStyle = empty($objField->fields['interline']) ? '' : "margin-top:{$objField->fields['interline']}px;";
 
-                    $objPanel->addField( new ovensia\ploopi\form_html('<div class="xhtml" id="field_'.$objField->fields['id'].'_form" style="'.$strStyle.'">'.$objField->fields['xhtmlcontent_cleaned'].'</div>') );
+                    $objPanel->addField( new ploopi\form_html('<div class="xhtml" id="field_'.$objField->fields['id'].'_form" style="'.$strStyle.'">'.$objField->fields['xhtmlcontent_cleaned'].'</div>') );
                 }
                 elseif ($objField->fields['option_formview'] && (!$objField->fields['option_adminonly'] || $booIsAdmin))
                 {
                     if($objField->fields['captcha'])
                     {
-                        $objPanel->addField( new ovensia\ploopi\form_html('<div>Les CAPTCHAs ne sont pas gérés</div>') );
+                        $objPanel->addField( new ploopi\form_html('<div>Les CAPTCHAs ne sont pas gérés</div>') );
                     }
                     else
                     {
@@ -1751,7 +1751,7 @@ class formsForm extends ovensia\ploopi\data_object
 
                         $arrOptions = array(
                             'required' => $booRequired,
-                            'description' => ovensia\ploopi\str::nl2br(ovensia\ploopi\str::htmlentities($objField->fields['description'])),
+                            'description' => ploopi\str::nl2br(ploopi\str::htmlentities($objField->fields['description'])),
                             'style' => $objField->fields['style_field'],
                             'style_form' => (empty($objField->fields['interline']) ? '' : "margin-top:{$objField->fields['interline']}px;") . $objField->fields['style_form'],
                             'class_form' => 'field'
@@ -1830,9 +1830,9 @@ class formsForm extends ovensia\ploopi\data_object
                                     // Mise à jour des paramètres déjà saisis pour le prochain champ imbriqué dans la boucle
                                     $arrParams[$objLinkedField->fields['id_form']][$objLinkedField->fields['fieldname']] = current($arrFieldsContent[$objField->fields['id']]);
 
-                                    $arrOptions['onchange'] .= "forms_field_tablelink_onchange({$objField->fields['id']}, ".json_encode(array_keys($arrLinkedFields['forms'][$objLinkedField->fields['id_form']])).",'".ovensia\ploopi\crypt::urlencode('admin-light.php?ploopi_op=forms_tablelink_values')."');";
+                                    $arrOptions['onchange'] .= "forms_field_tablelink_onchange({$objField->fields['id']}, ".json_encode(array_keys($arrLinkedFields['forms'][$objLinkedField->fields['id_form']])).",'".ploopi\crypt::urlencode('admin-light.php?ploopi_op=forms_tablelink_values')."');";
 
-                                    $objPanel->addField( new ovensia\ploopi\form_select(
+                                    $objPanel->addField( new ploopi\form_select(
                                         $objField->fields['name'],
                                         $arrValues,
                                         current($arrFieldsContent[$objField->fields['id']]),
@@ -1848,11 +1848,11 @@ class formsForm extends ovensia\ploopi\data_object
 
                                 $arrValues = explode('||',$objField->fields['values']);
                                 $arrSelectOptions = array();
-                                $arrSelectOptions[] = new ovensia\ploopi\form_select_option('', '');
-                                foreach($arrValues as $strValue) $arrSelectOptions[] = new ovensia\ploopi\form_select_option(' ', $strValue, null, array('style' => "background-color:{$strValue}"));
+                                $arrSelectOptions[] = new ploopi\form_select_option('', '');
+                                foreach($arrValues as $strValue) $arrSelectOptions[] = new ploopi\form_select_option(' ', $strValue, null, array('style' => "background-color:{$strValue}"));
                                 $arrOptions['onchange'] .= "this.style.backgroundColor = this[this.selectedIndex].style.backgroundColor;";
 
-                                $objPanel->addField( new ovensia\ploopi\form_select(
+                                $objPanel->addField( new ploopi\form_select(
                                     $objField->fields['name'],
                                     $arrSelectOptions,
                                     current($arrFieldsContent[$objField->fields['id']]),
@@ -1868,7 +1868,7 @@ class formsForm extends ovensia\ploopi\data_object
                                 $arrValues = explode('||',$objField->fields['values']);
                                 $arrValues = empty($arrValues) ? array() : array_combine($arrValues, $arrValues);
 
-                                $objPanel->addField( new ovensia\ploopi\form_select(
+                                $objPanel->addField( new ploopi\form_select(
                                     $objField->fields['name'],
                                     array('' => '') + $arrValues,
                                     current($arrFieldsContent[$objField->fields['id']]),
@@ -1881,7 +1881,7 @@ class formsForm extends ovensia\ploopi\data_object
                             case 'checkbox':
                                 $arrValues = explode('||',$objField->fields['values']);
 
-                                $objPanel->addField( new ovensia\ploopi\form_checkbox_list(
+                                $objPanel->addField( new ploopi\form_checkbox_list(
                                     $objField->fields['name'],
                                     array_combine($arrValues, $arrValues),
                                     $arrFieldsContent[$objField->fields['id']],
@@ -1893,7 +1893,7 @@ class formsForm extends ovensia\ploopi\data_object
 
                             case 'radio':
                                 $arrValues = explode('||',$objField->fields['values']);
-                                $objPanel->addField( new ovensia\ploopi\form_radio_list(
+                                $objPanel->addField( new ploopi\form_radio_list(
                                     $objField->fields['name'],
                                     array_combine($arrValues, $arrValues),
                                     current($arrFieldsContent[$objField->fields['id']]),
@@ -1906,7 +1906,7 @@ class formsForm extends ovensia\ploopi\data_object
                             case 'textarea':
                                 if (empty($strFocus)) $strFocus = 'field_'.$objField->fields['id'];
 
-                                $objPanel->addField( new ovensia\ploopi\form_field(
+                                $objPanel->addField( new ploopi\form_field(
                                     'textarea',
                                     $objField->fields['name'],
                                     current($arrFieldsContent[$objField->fields['id']]),
@@ -1923,7 +1923,7 @@ class formsForm extends ovensia\ploopi\data_object
                             case 'file':
                                 if (empty($strFocus)) $strFocus = 'field_'.$objField->fields['id'];
 
-                                $objPanel->addField( new ovensia\ploopi\form_field(
+                                $objPanel->addField( new ploopi\form_field(
                                     'input:file',
                                     $objField->fields['name'],
                                     current($arrFieldsContent[$objField->fields['id']]),
@@ -1963,9 +1963,9 @@ class formsForm extends ovensia\ploopi\data_object
                             case 'input:text':
                                 if (!empty($objField->fields['maxlength'])) $intMaxLength = $objField->fields['maxlength'];
 
-                                $objPanel->addField( new ovensia\ploopi\form_field(
+                                $objPanel->addField( new ploopi\form_field(
                                     'input:text',
-                                    ovensia\ploopi\str::htmlentities($objField->fields['name']),
+                                    ploopi\str::htmlentities($objField->fields['name']),
                                     isset($arrFieldsContent[$objField->fields['id']]) ? current($arrFieldsContent[$objField->fields['id']]) : '',
                                     'field_'.$objField->fields['id'],
                                     'field_'.$objField->fields['id'],
@@ -1991,21 +1991,21 @@ class formsForm extends ovensia\ploopi\data_object
             case 'frontoffice':
                 if ($strRenderMode != 'frontoffice')
                 {
-                    $objForm->addButton( new ovensia\ploopi\form_button('input:button', 'Retour', null, null, array('onclick' => "document.location.href='".ovensia\ploopi\crypt::urlencode("admin.php?op=forms_viewreplies&forms_id={$this->fields['id']}")."';")) );
+                    $objForm->addButton( new ploopi\form_button('input:button', 'Retour', null, null, array('onclick' => "document.location.href='".ploopi\crypt::urlencode("admin.php?op=forms_viewreplies&forms_id={$this->fields['id']}")."';")) );
                 }
 
-                //$objForm->addButton( new ovensia\ploopi\form_button('input:reset', 'Réinitialiser', null, null, array('style' => 'margin-right:10px;') ) );
-                $objForm->addButton( new ovensia\ploopi\form_button('input:button', 'Réinitialiser', null, null, array('style' => 'margin-right:10px;', 'onclick' => "document.location.reload();")) );
-                $objForm->addButton( new ovensia\ploopi\form_button('input:button', 'Imprimer', null, null, array('onclick' => "ploopi.{$strFormId}_quicksave('print'); ploopi_openwin('".ovensia\ploopi\crypt::urlencode("index-light.php?ploopi_op=forms_print&forms_id={$this->fields['id']}&record_id={$intIdRecord}")."', 800, 600);")) );
+                //$objForm->addButton( new ploopi\form_button('input:reset', 'Réinitialiser', null, null, array('style' => 'margin-right:10px;') ) );
+                $objForm->addButton( new ploopi\form_button('input:button', 'Réinitialiser', null, null, array('style' => 'margin-right:10px;', 'onclick' => "document.location.reload();")) );
+                $objForm->addButton( new ploopi\form_button('input:button', 'Imprimer', null, null, array('onclick' => "ploopi.{$strFormId}_quicksave('print'); ploopi_openwin('".ploopi\crypt::urlencode("index-light.php?ploopi_op=forms_print&forms_id={$this->fields['id']}&record_id={$intIdRecord}")."', 800, 600);")) );
             break;
 
             case 'view':
-                $objForm->addButton( new ovensia\ploopi\form_button('input:button', 'Retour', null, null, array('onclick' => "document.location.href='".ovensia\ploopi\crypt::urlencode("admin.php?op=forms_viewreplies&forms_id={$this->fields['id']}")."';")) );
-                $objForm->addButton( new ovensia\ploopi\form_button('input:button', 'Imprimer', null, null, array('onclick' => "ploopi.{$strFormId}_quicksave('print'); ploopi_openwin('".ovensia\ploopi\crypt::urlencode("index-light.php?ploopi_op=forms_print&forms_id={$this->fields['id']}&record_id={$intIdRecord}")."', 800, 600);")) );
+                $objForm->addButton( new ploopi\form_button('input:button', 'Retour', null, null, array('onclick' => "document.location.href='".ploopi\crypt::urlencode("admin.php?op=forms_viewreplies&forms_id={$this->fields['id']}")."';")) );
+                $objForm->addButton( new ploopi\form_button('input:button', 'Imprimer', null, null, array('onclick' => "ploopi.{$strFormId}_quicksave('print'); ploopi_openwin('".ploopi\crypt::urlencode("index-light.php?ploopi_op=forms_print&forms_id={$this->fields['id']}&record_id={$intIdRecord}")."', 800, 600);")) );
             break;
 
             case 'preview':
-                $objForm->addButton( new ovensia\ploopi\form_button('input:button', 'Retour', null, null, array('onclick' => "ploopi_hidepopup('forms_preview');")) );
+                $objForm->addButton( new ploopi\form_button('input:button', 'Retour', null, null, array('onclick' => "ploopi_hidepopup('forms_preview');")) );
             break;
         }
 
@@ -2058,7 +2058,7 @@ class formsForm extends ovensia\ploopi\data_object
                         break;
                     }
 
-                    $strValue = addslashes(strtoupper(ovensia\ploopi\str::convertaccents($row['value'])));
+                    $strValue = addslashes(strtoupper(ploopi\str::convertaccents($row['value'])));
 
                     $strJsCond .= "\nvar C{$key} = false;";
                     $strJsCond .= "\nfor (i=0;i<V{$key}.length;i++) {";
@@ -2202,7 +2202,7 @@ class formsForm extends ovensia\ploopi\data_object
             // Code JS du switch des fonctions de validation des panels
             $strJsSwitch = '';
 
-            $objForm->addButton( new ovensia\ploopi\form_button('input:button', 'Précédent', null, "{$strFormId}_btn_prev", array('style' => 'margin-left:2px;font-weight:bold;display:none;', 'onclick' => "ploopi.{$strFormId}_prevpanel();")) );
+            $objForm->addButton( new ploopi\form_button('input:button', 'Précédent', null, "{$strFormId}_btn_prev", array('style' => 'margin-left:2px;font-weight:bold;display:none;', 'onclick' => "ploopi.{$strFormId}_prevpanel();")) );
 
 
             // Pour chaque panel, on affiche un bouton et on prépare le code JS
@@ -2220,14 +2220,14 @@ class formsForm extends ovensia\ploopi\data_object
 
                 if ($this->fields['option_multidisplaypages'])
                 {
-                    $objForm->addButton( new ovensia\ploopi\form_button('input:button', 'Page '.($intNum+1), null, "{$strFormId}_btn_{$intId}", $arrOptions ) );
+                    $objForm->addButton( new ploopi\form_button('input:button', 'Page '.($intNum+1), null, "{$strFormId}_btn_{$intId}", $arrOptions ) );
                     $strJsHidePanels .= " $('{$strFormId}_btn_{$intId}').className = '';";
                 }
 
                 $strJsSwitch .= "\ncase {$intId}: return ploopi.{$strFormId}_{$strPanelId}_validate(form); break;";
             }
 
-            $objForm->addButton( new ovensia\ploopi\form_button('input:button', 'Suivant', null, "{$strFormId}_btn_next", array('style' => 'margin-left:2px;font-weight:bold;', 'onclick' => "ploopi.{$strFormId}_nextpanel();")) );
+            $objForm->addButton( new ploopi\form_button('input:button', 'Suivant', null, "{$strFormId}_btn_next", array('style' => 'margin-left:2px;font-weight:bold;', 'onclick' => "ploopi.{$strFormId}_nextpanel();")) );
 
             $objForm->addJs("
                 // Switch de panel avec vérification des données
@@ -2321,11 +2321,11 @@ class formsForm extends ovensia\ploopi\data_object
             case 'frontoffice':
                 if (sizeof($arrPanels) > 1 && !$this->fields['option_multidisplaysave'])
                 {
-                    $objForm->addButton( new ovensia\ploopi\form_button('input:submit', 'Enregistrer', null, "{$strFormId}_btn_submit", array('style' => 'margin-left:2px;display:none;')) );
+                    $objForm->addButton( new ploopi\form_button('input:submit', 'Enregistrer', null, "{$strFormId}_btn_submit", array('style' => 'margin-left:2px;display:none;')) );
                 }
                 else
                 {
-                    $objForm->addButton( new ovensia\ploopi\form_button('input:submit', 'Enregistrer', null, null, array('style' => 'margin-left:2px;')) );
+                    $objForm->addButton( new ploopi\form_button('input:submit', 'Enregistrer', null, null, array('style' => 'margin-left:2px;')) );
                 }
             break;
         }
@@ -2362,7 +2362,7 @@ class formsForm extends ovensia\ploopi\data_object
 
     public function captchainform()
     {
-        global $db;
+        $db = ploopi\loader::getdb();
 
         $select = "SELECT id FROM ploopi_mod_forms_field WHERE id_form = {$this->fields['id']} AND captcha = 1";
 
@@ -2377,7 +2377,7 @@ class formsForm extends ovensia\ploopi\data_object
      */
     public function isPublished()
     {
-        $intTsToday = ovensia\ploopi\date::createtimestamp();
+        $intTsToday = ploopi\date::createtimestamp();
 
         return ($this->fields['pubdate_start'] <= $intTsToday || empty($this->fields['pubdate_start'])) && ($this->fields['pubdate_end'] >= $intTsToday || empty($this->fields['pubdate_end']));
     }

@@ -3,7 +3,7 @@
  * Sauve un enregistrement du formulaire (front et back)
  */
 
-ovensia\ploopi\module::init('forms');
+ploopi\module::init('forms');
 
 include_once './modules/forms/classes/formsForm.php';
 include_once './modules/forms/classes/formsRecord.php';
@@ -16,7 +16,7 @@ if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open
     /**
      * En frontoffice on vérifie qu'il s'agit d'un formulaire dédié (et donc public)
      */
-    if ($_SESSION['ploopi']['mode'] == 'frontoffice' && $objForm->fields['typeform'] != 'cms') ovensia\ploopi\output::redirect();
+    if ($_SESSION['ploopi']['mode'] == 'frontoffice' && $objForm->fields['typeform'] != 'cms') ploopi\output::redirect();
 
 
     /**
@@ -99,7 +99,7 @@ if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open
                 if ($objRecord->isnew()) // not in form => need to be calculated
                 {
                     $booFieldOk = true;
-                    $objQuery = new ovensia\ploopi\query_select();
+                    $objQuery = new ploopi\query_select();
                     $objQuery->add_select("max(`{$objField->fields['fieldname']}`) as maxinc");
                     $objQuery->add_from($objForm->getDataTableName());
                     $strValue = current($objQuery->execute()->getarray(true)) + 1;
@@ -138,7 +138,7 @@ if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open
                     switch($objField->fields['format'])
                     {
                         case 'date':
-                            $strValue = substr(ovensia\ploopi\date::local2timestamp($_POST['field_'.$objField->fields['id']]), 0, 8);
+                            $strValue = substr(ploopi\date::local2timestamp($_POST['field_'.$objField->fields['id']]), 0, 8);
                         break;
 
                         default:
@@ -221,8 +221,8 @@ if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open
                         // Le champ
                         $objFieldVar = $arrFields[$row['field']];
                         // La valeur saisie
-                        $strValue = strtoupper(ovensia\ploopi\str::convertaccents($objRecord->fields[$arrFields[$row['field']]->fields['fieldname']]));
-                        $row['value'] = strtoupper(ovensia\ploopi\str::convertaccents($row['value']));
+                        $strValue = strtoupper(ploopi\str::convertaccents($objRecord->fields[$arrFields[$row['field']]->fields['fieldname']]));
+                        $row['value'] = strtoupper(ploopi\str::convertaccents($row['value']));
 
                         $arrValues = array();
 
@@ -348,7 +348,7 @@ if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open
     $strVarName = formsForm::getVarName($objForm->fields['id']).'_save';
 
     // Sauvegarde en session
-    ovensia\ploopi\session::setvar($strVarName, null);
+    ploopi\session::setvar($strVarName, null);
     setcookie($strVarName, null, 0);
 
     /**
@@ -365,7 +365,7 @@ if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open
                     $strFile = $_FILES['field_'.$objField->fields['id']]['name'];
                     $strPath = formsField::getFilePath($objForm->fields['id'], $objRecord->fields['#id']);
 
-                    ovensia\ploopi\fs::makedir($strPath);
+                    ploopi\fs::makedir($strPath);
                     if (file_exists($strPath) && is_writable($strPath))
                     {
                         move_uploaded_file($_FILES['field_'.$objField->fields['id']]['tmp_name'], $strPath.$strFile);
@@ -385,7 +385,7 @@ if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open
 
     foreach($arrFields as $objField)
     {
-        if (!$objField->fields['option_adminonly'] || ovensia\ploopi\acl::isadmin())
+        if (!$objField->fields['option_adminonly'] || ploopi\acl::isadmin())
         {
             $arrEmailContent['Contenu'][$objField->fields['name']] = $objRecord->fields[$objField->fields['fieldname']];
         }
@@ -403,7 +403,7 @@ if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open
 
     // On récupère les utilisateurs/groupes pour lesquels il faut envoyer un mail
     // Le dernier paramètre est très important depuis un appel WCE (l'id module étant déterminé par le formulaire)
-    $arrShares = ovensia\ploopi\share::get(-1, _FORMS_OBJECT_FORM, $objForm->fields['id'], $objForm->fields['id_module']);
+    $arrShares = ploopi\share::get(-1, _FORMS_OBJECT_FORM, $objForm->fields['id'], $objForm->fields['id_module']);
 
     $_SESSION['ploopi']['tickets']['users_selected'] = array();
     foreach($arrShares as $row)
@@ -415,14 +415,14 @@ if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open
             break;
 
             case 'group':
-                $objGroup = new ovensia\ploopi\group();
+                $objGroup = new ploopi\group();
                 if ($objGroup->open($row['id_share'])) foreach(array_keys($objGroup->getusers()) as $id) $_SESSION['ploopi']['tickets']['users_selected'][$id] = $id;
             break;
         }
     }
 
 
-    ovensia\ploopi\ticket::send($arrEmailContent['Formulaire']['Titre'], '<table class="ploopi_array">'.ovensia\ploopi\mail::form2html($arrEmailContent).'</table>', 0, 0, _FORMS_OBJECT_FORM, $objForm->fields['id'].','.$objRecord->fields['#id'], $arrEmailContent['Formulaire']['Titre']);
+    ploopi\ticket::send($arrEmailContent['Formulaire']['Titre'], '<table class="ploopi_array">'.ploopi\mail::form2html($arrEmailContent).'</table>', 0, 0, _FORMS_OBJECT_FORM, $objForm->fields['id'].','.$objRecord->fields['#id'], $arrEmailContent['Formulaire']['Titre']);
 
 
     /*
@@ -444,11 +444,11 @@ if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open
 
         // Envoi du formulaire par mail
 
-        ovensia\ploopi\mail::send_form($arrFrom, $arrTo, $arrEmailContent['Formulaire']['Titre'], $arrEmailContent);
+        ploopi\mail::send_form($arrFrom, $arrTo, $arrEmailContent['Formulaire']['Titre'], $arrEmailContent);
     }
     */
 
-    if ($_SESSION['ploopi']['mode'] == 'backoffice') ovensia\ploopi\output::redirect("admin.php?op=forms_viewreplies&forms_id={$objForm->fields['id']}");
+    if ($_SESSION['ploopi']['mode'] == 'backoffice') ploopi\output::redirect("admin.php?op=forms_viewreplies&forms_id={$objForm->fields['id']}");
     else
     {
         // Redirect frontoffice
@@ -459,8 +459,8 @@ if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open
         $arrUrlParams[] = "op=end";
         $arrUrlParams[] = "forms_id={$objForm->fields['id']}";
 
-        ovensia\ploopi\output::redirect('index.php?'.implode('&',$arrUrlParams));
+        ploopi\output::redirect('index.php?'.implode('&',$arrUrlParams));
     }
 
 }
-else ovensia\ploopi\output::redirect();
+else ploopi\output::redirect();

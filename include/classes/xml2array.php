@@ -20,16 +20,16 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-namespace ovensia\ploopi;
+namespace ploopi;
 
-use ovensia\ploopi;
+use ploopi;
 
 /**
  * Conversion d'un flux de données XML en tableau PHP
  *
  * @package ploopi
  * @subpackage xml
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -39,7 +39,7 @@ use ovensia\ploopi;
  *
  * @package ploopi
  * @subpackage xml
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */

@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,7 +25,7 @@
  *
  * @package system
  * @subpackage op
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -40,12 +39,12 @@ if ($_SESSION['ploopi']['connected'])
     switch($ploopi_op)
     {
         case 'system_update_profile_save':
-            ovensia\ploopi\module::init('system', false, false, false);
+            ploopi\module::init('system', false, false, false);
 
             // Protection contre modification
-            if (ovensia\ploopi\param::get('system_profile_edit_allowed', 1) == '0') ovensia\ploopi\output::redirect("admin.php?op=profile");
+            if (ploopi\param::get('system_profile_edit_allowed', 1) == '0') ploopi\output::redirect("admin.php?op=profile");
 
-            $user = new ovensia\ploopi\user();
+            $user = new ploopi\user();
             $user->open($_SESSION['ploopi']['userid']);
 
             unset($_POST['user_password']);
@@ -68,7 +67,7 @@ if ($_SESSION['ploopi']['connected'])
                         if ($_POST['usernewpass'] == $_POST['usernewpass_confirm'])
                         {
                             // Complexité ok
-                            if (!_PLOOPI_USE_COMPLEXE_PASSWORD || ovensia\ploopi\security::checkpasswordvalidity($_POST['usernewpass']))
+                            if (!_PLOOPI_USE_COMPLEXE_PASSWORD || ploopi\security::checkpasswordvalidity($_POST['usernewpass']))
                             {
                                 // Affectation du mot de passe
                                 $user->setpassword($_POST['usernewpass']);
@@ -94,19 +93,19 @@ if ($_SESSION['ploopi']['connected'])
                 switch($error)
                 {
                     case 'password':
-                        $msg = ovensia\ploopi\str::nl2br(_SYSTEM_MSG_PASSWORDERROR);
+                        $msg = ploopi\str::nl2br(_SYSTEM_MSG_PASSWORDERROR);
                     break;
 
                     case 'oldpassword':
-                        $msg = ovensia\ploopi\str::nl2br(_SYSTEM_MSG_OLDPASSWORDERROR);
+                        $msg = ploopi\str::nl2br(_SYSTEM_MSG_OLDPASSWORDERROR);
                     break;
 
                     case 'passrejected':
-                        $msg = ovensia\ploopi\str::nl2br(_SYSTEM_MSG_LOGINPASSWORDERROR);
+                        $msg = ploopi\str::nl2br(_SYSTEM_MSG_LOGINPASSWORDERROR);
                     break;
 
                     case 'login':
-                        $msg = ovensia\ploopi\str::nl2br(_SYSTEM_MSG_LOGINERROR);
+                        $msg = ploopi\str::nl2br(_SYSTEM_MSG_LOGINERROR);
                     break;
                 }
                 ?>
@@ -127,25 +126,25 @@ if ($_SESSION['ploopi']['connected'])
             </script>
             <?php
 
-            ovensia\ploopi\system::kill();
+            ploopi\system::kill();
         break;
 
         case 'system_update_profile':
-            ovensia\ploopi\module::init('system');
+            ploopi\module::init('system');
 
             ob_start();
 
-            $booReadonly = ovensia\ploopi\param::get('system_profile_edit_allowed', _PLOOPI_MODULE_SYSTEM) == '0';
+            $booReadonly = ploopi\param::get('system_profile_edit_allowed', _PLOOPI_MODULE_SYSTEM) == '0';
 
             $strDisabled = $booReadonly ? 'disabled="disabled"' : '';
 
             /**
              * Ouverture de l'instance de l'utilisateur à modifier
              */
-            $user = new ovensia\ploopi\user();
+            $user = new ploopi\user();
             $user->open($_SESSION['ploopi']['userid']);
 
-            $arrRequiredFields = explode(',', ovensia\ploopi\param::get('system_user_required_fields', _PLOOPI_MODULE_SYSTEM));
+            $arrRequiredFields = explode(',', ploopi\param::get('system_user_required_fields', _PLOOPI_MODULE_SYSTEM));
 
             if (!$booReadonly) {
 
@@ -263,7 +262,7 @@ if ($_SESSION['ploopi']['connected'])
                 }
                 ?>
 
-                <form name="form_modify_user" action="<?php echo ovensia\ploopi\crypt::urlencode('admin-light.php?ploopi_op=system_update_profile_save'); ?>" method="POST" onsubmit="javascript:ploopi_xmlhttprequest_submitform(this, 'system_popup_update_profile', system_user_validate ); return false;  ">
+                <form name="form_modify_user" action="<?php echo ploopi\crypt::urlencode('admin-light.php?ploopi_op=system_update_profile_save'); ?>" method="POST" onsubmit="javascript:ploopi_xmlhttprequest_submitform(this, 'system_popup_update_profile', system_user_validate ); return false;  ">
                 <?php
             }
             ?>
@@ -276,11 +275,11 @@ if ($_SESSION['ploopi']['connected'])
                             <div class="ploopi_form">
                                 <p>
                                     <label><?php echo _SYSTEM_LABEL_LASTNAME; ?> *:</label>
-                                    <input type="text" class="text" name="user_lastname"  value="<?php echo ovensia\ploopi\str::htmlentities($user->fields['lastname']); ?>" <?php echo $strDisabled; ?> tabindex="1" />
+                                    <input type="text" class="text" name="user_lastname"  value="<?php echo ploopi\str::htmlentities($user->fields['lastname']); ?>" <?php echo $strDisabled; ?> tabindex="1" />
                                 </p>
                                 <p>
                                     <label><?php echo _SYSTEM_LABEL_FIRSTNAME; ?> *:</label>
-                                    <input type="text" class="text" name="user_firstname"  value="<?php echo ovensia\ploopi\str::htmlentities($user->fields['firstname']); ?>" <?php echo $strDisabled; ?> tabindex="2" />
+                                    <input type="text" class="text" name="user_firstname"  value="<?php echo ploopi\str::htmlentities($user->fields['firstname']); ?>" <?php echo $strDisabled; ?> tabindex="2" />
                                 </p>
                                 <p>
                                     <label><?php echo _SYSTEM_LABEL_CIVILITY; ?><?php if (in_array('civility', $arrRequiredFields)) echo ' *'; ?> :</label>
@@ -290,7 +289,7 @@ if ($_SESSION['ploopi']['connected'])
                                         foreach ($ploopi_civility as $value)
                                         {
                                             ?>
-                                            <option value="<?php echo ovensia\ploopi\str::htmlentities($value); ?>" <?php if ($user->fields['civility'] == $value) echo 'selected'; ?>><?php echo ovensia\ploopi\str::htmlentities($value); ?></option>
+                                            <option value="<?php echo ploopi\str::htmlentities($value); ?>" <?php if ($user->fields['civility'] == $value) echo 'selected'; ?>><?php echo ploopi\str::htmlentities($value); ?></option>
                                             <?php
                                         }
                                         ?>
@@ -303,39 +302,39 @@ if ($_SESSION['ploopi']['connected'])
                             <div class="ploopi_form">
                                 <p>
                                     <label><?php echo _SYSTEM_LABEL_ENTITY; ?><?php if (in_array('entity', $arrRequiredFields)) echo ' *'; ?>:</label>
-                                    <input type="text" class="text" name="user_entity"  value="<?php echo ovensia\ploopi\str::htmlentities($user->fields['entity']); ?>" <?php echo $strDisabled; ?> tabindex="4" />
+                                    <input type="text" class="text" name="user_entity"  value="<?php echo ploopi\str::htmlentities($user->fields['entity']); ?>" <?php echo $strDisabled; ?> tabindex="4" />
                                 </p>
                                 <p>
                                     <label><?php echo _SYSTEM_LABEL_SERVICE; ?><?php if (in_array('service', $arrRequiredFields)) echo ' *'; ?>:</label>
-                                    <input type="text" class="text" name="user_service"  value="<?php echo ovensia\ploopi\str::htmlentities($user->fields['service']); ?>" <?php echo $strDisabled; ?> tabindex="4" />
+                                    <input type="text" class="text" name="user_service"  value="<?php echo ploopi\str::htmlentities($user->fields['service']); ?>" <?php echo $strDisabled; ?> tabindex="4" />
                                 </p>
                                 <p>
                                     <label><?php echo _SYSTEM_LABEL_SERVICE2; ?><?php if (in_array('service2', $arrRequiredFields)) echo ' *'; ?>:</label>
-                                    <input type="text" class="text" name="user_service2"  value="<?php echo ovensia\ploopi\str::htmlentities($user->fields['service2']); ?>" <?php echo $strDisabled; ?> tabindex="4" />
+                                    <input type="text" class="text" name="user_service2"  value="<?php echo ploopi\str::htmlentities($user->fields['service2']); ?>" <?php echo $strDisabled; ?> tabindex="4" />
                                 </p>
                                 <p>
                                     <label><?php echo _SYSTEM_LABEL_FUNCTION; ?><?php if (in_array('function', $arrRequiredFields)) echo ' *'; ?>:</label>
-                                    <input type="text" class="text" name="user_function"  value="<?php echo ovensia\ploopi\str::htmlentities($user->fields['function']); ?>" <?php echo $strDisabled; ?> tabindex="5" />
+                                    <input type="text" class="text" name="user_function"  value="<?php echo ploopi\str::htmlentities($user->fields['function']); ?>" <?php echo $strDisabled; ?> tabindex="5" />
                                 </p>
                                 <p>
                                     <label><?php echo _SYSTEM_LABEL_RANK; ?><?php if (in_array('rank', $arrRequiredFields)) echo ' *'; ?>:</label>
-                                    <input type="text" class="text" name="user_rank"  value="<?php echo ovensia\ploopi\str::htmlentities($user->fields['rank']); ?>" <?php echo $strDisabled; ?> tabindex="6" />
+                                    <input type="text" class="text" name="user_rank"  value="<?php echo ploopi\str::htmlentities($user->fields['rank']); ?>" <?php echo $strDisabled; ?> tabindex="6" />
                                 </p>
                                 <p>
                                     <label><?php echo _SYSTEM_LABEL_NUMBER; ?><?php if (in_array('number', $arrRequiredFields)) echo ' *'; ?>:</label>
-                                    <input type="text" class="text" name="user_number"  value="<?php echo ovensia\ploopi\str::htmlentities($user->fields['number']); ?>" <?php echo $strDisabled; ?> tabindex="7" />
+                                    <input type="text" class="text" name="user_number"  value="<?php echo ploopi\str::htmlentities($user->fields['number']); ?>" <?php echo $strDisabled; ?> tabindex="7" />
                                 </p>
                                 <p>
                                     <label><?php echo _SYSTEM_LABEL_PHONE; ?><?php if (in_array('phone', $arrRequiredFields)) echo ' *'; ?>:</label>
-                                    <input type="text" class="text" name="user_phone"  value="<?php echo ovensia\ploopi\str::htmlentities($user->fields['phone']); ?>" <?php echo $strDisabled; ?> tabindex="8" />
+                                    <input type="text" class="text" name="user_phone"  value="<?php echo ploopi\str::htmlentities($user->fields['phone']); ?>" <?php echo $strDisabled; ?> tabindex="8" />
                                 </p>
                                 <p>
                                     <label><?php echo _SYSTEM_LABEL_MOBILE; ?><?php if (in_array('mobile', $arrRequiredFields)) echo ' *'; ?>:</label>
-                                    <input type="text" class="text" name="user_mobile"  value="<?php echo ovensia\ploopi\str::htmlentities($user->fields['mobile']); ?>" <?php echo $strDisabled; ?> tabindex="9" />
+                                    <input type="text" class="text" name="user_mobile"  value="<?php echo ploopi\str::htmlentities($user->fields['mobile']); ?>" <?php echo $strDisabled; ?> tabindex="9" />
                                 </p>
                                 <p>
                                     <label><?php echo _SYSTEM_LABEL_FAX; ?><?php if (in_array('fax', $arrRequiredFields)) echo ' *'; ?>:</label>
-                                    <input type="text" class="text" name="user_fax"  value="<?php echo ovensia\ploopi\str::htmlentities($user->fields['fax']); ?>" <?php echo $strDisabled; ?> tabindex="10" />
+                                    <input type="text" class="text" name="user_fax"  value="<?php echo ploopi\str::htmlentities($user->fields['fax']); ?>" <?php echo $strDisabled; ?> tabindex="10" />
                                 </p>
                             </div>
                         </fieldset>
@@ -344,7 +343,7 @@ if ($_SESSION['ploopi']['connected'])
                             <div class="ploopi_form">
                                 <p>
                                     <label><?php echo _SYSTEM_LABEL_EMAIL; ?><?php if (in_array('email', $arrRequiredFields)) echo ' *'; ?>:</label>
-                                    <input type="text" class="text" name="user_email"  value="<?php echo ovensia\ploopi\str::htmlentities($user->fields['email']); ?>" <?php echo $strDisabled; ?> tabindex="25" />
+                                    <input type="text" class="text" name="user_email"  value="<?php echo ploopi\str::htmlentities($user->fields['email']); ?>" <?php echo $strDisabled; ?> tabindex="25" />
                                 </p>
                                 <p class="checkbox" onclick="javascript:ploopi_checkbox_click(event,'user_ticketsbyemail');">
                                     <label><?php echo _SYSTEM_LABEL_TICKETSBYEMAIL; ?>:</label>
@@ -364,7 +363,7 @@ if ($_SESSION['ploopi']['connected'])
                             <div class="ploopi_form">
                                 <p>
                                     <label><?php echo _SYSTEM_LABEL_LOGIN; ?>:</label>
-                                    <strong><?php echo ovensia\ploopi\str::htmlentities($user->fields['login']); ?></strong>
+                                    <strong><?php echo ploopi\str::htmlentities($user->fields['login']); ?></strong>
                                 </p>
                                 <p>
                                     <label>Ancien mot de passe:</label>
@@ -387,31 +386,31 @@ if ($_SESSION['ploopi']['connected'])
                             <div class="ploopi_form">
                                 <p>
                                     <label><?php echo _SYSTEM_LABEL_BUILDING; ?><?php if (in_array('building', $arrRequiredFields)) echo ' *'; ?>:</label>
-                                    <input type="text" class="text" name="user_building"  value="<?php echo ovensia\ploopi\str::htmlentities($user->fields['building']); ?>" <?php echo $strDisabled; ?> tabindex="11" />
+                                    <input type="text" class="text" name="user_building"  value="<?php echo ploopi\str::htmlentities($user->fields['building']); ?>" <?php echo $strDisabled; ?> tabindex="11" />
                                 </p>
                                 <p>
                                     <label><?php echo _SYSTEM_LABEL_FLOOR; ?><?php if (in_array('floor', $arrRequiredFields)) echo ' *'; ?>:</label>
-                                    <input type="text" class="text" name="user_floor"  value="<?php echo ovensia\ploopi\str::htmlentities($user->fields['floor']); ?>" <?php echo $strDisabled; ?> tabindex="12" />
+                                    <input type="text" class="text" name="user_floor"  value="<?php echo ploopi\str::htmlentities($user->fields['floor']); ?>" <?php echo $strDisabled; ?> tabindex="12" />
                                 </p>
                                 <p>
                                     <label><?php echo _SYSTEM_LABEL_OFFICE; ?><?php if (in_array('office', $arrRequiredFields)) echo ' *'; ?>:</label>
-                                    <input type="text" class="text" name="user_office"  value="<?php echo ovensia\ploopi\str::htmlentities($user->fields['office']); ?>" <?php echo $strDisabled; ?> tabindex="13" />
+                                    <input type="text" class="text" name="user_office"  value="<?php echo ploopi\str::htmlentities($user->fields['office']); ?>" <?php echo $strDisabled; ?> tabindex="13" />
                                 </p>
                                 <p>
                                     <label><?php echo _SYSTEM_LABEL_ADDRESS; ?><?php if (in_array('address', $arrRequiredFields)) echo ' *'; ?>:</label>
-                                    <textarea class="text" name="user_address" <?php echo $strDisabled; ?> tabindex="14"><?php echo ovensia\ploopi\str::htmlentities($user->fields['address']); ?></textarea>
+                                    <textarea class="text" name="user_address" <?php echo $strDisabled; ?> tabindex="14"><?php echo ploopi\str::htmlentities($user->fields['address']); ?></textarea>
                                 </p>
                                 <p>
                                     <label><?php echo _SYSTEM_LABEL_POSTALCODE; ?><?php if (in_array('postalcode', $arrRequiredFields)) echo ' *'; ?>:</label>
-                                    <input type="text" class="text" name="user_postalcode"  value="<?php echo ovensia\ploopi\str::htmlentities($user->fields['postalcode']); ?>" <?php echo $strDisabled; ?> tabindex="15" />
+                                    <input type="text" class="text" name="user_postalcode"  value="<?php echo ploopi\str::htmlentities($user->fields['postalcode']); ?>" <?php echo $strDisabled; ?> tabindex="15" />
                                 </p>
                                 <p>
                                     <label><?php echo _SYSTEM_LABEL_CITY; ?><?php if (in_array('city', $arrRequiredFields)) echo ' *'; ?>:</label>
-                                    <input type="text" class="text" name="user_city"  value="<?php echo ovensia\ploopi\str::htmlentities($user->fields['city']); ?>" <?php echo $strDisabled; ?> tabindex="16" />
+                                    <input type="text" class="text" name="user_city"  value="<?php echo ploopi\str::htmlentities($user->fields['city']); ?>" <?php echo $strDisabled; ?> tabindex="16" />
                                 </p>
                                 <p>
                                     <label><?php echo _SYSTEM_LABEL_COUNTRY; ?><?php if (in_array('country', $arrRequiredFields)) echo ' *'; ?>:</label>
-                                    <input type="text" class="text" name="user_country"  value="<?php echo ovensia\ploopi\str::htmlentities($user->fields['country']); ?>" <?php echo $strDisabled; ?> tabindex="17" />
+                                    <input type="text" class="text" name="user_country"  value="<?php echo ploopi\str::htmlentities($user->fields['country']); ?>" <?php echo $strDisabled; ?> tabindex="17" />
                                 </p>
                             </div>
                         </fieldset>
@@ -475,7 +474,7 @@ if ($_SESSION['ploopi']['connected'])
 
             echo $skin->create_popup('Validation du profil utilisateur', $content, 'system_popup_update_profile');
 
-            ovensia\ploopi\system::kill();
+            ploopi\system::kill();
         break;
     }
 
@@ -491,7 +490,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
 
         case 'system_search':
             include_once('./modules/system/public_search_result.php');
-            ovensia\ploopi\system::kill();
+            ploopi\system::kill();
         break;
     }
 }
@@ -504,24 +503,24 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
     switch($ploopi_op)
     {
         case 'system_directory_export':
-            ovensia\ploopi\module::init('system');
+            ploopi\module::init('system');
 
             // Type du document demandé
             $strTypeDoc = empty($_GET['system_directory_typedoc']) ? 'xls' : strtolower($_GET['system_directory_typedoc']);
 
             // Récupération de la requête utilisateur
-            $strSql = ovensia\ploopi\session::getvar('directory_sql');
+            $strSql = ploopi\session::getvar('directory_sql');
 
             // Préparation du jeu de données
             $arrData = array();
 
             if (!empty($strSql)) {
-                $res = $db->query($strSql);
+                $res = ploopi\loader::getdb()->query($strSql);
 
-                while ($row = $db->fetchrow($res)) {
+                while ($row = ploopi\loader::getdb()->fetchrow($res)) {
 
                     // on va chercher les espaces auxquels l'utilisateur peut accéder
-                    $objUser = new ovensia\ploopi\user();
+                    $objUser = new ploopi\user();
                     $objUser->open($row['id']);
                     // on met les libellés dans un tableau
                     $arrWspList = array();
@@ -531,8 +530,8 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
 
                     // Traitement spécial XLS (date)
                     if ($strTypeDoc == 'xls' || $strTypeDoc == 'xlsx' || $strTypeDoc == 'ods' || $strTypeDoc == 'sxc' || $strTypeDoc == 'pdf') {
-                        $row['date_creation'] = ovensia\ploopi\date::timestamp2unixtimestamp($row['date_creation']);
-                        $row['last_connection'] = ovensia\ploopi\date::timestamp2unixtimestamp($row['last_connection']);
+                        $row['date_creation'] = ploopi\date::timestamp2unixtimestamp($row['date_creation']);
+                        $row['last_connection'] = ploopi\date::timestamp2unixtimestamp($row['last_connection']);
                     }
 
 
@@ -577,7 +576,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
 
             // Dossier de travail
             $strOutputPath = _PLOOPI_PATHDATA.'/tmp/system_directory';
-            ovensia\ploopi\fs::makedir($strOutputPath);
+            ploopi\fs::makedir($strOutputPath);
 
             // Nom du fichier envoyé à l'utilisateur
             $strFileName = "utilisateurs.{$strTypeDoc}";
@@ -693,7 +692,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
             );
 
 
-            ovensia\ploopi\buffer::clean();
+            ploopi\buffer::clean();
 
             switch($strTypeDoc)
             {
@@ -706,33 +705,33 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                 break;
 
                 case 'csv':
-                    echo ovensia\ploopi\arr::tocsv($arrData);
+                    echo ploopi\arr::tocsv($arrData);
                 break;
 
                 case 'xml':
-                    echo ovensia\ploopi\arr::toxml($arrData);
+                    echo ploopi\arr::toxml($arrData);
                 break;
 
                 case 'json':
-                    echo ovensia\ploopi\arr::tojson($arrData);
+                    echo ploopi\arr::tojson($arrData);
                 break;
 
                 case 'xls':
-                    echo ovensia\ploopi\arr::toexcel($arrData, true, $strFileName, 'Export', $arrFormats, array('writer' => 'excel5'));
+                    echo ploopi\arr::toexcel($arrData, true, $strFileName, 'Export', $arrFormats, array('writer' => 'excel5'));
                 break;
 
                 case 'xlsx':
-                    echo ovensia\ploopi\arr::toexcel($arrData, true, $strFileName, 'Export', $arrFormats, array('writer' => 'excel2007'));
+                    echo ploopi\arr::toexcel($arrData, true, $strFileName, 'Export', $arrFormats, array('writer' => 'excel2007'));
                 break;
 
                 case 'ods':
                 case 'sxc':
                 case 'pdf':
                     // Génération XLSX
-                    file_put_contents($strTmpFile = $strOutputPath.'/'.uniqid().'.xlsx', ovensia\ploopi\arr::toexcel($arrData, true, $strFileName, 'Export', $arrFormats, array('writer' => 'excel2007')));
+                    file_put_contents($strTmpFile = $strOutputPath.'/'.uniqid().'.xlsx', ploopi\arr::toexcel($arrData, true, $strFileName, 'Export', $arrFormats, array('writer' => 'excel2007')));
 
                     // Chemin unoconv
-                    $strUnoconvPath = ovensia\ploopi\param::get('system_unoconv');
+                    $strUnoconvPath = ploopi\param::get('system_unoconv');
 
                     // Conversion via unoconv/libreoffice
                     passthru($cmd = "export HOME=/tmp && {$strUnoconvPath} -v --stdout -f {$strTypeDoc} {$strTmpFile}");
@@ -741,14 +740,14 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                 break;
             }
 
-            header('Content-Type: ' . ovensia\ploopi\fs::getmimetype($strFileName));
+            header('Content-Type: ' . ploopi\fs::getmimetype($strFileName));
             header('Content-Disposition: attachment; Filename="'.$strFileName.'"');
             header('Cache-Control: private');
             header('Pragma: private');
             header('Content-Length: '.ob_get_length());
             header("Content-Encoding: None");
 
-            ovensia\ploopi\system::kill();
+            ploopi\system::kill();
         break;
 
         /**
@@ -768,7 +767,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
 
             foreach($arrTickets as $ticket_id)
             {
-                $ticket = new ovensia\ploopi\ticket();
+                $ticket = new ploopi\ticket();
                 if (is_numeric($ticket_id) && $ticket->open($ticket_id))
                 {
                     if ($_SESSION['ploopi']['userid'] == $ticket->fields['id_user']) // utilisateur = emetteur
@@ -777,7 +776,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                         $ticket->save();
                     }
 
-                    $ticket_dest = new ovensia\ploopi\ticket_dest();
+                    $ticket_dest = new ploopi\ticket_dest();
                     if ($ticket_dest->open($_SESSION['ploopi']['userid'], $ticket_id))
                     {
                         $ticket_dest->fields['deleted'] = 1;
@@ -786,15 +785,15 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                 }
             }
 
-            ovensia\ploopi\output::redirect("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets");
+            ploopi\output::redirect("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets");
         break;
 
         case 'tickets_open':
-            $ticket = new ovensia\ploopi\ticket();
+            $ticket = new ploopi\ticket();
 
             if (isset($_GET['ticket_id']) && is_numeric($_GET['ticket_id']) && $ticket->open($_GET['ticket_id']))
             {
-                $ticket_status = new ovensia\ploopi\ticket_status();
+                $ticket_status = new ploopi\ticket_status();
 
                 if (!$ticket_status->open($_GET['ticket_id'], $_SESSION['ploopi']['userid'], _PLOOPI_TICKETS_OPENED))
                 {
@@ -804,7 +803,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                     $ticket_status->save();
                 }
 
-                $ticket_watch = new ovensia\ploopi\ticket_watch();
+                $ticket_watch = new ploopi\ticket_watch();
                 $ticket_watch->open($_GET['ticket_id'], $_SESSION['ploopi']['userid']);
                 $ticket_watch->fields['id_ticket'] = $_GET['ticket_id'];
                 $ticket_watch->fields['id_user'] = $_SESSION['ploopi']['userid'];
@@ -814,13 +813,13 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                 $ticket->fields['count_read']++;
                 $ticket->save();
             }
-            ovensia\ploopi\system::kill();
+            ploopi\system::kill();
         break;
 
         case 'tickets_open_responses':
             if (isset($_GET['ticket_id']) && is_numeric($_GET['ticket_id']))
             {
-                $rootid = $db->addslashes($_GET['ticket_id']);
+                $rootid = ploopi\loader::getdb()->addslashes($_GET['ticket_id']);
 
                 $sql =  "
                         SELECT      t.id,
@@ -855,9 +854,9 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                 $tickets = array();
                 $parents = array();
 
-                $rs = $db->query($sql);
+                $rs = ploopi\loader::getdb()->query($sql);
 
-                while ($fields = $db->fetchrow($rs))
+                while ($fields = ploopi\loader::getdb()->fetchrow($rs))
                 {
                     if (!isset($tickets[$fields['id']]))
                     {
@@ -869,11 +868,11 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
 
                 if (!empty($tickets)) system_tickets_displayresponses($parents, $tickets, $_GET['ticket_id']);
             }
-            ovensia\ploopi\system::kill();
+            ploopi\system::kill();
         break;
 
         case 'tickets_validate':
-            $ticket_status = new ovensia\ploopi\ticket_status();
+            $ticket_status = new ploopi\ticket_status();
 
             if (!empty($_GET['ticket_id']) && is_numeric($_GET['ticket_id']))
             {
@@ -885,7 +884,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                     $ticket_status->save();
                 }
             }
-            ovensia\ploopi\output::redirect("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets");
+            ploopi\output::redirect("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets");
         break;
 
 
@@ -894,30 +893,30 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
              * Autres opérations nécessitant un niveau d'accrédiation plus élevé (gestionnaire ou admin sys)
              */
 
-            if (ovensia\ploopi\acl::isadmin())
+            if (ploopi\acl::isadmin())
             {
                 switch($ploopi_op)
                 {
                     // update description
                     case 'updatedesc':
-                        ovensia\ploopi\module::init('system', false, false, false);
+                        ploopi\module::init('system', false, false, false);
 
-                        $module_type = new ovensia\ploopi\module_type();
+                        $module_type = new ploopi\module_type();
                         if (!empty($_GET['idmoduletype']) && is_numeric($_GET['idmoduletype']) && $module_type->open($_GET['idmoduletype']))
                         {
                             $xmlfile_desc = "./install/{$module_type->fields['label']}/description.xml";
                             $critical_error = $module_type->update_description($xmlfile_desc);
-                            if (!$critical_error) ovensia\ploopi\user_action_log::record(_SYSTEM_ACTION_UPDATEMODULE, "{$module_type->fields['label']} (reload)");
+                            if (!$critical_error) ploopi\user_action_log::record(_SYSTEM_ACTION_UPDATEMODULE, "{$module_type->fields['label']} (reload)");
                         }
 
-                        ovensia\ploopi\output::redirect('admin.php');
+                        ploopi\output::redirect('admin.php');
                     break;
 
                     // update metabase
                     case 'updatemb':
-                        ovensia\ploopi\module::init('system', false, false, false);
+                        ploopi\module::init('system', false, false, false);
 
-                        $module_type = new ovensia\ploopi\module_type();
+                        $module_type = new ploopi\module_type();
                         if (!empty($_GET['idmoduletype']) && is_numeric($_GET['idmoduletype']) && $module_type->open($_GET['idmoduletype']))
                         {
                             global $idmoduletype;
@@ -925,14 +924,14 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
 
                             include './modules/system/xmlparser_mb.php';
 
-                            ovensia\ploopi\user_action_log::record(_SYSTEM_ACTION_UPDATEMETABASE, $module_type->fields['label']);
+                            ploopi\user_action_log::record(_SYSTEM_ACTION_UPDATEMETABASE, $module_type->fields['label']);
 
-                            $db->query("DELETE FROM ploopi_mb_field WHERE id_module_type = {$_GET['idmoduletype']}");
-                            $db->query("DELETE FROM ploopi_mb_relation WHERE id_module_type = {$_GET['idmoduletype']}");
-                            $db->query("DELETE FROM ploopi_mb_schema WHERE id_module_type = {$_GET['idmoduletype']}");
-                            $db->query("DELETE FROM ploopi_mb_table WHERE id_module_type = {$_GET['idmoduletype']}");
-                            $db->query("DELETE FROM ploopi_mb_object WHERE id_module_type = {$_GET['idmoduletype']}");
-                            $db->query("DELETE FROM ploopi_mb_wce_object WHERE id_module_type = {$_GET['idmoduletype']}");
+                            ploopi\loader::getdb()->query("DELETE FROM ploopi_mb_field WHERE id_module_type = {$_GET['idmoduletype']}");
+                            ploopi\loader::getdb()->query("DELETE FROM ploopi_mb_relation WHERE id_module_type = {$_GET['idmoduletype']}");
+                            ploopi\loader::getdb()->query("DELETE FROM ploopi_mb_schema WHERE id_module_type = {$_GET['idmoduletype']}");
+                            ploopi\loader::getdb()->query("DELETE FROM ploopi_mb_table WHERE id_module_type = {$_GET['idmoduletype']}");
+                            ploopi\loader::getdb()->query("DELETE FROM ploopi_mb_object WHERE id_module_type = {$_GET['idmoduletype']}");
+                            ploopi\loader::getdb()->query("DELETE FROM ploopi_mb_wce_object WHERE id_module_type = {$_GET['idmoduletype']}");
 
                             $mbfile = "./install/{$module_type->fields['label']}/mb.xml";
 
@@ -944,51 +943,51 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                             }
                         }
 
-                        ovensia\ploopi\output::redirect('admin.php');
+                        ploopi\output::redirect('admin.php');
                     break;
                 }
             }
 
-            if (ovensia\ploopi\acl::ismanager())
+            if (ploopi\acl::ismanager())
             {
                 switch($ploopi_op)
                 {
                     case 'system_roleusers':
-                        if (empty($_GET['system_roleusers_roleid'])) ovensia\ploopi\system::kill();
+                        if (empty($_GET['system_roleusers_roleid'])) ploopi\system::kill();
                         $roleid = $_GET['system_roleusers_roleid'];
                         include './modules/system/admin_index_roles_assignment_list.php';
-                        ovensia\ploopi\system::kill();
+                        ploopi\system::kill();
                     break;
 
                     // suppression de l'affectation d'un rôle à un utilisateur
                     case 'system_roleusers_delete_user':
-                        if (empty($_GET['system_roleusers_userid']) || empty($_GET['system_roleusers_roleid']) || empty($_SESSION['system']['workspaceid'])) ovensia\ploopi\system::kill();
+                        if (empty($_GET['system_roleusers_userid']) || empty($_GET['system_roleusers_roleid']) || empty($_SESSION['system']['workspaceid'])) ploopi\system::kill();
 
-                        $wur = new ovensia\ploopi\workspace_user_role();
+                        $wur = new ploopi\workspace_user_role();
 
                         if ($wur->open($_GET['system_roleusers_userid'], $_SESSION['system']['workspaceid'], $_GET['system_roleusers_roleid'])) $wur->delete();
 
-                        ovensia\ploopi\output::redirect("admin-light.php?ploopi_op=system_roleusers&system_roleusers_roleid={$_GET['system_roleusers_roleid']}");
-                        //ovensia\ploopi\output::redirect("admin.php?op=assign_role&roleid={$_GET['system_roleusers_roleid']}");
+                        ploopi\output::redirect("admin-light.php?ploopi_op=system_roleusers&system_roleusers_roleid={$_GET['system_roleusers_roleid']}");
+                        //ploopi\output::redirect("admin.php?op=assign_role&roleid={$_GET['system_roleusers_roleid']}");
                     break;
 
                     // suppression de l'affectation d'un rôle à un groupe
                     case 'system_roleusers_delete_group':
-                        if (empty($_GET['system_roleusers_groupid']) || empty($_GET['system_roleusers_roleid']) || empty($_SESSION['system']['workspaceid'])) ovensia\ploopi\system::kill();
+                        if (empty($_GET['system_roleusers_groupid']) || empty($_GET['system_roleusers_roleid']) || empty($_SESSION['system']['workspaceid'])) ploopi\system::kill();
 
-                        $wgr = new ovensia\ploopi\workspace_group_role();
+                        $wgr = new ploopi\workspace_group_role();
 
                         if ($wgr->open($_GET['system_roleusers_groupid'], $_SESSION['system']['workspaceid'], $_GET['system_roleusers_roleid'])) $wgr->delete();
 
-                        ovensia\ploopi\output::redirect("admin-light.php?ploopi_op=system_roleusers&system_roleusers_roleid={$_GET['system_roleusers_roleid']}");
-                        //ovensia\ploopi\output::redirect("admin.php?op=assign_role&roleid={$_GET['system_roleusers_roleid']}");
+                        ploopi\output::redirect("admin-light.php?ploopi_op=system_roleusers&system_roleusers_roleid={$_GET['system_roleusers_roleid']}");
+                        //ploopi\output::redirect("admin.php?op=assign_role&roleid={$_GET['system_roleusers_roleid']}");
                     break;
 
                     // affectation d'un rôle à un utilisateur
                     case 'system_roleusers_select_user':
-                        if (empty($_GET['system_roleusers_userid']) || empty($_GET['system_roleusers_roleid']) || empty($_SESSION['system']['workspaceid'])) ovensia\ploopi\system::kill();
+                        if (empty($_GET['system_roleusers_userid']) || empty($_GET['system_roleusers_roleid']) || empty($_SESSION['system']['workspaceid'])) ploopi\system::kill();
 
-                        $wur = new ovensia\ploopi\workspace_user_role();
+                        $wur = new ploopi\workspace_user_role();
 
                         if (!$wur->open($_GET['system_roleusers_userid'], $_SESSION['system']['workspaceid'], $_GET['system_roleusers_roleid']))
                         {
@@ -998,14 +997,14 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                             $wur->save();
                         }
 
-                        ovensia\ploopi\output::redirect("admin-light.php?ploopi_op=system_roleusers&system_roleusers_roleid={$_GET['system_roleusers_roleid']}");
+                        ploopi\output::redirect("admin-light.php?ploopi_op=system_roleusers&system_roleusers_roleid={$_GET['system_roleusers_roleid']}");
                     break;
 
                     // affectation d'un rôle à un groupe
                     case 'system_roleusers_select_group':
-                        if (empty($_GET['system_roleusers_groupid']) || empty($_GET['system_roleusers_roleid']) || empty($_SESSION['system']['workspaceid'])) ovensia\ploopi\system::kill();
+                        if (empty($_GET['system_roleusers_groupid']) || empty($_GET['system_roleusers_roleid']) || empty($_SESSION['system']['workspaceid'])) ploopi\system::kill();
 
-                        $wgr = new ovensia\ploopi\workspace_group_role();
+                        $wgr = new ploopi\workspace_group_role();
 
                         if (!$wgr->open($_GET['system_roleusers_groupid'], $_SESSION['system']['workspaceid'], $_GET['system_roleusers_roleid']))
                         {
@@ -1015,14 +1014,14 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                             $wgr->save();
                         }
 
-                        ovensia\ploopi\output::redirect("admin-light.php?ploopi_op=system_roleusers&system_roleusers_roleid={$_GET['system_roleusers_roleid']}");
+                        ploopi\output::redirect("admin-light.php?ploopi_op=system_roleusers&system_roleusers_roleid={$_GET['system_roleusers_roleid']}");
                     break;
 
                     // résultat de la recherche utilisateurs / groupes
                     case 'system_roleusers_search':
-                        if (!isset($_GET['system_roleusers_filter'])) ovensia\ploopi\system::kill();
+                        if (!isset($_GET['system_roleusers_filter'])) ploopi\system::kill();
 
-                        $cleanedfilter = $db->addslashes($_GET['system_roleusers_filter']);
+                        $cleanedfilter = ploopi\loader::getdb()->addslashes($_GET['system_roleusers_filter']);
                         $userfilter = "(u.login LIKE '%{$cleanedfilter}%' OR u.firstname LIKE '%{$cleanedfilter}%' OR u.lastname LIKE '%{$cleanedfilter}%')";
 
                         $sql =  "
@@ -1042,8 +1041,8 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                                 ORDER BY    u.lastname, u.firstname
                                 ";
 
-                        $db->query($sql);
-                        $users = $db->getarray();
+                        ploopi\loader::getdb()->query($sql);
+                        $users = ploopi\loader::getdb()->getarray();
 
                         $groupfilter = "g.label LIKE '%{$cleanedfilter}%'";
 
@@ -1062,8 +1061,8 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                                 ORDER BY    g.label
                                 ";
 
-                        $db->query($sql);
-                        $groups = $db->getarray();
+                        ploopi\loader::getdb()->query($sql);
+                        $groups = ploopi\loader::getdb()->getarray();
 
                         if (empty($users) && empty($groups))
                         {
@@ -1083,8 +1082,8 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                                 foreach($groups as $group)
                                 {
                                     ?>
-                                    <a class="system_roleusers_select" title="Sélectionner ce groupe et lui attribuer ce rôle" href="javascript:void(0);" onclick="javascript:system_roleusers_select(<?php echo ovensia\ploopi\str::htmlentities($_GET['system_roleusers_roleid']); ?>, <?php echo $group['id']; ?>, 'group');">
-                                        <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_group.png"><span><?php echo ovensia\ploopi\str::htmlentities("{$group['label']}"); ?></span></p>
+                                    <a class="system_roleusers_select" title="Sélectionner ce groupe et lui attribuer ce rôle" href="javascript:void(0);" onclick="javascript:system_roleusers_select(<?php echo ploopi\str::htmlentities($_GET['system_roleusers_roleid']); ?>, <?php echo $group['id']; ?>, 'group');">
+                                        <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_group.png"><span><?php echo ploopi\str::htmlentities("{$group['label']}"); ?></span></p>
                                     </a>
                                     <?php
                                 }
@@ -1094,8 +1093,8 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                                 foreach($users as $user)
                                 {
                                     ?>
-                                    <a class="system_roleusers_select" title="Sélectionner cet utilisateur et lui attribuer ce rôle" href="javascript:void(0);" onclick="javascript:system_roleusers_select(<?php echo ovensia\ploopi\str::htmlentities($_GET['system_roleusers_roleid']); ?>, <?php echo $user['id']; ?>, 'user');">
-                                        <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span><?php echo ovensia\ploopi\str::htmlentities("{$user['lastname']} {$user['firstname']} ({$user['login']})"); ?></span></p>
+                                    <a class="system_roleusers_select" title="Sélectionner cet utilisateur et lui attribuer ce rôle" href="javascript:void(0);" onclick="javascript:system_roleusers_select(<?php echo ploopi\str::htmlentities($_GET['system_roleusers_roleid']); ?>, <?php echo $user['id']; ?>, 'user');">
+                                        <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span><?php echo ploopi\str::htmlentities("{$user['lastname']} {$user['firstname']} ({$user['login']})"); ?></span></p>
                                     </a>
                                     <?php
                                 }
@@ -1114,12 +1113,12 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                             <?php
                         }
 
-                        ovensia\ploopi\system::kill();
+                        ploopi\system::kill();
                     break;
 
                     case 'system_serverload':
                         include './modules/system/tools_serverload.php';
-                        ovensia\ploopi\system::kill();
+                        ploopi\system::kill();
                     break;
 
                     case 'system_tools_phpinfo':
@@ -1148,7 +1147,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                         window.onload = function() { system_autofit_iframe();};
                         </script>
                         <?php
-                        ovensia\ploopi\system::kill();
+                        ploopi\system::kill();
                     break;
 
                     case 'system_choose_photo':
@@ -1156,9 +1155,9 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                         if (!empty($_GET['system_user_id']) && is_numeric($_GET['system_user_id']))
                         {
                             ob_start();
-                            ovensia\ploopi\module::init('system');
+                            ploopi\module::init('system');
                             ?>
-                            <form action="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?ploopi_op=system_send_photo&system_user_id={$_GET['system_user_id']}"); ?>" method="post" enctype="multipart/form-data" target="system_user_photo_iframe">
+                            <form action="<?php echo ploopi\crypt::urlencode("admin.php?ploopi_op=system_send_photo&system_user_id={$_GET['system_user_id']}"); ?>" method="post" enctype="multipart/form-data" target="system_user_photo_iframe">
                             <p class="ploopi_va" style="padding:2px;">
                                 <label><?php echo _SYSTEM_LABEL_PHOTO; ?>: </label>
                                 <input type="file" name="system_user_photo" />
@@ -1172,7 +1171,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
 
                             echo $skin->create_popup("Chargement d'une nouvelle photo", $content, 'popup_system_choose_photo');
                         }
-                        ovensia\ploopi\system::kill();
+                        ploopi\system::kill();
                     break;
 
                     case 'system_send_photo':
@@ -1183,17 +1182,17 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                             if (!empty($_FILES['system_user_photo']['tmp_name']))
                             {
                                 // reset suppression
-                                ovensia\ploopi\session::setvar("deletephoto_{$_GET['system_user_id']}", 0);
+                                ploopi\session::setvar("deletephoto_{$_GET['system_user_id']}", 0);
 
                                 $strTmpPath = _PLOOPI_PATHDATA._PLOOPI_SEP.'tmp';
-                                ovensia\ploopi\fs::makedir($strTmpPath);
+                                ploopi\fs::makedir($strTmpPath);
                                 $_SESSION['system']['user_photopath'] = tempnam($strTmpPath, '');
-                                ovensia\ploopi\image::resize($_FILES['system_user_photo']['tmp_name'], 0, 100, 150, 'png', 0, $_SESSION['system']['user_photopath']);
+                                ploopi\image::resize($_FILES['system_user_photo']['tmp_name'], 0, 100, 150, 'png', 0, $_SESSION['system']['user_photopath']);
                             }
                             ?>
                             <script type="text/javascript">
                                 new function() {
-                                    window.parent.ploopi_getelem('system_user_photo', window.parent.document).innerHTML = '<img src="<?php echo ovensia\ploopi\crypt::urlencode('admin-light.php?ploopi_op=system_get_photo'); ?>" />';
+                                    window.parent.ploopi_getelem('system_user_photo', window.parent.document).innerHTML = '<img src="<?php echo ploopi\crypt::urlencode('admin-light.php?ploopi_op=system_get_photo'); ?>" />';
                                     window.parent.ploopi_hidepopup('popup_system_choose_photo');
                                 }
                             </script>
@@ -1204,31 +1203,31 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                     case 'system_delete_photo':
                         if (!empty($_GET['system_user_id']) && is_numeric($_GET['system_user_id']))
                         {
-                            ovensia\ploopi\session::setvar("deletephoto_{$_GET['system_user_id']}", 1);
+                            ploopi\session::setvar("deletephoto_{$_GET['system_user_id']}", 1);
                             $_SESSION['system']['user_photopath'] = '';
-                            ovensia\ploopi\system::kill();
+                            ploopi\system::kill();
                         }
                     break;
 
                     case 'system_get_photo':
                         // Envoi de la photo temporaire vers le client
-                        if (!empty($_SESSION['system']['user_photopath'])) ovensia\ploopi\fs::downloadfile($_SESSION['system']['user_photopath'], 'user.png', false, false);
-                        ovensia\ploopi\system::kill();
+                        if (!empty($_SESSION['system']['user_photopath'])) ploopi\fs::downloadfile($_SESSION['system']['user_photopath'], 'user.png', false, false);
+                        ploopi\system::kill();
                     break;
 
                     case 'system_delete_user':
                         if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_SYSTEMADMIN)
                         {
-                            ovensia\ploopi\module::init('system');
-                            $objUser = new ovensia\ploopi\user();
+                            ploopi\module::init('system');
+                            $objUser = new ploopi\user();
                             if (!empty($_GET['system_user_id']) && is_numeric($_GET['system_user_id']) && $objUser->open($_GET['system_user_id']))
                             {
                                 if ($_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_generate_htpasswd']) system_generate_htpasswd($objUser->fields['login'], '', true);
-                                ovensia\ploopi\user_action_log::record(_SYSTEM_ACTION_DELETEUSER, "{$objUser->fields['login']} - {$objUser->fields['lastname']} {$objUser->fields['firstname']} (id:{$objUser->fields['id']})");
+                                ploopi\user_action_log::record(_SYSTEM_ACTION_DELETEUSER, "{$objUser->fields['login']} - {$objUser->fields['lastname']} {$objUser->fields['firstname']} (id:{$objUser->fields['id']})");
                                 $objUser->delete();
                             }
                         }
-                        ovensia\ploopi\output::redirect('admin.php?system_level=system&sysToolbarItem=directory');
+                        ploopi\output::redirect('admin.php?system_level=system&sysToolbarItem=directory');
                     break;
 
                     case 'system_user_import':
@@ -1256,7 +1255,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                             }
                         }
 
-                        ovensia\ploopi\output::redirect("admin.php?usrTabItem=tabUserImport&op=preview");
+                        ploopi\output::redirect("admin.php?usrTabItem=tabUserImport&op=preview");
                     break;
                 }
             }

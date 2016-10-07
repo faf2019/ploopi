@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,7 +25,7 @@
  *
  * @package system
  * @subpackage admin
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -35,7 +34,7 @@
  * Ouverture d'une instance de l'objet user
  */
 
-$user = new ovensia\ploopi\user();
+$user = new ploopi\user();
 
 // Suppression de la variable de stockage de la photo temporaire
 if (isset($_SESSION['system']['user_photopath'])) unset($_SESSION['system']['user_photopath']);
@@ -45,8 +44,8 @@ if (empty($_GET['user_id']) || !is_numeric($_GET['user_id']) || !$user->open($_G
     $user->init_description();
     $user->fields['servertimezone'] = 1;
     // Lecture des paramètres "système"
-    $user->fields['password_force_update'] = ovensia\ploopi\param::get('system_password_force_update');
-    $user->fields['password_validity'] = ovensia\ploopi\param::get('system_password_validity');
+    $user->fields['password_force_update'] = ploopi\param::get('system_password_force_update');
+    $user->fields['password_validity'] = ploopi\param::get('system_password_validity');
 
     // Récuération des données de l'utilisateur (problème lors de la création) => pour remplir le formulaire
     if (!empty($_SESSION['system']['save_user']))
@@ -57,7 +56,7 @@ if (empty($_GET['user_id']) || !is_numeric($_GET['user_id']) || !$user->open($_G
         }
     }
 }
-else ovensia\ploopi\session::setvar("deletephoto_{$_GET['user_id']}", 0);
+else ploopi\session::setvar("deletephoto_{$_GET['user_id']}", 0);
 
 
 
@@ -67,13 +66,13 @@ $server_timezone = date_timezone_get($date);
 $server_timezoneid = timezone_name_get($server_timezone);
 if (empty($user->fields['timezone'])) $user->fields['timezone'] = $server_timezoneid;
 
-$user_date_expire = (!empty($user->fields['date_expire'])) ? ovensia\ploopi\date::timestamp2local($user->fields['date_expire']) : array('date' => '');
+$user_date_expire = (!empty($user->fields['date_expire'])) ? ploopi\date::timestamp2local($user->fields['date_expire']) : array('date' => '');
 
 $arrFormurl[] = 'op=save_user';
 if (isset($_REQUEST['confirm'])) $arrFormurl[] = 'confirm';
 if (!$user->new)  $arrFormurl[] = "user_id={$user->fields['id']}";
 
-$arrRequiredFields = explode(',', ovensia\ploopi\param::get('system_user_required_fields', _PLOOPI_MODULE_SYSTEM));
+$arrRequiredFields = explode(',', ploopi\param::get('system_user_required_fields', _PLOOPI_MODULE_SYSTEM));
 ?>
 <script type="text/javascript">
 function system_user_validate(form, isnew)
@@ -183,7 +182,7 @@ function system_user_validate(form, isnew)
 }
 </script>
 
-<form name="form_modify_user" action="<?php echo ovensia\ploopi\crypt::urlencode('admin.php?'.implode('&',$arrFormurl)); ?>" method="POST" enctype="multipart/form-data" onsubmit="javascript:return system_user_validate(this, <?php echo ($user->new) ? 'true' : 'false'; ?>)">
+<form name="form_modify_user" action="<?php echo ploopi\crypt::urlencode('admin.php?'.implode('&',$arrFormurl)); ?>" method="POST" enctype="multipart/form-data" onsubmit="javascript:return system_user_validate(this, <?php echo ($user->new) ? 'true' : 'false'; ?>)">
 <?php
 
 if (isset($_REQUEST['error']))
@@ -193,19 +192,19 @@ if (isset($_REQUEST['error']))
     switch($_REQUEST['error'])
     {
         case 'password':
-            $error = ovensia\ploopi\str::nl2br(_SYSTEM_MSG_PASSWORDERROR);
+            $error = ploopi\str::nl2br(_SYSTEM_MSG_PASSWORDERROR);
         break;
 
         case 'oldpassword':
-            $error = ovensia\ploopi\str::nl2br(_SYSTEM_MSG_OLDPASSWORDERROR);
+            $error = ploopi\str::nl2br(_SYSTEM_MSG_OLDPASSWORDERROR);
         break;
 
         case 'passrejected':
-            $error = ovensia\ploopi\str::nl2br(_SYSTEM_MSG_LOGINPASSWORDERROR);
+            $error = ploopi\str::nl2br(_SYSTEM_MSG_LOGINPASSWORDERROR);
         break;
 
         case 'login':
-            $error = ovensia\ploopi\str::nl2br(_SYSTEM_MSG_LOGINERROR);
+            $error = ploopi\str::nl2br(_SYSTEM_MSG_LOGINERROR);
         break;
     }
     ?>
@@ -218,7 +217,7 @@ if (isset($_REQUEST['confirm']))
     <div class="error" style="padding:2px;text-align:center;"><?php echo _SYSTEM_MSG_CREATEUSER_CONFIRMATION1; ?></div>
     <div style="margin:10px;">
     <?php
-    $db->query("
+    ploopi\loader::getdb()->query("
         SELECT  id,
                 login,
                 lastname,
@@ -231,9 +230,9 @@ if (isset($_REQUEST['confirm']))
 
         FROM    ploopi_user
 
-        WHERE   (lastname = '".$db->addslashes($_SESSION['system']['save_user']['user_lastname'])."'
-        AND     firstname = '".$db->addslashes($_SESSION['system']['save_user']['user_firstname'])."')
-        OR      login = '".$db->addslashes($_SESSION['system']['save_user']['user_login'])."'
+        WHERE   (lastname = '".ploopi\loader::getdb()->addslashes($_SESSION['system']['save_user']['user_lastname'])."'
+        AND     firstname = '".ploopi\loader::getdb()->addslashes($_SESSION['system']['save_user']['user_firstname'])."')
+        OR      login = '".ploopi\loader::getdb()->addslashes($_SESSION['system']['save_user']['user_login'])."'
     ");
 
     $arrColumns = array();
@@ -289,11 +288,11 @@ if (isset($_REQUEST['confirm']))
 
     $booLoginWarning = false;
 
-    while ($row = $db->fetchrow())
+    while ($row = ploopi\loader::getdb()->fetchrow())
     {
         if ($row['login'] == $_SESSION['system']['save_user']['user_login']) $booLoginWarning = true;
 
-        $objUser = new ovensia\ploopi\user();
+        $objUser = new ploopi\user();
         $objUser->fields['id'] = $row['id'];
 
         $arrGroups = $objUser->getgroups();
@@ -305,35 +304,35 @@ if (isset($_REQUEST['confirm']))
                     array(
                         'name' =>
                             array(
-                                'label' => ovensia\ploopi\str::htmlentities("{$row['lastname']}, {$row['firstname']}")
+                                'label' => ploopi\str::htmlentities("{$row['lastname']}, {$row['firstname']}")
                             ),
                         'login' =>
                             array(
-                                'label' => ovensia\ploopi\str::htmlentities($row['login'])
+                                'label' => ploopi\str::htmlentities($row['login'])
                             ),
                         'origin' =>
                             array(
-                                'label' => ovensia\ploopi\str::htmlentities($currentGroup['label'])
+                                'label' => ploopi\str::htmlentities($currentGroup['label'])
                             ),
                         'entity' =>
                             array(
-                                'label' => ovensia\ploopi\str::htmlentities($row['entity'])
+                                'label' => ploopi\str::htmlentities($row['entity'])
                             ),
                         'service' =>
                             array(
-                                'label' => ovensia\ploopi\str::htmlentities($row['service'])
+                                'label' => ploopi\str::htmlentities($row['service'])
                             ),
                         'office' =>
                             array(
-                                'label' => ovensia\ploopi\str::htmlentities($row['office'])
+                                'label' => ploopi\str::htmlentities($row['office'])
                             ),
                         'function' =>
                             array(
-                                'label' => ovensia\ploopi\str::htmlentities($row['function'])
+                                'label' => ploopi\str::htmlentities($row['function'])
                             ),
                     ),
                 'description' => _SYSTEM_LABEL_ATTACH,
-                'link' => ovensia\ploopi\crypt::urlencode("admin.php?op=attach_user&user_id={$row['id']}")
+                'link' => ploopi\crypt::urlencode("admin.php?op=attach_user&user_id={$row['id']}")
             );
     }
 
@@ -354,11 +353,11 @@ if (isset($_REQUEST['confirm']))
                 <div class="ploopi_form">
                     <p>
                         <label><?php if ($user->new) echo '<em>*&nbsp;</em>'; echo _SYSTEM_LABEL_LASTNAME; ?><sup style="font-size:.7em">&nbsp;1</sup> *:</label>
-                        <input type="text" class="text" name="user_lastname"  value="<?php echo ovensia\ploopi\str::htmlentities($user->fields['lastname']); ?>" tabindex="1" />
+                        <input type="text" class="text" name="user_lastname"  value="<?php echo ploopi\str::htmlentities($user->fields['lastname']); ?>" tabindex="1" />
                     </p>
                     <p>
                         <label><?php if ($user->new) echo '<em>*&nbsp;</em>'; echo _SYSTEM_LABEL_FIRSTNAME; ?><sup style="font-size:.7em">&nbsp;1</sup> *:</label>
-                        <input type="text" class="text" name="user_firstname"  value="<?php echo ovensia\ploopi\str::htmlentities($user->fields['firstname']); ?>" tabindex="2" />
+                        <input type="text" class="text" name="user_firstname"  value="<?php echo ploopi\str::htmlentities($user->fields['firstname']); ?>" tabindex="2" />
                     </p>
                     <p>
                         <label><?php echo _SYSTEM_LABEL_CIVILITY; ?><?php if (in_array('civility', $arrRequiredFields)) echo ' *'; ?>:</label>
@@ -368,7 +367,7 @@ if (isset($_REQUEST['confirm']))
                             foreach ($ploopi_civility as $value)
                             {
                                 ?>
-                                <option value="<?php echo ovensia\ploopi\str::htmlentities($value); ?>" <?php if ($user->fields['civility'] == $value) echo 'selected'; ?>><?php echo ovensia\ploopi\str::htmlentities($value); ?></option>
+                                <option value="<?php echo ploopi\str::htmlentities($value); ?>" <?php if ($user->fields['civility'] == $value) echo 'selected'; ?>><?php echo ploopi\str::htmlentities($value); ?></option>
                                 <?php
                             }
                             ?>
@@ -382,39 +381,39 @@ if (isset($_REQUEST['confirm']))
 
                     <p>
                         <label><?php echo _SYSTEM_LABEL_ENTITY; ?><?php if (in_array('entity', $arrRequiredFields)) echo ' *'; ?>:</label>
-                        <input type="text" class="text" name="user_entity"  value="<?php echo ovensia\ploopi\str::htmlentities($user->fields['entity']); ?>" tabindex="4" />
+                        <input type="text" class="text" name="user_entity"  value="<?php echo ploopi\str::htmlentities($user->fields['entity']); ?>" tabindex="4" />
                     </p>
                     <p>
                         <label><?php echo _SYSTEM_LABEL_SERVICE; ?><?php if (in_array('service', $arrRequiredFields)) echo ' *'; ?>:</label>
-                        <input type="text" class="text" name="user_service"  value="<?php echo ovensia\ploopi\str::htmlentities($user->fields['service']); ?>" tabindex="4" />
+                        <input type="text" class="text" name="user_service"  value="<?php echo ploopi\str::htmlentities($user->fields['service']); ?>" tabindex="4" />
                     </p>
                     <p>
                         <label><?php echo _SYSTEM_LABEL_SERVICE2; ?><?php if (in_array('service2', $arrRequiredFields)) echo ' *'; ?>:</label>
-                        <input type="text" class="text" name="user_service2"  value="<?php echo ovensia\ploopi\str::htmlentities($user->fields['service2']); ?>" tabindex="4" />
+                        <input type="text" class="text" name="user_service2"  value="<?php echo ploopi\str::htmlentities($user->fields['service2']); ?>" tabindex="4" />
                     </p>
                     <p>
                         <label><?php echo _SYSTEM_LABEL_FUNCTION; ?><?php if (in_array('function', $arrRequiredFields)) echo ' *'; ?>:</label>
-                        <input type="text" class="text" name="user_function"  value="<?php echo ovensia\ploopi\str::htmlentities($user->fields['function']); ?>" tabindex="5" />
+                        <input type="text" class="text" name="user_function"  value="<?php echo ploopi\str::htmlentities($user->fields['function']); ?>" tabindex="5" />
                     </p>
                     <p>
                         <label><?php echo _SYSTEM_LABEL_RANK; ?><?php if (in_array('rank', $arrRequiredFields)) echo ' *'; ?>:</label>
-                        <input type="text" class="text" name="user_rank"  value="<?php echo ovensia\ploopi\str::htmlentities($user->fields['rank']); ?>" tabindex="6" />
+                        <input type="text" class="text" name="user_rank"  value="<?php echo ploopi\str::htmlentities($user->fields['rank']); ?>" tabindex="6" />
                     </p>
                     <p>
                         <label><?php echo _SYSTEM_LABEL_NUMBER; ?><?php if (in_array('number', $arrRequiredFields)) echo ' *'; ?>:</label>
-                        <input type="text" class="text" name="user_number"  value="<?php echo ovensia\ploopi\str::htmlentities($user->fields['number']); ?>" tabindex="7" />
+                        <input type="text" class="text" name="user_number"  value="<?php echo ploopi\str::htmlentities($user->fields['number']); ?>" tabindex="7" />
                     </p>
                     <p>
                         <label><?php echo _SYSTEM_LABEL_PHONE; ?><?php if (in_array('phone', $arrRequiredFields)) echo ' *'; ?>:</label>
-                        <input type="text" class="text" name="user_phone"  value="<?php echo ovensia\ploopi\str::htmlentities($user->fields['phone']); ?>" tabindex="8" />
+                        <input type="text" class="text" name="user_phone"  value="<?php echo ploopi\str::htmlentities($user->fields['phone']); ?>" tabindex="8" />
                     </p>
                     <p>
                         <label><?php echo _SYSTEM_LABEL_MOBILE; ?><?php if (in_array('mobile', $arrRequiredFields)) echo ' *'; ?>:</label>
-                        <input type="text" class="text" name="user_mobile"  value="<?php echo ovensia\ploopi\str::htmlentities($user->fields['mobile']); ?>" tabindex="9" />
+                        <input type="text" class="text" name="user_mobile"  value="<?php echo ploopi\str::htmlentities($user->fields['mobile']); ?>" tabindex="9" />
                     </p>
                     <p>
                         <label><?php echo _SYSTEM_LABEL_FAX; ?><?php if (in_array('fax', $arrRequiredFields)) echo ' *'; ?>:</label>
-                        <input type="text" class="text" name="user_fax"  value="<?php echo ovensia\ploopi\str::htmlentities($user->fields['fax']); ?>" tabindex="10" />
+                        <input type="text" class="text" name="user_fax"  value="<?php echo ploopi\str::htmlentities($user->fields['fax']); ?>" tabindex="10" />
                     </p>
                 </div>
             </fieldset>
@@ -423,31 +422,31 @@ if (isset($_REQUEST['confirm']))
                 <div class="ploopi_form">
                     <p>
                         <label><?php echo _SYSTEM_LABEL_BUILDING; ?><?php if (in_array('building', $arrRequiredFields)) echo ' *'; ?>:</label>
-                        <input type="text" class="text" name="user_building"  value="<?php echo ovensia\ploopi\str::htmlentities($user->fields['building']); ?>" tabindex="11" />
+                        <input type="text" class="text" name="user_building"  value="<?php echo ploopi\str::htmlentities($user->fields['building']); ?>" tabindex="11" />
                     </p>
                     <p>
                         <label><?php echo _SYSTEM_LABEL_FLOOR; ?><?php if (in_array('floor', $arrRequiredFields)) echo ' *'; ?>:</label>
-                        <input type="text" class="text" name="user_floor"  value="<?php echo ovensia\ploopi\str::htmlentities($user->fields['floor']); ?>" tabindex="12" />
+                        <input type="text" class="text" name="user_floor"  value="<?php echo ploopi\str::htmlentities($user->fields['floor']); ?>" tabindex="12" />
                     </p>
                     <p>
                         <label><?php echo _SYSTEM_LABEL_OFFICE; ?><?php if (in_array('office', $arrRequiredFields)) echo ' *'; ?>:</label>
-                        <input type="text" class="text" name="user_office"  value="<?php echo ovensia\ploopi\str::htmlentities($user->fields['office']); ?>" tabindex="13" />
+                        <input type="text" class="text" name="user_office"  value="<?php echo ploopi\str::htmlentities($user->fields['office']); ?>" tabindex="13" />
                     </p>
                     <p>
                         <label><?php echo _SYSTEM_LABEL_ADDRESS; ?><?php if (in_array('address', $arrRequiredFields)) echo ' *'; ?>:</label>
-                        <textarea class="text" name="user_address" tabindex="14"><?php echo ovensia\ploopi\str::htmlentities($user->fields['address']); ?></textarea>
+                        <textarea class="text" name="user_address" tabindex="14"><?php echo ploopi\str::htmlentities($user->fields['address']); ?></textarea>
                     </p>
                     <p>
                         <label><?php echo _SYSTEM_LABEL_POSTALCODE; ?><?php if (in_array('postalcode', $arrRequiredFields)) echo ' *'; ?>:</label>
-                        <input type="text" class="text" name="user_postalcode"  value="<?php echo ovensia\ploopi\str::htmlentities($user->fields['postalcode']); ?>" tabindex="15" />
+                        <input type="text" class="text" name="user_postalcode"  value="<?php echo ploopi\str::htmlentities($user->fields['postalcode']); ?>" tabindex="15" />
                     </p>
                     <p>
                         <label><?php echo _SYSTEM_LABEL_CITY; ?><?php if (in_array('city', $arrRequiredFields)) echo ' *'; ?>:</label>
-                        <input type="text" class="text" name="user_city"  value="<?php echo ovensia\ploopi\str::htmlentities($user->fields['city']); ?>" tabindex="16" />
+                        <input type="text" class="text" name="user_city"  value="<?php echo ploopi\str::htmlentities($user->fields['city']); ?>" tabindex="16" />
                     </p>
                     <p>
                         <label><?php echo _SYSTEM_LABEL_COUNTRY; ?><?php if (in_array('country', $arrRequiredFields)) echo ' *'; ?>:</label>
-                        <input type="text" class="text" name="user_country"  value="<?php echo ovensia\ploopi\str::htmlentities($user->fields['country']); ?>"  tabindex="17" />
+                        <input type="text" class="text" name="user_country"  value="<?php echo ploopi\str::htmlentities($user->fields['country']); ?>"  tabindex="17" />
                     </p>
                 </div>
             </fieldset>
@@ -464,19 +463,19 @@ if (isset($_REQUEST['confirm']))
                         if ($user->new)
                         {
                             ?>
-                            <input type="text" class="text" name="user_login"  value="<?php echo ovensia\ploopi\str::htmlentities($user->fields['login']); ?>" tabindex="21" />
+                            <input type="text" class="text" name="user_login"  value="<?php echo ploopi\str::htmlentities($user->fields['login']); ?>" tabindex="21" />
                             <?php
                             if (isset($_REQUEST['confirm']) && !empty($booLoginWarning))
                             {
                                 ?>
-                                <div class="error">Attention ! &laquo; <?php echo ovensia\ploopi\str::htmlentities($user->fields['login']); ?> &raquo; existe déjà. Vous devez modifier la propriété &laquo; <?php echo _SYSTEM_LABEL_LOGIN; ?> &raquo; pour pouvoir créer un nouvel utilisateur.</div>
+                                <div class="error">Attention ! &laquo; <?php echo ploopi\str::htmlentities($user->fields['login']); ?> &raquo; existe déjà. Vous devez modifier la propriété &laquo; <?php echo _SYSTEM_LABEL_LOGIN; ?> &raquo; pour pouvoir créer un nouvel utilisateur.</div>
                                 <?php
                             }
                         }
                         else
                         {
                             ?>
-                            <strong><?php echo ovensia\ploopi\str::htmlentities($user->fields['login']); ?></strong>
+                            <strong><?php echo ploopi\str::htmlentities($user->fields['login']); ?></strong>
                             <?php
                         }
                         ?>
@@ -522,14 +521,14 @@ if (isset($_REQUEST['confirm']))
                     <?php if (!empty($user->fields['password_validity'])) { ?>
                     <p>
                         <label>Date d'expiration du mot de passe:</label>
-                        <input type="text" style="width:100px;" class="text" readonly="readonly" disabled="disabled" value="<?php echo date('d/m/Y', ovensia\ploopi\date::timestamp2unixtimestamp($user->fields['password_last_update'])+$user->fields['password_validity']*86400); ?>" tabindex="24" />
+                        <input type="text" style="width:100px;" class="text" readonly="readonly" disabled="disabled" value="<?php echo date('d/m/Y', ploopi\date::timestamp2unixtimestamp($user->fields['password_last_update'])+$user->fields['password_validity']*86400); ?>" tabindex="24" />
                     </p>
                     <?php } ?>
 
                     <p>
                         <label><?php echo _SYSTEM_LABEL_EXPIRATION_DATE; ?>:</label>
-                        <input type="text" style="width:100px;" class="text" name="user_date_expire" id="user_date_expire" value="<?php echo ovensia\ploopi\str::htmlentities($user_date_expire['date']); ?>" tabindex="24" />
-                        <?php ovensia\ploopi\date::open_calendar('user_date_expire'); ?>
+                        <input type="text" style="width:100px;" class="text" name="user_date_expire" id="user_date_expire" value="<?php echo ploopi\str::htmlentities($user_date_expire['date']); ?>" tabindex="24" />
+                        <?php ploopi\date::open_calendar('user_date_expire'); ?>
                     </p>
                     <p class="checkbox" onclick="javascript:ploopi_checkbox_click(event,'user_disabled');">
                         <label>Compte désactivé:</label>
@@ -537,7 +536,7 @@ if (isset($_REQUEST['confirm']))
                     </p>
                     <p>
                         <label><?php echo _SYSTEM_LABEL_EMAIL; ?><?php if (in_array('email', $arrRequiredFields)) echo ' *'; ?>:</label>
-                        <input type="text" class="text" name="user_email"  value="<?php echo ovensia\ploopi\str::htmlentities($user->fields['email']); ?>" tabindex="25" />
+                        <input type="text" class="text" name="user_email"  value="<?php echo ploopi\str::htmlentities($user->fields['email']); ?>" tabindex="25" />
                     </p>
                     <p class="checkbox" onclick="javascript:ploopi_checkbox_click(event,'user_ticketsbyemail');">
                         <label><?php echo _SYSTEM_LABEL_TICKETSBYEMAIL; ?>:</label>
@@ -566,7 +565,7 @@ if (isset($_REQUEST['confirm']))
                         <label><?php echo _SYSTEM_LABEL_TIMEZONE; ?>:</label>
                         <?php
                         $timezone_abbreviations = timezone_abbreviations_list();
-                        //ovensia\ploopi\output::print_r($timezone_abbreviations);
+                        //ploopi\output::print_r($timezone_abbreviations);
 
                         foreach($timezone_abbreviations as $value)
                         {
@@ -576,9 +575,9 @@ if (isset($_REQUEST['confirm']))
                                 {
                                     // Bug php avec version 5.2.0-8+etch15
                                     // timezone_open() [function.timezone-open]: Unknown or bad timezone (US/Pacific-New)
-                                    ovensia\ploopi\error::unset_handler();
+                                    ploopi\error::unset_handler();
                                     $objDateTimeZone = timezone_open($value['timezone_id']);
-                                    ovensia\ploopi\error::set_handler();
+                                    ploopi\error::set_handler();
 
                                     if ($objDateTimeZone !== false)
                                     {
@@ -608,7 +607,7 @@ if (isset($_REQUEST['confirm']))
                         foreach ($arrZones as $key => $value)
                         {
                             ?>
-                            <option value="<?php echo ovensia\ploopi\str::htmlentities($key); ?>" <?php if ($user->fields['timezone'] == $key) echo 'selected'; ?>><?php echo ovensia\ploopi\str::htmlentities($value['label']); ?> (<?php echo ovensia\ploopi\str::htmlentities($value['offset_display']); ?>)</option>
+                            <option value="<?php echo ploopi\str::htmlentities($key); ?>" <?php if ($user->fields['timezone'] == $key) echo 'selected'; ?>><?php echo ploopi\str::htmlentities($value['label']); ?> (<?php echo ploopi\str::htmlentities($value['offset_display']); ?>)</option>
                             <?php
                         }
                         ?>
@@ -616,7 +615,7 @@ if (isset($_REQUEST['confirm']))
                     </p>
                     <p>
                         <label><?php echo _SYSTEM_LABEL_COLOR; ?>:</label>
-                        <input type="text" style="width:100px;cursor:pointer;" class="text jscolor {hash:true}" name="user_color" id="user_color" value="<?php echo ovensia\ploopi\str::htmlentities($user->fields['color']); ?>" tabindex="29" readonly="readonly" />
+                        <input type="text" style="width:100px;cursor:pointer;" class="text jscolor {hash:true}" name="user_color" id="user_color" value="<?php echo ploopi\str::htmlentities($user->fields['color']); ?>" tabindex="29" readonly="readonly" />
                     </p>
                     <p>
                         <label><?php echo _SYSTEM_LABEL_PHOTO; ?>:</label>
@@ -628,14 +627,14 @@ if (isset($_REQUEST['confirm']))
                         <?php if ($booPhotoExists) { ?> <a href="javascript:void(0);" onclick="javascript:$('system_user_photo').innerHTML = ''; system_delete_photo('<?php echo $user->fields['id']; ?>');"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/btn_delete.png" /></a><?php } ?>
                         <br /><span id="system_user_photo">
                         <?php
-                        if ($booPhotoExists) { ?><img src="<?php echo ovensia\ploopi\crypt::urlencode("admin-light.php?ploopi_op=ploopi_get_userphoto&ploopi_user_id={$user->fields['id']}"); ?>" /><?php } ?>
+                        if ($booPhotoExists) { ?><img src="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=ploopi_get_userphoto&ploopi_user_id={$user->fields['id']}"); ?>" /><?php } ?>
                         </span>
                         </span>
                     </p>
                     <?php
                     if ($_SESSION['system']['level'] == _SYSTEM_WORKSPACES)
                     {
-                        $workspace_user = new ovensia\ploopi\workspace_user();
+                        $workspace_user = new ploopi\workspace_user();
                         if (!empty($workspaceid) && !empty($_GET['user_id']) && $workspace_user->open($workspaceid, $_GET['user_id']))
                         {
                             ?>
@@ -650,7 +649,7 @@ if (isset($_REQUEST['confirm']))
                                     if ($id <= $_SESSION['ploopi']['adminlevel'])
                                     {
                                         $sel = ($workspace_user->fields['adminlevel'] == $id) ? 'selected' : '';
-                                        echo "<option $sel value=\"$id\">".ovensia\ploopi\str::htmlentities($label)."</option>";
+                                        echo "<option $sel value=\"$id\">".ploopi\str::htmlentities($label)."</option>";
                                     }
                                     // user / group admin
                                 }
@@ -668,7 +667,7 @@ if (isset($_REQUEST['confirm']))
                 <div class="ploopi_form">
                     <p>
                         <label><?php echo _SYSTEM_LABEL_COMMENTS; ?>:</label>
-                        <textarea class="text" name="user_comments" tabindex="30"><?php echo ovensia\ploopi\str::htmlentities($user->fields['comments']); ?></textarea>
+                        <textarea class="text" name="user_comments" tabindex="30"><?php echo ploopi\str::htmlentities($user->fields['comments']); ?></textarea>
                     </p>
                 </div>
             </fieldset>
@@ -701,7 +700,7 @@ if (!$user->isnew())
     <fieldset class="fieldset" style="padding:0px;margin:4px;">
         <legend>Documents liés à l'utilisateur</legend>
         <?php
-        ovensia\ploopi\documents::insert(
+        ploopi\documents::insert(
             _SYSTEM_OBJECT_USER,
             $user->fields['id'],
             array(
@@ -733,7 +732,7 @@ if (!$user->isnew())
         ?>
     </fieldset>
     <?php
-    // ovensia\ploopi\annotation::display(_SYSTEM_OBJECT_USER, $user->fields['id'], trim("{$user->fields['lastname']} {$user->fields['firstname']}"));
+    // ploopi\annotation::display(_SYSTEM_OBJECT_USER, $user->fields['id'], trim("{$user->fields['lastname']} {$user->fields['firstname']}"));
 }
 ?>
 

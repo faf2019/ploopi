@@ -20,9 +20,9 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-namespace ovensia\ploopi;
+namespace ploopi;
 
-use ovensia\ploopi;
+use ploopi;
 
 /**
  * Génération de documents dans différents formats "bureautique" (ODT, ODS, DOC, XLS, RTF, PDF, etc...) à partir de modèles OpenDocument.

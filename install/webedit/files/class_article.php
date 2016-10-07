@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,7 +25,7 @@
  *
  * @package webedit
  * @subpackage article
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -56,12 +55,12 @@ include_once './modules/webedit/class_article_object.php';
  *
  * @package webedit
  * @subpackage article
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
 
-class webedit_article extends ovensia\ploopi\data_object
+class webedit_article extends ploopi\data_object
 {
     private $original_content;
 
@@ -111,20 +110,20 @@ class webedit_article extends ovensia\ploopi\data_object
     {
         if (empty($this->fields['metatitle'])) $this->fields['metatitle'] = $this->fields['title'];
 
-        if (empty($this->fields['timestp'])) $this->fields['timestp'] = ovensia\ploopi\date::createtimestamp();
+        if (empty($this->fields['timestp'])) $this->fields['timestp'] = ploopi\date::createtimestamp();
 
         $this->fields['content'] = preg_replace('/<span[^>]*contenteditable="false"[^>]*>\[\[(.*)\]\]<\/span>/i', '[[$1]]', $this->fields['content']);
 
         $this->fields['content_cleaned'] = $this->fields['content'];
 
         // filtre activé ?
-        if (!$this->fields['disabledfilter']) $this->fields['content_cleaned'] = ovensia\ploopi\str::htmlpurifier($this->fields['content_cleaned'], true);
+        if (!$this->fields['disabledfilter']) $this->fields['content_cleaned'] = ploopi\str::htmlpurifier($this->fields['content_cleaned'], true);
 
         // Nettoyage des tags
         // Note : les tags ne sont réellement enregistrés qu'à la publication
         if (!empty($this->fields['tags']))
         {
-            list($tags) = ovensia\ploopi\str::getwords($this->fields['tags'], true, false, false);
+            list($tags) = ploopi\str::getwords($this->fields['tags'], true, false, false);
             $this->fields['tags'] = implode(' ', array_keys($tags));
         }
 
@@ -134,7 +133,7 @@ class webedit_article extends ovensia\ploopi\data_object
             $article_backup = new webedit_article_backup();
             $article_backup->fields['id_article'] = $this->fields['id'];
             $article_backup->fields['content'] = $this->fields['content'];
-            $article_backup->fields['timestp'] = ovensia\ploopi\date::createtimestamp();
+            $article_backup->fields['timestp'] = ploopi\date::createtimestamp();
             $article_backup->setuwm();
             $article_backup->save();
         }
@@ -147,7 +146,7 @@ class webedit_article extends ovensia\ploopi\data_object
 
     public function delete()
     {
-        global $db;
+        $db = ploopi\loader::getdb();
 
         // mise à jour de la position des autres articles de la rubrique
         $db->query("UPDATE `".$this->gettablename()."` SET position = position - 1 WHERE position > {$this->fields['position']} AND id_heading = {$this->fields['id_heading']}");
@@ -166,7 +165,7 @@ class webedit_article extends ovensia\ploopi\data_object
             $db->query("DELETE FROM ploopi_mod_webedit_article_comment WHERE id_article = {$this->fields['id']}");
 
             // suppression de l'index
-            ovensia\ploopi\search_index::remove(_WEBEDIT_OBJECT_ARTICLE_PUBLIC, $this->fields['id']);
+            ploopi\search_index::remove(_WEBEDIT_OBJECT_ARTICLE_PUBLIC, $this->fields['id']);
         }
 
         parent::delete();
@@ -180,7 +179,7 @@ class webedit_article extends ovensia\ploopi\data_object
 
     public function publish()
     {
-        global $db;
+        $db = ploopi\loader::getdb();
 
         if ($this->gettablename() == 'ploopi_mod_webedit_article_draft')
         {
@@ -239,13 +238,13 @@ class webedit_article extends ovensia\ploopi\data_object
 
     public function index()
     {
-        global $db;
+        $db = ploopi\loader::getdb();
 
         // Suppression des docs rattachés à l'article (on les récrée par la suite)
         $db->query("DELETE FROM ploopi_mod_webedit_docfile WHERE id_article = {$this->fields['id']}");
 
         // Recherche des liens vers des documents (du module doc)
-        preg_match_all('/index-quick\.php[^\"]+docfile_md5id=([a-z0-9]{32})/i', ovensia\ploopi\str::html_entity_decode($this->fields['content']), $arrMatches);
+        preg_match_all('/index-quick\.php[^\"]+docfile_md5id=([a-z0-9]{32})/i', ploopi\str::html_entity_decode($this->fields['content']), $arrMatches);
 
         if (!empty($arrMatches[1]) && file_exists('./modules/doc/class_docfile.php'))
         {
@@ -275,7 +274,7 @@ class webedit_article extends ovensia\ploopi\data_object
         $db->query("DELETE FROM ploopi_mod_webedit_article_object WHERE id_article = {$this->fields['id']}");
 
         // Recherche des objets insérés
-        if (preg_match_all('@\[\[(\d+),(\d+)(,([^/]+))?/([^\]]*)\]\]@i', ovensia\ploopi\str::html_entity_decode($this->fields['content']), $arrMatches) !== false)
+        if (preg_match_all('@\[\[(\d+),(\d+)(,([^/]+))?/([^\]]*)\]\]@i', ploopi\str::html_entity_decode($this->fields['content']), $arrMatches) !== false)
         {
             foreach(array_keys($arrMatches[0]) as $intKey)
             {
@@ -302,7 +301,7 @@ class webedit_article extends ovensia\ploopi\data_object
         $db->query($sql);
 
         // récupération des tags
-        list($tags) = ovensia\ploopi\str::getwords($this->fields['tags'], true, false, false);
+        list($tags) = ploopi\str::getwords($this->fields['tags'], true, false, false);
         $tags = array_keys($tags);
         foreach($tags as $tag)
         {
@@ -323,7 +322,7 @@ class webedit_article extends ovensia\ploopi\data_object
             $objArticleTag->save();
         }
 
-        ovensia\ploopi\search_index::add(_WEBEDIT_OBJECT_ARTICLE_PUBLIC, $this->fields['id'], $this->fields['title'], strip_tags(ovensia\ploopi\str::html_entity_decode($this->fields['content'])), "{$this->fields['metatitle']} {$this->fields['metakeywords']} {$this->fields['metadescription']}", true, $this->fields['timestp'], $this->fields['lastupdate_timestp']);
+        ploopi\search_index::add(_WEBEDIT_OBJECT_ARTICLE_PUBLIC, $this->fields['id'], $this->fields['title'], strip_tags(ploopi\str::html_entity_decode($this->fields['content'])), "{$this->fields['metatitle']} {$this->fields['metakeywords']} {$this->fields['metadescription']}", true, $this->fields['timestp'], $this->fields['lastupdate_timestp']);
     }
 
     /**
@@ -338,7 +337,7 @@ class webedit_article extends ovensia\ploopi\data_object
 
         $heading = new webedit_heading();
 
-        $today = ovensia\ploopi\date::createtimestamp();
+        $today = ploopi\date::createtimestamp();
         return (
             ($this->fields['timestp_published'] <= $today || empty($this->fields['timestp_published'])) &&
             ($this->fields['timestp_unpublished'] >= $today || empty($this->fields['timestp_unpublished'])) &&
@@ -354,8 +353,8 @@ class webedit_article extends ovensia\ploopi\data_object
 
     public function geturl()
     {
-        ovensia\ploopi\module::init('webedit', false, false, false);
-        return(ovensia\ploopi\str::urlrewrite("index.php?headingid={$this->fields['id_heading']}&articleid={$this->fields['id']}", webedit_getrewriterules(), $this->fields['metatitle']));
+        ploopi\module::init('webedit', false, false, false);
+        return(ploopi\str::urlrewrite("index.php?headingid={$this->fields['id_heading']}&articleid={$this->fields['id']}", webedit_getrewriterules(), $this->fields['metatitle']));
     }
 
     /**
@@ -366,7 +365,7 @@ class webedit_article extends ovensia\ploopi\data_object
 
     public function gettags()
     {
-        global $db;
+        $db = ploopi\loader::getdb();
         if (!$this->new)
         {
             $sql =  "

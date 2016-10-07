@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,7 +25,7 @@
  *
  * @package forms
  * @subpackage admin
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -57,18 +56,18 @@ $arrParams[] = "forms_id={$_GET['forms_id']}";
 if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
 ?>
 
-<form name="form_field" action="<?php echo ovensia\ploopi\crypt::urlencode('admin.php?'.implode('&', $arrParams)); ?>" method="post" onsubmit="javascript:return field_validate(this);">
+<form name="form_field" action="<?php echo ploopi\crypt::urlencode('admin.php?'.implode('&', $arrParams)); ?>" method="post" onsubmit="javascript:return field_validate(this);">
 <div style="overflow:hidden">
     <div class="ploopi_form" style="float:left;width:50%;">
         <div style="padding:4px;">
 
             <p>
                 <label><?php echo _FORMS_FIELD_POSITION; ?>:</label>
-                <input type="text" class="text" style="width:30px;" name="field_position" value="<?php echo ovensia\ploopi\str::htmlentities($field->fields['position']); ?>">
+                <input type="text" class="text" style="width:30px;" name="field_position" value="<?php echo ploopi\str::htmlentities($field->fields['position']); ?>">
             </p>
             <p>
                 <label><?php echo _FORMS_FIELD_INTERLINE; ?>:</label>
-                <input type="text" class="text" style="width:30px;" name="field_interline" value="<?php echo ovensia\ploopi\str::htmlentities($field->fields['interline']); ?>">
+                <input type="text" class="text" style="width:30px;" name="field_interline" value="<?php echo ploopi\str::htmlentities($field->fields['interline']); ?>">
             </p>
             <p>
                 <label><?php echo _FORMS_FIELD_GROUP; ?>:</label>
@@ -78,7 +77,7 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
                     foreach($objForm->getGroups() as $intIdGroup => $objGroup)
                     {
                         ?>
-                        <option value="<?php echo $intIdGroup; ?>" <?php if ($field->fields['id_group'] == $intIdGroup) echo 'selected="selected"'; ?>><?php echo ovensia\ploopi\str::htmlentities($objGroup->fields['label']); ?></option>
+                        <option value="<?php echo $intIdGroup; ?>" <?php if ($field->fields['id_group'] == $intIdGroup) echo 'selected="selected"'; ?>><?php echo ploopi\str::htmlentities($objGroup->fields['label']); ?></option>
                         <?php
                     }
                     ?>
@@ -98,15 +97,15 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
             </p>
             <p>
                 <label><?php echo _FORMS_FIELD_NAME; ?>: </label>
-                <input type="text" class="text" size="30" name="field_name" value="<?php echo ovensia\ploopi\str::htmlentities($field->fields['name']); ?>">
+                <input type="text" class="text" size="30" name="field_name" value="<?php echo ploopi\str::htmlentities($field->fields['name']); ?>">
             </p>
             <p>
                 <label><?php echo _FORMS_FIELD_DESCRIPTION; ?>: </label>
-                <textarea class="text" style="height:40px;" name="field_description"><?php echo ovensia\ploopi\str::htmlentities($field->fields['description']); ?></textarea>
+                <textarea class="text" style="height:40px;" name="field_description"><?php echo ploopi\str::htmlentities($field->fields['description']); ?></textarea>
             </p>
             <p>
                 <label><?php echo _FORMS_FIELD_STYLE_FORM; ?>:</label>
-                <input type="text" class="text" name="field_style_form" value="<?php echo ovensia\ploopi\str::htmlentities($field->fields['style_form']); ?>">
+                <input type="text" class="text" name="field_style_form" value="<?php echo ploopi\str::htmlentities($field->fields['style_form']); ?>">
             </p>
         </div>
     </div>
@@ -127,7 +126,7 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
 </div>
 
 <div style="clear:both;background-color:#d0d0d0;border-top:1px solid #a0a0a0;padding:4px;overflow:auto;text-align:right;">
-    <input type="button" class="flatbutton" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<?php echo ovensia\ploopi\crypt::urlencode("admin.php?op=forms_modify&forms_id={$_GET['forms_id']}"); ?>'">
+    <input type="button" class="flatbutton" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<?php echo ploopi\crypt::urlencode("admin.php?op=forms_modify&forms_id={$_GET['forms_id']}"); ?>'">
     <input type="submit" class="flatbutton" value="<?php echo _PLOOPI_SAVE; ?>">
 </div>
 </form>

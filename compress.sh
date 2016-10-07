@@ -46,7 +46,7 @@ done
 
 echo "COMPRESSION DES FICHIERS js/css DES MODULES"
 
-for i in $( find ./modules ./templates/frontoffice \( \( -name '*.js' -or -name '*.css' \) -and -not -name 'fck*'  -and -not -name 'ck*' \) -type f )
+for i in $( find ./templates/install ./templates/frontoffice ./modules \( \( -name '*.js' -or -name '*.css' \) -and -not -name 'fck*'  -and -not -name 'ck*' \) -type f )
 do
     echo "Compression : $i => $i.gz"
     java -jar ../yuicompressor/build/yuicompressor$YUIVER.jar --charset ISO-8859-15 $i | gzip > $i.gz

@@ -41,7 +41,7 @@
  * @copyright Ovensia
  */
 
-class wiki_page_history extends ovensia\ploopi\data_object
+class wiki_page_history extends ploopi\data_object
 {
     /**
      * Constructeur de la classe

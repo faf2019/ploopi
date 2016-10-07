@@ -20,9 +20,31 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-namespace ovensia\ploopi;
+namespace ploopi;
 
-use ovensia\ploopi;
+use ploopi;
+
+/**
+ * Initialisation de Ploopi
+ *
+ * @package ploopi
+ * @subpackage log
+ * @copyright Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
+
+
+/**
+ * Initialisation de Ploopi
+ * Autoload, bufferisation, chargement de session, connexion à la base de données...
+ *
+ * @package ploopi
+ * @subpackage loader
+ * @copyright Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
 
 abstract class loader
 {
@@ -32,10 +54,29 @@ abstract class loader
     private static $workspace = array(); // workspace sélectionné
 
 
+    private static $_objDb = null;
     private static $_arrLoaded = array();
 
     private static function _classToFile($strClassName) {
-        return realpath('.').'/include/classes/'.implode('/', array_slice(explode('\\', $strClassName),2)).'.php';
+        $path = explode('\\', $strClassName);
+        switch (sizeof($path)) {
+            case 0:
+            case 1:
+                return '';
+            break;
+
+            case 2:
+                return realpath('.').'/include/classes/'.$path[1].'.php';
+            break;
+
+            default:
+                return realpath('.').'/modules/'.$path[1].'/classes/'.implode('/', array_slice($path, 2)).'.php';
+            break;
+        }
+    }
+
+    public static function classExists($strClassName) {
+        return file_exists(self::_classToFile($strClassName));
     }
 
     private static function _autoload($strClassName)
@@ -44,7 +85,7 @@ abstract class loader
         if (in_array($strClassName, self::$_arrLoaded)) return true;
 
 
-        if (strpos($strClassName, 'ovensia\\ploopi\\') === 0) {
+        if (strpos($strClassName, 'ploopi\\') === 0) {
             // Sinon, on essaye d'inclure le fichier selon les règles de nommage
             // echo '<br />called: '.$strClassName; // Désactiver le buffer !
             $strClassFile = self::_classToFile($strClassName);
@@ -80,7 +121,6 @@ abstract class loader
 
     public static function boot()
     {
-        global $db;
         global $ploopi_timer;
 
         /**
@@ -123,21 +163,8 @@ abstract class loader
          */
         include_once './include/constants.php';
 
-        /**
-         * Connexion à la base de données
-         */
-        if (file_exists('./include/classes/db_'._PLOOPI_SQL_LAYER.'.php')) include_once './include/classes/db_'._PLOOPI_SQL_LAYER.'.php';
-
-
-        $db = new \ploopi_db(_PLOOPI_DB_SERVER, _PLOOPI_DB_LOGIN, _PLOOPI_DB_PASSWORD, _PLOOPI_DB_DATABASE);
-        if(!$db->isconnected()) trigger_error(_PLOOPI_MSG_DBERROR, E_USER_ERROR);
-
-
         // Chargement des dépendances pour l'écriture du log dans le buffer (cas particulier, autoloader non fonctionnel)
-        if (defined('_PLOOPI_ACTIVELOG') && _PLOOPI_ACTIVELOG && isset($db))
-        {
-            include_once './include/classes/log.php';
-        }
+        if (defined('_PLOOPI_ACTIVELOG') && _PLOOPI_ACTIVELOG) include_once './include/classes/log.php';
 
         /**
          * Initialisation du gestionnaire de session
@@ -202,6 +229,55 @@ abstract class loader
 
         cache::init();
 
+    }
+
+    /**
+     * Chargement de l'environnement Ploopi en mode CLI
+     * Démarrage du timer principal.
+     * Chargement du fichier de config.
+     * Chargement du handler de gestion des erreurs.
+     * Connexion à la base de données.
+     *
+     * @package ploopi
+     * @subpackage loader
+     * @copyright Ovensia
+     * @license GNU General Public License (GPL)
+     * @author Stéphane Escaich
+     */
+
+    public static function boot_cli()
+    {
+        global $ploopi_timer;
+
+        /**
+         * Démarrage du timer principal.
+         */
+
+        include_once './include/classes/timer.php' ;
+        $ploopi_timer = new timer();
+        $ploopi_timer->start();
+
+        /**
+         * Autload
+         */
+        spl_autoload_register(array(__CLASS__, '_autoload'));
+        include_once './vendor/autoload.php';
+
+        /**
+         * Chargement du fichier de configuration
+         */
+        if (!file_exists('./config/config.php')) system::kill();
+        include_once './config/config.php';
+
+        /**
+         * Initialisation du gestionnaire d'erreur
+         */
+        error::set_handler();
+
+        /**
+         * Chargement des constantes, globales
+         */
+        include_once './include/constants.php';
     }
 
     /**
@@ -341,7 +417,7 @@ abstract class loader
 
     public static function dispatch()
     {
-        global $db;
+        $db = loader::getdb();
         global $skin;
         global $template_body;
         global $ploopi_timer;
@@ -500,7 +576,7 @@ abstract class loader
 
     public static function start()
     {
-        global $db;
+        $db = loader::getdb();
         global $ploopi_viewmodes;
         global $ploopi_system_levels;
 
@@ -1285,7 +1361,7 @@ abstract class loader
 
     public static function getworkspaces()
     {
-        global $db;
+        $db = loader::getdb();
 
         include_once './include/classes/workspace.php';
 
@@ -1416,7 +1492,7 @@ abstract class loader
 
     public static function getmodules()
     {
-        global $db;
+        $db = loader::getdb();
 
         $_SESSION['ploopi']['modules'] = array();
         $_SESSION['ploopi']['moduletypes'] = array();
@@ -1486,5 +1562,26 @@ abstract class loader
      */
 
     public static function getscript() { return self::$script; }
+
+    /**
+     * Retourne le connecteur vers la base de données
+
+     * @package ploopi
+     * @subpackage loader
+     * @copyright Ovensia
+     * @license GNU General Public License (GPL)
+     * @author Stéphane Escaich
+     * @return object
+     */
+
+    public static function getdb() {
+        if (!is_null(self::$_objDb)) return self::$_objDb;
+
+        $dbclass = __NAMESPACE__.'\\db_'._PLOOPI_SQL_LAYER;
+        self::$_objDb = new $dbclass(_PLOOPI_DB_SERVER, _PLOOPI_DB_LOGIN, _PLOOPI_DB_PASSWORD, _PLOOPI_DB_DATABASE);
+        if(!self::$_objDb->isconnected()) trigger_error(_PLOOPI_MSG_DBERROR, E_USER_ERROR);
+
+        return self::$_objDb;
+    }
 
 }

@@ -40,7 +40,7 @@
  * @author Stéphane Escaich
  */
 
-class webedit_counter extends ovensia\ploopi\data_object
+class webedit_counter extends ploopi\data_object
 {
     /**
      * Constructeur de la classe

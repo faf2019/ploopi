@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2012 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,7 +25,7 @@
  *
  * @package doc
  * @subpackage public
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  *
@@ -56,19 +55,19 @@ if ($objFolder->fields['foldertype'] != 'private')
     $parents = explode(',', $objFolder->fields['parents']);
     for ($i = 0; $i < sizeof($parents); $i++)
     {
-        if (ovensia\ploopi\subscription::subscribed(_DOC_OBJECT_FOLDER, $parents[$i]))
+        if (ploopi\subscription::subscribed(_DOC_OBJECT_FOLDER, $parents[$i]))
         {
             $objDocFolderSub = new docfolder();
             $objDocFolderSub->open($parents[$i])
             ?>
             <div style="padding:4px;font-weight:bold;border-bottom:1px solid #c0c0c0;">
-            Vous héritez de l'abonnement à &laquo; <a href="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?op=doc_browser&currentfolder={$parents[$i]}"); ?>"><?php echo ovensia\ploopi\str::htmlentities($objDocFolderSub->fields['name']); ?></a> &raquo;
+            Vous héritez de l'abonnement à &laquo; <a href="<?php echo ploopi\crypt::urlencode("admin.php?op=doc_browser&currentfolder={$parents[$i]}"); ?>"><?php echo ploopi\str::htmlentities($objDocFolderSub->fields['name']); ?></a> &raquo;
             </div>
             <?php
         }
     }
 
-    ovensia\ploopi\subscription::display(_DOC_OBJECT_FOLDER, $objFolder->fields['id'], $arrAllowedActions);
+    ploopi\subscription::display(_DOC_OBJECT_FOLDER, $objFolder->fields['id'], $arrAllowedActions);
 }
 ?>
 </div>
@@ -76,4 +75,4 @@ if ($objFolder->fields['foldertype'] != 'private')
 /**
  * Affichage du bloc d'annotations
  */
-if (ovensia\ploopi\param::get('doc_viewannotations')) ovensia\ploopi\annotation::display(_DOC_OBJECT_FOLDER, $objFolder->fields['id'], $objFolder->fields['name']); ?>
+if (ploopi\param::get('doc_viewannotations')) ploopi\annotation::display(_DOC_OBJECT_FOLDER, $objFolder->fields['id'], $objFolder->fields['name']); ?>

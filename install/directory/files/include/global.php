@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2009 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,7 +25,7 @@
  *
  * @package directory
  * @subpackage global
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -92,17 +91,17 @@ $arrDirectoryImportFields = array(
 
 function directory_getheadings($intIdHeading = 0)
 {
-    global $db;
+    $db = ploopi\loader::getdb();
 
-    $booIsAdmin = ovensia\ploopi\acl::isadmin();
+    $booIsAdmin = ploopi\acl::isadmin();
     if (!$booIsAdmin)
     {
         // Lecture du profil utilisateur (groupes notamment)
-        $objUser = new ovensia\ploopi\user();
+        $objUser = new ploopi\user();
         $arrGroups = $objUser->open($_SESSION['ploopi']['userid']) ? $objUser->getgroups(true) : array();
 
         // Tous les validateurs pour toutes les rubriques !
-        $arrVal = ovensia\ploopi\validation::get(_DIRECTORY_OBJECT_HEADING);
+        $arrVal = ploopi\validation::get(_DIRECTORY_OBJECT_HEADING);
 
         // On trie par rubrique
         // $arrValidation contient un enregistrement par rubrique, si false alors il y a des validateurs mais l'utilisateur courant n'en fait pas partie, si true alors l'utilisateur courant est validateur
@@ -153,7 +152,7 @@ function directory_getheadings($intIdHeading = 0)
 
 function directory_getcontacts()
 {
-    global $db;
+    $db = ploopi\loader::getdb();
 
     $arrContacts = array();
 
@@ -181,7 +180,7 @@ function directory_getcontacts()
 
 function directory_gettreeview($headings = array(), $booPopup = false)
 {
-    global $db;
+    $db = ploopi\loader::getdb();
 
     $treeview =
         array(
@@ -201,7 +200,7 @@ function directory_gettreeview($headings = array(), $booPopup = false)
 
             foreach($arrParents as &$strNodeParentId) $strNodeParentId = $strNodePrefix.$strNodeParentId;
 
-            $strNodeOnClick = "ploopi_skin_treeview_shownode('{$strNodeId}', '".ovensia\ploopi\crypt::queryencode("ploopi_op=directory_heading_detail&directory_heading_id={$fields['id']}&directory_option=popup")."', 'admin-light.php');";
+            $strNodeOnClick = "ploopi_skin_treeview_shownode('{$strNodeId}', '".ploopi\crypt::queryencode("ploopi_op=directory_heading_detail&directory_heading_id={$fields['id']}&directory_option=popup")."', 'admin-light.php');";
 
             $strLink = 'javascript:void(0);';
             $strOnClick = $fields['isvalidator'] ? 'javascript:directory_heading_choose(\''.$fields['id'].'\', \''.addslashes($fields['label']).'\');' : "javascript:alert('Vous ne disposez pas des autorisations nécessaires');";
@@ -213,9 +212,9 @@ function directory_gettreeview($headings = array(), $booPopup = false)
             $strNodePrefix = '';
             $strNodeId = $fields['id'];
 
-            $strNodeOnClick = "ploopi_skin_treeview_shownode('{$strNodeId}', '".ovensia\ploopi\crypt::queryencode("ploopi_op=directory_heading_detail&directory_heading_id={$fields['id']}")."', 'admin-light.php');";
+            $strNodeOnClick = "ploopi_skin_treeview_shownode('{$strNodeId}', '".ploopi\crypt::queryencode("ploopi_op=directory_heading_detail&directory_heading_id={$fields['id']}")."', 'admin-light.php');";
 
-            $strLink = ovensia\ploopi\crypt::urlencode("admin.php?directory_heading_id={$fields['id']}");
+            $strLink = ploopi\crypt::urlencode("admin.php?directory_heading_id={$fields['id']}");
             $strOnClick = '';
         }
 
@@ -263,14 +262,14 @@ function directory_template_display(&$template_body, &$arrHeadings, &$arrContact
             $template_body->assign_block_vars('directory_switch_full.line', array());
 
             $arrAddress = array();
-            if (!empty($row['address'])) $arrAddress[] = ovensia\ploopi\str::nl2br(ovensia\ploopi\str::htmlentities($row['address']));
-            if (!empty($row['postalcode']) || !empty($row['city'])) $arrAddress[] = ovensia\ploopi\str::nl2br(ovensia\ploopi\str::htmlentities(trim($row['postalcode'].' '.$row['city'])));
-            if (!empty($row['country'])) $arrAddress[] = ovensia\ploopi\str::nl2br(ovensia\ploopi\str::htmlentities($row['country']));
+            if (!empty($row['address'])) $arrAddress[] = ploopi\str::nl2br(ploopi\str::htmlentities($row['address']));
+            if (!empty($row['postalcode']) || !empty($row['city'])) $arrAddress[] = ploopi\str::nl2br(ploopi\str::htmlentities(trim($row['postalcode'].' '.$row['city'])));
+            if (!empty($row['country'])) $arrAddress[] = ploopi\str::nl2br(ploopi\str::htmlentities($row['country']));
 
             $objContact = new directory_contact();
             $objContact->fields['id'] = $row['id'];
 
-            if (file_exists($objContact->getphotopath())) $row['photopath'] = ovensia\ploopi\crypt::urlencode("index-light.php?ploopi_op=directory_contact_getphoto&directory_contact_id={$row['id']}");
+            if (file_exists($objContact->getphotopath())) $row['photopath'] = ploopi\crypt::urlencode("index-light.php?ploopi_op=directory_contact_getphoto&directory_contact_id={$row['id']}");
             else $row['photopath'] = './modules/directory/img/nopic.gif';
 
             // Récupération des rubriques du contact
@@ -297,31 +296,31 @@ function directory_template_display(&$template_body, &$arrHeadings, &$arrContact
                 array(
                     'ID' => $row['id'],
                     'POSITION' => $row['position'],
-                    'CIVILITY' => ovensia\ploopi\str::htmlentities($row['civility']),
-                    'LASTNAME' => ovensia\ploopi\str::htmlentities($row['lastname']),
-                    'FIRSTNAME' => ovensia\ploopi\str::htmlentities($row['firstname']),
-                    'EMAIL' => ovensia\ploopi\str::htmlentities($row['email']),
-                    'PHONE' => ovensia\ploopi\str::htmlentities($row['phone']),
-                    'FAX' => ovensia\ploopi\str::htmlentities($row['fax']),
-                    'MOBILE' => ovensia\ploopi\str::htmlentities($row['mobile']),
-                    'SERVICE' => ovensia\ploopi\str::htmlentities($row['service']),
-                    'FUNCTION' => ovensia\ploopi\str::htmlentities($row['function']),
-                    'RANK' => ovensia\ploopi\str::htmlentities($row['rank']),
-                    'NUMBER' => ovensia\ploopi\str::htmlentities($row['number']),
-                    'POSTALCODE' => ovensia\ploopi\str::htmlentities($row['postalcode']),
-                    'ADDRESS' => ovensia\ploopi\str::htmlentities($row['address']),
-                    'CITY' => ovensia\ploopi\str::htmlentities($row['city']),
-                    'COUNTRY' => ovensia\ploopi\str::htmlentities($row['country']),
+                    'CIVILITY' => ploopi\str::htmlentities($row['civility']),
+                    'LASTNAME' => ploopi\str::htmlentities($row['lastname']),
+                    'FIRSTNAME' => ploopi\str::htmlentities($row['firstname']),
+                    'EMAIL' => ploopi\str::htmlentities($row['email']),
+                    'PHONE' => ploopi\str::htmlentities($row['phone']),
+                    'FAX' => ploopi\str::htmlentities($row['fax']),
+                    'MOBILE' => ploopi\str::htmlentities($row['mobile']),
+                    'SERVICE' => ploopi\str::htmlentities($row['service']),
+                    'FUNCTION' => ploopi\str::htmlentities($row['function']),
+                    'RANK' => ploopi\str::htmlentities($row['rank']),
+                    'NUMBER' => ploopi\str::htmlentities($row['number']),
+                    'POSTALCODE' => ploopi\str::htmlentities($row['postalcode']),
+                    'ADDRESS' => ploopi\str::htmlentities($row['address']),
+                    'CITY' => ploopi\str::htmlentities($row['city']),
+                    'COUNTRY' => ploopi\str::htmlentities($row['country']),
                     'ADDRESS_FULL' => implode('<br />', $arrAddress),
-                    'BUILDING' => ovensia\ploopi\str::htmlentities($row['building']),
-                    'FLOOR' => ovensia\ploopi\str::htmlentities($row['floor']),
-                    'OFFICE' => ovensia\ploopi\str::htmlentities($row['office']),
+                    'BUILDING' => ploopi\str::htmlentities($row['building']),
+                    'FLOOR' => ploopi\str::htmlentities($row['floor']),
+                    'OFFICE' => ploopi\str::htmlentities($row['office']),
                     'PHOTOPATH' => $row['photopath'],
-                    'COMMENTS' => ovensia\ploopi\str::nl2br(ovensia\ploopi\str::htmlentities($row['comments'])),
-                    'HEADING' => ovensia\ploopi\str::htmlentities($arrHeadings['list'][$intHeadingId]['label']),
-                    'HEADINGS' => ovensia\ploopi\str::htmlentities($strContactHeadings),
+                    'COMMENTS' => ploopi\str::nl2br(ploopi\str::htmlentities($row['comments'])),
+                    'HEADING' => ploopi\str::htmlentities($arrHeadings['list'][$intHeadingId]['label']),
+                    'HEADINGS' => ploopi\str::htmlentities($strContactHeadings),
                     'ALTERNATE_STYLE' => $c%2,
-                    'LINK' => ovensia\ploopi\crypt::urlencode('index.php?'.implode('&',$arrRequest))
+                    'LINK' => ploopi\crypt::urlencode('index.php?'.implode('&',$arrRequest))
                 )
             );
 
@@ -346,15 +345,15 @@ function directory_template_display(&$template_body, &$arrHeadings, &$arrContact
             $template_body->assign_block_vars('directory_switch_full.line.heading',
                 array(
                     'ID' => $intId,
-                    'LABEL' => ovensia\ploopi\str::htmlentities($arrHeadings['list'][$intId]['label']),
-                    'PHONE' => ovensia\ploopi\str::htmlentities($arrHeadings['list'][$intId]['phone']),
-                    'FAX' => ovensia\ploopi\str::htmlentities($arrHeadings['list'][$intId]['fax']),
-                    'POSTALCODE' => ovensia\ploopi\str::htmlentities($arrHeadings['list'][$intId]['postalcode']),
-                    'ADDRESS' => ovensia\ploopi\str::nl2br(ovensia\ploopi\str::htmlentities($arrHeadings['list'][$intId]['address'])),
-                    'CITY' => ovensia\ploopi\str::htmlentities($arrHeadings['list'][$intId]['city']),
-                    'COUNTRY' => ovensia\ploopi\str::htmlentities($arrHeadings['list'][$intId]['country']),
+                    'LABEL' => ploopi\str::htmlentities($arrHeadings['list'][$intId]['label']),
+                    'PHONE' => ploopi\str::htmlentities($arrHeadings['list'][$intId]['phone']),
+                    'FAX' => ploopi\str::htmlentities($arrHeadings['list'][$intId]['fax']),
+                    'POSTALCODE' => ploopi\str::htmlentities($arrHeadings['list'][$intId]['postalcode']),
+                    'ADDRESS' => ploopi\str::nl2br(ploopi\str::htmlentities($arrHeadings['list'][$intId]['address'])),
+                    'CITY' => ploopi\str::htmlentities($arrHeadings['list'][$intId]['city']),
+                    'COUNTRY' => ploopi\str::htmlentities($arrHeadings['list'][$intId]['country']),
                     'DEPTH' => substr_count($arrHeadings['list'][$intId]['parents'], ';')+1,
-                    'LINK' => ovensia\ploopi\crypt::urlencode('index.php?'.implode('&',$arrRequest))
+                    'LINK' => ploopi\crypt::urlencode('index.php?'.implode('&',$arrRequest))
                 )
             );
 
@@ -392,15 +391,15 @@ function directory_template_display_organigram(&$template_body, &$arrHeadings, $
             $template_body->assign_block_vars('directory_switch_organigram.heading',
                 array(
                     'ID' => $intId,
-                    'LABEL' => ovensia\ploopi\str::htmlentities($arrHeadings['list'][$intId]['label']),
-                    'PHONE' => ovensia\ploopi\str::htmlentities($arrHeadings['list'][$intId]['phone']),
-                    'FAX' => ovensia\ploopi\str::htmlentities($arrHeadings['list'][$intId]['fax']),
-                    'POSTALCODE' => ovensia\ploopi\str::htmlentities($arrHeadings['list'][$intId]['postalcode']),
-                    'ADDRESS' => ovensia\ploopi\str::nl2br(ovensia\ploopi\str::htmlentities($arrHeadings['list'][$intId]['address'])),
-                    'CITY' => ovensia\ploopi\str::htmlentities($arrHeadings['list'][$intId]['city']),
-                    'COUNTRY' => ovensia\ploopi\str::htmlentities($arrHeadings['list'][$intId]['country']),
+                    'LABEL' => ploopi\str::htmlentities($arrHeadings['list'][$intId]['label']),
+                    'PHONE' => ploopi\str::htmlentities($arrHeadings['list'][$intId]['phone']),
+                    'FAX' => ploopi\str::htmlentities($arrHeadings['list'][$intId]['fax']),
+                    'POSTALCODE' => ploopi\str::htmlentities($arrHeadings['list'][$intId]['postalcode']),
+                    'ADDRESS' => ploopi\str::nl2br(ploopi\str::htmlentities($arrHeadings['list'][$intId]['address'])),
+                    'CITY' => ploopi\str::htmlentities($arrHeadings['list'][$intId]['city']),
+                    'COUNTRY' => ploopi\str::htmlentities($arrHeadings['list'][$intId]['country']),
                     'DEPTH' => substr_count($arrHeadings['list'][$intId]['parents'], ';')+1,
-                    'LINK' => ovensia\ploopi\crypt::urlencode('index.php?'.implode('&',$arrRequest))
+                    'LINK' => ploopi\crypt::urlencode('index.php?'.implode('&',$arrRequest))
                 )
             );
 

@@ -36,7 +36,7 @@
  * Classe "resource_workspace"
  */
 
-class booking_resource_workspace extends ovensia\ploopi\data_object {
+class booking_resource_workspace extends ploopi\data_object {
 
     /**
      * Constructeur de la classe

@@ -33,23 +33,23 @@
 switch($op)
 {
     default:
-        echo $skin->create_pagetitle(ovensia\ploopi\str::htmlentities($_SESSION['ploopi']['modulelabel']));
+        echo $skin->create_pagetitle(ploopi\str::htmlentities($_SESSION['ploopi']['modulelabel']));
         echo $skin->open_simplebloc('Réindexation');
 
-        $db->query("SELECT count(*) as c FROM ploopi_mod_webedit_heading WHERE id_module = {$_SESSION['ploopi']['moduleid']}");
-        $arrStats['headings'] = ($row = $db->fetchrow()) ? $row['c'] : 0;
+        ploopi\loader::getdb()->query("SELECT count(*) as c FROM ploopi_mod_webedit_heading WHERE id_module = {$_SESSION['ploopi']['moduleid']}");
+        $arrStats['headings'] = ($row = ploopi\loader::getdb()->fetchrow()) ? $row['c'] : 0;
 
-        $db->query("SELECT count(*) as c FROM ploopi_mod_webedit_article WHERE id_module = {$_SESSION['ploopi']['moduleid']}");
-        $arrStats['articles'] = ($row = $db->fetchrow()) ? $row['c'] : 0;
+        ploopi\loader::getdb()->query("SELECT count(*) as c FROM ploopi_mod_webedit_article WHERE id_module = {$_SESSION['ploopi']['moduleid']}");
+        $arrStats['articles'] = ($row = ploopi\loader::getdb()->fetchrow()) ? $row['c'] : 0;
 
-        $db->query("SELECT count(*) as c FROM ploopi_mod_webedit_docfile WHERE id_module = {$_SESSION['ploopi']['moduleid']}");
-        $arrStats['files'] = ($row = $db->fetchrow()) ? $row['c'] : 0;
+        ploopi\loader::getdb()->query("SELECT count(*) as c FROM ploopi_mod_webedit_docfile WHERE id_module = {$_SESSION['ploopi']['moduleid']}");
+        $arrStats['files'] = ($row = ploopi\loader::getdb()->fetchrow()) ? $row['c'] : 0;
 
-        $db->query("SELECT count(*) as c FROM ploopi_mod_webedit_tag WHERE id_module = {$_SESSION['ploopi']['moduleid']}");
-        $arrStats['tags'] = ($row = $db->fetchrow()) ? $row['c'] : 0;
+        ploopi\loader::getdb()->query("SELECT count(*) as c FROM ploopi_mod_webedit_tag WHERE id_module = {$_SESSION['ploopi']['moduleid']}");
+        $arrStats['tags'] = ($row = ploopi\loader::getdb()->fetchrow()) ? $row['c'] : 0;
 
         /*
-        $idxdb = ovensia\ploopi\search_index::getdb();
+        $idxdb = ploopi\search_index::getdb();
         $idxdb->query(
             "
             SELECT  count(*) as c
@@ -67,7 +67,7 @@ switch($op)
 
         ?>
         <div style="padding:4px;">
-            <input type="button" class="button" value="Réindexer le contenu du site" onclick="javascript:document.location.href='<?php echo ovensia\ploopi\crypt::urlencode('admin.php?webedit_menu=reindex&op=reindex'); ?>';" />
+            <input type="button" class="button" value="Réindexer le contenu du site" onclick="javascript:document.location.href='<?php echo ploopi\crypt::urlencode('admin.php?webedit_menu=reindex&op=reindex'); ?>';" />
         </div>
         <div style="padding:4px;">
             Le site contient :
@@ -95,16 +95,16 @@ switch($op)
         if (!ini_get('safe_mode')) ini_set('max_execution_time', 0);
         include_once './modules/webedit/class_article.php';
 
-        echo $skin->create_pagetitle(ovensia\ploopi\str::htmlentities($_SESSION['ploopi']['modulelabel']));
+        echo $skin->create_pagetitle(ploopi\str::htmlentities($_SESSION['ploopi']['modulelabel']));
         echo $skin->open_simplebloc();
         ?>
         <div style="padding:4px;">
         <?php
         $index_start = $ploopi_timer->getexectime();
 
-        $rsArticles = $db->query("SELECT id FROM ploopi_mod_webedit_article");
+        $rsArticles = ploopi\loader::getdb()->query("SELECT id FROM ploopi_mod_webedit_article");
 
-        while ($row = $db->fetchrow($rsArticles))
+        while ($row = ploopi\loader::getdb()->fetchrow($rsArticles))
         {
             $objArticle = new webedit_article();
             if ($objArticle->open($row['id']))
@@ -116,7 +116,7 @@ switch($op)
         ?>
         indexation terminée en <?php printf("%.02fs", $ploopi_timer->getexectime() - $index_start); ?>
         <?php if (isset($_REQUEST['force'])) echo "<br />Mode 'force' activé"; ?>
-        <br /><a title="Retour" href="<?php echo ovensia\ploopi\crypt::urlencode('admin.php?webedit_menu=reindex'); ?>">Retour</a>
+        <br /><a title="Retour" href="<?php echo ploopi\crypt::urlencode('admin.php?webedit_menu=reindex'); ?>">Retour</a>
         </div>
         <?php
         echo $skin->close_simplebloc();

@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,7 +25,7 @@
  *
  * @package directory
  * @subpackage user_delete
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -35,7 +34,7 @@
  * Intialisation du module
  */
 
-ovensia\ploopi\module::init('directory', false, false, false);
+ploopi\module::init('directory', false, false, false);
 
 global $admin_redirect;
 
@@ -43,7 +42,7 @@ global $admin_redirect;
  * Suppression des contacts de l'utilisateur
  */
 
-$db->query("DELETE FROM ploopi_mod_directory_contact WHERE id_user = {$admin_userid} AND id_workspace = {$admin_workspaceid} AND id_module = {$admin_moduleid}");
+ploopi\loader::getdb()->query("DELETE FROM ploopi_mod_directory_contact WHERE id_user = {$admin_userid} AND id_workspace = {$admin_workspaceid} AND id_module = {$admin_moduleid}");
 
 echo _DIRECTORY_LABEL_DELETE_USER;
 

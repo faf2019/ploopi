@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2009 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,7 +25,7 @@
  *
  * @package system
  * @subpackage admin
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -46,7 +45,7 @@ else
 
     if ($alphaTabItem == -1)
     {
-        $db->query("
+        ploopi\loader::getdb()->query("
             SELECT      count(ploopi_group.id) as nbgroup
 
             FROM        ploopi_group
@@ -55,7 +54,7 @@ else
             ON          ploopi_workspace_group.id_group = ploopi_group.id
             AND         ploopi_workspace_group.id_workspace = {$workspaceid}
         ");
-        $fields = $db->fetchrow();
+        $fields = ploopi\loader::getdb()->fetchrow();
         if ($fields['nbgroup'] < 25) $alphaTabItem = 99;
     }
 }
@@ -89,10 +88,10 @@ else
     ?>
 </div>
 
-<form action="<?php echo ovensia\ploopi\crypt::urlencode('admin.php'); ?>" method="post">
+<form action="<?php echo ploopi\crypt::urlencode('admin.php'); ?>" method="post">
 <p class="ploopi_va" style="padding:4px;border-bottom:2px solid #c0c0c0;">
     <span><?php echo _SYSTEM_LABEL_USER; ?> :</span>
-    <input class="text" ID="system_user" name="pattern" type="text" size="15" maxlength="255" value="<?php echo ovensia\ploopi\str::htmlentities($pattern); ?>">
+    <input class="text" ID="system_user" name="pattern" type="text" size="15" maxlength="255" value="<?php echo ploopi\str::htmlentities($pattern); ?>">
     <input type="submit" value="<?php echo _PLOOPI_FILTER; ?>" class="button">
     <input type="submit" name="reset" value="<?php echo _PLOOPI_RESET; ?>" class="button">
 </p>
@@ -105,7 +104,7 @@ if ($alphaTabItem == 99) // tous ou recherche
 {
     if ($pattern != '')
     {
-        $pattern = $db->addslashes($pattern);
+        $pattern = ploopi\loader::getdb()->addslashes($pattern);
         $where[] .=  "ploopi_group.label LIKE '%{$pattern}%'";
     }
 }
@@ -170,9 +169,9 @@ $columns['actions_right']['actions'] =
 
 $c = 0;
 
-$result = $db->query($sql);
+$result = ploopi\loader::getdb()->query($sql);
 
-while ($fields = $db->fetchrow($result))
+while ($fields = ploopi\loader::getdb()->fetchrow($result))
 {
     $array_parents = system_getparents($fields['parents'], 'group');
     array_shift($array_parents);
@@ -180,10 +179,10 @@ while ($fields = $db->fetchrow($result))
     $str_parents = '';
     foreach($array_parents as $parent) $str_parents .= ($str_parents == '') ? $parent['label']: " > {$parent['label']}";
 
-    $action = '<a href="javascript:ploopi_confirmlink(\''.ovensia\ploopi\crypt::urlencode("admin.php?op=detach_group&orgid={$fields['id']}").'\',\''._SYSTEM_MSG_CONFIRMGROUPDETACH.'\')"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_cut.png" title="'._SYSTEM_TITLE_GROUPDETACH.'"></a>';
+    $action = '<a href="javascript:ploopi_confirmlink(\''.ploopi\crypt::urlencode("admin.php?op=detach_group&orgid={$fields['id']}").'\',\''._SYSTEM_MSG_CONFIRMGROUPDETACH.'\')"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_cut.png" title="'._SYSTEM_TITLE_GROUPDETACH.'"></a>';
 
-    $values[$c]['values']['label']      = array('label' => ovensia\ploopi\str::htmlentities($fields['label']));
-    $values[$c]['values']['parents']    = array('label' => ovensia\ploopi\str::htmlentities($str_parents));
+    $values[$c]['values']['label']      = array('label' => ploopi\str::htmlentities($fields['label']));
+    $values[$c]['values']['parents']    = array('label' => ploopi\str::htmlentities($str_parents));
 
     switch($fields['adminlevel'])
     {
@@ -204,7 +203,7 @@ while ($fields = $db->fetchrow($result))
     $values[$c]['values']['adminlevel'] = array('label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/adminlevels/{$icon}.png\" />", 'style' => 'text-align:center;', 'sort_label' => $fields['adminlevel']);
 
     if ($_SESSION['ploopi']['adminlevel'] >= $fields['adminlevel'])
-        $manage_grp =   '<a href="'.ovensia\ploopi\crypt::urlencode("admin.php?op=modify_group&orgid={$fields['id']}").'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_edit.png" title="'._SYSTEM_LABEL_MODIFY.'"></a>'.$action;
+        $manage_grp =   '<a href="'.ploopi\crypt::urlencode("admin.php?op=modify_group&orgid={$fields['id']}").'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_edit.png" title="'._SYSTEM_LABEL_MODIFY.'"></a>'.$action;
     else
         $manage_grp =   '<img style="margin:0 2px;" src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_noway.png"><img style="margin:0 2px;" src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_noway.png">';
 
@@ -221,13 +220,13 @@ if ($_SESSION['system']['level'] == _SYSTEM_WORKSPACES)
     <p class="ploopi_va" style="padding:4px;">
         <span style="margin-right:5px;">Légende:</span>
         <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/adminlevels/level_user.png" />
-        <span style="margin-right:5px;"><?php echo ovensia\ploopi\str::htmlentities($ploopi_system_levels[_PLOOPI_ID_LEVEL_USER]); ?></span>
+        <span style="margin-right:5px;"><?php echo ploopi\str::htmlentities($ploopi_system_levels[_PLOOPI_ID_LEVEL_USER]); ?></span>
         <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/adminlevels/level_groupmanager.png" />
-        <span style="margin-right:5px;"><?php echo ovensia\ploopi\str::htmlentities($ploopi_system_levels[_PLOOPI_ID_LEVEL_GROUPMANAGER]); ?></span>
+        <span style="margin-right:5px;"><?php echo ploopi\str::htmlentities($ploopi_system_levels[_PLOOPI_ID_LEVEL_GROUPMANAGER]); ?></span>
         <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/adminlevels/level_groupadmin.png" />
-        <span style="margin-right:5px;"><?php echo ovensia\ploopi\str::htmlentities($ploopi_system_levels[_PLOOPI_ID_LEVEL_GROUPADMIN]); ?></span>
+        <span style="margin-right:5px;"><?php echo ploopi\str::htmlentities($ploopi_system_levels[_PLOOPI_ID_LEVEL_GROUPADMIN]); ?></span>
         <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/adminlevels/level_systemadmin.png" />
-        <span style="margin-right:5px;"><?php echo ovensia\ploopi\str::htmlentities($ploopi_system_levels[_PLOOPI_ID_LEVEL_SYSTEMADMIN]); ?></span>
+        <span style="margin-right:5px;"><?php echo ploopi\str::htmlentities($ploopi_system_levels[_PLOOPI_ID_LEVEL_SYSTEMADMIN]); ?></span>
     </p>
     <?php
 }

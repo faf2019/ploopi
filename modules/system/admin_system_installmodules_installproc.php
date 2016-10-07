@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,7 +25,7 @@
  *
  * @package system
  * @subpackage system
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -37,7 +36,7 @@
 include_once './modules/system/xmlparser_mod.php';
 include_once './modules/system/xmlparser_mb.php';
 
-if (empty($_GET['installmoduletype']) || !preg_match('@^([a-z0-9_\-])+$@i', $_GET['installmoduletype'])) ovensia\ploopi\output::redirect('admin.php');
+if (empty($_GET['installmoduletype']) || !preg_match('@^([a-z0-9_\-])+$@i', $_GET['installmoduletype'])) ploopi\output::redirect('admin.php');
 
 if (!ini_get('safe_mode')) ini_set('max_execution_time', 0);
 
@@ -48,9 +47,9 @@ echo $skin->open_simplebloc(_SYSTEM_LABEL_INSTALLREPORT);
 ?>
 
 <?php
-$select = "SELECT * FROM ploopi_module_type WHERE label = '".$db->addslashes($_GET['installmoduletype'])."'";
-$db->query($select);
-if ($db->numrows())
+$select = "SELECT * FROM ploopi_module_type WHERE label = '".ploopi\loader::getdb()->addslashes($_GET['installmoduletype'])."'";
+ploopi\loader::getdb()->query($select);
+if (ploopi\loader::getdb()->numrows())
 {
     ?>
     <div style="padding:4px;text-align:center;font-weight:bold;color:#a60000;">Module déjà installé !</div>
@@ -80,7 +79,7 @@ else
     {
         if (is_writable(realpath("./modules/")))
         {
-            ovensia\ploopi\fs::copydir($srcfiles , $destfiles);
+            ploopi\fs::copydir($srcfiles , $destfiles);
             $detail = 'Fichiers copiés';
         }
         else
@@ -108,14 +107,14 @@ else
             $data = fread ($fp, filesize ($xmlfile_desc));
             fclose($fp);
 
-            $x2a = new ovensia\ploopi\xml2array();
+            $x2a = new ploopi\xml2array();
             $xmlarray = $x2a->parse($data);
             if ($xmlarray)
             {
                 $pt = &$xmlarray['root']['ploopi'][0]['moduletype'][0];
 
-                //ovensia\ploopi\output::print_r($pt);
-                $module_type = new ovensia\ploopi\module_type();
+                //ploopi\output::print_r($pt);
+                $module_type = new ploopi\module_type();
                 $module_type->fields = array(   'label'         => $pt['label'][0],
                                                 'version'       => $pt['version'][0],
                                                 'author'        => $pt['author'][0],
@@ -131,7 +130,7 @@ else
                     {
                         if (empty($value['default_value'][0])) $value['default_value'][0] = '';
 
-                        $param_type = new ovensia\ploopi\param_type();
+                        $param_type = new ploopi\param_type();
                         $param_type->fields = array(    'id_module_type'    => $module_type->fields['id'],
                                                         'name'              => $value['name'][0],
                                                         'label'             => $value['label'][0],
@@ -146,7 +145,7 @@ else
                         {
                             foreach($value['paramchoice'] as $ckey => $cvalue)
                             {
-                                $param_choice = new ovensia\ploopi\param_choice();
+                                $param_choice = new ploopi\param_choice();
                                 $param_choice->fields = array(  'id_module_type'    => $module_type->fields['id'],
                                                                 'name'              => $param_type->fields['name'],
                                                                 'value'             => $cvalue['value'][0],
@@ -162,7 +161,7 @@ else
                 {
                     foreach($pt['cms_object'] as $key => $value)
                     {
-                        $mb_cms_object = new ovensia\ploopi\mb_cms_object();
+                        $mb_cms_object = new ploopi\mb_cms_object();
                         $mb_cms_object->fields = array( 'id_module_type'    => $module_type->fields['id'],
                                                         'label' => $value['label'][0],
                                                         'script' => $value['script'][0],
@@ -178,7 +177,7 @@ else
                 {
                     foreach($pt['action'] as $key => $value)
                     {
-                        $mb_action = new ovensia\ploopi\mb_action();
+                        $mb_action = new ploopi\mb_action();
                         $mb_action->fields = array( 'id_module_type'    => $module_type->fields['id'],
                                                     'id_action' => $value['id_action'][0],
                                                     'label' => $value['label'][0],
@@ -209,7 +208,7 @@ else
 
         if (!$critical_error)
         {
-            ovensia\ploopi\user_action_log::record(_SYSTEM_ACTION_INSTALLMODULE, $_GET['installmoduletype']);
+            ploopi\user_action_log::record(_SYSTEM_ACTION_INSTALLMODULE, $_GET['installmoduletype']);
 
             /**
              * OPERATION 3 : Création des tables/champs
@@ -219,7 +218,7 @@ else
 
             if (file_exists($sqlfile))
             {
-                $db->multiplequeries(file_get_contents($sqlfile));
+                ploopi\loader::getdb()->multiplequeries(file_get_contents($sqlfile));
                 $detail = "Fichier '{$sqlfile}' importé";
             }
             else $detail = "Fichier '{$sqlfile}' non trouvé";
@@ -284,8 +283,8 @@ else
     foreach($rapport as $op_detail)
     {
         $bullet = ($op_detail['res']) ? 'green' : 'red';
-        $values[$c]['values']['operation'] = array('label' => ovensia\ploopi\str::htmlentities($op_detail['operation']));
-        $values[$c]['values']['detail'] = array('label' => ovensia\ploopi\str::htmlentities($op_detail['detail']));
+        $values[$c]['values']['operation'] = array('label' => ploopi\str::htmlentities($op_detail['operation']));
+        $values[$c]['values']['detail'] = array('label' => ploopi\str::htmlentities($op_detail['detail']));
         $values[$c]['values']['result'] = array('label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/p_{$bullet}.png\" />");
 
         $c++;
@@ -295,7 +294,7 @@ else
 }
 ?>
 <div style="padding:4px;text-align:right;">
-    <form action="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?sysToolbarItem=install"); ?>" method="post">
+    <form action="<?php echo ploopi\crypt::urlencode("admin.php?sysToolbarItem=install"); ?>" method="post">
     <input type="submit" class="flatbutton" value="<?php echo _PLOOPI_CONTINUE; ?>">
     </form>
 </div>

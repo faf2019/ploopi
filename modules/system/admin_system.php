@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,7 +25,7 @@
  *
  * @package system
  * @subpackage system
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -39,8 +38,8 @@ $toolbar = array();
 
 $strSysVersion = '';
 
-$db->query('SELECT version FROM ploopi_module_type WHERE id = 1');
-$row = $db->fetchrow();
+ploopi\loader::getdb()->query('SELECT version FROM ploopi_module_type WHERE id = 1');
+$row = ploopi\loader::getdb()->fetchrow();
 
 /**
  * On compare la version des fichiers (_PLOOPI_VERSION) avec celle de la base de données.
@@ -119,7 +118,7 @@ echo $skin->create_toolbar($toolbar,$_SESSION['system']['sysToolbarItem']);
 
                     include './modules/system/admin_system_installmodules_uninstallproc.php';
 
-                    if ($admin_redirect) ovensia\ploopi\output::redirect("admin.php?reloadsession");
+                    if ($admin_redirect) ploopi\output::redirect("admin.php?reloadsession");
                     else
                     {
                         ?>
@@ -127,7 +126,7 @@ echo $skin->create_toolbar($toolbar,$_SESSION['system']['sysToolbarItem']);
                             </TR>
                             <TR>
                                 <TD ALIGN="RIGHT">
-                                <INPUT TYPE="Button" CLASS="flatbutton" VALUE="<?php echo _PLOOPI_CONTINUE; ?>" OnClick="javascript:document.location.href='<?php echo ovensia\ploopi\crypt::urlencode("admin.php?reloadsession"); ?>'">
+                                <INPUT TYPE="Button" CLASS="flatbutton" VALUE="<?php echo _PLOOPI_CONTINUE; ?>" OnClick="javascript:document.location.href='<?php echo ploopi\crypt::urlencode("admin.php?reloadsession"); ?>'">
                                 </TD>
                             </TR>
                             </TABLE>
@@ -139,7 +138,7 @@ echo $skin->create_toolbar($toolbar,$_SESSION['system']['sysToolbarItem']);
 
                 case 'addnewmodule':
                     include './modules/system/admin_system_addnewmodule.php';
-                    //ovensia\ploopi\output::redirect("admin.php");
+                    //ploopi\output::redirect("admin.php");
                 break;
 
                 default:
@@ -159,7 +158,7 @@ echo $skin->create_toolbar($toolbar,$_SESSION['system']['sysToolbarItem']);
                 case 'phpinfo':
                     echo $skin->open_simplebloc(_SYSTEM_LABEL_PHPINFO);
                     ?>
-                    <iframe id="system_tools_phpinfo" style="border:0;width:100%;height:400px;margin:0;padding:0;" src="<?php echo ovensia\ploopi\crypt::urlencode("admin-light.php?ploopi_op=system_tools_phpinfo"); ?>"></iframe>
+                    <iframe id="system_tools_phpinfo" style="border:0;width:100%;height:400px;margin:0;padding:0;" src="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=system_tools_phpinfo"); ?>"></iframe>
                     <?php
                     echo $skin->close_simplebloc();
                 break;
@@ -210,24 +209,24 @@ echo $skin->create_toolbar($toolbar,$_SESSION['system']['sysToolbarItem']);
         // ONGLET DE GESTION DES PARAMETRES GENERAUX DE PLOOPI
         // -------------------------------------------------
         case 'params' :
-            $param_module = new ovensia\ploopi\param();
+            $param_module = new ploopi\param();
 
             switch($op)
             {
                 case 'save':
                     if (!empty($_POST['idmodule']) && is_numeric($_POST['idmodule']))
                     {
-                        $module = new ovensia\ploopi\module();
+                        $module = new ploopi\module();
                         $module->open($_POST['idmodule']);
-                        ovensia\ploopi\user_action_log::record(_SYSTEM_ACTION_PARAMMODULE, $module->fields['label']);
+                        ploopi\user_action_log::record(_SYSTEM_ACTION_PARAMMODULE, $module->fields['label']);
 
                         $param_module->open($_POST['idmodule']);
                         $param_module->setvalues($_POST);
                         $param_module->save();
 
-                        ovensia\ploopi\output::redirect("admin.php?idmodule={$_POST['idmodule']}&reloadsession");
+                        ploopi\output::redirect("admin.php?idmodule={$_POST['idmodule']}&reloadsession");
                     }
-                    else ovensia\ploopi\output::redirect("admin.php");
+                    else ploopi\output::redirect("admin.php");
                 break;
 
                 default:

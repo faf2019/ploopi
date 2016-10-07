@@ -30,17 +30,17 @@
  * @author Stéphane Escaich
  */
 
-echo $skin->create_pagetitle(ovensia\ploopi\str::htmlentities($_SESSION['ploopi']['modulelabel']));
+echo $skin->create_pagetitle(ploopi\str::htmlentities($_SESSION['ploopi']['modulelabel']));
 echo $skin->open_simplebloc('Statistiques');
 
 $intYearSel = (empty($_GET['webedit_yearsel']) || !is_numeric($_GET['webedit_yearsel'])) ? date('Y') : $_GET['webedit_yearsel'];
 $intMonthSel = (empty($_GET['webedit_monthsel']) || empty($_GET['webedit_yearsel'])  || !is_numeric($_GET['webedit_monthsel']) || !is_numeric($_GET['webedit_yearsel'])) ? '' : $_GET['webedit_monthsel'];
 
-$rs = $db->query("SELECT distinct(year) FROM ploopi_mod_webedit_counter WHERE id_module = {$_SESSION['ploopi']['moduleid']} ORDER BY year");
-$arrSelectYear = $db->getarray($rs, true);
+$rs = ploopi\loader::getdb()->query("SELECT distinct(year) FROM ploopi_mod_webedit_counter WHERE id_module = {$_SESSION['ploopi']['moduleid']} ORDER BY year");
+$arrSelectYear = ploopi\loader::getdb()->getarray($rs, true);
 
-$rs = $db->query("SELECT distinct(month) FROM ploopi_mod_webedit_counter WHERE id_module = {$_SESSION['ploopi']['moduleid']} AND year = {$intYearSel} ORDER BY month");
-$arrSelectMonth = $db->getarray($rs, true);
+$rs = ploopi\loader::getdb()->query("SELECT distinct(month) FROM ploopi_mod_webedit_counter WHERE id_module = {$_SESSION['ploopi']['moduleid']} AND year = {$intYearSel} ORDER BY month");
+$arrSelectMonth = ploopi\loader::getdb()->getarray($rs, true);
 
 // aucun mois sélectionné
 if (empty($intMonthSel))
@@ -62,7 +62,7 @@ $arrHeadings = webedit_getheadings();
             foreach($arrSelectYear as $year)
             {
                 ?>
-                <a href="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?webedit_menu=stats&webedit_yearsel={$year}"); ?>" <?php if ($year == $intYearSel) echo 'class="selected"'; ?>><?php echo $year; ?></a>
+                <a href="<?php echo ploopi\crypt::urlencode("admin.php?webedit_menu=stats&webedit_yearsel={$year}"); ?>" <?php if ($year == $intYearSel) echo 'class="selected"'; ?>><?php echo $year; ?></a>
                 <?php
             }
             ?>
@@ -73,7 +73,7 @@ $arrHeadings = webedit_getheadings();
             foreach($arrSelectMonth as $month)
             {
                 ?>
-                <a href="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?webedit_menu=stats&webedit_yearsel={$intYearSel}&webedit_monthsel={$month}"); ?>" <?php if ($month == $intMonthSel) echo 'class="selected"'; ?>><?php echo $ploopi_months[$month]; ?></a>
+                <a href="<?php echo ploopi\crypt::urlencode("admin.php?webedit_menu=stats&webedit_yearsel={$intYearSel}&webedit_monthsel={$month}"); ?>" <?php if ($month == $intMonthSel) echo 'class="selected"'; ?>><?php echo $ploopi_months[$month]; ?></a>
                 <?php
             }
             ?>
@@ -93,7 +93,7 @@ $arrHeadings = webedit_getheadings();
         $legend[$key] = $value;
     }
 
-    $db->query(
+    ploopi\loader::getdb()->query(
         "
         SELECT  month,
                 sum(hits) as c
@@ -104,13 +104,13 @@ $arrHeadings = webedit_getheadings();
         ORDER BY month
         ");
 
-    while ($row = $db->fetchrow())
+    while ($row = ploopi\loader::getdb()->fetchrow())
     {
         $dataset[$row['month']] = $row['c'];
         $dataset2[$row['month']] = $row['c']-10;
     }
 
-    $objBarChartYear = new ovensia\ploopi\barchart(700, 150, array('padding' => 1));
+    $objBarChartYear = new ploopi\barchart(700, 150, array('padding' => 1));
     $objBarChartYear->setvalues($dataset, 'Fréquentation mensuelle', '#1E64A1', '#f0f0f0');
     $objBarChartYear->setlegend($legend);
 
@@ -128,7 +128,7 @@ $arrHeadings = webedit_getheadings();
         $legend[$d] = substr($ploopi_days[$weekday],0,2).'<br />'.$d;
     }
 
-    $db->query(
+    ploopi\loader::getdb()->query(
         "
         SELECT  day,
                 sum(hits) as c
@@ -140,9 +140,9 @@ $arrHeadings = webedit_getheadings();
         ORDER BY day
         ");
 
-    while ($row = $db->fetchrow()) $dataset[$row['day']] = $row['c'];
+    while ($row = ploopi\loader::getdb()->fetchrow()) $dataset[$row['day']] = $row['c'];
 
-    $objBarChartMonth = new ovensia\ploopi\barchart(700, 150, array('padding' => 1));
+    $objBarChartMonth = new ploopi\barchart(700, 150, array('padding' => 1));
     $objBarChartMonth->setvalues($dataset, 'Fréquentation quotidienne', '#4FA11E', '#f0f0f0');
     $objBarChartMonth->setlegend($legend);
 
@@ -160,7 +160,7 @@ $arrHeadings = webedit_getheadings();
     <?php
     // Recherche des articles les plus consultés
 
-    $db->query(
+    ploopi\loader::getdb()->query(
         "
         SELECT      c.id_article,
                     sum(c.hits) as counter,
@@ -214,28 +214,28 @@ $arrHeadings = webedit_getheadings();
 
     $c = 0;
 
-    while ($row = $db->fetchrow())
+    while ($row = ploopi\loader::getdb()->fetchrow())
     {
         $arrParents = array();
         if (isset($arrHeadings['list'][$row['id_heading']])) foreach(preg_split('/;/', $arrHeadings['list'][$row['id_heading']]['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
 
         $values[$c]['values']['article'] =
             array(
-                'label' => ovensia\ploopi\str::htmlentities($row['title'])
+                'label' => ploopi\str::htmlentities($row['title'])
             );
 
         $values[$c]['values']['heading'] =
             array(
-                'label' => ovensia\ploopi\str::htmlentities($row['label'])
+                'label' => ploopi\str::htmlentities($row['label'])
             );
 
         $values[$c]['values']['counter'] =
             array(
-                'label' => ovensia\ploopi\str::htmlentities($row['counter'])
+                'label' => ploopi\str::htmlentities($row['counter'])
             );
 
-        $values[$c]['description'] = ovensia\ploopi\str::htmlentities($row['title']);
-        $values[$c]['link'] = ovensia\ploopi\str::urlrewrite("index.php?headingid={$row['id_heading']}&articleid={$row['id_article']}", webedit_getrewriterules(), $row['metatitle'], $arrParents);
+        $values[$c]['description'] = ploopi\str::htmlentities($row['title']);
+        $values[$c]['link'] = ploopi\str::urlrewrite("index.php?headingid={$row['id_heading']}&articleid={$row['id_article']}", webedit_getrewriterules(), $row['metatitle'], $arrParents);
 
         $c++;
     }
@@ -262,7 +262,7 @@ $arrHeadings = webedit_getheadings();
     <?php
     // Recherche des rubriques les plus consultées
 
-    $db->query(
+    ploopi\loader::getdb()->query(
         "
         SELECT      h.id,
                     h.label,
@@ -307,23 +307,23 @@ $arrHeadings = webedit_getheadings();
 
     $c = 0;
 
-    while ($row = $db->fetchrow())
+    while ($row = ploopi\loader::getdb()->fetchrow())
     {
         $arrParents = array();
         foreach(preg_split('/;/', $row['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
 
         $values[$c]['values']['heading'] =
             array(
-                'label' => ovensia\ploopi\str::htmlentities($row['label'])
+                'label' => ploopi\str::htmlentities($row['label'])
             );
 
         $values[$c]['values']['counter'] =
             array(
-                'label' => ovensia\ploopi\str::htmlentities($row['counter'])
+                'label' => ploopi\str::htmlentities($row['counter'])
             );
 
-        $values[$c]['description'] = ovensia\ploopi\str::htmlentities($row['label']);
-        $values[$c]['link'] =  ovensia\ploopi\str::urlrewrite($script = "index.php?headingid={$row['id']}", webedit_getrewriterules(),$row['label'], $arrParents);
+        $values[$c]['description'] = ploopi\str::htmlentities($row['label']);
+        $values[$c]['link'] =  ploopi\str::urlrewrite($script = "index.php?headingid={$row['id']}", webedit_getrewriterules(),$row['label'], $arrParents);
 
         $c++;
     }

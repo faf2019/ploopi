@@ -20,16 +20,16 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-namespace ovensia\ploopi;
+namespace ploopi;
 
-use ovensia\ploopi;
+use ploopi;
 
 /**
  * Gestion des groupes d'utilisateurs.
  *
  * @package ploopi
  * @subpackage group
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -39,7 +39,7 @@ use ovensia\ploopi;
  *
  * @package ploopi
  * @subpackage group
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -75,7 +75,7 @@ class group extends data_object
 
     public function delete()
     {
-        global $db;
+        $db = loader::getdb();
 
         if ($this->fields['id'] != -1 && !$this->fields['system'])
         {
@@ -95,7 +95,7 @@ class group extends data_object
 
     public function getchildren()
     {
-        global $db;
+        $db = loader::getdb();
 
         $rs = $db->query("SELECT id FROM ploopi_group WHERE system = 0 AND parents = '{$this->fields['parents']};{$this->fields['id']}' OR parents LIKE '{$this->fields['parents']};{$this->fields['id']};%'");
 
@@ -110,7 +110,7 @@ class group extends data_object
 
     public function getbrothers()
     {
-        global $db;
+        $db = loader::getdb();
 
         $rs = $db->query("
             SELECT  id
@@ -154,7 +154,7 @@ class group extends data_object
 
     public function getusers()
     {
-        global $db;
+        $db = loader::getdb();
 
         $users = array();
 
@@ -182,7 +182,7 @@ class group extends data_object
      */
     public function countusers()
     {
-        global $db;
+        $db = loader::getdb();
 
         $result = $db->query("
             SELECT  count(id_user) as c
@@ -223,7 +223,7 @@ class group extends data_object
     {
         include_once './include/classes/workspace.php';
 
-        global $db;
+        $db = loader::getdb();
 
         $workspace_group = new workspace_group();
         $workspace_group->fields['id_group'] = $this->fields['id'];
@@ -241,7 +241,7 @@ class group extends data_object
 
     public function getactions($actions = null)
     {
-        global $db;
+        $db = loader::getdb();
 
         $select =   "
                     SELECT      ploopi_workspace_group_role.id_workspace,

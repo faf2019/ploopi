@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,7 +24,7 @@
  * Gestion des fichiers
  * @package doc
  * @subpackage file
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -43,12 +42,12 @@ include_once './modules/doc/class_docmeta.php';
  *
  * @package doc
  * @subpackage file
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
 
-class docfile extends ovensia\ploopi\data_object
+class docfile extends ploopi\data_object
 {
     var $oldname;
     var $tmpfile;
@@ -65,7 +64,7 @@ class docfile extends ovensia\ploopi\data_object
     {
         parent::__construct('ploopi_mod_doc_file');
         $this->fields['id_user'] = 0;
-        $this->fields['timestp_create'] = ovensia\ploopi\date::createtimestamp();
+        $this->fields['timestp_create'] = ploopi\date::createtimestamp();
         $this->fields['timestp_modify'] = $this->fields['timestp_create'];
         $this->fields['description']='';
         $this->fields['size'] = 0;
@@ -101,7 +100,7 @@ class docfile extends ovensia\ploopi\data_object
 
     function openmd5($md5id)
     {
-        global $db;
+        $db = ploopi\loader::getdb();
 
         $db->query("SELECT id FROM ploopi_mod_doc_file WHERE md5id = '".$db->addslashes($md5id)."'");
         if ($fields = $db->fetchrow()) return($this->open($fields['id']));
@@ -121,7 +120,7 @@ class docfile extends ovensia\ploopi\data_object
 
     function save()
     {
-        global $db;
+        $db = ploopi\loader::getdb();
 
         $booParse = false;
 
@@ -245,7 +244,7 @@ class docfile extends ovensia\ploopi\data_object
                     }
                 }
 
-                $this->fields['timestp_modify'] = ovensia\ploopi\date::createtimestamp();
+                $this->fields['timestp_modify'] = ploopi\date::createtimestamp();
 
                 $this->oldname = $this->fields['name'];
             }
@@ -300,7 +299,7 @@ class docfile extends ovensia\ploopi\data_object
 
     function delete()
     {
-        global $db;
+        $db = ploopi\loader::getdb();
 
         $filepath = $this->getfilepath();
         if (file_exists($filepath)) @unlink($filepath);
@@ -316,7 +315,7 @@ class docfile extends ovensia\ploopi\data_object
             if ($booEmptyDir) @rmdir($basepath);
         }
 
-        ovensia\ploopi\search_index::remove(_DOC_OBJECT_FILE, $this->fields['md5id']);
+        ploopi\search_index::remove(_DOC_OBJECT_FILE, $this->fields['md5id']);
 
         // delete existing meta for current file
         $db->query("DELETE FROM ploopi_mod_doc_meta WHERE id_file = {$this->fields['id']}");
@@ -363,7 +362,7 @@ class docfile extends ovensia\ploopi\data_object
     function getbasepath()
     {
         $basepath = doc_getpath($this->fields['id_module'])._PLOOPI_SEP.substr($this->fields['timestp_create'],0,8);
-        ovensia\ploopi\fs::makedir($basepath);
+        ploopi\fs::makedir($basepath);
         return($basepath);
     }
 
@@ -387,7 +386,7 @@ class docfile extends ovensia\ploopi\data_object
 
     function gethistory()
     {
-        global $db;
+        $db = ploopi\loader::getdb();
 
         $rs = $db->query(   "
                             SELECT      h.*,
@@ -449,7 +448,7 @@ class docfile extends ovensia\ploopi\data_object
 
     function getmeta()
     {
-        global $db;
+        $db = ploopi\loader::getdb();
 
         $rs = $db->query(   "
                             SELECT      m.*
@@ -476,7 +475,7 @@ class docfile extends ovensia\ploopi\data_object
 
     function parse($debug = false)
     {
-        global $db;
+        $db = ploopi\loader::getdb();
 
         global $ploopi_timer;
         if ($debug) printf("<br />START: %0.2f",$ploopi_timer->getexectime()*1000);
@@ -624,12 +623,12 @@ class docfile extends ovensia\ploopi\data_object
                 unset($array_result);
             }
 
-            $res_txt .= "<div style=\"background-color:#e0e0f0;border-bottom:1px solid #c0c0c0;padding:1px;\">".ovensia\ploopi\str::cut($content,200)."</div>\n";
+            $res_txt .= "<div style=\"background-color:#e0e0f0;border-bottom:1px solid #c0c0c0;padding:1px;\">".ploopi\str::cut($content,200)."</div>\n";
 
             $metakeywords_str .= " {$this->fields['name']} {$this->fields['description']}";
 
-            ovensia\ploopi\search_index::remove(_DOC_OBJECT_FILE, $this->fields['md5id'], $this->fields['id_module']);
-            ovensia\ploopi\search_index::add(
+            ploopi\search_index::remove(_DOC_OBJECT_FILE, $this->fields['md5id'], $this->fields['id_module']);
+            ploopi\search_index::add(
                 _DOC_OBJECT_FILE,
                 $this->fields['md5id'],
                 $this->fields['name'],

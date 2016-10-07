@@ -20,16 +20,16 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-namespace ovensia\ploopi;
+namespace ploopi;
 
-use ovensia\ploopi;
+use ploopi;
 
 /**
- * Gestion deslogs
+ * Gestion des logs
  *
  * @package ploopi
  * @subpackage log
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -39,7 +39,7 @@ use ovensia\ploopi;
  *
  * @package ploopi
  * @subpackage log
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -62,6 +62,6 @@ class log extends data_object
     public static function getdb()
     {
         if (session::get_usedb()) return session::get_db();
-        else { global $db; return $db; }
+        else { $db = loader::getdb(); return $db; }
     }
 }

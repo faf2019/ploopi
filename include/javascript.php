@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2009 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Copyright (c) 2009 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
@@ -27,7 +26,7 @@
  *
  * @package ploopi
  * @subpackage javascript
- * @copyright Netlor, Ovensia, HeXad
+ * @copyright Ovensia, HeXad
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  *

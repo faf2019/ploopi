@@ -1,5 +1,5 @@
 <?php
-ovensia\ploopi\module::init('wiki');
+ploopi\module::init('wiki');
 include_once './modules/wiki/classes/class_wiki_page.php';
 
 // Hérité de webedit
@@ -21,10 +21,10 @@ $objWikiPage = new wiki_page();
 // cas particulier, recherche de root
 if ($strWikiPageId == '' || !$objWikiPage->open($strWikiPageId, $intIdModule))
 {
-    $db->query("SELECT id FROM ploopi_mod_wiki_page WHERE root = 1 AND id_module = {$intIdModule}");
-    if ($db->numrows())
+    ploopi\loader::getdb()->query("SELECT id FROM ploopi_mod_wiki_page WHERE root = 1 AND id_module = {$intIdModule}");
+    if (ploopi\loader::getdb()->numrows())
     {
-        $row = $db->fetchrow();
+        $row = ploopi\loader::getdb()->fetchrow();
         $strWikiPageId = $row['id'];
         $objWikiPage->open($strWikiPageId, $intIdModule);
     }
@@ -37,7 +37,7 @@ $arrParents = array();
 foreach(explode(';', $arrHeadings['list'][$headingid]['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
 
 // Gestion et affichage de l'historique de navigation
-$arrPageHistory = ovensia\ploopi\session::getvar('history_front', $intIdModule);
+$arrPageHistory = ploopi\session::getvar('history_front', $intIdModule);
 if (is_null($arrPageHistory)) $arrPageHistory = array();
 
 if (empty($arrPageHistory) || $arrPageHistory[0] != $strWikiPageId)
@@ -46,7 +46,7 @@ if (empty($arrPageHistory) || $arrPageHistory[0] != $strWikiPageId)
     if (sizeof($arrPageHistory) > 5) array_pop($arrPageHistory);
 }
 
-ovensia\ploopi\session::setvar('history_front', $arrPageHistory, $intIdModule);
+ploopi\session::setvar('history_front', $arrPageHistory, $intIdModule);
 
 $arrUrlHistory = array();
 foreach($arrPageHistory as $strPageId) $arrUrlHistory[] = "<a href=\"".wiki_generatefronturl($strPageId, $headingid, $articleid, $article->fields['metatitle'], $arrParents)."\">{$strPageId}</a>";
@@ -61,13 +61,13 @@ foreach($arrPageHistory as $strPageId) $arrUrlHistory[] = "<a href=\"".wiki_gene
 
     if (!empty($arrMatches[1]))
     {
-        $strPageId = ovensia\ploopi\str::iso8859_clean(ovensia\ploopi\str::html_entity_decode(strip_tags($arrMatches[1])));
+        $strPageId = ploopi\str::iso8859_clean(ploopi\str::html_entity_decode(strip_tags($arrMatches[1])));
 
         $objWikiPage = new wiki_page();
         if ($objWikiPage->open($strPageId, $intIdModule))
         {
             $strLinkClass = 'wiki_link';
-            $strTitle = 'Ouvrir la page &laquo; '.ovensia\ploopi\str::htmlentities($strPageId).' &raquo;';
+            $strTitle = 'Ouvrir la page &laquo; '.ploopi\str::htmlentities($strPageId).' &raquo;';
 
             return '<span class="'.$strLinkClass.'"><a title="'.$strTitle.'" href="'.wiki_generatefronturl($strPageId, $headingid, $articleid, $article->fields['metatitle'], $arrParents).'">'.$arrMatches[1].'</a><img src="./modules/wiki/img/ico_link.png" /></span>';
         }

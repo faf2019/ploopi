@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2011 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -29,7 +29,7 @@
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  *
- * @see ovensia\ploopi\buffer::clean
+ * @see ploopi\buffer::clean
  * @link http://pear.php.net/package/Spreadsheet_Excel_Writer
  */
 
@@ -37,15 +37,15 @@
  * On supprime tous les buffers autres que le buffer principal et on vide le buffer principal
  */
 
-ovensia\ploopi\buffer::clean();
+ploopi\buffer::clean();
 
 include_once './modules/forms/classes/formsForm.php';
 
 $objForm = new formsForm();
 
-if (empty($_GET['forms_export_format']) || empty($_GET['forms_id']) || !is_numeric($_GET['forms_id']) || !$objForm->open($_GET['forms_id'])) ovensia\ploopi\system::kill();
+if (empty($_GET['forms_export_format']) || empty($_GET['forms_id']) || !is_numeric($_GET['forms_id']) || !$objForm->open($_GET['forms_id'])) ploopi\system::kill();
 
 $objForm->export($_GET['forms_export_format']);
 
-ovensia\ploopi\system::kill();
+ploopi\system::kill();
 ?>

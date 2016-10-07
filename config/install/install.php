@@ -24,7 +24,7 @@ include_once './include/constants.php';
 
 session_start();
 
-ovensia\ploopi\buffer::clean();
+ploopi\buffer::clean();
 
 clearstatcache();
 
@@ -371,12 +371,6 @@ $tabid = 1;
 <body>
 
     <div id="background">
-        <pre>
-        <?
-        print_r($_SERVER);
-        ?>
-        </pre>
-
         <div id="window">
             <h1>Installation de Ploopi <?php echo _PLOOPI_VERSION; ?> (<?php echo _PLOOPI_REVISION; ?>)</h1>
             <form id="form" action="" method="post">
@@ -390,11 +384,11 @@ $tabid = 1;
                                 <em><?php echo $row[1]; ?></em>
                                 <span id="sp_<?php echo $var; ?>">
                                 <?php if (empty($row[3])) { ?>
-                                    <input class="field" type="text" id="<?php echo $var; ?>" name="<?php echo $var; ?>" value="<?php echo ovensia\ploopi\str::htmlentities(isset($S['saved'][$var]) ? $S['saved'][$var] : $row[2]); ?>" tabindex="<?php echo $tabid; ?>" />
+                                    <input class="field" type="text" id="<?php echo $var; ?>" name="<?php echo $var; ?>" value="<?php echo ploopi\str::htmlentities(isset($S['saved'][$var]) ? $S['saved'][$var] : $row[2]); ?>" tabindex="<?php echo $tabid; ?>" />
                                 <?php } else { ?>
                                     <select class="field" id="<?php echo $var; ?>" name="<?php echo $var; ?>" tabindex="<?php echo $tabid; ?>">
                                         <?php foreach($row[3] as $k => $v) { ?>
-                                            <option value="<?php echo $k ?>" <?php if ($k == (isset($S['saved'][$var]) ? $S['saved'][$var] : $row[2])) echo 'selected="selected"'; ?>><?php echo ovensia\ploopi\str::htmlentities($v); ?></option>
+                                            <option value="<?php echo $k ?>" <?php if ($k == (isset($S['saved'][$var]) ? $S['saved'][$var] : $row[2])) echo 'selected="selected"'; ?>><?php echo ploopi\str::htmlentities($v); ?></option>
                                         <?php } ?>
                                     </select>
                                 <?php } ?>

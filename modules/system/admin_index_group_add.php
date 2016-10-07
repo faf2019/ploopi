@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,7 +25,7 @@
  *
  * @package system
  * @subpackage admin
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -38,7 +37,7 @@ echo $skin->open_simplebloc();
 
 if (empty($group))
 {
-    $group = new ovensia\ploopi\group();
+    $group = new ploopi\group();
     $group->init_description();
     $parentlabel = $workspace->fields['label'];
 }
@@ -48,15 +47,15 @@ else
 }
 ?>
 
-<form action="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?op=save_group&group_id_group={$group->fields['id']}"); ?>" method="POST" onsubmit="javascript:return system_group_validate(this);">
+<form action="<?php echo ploopi\crypt::urlencode("admin.php?op=save_group&group_id_group={$group->fields['id']}"); ?>" method="POST" onsubmit="javascript:return system_group_validate(this);">
 
 <div class="ploopi_form_title">
-    <?php echo ovensia\ploopi\str::htmlentities($parentlabel); ?> &raquo; <?php echo _SYSTEM_LABEL_GROUP_ADD; ?>
+    <?php echo ploopi\str::htmlentities($parentlabel); ?> &raquo; <?php echo _SYSTEM_LABEL_GROUP_ADD; ?>
 </div>
 <div class="ploopi_form" style="clear:both;padding:2px">
     <p>
         <label><?php echo _SYSTEM_LABEL_GROUP_NAME; ?>:</label>
-        <input type="text" class="text" name="group_label"  value="<?php echo ovensia\ploopi\str::htmlentities("fils de {$parentlabel}"); ?>">
+        <input type="text" class="text" name="group_label"  value="<?php echo ploopi\str::htmlentities("fils de {$parentlabel}"); ?>">
     </p>
     <p>
         <label><?php echo _SYSTEM_LABEL_GROUP_SHARED; ?>:</label>

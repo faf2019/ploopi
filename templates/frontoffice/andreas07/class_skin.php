@@ -33,9 +33,9 @@
  */
 
 
-namespace ovensia\ploopi;
+namespace ploopi;
 
-use ovensia\ploopi;
+use ploopi;
 
 /**
  * inclusion de la classe parent

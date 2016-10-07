@@ -80,11 +80,11 @@ function planning_get_resources()
 {
     $arrResource = array('user' => array(), 'group' => array());
 
-    $arrWorkspaces = explode(',', ovensia\ploopi\system::viewworkspaces());
+    $arrWorkspaces = explode(',', ploopi\system::viewworkspaces());
 
     foreach($arrWorkspaces as $intIdWorkspace)
     {
-        $objWorkspace = new ovensia\ploopi\workspace();
+        $objWorkspace = new ploopi\workspace();
         if ($objWorkspace->open($intIdWorkspace))
         {
             foreach($objWorkspace->getusers(true) as $arrUser)
@@ -95,7 +95,7 @@ function planning_get_resources()
                     'color' => $arrUser['color']
                 );
             }
-            if (ovensia\ploopi\param::get('planning_display_groups'))
+            if (ploopi\param::get('planning_display_groups'))
             {
                 foreach($objWorkspace->getgroups() as $arrGroup)
                 {
@@ -114,7 +114,7 @@ function planning_get_resources()
 
 function planning_get_events($arrResources, $intTimepstpBegin = null, $intTimepstpEnd = null)
 {
-    global $db;
+    $db = ploopi\loader::getdb();
 
     $arrEvents = array();
 
@@ -139,7 +139,7 @@ function planning_get_events($arrResources, $intTimepstpBegin = null, $intTimeps
         ON          ".implode(' AND ', $arrWhere['ed'])."
 
         WHERE       e.id_module = {$_SESSION['ploopi']['moduleid']}
-        AND         e.id_workspace IN (".ovensia\ploopi\system::viewworkspaces().")
+        AND         e.id_workspace IN (".ploopi\system::viewworkspaces().")
 
         ORDER BY    ed.timestp_begin, ed.timestp_end
     ");
@@ -213,9 +213,9 @@ function planning_getcookie()
     $arrSearchPattern = array();
 
     // Lecture cookie
-    ovensia\ploopi\error::unset_handler();
+    ploopi\error::unset_handler();
     if (isset($_COOKIE["planning_request{$_SESSION['ploopi']['moduleid']}"])) $arrSearchPattern = unserialize(gzuncompress(base64_decode($_COOKIE["planning_request{$_SESSION['ploopi']['moduleid']}"])));
-    ovensia\ploopi\error::set_handler();
+    ploopi\error::set_handler();
 
     return $arrSearchPattern;
 }

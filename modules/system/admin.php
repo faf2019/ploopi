@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,7 +25,7 @@
  *
  * @package system
  * @subpackage admin
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -34,14 +33,14 @@
 /**
  * Si l'utilisateur n'est pas gestionnaire, il n'a rien à faire ici => []
  */
-if (!ovensia\ploopi\acl::ismanager()) ovensia\ploopi\output::redirect('admin.php?ploopi_logout');
+if (!ploopi\acl::ismanager()) ploopi\output::redirect('admin.php?ploopi_logout');
 else
 {
     /**
      * Initialisation du module
      */
 
-    ovensia\ploopi\module::init('system');
+    ploopi\module::init('system');
 
     if (!empty($_REQUEST['system_level'])) $_SESSION['system']['level'] = $_REQUEST['system_level'];
     if (empty($_SESSION['system']['level'])) $_SESSION['system']['level'] = _SYSTEM_WORKSPACES;
@@ -135,7 +134,7 @@ else
                         break;
                     }
                 }
-                ovensia\ploopi\system::kill();
+                ploopi\system::kill();
             }
 
             echo $skin->create_pagetitle(_SYSTEM_PAGE_TITLE);
@@ -176,7 +175,7 @@ else
                 <?php
                 echo $skin->close_simplebloc();
             }
-            else ovensia\ploopi\output::redirect("admin.php?system_level="._SYSTEM_WORKSPACES);
+            else ploopi\output::redirect("admin.php?system_level="._SYSTEM_WORKSPACES);
         break;
     }
 

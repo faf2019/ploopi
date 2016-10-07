@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -27,12 +26,12 @@
  *
  * @package ploopi
  * @subpackage frontoffice
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
 
-global $db;
+global ploopi\loader::getdb();
 global $skin;
 global $template_body;
 global $ploopi_timer;
@@ -47,13 +46,13 @@ $skin = null;
 if (!empty($_SESSION['ploopi']['frontoffice']['template_path']) && file_exists("{$_SESSION['ploopi']['frontoffice']['template_path']}/class_skin.php"))
 {
     include_once "{$_SESSION['ploopi']['frontoffice']['template_path']}/class_skin.php";
-    $skin = new ovensia\ploopi\skin();
+    $skin = new ploopi\skin();
 }
 
 /**
  * Initialisation du module WebEdit
  */
 
-ovensia\ploopi\module::init('webedit', false, false, false);
+ploopi\module::init('webedit', false, false, false);
 
 include './modules/webedit/display.php';

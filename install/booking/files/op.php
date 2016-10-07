@@ -36,7 +36,7 @@
  * On vérifie qu'on est bien dans le module Booking.
  */
 
-if ($_SESSION['ploopi']['mode'] == 'backoffice' && ovensia\ploopi\acl::ismoduleallowed('booking'))
+if ($_SESSION['ploopi']['mode'] == 'backoffice' && ploopi\acl::ismoduleallowed('booking'))
 {
     /**
      * Opérations sur les types de ressources
@@ -66,7 +66,7 @@ if ($_SESSION['ploopi']['mode'] == 'backoffice' && ovensia\ploopi\acl::ismodulea
 }
 else // on n'est pas dans le module, peut être une requête frontoffice ?
 {
-    if ($_SESSION['ploopi']['mode'] == 'frontoffice' && !empty($_GET['booking_moduleid']) && is_numeric($_GET['booking_moduleid']) && ovensia\ploopi\acl::ismoduleallowed('booking', $_GET['booking_moduleid']))
+    if ($_SESSION['ploopi']['mode'] == 'frontoffice' && !empty($_GET['booking_moduleid']) && is_numeric($_GET['booking_moduleid']) && ploopi\acl::ismoduleallowed('booking', $_GET['booking_moduleid']))
     {
         $booking_moduleid = $_GET['booking_moduleid'];
 
@@ -77,7 +77,7 @@ else // on n'est pas dans le module, peut être une requête frontoffice ?
          */
         include_once './modules/booking/op_wce_planning.php';
 
-        ovensia\ploopi\system::kill();
+        ploopi\system::kill();
     }
 }
 ?>

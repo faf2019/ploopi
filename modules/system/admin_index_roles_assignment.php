@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -70,7 +70,7 @@ $sql =  "
         ORDER BY    module_type, m.label
         ";
 
-$db->query($sql);
+ploopi\loader::getdb()->query($sql);
 
 $columns = array();
 $values = array();
@@ -82,13 +82,13 @@ $columns['left']['role']        = array('label' => 'Rôle', 'width' => '200', 'op
 $columns['right']['shared']     = array('label' => 'Partagé', 'width' => '65');
 $columns['right']['origine']    = array('label' => 'Origine', 'width' => '150', 'options' => array('sort' => true));
 
-while($row = $db->fetchrow())
+while($row = ploopi\loader::getdb()->fetchrow())
 {
-    $values[$c]['values']['desc']       = array('label' => ovensia\ploopi\str::htmlentities($row['description']));
-    $values[$c]['values']['module']     = array('label' => ovensia\ploopi\str::htmlentities($row['module_label']), 'sort_label' => sprintf("%s_%s", $row['module_label'], $row['label']));
-    $values[$c]['values']['role']       = array('label' => ovensia\ploopi\str::htmlentities($row['label']));
+    $values[$c]['values']['desc']       = array('label' => ploopi\str::htmlentities($row['description']));
+    $values[$c]['values']['module']     = array('label' => ploopi\str::htmlentities($row['module_label']), 'sort_label' => sprintf("%s_%s", $row['module_label'], $row['label']));
+    $values[$c]['values']['role']       = array('label' => ploopi\str::htmlentities($row['label']));
     $values[$c]['values']['shared']     = array('label' => '<img src="'.$_SESSION['ploopi']['template_path'].'/img/system/p_'.(($row['shared'] ? 'green' : 'red')).'.png">');
-    $values[$c]['values']['origine']    = array('label' => ovensia\ploopi\str::htmlentities($row['origine']));
+    $values[$c]['values']['origine']    = array('label' => ploopi\str::htmlentities($row['origine']));
 
     if ($op == 'assign_role' && !empty($_GET['roleid']) && is_numeric($_GET['roleid']) && $_GET['roleid'] == $row['id'])
     {
@@ -97,7 +97,7 @@ while($row = $db->fetchrow())
     }
 
     $values[$c]['description'] = 'Attribuer ce rôle';
-    $values[$c]['link'] = ovensia\ploopi\crypt::urlencode("admin.php?op=assign_role&roleid={$row['id']}");
+    $values[$c]['link'] = ploopi\crypt::urlencode("admin.php?op=assign_role&roleid={$row['id']}");
     $c++;
 }
 
@@ -107,13 +107,13 @@ echo $skin->close_simplebloc();
 
 if ($op == 'assign_role' && !empty($_GET['roleid']) && is_numeric($_GET['roleid']))
 {
-    echo $skin->open_simplebloc("Gestion des attributions du rôle &laquo; ".ovensia\ploopi\str::htmlentities($arrRole['label'])." &raquo; du module &laquo; ".ovensia\ploopi\str::htmlentities($arrRole['module_label'])." &raquo;");
+    echo $skin->open_simplebloc("Gestion des attributions du rôle &laquo; ".ploopi\str::htmlentities($arrRole['label'])." &raquo; du module &laquo; ".ploopi\str::htmlentities($arrRole['module_label'])." &raquo;");
     ?>
 
     <p class="ploopi_va" style="padding:4px; background-color:#e0e0e0; border-bottom:1px solid #c0c0c0;">
         <span style="font-weight:bold;">Rechercher un utilisateur ou un groupe :</span>
         <input type="text" id="system_roleusers_filter" class="text">
-        <img style="cursor:pointer;" onclick="javascript:system_roleusers_search(<?php echo ovensia\ploopi\str::htmlentities($_GET['roleid']); ?>);" src="<?php echo "{$_SESSION['ploopi']['template_path']}/img/validation/search.png"; ?>">
+        <img style="cursor:pointer;" onclick="javascript:system_roleusers_search(<?php echo ploopi\str::htmlentities($_GET['roleid']); ?>);" src="<?php echo "{$_SESSION['ploopi']['template_path']}/img/validation/search.png"; ?>">
     </p>
 
     <div id="system_roleusers_search_result"></div>

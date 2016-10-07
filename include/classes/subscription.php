@@ -20,16 +20,16 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-namespace ovensia\ploopi;
+namespace ploopi;
 
-use ovensia\ploopi;
+use ploopi;
 
 /**
  * Gestion des abonnements
  *
  * @package ploopi
  * @subpackage subscription
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -39,7 +39,7 @@ use ovensia\ploopi;
  *
  * @package ploopi
  * @subpackage subscription
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -63,7 +63,7 @@ class subscription extends data_object
 
     public function clean()
     {
-        global $db;
+        $db = loader::getdb();
         $db->query("DELETE FROM ploopi_subscription_action WHERE id_subscription = '{$this->fields['id']}'");
     }
 
@@ -73,7 +73,7 @@ class subscription extends data_object
 
     public function getactions()
     {
-        global $db;
+        $db = loader::getdb();
 
         $arrActions = array();
 
@@ -135,7 +135,7 @@ class subscription extends data_object
 
     public static function display_refresh($ploopi_subscription_id, $next = '')
     {
-        global $db;
+        $db = loader::getdb();
 
         $objSubscription = new self();
         $booSubscribed = ($objSubscription->open($ploopi_subscription_id));
@@ -266,7 +266,7 @@ class subscription extends data_object
 
     public static function subscribed($id_object, $id_record, $id_action = -1)
     {
-        global $db;
+        $db = loader::getdb();
 
         $where = ($id_action != -1) ? " AND (sa.id_action = {$id_action} OR s.allactions = 1) " : '';
 
@@ -301,7 +301,7 @@ class subscription extends data_object
 
     public static function getusers($id_object, $id_record, $arrActionIds = null)
     {
-        global $db;
+        $db = loader::getdb();
 
         $where = (is_null($arrActionIds)) ? '' : ' AND (sa.id_action IN ('.implode(',', $arrActionIds).') OR s.allactions = 1) ';
 

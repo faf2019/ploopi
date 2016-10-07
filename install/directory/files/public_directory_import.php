@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2010 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -80,7 +80,7 @@ function filesubmit(form)
     foreach($arrDirectoryImportFields as $strKey => $strValue)
     {
         ?>
-        <li style="float:left;width:50%;"><strong><?php echo ovensia\ploopi\str::htmlentities($strKey); ?>:</strong> <span><?php echo ovensia\ploopi\str::htmlentities($strValue); ?></span></li>
+        <li style="float:left;width:50%;"><strong><?php echo ploopi\str::htmlentities($strKey); ?>:</strong> <span><?php echo ploopi\str::htmlentities($strValue); ?></span></li>
         <?php
     }
     //onsubmit="javascript:$('directory_import_info').style.display='block'; ploopi_xmlhttprequest_submitform($('directory_import_form'), 'directory_import_info'); return false;">
@@ -88,7 +88,7 @@ function filesubmit(form)
     ?>
     </ul>
     
-    <form id="directory_import_form" action="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?ploopi_op=directory_import".(!empty($intHeadingId) ? "&directory_heading_id={$intHeadingId}" : '')); ?>" method="post" onsubmit="javascript:filesubmit(this);" enctype="multipart/form-data"> 
+    <form id="directory_import_form" action="<?php echo ploopi\crypt::urlencode("admin.php?ploopi_op=directory_import".(!empty($intHeadingId) ? "&directory_heading_id={$intHeadingId}" : '')); ?>" method="post" onsubmit="javascript:filesubmit(this);" enctype="multipart/form-data"> 
     <div class="ploopi_form" style="clear:both;margin-top:10px;">
         <p>
             <label>Fichier CSV:</label>
@@ -97,14 +97,14 @@ function filesubmit(form)
         <p>
             <label>Séparateur:</label>
             <select class="select" name="directory_import_sep" tabindex="102" style="width:40px;">
-                <option value="<?php echo ovensia\ploopi\str::htmlentities(',') ?>"><?php echo ovensia\ploopi\str::htmlentities(',') ?></option>
-                <option value="<?php echo ovensia\ploopi\str::htmlentities(';') ?>"><?php echo ovensia\ploopi\str::htmlentities(';') ?></option>
+                <option value="<?php echo ploopi\str::htmlentities(',') ?>"><?php echo ploopi\str::htmlentities(',') ?></option>
+                <option value="<?php echo ploopi\str::htmlentities(';') ?>"><?php echo ploopi\str::htmlentities(';') ?></option>
             </select>
         </p>
     </div>
         
     <div style="clear:both;padding:2px 4px;text-align:right;">
-        <input type="button" class="button" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<?php echo ovensia\ploopi\crypt::urlencode("admin.php"); ?>';" tabindex="141" />
+        <input type="button" class="button" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<?php echo ploopi\crypt::urlencode("admin.php"); ?>';" tabindex="141" />
         <input type="submit" class="button" value="Importer" tabindex="140" />
     </div>
     </form>

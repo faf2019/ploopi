@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2012 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,7 +25,7 @@
  *
  * @package system
  * @subpackage admin
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -65,7 +64,7 @@ $_SESSION['system']['directoryform'] = $arrFilter;
 if (trim(implode('', $arrFilter)) != '') $alphaTabItem = 99; // tous
 else
 {
-    $alphaTabItem = (empty($_GET['alphaTabItem'])) ? ovensia\ploopi\session::getvar('system_alphatabitem') : $_GET['alphaTabItem'];
+    $alphaTabItem = (empty($_GET['alphaTabItem'])) ? ploopi\session::getvar('system_alphatabitem') : $_GET['alphaTabItem'];
 
     if (is_null($alphaTabItem))
     {
@@ -84,7 +83,7 @@ else
     }
 }
 
-ovensia\ploopi\session::setvar('system_alphatabitem', $alphaTabItem);
+ploopi\session::setvar('system_alphatabitem', $alphaTabItem);
 ?>
 <div style="padding:4px;">
     <?php
@@ -114,45 +113,45 @@ ovensia\ploopi\session::setvar('system_alphatabitem', $alphaTabItem);
     ?>
 </div>
 
-<form action="<?php echo ovensia\ploopi\crypt::urlencode('admin.php?wspToolbarItem=tabUsers'); ?>" method="post">
+<form action="<?php echo ploopi\crypt::urlencode('admin.php?wspToolbarItem=tabUsers'); ?>" method="post">
 <div class="ploopi_va" style="padding:6px;">
     <label>Nom: </label>
-    <input type="text" class="text" name="ploopi_lastname" value="<?php echo ovensia\ploopi\str::htmlentities($arrFilter['ploopi_lastname']); ?>" style="width:100px;" tabindex="100" />
+    <input type="text" class="text" name="ploopi_lastname" value="<?php echo ploopi\str::htmlentities($arrFilter['ploopi_lastname']); ?>" style="width:100px;" tabindex="100" />
 
     <label>Prénom: </label>
-    <input type="text" class="text" name="ploopi_firstname" value="<?php echo ovensia\ploopi\str::htmlentities($arrFilter['ploopi_firstname']); ?>" style="width:100px;" tabindex="105" />
+    <input type="text" class="text" name="ploopi_firstname" value="<?php echo ploopi\str::htmlentities($arrFilter['ploopi_firstname']); ?>" style="width:100px;" tabindex="105" />
 
     <label>Identifiant: </label>
-    <input type="text" class="text" name="ploopi_login" value="<?php echo ovensia\ploopi\str::htmlentities($arrFilter['ploopi_login']); ?>" style="width:100px;" tabindex="110" />
+    <input type="text" class="text" name="ploopi_login" value="<?php echo ploopi\str::htmlentities($arrFilter['ploopi_login']); ?>" style="width:100px;" tabindex="110" />
 
     <label>Courriel: </label>
-    <input type="text" class="text" name="ploopi_email" value="<?php echo ovensia\ploopi\str::htmlentities($arrFilter['ploopi_email']); ?>" style="width:150px;" tabindex="120" />
+    <input type="text" class="text" name="ploopi_email" value="<?php echo ploopi\str::htmlentities($arrFilter['ploopi_email']); ?>" style="width:150px;" tabindex="120" />
 
     <label>Connexion entre le: </label>
-    <input type="text" class="text" name="ploopi_last_connection_1" id="ploopi_last_connection_1" value="<?php echo ovensia\ploopi\str::htmlentities($arrFilter['ploopi_last_connection_1']); ?>" style="width:100px;" tabindex="116" />
-    <? ovensia\ploopi\date::open_calendar('ploopi_last_connection_1'); ?>
+    <input type="text" class="text" name="ploopi_last_connection_1" id="ploopi_last_connection_1" value="<?php echo ploopi\str::htmlentities($arrFilter['ploopi_last_connection_1']); ?>" style="width:100px;" tabindex="116" />
+    <?php ploopi\date::open_calendar('ploopi_last_connection_1'); ?>
     <label>et le: </label>
-    <input type="text" class="text" name="ploopi_last_connection_2" id="ploopi_last_connection_2" value="<?php echo ovensia\ploopi\str::htmlentities($arrFilter['ploopi_last_connection_2']); ?>" style="width:100px;" tabindex="117" />
-    <? ovensia\ploopi\date::open_calendar('ploopi_last_connection_2'); ?>
+    <input type="text" class="text" name="ploopi_last_connection_2" id="ploopi_last_connection_2" value="<?php echo ploopi\str::htmlentities($arrFilter['ploopi_last_connection_2']); ?>" style="width:100px;" tabindex="117" />
+    <?php ploopi\date::open_calendar('ploopi_last_connection_2'); ?>
 
     <input type="submit" class="button" value="Filtrer" tabindex="150" />
-    <input type="button" class="button" value="Réinitialiser" onclick="document.location.href='<?php echo ovensia\ploopi\crypt::urlencode('admin.php?wspToolbarItem=tabUsers&reset'); ?>';" tabindex="160" />
+    <input type="button" class="button" value="Réinitialiser" onclick="document.location.href='<?php echo ploopi\crypt::urlencode('admin.php?wspToolbarItem=tabUsers&reset'); ?>';" tabindex="160" />
 </div>
 
 <div class="ploopi_tabs">
-    <a href="<? echo ovensia\ploopi\crypt::urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=vcf"); ?>"><img src="./img/export/vcf.png"><span>vCard <sup>VCF</sup></span></a>
-    <a href="<? echo ovensia\ploopi\crypt::urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=xml"); ?>"><img src="./img/export/xml.png"><span>Brut <sup>XML</sup></span></a>
-    <a href="<? echo ovensia\ploopi\crypt::urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=csv"); ?>"><img src="./img/export/csv.png"><span>Brut <sup>CSV</sup></span></a>
-    <?
-    if (ovensia\ploopi\param::get('system_jodwebservice') != '') {
+    <a href="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=vcf"); ?>"><img src="./img/export/vcf.png"><span>vCard <sup>VCF</sup></span></a>
+    <a href="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=xml"); ?>"><img src="./img/export/xml.png"><span>Brut <sup>XML</sup></span></a>
+    <a href="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=csv"); ?>"><img src="./img/export/csv.png"><span>Brut <sup>CSV</sup></span></a>
+    <?php
+    if (ploopi\param::get('system_jodwebservice') != '') {
         ?>
-        <a href="<? echo ovensia\ploopi\crypt::urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=pdf"); ?>"><img src="./img/export/pdf.png"><span>Adobe &trade; <sup>PDF</sup></span></a>
-        <a href="<? echo ovensia\ploopi\crypt::urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=ods"); ?>"><img src="./img/export/ods.png"><span>OpenOffice &trade; <sup>ODS</sup></span></a>
-        <?
+        <a href="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=pdf"); ?>"><img src="./img/export/pdf.png"><span>Adobe &trade; <sup>PDF</sup></span></a>
+        <a href="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=ods"); ?>"><img src="./img/export/ods.png"><span>OpenOffice &trade; <sup>ODS</sup></span></a>
+        <?php
     }
     ?>
-    <a href="<? echo ovensia\ploopi\crypt::urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=xls"); ?>"><img src="./img/export/xls.png"><span>MS Excel &trade; <sup>XLS</sup></span></a>
-    <a href="<? echo ovensia\ploopi\crypt::urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=xlsx"); ?>"><img src="./img/export/xls.png"><span>MS Excel &trade; <sup>XLSX</sup></span></a>
+    <a href="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=xls"); ?>"><img src="./img/export/xls.png"><span>MS Excel &trade; <sup>XLS</sup></span></a>
+    <a href="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=xlsx"); ?>"><img src="./img/export/xls.png"><span>MS Excel &trade; <sup>XLSX</sup></span></a>
 </div>
 
 <?php
@@ -160,10 +159,10 @@ $where = array();
 
 if ($alphaTabItem == 99) // tous ou recherche
 {
-    if ($arrFilter['ploopi_lastname'] != '') $where[] = "lastname LIKE '%".$db->addslashes($arrFilter['ploopi_lastname'])."%'";
-    if ($arrFilter['ploopi_firstname'] != '') $where[] = "firstname LIKE '%".$db->addslashes($arrFilter['ploopi_firstname'])."%'";
-    if ($arrFilter['ploopi_login'] != '') $where[] = "login LIKE '%".$db->addslashes($arrFilter['ploopi_login'])."%'";
-    if ($arrFilter['ploopi_email'] != '') $where[] = "email LIKE '%".$db->addslashes($arrFilter['ploopi_email'])."%'";
+    if ($arrFilter['ploopi_lastname'] != '') $where[] = "lastname LIKE '%".ploopi\loader::getdb()->addslashes($arrFilter['ploopi_lastname'])."%'";
+    if ($arrFilter['ploopi_firstname'] != '') $where[] = "firstname LIKE '%".ploopi\loader::getdb()->addslashes($arrFilter['ploopi_firstname'])."%'";
+    if ($arrFilter['ploopi_login'] != '') $where[] = "login LIKE '%".ploopi\loader::getdb()->addslashes($arrFilter['ploopi_login'])."%'";
+    if ($arrFilter['ploopi_email'] != '') $where[] = "email LIKE '%".ploopi\loader::getdb()->addslashes($arrFilter['ploopi_email'])."%'";
     if ($arrFilter['ploopi_last_connection_1'] != '') $where[] = "last_connection >= '".ploopi_local2timestamp($arrFilter['ploopi_last_connection_1'], '00:00:00')."'";
     if ($arrFilter['ploopi_last_connection_2'] != '') $where[] = "last_connection <= '".ploopi_local2timestamp($arrFilter['ploopi_last_connection_2'], '23:59:59')."'";
 }
@@ -286,11 +285,11 @@ $columns['actions_right']['actions'] =
 $c = 0;
 
 // Sauvegarde de la dernière requête SQL pour export
-ovensia\ploopi\session::setvar('directory_sql', $strSql);
+ploopi\session::setvar('directory_sql', $strSql);
 
-$result = $db->query($strSql);
-$user = new ovensia\ploopi\user();
-$intNbRep = $db->numrows($result);
+$result = ploopi\loader::getdb()->query($strSql);
+$user = new ploopi\user();
+$intNbRep = ploopi\loader::getdb()->numrows($result);
 
 if ($intNbRep > 2000)
 {
@@ -300,23 +299,23 @@ if ($intNbRep > 2000)
 }
 else
 {
-    while ($fields = $db->fetchrow($result))
+    while ($fields = ploopi\loader::getdb()->fetchrow($result))
     {
         $user->fields['id'] = $fields['id'];
         $groups = $user->getgroups();
         $currentgroup = current($groups);
 
-        $action = ' <a href="javascript:ploopi_confirmlink(\''.ovensia\ploopi\crypt::urlencode("admin.php?op=detach_user&user_id={$fields['id']}").'\',\''._SYSTEM_MSG_CONFIRMUSERDETACH.'\')"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_cut.png" title="'._SYSTEM_TITLE_USERDETACH.'"></a>
-                    <a href="javascript:ploopi_confirmlink(\''.ovensia\ploopi\crypt::urlencode("admin.php?op=delete_user&user_id={$fields['id']}").'\',\''._SYSTEM_MSG_CONFIRMUSERDELETE.'\')"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_delete.png" title="'._SYSTEM_LABEL_DELETE.'"></a>
+        $action = ' <a href="javascript:ploopi_confirmlink(\''.ploopi\crypt::urlencode("admin.php?op=detach_user&user_id={$fields['id']}").'\',\''._SYSTEM_MSG_CONFIRMUSERDETACH.'\')"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_cut.png" title="'._SYSTEM_TITLE_USERDETACH.'"></a>
+                    <a href="javascript:ploopi_confirmlink(\''.ploopi\crypt::urlencode("admin.php?op=delete_user&user_id={$fields['id']}").'\',\''._SYSTEM_MSG_CONFIRMUSERDELETE.'\')"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_delete.png" title="'._SYSTEM_LABEL_DELETE.'"></a>
                     ';
 
-        $values[$c]['values']['name']       = array('label' => ovensia\ploopi\str::htmlentities("{$fields['lastname']}, {$fields['firstname']}"));
-        $values[$c]['values']['login']      = array('label' => ovensia\ploopi\str::htmlentities($fields['login']));
-        $values[$c]['values']['email']      = array('label' => empty($fields['email']) ? '' : '<a title="'.ovensia\ploopi\str::htmlentities($fields['email']).'" href="mailto:'.ovensia\ploopi\str::htmlentities($fields['email']).'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/email.gif" /></a>', 'sort_label' => $fields['email']);
+        $values[$c]['values']['name']       = array('label' => ploopi\str::htmlentities("{$fields['lastname']}, {$fields['firstname']}"));
+        $values[$c]['values']['login']      = array('label' => ploopi\str::htmlentities($fields['login']));
+        $values[$c]['values']['email']      = array('label' => empty($fields['email']) ? '' : '<a title="'.ploopi\str::htmlentities($fields['email']).'" href="mailto:'.ploopi\str::htmlentities($fields['email']).'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/email.gif" /></a>', 'sort_label' => $fields['email']);
 
-        $values[$c]['values']['origin']     = array('label' => '<a href="'.ovensia\ploopi\crypt::urlencode("admin.php?wspToolbarItem=tabUsers&usrTabItem=tabUserList&groupid={$currentgroup['id']}&alphaTabItem=".(ord(strtolower($fields['lastname']))-96)).'">'.ovensia\ploopi\str::htmlentities($currentgroup['label']).'</a>');
-        $values[$c]['values']['entity']    = array('label' => ovensia\ploopi\str::htmlentities($fields['entity']));
-        $values[$c]['values']['service']    = array('label' => ovensia\ploopi\str::htmlentities($fields['service']));
+        $values[$c]['values']['origin']     = array('label' => '<a href="'.ploopi\crypt::urlencode("admin.php?wspToolbarItem=tabUsers&usrTabItem=tabUserList&groupid={$currentgroup['id']}&alphaTabItem=".(ord(strtolower($fields['lastname']))-96)).'">'.ploopi\str::htmlentities($currentgroup['label']).'</a>');
+        $values[$c]['values']['entity']    = array('label' => ploopi\str::htmlentities($fields['entity']));
+        $values[$c]['values']['service']    = array('label' => ploopi\str::htmlentities($fields['service']));
 
         switch ($_SESSION['system']['level'])
         {
@@ -341,7 +340,7 @@ else
                 $values[$c]['values']['adminlevel'] = array('label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/adminlevels/{$icon}.png\" />", 'style' => 'text-align:center;', 'sort_label' => $fields['adminlevel']);
 
                 if ($_SESSION['ploopi']['adminlevel'] >= $fields['adminlevel'])
-                    $manage_user =  '<a href="'.ovensia\ploopi\crypt::urlencode("admin.php?op=modify_user&user_id={$fields['id']}").'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_edit.png" title="'._SYSTEM_LABEL_MODIFY.'"></a>'.$action;
+                    $manage_user =  '<a href="'.ploopi\crypt::urlencode("admin.php?op=modify_user&user_id={$fields['id']}").'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_edit.png" title="'._SYSTEM_LABEL_MODIFY.'"></a>'.$action;
                 else
                     $manage_user =  '<img style="margin:0 2px;" src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_noway.png"><img style="margin:0 2px;" src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_noway.png">';
 
@@ -351,7 +350,7 @@ else
 
             case _SYSTEM_GROUPS :
 
-                $values[$c]['values']['actions']        = array('label' => '<a href="'.ovensia\ploopi\crypt::urlencode("admin.php?op=modify_user&user_id={$fields['id']}").'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_edit.png" title="'._SYSTEM_LABEL_MODIFY.'"></a>'.$action);
+                $values[$c]['values']['actions']        = array('label' => '<a href="'.ploopi\crypt::urlencode("admin.php?op=modify_user&user_id={$fields['id']}").'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_edit.png" title="'._SYSTEM_LABEL_MODIFY.'"></a>'.$action);
             break;
         }
 
@@ -367,13 +366,13 @@ if ($_SESSION['system']['level'] == _SYSTEM_WORKSPACES)
     <p class="ploopi_va" style="padding:4px;">
         <span style="margin-right:5px;">Légende:</span>
         <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/adminlevels/level_user.png" />
-        <span style="margin-right:5px;"><?php echo ovensia\ploopi\str::htmlentities($ploopi_system_levels[_PLOOPI_ID_LEVEL_USER]); ?></span>
+        <span style="margin-right:5px;"><?php echo ploopi\str::htmlentities($ploopi_system_levels[_PLOOPI_ID_LEVEL_USER]); ?></span>
         <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/adminlevels/level_groupmanager.png" />
-        <span style="margin-right:5px;"><?php echo ovensia\ploopi\str::htmlentities($ploopi_system_levels[_PLOOPI_ID_LEVEL_GROUPMANAGER]); ?></span>
+        <span style="margin-right:5px;"><?php echo ploopi\str::htmlentities($ploopi_system_levels[_PLOOPI_ID_LEVEL_GROUPMANAGER]); ?></span>
         <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/adminlevels/level_groupadmin.png" />
-        <span style="margin-right:5px;"><?php echo ovensia\ploopi\str::htmlentities($ploopi_system_levels[_PLOOPI_ID_LEVEL_GROUPADMIN]); ?></span>
+        <span style="margin-right:5px;"><?php echo ploopi\str::htmlentities($ploopi_system_levels[_PLOOPI_ID_LEVEL_GROUPADMIN]); ?></span>
         <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/adminlevels/level_systemadmin.png" />
-        <span style="margin-right:5px;"><?php echo ovensia\ploopi\str::htmlentities($ploopi_system_levels[_PLOOPI_ID_LEVEL_SYSTEMADMIN]); ?></span>
+        <span style="margin-right:5px;"><?php echo ploopi\str::htmlentities($ploopi_system_levels[_PLOOPI_ID_LEVEL_SYSTEMADMIN]); ?></span>
     </p>
     <?php
 }

@@ -34,9 +34,9 @@
  * Initialisation du module
  */
 
-ovensia\ploopi\module::init('doc');
+ploopi\module::init('doc');
 
-$strListDocWorkspace = ovensia\ploopi\system::viewworkspaces($template_moduleid,'doc');
+$strListDocWorkspace = ploopi\system::viewworkspaces($template_moduleid,'doc');
 
 $strDocSelect =  "
                 SELECT      f.id, f.name, f.id_module
@@ -50,20 +50,20 @@ $strDocSelect =  "
                 ORDER BY    f.name asc 
                 ";
 
-$sqlDocResult = $db->query($strDocSelect);
+$sqlDocResult = ploopi\loader::getdb()->query($strDocSelect);
 
-if($db->numrows($sqlDocResult)) $template_body->assign_block_vars('switch_docfeed', array());
+if(ploopi\loader::getdb()->numrows($sqlDocResult)) $template_body->assign_block_vars('switch_docfeed', array());
 
-while($docFields = $db->fetchrow($sqlDocResult))
+while($docFields = ploopi\loader::getdb()->fetchrow($sqlDocResult))
 {
     $template_body->assign_block_vars('switch_docfeed.rss' , array(
-        'URL' => ovensia\ploopi\str::urlrewrite('./backend.php?format=rss&ploopi_moduleid='.$docFields['id_module'].'&id_folder='.$docFields['id'], doc_getrewriterules(), $docFields['name'].'.xml',null,true),
+        'URL' => ploopi\str::urlrewrite('./backend.php?format=rss&ploopi_moduleid='.$docFields['id_module'].'&id_folder='.$docFields['id'], doc_getrewriterules(), $docFields['name'].'.xml',null,true),
         'TITLE' => $docFields['name']
         )
     );
     
     $template_body->assign_block_vars('switch_docfeed.atom' , array(
-        'URL' => ovensia\ploopi\str::urlrewrite('./backend.php?format=atom&ploopi_moduleid='.$docFields['id_module'].'&id_folder='.$docFields['id'], doc_getrewriterules(), $docFields['name'].'.xml',null,true),
+        'URL' => ploopi\str::urlrewrite('./backend.php?format=atom&ploopi_moduleid='.$docFields['id_module'].'&id_folder='.$docFields['id'], doc_getrewriterules(), $docFields['name'].'.xml',null,true),
         'TITLE' => $docFields['name']
         )
     );

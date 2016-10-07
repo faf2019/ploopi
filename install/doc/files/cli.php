@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2009 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Copyright (c) 2009 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
@@ -36,7 +36,7 @@
 
 if (!ini_get('safe_mode')) ini_set('max_execution_time', 0);
 
-ovensia\ploopi\module::init('doc');
+ploopi\module::init('doc');
 
 switch($op)
 {
@@ -49,8 +49,8 @@ switch($op)
 
         // Vignettes des fichiers
         $sql = 'SELECT md5id, name, version, id_workspace, id_module FROM ploopi_mod_doc_file';
-        $sqlResult = $db->query($sql);
-        while ($row = $db->fetchrow($sqlResult))
+        $sqlResult = ploopi\loader::getdb()->query($sql);
+        while ($row = ploopi\loader::getdb()->fetchrow($sqlResult))
         {
             $objCache = new Cache_Lite(array( 'cacheDir' => _PLOOPI_PATHCACHE._PLOOPI_SEP, 'lifeTime' => 2592000)); // 30 jours
 
@@ -80,8 +80,8 @@ switch($op)
 
         // Vignettes des fichiers DRAFT !
         $sql = "SELECT md5id, name, id_workspace, id_module FROM ploopi_mod_doc_file_draft";
-        $sqlResult = $db->query($sql);
-        while ($row = $db->fetchrow($sqlResult))
+        $sqlResult = ploopi\loader::getdb()->query($sql);
+        while ($row = ploopi\loader::getdb()->fetchrow($sqlResult))
         {
             $objCache = new Cache_Lite(array( 'cacheDir' => _PLOOPI_PATHCACHE._PLOOPI_SEP, 'lifeTime' => 2592000)); // 30 jours
 
@@ -125,10 +125,10 @@ switch($op)
                 if (is_writable($file)) {
 
                     // Action
-                    $rs = $db->query("SELECT id FROM ploopi_mod_doc_file LIMIT {$limit}");
+                    $rs = ploopi\loader::getdb()->query("SELECT id FROM ploopi_mod_doc_file LIMIT {$limit}");
                     $c = 0;
 
-                    while($row = $db->fetchrow($rs)) {
+                    while($row = ploopi\loader::getdb()->fetchrow($rs)) {
 
                         $objDocFile = new docfile();
                         $objDocFile->open($row['id']);
@@ -152,13 +152,13 @@ switch($op)
         set_time_limit(0);
 
         // Nombre de processus à paralléliser
-        $intNbProc = ovensia\ploopi\system::getnbcore()*2;
+        $intNbProc = ploopi\system::getnbcore()*2;
         // Nombre d'enregistrement à traiter par processus
         $intPageSize = 50;
         // Sélection de l'ensemble des documents
-        $rs = $db->query("SELECT id FROM ploopi_mod_doc_file");
+        $rs = ploopi\loader::getdb()->query("SELECT id FROM ploopi_mod_doc_file");
         // Nombre d'éléments à traiter
-        $intNbElt = $db->numrows();
+        $intNbElt = ploopi\loader::getdb()->numrows();
         // Page de démarrage
         $intCurrentPage = 0;
         // Nombre de page traitées

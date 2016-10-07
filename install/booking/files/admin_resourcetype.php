@@ -81,7 +81,7 @@ $arrResult['columns']['actions_right']['actions'] =
         'width' => '24'
     );    
     
-$db->query("
+ploopi\loader::getdb()->query("
     SELECT      rt.*,
                 w.label as w_label,
                 IF(ISNULL(r.id), 0, count(*)) as c
@@ -100,7 +100,7 @@ $db->query("
 ");
     
 
-while ($row = $db->fetchrow())
+while ($row = ploopi\loader::getdb()->fetchrow())
 {
     $arrResult['rows'][] = 
         array(
@@ -108,15 +108,15 @@ while ($row = $db->fetchrow())
                 array(
                     'name' => 
                         array(
-                            'label' => ovensia\ploopi\str::htmlentities($row['name']),
+                            'label' => ploopi\str::htmlentities($row['name']),
                             'style' => ($row['active']) ? '' : 'color:#a60000;'
                         ),
                     'count' => array('label' => $row['c']),
-                    'workspace' => array('label' => ovensia\ploopi\str::htmlentities($row['w_label'])),
+                    'workspace' => array('label' => ploopi\str::htmlentities($row['w_label'])),
                     'active' => array('label' => ($row['active']) ? 'oui' : 'non'),
                     'actions' => array('label' => ($row['c']) ? '&nbsp;' : '<input type="checkbox" class="booking_element_checkbox" value="'.$row['id'].'">')
                 ),
-            'description' => "Modifier le type de ressource '".ovensia\ploopi\str::htmlentities($row['name'])."'",
+            'description' => "Modifier le type de ressource '".ploopi\str::htmlentities($row['name'])."'",
             'link' => 'javascript:void(0);',
             'onclick' => "booking_element_open('resourcetype', '{$row['id']}', event);"
         );

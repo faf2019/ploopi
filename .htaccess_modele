@@ -88,9 +88,6 @@ FileETag None
 <IfModule rewrite_module>
     RewriteEngine on
 
-    # Changez cette valeur si PLOOPI est installe dans un sous dossier du site (ex : /test )
-    RewriteBase /
-
     # Exemple de blocage des urls publiques vers les documents (version rewritée)
     #RewriteRule ^documents/[a-z0-9]{32}/.*$ - [F]
 

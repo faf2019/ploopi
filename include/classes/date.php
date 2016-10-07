@@ -20,9 +20,9 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-namespace ovensia\ploopi;
+namespace ploopi;
 
-use ovensia\ploopi;
+use ploopi;
 
 /**
  * Fonctions de base pour le traitement des dates, des timestamps MYSQL et des fuseaux horaires.
@@ -30,7 +30,7 @@ use ovensia\ploopi;
  *
  * @package ploopi
  * @subpackage date
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */

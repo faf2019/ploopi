@@ -20,16 +20,16 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-namespace ovensia\ploopi;
+namespace ploopi;
 
-use ovensia\ploopi;
+use ploopi;
 
 /**
  * Gestion des tickets
  *
  * @package ploopi
  * @subpackage ticket
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -43,7 +43,7 @@ define ('_PLOOPI_TICKETS_DONE',     2);
  *
  * @package ploopi
  * @subpackage ticket
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -69,7 +69,7 @@ class ticket extends data_object
 
     public function save()
     {
-        global $db;
+        $db = loader::getdb();
 
         if (!$this->new && $this->fields['needed_validation'] > _PLOOPI_TICKETS_NONE && $this->fields['status'] < _PLOOPI_TICKETS_DONE)
         {
@@ -122,7 +122,7 @@ class ticket extends data_object
      *
      * @package ploopi
      * @subpackage ticket
-     * @copyright Netlor, Ovensia
+     * @copyright Ovensia
      * @license GNU General Public License (GPL)
      * @author Stéphane Escaich
      */
@@ -338,7 +338,7 @@ class ticket extends data_object
 
     public static function getnew()
     {
-        global $db;
+        $db = loader::getdb();
 
         $sql =  "
                 SELECT      t.id

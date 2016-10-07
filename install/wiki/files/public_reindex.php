@@ -34,19 +34,19 @@ echo $skin->open_simplebloc('Réindexation des pages');
 ?>
 <div id="wiki_index">
 <?php
-    ovensia\ploopi\module::init('cus');
+    ploopi\module::init('cus');
     set_time_limit(0);
 
     include_once './modules/wiki/classes/class_wiki_page.php';
 
     $intI = 0;
 
-    $objCol = new ovensia\ploopi\data_object_collection('wiki_page');
+    $objCol = new ploopi\data_object_collection('wiki_page');
     $objCol->add_where('id_module = %d', $_SESSION['ploopi']['moduleid']);
     foreach($objCol->get_objects() as $objPage)
     {
         $objPage->index();
-        $db->flush_log();
+        ploopi\loader::getdb()->flush_log();
         $intI++;
     }
 

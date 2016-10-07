@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,7 +25,7 @@
  *
  * @package webedit
  * @subpackage block
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -35,9 +34,9 @@
  * Initialisation du module
  */
 
-ovensia\ploopi\module::init('webedit', false, false, false);
+ploopi\module::init('webedit', false, false, false);
 
-$block->addmenu('Voir les articles', ovensia\ploopi\crypt::urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public"), ($_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public'));
+$block->addmenu('Voir les articles', ploopi\crypt::urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public"), ($_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public'));
 
 
 $webedit_menu = ($_SESSION['ploopi']['moduleid'] == $menu_moduleid && !empty($_REQUEST['webedit_menu'])) ? $_REQUEST['webedit_menu'] : '';
@@ -46,27 +45,27 @@ $webedit_menu = ($_SESSION['ploopi']['moduleid'] == $menu_moduleid && !empty($_R
  * Il faut que l'utilisateur dispose au moins d'une action pour accéder à la partie 'admin'
  */
 
-if (ovensia\ploopi\acl::isactionallowed(-1, $_SESSION['ploopi']['workspaceid'], $menu_moduleid))
+if (ploopi\acl::isactionallowed(-1, $_SESSION['ploopi']['workspaceid'], $menu_moduleid))
 {
-    $block->addmenu('<b>Gestion du contenu</b>', ovensia\ploopi\crypt::urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=admin"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'admin' && $webedit_menu == '');
+    $block->addmenu('<b>Gestion du contenu</b>', ploopi\crypt::urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=admin"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'admin' && $webedit_menu == '');
 }
 
 /**
  * STATISTIQUES
  */
 
-if (ovensia\ploopi\acl::isactionallowed(_WEBEDIT_ACTION_STATS, $_SESSION['ploopi']['workspaceid'], $menu_moduleid))
+if (ploopi\acl::isactionallowed(_WEBEDIT_ACTION_STATS, $_SESSION['ploopi']['workspaceid'], $menu_moduleid))
 {
-    $block->addmenu('<b>Statistiques</b>', ovensia\ploopi\crypt::urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=admin&webedit_menu=stats"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'admin' && $webedit_menu == 'stats');
+    $block->addmenu('<b>Statistiques</b>', ploopi\crypt::urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=admin&webedit_menu=stats"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'admin' && $webedit_menu == 'stats');
 }
 
 /**
  * Réindexation du contenu
  */
 
-if (ovensia\ploopi\acl::isactionallowed(_WEBEDIT_ACTION_REINDEX, $_SESSION['ploopi']['workspaceid'], $menu_moduleid))
+if (ploopi\acl::isactionallowed(_WEBEDIT_ACTION_REINDEX, $_SESSION['ploopi']['workspaceid'], $menu_moduleid))
 {
-    $block->addmenu('<b>Réindexation</b>', ovensia\ploopi\crypt::urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=admin&webedit_menu=reindex"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'admin' && $webedit_menu == 'reindex');
+    $block->addmenu('<b>Réindexation</b>', ploopi\crypt::urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=admin&webedit_menu=reindex"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'admin' && $webedit_menu == 'reindex');
 }
 
 ?>

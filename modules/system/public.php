@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,7 +25,7 @@
  *
  * @package system
  * @subpackage public
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -34,9 +33,9 @@
 /**
  * Initialisation du module
  */
-ovensia\ploopi\module::init('system');
+ploopi\module::init('system');
 
-$op = empty($_REQUEST['op']) ? (ovensia\ploopi\param::get('system_submenu_display') ? 'tickets' : 'profile') : $_REQUEST['op'];
+$op = empty($_REQUEST['op']) ? (ploopi\param::get('system_submenu_display') ? 'tickets' : 'profile') : $_REQUEST['op'];
 
 switch($op)
 {
@@ -52,14 +51,14 @@ switch($op)
     case 'paramsave':
         if (!empty($_POST['idmodule']) && is_numeric($_POST['idmodule']))
         {
-            $param_module = new ovensia\ploopi\param();
+            $param_module = new ploopi\param();
             $param_module->open($_POST['idmodule'],0,$_SESSION['ploopi']['userid'], 1);
             $param_module->setvalues($_POST);
             $param_module->save();
 
-            ovensia\ploopi\output::redirect("admin.php?op=param&idmodule={$_POST['idmodule']}&reloadsession");
+            ploopi\output::redirect("admin.php?op=param&idmodule={$_POST['idmodule']}&reloadsession");
         }
-        else ovensia\ploopi\output::redirect('admin.php');
+        else ploopi\output::redirect('admin.php');
     break;
 
     case 'param':
@@ -73,9 +72,9 @@ switch($op)
     case 'save_user':
 
         // Protection contre modification
-        if (ovensia\ploopi\param::get('system_profile_edit_allowed') == '0') ovensia\ploopi\output::redirect("admin.php?op=profile");
+        if (ploopi\param::get('system_profile_edit_allowed') == '0') ploopi\output::redirect("admin.php?op=profile");
 
-        $user = new ovensia\ploopi\user();
+        $user = new ploopi\user();
         $user->open($_SESSION['ploopi']['userid']);
 
         if (!isset($_POST['user_ticketsbyemail'])) $user->fields['ticketsbyemail'] = 0;
@@ -97,7 +96,7 @@ switch($op)
                     if ($_POST['usernewpass'] == $_POST['usernewpass_confirm'])
                     {
                         // Complexité ok
-                        if (!_PLOOPI_USE_COMPLEXE_PASSWORD || ovensia\ploopi\security::checkpasswordvalidity($_POST['usernewpass']))
+                        if (!_PLOOPI_USE_COMPLEXE_PASSWORD || ploopi\security::checkpasswordvalidity($_POST['usernewpass']))
                         {
                             // Affectation du mot de passe
                             $user->setpassword($_POST['usernewpass']);
@@ -116,7 +115,7 @@ switch($op)
 
         if (!empty($_SESSION['system']['user_photopath']))
         {
-            ovensia\ploopi\fs::makedir(_PLOOPI_PATHDATA._PLOOPI_SEP.'system');
+            ploopi\fs::makedir(_PLOOPI_PATHDATA._PLOOPI_SEP.'system');
 
             // photo temporaire présente => copie dans le dossier définitif
             rename($_SESSION['system']['user_photopath'], $user->getphotopath());
@@ -124,10 +123,10 @@ switch($op)
         }
 
         // Suppression photo
-        if (ovensia\ploopi\session::getvar("deletephoto_{$user->fields['id']}")) $user->deletephoto();
+        if (ploopi\session::getvar("deletephoto_{$user->fields['id']}")) $user->deletephoto();
 
-        if ($error) ovensia\ploopi\output::redirect("admin.php?op=profile&error={$error}");
-        else ovensia\ploopi\output::redirect("admin.php?op=profile&reloadsession");
+        if ($error) ploopi\output::redirect("admin.php?op=profile&error={$error}");
+        else ploopi\output::redirect("admin.php?op=profile&reloadsession");
     break;
 
     case 'profile':

@@ -20,9 +20,9 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-namespace ovensia\ploopi;
+namespace ploopi;
 
-use ovensia\ploopi;
+use ploopi;
 
 /**
  * Gestionnaire de sessions avec une base de données
@@ -112,7 +112,7 @@ class session
                 }
                 else
                 {
-                    global $db;
+                    $db = loader::getdb();
                     self::set_db($db);
                 }
             break;

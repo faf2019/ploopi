@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,7 +25,7 @@
  *
  * @package ploopi
  * @subpackage annotation
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -34,11 +33,11 @@
 switch($ploopi_op)
 {
     case 'annotation':
-        if (empty($_GET['id_annotation'])) ovensia\ploopi\system::kill();
+        if (empty($_GET['id_annotation'])) ploopi\system::kill();
 
-        ovensia\ploopi\annotation::display_refresh($_GET['id_annotation']);
+        ploopi\annotation::display_refresh($_GET['id_annotation']);
 
-        ovensia\ploopi\system::kill();
+        ploopi\system::kill();
     break;
 
     case 'annotation_taghistory':
@@ -47,11 +46,11 @@ switch($ploopi_op)
         <?php
         if (isset($_GET['id_tag']) && is_numeric($_GET['id_tag']))
         {
-            $tag = new ovensia\ploopi\tag();
+            $tag = new ploopi\tag();
             $tag->open($_GET['id_tag']);
 
             ?>
-            <div style="padding:4px;">Le tag <b><?php echo ovensia\ploopi\str::htmlentities($tag->fields['tag']); ; ?></b> a aussi été utilisé sur les annotation suivantes :</div>
+            <div style="padding:4px;">Le tag <b><?php echo ploopi\str::htmlentities($tag->fields['tag']); ; ?></b> a aussi été utilisé sur les annotation suivantes :</div>
             <div class="ploopi_annotation_popup_list">
             <?php
 
@@ -75,16 +74,16 @@ switch($ploopi_op)
                         ORDER BY    a.date_annotation DESC
                         ";
 
-            $rs = $db->query($select);
+            $rs = ploopi\loader::getdb()->query($select);
 
-            while ($fields = $db->fetchrow($rs))
+            while ($fields = ploopi\loader::getdb()->fetchrow($rs))
             {
-                $ld = ovensia\ploopi\date::timestamp2local($fields['date_annotation']);
+                $ld = ploopi\date::timestamp2local($fields['date_annotation']);
                 ?>
                 <div class="ploopi_annotation_row_<?php echo $numrow = (!isset($numrow) || $numrow == 2) ? 1 : 2; ?>" style="padding:4px;">
-                    <div style="float:right;"><?php echo ovensia\ploopi\str::htmlentities("le {$ld['date']} à {$ld['time']}"); ?></div>
-                    <div style="font-weight:bold;"><?php echo ovensia\ploopi\str::htmlentities("{$fields['title']}"); ?></div>
-                    <div style="clear:both;padding-top:4px;"><?php echo ovensia\ploopi\str::make_links(ovensia\ploopi\str::nl2br(ovensia\ploopi\str::htmlentities($fields['content']))); ?></div>
+                    <div style="float:right;"><?php echo ploopi\str::htmlentities("le {$ld['date']} à {$ld['time']}"); ?></div>
+                    <div style="font-weight:bold;"><?php echo ploopi\str::htmlentities("{$fields['title']}"); ?></div>
+                    <div style="clear:both;padding-top:4px;"><?php echo ploopi\str::make_links(ploopi\str::nl2br(ploopi\str::htmlentities($fields['content']))); ?></div>
                     <?php
                     if ($fields['id_record'] != '')
                     {
@@ -102,7 +101,7 @@ switch($ploopi_op)
                                                     $fields['script']
                                         );
                         ?>
-                        <div style="clear:both;padding-top:4px;text-align:right;"><a href="<?php echo "admin.php?ploopi_mainmenu=1&{$object_script}"; ?>"><?php echo ovensia\ploopi\str::htmlentities("{$fields['module_name']} / {$fields['object_name']} / {$fields['object_label']}"); ?></a></div>
+                        <div style="clear:both;padding-top:4px;text-align:right;"><a href="<?php echo "admin.php?ploopi_mainmenu=1&{$object_script}"; ?>"><?php echo ploopi\str::htmlentities("{$fields['module_name']} / {$fields['object_name']} / {$fields['object_label']}"); ?></a></div>
                         <?php
                     }
                     ?>
@@ -119,7 +118,7 @@ switch($ploopi_op)
         <div style="padding:4px;text-align:right"><a href="javascript:void(0);" onclick="javascript:ploopi_hidepopup();">Fermer</a></div>
         </div>
         <?php
-        ovensia\ploopi\system::kill();
+        ploopi\system::kill();
     break;
 
     case 'annotation_searchtags':
@@ -131,27 +130,27 @@ switch($ploopi_op)
                                 count(*) as c
                         FROM    ploopi_tag t,
                                 ploopi_annotation_tag at
-                        WHERE   t.tag LIKE '".$db->addslashes($_GET['tag'])."%'
+                        WHERE   t.tag LIKE '".ploopi\loader::getdb()->addslashes($_GET['tag'])."%'
                         AND     t.id_user = {$_SESSION['ploopi']['userid']}
                         AND     t.id = at.id_tag
                         GROUP BY t.id
                         ORDER BY c DESC
                         ";
 
-            $rs = $db->query($select);
+            $rs = ploopi\loader::getdb()->query($select);
             $c=0;
 
-            while ($fields = $db->fetchrow($rs))
+            while ($fields = ploopi\loader::getdb()->fetchrow($rs))
             {
                 if ($c++) echo '|';
-                echo ovensia\ploopi\str::htmlentities("{$fields['tag']};{$fields['c']}");
+                echo ploopi\str::htmlentities("{$fields['tag']};{$fields['c']}");
             }
         }
-        ovensia\ploopi\system::kill();
+        ploopi\system::kill();
     break;
 
     case 'annotation_delete':
-        $annotation = new ovensia\ploopi\annotation();
+        $annotation = new ploopi\annotation();
 
         if (!empty($_GET['ploopi_annotation_id']) && is_numeric($_GET['ploopi_annotation_id']) && $annotation->open($_GET['ploopi_annotation_id']) && $annotation->fields['id_user'] == $_SESSION['ploopi']['userid'])
         {
@@ -162,7 +161,7 @@ switch($ploopi_op)
     case 'annotation_save':
         if (!empty($_POST['id_annotation']))
         {
-            $annotation = new ovensia\ploopi\annotation();
+            $annotation = new ploopi\annotation();
             $annotation->setvalues($_POST,'ploopi_annotation_');
 
             $annotation->fields['id_object'] = $_SESSION['annotation'][$_POST['id_annotation']]['id_object'];
@@ -172,19 +171,19 @@ switch($ploopi_op)
             if (isset($_POST['ploopi_annotationtags'])) $annotation->tags = $_POST['ploopi_annotationtags'];
             if (!isset($_POST['ploopi_annotation_private'])) $annotation->fields['private'] = 0;
 
-            $annotation->fields['date_annotation'] = ovensia\ploopi\date::createtimestamp();
+            $annotation->fields['date_annotation'] = ploopi\date::createtimestamp();
             $annotation->setuwm();
 
             if (!empty($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']])) $annotation->fields['id_module_type'] = $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['id_module_type'];
             $annotation->save();
             ?>
             <script type="text/javascript">
-                window.parent.ovensia\ploopi\annotation::display('<?php echo ovensia\ploopi\str::htmlentities($_POST['id_annotation']); ?>');
+                window.parent.ploopi\annotation::display('<?php echo ploopi\str::htmlentities($_POST['id_annotation']); ?>');
             </script>
         <?php
         }
-        ovensia\ploopi\system::kill();
-        //ovensia\ploopi\ticket::send($annotation->fields['id_object'], $annotation->fields['id_record'], $annotation->fields['object_label'], $annotation->fields['title'], $annotation->fields['content']);
+        ploopi\system::kill();
+        //ploopi\ticket::send($annotation->fields['id_object'], $annotation->fields['id_record'], $annotation->fields['object_label'], $annotation->fields['title'], $annotation->fields['content']);
     break;
 
     case 'annotation_show':

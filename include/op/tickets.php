@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,7 +25,7 @@
  *
  * @package ploopi
  * @subpackage ticket
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -34,9 +33,9 @@
 switch($ploopi_op)
 {
     case 'tickets_getnum':
-        list($newtickets, $lastticket) = ovensia\ploopi\ticket::getnew();
+        list($newtickets, $lastticket) = ploopi\ticket::getnew();
         echo "{$newtickets},{$lastticket}";
-        ovensia\ploopi\system::kill();
+        ploopi\system::kill();
     break;
 
     case 'tickets_alert':
@@ -44,17 +43,17 @@ switch($ploopi_op)
         ?>
         <p class="ploopi_va" style="padding:4px;">
             <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/tickets/newmail.png">
-            <a href="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets"); ?>"><b>Vous avez reçu un nouveau message !</b></a>
+            <a href="<?php echo ploopi\crypt::urlencode("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets"); ?>"><b>Vous avez reçu un nouveau message !</b></a>
         </p>
         <?php
         $content = ob_get_contents();
         ob_end_clean();
         echo $skin->create_popup('Nouveau Message !', $content, 'popup_tickets_new_alert');
-        ovensia\ploopi\system::kill();
+        ploopi\system::kill();
     break;
 
     case 'tickets_new':
-        if (!$_SESSION['ploopi']['connected']) ovensia\ploopi\system::kill();
+        if (!$_SESSION['ploopi']['connected']) ploopi\system::kill();
 
         ob_start();
         ?>
@@ -69,26 +68,26 @@ switch($ploopi_op)
         </script>
 
         <div id="tickets_new">
-            <form method="post" action="<?php echo ovensia\ploopi\crypt::urlencode('admin.php'); ?>" target="ploopi_tickets_send" onsubmit="javascript:return ploopi_tickets_validate(this);">
+            <form method="post" action="<?php echo ploopi\crypt::urlencode('admin.php'); ?>" target="ploopi_tickets_send" onsubmit="javascript:return ploopi_tickets_validate(this);">
             <input type="hidden" name="ploopi_op" value="tickets_send">
-            <input type="hidden" name="ploopi_tickets_reload" value="<?php if (!empty($_GET['ploopi_tickets_reload'])) echo ovensia\ploopi\str::htmlentities($_GET['ploopi_tickets_reload']); ?>">
+            <input type="hidden" name="ploopi_tickets_reload" value="<?php if (!empty($_GET['ploopi_tickets_reload'])) echo ploopi\str::htmlentities($_GET['ploopi_tickets_reload']); ?>">
             <?php
             if (isset($_GET['ploopi_tickets_id_object']))
             {
                 ?>
-                <input type="hidden" name="ploopi_tickets_id_object" value="<?php echo ovensia\ploopi\str::htmlentities($_GET['ploopi_tickets_id_object']); ?>">
+                <input type="hidden" name="ploopi_tickets_id_object" value="<?php echo ploopi\str::htmlentities($_GET['ploopi_tickets_id_object']); ?>">
                 <?php
             }
             if (isset($_GET['ploopi_tickets_id_record']))
             {
                 ?>
-                <input type="hidden" name="ploopi_tickets_id_record" value="<?php echo ovensia\ploopi\str::htmlentities($_GET['ploopi_tickets_id_record']); ?>">
+                <input type="hidden" name="ploopi_tickets_id_record" value="<?php echo ploopi\str::htmlentities($_GET['ploopi_tickets_id_record']); ?>">
                 <?php
             }
             if (isset($_GET['ploopi_tickets_object_label']))
             {
                 ?>
-                <input type="hidden" name="ploopi_tickets_object_label" value="<?php echo ovensia\ploopi\str::htmlentities($_GET['ploopi_tickets_object_label']); ?>">
+                <input type="hidden" name="ploopi_tickets_object_label" value="<?php echo ploopi\str::htmlentities($_GET['ploopi_tickets_object_label']); ?>">
                 <?php
             }
             ?>
@@ -108,7 +107,7 @@ switch($ploopi_op)
             if (isset($_GET['ploopi_tickets_object_label']))
             {
                 ?>
-                <div><b><?php echo _PLOOPI_LABEL_TICKET_LINKEDOBJECT; ?></b>: <?php echo ovensia\ploopi\str::htmlentities($_GET['ploopi_tickets_object_label']); ?></div>
+                <div><b><?php echo _PLOOPI_LABEL_TICKET_LINKEDOBJECT; ?></b>: <?php echo ploopi\str::htmlentities($_GET['ploopi_tickets_object_label']); ?></div>
                 <?php
             }
             ?>
@@ -122,7 +121,7 @@ switch($ploopi_op)
 
             <div style="padding:8px 4px;margin:4px 0;background-color:#f0f0f0;border:1px solid #c0c0c0;">
                 <?php
-                ovensia\ploopi\ticket::selectusers((empty($_GET['ploopi_tickets_id_user'])) ? null : $_GET['ploopi_tickets_id_user']);
+                ploopi\ticket::selectusers((empty($_GET['ploopi_tickets_id_user'])) ? null : $_GET['ploopi_tickets_id_user']);
                 ?>
             </div>
             <div style="text-align:right;">
@@ -136,22 +135,22 @@ switch($ploopi_op)
         $content = ob_get_contents();
         ob_end_clean();
         echo $skin->create_popup(_PLOOPI_LABEL_NEWTICKET, $content, 'system_popupticket');
-        ovensia\ploopi\system::kill();
+        ploopi\system::kill();
     break;
 
     case 'tickets_replyto':
     case 'tickets_modify':
-        if (!$_SESSION['ploopi']['connected']) ovensia\ploopi\system::kill();
+        if (!$_SESSION['ploopi']['connected']) ploopi\system::kill();
 
         ob_start();
 
-        $ticket = new ovensia\ploopi\ticket();
+        $ticket = new ploopi\ticket();
 
         if (!empty($_GET['ticket_id']) && is_numeric($_GET['ticket_id']) && $ticket->open($_GET['ticket_id']))
         {
             if ($ploopi_op == 'tickets_replyto')
             {
-                $objUser = new ovensia\ploopi\user();
+                $objUser = new ploopi\user();
                 $strUserName = ($objUser->open($ticket->fields['id_user'])) ? "{$objUser->fields['lastname']} {$objUser->fields['firstname']}" : _PLOOPI_LABEL_TICKET_UNKNOWN_USER;
 
                 $ticket->fields['title'] = "RE: {$ticket->fields['title']}";
@@ -177,21 +176,21 @@ switch($ploopi_op)
                 }
             </script>
             <div id="tickets_new">
-                <form method="post" action="<?php echo ovensia\ploopi\crypt::urlencode('admin.php'); ?>" target="ploopi_tickets_send" onsubmit="javascript:return ploopi_tickets_validate(this);">
+                <form method="post" action="<?php echo ploopi\crypt::urlencode('admin.php'); ?>" target="ploopi_tickets_send" onsubmit="javascript:return ploopi_tickets_validate(this);">
                 <input type="hidden" name="ploopi_op" value="<?php echo $nextop; ?>">
-                <input type="hidden" name="ticket_id" value="<?php echo ovensia\ploopi\str::htmlentities($_GET['ticket_id']); ?>">
+                <input type="hidden" name="ticket_id" value="<?php echo ploopi\str::htmlentities($_GET['ticket_id']); ?>">
                 <input type="hidden" name="ploopi_tickets_reload" value="1">
                 <?php
                 if ($ploopi_op == 'tickets_replyto')
                 {
                     ?>
-                    <div><span><?php echo _PLOOPI_LABEL_TICKET_RECIPIENT; ?> : </span><span style="font-weight:bold;"><?php echo ovensia\ploopi\str::htmlentities($strUserName); ?></span></div>
+                    <div><span><?php echo _PLOOPI_LABEL_TICKET_RECIPIENT; ?> : </span><span style="font-weight:bold;"><?php echo ploopi\str::htmlentities($strUserName); ?></span></div>
                     <?php
                 }
                 ?>
 
                 <div style="font-weight:bold;"><?php echo _PLOOPI_LABEL_TICKET_TITLE; ?></div>
-                <div><input type="text" name="ticket_title" class="text" value="<?php echo ovensia\ploopi\str::htmlentities($ticket->fields['title']); ?>" style="width:98%"></div>
+                <div><input type="text" name="ticket_title" class="text" value="<?php echo ploopi\str::htmlentities($ticket->fields['title']); ?>" style="width:98%"></div>
                 <div style="font-weight:bold;"><?php echo _PLOOPI_LABEL_TICKET_MESSAGE; ?></div>
                 <div>
                     <?php
@@ -213,34 +212,34 @@ switch($ploopi_op)
         $content = ob_get_contents();
         ob_end_clean();
         echo $skin->create_popup($popup_title, $content, 'system_popupticket');
-        ovensia\ploopi\system::kill();
+        ploopi\system::kill();
     break;
 
     case 'tickets_send':
-        $ticket = new ovensia\ploopi\ticket();
+        $ticket = new ploopi\ticket();
         if (isset($_POST['ticket_id']) && is_numeric($_POST['ticket_id']) && isset($_POST['fck_ticket_message']) && $ticket->open($_POST['ticket_id']))
         {
-            $root_ticket = new ovensia\ploopi\ticket();
+            $root_ticket = new ploopi\ticket();
             if ($ticket->fields['root_id'] && $root_ticket->open($ticket->fields['root_id']))
             {
                 $root_ticket->fields['count_replies']++;
-                $root_ticket->fields['lastreply_timestp'] = ovensia\ploopi\date::createtimestamp();
+                $root_ticket->fields['lastreply_timestp'] = ploopi\date::createtimestamp();
                 $root_ticket->save();
             }
 
-            $response = new ovensia\ploopi\ticket();
+            $response = new ploopi\ticket();
             $response->fields = $ticket->fields;
             $response->fields['id'] = '';
             $response->fields['title'] = $_POST['ticket_title'];
-            $response->fields['message'] = ovensia\ploopi\str::htmlpurifier($_POST['fck_ticket_message']);
+            $response->fields['message'] = ploopi\str::htmlpurifier($_POST['fck_ticket_message']);
             $response->fields['id_user'] = $_SESSION['ploopi']['userid'];
-            $response->fields['timestp'] = ovensia\ploopi\date::createtimestamp();
+            $response->fields['timestp'] = ploopi\date::createtimestamp();
             $response->fields['lastreply_timestp'] = $response->fields['timestp'];
             $response->fields['parent_id'] = $_POST['ticket_id'];
             $response->fields['root_id'] = $ticket->fields['root_id'];
             $id_resp = $response->save();
 
-            $db->query("DELETE FROM ploopi_ticket_watch WHERE id_ticket = {$ticket->fields['root_id']} AND id_user <> {$_SESSION['ploopi']['userid']}");
+            ploopi\loader::getdb()->query("DELETE FROM ploopi_ticket_watch WHERE id_ticket = {$ticket->fields['root_id']} AND id_user <> {$_SESSION['ploopi']['userid']}");
         }
         else
         {
@@ -248,11 +247,11 @@ switch($ploopi_op)
             {
                 if (!empty($_POST['ploopi_tickets_id_object']) && !empty($_POST['ploopi_tickets_id_record']) && !empty($_POST['ploopi_tickets_object_label']))
                 {
-                    ovensia\ploopi\ticket::send($_POST['ticket_title'], $_POST['fck_ticket_message'], isset($_POST['ticket_needed_validation']) ? $_POST['ticket_needed_validation'] : 0, isset($_POST['ticket_delivery_notification']) ? $_POST['ticket_delivery_notification'] : 0, $_POST['ploopi_tickets_id_object'], $_POST['ploopi_tickets_id_record'], $_POST['ploopi_tickets_object_label']);
+                    ploopi\ticket::send($_POST['ticket_title'], $_POST['fck_ticket_message'], isset($_POST['ticket_needed_validation']) ? $_POST['ticket_needed_validation'] : 0, isset($_POST['ticket_delivery_notification']) ? $_POST['ticket_delivery_notification'] : 0, $_POST['ploopi_tickets_id_object'], $_POST['ploopi_tickets_id_record'], $_POST['ploopi_tickets_object_label']);
                 }
                 else
                 {
-                    ovensia\ploopi\ticket::send($_POST['ticket_title'], $_POST['fck_ticket_message'], isset($_POST['ticket_needed_validation']) ? $_POST['ticket_needed_validation'] : 0, isset($_POST['ticket_delivery_notification']) ? $_POST['ticket_delivery_notification'] : 0);
+                    ploopi\ticket::send($_POST['ticket_title'], $_POST['fck_ticket_message'], isset($_POST['ticket_needed_validation']) ? $_POST['ticket_needed_validation'] : 0, isset($_POST['ticket_delivery_notification']) ? $_POST['ticket_delivery_notification'] : 0);
                 }
             }
         }
@@ -261,7 +260,7 @@ switch($ploopi_op)
         {
             ?>
             <script type="text/javascript">
-                window.parent.location.href = '<?php echo ovensia\ploopi\crypt::urlencode('admin.php?ploopi_mainmenu='._PLOOPI_MENU_MYWORKSPACE.'&op=tickets'); ?>';
+                window.parent.location.href = '<?php echo ploopi\crypt::urlencode('admin.php?ploopi_mainmenu='._PLOOPI_MENU_MYWORKSPACE.'&op=tickets'); ?>';
             </script>
             <?php
         }
@@ -274,34 +273,34 @@ switch($ploopi_op)
             <?php
         }
 
-        ovensia\ploopi\system::kill();
+        ploopi\system::kill();
     break;
 
     case 'tickets_modify_next':
-        $ticket = new ovensia\ploopi\ticket();
+        $ticket = new ploopi\ticket();
         if (isset($_POST['ticket_id']) && is_numeric($_POST['ticket_id']) && isset($_POST['fck_ticket_message']) && $ticket->open($_POST['ticket_id']))
         {
             $_POST['ticket_message'] = $_POST['fck_ticket_message'];
             unset($_POST['fck_ticket_message']);
-            $ticket->fields['lastedit_timestp'] = ovensia\ploopi\date::createtimestamp();
+            $ticket->fields['lastedit_timestp'] = ploopi\date::createtimestamp();
             $ticket->setvalues($_POST, 'ticket_');
             $ticket->save();
         }
         ?>
         <script type="text/javascript">
-            window.parent.location.href = '<?php echo ovensia\ploopi\crypt::urlencode('admin.php?ploopi_mainmenu='._PLOOPI_MENU_MYWORKSPACE.'&op=tickets'); ?>';
+            window.parent.location.href = '<?php echo ploopi\crypt::urlencode('admin.php?ploopi_mainmenu='._PLOOPI_MENU_MYWORKSPACE.'&op=tickets'); ?>';
         </script>
         <?php
-        ovensia\ploopi\system::kill();
+        ploopi\system::kill();
     break;
 
     case 'tickets_select_user':
-        if (!$_SESSION['ploopi']['connected']) ovensia\ploopi\system::kill();
+        if (!$_SESSION['ploopi']['connected']) ploopi\system::kill();
 
         if (isset($_GET['user_id']) && is_numeric($_GET['user_id'])) $_SESSION['ploopi']['tickets']['users_selected'][$_GET['user_id']] = $_GET['user_id'];
         if (isset($_GET['group_id']) && is_numeric($_GET['group_id']))
         {
-            $objGroup = new ovensia\ploopi\group();
+            $objGroup = new ploopi\group();
             $objGroup->fields['id'] = $_GET['group_id'];
             $arrUsers = $objGroup->getusers();
 
@@ -309,21 +308,21 @@ switch($ploopi_op)
         }
         if (isset($_GET['remove_user_id'])) unset($_SESSION['ploopi']['tickets']['users_selected'][$_GET['remove_user_id']]);
 
-        ovensia\ploopi\ticket::displayusers();
+        ploopi\ticket::displayusers();
 
-        ovensia\ploopi\system::kill();
+        ploopi\system::kill();
     break;
 
     case 'tickets_search_users':
-        if (!$_SESSION['ploopi']['connected']) ovensia\ploopi\system::kill();
-        if (!isset($_POST['ploopi_ticket_userfilter']) && !isset($_POST['ploopi_ticket_typefilter'])) ovensia\ploopi\system::kill();
+        if (!$_SESSION['ploopi']['connected']) ploopi\system::kill();
+        if (!isset($_POST['ploopi_ticket_userfilter']) && !isset($_POST['ploopi_ticket_typefilter'])) ploopi\system::kill();
 
         ?>
         <div style="height:150px;overflow-y:auto;overflow-x:hidden;border:1px solid #c0c0c0;">
         <?php
             $listgroup = array();
-            $group = new ovensia\ploopi\group();
-            $workspace = new ovensia\ploopi\workspace();
+            $group = new ploopi\group();
+            $workspace = new ploopi\workspace();
 
             // liste pour les espaces, groupes, utilisateurs
             $list = array();
@@ -334,7 +333,7 @@ switch($ploopi_op)
             $booEmptySearch = true;
 
             // Filtre utilisateur
-            $filtered_search_field = $db->addslashes($_POST['ploopi_ticket_userfilter']);
+            $filtered_search_field = ploopi\loader::getdb()->addslashes($_POST['ploopi_ticket_userfilter']);
             $search_pattern_user = ($_POST['ploopi_ticket_typefilter'] == 'user') ? "AND (u.login LIKE '%{$filtered_search_field}%' OR u.lastname LIKE '%{$filtered_search_field}%' OR u.firstname LIKE '%{$filtered_search_field}%') " : '';
 
             // construction de la liste des groupes de travail et des groupes d'utilisateurs rattachés (pour l'utilisateur courant)
@@ -342,7 +341,7 @@ switch($ploopi_op)
             {
                 if (isset($wsp['adminlevel']) && $wsp['backoffice'])
                 {
-                    if ($_POST['ploopi_ticket_typefilter'] != 'workspace' || $_POST['ploopi_ticket_userfilter'] == '' || ($_POST['ploopi_ticket_typefilter'] == 'workspace' && stristr(ovensia\ploopi\str::convertaccents($wsp['label']), ovensia\ploopi\str::convertaccents($_POST['ploopi_ticket_userfilter'])) !== false))
+                    if ($_POST['ploopi_ticket_typefilter'] != 'workspace' || $_POST['ploopi_ticket_userfilter'] == '' || ($_POST['ploopi_ticket_typefilter'] == 'workspace' && stristr(ploopi\str::convertaccents($wsp['label']), ploopi\str::convertaccents($_POST['ploopi_ticket_userfilter'])) !== false))
                     {
                         $list['wsp'][$wsp['id']]['label'] = $wsp['label'];
                         $list['wsp'][$wsp['id']]['empty'] = true;
@@ -351,7 +350,7 @@ switch($ploopi_op)
                         $workspace->fields['id'] = $wsp['id'];
                         foreach ($workspace->getgroups(true) as $grp)
                         {
-                            if ($_POST['ploopi_ticket_typefilter'] != 'group' || ovensia\ploopi\str::convertaccents($_POST['ploopi_ticket_userfilter']) == '' || ($_POST['ploopi_ticket_typefilter'] == 'group' && stristr(ovensia\ploopi\str::convertaccents($grp['label']), ovensia\ploopi\str::convertaccents($_POST['ploopi_ticket_userfilter'])) !== false))
+                            if ($_POST['ploopi_ticket_typefilter'] != 'group' || ploopi\str::convertaccents($_POST['ploopi_ticket_userfilter']) == '' || ($_POST['ploopi_ticket_typefilter'] == 'group' && stristr(ploopi\str::convertaccents($grp['label']), ploopi\str::convertaccents($_POST['ploopi_ticket_userfilter'])) !== false))
                             {
                                 $list['wsp'][$wsp['id']]['groups'][$grp['id']] = $grp['id'];
                                 if (!isset($list['grp'][$grp['id']])) $list['grp'][$grp['id']]['label'] = $grp['label'];
@@ -367,7 +366,7 @@ switch($ploopi_op)
                 if ($_POST['ploopi_ticket_typefilter'] != 'group')
                 {
                     // recherche des utilisateurs attachés aux espaces précédemment sélectionnés
-                    $db->query("
+                    ploopi\loader::getdb()->query("
                         SELECT      u.*,
                                     wu.id_workspace
 
@@ -383,7 +382,7 @@ switch($ploopi_op)
                     ");
 
                     // affectation des utilisateurs à leurs groupes de rattachement
-                    while ($fields = $db->fetchrow())
+                    while ($fields = ploopi\loader::getdb()->fetchrow())
                     {
                         // Si l'espace contient au moins 1 utilisateur, il n'est pas vide
                         if ($list['wsp'][$fields['id_workspace']]['empty']) $list['wsp'][$fields['id_workspace']]['empty'] = false;
@@ -395,7 +394,7 @@ switch($ploopi_op)
 
                 if (!empty($list['grp']))
                 {
-                    $db->query("
+                    ploopi\loader::getdb()->query("
                         SELECT      u.*,
                                     gu.id_group
 
@@ -411,7 +410,7 @@ switch($ploopi_op)
                     ");
 
                     $listgroup = array();
-                    while ($fields = $db->fetchrow())
+                    while ($fields = ploopi\loader::getdb()->fetchrow())
                     {
                         $list['grp'][$fields['id_group']]['users'][] = $fields['id'];
                         if (!isset($list['usr'][$fields['id']])) $list['usr'][$fields['id']] = array('id' => $fields['id'], 'login' => $fields['login'], 'lastname' => $fields['lastname'], 'firstname' => $fields['firstname']);
@@ -436,7 +435,7 @@ switch($ploopi_op)
                         {
                             ?>
                             <div class="system_tickets_select_workgroup">
-                                <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_workgroup.png"><span><?php echo ovensia\ploopi\str::htmlentities($wsp['label']); ?></span></p>
+                                <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_workgroup.png"><span><?php echo ploopi\str::htmlentities($wsp['label']); ?></span></p>
                             </div>
                             <?php
                             if (!empty($wsp['users']))
@@ -447,7 +446,7 @@ switch($ploopi_op)
 
                                     ?>
                                     <a class="system_tickets_select_user" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_select_user&user_id=<?php echo $id_user; ?>', 'div_ticket_users_selected');">
-                                        <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span><?php echo ovensia\ploopi\str::htmlentities("{$list['usr'][$id_user]['lastname']} {$list['usr'][$id_user]['firstname']}"); ?></span></p>
+                                        <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span><?php echo ploopi\str::htmlentities("{$list['usr'][$id_user]['lastname']} {$list['usr'][$id_user]['firstname']}"); ?></span></p>
                                     </a>
                                     <?php
                                 }
@@ -461,7 +460,7 @@ switch($ploopi_op)
                                     {
                                         ?>
                                         <a class="system_tickets_select_usergroup" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_select_user&group_id=<?php echo $id_grp; ?>', 'div_ticket_users_selected');">
-                                            <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_group.png"><span><?php echo ovensia\ploopi\str::htmlentities($list['grp'][$id_grp]['label']); ?></span></p>
+                                            <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_group.png"><span><?php echo ploopi\str::htmlentities($list['grp'][$id_grp]['label']); ?></span></p>
                                         </a>
                                         <?php
                                         foreach($list['grp'][$id_grp]['users'] as $id_user)
@@ -469,7 +468,7 @@ switch($ploopi_op)
                                             if ($booEmptySearch) $booEmptySearch = false;
                                             ?>
                                             <a class="system_tickets_select_usergroup_user" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_select_user&user_id=<?php echo $id_user; ?>', 'div_ticket_users_selected');">
-                                                <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span><?php echo ovensia\ploopi\str::htmlentities("{$list['usr'][$id_user]['lastname']} {$list['usr'][$id_user]['firstname']}"); ?></span></p>
+                                                <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span><?php echo ploopi\str::htmlentities("{$list['usr'][$id_user]['lastname']} {$list['usr'][$id_user]['firstname']}"); ?></span></p>
                                             </a>
                                             <?php
                                         }
@@ -489,7 +488,7 @@ switch($ploopi_op)
                 </div>
                 <?php
             }
-            ovensia\ploopi\system::kill();
+            ploopi\system::kill();
 
             ?>
         </div>
@@ -502,7 +501,7 @@ switch($ploopi_op)
             </p>
         </div>
         <?php
-        ovensia\ploopi\system::kill();
+        ploopi\system::kill();
     break;
 
 }

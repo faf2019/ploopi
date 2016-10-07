@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2011 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Copyright (c) 2010 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
@@ -27,7 +26,7 @@
  *
  * @package forms
  * @subpackage global
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */

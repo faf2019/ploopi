@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,7 +25,7 @@
  *
  * @package system
  * @subpackage system
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -36,24 +35,24 @@
  */
 include_once './modules/system/xmlparser_mb.php';
 
-if (empty($_GET['idmoduletype']) || empty($_GET['updatefrom']) || empty($_GET['updateto']) || !is_numeric($_GET['idmoduletype'])) ovensia\ploopi\output::redirect("admin.php");
+if (empty($_GET['idmoduletype']) || empty($_GET['updatefrom']) || empty($_GET['updateto']) || !is_numeric($_GET['idmoduletype'])) ploopi\output::redirect("admin.php");
 
 global $idmoduletype;
 $idmoduletype = $_GET['idmoduletype'];
 
-$objModuleType = new ovensia\ploopi\module_type();
-if (!$objModuleType->open($_GET['idmoduletype'])) ovensia\ploopi\output::redirect("admin.php");
+$objModuleType = new ploopi\module_type();
+if (!$objModuleType->open($_GET['idmoduletype'])) ploopi\output::redirect("admin.php");
 
 $strModuleType = $objModuleType->fields['label'];
 
 if (!ini_get('safe_mode')) ini_set('max_execution_time', 0);
 
-echo $skin->open_simplebloc(_SYSTEM_LABEL_UPDATEREPORT.ovensia\ploopi\str::htmlentities(" - {$strModuleType} {$_GET['updatefrom']} => {$_GET['updateto']}"));
+echo $skin->open_simplebloc(_SYSTEM_LABEL_UPDATEREPORT.ploopi\str::htmlentities(" - {$strModuleType} {$_GET['updatefrom']} => {$_GET['updateto']}"));
 
 
-$select = "SELECT version FROM ploopi_module_type WHERE id = '".$db->addslashes($strModuleType)."' AND version = '".$db->addslashes($_GET['updateto'])."'";
-$db->query($select);
-if ($db->numrows())
+$select = "SELECT version FROM ploopi_module_type WHERE id = '".ploopi\loader::getdb()->addslashes($strModuleType)."' AND version = '".ploopi\loader::getdb()->addslashes($_GET['updateto'])."'";
+ploopi\loader::getdb()->query($select);
+if (ploopi\loader::getdb()->numrows())
 {
     ?>
     <div style="padding:4px;text-align:center;font-weight:bold;color:#a60000;">Module déjà mis à jour !</div>
@@ -61,7 +60,7 @@ if ($db->numrows())
 }
 else
 {
-    ovensia\ploopi\user_action_log::record(_SYSTEM_ACTION_UPDATEMODULE, "{$strModuleType} {$_GET['updatefrom']} => {$strModuleType} {$_GET['updateto']}");
+    ploopi\user_action_log::record(_SYSTEM_ACTION_UPDATEMODULE, "{$strModuleType} {$_GET['updatefrom']} => {$strModuleType} {$_GET['updateto']}");
 
     $modpath = "./install/{$strModuleType}";
 
@@ -109,7 +108,7 @@ else
     {
         if (is_writable(realpath($destfiles)))
         {
-            ovensia\ploopi\fs::copydir($srcfiles , $destfiles);
+            ploopi\fs::copydir($srcfiles , $destfiles);
             $detail = 'Fichiers copiés';
         }
         else
@@ -129,7 +128,7 @@ else
         // OPERATION 2 : Chargement des paramètres/actions
         // =============
 
-        $module_type = new ovensia\ploopi\module_type();
+        $module_type = new ploopi\module_type();
         $module_type->open($_GET['idmoduletype']);
 
         $critical_error = $module_type->update_description($xmlfile_desc, $rapport);
@@ -146,7 +145,7 @@ else
             {
                 if (file_exists("{$sqlpath}/{$sqlfile}"))
                 {
-                    $db->multiplequeries(file_get_contents("{$sqlpath}/{$sqlfile}"));
+                    ploopi\loader::getdb()->multiplequeries(file_get_contents("{$sqlpath}/{$sqlfile}"));
                     $detail[] = "Fichier '{$sqlfile}' importé";
                 }
                 else $detail[] = "Fichier '{$sqlfile}' non trouvé";
@@ -160,14 +159,14 @@ else
             $testok = true;
             $detail = '';
 
-            ovensia\ploopi\user_action_log::record(_SYSTEM_ACTION_UPDATEMETABASE, $strModuleType);
+            ploopi\user_action_log::record(_SYSTEM_ACTION_UPDATEMETABASE, $strModuleType);
 
-            $db->query("DELETE FROM ploopi_mb_field WHERE id_module_type = {$_GET['idmoduletype']}");
-            $db->query("DELETE FROM ploopi_mb_relation WHERE id_module_type = {$_GET['idmoduletype']}");
-            $db->query("DELETE FROM ploopi_mb_schema WHERE id_module_type = {$_GET['idmoduletype']}");
-            $db->query("DELETE FROM ploopi_mb_table WHERE id_module_type = {$_GET['idmoduletype']}");
-            $db->query("DELETE FROM ploopi_mb_object WHERE id_module_type = {$_GET['idmoduletype']}");
-            $db->query("DELETE FROM ploopi_mb_wce_object WHERE id_module_type = {$_GET['idmoduletype']}");
+            ploopi\loader::getdb()->query("DELETE FROM ploopi_mb_field WHERE id_module_type = {$_GET['idmoduletype']}");
+            ploopi\loader::getdb()->query("DELETE FROM ploopi_mb_relation WHERE id_module_type = {$_GET['idmoduletype']}");
+            ploopi\loader::getdb()->query("DELETE FROM ploopi_mb_schema WHERE id_module_type = {$_GET['idmoduletype']}");
+            ploopi\loader::getdb()->query("DELETE FROM ploopi_mb_table WHERE id_module_type = {$_GET['idmoduletype']}");
+            ploopi\loader::getdb()->query("DELETE FROM ploopi_mb_object WHERE id_module_type = {$_GET['idmoduletype']}");
+            ploopi\loader::getdb()->query("DELETE FROM ploopi_mb_wce_object WHERE id_module_type = {$_GET['idmoduletype']}");
 
             if (file_exists($mbfile))
             {
@@ -209,7 +208,7 @@ else
 }
 ?>
 <div style="padding:4px;text-align:right;">
-    <form action="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?sysToolbarItem=install&reloadsession"); ?>" method="post">
+    <form action="<?php echo ploopi\crypt::urlencode("admin.php?sysToolbarItem=install&reloadsession"); ?>" method="post">
     <input type="submit" class="flatbutton" value="<?php echo _PLOOPI_CONTINUE; ?>">
     </form>
 </div>

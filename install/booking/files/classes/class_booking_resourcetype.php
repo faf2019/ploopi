@@ -41,7 +41,7 @@
  * @lastmodified $Date$
  */
 
-class booking_resourcetype extends ovensia\ploopi\data_object
+class booking_resourcetype extends ploopi\data_object
 {
     /**
      * Constructeur de la classe

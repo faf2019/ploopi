@@ -34,13 +34,13 @@ switch($ploopi_op)
 {
 
     case 'filexplorer_browser':
-        if (empty($_GET['filexplorer_id']) || empty($_SESSION['filexplorer'][$_GET['filexplorer_id']])) ovensia\ploopi\system::kill();
+        if (empty($_GET['filexplorer_id']) || empty($_SESSION['filexplorer'][$_GET['filexplorer_id']])) ploopi\system::kill();
 
         ob_start();
 
-        $cipher = new ovensia\ploopi\cipher();
+        $cipher = new ploopi\cipher();
 
-        //ovensia\ploopi\output::print_r($_GET);
+        //ploopi\output::print_r($_GET);
 
         // Dossier actuel (chaine)
         $strCurrentFolder = empty($_GET['filexplorer_folder']) ? '' : $cipher->decrypt($_GET['filexplorer_folder']);
@@ -55,7 +55,7 @@ switch($ploopi_op)
         <div id="filexplorer">
             <div class="documents_browser">
                 <div class="documents_path">
-                    <a title="Aller au Dossier Racine" href="javascript:void(0);" style="float:right;" onclick="javascript:ploopi_filexplorer_browser('<?php echo ovensia\ploopi\str::htmlentities($_GET['filexplorer_id']); ?>', '<?php $cipher->crypt(''); ?>');"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/documents/ico_home.png"></a>
+                    <a title="Aller au Dossier Racine" href="javascript:void(0);" style="float:right;" onclick="javascript:ploopi_filexplorer_browser('<?php echo ploopi\str::htmlentities($_GET['filexplorer_id']); ?>', '<?php $cipher->crypt(''); ?>');"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/documents/ico_home.png"></a>
                     <div>Emplacement :</div>
                     <?php
                     $strShortCutPath = '';
@@ -63,10 +63,10 @@ switch($ploopi_op)
                     {
                         if ($strFolderName != '') $strShortCutPath .= _PLOOPI_SEP.$strFolderName;
                         ?>
-                        <a href="javascript:void(0);" onclick="javascript:ploopi_filexplorer_browser('<?php echo ovensia\ploopi\str::htmlentities($_GET['filexplorer_id']); ?>', '<?php echo $cipher->crypt($strShortCutPath); ?>');">
+                        <a href="javascript:void(0);" onclick="javascript:ploopi_filexplorer_browser('<?php echo ploopi\str::htmlentities($_GET['filexplorer_id']); ?>', '<?php echo $cipher->crypt($strShortCutPath); ?>');">
                             <p class="ploopi_va">
                                 <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/documents/ico_folder.png" />
-                                <span><?php echo ovensia\ploopi\str::htmlentities($strFolderName ? $strFolderName : 'Racine'); ?></span>
+                                <span><?php echo ploopi\str::htmlentities($strFolderName ? $strFolderName : 'Racine'); ?></span>
                             </p>
                         </a>
                         <?php
@@ -129,7 +129,7 @@ switch($ploopi_op)
                         $boolIsFolder = is_dir($strFilePath);
                         $arrStat = stat($strFilePath);
 
-                       // ovensia\ploopi\output::print_r($arrStat);
+                       // ploopi\output::print_r($arrStat);
 
                         if ($boolIsFolder)
                         {
@@ -144,14 +144,14 @@ switch($ploopi_op)
                         }
                         else
                         {
-                            //echo $strFileExtension = ovensia\ploopi\fs::file_getextension($strFileName);
+                            //echo $strFileExtension = ploopi\fs::file_getextension($strFileName);
                             //$strIcon = "mimetypes/".(file_exists("{$_SESSION['ploopi']['template_path']}/img/documents/mimetypes/ico_{$strFileExtension}.png") ? "ico_{$strFileExtension}.png" : 'ico_default.png');
                             $strIcon = 'mimetypes/ico_default.png';
                             $intSortId = 2;
                             $intElements = 0;
                         }
 
-                        $strDate = ovensia\ploopi\date::unixtimestamp2local($arrStat['mtime']);
+                        $strDate = ploopi\date::unixtimestamp2local($arrStat['mtime']);
 
                         $documents_values[] =
                             array(
@@ -159,7 +159,7 @@ switch($ploopi_op)
                                     array(
                                         'name' =>
                                             array(
-                                                'label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/documents/{$strIcon}\" /><span>&nbsp;".ovensia\ploopi\str::htmlentities($strFileName)."</span>",
+                                                'label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/documents/{$strIcon}\" /><span>&nbsp;".ploopi\str::htmlentities($strFileName)."</span>",
                                                 'sort_label' => "{$intSortId}_{$strFileName}"
                                             ),
                                         'type' =>
@@ -169,12 +169,12 @@ switch($ploopi_op)
                                             ),
                                         'timestp_file' =>
                                             array(
-                                                'label' => ovensia\ploopi\str::htmlentities(substr($strDate,0,10)),
+                                                'label' => ploopi\str::htmlentities(substr($strDate,0,10)),
                                                 'sort_label' => $arrStat['mtime']
                                             ),
                                         'size' =>
                                             array(
-                                                'label' => ovensia\ploopi\str::htmlentities($boolIsFolder ? "{$intElements} element(s)" : sprintf("%s Ko", number_format(($arrStat['size']/1024),1,".", " "))),
+                                                'label' => ploopi\str::htmlentities($boolIsFolder ? "{$intElements} element(s)" : sprintf("%s Ko", number_format(($arrStat['size']/1024),1,".", " "))),
                                                 'sort_label' => $intSortId.'_'.($boolIsFolder ? sprintf("%020d", $intElements) : sprintf("%020d", $arrStat['size'])),
                                                 'style' => 'text-align:right;'
                                             )
@@ -211,7 +211,7 @@ switch($ploopi_op)
 
         echo $skin->create_popup('Explorateur de fichiers', $content, 'ploopi_filexplorer_popup');
 
-        ovensia\ploopi\system::kill();
+        ploopi\system::kill();
     break;
 
 }

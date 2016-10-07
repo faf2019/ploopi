@@ -20,9 +20,9 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-namespace ovensia\ploopi;
+namespace ploopi;
 
-use ovensia\ploopi;
+use ploopi;
 
 /**
  * Fonction d'accès à l'espace physique de stockage.
@@ -30,7 +30,7 @@ use ovensia\ploopi;
  *
  * @package ploopi
  * @subpackage filesystem
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -153,7 +153,7 @@ abstract class fs
     {
         $ext = fs::file_getextension($filename);
 
-        global $db;
+        $db = loader::getdb();
 
         // Si mimetype = '' ou pas trouvé c'est que c'est un octetstream donc on passe
         $sqlMime = $db->query("SELECT mimetype FROM ploopi_mimetype WHERE ext = '".$db->addslashes($ext)."' AND mimetype != ''");

@@ -20,9 +20,9 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-namespace ovensia\ploopi;
+namespace ploopi;
 
-use ovensia\ploopi;
+use ploopi;
 
 /**
  * Fonction de manipulation de chaînes.
@@ -30,7 +30,7 @@ use ovensia\ploopi;
  *
  * @package ploopi
  * @subpackage string
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -545,7 +545,7 @@ abstract class str {
      * @see _PLOOPI_INDEXATION_WORDMINLENGHT
      * @see _PLOOPI_INDEXATION_WORDMAXLENGHT
      *
-     * @see ovensia\ploopi\str::convertaccents
+     * @see ploopi\str::convertaccents
      *
      * @link http://pecl.php.net/package/stem
      */

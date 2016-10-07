@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2010 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Copyright (c) 2010 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
@@ -27,7 +26,7 @@
  *
  * @package forms
  * @subpackage admin
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -66,18 +65,18 @@ $arrParams[] = "forms_id={$_GET['forms_id']}";
 if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
 ?>
 
-<form name="form_field" action="<?php echo ovensia\ploopi\crypt::urlencode('admin.php?'.implode('&', $arrParams)); ?>" method="post" onsubmit="javascript:return forms_field_validate(this);">
-<input type="hidden" name="field_values" value="<?php echo ovensia\ploopi\str::htmlentities($field->fields['values']); ?>">
+<form name="form_field" action="<?php echo ploopi\crypt::urlencode('admin.php?'.implode('&', $arrParams)); ?>" method="post" onsubmit="javascript:return forms_field_validate(this);">
+<input type="hidden" name="field_values" value="<?php echo ploopi\str::htmlentities($field->fields['values']); ?>">
 <div style="overflow:hidden">
     <div style="float:left;width:50%;">
         <div class="ploopi_form" style="padding:4px;">
             <p>
                 <label><?php echo _FORMS_FIELD_POSITION; ?>:</label>
-                <input type="text" class="text" style="width:30px;" name="field_position" value="<?php echo ovensia\ploopi\str::htmlentities($field->fields['position']); ?>" />
+                <input type="text" class="text" style="width:30px;" name="field_position" value="<?php echo ploopi\str::htmlentities($field->fields['position']); ?>" />
             </p>
             <p>
                 <label><?php echo _FORMS_FIELD_INTERLINE; ?>:</label>
-                <input type="text" class="text" style="width:30px;" name="field_interline" value="<?php echo ovensia\ploopi\str::htmlentities($field->fields['interline']); ?>" />
+                <input type="text" class="text" style="width:30px;" name="field_interline" value="<?php echo ploopi\str::htmlentities($field->fields['interline']); ?>" />
             </p>
             <p>
                 <label><?php echo _FORMS_FIELD_GROUP; ?>:</label>
@@ -87,7 +86,7 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
                     foreach($objForm->getGroups() as $intIdGroup => $objGroup)
                     {
                         ?>
-                        <option value="<?php echo $intIdGroup; ?>" <?php if ($field->fields['id_group'] == $intIdGroup) echo 'selected="selected"'; ?>><?php echo ovensia\ploopi\str::htmlentities($objGroup->fields['label']); ?></option>
+                        <option value="<?php echo $intIdGroup; ?>" <?php if ($field->fields['id_group'] == $intIdGroup) echo 'selected="selected"'; ?>><?php echo ploopi\str::htmlentities($objGroup->fields['label']); ?></option>
                         <?php
                     }
                     ?>
@@ -95,11 +94,11 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
             </p>
             <p>
                 <label><?php echo _FORMS_FIELD_NAME; ?>:</label>
-                <input type="text" class="text" name="field_name" value="<?php echo ovensia\ploopi\str::htmlentities($field->fields['name']); ?>" />
+                <input type="text" class="text" name="field_name" value="<?php echo ploopi\str::htmlentities($field->fields['name']); ?>" />
             </p>
             <p>
                 <label><?php echo _FORMS_FIELD_FIELDNAME; ?>:</label>
-                <input type="text" class="text" name="field_fieldname" value="<?php echo ovensia\ploopi\str::htmlentities($field->fields['fieldname']); ?>" maxlength="64" />
+                <input type="text" class="text" name="field_fieldname" value="<?php echo ploopi\str::htmlentities($field->fields['fieldname']); ?>" maxlength="64" />
             </p>
             <p>
                 <label><?php echo _FORMS_FIELD_TYPE; ?>:</label>
@@ -108,18 +107,18 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
                 foreach($field_types as $key => $value)
                 {
                     $sel = ($field->fields['type'] == $key) ? 'selected' : '';
-                    echo "<option $sel value=\"{$key}\">".ovensia\ploopi\str::htmlentities($value)."</option>";
+                    echo "<option $sel value=\"{$key}\">".ploopi\str::htmlentities($value)."</option>";
                 }
                 ?>
                 </select>
             </p>
             <p>
                 <label><?php echo _FORMS_FIELD_DESCRIPTION; ?>:</label>
-                <textarea class="text" style="height:40px;" name="field_description"><?php echo ovensia\ploopi\str::htmlentities($field->fields['description']); ?></textarea>
+                <textarea class="text" style="height:40px;" name="field_description"><?php echo ploopi\str::htmlentities($field->fields['description']); ?></textarea>
             </p>
             <p>
                 <label><?php echo _FORMS_FIELD_DEFAULTVALUE; ?>:</label>
-                <input type="text" class="text" size="30" name="field_defaultvalue" value="<?php echo ovensia\ploopi\str::htmlentities($field->fields['defaultvalue']); ?>" />
+                <input type="text" class="text" size="30" name="field_defaultvalue" value="<?php echo ploopi\str::htmlentities($field->fields['defaultvalue']); ?>" />
             </p>
         </div>
     </div>
@@ -135,14 +134,14 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
                     foreach($field_formats as $key => $value)
                     {
                         $sel = ($field->fields['format'] == $key) ? 'selected' : '';
-                        echo "<option $sel value=\"{$key}\">".ovensia\ploopi\str::htmlentities($value)."</option>";
+                        echo "<option $sel value=\"{$key}\">".ploopi\str::htmlentities($value)."</option>";
                     }
                     ?>
                     </select>
                 </p>
                 <p>
                     <label><?php echo _FORMS_FIELD_MAXLENGTH; ?>:</label>
-                    <input type="text" class="text" style="width:50px;" name="field_maxlength" value="<?php echo ovensia\ploopi\str::htmlentities($field->fields['maxlength']); ?>" />
+                    <input type="text" class="text" style="width:50px;" name="field_maxlength" value="<?php echo ploopi\str::htmlentities($field->fields['maxlength']); ?>" />
                 </p>
             </div>
 
@@ -199,7 +198,7 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
                     <select class="select" name="f_formfield" style="width:200px;">
                     <?php
 
-                    $db->query( "
+                    ploopi\loader::getdb()->query( "
                                 SELECT  forms.label, field.*
                                 FROM    ploopi_mod_forms_form forms,
                                         ploopi_mod_forms_field field
@@ -211,19 +210,19 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
                                 ");
 
                     $strTable = '';
-                    while ($row = $db->fetchrow())
+                    while ($row = ploopi\loader::getdb()->fetchrow())
                     {
                         if ($row['label'] != $strTable)
                         {
                             if (!empty($strTable)) echo '</optgroup>';
                             $strTable = $row['label'];
-                            echo '<optgroup label="'.ovensia\ploopi\str::htmlentities($strTable).'">';
+                            echo '<optgroup label="'.ploopi\str::htmlentities($strTable).'">';
                         }
 
                         $strFormat = isset($field_formats[$row['format']]) ? " ({$field_formats[$row['format']]})" : '';
                         ?>
                         <option value="<?php echo $row['id']; ?>" <?php if ($field->fields['values'] == $row['id']) echo 'selected="selected"'; ?>>
-                        <?php echo ovensia\ploopi\str::htmlentities("{$row['name']}{$strFormat}"); ?>
+                        <?php echo ploopi\str::htmlentities("{$row['name']}{$strFormat}"); ?>
                         </option>
                         <?php
                     }
@@ -247,15 +246,15 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
                         if ($objField->fields['id'] != $field->fields['id'] && ($objField->fields['type'] == 'calculation' || in_array($objField->fields['format'], array('integer', 'float'))))
                         {
                             ?>
-                            <optgroup label="<?php echo ovensia\ploopi\str::htmlentities("C{$objField->fields['position']} - {$objField->fields['name']}"); ?>">
-                            <option value="<?php echo ovensia\ploopi\str::htmlentities($objField->fields['position']); ?>"><?php echo "Valeur"; ?></option>
-                            <option value="<?php echo ovensia\ploopi\str::htmlentities($objField->fields['position']); ?>_CNT"><?php echo "Nombre"; ?></option>
-                            <option value="<?php echo ovensia\ploopi\str::htmlentities($objField->fields['position']); ?>_SUM"><?php echo "Somme"; ?></option>
-                            <option value="<?php echo ovensia\ploopi\str::htmlentities($objField->fields['position']); ?>_MIN"><?php echo "Min"; ?></option>
-                            <option value="<?php echo ovensia\ploopi\str::htmlentities($objField->fields['position']); ?>_MAX"><?php echo "Max"; ?></option>
-                            <option value="<?php echo ovensia\ploopi\str::htmlentities($objField->fields['position']); ?>_AVG"><?php echo "Moyenne"; ?></option>
-                            <option value="<?php echo ovensia\ploopi\str::htmlentities($objField->fields['position']); ?>_STD"><?php echo "Ecart-type"; ?></option>
-                            <option value="<?php echo ovensia\ploopi\str::htmlentities($objField->fields['position']); ?>_VAR"><?php echo "Variance"; ?></option>
+                            <optgroup label="<?php echo ploopi\str::htmlentities("C{$objField->fields['position']} - {$objField->fields['name']}"); ?>">
+                            <option value="<?php echo ploopi\str::htmlentities($objField->fields['position']); ?>"><?php echo "Valeur"; ?></option>
+                            <option value="<?php echo ploopi\str::htmlentities($objField->fields['position']); ?>_CNT"><?php echo "Nombre"; ?></option>
+                            <option value="<?php echo ploopi\str::htmlentities($objField->fields['position']); ?>_SUM"><?php echo "Somme"; ?></option>
+                            <option value="<?php echo ploopi\str::htmlentities($objField->fields['position']); ?>_MIN"><?php echo "Min"; ?></option>
+                            <option value="<?php echo ploopi\str::htmlentities($objField->fields['position']); ?>_MAX"><?php echo "Max"; ?></option>
+                            <option value="<?php echo ploopi\str::htmlentities($objField->fields['position']); ?>_AVG"><?php echo "Moyenne"; ?></option>
+                            <option value="<?php echo ploopi\str::htmlentities($objField->fields['position']); ?>_STD"><?php echo "Ecart-type"; ?></option>
+                            <option value="<?php echo ploopi\str::htmlentities($objField->fields['position']); ?>_VAR"><?php echo "Variance"; ?></option>
                             </optgroup>
                             <?php
                         }
@@ -271,7 +270,7 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
                     // Pour chaque fonction
                     foreach(formsArithmeticParser::getFunctionsDef() as $strFunction => $strDef)
                     {
-                        ?><option value="<?php echo ovensia\ploopi\str::htmlentities($strFunction); ?>"><?php echo ovensia\ploopi\str::htmlentities($strDef); ?></option><?php
+                        ?><option value="<?php echo ploopi\str::htmlentities($strFunction); ?>"><?php echo ploopi\str::htmlentities($strDef); ?></option><?php
                     }
                     ?>
                     </select>
@@ -282,28 +281,28 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
                     // Pour chaque fonction
                     foreach(formsArithmeticParser::getOperatorsDef() as $strOperator => $strDef)
                     {
-                        ?><input type="button" class="button" value="<?php echo ovensia\ploopi\str::htmlentities($strOperator); ?>" style="width:25px;margin-right:2px;" title="<?php echo ovensia\ploopi\str::htmlentities($strDef); ?>" onclick="javascript:forms_setoperator(this);" /><?php
+                        ?><input type="button" class="button" value="<?php echo ploopi\str::htmlentities($strOperator); ?>" style="width:25px;margin-right:2px;" title="<?php echo ploopi\str::htmlentities($strDef); ?>" onclick="javascript:forms_setoperator(this);" /><?php
                     }
                     ?><input type="button" class="button" value="(" style="width:25px;margin-right:2px;" onclick="javascript:forms_setoperator(this);" /><input type="button" class="button" value=")" style="width:25px;margin-right:2px;" onclick="javascript:forms_setoperator(this);" />
                 </p>
                 <p>
                     <label>&nbsp;</label>
-                    <textarea class="text" name="field_formula" id="field_formula"><?php echo ovensia\ploopi\str::htmlentities($field->fields['formula']); ?></textarea>
+                    <textarea class="text" name="field_formula" id="field_formula"><?php echo ploopi\str::htmlentities($field->fields['formula']); ?></textarea>
                 </p>
             </div>
 
             <div id="fieldstyles" class="ploopi_form" style="display:block;">
                 <p>
                     <label><?php echo _FORMS_FIELD_STYLE_FORM; ?>:</label>
-                    <input type="text" class="text" name="field_style_form" value="<?php echo ovensia\ploopi\str::htmlentities($field->fields['style_form']); ?>" />
+                    <input type="text" class="text" name="field_style_form" value="<?php echo ploopi\str::htmlentities($field->fields['style_form']); ?>" />
                 </p>
                 <p>
                     <label><?php echo _FORMS_FIELD_STYLE_FIELD; ?>:</label>
-                    <input type="text" class="text" name="field_style_field" value="<?php echo ovensia\ploopi\str::htmlentities($field->fields['style_field']); ?>" />
+                    <input type="text" class="text" name="field_style_field" value="<?php echo ploopi\str::htmlentities($field->fields['style_field']); ?>" />
                 </p>
                 <p>
                     <label><?php echo _FORMS_FIELD_EXPORT_WIDTH; ?>:</label>
-                    <input type="text" class="text" name="field_export_width" value="<?php echo ovensia\ploopi\str::htmlentities($field->fields['export_width']); ?>" />
+                    <input type="text" class="text" name="field_export_width" value="<?php echo ploopi\str::htmlentities($field->fields['export_width']); ?>" />
                 </p>
             </div>
 
@@ -344,7 +343,7 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
 
 
 <div style="clear:both;background-color:#d0d0d0;border-top:1px solid #a0a0a0;padding:4px;overflow:auto;text-align:right;">
-    <input type="button" class="flatbutton" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<?php echo ovensia\ploopi\crypt::urlencode("admin.php?op=forms_modify&forms_id={$_GET['forms_id']}"); ?>'" />
+    <input type="button" class="flatbutton" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<?php echo ploopi\crypt::urlencode("admin.php?op=forms_modify&forms_id={$_GET['forms_id']}"); ?>'" />
     <input type="submit" class="flatbutton" value="<?php echo _PLOOPI_SAVE; ?>" />
 </div>
 </form>

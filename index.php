@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -43,7 +42,7 @@ define('_PLOOPI_DIRNAME',  dirname(__FILE__));
 
 include_once './include/classes/loader.php';
 
-ovensia\ploopi\loader::boot();
-ovensia\ploopi\loader::dispatch();
-ovensia\ploopi\system::kill();
+ploopi\loader::boot();
+ploopi\loader::dispatch();
+ploopi\system::kill();
 ?>

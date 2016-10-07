@@ -20,16 +20,16 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-namespace ovensia\ploopi;
+namespace ploopi;
 
-use ovensia\ploopi;
+use ploopi;
 
 /**
  * Classe d'accès à la table ploopi_module_workspace
  *
  * @package ploopi
  * @subpackage workspace
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -53,7 +53,7 @@ class module_workspace extends data_object
 
     public function save()
     {
-        global $db;
+        $db = loader::getdb();
 
         if ($this->new)
         {
@@ -77,7 +77,7 @@ class module_workspace extends data_object
 
     public function delete()
     {
-        global $db;
+        $db = loader::getdb();
 
         $update = "UPDATE ploopi_module_workspace SET position=position-1 WHERE id_workspace = {$this->fields['id_workspace']} AND position > {$this->fields['position']}";
         $db->query($update);
@@ -93,7 +93,7 @@ class module_workspace extends data_object
 
     public function changeposition($direction)
     {
-        global $db;
+        $db = loader::getdb();
 
         $workspaceid = $this->fields['id_workspace'];
 

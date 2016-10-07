@@ -20,16 +20,16 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-namespace ovensia\ploopi;
+namespace ploopi;
 
-use ovensia\ploopi;
+use ploopi;
 
 /**
  * Gestion des rôles.
  *
  * @package ploopi
  * @subpackage role
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -39,7 +39,7 @@ use ovensia\ploopi;
  *
  * @package ploopi
  * @subpackage role
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -66,7 +66,7 @@ class role extends data_object
 
     public function save($actions, $id_module_type)
     {
-        global $db;
+        $db = loader::getdb();
 
         parent::save();
 
@@ -94,7 +94,7 @@ class role extends data_object
 
     public function delete()
     {
-        global $db;
+        $db = loader::getdb();
 
         $delete = "DELETE FROM ploopi_role_action WHERE id_role = ".$this->fields['id'];
         $db->query($delete);
@@ -110,7 +110,7 @@ class role extends data_object
 
     public function getactions()
     {
-        global $db;
+        $db = loader::getdb();
 
         $arrActions = array();
 

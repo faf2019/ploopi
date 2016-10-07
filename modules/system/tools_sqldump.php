@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -35,7 +34,7 @@
 /**
  * Nettoyage des buffers actifs
  */
-ovensia\ploopi\buffer::clean();
+ploopi\buffer::clean();
 
 if (!ini_get('safe_mode')) @set_time_limit(0);
 $crlf = "\n";
@@ -56,9 +55,9 @@ function system_get_table_def($fp, $db, $table, $crlf)
     $schema_create .= "DROP TABLE IF EXISTS {$table};{$crlf}";
     $schema_create .= "CREATE TABLE {$table} ({$crlf}";
 
-    //$result = mysql_db_query($db, "SHOW FIELDS FROM $table") or mysql_ovensia\ploopi\system::kill();
-    $result = $db->query("SHOW FIELDS FROM {$table}");
-    while($row = $db->fetchrow($result))
+    //$result = mysql_db_query($db, "SHOW FIELDS FROM $table") or mysql_ploopi\system::kill();
+    $result = ploopi\loader::getdb()->query("SHOW FIELDS FROM {$table}");
+    while($row = ploopi\loader::getdb()->fetchrow($result))
     {
         $schema_create .= "   {$row['Field']} {$row['Type']}";
 
@@ -71,9 +70,9 @@ function system_get_table_def($fp, $db, $table, $crlf)
         $schema_create .= ",{$crlf}";
     }
     $schema_create = preg_replace("/,".$crlf."$/", "", $schema_create);
-    //$result = mysql_db_query($db, "SHOW KEYS FROM $table") or mysql_ovensia\ploopi\system::kill();
-    $result = $db->query("SHOW KEYS FROM {$table}");
-    while($row = $db->fetchrow($result))
+    //$result = mysql_db_query($db, "SHOW KEYS FROM $table") or mysql_ploopi\system::kill();
+    $result = ploopi\loader::getdb()->query("SHOW KEYS FROM {$table}");
+    while($row = ploopi\loader::getdb()->fetchrow($result))
     {
         $kname=$row['Key_name'];
         if(($kname != "PRIMARY") && ($row['Non_unique'] == 0))
@@ -105,15 +104,15 @@ function system_get_table_def($fp, $db, $table, $crlf)
 // Get the content of $table as a series of INSERT statements.
 function system_get_table_content($fp, $db, $table, $crlf)
 {
-    $result = $db->query("SELECT * FROM $table");
+    $result = ploopi\loader::getdb()->query("SELECT * FROM $table");
     $i = 0;
-    while($row = $db->fetchrow($result, MYSQL_NUM))
+    while($row = ploopi\loader::getdb()->fetchrow($result, MYSQL_NUM))
     {
         if (!ini_get('safe_mode')) @set_time_limit(60);
         $table_list = "(";
 
-        for($j=0; $j<$db->numfields($result);$j++)
-            $table_list .= $db->fieldname($result,$j).", ";
+        for($j=0; $j<ploopi\loader::getdb()->numfields($result);$j++)
+            $table_list .= ploopi\loader::getdb()->fieldname($result,$j).", ";
 
         $table_list = substr($table_list,0,-2);
         $table_list .= ")";
@@ -123,12 +122,12 @@ function system_get_table_content($fp, $db, $table, $crlf)
         else
             $schema_insert = "INSERT INTO {$table} VALUES (";
 
-        for($j=0; $j<$db->numfields($result);$j++)
+        for($j=0; $j<ploopi\loader::getdb()->numfields($result);$j++)
         {
             if(!isset($row[$j]))
                 $schema_insert .= " NULL,";
             elseif($row[$j] != "")
-                $schema_insert .= " '".$db->addslashes($row[$j])."',";
+                $schema_insert .= " '".ploopi\loader::getdb()->addslashes($row[$j])."',";
             else
                 $schema_insert .= " '',";
         }
@@ -141,7 +140,7 @@ function system_get_table_content($fp, $db, $table, $crlf)
     return true;
 }
 
-$tables = $db->listtables();
+$tables = ploopi\loader::getdb()->listtables();
 
 
 if(empty($tables)) echo $strNoTablesFound;
@@ -152,7 +151,7 @@ else
      */
 
     $filepath = _PLOOPI_PATHDATA._PLOOPI_SEP.'tmp';
-    ovensia\ploopi\fs::makedir($filepath);
+    ploopi\fs::makedir($filepath);
 
     $filename_sql = tempnam($filepath, 'dump_sql');
     $filename_zip = tempnam($filepath, 'dump_zip');
@@ -203,10 +202,10 @@ else
 
         unlink($filename_zip);
 
-        ovensia\ploopi\fs::downloadfile($filename_zip, 'dump.zip', true, true);
+        ploopi\fs::downloadfile($filename_zip, 'dump.zip', true, true);
     }
 }
 
 
-ovensia\ploopi\system::kill();
+ploopi\system::kill();
 ?>

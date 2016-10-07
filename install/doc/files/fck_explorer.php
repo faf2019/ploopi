@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,7 +25,7 @@
  *
  * @package doc
  * @subpackage fckeditor
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -35,16 +34,16 @@
  * On commence par tester si une instance du module DOC est présente.
  */
 
-$arrModules = ovensia\ploopi\module::getid('doc', false);
+$arrModules = ploopi\module::getid('doc', false);
 
-if (empty($arrModules)) ovensia\ploopi\system::kill('<div class="error">Module DOC absent</div>');
+if (empty($arrModules)) ploopi\system::kill('<div class="error">Module DOC absent</div>');
 
 /**
  * Initialisation du module DOC
  */
-ovensia\ploopi\module::init('doc');
+ploopi\module::init('doc');
 
-$db->query("
+ploopi\loader::getdb()->query("
     SELECT  m.label,
             fold.id,
             fold.name,
@@ -65,7 +64,7 @@ $db->query("
 ");
 
 $arrFolders = array();
-while ($fields = $db->fetchrow())
+while ($fields = ploopi\loader::getdb()->fetchrow())
 {
     $arrFolders[$fields['label']]['list'][$fields['id']] = $fields;
     $arrFolders[$fields['label']]['tree'][$fields['id_folder']][] = $fields['id'];
@@ -73,8 +72,8 @@ while ($fields = $db->fetchrow())
 
 echo $skin->open_simplebloc();
 ?>
-<input type="hidden" id="CKEditor" value="<? echo isset($_REQUEST['CKEditor']) ? $_REQUEST['CKEditor'] : ''; ?>" />
-<input type="hidden" id="CKEditorFuncNum" value="<? echo isset($_REQUEST['CKEditorFuncNum']) ? $_REQUEST['CKEditorFuncNum'] : ''; ?>" />
+<input type="hidden" id="CKEditor" value="<?php echo isset($_REQUEST['CKEditor']) ? $_REQUEST['CKEditor'] : ''; ?>" />
+<input type="hidden" id="CKEditorFuncNum" value="<?php echo isset($_REQUEST['CKEditorFuncNum']) ? $_REQUEST['CKEditorFuncNum'] : ''; ?>" />
 <div style="padding:4px;border-bottom:1px solid #a0a0a0;">
     Dossier :
     <select class="select" name="doc_choosefolder" id="doc_choosefolder" onchange="javascript:doc_fckexplorer_switch_folder(this.value, '<?php echo $ploopi_op; ?>');">
@@ -84,7 +83,7 @@ echo $skin->open_simplebloc();
     foreach($arrFolders as $strModuleLabel => $arrSubFolders)
     {
         ?>
-        <optgroup label="<?php echo ovensia\ploopi\str::htmlentities($strModuleLabel); ?>"><?php echo ovensia\ploopi\str::htmlentities($strModuleLabel); ?></optgroup>
+        <optgroup label="<?php echo ploopi\str::htmlentities($strModuleLabel); ?>"><?php echo ploopi\str::htmlentities($strModuleLabel); ?></optgroup>
         <?php
         if (!$intDefaultFolder && isset($arrSubFolders['tree'][0][0])) $intDefaultFolder = $arrSubFolders['tree'][0][0];
         doc_fckexplorer_displayfolders($arrSubFolders);

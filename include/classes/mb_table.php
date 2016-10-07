@@ -20,16 +20,16 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-namespace ovensia\ploopi;
+namespace ploopi;
 
-use ovensia\ploopi;
+use ploopi;
 
 /**
  * Classe d'accès à la table ploopi_mb_table
  *
  * @package ploopi
  * @subpackage metabase
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -53,7 +53,7 @@ class mb_table extends data_object
 
     function delete()
     {
-        global $db;
+        $db = loader::getdb();
 
         $db->query("DELETE FROM ploopi_mb_field WHERE tablename = '".$db->addslashes($this->fields['name'])."' AND id_module_type = {$this->fields['id_module_type']}");
         $db->query("DELETE FROM ploopi_mb_relation WHERE (tablesrc = '".$db->addslashes($this->fields['name'])."' OR tabledest = '".$db->addslashes($this->fields['name'])."') AND id_module_type = {$this->fields['id_module_type']}");

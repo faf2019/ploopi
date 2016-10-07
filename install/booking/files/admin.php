@@ -35,7 +35,7 @@
 /**
  * Initialisation du module
  */
-ovensia\ploopi\module::init('booking');
+ploopi\module::init('booking');
 
 $op = (empty($_REQUEST['op'])) ? '' : $_REQUEST['op'];
 
@@ -61,7 +61,7 @@ $tabs['subresource'] = array(
     'url' => "admin.php?booking_tab=subresource"
 );
 
-echo $skin->create_pagetitle(ovensia\ploopi\str::htmlentities("{$_SESSION['ploopi']['modulelabel']} - Administration"));
+echo $skin->create_pagetitle(ploopi\str::htmlentities("{$_SESSION['ploopi']['modulelabel']} - Administration"));
 echo $skin->create_tabs($tabs, $_SESSION['booking']['booking_tab']);
 
 echo $skin->open_simplebloc();

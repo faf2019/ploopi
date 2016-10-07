@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2010 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Copyright (c) 2010 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
@@ -27,7 +26,7 @@
  *
  * @package forms
  * @subpackage javascript
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -35,18 +34,18 @@
 /**
  * Initialisation du module
  */
-if (ovensia\ploopi\acl::ismoduleallowed('forms'))
+if (ploopi\acl::ismoduleallowed('forms'))
 {
-    ovensia\ploopi\module::init('forms', false, false, false);
+    ploopi\module::init('forms', false, false, false);
     ?>
 
     var verifcolor = false;
 
     function forms_validate(form)
     {
-        if (ploopi_validatefield('<?php echo addslashes(ovensia\ploopi\str::html_entity_decode(_FORMS_LABEL)); ?>',form.forms_label,"string"))
-        if (ploopi_validatefield('<?php echo addslashes(ovensia\ploopi\str::html_entity_decode(_FORMS_PUBDATESTART)); ?>',form.forms_pubdate_start,"emptydate"))
-        if (ploopi_validatefield('<?php echo addslashes(ovensia\ploopi\str::html_entity_decode(_FORMS_PUBDATEEND)); ?>',form.forms_pubdate_end,"emptydate"))
+        if (ploopi_validatefield('<?php echo addslashes(ploopi\str::html_entity_decode(_FORMS_LABEL)); ?>',form.forms_label,"string"))
+        if (ploopi_validatefield('<?php echo addslashes(ploopi\str::html_entity_decode(_FORMS_PUBDATESTART)); ?>',form.forms_pubdate_start,"emptydate"))
+        if (ploopi_validatefield('<?php echo addslashes(ploopi\str::html_entity_decode(_FORMS_PUBDATEEND)); ?>',form.forms_pubdate_end,"emptydate"))
             return(true);
 
         return(false);
@@ -75,7 +74,7 @@ if (ovensia\ploopi\acl::ismoduleallowed('forms'))
 
     function forms_graphic_validate(form)
     {
-        if (ploopi_validatefield('<?php echo addslashes(ovensia\ploopi\str::html_entity_decode(_FORMS_GRAPHIC_LABEL)); ?>',form.forms_graphic_label,"string"))
+        if (ploopi_validatefield('<?php echo addslashes(ploopi\str::html_entity_decode(_FORMS_GRAPHIC_LABEL)); ?>',form.forms_graphic_label,"string"))
             return(true);
 
         return(false);
@@ -83,7 +82,7 @@ if (ovensia\ploopi\acl::ismoduleallowed('forms'))
 
     function forms_group_validate(form)
     {
-        if (ploopi_validatefield('<?php echo addslashes(ovensia\ploopi\str::html_entity_decode(_FORMS_GROUP_LABEL)); ?>',form.forms_group_label,"string"))
+        if (ploopi_validatefield('<?php echo addslashes(ploopi\str::html_entity_decode(_FORMS_GROUP_LABEL)); ?>',form.forms_group_label,"string"))
             return(true);
 
         return(false);

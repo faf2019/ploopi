@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2009-2011 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -315,11 +315,11 @@ class formsBooleanParser
      */
     public function displayTree()
     {
-        if (!is_null($this->strVal)) echo ovensia\ploopi\str::htmlentities($this->strVal);
+        if (!is_null($this->strVal)) echo ploopi\str::htmlentities($this->strVal);
         else if (is_null($this->objExprB) && !is_null($this->objExprA)) $this->objExprA->displayTree();
         else if (is_null($this->objExprA) && !is_null($this->objExprB))
         {
-            if (!is_null($this->strOperator)) echo ovensia\ploopi\str::htmlentities($this->strOperator);
+            if (!is_null($this->strOperator)) echo ploopi\str::htmlentities($this->strOperator);
             $this->objExprB->displayTree();
         }
         else if (!is_null($this->objExprA) && !is_null($this->objExprB))

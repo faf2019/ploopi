@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -67,7 +67,7 @@ $sql =  "
         ORDER BY    module_type, m.label
         ";
 
-$db->query($sql);
+ploopi\loader::getdb()->query($sql);
 
 $columns = array();
 $values = array();
@@ -80,26 +80,26 @@ $columns['right']['shared']     = array('label' => 'Partagé', 'width' => '65');
 $columns['right']['origine']    = array('label' => 'Origine', 'width' => '150', 'options' => array('sort' => true));
 $columns['actions_right']['actions'] = array('label' => '&nbsp;', 'width' => '44');
 
-while($row = $db->fetchrow())
+while($row = ploopi\loader::getdb()->fetchrow())
 {
     if ($row['id_workspace'] == $workspaceid)
     {
         $actions =  '
-                    <a href="'.ovensia\ploopi\crypt::urlencode("admin.php?op=modify_role&roleid={$row['id']}").'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_edit.png" alt="'._SYSTEM_LABEL_MODIFY.'"></a>
-                    <a href="javascript:ploopi_confirmlink(\''.ovensia\ploopi\crypt::urlencode("admin.php?op=delete_role&roleid={$row['id']}").'\',\''._SYSTEM_MSG_CONFIRMROLEDELETE.'\')"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_delete.png" alt="'._SYSTEM_LABEL_DELETE.'"></a>
+                    <a href="'.ploopi\crypt::urlencode("admin.php?op=modify_role&roleid={$row['id']}").'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_edit.png" alt="'._SYSTEM_LABEL_MODIFY.'"></a>
+                    <a href="javascript:ploopi_confirmlink(\''.ploopi\crypt::urlencode("admin.php?op=delete_role&roleid={$row['id']}").'\',\''._SYSTEM_MSG_CONFIRMROLEDELETE.'\')"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_delete.png" alt="'._SYSTEM_LABEL_DELETE.'"></a>
                     ';
     }
     else $actions = '&nbsp;';
 
-    $values[$c]['values']['desc']       = array('label' => ovensia\ploopi\str::htmlentities($row['description']));
-    $values[$c]['values']['module']     = array('label' => ovensia\ploopi\str::htmlentities($row['module_label']), 'sort_label' => sprintf("%s_%s", $row['module_label'], $row['label']));
-    $values[$c]['values']['role']       = array('label' => ovensia\ploopi\str::htmlentities($row['label']));
+    $values[$c]['values']['desc']       = array('label' => ploopi\str::htmlentities($row['description']));
+    $values[$c]['values']['module']     = array('label' => ploopi\str::htmlentities($row['module_label']), 'sort_label' => sprintf("%s_%s", $row['module_label'], $row['label']));
+    $values[$c]['values']['role']       = array('label' => ploopi\str::htmlentities($row['label']));
     $values[$c]['values']['shared']     = array('label' => '<img src="'.$_SESSION['ploopi']['template_path'].'/img/system/check_'.(($row['shared'] ? 'on' : 'off')).'.png">');
-    $values[$c]['values']['origine']    = array('label' => ovensia\ploopi\str::htmlentities($row['origine']));
+    $values[$c]['values']['origine']    = array('label' => ploopi\str::htmlentities($row['origine']));
     $values[$c]['values']['actions']    = array('label' => $actions);
 
-    $values[$c]['description'] = ovensia\ploopi\str::htmlentities($row['description']);
-    if ($row['id_workspace'] == $workspaceid) $values[$c]['link'] = ovensia\ploopi\crypt::urlencode("admin.php?op=modify_role&roleid={$row['id']}");
+    $values[$c]['description'] = ploopi\str::htmlentities($row['description']);
+    if ($row['id_workspace'] == $workspaceid) $values[$c]['link'] = ploopi\crypt::urlencode("admin.php?op=modify_role&roleid={$row['id']}");
     $c++;
 }
 

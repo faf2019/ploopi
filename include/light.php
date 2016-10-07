@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -27,7 +26,7 @@
  *
  * @package ploopi
  * @subpackage index
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -40,12 +39,12 @@ if ($_SESSION['ploopi']['mode'] == 'backoffice')
         include_once './lib/template/template.php';
         include_once "{$_SESSION['ploopi']['template_path']}/class_skin.php";
 
-        $skin = new ovensia\ploopi\skin();
+        $skin = new ploopi\skin();
         $template_body = new \Template($_SESSION['ploopi']['template_path']);
 
         if (!file_exists("{$_SESSION['ploopi']['template_path']}/light.tpl") || ! is_readable("{$_SESSION['ploopi']['template_path']}/light.tpl")) {
 
-            ovensia\ploopi\system::kill(
+            ploopi\system::kill(
                 str_replace(
                     array('<FILE>', '<TEMPLATE>'),
                     array('light.tpl', $_SESSION['ploopi']['template_path']),
@@ -89,15 +88,21 @@ if ($_SESSION['ploopi']['mode'] == 'backoffice')
         ob_start();
         if (!empty($_SESSION['ploopi']['moduletype']))
         {
-            if ($_SESSION['ploopi']['action'] == 'admin')
-            {
-                if (file_exists("./modules/{$_SESSION['ploopi']['moduletype']}/admin.php")) include_once "./modules/{$_SESSION['ploopi']['moduletype']}/admin.php";
+            $strControllerFile = "ploopi\\{$_SESSION['ploopi']['moduletype']}\\controller";
+            if (ploopi\loader::classExists($strControllerFile)) {
+                $strControllerFile::dispatch();
             }
-            else
-            {
-                if (file_exists("./modules/{$_SESSION['ploopi']['moduletype']}/public.php")) include_once "./modules/{$_SESSION['ploopi']['moduletype']}/public.php";
+            else {
+                // Rétrocompatibilité
+                if ($_SESSION['ploopi']['action'] == 'admin')
+                {
+                    if (file_exists("./modules/{$_SESSION['ploopi']['moduletype']}/admin.php")) include_once "./modules/{$_SESSION['ploopi']['moduletype']}/admin.php";
+                }
+                else
+                {
+                    if (file_exists("./modules/{$_SESSION['ploopi']['moduletype']}/public.php")) include_once "./modules/{$_SESSION['ploopi']['moduletype']}/public.php";
+                }
             }
-
         }
         $main_content = ob_get_contents();
         @ob_end_clean();

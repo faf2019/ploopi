@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2009 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -32,10 +32,10 @@
 
 
 // semaine dernière
-$strTsDelete = ovensia\ploopi\date::timestamp_add(ovensia\ploopi\date::createtimestamp(), 0, 0, 0, 0, -7, 0);
+$strTsDelete = ploopi\date::timestamp_add(ploopi\date::createtimestamp(), 0, 0, 0, 0, -7, 0);
 
 // suppression des données périmées
-$db->query("DELETE FROM `ploopi_log` WHERE ts < {$strTsDelete}");
+ploopi\loader::getdb()->query("DELETE FROM `ploopi_log` WHERE ts < {$strTsDelete}");
 
 // optimisation des tables
-$db->query("OPTIMIZE TABLE `ploopi_log`");
+ploopi\loader::getdb()->query("OPTIMIZE TABLE `ploopi_log`");

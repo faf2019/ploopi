@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2011 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -48,7 +48,7 @@ include_once './modules/forms/classes/formsArithmeticParser.php';
  * @author Stéphane Escaich
  */
 
-class formsField extends ovensia\ploopi\data_object
+class formsField extends ploopi\data_object
 {
 
     private $_strOriginalFieldName;
@@ -76,7 +76,7 @@ class formsField extends ovensia\ploopi\data_object
 
     private static function _updateFormulas($arrPositions)
     {
-        $objCol = new ovensia\ploopi\data_object_collection('formsField');
+        $objCol = new ploopi\data_object_collection('formsField');
         $objCol->add_where("type = 'calculation'");
         $objCol->add_where("formula != ''");
         foreach($objCol->get_objects() as $objField)
@@ -145,7 +145,7 @@ class formsField extends ovensia\ploopi\data_object
      */
     public function openByPos($intPos)
     {
-        $objCol = new ovensia\ploopi\data_object_collection('formsField');
+        $objCol = new ploopi\data_object_collection('formsField');
         $objCol->add_where('position = %d', $intPos);
         $objField = current($objCol->get_objects());
         return $objField === false ? false : $this->open($objField->fields['id']);
@@ -165,7 +165,7 @@ class formsField extends ovensia\ploopi\data_object
      */
     public function save($booUpdateTable = true)
     {
-        global $db;
+        $db = ploopi\loader::getdb();
 
         if (empty($this->fields['separator']) && empty($this->fields['html']) && empty($this->fields['captcha'])) $this->_createPhysicalName();
 
@@ -309,7 +309,7 @@ class formsField extends ovensia\ploopi\data_object
      */
     public function delete()
     {
-        global $db;
+        $db = ploopi\loader::getdb();
 
         $arrPositions = array();
 
@@ -364,9 +364,9 @@ class formsField extends ovensia\ploopi\data_object
              * Ajout d'un préfixe obligatoire "form_"
              */
 
-            $strFieldName = substr('_'.trim(preg_replace("/[^[:alnum:]]+/", "_", ovensia\ploopi\str::convertaccents(strtolower(trim($this->fields['name'])))), '_'), 0, 60);
+            $strFieldName = substr('_'.trim(preg_replace("/[^[:alnum:]]+/", "_", ploopi\str::convertaccents(strtolower(trim($this->fields['name'])))), '_'), 0, 60);
         }
-        else $strFieldName = $strFieldName = substr('_'.trim(preg_replace("/[^[:alnum:]]+/", "_", ovensia\ploopi\str::convertaccents(strtolower(trim($this->fields['fieldname'])))), '_'), 0, 60);
+        else $strFieldName = $strFieldName = substr('_'.trim(preg_replace("/[^[:alnum:]]+/", "_", ploopi\str::convertaccents(strtolower(trim($this->fields['fieldname'])))), '_'), 0, 60);
 
 
         // Fix spécial doublon
@@ -375,7 +375,7 @@ class formsField extends ovensia\ploopi\data_object
         /**
          * Vérification de l'unicité
          */
-        $objQuery = new ovensia\ploopi\query_select();
+        $objQuery = new ploopi\query_select();
         $objQuery->add_select('count(*) as c');
         $objQuery->add_from('ploopi_mod_forms_field');
         if (!$this->isnew()) $objQuery->add_where('id != %d', $this->fields['id']);
@@ -466,7 +466,7 @@ class formsField extends ovensia\ploopi\data_object
         $objForm = new formsForm();
         if ($objForm->open($this->fields['id_form']))
         {
-            $objQuery = new ovensia\ploopi\query_select();
+            $objQuery = new ploopi\query_select();
             $objQuery->add_from($objForm->getDataTableName());
             $objQuery->add_select(($booDistinct ? 'DISTINCT ' : '').$this->fields['fieldname']);
             $objQuery->add_orderby($this->fields['fieldname']);
@@ -488,7 +488,7 @@ class formsField extends ovensia\ploopi\data_object
         $objForm = new formsForm();
         if ($objForm->open($this->fields['id_form']))
         {
-            $objQuery = new ovensia\ploopi\query_select();
+            $objQuery = new ploopi\query_select();
             $objQuery->add_from($objForm->getDataTableName());
             switch(strtoupper($strFunction))
             {

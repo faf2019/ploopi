@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2009 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -79,7 +79,7 @@ $arrFields = array(
 );
 
 ?>
-<form action="<?php echo ovensia\ploopi\crypt::urlencode('admin.php?ploopi_op=system_user_import'); ?>" method="post" enctype="multipart/form-data">
+<form action="<?php echo ploopi\crypt::urlencode('admin.php?ploopi_op=system_user_import'); ?>" method="post" enctype="multipart/form-data">
 
 <div style="width:500px;margin:auto;">
     <div class="ploopi_form">
@@ -90,8 +90,8 @@ $arrFields = array(
         <p>
             <label>Séparateur:</label>
             <select class="select" name="system_user_sep" tabindex="102" style="width:40px;">
-                <option value="<?php echo ovensia\ploopi\str::htmlentities(',') ?>"><?php echo ovensia\ploopi\str::htmlentities(',') ?></option>
-                <option value="<?php echo ovensia\ploopi\str::htmlentities(';') ?>"><?php echo ovensia\ploopi\str::htmlentities(';') ?></option>
+                <option value="<?php echo ploopi\str::htmlentities(',') ?>"><?php echo ploopi\str::htmlentities(',') ?></option>
+                <option value="<?php echo ploopi\str::htmlentities(';') ?>"><?php echo ploopi\str::htmlentities(';') ?></option>
             </select>
         </p>
     </div>

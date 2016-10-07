@@ -20,9 +20,9 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-namespace ovensia\ploopi;
+namespace ploopi;
 
-use ovensia\ploopi;
+use ploopi;
 
 /**
  * Gestion d'une collection d'objets de type "data_object"
@@ -87,7 +87,7 @@ class data_object_collection
         $this->strClassName = $strClassName;
 
         if (!is_null($objDb)) $this->objDb = $objDb;
-        else { global $db; $this->objDb = &$db; }
+        else { $db = loader::getdb(); $this->objDb = &$db; }
 
         //On vérifie que la classe existe
         if (empty($this->strClassName) || !class_exists($this->strClassName)) trigger_error("data_object_collection : classe '{$this->strClassName}' inconnue");

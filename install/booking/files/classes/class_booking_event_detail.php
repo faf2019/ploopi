@@ -43,7 +43,7 @@ include_once './modules/booking/classes/class_booking_event.php';
  * @copyright Ovensia
  */
 
-class booking_event_detail extends ovensia\ploopi\data_object
+class booking_event_detail extends ploopi\data_object
 {
     /**
      * Constructeur de la classe
@@ -63,7 +63,7 @@ class booking_event_detail extends ovensia\ploopi\data_object
      */
     public function delete()
     {
-        global $db;
+        $db = ploopi\loader::getdb();
 
         // Recherche si l'event contient d'autres détails.
         // S'il n'en contient pas, on le supprime
@@ -101,12 +101,12 @@ class booking_event_detail extends ovensia\ploopi\data_object
             null, // managed
             '', // object
             '', //requestedby
-            current(ovensia\ploopi\date::timestamp2local($this->fields['timestp_begin'])), //from
-            current(ovensia\ploopi\date::timestamp2local($this->fields['timestp_end'])), //to
+            current(ploopi\date::timestamp2local($this->fields['timestp_begin'])), //from
+            current(ploopi\date::timestamp2local($this->fields['timestp_end'])), //to
             $objEvent->fields['id_module'] // moduleid
         );
 
-        ovensia\ploopi\output::print_r($arrEvents);
+        ploopi\output::print_r($arrEvents);
 
         if (!empty($arrEvents)) {
 

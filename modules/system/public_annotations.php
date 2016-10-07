@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,7 +25,7 @@
  *
  * @package system
  * @subpackage public
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -46,7 +45,7 @@ switch($op)
 
             <div id="system_annotation_tags">
                 <div id="system_annotation_titlebar">
-                    <b>Mes tags : </b><a href="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=annotation"); ?>">voir tous les tags</a>
+                    <b>Mes tags : </b><a href="<?php echo ploopi\crypt::urlencode("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=annotation"); ?>">voir tous les tags</a>
                 </div>
                 <?php
                 $select =   "
@@ -59,10 +58,10 @@ switch($op)
                             ORDER BY t.tag
                             ";
 
-                $rs = $db->query($select);
+                $rs = ploopi\loader::getdb()->query($select);
                 $tags = array();
                 $max_c = 0;
-                while ($row = $db->fetchrow($rs))
+                while ($row = ploopi\loader::getdb()->fetchrow($rs))
                 {
                     if (!empty($row['c']) && $row['c'] > $max_c) $max_c = $row['c'];
                     $tags[$row['id']] = $row;
@@ -74,7 +73,7 @@ switch($op)
                 {
                     $size = $minsize + $maxsize * $tag['c'] / $max_c;
                     ?>
-                    <a title="utilisé <?php echo $tag['c']; ?> fois" class="system_annotation_tag<?php if (!empty($_GET['idtag']) && $_GET['idtag'] == $idt) echo 'sel'; ?>" style="font-size: <?php echo $size; ?>px;" href="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=annotation&idtag={$idt}"); ?>"><?php echo ovensia\ploopi\str::htmlentities($tag['tag']); ?><span style="vertical-align: 4px; font-size: 7px"> <?php echo $tag['c']; ?></span></a>
+                    <a title="utilisé <?php echo $tag['c']; ?> fois" class="system_annotation_tag<?php if (!empty($_GET['idtag']) && $_GET['idtag'] == $idt) echo 'sel'; ?>" style="font-size: <?php echo $size; ?>px;" href="<?php echo ploopi\crypt::urlencode("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=annotation&idtag={$idt}"); ?>"><?php echo ploopi\str::htmlentities($tag['tag']); ?><span style="vertical-align: 4px; font-size: 7px"> <?php echo $tag['c']; ?></span></a>
                     <?php
                 }
 
@@ -101,7 +100,7 @@ switch($op)
 
                                 INNER JOIN  ploopi_annotation_tag at2
                                 ON          a.id = at2.id_annotation
-                                AND         at2.id_tag = '".$db->addslashes($_GET['idtag'])."'
+                                AND         at2.id_tag = '".ploopi\loader::getdb()->addslashes($_GET['idtag'])."'
 
                                 LEFT JOIN   ploopi_annotation_tag at ON at.id_annotation = a.id
                                 LEFT JOIN   ploopi_tag t ON t.id = at.id_tag
@@ -136,9 +135,9 @@ switch($op)
                                 ";
                 }
 
-                $rs = $db->query($select);
+                $rs = ploopi\loader::getdb()->query($select);
                 $arrAnnotations = array();
-                while ($row = $db->fetchrow($rs))
+                while ($row = ploopi\loader::getdb()->fetchrow($rs))
                 {
                     if (!isset($arrAnnotations[$row['id']])) $arrAnnotations[$row['id']] = $row;
                     if (!is_null($row['tag'])) $arrAnnotations[$row['id']]['tags'][$row['tagid']] = $row['tag'];
@@ -160,7 +159,7 @@ switch($op)
                         for ($p = 1; $p <= $nbpage; $p++)
                         {
                             ?>
-                            <a class="system_annotation_page<?php if ($p==$page) echo '_sel'; ?>" href="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=annotation&page={$p}&idtag={$idtag}"); ?>"><?php echo $p; ?></a>
+                            <a class="system_annotation_page<?php if ($p==$page) echo '_sel'; ?>" href="<?php echo ploopi\crypt::urlencode("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=annotation&page={$p}&idtag={$idtag}"); ?>"><?php echo $p; ?></a>
                             <?php
                         }
                         ?>
@@ -190,18 +189,18 @@ switch($op)
                                                     ),
                                                     $annotation['script']
                                         );
-                    $ldate = ovensia\ploopi\date::timestamp2local($annotation['date_annotation']);
+                    $ldate = ploopi\date::timestamp2local($annotation['date_annotation']);
                     $color = (!isset($color) || $color == $skin->values['bgline2']) ? $skin->values['bgline1'] : $skin->values['bgline2'];
                     ?>
                     <div class="system_annotation_row" style="background-color:<?php echo $color; ?>">
                         <div class="system_annotation_title">
-                            <a href="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?ploopi_mainmenu=1&{$object_script}"); ?>"><?php echo ovensia\ploopi\str::htmlentities($annotation['object_label']); ?></a>
+                            <a href="<?php echo ploopi\crypt::urlencode("admin.php?ploopi_mainmenu=1&{$object_script}"); ?>"><?php echo ploopi\str::htmlentities($annotation['object_label']); ?></a>
                         </div>
                         <div class="system_annotation_date">
-                            le <?php echo ovensia\ploopi\str::htmlentities($ldate['date']); ?> à <?php echo ovensia\ploopi\str::htmlentities($ldate['time']); ?>
+                            le <?php echo ploopi\str::htmlentities($ldate['date']); ?> à <?php echo ploopi\str::htmlentities($ldate['time']); ?>
                         </div>
 
-                        <div  class="system_annotation_content"><?php echo ovensia\ploopi\str::make_links(ovensia\ploopi\str::nl2br(ovensia\ploopi\str::htmlentities($annotation['content']))); ?></div>
+                        <div  class="system_annotation_content"><?php echo ploopi\str::make_links(ploopi\str::nl2br(ploopi\str::htmlentities($annotation['content']))); ?></div>
 
                         <div class="system_annotation_taglist">
                         <?php
@@ -213,14 +212,14 @@ switch($op)
                             foreach($annotation['tags'] as $idtag => $tag)
                             {
                                 ?>
-                                <a href="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=annotation&idtag={$idtag}"); ?>"><?php echo ovensia\ploopi\str::htmlentities($tag); ?></a>
+                                <a href="<?php echo ploopi\crypt::urlencode("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=annotation&idtag={$idtag}"); ?>"><?php echo ploopi\str::htmlentities($tag); ?></a>
                                 <?php
                             }
                         }
                         ?>
                         </div>
                         <div class="system_annotation_module">
-                            <a href="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?ploopi_mainmenu=1&{$object_script}"); ?>"><b><?php echo ovensia\ploopi\str::htmlentities($annotation['module_name']); ?></b>  / <?php echo ovensia\ploopi\str::htmlentities($annotation['object_name']); ?></a>
+                            <a href="<?php echo ploopi\crypt::urlencode("admin.php?ploopi_mainmenu=1&{$object_script}"); ?>"><b><?php echo ploopi\str::htmlentities($annotation['module_name']); ?></b>  / <?php echo ploopi\str::htmlentities($annotation['object_name']); ?></a>
                         </div>
                     </div>
                     <?php

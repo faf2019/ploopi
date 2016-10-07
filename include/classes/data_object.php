@@ -20,16 +20,16 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-namespace ovensia\ploopi;
+namespace ploopi;
 
-use ovensia\ploopi;
+use ploopi;
 
 /**
  * Gestion de l'accès aux données.
  *
  * @package ploopi
  * @subpackage database
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -40,7 +40,7 @@ use ovensia\ploopi;
  *
  * @package ploopi
  * @subpackage database
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -152,7 +152,7 @@ class data_object
 
     public function __construct()
     {
-        global $db;
+        $db = loader::getdb();
         // arg(0) : tablename
 
         $numargs = func_num_args();

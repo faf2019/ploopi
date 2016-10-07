@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2012 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Copyright (c) 2009 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
@@ -27,7 +26,7 @@
  *
  * @package doc
  * @subpackage global
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -216,7 +215,7 @@ function doc_getpath($id_module = -1, $createpath = false)
 
 function doc_countelements($id_folder)
 {
-    global $db;
+    $db = ploopi\loader::getdb();
 
     $c = 0;
 
@@ -246,12 +245,12 @@ function doc_getshare($id_module = -1)
     {
         $_SESSION['doc'][$id_module]['share'] = array('folders' => array(), 'files' => array());
 
-        $objUser = new ovensia\ploopi\user();
+        $objUser = new ploopi\user();
         if ($objUser->open($_SESSION['ploopi']['userid']))
         {
             $arrGroups = array_keys($objUser->getgroups(true));
 
-            foreach(ovensia\ploopi\share::get(-1, -1, -1, $id_module) as $sh)
+            foreach(ploopi\share::get(-1, -1, -1, $id_module) as $sh)
             {
                 if (($sh['type_share'] == 'user' && $sh['id_share'] == $_SESSION['ploopi']['userid']) || ($sh['type_share'] == 'group' && in_array($sh['id_share'], $arrGroups)))
                 {
@@ -294,12 +293,12 @@ function doc_getvalidation($id_module = -1)
     {
         $_SESSION['doc'][$id_module]['validation'] = array('folders' => array());
 
-        $objUser = new ovensia\ploopi\user();
+        $objUser = new ploopi\user();
         if ($objUser->open($_SESSION['ploopi']['userid']))
         {
             $arrGroups = array_keys($objUser->getgroups(true));
 
-            foreach(ovensia\ploopi\validation::get(_DOC_OBJECT_FOLDER, '', $id_module) as $wf)
+            foreach(ploopi\validation::get(_DOC_OBJECT_FOLDER, '', $id_module) as $wf)
             {
                 if (($wf['type_validation'] == 'user' && $wf['id_validation'] == $_SESSION['ploopi']['userid']) || ($wf['type_validation'] == 'group' && in_array($wf['id_validation'], $arrGroups))) $_SESSION['doc'][$id_module]['validation']['folders'][$wf['id_record']] = $wf['id_record'];
             }
@@ -367,7 +366,7 @@ function doc_record_isenabled($id_object, $id_record, $id_module)
 {
     $enabled = false;
 
-    if (ovensia\ploopi\acl::isadmin()) return true;
+    if (ploopi\acl::isadmin()) return true;
 
     switch($id_object)
     {
@@ -377,10 +376,10 @@ function doc_record_isenabled($id_object, $id_record, $id_module)
             $objFolder = new docfolder();
             if ($objFolder->open($id_record))
             {
-                if (ovensia\ploopi\acl::isactionallowed(_DOC_ACTION_ADMIN, $objFolder->fields['id_workspace'], $id_module) || $objFolder->fields['id_user'] == $_SESSION['ploopi']['userid']) $enabled = true;
+                if (ploopi\acl::isactionallowed(_DOC_ACTION_ADMIN, $objFolder->fields['id_workspace'], $id_module) || $objFolder->fields['id_user'] == $_SESSION['ploopi']['userid']) $enabled = true;
                 else
                 {
-                    if ($objFolder->fields['foldertype'] == 'public' && in_array($objFolder->fields['id_workspace'], explode(',', ovensia\ploopi\system::viewworkspaces()))) $enabled = true;
+                    if ($objFolder->fields['foldertype'] == 'public' && in_array($objFolder->fields['id_workspace'], explode(',', ploopi\system::viewworkspaces()))) $enabled = true;
                     else
                     {
                         doc_getshare($id_module);
@@ -397,15 +396,15 @@ function doc_record_isenabled($id_object, $id_record, $id_module)
             $objFile = new docfile();
             if ($objFile->openmd5($id_record))
             {
-                //ovensia\ploopi\output::print_r($objFile);
+                //ploopi\output::print_r($objFile);
 
-                if (ovensia\ploopi\acl::isactionallowed(_DOC_ACTION_ADMIN, $objFile->fields['id_workspace'], $id_module) || $objFile->fields['id_user'] == $_SESSION['ploopi']['userid']) $enabled = true;
+                if (ploopi\acl::isactionallowed(_DOC_ACTION_ADMIN, $objFile->fields['id_workspace'], $id_module) || $objFile->fields['id_user'] == $_SESSION['ploopi']['userid']) $enabled = true;
                 else
                 {
                     $objFolder = new docfolder();
                     if ($objFolder->open($objFile->fields['id_folder']))
                     {
-                        if ($objFolder->fields['foldertype'] == 'public' && in_array($objFolder->fields['id_workspace'], explode(',', ovensia\ploopi\system::viewworkspaces()))) $enabled = true;
+                        if ($objFolder->fields['foldertype'] == 'public' && in_array($objFolder->fields['id_workspace'], explode(',', ploopi\system::viewworkspaces()))) $enabled = true;
                         else
                         {
                             doc_getshare($id_module);
@@ -424,7 +423,7 @@ function doc_record_isenabled($id_object, $id_record, $id_module)
             $objFile = new docfiledraft();
             if ($objFile->openmd5($id_record))
             {
-                if (ovensia\ploopi\acl::isactionallowed(_DOC_ACTION_ADMIN, $objFile->fields['id_workspace'], $id_module) || $objFile->fields['id_user'] == $_SESSION['ploopi']['userid']) $enabled = true;
+                if (ploopi\acl::isactionallowed(_DOC_ACTION_ADMIN, $objFile->fields['id_workspace'], $id_module) || $objFile->fields['id_user'] == $_SESSION['ploopi']['userid']) $enabled = true;
                 else
                 {
                     $objFolder = new docfolder();
@@ -449,7 +448,7 @@ function doc_record_isenabled($id_object, $id_record, $id_module)
  */
 function doc_getfolders()
 {
-    global $db;
+    $db = ploopi\loader::getdb();
 
     $id_module = $_SESSION['ploopi']['moduleid'];
     $id_user = $_SESSION['ploopi']['userid'];
@@ -472,7 +471,7 @@ function doc_getfolders()
     $arrWhere['module'] = "f.id_module = {$id_module}";
 
     // Utilisateur "standard"
-    if (!ovensia\ploopi\acl::isadmin() && !ovensia\ploopi\acl::isactionallowed(_DOC_ACTION_ADMIN))
+    if (!ploopi\acl::isadmin() && !ploopi\acl::isactionallowed(_DOC_ACTION_ADMIN))
     {
         // Publié (ou propriétaire)
         $arrWhere['published'] = "(f.published = 1 OR f.id_user = {$id_user})";
@@ -486,7 +485,7 @@ function doc_getfolders()
         // Partagé
         if (!empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['share']['folders'])) $arrWhere['visibility']['shared'] = "(f.foldertype = 'shared' AND f.id IN (".implode(',', $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['share']['folders'])."))";
         // Public
-        $arrWhere['visibility']['public'] = "(f.foldertype = 'public' AND f.id_workspace IN (".ovensia\ploopi\system::viewworkspaces()."))";
+        $arrWhere['visibility']['public'] = "(f.foldertype = 'public' AND f.id_workspace IN (".ploopi\system::viewworkspaces()."))";
 
         // Synthèse visibilité
         $arrWhere['visibility'] = '('.implode(' OR ', $arrWhere['visibility']).')';
@@ -560,7 +559,7 @@ function doc_getfolders()
  */
 function doc_gettreeview($arrFolders = array(), $strPrefix = '', $arrExcludes = null)
 {
-    global $db;
+    $db = ploopi\loader::getdb();
 
     $arrTreeview = array(
         'list' => array(),
@@ -586,7 +585,7 @@ function doc_gettreeview($arrFolders = array(), $strPrefix = '', $arrExcludes = 
             {
                 $strId = $fields['id'];
                 $strparents = preg_split('/;/', $fields['parents']);
-                $strLink = ovensia\ploopi\crypt::urlencode("admin.php?op=doc_browser&currentfolder={$fields['id']}");
+                $strLink = ploopi\crypt::urlencode("admin.php?op=doc_browser&currentfolder={$fields['id']}");
                 $strOnClick = '';
             }
             // Arbre de sélection
@@ -599,7 +598,7 @@ function doc_gettreeview($arrFolders = array(), $strPrefix = '', $arrExcludes = 
                 $strLink = 'javascript:void(0);';
                 if ($id == 0 || !doc_folder_contentisreadonly($arrFolders['list'][$id]))
                 {
-                    $strOnClick = "$('docfolder_id_folder').value='{$fields['id']}'; $('docfolder_id_folder_name').innerHTML='".addslashes(ovensia\ploopi\str::htmlentities($fields['name']))."'; ploopi_hidepopup('doc_popup_folderselect');";
+                    $strOnClick = "$('docfolder_id_folder').value='{$fields['id']}'; $('docfolder_id_folder_name').innerHTML='".addslashes(ploopi\str::htmlentities($fields['name']))."'; ploopi_hidepopup('doc_popup_folderselect');";
                 }
                 else
                 {
@@ -613,7 +612,7 @@ function doc_gettreeview($arrFolders = array(), $strPrefix = '', $arrExcludes = 
                 'description' => $fields['name'],
                 'parents' => preg_split('/;/', $strPrefix.str_replace(';', ";{$strPrefix}", $fields['parents'])),
                 'node_link' => '',
-                'node_onclick' => "ploopi_skin_treeview_shownode('{$strId}', '".ovensia\ploopi\crypt::queryencode("ploopi_op=doc_folder_detail&doc_folder_id={$fields['id']}&doc_prefix={$strPrefix}&doc_excludes={$strExcludes}")."', 'admin-light.php');",
+                'node_onclick' => "ploopi_skin_treeview_shownode('{$strId}', '".ploopi\crypt::queryencode("ploopi_op=doc_folder_detail&doc_folder_id={$fields['id']}&doc_prefix={$strPrefix}&doc_excludes={$strExcludes}")."', 'admin-light.php');",
                 'link' => $strLink,
                 'onclick' => $strOnClick,
                 'icon' => "./modules/doc/img/{$strIco}.png",
@@ -666,7 +665,7 @@ function doc_fckexplorer_displayfolders(&$arrFolders, $intIdFolder = 0, $strPath
         foreach($arrFolders['tree'][$intIdFolder] as $intIdChild)
         {
             ?>
-            <option value="<?php echo $intIdChild; ?>" label="<?php echo ovensia\ploopi\str::htmlentities($arrFolders['list'][$intIdChild]['name']); ?>"><?php echo ovensia\ploopi\str::htmlentities("{$strPath} / {$arrFolders['list'][$intIdChild]['name']}"); ?></option>
+            <option value="<?php echo $intIdChild; ?>" label="<?php echo ploopi\str::htmlentities($arrFolders['list'][$intIdChild]['name']); ?>"><?php echo ploopi\str::htmlentities("{$strPath} / {$arrFolders['list'][$intIdChild]['name']}"); ?></option>
             <?php
             doc_fckexplorer_displayfolders($arrFolders, $intIdChild, "{$strPath} / {$arrFolders['list'][$intIdChild]['name']}");
         }
@@ -690,9 +689,9 @@ function doc_getrenderer($strExtension)
  */
 function doc_folder_isreadonly($row, $action = null)
 {
-    $booActionIsOk = is_null($action) || ovensia\ploopi\acl::isactionallowed($action);
+    $booActionIsOk = is_null($action) || ploopi\acl::isactionallowed($action);
 
-    return !(ovensia\ploopi\acl::isadmin() || ovensia\ploopi\acl::isactionallowed(_DOC_ACTION_ADMIN) || $row['id_user'] == $_SESSION['ploopi']['userid'] || (doc_folder_isenabled($row) && $booActionIsOk));
+    return !(ploopi\acl::isadmin() || ploopi\acl::isactionallowed(_DOC_ACTION_ADMIN) || $row['id_user'] == $_SESSION['ploopi']['userid'] || (doc_folder_isenabled($row) && $booActionIsOk));
 }
 
 /**
@@ -704,9 +703,9 @@ function doc_folder_isenabled($row)
     doc_getshare();
 
     return  $row['id_user'] == $_SESSION['ploopi']['userid'] // Propriétaire ?
-            || ovensia\ploopi\acl::isadmin() // Admin sys ?
-            || ovensia\ploopi\acl::isactionallowed(_DOC_ACTION_ADMIN) // Rôle admin ?
-            || ($row['foldertype'] == 'public' && in_array($row['id_workspace'], explode(',', ovensia\ploopi\system::viewworkspaces()))) // Public pour l'espace courant ?
+            || ploopi\acl::isadmin() // Admin sys ?
+            || ploopi\acl::isactionallowed(_DOC_ACTION_ADMIN) // Rôle admin ?
+            || ($row['foldertype'] == 'public' && in_array($row['id_workspace'], explode(',', ploopi\system::viewworkspaces()))) // Public pour l'espace courant ?
             || ($row['foldertype'] == 'shared' &&  in_array($row['id'], $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['share']['folders'])); // Partagé pour l'utilisateur ?
 }
 
@@ -715,7 +714,7 @@ function doc_folder_contentisreadonly($row, $action = null, $id_module = -1)
 {
     if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];
 
-    $booActionIsOk = is_null($action) || ovensia\ploopi\acl::isactionallowed($action, -1, $id_module);
+    $booActionIsOk = is_null($action) || ploopi\acl::isactionallowed($action, -1, $id_module);
 
     $root = empty($row['id']);
 
@@ -725,7 +724,7 @@ function doc_folder_contentisreadonly($row, $action = null, $id_module = -1)
     // - propriétaire du dossier & actionOK
     // - admin du module
     // - super admin
-    return !((((!$root && !$row['readonly']) || $row['id_user'] == $_SESSION['ploopi']['userid'] || ($root && ovensia\ploopi\param::get('doc_rootwritable', $id_module))) && $booActionIsOk) || ovensia\ploopi\acl::isadmin() || ovensia\ploopi\acl::isactionallowed(_DOC_ACTION_ADMIN, -1, $id_module));
+    return !((((!$root && !$row['readonly']) || $row['id_user'] == $_SESSION['ploopi']['userid'] || ($root && ploopi\param::get('doc_rootwritable', $id_module))) && $booActionIsOk) || ploopi\acl::isadmin() || ploopi\acl::isactionallowed(_DOC_ACTION_ADMIN, -1, $id_module));
 }
 
 
@@ -736,8 +735,8 @@ function doc_folder_contentisreadonly($row, $action = null, $id_module = -1)
 
 function doc_file_isreadonly($row, $action = null)
 {
-    $booActionIsOk = is_null($action) || ovensia\ploopi\acl::isactionallowed($action);
+    $booActionIsOk = is_null($action) || ploopi\acl::isactionallowed($action);
 
-    return !(ovensia\ploopi\acl::isadmin() || ovensia\ploopi\acl::isactionallowed(_DOC_ACTION_ADMIN) || $row['id_user'] == $_SESSION['ploopi']['userid'] || ($booActionIsOk && !$row['readonly']));
+    return !(ploopi\acl::isadmin() || ploopi\acl::isactionallowed(_DOC_ACTION_ADMIN) || $row['id_user'] == $_SESSION['ploopi']['userid'] || ($booActionIsOk && !$row['readonly']));
 }
 ?>

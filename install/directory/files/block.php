@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,7 +25,7 @@
  *
  * @package directory
  * @subpackage block
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -35,7 +34,7 @@
  * Initialisation du module
  */
 
-ovensia\ploopi\module::init('directory', false, false, false);
+ploopi\module::init('directory', false, false, false);
 
 if ($_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public')
 {
@@ -51,9 +50,9 @@ else $_SESSION['directory']['directoryTabItem'] = '';
 if ($_SESSION["ploopi"]["workspaceid"] > 0)  // group selected
 {
     if ($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_mygroup'])
-    //if (ovensia\ploopi\acl::isactionallowed(_DIRECTORY_ACTION_MYGROUP,-1,$menu_moduleid))
+    //if (ploopi\acl::isactionallowed(_DIRECTORY_ACTION_MYGROUP,-1,$menu_moduleid))
     {
-        $block->addmenu((empty($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_mygroup'])) ? _DIRECTORY_MYGROUP : ovensia\ploopi\str::htmlentities($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_mygroup']),ovensia\ploopi\crypt::urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&directoryTabItem=tabMygroup"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && $_SESSION['directory']['directoryTabItem'] == 'tabMygroup');
+        $block->addmenu((empty($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_mygroup'])) ? _DIRECTORY_MYGROUP : ploopi\str::htmlentities($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_mygroup']),ploopi\crypt::urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&directoryTabItem=tabMygroup"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && $_SESSION['directory']['directoryTabItem'] == 'tabMygroup');
     }
 }
 
@@ -64,7 +63,7 @@ if ($_SESSION["ploopi"]["workspaceid"] > 0)  // group selected
 /*
 if ($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_organizationchart'])
 {
-    $block->addmenu((empty($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_organizationchart'])) ? _DIRECTORY_ORGANIZATIONCHART : ovensia\ploopi\str::htmlentities($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_organizationchart']),ovensia\ploopi\crypt::urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&directoryTabItem=tabOrganizationChart"));
+    $block->addmenu((empty($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_organizationchart'])) ? _DIRECTORY_ORGANIZATIONCHART : ploopi\str::htmlentities($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_organizationchart']),ploopi\crypt::urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&directoryTabItem=tabOrganizationChart"));
 }
 */
 
@@ -74,7 +73,7 @@ if ($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_organizationchart'
 
 if ($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_sharedcontacts'])
 {
-    $block->addmenu((empty($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_sharedcontacts'])) ? _DIRECTORY_SHAREDCONTACTS : ovensia\ploopi\str::htmlentities($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_sharedcontacts']),ovensia\ploopi\crypt::urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&directoryTabItem=tabSharedContacts"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && $_SESSION['directory']['directoryTabItem'] == 'tabSharedContacts');
+    $block->addmenu((empty($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_sharedcontacts'])) ? _DIRECTORY_SHAREDCONTACTS : ploopi\str::htmlentities($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_sharedcontacts']),ploopi\crypt::urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&directoryTabItem=tabSharedContacts"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && $_SESSION['directory']['directoryTabItem'] == 'tabSharedContacts');
 }
 
 /**
@@ -83,7 +82,7 @@ if ($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_sharedcontacts'])
 
 if ($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_speeddialing'])
 {
-    $block->addmenu((empty($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_speeddialing'])) ? _DIRECTORY_SPEEDDIALING : ovensia\ploopi\str::htmlentities($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_speeddialing']),ovensia\ploopi\crypt::urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&directoryTabItem=tabSpeedDialing"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && $_SESSION['directory']['directoryTabItem'] == 'tabSpeedDialing');
+    $block->addmenu((empty($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_speeddialing'])) ? _DIRECTORY_SPEEDDIALING : ploopi\str::htmlentities($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_speeddialing']),ploopi\crypt::urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&directoryTabItem=tabSpeedDialing"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && $_SESSION['directory']['directoryTabItem'] == 'tabSpeedDialing');
 }
 
 /**
@@ -92,7 +91,7 @@ if ($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_speeddialing'])
 
 if ($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_mycontacts'])
 {
-    $block->addmenu((empty($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_mycontacts'])) ? _DIRECTORY_MYCONTACTS : ovensia\ploopi\str::htmlentities($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_mycontacts']),ovensia\ploopi\crypt::urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&directoryTabItem=tabMycontacts"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && $_SESSION['directory']['directoryTabItem'] == 'tabMycontacts');
+    $block->addmenu((empty($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_mycontacts'])) ? _DIRECTORY_MYCONTACTS : ploopi\str::htmlentities($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_mycontacts']),ploopi\crypt::urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&directoryTabItem=tabMycontacts"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && $_SESSION['directory']['directoryTabItem'] == 'tabMycontacts');
 }
 
 /**
@@ -101,7 +100,7 @@ if ($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_mycontacts'])
 
 if ($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_myfavorites'])
 {
-    $block->addmenu((empty($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_myfavorites'])) ? _DIRECTORY_FAVORITES : ovensia\ploopi\str::htmlentities($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_myfavorites']),ovensia\ploopi\crypt::urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&directoryTabItem=tabFavorites"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && $_SESSION['directory']['directoryTabItem'] == 'tabFavorites');
+    $block->addmenu((empty($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_myfavorites'])) ? _DIRECTORY_FAVORITES : ploopi\str::htmlentities($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_myfavorites']),ploopi\crypt::urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&directoryTabItem=tabFavorites"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && $_SESSION['directory']['directoryTabItem'] == 'tabFavorites');
 }
 
 /**
@@ -110,6 +109,6 @@ if ($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_myfavorites'])
 
 if ($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_search'])
 {
-    $block->addmenu((empty($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_search'])) ? _DIRECTORY_SEARCH : ovensia\ploopi\str::htmlentities($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_search']),ovensia\ploopi\crypt::urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&directoryTabItem=tabSearch"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && $_SESSION['directory']['directoryTabItem'] == 'tabSearch');
+    $block->addmenu((empty($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_search'])) ? _DIRECTORY_SEARCH : ploopi\str::htmlentities($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_label_search']),ploopi\crypt::urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&directoryTabItem=tabSearch"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && $_SESSION['directory']['directoryTabItem'] == 'tabSearch');
 }
 ?>

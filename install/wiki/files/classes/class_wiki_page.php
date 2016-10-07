@@ -46,7 +46,7 @@ include_once './modules/wiki/classes/class_wiki_page_history.php';
  * @copyright Ovensia
  */
 
-class wiki_page extends ovensia\ploopi\data_object
+class wiki_page extends ploopi\data_object
 {
 
     private $objPageHistory;
@@ -109,7 +109,7 @@ class wiki_page extends ovensia\ploopi\data_object
     {
         if ($this->isnew())
         {
-            $this->fields['ts_created'] = ovensia\ploopi\date::createtimestamp();
+            $this->fields['ts_created'] = ploopi\date::createtimestamp();
             $this->fields['ts_modified'] = $this->fields['ts_created'];
             $this->fields['revision'] = 1;
             if (empty($this->fields['id_module'])) parent::setuwm();
@@ -118,7 +118,7 @@ class wiki_page extends ovensia\ploopi\data_object
         {
             if (!is_null($this->objPageHistory)) $this->objPageHistory->save();
 
-            $this->fields['ts_modified'] = ovensia\ploopi\date::createtimestamp();
+            $this->fields['ts_modified'] = ploopi\date::createtimestamp();
             $this->fields['revision']++;
             parent::setuwm();
         }
@@ -137,8 +137,8 @@ class wiki_page extends ovensia\ploopi\data_object
      */
     public function redirectLinks($strNewId)
     {
-        $strOldId = ovensia\ploopi\str::htmlentities($this->fields['id']);
-        $strNewId = ovensia\ploopi\str::htmlentities($strNewId);
+        $strOldId = ploopi\str::htmlentities($this->fields['id']);
+        $strNewId = ploopi\str::htmlentities($strNewId);
         $this->fields['content'] = str_replace("[[{$strOldId}]]", "[[{$strNewId}]]", $this->fields['content']);
         $this->index();
         return parent::save();
@@ -164,7 +164,7 @@ class wiki_page extends ovensia\ploopi\data_object
      */
     public function getHistory()
     {
-        global $db;
+        $db = ploopi\loader::getdb();
 
         $db->query("
             SELECT      ph.*, u.lastname, u.firstname, u.login
@@ -188,7 +188,7 @@ class wiki_page extends ovensia\ploopi\data_object
      */
     public function rename($strNewId, $booRedirectLinks)
     {
-        global $db;
+        $db = ploopi\loader::getdb();
 
         $this->remove_index();
 
@@ -216,7 +216,7 @@ class wiki_page extends ovensia\ploopi\data_object
 
     public function remove_index()
     {
-        ovensia\ploopi\search_index::remove(_WIKI_OBJECT_PAGE, $this->fields['id'], $this->fields['id_module']);
+        ploopi\search_index::remove(_WIKI_OBJECT_PAGE, $this->fields['id'], $this->fields['id_module']);
     }
 
     /**
@@ -225,6 +225,6 @@ class wiki_page extends ovensia\ploopi\data_object
     public function index()
     {
         $this->remove_index();
-        ovensia\ploopi\search_index::add(_WIKI_OBJECT_PAGE, $this->fields['id'], $this->fields['id'], strip_tags(ovensia\ploopi\str::html_entity_decode(wiki_render($this->fields['content']))), $this->fields['id'], true, $this->fields['ts_created'], $this->fields['ts_modified']);
+        ploopi\search_index::add(_WIKI_OBJECT_PAGE, $this->fields['id'], $this->fields['id'], strip_tags(ploopi\str::html_entity_decode(wiki_render($this->fields['content']))), $this->fields['id'], true, $this->fields['ts_created'], $this->fields['ts_modified']);
     }
 }

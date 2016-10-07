@@ -25,7 +25,7 @@
  *
  * @package ploopi
  * @subpackage backoffice
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -43,7 +43,7 @@ switch ($_SESSION['ploopi']['mainmenu'])
             // left menu
             // admin menu always on the left menu
             //if ($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['grouptabid']]['system'])
-            if (ovensia\ploopi\acl::ismanager())
+            if (ploopi\acl::ismanager())
             {
                 $blockpath = "./modules/system/block.php";
 
@@ -53,12 +53,12 @@ switch ($_SESSION['ploopi']['mainmenu'])
                         array(
                             'title'=> _PLOOPI_GENERAL_ADMINISTRATION,
                             'description' => 'Installation des Modules, Paramétrage, Monitoring',
-                            'url' => ovensia\ploopi\crypt::urlencode("admin.php?ploopi_moduleid="._PLOOPI_MODULE_SYSTEM.'&ploopi_action=admin&system_level='.($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_SYSTEMADMIN ? 'system' : _SYSTEM_WORKSPACES)),
+                            'url' => ploopi\crypt::urlencode("admin.php?ploopi_moduleid="._PLOOPI_MODULE_SYSTEM.'&ploopi_action=admin&system_level='.($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_SYSTEMADMIN ? 'system' : _SYSTEM_WORKSPACES)),
                             'admin' => true,
                             'file' => $blockpath
                         );
 
-                    $block = new ovensia\ploopi\block();
+                    $block = new ploopi\block();
                     include $blockpath;
                     $arrBlocks[_PLOOPI_MODULE_SYSTEM]['menu'] = $block->getmenu();
                     $arrBlocks[_PLOOPI_MODULE_SYSTEM]['content'] = $block->getcontent();
@@ -75,34 +75,52 @@ switch ($_SESSION['ploopi']['mainmenu'])
                     if ($_SESSION['ploopi']['modules'][$menu_moduleid]['active'] && $_SESSION['ploopi']['modules'][$menu_moduleid]['visible'])
                     {
                         $strmtype = $_SESSION['ploopi']['modules'][$menu_moduleid]['moduletype'];
-                        $blockpath = "./modules/{$strmtype}/block.php";
 
-                        if (file_exists($blockpath))
-                        {
-                            $strClassPath = "./modules/{$strmtype}/classes/{$strmtype}.php";
 
-                            $booAllowed = true;
-                            if (file_exists($strClassPath))
+                        $strControllerFile = "ploopi\\{$strmtype}\\controller";
+                        if (ploopi\loader::classExists($strControllerFile)) {
+                            $strControllerFile::setBlock();
+                            $block = $strControllerFile::getBlock();
+
+                            $arrBlocks[$menu_moduleid] = array(
+                                'title'=> $_SESSION['ploopi']['modules'][$menu_moduleid]['label'],
+                                'description' => '',
+                                'url' => ploopi\crypt::urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public")
+                            );
+
+                            $arrBlocks[$menu_moduleid]['menu'] = $block->getmenu();
+                            $arrBlocks[$menu_moduleid]['content'] = $block->getcontent();
+                        }
+                        else {
+                            // Rétrocompatibilité
+                            $blockpath = "./modules/{$strmtype}/block.php";
+
+                            if (file_exists($blockpath))
                             {
-                                include_once $strClassPath;
+                                $strClassPath = "./modules/{$strmtype}/classes/{$strmtype}.php";
 
-                                if (method_exists($strmtype, 'isAllowed') && !$strmtype::isAllowed($_SESSION['ploopi']['workspaceid'], $menu_moduleid)) $booAllowed = false;
-                            }
+                                $booAllowed = true;
+                                if (file_exists($strClassPath))
+                                {
+                                    include_once $strClassPath;
 
-                            if ($booAllowed)
-                            {
-                                $arrBlocks[$menu_moduleid] =
-                                    array(
+                                    if (method_exists($strmtype, 'isAllowed') && !$strmtype::isAllowed($_SESSION['ploopi']['workspaceid'], $menu_moduleid)) $booAllowed = false;
+                                }
+
+                                if ($booAllowed)
+                                {
+                                    $arrBlocks[$menu_moduleid] =array(
                                         'title'=> $_SESSION['ploopi']['modules'][$menu_moduleid]['label'],
                                         'description' => '',
-                                        'url' => ovensia\ploopi\crypt::urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public"),
+                                        'url' => ploopi\crypt::urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public"),
                                         'file' => $blockpath
                                     );
 
-                                $block = new ovensia\ploopi\block();
-                                include($blockpath);
-                                $arrBlocks[$menu_moduleid]['menu'] = $block->getmenu();
-                                $arrBlocks[$menu_moduleid]['content'] = $block->getcontent();
+                                    $block = new ploopi\block();
+                                    include($blockpath);
+                                    $arrBlocks[$menu_moduleid]['menu'] = $block->getmenu();
+                                    $arrBlocks[$menu_moduleid]['content'] = $block->getcontent();
+                                }
                             }
                         }
                     }
@@ -122,11 +140,11 @@ switch ($_SESSION['ploopi']['mainmenu'])
                 array(
                     'title'=> _PLOOPI_LABEL_MYWORKSPACE,
                     'description' => 'Profil, paramètres, annotations, tickets',
-                    'url' => ovensia\ploopi\crypt::urlencode("admin.php?ploopi_moduleid="._PLOOPI_MODULE_SYSTEM.'&ploopi_action=public'),
+                    'url' => ploopi\crypt::urlencode("admin.php?ploopi_moduleid="._PLOOPI_MODULE_SYSTEM.'&ploopi_action=public'),
                     'file' => $blockpath
                 );
 
-            $block = new block();
+            $block = new ploopi\block();
             include $blockpath;
             $arrBlocks[_PLOOPI_MODULE_SYSTEM]['menu'] = $block->getmenu();
             $arrBlocks[_PLOOPI_MODULE_SYSTEM]['content'] = $block->getcontent();

@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,7 +25,7 @@
  *
  * @package directory
  * @subpackage public
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -53,7 +53,7 @@ $arrColumns['right']['phone'] = array('label' => _DIRECTORY_PHONE,     'width' =
 $arrColumns['right']['function'] = array('label' => _DIRECTORY_FUNCTION, 'width' => 150, 'options' => array('sort' => true));
 $arrColumns['right']['service'] = array('label' => _DIRECTORY_SERVICE, 'width' => 150, 'options' => array('sort' => true));
 
-if (ovensia\ploopi\param::get('directory_display_workspaces'))
+if (ploopi\param::get('directory_display_workspaces'))
 {        
     $arrColumns['right']['groups'] = array('label' => _DIRECTORY_GROUPS,    'width' => 150, 'options' => array('sort' => true));
 }
@@ -76,8 +76,8 @@ $sql =  "
         GROUP BY c.id
         ";
 
-$db->query($sql);
-while ($row = $db->fetchrow()) $result[] = $row;
+ploopi\loader::getdb()->query($sql);
+while ($row = ploopi\loader::getdb()->fetchrow()) $result[] = $row;
 
 $sql =  "
         SELECT  u.*,
@@ -93,13 +93,13 @@ $sql =  "
         GROUP BY u.id
         ";
 
-$db->query($sql);
-while ($row = $db->fetchrow()) $result[] = $row;
+ploopi\loader::getdb()->query($sql);
+while ($row = ploopi\loader::getdb()->fetchrow()) $result[] = $row;
 
 $c = 0;
 foreach($result as $row)
 {
-    $email = ($row['email']) ? '<a href="mailto:'.ovensia\ploopi\str::htmlentities($row['email']).'" title="'.ovensia\ploopi\str::htmlentities(_DIRECTORY_SEND_EMAIL.': '.$row['email']).'"><img src="./modules/directory/img/ico_email.png"></a>' : '&nbsp;';
+    $email = ($row['email']) ? '<a href="mailto:'.ploopi\str::htmlentities($row['email']).'" title="'.ploopi\str::htmlentities(_DIRECTORY_SEND_EMAIL.': '.$row['email']).'"><img src="./modules/directory/img/ico_email.png"></a>' : '&nbsp;';
     $ticket = '&nbsp;';
 
     switch ($row['usertype'])
@@ -114,7 +114,7 @@ foreach($result as $row)
             $level_display = (empty($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_users'])) ? _DIRECTORY_USERS : $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_users'];
 
             // on va chercher les espaces auxquels l'utilisateur peut accéder
-            $user = new ovensia\ploopi\user();
+            $user = new ploopi\user();
             $user->open($row['id']);
             $user_ws = $user->getworkspaces();
 
@@ -165,16 +165,16 @@ foreach($result as $row)
     }
 
     $arrValues[$c]['values']['type'] = array('label' => $level_display);
-    $arrValues[$c]['values']['name'] = array('label' => ovensia\ploopi\str::htmlentities("{$row['lastname']} {$row['firstname']}"));
-    $arrValues[$c]['values']['groups'] = array('label' => ovensia\ploopi\str::htmlentities($workspaces_list));
-    $arrValues[$c]['values']['service'] = array('label' => ($row['service']) ? ovensia\ploopi\str::htmlentities($row['service']) : '&nbsp;');
-    $arrValues[$c]['values']['function'] = array('label' => ($row['function']) ? ovensia\ploopi\str::htmlentities($row['function']) : '&nbsp;');
-    $arrValues[$c]['values']['phone'] = array('label' => ($row['phone']) ? ovensia\ploopi\str::htmlentities($row['phone']) : '&nbsp;');
+    $arrValues[$c]['values']['name'] = array('label' => ploopi\str::htmlentities("{$row['lastname']} {$row['firstname']}"));
+    $arrValues[$c]['values']['groups'] = array('label' => ploopi\str::htmlentities($workspaces_list));
+    $arrValues[$c]['values']['service'] = array('label' => ($row['service']) ? ploopi\str::htmlentities($row['service']) : '&nbsp;');
+    $arrValues[$c]['values']['function'] = array('label' => ($row['function']) ? ploopi\str::htmlentities($row['function']) : '&nbsp;');
+    $arrValues[$c]['values']['phone'] = array('label' => ($row['phone']) ? ploopi\str::htmlentities($row['phone']) : '&nbsp;');
     $arrValues[$c]['values']['email'] = array('label' => $email);
     $arrValues[$c]['values']['ticket'] = array('label' => $ticket);
     $arrValues[$c]['values']['actions'] = array('label' => $actions);
 
-    $arrValues[$c]['description'] = ovensia\ploopi\str::htmlentities("{$row['lastname']} {$row['firstname']}");
+    $arrValues[$c]['description'] = ploopi\str::htmlentities("{$row['lastname']} {$row['firstname']}");
     $arrValues[$c]['style'] = '';
 
     $c++;

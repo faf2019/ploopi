@@ -36,7 +36,7 @@
  * On vérifie qu'on est bien dans le module Booking.
  */
 
-if (ovensia\ploopi\acl::ismoduleallowed('planning'))
+if (ploopi\acl::ismoduleallowed('planning'))
 {
     /**
      * Opérations sur les événements

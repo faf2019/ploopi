@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2012 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,7 +25,7 @@
  *
  * @package doc
  * @subpackage public
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -58,7 +57,7 @@ $show_options = (
  */
 ?>
 
-<form action="<?php echo ovensia\ploopi\crypt::urlencode('admin.php'); ?>" onsubmit="javascript:doc_search_next();return false;" method="post">
+<form action="<?php echo ploopi\crypt::urlencode('admin.php'); ?>" onsubmit="javascript:doc_search_next();return false;" method="post">
 <input type="hidden" name="op" value="search_next">
 <div class="doc_folderinfo">
     <div style="float:left;height:40px;">
@@ -76,7 +75,7 @@ $show_options = (
 
     <div style="float:left;height:40px;border-left:1px solid #e0e0e0;">
         <p style="margin:0;padding:4px;float:left;">
-            <input type="text" class="text" style="width:140px;" id="doc_search_keywords" value="<?php echo ovensia\ploopi\str::htmlentities($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords']); ?>" placeholder="Fichier / Mot Clé" />
+            <input type="text" class="text" style="width:140px;" id="doc_search_keywords" value="<?php echo ploopi\str::htmlentities($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords']); ?>" placeholder="Fichier / Mot Clé" />
             <input type="submit" class="flatbutton" value="Rechercher" />
         </p>
     </div>
@@ -94,8 +93,8 @@ $show_options = (
         $arrFileType = array();
 
         $select = "SELECT distinct(filetype) FROM ploopi_mimetype";
-        $db->query($select);
-        while ($row = $db->fetchrow())
+        ploopi\loader::getdb()->query($select);
+        while ($row = ploopi\loader::getdb()->fetchrow())
         {
             $arrFileType[$row['filetype']] = (isset($ploopi_type_file[$row['filetype']]) ? $ploopi_type_file[$row['filetype']] : $row['filetype']);
         }
@@ -107,7 +106,7 @@ $show_options = (
             foreach ($arrFileType as $strFileType => $strFileTypeLang)
             {
                 ?>
-                <option value="<?php echo ovensia\ploopi\str::htmlentities($strFileType); ?>" <?php if ($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_filetype'] == $strFileType) echo 'selected'; ?>><?php echo ovensia\ploopi\str::htmlentities($strFileTypeLang); ?></option>
+                <option value="<?php echo ploopi\str::htmlentities($strFileType); ?>" <?php if ($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_filetype'] == $strFileType) echo 'selected'; ?>><?php echo ploopi\str::htmlentities($strFileTypeLang); ?></option>
                 <?php
             }
             ?>
@@ -115,22 +114,22 @@ $show_options = (
     </p>
     <p style="margin:0;padding:4px;float:left;">
         <strong>Propriétaire</strong>:
-        <br /><input type="text" class="text"  style="width:90px;" value="<?php echo ovensia\ploopi\str::htmlentities($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_user']); ?>" id="doc_search_user">
+        <br /><input type="text" class="text"  style="width:90px;" value="<?php echo ploopi\str::htmlentities($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_user']); ?>" id="doc_search_user">
     </p>
     <p style="margin:0;padding:4px;float:left;">
         <strong>Espace</strong>:
-        <br /><input type="text" class="text" style="width:90px;" value="<?php echo ovensia\ploopi\str::htmlentities($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_workspace']); ?>" id="doc_search_workspace">
+        <br /><input type="text" class="text" style="width:90px;" value="<?php echo ploopi\str::htmlentities($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_workspace']); ?>" id="doc_search_workspace">
     </p>
     <p style="margin:0;padding:4px;float:left;">
         <strong>Date (du)</strong>:
         <br />
-        <input type="text" class="text" style="width:70px;" value="<?php echo ovensia\ploopi\str::htmlentities($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date1']); ?>" name="doc_search_date1" id="doc_search_date1">
+        <input type="text" class="text" style="width:70px;" value="<?php echo ploopi\str::htmlentities($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date1']); ?>" name="doc_search_date1" id="doc_search_date1">
         <a href="javascript:void(0);" onclick="javascript:ploopi_calendar_open('doc_search_date1', event);"><img src="./img/calendar/calendar.gif" width="31" height="18" align="top" border="0"></a>
     </p>
     <p style="float:left;margin:0;padding:4px;">
         <strong>Date (au)</strong>:
         <br />
-        <input type="text" class="text" style="width:70px;" value="<?php echo ovensia\ploopi\str::htmlentities(ovensia\ploopi\str::htmlentities($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date2'])); ?>" name="doc_search_date2" id="doc_search_date2">
+        <input type="text" class="text" style="width:70px;" value="<?php echo ploopi\str::htmlentities(ploopi\str::htmlentities($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date2'])); ?>" name="doc_search_date2" id="doc_search_date2">
         <a href="javascript:void(0);" onclick="javascript:ploopi_calendar_open('doc_search_date2', event);"><img src="./img/calendar/calendar.gif" width="31" height="18" align="top" border="0"></a>
     </p>
 </div>

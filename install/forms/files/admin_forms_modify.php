@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2011 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Copyright (c) 2010 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
@@ -27,7 +26,7 @@
  *
  * @package forms
  * @subpackage admin
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -42,7 +41,7 @@ $objForm = new formsForm();
 if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']))
 {
     $objForm->open($_GET['forms_id']);
-    $title = _FORMS_MODIFICATION.' &laquo; '.ovensia\ploopi\str::htmlentities($objForm->fields['label']).' &raquo;';
+    $title = _FORMS_MODIFICATION.' &laquo; '.ploopi\str::htmlentities($objForm->fields['label']).' &raquo;';
     $objForm->includeCss(); // permet la prévisu directe en popup ajax
 }
 else
@@ -52,10 +51,10 @@ else
 }
 echo $skin->open_simplebloc($title);
 
-$pubdate_start = ($objForm->fields['pubdate_start']) ? ovensia\ploopi\date::timestamp2local($objForm->fields['pubdate_start']) : array('date' => '');
-$pubdate_end = ($objForm->fields['pubdate_end']) ? ovensia\ploopi\date::timestamp2local($objForm->fields['pubdate_end']) : array('date' => '');
+$pubdate_start = ($objForm->fields['pubdate_start']) ? ploopi\date::timestamp2local($objForm->fields['pubdate_start']) : array('date' => '');
+$pubdate_end = ($objForm->fields['pubdate_end']) ? ploopi\date::timestamp2local($objForm->fields['pubdate_end']) : array('date' => '');
 
-$autobackup_date = ($objForm->fields['autobackup_date']) ? ovensia\ploopi\date::timestamp2local($objForm->fields['autobackup_date']) : array('date' => '');
+$autobackup_date = ($objForm->fields['autobackup_date']) ? ploopi\date::timestamp2local($objForm->fields['autobackup_date']) : array('date' => '');
 
 $objForm_tpl = array();
 clearstatcache();
@@ -65,7 +64,7 @@ while ($dir = @readdir($ptrdir)) if ($dir != '.' && $dir != '..' && is_dir("./mo
 sort($objForm_tpl);
 ?>
 
-<form name="frm_modify" action="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?ploopi_op=forms_save&forms_id={$objForm->fields['id']}"); ?>" method="post" onsubmit="javascript:return forms_validate(this);">
+<form name="frm_modify" action="<?php echo ploopi\crypt::urlencode("admin.php?ploopi_op=forms_save&forms_id={$objForm->fields['id']}"); ?>" method="post" onsubmit="javascript:return forms_validate(this);">
 <div style="overflow:hidden">
 
     <?php
@@ -96,25 +95,25 @@ sort($objForm_tpl);
             <div class="ploopi_form" style="padding:4px;">
                 <p>
                     <label>*&nbsp;<?php echo _FORMS_LABEL; ?>:</label>
-                    <input type="text" class="text" name="forms_label" value="<?php echo ovensia\ploopi\str::htmlentities($objForm->fields['label']); ?>" />
+                    <input type="text" class="text" name="forms_label" value="<?php echo ploopi\str::htmlentities($objForm->fields['label']); ?>" />
                 </p>
                 <p>
                     <label>&nbsp;<?php echo _FORMS_TABLENAME; ?>:</label>
-                    <span><?php echo ovensia\ploopi\str::htmlentities($objForm->getDataTableName()); ?></span>
+                    <span><?php echo ploopi\str::htmlentities($objForm->getDataTableName()); ?></span>
                 </p>
                 <p>
                     <label><?php echo _FORMS_PUBDATESTART; ?>:</label>
-                    <input type="text" class="text" style="width:70px;" name="forms_pubdate_start" id="forms_pubdate_start" value="<?php echo ovensia\ploopi\str::htmlentities($pubdate_start['date']); ?>">&nbsp;
-                    <?php echo ovensia\ploopi\date::open_calendar('forms_pubdate_start'); ?>
+                    <input type="text" class="text" style="width:70px;" name="forms_pubdate_start" id="forms_pubdate_start" value="<?php echo ploopi\str::htmlentities($pubdate_start['date']); ?>">&nbsp;
+                    <?php echo ploopi\date::open_calendar('forms_pubdate_start'); ?>
                 </p>
                 <p>
                     <label><?php echo _FORMS_PUBDATEEND; ?>:</label>
-                    <input type="text" class="text" style="width:70px;" name="forms_pubdate_end" id="forms_pubdate_end" value="<?php echo ovensia\ploopi\str::htmlentities($pubdate_end['date']); ?>">&nbsp;
-                    <?php echo ovensia\ploopi\date::open_calendar('forms_pubdate_end'); ?>
+                    <input type="text" class="text" style="width:70px;" name="forms_pubdate_end" id="forms_pubdate_end" value="<?php echo ploopi\str::htmlentities($pubdate_end['date']); ?>">&nbsp;
+                    <?php echo ploopi\date::open_calendar('forms_pubdate_end'); ?>
                 </p>
                 <p>
                     <label><?php echo _FORMS_DESCRIPTION; ?>:</label>
-                    <textarea class="text" style="height:50px;" name="forms_description"><?php echo ovensia\ploopi\str::htmlentities($objForm->fields['description']); ?></textarea>
+                    <textarea class="text" style="height:50px;" name="forms_description"><?php echo ploopi\str::htmlentities($objForm->fields['description']); ?></textarea>
                 </p>
                 <p>
                     <label><?php echo _FORMS_TYPEFORM; ?>:</label>
@@ -123,7 +122,7 @@ sort($objForm_tpl);
                     foreach($form_types as $key => $value)
                     {
                         $sel = ($objForm->fields['typeform'] == $key) ? 'selected' : '';
-                        echo "<option $sel value=\"{$key}\">".ovensia\ploopi\str::htmlentities($value)."</option>";
+                        echo "<option $sel value=\"{$key}\">".ploopi\str::htmlentities($value)."</option>";
                     }
                     ?>
                     </select>
@@ -135,7 +134,7 @@ sort($objForm_tpl);
                 <div id="forms_type_cms" <?php if ($objForm->fields['typeform'] != 'cms') echo 'style="display:none;"'; ?>>
                     <p>
                         <label><?php echo _FORMS_RESPONSE; ?>:</label>
-                        <textarea class="text" rows="3" name="forms_cms_response"><?php echo ovensia\ploopi\str::htmlentities($objForm->fields['cms_response']); ?></textarea>
+                        <textarea class="text" rows="3" name="forms_cms_response"><?php echo ploopi\str::htmlentities($objForm->fields['cms_response']); ?></textarea>
                     </p>
                 </div>
                 <?php
@@ -175,7 +174,7 @@ sort($objForm_tpl);
                     foreach($objForm_tpl as $tpl_name)
                     {
                         ?>
-                        <option <?php if ($objForm->fields['model'] == $tpl_name) echo 'selected'; ?> value="<?php echo ovensia\ploopi\str::htmlentities($tpl_name); ?>"><?php echo ovensia\ploopi\str::htmlentities($tpl_name); ?></option>
+                        <option <?php if ($objForm->fields['model'] == $tpl_name) echo 'selected'; ?> value="<?php echo ploopi\str::htmlentities($tpl_name); ?>"><?php echo ploopi\str::htmlentities($tpl_name); ?></option>
                         <?php
                     }
                     ?>
@@ -183,11 +182,11 @@ sort($objForm_tpl);
                 </p>
                 <p>
                     <label><?php echo _FORMS_STYLE; ?>:</label>
-                    <input type="text" class="text" name="forms_style" value="<?php echo ovensia\ploopi\str::htmlentities($objForm->fields['style']); ?>">
+                    <input type="text" class="text" name="forms_style" value="<?php echo ploopi\str::htmlentities($objForm->fields['style']); ?>">
                 </p>
                 <p>
                     <label><?php echo _FORMS_NBLINE; ?>:</label>
-                    <input type="text" class="text" style="width:30px;"name="forms_nbline" value="<?php echo ovensia\ploopi\str::htmlentities($objForm->fields['nbline']); ?>" />
+                    <input type="text" class="text" style="width:30px;"name="forms_nbline" value="<?php echo ploopi\str::htmlentities($objForm->fields['nbline']); ?>" />
                 </p>
                 <p>
                     <label style="cursor:pointer;" onclick="javascript:$('forms_option_displaydate').checked = !$('forms_option_displaydate').checked;"><?php echo _FORMS_OPTION_DISPLAY_DATE; ?>:</label>
@@ -223,17 +222,17 @@ sort($objForm_tpl);
                     ?>
                     <p>
                         <label>Archiver les données plus anciennes que :</label>
-                        <input type="text" class="text" style="width:30px;" name="forms_autobackup" value="<?php echo ovensia\ploopi\str::htmlentities($objForm->fields['autobackup']); ?>">&nbsp;jours (0 = aucun archivage)
+                        <input type="text" class="text" style="width:30px;" name="forms_autobackup" value="<?php echo ploopi\str::htmlentities($objForm->fields['autobackup']); ?>">&nbsp;jours (0 = aucun archivage)
                     </p>
                     <p>
                         <label>Archiver les données jusqu'au :</label>
-                        <input type="text" class="text" style="width:70px;" name="forms_autobackup_date" id="forms_autobackup_date" value="<?php echo ovensia\ploopi\str::htmlentities($autobackup_date['date']); ?>">&nbsp;
-                        <?php echo ovensia\ploopi\date::open_calendar('forms_autobackup_date'); ?>
+                        <input type="text" class="text" style="width:70px;" name="forms_autobackup_date" id="forms_autobackup_date" value="<?php echo ploopi\str::htmlentities($autobackup_date['date']); ?>">&nbsp;
+                        <?php echo ploopi\date::open_calendar('forms_autobackup_date'); ?>
                     </p>
                     <p>
                         <label>Supprimer les données jusqu'au :</label>
                         <input type="text" class="text" style="width:70px;" id="forms_delete_date">&nbsp;
-                        <?php echo ovensia\ploopi\date::open_calendar('forms_delete_date'); ?>
+                        <?php echo ploopi\date::open_calendar('forms_delete_date'); ?>
                         <a href="javascript:void(0);" onclick="javascript:forms_deletedata('<?php echo $objForm->fields['id']; ?>', event);"><img src="./modules/forms/img/ico_trash.png" /></a>
                     </p>
                     <?php
@@ -278,13 +277,13 @@ sort($objForm_tpl);
         </div>
 
         <div style="clear:both;border-top:1px solid #a0a0a0;overflow:auto;">
-        <?php ovensia\ploopi\share::selectusers(_FORMS_OBJECT_FORM, $objForm->fields['id'], -1, 'Envoi des réponses par message à...', 'forms_send_email', './modules/forms/img/mail.png'); ?>
+        <?php ploopi\share::selectusers(_FORMS_OBJECT_FORM, $objForm->fields['id'], -1, 'Envoi des réponses par message à...', 'forms_send_email', './modules/forms/img/mail.png'); ?>
         </div>
 
 
         <div style="clear:both;background-color:#d0d0d0;border-top:1px solid #a0a0a0;border-bottom:1px solid #a0a0a0;padding:4px;overflow:auto;">
             <div style="float:right;">
-                <input type="button" class="flatbutton" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<?php echo ovensia\ploopi\crypt::urlencode("admin.php?formsTabItem=formslist"); ?>'">
+                <input type="button" class="flatbutton" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<?php echo ploopi\crypt::urlencode("admin.php?formsTabItem=formslist"); ?>'">
                 <input type="reset" class="flatbutton" value="<?php echo _PLOOPI_RESET; ?>">
                 <?php
                 if (!$objForm->new) //désactivé
@@ -302,9 +301,9 @@ sort($objForm_tpl);
                 if (!$objForm->new) //désactivé
                 {
                     ?>
-                        <input type="button" class="flatbutton" value="<?php echo _FORMS_PREVIEW; ?>" onclick="javascript:ploopi_xmlhttprequest_topopup(780, event, 'forms_preview', 'admin-light.php', '<?php echo ovensia\ploopi\crypt::queryencode("ploopi_op=forms_preview&forms_id={$objForm->fields['id']}"); ?>', 'post');" />
-                        <input type="button" class="flatbutton" value="<?php echo _FORMS_VIEWRESULT; ?>" onclick="javascript:document.location.href='<?php echo ovensia\ploopi\crypt::urlencode("admin.php?ploopi_action=public&op=forms_viewreplies&forms_id={$objForm->fields['id']}"); ?>'">
-                        <input type="button" class="flatbutton" value="<?php echo _FORMS_IMPORT; ?>" onclick="javascript:ploopi_xmlhttprequest_topopup(450, event, 'forms_import', 'admin-light.php', '<?php echo ovensia\ploopi\crypt::queryencode("ploopi_op=forms_import&forms_id={$objForm->fields['id']}"); ?>', 'post');" />
+                        <input type="button" class="flatbutton" value="<?php echo _FORMS_PREVIEW; ?>" onclick="javascript:ploopi_xmlhttprequest_topopup(780, event, 'forms_preview', 'admin-light.php', '<?php echo ploopi\crypt::queryencode("ploopi_op=forms_preview&forms_id={$objForm->fields['id']}"); ?>', 'post');" />
+                        <input type="button" class="flatbutton" value="<?php echo _FORMS_VIEWRESULT; ?>" onclick="javascript:document.location.href='<?php echo ploopi\crypt::urlencode("admin.php?ploopi_action=public&op=forms_viewreplies&forms_id={$objForm->fields['id']}"); ?>'">
+                        <input type="button" class="flatbutton" value="<?php echo _FORMS_IMPORT; ?>" onclick="javascript:ploopi_xmlhttprequest_topopup(450, event, 'forms_import', 'admin-light.php', '<?php echo ploopi\crypt::queryencode("ploopi_op=forms_import&forms_id={$objForm->fields['id']}"); ?>', 'post');" />
                     <?php
                 }
                 ?>
@@ -360,9 +359,9 @@ if (!$objForm->isnew())
         default:
             ?>
             <div style="clear:both;background-color:#d0d0d0;overflow:auto;text-align:right;padding:4px;border-bottom:1px solid #a0a0a0;">
-                <input type="button" onclick="javascript:document.location.href='<?php echo ovensia\ploopi\crypt::urlencode("admin.php?op=forms_html_add&forms_id={$objForm->fields['id']}"); ?>#addform'" class="flatbutton" value="<?php echo _FORMS_ADDHTML; ?>">
-                <input type="button" onclick="javascript:document.location.href='<?php echo ovensia\ploopi\crypt::urlencode("admin.php?op=forms_separator_add&forms_id={$objForm->fields['id']}"); ?>#addform'" class="flatbutton" value="<?php echo _FORMS_ADDSEPARATOR; ?>">
-                <input type="button" onclick="javascript:document.location.href='<?php echo ovensia\ploopi\crypt::urlencode("admin.php?op=forms_field_add&forms_id={$objForm->fields['id']}"); ?>#addform'" class="flatbutton" value="<?php echo _FORMS_ADDFIELD; ?>">
+                <input type="button" onclick="javascript:document.location.href='<?php echo ploopi\crypt::urlencode("admin.php?op=forms_html_add&forms_id={$objForm->fields['id']}"); ?>#addform'" class="flatbutton" value="<?php echo _FORMS_ADDHTML; ?>">
+                <input type="button" onclick="javascript:document.location.href='<?php echo ploopi\crypt::urlencode("admin.php?op=forms_separator_add&forms_id={$objForm->fields['id']}"); ?>#addform'" class="flatbutton" value="<?php echo _FORMS_ADDSEPARATOR; ?>">
+                <input type="button" onclick="javascript:document.location.href='<?php echo ploopi\crypt::urlencode("admin.php?op=forms_field_add&forms_id={$objForm->fields['id']}"); ?>#addform'" class="flatbutton" value="<?php echo _FORMS_ADDFIELD; ?>">
             </div>
             <?php
         break;
@@ -404,7 +403,7 @@ if (!$objForm->isnew())
 
     $array_columns['actions_right']['actions'] = array('label' => '', 'width' => 74);
 
-    $rs_fields = $db->query("
+    $rs_fields = ploopi\loader::getdb()->query("
         SELECT      f.*, g.label as g_label
         FROM        ploopi_mod_forms_field f
         LEFT JOIN   ploopi_mod_forms_group g ON g.id = f.id_group
@@ -412,10 +411,10 @@ if (!$objForm->isnew())
         ORDER BY    f.position
     ");
 
-    $arrFields = $db->getarray($rs_fields, true);
+    $arrFields = ploopi\loader::getdb()->getarray($rs_fields, true);
 
     $c=0;
-    while ($row = $db->fetchrow($rs_fields))
+    while ($row = ploopi\loader::getdb()->fetchrow($rs_fields))
     {
 
         if ($row['separator'])
@@ -432,13 +431,13 @@ if (!$objForm->isnew())
             );
 
             $array_values[$c]['values']['actions']      = array('label' => '
-                <a href="'.ovensia\ploopi\crypt::urlencode("admin.php?ploopi_op=forms_field_moveup&field_id={$row['id']}").'"><img src="./modules/forms/img/ico_up2.png"></a>
-                <a href="'.ovensia\ploopi\crypt::urlencode("admin.php?ploopi_op=forms_field_movedown&field_id={$row['id']}").'"><img src="./modules/forms/img/ico_down2.png"></a>
-                <a style="margin-left:10px;" href="javascript:ploopi_confirmlink(\''.ovensia\ploopi\crypt::urlencode("admin.php?op=forms_field_delete&field_id={$row['id']}").'\',\''._PLOOPI_CONFIRM.'\')"><img src="./modules/forms/img/ico_trash.png"></a>
+                <a href="'.ploopi\crypt::urlencode("admin.php?ploopi_op=forms_field_moveup&field_id={$row['id']}").'"><img src="./modules/forms/img/ico_up2.png"></a>
+                <a href="'.ploopi\crypt::urlencode("admin.php?ploopi_op=forms_field_movedown&field_id={$row['id']}").'"><img src="./modules/forms/img/ico_down2.png"></a>
+                <a style="margin-left:10px;" href="javascript:ploopi_confirmlink(\''.ploopi\crypt::urlencode("admin.php?op=forms_field_delete&field_id={$row['id']}").'\',\''._PLOOPI_CONFIRM.'\')"><img src="./modules/forms/img/ico_trash.png"></a>
             ');
 
-            $array_values[$c]['description'] = 'Ouvrir le Séparateur "'.ovensia\ploopi\str::htmlentities($row['name']).'"';
-            $array_values[$c]['link'] = ovensia\ploopi\crypt::urlencode("admin.php?op=forms_separator_modify&forms_id={$objForm->fields['id']}&field_id={$row['id']}").'#addform';
+            $array_values[$c]['description'] = 'Ouvrir le Séparateur "'.ploopi\str::htmlentities($row['name']).'"';
+            $array_values[$c]['link'] = ploopi\crypt::urlencode("admin.php?op=forms_separator_modify&forms_id={$objForm->fields['id']}&field_id={$row['id']}").'#addform';
             $array_values[$c]['style'] = 'background-color:#ddeeff';
 
         }
@@ -456,13 +455,13 @@ if (!$objForm->isnew())
             );
 
             $array_values[$c]['values']['actions']      = array('label' => '
-                <a href="'.ovensia\ploopi\crypt::urlencode("admin.php?ploopi_op=forms_field_moveup&field_id={$row['id']}").'"><img src="./modules/forms/img/ico_up2.png"></a>
-                <a href="'.ovensia\ploopi\crypt::urlencode("admin.php?ploopi_op=forms_field_movedown&field_id={$row['id']}").'"><img src="./modules/forms/img/ico_down2.png"></a>
-                <a style="margin-left:10px;" href="javascript:ploopi_confirmlink(\''.ovensia\ploopi\crypt::urlencode("admin.php?op=forms_field_delete&field_id={$row['id']}").'\',\''._PLOOPI_CONFIRM.'\')"><img src="./modules/forms/img/ico_trash.png"></a>
+                <a href="'.ploopi\crypt::urlencode("admin.php?ploopi_op=forms_field_moveup&field_id={$row['id']}").'"><img src="./modules/forms/img/ico_up2.png"></a>
+                <a href="'.ploopi\crypt::urlencode("admin.php?ploopi_op=forms_field_movedown&field_id={$row['id']}").'"><img src="./modules/forms/img/ico_down2.png"></a>
+                <a style="margin-left:10px;" href="javascript:ploopi_confirmlink(\''.ploopi\crypt::urlencode("admin.php?op=forms_field_delete&field_id={$row['id']}").'\',\''._PLOOPI_CONFIRM.'\')"><img src="./modules/forms/img/ico_trash.png"></a>
             ');
 
             $array_values[$c]['description'] = 'Ouvrir le Contenu HTML';
-            $array_values[$c]['link'] = ovensia\ploopi\crypt::urlencode("admin.php?op=forms_html_modify&forms_id={$objForm->fields['id']}&field_id={$row['id']}").'#addform';
+            $array_values[$c]['link'] = ploopi\crypt::urlencode("admin.php?op=forms_html_modify&forms_id={$objForm->fields['id']}&field_id={$row['id']}").'#addform';
             $array_values[$c]['style'] = 'background-color:#ddffee';
 
         }
@@ -478,22 +477,22 @@ if (!$objForm->isnew())
             if ($row['option_wceview']) $arrOptions[] = 'Frontoffice';
 
             $array_values[$c]['values'] = array(
-                'name' => array('label' => ovensia\ploopi\str::htmlentities($row['name'])),
-                'group' => array('label' => ovensia\ploopi\str::htmlentities($row['g_label'])),
-                'type' => array('label' => ovensia\ploopi\str::htmlentities($field_types[$row['type']].( ($row['type'] == 'text' && isset($field_formats[$row['format']])) ? " ( {$field_formats[$row['format']]} )" : ''))),
-                'options' => array('label' => ovensia\ploopi\str::htmlentities(implode(', ', $arrOptions))),
+                'name' => array('label' => ploopi\str::htmlentities($row['name'])),
+                'group' => array('label' => ploopi\str::htmlentities($row['g_label'])),
+                'type' => array('label' => ploopi\str::htmlentities($field_types[$row['type']].( ($row['type'] == 'text' && isset($field_formats[$row['format']])) ? " ( {$field_formats[$row['format']]} )" : ''))),
+                'options' => array('label' => ploopi\str::htmlentities(implode(', ', $arrOptions))),
             );
 
-            $array_values[$c]['description'] = 'Ouvrir le Champ "'.ovensia\ploopi\str::htmlentities($row['name']).'"';
-            $array_values[$c]['link'] = ovensia\ploopi\crypt::urlencode("admin.php?op=forms_field_modify&forms_id={$objForm->fields['id']}&field_id={$row['id']}")."#addform";
+            $array_values[$c]['description'] = 'Ouvrir le Champ "'.ploopi\str::htmlentities($row['name']).'"';
+            $array_values[$c]['link'] = ploopi\crypt::urlencode("admin.php?op=forms_field_modify&forms_id={$objForm->fields['id']}&field_id={$row['id']}")."#addform";
         }
 
 
         $array_values[$c]['values']['pos'] = array('label' =>  $row['position']);
         $array_values[$c]['values']['actions'] = array('label' => '
-            <a href="'.ovensia\ploopi\crypt::urlencode("admin.php?ploopi_op=forms_field_moveup&forms_id={$objForm->fields['id']}&field_id={$row['id']}").'"><img src="./modules/forms/img/ico_up2.png"></a>
-            <a href="'.ovensia\ploopi\crypt::urlencode("admin.php?ploopi_op=forms_field_movedown&forms_id={$objForm->fields['id']}&field_id={$row['id']}").'"><img src="./modules/forms/img/ico_down2.png"></a>
-            <a style="margin-left:10px;" href="javascript:ploopi_confirmlink(\''.ovensia\ploopi\crypt::urlencode("admin.php?ploopi_op=forms_field_delete&forms_id={$objForm->fields['id']}&field_id={$row['id']}").'\',\''._PLOOPI_CONFIRM.'\')"><img src="./modules/forms/img/ico_trash.png"></a>
+            <a href="'.ploopi\crypt::urlencode("admin.php?ploopi_op=forms_field_moveup&forms_id={$objForm->fields['id']}&field_id={$row['id']}").'"><img src="./modules/forms/img/ico_up2.png"></a>
+            <a href="'.ploopi\crypt::urlencode("admin.php?ploopi_op=forms_field_movedown&forms_id={$objForm->fields['id']}&field_id={$row['id']}").'"><img src="./modules/forms/img/ico_down2.png"></a>
+            <a style="margin-left:10px;" href="javascript:ploopi_confirmlink(\''.ploopi\crypt::urlencode("admin.php?ploopi_op=forms_field_delete&forms_id={$objForm->fields['id']}&field_id={$row['id']}").'\',\''._PLOOPI_CONFIRM.'\')"><img src="./modules/forms/img/ico_trash.png"></a>
         ');
 
         if (isset($_GET['field_id']) && $row['id'] == $_GET['field_id']) $array_values[$c]['style'] = 'background-color:#ffe0e0;';
@@ -521,7 +520,7 @@ if (!$objForm->isnew())
         default:
             ?>
             <div style="clear:both;background-color:#d0d0d0;overflow:auto;text-align:right;padding:4px;border-bottom:1px solid #a0a0a0;">
-                <input type="button" onclick="javascript:document.location.href='<?php echo ovensia\ploopi\crypt::urlencode("admin.php?op=forms_group_add&forms_id={$objForm->fields['id']}"); ?>#addgroup'" class="flatbutton" value="<?php echo _FORMS_ADDGROUP; ?>">
+                <input type="button" onclick="javascript:document.location.href='<?php echo ploopi\crypt::urlencode("admin.php?op=forms_group_add&forms_id={$objForm->fields['id']}"); ?>#addgroup'" class="flatbutton" value="<?php echo _FORMS_ADDGROUP; ?>">
             </div>
             <?php
         break;
@@ -555,20 +554,20 @@ if (!$objForm->isnew())
             WHERE   id_form = {$objForm->fields['id']}
             ";
 
-    $rs_fields = $db->query($sql);
+    $rs_fields = ploopi\loader::getdb()->query($sql);
 
     $c=0;
-    while ($row = $db->fetchrow($rs_fields))
+    while ($row = ploopi\loader::getdb()->fetchrow($rs_fields))
     {
-        $array_values[$c]['values']['label'] = array('label' => ovensia\ploopi\str::htmlentities($row['label']));
-        $array_values[$c]['values']['description'] = array('label' =>  ovensia\ploopi\str::nl2br(ovensia\ploopi\str::htmlentities($row['description'])));
-        $array_values[$c]['values']['formula'] = array('label' =>  ovensia\ploopi\str::htmlentities($row['formula']));
+        $array_values[$c]['values']['label'] = array('label' => ploopi\str::htmlentities($row['label']));
+        $array_values[$c]['values']['description'] = array('label' =>  ploopi\str::nl2br(ploopi\str::htmlentities($row['description'])));
+        $array_values[$c]['values']['formula'] = array('label' =>  ploopi\str::htmlentities($row['formula']));
         $array_values[$c]['values']['actions']  = array('label' => '
-            <a href="javascript:ploopi_confirmlink(\''.ovensia\ploopi\crypt::urlencode("admin-light.php?ploopi_op=forms_group_delete&forms_id={$objForm->fields['id']}&forms_group_id={$row['id']}").'\',\''._PLOOPI_CONFIRM.'\')"><img src="./modules/forms/img/ico_trash.png"></a>
+            <a href="javascript:ploopi_confirmlink(\''.ploopi\crypt::urlencode("admin-light.php?ploopi_op=forms_group_delete&forms_id={$objForm->fields['id']}&forms_group_id={$row['id']}").'\',\''._PLOOPI_CONFIRM.'\')"><img src="./modules/forms/img/ico_trash.png"></a>
         ');
 
-        $array_values[$c]['description'] = 'Ouvrir le Groupe &laquo; '.ovensia\ploopi\str::htmlentities($row['label']).' &raquo;';
-        $array_values[$c]['link'] = ovensia\ploopi\crypt::urlencode("admin.php?op=forms_group_modify&forms_id={$objForm->fields['id']}&forms_group_id={$row['id']}").'#addgroup';
+        $array_values[$c]['description'] = 'Ouvrir le Groupe &laquo; '.ploopi\str::htmlentities($row['label']).' &raquo;';
+        $array_values[$c]['link'] = ploopi\crypt::urlencode("admin.php?op=forms_group_modify&forms_id={$objForm->fields['id']}&forms_group_id={$row['id']}").'#addgroup';
 
         if (isset($_GET['forms_group_id']) && $row['id'] == $_GET['forms_group_id']) $array_values[$c]['style'] = 'background-color:#ffe0e0;';
 
@@ -596,7 +595,7 @@ if (!$objForm->isnew())
         default:
             ?>
             <div style="clear:both;background-color:#d0d0d0;overflow:auto;text-align:right;padding:4px;border-bottom:1px solid #a0a0a0;">
-                <input type="button" onclick="javascript:document.location.href='<?php echo ovensia\ploopi\crypt::urlencode("admin.php?op=forms_graphic_add&forms_id={$objForm->fields['id']}"); ?>#addgraphic'" class="flatbutton" value="<?php echo _FORMS_ADDGRAPHIC; ?>">
+                <input type="button" onclick="javascript:document.location.href='<?php echo ploopi\crypt::urlencode("admin.php?op=forms_graphic_add&forms_id={$objForm->fields['id']}"); ?>#addgraphic'" class="flatbutton" value="<?php echo _FORMS_ADDGRAPHIC; ?>">
             </div>
             <?php
         break;
@@ -636,21 +635,21 @@ if (!$objForm->isnew())
             WHERE   id_form = {$objForm->fields['id']}
             ";
 
-    $rs_fields = $db->query($sql);
+    $rs_fields = ploopi\loader::getdb()->query($sql);
 
     $c=0;
-    while ($row = $db->fetchrow($rs_fields))
+    while ($row = ploopi\loader::getdb()->fetchrow($rs_fields))
     {
-        $array_values[$c]['values']['label'] = array('label' => ovensia\ploopi\str::htmlentities($row['label']));
-        $array_values[$c]['values']['description'] = array('label' =>  ovensia\ploopi\str::nl2br(ovensia\ploopi\str::htmlentities($row['description'])));
-        $array_values[$c]['values']['type'] = array('label' => ovensia\ploopi\str::htmlentities(isset($forms_graphic_types[$row['type']]) ? $forms_graphic_types[$row['type']] : ''));
+        $array_values[$c]['values']['label'] = array('label' => ploopi\str::htmlentities($row['label']));
+        $array_values[$c]['values']['description'] = array('label' =>  ploopi\str::nl2br(ploopi\str::htmlentities($row['description'])));
+        $array_values[$c]['values']['type'] = array('label' => ploopi\str::htmlentities(isset($forms_graphic_types[$row['type']]) ? $forms_graphic_types[$row['type']] : ''));
         $array_values[$c]['values']['line_aggregation'] = array('label' => isset($forms_graphic_line_aggregation[$row['line_aggregation']]) ? $forms_graphic_line_aggregation[$row['line_aggregation']] : '');
         $array_values[$c]['values']['actions']  = array('label' => '
-            <a href="javascript:ploopi_confirmlink(\''.ovensia\ploopi\crypt::urlencode("admin-light.php?ploopi_op=forms_graphic_delete&forms_id={$objForm->fields['id']}&forms_graphic_id={$row['id']}").'\',\''._PLOOPI_CONFIRM.'\')"><img src="./modules/forms/img/ico_trash.png"></a>
+            <a href="javascript:ploopi_confirmlink(\''.ploopi\crypt::urlencode("admin-light.php?ploopi_op=forms_graphic_delete&forms_id={$objForm->fields['id']}&forms_graphic_id={$row['id']}").'\',\''._PLOOPI_CONFIRM.'\')"><img src="./modules/forms/img/ico_trash.png"></a>
         ');
 
-        $array_values[$c]['description'] = 'Ouvrir le Graphique &laquo; '.ovensia\ploopi\str::htmlentities($row['label']).' &raquo;';
-        $array_values[$c]['link'] = ovensia\ploopi\crypt::urlencode("admin.php?op=forms_graphic_modify&forms_id={$objForm->fields['id']}&forms_graphic_id={$row['id']}").'#addgraphic';
+        $array_values[$c]['description'] = 'Ouvrir le Graphique &laquo; '.ploopi\str::htmlentities($row['label']).' &raquo;';
+        $array_values[$c]['link'] = ploopi\crypt::urlencode("admin.php?op=forms_graphic_modify&forms_id={$objForm->fields['id']}&forms_graphic_id={$row['id']}").'#addgraphic';
 
         if (isset($_GET['forms_graphic_id']) && $row['id'] == $_GET['forms_graphic_id']) $array_values[$c]['style'] = 'background-color:#ffe0e0;';
 

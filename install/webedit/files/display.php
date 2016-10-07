@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2011 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Copyright (c) 2009-2010 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
@@ -27,7 +26,7 @@
  *
  * @package webedit
  * @subpackage frontoffice
- * @copyright Netlor, Ovensia, HeXad
+ * @copyright Ovensia, HeXad
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  *
@@ -72,7 +71,7 @@ $ploopi_additional_head = '';
 $ploopi_additional_javascript = '';
 
 // Date du jour (utile pour vérifier les dates de publication)
-$today = ovensia\ploopi\date::createtimestamp();
+$today = ploopi\date::createtimestamp();
 
 $type = (empty($_GET['type'])) ? '' : $_GET['type'];
 $webedit_mode = (empty($_GET['webedit_mode'])) ? 'display' : $_GET['webedit_mode'];
@@ -90,7 +89,7 @@ $headingid = (!empty($_REQUEST['headingid']) && is_numeric($_REQUEST['headingid'
 $intErrorCode = 0;
 
 // vérification des paramètres
-if ($webedit_mode == 'edit' && !(ovensia\ploopi\acl::isactionallowed(_WEBEDIT_ACTION_ARTICLE_EDIT) || webedit_isEditor($headingid))) $webedit_mode = 'display';
+if ($webedit_mode == 'edit' && !(ploopi\acl::isactionallowed(_WEBEDIT_ACTION_ARTICLE_EDIT) || webedit_isEditor($headingid))) $webedit_mode = 'display';
 
 if ($webedit_mode == 'render')
 {
@@ -191,7 +190,7 @@ else // affichage standard rubrique/page ou blog
                 break;
 
                 case 'url_redirect':
-                    if (!empty($arrHeadings['list'][$headingid]['url'])) ovensia\ploopi\output::redirect($arrHeadings['list'][$headingid]['url'], false, false);
+                    if (!empty($arrHeadings['list'][$headingid]['url'])) ploopi\output::redirect($arrHeadings['list'][$headingid]['url'], false, false);
                 break;
 
                 case 'article_first':
@@ -297,7 +296,7 @@ $_SESSION['ploopi']['frontoffice']['template_path'] = $template_path;
 if (!is_object($skin) && !empty($_SESSION['ploopi']['frontoffice']['template_path']) && file_exists("{$_SESSION['ploopi']['frontoffice']['template_path']}/class_skin.php"))
 {
     include_once "{$_SESSION['ploopi']['frontoffice']['template_path']}/class_skin.php";
-    $skin = new ovensia\ploopi\skin();
+    $skin = new ploopi\skin();
 }
 
 include_once './include/op.php';
@@ -349,8 +348,8 @@ if ($query_string != '' || $advanced_search) // recherche intégrale
     if ($query_string != '' || $query_date_b != '' || $query_date_e != '' || $query_content_type != '' || $query_mime_type != '' || $query_heading_id != '')
     {
         // Conversion des dates de recherche en timestamp
-        $ts_date_b = empty($query_date_b) ? 0 : ovensia\ploopi\date::local2timestamp($query_date_b);
-        $ts_date_e = empty($query_date_e) ? 0 : ovensia\ploopi\date::local2timestamp($query_date_e, '23:59:59');
+        $ts_date_b = empty($query_date_b) ? 0 : ploopi\date::local2timestamp($query_date_b);
+        $ts_date_e = empty($query_date_e) ? 0 : ploopi\date::local2timestamp($query_date_e, '23:59:59');
 
         $template_body->assign_block_vars('switch_search', array());
 
@@ -360,7 +359,7 @@ if ($query_string != '' || $advanced_search) // recherche intégrale
             if ($query_heading_id != '')
             {
                 // Liste des articles de la rubrique sélectionnée
-                $rs = $db->query("
+                $rs = ploopi\loader::getdb()->query("
                     SELECT  a.id
                     FROM    ploopi_mod_webedit_heading h1,
                             ploopi_mod_webedit_heading h2,
@@ -370,11 +369,11 @@ if ($query_string != '' || $advanced_search) // recherche intégrale
                     AND     a.id_heading = h1.id
                 ");
 
-                $arrQueryHeadingArticles = $db->getarray($rs, true);
+                $arrQueryHeadingArticles = ploopi\loader::getdb()->getarray($rs, true);
 
                 if (!empty($arrQueryHeadingArticles))
                 {
-                    foreach(ovensia\ploopi\search_index::search($query_string, _WEBEDIT_OBJECT_ARTICLE_PUBLIC, $arrQueryHeadingArticles, $_SESSION['ploopi']['moduleid']) as $row)
+                    foreach(ploopi\search_index::search($query_string, _WEBEDIT_OBJECT_ARTICLE_PUBLIC, $arrQueryHeadingArticles, $_SESSION['ploopi']['moduleid']) as $row)
                     {
                         $arrRelevance['webedit_'.$row['id_record']] = $row;
                     }
@@ -382,7 +381,7 @@ if ($query_string != '' || $advanced_search) // recherche intégrale
             }
             else
             {
-                foreach(ovensia\ploopi\search_index::search($query_string, _WEBEDIT_OBJECT_ARTICLE_PUBLIC, null, $_SESSION['ploopi']['moduleid']) as $row)
+                foreach(ploopi\search_index::search($query_string, _WEBEDIT_OBJECT_ARTICLE_PUBLIC, null, $_SESSION['ploopi']['moduleid']) as $row)
                 {
                     $arrRelevance['webedit_'.$row['id_record']] = $row;
                 }
@@ -404,11 +403,11 @@ if ($query_string != '' || $advanced_search) // recherche intégrale
                 WHERE       a.id_module = {$_SESSION['ploopi']['moduleid']}
                 AND         ao.id_article = a.id
                 ";
-            $db->query($sql);
+            ploopi\loader::getdb()->query($sql);
 
             $arrObject = array();
 
-            while ($row = $db->fetchrow())
+            while ($row = ploopi\loader::getdb()->fetchrow())
             {
                 if ($row['id_heading'] == 0 || !$arrHeadings['list'][$row['id_heading']]['private'] || isset($arrShares[$arrHeadings['list'][$row['id_heading']]['herited_private']]) || isset($_SESSION['webedit']['allowedheading'][$_SESSION['ploopi']['moduleid']][$arrHeadings['list'][$row['id_heading']]['herited_private']]) || $webedit_mode == 'edit') // Rubrique non privée ou accessible par l'utilisateur
                 {
@@ -436,7 +435,7 @@ if ($query_string != '' || $advanced_search) // recherche intégrale
                 if (isset($_SESSION['ploopi']['modules'][$rowObject['id_module']]) && $_SESSION['ploopi']['modules'][$rowObject['id_module']]['active']) // Module existe et actif ?
                 {
                     // Charge le fichier global.php du module
-                    ovensia\ploopi\module::init($_SESSION['ploopi']['modules'][$rowObject['id_module']]['moduletype'], false, false, false);
+                    ploopi\module::init($_SESSION['ploopi']['modules'][$rowObject['id_module']]['moduletype'], false, false, false);
                     // Vérifie l'existence d'une fonction de recherche dans les objets
                     $cbSearchFunc = $_SESSION['ploopi']['modules'][$rowObject['id_module']]['moduletype'].'_object_search';
 
@@ -458,7 +457,7 @@ if ($query_string != '' || $advanced_search) // recherche intégrale
         if ($query_content_type != 'art')
         {
             // booléen à true si le module DOC existe physiquement
-            if ($boolModDocExists = ovensia\ploopi\module::init('doc', false, false, false)) include_once './modules/doc/class_docfile.php';
+            if ($boolModDocExists = ploopi\module::init('doc', false, false, false)) include_once './modules/doc/class_docfile.php';
 
             // Recherche des modules DOC utilisés par les documents liés
             $sql =
@@ -481,9 +480,9 @@ if ($query_string != '' || $advanced_search) // recherche intégrale
             if (!empty($ts_date_b)) $sql .= " AND d.timestp_create >= '{$ts_date_b}' ";
             if (!empty($ts_date_e)) $sql .= " AND d.timestp_create <= '{$ts_date_e}' ";
 
-            $db->query($sql);
+            ploopi\loader::getdb()->query($sql);
 
-            while ($row = $db->fetchrow())
+            while ($row = ploopi\loader::getdb()->fetchrow())
             {
                 if ($row['id_heading'] == 0 || !$arrHeadings['list'][$row['id_heading']]['private'] || isset($arrShares[$arrHeadings['list'][$row['id_heading']]['herited_private']]) || isset($_SESSION['webedit']['allowedheading'][$_SESSION['ploopi']['moduleid']][$arrHeadings['list'][$row['id_heading']]['herited_private']]) || $webedit_mode == 'edit') // Rubrique non privée ou accessible par l'utilisateur
                 {
@@ -509,7 +508,7 @@ if ($query_string != '' || $advanced_search) // recherche intégrale
                 foreach($arrModDoc as $idModDoc => $arrDoc)
                 {
                     // Filtrage par extension
-                    foreach (ovensia\ploopi\search_index::search($query_string, _DOC_OBJECT_FILE, $arrDoc, $idModDoc) as $row)
+                    foreach (ploopi\search_index::search($query_string, _DOC_OBJECT_FILE, $arrDoc, $idModDoc) as $row)
                     {
                         if ($query_mime_type != '')
                         {
@@ -540,23 +539,23 @@ if ($query_string != '' || $advanced_search) // recherche intégrale
 
                     if ($objDocFile->openmd5($result['id_record']))
                     {
-                        $link = ovensia\ploopi\str::urlrewrite("index-quick.php?ploopi_op=doc_file_download&docfile_md5id={$result['id_record']}", doc_getrewriterules(), $objDocFile->fields['name'], null, true);
+                        $link = ploopi\str::urlrewrite("index-quick.php?ploopi_op=doc_file_download&docfile_md5id={$result['id_record']}", doc_getrewriterules(), $objDocFile->fields['name'], null, true);
 
                         $template_body->assign_block_vars('switch_search.result',
                             array(
                                 'RELEVANCE' => sprintf("%.02f", $result['relevance']),
-                                'TITLE' => ovensia\ploopi\str::htmlentities($objDocFile->fields['name']),
+                                'TITLE' => ploopi\str::htmlentities($objDocFile->fields['name']),
                                 'TITLE_RAW' => $objDocFile->fields['name'],
                                 'AUTHOR' => '',
                                 'EXTRACT' => '',
-                                'METATITLE' => ovensia\ploopi\str::htmlentities($objDocFile->fields['name']),
+                                'METATITLE' => ploopi\str::htmlentities($objDocFile->fields['name']),
                                 'METATITLE_RAW' => $objDocFile->fields['name'],
                                 'METAKEYWORDS' => '',
                                 'METADESCRIPTION' => '',
-                                'DATE' => current(ovensia\ploopi\date::timestamp2local($objDocFile->fields['timestp_create'])),
+                                'DATE' => current(ploopi\date::timestamp2local($objDocFile->fields['timestp_create'])),
                                 'SIZE' => sprintf("%.02f", $objDocFile->fields['size']/1024),
                                 'LINK' => $link,
-                                'SHORT_LINK' => ovensia\ploopi\str::cut($link, 50, 'middle')
+                                'SHORT_LINK' => ploopi\str::cut($link, 50, 'middle')
                             )
                         );
 
@@ -593,7 +592,7 @@ if ($query_string != '' || $advanced_search) // recherche intégrale
                             }
                             else
                             {
-                                $cleaned_content = strip_tags(ovensia\ploopi\str::html_entity_decode($objArticle->fields['content_cleaned']));
+                                $cleaned_content = strip_tags(ploopi\str::html_entity_decode($objArticle->fields['content_cleaned']));
 
                                 // Gestion des url par mode de rendu
                                 switch($webedit_mode)
@@ -607,7 +606,7 @@ if ($query_string != '' || $advanced_search) // recherche intégrale
                                     case 'display';
                                         $arrParents = array();
                                         if (isset($arrHeadings['list'][$objArticle->fields['id_heading']])) foreach(explode(';', $arrHeadings['list'][$objArticle->fields['id_heading']]['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
-                                        $link = ovensia\ploopi\str::urlrewrite("index.php?headingid={$objArticle->fields['id_heading']}&articleid={$result['id_record']}", webedit_getrewriterules(), $objArticle->fields['metatitle'], $arrParents);
+                                        $link = ploopi\str::urlrewrite("index.php?headingid={$objArticle->fields['id_heading']}&articleid={$result['id_record']}", webedit_getrewriterules(), $objArticle->fields['metatitle'], $arrParents);
                                     break;
                                 }
 
@@ -615,21 +614,21 @@ if ($query_string != '' || $advanced_search) // recherche intégrale
                                 $template_body->assign_block_vars('switch_search.result',
                                     array(
                                         'RELEVANCE' => sprintf("%.02f", $result['relevance']),
-                                        'TITLE' => ovensia\ploopi\str::htmlentities($objArticle->fields['title']),
+                                        'TITLE' => ploopi\str::htmlentities($objArticle->fields['title']),
                                         'TITLE_RAW' => $objArticle->fields['title'],
-                                        'AUTHOR' => ovensia\ploopi\str::htmlentities($objArticle->fields['author']),
+                                        'AUTHOR' => ploopi\str::htmlentities($objArticle->fields['author']),
                                         'AUTHOR_RAW' => $objArticle->fields['author'],
-                                        'EXTRACT' => empty($result['kw']) && empty($result['stem']) ? $cleaned_content : ovensia\ploopi\str::highlight($cleaned_content, array_merge(array_keys($result['kw']), array_keys($result['stem']))),
-                                        'METATITLE' => ovensia\ploopi\str::htmlentities($objArticle->fields['metatitle']),
+                                        'EXTRACT' => empty($result['kw']) && empty($result['stem']) ? $cleaned_content : ploopi\str::highlight($cleaned_content, array_merge(array_keys($result['kw']), array_keys($result['stem']))),
+                                        'METATITLE' => ploopi\str::htmlentities($objArticle->fields['metatitle']),
                                         'METATITLE_RAW' => $objArticle->fields['metatitle'],
-                                        'METAKEYWORDS' => ovensia\ploopi\str::htmlentities($objArticle->fields['metakeywords']),
+                                        'METAKEYWORDS' => ploopi\str::htmlentities($objArticle->fields['metakeywords']),
                                         'METAKEYWORDS_RAW' => $objArticle->fields['metakeywords'],
-                                        'METADESCRIPTION' => ovensia\ploopi\str::htmlentities($objArticle->fields['metadescription']),
+                                        'METADESCRIPTION' => ploopi\str::htmlentities($objArticle->fields['metadescription']),
                                         'METADESCRIPTION_RAW' => $objArticle->fields['metadescription'],
-                                        'DATE' => ($objArticle->fields['timestp']!='') ? current(ovensia\ploopi\date::timestamp2local($objArticle->fields['timestp'])) : '',
+                                        'DATE' => ($objArticle->fields['timestp']!='') ? current(ploopi\date::timestamp2local($objArticle->fields['timestp'])) : '',
                                         'SIZE' => sprintf("%.02f", strlen($cleaned_content)/1024),
                                         'LINK' => $link,
-                                        'SHORT_LINK' => ovensia\ploopi\str::cut($link, 50, 'middle')
+                                        'SHORT_LINK' => ploopi\str::cut($link, 50, 'middle')
                                     )
                                 );
 
@@ -647,20 +646,20 @@ if ($query_string != '' || $advanced_search) // recherche intégrale
         }
 
         $title_raw = "Résultat de la recherche pour \" {$query_string} \"";
-        $title = ovensia\ploopi\str::htmlentities($title_raw);
+        $title = ploopi\str::htmlentities($title_raw);
 
         $template_body->assign_vars(
             array(
                 'SEARCH_RESPONSES' => $responses,
                 'PAGE_TITLE' => $title,
                 'PAGE_TITLE_RAW' => $title_raw,
-                'PAGE_KEYWORDS' => ovensia\ploopi\str::htmlentities($query_string),
+                'PAGE_KEYWORDS' => ploopi\str::htmlentities($query_string),
                 'PAGE_KEYWORDS_RAW' => $query_string,
                 'PAGE_DESCRIPTION' => $title,
                 'PAGE_DESCRIPTION_RAW' => $title_raw,
                 'PAGE_META_TITLE' => $title,
                 'PAGE_META_TITLE_RAW' => $title_raw,
-                'PAGE_META_KEYWORDS' => ovensia\ploopi\str::htmlentities($query_string),
+                'PAGE_META_KEYWORDS' => ploopi\str::htmlentities($query_string),
                 'PAGE_META_KEYWORDS_RAW' => $query_string,
                 'PAGE_META_DESCRIPTION' => $title,
                 'PAGE_META_DESCRIPTION_RAW' => $title
@@ -682,20 +681,20 @@ elseif($query_tag != '') // recherche par tag
                         ploopi_mod_webedit_article_tag at,
                         ploopi_mod_webedit_article a
 
-            WHERE       t.tag = '".$db->addslashes($query_tag)."'
+            WHERE       t.tag = '".ploopi\loader::getdb()->addslashes($query_tag)."'
             AND         at.id_tag = t.id
             AND         at.id_article = a.id
             AND         (a.timestp_published <= $today OR a.timestp_published = 0)
             AND         (a.timestp_unpublished >= $today OR a.timestp_unpublished = 0)
             ";
 
-    $db->query($sql);
+    ploopi\loader::getdb()->query($sql);
 
-    while ($row = $db->fetchrow())
+    while ($row = ploopi\loader::getdb()->fetchrow())
     {
         if (!$arrHeadings['list'][$row['id_heading']]['private'] || isset($arrShares[$arrHeadings['list'][$row['id_heading']]['herited_private']]) || isset($_SESSION['webedit']['allowedheading'][$_SESSION['ploopi']['moduleid']][$arrHeadings['list'][$row['id_heading']]['herited_private']]) || $webedit_mode == 'edit') // Rubrique non privée ou accessible par l'utilisateur
         {
-            $size = sprintf("%.02f", strlen(strip_tags(ovensia\ploopi\str::html_entity_decode($row['content_cleaned'])))/1024);
+            $size = sprintf("%.02f", strlen(strip_tags(ploopi\str::html_entity_decode($row['content_cleaned'])))/1024);
 
             switch($webedit_mode)
             {
@@ -708,40 +707,40 @@ elseif($query_tag != '') // recherche par tag
                 case 'display';
                     $arrParents = array();
                     if (isset($arrHeadings['list'][$row['id_heading']])) foreach(preg_split('/;/', $arrHeadings['list'][$row['id_heading']]['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
-                    $link = ovensia\ploopi\str::urlrewrite("index.php?headingid={$row['id_heading']}&articleid={$row['id']}", webedit_getrewriterules(), $row['metatitle'], $arrParents);
+                    $link = ploopi\str::urlrewrite("index.php?headingid={$row['id_heading']}&articleid={$row['id']}", webedit_getrewriterules(), $row['metatitle'], $arrParents);
                 break;
             }
 
             $template_body->assign_block_vars('switch_tagsearch.result',
                 array(
-                    'TITLE' => ovensia\ploopi\str::htmlentities($row['title']),
-                    'AUTHOR' => ovensia\ploopi\str::htmlentities($row['author']),
-                    'META_TITLE' => ovensia\ploopi\str::htmlentities($row['metatitle']),
-                    'META_KEYWORDS' => ovensia\ploopi\str::htmlentities($row['metakeywords']),
-                    'META_DESCRIPTION' => ovensia\ploopi\str::htmlentities($row['metadescription']),
-                    'DATE' => ($row['timestp']!='') ? current(ovensia\ploopi\date::timestamp2local($row['timestp'])) : '',
+                    'TITLE' => ploopi\str::htmlentities($row['title']),
+                    'AUTHOR' => ploopi\str::htmlentities($row['author']),
+                    'META_TITLE' => ploopi\str::htmlentities($row['metatitle']),
+                    'META_KEYWORDS' => ploopi\str::htmlentities($row['metakeywords']),
+                    'META_DESCRIPTION' => ploopi\str::htmlentities($row['metadescription']),
+                    'DATE' => ($row['timestp']!='') ? current(ploopi\date::timestamp2local($row['timestp'])) : '',
                     'SIZE' => $size,
                     'LINK' => $link,
-                    'SHORT_LINK' => ovensia\ploopi\str::cut($link, 50, 'middle')
+                    'SHORT_LINK' => ploopi\str::cut($link, 50, 'middle')
                 )
             );
         }
     }
 
     $title_raw = "Liste des articles contenant le tag \" {$query_tag} \"";
-    $title = ovensia\ploopi\str::htmlentities($title_raw);
+    $title = ploopi\str::htmlentities($title_raw);
 
     $template_body->assign_vars(
         array(
             'PAGE_TITLE' => $title,
             'PAGE_TITLE_RAW' => $title,
-            'PAGE_KEYWORDS' => ovensia\ploopi\str::htmlentities($query_tag),
+            'PAGE_KEYWORDS' => ploopi\str::htmlentities($query_tag),
             'PAGE_KEYWORDS_RAW' => $query_tag,
             'PAGE_DESCRIPTION' => $title,
             'PAGE_DESCRIPTION_RAW' => $title_raw,
             'PAGE_META_TITLE' => $title,
             'PAGE_META_TITLE_RAW' => $title_raw,
-            'PAGE_META_KEYWORDS' => ovensia\ploopi\str::htmlentities($query_tag),
+            'PAGE_META_KEYWORDS' => ploopi\str::htmlentities($query_tag),
             'PAGE_META_KEYWORDS_RAW' => $query_tag,
             'PAGE_META_DESCRIPTION' => $title,
             'PAGE_META_DESCRIPTION_RAW' => $title_raw
@@ -763,14 +762,14 @@ elseif (!empty($intTemplateModuleId)) // contenu d'un module
             'MODULE_TITLE' => $_SESSION['ploopi']['modules'][$intTemplateModuleId]['label'],
             'MODULE_VERSION' => $_SESSION['ploopi']['modules'][$intTemplateModuleId]['version'],
             'MODULE_AUTHOR' => $_SESSION['ploopi']['modules'][$intTemplateModuleId]['author'],
-            'MODULE_DATE' => current(ovensia\ploopi\date::timestamp2local($_SESSION['ploopi']['modules'][$intTemplateModuleId]['date']))
+            'MODULE_DATE' => current(ploopi\date::timestamp2local($_SESSION['ploopi']['modules'][$intTemplateModuleId]['date']))
         )
     );
 }
 elseif (!empty($ploopi_op) && $ploopi_op == 'webedit_unsubscribe') // message affiché lors du désabonnement (lien depuis email)
 {
     $title_raw = 'Désabonnement';
-    $title = ovensia\ploopi\str::htmlentities($title_raw);
+    $title = ploopi\str::htmlentities($title_raw);
 
     $template_body->assign_block_vars('switch_content_message', array());
 
@@ -789,7 +788,7 @@ elseif (!empty($ploopi_op) && $ploopi_op == 'webedit_unsubscribe') // message af
             'PAGE_META_DESCRIPTION' => $title,
             'PAGE_META_DESCRIPTION_RAW' => $title_raw,
             'MESSAGE_TITLE' => $title,
-            'MESSAGE_CONTENT' => ovensia\ploopi\str::htmlentities('Votre demande de désabonnement a été prise en compte.')
+            'MESSAGE_CONTENT' => ploopi\str::htmlentities('Votre demande de désabonnement a été prise en compte.')
         )
     );
 }
@@ -847,9 +846,9 @@ elseif($arrHeadings['list'][$headingid]['content_type'] == 'blog' && $webedit_mo
                             ";
             }
 
-            $resSQL = $db->query($select); // ATTENTION CE RESULTAT DE REQUETE "$resSQL" SERT A NOUVEAU PLUS BAS !!!
+            $resSQL = ploopi\loader::getdb()->query($select); // ATTENTION CE RESULTAT DE REQUETE "$resSQL" SERT A NOUVEAU PLUS BAS !!!
 
-            if ($db->numrows($resSQL))
+            if (ploopi\loader::getdb()->numrows($resSQL))
             {
                 // Tableau tampon des infos user (dans un blog on retrouve souvent les meme info sur le redacteur ! pas besoin de $objuser->open(iduser) 50x !)
                 $arrTmpUser = array();
@@ -877,9 +876,9 @@ elseif($arrHeadings['list'][$headingid]['content_type'] == 'blog' && $webedit_mo
 
                 // On balaye TOUS les article du id heading pour générer les boutons
                 // On filtre aussi dans $arrShowArticle les articles à afficher
-                while ($row = $db->fetchrow($resSQL))
+                while ($row = ploopi\loader::getdb()->fetchrow($resSQL))
                 {
-                    $arrDate = ovensia\ploopi\date::gettimestampdetail($row['timestp']);
+                    $arrDate = ploopi\date::gettimestampdetail($row['timestp']);
 
                     $year       = $arrDate[1];
                     $month      = $arrDate[2];
@@ -931,29 +930,29 @@ elseif($arrHeadings['list'][$headingid]['content_type'] == 'blog' && $webedit_mo
                     {
                         $arrParents = array();
                         if (isset($arrHeadings['list'][$headingid])) foreach(preg_split('/;/', $arrHeadings['list'][$headingid]['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
-                        $scriptUrlArticle = ovensia\ploopi\str::urlrewrite("index.php?headingid={$headingid}&articleid={$row['id']}", webedit_getrewriterules(), $row['metatitle'], $arrParents);
+                        $scriptUrlArticle = ploopi\str::urlrewrite("index.php?headingid={$headingid}&articleid={$row['id']}", webedit_getrewriterules(), $row['metatitle'], $arrParents);
                     }
 
                     $sel = '';
                     if ($articleid == $row['id']) $sel = 'selected';
 
-                    $ldate_pub = (!empty($row['timestp_published'])) ? ovensia\ploopi\date::timestamp2local($row['timestp_published']) : array('date' => '');
-                    $ldate_unpub = (!empty($row['timestp_unpublished'])) ? ovensia\ploopi\date::timestamp2local($row['timestp_unpublished']) : array('date' => '');
-                    $ldate_lastupdate = (!empty($row['lastupdate_timestp'])) ? ovensia\ploopi\date::timestamp2local($row['lastupdate_timestp']) : array('date' => '', 'time' => '');
-                    $ldate_timestp = (!empty($row['timestp'])) ? ovensia\ploopi\date::timestamp2local($row['timestp']) : array('date' => '');
+                    $ldate_pub = (!empty($row['timestp_published'])) ? ploopi\date::timestamp2local($row['timestp_published']) : array('date' => '');
+                    $ldate_unpub = (!empty($row['timestp_unpublished'])) ? ploopi\date::timestamp2local($row['timestp_unpublished']) : array('date' => '');
+                    $ldate_lastupdate = (!empty($row['lastupdate_timestp'])) ? ploopi\date::timestamp2local($row['lastupdate_timestp']) : array('date' => '', 'time' => '');
+                    $ldate_timestp = (!empty($row['timestp'])) ? ploopi\date::timestamp2local($row['timestp']) : array('date' => '');
 
                     $var_tpl_page =
                         array(
-                            'REFERENCE'     => ovensia\ploopi\str::htmlentities($row['reference']),
-                            'LABEL'         => ovensia\ploopi\str::htmlentities($row['title']),
+                            'REFERENCE'     => ploopi\str::htmlentities($row['reference']),
+                            'LABEL'         => ploopi\str::htmlentities($row['title']),
                             'LABEL_RAW'     => $row['title'],
-                            'CONTENT'       => ovensia\ploopi\str::htmlentities($row['content_cleaned']),
-                            'AUTHOR'        => ovensia\ploopi\str::htmlentities($row['author']),
+                            'CONTENT'       => ploopi\str::htmlentities($row['content_cleaned']),
+                            'AUTHOR'        => ploopi\str::htmlentities($row['author']),
                             'AUTHOR_RAW'    => $row['author'],
-                            'VERSION'       => ovensia\ploopi\str::htmlentities($row['version']),
-                            'DATE'          => ovensia\ploopi\str::htmlentities($ldate_timestp['date']),
-                            'LASTUPDATE_DATE' => ovensia\ploopi\str::htmlentities($ldate_lastupdate['date']),
-                            'LASTUPDATE_TIME' => ovensia\ploopi\str::htmlentities($ldate_lastupdate['time']),
+                            'VERSION'       => ploopi\str::htmlentities($row['version']),
+                            'DATE'          => ploopi\str::htmlentities($ldate_timestp['date']),
+                            'LASTUPDATE_DATE' => ploopi\str::htmlentities($ldate_lastupdate['date']),
+                            'LASTUPDATE_TIME' => ploopi\str::htmlentities($ldate_lastupdate['time']),
                             'DATE_PUB'   => $ldate_pub['date'],
                             'DATE_UNPUB' => $ldate_unpub['date'],
                             'TIMESTP_PUB'   => $ldate_pub['date'],
@@ -1013,8 +1012,8 @@ elseif($arrHeadings['list'][$headingid]['content_type'] == 'blog' && $webedit_mo
                         $content = preg_replace_callback('/\[\[(.*)\]\]/i','webedit_getobjectcontent', $webedit_mode == 'edit' ? $row['content_cleaned'] : webedit_replace_links($objArticle, $webedit_mode, $arrHeadings) );
                     }
 
-                    $article_timestp = ($row['timestp']!='') ? ovensia\ploopi\date::timestamp2local($row['timestp']) : array('date' => '');
-                    $article_lastupdate = ($row['lastupdate_timestp']!='') ? ovensia\ploopi\date::timestamp2local($row['lastupdate_timestp']) : array('date' => '', 'time' => '');
+                    $article_timestp = ($row['timestp']!='') ? ploopi\date::timestamp2local($row['timestp']) : array('date' => '');
+                    $article_lastupdate = ($row['lastupdate_timestp']!='') ? ploopi\date::timestamp2local($row['lastupdate_timestp']) : array('date' => '', 'time' => '');
 
                     if(isset($arrTmpUser[$row['lastupdate_id_user']]))
                     {
@@ -1029,7 +1028,7 @@ elseif($arrHeadings['list'][$headingid]['content_type'] == 'blog' && $webedit_mo
                     }
                     else
                     {
-                        $user = new ovensia\ploopi\user();
+                        $user = new ploopi\user();
                         if ($user->open($row['lastupdate_id_user']))
                         {
                             $user_lastname = $user->fields['lastname'];
@@ -1043,20 +1042,20 @@ elseif($arrHeadings['list'][$headingid]['content_type'] == 'blog' && $webedit_mo
                             $arrTmpUser[$row['lastupdate_id_user']] = '';   // On garde l'info temporairement
                         }
                     }
-                    list($keywords) = ovensia\ploopi\str::getwords("{$row['metatitle']} {$row['metakeywords']} {$row['author']}");
+                    list($keywords) = ploopi\str::getwords("{$row['metatitle']} {$row['metakeywords']} {$row['author']}");
 
                     $kwds_raw = implode(', ', array_keys($keywords));
-                    $kwds = ovensia\ploopi\str::htmlentities($kwds_raw);
+                    $kwds = ploopi\str::htmlentities($kwds_raw);
 
                     $desc_raw = $row['metadescription'];
-                    $desc = ovensia\ploopi\str::htmlentities($row['metadescription']);
+                    $desc = ploopi\str::htmlentities($row['metadescription']);
 
                     $template_body->assign_block_vars('switch_content_blog.article',
                         array(
                             'PAGE_ID' => $row['id'],
-                            'PAGE_REFERENCE' => ovensia\ploopi\str::htmlentities($row['reference']),
+                            'PAGE_REFERENCE' => ploopi\str::htmlentities($row['reference']),
                             'PAGE_REFERENCE_RAW' => $row['reference'],
-                            'PAGE_TITLE' => ovensia\ploopi\str::htmlentities($row['title']),
+                            'PAGE_TITLE' => ploopi\str::htmlentities($row['title']),
                             'PAGE_TITLE_RAW' => $row['title'],
                             'PAGE_TITLE_ESCAPED' => addslashes($row['title']),
                             'PAGE_KEYWORDS' => $kwds,
@@ -1064,22 +1063,22 @@ elseif($arrHeadings['list'][$headingid]['content_type'] == 'blog' && $webedit_mo
                             'PAGE_DESCRIPTION' => $desc,
                             'PAGE_DESCRIPTION_RAW' => $desc_raw,
                             'PAGE_DESCRIPTION_ESCAPED' => addslashes($row['metadescription']),
-                            'PAGE_META_TITLE' => ovensia\ploopi\str::htmlentities($row['metatitle']),
+                            'PAGE_META_TITLE' => ploopi\str::htmlentities($row['metatitle']),
                             'PAGE_META_TITLE_RAW' => $row['metatitle'],
                             'PAGE_META_KEYWORDS' => $kwds,
                             'PAGE_META_KEYWORDS_RAW' => $kwds_raw,
                             'PAGE_META_DESCRIPTION' => $desc,
                             'PAGE_META_DESCRIPTION_RAW' => $desc_raw,
-                            'PAGE_AUTHOR' => ovensia\ploopi\str::htmlentities($row['author']),
+                            'PAGE_AUTHOR' => ploopi\str::htmlentities($row['author']),
                             'PAGE_AUTHOR_RAW' => $row['author'],
-                            'PAGE_VERSION' => ovensia\ploopi\str::htmlentities($row['version']),
+                            'PAGE_VERSION' => ploopi\str::htmlentities($row['version']),
                             'PAGE_VERSION_RAW' => $row['version'],
-                            'PAGE_DATE' => ovensia\ploopi\str::htmlentities($article_timestp['date']),
-                            'PAGE_LASTUPDATE_DATE' => ovensia\ploopi\str::htmlentities($article_lastupdate['date']),
-                            'PAGE_LASTUPDATE_TIME' => ovensia\ploopi\str::htmlentities($article_lastupdate['time']),
-                            'PAGE_LASTUPDATE_USER_LASTNAME' => ovensia\ploopi\str::htmlentities($user_lastname),
-                            'PAGE_LASTUPDATE_USER_FIRSTNAME' => ovensia\ploopi\str::htmlentities($user_firstname),
-                            'PAGE_LASTUPDATE_USER_LOGIN' => ovensia\ploopi\str::htmlentities($user_login),
+                            'PAGE_DATE' => ploopi\str::htmlentities($article_timestp['date']),
+                            'PAGE_LASTUPDATE_DATE' => ploopi\str::htmlentities($article_lastupdate['date']),
+                            'PAGE_LASTUPDATE_TIME' => ploopi\str::htmlentities($article_lastupdate['time']),
+                            'PAGE_LASTUPDATE_USER_LASTNAME' => ploopi\str::htmlentities($user_lastname),
+                            'PAGE_LASTUPDATE_USER_FIRSTNAME' => ploopi\str::htmlentities($user_firstname),
+                            'PAGE_LASTUPDATE_USER_LOGIN' => ploopi\str::htmlentities($user_login),
                             'PAGE_CONTENT' => $content,
                             'PAGE_HEADCONTENT' => $row['headcontent'],
                             'PAGE_URL_ARTICLE' => $scriptUrlArticle
@@ -1097,17 +1096,17 @@ elseif($arrHeadings['list'][$headingid]['content_type'] == 'blog' && $webedit_mo
                         WHERE   t.id = at.id_tag
                         AND     at.id_article = {$row['id']}
                         ";
-                    $resSqltag = $db->query($sqlTag);
-                    if($db->numrows($resSqltag))
+                    $resSqltag = ploopi\loader::getdb()->query($sqlTag);
+                    if(ploopi\loader::getdb()->numrows($resSqltag))
                     {
                         $template_body->assign_block_vars('switch_content_blog.article.switch_tags', array());
 
-                        while ($tag = $db->fetchrow($resSqltag))
+                        while ($tag = ploopi\loader::getdb()->fetchrow($resSqltag))
                         {
                             if($webedit_mode == 'render')
                                 $link =  "index.php?webedit_mode=render&query_tag={$tag['tag']}";
                             else
-                                $link =  ovensia\ploopi\str::urlrewrite("index.php?query_tag={$tag['tag']}", webedit_getrewriterules());
+                                $link =  ploopi\str::urlrewrite("index.php?query_tag={$tag['tag']}", webedit_getrewriterules());
 
                             $template_body->assign_block_vars('switch_content_blog.article.switch_tags.tag',
                                 array(
@@ -1137,7 +1136,7 @@ elseif($arrHeadings['list'][$headingid]['content_type'] == 'blog' && $webedit_mo
                         $template_body->assign_block_vars('switch_content_blog.article.sw_comment',
                             array(
                                 'LIBELLE_POST'  => _WEBEDIT_COMMENT_POST,
-                                'ACTION'        => ovensia\ploopi\crypt::urlencode($action)
+                                'ACTION'        => ploopi\crypt::urlencode($action)
                             )
                         );
 
@@ -1151,15 +1150,15 @@ elseif($arrHeadings['list'][$headingid]['content_type'] == 'blog' && $webedit_mo
                             ORDER BY    timestp DESC
                             ";
 
-                        $resSqlComment = $db->query($selectComment);
+                        $resSqlComment = ploopi\loader::getdb()->query($selectComment);
 
-                        if($db->numrows())
+                        if(ploopi\loader::getdb()->numrows())
                         {
                             if($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['nb_comm_blog'])
                             {
-                                while($rowComment = $db->fetchrow($resSqlComment))
+                                while($rowComment = ploopi\loader::getdb()->fetchrow($resSqlComment))
                                 {
-                                    $date_comment = (!empty($row['timestp_published'])) ? ovensia\ploopi\date::timestamp2local($rowComment['timestp']) : array('date' => '', 'time' => '');
+                                    $date_comment = (!empty($row['timestp_published'])) ? ploopi\date::timestamp2local($rowComment['timestp']) : array('date' => '', 'time' => '');
 
                                     $nbComment++;
                                     if($nbComment <= $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['nb_comm_blog'])
@@ -1168,12 +1167,12 @@ elseif($arrHeadings['list'][$headingid]['content_type'] == 'blog' && $webedit_mo
                                             array(
                                                 'ID'        => $rowComment['id'],
                                                 'PUBLISHED' => $rowComment['publish'],
-                                                'COMMENT'   => ovensia\ploopi\str::htmlentities($rowComment['comment']),
-                                                'EMAIL'     => ovensia\ploopi\str::htmlentities($rowComment['email']),
-                                                'NICKNAME'  => ovensia\ploopi\str::htmlentities($rowComment['nickname']),
+                                                'COMMENT'   => ploopi\str::htmlentities($rowComment['comment']),
+                                                'EMAIL'     => ploopi\str::htmlentities($rowComment['email']),
+                                                'NICKNAME'  => ploopi\str::htmlentities($rowComment['nickname']),
                                                 'DATE'      => $date_comment['date'],
                                                 'TIME'      => $date_comment['time'],
-                                                'POSTBY'    => sprintf(_WEBEDIT_COMMENT_COMMENT_POSTBY,ovensia\ploopi\str::htmlentities($rowComment['nickname']),$date_comment['date'],$date_comment['time'])
+                                                'POSTBY'    => sprintf(_WEBEDIT_COMMENT_COMMENT_POSTBY,ploopi\str::htmlentities($rowComment['nickname']),$date_comment['date'],$date_comment['time'])
                                             )
                                         );
                                     }
@@ -1184,14 +1183,14 @@ elseif($arrHeadings['list'][$headingid]['content_type'] == 'blog' && $webedit_mo
                                                 'LIBELLE_SHOW'  => _WEBEDIT_COMMENT_SHOWALL
                                             )
                                         );
-                                        $nbComment = $db->numrows($resSqlComment);
+                                        $nbComment = ploopi\loader::getdb()->numrows($resSqlComment);
                                         break;
                                     }
                                 }
                             }
                         }
 
-                        $nbComment = $db->numrows($resSqlComment);
+                        $nbComment = ploopi\loader::getdb()->numrows($resSqlComment);
 
                         $template_body->assign_block_vars('switch_content_blog.article.sw_comment.info',
                             array(
@@ -1218,7 +1217,7 @@ elseif($arrHeadings['list'][$headingid]['content_type'] == 'blog' && $webedit_mo
                     {
                         $arrParents = array();
                         if (isset($arrHeadings['list'][$headingid])) foreach(preg_split('/;/', $arrHeadings['list'][$headingid]['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
-                        $strUrl = ovensia\ploopi\str::urlrewrite("index.php?headingid={$headingid}&numpage=".($intNumPage+1).$param,webedit_getrewriterules(),$arrHeadings['list'][$headingid]['label'], $arrParents);
+                        $strUrl = ploopi\str::urlrewrite("index.php?headingid={$headingid}&numpage=".($intNumPage+1).$param,webedit_getrewriterules(),$arrHeadings['list'][$headingid]['label'], $arrParents);
                     }
 
                     $template_body->assign_block_vars('switch_content_blog.page_before', array('URL' => $strUrl));
@@ -1233,7 +1232,7 @@ elseif($arrHeadings['list'][$headingid]['content_type'] == 'blog' && $webedit_mo
                     {
                         $arrParents = array();
                         if (isset($arrHeadings['list'][$headingid])) foreach(preg_split('/;/', $arrHeadings['list'][$headingid]['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
-                        $strUrl = ovensia\ploopi\str::urlrewrite("index.php?headingid={$headingid}&numpage=".($intNumPage-1).$param,webedit_getrewriterules(),$arrHeadings['list'][$headingid]['label'], $arrParents);
+                        $strUrl = ploopi\str::urlrewrite("index.php?headingid={$headingid}&numpage=".($intNumPage-1).$param,webedit_getrewriterules(),$arrHeadings['list'][$headingid]['label'], $arrParents);
                     }
 
                     $template_body->assign_block_vars('switch_content_blog.page_after', array('URL' => $strUrl));
@@ -1245,16 +1244,16 @@ elseif($arrHeadings['list'][$headingid]['content_type'] == 'blog' && $webedit_mo
                     $template_body->assign_block_vars(
                         'switch_atomfeed_heading',
                         array(
-                            'URL' => ovensia\ploopi\str::urlrewrite("index.php?ploopi_op=webedit_backend&format=atom&headingid={$headingid}", webedit_getrewriterules(), $arrHeadings['list'][$headingid]['label']), //ovensia\ploopi\crypt::urlencode("backend.php?ploopi_moduleid={$_SESSION['ploopi']['moduleid']}&format=atom&headingid={$headingid}", null, null, null, null, false),
-                            'TITLE' => ovensia\ploopi\str::htmlentities($arrHeadings['list'][$headingid]['label']),
+                            'URL' => ploopi\str::urlrewrite("index.php?ploopi_op=webedit_backend&format=atom&headingid={$headingid}", webedit_getrewriterules(), $arrHeadings['list'][$headingid]['label']), //ploopi\crypt::urlencode("backend.php?ploopi_moduleid={$_SESSION['ploopi']['moduleid']}&format=atom&headingid={$headingid}", null, null, null, null, false),
+                            'TITLE' => ploopi\str::htmlentities($arrHeadings['list'][$headingid]['label']),
                         )
                     );
 
                     $template_body->assign_block_vars(
                         'switch_rssfeed_heading',
                         array(
-                            'URL' => ovensia\ploopi\str::urlrewrite("index.php?ploopi_op=webedit_backend&format=rss&headingid={$headingid}", webedit_getrewriterules(), $arrHeadings['list'][$headingid]['label']),//ovensia\ploopi\crypt::urlencode("backend.php?ploopi_moduleid={$_SESSION['ploopi']['moduleid']}&format=rss&headingid={$headingid}", null, null, null, null, false),
-                            'TITLE' => ovensia\ploopi\str::htmlentities($arrHeadings['list'][$headingid]['label']),
+                            'URL' => ploopi\str::urlrewrite("index.php?ploopi_op=webedit_backend&format=rss&headingid={$headingid}", webedit_getrewriterules(), $arrHeadings['list'][$headingid]['label']),//ploopi\crypt::urlencode("backend.php?ploopi_moduleid={$_SESSION['ploopi']['moduleid']}&format=rss&headingid={$headingid}", null, null, null, null, false),
+                            'TITLE' => ploopi\str::htmlentities($arrHeadings['list'][$headingid]['label']),
                         )
                     );
                 }
@@ -1264,9 +1263,9 @@ elseif($arrHeadings['list'][$headingid]['content_type'] == 'blog' && $webedit_mo
                 {
                     // Gestion des url par mode de rendu
                     if($webedit_mode == 'render')
-                        $link = ovensia\ploopi\crypt::urlencode("index.php?webedit_mode=render&ploopi_op=webedit_subscribe&headingid={$headingid}".(empty($articleid) ? '' : "&articleid={$articleid}"), null, null, null, null, false);
+                        $link = ploopi\crypt::urlencode("index.php?webedit_mode=render&ploopi_op=webedit_subscribe&headingid={$headingid}".(empty($articleid) ? '' : "&articleid={$articleid}"), null, null, null, null, false);
                     else
-                        $link = ovensia\ploopi\crypt::urlencode("index.php?ploopi_op=webedit_subscribe&headingid={$headingid}".(empty($articleid) ? '' : "&articleid={$articleid}"), null, null, null, null, false);
+                        $link = ploopi\crypt::urlencode("index.php?ploopi_op=webedit_subscribe&headingid={$headingid}".(empty($articleid) ? '' : "&articleid={$articleid}"), null, null, null, null, false);
 
                     $template_body->assign_block_vars(
                         'switch_subscription',
@@ -1315,7 +1314,7 @@ else // affichage standard rubrique/page
         if(in_array($arrHeadings['list'][$headingid]['content_type'], array('headings', 'sitemap')) && empty($articleid)) // affichage rubriques ou plan de site
         {
 
-            $db->query("
+            ploopi\loader::getdb()->query("
                 SELECT      id, visible, metatitle, timestp_published, timestp_unpublished, lastupdate_timestp,
                             timestp, reference, title, content_cleaned, author, version, position, id_heading
                 FROM        ploopi_mod_webedit_article
@@ -1326,7 +1325,7 @@ else // affichage standard rubrique/page
             ");
 
             $arrArticles = array();
-            while ($row = $db->fetchrow()) $arrArticles[$row['id_heading']][] = $row;
+            while ($row = ploopi\loader::getdb()->fetchrow()) $arrArticles[$row['id_heading']][] = $row;
             // Affichage rubriques
             if ($arrHeadings['list'][$headingid]['content_type'] == 'headings')
             {
@@ -1388,9 +1387,9 @@ else // affichage standard rubrique/page
             break;
         }
 
-        $resSQL = $db->query($select); // ATTENTION CE RESULTAT DE REQUETE "$resSQL" PEUT SERVIR A NOUVEAU PLUS BAS !!!
+        $resSQL = ploopi\loader::getdb()->query($select); // ATTENTION CE RESULTAT DE REQUETE "$resSQL" PEUT SERVIR A NOUVEAU PLUS BAS !!!
 
-        if ($db->numrows($resSQL))
+        if (ploopi\loader::getdb()->numrows($resSQL))
         {
             // Bouton de menu
             $booIsSwitchPages = false;
@@ -1400,7 +1399,7 @@ else // affichage standard rubrique/page
 
             $article_array = array();
 
-            while ($row = $db->fetchrow($resSQL))
+            while ($row = ploopi\loader::getdb()->fetchrow($resSQL))
             {
                 $article_array[] = $row;
                 if ($row['visible']) $nbvisart++;
@@ -1421,7 +1420,7 @@ else // affichage standard rubrique/page
                     switch($webedit_mode)
                     {
                         case 'edit';
-                            $script = "javascript:window.parent.document.location.href='".ovensia\ploopi\crypt::urlencode("admin.php?op=article_modify&headingid={$headingid}&articleid={$row['id']}")."';";
+                            $script = "javascript:window.parent.document.location.href='".ploopi\crypt::urlencode("admin.php?op=article_modify&headingid={$headingid}&articleid={$row['id']}")."';";
                         break;
 
                         case 'render';
@@ -1433,30 +1432,30 @@ else // affichage standard rubrique/page
                         case 'display';
                             $arrParents = array();
                             if (isset($arrHeadings['list'][$headingid])) foreach(preg_split('/;/', $arrHeadings['list'][$headingid]['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
-                            $script = ovensia\ploopi\str::urlrewrite("index.php?headingid={$headingid}&articleid={$row['id']}", webedit_getrewriterules(), $row['metatitle'], $arrParents);
+                            $script = ploopi\str::urlrewrite("index.php?headingid={$headingid}&articleid={$row['id']}", webedit_getrewriterules(), $row['metatitle'], $arrParents);
                         break;
                     }
 
                     $sel = '';
                     if ($articleid == $row['id']) $sel = 'selected';
 
-                    $ldate_pub = (!empty($row['timestp_published'])) ? ovensia\ploopi\date::timestamp2local($row['timestp_published']) : array('date' => '');
-                    $ldate_unpub = (!empty($row['timestp_unpublished'])) ? ovensia\ploopi\date::timestamp2local($row['timestp_unpublished']) : array('date' => '');
-                    $ldate_lastupdate = (!empty($row['lastupdate_timestp'])) ? ovensia\ploopi\date::timestamp2local($row['lastupdate_timestp']) : array('date' => '', 'time' => '');
-                    $ldate_timestp = (!empty($row['timestp'])) ? ovensia\ploopi\date::timestamp2local($row['timestp']) : array('date' => '');
+                    $ldate_pub = (!empty($row['timestp_published'])) ? ploopi\date::timestamp2local($row['timestp_published']) : array('date' => '');
+                    $ldate_unpub = (!empty($row['timestp_unpublished'])) ? ploopi\date::timestamp2local($row['timestp_unpublished']) : array('date' => '');
+                    $ldate_lastupdate = (!empty($row['lastupdate_timestp'])) ? ploopi\date::timestamp2local($row['lastupdate_timestp']) : array('date' => '', 'time' => '');
+                    $ldate_timestp = (!empty($row['timestp'])) ? ploopi\date::timestamp2local($row['timestp']) : array('date' => '');
 
                     $var_tpl_page =
                         array(
-                            'REFERENCE'     => ovensia\ploopi\str::htmlentities($row['reference']),
-                            'LABEL'         => ovensia\ploopi\str::htmlentities($row['title']),
+                            'REFERENCE'     => ploopi\str::htmlentities($row['reference']),
+                            'LABEL'         => ploopi\str::htmlentities($row['title']),
                             'LABEL_RAW'     => $row['title'],
-                            'CONTENT'       => ovensia\ploopi\str::htmlentities($row['content_cleaned']),
-                            'AUTHOR'        => ovensia\ploopi\str::htmlentities($row['author']),
+                            'CONTENT'       => ploopi\str::htmlentities($row['content_cleaned']),
+                            'AUTHOR'        => ploopi\str::htmlentities($row['author']),
                             'AUTHOR_RAW'    => $row['author'],
-                            'VERSION'       => ovensia\ploopi\str::htmlentities($row['version']),
-                            'DATE'          => ovensia\ploopi\str::htmlentities($ldate_timestp['date']),
-                            'LASTUPDATE_DATE' => ovensia\ploopi\str::htmlentities($ldate_lastupdate['date']),
-                            'LASTUPDATE_TIME' => ovensia\ploopi\str::htmlentities($ldate_lastupdate['time']),
+                            'VERSION'       => ploopi\str::htmlentities($row['version']),
+                            'DATE'          => ploopi\str::htmlentities($ldate_timestp['date']),
+                            'LASTUPDATE_DATE' => ploopi\str::htmlentities($ldate_lastupdate['date']),
+                            'LASTUPDATE_TIME' => ploopi\str::htmlentities($ldate_lastupdate['time']),
                             'DATE_PUB'   => $ldate_pub['date'],
                             'DATE_UNPUB' => $ldate_unpub['date'],
                             'TIMESTP_PUB'   => $ldate_pub['date'],
@@ -1530,17 +1529,17 @@ else // affichage standard rubrique/page
                     ob_start();
                     ?>
                     <script src="./vendor/ckeditor/ckeditor/ckeditor.js"></script>
-                    <div id="editor"><? echo $article->fields['content']; ?></div>
+                    <div id="editor"><?php echo $article->fields['content']; ?></div>
                     <script>
 
                         // Ajout d'un plugin externe
-                        CKEDITOR.plugins.addExternal('tag', '<? echo _PLOOPI_BASEPATH.'/modules/webedit/ckeditor/plugins/tag/'; ?>', 'plugin.js');
+                        CKEDITOR.plugins.addExternal('tag', '<?php echo _PLOOPI_BASEPATH.'/modules/webedit/ckeditor/plugins/tag/'; ?>', 'plugin.js');
 
                         /*
                         // http://docs.ckeditor.com/#!/guide/plugin_sdk_styles
                         CKEDITOR.plugins.add( 'tag', {
                             init: function( editor ) {
-                                var pluginDirectory = '<? echo _PLOOPI_BASEPATH.'/modules/webedit/ckeditor/plugins/tag/'; ?>';
+                                var pluginDirectory = '<?php echo _PLOOPI_BASEPATH.'/modules/webedit/ckeditor/plugins/tag/'; ?>';
                                 editor.addContentsCss( pluginDirectory + 'styles.css' );
                             }
                         } );
@@ -1548,18 +1547,18 @@ else // affichage standard rubrique/page
 
                         // http://docs.ckeditor.com/#!/guide/dev_file_browser_api
                         CKEDITOR.replace( 'editor', {
-                            customConfig: '<? echo _PLOOPI_BASEPATH.'/modules/webedit/ckeditor/config.js'; ?>',
-                            filebrowserBrowseUrl: '<? echo _PLOOPI_BASEPATH.'/admin-light.php?'.ovensia\ploopi\crypt::queryencode('ploopi_op=doc_selectfile'); ?>',
-                            filebrowserImageBrowseUrl: '<? echo _PLOOPI_BASEPATH.'/admin-light.php?'.ovensia\ploopi\crypt::queryencode('ploopi_op=doc_selectimage'); ?>',
+                            customConfig: '<?php echo _PLOOPI_BASEPATH.'/modules/webedit/ckeditor/config.js'; ?>',
+                            filebrowserBrowseUrl: '<?php echo _PLOOPI_BASEPATH.'/admin-light.php?'.ploopi\crypt::queryencode('ploopi_op=doc_selectfile'); ?>',
+                            filebrowserImageBrowseUrl: '<?php echo _PLOOPI_BASEPATH.'/admin-light.php?'.ploopi\crypt::queryencode('ploopi_op=doc_selectimage'); ?>',
                             // Url de choix des objets
-                            objectBrowserUrl: '<? echo _PLOOPI_BASEPATH.'/admin-light.php?'.ovensia\ploopi\crypt::queryencode('ploopi_op=ploopi_getobjects'); ?>',
+                            objectBrowserUrl: '<?php echo _PLOOPI_BASEPATH.'/admin-light.php?'.ploopi\crypt::queryencode('ploopi_op=ploopi_getobjects'); ?>',
                             // Chargement de styles complémentaires (on remet le fichier par défaut en 1er)
                             // Puis on ajoute la feuille de style des plugins...
                             contentsCss: [
                                 CKEDITOR.basePath+'contents.css',
-                                '<? echo _PLOOPI_BASEPATH; ?>/modules/webedit/ckeditor/plugins/tag/styles.css',
+                                '<?php echo _PLOOPI_BASEPATH; ?>/modules/webedit/ckeditor/plugins/tag/styles.css',
                             ],
-                                <?
+                            <?php
                             if ($_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['display_type'] == 'beginner') {
                                 ?>
                                 toolbar: [
@@ -1568,13 +1567,13 @@ else // affichage standard rubrique/page
                                     ['TextColor','BGColor'],
                                     ['Image','Link','Unink'],
                                 ]
-                                <?
+                                <?php
                             }
                             ?>
                         });
                     </script>
 
-                    <?
+                    <?php
                     $editor = ob_get_contents();
 
                     ob_end_clean();
@@ -1626,10 +1625,10 @@ else // affichage standard rubrique/page
                 if (!empty($editor)) $content = $editor;
                 else $content = preg_replace_callback('/\[\[(.*)\]\]/i','webedit_getobjectcontent', $webedit_mode == 'edit' ? $article->fields['content_cleaned'] : webedit_replace_links($article, $webedit_mode, $arrHeadings) );
 
-                $article_timestp = ($article->fields['timestp']!='') ? ovensia\ploopi\date::timestamp2local($article->fields['timestp']) : array('date' => '');
-                $article_lastupdate = ($article->fields['lastupdate_timestp']!='') ? ovensia\ploopi\date::timestamp2local($article->fields['lastupdate_timestp']) : array('date' => '', 'time' => '');
+                $article_timestp = ($article->fields['timestp']!='') ? ploopi\date::timestamp2local($article->fields['timestp']) : array('date' => '');
+                $article_lastupdate = ($article->fields['lastupdate_timestp']!='') ? ploopi\date::timestamp2local($article->fields['lastupdate_timestp']) : array('date' => '', 'time' => '');
 
-                $user = new ovensia\ploopi\user();
+                $user = new ploopi\user();
                 if ($user->open($article->fields['lastupdate_id_user']))
                 {
                     $user_lastname = $user->fields['lastname'];
@@ -1638,22 +1637,22 @@ else // affichage standard rubrique/page
                 }
                 else $user_lastname = $user_firstname = $user_login = '';
 
-                list($keywords) = ovensia\ploopi\str::getwords("{$article->fields['metatitle']} {$article->fields['metakeywords']} {$article->fields['author']}");
+                list($keywords) = ploopi\str::getwords("{$article->fields['metatitle']} {$article->fields['metakeywords']} {$article->fields['author']}");
 
                 $kwds_raw = implode(', ', array_keys($keywords));
-                $kwds = ovensia\ploopi\str::htmlentities($kwds_raw);
+                $kwds = ploopi\str::htmlentities($kwds_raw);
 
                 $desc_raw = $article->fields['metadescription'];
-                $desc = ovensia\ploopi\str::htmlentities($article->fields['metadescription']);
+                $desc = ploopi\str::htmlentities($article->fields['metadescription']);
 
                 $id_captcha = md5('article_comment_catpcha_'.$article->fields['id']);
 
                 $template_body->assign_vars(
                     array(
                         'PAGE_ID' => $article->fields['id'],
-                        'PAGE_REFERENCE' => ovensia\ploopi\str::htmlentities($article->fields['reference']),
+                        'PAGE_REFERENCE' => ploopi\str::htmlentities($article->fields['reference']),
                         'PAGE_REFERENCE_RAW' => $article->fields['reference'],
-                        'PAGE_TITLE' => ovensia\ploopi\str::htmlentities($article->fields['title']),
+                        'PAGE_TITLE' => ploopi\str::htmlentities($article->fields['title']),
                         'PAGE_TITLE_RAW' => $article->fields['title'],
                         'PAGE_TITLE_ESCAPED' => addslashes($article->fields['title']),
                         'PAGE_KEYWORDS' => $kwds,
@@ -1661,27 +1660,27 @@ else // affichage standard rubrique/page
                         'PAGE_DESCRIPTION' => $desc,
                         'PAGE_DESCRIPTION_RAW' => $desc_raw,
                         'PAGE_DESCRIPTION_ESCAPED' => addslashes($article->fields['metadescription']),
-                        'PAGE_META_TITLE' => ovensia\ploopi\str::htmlentities($article->fields['metatitle']),
+                        'PAGE_META_TITLE' => ploopi\str::htmlentities($article->fields['metatitle']),
                         'PAGE_META_TITLE_RAW' => $article->fields['metatitle'],
                         'PAGE_META_KEYWORDS' => $kwds,
                         'PAGE_META_KEYWORDS_RAW' => $kwds_raw,
                         'PAGE_META_DESCRIPTION' => $desc,
                         'PAGE_META_DESCRIPTION_RAW' => $desc_raw,
-                        'PAGE_AUTHOR' => ovensia\ploopi\str::htmlentities($article->fields['author']),
+                        'PAGE_AUTHOR' => ploopi\str::htmlentities($article->fields['author']),
                         'PAGE_AUTHOR_RAW' => $article->fields['author'],
-                        'PAGE_VERSION' => ovensia\ploopi\str::htmlentities($article->fields['version']),
+                        'PAGE_VERSION' => ploopi\str::htmlentities($article->fields['version']),
                         'PAGE_VERSION_RAW' => $article->fields['version'],
-                        'PAGE_DATE' => ovensia\ploopi\str::htmlentities($article_timestp['date']),
-                        'PAGE_LASTUPDATE_DATE' => ovensia\ploopi\str::htmlentities($article_lastupdate['date']),
-                        'PAGE_LASTUPDATE_TIME' => ovensia\ploopi\str::htmlentities($article_lastupdate['time']),
-                        'PAGE_LASTUPDATE_USER_LASTNAME' => ovensia\ploopi\str::htmlentities($user_lastname),
-                        'PAGE_LASTUPDATE_USER_FIRSTNAME' => ovensia\ploopi\str::htmlentities($user_firstname),
-                        'PAGE_LASTUPDATE_USER_LOGIN' => ovensia\ploopi\str::htmlentities($user_login),
+                        'PAGE_DATE' => ploopi\str::htmlentities($article_timestp['date']),
+                        'PAGE_LASTUPDATE_DATE' => ploopi\str::htmlentities($article_lastupdate['date']),
+                        'PAGE_LASTUPDATE_TIME' => ploopi\str::htmlentities($article_lastupdate['time']),
+                        'PAGE_LASTUPDATE_USER_LASTNAME' => ploopi\str::htmlentities($user_lastname),
+                        'PAGE_LASTUPDATE_USER_FIRSTNAME' => ploopi\str::htmlentities($user_firstname),
+                        'PAGE_LASTUPDATE_USER_LOGIN' => ploopi\str::htmlentities($user_login),
                         'PAGE_CONTENT' => $content,
                         'PAGE_HEADCONTENT' => $article->fields['headcontent'],
                         'PAGE_IDCAPTCHA' => $id_captcha,
-                        'PAGE_URL_UPDATECAPTCHA' => ovensia\ploopi\crypt::urlencode('index-light.php?ploopi_op=ploopi_get_captcha&time='.date('His').'&id_captcha='.$id_captcha),
-                        'PAGE_URL_CONTROLCAPTCHA' => ovensia\ploopi\crypt::urlencode('index-light.php?ploopi_op=ploopi_get_captcha_verif&time='.date('His').'&id_captcha='.$id_captcha)
+                        'PAGE_URL_UPDATECAPTCHA' => ploopi\crypt::urlencode('index-light.php?ploopi_op=ploopi_get_captcha&time='.date('His').'&id_captcha='.$id_captcha),
+                        'PAGE_URL_CONTROLCAPTCHA' => ploopi\crypt::urlencode('index-light.php?ploopi_op=ploopi_get_captcha_verif&time='.date('His').'&id_captcha='.$id_captcha)
                     )
                 );
 
@@ -1701,7 +1700,7 @@ else // affichage standard rubrique/page
 
                             default:
                             case 'display';
-                                $link =  ovensia\ploopi\str::urlrewrite("index.php?query_tag={$tag['tag']}", webedit_getrewriterules());
+                                $link =  ploopi\str::urlrewrite("index.php?query_tag={$tag['tag']}", webedit_getrewriterules());
                             break;
                         }
 
@@ -1729,11 +1728,11 @@ else // affichage standard rubrique/page
 
                 $template_body->assign_block_vars('switch_content_page.sw_comment',
                     array(
-                        'ACTION'        => ovensia\ploopi\crypt::urlencode($action),
+                        'ACTION'        => ploopi\crypt::urlencode($action),
                         'IDCAPTCHA'     => $id_captcha,
-                        'URLTOCAPTCHA'      => ovensia\ploopi\crypt::urlencode('index-light.php?ploopi_op=ploopi_get_captcha&id_captcha='.$id_captcha),
+                        'URLTOCAPTCHA'      => ploopi\crypt::urlencode('index-light.php?ploopi_op=ploopi_get_captcha&id_captcha='.$id_captcha),
                         // Passage au flash nécessite constament une url_encodée
-                        'URLTOCAPTCHASOUND' => (defined('_PLOOPI_URL_ENCODE') && (_PLOOPI_URL_ENCODE)) ? ovensia\ploopi\crypt::urlencode('index-light.php?ploopi_op=ploopi_get_captcha_sound&id_captcha='.$id_captcha) : urlencode('index-light.php?ploopi_op=ploopi_get_captcha_sound&id_captcha='.$id_captcha)
+                        'URLTOCAPTCHASOUND' => (defined('_PLOOPI_URL_ENCODE') && (_PLOOPI_URL_ENCODE)) ? ploopi\crypt::urlencode('index-light.php?ploopi_op=ploopi_get_captcha_sound&id_captcha='.$id_captcha) : urlencode('index-light.php?ploopi_op=ploopi_get_captcha_sound&id_captcha='.$id_captcha)
                     )
                 );
 
@@ -1756,12 +1755,12 @@ else // affichage standard rubrique/page
                     ORDER BY    timestp DESC
                     ";
 
-                $resSqlComment = $db->query($selectComment);
-                if($db->numrows())
+                $resSqlComment = ploopi\loader::getdb()->query($selectComment);
+                if(ploopi\loader::getdb()->numrows())
                 {
-                    while($rowComment = $db->fetchrow($resSqlComment))
+                    while($rowComment = ploopi\loader::getdb()->fetchrow($resSqlComment))
                     {
-                        $date_comment = ($article->fields['timestp_published']!='') ? ovensia\ploopi\date::timestamp2local($rowComment['timestp']) : array('date' => '', 'time' => '');
+                        $date_comment = ($article->fields['timestp_published']!='') ? ploopi\date::timestamp2local($rowComment['timestp']) : array('date' => '', 'time' => '');
 
                         $nbComment++;
 
@@ -1769,12 +1768,12 @@ else // affichage standard rubrique/page
                             array(
                                 'ID'        => $rowComment['id'],
                                 'PUBLISHED' => $rowComment['publish'],
-                                'COMMENT'   => ovensia\ploopi\str::htmlentities($rowComment['comment']),
-                                'EMAIL'     => ovensia\ploopi\str::htmlentities($rowComment['email']),
-                                'NICKNAME'  => ovensia\ploopi\str::htmlentities($rowComment['nickname']),
+                                'COMMENT'   => ploopi\str::htmlentities($rowComment['comment']),
+                                'EMAIL'     => ploopi\str::htmlentities($rowComment['email']),
+                                'NICKNAME'  => ploopi\str::htmlentities($rowComment['nickname']),
                                 'DATE'      => $date_comment['date'],
                                 'TIME'      => $date_comment['time'],
-                                'POSTBY'    => sprintf(_WEBEDIT_COMMENT_COMMENT_POSTBY,ovensia\ploopi\str::htmlentities($rowComment['nickname']),$date_comment['date'],$date_comment['time'])
+                                'POSTBY'    => sprintf(_WEBEDIT_COMMENT_COMMENT_POSTBY,ploopi\str::htmlentities($rowComment['nickname']),$date_comment['date'],$date_comment['time'])
                             )
                         );
                     }
@@ -1801,16 +1800,16 @@ else // affichage standard rubrique/page
             $template_body->assign_block_vars(
                 'switch_atomfeed_heading',
                 array(
-                    'URL' => ovensia\ploopi\str::urlrewrite("index.php?ploopi_op=webedit_backend&format=atom&headingid={$headingid}", webedit_getrewriterules(), $arrHeadings['list'][$headingid]['label']), //ovensia\ploopi\crypt::urlencode("backend.php?ploopi_moduleid={$_SESSION['ploopi']['moduleid']}&format=atom&headingid={$headingid}", null, null, null, null, false),
-                    'TITLE' => ovensia\ploopi\str::htmlentities($arrHeadings['list'][$headingid]['label']),
+                    'URL' => ploopi\str::urlrewrite("index.php?ploopi_op=webedit_backend&format=atom&headingid={$headingid}", webedit_getrewriterules(), $arrHeadings['list'][$headingid]['label']), //ploopi\crypt::urlencode("backend.php?ploopi_moduleid={$_SESSION['ploopi']['moduleid']}&format=atom&headingid={$headingid}", null, null, null, null, false),
+                    'TITLE' => ploopi\str::htmlentities($arrHeadings['list'][$headingid]['label']),
                 )
             );
 
             $template_body->assign_block_vars(
                 'switch_rssfeed_heading',
                 array(
-                    'URL' => ovensia\ploopi\str::urlrewrite("index.php?ploopi_op=webedit_backend&format=rss&headingid={$headingid}", webedit_getrewriterules(), $arrHeadings['list'][$headingid]['label']),//ovensia\ploopi\crypt::urlencode("backend.php?ploopi_moduleid={$_SESSION['ploopi']['moduleid']}&format=rss&headingid={$headingid}", null, null, null, null, false),
-                    'TITLE' => ovensia\ploopi\str::htmlentities($arrHeadings['list'][$headingid]['label']),
+                    'URL' => ploopi\str::urlrewrite("index.php?ploopi_op=webedit_backend&format=rss&headingid={$headingid}", webedit_getrewriterules(), $arrHeadings['list'][$headingid]['label']),//ploopi\crypt::urlencode("backend.php?ploopi_moduleid={$_SESSION['ploopi']['moduleid']}&format=rss&headingid={$headingid}", null, null, null, null, false),
+                    'TITLE' => ploopi\str::htmlentities($arrHeadings['list'][$headingid]['label']),
                 )
             );
         }
@@ -1823,12 +1822,12 @@ else // affichage standard rubrique/page
             {
                 case 'edit';
                 case 'render';
-                    $link = ovensia\ploopi\crypt::urlencode("index.php?webedit_mode=render&ploopi_op=webedit_subscribe&headingid={$headingid}".(empty($articleid) ? '' : "&articleid={$articleid}"), null, null, null, null, false);
+                    $link = ploopi\crypt::urlencode("index.php?webedit_mode=render&ploopi_op=webedit_subscribe&headingid={$headingid}".(empty($articleid) ? '' : "&articleid={$articleid}"), null, null, null, null, false);
                 break;
 
                 default:
                 case 'display';
-                    $link = ovensia\ploopi\crypt::urlencode("index.php?ploopi_op=webedit_subscribe&headingid={$headingid}".(empty($articleid) ? '' : "&articleid={$articleid}"), null, null, null, null, false);
+                    $link = ploopi\crypt::urlencode("index.php?ploopi_op=webedit_subscribe&headingid={$headingid}".(empty($articleid) ? '' : "&articleid={$articleid}"), null, null, null, null, false);
                 break;
             }
 
@@ -1860,26 +1859,26 @@ else // affichage standard rubrique/page
 
 if ($intErrorCode && $webedit_mode != 'edit')
 {
-    ovensia\ploopi\output::h404();
+    ploopi\output::h404();
     $template_body->assign_block_vars('switch_content_error', array());
 
     $strError = 'Erreur '.$intErrorCode;
 
     $template_body->assign_vars(
         array(
-            'PAGE_TITLE' => ovensia\ploopi\str::htmlentities($strError),
+            'PAGE_TITLE' => ploopi\str::htmlentities($strError),
             'PAGE_TITLE_RAW' => $strError,
             'PAGE_TITLE_ESCAPED' => addslashes($strError),
-            'PAGE_KEYWORDS' => ovensia\ploopi\str::htmlentities($strError),
+            'PAGE_KEYWORDS' => ploopi\str::htmlentities($strError),
             'PAGE_KEYWORDS_RAW' => $strError,
-            'PAGE_DESCRIPTION' => ovensia\ploopi\str::htmlentities($strError),
+            'PAGE_DESCRIPTION' => ploopi\str::htmlentities($strError),
             'PAGE_DESCRIPTION_RAW' => $strError,
             'PAGE_DESCRIPTION_ESCAPED' => addslashes($strError),
-            'PAGE_META_TITLE' => ovensia\ploopi\str::htmlentities($strError),
+            'PAGE_META_TITLE' => ploopi\str::htmlentities($strError),
             'PAGE_META_TITLE_RAW' => $strError,
             'PAGE_META_KEYWORDS' => $strError,
             'PAGE_META_KEYWORDS_RAW' => $strError,
-            'PAGE_META_DESCRIPTION' => ovensia\ploopi\str::htmlentities($strError),
+            'PAGE_META_DESCRIPTION' => ploopi\str::htmlentities($strError),
             'PAGE_META_DESCRIPTION_RAW' => $strError,
             'PAGE_ERROR_CODE' => $intErrorCode,
         )
@@ -1893,7 +1892,7 @@ if ($webedit_mode == 'edit' && file_exists("./templates/frontoffice/{$template_n
 // on vérifie l'existence du fichier TPL, sinon => die
 if (!file_exists("./templates/frontoffice/{$template_name}/{$template_file}") || ! is_readable("./templates/frontoffice/{$template_name}/{$template_file}")) {
 
-    ovensia\ploopi\system::kill(
+    ploopi\system::kill(
         str_replace(
             array('<FILE>', '<TEMPLATE>'),
             array($template_file, "./templates/frontoffice/{$template_name}"),
@@ -1915,11 +1914,11 @@ if ($_SESSION['ploopi']['connected'])
             'USER_FIRSTNAME'        => $_SESSION['ploopi']['user']['firstname'],
             'USER_LASTNAME'         => $_SESSION['ploopi']['user']['lastname'],
             'USER_EMAIL'            => $_SESSION['ploopi']['user']['email'],
-            'USER_SHOWPROFILE'      => ovensia\ploopi\crypt::urlencode('index.php?modcontent='._PLOOPI_MODULE_SYSTEM.'&op=showprofile'),
-            'USER_SHOWTICKETS'      => ovensia\ploopi\crypt::urlencode('index.php?modcontent='._PLOOPI_MODULE_SYSTEM.'&op=showtickets'),
-            'USER_SHOWFAVORITES'    => ovensia\ploopi\crypt::urlencode('index.php?modcontent='._PLOOPI_MODULE_SYSTEM.'&op=showfavorites'),
-            'USER_ADMINISTRATION'   => ovensia\ploopi\crypt::urlencode('admin.php'.''),
-            'USER_DECONNECT'        => ovensia\ploopi\crypt::urlencode('index.php?ploopi_logout')
+            'USER_SHOWPROFILE'      => ploopi\crypt::urlencode('index.php?modcontent='._PLOOPI_MODULE_SYSTEM.'&op=showprofile'),
+            'USER_SHOWTICKETS'      => ploopi\crypt::urlencode('index.php?modcontent='._PLOOPI_MODULE_SYSTEM.'&op=showtickets'),
+            'USER_SHOWFAVORITES'    => ploopi\crypt::urlencode('index.php?modcontent='._PLOOPI_MODULE_SYSTEM.'&op=showfavorites'),
+            'USER_ADMINISTRATION'   => ploopi\crypt::urlencode('admin.php'.''),
+            'USER_DECONNECT'        => ploopi\crypt::urlencode('index.php?ploopi_logout')
         )
     );
 }
@@ -1966,12 +1965,12 @@ if ($webedit_mode != 'display')
 $ploopi_additional_javascript .= ob_get_contents();
 @ob_end_clean();
 
-$lastupdate = ($lastupdate = webedit_getlastupdate()) ? ovensia\ploopi\date::timestamp2local($lastupdate) : array('date' => '', 'time' => '');
+$lastupdate = ($lastupdate = webedit_getlastupdate()) ? ploopi\date::timestamp2local($lastupdate) : array('date' => '', 'time' => '');
 
 // template assignments
 $wsp = self::getworkspace();
 
-list($keywords) = ovensia\ploopi\str::getwords("{$wsp['title']} {$wsp['meta_keywords']} {$wsp['meta_author']}");
+list($keywords) = ploopi\str::getwords("{$wsp['title']} {$wsp['meta_keywords']} {$wsp['meta_author']}");
 
 // PLOOPI JS
 $template_body->assign_block_vars(
@@ -1996,7 +1995,7 @@ $template_body->assign_block_vars(
 );
 
 $title_raw = $wsp['title'];
-$title = ovensia\ploopi\str::htmlentities($title_raw);
+$title = ploopi\str::htmlentities($title_raw);
 
 // Doit on afficher le flux du site ?
 if (isset($arrHeadings['feed_enabled']) && $arrHeadings['feed_enabled'])
@@ -2004,14 +2003,14 @@ if (isset($arrHeadings['feed_enabled']) && $arrHeadings['feed_enabled'])
     $template_body->assign_block_vars(
         'switch_atomfeed_site',
         array(
-            'URL' => ovensia\ploopi\str::urlrewrite("index.php?ploopi_op=webedit_backend&format=atom", webedit_getrewriterules(), $title_raw), // ovensia\ploopi\str::urlrewrite("backend.php?ploopi_moduleid={$_SESSION['ploopi']['moduleid']}&format=atom", webedit_getrewriterules(), 'titre'),  //ovensia\ploopi\crypt::urlencode("backend.php?ploopi_moduleid={$_SESSION['ploopi']['moduleid']}&format=atom", null, null, null, null, false),
+            'URL' => ploopi\str::urlrewrite("index.php?ploopi_op=webedit_backend&format=atom", webedit_getrewriterules(), $title_raw), // ploopi\str::urlrewrite("backend.php?ploopi_moduleid={$_SESSION['ploopi']['moduleid']}&format=atom", webedit_getrewriterules(), 'titre'),  //ploopi\crypt::urlencode("backend.php?ploopi_moduleid={$_SESSION['ploopi']['moduleid']}&format=atom", null, null, null, null, false),
             'TITLE' => $title,
         )
     );
     $template_body->assign_block_vars(
         'switch_rssfeed_site',
         array(
-            'URL' => ovensia\ploopi\str::urlrewrite("index.php?ploopi_op=webedit_backend&format=rss", webedit_getrewriterules(), $title_raw), //ovensia\ploopi\crypt::urlencode("backend.php?ploopi_moduleid={$_SESSION['ploopi']['moduleid']}&format=rss", null, null, null, null, false),
+            'URL' => ploopi\str::urlrewrite("index.php?ploopi_op=webedit_backend&format=rss", webedit_getrewriterules(), $title_raw), //ploopi\crypt::urlencode("backend.php?ploopi_moduleid={$_SESSION['ploopi']['moduleid']}&format=rss", null, null, null, null, false),
             'TITLE' => $title,
         )
     );
@@ -2031,20 +2030,20 @@ $template_body->assign_vars(
         'SITE_TITLE_RAW'                => $title_raw,
         'WORKSPACE_TITLE'               => $title,
         'WORKSPACE_TITLE_RAW'           => $title_raw,
-        'WORKSPACE_META_DESCRIPTION'    => ovensia\ploopi\str::htmlentities($wsp['meta_description']),
-        'WORKSPACE_META_KEYWORDS'       => ovensia\ploopi\str::htmlentities($wsp['meta_keywords']),
-        'WORKSPACE_META_AUTHOR'         => ovensia\ploopi\str::htmlentities($wsp['meta_author']),
-        'WORKSPACE_META_COPYRIGHT'      => ovensia\ploopi\str::htmlentities($wsp['meta_copyright']),
-        'WORKSPACE_META_ROBOTS'         => ovensia\ploopi\str::htmlentities($wsp['meta_robots']),
-        'UNIQUE_KEYWORDS'               => ovensia\ploopi\str::htmlentities(implode(', ', array_keys($keywords))),
-        'PAGE_QUERYSTRING'              => ovensia\ploopi\str::htmlentities($query_string),
-        'PAGE_QUERYDATE_B'              => ovensia\ploopi\str::htmlentities($query_date_b),
-        'PAGE_QUERYDATE_E'              => ovensia\ploopi\str::htmlentities($query_date_e),
-        'PAGE_QUERYMT'                  => ovensia\ploopi\str::htmlentities($query_mime_type),
+        'WORKSPACE_META_DESCRIPTION'    => ploopi\str::htmlentities($wsp['meta_description']),
+        'WORKSPACE_META_KEYWORDS'       => ploopi\str::htmlentities($wsp['meta_keywords']),
+        'WORKSPACE_META_AUTHOR'         => ploopi\str::htmlentities($wsp['meta_author']),
+        'WORKSPACE_META_COPYRIGHT'      => ploopi\str::htmlentities($wsp['meta_copyright']),
+        'WORKSPACE_META_ROBOTS'         => ploopi\str::htmlentities($wsp['meta_robots']),
+        'UNIQUE_KEYWORDS'               => ploopi\str::htmlentities(implode(', ', array_keys($keywords))),
+        'PAGE_QUERYSTRING'              => ploopi\str::htmlentities($query_string),
+        'PAGE_QUERYDATE_B'              => ploopi\str::htmlentities($query_date_b),
+        'PAGE_QUERYDATE_E'              => ploopi\str::htmlentities($query_date_e),
+        'PAGE_QUERYMT'                  => ploopi\str::htmlentities($query_mime_type),
         'PAGE_QUERYCT_ALL_SELECTED'     => $query_content_type == 'all' ? 'selected="selected"' : '',
         'PAGE_QUERYCT_ART_SELECTED'     => $query_content_type == 'art' ? 'selected="selected"' : '',
         'PAGE_QUERYCT_DOC_SELECTED'     => $query_content_type == 'doc' ? 'selected="selected"' : '',
-        'PAGE_QUERYTAG'                 => ovensia\ploopi\str::htmlentities($query_tag),
+        'PAGE_QUERYTAG'                 => ploopi\str::htmlentities($query_tag),
         'SITE_HOME'                     => in_array($webedit_mode, array('render', 'edit')) ? 'index.php?webedit_mode=render' : 'index.php',
         'HOST'                          => $_SERVER['HTTP_HOST'],
         'DATE_DAY'                      => date('d'),
@@ -2059,7 +2058,7 @@ $template_body->assign_vars(
         'SITE_BASEPATH'                 => $strBasePath,
         'PLOOPI_VERSION'                => _PLOOPI_VERSION,
         'PLOOPI_REVISION'               => _PLOOPI_REVISION,
-        'URL_XML_TAG3D'                 => ovensia\ploopi\str::urlrewrite("index.php?ploopi_op=webedit_backend&query_tag=".((!empty($query_tag)) ? $query_tag : 'tag3D')."&moduleid={$_SESSION['ploopi']['workspaceid']}", webedit_getrewriterules())
+        'URL_XML_TAG3D'                 => ploopi\str::urlrewrite("index.php?ploopi_op=webedit_backend&query_tag=".((!empty($query_tag)) ? $query_tag : 'tag3D')."&moduleid={$_SESSION['ploopi']['workspaceid']}", webedit_getrewriterules())
     )
 );
 
@@ -2082,11 +2081,11 @@ $sql =  "
         ";
 
 
-$db->query($sql);
+ploopi\loader::getdb()->query($sql);
 
 $arrTags = array();
 
-while ($row = $db->fetchrow())
+while ($row = ploopi\loader::getdb()->fetchrow())
 {
     // ATTENTION EN CAS DE CHANGEMENT DE FILTRE, NE PAS OUBLIER LES TAG 3D DANS BACKEND.PHP
     if (!$arrHeadings['list'][$row['id_heading']]['private']
@@ -2094,7 +2093,7 @@ while ($row = $db->fetchrow())
         || isset($_SESSION['webedit']['allowedheading'][$_SESSION['ploopi']['moduleid']][$arrHeadings['list'][$row['id_heading']]['herited_private']])
         || $webedit_mode == 'edit') // Rubrique non privée ou accessible par l'utilisateur
     {
-        $strTag = strtolower(ovensia\ploopi\str::convertaccents($row['tag']));
+        $strTag = strtolower(ploopi\str::convertaccents($row['tag']));
         if (!isset($arrTags[$strTag])) $arrTags[$strTag] = 0;
         $arrTags[$strTag]++;
     }
@@ -2132,7 +2131,7 @@ foreach ($arrTags as $strTag => $arrTag)
 
         default:
         case 'display';
-            $link = ovensia\ploopi\str::urlrewrite("index.php?query_tag={$strTag}", webedit_getrewriterules());
+            $link = ploopi\str::urlrewrite("index.php?query_tag={$strTag}", webedit_getrewriterules());
         break;
     }
 
@@ -2171,13 +2170,13 @@ if(isset($arrHeadings['list'][$headingid]['content_type']) && $arrHeadings['list
     );
 
     // la requete a déjà été effectuée dans l'affichage "blog" ou "page" plus haut
-    if(isset($resSQL) && $db->numrows($resSQL))
+    if(isset($resSQL) && ploopi\loader::getdb()->numrows($resSQL))
     {
-        $db->dataseek($resSQL); // Repositionne au debut;
+        ploopi\loader::getdb()->dataseek($resSQL); // Repositionne au debut;
 
-        while ($row = $db->fetchrow($resSQL))
+        while ($row = ploopi\loader::getdb()->fetchrow($resSQL))
         {
-            $arrDate = ovensia\ploopi\date::gettimestampdetail($row['timestp']);
+            $arrDate = ploopi\date::gettimestampdetail($row['timestp']);
 
             $year       = $arrDate[1];
             $month      = $arrDate[2];
@@ -2200,10 +2199,10 @@ if(isset($arrHeadings['list'][$headingid]['content_type']) && $arrHeadings['list
                 if (isset($arrHeadings['list'][$headingid])) foreach(preg_split('/;/', $arrHeadings['list'][$headingid]['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
                 $arrParents[] = $year;
                 $arrParents[] = $month;
-                $scriptArchive = ovensia\ploopi\str::urlrewrite("index.php?headingid={$headingid}&yearmonth={$yearmonth}", webedit_getrewriterules(), $arrHeadings['list'][$headingid]['label'], $arrParents);
+                $scriptArchive = ploopi\str::urlrewrite("index.php?headingid={$headingid}&yearmonth={$yearmonth}", webedit_getrewriterules(), $arrHeadings['list'][$headingid]['label'], $arrParents);
 
                 $arrParents[] = $day;
-                $scriptDate = ovensia\ploopi\str::urlrewrite("index.php?headingid={$headingid}&yearmonth={$yearmonth}&day={$day}", webedit_getrewriterules(), $arrHeadings['list'][$headingid]['label'], $arrParents);
+                $scriptDate = ploopi\str::urlrewrite("index.php?headingid={$headingid}&yearmonth={$yearmonth}&day={$day}", webedit_getrewriterules(), $arrHeadings['list'][$headingid]['label'], $arrParents);
             }
 
             // ARCHIVES
@@ -2218,7 +2217,7 @@ if(isset($arrHeadings['list'][$headingid]['content_type']) && $arrHeadings['list
             // CALENDRIER
             // On passe les jours où il y a des articles
             $objCalendarBlog->addevent(
-                new ovensia\ploopi\calendarEvent(
+                new ploopi\calendarEvent(
                     $date.'000000',
                     $date.'000000',
                     $row['metatitle'],
@@ -2272,10 +2271,10 @@ if(isset($arrHeadings['list'][$headingid]['content_type']) && $arrHeadings['list
             $arrParentsNext[] = substr($intYearMonthNext,0,4);
             $arrParentsNext[] = substr($intYearMonthNext,4,2);
 
-            $strUrlCalendarMonthNext = (substr($maxTimeStpArt,0,6) >= $intYearMonthNext) ? ovensia\ploopi\str::urlrewrite("index.php?headingid={$headingid}&yearmonth={$intYearMonthNext}", webedit_getrewriterules(), $arrHeadings['list'][$headingid]['label'], $arrParentsNext) : '';
-            $strUrlCalendarMonthBefore = (substr($minTimeStpArt,0,6) <= $intYearMonthPreced) ? ovensia\ploopi\str::urlrewrite("index.php?headingid={$headingid}&yearmonth={$intYearMonthPreced}", webedit_getrewriterules(), $arrHeadings['list'][$headingid]['label'], $arrParentsPreced) : '';
+            $strUrlCalendarMonthNext = (substr($maxTimeStpArt,0,6) >= $intYearMonthNext) ? ploopi\str::urlrewrite("index.php?headingid={$headingid}&yearmonth={$intYearMonthNext}", webedit_getrewriterules(), $arrHeadings['list'][$headingid]['label'], $arrParentsNext) : '';
+            $strUrlCalendarMonthBefore = (substr($minTimeStpArt,0,6) <= $intYearMonthPreced) ? ploopi\str::urlrewrite("index.php?headingid={$headingid}&yearmonth={$intYearMonthPreced}", webedit_getrewriterules(), $arrHeadings['list'][$headingid]['label'], $arrParentsPreced) : '';
 
-            $strUrlYear = ovensia\ploopi\str::urlrewrite("index.php?headingid={$headingid}&year={$arrSessionBlog['year']}", webedit_getrewriterules(), $arrHeadings['list'][$headingid]['label'], $arrParents);
+            $strUrlYear = ploopi\str::urlrewrite("index.php?headingid={$headingid}&year={$arrSessionBlog['year']}", webedit_getrewriterules(), $arrHeadings['list'][$headingid]['label'], $arrParents);
         }
 
         // CALENDRIER
@@ -2306,7 +2305,7 @@ if(isset($arrHeadings['list'][$headingid]['content_type']) && $arrHeadings['list
 
         // ARCHIVES
         //krsort($arrArticleBlogByMonth); // la requete le fait déjà :)
-        //ovensia\ploopi\output::print_r($arrArticleBlogArchive);
+        //ploopi\output::print_r($arrArticleBlogArchive);
         foreach($arrArticleBlogArchive as $year => $arrmonth)
         {
             $template_body->assign_block_vars('switch_blog.archive',
@@ -2332,9 +2331,9 @@ if(isset($arrHeadings['list'][$headingid]['content_type']) && $arrHeadings['list
     }
 }
 
-if($type == 'draft') $rs = $db->query("SELECT * FROM ploopi_mod_webedit_article_draft WHERE id_module = {$_SESSION['ploopi']['moduleid']} AND id_heading = 0");
-else $rs = $db->query("SELECT * FROM ploopi_mod_webedit_article WHERE id_module = {$_SESSION['ploopi']['moduleid']} AND id_heading = 0");
-while ($row = $db->fetchrow($rs))
+if($type == 'draft') $rs = ploopi\loader::getdb()->query("SELECT * FROM ploopi_mod_webedit_article_draft WHERE id_module = {$_SESSION['ploopi']['moduleid']} AND id_heading = 0");
+else $rs = ploopi\loader::getdb()->query("SELECT * FROM ploopi_mod_webedit_article WHERE id_module = {$_SESSION['ploopi']['moduleid']} AND id_heading = 0");
+while ($row = ploopi\loader::getdb()->fetchrow($rs))
 {
     $objArticle = new webedit_article();
     $objArticle->fields = $row; // astuce pour pouvoir se servir de webedit_replace_links() !
@@ -2345,4 +2344,3 @@ while ($row = $db->fetchrow($rs))
 
 
 $template_body->pparse('body');
-?>

@@ -284,7 +284,7 @@ class Text {
 
         // Create CSIM targets
         $coords = $bbox[0].','.$bbox[1].','.$bbox[2].','.$bbox[3].','.$bbox[4].','.$bbox[5].','.$bbox[6].','.$bbox[7];
-        $this->iCSIMarea = "<area shape=\"poly\" coords=\"$coords\" href=\"".ovensia\ploopi\str::htmlentities($this->iCSIMtarget)."\" ";
+        $this->iCSIMarea = "<area shape=\"poly\" coords=\"$coords\" href=\"".ploopi\str::htmlentities($this->iCSIMtarget)."\" ";
         if( trim($this->iCSIMalt) != '' ) {
             $this->iCSIMarea .= " alt=\"".$this->iCSIMalt."\" ";
             $this->iCSIMarea .= " title=\"".$this->iCSIMalt."\" ";

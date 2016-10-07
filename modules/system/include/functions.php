@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,7 +25,7 @@
  *
  * @package system
  * @subpackage global
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -51,7 +50,7 @@ function system_mergegroups($array1, $array2)
  */
 function system_getwg()
 {
-    global $db;
+    $db = ploopi\loader::getdb();
 
     $workspaces = array('list' => array(), 'tree' => array(), 'workspaceid' => $_SESSION['ploopi']['workspaceid']);
 
@@ -282,7 +281,7 @@ function system_build_tree($typetree, $from_wid = 1, $from_gid = 0)
                                     <div>
                                         {$node}<img style=\"display:block;float:left;\" src=\"{$_SESSION['ploopi']['template_path']}/img/treeview/{$icon}.png\" />
                                         <span style=\"display:block;margin-left:".($marginleft+20)."px;line-height:18px;\">
-                                            <a style=\"font-weight:{$style_sel};\" href=\"".ovensia\ploopi\crypt::urlencode("admin.php?groupid={$group['id']}")."\">".ovensia\ploopi\str::htmlentities($group['label'])."</a>
+                                            <a style=\"font-weight:{$style_sel};\" href=\"".ploopi\crypt::urlencode("admin.php?groupid={$group['id']}")."\">".ploopi\str::htmlentities($group['label'])."</a>
                                         </span>
                                     </div>
                                     <div style=\"margin-left:{$marginleft}px;display:{$display};\" id=\"g{$group['id']}\">{$html_rec}</div>
@@ -303,8 +302,8 @@ function system_build_tree($typetree, $from_wid = 1, $from_gid = 0)
 
                     $wselparents = (isset($workspacesel)) ? explode(';',$workspacesel['parents'].';'.$workspacesel['id']) : explode(';',$groupsel['parents_workspace']);
                     //echo $workspace['label'];
-                    //ovensia\ploopi\output::print_r($groupsel);
-                    //ovensia\ploopi\output::print_r($wselparents);
+                    //ploopi\output::print_r($groupsel);
+                    //ploopi\output::print_r($wselparents);
                     //$gselparents = (isset($workspacesel)) ? explode(';',$workspacesel['parents'].';'.$workspacesel['id']) : explode(';',$groupsel['parents_workspace'].';g'.$groupsel['id']);
                     $currentparents = explode(';',$workspace['parents'].';'.$workspace['id']);
 
@@ -353,7 +352,7 @@ function system_build_tree($typetree, $from_wid = 1, $from_gid = 0)
                                     <div>
                                         {$node}<img style=\"display:block;float:left;\" src=\"{$_SESSION['ploopi']['template_path']}/img/treeview/{$icon}.png\" />
                                         <span style=\"display:block;margin-left:".($marginleft+20)."px;line-height:18px;\">
-                                            <a style=\"font-weight:{$style_sel};\" href=\"".ovensia\ploopi\crypt::urlencode("admin.php?workspaceid={$workspace['id']}")."\">".ovensia\ploopi\str::htmlentities($workspace['label'])."</a>
+                                            <a style=\"font-weight:{$style_sel};\" href=\"".ploopi\crypt::urlencode("admin.php?workspaceid={$workspace['id']}")."\">".ploopi\str::htmlentities($workspace['label'])."</a>
                                         </span>
                                     </div>
                                     <div style=\"margin-left:{$marginleft}px;display:{$display};\" id=\"w{$workspace['id']}\">{$html_rec}</div>
@@ -428,7 +427,7 @@ function system_build_tree($typetree, $from_wid = 1, $from_gid = 0)
                                         <div>
                                             {$node}<img style=\"display:block;float:left;\" src=\"{$_SESSION['ploopi']['template_path']}/img/treeview/{$icon}.png\" />
                                             <span style=\"display:block;margin-left:40px;line-height:18px;\">
-                                                <a style=\"font-weight:{$style_sel};\" href=\"".ovensia\ploopi\crypt::urlencode("admin.php?groupid={$group['id']}")."\">{$group['label']}</a>
+                                                <a style=\"font-weight:{$style_sel};\" href=\"".ploopi\crypt::urlencode("admin.php?groupid={$group['id']}")."\">{$group['label']}</a>
                                             </span>
                                         </div>
                                         <div style=\"margin-left:20px;display:{$display};\" id=\"g{$group['id']}\">{$html_rec}</div>
@@ -447,7 +446,7 @@ function system_build_tree($typetree, $from_wid = 1, $from_gid = 0)
 
 function system_getallworkspaces($idworkspacetop = '')
 {
-    global $db;
+    $db = ploopi\loader::getdb();
     $workspaces = array();
 
     $select = "SELECT * FROM ploopi_workspace WHERE system = 0 ORDER BY label";
@@ -464,7 +463,7 @@ function system_getallworkspaces($idworkspacetop = '')
 
 function system_updateparents($idgroup=0,$parents='',$depth=1)
 {
-    global $db;
+    $db = ploopi\loader::getdb();
 
     $select = "SELECT * FROM ploopi_group WHERE id_group = $idgroup AND id <> $idgroup";
     $result = $db->query($select);
@@ -482,7 +481,7 @@ function system_updateparents($idgroup=0,$parents='',$depth=1)
 
 function system_getinstalledmodules()
 {
-    global $db;
+    $db = ploopi\loader::getdb();
 
     $modules = array();
 
@@ -538,7 +537,7 @@ function system_generate_htpasswd($login, $pass, $delete = false)
         }
 
         if ($delete && isset($array_pass[$login])) unset($array_pass[$login]);
-        else $array_pass[$login] = ovensia\ploopi\crypt::htpasswd($pass);
+        else $array_pass[$login] = ploopi\crypt::htpasswd($pass);
 
         $c = 0;
         foreach($array_pass as $ht_login => $ht_pass)
@@ -558,13 +557,13 @@ function system_tickets_displayresponses($parents, $tickets, $rootid)
 
     sort($parents[$rootid]);
 
-    $todaydate = ovensia\ploopi\date::timestamp2local(ovensia\ploopi\date::createtimestamp());
+    $todaydate = ploopi\date::timestamp2local(ploopi\date::createtimestamp());
 
     foreach($parents[$rootid] as $ticketid)
     {
         $fields = $tickets[$ticketid];
 
-        $localdate = ovensia\ploopi\date::timestamp2local($fields['timestp']);
+        $localdate = ploopi\date::timestamp2local($fields['timestp']);
         $localdate['date'] = ($todaydate['date'] == $localdate['date'])  ? "Aujourd'hui" : "le {$localdate['date']}";
 
         $puce = '#ff2020';
@@ -577,18 +576,18 @@ function system_tickets_displayresponses($parents, $tickets, $rootid)
         ?>
         <div class="system_tickets_response">
             <div class="system_tickets_head" onclick="javascript:system_tickets_display(<?php echo $fields['id']; ?>,<?php echo (empty($fields['status'])) ? 0 : 1; ?>, 0);">
-                <div  class="system_tickets_date"><?php echo ovensia\ploopi\str::htmlentities($localdate['date']); ?> à <?php echo ovensia\ploopi\str::htmlentities($localdate['time']); ?></div>
-                <div class="system_tickets_sender"><b><?php echo ovensia\ploopi\str::htmlentities("{$fields['firstname']} {$fields['lastname']}"); ?></b></div>
-                <div class="system_tickets_title" id="tickets_title_<?php echo $fields['id']; ?>" <?php if (is_null($fields['status'])) echo 'style="font-weight:bold;"'; ?>><?php echo ovensia\ploopi\str::htmlentities($fields['title']); ?></div>
+                <div  class="system_tickets_date"><?php echo ploopi\str::htmlentities($localdate['date']); ?> à <?php echo ploopi\str::htmlentities($localdate['time']); ?></div>
+                <div class="system_tickets_sender"><b><?php echo ploopi\str::htmlentities("{$fields['firstname']} {$fields['lastname']}"); ?></b></div>
+                <div class="system_tickets_title" id="tickets_title_<?php echo $fields['id']; ?>" <?php if (is_null($fields['status'])) echo 'style="font-weight:bold;"'; ?>><?php echo ploopi\str::htmlentities($fields['title']); ?></div>
             </div>
 
             <div class="system_tickets_response_detail" id="tickets_detail_<?php echo $fields['id'];?>">
                 <div class="system_tickets_message">
                 <?php
-                echo ovensia\ploopi\str::make_links($fields['message']);
+                echo ploopi\str::make_links($fields['message']);
                 if ($fields['lastedit_timestp'])
                 {
-                    $lastedit_local = ovensia\ploopi\date::timestamp2local($fields['lastedit_timestp']);
+                    $lastedit_local = ploopi\date::timestamp2local($fields['lastedit_timestp']);
                     echo "<i>Dernière modification le {$lastedit_local['date']} à {$lastedit_local['time']}</i>";
                 }
                 ?>
@@ -651,7 +650,7 @@ function system_serverload_getcolor($min, $max, $x)
 
 function system_getparents($parents, $type)
 {
-    global $db;
+    $db = ploopi\loader::getdb();
 
     $parents = str_replace(';',',',$parents);
 

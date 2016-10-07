@@ -35,19 +35,19 @@
  */
 
 
-if (ovensia\ploopi\param::get('system_submenu_display'))
+if (ploopi\param::get('system_submenu_display'))
 {
     $op = empty($_REQUEST['op']) ? 'tickets' : $_REQUEST['op'];
 
     $block->addmenu(
         _PLOOPI_LABEL_MYTICKETS,
-        ovensia\ploopi\crypt::urlencode('admin.php?op=tickets', _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
+        ploopi\crypt::urlencode('admin.php?op=tickets', _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
         $op == 'tickets'
     );
 
     $block->addmenu(
         _PLOOPI_LABEL_MYANNOTATIONS,
-        ovensia\ploopi\crypt::urlencode('admin.php?op=annotation', _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
+        ploopi\crypt::urlencode('admin.php?op=annotation', _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
         $op == 'annotation'
     );
 }
@@ -55,21 +55,21 @@ else $op = empty($_REQUEST['op']) ? 'profile' : $_REQUEST['op'];
 
 $block->addmenu(
     _PLOOPI_LABEL_MYPROFILE,
-    ovensia\ploopi\crypt::urlencode('admin.php?op=profile', _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
+    ploopi\crypt::urlencode('admin.php?op=profile', _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
     $op == 'profile'
 );
 
-if (ovensia\ploopi\param::get('system_submenu_display'))
+if (ploopi\param::get('system_submenu_display'))
 {
     $block->addmenu(
         _PLOOPI_LABEL_MYDATA,
-        ovensia\ploopi\crypt::urlencode('admin.php?op=actions', _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
+        ploopi\crypt::urlencode('admin.php?op=actions', _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
         $op == 'actions'
     );
 
     $block->addmenu(
         _PLOOPI_LABEL_MYPARAMS,
-        ovensia\ploopi\crypt::urlencode('admin.php?op=param', _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
+        ploopi\crypt::urlencode('admin.php?op=param', _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
         $op == 'param'
     );
 }

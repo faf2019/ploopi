@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2010 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Copyright (c) 2010 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
@@ -35,8 +35,8 @@
  * On récupère les dates de publication du formulaire
  */
 
-$pubdate_start = ($objForm->fields['pubdate_start']) ? ovensia\ploopi\date::timestamp2local($objForm->fields['pubdate_start']) : array('date' => '');
-$pubdate_end = ($objForm->fields['pubdate_end']) ? ovensia\ploopi\date::timestamp2local($objForm->fields['pubdate_end']) : array('date' => '');
+$pubdate_start = ($objForm->fields['pubdate_start']) ? ploopi\date::timestamp2local($objForm->fields['pubdate_start']) : array('date' => '');
+$pubdate_end = ($objForm->fields['pubdate_end']) ? ploopi\date::timestamp2local($objForm->fields['pubdate_end']) : array('date' => '');
 
 switch($op)
 {

@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,7 +25,7 @@
  *
  * @package webedit
  * @subpackage fckeditor
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -57,7 +56,7 @@ if ($webedit_idm)
     /**
      * Initialisation du module
      */
-    ovensia\ploopi\module::init('webedit');
+    ploopi\module::init('webedit');
 
     /**
      * Inclusion des classes du module
@@ -75,7 +74,7 @@ if ($webedit_idm)
             $option = (empty($_GET['option'])) ? '' : $_GET['option'];
             $treeview = webedit_gettreeview(webedit_getheadings($webedit_idm), webedit_getarticles($webedit_idm), $option);
             echo $skin->display_treeview($treeview['list'], $treeview['tree'], null, $_GET['hid']);
-            ovensia\ploopi\system::kill();
+            ploopi\system::kill();
         break;
 
         case 'webedit_selectlink':

@@ -20,16 +20,16 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-namespace ovensia\ploopi;
+namespace ploopi;
 
-use ovensia\ploopi;
+use ploopi;
 
 /**
  * Gestion des modules.
  *
  * @package ploopi
  * @subpackage module
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -39,7 +39,7 @@ use ovensia\ploopi;
  *
  * @package ploopi
  * @subpackage module
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -64,7 +64,7 @@ class module extends data_object
 
     public function save()
     {
-        global $db;
+        $db = loader::getdb();
 
         $res = -1;
 
@@ -99,7 +99,7 @@ class module extends data_object
     {
         include_once './include/classes/workspace.php';
 
-        global $db;
+        $db = loader::getdb();
 
         if ($this->fields['id']!=-1)
         {
@@ -163,7 +163,7 @@ class module extends data_object
 
     public function getallworkspaces()
     {
-        global $db;
+        $db = loader::getdb();
 
         $workspaces = array();
 
@@ -191,7 +191,7 @@ class module extends data_object
 
     public function getroles($shared = false)
     {
-        global $db;
+        $db = loader::getdb();
 
         $roles = array();
 
@@ -220,7 +220,7 @@ class module extends data_object
 
     public function unlink($workspaceid)
     {
-        global $db;
+        $db = loader::getdb();
 
         $sql =  "
                 DELETE

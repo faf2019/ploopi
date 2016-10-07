@@ -20,9 +20,9 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-namespace ovensia\ploopi;
+namespace ploopi;
 
-use ovensia\ploopi;
+use ploopi;
 
 /**
  * Fonctions de recherche et d'indexation de contenu.
@@ -179,7 +179,7 @@ abstract class search_index
             }
         }
         catch (Exception $e) {
-            trigger_error($e->getMessage(), E_USER_ERROR);
+            //trigger_error($e->getMessage(), E_USER_ERROR);
         }
 
         return $client;
@@ -212,6 +212,7 @@ abstract class search_index
     public static function remove($id_object, $id_record, $id_module = -1)
     {
         $client = self::getdb();
+        if (is_null($client)) return;
 
         if ($id_module == -1 && !empty($_SESSION['ploopi']['moduleid'])) $id_module= $_SESSION['ploopi']['moduleid'];
 
@@ -234,6 +235,7 @@ abstract class search_index
     public static function remove_module($id_module = -1)
     {
         $client = self::getdb();
+        if (is_null($client)) return;
 
         if ($id_module == -1 && !empty($_SESSION['ploopi']['moduleid'])) $id_module = $_SESSION['ploopi']['moduleid'];
 
@@ -282,6 +284,7 @@ abstract class search_index
 
 
         $client = self::getdb();
+        if (is_null($client)) return;
 
         $key = self::getid($id_module, $id_object, $id_record);
 
@@ -326,6 +329,7 @@ abstract class search_index
         if ($id_module == -1 && !empty($_SESSION['ploopi']['moduleid'])) $id_module= $_SESSION['ploopi']['moduleid'];
 
         $client = self::getdb();
+        if (is_null($client)) return;
 
         $key = self::getid($id_module, $id_object, $id_record);
 
@@ -373,6 +377,7 @@ abstract class search_index
     public static function search($keywords, $id_object = -1, $id_record = null, $id_module = null, $options = null)
     {
         $client = self::getdb();
+        if (is_null($client)) return;
 
         // Contrôle et formatage des paramètres
         if ($id_module == -1 && !empty($_SESSION['ploopi']['moduleid'])) $id_module = $_SESSION['ploopi']['moduleid'];

@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,7 +25,7 @@
  *
  * @package system
  * @subpackage system
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -35,12 +34,12 @@
  * Ouverture du bloc
  */
 
-echo $skin->open_simplebloc(_SYSTEM_UPDATE.ovensia\ploopi\str::htmlentities(" - {$strSysVersion} vers ")._PLOOPI_VERSION);
+echo $skin->open_simplebloc(_SYSTEM_UPDATE.ploopi\str::htmlentities(" - {$strSysVersion} vers ")._PLOOPI_VERSION);
 
 switch($op)
 {
     case 'system_update_execute':
-        if ($strSysVersion == _PLOOPI_VERSION) ovensia\ploopi\output::redirect('admin.php?reloadsession');
+        if ($strSysVersion == _PLOOPI_VERSION) ploopi\output::redirect('admin.php?reloadsession');
 
         $strSysVersion = str_replace(' ', '', $strSysVersion);
 
@@ -76,14 +75,14 @@ switch($op)
             if (file_exists("{$strSysInstallPath}{$strSqlFile}") && is_readable("{$strSysInstallPath}{$strSqlFile}"))
             {
                 ?>
-                <div style="padding:4px;">Import du fichier <b><?php echo ovensia\ploopi\str::htmlentities($strSqlFile); ?></b></div>
+                <div style="padding:4px;">Import du fichier <b><?php echo ploopi\str::htmlentities($strSqlFile); ?></b></div>
                 <?php
-                $db->multiplequeries(file_get_contents("{$strSysInstallPath}{$strSqlFile}"));
+                ploopi\loader::getdb()->multiplequeries(file_get_contents("{$strSysInstallPath}{$strSqlFile}"));
             }
             else
             {
                 ?>
-                <div style="padding:4px;color:#a60000;">Impossible de lire le fichier <b><?php echo ovensia\ploopi\str::htmlentities("{$strSysInstallPath}{$strSqlFile}") ?></b>, vérifiez les droits en lecture</div>
+                <div style="padding:4px;color:#a60000;">Impossible de lire le fichier <b><?php echo ploopi\str::htmlentities("{$strSysInstallPath}{$strSqlFile}") ?></b>, vérifiez les droits en lecture</div>
                 <?php
             }
         }
@@ -92,7 +91,7 @@ switch($op)
         <b>Mise à jour terminée</b>
         </div>
         <div style="padding:4px;">
-        <button onclick="javascript:document.location.href='<?php echo ovensia\ploopi\crypt::urlencode('admin.php?reloadsession'); ?>';">Continuer</button>
+        <button onclick="javascript:document.location.href='<?php echo ploopi\crypt::urlencode('admin.php?reloadsession'); ?>';">Continuer</button>
         </div>
         <?php
     break;
@@ -101,12 +100,12 @@ switch($op)
         ?>
         <div style="padding:4px;">
         Vous venez de mettre à jour Ploopi.
-        <br />Vous aviez la version <b><?php echo ovensia\ploopi\str::htmlentities($strSysVersion); ?></b> et le système a été mis à jour en version <b><?php echo _PLOOPI_VERSION; ?></b>
+        <br />Vous aviez la version <b><?php echo ploopi\str::htmlentities($strSysVersion); ?></b> et le système a été mis à jour en version <b><?php echo _PLOOPI_VERSION; ?></b>
         <br />Pour terminer la mise à jour vous devez mettre à jour la base de données.
         </div>
 
         <div style="padding:4px;">
-        <button onclick="javascript:document.location.href='<?php echo ovensia\ploopi\crypt::urlencode("admin.php?op=system_update_execute"); ?>';">Mettre à jour la Base de Données</button>
+        <button onclick="javascript:document.location.href='<?php echo ploopi\crypt::urlencode("admin.php?op=system_update_execute"); ?>';">Mettre à jour la Base de Données</button>
         </div>
         <?php
    break;

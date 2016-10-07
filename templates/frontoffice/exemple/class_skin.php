@@ -21,9 +21,9 @@
 */
 
 
-namespace ovensia\ploopi;
+namespace ploopi;
 
-use ovensia\ploopi;
+use ploopi;
 
 /**
  * Gestion du skin 'exemple'

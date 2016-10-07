@@ -41,7 +41,7 @@
  * @copyright OVENSIA
  */
 
-class booking_subresource extends ovensia\ploopi\data_object
+class booking_subresource extends ploopi\data_object
 {
     /**
      * Constructeur de la classe

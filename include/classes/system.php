@@ -20,16 +20,16 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-namespace ovensia\ploopi;
+namespace ploopi;
 
-use ovensia\ploopi;
+use ploopi;
 
 /**
  * Fonctions de base du coeur de Ploopi
  *
  * @package ploopi
  * @subpackage system
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -57,7 +57,7 @@ abstract class system
 
     public static function kill($var = null, $flush = true)
     {
-        global $db;
+        $db = loader::getdb();
 
         global $ploopi_timer;
 

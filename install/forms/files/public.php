@@ -1,7 +1,6 @@
 <?php
 /*
- Copyright (c) 2002-2007 Netlor
- Copyright (c) 2007-2010 Ovensia
+ Copyright (c) 2007-2016 Ovensia
  Copyright (c) 2010 HeXad
  Contributors hold Copyright (c) to their code submissions.
 
@@ -27,7 +26,7 @@
  *
  * @package forms
  * @subpackage public
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -35,7 +34,7 @@
 /**
  * Initialisation du module
  */
-ovensia\ploopi\module::init('forms');
+ploopi\module::init('forms');
 
 global $field_types;
 global $field_formats;
@@ -63,7 +62,7 @@ if ($op == 'forms_print')
         <form id="form"></form>
         </div>
         <script type="text/javascript">
-            $('form').innerHTML = window.opener.document.forms_form_<?php echo ovensia\ploopi\str::htmlentities($_GET['forms_id']); ?>.innerHTML;
+            $('form').innerHTML = window.opener.document.forms_form_<?php echo ploopi\str::htmlentities($_GET['forms_id']); ?>.innerHTML;
             Event.observe(window, 'load', function() {
                 <?php
                 for ($i=1; $i<=$objForm->getNbPanels();$i++)
@@ -83,9 +82,9 @@ if ($op == 'forms_print')
 }
 */
 
-$sqllimitgroup = ' AND ploopi_mod_forms_form.id_workspace IN ('.ovensia\ploopi\system::viewworkspaces($_SESSION['ploopi']['moduleid']).')';
+$sqllimitgroup = ' AND ploopi_mod_forms_form.id_workspace IN ('.ploopi\system::viewworkspaces($_SESSION['ploopi']['moduleid']).')';
 
-echo $skin->create_pagetitle(ovensia\ploopi\str::htmlentities($_SESSION['ploopi']['modulelabel']));
+echo $skin->create_pagetitle(ploopi\str::htmlentities($_SESSION['ploopi']['modulelabel']));
 
 switch($op)
 {
@@ -95,30 +94,30 @@ switch($op)
         {
             $objForm->open($_POST['forms_id']);
             $objForm->fields['autobackup'] = $_POST['forms_autobackup'];
-            $objForm->fields['autobackup_date'] = ovensia\ploopi\date::local2timestamp($_POST['forms_autobackup_date']);
+            $objForm->fields['autobackup_date'] = ploopi\date::local2timestamp($_POST['forms_autobackup_date']);
             $objForm->save();
-            ovensia\ploopi\output::redirect("admin.php?op=forms_viewreplies&forms_id={$_POST['forms_id']}");
+            ploopi\output::redirect("admin.php?op=forms_viewreplies&forms_id={$_POST['forms_id']}");
         }
-        ovensia\ploopi\output::redirect('admin.php');
+        ploopi\output::redirect('admin.php');
     break;
 
     case 'forms_reply_display':
     case 'forms_reply_add':
     case 'forms_reply_modify':
-        if (ovensia\ploopi\acl::isactionallowed(_FORMS_ACTION_ADDREPLY) || $op == 'forms_reply_display')
+        if (ploopi\acl::isactionallowed(_FORMS_ACTION_ADDREPLY) || $op == 'forms_reply_display')
         {
             $objForm = new formsForm();
 
             if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open($_GET['forms_id']))
             {
-                if (ovensia\ploopi\session::setflag('forms_nbclick', $_GET['forms_id'])) $objForm->fields['viewed']++;
+                if (ploopi\session::setflag('forms_nbclick', $_GET['forms_id'])) $objForm->fields['viewed']++;
                 $objForm->quicksave();
 
                 include './modules/forms/public_forms_display.php';
             }
-            else ovensia\ploopi\output::redirect('admin.php');
+            else ploopi\output::redirect('admin.php');
         }
-        else ovensia\ploopi\output::redirect('admin.php');
+        else ploopi\output::redirect('admin.php');
     break;
 
     /**
@@ -129,15 +128,15 @@ switch($op)
     case 'forms_deletedata':
         $objForm = new formsForm();
 
-        if (empty($_REQUEST['forms_id']) || !is_numeric($_REQUEST['forms_id']) || !$objForm->open($_REQUEST['forms_id'])) ovensia\ploopi\output::redirect('admin.php');
+        if (empty($_REQUEST['forms_id']) || !is_numeric($_REQUEST['forms_id']) || !$objForm->open($_REQUEST['forms_id'])) ploopi\output::redirect('admin.php');
 
-        if ($objForm->isPublished() && (!$objForm->fields['option_adminonly'] || ovensia\ploopi\acl::isactionallowed(_FORMS_ACTION_ADMIN)))
+        if ($objForm->isPublished() && (!$objForm->fields['option_adminonly'] || ploopi\acl::isactionallowed(_FORMS_ACTION_ADMIN)))
         {
 
             if ($op == 'forms_deletedata')
             {
                 $objForm->deleteData();
-                ovensia\ploopi\output::redirect("admin.php?op=forms_viewreplies&forms_id={$objForm->fields['id']}");
+                ploopi\output::redirect("admin.php?op=forms_viewreplies&forms_id={$objForm->fields['id']}");
             }
             else
             {
@@ -149,7 +148,7 @@ switch($op)
                 include_once './modules/forms/public_forms_viewreplies.php';
             }
         }
-        else ovensia\ploopi\output::redirect('admin.php');
+        else ploopi\output::redirect('admin.php');
     break;
 
     default:

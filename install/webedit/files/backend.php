@@ -1,7 +1,6 @@
 <?php
 /*
- Copyright (c) 2002-2007 Netlor
- Copyright (c) 2007-2009 Ovensia
+ Copyright (c) 2007-2016 Ovensia
  Copyright (c) 2009 HeXad
  Contributors hold Copyright (c) to their code submissions.
 
@@ -27,7 +26,7 @@
  *
  * @package webedit
  * @subpackage backend
- * @copyright Netlor, Ovensia, HeXad
+ * @copyright Ovensia, HeXad
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -43,16 +42,16 @@ switch ($strbackendtype)
 
         $query_tag = (empty($_REQUEST['query_tag'])) ? '' : $_REQUEST['query_tag'];
 
-        $objCache = new ovensia\ploopi\cache($query_tag.'-'.$_GET['ploopi_moduleid'].'.xml', 300);
+        $objCache = new ploopi\cache($query_tag.'-'.$_GET['ploopi_moduleid'].'.xml', 300);
 
         // Vidage du buffer
-        ovensia\ploopi\buffer::clean();
+        ploopi\buffer::clean();
 
         if (!$objCache->start())
         {
             include_once './modules/webedit/include/global.php';
 
-            $today = ovensia\ploopi\date::createtimestamp();
+            $today = ploopi\date::createtimestamp();
 
             $strBasePath = _PLOOPI_BASEPATH;
             if (substr($strBasePath, -1) != '/') $strBasePath .= '/';
@@ -78,16 +77,16 @@ switch ($strbackendtype)
                     AND         (a.timestp_unpublished >= $today OR a.timestp_unpublished = 0)
                     ";
 
-            $db->query($sql);
+            ploopi\loader::getdb()->query($sql);
 
             $arrTags = array();
-            while ($row = $db->fetchrow())
+            while ($row = ploopi\loader::getdb()->fetchrow())
             {
                 if (!$arrHeadings['list'][$row['id_heading']]['private']
                     || isset($arrShares[$arrHeadings['list'][$row['id_heading']]['herited_private']])
                     || isset($_SESSION['webedit']['allowedheading'][$_GET['ploopi_moduleid']][$arrHeadings['list'][$row['id_heading']]['herited_private']])) // Rubrique non privée ou accessible par l'utilisateur
                 {
-                    $strTag = strtolower(ovensia\ploopi\str::convertaccents($row['tag']));
+                    $strTag = strtolower(ploopi\str::convertaccents($row['tag']));
                     if (!isset($arrTags[$strTag])) $arrTags[$strTag] = 0;
                     $arrTags[$strTag]++;
                 }
@@ -115,9 +114,9 @@ switch ($strbackendtype)
 
             foreach ($arrTags as $strTag => $arrTag)
             {
-                $link = $strBasePath.ovensia\ploopi\str::urlrewrite("index.php?query_tag={$strTag}", webedit_getrewriterules());
+                $link = $strBasePath.ploopi\str::urlrewrite("index.php?query_tag={$strTag}", webedit_getrewriterules());
                 //$class = ($strTag == $query_tag) ? 'tagcloud3D_selected' : 'tagcloud3D';
-                echo '<a href="'.$link.'" title="'.$strTag.'" rel="tag" style="font-size: '.$arrTag['size'].'pt;" >'.ovensia\ploopi\str::htmlentities($strTag).'</a>';
+                echo '<a href="'.$link.'" title="'.$strTag.'" rel="tag" style="font-size: '.$arrTag['size'].'pt;" >'.ploopi\str::htmlentities($strTag).'</a>';
             }
             echo '</tags>';
 
@@ -125,7 +124,7 @@ switch ($strbackendtype)
         }
 
         header('Content-Type: text/xml');
-        ovensia\ploopi\system::kill();
+        ploopi\system::kill();
         break;
 
     case 'feedRssAtom' :
@@ -134,10 +133,10 @@ switch ($strbackendtype)
         $format = (empty($_REQUEST['format'])) ? 'atom' : $_REQUEST['format'];
 
         // Mise en cache
-        $objCache = new ovensia\ploopi\cache($format.(isset($_REQUEST['headingid']) ? "-h{$_REQUEST['headingid']}" : '').'.xml', 300);
+        $objCache = new ploopi\cache($format.(isset($_REQUEST['headingid']) ? "-h{$_REQUEST['headingid']}" : '').'.xml', 300);
 
         // Vidage du buffer
-        ovensia\ploopi\buffer::clean();
+        ploopi\buffer::clean();
 
         if (!$objCache->start())
         {
@@ -151,18 +150,18 @@ switch ($strbackendtype)
              */
             // include_once './lib/feedwriter/FeedWriter.php';
 
-            ovensia\ploopi\module::init('webedit', false, false, false);
+            ploopi\module::init('webedit', false, false, false);
 
             // récupération des rubriques
             $arrHeadings = webedit_getheadings();
 
-            $intTsToday = ovensia\ploopi\date::createtimestamp();
+            $intTsToday = ploopi\date::createtimestamp();
 
             $feed_title = '';
             $feed_description = '';
             $feed_author = '';
 
-            $objWorkspace = new ovensia\ploopi\workspace();
+            $objWorkspace = new ploopi\workspace();
             if ($objWorkspace->open($_SESSION['ploopi']['workspaceid'])) {
                 $feed_title = $objWorkspace->fields['title'];
                 $feed_description = $objWorkspace->fields['meta_description'];
@@ -181,8 +180,8 @@ switch ($strbackendtype)
                 }
                 else
                 {
-                    ovensia\ploopi\output::h404();
-                    ovensia\ploopi\system::kill();
+                    ploopi\output::h404();
+                    ploopi\system::kill();
                 }
             }
             else // sinon du site
@@ -202,11 +201,11 @@ switch ($strbackendtype)
                 break;
             }
 
-            $feed->setTitle(ovensia\ploopi\str::xmlentities(utf8_encode($feed_title), true));
+            $feed->setTitle(ploopi\str::xmlentities(utf8_encode($feed_title), true));
             $feed->setLink(_PLOOPI_BASEPATH);
 
             $feed->setChannelElement('updated', date(DATE_ATOM , time()));
-            $feed->setChannelElement('author', array('name '=> ovensia\ploopi\str::xmlentities(utf8_encode($feed_author), true)));
+            $feed->setChannelElement('author', array('name '=> ploopi\str::xmlentities(utf8_encode($feed_author), true)));
 
 
             $select = "
@@ -223,9 +222,9 @@ switch ($strbackendtype)
                 LIMIT       0,10
             ";
 
-            $db->query($select);
+            ploopi\loader::getdb()->query($select);
 
-            while ($article = $db->fetchrow())
+            while ($article = ploopi\loader::getdb()->fetchrow())
             {
                 if (!$arrHeadings['list'][$article['id_heading']]['private'])
                 {
@@ -234,15 +233,15 @@ switch ($strbackendtype)
                     $arrParents = array();
                     if (isset($arrHeadings['list'][$article['id_heading']])) foreach(preg_split('/;/', $arrHeadings['list'][$article['id_heading']]['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
 
-                    $url = ovensia\ploopi\str::urlrewrite("index.php?headingid={$article['id_heading']}&articleid={$article['id']}", webedit_getrewriterules(), "{$article['metatitle']} {$article['metakeywords']}", $arrParents);
+                    $url = ploopi\str::urlrewrite("index.php?headingid={$article['id_heading']}&articleid={$article['id']}", webedit_getrewriterules(), "{$article['metatitle']} {$article['metakeywords']}", $arrParents);
 
                     // Création d'un nouvel item
                     $item = $feed->createNewItem();
 
-                    $item->setTitle(ovensia\ploopi\str::xmlentities(utf8_encode($article['title']), true));
+                    $item->setTitle(ploopi\str::xmlentities(utf8_encode($article['title']), true));
                     $item->setLink(_PLOOPI_BASEPATH.'/'.$url);
-                    $item->setDate(ovensia\ploopi\date::timestamp2unixtimestamp($article['timestp']));
-                    $item->setDescription(ovensia\ploopi\str::nl2br(ovensia\ploopi\str::htmlentities($article['metadescription'])));
+                    $item->setDate(ploopi\date::timestamp2unixtimestamp($article['timestp']));
+                    $item->setDescription(ploopi\str::nl2br(ploopi\str::htmlentities($article['metadescription'])));
 
                     // Ajout de l'item dans le flux
                     $feed->addItem($item);
@@ -256,7 +255,7 @@ switch ($strbackendtype)
         }
 
         header('Content-Type: text/xml');
-        ovensia\ploopi\system::kill();
+        ploopi\system::kill();
         break;
 
     default:

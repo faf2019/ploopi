@@ -41,10 +41,10 @@ switch($ploopi_op)
     case 'booking_setresources':
         if (empty($_REQUEST['booking_resources'])) $_REQUEST['booking_resources'] = array();
     case 'booking_refresh':
-        ovensia\ploopi\module::init('booking');
+        ploopi\module::init('booking');
         global $arrBookingColor;
         include_once './modules/booking/wce_display.php';
-        ovensia\ploopi\system::kill();
+        ploopi\system::kill();
     break;
     
 }

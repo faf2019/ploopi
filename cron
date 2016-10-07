@@ -38,45 +38,22 @@
 /**
  * On se positionne dans le dossier de l'application
  * pour éviter les problèmes d'include.
- * Solution temporaire en attendant Ploopi 2
+ * Solution temporaire en attendant mieux.
  */
 
 chdir(dirname(__FILE__));
 
-include_once './include/classes/timer.php' ;
-$ploopi_timer = new timer();
-$ploopi_timer->start();
-
-include_once './config/config.php'; // load config (mysql, path, etc.)
-
 /**
- * Initialisation du gestionnaire d'erreur
+ * Chargement de l'environnement
  */
-include_once './include/functions/errors.php';
-ploopi_set_error_handler();
 
-/**
- * Chargement des constantes, globales
- */
-include_once './include/constants.php';
+define('_PLOOPI_DIRNAME',  dirname(__FILE__));
 
-/**
- * Chargements des classes et fonctions principales
- * Attention de bien garder ces inclusions. Sinon problèmes avec ploopi_die et la gestion du buffer.
- */
-include_once './include/classes/data_object.php';
-include_once './include/classes/date.php';
-include_once './include/functions/system.php';
+include_once './include/classes/loader.php';
 
-/**
- * Connexion à la base de données
- */
-if (file_exists('./include/classes/db_'._PLOOPI_SQL_LAYER.'.php')) include_once './include/classes/db_'._PLOOPI_SQL_LAYER.'.php';
+ploopi\loader::boot_cli();
 
-global $db;
-
-$db = new ploopi_db(_PLOOPI_DB_SERVER, _PLOOPI_DB_LOGIN, _PLOOPI_DB_PASSWORD, _PLOOPI_DB_DATABASE);
-if(!$db->isconnected()) trigger_error(_PLOOPI_MSG_DBERROR, E_USER_ERROR);
+$db = ploopi\loader::getdb();
 
 $cron_rs = $db->query("
     SELECT      label
@@ -85,8 +62,17 @@ $cron_rs = $db->query("
 
 while ($cron_fields = $db->fetchrow($cron_rs))
 {
-    $cronfile = "./modules/{$cron_fields['label']}/cron.php";
-    if (file_exists($cronfile)) include $cronfile;
+    $strControllerFile = "ploopi\\{$cron_fields['label']}\\controller";
+    if (ploopi\loader::classExists($strControllerFile)) {
+        // Wrapper pour compatibilité avec le contrôleur du module
+        $_REQUEST['entity'] = 'cron';
+        $strControllerFile::dispatch();
+    }
+    else {
+        // Rétrocompatibilité
+        $cronfile = "./modules/{$cron_fields['label']}/cron.php";
+        if (file_exists($cronfile)) include $cronfile;
+    }
 }
 
 ploopi_die();

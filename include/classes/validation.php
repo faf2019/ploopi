@@ -20,16 +20,16 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-namespace ovensia\ploopi;
+namespace ploopi;
 
-use ovensia\ploopi;
+use ploopi;
 
 /**
  * Gestion de la couche validation
  *
  * @package ploopi
  * @subpackage validation
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -39,7 +39,7 @@ use ovensia\ploopi;
  *
  * @package ploopi
  * @subpackage validation
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -86,7 +86,7 @@ class validation extends data_object
 
     public static function selectusers($id_object = 0, $id_record = '', $id_module = -1, $id_action = -1, $strTitle = null, $strForceValidationId = null)
     {
-        global $db;
+        $db = loader::getdb();
 
         if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];
 
@@ -165,7 +165,7 @@ class validation extends data_object
 
     public static function add($id_object = 0, $id_record = '', $id_module = -1, $strForceValidationId = null)
     {
-        global $db;
+        $db = loader::getdb();
         include_once './include/classes/validation.php';
 
         if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];
@@ -226,7 +226,7 @@ class validation extends data_object
 
     public static function get($id_object = 0, $id_record = '', $id_module = -1, $id_val = 0, $type_val = 'user')
     {
-        global $db;
+        $db = loader::getdb();
 
         if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];
 
@@ -283,7 +283,7 @@ class validation extends data_object
      */
     public static function remove($id_object = 0, $id_record = '', $id_module = -1, $id_val = 0, $type_val = 'user')
     {
-        global $db;
+        $db = loader::getdb();
 
         if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];
 

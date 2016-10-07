@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,7 +25,7 @@
  *
  * @package system
  * @subpackage system
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -49,7 +48,7 @@ if ($dir = @opendir("./install/"))
             $descfile = "./install/{$file}/description.xml";
             if (file_exists($descfile))
             {
-                $xml2array = new ovensia\ploopi\xml2array();
+                $xml2array = new ploopi\xml2array();
                 $xmlarray = $xml2array->parseFile($descfile);
                 if ($xmlarray)
                 {
@@ -105,45 +104,45 @@ $select =   "
             ORDER   BY label
             ";
 
-$result = $db->query($select);
+$result = ploopi\loader::getdb()->query($select);
 
-while ($fields = $db->fetchrow($result))
+while ($fields = ploopi\loader::getdb()->fetchrow($result))
 {
     // Recherche d'actions pour ce module
     $select = "SELECT * FROM ploopi_mb_action WHERE id_module_type = {$fields['id']}";
-    $db->query($select);
-    if ($db->numrows()) $has_actions = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/check_on.png\" align=\"middle\">";
+    ploopi\loader::getdb()->query($select);
+    if (ploopi\loader::getdb()->numrows()) $has_actions = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/check_on.png\" align=\"middle\">";
     else $has_actions = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/check_off.png\" align=\"middle\">";
 
     // Recherche de métabase pour ce module
     $select = "SELECT * FROM ploopi_mb_table WHERE id_module_type = {$fields['id']}";
-    $db->query($select);
-    if ($db->numrows()) $has_mb = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/check_on.png\" align=\"middle\">";
+    ploopi\loader::getdb()->query($select);
+    if (ploopi\loader::getdb()->numrows()) $has_mb = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/check_on.png\" align=\"middle\">";
     else $has_mb = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/check_off.png\" align=\"middle\">";
 
     // Recherche d'objets "WCE" (WebEdit) pour ce module
     $select = "SELECT * FROM ploopi_mb_wce_object WHERE id_module_type = {$fields['id']}";
-    $db->query($select);
-    if ($db->numrows()) $has_cmsop = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/check_on.png\" align=\"middle\">";
+    ploopi\loader::getdb()->query($select);
+    if (ploopi\loader::getdb()->numrows()) $has_cmsop = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/check_on.png\" align=\"middle\">";
     else $has_cmsop = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/check_off.png\" align=\"middle\">";
 
-    $ldate = ovensia\ploopi\date::timestamp2local($fields['date']);
+    $ldate = ploopi\date::timestamp2local($fields['date']);
 
-    $values[$c]['values']['desc'] = array('label' => ovensia\ploopi\str::htmlentities($fields['description']));
-    $values[$c]['values']['mtype'] = array('label' => ovensia\ploopi\str::htmlentities($fields['label']));
-    $values[$c]['values']['author'] = array('label' => ovensia\ploopi\str::htmlentities($fields['author']));
-    $values[$c]['values']['version'] = array('label' => "<a title=\""._PLOOPI_UPDATE."\" href=\"javascript:ploopi_confirmlink('".ovensia\ploopi\crypt::urlencode("admin.php?ploopi_op=updatedesc&moduletype={$fields['label']}&idmoduletype={$fields['id']}")."','"._SYSTEM_MSG_CONFIRMDESCUPDATE."')\">{$fields['version']}</a>");
+    $values[$c]['values']['desc'] = array('label' => ploopi\str::htmlentities($fields['description']));
+    $values[$c]['values']['mtype'] = array('label' => ploopi\str::htmlentities($fields['label']));
+    $values[$c]['values']['author'] = array('label' => ploopi\str::htmlentities($fields['author']));
+    $values[$c]['values']['version'] = array('label' => "<a title=\""._PLOOPI_UPDATE."\" href=\"javascript:ploopi_confirmlink('".ploopi\crypt::urlencode("admin.php?ploopi_op=updatedesc&moduletype={$fields['label']}&idmoduletype={$fields['id']}")."','"._SYSTEM_MSG_CONFIRMDESCUPDATE."')\">{$fields['version']}</a>");
     $values[$c]['values']['date'] = array('label' => $ldate['date'], 'sort_label' => $fields['date']);
     $values[$c]['values']['actions'] = array('label' => $has_actions, 'style' => 'text-align:center');
-    $values[$c]['values']['metabase'] = array('label' => "<a title=\""._PLOOPI_UPDATE."\" href=\"javascript:ploopi_confirmlink('".ovensia\ploopi\crypt::urlencode("admin-light.php?ploopi_op=updatemb&moduletype={$fields['label']}&idmoduletype={$fields['id']}")."','"._SYSTEM_MSG_CONFIRMMBUPDATE."')\">{$has_mb}</a>", 'style' => 'text-align:center');
+    $values[$c]['values']['metabase'] = array('label' => "<a title=\""._PLOOPI_UPDATE."\" href=\"javascript:ploopi_confirmlink('".ploopi\crypt::urlencode("admin-light.php?ploopi_op=updatemb&moduletype={$fields['label']}&idmoduletype={$fields['id']}")."','"._SYSTEM_MSG_CONFIRMMBUPDATE."')\">{$has_mb}</a>", 'style' => 'text-align:center');
     $values[$c]['values']['wce'] = array('label' => $has_cmsop, 'style' => 'text-align:center');
 
     if ($fields['id'] == _PLOOPI_MODULE_SYSTEM) // module system
         $values[$c]['values']['action'] = array('label' => '&nbsp;');
     else
-        $values[$c]['values']['action'] = array('label' => "<a href=\"javascript:ploopi_confirmlink('".ovensia\ploopi\crypt::urlencode("admin.php?op=uninstall&uninstallidmoduletype={$fields['id']}")."','"._SYSTEM_MSG_CONFIRMMODULEUNINSTAL."')\">"._SYSTEM_LABEL_UNINSTALL."</a>", 'style' => 'text-align:center;');
+        $values[$c]['values']['action'] = array('label' => "<a href=\"javascript:ploopi_confirmlink('".ploopi\crypt::urlencode("admin.php?op=uninstall&uninstallidmoduletype={$fields['id']}")."','"._SYSTEM_MSG_CONFIRMMODULEUNINSTAL."')\">"._SYSTEM_LABEL_UNINSTALL."</a>", 'style' => 'text-align:center;');
 
-    $values[$c]['description'] = ovensia\ploopi\str::htmlentities($fields['description']);
+    $values[$c]['description'] = ploopi\str::htmlentities($fields['description']);
     $values[$c]['style'] = ($fields['id'] == _PLOOPI_MODULE_SYSTEM) ? 'background-color:#f0e0e0;' : '';
 
     $c++;
@@ -170,7 +169,7 @@ $columns['left']['mtype'] = array('label' => _SYSTEM_LABEL_MODULETYPE, 'width' =
 
 foreach($tabmoduletype_install as $label => $fields)
 {
-    if (isset($tabmoduletype_installed[$label])) // new ovensia\ploopi\module version if already defined in installed module and greater version
+    if (isset($tabmoduletype_installed[$label])) // new ploopi\module version if already defined in installed module and greater version
     {
         // Correction version (temporaire en attente de nouvelle déclaration)
         $v_install = explode('.', preg_replace('@([0-9]+)([a-zA-Z]+)@','$1.$2', $tabmoduletype_install[$label]['version']));
@@ -183,19 +182,19 @@ foreach($tabmoduletype_install as $label => $fields)
         {
             if (empty($fields['error']))
             {
-                $ldate = ovensia\ploopi\date::timestamp2local($fields['date']);
+                $ldate = ploopi\date::timestamp2local($fields['date']);
 
-                $values[$c]['values']['desc'] = array('label' => ovensia\ploopi\str::htmlentities($fields['description']), 'style' => '');
-                $values[$c]['values']['mtype'] = array('label' => ovensia\ploopi\str::htmlentities($fields['label']), 'style' => '');
-                $values[$c]['values']['author'] = array('label' => ovensia\ploopi\str::htmlentities($fields['author']), 'style' => '');
-                $values[$c]['values']['version'] = array('label' => ovensia\ploopi\str::htmlentities($fields['version']), 'style' => '');
+                $values[$c]['values']['desc'] = array('label' => ploopi\str::htmlentities($fields['description']), 'style' => '');
+                $values[$c]['values']['mtype'] = array('label' => ploopi\str::htmlentities($fields['label']), 'style' => '');
+                $values[$c]['values']['author'] = array('label' => ploopi\str::htmlentities($fields['author']), 'style' => '');
+                $values[$c]['values']['version'] = array('label' => ploopi\str::htmlentities($fields['version']), 'style' => '');
                 $values[$c]['values']['date'] = array('label' => $ldate['date'], 'style' => '', 'sort_label' => $fields['date']);
-                $values[$c]['values']['action'] = array('label' => "<a href=\"".ovensia\ploopi\crypt::urlencode("admin.php?op=update&idmoduletype={$tabmoduletype_installed[$label]['id']}&updatefrom={$tabmoduletype_installed[$label]['version']}&updateto={$fields['version']}")."\">"._SYSTEM_LABEL_UPDATE."</a>", 'style' => 'text-align:center;');
+                $values[$c]['values']['action'] = array('label' => "<a href=\"".ploopi\crypt::urlencode("admin.php?op=update&idmoduletype={$tabmoduletype_installed[$label]['id']}&updatefrom={$tabmoduletype_installed[$label]['version']}&updateto={$fields['version']}")."\">"._SYSTEM_LABEL_UPDATE."</a>", 'style' => 'text-align:center;');
             }
             else
             {
                 $values[$c]['values']['desc'] = array('label' => 'Erreur dans la structure XML', 'style' => 'font-weight:bold;color:#a60000;');
-                $values[$c]['values']['mtype'] = array('label' => ovensia\ploopi\str::htmlentities($fields['label']));
+                $values[$c]['values']['mtype'] = array('label' => ploopi\str::htmlentities($fields['label']));
                 $values[$c]['values']['author'] = array('label' => '&nbsp;');
                 $values[$c]['values']['version'] = array('label' => '&nbsp;');
                 $values[$c]['values']['date'] = array('label' => '&nbsp;');
@@ -227,19 +226,19 @@ foreach($tabmoduletype_install as $label => $fields)
     {
         if (empty($fields['error']))
         {
-            $ldate = ovensia\ploopi\date::timestamp2local($fields['date']);
+            $ldate = ploopi\date::timestamp2local($fields['date']);
 
-            $values[$c]['values']['desc'] = array('label' => ovensia\ploopi\str::htmlentities($fields['description']));
-            $values[$c]['values']['mtype'] = array('label' => ovensia\ploopi\str::htmlentities($fields['label']));
-            $values[$c]['values']['author'] = array('label' => ovensia\ploopi\str::htmlentities($fields['author']));
-            $values[$c]['values']['version'] = array('label' => ovensia\ploopi\str::htmlentities($fields['version']));
+            $values[$c]['values']['desc'] = array('label' => ploopi\str::htmlentities($fields['description']));
+            $values[$c]['values']['mtype'] = array('label' => ploopi\str::htmlentities($fields['label']));
+            $values[$c]['values']['author'] = array('label' => ploopi\str::htmlentities($fields['author']));
+            $values[$c]['values']['version'] = array('label' => ploopi\str::htmlentities($fields['version']));
             $values[$c]['values']['date'] = array('label' => $ldate['date'], 'sort_label' => $fields['date']);
-            $values[$c]['values']['action'] = array('label' => "<a href=\"".ovensia\ploopi\crypt::urlencode("admin.php?op=install&installmoduletype={$fields['label']}")."\">"._SYSTEM_LABEL_INSTALL."</a>", 'style' => 'text-align:center;');
+            $values[$c]['values']['action'] = array('label' => "<a href=\"".ploopi\crypt::urlencode("admin.php?op=install&installmoduletype={$fields['label']}")."\">"._SYSTEM_LABEL_INSTALL."</a>", 'style' => 'text-align:center;');
         }
         else
         {
             $values[$c]['values']['desc'] = array('label' => 'Erreur dans la structure XML', 'style' => 'font-weight:bold;color:#a60000;');
-            $values[$c]['values']['mtype'] = array('label' => ovensia\ploopi\str::htmlentities($fields['label']));
+            $values[$c]['values']['mtype'] = array('label' => ploopi\str::htmlentities($fields['label']));
             $values[$c]['values']['author'] = array('label' => '&nbsp;');
             $values[$c]['values']['version'] = array('label' => '&nbsp;');
             $values[$c]['values']['date'] = array('label' => '&nbsp;');

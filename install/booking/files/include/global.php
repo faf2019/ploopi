@@ -96,11 +96,11 @@ $arrBookingColor =
 
 function booking_get_workspaces($idw = 0)
 {
-    global $db;
+    $db = ploopi\loader::getdb();
 
     if (!$idw) $idw = $_SESSION['ploopi']['workspaceid'];
 
-    $objWorkspace = new ovensia\ploopi\workspace();
+    $objWorkspace = new ploopi\workspace();
     $objWorkspace->open($idw);
     $parents = "{$objWorkspace->fields['parents']};{$idw}";
 
@@ -229,14 +229,14 @@ function booking_display_workspaces(&$arrWorkspaces, $fieldname, &$widsel = arra
 
 function booking_get_resources($strict = false, $moduleid = -1, $workspaceid = -1)
 {
-    global $db;
+    $db = ploopi\loader::getdb();
 
     if ($moduleid == -1) $moduleid = $_SESSION['ploopi']['moduleid'];
     if ($workspaceid == -1) $workspaceid = $_SESSION['ploopi']['workspaceid'];
 
     $arrResources = array();
 
-    if (!$strict || ovensia\ploopi\acl::isactionallowed(_BOOKING_ACTION_VALIDATE, $workspaceid, $moduleid))
+    if (!$strict || ploopi\acl::isactionallowed(_BOOKING_ACTION_VALIDATE, $workspaceid, $moduleid))
     {
         // Recherche des resources actives
         $db->query("
@@ -293,7 +293,7 @@ function booking_get_resources($strict = false, $moduleid = -1, $workspaceid = -
             $booWorkspaceValidator = in_array($workspaceid, $res['workspaces']);
 
             // Validateur oui/non ?
-            $arrResources[$key]['validator'] = ($booWorkspaceValidator && ovensia\ploopi\acl::isactionallowed(_BOOKING_ACTION_VALIDATE)) ? 1 : 0;
+            $arrResources[$key]['validator'] = ($booWorkspaceValidator && ploopi\acl::isactionallowed(_BOOKING_ACTION_VALIDATE)) ? 1 : 0;
 
             // Application du filtre "strict" : On ne renvoit que les ressources gérées par l'espace courant
             if ($strict && !$booWorkspaceValidator) unset($arrResources[$key]);
@@ -321,7 +321,7 @@ function booking_get_resources($strict = false, $moduleid = -1, $workspaceid = -
 
 function booking_get_events($mixId = null, $extended = false, $strict = false, $validated = null, $managed = null, $object = '', $requestedby = '', $from = '', $to = '', $moduleid = -1)
 {
-    global $db;
+    $db = ploopi\loader::getdb();
 
     if ($moduleid == -1) $moduleid = $_SESSION['ploopi']['moduleid'];
 
@@ -361,8 +361,8 @@ function booking_get_events($mixId = null, $extended = false, $strict = false, $
         if ($managed == '1' || $managed == '0') $arrWhere[] = " e.managed = '".$db->addslashes($managed)."' ";
         if ($object != '') $arrWhere[] = " e.object LIKE '%".$db->addslashes($object)."%' ";
         if ($requestedby != '') $arrWhere[] = " (u.lastname LIKE '%".$db->addslashes($requestedby)."%' OR u.firstname LIKE '%".$db->addslashes($requestedby)."%' OR w.label LIKE '%".$db->addslashes($requestedby)."%')";
-        if ($from != '') $arrWhere[] = " e.timestp_request >= '".ovensia\ploopi\date::local2timestamp($from)."' ";
-        if ($to != '') $arrWhere[] = " e.timestp_request <= '".substr(ovensia\ploopi\date::local2timestamp($to), 0, 8)."235959' ";
+        if ($from != '') $arrWhere[] = " (ed.timestp_begin >= '".ploopi\date::local2timestamp($from)."' OR ed.timestp_end >= '".ploopi\date::local2timestamp($from)."') ";
+        if ($to != '') $arrWhere[] = " (ed.timestp_begin <= '".substr(ploopi\date::local2timestamp($to), 0, 8)."235959' OR ed.timestp_end <= '".substr(ploopi\date::local2timestamp($to), 0, 8)."235959') ";
 
         $strWhere = ' AND '.implode(' AND ', $arrWhere);
 

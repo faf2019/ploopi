@@ -20,16 +20,16 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-namespace ovensia\ploopi;
+namespace ploopi;
 
-use ovensia\ploopi;
+use ploopi;
 
 /**
  * Classe d'accès à la table ploopi_param_type
  *
  * @package ploopi
  * @subpackage param
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -53,7 +53,7 @@ class param_type extends data_object
      */
     public function delete($preserve_data = false)
     {
-        global $db;
+        $db = loader::getdb();
 
         $delete = "DELETE FROM ploopi_param_choice WHERE id_module_type = {$this->fields['id_module_type']} AND name = '".$db->addslashes($this->fields['name'])."'";
         $db->query($delete);
@@ -81,7 +81,7 @@ class param_type extends data_object
 
     public function getallchoices()
     {
-        global $db;
+        $db = loader::getdb();
 
         $arrParamChoice = array();
 

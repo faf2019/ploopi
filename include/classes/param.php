@@ -20,9 +20,9 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-namespace ovensia\ploopi;
+namespace ploopi;
 
-use ovensia\ploopi;
+use ploopi;
 
 /**
  * Gestion des paramètres des modules.
@@ -30,7 +30,7 @@ use ovensia\ploopi;
  *
  * @package ploopi
  * @subpackage param
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -42,7 +42,7 @@ use ovensia\ploopi;
  *
  * @package ploopi
  * @subpackage param
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -106,7 +106,7 @@ class param
      */
     public function open($moduleid, $workspaceid = 0, $userid = 0, $public = false)
     {
-        global $db;
+        $db = loader::getdb();
 
         $this->moduleid = $moduleid;
         $this->workspaceid = $workspaceid;
@@ -250,7 +250,7 @@ class param
 
     public function save()
     {
-        global $db;
+        $db = loader::getdb();
 
         foreach($this->arrParam as $name => $param)
         {
@@ -293,7 +293,7 @@ class param
 
     public static function load()
     {
-        global $db;
+        $db = loader::getdb();
 
         $arrParams = array();
 

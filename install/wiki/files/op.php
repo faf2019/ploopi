@@ -36,7 +36,7 @@
  * On vérifie qu'on est bien dans le module Booking.
  */
 
-if (ovensia\ploopi\acl::ismoduleallowed('wiki'))
+if (ploopi\acl::ismoduleallowed('wiki'))
 {
     /**
      * Affichage de l'aide en ligne
@@ -45,7 +45,7 @@ if (ovensia\ploopi\acl::ismoduleallowed('wiki'))
     switch($ploopi_op)
     {
         case 'wiki_page_print':
-            ovensia\ploopi\module::init('wiki');
+            ploopi\module::init('wiki');
             include_once './modules/wiki/classes/class_wiki_page.php';
 
             $strWikiPageId = (empty($_GET['wiki_page_id'])) ? 'wiki' : $_GET['wiki_page_id'];
@@ -56,7 +56,7 @@ if (ovensia\ploopi\acl::ismoduleallowed('wiki'))
                 ?>
                 <html>
                 <head>
-                    <title><?php echo ovensia\ploopi\str::htmlentities($strWikiPageId); ?></title>
+                    <title><?php echo ploopi\str::htmlentities($strWikiPageId); ?></title>
                     <link rel="stylesheet" href="./modules/wiki/include/styles.css" type="text/css" />
                     <link rel="stylesheet" href="./vendor/components/highlightjs/styles/vs.css">
                     <script src="./vendor/components/highlightjs/highlight.pack.min.js"></script>
@@ -66,12 +66,12 @@ if (ovensia\ploopi\acl::ismoduleallowed('wiki'))
                 </head>
                 <body class="wiki_print">
                     <div id="wiki_page" class="wiki_page"><?php echo wiki_render($objWikiPage->fields['content']); ?></div>
-                    <div id="wiki_page_print_info">R&eacute;vision num&eacute;ro <?php echo ovensia\ploopi\str::htmlentities($objWikiPage->fields['revision']); ?> modifi&eacute; le <?php echo implode(' à ', ovensia\ploopi\date::timestamp2local($objWikiPage->fields['ts_modified'])); ?></div>
+                    <div id="wiki_page_print_info">R&eacute;vision num&eacute;ro <?php echo ploopi\str::htmlentities($objWikiPage->fields['revision']); ?> modifi&eacute; le <?php echo implode(' à ', ploopi\date::timestamp2local($objWikiPage->fields['ts_modified'])); ?></div>
                 </body>
                 </html>
                 <?php
             }
-            ovensia\ploopi\system::kill();
+            ploopi\system::kill();
         break;
 
 
@@ -81,11 +81,11 @@ if (ovensia\ploopi\acl::ismoduleallowed('wiki'))
             include_once './modules/wiki/op_help.php';
             $content = ob_get_contents();
             ob_end_clean();
-            ovensia\ploopi\system::kill($skin->create_popup('Syntaxe Wiki - Aide en Ligne', $content, 'popup_wiki_help'));
+            ploopi\system::kill($skin->create_popup('Syntaxe Wiki - Aide en Ligne', $content, 'popup_wiki_help'));
         break;
 
         case 'wiki_page_save':
-            ovensia\ploopi\module::init('wiki', false, false, false);
+            ploopi\module::init('wiki', false, false, false);
             include_once './modules/wiki/classes/class_wiki_page.php';
 
             $strWikiPageId = (empty($_GET['wiki_page_id'])) ? 'wiki' : $_GET['wiki_page_id'];
@@ -94,17 +94,17 @@ if (ovensia\ploopi\acl::ismoduleallowed('wiki'))
             $objWikiPage->open($strWikiPageId);
             $objWikiPage->fields['id'] = $strWikiPageId;
 
-            if (isset($_POST['fck_wiki_page_content'])) $objWikiPage->fields['content'] = ovensia\ploopi\str::iso8859_clean($_POST['fck_wiki_page_content']);
+            if (isset($_POST['fck_wiki_page_content'])) $objWikiPage->fields['content'] = ploopi\str::iso8859_clean($_POST['fck_wiki_page_content']);
             $objWikiPage->save();
 
             // on envoie le ticket de notification d'action sur l'objet
-            ovensia\ploopi\subscription::notify(
+            ploopi\subscription::notify(
                 _WIKI_OBJECT_PAGE,
                 $objWikiPage->fields['id'],
                 _WIKI_ACTION_PAGE_MODIFY,
                 $objWikiPage->fields['id'],
                 array_keys(
-                    ovensia\ploopi\subscription::getusers(
+                    ploopi\subscription::getusers(
                         _WIKI_OBJECT_PAGE,
                         $objWikiPage->fields['id'],
                         array(_WIKI_ACTION_PAGE_MODIFY)
@@ -113,16 +113,16 @@ if (ovensia\ploopi\acl::ismoduleallowed('wiki'))
                 'Cet objet à été modifié'
             );
 
-            ovensia\ploopi\user_action_log::record(_WIKI_ACTION_PAGE_MODIFY, $objWikiPage->fields['id']);
+            ploopi\user_action_log::record(_WIKI_ACTION_PAGE_MODIFY, $objWikiPage->fields['id']);
 
-            ovensia\ploopi\search_index::remove(_WIKI_OBJECT_PAGE, $objWikiPage->fields['id']);
-            ovensia\ploopi\search_index::add(_WIKI_OBJECT_PAGE, $objWikiPage->fields['id'], $objWikiPage->fields['id'], strip_tags(ovensia\ploopi\str::html_entity_decode(wiki_render($objWikiPage->fields['content']))), $objWikiPage->fields['id'], true, $objWikiPage->fields['ts_created'], $objWikiPage->fields['ts_modified']);
+            ploopi\search_index::remove(_WIKI_OBJECT_PAGE, $objWikiPage->fields['id']);
+            ploopi\search_index::add(_WIKI_OBJECT_PAGE, $objWikiPage->fields['id'], $objWikiPage->fields['id'], strip_tags(ploopi\str::html_entity_decode(wiki_render($objWikiPage->fields['content']))), $objWikiPage->fields['id'], true, $objWikiPage->fields['ts_created'], $objWikiPage->fields['ts_modified']);
 
-            ovensia\ploopi\output::redirect_trusted("admin.php?wiki_page_id=".urlencode($strWikiPageId));
+            ploopi\output::redirect_trusted("admin.php?wiki_page_id=".urlencode($strWikiPageId));
         break;
 
         case 'wiki_page_delete':
-            ovensia\ploopi\module::init('wiki', false, false, false);
+            ploopi\module::init('wiki', false, false, false);
             include_once './modules/wiki/classes/class_wiki_page.php';
 
             $strWikiPageId = (empty($_GET['wiki_page_id'])) ? 'wiki' : $_GET['wiki_page_id'];
@@ -130,17 +130,17 @@ if (ovensia\ploopi\acl::ismoduleallowed('wiki'))
             $objWikiPage = new wiki_page();
             if ($objWikiPage->open($strWikiPageId))
             {
-                ovensia\ploopi\search_index::remove(_WIKI_OBJECT_PAGE, $strWikiPageId);
+                ploopi\search_index::remove(_WIKI_OBJECT_PAGE, $strWikiPageId);
                 $objWikiPage->delete();
 
                 // on envoie le ticket de notification d'action sur l'objet
-                ovensia\ploopi\subscription::notify(
+                ploopi\subscription::notify(
                     _WIKI_OBJECT_PAGE,
                     $strWikiPageId,
                     _WIKI_ACTION_PAGE_DELETE,
                     $strWikiPageId,
                     array_keys(
-                        ovensia\ploopi\subscription::getusers(
+                        ploopi\subscription::getusers(
                             _WIKI_OBJECT_PAGE,
                             $strWikiPageId,
                             array(_WIKI_ACTION_PAGE_DELETE)
@@ -149,15 +149,15 @@ if (ovensia\ploopi\acl::ismoduleallowed('wiki'))
                     'Cet objet à été supprimé'
                 );
 
-                ovensia\ploopi\user_action_log::record(_WIKI_ACTION_PAGE_DELETE, $strWikiPageId);
+                ploopi\user_action_log::record(_WIKI_ACTION_PAGE_DELETE, $strWikiPageId);
             }
 
-            ovensia\ploopi\output::redirect("admin.php");
+            ploopi\output::redirect("admin.php");
         break;
 
         case 'wiki_page_lock':
         case 'wiki_page_unlock':
-            ovensia\ploopi\module::init('wiki', false, false, false);
+            ploopi\module::init('wiki', false, false, false);
             include_once './modules/wiki/classes/class_wiki_page.php';
 
             $strWikiPageId = (empty($_GET['wiki_page_id'])) ? '' : $_GET['wiki_page_id'];
@@ -166,19 +166,19 @@ if (ovensia\ploopi\acl::ismoduleallowed('wiki'))
             if ($objWikiPage->open($strWikiPageId))
             {
                 $objWikiPage->lock($ploopi_op == 'wiki_page_lock');
-                ovensia\ploopi\user_action_log::record($ploopi_op == 'wiki_page_lock' ? _WIKI_ACTION_PAGE_LOCK : _WIKI_ACTION_PAGE_UNLOCK, $strWikiPageId);
+                ploopi\user_action_log::record($ploopi_op == 'wiki_page_lock' ? _WIKI_ACTION_PAGE_LOCK : _WIKI_ACTION_PAGE_UNLOCK, $strWikiPageId);
             }
-            ovensia\ploopi\output::redirect_trusted("admin.php?wiki_page_id=".urlencode($strWikiPageId));
+            ploopi\output::redirect_trusted("admin.php?wiki_page_id=".urlencode($strWikiPageId));
         break;
 
         case 'wiki_page_rename':
-            ovensia\ploopi\module::init('wiki', false, false, false);
+            ploopi\module::init('wiki', false, false, false);
             include_once './modules/wiki/classes/class_wiki_page.php';
 
             if (isset($_POST['wiki_page_newid']) && isset($_GET['wiki_page_id']))
             {
                 // pas de changement
-                if ($_POST['wiki_page_newid'] == $_GET['wiki_page_id']) ovensia\ploopi\output::redirect_trusted("admin.php?wiki_page_id=".urlencode($_GET['wiki_page_id']));
+                if ($_POST['wiki_page_newid'] == $_GET['wiki_page_id']) ploopi\output::redirect_trusted("admin.php?wiki_page_id=".urlencode($_GET['wiki_page_id']));
                 else
                 {
                     // On va vérifier que le "nouvel" ID n'existe pas déjà
@@ -187,14 +187,14 @@ if (ovensia\ploopi\acl::ismoduleallowed('wiki'))
                     if (!$objWikiPageVerif->open($_POST['wiki_page_newid']) && $objWikiPage->open($_GET['wiki_page_id']))
                     {
                         $objWikiPage->rename($_POST['wiki_page_newid'], isset($_POST['wiki_page_rename_redirect']));
-                        ovensia\ploopi\user_action_log::record(_WIKI_ACTION_PAGE_RENAME, "{$_GET['wiki_page_id']} -> {$_POST['wiki_page_newid']}");
-                        ovensia\ploopi\output::redirect_trusted("admin.php?wiki_page_id=".urlencode($objWikiPage->fields['id']));
+                        ploopi\user_action_log::record(_WIKI_ACTION_PAGE_RENAME, "{$_GET['wiki_page_id']} -> {$_POST['wiki_page_newid']}");
+                        ploopi\output::redirect_trusted("admin.php?wiki_page_id=".urlencode($objWikiPage->fields['id']));
                     }
-                    else ovensia\ploopi\output::redirect_trusted("admin.php?op=wiki_page_rename&wiki_page_id=".urlencode($_GET['wiki_page_id'])."&wiki_rename_error");
+                    else ploopi\output::redirect_trusted("admin.php?op=wiki_page_rename&wiki_page_id=".urlencode($_GET['wiki_page_id'])."&wiki_rename_error");
                 }
             }
 
-            ovensia\ploopi\output::redirect('admin.php');
+            ploopi\output::redirect('admin.php');
         break;
     }
 }

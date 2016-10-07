@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,16 +20,16 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-namespace ovensia\ploopi;
+namespace ploopi;
 
-use ovensia\ploopi;
+use ploopi;
 
 /**
  * Gestion des annotations
  *
  * @package ploopi
  * @subpackage annotation
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -40,7 +39,7 @@ use ovensia\ploopi;
  *
  * @package ploopi
  * @subpackage annotation
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -67,7 +66,7 @@ class annotation extends data_object
 
     public function save()
     {
-        global $db;
+        $db = loader::getdb();
 
         $this->fields['id_element'] = md5(sprintf("%04d%04d%s", $this->fields['id_module'], $this->fields['id_object'], $this->fields['id_record']));
 
@@ -111,7 +110,7 @@ class annotation extends data_object
 
     public function delete()
     {
-        global $db;
+        $db = loader::getdb();
 
         $select =   "
                     SELECT  *
@@ -144,7 +143,7 @@ class annotation extends data_object
 
     public static function getnb($id_object, $id_record, $id_user = -1, $id_workspace = -1, $id_module = -1)
     {
-        global $db;
+        $db = loader::getdb();
 
         if ($id_user == -1) $id_user = $_SESSION['ploopi']['userid'];
         if ($id_workspace == -1) $id_workspace = $_SESSION['ploopi']['workspaceid'];
@@ -202,7 +201,7 @@ class annotation extends data_object
 
     public static function display_refresh($id_annotation)
     {
-        global $db;
+        $db = loader::getdb();
 
         $id_object = $_SESSION['annotation'][$id_annotation]['id_object'];
         $id_record = $_SESSION['annotation'][$id_annotation]['id_record'];
@@ -269,7 +268,7 @@ class annotation extends data_object
 
                     $fields = $anno['fields'];
 
-                    $ldate = ovensia\ploopi\date::timestamp2local($fields['date_annotation']);
+                    $ldate = ploopi\date::timestamp2local($fields['date_annotation']);
                     $numrow = (!isset($numrow) || $numrow == 2) ? 1 : 2;
 
                     $private = '';
@@ -279,7 +278,7 @@ class annotation extends data_object
                     <div class="ploopi_annotation_row_<?php echo $numrow; ?>">
                         <div style="padding:2px 4px;">
                             <?php echo $private; ?>
-                            <div style="float:right;padding:0 4px;">par <strong><?php echo ovensia\ploopi\str::htmlentities("{$fields['firstname']} {$fields['lastname']}"); ?></strong> le <?php echo $ldate['date']; ?> à <?php echo $ldate['time']; ?></div>
+                            <div style="float:right;padding:0 4px;">par <strong><?php echo ploopi\str::htmlentities("{$fields['firstname']} {$fields['lastname']}"); ?></strong> le <?php echo $ldate['date']; ?> à <?php echo $ldate['time']; ?></div>
                             <?php
                             if (isset($anno['tags']) && is_array($anno['tags']))
                             {
@@ -287,14 +286,14 @@ class annotation extends data_object
                                 foreach($anno['tags'] as $idtag => $tag)
                                 {
                                     ?>
-                                    <a href="javascript:void(0);" onclick="javascript:ploopi_showpopup('','400',event,'click');ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=annotation_taghistory&id_tag=<?php echo $idtag; ?>', 'ploopi_popup');return false;"><?php echo ovensia\ploopi\str::htmlentities($tag); ?></a>
+                                    <a href="javascript:void(0);" onclick="javascript:ploopi_showpopup('','400',event,'click');ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=annotation_taghistory&id_tag=<?php echo $idtag; ?>', 'ploopi_popup');return false;"><?php echo ploopi\str::htmlentities($tag); ?></a>
                                     <?php
                                 }
                             }
                             ?>
                         </div>
                         <div style="clear:both;padding:2px 4px;">
-                            <?php echo ovensia\ploopi\str::make_links(ovensia\ploopi\str::nl2br(ovensia\ploopi\str::htmlentities($fields['content']))); ?>
+                            <?php echo ploopi\str::make_links(ploopi\str::nl2br(ploopi\str::htmlentities($fields['content']))); ?>
                         </div>
                         <div style="clear:both;">
                             <?php
@@ -353,7 +352,7 @@ class annotation extends data_object
  *
  * @package ploopi
  * @subpackage annotation
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -377,7 +376,7 @@ class annotation_tag extends data_object
 
     public function delete()
     {
-        global $db;
+        $db = loader::getdb();
 
         $select =   "
                     SELECT  count(*) as c
@@ -404,7 +403,7 @@ class annotation_tag extends data_object
  *
  * @package ploopi
  * @subpackage annotation
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */

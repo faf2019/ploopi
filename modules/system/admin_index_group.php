@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -27,7 +26,7 @@
  *
  * @package system
  * @subpackage admin
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -111,13 +110,13 @@ echo $skin->open_simplebloc();
             $parentid = '';
         }
 
-        $templatelist_back = ovensia\ploopi\system::getavailabletemplates('backoffice');
-        $templatelist_front = ovensia\ploopi\system::getavailabletemplates('frontoffice');
+        $templatelist_back = ploopi\system::getavailabletemplates('backoffice');
+        $templatelist_front = ploopi\system::getavailabletemplates('frontoffice');
         ?>
-        <form name="" action="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?op=save_group&group_id={$group->fields['id']}"); ?>" method="POST" onsubmit="javascript:return system_group_validate(this);">
+        <form name="" action="<?php echo ploopi\crypt::urlencode("admin.php?op=save_group&group_id={$group->fields['id']}"); ?>" method="POST" onsubmit="javascript:return system_group_validate(this);">
 
             <div class="ploopi_form_title">
-                <?php echo ovensia\ploopi\str::htmlentities($group->fields['label']); ?> &raquo;
+                <?php echo ploopi\str::htmlentities($group->fields['label']); ?> &raquo;
                 <?php
                     echo _SYSTEM_LABEL_GROUP_MODIFY;
                 ?>
@@ -125,7 +124,7 @@ echo $skin->open_simplebloc();
             <div class="ploopi_form" style="clear:both;padding:2px">
                 <p>
                     <label><?php echo _SYSTEM_LABEL_GROUP_NAME; ?>:</label>
-                    <input type="text" class="text" name="group_label"  value="<?php echo ovensia\ploopi\str::htmlentities($group->fields['label']); ?>">
+                    <input type="text" class="text" name="group_label"  value="<?php echo ploopi\str::htmlentities($group->fields['label']); ?>">
                 </p>
                 <p>
                     <label><?php echo _SYSTEM_LABEL_GROUP_SHARED; ?>:</label>
@@ -142,6 +141,6 @@ echo $skin->open_simplebloc();
 echo $skin->close_simplebloc();
 
 echo $skin->open_simplebloc();
-ovensia\ploopi\annotation::display(_SYSTEM_OBJECT_GROUP, $group->fields['id'], $group->fields['label']);
+ploopi\annotation::display(_SYSTEM_OBJECT_GROUP, $group->fields['id'], $group->fields['label']);
 echo $skin->close_simplebloc();
 ?>

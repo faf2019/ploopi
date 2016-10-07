@@ -41,12 +41,12 @@ switch($ploopi_op)
     case 'booking_setresources':
         if (empty($_REQUEST['booking_resources'])) $_REQUEST['booking_resources'] = array();
     case 'booking_refresh':
-        ovensia\ploopi\module::init('booking');
+        ploopi\module::init('booking');
         global $arrBookingPeriodicity;
         global $arrBookingSize;
         global $arrBookingColor;
         include_once './modules/booking/public_planning.php';
-        ovensia\ploopi\system::kill();
+        ploopi\system::kill();
     break;
 
 }

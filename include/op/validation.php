@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2009 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Copyright (c) 2009 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
@@ -27,7 +26,7 @@
  *
  * @package ploopi
  * @subpackage validation
- * @copyright Netlor, Ovensia, HeXad
+ * @copyright Ovensia, HeXad
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -35,7 +34,7 @@
 switch($ploopi_op)
 {
     case 'validation_select_user':
-        if (empty($_GET['validation_id'])) ovensia\ploopi\system::kill();
+        if (empty($_GET['validation_id'])) ploopi\system::kill();
 
         if (!isset($_SESSION['ploopi']['validation'][$_GET['validation_id']])) $_SESSION['ploopi']['validation'][$_GET['validation_id']] = array('users_selected' => array(), 'groups_selected' => array());
 
@@ -48,14 +47,14 @@ switch($ploopi_op)
 
         foreach($_SESSION['ploopi']['validation'][$_GET['validation_id']]['groups_selected'] as $group_id)
         {
-            $group = new ovensia\ploopi\group();
+            $group = new ploopi\group();
             if ($group->open($group_id))
             {
                 ?>
                 <p class="ploopi_va" style="padding:2px;">
-                    <a class="ploopi_validation_delete_user" href="javascript:void(0);" onclick="ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=validation_select_user&validation_id=<?php echo urlencode($_GET['validation_id']); ?>&remove_group_id=<?php echo $group->fields['id']; ?>', 'div_validation_users_selected_<?php echo ovensia\ploopi\str::htmlentities($_GET['validation_id']); ?>');">
+                    <a class="ploopi_validation_delete_user" href="javascript:void(0);" onclick="ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=validation_select_user&validation_id=<?php echo urlencode($_GET['validation_id']); ?>&remove_group_id=<?php echo $group->fields['id']; ?>', 'div_validation_users_selected_<?php echo ploopi\str::htmlentities($_GET['validation_id']); ?>');">
                         <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/btn_delete.png" />
-                        <span>Groupe &laquo; </span><strong><?php echo ovensia\ploopi\str::htmlentities($group->fields['label']); ?></strong><span></span> &raquo; (Cliquez pour supprimer)</span>
+                        <span>Groupe &laquo; </span><strong><?php echo ploopi\str::htmlentities($group->fields['label']); ?></strong><span></span> &raquo; (Cliquez pour supprimer)</span>
                     </a>
                 </p>
                 <?php
@@ -64,28 +63,28 @@ switch($ploopi_op)
 
         foreach($_SESSION['ploopi']['validation'][$_GET['validation_id']]['users_selected'] as $user_id)
         {
-            $user = new ovensia\ploopi\user();
+            $user = new ploopi\user();
             if ($user->open($user_id))
             {
                 ?>
                 <p class="ploopi_va" style="padding:2px;">
-                    <a class="ploopi_validation_delete_user" href="javascript:void(0);" onclick="ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=validation_select_user&validation_id=<?php echo urlencode($_GET['validation_id']); ?>&remove_user_id=<?php echo $user->fields['id']; ?>', 'div_validation_users_selected_<?php echo ovensia\ploopi\str::htmlentities($_GET['validation_id']); ?>');">
+                    <a class="ploopi_validation_delete_user" href="javascript:void(0);" onclick="ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=validation_select_user&validation_id=<?php echo urlencode($_GET['validation_id']); ?>&remove_user_id=<?php echo $user->fields['id']; ?>', 'div_validation_users_selected_<?php echo ploopi\str::htmlentities($_GET['validation_id']); ?>');">
                         <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/btn_delete.png" />
-                        <strong><?php echo ovensia\ploopi\str::htmlentities("{$user->fields['lastname']} {$user->fields['firstname']}"); ?></strong><span>&nbsp;(Cliquez pour supprimer)</span>
+                        <strong><?php echo ploopi\str::htmlentities("{$user->fields['lastname']} {$user->fields['firstname']}"); ?></strong><span>&nbsp;(Cliquez pour supprimer)</span>
                     </a>
                 </p>
                 <?php
             }
         }
 
-        ovensia\ploopi\system::kill();
+        ploopi\system::kill();
     break;
 
     case 'validation_search_users':
-        if (empty($_GET['validation_id'])) ovensia\ploopi\system::kill();
+        if (empty($_GET['validation_id'])) ploopi\system::kill();
 
-        $group = new ovensia\ploopi\group();
-        $workspace = new ovensia\ploopi\workspace();
+        $group = new ploopi\group();
+        $workspace = new ploopi\workspace();
 
         $list = array();
         $list['workspaces'] = array();
@@ -95,17 +94,17 @@ switch($ploopi_op)
         $id_action = (!empty($_GET['id_action']) && is_numeric($_GET['id_action'])) ? $_GET['id_action'] : -1;
 
         // Recherche des espaces de travail qui supportent ce module, selon la vue inverse
-        $rs = $db->query("
+        $rs = ploopi\loader::getdb()->query("
             SELECT  w.*
             FROM    ploopi_workspace w,
                     ploopi_module_workspace mw
             WHERE   w.id = mw.id_workspace
-            AND     w.id IN (".ovensia\ploopi\system::viewworkspaces_inv().")
+            AND     w.id IN (".ploopi\system::viewworkspaces_inv().")
             AND     mw.id_module = {$_SESSION['ploopi']['moduleid']}
             ORDER BY w.depth, w.label
         ");
 
-        while ($row = $db->fetchrow($rs))
+        while ($row = ploopi\loader::getdb()->fetchrow($rs))
         {
             $list['workspaces'][$row['id']]['label'] = $row['label'];
             $list['workspaces'][$row['id']]['groups'] = array();
@@ -119,7 +118,7 @@ switch($ploopi_op)
         }
 
         if (!empty($list['workspaces'])) {
-            $cleanedfilter = $db->addslashes($_GET['ploopi_validation_userfilter']);
+            $cleanedfilter = ploopi\loader::getdb()->addslashes($_GET['ploopi_validation_userfilter']);
             $userfilter = "(u.login LIKE '%{$cleanedfilter}%' OR u.firstname LIKE '%{$cleanedfilter}%' OR u.lastname LIKE '%{$cleanedfilter}%')";
 
             // recherche des utilisateurs "admininstrateur d'espace" ou disposant d'une action particuliere dans le module
@@ -213,21 +212,21 @@ switch($ploopi_op)
 
 
 
-            $db->query($query_u);
-            while ($fields = $db->fetchrow())
+            ploopi\loader::getdb()->query($query_u);
+            while ($fields = ploopi\loader::getdb()->fetchrow())
             {
                 $list['users'][$fields['id']] = array('id' => $fields['id'], 'login' => $fields['login'], 'lastname' => $fields['lastname'], 'firstname' => $fields['firstname']);
                 $list['workspaces'][$fields['id_workspace']]['users'][$fields['id']] = $fields['id'];
             }
 
-            $db->query($query_g);
-            while ($fields = $db->fetchrow())
+            ploopi\loader::getdb()->query($query_g);
+            while ($fields = ploopi\loader::getdb()->fetchrow())
             {
                 $list['groups'][$fields['id']]['display'] = true;
             }
 
-            $db->query($query_gu);
-            while ($fields = $db->fetchrow())
+            ploopi\loader::getdb()->query($query_gu);
+            while ($fields = ploopi\loader::getdb()->fetchrow())
             {
                 $list['users'][$fields['id']] = array('id' => $fields['id'], 'login' => $fields['login'], 'lastname' => $fields['lastname'], 'firstname' => $fields['firstname']);
                 $list['groups'][$fields['id_group']]['users'][$fields['id']] = $fields['id'];
@@ -255,7 +254,7 @@ switch($ploopi_op)
                     {
                         ?>
                         <div class="ploopi_validation_select_workgroup">
-                            <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_workgroup.png"><span><?php echo ovensia\ploopi\str::htmlentities($workspace['label']); ?></span></p>
+                            <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_workgroup.png"><span><?php echo ploopi\str::htmlentities($workspace['label']); ?></span></p>
                         </div>
                         <?php
                         if (!empty($workspace['users']))
@@ -264,8 +263,8 @@ switch($ploopi_op)
                             {
                                 $user = &$list['users'][$id_user];
                                 ?>
-                                <a class="ploopi_validation_select_user" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=validation_select_user&validation_id=<?php echo urlencode($_GET['validation_id']); ?>&user_id=<?php echo $id_user; ?>', 'div_validation_users_selected_<?php echo ovensia\ploopi\str::htmlentities($_GET['validation_id']); ?>');">
-                                    <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span><?php echo ovensia\ploopi\str::htmlentities("{$user['lastname']} {$user['firstname']}"); ?></span></p>
+                                <a class="ploopi_validation_select_user" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=validation_select_user&validation_id=<?php echo urlencode($_GET['validation_id']); ?>&user_id=<?php echo $id_user; ?>', 'div_validation_users_selected_<?php echo ploopi\str::htmlentities($_GET['validation_id']); ?>');">
+                                    <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span><?php echo ploopi\str::htmlentities("{$user['lastname']} {$user['firstname']}"); ?></span></p>
                                 </a>
                                 <?php
                             }
@@ -279,8 +278,8 @@ switch($ploopi_op)
                                 if ($group['display'])
                                 {
                                     ?>
-                                    <a class="ploopi_validation_select_usergroup" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=validation_select_user&validation_id=<?php echo urlencode($_GET['validation_id']); ?>&group_id=<?php echo $id_grp; ?>', 'div_validation_users_selected_<?php echo ovensia\ploopi\str::htmlentities($_GET['validation_id']); ?>');">
-                                        <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_group.png"><span><?php echo ovensia\ploopi\str::htmlentities($list['groups'][$id_grp]['label']);  ?></span></p>
+                                    <a class="ploopi_validation_select_usergroup" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=validation_select_user&validation_id=<?php echo urlencode($_GET['validation_id']); ?>&group_id=<?php echo $id_grp; ?>', 'div_validation_users_selected_<?php echo ploopi\str::htmlentities($_GET['validation_id']); ?>');">
+                                        <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_group.png"><span><?php echo ploopi\str::htmlentities($list['groups'][$id_grp]['label']);  ?></span></p>
                                     </a>
                                     <?php
                                     if (!empty($list['groups'][$id_grp]))
@@ -289,8 +288,8 @@ switch($ploopi_op)
                                         {
                                             $user = &$list['users'][$id_user];
                                             ?>
-                                            <a class="ploopi_validation_select_usergroup_user" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=validation_select_user&validation_id=<?php echo urlencode($_GET['validation_id']); ?>&user_id=<?php echo $id_user; ?>', 'div_validation_users_selected_<?php echo ovensia\ploopi\str::htmlentities($_GET['validation_id']); ?>');">
-                                                <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span><?php echo ovensia\ploopi\str::htmlentities("{$user['lastname']} {$user['firstname']}"); ?></span></p>
+                                            <a class="ploopi_validation_select_usergroup_user" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=validation_select_user&validation_id=<?php echo urlencode($_GET['validation_id']); ?>&user_id=<?php echo $id_user; ?>', 'div_validation_users_selected_<?php echo ploopi\str::htmlentities($_GET['validation_id']); ?>');">
+                                                <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span><?php echo ploopi\str::htmlentities("{$user['lastname']} {$user['firstname']}"); ?></span></p>
                                             </a>
                                             <?php
                                         }
@@ -313,6 +312,6 @@ switch($ploopi_op)
             <?php
         }
 
-        ovensia\ploopi\system::kill();
+        ploopi\system::kill();
     break;
 }

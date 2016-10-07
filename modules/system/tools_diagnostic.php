@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,7 +25,7 @@
  *
  * @package system
  * @subpackage system_tools
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -109,9 +108,9 @@ foreach($array_path as $key => $path)
         break;
     }
 
-    $values[$c]['values']['function']   = array('label' => ovensia\ploopi\str::htmlentities("Accès en écriture au dossier « {$key} »"));
-    $values[$c]['values']['desc']       = array('label' => ovensia\ploopi\str::nl2br(ovensia\ploopi\str::htmlentities($desc)), 'style' => '');
-    $values[$c]['values']['comment']    = array('label' => ovensia\ploopi\str::nl2br(ovensia\ploopi\str::htmlentities($comment)), 'style' => '');
+    $values[$c]['values']['function']   = array('label' => ploopi\str::htmlentities("Accès en écriture au dossier « {$key} »"));
+    $values[$c]['values']['desc']       = array('label' => ploopi\str::nl2br(ploopi\str::htmlentities($desc)), 'style' => '');
+    $values[$c]['values']['comment']    = array('label' => ploopi\str::nl2br(ploopi\str::htmlentities($comment)), 'style' => '');
     $values[$c]['values']['result']     = array('label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/p_{$bullet}.png\" />", 'style' => '');
     $c++;
 
@@ -124,9 +123,9 @@ $testok = !get_magic_quotes_gpc();
 $comment = ($testok) ? 'La directive est correctement configurée.' : 'Vous devriez modifier la valeur de cette directive.';
 $bullet = ($testok) ? 'green' : 'orange';
 
-$values[$c]['values']['function']   = array('label' => ovensia\ploopi\str::htmlentities("PHP - magic_quote_gpc"));
-$values[$c]['values']['desc']       = array('label' => ovensia\ploopi\str::nl2br(ovensia\ploopi\str::htmlentities("La directive php 'magic_quote_gpc' permet d'ajouter automatiquement des « ' » dans le contenu des superglobales \$_GET, \$_POST, \$_COOKIE. Il est recommandé de désactiver cette fonctionnalité.")), 'style' => '');
-$values[$c]['values']['comment']    = array('label' => ovensia\ploopi\str::nl2br(ovensia\ploopi\str::htmlentities($comment)), 'style' => '');
+$values[$c]['values']['function']   = array('label' => ploopi\str::htmlentities("PHP - magic_quote_gpc"));
+$values[$c]['values']['desc']       = array('label' => ploopi\str::nl2br(ploopi\str::htmlentities("La directive php 'magic_quote_gpc' permet d'ajouter automatiquement des « ' » dans le contenu des superglobales \$_GET, \$_POST, \$_COOKIE. Il est recommandé de désactiver cette fonctionnalité.")), 'style' => '');
+$values[$c]['values']['comment']    = array('label' => ploopi\str::nl2br(ploopi\str::htmlentities($comment)), 'style' => '');
 $values[$c]['values']['result']     = array('label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/p_{$bullet}.png\" />", 'style' => '');
 $c++;
 
@@ -135,9 +134,9 @@ $testok = !ini_get('register_globals');
 $comment = ($testok) ? 'La directive est correctement configurée.' : 'Vous devriez modifier la valeur de cette directive.';
 $bullet = ($testok) ? 'green' : 'red';
 
-$values[$c]['values']['function']   = array('label' => ovensia\ploopi\str::htmlentities("PHP - register_globals"));
-$values[$c]['values']['desc']       = array('label' => ovensia\ploopi\str::nl2br(ovensia\ploopi\str::htmlentities("La directive php 'register_globals' permet d'affecter automatiquement les paramètres en variables globales. Il est fortement recommandé de désactiver cette fonctionnalité.")), 'style' => '');
-$values[$c]['values']['comment']    = array('label' => ovensia\ploopi\str::nl2br(ovensia\ploopi\str::htmlentities($comment)), 'style' => '');
+$values[$c]['values']['function']   = array('label' => ploopi\str::htmlentities("PHP - register_globals"));
+$values[$c]['values']['desc']       = array('label' => ploopi\str::nl2br(ploopi\str::htmlentities("La directive php 'register_globals' permet d'affecter automatiquement les paramètres en variables globales. Il est fortement recommandé de désactiver cette fonctionnalité.")), 'style' => '');
+$values[$c]['values']['comment']    = array('label' => ploopi\str::nl2br(ploopi\str::htmlentities($comment)), 'style' => '');
 $values[$c]['values']['result']     = array('label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/p_{$bullet}.png\" />", 'style' => '');
 $c++;
 
@@ -146,9 +145,9 @@ $testok = !ini_get('display_errors');
 $comment = ($testok) ? 'La directive est correctement configurée.' : 'Vous devriez modifier la valeur de cette directive.';
 $bullet = ($testok) ? 'green' : 'orange';
 
-$values[$c]['values']['function']   = array('label' => ovensia\ploopi\str::htmlentities("PHP - display_errors"));
-$values[$c]['values']['desc']       = array('label' => ovensia\ploopi\str::nl2br(ovensia\ploopi\str::htmlentities("La directive php 'display_errors' permet d'afficher les erreurs d'exécution. Il est fortement recommandé de désactiver cette fonctionnalité, notamment pour un site en production.")), 'style' => '');
-$values[$c]['values']['comment']    = array('label' => ovensia\ploopi\str::nl2br(ovensia\ploopi\str::htmlentities($comment)), 'style' => '');
+$values[$c]['values']['function']   = array('label' => ploopi\str::htmlentities("PHP - display_errors"));
+$values[$c]['values']['desc']       = array('label' => ploopi\str::nl2br(ploopi\str::htmlentities("La directive php 'display_errors' permet d'afficher les erreurs d'exécution. Il est fortement recommandé de désactiver cette fonctionnalité, notamment pour un site en production.")), 'style' => '');
+$values[$c]['values']['comment']    = array('label' => ploopi\str::nl2br(ploopi\str::htmlentities($comment)), 'style' => '');
 $values[$c]['values']['result']     = array('label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/p_{$bullet}.png\" />", 'style' => '');
 $c++;
 
@@ -160,9 +159,9 @@ $bullet = ($testok) ? 'green' : 'orange';
 
 $comment .= " (Valeur actuelle : {$mem} Mio)";
 
-$values[$c]['values']['function']   = array('label' => ovensia\ploopi\str::htmlentities("PHP - memory_limit"));
-$values[$c]['values']['desc']       = array('label' => ovensia\ploopi\str::nl2br(ovensia\ploopi\str::htmlentities("La directive php 'memory_limit' est utile pour les scripts qui consomment beaucoup de mémoire (comme l'indexation des documents ou le moteur de recherche).")), 'style' => '');
-$values[$c]['values']['comment']    = array('label' => ovensia\ploopi\str::nl2br(ovensia\ploopi\str::htmlentities($comment)), 'style' => '');
+$values[$c]['values']['function']   = array('label' => ploopi\str::htmlentities("PHP - memory_limit"));
+$values[$c]['values']['desc']       = array('label' => ploopi\str::nl2br(ploopi\str::htmlentities("La directive php 'memory_limit' est utile pour les scripts qui consomment beaucoup de mémoire (comme l'indexation des documents ou le moteur de recherche).")), 'style' => '');
+$values[$c]['values']['comment']    = array('label' => ploopi\str::nl2br(ploopi\str::htmlentities($comment)), 'style' => '');
 $values[$c]['values']['result']     = array('label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/p_{$bullet}.png\" />", 'style' => '');
 $c++;
 
@@ -199,9 +198,9 @@ switch($testok)
 
 if ($testok>1) $comment .= "\nSi vous voulez modifier cette limite vous pouvez modifier les paramètres suivants:\n- upload_max_filesize (PHP / php.ini) : {$upload_max_filesize} kio\n- post_max_size (PHP / php.ini) : {$post_max_size} kio\n- _PLOOPI_MAXFILESIZE (PLOOPI / config.php) : {$ploopi_maxfilesize} kio";
 
-$values[$c]['values']['function']   = array('label' => ovensia\ploopi\str::htmlentities("Capacité d'upload"));
-$values[$c]['values']['desc']       = array('label' => ovensia\ploopi\str::nl2br(ovensia\ploopi\str::htmlentities("La capacité d'upload permet de déterminer le poids maximum d'un fichier pouvant être accepté par le serveur. Si le poids est trop petit, vous risquez de ne pas pouvoir accepter certains documents.")), 'style' => '');
-$values[$c]['values']['comment']    = array('label' => ovensia\ploopi\str::nl2br(ovensia\ploopi\str::htmlentities($comment)), 'style' => '');
+$values[$c]['values']['function']   = array('label' => ploopi\str::htmlentities("Capacité d'upload"));
+$values[$c]['values']['desc']       = array('label' => ploopi\str::nl2br(ploopi\str::htmlentities("La capacité d'upload permet de déterminer le poids maximum d'un fichier pouvant être accepté par le serveur. Si le poids est trop petit, vous risquez de ne pas pouvoir accepter certains documents.")), 'style' => '');
+$values[$c]['values']['comment']    = array('label' => ploopi\str::nl2br(ploopi\str::htmlentities($comment)), 'style' => '');
 $values[$c]['values']['result']     = array('label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/p_{$bullet}.png\" />", 'style' => '');
 $c++;
 
@@ -211,8 +210,8 @@ $comment = ($testok) ? 'L\'extension &laquo; gd &raquo; est activée.' : 'Vous de
 $bullet = ($testok) ? 'green' : 'red';
 
 $values[$c]['values']['function']   = array('label' => "PHP Extension - gd");
-$values[$c]['values']['desc']       = array('label' => ovensia\ploopi\str::nl2br("L'extension &laquo; gd &raquo; permet de traiter les images."), 'style' => '');
-$values[$c]['values']['comment']    = array('label' => ovensia\ploopi\str::nl2br($comment), 'style' => '');
+$values[$c]['values']['desc']       = array('label' => ploopi\str::nl2br("L'extension &laquo; gd &raquo; permet de traiter les images."), 'style' => '');
+$values[$c]['values']['comment']    = array('label' => ploopi\str::nl2br($comment), 'style' => '');
 $values[$c]['values']['result']     = array('label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/p_{$bullet}.png\" />", 'style' => '');
 $c++;
 
@@ -222,8 +221,8 @@ $comment = ($testok) ? 'L\'extension &laquo; mcrypt &raquo; est activée.' : 'Vou
 $bullet = ($testok) ? 'green' : 'red';
 
 $values[$c]['values']['function']   = array('label' => "PHP Extension - mcrypt");
-$values[$c]['values']['desc']       = array('label' => ovensia\ploopi\str::nl2br("L'extension &laquo; mcrypt &raquo; permet de générer les url encodées."), 'style' => '');
-$values[$c]['values']['comment']    = array('label' => ovensia\ploopi\str::nl2br($comment), 'style' => '');
+$values[$c]['values']['desc']       = array('label' => ploopi\str::nl2br("L'extension &laquo; mcrypt &raquo; permet de générer les url encodées."), 'style' => '');
+$values[$c]['values']['comment']    = array('label' => ploopi\str::nl2br($comment), 'style' => '');
 $values[$c]['values']['result']     = array('label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/p_{$bullet}.png\" />", 'style' => '');
 $c++;
 
@@ -233,8 +232,8 @@ $comment = ($testok) ? 'L\'extension &laquo; stem &raquo; est activée.' : 'Vous 
 $bullet = ($testok) ? 'green' : 'red';
 
 $values[$c]['values']['function']   = array('label' => "PHP Extension - stem");
-$values[$c]['values']['desc']       = array('label' => ovensia\ploopi\str::nl2br("L'extension &laquo; stem &raquo; permet d'indexer certains contenus."), 'style' => '');
-$values[$c]['values']['comment']    = array('label' => ovensia\ploopi\str::nl2br($comment), 'style' => '');
+$values[$c]['values']['desc']       = array('label' => ploopi\str::nl2br("L'extension &laquo; stem &raquo; permet d'indexer certains contenus."), 'style' => '');
+$values[$c]['values']['comment']    = array('label' => ploopi\str::nl2br($comment), 'style' => '');
 $values[$c]['values']['result']     = array('label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/p_{$bullet}.png\" />", 'style' => '');
 $c++;
 
@@ -279,8 +278,8 @@ if (!$res)
 $bullet = ($testok) ? 'green' : 'red';
 
 $values[$c]['values']['function']   = array('label' => "Connexion internet");
-$values[$c]['values']['desc']       = array('label' => ovensia\ploopi\str::nl2br("Certains modules de PLOOPI ont besoin de se connecter à internet. Ce test vous indique si le serveur arrive à ouvrir une connexion internet."), 'style' => '');
-$values[$c]['values']['comment']    = array('label' => ovensia\ploopi\str::nl2br($comment), 'style' => '');
+$values[$c]['values']['desc']       = array('label' => ploopi\str::nl2br("Certains modules de PLOOPI ont besoin de se connecter à internet. Ce test vous indique si le serveur arrive à ouvrir une connexion internet."), 'style' => '');
+$values[$c]['values']['comment']    = array('label' => ploopi\str::nl2br($comment), 'style' => '');
 $values[$c]['values']['result']     = array('label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/p_{$bullet}.png\" />", 'style' => '');
 $c++;
 

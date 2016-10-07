@@ -41,7 +41,7 @@
  * @copyright OVENSIA
  */
 
-class booking_event extends ovensia\ploopi\data_object
+class booking_event extends ploopi\data_object
 {
 
     private $details;
@@ -62,7 +62,7 @@ class booking_event extends ovensia\ploopi\data_object
     }
 
     public function open(...$args) {
-        global $db;
+        $db = ploopi\loader::getdb();
 
         $res = parent::open($args[0]);
         $this->subresources = array();
@@ -83,11 +83,11 @@ class booking_event extends ovensia\ploopi\data_object
 
     public function save()
     {
-        global $db;
+        $db = ploopi\loader::getdb();
 
         if ($this->new)
         {
-            $this->fields['timestp_request'] = ovensia\ploopi\date::createtimestamp();
+            $this->fields['timestp_request'] = ploopi\date::createtimestamp();
         }
 
         $intIdEvent = parent::save();
@@ -98,8 +98,8 @@ class booking_event extends ovensia\ploopi\data_object
             include_once './modules/booking/classes/class_booking_event_detail.php';
 
             $objEventDetail = new booking_event_detail();
-            $objEventDetail->fields['timestp_begin'] = ovensia\ploopi\date::local2timestamp($this->details['timestp_begin_d'], sprintf("%02d:%02d:00", $this->details['timestp_begin_h'], $this->details['timestp_begin_m']));
-            $objEventDetail->fields['timestp_end'] = ovensia\ploopi\date::local2timestamp($this->details['timestp_end_d'], sprintf("%02d:%02d:00", $this->details['timestp_end_h'], $this->details['timestp_end_m']));
+            $objEventDetail->fields['timestp_begin'] = ploopi\date::local2timestamp($this->details['timestp_begin_d'], sprintf("%02d:%02d:00", $this->details['timestp_begin_h'], $this->details['timestp_begin_m']));
+            $objEventDetail->fields['timestp_end'] = ploopi\date::local2timestamp($this->details['timestp_end_d'], sprintf("%02d:%02d:00", $this->details['timestp_end_h'], $this->details['timestp_end_m']));
             $objEventDetail->fields['message'] = $this->details['message'];
             $objEventDetail->fields['emails'] = $this->details['emails'];
             $objEventDetail->fields['id_event'] = $intIdEvent;
@@ -110,13 +110,13 @@ class booking_event extends ovensia\ploopi\data_object
             if (!empty($this->fields['periodicity']) && !empty($this->details['periodicity_end_date'])) // Périodicité définie
             {
                 // Timestp unix de la date de début du premier événement
-                $intUxTsEventBegin = ovensia\ploopi\date::timestamp2unixtimestamp($objEventDetail->fields['timestp_begin']);
+                $intUxTsEventBegin = ploopi\date::timestamp2unixtimestamp($objEventDetail->fields['timestp_begin']);
 
                 // Timestp unix de la date de fin du premier événement
-                $intUxTsEventEnd = ovensia\ploopi\date::timestamp2unixtimestamp($objEventDetail->fields['timestp_end']);
+                $intUxTsEventEnd = ploopi\date::timestamp2unixtimestamp($objEventDetail->fields['timestp_end']);
 
                 // Timestp unix de la date de fin de périodicité
-                $intUxTsPeriodEnd = ovensia\ploopi\date::timestamp2unixtimestamp(substr(ovensia\ploopi\date::local2timestamp($this->details['periodicity_end_date']), 0, 8).'235959');
+                $intUxTsPeriodEnd = ploopi\date::timestamp2unixtimestamp(substr(ploopi\date::local2timestamp($this->details['periodicity_end_date']), 0, 8).'235959');
 
                 // Date de début du premier événement : Version tableau
                 $arrBegin =
@@ -154,8 +154,8 @@ class booking_event extends ovensia\ploopi\data_object
                         while ($intUxTs < $intUxTsPeriodEnd)
                         {
                             $objEventDetail = new booking_event_detail();
-                            $objEventDetail->fields['timestp_begin'] = ovensia\ploopi\date::unixtimestamp2timestamp($intUxTs);
-                            $objEventDetail->fields['timestp_end'] = ovensia\ploopi\date::unixtimestamp2timestamp(mktime($arrEnd['ho'], $arrEnd['mi'], $arrEnd['se'], $arrEnd['m'], $arrEnd['d'] + $d, $arrEnd['y']));
+                            $objEventDetail->fields['timestp_begin'] = ploopi\date::unixtimestamp2timestamp($intUxTs);
+                            $objEventDetail->fields['timestp_end'] = ploopi\date::unixtimestamp2timestamp(mktime($arrEnd['ho'], $arrEnd['mi'], $arrEnd['se'], $arrEnd['m'], $arrEnd['d'] + $d, $arrEnd['y']));
                             $objEventDetail->fields['id_event'] = $intIdEvent;
                             $objEventDetail->save();
 
@@ -176,8 +176,8 @@ class booking_event extends ovensia\ploopi\data_object
                         while ($intUxTs < $intUxTsPeriodEnd)
                         {
                             $objEventDetail = new booking_event_detail();
-                            $objEventDetail->fields['timestp_begin'] = ovensia\ploopi\date::unixtimestamp2timestamp($intUxTs);
-                            $objEventDetail->fields['timestp_end'] = ovensia\ploopi\date::unixtimestamp2timestamp(mktime($arrEnd['ho'], $arrEnd['mi'], $arrEnd['se'], $arrEnd['m'] + $m, $arrEnd['d'], $arrEnd['y']));
+                            $objEventDetail->fields['timestp_begin'] = ploopi\date::unixtimestamp2timestamp($intUxTs);
+                            $objEventDetail->fields['timestp_end'] = ploopi\date::unixtimestamp2timestamp(mktime($arrEnd['ho'], $arrEnd['mi'], $arrEnd['se'], $arrEnd['m'] + $m, $arrEnd['d'], $arrEnd['y']));
                             $objEventDetail->fields['id_event'] = $intIdEvent;
                             $objEventDetail->save();
 
@@ -212,8 +212,8 @@ class booking_event extends ovensia\ploopi\data_object
         if (!empty($this->details)) {
 
             // timestp mysql de la demande principale
-            $timestp_begin = ovensia\ploopi\date::local2timestamp($this->details['timestp_begin_d'], sprintf("%02d:%02d:00", $this->details['timestp_begin_h'], $this->details['timestp_begin_m']));
-            $timestp_end = ovensia\ploopi\date::local2timestamp($this->details['timestp_end_d'], sprintf("%02d:%02d:00", $this->details['timestp_end_h'], $this->details['timestp_end_m']));
+            $timestp_begin = ploopi\date::local2timestamp($this->details['timestp_begin_d'], sprintf("%02d:%02d:00", $this->details['timestp_begin_h'], $this->details['timestp_begin_m']));
+            $timestp_end = ploopi\date::local2timestamp($this->details['timestp_end_d'], sprintf("%02d:%02d:00", $this->details['timestp_end_h'], $this->details['timestp_end_m']));
 
             // Recherche des événments validés dans l'intervalle de la demande principale
             $arrEvents = booking_get_events(
@@ -246,13 +246,13 @@ class booking_event extends ovensia\ploopi\data_object
             if (!empty($this->fields['periodicity']) && !empty($this->details['periodicity_end_date'])) // Périodicité définie
             {
                 // Timestp unix de la date de début du premier événement
-                $intUxTsEventBegin = ovensia\ploopi\date::timestamp2unixtimestamp($timestp_begin);
+                $intUxTsEventBegin = ploopi\date::timestamp2unixtimestamp($timestp_begin);
 
                 // Timestp unix de la date de fin du premier événement
-                $intUxTsEventEnd = ovensia\ploopi\date::timestamp2unixtimestamp($timestp_end);
+                $intUxTsEventEnd = ploopi\date::timestamp2unixtimestamp($timestp_end);
 
                 // Timestp unix de la date de fin de périodicité
-                $intUxTsPeriodEnd = ovensia\ploopi\date::timestamp2unixtimestamp(substr(ovensia\ploopi\date::local2timestamp($this->details['periodicity_end_date']), 0, 8).'235959');
+                $intUxTsPeriodEnd = ploopi\date::timestamp2unixtimestamp(substr(ploopi\date::local2timestamp($this->details['periodicity_end_date']), 0, 8).'235959');
 
                 // Date de début du premier événement : Version tableau
                 $arrBegin =
@@ -392,7 +392,7 @@ class booking_event extends ovensia\ploopi\data_object
 
     public function getdetails()
     {
-        global $db;
+        $db = ploopi\loader::getdb();
 
         // Recherche des détails liés à l'événement
         $db->query("SELECT * FROM ploopi_mod_booking_event_detail WHERE id_event = {$this->fields['id']} ORDER BY timestp_begin, timestp_end");

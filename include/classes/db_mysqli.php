@@ -20,7 +20,9 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-use ovensia\ploopi;
+namespace ploopi;
+
+use ploopi;
 
 /**
  * Gestion de la connexion à la base MySQL.
@@ -38,12 +40,12 @@ use ovensia\ploopi;
  *
  * @package ploopi
  * @subpackage database
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General var License (GPL)
  * @author Stéphane Escaich
  */
 
-class ploopi_db
+class db_mysqli
 {
     /**
      * Détermine si la connexion est permanente
@@ -183,7 +185,7 @@ class ploopi_db
         if ($this->persistency) $this->server = 'p:'.$this->server;
 
         $this->timer_start();
-        $this->mysqli = @new mysqli($this->server, $this->user, $this->password, $this->database, $this->port);
+        $this->mysqli = @new \mysqli($this->server, $this->user, $this->password, $this->database, $this->port);
         $this->timer_stop();
 
         if ($this->mysqli->connect_errno) {
@@ -623,7 +625,7 @@ class ploopi_db
     {
         if (!$this->isconnected()) return false;
 
-        return ovensia\ploopi\arr::map(array($this, 'escape_string'), $var);
+        return ploopi\arr::map(array($this, 'escape_string'), $var);
     }
 
     /**
@@ -635,7 +637,7 @@ class ploopi_db
 
     public function timer_start()
     {
-        $this->db_timer = new ovensia\ploopi\timer();
+        $this->db_timer = new ploopi\timer();
         $this->db_timer->start();
     }
 

@@ -20,16 +20,16 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-namespace ovensia\ploopi;
+namespace ploopi;
 
-use ovensia\ploopi;
+use ploopi;
 
 /**
  * Gestion des utilisateurs
  *
  * @package ploopi
  * @subpackage user
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -40,7 +40,7 @@ use ovensia\ploopi;
  *
  * @package ploopi
  * @subpackage user
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -103,7 +103,7 @@ class user extends data_object
     {
         include_once './include/classes/group.php';
 
-        global $db;
+        $db = loader::getdb();
 
         $db->query("DELETE FROM ploopi_validation WHERE type_validation = 'user' AND id_validation = {$this->fields['id']}");
         $db->query("DELETE FROM ploopi_share WHERE type_share = 'user' AND id_share = {$this->fields['id']}");
@@ -153,7 +153,7 @@ class user extends data_object
          * 3. Récupère les espaces auxquels l'utilisateur est directement rattaché.
          */
 
-        global $db;
+        $db = loader::getdb();
 
         $workspaces = array();
 
@@ -239,7 +239,7 @@ class user extends data_object
 
     public function getgroups($lite = false)
     {
-        global $db;
+        $db = loader::getdb();
 
         module::init('system', false, false, false);
 
@@ -276,7 +276,7 @@ class user extends data_object
     {
         include_once './include/classes/group.php';
 
-        global $db;
+        $db = loader::getdb();
 
         $group_user = new group_user();
         $group_user->fields['id_user'] = $this->fields['id'];
@@ -292,7 +292,7 @@ class user extends data_object
 
     public function attachtoworkspace($workspaceid)
     {
-        global $db;
+        $db = loader::getdb();
 
         $workspace_user = new workspace_user();
         $workspace_user->fields['id_user'] = $this->fields['id'];
@@ -336,7 +336,7 @@ class user extends data_object
     {
         include_once './include/classes/group.php';
 
-        global $db;
+        $db = loader::getdb();
 
         $result = $db->query("
             SELECT      ploopi_workspace_user_role.id_workspace,
@@ -375,7 +375,7 @@ class user extends data_object
 
     public function getusersgroup()
     {
-        global $db;
+        $db = loader::getdb();
         $usrlist=array();
         // récupération de ts les espaces de travail
         $workspaces = array_keys($this->getworkspaces());

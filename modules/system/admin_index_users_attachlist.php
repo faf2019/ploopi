@@ -1,7 +1,6 @@
 <?php
 /*
- Copyright (c) 2002-2007 Netlor
- Copyright (c) 2007-2008 Ovensia
+ Copyright (c) 2007-2016 Ovensia
  Contributors hold Copyright (c) to their code submissions.
 
  This file is part of Ploopi.
@@ -26,7 +25,7 @@
  *
  * @package system
  * @subpackage admin
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -68,7 +67,7 @@ $arrWhere = array();
 switch ($_SESSION['system']['level'])
 {
     case _SYSTEM_GROUPS :
-        if (!ovensia\ploopi\acl::isadmin())
+        if (!ploopi\acl::isadmin())
         {
             // filtrage sur les groupes partagés
             if (!empty($groups['list'][$groupid]['groups'])) $arrWhere[] = '( gu.id_group IN ('.implode(',',array_keys($groups['list'][$groupid]['groups'])).'))';
@@ -87,7 +86,7 @@ switch ($_SESSION['system']['level'])
     break;
 
     case _SYSTEM_WORKSPACES :
-        if (!ovensia\ploopi\acl::isadmin())
+        if (!ploopi\acl::isadmin())
         {
             // filtrage sur les groupes partagés
             if (!empty($workspaces['list'][$workspaceid]['groups'])) $arrWhere[] = 'gu.id_group IN ('.implode(',',array_keys($workspaces['list'][$workspaceid]['groups'])).')';
@@ -114,11 +113,11 @@ else
 {
     // aucun caractère de filtrage sélectionné. On recherche si on en met un par défaut (si trop d'utilisateurs) ou si on sélectionne "tous"
 
-    $alphaTabItem = (empty($_GET['alphaTabItem'])) ? ovensia\ploopi\session::getvar('system_alphatabitem') : $_GET['alphaTabItem'];
+    $alphaTabItem = (empty($_GET['alphaTabItem'])) ? ploopi\session::getvar('system_alphatabitem') : $_GET['alphaTabItem'];
 
     if (is_null($alphaTabItem))
     {
-        $db->query("
+        ploopi\loader::getdb()->query("
             SELECT      count(distinct(u.id)) as nbuser
 
             FROM        ploopi_user u,
@@ -128,14 +127,14 @@ else
             {$strWhere}
         ");
 
-        $fields = $db->fetchrow();
+        $fields = ploopi\loader::getdb()->fetchrow();
 
         $c = $fields['nbuser'];
 
         if ($_SESSION['system']['level'] == _SYSTEM_GROUPS)
         {
             // Utilisateurs non rattachés
-            $db->query("
+            ploopi\loader::getdb()->query("
                 SELECT      count(distinct(u.id)) as nbuser
 
                 FROM        ploopi_user u
@@ -143,7 +142,7 @@ else
                 WHERE       u.id NOT IN (SELECT distinct(id_user) FROM ploopi_group_user gu)
             ");
 
-            $fields = $db->fetchrow();
+            $fields = ploopi\loader::getdb()->fetchrow();
 
             $c += $fields['nbuser'];
         }
@@ -152,7 +151,7 @@ else
     }
 }
 
-ovensia\ploopi\session::setvar('system_alphatabitem', $alphaTabItem);
+ploopi\session::setvar('system_alphatabitem', $alphaTabItem);
 ?>
 <div style="padding: 4px;">
     <?php
@@ -182,29 +181,29 @@ ovensia\ploopi\session::setvar('system_alphatabitem', $alphaTabItem);
     ?>
 </div>
 
-<form action="<?php echo ovensia\ploopi\crypt::urlencode('admin.php?usrTabItem=tabUserAttach'); ?>" method="post">
+<form action="<?php echo ploopi\crypt::urlencode('admin.php?usrTabItem=tabUserAttach'); ?>" method="post">
 <div class="ploopi_va" style="padding:6px;">
     <label>Nom: </label>
-    <input type="text" class="text" name="ploopi_lastname" value="<?php echo ovensia\ploopi\str::htmlentities($arrFilter['ploopi_lastname']); ?>" style="width:100px;" tabindex="100" />
+    <input type="text" class="text" name="ploopi_lastname" value="<?php echo ploopi\str::htmlentities($arrFilter['ploopi_lastname']); ?>" style="width:100px;" tabindex="100" />
 
     <label>Prénom: </label>
-    <input type="text" class="text" name="ploopi_firstname" value="<?php echo ovensia\ploopi\str::htmlentities($arrFilter['ploopi_firstname']); ?>" style="width:100px;" tabindex="105" />
+    <input type="text" class="text" name="ploopi_firstname" value="<?php echo ploopi\str::htmlentities($arrFilter['ploopi_firstname']); ?>" style="width:100px;" tabindex="105" />
 
     <label>Identifiant: </label>
-    <input type="text" class="text" name="ploopi_login" value="<?php echo ovensia\ploopi\str::htmlentities($arrFilter['ploopi_login']); ?>" style="width:100px;" tabindex="110" />
+    <input type="text" class="text" name="ploopi_login" value="<?php echo ploopi\str::htmlentities($arrFilter['ploopi_login']); ?>" style="width:100px;" tabindex="110" />
 
     <label>Email: </label>
-    <input type="text" class="text" name="ploopi_email" value="<?php echo ovensia\ploopi\str::htmlentities($arrFilter['ploopi_email']); ?>" style="width:150px;" tabindex="120" />
+    <input type="text" class="text" name="ploopi_email" value="<?php echo ploopi\str::htmlentities($arrFilter['ploopi_email']); ?>" style="width:150px;" tabindex="120" />
 
     <label>Connexion entre le: </label>
-    <input type="text" class="text" name="ploopi_last_connection_1" id="ploopi_last_connection_1" value="<?php echo ovensia\ploopi\str::htmlentities($arrFilter['ploopi_last_connection_1']); ?>" style="width:100px;" tabindex="116" />
-    <? ovensia\ploopi\date::open_calendar('ploopi_last_connection_1'); ?>
+    <input type="text" class="text" name="ploopi_last_connection_1" id="ploopi_last_connection_1" value="<?php echo ploopi\str::htmlentities($arrFilter['ploopi_last_connection_1']); ?>" style="width:100px;" tabindex="116" />
+    <?php ploopi\date::open_calendar('ploopi_last_connection_1'); ?>
     <label>et le: </label>
-    <input type="text" class="text" name="ploopi_last_connection_2" id="ploopi_last_connection_2" value="<?php echo ovensia\ploopi\str::htmlentities($arrFilter['ploopi_last_connection_2']); ?>" style="width:100px;" tabindex="117" />
-    <? ovensia\ploopi\date::open_calendar('ploopi_last_connection_2'); ?>
+    <input type="text" class="text" name="ploopi_last_connection_2" id="ploopi_last_connection_2" value="<?php echo ploopi\str::htmlentities($arrFilter['ploopi_last_connection_2']); ?>" style="width:100px;" tabindex="117" />
+    <?php ploopi\date::open_calendar('ploopi_last_connection_2'); ?>
 
     <input type="submit" class="button" value="Filtrer" tabindex="150" />
-    <input type="button" class="button" value="Réinitialiser" onclick="document.location.href='<?php echo ovensia\ploopi\crypt::urlencode('admin.php?usrTabItem=tabUserAttach&reset'); ?>';" tabindex="160" />
+    <input type="button" class="button" value="Réinitialiser" onclick="document.location.href='<?php echo ploopi\crypt::urlencode('admin.php?usrTabItem=tabUserAttach&reset'); ?>';" tabindex="160" />
 </div>
 </form>
 
@@ -215,10 +214,10 @@ $strWhereName = '';
 if ($alphaTabItem == 99) // tous ou recherche
 {
     $where = array();
-    if ($arrFilter['ploopi_lastname'] != '') $where[] = "lastname LIKE '%".$db->addslashes($arrFilter['ploopi_lastname'])."%'";
-    if ($arrFilter['ploopi_firstname'] != '') $where[] = "firstname LIKE '%".$db->addslashes($arrFilter['ploopi_firstname'])."%'";
-    if ($arrFilter['ploopi_login'] != '') $where[] = "login LIKE '%".$db->addslashes($arrFilter['ploopi_login'])."%'";
-    if ($arrFilter['ploopi_email'] != '') $where[] = "email LIKE '%".$db->addslashes($arrFilter['ploopi_email'])."%'";
+    if ($arrFilter['ploopi_lastname'] != '') $where[] = "lastname LIKE '%".ploopi\loader::getdb()->addslashes($arrFilter['ploopi_lastname'])."%'";
+    if ($arrFilter['ploopi_firstname'] != '') $where[] = "firstname LIKE '%".ploopi\loader::getdb()->addslashes($arrFilter['ploopi_firstname'])."%'";
+    if ($arrFilter['ploopi_login'] != '') $where[] = "login LIKE '%".ploopi\loader::getdb()->addslashes($arrFilter['ploopi_login'])."%'";
+    if ($arrFilter['ploopi_email'] != '') $where[] = "email LIKE '%".ploopi\loader::getdb()->addslashes($arrFilter['ploopi_email'])."%'";
     if ($arrFilter['ploopi_last_connection_1'] != '') $where[] = "last_connection >= '".ploopi_local2timestamp($arrFilter['ploopi_last_connection_1'], '00:00:00')."'";
     if ($arrFilter['ploopi_last_connection_2'] != '') $where[] = "last_connection <= '".ploopi_local2timestamp($arrFilter['ploopi_last_connection_2'], '23:59:59')."'";
 
@@ -232,7 +231,7 @@ else
     else $strWhereName = " AND ASCII(LCASE(LEFT(u.lastname,1))) = ".($alphaTabItem+96).' ';
 }
 
-$db->query("
+ploopi\loader::getdb()->query("
     SELECT      u.id,
                 u.lastname,
                 u.firstname,
@@ -251,12 +250,12 @@ $db->query("
     GROUP BY    u.id
 ");
 
-$arrUsers = $db->getarray();
+$arrUsers = ploopi\loader::getdb()->getarray();
 
 if ($_SESSION['system']['level'] == _SYSTEM_GROUPS)
 {
     // Utilisateurs non rattachés
-    $db->query("
+    ploopi\loader::getdb()->query("
         SELECT      u.id,
                     u.lastname,
                     u.firstname,
@@ -273,7 +272,7 @@ if ($_SESSION['system']['level'] == _SYSTEM_GROUPS)
         GROUP BY    u.id
     ");
 
-    $arrUsers = array_merge($arrUsers, $db->getarray());
+    $arrUsers = array_merge($arrUsers, ploopi\loader::getdb()->getarray());
 }
 
 $intNbRep = sizeof($arrUsers);
@@ -332,7 +331,7 @@ else
 
     $c = 0;
 
-    $user = new ovensia\ploopi\user();
+    $user = new ploopi\user();
 
     foreach($arrUsers as $fields)
     {
@@ -341,18 +340,18 @@ else
         if (!empty($groups))
         {
             $currentgroup = current($groups);
-            $values[$c]['values']['origin']     = array('label' => '<a href="'.ovensia\ploopi\crypt::urlencode("admin.php?wspToolbarItem=tabUsers&usrTabItem=tabUserList&groupid={$currentgroup['id']}&alphaTabItem=".(ord(strtolower($fields['lastname']))-96)).'">'.ovensia\ploopi\str::htmlentities($currentgroup['label']).'</a>');
+            $values[$c]['values']['origin']     = array('label' => '<a href="'.ploopi\crypt::urlencode("admin.php?wspToolbarItem=tabUsers&usrTabItem=tabUserList&groupid={$currentgroup['id']}&alphaTabItem=".(ord(strtolower($fields['lastname']))-96)).'">'.ploopi\str::htmlentities($currentgroup['label']).'</a>');
         }
         else
         {
             $values[$c]['values']['origin']     = array('label' => 'non rattaché', 'style' => 'font-style:italic;');
         }
 
-        $values[$c]['values']['name']       = array('label' => ovensia\ploopi\str::htmlentities("{$fields['lastname']}, {$fields['firstname']}"));
-        $values[$c]['values']['login']      = array('label' => ovensia\ploopi\str::htmlentities($fields['login']));
-        $values[$c]['values']['service']    = array('label' => ovensia\ploopi\str::htmlentities($fields['service']));
-        $values[$c]['values']['entity']    = array('label' => ovensia\ploopi\str::htmlentities($fields['entity']));
-        $values[$c]['values']['actions']    = array('label' => '<a style="float:left;display:block;margin:2px;" href="'.ovensia\ploopi\crypt::urlencode("admin.php?op=attach_user&userid={$fields['id']}&alphaTabItem={$alphaTabItem}").'"><img style="float:left;display:block;" src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_attach.png" title="'._SYSTEM_LABEL_ATTACH.'"></a>');
+        $values[$c]['values']['name']       = array('label' => ploopi\str::htmlentities("{$fields['lastname']}, {$fields['firstname']}"));
+        $values[$c]['values']['login']      = array('label' => ploopi\str::htmlentities($fields['login']));
+        $values[$c]['values']['service']    = array('label' => ploopi\str::htmlentities($fields['service']));
+        $values[$c]['values']['entity']    = array('label' => ploopi\str::htmlentities($fields['entity']));
+        $values[$c]['values']['actions']    = array('label' => '<a style="float:left;display:block;margin:2px;" href="'.ploopi\crypt::urlencode("admin.php?op=attach_user&userid={$fields['id']}&alphaTabItem={$alphaTabItem}").'"><img style="float:left;display:block;" src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_attach.png" title="'._SYSTEM_LABEL_ATTACH.'"></a>');
         $c++;
     }
 
@@ -365,13 +364,13 @@ if ($_SESSION['system']['level'] == _SYSTEM_WORKSPACES)
     <p class="ploopi_va" style="padding: 4px;">
         <span style="margin-right: 5px;">Légende:</span>
         <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/adminlevels/level_user.png" />
-        <span style="margin-right: 5px;"><?php echo ovensia\ploopi\str::htmlentities($ploopi_system_levels[_PLOOPI_ID_LEVEL_USER]); ?></span>
+        <span style="margin-right: 5px;"><?php echo ploopi\str::htmlentities($ploopi_system_levels[_PLOOPI_ID_LEVEL_USER]); ?></span>
         <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/adminlevels/level_groupmanager.png" />
-        <span style="margin-right: 5px;"><?php echo ovensia\ploopi\str::htmlentities($ploopi_system_levels[_PLOOPI_ID_LEVEL_GROUPMANAGER]); ?></span>
+        <span style="margin-right: 5px;"><?php echo ploopi\str::htmlentities($ploopi_system_levels[_PLOOPI_ID_LEVEL_GROUPMANAGER]); ?></span>
         <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/adminlevels/level_groupadmin.png" />
-        <span style="margin-right: 5px;"><?php echo ovensia\ploopi\str::htmlentities($ploopi_system_levels[_PLOOPI_ID_LEVEL_GROUPADMIN]); ?></span>
+        <span style="margin-right: 5px;"><?php echo ploopi\str::htmlentities($ploopi_system_levels[_PLOOPI_ID_LEVEL_GROUPADMIN]); ?></span>
         <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/adminlevels/level_systemadmin.png" />
-        <span style="margin-right: 5px;"><?php echo ovensia\ploopi\str::htmlentities($ploopi_system_levels[_PLOOPI_ID_LEVEL_SYSTEMADMIN]); ?></span>
+        <span style="margin-right: 5px;"><?php echo ploopi\str::htmlentities($ploopi_system_levels[_PLOOPI_ID_LEVEL_SYSTEMADMIN]); ?></span>
     </p>
     <?php
 }

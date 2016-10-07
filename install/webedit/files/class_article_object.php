@@ -40,7 +40,7 @@
  * @author Stéphane Escaich
  */
 
-class webedit_article_object extends ovensia\ploopi\data_object
+class webedit_article_object extends ploopi\data_object
 {
     /**
      * Contructeur de la classe

@@ -42,7 +42,7 @@
 
 if (isset($object))
 {
-    ovensia\ploopi\module::init('booking');
+    ploopi\module::init('booking');
 
     // Importe les variables globales du module (Rappel : on est dans une fonction !)
     global $arrBookingPeriodicity;
@@ -85,7 +85,7 @@ if (isset($object))
                 ?>
 
                 <div id="booking_ressource_list">
-                <form id="booking_resource_list_form" action="<?php echo ovensia\ploopi\crypt::urlencode("index-light.php?ploopi_op=booking_setresources&booking_moduleid={$booking_moduleid}"); ?>" method="post" onsubmit="javascript:ploopi_xmlhttprequest_submitform($('booking_resource_list_form'), 'booking_main'); return false;">
+                <form id="booking_resource_list_form" action="<?php echo ploopi\crypt::urlencode("index-light.php?ploopi_op=booking_setresources&booking_moduleid={$booking_moduleid}"); ?>" method="post" onsubmit="javascript:ploopi_xmlhttprequest_submitform($('booking_resource_list_form'), 'booking_main'); return false;">
 				<?php
                 $strResourceType = '';
                 foreach ($arrResources as $row)
@@ -98,18 +98,18 @@ if (isset($object))
 						<div style="float:left;height:18px;margin:0;">
 							<input type="checkbox" style="display:inline;" onclick="ploopi_checkall(booking_resource_list_form, 'booking_resource<?php echo $row['rt_name']; ?>', this.checked, true);$('booking_resource_list_form').onsubmit();" />
 						</div>
-                        <a href="javascript:void(0);" onclick="javascript:with ($('booking_<?php echo ovensia\ploopi\str::htmlentities($strResourceType); ?>_list')) { style.display = (style.display == 'block') ? 'none' : 'block'; }">
+                        <a href="javascript:void(0);" onclick="javascript:with ($('booking_<?php echo ploopi\str::htmlentities($strResourceType); ?>_list')) { style.display = (style.display == 'block') ? 'none' : 'block'; }">
 							<div class="ploopi_va" style="border-width:1px 0;border-style:solid;border-color:#bbb;background-color:#ddd;height:18px;">
-								<strong><?php echo ovensia\ploopi\str::htmlentities($strResourceType); ?></strong>
+								<strong><?php echo ploopi\str::htmlentities($strResourceType); ?></strong>
                             </div>
                         </a>
-                        <div id="booking_<?php echo ovensia\ploopi\str::htmlentities($row['rt_name']); ?>_list" style="display:block;">
+                        <div id="booking_<?php echo ploopi\str::htmlentities($row['rt_name']); ?>_list" style="display:block;">
                         <?php
                     }
                     ?>
-                    <p class="checkbox" style="background-color:<?php echo ovensia\ploopi\str::htmlentities($row['color']); ?>;" onclick="javascript:ploopi_checkbox_click(event, 'booking_resource<?php echo $row['id']; ?>');">
+                    <p class="checkbox" style="background-color:<?php echo ploopi\str::htmlentities($row['color']); ?>;" onclick="javascript:ploopi_checkbox_click(event, 'booking_resource<?php echo $row['id']; ?>');">
                         <input type="checkbox" name="booking_resources[<?php echo $row['id']; ?>]" id="booking_resource<?php echo $row['rt_name'].$row['id']; ?>" value="<?php echo $row['id']; ?>" <?php if (!empty($arrSearchPattern['booking_resources'][$row['id']])) echo 'checked="checked"'; ?> onchange="javascript:$('booking_resource_list_form').onsubmit();" />
-                        <span><?php echo ovensia\ploopi\str::htmlentities($row['name']); ?><span>
+                        <span><?php echo ploopi\str::htmlentities($row['name']); ?><span>
                     </p>
                     <?php
                 }

@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2009 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -32,10 +32,10 @@
  */
 
 
-// ovensia\ploopi\output::print_r($_SESSION['system']['user_import']);
+// ploopi\output::print_r($_SESSION['system']['user_import']);
 
 
-$objUser = new ovensia\ploopi\user();
+$objUser = new ploopi\user();
 $objUser->init_description();
 
 $arrErrors = array();
@@ -99,7 +99,7 @@ else
     foreach($arrErrors as $strError)
     {
         ?>
-        <p class="ploopi_va" style="padding:2px;"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/attention.png" style="margin-right:4px;" /><span class="error"><?php echo ovensia\ploopi\str::htmlentities($strError); ?></span></p>
+        <p class="ploopi_va" style="padding:2px;"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/attention.png" style="margin-right:4px;" /><span class="error"><?php echo ploopi\str::htmlentities($strError); ?></span></p>
         <?php
     }
 }
@@ -107,7 +107,7 @@ else
 if (!$booCriticalError)
 {
     ?>
-    <div style="padding:2px;border-bottom:1px solid #a0a0a0;background-color:#e0e0e0;"><strong>Aperçu de l'import (<a href="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?usrTabItem=tabUserImport&op=import"); ?>">Confirmer l'import</a>):</strong></div>
+    <div style="padding:2px;border-bottom:1px solid #a0a0a0;background-color:#e0e0e0;"><strong>Aperçu de l'import (<a href="<?php echo ploopi\crypt::urlencode("admin.php?usrTabItem=tabUserImport&op=import"); ?>">Confirmer l'import</a>):</strong></div>
     <?php
     
     $columns = array();
@@ -117,7 +117,7 @@ if (!$booCriticalError)
     {
         $columns['left'][$strFieldName] =
             array(
-                'label' => ovensia\ploopi\str::htmlentities($strFieldName),
+                'label' => ploopi\str::htmlentities($strFieldName),
                 'width' => 90,
                 'options' => array('sort' => true)
             );
@@ -130,7 +130,7 @@ if (!$booCriticalError)
         $intJ = 0;
         foreach($_SESSION['system']['user_import'][0] as $strFieldName)
         {
-            if (isset($_SESSION['system']['user_import'][$intI][$intJ])) $values[$intC]['values'][$strFieldName] = array('label' => ovensia\ploopi\str::htmlentities($_SESSION['system']['user_import'][$intI][$intJ]));
+            if (isset($_SESSION['system']['user_import'][$intI][$intJ])) $values[$intC]['values'][$strFieldName] = array('label' => ploopi\str::htmlentities($_SESSION['system']['user_import'][$intI][$intJ]));
             $intJ++;
         }   
         $intC++;

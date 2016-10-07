@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,7 +25,7 @@
  *
  * @package directory
  * @subpackage contacts
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -36,12 +35,12 @@
  *
  * @package directory
  * @subpackage contacts
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
 
-class directory_contact extends ovensia\ploopi\data_object
+class directory_contact extends ploopi\data_object
 {
     private $intPosition;
 
@@ -74,7 +73,7 @@ class directory_contact extends ovensia\ploopi\data_object
      */
     public function save($booForcePos = false)
     {
-        global $db;
+        $db = ploopi\loader::getdb();
 
         if (!$booForcePos)
         {
@@ -115,7 +114,7 @@ class directory_contact extends ovensia\ploopi\data_object
 
     public function delete()
     {
-        global $db;
+        $db = ploopi\loader::getdb();
 
         $db->query("UPDATE ploopi_mod_directory_contact SET position = position - 1 WHERE position > {$this->fields['position']} AND id_heading = {$this->fields['id_heading']}");
 

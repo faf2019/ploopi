@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2012 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,7 +25,7 @@
  *
  * @package doc
  * @subpackage public
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -34,7 +33,7 @@
 ?>
 <div id="doc_infotypedisplay" style="display: none;">list</div>
 <?php
-$booConv = ovensia\ploopi\session::getvar('unoconv') === true;
+$booConv = ploopi\session::getvar('unoconv') === true;
 
 /**
  * Charge le validation
@@ -114,7 +113,7 @@ $arrWhere['module'] = "f.id_module = {$_SESSION['ploopi']['moduleid']}";
 $arrWhere['folder'] = "f.id_folder = {$currentfolder}";
 
 // Utilisateur "standard"
-if (!$wf_validator && !ovensia\ploopi\acl::isadmin() && !ovensia\ploopi\acl::isactionallowed(_DOC_ACTION_ADMIN))
+if (!$wf_validator && !ploopi\acl::isadmin() && !ploopi\acl::isactionallowed(_DOC_ACTION_ADMIN))
 {
     // Publié (ou propriétaire)
     $arrWhere['published'] = "(f.published = 1 OR f.id_user = {$_SESSION['ploopi']['userid']})";
@@ -124,7 +123,7 @@ if (!$wf_validator && !ovensia\ploopi\acl::isadmin() && !ovensia\ploopi\acl::isa
     // Partagé
     if (!empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['share']['folders'])) $arrWhere['visibility']['shared'] = "(f.foldertype = 'shared' AND f.id IN (".implode(',', $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['share']['folders'])."))";
     // Public
-    $arrWhere['visibility']['public'] = "(f.foldertype = 'public' AND f.id_workspace IN (".ovensia\ploopi\system::viewworkspaces()."))";
+    $arrWhere['visibility']['public'] = "(f.foldertype = 'public' AND f.id_workspace IN (".ploopi\system::viewworkspaces()."))";
 
     // Synthèse visibilité
     $arrWhere['visibility'] = '('.implode(' OR ', $arrWhere['visibility']).')';
@@ -155,11 +154,11 @@ $sql = "
     WHERE  {$strWhere}
 ";
 
-$rs = $db->query($sql);
+$rs = ploopi\loader::getdb()->query($sql);
 
-while ($row = $db->fetchrow($rs))
+while ($row = ploopi\loader::getdb()->fetchrow($rs))
 {
-    $ldate = ovensia\ploopi\date::timestamp2local($row['timestp_modify']);
+    $ldate = ploopi\date::timestamp2local($row['timestp_modify']);
 
     $ico = 'ico_folder';
     if ($row['foldertype'] == 'shared') $ico .= '_shared';
@@ -173,9 +172,9 @@ while ($row = $db->fetchrow($rs))
     if (!doc_folder_isreadonly($row, _DOC_ACTION_DELETEFOLDER))
     {
         // Contrôle du nombre d'éléments
-        if (ovensia\ploopi\acl::isadmin() || ovensia\ploopi\acl::isactionallowed(_DOC_ACTION_ADMIN) || $row['nbelements'] == 0)
+        if (ploopi\acl::isadmin() || ploopi\acl::isactionallowed(_DOC_ACTION_ADMIN) || $row['nbelements'] == 0)
         {
-            $tools = '<a title="Supprimer" style="display:block;float:right;" href="javascript:void(0);" onclick="javascript:if (confirm(\'Êtes vous certain de vouloir supprimer ce dossier ?\')) document.location.href=\''.ovensia\ploopi\crypt::urlencode("admin.php?ploopi_op=doc_folderdelete&docfolder_id={$row['id']}").'\'; return(false);"><img src="./modules/doc/img/ico_trash.png" /></a>';
+            $tools = '<a title="Supprimer" style="display:block;float:right;" href="javascript:void(0);" onclick="javascript:if (confirm(\'Êtes vous certain de vouloir supprimer ce dossier ?\')) document.location.href=\''.ploopi\crypt::urlencode("admin.php?ploopi_op=doc_folderdelete&docfolder_id={$row['id']}").'\'; return(false);"><img src="./modules/doc/img/ico_trash.png" /></a>';
         }
         else
         {
@@ -187,12 +186,12 @@ while ($row = $db->fetchrow($rs))
         $tools = '<a style="display:block;float:right;" href="javascript:void(0);" onclick="javascript:alert(\'Vous ne disposez pas des autorisations nécessaires pour supprimer ce dossier\');"><img src="./modules/doc/img/ico_trash_grey.png" /></a>';
     }
 
-    if (!$row['published'] && ($wf_validator || ovensia\ploopi\acl::isadmin() || ovensia\ploopi\acl::isactionallowed(_DOC_ACTION_ADMIN)))
+    if (!$row['published'] && ($wf_validator || ploopi\acl::isadmin() || ploopi\acl::isactionallowed(_DOC_ACTION_ADMIN)))
     {
-        $tools .= '<a title="Publier" style="display:block;float:right;" href="'.ovensia\ploopi\crypt::urlencode("admin.php?ploopi_op=doc_folderpublish&currentfolder={$currentfolder}&docfolder_id={$row['id']}").'"><img src="./modules/doc/img/ico_validate.png" /></a>';
+        $tools .= '<a title="Publier" style="display:block;float:right;" href="'.ploopi\crypt::urlencode("admin.php?ploopi_op=doc_folderpublish&currentfolder={$currentfolder}&docfolder_id={$row['id']}").'"><img src="./modules/doc/img/ico_validate.png" /></a>';
     }
 
-    $tools .= '<a title="Modifier" style="display:block;float:right;" href="'.ovensia\ploopi\crypt::urlencode("admin.php?op=doc_foldermodify&currentfolder={$row['id']}&addfolder=0").'"><img src="./modules/doc/img/ico_main.png" /></a>';
+    $tools .= '<a title="Modifier" style="display:block;float:right;" href="'.ploopi\crypt::urlencode("admin.php?op=doc_foldermodify&currentfolder={$row['id']}&addfolder=0").'"><img src="./modules/doc/img/ico_main.png" /></a>';
 
     $linked = ($currentfolder ==0 && $row['id_folder'] != 0 && ($row['foldertype'] == 'shared' || $row['foldertype'] == 'public'));
 
@@ -201,20 +200,20 @@ while ($row = $db->fetchrow($rs))
     {
         $style = 'style="font-style:italic;"';
 
-        $link_rs = $db->query("SELECT id, name, foldertype, readonly FROM ploopi_mod_doc_folder WHERE id in ({$row['parents']},{$row['id']})");
+        $link_rs = ploopi\loader::getdb()->query("SELECT id, name, foldertype, readonly FROM ploopi_mod_doc_folder WHERE id in ({$row['parents']},{$row['id']})");
         $link_detail = array(' => ');
 
-        while ($link_row = $db->fetchrow($link_rs)) $link_detail[] = $link_row['name'];
+        while ($link_row = ploopi\loader::getdb()->fetchrow($link_rs)) $link_detail[] = $link_row['name'];
 
         $link = implode(' / ', $link_detail);
     }
 
-    $values[$c]['values']['label']      = array('label' => "<img src=\"./modules/doc/img/{$ico}\" /><span>&nbsp;".ovensia\ploopi\str::htmlentities($row['name'])." {$link}</span>", 'sort_label' => '0 '.strtolower($row['name'])." {$link}");
+    $values[$c]['values']['label']      = array('label' => "<img src=\"./modules/doc/img/{$ico}\" /><span>&nbsp;".ploopi\str::htmlentities($row['name'])." {$link}</span>", 'sort_label' => '0 '.strtolower($row['name'])." {$link}");
 
     if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_explorer_displaysize'])
         $values[$c]['values']['size'] =
             array(
-                'label' => ovensia\ploopi\str::htmlentities("{$row['nbelements']} élément".($row['nbelements']>1 ? 's' : '')),
+                'label' => ploopi\str::htmlentities("{$row['nbelements']} élément".($row['nbelements']>1 ? 's' : '')),
                 'style' => 'text-align:right',
                 'sort_label' => sprintf("0 %016d", $row['nbelements'])
             );
@@ -222,21 +221,21 @@ while ($row = $db->fetchrow($rs))
     if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_explorer_displayuser'])
         $values[$c]['values']['user'] =
             array(
-                'label' => empty($row['user_id']) ? '<em>supprimé</em>' : ovensia\ploopi\str::htmlentities("{$row['lastname']} {$row['firstname']}"),
+                'label' => empty($row['user_id']) ? '<em>supprimé</em>' : ploopi\str::htmlentities("{$row['lastname']} {$row['firstname']}"),
                 'sort_label' => '0 '.(empty($row['user_id']) ? '' : strtolower("{$row['lastname']} {$row['firstname']}"))
             );
 
     if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_explorer_displayworkspace'])
         $values[$c]['values']['workspace'] =
             array(
-                'label' => empty($row['workspace_id']) ? '<em>supprimé</em>' : ovensia\ploopi\str::htmlentities($row['label']),
+                'label' => empty($row['workspace_id']) ? '<em>supprimé</em>' : ploopi\str::htmlentities($row['label']),
                 'sort_label' => '0 '.(empty($row['workspace_id']) ? '' : strtolower($row['label']))
             );
 
     if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_explorer_displaydatetime'])
         $values[$c]['values']['date'] =
             array(
-                'label' => ovensia\ploopi\str::htmlentities($ldate['date'].' '.substr($ldate['time'], 0, 5)),
+                'label' => ploopi\str::htmlentities($ldate['date'].' '.substr($ldate['time'], 0, 5)),
                 'sort_label' => "0 {$row['timestp_modify']}"
             );
 
@@ -247,7 +246,7 @@ while ($row = $db->fetchrow($rs))
         );
 
     $values[$c]['description'] = strip_tags($row['description']);
-    $values[$c]['link'] = ovensia\ploopi\crypt::urlencode("admin.php?op=doc_browser&currentfolder={$row['id']}");
+    $values[$c]['link'] = ploopi\crypt::urlencode("admin.php?op=doc_browser&currentfolder={$row['id']}");
     $values[$c]['style'] = ($row['published']) ? '' : 'background-color:#ffe0e0;';
     $c++;
 }
@@ -259,7 +258,7 @@ $arrWhere = array();
 $arrWhere['module'] = "f.id_module = {$_SESSION['ploopi']['moduleid']}";
 
 // Dossier : /!\ l'admin system voit tous les fichiers dans 'racine'
-$arrWhere['folder'] = ($currentfolder || ovensia\ploopi\acl::isadmin() || ovensia\ploopi\acl::isactionallowed(_DOC_ACTION_ADMIN)) ? "f.id_folder = {$currentfolder}" : "f.id_folder = {$currentfolder} AND f.id_user = {$_SESSION['ploopi']['userid']}";
+$arrWhere['folder'] = ($currentfolder || ploopi\acl::isadmin() || ploopi\acl::isactionallowed(_DOC_ACTION_ADMIN)) ? "f.id_folder = {$currentfolder}" : "f.id_folder = {$currentfolder} AND f.id_user = {$_SESSION['ploopi']['userid']}";
 
 $strWhere = implode(' AND ', $arrWhere);
 
@@ -287,12 +286,12 @@ $sql = "
     WHERE   {$strWhere}
 ";
 
-$db->query($sql);
+ploopi\loader::getdb()->query($sql);
 
-while ($row = $db->fetchrow())
+while ($row = ploopi\loader::getdb()->fetchrow())
 {
     $ksize = sprintf("%.02f",$row['size']/1024);
-    $ldate = ovensia\ploopi\date::timestamp2local($row['timestp_modify']);
+    $ldate = ploopi\date::timestamp2local($row['timestp_modify']);
 
     $ico = (file_exists("./img/mimetypes/ico_{$row['filetype']}.png")) ? "ico_{$row['filetype']}.png" : 'ico_default.png';
 
@@ -301,7 +300,7 @@ while ($row = $db->fetchrow())
     // Le fichier peut être supprimé ?
     if (!doc_file_isreadonly($row, _DOC_ACTION_DELETEFILE))
     {
-        $tools = '<a title="Supprimer" style="display:block;float:right;" href="javascript:void(0);" onclick="javascript:if (confirm(\'Êtes vous certain de vouloir supprimer ce fichier ?\')) document.location.href=\''.ovensia\ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_filedelete&currentfolder={$currentfolder}&docfile_md5id={$row['md5id']}").'\'; return(false);"><img src="./modules/doc/img/ico_trash.png" /></a>';
+        $tools = '<a title="Supprimer" style="display:block;float:right;" href="javascript:void(0);" onclick="javascript:if (confirm(\'Êtes vous certain de vouloir supprimer ce fichier ?\')) document.location.href=\''.ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_filedelete&currentfolder={$currentfolder}&docfile_md5id={$row['md5id']}").'\'; return(false);"><img src="./modules/doc/img/ico_trash.png" /></a>';
     }
     else
     {
@@ -309,28 +308,28 @@ while ($row = $db->fetchrow())
     }
 
     $tools .= '
-        <a title="Modifier" style="display:block;float:right;" href="'.ovensia\ploopi\crypt::urlencode("admin.php?op=doc_fileform&currentfolder={$currentfolder}&docfile_md5id={$row['md5id']}&docfile_tab=modify").'"><img src="./modules/doc/img/ico_main.png" /></a>
-        <a title="Télécharger" style="display:block;float:right;" href="'.ovensia\ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_filedownload&docfile_md5id={$row['md5id']}").'"><img src="./modules/doc/img/ico_download.png" /></a>
-        <a title="Télécharger (ZIP)" style="display:block;float:right;" href="'.ovensia\ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_filedownloadzip&docfile_md5id={$row['md5id']}").'"><img src="./modules/doc/img/ico_download_zip.png" /></a>
+        <a title="Modifier" style="display:block;float:right;" href="'.ploopi\crypt::urlencode("admin.php?op=doc_fileform&currentfolder={$currentfolder}&docfile_md5id={$row['md5id']}&docfile_tab=modify").'"><img src="./modules/doc/img/ico_main.png" /></a>
+        <a title="Télécharger" style="display:block;float:right;" href="'.ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_filedownload&docfile_md5id={$row['md5id']}").'"><img src="./modules/doc/img/ico_download.png" /></a>
+        <a title="Télécharger (ZIP)" style="display:block;float:right;" href="'.ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_filedownloadzip&docfile_md5id={$row['md5id']}").'"><img src="./modules/doc/img/ico_download_zip.png" /></a>
     ';
 
     if ($booConv)
     {
         $arrRenderer = doc_getrenderer($row['extension']);
-        if (isset($arrRenderer[1]) && $arrRenderer[1] == 'unoconv') $tools .= '<a title="Ouvrir en PDF" style="display:block;float:right;" href="'.ovensia\ploopi\crypt::urlencode("admin.php?op=doc_fileform&currentfolder={$currentfolder}&docfile_md5id={$row['md5id']}&docfile_tab=pdf").'"><img src="./modules/doc/img/pdf.png" /></a>';
+        if (isset($arrRenderer[1]) && $arrRenderer[1] == 'unoconv') $tools .= '<a title="Ouvrir en PDF" style="display:block;float:right;" href="'.ploopi\crypt::urlencode("admin.php?op=doc_fileform&currentfolder={$currentfolder}&docfile_md5id={$row['md5id']}&docfile_tab=pdf").'"><img src="./modules/doc/img/pdf.png" /></a>';
     }
 
 
     $values[$c]['values']['label'] =
         array(
-            'label' => "<img src=\"./img/mimetypes/{$ico}\" /><span>&nbsp;".ovensia\ploopi\str::htmlentities($row['name'])."</span>",
+            'label' => "<img src=\"./img/mimetypes/{$ico}\" /><span>&nbsp;".ploopi\str::htmlentities($row['name'])."</span>",
             'sort_label' => '1 '.strtolower($row['name'])
         );
 
     if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_explorer_displaysize'])
         $values[$c]['values']['size'] =
             array(
-                'label' => ovensia\ploopi\str::htmlentities("{$ksize} ko"),
+                'label' => ploopi\str::htmlentities("{$ksize} ko"),
                 'style' => 'text-align:right',
                 'sort_label' => sprintf("1 %016d", $ksize*100)
             );
@@ -338,21 +337,21 @@ while ($row = $db->fetchrow())
     if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_explorer_displayuser'])
         $values[$c]['values']['user'] =
             array(
-                'label' => empty($row['user_id']) ? '<em>supprimé</em>' : ovensia\ploopi\str::htmlentities("{$row['lastname']} {$row['firstname']}"),
+                'label' => empty($row['user_id']) ? '<em>supprimé</em>' : ploopi\str::htmlentities("{$row['lastname']} {$row['firstname']}"),
                 'sort_label' => '1 '.(empty($row['user_id']) ? '' : strtolower("{$row['lastname']} {$row['firstname']}"))
             );
 
     if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_explorer_displayworkspace'])
         $values[$c]['values']['workspace'] =
             array(
-                'label' => empty($row['workspace_id']) ? '<em>supprimé</em>' : ovensia\ploopi\str::htmlentities($row['label']),
+                'label' => empty($row['workspace_id']) ? '<em>supprimé</em>' : ploopi\str::htmlentities($row['label']),
                 'sort_label' => '1 '.(empty($row['workspace_id']) ? '' : strtolower($row['label']))
             );
 
     if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_explorer_displaydatetime'])
         $values[$c]['values']['date'] =
             array(
-                'label' => ovensia\ploopi\str::htmlentities($ldate['date'].' '.substr($ldate['time'], 0, 5)),
+                'label' => ploopi\str::htmlentities($ldate['date'].' '.substr($ldate['time'], 0, 5)),
                 'sort_label' => "1 {$row['timestp_modify']}"
             );
 
@@ -363,7 +362,7 @@ while ($row = $db->fetchrow())
         );
 
     $values[$c]['description'] = strip_tags($row['description']);
-    $values[$c]['link'] = ovensia\ploopi\crypt::urlencode("admin.php?op=doc_fileform&currentfolder={$currentfolder}&docfile_md5id={$row['md5id']}&docfile_tab=open");
+    $values[$c]['link'] = ploopi\crypt::urlencode("admin.php?op=doc_fileform&currentfolder={$currentfolder}&docfile_md5id={$row['md5id']}&docfile_tab=open");
     $values[$c]['style'] = '';
     $c++;
 }
@@ -375,9 +374,9 @@ $arrWhere = array();
 $arrWhere['module'] = "f.id_module = {$_SESSION['ploopi']['moduleid']}";
 
 // Dossier : /!\ l'admin system voit tous les fichiers dans 'racine'
-$arrWhere['folder'] = ($currentfolder || ovensia\ploopi\acl::isadmin() || ovensia\ploopi\acl::isactionallowed(_DOC_ACTION_ADMIN)) ? "f.id_folder = {$currentfolder}" : "f.id_folder = {$currentfolder} AND f.id_user = {$_SESSION['ploopi']['userid']}";
+$arrWhere['folder'] = ($currentfolder || ploopi\acl::isadmin() || ploopi\acl::isactionallowed(_DOC_ACTION_ADMIN)) ? "f.id_folder = {$currentfolder}" : "f.id_folder = {$currentfolder} AND f.id_user = {$_SESSION['ploopi']['userid']}";
 
-if (!$wf_validator && !ovensia\ploopi\acl::isadmin() && !ovensia\ploopi\acl::isactionallowed(_DOC_ACTION_ADMIN)) $arrWhere['user'] = "f.id_user = {$_SESSION['ploopi']['userid']} ";
+if (!$wf_validator && !ploopi\acl::isadmin() && !ploopi\acl::isactionallowed(_DOC_ACTION_ADMIN)) $arrWhere['user'] = "f.id_user = {$_SESSION['ploopi']['userid']} ";
 
 $strWhere = implode(' AND ', $arrWhere);
 
@@ -409,38 +408,38 @@ $sql = "
     WHERE       {$strWhere}
 ";
 
-$db->query($sql);
+ploopi\loader::getdb()->query($sql);
 
-while ($row = $db->fetchrow())
+while ($row = ploopi\loader::getdb()->fetchrow())
 {
     $ksize = sprintf("%.02f",$row['size']/1024);
-    $ldate = ovensia\ploopi\date::timestamp2local($row['timestp_create']);
+    $ldate = ploopi\date::timestamp2local($row['timestp_create']);
 
     $ico = (file_exists("./img/mimetypes/ico_{$row['filetype']}.png")) ? "ico_{$row['filetype']}.png" : 'ico_default.png';
 
     $tools = '';
 
-    if (ovensia\ploopi\acl::isadmin() || ovensia\ploopi\acl::isactionallowed(_DOC_ACTION_ADMIN) || (ovensia\ploopi\acl::isactionallowed(_DOC_ACTION_DELETEFILE) && (!$docfolder_readonly_content || $row['id_user'] == $_SESSION['ploopi']['userid'])))
+    if (ploopi\acl::isadmin() || ploopi\acl::isactionallowed(_DOC_ACTION_ADMIN) || (ploopi\acl::isactionallowed(_DOC_ACTION_DELETEFILE) && (!$docfolder_readonly_content || $row['id_user'] == $_SESSION['ploopi']['userid'])))
     {
-        $tools = '<a title="Supprimer" style="display:block;float:right;" href="javascript:void(0);" onclick="javascript:if (confirm(\'Êtes vous certain de vouloir supprimer ce fichier ?\')) document.location.href=\''.ovensia\ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_filedraftdelete&currentfolder={$currentfolder}&docfiledraft_md5id={$row['md5id']}").'\'; return(false);"><img src="./modules/doc/img/ico_trash.png" /></a>';
+        $tools = '<a title="Supprimer" style="display:block;float:right;" href="javascript:void(0);" onclick="javascript:if (confirm(\'Êtes vous certain de vouloir supprimer ce fichier ?\')) document.location.href=\''.ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_filedraftdelete&currentfolder={$currentfolder}&docfiledraft_md5id={$row['md5id']}").'\'; return(false);"><img src="./modules/doc/img/ico_trash.png" /></a>';
     }
     else
     {
         $tools = '<a title="Supprimer" style="display:block;float:right;" href="javascript:void(0);" onclick="javascript:alert(\'Vous ne disposez pas des autorisations nécessaires pour supprimer ce fichier\');"><img src="./modules/doc/img/ico_trash_grey.png" /></a>';
     }
 
-    if ($wf_validator || ovensia\ploopi\acl::isadmin() || ovensia\ploopi\acl::isactionallowed(_DOC_ACTION_ADMIN))
+    if ($wf_validator || ploopi\acl::isadmin() || ploopi\acl::isactionallowed(_DOC_ACTION_ADMIN))
     {
-        $tools .= '<a title="Publier" style="display:block;float:right;" href="javascript:void(0);" onclick="javascript:if (confirm(\'Êtes vous certain de vouloir publier ce fichier ?\')) document.location.href=\''.ovensia\ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_filepublish&currentfolder={$currentfolder}&docfiledraft_md5id={$row['md5id']}").'\'; return(false);"><img src="./modules/doc/img/ico_validate.png" /></a>';
+        $tools .= '<a title="Publier" style="display:block;float:right;" href="javascript:void(0);" onclick="javascript:if (confirm(\'Êtes vous certain de vouloir publier ce fichier ?\')) document.location.href=\''.ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_filepublish&currentfolder={$currentfolder}&docfiledraft_md5id={$row['md5id']}").'\'; return(false);"><img src="./modules/doc/img/ico_validate.png" /></a>';
     }
 
     $tools .= '
-        <a title="Télécharger" style="display:block;float:right;" href="'.ovensia\ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_filedownload&docfiledraft_md5id={$row['md5id']}").'"><img src="./modules/doc/img/ico_download.png" /></a>
-        <a title="Télécharger (ZIP)" style="display:block;float:right;" href="'.ovensia\ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_filedownloadzip&docfiledraft_md5id={$row['md5id']}").'"><img src="./modules/doc/img/ico_download_zip.png" /></a>
+        <a title="Télécharger" style="display:block;float:right;" href="'.ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_filedownload&docfiledraft_md5id={$row['md5id']}").'"><img src="./modules/doc/img/ico_download.png" /></a>
+        <a title="Télécharger (ZIP)" style="display:block;float:right;" href="'.ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_filedownloadzip&docfiledraft_md5id={$row['md5id']}").'"><img src="./modules/doc/img/ico_download_zip.png" /></a>
     ';
 
     $name = $row['name'];
-    if ($row['id_docfile']) $name .= ($row['dfname'] != $row['name']) ? " (nouvelle version de &laquo; ".ovensia\ploopi\str::htmlentities($row['dfname'])." &raquo;)" : ' (nouvelle version)';
+    if ($row['id_docfile']) $name .= ($row['dfname'] != $row['name']) ? " (nouvelle version de &laquo; ".ploopi\str::htmlentities($row['dfname'])." &raquo;)" : ' (nouvelle version)';
 
     $values[$c]['values']['label'] =
         array(
@@ -458,14 +457,14 @@ while ($row = $db->fetchrow())
     if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_explorer_displayuser'])
         $values[$c]['values']['user'] =
             array(
-                'label' => empty($row['user_id']) ? '<em>supprimé</em>' : ovensia\ploopi\str::htmlentities("{$row['lastname']} {$row['firstname']}"),
+                'label' => empty($row['user_id']) ? '<em>supprimé</em>' : ploopi\str::htmlentities("{$row['lastname']} {$row['firstname']}"),
                 'sort_label' => '3 '.(empty($row['user_id']) ? '' : strtolower("{$row['lastname']} {$row['firstname']}"))
             );
 
     if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_explorer_displayworkspace'])
         $values[$c]['values']['workspace']  =
             array(
-                'label' => empty($row['workspace_id']) ? '<em>supprimé</em>' : ovensia\ploopi\str::htmlentities($row['label']),
+                'label' => empty($row['workspace_id']) ? '<em>supprimé</em>' : ploopi\str::htmlentities($row['label']),
                 'sort_label' => '3 '.(empty($row['workspace_id']) ? '' : strtolower($row['label']))
             );
 
@@ -483,7 +482,7 @@ while ($row = $db->fetchrow())
         );
 
     $values[$c]['description'] = strip_tags($row['description']);
-    $values[$c]['link'] = ovensia\ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_filedownload&docfiledraft_md5id={$row['md5id']}");
+    $values[$c]['link'] = ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_filedownload&docfiledraft_md5id={$row['md5id']}");
     $values[$c]['style'] = 'background-color:#ffe0e0;';
     $c++;
 }

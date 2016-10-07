@@ -20,16 +20,16 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-namespace ovensia\ploopi;
+namespace ploopi;
 
-use ovensia\ploopi;
+use ploopi;
 
 /**
  * Gestion de la metabase.
  *
  * @package ploopi
  * @subpackage metabase
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -39,7 +39,7 @@ use ovensia\ploopi;
  *
  * @package ploopi
  * @subpackage metabase
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -65,7 +65,7 @@ class mb_action extends data_object
 
     function save()
     {
-        global $db;
+        $db = loader::getdb();
 
         if ($this->new && ($this->fields['id_action'] == '' || $this->fields['id_action'] <= 0))
         {
@@ -86,7 +86,7 @@ class mb_action extends data_object
     {
         include_once './include/classes/role.php';
 
-        global $db;
+        $db = loader::getdb();
 
         if ($this->fields['id_action']!=-1 && !$preserve_data)
         {

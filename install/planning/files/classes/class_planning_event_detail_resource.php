@@ -41,7 +41,7 @@
  * @copyright Ovensia
  */
 
-class planning_event_detail_resource extends ovensia\ploopi\data_object
+class planning_event_detail_resource extends ploopi\data_object
 {
     /**
      * Constructeur de la classe

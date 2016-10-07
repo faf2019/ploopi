@@ -34,16 +34,16 @@
 /**
  * Initialisation des données
  */
-$current_ts = ovensia\ploopi\date::createtimestamp();
+$current_ts = ploopi\date::createtimestamp();
 $intMaxRequests = 50;
 
 $load = array();
-$load['m1']['ts'] = ovensia\ploopi\date::timestamp_add($current_ts, 0, -1);
-$load['m5']['ts'] = ovensia\ploopi\date::timestamp_add($current_ts, 0, -5);
-$load['m15']['ts'] = ovensia\ploopi\date::timestamp_add($current_ts, 0, -15);
-$load['m30']['ts'] = ovensia\ploopi\date::timestamp_add($current_ts, 0, -30);
-$load['m60']['ts'] = ovensia\ploopi\date::timestamp_add($current_ts, 0, -60);
-$load['h24']['ts'] = ovensia\ploopi\date::timestamp_add($current_ts, 0, -60*24);
+$load['m1']['ts'] = ploopi\date::timestamp_add($current_ts, 0, -1);
+$load['m5']['ts'] = ploopi\date::timestamp_add($current_ts, 0, -5);
+$load['m15']['ts'] = ploopi\date::timestamp_add($current_ts, 0, -15);
+$load['m30']['ts'] = ploopi\date::timestamp_add($current_ts, 0, -30);
+$load['m60']['ts'] = ploopi\date::timestamp_add($current_ts, 0, -60);
+$load['h24']['ts'] = ploopi\date::timestamp_add($current_ts, 0, -60*24);
 
 $load['m1']['time'] = 60;
 $load['m5']['time'] = 300;
@@ -74,9 +74,9 @@ foreach($load as $key => $l)
             WHERE       ts >= {$l['ts']}
             ";
 
-    $db->query($sql);
+    ploopi\loader::getdb()->query($sql);
 
-    if ($row = $db->fetchrow())
+    if ($row = ploopi\loader::getdb()->fetchrow())
     {
         $load[$key]['res'] = $row;
         $load[$key]['res']['load'] = ($row['total_exec_time'] / ($l['time']*10)) / _PLOOPI_LOAD_NBCORE; // charge (ratio tps d'exec/tps écoulé) en %
@@ -104,7 +104,7 @@ $columns['left']['rps'] = array('label' => 'Requêtes/s', 'width' => 100, 'style'
 $columns['left']['pps'] = array('label' => 'Pages/s', 'width' => 100, 'style' => 'text-align:right;');
 $columns['left']['bw'] = array('label' => 'Bande passante (ko)', 'width' => 150, 'style' => 'text-align:right;');
 
-$db->query($sql);
+ploopi\loader::getdb()->query($sql);
 
 $c = 0;
 // Calcul Charge :
@@ -113,7 +113,7 @@ foreach($load as $key => $l)
     $load_color = system_serverload_getcolor(0,100,$l['res']['load']);
     $tpp_color = system_serverload_getcolor(0,500,$l['res']['tpp']);
 
-    $values[$c]['values']['title'] = array('label' => ovensia\ploopi\str::htmlentities($l['title']), 'style' => 'text-align:right;');
+    $values[$c]['values']['title'] = array('label' => ploopi\str::htmlentities($l['title']), 'style' => 'text-align:right;');
     $values[$c]['values']['load'] = array('label' => $l['res']['load']. ' %', 'style' => "text-align:right;background-color:{$load_color}");
     $values[$c]['values']['tpp'] = array('label' => $l['res']['tpp'], 'style' => "text-align:right;background-color:{$tpp_color}");
     $values[$c]['values']['rps'] = array('label' => $l['res']['rps'], 'style' => 'text-align:right;');
@@ -135,7 +135,7 @@ $skin->display_array($columns, $values, 'array_load');
 
 // Analyse des x dernières requêtes
 
-$db->query( "
+ploopi\loader::getdb()->query( "
             SELECT  ts,
                     browser,
                     system,
@@ -170,17 +170,17 @@ $columns['auto']['uri'] = array('label' => 'URI');
 
 $c = 0;
 
-while ($row = $db->fetchrow())
+while ($row = ploopi\loader::getdb()->fetchrow())
 {
-    $ldate = ovensia\ploopi\date::timestamp2local($row['ts']);
-    $values[$c]['values']['ts'] = array('label' => ovensia\ploopi\str::htmlentities("{$ldate['date']} {$ldate['time']}"), 'sort_label' => $row['ts']);
-    $values[$c]['values']['env'] = array('label' => ovensia\ploopi\str::htmlentities("{$row['browser']} {$row['system']}"));
-    $values[$c]['values']['exec'] = array('label' => ovensia\ploopi\str::htmlentities($row['total_exec_time']));
-    $values[$c]['values']['sql'] = array('label' => ovensia\ploopi\str::htmlentities($row['sql_exec_time']));
-    $values[$c]['values']['numq'] = array('label' => ovensia\ploopi\str::htmlentities($row['numqueries']));
-    $values[$c]['values']['uri'] = array('label' => ovensia\ploopi\str::htmlentities($row['request_uri']));
-    $values[$c]['values']['ip'] = array('label' => ovensia\ploopi\str::htmlentities($row['remote_addr']));
-    $values[$c]['values']['ploopi'] = array('label' => ovensia\ploopi\str::htmlentities("{$row['ploopi_userid']}/{$row['ploopi_workspaceid']}/{$row['ploopi_moduleid']}"));
+    $ldate = ploopi\date::timestamp2local($row['ts']);
+    $values[$c]['values']['ts'] = array('label' => ploopi\str::htmlentities("{$ldate['date']} {$ldate['time']}"), 'sort_label' => $row['ts']);
+    $values[$c]['values']['env'] = array('label' => ploopi\str::htmlentities("{$row['browser']} {$row['system']}"));
+    $values[$c]['values']['exec'] = array('label' => ploopi\str::htmlentities($row['total_exec_time']));
+    $values[$c]['values']['sql'] = array('label' => ploopi\str::htmlentities($row['sql_exec_time']));
+    $values[$c]['values']['numq'] = array('label' => ploopi\str::htmlentities($row['numqueries']));
+    $values[$c]['values']['uri'] = array('label' => ploopi\str::htmlentities($row['request_uri']));
+    $values[$c]['values']['ip'] = array('label' => ploopi\str::htmlentities($row['remote_addr']));
+    $values[$c]['values']['ploopi'] = array('label' => ploopi\str::htmlentities("{$row['ploopi_userid']}/{$row['ploopi_workspaceid']}/{$row['ploopi_moduleid']}"));
 
     $values[$c]['description'] = '';
     $values[$c]['style'] = '';

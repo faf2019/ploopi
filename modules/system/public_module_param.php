@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,7 +25,7 @@
  *
  * @package system
  * @subpackage public
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -65,7 +64,7 @@ if (empty($arrModList))
 else
 {
     ?>
-    <form id="form_modparam" action="<?php echo ovensia\ploopi\crypt::urlencode('admin.php'); ?>" method="post">
+    <form id="form_modparam" action="<?php echo ploopi\crypt::urlencode('admin.php'); ?>" method="post">
         <input type="hidden" name="op" value="param">
         <select class="select" name="idmodule" onchange="javascript:$('form_modparam').submit();">
         <?php
@@ -77,7 +76,7 @@ else
 
             if (empty($idmodule)) $idmodule = $idm;
             ?>
-                <option <?php if ($idmodule == $idm) echo 'selected'; ?> value="<?php echo $idm; ?>"><?php echo ovensia\ploopi\str::htmlentities("{$mod['label']} ({$mod['moduletype']})"); ?></option>
+                <option <?php if ($idmodule == $idm) echo 'selected'; ?> value="<?php echo $idm; ?>"><?php echo ploopi\str::htmlentities("{$mod['label']} ({$mod['moduletype']})"); ?></option>
             <?php
         }
         ?>
@@ -94,7 +93,7 @@ if (isset($idmodule))
 {
     echo $skin->open_simplebloc(_SYSTEM_MODULEPARAM);
 
-    $param_module = new ovensia\ploopi\param();
+    $param_module = new ploopi\param();
     $param_module->open($idmodule, 0, $_SESSION['ploopi']['userid'], 1);
 
     $arrParam = $param_module->getvalues();
@@ -103,7 +102,7 @@ if (isset($idmodule))
     {
         ?>
         <div style="padding:4px;">
-            <form action="<?php echo ovensia\ploopi\crypt::urlencode('admin.php'); ?>" method="post">
+            <form action="<?php echo ploopi\crypt::urlencode('admin.php'); ?>" method="post">
             <input type="hidden" name="op" value="paramsave">
             <input type="hidden" name="idmodule" value="<?php echo $idmodule; ?>">
             <div class="ploopi_form">
@@ -112,18 +111,18 @@ if (isset($idmodule))
             {
                 ?>
                 <p>
-                    <label><?php echo ovensia\ploopi\str::htmlentities($param['label']); ?>:</label>
+                    <label><?php echo ploopi\str::htmlentities($param['label']); ?>:</label>
 
                     <?php
                     if (!empty($param['choices']))
                     {
                         ?>
-                        <select class="select" name="<?php echo ovensia\ploopi\str::htmlentities($name); ?>">
+                        <select class="select" name="<?php echo ploopi\str::htmlentities($name); ?>">
                         <?php
                         foreach($param['choices'] as $value => $displayed_value)
                         {
                             ?>
-                            <option <?php if ($param['value'] == $value) echo 'selected'; ?> value="<?php echo ovensia\ploopi\str::htmlentities($value); ?>"><?php echo ovensia\ploopi\str::htmlentities($displayed_value); ?></option>
+                            <option <?php if ($param['value'] == $value) echo 'selected'; ?> value="<?php echo ploopi\str::htmlentities($value); ?>"><?php echo ploopi\str::htmlentities($displayed_value); ?></option>
                             <?php
                         }
                         ?>
@@ -135,13 +134,13 @@ if (isset($idmodule))
                         if (strlen($param['value'])>200 || strpos($param['value'], "\n") !== false)
                         {
                             ?>
-                            <textarea class="text" name="<?php echo ovensia\ploopi\str::htmlentities($name); ?>"><?php echo htmlspecialchars($param['value']); ?></textarea>
+                            <textarea class="text" name="<?php echo ploopi\str::htmlentities($name); ?>"><?php echo htmlspecialchars($param['value']); ?></textarea>
                             <?php
                         }
                         else
                         {
                             ?>
-                            <input class="text" type="text" name="<?php echo ovensia\ploopi\str::htmlentities($name); ?>" value="<?php echo ovensia\ploopi\str::htmlentities($param['value']); ?>" />
+                            <input class="text" type="text" name="<?php echo ploopi\str::htmlentities($name); ?>" value="<?php echo ploopi\str::htmlentities($param['value']); ?>" />
                             <?php
                         }
                     }

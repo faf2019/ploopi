@@ -20,16 +20,16 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-namespace ovensia\ploopi;
+namespace ploopi;
 
-use ovensia\ploopi;
+use ploopi;
 
 /**
  * Gestion interne des documents
  *
  * @package ploopi
  * @subpackage document
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -39,7 +39,7 @@ use ovensia\ploopi;
  *
  * @package ploopi
  * @subpackage document
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -93,7 +93,7 @@ class documentsfile extends data_object
 
     function openmd5($md5id)
     {
-        global $db;
+        $db = loader::getdb();
 
         $db->query("SELECT id FROM ploopi_documents_file WHERE md5id = '".$db->addslashes($md5id)."'");
         if ($fields = $db->fetchrow()) return($this->open($fields['id']));
@@ -108,7 +108,7 @@ class documentsfile extends data_object
      */
     public function save()
     {
-        global $db;
+        $db = loader::getdb();
         $error = 0;
         if (isset($this->fields['folder'])) unset($this->fields['folder']);
 

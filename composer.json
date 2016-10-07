@@ -1,10 +1,10 @@
 {
     "name": "ovensia/ploopi",
     "description": "Ploopi - plateforme de gestion web - contenus, wiki, documents, planning",
+    "version": "1.9.7-dev",
     "keywords": ["PHP","ploopi","cms","content management system","editor","documents","planning","agenda","booking","wiki","webedit","forms","dbreport"],
     "homepage": "http://www.ploopi.org",
     "type": "project",
-    "version": "1.9.7-dev",
     "minimum-stability": "dev",
     "prefer-stable": true,
     "license": "GPL-2.0",

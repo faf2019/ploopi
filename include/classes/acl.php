@@ -20,9 +20,19 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-namespace ovensia\ploopi;
+namespace ploopi;
 
-use ovensia\ploopi;
+use ploopi;
+
+/**
+ * Fonctions de contrôle des droits
+ *
+ * @package ploopi
+ * @subpackage acl
+ * @copyright Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Stéphane Escaich
+ */
 
 abstract class acl
 {
@@ -37,7 +47,7 @@ abstract class acl
 
     function actions_getusers($id_action, $id_module = -1, $id_workspace = -1)
     {
-        global $db;
+        $db = loader::getdb();
 
         if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];
         if ($id_workspace == -1) $id_workspace = $_SESSION['ploopi']['workspaceid'];

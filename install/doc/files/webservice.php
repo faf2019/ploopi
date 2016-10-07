@@ -36,7 +36,7 @@
 /**
  * Initialisation du module
  */
-ovensia\ploopi\module::init('doc', false, false, false);
+ploopi\module::init('doc', false, false, false);
 include_once './modules/doc/class_docapi.php';
 
 docapi::getInstance()->launch($_REQUEST)->printResult();

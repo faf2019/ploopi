@@ -40,7 +40,7 @@
  * @author Xavier Toussaint
  */
 
-class webedit_article_comment extends ovensia\ploopi\data_object
+class webedit_article_comment extends ploopi\data_object
 {
 
     /**
@@ -67,7 +67,7 @@ class webedit_article_comment extends ovensia\ploopi\data_object
         // Contrôle des commentaire a priori ?
         $this->fields['publish'] = ($_SESSION['ploopi']['modules'][$moduleid]['comment_ctrl'] == 1) ? 0 : 1;
 
-        $this->fields['timestp'] = ovensia\ploopi\date::createtimestamp();
+        $this->fields['timestp'] = ploopi\date::createtimestamp();
         $this->fields['id_module'] = $moduleid;
         $this->fields['id_workspace'] = $workspaceid;
 
@@ -113,7 +113,7 @@ class webedit_article_comment extends ovensia\ploopi\data_object
 
     function admin_comment_refresh($id_article)
     {
-        global $db;
+        $db = ploopi\loader::getdb();
 
         $select =   "
                     SELECT      *
@@ -142,7 +142,7 @@ class webedit_article_comment extends ovensia\ploopi\data_object
 
         $comment_show = (isset($_SESSION['ploopi']['comment']['show'][$id_article]));
 
-        $ajaxRequestShow = ovensia\ploopi\crypt::urlencode('admin-light.php?ploopi_op=webedit_comment_show&id_article='.$id_article);
+        $ajaxRequestShow = ploopi\crypt::urlencode('admin-light.php?ploopi_op=webedit_comment_show&id_article='.$id_article);
         ?>
         <a name="comment_<?php echo $id_article; ?>" style="display:none;"></a>
         <div style="overflow:hidden;">
@@ -160,14 +160,14 @@ class webedit_article_comment extends ovensia\ploopi\data_object
 
                 while ($fields = $db->fetchrow($sql_comment))
                 {
-                    $ldate = ovensia\ploopi\date::timestamp2local($fields['timestp']);
+                    $ldate = ploopi\date::timestamp2local($fields['timestp']);
                     $numrow = (!isset($numrow) || $numrow == 2) ? 1 : 2;
                     ?>
                     <div class="webedit_comment_row_<?php echo $numrow; ?>">
                         <div style="padding: 2px 0 0 8px;">
-                            <div style="float: left;">Par <strong><?php echo ovensia\ploopi\str::htmlentities($fields['nickname']); ?></strong> le <?php echo $ldate['date']; ?> à <?php echo $ldate['time']; ?></div>
+                            <div style="float: left;">Par <strong><?php echo ploopi\str::htmlentities($fields['nickname']); ?></strong> le <?php echo $ldate['date']; ?> à <?php echo $ldate['time']; ?></div>
                             <?php
-                            if (ovensia\ploopi\acl::isactionallowed(_WEBEDIT_ACTION_COMMENT))
+                            if (ploopi\acl::isactionallowed(_WEBEDIT_ACTION_COMMENT))
                             {
                                 if ($fields['publish'])
                                 {
@@ -198,8 +198,8 @@ class webedit_article_comment extends ovensia\ploopi\data_object
                             }
                             ?>
                         </div>
-                        <div style="clear: both; margin:0; padding:0 0 0 8px;"><?php echo ovensia\ploopi\str::htmlentities($fields['email']); ?></div>
-                        <div style="clear: both; padding:2px 4px;"><?php echo ovensia\ploopi\str::htmlentities($fields['comment']); ?></div>
+                        <div style="clear: both; margin:0; padding:0 0 0 8px;"><?php echo ploopi\str::htmlentities($fields['email']); ?></div>
+                        <div style="clear: both; padding:2px 4px;"><?php echo ploopi\str::htmlentities($fields['comment']); ?></div>
                     </div>
                     <?php
                 }

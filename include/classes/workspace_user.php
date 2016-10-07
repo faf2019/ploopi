@@ -20,16 +20,16 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-namespace ovensia\ploopi;
+namespace ploopi;
 
-use ovensia\ploopi;
+use ploopi;
 
 /**
  * Classe d'accès à la table ploopi_workspace_user
  *
  * @package ploopi
  * @subpackage workspace
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -54,7 +54,7 @@ class workspace_user extends data_object
 
     public function delete()
     {
-        global $db;
+        $db = loader::getdb();
 
         // search for modules
         $select =   "

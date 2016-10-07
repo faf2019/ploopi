@@ -20,9 +20,9 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-namespace ovensia\ploopi;
+namespace ploopi;
 
-use ovensia\ploopi;
+use ploopi;
 
 /**
  * Classe d'accès à la table user_action_log.
@@ -30,7 +30,7 @@ use ovensia\ploopi;
  *
  * @package ploopi
  * @subpackage log
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -53,7 +53,7 @@ class user_action_log extends data_object
     public static function getdb()
     {
         if (session::get_usedb()) return session::get_db();
-        else { global $db; return $db; }
+        else { $db = loader::getdb(); return $db; }
     }
 
 
@@ -68,7 +68,7 @@ class user_action_log extends data_object
 
     public static function record($id_action, $id_record, $id_module_type = 0, $id_module = 0, $id_workspace = 0)
     {
-        global $db;
+        $db = loader::getdb();
 
         $user_action_log = new self();
         $user_action_log->fields['user'] = '';
@@ -136,7 +136,7 @@ class user_action_log extends data_object
 
     public static function get($id_record, $id_object = -1, $id_action = -1, $id_module_type = -1, $id_module = -1, $limit_offset = 0, $limit_count = 25)
     {
-        global $db;
+        $db = loader::getdb();
 
         if ($id_module_type == -1) $id_module_type = $_SESSION['ploopi']['moduletypeid'];
         if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];

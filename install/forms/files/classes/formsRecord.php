@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2011 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -40,7 +40,7 @@
  * @author Stéphane Escaich
  */
 
-class formsRecord extends ovensia\ploopi\data_object
+class formsRecord extends ploopi\data_object
 {
     public function __construct(&$objForm)
     {
@@ -51,7 +51,7 @@ class formsRecord extends ovensia\ploopi\data_object
     {
         if ($this->isnew())
         {
-            $this->fields['date_validation'] = ovensia\ploopi\date::createtimestamp();
+            $this->fields['date_validation'] = ploopi\date::createtimestamp();
             $this->fields['user_id'] = isset($_SESSION['ploopi']['user']['id']) ? $_SESSION['ploopi']['user']['id'] : '';
             $this->fields['user_login'] = isset($_SESSION['ploopi']['user']['login']) ? $_SESSION['ploopi']['user']['login'] : '';
             $this->fields['user_firstname'] = isset($_SESSION['ploopi']['user']['firstname']) ? $_SESSION['ploopi']['user']['firstname'] : '';

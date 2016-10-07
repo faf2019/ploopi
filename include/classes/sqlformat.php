@@ -20,9 +20,9 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-namespace ovensia\ploopi;
+namespace ploopi;
 
-use ovensia\ploopi;
+use ploopi;
 
 /**
  * Classe abstraite permettant de formater un contenu SQL à la manière de printf
@@ -68,7 +68,7 @@ abstract class sqlformat
      */
     private static function cb_replace($arrMatches)
     {
-        global $db;
+        $db = loader::getdb();
 
         if (sizeof($arrMatches) == 4)
         {
@@ -137,7 +137,7 @@ abstract class sqlformat
         self::$intNumParam = 0;
 
         // Initialisation de la connexion à la BDD
-        if (is_null($objDb)) { global $db; self::$objDb = $db; }
+        if (is_null($objDb)) { $db = loader::getdb(); self::$objDb = $db; }
         else self::$objDb = $objDb;
 
         // Initialisation des valeurs de remplacement

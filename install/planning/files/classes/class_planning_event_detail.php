@@ -47,7 +47,7 @@ include_once './modules/planning/classes/class_planning_event_detail_resource.ph
  * @copyright Ovensia
  */
 
-class planning_event_detail extends ovensia\ploopi\data_object
+class planning_event_detail extends ploopi\data_object
 {
     private $arrResource;
 
@@ -71,7 +71,7 @@ class planning_event_detail extends ovensia\ploopi\data_object
     {
         if (parent::open($args[0]))
         {
-            global $db;
+            $db = ploopi\loader::getdb();
 
             $this->initresources();
 
@@ -88,7 +88,7 @@ class planning_event_detail extends ovensia\ploopi\data_object
     {
         if (!$this->isnew())
         {
-            global $db;
+            $db = ploopi\loader::getdb();
             // Suppression des resources associées au détail
             $db->query("DELETE FROM ploopi_mod_planning_event_detail_resource WHERE id_event_detail = {$this->fields['id']}");
         }
@@ -135,7 +135,7 @@ class planning_event_detail extends ovensia\ploopi\data_object
      */
     public function delete()
     {
-        global $db;
+        $db = ploopi\loader::getdb();
 
         // Suppression des ressources liées
         $db->query("
@@ -183,7 +183,7 @@ class planning_event_detail extends ovensia\ploopi\data_object
                         switch($strResourceType)
                         {
                             case 'user': // utilisateur
-                                $objUser = new ovensia\ploopi\user();
+                                $objUser = new ploopi\user();
                                 if ($objUser->open($intIdResource)) // utilisateur existe
                                 {
                                     $this->arrResource['user'][$intIdResource] = $intIdResource;
@@ -191,7 +191,7 @@ class planning_event_detail extends ovensia\ploopi\data_object
                             break;
 
                             case 'group': // groupe
-                                $objGroup = new ovensia\ploopi\group();
+                                $objGroup = new ploopi\group();
                                 if ($objGroup->open($intIdResource)) // groupe existe
                                 {
                                     $this->arrResource['group'][$intIdResource] =$intIdResource;

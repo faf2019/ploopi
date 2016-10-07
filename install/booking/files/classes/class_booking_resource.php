@@ -41,7 +41,7 @@
  * @copyright OVENSIA
  */
 
-class booking_resource extends ovensia\ploopi\data_object
+class booking_resource extends ploopi\data_object
 {
     /**
      * Constructeur de la classe
@@ -77,7 +77,7 @@ class booking_resource extends ovensia\ploopi\data_object
     public function getworkspaces()
     {
 
-        global $db;
+        $db = ploopi\loader::getdb();
 
         if (!empty($this->fields['id']))
         {
@@ -108,7 +108,7 @@ class booking_resource extends ovensia\ploopi\data_object
 
         foreach($arrWorkspaces as $intIdWsp)
         {
-            $objWorkspace = new ovensia\ploopi\workspace();
+            $objWorkspace = new ploopi\workspace();
             if ($objWorkspace->open($intIdWsp))
             {
                 // On récupère les utilisateurs des espaces gestionnaires
@@ -116,7 +116,7 @@ class booking_resource extends ovensia\ploopi\data_object
                 {
                     if (!isset($arrUsers[$arrUser['id']])) // Utilisateur non sélectionné
                     {
-                        $objUser = new ovensia\ploopi\user();
+                        $objUser = new ploopi\user();
 
                         if ($objUser->open($arrUser['id']))
                         {

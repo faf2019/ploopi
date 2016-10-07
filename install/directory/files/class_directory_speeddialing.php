@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2009 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -40,7 +40,7 @@
  * @author Stéphane Escaich
  */
 
-class directory_speeddialing extends ovensia\ploopi\data_object
+class directory_speeddialing extends ploopi\data_object
 {
     /**
      * Constructeur de la classe

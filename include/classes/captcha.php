@@ -57,7 +57,7 @@ class ploopi_captcha extends data_object
      */
     function gc() // Garbage collector, Suppression des "vieux captcha"
     {
-        global $db;
+        $db = loader::getdb();
         
         $intTimeMin = time() - 900; // maintenant - 15min
         $db->query("DELETE FROM ploopi_captcha WHERE time <= '{$intTimeMin}'");

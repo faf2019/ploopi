@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,7 +25,7 @@
  *
  * @package system
  * @subpackage admin
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -42,11 +41,11 @@ switch($op)
         {
             $role = new role();
             $role->open($_GET['roleid']);
-            ovensia\ploopi\user_action_log::record(_SYSTEM_ACTION_DELETEROLE, "{$role->fields['label']} ({$role->fields['id']})");
+            ploopi\user_action_log::record(_SYSTEM_ACTION_DELETEROLE, "{$role->fields['label']} ({$role->fields['id']})");
             $role->delete();
-            ovensia\ploopi\output::redirect("admin.php?roleTabItem=tabRoleManagement&reloadsession");
+            ploopi\output::redirect("admin.php?roleTabItem=tabRoleManagement&reloadsession");
         }
-        ovensia\ploopi\output::redirect("admin.php?roleTabItem=tabRoleManagement");
+        ploopi\output::redirect("admin.php?roleTabItem=tabRoleManagement");
     break;
 
     case 'save_role':
@@ -61,15 +60,15 @@ switch($op)
         $role->setvalues($_POST,'role_');
         if (empty($_POST['role_shared'])) $role->fields['shared'] = 0;
 
-        $module = new ovensia\ploopi\module();
+        $module = new ploopi\module();
         if ($module->open($_POST['role_id_module']))
         {
             $role->save($_POST['id_action'], $module->fields['id_module_type']);
-            ovensia\ploopi\user_action_log::record(($isnew) ?_SYSTEM_ACTION_CREATEROLE : _SYSTEM_ACTION_MODIFYROLE, "{$role->fields['label']} ({$role->fields['id']})");
-            ovensia\ploopi\output::redirect("admin.php?roleTabItem=tabRoleManagement&reloadsession");
+            ploopi\user_action_log::record(($isnew) ?_SYSTEM_ACTION_CREATEROLE : _SYSTEM_ACTION_MODIFYROLE, "{$role->fields['label']} ({$role->fields['id']})");
+            ploopi\output::redirect("admin.php?roleTabItem=tabRoleManagement&reloadsession");
         }
 
-        ovensia\ploopi\output::redirect("admin.php?roleTabItem=tabRoleManagement");
+        ploopi\output::redirect("admin.php?roleTabItem=tabRoleManagement");
     break;
 }
 

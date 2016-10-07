@@ -52,7 +52,7 @@ try {
         // TRUNCATE (Supprime l'index complet)
         echo '<hr />TRUNCATE';
         $response = $client->indices()->delete(['index' => 'ploopi', 'client' => ['ignore' => 404]]);
-        // ovensia\ploopi\output::print_r($response);
+        // ploopi\output::print_r($response);
 
         $params = [
             'index' => 'ploopi',
@@ -156,16 +156,16 @@ try {
 
         echo '<hr />CREATE INDEX';
         $response = $client->indices()->create($params);
-        // ovensia\ploopi\output::print_r($response);
+        // ploopi\output::print_r($response);
 
         echo '<hr />GET MAPPING';
         $response = $client->indices()->getMapping();
-        // ovensia\ploopi\output::print_r($response);
+        // ploopi\output::print_r($response);
 
         // SETTINGS
         echo '<hr />GET SETTINGS';
         $response = $client->indices()->getSettings();
-        // ovensia\ploopi\output::print_r($response);
+        // ploopi\output::print_r($response);
 
 
         // Permet que le serveur soit pret ????
@@ -181,7 +181,7 @@ try {
         ];
 
         $response = $client->indices()->analyze($params);
-        ovensia\ploopi\output::print_r($response);
+        ploopi\output::print_r($response);
 
         // CREATE INDEX
         $params = [
@@ -203,7 +203,7 @@ try {
 
         echo '<hr />INDEX';
         $response = $client->index($params);
-        ovensia\ploopi\output::print_r($response);
+        ploopi\output::print_r($response);
 
 
         // GET ID
@@ -215,7 +215,7 @@ try {
 
         $response = $client->get($params);
         echo '<hr />GET ID';
-        ovensia\ploopi\output::print_r($response);
+        ploopi\output::print_r($response);
 
 
         // SEARCH
@@ -254,7 +254,7 @@ try {
 
     $response = $client->search($params);
     echo '<hr />SEARCH';
-    ovensia\ploopi\output::print_r($response);
+    ploopi\output::print_r($response);
 }
 catch (Exception $e) {
     echo $e->getMessage();
@@ -262,9 +262,9 @@ catch (Exception $e) {
 return;
 */
 
-ovensia\ploopi\module::init('wiki');
+ploopi\module::init('wiki');
 
-echo $skin->create_pagetitle(ovensia\ploopi\str::htmlentities($_SESSION['ploopi']['modulelabel']));
+echo $skin->create_pagetitle(ploopi\str::htmlentities($_SESSION['ploopi']['modulelabel']));
 
 // Menu principal
 $strWikiMenu = isset($_GET['wiki_menu']) ? $_GET['wiki_menu'] : '';

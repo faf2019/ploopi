@@ -36,15 +36,15 @@
  * Initialisation du module
  */
 
-ovensia\ploopi\module::init('booking', false, false, false);
+ploopi\module::init('booking', false, false, false);
 
 
-$block->addmenu('Voir le planning', ovensia\ploopi\crypt::urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&booking_menu=planning"), ($_SESSION['ploopi']['moduleid'] == $menu_moduleid && isset($_GET['booking_menu']) && $_GET['booking_menu'] == 'planning'));
+$block->addmenu('Voir le planning', ploopi\crypt::urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&booking_menu=planning"), ($_SESSION['ploopi']['moduleid'] == $menu_moduleid && isset($_GET['booking_menu']) && $_GET['booking_menu'] == 'planning'));
 
-$block->addmenu('Suivi des demandes', ovensia\ploopi\crypt::urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&booking_menu=monitoring"), ($_SESSION['ploopi']['moduleid'] == $menu_moduleid && isset($_GET['booking_menu']) && $_GET['booking_menu'] == 'monitoring'));
+$block->addmenu('Suivi des demandes', ploopi\crypt::urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&booking_menu=monitoring"), ($_SESSION['ploopi']['moduleid'] == $menu_moduleid && isset($_GET['booking_menu']) && $_GET['booking_menu'] == 'monitoring'));
 
 // Administration des données (ressources, types de ressources)
-if (ovensia\ploopi\acl::isactionallowed(array(_BOOKING_ACTION_ADMIN_TYPERESOURCE, _BOOKING_ACTION_ADMIN_RESOURCE), $_SESSION['ploopi']['workspaceid'], $menu_moduleid))
-    $block->addmenu('<b>Administration</b>', ovensia\ploopi\crypt::urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=admin"), ($_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'admin'));
+if (ploopi\acl::isactionallowed(array(_BOOKING_ACTION_ADMIN_TYPERESOURCE, _BOOKING_ACTION_ADMIN_RESOURCE), $_SESSION['ploopi']['workspaceid'], $menu_moduleid))
+    $block->addmenu('<b>Administration</b>', ploopi\crypt::urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=admin"), ($_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'admin'));
 
 ?>

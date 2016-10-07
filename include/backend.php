@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -33,22 +33,22 @@
 // La requête doit forcément porter sur un module valide
 if (isset($_REQUEST['ploopi_moduleid']) && is_numeric($_REQUEST['ploopi_moduleid']) && isset($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['modules'][$_REQUEST['ploopi_moduleid']]))
 {
-    $db->query( "
+    ploopi\loader::getdb()->query( "
         SELECT      mt.label labeltype,
                     m.label
         FROM        ploopi_module m
         INNER JOIN  ploopi_module_type mt
         ON          mt.id = m.id_module_type
-        WHERE       m.id = '".$db->addslashes($_REQUEST['ploopi_moduleid'])."'
+        WHERE       m.id = '".ploopi\loader::getdb()->addslashes($_REQUEST['ploopi_moduleid'])."'
     ");
 
-    if ($row = $db->fetchrow())
+    if ($row = ploopi\loader::getdb()->fetchrow())
     {
         if (file_exists($backend_filepath = "./modules/{$row['labeltype']}/backend.php"))
         {
             include_once $backend_filepath;
-            ovensia\ploopi\system::kill();
+            ploopi\system::kill();
         }
     }
 }
-ovensia\ploopi\output::h404();
+ploopi\output::h404();

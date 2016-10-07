@@ -20,16 +20,16 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-namespace ovensia\ploopi;
+namespace ploopi;
 
-use ovensia\ploopi;
+use ploopi;
 
 /**
  * Gestion des espaces de travail
  *
  * @package ploopi
  * @subpackage workspace
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -39,7 +39,7 @@ use ovensia\ploopi;
  *
  * @package ploopi
  * @subpackage workspace
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -80,7 +80,7 @@ class workspace extends data_object
 
     public function delete()
     {
-        global $db;
+        $db = loader::getdb();
 
         if ($this->fields['id']!=-1 && !$this->fields['system'])
         {
@@ -131,7 +131,7 @@ class workspace extends data_object
     {
         if (isset(self::$_arrCache[$this->fields['id']]['children'])) return self::$_arrCache[$this->fields['id']]['children'];
 
-        global $db;
+        $db = loader::getdb();
 
         $rs = $db->query("SELECT id FROM ploopi_workspace WHERE parents = '{$this->fields['parents']};{$this->fields['id']}' OR parents LIKE '{$this->fields['parents']};{$this->fields['id']};%'");
 
@@ -148,7 +148,7 @@ class workspace extends data_object
     {
         if (isset(self::$_arrCache[$this->fields['id']]['brothers'])) return self::$_arrCache[$this->fields['id']]['brothers'];
 
-        global $db;
+        $db = loader::getdb();
 
         $rs = $db->query("
             SELECT  id
@@ -194,7 +194,7 @@ class workspace extends data_object
 
     public function getusers($booWithGroups = false)
     {
-        global $db;
+        $db = loader::getdb();
 
         $arrUsers = array();
 
@@ -241,7 +241,7 @@ class workspace extends data_object
      */
     public function countusers()
     {
-        global $db;
+        $db = loader::getdb();
 
         $result = $db->query("
             SELECT  count(id_user) as c
@@ -264,7 +264,7 @@ class workspace extends data_object
 
     public function getallusers()
     {
-        global $db;
+        $db = loader::getdb();
 
         $users = array();
 
@@ -318,7 +318,7 @@ class workspace extends data_object
 
     public function getgroups($getchildren = false)
     {
-        global $db;
+        $db = loader::getdb();
 
         $groups = array();
 
@@ -381,7 +381,7 @@ class workspace extends data_object
 
     public function getmodules($light = false)
     {
-        global $db;
+        $db = loader::getdb();
 
         $modules = array();
 
@@ -430,7 +430,7 @@ class workspace extends data_object
 
     public function getsharedmodules($herited = false)
     {
-        global $db;
+        $db = loader::getdb();
 
         $modules = array();
 

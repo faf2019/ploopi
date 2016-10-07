@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,7 +25,7 @@
  *
  * @package system
  * @subpackage admin
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  *
@@ -38,7 +37,7 @@
  */
 ?>
 
-<FORM NAME="form_modify_group" ACTION="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?op=save_group&orgid={$org->fields['id']}"); ?>" METHOD="POST">
+<FORM NAME="form_modify_group" ACTION="<?php echo ploopi\crypt::urlencode("admin.php?op=save_group&orgid={$org->fields['id']}"); ?>" METHOD="POST">
 <TABLE CELLPADDING="2" CELLSPACING="1" ALIGN="CENTER">
 <TR>
     <TD ALIGN=RIGHT><?php echo _SYSTEM_LABEL_LEVEL; ?>:&nbsp;</TD>
@@ -53,7 +52,7 @@
         {
 
             $sel = ($workspace_group->fields['adminlevel'] == $id) ? 'selected' : '';
-            echo "<option $sel value=\"$id\">".ovensia\ploopi\str::htmlentities($label)."</option>";
+            echo "<option $sel value=\"$id\">".ploopi\str::htmlentities($label)."</option>";
         }
     }
     ?>

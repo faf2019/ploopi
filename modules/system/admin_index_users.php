@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,7 +25,7 @@
  *
  * @package system
  * @subpackage admin
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -38,34 +37,34 @@
 switch($op)
 {
     case 'save_user':
-        $user = new ovensia\ploopi\user();
+        $user = new ploopi\user();
 
         // ouverture utilisateur si existant
         if (!empty($_GET['user_id']))
         {
             // ne doit pas modifier le login !
-            if (isset($_POST['user_login'])) ovensia\ploopi\output::redirect('admin.php');
+            if (isset($_POST['user_login'])) ploopi\output::redirect('admin.php');
 
-            if (!is_numeric($_GET['user_id']) || !$user->open($_GET['user_id'])) ovensia\ploopi\output::redirect('admin.php');
+            if (!is_numeric($_GET['user_id']) || !$user->open($_GET['user_id'])) ploopi\output::redirect('admin.php');
         }
         else // nouvel utilisateur
         {
-            if (empty($_POST['user_login'])) ovensia\ploopi\output::redirect('admin.php');
+            if (empty($_POST['user_login'])) ploopi\output::redirect('admin.php');
 
             $_SESSION['system']['save_user'] = $_POST;
 
             if (!isset($_GET['confirm'])) // pas de confirmation de création demandée
             {
                 // test si utilisateur existe déjà => demande de confirmation de création (homonyme ?)
-                $db->query("SELECT id FROM ploopi_user WHERE (lastname = '{$_POST['user_lastname']}' AND firstname = '{$_POST['user_firstname']}') OR (login = '".$db->addslashes($_POST['user_login'])."')");
-                if($db->numrows()) ovensia\ploopi\output::redirect("admin.php?op=manage_account&confirm");
+                ploopi\loader::getdb()->query("SELECT id FROM ploopi_user WHERE (lastname = '{$_POST['user_lastname']}' AND firstname = '{$_POST['user_firstname']}') OR (login = '".ploopi\loader::getdb()->addslashes($_POST['user_login'])."')");
+                if(ploopi\loader::getdb()->numrows()) ploopi\output::redirect("admin.php?op=manage_account&confirm");
             }
             else // on vérifie qd même le doublon de login
             {
                 // test si login deja existant
-                $db->query("SELECT id FROM ploopi_user WHERE login = '".$db->addslashes($_POST['user_login'])."'");
+                ploopi\loader::getdb()->query("SELECT id FROM ploopi_user WHERE login = '".ploopi\loader::getdb()->addslashes($_POST['user_login'])."'");
                 // problème, ce login existe déjà => redirect
-                if($db->numrows()) ovensia\ploopi\output::redirect("admin.php?op=manage_account&confirm");
+                if(ploopi\loader::getdb()->numrows()) ploopi\output::redirect("admin.php?op=manage_account&confirm");
             }
         }
 
@@ -76,7 +75,7 @@ switch($op)
         if (!isset($_POST['user_password_force_update'])) $user->fields['password_force_update'] = 0;
         if (!isset($_POST['user_disabled'])) $user->fields['disabled'] = 0;
         if (!isset($_POST['user_servertimezone'])) $user->fields['servertimezone'] = 0;
-        if (!empty($_POST['user_date_expire'])) $_POST['user_date_expire'] = ovensia\ploopi\date::local2timestamp($_POST['user_date_expire']);
+        if (!empty($_POST['user_date_expire'])) $_POST['user_date_expire'] = ploopi\date::local2timestamp($_POST['user_date_expire']);
 
         $user->setvalues($_POST,'user_');
 
@@ -104,7 +103,7 @@ switch($op)
                 if ($_POST['usernewpass'] == $_POST['usernewpass_confirm'])
                 {
                     // Complexité ok
-                    if (!_PLOOPI_USE_COMPLEXE_PASSWORD || ovensia\ploopi\security::checkpasswordvalidity($_POST['usernewpass']))
+                    if (!_PLOOPI_USE_COMPLEXE_PASSWORD || ploopi\security::checkpasswordvalidity($_POST['usernewpass']))
                     {
                         // Affectation du mot de passe
                         $user->setpassword($_POST['usernewpass']);
@@ -125,17 +124,17 @@ switch($op)
         if ($user->new)
         {
             $user->save();
-            ovensia\ploopi\user_action_log::record(_SYSTEM_ACTION_CREATEUSER, "{$user->fields['login']} - {$user->fields['lastname']} {$user->fields['firstname']} (id:{$user->fields['id']})");
+            ploopi\user_action_log::record(_SYSTEM_ACTION_CREATEUSER, "{$user->fields['login']} - {$user->fields['lastname']} {$user->fields['firstname']} (id:{$user->fields['id']})");
         }
         else
         {
             $user->save();
-            ovensia\ploopi\user_action_log::record(_SYSTEM_ACTION_MODIFYUSER, "{$user->fields['login']} - {$user->fields['lastname']} {$user->fields['firstname']} (id:{$user->fields['id']})");
+            ploopi\user_action_log::record(_SYSTEM_ACTION_MODIFYUSER, "{$user->fields['login']} - {$user->fields['lastname']} {$user->fields['firstname']} (id:{$user->fields['id']})");
         }
 
         if (!empty($_SESSION['system']['user_photopath']))
         {
-            ovensia\ploopi\fs::makedir(_PLOOPI_PATHDATA._PLOOPI_SEP.'system');
+            ploopi\fs::makedir(_PLOOPI_PATHDATA._PLOOPI_SEP.'system');
 
             // photo temporaire présente => copie dans le dossier définitif
             rename($_SESSION['system']['user_photopath'], $user->getphotopath());
@@ -143,14 +142,14 @@ switch($op)
         }
 
         // Suppression photo
-        if (ovensia\ploopi\session::getvar("deletephoto_{$user->fields['id']}")) $user->deletephoto();
+        if (ploopi\session::getvar("deletephoto_{$user->fields['id']}")) $user->deletephoto();
 
         $reload = ''; // reloadsession or not ?
 
         if ($_SESSION['system']['level'] == _SYSTEM_WORKSPACES && !empty($workspaceid))
         {
             // modify adminlevel for current workspace/user
-            $workspace_user = new ovensia\ploopi\workspace_user();
+            $workspace_user = new ploopi\workspace_user();
             if ($workspace_user->open($workspaceid, $user->fields['id'])) {
                 if (!empty($_POST['userworkspace_adminlevel']) && $workspace_user->fields['adminlevel'] != $_POST['userworkspace_adminlevel']) $reload = '&reloadsession';
 
@@ -161,7 +160,7 @@ switch($op)
 
         if ($_SESSION['system']['level'] == _SYSTEM_GROUPS && !empty($groupid))
         {
-            $group_user = new ovensia\ploopi\group_user();
+            $group_user = new ploopi\group_user();
             $group_user->open($groupid, $user->fields['id']);
             $group_user->save();
         }
@@ -170,9 +169,9 @@ switch($op)
         {
             $alphaTabItem = ord(strtolower($user->fields['lastname']))-96;
             if ($alphaTabItem < 1 || $alphaTabItem > 26) $alphaTabItem = 98; // #
-            ovensia\ploopi\output::redirect("admin.php?wspToolbarItem=tabUsers&usrTabItem=tabUserList&alphaTabItem={$alphaTabItem}{$reload}");
+            ploopi\output::redirect("admin.php?wspToolbarItem=tabUsers&usrTabItem=tabUserList&alphaTabItem={$alphaTabItem}{$reload}");
         }
-        else ovensia\ploopi\output::redirect("admin.php?op=modify_user&user_id={$user->fields['id']}&error=password");
+        else ploopi\output::redirect("admin.php?op=modify_user&user_id={$user->fields['id']}&error=password");
     break;
 
 }
@@ -239,41 +238,41 @@ switch($_SESSION['system']['usrTabItem'])
             case 'modify_group':
                 if (!empty($_GET['orgid']) && is_numeric($_GET['orgid']))
                 {
-                    $org = new ovensia\ploopi\group();
+                    $org = new ploopi\group();
                     $org->open($_GET['orgid']);
-                    $workspace_group = new ovensia\ploopi\workspace_group();
+                    $workspace_group = new ploopi\workspace_group();
                     $workspace_group->open($workspaceid,$_GET['orgid']);
                     include './modules/system/admin_index_group_form.php';
                 }
-                else ovensia\ploopi\output::redirect('admin.php');
+                else ploopi\output::redirect('admin.php');
             break;
 
             case 'save_group':
                 if (!empty($_GET['orgid']) && is_numeric($_GET['orgid']))
                 {
                     // modify adminlevel for current group/user
-                    $workspace_group = new ovensia\ploopi\workspace_group();
+                    $workspace_group = new ploopi\workspace_group();
                     $workspace_group->open($workspaceid,$_GET['orgid']);
                     $workspace_group->setvalues($_POST,'workspacegroup_');
                     $workspace_group->save();
-                    ovensia\ploopi\output::redirect("admin.php?reloadsession");
+                    ploopi\output::redirect("admin.php?reloadsession");
                 }
-                else ovensia\ploopi\output::redirect('admin.php');
+                else ploopi\output::redirect('admin.php');
             break;
 
             case 'detach_group':
                 if (!empty($_GET['orgid']) && is_numeric($_GET['orgid']))
                 {
-                    $workspace_group = new ovensia\ploopi\workspace_group();
+                    $workspace_group = new ploopi\workspace_group();
                     $workspace_group->open($workspaceid,$_GET['orgid']);
                     $workspace_group->delete();
 
                     unset($_SESSION['system']['groups']);
                     unset($_SESSION['system']['workspaces']);
 
-                    ovensia\ploopi\output::redirect("admin.php?reloadsession");
+                    ploopi\output::redirect("admin.php?reloadsession");
                 }
-                else ovensia\ploopi\output::redirect('admin.php');
+                else ploopi\output::redirect('admin.php');
             break;
 
             default:
@@ -290,17 +289,17 @@ switch($_SESSION['system']['usrTabItem'])
                 case _SYSTEM_GROUPS :
                     if (!empty($_GET['orgid']) && is_numeric($_GET['orgid']))
                     {
-                        $org = new ovensia\ploopi\group();
+                        $org = new ploopi\group();
                         $org->open($_GET['orgid']);
                         $org->attachtogroup($workspaceid);
 
                         unset($_SESSION['system']['groups']);
                         unset($_SESSION['system']['workspaces']);
 
-                        ovensia\ploopi\user_action_log::record(_SYSTEM_ACTION_ATTACHGROUP, "{$org->fields['label']} (id:{$org->fields['id']}) => {$workspace->fields['label']} (id:$workspaceid)");
-                        ovensia\ploopi\output::redirect("admin.php?reloadsession");
+                        ploopi\user_action_log::record(_SYSTEM_ACTION_ATTACHGROUP, "{$org->fields['label']} (id:{$org->fields['id']}) => {$workspace->fields['label']} (id:$workspaceid)");
+                        ploopi\output::redirect("admin.php?reloadsession");
                     }
-                    else ovensia\ploopi\output::redirect('admin.php');
+                    else ploopi\output::redirect('admin.php');
             break;
 
             default:
@@ -319,23 +318,23 @@ switch($_SESSION['system']['usrTabItem'])
                     switch ($_SESSION['system']['level'])
                     {
                         case _SYSTEM_GROUPS :
-                            $user = new ovensia\ploopi\user();
+                            $user = new ploopi\user();
                             $user->open($_GET['userid']);
                             $user->attachtogroup($groupid);
-                            ovensia\ploopi\user_action_log::record(_SYSTEM_ACTION_ATTACHUSER, "{$user->fields['login']} - {$user->fields['lastname']} {$user->fields['firstname']} (id:{$user->fields['id']}) => {$group->fields['label']} (id:$groupid)");
-                            ovensia\ploopi\output::redirect("admin.php?reloadsession&alphaTabItem={$alphaTabItem}");
+                            ploopi\user_action_log::record(_SYSTEM_ACTION_ATTACHUSER, "{$user->fields['login']} - {$user->fields['lastname']} {$user->fields['firstname']} (id:{$user->fields['id']}) => {$group->fields['label']} (id:$groupid)");
+                            ploopi\output::redirect("admin.php?reloadsession&alphaTabItem={$alphaTabItem}");
                         break;
 
                         case _SYSTEM_WORKSPACES :
-                            $user = new ovensia\ploopi\user();
+                            $user = new ploopi\user();
                             $user->open($_GET['userid']);
                             $user->attachtoworkspace($workspaceid);
-                            ovensia\ploopi\user_action_log::record(_SYSTEM_ACTION_ATTACHUSER, "{$user->fields['login']} - {$user->fields['lastname']} {$user->fields['firstname']} (id:{$user->fields['id']}) => {$workspace->fields['label']} (id:$workspaceid)");
-                            ovensia\ploopi\output::redirect("admin.php?reloadsession&alphaTabItem={$alphaTabItem}");
+                            ploopi\user_action_log::record(_SYSTEM_ACTION_ATTACHUSER, "{$user->fields['login']} - {$user->fields['lastname']} {$user->fields['firstname']} (id:{$user->fields['id']}) => {$workspace->fields['label']} (id:$workspaceid)");
+                            ploopi\output::redirect("admin.php?reloadsession&alphaTabItem={$alphaTabItem}");
                         break;
                     }
                 }
-                else ovensia\ploopi\output::redirect('admin.php');
+                else ploopi\output::redirect('admin.php');
             break;
 
             default:
@@ -346,7 +345,7 @@ switch($_SESSION['system']['usrTabItem'])
 
     case 'tabUserList':
 
-        $user = new ovensia\ploopi\user();
+        $user = new ploopi\user();
 
         switch($op)
         {
@@ -354,11 +353,11 @@ switch($_SESSION['system']['usrTabItem'])
                 if (!empty($_GET['user_id']) && is_numeric($_GET['user_id']))
                 {
                     $user->open($_GET['user_id']);
-                    $group_user = new ovensia\ploopi\group_user();
+                    $group_user = new ploopi\group_user();
                     $group_user->open($groupid,$_GET['user_id']);
                     include './modules/system/admin_index_users_form.php';
                 }
-                else ovensia\ploopi\output::redirect('admin.php');
+                else ploopi\output::redirect('admin.php');
             break;
 
             case 'delete_user':
@@ -371,7 +370,7 @@ switch($_SESSION['system']['usrTabItem'])
                     {
                         if ($_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_generate_htpasswd']) system_generate_htpasswd($user->fields['login'], '', true);
 
-                        ovensia\ploopi\user_action_log::record(_SYSTEM_ACTION_DELETEUSER, "{$user->fields['login']} - {$user->fields['lastname']} {$user->fields['firstname']} (id:{$user->fields['id']})");
+                        ploopi\user_action_log::record(_SYSTEM_ACTION_DELETEUSER, "{$user->fields['login']} - {$user->fields['lastname']} {$user->fields['firstname']} (id:{$user->fields['id']})");
 
                         ?>
                         <div style="padding:4px;">
@@ -381,25 +380,25 @@ switch($_SESSION['system']['usrTabItem'])
                             <?php
 
                             $user->delete();
-                            if ($admin_redirect) ovensia\ploopi\output::redirect("admin.php?reloadsession");
+                            if ($admin_redirect) ploopi\output::redirect("admin.php?reloadsession");
 
                             ?>
                             <div style="text-align:right;">
-                                <input type="button" class="button" value="<?php echo _PLOOPI_CONTINUE; ?>" onclick="javascript:document.location.href='<?php echo ovensia\ploopi\crypt::urlencode("admin.php?reloadsession"); ?>'">
+                                <input type="button" class="button" value="<?php echo _PLOOPI_CONTINUE; ?>" onclick="javascript:document.location.href='<?php echo ploopi\crypt::urlencode("admin.php?reloadsession"); ?>'">
                             </div>
                         </div>
                         <?php
                     }
-                    else ovensia\ploopi\output::redirect('admin.php');
+                    else ploopi\output::redirect('admin.php');
                 }
-                else ovensia\ploopi\output::redirect('admin.php');
+                else ploopi\output::redirect('admin.php');
             break;
 
             case 'attach_user':
                 // on efface la sauvegarde des données utilisateur si elles existent
                 if (isset($_SESSION['system']['save_user'])) unset($_SESSION['system']['save_user']);
 
-                $user = new ovensia\ploopi\user();
+                $user = new ploopi\user();
                 if (isset($_GET['user_id']) && is_numeric($_GET['user_id']) && $user->open($_GET['user_id']))
                 {
                     $user->attachtogroup($groupid);
@@ -407,9 +406,9 @@ switch($_SESSION['system']['usrTabItem'])
                     $alphaTabItem = ord(strtolower($user->fields['lastname']))-96;
                     if ($alphaTabItem < 1 || $alphaTabItem > 26) $alphaTabItem = 98; // #
 
-                    ovensia\ploopi\output::redirect("admin.php?reloadsession&usrTabItem=tabUserList&alphaTabItem={$alphaTabItem}");
+                    ploopi\output::redirect("admin.php?reloadsession&usrTabItem=tabUserList&alphaTabItem={$alphaTabItem}");
                 }
-                else ovensia\ploopi\output::redirect('admin.php');
+                else ploopi\output::redirect('admin.php');
             break;
 
             case 'detach_user':
@@ -421,13 +420,13 @@ switch($_SESSION['system']['usrTabItem'])
                             global $admin_redirect;
                             $admin_redirect = true;
 
-                            $user = new ovensia\ploopi\user();
+                            $user = new ploopi\user();
                             $user->open($_GET['user_id']);
 
-                            $group = new ovensia\ploopi\group();
+                            $group = new ploopi\group();
                             $group->open($groupid);
 
-                            ovensia\ploopi\user_action_log::record(_SYSTEM_ACTION_DETACHUSER, "{$user->fields['login']} - {$user->fields['lastname']} {$user->fields['firstname']} (id:{$user->fields['id']}) => {$group->fields['label']} (id:$groupid)");
+                            ploopi\user_action_log::record(_SYSTEM_ACTION_DETACHUSER, "{$user->fields['login']} - {$user->fields['lastname']} {$user->fields['firstname']} (id:{$user->fields['id']}) => {$group->fields['label']} (id:$groupid)");
 
                             ?>
                             <div style="padding:4px;">
@@ -435,14 +434,14 @@ switch($_SESSION['system']['usrTabItem'])
                                     <?php echo str_replace('<LABELGROUP>',$group->fields['label'],str_replace('<LABELUSER>',$user->fields['login'],_SYSTEM_LABEL_USERDETACH)); ?>
                                 </div>
                                 <?php
-                                $group_user = new ovensia\ploopi\group_user();
+                                $group_user = new ploopi\group_user();
                                 $group_user->open($groupid,$_GET['user_id']);
                                 $group_user->delete();
 
-                                if ($admin_redirect) ovensia\ploopi\output::redirect("admin.php?reloadsession");
+                                if ($admin_redirect) ploopi\output::redirect("admin.php?reloadsession");
                                 ?>
                                 <div style="text-align:right;">
-                                    <input type="button" class="button" value="<?php echo _PLOOPI_CONTINUE; ?>" onclick="javascript:document.location.href='<?php echo ovensia\ploopi\crypt::urlencode("admin.php?reloadsession"); ?>'">
+                                    <input type="button" class="button" value="<?php echo _PLOOPI_CONTINUE; ?>" onclick="javascript:document.location.href='<?php echo ploopi\crypt::urlencode("admin.php?reloadsession"); ?>'">
                                 </div>
                             </div>
                             <?php
@@ -452,13 +451,13 @@ switch($_SESSION['system']['usrTabItem'])
                             global $admin_redirect;
                             $admin_redirect = true;
 
-                            $user = new ovensia\ploopi\user();
+                            $user = new ploopi\user();
                             $user->open($_GET['user_id']);
 
-                            $workspace = new ovensia\ploopi\workspace();
+                            $workspace = new ploopi\workspace();
                             $workspace->open($workspaceid);
 
-                            ovensia\ploopi\user_action_log::record(_SYSTEM_ACTION_DETACHUSER, "{$user->fields['login']} - {$user->fields['lastname']} {$user->fields['firstname']} (id:{$user->fields['id']}) => {$workspace->fields['label']} (id:$workspaceid)");
+                            ploopi\user_action_log::record(_SYSTEM_ACTION_DETACHUSER, "{$user->fields['login']} - {$user->fields['lastname']} {$user->fields['firstname']} (id:{$user->fields['id']}) => {$workspace->fields['label']} (id:$workspaceid)");
 
                             ?>
                             <div style="padding:4px;">
@@ -467,14 +466,14 @@ switch($_SESSION['system']['usrTabItem'])
                                 </div>
                                 <?php
 
-                                $workspace_user = new ovensia\ploopi\workspace_user();
+                                $workspace_user = new ploopi\workspace_user();
                                 $workspace_user->open($workspaceid,$_GET['user_id']);
                                 $workspace_user->delete();
 
-                                if ($admin_redirect) ovensia\ploopi\output::redirect("admin.php?reloadsession");
+                                if ($admin_redirect) ploopi\output::redirect("admin.php?reloadsession");
                                 ?>
                                 <div style="text-align:right;">
-                                    <input type="button" class="button" value="<?php echo _PLOOPI_CONTINUE; ?>" onclick="javascript:document.location.href='<?php echo ovensia\ploopi\crypt::urlencode("admin.php?reloadsession"); ?>'">
+                                    <input type="button" class="button" value="<?php echo _PLOOPI_CONTINUE; ?>" onclick="javascript:document.location.href='<?php echo ploopi\crypt::urlencode("admin.php?reloadsession"); ?>'">
                                 </div>
                             </div>
                             <?php
@@ -491,13 +490,13 @@ switch($_SESSION['system']['usrTabItem'])
     break;
 
     case 'tabUserAdd':
-        $user = new ovensia\ploopi\user();
+        $user = new ploopi\user();
 
         switch($op)
         {
             case 'modify_user':
                 if (!empty($_GET['user_id']) && is_numeric($_GET['user_id'])) include './modules/system/admin_index_users_form.php';
-                else ovensia\ploopi\output::redirect('admin.php');
+                else ploopi\output::redirect('admin.php');
             break;
 
             default:
@@ -526,7 +525,7 @@ switch($_SESSION['system']['usrTabItem'])
                             ?>
                             <p class="ploopi_va">
                                 <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/attention.png" style="margin-right:4px;" />
-                                <span><?php echo ovensia\ploopi\str::htmlentities($strMsg); ?></span>
+                                <span><?php echo ploopi\str::htmlentities($strMsg); ?></span>
                             </p>
                             <?php
                         }
@@ -535,7 +534,7 @@ switch($_SESSION['system']['usrTabItem'])
                     <?php
                 }
                 ?>
-                <div style="padding:4px;"><input type="button" class="button" value="Retour" onclick="javascript:document.location.href='<?php echo ovensia\ploopi\crypt::urlencode("admin.php?usrTabItem=tabUserImport"); ?>';" /></div>
+                <div style="padding:4px;"><input type="button" class="button" value="Retour" onclick="javascript:document.location.href='<?php echo ploopi\crypt::urlencode("admin.php?usrTabItem=tabUserImport"); ?>';" /></div>
                 <?php
             break;
 
@@ -546,7 +545,7 @@ switch($_SESSION['system']['usrTabItem'])
                 {
                     for ($intI = 1; $intI < count($_SESSION['system']['user_import']); $intI++)
                     {
-                        $objUser = new ovensia\ploopi\user();
+                        $objUser = new ploopi\user();
                         $objUser->init_description();
 
                         $intJ = 0;
@@ -563,13 +562,13 @@ switch($_SESSION['system']['usrTabItem'])
                         }
 
                         // On vérifie que le login n'existe pas déjà
-                        $db->query("
+                        ploopi\loader::getdb()->query("
                             SELECT  login
                             FROM    ploopi_user
-                            WHERE   login = '".$db->addslashes($objUser->fields['login'])."'
+                            WHERE   login = '".ploopi\loader::getdb()->addslashes($objUser->fields['login'])."'
                         ");
 
-                        if (!$db->numrows()) // ok pas de login identique dans la BDD
+                        if (!ploopi\loader::getdb()->numrows()) // ok pas de login identique dans la BDD
                         {
                             $objUser->setpassword($objUser->fields['password']);
 
@@ -586,7 +585,7 @@ switch($_SESSION['system']['usrTabItem'])
                     }
                 }
 
-                ovensia\ploopi\output::redirect("admin.php?usrTabItem=tabUserImport&op=end");
+                ploopi\output::redirect("admin.php?usrTabItem=tabUserImport&op=end");
             break;
 
             case 'preview':

@@ -20,16 +20,16 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-namespace ovensia\ploopi;
+namespace ploopi;
 
-use ovensia\ploopi;
+use ploopi;
 
 /**
  * Gestion des partages
  *
  * @package ploopi
  * @subpackage share
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -39,7 +39,7 @@ use ovensia\ploopi;
  *
  * @package ploopi
  * @subpackage share
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -87,7 +87,7 @@ class share extends data_object
 
     public static function selectusers($id_object = -1, $id_record = -1, $id_module = -1, $strTitle = null, $strForceShareId = null, $strPathIcon = null)
     {
-        global $db;
+        $db = loader::getdb();
 
         if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];
 
@@ -166,7 +166,7 @@ class share extends data_object
 
     public static function add($id_object = -1, $id_record = -1, $id_module = -1, $strForceShareId = null)
     {
-        global $db;
+        $db = loader::getdb();
         include_once './include/classes/share.php';
 
         if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];
@@ -226,7 +226,7 @@ class share extends data_object
 
     public static function get($id_user = -1, $id_object = -1, $id_record = -1,  $id_module = -1)
     {
-        global $db;
+        $db = loader::getdb();
 
         if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];
 

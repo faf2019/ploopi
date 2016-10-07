@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2012 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Copyright (c) 2009 HeXad
 
     Contributors hold Copyright (c) to their code submissions.
@@ -28,7 +27,7 @@
  *
  * @package doc
  * @subpackage public
- * @copyright Netlor, Ovensia, HeXad
+ * @copyright Ovensia, HeXad
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  *
@@ -96,7 +95,7 @@ if ($newfile)
             $wf_validator = in_array($currentfolder, $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['validation']['folders']);
             ?>
 
-            <form method="post" enctype="multipart/form-data" action="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?ploopi_op=doc_filesave&currentfolder={$currentfolder}"); ?>"  onsubmit="javascript:return doc_file_validate(this,<?php echo ($newfile) ? 'true' : 'false'; ?>,<?php echo (!empty($wfusers) && !$wf_validator) ? 'true' : 'false'; ?>);">
+            <form method="post" enctype="multipart/form-data" action="<?php echo ploopi\crypt::urlencode("admin.php?ploopi_op=doc_filesave&currentfolder={$currentfolder}"); ?>"  onsubmit="javascript:return doc_file_validate(this,<?php echo ($newfile) ? 'true' : 'false'; ?>,<?php echo (!empty($wfusers) && !$wf_validator) ? 'true' : 'false'; ?>);">
             <input type="hidden" name="doc_mode" id="doc_mode" value="host">
             <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo $max_filesize*1024; ?>">
             <div style="padding:2px;">
@@ -139,7 +138,7 @@ if ($newfile)
         {
             ?>
             <div id="doc_form_server" style="display:none;">
-                <form method="post" action="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?ploopi_op=doc_filesave&currentfolder={$currentfolder}&doc_mode=server"); ?>"  onsubmit="javascript:return doc_file_validate(this,<?php echo ($newfile) ? 'true' : 'false'; ?>,<?php echo (!empty($wfusers) && !$wf_validator) ? 'true' : 'false'; ?>);">
+                <form method="post" action="<?php echo ploopi\crypt::urlencode("admin.php?ploopi_op=doc_filesave&currentfolder={$currentfolder}&doc_mode=server"); ?>"  onsubmit="javascript:return doc_file_validate(this,<?php echo ($newfile) ? 'true' : 'false'; ?>,<?php echo (!empty($wfusers) && !$wf_validator) ? 'true' : 'false'; ?>);">
                 <div style="padding:2px;">
                     <div style="padding:2px;font-weight:bold;">Fichiers : </div>
                     <?php
@@ -147,8 +146,8 @@ if ($newfile)
                     {
                         ?>
                         <p class="ploopi_va" style="margin-bottom:2px;">
-                            <input type="text" class="text" name="docfile_file_<?php echo $i; ?>" id="docfile_file_server_<?php echo $i; ?>" value="" style="width:160px;cursor:pointer;" onclick="javascript:ploopi_filexplorer_popup('<?php echo ovensia\ploopi\fs::filexplorer_init(_PLOOPI_PATHSHARED, "docfile_file_server_{$i}", "docfile_explorer_{$i}"); ?>', event);" readonly="readonly" />
-                            <input type="button" class="button" value="Parcourir" style="width:90px;" onclick="javascript:ploopi_filexplorer_popup('<?php echo ovensia\ploopi\fs::filexplorer_init(_PLOOPI_PATHSHARED, "docfile_file_server_{$i}", "docfile_explorer_{$i}"); ?>', event);" />&nbsp;<input type="text" style="width:250px;" maxlength="100" class="text" name="docfile_description_<?php echo $i; ?>" />
+                            <input type="text" class="text" name="docfile_file_<?php echo $i; ?>" id="docfile_file_server_<?php echo $i; ?>" value="" style="width:160px;cursor:pointer;" onclick="javascript:ploopi_filexplorer_popup('<?php echo ploopi\fs::filexplorer_init(_PLOOPI_PATHSHARED, "docfile_file_server_{$i}", "docfile_explorer_{$i}"); ?>', event);" readonly="readonly" />
+                            <input type="button" class="button" value="Parcourir" style="width:90px;" onclick="javascript:ploopi_filexplorer_popup('<?php echo ploopi\fs::filexplorer_init(_PLOOPI_PATHSHARED, "docfile_file_server_{$i}", "docfile_explorer_{$i}"); ?>', event);" />&nbsp;<input type="text" style="width:250px;" maxlength="100" class="text" name="docfile_description_<?php echo $i; ?>" />
                             <span class="ploopi_checkbox" onclick="javascript:ploopi_checkbox_click(event, 'docfile_readonly_<?php echo $i; ?>_server');">
                                 <input type="checkbox" name="docfile_readonly_<?php echo $i; ?>" id="docfile_readonly_<?php echo $i; ?>_server" value="1">
                                 <span>Contenu protégé</span>
@@ -187,26 +186,26 @@ else
 
     $docfile_tab = empty($_GET['docfile_tab']) ? 'open' : $_GET['docfile_tab'];
 
-    $db->query("SELECT filetype FROM ploopi_mimetype WHERE ext = '{$docfile->fields['extension']}'");
-    $row = $db->fetchrow();
+    ploopi\loader::getdb()->query("SELECT filetype FROM ploopi_mimetype WHERE ext = '{$docfile->fields['extension']}'");
+    $row = ploopi\loader::getdb()->fetchrow();
 
     $ico = (!empty($row['filetype']) && file_exists("./img/mimetypes/ico_{$row['filetype']}.png")) ? "ico_{$row['filetype']}.png" : 'ico_default.png';
     ?>
 
     <div class="doc_fileinfo">
-        <a href="javascript:void(0);" onclick="javascript:ploopi_tickets_new(event, '<?php echo _DOC_OBJECT_FILE ?>','<?php echo $docfile->fields['md5id']; ?>', '<?php echo addslashes(ovensia\ploopi\str::htmlentities($docfile->fields['name'])); ?>');" title="Envoyer en Pièce Jointe">
+        <a href="javascript:void(0);" onclick="javascript:ploopi_tickets_new(event, '<?php echo _DOC_OBJECT_FILE ?>','<?php echo $docfile->fields['md5id']; ?>', '<?php echo addslashes(ploopi\str::htmlentities($docfile->fields['name'])); ?>');" title="Envoyer en Pièce Jointe">
             <p class="ploopi_va">
                 <img src="./modules/doc/img/send.png" />
                 <span>Envoyer</span>
             </p>
         </a>
-        <a href="<?php echo ovensia\ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_filedownloadzip&docfile_md5id={$docfile->fields['md5id']}"); ?>" title="Télécharger Zip">
+        <a href="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_filedownloadzip&docfile_md5id={$docfile->fields['md5id']}"); ?>" title="Télécharger Zip">
             <p class="ploopi_va">
                 <img src="./modules/doc/img/downloadzip.png" />
                 <span>Télécharger Zip</span>
             </p>
         </a>
-        <a href="<?php echo ovensia\ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_filedownload&docfile_md5id={$docfile->fields['md5id']}"); ?>" title="Télécharger">
+        <a href="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_filedownload&docfile_md5id={$docfile->fields['md5id']}"); ?>" title="Télécharger">
             <p class="ploopi_va">
                 <img src="./modules/doc/img/download.png" />
                 <span>Télécharger</span>
@@ -216,7 +215,7 @@ else
         <div>
             <p class="ploopi_va" style="white-space:nowrap;overflow:hidden;">
                 <img src="./img/mimetypes/<?php echo $ico; ?>" />
-                <strong><?php echo ovensia\ploopi\str::htmlentities("{$docfile->fields['name']} {$title}"); ?></strong>
+                <strong><?php echo ploopi\str::htmlentities("{$docfile->fields['name']} {$title}"); ?></strong>
             </p>
         </div>
     </div>
@@ -225,7 +224,7 @@ else
 
     if (!empty($currentfolder) && $objFolder->fields['foldertype'] == 'public')
     {
-        $strPublicUrl = _PLOOPI_BASEPATH.'/'.ovensia\ploopi\str::urlrewrite("index.php?ploopi_op=doc_file_download&docfile_md5id={$docfile->fields['md5id']}", doc_getrewriterules(), $docfile->fields['name'], null, true);
+        $strPublicUrl = _PLOOPI_BASEPATH.'/'.ploopi\str::urlrewrite("index.php?ploopi_op=doc_file_download&docfile_md5id={$docfile->fields['md5id']}", doc_getrewriterules(), $docfile->fields['name'], null, true);
         ?>
         <p class="ploopi_va" style="padding:4px;border-bottom:1px solid #aaa;background-color:#ddd;">
             <strong>URL publique du fichier :</strong>
@@ -236,23 +235,23 @@ else
     ?>
 
     <div class="ploopi_tabs" style="margin-top:1px;">
-        <a <?php if ($docfile_tab == 'history') echo 'style="font-weight:bold;"'; ?> href="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?op=doc_fileform&currentfolder={$currentfolder}&docfile_md5id={$docfile->fields['md5id']}&docfile_tab=history"); ?>"><img src="./modules/doc/img/ico_history.png"><span>Anciennes versions</span></a>
-        <a <?php if ($docfile_tab == 'keywords') echo 'style="font-weight:bold;"'; ?> href="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?op=doc_fileform&currentfolder={$currentfolder}&docfile_md5id={$docfile->fields['md5id']}&docfile_tab=keywords"); ?>" title="Mots clés"><img src="./modules/doc/img/ico_keywords.png"><span>Mots clés</span></a>
-        <a <?php if ($docfile_tab == 'meta') echo 'style="font-weight:bold;"'; ?> href="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?op=doc_fileform&currentfolder={$currentfolder}&docfile_md5id={$docfile->fields['md5id']}&docfile_tab=meta"); ?>" title="Métadonnées / Propriétés"><img src="./modules/doc/img/ico_meta.png"><span>Métadonnées</span></a>
-        <a <?php if ($docfile_tab == 'modify') echo 'style="font-weight:bold;"'; ?> href="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?op=doc_fileform&currentfolder={$currentfolder}&docfile_md5id={$docfile->fields['md5id']}&docfile_tab=modify"); ?>" title="Modifier le fichier"><img src="./modules/doc/img/ico_main.png"><span>Modifier</span></a>
+        <a <?php if ($docfile_tab == 'history') echo 'style="font-weight:bold;"'; ?> href="<?php echo ploopi\crypt::urlencode("admin.php?op=doc_fileform&currentfolder={$currentfolder}&docfile_md5id={$docfile->fields['md5id']}&docfile_tab=history"); ?>"><img src="./modules/doc/img/ico_history.png"><span>Anciennes versions</span></a>
+        <a <?php if ($docfile_tab == 'keywords') echo 'style="font-weight:bold;"'; ?> href="<?php echo ploopi\crypt::urlencode("admin.php?op=doc_fileform&currentfolder={$currentfolder}&docfile_md5id={$docfile->fields['md5id']}&docfile_tab=keywords"); ?>" title="Mots clés"><img src="./modules/doc/img/ico_keywords.png"><span>Mots clés</span></a>
+        <a <?php if ($docfile_tab == 'meta') echo 'style="font-weight:bold;"'; ?> href="<?php echo ploopi\crypt::urlencode("admin.php?op=doc_fileform&currentfolder={$currentfolder}&docfile_md5id={$docfile->fields['md5id']}&docfile_tab=meta"); ?>" title="Métadonnées / Propriétés"><img src="./modules/doc/img/ico_meta.png"><span>Métadonnées</span></a>
+        <a <?php if ($docfile_tab == 'modify') echo 'style="font-weight:bold;"'; ?> href="<?php echo ploopi\crypt::urlencode("admin.php?op=doc_fileform&currentfolder={$currentfolder}&docfile_md5id={$docfile->fields['md5id']}&docfile_tab=modify"); ?>" title="Modifier le fichier"><img src="./modules/doc/img/ico_main.png"><span>Modifier</span></a>
         <?php
-        if (ovensia\ploopi\session::getvar('unoconv') === true)
+        if (ploopi\session::getvar('unoconv') === true)
         {
             $arrRenderer = doc_getrenderer($docfile->fields['extension']);
             if (isset($arrRenderer[1]) && $arrRenderer[1] == 'unoconv')
             {
                 ?>
-                <a <?php if ($docfile_tab == 'pdf') echo 'style="font-weight:bold;"'; ?> href="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?op=doc_fileform&currentfolder={$currentfolder}&docfile_md5id={$docfile->fields['md5id']}&docfile_tab=pdf"); ?>" title="Voir le contenu"><img src="./modules/doc/img/pdf.png"><span>Voir en PDF</span></a>
+                <a <?php if ($docfile_tab == 'pdf') echo 'style="font-weight:bold;"'; ?> href="<?php echo ploopi\crypt::urlencode("admin.php?op=doc_fileform&currentfolder={$currentfolder}&docfile_md5id={$docfile->fields['md5id']}&docfile_tab=pdf"); ?>" title="Voir le contenu"><img src="./modules/doc/img/pdf.png"><span>Voir en PDF</span></a>
                 <?php
             }
         }
         ?>
-        <a <?php if ($docfile_tab == 'open') echo 'style="font-weight:bold;"'; ?> href="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?op=doc_fileform&currentfolder={$currentfolder}&docfile_md5id={$docfile->fields['md5id']}&docfile_tab=open"); ?>" title="Voir le contenu"><img src="./modules/doc/img/ico_open.png"><span>Voir</span></a>
+        <a <?php if ($docfile_tab == 'open') echo 'style="font-weight:bold;"'; ?> href="<?php echo ploopi\crypt::urlencode("admin.php?op=doc_fileform&currentfolder={$currentfolder}&docfile_md5id={$docfile->fields['md5id']}&docfile_tab=open"); ?>" title="Voir le contenu"><img src="./modules/doc/img/ico_open.png"><span>Voir</span></a>
 
     </div>
 
@@ -276,7 +275,7 @@ else
                         <link rel="stylesheet" href="./vendor/components/highlightjs/styles/vs.css">
                         <script src="./vendor/components/highlightjs/highlight.pack.min.js"></script>
                         <script>hljs.initHighlightingOnLoad();</script>
-                        <div style="border:1px solid #c0c0c0;margin:4px;padding:4px;background-color:#ffffff;height:<?php echo ovensia\ploopi\str::htmlentities($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_viewerheight']); ?>px;overflow:auto;">
+                        <div style="border:1px solid #c0c0c0;margin:4px;padding:4px;background-color:#ffffff;height:<?php echo ploopi\str::htmlentities($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_viewerheight']); ?>px;overflow:auto;">
                         <?php
                         $strFileContent = file_get_contents($docfile->getfilepath());
                         $strFileContent = mb_convert_encoding($strFileContent, 'ISO-8859-15', mb_detect_encoding($strFileContent,  mb_detect_order(), true));
@@ -291,7 +290,7 @@ else
                         <script type="text/javascript" src="./vendor/swfobject/swfobject/swfobject/swfobject.js"></script>
                         <div id="doc_flash_player">Player</div>
                         <script type="text/javascript">
-                        var so = new SWFObject('<?php echo ovensia\ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_fileview&docfile_md5id={$docfile->fields['md5id']}"); ?>','mpl','100%','<?php echo ovensia\ploopi\str::htmlentities($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_viewerheight']); ?>','9');
+                        var so = new SWFObject('<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_fileview&docfile_md5id={$docfile->fields['md5id']}"); ?>','mpl','100%','<?php echo ploopi\str::htmlentities($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_viewerheight']); ?>','9');
                         so.write('doc_flash_player');
                         </script>
                         <?php
@@ -299,7 +298,7 @@ else
 
                     case 'div':
                         ?>
-                        <div style="border:1px solid #c0c0c0;margin:4px;padding:4px;background-color:#ffffff;height:<?php echo ovensia\ploopi\str::htmlentities($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_viewerheight']); ?>px;overflow:auto;">
+                        <div style="border:1px solid #c0c0c0;margin:4px;padding:4px;background-color:#ffffff;height:<?php echo ploopi\str::htmlentities($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_viewerheight']); ?>px;overflow:auto;">
                         <?php
                         $strFileContent = file_get_contents($docfile->getfilepath());
                         $strLines = implode(range(1, count(explode("\n", $strFileContent))), '<br />');
@@ -310,16 +309,16 @@ else
                     break;
 
                     case 'video':
-                        /* <?php echo ovensia\ploopi\str::urlrewrite("index.php?ploopi_op=doc_file_download&docfile_md5id={$docfile->fields['md5id']}", doc_getrewriterules(), $docfile->fields['name'], null, true); ?> */
+                        /* <?php echo ploopi\str::urlrewrite("index.php?ploopi_op=doc_file_download&docfile_md5id={$docfile->fields['md5id']}", doc_getrewriterules(), $docfile->fields['name'], null, true); ?> */
                         ?>
-                        <video id='v1' src="<?php echo ovensia\ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_filedownload&docfile_md5id={$docfile->fields['md5id']}"); ?>" controls="true"><div style="padding:10px;">Votre navigateur ne supporte pas la balise "video".<br /><a href="<?php echo ovensia\ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_filedownload&docfile_md5id={$docfile->fields['md5id']}"); ?>">Cliquez sur ce lien pour télécharger le document</a></div></video>
+                        <video id='v1' src="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_filedownload&docfile_md5id={$docfile->fields['md5id']}"); ?>" controls="true"><div style="padding:10px;">Votre navigateur ne supporte pas la balise "video".<br /><a href="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_filedownload&docfile_md5id={$docfile->fields['md5id']}"); ?>">Cliquez sur ce lien pour télécharger le document</a></div></video>
                         <?php
                     break;
 
                     default:
                     case 'iframe':
                         ?>
-                        <div style="border:1px solid #c0c0c0;margin:4px;background-color:#f0f0f0;"><iframe src="<?php echo ovensia\ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_fileview&docfile_md5id={$docfile->fields['md5id']}".($docfile_tab == 'pdf' && isset($arrRenderer[1]) && $arrRenderer[1] == 'unoconv' ? '&doc_viewmode=pdf' : '')); ?>" style="border:0;width:100%;margin:0;padding:0;height:<?php echo ovensia\ploopi\str::htmlentities($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_viewerheight']); ?>px;"></iframe></div>
+                        <div style="border:1px solid #c0c0c0;margin:4px;background-color:#f0f0f0;"><iframe src="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_fileview&docfile_md5id={$docfile->fields['md5id']}".($docfile_tab == 'pdf' && isset($arrRenderer[1]) && $arrRenderer[1] == 'unoconv' ? '&doc_viewmode=pdf' : '')); ?>" style="border:0;width:100%;margin:0;padding:0;height:<?php echo ploopi\str::htmlentities($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_viewerheight']); ?>px;"></iframe></div>
                         <?php
                     break;
                 }
@@ -342,14 +341,14 @@ else
                         'options' => array('sort' => true)
                     );
 
-                $index = ovensia\ploopi\search_index::get(_DOC_OBJECT_FILE, $docfile->fields['md5id']);
+                $index = ploopi\search_index::get(_DOC_OBJECT_FILE, $docfile->fields['md5id']);
 
                 $c = 1;
 
                 foreach ($index as $k => $v)
                 {
                     $array_values[$c]['values']['occ']    = array('label' => sprintf("%d", $v));
-                    $array_values[$c]['values']['keyword']  = array('label' => ovensia\ploopi\str::htmlentities($k));
+                    $array_values[$c]['values']['keyword']  = array('label' => ploopi\str::htmlentities($k));
                     $c++;
                 }
 
@@ -358,7 +357,7 @@ else
 
             case 'meta':
                 $sql = "SELECT * FROM ploopi_mod_doc_meta WHERE id_file = {$docfile->fields['id']}";
-                $db->query($sql);
+                ploopi\loader::getdb()->query($sql);
 
                 $array_columns = array();
                 $array_values = array();
@@ -378,11 +377,11 @@ else
 
                 $c = 0;
 
-                while ($row = $db->fetchrow())
+                while ($row = ploopi\loader::getdb()->fetchrow())
                 {
-                    $array_values[$c]['values']['meta']     = array('label' => ovensia\ploopi\str::htmlentities($row['meta']), 'style' => '');
-                    $array_values[$c]['values']['valeur']   = array('label' => ovensia\ploopi\str::htmlentities($row['value']), 'style' => '');
-                    $array_values[$c]['description'] = ovensia\ploopi\str::htmlentities($row['meta']);
+                    $array_values[$c]['values']['meta']     = array('label' => ploopi\str::htmlentities($row['meta']), 'style' => '');
+                    $array_values[$c]['values']['valeur']   = array('label' => ploopi\str::htmlentities($row['value']), 'style' => '');
+                    $array_values[$c]['description'] = ploopi\str::htmlentities($row['meta']);
                     $array_values[$c]['link'] = '';
                     $array_values[$c]['style'] = '';
                     $c++;
@@ -435,14 +434,14 @@ else
 
                 foreach($history as $row)
                 {
-                    $ldate_modify = (!empty($row['timestp_modify'])) ? ovensia\ploopi\date::timestamp2local($row['timestp_modify']) : array('date' => '', 'time' => '');
+                    $ldate_modify = (!empty($row['timestp_modify'])) ? ploopi\date::timestamp2local($row['timestp_modify']) : array('date' => '', 'time' => '');
 
-                    $array_values[$c]['values']['vers']     = array('label' => ovensia\ploopi\str::htmlentities($row['version']), 'style' => '');
+                    $array_values[$c]['values']['vers']     = array('label' => ploopi\str::htmlentities($row['version']), 'style' => '');
                     $array_values[$c]['values']['taille']   = array('label' => sprintf("%0.2f kio", ($row['size']/1024)), 'style' => '');
-                    $array_values[$c]['values']['par']  = array('label' => ovensia\ploopi\str::htmlentities($row['login']), 'style' => '');
-                    $array_values[$c]['values']['modif']    = array('label' => ovensia\ploopi\str::htmlentities("{$ldate_modify['date']} {$ldate_modify['time']}"), 'style' => '');
-                    $array_values[$c]['values']['fichier']  = array('label' => ovensia\ploopi\str::htmlentities($row['name']), 'style' => '');
-                    $array_values[$c]['description'] = ovensia\ploopi\str::htmlentities("{$row['name']} ({$row['version']})");
+                    $array_values[$c]['values']['par']  = array('label' => ploopi\str::htmlentities($row['login']), 'style' => '');
+                    $array_values[$c]['values']['modif']    = array('label' => ploopi\str::htmlentities("{$ldate_modify['date']} {$ldate_modify['time']}"), 'style' => '');
+                    $array_values[$c]['values']['fichier']  = array('label' => ploopi\str::htmlentities($row['name']), 'style' => '');
+                    $array_values[$c]['description'] = ploopi\str::htmlentities("{$row['name']} ({$row['version']})");
                     $array_values[$c]['link'] = "admin.php?ploopi_op=doc_filedownload&docfile_md5id={$row['md5id']}&version={$row['version']}";
                     $array_values[$c]['style'] = '';
                     $c++;
@@ -460,7 +459,7 @@ else
                         doc_getvalidation();
                         $wf_validator = in_array($currentfolder, $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['validation']['folders']);
                         ?>
-                        <form method="post" enctype="multipart/form-data" action="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?ploopi_op=doc_filesave&currentfolder={$currentfolder}&docfile_md5id={$docfile->fields['md5id']}"); ?>" onsubmit="javascript:return doc_file_validate(this,<?php echo ($newfile) ? 'true' : 'false'; ?>,<?php echo (!empty($wfusers) && !$wf_validator) ? 'true' : 'false'; ?>);">
+                        <form method="post" enctype="multipart/form-data" action="<?php echo ploopi\crypt::urlencode("admin.php?ploopi_op=doc_filesave&currentfolder={$currentfolder}&docfile_md5id={$docfile->fields['md5id']}"); ?>" onsubmit="javascript:return doc_file_validate(this,<?php echo ($newfile) ? 'true' : 'false'; ?>,<?php echo (!empty($wfusers) && !$wf_validator) ? 'true' : 'false'; ?>);">
                         <input type="hidden" name="doc_mode" id="doc_mode" value="host">
                         <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo $max_filesize*1024; ?>">
                         <?php
@@ -503,7 +502,7 @@ else
                                     <div id="doc_form_server" style="display:none;">
                                         <p class="ploopi_va" style="margin-bottom:2px;">
                                             <input type="text" class="text" name="_docfile_file_server" id="docfile_file_server" value="" style="width:200px;" readonly />
-                                            <input type="button" class="button" value="Parcourir" style="width:90px;" onclick="javascript:ploopi_filexplorer_popup('<?php echo ovensia\ploopi\fs::filexplorer_init(_PLOOPI_PATHSHARED, "docfile_file_server", "docfile_explorer"); ?>', event);" />
+                                            <input type="button" class="button" value="Parcourir" style="width:90px;" onclick="javascript:ploopi_filexplorer_popup('<?php echo ploopi\fs::filexplorer_init(_PLOOPI_PATHSHARED, "docfile_file_server", "docfile_explorer"); ?>', event);" />
                                         </p>
                                     </div>
                                     <?php
@@ -519,8 +518,8 @@ else
 
                     <div style="float:left;width:59%;">
                         <?php
-                        $user = new ovensia\ploopi\user();
-                        $user_modify = new ovensia\ploopi\user();
+                        $user = new ploopi\user();
+                        $user_modify = new ploopi\user();
 
                         if ($user->open($docfile->fields['id_user'])) $user_name = "{$user->fields['lastname']} {$user->fields['firstname']}";
                         else $user_name = "<i>supprimé</i>";
@@ -528,17 +527,17 @@ else
                         if ($user_modify->open($docfile->fields['id_user_modify'])) $user_modify_name = "{$user->fields['lastname']} {$user->fields['firstname']}";
                         else $user_modify_name = "<i>supprimé</i>";
 
-                        $ldate_modify = (!empty($docfile->fields['timestp_modify'])) ? ovensia\ploopi\date::timestamp2local($docfile->fields['timestp_modify']) : array('date' => '', 'time' => '');
+                        $ldate_modify = (!empty($docfile->fields['timestp_modify'])) ? ploopi\date::timestamp2local($docfile->fields['timestp_modify']) : array('date' => '', 'time' => '');
                         ?>
                         <div class="ploopi_form" style="padding:2px;">
                             <p>
                                 <label>Nom du Fichier:</label>
                                 <?php
-                                if ($readonly) echo ovensia\ploopi\str::htmlentities($docfile->fields['name']);
+                                if ($readonly) echo ploopi\str::htmlentities($docfile->fields['name']);
                                 else
                                 {
                                     ?>
-                                    <input type="text" class="text" name="docfile_name" value="<?php echo ovensia\ploopi\str::htmlentities($docfile->fields['name']); ?>">
+                                    <input type="text" class="text" name="docfile_name" value="<?php echo ploopi\str::htmlentities($docfile->fields['name']); ?>">
                                     <?php
                                 }
                                 ?>
@@ -554,7 +553,7 @@ else
                                 if ($readonly)
                                 {
                                     ?>
-                                    <span><a title="Aller au dossier" href="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?op=doc_browser&currentfolder={$docfile->fields['id_folder']}"); ?>"><?php echo ovensia\ploopi\str::htmlentities($strParent); ?></a></span>
+                                    <span><a title="Aller au dossier" href="<?php echo ploopi\crypt::urlencode("admin.php?op=doc_browser&currentfolder={$docfile->fields['id_folder']}"); ?>"><?php echo ploopi\str::htmlentities($strParent); ?></a></span>
                                     <?php
                                 }
                                 else
@@ -562,7 +561,7 @@ else
                                     ?>
                                     <input type="hidden" name="docfile_id_folder" id="docfolder_id_folder" value="<?php echo $docfile->fields['id_folder']; ?>" />
                                     <a title="Choisir un autre dossier parent" href="javascript:void(0);" onclick="javascript:ploopi_showpopup(ploopi_xmlhttprequest('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=doc_folderselect&doc_id_folder='+$('docfolder_id_folder').value, false), 300, event, 'click', 'doc_popup_folderselect');" class="ploopi_va">
-                                        <span style="width:auto;" id="docfolder_id_folder_name"><?php echo ovensia\ploopi\str::htmlentities($strParent); ?></span><img style="margin-left:6px;" src="./modules/doc/img/ico_folder.png" />
+                                        <span style="width:auto;" id="docfolder_id_folder_name"><?php echo ploopi\str::htmlentities($strParent); ?></span><img style="margin-left:6px;" src="./modules/doc/img/ico_folder.png" />
                                     </a>
                                     <?php
                                 }
@@ -570,7 +569,7 @@ else
                             </p>
                             <p>
                                 <label>Version:</label>
-                                <span><?php echo ovensia\ploopi\str::htmlentities($docfile->fields['version']); ?></span>
+                                <span><?php echo ploopi\str::htmlentities($docfile->fields['version']); ?></span>
                             </p>
                             <p>
                                 <label>Taille:</label>
@@ -578,15 +577,15 @@ else
                             </p>
                             <p>
                                 <label>Propriétaire:</label>
-                                <span><?php echo ovensia\ploopi\str::htmlentities($user_name); ?></span>
+                                <span><?php echo ploopi\str::htmlentities($user_name); ?></span>
                             </p>
                             <p>
                                 <label>Modifié par:</label>
-                                <span><?php echo ovensia\ploopi\str::htmlentities($user_modify_name); ?></span>
+                                <span><?php echo ploopi\str::htmlentities($user_modify_name); ?></span>
                             </p>
                             <p>
                                 <label>Dernière modification:</label>
-                                <span><?php echo ovensia\ploopi\str::htmlentities("{$ldate_modify['date']} {$ldate_modify['time']}"); ?></span>
+                                <span><?php echo ploopi\str::htmlentities("{$ldate_modify['date']} {$ldate_modify['time']}"); ?></span>
                             </p>
                             <p class="checkbox" onclick="javascript:ploopi_checkbox_click(event, 'docfile_readonly');">
                                 <label>Contenu protégé:</label>
@@ -603,11 +602,11 @@ else
                             <p>
                                 <label>Commentaire:</label>
                                 <?php
-                                if ($readonly) echo ovensia\ploopi\str::nl2br(ovensia\ploopi\str::htmlentities($docfile->fields['description']));
+                                if ($readonly) echo ploopi\str::nl2br(ploopi\str::htmlentities($docfile->fields['description']));
                                 else
                                 {
                                     ?>
-                                    <textarea class="text" name="docfile_description"><?php echo ovensia\ploopi\str::htmlentities($docfile->fields['description']); ?></textarea>
+                                    <textarea class="text" name="docfile_description"><?php echo ploopi\str::htmlentities($docfile->fields['description']); ?></textarea>
                                     <?php
                                 }
                                 ?>
@@ -620,7 +619,7 @@ else
                         if (!$readonly)
                         {
                             ?>
-                            <input type="button" class="flatbutton" value="Ré-indéxer" onclick="javascript:document.location.href='<?php echo ovensia\ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_fileindex&currentfolder={$currentfolder}&docfile_md5id={$_GET['docfile_md5id']}"); ?>';">
+                            <input type="button" class="flatbutton" value="Ré-indéxer" onclick="javascript:document.location.href='<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_fileindex&currentfolder={$currentfolder}&docfile_md5id={$_GET['docfile_md5id']}"); ?>';">
                             <input type="submit" class="flatbutton" value="<?php echo _PLOOPI_SAVE; ?>">
                             <?php
                         }
@@ -659,22 +658,22 @@ else
         $parents = explode(',', "{$objFolder->fields['parents']},{$objFolder->fields['id']}");
         for ($i = 0; $i < sizeof($parents); $i++)
         {
-            if (ovensia\ploopi\subscription::subscribed(_DOC_OBJECT_FOLDER, $parents[$i]))
+            if (ploopi\subscription::subscribed(_DOC_OBJECT_FOLDER, $parents[$i]))
             {
                 $objDocFolderSub = new docfolder();
                 $objDocFolderSub->open($parents[$i])
                 ?>
                 <div style="padding:4px;font-weight:bold;border-bottom:1px solid #c0c0c0;">
-                Vous héritez de l'abonnement à &laquo; <a href="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?op=doc_browser&currentfolder={$parents[$i]}"); ?>"><?php echo ovensia\ploopi\str::htmlentities($objDocFolderSub->fields['name']); ?></a> &raquo;
+                Vous héritez de l'abonnement à &laquo; <a href="<?php echo ploopi\crypt::urlencode("admin.php?op=doc_browser&currentfolder={$parents[$i]}"); ?>"><?php echo ploopi\str::htmlentities($objDocFolderSub->fields['name']); ?></a> &raquo;
                 </div>
                 <?php
             }
         }
-        ovensia\ploopi\subscription::display(_DOC_OBJECT_FILE, $docfile->fields['md5id'], $arrAllowedActions);
+        ploopi\subscription::display(_DOC_OBJECT_FILE, $docfile->fields['md5id'], $arrAllowedActions);
     }
     ?>
     </div>
     <?php
-    if (ovensia\ploopi\param::get('doc_viewannotations')) ovensia\ploopi\annotation::display(_DOC_OBJECT_FILE, $docfile->fields['md5id'], $docfile->fields['name']);
+    if (ploopi\param::get('doc_viewannotations')) ploopi\annotation::display(_DOC_OBJECT_FILE, $docfile->fields['md5id'], $docfile->fields['name']);
 }
 ?>

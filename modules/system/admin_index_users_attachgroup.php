@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,7 +25,7 @@
  *
  * @package system
  * @subpackage admin
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -42,7 +41,7 @@ $arrWhere[] = 'ploopi_group.system = 0';
 
 $arrCurrentGroups = array_keys($workspace->getgroups());
 
-if (!ovensia\ploopi\acl::isadmin()) // filtrage des groupes visibles si l'utilisateur n'est pas admin système
+if (!ploopi\acl::isadmin()) // filtrage des groupes visibles si l'utilisateur n'est pas admin système
 {
     // liste des groupes (id) "rattachables" (sans filtrage)
     $grp_list = array_diff(array_keys($workspaces['list'][$workspaceid]['groups']), $arrCurrentGroups);
@@ -61,8 +60,8 @@ else
         $arrWhere[] = 'id NOT IN ('.implode(',', $arrCurrentGroups).')';
     }
 
-    $db->query();
-    $row = $db->fetchrow();
+    ploopi\loader::getdb()->query();
+    $row = ploopi\loader::getdb()->fetchrow();
     $nbgroup = $row['nb'];
 }
 
@@ -107,10 +106,10 @@ else
     ?>
 </div>
 
-<form action="<?php echo ovensia\ploopi\crypt::urlencode('admin.php'); ?>" method="post">
+<form action="<?php echo ploopi\crypt::urlencode('admin.php'); ?>" method="post">
 <p class="ploopi_va" style="padding:4px;border-bottom:2px solid #c0c0c0;">
     <span><?php echo _SYSTEM_LABEL_GROUP; ?> :</span>
-    <input class="text" ID="system_user" name="pattern" type="text" size="15" maxlength="255" value="<?php echo ovensia\ploopi\str::htmlentities($pattern); ?>">
+    <input class="text" ID="system_user" name="pattern" type="text" size="15" maxlength="255" value="<?php echo ploopi\str::htmlentities($pattern); ?>">
     <input type="submit" value="<?php echo _PLOOPI_FILTER; ?>" class="button">
     <input type="submit" name="reset" value="<?php echo _PLOOPI_RESET; ?>" class="button">
 </p>
@@ -121,7 +120,7 @@ if ($alphaTabItem == 99) // tous ou recherche
 {
     if ($pattern != '')
     {
-        $pattern = $db->addslashes($pattern);
+        $pattern = ploopi\loader::getdb()->addslashes($pattern);
         $arrWhere[] .=  "ploopi_group.label LIKE '%{$pattern}%'";
     }
 }
@@ -154,9 +153,9 @@ $columns['actions_right']['actions'] = array('label' => '&nbsp;', 'width' => '24
 
 $c = 0;
 
-$result = $db->query($sql);
+$result = ploopi\loader::getdb()->query($sql);
 
-while ($fields = $db->fetchrow($result))
+while ($fields = ploopi\loader::getdb()->fetchrow($result))
 {
     $array_parents = system_getparents($fields['parents'], 'group');
     array_shift($array_parents);
@@ -164,9 +163,9 @@ while ($fields = $db->fetchrow($result))
     $str_parents = '';
     foreach($array_parents as $parent) $str_parents .= ($str_parents == '') ? $parent['label']: " > {$parent['label']}";
 
-    $values[$c]['values']['label']      = array('label' => ovensia\ploopi\str::htmlentities($fields['label']));
-    $values[$c]['values']['parents']    = array('label' => ovensia\ploopi\str::htmlentities($str_parents));
-    $values[$c]['values']['actions']    = array('label' => '<a href="'.ovensia\ploopi\crypt::urlencode("admin.php?op=attach_group&orgid={$fields['id']}&alphaTabItem={$alphaTabItem}").'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_attach.png" title="'._SYSTEM_LABEL_ATTACH.'"></a>');
+    $values[$c]['values']['label']      = array('label' => ploopi\str::htmlentities($fields['label']));
+    $values[$c]['values']['parents']    = array('label' => ploopi\str::htmlentities($str_parents));
+    $values[$c]['values']['actions']    = array('label' => '<a href="'.ploopi\crypt::urlencode("admin.php?op=attach_group&orgid={$fields['id']}&alphaTabItem={$alphaTabItem}").'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_attach.png" title="'._SYSTEM_LABEL_ATTACH.'"></a>');
 
     $c++;
 }

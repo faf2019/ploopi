@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2011 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -40,7 +40,7 @@
  * @author Stéphane Escaich
  */
 
-class formsGroup extends ovensia\ploopi\data_object
+class formsGroup extends ploopi\data_object
 {
     /**
      * Constructeur de la classe
@@ -68,7 +68,7 @@ class formsGroup extends ovensia\ploopi\data_object
     public function delete()
     {
         // Suppression de la dépendance
-        $objQuery = new ovensia\ploopi\query_update();
+        $objQuery = new ploopi\query_update();
         $objQuery->add_from('ploopi_mod_forms_field');
         $objQuery->add_set('id_group = 0');
         $objQuery->add_where('id_group = %d', $this->fields['id']);
@@ -81,7 +81,7 @@ class formsGroup extends ovensia\ploopi\data_object
      * Retourne les conditions sous forme d'un tableau
      */
 
-    public function getConditions() { return ovensia\ploopi\crypt::unserialize($this->fields['conditions']); }
+    public function getConditions() { return ploopi\crypt::unserialize($this->fields['conditions']); }
 
 }
 ?>

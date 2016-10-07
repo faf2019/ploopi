@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2012 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,7 +25,7 @@
  *
  * @package doc
  * @subpackage public
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  *
@@ -47,7 +46,7 @@ if (!empty($currentfolder))
     <div class="doc_folderinfo" <?php echo $style; ?>>
         <div style="float:right;height:40px;">
             <p style="margin:0;padding:4px 8px;">
-                <a href="<?php echo ovensia\ploopi\crypt::urlencode("admin.php?op=doc_folderform&currentfolder={$currentfolder}&addfolder=0"); ?>"><img style="border:0;" src="./modules/doc/img/edit.png" /></a>
+                <a href="<?php echo ploopi\crypt::urlencode("admin.php?op=doc_folderform&currentfolder={$currentfolder}&addfolder=0"); ?>"><img style="border:0;" src="./modules/doc/img/edit.png" /></a>
             </p>
         </div>
         <div style="float:left;height:40px;">
@@ -57,8 +56,8 @@ if (!empty($currentfolder))
         </div>
         <div style="float:left;height:40px;">
             <p style="margin:0;padding:4px 8px;">
-                <strong><?php echo ovensia\ploopi\str::htmlentities($objFolder->fields['name']); ?></strong>
-                <br />Dossier <?php echo ovensia\ploopi\str::htmlentities($foldertypes[$objFolder->fields['foldertype']]); ?><?php if ($objFolder->fields['readonly']) echo ' protégé'; ?>
+                <strong><?php echo ploopi\str::htmlentities($objFolder->fields['name']); ?></strong>
+                <br />Dossier <?php echo ploopi\str::htmlentities($foldertypes[$objFolder->fields['foldertype']]); ?><?php if ($objFolder->fields['readonly']) echo ' protégé'; ?>
             </p>
         </div>
         <div style="float:left;height:40px;border-left:1px solid #e0e0e0;">
@@ -66,8 +65,8 @@ if (!empty($currentfolder))
                 <strong>Propriétaire</strong>:
                 <br />
                 <?php
-                $user = new ovensia\ploopi\user();
-                if ($user->open($objFolder->fields['id_user'])) echo ovensia\ploopi\str::htmlentities("{$user->fields['lastname']} {$user->fields['firstname']}");
+                $user = new ploopi\user();
+                if ($user->open($objFolder->fields['id_user'])) echo ploopi\str::htmlentities("{$user->fields['lastname']} {$user->fields['firstname']}");
                 else echo '<i>supprimé</i>';
                 ?>
             </p>
@@ -100,7 +99,7 @@ if (!empty($currentfolder))
                     <p class="ploopi_va">
                     <?php
                     $arrShares = array();
-                    foreach(ovensia\ploopi\share::get(-1, _DOC_OBJECT_FOLDER, $currentfolder) as $value) $arrShares[$value['type_share']][] = $value['id_share'];
+                    foreach(ploopi\share::get(-1, _DOC_OBJECT_FOLDER, $currentfolder) as $value) $arrShares[$value['type_share']][] = $value['id_share'];
 
                     if (!empty($arrShares))
                     {
@@ -108,21 +107,21 @@ if (!empty($currentfolder))
                         {
                             $strIcon = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/ico_group.png\">";
 
-                            $db->query(
+                            ploopi\loader::getdb()->query(
                                 "SELECT label FROM ploopi_group WHERE id in (".implode(',',$arrShares['group']).") ORDER BY label"
                             );
 
-                            while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;".ovensia\ploopi\str::htmlentities($row['label'])."&nbsp;</span>";
+                            while ($row = ploopi\loader::getdb()->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi\str::htmlentities($row['label'])."&nbsp;</span>";
                         }
                         if (!empty($arrShares['user']))
                         {
                             $strIcon = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/ico_user.png\">";
 
-                            $db->query(
+                            ploopi\loader::getdb()->query(
                                 "SELECT concat(lastname, ' ', firstname) as name FROM ploopi_user WHERE id in (".implode(',',$arrShares['user']).") ORDER BY lastname, firstname"
                             );
 
-                            while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;".ovensia\ploopi\str::htmlentities($row['name'])."&nbsp;</span>";
+                            while ($row = ploopi\loader::getdb()->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi\str::htmlentities($row['name'])."&nbsp;</span>";
                         }
                     }
                     else echo '<span>Aucun partage</span>';
@@ -145,7 +144,7 @@ if (!empty($currentfolder))
                     <p class="ploopi_va">
                     <?php
                     $arrValidation = array();
-                    foreach(ovensia\ploopi\validation::get(_DOC_OBJECT_FOLDER, $currentfolder) as $value) $arrValidation[$value['type_validation']][] = $value['id_validation'];
+                    foreach(ploopi\validation::get(_DOC_OBJECT_FOLDER, $currentfolder) as $value) $arrValidation[$value['type_validation']][] = $value['id_validation'];
 
                     if (!empty($arrValidation))
                     {
@@ -153,21 +152,21 @@ if (!empty($currentfolder))
                         {
                             $strIcon = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/ico_group.png\">";
 
-                            $db->query(
+                            ploopi\loader::getdb()->query(
                                 "SELECT label FROM ploopi_group WHERE id in (".implode(',',$arrValidation['group']).") ORDER BY label"
                             );
 
-                            while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;".ovensia\ploopi\str::htmlentities($row['label'])."&nbsp;</span>";
+                            while ($row = ploopi\loader::getdb()->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi\str::htmlentities($row['label'])."&nbsp;</span>";
                         }
                         if (!empty($arrValidation['user']))
                         {
                             $strIcon = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/ico_user.png\">";
 
-                            $db->query(
+                            ploopi\loader::getdb()->query(
                                 "SELECT concat(lastname, ' ', firstname) as name FROM ploopi_user WHERE id in (".implode(',',$arrValidation['user']).") ORDER BY lastname, firstname"
                             );
 
-                            while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;".ovensia\ploopi\str::htmlentities($row['name'])."&nbsp;</span>";
+                            while ($row = ploopi\loader::getdb()->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi\str::htmlentities($row['name'])."&nbsp;</span>";
                         }
                     }
                     else echo '<span>Aucune accréditation</span>';

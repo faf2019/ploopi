@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,7 +25,7 @@
  *
  * @package system
  * @subpackage system
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -34,12 +33,12 @@
 /**
  * On vérifie le contenu de la variable GET
  */
-if (empty($_GET['uninstallidmoduletype'])) ovensia\ploopi\output::redirect('admin.php');
+if (empty($_GET['uninstallidmoduletype'])) ploopi\output::redirect('admin.php');
 
-$module_type = new ovensia\ploopi\module_type();
+$module_type = new ploopi\module_type();
 if ($module_type->open($_GET['uninstallidmoduletype']))
 {
-    ovensia\ploopi\user_action_log::record(_SYSTEM_ACTION_UNINSTALLMODULE, $module_type->fields['label']);
+    ploopi\user_action_log::record(_SYSTEM_ACTION_UNINSTALLMODULE, $module_type->fields['label']);
 
     if (!empty($module_type->fields['label']))
     {
@@ -47,19 +46,19 @@ if ($module_type->open($_GET['uninstallidmoduletype']))
 
         // DELETE FILES
         $filestodelete = "./modules/".$module_type->fields['label'];
-        if (file_exists($filestodelete)) ovensia\ploopi\fs::deletedir($filestodelete);
+        if (file_exists($filestodelete)) ploopi\fs::deletedir($filestodelete);
     }
 
     // DELETE TABLES
     $select = "SELECT * FROM ploopi_mb_table WHERE id_module_type = {$_GET['uninstallidmoduletype']}";
-    $rs = $db->query($select);
-    while ($fields = $db->fetchrow($rs))
+    $rs = ploopi\loader::getdb()->query($select);
+    while ($fields = ploopi\loader::getdb()->fetchrow($rs))
     {
-        $db->query("DROP TABLE IF EXISTS `{$fields['name']}`");
+        ploopi\loader::getdb()->query("DROP TABLE IF EXISTS `{$fields['name']}`");
     }
 
     // DELETE MODULE TYPE, MODULES, ACTIONS, etc...
     $module_type->delete();
 }
-else ovensia\ploopi\output::redirect('admin.php');
+else ploopi\output::redirect('admin.php');
 ?>

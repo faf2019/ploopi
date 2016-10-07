@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,7 +25,7 @@
  *
  * @package doc
  * @subpackage folder
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -42,12 +41,12 @@ include_once './modules/doc/class_docfile.php';
  *
  * @package doc
  * @subpackage folder
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
 
-class docfolder extends ovensia\ploopi\data_object
+class docfolder extends ploopi\data_object
 {
     private $id_folder = 0;
     private $parents = '';
@@ -61,7 +60,7 @@ class docfolder extends ovensia\ploopi\data_object
     public function __construct()
     {
         parent::__construct('ploopi_mod_doc_folder');
-        $this->fields['timestp_create'] = ovensia\ploopi\date::createtimestamp();
+        $this->fields['timestp_create'] = ploopi\date::createtimestamp();
         $this->fields['timestp_modify'] = $this->fields['timestp_create'];
         $this->fields['parents'] = 0;
     }
@@ -90,7 +89,7 @@ class docfolder extends ovensia\ploopi\data_object
      */
     public function save()
     {
-        global $db;
+        $db = ploopi\loader::getdb();
 
         if ($this->fields['id_folder'] != 0)
         {
@@ -111,7 +110,7 @@ class docfolder extends ovensia\ploopi\data_object
         // Cas d'un changement de parent, il faut mettre à jour en cascade tous les enfants
         if ($this->fields['id_folder'] != $this->id_folder)
         {
-            $objCol = new ovensia\ploopi\data_object_collection('docfolder');
+            $objCol = new ploopi\data_object_collection('docfolder');
             $objCol->add_where('parents LIKE %s', "{$this->parents},{$this->fields['id']}%");
             foreach($objCol->get_objects() as $objChildFolder) $objChildFolder->save();
 
@@ -128,7 +127,7 @@ class docfolder extends ovensia\ploopi\data_object
 
     public function publish()
     {
-        global $db;
+        $db = ploopi\loader::getdb();
 
         $ret = 0;
         if (!$this->fields['published'])
@@ -151,10 +150,10 @@ class docfolder extends ovensia\ploopi\data_object
     {
         $booFolderEnabled = false;
 
-        if ($this->fields['id_user'] == $_SESSION['ploopi']['userid'] || ovensia\ploopi\acl::isadmin() || ovensia\ploopi\acl::isactionallowed(_DOC_ACTION_ADMIN)) $booFolderEnabled = true;
+        if ($this->fields['id_user'] == $_SESSION['ploopi']['userid'] || ploopi\acl::isadmin() || ploopi\acl::isactionallowed(_DOC_ACTION_ADMIN)) $booFolderEnabled = true;
         else
         {
-            if ($this->fields['foldertype'] == 'public' && in_array($this->fields['id_workspace'], explode(',', ovensia\ploopi\system::viewworkspaces()))) $booFolderEnabled = true;
+            if ($this->fields['foldertype'] == 'public' && in_array($this->fields['id_workspace'], explode(',', ploopi\system::viewworkspaces()))) $booFolderEnabled = true;
             else
             {
                 doc_getshare();
@@ -172,7 +171,7 @@ class docfolder extends ovensia\ploopi\data_object
 
     public function delete()
     {
-        global $db;
+        $db = ploopi\loader::getdb();
 
         // on recherche tous les fichiers pour les supprimer
         $rs = $db->query("SELECT id FROM ploopi_mod_doc_file WHERE id_folder = {$this->fields['id']}");
@@ -222,13 +221,13 @@ class docfolder extends ovensia\ploopi\data_object
 
             // on cherche la liste des abonnés à chacun des objets pour construire une liste globale d'abonnés
             foreach ($arrFolderList as $intObjectId)
-                $arrSubscribers += ovensia\ploopi\subscription::getusers(_DOC_OBJECT_FOLDER, $intObjectId, $arrActions);
+                $arrSubscribers += ploopi\subscription::getusers(_DOC_OBJECT_FOLDER, $intObjectId, $arrActions);
 
             // Si dossier partagé, on vérifie que l'abonné est dans les partages
             if ($this->fields['foldertype'] == 'shared')
             {
                 // On récupère les utilisateurs pour lesquels le dossier est partagé
-                $arrShareUsers = ovensia\ploopi\share::get(-1, _DOC_OBJECT_FOLDER, $intObjectId);
+                $arrShareUsers = ploopi\share::get(-1, _DOC_OBJECT_FOLDER, $intObjectId);
 
                 // Tableau résultat des utilisateurs abonnés et pour lesquels le dossier est partagé
                 $arrShareSubscribers = array();

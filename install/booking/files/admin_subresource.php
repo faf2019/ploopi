@@ -84,7 +84,7 @@ $arrResult['columns']['actions_right']['actions'] =
     );
 
 // Récupération des sous-ressources
-$db->query("
+ploopi\loader::getdb()->query("
     SELECT      sr.*,
                 r.name as res_name
 
@@ -95,7 +95,7 @@ $db->query("
     WHERE       sr.id_module = {$_SESSION['ploopi']['moduleid']}
 ");
 
-while ($row = $db->fetchrow())
+while ($row = ploopi\loader::getdb()->fetchrow())
 {
     $arrResult['rows'][] =
         array(
@@ -103,23 +103,23 @@ while ($row = $db->fetchrow())
                 array(
                     'reference' =>
                         array(
-                            'label' => ovensia\ploopi\str::htmlentities($row['reference']),
+                            'label' => ploopi\str::htmlentities($row['reference']),
                             'style' => ($row['active']) ? '' : 'color:#a60000;'
                         ),
                     'resource' =>
                         array(
-                            'label' => ovensia\ploopi\str::htmlentities($row['res_name']),
+                            'label' => ploopi\str::htmlentities($row['res_name']),
                             'style' => ($row['active']) ? '' : 'color:#a60000;'
                         ),
                     'name' =>
                         array(
-                            'label' => ovensia\ploopi\str::htmlentities($row['name']),
+                            'label' => ploopi\str::htmlentities($row['name']),
                             'style' => ($row['active']) ? '' : 'color:#a60000;'
                         ),
                     'active' => array('label' => ($row['active']) ? 'oui' : 'non'),
                     'actions' => array('label' => '<input type="checkbox" class="booking_element_checkbox" value="'.$row['id'].'">')
                 ),
-            'description' => "Modifier la sous-ressource '".ovensia\ploopi\str::htmlentities($row['name'])."'",
+            'description' => "Modifier la sous-ressource '".ploopi\str::htmlentities($row['name'])."'",
             'link' => 'javascript:void(0);',
             'onclick' => "booking_element_open('subresource', '{$row['id']}', event);"
         );

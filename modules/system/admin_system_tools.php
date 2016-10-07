@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,7 +25,7 @@
  *
  * @package system
  * @subpackage system
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -58,37 +57,37 @@ $c = 0;
 $values[$c]['values']['tool'] = array('label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/tools/tool_phpinfo.png\"><span>&nbsp;"._SYSTEM_LABEL_PHPINFO."</span>", 'style' => '', 'sort_label' => _SYSTEM_LABEL_PHPINFO);
 $values[$c]['values']['desc'] = array('label' => _SYSTEM_EXPLAIN_PHPINFO, 'style' => '');
 $values[$c]['description'] = _SYSTEM_EXPLAIN_PHPINFO;
-$values[$c]['link'] = ovensia\ploopi\crypt::urlencode("admin.php?op=phpinfo");
+$values[$c]['link'] = ploopi\crypt::urlencode("admin.php?op=phpinfo");
 $c++;
 
 $values[$c]['values']['tool'] = array('label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/tools/tool_diagnostic.png\"><span>&nbsp;"._SYSTEM_LABEL_DIAGNOSTIC."</span>", 'style' => '', 'sort_label' => _SYSTEM_LABEL_DIAGNOSTIC);
 $values[$c]['values']['desc'] = array('label' => _SYSTEM_EXPLAIN_DIAGNOSTIC, 'style' => '');
 $values[$c]['description'] = _SYSTEM_EXPLAIN_DIAGNOSTIC;
-$values[$c]['link'] = ovensia\ploopi\crypt::urlencode("admin.php?op=diagnostic");
+$values[$c]['link'] = ploopi\crypt::urlencode("admin.php?op=diagnostic");
 $c++;
 
 $values[$c]['values']['tool'] = array('label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/tools/tool_sqldump.png\"><span>&nbsp;"._SYSTEM_LABEL_SQLDUMP."</span>", 'style' => '', 'sort_label' => _SYSTEM_LABEL_SQLDUMP);
 $values[$c]['values']['desc'] = array('label' => _SYSTEM_EXPLAIN_SQLDUMP, 'style' => '');
 $values[$c]['description'] = _SYSTEM_EXPLAIN_SQLDUMP;
-$values[$c]['link'] = ovensia\ploopi\crypt::urlencode("admin.php?op=sqldump");
+$values[$c]['link'] = ploopi\crypt::urlencode("admin.php?op=sqldump");
 $c++;
 
 $values[$c]['values']['tool'] = array('label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/tools/tool_logusers.png\"><span>&nbsp;"._SYSTEM_LABEL_CONNECTEDUSERS."</span>", 'style' => '', 'sort_label' => _SYSTEM_LABEL_CONNECTEDUSERS);
 $values[$c]['values']['desc'] = array('label' => _SYSTEM_EXPLAIN_CONNECTEDUSERS, 'style' => '');
 $values[$c]['description'] = _SYSTEM_EXPLAIN_CONNECTEDUSERS;
-$values[$c]['link'] = ovensia\ploopi\crypt::urlencode("admin.php?op=connectedusers");
+$values[$c]['link'] = ploopi\crypt::urlencode("admin.php?op=connectedusers");
 $c++;
 
 $values[$c]['values']['tool'] = array('label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/tools/tool_serverload.png\"><span>&nbsp;"._SYSTEM_LABEL_SERVERLOAD."</span>", 'style' => '', 'sort_label' => _SYSTEM_LABEL_SERVERLOAD);
 $values[$c]['values']['desc'] = array('label' => _SYSTEM_EXPLAIN_SERVERLOAD, 'style' => '');
 $values[$c]['description'] = _SYSTEM_EXPLAIN_SERVERLOAD;
-$values[$c]['link'] = ovensia\ploopi\crypt::urlencode("admin.php?op=serverload");
+$values[$c]['link'] = ploopi\crypt::urlencode("admin.php?op=serverload");
 $c++;
 
 $values[$c]['values']['tool'] = array('label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/tools/tool_logactions.png\"><span>&nbsp;"._SYSTEM_LABEL_ACTIONHISTORY."</span>", 'style' => '', 'sort_label' => _SYSTEM_LABEL_ACTIONHISTORY);
 $values[$c]['values']['desc'] = array('label' => _SYSTEM_EXPLAIN_ACTIONHISTORY, 'style' => '');
 $values[$c]['description'] = _SYSTEM_EXPLAIN_ACTIONHISTORY;
-$values[$c]['link'] = ovensia\ploopi\crypt::urlencode("admin.php?op=actionhistory");
+$values[$c]['link'] = ploopi\crypt::urlencode("admin.php?op=actionhistory");
 $c++;
 
 $skin->display_array($columns, $values, 'array_tools', array('sortable' => true, 'orderby_default' => 'tool'));

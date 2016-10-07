@@ -32,9 +32,9 @@
  * @see skin_common
  */
 
-namespace ovensia\ploopi;
+namespace ploopi;
 
-use ovensia\ploopi;
+use ploopi;
 
 /**
  * Gestion de l'affichage du skin 'ovensia'

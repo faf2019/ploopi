@@ -44,12 +44,12 @@ switch($strWikiMenu)
     
 }
 
-echo $skin->open_simplebloc(ovensia\ploopi\str::htmlentities($strTitle));
+echo $skin->open_simplebloc(ploopi\str::htmlentities($strTitle));
 ?>
 <div id="wiki_index">
     <?php
     
-    $db->query("
+    ploopi\loader::getdb()->query("
         SELECT      *
         FROM        ploopi_mod_wiki_page
         WHERE       id_module = {$_SESSION['ploopi']['moduleid']}
@@ -60,9 +60,9 @@ echo $skin->open_simplebloc(ovensia\ploopi\str::htmlentities($strTitle));
 
     $strPrevDate = '';
     
-    while ($row = $db->fetchrow())
+    while ($row = ploopi\loader::getdb()->fetchrow())
     {
-        $strDate = current(ovensia\ploopi\date::timestamp2local($row['ts_modified']));
+        $strDate = current(ploopi\date::timestamp2local($row['ts_modified']));
         if ($strWikiMenu == 'index_date' && $strDate != $strPrevDate)
         {
             if ($strPrevDate != '') echo '</ul>'; 
@@ -72,7 +72,7 @@ echo $skin->open_simplebloc(ovensia\ploopi\str::htmlentities($strTitle));
             $strPrevDate = $strDate;
         }
         ?>
-        <li><a href="<?php echo ovensia\ploopi\crypt::urlencode_trusted("admin.php?wiki_page_id=".urlencode($row['id'])); ?>"><?php echo ovensia\ploopi\str::htmlentities($row['id']); ?></a></li>
+        <li><a href="<?php echo ploopi\crypt::urlencode_trusted("admin.php?wiki_page_id=".urlencode($row['id'])); ?>"><?php echo ploopi\str::htmlentities($row['id']); ?></a></li>
         <?php
     }
 

@@ -44,8 +44,8 @@ $sql =  "
         ORDER BY    u.lastname, u.firstname
         ";
 
-$db->query($sql);
-$users = $db->getarray();
+ploopi\loader::getdb()->query($sql);
+$users = ploopi\loader::getdb()->getarray();
 
 /**
  * Recherche des groupes d'utilisateurs qui possèdent le rôle
@@ -61,8 +61,8 @@ $sql =  "
         ORDER BY    g.label
         ";
 
-$db->query($sql);
-$groups = $db->getarray();
+ploopi\loader::getdb()->query($sql);
+$groups = ploopi\loader::getdb()->getarray();
 
 if (empty($groups) && empty($users))
 {
@@ -84,7 +84,7 @@ if (empty($groups) && empty($users))
         foreach($groups as $group)
         {
             $values[$c]['values']['type']   = array('label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/ico_group.png\"><span>&nbsp;Groupe</span>");
-            $values[$c]['values']['name']   = array('label' => ovensia\ploopi\str::htmlentities($group['label']));
+            $values[$c]['values']['name']   = array('label' => ploopi\str::htmlentities($group['label']));
             $values[$c]['values']['actions']    = array('label' => '<a href="javascript:if (confirm(\''._SYSTEM_MSG_CONFIRMGROUPDETACH.'\')) system_roleusers_delete('.$roleid.', '.$group['id'].', \'group\');"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_delete.png" alt="'._SYSTEM_LABEL_DELETE.'"></a>');
             $c++;
         }
@@ -92,7 +92,7 @@ if (empty($groups) && empty($users))
         foreach($users as $user)
         {
             $values[$c]['values']['type']   = array('label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/ico_user.png\"><span>&nbsp;Utilisateur</span>");
-            $values[$c]['values']['name']   = array('label' => ovensia\ploopi\str::htmlentities("{$user['firstname']} {$user['lastname']} ({$user['login']})"));
+            $values[$c]['values']['name']   = array('label' => ploopi\str::htmlentities("{$user['firstname']} {$user['lastname']} ({$user['login']})"));
             $values[$c]['values']['actions']    = array('label' => '<a href="javascript:if (confirm(\''._SYSTEM_MSG_CONFIRMUSERDETACH.'\')) system_roleusers_delete('.$roleid.', '.$user['id'].', \'user\');"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_delete.png" alt="'._SYSTEM_LABEL_DELETE.'"></a>');
             $c++;
         }

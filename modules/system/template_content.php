@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,7 +25,7 @@
  *
  * @package system
  * @subpackage template
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  *
@@ -37,7 +36,7 @@
  * Initialisation du module
  */
 
-ovensia\ploopi\module::init('system');
+ploopi\module::init('system');
 
 if (!isset($op)) $op = '';
 
@@ -48,14 +47,14 @@ switch($op)
 
         $template_body->assign_block_vars('switch_content_module_system.switch_tickets.menu' , array(
                                 'LABEL' => 'Messages reçus',
-                                'URL' => ovensia\ploopi\crypt::urlencode("index.php?modcontent={$template_moduleid}&op=showtickets&menu=received"),
+                                'URL' => ploopi\crypt::urlencode("index.php?modcontent={$template_moduleid}&op=showtickets&menu=received"),
                                 'SELECTED' => (!isset($_GET['menu']) || (isset($_GET['menu']) && $_GET['menu'] == 'received')) ? 'sel' : 'notsel'
                                 )
                             );
 
         $template_body->assign_block_vars('switch_content_module_system.switch_tickets.menu' , array(
                                 'LABEL' => 'Messages envoyés',
-                                'URL' => ovensia\ploopi\crypt::urlencode("index.php?modcontent={$template_moduleid}&op=showtickets&menu=sent"),
+                                'URL' => ploopi\crypt::urlencode("index.php?modcontent={$template_moduleid}&op=showtickets&menu=sent"),
                                 'SELECTED' => (isset($_GET['menu']) && $_GET['menu'] == 'sent') ? 'sel' : 'notsel'
                                 )
                             );
@@ -90,11 +89,11 @@ switch($op)
                     AND         t.id = t.root_id
                     ORDER BY    t.timestp DESC
                     ";
-            $rs = $db->query($sql);
+            $rs = ploopi\loader::getdb()->query($sql);
 
-            while ($fields = $db->fetchrow($rs))
+            while ($fields = ploopi\loader::getdb()->fetchrow($rs))
             {
-                $ld = ovensia\ploopi\date::timestamp2local($fields['timestp']);
+                $ld = ploopi\date::timestamp2local($fields['timestp']);
                 if (!$fields['opened']) $puce = '#ff2020';
                 elseif (!$fields['done']) $puce = '#2020ff';
                 else $puce = '#20ff20';
@@ -102,7 +101,7 @@ switch($op)
                 $template_body->assign_block_vars('switch_content_module_system.switch_tickets.tickets' , array(
                                     'ID' => $fields['id'],
                                     'TITLE' => $fields['title'],
-                                    'MESSAGE' => ovensia\ploopi\str::nl2br($fields['message']),
+                                    'MESSAGE' => ploopi\str::nl2br($fields['message']),
                                     'DATE' => $ld['date'],
                                     'TIME' => $ld['time'],
                                     'COLOR' => $puce,
@@ -153,11 +152,11 @@ switch($op)
 
                     ORDER BY    t.timestp DESC
                     ";
-            $rs = $db->query($sql);
+            $rs = ploopi\loader::getdb()->query($sql);
 
             $tickets = array();
 
-            while ($fields = $db->fetchrow($rs))
+            while ($fields = ploopi\loader::getdb()->fetchrow($rs))
             {
                 $tickets[$fields['id']]['fields'] = $fields;
                 $tickets[$fields['id']]['dest'][$fields['id_user']]['id'] = $fields['id_user'];
@@ -175,7 +174,7 @@ switch($op)
             foreach($tickets as $id => $ticket)
             {
                 $fields = $ticket['fields'];
-                $ld = ovensia\ploopi\date::timestamp2local($fields['timestp']);
+                $ld = ploopi\date::timestamp2local($fields['timestp']);
 
                 $ticket_status = 2; // 0 = nothing done // 1 = opened // 2 = done
 
@@ -203,7 +202,7 @@ switch($op)
                 $template_body->assign_block_vars('switch_content_module_system.switch_tickets.tickets' , array(
                                     'ID' => $fields['id'],
                                     'TITLE' => $fields['title'],
-                                    'MESSAGE' => ovensia\ploopi\str::nl2br($fields['message']),
+                                    'MESSAGE' => ploopi\str::nl2br($fields['message']),
                                     'DATE' => $ld['date'],
                                     'TIME' => $ld['time'],
                                     'COLOR' => $puce,
@@ -239,7 +238,7 @@ switch($op)
     case 'saveprofile':
     case 'showprofile':
         $template_body->assign_block_vars("switch_content_module_system.switch_profile", array());
-        $user = new ovensia\ploopi\user();
+        $user = new ploopi\user();
         $user->open($_SESSION['ploopi']['userid']);
 
         if ($op == 'saveprofile')
@@ -249,7 +248,7 @@ switch($op)
             if ($userx_password!='' && $userx_password == $userx_passwordconfirm) $user->fields['password'] = md5($userx_password);
             elseif ($userx_password != $userx_passwordconfirm) $passwordok = false;
             $user->save();
-            ovensia\ploopi\output::redirect('./?modcontent='._PLOOPI_MODULE_SYSTEM.'&op=showprofile&reloadsession&ok='.$passwordok);
+            ploopi\output::redirect('./?modcontent='._PLOOPI_MODULE_SYSTEM.'&op=showprofile&reloadsession&ok='.$passwordok);
         }
 
         if (isset($ok))

@@ -110,7 +110,7 @@ $arrResult['columns']['actions_right']['actions'] =
     );    
     
 // Récupération des espaces gestionnaires
-$db->query("
+ploopi\loader::getdb()->query("
     SELECT      r.id,
                 w.label
                 
@@ -128,10 +128,10 @@ $db->query("
 ");   
 
 $arrResWorkspaces = array();
-while ($row = $db->fetchrow()) $arrResWorkspaces[$row['id']][] = ovensia\ploopi\str::htmlentities($row['label']);
+while ($row = ploopi\loader::getdb()->fetchrow()) $arrResWorkspaces[$row['id']][] = ploopi\str::htmlentities($row['label']);
 
 // Récupération des ressources
-$db->query("
+ploopi\loader::getdb()->query("
     SELECT      r.*,
                 rt.name as rt_name,
                 w.label as w_label,
@@ -152,7 +152,7 @@ $db->query("
     GROUP BY    r.id
 ");   
 
-while ($row = $db->fetchrow())
+while ($row = ploopi\loader::getdb()->fetchrow())
 {
     $arrResult['rows'][] = 
         array(
@@ -160,17 +160,17 @@ while ($row = $db->fetchrow())
                 array(
                     'reference' => 
                         array(
-                            'label' => ovensia\ploopi\str::htmlentities($row['reference']),
+                            'label' => ploopi\str::htmlentities($row['reference']),
                             'style' => ($row['active']) ? '' : 'color:#a60000;'
                         ),
                     'type' => 
                         array(
-                            'label' => ovensia\ploopi\str::htmlentities($row['rt_name']),
+                            'label' => ploopi\str::htmlentities($row['rt_name']),
                             'style' => ($row['active']) ? '' : 'color:#a60000;'
                         ),
                     'name' => 
                         array(
-                            'label' => ovensia\ploopi\str::htmlentities($row['name']),
+                            'label' => ploopi\str::htmlentities($row['name']),
                             'style' => ($row['active']) ? '' : 'color:#a60000;'
                         ),
                     'count' => array('label' => $row['c']),
@@ -179,11 +179,11 @@ while ($row = $db->fetchrow())
                     'active' => array('label' => ($row['active']) ? 'oui' : 'non'),
                     'color' => 
                         array(
-                            'label' => '<div style="width:8px;height:8px;margin-left:4px;border:1px solid #a0a0a0;background-color:'.ovensia\ploopi\str::htmlentities($row['color']).'"></div>'
+                            'label' => '<div style="width:8px;height:8px;margin-left:4px;border:1px solid #a0a0a0;background-color:'.ploopi\str::htmlentities($row['color']).'"></div>'
                         ),
                     'actions' => array('label' => ($row['c']) ? '&nbsp;' : '<input type="checkbox" class="booking_element_checkbox" value="'.$row['id'].'">')
                 ),
-            'description' => "Modifier la ressource '".ovensia\ploopi\str::htmlentities($row['name'])."'",
+            'description' => "Modifier la ressource '".ploopi\str::htmlentities($row['name'])."'",
             'link' => 'javascript:void(0);',
             'onclick' => "booking_element_open('resource', '{$row['id']}', event);"
         );

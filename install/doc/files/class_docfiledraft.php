@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,7 +25,7 @@
  *
  * @package doc
  * @subpackage file
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -37,12 +36,12 @@
  *
  * @package doc
  * @subpackage file
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
 
-class docfiledraft extends ovensia\ploopi\data_object
+class docfiledraft extends ploopi\data_object
 {
     var $oldname;
     var $tmpfile;
@@ -57,7 +56,7 @@ class docfiledraft extends ovensia\ploopi\data_object
     function __construct()
     {
         parent::__construct('ploopi_mod_doc_file_draft');
-        $this->fields['timestp_create'] = ovensia\ploopi\date::createtimestamp();
+        $this->fields['timestp_create'] = ploopi\date::createtimestamp();
 
         $this->oldname = '';
         $this->tmpfile = null;
@@ -73,7 +72,7 @@ class docfiledraft extends ovensia\ploopi\data_object
 
     function openmd5($md5id)
     {
-        global $db;
+        $db = ploopi\loader::getdb();
 
         $db->query("SELECT id FROM ploopi_mod_doc_file_draft WHERE md5id = '".$db->addslashes($md5id)."'");
         if ($fields = $db->fetchrow()) return(parent::open($fields['id']));
@@ -94,7 +93,7 @@ class docfiledraft extends ovensia\ploopi\data_object
 
     function save()
     {
-        global $db;
+        $db = ploopi\loader::getdb();
         $error = 0;
         if (isset($this->fields['folder'])) unset($this->fields['folder']);
 
@@ -155,7 +154,7 @@ class docfiledraft extends ovensia\ploopi\data_object
     function getbasepath()
     {
         $basepath = doc_getpath($this->fields['id_module'])._PLOOPI_SEP.'drafts'._PLOOPI_SEP.$this->fields['id'];
-        ovensia\ploopi\fs::makedir($basepath);
+        ploopi\fs::makedir($basepath);
         return($basepath);
     }
 

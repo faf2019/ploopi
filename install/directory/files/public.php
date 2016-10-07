@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,7 +25,7 @@
  *
  * @package directory
  * @subpackage public
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -34,7 +33,7 @@
 /**
  * Initialisation du module
  */
-ovensia\ploopi\module::init('directory');
+ploopi\module::init('directory');
 
 global $arrDirectoryImportFields;
 
@@ -54,7 +53,7 @@ switch($op)
     case 'directory_view':
         if ((!empty($_GET['directory_id_contact']) && is_numeric($_GET['directory_id_contact'])) || (!empty($_GET['directory_id_user']) && is_numeric($_GET['directory_id_user'])))
         {
-            ovensia\ploopi\module::init('directory');
+            ploopi\module::init('directory');
             include './modules/directory/public_directory_view.php';
         }
         return;
@@ -64,7 +63,7 @@ switch($op)
 if (!empty($_GET['directoryTabItem'])) $_SESSION['directory']['directoryTabItem'] = $_GET['directoryTabItem'];
 if (empty($_SESSION['directory']['directoryTabItem'])) $_SESSION['directory']['directoryTabItem'] = 'tabFavorites';
 
-echo $skin->create_pagetitle(ovensia\ploopi\str::htmlentities($_SESSION['ploopi']['modulelabel']));
+echo $skin->create_pagetitle(ploopi\str::htmlentities($_SESSION['ploopi']['modulelabel']));
 
 $desc = $title = '';
 switch($_SESSION['directory']['directoryTabItem'])

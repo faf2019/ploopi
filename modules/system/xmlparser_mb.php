@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,7 +25,7 @@
  *
  * @package system
  * @subpackage system
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -42,7 +41,7 @@ function startElement_mb($parser, $name, $attribs)
     global $globaldata;
     global $datatype;
     global $field;
-    global $db;
+    $db = ploopi\loader::getdb();
     global $newrow;
     global $newfield;
     global $dataobject;
@@ -63,23 +62,23 @@ function startElement_mb($parser, $name, $attribs)
         switch($datatype)
         {
             case 'ploopi_mb_table':
-                $dataobject = new ovensia\ploopi\mb_table();
+                $dataobject = new ploopi\mb_table();
             break;
 
             case 'ploopi_mb_field':
-                $dataobject = new ovensia\ploopi\mb_field();
+                $dataobject = new ploopi\mb_field();
             break;
 
             case 'ploopi_mb_schema':
-                $dataobject = new ovensia\ploopi\mb_schema();
+                $dataobject = new ploopi\mb_schema();
             break;
 
             case 'ploopi_mb_relation':
-                $dataobject = new ovensia\ploopi\mb_relation();
+                $dataobject = new ploopi\mb_relation();
             break;
 
             default:
-                $dataobject = new ovensia\ploopi\data_object($datatype);
+                $dataobject = new ploopi\data_object($datatype);
             break;
         }
         $newrow = true;

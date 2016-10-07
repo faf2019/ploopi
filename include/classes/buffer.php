@@ -20,9 +20,9 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-namespace ovensia\ploopi;
+namespace ploopi;
 
-use ovensia\ploopi;
+use ploopi;
 
 /**
  * Gestion du buffer
@@ -53,7 +53,7 @@ abstract class buffer
     {
 
         global $ploopi_timer;
-        global $db;
+        $db = loader::getdb();
 
         if (!strlen(trim($buffer))) return '';
 
@@ -196,7 +196,7 @@ abstract class buffer
      * @license GNU General Public License (GPL)
      * @author Stéphane Escaich
      *
-     * @see ovensia\ploopi\buffer::callback
+     * @see ploopi\buffer::callback
      */
 
     public static function clean($booDeleteAllBuffers = false)

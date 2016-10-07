@@ -1,7 +1,6 @@
 <?php
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Copyright (c) 2009-2010 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
@@ -27,7 +26,7 @@
  *
  * @package webedit
  * @subpackage heading
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
@@ -37,12 +36,12 @@
  *
  * @package webedit
  * @subpackage heading
- * @copyright Netlor, Ovensia
+ * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
 
-class webedit_heading extends ovensia\ploopi\data_object
+class webedit_heading extends ploopi\data_object
 {
     /**
      * Contructeur de la classe
@@ -63,7 +62,7 @@ class webedit_heading extends ovensia\ploopi\data_object
     {
         include_once './modules/webedit/class_article.php';
 
-        global $db;
+        $db = ploopi\loader::getdb();
 
         // suppression des abonnements (frontoffice)
         $db->query("DELETE FROM ploopi_mod_webedit_heading_subscriber WHERE id_heading = {$this->fields['id']}");

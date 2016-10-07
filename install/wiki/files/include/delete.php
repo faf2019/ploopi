@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2009 Ovensia
+    Copyright (c) 2007-2016 Ovensia
 
     Contributors hold Copyright (c) to their code submissions.
 
@@ -36,12 +36,12 @@
  */
 
 $delete = "DELETE FROM ploopi_mod_wiki_page WHERE id_module = {$this->fields['id']}";
-$db->query($delete);
+ploopi\loader::getdb()->query($delete);
 
 /**
  * Suppression de l'historique
  */
 
 $delete = "DELETE FROM ploopi_mod_wiki_page_history WHERE id_module = {$this->fields['id']}";
-$db->query($delete);
+ploopi\loader::getdb()->query($delete);
 ?>

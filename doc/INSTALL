@@ -18,6 +18,17 @@ sudo systemctl daemon-reload
 sudo systemctl enable elasticsearch
 sudo systemctl restart elasticsearch
 
+## Attention lors d'un update de elasticsearch, il peut être nécessaire de mettre à jour les plugins !!
+
+sudo /usr/share/elasticsearch/bin/plugin remove license
+sudo /usr/share/elasticsearch/bin/plugin remove analysis-phonetic
+sudo /usr/share/elasticsearch/bin/plugin remove delete-by-query
+
+sudo /usr/share/elasticsearch/bin/plugin install license
+sudo /usr/share/elasticsearch/bin/plugin install analysis-phonetic
+sudo /usr/share/elasticsearch/bin/plugin install delete-by-query
+
+
 ## Activation des modules Apache
 
 sudo a2enmod rewrite expires headers

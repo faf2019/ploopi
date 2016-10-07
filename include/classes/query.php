@@ -20,9 +20,9 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-namespace ovensia\ploopi;
+namespace ploopi;
 
-use ovensia\ploopi;
+use ploopi;
 
 /**
  * Gestion de requêtes SQL construites
@@ -61,7 +61,7 @@ abstract class query
     public function __construct($objDb = null)
     {
         if (!is_null($objDb)) $this->objDb = $objDb;
-        else { global $db; $this->objDb = $db; }
+        else { $this->objDb = loader::getdb(); }
 
         $this->arrRaw = array();
 
@@ -140,7 +140,7 @@ abstract class query
      */
     public function __wakeup()
     {
-        global $db;
+        $db = loader::getdb();
         $this->objDb = $db;
     }
 }

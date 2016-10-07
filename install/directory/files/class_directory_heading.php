@@ -36,7 +36,7 @@
 
 include_once './modules/directory/class_directory_contact.php';
 
-class directory_heading extends ovensia\ploopi\data_object
+class directory_heading extends ploopi\data_object
 {
     private $modules;
     private $plans;
@@ -62,7 +62,7 @@ class directory_heading extends ovensia\ploopi\data_object
 
     public function save($booForcePos = false)
     {
-        global $db;
+        $db = ploopi\loader::getdb();
 
         if ($this->new) $this->setuwm();
         else
@@ -123,7 +123,7 @@ class directory_heading extends ovensia\ploopi\data_object
     {
         include_once './modules/directory/include/global.php';
 
-        global $db;
+        $db = ploopi\loader::getdb();
 
         // Effacer les contacts attachés
         $rs_contact = $db->query("SELECT id FROM ploopi_mod_directory_contact WHERE id_heading = {$this->fields['id']}");
@@ -137,7 +137,7 @@ class directory_heading extends ovensia\ploopi\data_object
         $db->query("UPDATE ploopi_mod_directory_heading SET position = position - 1 WHERE position > {$this->fields['position']} AND id_heading = {$this->fields['id_heading']}");
 
         // Suppression des gestionnaires (workflow)
-        ovensia\ploopi\validation::remove(_DIRECTORY_OBJECT_HEADING, $this->fields['id']);
+        ploopi\validation::remove(_DIRECTORY_OBJECT_HEADING, $this->fields['id']);
 
         // Effacer les fils
         $rs_headings = $db->query("SELECT id FROM ploopi_mod_directory_heading WHERE id_heading = {$this->fields['id']}");
@@ -158,7 +158,7 @@ class directory_heading extends ovensia\ploopi\data_object
 
     function create_child()
     {
-        global $db;
+        $db = ploopi\loader::getdb();
 
         // calcul pos
         $rs = $db->query("SELECT max(position) AS maxpos FROM ploopi_mod_directory_heading WHERE id_heading = {$this->fields['id']}");

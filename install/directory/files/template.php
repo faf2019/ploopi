@@ -34,10 +34,10 @@
 
 $template_body->assign_vars(
     array(
-        'DIRECTORY_FORMACTION' => ovensia\ploopi\crypt::urlencode("index.php?headingid={$headingid}&template_moduleid={$template_moduleid}&op=search"),
-        'DIRECTORY_LINK_FULL' => ovensia\ploopi\crypt::urlencode("index.php?headingid={$headingid}&template_moduleid={$template_moduleid}&op=full"),
-        'DIRECTORY_LINK_ORGANIGRAM' => ovensia\ploopi\crypt::urlencode("index.php?headingid={$headingid}&template_moduleid={$template_moduleid}&op=organigram"),
-        'DIRECTORY_LINK_SPEEDDIALING' => ovensia\ploopi\crypt::urlencode("index.php?headingid={$headingid}&template_moduleid={$template_moduleid}&op=speeddialing")
+        'DIRECTORY_FORMACTION' => ploopi\crypt::urlencode("index.php?headingid={$headingid}&template_moduleid={$template_moduleid}&op=search"),
+        'DIRECTORY_LINK_FULL' => ploopi\crypt::urlencode("index.php?headingid={$headingid}&template_moduleid={$template_moduleid}&op=full"),
+        'DIRECTORY_LINK_ORGANIGRAM' => ploopi\crypt::urlencode("index.php?headingid={$headingid}&template_moduleid={$template_moduleid}&op=organigram"),
+        'DIRECTORY_LINK_SPEEDDIALING' => ploopi\crypt::urlencode("index.php?headingid={$headingid}&template_moduleid={$template_moduleid}&op=speeddialing")
     )
 );
 ?>

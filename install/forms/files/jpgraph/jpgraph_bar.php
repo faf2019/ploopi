@@ -602,7 +602,7 @@ class BarPlot extends Plot {
             }
             if( !empty($this->csimtargets[$i]) ) {
                 $this->csimareas .= '<area shape="poly" coords="'.$csimcoord.'" ';
-                $this->csimareas .= " href=\"".ovensia\ploopi\str::htmlentities($this->csimtargets[$i])."\"";
+                $this->csimareas .= " href=\"".ploopi\str::htmlentities($this->csimtargets[$i])."\"";
 
                 if( !empty($this->csimwintargets[$i]) ) {
                     $this->csimareas .= " target=\"".$this->csimwintargets[$i]."\" ";
