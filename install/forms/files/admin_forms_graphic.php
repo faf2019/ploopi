@@ -74,7 +74,7 @@ else
     $strTitle = _FORMS_GRAPHICCREATION;
 }
 
-echo $skin->open_simplebloc($strTitle);
+echo ploopi\skin::get()->open_simplebloc($strTitle);
 
 $arrParams = array();
 $arrParams[] = "ploopi_op=forms_graphic_save";
@@ -473,5 +473,5 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
 </form>
 
 <?php
-echo $skin->close_simplebloc();
+echo ploopi\skin::get()->close_simplebloc();
 ?>

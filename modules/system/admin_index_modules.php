@@ -46,7 +46,7 @@ $sharedmodules = $workspace->getsharedmodules();
  */
 $ownmodules = $workspace->getmodules();
 
-echo $skin->open_simplebloc(_SYSTEM_LABEL_GROUP_AVAILABLE_MODULES);
+echo ploopi\skin::get()->open_simplebloc(_SYSTEM_LABEL_GROUP_AVAILABLE_MODULES);
 
 $columns = array();
 $values = array();
@@ -123,9 +123,9 @@ foreach ($ownmodules as $index => $module)
     $c++;
 }
 
-$skin->display_array($columns, $values, 'array_ownmodules', array('sortable' => true, 'orderby_default' => 'position'));
+ploopi\skin::get()->display_array($columns, $values, 'array_ownmodules', array('sortable' => true, 'orderby_default' => 'position'));
 
-echo $skin->close_simplebloc();
+echo ploopi\skin::get()->close_simplebloc();
 
 if ($op == 'modify' && !empty($_GET['moduleid']) && is_numeric($_GET['moduleid']))
 {
@@ -133,7 +133,7 @@ if ($op == 'modify' && !empty($_GET['moduleid']) && is_numeric($_GET['moduleid']
     $module->open($_GET['moduleid']);
 
     echo '<a name="modify"></a>';
-    echo $skin->open_simplebloc(str_replace('<MODULE>',ploopi\str::htmlentities($module->fields['label']),_SYSTEM_LABEL_MODULE_PROPERTIES));
+    echo ploopi\skin::get()->open_simplebloc(str_replace('<MODULE>',ploopi\str::htmlentities($module->fields['label']),_SYSTEM_LABEL_MODULE_PROPERTIES));
     ?>
 
     <form name="form_modify_module" action="<?php echo ploopi\crypt::urlencode("admin.php?op=save_module_props&moduleid={$module->fields['id']}"); ?>" method="post">
@@ -238,10 +238,10 @@ if ($op == 'modify' && !empty($_GET['moduleid']) && is_numeric($_GET['moduleid']
         );
     </script>
     <?php
-    echo $skin->close_simplebloc();
+    echo ploopi\skin::get()->close_simplebloc();
 }
 
-echo $skin->open_simplebloc(_SYSTEM_LABEL_GROUP_USABLE_MODULES);
+echo ploopi\skin::get()->open_simplebloc(_SYSTEM_LABEL_GROUP_USABLE_MODULES);
 
 $columns = array();
 $values = array();
@@ -271,7 +271,7 @@ foreach ($installedmodules AS $index => $moduletype)
     $c++;
 }
 
-$skin->display_array($columns, $values, 'array_modules', array('sortable' => true, 'orderby_default' => 'type'));
+ploopi\skin::get()->display_array($columns, $values, 'array_modules', array('sortable' => true, 'orderby_default' => 'type'));
 
-echo $skin->close_simplebloc();
+echo ploopi\skin::get()->close_simplebloc();
 ?>

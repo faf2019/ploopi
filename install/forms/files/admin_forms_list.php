@@ -34,7 +34,7 @@
  * Initialisation du tableau contenant la liste des formulaires
  */
 
-echo $skin->open_simplebloc(_FORMS_LABELTAB_LIST);
+echo ploopi\skin::get()->open_simplebloc(_FORMS_LABELTAB_LIST);
 
 $array_columns = array();
 $array_values = array();
@@ -75,11 +75,11 @@ $sql =  "
         ORDER BY pubdate_start DESC, pubdate_end DESC
         ";
 
-ploopi\loader::getdb()->query($sql);
+ploopi\db::get()->query($sql);
 
 $c=0;
 
-while ($fields = ploopi\loader::getdb()->fetchrow())
+while ($fields = ploopi\db::get()->fetchrow())
 {
     $pubdate_start = ($fields['pubdate_start']) ? ploopi\date::timestamp2local($fields['pubdate_start']) : array('date' => '');
     $pubdate_end = ($fields['pubdate_end']) ? ploopi\date::timestamp2local($fields['pubdate_end']) : array('date' => '');
@@ -108,7 +108,7 @@ while ($fields = ploopi\loader::getdb()->fetchrow())
     $c++;
 }
 
-$skin->display_array($array_columns, $array_values, 'forms_list', array('sortable' => true, 'orderby_default' => 'label'));
+ploopi\skin::get()->display_array($array_columns, $array_values, 'forms_list', array('sortable' => true, 'orderby_default' => 'label'));
 
-echo $skin->close_simplebloc();
+echo ploopi\skin::get()->close_simplebloc();
 ?>

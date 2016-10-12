@@ -153,7 +153,7 @@ abstract class fs
     {
         $ext = fs::file_getextension($filename);
 
-        $db = loader::getdb();
+        $db = db::get();
 
         // Si mimetype = '' ou pas trouvé c'est que c'est un octetstream donc on passe
         $sqlMime = $db->query("SELECT mimetype FROM ploopi_mimetype WHERE ext = '".$db->addslashes($ext)."' AND mimetype != ''");

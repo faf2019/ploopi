@@ -164,7 +164,7 @@ class wiki_page extends ploopi\data_object
      */
     public function getHistory()
     {
-        $db = ploopi\loader::getdb();
+        $db = ploopi\db::get();
 
         $db->query("
             SELECT      ph.*, u.lastname, u.firstname, u.login
@@ -188,7 +188,7 @@ class wiki_page extends ploopi\data_object
      */
     public function rename($strNewId, $booRedirectLinks)
     {
-        $db = ploopi\loader::getdb();
+        $db = ploopi\db::get();
 
         $this->remove_index();
 

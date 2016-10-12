@@ -34,7 +34,7 @@
  * Ouverture du bloc
  */
 
-echo $skin->open_simplebloc();
+echo ploopi\skin::get()->open_simplebloc();
 
 $parents = str_replace(';',',',$workspace->fields['parents']);
 
@@ -67,7 +67,7 @@ $sql =  "
         ORDER BY    module_type, m.label
         ";
 
-ploopi\loader::getdb()->query($sql);
+ploopi\db::get()->query($sql);
 
 $columns = array();
 $values = array();
@@ -80,7 +80,7 @@ $columns['right']['shared']     = array('label' => 'Partagé', 'width' => '65');
 $columns['right']['origine']    = array('label' => 'Origine', 'width' => '150', 'options' => array('sort' => true));
 $columns['actions_right']['actions'] = array('label' => '&nbsp;', 'width' => '44');
 
-while($row = ploopi\loader::getdb()->fetchrow())
+while($row = ploopi\db::get()->fetchrow())
 {
     if ($row['id_workspace'] == $workspaceid)
     {
@@ -103,7 +103,7 @@ while($row = ploopi\loader::getdb()->fetchrow())
     $c++;
 }
 
-$skin->display_array($columns, $values, 'array_roles', array('sortable' => true, 'orderby_default' => 'module'));
+ploopi\skin::get()->display_array($columns, $values, 'array_roles', array('sortable' => true, 'orderby_default' => 'module'));
 
-echo $skin->close_simplebloc();
+echo ploopi\skin::get()->close_simplebloc();
 ?>

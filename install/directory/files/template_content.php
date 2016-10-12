@@ -122,16 +122,16 @@ switch($op)
             $arrHeadingId = array();
 
             // recherche sur libellé de rubrique
-            $ptrRs = ploopi\loader::getdb()->query("
+            $ptrRs = ploopi\db::get()->query("
                 SELECT      h.*
 
                 FROM        ploopi_mod_directory_heading h
 
-                WHERE       label LIKE '%".ploopi\loader::getdb()->addslashes($arrFilter['directory_heading'])."%'
+                WHERE       label LIKE '%".ploopi\db::get()->addslashes($arrFilter['directory_heading'])."%'
             ");
 
             // rubriques répondant au libellé
-            while ($row = ploopi\loader::getdb()->fetchrow($ptrRs)) $arrHeadingId[] = $row['id'];
+            while ($row = ploopi\db::get()->fetchrow($ptrRs)) $arrHeadingId[] = $row['id'];
 
             // recherche des rubriques filles et complétion du tableau de rubriques de recherche
             $intHid = current($arrHeadingId);
@@ -146,21 +146,21 @@ switch($op)
         }
 
 
-        if (!empty($arrFilter['directory_lastname'])) $arrWhere[] = "c.lastname LIKE '".ploopi\loader::getdb()->addslashes($arrFilter['directory_lastname'])."%'";
-        if (!empty($arrFilter['directory_firstname'])) $arrWhere[] = "c.firstname LIKE '".ploopi\loader::getdb()->addslashes($arrFilter['directory_firstname'])."%'";
-        if (!empty($arrFilter['directory_phone'])) $arrWhere[] = "c.phone LIKE '".ploopi\loader::getdb()->addslashes($arrFilter['directory_phone'])."%'";
-        if (!empty($arrFilter['directory_email'])) $arrWhere[] = "c.email LIKE '%".ploopi\loader::getdb()->addslashes($arrFilter['directory_email'])."%'";
-        if (!empty($arrFilter['directory_number'])) $arrWhere[] = "c.number LIKE '".ploopi\loader::getdb()->addslashes($arrFilter['directory_number'])."%'";
-        if (!empty($arrFilter['directory_service'])) $arrWhere[] = "c.service LIKE '%".ploopi\loader::getdb()->addslashes($arrFilter['directory_service'])."%'";
-        if (!empty($arrFilter['directory_function'])) $arrWhere[] = "c.function LIKE '%".ploopi\loader::getdb()->addslashes($arrFilter['directory_function'])."%'";
-        if (!empty($arrFilter['directory_rank'])) $arrWhere[] = "c.rank LIKE '%".ploopi\loader::getdb()->addslashes($arrFilter['directory_rank'])."%'";
-        if (!empty($arrFilter['directory_country'])) $arrWhere[] = "c.country LIKE '%".ploopi\loader::getdb()->addslashes($arrFilter['directory_country'])."%'";
-        if (!empty($arrFilter['directory_city'])) $arrWhere[] = "c.city LIKE '%".ploopi\loader::getdb()->addslashes($arrFilter['directory_city'])."%'";
-        if (!empty($arrFilter['directory_postalcode'])) $arrWhere[] = "c.postalcode LIKE '".ploopi\loader::getdb()->addslashes($arrFilter['directory_postalcode'])."%'";
-        if (!empty($arrFilter['directory_comments'])) $arrWhere[] = "c.comments LIKE '%".ploopi\loader::getdb()->addslashes($arrFilter['directory_comments'])."%'";
+        if (!empty($arrFilter['directory_lastname'])) $arrWhere[] = "c.lastname LIKE '".ploopi\db::get()->addslashes($arrFilter['directory_lastname'])."%'";
+        if (!empty($arrFilter['directory_firstname'])) $arrWhere[] = "c.firstname LIKE '".ploopi\db::get()->addslashes($arrFilter['directory_firstname'])."%'";
+        if (!empty($arrFilter['directory_phone'])) $arrWhere[] = "c.phone LIKE '".ploopi\db::get()->addslashes($arrFilter['directory_phone'])."%'";
+        if (!empty($arrFilter['directory_email'])) $arrWhere[] = "c.email LIKE '%".ploopi\db::get()->addslashes($arrFilter['directory_email'])."%'";
+        if (!empty($arrFilter['directory_number'])) $arrWhere[] = "c.number LIKE '".ploopi\db::get()->addslashes($arrFilter['directory_number'])."%'";
+        if (!empty($arrFilter['directory_service'])) $arrWhere[] = "c.service LIKE '%".ploopi\db::get()->addslashes($arrFilter['directory_service'])."%'";
+        if (!empty($arrFilter['directory_function'])) $arrWhere[] = "c.function LIKE '%".ploopi\db::get()->addslashes($arrFilter['directory_function'])."%'";
+        if (!empty($arrFilter['directory_rank'])) $arrWhere[] = "c.rank LIKE '%".ploopi\db::get()->addslashes($arrFilter['directory_rank'])."%'";
+        if (!empty($arrFilter['directory_country'])) $arrWhere[] = "c.country LIKE '%".ploopi\db::get()->addslashes($arrFilter['directory_country'])."%'";
+        if (!empty($arrFilter['directory_city'])) $arrWhere[] = "c.city LIKE '%".ploopi\db::get()->addslashes($arrFilter['directory_city'])."%'";
+        if (!empty($arrFilter['directory_postalcode'])) $arrWhere[] = "c.postalcode LIKE '".ploopi\db::get()->addslashes($arrFilter['directory_postalcode'])."%'";
+        if (!empty($arrFilter['directory_comments'])) $arrWhere[] = "c.comments LIKE '%".ploopi\db::get()->addslashes($arrFilter['directory_comments'])."%'";
 
         // Exécution de la requête principale permettant de lister les utilisateurs selon le filtre
-        $ptrRs = ploopi\loader::getdb()->query("
+        $ptrRs = ploopi\db::get()->query("
             SELECT      c.*, h.label
 
             FROM        ploopi_mod_directory_contact c,
@@ -171,10 +171,10 @@ switch($op)
             ORDER BY    c.lastname, c.firstname
         ");
 
-        if (ploopi\loader::getdb()->numrows())
+        if (ploopi\db::get()->numrows())
         {
             $c = 0;
-            while ($row = ploopi\loader::getdb()->fetchrow($ptrRs))
+            while ($row = ploopi\db::get()->fetchrow($ptrRs))
             {
                 $c++;
 
@@ -353,7 +353,7 @@ switch($op)
 
 
             // Recherche des personnes du même service
-            $ptrRs = ploopi\loader::getdb()->query("
+            $ptrRs = ploopi\db::get()->query("
                 SELECT      c.*
 
                 FROM        ploopi_mod_directory_contact c
@@ -365,7 +365,7 @@ switch($op)
             ");
 
             $c = 0;
-            while ($row = ploopi\loader::getdb()->fetchrow($ptrRs))
+            while ($row = ploopi\db::get()->fetchrow($ptrRs))
             {
                 $c++;
 
@@ -498,7 +498,7 @@ switch($op)
 
         $template_body->assign_block_vars('directory_switch_speeddialing', array());
 
-        ploopi\loader::getdb()->query("
+        ploopi\db::get()->query("
             SELECT      *
             FROM        ploopi_mod_directory_speeddialing
             ORDER BY    heading, label
@@ -506,7 +506,7 @@ switch($op)
 
         $strHeading = null;
 
-        while ($row = ploopi\loader::getdb()->fetchrow())
+        while ($row = ploopi\db::get()->fetchrow())
         {
             if ($row['heading'] != $strHeading) // Nouvelle rubrique
             {

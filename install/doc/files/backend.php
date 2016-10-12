@@ -110,16 +110,16 @@ if (!$objCache->start())
         AND         foldertype = 'public'
         AND         published = 1
     ";
-    $sql_folder = ploopi\loader::getdb()->query($select);
+    $sql_folder = ploopi\db::get()->query($select);
 
-    if(!ploopi\loader::getdb()->numrows($sql_folder))
+    if(!ploopi\db::get()->numrows($sql_folder))
     {
         // Aucun fichier, flux retourne faux !
         ploopi\output::h404();
         ploopi\system::kill();
     }
 
-    $arrFolder = ploopi\loader::getdb()->getarray($sql_folder,true);
+    $arrFolder = ploopi\db::get()->getarray($sql_folder,true);
     $strFolderSql = implode(',',array_keys($arrFolder));
 
     $limit = '';
@@ -143,16 +143,16 @@ if (!$objCache->start())
         {$limit}
     ";
 
-    $sql_file = ploopi\loader::getdb()->query($select);
+    $sql_file = ploopi\db::get()->query($select);
 
-    if(!ploopi\loader::getdb()->numrows($sql_file))
+    if(!ploopi\db::get()->numrows($sql_file))
     {
         // Aucun fichier, flux retourne faux !
         ploopi\output::h404();
         ploopi\system::kill();
     }
 
-    while ($file = ploopi\loader::getdb()->fetchrow($sql_file))
+    while ($file = ploopi\db::get()->fetchrow($sql_file))
     {
         // Création d'un nouvel item
         $link = _PLOOPI_BASEPATH.'/'.ploopi\str::urlrewrite("index.php?ploopi_op=doc_file_download&docfile_md5id={$file['md5id']}", doc_getrewriterules(), $file['name'], null, true);

@@ -44,8 +44,8 @@ $sql =  "
         ORDER BY    u.lastname, u.firstname
         ";
 
-ploopi\loader::getdb()->query($sql);
-$users = ploopi\loader::getdb()->getarray();
+ploopi\db::get()->query($sql);
+$users = ploopi\db::get()->getarray();
 
 /**
  * Recherche des groupes d'utilisateurs qui possèdent le rôle
@@ -61,8 +61,8 @@ $sql =  "
         ORDER BY    g.label
         ";
 
-ploopi\loader::getdb()->query($sql);
-$groups = ploopi\loader::getdb()->getarray();
+ploopi\db::get()->query($sql);
+$groups = ploopi\db::get()->getarray();
 
 if (empty($groups) && empty($users))
 {
@@ -97,7 +97,7 @@ if (empty($groups) && empty($users))
             $c++;
         }
 
-        $skin->display_array($columns, $values, 'array_roles_users', array('sortable' => true, 'orderby_default' => 'type'));
+        ploopi\skin::get()->display_array($columns, $values, 'array_roles_users', array('sortable' => true, 'orderby_default' => 'type'));
     }
 
 ?>

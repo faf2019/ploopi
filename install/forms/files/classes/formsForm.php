@@ -1205,7 +1205,7 @@ class formsForm extends ploopi\data_object
 
     private function _dropTable()
     {
-        $db = ploopi\loader::getdb();
+        $db = ploopi\db::get();
 
         $db->query("DROP TABLE IF EXISTS `".$this->getDataTableName()."`");
     }
@@ -1216,7 +1216,7 @@ class formsForm extends ploopi\data_object
 
     public function generateTable()
     {
-        $db = ploopi\loader::getdb();
+        $db = ploopi\db::get();
 
         $this->_setDataTableName();
 
@@ -1295,7 +1295,7 @@ class formsForm extends ploopi\data_object
 
     public function exportToTable()
     {
-        $db = ploopi\loader::getdb();
+        $db = ploopi\db::get();
 
         $this->generateTable();
 
@@ -2362,7 +2362,7 @@ class formsForm extends ploopi\data_object
 
     public function captchainform()
     {
-        $db = ploopi\loader::getdb();
+        $db = ploopi\db::get();
 
         $select = "SELECT id FROM ploopi_mod_forms_field WHERE id_form = {$this->fields['id']} AND captcha = 1";
 

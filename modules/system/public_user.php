@@ -139,8 +139,8 @@ if (!$booReadonly) {
 // Suppression de la variable de stockage de la photo temporaire
 if (isset($_SESSION['system']['user_photopath'])) unset($_SESSION['system']['user_photopath']);
 
-echo $skin->create_pagetitle(_PLOOPI_LABEL_MYWORKSPACE);
-echo $skin->open_simplebloc(_PLOOPI_LABEL_MYPROFILE);
+echo ploopi\skin::get()->create_pagetitle(_PLOOPI_LABEL_MYWORKSPACE);
+echo ploopi\skin::get()->open_simplebloc(_PLOOPI_LABEL_MYPROFILE);
 
 /**
  * Ouverture de l'instance de l'utilisateur à modifier
@@ -535,4 +535,4 @@ if (isset($_GET['error']))
 
 
 
-<?php echo $skin->close_simplebloc(); ?>
+<?php echo ploopi\skin::get()->close_simplebloc(); ?>

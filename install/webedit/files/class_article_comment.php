@@ -113,7 +113,7 @@ class webedit_article_comment extends ploopi\data_object
 
     function admin_comment_refresh($id_article)
     {
-        $db = ploopi\loader::getdb();
+        $db = ploopi\db::get();
 
         $select =   "
                     SELECT      *

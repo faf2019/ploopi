@@ -73,7 +73,7 @@ if ($_SESSION['ploopi']['connected'])
                     // Récupération de la structure du treeview
                     $arrTreeview = doc_gettreeview(doc_getfolders(), $strPrefix, $arrExcludes);
 
-                    echo $skin->display_treeview($arrTreeview['list'], $arrTreeview['tree'], $strPrefix.$currentfolder, $strPrefix.$_GET['doc_folder_id']);
+                    echo ploopi\skin::get()->display_treeview($arrTreeview['list'], $arrTreeview['tree'], $strPrefix.$currentfolder, $strPrefix.$_GET['doc_folder_id']);
                 }
                 ploopi\system::kill();
             break;
@@ -864,14 +864,14 @@ if ($_SESSION['ploopi']['connected'])
                 <?php
                 // Récupération de la structure du treeview
                 $arrTreeview = doc_gettreeview(doc_getfolders(), 'p_', $arrExcludes);
-                echo $skin->display_treeview($arrTreeview['list'], $arrTreeview['tree'], 'p_'.$currentfolder, 'p_-1');
+                echo ploopi\skin::get()->display_treeview($arrTreeview['list'], $arrTreeview['tree'], 'p_'.$currentfolder, 'p_-1');
                 ?>
                 </div>
                 <?php
                 $content = ob_get_contents();
                 ob_end_clean();
 
-                echo $skin->create_popup('Choix d\'un dossier parent', $content, 'doc_popup_folderselect');
+                echo ploopi\skin::get()->create_popup('Choix d\'un dossier parent', $content, 'doc_popup_folderselect');
                 ploopi\system::kill();
             break;
         }
@@ -909,7 +909,7 @@ if ($_SESSION['ploopi']['connected'])
                 if (!empty($arrModules))
                 {
                     // exec requete + encodage JSON
-                    ploopi\loader::getdb()->query("
+                    ploopi\db::get()->query("
                         SELECT      doc.md5id,
                                     doc.name,
                                     doc.size
@@ -926,7 +926,7 @@ if ($_SESSION['ploopi']['connected'])
                         ORDER BY    doc.name
                     ");
 
-                    while ($row = ploopi\loader::getdb()->fetchrow())
+                    while ($row = ploopi\db::get()->fetchrow())
                     {
                         switch($_GET['filter'])
                         {

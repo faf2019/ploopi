@@ -63,7 +63,7 @@ class booking_event_detail extends ploopi\data_object
      */
     public function delete()
     {
-        $db = ploopi\loader::getdb();
+        $db = ploopi\db::get();
 
         // Recherche si l'event contient d'autres détails.
         // S'il n'en contient pas, on le supprime

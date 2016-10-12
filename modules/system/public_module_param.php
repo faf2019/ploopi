@@ -35,12 +35,12 @@
  */
 if (!empty($_REQUEST['idmodule']) && is_numeric($_REQUEST['idmodule'])) $idmodule = $_REQUEST['idmodule'];
 
-echo $skin->create_pagetitle(_PLOOPI_LABEL_MYWORKSPACE);
-echo $skin->open_simplebloc(_PLOOPI_LABEL_MYPARAMS); 
+echo ploopi\skin::get()->create_pagetitle(_PLOOPI_LABEL_MYWORKSPACE);
+echo ploopi\skin::get()->open_simplebloc(_PLOOPI_LABEL_MYPARAMS); 
 ?>
 <div style="padding:4px;">
 <?php
-echo $skin->open_simplebloc(_SYSTEM_MODULESELECTED);
+echo ploopi\skin::get()->open_simplebloc(_SYSTEM_MODULESELECTED);
 
 ?>
 <div style="padding:4px;">
@@ -87,11 +87,11 @@ else
 ?>
 </div>
 <?php
-echo $skin->close_simplebloc();
+echo ploopi\skin::get()->close_simplebloc();
 
 if (isset($idmodule))
 {
-    echo $skin->open_simplebloc(_SYSTEM_MODULEPARAM);
+    echo ploopi\skin::get()->open_simplebloc(_SYSTEM_MODULEPARAM);
 
     $param_module = new ploopi\param();
     $param_module->open($idmodule, 0, $_SESSION['ploopi']['userid'], 1);
@@ -159,8 +159,8 @@ if (isset($idmodule))
     }
     else echo '&nbsp;'._SYSTEM_LABEL_NOMODULEPARAM;
 
-    echo $skin->close_simplebloc();
+    echo ploopi\skin::get()->close_simplebloc();
 }
 ?>
 </div>
-<?php echo $skin->close_simplebloc(); ?>
+<?php echo ploopi\skin::get()->close_simplebloc(); ?>

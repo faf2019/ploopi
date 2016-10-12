@@ -86,7 +86,7 @@ class validation extends data_object
 
     public static function selectusers($id_object = 0, $id_record = '', $id_module = -1, $id_action = -1, $strTitle = null, $strForceValidationId = null)
     {
-        $db = loader::getdb();
+        $db = db::get();
 
         if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];
 
@@ -165,7 +165,7 @@ class validation extends data_object
 
     public static function add($id_object = 0, $id_record = '', $id_module = -1, $strForceValidationId = null)
     {
-        $db = loader::getdb();
+        $db = db::get();
         include_once './include/classes/validation.php';
 
         if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];
@@ -226,7 +226,7 @@ class validation extends data_object
 
     public static function get($id_object = 0, $id_record = '', $id_module = -1, $id_val = 0, $type_val = 'user')
     {
-        $db = loader::getdb();
+        $db = db::get();
 
         if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];
 
@@ -283,7 +283,7 @@ class validation extends data_object
      */
     public static function remove($id_object = 0, $id_record = '', $id_module = -1, $id_val = 0, $type_val = 'user')
     {
-        $db = loader::getdb();
+        $db = db::get();
 
         if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];
 

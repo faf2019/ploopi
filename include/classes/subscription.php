@@ -63,7 +63,7 @@ class subscription extends data_object
 
     public function clean()
     {
-        $db = loader::getdb();
+        $db = db::get();
         $db->query("DELETE FROM ploopi_subscription_action WHERE id_subscription = '{$this->fields['id']}'");
     }
 
@@ -73,7 +73,7 @@ class subscription extends data_object
 
     public function getactions()
     {
-        $db = loader::getdb();
+        $db = db::get();
 
         $arrActions = array();
 
@@ -135,7 +135,7 @@ class subscription extends data_object
 
     public static function display_refresh($ploopi_subscription_id, $next = '')
     {
-        $db = loader::getdb();
+        $db = db::get();
 
         $objSubscription = new self();
         $booSubscribed = ($objSubscription->open($ploopi_subscription_id));
@@ -266,7 +266,7 @@ class subscription extends data_object
 
     public static function subscribed($id_object, $id_record, $id_action = -1)
     {
-        $db = loader::getdb();
+        $db = db::get();
 
         $where = ($id_action != -1) ? " AND (sa.id_action = {$id_action} OR s.allactions = 1) " : '';
 
@@ -301,7 +301,7 @@ class subscription extends data_object
 
     public static function getusers($id_object, $id_record, $arrActionIds = null)
     {
-        $db = loader::getdb();
+        $db = db::get();
 
         $where = (is_null($arrActionIds)) ? '' : ' AND (sa.id_action IN ('.implode(',', $arrActionIds).') OR s.allactions = 1) ';
 

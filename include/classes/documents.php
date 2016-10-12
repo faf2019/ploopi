@@ -135,7 +135,7 @@ abstract class documents {
 
     public static function insert($id_object, $id_record, $rights = array(), $default_folders = array(), $params = array(), $load_doc = true, $id_user = -1, $id_workspace = -1, $id_module = -1)
     {
-        $db = loader::getdb();
+        $db = db::get();
 
         if ($id_user == -1) $id_user = $_SESSION['ploopi']['userid'];
         if ($id_workspace == -1) $id_workspace = $_SESSION['ploopi']['workspaceid'];
@@ -301,7 +301,7 @@ abstract class documents {
 
     public static function countelements($id_folder)
     {
-        $db = loader::getdb();
+        $db = db::get();
 
         $c = 0;
 
@@ -327,7 +327,7 @@ abstract class documents {
 
     public static function getfiles($id_object, $id_record, $id_folder = 0, $id_module = -1)
     {
-        $db = loader::getdb();
+        $db = db::get();
 
         if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];
 
@@ -352,7 +352,7 @@ abstract class documents {
 
     public static function getfolders($id_object, $id_record, $id_module = -1)
     {
-        $db = loader::getdb();
+        $db = db::get();
 
         if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];
 
@@ -513,8 +513,8 @@ abstract class documents {
         // Vérification paramètres
         if (!isset($_SESSION['documents'][$documents_id])) return;
 
-        $db = loader::getdb();
-        global $skin;
+        $db = db::get();
+        $skin = skin::get();
         ?>
         <div class="documents_browser">
 

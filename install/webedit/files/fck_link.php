@@ -73,13 +73,13 @@ if ($webedit_idm)
         case 'webedit_detail_heading';
             $option = (empty($_GET['option'])) ? '' : $_GET['option'];
             $treeview = webedit_gettreeview(webedit_getheadings($webedit_idm), webedit_getarticles($webedit_idm), $option);
-            echo $skin->display_treeview($treeview['list'], $treeview['tree'], null, $_GET['hid']);
+            echo ploopi\skin::get()->display_treeview($treeview['list'], $treeview['tree'], null, $_GET['hid']);
             ploopi\system::kill();
         break;
 
         case 'webedit_selectlink':
             $treeview = webedit_gettreeview(webedit_getheadings($webedit_idm), webedit_getarticles($webedit_idm), 'selectlink');
-            echo $skin->display_treeview($treeview['list'], $treeview['tree']);
+            echo ploopi\skin::get()->display_treeview($treeview['list'], $treeview['tree']);
         break;
     }
 }

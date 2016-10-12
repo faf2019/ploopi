@@ -212,7 +212,7 @@ class mimethumb
      */
     public function getThumbnail($pathfile)
     {
-        $db = loader::getdb();
+        $db = db::get();
         $booviewthumb = false;
 
         $strParam = array();

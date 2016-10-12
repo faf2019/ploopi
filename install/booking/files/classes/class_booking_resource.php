@@ -77,7 +77,7 @@ class booking_resource extends ploopi\data_object
     public function getworkspaces()
     {
 
-        $db = ploopi\loader::getdb();
+        $db = ploopi\db::get();
 
         if (!empty($this->fields['id']))
         {

@@ -68,7 +68,7 @@ abstract class sqlformat
      */
     private static function cb_replace($arrMatches)
     {
-        $db = loader::getdb();
+        $db = db::get();
 
         if (sizeof($arrMatches) == 4)
         {
@@ -137,7 +137,7 @@ abstract class sqlformat
         self::$intNumParam = 0;
 
         // Initialisation de la connexion à la BDD
-        if (is_null($objDb)) { $db = loader::getdb(); self::$objDb = $db; }
+        if (is_null($objDb)) { $db = db::get(); self::$objDb = $db; }
         else self::$objDb = $objDb;
 
         // Initialisation des valeurs de remplacement

@@ -77,10 +77,10 @@ switch ($strbackendtype)
                     AND         (a.timestp_unpublished >= $today OR a.timestp_unpublished = 0)
                     ";
 
-            ploopi\loader::getdb()->query($sql);
+            ploopi\db::get()->query($sql);
 
             $arrTags = array();
-            while ($row = ploopi\loader::getdb()->fetchrow())
+            while ($row = ploopi\db::get()->fetchrow())
             {
                 if (!$arrHeadings['list'][$row['id_heading']]['private']
                     || isset($arrShares[$arrHeadings['list'][$row['id_heading']]['herited_private']])
@@ -222,9 +222,9 @@ switch ($strbackendtype)
                 LIMIT       0,10
             ";
 
-            ploopi\loader::getdb()->query($select);
+            ploopi\db::get()->query($select);
 
-            while ($article = ploopi\loader::getdb()->fetchrow())
+            while ($article = ploopi\db::get()->fetchrow())
             {
                 if (!$arrHeadings['list'][$article['id_heading']]['private'])
                 {

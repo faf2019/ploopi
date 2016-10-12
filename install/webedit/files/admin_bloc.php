@@ -263,14 +263,14 @@ switch($op)
                             LIMIT       0,10
                             ";
 
-                    ploopi\loader::getdb()->query($sql);
-                    if (ploopi\loader::getdb()->numrows() == 0) echo "Aucun historique pour cet article";
+                    ploopi\db::get()->query($sql);
+                    if (ploopi\db::get()->numrows() == 0) echo "Aucun historique pour cet article";
                     else
                     {
                         ?>
                         <select class="select" id="article_backup">
                         <?php
-                        while ($row = ploopi\loader::getdb()->fetchrow())
+                        while ($row = ploopi\db::get()->fetchrow())
                         {
                             $ldate = ($row['timestp']) ? ploopi\date::timestamp2local($row['timestp']) : array('date' => '', 'time' => '');
                             $size = sprintf("%.02f",($row['l']/1024));
@@ -375,21 +375,21 @@ switch($op)
                 {
                     $strIcon = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/ico_group.png\">";
 
-                    ploopi\loader::getdb()->query(
+                    ploopi\db::get()->query(
                         "SELECT label FROM ploopi_group WHERE id in (".implode(',',$arrWfUsers['group']).") ORDER BY label"
                     );
 
-                    while ($row = ploopi\loader::getdb()->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi\str::htmlentities($row['label'])."&nbsp;</span>";
+                    while ($row = ploopi\db::get()->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi\str::htmlentities($row['label'])."&nbsp;</span>";
                 }
                 if (!empty($arrWfUsers['user']))
                 {
                     $strIcon = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/ico_user.png\">";
 
-                    ploopi\loader::getdb()->query(
+                    ploopi\db::get()->query(
                         "SELECT concat(lastname, ' ', firstname) as name FROM ploopi_user WHERE id in (".implode(',',$arrWfUsers['user']).") ORDER BY lastname, firstname"
                     );
 
-                    while ($row = ploopi\loader::getdb()->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi\str::htmlentities($row['name'])."&nbsp;</span>";
+                    while ($row = ploopi\db::get()->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi\str::htmlentities($row['name'])."&nbsp;</span>";
                 }
             }
             else echo '<em>Aucune accréditation</em>';

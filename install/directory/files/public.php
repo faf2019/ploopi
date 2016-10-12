@@ -63,7 +63,7 @@ switch($op)
 if (!empty($_GET['directoryTabItem'])) $_SESSION['directory']['directoryTabItem'] = $_GET['directoryTabItem'];
 if (empty($_SESSION['directory']['directoryTabItem'])) $_SESSION['directory']['directoryTabItem'] = 'tabFavorites';
 
-echo $skin->create_pagetitle(ploopi\str::htmlentities($_SESSION['ploopi']['modulelabel']));
+echo ploopi\skin::get()->create_pagetitle(ploopi\str::htmlentities($_SESSION['ploopi']['modulelabel']));
 
 $desc = $title = '';
 switch($_SESSION['directory']['directoryTabItem'])

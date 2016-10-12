@@ -154,9 +154,9 @@ $sql = "
     WHERE  {$strWhere}
 ";
 
-$rs = ploopi\loader::getdb()->query($sql);
+$rs = ploopi\db::get()->query($sql);
 
-while ($row = ploopi\loader::getdb()->fetchrow($rs))
+while ($row = ploopi\db::get()->fetchrow($rs))
 {
     $ldate = ploopi\date::timestamp2local($row['timestp_modify']);
 
@@ -200,10 +200,10 @@ while ($row = ploopi\loader::getdb()->fetchrow($rs))
     {
         $style = 'style="font-style:italic;"';
 
-        $link_rs = ploopi\loader::getdb()->query("SELECT id, name, foldertype, readonly FROM ploopi_mod_doc_folder WHERE id in ({$row['parents']},{$row['id']})");
+        $link_rs = ploopi\db::get()->query("SELECT id, name, foldertype, readonly FROM ploopi_mod_doc_folder WHERE id in ({$row['parents']},{$row['id']})");
         $link_detail = array(' => ');
 
-        while ($link_row = ploopi\loader::getdb()->fetchrow($link_rs)) $link_detail[] = $link_row['name'];
+        while ($link_row = ploopi\db::get()->fetchrow($link_rs)) $link_detail[] = $link_row['name'];
 
         $link = implode(' / ', $link_detail);
     }
@@ -286,9 +286,9 @@ $sql = "
     WHERE   {$strWhere}
 ";
 
-ploopi\loader::getdb()->query($sql);
+ploopi\db::get()->query($sql);
 
-while ($row = ploopi\loader::getdb()->fetchrow())
+while ($row = ploopi\db::get()->fetchrow())
 {
     $ksize = sprintf("%.02f",$row['size']/1024);
     $ldate = ploopi\date::timestamp2local($row['timestp_modify']);
@@ -408,9 +408,9 @@ $sql = "
     WHERE       {$strWhere}
 ";
 
-ploopi\loader::getdb()->query($sql);
+ploopi\db::get()->query($sql);
 
-while ($row = ploopi\loader::getdb()->fetchrow())
+while ($row = ploopi\db::get()->fetchrow())
 {
     $ksize = sprintf("%.02f",$row['size']/1024);
     $ldate = ploopi\date::timestamp2local($row['timestp_create']);
@@ -487,7 +487,7 @@ while ($row = ploopi\loader::getdb()->fetchrow())
     $c++;
 }
 
-$skin->display_array($columns, $values, 'doc_explorer', array('sortable' => true, 'orderby_default' => 'label', 'limit' => 100));
+ploopi\skin::get()->display_array($columns, $values, 'doc_explorer', array('sortable' => true, 'orderby_default' => 'label', 'limit' => 100));
 
 if (!empty($currentfolder)) include './modules/doc/public_folder_actions.php';
 ?>

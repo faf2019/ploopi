@@ -56,15 +56,15 @@ switch($op)
             if (!isset($_GET['confirm'])) // pas de confirmation de création demandée
             {
                 // test si utilisateur existe déjà => demande de confirmation de création (homonyme ?)
-                ploopi\loader::getdb()->query("SELECT id FROM ploopi_user WHERE (lastname = '{$_POST['user_lastname']}' AND firstname = '{$_POST['user_firstname']}') OR (login = '".ploopi\loader::getdb()->addslashes($_POST['user_login'])."')");
-                if(ploopi\loader::getdb()->numrows()) ploopi\output::redirect("admin.php?op=manage_account&confirm");
+                ploopi\db::get()->query("SELECT id FROM ploopi_user WHERE (lastname = '{$_POST['user_lastname']}' AND firstname = '{$_POST['user_firstname']}') OR (login = '".ploopi\db::get()->addslashes($_POST['user_login'])."')");
+                if(ploopi\db::get()->numrows()) ploopi\output::redirect("admin.php?op=manage_account&confirm");
             }
             else // on vérifie qd même le doublon de login
             {
                 // test si login deja existant
-                ploopi\loader::getdb()->query("SELECT id FROM ploopi_user WHERE login = '".ploopi\loader::getdb()->addslashes($_POST['user_login'])."'");
+                ploopi\db::get()->query("SELECT id FROM ploopi_user WHERE login = '".ploopi\db::get()->addslashes($_POST['user_login'])."'");
                 // problème, ce login existe déjà => redirect
-                if(ploopi\loader::getdb()->numrows()) ploopi\output::redirect("admin.php?op=manage_account&confirm");
+                if(ploopi\db::get()->numrows()) ploopi\output::redirect("admin.php?op=manage_account&confirm");
             }
         }
 
@@ -227,8 +227,8 @@ if ($_SESSION['system']['level'] == _SYSTEM_GROUPS)
 if (!empty($_GET['usrTabItem']))  $_SESSION['system']['usrTabItem'] = $_GET['usrTabItem'];
 if (!isset($_SESSION['system']['usrTabItem'])) $_SESSION['system']['usrTabItem'] = '';
 
-echo $skin->create_tabs($tabs, $_SESSION['system']['usrTabItem']);
-echo $skin->open_simplebloc();
+echo ploopi\skin::get()->create_tabs($tabs, $_SESSION['system']['usrTabItem']);
+echo ploopi\skin::get()->open_simplebloc();
 
 switch($_SESSION['system']['usrTabItem'])
 {
@@ -562,13 +562,13 @@ switch($_SESSION['system']['usrTabItem'])
                         }
 
                         // On vérifie que le login n'existe pas déjà
-                        ploopi\loader::getdb()->query("
+                        ploopi\db::get()->query("
                             SELECT  login
                             FROM    ploopi_user
-                            WHERE   login = '".ploopi\loader::getdb()->addslashes($objUser->fields['login'])."'
+                            WHERE   login = '".ploopi\db::get()->addslashes($objUser->fields['login'])."'
                         ");
 
-                        if (!ploopi\loader::getdb()->numrows()) // ok pas de login identique dans la BDD
+                        if (!ploopi\db::get()->numrows()) // ok pas de login identique dans la BDD
                         {
                             $objUser->setpassword($objUser->fields['password']);
 
@@ -600,5 +600,5 @@ switch($_SESSION['system']['usrTabItem'])
 
 }
 
-echo $skin->close_simplebloc();
+echo ploopi\skin::get()->close_simplebloc();
 ?>

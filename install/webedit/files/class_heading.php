@@ -62,7 +62,7 @@ class webedit_heading extends ploopi\data_object
     {
         include_once './modules/webedit/class_article.php';
 
-        $db = ploopi\loader::getdb();
+        $db = ploopi\db::get();
 
         // suppression des abonnements (frontoffice)
         $db->query("DELETE FROM ploopi_mod_webedit_heading_subscriber WHERE id_heading = {$this->fields['id']}");

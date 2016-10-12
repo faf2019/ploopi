@@ -31,8 +31,6 @@
  * @author Stéphane Escaich
  */
 
-global ploopi\loader::getdb();
-global $skin;
 global $template_body;
 global $ploopi_timer;
 global $ploopi_viewmodes;
@@ -41,13 +39,6 @@ global $ploopi_days;
 global $ploopi_months;
 global $ploopi_errormsg;
 global $ploopi_civility;
-
-$skin = null;
-if (!empty($_SESSION['ploopi']['frontoffice']['template_path']) && file_exists("{$_SESSION['ploopi']['frontoffice']['template_path']}/class_skin.php"))
-{
-    include_once "{$_SESSION['ploopi']['frontoffice']['template_path']}/class_skin.php";
-    $skin = new ploopi\skin();
-}
 
 /**
  * Initialisation du module WebEdit

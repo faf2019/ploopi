@@ -22,7 +22,7 @@
 
 include_once './modules/forms/classes/formsForm.php';
 
-echo $skin->open_simplebloc(_FORMS_LIST);
+echo ploopi\skin::get()->open_simplebloc(_FORMS_LIST);
 
 $intTsToday = ploopi\date::createtimestamp();
 
@@ -50,5 +50,5 @@ foreach($objDOC->get_objects() as $objForm)
 
 
 <?php
-echo $skin->close_simplebloc();
+echo ploopi\skin::get()->close_simplebloc();
 ?>

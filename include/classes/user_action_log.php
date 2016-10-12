@@ -53,7 +53,7 @@ class user_action_log extends data_object
     public static function getdb()
     {
         if (session::get_usedb()) return session::get_db();
-        else { $db = loader::getdb(); return $db; }
+        else { $db = db::get(); return $db; }
     }
 
 
@@ -68,7 +68,7 @@ class user_action_log extends data_object
 
     public static function record($id_action, $id_record, $id_module_type = 0, $id_module = 0, $id_workspace = 0)
     {
-        $db = loader::getdb();
+        $db = db::get();
 
         $user_action_log = new self();
         $user_action_log->fields['user'] = '';
@@ -136,7 +136,7 @@ class user_action_log extends data_object
 
     public static function get($id_record, $id_object = -1, $id_action = -1, $id_module_type = -1, $id_module = -1, $limit_offset = 0, $limit_count = 25)
     {
-        $db = loader::getdb();
+        $db = db::get();
 
         if ($id_module_type == -1) $id_module_type = $_SESSION['ploopi']['moduletypeid'];
         if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];

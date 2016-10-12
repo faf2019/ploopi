@@ -34,7 +34,7 @@
 /**
  * Ouverture du bloc
  */
-echo $skin->open_simplebloc();
+echo ploopi\skin::get()->open_simplebloc();
 ?>
 
 <div>
@@ -122,7 +122,7 @@ echo $skin->open_simplebloc();
                 );
 
             $x = null;
-            echo $skin->create_toolbar($toolbar_workspace, $x, false, true);
+            echo ploopi\skin::get()->create_toolbar($toolbar_workspace, $x, false, true);
             ?>
         </div>
     </div>
@@ -409,9 +409,9 @@ echo $skin->open_simplebloc();
 
 </div>
 <?php
-echo $skin->close_simplebloc();
+echo ploopi\skin::get()->close_simplebloc();
 
-echo $skin->open_simplebloc('');
+echo ploopi\skin::get()->open_simplebloc('');
 ploopi\annotation::display(_SYSTEM_OBJECT_WORKSPACE, $workspace->fields['id'], $workspace->fields['label']);
-echo $skin->close_simplebloc();
+echo ploopi\skin::get()->close_simplebloc();
 ?>

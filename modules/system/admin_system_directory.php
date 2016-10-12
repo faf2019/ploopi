@@ -34,7 +34,7 @@
  * Ouverture du bloc
  */
 
-echo $skin->open_simplebloc(_SYSTEM_LABEL_DIRECTORY);
+echo ploopi\skin::get()->open_simplebloc(_SYSTEM_LABEL_DIRECTORY);
 
 $intMaxResponse = 500;
 
@@ -753,7 +753,7 @@ if ($intNbRep <= $intMaxResponse && $intNbRep > 0)
         );
     }
 
-    $skin->display_array(
+    ploopi\skin::get()->display_array(
         $arrResult['columns'],
         $arrResult['rows'],
         'system_directory',
@@ -764,7 +764,7 @@ if ($intNbRep <= $intMaxResponse && $intNbRep > 0)
         )
     );
 }
-echo $skin->close_simplebloc();
+echo ploopi\skin::get()->close_simplebloc();
 
 ?>
 

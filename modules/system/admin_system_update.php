@@ -34,7 +34,7 @@
  * Ouverture du bloc
  */
 
-echo $skin->open_simplebloc(_SYSTEM_UPDATE.ploopi\str::htmlentities(" - {$strSysVersion} vers ")._PLOOPI_VERSION);
+echo ploopi\skin::get()->open_simplebloc(_SYSTEM_UPDATE.ploopi\str::htmlentities(" - {$strSysVersion} vers ")._PLOOPI_VERSION);
 
 switch($op)
 {
@@ -77,7 +77,7 @@ switch($op)
                 ?>
                 <div style="padding:4px;">Import du fichier <b><?php echo ploopi\str::htmlentities($strSqlFile); ?></b></div>
                 <?php
-                ploopi\loader::getdb()->multiplequeries(file_get_contents("{$strSysInstallPath}{$strSqlFile}"));
+                ploopi\db::get()->multiplequeries(file_get_contents("{$strSysInstallPath}{$strSqlFile}"));
             }
             else
             {
@@ -111,5 +111,5 @@ switch($op)
    break;
 }
 
-echo $skin->close_simplebloc();
+echo ploopi\skin::get()->close_simplebloc();
 ?>

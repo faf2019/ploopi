@@ -48,7 +48,7 @@ else
     $strTitle = _FORMS_GROUPCREATION;
 }
 
-echo $skin->open_simplebloc($strTitle);
+echo ploopi\skin::get()->open_simplebloc($strTitle);
 
 $arrParams = array();
 $arrParams[] = "ploopi_op=forms_group_save";
@@ -143,5 +143,5 @@ if (!$objGroup->isnew()) $arrParams[] = "forms_group_id={$objGroup->fields['id']
 </form>
 
 <?php
-echo $skin->close_simplebloc();
+echo ploopi\skin::get()->close_simplebloc();
 ?>

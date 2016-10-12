@@ -71,7 +71,7 @@ switch ($_SESSION['system']['level'])
 
         if (!empty($_GET['wspToolbarItem']))  $_SESSION['system']['wspToolbarItem'] = $_GET['wspToolbarItem'];
         if (!isset($_SESSION['system']['wspToolbarItem'])) $_SESSION['system']['wspToolbarItem'] = '';
-        echo $skin->create_toolbar($toolbar,$_SESSION['system']['wspToolbarItem']);
+        echo ploopi\skin::get()->create_toolbar($toolbar,$_SESSION['system']['wspToolbarItem']);
 
         switch($_SESSION['system']['wspToolbarItem'])
         {
@@ -236,7 +236,7 @@ switch ($_SESSION['system']['level'])
 
         if (!empty($_GET['wspToolbarItem']))  $_SESSION['system']['wspToolbarItem'] = $_GET['wspToolbarItem'];
         if (!isset($_SESSION['system']['wspToolbarItem'])) $_SESSION['system']['wspToolbarItem'] = '';
-        echo $skin->create_toolbar($toolbar, $_SESSION['system']['wspToolbarItem']);
+        echo ploopi\skin::get()->create_toolbar($toolbar, $_SESSION['system']['wspToolbarItem']);
 
         switch($_SESSION['system']['wspToolbarItem'])
         {
@@ -442,7 +442,7 @@ switch ($_SESSION['system']['level'])
 
                                     ploopi\user_action_log::record(_SYSTEM_ACTION_USEMODULE, $module_type->fields['label']);
 
-                                    echo $skin->open_simplebloc(ploopi\str::htmlentities(str_replace('<LABEL>',$module_type->fields['label'],_SYSTEM_LABEL_MODULEINSTANCIATION)));
+                                    echo ploopi\skin::get()->open_simplebloc(ploopi\str::htmlentities(str_replace('<LABEL>',$module_type->fields['label'],_SYSTEM_LABEL_MODULEINSTANCIATION)));
                                     ?>
                                     <TABLE CELLPADDING="2" CELLSPACING="1"><TR><TD>
                                     <?php
@@ -469,7 +469,7 @@ switch ($_SESSION['system']['level'])
                                                 </TR>
                                                 </TABLE>
                                             <?php
-                                            echo $skin->close_simplebloc();
+                                            echo ploopi\skin::get()->close_simplebloc();
                                         }
                                     }
                                     else ploopi\output::redirect('admin.php');
@@ -596,7 +596,7 @@ switch ($_SESSION['system']['level'])
 
                             ploopi\user_action_log::record(_SYSTEM_ACTION_DELETEMODULE, $module->fields['label']);
 
-                            echo $skin->open_simplebloc(ploopi\str::htmlentities(str_replace('<LABEL>',$module->fields['label'],_SYSTEM_LABEL_MODULEDELETE)));
+                            echo ploopi\skin::get()->open_simplebloc(ploopi\str::htmlentities(str_replace('<LABEL>',$module->fields['label'],_SYSTEM_LABEL_MODULEDELETE)));
                             ?>
                             <TABLE CELLPADDING="2" CELLSPACING="1"><TR><TD>
                             <?php
@@ -616,7 +616,7 @@ switch ($_SESSION['system']['level'])
                                     </TR>
                                     </TABLE>
                                 <?php
-                                echo $skin->close_simplebloc();
+                                echo ploopi\skin::get()->close_simplebloc();
                             }
                         }
                     break;

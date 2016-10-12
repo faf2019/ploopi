@@ -62,7 +62,7 @@ class booking_event extends ploopi\data_object
     }
 
     public function open(...$args) {
-        $db = ploopi\loader::getdb();
+        $db = ploopi\db::get();
 
         $res = parent::open($args[0]);
         $this->subresources = array();
@@ -83,7 +83,7 @@ class booking_event extends ploopi\data_object
 
     public function save()
     {
-        $db = ploopi\loader::getdb();
+        $db = ploopi\db::get();
 
         if ($this->new)
         {
@@ -392,7 +392,7 @@ class booking_event extends ploopi\data_object
 
     public function getdetails()
     {
-        $db = ploopi\loader::getdb();
+        $db = ploopi\db::get();
 
         // Recherche des détails liés à l'événement
         $db->query("SELECT * FROM ploopi_mod_booking_event_detail WHERE id_event = {$this->fields['id']} ORDER BY timestp_begin, timestp_end");

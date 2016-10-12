@@ -43,13 +43,13 @@ if (!ini_get('safe_mode')) ini_set('max_execution_time', 0);
 global $idmoduletype;
 $idmoduletype = -1;
 
-echo $skin->open_simplebloc(_SYSTEM_LABEL_INSTALLREPORT);
+echo ploopi\skin::get()->open_simplebloc(_SYSTEM_LABEL_INSTALLREPORT);
 ?>
 
 <?php
-$select = "SELECT * FROM ploopi_module_type WHERE label = '".ploopi\loader::getdb()->addslashes($_GET['installmoduletype'])."'";
-ploopi\loader::getdb()->query($select);
-if (ploopi\loader::getdb()->numrows())
+$select = "SELECT * FROM ploopi_module_type WHERE label = '".ploopi\db::get()->addslashes($_GET['installmoduletype'])."'";
+ploopi\db::get()->query($select);
+if (ploopi\db::get()->numrows())
 {
     ?>
     <div style="padding:4px;text-align:center;font-weight:bold;color:#a60000;">Module déjà installé !</div>
@@ -218,7 +218,7 @@ else
 
             if (file_exists($sqlfile))
             {
-                ploopi\loader::getdb()->multiplequeries(file_get_contents($sqlfile));
+                ploopi\db::get()->multiplequeries(file_get_contents($sqlfile));
                 $detail = "Fichier '{$sqlfile}' importé";
             }
             else $detail = "Fichier '{$sqlfile}' non trouvé";
@@ -290,7 +290,7 @@ else
         $c++;
     }
 
-    $skin->display_array($columns, $values, 'array_installproc');
+    ploopi\skin::get()->display_array($columns, $values, 'array_installproc');
 }
 ?>
 <div style="padding:4px;text-align:right;">
@@ -299,4 +299,4 @@ else
     </form>
 </div>
 
-<?php echo $skin->close_simplebloc(); ?>
+<?php echo ploopi\skin::get()->close_simplebloc(); ?>

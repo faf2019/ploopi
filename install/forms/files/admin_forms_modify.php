@@ -49,7 +49,7 @@ else
     $objForm->init_description();
     $title = _FORMS_ADD;
 }
-echo $skin->open_simplebloc($title);
+echo ploopi\skin::get()->open_simplebloc($title);
 
 $pubdate_start = ($objForm->fields['pubdate_start']) ? ploopi\date::timestamp2local($objForm->fields['pubdate_start']) : array('date' => '');
 $pubdate_end = ($objForm->fields['pubdate_end']) ? ploopi\date::timestamp2local($objForm->fields['pubdate_end']) : array('date' => '');
@@ -403,7 +403,7 @@ if (!$objForm->isnew())
 
     $array_columns['actions_right']['actions'] = array('label' => '', 'width' => 74);
 
-    $rs_fields = ploopi\loader::getdb()->query("
+    $rs_fields = ploopi\db::get()->query("
         SELECT      f.*, g.label as g_label
         FROM        ploopi_mod_forms_field f
         LEFT JOIN   ploopi_mod_forms_group g ON g.id = f.id_group
@@ -411,10 +411,10 @@ if (!$objForm->isnew())
         ORDER BY    f.position
     ");
 
-    $arrFields = ploopi\loader::getdb()->getarray($rs_fields, true);
+    $arrFields = ploopi\db::get()->getarray($rs_fields, true);
 
     $c=0;
-    while ($row = ploopi\loader::getdb()->fetchrow($rs_fields))
+    while ($row = ploopi\db::get()->fetchrow($rs_fields))
     {
 
         if ($row['separator'])
@@ -500,7 +500,7 @@ if (!$objForm->isnew())
         $c++;
     }
 
-    $skin->display_array($array_columns, $array_values, 'forms_field_list', array('sortable' => true, 'orderby_default' => 'pos'));
+    ploopi\skin::get()->display_array($array_columns, $array_values, 'forms_field_list', array('sortable' => true, 'orderby_default' => 'pos'));
     ?>
 
     <div class="ploopi_form_title" style=""><?php echo _FORMS_GROUPLIST; ?></div>
@@ -554,10 +554,10 @@ if (!$objForm->isnew())
             WHERE   id_form = {$objForm->fields['id']}
             ";
 
-    $rs_fields = ploopi\loader::getdb()->query($sql);
+    $rs_fields = ploopi\db::get()->query($sql);
 
     $c=0;
-    while ($row = ploopi\loader::getdb()->fetchrow($rs_fields))
+    while ($row = ploopi\db::get()->fetchrow($rs_fields))
     {
         $array_values[$c]['values']['label'] = array('label' => ploopi\str::htmlentities($row['label']));
         $array_values[$c]['values']['description'] = array('label' =>  ploopi\str::nl2br(ploopi\str::htmlentities($row['description'])));
@@ -574,7 +574,7 @@ if (!$objForm->isnew())
         $c++;
     }
 
-    $skin->display_array($array_columns, $array_values, 'forms_group_list', array('sortable' => true, 'orderby_default' => 'label'));
+    ploopi\skin::get()->display_array($array_columns, $array_values, 'forms_group_list', array('sortable' => true, 'orderby_default' => 'label'));
     ?>
 
 
@@ -635,10 +635,10 @@ if (!$objForm->isnew())
             WHERE   id_form = {$objForm->fields['id']}
             ";
 
-    $rs_fields = ploopi\loader::getdb()->query($sql);
+    $rs_fields = ploopi\db::get()->query($sql);
 
     $c=0;
-    while ($row = ploopi\loader::getdb()->fetchrow($rs_fields))
+    while ($row = ploopi\db::get()->fetchrow($rs_fields))
     {
         $array_values[$c]['values']['label'] = array('label' => ploopi\str::htmlentities($row['label']));
         $array_values[$c]['values']['description'] = array('label' =>  ploopi\str::nl2br(ploopi\str::htmlentities($row['description'])));
@@ -656,10 +656,10 @@ if (!$objForm->isnew())
         $c++;
     }
 
-    $skin->display_array($array_columns, $array_values, 'forms_graphic_list', array('sortable' => true, 'orderby_default' => 'label'));
+    ploopi\skin::get()->display_array($array_columns, $array_values, 'forms_graphic_list', array('sortable' => true, 'orderby_default' => 'label'));
 
 
 }
 
-echo $skin->close_simplebloc();
+echo ploopi\skin::get()->close_simplebloc();
 ?>

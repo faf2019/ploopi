@@ -50,11 +50,11 @@ $strDocSelect =  "
                 ORDER BY    f.name asc 
                 ";
 
-$sqlDocResult = ploopi\loader::getdb()->query($strDocSelect);
+$sqlDocResult = ploopi\db::get()->query($strDocSelect);
 
-if(ploopi\loader::getdb()->numrows($sqlDocResult)) $template_body->assign_block_vars('switch_docfeed', array());
+if(ploopi\db::get()->numrows($sqlDocResult)) $template_body->assign_block_vars('switch_docfeed', array());
 
-while($docFields = ploopi\loader::getdb()->fetchrow($sqlDocResult))
+while($docFields = ploopi\db::get()->fetchrow($sqlDocResult))
 {
     $template_body->assign_block_vars('switch_docfeed.rss' , array(
         'URL' => ploopi\str::urlrewrite('./backend.php?format=rss&ploopi_moduleid='.$docFields['id_module'].'&id_folder='.$docFields['id'], doc_getrewriterules(), $docFields['name'].'.xml',null,true),

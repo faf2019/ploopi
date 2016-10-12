@@ -42,14 +42,6 @@
 
 include_once './lib/template/template.php';
 
-/**
- * Chargement de la classe skin liée au template.
- * Initialisation du template
- */
-
-include_once "{$_SESSION['ploopi']['template_path']}/class_skin.php";
-$skin = new ploopi\skin();
-
 $template_body = new \Template($_SESSION['ploopi']['template_path']);
 
 $template_filename = 'index.tpl';

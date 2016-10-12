@@ -140,10 +140,10 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
     // Construction de la liste des espaces de travail
     $arrWorkspace = array('list' => array(), 'tree' => array());
 
-    $result = ploopi\loader::getdb()->query("SELECT id, label, id_workspace FROM ploopi_workspace WHERE system = 0 ORDER BY depth, label");
+    $result = ploopi\db::get()->query("SELECT id, label, id_workspace FROM ploopi_workspace WHERE system = 0 ORDER BY depth, label");
 
     // On les trie pour les afficher sous forme d'un arbre
-    while ($fields = ploopi\loader::getdb()->fetchrow($result))
+    while ($fields = ploopi\db::get()->fetchrow($result))
     {
         $arrWorkspace['list'][$fields['id']] = $fields;
 
@@ -178,8 +178,8 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
     $funcWorkspaces($arrWorkspace, $objTplDirectory);
 
     // Construction de la liste des noms
-    ploopi\loader::getdb()->query("SELECT lastname, firstname FROM ploopi_user GROUP BY lastname, firstname ORDER BY lastname, firstname");
-    while ($row = ploopi\loader::getdb()->fetchrow())
+    ploopi\db::get()->query("SELECT lastname, firstname FROM ploopi_user GROUP BY lastname, firstname ORDER BY lastname, firstname");
+    while ($row = ploopi\db::get()->fetchrow())
     {
         $strUserName = sprintf("%s %s", $row['lastname'], $row['firstname']);
 
@@ -193,15 +193,15 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
     }
 
     // Construction de la liste des données brutes pour traitement via JS
-    $rs = ploopi\loader::getdb()->query("SELECT service, service2, office, function, number, rank, building, floor, country, city, postalcode FROM ploopi_user");
-    $objTplDirectory->assign_var('SYSTEM_TROMBI_JSDATA', json_encode(ploopi\arr::map('ploopi\str::utf8encode', ploopi\arr::map('ucfirst', ploopi\loader::getdb()->getarray()))));
+    $rs = ploopi\db::get()->query("SELECT service, service2, office, function, number, rank, building, floor, country, city, postalcode FROM ploopi_user");
+    $objTplDirectory->assign_var('SYSTEM_TROMBI_JSDATA', json_encode(ploopi\arr::map('ploopi\str::utf8encode', ploopi\arr::map('ucfirst', ploopi\db::get()->getarray()))));
 
     // Construction des autres listes génériques
     foreach(array('service', 'service2', 'login', 'email', 'office', 'function', 'number', 'rank', 'building', 'floor', 'country', 'city', 'postalcode') as $strField)
     {
         // Construction de la liste des services
-        ploopi\loader::getdb()->query("SELECT `{$strField}` FROM ploopi_user WHERE `{$strField}` <> '' GROUP BY `{$strField}` ORDER BY `{$strField}`");
-        while ($row = ploopi\loader::getdb()->fetchrow())
+        ploopi\db::get()->query("SELECT `{$strField}` FROM ploopi_user WHERE `{$strField}` <> '' GROUP BY `{$strField}` ORDER BY `{$strField}`");
+        while ($row = ploopi\db::get()->fetchrow())
         {
             $objTplDirectory->assign_block_vars("system_trombi_{$strField}",
                 array(
@@ -275,29 +275,29 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
             $arrWhere = array();
             $arrWhere[] = '1';
 
-            if (!empty($arrFilter['system_lastname'])) $arrWhere[] = "u.lastname LIKE '".ploopi\loader::getdb()->addslashes($arrFilter['system_lastname'])."%'";
-            if (!empty($arrFilter['system_firstname'])) $arrWhere[] = "u.firstname LIKE '".ploopi\loader::getdb()->addslashes($arrFilter['system_firstname'])."%'";
-            if (!empty($arrFilter['system_user'])) $arrWhere[] = "CONCAT(u.lastname, ' ', u.firstname) = '".ploopi\loader::getdb()->addslashes($arrFilter['system_user'])."'";
-            if (!empty($arrFilter['system_service'])) $arrWhere[] = "u.service LIKE '".ploopi\loader::getdb()->addslashes($arrFilter['system_service'])."%'";
-            if (!empty($arrFilter['system_service2'])) $arrWhere[] = "u.service2 LIKE '".ploopi\loader::getdb()->addslashes($arrFilter['system_service2'])."%'";
-            if (!empty($arrFilter['system_phone'])) $arrWhere[] = "u.phone LIKE '".ploopi\loader::getdb()->addslashes($arrFilter['system_phone'])."%'";
-            if (!empty($arrFilter['system_fax'])) $arrWhere[] = "u.fax LIKE '".ploopi\loader::getdb()->addslashes($arrFilter['system_fax'])."%'";
-            if (!empty($arrFilter['system_mobile'])) $arrWhere[] = "u.mobile LIKE '".ploopi\loader::getdb()->addslashes($arrFilter['system_mobile'])."%'";
-            if (!empty($arrFilter['system_login'])) $arrWhere[] = "u.login LIKE '".ploopi\loader::getdb()->addslashes($arrFilter['system_login'])."%'";
-            if (!empty($arrFilter['system_email'])) $arrWhere[] = "u.email LIKE '%".ploopi\loader::getdb()->addslashes($arrFilter['system_email'])."%'";
-            if (!empty($arrFilter['system_office'])) $arrWhere[] = "u.office LIKE '".ploopi\loader::getdb()->addslashes($arrFilter['system_office'])."%'";
-            if (!empty($arrFilter['system_comments'])) $arrWhere[] = "u.comments LIKE '%".ploopi\loader::getdb()->addslashes($arrFilter['system_comments'])."%'";
-            if (!empty($arrFilter['system_function'])) $arrWhere[] = "u.function LIKE '".ploopi\loader::getdb()->addslashes($arrFilter['system_function'])."%'";
-            if (!empty($arrFilter['system_number'])) $arrWhere[] = "u.number LIKE '".ploopi\loader::getdb()->addslashes($arrFilter['system_number'])."%'";
-            if (!empty($arrFilter['system_rank'])) $arrWhere[] = "u.rank LIKE '".ploopi\loader::getdb()->addslashes($arrFilter['system_rank'])."%'";
-            if (!empty($arrFilter['system_building'])) $arrWhere[] = "u.building LIKE '".ploopi\loader::getdb()->addslashes($arrFilter['system_building'])."%'";
-            if (!empty($arrFilter['system_floor'])) $arrWhere[] = "u.floor LIKE '".ploopi\loader::getdb()->addslashes($arrFilter['system_floor'])."%'";
-            if (!empty($arrFilter['system_country'])) $arrWhere[] = "u.country LIKE '".ploopi\loader::getdb()->addslashes($arrFilter['system_country'])."%'";
-            if (!empty($arrFilter['system_city'])) $arrWhere[] = "u.city LIKE '".ploopi\loader::getdb()->addslashes($arrFilter['system_city'])."%'";
-            if (!empty($arrFilter['system_postalcode'])) $arrWhere[] = "u.postalcode LIKE '".ploopi\loader::getdb()->addslashes($arrFilter['system_postalcode'])."%'";
+            if (!empty($arrFilter['system_lastname'])) $arrWhere[] = "u.lastname LIKE '".ploopi\db::get()->addslashes($arrFilter['system_lastname'])."%'";
+            if (!empty($arrFilter['system_firstname'])) $arrWhere[] = "u.firstname LIKE '".ploopi\db::get()->addslashes($arrFilter['system_firstname'])."%'";
+            if (!empty($arrFilter['system_user'])) $arrWhere[] = "CONCAT(u.lastname, ' ', u.firstname) = '".ploopi\db::get()->addslashes($arrFilter['system_user'])."'";
+            if (!empty($arrFilter['system_service'])) $arrWhere[] = "u.service LIKE '".ploopi\db::get()->addslashes($arrFilter['system_service'])."%'";
+            if (!empty($arrFilter['system_service2'])) $arrWhere[] = "u.service2 LIKE '".ploopi\db::get()->addslashes($arrFilter['system_service2'])."%'";
+            if (!empty($arrFilter['system_phone'])) $arrWhere[] = "u.phone LIKE '".ploopi\db::get()->addslashes($arrFilter['system_phone'])."%'";
+            if (!empty($arrFilter['system_fax'])) $arrWhere[] = "u.fax LIKE '".ploopi\db::get()->addslashes($arrFilter['system_fax'])."%'";
+            if (!empty($arrFilter['system_mobile'])) $arrWhere[] = "u.mobile LIKE '".ploopi\db::get()->addslashes($arrFilter['system_mobile'])."%'";
+            if (!empty($arrFilter['system_login'])) $arrWhere[] = "u.login LIKE '".ploopi\db::get()->addslashes($arrFilter['system_login'])."%'";
+            if (!empty($arrFilter['system_email'])) $arrWhere[] = "u.email LIKE '%".ploopi\db::get()->addslashes($arrFilter['system_email'])."%'";
+            if (!empty($arrFilter['system_office'])) $arrWhere[] = "u.office LIKE '".ploopi\db::get()->addslashes($arrFilter['system_office'])."%'";
+            if (!empty($arrFilter['system_comments'])) $arrWhere[] = "u.comments LIKE '%".ploopi\db::get()->addslashes($arrFilter['system_comments'])."%'";
+            if (!empty($arrFilter['system_function'])) $arrWhere[] = "u.function LIKE '".ploopi\db::get()->addslashes($arrFilter['system_function'])."%'";
+            if (!empty($arrFilter['system_number'])) $arrWhere[] = "u.number LIKE '".ploopi\db::get()->addslashes($arrFilter['system_number'])."%'";
+            if (!empty($arrFilter['system_rank'])) $arrWhere[] = "u.rank LIKE '".ploopi\db::get()->addslashes($arrFilter['system_rank'])."%'";
+            if (!empty($arrFilter['system_building'])) $arrWhere[] = "u.building LIKE '".ploopi\db::get()->addslashes($arrFilter['system_building'])."%'";
+            if (!empty($arrFilter['system_floor'])) $arrWhere[] = "u.floor LIKE '".ploopi\db::get()->addslashes($arrFilter['system_floor'])."%'";
+            if (!empty($arrFilter['system_country'])) $arrWhere[] = "u.country LIKE '".ploopi\db::get()->addslashes($arrFilter['system_country'])."%'";
+            if (!empty($arrFilter['system_city'])) $arrWhere[] = "u.city LIKE '".ploopi\db::get()->addslashes($arrFilter['system_city'])."%'";
+            if (!empty($arrFilter['system_postalcode'])) $arrWhere[] = "u.postalcode LIKE '".ploopi\db::get()->addslashes($arrFilter['system_postalcode'])."%'";
 
             // Exécution de la requête principale permettant de lister les utilisateurs selon le filtre
-            $ptrRs = ploopi\loader::getdb()->query("
+            $ptrRs = ploopi\db::get()->query("
                 SELECT      u.id,
                             u.lastname,
                             u.firstname,
@@ -339,7 +339,7 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
             $arrUser = array();
             $arrGroup = array();
 
-            while ($row = ploopi\loader::getdb()->fetchrow($ptrRs))
+            while ($row = ploopi\db::get()->fetchrow($ptrRs))
             {
                 if (!isset($arrUser[$row['id']]))
                 {
@@ -369,7 +369,7 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
                 if (!empty($strGroupList))
                 {
                     // recherche des rôles "groupe"
-                    ploopi\loader::getdb()->query("
+                    ploopi\db::get()->query("
                         SELECT      wgr.id_group,
                                     wgr.id_workspace,
                                     r.id,
@@ -386,11 +386,11 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
                         AND         wgr.id_group IN ({$strGroupList})
                     ");
 
-                    while ($row = ploopi\loader::getdb()->fetchrow()) $arrRoles['groups'][$row['id_workspace']][$row['id_group']][$row['id']] = $row;
+                    while ($row = ploopi\db::get()->fetchrow()) $arrRoles['groups'][$row['id_workspace']][$row['id_group']][$row['id']] = $row;
                 }
 
                 // recherche des rôles "utilisateur"
-                ploopi\loader::getdb()->query("
+                ploopi\db::get()->query("
                     SELECT      wur.id_user,
                                 wur.id_workspace,
                                 r.id,
@@ -407,7 +407,7 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
                     AND         wur.id_user IN ({$strUserList})
                 ");
             }
-            while ($row = ploopi\loader::getdb()->fetchrow()) $arrRoles['users'][$row['id_workspace']][$row['id_user']][$row['id']] = $row;
+            while ($row = ploopi\db::get()->fetchrow()) $arrRoles['users'][$row['id_workspace']][$row['id_user']][$row['id']] = $row;
 
             foreach ($arrUser as $row)
             {

@@ -183,21 +183,21 @@ if ($_SESSION['ploopi']['connected'])
                     $strCloneTable = $objFormClone->getDataTableName();
 
                     // Extraction de la structure
-                    ploopi\loader::getdb()->query("SHOW CREATE TABLE `{$strSrcTable}`");
-                    if ($row = ploopi\loader::getdb()->fetchrow()) {
+                    ploopi\db::get()->query("SHOW CREATE TABLE `{$strSrcTable}`");
+                    if ($row = ploopi\db::get()->fetchrow()) {
 
                         $strCreateTable = preg_replace("@^CREATE TABLE `{$strSrcTable}`@i", "CREATE TABLE `{$strCloneTable}`", $row['Create Table']);
 
                         // Suppression de la table de destination
-                        ploopi\loader::getdb()->query("DROP TABLE IF EXISTS `{$strCloneTable}`");
+                        ploopi\db::get()->query("DROP TABLE IF EXISTS `{$strCloneTable}`");
 
                         // Création de la table de destination
-                        ploopi\loader::getdb()->query($strCreateTable);
+                        ploopi\db::get()->query($strCreateTable);
 
                         if (isset($_GET['data']) && $_GET['data'] == 'true')
                         {
                             // Copie des données
-                            ploopi\loader::getdb()->query("INSERT INTO `{$strCloneTable}` SELECT * FROM `{$strSrcTable}`");
+                            ploopi\db::get()->query("INSERT INTO `{$strCloneTable}` SELECT * FROM `{$strSrcTable}`");
                         }
                     }
 
@@ -300,7 +300,7 @@ if ($_SESSION['ploopi']['connected'])
                     $objForm->addButton( new ploopi\form_button('input:button', 'Fermer', null, null, array('onclick' => "ploopi_hidepopup('forms_import');")) );
                     $objForm->addButton( new ploopi\form_button('input:submit', 'Importer', null, null, array('style' => 'margin-left:2px;')) );
 
-                    echo $skin->create_popup('Import de données CSV', $objForm->render(), 'forms_import');
+                    echo ploopi\skin::get()->create_popup('Import de données CSV', $objForm->render(), 'forms_import');
                 }
 
                 ploopi\system::kill();
@@ -316,7 +316,7 @@ if ($_SESSION['ploopi']['connected'])
                 $objForm = new formsForm();
                 if (!empty($_POST['forms_id']) && is_numeric($_POST['forms_id']) && $objForm->open($_POST['forms_id']))
                 {
-                    echo $skin->create_popup('Aperçu du formulaire', $objForm->render(null, 'preview', false, false), 'forms_preview');
+                    echo ploopi\skin::get()->create_popup('Aperçu du formulaire', $objForm->render(null, 'preview', false, false), 'forms_preview');
                 }
 
                 ploopi\system::kill();
@@ -474,25 +474,25 @@ if ($_SESSION['ploopi']['connected'])
                     $field->open($_GET['field_id']);
 
                     $select = "Select min(position) as minpos, max(position) as maxpos from ploopi_mod_forms_field where id_form = {$field->fields['id_form']}";
-                    ploopi\loader::getdb()->query($select);
-                    $fields = ploopi\loader::getdb()->fetchrow();
+                    ploopi\db::get()->query($select);
+                    $fields = ploopi\db::get()->fetchrow();
 
                     if ($ploopi_op == 'forms_field_movedown')
                     {
                         if ($fields['maxpos'] != $field->fields['position']) // ce n'est pas le dernier champ
                         {
-                            ploopi\loader::getdb()->query("update ploopi_mod_forms_field set position=0 where position=".($field->fields['position']+1)." and id_form = {$field->fields['id_form']}");
-                            ploopi\loader::getdb()->query("update ploopi_mod_forms_field set position=".($field->fields['position']+1)." where position=".$field->fields['position']." and id_form = {$field->fields['id_form']}");
-                            ploopi\loader::getdb()->query("update ploopi_mod_forms_field set position=".$field->fields['position']." where position=0 and id_form = {$field->fields['id_form']}");
+                            ploopi\db::get()->query("update ploopi_mod_forms_field set position=0 where position=".($field->fields['position']+1)." and id_form = {$field->fields['id_form']}");
+                            ploopi\db::get()->query("update ploopi_mod_forms_field set position=".($field->fields['position']+1)." where position=".$field->fields['position']." and id_form = {$field->fields['id_form']}");
+                            ploopi\db::get()->query("update ploopi_mod_forms_field set position=".$field->fields['position']." where position=0 and id_form = {$field->fields['id_form']}");
                         }
                     }
                     else
                     {
                         if ($fields['minpos'] != $field->fields['position']) // ce n'est pas le premier champ
                         {
-                            ploopi\loader::getdb()->query("update ploopi_mod_forms_field set position=0 where position=".($field->fields['position']-1)." and id_form = {$field->fields['id_form']}");
-                            ploopi\loader::getdb()->query("update ploopi_mod_forms_field set position=".($field->fields['position']-1)." where position=".$field->fields['position']." and id_form = {$field->fields['id_form']}");
-                            ploopi\loader::getdb()->query("update ploopi_mod_forms_field set position=".$field->fields['position']." where position=0 and id_form = {$field->fields['id_form']}");
+                            ploopi\db::get()->query("update ploopi_mod_forms_field set position=0 where position=".($field->fields['position']-1)." and id_form = {$field->fields['id_form']}");
+                            ploopi\db::get()->query("update ploopi_mod_forms_field set position=".($field->fields['position']-1)." where position=".$field->fields['position']." and id_form = {$field->fields['id_form']}");
+                            ploopi\db::get()->query("update ploopi_mod_forms_field set position=".$field->fields['position']." where position=0 and id_form = {$field->fields['id_form']}");
                         }
                     }
                     ploopi\output::redirect("admin.php?op=forms_modify&forms_id={$field->fields['id_form']}&ploopi_mod_msg=_FORMS_MESS_OK_7");
@@ -748,7 +748,7 @@ if ($_SESSION['ploopi']['connected'])
                 <?php
                 $strContent = ob_get_contents();
                 ob_end_clean();
-                ploopi\system::kill($skin->create_popup('Graphique', $strContent, 'forms_popup_graphic'));
+                ploopi\system::kill(ploopi\skin::get()->create_popup('Graphique', $strContent, 'forms_popup_graphic'));
             break;
 
             case 'forms_graphic_generate':

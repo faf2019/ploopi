@@ -239,7 +239,7 @@ switch($ploopi_op)
             $response->fields['root_id'] = $ticket->fields['root_id'];
             $id_resp = $response->save();
 
-            ploopi\loader::getdb()->query("DELETE FROM ploopi_ticket_watch WHERE id_ticket = {$ticket->fields['root_id']} AND id_user <> {$_SESSION['ploopi']['userid']}");
+            ploopi\db::get()->query("DELETE FROM ploopi_ticket_watch WHERE id_ticket = {$ticket->fields['root_id']} AND id_user <> {$_SESSION['ploopi']['userid']}");
         }
         else
         {
@@ -333,7 +333,7 @@ switch($ploopi_op)
             $booEmptySearch = true;
 
             // Filtre utilisateur
-            $filtered_search_field = ploopi\loader::getdb()->addslashes($_POST['ploopi_ticket_userfilter']);
+            $filtered_search_field = ploopi\db::get()->addslashes($_POST['ploopi_ticket_userfilter']);
             $search_pattern_user = ($_POST['ploopi_ticket_typefilter'] == 'user') ? "AND (u.login LIKE '%{$filtered_search_field}%' OR u.lastname LIKE '%{$filtered_search_field}%' OR u.firstname LIKE '%{$filtered_search_field}%') " : '';
 
             // construction de la liste des groupes de travail et des groupes d'utilisateurs rattachés (pour l'utilisateur courant)
@@ -366,7 +366,7 @@ switch($ploopi_op)
                 if ($_POST['ploopi_ticket_typefilter'] != 'group')
                 {
                     // recherche des utilisateurs attachés aux espaces précédemment sélectionnés
-                    ploopi\loader::getdb()->query("
+                    ploopi\db::get()->query("
                         SELECT      u.*,
                                     wu.id_workspace
 
@@ -382,7 +382,7 @@ switch($ploopi_op)
                     ");
 
                     // affectation des utilisateurs à leurs groupes de rattachement
-                    while ($fields = ploopi\loader::getdb()->fetchrow())
+                    while ($fields = ploopi\db::get()->fetchrow())
                     {
                         // Si l'espace contient au moins 1 utilisateur, il n'est pas vide
                         if ($list['wsp'][$fields['id_workspace']]['empty']) $list['wsp'][$fields['id_workspace']]['empty'] = false;
@@ -394,7 +394,7 @@ switch($ploopi_op)
 
                 if (!empty($list['grp']))
                 {
-                    ploopi\loader::getdb()->query("
+                    ploopi\db::get()->query("
                         SELECT      u.*,
                                     gu.id_group
 
@@ -410,7 +410,7 @@ switch($ploopi_op)
                     ");
 
                     $listgroup = array();
-                    while ($fields = ploopi\loader::getdb()->fetchrow())
+                    while ($fields = ploopi\db::get()->fetchrow())
                     {
                         $list['grp'][$fields['id_group']]['users'][] = $fields['id'];
                         if (!isset($list['usr'][$fields['id']])) $list['usr'][$fields['id']] = array('id' => $fields['id'], 'login' => $fields['login'], 'lastname' => $fields['lastname'], 'firstname' => $fields['firstname']);

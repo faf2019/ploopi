@@ -75,8 +75,8 @@ if (ploopi\acl::isactionallowed(_FORMS_ACTION_ADMIN))
             'url' => "admin.php?formsTabItem=formadd"
         );
 
-    echo $skin->create_pagetitle(ploopi\str::htmlentities($_SESSION['ploopi']['modulelabel']));
-    echo $skin->create_tabs($tabs, $_SESSION['forms']['formsTabItem']);
+    echo ploopi\skin::get()->create_pagetitle(ploopi\str::htmlentities($_SESSION['ploopi']['modulelabel']));
+    echo ploopi\skin::get()->create_tabs($tabs, $_SESSION['forms']['formsTabItem']);
 
 
     switch($_SESSION['forms']['formsTabItem'])

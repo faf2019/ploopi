@@ -56,8 +56,8 @@ function system_get_table_def($fp, $db, $table, $crlf)
     $schema_create .= "CREATE TABLE {$table} ({$crlf}";
 
     //$result = mysql_db_query($db, "SHOW FIELDS FROM $table") or mysql_ploopi\system::kill();
-    $result = ploopi\loader::getdb()->query("SHOW FIELDS FROM {$table}");
-    while($row = ploopi\loader::getdb()->fetchrow($result))
+    $result = ploopi\db::get()->query("SHOW FIELDS FROM {$table}");
+    while($row = ploopi\db::get()->fetchrow($result))
     {
         $schema_create .= "   {$row['Field']} {$row['Type']}";
 
@@ -71,8 +71,8 @@ function system_get_table_def($fp, $db, $table, $crlf)
     }
     $schema_create = preg_replace("/,".$crlf."$/", "", $schema_create);
     //$result = mysql_db_query($db, "SHOW KEYS FROM $table") or mysql_ploopi\system::kill();
-    $result = ploopi\loader::getdb()->query("SHOW KEYS FROM {$table}");
-    while($row = ploopi\loader::getdb()->fetchrow($result))
+    $result = ploopi\db::get()->query("SHOW KEYS FROM {$table}");
+    while($row = ploopi\db::get()->fetchrow($result))
     {
         $kname=$row['Key_name'];
         if(($kname != "PRIMARY") && ($row['Non_unique'] == 0))
@@ -104,15 +104,15 @@ function system_get_table_def($fp, $db, $table, $crlf)
 // Get the content of $table as a series of INSERT statements.
 function system_get_table_content($fp, $db, $table, $crlf)
 {
-    $result = ploopi\loader::getdb()->query("SELECT * FROM $table");
+    $result = ploopi\db::get()->query("SELECT * FROM $table");
     $i = 0;
-    while($row = ploopi\loader::getdb()->fetchrow($result, MYSQL_NUM))
+    while($row = ploopi\db::get()->fetchrow($result, MYSQL_NUM))
     {
         if (!ini_get('safe_mode')) @set_time_limit(60);
         $table_list = "(";
 
-        for($j=0; $j<ploopi\loader::getdb()->numfields($result);$j++)
-            $table_list .= ploopi\loader::getdb()->fieldname($result,$j).", ";
+        for($j=0; $j<ploopi\db::get()->numfields($result);$j++)
+            $table_list .= ploopi\db::get()->fieldname($result,$j).", ";
 
         $table_list = substr($table_list,0,-2);
         $table_list .= ")";
@@ -122,12 +122,12 @@ function system_get_table_content($fp, $db, $table, $crlf)
         else
             $schema_insert = "INSERT INTO {$table} VALUES (";
 
-        for($j=0; $j<ploopi\loader::getdb()->numfields($result);$j++)
+        for($j=0; $j<ploopi\db::get()->numfields($result);$j++)
         {
             if(!isset($row[$j]))
                 $schema_insert .= " NULL,";
             elseif($row[$j] != "")
-                $schema_insert .= " '".ploopi\loader::getdb()->addslashes($row[$j])."',";
+                $schema_insert .= " '".ploopi\db::get()->addslashes($row[$j])."',";
             else
                 $schema_insert .= " '',";
         }
@@ -140,7 +140,7 @@ function system_get_table_content($fp, $db, $table, $crlf)
     return true;
 }
 
-$tables = ploopi\loader::getdb()->listtables();
+$tables = ploopi\db::get()->listtables();
 
 
 if(empty($tables)) echo $strNoTablesFound;

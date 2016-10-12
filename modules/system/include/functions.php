@@ -50,7 +50,7 @@ function system_mergegroups($array1, $array2)
  */
 function system_getwg()
 {
-    $db = ploopi\loader::getdb();
+    $db = ploopi\db::get();
 
     $workspaces = array('list' => array(), 'tree' => array(), 'workspaceid' => $_SESSION['ploopi']['workspaceid']);
 
@@ -446,7 +446,7 @@ function system_build_tree($typetree, $from_wid = 1, $from_gid = 0)
 
 function system_getallworkspaces($idworkspacetop = '')
 {
-    $db = ploopi\loader::getdb();
+    $db = ploopi\db::get();
     $workspaces = array();
 
     $select = "SELECT * FROM ploopi_workspace WHERE system = 0 ORDER BY label";
@@ -463,7 +463,7 @@ function system_getallworkspaces($idworkspacetop = '')
 
 function system_updateparents($idgroup=0,$parents='',$depth=1)
 {
-    $db = ploopi\loader::getdb();
+    $db = ploopi\db::get();
 
     $select = "SELECT * FROM ploopi_group WHERE id_group = $idgroup AND id <> $idgroup";
     $result = $db->query($select);
@@ -481,7 +481,7 @@ function system_updateparents($idgroup=0,$parents='',$depth=1)
 
 function system_getinstalledmodules()
 {
-    $db = ploopi\loader::getdb();
+    $db = ploopi\db::get();
 
     $modules = array();
 
@@ -552,9 +552,6 @@ function system_generate_htpasswd($login, $pass, $delete = false)
 
 function system_tickets_displayresponses($parents, $tickets, $rootid)
 {
-    global $skin;
-
-
     sort($parents[$rootid]);
 
     $todaydate = ploopi\date::timestamp2local(ploopi\date::createtimestamp());
@@ -650,7 +647,7 @@ function system_serverload_getcolor($min, $max, $x)
 
 function system_getparents($parents, $type)
 {
-    $db = ploopi\loader::getdb();
+    $db = ploopi\db::get();
 
     $parents = str_replace(';',',',$parents);
 

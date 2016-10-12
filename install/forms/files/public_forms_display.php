@@ -56,10 +56,10 @@ switch($op)
 
 $intReplyId = isset($_REQUEST['record_id']) && is_numeric($_REQUEST['record_id']) ? $_REQUEST['record_id'] : null;
 
-echo $skin->open_simplebloc();
+echo ploopi\skin::get()->open_simplebloc();
 
 $objForm->render($intReplyId, $strRenderMode);
 
-echo $skin->close_simplebloc();
+echo ploopi\skin::get()->close_simplebloc();
 
 

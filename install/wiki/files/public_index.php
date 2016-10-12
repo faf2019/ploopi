@@ -44,12 +44,12 @@ switch($strWikiMenu)
     
 }
 
-echo $skin->open_simplebloc(ploopi\str::htmlentities($strTitle));
+echo ploopi\skin::get()->open_simplebloc(ploopi\str::htmlentities($strTitle));
 ?>
 <div id="wiki_index">
     <?php
     
-    ploopi\loader::getdb()->query("
+    ploopi\db::get()->query("
         SELECT      *
         FROM        ploopi_mod_wiki_page
         WHERE       id_module = {$_SESSION['ploopi']['moduleid']}
@@ -60,7 +60,7 @@ echo $skin->open_simplebloc(ploopi\str::htmlentities($strTitle));
 
     $strPrevDate = '';
     
-    while ($row = ploopi\loader::getdb()->fetchrow())
+    while ($row = ploopi\db::get()->fetchrow())
     {
         $strDate = current(ploopi\date::timestamp2local($row['ts_modified']));
         if ($strWikiMenu == 'index_date' && $strDate != $strPrevDate)
@@ -79,4 +79,4 @@ echo $skin->open_simplebloc(ploopi\str::htmlentities($strTitle));
     if ($strWikiMenu == 'index_title' || $strPrevDate != '') echo '</ul>';
     ?>
 </div>
-<?php echo $skin->close_simplebloc(); ?>
+<?php echo ploopi\skin::get()->close_simplebloc(); ?>

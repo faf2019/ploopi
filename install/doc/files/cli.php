@@ -49,8 +49,8 @@ switch($op)
 
         // Vignettes des fichiers
         $sql = 'SELECT md5id, name, version, id_workspace, id_module FROM ploopi_mod_doc_file';
-        $sqlResult = ploopi\loader::getdb()->query($sql);
-        while ($row = ploopi\loader::getdb()->fetchrow($sqlResult))
+        $sqlResult = ploopi\db::get()->query($sql);
+        while ($row = ploopi\db::get()->fetchrow($sqlResult))
         {
             $objCache = new Cache_Lite(array( 'cacheDir' => _PLOOPI_PATHCACHE._PLOOPI_SEP, 'lifeTime' => 2592000)); // 30 jours
 
@@ -80,8 +80,8 @@ switch($op)
 
         // Vignettes des fichiers DRAFT !
         $sql = "SELECT md5id, name, id_workspace, id_module FROM ploopi_mod_doc_file_draft";
-        $sqlResult = ploopi\loader::getdb()->query($sql);
-        while ($row = ploopi\loader::getdb()->fetchrow($sqlResult))
+        $sqlResult = ploopi\db::get()->query($sql);
+        while ($row = ploopi\db::get()->fetchrow($sqlResult))
         {
             $objCache = new Cache_Lite(array( 'cacheDir' => _PLOOPI_PATHCACHE._PLOOPI_SEP, 'lifeTime' => 2592000)); // 30 jours
 
@@ -125,10 +125,10 @@ switch($op)
                 if (is_writable($file)) {
 
                     // Action
-                    $rs = ploopi\loader::getdb()->query("SELECT id FROM ploopi_mod_doc_file LIMIT {$limit}");
+                    $rs = ploopi\db::get()->query("SELECT id FROM ploopi_mod_doc_file LIMIT {$limit}");
                     $c = 0;
 
-                    while($row = ploopi\loader::getdb()->fetchrow($rs)) {
+                    while($row = ploopi\db::get()->fetchrow($rs)) {
 
                         $objDocFile = new docfile();
                         $objDocFile->open($row['id']);
@@ -156,9 +156,9 @@ switch($op)
         // Nombre d'enregistrement à traiter par processus
         $intPageSize = 50;
         // Sélection de l'ensemble des documents
-        $rs = ploopi\loader::getdb()->query("SELECT id FROM ploopi_mod_doc_file");
+        $rs = ploopi\db::get()->query("SELECT id FROM ploopi_mod_doc_file");
         // Nombre d'éléments à traiter
-        $intNbElt = ploopi\loader::getdb()->numrows();
+        $intNbElt = ploopi\db::get()->numrows();
         // Page de démarrage
         $intCurrentPage = 0;
         // Nombre de page traitées

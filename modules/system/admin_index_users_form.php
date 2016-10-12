@@ -217,7 +217,7 @@ if (isset($_REQUEST['confirm']))
     <div class="error" style="padding:2px;text-align:center;"><?php echo _SYSTEM_MSG_CREATEUSER_CONFIRMATION1; ?></div>
     <div style="margin:10px;">
     <?php
-    ploopi\loader::getdb()->query("
+    ploopi\db::get()->query("
         SELECT  id,
                 login,
                 lastname,
@@ -230,9 +230,9 @@ if (isset($_REQUEST['confirm']))
 
         FROM    ploopi_user
 
-        WHERE   (lastname = '".ploopi\loader::getdb()->addslashes($_SESSION['system']['save_user']['user_lastname'])."'
-        AND     firstname = '".ploopi\loader::getdb()->addslashes($_SESSION['system']['save_user']['user_firstname'])."')
-        OR      login = '".ploopi\loader::getdb()->addslashes($_SESSION['system']['save_user']['user_login'])."'
+        WHERE   (lastname = '".ploopi\db::get()->addslashes($_SESSION['system']['save_user']['user_lastname'])."'
+        AND     firstname = '".ploopi\db::get()->addslashes($_SESSION['system']['save_user']['user_firstname'])."')
+        OR      login = '".ploopi\db::get()->addslashes($_SESSION['system']['save_user']['user_login'])."'
     ");
 
     $arrColumns = array();
@@ -288,7 +288,7 @@ if (isset($_REQUEST['confirm']))
 
     $booLoginWarning = false;
 
-    while ($row = ploopi\loader::getdb()->fetchrow())
+    while ($row = ploopi\db::get()->fetchrow())
     {
         if ($row['login'] == $_SESSION['system']['save_user']['user_login']) $booLoginWarning = true;
 
@@ -336,9 +336,9 @@ if (isset($_REQUEST['confirm']))
             );
     }
 
-    echo $skin->open_simplebloc('Choisir un utilisateur existant');
-    $skin->display_array($arrColumns, $arrValues, 'array_createuser_confirm', array('sortable' => true, 'orderby_default' => 'name'));
-    echo $skin->close_simplebloc();
+    echo ploopi\skin::get()->open_simplebloc('Choisir un utilisateur existant');
+    ploopi\skin::get()->display_array($arrColumns, $arrValues, 'array_createuser_confirm', array('sortable' => true, 'orderby_default' => 'name'));
+    echo ploopi\skin::get()->close_simplebloc();
     ?>
     </div>
     <div class="error" style="padding:2px;text-align:center;"><?php echo _SYSTEM_MSG_CREATEUSER_CONFIRMATION2; ?></div>

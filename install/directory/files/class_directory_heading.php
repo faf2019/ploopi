@@ -62,7 +62,7 @@ class directory_heading extends ploopi\data_object
 
     public function save($booForcePos = false)
     {
-        $db = ploopi\loader::getdb();
+        $db = ploopi\db::get();
 
         if ($this->new) $this->setuwm();
         else
@@ -123,7 +123,7 @@ class directory_heading extends ploopi\data_object
     {
         include_once './modules/directory/include/global.php';
 
-        $db = ploopi\loader::getdb();
+        $db = ploopi\db::get();
 
         // Effacer les contacts attachés
         $rs_contact = $db->query("SELECT id FROM ploopi_mod_directory_contact WHERE id_heading = {$this->fields['id']}");
@@ -158,7 +158,7 @@ class directory_heading extends ploopi\data_object
 
     function create_child()
     {
-        $db = ploopi\loader::getdb();
+        $db = ploopi\db::get();
 
         // calcul pos
         $rs = $db->query("SELECT max(position) AS maxpos FROM ploopi_mod_directory_heading WHERE id_heading = {$this->fields['id']}");

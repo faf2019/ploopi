@@ -89,7 +89,7 @@ class docfolder extends ploopi\data_object
      */
     public function save()
     {
-        $db = ploopi\loader::getdb();
+        $db = ploopi\db::get();
 
         if ($this->fields['id_folder'] != 0)
         {
@@ -127,7 +127,7 @@ class docfolder extends ploopi\data_object
 
     public function publish()
     {
-        $db = ploopi\loader::getdb();
+        $db = ploopi\db::get();
 
         $ret = 0;
         if (!$this->fields['published'])
@@ -171,7 +171,7 @@ class docfolder extends ploopi\data_object
 
     public function delete()
     {
-        $db = ploopi\loader::getdb();
+        $db = ploopi\db::get();
 
         // on recherche tous les fichiers pour les supprimer
         $rs = $db->query("SELECT id FROM ploopi_mod_doc_file WHERE id_folder = {$this->fields['id']}");

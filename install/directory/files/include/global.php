@@ -91,7 +91,7 @@ $arrDirectoryImportFields = array(
 
 function directory_getheadings($intIdHeading = 0)
 {
-    $db = ploopi\loader::getdb();
+    $db = ploopi\db::get();
 
     $booIsAdmin = ploopi\acl::isadmin();
     if (!$booIsAdmin)
@@ -152,7 +152,7 @@ function directory_getheadings($intIdHeading = 0)
 
 function directory_getcontacts()
 {
-    $db = ploopi\loader::getdb();
+    $db = ploopi\db::get();
 
     $arrContacts = array();
 
@@ -180,7 +180,7 @@ function directory_getcontacts()
 
 function directory_gettreeview($headings = array(), $booPopup = false)
 {
-    $db = ploopi\loader::getdb();
+    $db = ploopi\db::get();
 
     $treeview =
         array(

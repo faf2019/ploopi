@@ -652,21 +652,21 @@ foreach($arrShares as $value) $arrSharesUsers[$value['type_share']][] = $value['
                 {
                     $strIcon = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/ico_group.png\">";
 
-                    ploopi\loader::getdb()->query(
+                    ploopi\db::get()->query(
                         "SELECT label FROM ploopi_group WHERE id in (".implode(',',$arrWfUsers['group']).") ORDER BY label"
                     );
 
-                    while ($row = ploopi\loader::getdb()->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi\str::htmlentities($row['label'])."&nbsp;</span>";
+                    while ($row = ploopi\db::get()->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi\str::htmlentities($row['label'])."&nbsp;</span>";
                 }
                 if (!empty($arrWfUsers['user']))
                 {
                     $strIcon = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/ico_user.png\">";
 
-                    ploopi\loader::getdb()->query(
+                    ploopi\db::get()->query(
                         "SELECT concat(lastname, ' ', firstname) as name FROM ploopi_user WHERE id in (".implode(',',$arrWfUsers['user']).") ORDER BY lastname, firstname"
                     );
 
-                    while ($row = ploopi\loader::getdb()->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi\str::htmlentities($row['name'])."&nbsp;</span>";
+                    while ($row = ploopi\db::get()->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi\str::htmlentities($row['name'])."&nbsp;</span>";
                 }
             }
             else echo '<em>Aucune accréditation</em>';
@@ -698,21 +698,21 @@ foreach($arrShares as $value) $arrSharesUsers[$value['type_share']][] = $value['
                 {
                     $strIcon = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/ico_group.png\">";
 
-                    ploopi\loader::getdb()->query(
+                    ploopi\db::get()->query(
                         "SELECT label FROM ploopi_group WHERE id in (".implode(',',$arrEditorUsers['group']).") ORDER BY label"
                     );
 
-                    while ($row = ploopi\loader::getdb()->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi\str::htmlentities($row['label'])."&nbsp;</span>";
+                    while ($row = ploopi\db::get()->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi\str::htmlentities($row['label'])."&nbsp;</span>";
                 }
                 if (!empty($arrEditorUsers['user']))
                 {
                     $strIcon = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/ico_user.png\">";
 
-                    ploopi\loader::getdb()->query(
+                    ploopi\db::get()->query(
                         "SELECT concat(lastname, ' ', firstname) as name FROM ploopi_user WHERE id in (".implode(',',$arrEditorUsers['user']).") ORDER BY lastname, firstname"
                     );
 
-                    while ($row = ploopi\loader::getdb()->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi\str::htmlentities($row['name'])."&nbsp;</span>";
+                    while ($row = ploopi\db::get()->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi\str::htmlentities($row['name'])."&nbsp;</span>";
                 }
             }
             else echo '<em>Aucune accréditation</em>';
@@ -771,21 +771,21 @@ foreach($arrShares as $value) $arrSharesUsers[$value['type_share']][] = $value['
                     {
                         $strIcon = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/ico_group.png\">";
 
-                        ploopi\loader::getdb()->query(
+                        ploopi\db::get()->query(
                             "SELECT label FROM ploopi_group WHERE id in (".implode(',',$arrSharesUsers['group']).") ORDER BY label"
                         );
 
-                        while ($row = ploopi\loader::getdb()->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi\str::htmlentities($row['label'])."&nbsp;</span>";
+                        while ($row = ploopi\db::get()->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi\str::htmlentities($row['label'])."&nbsp;</span>";
                     }
                     if (!empty($arrSharesUsers['user']))
                     {
                         $strIcon = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/ico_user.png\">";
 
-                        ploopi\loader::getdb()->query(
+                        ploopi\db::get()->query(
                             "SELECT concat(lastname, ' ', firstname) as name FROM ploopi_user WHERE id in (".implode(',',$arrSharesUsers['user']).") ORDER BY lastname, firstname"
                         );
 
-                        while ($row = ploopi\loader::getdb()->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi\str::htmlentities($row['name'])."&nbsp;</span>";
+                        while ($row = ploopi\db::get()->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi\str::htmlentities($row['name'])."&nbsp;</span>";
                     }
                 }
                 else echo '<em>Aucune accréditation</em>';
@@ -907,7 +907,7 @@ if ($booIsAllowedEdit)
         break;
     }
 
-    $skin->display_array($articles_columns, $articles_values, 'webedit_articlelist', $options);
+    ploopi\skin::get()->display_array($articles_columns, $articles_values, 'webedit_articlelist', $options);
     ?>
 </div>
 
@@ -937,11 +937,11 @@ if (ploopi\acl::isactionallowed(_WEBEDIT_ACTION_SUBSCRIBERS_MANAGE)) // Gestion 
         $subscribers_values = array();
 
         $sql = "SELECT * FROM ploopi_mod_webedit_heading_subscriber WHERE (id_heading = {$headingid} OR id_heading = 0) AND id_module = {$_SESSION['ploopi']['moduleid']}";
-        ploopi\loader::getdb()->query($sql);
+        ploopi\db::get()->query($sql);
 
         $c = 0;
 
-        while ($row = ploopi\loader::getdb()->fetchrow())
+        while ($row = ploopi\db::get()->fetchrow())
         {
             $subscribers_values[$c]['values']['email'] =
                 array(
@@ -959,7 +959,7 @@ if (ploopi\acl::isactionallowed(_WEBEDIT_ACTION_SUBSCRIBERS_MANAGE)) // Gestion 
             $c++;
         }
 
-        $skin->display_array($subscribers_columns, $subscribers_values, 'webedit_subscribers', $options = array('sortable' => true, 'orderby_default' => 'email'));
+        ploopi\skin::get()->display_array($subscribers_columns, $subscribers_values, 'webedit_subscribers', $options = array('sortable' => true, 'orderby_default' => 'email'));
         ?>
     </div>
     <?php

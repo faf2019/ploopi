@@ -54,8 +54,8 @@ switch($_SESSION['booking']['$booking_menu'])
 
     default:
     case 'planning':
-        echo $skin->create_pagetitle(ploopi\str::htmlentities("{$_SESSION['ploopi']['modulelabel']} - Gestion"));
-        echo $skin->open_simplebloc('Planning des réservations');
+        echo ploopi\skin::get()->create_pagetitle(ploopi\str::htmlentities("{$_SESSION['ploopi']['modulelabel']} - Gestion"));
+        echo ploopi\skin::get()->open_simplebloc('Planning des réservations');
         ?>
         <div id="booking_main">
         <?php
@@ -63,7 +63,7 @@ switch($_SESSION['booking']['$booking_menu'])
         ?>
         </div>
         <?php
-        echo $skin->close_simplebloc();
+        echo ploopi\skin::get()->close_simplebloc();
 
         /**
          * Affichage du popup de sélection des ressources
@@ -110,7 +110,7 @@ switch($_SESSION['booking']['$booking_menu'])
         $content = ob_get_contents();
         ob_end_clean();
 
-        echo $skin->open_popup(
+        echo ploopi\skin::get()->open_popup(
             'Ressources affichées',
             $content,
             'popup_booking',

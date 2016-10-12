@@ -42,10 +42,10 @@ $strWikiPageId = (empty($_GET['wiki_page_id'])) ? '' : $_GET['wiki_page_id'];
 
 if ($strWikiPageId == '') // cas particulier, pas d'id renseigné => recherche de root
 {
-    ploopi\loader::getdb()->query("SELECT id FROM ploopi_mod_wiki_page WHERE root = 1 AND id_module = {$_SESSION['ploopi']['moduleid']}");
-    if (ploopi\loader::getdb()->numrows())
+    ploopi\db::get()->query("SELECT id FROM ploopi_mod_wiki_page WHERE root = 1 AND id_module = {$_SESSION['ploopi']['moduleid']}");
+    if (ploopi\db::get()->numrows())
     {
-        $row = ploopi\loader::getdb()->fetchrow();
+        $row = ploopi\db::get()->fetchrow();
         $strWikiPageId = $row['id'];
     }
     else // Pas de page root ! => Problème !!!!
@@ -76,7 +76,7 @@ if ($booExists)
 // Vérification du droit de modification
 if ($op == 'wiki_page_modify' && (!ploopi\acl::isactionallowed(_WIKI_ACTION_PAGE_MODIFY) || $objWikiPage->fields['locked'])) $op = '';
 
-echo $skin->open_simplebloc(ploopi\str::htmlentities($strWikiPageId));
+echo ploopi\skin::get()->open_simplebloc(ploopi\str::htmlentities($strWikiPageId));
 ?>
 <div>
     <div class="ploopi_tabs">
@@ -452,7 +452,7 @@ echo $skin->open_simplebloc(ploopi\str::htmlentities($strWikiPageId));
 
                 ?>
                 <form action="<?php echo ploopi\crypt::urlencode_trusted("admin.php?op=wiki_page_history&wiki_page_id=".urlencode($strWikiPageId)); ?>" method="post">
-                <?php $skin->display_array($columns, $values, 'wiki_history', array('sortable' => true, 'orderby_default' => 'revision', 'sort_default' => 'DESC')); ?>
+                <?php ploopi\skin::get()->display_array($columns, $values, 'wiki_history', array('sortable' => true, 'orderby_default' => 'revision', 'sort_default' => 'DESC')); ?>
                 <div style="text-align:right;"><input type="submit" class="button" value="Voir les différences" style="margin:4px;"/></div>
                 </form>
                 <?php
@@ -515,4 +515,4 @@ echo $skin->open_simplebloc(ploopi\str::htmlentities($strWikiPageId));
         <?php ploopi\annotation::display(_WIKI_OBJECT_PAGE, $strWikiPageId, $strWikiPageId); ?>
     </div>
 </div>
-<?php echo $skin->close_simplebloc(); ?>
+<?php echo ploopi\skin::get()->close_simplebloc(); ?>

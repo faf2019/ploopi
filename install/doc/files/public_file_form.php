@@ -186,8 +186,8 @@ else
 
     $docfile_tab = empty($_GET['docfile_tab']) ? 'open' : $_GET['docfile_tab'];
 
-    ploopi\loader::getdb()->query("SELECT filetype FROM ploopi_mimetype WHERE ext = '{$docfile->fields['extension']}'");
-    $row = ploopi\loader::getdb()->fetchrow();
+    ploopi\db::get()->query("SELECT filetype FROM ploopi_mimetype WHERE ext = '{$docfile->fields['extension']}'");
+    $row = ploopi\db::get()->fetchrow();
 
     $ico = (!empty($row['filetype']) && file_exists("./img/mimetypes/ico_{$row['filetype']}.png")) ? "ico_{$row['filetype']}.png" : 'ico_default.png';
     ?>
@@ -352,12 +352,12 @@ else
                     $c++;
                 }
 
-                $skin->display_array($array_columns, $array_values, 'docfile_words', array('sortable' => true, 'orderby_default' => 'occ', 'sort_default' => 'DESC'));
+                ploopi\skin::get()->display_array($array_columns, $array_values, 'docfile_words', array('sortable' => true, 'orderby_default' => 'occ', 'sort_default' => 'DESC'));
                 break;
 
             case 'meta':
                 $sql = "SELECT * FROM ploopi_mod_doc_meta WHERE id_file = {$docfile->fields['id']}";
-                ploopi\loader::getdb()->query($sql);
+                ploopi\db::get()->query($sql);
 
                 $array_columns = array();
                 $array_values = array();
@@ -377,7 +377,7 @@ else
 
                 $c = 0;
 
-                while ($row = ploopi\loader::getdb()->fetchrow())
+                while ($row = ploopi\db::get()->fetchrow())
                 {
                     $array_values[$c]['values']['meta']     = array('label' => ploopi\str::htmlentities($row['meta']), 'style' => '');
                     $array_values[$c]['values']['valeur']   = array('label' => ploopi\str::htmlentities($row['value']), 'style' => '');
@@ -387,7 +387,7 @@ else
                     $c++;
                 }
 
-                $skin->display_array($array_columns, $array_values, 'docfile_meta', array('sortable' => true));
+                ploopi\skin::get()->display_array($array_columns, $array_values, 'docfile_meta', array('sortable' => true));
             break;
 
             case 'history':
@@ -447,7 +447,7 @@ else
                     $c++;
                 }
 
-                $skin->display_array($array_columns, $array_values, 'docfile_history', array('sortable' => true, 'orderby_default' => 'vers', 'sort_default' => 'DESC'));
+                ploopi\skin::get()->display_array($array_columns, $array_values, 'docfile_history', array('sortable' => true, 'orderby_default' => 'vers', 'sort_default' => 'DESC'));
             break;
 
             default:

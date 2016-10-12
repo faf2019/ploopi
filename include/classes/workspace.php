@@ -80,7 +80,7 @@ class workspace extends data_object
 
     public function delete()
     {
-        $db = loader::getdb();
+        $db = db::get();
 
         if ($this->fields['id']!=-1 && !$this->fields['system'])
         {
@@ -131,7 +131,7 @@ class workspace extends data_object
     {
         if (isset(self::$_arrCache[$this->fields['id']]['children'])) return self::$_arrCache[$this->fields['id']]['children'];
 
-        $db = loader::getdb();
+        $db = db::get();
 
         $rs = $db->query("SELECT id FROM ploopi_workspace WHERE parents = '{$this->fields['parents']};{$this->fields['id']}' OR parents LIKE '{$this->fields['parents']};{$this->fields['id']};%'");
 
@@ -148,7 +148,7 @@ class workspace extends data_object
     {
         if (isset(self::$_arrCache[$this->fields['id']]['brothers'])) return self::$_arrCache[$this->fields['id']]['brothers'];
 
-        $db = loader::getdb();
+        $db = db::get();
 
         $rs = $db->query("
             SELECT  id
@@ -194,7 +194,7 @@ class workspace extends data_object
 
     public function getusers($booWithGroups = false)
     {
-        $db = loader::getdb();
+        $db = db::get();
 
         $arrUsers = array();
 
@@ -241,7 +241,7 @@ class workspace extends data_object
      */
     public function countusers()
     {
-        $db = loader::getdb();
+        $db = db::get();
 
         $result = $db->query("
             SELECT  count(id_user) as c
@@ -264,7 +264,7 @@ class workspace extends data_object
 
     public function getallusers()
     {
-        $db = loader::getdb();
+        $db = db::get();
 
         $users = array();
 
@@ -318,7 +318,7 @@ class workspace extends data_object
 
     public function getgroups($getchildren = false)
     {
-        $db = loader::getdb();
+        $db = db::get();
 
         $groups = array();
 
@@ -381,7 +381,7 @@ class workspace extends data_object
 
     public function getmodules($light = false)
     {
-        $db = loader::getdb();
+        $db = db::get();
 
         $modules = array();
 
@@ -430,7 +430,7 @@ class workspace extends data_object
 
     public function getsharedmodules($herited = false)
     {
-        $db = loader::getdb();
+        $db = db::get();
 
         $modules = array();
 

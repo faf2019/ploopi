@@ -72,7 +72,7 @@ class docfiledraft extends ploopi\data_object
 
     function openmd5($md5id)
     {
-        $db = ploopi\loader::getdb();
+        $db = ploopi\db::get();
 
         $db->query("SELECT id FROM ploopi_mod_doc_file_draft WHERE md5id = '".$db->addslashes($md5id)."'");
         if ($fields = $db->fetchrow()) return(parent::open($fields['id']));
@@ -93,7 +93,7 @@ class docfiledraft extends ploopi\data_object
 
     function save()
     {
-        $db = ploopi\loader::getdb();
+        $db = ploopi\db::get();
         $error = 0;
         if (isset($this->fields['folder'])) unset($this->fields['folder']);
 

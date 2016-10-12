@@ -94,7 +94,7 @@ switch($ploopi_op)
         $id_action = (!empty($_GET['id_action']) && is_numeric($_GET['id_action'])) ? $_GET['id_action'] : -1;
 
         // Recherche des espaces de travail qui supportent ce module, selon la vue inverse
-        $rs = ploopi\loader::getdb()->query("
+        $rs = ploopi\db::get()->query("
             SELECT  w.*
             FROM    ploopi_workspace w,
                     ploopi_module_workspace mw
@@ -104,7 +104,7 @@ switch($ploopi_op)
             ORDER BY w.depth, w.label
         ");
 
-        while ($row = ploopi\loader::getdb()->fetchrow($rs))
+        while ($row = ploopi\db::get()->fetchrow($rs))
         {
             $list['workspaces'][$row['id']]['label'] = $row['label'];
             $list['workspaces'][$row['id']]['groups'] = array();
@@ -118,7 +118,7 @@ switch($ploopi_op)
         }
 
         if (!empty($list['workspaces'])) {
-            $cleanedfilter = ploopi\loader::getdb()->addslashes($_GET['ploopi_validation_userfilter']);
+            $cleanedfilter = ploopi\db::get()->addslashes($_GET['ploopi_validation_userfilter']);
             $userfilter = "(u.login LIKE '%{$cleanedfilter}%' OR u.firstname LIKE '%{$cleanedfilter}%' OR u.lastname LIKE '%{$cleanedfilter}%')";
 
             // recherche des utilisateurs "admininstrateur d'espace" ou disposant d'une action particuliere dans le module
@@ -212,21 +212,21 @@ switch($ploopi_op)
 
 
 
-            ploopi\loader::getdb()->query($query_u);
-            while ($fields = ploopi\loader::getdb()->fetchrow())
+            ploopi\db::get()->query($query_u);
+            while ($fields = ploopi\db::get()->fetchrow())
             {
                 $list['users'][$fields['id']] = array('id' => $fields['id'], 'login' => $fields['login'], 'lastname' => $fields['lastname'], 'firstname' => $fields['firstname']);
                 $list['workspaces'][$fields['id_workspace']]['users'][$fields['id']] = $fields['id'];
             }
 
-            ploopi\loader::getdb()->query($query_g);
-            while ($fields = ploopi\loader::getdb()->fetchrow())
+            ploopi\db::get()->query($query_g);
+            while ($fields = ploopi\db::get()->fetchrow())
             {
                 $list['groups'][$fields['id']]['display'] = true;
             }
 
-            ploopi\loader::getdb()->query($query_gu);
-            while ($fields = ploopi\loader::getdb()->fetchrow())
+            ploopi\db::get()->query($query_gu);
+            while ($fields = ploopi\db::get()->fetchrow())
             {
                 $list['users'][$fields['id']] = array('id' => $fields['id'], 'login' => $fields['login'], 'lastname' => $fields['lastname'], 'firstname' => $fields['firstname']);
                 $list['groups'][$fields['id_group']]['users'][$fields['id']] = $fields['id'];

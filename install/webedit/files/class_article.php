@@ -146,7 +146,7 @@ class webedit_article extends ploopi\data_object
 
     public function delete()
     {
-        $db = ploopi\loader::getdb();
+        $db = ploopi\db::get();
 
         // mise à jour de la position des autres articles de la rubrique
         $db->query("UPDATE `".$this->gettablename()."` SET position = position - 1 WHERE position > {$this->fields['position']} AND id_heading = {$this->fields['id_heading']}");
@@ -179,7 +179,7 @@ class webedit_article extends ploopi\data_object
 
     public function publish()
     {
-        $db = ploopi\loader::getdb();
+        $db = ploopi\db::get();
 
         if ($this->gettablename() == 'ploopi_mod_webedit_article_draft')
         {
@@ -238,7 +238,7 @@ class webedit_article extends ploopi\data_object
 
     public function index()
     {
-        $db = ploopi\loader::getdb();
+        $db = ploopi\db::get();
 
         // Suppression des docs rattachés à l'article (on les récrée par la suite)
         $db->query("DELETE FROM ploopi_mod_webedit_docfile WHERE id_article = {$this->fields['id']}");
@@ -365,7 +365,7 @@ class webedit_article extends ploopi\data_object
 
     public function gettags()
     {
-        $db = ploopi\loader::getdb();
+        $db = ploopi\db::get();
         if (!$this->new)
         {
             $sql =  "

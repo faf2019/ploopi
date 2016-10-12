@@ -152,7 +152,7 @@ class data_object
 
     public function __construct()
     {
-        $db = loader::getdb();
+        $db = db::get();
         // arg(0) : tablename
 
         $numargs = func_num_args();

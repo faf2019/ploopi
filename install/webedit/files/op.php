@@ -40,7 +40,7 @@ switch($ploopi_op)
 
         if (!empty($_GET['subscription_email']))
         {
-            ploopi\loader::getdb()->query("DELETE FROM ploopi_mod_webedit_heading_subscriber WHERE md5(email) = '".ploopi\loader::getdb()->addslashes($_GET['subscription_email'])."'");
+            ploopi\db::get()->query("DELETE FROM ploopi_mod_webedit_heading_subscriber WHERE md5(email) = '".ploopi\db::get()->addslashes($_GET['subscription_email'])."'");
         }
         //ploopi\output::redirect('index.php', false);
     break;
@@ -182,7 +182,7 @@ if ($_SESSION['ploopi']['connected'])
                     $option = (empty($_GET['option'])) ? '' : $_GET['option'];
 
                     $treeview = webedit_gettreeview(webedit_getheadings(), webedit_getarticles(), $option);
-                    echo $skin->display_treeview($treeview['list'], $treeview['tree'], null, $_GET['hid']);
+                    echo ploopi\skin::get()->display_treeview($treeview['list'], $treeview['tree'], null, $_GET['hid']);
                 }
                 ploopi\system::kill();
             break;
@@ -199,14 +199,14 @@ if ($_SESSION['ploopi']['connected'])
                 <div style="padding:4px;height:150px;overflow:auto;">
                 <?php
                 $treeview = webedit_gettreeview(webedit_getheadings(), webedit_getarticles(), 'selectredirect');
-                echo $skin->display_treeview($treeview['list'], $treeview['tree']);
+                echo ploopi\skin::get()->display_treeview($treeview['list'], $treeview['tree']);
                 ?>
                 </div>
                 <?php
                 $content = ob_get_contents();
                 ob_end_clean();
 
-                echo $skin->create_popup('Choix d\'une page', $content, 'webedit_popup_selectredirect');
+                echo ploopi\skin::get()->create_popup('Choix d\'une page', $content, 'webedit_popup_selectredirect');
 
                 ploopi\system::kill();
             break;
@@ -220,14 +220,14 @@ if ($_SESSION['ploopi']['connected'])
                 $hid = (empty($_GET['hid'])) ? '' : 'hh'.$_GET['hid'];
 
                 $treeview = webedit_gettreeview(webedit_getheadings(), webedit_getarticles(), 'selectheading');
-                echo $skin->display_treeview($treeview['list'], $treeview['tree'],$hid);
+                echo ploopi\skin::get()->display_treeview($treeview['list'], $treeview['tree'],$hid);
                 ?>
                 </div>
                 <?php
                 $content = ob_get_contents();
                 ob_end_clean();
 
-                echo $skin->create_popup('Choix d\'une rubrique de rattachement', $content, 'webedit_popup_selectheading');
+                echo ploopi\skin::get()->create_popup('Choix d\'une rubrique de rattachement', $content, 'webedit_popup_selectheading');
 
                 ploopi\system::kill();
             break;
@@ -268,11 +268,11 @@ if ($_SESSION['ploopi']['connected'])
                         $intArticleId = $_POST['webedit_article_id'];
                         $intHeadingId = 'null';
 
-                        ploopi\loader::getdb()->query("SELECT distinct(year) FROM ploopi_mod_webedit_counter WHERE id_article = {$intArticleId} ORDER BY year");
-                        $rs = $arrSelectYear = ploopi\loader::getdb()->getarray($rs, true);
+                        ploopi\db::get()->query("SELECT distinct(year) FROM ploopi_mod_webedit_counter WHERE id_article = {$intArticleId} ORDER BY year");
+                        $rs = $arrSelectYear = ploopi\db::get()->getarray($rs, true);
 
-                        $rs = ploopi\loader::getdb()->query("SELECT distinct(month) FROM ploopi_mod_webedit_counter WHERE id_article = {$intArticleId} AND year = {$intYearSel} ORDER BY month");
-                        $arrSelectMonth = ploopi\loader::getdb()->getarray($rs, true);
+                        $rs = ploopi\db::get()->query("SELECT distinct(month) FROM ploopi_mod_webedit_counter WHERE id_article = {$intArticleId} AND year = {$intYearSel} ORDER BY month");
+                        $arrSelectMonth = ploopi\db::get()->getarray($rs, true);
 
                         $strPopupTitle = "Statistiques de fréquentation de l'article &laquo; ".ploopi\str::htmlentities($objArticle->fields['title'])." &raquo;";
                     break;
@@ -286,7 +286,7 @@ if ($_SESSION['ploopi']['connected'])
                         $intArticleId = 'null';
                         $intHeadingId = $_POST['webedit_heading_id'];
 
-                        $rs = ploopi\loader::getdb()->query(
+                        $rs = ploopi\db::get()->query(
                             "
                             SELECT      distinct(c.year)
 
@@ -300,9 +300,9 @@ if ($_SESSION['ploopi']['connected'])
                             "
                         );
 
-                        $arrSelectYear = ploopi\loader::getdb()->getarray($rs, true);
+                        $arrSelectYear = ploopi\db::get()->getarray($rs, true);
 
-                        $rs = ploopi\loader::getdb()->query(
+                        $rs = ploopi\db::get()->query(
                             "
                             SELECT      distinct(c.month)
 
@@ -318,7 +318,7 @@ if ($_SESSION['ploopi']['connected'])
                             "
                         );
 
-                        $arrSelectMonth = ploopi\loader::getdb()->getarray($rs, true);
+                        $arrSelectMonth = ploopi\db::get()->getarray($rs, true);
 
                         $strPopupTitle = "Statistiques de fréquentation de la rubrique &laquo; ".ploopi\str::htmlentities($objHeading->fields['label'])." &raquo;";
                     break;
@@ -374,7 +374,7 @@ if ($_SESSION['ploopi']['connected'])
                     switch($type_stat)
                     {
                         case 'article':
-                            ploopi\loader::getdb()->query(
+                            ploopi\db::get()->query(
                                 "
                                 SELECT  month,
                                         sum(hits) as counter
@@ -391,7 +391,7 @@ if ($_SESSION['ploopi']['connected'])
                         break;
 
                         case 'heading':
-                            ploopi\loader::getdb()->query(
+                            ploopi\db::get()->query(
                                 "
                                 SELECT      c.month,
                                             sum(c.hits) as counter
@@ -411,7 +411,7 @@ if ($_SESSION['ploopi']['connected'])
                         break;
                     }
 
-                    while ($row = ploopi\loader::getdb()->fetchrow()) $dataset[$row['month']] = $row['counter'];
+                    while ($row = ploopi\db::get()->fetchrow()) $dataset[$row['month']] = $row['counter'];
 
                     $objBarChartYear = new ploopi\barchart(550, 150, array('padding' => 1));
                     $objBarChartYear->setvalues($dataset, 'Fréquentation mensuelle', '#1E64A1', '#f0f0f0');
@@ -434,7 +434,7 @@ if ($_SESSION['ploopi']['connected'])
                     switch($type_stat)
                     {
                         case 'article':
-                            ploopi\loader::getdb()->query(
+                            ploopi\db::get()->query(
                                 "
                                 SELECT  c.day,
                                         sum(c.hits) as counter
@@ -452,7 +452,7 @@ if ($_SESSION['ploopi']['connected'])
                         break;
 
                         case 'heading':
-                            ploopi\loader::getdb()->query(
+                            ploopi\db::get()->query(
                                 "
                                 SELECT      c.day,
                                             sum(c.hits) as counter
@@ -473,7 +473,7 @@ if ($_SESSION['ploopi']['connected'])
                         break;
                     }
 
-                    while ($row = ploopi\loader::getdb()->fetchrow()) $dataset[$row['day']] = $row['counter'];
+                    while ($row = ploopi\db::get()->fetchrow()) $dataset[$row['day']] = $row['counter'];
 
                     $objBarChartMonth = new ploopi\barchart(550, 150, array('padding' => 1));
                     $objBarChartMonth->setvalues($dataset, 'Fréquentation quotidienne', '#4FA11E', '#f0f0f0');
@@ -494,7 +494,7 @@ if ($_SESSION['ploopi']['connected'])
                 $content = ob_get_contents();
                 ob_end_clean();
 
-                echo $skin->create_popup($strPopupTitle, $content, 'popup_webedit_article_stats');
+                echo ploopi\skin::get()->create_popup($strPopupTitle, $content, 'popup_webedit_article_stats');
 
                 ploopi\system::kill();
             break;

@@ -75,7 +75,7 @@ if (!empty($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords']))
     }
 
     // on construit $arrObjectTypes, la liste des objets ploopi
-    ploopi\loader::getdb()->query( '
+    ploopi\db::get()->query( '
                 SELECT      mbo.*,
                             m.id as module_id,
                             m.label as module_label,
@@ -91,7 +91,7 @@ if (!empty($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords']))
                 ON          mt.id = mbo.id_module_type
                 ');
 
-    while ($row = ploopi\loader::getdb()->fetchrow())
+    while ($row = ploopi\db::get()->fetchrow())
     {
         if (empty($arrObjectTypes[$row['module_id']]))
         {
@@ -216,7 +216,7 @@ if (!empty($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords']))
         }
         ?>
         <div style="background-color:#f0f0f0;border-top:2px solid #c0c0c0;">
-        <?php $skin->display_array($columns, $values, 'system_search', array('sortable' => true, 'orderby_default' => 'relevance', 'sort_default' => 'DESC', 'limit' => 25)); ?>
+        <?php ploopi\skin::get()->display_array($columns, $values, 'system_search', array('sortable' => true, 'orderby_default' => 'relevance', 'sort_default' => 'DESC', 'limit' => 25)); ?>
         </div>
         <?php
     }

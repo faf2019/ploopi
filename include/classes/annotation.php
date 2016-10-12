@@ -66,7 +66,7 @@ class annotation extends data_object
 
     public function save()
     {
-        $db = loader::getdb();
+        $db = db::get();
 
         $this->fields['id_element'] = md5(sprintf("%04d%04d%s", $this->fields['id_module'], $this->fields['id_object'], $this->fields['id_record']));
 
@@ -110,7 +110,7 @@ class annotation extends data_object
 
     public function delete()
     {
-        $db = loader::getdb();
+        $db = db::get();
 
         $select =   "
                     SELECT  *
@@ -143,7 +143,7 @@ class annotation extends data_object
 
     public static function getnb($id_object, $id_record, $id_user = -1, $id_workspace = -1, $id_module = -1)
     {
-        $db = loader::getdb();
+        $db = db::get();
 
         if ($id_user == -1) $id_user = $_SESSION['ploopi']['userid'];
         if ($id_workspace == -1) $id_workspace = $_SESSION['ploopi']['workspaceid'];
@@ -201,7 +201,7 @@ class annotation extends data_object
 
     public static function display_refresh($id_annotation)
     {
-        $db = loader::getdb();
+        $db = db::get();
 
         $id_object = $_SESSION['annotation'][$id_annotation]['id_object'];
         $id_record = $_SESSION['annotation'][$id_annotation]['id_record'];
@@ -376,7 +376,7 @@ class annotation_tag extends data_object
 
     public function delete()
     {
-        $db = loader::getdb();
+        $db = db::get();
 
         $select =   "
                     SELECT  count(*) as c

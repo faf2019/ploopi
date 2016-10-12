@@ -30,17 +30,17 @@
  * @author Stéphane Escaich
  */
 
-echo $skin->create_pagetitle(ploopi\str::htmlentities($_SESSION['ploopi']['modulelabel']));
-echo $skin->open_simplebloc('Statistiques');
+echo ploopi\skin::get()->create_pagetitle(ploopi\str::htmlentities($_SESSION['ploopi']['modulelabel']));
+echo ploopi\skin::get()->open_simplebloc('Statistiques');
 
 $intYearSel = (empty($_GET['webedit_yearsel']) || !is_numeric($_GET['webedit_yearsel'])) ? date('Y') : $_GET['webedit_yearsel'];
 $intMonthSel = (empty($_GET['webedit_monthsel']) || empty($_GET['webedit_yearsel'])  || !is_numeric($_GET['webedit_monthsel']) || !is_numeric($_GET['webedit_yearsel'])) ? '' : $_GET['webedit_monthsel'];
 
-$rs = ploopi\loader::getdb()->query("SELECT distinct(year) FROM ploopi_mod_webedit_counter WHERE id_module = {$_SESSION['ploopi']['moduleid']} ORDER BY year");
-$arrSelectYear = ploopi\loader::getdb()->getarray($rs, true);
+$rs = ploopi\db::get()->query("SELECT distinct(year) FROM ploopi_mod_webedit_counter WHERE id_module = {$_SESSION['ploopi']['moduleid']} ORDER BY year");
+$arrSelectYear = ploopi\db::get()->getarray($rs, true);
 
-$rs = ploopi\loader::getdb()->query("SELECT distinct(month) FROM ploopi_mod_webedit_counter WHERE id_module = {$_SESSION['ploopi']['moduleid']} AND year = {$intYearSel} ORDER BY month");
-$arrSelectMonth = ploopi\loader::getdb()->getarray($rs, true);
+$rs = ploopi\db::get()->query("SELECT distinct(month) FROM ploopi_mod_webedit_counter WHERE id_module = {$_SESSION['ploopi']['moduleid']} AND year = {$intYearSel} ORDER BY month");
+$arrSelectMonth = ploopi\db::get()->getarray($rs, true);
 
 // aucun mois sélectionné
 if (empty($intMonthSel))
@@ -93,7 +93,7 @@ $arrHeadings = webedit_getheadings();
         $legend[$key] = $value;
     }
 
-    ploopi\loader::getdb()->query(
+    ploopi\db::get()->query(
         "
         SELECT  month,
                 sum(hits) as c
@@ -104,7 +104,7 @@ $arrHeadings = webedit_getheadings();
         ORDER BY month
         ");
 
-    while ($row = ploopi\loader::getdb()->fetchrow())
+    while ($row = ploopi\db::get()->fetchrow())
     {
         $dataset[$row['month']] = $row['c'];
         $dataset2[$row['month']] = $row['c']-10;
@@ -128,7 +128,7 @@ $arrHeadings = webedit_getheadings();
         $legend[$d] = substr($ploopi_days[$weekday],0,2).'<br />'.$d;
     }
 
-    ploopi\loader::getdb()->query(
+    ploopi\db::get()->query(
         "
         SELECT  day,
                 sum(hits) as c
@@ -140,7 +140,7 @@ $arrHeadings = webedit_getheadings();
         ORDER BY day
         ");
 
-    while ($row = ploopi\loader::getdb()->fetchrow()) $dataset[$row['day']] = $row['c'];
+    while ($row = ploopi\db::get()->fetchrow()) $dataset[$row['day']] = $row['c'];
 
     $objBarChartMonth = new ploopi\barchart(700, 150, array('padding' => 1));
     $objBarChartMonth->setvalues($dataset, 'Fréquentation quotidienne', '#4FA11E', '#f0f0f0');
@@ -160,7 +160,7 @@ $arrHeadings = webedit_getheadings();
     <?php
     // Recherche des articles les plus consultés
 
-    ploopi\loader::getdb()->query(
+    ploopi\db::get()->query(
         "
         SELECT      c.id_article,
                     sum(c.hits) as counter,
@@ -214,7 +214,7 @@ $arrHeadings = webedit_getheadings();
 
     $c = 0;
 
-    while ($row = ploopi\loader::getdb()->fetchrow())
+    while ($row = ploopi\db::get()->fetchrow())
     {
         $arrParents = array();
         if (isset($arrHeadings['list'][$row['id_heading']])) foreach(preg_split('/;/', $arrHeadings['list'][$row['id_heading']]['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
@@ -245,7 +245,7 @@ $arrHeadings = webedit_getheadings();
         <h1>Articles les plus visités pour <em><?php echo $ploopi_months[$intMonthSel] ?> <?php echo $intYearSel ?></em> (nombre de visites)</h1>
         <div style="border-top:1px solid #c0c0c0;">
         <?php
-        $skin->display_array(
+        ploopi\skin::get()->display_array(
             $columns,
             $values,
             'webedit_array_stats_articles',
@@ -262,7 +262,7 @@ $arrHeadings = webedit_getheadings();
     <?php
     // Recherche des rubriques les plus consultées
 
-    ploopi\loader::getdb()->query(
+    ploopi\db::get()->query(
         "
         SELECT      h.id,
                     h.label,
@@ -307,7 +307,7 @@ $arrHeadings = webedit_getheadings();
 
     $c = 0;
 
-    while ($row = ploopi\loader::getdb()->fetchrow())
+    while ($row = ploopi\db::get()->fetchrow())
     {
         $arrParents = array();
         foreach(preg_split('/;/', $row['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
@@ -333,7 +333,7 @@ $arrHeadings = webedit_getheadings();
         <h1>Rubriques les plus visités pour <em><?php echo $ploopi_months[$intMonthSel] ?> <?php echo $intYearSel ?></em> (nombre de visites)</h1>
         <div style="border-top:1px solid #c0c0c0;">
         <?php
-        $skin->display_array(
+        ploopi\skin::get()->display_array(
             $columns,
             $values,
             'webedit_array_stats_headings',
@@ -349,5 +349,5 @@ $arrHeadings = webedit_getheadings();
 </div>
 
 <?php
-echo $skin->close_simplebloc();
+echo ploopi\skin::get()->close_simplebloc();
 ?>

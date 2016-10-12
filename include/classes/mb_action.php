@@ -65,7 +65,7 @@ class mb_action extends data_object
 
     function save()
     {
-        $db = loader::getdb();
+        $db = db::get();
 
         if ($this->new && ($this->fields['id_action'] == '' || $this->fields['id_action'] <= 0))
         {
@@ -86,7 +86,7 @@ class mb_action extends data_object
     {
         include_once './include/classes/role.php';
 
-        $db = loader::getdb();
+        $db = db::get();
 
         if ($this->fields['id_action']!=-1 && !$preserve_data)
         {

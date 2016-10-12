@@ -71,7 +71,7 @@ switch($_REQUEST['ploopi_op'])
         $intIdRes = $objResource->save();
 
         // suppression des espaces déjà rattachés
-        ploopi\loader::getdb()->query("
+        ploopi\db::get()->query("
             DELETE FROM ploopi_mod_booking_resource_workspace
             WHERE       id_resource = {$intIdRes}
         ");
@@ -125,12 +125,12 @@ switch($_REQUEST['ploopi_op'])
             <p>
                 <label>Type de ressource:</label>
                 <?php
-                ploopi\loader::getdb()->query("SELECT * FROM ploopi_mod_booking_resourcetype WHERE id_module = {$_SESSION['ploopi']['moduleid']} ORDER BY name");
+                ploopi\db::get()->query("SELECT * FROM ploopi_mod_booking_resourcetype WHERE id_module = {$_SESSION['ploopi']['moduleid']} ORDER BY name");
                 ?>
                 <select name="booking_resource_id_resourcetype" class="select">
                     <option value="">(Choisir)</option>
                     <?php
-                    while ($row = ploopi\loader::getdb()->fetchrow())
+                    while ($row = ploopi\db::get()->fetchrow())
                     {
                         ?>
                         <option value="<?php echo $row['id']; ?>" <?php if ($objResource->fields['id_resourcetype'] == $row['id']) echo 'selected="selected"'; ?>><?php echo ploopi\str::htmlentities($row['name']); ?></option>
@@ -187,7 +187,7 @@ switch($_REQUEST['ploopi_op'])
 
         $titre = ($_REQUEST['ploopi_op'] == 'booking_resource_add') ? 'Ajout' : 'Modification';
 
-        echo $skin->create_popup("{$titre} d'une ressource", $content, 'popup_resource');
+        echo ploopi\skin::get()->create_popup("{$titre} d'une ressource", $content, 'popup_resource');
         ploopi\system::kill();
     break;
 }

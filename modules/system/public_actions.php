@@ -33,8 +33,8 @@
 /**
  * Création du titre de la page
  */
-echo $skin->create_pagetitle(_PLOOPI_LABEL_MYWORKSPACE);
-echo $skin->open_simplebloc(_PLOOPI_LABEL_MYDATA);
+echo ploopi\skin::get()->create_pagetitle(_PLOOPI_LABEL_MYWORKSPACE);
+echo ploopi\skin::get()->open_simplebloc(_PLOOPI_LABEL_MYDATA);
 ?>
 <div style="padding:4px;">
 <?php
@@ -44,8 +44,8 @@ $green = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/check_on.
 
 $arrActions = array();
 
-ploopi\loader::getdb()->query("SELECT * FROM ploopi_mb_action");
-while ($fields = ploopi\loader::getdb()->fetchrow()) $arrActions[$fields['id_module_type']][$fields['id_action']] = $fields;
+ploopi\db::get()->query("SELECT * FROM ploopi_mb_action");
+while ($fields = ploopi\db::get()->fetchrow()) $arrActions[$fields['id_module_type']][$fields['id_action']] = $fields;
 
 $num_array = 0;
 
@@ -53,7 +53,7 @@ foreach ($_SESSION['ploopi']['workspaces'] as $group)
 {
     if (!empty($group['adminlevel']) && $group['id'] != _PLOOPI_SYSTEMGROUP)
     {
-        echo $skin->open_simplebloc(ploopi\str::htmlentities("Espace « {$group['label']} »"));
+        echo ploopi\skin::get()->open_simplebloc(ploopi\str::htmlentities("Espace « {$group['label']} »"));
 
         $columns = array();
         $values = array();
@@ -87,11 +87,11 @@ foreach ($_SESSION['ploopi']['workspaces'] as $group)
             }
         }
 
-        $skin->display_array($columns, $values, 'system_actions_list'.$num_array);
-        echo $skin->close_simplebloc();
+        ploopi\skin::get()->display_array($columns, $values, 'system_actions_list'.$num_array);
+        echo ploopi\skin::get()->close_simplebloc();
         $num_array++;
     }
 }
 ?>
 </div>
-<?php echo $skin->close_simplebloc(); ?>
+<?php echo ploopi\skin::get()->close_simplebloc(); ?>

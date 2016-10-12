@@ -74,9 +74,9 @@ foreach($load as $key => $l)
             WHERE       ts >= {$l['ts']}
             ";
 
-    ploopi\loader::getdb()->query($sql);
+    ploopi\db::get()->query($sql);
 
-    if ($row = ploopi\loader::getdb()->fetchrow())
+    if ($row = ploopi\db::get()->fetchrow())
     {
         $load[$key]['res'] = $row;
         $load[$key]['res']['load'] = ($row['total_exec_time'] / ($l['time']*10)) / _PLOOPI_LOAD_NBCORE; // charge (ratio tps d'exec/tps écoulé) en %
@@ -104,7 +104,7 @@ $columns['left']['rps'] = array('label' => 'Requêtes/s', 'width' => 100, 'style'
 $columns['left']['pps'] = array('label' => 'Pages/s', 'width' => 100, 'style' => 'text-align:right;');
 $columns['left']['bw'] = array('label' => 'Bande passante (ko)', 'width' => 150, 'style' => 'text-align:right;');
 
-ploopi\loader::getdb()->query($sql);
+ploopi\db::get()->query($sql);
 
 $c = 0;
 // Calcul Charge :
@@ -131,11 +131,11 @@ foreach($load as $key => $l)
     <span>Charge du système en temps réel (nombre de coeurs : <?php echo _PLOOPI_LOAD_NBCORE; ?>)&nbsp;&nbsp;</span><img src="./img/loading.gif" style="visibility:hidden;" id="system_serverload_loading"/>
 </p>
 <?php
-$skin->display_array($columns, $values, 'array_load');
+ploopi\skin::get()->display_array($columns, $values, 'array_load');
 
 // Analyse des x dernières requêtes
 
-ploopi\loader::getdb()->query( "
+ploopi\db::get()->query( "
             SELECT  ts,
                     browser,
                     system,
@@ -170,7 +170,7 @@ $columns['auto']['uri'] = array('label' => 'URI');
 
 $c = 0;
 
-while ($row = ploopi\loader::getdb()->fetchrow())
+while ($row = ploopi\db::get()->fetchrow())
 {
     $ldate = ploopi\date::timestamp2local($row['ts']);
     $values[$c]['values']['ts'] = array('label' => ploopi\str::htmlentities("{$ldate['date']} {$ldate['time']}"), 'sort_label' => $row['ts']);
@@ -193,5 +193,5 @@ while ($row = ploopi\loader::getdb()->fetchrow())
     Historique : <?php echo $intMaxRequests; ?> dernières requêtes
 </div>
 <?php
-$skin->display_array($columns, $values, 'array_requests');
+ploopi\skin::get()->display_array($columns, $values, 'array_requests');
 ?>

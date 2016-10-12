@@ -75,7 +75,7 @@ class group extends data_object
 
     public function delete()
     {
-        $db = loader::getdb();
+        $db = db::get();
 
         if ($this->fields['id'] != -1 && !$this->fields['system'])
         {
@@ -95,7 +95,7 @@ class group extends data_object
 
     public function getchildren()
     {
-        $db = loader::getdb();
+        $db = db::get();
 
         $rs = $db->query("SELECT id FROM ploopi_group WHERE system = 0 AND parents = '{$this->fields['parents']};{$this->fields['id']}' OR parents LIKE '{$this->fields['parents']};{$this->fields['id']};%'");
 
@@ -110,7 +110,7 @@ class group extends data_object
 
     public function getbrothers()
     {
-        $db = loader::getdb();
+        $db = db::get();
 
         $rs = $db->query("
             SELECT  id
@@ -154,7 +154,7 @@ class group extends data_object
 
     public function getusers()
     {
-        $db = loader::getdb();
+        $db = db::get();
 
         $users = array();
 
@@ -182,7 +182,7 @@ class group extends data_object
      */
     public function countusers()
     {
-        $db = loader::getdb();
+        $db = db::get();
 
         $result = $db->query("
             SELECT  count(id_user) as c
@@ -223,7 +223,7 @@ class group extends data_object
     {
         include_once './include/classes/workspace.php';
 
-        $db = loader::getdb();
+        $db = db::get();
 
         $workspace_group = new workspace_group();
         $workspace_group->fields['id_group'] = $this->fields['id'];
@@ -241,7 +241,7 @@ class group extends data_object
 
     public function getactions($actions = null)
     {
-        $db = loader::getdb();
+        $db = db::get();
 
         $select =   "
                     SELECT      ploopi_workspace_group_role.id_workspace,

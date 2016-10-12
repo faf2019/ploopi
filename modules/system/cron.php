@@ -35,7 +35,7 @@
 $strTsDelete = ploopi\date::timestamp_add(ploopi\date::createtimestamp(), 0, 0, 0, 0, -7, 0);
 
 // suppression des données périmées
-ploopi\loader::getdb()->query("DELETE FROM `ploopi_log` WHERE ts < {$strTsDelete}");
+ploopi\db::get()->query("DELETE FROM `ploopi_log` WHERE ts < {$strTsDelete}");
 
 // optimisation des tables
-ploopi\loader::getdb()->query("OPTIMIZE TABLE `ploopi_log`");
+ploopi\db::get()->query("OPTIMIZE TABLE `ploopi_log`");

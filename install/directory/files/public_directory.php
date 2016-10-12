@@ -34,7 +34,7 @@
  * Habillage global de l'annuaire
  */
 
-echo $skin->open_simplebloc(ploopi\str::htmlentities($title));
+echo ploopi\skin::get()->open_simplebloc(ploopi\str::htmlentities($title));
 ?>
 <div style="padding:4px;background-color:#e0e0e0;border-bottom:2px solid #c0c0c0;">
 <?php echo $desc; ?>
@@ -52,9 +52,9 @@ $sql =  "
         FROM    ploopi_mod_directory_favorites
         WHERE   id_user = {$_SESSION['ploopi']['userid']}
         ";
-ploopi\loader::getdb()->query($sql);
+ploopi\db::get()->query($sql);
 
-while ($row = ploopi\loader::getdb()->fetchrow())
+while ($row = ploopi\db::get()->fetchrow())
 {
     if ($row['id_contact']) $favorites["contact_{$row['id_contact']}"] = $row;
     if ($row['id_ploopi_user']) $favorites["user_{$row['id_ploopi_user']}"] = $row;
@@ -176,10 +176,10 @@ switch($_SESSION['directory']['directoryTabItem'])
                 AND     id_heading = 0
                 ";
 
-        ploopi\loader::getdb()->query($sql);
+        ploopi\db::get()->query($sql);
 
         $c = 0;
-        while ($row = ploopi\loader::getdb()->fetchrow())
+        while ($row = ploopi\db::get()->fetchrow())
         {
             $email = ($row['email']) ? '<a href="mailto:'.ploopi\str::htmlentities($row['email']).'" title="'.ploopi\str::htmlentities(_DIRECTORY_SEND_EMAIL.': '.$row['email']).'"><img src="./modules/directory/img/ico_email.png"></a>' : '';
 
@@ -205,7 +205,7 @@ switch($_SESSION['directory']['directoryTabItem'])
             $c++;
         }
 
-        $skin->display_array($arrColumns, $arrValues, 'array_directory', array('sortable' => true, 'orderby_default' => 'name', 'limit' => ploopi\param::get('directory_pagesize')));
+        ploopi\skin::get()->display_array($arrColumns, $arrValues, 'array_directory', array('sortable' => true, 'orderby_default' => 'name', 'limit' => ploopi\param::get('directory_pagesize')));
     break;
 
     /**
@@ -253,10 +253,10 @@ switch($_SESSION['directory']['directoryTabItem'])
                 GROUP BY    u.id
                 ";
 
-        $res = ploopi\loader::getdb()->query($sql);
+        $res = ploopi\db::get()->query($sql);
 
         $c = 0;
-        while ($row = ploopi\loader::getdb()->fetchrow($res))
+        while ($row = ploopi\db::get()->fetchrow($res))
         {
             $email = ($row['email']) ? '<a href="mailto:'.ploopi\str::htmlentities($row['email']).'" title="'.ploopi\str::htmlentities(_DIRECTORY_SEND_EMAIL.': '.$row['email']).'"><img src="./modules/directory/img/ico_email.png"></a>' : '';
             $ticket = '<a href="javascript:void(0);" onclick="javascript:ploopi_tickets_new(event, null, null, null, '.$row['id'].');"><img title="'._DIRECTORY_SEND_TICKET.'" src="./modules/directory/img/ico_ticket.png"></a>';
@@ -297,7 +297,7 @@ switch($_SESSION['directory']['directoryTabItem'])
             $c++;
         }
 
-        $skin->display_array($arrColumns, $arrValues, 'array_directory', array('sortable' => true, 'orderby_default' => 'name', 'limit' => ploopi\param::get('directory_pagesize')));
+        ploopi\skin::get()->display_array($arrColumns, $arrValues, 'array_directory', array('sortable' => true, 'orderby_default' => 'name', 'limit' => ploopi\param::get('directory_pagesize')));
 
     break;
 
@@ -336,8 +336,8 @@ switch($_SESSION['directory']['directoryTabItem'])
                         ORDER BY    l.label
                         ";
 
-                ploopi\loader::getdb()->query($sql);
-                $arrLists = ploopi\loader::getdb()->getarray();
+                ploopi\db::get()->query($sql);
+                $arrLists = ploopi\db::get()->getarray();
                 foreach($arrLists as $row)
                 {
                     ?>
@@ -420,7 +420,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                 $words = '';
                 foreach($fulltext_array as $word)
                 {
-                    $word = ploopi\loader::getdb()->addslashes($word);
+                    $word = ploopi\db::get()->addslashes($word);
 
                     if ($words != "") $words .= " ";
                     $words .= "+{$word}*";
@@ -429,15 +429,15 @@ switch($_SESSION['directory']['directoryTabItem'])
                 $sql .= " AND ( MATCH(lastname,firstname,service,function,city,country,office,number,comments) AGAINST ('{$words}' IN BOOLEAN MODE)) ";
             }
 
-            if ($_SESSION['directory']['search']['lastname']) $sql .= " AND lastname LIKE '%".ploopi\loader::getdb()->addslashes($_SESSION['directory']['search']['lastname'])."%'";
-            if ($_SESSION['directory']['search']['firstname']) $sql .= " AND firstname LIKE '%".ploopi\loader::getdb()->addslashes($_SESSION['directory']['search']['firstname'])."%'";
-            if ($_SESSION['directory']['search']['service']) $sql .= " AND service LIKE '%".ploopi\loader::getdb()->addslashes($_SESSION['directory']['search']['service'])."%'";
-            if ($_SESSION['directory']['search']['function']) $sql .= " AND function LIKE '%".ploopi\loader::getdb()->addslashes($_SESSION['directory']['search']['function'])."%'";
-            if ($_SESSION['directory']['search']['city']) $sql .= " AND city LIKE '%".ploopi\loader::getdb()->addslashes($_SESSION['directory']['search']['city'])."%'";
-            if ($_SESSION['directory']['search']['country']) $sql .= " AND country LIKE '%".ploopi\loader::getdb()->addslashes($_SESSION['directory']['search']['country'])."%'";
+            if ($_SESSION['directory']['search']['lastname']) $sql .= " AND lastname LIKE '%".ploopi\db::get()->addslashes($_SESSION['directory']['search']['lastname'])."%'";
+            if ($_SESSION['directory']['search']['firstname']) $sql .= " AND firstname LIKE '%".ploopi\db::get()->addslashes($_SESSION['directory']['search']['firstname'])."%'";
+            if ($_SESSION['directory']['search']['service']) $sql .= " AND service LIKE '%".ploopi\db::get()->addslashes($_SESSION['directory']['search']['service'])."%'";
+            if ($_SESSION['directory']['search']['function']) $sql .= " AND function LIKE '%".ploopi\db::get()->addslashes($_SESSION['directory']['search']['function'])."%'";
+            if ($_SESSION['directory']['search']['city']) $sql .= " AND city LIKE '%".ploopi\db::get()->addslashes($_SESSION['directory']['search']['city'])."%'";
+            if ($_SESSION['directory']['search']['country']) $sql .= " AND country LIKE '%".ploopi\db::get()->addslashes($_SESSION['directory']['search']['country'])."%'";
 
-            ploopi\loader::getdb()->query($sql);
-            while ($row = ploopi\loader::getdb()->fetchrow()) $result[] = $row;
+            ploopi\db::get()->query($sql);
+            while ($row = ploopi\db::get()->fetchrow()) $result[] = $row;
         }
 
         $where = array();
@@ -447,12 +447,12 @@ switch($_SESSION['directory']['directoryTabItem'])
             $where[] = " ( MATCH(lastname,firstname,service,function,city,country,office,number,comments) AGAINST ('{$words}' IN BOOLEAN MODE))";
         }
 
-        if ($_SESSION['directory']['search']['lastname']) $where[] = " lastname LIKE '%".ploopi\loader::getdb()->addslashes($_SESSION['directory']['search']['lastname'])."%'";
-        if ($_SESSION['directory']['search']['firstname']) $where[] = " firstname LIKE '%".ploopi\loader::getdb()->addslashes($_SESSION['directory']['search']['firstname'])."%'";
-        if ($_SESSION['directory']['search']['service']) $where[] = " service LIKE '%".ploopi\loader::getdb()->addslashes($_SESSION['directory']['search']['service'])."%'";
-        if ($_SESSION['directory']['search']['function']) $where[] = " function LIKE '%".ploopi\loader::getdb()->addslashes($_SESSION['directory']['search']['function'])."%'";
-        if ($_SESSION['directory']['search']['city']) $where[] = " city LIKE '%".ploopi\loader::getdb()->addslashes($_SESSION['directory']['search']['city'])."%'";
-        if ($_SESSION['directory']['search']['country']) $where[] = " country LIKE '%".ploopi\loader::getdb()->addslashes($_SESSION['directory']['search']['country'])."%'";
+        if ($_SESSION['directory']['search']['lastname']) $where[] = " lastname LIKE '%".ploopi\db::get()->addslashes($_SESSION['directory']['search']['lastname'])."%'";
+        if ($_SESSION['directory']['search']['firstname']) $where[] = " firstname LIKE '%".ploopi\db::get()->addslashes($_SESSION['directory']['search']['firstname'])."%'";
+        if ($_SESSION['directory']['search']['service']) $where[] = " service LIKE '%".ploopi\db::get()->addslashes($_SESSION['directory']['search']['service'])."%'";
+        if ($_SESSION['directory']['search']['function']) $where[] = " function LIKE '%".ploopi\db::get()->addslashes($_SESSION['directory']['search']['function'])."%'";
+        if ($_SESSION['directory']['search']['city']) $where[] = " city LIKE '%".ploopi\db::get()->addslashes($_SESSION['directory']['search']['city'])."%'";
+        if ($_SESSION['directory']['search']['country']) $where[] = " country LIKE '%".ploopi\db::get()->addslashes($_SESSION['directory']['search']['country'])."%'";
 
         $where_sql = (empty($where)) ? '' : ' WHERE '.implode(' AND ', $where);
 
@@ -463,9 +463,9 @@ switch($_SESSION['directory']['directoryTabItem'])
                 {$where_sql}
                 ";
 
-        ploopi\loader::getdb()->query($sql);
+        ploopi\db::get()->query($sql);
 
-        while ($row = ploopi\loader::getdb()->fetchrow()) $result[] = $row;
+        while ($row = ploopi\db::get()->fetchrow()) $result[] = $row;
 
         if (sizeof($result)>200)
         {
@@ -560,7 +560,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                 $c++;
             }
 
-            $skin->display_array($arrColumns, $arrValues, 'array_directory', array('sortable' => true, 'orderby_default' => 'name', 'limit' => ploopi\param::get('directory_pagesize')));
+            ploopi\skin::get()->display_array($arrColumns, $arrValues, 'array_directory', array('sortable' => true, 'orderby_default' => 'name', 'limit' => ploopi\param::get('directory_pagesize')));
         }
     break;
 
@@ -593,7 +593,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                     <a href="<?php echo ploopi\crypt::urlencode("admin.php?directory_heading_id={$intHeadingId}&op=directory_heading_viewall"); ?>"><img src="./modules/directory/img/ico_viewall.png">Voir toutes les rubriques</a>
                 </div>
                 <div style="padding:10px;">
-                    <?php echo $skin->display_treeview($arrTreeview['list'], $arrTreeview['tree'], $intHeadingId, null, $op == 'directory_heading_viewall'); ?>
+                    <?php echo ploopi\skin::get()->display_treeview($arrTreeview['list'], $arrTreeview['tree'], $intHeadingId, null, $op == 'directory_heading_viewall'); ?>
                 </div>
             </div>
             <div class="directory_shared_heading" id="directory_shared_heading">
@@ -788,21 +788,21 @@ switch($_SESSION['directory']['directoryTabItem'])
                                                 {
                                                     $strIcon = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/ico_group.png\">";
 
-                                                    ploopi\loader::getdb()->query(
+                                                    ploopi\db::get()->query(
                                                         "SELECT label FROM ploopi_group WHERE id in (".implode(',',$arrWfUsers['group']).") ORDER BY label"
                                                     );
 
-                                                    while ($row = ploopi\loader::getdb()->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi\str::htmlentities($row['label'])."&nbsp;</span>";
+                                                    while ($row = ploopi\db::get()->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi\str::htmlentities($row['label'])."&nbsp;</span>";
                                                 }
                                                 if (!empty($arrWfUsers['user']))
                                                 {
                                                     $strIcon = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/ico_user.png\">";
 
-                                                    ploopi\loader::getdb()->query(
+                                                    ploopi\db::get()->query(
                                                         "SELECT concat(lastname, ' ', firstname) as name FROM ploopi_user WHERE id in (".implode(',',$arrWfUsers['user']).") ORDER BY lastname, firstname"
                                                     );
 
-                                                    while ($row = ploopi\loader::getdb()->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi\str::htmlentities($row['name'])."&nbsp;</span>";
+                                                    while ($row = ploopi\db::get()->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi\str::htmlentities($row['name'])."&nbsp;</span>";
                                                 }
                                             }
                                             else echo '<em>Aucune accréditation</em>';
@@ -848,21 +848,21 @@ switch($_SESSION['directory']['directoryTabItem'])
                                                     {
                                                         $strIcon = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/ico_group.png\">";
 
-                                                        ploopi\loader::getdb()->query(
+                                                        ploopi\db::get()->query(
                                                             "SELECT label FROM ploopi_group WHERE id in (".implode(',',$arrWfUsers['group']).") ORDER BY label"
                                                         );
 
-                                                        while ($row = ploopi\loader::getdb()->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi\str::htmlentities($row['label'])."&nbsp;</span>";
+                                                        while ($row = ploopi\db::get()->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi\str::htmlentities($row['label'])."&nbsp;</span>";
                                                     }
                                                     if (!empty($arrWfUsers['user']))
                                                     {
                                                         $strIcon = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/ico_user.png\">";
 
-                                                        ploopi\loader::getdb()->query(
+                                                        ploopi\db::get()->query(
                                                             "SELECT concat(lastname, ' ', firstname) as name FROM ploopi_user WHERE id in (".implode(',',$arrWfUsers['user']).") ORDER BY lastname, firstname"
                                                         );
 
-                                                        while ($row = ploopi\loader::getdb()->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi\str::htmlentities($row['name'])."&nbsp;</span>";
+                                                        while ($row = ploopi\db::get()->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi\str::htmlentities($row['name'])."&nbsp;</span>";
                                                     }
                                                 }
                                                 else echo '<em>Aucune accréditation</em>';
@@ -942,12 +942,12 @@ switch($_SESSION['directory']['directoryTabItem'])
                                     WHERE   id_heading = {$intHeadingId}
                                     ";
 
-                            $rs = ploopi\loader::getdb()->query($sql);
+                            $rs = ploopi\db::get()->query($sql);
 
-                            if (ploopi\loader::getdb()->numrows($rs))
+                            if (ploopi\db::get()->numrows($rs))
                             {
                                 $c = 0;
-                                while ($row = ploopi\loader::getdb()->fetchrow($rs))
+                                while ($row = ploopi\db::get()->fetchrow($rs))
                                 {
                                     $email = ($row['email']) ? '<a href="mailto:'.ploopi\str::htmlentities($row['email']).'" title="'.ploopi\str::htmlentities(_DIRECTORY_SEND_EMAIL.': '.$row['email']).'"><img src="./modules/directory/img/ico_email.png"></a>' : '';
 
@@ -974,9 +974,9 @@ switch($_SESSION['directory']['directoryTabItem'])
                                 }
                             }
 
-                            $skin->display_array($arrColumns, $arrValues, 'array_directory', array('sortable' => true, 'orderby_default' => 'position', 'limit' => ploopi\param::get('directory_pagesize')));
+                            ploopi\skin::get()->display_array($arrColumns, $arrValues, 'array_directory', array('sortable' => true, 'orderby_default' => 'position', 'limit' => ploopi\param::get('directory_pagesize')));
 
-                            if (!ploopi\loader::getdb()->numrows($rs))
+                            if (!ploopi\db::get()->numrows($rs))
                             {
                                 ?>
                                 <div style="padding:4px;text-align:center;">Il n'y a pas de contact rattaché à <?php printf("%s %s", ploopi\str::htmlentities($arrHeadingLabel[$intDepth][1]), ploopi\str::htmlentities($arrHeadingLabel[$intDepth][2])); ?></div>
@@ -1033,8 +1033,8 @@ switch($_SESSION['directory']['directoryTabItem'])
         $objSpeedDialing = new directory_speeddialing();
         $objSpeedDialing->init_description();
 
-        $arrHeadings = ploopi\loader::getdb()->getarray(
-            ploopi\loader::getdb()->query("
+        $arrHeadings = ploopi\db::get()->getarray(
+            ploopi\db::get()->query("
                 SELECT      distinct(ds.heading)
                 FROM        ploopi_mod_directory_speeddialing ds
                 ORDER BY    ds.label
@@ -1092,15 +1092,15 @@ switch($_SESSION['directory']['directoryTabItem'])
                 $arrColumns['actions_right']['actions'] = array('label' => '&nbsp;', 'width' => 42);
             }
 
-            $rs = ploopi\loader::getdb()->query("
+            $rs = ploopi\db::get()->query("
                 SELECT  *
                 FROM    ploopi_mod_directory_speeddialing
             ");
 
-            if (ploopi\loader::getdb()->numrows($rs))
+            if (ploopi\db::get()->numrows($rs))
             {
                 $c = 0;
-                while ($row = ploopi\loader::getdb()->fetchrow())
+                while ($row = ploopi\db::get()->fetchrow())
                 {
 
                     $arrValues[$c]['values']['heading'] = array('label' => ploopi\str::htmlentities($row['heading']), 'sort_label' => strtoupper(ploopi\str::convertaccents(sprintf("%-255s_%-255s", $row['heading'], $row['label']))));
@@ -1122,9 +1122,9 @@ switch($_SESSION['directory']['directoryTabItem'])
                 }
             }
 
-            $skin->display_array($arrColumns, $arrValues, 'array_directory_speeddialing', array('sortable' => true, 'orderby_default' => 'heading', 'limit' => ploopi\param::get('directory_pagesize')));
+            ploopi\skin::get()->display_array($arrColumns, $arrValues, 'array_directory_speeddialing', array('sortable' => true, 'orderby_default' => 'heading', 'limit' => ploopi\param::get('directory_pagesize')));
 
-            if (!ploopi\loader::getdb()->numrows($rs))
+            if (!ploopi\db::get()->numrows($rs))
             {
                 ?>
                 <div style="padding:4px;text-align:center;">Il n'y a pas de numéro abrégé</div>
@@ -1157,4 +1157,4 @@ switch($_SESSION['directory']['directoryTabItem'])
     <img style="margin:0 4px 0 10px;" src="./modules/directory/img/ico_ticket.png" /><span><?php echo _DIRECTORY_LEGEND_TICKET; ?></span>
 </p>
 
-<?php echo $skin->close_simplebloc(); ?>
+<?php echo ploopi\skin::get()->close_simplebloc(); ?>

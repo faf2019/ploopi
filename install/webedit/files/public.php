@@ -56,13 +56,13 @@ switch($op)
     break;
 
     default:
-        echo $skin->create_pagetitle(ploopi\str::htmlentities($_SESSION['ploopi']['modulelabel']));
-        echo $skin->open_simplebloc('Voir les articles');
+        echo ploopi\skin::get()->create_pagetitle(ploopi\str::htmlentities($_SESSION['ploopi']['modulelabel']));
+        echo ploopi\skin::get()->open_simplebloc('Voir les articles');
         $options = '';
         if (!empty($_REQUEST['headingid'])) $options = "&headingid={$_REQUEST['headingid']}";
         if (!empty($_REQUEST['articleid'])) $options = "&articleid={$_REQUEST['articleid']}";
         ?><iframe id="webedit_frame_editor" style="border:0;width:100%;height:400px;margin:0;padding:0;" src="<?php echo "index.php?moduleid={$_SESSION['ploopi']['moduleid']}{$options}&webedit_mode=render&type="; ?>"></iframe><?php
-        echo $skin->close_simplebloc();
+        echo ploopi\skin::get()->close_simplebloc();
     break;
 }
 ?>

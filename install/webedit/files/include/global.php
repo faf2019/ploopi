@@ -165,7 +165,7 @@ $heading_sortmodes =
 
 function webedit_getlastupdate($moduleid = -1)
 {
-    $db = ploopi\loader::getdb();
+    $db = ploopi\db::get();
 
     if ($moduleid == -1) $moduleid = $_SESSION['ploopi']['moduleid'];
 
@@ -194,7 +194,7 @@ function webedit_getlastupdate($moduleid = -1)
 
 function webedit_gettreeview($arrHeadings = array(), $articles = array(), $option = '', $moduleid = -1)
 {
-    $db = ploopi\loader::getdb();
+    $db = ploopi\db::get();
 
     if ($moduleid == -1) $moduleid = $_SESSION['ploopi']['moduleid'];
 
@@ -338,7 +338,7 @@ function webedit_gettreeview($arrHeadings = array(), $articles = array(), $optio
 
 function webedit_getheadings($moduleid = -1)
 {
-    $db = ploopi\loader::getdb();
+    $db = ploopi\db::get();
 
     if ($moduleid == -1) $moduleid = $_SESSION['ploopi']['moduleid'];
 
@@ -407,7 +407,7 @@ function webedit_getheadings($moduleid = -1)
 
 function webedit_getarticles($moduleid = -1, $booBlocs = false)
 {
-    $db = ploopi\loader::getdb();
+    $db = ploopi\db::get();
 
     $key = $booBlocs ? 'blocs' : 'articles';
     $sql_filter = $booBlocs ? ' AND ad.id_heading = 0 ' : ' AND ad.id_heading > 0 ';
@@ -819,7 +819,7 @@ function webedit_gettemplates()
 
 function webedit_getobjectcontent($matches)
 {
-    $db = ploopi\loader::getdb();
+    $db = ploopi\db::get();
 
     $content = '';
 
@@ -1017,7 +1017,7 @@ function webedit_sitemap()
 
     if (!$objCache->start())
     {
-        $db = ploopi\loader::getdb();
+        $db = ploopi\db::get();
 
         // récupération des rubriques
         $arrHeadings = webedit_getheadings();

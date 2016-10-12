@@ -21,10 +21,10 @@ $objWikiPage = new wiki_page();
 // cas particulier, recherche de root
 if ($strWikiPageId == '' || !$objWikiPage->open($strWikiPageId, $intIdModule))
 {
-    ploopi\loader::getdb()->query("SELECT id FROM ploopi_mod_wiki_page WHERE root = 1 AND id_module = {$intIdModule}");
-    if (ploopi\loader::getdb()->numrows())
+    ploopi\db::get()->query("SELECT id FROM ploopi_mod_wiki_page WHERE root = 1 AND id_module = {$intIdModule}");
+    if (ploopi\db::get()->numrows())
     {
-        $row = ploopi\loader::getdb()->fetchrow();
+        $row = ploopi\db::get()->fetchrow();
         $strWikiPageId = $row['id'];
         $objWikiPage->open($strWikiPageId, $intIdModule);
     }

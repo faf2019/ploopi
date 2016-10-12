@@ -115,7 +115,7 @@ if ($_SESSION['ploopi']['connected'])
             $content = ob_get_contents();
             ob_end_clean();
 
-            echo $skin->create_popup('Validation du profil utilisateur', $content, 'system_popup_update_profile');
+            echo ploopi\skin::get()->create_popup('Validation du profil utilisateur', $content, 'system_popup_update_profile');
 
             ?>
             <script type="text/javascript">
@@ -472,7 +472,7 @@ if ($_SESSION['ploopi']['connected'])
             $content = ob_get_contents();
             ob_end_clean();
 
-            echo $skin->create_popup('Validation du profil utilisateur', $content, 'system_popup_update_profile');
+            echo ploopi\skin::get()->create_popup('Validation du profil utilisateur', $content, 'system_popup_update_profile');
 
             ploopi\system::kill();
         break;
@@ -515,9 +515,9 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
             $arrData = array();
 
             if (!empty($strSql)) {
-                $res = ploopi\loader::getdb()->query($strSql);
+                $res = ploopi\db::get()->query($strSql);
 
-                while ($row = ploopi\loader::getdb()->fetchrow($res)) {
+                while ($row = ploopi\db::get()->fetchrow($res)) {
 
                     // on va chercher les espaces auxquels l'utilisateur peut accéder
                     $objUser = new ploopi\user();
@@ -819,7 +819,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
         case 'tickets_open_responses':
             if (isset($_GET['ticket_id']) && is_numeric($_GET['ticket_id']))
             {
-                $rootid = ploopi\loader::getdb()->addslashes($_GET['ticket_id']);
+                $rootid = ploopi\db::get()->addslashes($_GET['ticket_id']);
 
                 $sql =  "
                         SELECT      t.id,
@@ -854,9 +854,9 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                 $tickets = array();
                 $parents = array();
 
-                $rs = ploopi\loader::getdb()->query($sql);
+                $rs = ploopi\db::get()->query($sql);
 
-                while ($fields = ploopi\loader::getdb()->fetchrow($rs))
+                while ($fields = ploopi\db::get()->fetchrow($rs))
                 {
                     if (!isset($tickets[$fields['id']]))
                     {
@@ -926,12 +926,12 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
 
                             ploopi\user_action_log::record(_SYSTEM_ACTION_UPDATEMETABASE, $module_type->fields['label']);
 
-                            ploopi\loader::getdb()->query("DELETE FROM ploopi_mb_field WHERE id_module_type = {$_GET['idmoduletype']}");
-                            ploopi\loader::getdb()->query("DELETE FROM ploopi_mb_relation WHERE id_module_type = {$_GET['idmoduletype']}");
-                            ploopi\loader::getdb()->query("DELETE FROM ploopi_mb_schema WHERE id_module_type = {$_GET['idmoduletype']}");
-                            ploopi\loader::getdb()->query("DELETE FROM ploopi_mb_table WHERE id_module_type = {$_GET['idmoduletype']}");
-                            ploopi\loader::getdb()->query("DELETE FROM ploopi_mb_object WHERE id_module_type = {$_GET['idmoduletype']}");
-                            ploopi\loader::getdb()->query("DELETE FROM ploopi_mb_wce_object WHERE id_module_type = {$_GET['idmoduletype']}");
+                            ploopi\db::get()->query("DELETE FROM ploopi_mb_field WHERE id_module_type = {$_GET['idmoduletype']}");
+                            ploopi\db::get()->query("DELETE FROM ploopi_mb_relation WHERE id_module_type = {$_GET['idmoduletype']}");
+                            ploopi\db::get()->query("DELETE FROM ploopi_mb_schema WHERE id_module_type = {$_GET['idmoduletype']}");
+                            ploopi\db::get()->query("DELETE FROM ploopi_mb_table WHERE id_module_type = {$_GET['idmoduletype']}");
+                            ploopi\db::get()->query("DELETE FROM ploopi_mb_object WHERE id_module_type = {$_GET['idmoduletype']}");
+                            ploopi\db::get()->query("DELETE FROM ploopi_mb_wce_object WHERE id_module_type = {$_GET['idmoduletype']}");
 
                             $mbfile = "./install/{$module_type->fields['label']}/mb.xml";
 
@@ -1021,7 +1021,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                     case 'system_roleusers_search':
                         if (!isset($_GET['system_roleusers_filter'])) ploopi\system::kill();
 
-                        $cleanedfilter = ploopi\loader::getdb()->addslashes($_GET['system_roleusers_filter']);
+                        $cleanedfilter = ploopi\db::get()->addslashes($_GET['system_roleusers_filter']);
                         $userfilter = "(u.login LIKE '%{$cleanedfilter}%' OR u.firstname LIKE '%{$cleanedfilter}%' OR u.lastname LIKE '%{$cleanedfilter}%')";
 
                         $sql =  "
@@ -1041,8 +1041,8 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                                 ORDER BY    u.lastname, u.firstname
                                 ";
 
-                        ploopi\loader::getdb()->query($sql);
-                        $users = ploopi\loader::getdb()->getarray();
+                        ploopi\db::get()->query($sql);
+                        $users = ploopi\db::get()->getarray();
 
                         $groupfilter = "g.label LIKE '%{$cleanedfilter}%'";
 
@@ -1061,8 +1061,8 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                                 ORDER BY    g.label
                                 ";
 
-                        ploopi\loader::getdb()->query($sql);
-                        $groups = ploopi\loader::getdb()->getarray();
+                        ploopi\db::get()->query($sql);
+                        $groups = ploopi\db::get()->getarray();
 
                         if (empty($users) && empty($groups))
                         {
@@ -1169,7 +1169,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                             $content = ob_get_contents();
                             ob_end_clean();
 
-                            echo $skin->create_popup("Chargement d'une nouvelle photo", $content, 'popup_system_choose_photo');
+                            echo ploopi\skin::get()->create_popup("Chargement d'une nouvelle photo", $content, 'popup_system_choose_photo');
                         }
                         ploopi\system::kill();
                     break;

@@ -264,7 +264,7 @@ return;
 
 ploopi\module::init('wiki');
 
-echo $skin->create_pagetitle(ploopi\str::htmlentities($_SESSION['ploopi']['modulelabel']));
+echo ploopi\skin::get()->create_pagetitle(ploopi\str::htmlentities($_SESSION['ploopi']['modulelabel']));
 
 // Menu principal
 $strWikiMenu = isset($_GET['wiki_menu']) ? $_GET['wiki_menu'] : '';

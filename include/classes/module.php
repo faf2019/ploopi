@@ -64,7 +64,7 @@ class module extends data_object
 
     public function save()
     {
-        $db = loader::getdb();
+        $db = db::get();
 
         $res = -1;
 
@@ -99,7 +99,7 @@ class module extends data_object
     {
         include_once './include/classes/workspace.php';
 
-        $db = loader::getdb();
+        $db = db::get();
 
         if ($this->fields['id']!=-1)
         {
@@ -163,7 +163,7 @@ class module extends data_object
 
     public function getallworkspaces()
     {
-        $db = loader::getdb();
+        $db = db::get();
 
         $workspaces = array();
 
@@ -191,7 +191,7 @@ class module extends data_object
 
     public function getroles($shared = false)
     {
-        $db = loader::getdb();
+        $db = db::get();
 
         $roles = array();
 
@@ -220,7 +220,7 @@ class module extends data_object
 
     public function unlink($workspaceid)
     {
-        $db = loader::getdb();
+        $db = db::get();
 
         $sql =  "
                 DELETE

@@ -89,9 +89,9 @@ switch($op)
                     AND         t.id = t.root_id
                     ORDER BY    t.timestp DESC
                     ";
-            $rs = ploopi\loader::getdb()->query($sql);
+            $rs = ploopi\db::get()->query($sql);
 
-            while ($fields = ploopi\loader::getdb()->fetchrow($rs))
+            while ($fields = ploopi\db::get()->fetchrow($rs))
             {
                 $ld = ploopi\date::timestamp2local($fields['timestp']);
                 if (!$fields['opened']) $puce = '#ff2020';
@@ -152,11 +152,11 @@ switch($op)
 
                     ORDER BY    t.timestp DESC
                     ";
-            $rs = ploopi\loader::getdb()->query($sql);
+            $rs = ploopi\db::get()->query($sql);
 
             $tickets = array();
 
-            while ($fields = ploopi\loader::getdb()->fetchrow($rs))
+            while ($fields = ploopi\db::get()->fetchrow($rs))
             {
                 $tickets[$fields['id']]['fields'] = $fields;
                 $tickets[$fields['id']]['dest'][$fields['id_user']]['id'] = $fields['id_user'];

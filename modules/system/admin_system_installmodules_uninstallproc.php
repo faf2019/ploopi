@@ -51,10 +51,10 @@ if ($module_type->open($_GET['uninstallidmoduletype']))
 
     // DELETE TABLES
     $select = "SELECT * FROM ploopi_mb_table WHERE id_module_type = {$_GET['uninstallidmoduletype']}";
-    $rs = ploopi\loader::getdb()->query($select);
-    while ($fields = ploopi\loader::getdb()->fetchrow($rs))
+    $rs = ploopi\db::get()->query($select);
+    while ($fields = ploopi\db::get()->fetchrow($rs))
     {
-        ploopi\loader::getdb()->query("DROP TABLE IF EXISTS `{$fields['name']}`");
+        ploopi\db::get()->query("DROP TABLE IF EXISTS `{$fields['name']}`");
     }
 
     // DELETE MODULE TYPE, MODULES, ACTIONS, etc...

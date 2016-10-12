@@ -33,7 +33,7 @@
 /**
  * Ouverture du bloc
  */
-echo $skin->open_simplebloc(_SYSTEM_LABEL_CONNECTEDUSERS);
+echo ploopi\skin::get()->open_simplebloc(_SYSTEM_LABEL_CONNECTEDUSERS);
 
 if (isset($_GET['monitoring'])) header("Refresh: ".intval($_GET['monitoring'])."; URL=".ploopi\crypt::urlencode("admin.php?op=connectedusers&monitoring={$_GET['monitoring']}"));
 
@@ -61,9 +61,9 @@ $sql =  "
         LEFT JOIN   ploopi_module ON ploopi_connecteduser.module_id = ploopi_module.id
         ";
 
-ploopi\loader::getdb()->query($sql);
+ploopi\db::get()->query($sql);
 
-while($row = ploopi\loader::getdb()->fetchrow())
+while($row = ploopi\db::get()->fetchrow())
 {
     $date_local = ploopi\date::timestamp2local($row['timestp']);
 
@@ -86,7 +86,7 @@ while($row = ploopi\loader::getdb()->fetchrow())
 
 }
 
-$skin->display_array($columns, $values, 'array_connectedusers', array('sortable' => true, 'orderby_default' => 'timestp', 'sort_default' => 'DESC'));
+ploopi\skin::get()->display_array($columns, $values, 'array_connectedusers', array('sortable' => true, 'orderby_default' => 'timestp', 'sort_default' => 'DESC'));
 ?>
 
 <div style="padding:4px;text-align:right;">
@@ -107,4 +107,4 @@ else
 ?>
 </div>
 
-<?php echo $skin->close_simplebloc(); ?>
+<?php echo ploopi\skin::get()->close_simplebloc(); ?>

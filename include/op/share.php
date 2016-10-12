@@ -92,7 +92,7 @@ switch($ploopi_op)
         $filter = isset($_REQUEST['ploopi_share_userfilter']) ? $_REQUEST['ploopi_share_userfilter'] : '';
 
         // Recherche des espaces de travail qui supportent ce module, selon la vue inverse
-        $rs = ploopi\loader::getdb()->query("
+        $rs = ploopi\db::get()->query("
             SELECT  w.*
             FROM    ploopi_workspace w,
                     ploopi_module_workspace mw
@@ -103,7 +103,7 @@ switch($ploopi_op)
         ");
 
 
-        while ($row = ploopi\loader::getdb()->fetchrow($rs))
+        while ($row = ploopi\db::get()->fetchrow($rs))
         {
             $list['workspaces'][$row['id']]['label'] = $row['label'];
             $list['workspaces'][$row['id']]['priority'] = $row['priority'];
@@ -131,7 +131,7 @@ switch($ploopi_op)
             {
                 if ($words != '') $words .= ' ';
                 $word = trim($word);
-                if ($word != '') $words .= '+'.ploopi\loader::getdb()->addslashes($word).'*';
+                if ($word != '') $words .= '+'.ploopi\db::get()->addslashes($word).'*';
             }
 
             $userfilter = $words ? "(MATCH(u.lastname, u.firstname, u.login) AGAINST ('{$words}' IN BOOLEAN MODE))" : '1=1';
@@ -175,15 +175,15 @@ switch($ploopi_op)
                         ORDER BY    u.lastname, u.firstname
                         ";
 
-            ploopi\loader::getdb()->query($query_u);
-            while ($fields = ploopi\loader::getdb()->fetchrow())
+            ploopi\db::get()->query($query_u);
+            while ($fields = ploopi\db::get()->fetchrow())
             {
                 $list['users'][$fields['id']] = array('id' => $fields['id'], 'login' => $fields['login'], 'lastname' => $fields['lastname'], 'firstname' => $fields['firstname']);
                 $list['workspaces'][$fields['id_workspace']]['users'][$fields['id']] = $fields['id'];
             }
 
-            ploopi\loader::getdb()->query($query_g);
-            while ($fields = ploopi\loader::getdb()->fetchrow())
+            ploopi\db::get()->query($query_g);
+            while ($fields = ploopi\db::get()->fetchrow())
             {
                 $list['users'][$fields['id']] = array('id' => $fields['id'], 'login' => $fields['login'], 'lastname' => $fields['lastname'], 'firstname' => $fields['firstname']);
                 $list['groups'][$fields['id_group']]['users'][$fields['id']] = $fields['id'];
@@ -191,8 +191,8 @@ switch($ploopi_op)
 
             // Matching groupe/recherche
             if (!empty($list['groups'])) {
-                ploopi\loader::getdb()->query("SELECT id FROM ploopi_group g WHERE {$groupfilter} AND id IN (".implode(',', array_keys($list['groups'])).")");
-                while ($row = ploopi\loader::getdb()->fetchrow()) $list['groups'][$row['id']]['match'] = 1;
+                ploopi\db::get()->query("SELECT id FROM ploopi_group g WHERE {$groupfilter} AND id IN (".implode(',', array_keys($list['groups'])).")");
+                while ($row = ploopi\db::get()->fetchrow()) $list['groups'][$row['id']]['match'] = 1;
             }
 
             // Suppression des groupes vides et qui ne matchent pas la recherche

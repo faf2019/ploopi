@@ -83,7 +83,7 @@ if ($_SESSION['ploopi']['connected'])
                 <?php
                 $content = ob_get_contents();
                 ob_end_clean();
-                echo $skin->create_popup($title , $content, 'popup_directory_list_form');
+                echo ploopi\skin::get()->create_popup($title , $content, 'popup_directory_list_form');
                 ploopi\system::kill();
             break;
 
@@ -131,8 +131,8 @@ if ($_SESSION['ploopi']['connected'])
                         ORDER BY    l.label
                         ";
 
-                ploopi\loader::getdb()->query($sql);
-                $arrLists = ploopi\loader::getdb()->getarray();
+                ploopi\db::get()->query($sql);
+                $arrLists = ploopi\db::get()->getarray();
                 $isfav = false;
                 foreach($arrLists as $row) if ($row['nbfav']>0) {$isfav = true; break;}
 
@@ -226,7 +226,7 @@ if ($_SESSION['ploopi']['connected'])
                      * On affiche le popup
                      */
 
-                    echo $skin->create_popup("Modification d'un contact", $content, 'popup_directory_modify');
+                    echo ploopi\skin::get()->create_popup("Modification d'un contact", $content, 'popup_directory_modify');
                 }
 
                 ploopi\system::kill();
@@ -305,7 +305,7 @@ if ($_SESSION['ploopi']['connected'])
 
                 if (!empty($_GET['directory_favorites_id_user']) && is_numeric($_GET['directory_favorites_id_user']))
                 {
-                    ploopi\loader::getdb()->query("DELETE FROM ploopi_mod_directory_favorites WHERE id_ploopi_user = {$_GET['directory_favorites_id_user']} AND id_user = {$_SESSION['ploopi']['userid']} AND id_contact = 0");
+                    ploopi\db::get()->query("DELETE FROM ploopi_mod_directory_favorites WHERE id_ploopi_user = {$_GET['directory_favorites_id_user']} AND id_user = {$_SESSION['ploopi']['userid']} AND id_contact = 0");
                     if (isset($_POST['directory_favorites_id_list']) && is_array($_POST['directory_favorites_id_list']))
                     {
                         foreach($_POST['directory_favorites_id_list'] as $id_list)
@@ -321,7 +321,7 @@ if ($_SESSION['ploopi']['connected'])
                 }
                 elseif (!empty($_GET['directory_favorites_id_contact']) && is_numeric($_GET['directory_favorites_id_contact']))
                 {
-                    ploopi\loader::getdb()->query("DELETE FROM ploopi_mod_directory_favorites WHERE id_ploopi_user = 0 AND id_user = {$_SESSION['ploopi']['userid']} AND id_contact = {$_GET['directory_favorites_id_contact']}");
+                    ploopi\db::get()->query("DELETE FROM ploopi_mod_directory_favorites WHERE id_ploopi_user = 0 AND id_user = {$_SESSION['ploopi']['userid']} AND id_contact = {$_GET['directory_favorites_id_contact']}");
                     if (isset($_POST['directory_favorites_id_list']) && is_array($_POST['directory_favorites_id_list']))
                     {
                         foreach($_POST['directory_favorites_id_list'] as $id_list)
@@ -368,7 +368,7 @@ if ($_SESSION['ploopi']['connected'])
                 $content = ob_get_contents();
                 ob_end_clean();
 
-                echo $skin->create_popup("Chargement d'une nouvelle photo", $content, 'popup_directory_choose_photo');
+                echo ploopi\skin::get()->create_popup("Chargement d'une nouvelle photo", $content, 'popup_directory_choose_photo');
                 ploopi\system::kill();
             break;
 
@@ -424,12 +424,12 @@ if ($_SESSION['ploopi']['connected'])
                     if (!empty($_GET['directory_option']) && $_GET['directory_option'] == 'popup')
                     {
                         $treeview = directory_gettreeview(directory_getheadings(), true);
-                        echo $skin->display_treeview($treeview['list'], $treeview['tree'], null, 'pop_'.$_GET['directory_heading_id']);
+                        echo ploopi\skin::get()->display_treeview($treeview['list'], $treeview['tree'], null, 'pop_'.$_GET['directory_heading_id']);
                     }
                     else
                     {
                         $treeview = directory_gettreeview(directory_getheadings());
-                        echo $skin->display_treeview($treeview['list'], $treeview['tree'], null, $_GET['directory_heading_id']);
+                        echo ploopi\skin::get()->display_treeview($treeview['list'], $treeview['tree'], null, $_GET['directory_heading_id']);
                     }
                 }
                 ploopi\system::kill();
@@ -459,8 +459,8 @@ if ($_SESSION['ploopi']['connected'])
                 if (empty($_GET['directory_heading_id_heading']) || !is_numeric($_GET['directory_heading_id_heading']) || !$objHeading->open($_GET['directory_heading_id_heading']))
                 {
                     // calcul pos
-                    $rs = ploopi\loader::getdb()->query("SELECT max(position) AS maxpos FROM ploopi_mod_directory_heading WHERE id_heading = 0");
-                    $row = ploopi\loader::getdb()->fetchrow();
+                    $rs = ploopi\db::get()->query("SELECT max(position) AS maxpos FROM ploopi_mod_directory_heading WHERE id_heading = 0");
+                    $row = ploopi\db::get()->fetchrow();
 
                     if (!isset($row['maxpos'])) $row['maxpos'] = 0;
 
@@ -509,13 +509,13 @@ if ($_SESSION['ploopi']['connected'])
                 $arrTreeview = directory_gettreeview($arrHeadings, true);
                 ?>
                 <div style="height:150px;overflow:auto;padding:4px;">
-                <?php echo $skin->display_treeview($arrTreeview['list'], $arrTreeview['tree'], 'pop_'.$_GET['directory_heading_id'], null, false); ?>
+                <?php echo ploopi\skin::get()->display_treeview($arrTreeview['list'], $arrTreeview['tree'], 'pop_'.$_GET['directory_heading_id'], null, false); ?>
                 </div>
                 <?php
                 $content = ob_get_contents();
                 ob_end_clean();
 
-                echo $skin->create_popup("Choix d'une rubrique", $content, 'popup_directory_heading_choose');
+                echo ploopi\skin::get()->create_popup("Choix d'une rubrique", $content, 'popup_directory_heading_choose');
 
                 ploopi\system::kill();
             break;
@@ -556,8 +556,8 @@ if ($_SESSION['ploopi']['connected'])
                     $objSpeedDialing = new directory_speeddialing();
                     if (empty($_GET['directory_speeddialing_id']) || !is_numeric($_GET['directory_speeddialing_id']) || !$objSpeedDialing->open($_GET['directory_speeddialing_id'])) ploopi\system::kill();
 
-                    $arrHeadings = ploopi\loader::getdb()->getarray(
-                        ploopi\loader::getdb()->query("
+                    $arrHeadings = ploopi\db::get()->getarray(
+                        ploopi\db::get()->query("
                             SELECT      distinct(ds.heading)
                             FROM        ploopi_mod_directory_speeddialing ds
                             ORDER BY    ds.label
@@ -599,7 +599,7 @@ if ($_SESSION['ploopi']['connected'])
                     $content = ob_get_contents();
                     ob_end_clean();
 
-                    echo $skin->create_popup("Modification d'un numéro", $content, 'popup_directory_speeddialing_modify');
+                    echo ploopi\skin::get()->create_popup("Modification d'un numéro", $content, 'popup_directory_speeddialing_modify');
                 }
 
                 ploopi\system::kill();
@@ -639,8 +639,8 @@ if ($_SESSION['ploopi']['connected'])
                             if (isset($arrContact['lastname']) && isset($arrContact['firstname']))
                             {
                                 // Vérification de doublon
-                                ploopi\loader::getdb()->query("SELECT * FROM ploopi_mod_directory_contact WHERE id_heading = ".$_GET['directory_heading_id']." AND lastname = '".addslashes($arrContact['lastname'])."' AND firstname = '".addslashes($arrContact['firstname'])."'");
-                                if (ploopi\loader::getdb()->numrows() == 0)
+                                ploopi\db::get()->query("SELECT * FROM ploopi_mod_directory_contact WHERE id_heading = ".$_GET['directory_heading_id']." AND lastname = '".addslashes($arrContact['lastname'])."' AND firstname = '".addslashes($arrContact['firstname'])."'");
+                                if (ploopi\db::get()->numrows() == 0)
                                 {
                                     $objContact = new directory_contact();
 
@@ -751,7 +751,7 @@ if ($_SESSION['ploopi']['connected'])
                     WHERE   id_heading = {$_GET['directory_heading_id']}
                 ";
 
-                $rs = ploopi\loader::getdb()->query($sql);
+                $rs = ploopi\db::get()->query($sql);
 
                 $strFormat = strtolower($_GET['directory_format']);
 
@@ -760,17 +760,17 @@ if ($_SESSION['ploopi']['connected'])
                 switch($_GET['directory_format'])
                 {
                     case 'xls':
-                        echo ploopi\arr::toexcel(ploopi\loader::getdb()->getarray());
+                        echo ploopi\arr::toexcel(ploopi\db::get()->getarray());
                     break;
 
                     case 'csv':
-                        echo ploopi\arr::tocsv(ploopi\loader::getdb()->getarray());
+                        echo ploopi\arr::tocsv(ploopi\db::get()->getarray());
                     break;
 
                     default:
                         $strFormat = 'xml';
                     case 'xml':
-                        echo ploopi\arr::toxml(ploopi\loader::getdb()->getarray(), 'contacts', 'contact');
+                        echo ploopi\arr::toxml(ploopi\db::get()->getarray(), 'contacts', 'contact');
                     break;
                 }
 

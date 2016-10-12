@@ -242,7 +242,7 @@ $strName = ploopi\str::htmlentities(trim($usr->fields['lastname'].' '.$usr->fiel
                                 if (!empty($user_gp))
                                 {
 
-                                    ploopi\loader::getdb()->query("
+                                    ploopi\db::get()->query("
                                         SELECT      wgr.id_group,
                                                     wgr.id_workspace,
                                                     r.id,
@@ -260,10 +260,10 @@ $strName = ploopi\str::htmlentities(trim($usr->fields['lastname'].' '.$usr->fiel
                                         AND         wgr.id_workspace IN (".implode(',', array_keys($user_ws)).")
                                     ");
 
-                                    while ($row = ploopi\loader::getdb()->fetchrow()) $arrRoles["{$row['id_workspace']}_{$row['id']}"] = sprintf("%s : <strong>%s</strong> dans le module <strong>%s</strong>", ploopi\str::htmlentities($user_ws[$row['id_workspace']]['label']), ploopi\str::htmlentities($row['role_label']), ploopi\str::htmlentities($row['module_label']));
+                                    while ($row = ploopi\db::get()->fetchrow()) $arrRoles["{$row['id_workspace']}_{$row['id']}"] = sprintf("%s : <strong>%s</strong> dans le module <strong>%s</strong>", ploopi\str::htmlentities($user_ws[$row['id_workspace']]['label']), ploopi\str::htmlentities($row['role_label']), ploopi\str::htmlentities($row['module_label']));
 
                                     // recherche des rôles "utilisateur"
-                                    ploopi\loader::getdb()->query("
+                                    ploopi\db::get()->query("
                                         SELECT      wur.id_user,
                                                     wur.id_workspace,
                                                     r.id,
@@ -281,7 +281,7 @@ $strName = ploopi\str::htmlentities(trim($usr->fields['lastname'].' '.$usr->fiel
                                         AND         wur.id_workspace IN (".implode(',', array_keys($user_ws)).")
                                     ");
 
-                                    while ($row = ploopi\loader::getdb()->fetchrow()) $arrRoles["{$row['id_workspace']}_{$row['id']}"] = sprintf("%s : <strong>%s</strong> dans le module <strong>%s</strong>", ploopi\str::htmlentities($user_ws[$row['id_workspace']]['label']), ploopi\str::htmlentities($row['role_label']), ploopi\str::htmlentities($row['module_label']));
+                                    while ($row = ploopi\db::get()->fetchrow()) $arrRoles["{$row['id_workspace']}_{$row['id']}"] = sprintf("%s : <strong>%s</strong> dans le module <strong>%s</strong>", ploopi\str::htmlentities($user_ws[$row['id_workspace']]['label']), ploopi\str::htmlentities($row['role_label']), ploopi\str::htmlentities($row['module_label']));
                                 }
                             }
 
@@ -362,7 +362,7 @@ else
      * On affiche le popup
      */
 
-    echo $skin->create_popup($popup_title, $content, 'popup_directory_view');
+    echo ploopi\skin::get()->create_popup($popup_title, $content, 'popup_directory_view');
     ploopi\system::kill();
 }
 ?>

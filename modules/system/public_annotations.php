@@ -37,8 +37,8 @@
 switch($op)
 {
     default:
-        echo $skin->create_pagetitle(_PLOOPI_LABEL_MYWORKSPACE);
-        echo $skin->open_simplebloc(_PLOOPI_LABEL_MYANNOTATIONS); 
+        echo ploopi\skin::get()->create_pagetitle(_PLOOPI_LABEL_MYWORKSPACE);
+        echo ploopi\skin::get()->open_simplebloc(_PLOOPI_LABEL_MYANNOTATIONS); 
 
         $page = (empty($_GET['page'])) ? 1 : $_GET['page'];
         ?>
@@ -58,10 +58,10 @@ switch($op)
                             ORDER BY t.tag
                             ";
 
-                $rs = ploopi\loader::getdb()->query($select);
+                $rs = ploopi\db::get()->query($select);
                 $tags = array();
                 $max_c = 0;
-                while ($row = ploopi\loader::getdb()->fetchrow($rs))
+                while ($row = ploopi\db::get()->fetchrow($rs))
                 {
                     if (!empty($row['c']) && $row['c'] > $max_c) $max_c = $row['c'];
                     $tags[$row['id']] = $row;
@@ -100,7 +100,7 @@ switch($op)
 
                                 INNER JOIN  ploopi_annotation_tag at2
                                 ON          a.id = at2.id_annotation
-                                AND         at2.id_tag = '".ploopi\loader::getdb()->addslashes($_GET['idtag'])."'
+                                AND         at2.id_tag = '".ploopi\db::get()->addslashes($_GET['idtag'])."'
 
                                 LEFT JOIN   ploopi_annotation_tag at ON at.id_annotation = a.id
                                 LEFT JOIN   ploopi_tag t ON t.id = at.id_tag
@@ -135,9 +135,9 @@ switch($op)
                                 ";
                 }
 
-                $rs = ploopi\loader::getdb()->query($select);
+                $rs = ploopi\db::get()->query($select);
                 $arrAnnotations = array();
-                while ($row = ploopi\loader::getdb()->fetchrow($rs))
+                while ($row = ploopi\db::get()->fetchrow($rs))
                 {
                     if (!isset($arrAnnotations[$row['id']])) $arrAnnotations[$row['id']] = $row;
                     if (!is_null($row['tag'])) $arrAnnotations[$row['id']]['tags'][$row['tagid']] = $row['tag'];
@@ -190,7 +190,7 @@ switch($op)
                                                     $annotation['script']
                                         );
                     $ldate = ploopi\date::timestamp2local($annotation['date_annotation']);
-                    $color = (!isset($color) || $color == $skin->values['bgline2']) ? $skin->values['bgline1'] : $skin->values['bgline2'];
+                    $color = (!isset($color) || $color == ploopi\skin::get()->values['bgline2']) ? ploopi\skin::get()->values['bgline1'] : ploopi\skin::get()->values['bgline2'];
                     ?>
                     <div class="system_annotation_row" style="background-color:<?php echo $color; ?>">
                         <div class="system_annotation_title">
@@ -229,7 +229,7 @@ switch($op)
                 ?>
             </div>
         <?php
-        echo $skin->close_simplebloc();
+        echo ploopi\skin::get()->close_simplebloc();
     break;
 }
 ?>

@@ -114,7 +114,7 @@ function planning_get_resources()
 
 function planning_get_events($arrResources, $intTimepstpBegin = null, $intTimepstpEnd = null)
 {
-    $db = ploopi\loader::getdb();
+    $db = ploopi\db::get();
 
     $arrEvents = array();
 

@@ -50,8 +50,8 @@ if (!isset($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_module'])) $_SESSI
 if (!isset($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_date1'])) $_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_date1'] = '';
 if (!isset($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_date2'])) $_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_date2'] = '';
 
-echo $skin->create_pagetitle(_SYSTEM_LABEL_SEARCH);
-echo $skin->open_simplebloc('Formulaire de recherche');
+echo ploopi\skin::get()->create_pagetitle(_SYSTEM_LABEL_SEARCH);
+echo ploopi\skin::get()->open_simplebloc('Formulaire de recherche');
 ?>
 <form action="<?php echo ploopi\crypt::urlencode('admin.php?op=search_next'); ?>" onsubmit="javascript:system_search_next();return false;" method="post">
 <div class="dims_va" style="padding:4px;">
@@ -91,7 +91,7 @@ echo $skin->open_simplebloc('Formulaire de recherche');
 </div>
 
 <?php
-echo $skin->close_simplebloc();
+echo ploopi\skin::get()->close_simplebloc();
 ?>
 
 <script type="text/javascript">

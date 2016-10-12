@@ -60,8 +60,8 @@ if (!empty($_GET['docfile_md5id']) && empty($currentfolder))
     else ploopi\output::redirect("admin.php?doc_error=unknown_file"); // Fichier inconnu => redirection
 }
 
-echo $skin->create_pagetitle(ploopi\str::htmlentities($_SESSION['ploopi']['modulelabel']));
-echo $skin->open_simplebloc('Explorateur de documents');
+echo ploopi\skin::get()->create_pagetitle(ploopi\str::htmlentities($_SESSION['ploopi']['modulelabel']));
+echo ploopi\skin::get()->open_simplebloc('Explorateur de documents');
 
 if (ploopi\param::get('doc_explorer_displaytreeview'))
 {
@@ -75,7 +75,7 @@ if (ploopi\param::get('doc_explorer_displaytreeview'))
 
                 // Récupération de la structure du treeview
                 $arrTreeview = doc_gettreeview($arrFolders);
-                echo $skin->display_treeview($arrTreeview['list'], $arrTreeview['tree'], $currentfolder, -1);
+                echo ploopi\skin::get()->display_treeview($arrTreeview['list'], $arrTreeview['tree'], $currentfolder, -1);
                 ?>
             </div>
         </div>
@@ -165,9 +165,9 @@ else
                         {
                             doc_getshare();
 
-                            ploopi\loader::getdb()->query("SELECT id, name, foldertype, readonly, id_user FROM ploopi_mod_doc_folder WHERE id in ({$objFolder->fields['parents']},{$currentfolder}) ORDER BY length(parents)");
+                            ploopi\db::get()->query("SELECT id, name, foldertype, readonly, id_user FROM ploopi_mod_doc_folder WHERE id in ({$objFolder->fields['parents']},{$currentfolder}) ORDER BY length(parents)");
 
-                            while ($row = ploopi\loader::getdb()->fetchrow())
+                            while ($row = ploopi\db::get()->fetchrow())
                             {
                                 $allowed = false;
 
@@ -253,5 +253,5 @@ else
     ?>
 </div>
 <?php
-echo $skin->close_simplebloc();
+echo ploopi\skin::get()->close_simplebloc();
 ?>

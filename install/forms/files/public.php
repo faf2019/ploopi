@@ -84,7 +84,7 @@ if ($op == 'forms_print')
 
 $sqllimitgroup = ' AND ploopi_mod_forms_form.id_workspace IN ('.ploopi\system::viewworkspaces($_SESSION['ploopi']['moduleid']).')';
 
-echo $skin->create_pagetitle(ploopi\str::htmlentities($_SESSION['ploopi']['modulelabel']));
+echo ploopi\skin::get()->create_pagetitle(ploopi\str::htmlentities($_SESSION['ploopi']['modulelabel']));
 
 switch($op)
 {

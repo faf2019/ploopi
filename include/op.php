@@ -89,10 +89,10 @@ if (isset($_REQUEST['ploopi_op']))
             if (!isset($_REQUEST['ploopi_lostpassword_login']) && !isset($_REQUEST['ploopi_lostpassword_email'])) ploopi\system::kill();
 
             $arrWhere = array();
-            if (!empty($_REQUEST['ploopi_lostpassword_login'])) $arrWhere[] = "login = '".ploopi\loader::getdb()->addslashes($_REQUEST['ploopi_lostpassword_login'])."'";
-            if (!empty($_REQUEST['ploopi_lostpassword_email'])) $arrWhere[] = "email = '".ploopi\loader::getdb()->addslashes($_REQUEST['ploopi_lostpassword_email'])."'";
+            if (!empty($_REQUEST['ploopi_lostpassword_login'])) $arrWhere[] = "login = '".ploopi\db::get()->addslashes($_REQUEST['ploopi_lostpassword_login'])."'";
+            if (!empty($_REQUEST['ploopi_lostpassword_email'])) $arrWhere[] = "email = '".ploopi\db::get()->addslashes($_REQUEST['ploopi_lostpassword_email'])."'";
 
-            ploopi\loader::getdb()->query('
+            ploopi\db::get()->query('
                 SELECT  id,
                         email,
                         lastname,
@@ -103,14 +103,14 @@ if (isset($_REQUEST['ploopi_op']))
                 WHERE   '.implode(' AND ', $arrWhere)
             );
 
-            switch (ploopi\loader::getdb()->numrows())
+            switch (ploopi\db::get()->numrows())
             {
                 case 0: // erreur : inconnu
                     $intError = _PLOOPI_ERROR_LOSTPASSWORD_UNKNOWN;
                 break;
 
                 case 1: // ok
-                    $row = ploopi\loader::getdb()->fetchrow();
+                    $row = ploopi\db::get()->fetchrow();
                     if (!empty($row['email']))
                     {
 
@@ -599,15 +599,15 @@ if (isset($_REQUEST['ploopi_op']))
                     ORDER BY module_label, label
                 ";
 
-                $result_object = ploopi\loader::getdb()->query($select_object);
-                while ($fields_object = ploopi\loader::getdb()->fetchrow($result_object))
+                $result_object = ploopi\db::get()->query($select_object);
+                while ($fields_object = ploopi\db::get()->fetchrow($result_object))
                 {
                     if ($fields_object['select_label'] != '')
                     {
                         $select = "select {$fields_object['select_id']}, {$fields_object['select_label']} from {$fields_object['select_table']} where id_module = {$fields_object['module_id']} ORDER BY {$fields_object['select_label']}";
-                        ploopi\loader::getdb()->query($select);
+                        ploopi\db::get()->query($select);
 
-                        while ($fields = ploopi\loader::getdb()->fetchrow())
+                        while ($fields = ploopi\db::get()->fetchrow())
                         {
                             $fields_object['object_label'] = $fields[$fields_object['select_label']];
                             $array_modules["{$fields_object['id']},{$fields_object['module_id']},{$fields[$fields_object['select_id']]}"] = $fields_object;
@@ -660,15 +660,15 @@ if (isset($_REQUEST['ploopi_op']))
                     ORDER BY module_label, label
                 ";
 
-                $result_object = ploopi\loader::getdb()->query($select_object);
-                while ($fields_object = ploopi\loader::getdb()->fetchrow($result_object))
+                $result_object = ploopi\db::get()->query($select_object);
+                while ($fields_object = ploopi\db::get()->fetchrow($result_object))
                 {
                     if ($fields_object['select_label'] != '')
                     {
                         $select = "select {$fields_object['select_id']}, {$fields_object['select_label']} from {$fields_object['select_table']} where id_module = {$fields_object['module_id']} ORDER BY {$fields_object['select_label']}";
-                        ploopi\loader::getdb()->query($select);
+                        ploopi\db::get()->query($select);
 
-                        while ($fields = ploopi\loader::getdb()->fetchrow())
+                        while ($fields = ploopi\db::get()->fetchrow())
                         {
                             $fields_object['object_label'] = $fields[$fields_object['select_label']];
                             $array_modules["{$fields_object['id']},{$fields_object['module_id']},{$fields[$fields_object['select_id']]}"] = "{$fields_object['module_label']} » {$fields_object['label']} » {$fields_object['object_label']}";

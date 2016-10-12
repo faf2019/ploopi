@@ -38,8 +38,8 @@ $toolbar = array();
 
 $strSysVersion = '';
 
-ploopi\loader::getdb()->query('SELECT version FROM ploopi_module_type WHERE id = 1');
-$row = ploopi\loader::getdb()->fetchrow();
+ploopi\db::get()->query('SELECT version FROM ploopi_module_type WHERE id = 1');
+$row = ploopi\db::get()->fetchrow();
 
 /**
  * On compare la version des fichiers (_PLOOPI_VERSION) avec celle de la base de données.
@@ -87,7 +87,7 @@ $toolbar['tools'] =
 
 if (!empty($_GET['sysToolbarItem']))  $_SESSION['system']['sysToolbarItem'] = $_GET['sysToolbarItem'];
 if (!isset($_SESSION['system']['sysToolbarItem'])) $_SESSION['system']['sysToolbarItem'] = '';
-echo $skin->create_toolbar($toolbar,$_SESSION['system']['sysToolbarItem']);
+echo ploopi\skin::get()->create_toolbar($toolbar,$_SESSION['system']['sysToolbarItem']);
 ?>
 
 <div>
@@ -131,7 +131,7 @@ echo $skin->create_toolbar($toolbar,$_SESSION['system']['sysToolbarItem']);
                             </TR>
                             </TABLE>
                         <?php
-                        echo $skin->close_simplebloc();
+                        echo ploopi\skin::get()->close_simplebloc();
                     }
 
                 break;
@@ -156,22 +156,22 @@ echo $skin->create_toolbar($toolbar,$_SESSION['system']['sysToolbarItem']);
             switch($op)
             {
                 case 'phpinfo':
-                    echo $skin->open_simplebloc(_SYSTEM_LABEL_PHPINFO);
+                    echo ploopi\skin::get()->open_simplebloc(_SYSTEM_LABEL_PHPINFO);
                     ?>
                     <iframe id="system_tools_phpinfo" style="border:0;width:100%;height:400px;margin:0;padding:0;" src="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=system_tools_phpinfo"); ?>"></iframe>
                     <?php
-                    echo $skin->close_simplebloc();
+                    echo ploopi\skin::get()->close_simplebloc();
                 break;
 
                 case 'serverload':
-                    echo $skin->open_simplebloc(_SYSTEM_LABEL_SERVERLOAD);
+                    echo ploopi\skin::get()->open_simplebloc(_SYSTEM_LABEL_SERVERLOAD);
                     ?>
                     <div id="system_serverload">
                     <?php include './modules/system/tools_serverload.php'; ?>
                     </div>
                     <script type="text/javascript">system_serverload();</script>
                     <?php
-                    echo $skin->close_simplebloc();
+                    echo ploopi\skin::get()->close_simplebloc();
                 break;
 
                 case 'diagnostic':

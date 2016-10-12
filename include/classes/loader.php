@@ -54,7 +54,6 @@ abstract class loader
     private static $workspace = array(); // workspace sélectionné
 
 
-    private static $_objDb = null;
     private static $_arrLoaded = array();
 
     private static function _classToFile($strClassName) {
@@ -417,8 +416,6 @@ abstract class loader
 
     public static function dispatch()
     {
-        $db = loader::getdb();
-        global $skin;
         global $template_body;
         global $ploopi_timer;
         global $ploopi_viewmodes;
@@ -576,7 +573,7 @@ abstract class loader
 
     public static function start()
     {
-        $db = loader::getdb();
+        $db = db::get();
         global $ploopi_viewmodes;
         global $ploopi_system_levels;
 
@@ -586,8 +583,6 @@ abstract class loader
 
         if ((!empty($_REQUEST['ploopi_login']) && !empty($_REQUEST['ploopi_password'])))
         {
-
-
             $db->query("
                 SELECT      *
                 FROM        ploopi_user
@@ -614,7 +609,7 @@ abstract class loader
                 }
 
                 // Mot de passe erronné
-                if ($fields['password'] != user::generate_hash($_REQUEST['ploopi_password'], $_REQUEST['ploopi_login'])) {
+                if (!user::password_verify($_REQUEST['ploopi_password'], $_REQUEST['ploopi_login'], $fields['password'])) {
                     $objUser = new user();
                     $objUser->open($fields['id']);
                     $objUser->fields['failed_attemps']++;
@@ -1361,7 +1356,7 @@ abstract class loader
 
     public static function getworkspaces()
     {
-        $db = loader::getdb();
+        $db = db::get();
 
         include_once './include/classes/workspace.php';
 
@@ -1492,7 +1487,7 @@ abstract class loader
 
     public static function getmodules()
     {
-        $db = loader::getdb();
+        $db = db::get();
 
         $_SESSION['ploopi']['modules'] = array();
         $_SESSION['ploopi']['moduletypes'] = array();
@@ -1562,26 +1557,5 @@ abstract class loader
      */
 
     public static function getscript() { return self::$script; }
-
-    /**
-     * Retourne le connecteur vers la base de données
-
-     * @package ploopi
-     * @subpackage loader
-     * @copyright Ovensia
-     * @license GNU General Public License (GPL)
-     * @author Stéphane Escaich
-     * @return object
-     */
-
-    public static function getdb() {
-        if (!is_null(self::$_objDb)) return self::$_objDb;
-
-        $dbclass = __NAMESPACE__.'\\db_'._PLOOPI_SQL_LAYER;
-        self::$_objDb = new $dbclass(_PLOOPI_DB_SERVER, _PLOOPI_DB_LOGIN, _PLOOPI_DB_PASSWORD, _PLOOPI_DB_DATABASE);
-        if(!self::$_objDb->isconnected()) trigger_error(_PLOOPI_MSG_DBERROR, E_USER_ERROR);
-
-        return self::$_objDb;
-    }
 
 }

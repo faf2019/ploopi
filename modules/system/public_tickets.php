@@ -42,8 +42,8 @@ if (isset($_GET['sort'])) $_SESSION['tickets']['sort'] = $_GET['sort'];
 if (!isset($_SESSION['tickets']['sort'])) $_SESSION['tickets']['sort'] = 'datereply';
 $sort = $_SESSION['tickets']['sort'];
 
-echo $skin->create_pagetitle(_PLOOPI_LABEL_MYWORKSPACE);
-echo $skin->open_simplebloc(_PLOOPI_LABEL_MYTICKETS);
+echo ploopi\skin::get()->create_pagetitle(_PLOOPI_LABEL_MYWORKSPACE);
+echo ploopi\skin::get()->open_simplebloc(_PLOOPI_LABEL_MYTICKETS);
 
 $where = '';
 switch($filtertype)
@@ -157,11 +157,11 @@ $sql =  "
         {$orderby}
         ";
 
-$rs = ploopi\loader::getdb()->query($sql);
+$rs = ploopi\db::get()->query($sql);
 
 $tickets = array();
 
-while ($fields = ploopi\loader::getdb()->fetchrow($rs))
+while ($fields = ploopi\db::get()->fetchrow($rs))
 {
     $fields['status'] = _PLOOPI_TICKETS_DONE;
     if (!isset($tickets[$fields['id']])) $tickets[$fields['id']] = $fields;
@@ -193,9 +193,9 @@ if (!empty($ticket_list))
             WHERE       td.id_ticket IN ({$ticket_list})
             ";
 
-    $rs = ploopi\loader::getdb()->query($sql);
+    $rs = ploopi\db::get()->query($sql);
 
-    while ($fields = ploopi\loader::getdb()->fetchrow($rs))
+    while ($fields = ploopi\db::get()->fetchrow($rs))
     {
         if (!isset($tickets[$fields['id_ticket']]['dest'][$fields['id']]))
         {
@@ -325,7 +325,7 @@ if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
     $todaydate = ploopi\date::timestamp2local(ploopi\date::createtimestamp());
     if (!sizeof($tickets))
     {
-        $color = (!isset($color) || $color == $skin->values['bgline2']) ? $skin->values['bgline1'] : $skin->values['bgline2'];
+        $color = (!isset($color) || $color == ploopi\skin::get()->values['bgline2']) ? ploopi\skin::get()->values['bgline1'] : ploopi\skin::get()->values['bgline2'];
         ?>
         <div class="system_tickets_row" style="background-color:<?php echo $color; ?>;text-align:center;">
         <?php echo _SYSTEM_LABEL_NOTICKETS; ?>
@@ -355,7 +355,7 @@ if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
             $fields['script']
         );
 
-        $color = (!isset($color) || $color == $skin->values['bgline2']) ? $skin->values['bgline1'] : $skin->values['bgline2'];
+        $color = (!isset($color) || $color == ploopi\skin::get()->values['bgline2']) ? ploopi\skin::get()->values['bgline1'] : ploopi\skin::get()->values['bgline2'];
         $timestp = ploopi\date::timestamp2local($fields['timestp']);
         $timestp['date'] = ($todaydate['date'] == $timestp['date'])  ? "Aujourd'hui" : $timestp['date'];
         $fields['lastreply_timestp'];
@@ -599,4 +599,4 @@ if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
     <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/p_green.png" /><span>&nbsp;validé&nbsp;&nbsp;</span>
     <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/tickets/attachment.png" /><span>&nbsp;objet lié&nbsp;&nbsp;</span>
 </p>
-<?php echo $skin->close_simplebloc(); ?>
+<?php echo ploopi\skin::get()->close_simplebloc(); ?>

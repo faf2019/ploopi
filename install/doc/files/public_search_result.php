@@ -91,10 +91,10 @@ if (isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords']))
 
     if (!empty($arrRelevance)) $search[] = " f.md5id IN ('".implode("','",array_keys($arrRelevance))."') ";
 
-    if (!empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_name'])) $search[] = " f.name LIKE '%".ploopi\loader::getdb()->addslashes(trim($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_name']))."%' ";
-    if (!empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_filetype'])) $search[] = " e.filetype LIKE '%".ploopi\loader::getdb()->addslashes($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_filetype'])."%' ";
-    if (!empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_user'])) $search[] = " u.login LIKE '%".ploopi\loader::getdb()->addslashes(trim($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_user']))."%' ";
-    if (!empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_workspace'])) $search[] = " w.label LIKE '%".ploopi\loader::getdb()->addslashes(trim($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_workspace']))."%' ";
+    if (!empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_name'])) $search[] = " f.name LIKE '%".ploopi\db::get()->addslashes(trim($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_name']))."%' ";
+    if (!empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_filetype'])) $search[] = " e.filetype LIKE '%".ploopi\db::get()->addslashes($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_filetype'])."%' ";
+    if (!empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_user'])) $search[] = " u.login LIKE '%".ploopi\db::get()->addslashes(trim($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_user']))."%' ";
+    if (!empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_workspace'])) $search[] = " w.label LIKE '%".ploopi\db::get()->addslashes(trim($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_workspace']))."%' ";
 
     if (!empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date1']) && !empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date2'])) $search[] = " f.timestp_modify BETWEEN '".ploopi\date::local2timestamp($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date1'])."' AND '".ploopi\date::timestamp_add(ploopi\date::local2timestamp($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date2']),0,0,0,0,1)."'";
     else
@@ -150,11 +150,11 @@ if (isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords']))
             WHERE   {$strWhere}
         ";
 
-        ploopi\loader::getdb()->query($sql);
+        ploopi\db::get()->query($sql);
 
         $arrFolderList = array();
         $arrFolderList[] = 0;
-        while ($row = ploopi\loader::getdb()->fetchrow()) $arrFolderList[] = $row['id'];
+        while ($row = ploopi\db::get()->fetchrow()) $arrFolderList[] = $row['id'];
 
         // Tableau pour construire la clause WHERE
         $arrWhere = array();
@@ -205,7 +205,7 @@ if (isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords']))
                 WHERE       {$strWhere}
                 ";
 
-        ploopi\loader::getdb()->query($sql);
+        ploopi\db::get()->query($sql);
 
         $columns = array();
         $values = array();
@@ -266,10 +266,10 @@ if (isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords']))
 
         $columns['actions_right']['actions'] = array('label' => 'Actions', 'width' => $booConv ? '110' : '90');
 
-        if (ploopi\loader::getdb()->numrows())
+        if (ploopi\db::get()->numrows())
         {
             ?>
-            <div style="padding:4px;font-weight:bold;background-color:#f0f0f0;border-bottom:1px solid #c0c0c0;"><?php echo ploopi\loader::getdb()->numrows(); ?> fichier(s) trouvé(s)</div>
+            <div style="padding:4px;font-weight:bold;background-color:#f0f0f0;border-bottom:1px solid #c0c0c0;"><?php echo ploopi\db::get()->numrows(); ?> fichier(s) trouvé(s)</div>
             <?php
         }
         else
@@ -282,7 +282,7 @@ if (isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords']))
 
 
         // DISPLAY FILES
-        while ($row = ploopi\loader::getdb()->fetchrow())
+        while ($row = ploopi\db::get()->fetchrow())
         {
             if ($row['id_folder'] == 0) $row['fd_name'] = 'Racine';
 
@@ -391,7 +391,7 @@ if (isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords']))
             $c++;
         }
 
-        $skin->display_array($columns, $values, 'docsearch', array('sortable' => true, 'orderby_default' => 'pert', 'sort_default' => 'DESC', 'limit' => 100));
+        ploopi\skin::get()->display_array($columns, $values, 'docsearch', array('sortable' => true, 'orderby_default' => 'pert', 'sort_default' => 'DESC', 'limit' => 100));
     }
 }
 ?>

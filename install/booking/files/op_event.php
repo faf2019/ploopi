@@ -405,7 +405,7 @@ if ($_SESSION['ploopi']['connected'])
 
 
             // On vérifie si le traitement de la demandée est terminée en vérifiant les détails
-            ploopi\loader::getdb()->query("
+            ploopi\db::get()->query("
                 SELECT  count(*) as c
                 FROM    ploopi_mod_booking_event_detail
                 WHERE   id_event = {$objEvent->fields['id']}
@@ -413,7 +413,7 @@ if ($_SESSION['ploopi']['connected'])
                 AND     canceled = 0
             ");
 
-            $objEvent->fields['managed'] = (($row = ploopi\loader::getdb()->fetchrow()) && ($row['c'] == 0)) ? 1 : 0;
+            $objEvent->fields['managed'] = (($row = ploopi\db::get()->fetchrow()) && ($row['c'] == 0)) ? 1 : 0;
 
             $objEvent->save();
 
@@ -444,10 +444,10 @@ if ($_SESSION['ploopi']['connected'])
 
             if (empty($arrResources)) $arrResources = array(0);
 
-            ploopi\loader::getdb()->query("SELECT * FROM ploopi_mod_booking_subresource WHERE id_resource IN (".implode(',', array_keys($arrResources)).") AND active = 1 ORDER BY name");
+            ploopi\db::get()->query("SELECT * FROM ploopi_mod_booking_subresource WHERE id_resource IN (".implode(',', array_keys($arrResources)).") AND active = 1 ORDER BY name");
             ?>
             <script type="text/javascript">
-                booking_json_sr = <?php echo json_encode(ploopi\arr::map('ploopi\str::utf8encode', ploopi\loader::getdb()->getarray())); ?>;
+                booking_json_sr = <?php echo json_encode(ploopi\arr::map('ploopi\str::utf8encode', ploopi\db::get()->getarray())); ?>;
             </script>
             <?php
 
@@ -570,7 +570,7 @@ if ($_SESSION['ploopi']['connected'])
 
             include_once './modules/booking/include/global.php';
 
-            echo $skin->create_popup("Ajout d'une demande de réservation", $content, 'popup_event');
+            echo ploopi\skin::get()->create_popup("Ajout d'une demande de réservation", $content, 'popup_event');
             ploopi\system::kill();
         break;
 
@@ -751,10 +751,10 @@ switch($ploopi_op)
                 else $arrResources = array($objEvent->fields['id_resource'] => 1);
 
                 if (!empty($arrResources)) {
-                    ploopi\loader::getdb()->query("SELECT * FROM ploopi_mod_booking_subresource WHERE id_resource IN (".implode(',', array_keys($arrResources)).") AND active = 1 ORDER BY name");
+                    ploopi\db::get()->query("SELECT * FROM ploopi_mod_booking_subresource WHERE id_resource IN (".implode(',', array_keys($arrResources)).") AND active = 1 ORDER BY name");
                     ?>
                     <script type="text/javascript">
-                        booking_json_sr = <?php echo json_encode(ploopi\arr::map('ploopi\str::utf8encode', ploopi\loader::getdb()->getarray())); ?>;
+                        booking_json_sr = <?php echo json_encode(ploopi\arr::map('ploopi\str::utf8encode', ploopi\db::get()->getarray())); ?>;
                     </script>
                     <?php
                 }
@@ -1115,7 +1115,7 @@ switch($ploopi_op)
 
             include_once './modules/booking/include/global.php';
 
-            echo $skin->create_popup("Consultation d'une demande de réservation", $content, 'popup_event');
+            echo ploopi\skin::get()->create_popup("Consultation d'une demande de réservation", $content, 'popup_event');
         }
         ploopi\system::kill();
     break;

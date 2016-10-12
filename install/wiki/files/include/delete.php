@@ -36,12 +36,12 @@
  */
 
 $delete = "DELETE FROM ploopi_mod_wiki_page WHERE id_module = {$this->fields['id']}";
-ploopi\loader::getdb()->query($delete);
+ploopi\db::get()->query($delete);
 
 /**
  * Suppression de l'historique
  */
 
 $delete = "DELETE FROM ploopi_mod_wiki_page_history WHERE id_module = {$this->fields['id']}";
-ploopi\loader::getdb()->query($delete);
+ploopi\db::get()->query($delete);
 ?>

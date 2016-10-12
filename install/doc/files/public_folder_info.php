@@ -107,21 +107,21 @@ if (!empty($currentfolder))
                         {
                             $strIcon = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/ico_group.png\">";
 
-                            ploopi\loader::getdb()->query(
+                            ploopi\db::get()->query(
                                 "SELECT label FROM ploopi_group WHERE id in (".implode(',',$arrShares['group']).") ORDER BY label"
                             );
 
-                            while ($row = ploopi\loader::getdb()->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi\str::htmlentities($row['label'])."&nbsp;</span>";
+                            while ($row = ploopi\db::get()->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi\str::htmlentities($row['label'])."&nbsp;</span>";
                         }
                         if (!empty($arrShares['user']))
                         {
                             $strIcon = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/ico_user.png\">";
 
-                            ploopi\loader::getdb()->query(
+                            ploopi\db::get()->query(
                                 "SELECT concat(lastname, ' ', firstname) as name FROM ploopi_user WHERE id in (".implode(',',$arrShares['user']).") ORDER BY lastname, firstname"
                             );
 
-                            while ($row = ploopi\loader::getdb()->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi\str::htmlentities($row['name'])."&nbsp;</span>";
+                            while ($row = ploopi\db::get()->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi\str::htmlentities($row['name'])."&nbsp;</span>";
                         }
                     }
                     else echo '<span>Aucun partage</span>';
@@ -152,21 +152,21 @@ if (!empty($currentfolder))
                         {
                             $strIcon = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/ico_group.png\">";
 
-                            ploopi\loader::getdb()->query(
+                            ploopi\db::get()->query(
                                 "SELECT label FROM ploopi_group WHERE id in (".implode(',',$arrValidation['group']).") ORDER BY label"
                             );
 
-                            while ($row = ploopi\loader::getdb()->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi\str::htmlentities($row['label'])."&nbsp;</span>";
+                            while ($row = ploopi\db::get()->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi\str::htmlentities($row['label'])."&nbsp;</span>";
                         }
                         if (!empty($arrValidation['user']))
                         {
                             $strIcon = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/ico_user.png\">";
 
-                            ploopi\loader::getdb()->query(
+                            ploopi\db::get()->query(
                                 "SELECT concat(lastname, ' ', firstname) as name FROM ploopi_user WHERE id in (".implode(',',$arrValidation['user']).") ORDER BY lastname, firstname"
                             );
 
-                            while ($row = ploopi\loader::getdb()->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi\str::htmlentities($row['name'])."&nbsp;</span>";
+                            while ($row = ploopi\db::get()->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi\str::htmlentities($row['name'])."&nbsp;</span>";
                         }
                     }
                     else echo '<span>Aucune accréditation</span>';

@@ -94,9 +94,9 @@ if ($_SESSION['ploopi']['modules'][$menu_moduleid]['doc_viewfoldersinblock'])
         ORDER BY    f.name
     ";
 
-    ploopi\loader::getdb()->query($sql);
+    ploopi\db::get()->query($sql);
 
-    while ($row = ploopi\loader::getdb()->fetchrow())
+    while ($row = ploopi\db::get()->fetchrow())
     {
 
         if ($_SESSION['ploopi']['modules'][$menu_moduleid]['doc_viewiconsinblock'])

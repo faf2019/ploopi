@@ -108,8 +108,8 @@ switch($menu)
                     $heading_new = new webedit_heading();
 
                     $select = "Select max(position) as maxpos from ploopi_mod_webedit_heading WHERE id_heading = 0 AND id_module = {$_SESSION['ploopi']['moduleid']}";
-                    ploopi\loader::getdb()->query($select);
-                    $fields = ploopi\loader::getdb()->fetchrow();
+                    ploopi\db::get()->query($select);
+                    $fields = ploopi\db::get()->fetchrow();
                     $maxpos = $fields['maxpos'];
                     if (!is_numeric($maxpos)) $maxpos = 0;
                     $heading_new->fields['position'] = $maxpos+1;
@@ -140,8 +140,8 @@ switch($menu)
                     $heading_new->fields['depth'] = $heading->fields['depth']+1;
 
                     $select = "Select max(position) as maxpos from ploopi_mod_webedit_heading WHERE id_heading = {$headingid}";
-                    ploopi\loader::getdb()->query($select);
-                    $fields = ploopi\loader::getdb()->fetchrow();
+                    ploopi\db::get()->query($select);
+                    $fields = ploopi\db::get()->fetchrow();
                     $maxpos = $fields['maxpos'];
                     if (!is_numeric($maxpos)) $maxpos = 0;
                     $heading_new->fields['position'] = $maxpos+1;
@@ -200,19 +200,19 @@ switch($menu)
                                 else
                                 {
                                     $select = "Select max(position) as maxpos from ploopi_mod_webedit_heading where id_heading = {$heading->fields['id_heading']} AND id_module = {$_SESSION['ploopi']['moduleid']}";
-                                    ploopi\loader::getdb()->query($select);
-                                    $fields = ploopi\loader::getdb()->fetchrow();
+                                    ploopi\db::get()->query($select);
+                                    $fields = ploopi\db::get()->fetchrow();
                                     if ($newposition > $fields['maxpos']) $newposition = $fields['maxpos'];
                                 }
 
                                 // mise à jour des positions
                                 if ($newposition > $heading->fields['position'])
                                 {
-                                    ploopi\loader::getdb()->query("UPDATE ploopi_mod_webedit_heading SET position = position - 1 WHERE position BETWEEN ".($heading->fields['position']+1)." AND {$newposition} AND id_heading = {$heading->fields['id_heading']} AND id != {$heading->fields['id']} AND id_module = {$_SESSION['ploopi']['moduleid']}");
+                                    ploopi\db::get()->query("UPDATE ploopi_mod_webedit_heading SET position = position - 1 WHERE position BETWEEN ".($heading->fields['position']+1)." AND {$newposition} AND id_heading = {$heading->fields['id_heading']} AND id != {$heading->fields['id']} AND id_module = {$_SESSION['ploopi']['moduleid']}");
                                 }
                                 else
                                 {
-                                    ploopi\loader::getdb()->query("UPDATE ploopi_mod_webedit_heading SET position = position + 1 WHERE position BETWEEN {$newposition} AND ".($heading->fields['position']-1)." AND id_heading = {$heading->fields['id_heading']} AND id != {$heading->fields['id']} AND id_module = {$_SESSION['ploopi']['moduleid']}");
+                                    ploopi\db::get()->query("UPDATE ploopi_mod_webedit_heading SET position = position + 1 WHERE position BETWEEN {$newposition} AND ".($heading->fields['position']-1)." AND id_heading = {$heading->fields['id_heading']} AND id != {$heading->fields['id']} AND id_module = {$_SESSION['ploopi']['moduleid']}");
                                 }
 
                                 // Mise à jour de la nouvelle position.
@@ -258,7 +258,7 @@ switch($menu)
                     }
 
                     if (_PLOOPI_SQL_LAYER == 'mysqli') {
-                        ploopi\loader::getdb()->multiplequeries("
+                        ploopi\db::get()->multiplequeries("
                             SET @pos:=0;
                             SET @heading:=0;
 
@@ -471,13 +471,13 @@ switch($menu)
                         {
                             // on recherche la nouvelle position de l'article dans sa nouvelle rubrique
                             $select = "Select max(position) as maxpos from {$tablename} WHERE id_heading = {$_POST['webedit_article_id_heading']}";
-                            ploopi\loader::getdb()->query($select);
-                            $fields = ploopi\loader::getdb()->fetchrow();
+                            ploopi\db::get()->query($select);
+                            $fields = ploopi\db::get()->fetchrow();
                             $maxpos = $fields['maxpos'];
                             if (!is_numeric($maxpos)) $maxpos = 0;
 
                             // on remonte les articles de la rubrique actuelle
-                            ploopi\loader::getdb()->query("UPDATE {$tablename} SET position = position - 1 WHERE position > {$article->fields['position']} AND id_heading = {$article->fields['id_heading']}");
+                            ploopi\db::get()->query("UPDATE {$tablename} SET position = position - 1 WHERE position > {$article->fields['position']} AND id_heading = {$article->fields['id_heading']}");
 
                             // on affecte la nouvelle position à l'article
                             $article->fields['position'] = $maxpos+1;
@@ -496,19 +496,19 @@ switch($menu)
                                     else
                                     {
                                         $select = "Select max(position) as maxpos from {$tablename} WHERE id_heading = {$headingid}";
-                                        ploopi\loader::getdb()->query($select);
-                                        $fields = ploopi\loader::getdb()->fetchrow();
+                                        ploopi\db::get()->query($select);
+                                        $fields = ploopi\db::get()->fetchrow();
                                         if ($newposition > $fields['maxpos']) $newposition = $fields['maxpos'];
                                     }
 
                                     // Impact autres articles
                                     if ($newposition > $article->fields['position'])
                                     {
-                                        ploopi\loader::getdb()->query("UPDATE {$tablename} SET position = position-1 WHERE position BETWEEN ".($article->fields['position']+1)." AND {$newposition} AND id_heading = {$article->fields['id_heading']} AND id != {$article->fields['id']}");
+                                        ploopi\db::get()->query("UPDATE {$tablename} SET position = position-1 WHERE position BETWEEN ".($article->fields['position']+1)." AND {$newposition} AND id_heading = {$article->fields['id_heading']} AND id != {$article->fields['id']}");
                                     }
                                     else
                                     {
-                                        ploopi\loader::getdb()->query("UPDATE {$tablename} SET position = position+1 WHERE position BETWEEN {$newposition} AND ".($article->fields['position']-1)." AND id_heading = {$article->fields['id_heading']} AND id != {$article->fields['id']}");
+                                        ploopi\db::get()->query("UPDATE {$tablename} SET position = position+1 WHERE position BETWEEN {$newposition} AND ".($article->fields['position']-1)." AND id_heading = {$article->fields['id_heading']} AND id != {$article->fields['id']}");
                                     }
 
                                     // Mise à jour de la nouvelle position.
@@ -524,8 +524,8 @@ switch($menu)
                         $article->init_description();
                         $article->setuwm();
                         $select = "Select max(position) as maxpos from {$tablename} WHERE id_heading = {$headingid}";
-                        ploopi\loader::getdb()->query($select);
-                        $fields = ploopi\loader::getdb()->fetchrow();
+                        ploopi\db::get()->query($select);
+                        $fields = ploopi\db::get()->fetchrow();
                         $maxpos = $fields['maxpos'];
                         if (!is_numeric($maxpos)) $maxpos = 0;
                         $article->fields['position'] = $maxpos+1;
@@ -653,7 +653,7 @@ switch($menu)
                                     AND     id_heading IN (".implode(',', $arrHeadingList).")
                                     ";
 
-                            ploopi\loader::getdb()->query($sql);
+                            ploopi\db::get()->query($sql);
 
                             $from = array();
                             $from[] =
@@ -663,7 +663,7 @@ switch($menu)
                                 );
 
                             // envoi d'un mail à chaque abonné
-                            while ($row = ploopi\loader::getdb()->fetchrow())
+                            while ($row = ploopi\db::get()->fetchrow())
                             {
                                 switch($strTypeTicket)
                                 {
@@ -713,7 +713,7 @@ switch($menu)
                     else ploopi\user_action_log::record(_WEBEDIT_ACTION_ARTICLE_EDIT, $articleid);
 
                     if (_PLOOPI_SQL_LAYER == 'mysqli') {
-                        ploopi\loader::getdb()->multiplequeries("
+                        ploopi\db::get()->multiplequeries("
                             SET @pos:=0;
                             SET @heading:=0;
 
@@ -829,8 +829,8 @@ switch($menu)
                     if ($headingid == 'b') $op = 'bloc_modify';
                 }
 
-                echo $skin->create_pagetitle(ploopi\str::htmlentities($_SESSION['ploopi']['modulelabel']));
-                echo $skin->open_simplebloc('Gestion du contenu');
+                echo ploopi\skin::get()->create_pagetitle(ploopi\str::htmlentities($_SESSION['ploopi']['modulelabel']));
+                echo ploopi\skin::get()->open_simplebloc('Gestion du contenu');
 
                 ?>
                 <div id="webedit_header">
@@ -909,7 +909,7 @@ switch($menu)
                             }
 
                             $node_id = (!empty($articleid)) ? "a{$articleid}" : "h{$headingid}";
-                            echo $skin->display_treeview($treeview['list'], $treeview['tree'], $node_id);
+                            echo ploopi\skin::get()->display_treeview($treeview['list'], $treeview['tree'], $node_id);
                             ?>
                         </div>
                         <div id="webedit_legende">
@@ -954,7 +954,7 @@ switch($menu)
                     </div>
                 </div>
                 <?php
-                echo $skin->close_simplebloc();
+                echo ploopi\skin::get()->close_simplebloc();
             break;
         }
     break;

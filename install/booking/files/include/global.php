@@ -96,7 +96,7 @@ $arrBookingColor =
 
 function booking_get_workspaces($idw = 0)
 {
-    $db = ploopi\loader::getdb();
+    $db = ploopi\db::get();
 
     if (!$idw) $idw = $_SESSION['ploopi']['workspaceid'];
 
@@ -229,7 +229,7 @@ function booking_display_workspaces(&$arrWorkspaces, $fieldname, &$widsel = arra
 
 function booking_get_resources($strict = false, $moduleid = -1, $workspaceid = -1)
 {
-    $db = ploopi\loader::getdb();
+    $db = ploopi\db::get();
 
     if ($moduleid == -1) $moduleid = $_SESSION['ploopi']['moduleid'];
     if ($workspaceid == -1) $workspaceid = $_SESSION['ploopi']['workspaceid'];
@@ -321,7 +321,7 @@ function booking_get_resources($strict = false, $moduleid = -1, $workspaceid = -
 
 function booking_get_events($mixId = null, $extended = false, $strict = false, $validated = null, $managed = null, $object = '', $requestedby = '', $from = '', $to = '', $moduleid = -1)
 {
-    $db = ploopi\loader::getdb();
+    $db = ploopi\db::get();
 
     if ($moduleid == -1) $moduleid = $_SESSION['ploopi']['moduleid'];
 

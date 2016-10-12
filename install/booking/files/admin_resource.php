@@ -110,7 +110,7 @@ $arrResult['columns']['actions_right']['actions'] =
     );    
     
 // Récupération des espaces gestionnaires
-ploopi\loader::getdb()->query("
+ploopi\db::get()->query("
     SELECT      r.id,
                 w.label
                 
@@ -128,10 +128,10 @@ ploopi\loader::getdb()->query("
 ");   
 
 $arrResWorkspaces = array();
-while ($row = ploopi\loader::getdb()->fetchrow()) $arrResWorkspaces[$row['id']][] = ploopi\str::htmlentities($row['label']);
+while ($row = ploopi\db::get()->fetchrow()) $arrResWorkspaces[$row['id']][] = ploopi\str::htmlentities($row['label']);
 
 // Récupération des ressources
-ploopi\loader::getdb()->query("
+ploopi\db::get()->query("
     SELECT      r.*,
                 rt.name as rt_name,
                 w.label as w_label,
@@ -152,7 +152,7 @@ ploopi\loader::getdb()->query("
     GROUP BY    r.id
 ");   
 
-while ($row = ploopi\loader::getdb()->fetchrow())
+while ($row = ploopi\db::get()->fetchrow())
 {
     $arrResult['rows'][] = 
         array(
@@ -189,7 +189,7 @@ while ($row = ploopi\loader::getdb()->fetchrow())
         );
 }
 
-$skin->display_array(
+ploopi\skin::get()->display_array(
     $arrResult['columns'], 
     $arrResult['rows'], 
     'booking_resource', 

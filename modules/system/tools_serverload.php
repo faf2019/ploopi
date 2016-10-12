@@ -128,7 +128,7 @@ foreach($load as $key => $l)
     <span>Charge du système en temps réel (nombre de coeurs : <?php echo _PLOOPI_LOAD_NBCORE; ?>)&nbsp;&nbsp;</span><img src="./img/loading.gif" style="visibility:hidden;" id="system_serverload_loading"/>
 </p>
 <?php
-$skin->display_array($columns, $values, 'array_load');
+ploopi\skin::get()->display_array($columns, $values, 'array_load');
 
 ploopi\log::getdb()->query("SELECT COUNT(*) AS c FROM ploopi_log");
 $row = ploopi\log::getdb()->fetchrow();
@@ -194,5 +194,5 @@ while ($row = ploopi\log::getdb()->fetchrow())
     <strong>Historique : <?php echo $intMaxRequests; ?> dernières requêtes</strong> (<span style="color:#a60000;"><?php echo $intLogRows ?> lignes dans la base</span>, pensez à vider les logs régulièrement ou à utiliser la tâche &laquo; cron &raquo;  de Ploopi)
 </div>
 <?php
-$skin->display_array($columns, $values, 'array_requests');
+ploopi\skin::get()->display_array($columns, $values, 'array_requests');
 ?>

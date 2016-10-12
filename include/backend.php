@@ -33,16 +33,16 @@
 // La requête doit forcément porter sur un module valide
 if (isset($_REQUEST['ploopi_moduleid']) && is_numeric($_REQUEST['ploopi_moduleid']) && isset($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['modules'][$_REQUEST['ploopi_moduleid']]))
 {
-    ploopi\loader::getdb()->query( "
+    ploopi\db::get()->query( "
         SELECT      mt.label labeltype,
                     m.label
         FROM        ploopi_module m
         INNER JOIN  ploopi_module_type mt
         ON          mt.id = m.id_module_type
-        WHERE       m.id = '".ploopi\loader::getdb()->addslashes($_REQUEST['ploopi_moduleid'])."'
+        WHERE       m.id = '".ploopi\db::get()->addslashes($_REQUEST['ploopi_moduleid'])."'
     ");
 
-    if ($row = ploopi\loader::getdb()->fetchrow())
+    if ($row = ploopi\db::get()->fetchrow())
     {
         if (file_exists($backend_filepath = "./modules/{$row['labeltype']}/backend.php"))
         {

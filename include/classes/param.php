@@ -106,7 +106,7 @@ class param
      */
     public function open($moduleid, $workspaceid = 0, $userid = 0, $public = false)
     {
-        $db = loader::getdb();
+        $db = db::get();
 
         $this->moduleid = $moduleid;
         $this->workspaceid = $workspaceid;
@@ -250,7 +250,7 @@ class param
 
     public function save()
     {
-        $db = loader::getdb();
+        $db = db::get();
 
         foreach($this->arrParam as $name => $param)
         {
@@ -293,7 +293,7 @@ class param
 
     public static function load()
     {
-        $db = loader::getdb();
+        $db = db::get();
 
         $arrParams = array();
 

@@ -33,7 +33,7 @@
 /**
  * Ouverture du bloc
  */
-echo $skin->open_simplebloc();
+echo ploopi\skin::get()->open_simplebloc();
 
 /**
  * On récupère la liste des modules de l'espace de travail courant
@@ -140,5 +140,5 @@ $modules = $workspace->getmodules();
     ?>
 </div>
 <?php
-echo $skin->close_simplebloc();
+echo ploopi\skin::get()->close_simplebloc();
 ?>

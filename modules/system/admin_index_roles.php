@@ -94,7 +94,7 @@ $tabs['tabRoleUsers'] = array (
 if (!empty($_GET['roleTabItem']))  $_SESSION['system']['roleTabItem'] = $_GET['roleTabItem'];
 if (!isset($_SESSION['system']['roleTabItem'])) $_SESSION['system']['roleTabItem'] = '';
 
-echo $skin->create_tabs($tabs, $_SESSION['system']['roleTabItem']);
+echo ploopi\skin::get()->create_tabs($tabs, $_SESSION['system']['roleTabItem']);
 
 switch($_SESSION['system']['roleTabItem'])
 {

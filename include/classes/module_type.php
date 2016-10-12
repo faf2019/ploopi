@@ -53,7 +53,7 @@ class module_type extends data_object
 
     public function delete()
     {
-        $db = loader::getdb();
+        $db = db::get();
         // delete params
 
         if ($this->fields['id']!=-1)
@@ -106,7 +106,7 @@ class module_type extends data_object
 
     public function delete_params()
     {
-        $db = loader::getdb();
+        $db = db::get();
 
         if ($this->fields['id']!=-1)
         {
@@ -173,7 +173,7 @@ class module_type extends data_object
 
     public function getactions($role_enabled = true)
     {
-        $db = loader::getdb();
+        $db = db::get();
 
         $actions = array();
 
@@ -198,7 +198,7 @@ class module_type extends data_object
 
     public function update_description($xmlfile_desc, &$rapport = array())
     {
-        $db = loader::getdb();
+        $db = db::get();
 
         $testok = true;
         $critical_error = false;

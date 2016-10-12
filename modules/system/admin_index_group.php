@@ -35,7 +35,7 @@
  * Affichage du bloc
  */
 
-echo $skin->open_simplebloc();
+echo ploopi\skin::get()->open_simplebloc();
 ?>
 <div>
     <div class="system_group_icons">
@@ -92,7 +92,7 @@ echo $skin->open_simplebloc();
             }
 
             $null = null;
-            echo $skin->create_toolbar($toolbar_group, $null, false, true);
+            echo ploopi\skin::get()->create_toolbar($toolbar_group, $null, false, true);
             ?>
         </div>
     </div>
@@ -138,9 +138,9 @@ echo $skin->open_simplebloc();
     </div>
 </div>
 <?php
-echo $skin->close_simplebloc();
+echo ploopi\skin::get()->close_simplebloc();
 
-echo $skin->open_simplebloc();
+echo ploopi\skin::get()->open_simplebloc();
 ploopi\annotation::display(_SYSTEM_OBJECT_GROUP, $group->fields['id'], $group->fields['label']);
-echo $skin->close_simplebloc();
+echo ploopi\skin::get()->close_simplebloc();
 ?>

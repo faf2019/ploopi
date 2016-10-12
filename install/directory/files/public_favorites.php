@@ -76,8 +76,8 @@ $sql =  "
         GROUP BY c.id
         ";
 
-ploopi\loader::getdb()->query($sql);
-while ($row = ploopi\loader::getdb()->fetchrow()) $result[] = $row;
+ploopi\db::get()->query($sql);
+while ($row = ploopi\db::get()->fetchrow()) $result[] = $row;
 
 $sql =  "
         SELECT  u.*,
@@ -93,8 +93,8 @@ $sql =  "
         GROUP BY u.id
         ";
 
-ploopi\loader::getdb()->query($sql);
-while ($row = ploopi\loader::getdb()->fetchrow()) $result[] = $row;
+ploopi\db::get()->query($sql);
+while ($row = ploopi\db::get()->fetchrow()) $result[] = $row;
 
 $c = 0;
 foreach($result as $row)
@@ -180,5 +180,5 @@ foreach($result as $row)
     $c++;
 }
 
-$skin->display_array($arrColumns, $arrValues, 'array_directory', array('sortable' => true, 'orderby_default' => 'name'));
+ploopi\skin::get()->display_array($arrColumns, $arrValues, 'array_directory', array('sortable' => true, 'orderby_default' => 'name'));
 ?>

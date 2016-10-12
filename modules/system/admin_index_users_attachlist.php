@@ -117,7 +117,7 @@ else
 
     if (is_null($alphaTabItem))
     {
-        ploopi\loader::getdb()->query("
+        ploopi\db::get()->query("
             SELECT      count(distinct(u.id)) as nbuser
 
             FROM        ploopi_user u,
@@ -127,14 +127,14 @@ else
             {$strWhere}
         ");
 
-        $fields = ploopi\loader::getdb()->fetchrow();
+        $fields = ploopi\db::get()->fetchrow();
 
         $c = $fields['nbuser'];
 
         if ($_SESSION['system']['level'] == _SYSTEM_GROUPS)
         {
             // Utilisateurs non rattachés
-            ploopi\loader::getdb()->query("
+            ploopi\db::get()->query("
                 SELECT      count(distinct(u.id)) as nbuser
 
                 FROM        ploopi_user u
@@ -142,7 +142,7 @@ else
                 WHERE       u.id NOT IN (SELECT distinct(id_user) FROM ploopi_group_user gu)
             ");
 
-            $fields = ploopi\loader::getdb()->fetchrow();
+            $fields = ploopi\db::get()->fetchrow();
 
             $c += $fields['nbuser'];
         }
@@ -177,7 +177,7 @@ ploopi\session::setvar('system_alphatabitem', $alphaTabItem);
             'url' => 'admin.php?usrTabItem=tabUserAttach&alphaTabItem=99&reset'
         );
 
-    echo $skin->create_tabs($tabs_char, $alphaTabItem);
+    echo ploopi\skin::get()->create_tabs($tabs_char, $alphaTabItem);
     ?>
 </div>
 
@@ -214,10 +214,10 @@ $strWhereName = '';
 if ($alphaTabItem == 99) // tous ou recherche
 {
     $where = array();
-    if ($arrFilter['ploopi_lastname'] != '') $where[] = "lastname LIKE '%".ploopi\loader::getdb()->addslashes($arrFilter['ploopi_lastname'])."%'";
-    if ($arrFilter['ploopi_firstname'] != '') $where[] = "firstname LIKE '%".ploopi\loader::getdb()->addslashes($arrFilter['ploopi_firstname'])."%'";
-    if ($arrFilter['ploopi_login'] != '') $where[] = "login LIKE '%".ploopi\loader::getdb()->addslashes($arrFilter['ploopi_login'])."%'";
-    if ($arrFilter['ploopi_email'] != '') $where[] = "email LIKE '%".ploopi\loader::getdb()->addslashes($arrFilter['ploopi_email'])."%'";
+    if ($arrFilter['ploopi_lastname'] != '') $where[] = "lastname LIKE '%".ploopi\db::get()->addslashes($arrFilter['ploopi_lastname'])."%'";
+    if ($arrFilter['ploopi_firstname'] != '') $where[] = "firstname LIKE '%".ploopi\db::get()->addslashes($arrFilter['ploopi_firstname'])."%'";
+    if ($arrFilter['ploopi_login'] != '') $where[] = "login LIKE '%".ploopi\db::get()->addslashes($arrFilter['ploopi_login'])."%'";
+    if ($arrFilter['ploopi_email'] != '') $where[] = "email LIKE '%".ploopi\db::get()->addslashes($arrFilter['ploopi_email'])."%'";
     if ($arrFilter['ploopi_last_connection_1'] != '') $where[] = "last_connection >= '".ploopi_local2timestamp($arrFilter['ploopi_last_connection_1'], '00:00:00')."'";
     if ($arrFilter['ploopi_last_connection_2'] != '') $where[] = "last_connection <= '".ploopi_local2timestamp($arrFilter['ploopi_last_connection_2'], '23:59:59')."'";
 
@@ -231,7 +231,7 @@ else
     else $strWhereName = " AND ASCII(LCASE(LEFT(u.lastname,1))) = ".($alphaTabItem+96).' ';
 }
 
-ploopi\loader::getdb()->query("
+ploopi\db::get()->query("
     SELECT      u.id,
                 u.lastname,
                 u.firstname,
@@ -250,12 +250,12 @@ ploopi\loader::getdb()->query("
     GROUP BY    u.id
 ");
 
-$arrUsers = ploopi\loader::getdb()->getarray();
+$arrUsers = ploopi\db::get()->getarray();
 
 if ($_SESSION['system']['level'] == _SYSTEM_GROUPS)
 {
     // Utilisateurs non rattachés
-    ploopi\loader::getdb()->query("
+    ploopi\db::get()->query("
         SELECT      u.id,
                     u.lastname,
                     u.firstname,
@@ -272,7 +272,7 @@ if ($_SESSION['system']['level'] == _SYSTEM_GROUPS)
         GROUP BY    u.id
     ");
 
-    $arrUsers = array_merge($arrUsers, ploopi\loader::getdb()->getarray());
+    $arrUsers = array_merge($arrUsers, ploopi\db::get()->getarray());
 }
 
 $intNbRep = sizeof($arrUsers);
@@ -355,7 +355,7 @@ else
         $c++;
     }
 
-    $skin->display_array($columns, $values, 'array_userlist', array('sortable' => true, 'orderby_default' => 'name', 'limit' => 50));
+    ploopi\skin::get()->display_array($columns, $values, 'array_userlist', array('sortable' => true, 'orderby_default' => 'name', 'limit' => 50));
 }
 
 if ($_SESSION['system']['level'] == _SYSTEM_WORKSPACES)

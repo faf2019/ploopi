@@ -30,14 +30,14 @@
  * @author Stéphane Escaich
  */
 
-echo $skin->create_pagetitle(ploopi\str::htmlentities($_SESSION['ploopi']['modulelabel']));
-echo $skin->open_simplebloc('Planning');
+echo ploopi\skin::get()->create_pagetitle(ploopi\str::htmlentities($_SESSION['ploopi']['modulelabel']));
+echo ploopi\skin::get()->open_simplebloc('Planning');
 ?>
 <div id="planning_main">
 <?php include_once './modules/planning/public_planning.php'; ?>
 </div>
 <?php
-echo $skin->close_simplebloc();
+echo ploopi\skin::get()->close_simplebloc();
 
 /**
  * Affichage du popup de sélection des ressources
@@ -101,7 +101,7 @@ foreach ($arrResources as $strResourceType => $arrResourceType)
 $content = ob_get_contents();
 ob_end_clean();
 
-echo $skin->open_popup(
+echo ploopi\skin::get()->open_popup(
     'Ressources affichées',
     $content,
     'popup_planning',

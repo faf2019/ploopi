@@ -30,7 +30,7 @@
  * @author Stéphane Escaich
  */
 
-echo $skin->open_simplebloc('Réindexation des pages');
+echo ploopi\skin::get()->open_simplebloc('Réindexation des pages');
 ?>
 <div id="wiki_index">
 <?php
@@ -46,7 +46,7 @@ echo $skin->open_simplebloc('Réindexation des pages');
     foreach($objCol->get_objects() as $objPage)
     {
         $objPage->index();
-        ploopi\loader::getdb()->flush_log();
+        ploopi\db::get()->flush_log();
         $intI++;
     }
 
@@ -54,4 +54,4 @@ echo $skin->open_simplebloc('Réindexation des pages');
     ?>
     Résultat de l'indexation : <?php echo $intI; ?> page(s) traitée(s)
 </div>
-<?php echo $skin->close_simplebloc(); ?>
+<?php echo ploopi\skin::get()->close_simplebloc(); ?>

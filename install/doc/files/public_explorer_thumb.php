@@ -106,11 +106,11 @@ $sql = "
     ORDER BY f.name
 ";
 
-$rs = ploopi\loader::getdb()->query($sql);
+$rs = ploopi\db::get()->query($sql);
 ?>
 <div class="doc_main_thumbs">
 <?php
-while ($row = ploopi\loader::getdb()->fetchrow($rs))
+while ($row = ploopi\db::get()->fetchrow($rs))
 {
     $readonly = (($row['readonly'] && $row['id_user'] != $_SESSION['ploopi']['userid']) || $docfolder_readonly_content);
 
@@ -145,10 +145,10 @@ while ($row = ploopi\loader::getdb()->fetchrow($rs))
     {
         $style = 'style="font-style:italic;"';
 
-        $link_rs = ploopi\loader::getdb()->query("SELECT id, name, foldertype, readonly FROM ploopi_mod_doc_folder WHERE id in ({$row['parents']},{$row['id']})");
+        $link_rs = ploopi\db::get()->query("SELECT id, name, foldertype, readonly FROM ploopi_mod_doc_folder WHERE id in ({$row['parents']},{$row['id']})");
         $link_detail = array(' => ');
 
-        while ($link_row = ploopi\loader::getdb()->fetchrow($link_rs)) $link_detail[] = $link_row['name'];
+        while ($link_row = ploopi\db::get()->fetchrow($link_rs)) $link_detail[] = $link_row['name'];
 
         $link = implode(' / ', $link_detail);
     }
@@ -202,9 +202,9 @@ $sql = "
     ORDER BY f.name
 ";
 
-ploopi\loader::getdb()->query($sql);
+ploopi\db::get()->query($sql);
 
-while ($row = ploopi\loader::getdb()->fetchrow())
+while ($row = ploopi\db::get()->fetchrow())
 {
     $ksize = sprintf("%.02f",$row['size']/1024);
     $ldate = ploopi\date::timestamp2local($row['timestp_modify']);
@@ -294,9 +294,9 @@ $sql = "
     ORDER BY f.name
 ";
 
-ploopi\loader::getdb()->query($sql);
+ploopi\db::get()->query($sql);
 
-while ($row = ploopi\loader::getdb()->fetchrow())
+while ($row = ploopi\db::get()->fetchrow())
 {
     $ksize = sprintf("%.02f",$row['size']/1024);
     $ldate = ploopi\date::timestamp2local($row['timestp_create']);

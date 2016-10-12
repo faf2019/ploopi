@@ -57,7 +57,7 @@ abstract class system
 
     public static function kill($var = null, $flush = true)
     {
-        $db = loader::getdb();
+        $db = db::get();
 
         global $ploopi_timer;
 

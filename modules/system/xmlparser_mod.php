@@ -47,7 +47,7 @@ function startElement_mod($parser, $name, $attribs)
     global $globaldata;
     global $datatype;
     global $field;
-    $db = ploopi\loader::getdb();
+    $db = ploopi\db::get();
     global $newrow;
     global $newfield;
     global $dataobject;

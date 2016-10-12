@@ -55,7 +55,7 @@ class workspace_group extends data_object
 
     public function delete()
     {
-        $db = loader::getdb();
+        $db = db::get();
 
         // search for modules
         $select =   "

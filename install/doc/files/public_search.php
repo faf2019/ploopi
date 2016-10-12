@@ -93,8 +93,8 @@ $show_options = (
         $arrFileType = array();
 
         $select = "SELECT distinct(filetype) FROM ploopi_mimetype";
-        ploopi\loader::getdb()->query($select);
-        while ($row = ploopi\loader::getdb()->fetchrow())
+        ploopi\db::get()->query($select);
+        while ($row = ploopi\db::get()->fetchrow())
         {
             $arrFileType[$row['filetype']] = (isset($ploopi_type_file[$row['filetype']]) ? $ploopi_type_file[$row['filetype']] : $row['filetype']);
         }

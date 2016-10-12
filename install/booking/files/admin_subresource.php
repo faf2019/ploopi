@@ -84,7 +84,7 @@ $arrResult['columns']['actions_right']['actions'] =
     );
 
 // Récupération des sous-ressources
-ploopi\loader::getdb()->query("
+ploopi\db::get()->query("
     SELECT      sr.*,
                 r.name as res_name
 
@@ -95,7 +95,7 @@ ploopi\loader::getdb()->query("
     WHERE       sr.id_module = {$_SESSION['ploopi']['moduleid']}
 ");
 
-while ($row = ploopi\loader::getdb()->fetchrow())
+while ($row = ploopi\db::get()->fetchrow())
 {
     $arrResult['rows'][] =
         array(
@@ -125,7 +125,7 @@ while ($row = ploopi\loader::getdb()->fetchrow())
         );
 }
 
-$skin->display_array(
+ploopi\skin::get()->display_array(
     $arrResult['columns'],
     $arrResult['rows'],
     'booking_subresource',

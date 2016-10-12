@@ -33,7 +33,7 @@
 /**
  * Ouverture du bloc
  */
-echo $skin->open_simplebloc(_SYSTEM_LABEL_DIAGNOSTIC);
+echo ploopi\skin::get()->open_simplebloc(_SYSTEM_LABEL_DIAGNOSTIC);
 
 $columns = array();
 $values = array();
@@ -283,7 +283,7 @@ $values[$c]['values']['comment']    = array('label' => ploopi\str::nl2br($commen
 $values[$c]['values']['result']     = array('label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/p_{$bullet}.png\" />", 'style' => '');
 $c++;
 
-$skin->display_array($columns, $values, 'array_diagnostic', array('sortable' => true, 'orderby_default' => 'function'));
+ploopi\skin::get()->display_array($columns, $values, 'array_diagnostic', array('sortable' => true, 'orderby_default' => 'function'));
 ?>
 
 <p class="ploopi_va" style="padding:2px;">
@@ -299,4 +299,4 @@ $skin->display_array($columns, $values, 'array_diagnostic', array('sortable' => 
 <span>Une puce verte indique que tout va bien !</span>
 </p>
 
-<?php echo $skin->close_simplebloc(); ?>
+<?php echo ploopi\skin::get()->close_simplebloc(); ?>

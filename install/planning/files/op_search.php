@@ -129,7 +129,7 @@ switch($ploopi_op) {
                 }
             }
 
-            $skin->display_array($columns, $values, 'event_list', array('sortable' => true, 'orderby_default' => 'event', 'sort_default' => 'DESC', 'limit' => 5));
+            ploopi\skin::get()->display_array($columns, $values, 'event_list', array('sortable' => true, 'orderby_default' => 'event', 'sort_default' => 'DESC', 'limit' => 5));
         }
 
         ploopi\system::kill();

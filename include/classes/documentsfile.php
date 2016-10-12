@@ -93,7 +93,7 @@ class documentsfile extends data_object
 
     function openmd5($md5id)
     {
-        $db = loader::getdb();
+        $db = db::get();
 
         $db->query("SELECT id FROM ploopi_documents_file WHERE md5id = '".$db->addslashes($md5id)."'");
         if ($fields = $db->fetchrow()) return($this->open($fields['id']));
@@ -108,7 +108,7 @@ class documentsfile extends data_object
      */
     public function save()
     {
-        $db = loader::getdb();
+        $db = db::get();
         $error = 0;
         if (isset($this->fields['folder'])) unset($this->fields['folder']);
 

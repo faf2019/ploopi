@@ -59,7 +59,7 @@ class documentsfolder extends data_object
 
     function openmd5($md5id)
     {
-        $db = loader::getdb();
+        $db = db::get();
 
         $db->query("SELECT id FROM ploopi_documents_folder WHERE md5id = '".$db->addslashes($md5id)."'");
         if ($fields = $db->fetchrow()) return($this->open($fields['id']));
@@ -101,7 +101,7 @@ class documentsfolder extends data_object
      */
     function delete()
     {
-        $db = loader::getdb();
+        $db = db::get();
 
         // on recherche tous les fichiers pour les supprimer
         $rs = $db->query("SELECT id FROM ploopi_documents_file WHERE id_folder = {$this->fields['id']}");

@@ -43,7 +43,7 @@ $arrStaticFields = formsForm::getStaticFields();
 // Lecture des titres de colonnes
 $arrTitles = $objForm->getTitles();
 
-echo $skin->open_simplebloc(ploopi\str::htmlentities($objForm->fields['label'].' ('._FORMS_VIEWLIST.')'));
+echo ploopi\skin::get()->open_simplebloc(ploopi\str::htmlentities($objForm->fields['label'].' ('._FORMS_VIEWLIST.')'));
 ?>
 
 <div style="overflow:hidden;">
@@ -266,12 +266,12 @@ echo $skin->open_simplebloc(ploopi\str::htmlentities($objForm->fields['label'].'
 
                 if (ploopi\acl::isactionallowed(_FORMS_ACTION_GRAPHICS))
                 {
-                    ploopi\loader::getdb()->query("
+                    ploopi\db::get()->query("
                         SELECT  *
                         FROM    ploopi_mod_forms_graphic
                         WHERE   id_form = {$objForm->fields['id']}
                     ");
-                    if (ploopi\loader::getdb()->numrows())
+                    if (ploopi\db::get()->numrows())
                     {
                         ?>
                             <span style="margin-left:10px;">Graphique : </span>
@@ -280,7 +280,7 @@ echo $skin->open_simplebloc(ploopi\str::htmlentities($objForm->fields['label'].'
                             <select class="select" onchange="javascript:if (this.value != '') {ploopi_xmlhttprequest_topopup(750, event, 'forms_popup_graphic', 'admin-light.php', 'ploopi_op=forms_graphic_display&forms_graphic_id='+this.value+'&forms_graphic_width='+$('forms_graphic_width').value, 'POST');} else {ploopi_hidepopup('forms_popup_graphic');} this.selectedIndex = 0;">
                                 <option value="">(Sélectionner un graphique)</option>
                                 <?php
-                                while ($row = ploopi\loader::getdb()->fetchrow())
+                                while ($row = ploopi\db::get()->fetchrow())
                                 {
                                     ?>
                                     <option value="<?php echo $row['id']; ?>"><?php echo ploopi\str::htmlentities($row['label']); ?></option>
@@ -305,7 +305,7 @@ echo $skin->open_simplebloc(ploopi\str::htmlentities($objForm->fields['label'].'
     <div class="forms_viewlist">
         <table class="forms_viewlist">
         <?php
-        $color = (!isset($color) || $color == $skin->values['bgline1']) ? $skin->values['bgline2'] : $skin->values['bgline1'];
+        $color = (!isset($color) || $color == ploopi\skin::get()->values['bgline1']) ? ploopi\skin::get()->values['bgline2'] : ploopi\skin::get()->values['bgline1'];
         ?>
         <tr style="background-color:<?php echo $color; ?>;">
             <?php
@@ -351,7 +351,7 @@ echo $skin->open_simplebloc(ploopi\str::htmlentities($objForm->fields['label'].'
         {
             $intReplyId = $rowData['id'];
 
-            $color = (!isset($color) || $color == $skin->values['bgline1']) ? $skin->values['bgline2'] : $skin->values['bgline1'];
+            $color = (!isset($color) || $color == ploopi\skin::get()->values['bgline1']) ? ploopi\skin::get()->values['bgline2'] : ploopi\skin::get()->values['bgline1'];
             ?>
             <tr bgcolor="<?php echo $color; ?>">
                 <?php
@@ -438,4 +438,4 @@ echo $skin->open_simplebloc(ploopi\str::htmlentities($objForm->fields['label'].'
     </div>
 </div>
 
-<?php echo $skin->close_simplebloc(); ?>
+<?php echo ploopi\skin::get()->close_simplebloc(); ?>

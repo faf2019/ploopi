@@ -69,7 +69,7 @@ class ticket extends data_object
 
     public function save()
     {
-        $db = loader::getdb();
+        $db = db::get();
 
         if (!$this->new && $this->fields['needed_validation'] > _PLOOPI_TICKETS_NONE && $this->fields['status'] < _PLOOPI_TICKETS_DONE)
         {
@@ -338,7 +338,7 @@ class ticket extends data_object
 
     public static function getnew()
     {
-        $db = loader::getdb();
+        $db = db::get();
 
         $sql =  "
                 SELECT      t.id
@@ -374,7 +374,7 @@ class ticket extends data_object
 
     public static function displayusers()
     {
-        global $skin;
+        $skin = skin::get();
 
         if (!empty($_SESSION['ploopi']['tickets']['users_selected']))
         {

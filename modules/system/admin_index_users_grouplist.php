@@ -45,7 +45,7 @@ else
 
     if ($alphaTabItem == -1)
     {
-        ploopi\loader::getdb()->query("
+        ploopi\db::get()->query("
             SELECT      count(ploopi_group.id) as nbgroup
 
             FROM        ploopi_group
@@ -54,7 +54,7 @@ else
             ON          ploopi_workspace_group.id_group = ploopi_group.id
             AND         ploopi_workspace_group.id_workspace = {$workspaceid}
         ");
-        $fields = ploopi\loader::getdb()->fetchrow();
+        $fields = ploopi\db::get()->fetchrow();
         if ($fields['nbgroup'] < 25) $alphaTabItem = 99;
     }
 }
@@ -84,7 +84,7 @@ else
             'url' => 'admin.php?alphaTabItem=99'
         );
 
-    echo $skin->create_tabs($tabs_char, $alphaTabItem);
+    echo ploopi\skin::get()->create_tabs($tabs_char, $alphaTabItem);
     ?>
 </div>
 
@@ -104,7 +104,7 @@ if ($alphaTabItem == 99) // tous ou recherche
 {
     if ($pattern != '')
     {
-        $pattern = ploopi\loader::getdb()->addslashes($pattern);
+        $pattern = ploopi\db::get()->addslashes($pattern);
         $where[] .=  "ploopi_group.label LIKE '%{$pattern}%'";
     }
 }
@@ -169,9 +169,9 @@ $columns['actions_right']['actions'] =
 
 $c = 0;
 
-$result = ploopi\loader::getdb()->query($sql);
+$result = ploopi\db::get()->query($sql);
 
-while ($fields = ploopi\loader::getdb()->fetchrow($result))
+while ($fields = ploopi\db::get()->fetchrow($result))
 {
     $array_parents = system_getparents($fields['parents'], 'group');
     array_shift($array_parents);
@@ -212,7 +212,7 @@ while ($fields = ploopi\loader::getdb()->fetchrow($result))
     $c++;
 }
 
-$skin->display_array($columns, $values, 'array_grouplist', array('sortable' => true, 'orderby_default' => 'label'));
+ploopi\skin::get()->display_array($columns, $values, 'array_grouplist', array('sortable' => true, 'orderby_default' => 'label'));
 
 if ($_SESSION['system']['level'] == _SYSTEM_WORKSPACES)
 {

@@ -71,8 +71,6 @@ abstract class controller
      */
     public static function dispatch()
     {
-        global $skin;
-
         $arrClassPath = explode('\\', get_called_class());
         $strModuleName = $arrClassPath[1];
         $strModulePath = './modules/'.$strModuleName;

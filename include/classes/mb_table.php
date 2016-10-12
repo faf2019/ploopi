@@ -53,7 +53,7 @@ class mb_table extends data_object
 
     function delete()
     {
-        $db = loader::getdb();
+        $db = db::get();
 
         $db->query("DELETE FROM ploopi_mb_field WHERE tablename = '".$db->addslashes($this->fields['name'])."' AND id_module_type = {$this->fields['id_module_type']}");
         $db->query("DELETE FROM ploopi_mb_relation WHERE (tablesrc = '".$db->addslashes($this->fields['name'])."' OR tabledest = '".$db->addslashes($this->fields['name'])."') AND id_module_type = {$this->fields['id_module_type']}");

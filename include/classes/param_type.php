@@ -53,7 +53,7 @@ class param_type extends data_object
      */
     public function delete($preserve_data = false)
     {
-        $db = loader::getdb();
+        $db = db::get();
 
         $delete = "DELETE FROM ploopi_param_choice WHERE id_module_type = {$this->fields['id_module_type']} AND name = '".$db->addslashes($this->fields['name'])."'";
         $db->query($delete);
@@ -81,7 +81,7 @@ class param_type extends data_object
 
     public function getallchoices()
     {
-        $db = loader::getdb();
+        $db = db::get();
 
         $arrParamChoice = array();
 

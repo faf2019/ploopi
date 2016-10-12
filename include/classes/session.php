@@ -112,7 +112,7 @@ class session
                 }
                 else
                 {
-                    $db = loader::getdb();
+                    $db = db::get();
                     self::set_db($db);
                 }
             break;

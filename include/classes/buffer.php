@@ -53,7 +53,7 @@ abstract class buffer
     {
 
         global $ploopi_timer;
-        $db = loader::getdb();
+        $db = db::connected() ? db::get() : null;
 
         if (!strlen(trim($buffer))) return '';
 

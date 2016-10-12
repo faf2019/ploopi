@@ -81,7 +81,7 @@ $arrResult['columns']['actions_right']['actions'] =
         'width' => '24'
     );    
     
-ploopi\loader::getdb()->query("
+ploopi\db::get()->query("
     SELECT      rt.*,
                 w.label as w_label,
                 IF(ISNULL(r.id), 0, count(*)) as c
@@ -100,7 +100,7 @@ ploopi\loader::getdb()->query("
 ");
     
 
-while ($row = ploopi\loader::getdb()->fetchrow())
+while ($row = ploopi\db::get()->fetchrow())
 {
     $arrResult['rows'][] = 
         array(
@@ -122,7 +122,7 @@ while ($row = ploopi\loader::getdb()->fetchrow())
         );
 }
 
-$skin->display_array(
+ploopi\skin::get()->display_array(
     $arrResult['columns'], 
     $arrResult['rows'], 
     'booking_resourcetype', 

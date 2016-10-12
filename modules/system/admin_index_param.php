@@ -35,7 +35,7 @@
  */
 if (!empty($_REQUEST['idmodule'])) $idmodule = $_REQUEST['idmodule'];
 
-echo $skin->open_simplebloc(_SYSTEM_MODULESELECTED);
+echo ploopi\skin::get()->open_simplebloc(_SYSTEM_MODULESELECTED);
 ?>
 <div style="padding:4px;">
 <?php
@@ -70,11 +70,11 @@ else
 ?>
 </div>
 <?php
-echo $skin->close_simplebloc();
+echo ploopi\skin::get()->close_simplebloc();
 
 if (isset($idmodule))
 {
-    echo $skin->open_simplebloc(_SYSTEM_MODULEPARAM);
+    echo ploopi\skin::get()->open_simplebloc(_SYSTEM_MODULEPARAM);
 
     $param_module->open($idmodule, $workspaceid);
 
@@ -141,6 +141,6 @@ if (isset($idmodule))
     }
     else echo '&nbsp;'._SYSTEM_LABEL_NOMODULEPARAM;
 
-    echo $skin->close_simplebloc();
+    echo ploopi\skin::get()->close_simplebloc();
 }
 ?>

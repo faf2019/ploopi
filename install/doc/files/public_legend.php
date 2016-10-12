@@ -92,5 +92,5 @@ ob_end_clean();
 /**
  * Affichage du popup
  */
-echo $skin->create_popup('Légende', $content, 'dochelp');
+echo ploopi\skin::get()->create_popup('Légende', $content, 'dochelp');
 ?>

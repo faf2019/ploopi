@@ -73,7 +73,7 @@ class directory_contact extends ploopi\data_object
      */
     public function save($booForcePos = false)
     {
-        $db = ploopi\loader::getdb();
+        $db = ploopi\db::get();
 
         if (!$booForcePos)
         {
@@ -114,7 +114,7 @@ class directory_contact extends ploopi\data_object
 
     public function delete()
     {
-        $db = ploopi\loader::getdb();
+        $db = ploopi\db::get();
 
         $db->query("UPDATE ploopi_mod_directory_contact SET position = position - 1 WHERE position > {$this->fields['position']} AND id_heading = {$this->fields['id_heading']}");
 

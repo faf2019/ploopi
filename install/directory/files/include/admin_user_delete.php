@@ -42,7 +42,7 @@ global $admin_redirect;
  * Suppression des contacts de l'utilisateur
  */
 
-ploopi\loader::getdb()->query("DELETE FROM ploopi_mod_directory_contact WHERE id_user = {$admin_userid} AND id_workspace = {$admin_workspaceid} AND id_module = {$admin_moduleid}");
+ploopi\db::get()->query("DELETE FROM ploopi_mod_directory_contact WHERE id_user = {$admin_userid} AND id_workspace = {$admin_workspaceid} AND id_module = {$admin_moduleid}");
 
 echo _DIRECTORY_LABEL_DELETE_USER;
 

@@ -60,8 +60,8 @@ else
         $arrWhere[] = 'id NOT IN ('.implode(',', $arrCurrentGroups).')';
     }
 
-    ploopi\loader::getdb()->query();
-    $row = ploopi\loader::getdb()->fetchrow();
+    ploopi\db::get()->query();
+    $row = ploopi\db::get()->fetchrow();
     $nbgroup = $row['nb'];
 }
 
@@ -102,7 +102,7 @@ else
             'url' => 'admin.php?alphaTabItem=99'
         );
 
-    echo $skin->create_tabs($tabs_char, $alphaTabItem);
+    echo ploopi\skin::get()->create_tabs($tabs_char, $alphaTabItem);
     ?>
 </div>
 
@@ -120,7 +120,7 @@ if ($alphaTabItem == 99) // tous ou recherche
 {
     if ($pattern != '')
     {
-        $pattern = ploopi\loader::getdb()->addslashes($pattern);
+        $pattern = ploopi\db::get()->addslashes($pattern);
         $arrWhere[] .=  "ploopi_group.label LIKE '%{$pattern}%'";
     }
 }
@@ -153,9 +153,9 @@ $columns['actions_right']['actions'] = array('label' => '&nbsp;', 'width' => '24
 
 $c = 0;
 
-$result = ploopi\loader::getdb()->query($sql);
+$result = ploopi\db::get()->query($sql);
 
-while ($fields = ploopi\loader::getdb()->fetchrow($result))
+while ($fields = ploopi\db::get()->fetchrow($result))
 {
     $array_parents = system_getparents($fields['parents'], 'group');
     array_shift($array_parents);
@@ -170,5 +170,5 @@ while ($fields = ploopi\loader::getdb()->fetchrow($result))
     $c++;
 }
 
-$skin->display_array($columns, $values, 'array_grouplist_attach', array('sortable' => true, 'orderby_default' => 'label'));
+ploopi\skin::get()->display_array($columns, $values, 'array_grouplist_attach', array('sortable' => true, 'orderby_default' => 'label'));
 ?>

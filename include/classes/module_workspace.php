@@ -53,7 +53,7 @@ class module_workspace extends data_object
 
     public function save()
     {
-        $db = loader::getdb();
+        $db = db::get();
 
         if ($this->new)
         {
@@ -77,7 +77,7 @@ class module_workspace extends data_object
 
     public function delete()
     {
-        $db = loader::getdb();
+        $db = db::get();
 
         $update = "UPDATE ploopi_module_workspace SET position=position-1 WHERE id_workspace = {$this->fields['id_workspace']} AND position > {$this->fields['position']}";
         $db->query($update);
@@ -93,7 +93,7 @@ class module_workspace extends data_object
 
     public function changeposition($direction)
     {
-        $db = loader::getdb();
+        $db = db::get();
 
         $workspaceid = $this->fields['id_workspace'];
 

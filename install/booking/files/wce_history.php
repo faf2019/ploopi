@@ -36,7 +36,7 @@ if ($_SESSION['ploopi']['connected'])
 {
     $booking_resource_id = (empty($_POST['booking_resource_id']) || !is_numeric($_POST['booking_resource_id'])) ? '' : $_POST['booking_resource_id'];
 
-    echo $skin->open_simplebloc('Suivi des demandes');
+    echo ploopi\skin::get()->open_simplebloc('Suivi des demandes');
 
     // INIT PATTERN de recherche
     $arrSearchPattern = array();
@@ -239,7 +239,7 @@ if ($_SESSION['ploopi']['connected'])
         }
 
         // Affichage du tableau
-        $skin->display_array(
+        ploopi\skin::get()->display_array(
             $arrResult['columns'],
             $arrResult['rows'],
             'booking_events',
@@ -251,7 +251,7 @@ if ($_SESSION['ploopi']['connected'])
         );
     }
 
-    echo $skin->close_simplebloc();
+    echo ploopi\skin::get()->close_simplebloc();
 }
 else
 {

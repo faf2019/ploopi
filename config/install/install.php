@@ -187,7 +187,15 @@ if (!empty($_POST)) {
         $mysqli->multi_query(file_get_contents($sql));
         while ($mysqli->more_results()) $mysqli->next_result();
 
-        $hash = hash($S['saved']['HASH_ALGO'], "{$S['saved']['SECRETKEY']}/{$S['saved']['ADMIN_LOGIN']}/".hash($S['saved']['HASH_ALGO'], $S['saved']['ADMIN_PASSWORD']));
+        switch($S['saved']['HASH_ALGO']) {
+            case 'bcrypt':
+                $hash = password_hash("{$S['saved']['SECRETKEY']}/{$S['saved']['ADMIN_LOGIN']}/{$S['saved']['ADMIN_PASSWORD']}", PASSWORD_BCRYPT);
+            break;
+
+            default:
+                $hash = hash($S['saved']['HASH_ALGO'], "{$S['saved']['SECRETKEY']}/{$S['saved']['ADMIN_LOGIN']}/".hash($S['saved']['HASH_ALGO'], $S['saved']['ADMIN_PASSWORD']));
+            break;
+        }
 
         $res = $mysqli->real_query($sql = "
             UPDATE  `ploopi_user`
@@ -290,9 +298,10 @@ $arrVariables = [
         ],
         'HASH_ALGO' => [
             'Algorithme de hashage pour le stockage des mots de passe',
-            'Recommandé : sha256, sha384, sha512, whirlpool',
-            'sha256',
+            'Recommandé : bcrypt, sha256, sha384, sha512, whirlpool',
+            'bcrypt',
             [
+                'bcrypt' => 'BCRYPT',
                 'md5' => 'MD5',
                 'sha1' => 'SHA-1',
                 'sha256' => 'SHA-256',

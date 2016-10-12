@@ -48,7 +48,7 @@ else
     $title = _FORMS_SEPARATORCREATION;
 }
 
-echo $skin->open_simplebloc($title);
+echo ploopi\skin::get()->open_simplebloc($title);
 
 $arrParams = array();
 $arrParams[] = "ploopi_op=forms_separator_save";
@@ -131,4 +131,4 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
 </div>
 </form>
 
-<?php echo $skin->close_simplebloc(); ?>
+<?php echo ploopi\skin::get()->close_simplebloc(); ?>

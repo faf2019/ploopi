@@ -137,8 +137,8 @@ else
                 ploopi\system::kill();
             }
 
-            echo $skin->create_pagetitle(_SYSTEM_PAGE_TITLE);
-            echo $skin->open_simplebloc(_PLOOPI_ADMIN_WORKSPACES);
+            echo ploopi\skin::get()->create_pagetitle(_SYSTEM_PAGE_TITLE);
+            echo ploopi\skin::get()->open_simplebloc(_PLOOPI_ADMIN_WORKSPACES);
             ?>
             <div style="overflow:auto;">
                 <div class="system_tree">
@@ -157,7 +157,7 @@ else
                 </div>
             </div>
             <?php
-            echo $skin->close_simplebloc();
+            echo ploopi\skin::get()->close_simplebloc();
         break;
 
         /**
@@ -166,14 +166,14 @@ else
         case 'system':
             if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_SYSTEMADMIN)
             {
-                echo $skin->create_pagetitle(_SYSTEM_PAGE_TITLE);
-                echo $skin->open_simplebloc(_PLOOPI_ADMIN_SYSTEM);
+                echo ploopi\skin::get()->create_pagetitle(_SYSTEM_PAGE_TITLE);
+                echo ploopi\skin::get()->open_simplebloc(_PLOOPI_ADMIN_SYSTEM);
                 ?>
                 <div class="system_main">
                 <?php include_once './modules/system/admin_system.php'; ?>
                 </div>
                 <?php
-                echo $skin->close_simplebloc();
+                echo ploopi\skin::get()->close_simplebloc();
             }
             else ploopi\output::redirect("admin.php?system_level="._SYSTEM_WORKSPACES);
         break;

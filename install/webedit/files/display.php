@@ -359,7 +359,7 @@ if ($query_string != '' || $advanced_search) // recherche intégrale
             if ($query_heading_id != '')
             {
                 // Liste des articles de la rubrique sélectionnée
-                $rs = ploopi\loader::getdb()->query("
+                $rs = ploopi\db::get()->query("
                     SELECT  a.id
                     FROM    ploopi_mod_webedit_heading h1,
                             ploopi_mod_webedit_heading h2,
@@ -369,7 +369,7 @@ if ($query_string != '' || $advanced_search) // recherche intégrale
                     AND     a.id_heading = h1.id
                 ");
 
-                $arrQueryHeadingArticles = ploopi\loader::getdb()->getarray($rs, true);
+                $arrQueryHeadingArticles = ploopi\db::get()->getarray($rs, true);
 
                 if (!empty($arrQueryHeadingArticles))
                 {
@@ -403,11 +403,11 @@ if ($query_string != '' || $advanced_search) // recherche intégrale
                 WHERE       a.id_module = {$_SESSION['ploopi']['moduleid']}
                 AND         ao.id_article = a.id
                 ";
-            ploopi\loader::getdb()->query($sql);
+            ploopi\db::get()->query($sql);
 
             $arrObject = array();
 
-            while ($row = ploopi\loader::getdb()->fetchrow())
+            while ($row = ploopi\db::get()->fetchrow())
             {
                 if ($row['id_heading'] == 0 || !$arrHeadings['list'][$row['id_heading']]['private'] || isset($arrShares[$arrHeadings['list'][$row['id_heading']]['herited_private']]) || isset($_SESSION['webedit']['allowedheading'][$_SESSION['ploopi']['moduleid']][$arrHeadings['list'][$row['id_heading']]['herited_private']]) || $webedit_mode == 'edit') // Rubrique non privée ou accessible par l'utilisateur
                 {
@@ -480,9 +480,9 @@ if ($query_string != '' || $advanced_search) // recherche intégrale
             if (!empty($ts_date_b)) $sql .= " AND d.timestp_create >= '{$ts_date_b}' ";
             if (!empty($ts_date_e)) $sql .= " AND d.timestp_create <= '{$ts_date_e}' ";
 
-            ploopi\loader::getdb()->query($sql);
+            ploopi\db::get()->query($sql);
 
-            while ($row = ploopi\loader::getdb()->fetchrow())
+            while ($row = ploopi\db::get()->fetchrow())
             {
                 if ($row['id_heading'] == 0 || !$arrHeadings['list'][$row['id_heading']]['private'] || isset($arrShares[$arrHeadings['list'][$row['id_heading']]['herited_private']]) || isset($_SESSION['webedit']['allowedheading'][$_SESSION['ploopi']['moduleid']][$arrHeadings['list'][$row['id_heading']]['herited_private']]) || $webedit_mode == 'edit') // Rubrique non privée ou accessible par l'utilisateur
                 {
@@ -681,16 +681,16 @@ elseif($query_tag != '') // recherche par tag
                         ploopi_mod_webedit_article_tag at,
                         ploopi_mod_webedit_article a
 
-            WHERE       t.tag = '".ploopi\loader::getdb()->addslashes($query_tag)."'
+            WHERE       t.tag = '".ploopi\db::get()->addslashes($query_tag)."'
             AND         at.id_tag = t.id
             AND         at.id_article = a.id
             AND         (a.timestp_published <= $today OR a.timestp_published = 0)
             AND         (a.timestp_unpublished >= $today OR a.timestp_unpublished = 0)
             ";
 
-    ploopi\loader::getdb()->query($sql);
+    ploopi\db::get()->query($sql);
 
-    while ($row = ploopi\loader::getdb()->fetchrow())
+    while ($row = ploopi\db::get()->fetchrow())
     {
         if (!$arrHeadings['list'][$row['id_heading']]['private'] || isset($arrShares[$arrHeadings['list'][$row['id_heading']]['herited_private']]) || isset($_SESSION['webedit']['allowedheading'][$_SESSION['ploopi']['moduleid']][$arrHeadings['list'][$row['id_heading']]['herited_private']]) || $webedit_mode == 'edit') // Rubrique non privée ou accessible par l'utilisateur
         {
@@ -846,9 +846,9 @@ elseif($arrHeadings['list'][$headingid]['content_type'] == 'blog' && $webedit_mo
                             ";
             }
 
-            $resSQL = ploopi\loader::getdb()->query($select); // ATTENTION CE RESULTAT DE REQUETE "$resSQL" SERT A NOUVEAU PLUS BAS !!!
+            $resSQL = ploopi\db::get()->query($select); // ATTENTION CE RESULTAT DE REQUETE "$resSQL" SERT A NOUVEAU PLUS BAS !!!
 
-            if (ploopi\loader::getdb()->numrows($resSQL))
+            if (ploopi\db::get()->numrows($resSQL))
             {
                 // Tableau tampon des infos user (dans un blog on retrouve souvent les meme info sur le redacteur ! pas besoin de $objuser->open(iduser) 50x !)
                 $arrTmpUser = array();
@@ -876,7 +876,7 @@ elseif($arrHeadings['list'][$headingid]['content_type'] == 'blog' && $webedit_mo
 
                 // On balaye TOUS les article du id heading pour générer les boutons
                 // On filtre aussi dans $arrShowArticle les articles à afficher
-                while ($row = ploopi\loader::getdb()->fetchrow($resSQL))
+                while ($row = ploopi\db::get()->fetchrow($resSQL))
                 {
                     $arrDate = ploopi\date::gettimestampdetail($row['timestp']);
 
@@ -1096,12 +1096,12 @@ elseif($arrHeadings['list'][$headingid]['content_type'] == 'blog' && $webedit_mo
                         WHERE   t.id = at.id_tag
                         AND     at.id_article = {$row['id']}
                         ";
-                    $resSqltag = ploopi\loader::getdb()->query($sqlTag);
-                    if(ploopi\loader::getdb()->numrows($resSqltag))
+                    $resSqltag = ploopi\db::get()->query($sqlTag);
+                    if(ploopi\db::get()->numrows($resSqltag))
                     {
                         $template_body->assign_block_vars('switch_content_blog.article.switch_tags', array());
 
-                        while ($tag = ploopi\loader::getdb()->fetchrow($resSqltag))
+                        while ($tag = ploopi\db::get()->fetchrow($resSqltag))
                         {
                             if($webedit_mode == 'render')
                                 $link =  "index.php?webedit_mode=render&query_tag={$tag['tag']}";
@@ -1150,13 +1150,13 @@ elseif($arrHeadings['list'][$headingid]['content_type'] == 'blog' && $webedit_mo
                             ORDER BY    timestp DESC
                             ";
 
-                        $resSqlComment = ploopi\loader::getdb()->query($selectComment);
+                        $resSqlComment = ploopi\db::get()->query($selectComment);
 
-                        if(ploopi\loader::getdb()->numrows())
+                        if(ploopi\db::get()->numrows())
                         {
                             if($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['nb_comm_blog'])
                             {
-                                while($rowComment = ploopi\loader::getdb()->fetchrow($resSqlComment))
+                                while($rowComment = ploopi\db::get()->fetchrow($resSqlComment))
                                 {
                                     $date_comment = (!empty($row['timestp_published'])) ? ploopi\date::timestamp2local($rowComment['timestp']) : array('date' => '', 'time' => '');
 
@@ -1183,14 +1183,14 @@ elseif($arrHeadings['list'][$headingid]['content_type'] == 'blog' && $webedit_mo
                                                 'LIBELLE_SHOW'  => _WEBEDIT_COMMENT_SHOWALL
                                             )
                                         );
-                                        $nbComment = ploopi\loader::getdb()->numrows($resSqlComment);
+                                        $nbComment = ploopi\db::get()->numrows($resSqlComment);
                                         break;
                                     }
                                 }
                             }
                         }
 
-                        $nbComment = ploopi\loader::getdb()->numrows($resSqlComment);
+                        $nbComment = ploopi\db::get()->numrows($resSqlComment);
 
                         $template_body->assign_block_vars('switch_content_blog.article.sw_comment.info',
                             array(
@@ -1314,7 +1314,7 @@ else // affichage standard rubrique/page
         if(in_array($arrHeadings['list'][$headingid]['content_type'], array('headings', 'sitemap')) && empty($articleid)) // affichage rubriques ou plan de site
         {
 
-            ploopi\loader::getdb()->query("
+            ploopi\db::get()->query("
                 SELECT      id, visible, metatitle, timestp_published, timestp_unpublished, lastupdate_timestp,
                             timestp, reference, title, content_cleaned, author, version, position, id_heading
                 FROM        ploopi_mod_webedit_article
@@ -1325,7 +1325,7 @@ else // affichage standard rubrique/page
             ");
 
             $arrArticles = array();
-            while ($row = ploopi\loader::getdb()->fetchrow()) $arrArticles[$row['id_heading']][] = $row;
+            while ($row = ploopi\db::get()->fetchrow()) $arrArticles[$row['id_heading']][] = $row;
             // Affichage rubriques
             if ($arrHeadings['list'][$headingid]['content_type'] == 'headings')
             {
@@ -1387,9 +1387,9 @@ else // affichage standard rubrique/page
             break;
         }
 
-        $resSQL = ploopi\loader::getdb()->query($select); // ATTENTION CE RESULTAT DE REQUETE "$resSQL" PEUT SERVIR A NOUVEAU PLUS BAS !!!
+        $resSQL = ploopi\db::get()->query($select); // ATTENTION CE RESULTAT DE REQUETE "$resSQL" PEUT SERVIR A NOUVEAU PLUS BAS !!!
 
-        if (ploopi\loader::getdb()->numrows($resSQL))
+        if (ploopi\db::get()->numrows($resSQL))
         {
             // Bouton de menu
             $booIsSwitchPages = false;
@@ -1399,7 +1399,7 @@ else // affichage standard rubrique/page
 
             $article_array = array();
 
-            while ($row = ploopi\loader::getdb()->fetchrow($resSQL))
+            while ($row = ploopi\db::get()->fetchrow($resSQL))
             {
                 $article_array[] = $row;
                 if ($row['visible']) $nbvisart++;
@@ -1755,10 +1755,10 @@ else // affichage standard rubrique/page
                     ORDER BY    timestp DESC
                     ";
 
-                $resSqlComment = ploopi\loader::getdb()->query($selectComment);
-                if(ploopi\loader::getdb()->numrows())
+                $resSqlComment = ploopi\db::get()->query($selectComment);
+                if(ploopi\db::get()->numrows())
                 {
-                    while($rowComment = ploopi\loader::getdb()->fetchrow($resSqlComment))
+                    while($rowComment = ploopi\db::get()->fetchrow($resSqlComment))
                     {
                         $date_comment = ($article->fields['timestp_published']!='') ? ploopi\date::timestamp2local($rowComment['timestp']) : array('date' => '', 'time' => '');
 
@@ -2081,11 +2081,11 @@ $sql =  "
         ";
 
 
-ploopi\loader::getdb()->query($sql);
+ploopi\db::get()->query($sql);
 
 $arrTags = array();
 
-while ($row = ploopi\loader::getdb()->fetchrow())
+while ($row = ploopi\db::get()->fetchrow())
 {
     // ATTENTION EN CAS DE CHANGEMENT DE FILTRE, NE PAS OUBLIER LES TAG 3D DANS BACKEND.PHP
     if (!$arrHeadings['list'][$row['id_heading']]['private']
@@ -2170,11 +2170,11 @@ if(isset($arrHeadings['list'][$headingid]['content_type']) && $arrHeadings['list
     );
 
     // la requete a déjà été effectuée dans l'affichage "blog" ou "page" plus haut
-    if(isset($resSQL) && ploopi\loader::getdb()->numrows($resSQL))
+    if(isset($resSQL) && ploopi\db::get()->numrows($resSQL))
     {
-        ploopi\loader::getdb()->dataseek($resSQL); // Repositionne au debut;
+        ploopi\db::get()->dataseek($resSQL); // Repositionne au debut;
 
-        while ($row = ploopi\loader::getdb()->fetchrow($resSQL))
+        while ($row = ploopi\db::get()->fetchrow($resSQL))
         {
             $arrDate = ploopi\date::gettimestampdetail($row['timestp']);
 
@@ -2331,9 +2331,9 @@ if(isset($arrHeadings['list'][$headingid]['content_type']) && $arrHeadings['list
     }
 }
 
-if($type == 'draft') $rs = ploopi\loader::getdb()->query("SELECT * FROM ploopi_mod_webedit_article_draft WHERE id_module = {$_SESSION['ploopi']['moduleid']} AND id_heading = 0");
-else $rs = ploopi\loader::getdb()->query("SELECT * FROM ploopi_mod_webedit_article WHERE id_module = {$_SESSION['ploopi']['moduleid']} AND id_heading = 0");
-while ($row = ploopi\loader::getdb()->fetchrow($rs))
+if($type == 'draft') $rs = ploopi\db::get()->query("SELECT * FROM ploopi_mod_webedit_article_draft WHERE id_module = {$_SESSION['ploopi']['moduleid']} AND id_heading = 0");
+else $rs = ploopi\db::get()->query("SELECT * FROM ploopi_mod_webedit_article WHERE id_module = {$_SESSION['ploopi']['moduleid']} AND id_heading = 0");
+while ($row = ploopi\db::get()->fetchrow($rs))
 {
     $objArticle = new webedit_article();
     $objArticle->fields = $row; // astuce pour pouvoir se servir de webedit_replace_links() !

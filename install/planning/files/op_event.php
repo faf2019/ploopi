@@ -396,7 +396,7 @@ switch($ploopi_op)
         $content = ob_get_contents();
         ob_end_clean();
 
-        echo $skin->create_popup($strPopupTitle, $content, 'popup_planning_event');
+        echo ploopi\skin::get()->create_popup($strPopupTitle, $content, 'popup_planning_event');
         ploopi\system::kill();
     break;
 

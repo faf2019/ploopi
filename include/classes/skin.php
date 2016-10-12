@@ -44,8 +44,9 @@ use ploopi;
  * @author Stéphane Escaich
  */
 
-class skin_common
+class skin
 {
+    private static $_skin = null;
 
     /**
      * Constructeur de la classe skin_common
@@ -60,6 +61,26 @@ class skin_common
         $this->values['path'] = "./templates/{$_SESSION['ploopi']['mode']}/{$skin}/img";
         $this->values['inifile'] = "./templates/{$_SESSION['ploopi']['mode']}/{$skin}/skin.ini";
         if (file_exists($this->values['inifile'])) $this->values = array_merge($this->values,parse_ini_file($this->values['inifile']));
+    }
+
+    /**
+     * Accès au skin + init (singleton)
+     */
+    public static function get() {
+        if (is_null(self::$_skin)) {
+            if ($_SESSION['ploopi']['mode'] == 'frontoffice') {
+                if (!empty($_SESSION['ploopi']['frontoffice']['template_path']) && file_exists("{$_SESSION['ploopi']['frontoffice']['template_path']}/class_skin.php")) {
+                    include_once "{$_SESSION['ploopi']['frontoffice']['template_path']}/class_skin.php";
+                    self::$_skin = new \skin();
+                }
+            }
+            else {
+                include_once "{$_SESSION['ploopi']['template_path']}/class_skin.php";
+                self::$_skin = new \skin();
+            }
+        }
+
+        return self::$_skin;
     }
 
     /**

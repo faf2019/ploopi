@@ -47,7 +47,7 @@ abstract class acl
 
     function actions_getusers($id_action, $id_module = -1, $id_workspace = -1)
     {
-        $db = loader::getdb();
+        $db = db::get();
 
         if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];
         if ($id_workspace == -1) $id_workspace = $_SESSION['ploopi']['workspaceid'];

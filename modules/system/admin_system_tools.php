@@ -34,7 +34,7 @@
  * Ouverture du bloc
  */
 
-echo $skin->open_simplebloc(_SYSTEM_LABEL_TOOLS);
+echo ploopi\skin::get()->open_simplebloc(_SYSTEM_LABEL_TOOLS);
 
 $columns = array();
 $values = array();
@@ -90,7 +90,7 @@ $values[$c]['description'] = _SYSTEM_EXPLAIN_ACTIONHISTORY;
 $values[$c]['link'] = ploopi\crypt::urlencode("admin.php?op=actionhistory");
 $c++;
 
-$skin->display_array($columns, $values, 'array_tools', array('sortable' => true, 'orderby_default' => 'tool'));
+ploopi\skin::get()->display_array($columns, $values, 'array_tools', array('sortable' => true, 'orderby_default' => 'tool'));
 
-echo $skin->close_simplebloc();
+echo ploopi\skin::get()->close_simplebloc();
 ?>

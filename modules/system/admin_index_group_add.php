@@ -33,7 +33,7 @@
 /**
  * Ouverture du bloc
  */
-echo $skin->open_simplebloc();
+echo ploopi\skin::get()->open_simplebloc();
 
 if (empty($group))
 {
@@ -67,4 +67,4 @@ else
     <input type="submit" class="flatbutton" value="<?php echo _PLOOPI_SAVE; ?>">
 </div>
 
-<?php echo $skin->close_simplebloc(); ?>
+<?php echo ploopi\skin::get()->close_simplebloc(); ?>

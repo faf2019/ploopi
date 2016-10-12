@@ -35,7 +35,7 @@
  */
 if (!empty($_REQUEST['idmodule']) && is_numeric($_REQUEST['idmodule'])) $idmodule = $_REQUEST['idmodule'];
 
-echo $skin->open_simplebloc(_SYSTEM_MODULESELECTED);
+echo ploopi\skin::get()->open_simplebloc(_SYSTEM_MODULESELECTED);
 
 $arrModules = $_SESSION['ploopi']['modules'];
 usort($arrModules, create_function('$a,$b', 'return strcasecmp($a[\'label\'], $b[\'label\']);'));
@@ -58,11 +58,11 @@ usort($arrModules, create_function('$a,$b', 'return strcasecmp($a[\'label\'], $b
 </form>
 </div>
 <?php
-echo $skin->close_simplebloc();
+echo ploopi\skin::get()->close_simplebloc();
 
 if (isset($idmodule))
 {
-    echo $skin->open_simplebloc(_SYSTEM_MODULEPARAM);
+    echo ploopi\skin::get()->open_simplebloc(_SYSTEM_MODULEPARAM);
 
     $param_module->open($idmodule);
 
@@ -129,6 +129,6 @@ if (isset($idmodule))
     }
     else echo '&nbsp;'._SYSTEM_LABEL_NOMODULEPARAM;
 
-    echo $skin->close_simplebloc();
+    echo ploopi\skin::get()->close_simplebloc();
 }
 ?>

@@ -59,7 +59,7 @@ class directory_list extends ploopi\data_object
 
     public function delete()
     {
-        $db = ploopi\loader::getdb();
+        $db = ploopi\db::get();
         $db->query("DELETE FROM ploopi_mod_directory_favorites WHERE id_list = {$this->fields['id']}");
         parent::delete();
     }

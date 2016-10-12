@@ -66,7 +66,7 @@ class role extends data_object
 
     public function save($actions, $id_module_type)
     {
-        $db = loader::getdb();
+        $db = db::get();
 
         parent::save();
 
@@ -94,7 +94,7 @@ class role extends data_object
 
     public function delete()
     {
-        $db = loader::getdb();
+        $db = db::get();
 
         $delete = "DELETE FROM ploopi_role_action WHERE id_role = ".$this->fields['id'];
         $db->query($delete);
@@ -110,7 +110,7 @@ class role extends data_object
 
     public function getactions()
     {
-        $db = loader::getdb();
+        $db = db::get();
 
         $arrActions = array();
 

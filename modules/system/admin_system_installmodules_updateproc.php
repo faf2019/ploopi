@@ -47,12 +47,12 @@ $strModuleType = $objModuleType->fields['label'];
 
 if (!ini_get('safe_mode')) ini_set('max_execution_time', 0);
 
-echo $skin->open_simplebloc(_SYSTEM_LABEL_UPDATEREPORT.ploopi\str::htmlentities(" - {$strModuleType} {$_GET['updatefrom']} => {$_GET['updateto']}"));
+echo ploopi\skin::get()->open_simplebloc(_SYSTEM_LABEL_UPDATEREPORT.ploopi\str::htmlentities(" - {$strModuleType} {$_GET['updatefrom']} => {$_GET['updateto']}"));
 
 
-$select = "SELECT version FROM ploopi_module_type WHERE id = '".ploopi\loader::getdb()->addslashes($strModuleType)."' AND version = '".ploopi\loader::getdb()->addslashes($_GET['updateto'])."'";
-ploopi\loader::getdb()->query($select);
-if (ploopi\loader::getdb()->numrows())
+$select = "SELECT version FROM ploopi_module_type WHERE id = '".ploopi\db::get()->addslashes($strModuleType)."' AND version = '".ploopi\db::get()->addslashes($_GET['updateto'])."'";
+ploopi\db::get()->query($select);
+if (ploopi\db::get()->numrows())
 {
     ?>
     <div style="padding:4px;text-align:center;font-weight:bold;color:#a60000;">Module déjà mis à jour !</div>
@@ -145,7 +145,7 @@ else
             {
                 if (file_exists("{$sqlpath}/{$sqlfile}"))
                 {
-                    ploopi\loader::getdb()->multiplequeries(file_get_contents("{$sqlpath}/{$sqlfile}"));
+                    ploopi\db::get()->multiplequeries(file_get_contents("{$sqlpath}/{$sqlfile}"));
                     $detail[] = "Fichier '{$sqlfile}' importé";
                 }
                 else $detail[] = "Fichier '{$sqlfile}' non trouvé";
@@ -161,12 +161,12 @@ else
 
             ploopi\user_action_log::record(_SYSTEM_ACTION_UPDATEMETABASE, $strModuleType);
 
-            ploopi\loader::getdb()->query("DELETE FROM ploopi_mb_field WHERE id_module_type = {$_GET['idmoduletype']}");
-            ploopi\loader::getdb()->query("DELETE FROM ploopi_mb_relation WHERE id_module_type = {$_GET['idmoduletype']}");
-            ploopi\loader::getdb()->query("DELETE FROM ploopi_mb_schema WHERE id_module_type = {$_GET['idmoduletype']}");
-            ploopi\loader::getdb()->query("DELETE FROM ploopi_mb_table WHERE id_module_type = {$_GET['idmoduletype']}");
-            ploopi\loader::getdb()->query("DELETE FROM ploopi_mb_object WHERE id_module_type = {$_GET['idmoduletype']}");
-            ploopi\loader::getdb()->query("DELETE FROM ploopi_mb_wce_object WHERE id_module_type = {$_GET['idmoduletype']}");
+            ploopi\db::get()->query("DELETE FROM ploopi_mb_field WHERE id_module_type = {$_GET['idmoduletype']}");
+            ploopi\db::get()->query("DELETE FROM ploopi_mb_relation WHERE id_module_type = {$_GET['idmoduletype']}");
+            ploopi\db::get()->query("DELETE FROM ploopi_mb_schema WHERE id_module_type = {$_GET['idmoduletype']}");
+            ploopi\db::get()->query("DELETE FROM ploopi_mb_table WHERE id_module_type = {$_GET['idmoduletype']}");
+            ploopi\db::get()->query("DELETE FROM ploopi_mb_object WHERE id_module_type = {$_GET['idmoduletype']}");
+            ploopi\db::get()->query("DELETE FROM ploopi_mb_wce_object WHERE id_module_type = {$_GET['idmoduletype']}");
 
             if (file_exists($mbfile))
             {
@@ -204,7 +204,7 @@ else
         $c++;
     }
 
-    $skin->display_array($columns, $values, 'array_updateproc');
+    ploopi\skin::get()->display_array($columns, $values, 'array_updateproc');
 }
 ?>
 <div style="padding:4px;text-align:right;">
@@ -212,4 +212,4 @@ else
     <input type="submit" class="flatbutton" value="<?php echo _PLOOPI_CONTINUE; ?>">
     </form>
 </div>
-<?php echo $skin->close_simplebloc(); ?>
+<?php echo ploopi\skin::get()->close_simplebloc(); ?>

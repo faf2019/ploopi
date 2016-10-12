@@ -33,20 +33,20 @@
 switch($op)
 {
     default:
-        echo $skin->create_pagetitle(ploopi\str::htmlentities($_SESSION['ploopi']['modulelabel']));
-        echo $skin->open_simplebloc('Réindexation');
+        echo ploopi\skin::get()->create_pagetitle(ploopi\str::htmlentities($_SESSION['ploopi']['modulelabel']));
+        echo ploopi\skin::get()->open_simplebloc('Réindexation');
 
-        ploopi\loader::getdb()->query("SELECT count(*) as c FROM ploopi_mod_webedit_heading WHERE id_module = {$_SESSION['ploopi']['moduleid']}");
-        $arrStats['headings'] = ($row = ploopi\loader::getdb()->fetchrow()) ? $row['c'] : 0;
+        ploopi\db::get()->query("SELECT count(*) as c FROM ploopi_mod_webedit_heading WHERE id_module = {$_SESSION['ploopi']['moduleid']}");
+        $arrStats['headings'] = ($row = ploopi\db::get()->fetchrow()) ? $row['c'] : 0;
 
-        ploopi\loader::getdb()->query("SELECT count(*) as c FROM ploopi_mod_webedit_article WHERE id_module = {$_SESSION['ploopi']['moduleid']}");
-        $arrStats['articles'] = ($row = ploopi\loader::getdb()->fetchrow()) ? $row['c'] : 0;
+        ploopi\db::get()->query("SELECT count(*) as c FROM ploopi_mod_webedit_article WHERE id_module = {$_SESSION['ploopi']['moduleid']}");
+        $arrStats['articles'] = ($row = ploopi\db::get()->fetchrow()) ? $row['c'] : 0;
 
-        ploopi\loader::getdb()->query("SELECT count(*) as c FROM ploopi_mod_webedit_docfile WHERE id_module = {$_SESSION['ploopi']['moduleid']}");
-        $arrStats['files'] = ($row = ploopi\loader::getdb()->fetchrow()) ? $row['c'] : 0;
+        ploopi\db::get()->query("SELECT count(*) as c FROM ploopi_mod_webedit_docfile WHERE id_module = {$_SESSION['ploopi']['moduleid']}");
+        $arrStats['files'] = ($row = ploopi\db::get()->fetchrow()) ? $row['c'] : 0;
 
-        ploopi\loader::getdb()->query("SELECT count(*) as c FROM ploopi_mod_webedit_tag WHERE id_module = {$_SESSION['ploopi']['moduleid']}");
-        $arrStats['tags'] = ($row = ploopi\loader::getdb()->fetchrow()) ? $row['c'] : 0;
+        ploopi\db::get()->query("SELECT count(*) as c FROM ploopi_mod_webedit_tag WHERE id_module = {$_SESSION['ploopi']['moduleid']}");
+        $arrStats['tags'] = ($row = ploopi\db::get()->fetchrow()) ? $row['c'] : 0;
 
         /*
         $idxdb = ploopi\search_index::getdb();
@@ -88,23 +88,23 @@ switch($op)
             <strong><?php echo $arrStats['keywords']; ?> mot(s) indexé(s)</strong>
         </div>
         <?php
-        echo $skin->close_simplebloc();
+        echo ploopi\skin::get()->close_simplebloc();
     break;
 
     case 'reindex':
         if (!ini_get('safe_mode')) ini_set('max_execution_time', 0);
         include_once './modules/webedit/class_article.php';
 
-        echo $skin->create_pagetitle(ploopi\str::htmlentities($_SESSION['ploopi']['modulelabel']));
-        echo $skin->open_simplebloc();
+        echo ploopi\skin::get()->create_pagetitle(ploopi\str::htmlentities($_SESSION['ploopi']['modulelabel']));
+        echo ploopi\skin::get()->open_simplebloc();
         ?>
         <div style="padding:4px;">
         <?php
         $index_start = $ploopi_timer->getexectime();
 
-        $rsArticles = ploopi\loader::getdb()->query("SELECT id FROM ploopi_mod_webedit_article");
+        $rsArticles = ploopi\db::get()->query("SELECT id FROM ploopi_mod_webedit_article");
 
-        while ($row = ploopi\loader::getdb()->fetchrow($rsArticles))
+        while ($row = ploopi\db::get()->fetchrow($rsArticles))
         {
             $objArticle = new webedit_article();
             if ($objArticle->open($row['id']))
@@ -119,7 +119,7 @@ switch($op)
         <br /><a title="Retour" href="<?php echo ploopi\crypt::urlencode('admin.php?webedit_menu=reindex'); ?>">Retour</a>
         </div>
         <?php
-        echo $skin->close_simplebloc();
+        echo ploopi\skin::get()->close_simplebloc();
     break;
 }
 ?>

@@ -34,7 +34,7 @@
  * Ouverture du bloc
  */
 
-echo ploopi\str::htmlentities($skin->open_simplebloc());
+echo ploopi\str::htmlentities(ploopi\skin::get()->open_simplebloc());
 ?>
 
 <form name="" action="<?php echo ploopi\crypt::urlencode("admin.php?op=save_workspace&workspace_id_workspace={$workspace->fields['id']}"); ?>" method="post" onsubmit="javascript:return system_workspace_validate(this);">
@@ -209,7 +209,7 @@ echo ploopi\str::htmlentities($skin->open_simplebloc());
             );
       }
 
-    $skin->display_array($columns, $values, 'array_choosemodules', array('sortable' => true, 'orderby_default' => 'check'));
+    ploopi\skin::get()->display_array($columns, $values, 'array_choosemodules', array('sortable' => true, 'orderby_default' => 'check'));
 
     ?>
 </div>
@@ -218,4 +218,4 @@ echo ploopi\str::htmlentities($skin->open_simplebloc());
     <input type="submit" class="flatbutton" value="<?php echo _PLOOPI_SAVE; ?>">
 </div>
 
-<?php echo $skin->close_simplebloc(); ?>
+<?php echo ploopi\skin::get()->close_simplebloc(); ?>

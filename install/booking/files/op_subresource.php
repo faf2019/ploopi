@@ -104,12 +104,12 @@ switch($_REQUEST['ploopi_op'])
             <p>
                 <label>Ressource liée:</label>
                 <?php
-                ploopi\loader::getdb()->query("SELECT * FROM ploopi_mod_booking_resource WHERE id_module = {$_SESSION['ploopi']['moduleid']} ORDER BY name");
+                ploopi\db::get()->query("SELECT * FROM ploopi_mod_booking_resource WHERE id_module = {$_SESSION['ploopi']['moduleid']} ORDER BY name");
                 ?>
                 <select name="booking_subresource_id_resource" class="select" <?php if ($_REQUEST['ploopi_op'] == 'booking_subresource_open') echo 'disabled="disabled"'; ?>>
                     <option value="">(Choisir)</option>
                     <?php
-                    while ($row = ploopi\loader::getdb()->fetchrow())
+                    while ($row = ploopi\db::get()->fetchrow())
                     {
                         ?>
                         <option value="<?php echo $row['id']; ?>" <?php if ($objSubresource->fields['id_resource'] == $row['id']) echo 'selected="selected"'; ?>><?php echo ploopi\str::htmlentities($row['name']); ?></option>
@@ -136,7 +136,7 @@ switch($_REQUEST['ploopi_op'])
 
         $titre = ($_REQUEST['ploopi_op'] == 'booking_subresource_add') ? 'Ajout' : 'Modification';
 
-        echo $skin->create_popup("{$titre} d'une sous-ressource", $content, 'popup_subresource');
+        echo ploopi\skin::get()->create_popup("{$titre} d'une sous-ressource", $content, 'popup_subresource');
         ploopi\system::kill();
     break;
 }

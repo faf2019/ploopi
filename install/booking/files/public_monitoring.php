@@ -34,9 +34,9 @@
 
 $booking_resource_id = (empty($_POST['booking_resource_id']) || !is_numeric($_POST['booking_resource_id'])) ? '' : $_POST['booking_resource_id'];
 
-echo $skin->create_pagetitle(ploopi\str::htmlentities("{$_SESSION['ploopi']['modulelabel']} - Gestion"));
+echo ploopi\skin::get()->create_pagetitle(ploopi\str::htmlentities("{$_SESSION['ploopi']['modulelabel']} - Gestion"));
 
-echo $skin->open_simplebloc('Suivi des demandes');
+echo ploopi\skin::get()->open_simplebloc('Suivi des demandes');
 
 // INIT PATTERN de recherche
 $arrSearchPattern = array();
@@ -249,7 +249,7 @@ if (!empty($arrResources))
     }
 
     // Affichage du tableau
-    $skin->display_array(
+    ploopi\skin::get()->display_array(
         $arrResult['columns'],
         $arrResult['rows'],
         'booking_events',
@@ -261,5 +261,5 @@ if (!empty($arrResources))
     );
 }
 
-echo $skin->close_simplebloc();
+echo ploopi\skin::get()->close_simplebloc();
 ?>

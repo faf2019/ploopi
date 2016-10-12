@@ -116,7 +116,7 @@ switch($_REQUEST['ploopi_op'])
 
         $titre = ($_REQUEST['ploopi_op'] == 'booking_resourcetype_add') ? 'Ajout' : 'Modification';
 
-        echo $skin->create_popup("{$titre} d'un type de ressource", $content, 'popup_resourcetype');
+        echo ploopi\skin::get()->create_popup("{$titre} d'un type de ressource", $content, 'popup_resourcetype');
         ploopi\system::kill();
     break;
 }

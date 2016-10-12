@@ -33,7 +33,7 @@
 /**
  * Ouverture du bloc
  */
-echo $skin->open_simplebloc();
+echo ploopi\skin::get()->open_simplebloc();
 
 $arrRole = null;
 
@@ -70,7 +70,7 @@ $sql =  "
         ORDER BY    module_type, m.label
         ";
 
-ploopi\loader::getdb()->query($sql);
+ploopi\db::get()->query($sql);
 
 $columns = array();
 $values = array();
@@ -82,7 +82,7 @@ $columns['left']['role']        = array('label' => 'Rôle', 'width' => '200', 'op
 $columns['right']['shared']     = array('label' => 'Partagé', 'width' => '65');
 $columns['right']['origine']    = array('label' => 'Origine', 'width' => '150', 'options' => array('sort' => true));
 
-while($row = ploopi\loader::getdb()->fetchrow())
+while($row = ploopi\db::get()->fetchrow())
 {
     $values[$c]['values']['desc']       = array('label' => ploopi\str::htmlentities($row['description']));
     $values[$c]['values']['module']     = array('label' => ploopi\str::htmlentities($row['module_label']), 'sort_label' => sprintf("%s_%s", $row['module_label'], $row['label']));
@@ -101,13 +101,13 @@ while($row = ploopi\loader::getdb()->fetchrow())
     $c++;
 }
 
-$skin->display_array($columns, $values, 'array_roles', array('sortable' => true, 'orderby_default' => 'module', 'height' => 150));
+ploopi\skin::get()->display_array($columns, $values, 'array_roles', array('sortable' => true, 'orderby_default' => 'module', 'height' => 150));
 
-echo $skin->close_simplebloc();
+echo ploopi\skin::get()->close_simplebloc();
 
 if ($op == 'assign_role' && !empty($_GET['roleid']) && is_numeric($_GET['roleid']))
 {
-    echo $skin->open_simplebloc("Gestion des attributions du rôle &laquo; ".ploopi\str::htmlentities($arrRole['label'])." &raquo; du module &laquo; ".ploopi\str::htmlentities($arrRole['module_label'])." &raquo;");
+    echo ploopi\skin::get()->open_simplebloc("Gestion des attributions du rôle &laquo; ".ploopi\str::htmlentities($arrRole['label'])." &raquo; du module &laquo; ".ploopi\str::htmlentities($arrRole['module_label'])." &raquo;");
     ?>
 
     <p class="ploopi_va" style="padding:4px; background-color:#e0e0e0; border-bottom:1px solid #c0c0c0;">
@@ -125,6 +125,6 @@ if ($op == 'assign_role' && !empty($_GET['roleid']) && is_numeric($_GET['roleid'
     ?>
     </div>
     <?php
-    echo $skin->close_simplebloc();
+    echo ploopi\skin::get()->close_simplebloc();
 }
 ?>

@@ -71,7 +71,7 @@ class planning_event_detail extends ploopi\data_object
     {
         if (parent::open($args[0]))
         {
-            $db = ploopi\loader::getdb();
+            $db = ploopi\db::get();
 
             $this->initresources();
 
@@ -88,7 +88,7 @@ class planning_event_detail extends ploopi\data_object
     {
         if (!$this->isnew())
         {
-            $db = ploopi\loader::getdb();
+            $db = ploopi\db::get();
             // Suppression des resources associées au détail
             $db->query("DELETE FROM ploopi_mod_planning_event_detail_resource WHERE id_event_detail = {$this->fields['id']}");
         }
@@ -135,7 +135,7 @@ class planning_event_detail extends ploopi\data_object
      */
     public function delete()
     {
-        $db = ploopi\loader::getdb();
+        $db = ploopi\db::get();
 
         // Suppression des ressources liées
         $db->query("

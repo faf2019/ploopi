@@ -87,7 +87,7 @@ class data_object_collection
         $this->strClassName = $strClassName;
 
         if (!is_null($objDb)) $this->objDb = $objDb;
-        else { $db = loader::getdb(); $this->objDb = &$db; }
+        else { $db = db::get(); $this->objDb = &$db; }
 
         //On vérifie que la classe existe
         if (empty($this->strClassName) || !class_exists($this->strClassName)) trigger_error("data_object_collection : classe '{$this->strClassName}' inconnue");

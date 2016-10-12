@@ -215,7 +215,7 @@ function doc_getpath($id_module = -1, $createpath = false)
 
 function doc_countelements($id_folder)
 {
-    $db = ploopi\loader::getdb();
+    $db = ploopi\db::get();
 
     $c = 0;
 
@@ -448,7 +448,7 @@ function doc_record_isenabled($id_object, $id_record, $id_module)
  */
 function doc_getfolders()
 {
-    $db = ploopi\loader::getdb();
+    $db = ploopi\db::get();
 
     $id_module = $_SESSION['ploopi']['moduleid'];
     $id_user = $_SESSION['ploopi']['userid'];
@@ -559,7 +559,7 @@ function doc_getfolders()
  */
 function doc_gettreeview($arrFolders = array(), $strPrefix = '', $arrExcludes = null)
 {
-    $db = ploopi\loader::getdb();
+    $db = ploopi\db::get();
 
     $arrTreeview = array(
         'list' => array(),

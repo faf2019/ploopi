@@ -81,7 +81,7 @@ if (ploopi\acl::ismoduleallowed('wiki'))
             include_once './modules/wiki/op_help.php';
             $content = ob_get_contents();
             ob_end_clean();
-            ploopi\system::kill($skin->create_popup('Syntaxe Wiki - Aide en Ligne', $content, 'popup_wiki_help'));
+            ploopi\system::kill(ploopi\skin::get()->create_popup('Syntaxe Wiki - Aide en Ligne', $content, 'popup_wiki_help'));
         break;
 
         case 'wiki_page_save':

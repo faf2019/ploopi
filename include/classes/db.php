@@ -45,7 +45,7 @@ use ploopi;
  * @author Stéphane Escaich
  */
 
-class db_mysqli
+class db
 {
     /**
      * Détermine si la connexion est permanente
@@ -152,6 +152,12 @@ class db_mysqli
 
 
     /**
+     * Singleton de connexion à la base de donnée
+     */
+    private static $_objDb = null;
+
+
+    /**
      * Constructeur de la classe. Connexion à une base de données, sélection de la base.
      *
      * @param string $server adresse du serveur mysql
@@ -196,6 +202,33 @@ class db_mysqli
             $this->mysqli->set_charset('latin1');
         }
     }
+
+
+    /**
+     * Retourne le connecteur vers la base de données
+     *
+     * @return db instance du connecteur à la base de donnée
+     */
+
+    public static function get() {
+        if (!is_null(self::$_objDb)) return self::$_objDb;
+
+        self::$_objDb = new self(_PLOOPI_DB_SERVER, _PLOOPI_DB_LOGIN, _PLOOPI_DB_PASSWORD, _PLOOPI_DB_DATABASE);
+        if(!self::$_objDb->isconnected()) trigger_error(_PLOOPI_MSG_DBERROR, E_USER_ERROR);
+
+        return self::$_objDb;
+    }
+
+    /**
+     * Indique si une connexion en cours à la base de données
+     *
+     * @return boolean true s'il existe une connexion à la base de donnée
+     */
+
+    public static function connected() {
+        return !is_null(self::$_objDb);
+    }
+
 
     /**
      * Choix d'une base

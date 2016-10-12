@@ -136,6 +136,6 @@ if (!$booCriticalError)
         $intC++;
     }
     
-    $skin->display_array($columns, $values, 'array_user_importlist', array('sortable' => true));
+    ploopi\skin::get()->display_array($columns, $values, 'array_user_importlist', array('sortable' => true));
 }
 ?>

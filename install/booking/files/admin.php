@@ -61,10 +61,10 @@ $tabs['subresource'] = array(
     'url' => "admin.php?booking_tab=subresource"
 );
 
-echo $skin->create_pagetitle(ploopi\str::htmlentities("{$_SESSION['ploopi']['modulelabel']} - Administration"));
-echo $skin->create_tabs($tabs, $_SESSION['booking']['booking_tab']);
+echo ploopi\skin::get()->create_pagetitle(ploopi\str::htmlentities("{$_SESSION['ploopi']['modulelabel']} - Administration"));
+echo ploopi\skin::get()->create_tabs($tabs, $_SESSION['booking']['booking_tab']);
 
-echo $skin->open_simplebloc();
+echo ploopi\skin::get()->open_simplebloc();
 
 
 switch($_SESSION['booking']['booking_tab'])
@@ -83,5 +83,5 @@ switch($_SESSION['booking']['booking_tab'])
 }
 
 
-echo $skin->close_simplebloc();
+echo ploopi\skin::get()->close_simplebloc();
 ?>

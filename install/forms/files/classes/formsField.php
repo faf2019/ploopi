@@ -165,7 +165,7 @@ class formsField extends ploopi\data_object
      */
     public function save($booUpdateTable = true)
     {
-        $db = ploopi\loader::getdb();
+        $db = ploopi\db::get();
 
         if (empty($this->fields['separator']) && empty($this->fields['html']) && empty($this->fields['captcha'])) $this->_createPhysicalName();
 
@@ -309,7 +309,7 @@ class formsField extends ploopi\data_object
      */
     public function delete()
     {
-        $db = ploopi\loader::getdb();
+        $db = ploopi\db::get();
 
         $arrPositions = array();
 

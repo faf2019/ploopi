@@ -103,7 +103,7 @@ class user extends data_object
     {
         include_once './include/classes/group.php';
 
-        $db = loader::getdb();
+        $db = db::get();
 
         $db->query("DELETE FROM ploopi_validation WHERE type_validation = 'user' AND id_validation = {$this->fields['id']}");
         $db->query("DELETE FROM ploopi_share WHERE type_share = 'user' AND id_share = {$this->fields['id']}");
@@ -153,7 +153,7 @@ class user extends data_object
          * 3. Récupère les espaces auxquels l'utilisateur est directement rattaché.
          */
 
-        $db = loader::getdb();
+        $db = db::get();
 
         $workspaces = array();
 
@@ -239,7 +239,7 @@ class user extends data_object
 
     public function getgroups($lite = false)
     {
-        $db = loader::getdb();
+        $db = db::get();
 
         module::init('system', false, false, false);
 
@@ -276,7 +276,7 @@ class user extends data_object
     {
         include_once './include/classes/group.php';
 
-        $db = loader::getdb();
+        $db = db::get();
 
         $group_user = new group_user();
         $group_user->fields['id_user'] = $this->fields['id'];
@@ -292,7 +292,7 @@ class user extends data_object
 
     public function attachtoworkspace($workspaceid)
     {
-        $db = loader::getdb();
+        $db = db::get();
 
         $workspace_user = new workspace_user();
         $workspace_user->fields['id_user'] = $this->fields['id'];
@@ -336,7 +336,7 @@ class user extends data_object
     {
         include_once './include/classes/group.php';
 
-        $db = loader::getdb();
+        $db = db::get();
 
         $result = $db->query("
             SELECT      ploopi_workspace_user_role.id_workspace,
@@ -375,7 +375,7 @@ class user extends data_object
 
     public function getusersgroup()
     {
-        $db = loader::getdb();
+        $db = db::get();
         $usrlist=array();
         // récupération de ts les espaces de travail
         $workspaces = array_keys($this->getworkspaces());
@@ -419,11 +419,42 @@ class user extends data_object
 
     /**
      * Génère le hash à partir du mot de passe en clair et du login de l'utilisateur
+     *
+     * @param string $strPassword mot de passe à "hasher"
+     * @param string $strLogin login de l'utilisateur
      */
 
     public static function generate_hash($strPassword, $strLogin)
     {
-        return hash(_PLOOPI_HASH_ALGO, _PLOOPI_SECRETKEY."/{$strLogin}/".hash(_PLOOPI_HASH_ALGO, $strPassword));
+        switch(_PLOOPI_HASH_ALGO) {
+            case 'bcrypt':
+                return password_hash(_PLOOPI_SECRETKEY."/{$strLogin}/{$strPassword}", PASSWORD_BCRYPT);
+            break;
+
+            default:
+                return hash(_PLOOPI_HASH_ALGO, _PLOOPI_SECRETKEY."/{$strLogin}/".hash(_PLOOPI_HASH_ALGO, $strPassword));
+            break;
+        }
+    }
+
+    /**
+     * Contrôle le mot de passe utilisateur
+     *
+     * @param string $strPassword mot de passe à vérifier
+     * @param string $strLogin login de l'utilisateur
+     * @param string $strHash hash du mot de passe
+     */
+    public static function password_verify($strPassword, $strLogin, $strHash)
+    {
+        switch(_PLOOPI_HASH_ALGO) {
+            case 'bcrypt':
+                return password_verify(_PLOOPI_SECRETKEY."/{$strLogin}/{$strPassword}", $strHash);
+            break;
+
+            default:
+                return $strHash == hash(_PLOOPI_HASH_ALGO, _PLOOPI_SECRETKEY."/{$strLogin}/".hash(_PLOOPI_HASH_ALGO, $strPassword));
+            break;
+        }
     }
 
     /**

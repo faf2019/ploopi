@@ -33,7 +33,7 @@
 /**
  * Ouverture du bloc
  */
-echo $skin->open_simplebloc(_SYSTEM_LABEL_INSTALLEDMODULES);
+echo ploopi\skin::get()->open_simplebloc(_SYSTEM_LABEL_INSTALLEDMODULES);
 
 $tabmoduletype_installed = array();
 $tabmoduletype_install = array();
@@ -104,26 +104,26 @@ $select =   "
             ORDER   BY label
             ";
 
-$result = ploopi\loader::getdb()->query($select);
+$result = ploopi\db::get()->query($select);
 
-while ($fields = ploopi\loader::getdb()->fetchrow($result))
+while ($fields = ploopi\db::get()->fetchrow($result))
 {
     // Recherche d'actions pour ce module
     $select = "SELECT * FROM ploopi_mb_action WHERE id_module_type = {$fields['id']}";
-    ploopi\loader::getdb()->query($select);
-    if (ploopi\loader::getdb()->numrows()) $has_actions = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/check_on.png\" align=\"middle\">";
+    ploopi\db::get()->query($select);
+    if (ploopi\db::get()->numrows()) $has_actions = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/check_on.png\" align=\"middle\">";
     else $has_actions = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/check_off.png\" align=\"middle\">";
 
     // Recherche de métabase pour ce module
     $select = "SELECT * FROM ploopi_mb_table WHERE id_module_type = {$fields['id']}";
-    ploopi\loader::getdb()->query($select);
-    if (ploopi\loader::getdb()->numrows()) $has_mb = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/check_on.png\" align=\"middle\">";
+    ploopi\db::get()->query($select);
+    if (ploopi\db::get()->numrows()) $has_mb = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/check_on.png\" align=\"middle\">";
     else $has_mb = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/check_off.png\" align=\"middle\">";
 
     // Recherche d'objets "WCE" (WebEdit) pour ce module
     $select = "SELECT * FROM ploopi_mb_wce_object WHERE id_module_type = {$fields['id']}";
-    ploopi\loader::getdb()->query($select);
-    if (ploopi\loader::getdb()->numrows()) $has_cmsop = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/check_on.png\" align=\"middle\">";
+    ploopi\db::get()->query($select);
+    if (ploopi\db::get()->numrows()) $has_cmsop = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/check_on.png\" align=\"middle\">";
     else $has_cmsop = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/check_off.png\" align=\"middle\">";
 
     $ldate = ploopi\date::timestamp2local($fields['date']);
@@ -151,9 +151,9 @@ while ($fields = ploopi\loader::getdb()->fetchrow($result))
     $tabmoduletype_installed[$fields['label']]['id'] = $fields['id'];
 }
 
-$skin->display_array($columns, $values, 'array_installed_modules', array('sortable' => true, 'orderby_default' => 'mtype'));
+ploopi\skin::get()->display_array($columns, $values, 'array_installed_modules', array('sortable' => true, 'orderby_default' => 'mtype'));
 
-echo $skin->close_simplebloc();
+echo ploopi\skin::get()->close_simplebloc();
 
 $columns = array();
 $values = array();
@@ -205,9 +205,9 @@ foreach($tabmoduletype_install as $label => $fields)
     }
 }
 
-echo $skin->open_simplebloc(_SYSTEM_LABEL_NEWMODULEVERSIONS);
-$skin->display_array($columns, $values, 'array_toupdate_modules', array('sortable' => true, 'orderby_default' => 'mtype'));
-echo $skin->close_simplebloc();
+echo ploopi\skin::get()->open_simplebloc(_SYSTEM_LABEL_NEWMODULEVERSIONS);
+ploopi\skin::get()->display_array($columns, $values, 'array_toupdate_modules', array('sortable' => true, 'orderby_default' => 'mtype'));
+echo ploopi\skin::get()->close_simplebloc();
 
 $columns = array();
 $values = array();
@@ -248,7 +248,7 @@ foreach($tabmoduletype_install as $label => $fields)
     }
 }
 
-echo $skin->open_simplebloc(_SYSTEM_LABEL_UNINSTALLEDMODULES);
-$skin->display_array($columns, $values, 'array_new_modules', array('sortable' => true, 'orderby_default' => 'mtype'));
-echo $skin->close_simplebloc();
+echo ploopi\skin::get()->open_simplebloc(_SYSTEM_LABEL_UNINSTALLEDMODULES);
+ploopi\skin::get()->display_array($columns, $values, 'array_new_modules', array('sortable' => true, 'orderby_default' => 'mtype'));
+echo ploopi\skin::get()->close_simplebloc();
 ?>

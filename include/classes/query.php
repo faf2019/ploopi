@@ -61,7 +61,7 @@ abstract class query
     public function __construct($objDb = null)
     {
         if (!is_null($objDb)) $this->objDb = $objDb;
-        else { $this->objDb = loader::getdb(); }
+        else { $this->objDb = db::get(); }
 
         $this->arrRaw = array();
 
@@ -140,7 +140,7 @@ abstract class query
      */
     public function __wakeup()
     {
-        $db = loader::getdb();
+        $db = db::get();
         $this->objDb = $db;
     }
 }

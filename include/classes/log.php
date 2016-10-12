@@ -62,6 +62,6 @@ class log extends data_object
     public static function getdb()
     {
         if (session::get_usedb()) return session::get_db();
-        else { $db = loader::getdb(); return $db; }
+        else { $db = db::get(); return $db; }
     }
 }

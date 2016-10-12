@@ -74,9 +74,9 @@ switch($ploopi_op)
                         ORDER BY    a.date_annotation DESC
                         ";
 
-            $rs = ploopi\loader::getdb()->query($select);
+            $rs = ploopi\db::get()->query($select);
 
-            while ($fields = ploopi\loader::getdb()->fetchrow($rs))
+            while ($fields = ploopi\db::get()->fetchrow($rs))
             {
                 $ld = ploopi\date::timestamp2local($fields['date_annotation']);
                 ?>
@@ -130,17 +130,17 @@ switch($ploopi_op)
                                 count(*) as c
                         FROM    ploopi_tag t,
                                 ploopi_annotation_tag at
-                        WHERE   t.tag LIKE '".ploopi\loader::getdb()->addslashes($_GET['tag'])."%'
+                        WHERE   t.tag LIKE '".ploopi\db::get()->addslashes($_GET['tag'])."%'
                         AND     t.id_user = {$_SESSION['ploopi']['userid']}
                         AND     t.id = at.id_tag
                         GROUP BY t.id
                         ORDER BY c DESC
                         ";
 
-            $rs = ploopi\loader::getdb()->query($select);
+            $rs = ploopi\db::get()->query($select);
             $c=0;
 
-            while ($fields = ploopi\loader::getdb()->fetchrow($rs))
+            while ($fields = ploopi\db::get()->fetchrow($rs))
             {
                 if ($c++) echo '|';
                 echo ploopi\str::htmlentities("{$fields['tag']};{$fields['c']}");

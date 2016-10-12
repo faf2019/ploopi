@@ -100,7 +100,7 @@ class docfile extends ploopi\data_object
 
     function openmd5($md5id)
     {
-        $db = ploopi\loader::getdb();
+        $db = ploopi\db::get();
 
         $db->query("SELECT id FROM ploopi_mod_doc_file WHERE md5id = '".$db->addslashes($md5id)."'");
         if ($fields = $db->fetchrow()) return($this->open($fields['id']));
@@ -120,7 +120,7 @@ class docfile extends ploopi\data_object
 
     function save()
     {
-        $db = ploopi\loader::getdb();
+        $db = ploopi\db::get();
 
         $booParse = false;
 
@@ -299,7 +299,7 @@ class docfile extends ploopi\data_object
 
     function delete()
     {
-        $db = ploopi\loader::getdb();
+        $db = ploopi\db::get();
 
         $filepath = $this->getfilepath();
         if (file_exists($filepath)) @unlink($filepath);
@@ -386,7 +386,7 @@ class docfile extends ploopi\data_object
 
     function gethistory()
     {
-        $db = ploopi\loader::getdb();
+        $db = ploopi\db::get();
 
         $rs = $db->query(   "
                             SELECT      h.*,
@@ -448,7 +448,7 @@ class docfile extends ploopi\data_object
 
     function getmeta()
     {
-        $db = ploopi\loader::getdb();
+        $db = ploopi\db::get();
 
         $rs = $db->query(   "
                             SELECT      m.*
@@ -475,7 +475,7 @@ class docfile extends ploopi\data_object
 
     function parse($debug = false)
     {
-        $db = ploopi\loader::getdb();
+        $db = ploopi\db::get();
 
         global $ploopi_timer;
         if ($debug) printf("<br />START: %0.2f",$ploopi_timer->getexectime()*1000);

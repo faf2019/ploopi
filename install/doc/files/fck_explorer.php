@@ -43,7 +43,7 @@ if (empty($arrModules)) ploopi\system::kill('<div class="error">Module DOC absen
  */
 ploopi\module::init('doc');
 
-ploopi\loader::getdb()->query("
+ploopi\db::get()->query("
     SELECT  m.label,
             fold.id,
             fold.name,
@@ -64,13 +64,13 @@ ploopi\loader::getdb()->query("
 ");
 
 $arrFolders = array();
-while ($fields = ploopi\loader::getdb()->fetchrow())
+while ($fields = ploopi\db::get()->fetchrow())
 {
     $arrFolders[$fields['label']]['list'][$fields['id']] = $fields;
     $arrFolders[$fields['label']]['tree'][$fields['id_folder']][] = $fields['id'];
 }
 
-echo $skin->open_simplebloc();
+echo ploopi\skin::get()->open_simplebloc();
 ?>
 <input type="hidden" id="CKEditor" value="<?php echo isset($_REQUEST['CKEditor']) ? $_REQUEST['CKEditor'] : ''; ?>" />
 <input type="hidden" id="CKEditorFuncNum" value="<?php echo isset($_REQUEST['CKEditorFuncNum']) ? $_REQUEST['CKEditorFuncNum'] : ''; ?>" />
@@ -94,7 +94,7 @@ echo $skin->open_simplebloc();
 
 <div id="doc_filebrowser" style="padding:4px;"></div>
 
-<?php echo $skin->close_simplebloc(); ?>
+<?php echo ploopi\skin::get()->close_simplebloc(); ?>
 
 <script language="javascript">
 doc_fckexplorer_set_folder('<?php echo $intDefaultFolder; ?>', '<?php echo $ploopi_op; ?>');

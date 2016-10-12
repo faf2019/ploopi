@@ -226,7 +226,7 @@ class docapi {
      */
     public function actionListContent($arrParams) {
 
-        $db = ploopi\loader::getdb();
+        $db = ploopi\db::get();
 
         if (!$this->_isAllowed($arrParams)) return $this;
 

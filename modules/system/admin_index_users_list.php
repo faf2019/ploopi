@@ -109,7 +109,7 @@ ploopi\session::setvar('system_alphatabitem', $alphaTabItem);
             'url' => 'admin.php?wspToolbarItem=tabUsers&alphaTabItem=99&reset'
         );
 
-    echo $skin->create_tabs($tabs_char, $alphaTabItem);
+    echo ploopi\skin::get()->create_tabs($tabs_char, $alphaTabItem);
     ?>
 </div>
 
@@ -159,10 +159,10 @@ $where = array();
 
 if ($alphaTabItem == 99) // tous ou recherche
 {
-    if ($arrFilter['ploopi_lastname'] != '') $where[] = "lastname LIKE '%".ploopi\loader::getdb()->addslashes($arrFilter['ploopi_lastname'])."%'";
-    if ($arrFilter['ploopi_firstname'] != '') $where[] = "firstname LIKE '%".ploopi\loader::getdb()->addslashes($arrFilter['ploopi_firstname'])."%'";
-    if ($arrFilter['ploopi_login'] != '') $where[] = "login LIKE '%".ploopi\loader::getdb()->addslashes($arrFilter['ploopi_login'])."%'";
-    if ($arrFilter['ploopi_email'] != '') $where[] = "email LIKE '%".ploopi\loader::getdb()->addslashes($arrFilter['ploopi_email'])."%'";
+    if ($arrFilter['ploopi_lastname'] != '') $where[] = "lastname LIKE '%".ploopi\db::get()->addslashes($arrFilter['ploopi_lastname'])."%'";
+    if ($arrFilter['ploopi_firstname'] != '') $where[] = "firstname LIKE '%".ploopi\db::get()->addslashes($arrFilter['ploopi_firstname'])."%'";
+    if ($arrFilter['ploopi_login'] != '') $where[] = "login LIKE '%".ploopi\db::get()->addslashes($arrFilter['ploopi_login'])."%'";
+    if ($arrFilter['ploopi_email'] != '') $where[] = "email LIKE '%".ploopi\db::get()->addslashes($arrFilter['ploopi_email'])."%'";
     if ($arrFilter['ploopi_last_connection_1'] != '') $where[] = "last_connection >= '".ploopi_local2timestamp($arrFilter['ploopi_last_connection_1'], '00:00:00')."'";
     if ($arrFilter['ploopi_last_connection_2'] != '') $where[] = "last_connection <= '".ploopi_local2timestamp($arrFilter['ploopi_last_connection_2'], '23:59:59')."'";
 }
@@ -287,9 +287,9 @@ $c = 0;
 // Sauvegarde de la dernière requête SQL pour export
 ploopi\session::setvar('directory_sql', $strSql);
 
-$result = ploopi\loader::getdb()->query($strSql);
+$result = ploopi\db::get()->query($strSql);
 $user = new ploopi\user();
-$intNbRep = ploopi\loader::getdb()->numrows($result);
+$intNbRep = ploopi\db::get()->numrows($result);
 
 if ($intNbRep > 2000)
 {
@@ -299,7 +299,7 @@ if ($intNbRep > 2000)
 }
 else
 {
-    while ($fields = ploopi\loader::getdb()->fetchrow($result))
+    while ($fields = ploopi\db::get()->fetchrow($result))
     {
         $user->fields['id'] = $fields['id'];
         $groups = $user->getgroups();
@@ -357,7 +357,7 @@ else
         $c++;
     }
 
-    $skin->display_array($columns, $values, 'array_userlist', array('sortable' => true, 'orderby_default' => 'name', 'limit' => 50));
+    ploopi\skin::get()->display_array($columns, $values, 'array_userlist', array('sortable' => true, 'orderby_default' => 'name', 'limit' => 50));
 }
 
 if ($_SESSION['system']['level'] == _SYSTEM_WORKSPACES)

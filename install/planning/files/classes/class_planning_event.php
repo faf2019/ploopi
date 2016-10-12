@@ -259,7 +259,7 @@ class planning_event extends ploopi\data_object
      */
     public function getdetails()
     {
-        $db = ploopi\loader::getdb();
+        $db = ploopi\db::get();
 
         // Recherche des détails liés à l'événement
         $db->query("SELECT * FROM ploopi_mod_planning_event_detail WHERE id_event = {$this->fields['id']} ORDER BY timestp_begin, timestp_end");

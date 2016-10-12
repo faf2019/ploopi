@@ -87,7 +87,7 @@ class share extends data_object
 
     public static function selectusers($id_object = -1, $id_record = -1, $id_module = -1, $strTitle = null, $strForceShareId = null, $strPathIcon = null)
     {
-        $db = loader::getdb();
+        $db = db::get();
 
         if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];
 
@@ -166,7 +166,7 @@ class share extends data_object
 
     public static function add($id_object = -1, $id_record = -1, $id_module = -1, $strForceShareId = null)
     {
-        $db = loader::getdb();
+        $db = db::get();
         include_once './include/classes/share.php';
 
         if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];
@@ -226,7 +226,7 @@ class share extends data_object
 
     public static function get($id_user = -1, $id_object = -1, $id_record = -1,  $id_module = -1)
     {
-        $db = loader::getdb();
+        $db = db::get();
 
         if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];
 

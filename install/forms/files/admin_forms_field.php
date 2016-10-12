@@ -57,7 +57,7 @@ else
     $title = _FORMS_FIELDCREATION;
 }
 
-echo $skin->open_simplebloc($title);
+echo ploopi\skin::get()->open_simplebloc($title);
 
 $arrParams = array();
 $arrParams[] = "ploopi_op=forms_field_save";
@@ -198,7 +198,7 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
                     <select class="select" name="f_formfield" style="width:200px;">
                     <?php
 
-                    ploopi\loader::getdb()->query( "
+                    ploopi\db::get()->query( "
                                 SELECT  forms.label, field.*
                                 FROM    ploopi_mod_forms_form forms,
                                         ploopi_mod_forms_field field
@@ -210,7 +210,7 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
                                 ");
 
                     $strTable = '';
-                    while ($row = ploopi\loader::getdb()->fetchrow())
+                    while ($row = ploopi\db::get()->fetchrow())
                     {
                         if ($row['label'] != $strTable)
                         {
@@ -360,5 +360,5 @@ ploopi_window_onload_stock(function() {
 
 
 <?php
-echo $skin->close_simplebloc();
+echo ploopi\skin::get()->close_simplebloc();
 ?>

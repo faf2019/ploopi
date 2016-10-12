@@ -57,7 +57,8 @@ if (isset($object))
     global $headingid;
     global $template_name;
     global $template_path;
-    global $skin;
+
+    $skin = ploopi\skin::get();
 
     if (!empty($skin))
     {
@@ -86,7 +87,7 @@ if (isset($object))
 
                 <div id="booking_ressource_list">
                 <form id="booking_resource_list_form" action="<?php echo ploopi\crypt::urlencode("index-light.php?ploopi_op=booking_setresources&booking_moduleid={$booking_moduleid}"); ?>" method="post" onsubmit="javascript:ploopi_xmlhttprequest_submitform($('booking_resource_list_form'), 'booking_main'); return false;">
-				<?php
+                <?php
                 $strResourceType = '';
                 foreach ($arrResources as $row)
                 {
@@ -95,12 +96,12 @@ if (isset($object))
                         if ($strResourceType != '') echo '</div>';
                         $strResourceType = $row['rt_name'];
                         ?>
-						<div style="float:left;height:18px;margin:0;">
-							<input type="checkbox" style="display:inline;" onclick="ploopi_checkall(booking_resource_list_form, 'booking_resource<?php echo $row['rt_name']; ?>', this.checked, true);$('booking_resource_list_form').onsubmit();" />
-						</div>
+                        <div style="float:left;height:18px;margin:0;">
+                            <input type="checkbox" style="display:inline;" onclick="ploopi_checkall(booking_resource_list_form, 'booking_resource<?php echo $row['rt_name']; ?>', this.checked, true);$('booking_resource_list_form').onsubmit();" />
+                        </div>
                         <a href="javascript:void(0);" onclick="javascript:with ($('booking_<?php echo ploopi\str::htmlentities($strResourceType); ?>_list')) { style.display = (style.display == 'block') ? 'none' : 'block'; }">
-							<div class="ploopi_va" style="border-width:1px 0;border-style:solid;border-color:#bbb;background-color:#ddd;height:18px;">
-								<strong><?php echo ploopi\str::htmlentities($strResourceType); ?></strong>
+                            <div class="ploopi_va" style="border-width:1px 0;border-style:solid;border-color:#bbb;background-color:#ddd;height:18px;">
+                                <strong><?php echo ploopi\str::htmlentities($strResourceType); ?></strong>
                             </div>
                         </a>
                         <div id="booking_<?php echo ploopi\str::htmlentities($row['rt_name']); ?>_list" style="display:block;">
@@ -122,7 +123,7 @@ if (isset($object))
                 ob_end_clean();
 
 
-                echo $skin->open_popup(
+                echo ploopi\skin::get()->open_popup(
                     'Ressources affichées',
                     $content,
                     'popup_booking',

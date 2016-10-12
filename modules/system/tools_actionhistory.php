@@ -35,7 +35,7 @@
  * Ouverture du bloc
  */
 
-echo $skin->open_simplebloc(_SYSTEM_LABEL_ACTIONHISTORY);
+echo ploopi\skin::get()->open_simplebloc(_SYSTEM_LABEL_ACTIONHISTORY);
 
 $intLimit = 5000;
 
@@ -250,7 +250,7 @@ while($row = ploopi\user_action_log::getdb()->fetchrow())
 ?>
 <div style="margin:0; padding:0; border-bottom:1px solid #c0c0c0; height:0px; font-size: 0em;"></div>
 <?php
-$skin->display_array(
+ploopi\skin::get()->display_array(
     $arrColumns,
     $arrValues,
     'array_actionlog',
@@ -263,5 +263,5 @@ $skin->display_array(
     )
 );
 
-echo $skin->close_simplebloc();
+echo ploopi\skin::get()->close_simplebloc();
 ?>
