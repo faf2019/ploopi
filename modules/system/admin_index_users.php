@@ -58,9 +58,20 @@ switch($op)
 
             if (!isset($_GET['confirm'])) // pas de confirmation de création demandée
             {
-                // test si utilisateur existe déjà => demande de confirmation de création (homonyme ?)
-                $db->query("SELECT id FROM ploopi_user WHERE (lastname = '{$_POST['user_lastname']}' AND firstname = '{$_POST['user_firstname']}') OR (login = '".$db->addslashes($_POST['user_login'])."')");
-                if($db->numrows()) ploopi_redirect("admin.php?op=manage_account&confirm");
+                if (isset($_POST['user_lastname']) && isset($_POST['user_firstname'])) {
+                    // test si utilisateur existe déjà => demande de confirmation de création (homonyme ?)
+                    $db->query("
+                        SELECT  id
+                        FROM    ploopi_user
+                        WHERE   (
+                                lastname = '".$db->addslashes($_POST['user_lastname'])."'
+                            AND firstname = '".$db->addslashes($_POST['user_firstname']}."'
+                        )
+                        OR login = '".$db->addslashes($_POST['user_login'])."'
+                    ");
+
+                    if($db->numrows()) ploopi_redirect("admin.php?op=manage_account&confirm");
+                }
             }
             else // on vérifie qd même le doublon de login
             {
