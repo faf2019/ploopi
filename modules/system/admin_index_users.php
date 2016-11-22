@@ -65,7 +65,7 @@ switch($op)
                         FROM    ploopi_user
                         WHERE   (
                                 lastname = '".$db->addslashes($_POST['user_lastname'])."'
-                            AND firstname = '".$db->addslashes($_POST['user_firstname']}."'
+                            AND firstname = '".$db->addslashes($_POST['user_firstname'])."'
                         )
                         OR login = '".$db->addslashes($_POST['user_login'])."'
                     ");

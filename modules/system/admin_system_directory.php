@@ -488,7 +488,7 @@ if ($intNbRep <= $intMaxResponse && $intNbRep > 0)
 
     $arrResult['columns']['right']['last_connection'] = array(
         'label' => 'Dernière connexion',
-        'width' => '140',
+        'width' => '150',
         'options' => array('sort' => true)
     );
 
@@ -759,7 +759,7 @@ if ($intNbRep <= $intMaxResponse && $intNbRep > 0)
                 'last_connection' => array(
                     'label' => implode(' ', ploopi_timestamp2local($row['last_connection'])),
                     'sort_label' => $row['last_connection'],
-                    'sort_flag' => 'SORT_NUMERIC'
+                    'sort_flag' => SORT_NUMERIC
                 ),
                 'actions' => array('label' => '<a href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("admin.php?ploopi_op=system_delete_user&system_user_id={$intUserId}").'\',\''._SYSTEM_MSG_CONFIRMUSERDELETE.'\')"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_delete.png" title="'._SYSTEM_LABEL_DELETE.'"></a>')
             )
