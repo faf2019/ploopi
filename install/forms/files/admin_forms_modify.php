@@ -489,7 +489,7 @@ if (!$objForm->isnew())
         }
 
 
-        $array_values[$c]['values']['pos'] = array('label' =>  $row['position']);
+        $array_values[$c]['values']['pos'] = array('label' =>  $row['position'], 'sort_flag' => SORT_NUMERIC);
         $array_values[$c]['values']['actions'] = array('label' => '
             <a href="'.ploopi_urlencode("admin.php?ploopi_op=forms_field_moveup&forms_id={$objForm->fields['id']}&field_id={$row['id']}").'"><img src="./modules/forms/img/ico_up2.png"></a>
             <a href="'.ploopi_urlencode("admin.php?ploopi_op=forms_field_movedown&forms_id={$objForm->fields['id']}&field_id={$row['id']}").'"><img src="./modules/forms/img/ico_down2.png"></a>

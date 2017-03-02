@@ -1,3 +1,9 @@
+== Module FORMS - version 3.6.4 =====================================================
+
+2017-01-02  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+* Correction d'un bug dans le contrôle de validité des groupes conditionnels lors de l'enregistrement.
+
 == Module FORMS - version 3.6.3 =====================================================
 
 2016-02-23  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>

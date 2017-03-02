@@ -169,7 +169,6 @@ if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open
             break;
         }
 
-
         /*
 
         if ($booFieldOk)
@@ -208,6 +207,7 @@ if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open
                 $arrConditions = $objGroup->getConditions();
                 // Variables utilisées dans la condition
                 $arrCondVars = array();
+
 
                 // On va "calculer" chaque condition
                 foreach($arrConditions as $key => $row)
@@ -248,34 +248,48 @@ if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open
                                     $booRes = $booRes || strpos($strValue, $row['value']) !== false;
                                 break;
 
+                                case 'in':
+                                    $booRes = $booRes || in_array($strValue, explode(',', $row['value']));
+                                break;
+
+                                case 'between':
+                                    $values = explode(';', $row['value']);
+                                    $booRes = $booRes || ($strValue >= $values[0] && (!isset($values[1]) || $strValue <= $values[1]));
+                                break;
+
                                 default:
                                     switch($row['op'])
                                     {
                                         case '=':
+                                        case 'eq':
                                             $booRes = $booRes || $strValue == $row['value'];
                                         break;
 
                                         case '>':
+                                        case 'gt':
                                             $booRes = $booRes || $strValue > $row['value'];
                                         break;
 
                                         case '>=':
+                                        case 'ge':
                                             $booRes = $booRes || $strValue >= $row['value'];
                                         break;
 
                                         case '<':
+                                        case 'lt':
                                             $booRes = $booRes || $strValue < $row['value'];
                                         break;
 
                                         case '<=':
+                                        case 'le':
                                             $booRes = $booRes || $strValue <= $row['value'];
                                         break;
 
                                         case '<>':
+                                        case 'ne':
                                             $booRes = $booRes || $strValue != $row['value'];
                                         break;
                                     }
-
 
                                 break;
                             }
