@@ -27,6 +27,7 @@ AddDefaultCharset ISO-8859-15
     php_flag magic_quotes_gpc Off
     php_flag register_globals Off
     php_value include_path .
+    php_value default_charset ISO-8859-15
 
     php_flag session.use_trans_sid off
     php_flag session.use_only_cookies Off
