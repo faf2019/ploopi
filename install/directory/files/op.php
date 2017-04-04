@@ -604,6 +604,7 @@ if ($_SESSION['ploopi']['connected'])
 
             case 'directory_import':
                 ploopi_init_module('directory', false, false, false);
+                global $arrDirectoryImportFields;
 
                 if (empty($_GET['directory_heading_id']) && !is_numeric($_GET['directory_heading_id'])) ploopi_die();
 
@@ -725,7 +726,10 @@ if ($_SESSION['ploopi']['connected'])
 
             case 'directory_export':
                 ploopi_init_module('directory', false, false, false);
+
                 include_once './include/functions/array.php';
+
+                global $arrDirectoryImportFields;
 
                 if (empty($_GET['directory_heading_id']) || !is_numeric($_GET['directory_heading_id']) || !isset($_GET['directory_format'])) ploopi_die();
 

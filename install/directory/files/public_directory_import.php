@@ -42,8 +42,8 @@ function filesubmit_onload(iFrameName)
     var oIframe = $(iFrameName);
     var oDoc = oIframe.contentWindow || oIframe.contentDocument;
     if (oDoc.document) oDoc = oDoc.document;
-    
-    $('directory_import_info').innerHTML = oDoc.body.innerHTML; 
+
+    $('directory_import_info').innerHTML = oDoc.body.innerHTML;
 }
 
 function filesubmit(form)
@@ -57,11 +57,11 @@ function filesubmit(form)
     var d = document.createElement('DIV');
     d.innerHTML = '<iframe style="display:none;" src="about:blank" id="'+iFrameName+'" name="'+iFrameName+'" onload="javascript:filesubmit_onload(\''+iFrameName+'\');"></iframe>';
     document.body.appendChild(d);
-    
+
     // Redirection du formulaire dans l'iframe
     form.setAttribute('target', iFrameName);
 
-    // Validation formulaire    
+    // Validation formulaire
     return true;
 }
 </script>
@@ -74,9 +74,11 @@ function filesubmit(form)
     <br />
     <br />La première ligne doit être une ligne de description des colonnes fournies.
     <br />Cela signifie qu'elle contient certains ou tous les champs de la liste ci-dessous :
-    
+
     <ul style="overflow:auto;">
     <?
+    global $arrDirectoryImportFields;
+
     foreach($arrDirectoryImportFields as $strKey => $strValue)
     {
         ?>
@@ -84,11 +86,11 @@ function filesubmit(form)
         <?
     }
     //onsubmit="javascript:$('directory_import_info').style.display='block'; ploopi_xmlhttprequest_submitform($('directory_import_form'), 'directory_import_info'); return false;">
-    //onsubmit="javascript:filesubmit('toto');" 
+    //onsubmit="javascript:filesubmit('toto');"
     ?>
     </ul>
-    
-    <form id="directory_import_form" action="<?php echo ploopi_urlencode("admin.php?ploopi_op=directory_import".(!empty($intHeadingId) ? "&directory_heading_id={$intHeadingId}" : '')); ?>" method="post" onsubmit="javascript:filesubmit(this);" enctype="multipart/form-data"> 
+
+    <form id="directory_import_form" action="<?php echo ploopi_urlencode("admin.php?ploopi_op=directory_import".(!empty($intHeadingId) ? "&directory_heading_id={$intHeadingId}" : '')); ?>" method="post" onsubmit="javascript:filesubmit(this);" enctype="multipart/form-data">
     <div class="ploopi_form" style="clear:both;margin-top:10px;">
         <p>
             <label>Fichier CSV:</label>
@@ -102,12 +104,12 @@ function filesubmit(form)
             </select>
         </p>
     </div>
-        
+
     <div style="clear:both;padding:2px 4px;text-align:right;">
         <input type="button" class="button" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php"); ?>';" tabindex="141" />
         <input type="submit" class="button" value="Importer" tabindex="140" />
     </div>
     </form>
-    
+
     <div id="directory_import_info" style="display:none;"></div>
 </div>

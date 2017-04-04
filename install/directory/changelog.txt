@@ -1,3 +1,9 @@
+== Module DIRECTORY - version 2.4.1 ====================================================
+
+2017-04-04  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+* Correction d'un bug dans la fonctionnalité d'import des contacts
+
 == Module DIRECTORY - version 2.4.0 ====================================================
 
 2015-07-13  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
