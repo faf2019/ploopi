@@ -301,7 +301,7 @@ switch($http_host)
          * Uniquement pour rétro compatibilité: md5
          */
 
-        define ('_PLOOPI_HASH_ALGO', 'sha256');
+        define ('_PLOOPI_HASH_ALGO', 'md5');
 
         /**
          * Clé secrète utilisée pour le chiffrement des URL et des mots de passe
