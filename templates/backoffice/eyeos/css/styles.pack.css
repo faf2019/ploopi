@@ -1819,6 +1819,13 @@ input[type='submit'], button[type='submit'] {
 font-weight:bold;
 }
 
+input[type='checkbox'], input[type='radio'], input[type='checkbox']:focus, input[type='radio']:focus, input[type='checkbox']:hover, input[type='radio']:hover {
+box-shadow:none;
+-moz-box-shadow:none;
+-webkit-box-shadow:none;
+}
+
+
 *[disabled=disabled],
 *[readonly=readonly] {
     color:#888;
@@ -2560,7 +2567,8 @@ background: url(../img/template/tabs.png) 0 -20px no-repeat;
     margin:2px 0 5px 0;
 }
 
-.ploopi_generate_form > form > div > fieldset > div > input[type='checkbox'] {
+.ploopi_generate_form > form > div > fieldset > div > input[type='checkbox'],
+.ploopi_generate_form > form > div > fieldset > div > input[type='radio'] {
     width:auto;
 }
 

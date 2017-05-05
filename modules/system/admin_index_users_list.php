@@ -181,6 +181,10 @@ $where = (empty($where)) ? '' : 'WHERE '.implode(' AND ', $where);
 switch ($_SESSION['system']['level'])
 {
     case _SYSTEM_WORKSPACES :
+
+        // Espaces fils ET l'espace courant (voir plus bas)
+        $workspace_children = array_merge(array_keys($workspace->getchildren()), array($workspaceid));
+
         $strSql = "
             SELECT      ploopi_user.*,
                         ploopi_workspace.id as idref,
@@ -306,9 +310,52 @@ else
         $groups = $user->getgroups();
         $currentgroup = current($groups);
 
-        $action = ' <a href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("admin.php?op=detach_user&user_id={$fields['id']}").'\',\''._SYSTEM_MSG_CONFIRMUSERDETACH.'\')"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_cut.png" title="'._SYSTEM_TITLE_USERDETACH.'"></a>
-                    <a href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("admin.php?op=delete_user&user_id={$fields['id']}").'\',\''._SYSTEM_MSG_CONFIRMUSERDELETE.'\')"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_delete.png" title="'._SYSTEM_LABEL_DELETE.'"></a>
-                    ';
+
+        // Droits de modification / suppression
+        $delete = true;
+        $modify = true;
+
+        // On ne peut pas s'autosupprimer
+        if ($fields['id'] == $_SESSION['ploopi']['user']['id']) {
+            $delete = false;
+        }
+        // Cas des autres utilisateurs
+        else {
+            if (!ploopi_isadmin()) {
+                switch ($_SESSION['system']['level'])
+                {
+                    case _SYSTEM_WORKSPACES :
+                        // Pour tous les administrateurs autre que "système"
+                        // on ne peut supprimer un utilisateur que s'il appartient exclusivement à cet espace de travail
+                        $user_workspaces = $user->getworkspaces();
+
+                        foreach($user_workspaces as $id_uw => $row_uw) {
+                            if (!in_array($id_uw, $workspace_children)) $delete = false;
+
+                            // On ne peut pas modifier ou supprimer un utilisateur qui dispose de privilèges plus élevés même dans un autre espace de travail
+                            if ($row_uw['adminlevel'] > $_SESSION['ploopi']['adminlevel']) {
+                                $delete = false;
+                                $modify = false;
+                            }
+                        }
+                    break;
+
+                    case _SYSTEM_GROUPS :
+                    break;
+                }
+            }
+        }
+
+        $actions = '';
+
+        if ($modify) {
+            $actions .= '<a href="'.ploopi_urlencode("admin.php?op=modify_user&user_id={$fields['id']}").'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_edit.png" title="'._SYSTEM_LABEL_MODIFY.'"></a>';
+            $actions .= '<a href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("admin.php?op=detach_user&user_id={$fields['id']}").'\',\''._SYSTEM_MSG_CONFIRMUSERDETACH.'\')"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_cut.png" title="'._SYSTEM_TITLE_USERDETACH.'"></a>';
+        }
+
+        if ($delete) {
+            $actions .= '<a href="javascript:ploopi_confirmlink(\''.ploopi_urlencode("admin.php?op=delete_user&user_id={$fields['id']}").'\',\''._SYSTEM_MSG_CONFIRMUSERDELETE.'\')"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_delete.png" title="'._SYSTEM_LABEL_DELETE.'"></a>';
+        }
 
         $values[$c]['values']['name']       = array('label' => ploopi_htmlentities("{$fields['lastname']}, {$fields['firstname']}"));
         $values[$c]['values']['login']      = array('label' => ploopi_htmlentities($fields['login']));
@@ -340,18 +387,14 @@ else
 
                 $values[$c]['values']['adminlevel'] = array('label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/adminlevels/{$icon}.png\" />", 'style' => 'text-align:center;', 'sort_label' => $fields['adminlevel']);
 
-                if ($_SESSION['ploopi']['adminlevel'] >= $fields['adminlevel'])
-                    $manage_user =  '<a href="'.ploopi_urlencode("admin.php?op=modify_user&user_id={$fields['id']}").'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_edit.png" title="'._SYSTEM_LABEL_MODIFY.'"></a>'.$action;
-                else
-                    $manage_user =  '<img style="margin:0 2px;" src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_noway.png"><img style="margin:0 2px;" src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_noway.png">';
-
-                $values[$c]['values']['actions']        = array('label' => $manage_user);
+                $values[$c]['values']['actions']        = array('label' => $actions);
 
             break;
 
             case _SYSTEM_GROUPS :
 
-                $values[$c]['values']['actions']        = array('label' => '<a href="'.ploopi_urlencode("admin.php?op=modify_user&user_id={$fields['id']}").'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_edit.png" title="'._SYSTEM_LABEL_MODIFY.'"></a>'.$action);
+                $values[$c]['values']['actions']        = array('label' => $actions);
+
             break;
         }
 

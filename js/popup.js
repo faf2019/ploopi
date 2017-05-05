@@ -86,16 +86,25 @@ function ploopi_showpopup(popup_content, w, e, centered, id, pposx, pposy, enabl
     if(e) // event ok
     {
         if (e.pageX || e.pageY) {
+
             var coordScroll = ploopi_hooks[0].cumulativeScrollOffset();
             var hookScroll = document.viewport.getScrollOffsets();
-            posx = e.pageX-ploopi_hooks[0].cumulativeOffset().left + coordScroll.left + hookScroll.left;
-            posy = e.pageY-ploopi_hooks[0].cumulativeOffset().top + coordScroll.top + hookScroll.top;
+
+            //posx = e.pageX-ploopi_hooks[0].cumulativeOffset().left + coordScroll.left + hookScroll.left;
+            //posy = e.pageY-ploopi_hooks[0].cumulativeOffset().top + coordScroll.top + hookScroll.top;
+
+            posx = e.pageX-ploopi_hooks[0].cumulativeOffset().left + coordScroll.left - hookScroll.left;
+            posy = e.pageY-ploopi_hooks[0].cumulativeOffset().top + coordScroll.top - hookScroll.top;
         }
         else if (e.clientX || e.clientY) {
             var coordScroll = ploopi_hooks[0].cumulativeScrollOffset();
             var hookScroll = document.viewport.getScrollOffsets();
-            posx = e.clientX + coordScroll.left + hookScroll.left;
-            posy = e.clientY + coordScroll.top + hookScroll.top;
+
+            //posx = e.clientX + coordScroll.left + hookScroll.left;
+            //posy = e.clientY + coordScroll.top + hookScroll.top;
+
+            posx = e.clientX + coordScroll.left - hookScroll.left;
+            posy = e.clientY + coordScroll.top - hookScroll.top;
         }
     }
     else

@@ -421,18 +421,33 @@ function ploopi_search_get_index($id_object, $id_record, $limit = 100, $id_modul
  * @param int $id_object identifiant de l'objet recherché (optionnel)
  * @param string $id_record tableau d'enregistrement ou masque d'enregistrement recherché, recherche de type abc% (optionnel)
  * @param mixed $id_module identifiant du module ou tableau d'idenfiants de modules (optionnel)
- * @param array $options tableau des options de recherche : 'orderby', 'sort', 'limit' (optionnel)
+ * @param array $options tableau des options de recherche : 'orderby', 'sort', 'limit', 'stem', 'phonetic', 'and' (optionnel)
  * @return array tableau contenant le résultat de la recherche
  */
 
-function ploopi_search($keywords, $id_object = -1, $id_record = null, $id_module = null, $options = null)
+function ploopi_search($keywords, $id_object = -1, $id_record = null, $id_module = null, $options = array())
 {
     $db = ploopi_search_getdb();
+
+    $default_options = array(
+        'usecommonwords' => true,
+        'orderby' => 'relevance',
+        'sort' => 'DESC',
+        'limit' => 200,
+        'phonetic' => true,
+        'stem' => true,
+        'and' => false
+    );
+
+    $options = array_merge($default_options, $options);
 
     if ($id_module == -1 && !empty($_SESSION['ploopi']['moduleid'])) $id_module = $_SESSION['ploopi']['moduleid'];
 
     // on récupère la liste des racines contenues dans la liste des mots clés
-    list($arrStems) = ploopi_getwords($keywords, isset($options['usecommonwords']) ? $options['usecommonwords'] : true, true);
+    if ($options['stem']) {
+        list($arrStems) = ploopi_getwords($keywords, isset($options['usecommonwords']) ? $options['usecommonwords'] : true, true);
+    }
+    else $arrStems = array();
 
     // on récupère la liste des mots contenus dans la liste des mots clés
     list($arrKeywords) = ploopi_getwords($keywords, isset($options['usecommonwords']) ? $options['usecommonwords'] : true, false);
@@ -467,11 +482,9 @@ function ploopi_search($keywords, $id_object = -1, $id_record = null, $id_module
 
     $strSearch = (empty($arrSearch)) ? '' : ' WHERE '.implode(' AND ', $arrSearch);
 
-    $orderby = (empty($options['orderby'])) ? 'relevance' : $options['orderby'];
-    $sort = (isset($options['sort'])) ? $options['sort'] : 'DESC';
-
-    $limit = (isset($options['limit'])) ? $options['limit'] : 200;
-
+    $orderby = $options['orderby'];
+    $sort = $options['sort'];
+    $limit = $options['limit'];
 
     if (empty($arrKeywords) && empty($arrStems))
     {
@@ -508,14 +521,18 @@ function ploopi_search($keywords, $id_object = -1, $id_record = null, $id_module
         {
             $arrSearchs['keyword'][$kw] = 1;
 
-            $stem = stem_french($kw);
-            $pho = strtolower(phonetique($kw));
-            if ($stem != '') $arrSearchs['stem'][$stem] = 1;
-            if ($pho != '') $arrSearchs['phonetic'][$pho] = 1;
+            if ($options['stem']) {
+                $stem = stem_french($kw);
+                if ($stem != '') $arrSearchs['stem'][$stem] = 1;
+            }
+
+            if ($options['phonetic']) {
+                $pho = strtolower(phonetique($kw));
+                if ($pho != '') $arrSearchs['phonetic'][$pho] = 1;
+            }
         }
 
         $intNbKw = sizeof($arrSearchs['keyword'])+sizeof($arrSearchs['stem'])+sizeof($arrSearchs['phonetic']);
-
 
         global $ploopi_timer;
         $t1 = $ploopi_timer->getexectime();
@@ -547,13 +564,36 @@ function ploopi_search($keywords, $id_object = -1, $id_record = null, $id_module
                     {
                         $arrElements[$id] = $row;
                         $arrRelevance[$id]['relevance'] = $row['relevance']/$intNbKw;
+                        if (empty($arrRelevance[$id][$type])) $arrRelevance[$id][$type] = 1;
+                        else $arrRelevance[$id][$type]++;
                     }
                     else
                     {
                         $arrRelevance[$id]['relevance'] += $row['relevance']/$intNbKw;
+                        if (empty($arrRelevance[$id][$type])) $arrRelevance[$id][$type] = 1;
+                        else $arrRelevance[$id][$type]++;
                     }
                 }
             }
+        }
+
+        // Filtre AND
+        if ($options['and']) {
+            $matches_ok = sizeof($arrSearchs['keyword']);
+
+            foreach($arrRelevance as $id => $row) {
+                $matches = 0;
+                foreach(array_keys($arrSearchs) as $type) {
+                    if (isset($row[$type])) $matches = max($matches, $row[$type]);
+                }
+
+                // Suppression des résultats qui ne matchent pas strictement
+                if ($matches < $matches_ok) {
+                    unset($arrRelevance[$id]);
+                    unset($arrElements[$id]);
+                }
+            }
+
         }
     }
 
@@ -562,17 +602,16 @@ function ploopi_search($keywords, $id_object = -1, $id_record = null, $id_module
 
     uasort($arrRelevance, create_function('$a,$b', 'return $b[\''.$orderby.'\'] '.$compare_sign.' $a[\''.$orderby.'\'];'));
 
-    $arrResult = array();
 
     $c = 0;
-    while (current($arrRelevance) !== false && $c++ < $limit)
-    {
+    reset($arrRelevance);
+    while (current($arrRelevance) !== false && $c++ < $limit) {
         $k = key($arrRelevance);
         $arrResult[$k] = array_merge($arrElements[$k], $arrRelevance[$k]);
         next($arrRelevance);
     }
 
-    return($arrResult);
+    return $arrResult;
 }
 
 /**

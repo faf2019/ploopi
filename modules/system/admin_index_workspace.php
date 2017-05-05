@@ -376,7 +376,7 @@ echo $skin->open_simplebloc();
                 if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPADMIN)
                 {
                     ?>
-                    <input type="text" class="text" name="workspace_iprules"  value="<?php echo ploopi_htmlentities($workspace->fields['iprules']); ?>">
+                    <input type="text" class="text" name="workspace_iprules"  value="<?php echo ploopi_htmlentities($workspace->fields['iprules']); ?>" placeholder="192.168.1.0-192.168.10.255;192.168.12.*">
                     <?php
                 }
                 else echo '<span>'.ploopi_htmlentities($workspace->fields['iprules']).'</span>';

@@ -258,7 +258,7 @@
                     <!-- BEGIN switch_private -->
                         <!-- BEGIN switch_notconnected -->
                         <h2>Cette rubrique est privée</h2>
-                        Vous devez vous identifier pour accéder à cette rubrique
+                        Vous n'êtes pas autorisé à accéder à cette rubrique
                         <!-- END switch_notconnected -->
                         <!-- BEGIN switch_notallowed -->
                         <h2>Cette rubrique est privée</h2>

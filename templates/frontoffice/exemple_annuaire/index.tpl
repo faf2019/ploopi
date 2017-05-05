@@ -186,6 +186,17 @@
 
                 <div id="pagecontent">
 
+                    <!-- BEGIN switch_private -->
+                        <!-- BEGIN switch_notconnected -->
+                        <h2>Cette rubrique est privée</h2>
+                        Vous n'êtes pas autorisé à accéder à cette rubrique
+                        <!-- END switch_notconnected -->
+                        <!-- BEGIN switch_notallowed -->
+                        <h2>Cette rubrique est privée</h2>
+                        Vous n'êtes pas autorisé à accéder à cette rubrique
+                        <!-- END switch_notallowed -->
+                    <!-- END switch_private -->
+
                     <!-- ***** DEBUT ANNUAIRE ***** -->
 
                     <!-- BEGIN directory_switch_result -->

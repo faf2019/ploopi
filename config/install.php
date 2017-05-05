@@ -36,6 +36,8 @@
  */
 session_start();
 
+header('Content-type: text/html; charset=iso-8859-1');
+
 define ('_PLOOPI_ERROR_REPORTING', E_ALL);
 
 define ('_PLOOPI_SERVER_OSTYPE', (substr(PHP_OS, 0, 3) == 'WIN') ? 'windows' : 'unix');

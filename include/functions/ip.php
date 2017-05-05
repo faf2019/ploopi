@@ -136,14 +136,16 @@ function ploopi_isipvalid($iprules)
     {
         $arrUserip = ploopi_getip();
 
-        if (!empty($arrUserip)) $userip = $arrUserip[0];
+        if (!empty($arrUserip)) {
+            $userip = ip2long($arrUserip[0]);
 
-        foreach($iprules as $startip => $endip)
-        {
-            if ($userip >= $startip && $userip <= $endip) $ip_ok = true;
+            foreach($iprules as $startip => $endip)
+            {
+                if ($userip >= $startip && $userip <= $endip) $ip_ok = true;
+            }
         }
     }
     else $ip_ok = true;
 
-    return($ip_ok);
+    return $ip_ok;
 }

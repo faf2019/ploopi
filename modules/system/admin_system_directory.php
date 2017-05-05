@@ -96,7 +96,9 @@ $_SESSION['system']['directoryform'] = $arrFilter;
     <? ploopi_open_calendar('ploopi_last_connection_2'); ?>
 
     <input type="submit" class="button" value="Filtrer" tabindex="150" />
+    <? if ($_SESSION['system']['level'] == 'system') { ?>
     <input type="submit" class="button" name="delete" value="Supprimer" style="color:#a60000" tabindex="155" onclick="if (!confirm('Attention vous allez supprimer définitivement les utilisateurs correspondant à ce filtre.\nContinuer ?')) return false;" />
+    <? } ?>
     <input type="button" class="button" value="Réinitialiser" onclick="document.location.href='<?php echo ploopi_urlencode('admin.php?sysToolbarItem=directory&system_filter_reset'); ?>';" tabindex="160" />
 </div>
 </form>
@@ -702,7 +704,7 @@ if ($intNbRep <= $intMaxResponse && $intNbRep > 0)
                 else $icon = 'level_user';
 
                 $row['workspaces'][$intIdWorkspace] = sprintf(
-                    "<img style=\"float:left;\" src=\"%s\" /><span style=\"display:block;margin-left:20px;\"><a title=\"Accéder à cet espace\" href=\"%s\">%s</a>%s</span>",
+                    "<img style=\"clear:both;float:left;\" src=\"%s\" /><span style=\"display:block;line-height:16px;margin-left:20px;\"><a title=\"Accéder à cet espace\" href=\"%s\">%s</a>%s</span>",
                     "{$_SESSION['ploopi']['template_path']}/img/system/adminlevels/{$icon}.png",
                     ploopi_urlencode("admin.php?system_level=work&workspaceid={$intIdWorkspace}"),
                     ploopi_htmlentities($rowWorkspace['label']),
