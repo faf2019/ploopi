@@ -130,7 +130,7 @@ function doc_search()
 function doc_search_next()
 {
     ploopi_ajaxloader('doc_search_result');
-    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=doc_search_next&doc_search_keywords='+encodeURIComponent($('doc_search_keywords').value)+'&doc_search_filetype='+encodeURIComponent($('doc_search_filetype').value)+'&doc_search_user='+$('doc_search_user').value+'&doc_search_workspace='+$('doc_search_workspace').value+'&doc_search_date1='+$('doc_search_date1').value+'&doc_search_date2='+$('doc_search_date2').value,'doc_search_result');
+    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=doc_search_next&doc_search_keywords='+encodeURIComponent($('doc_search_keywords').value)+'&doc_search_filetype='+encodeURIComponent($('doc_search_filetype').value)+'&doc_search_user='+$('doc_search_user').value+'&doc_search_workspace='+$('doc_search_workspace').value+'&doc_search_date1='+$('doc_search_date1').value+'&doc_search_date2='+$('doc_search_date2').value+'&doc_search_stem='+($('doc_search_stem').checked?1:0)+'&doc_search_phonetic='+($('doc_search_phonetic').checked?1:0)+'&doc_search_and='+($('doc_search_and').checked?1:0),'doc_search_result');
 }
 
 function doc_openhelp(e)

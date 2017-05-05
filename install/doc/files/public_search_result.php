@@ -36,23 +36,14 @@
 
 /**
  * Récupération des paramètres de recherche et remplissage de la variable session du module
- */
-if (isset($_GET['doc_search_keywords']))    $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords'] = $_GET['doc_search_keywords'];
-if (isset($_GET['doc_search_filetype']))    $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_filetype'] = $_GET['doc_search_filetype'];
-if (isset($_GET['doc_search_user']))        $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_user'] = $_GET['doc_search_user'];
-if (isset($_GET['doc_search_workspace']))   $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_workspace'] = $_GET['doc_search_workspace'];
-if (isset($_GET['doc_search_date1']))       $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date1'] = $_GET['doc_search_date1'];
-if (isset($_GET['doc_search_date2']))       $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date2'] = $_GET['doc_search_date2'];
-
-/**
  * Initialisation de la variable session si elle n'est pas définie
  */
-if (!isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords'])) $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords'] = '';
-if (!isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_filetype'])) $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_filetype'] = '';
-if (!isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_user'])) $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_user'] = '';
-if (!isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_workspace'])) $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_workspace'] = '';
-if (!isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date1'])) $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date1'] = '';
-if (!isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date2'])) $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date2'] = '';
+
+foreach(array('keywords', 'filetype', 'user', 'workspace', 'date1', 'date2', 'stem', 'phonetic', 'and') as $p) {
+    $param = 'doc_search_'.$p;
+    if (isset($_GET[$param]))    $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_'.$p] = $_GET[$param];
+    if (!isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_'.$p])) $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_'.$p] = '';
+}
 
 /**
  * On démarre la recherche si au moins un mot clé a été saisi
@@ -78,12 +69,18 @@ if (isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords']))
 
     if (!empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords']))
     {
+        $arrOptions = array(
+            'stem' => !empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_stem']),
+            'phonetic' => !empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_phonetic']),
+            'and' => !empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_and'])
+        );
+
         /**
          * Appel de la fonction de recherche du moteur d'indexation interne.
          * Renvoie une liste de fichiers correspondants au mots clés.
          */
 
-        $arrRelevance = ploopi_search($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords'], _DOC_OBJECT_FILE, '', $_SESSION['ploopi']['moduleid']);
+        $arrRelevance = ploopi_search($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords'], _DOC_OBJECT_FILE, '', $_SESSION['ploopi']['moduleid'], $arrOptions);
     }
 
     /**
