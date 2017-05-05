@@ -733,6 +733,15 @@ foreach($arrShares as $value) $arrSharesUsers[$value['type_share']][] = $value['
     </fieldset>
 </div>
 
+
+
+<div style="clear:both; padding:4px;">
+    <fieldset class="fieldset" style="padding:6px;">
+        <legend><strong>Restriction d'accès par IP</strong> (Adresses IP qui peuvent accéder à une rubrique privée)</legend>
+        <input type="text" name="webedit_heading_iprules" value="<?php echo ploopi_htmlentities($heading->fields['iprules']); ?>" placeholder="192.168.1.0-192.168.10.255;192.168.12.*" style="width:100%;box-sizing: border-box;" />
+    </fieldset>
+</div>
+
 <div style="clear:both; padding:4px;">
     <fieldset class="fieldset" style="padding:6px;">
         <legend><strong>Autorisations d'accès</strong> (utilisateurs qui peuvent accéder à une rubrique privée)</legend>

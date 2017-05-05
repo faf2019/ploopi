@@ -389,6 +389,18 @@ function webedit_getheadings($moduleid = -1)
             $arrHeadings['list'][$fields['id']]['herited_private'] = $arrHeadings['list'][$fields['id_heading']]['herited_private'];
         }
 
+        // Filtre IP sur la rubrique parent ?
+        if (isset($arrHeadings['list'][$fields['id_heading']]) && !empty($arrHeadings['list'][$fields['id_heading']]['iprules'])) {
+            // Fusion des filtres IP (dans la pratique on empile)
+            $arrHeadings['list'][$fields['id']]['iprules'] = trim($arrHeadings['list'][$fields['id_heading']]['iprules'].';'.$arrHeadings['list'][$fields['id']]['iprules'], ' ;');
+        }
+
+        // Filtre IP sur cette rubrique ?
+        if (!empty($arrHeadings['list'][$fields['id']]['iprules'])) {
+            $arrHeadings['list'][$fields['id']]['ipvalid'] = ploopi_isipvalid(ploopi_getiprules($arrHeadings['list'][$fields['id']]['iprules']));
+        }
+        else $arrHeadings['list'][$fields['id']]['ipvalid'] = true;
+
         // Il suffit qu'une rubrique active le flux pour que le flux soit également activé sur le site global (en respectant le choix de chaque rubrique)
         if ($fields['feed_enabled'] && !$arrHeadings['feed_enabled']) $arrHeadings['feed_enabled'] = true;
 
@@ -854,6 +866,8 @@ function webedit_getobjectcontent($matches)
 
                 $arrQuery = explode("&",trim($obj['script'],"?"));
 
+                ploopi_print_r($arrQuery);
+
                 foreach ($arrQuery as $key => $value) eval("$".$value.";");
 
                 ob_start();
@@ -864,6 +878,7 @@ function webedit_getobjectcontent($matches)
                 {
                     if (file_exists("./modules/".$_SESSION['ploopi']['modules'][$obj['module_id']]['moduletype']."/wce.php"))
                     {
+                        ploopi_print_r($obj);
                         include "./modules/{$obj['module_type']}/wce.php";
                         $content = ob_get_contents();
                     }
@@ -1436,5 +1451,14 @@ function webedit_headinglist2template(&$arrHeadings, &$arrShares, $template_body
             }
         }
     }
+}
+
+// Rubrique accessible ?
+function webedit_headingallowed($arrHeadings, $arrShares, $headingid)
+{
+    // Rubrique non privée ou accessible par l'utilisateur (et accessible par IP)
+    return $arrHeadings['list'][$headingid]['ipvalid'] && (!$arrHeadings['list'][$headingid]['private']
+        || isset($arrShares[$arrHeadings['list'][$headingid]['herited_private']])
+        || isset($_SESSION['webedit']['allowedheading'][$_SESSION['ploopi']['moduleid']][$arrHeadings['list'][$headingid]['herited_private']]));
 }
 ?>

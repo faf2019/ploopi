@@ -1,3 +1,10 @@
+== Module WebEdit - version 2.6.3 ============================================
+
+2017-05-05  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Possibilité d'ajouter des restrictions d'accès par IP sur une rubrique (backoffice).
+* Application du filtrage IP sur les rubriques du frontoffice
+
 == Module WebEdit - version 2.6.2 ============================================
 
 2016-02-15  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

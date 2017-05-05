@@ -199,3 +199,6 @@ CREATE TABLE IF NOT EXISTS `ploopi_mod_webedit_article_object` (
   `id_record` varchar(255) NOT NULL,
   PRIMARY KEY (`id_article`,`id_wce_object`,`id_module_type`,`id_module`,`id_record`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+
+ALTER TABLE  `ploopi_mod_webedit_heading` ADD  `iprules` TEXT NOT NULL AFTER  `free2`;

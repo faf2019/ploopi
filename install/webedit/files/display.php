@@ -171,7 +171,8 @@ else // affichage standard rubrique/page ou blog
             } while(!empty($objHeading->fields['linkedpage']) && substr($objHeading->fields['linkedpage'],0,1) == 'h');
         }
 
-        if (!$arrHeadings['list'][$headingid]['private'] || isset($arrShares[$arrHeadings['list'][$headingid]['herited_private']]) || isset($_SESSION['webedit']['allowedheading'][$_SESSION['ploopi']['moduleid']][$arrHeadings['list'][$headingid]['herited_private']])) // Rubrique non privée ou accessible par l'utilisateur
+        // Rubrique non privée ou accessible par l'utilisateur
+        if (webedit_headingallowed($arrHeadings, $arrShares, $headingid))
         {
             switch($arrHeadings['list'][$headingid]['content_type'])
             {
@@ -410,7 +411,7 @@ if ($query_string != '' || $advanced_search) // recherche intégrale
 
             while ($row = $db->fetchrow())
             {
-                if ($row['id_heading'] == 0 || !$arrHeadings['list'][$row['id_heading']]['private'] || isset($arrShares[$arrHeadings['list'][$row['id_heading']]['herited_private']]) || isset($_SESSION['webedit']['allowedheading'][$_SESSION['ploopi']['moduleid']][$arrHeadings['list'][$row['id_heading']]['herited_private']]) || $webedit_mode == 'edit') // Rubrique non privée ou accessible par l'utilisateur
+                if ($row['id_heading'] == 0 || webedit_headingallowed($arrHeadings, $arrShares, $row['id_heading']) || $webedit_mode == 'edit') // Rubrique non privée ou accessible par l'utilisateur
                 {
                     // Recherche par rubrique, on contrôle l'id de la rubrique (et parents) du document avec la rubrique sélectionnée
                     if ($query_heading_id != '')
@@ -485,7 +486,7 @@ if ($query_string != '' || $advanced_search) // recherche intégrale
 
             while ($row = $db->fetchrow())
             {
-                if ($row['id_heading'] == 0 || !$arrHeadings['list'][$row['id_heading']]['private'] || isset($arrShares[$arrHeadings['list'][$row['id_heading']]['herited_private']]) || isset($_SESSION['webedit']['allowedheading'][$_SESSION['ploopi']['moduleid']][$arrHeadings['list'][$row['id_heading']]['herited_private']]) || $webedit_mode == 'edit') // Rubrique non privée ou accessible par l'utilisateur
+                if ($row['id_heading'] == 0 || webedit_headingallowed($arrHeadings, $arrShares, $row['id_heading']) || $webedit_mode == 'edit') // Rubrique non privée ou accessible par l'utilisateur
                 {
                     // Recherche par rubrique, on contrôle l'id de la rubrique (et parents) du document avec la rubrique sélectionnée
                     if ($query_heading_id != '')
@@ -577,7 +578,7 @@ if ($query_string != '' || $advanced_search) // recherche intégrale
                     if (($objArticle->fields['timestp'] >= $ts_date_b || empty($ts_date_b)) && ($objArticle->fields['timestp'] <= $ts_date_e || empty($ts_date_e)))
                     {
                         // Rubrique non privée ou accessible par l'utilisateur
-                        if (!$arrHeadings['list'][$objArticle->fields['id_heading']]['private'] || isset($arrShares[$arrHeadings['list'][$objArticle->fields['id_heading']]['herited_private']]) || isset($_SESSION['webedit']['allowedheading'][$_SESSION['ploopi']['moduleid']][$arrHeadings['list'][$objArticle->fields['id_heading']]['herited_private']]) || $webedit_mode == 'edit')
+                        if (webedit_headingallowed($arrHeadings, $arrShares, $objArticle->fields['id_heading']) || $webedit_mode == 'edit')
                         {
                             // c'est un objet intégré dans un article
                             if (isset($result['id_article']))
@@ -693,7 +694,8 @@ elseif($query_tag != '') // recherche par tag
 
     while ($row = $db->fetchrow())
     {
-        if (!$arrHeadings['list'][$row['id_heading']]['private'] || isset($arrShares[$arrHeadings['list'][$row['id_heading']]['herited_private']]) || isset($_SESSION['webedit']['allowedheading'][$_SESSION['ploopi']['moduleid']][$arrHeadings['list'][$row['id_heading']]['herited_private']]) || $webedit_mode == 'edit') // Rubrique non privée ou accessible par l'utilisateur
+        // Rubrique non privée ou accessible par l'utilisateur
+        if (webedit_headingallowed($arrHeadings, $arrShares, $row['id_heading']) || $webedit_mode == 'edit')
         {
             $size = sprintf("%.02f", strlen(strip_tags(ploopi_html_entity_decode($row['content_cleaned'])))/1024);
 
@@ -800,7 +802,7 @@ elseif($arrHeadings['list'][$headingid]['content_type'] == 'blog' && $webedit_mo
     if(isset($headingid))
     {
         // Rubrique privée et non autorisée
-        if ($arrHeadings['list'][$headingid]['private'] && !isset($arrShares[$arrHeadings['list'][$headingid]['herited_private']]) && !isset($_SESSION['webedit']['allowedheading'][$_SESSION['ploopi']['moduleid']][$arrHeadings['list'][$headingid]['herited_private']]) && $webedit_mode != 'edit')
+        if (!webedit_headingallowed($arrHeadings, $arrShares, $headingid) && $webedit_mode != 'edit')
         {
             $template_body->assign_block_vars('switch_private', array());
             if (!$_SESSION['ploopi']['connected']) $template_body->assign_block_vars('switch_private.switch_notconnected', array());
@@ -1302,9 +1304,8 @@ elseif($arrHeadings['list'][$headingid]['content_type'] == 'blog' && $webedit_mo
 }
 else // affichage standard rubrique/page
 {
-
     // Rubrique privée et non autorisée
-    if ($arrHeadings['list'][$headingid]['private'] && !isset($arrShares[$arrHeadings['list'][$headingid]['herited_private']]) && !isset($_SESSION['webedit']['allowedheading'][$_SESSION['ploopi']['moduleid']][$arrHeadings['list'][$headingid]['herited_private']]) && $webedit_mode != 'edit')
+    if (!webedit_headingallowed($arrHeadings, $arrShares, $headingid) && $webedit_mode != 'edit')
     {
         $template_body->assign_block_vars('switch_private', array());
         if (!$_SESSION['ploopi']['connected']) $template_body->assign_block_vars('switch_private.switch_notconnected', array());
@@ -2058,10 +2059,8 @@ $arrTags = array();
 while ($row = $db->fetchrow())
 {
     // ATTENTION EN CAS DE CHANGEMENT DE FILTRE, NE PAS OUBLIER LES TAG 3D DANS BACKEND.PHP
-    if (!$arrHeadings['list'][$row['id_heading']]['private']
-        || isset($arrShares[$arrHeadings['list'][$row['id_heading']]['herited_private']])
-        || isset($_SESSION['webedit']['allowedheading'][$_SESSION['ploopi']['moduleid']][$arrHeadings['list'][$row['id_heading']]['herited_private']])
-        || $webedit_mode == 'edit') // Rubrique non privée ou accessible par l'utilisateur
+    // Rubrique non privée ou accessible par l'utilisateur
+    if (webedit_headingallowed($arrHeadings, $arrShares, $row['id_heading']) || $webedit_mode == 'edit')
     {
         $strTag = strtolower(ploopi_convertaccents($row['tag']));
         if (!isset($arrTags[$strTag])) $arrTags[$strTag] = 0;
