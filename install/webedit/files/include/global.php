@@ -866,8 +866,6 @@ function webedit_getobjectcontent($matches)
 
                 $arrQuery = explode("&",trim($obj['script'],"?"));
 
-                ploopi_print_r($arrQuery);
-
                 foreach ($arrQuery as $key => $value) eval("$".$value.";");
 
                 ob_start();
@@ -878,7 +876,6 @@ function webedit_getobjectcontent($matches)
                 {
                     if (file_exists("./modules/".$_SESSION['ploopi']['modules'][$obj['module_id']]['moduletype']."/wce.php"))
                     {
-                        ploopi_print_r($obj);
                         include "./modules/{$obj['module_type']}/wce.php";
                         $content = ob_get_contents();
                     }
