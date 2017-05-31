@@ -172,9 +172,9 @@ function forum_GetMessPage($intIdMess,$arrInfoGlb)
   // Rech nb of message before
   $strForumSqlQuery = "SELECT COUNT(ploopi_mod_forum_mess.id) AS intPage
   FROM ploopi_mod_forum_mess
-  WHERE $strForumSqlLimitGroupMess
+  WHERE {$strForumSqlLimitGroupMess}
     AND ploopi_mod_forum_mess.id_cat = {$objForumMess->fields['id_cat']}
-    AND ploopi_mod_forum_mess.id_subject =  {$objForumMess->fields['id_subject']}
+    AND ploopi_mod_forum_mess.id_subject = {$objForumMess->fields['id_subject']}
     AND ploopi_mod_forum_mess.id_module = {$_SESSION['ploopi']['moduleid']}
     AND (ploopi_mod_forum_mess.timestp {$strForumCompare} {$objForumMess->fields['timestp']}
          OR (ploopi_mod_forum_mess.timestp = {$objForumMess->fields['timestp']}
@@ -301,7 +301,7 @@ function forum_ListModer($intIdCat = -1, $intObject = -1, $booWidthDetail = true
   if($intObject > -1)
   {
     $arrForumModeratSearch = ploopi_validation_get($intObject, $intIdCat);
-    
+
     $arrForumModerat = array();
     foreach($arrForumModeratSearch as $value)
     {
@@ -318,7 +318,7 @@ function forum_ListModer($intIdCat = -1, $intObject = -1, $booWidthDetail = true
         }
       }
       else $arrForumModerat[$value['id_validation']] = $value;
-    }      
+    }
   }
 
   if($booWidthDetail)

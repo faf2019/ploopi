@@ -1,3 +1,9 @@
+== Module FORUM - version 1.0.10 ====================================================
+
+2017-05-31  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+* Correction d'un bug SQL / Initialisation manquante d'une variable globale
+
 == Module FORUM - version 1.0.9 ====================================================
 
 2015-01-20  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
