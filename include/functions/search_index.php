@@ -605,6 +605,7 @@ function ploopi_search($keywords, $id_object = -1, $id_record = null, $id_module
 
     $c = 0;
     reset($arrRelevance);
+    $arrResult = array();
     while (current($arrRelevance) !== false && $c++ < $limit) {
         $k = key($arrRelevance);
         $arrResult[$k] = array_merge($arrElements[$k], $arrRelevance[$k]);
