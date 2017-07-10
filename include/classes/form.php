@@ -419,7 +419,7 @@ class form_field extends form_element
             case 'input:number':
                 $strMinMax = '';
                 if (isset($this->_arrOptions['min']) && is_numeric($this->_arrOptions['min'])) $strMinMax .= " min=\"{$this->_arrOptions['min']}\"";
-                if (isset($this->_arrOptions['max']) && is_numeric($this->_arrOptions['max'])) $strMinMax .= " min=\"{$this->_arrOptions['max']}\"";
+                if (isset($this->_arrOptions['max']) && is_numeric($this->_arrOptions['max'])) $strMinMax .= " max=\"{$this->_arrOptions['max']}\"";
 
                 $strOutput .= "<input type=\"number\" name=\"{$this->_strName}\" id=\"{$this->_strId}\" value=\"{$strValue}\" tabindex=\"{$intTabindex}\"{$strProperties}{$strMaxLength}{$strEvents}{$strPlaceHolder}{$strMinMax} />";
             break;
@@ -1738,7 +1738,7 @@ class form
      * @param string $str chaîne brute
      * @return string chaîne encodée
      **/
-    public function htmlentities($str) {
+    public static function htmlentities($str) {
         return ploopi_htmlentities($str, null, 'ISO-8859-15', false);
     }
 
