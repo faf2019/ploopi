@@ -575,6 +575,10 @@ function ploopi_loadparams()
             foreach($param_type['default'] as $param_name => $param_value)
                 $_SESSION['ploopi']['modules'][$param_idmodule][$param_name] = $param_value;
 
+        if (!empty($param_type['workspace'][$_SESSION['ploopi']['frontoffice']['workspaceid']]))
+            foreach($param_type['workspace'][$_SESSION['ploopi']['frontoffice']['workspaceid']] as $param_name => $param_value)
+                $_SESSION['ploopi']['modules'][$param_idmodule][$param_name] = $param_value;
+
         if (!empty($param_type['workspace'][$_SESSION['ploopi']['backoffice']['workspaceid']]))
             foreach($param_type['workspace'][$_SESSION['ploopi']['backoffice']['workspaceid']] as $param_name => $param_value)
                 $_SESSION['ploopi']['modules'][$param_idmodule][$param_name] = $param_value;
