@@ -440,7 +440,7 @@ switch($http_host)
          * Liste des séparateurs de mots (fonctions d'indexation)
          */
 
-        define ('_PLOOPI_INDEXATION_WORDSEPARATORS', " :;,.!?'^`'\"«»~-_|()[]{}<>\$£µ&#§@%=+/*\\/\n\r");
+        define ('_PLOOPI_INDEXATION_WORDSEPARATORS', " :;,.!?'^`'\"«»~-_|()[]{}<>\$£µ&#§@%=+/*\\/\n\r\0\x0B\xa0");
 
         /**
          * Longueur minimale d'un mot indexable
@@ -464,7 +464,7 @@ switch($http_host)
          * Pourcentage d'apparition minimum d'un mot pour qu'il soit indexable
          */
 
-        define ('_PLOOPI_INDEXATION_RATIOMIN', 0.01);
+        define ('_PLOOPI_INDEXATION_RATIOMIN', 0.001);
 
         /**
          * Pourcentage de mots indexés dans un document (expérimental, laisser 100)
