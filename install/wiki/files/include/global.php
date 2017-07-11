@@ -206,7 +206,7 @@ function wiki_render($strContent, $cbInternalLinks = 'wiki_internal_links')
 
     // Post-traitement du formatage de code
     $strTextile = str_replace($arrReplace, $arrHighlight, $strTextile);
-    
+
     return $strTextile;
 }
 

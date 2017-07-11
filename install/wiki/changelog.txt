@@ -1,3 +1,9 @@
+== Module Wiki - version 1.3.1 ====================================================
+
+2017-07-11  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Correction d'un bug dans le rendu des liens internes
+
 == Module Wiki - version 1.3.0 ====================================================
 
 2015-06-08  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
