@@ -322,7 +322,7 @@ if (!empty($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]
             if (file_exists("./modules/{$_SESSION['ploopi']['modules'][$intModuleId]['moduletype']}/template.php"))
             {
                 $template_moduleid = $intModuleId;
-                include_once "./modules/{$_SESSION['ploopi']['modules'][$intModuleId]['moduletype']}/template.php";
+                include "./modules/{$_SESSION['ploopi']['modules'][$intModuleId]['moduletype']}/template.php";
                 unset($template_moduleid);
             }
         }
@@ -756,7 +756,7 @@ elseif (!empty($intTemplateModuleId)) // contenu d'un module
 
     global $template_moduleid;
     $template_moduleid = $intTemplateModuleId;
-    include_once "./modules/{$_SESSION['ploopi']['modules'][$intTemplateModuleId]['moduletype']}/template_content.php";
+    include "./modules/{$_SESSION['ploopi']['modules'][$intTemplateModuleId]['moduletype']}/template_content.php";
     unset($template_moduleid);
 
     $template_body->assign_vars(

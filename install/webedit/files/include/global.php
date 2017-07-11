@@ -92,6 +92,17 @@ define ('_WEBEDIT_ACTION_HEADING_BACK_EDITOR_MANAGE',   11);
 define ('_WEBEDIT_ACTION_HEADING_BACK_EDITOR',   12);
 
 /**
+ * Gerer les gestionnaires de rubrique
+ */
+define ('_WEBEDIT_ACTION_HEADING_BACK_MANAGER_MANAGE',   21);
+
+/**
+ * Etre gestionnaire de rubrique potentiel
+ */
+define ('_WEBEDIT_ACTION_HEADING_BACK_MANAGER',   22);
+
+
+/**
  * Objet : ARTICLE (admin)
  */
 define ('_WEBEDIT_OBJECT_ARTICLE_ADMIN',        1);
@@ -110,6 +121,11 @@ define ('_WEBEDIT_OBJECT_HEADING',              3);
  * Objet : REDACTEUR DE RUBRIQUE
  */
 define ('_WEBEDIT_OBJECT_HEADING_BACK_EDITOR',  4);
+
+/**
+ * Objet : GESTIONNAIRE DE RUBRIQUE
+ */
+define ('_WEBEDIT_OBJECT_HEADING_BACK_MANAGER',  5);
 
 /**
  * Chemin relatif du dossier de stockage des templates
@@ -934,6 +950,10 @@ function webedit_record_isenabled($id_object, $id_record, $id_module)
 
 function webedit_replace_links($objArticle, $mode, &$arrHeadings)
 {
+    // Paramétrage du content-disposition pour les liens vers les documents
+    $strContentDisp = ploopi_getparam('content_disposition');
+    if (empty($strContentDisp)) $strContentDisp = 'attachment';
+
     // Mise en cache
     $objCache = new ploopi_cache('webedit/article/'._PLOOPI_FRONTOFFICE_REWRITERULE.'/'.$objArticle->fields['id'].'/'.$objArticle->fields['lastupdate_timestp'], 86400);
 
@@ -1003,7 +1023,7 @@ function webedit_replace_links($objArticle, $mode, &$arrHeadings)
                 {
                     $arrSearch[] = $arrMatches[1][$key];
                     // ATTENTION ! _PLOOPI_BASEPATH est nécessaire pour la lecture des vidéos flash (chemin absolu sinon ne fonctionne pas)
-                    $arrReplace[] = _PLOOPI_BASEPATH.'/'.ploopi_urlrewrite(ploopi_html_entity_decode($arrMatches[1][$key]), doc_getrewriterules(), $objDocFile->fields['name'], null, true);
+                    $arrReplace[] = _PLOOPI_BASEPATH.'/'.ploopi_urlrewrite(ploopi_html_entity_decode($arrMatches[1][$key]), doc_getrewriterules($strContentDisp), $objDocFile->fields['name'], null, true);
                 }
             }
         }
@@ -1328,6 +1348,58 @@ function webedit_isEditor($heading, $user = null, $type = 'user', $id_module = n
 
         if(!empty($arrGroups))
             $arrEditor = ploopi_validation_get(_WEBEDIT_OBJECT_HEADING_BACK_EDITOR, $arrHeading, $id_module, $arrGroups, 'group');
+    }
+
+    return (!empty($arrEditor));
+}
+
+
+/**
+ * Contrôle si le user connecté est un Gestionnaire
+ *
+ * @Param int $heading id_heading à contrôler
+ * @Param int $user identifiant du user ou du groupe (optionnel)
+ * @Param string $type type de user (user/group) (optionnel)
+ * @Param int $id_module identifiant du module (optionnel)
+ *
+ * @return boolean true/false
+ */
+function webedit_isManager($heading, $user = null, $type = 'user', $id_module = null)
+{
+    if ((empty($heading) || !is_numeric($heading)) && $heading != 'b') return false;
+
+    if (is_null($user)) $user = $_SESSION['ploopi']['userid'];
+
+    $type = strtolower($type);
+    $type = ($type == 'user' &&  $type == 'group') ? $type : 'user';
+
+    if (is_null($id_module)) $id_module = $_SESSION['ploopi']['moduleid'];
+
+    // On cherche les parents de cet heading
+    include_once './modules/webedit/class_heading.php';
+
+    if ($heading != 'b')
+    {
+        $objHeading = new webedit_heading();
+        if(!$objHeading->open($heading)) return false;
+        $arrHeading = explode(';',$objHeading->fields['parents']);
+    }
+    $arrHeading[] = $heading;
+
+    // On test si c'est un rédacteur avec le user
+    $arrEditor = ploopi_validation_get(_WEBEDIT_OBJECT_HEADING_BACK_MANAGER, $arrHeading, $id_module, $user, $type);
+
+    // on a verifié par le user et il n'est pas rédacteur, on va verif ses groupes
+    if(empty($arrEditor) && $type == 'user')
+    {
+        include_once './include/classes/user.php';
+
+        $objUser = new user();
+        $objUser->open($user);
+        $arrGroups = array_keys($objUser->getgroups(true));
+
+        if(!empty($arrGroups))
+            $arrEditor = ploopi_validation_get(_WEBEDIT_OBJECT_HEADING_BACK_MANAGER, $arrHeading, $id_module, $arrGroups, 'group');
     }
 
     return (!empty($arrEditor));

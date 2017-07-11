@@ -132,7 +132,8 @@ switch($menu)
 
             case 'heading_addnew':
                 $heading = new webedit_heading();
-                if ((ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT) || webedit_isEditor($headingid)) && is_numeric($headingid) && $heading->open($headingid))
+
+                if ((ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT) || webedit_isManager($headingid)) && is_numeric($headingid) && $heading->open($headingid))
                 {
                     $heading_new = new webedit_heading();
                     $heading_new->fields['label'] = "Sous rubrique de '{$heading->fields['label']}'";
@@ -174,7 +175,7 @@ switch($menu)
             break;
 
             case 'heading_save':
-                if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT) || webedit_isEditor($headingid))
+                if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT) || webedit_isManager($headingid))
                 {
                     if ($headingid == 'b') // Blocs
                     {
@@ -184,8 +185,17 @@ switch($menu)
                         ploopi_subscription_notify(_WEBEDIT_OBJECT_HEADING, 'b', _WEBEDIT_ACTION_CATEGORY_EDIT, 'Blocs', array_keys($arrUsers), 'Cet objet à été modifié');
                         /* FIN ABONNEMENT */
 
-                        ploopi_validation_save(_WEBEDIT_OBJECT_HEADING, $headingid);
-                        ploopi_validation_save(_WEBEDIT_OBJECT_HEADING_BACK_EDITOR, $headingid);
+                        if (ploopi_isactionallowed(_WEBEDIT_ACTION_WORKFLOW_MANAGE) && ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT)) {
+                            ploopi_validation_save(_WEBEDIT_OBJECT_HEADING, $headingid);
+                        }
+
+                        if (ploopi_isactionallowed(_WEBEDIT_ACTION_HEADING_BACK_EDITOR_MANAGE) && ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT)) {
+                            ploopi_validation_save(_WEBEDIT_OBJECT_HEADING_BACK_EDITOR, $headingid);
+                        }
+
+                        if (ploopi_isactionallowed(_WEBEDIT_ACTION_HEADING_BACK_MANAGER_MANAGE) && ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT)) {
+                            ploopi_validation_save(_WEBEDIT_OBJECT_HEADING_BACK_MANAGER, $headingid);
+                        }
                     }
                     else
                     {
@@ -250,11 +260,22 @@ switch($menu)
                             /* FIN ABONNEMENT */
 
                             // Enregistrement des partages si la rubrique est privée
-                            if (!$heading->fields['private']) unset($_SESSION['ploopi']['share']['users_selected']);
-                            ploopi_share_save(_WEBEDIT_OBJECT_HEADING, $heading->fields['id']);
+                            if (ploopi_isactionallowed(_WEBEDIT_ACTION_ACCESS_MANAGE)) {
+                                if (!$heading->fields['private']) unset($_SESSION['ploopi']['share']['users_selected']);
+                                ploopi_share_save(_WEBEDIT_OBJECT_HEADING, $heading->fields['id']);
+                            }
 
-                            ploopi_validation_save(_WEBEDIT_OBJECT_HEADING, $heading->fields['id']);
-                            ploopi_validation_save(_WEBEDIT_OBJECT_HEADING_BACK_EDITOR, $heading->fields['id']);
+                            if (ploopi_isactionallowed(_WEBEDIT_ACTION_WORKFLOW_MANAGE) && ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT)) {
+                                ploopi_validation_save(_WEBEDIT_OBJECT_HEADING, $headingid);
+                            }
+
+                            if (ploopi_isactionallowed(_WEBEDIT_ACTION_HEADING_BACK_EDITOR_MANAGE) && ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT)) {
+                                ploopi_validation_save(_WEBEDIT_OBJECT_HEADING_BACK_EDITOR, $headingid);
+                            }
+
+                            if (ploopi_isactionallowed(_WEBEDIT_ACTION_HEADING_BACK_MANAGER_MANAGE) && ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT)) {
+                                ploopi_validation_save(_WEBEDIT_OBJECT_HEADING_BACK_MANAGER, $headingid);
+                            }
                         }
                     }
 
@@ -288,7 +309,7 @@ switch($menu)
                 $heading = new webedit_heading();
 
                 // Pour rédacteur on verif qu'on est pas à la racine du redacteur en controlant si il est bien rédacteur du heading parents (ou plus loin)
-                if ($heading->open($headingid) && (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT) || (webedit_isEditor($headingid) && webedit_isEditor($heading->fields['id_heading']))))
+                if ($heading->open($headingid) && (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT) || (webedit_isManager($headingid) && webedit_isManager($heading->fields['id_heading']))))
                 {
                     if (!($heading->fields['id_heading'] == 0 && $heading->fields['position'] == 1))
                     {

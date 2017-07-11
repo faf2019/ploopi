@@ -1,3 +1,13 @@
+== Module WebEdit - version 2.6.5 ============================================
+
+2017-07-11  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Ajout d'un rôle permettant d'être sélectionnable dans les gestionnaires de rubriques
+* Ajout d'une interface de sélection des gestionnaires de rubriques (au niveau des rubriques)
+* Impact du nouveau rôle de gestionnaire de rubrique sur la création/modification/suppression de rubriques
+* Correction d'un bug dans les inclusions d'objets multiples en frontoffice
+* Ajout d'un paramètres permettant de forcer le téléchargement des documents liés en "inline"
+
 == Module WebEdit - version 2.6.4 ============================================
 
 2017-05-11  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

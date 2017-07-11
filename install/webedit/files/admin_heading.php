@@ -59,8 +59,28 @@ if (empty($arrEditor)) // pas de partages pour cette rubrique, on recherche sur 
         }
     }
 }
-else
-    $intEditorHeadingId = $headingid;
+else $intEditorHeadingId = $headingid;
+
+// Recupère les Gestionnaires
+$intManagerHeadingId = 0;
+$arrManagerUsers = array();
+$booManagerHeadingIdIsRoot = true;
+$arrManager = ploopi_validation_get(_WEBEDIT_OBJECT_HEADING_BACK_MANAGER, $headingid);
+if (empty($arrManager)) // pas de partages pour cette rubrique, on recherche sur les parents
+{
+    $booManagerHeadingIdIsRoot = false;
+    $arrParents = explode(';', $heading->fields['parents']);
+    for ($i = sizeof($arrParents)-1; $i >= 0; $i--)
+    {
+        $arrManager = ploopi_validation_get(_WEBEDIT_OBJECT_HEADING_BACK_MANAGER, $arrParents[$i]);
+        if (!empty($arrManager))
+        {
+            $intManagerHeadingId = $arrParents[$i];
+            break;
+        }
+    }
+}
+else $intManagerHeadingId = $headingid;
 
 /**
  * L'utilisateur connecté est-il rédacteur ?
@@ -75,7 +95,25 @@ foreach($arrEditor as $value)
 }
 
 // Si l'utilisateur connecté n'est pas un "Rédacteur" on verif ses droits pour l'action _WEBEDIT_ACTION_CATEGORY_EDIT
-if(!$booIsAllowedEdit) $booIsAllowedEdit = ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT);
+if(!$booIsAllowedEdit) $booIsAllowedEdit = ploopi_isactionallowed(_WEBEDIT_ACTION_ARTICLE_EDIT);
+
+
+/**
+ * L'utilisateur connecté est-il gestionnaire ?
+ */
+
+$booIsAllowedManage = $booIsManager = false;
+foreach($arrManager as $value)
+{
+    if ($value['type_validation'] == 'user' && $value['id_validation'] == $_SESSION['ploopi']['userid']) $booIsAllowedManage = $booIsManager = true;
+    if ($value['type_validation'] == 'group' && isset($arrGroups[$value['id_validation']])) $booIsAllowedManage = $booIsManager = true;
+
+    $arrManagerUsers[$value['type_validation']][] = $value['id_validation'];
+}
+
+// Si l'utilisateur connecté n'est pas un "Rédacteur" on verif ses droits pour l'action _WEBEDIT_ACTION_CATEGORY_EDIT
+if(!$booIsAllowedManage) $booIsAllowedManage = ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT);
+
 ?>
 
 <p class="ploopi_va" style="background-color:#e0e0e0;padding:6px;border-bottom:1px solid #c0c0c0;">
@@ -105,7 +143,7 @@ if(!$booIsAllowedEdit) $booIsAllowedEdit = ploopi_isactionallowed(_WEBEDIT_ACTIO
 </p>
 <div id="webedit_heading_toolbar">
     <?php
-    if (ploopi_isactionallowed(_WEBEDIT_ACTION_ARTICLE_EDIT) || $booIsAllowedEdit)
+    if ($booIsAllowedEdit)
     {
         ?>
         <p class="ploopi_va" style="float:left;padding:6px;cursor:pointer;" title="Ajouter un article" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?op=article_addnew"); ?>';" >
@@ -115,8 +153,7 @@ if(!$booIsAllowedEdit) $booIsAllowedEdit = ploopi_isactionallowed(_WEBEDIT_ACTIO
         <?php
     }
 
-    //if ($booIsAllowedEdit) Modifié par SE le 01/06/2010 (demande SZSIC)
-    if (ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
+    if ($booIsAllowedManage)
     {
         ?>
         <p class="ploopi_va" style="float:left;padding:6px;cursor:pointer;" title="Ajouter une sous-rubrique" onclick="javascript:document.location.href='<?php echo ploopi_urlencode("admin.php?op=heading_addnew"); ?>';" >
@@ -137,7 +174,7 @@ if(!$booIsAllowedEdit) $booIsAllowedEdit = ploopi_isactionallowed(_WEBEDIT_ACTIO
     }
 
     //if (ploopi_isactionallowed(_WEBEDIT_ACTION_DELETECAT) && $heading->fields['id_heading'] != 0)
-    if ((ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT) || ($booIsEditor && !$booEditorHeadingIdIsRoot)) && !($heading->fields['id_heading'] == 0 && $heading->fields['position'] == 1) )
+    if ((ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT) || ($booIsManager && !$booManagerHeadingIdIsRoot)) && !($heading->fields['id_heading'] == 0 && $heading->fields['position'] == 1) )
     {
         ?>
         <p class="ploopi_va" style="float:left;padding:6px;cursor:pointer;" title="Supprimer cette rubrique" onclick="javascript:ploopi_confirmlink('<?php echo ploopi_urlencode("admin.php?op=heading_delete"); ?>','<?php echo _PLOOPI_CONFIRM; ?>');" >
@@ -150,7 +187,7 @@ if(!$booIsAllowedEdit) $booIsAllowedEdit = ploopi_isactionallowed(_WEBEDIT_ACTIO
 </div>
 
 <?php
-if ($booIsAllowedEdit)
+if ($booIsAllowedManage)
 {
     ?>
     <form style="margin:0;" action="<?php echo ploopi_urlencode('admin.php?op=heading_save'); ?>" method="post" onsubmit="javascript:return webedit_heading_validate(this);">
@@ -169,7 +206,7 @@ if ($display_type == 'advanced')
             <p>
                 <label>Libellé:</label>
                 <?php
-                if ($booIsAllowedEdit)
+                if ($booIsAllowedManage)
                 {
                     ?>
                     <input type="text" class="text" name="webedit_heading_label"  value="<?php echo ploopi_htmlentities($heading->fields['label']); ?>" tabindex="1" />
@@ -181,7 +218,7 @@ if ($display_type == 'advanced')
             <p>
                 <label>Description:</label>
                 <?php
-                if ($booIsAllowedEdit)
+                if ($booIsAllowedManage)
                 {
                     ?>
                     <textarea class="text" name="webedit_heading_description" tabindex="2"><?php echo ploopi_htmlentities($heading->fields['description']); ?></textarea>
@@ -193,7 +230,7 @@ if ($display_type == 'advanced')
             <p>
                 <label>Gabarit:</label>
                 <?php
-                if ($booIsAllowedEdit)
+                if ($booIsAllowedManage)
                 {
                     ?>
                     <select class="select" name="webedit_heading_template" tabindex="3">
@@ -225,7 +262,7 @@ if ($display_type == 'advanced')
             <p>
                 <label>Position:</label>
                 <?php
-                if ($booIsAllowedEdit)
+                if ($booIsAllowedManage)
                 {
                     ?>
                     <input type="text" class="text" name="head_position" value="<?php echo ploopi_htmlentities($heading->fields['position']); ?>" style="width:40px;" tabindex="4" />
@@ -239,7 +276,7 @@ if ($display_type == 'advanced')
             <p>
                 <label for="webedit_heading_visible" style="cursor:pointer;"><strong>Visible dans le menu:</strong></label>
                 <?php
-                if ($booIsAllowedEdit)
+                if ($booIsAllowedManage)
                 {
                     ?>
                     <input type="checkbox" name="webedit_heading_visible" id="webedit_heading_visible" class="checkbox" value="1" <?php if ($heading->fields['visible']) echo 'checked'; ?> tabindex="5" />
@@ -251,7 +288,7 @@ if ($display_type == 'advanced')
             <p>
                 <label for="webedit_heading_url_window" style="cursor:pointer;">Ouvrir une nouvelle fenêtre:</label>
                 <?php
-                if ($booIsAllowedEdit)
+                if ($booIsAllowedManage)
                 {
                     ?>
                     <input type="checkbox" name="webedit_heading_url_window" id="webedit_heading_url_window" class="checkbox" value="1" <?php if ($heading->fields['url_window']) echo 'checked'; ?> tabindex="9" />
@@ -263,7 +300,7 @@ if ($display_type == 'advanced')
             <p>
                 <label>Trier les articles:</label>
                 <?php
-                if ($booIsAllowedEdit)
+                if ($booIsAllowedManage)
                 {
                     ?>
                     <select class="select" name="webedit_heading_sortmode">
@@ -287,7 +324,7 @@ if ($display_type == 'advanced')
             <p>
                 <label for="webedit_heading_feed_enabled" style="cursor:pointer;">Fournir un flux RSS:</label>
                 <?php
-                if ($booIsAllowedEdit)
+                if ($booIsAllowedManage)
                 {
                     ?>
                     <input type="checkbox" name="webedit_heading_feed_enabled" id="webedit_heading_feed_enabled" class="checkbox" value="1" <?php if ($heading->fields['feed_enabled']) echo 'checked'; ?> tabindex="9" />
@@ -299,7 +336,7 @@ if ($display_type == 'advanced')
             <p>
                 <label for="webedit_heading_subscription_enabled" style="cursor:pointer;">Autoriser les abonnements:</label>
                 <?php
-                if ($booIsAllowedEdit)
+                if ($booIsAllowedManage)
                 {
                     ?>
                     <input type="checkbox" name="webedit_heading_subscription_enabled" id="webedit_heading_subscription_enabled" class="checkbox" value="1" <?php if ($heading->fields['subscription_enabled']) echo 'checked'; ?> tabindex="9" />
@@ -319,7 +356,7 @@ if ($display_type == 'advanced')
                 <label style="width:20%;">&nbsp;</label>
                 <span style="width:75%;">
                     <?php
-                    if ($booIsAllowedEdit)
+                    if ($booIsAllowedManage)
                     {
                         ?>
                         <span style="clear:both;cursor:pointer;" onclick="javascript:ploopi_checkbox_click(event, 'heading_content_type_article_first');">
@@ -421,7 +458,7 @@ if ($display_type == 'advanced')
             <p>
                 <label>Couleur:</label>
                 <?php
-                if ($booIsAllowedEdit)
+                if ($booIsAllowedManage)
                 {
                     ?>
                     <input type="text" style="width:100px;cursor:pointer" class="text color {hash:true}" name="webedit_heading_color" id="webedit_heading_color" value="<?php echo ploopi_htmlentities($heading->fields['color']); ?>" tabindex="10" />
@@ -433,7 +470,7 @@ if ($display_type == 'advanced')
             <p>
                 <label>Position x:</label>
                 <?php
-                if ($booIsAllowedEdit)
+                if ($booIsAllowedManage)
                 {
                     ?>
                     <input type="text" style="width:100px;" class="text" name="webedit_heading_posx"  value="<?php echo ploopi_htmlentities($heading->fields['posx']); ?>" tabindex="11" />
@@ -445,7 +482,7 @@ if ($display_type == 'advanced')
             <p>
                 <label>Position y:</label>
                 <?php
-                if ($booIsAllowedEdit)
+                if ($booIsAllowedManage)
                 {
                     ?>
                     <input type="text" style="width:100px;" class="text" name="webedit_heading_posy"  value="<?php echo ploopi_htmlentities($heading->fields['posy']); ?>" tabindex="12" />
@@ -457,7 +494,7 @@ if ($display_type == 'advanced')
             <p>
                 <label>Champ Libre 1:</label>
                 <?php
-                if ($booIsAllowedEdit)
+                if ($booIsAllowedManage)
                 {
                     ?>
                     <input type="text" class="text" name="webedit_heading_free1"  value="<?php echo ploopi_htmlentities($heading->fields['free1']); ?>" tabindex="13" />
@@ -469,7 +506,7 @@ if ($display_type == 'advanced')
             <p>
                 <label>Champ Libre 2:</label>
                 <?php
-                if ($booIsAllowedEdit)
+                if ($booIsAllowedManage)
                 {
                     ?>
                     <input type="text" class="text" name="webedit_heading_free2"  value="<?php echo ploopi_htmlentities($heading->fields['free2']); ?>" tabindex="14" />
@@ -495,7 +532,7 @@ else
             <p>
                 <label>Libellé:</label>
                 <?php
-                if ($booIsAllowedEdit)
+                if ($booIsAllowedManage)
                 {
                     ?>
                     <input type="text" class="text" name="webedit_heading_label"  value="<?php echo ploopi_htmlentities($heading->fields['label']); ?>" tabindex="1" />
@@ -507,7 +544,7 @@ else
             <p>
                 <label>Gabarit:</label>
                 <?php
-                if ($booIsAllowedEdit)
+                if ($booIsAllowedManage)
                 {
                     ?>
                     <select class="select" name="webedit_heading_template" tabindex="3">
@@ -539,7 +576,7 @@ else
             <p>
                 <label>Position:</label>
                 <?php
-                if ($booIsAllowedEdit)
+                if ($booIsAllowedManage)
                 {
                     ?>
                     <input type="text" class="text" name="head_position" value="<?php echo ploopi_htmlentities($heading->fields['position']); ?>" style="width:40px;" tabindex="4" />
@@ -551,7 +588,7 @@ else
             <p>
                 <label for="webedit_heading_visible" style="cursor:pointer;"><strong>Visible:</strong></label>
                 <?php
-                if ($booIsAllowedEdit)
+                if ($booIsAllowedManage)
                 {
                     ?>
                     <input type="checkbox" name="webedit_heading_visible" id="webedit_heading_visible" class="checkbox" value="1" <?php if ($heading->fields['visible']) echo 'checked'; ?> tabindex="5" />
@@ -568,7 +605,7 @@ else
             <p>
                 <label>Description:</label>
                 <?php
-                if ($booIsAllowedEdit)
+                if ($booIsAllowedManage)
                 {
                     ?>
                     <textarea class="text" name="webedit_heading_description" tabindex="2"><?php echo ploopi_htmlentities($heading->fields['description']); ?></textarea>
@@ -689,7 +726,7 @@ foreach($arrShares as $value) $arrSharesUsers[$value['type_share']][] = $value['
 
 <div style="clear:both;padding:4px;">
     <fieldset class="fieldset" style="padding:6px;">
-        <legend><strong>Rédacteurs</strong> (utilisateurs qui peuvent gérer cette branche)</legend>
+        <legend><strong>Rédacteurs</strong> (utilisateurs qui peuvent gérer les articles)</legend>
 
         <p class="ploopi_va" style="padding:0 2px 2px 2px;"><span>Rédacteurs </span><?php if ($intEditorHeadingId && $intEditorHeadingId != $headingid) echo "<em>&nbsp;héritées de &laquo;&nbsp;</em><a href=\"".ploopi_urlencode("admin.php?headingid={$intEditorHeadingId}")."\">{$headings['list'][$intEditorHeadingId]['label']}</a><em>&nbsp;&raquo;</em>"; ?><span>:</span>
             <?php
@@ -734,6 +771,51 @@ foreach($arrShares as $value) $arrSharesUsers[$value['type_share']][] = $value['
 </div>
 
 
+<div style="clear:both;padding:4px;">
+    <fieldset class="fieldset" style="padding:6px;">
+        <legend><strong>Gestionnaires</strong> (utilisateurs qui peuvent gérer les rubriques)</legend>
+
+        <p class="ploopi_va" style="padding:0 2px 2px 2px;"><span>Gestionnaires </span><?php if ($intManagerHeadingId && $intManagerHeadingId != $headingid) echo "<em>&nbsp;héritées de &laquo;&nbsp;</em><a href=\"".ploopi_urlencode("admin.php?headingid={$intManagerHeadingId}")."\">{$headings['list'][$intManagerHeadingId]['label']}</a><em>&nbsp;&raquo;</em>"; ?><span>:</span>
+            <?php
+            if (!empty($arrManagerUsers))
+            {
+                if (!empty($arrManagerUsers['group']))
+                {
+                    $strIcon = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/ico_group.png\">";
+
+                    $db->query(
+                        "SELECT label FROM ploopi_group WHERE id in (".implode(',',$arrManagerUsers['group']).") ORDER BY label"
+                    );
+
+                    while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi_htmlentities($row['label'])."&nbsp;</span>";
+                }
+                if (!empty($arrManagerUsers['user']))
+                {
+                    $strIcon = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/ico_user.png\">";
+
+                    $db->query(
+                        "SELECT concat(lastname, ' ', firstname) as name FROM ploopi_user WHERE id in (".implode(',',$arrManagerUsers['user']).") ORDER BY lastname, firstname"
+                    );
+
+                    while ($row = $db->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi_htmlentities($row['name'])."&nbsp;</span>";
+                }
+            }
+            else echo '<em>Aucune accréditation</em>';
+            ?>
+        </p>
+
+        <?php
+        if (ploopi_isactionallowed(_WEBEDIT_ACTION_HEADING_BACK_MANAGER_MANAGE) && ploopi_isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
+        {
+            ?>
+            <div style="border:1px solid #c0c0c0;overflow:hidden;">
+            <?php ploopi_validation_selectusers(_WEBEDIT_OBJECT_HEADING_BACK_MANAGER, $heading->fields['id'], -1, _WEBEDIT_ACTION_HEADING_BACK_MANAGER, $intManagerHeadingId == $headingid ? 'Modifier la listes des gestionnaires :' : 'Définir une nouvelle liste de gestionnaires :'); ?>
+            </div>
+            <?php
+        }
+        ?>
+    </fieldset>
+</div>
 
 <div style="clear:both; padding:4px;">
     <fieldset class="fieldset" style="padding:6px;">
@@ -818,7 +900,7 @@ foreach($arrShares as $value) $arrSharesUsers[$value['type_share']][] = $value['
 </div>
 
 <?
-if ($booIsAllowedEdit)
+if ($booIsAllowedManage)
 {
     ?>
     <div style="text-align:right;padding:4px;">
