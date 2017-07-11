@@ -541,9 +541,10 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
 
                     $rowData = array(
                         'login' => $row['login'],
+                        'password' => '',
                         'lastname' => $row['lastname'],
                         'firstname' => $row['firstname'],
-                        'user' => trim($row['lastname'].' '.$row['firstname']),
+                        'civility' => $row['civility'],
                         'workspaces' => implode("\n\r",$arrWspList),
                         'service' => $row['service'],
                         'service2' => $row['service2'],
@@ -558,22 +559,26 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                         'building' => $row['building'],
                         'floor' => $row['floor'],
                         'office' => $row['office'],
+                        'entity' => $row['entity'],
+                        'service' => $row['service'],
+                        'function' => $row['function'],
+                        'service2' => $row['service2'],
                         'address' => $row['address'],
                         'postalcode' => $row['postalcode'],
                         'city' => $row['city'],
                         'country' => $row['country'],
                         'date_creation' => $row['date_creation'],
+                        'timezone' => $row['timezone'],
+                        'color' => $row['color'],
+                        'ticketsbyemail' => $row['ticketsbyemail'],
+                        'password_force_update' => $row['password_force_update'],
+                        'password_validity' => $row['password_validity'],
+
+                        'comments' => $row['comments'],
 
                         'last_connection' => $row['last_connection']
 
-
                     );
-
-                    // Traitement spécial vCard
-                    if ($strTypeDoc != 'vcf') {
-                        unset($rowData['lastname']);
-                        unset($rowData['firstname']);
-                    }
 
                     $arrData[] = $rowData;
 

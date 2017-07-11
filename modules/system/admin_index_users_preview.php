@@ -62,16 +62,16 @@ foreach($_SESSION['system']['user_import'][0] as $strFieldName)
 {
     if (!in_array($strFieldName, $arrValidFields) || $strFieldName == 'id')
     {
-        $arrErrors[] = "Champ '{$strFieldName}' invalide";
+        $arrErrors[] = "Champ '{$strFieldName}' non utilisé";
     }
-    
+
     // Est-ce un champ obligatoire
     if (isset($arrNeededFields[$strFieldName])) $arrNeededFields[$strFieldName] = 1;
 }
 
 foreach($arrNeededFields as $strFieldName => $booFound)
 {
-    if (!$booFound) 
+    if (!$booFound)
     {
         $arrErrors[] = "Champ '{$strFieldName}' non trouvé";
         $booCriticalError = true;
@@ -109,22 +109,25 @@ if (!$booCriticalError)
     ?>
     <div style="padding:2px;border-bottom:1px solid #a0a0a0;background-color:#e0e0e0;"><strong>Aperçu de l'import (<a href="<? echo ploopi_urlencode("admin.php?usrTabItem=tabUserImport&op=import"); ?>">Confirmer l'import</a>):</strong></div>
     <?
-    
+
     $columns = array();
     $values = array();
-    
+    $width = 0;
+
     foreach($_SESSION['system']['user_import'][0] as $strFieldName)
     {
+        $w = 30+strlen($strFieldName)*7;
+        $width += $w;
         $columns['left'][$strFieldName] =
             array(
                 'label' => ploopi_htmlentities($strFieldName),
-                'width' => 90,
+                'width' => $w,
                 'options' => array('sort' => true)
             );
     }
-    
+
     $intC = 0;
-    
+
     for ($intI = 1; $intI < count($_SESSION['system']['user_import']); $intI++)
     {
         $intJ = 0;
@@ -132,10 +135,15 @@ if (!$booCriticalError)
         {
             if (isset($_SESSION['system']['user_import'][$intI][$intJ])) $values[$intC]['values'][$strFieldName] = array('label' => ploopi_htmlentities($_SESSION['system']['user_import'][$intI][$intJ]));
             $intJ++;
-        }   
+        }
         $intC++;
     }
-    
-    $skin->display_array($columns, $values, 'array_user_importlist', array('sortable' => true));
+    ?>
+    <div style="width:<? echo $width+20; ?>px;">
+        <?
+        $skin->display_array($columns, $values, 'array_user_importlist', array('sortable' => true));
+        ?>
+    </div>
+    <?
 }
 ?>
