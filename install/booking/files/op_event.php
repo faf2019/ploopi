@@ -448,12 +448,14 @@ if ($_SESSION['ploopi']['connected'])
 
             $arrResources = ($_SESSION['ploopi']['mode'] == 'frontoffice') ? booking_get_resources(false, $_GET['booking_moduleid']) : booking_get_resources();
 
-            $db->query("SELECT * FROM ploopi_mod_booking_subresource WHERE id_resource IN (".implode(',', array_keys($arrResources)).") AND active = 1 ORDER BY name");
-            ?>
-            <script type="text/javascript">
-                booking_json_sr = <? echo json_encode(ploopi_array_map('ploopi_utf8encode', $db->getarray())); ?>;
-            </script>
-            <?
+            if (!empty($arrResources)) {
+                $db->query("SELECT * FROM ploopi_mod_booking_subresource WHERE id_resource IN (".implode(',', array_keys($arrResources)).") AND active = 1 ORDER BY name");
+                ?>
+                <script type="text/javascript">
+                    booking_json_sr = <? echo json_encode(ploopi_array_map('ploopi_utf8encode', $db->getarray())); ?>;
+                </script>
+                <?
+            }
 
             $objEvent = new booking_event();
             $objEvent->init_description();

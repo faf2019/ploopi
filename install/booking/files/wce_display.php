@@ -312,7 +312,9 @@ switch($arrSearchPattern['booking_display_type'])
         }
         else
         {
-            ?><input type="button" class="button" value="Réserver" style="margin:0 10px;" onclick="javascript:alert('Vous ne disposez pas des autorisations nécessaires');" /><?
+            if (!$_SESSION['ploopi']['connected']) $msg = 'Vous devez vous connecter avec votre compte utilisateur';
+            else $msg = 'Vous ne disposez pas des droits nécessaire pour effectuer une réservation';
+            ?><input type="button" class="button" value="Réserver" style="margin:0 10px;" onclick="javascript:alert('<? echo $msg; ?>');" /><?
         }
         ?>
         </p>

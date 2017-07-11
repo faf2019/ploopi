@@ -1,3 +1,10 @@
+== Module BOOKING - version 1.2.14 ====================================================
+
+2017-07-11  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+* Modification du message d'erreur lorsque l'utilisateur n'est pas connecté en frontoffice
+* Correction d'un bug en frontoffice si aucune ressource créée
+
 == Module BOOKING - version 1.2.13 ====================================================
 
 2016-09-27  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
