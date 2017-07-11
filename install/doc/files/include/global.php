@@ -619,7 +619,7 @@ function doc_gettreeview($arrFolders = array(), $strPrefix = '', $arrExcludes = 
  *
  * @return array tableau contenant les règles de réécriture
  */
-function doc_getrewriterules()
+function doc_getrewriterules($inline = false)
 {
     return array(
         'patterns' => array(
@@ -630,7 +630,7 @@ function doc_getrewriterules()
         ),
 
         'replacements' => array(
-            'documents/$1/<TITLE>.<EXT>',
+            $inline ? 'inlinedocs/$1/<TITLE>.<EXT>' : 'documents/$1/<TITLE>.<EXT>',
             'media/$1/<TITLE>.<EXT>',
             // Flux RSS/Atom
             'doc/$1/<TITLE>-m$2f$3.<EXT>'
