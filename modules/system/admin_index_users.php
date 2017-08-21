@@ -40,6 +40,7 @@ include_once './include/classes/workspace.php';
 switch($op)
 {
     case 'save_user':
+
         $user = new user();
 
         // ouverture utilisateur si existant
@@ -138,6 +139,35 @@ switch($op)
         if ($user->new)
         {
             $user->save();
+
+            // Envoi du mail de création utilisateur
+            if ($_SESSION['system']['level'] == _SYSTEM_GROUPS) {
+                // Recherche de l'espace de travail de rattachement
+                $arrParents = $group->getparents();
+                $id_workspace = sizeof($arrParents) > 1 ? end($arrParents)['id_workspace'] : $group->fields['id_workspace'];
+
+                $workspace = new workspace();
+                if ($workspace->open($id_workspace)) {
+                    if (!empty($workspace->fields['mail_model']) && !empty($user->fields['email'])) {
+                        $arrReplacements = array(
+                            '{login}' => $user->fields['login'],
+                            '{lastname}' => $user->fields['lastname'],
+                            '{firstname}' => $user->fields['firstname'],
+                            '{password}' => $_POST['usernewpass'],
+                            '{email}' => $user->fields['email'],
+                            '{date}' => date('d/m/Y'),
+                            '{time}' => date('H:i:s'),
+                            '{url}' => _PLOOPI_BASEPATH,
+                        );
+
+                        $mail_content = str_replace(array_keys($arrReplacements), array_values($arrReplacements), $workspace->fields['mail_model']);
+                        $subject = 'Vos identifiants de connexion pour '.(isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : $_SERVER['SERVER_NAME']);
+
+                        ploopi_send_mail(_PLOOPI_ADMINMAIL, array(array('address' => $user->fields['email'], 'name' => trim($user->fields['firstname'].' '.$user->fields['lastname']))), $subject, $mail_content, null, null, null, null, false);
+                    }
+                }
+            }
+
             ploopi_create_user_action_log(_SYSTEM_ACTION_CREATEUSER, "{$user->fields['login']} - {$user->fields['lastname']} {$user->fields['firstname']} (id:{$user->fields['id']})");
         }
         else

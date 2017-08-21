@@ -40,15 +40,12 @@ echo ploopi_htmlentities($skin->open_simplebloc());
 
 <form name="" action="<?php echo ploopi_urlencode("admin.php?op=save_workspace&workspace_id_workspace={$workspace->fields['id']}"); ?>" method="post" onsubmit="javascript:return system_workspace_validate(this);">
 <div class="ploopi_form_title">
-    <?php echo ploopi_htmlentities($workspace->fields['label']); ?> &raquo;
-    <?php
-     echo _SYSTEM_LABEL_WORKSPACE_ADD;
-    ?>
+    <?php echo _SYSTEM_LABEL_WORKSPACE_ADD; ?>
 </div>
 <div class="ploopi_form" style="clear:both;padding:2px">
     <p>
         <label><?php echo _SYSTEM_LABEL_GROUP_NAME; ?>:</label>
-        <input type="text" class="text" name="workspace_label"  value="fils de <?php echo ploopi_htmlentities($workspace->fields['label']); ?>">
+        <input type="text" class="text" name="workspace_label"  value="fils de <?php echo ploopi_htmlentities($workspace->fields['label']); ?>" />
     </p>
     <?php
         $templatelist_back = ploopi_getavailabletemplates('backoffice');
@@ -59,11 +56,11 @@ echo ploopi_htmlentities($skin->open_simplebloc());
             ?>
             <p>
                 <label><?php echo _SYSTEM_LABEL_GROUP_CODE; ?>:</label>
-                <input type="text" class="text" name="workspace_code"  value="<?php echo ploopi_htmlentities($workspace->fields['code']); ?>">
+                <input type="text" class="text" name="workspace_code"  value="<?php echo ploopi_htmlentities($workspace->fields['code']); ?>" />
             </p>
             <p>
                 <label><?php echo _SYSTEM_LABEL_GROUP_PRIORITY; ?>:</label>
-                <input type="text" class="text" name="workspace_priority"  value="<?php echo ploopi_htmlentities(pow(10, $workspace->fields['depth']-1)); ?>">
+                <input type="text" class="text" name="workspace_priority"  value="<?php echo ploopi_htmlentities(pow(10, $workspace->fields['depth']-1)); ?>" />
             </p>
             <?php
         }
@@ -71,13 +68,13 @@ echo ploopi_htmlentities($skin->open_simplebloc());
 </div>
 
 <div class="ploopi_form_title">
-    <?php echo ploopi_htmlentities($workspace->fields['label']); ?> &raquo; <?php echo _SYSTEM_LABEL_ACCESS; ?>
+    <?php echo _SYSTEM_LABEL_ACCESS; ?>
 </div>
 
 <div class="ploopi_form" style="clear:both;padding:2px">
     <p>
         <label><?php echo _SYSTEM_LABEL_GROUP_ADMIN; ?>:</label>
-        <input type="checkbox" name="workspace_backoffice" <?php if($workspace->fields['backoffice']) echo "checked"; ?> value="1">
+        <input type="checkbox" name="workspace_backoffice" <?php if($workspace->fields['backoffice']) echo "checked"; ?> value="1" />
     </p>
     <p>
         <label><?php echo _SYSTEM_LABEL_GROUP_SKIN; ?>:</label>
@@ -98,7 +95,7 @@ echo ploopi_htmlentities($skin->open_simplebloc());
     </p>
     <p>
         <label><?php echo _SYSTEM_LABEL_GROUP_WEB; ?>:</label>
-        <input type="checkbox" name="workspace_frontoffice" <?php if($workspace->fields['frontoffice']) echo "checked"; ?> value="1">
+        <input type="checkbox" name="workspace_frontoffice" <?php if($workspace->fields['frontoffice']) echo "checked"; ?> value="1" />
     </p>
     <p>
         <label><?php echo _SYSTEM_LABEL_GROUP_WEBDOMAINLIST; ?>:</label>
@@ -108,47 +105,71 @@ echo ploopi_htmlentities($skin->open_simplebloc());
 </div>
 
 <div class="ploopi_form_title">
-    <?php echo ploopi_htmlentities($workspace->fields['label']); ?> &raquo; <?php echo _SYSTEM_LABEL_META; ?>
+    <?php echo _SYSTEM_LABEL_META; ?>
 </div>
 <div class="ploopi_form" id="system_meta" style="clear:both;padding:2px;">
     <p>
         <label>Titre:</label>
-        <input type="text" class="text" name="workspace_title" value="<?php echo ploopi_htmlentities($workspace->fields['title']); ?>">
+        <input type="text" class="text" name="workspace_title" value="<?php echo ploopi_htmlentities($workspace->fields['title']); ?>" />
     </p>
     <p>
         <label>Description:</label>
-        <input type="text" class="text" name="workspace_meta_description" value="<?php echo ploopi_htmlentities($workspace->fields['meta_description']); ?>">
+        <input type="text" class="text" name="workspace_meta_description" value="<?php echo ploopi_htmlentities($workspace->fields['meta_description']); ?>" />
     </p>
     <p>
         <label>Mots Clés:</label>
-        <input type="text" class="text" name="workspace_meta_keywords" value="<?php echo ploopi_htmlentities($workspace->fields['meta_keywords']); ?>">
+        <input type="text" class="text" name="workspace_meta_keywords" value="<?php echo ploopi_htmlentities($workspace->fields['meta_keywords']); ?>" />
     </p>
     <p>
         <label>Auteur:</label>
-        <input type="text" class="text" name="workspace_meta_author" value="<?php echo ploopi_htmlentities($workspace->fields['meta_author']); ?>">
+        <input type="text" class="text" name="workspace_meta_author" value="<?php echo ploopi_htmlentities($workspace->fields['meta_author']); ?>" />
     </p>
     <p>
         <label>Copyright:</label>
-        <input type="text" class="text" name="workspace_meta_copyright" value="<?php echo ploopi_htmlentities($workspace->fields['meta_copyright']); ?>">
+        <input type="text" class="text" name="workspace_meta_copyright" value="<?php echo ploopi_htmlentities($workspace->fields['meta_copyright']); ?>" />
     </p>
     <p>
         <label>Robots:</label>
-        <input type="text" class="text" name="workspace_meta_robots" value="<?php echo ploopi_htmlentities($workspace->fields['meta_robots']); ?>">
+        <input type="text" class="text" name="workspace_meta_robots" value="<?php echo ploopi_htmlentities($workspace->fields['meta_robots']); ?>" />
     </p>
 </div>
 
 <div class="ploopi_form_title">
-    <?php echo ploopi_htmlentities($workspace->fields['label']); ?> &raquo; <?php echo _SYSTEM_LABEL_FILTERING; ?>
+    <?php echo _SYSTEM_LABEL_FILTERING; ?>
 </div>
 <div class="ploopi_form" id="system_filtering" style="clear:both;padding:2px;">
     <p>
         <label><?php echo _SYSTEM_LABEL_GROUP_ALLOWEDIP; ?>:</label>
-        <input type="text" class="text" name="workspace_iprules"  value="<?php echo ploopi_htmlentities($workspace->fields['iprules']); ?>">
+        <input type="text" class="text" name="workspace_iprules"  value="<?php echo ploopi_htmlentities($workspace->fields['iprules']); ?>" placeholder="192.168.1.0-192.168.10.255;192.168.12.*" />
     </p>
 </div>
 
 <div class="ploopi_form_title">
-    <?php echo ploopi_htmlentities($workspace->fields['label']); ?> &raquo; <?php echo _SYSTEM_LABEL_USEDMODULES; ?>
+    Modèle de courriel
+</div>
+
+<div class="ploopi_form" id="system_filtering" style="clear:both;padding:2px;">
+    <p>
+        <label>Modèle de courriel (création de compte utilisateur):
+        <br /><em style="padding:4px;">Balises disponibles:</em>
+        <br /><em style="padding:4px;"><? foreach(array('firstname', 'lastname', 'email', 'login', 'password', 'date', 'time', 'url') as $key) { ?><a class="mail_model_tag" href="javascript:void(0);" onclick="ploopi_insertatcursor($('workspace_mail_model'), '{<? echo $key; ?>}');">{<? echo $key; ?>}</a> <? } ?></em>
+
+        </label>
+        <?php
+        if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPADMIN)
+        {
+            ?>
+            <textarea type="text" class="text" name="workspace_mail_model" id="workspace_mail_model"><?php echo $workspace->fields['mail_model']; ?></textarea>
+            <?php
+        }
+        else echo '<span>'.ploopi_htmlentities($workspace->fields['iprules']).'</span>';
+        ?>
+
+    </p>
+</div>
+
+<div class="ploopi_form_title">
+    <?php echo _SYSTEM_LABEL_USEDMODULES; ?>
 </div>
 <div class="ploopi_form">
     <?php
