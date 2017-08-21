@@ -612,7 +612,6 @@ if ($query_string != '' || $advanced_search) // recherche intégrale
                                     break;
                                 }
 
-
                                 $template_body->assign_block_vars('switch_search.result',
                                     array(
                                         'RELEVANCE' => sprintf("%.02f", $result['relevance']),
@@ -620,7 +619,7 @@ if ($query_string != '' || $advanced_search) // recherche intégrale
                                         'TITLE_RAW' => $objArticle->fields['title'],
                                         'AUTHOR' => ploopi_htmlentities($objArticle->fields['author']),
                                         'AUTHOR_RAW' => $objArticle->fields['author'],
-                                        'EXTRACT' => empty($result['kw']) && empty($result['stem']) ? $cleaned_content : ploopi_highlight($cleaned_content, array_merge(array_keys($result['kw']), array_keys($result['stem']))),
+                                        'EXTRACT' => empty($result['kw']) && empty($result['stem']) ? $cleaned_content : ploopi_highlight($cleaned_content, array_merge(empty($result['kw']) ? array() : array_keys($result['kw']), empty($result['stem']) ? array() : array_keys($result['stem']))),
                                         'METATITLE' => ploopi_htmlentities($objArticle->fields['metatitle']),
                                         'METATITLE_RAW' => $objArticle->fields['metatitle'],
                                         'METAKEYWORDS' => ploopi_htmlentities($objArticle->fields['metakeywords']),
