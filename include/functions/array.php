@@ -148,7 +148,7 @@ function ploopi_array2html($arrArray, $booHeader = true, $strClassName = 'ploopi
  * @param string $strFileName nom du fichier
  * @param string $strSheetName nom de la feuille dans le document XLS
  * @param array $arrDataFormats formats des colonnes ('title', 'type', 'width')
- * @param array $arrOptions Options de configuration de l'export ('landscape', 'fitpage_width', 'fitpage_height', 'tofile', 'setborder')
+ * @param array $arrOptions Options de configuration de l'export ('landscape', 'fitpage_width', 'fitpage_height', 'tofile', 'setborder', 'textwrap')
  * @return binary contenu XLS
  */
 function ploopi_array2xls($arrArray, $booHeader = true, $strFileName = 'document.xls', $strSheetName = 'Feuille', $arrDataFormats = null, $arrOptions = null)
@@ -165,7 +165,8 @@ function ploopi_array2xls($arrArray, $booHeader = true, $strFileName = 'document
         'fitpage_width' => true,
         'fitpage_height' => false,
         'tofile' => false,
-        'setborder' => false
+        'setborder' => false,
+        'textwrap' => true,
     );
 
     $arrOptions = empty($arrOptions) ? $arrDefautOptions : array_merge($arrDefautOptions, $arrOptions);
@@ -176,8 +177,10 @@ function ploopi_array2xls($arrArray, $booHeader = true, $strFileName = 'document
 
     $objFormatTitle = $objWorkBook->addFormat( array( 'Align' => 'center', 'TextWrap' => 1, 'Bold'  => 1, 'Color'  => 'black', 'Size'  => 10, 'vAlign' => 'vcenter', 'FgColor' => 'silver'));
     if ($arrOptions['setborder']) { $objFormatTitle->setBorder(1); $objFormatTitle->setBorderColor('black'); }
+    if ($arrOptions['textwrap']) { $objFormatTitle->setTextWrap(); }
     $objFormatDefault = $objWorkBook->addFormat( array( 'TextWrap' => 1, 'Align' => 'left', 'Bold'  => 0, 'Color'  => 'black', 'Size'  => 10, 'vAlign' => 'vcenter'));
     if ($arrOptions['setborder']) { $objFormatDefault->setBorder(1); $objFormatDefault->setBorderColor('black'); }
+    if ($arrOptions['textwrap']) { $objFormatDefault->setTextWrap(); }
 
     // Définition des différents formats numériques/text
     $arrFormats = array(
@@ -196,6 +199,7 @@ function ploopi_array2xls($arrArray, $booHeader = true, $strFileName = 'document
     {
         $objFormat = $objWorkBook->addFormat( array( 'Align' => 'right', 'TextWrap' => 1, 'Bold'  => 0, 'Color'  => 'black', 'Size'  => 10, 'vAlign' => 'vcenter'));
         if ($arrOptions['setborder']) { $objFormat->setBorder(1); $objFormat->setBorderColor('black'); }
+        if ($arrOptions['textwrap']) { $objFormat->setTextWrap(); }
 
         switch($strKey)
         {
