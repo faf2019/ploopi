@@ -1456,4 +1456,4 @@ Cordialement,
 
 Ce message a été envoyé automatiquement. Nous vous remercions de ne pas répondre.';
 
-UPDATE `ploopi_module_type` SET `version` = '1.9.6.7', `author` = 'Ovensia', `date` = '20170821000000', `description` = 'Noyau du système' WHERE `ploopi_module_type`.`id` = 1;
+UPDATE `ploopi_module_type` SET `version` = '1.9.6.8', `author` = 'Ovensia', `date` = '20170823000000', `description` = 'Noyau du système' WHERE `ploopi_module_type`.`id` = 1;
