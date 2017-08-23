@@ -45,7 +45,6 @@ include_once './lib/phonetic/phonetic.php';
 
 if (!function_exists('stem_french')) { function stem_french($str) { return ''; } }
 
-
 /**
  * Connexion à la base de données d'indexation
  */
@@ -189,6 +188,7 @@ function ploopi_search_remove_index_module($id_module = -1)
 
 function ploopi_search_create_index($id_object, $id_record, $label, &$content, $meta = '', $usecommonwords = true, $timestp_create = 0, $timestp_modify = 0, $id_user = -1, $id_workspace = -1, $id_module = -1)
 {
+
     global $ploopi_timer;
 
     $db = ploopi_search_getdb();
@@ -220,7 +220,7 @@ function ploopi_search_create_index($id_object, $id_record, $label, &$content, $
     for ($kw = strtok($content, _PLOOPI_INDEXATION_WORDSEPARATORS); $kw !== false; $kw = strtok(_PLOOPI_INDEXATION_WORDSEPARATORS))
     {
         // mot en minuscule avec accents
-        $kw = trim(mb_strtolower($kw),"\x0..\x20\xa0");
+        $kw = trim(mb_strtolower($kw, 'ISO-8859-1'),"\x0..\x20\xa0");
 
         // mot en minuscule sans accent et sans caractère parasite
         $kw_clean = preg_replace("/[^a-zA-Z0-9]/","",ploopi_convertaccents($kw));
@@ -259,7 +259,7 @@ function ploopi_search_create_index($id_object, $id_record, $label, &$content, $
     for ($kw = strtok($meta, _PLOOPI_INDEXATION_WORDSEPARATORS); $kw !== false; $kw = strtok(_PLOOPI_INDEXATION_WORDSEPARATORS))
     {
         // mot en minuscule avec accents
-        $kw = trim(mb_strtolower($kw),"\x0..\x20\xa0");
+        $kw = trim(mb_strtolower($kw, 'ISO-8859-1'),"\x0..\x20\xa0");
 
         // mot en minuscule sans accent et sans caractère parasite
         $kw_clean = preg_replace("/[^a-zA-Z0-9]/","",ploopi_convertaccents($kw));
@@ -507,9 +507,9 @@ function ploopi_search($keywords, $id_object = -1, $id_record = null, $id_module
             $arrElements[$id] = $row;
             $arrRelevance[$id] = array(
                 'relevance' => 100,
-                'count' => 1,
-                'kw_ratio' => 0
+                'kw' => array(),
             );
+
         }
 
     }
@@ -563,13 +563,24 @@ function ploopi_search($keywords, $id_object = -1, $id_record = null, $id_module
                     if (!isset($arrElements[$id]))
                     {
                         $arrElements[$id] = $row;
+
+                        $arrRelevance[$id] = array(
+                            'relevance' => $row['relevance']/$intNbKw,
+                            $type => 1,
+                            'kw' => array($kw => 1)
+                        );
+
+                        /*
                         $arrRelevance[$id]['relevance'] = $row['relevance']/$intNbKw;
                         if (empty($arrRelevance[$id][$type])) $arrRelevance[$id][$type] = 1;
                         else $arrRelevance[$id][$type]++;
+                        */
                     }
                     else
                     {
                         $arrRelevance[$id]['relevance'] += $row['relevance']/$intNbKw;
+                        if (empty($arrRelevance[$id]['kw'][$kw])) $arrRelevance[$id]['kw'][$kw] = 1;
+                        else $arrRelevance[$id]['kw'][$kw]++;
                         if (empty($arrRelevance[$id][$type])) $arrRelevance[$id][$type] = 1;
                         else $arrRelevance[$id][$type]++;
                     }
