@@ -1526,7 +1526,7 @@ function webedit_headinglist2template(&$arrHeadings, &$arrShares, $template_body
 function webedit_headingallowed($arrHeadings, $arrShares, $headingid)
 {
     // Rubrique non privée ou accessible par l'utilisateur (et accessible par IP)
-    return $arrHeadings['list'][$headingid]['ipvalid'] && (!$arrHeadings['list'][$headingid]['private']
+    return isset($arrHeadings['list'][$headingid]) && $arrHeadings['list'][$headingid]['ipvalid'] && (!$arrHeadings['list'][$headingid]['private']
         || isset($arrShares[$arrHeadings['list'][$headingid]['herited_private']])
         || isset($_SESSION['webedit']['allowedheading'][$_SESSION['ploopi']['moduleid']][$arrHeadings['list'][$headingid]['herited_private']]));
 }
