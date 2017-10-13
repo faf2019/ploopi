@@ -497,10 +497,10 @@ function ploopi_array2excel($arrArray, $booHeader = true, $strFileName = 'docume
 
                 case 'float': $strFormat = '0.00'; break;
                 case 'float_percent': $strFormat = '0.00%'; break;
-                case 'float_euro': $strFormat = '[$EUR ]#,##0.00_-'; break;
+                case 'float_euro': $strFormat = '#,##0.00_-[$EUR]'; break;
                 case 'integer': $strFormat = '0'; break;
                 case 'integer_percent': $strFormat = '0%'; break;
-                case 'integer_euro': $strFormat = '[$EUR ]#,##0_-'; break;
+                case 'integer_euro': $strFormat = '#,##0_-[$EUR]'; break;
                 case 'date': $strFormat = 'dd/mm/yyyy'; break;
                 case 'datetime' : $strFormat = 'dd/mm/yyyy hh:mm:ss'; break;
 
