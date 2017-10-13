@@ -122,15 +122,70 @@ function booking_event_add(e, date)
     ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=booking_event_add&booking_resource_date='+date, 'popup_event');
 }
 
+/**
+ * Contrôle de validation pour le formulaire d'ajout d'événement
+ */
 function booking_event_validate(form)
 {
     if (ploopi_validatefield('Ressource',form.booking_event_id_resource, 'selected'))
     if (ploopi_validatefield('Objet',form.booking_event_object, 'string'))
     if (ploopi_validatefield('Date de début',form._booking_event_timestp_begin_d, 'date'))
-    if (ploopi_validatefield('Date de fin',form._booking_event_timestp_end_d, 'date'))
-        return true;
+    if (ploopi_validatefield('Date de fin',form._booking_event_timestp_end_d, 'date')) {
+
+        // Contrôle des dates
+        var datestr_b = form._booking_event_timestp_begin_d.value.split('/');
+        var date_b = new Date(datestr_b[1]+'/'+datestr_b[0]+'/'+datestr_b[2]).getTime();
+
+        var datestr_e = form._booking_event_timestp_end_d.value.split('/');
+        var date_e = new Date(datestr_e[1]+'/'+datestr_e[0]+'/'+datestr_e[2]).getTime();
+
+        if (date_e > date_b) return true
+        else if (date_e == date_b) {
+            time_b = parseInt(form._booking_event_timestp_begin_h.value, 10)*100 + parseInt(form._booking_event_timestp_begin_m.value,10);
+            time_e = parseInt(form._booking_event_timestp_end_h.value, 10)*100 + parseInt(form._booking_event_timestp_end_m.value,10);
+            if (time_e > time_b) return true
+        }
+
+        alert('La date de fin doit être postérieure à la date de début');
+    }
 
     return false;
+}
+
+/**
+ * Contrôle de validation pour le formulaire de modification d'événement
+ */
+function booking_event_validate_2(form)
+{
+    var ok = true;
+
+    $$('.booking_date').each(function(item) {
+        console.log(item);
+        console.log(item.dataset.id);
+
+        if (ok) {
+            // Contrôle des dates
+            var datestr_b = $('_booking_event_timestp_begin_d'+item.dataset.id).value.split('/');
+            var date_b = new Date(datestr_b[1]+'/'+datestr_b[0]+'/'+datestr_b[2]).getTime();
+
+            var datestr_e = $('_booking_event_timestp_end_d'+item.dataset.id).value.split('/');
+            var date_e = new Date(datestr_e[1]+'/'+datestr_e[0]+'/'+datestr_e[2]).getTime();
+
+            if (date_e < date_b) ok = false;
+            else if (date_e == date_b) {
+                time_b = parseInt($('_booking_event_timestp_begin_h'+item.dataset.id).value, 10)*100 + parseInt($('_booking_event_timestp_begin_m'+item.dataset.id).value,10);
+                time_e = parseInt($('_booking_event_timestp_end_h'+item.dataset.id).value, 10)*100 + parseInt($('_booking_event_timestp_end_m'+item.dataset.id).value,10);
+                if (time_e <= time_b) ok = false;
+            }
+        }
+    });
+
+    if (!ok) {
+        alert('La date de fin doit être postérieure à la date de début');
+    }
+
+    return ok;
+
 }
 
 /**

@@ -2,9 +2,9 @@
 <ploopi>
     <moduletype>
         <label>booking</label>
-        <version>1.2.14</version>
+        <version>1.2.15</version>
         <author>Ovensia</author>
-        <date>20170711000000</date>
+        <date>20171013000000</date>
         <description>Gestion de réservation</description>
       <paramtype>
          <name>booking_front_planning_width</name>
