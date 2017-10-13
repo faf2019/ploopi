@@ -601,6 +601,7 @@ class form_select extends form_field
         foreach($arrValues as $mixKey => $mixValue)
         {
             $mixKey = form::htmlentities($mixKey);
+            $arrDataset = array();
             $booSelected = in_array($mixKey, $this->_arrSelected);
 
             if (is_object($mixValue) && $mixValue instanceof form_select_option)
@@ -614,6 +615,12 @@ class form_select extends form_field
                     if (isset($mixValue['label']))
                     {
                         $strGroup = isset($mixValue['group']) ? form::htmlentities($mixValue['group']) : '';
+                        foreach ($mixValue as $key => $value) {
+                            if($key != 'group' && $key != 'label') {
+                                $value = form::htmlentities($value);
+                                $arrDataset[] = "data-".$key."=\"{$value}\"";
+                            }
+                        }
                         $mixValue = $mixValue['label'];
                     }
                     else
@@ -636,8 +643,9 @@ class form_select extends form_field
 
                 $mixValue = str_replace(' ', '&nbsp;', form::htmlentities($mixValue));
 
+                $strDataset = implode(' ', $arrDataset);
                 $strSelected = $booSelected ? ' selected="selected"' : '';
-                $strOutput .= "<option value=\"{$mixKey}\"{$strSelected}>{$mixValue}</option>";
+                $strOutput .= "<option {$strDataset} value=\"{$mixKey}\"{$strSelected}>{$mixValue}</option>";
             }
         }
 
@@ -705,18 +713,38 @@ class form_checkbox_list extends form_field
         $strProperties = $this->generateProperties();
 
         $intNumCheck = 0;
-        foreach($arrValues = $this->_arrValues as $strKey => $strValue)
+        foreach($arrValues = $this->_arrValues as $strKey => $mixValue)
         {
+            $arrDataset = array();
+            if (is_array($mixValue))
+            {
+                if (isset($mixValue['label']))
+                {
+                    foreach ($mixValue as $key => $value) {
+                        if($key != 'label') {
+                            $value = form::htmlentities($value);
+                            $arrDataset[] = "data-".$key."=\"{$value}\"";
+                        }
+                    }
+                    $mixValue = $mixValue['label'];
+                }
+                else
+                {
+                    trigger_error('Valeur d\'option incorrecte', E_USER_ERROR);
+                }
+            }
+
             $strValue = form::htmlentities($strValue);
             $strKey = form::htmlentities($strKey);
 
+            $strDataset = implode(' ', $arrDataset);
             $strChecked = in_array($strKey, $this->arrSelected) ? ' checked="checked"' : '';
-            $strOutput .= "<span class=\"checkbutton\"><input type=\"checkbox\" name=\"{$this->_strName}[]\" id=\"{$this->_strId}_{$intNumCheck}\" value=\"{$strKey}\" tabindex=\"{$intTabindex}\" {$strChecked}{$strProperties}{$strEvents}><label for=\"{$this->_strId}_{$intNumCheck}\">{$strValue}</label></span>";
+            $strOutput .= "<span class=\"checkbutton\"><input type=\"checkbox\" {$strDataset} name=\"{$this->_strName}[]\" id=\"{$this->_strId}_{$intNumCheck}\" value=\"{$strKey}\" tabindex=\"{$intTabindex}\" {$strChecked}{$strProperties}{$strEvents}><label for=\"{$this->_strId}_{$intNumCheck}\">{$strValue}</label></span>";
 
             $intNumCheck++;
         }
 
-        return $this->renderForm("<span class=\"onclick\">{$strOutput}</span>");
+        return $this->renderForm("<span id=\"{$this->_strId}\" class=\"onclick\">{$strOutput}</span>");
     }
 }
 
