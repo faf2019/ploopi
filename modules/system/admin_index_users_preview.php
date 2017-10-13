@@ -51,7 +51,7 @@ $arrValidFields = array_keys($objUser->fields);
 
 $booCriticalError = false;
 
-if (empty($_SESSION['system']['user_import']) || empty($_SESSION['system']['user_imporApert'][0]))
+if (empty($_SESSION['system']['user_import']) || empty($_SESSION['system']['user_import'][0]))
 {
     $arrErrors[] = 'Fichier invalide';
     $booCriticalError = true;
