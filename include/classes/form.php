@@ -326,6 +326,7 @@ class form_field extends form_element
         'readonly' => false,
         'disabled' => false,
         'accesskey' => null,
+        'htmlentities' => true,
         'onblur' => null,
         'onchange' => null,
         'onfocus' => null,
@@ -411,7 +412,7 @@ class form_field extends form_element
         $strEvents = $this->generateEvents();
         $strProperties = $this->generateProperties();
         $strMaxLength = is_null($this->_arrOptions['maxlength']) || !is_numeric($this->_arrOptions['maxlength']) ? '' : " maxlength=\"{$this->_arrOptions['maxlength']}\"";
-        $strValue = form::htmlentities($this->_arrValues[0]);
+        $strValue = $this->_arrOptions['htmlentities'] ? form::htmlentities($this->_arrValues[0]) : $this->_arrValues[0];
 
         $strPlaceHolder = $this->_arrOptions['placeholder'] != '' ? ' placeholder="'.form::htmlentities($this->_arrOptions['placeholder']).'"' : '';
         switch($this->_strType)
@@ -485,7 +486,7 @@ class form_hidden extends form_field
         $strOutput = '';
 
         $strClass = is_null($this->_arrOptions['class']) ? '' : " {$this->_arrOptions['class']}";
-        $strValue = form::htmlentities($this->_arrValues[0]);
+        $strValue = $this->_arrOptions['htmlentities'] ? form::htmlentities($this->_arrValues[0]) : $this->_arrValues[0];
 
         $strOutput .= "<input type=\"hidden\" name=\"{$this->_strName}\" id=\"{$this->_strId}\" value=\"{$strValue}\"{$strClass} />";
 
@@ -508,8 +509,8 @@ class form_select_option extends form_element
     {
         $strId = is_null($this->_strId) ? '' : " id=\"{$this->_strId}\"";
         $strStyle = is_null($this->_arrOptions['style']) ? '' : " style=\"{$this->_arrOptions['style']}\"";
-        $strLabel = form::htmlentities($this->_strLabel);
-        $strValue = form::htmlentities($this->_arrValues[0]);
+        $strLabel = $this->_arrOptions['htmlentities'] ? form::htmlentities($strLabel) : $strLabel;
+        $strValue = $this->_arrOptions['htmlentities'] ? form::htmlentities($this->_arrValues[0]) : $this->_arrValues[0];
         $strSelected = $booSelected ? ' selected="selected"' : '';
 
         return "<option value=\"{$strValue}\"{$strId}{$strStyle}{$strSelected}>{$strLabel}</option>";
@@ -560,7 +561,7 @@ class form_select extends form_field
 
         parent::__construct('select', $strLabel, $arrValues, $strName, $strId, is_null($arrOptions) ? self::$_arrDefaultOptions : array_merge(self::$_arrDefaultOptions, $arrOptions));
 
-        $this->_arrSelected = ploopi_array_map(array('form', 'htmlentities'), $arrSelected);
+        $this->_arrSelected = $this->_arrOptions['htmlentities'] ? ploopi_array_map(array('form', 'htmlentities'), $arrSelected) : $arrSelected;
     }
 
     /**
@@ -600,7 +601,7 @@ class form_select extends form_field
 
         foreach($arrValues as $mixKey => $mixValue)
         {
-            $mixKey = form::htmlentities($mixKey);
+            $mixKey = $this->_arrOptions['htmlentities'] ? form::htmlentities($mixKey) : $mixKey;
             $arrDataset = array();
             $booSelected = in_array($mixKey, $this->_arrSelected);
 
@@ -614,10 +615,10 @@ class form_select extends form_field
                 {
                     if (isset($mixValue['label']))
                     {
-                        $strGroup = isset($mixValue['group']) ? form::htmlentities($mixValue['group']) : '';
+                       $strGroup = isset($mixValue['group']) ? ($this->_arrOptions['htmlentities'] ? form::htmlentities($mixValue['group']) : $mixValue['group']) : '';
                         foreach ($mixValue as $key => $value) {
                             if($key != 'group' && $key != 'label') {
-                                $value = form::htmlentities($value);
+                                $value = $this->_arrOptions['htmlentities'] ? form::htmlentities($value) : $value;
                                 $arrDataset[] = "data-".$key."=\"{$value}\"";
                             }
                         }
@@ -641,7 +642,7 @@ class form_select extends form_field
                 }
 
 
-                $mixValue = str_replace(' ', '&nbsp;', form::htmlentities($mixValue));
+                $mixValue = str_replace(' ', '&nbsp;', $this->_arrOptions['htmlentities'] ? form::htmlentities($mixValue) : $mixValue);
 
                 $strDataset = implode(' ', $arrDataset);
                 $strSelected = $booSelected ? ' selected="selected"' : '';
@@ -696,7 +697,7 @@ class form_checkbox_list extends form_field
 
         parent::__construct('input:checkbox', $strLabel, $arrValues, $strName, $strId, is_null($arrOptions) ? self::$_arrDefaultOptions : array_merge(self::$_arrDefaultOptions, $arrOptions));
 
-        $this->arrSelected = ploopi_array_map(array('form', 'htmlentities'), $arrSelected);
+        $this->arrSelected = $this->_arrOptions['htmlentities'] ? ploopi_array_map(array('form', 'htmlentities'), $arrSelected) : $arrSelected;
     }
 
     /**
@@ -722,7 +723,7 @@ class form_checkbox_list extends form_field
                 {
                     foreach ($mixValue as $key => $value) {
                         if($key != 'label') {
-                            $value = form::htmlentities($value);
+                            $value = $this->_arrOptions['htmlentities'] ? form::htmlentities($value) : $value;
                             $arrDataset[] = "data-".$key."=\"{$value}\"";
                         }
                     }
@@ -734,8 +735,8 @@ class form_checkbox_list extends form_field
                 }
             }
 
-            $strValue = form::htmlentities($strValue);
-            $strKey = form::htmlentities($strKey);
+            $strValue = $this->_arrOptions['htmlentities'] ? form::htmlentities($strValue) : $strValue;
+            $strKey = $this->_arrOptions['htmlentities'] ? form::htmlentities($strKey) : $strKey;
 
             $strDataset = implode(' ', $arrDataset);
             $strChecked = in_array($strKey, $this->arrSelected) ? ' checked="checked"' : '';
@@ -787,7 +788,7 @@ class form_radio_list extends form_field
 
         parent::__construct('input:radio', $strLabel, $arrValues, $strName, $strId, is_null($arrOptions) ? self::$_arrDefaultOptions : array_merge(self::$_arrDefaultOptions, $arrOptions));
 
-        $this->_strSelected = form::htmlentities($strSelected);
+        $this->_strSelected = $this->_arrOptions['htmlentities'] ? form::htmlentities($strSelected) : $strSelected;
     }
 
     /**
@@ -806,8 +807,8 @@ class form_radio_list extends form_field
         $intNumCheck = 0;
         foreach($arrValues = $this->_arrValues as $strKey => $strValue)
         {
-            $strValue = form::htmlentities($strValue);
-            $strKey = form::htmlentities($strKey);
+            $strValue = $this->_arrOptions['htmlentities'] ? form::htmlentities($strValue) : $strValue;
+            $strKey = $this->_arrOptions['htmlentities'] ? form::htmlentities($strKey) : $strKey;
 
             $strChecked = $strKey ==  $this->_strSelected ? ' checked="checked"' : '';
             $strOutput .= "<span class=\"checkbutton\"><input type=\"radio\" name=\"{$this->_strName}\" id=\"{$this->_strId}_{$intNumCheck}\" value=\"{$strKey}\" tabindex=\"{$intTabindex}\" {$strChecked}{$strProperties}{$strEvents}><label for=\"{$this->_strId}_{$intNumCheck}\">{$strValue}</label></span>";
@@ -863,7 +864,7 @@ class form_checkbox extends form_field
         $strEvents = $this->generateEvents();
         $strProperties = $this->generateProperties('onclick'.(is_null($this->_arrOptions['class']) ? '' : ' '.$this->_arrOptions['class']));
         $strChecked = $this->_booChecked ? ' checked="checked"' : '';
-        $strValue = form::htmlentities($this->_arrValues[0]);
+        $strValue = $this->_arrOptions['htmlentities'] ? form::htmlentities($this->_arrValues[0]) : $strValue;
 
         return $this->renderForm("<input type=\"checkbox\" name=\"{$this->_strName}\" id=\"{$this->_strId}\" value=\"{$strValue}\" title=\"{$this->_strLabel}\" tabindex=\"{$intTabindex}\" {$strChecked}{$strProperties}{$strEvents} />");
     }
@@ -912,7 +913,7 @@ class form_radio extends form_field
         $strEvents = $this->generateEvents();
         $strProperties = $this->generateProperties('radio'.(is_null($this->_arrOptions['class']) ? '' : ' '.$this->_arrOptions['class']));
         $strChecked = $this->_booChecked ? ' checked="checked"' : '';
-        $strValue = form::htmlentities($this->_arrValues[0]);
+        $strValue = $this->_arrOptions['htmlentities'] ? form::htmlentities($this->_arrValues[0]) : $this->_arrValues[0];
 
         return $this->renderForm("<input type=\"radio\" name=\"{$this->_strName}\" id=\"{$this->_strId}\" value=\"{$strValue}\" tabindex=\"{$intTabindex}\" {$strChecked}{$strProperties}{$strEvents} />");
     }
@@ -1110,7 +1111,7 @@ class form_datetime extends form_field
         $arrParentOptions = $this->_objParentForm->getOptions();
 
         $strMaxLength = is_null($this->_arrOptions['maxlength']) || !is_numeric($this->_arrOptions['maxlength']) ? '' : " maxlength=\"{$this->_arrOptions['maxlength']}\"";
-        $strDate = form::htmlentities($this->_arrValues['date']);
+        $strDate = $this->_arrOptions['htmlentities'] ? form::htmlentities($this->_arrValues['date']) : $this->_arrValues['date'];
         list($strHour, $strMinute, $strSecond) = explode(':', $this->_arrValues['time']);
 
         $strOutput .= "<input type=\"text\" name=\"{$this->_strName}_date\" id=\"{$this->_strId}_date\" value=\"{$strDate}\" tabindex=\"{$intTabindex}\"{$strProperties}{$strMaxLength}{$strEvents} />";
@@ -1151,6 +1152,7 @@ class form_button extends form_element
     private static $_arrDefaultOptions = array(
         'style'     => null,
         'class' => null,
+        'htmlentities' => true,
         'readonly' => false,
         'autofocus' => false,
         'disabled' => false,
@@ -1199,7 +1201,7 @@ class form_button extends form_element
 
         $strEvents = $this->generateEvents();
         $strProperties = $this->generateProperties();
-        $strValue = form::htmlentities($this->_arrValues[0]);
+        $strValue = $this->_arrOptions['htmlentities'] ? form::htmlentities($this->_arrValues[0]) : $this->_arrValues[0];
 
         switch($this->_strType)
         {
