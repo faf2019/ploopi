@@ -711,7 +711,7 @@ function doc_folder_contentisreadonly($row, $action = null, $id_module = -1)
     // - propriétaire du dossier & actionOK
     // - admin du module
     // - super admin
-    return !((((!$root && !$row['readonly']) || $row['id_user'] == $_SESSION['ploopi']['userid'] || ($root && ploopi_getparam('doc_rootwritable', $id_module))) && $booActionIsOk) || ploopi_isadmin() || ploopi_isactionallowed(_DOC_ACTION_ADMIN, -1, $id_module));
+    return !((((!$root && empty($row['readonly'])) || $row['id_user'] == $_SESSION['ploopi']['userid'] || ($root && ploopi_getparam('doc_rootwritable', $id_module))) && $booActionIsOk) || ploopi_isadmin() || ploopi_isactionallowed(_DOC_ACTION_ADMIN, -1, $id_module));
 }
 
 
@@ -724,6 +724,6 @@ function doc_file_isreadonly($row, $action = null)
 {
     $booActionIsOk = is_null($action) || ploopi_isactionallowed($action);
 
-    return !(ploopi_isadmin() || ploopi_isactionallowed(_DOC_ACTION_ADMIN) || $row['id_user'] == $_SESSION['ploopi']['userid'] || ($booActionIsOk && !$row['readonly']));
+    return !(ploopi_isadmin() || ploopi_isactionallowed(_DOC_ACTION_ADMIN) || $row['id_user'] == $_SESSION['ploopi']['userid'] || ($booActionIsOk && empty($row['readonly'])));
 }
 ?>
