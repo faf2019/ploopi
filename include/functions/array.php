@@ -525,7 +525,7 @@ function ploopi_array2excel($arrArray, $booHeader = true, $strFileName = 'docume
             $objWorkSheet->getStyle("{$chrCol}2:{$chrCol}{$intLineMax}")->applyFromArray($rowStyle);
 
             // Largeur de colonne
-            if (isset($arrDataFormats[$strKey]['width'])) $objWorkSheet->getColumnDimension(chr($intCol+65))->setWidth($arrDataFormats[$strKey]['width']);
+            if (isset($arrDataFormats[$strKey]['width'])) $objWorkSheet->getColumnDimension($chrCol)->setWidth($arrDataFormats[$strKey]['width']);
 
             $intCol++;
 
