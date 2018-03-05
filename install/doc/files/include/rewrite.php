@@ -58,6 +58,10 @@ if (preg_match('/^\/documents\/([a-z0-9]{32})\/(.*)\.[a-zA-Z0-9]*(.*)/', $arrPar
         self::$script = 'quick';
         $_REQUEST['ploopi_op'] = $_GET['ploopi_op'] = 'doc_file_download';
         $_REQUEST['docfile_md5id'] = $_GET['docfile_md5id'] = $arrMatches[1];
+        if (!empty($_SESSION['ploopi']['tokens'])) {
+            end($_SESSION['ploopi']['tokens']);
+            $_REQUEST['ploopi_token'] = key($_SESSION['ploopi']['tokens']);
+        }
         $booRewriteRuleFound = true;
     }
 }
@@ -70,6 +74,10 @@ elseif (preg_match('/^\/inlinedocs\/([a-z0-9]{32})\/(.*)\.[a-zA-Z0-9]*(.*)/', $a
         self::$script = 'quick';
         $_REQUEST['ploopi_op'] = $_GET['ploopi_op'] = 'doc_file_view';
         $_REQUEST['docfile_md5id'] = $_GET['docfile_md5id'] = $arrMatches[1];
+        if (!empty($_SESSION['ploopi']['tokens'])) {
+            end($_SESSION['ploopi']['tokens']);
+            $_REQUEST['ploopi_token'] = key($_SESSION['ploopi']['tokens']);
+        }
         $booRewriteRuleFound = true;
     }
 }
@@ -81,6 +89,10 @@ elseif (preg_match('/^\/media\/([a-z0-9]{32})\/(.*)\.[a-zA-Z0-9]*(.*)/', $arrPar
         self::$script = 'quick';
         $_REQUEST['ploopi_op'] = $_GET['ploopi_op'] = 'doc_file_view';
         $_REQUEST['docfile_md5id'] = $_GET['docfile_md5id'] = $arrMatches[1];
+        if (!empty($_SESSION['ploopi']['tokens'])) {
+            end($_SESSION['ploopi']['tokens']);
+            $_REQUEST['ploopi_token'] = key($_SESSION['ploopi']['tokens']);
+        }
         $booRewriteRuleFound = true;
     }
 }
