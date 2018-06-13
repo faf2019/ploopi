@@ -389,7 +389,7 @@ if ($arrSearchPattern['booking_channels'])
     $arrChannels = array();
     foreach($arrSearchPattern['booking_resources'] as $intIdResource)
     {
-        if (empty($arrChannels[$intIdResource])) $arrChannels[$intIdResource] = new calendarChannel(in_array($arrSearchPattern['booking_display_type'], array('day', 'today')) ? $arrResources[$intIdResource]['name'] : '', $arrResources[$intIdResource]['color']);
+        if (isset($arrResources[$intIdResource]) && empty($arrChannels[$intIdResource])) $arrChannels[$intIdResource] = new calendarChannel(in_array($arrSearchPattern['booking_display_type'], array('day', 'today')) ? $arrResources[$intIdResource]['name'] : '', $arrResources[$intIdResource]['color']);
     }
 
     $objCalendar->setChannels($arrChannels);
