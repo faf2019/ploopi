@@ -238,14 +238,11 @@ class booking_event extends data_object
 
                 // Recherche plus précise de collisions
                 foreach($arrEvents as $row) {
-
-                    if ($row['id'] != $this->fields['id'] && ($timestp_begin >= $row['timestp_begin'] && $timestp_begin < $row['timestp_end']) || ($timestp_end > $row['timestp_begin'] && $timestp_end <= $row['timestp_end']) || ($timestp_begin <= $row['timestp_begin'] && $timestp_end >= $row['timestp_end'])) {
+                    if ($row['id'] != $this->fields['id'] && (($timestp_begin >= $row['timestp_begin'] && $timestp_begin < $row['timestp_end']) || ($timestp_end > $row['timestp_begin'] && $timestp_end <= $row['timestp_end']) || ($timestp_begin <= $row['timestp_begin'] && $timestp_end >= $row['timestp_end']))) {
                         // Collision détectée
-                        echo "je sors";
                         return false;
                     }
                 }
-
             }
 
             if (!empty($this->fields['periodicity']) && !empty($this->details['periodicity_end_date'])) // Périodicité définie
@@ -378,10 +375,12 @@ class booking_event extends data_object
         return true;
     }
 
-    public function setdetails($values, $prefix)
+    public function setdetails($values = array(), $prefix = '')
     {
         // Détermine le longueur du préfixe des variables
         $intPrefixLength = strlen($prefix);
+
+        $this->details = array();
 
         foreach ($values as $key => $value)
         {
