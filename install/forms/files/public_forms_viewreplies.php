@@ -279,7 +279,7 @@ echo $skin->open_simplebloc(ploopi_htmlentities($objForm->fields['label'].' ('._
                             <span style="margin-left:10px;">Graphique : </span>
                             <?php
                             ?>
-                            <select class="select" onchange="javascript:if (this.value != '') {ploopi_xmlhttprequest_topopup(750, event, 'forms_popup_graphic', 'admin-light.php', 'ploopi_op=forms_graphic_display&forms_graphic_id='+this.value+'&forms_graphic_width='+$('forms_graphic_width').value, 'POST');} else {ploopi_hidepopup('forms_popup_graphic');} this.selectedIndex = 0;">
+                            <select class="select" onchange="javascript:if (this.value != '') {ploopi_xmlhttprequest_topopup(750, event, 'forms_popup_graphic', 'admin-light.php', '<? echo ploopi_queryencode('ploopi_op=forms_graphic_display'); ?>&forms_graphic_id='+this.value+'&forms_graphic_width='+$('forms_graphic_width').value, 'POST');} else {ploopi_hidepopup('forms_popup_graphic');} this.selectedIndex = 0;">
                                 <option value="">(Sélectionner un graphique)</option>
                                 <?php
                                 while ($row = $db->fetchrow())
