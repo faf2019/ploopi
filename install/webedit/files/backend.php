@@ -172,6 +172,8 @@ switch ($strbackendtype)
 
             $intTsToday = ploopi_createtimestamp();
 
+            $wsp = ploopi_loader::getworkspace();
+
             // Si une rubrique est définie, le flux porte le titre de la rubrique
             if (isset($_REQUEST['headingid']))
             {
@@ -179,7 +181,7 @@ switch ($strbackendtype)
                 if ($objHeading->open($_REQUEST['headingid']))
                 {
                     $where = "AND (heading.id = {$objHeading->fields['id']} OR heading.parents = '{$objHeading->fields['parents']};{$objHeading->fields['id']}' OR heading.parents LIKE '{$objHeading->fields['parents']};{$objHeading->fields['id']};%')";
-                    $feed_title = $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['title'].' - '.$objHeading->fields['label'];
+                    $feed_title = $wsp['title'].' - '.$objHeading->fields['label'];
                     $feed_description = $objHeading->fields['description'];
                 }
                 else
@@ -191,8 +193,8 @@ switch ($strbackendtype)
             else // sinon du site
             {
                 $where = '';
-                $feed_title = $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['title'];
-                $feed_description = $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['meta_description'];
+                $feed_title = $wsp['title'];
+                $feed_description = $wsp['meta_description'];
             }
 
             switch($format)
@@ -213,7 +215,7 @@ switch ($strbackendtype)
             $feed->setLink(_PLOOPI_BASEPATH);
 
             $feed->setChannelElement('updated', date(DATE_ATOM , time()));
-            $feed->setChannelElement('author', array('name '=> ploopi_xmlentities(utf8_encode($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['meta_author']), true)));
+            $feed->setChannelElement('author', array('name '=> ploopi_xmlentities(utf8_encode($wsp['meta_author']), true)));
 
 
             $select = "
