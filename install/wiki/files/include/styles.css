@@ -253,7 +253,7 @@ padding:2px 10px 1px 0;
     color: Olive;
 }
 .wiki_page .hl-comment {
-    color: Orange;
+    color: DarkOrange;
 }
 .wiki_page .hl-quotes {
     color: Darkred;
@@ -331,6 +331,13 @@ body.wiki_print .hl-content {
 body.wiki_print .hl-content * {
     font-family: monospace;
 }
+
+body.wiki_print pre {
+width:95%;
+overflow: none;
+white-space: pre-wrap;
+}
+
 
 
 .wiki_page_toc {

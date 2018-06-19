@@ -127,6 +127,7 @@ if (ploopi_ismoduleallowed('wiki'))
                     <script type="text/javascript">window.onload = function() { print(); };</script>
                 </head>
                 <body class="wiki_print">
+                    <div id="wiki_page_print_info">R&eacute;vision num&eacute;ro <? echo ploopi_htmlentities($objWikiPage->fields['revision']); ?> modifi&eacute; le <? echo implode(' à ', ploopi_timestamp2local($objWikiPage->fields['ts_modified'])); ?></div>
                     <div id="wiki_page" class="wiki_page"><? echo wiki_render($objWikiPage->fields['content']); ?></div>
                     <div id="wiki_page_print_info">R&eacute;vision num&eacute;ro <? echo ploopi_htmlentities($objWikiPage->fields['revision']); ?> modifi&eacute; le <? echo implode(' à ', ploopi_timestamp2local($objWikiPage->fields['ts_modified'])); ?></div>
                 </body>
