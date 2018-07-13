@@ -141,7 +141,7 @@ switch($op)
             $user->save();
 
             // Envoi du mail de création utilisateur
-            if ($_SESSION['system']['level'] == _SYSTEM_GROUPS) {
+            if ($_SESSION['system']['level'] == _SYSTEM_GROUPS && ploopi_getparam('system_new_user_mail')) {
                 // Recherche de l'espace de travail de rattachement
                 $arrParents = $group->getparents();
                 $id_workspace = sizeof($arrParents) > 1 ? end($arrParents)['id_workspace'] : $group->fields['id_workspace'];

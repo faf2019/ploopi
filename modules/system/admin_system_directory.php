@@ -727,8 +727,28 @@ if ($intNbRep <= $intMaxResponse && $intNbRep > 0)
         $strUserLabel = ploopi_htmlentities(sprintf("%s %s", $row['lastname'], $row['firstname']));
         $strUserLogin = ploopi_htmlentities($row['login']);
 
+
+
+        $modify = true;
+
+        // Vue "espace de travail"
+        if ($_SESSION['system']['level'] == 'work') {
+            // Pour tous les administrateurs autre que "système"
+            // on ne peut supprimer un utilisateur que s'il appartient exclusivement à cet espace de travail
+            $user = new user();
+            if ($user->open($intUserId)) {
+                foreach($user->getworkspaces() as $id_uw => $row_uw) {
+
+                    // On ne peut pas modifier ou supprimer un utilisateur qui dispose de privilèges plus élevés même dans un autre espace de travail
+                    if ($row_uw['adminlevel'] > $_SESSION['ploopi']['adminlevel']) {
+                        $modify = false;
+                    }
+                }
+            }
+        }
+
         // si l'utilisateur est attaché à un groupe, on met un lien vers la fiche de l'utilisateur pour pouvoir la modifier
-        if (!empty($row['groups']))
+        if ($modify && !empty($row['groups']))
         {
             reset($row['groups']);
             $strUserLabel = sprintf(

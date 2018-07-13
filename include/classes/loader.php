@@ -662,8 +662,26 @@ abstract class ploopi_loader
                     if ($strRefererHost == $strRequestHost && ($strRefererScript == $strRequestScript || $strRequestScript != 'admin.php')) {
                         $strLoginRedirect = $_SERVER['HTTP_REFERER'];
                     }
-                    // on force la redirection sur le domaine+script courant
-                    else $strLoginRedirect = _PLOOPI_BASEPATH.'/'.$strRequestScript;
+                    else {
+                        $arrParams = $_GET;
+                        if (isset($arrParams['ploopi_env'])) {
+                            $arrEnv = explode('/', $_REQUEST['ploopi_env']);
+
+                            if (isset($arrEnv[0]) && is_numeric($arrEnv[0])) $arrParams['ploopi_mainmenu'] = $arrEnv[0];
+
+                            if (isset($arrEnv[1]) && is_numeric($arrEnv[1])) $arrParams['ploopi_workspaceid'] = $arrEnv[1];
+
+                            if (isset($arrEnv[2]) && is_numeric($arrEnv[2])) $arrParams['ploopi_moduleid'] = $arrEnv[2];
+
+                            if (isset($arrEnv[3])) $arrParams['ploopi_action'] = $arrEnv[3];
+                        }
+
+                        unset($arrParams['ploopi_login']);
+                        unset($arrParams['ploopi_password']);
+                        unset($arrParams['ploopi_env']);
+
+                        $strLoginRedirect = _PLOOPI_BASEPATH.'/'.ploopi_urlencode($strRequestScript.($arrParams?'?'.http_build_query($arrParams):''));
+                    }
                 }
 
             }

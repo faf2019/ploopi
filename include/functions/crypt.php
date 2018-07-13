@@ -121,7 +121,7 @@ function ploopi_urlencode($url, $ploopi_mainmenu = null, $ploopi_workspaceid = n
     if (isset($_SESSION['ploopi']['mode']) && $_SESSION['ploopi']['mode'] == 'frontoffice') $addenv = false;
 
     $arrParsedURL = parse_url($url);
-    
+
     if (!isset($arrParsedURL['path'])) return(false);
 
     // Attention la variable 'HTTP_X_SSL_REQUEST' permet de détecter un frontend gérant le chiffrage SSL, cette solution n'est pas exhaustive
