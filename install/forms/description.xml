@@ -2,9 +2,9 @@
 <ploopi>
    <moduletype>
       <label>forms</label>
-      <version>3.6.5</version>
+      <version>3.6.6</version>
       <author>Ovensia / HeXad</author>
-      <date>20180618000000</date>
+      <date>20180906000000</date>
       <description>Gestion de Formulaires</description>
       <paramtype>
          <name>forms_export_csvextension</name>
@@ -38,6 +38,13 @@
          <name>forms_webservice_jodconverter</name>
          <label>Web Service JODConverter</label>
          <default_value></default_value>
+         <public>0</public>
+         <description/>
+      </paramtype>
+      <paramtype>
+         <name>form_nb_cond</name>
+         <label>Nombre de conditions maximum dans les groupes conditionnels</label>
+         <default_value>5</default_value>
          <public>0</public>
          <description/>
       </paramtype>

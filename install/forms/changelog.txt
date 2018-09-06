@@ -1,3 +1,9 @@
+== Module FORMS - version 3.6.6 =====================================================
+
+2018-09-06  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+* Ajout d'un paramètre pour le nombre de conditions maximum dans un groupe conditionnel
+
 == Module FORMS - version 3.6.5 =====================================================
 
 2018-06-18  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>

@@ -850,7 +850,6 @@ class formsForm extends data_object
          */
         $objQuery = $this->getQuery($booWorkspaceFilter, $booBackupFilter, $arrFilter, $arrOrderBy, $intNumPage, $booFieldNamesAsKey, $booExport, $booRawData, $booDelete);
 
-
         if ($booDelete)
         {
             $objQuery->execute();
@@ -2077,6 +2076,7 @@ class formsForm extends data_object
                     $strJsCond .= "\nvar C{$key} = false;";
                     $strJsCond .= "\nfor (i=0;i<V{$key}.length;i++) {";
 
+                    if (empty($row['op'])) $row['op'] = '=';
 
                     switch($row['op'])
                     {
