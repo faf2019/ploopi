@@ -69,7 +69,7 @@ if (!$objGroup->isnew()) $arrParams[] = "forms_group_id={$objGroup->fields['id']
             </p>
             <p>
                 <label><?php echo _FORMS_GROUP_FORMULA; ?>:<br /><em>ex: (C1 AND C2) OR C3</em></label>
-                <? for ($i=1;$i<=5;$i++) { ?> <input type="button" class="button" value="C<? echo $i; ?>" title="Insérer la condition C<? echo $i; ?>" style="width:30px;" onclick="javascript:ploopi_insertatcursor($('forms_group_formula'), this.value); $('forms_group_formula').focus();" /> <? } ?>
+                <? for ($i = 1; $i <= ploopi_getparam('form_nb_cond'); $i++) { ?> <input type="button" class="button" value="C<? echo $i; ?>" title="Insérer la condition C<? echo $i; ?>" style="width:30px;" onclick="javascript:ploopi_insertatcursor($('forms_group_formula'), this.value); $('forms_group_formula').focus();" /> <? } ?>
                 <input type="button" class="button" value="AND" title="Insérer l'opérateur AND" style="width:40px;" onclick="javascript:ploopi_insertatcursor($('forms_group_formula'), ' '+this.value+' '); $('forms_group_formula').focus();" />
                 <input type="button" class="button" value="OR" title="Insérer l'opérateur OR" style="width:40px;" onclick="javascript:ploopi_insertatcursor($('forms_group_formula'), ' '+this.value+' '); $('forms_group_formula').focus();" />
                 <input type="button" class="button" value="NOT" title="Insérer l'opérateur NOT" style="width:40px;" onclick="javascript:ploopi_insertatcursor($('forms_group_formula'), ' '+this.value+' '); $('forms_group_formula').focus();" />
@@ -96,7 +96,7 @@ if (!$objGroup->isnew()) $arrParams[] = "forms_group_id={$objGroup->fields['id']
 
         $arrConditions = $objGroup->getConditions();
 
-        for ($intI = 1; $intI <= 5; $intI++)
+        for ($intI = 1; $intI <= ploopi_getparam('form_nb_cond'); $intI++)
         {
             ?>
             <p>
