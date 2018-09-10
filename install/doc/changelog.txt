@@ -1,3 +1,10 @@
+== Module DOC - version 4.9.5 ====================================================
+
+2018-09-10  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Mise à jour de la liste des parsers pour mieux traiter les problèmes de charset
+* Mise à jour de la liste des parsers pour mieux traiter les documents ODF
+
 == Module DOC - version 4.9.4 ====================================================
 
 2018-03-05  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
@@ -14,13 +21,13 @@
 
 2017-07-11  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Ajout d'une URL pour télécharger un document en inline 
+* Ajout d'une URL pour télécharger un document en inline
 
 == Module DOC - version 4.9.1 ====================================================
 
 2017-05-05  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Ajout d'options de recherche : racinisation, phonétique, et/ou 
+* Ajout d'options de recherche : racinisation, phonétique, et/ou
 
 == Module DOC - version 4.9.0 ====================================================
 

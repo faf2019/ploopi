@@ -41,7 +41,7 @@
 
 foreach(array('keywords', 'filetype', 'user', 'workspace', 'date1', 'date2', 'stem', 'phonetic', 'and') as $p) {
     $param = 'doc_search_'.$p;
-    if (isset($_GET[$param]))    $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_'.$p] = $_GET[$param];
+    if (isset($_GET[$param]))    $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_'.$p] = utf8_decode($_GET[$param]);
     if (!isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_'.$p])) $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_'.$p] = '';
 }
 

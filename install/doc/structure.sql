@@ -139,7 +139,7 @@ CREATE TABLE IF NOT EXISTS `ploopi_mod_doc_parser` (
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
 
-INSERT INTO `ploopi_mod_doc_parser` (`id`, `label`, `path`, `extension`) VALUES 
+INSERT INTO `ploopi_mod_doc_parser` (`id`, `label`, `path`, `extension`) VALUES
 (1, 'Microsoft WORD', 'catdoc -s 8859-15 -d 8859-15 -f ascii %f', 'doc'),
 (2, 'Acrobat PDF', 'pdftotext -nopgbrk %f -', 'pdf'),
 (3, 'TEXTE', 'cat %f', 'txt'),
@@ -160,3 +160,8 @@ INSERT INTO `ploopi_mod_doc_parser` (`id`, `label`, `path`, `extension`) VALUES
 UPDATE `ploopi_mod_doc_folder` SET `readonly` = `readonly_content`;
 ALTER TABLE `ploopi_mod_doc_folder` DROP `readonly_content`;
 UPDATE `ploopi_mod_doc_file` fi, `ploopi_mod_doc_folder` fo SET fi.`readonly` = fo.`readonly` WHERE fi.`id_folder` = fo.`id`;
+
+UPDATE ploopi_mod_doc_parser SET `path` = 'pdftotext -enc Latin1 -nopgbrk %f -' WHERE id = 2;
+UPDATE ploopi_mod_doc_parser SET `path` = 'cat %f | iconv -c -f $(file -b --mime-encoding %f) -t ISO-8859-1//TRANSLIT' WHERE id = 3;
+UPDATE ploopi_mod_doc_parser SET `path` = 'unoconv --format=txt --stdout %f' WHERE id IN(7,8,13,14,15);
+

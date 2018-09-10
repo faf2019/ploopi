@@ -614,23 +614,7 @@ class docfile extends data_object
                 exec($exec,$array_result);
                 if ($debug) printf("<br />CONTENT: %0.2f",$ploopi_timer->getexectime()*1000);
 
-                foreach($array_result as $key => $value)
-                {
-                    if ($value!="")
-                    {
-                        switch($fields['ext'])
-                        {
-                            case 'odg':
-                            case 'odt':
-                            case 'ods':
-                            case 'odp':
-                            case 'sxw':
-                                $value = iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $value);
-                            break;
-                        }
-                        $content .= $value.' ';
-                    }
-                }
+                $content = implode(' ', $array_result);
 
                 unset($array_result);
             }
