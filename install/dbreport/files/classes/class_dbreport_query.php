@@ -531,6 +531,7 @@ class dbreport_query extends data_object
         $objQuerySel->add_select('`id`, `tablename`, `id_module_type`, `fieldname`, `label`, `function`, `visible`, `sort`, `criteria`, `type_criteria`, `or`, `type_or`, `intervals`, `operation`, `position`, `series`');
         $objQuerySel->add_from("ploopi_mod_dbreport_queryfield");
         $objQuerySel->add_where('id_query = %d', $intClonedId);
+        $objQuerySel->add_orderby('position');
         $objRs = $objQuerySel->execute();
 
         $arrQueryFields = array();
