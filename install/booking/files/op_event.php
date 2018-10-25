@@ -781,7 +781,7 @@ switch($ploopi_op)
                 $booModify = ($objEvent->fields['managed'] == 0 && $booValidator);
 
                 // Récupération des détails de l'événement
-                $arrDetails = $objEvent->getdetails();
+                $arrDetails = $objEvent->getdetails(isset($arrId[1]) ? $arrId[1] : 0);
 
                 // True si au moins un événement modifiable
                 $booModifyEventGlobal = $booModify;

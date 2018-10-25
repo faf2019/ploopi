@@ -394,12 +394,15 @@ class booking_event extends data_object
     }
 
 
-    public function getdetails()
+    public function getdetails($id = 0)
     {
         global $db;
 
+        $filter = '';
+        if (!empty($id) && is_numeric($id)) $filter = " AND id = {$id} ";
+
         // Recherche des détails liés à l'événement
-        $db->query("SELECT * FROM ploopi_mod_booking_event_detail WHERE id_event = {$this->fields['id']} ORDER BY timestp_begin, timestp_end");
+        $db->query("SELECT * FROM ploopi_mod_booking_event_detail WHERE id_event = {$this->fields['id']} {$filter} ORDER BY timestp_begin, timestp_end");
         return $db->getarray();
     }
 
