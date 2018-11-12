@@ -397,6 +397,8 @@ class data_object
 
     public function setuwm()
     {
+        if (!isset($_SESSION['ploopi'])) return false;
+
         $this->fields['id_user'] = $_SESSION['ploopi']['userid'] ;
         $this->fields['id_workspace'] = $_SESSION['ploopi']['workspaceid'];
         $this->fields['id_module'] = $_SESSION['ploopi']['moduleid'];

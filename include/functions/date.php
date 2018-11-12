@@ -536,7 +536,7 @@ function ploopi_tz_createtimestamp($timezone_name = 'UTC')
 
 function ploopi_tz_timestamp2timestamp($ts, $timezone_name_src = 'UTC', $timezone_name_dst = 'UTC')
 {
-    if (empty($ts)) return $ts;
+    if (empty($_SESSION['ploopi']['user']) || empty($ts)) return $ts;
 
     switch($timezone_name_src)
     {
@@ -610,7 +610,11 @@ function ploopi_tz_getutc($timezone_name = 'UTC')
     switch($timezone_name)
     {
         case 'user':
-            $timezone_name = $_SESSION['ploopi']['user']['timezone'];
+            if (empty($_SESSION['ploopi']['user'])) {
+                // detect server timezone
+                $timezone_name = timezone_name_get(date_timezone_get(date_create()));
+            }
+            else $timezone_name = $_SESSION['ploopi']['user']['timezone'];
         break;
 
         case 'server':

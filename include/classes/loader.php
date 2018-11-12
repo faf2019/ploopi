@@ -109,6 +109,11 @@ abstract class ploopi_loader
         if(!$db->isconnected()) trigger_error(_PLOOPI_MSG_DBERROR, E_USER_ERROR);
 
         /**
+         * Traitement du rewriting inverse
+         */
+        self::rewrite();
+
+        /**
          * Initialisation du gestionnaire de session
          */
 
@@ -135,11 +140,6 @@ abstract class ploopi_loader
          * Démarrage de la session
          */
         session_start();
-
-        /**
-         * Traitement du rewriting inverse
-         */
-        self::rewrite();
 
         /**
          * Filtrage des variables entrantes
