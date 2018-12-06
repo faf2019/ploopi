@@ -619,6 +619,35 @@ switch($_SESSION['system']['usrTabItem'])
                             // On ajoute l'utilisateur
                             $objUser->save();
 
+                            // Envoi du mail de création utilisateur
+                            if ($_SESSION['system']['level'] == _SYSTEM_GROUPS && ploopi_getparam('system_new_user_mail')) {
+                                // Recherche de l'espace de travail de rattachement
+                                $arrParents = $group->getparents();
+                                $id_workspace = sizeof($arrParents) > 1 ? end($arrParents)['id_workspace'] : $group->fields['id_workspace'];
+
+                                $workspace = new workspace();
+                                if ($workspace->open($id_workspace)) {
+                                    if (!empty($workspace->fields['mail_model']) && !empty($objUser->fields['email'])) {
+                                        $arrReplacements = array(
+                                            '{login}' => $objUser->fields['login'],
+                                            '{lastname}' => $objUser->fields['lastname'],
+                                            '{firstname}' => $objUser->fields['firstname'],
+                                            '{password}' => $_POST['usernewpass'],
+                                            '{email}' => $objUser->fields['email'],
+                                            '{date}' => date('d/m/Y'),
+                                            '{time}' => date('H:i:s'),
+                                            '{url}' => _PLOOPI_BASEPATH,
+                                        );
+
+                                        $mail_content = str_replace(array_keys($arrReplacements), array_values($arrReplacements), $workspace->fields['mail_model']);
+                                        $subject = 'Vos identifiants de connexion pour '.(isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : $_SERVER['SERVER_NAME']);
+
+                                        ploopi_send_mail(_PLOOPI_ADMINMAIL, array(array('address' => $objUser->fields['email'], 'name' => trim($objUser->fields['firstname'].' '.$objUser->fields['lastname']))), $subject, $mail_content, null, null, null, null, false);
+                                    }
+                                }
+                            }
+
+
                             // On le rattache au groupe sélectionné
                             $objUser->attachtogroup($groupid);
                         }
