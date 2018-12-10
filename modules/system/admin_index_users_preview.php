@@ -56,31 +56,32 @@ if (empty($_SESSION['system']['user_import']) || empty($_SESSION['system']['user
     $arrErrors[] = 'Fichier invalide';
     $booCriticalError = true;
 }
-
-// Analyse de la ligne de titre (ligne 0)
-foreach($_SESSION['system']['user_import'][0] as $strFieldName)
-{
-    if (!in_array($strFieldName, $arrValidFields) || $strFieldName == 'id')
+else {
+    // Analyse de la ligne de titre (ligne 0)
+    foreach($_SESSION['system']['user_import'][0] as $strFieldName)
     {
-        $arrErrors[] = "Champ '{$strFieldName}' non utilisé";
+        if (!in_array($strFieldName, $arrValidFields) || $strFieldName == 'id')
+        {
+            $arrErrors[] = "Champ '{$strFieldName}' non utilisé";
+        }
+
+        // Est-ce un champ obligatoire
+        if (isset($arrNeededFields[$strFieldName])) $arrNeededFields[$strFieldName] = 1;
     }
 
-    // Est-ce un champ obligatoire
-    if (isset($arrNeededFields[$strFieldName])) $arrNeededFields[$strFieldName] = 1;
-}
-
-foreach($arrNeededFields as $strFieldName => $booFound)
-{
-    if (!$booFound)
+    foreach($arrNeededFields as $strFieldName => $booFound)
     {
-        $arrErrors[] = "Champ '{$strFieldName}' non trouvé";
-        $booCriticalError = true;
+        if (!$booFound)
+        {
+            $arrErrors[] = "Champ '{$strFieldName}' non trouvé";
+            $booCriticalError = true;
+        }
     }
-}
 
-for ($intI = 1; $intI < count($_SESSION['system']['user_import']); $intI++)
-{
-    if (count($_SESSION['system']['user_import'][$intI]) != count($_SESSION['system']['user_import'][0])) $arrErrors[] = "Taille de l'enregistrement n° {$intI} invalide";
+    for ($intI = 1; $intI < count($_SESSION['system']['user_import']); $intI++)
+    {
+        if (count($_SESSION['system']['user_import'][$intI]) != count($_SESSION['system']['user_import'][0])) $arrErrors[] = "Taille de l'enregistrement n° {$intI} invalide";
+    }
 }
 
 if ($booCriticalError) $arrErrors[] = "Erreur critique, impossible d'importer le fichier";
