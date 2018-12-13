@@ -71,6 +71,9 @@
         "pear-pear.php.net/XML_Serializer": "^0.21.0",
         "pear-pear.php.net/Cache_Lite": "^1.8",
         "pear-pear.horde.org/Horde_Text_Diff": "2.1.2",
-        "elasticsearch/elasticsearch": "^2.2"
+        "elasticsearch/elasticsearch": "^2.2",
+        "components/jquery": "^3.1",
+        "keller/soundex-fr-bundle": "dev-master",
+        "wamania/php-stemmer": "^1.2"
     }
 }
