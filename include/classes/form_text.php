@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,21 +25,25 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Classe de gestion des champs de type "text" (statique) d'un formulaire
+ * Gestion des champs de type "text" (fixe) de formulaires
  *
+ * @package ploopi
+ * @subpackage form
+ * @copyright Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Ovensia
  */
+
 class form_text extends form_field
 {
     /**
      * Constructeur de la classe
      *
-     * @param string $strLabel libellé du champ
+     * @param string $strLabel libellÃ© du champ
      * @param string $strValue valeur du champ
-     * @param string $strName propriété "name" du champ
-     * @param string $strId propriété "id" du champ
+     * @param string $strName propriÃ©tÃ© "name" du champ
+     * @param string $strId propriÃ©tÃ© "id" du champ
      * @param array $arrOptions options du champ
-     *
-     * @return form_text
      */
     public function __construct($strLabel, $strValue, $strName = null, $strId = null, $arrOptions = null)
     {
@@ -47,9 +51,9 @@ class form_text extends form_field
     }
 
     /**
-     * Génère le rendu html du champ
+     * GÃ©nÃ¨re le rendu html du champ
      *
-     * @param int $intTabindex tabindex du champs dans le formulaire
+     * @param int $intTabindex tabindex du champ dans le formulaire
      * @return string code html
      */
     public function render($intTabindex = null)

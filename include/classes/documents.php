@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,16 +25,15 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Gestion d'un bloc de document associé à un enregistrement d'un objet.
- * Permet notamment de gérer des pièces jointes à n'importe quel objet de ploopi.
+ * Gestion d'un bloc de documents associÃ© Ã  un enregistrement d'un objet.
+ * Permet notamment de gÃ©rer des piÃ¨ces jointes Ã  n'importe quel objet de ploopi.
  *
  * @package ploopi
  * @subpackage document
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
-
 
 abstract class documents {
 
@@ -57,13 +56,13 @@ abstract class documents {
     }
 
     /**
-     * Retourne le code d'appel javascript du popup de création de fichier
+     * Retourne le code d'appel javascript du popup de crÃ©ation de fichier
      *
      * @param int $id_object identifiant de l'objet
      * @param string $id_record identifiant de l'enregistrement
-     * @param array $rights tableau définissant les droits 'DOCUMENT_CREATE':boolean, 'DOCUMENT_MODIFY':boolean, 'DOCUMENT_DELETE':boolean, 'FOLDER_CREATE':boolean, 'FOLDER_MODIFY':boolean, 'FOLDER_DELETE': boolean, 'SEARCH': boolean
-     * @param array $default_folders tableau définissant les sous-dossiers par défaut à créer
-     * @param array $params tableau définissant les paramètres du bloc 'ROOT_NAME':string, 'ATTACHEMENT':boolean, 'FIELDS':array
+     * @param array $rights tableau dÃ©finissant les droits 'DOCUMENT_CREATE':boolean, 'DOCUMENT_MODIFY':boolean, 'DOCUMENT_DELETE':boolean, 'FOLDER_CREATE':boolean, 'FOLDER_MODIFY':boolean, 'FOLDER_DELETE': boolean, 'SEARCH': boolean
+     * @param array $default_folders tableau dÃ©finissant les sous-dossiers par dÃ©faut Ã  crÃ©er
+     * @param array $params tableau dÃ©finissant les paramÃ¨tres du bloc 'ROOT_NAME':string, 'ATTACHEMENT':boolean, 'FIELDS':array
      * @param int $width largeur du popup
      * @param int $id_user identifiant de l'utilisateur
      * @param int $id_workspace identifiant de l'espace
@@ -74,7 +73,7 @@ abstract class documents {
 
     public static function getopenfilejs($id_object, $id_record, $rights = array(), $default_folders = array(), $params = array(), $width = 600, $id_user = -1, $id_workspace = -1, $id_module = -1)
     {
-        // Important : il faut définir un mode de fonctionnement et une cible dans le paramètre $params
+        // Important : il faut dÃ©finir un mode de fonctionnement et une cible dans le paramÃ¨tre $params
         // Mode : tofield / tocallback
         // Target : champ de destination (tofield) ou fonction de callback tocallback)
 
@@ -87,13 +86,13 @@ abstract class documents {
     }
 
     /**
-     * Retourne le code d'appel javascript du popup de sélection de fichier
+     * Retourne le code d'appel javascript du popup de sÃ©lection de fichier
      *
      * @param int $id_object identifiant de l'objet
      * @param string $id_record identifiant de l'enregistrement
-     * @param array $rights tableau définissant les droits 'DOCUMENT_CREATE':boolean, 'DOCUMENT_MODIFY':boolean, 'DOCUMENT_DELETE':boolean, 'FOLDER_CREATE':boolean, 'FOLDER_MODIFY':boolean, 'FOLDER_DELETE': boolean, 'SEARCH': boolean
-     * @param array $default_folders tableau définissant les sous-dossiers par défaut à créer
-     * @param array $params tableau définissant les paramètres du bloc 'ROOT_NAME':string, 'ATTACHEMENT':boolean, 'FIELDS':array
+     * @param array $rights tableau dÃ©finissant les droits 'DOCUMENT_CREATE':boolean, 'DOCUMENT_MODIFY':boolean, 'DOCUMENT_DELETE':boolean, 'FOLDER_CREATE':boolean, 'FOLDER_MODIFY':boolean, 'FOLDER_DELETE': boolean, 'SEARCH': boolean
+     * @param array $default_folders tableau dÃ©finissant les sous-dossiers par dÃ©faut Ã  crÃ©er
+     * @param array $params tableau dÃ©finissant les paramÃ¨tres du bloc 'ROOT_NAME':string, 'ATTACHEMENT':boolean, 'FIELDS':array
      * @param int $width largeur du popup
      * @param int $id_user identifiant de l'utilisateur
      * @param int $id_workspace identifiant de l'espace
@@ -104,7 +103,7 @@ abstract class documents {
 
     public static function getselectfilejs($id_object, $id_record, $rights = array(), $default_folders = array(), $params = array(), $width = 600, $id_user = -1, $id_workspace = -1, $id_module = -1)
     {
-        // Important : il faut définir un mode de fonctionnement et une cible dans le paramètre $params
+        // Important : il faut dÃ©finir un mode de fonctionnement et une cible dans le paramÃ¨tre $params
         // Mode : tofield / tocallback
         // Target : champ de destination (tofield) ou fonction de callback tocallback)
 
@@ -118,13 +117,13 @@ abstract class documents {
 
 
     /**
-     * Insère un bloc de documents pour un enregistrement d'un objet
+     * InsÃ¨re un bloc de documents pour un enregistrement d'un objet
      *
      * @param int $id_object identifiant de l'objet
      * @param string $id_record identifiant de l'enregistrement
-     * @param array $rights tableau définissant les droits 'DOCUMENT_CREATE':boolean, 'DOCUMENT_MODIFY':boolean, 'DOCUMENT_DELETE':boolean, 'FOLDER_CREATE':boolean, 'FOLDER_MODIFY':boolean, 'FOLDER_DELETE': boolean, 'SEARCH': boolean
-     * @param array $default_folders tableau définissant les sous-dossiers par défaut à créer
-     * @param array $params tableau définissant les paramètres du bloc 'ROOT_NAME':string, 'ATTACHEMENT':boolean, 'FIELDS':array
+     * @param array $rights tableau dÃ©finissant les droits 'DOCUMENT_CREATE':boolean, 'DOCUMENT_MODIFY':boolean, 'DOCUMENT_DELETE':boolean, 'FOLDER_CREATE':boolean, 'FOLDER_MODIFY':boolean, 'FOLDER_DELETE': boolean, 'SEARCH': boolean
+     * @param array $default_folders tableau dÃ©finissant les sous-dossiers par dÃ©faut Ã  crÃ©er
+     * @param array $params tableau dÃ©finissant les paramÃ¨tres du bloc 'ROOT_NAME':string, 'ATTACHEMENT':boolean, 'FIELDS':array
      * @param bool $load_doc true si on souhaite afficher directement les documents
      * @param int $id_user identifiant de l'utilisateur
      * @param int $id_workspace identifiant de l'espace
@@ -144,7 +143,7 @@ abstract class documents {
         // generate documents id
         $documents_id = self::getid($id_object, $id_record, $id_module).(isset($params['UNIQID']) ? $params['UNIQID'] : '');
 
-        // permet de mettre des droits par défaut si le paramètre est incomplet
+        // permet de mettre des droits par dÃ©faut si le paramÃ¨tre est incomplet
         $rights =
             array_merge(
                 array(
@@ -173,16 +172,16 @@ abstract class documents {
         // permet de modifier le champ sur lequel va s'effectuer le tri du tableau
         if (empty($params['ORDER_BY'])) $params['ORDER_BY'] = 'name';
 
-        // permet de modifier l'ordre de tri du tableau (croissant/décroissant)
+        // permet de modifier l'ordre de tri du tableau (croissant/dÃ©croissant)
         if (empty($params['SORT'])) $params['SORT'] = 'ASC';
 
-        // hauteur fixe de la fenêtre
+        // hauteur fixe de la fenÃªtre
         if (empty($params['HEIGHT'])) $params['HEIGHT'] = 0;
 
-        // permet de paramétrer le libellé et l'icone des boutons de la mini-ged
+        // permet de paramÃ©trer le libellÃ© et l'icone des boutons de la mini-ged
         if (empty($params['ROOT_PLACE'])) $params['ROOT_PLACE'] = 'Aller au Dossier Racine';
         if (empty($params['ROOT_PLACE_IMG'])) $params['ROOT_PLACE_IMG'] = $_SESSION['ploopi']['template_path'] . '/img/documents/ico_home.png';
-        if (empty($params['NEW_FOLDER'])) $params['NEW_FOLDER'] = 'Créer un nouveau Dossier';
+        if (empty($params['NEW_FOLDER'])) $params['NEW_FOLDER'] = 'CrÃ©er un nouveau Dossier';
         if (empty($params['NEW_FOLDER_IMG'])) $params['NEW_FOLDER_IMG'] = $_SESSION['ploopi']['template_path'] . '/img/documents/ico_newfolder.png';
         if (empty($params['NEW_FILE'])) $params['NEW_FILE'] = 'Ajouter un Fichier';
         if (empty($params['NEW_FILE_IMG'])) $params['NEW_FILE_IMG'] = $_SESSION['ploopi']['template_path'] . '/img/documents/ico_newfile.png';
@@ -200,8 +199,8 @@ abstract class documents {
             'attachement'   => $params['ATTACHEMENT'],
             'fields'        => $params['FIELDS'],
             'fields_size'   => $params['FIELDS_SIZE'],
-            'callback_func' => $params['CALLBACK_FUNC'], // Fonction de callback php appelée suite à l'ajout d'un fichier/dossier
-            'callback_inc'  => $params['CALLBACK_INC'], // Inclusion nécessaire au callback php
+            'callback_func' => $params['CALLBACK_FUNC'], // Fonction de callback php appelÃ©e suite Ã  l'ajout d'un fichier/dossier
+            'callback_inc'  => $params['CALLBACK_INC'], // Inclusion nÃ©cessaire au callback php
             'default_folder'=> $params['DEFAULT_FOLDER'],
             'order_by'      => $params['ORDER_BY'],
             'sort'          => $params['SORT'],
@@ -216,7 +215,7 @@ abstract class documents {
             'new_file_img'  => $params['NEW_FILE_IMG'],
             'new_files'     => $params['NEW_FILES'],
             'new_files_img' => $params['NEW_FILES_IMG'],
-            // Pour le sélecteur de fichier
+            // Pour le sÃ©lecteur de fichier
             'mode'          => $params['MODE'], // peut valoir 'selectfile'
             'target'        => $params['TARGET'], // id de champ ou fonction de callback
         );
@@ -225,7 +224,7 @@ abstract class documents {
         $db->query("SELECT md5id FROM ploopi_documents_folder WHERE id_folder = 0 AND id_object = '{$_SESSION['documents'][$documents_id]['id_object']}' AND id_module = '{$_SESSION['documents'][$documents_id]['id_module']}' AND id_record = '".addslashes($_SESSION['documents'][$documents_id]['id_record'])."'");
 
         if ($row = $db->fetchrow()) $currentfolder = $row['md5id'];
-        else // racine inexistante, il faut la créer
+        else // racine inexistante, il faut la crÃ©er
         {
             $documentsfolder = new documentsfolder();
             $documentsfolder->fields['name'] = $params['ROOT_NAME'];
@@ -273,7 +272,7 @@ abstract class documents {
     /**
      * Renvoie le dossier de stockage des documents
      *
-     * @param boolean indique si le dossier doit être créé
+     * @param boolean indique si le dossier doit Ãªtre crÃ©Ã©
      * @return string chemin physique relatif du dossier de stockage
      */
 
@@ -293,10 +292,10 @@ abstract class documents {
     }
 
     /**
-     * Renvoie le nombre d'éléments d'un dossier
+     * Renvoie le nombre d'Ã©lÃ©ments d'un dossier
      *
      * @param int $id_folder identifiant du dossier
-     * @return int nombre d'élément du dossier
+     * @return int nombre d'Ã©lÃ©ment du dossier
      */
 
     public static function countelements($id_folder)
@@ -315,7 +314,7 @@ abstract class documents {
     }
 
     /**
-     * Renvoie un tableau de fichiers attachés à enregistrement d'un objet
+     * Renvoie un tableau de fichiers attachÃ©s Ã  enregistrement d'un objet
      *
      * @param int $id_object identifiant de l'objet
      * @param string $id_record identifiant de l'enregistrement
@@ -341,7 +340,7 @@ abstract class documents {
     }
 
     /**
-     * Renvoie un tableau de dossiers attachés à un enregistrement d'un objet
+     * Renvoie un tableau de dossiers attachÃ©s Ã  un enregistrement d'un objet
      *
      * @param int $id_object identifiant de l'objet
      * @param string $id_record identifiant de l'enregistrement
@@ -366,7 +365,7 @@ abstract class documents {
     }
 
     /**
-     * Renvoie un tableau de dossiers attachés à un enregistrement d'un objet (liste récursive)
+     * Renvoie un tableau de dossiers attachÃ©s Ã  un enregistrement d'un objet (liste rÃ©cursive)
      *
      * @param int $id_object identifiant de l'objet
      * @param string $id_record identifiant de l'enregistrement
@@ -382,7 +381,7 @@ abstract class documents {
     }
 
     /**
-     * Dépendance "privée" de "documents::listfolders"
+     * DÃ©pendance "privÃ©e" de "documents::listfolders"
      */
 
     private static function _listfolders_rec($arrFolders, $key = 0)
@@ -400,16 +399,16 @@ abstract class documents {
     }
 
     /**
-     * Sauvegarde un fichier dans un dossier attaché à un enregistrement d'un objet
+     * Sauvegarde un fichier dans un dossier attachÃ© Ã  un enregistrement d'un objet
      *
      * @param int $id_object identifiant de l'objet
      * @param string $id_record identifiant de l'enregistrement
      * @param string $file chemin du fichier
      * @param string $filename nom du fichier
      * @param int $id_folder identifiant du dossier
-     * @param string $label libellé du fichier (optionnel)
+     * @param string $label libellÃ© du fichier (optionnel)
      * @param string $description description du fichier (optionnel)
-     * @param string $ref référence du fichier (optionnel)
+     * @param string $ref rÃ©fÃ©rence du fichier (optionnel)
      * @param int $id_user identifiant du l'utilisateur (optionnel)
      * @param int $id_workspace identifiant de l'espace de travail (optionnel)
      * @param int $id_module identifiant du module (optionnel)
@@ -457,15 +456,15 @@ abstract class documents {
     }
 
     /**
-     * Sauvegarde un dossier attaché à un enregistrement d'un objet
+     * Sauvegarde un dossier attachÃ© Ã  un enregistrement d'un objet
      *
      * @param int $id_object identifiant de l'objet
      * @param string $id_record identifiant de l'enregistrement
      * @param string $name nom du dossier
      * @param int $id_folder identifiant du dossier
-     * @param string $label libellé du fichier (optionnel)
+     * @param string $label libellÃ© du fichier (optionnel)
      * @param string $description description du fichier (optionnel)
-     * @param bool $system 1 si c'est un dossier "système" (optionnel)
+     * @param bool $system 1 si c'est un dossier "systÃ¨me" (optionnel)
      * @param int $id_user identifiant du l'utilisateur (optionnel)
      * @param int $id_workspace identifiant de l'espace de travail (optionnel)
      * @param int $id_module identifiant du module (optionnel)
@@ -510,7 +509,7 @@ abstract class documents {
 
     public static function browser($currentfolder, $documents_id)
     {
-        // Vérification paramètres
+        // VÃ©rification paramÃ¨tres
         if (!isset($_SESSION['documents'][$documents_id])) return;
 
         $db = db::get();
@@ -522,15 +521,15 @@ abstract class documents {
                 <?php
                 if ($_SESSION['documents'][$documents_id]['rights']['DOCUMENT_CREATE'])
                 {
-                    ?><a title="<?php echo $_SESSION['documents'][$documents_id]['new_files']; ?>" href="javascript:void(0);" style="float:right;" onclick="javascript:ploopi_documents_openfile('<?php echo crypt::queryencode("ploopi_op=documents_addmultiplefiles&currentfolder={$currentfolder}&documents_id={$documents_id}&documentsfile_id="); ?>', event);"><img src="<?php echo $_SESSION['documents'][$documents_id]['new_files_img']; ?>"></a><?php
-                    ?><a title="<?php echo $_SESSION['documents'][$documents_id]['new_file']; ?>" href="javascript:void(0);" style="float:right;" onclick="javascript:ploopi_documents_openfile('<?php echo crypt::queryencode("ploopi_op=documents_openfile&currentfolder={$currentfolder}&documents_id={$documents_id}&documentsfile_id="); ?>', event);"><img src="<?php echo $_SESSION['documents'][$documents_id]['new_file_img']; ?>"></a><?php
+                    ?><a title="<?php echo $_SESSION['documents'][$documents_id]['new_files']; ?>" href="javascript:void(0);" style="float:right;" onclick="javascript:ploopi.documents.openfile('<?php echo crypt::queryencode("ploopi_op=documents_addmultiplefiles&currentfolder={$currentfolder}&documents_id={$documents_id}&documentsfile_id="); ?>', event);"><img src="<?php echo $_SESSION['documents'][$documents_id]['new_files_img']; ?>"></a><?php
+                    ?><a title="<?php echo $_SESSION['documents'][$documents_id]['new_file']; ?>" href="javascript:void(0);" style="float:right;" onclick="javascript:ploopi.documents.openfile('<?php echo crypt::queryencode("ploopi_op=documents_openfile&currentfolder={$currentfolder}&documents_id={$documents_id}&documentsfile_id="); ?>', event);"><img src="<?php echo $_SESSION['documents'][$documents_id]['new_file_img']; ?>"></a><?php
                 }
                 if ($_SESSION['documents'][$documents_id]['rights']['FOLDER_CREATE'])
                 {
-                    ?><a title="<?php echo $_SESSION['documents'][$documents_id]['new_folder']; ?>" href="javascript:void(0);" style="float:right;" onclick="javascript:ploopi_documents_openfolder('<?php echo crypt::queryencode("ploopi_op=documents_openfolder&currentfolder={$currentfolder}&documents_id={$documents_id}&documentsfolder_id="); ?>', event);"><img src="<?php echo $_SESSION['documents'][$documents_id]['new_folder_img']; ?>"></a><?php
+                    ?><a title="<?php echo $_SESSION['documents'][$documents_id]['new_folder']; ?>" href="javascript:void(0);" style="float:right;" onclick="javascript:ploopi.documents.openfolder('<?php echo crypt::queryencode("ploopi_op=documents_openfolder&currentfolder={$currentfolder}&documents_id={$documents_id}&documentsfolder_id="); ?>', event);"><img src="<?php echo $_SESSION['documents'][$documents_id]['new_folder_img']; ?>"></a><?php
                 }
                 ?>
-                <a title="<?php echo $_SESSION['documents'][$documents_id]['root_place']; ?>" href="javascript:void(0);" style="float:right;" onclick="javascript:documents::browser('<?php echo crypt::queryencode("ploopi_op=documents_browser&documents_id={$documents_id}&mode={$_SESSION['documents'][$documents_id]['mode']}"); ?>', '<?php echo $documents_id; ?>', true);"><img src="<?php echo $_SESSION['documents'][$documents_id]['root_place_img']; ?>"></a>
+                <a title="<?php echo $_SESSION['documents'][$documents_id]['root_place']; ?>" href="javascript:void(0);" style="float:right;" onclick="javascript:ploopi.documents.browser('<?php echo crypt::queryencode("ploopi_op=documents_browser&documents_id={$documents_id}&mode={$_SESSION['documents'][$documents_id]['mode']}"); ?>', '<?php echo $documents_id; ?>', true);"><img src="<?php echo $_SESSION['documents'][$documents_id]['root_place_img']; ?>"></a>
 
                 <div>Emplacement :</div>
                 <?php
@@ -544,7 +543,7 @@ abstract class documents {
                         // change root name
                         $foldername = (!$row['id_folder']) ? $_SESSION['documents'][$documents_id]['root_name'] : $row['name'];
                         ?>
-                        <a <?php if ($currentfolder == $row['md5id']) echo 'class="doc_pathselected"'; ?> href="javascript:void(0);" onclick="javascript:documents::browser('<?php echo crypt::queryencode("ploopi_op=documents_browser&currentfolder={$row['md5id']}&documents_id={$documents_id}&mode={$_SESSION['documents'][$documents_id]['mode']}"); ?>', '<?php echo $_SESSION['documents'][$documents_id]['documents_id']; ?>', true);">
+                        <a <?php if ($currentfolder == $row['md5id']) echo 'class="doc_pathselected"'; ?> href="javascript:void(0);" onclick="javascript:ploopi.documents.browser('<?php echo crypt::queryencode("ploopi_op=documents_browser&currentfolder={$row['md5id']}&documents_id={$documents_id}&mode={$_SESSION['documents'][$documents_id]['mode']}"); ?>', '<?php echo $_SESSION['documents'][$documents_id]['documents_id']; ?>', true);">
                             <p class="ploopi_va">
                                 <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/documents/ico_folder.png" />
                                 <span><?php echo str::htmlentities($foldername); ?></span>
@@ -609,7 +608,7 @@ abstract class documents {
             {
                 $documents_columns['right']['label'] =
                     array(
-                        'label' => 'Libellé',
+                        'label' => 'LibellÃ©',
                         'width' => empty($_SESSION['documents'][$documents_id]['fields_size']['label']) ? 150 : $_SESSION['documents'][$documents_id]['fields_size']['label'],
                         'options' => array('sort' => true)
                     );
@@ -687,8 +686,8 @@ abstract class documents {
                     );
 
                 $actions = '';
-                if ($_SESSION['documents'][$documents_id]['rights']['FOLDER_DELETE']) $actions .= '<a title="Supprimer" style="display:block;float:right;" href="javascript:void(0);" onclick="javascript:if (confirm(\'Attention, cette action va supprimer définitivement le dossier et son contenu\')) ploopi_documents_deletefolder(\''.crypt::queryencode("ploopi_op=documents_deletefolder&currentfolder={$currentfolder}&documents_id={$documents_id}&documentsfolder_id={$row['md5id']}").'\',\''.$_SESSION['documents'][$documents_id]['documents_id'].'\');"><img src="'.$_SESSION['ploopi']['template_path'].'/img/documents/ico_trash.png" /></a>';
-                if ($_SESSION['documents'][$documents_id]['rights']['FOLDER_MODIFY']) $actions .= '<a title="Modifier" style="display:block;float:right;" href="javascript:void(0);" onclick="javascript:ploopi_documents_openfolder(\''.crypt::queryencode("ploopi_op=documents_openfolder&currentfolder={$currentfolder}&documents_id={$documents_id}&documentsfolder_id={$row['md5id']}").'\',event);"><img src="'.$_SESSION['ploopi']['template_path'].'/img/documents/ico_modify.png" /></a>';
+                if ($_SESSION['documents'][$documents_id]['rights']['FOLDER_DELETE']) $actions .= '<a title="Supprimer" style="display:block;float:right;" href="javascript:void(0);" onclick="javascript:if (confirm(\'Attention, cette action va supprimer dÃ©finitivement le dossier et son contenu\')) ploopi.documents.deletefolder(\''.crypt::queryencode("ploopi_op=documents_deletefolder&currentfolder={$currentfolder}&documents_id={$documents_id}&documentsfolder_id={$row['md5id']}").'\',\''.$_SESSION['documents'][$documents_id]['documents_id'].'\');"><img src="'.$_SESSION['ploopi']['template_path'].'/img/documents/ico_trash.png" /></a>';
+                if ($_SESSION['documents'][$documents_id]['rights']['FOLDER_MODIFY']) $actions .= '<a title="Modifier" style="display:block;float:right;" href="javascript:void(0);" onclick="javascript:ploopi.documents.openfolder(\''.crypt::queryencode("ploopi_op=documents_openfolder&currentfolder={$currentfolder}&documents_id={$documents_id}&documentsfolder_id={$row['md5id']}").'\',event);"><img src="'.$_SESSION['ploopi']['template_path'].'/img/documents/ico_modify.png" /></a>';
 
                 if ($actions == '') $actions = '&nbsp;';
 
@@ -699,7 +698,7 @@ abstract class documents {
 
                 $documents_values[$i]['description'] = '';
                 $documents_values[$i]['link'] = 'javascript:void(0);';
-                $documents_values[$i]['option'] = 'onclick="javascript:documents::browser(\''.crypt::queryencode("ploopi_op=documents_browser&currentfolder={$row['md5id']}&documents_id={$documents_id}&mode={$_SESSION['documents'][$documents_id]['mode']}").'\',\''.$documents_id.'\',true);"';
+                $documents_values[$i]['option'] = 'onclick="javascript:ploopi.documents.browser(\''.crypt::queryencode("ploopi_op=documents_browser&currentfolder={$row['md5id']}&documents_id={$documents_id}&mode={$_SESSION['documents'][$documents_id]['mode']}").'\',\''.$documents_id.'\',true);"';
                 $documents_values[$i]['style'] = '';
 
                 $i++;
@@ -735,8 +734,8 @@ abstract class documents {
 
                 $actions = '';
 
-                if ($_SESSION['documents'][$documents_id]['rights']['DOCUMENT_DELETE']) $actions .= '<a title="Supprimer" style="display:block;float:right;" href="javascript:if (confirm(\'Attention, cette action va supprimer définitivement le fichier\')) ploopi_documents_deletefile(\''.crypt::queryencode("ploopi_op=documents_deletefile&currentfolder={$currentfolder}&documents_id={$documents_id}&documentsfile_id={$row['md5id']}").'\',\''.$_SESSION['documents'][$documents_id]['documents_id'].'\');"><img src="'.$_SESSION['ploopi']['template_path'].'/img/documents/ico_trash.png" /></a>';
-                if ($_SESSION['documents'][$documents_id]['rights']['DOCUMENT_MODIFY']) $actions .= '<a title="Modifier" style="display:block;float:right;" href="javascript:void(0);" onclick="javascript:ploopi_documents_openfile(\''.crypt::queryencode("ploopi_op=documents_openfile&currentfolder={$currentfolder}&documents_id={$documents_id}&documentsfile_id={$row['md5id']}").'\',event);"><img src="'.$_SESSION['ploopi']['template_path'].'/img/documents/ico_modify.png" /></a>';
+                if ($_SESSION['documents'][$documents_id]['rights']['DOCUMENT_DELETE']) $actions .= '<a title="Supprimer" style="display:block;float:right;" href="javascript:if (confirm(\'Attention, cette action va supprimer dÃ©finitivement le fichier\')) ploopi.documents.deletefile(\''.crypt::queryencode("ploopi_op=documents_deletefile&currentfolder={$currentfolder}&documents_id={$documents_id}&documentsfile_id={$row['md5id']}").'\',\''.$_SESSION['documents'][$documents_id]['documents_id'].'\');"><img src="'.$_SESSION['ploopi']['template_path'].'/img/documents/ico_trash.png" /></a>';
+                if ($_SESSION['documents'][$documents_id]['rights']['DOCUMENT_MODIFY']) $actions .= '<a title="Modifier" style="display:block;float:right;" href="javascript:void(0);" onclick="javascript:ploopi.documents.openfile(\''.crypt::queryencode("ploopi_op=documents_openfile&currentfolder={$currentfolder}&documents_id={$documents_id}&documentsfile_id={$row['md5id']}").'\',event);"><img src="'.$_SESSION['ploopi']['template_path'].'/img/documents/ico_modify.png" /></a>';
 
                 $documents_values[$i]['values'] =
                     array(
@@ -778,8 +777,8 @@ abstract class documents {
 
                 $documents_values[$i]['values']['actions'] =
                     array(
-                        'label' => $actions.'<a title="Télécharger" style="display:block;float:right;" href="'.crypt::urlencode("admin.php?ploopi_op=documents_downloadfile&documentsfile_id={$row['md5id']}").'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/documents/ico_download.png" /></a>
-                                             <a title="Télécharger (ZIP)" style="display:block;float:right;" href="'.crypt::urlencode("admin.php?ploopi_op=documents_downloadfile_zip&documentsfile_id={$row['md5id']}").'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/documents/ico_download_zip.png" /></a>',
+                        'label' => $actions.'<a title="TÃ©lÃ©charger" style="display:block;float:right;" href="'.crypt::urlencode("admin.php?ploopi_op=documents_downloadfile&documentsfile_id={$row['md5id']}").'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/documents/ico_download.png" /></a>
+                                             <a title="TÃ©lÃ©charger (ZIP)" style="display:block;float:right;" href="'.crypt::urlencode("admin.php?ploopi_op=documents_downloadfile_zip&documentsfile_id={$row['md5id']}").'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/documents/ico_download_zip.png" /></a>',
                     );
 
                 $documents_values[$i]['description'] = '';
@@ -787,7 +786,7 @@ abstract class documents {
                 if ($_SESSION['documents'][$documents_id]['mode'] == 'tofield')
                 {
                     $documents_values[$i]['link'] = 'javascript:void(0);';
-                    $documents_values[$i]['onclick'] = "javascript:dest = $('{$_SESSION['documents'][$documents_id]['target']}'); if (dest.type) dest.value='{$row['name']}'; else dest.innerHTML='{$row['name']}'; ploopi_getelem('{$_SESSION['documents'][$documents_id]['target']}_id').value='{$row['id']}';ploopi_hidepopup('ploopi_documents_popup');";
+                    $documents_values[$i]['onclick'] = "javascript:dest = $('{$_SESSION['documents'][$documents_id]['target']}'); if (dest.type) dest.value='{$row['name']}'; else dest.innerHTML='{$row['name']}'; ploopi.getelem('{$_SESSION['documents'][$documents_id]['target']}_id').value='{$row['id']}';ploopi.popup.hide('ploopi_documents_popup');";
                 }
                 elseif ($_SESSION['documents'][$documents_id]['mode'] == 'tocallback')
                 {

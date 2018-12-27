@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,22 +25,15 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Gestion de formulaires
+ * Gestion des formulaires
  *
  * @package ploopi
  * @subpackage form
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author StÈphane Escaich
- *
- *
- * @todo gÈnÈration formulaire, validation JS
+ * @author Ovensia
  */
 
-
-/**
- * Classe de gestion d'un formulaire HTML composÈ de champs, de boutons et d'un systËme de validation javascript
- */
 class form
 {
     /**
@@ -72,54 +65,75 @@ class form
     private $_arrOptions;
 
     /**
-     * PropriÈtÈ "id" du formulaire
+     * Propri√©t√© "id" du formulaire
+     *
+     * @var string
      */
     private $_strId;
 
     /**
-     * Action exÈcutÈe par le formulaire lors du submit
+     * Action ex√©cut√©e par le formulaire lors du submit
+     *
+     * @var string
      */
     private $_strAction;
 
     /**
-     * MÈthode de validation du formulaire (post/get)
+     * M√©thode de validation du formulaire (post/get)
+     *
+     * @var string
      */
     private $_strMethod;
 
     /**
-     * Panel par dÈfaut
+     * Panel par d√©faut
+     *
+     * @var form_panel
      */
     private $_objDefaultPanel;
 
     /**
-     * Options par dÈfaut des formulaires
+     * Options par d√©faut des formulaires
+     *
+     *   'tabindex'      : tabindex de d√©part pour le contenu du formulaire
+     *   'target'        : cible de la validation du formulaire (un iframe par exemple)
+     *   'enctype'       : type d'encodage du formulaire
+     *   'onsubmit'      : action √† effectuer sur l'√©v√©nement "onsubmit" du formulaire
+     *   'button_style'  : style appliqu√© aux boutons de validation du formulaire
+     *   'legend'        : contenu de la l√©gende du formulaire
+     *   'legend_style'  : style appliqu√© √† la l√©gende du formulaire
+     *   'class'         : class par d√©faut du formulaire (partie champs)
+     *   'style'         : style appliqu√© au formulaire (partie champs)
+     *   'class_form'    : class par d√©faut du formulaire (global, balise form)
+     *   'style_form'    : style appliqu√© au formulaire (global, balise form)
+     *   'readonly'      : formulaire complet en readonly
+     *   'disabled'      : formulaire complet en disabled
      *
      * @var array
      */
     static private $_arrDefaultOptions = array(
-        'tabindex'      => 1,                                       // tabindex de dÈpart pour le contenu du formulaire
+        'tabindex'      => 1,                                       // tabindex de d√©part pour le contenu du formulaire
         'target'        => null,                                    // cible de la validation du formulaire (un iframe par exemple)
         'enctype'       => null,                                    // type d'encodage du formulaire
-        'onsubmit'      => null,                                    // action ‡ effectuer sur l'ÈvÈnement "onsubmit" du formulaire
-        'button_style'  => '',                                      // style appliquÈ aux boutons de validation du formulaire
-        'legend'        => null,                                    // contenu de la lÈgende du formulaire
-        'legend_style'  => 'margin-right:4px;',                     // style appliquÈ ‡ la lÈgende du formulaire
-        'class'         => 'ploopi_generate_form',                  // class par dÈfaut du formulaire (partie champs)
-        'style'         => null,                                    // style appliquÈ au formulaire (partie champs)
-        'class_form'    => null,                                    // class par dÈfaut du formulaire (global, balise form)
-        'style_form'    => null,                                    // style appliquÈ au formulaire (global, balise form)
+        'onsubmit'      => null,                                    // action √† effectuer sur l'√©v√©nement "onsubmit" du formulaire
+        'button_style'  => '',                                      // style appliqu√© aux boutons de validation du formulaire
+        'legend'        => null,                                    // contenu de la l√©gende du formulaire
+        'legend_style'  => 'margin-right:4px;',                     // style appliqu√© √† la l√©gende du formulaire
+        'class'         => 'ploopi_generate_form',                  // class par d√©faut du formulaire (partie champs)
+        'style'         => null,                                    // style appliqu√© au formulaire (partie champs)
+        'class_form'    => null,                                    // class par d√©faut du formulaire (global, balise form)
+        'style_form'    => null,                                    // style appliqu√© au formulaire (global, balise form)
         'readonly'      => false,
         'disabled'      => false
     );
 
     /**
      * Constructeur du formulaire
-     * @param string $strId identifiant du formulaire
-     * @param string $strAction propriÈtÈ "action" du formulaire
-     * @param string $strMethod propriÈtÈ "method" du formulaire ("post" par dÈfaut)
-     * @param array $arrOptions options du formulaire (tabindex, target, enctype, onsubmit, button_style, legend, legend_style)
      *
-     * @return form
+     * @param string $strId identifiant du formulaire
+     * @param string $strAction propri√©t√© "action" du formulaire
+     * @param string $strMethod propri√©t√© "method" du formulaire ("post" par d√©faut)
+     * @param array $arrOptions options du formulaire (tabindex, target, enctype, onsubmit, button_style, legend, legend_style)
      */
     public function __construct($strId, $strAction, $strMethod = 'post', $arrOptions = null)
     {
@@ -135,12 +149,12 @@ class form
         // Fusion des options
         $this->_arrOptions = is_null($arrOptions) ? self::$_arrDefaultOptions : array_merge(self::$_arrDefaultOptions, $arrOptions);
 
-        // CrÈation d'un panel par dÈfaut (utilisÈ si l'utilisateur n'en crÈe pas)
+        // Cr√©ation d'un panel par d√©faut (utilis√© si l'utilisateur n'en cr√©e pas)
         $this->addPanel($this->_objDefaultPanel = new form_panel(form_panel::strDefaultPanel, null, array('style' => 'border:0;')));
     }
 
     /**
-     * Lecture de la propriÈtÈ "id"
+     * Lecture de la propri√©t√© "id"
      *
      * @return string
      */
@@ -193,7 +207,7 @@ class form
     }
 
     /**
-     * DÈfinit les options du formulaire
+     * D√©finit les options du formulaire
      *
      * @param array $arrOptions options du formulaire
      */
@@ -227,20 +241,22 @@ class form
     /**
      * Rendu HTML du formulaire
      *
+     * @param integer $intTabindexOptions  tabindex
+     *
      * @return string code html du formulaire
      */
-    // public function render()
+
     public function render($intTabindexOptions = null)
     {
         $intTabindex = $this->_arrOptions['tabindex'];
 
 
-        // GÈnÈration des Panels
+        // G√©n√©ration des Panels
         $strOutputPanels = '';
         $booHasFile = false;
         foreach($this->_arrPanels as $objPanel)
         {
-            // GÈnÈration des panels (+ champs)
+            // G√©n√©ration des panels (+ champs)
             if($objPanel->getNbFields()) $strOutputPanels .= $objPanel->render($intTabindex);
         }
 
@@ -253,7 +269,7 @@ class form
         // Formulaire readonly/disabled ?
         if ($this->_arrOptions['readonly'] || $this->_arrOptions['disabled']) {
             /*
-             * GÈnÈration du form
+             * G√©n√©ration du form
              */
 
             $strOutput = "<div{$strClass}{$strStyle}><form id=\"{$this->_strId}\" name=\"{$this->_strId}\"><div {$strClassForm}{$strStyleForm}>";
@@ -264,13 +280,13 @@ class form
             $strOnsubmit = is_null($this->_arrOptions['onsubmit']) ? 'onsubmit="javascript:return ploopi.'.$this->getFormValidateFunc().'(this);"' : " onsubmit=\"javascript:{$this->_arrOptions['onsubmit']}\"";
 
             /*
-             * GÈnÈration du script de validation
-             * Attention, nÈcessitÈ de passer par eval() pour les appels AJAX
+             * G√©n√©ration du script de validation
+             * Attention, n√©cessit√© de passer par eval() pour les appels AJAX
              */
             $strOutput = '<script type="text/javascript">'.$this->renderJS().'</script>';
 
             /*
-             * GÈnÈration du form
+             * G√©n√©ration du form
              */
 
             $strOutput .= "<div{$strClass}{$strStyle}><form id=\"{$this->_strId}\" name=\"{$this->_strId}\" action=\"{$this->_strAction}\" method=\"{$this->_strMethod}\"{$strOnsubmit}{$strTarget}{$strEnctype}><div {$strClassForm}{$strStyleForm}>";
@@ -285,7 +301,7 @@ class form
 
 
         /*
-         * GÈnÈration des boutons
+         * G√©n√©ration des boutons
          */
 
         $strLegend = is_null($this->_arrOptions['legend']) ? '' : "<em".(is_null($this->_arrOptions['legend_style']) ? '' : " style=\"{$this->_arrOptions['legend_style']}\"").">{$this->_arrOptions['legend']}</em>";
@@ -315,7 +331,7 @@ class form
 
         foreach($this->_arrPanels as $objPanel)
         {
-            // GÈnÈration d'une fonction de validation par panel
+            // G√©n√©ration d'une fonction de validation par panel
             $strOutput .= "\nploopi.".$objPanel->getFormValidateFunc().' = function(form) {';
             foreach($objPanel->getFields() as $objField)
             {
@@ -332,27 +348,27 @@ class form
                         case 'input:file':
                         case 'textarea':
                             $strFormat = ($objField->_arrOptions['required'] ? '' : 'empty').$objField->_arrOptions['datatype'];
-                            $strOutput .= "\nif ({$strCond} ploopi_validatefield('".addslashes(strip_tags(html_entity_decode($objField->_strLabel)))."', {$strFormField}, '{$strFormat}'))";
+                            $strOutput .= "\nif ({$strCond} ploopi.validatefield('".addslashes(strip_tags(html_entity_decode($objField->_strLabel)))."', {$strFormField}, '{$strFormat}'))";
                         break;
 
                         case 'input:hidden':
                             if (isset($objField->_arrOptions['label'])) {
                                 $strFormat = ($objField->_arrOptions['required'] ? '' : 'empty').$objField->_arrOptions['datatype'];
-                                $strOutput .= "\nif (ploopi_validatefield('".addslashes(strip_tags(html_entity_decode($objField->_arrOptions['label'])))."', {$strFormField}, '{$strFormat}'))";
+                                $strOutput .= "\nif (ploopi.validatefield('".addslashes(strip_tags(html_entity_decode($objField->_arrOptions['label'])))."', {$strFormField}, '{$strFormat}'))";
                             }
                         break;
 
                         case 'select':
                         case 'color':
-                            if ($objField->_arrOptions['required']) $strOutput .= "\nif ({$strCond} ploopi_validatefield('".addslashes(strip_tags(html_entity_decode($objField->_strLabel)))."', {$strFormField}, 'selected'))";
+                            if ($objField->_arrOptions['required']) $strOutput .= "\nif ({$strCond} ploopi.validatefield('".addslashes(strip_tags(html_entity_decode($objField->_strLabel)))."', {$strFormField}, 'selected'))";
                         break;
 
                         case 'input:radio':
-                            if ($objField->_arrOptions['required']) $strOutput .= "\nif ({$strCond} ploopi_validatefield('".addslashes(strip_tags(html_entity_decode($objField->_strLabel)))."', {$strFormField}, 'checked'))";
+                            if ($objField->_arrOptions['required']) $strOutput .= "\nif ({$strCond} ploopi.validatefield('".addslashes(strip_tags(html_entity_decode($objField->_strLabel)))."', {$strFormField}, 'checked'))";
                         break;
 
                         case 'input:checkbox':
-                            if ($objField->_arrOptions['required']) $strOutput .= "\nif ({$strCond} ploopi_validatefield('".addslashes(strip_tags(html_entity_decode($objField->_strLabel)))."', form['{$objField->_strName}[]'], 'checked'))";
+                            if ($objField->_arrOptions['required']) $strOutput .= "\nif ({$strCond} ploopi.validatefield('".addslashes(strip_tags(html_entity_decode($objField->_strLabel)))."', form['{$objField->_strName}[]'], 'checked'))";
                         break;
 
                         case 'datetime':
@@ -360,7 +376,7 @@ class form
 
                             $strFormField = "form['{$objField->_strName}_date']";
                             $strFormat = ($objField->_arrOptions['required'] ? 'date' : 'emptydate');
-                            $strOutput .= "\nif ({$strCond} ploopi_validatefield('".addslashes(strip_tags(html_entity_decode($objField->_strLabel)))."', {$strFormField}, '{$strFormat}'))";
+                            $strOutput .= "\nif ({$strCond} ploopi.validatefield('".addslashes(strip_tags(html_entity_decode($objField->_strLabel)))."', {$strFormField}, '{$strFormat}'))";
 
                         break;
                     }
@@ -371,9 +387,9 @@ class form
         }
 
 
-        // GÈnÈration de la fonction globale de validation pour tout le formulaire
+        // G√©n√©ration de la fonction globale de validation pour tout le formulaire
         $strOutput .= "\nploopi.".$this->getFormValidateFunc()." = function(form) {";
-        $strOutput .= "\nploopi_validatereset(form);";
+        $strOutput .= "\nploopi.validatereset(form);";
         foreach($this->_arrPanels as $objPanel) $strOutput .= "\nif (ploopi.".$objPanel->getFormValidateFunc()."(form))";
         $strOutput .= "\nreturn true; return false; }";
 
@@ -389,4 +405,12 @@ class form
      */
     public function getFormValidateFunc() { return "{$this->_strId}_validate"; }
 
+    /**
+     * Encodage HTML
+     * @param string $str cha√Æne brute
+     * @return string cha√Æne encod√©e
+     **/
+    public static function htmlentities($str) {
+        return str::htmlentities($str, null, null, false);
+    }
 }

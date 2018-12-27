@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,14 +25,20 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Classe de gestion des boutons d'un formulaire
+ * Gestion des boutons de formulaires
  *
+ * @package ploopi
+ * @subpackage form
+ * @copyright Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Ovensia
  */
+
 class form_button extends form_element
 {
 
     /**
-     * Options par défaut d'un bouton
+     * Options par dÃ©faut d'un bouton
      *
      * @var array
      */
@@ -46,7 +52,7 @@ class form_button extends form_element
     );
 
     /**
-     * Différents types de boutons acceptés
+     * DiffÃ©rents types de boutons acceptÃ©s
      *
      * @var array
      */
@@ -61,12 +67,10 @@ class form_button extends form_element
      * Constructeur de la classe
      *
      * @param string $strType type du bouton
-     * @param string $strValue valeur du bouton (intitulé)
-     * @param string $strName propriété "name" du bouton
-     * @param string $strId propriété "id" du bouton
+     * @param string $strValue valeur du bouton (intitulÃ©)
+     * @param string $strName propriÃ©tÃ© "name" du bouton
+     * @param string $strId propriÃ©tÃ© "id" du bouton
      * @param array $arrOptions options du bouton
-     *
-     * @return form_button
      */
     public function __construct($strType, $strValue, $strName = null, $strId = null, $arrOptions = null)
     {
@@ -75,9 +79,9 @@ class form_button extends form_element
     }
 
     /**
-     * Génère le rendu html du champ
+     * GÃ©nÃ¨re le rendu html du champ
      *
-     * @param int $intTabindex tabindex du champs dans le formulaire
+     * @param int $intTabindex tabindex du champ dans le formulaire
      * @return string code html
      */
     public function render($intTabindex = null)
@@ -87,7 +91,7 @@ class form_button extends form_element
 
         $strEvents = $this->generateEvents();
         $strProperties = $this->generateProperties();
-        $strValue = str::htmlentities($this->_arrValues[0]);
+        $strValue = form::htmlentities($this->_arrValues[0]);
 
         switch($this->_strType)
         {

@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,22 +25,19 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Gestion de requêtes SQL construites
+ * Gestion de requÃªtes SQL construites
  *
  * @package ploopi
  * @subpackage ploopi_query
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
-/**
- * Classe permettant de construire une requête SQL
- */
 abstract class query
 {
     /**
-     * Connexion à la BDD
+     * Connexion Ã  la BDD
      *
      * @var resource
      */
@@ -56,7 +53,7 @@ abstract class query
     /**
      * Constructeur de la classe
      *
-     * @param resource $objDb Connexion à la BDD
+     * @param db $objDb Connexion Ã  la BDD
      */
     public function __construct($objDb = null)
     {
@@ -64,21 +61,13 @@ abstract class query
         else { $this->objDb = db::get(); }
 
         $this->arrRaw = array();
-
-        return true;
     }
 
     /**
-     * Ajoute une clause SQL brute, non filtrée
+     * Ajoute une clause SQL brute, non filtrÃ©e
      *
-     * @param string $strRaw chaîne SQL
+     * @param string $strRaw chaÃ®ne SQL
      */
-    /*
-    public function add_raw($strRaw)
-    {
-        $this->arrRaw[] = $strRaw;
-    }*/
-
     public function add_raw($strRaw, $mixValues = null)
     {
         if (!empty($mixValues) && !is_array($mixValues)) $mixValues = array($mixValues);
@@ -91,13 +80,6 @@ abstract class query
      *
      * @return string
      */
-    /*
-    protected function get_raw()
-    {
-        return empty($this->arrRaw) ? false : ' '.implode(' ', $this->arrRaw);
-    }
-    */
-
     protected function get_raw()
     {
         $arrRaw = array();
@@ -107,7 +89,7 @@ abstract class query
     }
 
     /**
-     * Exécute la requête SQL
+     * ExÃ©cute la requÃªte SQL
      *
      * @return ploopi_recordset
      */
@@ -117,17 +99,17 @@ abstract class query
     }
 
     /**
-     * Permet de redéfinir la connexion à la BDD
+     * Permet de redÃ©finir la connexion Ã  la BDD
      *
-     * @param resource $objDb Connexion à la BDD
+     * @param resource $objDb Connexion Ã  la BDD
      */
     public function set_db($objDb) { $this->objDb = $objDb; }
 
 
     /**
-     * Retourne le nombre de lignes affectées lors de la dernières requête INSERT, UPDATE, REPLACE, DELETE
+     * Retourne le nombre de lignes affectÃ©es lors de la derniÃ¨res requÃªte INSERT, UPDATE, REPLACE, DELETE
      *
-     * @return integer nombre de lignes affectées lors de la dernières requête INSERT, UPDATE, REPLACE, DELETE
+     * @return integer nombre de lignes affectÃ©es lors de la derniÃ¨res requÃªte INSERT, UPDATE, REPLACE, DELETE
      */
     public function affectedrows()
     {
@@ -136,7 +118,7 @@ abstract class query
 
 
     /**
-     * Permet de redéfinir la connexion à la BDD au réveil de l'objet  (utile notamment après désérialisation)
+     * Permet de redÃ©finir la connexion Ã  la BDD au rÃ©veil de l'objet  (utile notamment aprÃ¨s dÃ©sÃ©rialisation)
      */
     public function __wakeup()
     {

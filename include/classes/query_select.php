@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,8 +25,15 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Classe permettant de construire une requête SQL de type SELECT
+ * Gestion de requÃªtes SQL construites de type SELECT
+ *
+ * @package ploopi
+ * @subpackage ploopi_query
+ * @copyright Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Ovensia
  */
+
 class query_select extends query_sud
 {
     /**
@@ -67,7 +74,7 @@ class query_select extends query_sud
     /**
      * Constructeur de la classe
      *
-     * @param resource $objDb Connexion à la BDD
+     * @param resource $objDb Connexion Ã  la BDD
      */
     public function __construct($objDb = null)
     {
@@ -77,7 +84,7 @@ class query_select extends query_sud
         $this->arrGroupBy = array();
         $this->arrHaving = array();
 
-        return parent::__construct('select', $objDb);
+        parent::__construct('select', $objDb);
     }
 
     /**
@@ -93,7 +100,7 @@ class query_select extends query_sud
     }
 
     /**
-     * Ajoute une clause LEFT JOIN à la requête
+     * Ajoute une clause LEFT JOIN Ã  la requÃªte
      *
      * @param string $strLeftJoin Clause LEFT JOIN
      */
@@ -104,7 +111,7 @@ class query_select extends query_sud
     }
 
     /**
-     * Ajoute une clause INNER JOIN à la requête
+     * Ajoute une clause INNER JOIN Ã  la requÃªte
      *
      * @param string $strInnerJoin Clause INNER JOIN
      */
@@ -115,8 +122,8 @@ class query_select extends query_sud
     }
 
     /**
-     * Ajoute une clause GROUP BY à la requête
-     * Si plusieurs clauses GROUP BY sont ajoutées, elles sont séparées par ","
+     * Ajoute une clause GROUP BY Ã  la requÃªte
+     * Si plusieurs clauses GROUP BY sont ajoutÃ©es, elles sont sÃ©parÃ©es par ","
      *
      * @param string $strGroupBy Clause ORDER BY
      */
@@ -126,8 +133,8 @@ class query_select extends query_sud
     }
 
     /**
-     * Ajout d'une clause HAVING à la requête
-     * Si plusieurs clauses HAVING sont ajoutées, elles sont séparées par AND
+     * Ajout d'une clause HAVING Ã  la requÃªte
+     * Si plusieurs clauses HAVING sont ajoutÃ©es, elles sont sÃ©parÃ©es par AND
      *
      * @param string $strWhere Clause SQL brute
      * @param mixed $mixValues Valeurs
@@ -226,9 +233,9 @@ class query_select extends query_sud
     public function remove_having() { $this->arrHaving = array(); }
 
     /**
-     * Génération de la requête SQL
+     * GÃ©nÃ©ration de la requÃªte SQL
      *
-     * @return string Chaîne contenant la requête SQL générée
+     * @return string ChaÃ®ne contenant la requÃªte SQL gÃ©nÃ©rÃ©e
      */
     public function get_sql()
     {

@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,26 +25,16 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Gestion des paramètres des modules.
- * Permet de lire/écrire les paramètres d'un module à différents niveaux (utilisateur, espace de travail, système)
+ * Gestion des paramÃ¨tres des modules
+ * Permet de lire/Ã©crire les paramÃ¨tres d'un module Ã  diffÃ©rents niveaux (utilisateur, espace de travail, systÃ¨me)
+ * AccÃ¨de aux tables ploopi_param_type, ploopi_param_default, ploopi_param_workspace, ploopi_param_user.
+ * Met Ã  jour les tables ploopi_param_default, ploopi_param_workspace, ploopi_param_user.
  *
  * @package ploopi
  * @subpackage param
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
- */
-
-/**
- * Cette classe permet de lire/écrire les paramètres d'un module à différents niveaux (utilisateur, espace de travail, système)
- * Accède aux tables ploopi_param_type, ploopi_param_default, ploopi_param_workspace, ploopi_param_user.
- * Met à jour les tables ploopi_param_default, ploopi_param_workspace, ploopi_param_user.
- *
- * @package ploopi
- * @subpackage param
- * @copyright Ovensia
- * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 class param
@@ -74,7 +64,7 @@ class param
     private $userid;
 
     /**
-     * Tableau des paramètres du module
+     * Tableau des paramÃ¨tres du module
      *
      * @var array
      */
@@ -102,7 +92,7 @@ class param
      * @param int $moduleid identifiant du module
      * @param int $workspaceid identifiant de l'espace
      * @param int $userid identifiant de l'utilisateur
-     * @param boolean $public true si on ne veut que les paramètres publics (false par défaut)
+     * @param boolean $public true si on ne veut que les paramÃ¨tres publics (false par dÃ©faut)
      */
     public function open($moduleid, $workspaceid = 0, $userid = 0, $public = false)
     {
@@ -208,9 +198,9 @@ class param
     }
 
     /**
-     * Affecte de nouvelles valeurs aux paramètres en fonction d'un tableau associatif de valeurs
+     * Affecte de nouvelles valeurs aux paramÃ¨tres en fonction d'un tableau associatif de valeurs
      *
-     * @param array $values tableau associatif contenant les nouvelles valeurs des paramètres
+     * @param array $values tableau associatif contenant les nouvelles valeurs des paramÃ¨tres
      */
 
     public function setvalues($values)
@@ -222,9 +212,9 @@ class param
     }
 
     /**
-     * Retourne les valeurs des paramètres dans un tableau associatif (nom => valeur)
+     * Retourne les valeurs des paramÃ¨tres dans un tableau associatif (nom => valeur)
      *
-     * @return array tableau des valeurs des paramètres
+     * @return array tableau des valeurs des paramÃ¨tres
      */
 
     public function getvalues()
@@ -233,10 +223,10 @@ class param
     }
 
     /**
-     * Retourne la valeur d'un paramètre
+     * Retourne la valeur d'un paramÃ¨tre
      *
-     * @param string $param nom du paramètre
-     * @return string valeur du paramètre
+     * @param string $param nom du paramÃ¨tre
+     * @return string valeur du paramÃ¨tre
      */
 
     public function getparam($param)
@@ -254,7 +244,7 @@ class param
 
         foreach($this->arrParam as $name => $param)
         {
-            if ($this->workspaceid == 0 && $this->userid == 0) // parametres par défaut
+            if ($this->workspaceid == 0 && $this->userid == 0) // parametres par dÃ©faut
             {
                 $db->query("UPDATE ploopi_param_default SET value = '".$db->addslashes($param['value'])."' WHERE name = '".$db->addslashes($name)."' AND id_module = {$this->moduleid}");
             }
@@ -288,7 +278,7 @@ class param
 
 
     /**
-     * Chargement des paramètres des modules
+     * Chargement des paramÃ¨tres des modules
      */
 
     public static function load()
@@ -299,7 +289,7 @@ class param
 
         $listmodules = implode(',',array_keys($_SESSION['ploopi']['modules']));
 
-        // On récupère les paramètres par défaut
+        // On rÃ©cupÃ¨re les paramÃ¨tres par dÃ©faut
         $db->query("
             SELECT      pd.id_module,
                         pt.name,
@@ -320,7 +310,7 @@ class param
             $arrParams[$fields['id_module']]['default'][$fields['name']] = $fields['value'];
         }
 
-        // On récupère les paramètres "espace de travail"
+        // On rÃ©cupÃ¨re les paramÃ¨tres "espace de travail"
         $db->query("
             SELECT      pg.id_module,
                         pt.name,
@@ -342,7 +332,7 @@ class param
             $arrParams[$fields['id_module']]['workspace'][$fields['id_workspace']][$fields['name']] = $fields['value'];
         }
 
-        // On récupère les paramètres utilisateur
+        // On rÃ©cupÃ¨re les paramÃ¨tres utilisateur
         if (!empty($_SESSION['ploopi']['userid']))
         {
             $db->query("
@@ -390,11 +380,11 @@ class param
 
 
     /**
-     * Retourne un paramètre de module
+     * Retourne un paramÃ¨tre de module
      *
-     * @param string $strParamName nom du paramètre à lire
-     * @param int $intModuleId identifiant du module (optionnel, le module courant si non défini)
-     * @return string valeur du paramètre
+     * @param string $strParamName nom du paramÃ¨tre Ã  lire
+     * @param int $intModuleId identifiant du module (optionnel, le module courant si non dÃ©fini)
+     * @return string valeur du paramÃ¨tre
      */
     public static function get($strParamName, $intModuleId = null)
     {

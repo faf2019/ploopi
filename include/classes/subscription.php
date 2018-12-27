@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,31 +25,19 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Gestion des abonnements
+ * Gestion des abonnements (table ploopi_subscription)
  *
  * @package ploopi
  * @subpackage subscription
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
- */
-
-/**
- * Classe d'accès à la table ploopi_subscription
- *
- * @package ploopi
- * @subpackage subscription
- * @copyright Ovensia
- * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 class subscription extends data_object
 {
     /**
      * Constructeur de la classe
-     *
-     * @return subscription
      */
 
     public function __construct()
@@ -99,7 +87,7 @@ class subscription extends data_object
 
 
     /**
-     * Insère le bloc d'abonnement pour un enregistrement d'un objet
+     * InsÃ¨re le bloc d'abonnement pour un enregistrement d'un objet
      *
      * @param int $id_object identifiant de l'objet
      * @param string $id_record identifiant de l'enregistrement
@@ -144,7 +132,7 @@ class subscription extends data_object
 
         if ($booSubscribed)
         {
-            $strTitle = "Vous êtes abonné {$_SESSION['subscription'][$ploopi_subscription_id]['optional_title']}";
+            $strTitle = "Vous Ãªtes abonnÃ© {$_SESSION['subscription'][$ploopi_subscription_id]['optional_title']}";
             $arrActions = $objSubscription->getactions();
             $strChecked = ($objSubscription->fields['allactions']) ? 'checked' : '';
             $strIconName = 'subscription1';
@@ -152,7 +140,7 @@ class subscription extends data_object
         }
         else
         {
-            $strTitle = "Vous n'êtes pas abonné {$_SESSION['subscription'][$ploopi_subscription_id]['optional_title']}";
+            $strTitle = "Vous n'Ãªtes pas abonnÃ© {$_SESSION['subscription'][$ploopi_subscription_id]['optional_title']}";
             $strChecked = '';
             $strIconName = 'subscription0';
         }
@@ -162,7 +150,7 @@ class subscription extends data_object
 
         ?>
         <div style="overflow:hidden;">
-            <a id="annotation_count_<?php echo $ploopi_subscription_id; ?>" class="ploopi_subscription_viewdetail" href="javascript:void(0);" onclick="javascript:ploopi_switchdisplay('<?php echo $div_id; ?>');ploopi_xmlhttprequest('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=ploopi_switchdisplay&id=<?php echo $div_id ?>&display='+$('<?php echo $div_id ?>').style.display);">
+            <a id="annotation_count_<?php echo $ploopi_subscription_id; ?>" class="ploopi_subscription_viewdetail" href="javascript:void(0);" onclick="javascript:ploopi.switchdisplay('<?php echo $div_id; ?>');ploopi.xhr.send('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=ploopi.switchdisplay&id=<?php echo $div_id ?>&display='+ploopi.getelem('<?php echo $div_id ?>').style.display);">
                 <img border="0" src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/<?php echo $strIconName; ?>.png">
                 <span><?php echo str::htmlentities(html_entity_decode($strTitle)); ?></span>
             </a>
@@ -179,15 +167,15 @@ class subscription extends data_object
                 if ($booSubscribed)
                 {
                     ?>
-                    <div class="ploopi_subscription_checkbox" onclick="javascript:ploopi_subscription_checkaction('<?php echo $ploopi_subscription_id; ?>', -1);">
-                        <input type="checkbox" class="checkbox" id="ploopi_subscription_unsubscribe" name="ploopi_subscription_unsubscribe" value="1" onclick="javascript:ploopi_subscription_checkaction('<?php echo $ploopi_subscription_id; ?>', -1);" />
+                    <div class="ploopi_subscription_checkbox" onclick="javascript:ploopi.subscription.checkaction('<?php echo $ploopi_subscription_id; ?>', -1);">
+                        <input type="checkbox" class="checkbox" id="ploopi_subscription_unsubscribe" name="ploopi_subscription_unsubscribe" value="1" onclick="javascript:ploopi.subscription.checkaction('<?php echo $ploopi_subscription_id; ?>', -1);" />
                         <span class="ploopi_subscription_unsubscribe"><?php echo _PLOOPI_LABEL_SUBSCRIPTION_UNSUSCRIBE; ?></span>
                     </div>
                     <?php
                 }
                 ?>
-                <div class="ploopi_subscription_checkbox" onclick="javascript:ploopi_subscription_checkaction('<?php echo $ploopi_subscription_id; ?>', 0);">
-                    <input type="checkbox" class="checkbox" id="ploopi_subscription_action_0" name="ploopi_subscription_action[]" value="0" onclick="javascript:ploopi_subscription_checkaction('<?php echo $ploopi_subscription_id; ?>', 0);" <?php echo $strChecked; ?> />
+                <div class="ploopi_subscription_checkbox" onclick="javascript:ploopi.subscription.checkaction('<?php echo $ploopi_subscription_id; ?>', 0);">
+                    <input type="checkbox" class="checkbox" id="ploopi_subscription_action_0" name="ploopi_subscription_action[]" value="0" onclick="javascript:ploopi.subscription.checkaction('<?php echo $ploopi_subscription_id; ?>', 0);" <?php echo $strChecked; ?> />
                     <span style="font-weight:bold;"><?php echo _PLOOPI_LABEL_SUBSCRIPTION_ALLACTIONS; ?></span>
                 </div>
                 <?php
@@ -215,8 +203,8 @@ class subscription extends data_object
                 {
                     $strChecked = (($booSubscribed && $objSubscription->fields['allactions']) || in_array($row['id_action'], $arrActions)) ? 'checked' : '';
                     ?>
-                    <div class="ploopi_subscription_checkbox" onclick="javascript:ploopi_subscription_checkaction('<?php echo $ploopi_subscription_id; ?>', <?php echo $row['id_action']; ?>);">
-                        <input type="checkbox" class="checkbox" id="ploopi_subscription_action_<?php echo $row['id_action']; ?>" name="ploopi_subscription_action[]" value="<?php echo $row['id_action']; ?>" onclick="javascript:ploopi_subscription_checkaction('<?php echo $ploopi_subscription_id; ?>', <?php echo $row['id_action']; ?>);" <?php echo $strChecked; ?> />
+                    <div class="ploopi_subscription_checkbox" onclick="javascript:ploopi.subscription.checkaction('<?php echo $ploopi_subscription_id; ?>', <?php echo $row['id_action']; ?>);">
+                        <input type="checkbox" class="checkbox ploopi_subscription_action" id="ploopi_subscription_action_<?php echo $row['id_action']; ?>" name="ploopi_subscription_action[]" value="<?php echo $row['id_action']; ?>" onclick="javascript:ploopi.subscription.checkaction('<?php echo $ploopi_subscription_id; ?>', <?php echo $row['id_action']; ?>);" <?php echo $strChecked; ?> />
                         <span><?php echo $row['label']; ?></span>
                     </div>
 
@@ -244,7 +232,7 @@ class subscription extends data_object
             </div>
             <div style="padding:4px;"><?php echo _PLOOPI_LABEL_SUBSCRIPTION_DESCIPTION; ?></div>
             <div style="clear:both;padding:4px;text-align:right;">
-                <input type="button" onclick="javascript:$('ploopi_form_subscription_<?php echo $ploopi_subscription_id; ?>').reset();ploopi_switchdisplay('<?php echo $div_id; ?>');" class="flatbutton" value="<?php echo _PLOOPI_CANCEL; ?>">
+                <input type="button" onclick="javascript:$('ploopi_form_subscription_<?php echo $ploopi_subscription_id; ?>').reset();ploopi.switchdisplay('<?php echo $div_id; ?>');" class="flatbutton" value="<?php echo _PLOOPI_CANCEL; ?>">
                 <input type="submit" class="flatbutton" value="<?php echo _PLOOPI_SAVE; ?>">
             </div>
 
@@ -256,12 +244,12 @@ class subscription extends data_object
     }
 
     /**
-     * Détermine si l'utilisateur courant est abonné à un objet, un enregistrement ou une action.
+     * DÃ©termine si l'utilisateur courant est abonnÃ© Ã  un objet, un enregistrement ou une action.
      *
      * @param int $id_object identifiant de l'objet
      * @param string $id_record identifiant de l'enregistrement
      * @param int $id_action identifiant de l'action
-     * @return boolean true si l'utilisateur est abonné
+     * @return boolean true si l'utilisateur est abonnÃ©
      */
 
     public static function subscribed($id_object, $id_record, $id_action = -1)
@@ -291,12 +279,12 @@ class subscription extends data_object
     }
 
     /**
-     * Renvoie un tableau des utilisateurs abonnés à une objet, un enregistrement et une liste d'action
+     * Renvoie un tableau des utilisateurs abonnÃ©s Ã  une objet, un enregistrement et une liste d'action
      *
      * @param int $id_object identifiant de l'objet
      * @param string $id_record identifiant de l'enregistrement
      * @param array $arrActionIds tableau d'identifiant d'actions
-     * @return array tableau d'utilisateurs abonnés
+     * @return array tableau d'utilisateurs abonnÃ©s
      */
 
     public static function getusers($id_object, $id_record, $arrActionIds = null)
@@ -361,8 +349,8 @@ class subscription extends data_object
 
                 ticket::send(
                     "Alerte abonnement : <i>{$objAction->fields['label']}</i> sur <b>{$object_title}</b> (module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']})",
-                    "Ceci est un message automatique déclenché par <em>{$_SESSION['ploopi']['user']['lastname']} {$_SESSION['ploopi']['user']['firstname']}</em> sur abonnement à l'action <em>{$objAction->fields['label']}</em> sur l'objet &laquo; <b>{$object_title}</b> &raquo; du module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']}.
-                    {$message}<br /><br />Vous pouvez accéder à cet objet en cliquant sur le lien ci-dessous.",
+                    "Ceci est un message automatique dÃ©clenchÃ© par <em>{$_SESSION['ploopi']['user']['lastname']} {$_SESSION['ploopi']['user']['firstname']}</em> sur abonnement Ã  l'action <em>{$objAction->fields['label']}</em> sur l'objet &laquo; <b>{$object_title}</b> &raquo; du module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']}.
+                    {$message}<br /><br />Vous pouvez accÃ©der Ã  cet objet en cliquant sur le lien ci-dessous.",
                     false,
                     0,
                     $id_object,

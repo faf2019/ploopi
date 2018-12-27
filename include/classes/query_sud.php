@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,8 +25,15 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Classe permettant de construire une requête SQL
+ * Gestion de requÃªtes SQL construites (class abstraite pour SELECT/UPDATE/DELETE)
+ *
+ * @package ploopi
+ * @subpackage ploopi_query
+ * @copyright Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Ovensia
  */
+
 abstract class query_sud extends query
 {
     /**
@@ -58,7 +65,7 @@ abstract class query_sud extends query
     private $strLimit;
 
     /**
-     * Différents types acceptés pour un élément
+     * DiffÃ©rents types acceptÃ©s pour un Ã©lÃ©ment
      *
      * @var array
      */
@@ -73,12 +80,12 @@ abstract class query_sud extends query
     /**
      * Constructeur de la classe
      *
-     * @param string $strType type de requête
-     * @param resource $objDb Connexion à la BDD
+     * @param string $strType type de requÃªte
+     * @param resource $objDb Connexion Ã  la BDD
      */
     public function __construct($strType = 'select', $objDb = null)
     {
-        if (!parent::__construct($objDb)) return false;
+        parent::__construct($objDb);
 
         $this->arrFrom = array();
         $this->arrWhere = array();
@@ -87,21 +94,19 @@ abstract class query_sud extends query
 
         if (!in_array($strType, self::$arrType))
         {
-            trigger_error('Ce type de requête n\'existe pas', E_USER_ERROR);
-            return false;
+            trigger_error('Ce type de requÃªte n\'existe pas', E_USER_ERROR);
         }
         else
         {
             $this->strType = $strType;
-            return true;
         }
     }
 
     /**
-     * Ajout d'une clause WHERE à la requête
-     * Si plusieurs clauses WHERE sont ajoutées, elles sont séparées par AND
+     * Ajout d'une clause WHERE Ã  la requÃªte
+     * Si plusieurs clauses WHERE sont ajoutÃ©es, elles sont sÃ©parÃ©es par AND
      *
-     * Format supportés :
+     * Format supportÃ©s :
      * %d int
      * %f float
      * %s string
@@ -110,7 +115,7 @@ abstract class query_sud extends query
      * %t string list
      * %r raw
      *
-     * Numérotation des arguments possible : %1$f, %2$d, %4$r
+     * NumÃ©rotation des arguments possible : %1$f, %2$d, %4$r
      *
      * @param string $strWhere Clause SQL brute
      * @param mixed $mixValues Valeurs
@@ -122,8 +127,8 @@ abstract class query_sud extends query
     }
 
     /**
-     * Ajoute une clause FROM à la requête (select/delete/update uniquement)
-     * Si plusieurs clauses FROM sont ajoutées, elles sont séparées par ","
+     * Ajoute une clause FROM Ã  la requÃªte (select/delete/update uniquement)
+     * Si plusieurs clauses FROM sont ajoutÃ©es, elles sont sÃ©parÃ©es par ","
      *
      * @param string $strFrom Clause FROM
      */
@@ -133,8 +138,8 @@ abstract class query_sud extends query
     }
 
     /**
-     * Ajoute une clause ORDER BY à la requête
-     * Si plusieurs clauses ORDER BY sont ajoutées, elles sont séparées par ","
+     * Ajoute une clause ORDER BY Ã  la requÃªte
+     * Si plusieurs clauses ORDER BY sont ajoutÃ©es, elles sont sÃ©parÃ©es par ","
      *
      * @param string $strOrderBy Clause ORDER BY
      */
@@ -144,7 +149,7 @@ abstract class query_sud extends query
     }
 
     /**
-     * Définit la clause LIMIT de la requête
+     * DÃ©finit la clause LIMIT de la requÃªte
      *
      * @param string $strLimit
      */

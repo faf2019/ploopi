@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,34 +25,22 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Gestion de la metabase.
+ * Gestion des actions de la metabase (table ploopi_mb_action)
  *
  * @package ploopi
  * @subpackage metabase
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
- */
-
-/**
- * Classe d'accès à la table ploopi_mb_action
- *
- * @package ploopi
- * @subpackage metabase
- * @copyright Ovensia
- * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 class mb_action extends data_object
 {
     /**
      * Constructeur de la classe
-     *
-     * @return mb_action
      */
 
-    function __construct()
+    public function __construct()
     {
         parent::__construct('ploopi_mb_action','id_module_type','id_action');
     }
@@ -63,7 +51,7 @@ class mb_action extends data_object
      * @return int identifiant de l'action
      */
 
-    function save()
+    public function save()
     {
         $db = db::get();
 
@@ -73,19 +61,18 @@ class mb_action extends data_object
             $resfields=$db->fetchrow($answer);
             $this->fields['id_action']=$resfields['maxi']+1;
         }
-        return(parent::save());
+
+        return parent::save();
     }
 
     /**
      * Supprime l'action
      *
-     * @param boolean $preserve_data false si la suppression doit se faire en cascade (rôles associés). Par défaut : false.
+     * @param boolean $preserve_data false si la suppression doit se faire en cascade (rÃ´les associÃ©s). Par dÃ©faut : false.
      */
 
-    function delete($preserve_data = false)
+    public function delete($preserve_data = false)
     {
-        include_once './include/classes/role.php';
-
         $db = db::get();
 
         if ($this->fields['id_action']!=-1 && !$preserve_data)
@@ -105,6 +92,7 @@ class mb_action extends data_object
                 $role_action->delete();
             }
         }
+
         parent::delete();
     }
 }

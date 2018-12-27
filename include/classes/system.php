@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -31,7 +31,7 @@ use ploopi;
  * @subpackage system
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 abstract class system
@@ -39,28 +39,17 @@ abstract class system
 
     /**
      * Affiche un message et termine le script courant.
-     * Peut envoyer un mail contenant les erreurs rencontrées durant l'exécution du script.
+     * Peut envoyer un mail contenant les erreurs rencontrÃ©es durant l'exÃ©cution du script.
      * Peut vider le buffer en cours.
      * Ferme la session en cours.
-     * Ferme la connexion à la base de données (si ouverte).
+     * Ferme la connexion Ã  la base de donnÃ©es (si ouverte).
      *
-     * @param mixed $var variable à afficher
-     * @param boolean $flush true si la sortie doit être vidée (true par défaut)
-     *
-     * @copyright Ovensia
-     * @license GNU General Public License (GPL)
-     * @author Stéphane Escaich
-     *
-     * @see die
-     * @see output::print_r
+     * @param mixed $var variable Ã  afficher
+     * @param boolean $flush true si la sortie doit Ãªtre vidÃ©e (true par dÃ©faut)
      */
 
     public static function kill($var = null, $flush = true)
     {
-        $db = db::get();
-
-        global $ploopi_timer;
-
         $strHost = (php_sapi_name() != 'cli') ? $_SERVER['HTTP_HOST'] : '';
 
         if (!empty(error::$level) && error::$level)
@@ -100,6 +89,8 @@ abstract class system
 
     /**
      * Retourne le nombre de coeurs du serveur apache
+     *
+     * @return integer Nombre de coeurs
      */
 
     public static function getnbcore() {
@@ -108,8 +99,14 @@ abstract class system
 
 
     /**
-     * Exécute une commande
-     * Crédit : http://stackoverflow.com/questions/2320608/php-stderr-after-exec/25879953#25879953
+     * ExÃ©cute une commande systÃ¨me
+     * CrÃ©dit : http://stackoverflow.com/questions/2320608/php-stderr-after-exec/25879953#25879953
+     *
+     * @param string $cmd commande systÃ¨me Ã  exÃ©cuter
+     * @param string $stdout sortie stdout
+     * @param string $stderr sortie stderr
+     *
+     * @return integer code de sortie du processus, -1 en cas d'Ã©chec
      */
 
     public static function exec($cmd, &$stdout=null, &$stderr=null) {
@@ -126,10 +123,10 @@ abstract class system
     }
 
     /**
-     * Déconnecte l'utilisateur, nettoie la session, initialise le code d'erreur
+     * DÃ©connecte l'utilisateur, nettoie la session, initialise le code d'erreur
      *
      * @param int $intErrorCode code d'erreur
-     * @param int $intSleep durée d'attente avant la redirection en seconde
+     * @param int $intSleep durÃ©e d'attente avant la redirection en seconde
      */
     public static function logout($intErrorCode = 0, $intSleep = 1, $booRedirect = true, $arrSession = array())
     {
@@ -139,16 +136,16 @@ abstract class system
         $objConnectedUser = new connecteduser();
         if ($objConnectedUser->open(session_id())) $objConnectedUser->delete();
 
-        // Suppression des données de la session active
+        // Suppression des donnÃ©es de la session active
         // Ecriture (suppression effective)
-        // Regénération d'un ID
+        // RegÃ©nÃ©ration d'un ID
         // Nouvelle session
         session::reset();
         //session_regenerate_id(true);
         session_write_close();
         session_start();
 
-        // Mise à jour de la session post logout
+        // Mise Ã  jour de la session post logout
         $_SESSION['ploopi']['errorcode'] = $intErrorCode;
         $_SESSION['ploopi'] = array_merge($_SESSION['ploopi'], $arrSession);
 
@@ -170,7 +167,7 @@ abstract class system
     /**
      * Renvoie un tableau des templates disponibles (frontoffice ou backoffice)
      *
-     * @param string $type au choix entre 'frontoffice' et 'backoffice', par défaut 'frontoffice'
+     * @param string $type au choix entre 'frontoffice' et 'backoffice', par dÃ©faut 'frontoffice'
      * @return array tableau des templates disponibles
      */
 
@@ -197,10 +194,10 @@ abstract class system
         return($templates);
     }
     /**
-     * Retourne la liste des espaces affectés par la vue du module (ascendante/descendante/globale/privée/transversale)
+     * Retourne la liste des espaces affectÃ©s par la vue du module (ascendante/descendante/globale/privÃ©e/transversale)
      *
      * @param int $moduleid identifiant du module
-     * @return string chaine contenant la liste des espaces séparés par une virgule
+     * @return string chaine contenant la liste des espaces sÃ©parÃ©s par une virgule
      */
 
     public static function viewworkspaces($moduleid = -1)
@@ -281,10 +278,10 @@ abstract class system
     }
 
     /**
-     * Retourne la liste des espaces inversement affectés par la vue du module (ascendante/descendante/globale/privée/transversale)
+     * Retourne la liste des espaces inversement affectÃ©s par la vue du module (ascendante/descendante/globale/privÃ©e/transversale)
      *
      * @param int $moduleid identifiant du module
-     * @return string chaine contenant la liste des espaces séparés par une virgule
+     * @return string chaine contenant la liste des espaces sÃ©parÃ©s par une virgule
      */
 
     public static function viewworkspaces_inv($moduleid = -1)

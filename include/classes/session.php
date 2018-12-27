@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,81 +25,165 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Gestionnaire de sessions avec une base de données
+ * Gestionnaire de sessions.
+ * Remplace le gestionnaire de session par dÃ©faut.
  *
  * @package ploopi
  * @subpackage session
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
- */
-
-/**
- * Classe permettant de remplacer le gestionnaire de session par défaut.
- * Les sessions sont stockées dans la base de données.
- *
- * @package ploopi
- * @subpackage session
- * @copyright Ovensia
- * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 class session
 {
+    /**
+     * Compression active
+     *
+     * @var boolean
+     */
     private static $booCompress = true;
 
+    /**
+     * Gestion via base de donnÃ©es
+     *
+     * @var boolean
+     */
     private static $booUseDb = null;
 
+    /**
+     * Gestion via Memcached
+     *
+     * @var boolean
+     */
     private static $booUseMc = null;
 
+    /**
+     * Objet db
+     *
+     * @var db
+     */
     private static $objDb = null;
 
+    /**
+     * Objet Memcached
+     *
+     * @var \Memcached
+     */
     private static $objMc = null;
 
+    /**
+     * Lock fichier
+     *
+     * @var resource
+     */
     private static $fpLock = null;
 
-    /**
-     * Tableau contenant les variables serialisées
-     */
-    private static $arrSv = null;
 
+    /**
+     * Retourne le chemin de stockage des fichiers
+     *
+     * @return string chemin
+     */
     private static function get_basepath() { return _PLOOPI_PATHDATA.'/session'; }
 
+    /**
+     * Retourne le chemin et le nom du fichier de la session
+     *
+     * @return string chemin et nom du fichier de la session
+     */
     public static function get_path() { return self::get_basepath().'/'.self::get_id(); }
 
+    /**
+     * Compresse les donnÃ©es
+     *
+     * @param string $data donnÃ©es
+     *
+     * @return string donnÃ©es compressÃ©es
+     */
     private static function compress($data) { return self::$booCompress ? @gzcompress($data, defined('_PLOOPI_SESSION_COMPRESSION') ? _PLOOPI_SESSION_COMPRESSION : -1) : $data; }
 
+    /**
+     * DÃ©compresse les donnÃ©es
+     *
+     * @param string $data donnÃ©es compressÃ©es
+     *
+     * @return donnÃ©es dÃ©compressÃ©es
+     */
     private static function uncompress($data) { return self::$booCompress && $data != '' ? @gzuncompress($data) : $data; }
 
+    /**
+     * Indique au gestionnaire d'utiliser Memcached
+     *
+     * @param boolean $booUseMc true pour utiliser Memcached
+     */
     public static function set_usemc($booUseMc) { self::$booUseMc = $booUseMc; }
 
+    /**
+     * Indique si le gestionnaire utilise Memcached
+     *
+     * @return boolean true si Memcached
+     */
     public static function get_usemc() {
         if (is_null(self::$booUseMc)) self::_initdb();
         return self::$booUseMc;
     }
 
+    /**
+     * Retourne le connecteur Memcached
+     *
+     * @return \Memcached connecteur Memcached utilisÃ©
+     */
     public static function get_mc() {
         if (is_null(self::$booUseMc)) self::_initdb();
         return self::$objMc;
     }
 
+    /**
+     * Indique au gestionnaire d'utiliser db
+     *
+     * @param boolean $booUseDb true pour utiliser db
+     */
     public static function set_usedb($booUseDb) { self::$booUseDb = $booUseDb; }
 
+    /**
+     * Indique si le gestionnaire utilise db
+     *
+     * @return boolean true si db
+     */
     public static function get_usedb() {
         if (is_null(self::$booUseDb)) self::_initdb();
         return self::$booUseDb;
     }
 
+    /**
+     * Fournit le connecteur db
+     *
+     * @param db $objDb connecteur db Ã  utiliser
+     */
+
     public static function set_db($objDb) { self::$objDb = $objDb; }
 
+    /**
+     * Retourne le connecteur db
+     *
+     * @return db connecteur db utilisÃ©
+     */
     public static function get_db() {
         if (is_null(self::$booUseDb)) self::_initdb();
         return self::$objDb;
     }
 
+    /**
+     * Retourne l'identifiant de session
+     *
+     * @return string identifiant de session
+     */
     public static function get_id() { return session_id(); }
 
+    /**
+     * Initialise le connecteur
+     */
     private static function _initdb()
     {
         switch(_PLOOPI_SESSION_HANDLER) {
@@ -125,6 +209,12 @@ class session
         }
     }
 
+
+    /**
+     * Ouvre le gestionnaire de session
+     *
+     * @return boolean true
+     */
     public static function open()
     {
         ini_set('session.gc_probability', 10);
@@ -135,15 +225,19 @@ class session
         return true;
     }
 
+    /**
+     * Ferme le gestionnaire de session
+     *
+     * @return boolean true
+     */
     public static function close() { return true; }
 
     /**
-     * Chargement de la session depuis la base de données.
-     * Utilisé par le gestionnaire de session de Ploopi.
+     * Lecture de la session
      *
      * @param string $id identifiant de la session
+     * @return array contenu de la session
      */
-
     public static function read($id)
     {
         if (self::$booUseDb)
@@ -167,11 +261,12 @@ class session
     }
 
     /**
-     * Ecriture de la session dans la base de données.
-     * Utilisé par le gestionnaire de session de Ploopi.
+     * Ecriture de la session
      *
      * @param string $id identifiant de la session
-     * @param string $data données de la session
+     * @param string $data donnÃ©es de la session
+     *
+     * @return boolean true
      */
 
     public static function write($id, $data)
@@ -198,10 +293,11 @@ class session
     }
 
     /**
-     * Suppression de la session dans la base de données.
-     * Utilisé par le gestionnaire de session de Ploopi.
+     * Suppression de la session
      *
      * @param string $id identifiant de la session
+     *
+     * @return boolean true
      */
 
     public static function destroy($id)
@@ -224,10 +320,11 @@ class session
     }
 
     /**
-     * Suppression des sessions périmées (Garbage collector).
-     * Utilisé par le gestionnaire de session de Ploopi.
+     * Suppression des sessions pÃ©rimÃ©es (Garbage collector)
      *
-     * @param int $max durée d'une session en secondes
+     * @param int $max durÃ©e d'une session en secondes
+     *
+     * @return boolean true
      */
 
     public static function gc($max)
@@ -266,15 +363,15 @@ class session
 
 
     /**
-     * Réinitialise la session
+     * RÃ©initialise la session
      */
 
     public static function reset()
     {
         $ua_info = parse_user_agent();
 
-        // Suppression des données de la session active
-        // Regénération d'un ID
+        // Suppression des donnÃ©es de la session active
+        // RegÃ©nÃ©ration d'un ID
         session_regenerate_id(true);
 
         $_SESSION = array('ploopi' => array(
@@ -352,16 +449,14 @@ class session
     }
 
     /**
-     * Met à jour les données et vérifie la validité de la session
+     * Met Ã  jour les donnÃ©es et vÃ©rifie la validitÃ© de la session
      */
 
     public static function update()
     {
-        global $session;
-
         $scriptname = basename($_SERVER['PHP_SELF']);
 
-        if (!isset($_SESSION['ploopi']['fingerprint']) || $_SESSION['ploopi']['fingerprint'] != _PLOOPI_FINGERPRINT) // problème d'empreinte, session invalide
+        if (!isset($_SESSION['ploopi']['fingerprint']) || $_SESSION['ploopi']['fingerprint'] != _PLOOPI_FINGERPRINT) // problÃ¨me d'empreinte, session invalide
         {
             error::syslog(LOG_INFO, 'Empreinte invalide');
             system::logout(_PLOOPI_ERROR_SESSIONINVALID);
@@ -372,13 +467,13 @@ class session
 
         $diff = $_SESSION['ploopi']['currentrequesttime'] - $_SESSION['ploopi']['lastrequesttime'];
 
-        // Si la durée de sessoin est expirée et que l'on est connecté, on vide la session et on retourne à la page de login
+        // Si la durÃ©e de sessoin est expirÃ©e et que l'on est connectÃ©, on vide la session et on retourne Ã  la page de login
         if ($diff > _PLOOPI_SESSIONTIME && _PLOOPI_SESSIONTIME != '' && _PLOOPI_SESSIONTIME != 0 && !empty($_SESSION['ploopi']['connected']))
         {
-            error::syslog(LOG_INFO, 'Session expirée');
+            error::syslog(LOG_INFO, 'Session expirÃ©e');
             system::logout(_PLOOPI_ERROR_SESSIONEXPIRE);
         }
-        else // Sinon on met simplement à jour la date/heure de la dernière requête + IP
+        else // Sinon on met simplement Ã  jour la date/heure de la derniÃ¨re requÃªte + IP
         {
             $_SESSION['ploopi']['lastrequesttime'] = $_SESSION['ploopi']['currentrequesttime'];
             $_SESSION['ploopi']['remote_ip'] = ip::get();
@@ -390,10 +485,11 @@ class session
 
 
     /**
-     * Vérifie si un drapeau a été posé et met à jour le drapeau
+     * VÃ©rifie si un drapeau a Ã©tÃ© posÃ© et met Ã  jour le drapeau
      *
      * @param string $var type de drapeau
-     * @param string $value valeur à tester
+     * @param string $value valeur Ã  tester
+     *
      * @return bool
      */
 
@@ -404,20 +500,22 @@ class session
         if (!isset($_SESSION['flags'][$var][$value]))
         {
             $_SESSION['flags'][$var][$value] = 1;
-            return(true);
+            return true;
         }
-        else return(false);
+        else return false;
     }
 
 
     /**
      * Lit une variable de module en session
      *
-     * @param string $strVarName nom de la variable à lire
-     * @param int $intModuleId identifiant du module (optionnel, le module courant si non défini)
-     * @param integer $intWorkspaceId Identifiant de l'espace de travail (optionnel, l'espace courant si non défini)
+     * @param string $strVarName nom de la variable Ã  lire
+     * @param int $intModuleId identifiant du module (optionnel, le module courant si non dÃ©fini)
+     * @param integer $intWorkspaceId Identifiant de l'espace de travail (optionnel, l'espace courant si non dÃ©fini)
+     *
      * @return mixed valeur de la variable
      */
+
     public static function getvar($strVarName, $intModuleId = null, $intWorkspaceId = null)
     {
         if (is_null($intModuleId)) $intModuleId = $_SESSION['ploopi']['moduleid'];
@@ -438,8 +536,8 @@ class session
      *
      * @param string $strVarName nom de la variable
      * @param mixed $mixVar contenu de la variable
-     * @param integer $intModuleId Identifiant du module (optionnel, le module courant si non défini)
-     * @param integer $intWorkspaceId Identifiant de l'espace de travail (optionnel, l'espace courant si non défini)
+     * @param integer $intModuleId Identifiant du module (optionnel, le module courant si non dÃ©fini)
+     * @param integer $intWorkspaceId Identifiant de l'espace de travail (optionnel, l'espace courant si non dÃ©fini)
      */
     public static function setvar($strVarName, $mixVar = null, $intModuleId = null, $intWorkspaceId = null)
     {
@@ -454,23 +552,3 @@ class session
         }
     }
 }
-/*
-
-
-
-    $allSlabs = $memcache->getExtendedStats('slabs');
-    foreach($allSlabs as $server => $slabs) {
-        foreach($slabs AS $slabId => $slabMeta) {
-           if (!is_numeric($slabId)) {
-                continue;
-           }
-           $cdump = $memcache->getExtendedStats('cachedump',(int)$slabId);
-            foreach($cdump AS $keys => $arrVal) {
-                if (!is_array($arrVal)) continue;
-                foreach($arrVal AS $k => $v) {
-                    echo $k .' - '.date('H:i d.m.Y',$v[1]).'<br />';
-                }
-           }
-        }
-    }
-*/

@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,34 +25,29 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Gestion de l'affichage des modules.
+ * Gestion de l'affichage d'Ã©lÃ©ments d'interface
+ * Regroupe des mÃ©thodes gÃ©nÃ©riques pour afficher blocs, menus, onglets, barres d'outils, popups, etc...
  *
  * @package ploopi
  * @subpackage skin
  * @copyright Ovensia, HeXad
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
- */
-
-/**
- * Regroupe des méthodes génériques pour afficher bloc, menus, onglets, barre d'outils, popups, etc...
- *
- * @package ploopi
- * @subpackage skin
- * @copyright Ovensia, HeXad
- * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 class skin
 {
+    /**
+     * Singleton
+     *
+     * @var skin
+     */
     private static $_skin = null;
 
     /**
-     * Constructeur de la classe skin_common
+     * Constructeur
      *
      * @param string $skin nom du skin (nom du dossier)
-     * @return skin_common
      */
 
     public function __construct($skin)
@@ -64,7 +59,9 @@ class skin
     }
 
     /**
-     * Accès au skin + init (singleton)
+     * AccÃ¨s au skin et initialisation du singleton
+     *
+     * @return skin singleton skin
      */
     public static function get() {
         if (is_null(self::$_skin)) {
@@ -84,13 +81,13 @@ class skin
     }
 
     /**
-     * Créé un haut de bloc
+     * CrÃ©Ã© un haut de bloc
      *
      * @param string $title titre du bloc
      * @param string $style styles optionnels du bloc
      * @param string $styletitle styles optionnels du titre
      * @param srting $additionnal_title titre additionnel
-     * @return string code html de l'entête du bloc
+     * @return string code html de l'entÃªte du bloc
      */
 
     public function open_simplebloc($title = '', $style = '', $styletitle = '', $additionnal_title = '')
@@ -106,7 +103,7 @@ class skin
     }
 
     /**
-     * Créé un bas de bloc (ferme le dernier bloc ouvert)
+     * CrÃ©Ã© un bas de bloc (ferme le dernier bloc ouvert)
      *
      * @return string code html du pied du bloc
      */
@@ -117,7 +114,7 @@ class skin
     }
 
     /**
-     * Crée un titre de page
+     * CrÃ©e un titre de page
      *
      * @param string $title titre de la page
      * @param string $style styles optionnels
@@ -133,12 +130,12 @@ class skin
     }
 
     /**
-     * Crée une barre d'outils (icones)
+     * CrÃ©e une barre d'outils (icones)
      *
-     * @param array $icons tableau associatif d'icones (propriétés : title, url, icon, width, confirm, javascript)
-     * @param string $iconsel clé de l'icone sélectionnée (par référence), sélectionne par défaut la première icone
-     * @param boolean $sel true si la sélection est gérée, par défaut tru
-     * @param boolean $vertical true si l'affichage est vertical, par défaut false
+     * @param array $icons tableau associatif d'icones (propriÃ©tÃ©s : title, url, icon, width, confirm, javascript)
+     * @param string $iconsel clÃ© de l'icone sÃ©lectionnÃ©e (par rÃ©fÃ©rence), sÃ©lectionne par dÃ©faut la premiÃ¨re icone
+     * @param boolean $sel true si la sÃ©lection est gÃ©rÃ©e, par dÃ©faut tru
+     * @param boolean $vertical true si l'affichage est vertical, par dÃ©faut false
      * @return string code html de la barre d'outils
      */
 
@@ -194,11 +191,11 @@ class skin
     }
 
     /**
-     * Crée une icone pour la barre d'outils
+     * CrÃ©e une icone pour la barre d'outils
      *
-     * @param array $icon icone à afficher (propriétés : title, url, icon, width, confirm, javascript)
-     * @param boolean $sel true si l'icone est sélectionnée
-     * @param string $key clé (propriété id) de l'icone
+     * @param array $icon icone Ã  afficher (propriÃ©tÃ©s : title, url, icon, width, confirm, javascript)
+     * @param boolean $sel true si l'icone est sÃ©lectionnÃ©e
+     * @param string $key clÃ© (propriÃ©tÃ© id) de l'icone
      * @param boolean $vertical true si l'affichage est vertical
      * @return string code html de l'icone
      */
@@ -212,7 +209,7 @@ class skin
         $strHrefTitle = str::htmlentities(strip_tags($title));
 
         if (!empty($icon['javascript'])) $onclick = $icon['javascript'];
-        elseif ($confirm) $onclick = "ploopi_confirmlink('".crypt::urlencode($icon['url'])."','{$icon['confirm']}')";
+        elseif ($confirm) $onclick = "ploopi.confirmlink('".crypt::urlencode($icon['url'])."','{$icon['confirm']}')";
         else $onclick = "document.location.href='".crypt::urlencode($icon['url'])."'";
 
         if (isset($icon['icon']))
@@ -229,7 +226,7 @@ class skin
 
         $res = "
             <div class=\"{$class}\" id=\"{$key}\" {$style}>
-                <a href=\"javascript:void(0);\" onclick=\"javascript:{$onclick};return false;\" title=\"Accéder à &laquo; {$strHrefTitle} &raquo;\">
+                <a href=\"javascript:void(0);\" onclick=\"javascript:{$onclick};return false;\" title=\"AccÃ©der Ã  &laquo; {$strHrefTitle} &raquo;\">
                     <div class=\"toolbar_icon_image\">$image</div>
                     <p>$title</p>
                 </a>
@@ -240,10 +237,10 @@ class skin
     }
 
     /**
-     * Crée une barre d'onglets
+     * CrÃ©e une barre d'onglets
      *
-     * @param array $tabs tableau associatif d'onglets (propriétés : title, url, width)
-     * @param string $tabsel clé de l'onglet sélectionné (par référence), sélectionne par défaut le premier onglet
+     * @param array $tabs tableau associatif d'onglets (propriÃ©tÃ©s : title, url, width)
+     * @param string $tabsel clÃ© de l'onglet sÃ©lectionnÃ© (par rÃ©fÃ©rence), sÃ©lectionne par dÃ©faut le premier onglet
      * @return string code html de la barre d'onglets
      */
 
@@ -266,10 +263,10 @@ class skin
     }
 
     /**
-     * Crée un onglet
+     * CrÃ©e un onglet
      *
-     * @param array $tab onglet (propriétés : title, url, width)
-     * @param boolean $sel true si l'onglet est sélectionné
+     * @param array $tab onglet (propriÃ©tÃ©s : title, url, width)
+     * @param boolean $sel true si l'onglet est sÃ©lectionnÃ©
      * @return string code html de l'onglet
      */
 
@@ -280,17 +277,17 @@ class skin
 
         $strHrefTitle = str::htmlentities(strip_tags($tab['title']));
 
-        if ($sel) $res = "<a href=\"".crypt::urlencode($tab['url'])."\" title=\"Accéder à l'onglet &laquo; {$strHrefTitle} &raquo;\"  class=\"selected\" {$style}>{$tab['title']}</a>";
-        else  $res = "<a href=\"".crypt::urlencode($tab['url'])."\" title=\"Accéder à l'onglet &laquo; {$strHrefTitle} &raquo;\"  {$style}>{$tab['title']}</a>";
+        if ($sel) $res = "<a href=\"".crypt::urlencode($tab['url'])."\" title=\"AccÃ©der Ã  l'onglet &laquo; {$strHrefTitle} &raquo;\"  class=\"selected\" {$style}>{$tab['title']}</a>";
+        else  $res = "<a href=\"".crypt::urlencode($tab['url'])."\" title=\"AccÃ©der Ã  l'onglet &laquo; {$strHrefTitle} &raquo;\"  {$style}>{$tab['title']}</a>";
         return $res;
     }
 
     /**
-     * Crée un faux popup (div)
+     * CrÃ©e un faux popup (div)
      *
      * @param string $title titre du popup
      * @param string $content contenu du popup (html)
-     * @param string $popupid id du popup (propriété html id)
+     * @param string $popupid id du popup (propriÃ©tÃ© html id)
      * @return string code html du popup
      */
 
@@ -303,16 +300,16 @@ class skin
                     <a name="anchor_'.$popupid.'"></a>
                     <div class="simplebloc_title">
                         <div class="simplebloc_titleleft">
-                            <img alt="Fermer" title="Fermer le popup" id="close_'.$popupid.'" onclick="javascript:ploopi_hidepopup(\''.$popupid.'\');" style="display:block;float:right;margin:2px;cursor:pointer;" src="'.$this->values['path'].'/template/close_popup.png">
-                            <div style="overflow:auto;cursor:move;" id="handle_'.$popupid.'">'.$title.'</div>
+                            <img alt="Fermer" title="Fermer le popup" id="close_'.$popupid.'" onclick="javascript:ploopi.popup.hide(\''.$popupid.'\');" style="display:block;float:right;margin:2px;cursor:pointer;" src="'.$this->values['path'].'/template/close_popup.png">
+                            <div style="overflow:auto;cursor:move;" class="handle_'.$popupid.'">'.$title.'</div>
                         </div>
                     </div>
                     <div class="simplebloc_content">'.$content.'</div>
-                    <div class="simplebloc_footer" style="cursor:move;" id="handlebottom_'.$popupid.'"></div>
+                    <div class="simplebloc_footer handle_'.$popupid.'" style="cursor:move;"></div>
                 </div>
                 <script type="text/javascript">
-                new Draggable(\''.$popupid.'\', { zindex:99999, handle: \'handle_'.$popupid.'\'});
-                new Draggable(\''.$popupid.'\', { zindex:99999, handle: \'handlebottom_'.$popupid.'\'});
+                console.log($(\'#'.$popupid.'\'));
+                $(\'#'.$popupid.'\').draggable({ zindex: 99999, handle: \'.handle_'.$popupid.'\'});
                 '.$strOptionAnchor.'
                 </script>
                 ';
@@ -322,11 +319,11 @@ class skin
 
 
     /**
-     * Crée un faux popup et l'ouvre via javascript
+     * CrÃ©e un faux popup et l'ouvre via javascript
      *
      * @param string $title titre du popup
      * @param string $content contenu du popup (html)
-     * @param string $popupid id du popup (propriété html id)
+     * @param string $popupid id du popup (propriÃ©tÃ© html id)
      * @return string code html du popup
      */
 
@@ -346,7 +343,7 @@ class skin
 
         $strOptionAnchor = ($_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_focus_popup']) ? "document.location.href = '#anchor_{$popupid}';" : '';
 
-        $strClosable = $arrOptions['booClosable'] ? '<img alt="Fermer" title="Fermer le popup" id="close_'.$popupid.'" onclick="javascript:ploopi_hidepopup(\''.$popupid.'\');" style="display:block;float:right;margin:2px;cursor:pointer;" src="'.$this->values['path'].'/template/close_popup.png">' : '';
+        $strClosable = $arrOptions['booClosable'] ? '<img alt="Fermer" title="Fermer le popup" id="close_'.$popupid.'" onclick="javascript:ploopi.popup.hide(\''.$popupid.'\');" style="display:block;float:right;margin:2px;cursor:pointer;" src="'.$this->values['path'].'/template/close_popup.png">' : '';
 
         $res =  '
                 <div id="'.$popupid.'" style="display:none;">
@@ -379,16 +376,16 @@ class skin
     }
 
     /**
-     * Affiche un tableau avancé
+     * Affiche un tableau avancÃ©
      *
-     * @param array $arrColumns définition des colonnes
+     * @param array $arrColumns dÃ©finition des colonnes
      * @param array $arrValues contenu du tableau
      * @param string $strArrayId identifiant du tableau
      * @param array $arrOptions options d'affichage
      *
-     * propriétés des colonnes : label, width, styles, options
-     * propriétés des valeurs : label, style, sort_label
-     * propriétés des options : height, sortable, orderby_default, sort_default
+     * propriÃ©tÃ©s des colonnes : label, width, styles, options
+     * propriÃ©tÃ©s des valeurs : label, style, sort_label
+     * propriÃ©tÃ©s des options : height, sortable, orderby_default, sort_default
      *
      * <code>
      * <?php
@@ -441,7 +438,7 @@ class skin
                 {
                     if (!empty($c['options']['sort']))
                     {
-                        $array['columns']['left'][$id]['onclick'] = "ploopi_skin_array_refresh('{$strArrayId}', '{$id}', '', '{$array['options']['callback']}');";
+                        $array['columns']['left'][$id]['onclick'] = "ploopi.skin.array_refresh('{$strArrayId}', '{$id}', '', '{$array['options']['callback']}');";
                         $array['sortable_columns'][] = $id;
                     }
                 }
@@ -453,7 +450,7 @@ class skin
                 {
                     if (!empty($c['options']['sort']))
                     {
-                        $array['columns']['auto'][$id]['onclick'] = "ploopi_skin_array_refresh('{$strArrayId}', '{$id}', '', '{$array['options']['callback']}');";
+                        $array['columns']['auto'][$id]['onclick'] = "ploopi.skin.array_refresh('{$strArrayId}', '{$id}', '', '{$array['options']['callback']}');";
                         $array['sortable_columns'][] = $id;
                     }
                 }
@@ -465,7 +462,7 @@ class skin
                 {
                     if (!empty($c['options']['sort']))
                     {
-                        $array['columns']['right'][$id]['onclick'] = "ploopi_skin_array_refresh('{$strArrayId}', '{$id}', '', '{$array['options']['callback']}');";
+                        $array['columns']['right'][$id]['onclick'] = "ploopi.skin.array_refresh('{$strArrayId}', '{$id}', '', '{$array['options']['callback']}');";
                         $array['sortable_columns'][] = $id;
                     }
                 }
@@ -477,7 +474,7 @@ class skin
                 {
                     if (!empty($c['options']['sort']))
                     {
-                        $array['columns']['actions_right'][$id]['onclick'] = "ploopi_skin_array_refresh('{$strArrayId}', '{$id}', '', '{$array['options']['callback']}');";
+                        $array['columns']['actions_right'][$id]['onclick'] = "ploopi.skin.array_refresh('{$strArrayId}', '{$id}', '', '{$array['options']['callback']}');";
                         $array['sortable_columns'][] = $id;
                     }
                 }
@@ -489,7 +486,7 @@ class skin
                 {
                     if (!empty($c['options']['sort']))
                     {
-                        $array['columns']['actions_right'][$id]['onclick'] = "ploopi_skin_array_refresh('{$strArrayId}', '{$id}', '', '{$array['options']['callback']}');";
+                        $array['columns']['actions_right'][$id]['onclick'] = "ploopi.skin.array_refresh('{$strArrayId}', '{$id}', '', '{$array['options']['callback']}');";
                         $array['sortable_columns'][] = $id;
                     }
                 }
@@ -510,11 +507,11 @@ class skin
 
     private function array_page($strArrayId, $intPage, $strPage, $intSel = 0, $callback = '')
     {
-        return $intSel == $intPage ? str_replace('{p}', $strPage, '<strong>{p}</strong>') : str_replace(array('{p}', '{id}'), array($strPage, $intPage), '<a href="javascript:void(0);" onclick="javascript:ploopi_skin_array_refresh(\''.$strArrayId.'\', \'\', \'{id}\', \''.$callback.'\');">{p}</a>');
+        return $intSel == $intPage ? str_replace('{p}', $strPage, '<strong>{p}</strong>') : str_replace(array('{p}', '{id}'), array($strPage, $intPage), '<a href="javascript:void(0);" onclick="javascript:ploopi.skin.array_refresh(\''.$strArrayId.'\', \'\', \'{id}\', \''.$callback.'\');">{p}</a>');
     }
 
     /**
-     * Rafraichit l'affichage d'un tableau avancé
+     * Rafraichit l'affichage d'un tableau avancÃ©
      *
      * @param string $strArrayId id du tableau
      * @param string $orderby colonne de tri
@@ -522,9 +519,7 @@ class skin
 
     public function display_array_refresh($strArrayId, $strOrderBy = null, $intIdPage = null)
     {
-        // On récupère le tableau stocké en session (identifié par array_id)
-        include_once './include/classes/serializedvar.php';
-
+        // On rÃ©cupÃ¨re le tableau stockÃ© en session (identifiÃ© par array_id)
         $objSV = new serializedvar($strArrayId);
         $array = $objSV->read();
 
@@ -534,18 +529,18 @@ class skin
         $sort_img = '';
         $sortable_img = "<img src=\"{$this->values['path']}/arrays/arrows.png\" style=\"opacity:0.5\" />";
 
-        // index temporaire (pour tri à l'affichage)
+        // index temporaire (pour tri Ã  l'affichage)
         $array['index'] = array();
 
         // si le tableau est "triable" (option)
         if (!empty($array['options']['sortable']) && $array['options']['sortable'])
         {
-            // initialisation  du tri par défaut pour le tableau courant
+            // initialisation  du tri par dÃ©faut pour le tableau courant
             if (empty($array['orderby']))
             {
                 if (!empty($_SESSION['ploopi']['arrays'][$strArrayId]))
                 {
-                    // On crée une liste applatie des colonnes pour vérifier l'existence de la colonne de tri
+                    // On crÃ©e une liste applatie des colonnes pour vÃ©rifier l'existence de la colonne de tri
                     $columns = array();
                     if (!empty($array['columns']['auto'])) $columns += $array['columns']['auto'];
                     if (!empty($array['columns']['right'])) $columns += $array['columns']['right'];
@@ -572,14 +567,14 @@ class skin
                 if (!empty($array['options']['sort_default'])) $array['sort'] = $array['options']['sort_default'];
                 else $array['sort'] = 'ASC';
             }
-            // on réinitialise l'ordre de tri si l'ordreby est différent du précédent
+            // on rÃ©initialise l'ordre de tri si l'ordreby est diffÃ©rent du prÃ©cÃ©dent
             if (!empty($strOrderBy))
             {
                 if ($strOrderBy != $array['orderby']) $array['sort'] = 'ASC';
                 else $array['sort'] = ($array['sort'] == 'ASC') ? 'DESC' : 'ASC';
             }
 
-            // récupération de la valeur de l'orderby en session ou en parametre (par défaut en paramètre)
+            // rÃ©cupÃ©ration de la valeur de l'orderby en session ou en parametre (par dÃ©faut en paramÃ¨tre)
             $array['orderby'] = (empty($strOrderBy)) ? $array['orderby'] : $strOrderBy;
 
             $c = 0;
@@ -620,25 +615,25 @@ class skin
 
             $arrPages = array();
 
-            // Fleche page précédente
+            // Fleche page prÃ©cÃ©dente
             if ($array['options']['page'] > 1) $arrPages[] = $this->array_page($strArrayId, $array['options']['page']-1, '&laquo;', 0, $array['options']['callback']);
 
             // On affiche toujours la premiere page
             $arrPages[] = $this->array_page($strArrayId, 1, 1, $array['options']['page'], $array['options']['callback']);
 
-            // Affichage "..." après première page
+            // Affichage "..." aprÃ¨s premiÃ¨re page
             if ($array['options']['page'] > 4) $arrPages[] = '...';
 
-            // Boucle sur les pages autour de la page sélectionnée (-2 à +2 si existe)
+            // Boucle sur les pages autour de la page sÃ©lectionnÃ©e (-2 Ã  +2 si existe)
             for ($i = $array['options']['page'] - 2; $i <= $array['options']['page'] + 2; $i++)
             {
                 if ($i>1 && $i<$intNbPages) $arrPages[] = $this->array_page($strArrayId, $i, $i, $array['options']['page'], $array['options']['callback']);
             }
 
-            // Affichage "..." avant dernière page
+            // Affichage "..." avant derniÃ¨re page
             if ($array['options']['page'] < $intNbPages - 3) $arrPages[] = '...';
 
-            // Dernière page
+            // DerniÃ¨re page
             if ($intNbPages>1) $arrPages[] = $this->array_page($strArrayId, $intNbPages, $intNbPages, $array['options']['page'], $array['options']['callback']);
 
             // Fleche page suivante
@@ -655,7 +650,7 @@ class skin
         $i = 0;
         $w = 0;
 
-        // on insère d'abord la colonne optionnelle de droite (actions)
+        // on insÃ¨re d'abord la colonne optionnelle de droite (actions)
         if (!empty($array['columns']['actions_right']))
         {
             foreach($array['columns']['actions_right'] as $id => $c)
@@ -668,7 +663,7 @@ class skin
             }
         }
 
-        // on insère ensuite les colonnes de données de droite (optionnelles)
+        // on insÃ¨re ensuite les colonnes de donnÃ©es de droite (optionnelles)
         if (!empty($array['columns']['right']))
         {
             foreach($array['columns']['right'] as $c)
@@ -697,7 +692,7 @@ class skin
         }
 
 
-        // puis les colonnes de données de gauche (optionnelles)
+        // puis les colonnes de donnÃ©es de gauche (optionnelles)
         if (!empty($array['columns']['left']))
         {
             foreach($array['columns']['left'] as $c)
@@ -710,12 +705,12 @@ class skin
             }
         }
 
-        // on gère ensuite l'affichage des titres de colonne
+        // on gÃ¨re ensuite l'affichage des titres de colonne
         ?>
         <div style="position:relative;">
             <div class="ploopi_explorer_title" id="ploopi_explorer_title_<?php echo $strArrayId; ?>">
                 <?php
-                // titres des colonnes d'action (à droite)
+                // titres des colonnes d'action (Ã  droite)
                 if (!empty($array['columns']['actions_right']))
                 {
                     foreach($array['columns']['actions_right'] as $id => $c)
@@ -745,7 +740,7 @@ class skin
                     }
                 }
 
-                // titres des colonnes de données à droite
+                // titres des colonnes de donnÃ©es Ã  droite
                 if (!empty($array['columns']['right']))
                 {
                     foreach($array['columns']['right'] as $id => $c)
@@ -775,7 +770,7 @@ class skin
                     }
                 }
 
-                // titres des colonnes d'action (à gauche)
+                // titres des colonnes d'action (Ã  gauche)
                 if (!empty($array['columns']['actions_left']))
                 {
                     foreach($array['columns']['actions_left'] as $id => $c)
@@ -805,7 +800,7 @@ class skin
                     }
                 }
 
-                // titres des colonnes de données à gauche
+                // titres des colonnes de donnÃ©es Ã  gauche
                 if (!empty($array['columns']['left']))
                 {
                     foreach($array['columns']['left'] as $id => $c)
@@ -869,7 +864,7 @@ class skin
             </div>
 
             <?php
-            // Gestion de l'affichage des lignes de données
+            // Gestion de l'affichage des lignes de donnÃ©es
             ?>
 
             <div <?php if (!empty($array['options']['height'])) echo "style=\"height:{$array['options']['height']}px;overflow:auto;\""; ?> id="ploopi_explorer_values_outer_<?php echo $strArrayId; ?>">
@@ -879,7 +874,7 @@ class skin
                 if (!empty($array['values']))
                 {
                     /*
-                    // On se positionne sur la bonne page de données
+                    // On se positionne sur la bonne page de donnÃ©es
                     reset($array['values']);
                     $intLines = $array['options']['limit'];
 
@@ -891,7 +886,7 @@ class skin
                     else $intLines = sizeof($array['values']);
                     */
 
-                    // On se positionne sur la bonne page de données
+                    // On se positionne sur la bonne page de donnÃ©es
                     $intLines = $array['options']['limit'];
 
                     if ($intLines > 0 && $intLines < sizeof($array['index']))
@@ -901,7 +896,7 @@ class skin
                     }
                     else $intLines = sizeof($array['index']);
 
-                    // On parcourt le nombre de ligne souhaité
+                    // On parcourt le nombre de ligne souhaitÃ©
                     for ($i = 0 ; $i < $intLines ; $i++)
                     {
                         $v = $array['values'][current($array['index'])];
@@ -998,7 +993,7 @@ class skin
         </div>
 
         <script type="text/javascript">
-            ploopi_skin_array_renderupdate('<?php echo $strArrayId; ?>');
+            ploopi.skin.array_renderupdate('<?php echo $strArrayId; ?>');
         </script>
         <?php
     }
@@ -1007,10 +1002,10 @@ class skin
      * Affiche un treeview
      *
      * @param array $nodes tableau associatif contenant les noeuds
-     * @param array $treeview tableau contenant la hiérarchie des noeuds
-     * @param string $node_id_sel identifiant du noeud sélectionné
-     * @param string $node_id_from identifiant du noeud de départ (permet de n'afficher qu'un sous-ensemble)
-     * @param boolean $viewall true tous les noeuds de l'arbre doivent être ouvert (false par défaut)
+     * @param array $treeview tableau contenant la hiÃ©rarchie des noeuds
+     * @param string $node_id_sel identifiant du noeud sÃ©lectionnÃ©
+     * @param string $node_id_from identifiant du noeud de dÃ©part (permet de n'afficher qu'un sous-ensemble)
+     * @param boolean $viewall true tous les noeuds de l'arbre doivent Ãªtre ouvert (false par dÃ©faut)
      * @return string code html du treeview
      */
 
@@ -1021,7 +1016,7 @@ class skin
 
         if (!is_null($node_id_sel) && isset($nodes[$node_id_sel])) $nodesel = $nodes[$node_id_sel];
 
-        // code html généré par ce niveau de boucle
+        // code html gÃ©nÃ©rÃ© par ce niveau de boucle
         $html = '';
 
         if (isset($treeview[$node_id_from]))
@@ -1032,19 +1027,19 @@ class skin
                 // noeud courant
                 $node = $nodes[$node_id];
 
-                // true si le noeud courant est sélectionné
+                // true si le noeud courant est sÃ©lectionnÃ©
                 $is_node_sel = (!is_null($node_id_sel) && ($node_id_sel == $node['id']));
 
-                // parents du noeud sélectionné
+                // parents du noeud sÃ©lectionnÃ©
                 $nodesel_parents = (isset($nodesel)) ? $nodesel['parents'] : array();
 
                 // parents du noeud courant
                 $node_parents = array_merge($node['parents'], array($node['id']));
 
-                // true si le noeud est ouvert : le noeud est ouvert si les parents du noeud courant et du noeud sélectionné se superposent
+                // true si le noeud est ouvert : le noeud est ouvert si les parents du noeud courant et du noeud sÃ©lectionnÃ© se superposent
                 $is_node_opened = ($viewall || sizeof(array_intersect_assoc($nodesel_parents, $node_parents)) == sizeof($node_parents));
 
-                // true si le noeud est le dernier fils de son père
+                // true si le noeud est le dernier fils de son pÃ¨re
                 $is_node_last = ($c == sizeof($treeview[$node_id_from])-1);
 
                 // profondeur du noeud ( = nombre de noeuds parents)
@@ -1055,7 +1050,7 @@ class skin
 
                 if ($node_depth == 1)
                 {
-                    // au premier niveau de profondeur, on ne crée pas de décalage
+                    // au premier niveau de profondeur, on ne crÃ©e pas de dÃ©calage
                     $marginleft = 0;
                 }
                 else
@@ -1077,25 +1072,25 @@ class skin
                     $marginleft = 20;
                 }
 
-                // récupération du code html des noeuds fils par un appel récursif
+                // rÃ©cupÃ©ration du code html des noeuds fils par un appel rÃ©cursif
                 $html_children = ($is_node_sel || $is_node_opened || $node_depth == 1) ? $this->display_treeview($nodes, $treeview, $node_id_sel, $node['id'], $viewall) : '';
 
-                // si du contenu à afficher, display = 'block'
+                // si du contenu Ã  afficher, display = 'block'
                 $display = ($html_children == '') ? 'none' : 'block';
 
-                // si le noeud courant est sélectionné on le met en gras
+                // si le noeud courant est sÃ©lectionnÃ© on le met en gras
                 $style_sel = ($is_node_sel) ? 'bold' : 'none';
 
-                // lien sur le libellé
+                // lien sur le libellÃ©
                 $link = (empty($node['link'])) ? 'javascript:void(0);' : $node['link'];
 
-                // onclick sur le libellé
+                // onclick sur le libellÃ©
                 $onclick = (empty($node['onclick'])) ? '' : 'onclick="'.$node['onclick'].';"';
 
-                // label supplémentaire
+                // label supplÃ©mentaire
                 $status = (empty($node['status'])) ? '' : $node['status'];
 
-                // génération du code html du noeud courant
+                // gÃ©nÃ©ration du code html du noeud courant
                 $html .= "
                     <div class=\"treeview_node\" id=\"treeview_node{$node['id']}\" style=\"{$bg}\">
                         <div>
@@ -1118,19 +1113,19 @@ class skin
 
 
     /**
-     * Affichage d'une liste de choix paramétrable
+     * Affichage d'une liste de choix paramÃ©trable
      *
      * @param string $id identifiant du champ de formulaire
      * @param string $name nom du champ de formulaire
      * @param array $arrValues tableau des valeurs de la liste
      * @param array $arrUserOptions options d'affichage
-     * @param string $selecteditem clé de l'élément sélectionné
+     * @param string $selecteditem clÃ© de l'Ã©lÃ©ment sÃ©lectionnÃ©
      * @return string code html de la liste
      */
 
     public function display_selectbox($id, $name, $arrValues, $arrUserOptions = null, $selecteditem = null)
     {
-        // Options par défaut
+        // Options par dÃ©faut
         $arrOptions =
             array(
                 'input_width' => null,
@@ -1141,7 +1136,7 @@ class skin
         // Merge avec les options utilisateur
         $arrOptions = array_merge($arrOptions, $arrUserOptions);
 
-        // Démarrage bufferisation
+        // DÃ©marrage bufferisation
         ob_start();
         ?>
         <input type="hidden" name="<?php echo $name; ?>" id="<?php echo $id; ?>" value="<?php if (!empty($selecteditem)) echo str::htmlentities($selecteditem); ?>" <?php if (!empty($arrOptions['onchange'])) echo 'onchange="javascript:'.$arrOptions['onchange'].'";'; ?>/>
@@ -1183,7 +1178,7 @@ class skin
                             case 'select':
                                 ?>
                                 <li>
-                                    <a href="javascript:void(0);" <?php if (!empty($menu['onclick'])) echo 'onclick="javascript:'.$menu['onclick'].'"'; ?> onclick="javascript:$('ploopi_selectbox_button_content<?php echo $id; ?>').innerHTML = this.innerHTML; $('<?php echo $id; ?>').value = '<?php echo addslashes($key); ?>'; ploopi_dispatch_onchange('<?php echo $id; ?>');return false;" title="Accéder à <?php echo str::htmlentities($menu['label']); ?>">
+                                    <a href="javascript:void(0);" <?php if (!empty($menu['onclick'])) echo 'onclick="javascript:'.$menu['onclick'].'"'; ?> onclick="javascript:$('ploopi_selectbox_button_content<?php echo $id; ?>').innerHTML = this.innerHTML; $('<?php echo $id; ?>').value = '<?php echo addslashes($key); ?>'; ploopi.event.dispatch_onchange('<?php echo $id; ?>');return false;" title="AccÃ©der Ã  <?php echo str::htmlentities($menu['label']); ?>">
                                         <?php
                                         if (!empty($menu['icon']))
                                         {
@@ -1201,7 +1196,7 @@ class skin
                             case 'link':
                                 ?>
                                 <li>
-                                    <a href="<?php echo $menu['link']; ?>" <?php if (!empty($menu['onclick'])) echo 'onclick="javascript:'.$menu['onclick'].'"'; ?> <?php if (!empty($menu['target'])) echo 'target="'.$menu['target'].'"'; ?> title="Accéder à <?php echo str::htmlentities($menu['label']); ?>">
+                                    <a href="<?php echo $menu['link']; ?>" <?php if (!empty($menu['onclick'])) echo 'onclick="javascript:'.$menu['onclick'].'"'; ?> <?php if (!empty($menu['target'])) echo 'target="'.$menu['target'].'"'; ?> title="AccÃ©der Ã  <?php echo str::htmlentities($menu['label']); ?>">
                                         <?php
                                         if (!empty($menu['icon']))
                                         {

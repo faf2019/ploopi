@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,13 +25,13 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Classe d'accès à la table ploopi_workspace_group
+ * Gestion de la relation Espace de travail / Groupe (table ploopi_workspace_group)
  *
  * @package ploopi
  * @subpackage workspace
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 class workspace_group extends data_object
@@ -39,8 +39,6 @@ class workspace_group extends data_object
 
     /**
      * Constructeur de la classe
-     *
-     * @return workspace_group
      */
 
     public function __construct()

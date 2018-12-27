@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,21 +25,19 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Classe d'accès à la table ploopi_role_action
+ * Gestion du lien rÃ´le/action (table ploopi_role_action)
  *
  * @package ploopi
  * @subpackage role
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 class role_action extends data_object
 {
     /**
      * Constructeur de la classe
-     *
-     * @return role_action
      */
 
     public function __construct()

@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,22 +25,20 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Classe d'accès à la table ploopi_connecteduser.
- * Gestion des utilisateurs connectés.
+ * Classe d'accÃ¨s Ã  la table ploopi_connecteduser.
+ * Gestion des utilisateurs connectÃ©s.
  *
  * @package ploopi
  * @subpackage log
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 class connecteduser extends data_object
 {
     /**
      * Constructeur de la classe
-     *
-     * @return connecteduser
      */
 
     public function __construct()

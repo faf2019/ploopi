@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,8 +25,15 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Classe permettant de construire une requête SQL de type INSERT
+ * Gestion de requÃªtes SQL construites de type INSERT
+ *
+ * @package ploopi
+ * @subpackage ploopi_query
+ * @copyright Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Ovensia
  */
+
 class query_insert extends query
 {
     /**
@@ -39,17 +46,17 @@ class query_insert extends query
     /**
      * Constructeur de la classe
      *
-     * @param resource $objDb Connexion à la BDD
+     * @param db $objDb Connexion Ã  la BDD
      */
     public function __construct($objDb = null)
     {
         $this->arrSet = array();
 
-        return parent::__construct($objDb);
+        parent::__construct($objDb);
     }
 
     /**
-     * Définit la table
+     * DÃ©finit la table
      *
      * @param string $strTable nom de la table
      */
@@ -59,8 +66,8 @@ class query_insert extends query
     }
 
     /**
-     * Ajout d'une clause SET à la requête
-     * Si plusieurs clauses SET sont ajoutées, elles sont séparées par ,
+     * Ajout d'une clause SET Ã  la requÃªte
+     * Si plusieurs clauses SET sont ajoutÃ©es, elles sont sÃ©parÃ©es par ,
      *
      * @param string $strSet Clause SQL brute
      * @param mixed $mixValues Valeurs
@@ -95,9 +102,9 @@ class query_insert extends query
     }
 
     /**
-     * Génération de la requête SQL
+     * GÃ©nÃ©ration de la requÃªte SQL
      *
-     * @return string Chaîne contenant la requête SQL générée
+     * @return string ChaÃ®ne contenant la requÃªte SQL gÃ©nÃ©rÃ©e
      */
     public function get_sql()
     {

@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,24 +25,22 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Classe d'accès à la table ploopi_mb_relation
+ * Gestion des relations de la metabase (table ploopi_mb_relation)
  *
  * @package ploopi
  * @subpackage metabase
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 class mb_relation extends data_object
 {
     /**
      * Constructeur de la classe
-     *
-     * @return mb_relation
      */
 
-    function __construct()
+    public function __construct()
     {
         parent::__construct('ploopi_mb_relation','tablesrc','fieldsrc','tabledest','fielddest','id_module_type');
     }

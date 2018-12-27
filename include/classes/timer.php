@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,33 +25,28 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Gestion du timer d'exécution
+ * Gestion du timer d'exÃ©cution
  *
  * @package ploopi
  * @subpackage timer
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
- */
-
-/**
- * Classe timer
- *
- * @package ploopi
- * @subpackage timer
- * @copyright Ovensia
- * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 class timer
 {
-    private $start;
+    /**
+     * heure de dÃ©clenchement du timer
+     *
+     * @var int
+     */
+    private $_start;
+
+    private static $_objTimer = null;
 
     /**
      * Constructeur de la classe
-     *
-     * @return timer
      */
 
     public function __construct()
@@ -60,12 +55,36 @@ class timer
     }
 
     /**
-     * Démarre le timer
+     * Retourne le singleton
+     *
+     * @return timer Singleton
+     */
+
+    public static function get() {
+        if (is_null(self::$_objTimer)) {
+            self::$_objTimer = new self();
+            self::$_objTimer->start();
+        }
+
+        return self::$_objTimer;
+    }
+
+    /**
+     * Indique si le singleton existe
+     *
+     * @return boolean true si le singleton existe
+     */
+    public static function exists() {
+        return !is_null(self::$_objTimer);
+    }
+
+    /**
+     * DÃ©marre le timer
      */
 
     public function start()
     {
-        $this->start = $this->getmicrotime();
+        $this->_start = $this->getmicrotime();
     }
 
     /**
@@ -80,20 +99,20 @@ class timer
     }
 
     /**
-     * Retourne le nombre de secondes écoulées depuis le démarrage du timer
+     * Retourne le nombre de secondes Ã©coulÃ©es depuis le dÃ©marrage du timer
      *
-     * @return float temps écoulé en secondes
+     * @return float temps Ã©coulÃ© en secondes
      */
 
     public function getexectime()
     {
-        return($this->getmicrotime() - $this->start);
+        return($this->getmicrotime() - $this->_start);
     }
 
     /**
-     * Gère la conversion de l'objet en chaîne
+     * GÃ¨re la conversion de l'objet en chaÃ®ne
      *
-     * @return string contenu de l'objet sous forme d'une chaîne de caractères
+     * @return string contenu de l'objet sous forme d'une chaÃ®ne de caractÃ¨res
      */
 
     public function __toString()

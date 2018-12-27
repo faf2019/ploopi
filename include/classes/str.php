@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -23,25 +23,26 @@
 namespace ploopi;
 
 use ploopi;
+use Wamania\Snowball\French;
 
 /**
- * Fonction de manipulation de chaînes.
- * Conversion, découpage, réécriture, etc..
+ * Manipulation de chaÃ®nes de caractÃ¨re
+ * Conversion, dÃ©coupage, rÃ©Ã©criture, etc..
  *
  * @package ploopi
  * @subpackage string
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 abstract class str {
 
     /**
-     * Insère un retour à la ligne HTML à chaque nouvelle ligne, améliore le comportement de la fonction php nl2br()
+     * InsÃ¨re un retour Ã  la ligne HTML Ã  chaque nouvelle ligne, amÃ©liore le comportement de la fonction php nl2br()
      *
      * @param string $str
-     * @return string chaîne modifiée
+     * @return string chaÃ®ne modifiÃ©e
      */
 
     public static function nl2br($str)
@@ -51,12 +52,12 @@ abstract class str {
 
 
     /**
-     * Coupe une chaîne à la longueur désirée et ajoute '...'
+     * Coupe une chaÃ®ne Ã  la longueur dÃ©sirÃ©e et ajoute '...'
      *
-     * @param string $str chaîne à couper
-     * @param string $len longueur maximale de la chaîne
-     * @param string $mode détermine ou couper la chaîne : 'left', 'middle'
-     * @return string chaîne modifiée
+     * @param string $str chaÃ®ne Ã  couper
+     * @param string $len longueur maximale de la chaÃ®ne
+     * @param string $mode dÃ©termine ou couper la chaÃ®ne : 'left', 'middle'
+     * @return string chaÃ®ne modifiÃ©e
      */
 
     public static function cut($str, $len = 30, $mode = 'left')
@@ -79,25 +80,43 @@ abstract class str {
     }
 
     /**
-     * Convertit tous les caractères accentués en caractères non accentués en préservant les majuscules/minuscules
+     * Convertit tous les caractÃ¨res accentuÃ©s en caractÃ¨res non accentuÃ©s en prÃ©servant les majuscules/minuscules
      *
-     * @param string $str chaîne à convertir
-     * @return string chaîne modifiée
+     * @param string $str chaÃ®ne Ã  convertir
+     * @return string chaÃ®ne modifiÃ©e
      */
 
     public static function convertaccents($str)
     {
-        return(
-            strtr(
-                $str,
-                "¥µÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏĞÑÒÓÔÕÖØÙÚÛÜİßàáâãäåæçèéêëìíîïğñòóôõöøùúûüıÿŞ",
-                "YuAAAAAAACEEEEIIIIDNOOOOOOUUUUYsaaaaaaaceeeeiiiionoooooouuuuyys"
-            )
+        return str_replace(
+            array(
+                'Â¥','Âµ','Ã€','Ã','Ã‚','Ãƒ','Ã„','Ã…','Ã†','Ã‡',
+                'Ãˆ','Ã‰','ÃŠ','Ã‹','ÃŒ','Ã','Ã','Ã','Ã','Ã‘',
+                'Ã’','Ã“','Ã”','Ã•','Ã–','Ã˜','Ã™','Ãš','Ã›','Ãœ',
+                'Ã','ÃŸ','Ã ','Ã¡','Ã¢','Ã£','Ã¤','Ã¥','Ã¦','Ã§',
+                'Ã¨','Ã©','Ãª','Ã«','Ã¬','Ã­','Ã®','Ã¯','Ã°','Ã±',
+                'Ã²','Ã³','Ã´','Ãµ','Ã¶','Ã¸','Ã¹','Ãº','Ã»','Ã¼',
+                'Ã½','Ã¿','Ã'
+            ),
+            array(
+                'Y','u','A','A','A','A','A','A','A','C',
+                'E','E','E','E','I','I','I','I','D','N',
+                'O','O','O','O','O','O','U','U','U','U',
+                'Y','s','a','a','a','a','a','a','a','c',
+                'e','e','e','e','i','i','i','i','o','n',
+                'o','o','o','o','o','o','u','u','u','u',
+                'y','y','s'
+            ),
+            $str
         );
     }
 
     /**
      * Encode les contenus d'url selon la RFC 3986
+     *
+     * @param string $str chaÃ®ne Ã  encoder
+     * @return string chaÃ®ne encodÃ©e
+     *
      * @see http://www.php.net/manual/fr/function.urlencode.php#97969
      */
 
@@ -111,14 +130,10 @@ abstract class str {
     }
 
     /**
-     * Réécrit une chaîne destinée à être transformée en URL
+     * RÃ©Ã©crit une chaÃ®ne destinÃ©e Ã  Ãªtre transformÃ©e en URL
      *
-     * @param string $str chaîne à transformer
-     * @return string chaîne transformée
-     *
-     * @copyright Ovensia
-     * @license GNU General Public License (GPL)
-     * @author Stéphane Escaich
+     * @param string $str chaÃ®ne Ã  transformer
+     * @return string chaÃ®ne transformÃ©e
      */
 
     public static function tourl($str)
@@ -128,21 +143,14 @@ abstract class str {
     }
 
     /**
-     * Réécrit une URL selon les règles de réécriture fournies en paramètre
+     * RÃ©Ã©crit une URL selon les rÃ¨gles de rÃ©Ã©criture fournies en paramÃ¨tre
      *
-     * @param string $strUrl URL à réécrire
-     * @param array $arrRules règles de réécriture au format array('patterns' => array(), 'replacements' => array())
-     * @param string $strTitle titre à insérer dans la nouvelle URL
-     * @param array $arrFolders tableau contenu les intitulé de dossiers à ajouter à l'url
-     * @param bool $booKeepExt true si l'url doit contenir l'extension de fichier éventuellement utilisée dans le paramètre $strTitle (par défaut : false)
-     * @return string URL réécrite
-     *
-     * @see _PLOOPI_FRONTOFFICE_REWRITERULE
-     * @see self::convertaccents
-     *
-     * @copyright Ovensia
-     * @license GNU General Public License (GPL)
-     * @author Stéphane Escaich
+     * @param string $strUrl URL Ã  rÃ©Ã©crire
+     * @param array $arrRules rÃ¨gles de rÃ©Ã©criture au format array('patterns' => array(), 'replacements' => array())
+     * @param string $strTitle titre Ã  insÃ©rer dans la nouvelle URL
+     * @param array $arrFolders tableau contenu les intitulÃ© de dossiers Ã  ajouter Ã  l'url
+     * @param bool $booKeepExt true si l'url doit contenir l'extension de fichier Ã©ventuellement utilisÃ©e dans le paramÃ¨tre $strTitle (par dÃ©faut : false)
+     * @return string URL rÃ©Ã©crite
      */
 
     public static function urlrewrite($strUrl, $arrRules, $strTitle = '', $arrFolders = null, $booKeepExt = false)
@@ -159,7 +167,7 @@ abstract class str {
 
             $strTitle = self::tourl($strTitle);
 
-            // Construction des dossiers si nécessaire
+            // Construction des dossiers si nÃ©cessaire
             if (!empty($arrFolders) && is_array($arrFolders))
             {
                 foreach($arrFolders as &$strFolder) $strFolder = self::tourl($strFolder);
@@ -181,18 +189,12 @@ abstract class str {
 
     /**
      * Equivalent de strtr en version multibyte (UTF-8) car la version "mbstring" de strtr n'existe pas.
-     * Remplace des caractères dans une chaîne.
+     * Remplace des caractÃ¨res dans une chaÃ®ne.
      *
-     * @param string $str la chaîne à traiter
-     * @param mixed $from caractères de départ sous forme d'une chaine ou d'un tableau associatif (si to est null)
-     * @param string $to caractères de remplacement ou null
-     * @return string chaîne modifiée
-     *
-     * @see strtr
-     *
-     * @copyright Ovensia
-     * @license GNU General Public License (GPL)
-     * @author Stéphane Escaich
+     * @param string $str la chaÃ®ne Ã  traiter
+     * @param mixed $from caractÃ¨res de dÃ©part sous forme d'une chaine ou d'un tableau associatif (si to est null)
+     * @param string $to caractÃ¨res de remplacement ou null
+     * @return string chaÃ®ne modifiÃ©e
      */
 
     public static function strtr($str, $from, $to = null)
@@ -207,12 +209,10 @@ abstract class str {
 
     /**
      * Equivalent de str_split en version multibyte (UTF-8) car la version "mbstring" de str_split n'existe pas.
-     * Convertit une chaîne de caractères en tableau.
+     * Convertit une chaÃ®ne de caractÃ¨res en tableau.
      *
-     * @param string $str la chaîne Ã  convertir
-     * @return array tableau de caractères
-     *
-     * @see strtr
+     * @param string $str la chaÃ®ne ÃƒÂ  convertir
+     * @return array tableau de caractÃ¨res
      */
 
     public static function str_split($str)
@@ -230,16 +230,12 @@ abstract class str {
     }
 
     /**
-     * Encode les caractères spéciaux d'une chaîne pour qu'elle puisse être intégrée dans un document XML
+     * Encode les caractÃ¨res spÃ©ciaux d'une chaÃ®ne pour qu'elle puisse Ãªtre intÃ©grÃ©e dans un document XML
      *
-     * @param string $str chaîne brute
-     * @param boolean $utf8 true si la chaîne à encoder est en UTF-8
-     * @param boolean $extended true permet d'encoder les caractères ascii spéciaux de 128 à 255
-     * @return string chaîne encodée
-     *
-     * @copyright Ovensia
-     * @license GNU General Public License (GPL)
-     * @author Stéphane Escaich
+     * @param string $str chaÃ®ne brute
+     * @param boolean $utf8 true si la chaÃ®ne Ã  encoder est en UTF-8
+     * @param boolean $extended true permet d'encoder les caractÃ¨res ascii spÃ©ciaux de 128 Ã  255
+     * @return string chaÃ®ne encodÃ©e
      */
 
     public static function xmlentities($str, $utf8 = false, $extended = true)
@@ -252,18 +248,18 @@ abstract class str {
     }
 
     /**
-     * Convertit tous les caractères éligibles en entités HTML (via htmlentities) mais en ISO-8859-1 par défaut et supprime les balises HTML.
+     * Convertit tous les caractÃ¨res Ã©ligibles en entitÃ©s HTML (via htmlentities) mais en ISO-8859-1 par dÃ©faut et supprime les balises HTML.
      *
-     * @param string $str chaîne brute
-     * @param int masque qui détermine la façon dans les guillemets sont gérés
-     * @param string $encoding définit l'encodage utilisé durant la conversion
-     * @return string chaîne convertie
+     * @param string $str chaÃ®ne brute
+     * @param int masque qui dÃ©termine la faÃ§on dans les guillemets sont gÃ©rÃ©s
+     * @param string $encoding dÃ©finit l'encodage utilisÃ© durant la conversion
+     * @return string chaÃ®ne convertie
      */
 
     public static function htmlentities($str, $flags = null, $encoding = null, $booStripTags = true)
     {
 
-        if (is_null($encoding)) $encoding = 'ISO-8859-15';
+        if (is_null($encoding)) $encoding = 'UTF-8';
         if (is_null($flags)) $flags = ENT_COMPAT | ENT_HTML401;
 
         return htmlentities($booStripTags ? strip_tags($str) : $str, $flags, $encoding);
@@ -271,15 +267,15 @@ abstract class str {
 
 
     /**
-     *  Convertit toutes les entités HTML en caractères normaux (via html_entity_decode) mais en ISO-8859-1 par défaut.
+     *  Convertit toutes les entitÃ©s HTML en caractÃ¨res normaux (via html_entity_decode) mais en ISO-8859-1 par dÃ©faut.
      *
-     * @param string $str chaîne brute
-     * @param int masque qui détermine la façon dans les guillemets sont gérés
-     * @param string $encoding définit l'encodage utilisé durant la conversion
-     * @return string chaîne convertie
+     * @param string $str chaÃ®ne brute
+     * @param int masque qui dÃ©termine la faÃ§on dans les guillemets sont gÃ©rÃ©s
+     * @param string $encoding dÃ©finit l'encodage utilisÃ© durant la conversion
+     * @return string chaÃ®ne convertie
      */
 
-    public static function html_entity_decode($str, $flags = null, $encoding = 'ISO-8859-1')
+    public static function html_entity_decode($str, $flags = null, $encoding = 'UTF-8')
     {
         if (is_null($flags)) $flags = version_compare(phpversion(), '5.4', '<') ? ENT_COMPAT : ENT_COMPAT | ENT_HTML401;
 
@@ -287,14 +283,14 @@ abstract class str {
     }
 
     /**
-     * Encode une chaîne en UTF8
+     * Encode une chaÃ®ne en UTF8
      *
-     * @param string $str chaîne ISO-8859-15
-     * @return string chaîne encodée UTF8
+     * @param string $str chaÃ®ne ISO-8859-15
+     * @return string chaÃ®ne encodÃ©e UTF8
      *
      * @copyright Ovensia
      * @license GNU General Public License (GPL)
-     * @author Stéphane Escaich
+     * @author Ovensia
      */
 
     public static function utf8encode($str)
@@ -303,11 +299,11 @@ abstract class str {
     }
 
     /**
-     * Décode les caractères iso non représentables
+     * DÃ©code les caractÃ¨res iso non reprÃ©sentables
      *
-     * @param string chaîne iso à décoder $str
-     * @param boolean true si les caractères doivent être adaptés
-     * @return chaîne décodée
+     * @param string chaÃ®ne iso Ã  dÃ©coder $str
+     * @param boolean true si les caractÃ¨res doivent Ãªtre adaptÃ©s
+     * @return chaÃ®ne dÃ©codÃ©e
      */
     public static function iso8859_clean($str, $booTranslit = true)
     {
@@ -379,8 +375,8 @@ abstract class str {
     /**
      * Rend les liens d'un texte cliquables
      *
-     * @param string $text le texte à traiter
-     * @return string le texte modifié
+     * @param string $text le texte Ã  traiter
+     * @return string le texte modifiÃ©
      */
 
     public static function make_links($text)
@@ -406,15 +402,15 @@ abstract class str {
 
 
     /**
-     * Encode et affiche une variable au format JSON et modifie les entêtes du document. Compatible x-json
+     * Encode et affiche une variable au format JSON et modifie les entÃªtes du document. Compatible x-json
      *
-     * @param mixed $var variable à encoder
-     * @param boolean $utf8encode true si le contenu de la variable doit être converti en UTF8 (true par défaut)
-     * @param boolean $use_xjson true si X-json peut être utilisé
+     * @param mixed $var variable Ã  encoder
+     * @param boolean $utf8encode true si le contenu de la variable doit Ãªtre converti en UTF8 (true par dÃ©faut)
+     * @param boolean $use_xjson true si X-json peut Ãªtre utilisÃ©
      *
      * @copyright Ovensia
      * @license GNU General Public License (GPL)
-     * @author Stéphane Escaich
+     * @author Ovensia
      */
 
     public static function print_json($var, $utf8encode = true, $use_xjson = true)
@@ -431,15 +427,15 @@ abstract class str {
     /**
      * Nettoie le code html et le rend valide XHTML
      *
-     * @param string $strContent code HTML à valider
-     * @param boolean $booTrusted true si le code fourni est "sûr", dans ce cas le filtrage est moins sévère (par défaut : false)
-     * @return string code HTML validé
+     * @param string $strContent code HTML Ã  valider
+     * @param boolean $booTrusted true si le code fourni est "sÃ»r", dans ce cas le filtrage est moins sÃ©vÃ¨re (par dÃ©faut : false)
+     * @return string code HTML validÃ©
      *
      * @link http://htmlpurifier.org/
      *
      * @copyright Ovensia
      * @license GNU General Public License (GPL)
-     * @author Stéphane Escaich
+     * @author Ovensia
      */
 
     public static function htmlpurifier($strContent, $booTrusted = false)
@@ -463,10 +459,7 @@ abstract class str {
 
         $objPurifier = new \HTMLPurifier($objConfig);
 
-        $subst = mb_substitute_character();
-        mb_substitute_character('');
-        $res = mb_convert_encoding($objPurifier->purify(mb_convert_encoding($strContent, 'UTF-8', 'ISO-8859-15')), 'ISO-8859-15', 'UTF-8');
-        mb_substitute_character($subst);
+        $res = $objPurifier->purify($strContent);
 
         return $res;
     }
@@ -485,9 +478,9 @@ abstract class str {
     }
 
     /**
-     * Vérifie qu'une url est valide
+     * VÃ©rifie qu'une url est valide
      *
-     * @param string $url url à tester
+     * @param string $url url Ã  tester
      * @return boolean true si l'url est valide
      */
 
@@ -519,8 +512,8 @@ abstract class str {
     /**
      * Nettoie une chaine pour en faire un nom de fichier valide. Ne conserve que les caracteres : [a-zA-Z0-9_-]
      *
-     * @param string $str chaine à nettoyer
-     * @return string la chaine nettoyée
+     * @param string $str chaine Ã  nettoyer
+     * @return string la chaine nettoyÃ©e
      */
 
     public static function clean_filename($str)
@@ -532,22 +525,13 @@ abstract class str {
     }
 
     /**
-     * Extrait les mots clés ou racines d'un texte
+     * Extrait les mots clÃ©s ou racines d'un texte
      *
-     * @param string $content contenu du texte à analyser
-     * @param boolean $usecommonwords true si la liste des mots communs doit être utilisée.
-     * @param boolean $getstem true si la méthode de lemmisation/racinisation doit être utilisée
-     * @param boolean $sort true si le résultat doit être trié par occurence d'apparition du mot
-     * @return tableau de mots clés ou de racines
-     *
-     * @see _PLOOPI_INDEXATION_COMMONWORDS_FR
-     * @see _PLOOPI_INDEXATION_WORDSEPARATORS
-     * @see _PLOOPI_INDEXATION_WORDMINLENGHT
-     * @see _PLOOPI_INDEXATION_WORDMAXLENGHT
-     *
-     * @see ploopi\str::convertaccents
-     *
-     * @link http://pecl.php.net/package/stem
+     * @param string $content contenu du texte Ã  analyser
+     * @param boolean $usecommonwords true si la liste des mots communs doit Ãªtre utilisÃ©e.
+     * @param boolean $getstem true si la mÃ©thode de lemmisation/racinisation doit Ãªtre utilisÃ©e
+     * @param boolean $sort true si le rÃ©sultat doit Ãªtre triÃ© par occurence d'apparition du mot
+     * @return tableau de mots clÃ©s ou de racines
      */
 
     public static function getwords($content, $usecommonwords = true, $getstem = false, $sort = true)
@@ -572,20 +556,22 @@ abstract class str {
             else $_SESSION['ploopi']['commonwords'] = array();
         }
 
+        if ($getstem) $stemmer = new French();
+
         for ($kw = strtok($content, _PLOOPI_INDEXATION_WORDSEPARATORS); $kw !== false; $kw = strtok(_PLOOPI_INDEXATION_WORDSEPARATORS))
         {
             // remove empty characters
-            $kw = trim(strtolower($kw),"\x0..\x20\xa0");
+            $kw = trim(mb_strtolower($kw));
 
             // only keep "normal" characters
             $kw_clean = preg_replace("/[^a-zA-Z0-9]/","",self::convertaccents($kw));
 
             if (!$usecommonwords || !isset($_SESSION['ploopi']['commonwords'][$kw_clean]))
             {
-                $len = strlen($kw_clean);
+                $len = mb_strlen($kw_clean);
                 if ($len >= _PLOOPI_INDEXATION_WORDMINLENGHT && $len <= _PLOOPI_INDEXATION_WORDMAXLENGHT)
                 {
-                    $kw = ($getstem) ? stem_french($kw) : $kw_clean;
+                    $kw = ($getstem) ? $stemmer->stem($kw) : $kw_clean;
 
                     if (!isset($words[$kw])) $words[$kw] = 1;
                     else $words[$kw]++;
@@ -602,21 +588,21 @@ abstract class str {
     }
 
     /**
-     * Met en valeur les mots recherchés dans un texte et génère des extraits.
-     * Grandement inspiré du code de phpdig.
+     * Met en valeur les mots recherchÃ©s dans un texte et gÃ©nÃ¨re des extraits.
+     * Grandement inspirÃ© du code de phpdig.
      *
      * @param string $content contenu du texte
-     * @param string $words mots recherchés
+     * @param string $words mots recherchÃ©s
      * @param int $snippet_length longueur de l'extrait
      * @param int $snippet_num nombre d'extraits
-     * @param string $highlight_class classe css utilisée pour la mise en valeur des mots
-     * @return string extraits avec les mots clés
+     * @param string $highlight_class classe css utilisÃ©e pour la mise en valeur des mots
+     * @return string extraits avec les mots clÃ©s
      */
 
     public static function highlight($content, $words, $snippet_length = 150, $snippet_num = 3, $highlight_class = 'ploopi_highlight')
     {
         // on calcule l'encodeur
-        $string_subst = 'A:ÀÁÂÃÄÅ,a:àáâãäå,O:ÒÓÔÕÖØ,o:òóôõöø,E:ÈÉÊË,e:èéêë,C:Ç,c:ç,I:ÌÍÎÏ,i:ìíîï,U:ÙÚÛÜ,u:ùúûü,Y:İ,y:ÿı,N:Ñ,n:ñ';
+        $string_subst = 'A:Ã€ÃÃ‚ÃƒÃ„Ã…,a:Ã Ã¡Ã¢Ã£Ã¤Ã¥,O:Ã’Ã“Ã”Ã•Ã–Ã˜,o:Ã²Ã³Ã´ÃµÃ¶Ã¸,E:ÃˆÃ‰ÃŠÃ‹,e:Ã¨Ã©ÃªÃ«,C:Ã‡,c:Ã§,I:ÃŒÃÃÃ,i:Ã¬Ã­Ã®Ã¯,U:Ã™ÃšÃ›Ãœ,u:Ã¹ÃºÃ»Ã¼,Y:Ã,y:Ã¿Ã½,N:Ã‘,n:Ã±';
 
         $arrEncoder = array();
 
@@ -646,14 +632,14 @@ abstract class str {
 
         $string = str_replace('\\','',implode('@#@',$words));
 
-        $string = str_replace('Æ','ae',str_replace('æ','ae',$string));
+        $string = str_replace('Ã†','ae',str_replace('Ã¦','ae',$string));
         $string = strtr($string, $arrEncoder['str'], $arrEncoder['tr']);
 
         $string = preg_quote(strtolower($string));
         $string = str_replace($arrEncoder['char'],$arrEncoder['ereg'],$string);
 
         $reg_strings = str_replace('@#@','|', $string);
-        $stop_regs = "[][(){}[:blank:]=&?!&#%\$£*@+%:;,\/\.'\"]";
+        $stop_regs = "[][(){}[:blank:]=&?!&#%\$Â£*@+%:;,\/\.'\"]";
         $reg_strings = "/({$stop_regs}{1}|^)({$reg_strings})()/i";
 
         $num_extracts = 0;

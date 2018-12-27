@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,20 +25,24 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Classe de gestion des champs de type "hidden"
+ * Gestion des champs hidden de formulaires
  *
+ * @package ploopi
+ * @subpackage form
+ * @copyright Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Ovensia
  */
+
 class form_hidden extends form_field
 {
     /**
      * Constructeur de la classe
      *
      * @param string $strValue valeur du champ
-     * @param string $strName propriété "name" du champ
-     * @param string $strId propriété "id" du champ
+     * @param string $strName propriÃ©tÃ© "name" du champ
+     * @param string $strId propriÃ©tÃ© "id" du champ
      * @param array $arrOptions options du champ
-     *
-     * @return form_hidden
      */
     public function __construct($strValue, $strName = null, $strId = null, $arrOptions = null)
     {
@@ -46,9 +50,9 @@ class form_hidden extends form_field
     }
 
     /**
-     * Génère le rendu html du champ
+     * GÃ©nÃ¨re le rendu html du champ
      *
-     * @param int $intTabindex tabindex du champs dans le formulaire
+     * @param int $intTabindex tabindex du champ dans le formulaire
      * @return string code html
      */
     public function render($intTabindex = null)
@@ -56,7 +60,7 @@ class form_hidden extends form_field
         $strOutput = '';
 
         $strClass = is_null($this->_arrOptions['class']) ? '' : " {$this->_arrOptions['class']}";
-        $strValue = str::htmlentities($this->_arrValues[0]);
+        $strValue = form::htmlentities($this->_arrValues[0]);
 
         $strOutput .= "<input type=\"hidden\" name=\"{$this->_strName}\" id=\"{$this->_strId}\" value=\"{$strValue}\"{$strClass} />";
 

@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,22 +25,45 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Classe de gestion des options des champs de type "select" d'un formulaire
+ * Gestion des options des champs de type "select" de formulaires
+ *
+ * @package ploopi
+ * @subpackage form
+ * @copyright Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Ovensia
  */
 
 class form_select_option extends form_element
 {
+
+    /**
+     * Constructeur de la classe
+     *
+     * @param string $strLabel libellÃ© de l'Ã©lÃ©ment
+     * @param string $strValue valeur de l'Ã©lÃ©ment
+     * @param string $strId propriÃ©tÃ© "id" de l'Ã©lÃ©ment
+     * @param array $arrOptions options du l'Ã©lÃ©ment
+     */
     public function __construct($strLabel, $strValue, $strId = null, $arrOptions = null)
     {
         parent::__construct('option', $strLabel, array($strValue), null, $strId, $arrOptions);
     }
 
+    /**
+     * GÃ©nÃ¨re le rendu html de l'Ã©lÃ©ment
+     *
+     * @param int $intTabindex tabindex du champ dans le formulaire
+     * @param boolean $booSelected true si sÃ©lectionnÃ©
+     *
+     * @return string code html
+     */
     public function render($intTabindex = null, $booSelected = false)
     {
         $strId = is_null($this->_strId) ? '' : " id=\"{$this->_strId}\"";
         $strStyle = is_null($this->_arrOptions['style']) ? '' : " style=\"{$this->_arrOptions['style']}\"";
-        $strLabel = str::htmlentities($this->_strLabel);
-        $strValue = str::htmlentities($this->_arrValues[0]);
+        $strLabel = form::htmlentities($this->_strLabel);
+        $strValue = form::htmlentities($this->_arrValues[0]);
         $strSelected = $booSelected ? ' selected="selected"' : '';
 
         return "<option value=\"{$strValue}\"{$strId}{$strStyle}{$strSelected}>{$strLabel}</option>";

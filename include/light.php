@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,14 +21,14 @@
 */
 
 /**
- * Point d'entrée permettant de charger une version allégée du template (light.tpl).
- * L'habillage général et les blocs ne sont pas affichés, uniquement le contenu du module.
+ * Point d'entrÃ©e permettant de charger une version allÃ©gÃ©e du template (light.tpl).
+ * L'habillage gÃ©nÃ©ral et les blocs ne sont pas affichÃ©s, uniquement le contenu du module.
  *
  * @package ploopi
  * @subpackage index
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 
@@ -37,9 +37,7 @@ if ($_SESSION['ploopi']['mode'] == 'backoffice')
     if ($_SESSION['ploopi']['connected'])
     {
         include_once './lib/template/template.php';
-        include_once "{$_SESSION['ploopi']['template_path']}/class_skin.php";
 
-        $skin = new ploopi\skin();
         $template_body = new \Template($_SESSION['ploopi']['template_path']);
 
         if (!file_exists("{$_SESSION['ploopi']['template_path']}/light.tpl") || ! is_readable("{$_SESSION['ploopi']['template_path']}/light.tpl")) {
@@ -93,7 +91,7 @@ if ($_SESSION['ploopi']['mode'] == 'backoffice')
                 $strControllerFile::dispatch();
             }
             else {
-                // Rétrocompatibilité
+                // RÃ©trocompatibilitÃ©
                 if ($_SESSION['ploopi']['action'] == 'admin')
                 {
                     if (file_exists("./modules/{$_SESSION['ploopi']['moduletype']}/admin.php")) include_once "./modules/{$_SESSION['ploopi']['moduletype']}/admin.php";

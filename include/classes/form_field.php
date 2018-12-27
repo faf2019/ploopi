@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,13 +25,19 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Classe de gestion des champs d'un formulaire
+ * Gestion des champs de formulaires
  *
+ * @package ploopi
+ * @subpackage form
+ * @copyright Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Ovensia
  */
+
 class form_field extends form_element
 {
     /**
-     * Diff�rents types accept�s pour un champ de formulaire
+     * Différents types acceptés pour un champ de formulaire
      *
      * @var array
      */
@@ -47,7 +53,40 @@ class form_field extends form_element
     );
 
     /**
-     * Options par d�faut d'un champ de formulaire
+     * Options par défaut d'un champ de formulaire
+     *
+     *   'description'    : description
+     *   'placeholder'    : intitulé affiché en fond
+     *   'autofocus'      : focus automatique (true/false)
+     *   'style'          : style appliqué au formulaire (champ uniquement)
+     *   'style_form'     : style appliqué au formulaire
+     *   'class'          : class du formulaire (champ uniquement)
+     *   'class_form'     : class du formulaire
+     *   'required'       : requis (true/false)
+     *   'datatype'       : type de données attendu pour validation javascript 'string', 'integer', 'float', etc..
+     *   'maxlength'      : longueur maximum en caractères
+     *   'autocomplete'   : autocomplétion (true/False)
+     *   'autocorrect'    : correction automatique sur mobiles (true/false)
+     *   'autocapitalize' : mise en majuscule (true/false)
+     *   'spellcheck'     : mise en évidence des fautes (true/false)
+     *   'readonly'       : lecture seule (true/false)
+     *   'disabled'       : désactivé (true/false)
+     *   'accesskey'      : touche d'accès rapide
+     *   'min'            : valeur minimale
+     *   'max'            : valeur maximale
+     *   'onblur'         : événement javascript
+     *   'onchange'       : événement javascript
+     *   'onfocus'        : événement javascript
+     *   'onclick'        : événement javascript
+     *   'ondblclick'     : événement javascript
+     *   'onkeydown'      : événement javascript
+     *   'onkeypress'     : événement javascript
+     *   'onkeyup'        : événement javascript
+     *   'onmousedown'    : événement javascript
+     *   'onmousemove'    : événement javascript
+     *   'onmouseout'     : événement javascript
+     *   'onmouseover'    : événement javascript
+     *   'onmouseup'      : événement javascript
      *
      * @var array
      */
@@ -90,13 +129,11 @@ class form_field extends form_element
      * Constructeur de la classe
      *
      * @param string $strType type du champ
-     * @param string $strLabel libell� du champ
+     * @param string $strLabel libellé du champ
      * @param mixed $mixValue valeur(s) du champ (array ou string)
-     * @param string $strName propri�t� "name" du champ
-     * @param string $strId propri�t� "id" du champ
+     * @param string $strName propriété "name" du champ
+     * @param string $strId propriété "id" du champ
      * @param array $arrOptions options du champ
-     *
-     * @return form_field
      */
     public function __construct($strType, $strLabel, $mixValue, $strName = null, $strId = null, $arrOptions = null)
     {
@@ -113,7 +150,7 @@ class form_field extends form_element
             case 'input:reset':
             case 'input:img':
             case 'textarea':
-                if (is_array($mixValue)) trigger_error('Ce type d\'�l�ment n\'accepte pas un tableau de valeurs', E_USER_ERROR);
+                if (is_array($mixValue)) trigger_error('Ce type d\'élément n\'accepte pas un tableau de valeurs', E_USER_ERROR);
             break;
         }
 
@@ -125,10 +162,10 @@ class form_field extends form_element
     }
 
     /**
-     * G�n�re le rendu html de l'habillage du champ (notamment le libell�)
+     * Génère le rendu html de l'habillage du champ (notamment le libellé)
      *
      * @param string $strOutputField code html du champ de formulaire
-     * @return string champ avec libell�
+     * @return string champ avec libellé
      */
     protected function renderForm($strOutputField = '')
     {
@@ -142,9 +179,9 @@ class form_field extends form_element
     }
 
     /**
-     * G�n�re le rendu html du champ
+     * Génère le rendu html du champ
      *
-     * @param int $intTabindex tabindex du champs dans le formulaire
+     * @param int $intTabindex tabindex du champ dans le formulaire
      * @return string code html
      */
     public function render($intTabindex = null)
@@ -154,15 +191,15 @@ class form_field extends form_element
         $strEvents = $this->generateEvents();
         $strProperties = $this->generateProperties();
         $strMaxLength = is_null($this->_arrOptions['maxlength']) || !is_numeric($this->_arrOptions['maxlength']) ? '' : " maxlength=\"{$this->_arrOptions['maxlength']}\"";
-        $strValue = str::htmlentities($this->_arrValues[0]);
+        $strValue = form::htmlentities($this->_arrValues[0]);
 
-        $strPlaceHolder = $this->_arrOptions['placeholder'] != '' ? ' placeholder="'.str::htmlentities($this->_arrOptions['placeholder']).'"' : '';
+        $strPlaceHolder = $this->_arrOptions['placeholder'] != '' ? ' placeholder="'.form::htmlentities($this->_arrOptions['placeholder']).'"' : '';
         switch($this->_strType)
         {
             case 'input:number':
                 $strMinMax = '';
                 if (isset($this->_arrOptions['min']) && is_numeric($this->_arrOptions['min'])) $strMinMax .= " min=\"{$this->_arrOptions['min']}\"";
-                if (isset($this->_arrOptions['max']) && is_numeric($this->_arrOptions['max'])) $strMinMax .= " min=\"{$this->_arrOptions['max']}\"";
+                if (isset($this->_arrOptions['max']) && is_numeric($this->_arrOptions['max'])) $strMinMax .= " max=\"{$this->_arrOptions['max']}\"";
 
                 $strOutput .= "<input type=\"number\" name=\"{$this->_strName}\" id=\"{$this->_strId}\" value=\"{$strValue}\" tabindex=\"{$intTabindex}\"{$strProperties}{$strMaxLength}{$strEvents}{$strPlaceHolder}{$strMinMax} />";
             break;

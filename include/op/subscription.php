@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2008 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,13 +21,13 @@
 */
 
 /**
- * Opérations sur les abonnements
+ * OpÃ©rations sur les abonnements
  *
  * @package ploopi
  * @subpackage subscription
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 switch($ploopi_op)
@@ -60,7 +60,7 @@ switch($ploopi_op)
                     $objSubscription->fields['id_user'] = $_SESSION['ploopi']['userid'];
                 }
 
-                if ($_POST['ploopi_subscription_action'][0] == 0) // abonnement à toutes les actions
+                if ($_POST['ploopi_subscription_action'][0] == 0) // abonnement Ã  toutes les actions
                 {
                     $objSubscription->fields['allactions'] = 1;
                     $objSubscription->save();
@@ -92,7 +92,7 @@ switch($ploopi_op)
 
         ?>
         <script type="text/javascript">
-            window.parent.ploopi\subscription::display('<?php echo ploopi\str::htmlentities($_POST['ploopi_subscription_id']); ?>', '<?php echo $strNext ?>');
+            window.parent.ploopi.subscription.display('<?php echo ploopi\str::htmlentities($_POST['ploopi_subscription_id']); ?>', '<?php echo $strNext ?>');
         </script>
         <?php
 

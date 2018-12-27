@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2008 Ovensia, CII67
+    Copyright (c) 2007-2018 Ovensia, CII67
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -31,7 +31,7 @@ use ploopi;
  * @subpackage barchart
  * @copyright Ovensia, CII67
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich, Frédéric Belloy, Laurent Ulrich
+ * @author Ovensia, FrÃ©dÃ©ric Belloy, Laurent Ulrich
  */
 
 class barchart
@@ -53,7 +53,7 @@ class barchart
     private $height;
 
     /**
-     * Données du diagramme
+     * DonnÃ©es du diagramme
      *
      * @var array
      */
@@ -61,7 +61,7 @@ class barchart
     private $datasets;
 
     /**
-     * Légende du diagramme
+     * LÃ©gende du diagramme
      *
      * @var array
      */
@@ -77,7 +77,7 @@ class barchart
     private $options;
 
     /**
-     * Nombre de colonnes à afficher
+     * Nombre de colonnes Ã  afficher
      *
      * @var int
      */
@@ -110,28 +110,28 @@ class barchart
         $this->options =
             array(
                 'display_values' => true, // affichage des valeurs sur les barres optionnel
-                'autofit_scale' => true, // échelle verticale auto-adaptive
+                'autofit_scale' => true, // Ã©chelle verticale auto-adaptive
                 'display_grid' => true, // affichage d'une grille horizontale
-                'display_legend' => true, // affichage d'une légende
-                'display_ticks' => true, // affichage des valeurs de l'échelle (vertical seulement)
+                'display_legend' => true, // affichage d'une lÃ©gende
+                'display_ticks' => true, // affichage des valeurs de l'Ã©chelle (vertical seulement)
                 'display_titles' => true, // affichage de titres
-                'class_name' => 'ploopi_barchart', // class de style (css) utilisée
+                'class_name' => 'ploopi_barchart', // class de style (css) utilisÃ©e
                 'bar_arrange' => 'merge', // type d'arrangement des barres : merge, stack, side_by_side
-                'padding' => 0, // marge utilisée à l'affichage
-                'yaxis_pos'=> 0 // positionnement personnalisé de l'axe des ordonnées
+                'padding' => 0, // marge utilisÃ©e Ã  l'affichage
+                'yaxis_pos'=> 0 // positionnement personnalisÃ© de l'axe des ordonnÃ©es
             );
 
         $this->setoptions($options);
     }
 
     /**
-     * Ajoute un jeu de données au diagramme
+     * Ajoute un jeu de donnÃ©es au diagramme
      *
-     * @param array $values tableau de données
-     * @param string $dataset_label libellé du jeu de données (optionnel)
-     * @param string $dataset_bgcolor couleur de fond du jeu de données (optionnel)
-     * @param string $dataset_color couleur du texte du jeu de données (optionnel)
-     * @param string $dataset_name nom du jeu de données (optionnel)
+     * @param array $values tableau de donnÃ©es
+     * @param string $dataset_label libellÃ© du jeu de donnÃ©es (optionnel)
+     * @param string $dataset_bgcolor couleur de fond du jeu de donnÃ©es (optionnel)
+     * @param string $dataset_color couleur du texte du jeu de donnÃ©es (optionnel)
+     * @param string $dataset_name nom du jeu de donnÃ©es (optionnel)
      */
 
     public function setvalues($values, $dataset_label = null, $dataset_bgcolor = null, $dataset_color = null, $dataset_name = null)
@@ -149,9 +149,9 @@ class barchart
     }
 
     /**
-     * Ajoute une légende au diagramme
+     * Ajoute une lÃ©gende au diagramme
      *
-     * @param array $legend tableau contenant la légende
+     * @param array $legend tableau contenant la lÃ©gende
      */
 
     public function setlegend($legend)
@@ -160,7 +160,7 @@ class barchart
     }
 
     /**
-     * Permet de définir les options :
+     * Permet de dÃ©finir les options :
      * grid_width:int,
      * autofit_scale:boolean,
      * display_grid:boolean,
@@ -173,7 +173,7 @@ class barchart
      * yaxis_pos:int,
      * class_name:string
      *
-     * @param array $options tableau des options à modifier
+     * @param array $options tableau des options Ã  modifier
      */
 
     public function setoptions($options)
@@ -205,7 +205,7 @@ class barchart
 
         }
 
-        //mise à l'échelle verticale auto-adaptive
+        //mise Ã  l'Ã©chelle verticale auto-adaptive
         $autofit_scale_inc = 0;
 
         $pow = $value_max_root = $value_max_margin = $value_max_rounded1 = 0;
@@ -230,7 +230,7 @@ class barchart
             }
         }
 
-        /* Les tables div_range1 à 5 représentent le nombre de divisions de l'échelle, suivies des seuils de passage à l'échelle supérieure pour les valeurs comprises entre 10 et 20. Ces valeurs sont modifiables en fonction des goûts esthétiques de chacun.    */
+        /* Les tables div_range1 Ã  5 reprÃ©sentent le nombre de divisions de l'Ã©chelle, suivies des seuils de passage Ã  l'Ã©chelle supÃ©rieure pour les valeurs comprises entre 10 et 20. Ces valeurs sont modifiables en fonction des goÃ»ts esthÃ©tiques de chacun.    */
 
         $div_range1 = array(5,6,10,10.1);
         $div_range2 = array(4,6,10.11,12.1);
@@ -281,7 +281,7 @@ class barchart
 
 
         /**
-         * Définition de la largeur de grille si elle n'existe pas déjà
+         * DÃ©finition de la largeur de grille si elle n'existe pas dÃ©jÃ 
          */
 
         $this->options =
@@ -413,7 +413,7 @@ class barchart
 
                             foreach($this->legend as $key => $label)
                             {
-                                //alignement automatique de l'échelle horizontale ?>
+                                //alignement automatique de l'Ã©chelle horizontale ?>
                                 <div style="text-align: center; text-indent: <?php if ($this->options['bar_arrange']=='side_by_side') echo -2 * $this->options['padding'] ; ?>px ; width:<?php echo $ticks_column_width; ?>px; "><?php echo $label; ?></div>
                                 <?php
                             }
@@ -431,9 +431,9 @@ class barchart
                 <div class="caption">
                 <?php
                 /*
-                 * légende en bas à droite du graph, avec alignement automatique du texte (en fonction de la longueur de chaîne):
-                 * si les descriptions de la légende sont de longueur différente, le texte et la légende seront alognés en fonction
-                 * de la chaîne la plus longue
+                 * lÃ©gende en bas Ã  droite du graph, avec alignement automatique du texte (en fonction de la longueur de chaÃ®ne):
+                 * si les descriptions de la lÃ©gende sont de longueur diffÃ©rente, le texte et la lÃ©gende seront alognÃ©s en fonction
+                 * de la chaÃ®ne la plus longue
                  */
 
                     $max_label_strl = 0;

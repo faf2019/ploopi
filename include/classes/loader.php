@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,36 +26,61 @@ use ploopi;
 
 /**
  * Initialisation de Ploopi
- *
- * @package ploopi
- * @subpackage log
- * @copyright Ovensia
- * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
- */
-
-
-/**
- * Initialisation de Ploopi
- * Autoload, bufferisation, chargement de session, connexion à la base de données...
+ * Autoload, bufferisation, chargement de session, connexion Ã  la base de donnÃ©es...
  *
  * @package ploopi
  * @subpackage loader
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 abstract class loader
 {
+    /**
+     * Session initialisÃ©e ?
+     *
+     * @var boolean
+     */
     private static $initsession = false;
-    private static $script = 'index'; // index/admin/light/quick/webservice/backend...
+
+    /**
+     * Script principal appelÃ©
+     * index/admin/light/quick/webservice/backend...
+     *
+     * @var string
+     */
+    private static $script = 'index'; //
+
+    /**
+     * Liste des espaces de travail
+     *
+     * @var array
+     */
     private static $workspaces = array();
-    private static $workspace = array(); // workspace sélectionné
 
+    /**
+     * Espace de travail sÃ©lectionnÃ©
+     *
+     * @var string
+     */
+    private static $workspace = array(); // workspace sÃ©lectionnÃ©
 
+    /**
+     * Liste des classes chargÃ©es par l'autoload
+     *
+     * @var array
+     */
     private static $_arrLoaded = array();
 
+
+    /**
+     * Conversion d'un nom de classe en chemin physique
+     *
+     * @param string $strClassName nom de classe
+     *
+     * @return string chemin physique
+     */
     private static function _classToFile($strClassName) {
         $path = explode('\\', $strClassName);
         switch (sizeof($path)) {
@@ -74,19 +99,30 @@ abstract class loader
         }
     }
 
+    /**
+     * VÃ©rifie l'existence d'une classe
+     *
+     * @param string $strClassName nom de classe
+     *
+     * @return boolean true si la classe existe
+     */
     public static function classExists($strClassName) {
         return file_exists(self::_classToFile($strClassName));
     }
 
+    /**
+     * Autoload
+     *
+     * @param string $strClassName nom de classe
+     */
     private static function _autoload($strClassName)
     {
-        // Classe déjà chargée
+        // Classe dÃ©jÃ  chargÃ©e
         if (in_array($strClassName, self::$_arrLoaded)) return true;
 
 
         if (strpos($strClassName, 'ploopi\\') === 0) {
-            // Sinon, on essaye d'inclure le fichier selon les règles de nommage
-            // echo '<br />called: '.$strClassName; // Désactiver le buffer !
+            // Sinon, on essaye d'inclure le fichier selon les rÃ¨gles de nommage
             $strClassFile = self::_classToFile($strClassName);
 
             // Inclusion du fichier de classe
@@ -102,33 +138,35 @@ abstract class loader
 
     /**
      * Partie commune des scripts de chargement de l'environnement Ploopi
-     * Démarrage du timer principal.
+     * DÃ©marrage du timer principal.
      * Chargement du fichier de config.
      * Chargement du handler de gestion du buffer.
      * Chargement du handler de gestion des erreurs.
      * Chargement du handler de gestion des sessions.
      * Filtrage des variables $POST, $GET, $COOKIE, $SERVER.
-     * Connexion à la base de données.
-     * Mise à jour de la session
+     * Connexion Ã  la base de donnÃ©es.
+     * Mise Ã  jour de la session
      *
      * @package ploopi
      * @subpackage loader
      * @copyright Ovensia
      * @license GNU General Public License (GPL)
-     * @author Stéphane Escaich
+     * @author Ovensia
      */
 
     public static function boot()
     {
-        global $ploopi_timer;
-
         /**
-         * Démarrage du timer principal.
+         * DÃ©marrage du timer principal.
          */
 
         include_once './include/classes/timer.php' ;
-        $ploopi_timer = new timer();
-        $ploopi_timer->start();
+        timer::get();
+
+        /**
+         * Encodage interne en UTF-8
+         */
+        mb_internal_encoding('UTF-8');
 
         /**
          * Autload
@@ -137,7 +175,7 @@ abstract class loader
         include_once './vendor/autoload.php';
 
         /**
-         * Création du buffer principal.
+         * CrÃ©ation du buffer principal.
          */
         ob_start(array(__NAMESPACE__.'\\buffer', 'callback'));
 
@@ -162,7 +200,7 @@ abstract class loader
          */
         include_once './include/constants.php';
 
-        // Chargement des dépendances pour l'écriture du log dans le buffer (cas particulier, autoloader non fonctionnel)
+        // Chargement des dÃ©pendances pour l'Ã©criture du log dans le buffer (cas particulier, autoloader non fonctionnel)
         if (defined('_PLOOPI_ACTIVELOG') && _PLOOPI_ACTIVELOG) include_once './include/classes/log.php';
 
         /**
@@ -188,43 +226,43 @@ abstract class loader
         }
 
         /**
-         * Démarrage de la session
+         * DÃ©marrage de la session
          */
         session_start();
 
         /**
          * Traitement du rewriting inverse
          */
-        self::rewrite();
+        self::_rewrite();
 
         /**
          * Filtrage des variables entrantes
          */
-        self::importgpr();
+        self::_importgpr();
 
         /**
-         * Séquence de logout
+         * SÃ©quence de logout
          */
         if (isset($_REQUEST['ploopi_logout'])) system::logout(0, 0, false);
 
         /**
-         * Pas de session, ou host différent => init session
+         * Pas de session, ou host diffÃ©rent => init session
          */
         if (empty($_SESSION) || (!empty($_SESSION['ploopi']['host']) && $_SESSION['ploopi']['host'] != $_SERVER['HTTP_HOST']))  {
-            if (!empty($_SESSION)) error::syslog(LOG_INFO, 'Réinitialisation de session liée à un changement de domaine');
+            if (!empty($_SESSION)) error::syslog(LOG_INFO, 'RÃ©initialisation de session liÃ©e Ã  un changement de domaine');
             session::reset();
             self::$initsession = true;
         }
 
         /**
-         * Mise à jour des données de la session
+         * Mise Ã  jour des donnÃ©es de la session
          */
         session::update();
 
         /**
-         * Initialisation du header par défaut
+         * Initialisation du header par dÃ©faut
          */
-        self::setheader();
+        self::_setheader();
 
         cache::init();
 
@@ -232,29 +270,26 @@ abstract class loader
 
     /**
      * Chargement de l'environnement Ploopi en mode CLI
-     * Démarrage du timer principal.
+     * DÃ©marrage du timer principal.
      * Chargement du fichier de config.
      * Chargement du handler de gestion des erreurs.
-     * Connexion à la base de données.
+     * Connexion Ã  la base de donnÃ©es.
      *
      * @package ploopi
      * @subpackage loader
      * @copyright Ovensia
      * @license GNU General Public License (GPL)
-     * @author Stéphane Escaich
+     * @author Ovensia
      */
 
     public static function boot_cli()
     {
-        global $ploopi_timer;
-
         /**
-         * Démarrage du timer principal.
+         * DÃ©marrage du timer principal.
          */
 
         include_once './include/classes/timer.php' ;
-        $ploopi_timer = new timer();
-        $ploopi_timer->start();
+        timer::get();
 
         /**
          * Autload
@@ -281,22 +316,22 @@ abstract class loader
 
     /**
      * Filtre les superglobales $_GET / $_POST / $_REQUEST / $_COOKIE / $_SERVER
-     * Déchiffre l'URL si elle est chiffrée.
+     * DÃ©chiffre l'URL si elle est chiffrÃ©e.
      *
      * @package ploopi
      * @subpackage loader
      * @copyright Ovensia
      * @license GNU General Public License (GPL)
-     * @author Stéphane Escaich
+     * @author Ovensia
      *
      * @see ploopi_filtervar
      * @see ploopi_cipher
      */
 
-    public static function importgpr()
+    private static function _importgpr()
     {
         /**
-         * Traitement du paramètre spécial 'ploopi_url' via POST/GET
+         * Traitement du paramÃ¨tre spÃ©cial 'ploopi_url' via POST/GET
          */
         foreach(array('POST', 'GET') as $strGlobalVar)
         {
@@ -313,7 +348,7 @@ abstract class loader
 
                     $strKey = urldecode($strKey);
 
-                    // Variable structurée ?
+                    // Variable structurÃ©e ?
                     // Traitement des variables de type var[dimension1][dimension2]=value
                     if (($pos = strpos($strKey, '[')) !== false)
                     {
@@ -323,7 +358,7 @@ abstract class loader
                         {
                             $funcBuildVar = function($var, $key = 0) use ($arrMatches, $strValue, &$funcBuildVar)
                             {
-                                // Cas général : on construit la variable en suivant la branche
+                                // Cas gÃ©nÃ©ral : on construit la variable en suivant la branche
                                 if (isset($arrMatches[1][$key])) {
                                     if (!isset($var[$arrMatches[1][$key]])) $var[$arrMatches[1][$key]] = array();
                                     $var[$arrMatches[1][$key]] = $funcBuildVar($var[$arrMatches[1][$key]], $key+1);
@@ -363,17 +398,17 @@ abstract class loader
     }
 
     /**
-     * Modifie les entêtes HTTP envoyées.
+     * Modifie les entÃªtes HTTP envoyÃ©es.
      * Modifie notamment la gestion du cache (no-cache)
      *
      * @package ploopi
      * @subpackage loader
      * @copyright Ovensia
      * @license GNU General Public License (GPL)
-     * @author Stéphane Escaich
+     * @author Ovensia
      */
 
-    public static function setheader()
+    private static function _setheader()
     {
         header('Expires: Sat, 1 Jan 2000 05:00:00 GMT');
         header('Last-Modified: ' . gmdate("D, d M Y H:i:s"));
@@ -387,37 +422,36 @@ abstract class loader
         // HTTP/1.0
         header('Pragma: no-cache');
 
-        // On génère un Etag unique
+        // On gÃ©nÃ¨re un Etag unique
         header('Etag: '.microtime());
 
         header('Accept-Ranges: bytes');
-        header('Content-type: text/html; charset=iso-8859-1');
+        header('Content-type: text/html; charset=utf-8');
     }
 
     /**
-     * Indique dans les entêtes si l'utilisateur est connecté
+     * Indique dans les entÃªtes si l'utilisateur est connectÃ©
      */
 
-    public static function setheader_connected()
+    private static function _setheader_connected()
     {
         header('Ploopi-Connected: '.(empty($_SESSION['ploopi']['connected']) ? 0 : 1));
     }
 
 
     /**
-     * Dispatcher en fonction du point d'entrée
+     * Dispatcher en fonction du point d'entrÃ©e
      *
      * @package ploopi
      * @subpackage loader
      * @copyright Ovensia
      * @license GNU General Public License (GPL)
-     * @author Stéphane Escaich
+     * @author Ovensia
      */
 
     public static function dispatch()
     {
         global $template_body;
-        global $ploopi_timer;
         global $ploopi_viewmodes;
         global $ploopi_system_levels;
         global $ploopi_days;
@@ -460,8 +494,8 @@ abstract class loader
             case 'quick':
                 if (empty($_SESSION['ploopi']['mode']))
                 {
-                    self::getworkspaces();
-                    self::getmodules();
+                    self::_getworkspaces();
+                    self::_getmodules();
 
                     if (!empty($_SESSION['ploopi']['hosts']['frontoffice'][0]))
                     {
@@ -469,7 +503,7 @@ abstract class loader
                     }
                 }
 
-                self::setheader_connected();
+                self::_setheader_connected();
 
                 include './include/op.php';
             break;
@@ -478,16 +512,16 @@ abstract class loader
     }
 
     /**
-     * Gère le rewriting inverse des URL
+     * GÃ¨re le rewriting inverse des URL
      *
      * @package ploopi
      * @subpackage loader
      * @copyright Ovensia
      * @license GNU General Public License (GPL)
-     * @author Stéphane Escaich
+     * @author Ovensia
      */
 
-    public static function rewrite()
+    private static function _rewrite()
     {
         global $arrParsedURI;
 
@@ -495,7 +529,7 @@ abstract class loader
         {
             $booRewriteRuleFound = false;
 
-            // Attention ! $_SERVER['REQUEST_URI'] peut contenir une url complète avec le nom de domaine
+            // Attention ! $_SERVER['REQUEST_URI'] peut contenir une url complÃ¨te avec le nom de domaine
             $arrParsedURI = @parse_url($_SERVER['REQUEST_URI']);
             $strRequestURI = $arrParsedURI['path'].(empty($arrParsedURI['query']) ? '' : "?{$arrParsedURI['query']}");
 
@@ -554,7 +588,7 @@ abstract class loader
             if (!$booRewriteRuleFound)
             {
                 output::h404();
-                system::kill('Page non trouvée');
+                system::kill('Page non trouvÃ©e');
             }
         }
     }
@@ -562,13 +596,13 @@ abstract class loader
     /**
      * Chargement de l'environnement Ploopi.
      * Charge les fonctions et classes principales.
-     * Connecte l'utilisateur, initialise la session, charge les paramètres.
+     * Connecte l'utilisateur, initialise la session, charge les paramÃ¨tres.
      *
      * @package ploopi
      * @subpackage loader
      * @copyright Ovensia
      * @license GNU General Public License (GPL)
-     * @author Stéphane Escaich
+     * @author Ovensia
      */
 
     public static function start()
@@ -589,7 +623,7 @@ abstract class loader
                 WHERE       login = '".$db->addslashes($_REQUEST['ploopi_login'])."'
             ");
 
-            // Un seul utilisateur trouvé
+            // Un seul utilisateur trouvÃ©
             if ($db->numrows() == 1)
             {
                 $fields = $db->fetchrow();
@@ -597,23 +631,23 @@ abstract class loader
                 // Trop de tentatives de connexion : mise en prison pendant _PLOOPI_JAILING_TIME
                 if ($fields['jailed_since'] > 0 && $fields['jailed_since'] + _PLOOPI_JAILING_TIME > date::createtimestamp()) {
                     user_action_log::record(_SYSTEM_ACTION_LOGIN_ERR, $_REQUEST['ploopi_login'],_PLOOPI_MODULE_SYSTEM,_PLOOPI_MODULE_SYSTEM);
-                    error::syslog(LOG_INFO, "Le compte {$_REQUEST['ploopi_login']} est suspendu pendant "._PLOOPI_JAILING_TIME."s suite à un trop grand nombre de tentatives de connexion");
+                    error::syslog(LOG_INFO, "Le compte {$_REQUEST['ploopi_login']} est suspendu pendant "._PLOOPI_JAILING_TIME."s suite Ã  un trop grand nombre de tentatives de connexion");
                     system::logout(_PLOOPI_ERROR_ACCOUNTJAILED);
                 }
 
-                // Compte désactivé
+                // Compte dÃ©sactivÃ©
                 if ($fields['disabled']) {
                     user_action_log::record(_SYSTEM_ACTION_LOGIN_ERR, $_REQUEST['ploopi_login'],_PLOOPI_MODULE_SYSTEM,_PLOOPI_MODULE_SYSTEM);
-                    error::syslog(LOG_INFO, "Le compte {$_REQUEST['ploopi_login']} est désactivé");
+                    error::syslog(LOG_INFO, "Le compte {$_REQUEST['ploopi_login']} est dÃ©sactivÃ©");
                     system::logout(_PLOOPI_ERROR_ACCOUNTEXPIRE);
                 }
 
-                // Mot de passe erronné
+                // Mot de passe erronnÃ©
                 if (!user::password_verify($_REQUEST['ploopi_password'], $_REQUEST['ploopi_login'], $fields['password'])) {
                     $objUser = new user();
                     $objUser->open($fields['id']);
                     $objUser->fields['failed_attemps']++;
-                    // Nombre de tentatives echouées trop élevé ? => case prison
+                    // Nombre de tentatives echouÃ©es trop Ã©levÃ© ? => case prison
                     if (_PLOOPI_MAX_CONNECTION_ATTEMPS && $objUser->fields['failed_attemps'] >= _PLOOPI_MAX_CONNECTION_ATTEMPS) {
                         $objUser->fields['jailed_since'] = date::createtimestamp();
                     }
@@ -631,20 +665,20 @@ abstract class loader
                     $objUser->save();
                 }
 
-                // Vérification de la validité du compte
+                // VÃ©rification de la validitÃ© du compte
                 if (!empty($fields['date_expire']))
                 {
-                    // Compte expiré (définitif sauf intervention administrateur)
+                    // Compte expirÃ© (dÃ©finitif sauf intervention administrateur)
                     if ($fields['date_expire'] <= date::createtimestamp())
                     {
                         user_action_log::record(_SYSTEM_ACTION_LOGIN_ERR, $_REQUEST['ploopi_login'],_PLOOPI_MODULE_SYSTEM,_PLOOPI_MODULE_SYSTEM);
-                        error::syslog(LOG_INFO, "Validité du compte expirée pour {$_REQUEST['ploopi_login']}");
+                        error::syslog(LOG_INFO, "ValiditÃ© du compte expirÃ©e pour {$_REQUEST['ploopi_login']}");
                         system::logout(_PLOOPI_ERROR_ACCOUNTEXPIRE);
                     }
                 }
 
-                // On force l'utilisateur à changer de mot de passe ?
-                // Le mot de passe est périmé ?
+                // On force l'utilisateur Ã  changer de mot de passe ?
+                // Le mot de passe est pÃ©rimÃ© ?
                 if (!empty($fields['password_force_update']) || (!empty($fields['password_validity']) && date::timestamp2unixtimestamp($fields['password_last_update'])+$fields['password_validity']*86400 < time())) {
 
                     $intErrorCode = 0;
@@ -658,7 +692,7 @@ abstract class loader
                             // Mot de passe valide ?
                             if (!_PLOOPI_USE_COMPLEXE_PASSWORD || security::checkpasswordvalidity($_REQUEST['ploopi_password_new'])) {
 
-                                // On peut mettre à jour la base de données
+                                // On peut mettre Ã  jour la base de donnÃ©es
                                 $objUser = new user();
                                 $objUser->open($fields['id']);
                                 $objUser->setpassword($_REQUEST['ploopi_password_new']);
@@ -701,8 +735,8 @@ abstract class loader
                 $_SESSION['ploopi']['userid'] = $fields['id'];
                 $_SESSION['ploopi']['user'] = $fields;
 
-                // Vérification de la validité du profil
-                // Il faut récupérer la liste des champs à contrôler dans les paramètres du module system
+                // VÃ©rification de la validitÃ© du profil
+                // Il faut rÃ©cupÃ©rer la liste des champs Ã  contrÃ´ler dans les paramÃ¨tres du module system
                 $objParamDefault = new param_default();
                 if ($objParamDefault->open(1, 'system_user_required_fields') && !empty($objParamDefault->fields['value']))
                 {
@@ -714,7 +748,7 @@ abstract class loader
                 }
 
                 if (empty($_REQUEST['noredir'])) {
-                    // Gestion de la redirection après login (en fonction de l'url de provenance et du script d'authentification)
+                    // Gestion de la redirection aprÃ¨s login (en fonction de l'url de provenance et du script d'authentification)
                     $arrReferer = isset($_SERVER['HTTP_REFERER']) ? parse_url($_SERVER['HTTP_REFERER']) : array(); // Provenance
                     $arrRequest = isset($_SERVER['REQUEST_URI']) ? parse_url($_SERVER['REQUEST_URI']) : array();  // Demande d'authentification
 
@@ -726,7 +760,7 @@ abstract class loader
 
                     $strLoginRedirect = '';
 
-                    // Même domaine, même script, redirection acceptée
+                    // MÃªme domaine, mÃªme script, redirection acceptÃ©e
                     if ($strRefererHost == $strRequestHost && ($strRefererScript == $strRequestScript || $strRequestScript != 'admin.php')) {
                         $strLoginRedirect = $_SERVER['HTTP_REFERER'];
                     }
@@ -749,7 +783,7 @@ abstract class loader
         self::$initsession |= isset($_REQUEST['reloadsession']);
 
         /**
-         * Permet de gérer le cas ou la session est partiellement chargée (on passe d'abord par index-quick.php...)
+         * Permet de gÃ©rer le cas ou la session est partiellement chargÃ©e (on passe d'abord par index-quick.php...)
          */
         self::$initsession |= empty($_SESSION['ploopi']['mode']);
 
@@ -757,7 +791,7 @@ abstract class loader
          * Chargement Espaces
          */
 
-        if (self::$initsession) self::getworkspaces();
+        if (self::$initsession) self::_getworkspaces();
 
         /**
          * Switch entre backoffice et frontoffice en fonction du nom du script appelant (admin.php/index.php) et de la config du portail
@@ -769,7 +803,7 @@ abstract class loader
             case 'index-light':
                 if ((!empty($_GET['webedit_mode'])) && isset($_SESSION['ploopi']['backoffice']['connected']) && $_SESSION['ploopi']['backoffice']['connected'] && isset($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['backoffice']['moduleid']]) && $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['backoffice']['moduleid']]['moduletype'] == 'webedit')
                 {
-                    // cas spécial du mode de rendu public du module Webedit (on utilise le rendu frontoffice sans activer tout le processus)
+                    // cas spÃ©cial du mode de rendu public du module Webedit (on utilise le rendu frontoffice sans activer tout le processus)
                     $newmode = 'frontoffice';
                     $_SESSION['ploopi']['frontoffice']['workspaceid'] = $_SESSION['ploopi']['backoffice']['workspaceid'];
                     $_SESSION['ploopi']['frontoffice']['moduleid'] = $_SESSION['ploopi']['backoffice']['moduleid'];
@@ -828,7 +862,7 @@ abstract class loader
 
             if ($_SESSION['ploopi']['userid'] != 0)
             {
-                self::getmodules();
+                self::_getmodules();
 
                 //include './include/start/load_param.php';
 
@@ -909,7 +943,7 @@ abstract class loader
                                 $_SESSION['ploopi']['workspaces'][$wid]['adminlevel']  = $adminlevel;
                                 $_SESSION['ploopi']['workspaces'][$wid]['backoffice']  = 1;
 
-                                // Faire une requête globale pour les modules ici ?
+                                // Faire une requÃªte globale pour les modules ici ?
                                 $_SESSION['ploopi']['workspaces'][$wid]['modules'] = $workspace->getmodules(true);
 
                                 $_SESSION['ploopi']['backoffice']['connected'] = 1;
@@ -939,10 +973,10 @@ abstract class loader
             }
         }
 
-        if (!$_SESSION['ploopi']['paramloaded']) self::getmodules();
+        if (!$_SESSION['ploopi']['paramloaded']) self::_getmodules();
 
 
-        // Génération du token en mode backoffice uniquement
+        // GÃ©nÃ©ration du token en mode backoffice uniquement
         if (_PLOOPI_TOKEN && $_SESSION['ploopi']['mode'] == 'backoffice')
         {
             $_SESSION['ploopi']['token'] = uniqid(rand());
@@ -960,7 +994,7 @@ abstract class loader
 
         // Indicateur global de connexion
         $_SESSION['ploopi']['connected'] = isset($_SESSION['ploopi'][$_SESSION['ploopi']['mode']]['connected']) && $_SESSION['ploopi'][$_SESSION['ploopi']['mode']]['connected'];
-        self::setheader_connected();
+        self::_setheader_connected();
 
         ///////////////////////////////////////////////////////////////////////////
         // ADMIN SWITCHES
@@ -992,8 +1026,8 @@ abstract class loader
             if ($_SESSION['ploopi']['connected'])
             {
                 if (_PLOOPI_TOKEN) {
-                    // Vérification de la validité du jeton
-                    // On autorise un jeton non valide ou non fourni à l'unique condition que la requête ne contienne aucun paramètre
+                    // VÃ©rification de la validitÃ© du jeton
+                    // On autorise un jeton non valide ou non fourni Ã  l'unique condition que la requÃªte ne contienne aucun paramÃ¨tre
                     if (!empty($_REQUEST) && ((empty($strToken) || !isset($_SESSION['ploopi']['tokens'][$strToken])))) {
                         if (empty($strToken)) {
                             error::syslog(LOG_INFO, 'Jeton absent');
@@ -1008,7 +1042,7 @@ abstract class loader
                         system::kill();
                     }
 
-                    // Mise à jour de la validité du jeon
+                    // Mise Ã  jour de la validitÃ© du jeon
                     unset($_SESSION['ploopi']['tokens'][$strToken]);
                     $_SESSION['ploopi']['tokens'][$strToken] = time();
                 }
@@ -1063,7 +1097,7 @@ abstract class loader
                     // SWITCH WORKSPACE
                     ///////////////////////////////////////////////////////////////////////////
 
-                    // Traitement d'un car particulier lié au détachement d'un utilisateur à l'espace qu'il consulte
+                    // Traitement d'un car particulier liÃ© au dÃ©tachement d'un utilisateur Ã  l'espace qu'il consulte
                     if (!isset($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['backoffice']['workspaceid']]))
                     {
                         $ploopi_workspaceid = $_SESSION['ploopi']['hosts']['backoffice'][0];
@@ -1164,10 +1198,10 @@ abstract class loader
                     $_SESSION['ploopi']['token']
                 );
 
-                // Suppression des jetons périmés
+                // Suppression des jetons pÃ©rimÃ©s
                 $mint = time() - _PLOOPI_TOKENTIME;
                 foreach($_SESSION['ploopi']['tokens'] as $k => $t) if ($t < $mint) unset($_SESSION['ploopi']['tokens'][$k]);
-                // Limitation du nombre de jetons conservés
+                // Limitation du nombre de jetons conservÃ©s
                 $_SESSION['ploopi']['tokens'] = array_slice($_SESSION['ploopi']['tokens'], -_PLOOPI_TOKENMAX, _PLOOPI_TOKENMAX);
 
             } else {
@@ -1286,7 +1320,7 @@ abstract class loader
         if ($ploopi_errornum)
         {
             session_destroy();
-            echo "<html><body><div style=\"text-align:center;\"><br /><br /><h1>Erreur de sécurité</h1>reconnectez vous ou fermez votre navigateur ou contactez l'administrateur système<br /><br /><b>erreur : $ploopi_errornum</b><br /><br /><a href=\"admin.php\">continuer</a></div></body></html>";
+            echo "<html><body><div style=\"text-align:center;\"><br /><br /><h1>Erreur de sÃ©curitÃ©</h1>reconnectez vous ou fermez votre navigateur ou contactez l'administrateur systÃ¨me<br /><br /><b>erreur : $ploopi_errornum</b><br /><br /><a href=\"admin.php\">continuer</a></div></body></html>";
             system::kill();
         }
 
@@ -1294,20 +1328,18 @@ abstract class loader
     }
 
     /**
-     * Chargement très simplifié de l'environnement Ploopi.
+     * Chargement trÃ¨s simplifiÃ© de l'environnement Ploopi.
      *
      * @package ploopi
      * @subpackage loader
      * @copyright Ovensia
      * @license GNU General Public License (GPL)
-     * @author Stéphane Escaich
+     * @author Ovensia
      */
 
     public static function startlight()
     {
-        include_once './include/classes/workspace.php';
-
-        if (self::$initsession) self::getworkspaces();
+        if (self::$initsession) self::_getworkspaces();
 
         switch(self::$script)
         {
@@ -1335,13 +1367,13 @@ abstract class loader
                     $_SESSION['ploopi']['workspaceid'] = $_SESSION['ploopi']['hosts']['backoffice'][0];
                 else system::kill();
 
-                self::getmodules();
+                self::_getmodules();
             break;
         }
 
         if (isset($_REQUEST['ploopi_moduleid']) && is_numeric($_REQUEST['ploopi_moduleid'])) $_SESSION['ploopi']['moduleid'] = $_REQUEST['ploopi_moduleid'];
 
-        self::setheader_connected();
+        self::_setheader_connected();
     }
 
     /**
@@ -1351,24 +1383,22 @@ abstract class loader
      * @subpackage start
      * @copyright Ovensia
      * @license GNU General Public License (GPL)
-     * @author Stéphane Escaich
+     * @author Ovensia
      */
 
-    public static function getworkspaces()
+    private static function _getworkspaces()
     {
         $db = db::get();
 
-        include_once './include/classes/workspace.php';
-
         /**
-         * Suppression des espaces de travail déjà sélectionnés
+         * Suppression des espaces de travail dÃ©jÃ  sÃ©lectionnÃ©s
          */
 
         unset($_SESSION['ploopi']['workspaces']);
 
         ///////////////////////////////////////////////////////////////////////////
         // Liste des espaces pour le domaine courant
-        // On en profite pour appliquer l'héritage implicite des domaines pour les sous-espaces de travail
+        // On en profite pour appliquer l'hÃ©ritage implicite des domaines pour les sous-espaces de travail
         ///////////////////////////////////////////////////////////////////////////
 
         $db->query("
@@ -1443,7 +1473,7 @@ abstract class loader
                 'backoffice' => array()
             );
 
-        // on garde les id de espaces autorisés en fonction du domaine courant
+        // on garde les id de espaces autorisÃ©s en fonction du domaine courant
         foreach($workspaces as $wid => $wsp)
         {
             foreach($wsp['frontoffice_domain_array'] as $domain)
@@ -1456,7 +1486,7 @@ abstract class loader
             }
         }
 
-        // Espace par défaut front/back
+        // Espace par dÃ©faut front/back
         if (isset($_SESSION['ploopi']['hosts']['frontoffice'][0])) $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['hosts']['frontoffice'][0]] = $workspaces[$_SESSION['ploopi']['hosts']['frontoffice'][0]];
         if (isset($_SESSION['ploopi']['hosts']['backoffice'][0])) $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['hosts']['backoffice'][0]] = $workspaces[$_SESSION['ploopi']['hosts']['backoffice'][0]];
 
@@ -1476,23 +1506,23 @@ abstract class loader
     }
 
     /**
-     * Chargement des modules + paramètres
+     * Chargement des modules + paramÃ¨tres
      *
      * @package ploopi
      * @subpackage loader
      * @copyright Ovensia
      * @license GNU General Public License (GPL)
-     * @author Stéphane Escaich
+     * @author Ovensia
      */
 
-    public static function getmodules()
+    private static function _getmodules()
     {
         $db = db::get();
 
         $_SESSION['ploopi']['modules'] = array();
         $_SESSION['ploopi']['moduletypes'] = array();
 
-        // On récupère les modules
+        // On rÃ©cupÃ¨re les modules
         $db->query("
             SELECT      m.id,
                         m.label,
@@ -1538,7 +1568,7 @@ abstract class loader
      * @subpackage loader
      * @copyright Ovensia
      * @license GNU General Public License (GPL)
-     * @author Stéphane Escaich
+     * @author Ovensia
      * @return array
      */
 
@@ -1552,7 +1582,7 @@ abstract class loader
      * @subpackage loader
      * @copyright Ovensia
      * @license GNU General Public License (GPL)
-     * @author Stéphane Escaich
+     * @author Ovensia
      * @return array
      */
 

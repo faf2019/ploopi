@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,49 +25,46 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Classe permettant de convertir un document au format OpenDocument en en PDF, DOC, SXW, RTF, XLS,  etc... via le webservice JODConverter
+ * Gestion de la conversion d'un document au format OpenDocument en PDF, DOC, SXW, RTF, XLS,  etc... via le webservice JODConverter
  *
  * @package ploopi
- * @subpackage odf
+ * @subpackage module
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
- *
- * @link http://www.artofsolving.com/opensource/jodconverter
+ * @author Ovensia
  */
 
 class odf_converter
 {
-    var $url = '';
+    private $_url = '';
 
     /**
      * Constructeur de la classe.
      *
      * @param string $url URL du webservice JODConverter
-     * @return odf_converter
      *
      * @link http://www.artofsolving.com/opensource/jodconverter
      */
 
     function __construct($url)
     {
-        $this->url = "{$url}/service";
+        $this->_url = "{$url}/service";
     }
 
     /**
-     * Convertit un document dans un format qu'Open Office peut lire (ODT, ODS, DOC, XLS, etc...) dans un format qu'il peut écrire (PDF, ODT, ODS, DOC, XLS, SXW, RTF, HTML, etc...)
+     * Convertit un document dans un format qu'Open Office peut lire (ODT, ODS, DOC, XLS, etc...) dans un format qu'il peut Ã©crire (PDF, ODT, ODS, DOC, XLS, SXW, RTF, HTML, etc...)
      *
      * @param string $inputData contenu du document
      * @param string $inputType type mime du document source
      * @param string $outputType type mime du document destination
-     * @return string contenu du document généré
+     * @return string contenu du document gÃ©nÃ©rÃ©
      */
 
     function convert($inputData, $inputType, $outputType)
     {
         require_once 'HTTP/Request2.php';
 
-        $objRequest = new HTTP_Request2($this->url);
+        $objRequest = new HTTP_Request2($this->_url);
 
         return $objRequest
             ->setMethod(HTTP_Request2::METHOD_POST)

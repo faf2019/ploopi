@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,38 +25,27 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Gestion des utilisateurs
+ * Gestion des utilisateurs (table ploopi_user)
  *
  * @package ploopi
  * @subpackage user
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
- */
-
-
-/**
- * Classe d'accès à la table ploopi_user
- *
- * @package ploopi
- * @subpackage user
- * @copyright Ovensia
- * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 class user extends data_object
 {
     /**
-     * Sauvegarde du précédent mot de passe pour détection de modification
+     * Sauvegarde du prÃ©cÃ©dent mot de passe pour dÃ©tection de modification
+     *
+     * @var string
      */
 
     private $_strPreviousPassword = '';
 
     /**
      * Constructeur de la classe
-     *
-     * @return user
      */
 
     public function __construct()
@@ -96,13 +85,11 @@ class user extends data_object
     }
 
     /**
-     * Supprime l'utilisateur et les données associées : validation, param, share, annotation, subscription, etc..
+     * Supprime l'utilisateur et les donnÃ©es associÃ©es : validation, param, share, annotation, subscription, etc..
      */
 
     public function delete()
     {
-        include_once './include/classes/group.php';
-
         $db = db::get();
 
         $db->query("DELETE FROM ploopi_validation WHERE type_validation = 'user' AND id_validation = {$this->fields['id']}");
@@ -129,7 +116,7 @@ class user extends data_object
     }
 
     /**
-     * Supprime la photo associée à l'utilisateur
+     * Supprime la photo associÃ©e Ã  l'utilisateur
      */
     public function deletephoto()
     {
@@ -139,7 +126,7 @@ class user extends data_object
     }
 
     /**
-     * Retourne un tableau contenant les espaces auxquels l'utilisateur est (plus ou moins directement) rattaché
+     * Retourne un tableau contenant les espaces auxquels l'utilisateur est (plus ou moins directement) rattachÃ©
      *
      * @param boolean $lite true si la fonction ne doit renvoyer que le nom des espaces
      * @return array tableau d'espaces
@@ -148,16 +135,16 @@ class user extends data_object
     public function getworkspaces($lite = false)
     {
         /**
-         * 1. Récupére les groupes auxquels l'utilisateur est rattaché.
-         * 2. A partir des groupes, récupère les espaces auxquels les groupes sont rattachés directement ou pas (on regarde les parents).
-         * 3. Récupère les espaces auxquels l'utilisateur est directement rattaché.
+         * 1. RÃ©cupÃ©re les groupes auxquels l'utilisateur est rattachÃ©.
+         * 2. A partir des groupes, rÃ©cupÃ¨re les espaces auxquels les groupes sont rattachÃ©s directement ou pas (on regarde les parents).
+         * 3. RÃ©cupÃ¨re les espaces auxquels l'utilisateur est directement rattachÃ©.
          */
 
         $db = db::get();
 
         $workspaces = array();
 
-        // on récupère l'ensemble des groupes d'utilisateurs et leurs parents
+        // on rÃ©cupÃ¨re l'ensemble des groupes d'utilisateurs et leurs parents
         $groups = $this->getgroups();
 
         if (sizeof($groups))
@@ -231,7 +218,7 @@ class user extends data_object
     }
 
     /**
-     * Retourne un tableau contenant les groupes auxquels l'utilisateur est rattaché
+     * Retourne un tableau contenant les groupes auxquels l'utilisateur est rattachÃ©
      *
      * @param boolean $lite true si la fonction ne doit renvoyer que le nom des groupes
      * @return array tableau de groupes
@@ -267,15 +254,13 @@ class user extends data_object
     }
 
     /**
-     * Attache l'utilisateur à un groupe
+     * Attache l'utilisateur Ã  un groupe
      *
      * @param int $groupid identifiant du groupe
      */
 
     public function attachtogroup($groupid)
     {
-        include_once './include/classes/group.php';
-
         $db = db::get();
 
         $group_user = new group_user();
@@ -285,7 +270,7 @@ class user extends data_object
     }
 
     /**
-     * Attache l'utilisateur à un espace de travail
+     * Attache l'utilisateur Ã  un espace de travail
      *
      * @param unknown_type $workspaceid
      */
@@ -317,25 +302,23 @@ class user extends data_object
             $admin_workspaceid = $workspaceid;
             $admin_moduleid = $fields['id'];
 
-            echo "<br /><strong>« ".str::htmlentities($fields['label'])." »</strong> (".str::htmlentities($fields['moduletype']).")<br />";
+            echo "<br /><strong>Â« ".str::htmlentities($fields['label'])." Â»</strong> (".str::htmlentities($fields['moduletype']).")<br />";
             if (file_exists("./modules/{$fields['moduletype']}/include/admin_user_create.php")) include "./modules/{$fields['moduletype']}/include/admin_user_create.php";
         }
 
     }
 
     /**
-     * Retourne un tableau des actions autorisées pour cet utilisateur.
+     * Retourne un tableau des actions autorisÃ©es pour cet utilisateur.
      * $actions[id_workspace][id_module][$fields['id_action']]
      *
-     * @param array $arrActions tableau d'actions déjà existant (optionnel)
-     * @param boolean $booWithGroups true si la méthode doit renvoyer les actions des groupes de l'utilisateurs (optionnel, false par défaut)
+     * @param array $arrActions tableau d'actions dÃ©jÃ  existant (optionnel)
+     * @param boolean $booWithGroups true si la mÃ©thode doit renvoyer les actions des groupes de l'utilisateurs (optionnel, false par dÃ©faut)
      * @return array tableau des actions
      */
 
     public function getactions($arrActions = null, $booWithGroups = false)
     {
-        include_once './include/classes/group.php';
-
         $db = db::get();
 
         $result = $db->query("
@@ -377,10 +360,10 @@ class user extends data_object
     {
         $db = db::get();
         $usrlist=array();
-        // récupération de ts les espaces de travail
+        // rÃ©cupÃ©ration de ts les espaces de travail
         $workspaces = array_keys($this->getworkspaces());
 
-        // récupération de ceux qui sont attachés directement à ceuxci
+        // rÃ©cupÃ©ration de ceux qui sont attachÃ©s directement Ã  ceuxci
          $select =  "
                     SELECT      ploopi_workspace_user.id_user
                     FROM        ploopi_workspace_user
@@ -390,7 +373,7 @@ class user extends data_object
 
         while ($fields = $db->fetchrow($result)) array_push($usrlist,$fields['id_user']);
 
-        // récupération de ceux qui sont attachés par un groupe
+        // rÃ©cupÃ©ration de ceux qui sont attachÃ©s par un groupe
 
         $select =   "
                     SELECT      distinct id_user
@@ -407,7 +390,7 @@ class user extends data_object
     }
 
     /**
-     * Affecte un nouveau mot de passe à l'utilisateur
+     * Affecte un nouveau mot de passe Ã  l'utilisateur
      *
      * @param string $strPassword mot de passe en clair
      */
@@ -418,9 +401,9 @@ class user extends data_object
     }
 
     /**
-     * Génère le hash à partir du mot de passe en clair et du login de l'utilisateur
+     * GÃ©nÃ¨re le hash Ã  partir du mot de passe en clair et du login de l'utilisateur
      *
-     * @param string $strPassword mot de passe à "hasher"
+     * @param string $strPassword mot de passe Ã  "hasher"
      * @param string $strLogin login de l'utilisateur
      */
 
@@ -438,9 +421,9 @@ class user extends data_object
     }
 
     /**
-     * Contrôle le mot de passe utilisateur
+     * ContrÃ´le le mot de passe utilisateur
      *
-     * @param string $strPassword mot de passe à vérifier
+     * @param string $strPassword mot de passe Ã  vÃ©rifier
      * @param string $strLogin login de l'utilisateur
      * @param string $strHash hash du mot de passe
      */
@@ -465,6 +448,6 @@ class user extends data_object
 
     public function getphotopath()
     {
-        return (_PLOOPI_PATHDATA._PLOOPI_SEP.'system'._PLOOPI_SEP.$this->fields['id'].'.png');
+        return _PLOOPI_PATHDATA._PLOOPI_SEP.'system'._PLOOPI_SEP.$this->fields['id'].'.png';
     }
 }

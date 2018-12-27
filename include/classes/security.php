@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,14 +25,14 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Fonctions permettant de mettre en place des mécanismes de sécurité.
+ * Gestion des mécanismes de sécurité.
  * Validation de mots de passe, filtrage de contenu, vérification de droits.
  *
  * @package ploopi
  * @subpackage security
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 abstract class security
@@ -72,7 +72,7 @@ abstract class security
      *
      * @copyright Ovensia
      * @license GNU General Public License (GPL)
-     * @author Stéphane Escaich
+     * @author Ovensia
      */
 
     public static function generatepassword($length = 8, $use_char_up = true, $use_char_numb = true, $use_ponc = true)
@@ -106,7 +106,7 @@ abstract class security
      *
      * @copyright Ovensia
      * @license GNU General Public License (GPL)
-     * @author Stéphane Escaich
+     * @author Ovensia
      */
 
     public static function filtervar($mixVar, $strVarName = null, $booUtf8 = false)

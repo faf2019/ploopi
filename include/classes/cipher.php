@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,26 +25,13 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Gestion du chiffrement/déchiffrement
+ * Gestion du chiffrement/dÃ©chiffrement (basÃ© sur mcrypt), notamment utilisÃ©e pour chiffrer les URL
  *
  * @package ploopi
  * @subpackage crypt
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
- *
- * @see mcrypt
- * @see _PLOOPI_SECRETKEY
- */
-
-/**
- * Classe de chiffrement/déchiffrement (basé sur mcrypt), notamment utilisée pour chiffrer les URL
- *
- * @package ploopi
- * @subpackage crypt
- * @copyright Ovensia
- * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  *
  * @see mcrypt
  * @see _PLOOPI_SECRETKEY
@@ -53,7 +40,7 @@ use ploopi;
 class cipher
 {
     /**
-     * Clé secrète
+     * ClÃ© secrÃ¨te
      *
      * @var string
      */
@@ -76,15 +63,19 @@ class cipher
 
     private $cipher;
 
+    /**
+     * Instance de la classe (singleton)
+     *
+     * @var cipher
+     */
 
     private static $objInstance;
 
     /**
      * Constructeur de la classe
      *
-     * @param string $key clé secrète
+     * @param string $key clÃ© secrÃ¨te
      * @param string $iv vecteur d'initialisation
-     * @return ploopi_cipher
      */
 
     public function __construct($key = _PLOOPI_SECRETKEY, $iv = _PLOOPI_CIPHER_IV, $c = _PLOOPI_CIPHER)
@@ -95,7 +86,9 @@ class cipher
     }
 
     /**
-     * Méthode singleton
+     * MÃ©thode singleton
+     *
+     * @return cipher
      */
 
     public static function singleton()
@@ -113,8 +106,8 @@ class cipher
     /**
      * Chiffre une chaine
      *
-     * @param string $str chaîne à chiffrer
-     * @return mixed chaîne chiffrée ou false si la chaîne est vide
+     * @param string $str chaÃ®ne Ã  chiffrer
+     * @return mixed chaÃ®ne chiffrÃ©e ou false si la chaÃ®ne est vide
      */
 
     function crypt($str)
@@ -130,10 +123,10 @@ class cipher
     }
 
     /**
-     * Déchiffre une chaîne
+     * DÃ©chiffre une chaÃ®ne
      *
-     * @param string $encrypted chaîne chiffrée
-     * @return mixed chaîne déchiffrée ou false si la chaîne est vide
+     * @param string $encrypted chaÃ®ne chiffrÃ©e
+     * @return mixed chaÃ®ne dÃ©chiffrÃ©e ou false si la chaÃ®ne est vide
      */
 
     function decrypt($strEncrypted)

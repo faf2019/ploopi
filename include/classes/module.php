@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,31 +25,19 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Gestion des modules.
+ * Gestion des modules (table ploopi_module)
  *
  * @package ploopi
  * @subpackage module
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
- */
-
-/**
- * Classe d'accès à la table ploopi_module
- *
- * @package ploopi
- * @subpackage module
- * @copyright Ovensia
- * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 class module extends data_object
 {
     /**
      * Constructeur de la classe
-     *
-     * @return module
      */
     public function __construct()
     {
@@ -92,13 +80,11 @@ class module extends data_object
     }
 
     /**
-     * Supprime l'instance de module et les données associées : rôles, partages, abonnements, validation, etc...
+     * Supprime l'instance de module et les donnÃ©es associÃ©es : rÃ´les, partages, abonnements, validation, etc...
      */
 
     public function delete()
     {
-        include_once './include/classes/workspace.php';
-
         $db = db::get();
 
         if ($this->fields['id']!=-1)
@@ -156,7 +142,7 @@ class module extends data_object
     }
 
     /**
-     * Retourne un tableau contenant les espaces de travail auxquels le module est rattaché
+     * Retourne un tableau contenant les espaces de travail auxquels le module est rattachÃ©
      *
      * @return array tableau des espaces de travail
      */
@@ -183,10 +169,10 @@ class module extends data_object
     }
 
     /**
-     * Retourne un tableau contenant les rôles basés sur le module
+     * Retourne un tableau contenant les rÃ´les basÃ©s sur le module
      *
-     * @param boolean $shared true si on ne veut que les rôles partagés
-     * @return array tableau des rôles
+     * @param boolean $shared true si on ne veut que les rÃ´les partagÃ©s
+     * @return array tableau des rÃ´les
      */
 
     public function getroles($shared = false)
@@ -213,7 +199,7 @@ class module extends data_object
     }
 
     /**
-     * Détache le module d'un espace de travail donné
+     * DÃ©tache le module d'un espace de travail donnÃ©
      *
      * @param int $workspaceid identifiant de l'espace de travail
      */
@@ -235,17 +221,17 @@ class module extends data_object
 
     /**
      * Charge l'environnement du module : variables globales, constantes, fonctions.
-     * En option : fichiers javascript, feuilles de styles, entêtes (head)
+     * En option : fichiers javascript, feuilles de styles, entÃªtes (head)
      *
      * @param string $moduletype nom du module
-     * @param boolean $js true si les fichiers javascript doivent être chargés
-     * @param boolean $css true si les feuilles de style doivent être chargées
-     * @param boolean $head true si l'entête doit être chargée
-     * @return boolean true si le module a été initialisé
+     * @param boolean $js true si les fichiers javascript doivent Ãªtre chargÃ©s
+     * @param boolean $css true si les feuilles de style doivent Ãªtre chargÃ©es
+     * @param boolean $head true si l'entÃªte doit Ãªtre chargÃ©e
+     * @return boolean true si le module a Ã©tÃ© initialisÃ©
      *
      * @copyright Ovensia
      * @license GNU General Public License (GPL)
-     * @author Stéphane Escaich
+     * @author Ovensia
      */
 
     public static function init($moduletype, $js = true, $css = true, $head = true)
@@ -354,14 +340,14 @@ class module extends data_object
     }
 
     /**
-     * Retourne l'id du module passé en paramètre
+     * Retourne l'id du module passÃ© en paramÃ¨tre
      *
      * @param string $strModuleName nom du module
      * @param boolean $booFirstOnly true si on souhaite simplement retourner le premier id de module (cas des instances multiples)
      * @return mixed identifiant du module ou tableau des identifiants de modules ou false si aucun module
      *
      * @copyright Exyzt, Ovensia
-     * @author Julio Renella, Stéphane Escaich
+     * @author Julio Renella, StÃ©phane Escaich
      */
 
     public static function getid($strModuleName, $booFirstOnly = true)

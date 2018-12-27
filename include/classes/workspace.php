@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,36 +25,28 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Gestion des espaces de travail
+ * Gestion des espaces de travail (table ploopi_workspace)
  *
  * @package ploopi
  * @subpackage workspace
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
- */
-
-/**
- * Classe d'accès à la table ploopi_workspace
- *
- * @package ploopi
- * @subpackage workspace
- * @copyright Ovensia
- * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 class workspace extends data_object
 {
-    // Stockage temporaire des résultats
-    // Utile si plusieurs appels à une même fonction dans l'exécution de la page
-    // Trop lourd à stocker en session
+    /**
+     * Stockage temporaire des rÃ©sultats.
+     * Utile si plusieurs appels dans l'exÃ©cution de la page.
+     * Trop lourd Ã  stocker en session.
+     *
+     * @var array
+     */
     private static $_arrCache = array();
 
     /**
      * Constructeur de la classe
-     *
-     * @return workspace
      */
 
     public function __construct()
@@ -63,9 +55,9 @@ class workspace extends data_object
     }
 
     /**
-     * Enregistre l'espace de travail. Met à jour la profondeur de l'espace.
+     * Enregistre l'espace de travail. Met Ã  jour la profondeur de l'espace.
      *
-     * @return boolean true si l'enregistrement a été correctement effectué
+     * @return boolean true si l'enregistrement a Ã©tÃ© correctement effectuÃ©
      */
 
     public function save()
@@ -139,9 +131,9 @@ class workspace extends data_object
     }
 
     /**
-     * Retourne un tableau contenant tous les identifiants des espaces frères de l'espace
+     * Retourne un tableau contenant tous les identifiants des espaces frÃ¨res de l'espace
      *
-     * @return array tableau des espaces frères de l'espace (identifiants)
+     * @return array tableau des espaces frÃ¨res de l'espace (identifiants)
      */
 
     public function getbrothers()
@@ -173,9 +165,9 @@ class workspace extends data_object
     }
 
     /**
-     * Retourne l'espace père ou false
+     * Retourne l'espace pÃ¨re ou false
      *
-     * @return workspace l'espace père ou false
+     * @return workspace l'espace pÃ¨re ou false
      */
 
     public function getfather()
@@ -186,9 +178,9 @@ class workspace extends data_object
     }
 
     /**
-     * Retourne un tableau associatif (id => fields) contenant les utilisateurs de l'espace (non récursif)
+     * Retourne un tableau associatif (id => fields) contenant les utilisateurs de l'espace (non rÃ©cursif)
      *
-     * @param boolean $booWithGroups true si la fonction doit renvoyer les utilisateurs des groupes rattachés (false par défaut)
+     * @param boolean $booWithGroups true si la fonction doit renvoyer les utilisateurs des groupes rattachÃ©s (false par dÃ©faut)
      * @return array tableau des utilisateurs
      */
 
@@ -310,10 +302,10 @@ class workspace extends data_object
     }
 
     /**
-     * Retourne un tableau associatif (id => fields) des groupes rattachés à l'espace.
+     * Retourne un tableau associatif (id => fields) des groupes rattachÃ©s Ã  l'espace.
      *
-     * @param boolean $getchildren true si la fonction doit renvoyer les sous-groupes (false par défaut)
-     * @return array tableau associatif des groupes rattachés à l'espace
+     * @param boolean $getchildren true si la fonction doit renvoyer les sous-groupes (false par dÃ©faut)
+     * @return array tableau associatif des groupes rattachÃ©s Ã  l'espace
      */
 
     public function getgroups($getchildren = false)
@@ -357,7 +349,7 @@ class workspace extends data_object
     }
 
     /**
-     * Crée un double de l'espace
+     * CrÃ©e un double de l'espace
      *
      * @return workspace
      */
@@ -373,10 +365,10 @@ class workspace extends data_object
     }
 
     /**
-     * Retourne un tableau contenant les modules rattachés à l'espace
+     * Retourne un tableau contenant les modules rattachÃ©s Ã  l'espace
      *
-     * @param boolean $light true si la fonction ne doit renvoyer que les identifiants des modules (false par défaut)
-     * @return array tableau contenant les modules rattachés à l'espace
+     * @param boolean $light true si la fonction ne doit renvoyer que les identifiants des modules (false par dÃ©faut)
+     * @return array tableau contenant les modules rattachÃ©s Ã  l'espace
      */
 
     public function getmodules($light = false)
@@ -422,10 +414,10 @@ class workspace extends data_object
     }
 
     /**
-     * Retourne un tableau des modules partagés (ou hérités) par les espaces parents
+     * Retourne un tableau des modules partagÃ©s (ou hÃ©ritÃ©s) par les espaces parents
      *
-     * @param boolean $herited true si la fonction doit renvoyer les modules hérités (false par défaut)
-     * @return array tableau des modules partagés (ou hérités) par les espaces parents
+     * @param boolean $herited true si la fonction doit renvoyer les modules hÃ©ritÃ©s (false par dÃ©faut)
+     * @return array tableau des modules partagÃ©s (ou hÃ©ritÃ©s) par les espaces parents
      */
 
     public function getsharedmodules($herited = false)

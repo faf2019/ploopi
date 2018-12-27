@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2008 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,13 +21,13 @@
 */
 
 /**
- * Opérations sur les documents
+ * OpÃ©rations sur les documents
  *
  * @package ploopi
  * @subpackage filexplorer
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 switch($ploopi_op)
@@ -137,7 +137,7 @@ switch($ploopi_op)
                             $strIcon = 'ico_folder.png';
                             $intSortId = 1;
 
-                            // ouverture du sous-dossier pour compter les éléments
+                            // ouverture du sous-dossier pour compter les Ã©lÃ©ments
                             $intElements = 0;
                             $ptF = @opendir($strFilePath);
                             while ($strFN = @readdir($ptF)) if ($strFN != '.' && $strFN != '..') $intElements++;
@@ -184,7 +184,7 @@ switch($ploopi_op)
                                 'option' =>
                                     $boolIsFolder
                                     ? 'onclick="javascript:ploopi_filexplorer_browser(\''.$_GET['filexplorer_id'].'\', \''.$cipher->crypt($strCurrentFolder._PLOOPI_SEP.$strFileName).'\');"'
-                                    : 'onclick="javascript:$(\''.$_SESSION['filexplorer'][$_GET['filexplorer_id']]['destfield'].'\').value=\''.$strCurrentFolder._PLOOPI_SEP.$strFileName.'\';ploopi_hidepopup(\'ploopi_filexplorer_popup\');"',
+                                    : 'onclick="javascript:$(\''.$_SESSION['filexplorer'][$_GET['filexplorer_id']]['destfield'].'\').value=\''.$strCurrentFolder._PLOOPI_SEP.$strFileName.'\';ploopi.popup.hide(\'ploopi_filexplorer_popup\');"',
                                 'style' => ''
                             );
                     }
@@ -192,7 +192,7 @@ switch($ploopi_op)
 
                 closedir($ptFolder);
 
-                $skin->display_array(
+                ploopi\skin::get()->display_array(
                     $documents_columns,
                     $documents_values,
                     'ploopi_documents',
@@ -209,7 +209,7 @@ switch($ploopi_op)
         $content = ob_get_contents();
         ob_end_clean();
 
-        echo $skin->create_popup('Explorateur de fichiers', $content, 'ploopi_filexplorer_popup');
+        echo ploopi\skin::get()->create_popup('Explorateur de fichiers', $content, 'ploopi_filexplorer_popup');
 
         ploopi\system::kill();
     break;

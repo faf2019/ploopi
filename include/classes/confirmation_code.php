@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2008 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -31,31 +31,13 @@ use ploopi;
  * @subpackage security
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
- */
-
-/**
- * Inclusion de la classe parent.
- */
-
-include_once './include/classes/data_object.php';
-
-/**
- * Classe de gestion des confirmation par mail
- *
- * @package ploopi
- * @subpackage security
- * @copyright Ovensia
- * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 class confirmation_code extends data_object
 {
     /**
      * Constructeur de la classe
-     *
-     * @return confirmation_code
      */
     function __construct()
     {
@@ -65,17 +47,16 @@ class confirmation_code extends data_object
     /**
      * Enregistrement du code de confirmation
      *
-     * @return unknown
+     * @return boolean
      */
 
     function save()
     {
-        if ($this->new)
-        {
+        if ($this->new) {
             if (empty($this->fields['code'])) $this->fields['code'] = md5(uniqid(rand(), true));
             if (empty($this->fields['timestp'])) $this->fields['timestp'] = date::createtimestamp();
         }
-        return(parent::save());
-    }
 
+        return parent::save();
+    }
 }

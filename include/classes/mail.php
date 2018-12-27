@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -31,28 +31,26 @@ use ploopi;
  * @subpackage mail
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
-
 
 abstract class mail
 {
 
     /**
-     * Envoie un mail. Gère les emetteurs multiples, les destinataires multiples, le CC multiple, le BCC multiple, le REPLYTO multiple, les pièces jointes, les messages au format HTML.
+     * Envoie un mail via la fonction interne de PHP. GÃ¨re les emetteurs multiples, les destinataires multiples, le CC multiple, le BCC multiple, le REPLYTO multiple, les piÃ¨ces jointes, les messages au format HTML.
      *
-     * @param mixed $from tableau indexé contenant les emetteurs, chaque emetteur est défini par Array('name' => '', 'address' => ''). Accepte aussi une chaine contenant une adresse email.
-     * @param mixed $to tableau indexé contenant les destinataires, chaque destinataire est défini par Array('name' => '', 'address' => ''). Accepte aussi une chaine contenant une adresse email.
+     * @param mixed $from tableau indexÃ© contenant les emetteurs, chaque emetteur est dÃ©fini par Array('name' => '', 'address' => ''). Accepte aussi une chaine contenant une adresse email.
+     * @param mixed $to tableau indexÃ© contenant les destinataires, chaque destinataire est dÃ©fini par Array('name' => '', 'address' => ''). Accepte aussi une chaine contenant une adresse email.
      * @param string $subject le sujet du message.
      * @param string $message le contenu du message.
-     * @param mixed $cc tableau indexé contenant les destinataires en copie, chaque destinataire est défini par Array('name' => '', 'address' => ''). Accepte aussi une chaine contenant une adresse email.
-     * @param mixed $bcc tableau indexé contenant les destinataires en copie cachée, chaque destinataire est défini par Array('name' => '', 'address' => ''). Accepte aussi une chaine contenant une adresse email.
-     * @param mixed $replyto tableau indexé contenant les destinataires de la réponse, chaque destinataire est défini par Array('name' => '', 'address' => ''). Accepte aussi une chaine contenant une adresse email.
-     * @param array $files tableau indexé de chemins vers des fichiers à joindre au message.
-     * @param boolean $html true si le message doit être envoyé au format HTML.
+     * @param mixed $cc tableau indexÃ© contenant les destinataires en copie, chaque destinataire est dÃ©fini par Array('name' => '', 'address' => ''). Accepte aussi une chaine contenant une adresse email.
+     * @param mixed $bcc tableau indexÃ© contenant les destinataires en copie cachÃ©e, chaque destinataire est dÃ©fini par Array('name' => '', 'address' => ''). Accepte aussi une chaine contenant une adresse email.
+     * @param mixed $replyto tableau indexÃ© contenant les destinataires de la rÃ©ponse, chaque destinataire est dÃ©fini par Array('name' => '', 'address' => ''). Accepte aussi une chaine contenant une adresse email.
+     * @param array $files tableau indexÃ© de chemins vers des fichiers Ã  joindre au message.
+     * @param boolean $html true si le message doit Ãªtre envoyÃ© au format HTML.
      *
-     * @see mail::check
-     * @see mail
+     * @return boolean true si le mail est envoyÃ©.
      */
 
     public static function send($from, $to, $subject, $message, $cc = null, $bcc = null, $replyto = null, $files = null, $html = true)
@@ -226,21 +224,20 @@ abstract class mail
 
 
     /**
-     * Envoie un mail via un serveur SMTP. Gère les emetteurs multiples, les destinataires multiples, le CC multiple, le BCC multiple, le REPLYTO multiple, les pièces jointes, les messages au format HTML.
+     * Envoie un mail via un serveur SMTP. GÃ¨re les emetteurs multiples, les destinataires multiples, le CC multiple, le BCC multiple, le REPLYTO multiple, les piÃ¨ces jointes, les messages au format HTML.
      *
-     * @param mixed $from tableau indexé contenant les emetteurs, chaque emetteur est défini par Array('name' => '', 'address' => ''). Accepte aussi une chaine contenant une adresse email.
-     * @param mixed $to tableau indexé contenant les destinataires, chaque destinataire est défini par Array('name' => '', 'address' => ''). Accepte aussi une chaine contenant une adresse email.
+     * @param mixed $from tableau indexÃ© contenant les emetteurs, chaque emetteur est dÃ©fini par Array('name' => '', 'address' => ''). Accepte aussi une chaine contenant une adresse email.
+     * @param mixed $to tableau indexÃ© contenant les destinataires, chaque destinataire est dÃ©fini par Array('name' => '', 'address' => ''). Accepte aussi une chaine contenant une adresse email.
      * @param string $subject le sujet du message.
      * @param string $message le contenu du message.
-     * @param array $params paramètres de connexion au serveur smtp ('host' => string, 'auth' => bool, 'username' => string, 'password' => string)
-     * @param mixed $cc tableau indexé contenant les destinataires en copie, chaque destinataire est défini par Array('name' => '', 'address' => ''). Accepte aussi une chaine contenant une adresse email.
-     * @param mixed $bcc tableau indexé contenant les destinataires en copie cachée, chaque destinataire est défini par Array('name' => '', 'address' => ''). Accepte aussi une chaine contenant une adresse email.
-     * @param mixed $replyto tableau indexé contenant les destinataires de la réponse, chaque destinataire est défini par Array('name' => '', 'address' => ''). Accepte aussi une chaine contenant une adresse email.
-     * @param array $files tableau indexé de chemins vers des fichiers à joindre au message.
-     * @param boolean $html true si le message doit être envoyé au format HTML.
+     * @param array $params paramÃ¨tres de connexion au serveur smtp ('host' => string, 'auth' => bool, 'username' => string, 'password' => string)
+     * @param mixed $cc tableau indexÃ© contenant les destinataires en copie, chaque destinataire est dÃ©fini par Array('name' => '', 'address' => ''). Accepte aussi une chaine contenant une adresse email.
+     * @param mixed $bcc tableau indexÃ© contenant les destinataires en copie cachÃ©e, chaque destinataire est dÃ©fini par Array('name' => '', 'address' => ''). Accepte aussi une chaine contenant une adresse email.
+     * @param mixed $replyto tableau indexÃ© contenant les destinataires de la rÃ©ponse, chaque destinataire est dÃ©fini par Array('name' => '', 'address' => ''). Accepte aussi une chaine contenant une adresse email.
+     * @param array $files tableau indexÃ© de chemins vers des fichiers Ã  joindre au message.
+     * @param boolean $html true si le message doit Ãªtre envoyÃ© au format HTML.
      *
-     * @see mail::check
-     * @see mail
+     * @return mixed true si le message est envoyÃ©, le message d'erreur sinon
      */
 
     public static function send_smtp($from, $to, $subject, $message, $params = null, $cc = null, $bcc = null, $replyto = null, $files = null, $html = true)
@@ -364,16 +361,16 @@ abstract class mail
             'head_charset'  => mb_internal_encoding()
         );
 
-        // Création du message
+        // CrÃ©ation du message
         $objMessage = new Mail_mime();
 
-        // Intégration des pièces jointes
+        // IntÃ©gration des piÃ¨ces jointes
         if (!empty($files))
         {
             foreach($files as $filename)
             {
                 if (file_exists($filename) && is_readable($filename)) {
-                    // Traitement spécial des images pour ajout du Content-ID
+                    // Traitement spÃ©cial des images pour ajout du Content-ID
                     // http://pear.php.net/package/Mail_Mime/docs/latest/Mail_Mime/Mail_mime.html#methodaddHTMLImage
                     if (in_array(fs::file_getextension($filename), array('png', 'jpg', 'jpeg', 'gif'))) {
                         $objMessage->addHTMLImage($filename, fs::getmimetype($filename), basename($filename), true, basename($filename));
@@ -411,9 +408,9 @@ abstract class mail
     }
 
     /**
-     * Génère une version HTML d'un tableau php multidimensionnel (formulaire par exemple)
+     * GÃ©nÃ¨re une version HTML d'un tableau php multidimensionnel (formulaire par exemple)
      *
-     * @param array $form tableau à convertir au format HTML
+     * @param array $form tableau Ã  convertir au format HTML
      * @return string code HTML du tableau
      */
 
@@ -447,15 +444,15 @@ abstract class mail
     }
 
     /**
-     * Envoie un formulaire (ou un tableau) par mail. Gère les emetteurs multiples, les destinataires multiples, le CC multiple, le BCC multiple, le REPLYTO multiple
+     * Envoie un formulaire (ou un tableau) par mail. GÃ¨re les emetteurs multiples, les destinataires multiples, le CC multiple, le BCC multiple, le REPLYTO multiple
      *
-     * @param mixed $from tableau indexé contenant les emetteurs, chaque emetteur est défini par Array('name' => '', 'address' => ''). Accepte aussi une chaine contenant une adresse email.
-     * @param mixed $to tableau indexé contenant les destinataires, chaque destinataire est défini par Array('name' => '', 'address' => ''). Accepte aussi une chaine contenant une adresse email.
+     * @param mixed $from tableau indexÃ© contenant les emetteurs, chaque emetteur est dÃ©fini par Array('name' => '', 'address' => ''). Accepte aussi une chaine contenant une adresse email.
+     * @param mixed $to tableau indexÃ© contenant les destinataires, chaque destinataire est dÃ©fini par Array('name' => '', 'address' => ''). Accepte aussi une chaine contenant une adresse email.
      * @param string $subject le sujet du message.
      * @param string $message le contenu du message.
-     * @param mixed $cc tableau indexé contenant les destinataires en copie, chaque destinataire est défini par Array('name' => '', 'address' => ''). Accepte aussi une chaine contenant une adresse email.
-     * @param mixed $bcc tableau indexé contenant les destinataires en copie cachée, chaque destinataire est défini par Array('name' => '', 'address' => ''). Accepte aussi une chaine contenant une adresse email.
-     * @param mixed $replyto tableau indexé contenant les destinataires de la réponse, chaque destinataire est défini par Array('name' => '', 'address' => ''). Accepte aussi une chaine contenant une adresse email.
+     * @param mixed $cc tableau indexÃ© contenant les destinataires en copie, chaque destinataire est dÃ©fini par Array('name' => '', 'address' => ''). Accepte aussi une chaine contenant une adresse email.
+     * @param mixed $bcc tableau indexÃ© contenant les destinataires en copie cachÃ©e, chaque destinataire est dÃ©fini par Array('name' => '', 'address' => ''). Accepte aussi une chaine contenant une adresse email.
+     * @param mixed $replyto tableau indexÃ© contenant les destinataires de la rÃ©ponse, chaque destinataire est dÃ©fini par Array('name' => '', 'address' => ''). Accepte aussi une chaine contenant une adresse email.
      */
 
     public static function send_form($from, $to, $subject, $form, $cc = null, $bcc = null, $replyto = null)
@@ -481,8 +478,8 @@ abstract class mail
     /**
      * Valide une adresse email (format uniquement) selon les RFC 2822 et 1035
      *
-     * @param string $email adresse email à valider
-     * @return boolean true si l'adresse est considérée comme valide
+     * @param string $email adresse email Ã  valider
+     * @return boolean true si l'adresse est considÃ©rÃ©e comme valide
      *
      * @copyright  bobocop (arobase) bobocop (point) cz
      *
@@ -493,16 +490,17 @@ abstract class mail
 
     public static function check($email)
     {
-        $atom   = '[-a-z0-9!#$%&\'*+\\/=?^_`{|}~]';   // caractères autorisés avant l'arobase
-        $domain = '([a-z0-9]([-a-z0-9]*[a-z0-9]+)?)'; // caractères autorisés après l'arobase (nom de domaine)
+        $atom   = '[-a-z0-9!#$%&\'*+\\/=?^_`{|}~]';   // caractÃ¨res autorisÃ©s avant l'arobase
+        $domain = '([a-z0-9]([-a-z0-9]*[a-z0-9]+)?)'; // caractÃ¨res autorisÃ©s aprÃ¨s l'arobase (nom de domaine)
 
-        $regex = '/^' . $atom . '+' .   // Une ou plusieurs fois les caractères autorisés avant l'arobase
-        '(\.' . $atom . '+)*' .         // Suivis par zéro point ou plus
-                                        // séparés par des caractères autorisés avant l'arobase
+        $regex = '/^' . $atom . '+' .   // Une ou plusieurs fois les caractÃ¨res autorisÃ©s avant l'arobase
+        '(\.' . $atom . '+)*' .         // Suivis par zÃ©ro point ou plus
+                                        // sÃ©parÃ©s par des caractÃ¨res autorisÃ©s avant l'arobase
         '@' .                           // Suivis d'un arobase
-        '(' . $domain . '{1,63}\.)+' .  // Suivis par 1 à 63 caractères autorisés pour le nom de domaine
-                                        // séparés par des points
-        $domain . '{2,63}$/i';          // Suivi de 2 à 63 caractères autorisés pour le nom de domaine
+        '(' . $domain . '{1,63}\.)+' .  // Suivis par 1 Ã  63 caractÃ¨res autorisÃ©s pour le nom de domaine
+                                        // sÃ©parÃ©s par des points
+        $domain . '{2,63}$/i';          // Suivi de 2 Ã  63 caractÃ¨res autorisÃ©s pour le nom de domaine
 
         return (preg_match($regex, $email));
     }
+}

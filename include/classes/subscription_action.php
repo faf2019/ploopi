@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,21 +25,19 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Classe d'accès à la table ploopi_subscription_action
+ * Gestion des dÃ©tails d'abonnements (table ploopi_subscription_action)
  *
  * @package ploopi
  * @subpackage subscription
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 class subscription_action extends data_object
 {
     /**
      * Constructeur de la classe
-     *
-     * @return subscription_action
      */
 
     public function __construct()

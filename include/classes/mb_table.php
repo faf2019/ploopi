@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,39 +25,38 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Classe d'accès à la table ploopi_mb_table
+ * Gestion des tables de la metabase (table ploopi_mb_table)
  *
  * @package ploopi
  * @subpackage metabase
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 class mb_table extends data_object
 {
     /**
      * Constructeur de la classe
-     *
-     * @return mb_table
      */
 
-    function __construct()
+    public function __construct()
     {
         parent::__construct('ploopi_mb_table','name','id_module_type');
     }
 
     /**
-     * Supprime la table ainsi que les champs, les relations et le schéma associés
+     * Supprime la table ainsi que les champs, les relations et le schÃ©ma associÃ©s
      */
 
-    function delete()
+    public function delete()
     {
         $db = db::get();
 
         $db->query("DELETE FROM ploopi_mb_field WHERE tablename = '".$db->addslashes($this->fields['name'])."' AND id_module_type = {$this->fields['id_module_type']}");
         $db->query("DELETE FROM ploopi_mb_relation WHERE (tablesrc = '".$db->addslashes($this->fields['name'])."' OR tabledest = '".$db->addslashes($this->fields['name'])."') AND id_module_type = {$this->fields['id_module_type']}");
         $db->query("DELETE FROM ploopi_mb_schema WHERE (tablesrc = '".$db->addslashes($this->fields['name'])."' OR tabledest = '".$db->addslashes($this->fields['name'])."') AND id_module_type = {$this->fields['id_module_type']}");
+
         parent::delete();
     }
 }

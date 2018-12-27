@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -24,36 +24,25 @@ namespace ploopi;
 
 use ploopi;
 
-/**
- * Gestion des tickets
- *
- * @package ploopi
- * @subpackage ticket
- * @copyright Ovensia
- * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
- */
-
 define ('_PLOOPI_TICKETS_NONE',     0);
 define ('_PLOOPI_TICKETS_OPENED',   1);
 define ('_PLOOPI_TICKETS_DONE',     2);
 
+
 /**
- * Classe d'accès à la table ploopi_ticket
+ * Gestion des tickets (table ploopi_ticket)
  *
  * @package ploopi
  * @subpackage ticket
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 class ticket extends data_object
 {
     /**
      * Constructeur de la classe
-     *
-     * @return subscription_action
      */
 
     public function __construct()
@@ -64,7 +53,7 @@ class ticket extends data_object
     /**
      * Enregistre le ticket
      *
-     * @return boolean true si le ticket s'est enregistré correctement
+     * @return boolean true si le ticket s'est enregistrÃ© correctement
      */
 
     public function save()
@@ -124,13 +113,13 @@ class ticket extends data_object
      * @subpackage ticket
      * @copyright Ovensia
      * @license GNU General Public License (GPL)
-     * @author Stéphane Escaich
+     * @author Ovensia
      */
 
     /**
-     * Insère un bloc pour la sélection de destinataires
+     * InsÃ¨re un bloc pour la sÃ©lection de destinataires
      *
-     * @param mixed $id_user identifiant utilisateur ou tableau d'utilisateurs présélectionnés
+     * @param mixed $id_user identifiant utilisateur ou tableau d'utilisateurs prÃ©sÃ©lectionnÃ©s
      */
 
     public static function selectusers($id_user = null)
@@ -151,8 +140,8 @@ class ticket extends data_object
                 <option value="workspace">Espace</option>
             </select>
             <input type="text" id="ploopi_ticket_userfilter" class="text" />
-            <?php /* Ne pas modifier, genère une erreur curieuse sinon... */ $strUrl = crypt::queryencode("ploopi_op=tickets_search_users"); ?>
-            <img id="ploopi_ticket_search_btn" style="cursor:pointer;" onclick="javascript:ploopi_tickets_select_users('<?php echo $strUrl; ?>', ploopi_getelem('ploopi_ticket_typefilter').value, ploopi_getelem('ploopi_ticket_userfilter').value, 'div_ticket_search_result');" src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/tickets/search.png">
+            <?php /* Ne pas modifier, genÃ¨re une erreur curieuse sinon... */ $strUrl = crypt::queryencode("ploopi_op=tickets_search_users"); ?>
+            <img id="ploopi_ticket_search_btn" style="cursor:pointer;" onclick="javascript:ploopi_tickets_select_users('<?php echo $strUrl; ?>', ploopi.getelem('ploopi_ticket_typefilter').value, ploopi.getelem('ploopi_ticket_userfilter').value, 'div_ticket_search_result');" src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/tickets/search.png">
         </p>
         <div id="div_ticket_search_result" style="padding:2px 0 6px 0;">
         </div>
@@ -171,12 +160,12 @@ class ticket extends data_object
      *
      * @param string $title titre du ticket
      * @param string $message contenu du ticket
-     * @param boolean $needed_validation true si le ticket nécessite une validation
-     * @param boolean $delivery_notification true si l'émetteur doit être averti de la lecture du message
-     * @param int $id_object identifiant de l'objet lié
-     * @param string $id_record identifiant de l'enregistrement lié
-     * @param string $object_label libellé de l'enregistrement lié
-     * @param boolean $system true s'il s'agit d'un ticket émis par le système
+     * @param boolean $needed_validation true si le ticket nÃ©cessite une validation
+     * @param boolean $delivery_notification true si l'Ã©metteur doit Ãªtre averti de la lecture du message
+     * @param int $id_object identifiant de l'objet liÃ©
+     * @param string $id_record identifiant de l'enregistrement liÃ©
+     * @param string $object_label libellÃ© de l'enregistrement liÃ©
+     * @param boolean $system true s'il s'agit d'un ticket Ã©mis par le systÃ¨me
      */
 
     public static function send($title, $message, $needed_validation = 0, $delivery_notification = 0, $id_object = '', $id_record = '', $object_label = '', $system = false)
@@ -203,7 +192,7 @@ class ticket extends data_object
             $tplmail = new \Template($_SESSION['ploopi']['template_path']);
             $tplmail->set_filenames(array('mail' => 'ticket.tpl'));
 
-            // Préparation du contenu du mail
+            // PrÃ©paration du contenu du mail
             $mb_object = new mb_object();
             if ($id_object != '' && $id_record != '' && $id_module_type != 0 && $mb_object->open($id_object, $id_module_type))
             {
@@ -279,7 +268,7 @@ class ticket extends data_object
             ob_end_clean();
         }
 
-        // Création du ticket
+        // CrÃ©ation du ticket
         $ticket = new self();
         $ticket->fields['id_object'] = $id_object;
         $ticket->fields['id_record'] = $id_record;
@@ -301,7 +290,7 @@ class ticket extends data_object
             $user = new user();
             if ($user->open($user_id))
             {
-               // Envoi d'une copie par mail si nécessaire
+               // Envoi d'une copie par mail si nÃ©cessaire
                 if (!empty($email_message) && $user->fields['ticketsbyemail'] == 1 && !empty($user->fields['email']))
                 {
 
@@ -327,13 +316,13 @@ class ticket extends data_object
     }
 
     /**
-     * Renvoie l'identifiant du dernier ticket reçu par l'utilisateur connecté et le nombre de nouveaux tickets
+     * Renvoie l'identifiant du dernier ticket reÃ§u par l'utilisateur connectÃ© et le nombre de nouveaux tickets
      *
      * @return array indice 0 : nombre nouveau tickets, 1 : id du dernier ticket
      *
      * @copyright Ovensia
      * @license GNU General Public License (GPL)
-     * @author Stéphane Escaich
+     * @author Ovensia
      */
 
     public static function getnew()
@@ -369,7 +358,7 @@ class ticket extends data_object
     }
 
     /**
-     * Insère un bloc pour afficher les destinataires d'un ticket et les supprimer
+     * InsÃ¨re un bloc pour afficher les destinataires d'un ticket et les supprimer
      */
 
     public static function displayusers()
@@ -389,7 +378,7 @@ class ticket extends data_object
                 $color = (!isset($color) || $color == $skin->values['bgline2']) ? $skin->values['bgline1'] : $skin->values['bgline2'];
                 ?>
                 <p class="ploopi_va" style="padding:2px;">
-                    <a class="system_tickets_delete_user" href="javascript:void(0);" onclick="ploopi_xmlhttprequest_todiv('admin.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_select_user&remove_user_id=<?php echo $user->fields['id']; ?>', 'div_ticket_users_selected');">
+                    <a class="system_tickets_delete_user" href="javascript:void(0);" onclick="ploopi.xhr.todiv('admin.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_select_user&remove_user_id=<?php echo $user->fields['id']; ?>', 'div_ticket_users_selected');">
                         <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/btn_delete.png" />
                         <span><?php echo str::htmlentities("{$user->fields['lastname']} {$user->fields['firstname']}")." ("._PLOOPI_LABEL_TICKET_DELETERECIPIENT.')'; ?></span>
                     </a>

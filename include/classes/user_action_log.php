@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,22 +25,19 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Classe d'accËs ‡ la table user_action_log.
- * Gestion des actions utilisateurs.
+ * Gestion du log des actions utilisateur (table ploopi_user_action_log)
  *
  * @package ploopi
  * @subpackage log
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author StÈphane Escaich
+ * @author Ovensia
  */
 
 class user_action_log extends data_object
 {
     /**
      * Constructeur de la classe
-     *
-     * @return user_action_log
      */
 
     public function __construct()
@@ -49,6 +46,12 @@ class user_action_log extends data_object
 
         if (session::get_usedb()) $this->setdb($this->getdb());
     }
+
+    /**
+     * Retourne le connecteur √† la base de donn√©es utilis√©e
+     *
+     * @return db connecteur √† la base de donn√©es
+     */
 
     public static function getdb()
     {
@@ -129,8 +132,8 @@ class user_action_log extends data_object
      * @param int $id_action identifiant de l'action
      * @param int $id_module_type identifiant du type de module
      * @param int $id_module identifiant du module
-     * @param int $limit_offset valeur infÈrieur de la clause LIMIT
-     * @param int $limit_count nombre de lignes de log ‡ renvoyer
+     * @param int $limit_offset valeur inf√©rieur de la clause LIMIT
+     * @param int $limit_count nombre de lignes de log √† renvoyer
      * @return array tableau contenant la liste des actions
      */
 

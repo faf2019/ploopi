@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,22 +25,22 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Fonctions de manipulation d'IPs
+ * Manipulation d'IPs
  *
  * @package ploopi
  * @subpackage ip
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 abstract class ip
 {
     /**
      * Retourne un tableau d'IP pour le client.
-     * On peut en effet obtenir plusieurs IP pour un même client, notamment s'il passe par un proxy.
+     * On peut en effet obtenir plusieurs IP pour un mÃªme client, notamment s'il passe par un proxy.
      *
-     * @param boolean $wan_only true si l'on ne veut que les adresses WAN (false par défaut)
+     * @param boolean $wan_only true si l'on ne veut que les adresses WAN (false par dÃ©faut)
      * @return array tableau d'IP
      */
 
@@ -77,10 +77,10 @@ abstract class ip
     }
 
     /**
-     * Convertit une liste de range d'IP en liste de règles facilement exploitables (à base d'entiers)
+     * Convertit une liste de range d'IP en liste de rÃ¨gles facilement exploitables (Ã  base d'entiers)
      *
      * @param string $rules ranges d'IP
-     * @return array tableau de règles
+     * @return array tableau de rÃ¨gles
      */
 
     public static function getrules($rules)
@@ -139,17 +139,19 @@ abstract class ip
 
         if ($iprules)
         {
-            $arrUserip = ip::get();
+            $arrUserip = ploopi_getip();
 
-            if (!empty($arrUserip)) $userip = $arrUserip[0];
+            if (!empty($arrUserip)) {
+                $userip = ip2long($arrUserip[0]);
 
-            foreach($iprules as $startip => $endip)
-            {
-                if ($userip >= $startip && $userip <= $endip) $ip_ok = true;
+                foreach($iprules as $startip => $endip)
+                {
+                    if ($userip >= $startip && $userip <= $endip) $ip_ok = true;
+                }
             }
         }
         else $ip_ok = true;
 
-        return($ip_ok);
+        return $ip_ok;
     }
 }

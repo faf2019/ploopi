@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,13 +21,13 @@
 */
 
 /**
- * Point d'entrée pour les webservices
+ * Point d'entrÃ©e pour les webservices
  *
  * @package ploopi
  * @subpackage webservice
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 if (empty($_REQUEST['module'])) ploopi\system::kill();
@@ -37,7 +37,7 @@ if (ploopi\loader::classExists($strControllerFile)) {
     $strControllerFile::dispatch();
 }
 else {
-    // Rétrocompatibilité
+    // RÃ©trocompatibilitÃ©
 
     $webservice_path = "./modules/{$_REQUEST['module']}";
     $webservice_rootfile = "{$webservice_path}/webservice.php";

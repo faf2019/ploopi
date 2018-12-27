@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,13 +21,13 @@
 */
 
 /**
- * Opérations sur les annotation
+ * OpÃ©rations sur les annotation
  *
  * @package ploopi
  * @subpackage annotation
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 switch($ploopi_op)
@@ -50,7 +50,7 @@ switch($ploopi_op)
             $tag->open($_GET['id_tag']);
 
             ?>
-            <div style="padding:4px;">Le tag <b><?php echo ploopi\str::htmlentities($tag->fields['tag']); ; ?></b> a aussi été utilisé sur les annotation suivantes :</div>
+            <div style="padding:4px;">Le tag <b><?php echo ploopi\str::htmlentities($tag->fields['tag']); ; ?></b> a aussi Ã©tÃ© utilisÃ© sur les annotation suivantes :</div>
             <div class="ploopi_annotation_popup_list">
             <?php
 
@@ -81,7 +81,7 @@ switch($ploopi_op)
                 $ld = ploopi\date::timestamp2local($fields['date_annotation']);
                 ?>
                 <div class="ploopi_annotation_row_<?php echo $numrow = (!isset($numrow) || $numrow == 2) ? 1 : 2; ?>" style="padding:4px;">
-                    <div style="float:right;"><?php echo ploopi\str::htmlentities("le {$ld['date']} à {$ld['time']}"); ?></div>
+                    <div style="float:right;"><?php echo ploopi\str::htmlentities("le {$ld['date']} Ã  {$ld['time']}"); ?></div>
                     <div style="font-weight:bold;"><?php echo ploopi\str::htmlentities("{$fields['title']}"); ?></div>
                     <div style="clear:both;padding-top:4px;"><?php echo ploopi\str::make_links(ploopi\str::nl2br(ploopi\str::htmlentities($fields['content']))); ?></div>
                     <?php
@@ -114,8 +114,8 @@ switch($ploopi_op)
         }
         else echo "erreur";
         ?>
-        <!--a style="display:block;line-height:1.2em;height:1.2em;" href="javascript:void(0);" onclick="javascript:ploopi_hidepopup();">Fermer</a-->
-        <div style="padding:4px;text-align:right"><a href="javascript:void(0);" onclick="javascript:ploopi_hidepopup();">Fermer</a></div>
+        <!--a style="display:block;line-height:1.2em;height:1.2em;" href="javascript:void(0);" onclick="javascript:ploopi.popup.hide();">Fermer</a-->
+        <div style="padding:4px;text-align:right"><a href="javascript:void(0);" onclick="javascript:ploopi.popup.hide();">Fermer</a></div>
         </div>
         <?php
         ploopi\system::kill();
@@ -178,7 +178,7 @@ switch($ploopi_op)
             $annotation->save();
             ?>
             <script type="text/javascript">
-                window.parent.ploopi\annotation::display('<?php echo ploopi\str::htmlentities($_POST['id_annotation']); ?>');
+                window.parent.ploopi.annotations.display('<?php echo ploopi\str::htmlentities($_POST['id_annotation']); ?>');
             </script>
         <?php
         }

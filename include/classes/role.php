@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,31 +25,19 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Gestion des rôles.
+ * Gestion des rÃ´les (table ploopi_role)
  *
  * @package ploopi
  * @subpackage role
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
- */
-
-/**
- * Classe d'accès à la table ploopi_role
- *
- * @package ploopi
- * @subpackage role
- * @copyright Ovensia
- * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 class role extends data_object
 {
     /**
      * Constructeur de la classe
-     *
-     * @return role
      */
 
     public function __construct()
@@ -58,25 +46,21 @@ class role extends data_object
     }
 
     /**
-     * Enregistre un rôle
+     * Enregistre les actions d'un rÃ´le
      *
-     * @param array $actions tableau des actions qui constituent le rôle
-     * @param int $id_module_type identifiant du type de module concerné
+     * @param array $actions tableau des actions qui constituent le rÃ´le
+     * @param int $id_module_type identifiant du type de module concernÃ©
      */
 
-    public function save($actions, $id_module_type)
+    public function saveactions($actions, $id_module_type)
     {
         $db = db::get();
 
-        parent::save();
-
-        $delete =   "
-                    DELETE
-                    FROM    ploopi_role_action
-                    WHERE   id_role = {$this->fields['id']}
-                    ";
-
-        $db->query($delete);
+        $db->query("
+            DELETE
+            FROM    ploopi_role_action
+            WHERE   id_role = {$this->fields['id']}
+        ");
 
         foreach($actions as $key => $id_action)
         {
@@ -89,7 +73,7 @@ class role extends data_object
     }
 
     /**
-     * Supprime le rôle
+     * Supprime le rÃ´le
      */
 
     public function delete()
@@ -103,9 +87,9 @@ class role extends data_object
     }
 
     /**
-     * Retourne un tableau contenant les actions d'un rôle
+     * Retourne un tableau contenant les actions d'un rÃ´le
      *
-     * @return array tableau contenant les actions d'un rôle
+     * @return array tableau contenant les actions d'un rÃ´le
      */
 
     public function getactions()

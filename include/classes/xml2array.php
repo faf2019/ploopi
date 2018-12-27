@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,23 +25,13 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Conversion d'un flux de données XML en tableau PHP
+ * Conversion d'un flux de donnÃ©es XML en tableau PHP
  *
  * @package ploopi
  * @subpackage xml
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
- */
-
-/**
- * Classe xml2array
- *
- * @package ploopi
- * @subpackage xml
- * @copyright Ovensia
- * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 class xml2array
@@ -65,7 +55,7 @@ class xml2array
     private $node_stack = array();
 
     /**
-     * Tableau contenant la structure et les données XML
+     * Tableau contenant la structure et les donnÃ©es XML
      *
      * @var array
      */
@@ -73,7 +63,7 @@ class xml2array
     private $xmlarray = array();
 
     /**
-     * Données en cours de lecture
+     * DonnÃ©es en cours de lecture
      *
      * @var string
      */
@@ -81,10 +71,10 @@ class xml2array
     private $currentdata = '';
 
     /**
-     * Parse une chaîne XML et retourne un tableau
+     * Parse une chaÃ®ne XML et retourne un tableau
      *
-     * @param string $xmlcontent contenu xml sous forme d'un chaîne
-     * @return array tableau contenant les données ou false
+     * @param string $xmlcontent contenu xml sous forme d'un chaÃ®ne
+     * @return array tableau contenant les donnÃ©es ou false
      *
      * @see xml_parser_create
      * @see xml_parse
@@ -119,7 +109,7 @@ class xml2array
      * Parse un fichier XML et retourne un tableau
      *
      * @param string $filename chemin du fichier
-     * @return array tableau contenant les données ou false
+     * @return array tableau contenant les donnÃ©es ou false
      *
      * @see fopen
      */
@@ -142,7 +132,7 @@ class xml2array
     }
 
     /**
-     * Gestionnaire de début de balise XML
+     * Gestionnaire de dÃ©but de balise XML
      *
      * @param resource $parser parser
      * @param string $name balise XML
@@ -177,10 +167,10 @@ class xml2array
     }
 
     /**
-     * Gestionnaire de données XML
+     * Gestionnaire de donnÃ©es XML
      *
      * @param resource $parser parser
-     * @param string $data contenu de la dernière balise ouverte
+     * @param string $data contenu de la derniÃ¨re balise ouverte
      */
 
     private function characterData($parser, $data)

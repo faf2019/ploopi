@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,17 +25,17 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Fonctions de manipulation d'images.
+ * Manipulation d'images.
  * Redimensionnement, changement de format.
  *
  * @package ploopi
  * @subpackage image
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
-abstract class fs
+abstract class image
 {
     /**
      * Redimensionne une image et l'enregistre dans un fichier ou la renvoie vers le navigateur
@@ -44,11 +44,12 @@ abstract class fs
      * @param float $coef ratio de redimensionnement de l'image destination
      * @param int $wmax largeur max de l'image destination
      * @param int $hmax hauteur max de l'image destination
-     * @param string/array $format format de l'image destination (jpg, png, gif) ou array(format,qualité), qualité pour le jpg 0<qualite<100
+     * @param string/array $format format de l'image destination (jpg, png, gif) ou array(format,qualitÃ©), qualitÃ© pour le jpg 0<qualite<100
      * @param int $nbcolor taille de la palette de l'image destination
      * @param string $filename nom du fichier image destination, si vide renvoit l'image vers le navigateur
-     * @param string (6) $centerwidth couleur de fond hexadécimal RVB à utiliser pour centrer l'image dans $wmax x $hmax
-     * @param string (6) $bgcolor couleur de fond hexadécimal RVB pour l'image de base (pour les png de odt qui sont transparent par ex.)
+     * @param string (6) $centerwidth couleur de fond hexadÃ©cimal RVB Ã  utiliser pour centrer l'image dans $wmax x $hmax
+     * @param string (6) $bgcolor couleur de fond hexadÃ©cimal RVB pour l'image de base (pour les png de odt qui sont transparent par ex.)
+     *
      * @return boolean true si redimensionnement ok
      *
      * @link http://fr.php.net/manual/fr/ref.image.php
@@ -69,7 +70,7 @@ abstract class fs
         else
             $format = strtolower($format);
 
-        $extension = mime_content_type($imagefile); //FIXME Cette fonction est devenue obsolète car Fileinfo fournit la même fonctionnalité (et bien plus) d'une façon plus propre (Mais intégré en php 5.3.0 et debian au jour d'aujourd'hui est en 5.2...).
+        $extension = mime_content_type($imagefile); //FIXME Cette fonction est devenue obsolÃ¨te car Fileinfo fournit la mÃªme fonctionnalitÃ© (et bien plus) d'une faÃ§on plus propre (Mais intÃ©grÃ© en php 5.3.0 et debian au jour d'aujourd'hui est en 5.2...).
 
         // Ouverture de l'image source
         switch($extension)
@@ -97,16 +98,16 @@ abstract class fs
             }
             break;
 
-            default: // format en entrée non supporté
+            default: // format en entrÃ©e non supportÃ©
               return false;
             break;
         }
 
-        // Récupération de la taille de l'image
+        // RÃ©cupÃ©ration de la taille de l'image
         $w = imagesx($imgsrc);
         $h = imagesy($imgsrc);
 
-        // Coloration du background (si ça sert à quelquechose !)
+        // Coloration du background (si Ã§a sert Ã  quelquechose !)
         if(!empty($bgcolor) && ($extension == 'png' || $extension == 'gif'))
         {
             $arrColor = str::color_hex2rgb($bgcolor);
@@ -129,7 +130,7 @@ abstract class fs
             if ($hmax && $h/$hmax > $coef) $coef = ($h/$hmax);
         }
 
-        // Détermination de la taille de l'image destination en fonction du coef de redimensionnement
+        // DÃ©termination de la taille de l'image destination en fonction du coef de redimensionnement
         if (!$coef)
         {
             $coef = 1;
@@ -145,7 +146,7 @@ abstract class fs
         if($wmax && $wdest > $wmax) $wdest = $wmax;
         if($hmax && $hdest > $hmax) $hdest = $hmax;
 
-        // Centrage de l'image demandé avec pourtour de couleur $centerwidthcolor
+        // Centrage de l'image demandÃ© avec pourtour de couleur $centerwidthcolor
         if(!empty($centerwidthcolor))
         {
             $distX = ($wmax > $wdest) ? round(($wmax-$wdest)/2) : 0;
@@ -205,7 +206,7 @@ abstract class fs
         {
             buffer::clean();
 
-            // Détermination du format de sortie
+            // DÃ©termination du format de sortie
             if ($format != '') $extension = $format;
             if (!in_array($extension, array('jpg', 'jpeg', 'png', 'gif'))) $extension = 'png';
 
@@ -240,7 +241,7 @@ abstract class fs
             $path = dirname($filename);
             $exists = file_exists($filename);
 
-            // Détermination du format de sortie
+            // DÃ©termination du format de sortie
             $extension = ($format == '') ? fs::file_getextension($filename) : $format;
             if (!in_array($extension, array('jpg', 'jpeg', 'png', 'gif'))) $extension = 'png';
 
@@ -291,13 +292,14 @@ abstract class fs
     }
 
     /**
-     * Découpe un texte pour qu'il tienne dans une image d'une largeur déterminée
+     * DÃ©coupe un texte pour qu'il tienne dans une image d'une largeur dÃ©terminÃ©e
      *
-     * @param string $text texte à écrire sur l'image
+     * @param string $text texte Ã  Ã©crire sur l'image
      * @param int $width largeur de l'image
-     * @param int $fontsize taille de la police de caractère
-     * @param string $font chemin vers le fichier de la police de caractère
-     * @return array tableau décrivant la structure du texte affiché
+     * @param int $fontsize taille de la police de caractÃ¨re
+     * @param string $font chemin vers le fichier de la police de caractÃ¨re
+     *
+     * @return array tableau dÃ©crivant la structure du texte affichÃ©
      */
 
     public static function wordwrap($text, $width, $fontsize, $font)

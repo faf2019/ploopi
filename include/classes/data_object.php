@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,24 +25,14 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Gestion de l'accès aux données.
+ * Gestion gÃ©nÃ©rique de l'accÃ¨s aux donnÃ©es (Mapping objet-relationnel / ORM).
+ * Permet la manipulation d'enregistrements de base de donnÃ©es sous forme d'objets.
  *
  * @package ploopi
  * @subpackage database
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
- */
-
-/**
- * Classe générique d'accès aux données.
- * Permet la manipulation d'enregistrements de base de données sous forme d'objets.
- *
- * @package ploopi
- * @subpackage database
- * @copyright Ovensia
- * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 class data_object
@@ -64,7 +54,7 @@ class data_object
     private $tablename;
 
     /**
-     * Nom de la table (intégration SQL)
+     * Nom de la table (intÃ©gration SQL)
      *
      * @var string
      */
@@ -72,7 +62,7 @@ class data_object
     private $tablename_quoted;
 
     /**
-     * Tableau indexé des champs qui composent la clé primaire
+     * Tableau indexÃ© des champs qui composent la clÃ© primaire
      *
      * @var array
      */
@@ -80,7 +70,7 @@ class data_object
     private $idfields;
 
     /**
-     * Tableau associatif des valeurs qui composent la clé primaire
+     * Tableau associatif des valeurs qui composent la clÃ© primaire
      *
      * @var array
      */
@@ -88,25 +78,23 @@ class data_object
     private $id;
 
     /**
-     * Objet de connexion à la base de données
+     * Objet de connexion Ã  la base de donnÃ©es
      *
-     * @var ploopi_db
-     * @see ploopi_db
+     * @var ploopi\db
      */
 
     private $db;
 
     /**
-     * Connexion à la base de données
+     * Recordset
      *
      * @var resource
-     * @see data_objet::setdb
      */
 
     private $resultid;
 
     /**
-     * Nombre de ligne du dernier résultat
+     * Nombre de ligne du dernier rÃ©sultat
      *
      * @var int
      */
@@ -114,10 +102,9 @@ class data_object
     private $numrows;
 
     /**
-     * Requête SQL générée par l
+     * RequÃªte SQL gÃ©nÃ©rÃ©e
      *
      * @var string
-     * @see data_objet::getsql
      */
 
     private $sql;
@@ -142,9 +129,9 @@ class data_object
      * Constructeur de la classe
      *
      * @param string nom de la table
-     * @param string champ clé n°1
-     * @param string champ clé n°2
-     * @param string champ clé n°X
+     * @param string champ clÃ© nÂ°1
+     * @param string champ clÃ© nÂ°2
+     * @param string champ clÃ© nÂ°X
      *
      * @return data_object
      *
@@ -163,16 +150,16 @@ class data_object
         $this->id = array();
         $this->fields = array();
 
-        if ($numargs == 1) // cas particulier n°1, pas de clé définie, on prend id par défaut
+        if ($numargs == 1) // cas particulier nÂ°1, pas de clÃ© dÃ©finie, on prend id par dÃ©faut
         {
             $this->idfields[0] = 'id';
             $this->fields['id'] = null;
         }
         else
         {
-            if ($numargs == 2 && is_array($keys = func_get_arg(1))) // cas particulier n°2, les clés sont définies dans un tableau (nouvelle méthode)
+            if ($numargs == 2 && is_array($keys = func_get_arg(1))) // cas particulier nÂ°2, les clÃ©s sont dÃ©finies dans un tableau (nouvelle mÃ©thode)
             {
-                if (sizeof($keys) == 0) // cas particulier n°2b, pas de clé définie, on prend id par défaut
+                if (sizeof($keys) == 0) // cas particulier nÂ°2b, pas de clÃ© dÃ©finie, on prend id par dÃ©faut
                 {
                     $this->idfields[0] = 'id';
                     $this->fields['id'] = null;
@@ -189,7 +176,7 @@ class data_object
                     }
                 }
             }
-            else // cas général, les clés sont définies dans une liste d'arguments
+            else // cas gÃ©nÃ©ral, les clÃ©s sont dÃ©finies dans une liste d'arguments
             {
                 for ($i = 1; $i < $numargs; $i++)
                 {
@@ -210,9 +197,9 @@ class data_object
 
 
     /**
-     * Permet de modifier la connexion à la base de données
+     * Permet de modifier la connexion Ã  la base de donnÃ©es
      *
-     * @param ressource $db objet de connexion à la base de données
+     * @param ressource $db objet de connexion Ã  la base de donnÃ©es
      */
 
     public function setdb($db)
@@ -223,15 +210,15 @@ class data_object
 
 
     /**
-     * Permet de mettre à jour les propriétés de l'objet (les champs de la table)
+     * Permet de mettre Ã  jour les propriÃ©tÃ©s de l'objet (les champs de la table)
      *
      * @param array $values tableau associatif contenant les valeurs tel que "prefixe_nomduchamp" => "valeur"
-     * @param string $prefix préfixe utilisé
+     * @param string $prefix prÃ©fixe utilisÃ©
      */
 
     public function setvalues($values, $prefix = '')
     {
-        // par défaut on récupère les champs du formulaire ($values)
+        // par dÃ©faut on rÃ©cupÃ¨re les champs du formulaire ($values)
         $lprefix = strlen($prefix);
         foreach ($values as $key => $value)
         {
@@ -250,11 +237,11 @@ class data_object
     }
 
     /**
-     * Ouvre un enregistrement de la table et met à jour l'objet
+     * Ouvre un enregistrement de la table et met Ã  jour l'objet
      *
-     * @param mixed valeur du champ 1 de la clé
-     * @param mixed valeur du champ 2 de la clé
-     * @param mixed valeur du champ X de la clé
+     * @param mixed valeur du champ 1 de la clÃ©
+     * @param mixed valeur du champ 2 de la clÃ©
+     * @param mixed valeur du champ X de la clÃ©
      *
      * @return int nombre d'enregistrements
      */
@@ -288,7 +275,7 @@ class data_object
     }
 
     /**
-     * Méthode d'ouverture spéciale pour "convertir" une ligne de recordset en objet
+     * MÃ©thode d'ouverture spÃ©ciale pour "convertir" une ligne de recordset en objet
      *
      * @param array $row ligne de recordset
      */
@@ -303,9 +290,9 @@ class data_object
     }
 
     /**
-     * Insère ou met à jour l'enregistrement dans la base de données
+     * InsÃ¨re ou met Ã  jour l'enregistrement dans la base de donnÃ©es
      *
-     * @return mixed valeur de la clé primaire
+     * @return mixed valeur de la clÃ© primaire
      */
 
     public function save()
@@ -324,7 +311,7 @@ class data_object
 
             $listvalues = (empty($arrValues)) ? '' : 'SET '.implode(', ', $arrValues);
 
-            $this->sql = "INSERT INTO {$this->tablename_quoted} {$listvalues}"; // construction de la requète
+            $this->sql = "INSERT INTO {$this->tablename_quoted} {$listvalues}"; // construction de la requÃ¨te
             $this->db->query($this->sql);
 
             // get "static" key
@@ -367,7 +354,7 @@ class data_object
     }
 
     /**
-     * Supprime l'enregistrement dans la base de données
+     * Supprime l'enregistrement dans la base de donnÃ©es
      */
 
     public function delete()
@@ -382,7 +369,7 @@ class data_object
     }
 
     /**
-     * Initialise les propriétés de l'objet avec la structure de la table
+     * Initialise les propriÃ©tÃ©s de l'objet avec la structure de la table
      */
 
     public function init_description()
@@ -393,7 +380,7 @@ class data_object
     }
 
     /**
-     * Met à jour les propriétés id_user, id_workspace, id_module de l'objet avec le contenu de la session
+     * Met Ã  jour les propriÃ©tÃ©s id_user, id_workspace, id_module de l'objet avec le contenu de la session
      */
 
     public function setuwm()
@@ -404,7 +391,7 @@ class data_object
     }
 
     /**
-     * Génère un dump SQL de l'enregistrement
+     * GÃ©nÃ¨re un dump SQL de l'enregistrement
      *
      * @return string dump SQL
      */
@@ -427,10 +414,10 @@ class data_object
     }
 
     /**
-     * Génère des variables templates à partir des propriétés de l'objet
+     * GÃ©nÃ¨re des variables templates Ã  partir des propriÃ©tÃ©s de l'objet
      *
      * @param Template $tpl template
-     * @param string $prefix préfixe à ajouter (optionnel)
+     * @param string $prefix prÃ©fixe Ã  ajouter (optionnel)
      */
 
     public function totemplate(&$tpl, $prefix = '')
@@ -441,7 +428,7 @@ class data_object
     }
 
     /**
-     * Retourne le script SQL de création de la table
+     * Retourne le script SQL de crÃ©ation de la table
      *
      * @return string script SQL
      */
@@ -467,7 +454,7 @@ class data_object
     }
 
     /**
-     * Retourne la dernière requête SQL exécutée
+     * Retourne la derniÃ¨re requÃªte SQL exÃ©cutÃ©e
      *
      * @return string
      */
@@ -475,7 +462,7 @@ class data_object
     public function getsql() { return $this->sql; }
 
     /**
-     * Retourne la table associée à l'instance
+     * Retourne la table associÃ©e Ã  l'instance
      *
      * @return string nom de la table
      */
@@ -483,7 +470,7 @@ class data_object
     public function gettablename() { return $this->tablename; }
 
     /**
-     * Retourne true si l'enregistrement n'existe pas encore dans la base de données
+     * Retourne true si l'enregistrement n'existe pas encore dans la base de donnÃ©es
      *
      * @return boolean
      */
@@ -491,7 +478,7 @@ class data_object
     public function isnew() { return $this->new; }
 
     /**
-     * Retourne un hash de la clé de l'enregistrement
+     * Retourne un hash de la clÃ© de l'enregistrement
      *
      * @return string
      */

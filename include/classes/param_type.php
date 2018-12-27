@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,21 +25,19 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Classe d'accès à la table ploopi_param_type
+ * Gestion des types de paramÃ¨tres (table ploopi_param_type)
  *
  * @package ploopi
  * @subpackage param
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 class param_type extends data_object
 {
     /**
      * Constructeur de la classe
-     *
-     * @return param_default
      */
     public function __construct()
     {
@@ -47,9 +45,9 @@ class param_type extends data_object
     }
 
     /**
-     * Enter description here...
+     * Suppression du type de paramÃ¨tre
      *
-     * @param unknown_type $preserve_data
+     * @param boolean $preserve_data true pour conserver les donnÃ©es associÃ©es
      */
     public function delete($preserve_data = false)
     {
@@ -74,9 +72,9 @@ class param_type extends data_object
     }
 
     /**
-     * Retourne un tableau contenant la liste des choix possibles pour le paramètre
+     * Retourne un tableau contenant la liste des choix possibles pour le paramÃ¨tre
      *
-     * @return array tableau associatif contenant la liste des choix possibles pour le paramètre
+     * @return array tableau associatif contenant la liste des choix possibles pour le paramÃ¨tre
      */
 
     public function getallchoices()

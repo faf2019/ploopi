@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,51 +25,54 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Classe de gestion des listes de boutons radio d'un formulaire
+ * Gestion des champs de type liste de "radio" de formulaires
  *
+ * @package ploopi
+ * @subpackage form
+ * @copyright Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Ovensia
  */
+
 class form_radio_list extends form_field
 {
     /**
-     * Valeur sélectionnée dans les boutons radio
+     * Valeur sÃ©lectionnÃ©e dans les boutons radio
      *
      * @var array
      */
     private $_strSelected;
 
     /**
-     * Options par défaut d'une liste de checkboxes
+     * Options par dÃ©faut d'une liste de checkboxes
      *
      * @var array
      */
-    protected static $_arrDefaultOptions = array(
-    );
+    protected static $_arrDefaultOptions = array();
 
     /**
      * Constructeur de la classe
      *
-     * @param string $strLabel libellé du champ
+     * @param string $strLabel libellÃ© du champ
      * @param array $arrValues valeur(s) du champ
-     * @param string $arrSelected valeurs des éléments sélectionnés
-     * @param string $strName propriété "name" du champ
-     * @param string $strId propriété "id" du champ
+     * @param string $arrSelected valeurs des Ã©lÃ©ments sÃ©lectionnÃ©s
+     * @param string $strName propriÃ©tÃ© "name" du champ
+     * @param string $strId propriÃ©tÃ© "id" du champ
      * @param array $arrOptions options du champ
-     *
-     * @return form_select
      */
     public function __construct($strLabel, $arrValues = array(), $strSelected, $strName, $strId = null, $arrOptions = null)
     {
-        if (!is_array($arrValues)) trigger_error('Ce type d\'élément attend un tableau de valeurs', E_USER_ERROR);
+        if (!is_array($arrValues)) trigger_error('Ce type d\'Ã©lÃ©ment attend un tableau de valeurs', E_USER_ERROR);
 
         parent::__construct('input:radio', $strLabel, $arrValues, $strName, $strId, is_null($arrOptions) ? self::$_arrDefaultOptions : array_merge(self::$_arrDefaultOptions, $arrOptions));
 
-        $this->_strSelected = str::htmlentities($strSelected);
+        $this->_strSelected = form::htmlentities($strSelected);
     }
 
     /**
-     * Génère le rendu html du champ
+     * GÃ©nÃ¨re le rendu html du champ
      *
-     * @param int $intTabindex tabindex du champs dans le formulaire
+     * @param int $intTabindex tabindex du champ dans le formulaire
      * @return string code html
      */
     public function render($intTabindex = null)
@@ -82,8 +85,8 @@ class form_radio_list extends form_field
         $intNumCheck = 0;
         foreach($arrValues = $this->_arrValues as $strKey => $strValue)
         {
-            $strValue = str::htmlentities($strValue);
-            $strKey = str::htmlentities($strKey);
+            $strValue = form::htmlentities($strValue);
+            $strKey = form::htmlentities($strKey);
 
             $strChecked = $strKey ==  $this->_strSelected ? ' checked="checked"' : '';
             $strOutput .= "<span class=\"checkbutton\"><input type=\"radio\" name=\"{$this->_strName}\" id=\"{$this->_strId}_{$intNumCheck}\" value=\"{$strKey}\" tabindex=\"{$intTabindex}\" {$strChecked}{$strProperties}{$strEvents}><label for=\"{$this->_strId}_{$intNumCheck}\">{$strValue}</label></span>";

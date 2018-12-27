@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,21 +25,19 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Classe d'accès à la table ploopi_module_type
+ * Gestion des types de module (table ploopi_module_type)
  *
  * @package ploopi
  * @subpackage module
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 class module_type extends data_object
 {
     /**
      * Constructeur de la classe
-     *
-     * @return module_type
      */
 
     public function __construct()
@@ -48,7 +46,7 @@ class module_type extends data_object
     }
 
     /**
-     * Supprime le type de module et les données associées : paramètres, modules, actions, métabase, etc..
+     * Supprime le type de module et les donnÃ©es associÃ©es : paramÃ¨tres, modules, actions, mÃ©tabase, etc..
      */
 
     public function delete()
@@ -101,7 +99,7 @@ class module_type extends data_object
     }
 
     /**
-     * Supprime les paramètres du type de module. Utilisé notamment pour la mise à jour des modules.
+     * Supprime les paramÃ¨tres du type de module. UtilisÃ© notamment pour la mise Ã  jour des modules.
      */
 
     public function delete_params()
@@ -140,10 +138,10 @@ class module_type extends data_object
     }
 
     /**
-     * Crée une instance de module à partir du type de module
+     * CrÃ©e une instance de module Ã  partir du type de module
      *
-     * @param int $workspaceid identifiant de l'espace de travail auquel l'instance va être rattachée
-     * @return module module instancié
+     * @param int $workspaceid identifiant de l'espace de travail auquel l'instance va Ãªtre rattachÃ©e
+     * @return module module instanciÃ©
      *
      * @see module
      */
@@ -165,9 +163,9 @@ class module_type extends data_object
     }
 
     /**
-     * Retourne un tableau contenant les actions proposées par le type de module
+     * Retourne un tableau contenant les actions proposÃ©es par le type de module
      *
-     * @param boolean $role_enabled true si on ne veut que les actions autorisées pour la création de rôles
+     * @param boolean $role_enabled true si on ne veut que les actions autorisÃ©es pour la crÃ©ation de rÃ´les
      * @return array tableau des actions
      */
 
@@ -192,10 +190,13 @@ class module_type extends data_object
         return $actions;
     }
 
-    public function update_metabase($xmlfile_desc, $rapport = array())
-    {
-    }
-
+    /**
+     * Charge le fichier description.xml dans la base
+     *
+     * @param string $xmlfile_desc chemin vers le fichier description.xml
+     *
+     * @return array rapport d'import
+     */
     public function update_description($xmlfile_desc, &$rapport = array())
     {
         $db = db::get();
@@ -251,7 +252,7 @@ class module_type extends data_object
 
                         $param_type->save();
 
-                        // on recherche les paramètres mal initialisés (ploopi_param_default manquant)
+                        // on recherche les paramÃ¨tres mal initialisÃ©s (ploopi_param_default manquant)
                         $sql =  "
                                 SELECT      m.id
 
@@ -334,23 +335,23 @@ class module_type extends data_object
                     }
                 }
 
-                $detail = "Fichier '{$xmlfile_desc}' importé.";
+                $detail = "Fichier '{$xmlfile_desc}' importÃ©.";
             }
             else
             {
-                $detail = "Fichier '{$xmlfile_desc}' mal formé. Vérifiez la structure XML du document.";
+                $detail = "Fichier '{$xmlfile_desc}' mal formÃ©. VÃ©rifiez la structure XML du document.";
                 $testok = false;
                 $critical_error = true;
             }
         }
         else
         {
-            $detail = "Fichier '{$xmlfile_desc}' non trouvé.";
+            $detail = "Fichier '{$xmlfile_desc}' non trouvÃ©.";
             $testok = false;
             $critical_error = true;
         }
 
-        $rapport[] = array('operation' => 'Chargement des paramètres/actions', 'detail' => $detail, 'res' => $testok);
+        $rapport[] = array('operation' => 'Chargement des paramÃ¨tres/actions', 'detail' => $detail, 'res' => $testok);
 
         return $critical_error;
 

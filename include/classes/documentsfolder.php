@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,21 +25,19 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Classe de gestion des fichiers (ne pas confondre avec le module DOC)
+ * Gestion interne des documents (dossiers)
  *
  * @package ploopi
  * @subpackage document
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 class documentsfolder extends data_object
 {
     /**
      * Contructeur de la classe
-     *
-     * @return documentsfolder
      */
     function __construct()
     {
@@ -54,7 +52,7 @@ class documentsfolder extends data_object
      * Ouvre un dossier avec son identifiant MD5
      *
      * @param string $md5id identifiant MD5 du dossier
-     * @return boolean true si le dossier a été ouvert
+     * @return boolean true si le dossier a Ã©tÃ© ouvert
      */
 
     function openmd5($md5id)
@@ -97,7 +95,7 @@ class documentsfolder extends data_object
 
     /**
      * Supprime le dossier et son contenu.
-     * Met à jour les informations du dossier parent.
+     * Met Ã  jour les informations du dossier parent.
      */
     function delete()
     {
@@ -134,7 +132,7 @@ class documentsfolder extends data_object
     }
 
     /**
-     * Crée un sous-dossier
+     * CrÃ©e un sous-dossier
      *
      * @param string $name nom du dossier
      * @param string $description description du dossier
@@ -224,7 +222,7 @@ class documentsfolder extends data_object
      *
      * @param array $arrTree arbre des dossiers/fichiers
      * @param int $intIdFolder identifiant du dossier courant
-     * @param string $strPath chemin relatif par rapport au dossier de départ
+     * @param string $strPath chemin relatif par rapport au dossier de dÃ©part
      * @return array tableau de chemins
      */
 

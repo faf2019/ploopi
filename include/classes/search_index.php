@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -23,168 +23,49 @@
 namespace ploopi;
 
 use ploopi;
+use Keller\SoundexFrBundle\Services\SoundexFr;
+use Wamania\Snowball\French;
 
 /**
- * Fonctions de recherche et d'indexation de contenu.
+ * Gestion de la recherche et de l'indexation de contenu
  *
  * @package ploopi
  * @subpackage search_index
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author St�phane Escaich
+ * @author Ovensia
  */
 
 abstract class search_index
 {
 
     /**
-     * Connexion � la base de donn�es d'indexation
+     * Connexion à la base de données d'indexation
+     *
+     * @return db
      */
 
     public static function getdb() {
-        static $client = null;
-        if (!is_null($client)) return $client;
+        static $objDb = null;
+        if (!is_null($objDb)) return $objDb;
 
-        try {
-
-            $client = \Elasticsearch\ClientBuilder::create()->setHosts([_PLOOPI_ELASTICSEARCH_HOST])->build();
-
-            // TEST UNIQUEMENT
-            // $response = $client->indices()->delete(['index' => _PLOOPI_DB_DATABASE, 'client' => ['ignore' => 404]]);
-
-            $exists = $client->indices()->exists(['index' => _PLOOPI_DB_DATABASE]);
-
-            // Cr�ation de l'index
-            if (!$exists) {
-
-                $params = [
-                    'index' => _PLOOPI_DB_DATABASE,
-                    'body' => [
-
-                        'mappings' => [
-                            'element' => [
-                                '_source' => [
-                                    'enabled' => true
-                                ],
-                                'properties' => [
-                                    'id_record' => [
-                                        'type' => 'string',
-                                    ],
-                                    'id_object' => [
-                                        'type' => 'integer',
-                                    ],
-                                    'label' => [
-                                        'type' => 'string',
-                                        'analyzer' => 'my_analyzer', // 'standard', 'french'
-                                        'boost' => 2
-                                    ],
-                                    'content' => [
-                                        'type' => 'string',
-                                        'analyzer' => 'my_analyzer' // 'standard', 'french'
-                                    ],
-                                    'meta' => [
-                                        'type' => 'string',
-                                        'analyzer' => 'my_analyzer_light', // 'standard', 'french'
-                                        'boost' => 3
-                                    ],
-                                    'timestp_create' => [
-                                        'type' => 'long',
-                                        'index' => 'not_analyzed'
-                                    ],
-                                    'timestp_modify' => [
-                                        'type' => 'long',
-                                        'index' => 'not_analyzed'
-                                    ],
-                                    'timestp_lastindex' => [
-                                        'type' => 'long',
-                                        'index' => 'not_analyzed'
-                                    ],
-                                    'id_user' => [
-                                        'type' => 'integer'
-                                    ],
-                                    'id_workspace' => [
-                                        'type' => 'integer'
-                                    ],
-                                    'id_module' => [
-                                        'type' => 'integer'
-                                    ]
-                                ]
-                            ]
-                        ],
-                        'settings' => [
-                            'number_of_shards' => 10,
-                            'number_of_replicas' => 1,
-                            'analysis' => [
-                                'analyzer' => [
-                                    'my_analyzer' => [
-                                        'type' => 'custom',
-                                        'tokenizer' => 'standard', // 'ngram', 'standard'
-                                        'filter' => ['stopwords', 'lowercase', 'elision', 'word_delimiter', 'snowball', 'phonetic'] // 'asciifolding', 'stemmer', 'phonetic'
-                                        //'filter' => ['stopwords', 'asciifolding' ,'lowercase', 'snowball', 'elision', 'word_delimiter']
-
-                                        // stopwords : suppression des mots communs
-                                        // asciifolding : suppression des accents
-                                        // lowercase : transformation en minuscules
-                                        // elision : suppression des petits mots (voir liste)
-                                        // word_delimiter : d�coupage en mots
-                                        // snowball : racinisation
-                                        // phonetic : conversion en phon�tique
-
-                                    ],
-                                    'my_analyzer_light' => [
-                                        'type' => 'custom',
-                                        'tokenizer' => 'standard',
-                                        'filter' => ['lowercase', 'elision', 'word_delimiter', 'snowball', 'phonetic']
-                                    ]
-                                ],
-                                'tokenizer' => [
-                                    'ngram' => [
-                                        'type' => 'nGram',
-                                        'min_gram' => 5,
-                                        'max_gram' => 20,
-                                        'token_chars' => [ "letter", "digit" ]
-                                    ]
-                                ],
-                                'filter' => [
-                                    'stopwords' => [
-                                        'type' => 'stop',
-                                        'stopwords' =>  ['_french_'],
-                                        'ignore_case' => true
-                                    ],
-                                    'snowball' => [
-                                        'type' => 'snowball',
-                                        'language' => 'French'
-                                    ],
-                                    'elision' => [
-                                        'type' => 'elision',
-                                        'articles' => ['c', 'l', 'm', 't', 'qu', 'n', 's', 'j', 'd']
-                                    ],
-                                    'phonetic' => [
-                                        'type' => 'phonetic',
-                                        'encoder' => 'beider_morse',
-                                        'languageset' => 'french'
-                                    ],
-                                    'stemmer' => [
-                                        'type' => 'stemmer',
-                                        'name' => 'light_french'
-                                    ],
-
-                                ],
-                            ]
-                        ],
-                    ]
-                ];
-
-                $response = $client->indices()->create($params);
+        if (_PLOOPI_DB_SERVER != _PLOOPI_INDEXATION_DB_SERVER || _PLOOPI_DB_DATABASE != _PLOOPI_INDEXATION_DB_DATABASE) {
+            $objDb = new db(_PLOOPI_INDEXATION_DB_SERVER, _PLOOPI_INDEXATION_DB_LOGIN, _PLOOPI_INDEXATION_DB_PASSWORD, _PLOOPI_INDEXATION_DB_DATABASE);
+            if(!$objDb->isconnected()) {
+                $objDb = null;
+                trigger_error(_PLOOPI_MSG_DBERROR, E_USER_ERROR);
             }
         }
-        catch (Exception $e) {
-            //trigger_error($e->getMessage(), E_USER_ERROR);
+        else {
+            $objDb = db::get();
         }
 
-        return $client;
-    }
+        return $objDb;
 
+
+        static $client = null;
+        if (!is_null($client)) return $client;
+    }
 
     /**
      * Retourne l'identifiant unique pour un enregistrement d'un objet
@@ -192,17 +73,24 @@ abstract class search_index
      * @param int $id_module identifiant du module
      * @param int $id_object identifiant de l'objet
      * @param string $id_record identifiant de l'enregistrement
-     * @return string identifiant unique de l'enregistrement (hash SHA)
+     * @return string identifiant unique de l'enregistrement (hash MD5, 32 caractères)
      *
+     * @see md5
      */
 
-    public static function getid($id_module, $id_object, $id_record)
+    public static function get_id($id_module, $id_object, $id_record)
     {
-        return sha1($id_module.'_'.$id_object.'_'.$id_record);
+        $db = self::getdb();
+
+        $db->query("SELECT id FROM ploopi_index_element WHERE id_module = {$id_module} AND id_object = {$id_object} AND id_record = '".$db->addslashes($id_record)."'");
+        if ($row = $db->fetchrow()) return $row['id'];
+        else return null;
     }
 
+
+
     /**
-     * Supprime l'index (mots cl�s) associ� � un enregistrement d'un objet
+     * Supprime l'index (mots clés) associé à un enregistrement d'un objet
      *
      * @param int $id_object identifiant de l'objet
      * @param string $id_record identifiant de l'enregistrement
@@ -211,19 +99,15 @@ abstract class search_index
 
     public static function remove($id_object, $id_record, $id_module = -1)
     {
-        $client = self::getdb();
-        if (is_null($client)) return;
+        $db = self::getdb();
 
         if ($id_module == -1 && !empty($_SESSION['ploopi']['moduleid'])) $id_module= $_SESSION['ploopi']['moduleid'];
-
-        $key = self::getid($id_module,$id_object,$id_record);
-
-        $response = $client->delete([
-            'index' => _PLOOPI_DB_DATABASE,
-            'type' => 'element',
-            'id' => $key,
-            'client' => ['ignore' => 404]
-        ]);
+        if (($id_element = self::get_id($id_module,$id_object,$id_record)) != null) {
+            $db->query("DELETE FROM ploopi_index_element WHERE id = '{$id_element}'");
+            $db->query("DELETE FROM ploopi_index_keyword_element WHERE id_element = '{$id_element}'");
+            $db->query("DELETE FROM ploopi_index_stem_element WHERE id_element = '{$id_element}'");
+            $db->query("DELETE FROM ploopi_index_phonetic_element WHERE id_element = '{$id_element}'");
+        }
     }
 
     /**
@@ -232,296 +116,622 @@ abstract class search_index
      * @param int $id_module identifiant du module
      */
 
-    public static function remove_module($id_module = -1)
+    public static function remove_index_module($id_module = -1)
     {
-        $client = self::getdb();
-        if (is_null($client)) return;
+        $db = self::getdb();
 
         if ($id_module == -1 && !empty($_SESSION['ploopi']['moduleid'])) $id_module = $_SESSION['ploopi']['moduleid'];
 
-        $client->deleteByQuery([
-            'index' => _PLOOPI_DB_DATABASE,
-            'type' => 'element',
-            'body'  => [
-                'query' => [
-                    'filtered' => [
-                        'filter' => [
-                            'must' => [
-                                ['term' => ['id_module' => $id_module]],
-                            ]
-                        ]
-                    ]
-                ]
-            ]
-        ]);
+        $db->query("
+            DELETE se.*
+            FROM ploopi_index_stem_element se, ploopi_index_element e
+            WHERE se.id_element = e.id
+            AND e.id_module = {$id_module}
+        ");
+
+        $db->query("
+            DELETE ke.*
+            FROM ploopi_index_keyword_element ke, ploopi_index_element e
+            WHERE ke.id_element = e.id
+            AND e.id_module = {$id_module}
+        ");
+
+        $db->query("
+            DELETE pe.*
+            FROM ploopi_index_phonetic_element pe, ploopi_index_element e
+            WHERE pe.id_element = e.id
+            AND e.id_module = {$id_module}
+        ");
+
+        $db->query("
+            DELETE e.*
+            FROM ploopi_index_element e
+            WHERE e.id_module = {$id_module}
+        ");
     }
 
 
     /**
-     * Cr�ation de l'index d'un enregistrement d'un objet
+     * Création de l'index d'un enregistrement d'un objet
      *
      * @param int $id_object identifiant de l'objet
      * @param string $id_record identifiant de l'enregistrement
-     * @param string $label libell� de l'objet
-     * @param string $content contenu de l'objet � ind�xer
-     * @param string $meta cha�ne contenant des METAs informations (le poids accord� sera maximal)
-     * @param boolean $usecommonwords true si la liste des mots communs doit �tre utilis�e (les mots communs seront dans ce cas retir�s)
-     * @param int $timestp_create date/heure de cr�ation au format timestamp MYSQL
+     * @param string $label libellé de l'objet
+     * @param string $content contenu de l'objet à indéxer
+     * @param string $meta chaîne contenant des METAs informations (le poids accordé sera maximal)
+     * @param boolean $usecommonwords true si la liste des mots communs doit être utilisée (les mots communs seront dans ce cas retirés)
+     * @param int $timestp_create date/heure de création au format timestamp MYSQL
      * @param int $timestp_modify date/heure de modification au format timestamp MYSQL
      * @param int $id_user identifiant de l'utilisateur
      * @param int $id_workspace identifiant de l'espace
      * @param int $id_module identifiant du module
      *
+     * @see index_element
+     * @see index_keyword
+     * @see index_keyword_element
+     * @see index_stem
+     * @see index_stem_element
+     *
+     * @see _PLOOPI_INDEXATION_COMMONWORDS_FR
+     * @see _PLOOPI_INDEXATION_WORDSEPARATORS
+     * @see _PLOOPI_INDEXATION_WORDMINLENGHT
+     * @see _PLOOPI_INDEXATION_WORDMAXLENGHT
+     * @see _PLOOPI_INDEXATION_METAWEIGHT
+     * @see _PLOOPI_INDEXATION_KEYWORDSMAXPCENT
+     *
+     * @see ploopi_convertaccents
+     *
+     * @link http://pecl.php.net/package/stem
      */
 
-    public static function add($id_object, $id_record, $label, $content, $meta = '', $usecommonwords = true, $timestp_create = 0, $timestp_modify = 0, $id_user = -1, $id_workspace = -1, $id_module = -1)
+    public static function add($id_object, $id_record, $label, &$content, $meta = '', $usecommonwords = true, $timestp_create = 0, $timestp_modify = 0, $id_user = -1, $id_workspace = -1, $id_module = -1)
     {
+
         global $ploopi_timer;
+
+        $db = self::getdb();
 
         if ($id_user == -1 && !empty($_SESSION['ploopi']['userid'])) $id_user = $_SESSION['ploopi']['userid'];
         if ($id_workspace == -1 && !empty($_SESSION['ploopi']['workspaceid'])) $id_workspace = $_SESSION['ploopi']['workspaceid'];
         if ($id_module == -1 && !empty($_SESSION['ploopi']['moduleid'])) $id_module= $_SESSION['ploopi']['moduleid'];
 
+        $words = array();
+        $words_indexed = $words_overall = 0;
 
-        $client = self::getdb();
-        if (is_null($client)) return;
+        if ($usecommonwords && !isset($_SESSION['ploopi']['commonwords']) && file_exists(_PLOOPI_INDEXATION_COMMONWORDS_FR) )
+        {
 
-        $key = self::getid($id_module, $id_object, $id_record);
+            $filecontent = '';
+            $handle = @fopen(_PLOOPI_INDEXATION_COMMONWORDS_FR, 'r');
+            if ($handle)
+            {
+                while (!feof($handle)) $filecontent .= fgets($handle);
+                fclose($handle);
+            }
 
-        // CREATE INDEX
-        $params = [
-            'index' => _PLOOPI_DB_DATABASE,
-            'type' => 'element',
-            'id' => $key,
-            'body' => [
-                'id_record' => $id_record,
-                'id_object' => $id_object,
-                'label' => utf8_encode($label),
-                'content' => utf8_encode($content),
-                'meta' => utf8_encode($meta),
-                'timestp_create' => $timestp_create,
-                'timestp_modify' => $timestp_modify,
-                'timestp_lastindex' => date::createtimestamp(),
-                'id_user' => $id_user,
-                'id_workspace' => $id_workspace,
-                'id_module' => $id_module,
-            ]
-        ];
+            $_SESSION['ploopi']['commonwords'] = array_flip(preg_split("/[\n]/", str_replace("\r",'',$filecontent)));
+        }
 
-        $response = $client->index($params);
-    }
+        if (empty($_SESSION['ploopi']['commonwords'])) $_SESSION['ploopi']['commonwords'] = array();
 
-    /**
-     * Renvoie l'index associ� � un enregistrement d'un objet
-     *
-     * @param int $id_object identifiant de l'objet
-     * @param string $id_record identifiant de l'enregistrement
-     * @param int $limit nombre de lignes renvoy�es
-     * @param int $id_module identifiant du module (optionnel)
-     * @return array tableau contenant l'index de l'enregistrement
-     *
-     */
+        // TRAITEMENT DU CONTENT
+        for ($kw = strtok($content, _PLOOPI_INDEXATION_WORDSEPARATORS); $kw !== false; $kw = strtok(_PLOOPI_INDEXATION_WORDSEPARATORS))
+        {
+            // mot en minuscule avec accents
+            $kw = trim(mb_strtolower($kw));
 
-    public static function get($id_object, $id_record, $limit = 100, $id_module = -1)
-    {
-        // curl -XGET 'http://localhost:9200/ploopidev/element/3986a02efba021669fe1e64ff1bfcceaf077aecd/_termvectors?fields=content&pretty=true' | more
+            // mot en minuscule sans accent et sans caractère parasite
+            $kw_clean = preg_replace("/[^a-zA-Z0-9]/","",str::convertaccents($kw));
 
-        if ($id_module == -1 && !empty($_SESSION['ploopi']['moduleid'])) $id_module= $_SESSION['ploopi']['moduleid'];
+            // on vérifie qu'il n'est pas dans la liste des mots à exclure
+            if (!$usecommonwords || !isset($_SESSION['ploopi']['commonwords'][$kw_clean]))
+            {
+                // on vérifie sa taille
+                $len = mb_strlen($kw);
+                if ($len >= _PLOOPI_INDEXATION_WORDMINLENGHT && $len <= _PLOOPI_INDEXATION_WORDMAXLENGHT)
+                {
 
-        $client = self::getdb();
-        if (is_null($client)) return;
+                    if (!isset($words[$kw_clean])) $words[$kw_clean] = array('weight' => 1, 'meta' => 0);
+                    else $words[$kw_clean]['weight']++;
 
-        $key = self::getid($id_module, $id_object, $id_record);
+                    $words_indexed++;
+                }
+            }
+            $words_overall++;
+        }
 
-        $params = [
-            'index' => _PLOOPI_DB_DATABASE,
-            'type' => 'element',
-            'id' => $key,
-            'fields' => ['label', 'content', 'meta'],
-        ];
+        // tri des mots par poids décroissant
+        arsort($words);
 
-        $response = $client->termvectors($params);
+        $word = current($words);
+        $max_weight = $word['weight'];
 
-        $tokens = array();
-        if (!empty($response['term_vectors'])) {
-            foreach(array('label', 'content', 'meta') as $field) {
-                if (isset($response['term_vectors'][$field]['terms'])) {
-                    foreach($response['term_vectors'][$field]['terms'] as $term => $detail) {
-                        if (!isset($tokens[$term])) $tokens[$term] = 0;
-                        $tokens[$term] += $detail['term_freq'];
-                    }
+        // TRAITEMENT DES METAS
+        for ($kw = strtok($meta, _PLOOPI_INDEXATION_WORDSEPARATORS); $kw !== false; $kw = strtok(_PLOOPI_INDEXATION_WORDSEPARATORS))
+        {
+            // mot en minuscule avec accents
+            $kw = trim(mb_strtolower($kw, 'ISO-8859-1'));
+
+            // mot en minuscule sans accent et sans caractère parasite
+            $kw_clean = preg_replace("/[^a-zA-Z0-9]/","",str::convertaccents($kw));
+
+            // on vérifie qu'il n'est pas dans la liste des mots à exclure
+            if (!$usecommonwords || !isset($_SESSION['ploopi']['commonwords'][$kw_clean]))
+            {
+                // on vérifie sa taille
+                $len = mb_strlen($kw);
+                if ($len >= _PLOOPI_INDEXATION_WORDMINLENGHT && $len <= _PLOOPI_INDEXATION_WORDMAXLENGHT)
+                {
+                    // détermination du lemme (racine)
+                    // $kw_stem = stem_french($kw);
+
+                    $words[$kw_clean]['weight'] = _PLOOPI_INDEXATION_METAWEIGHT;
+                    $words[$kw_clean]['meta'] = 1;
                 }
             }
         }
 
-        // Tri
-        asort($tokens, SORT_NUMERIC);
+        // tri des mots par poids décroissant
+        arsort($words);
 
-        // Limit
-        $tokens = array_slice($tokens, 0, $limit);
+        // nettoyage index
+        self::remove($id_object, $id_record, $id_module);
 
-        return $tokens;
+        $kw = current($words);
+        $kw_ratio = (empty($words_overall)) ? 1 : ($kw['weight']*100 / $words_overall);
+
+        $max_kw = (_PLOOPI_INDEXATION_KEYWORDSMAXPCENT) ? (sizeof($words)*_PLOOPI_INDEXATION_KEYWORDSMAXPCENT)/100 : sizeof($words);
+
+
+        $objElement = new index_element();
+        $objElement->fields['id_object'] = $id_object;
+        $objElement->fields['id_record'] = $id_record;
+        $objElement->fields['label'] = $label;
+        $objElement->fields['id_user'] = $id_user;
+        $objElement->fields['id_workspace'] = $id_workspace;
+        $objElement->fields['id_module'] = $id_module;
+        $objElement->fields['timestp_create'] = $timestp_create;
+        $objElement->fields['timestp_modify'] = $timestp_modify;
+        $objElement->fields['timestp_lastindex'] = date::createtimestamp();
+        $objElement->save();
+
+        $id_element = $objElement->fields['id'];
+
+
+        $stems = array();
+        $phonetics = array();
+        $stemmer = new French();
+        $soundex = new SoundexFr();
+
+        for ($i = 1; ($i <= $max_kw && $kw_ratio >= _PLOOPI_INDEXATION_RATIOMIN) || $kw['meta']; $i++)
+        {
+            $kw_value = key($words);
+            if (strlen($kw_value) <= 20)
+            {
+                $kw_pho = mb_strtolower($soundex->phonetique($kw_value));
+                $kw_stem = $stemmer->stem($kw_value);
+
+                $ratio = (empty($kw['meta']) && $kw_ratio<1) ? $kw_ratio : 1;
+                $relevance = (empty($kw['meta'])) ? ($kw['weight']*100)/$max_weight : 100;
+
+                if ($kw_stem != '') {
+                    if (empty($stems[$kw_stem])) {
+                        $stems[$kw_stem] = array(
+                            'weight' => $kw['weight'],
+                            'ratio' => $ratio,
+                            'relevance' => $relevance
+                        );
+                    }
+                    else {
+                        $stems[$kw_stem]['weight'] = min(999999, $stems[$kw_stem]['weight']+$kw['weight']);
+                        $stems[$kw_stem]['ratio'] = min(1, $stems[$kw_stem]['ratio']+$ratio);
+                        $stems[$kw_stem]['relevance'] = min(100, $stems[$kw_stem]['relevance']+$relevance);
+                    }
+                }
+
+                if ($kw_pho != '') {
+                    if (empty($phonetics[$kw_pho])) {
+                        $phonetics[$kw_pho] = array(
+                            'weight' => $kw['weight'],
+                            'ratio' => $ratio,
+                            'relevance' => $relevance
+                        );
+                    }
+                    else {
+                        $phonetics[$kw_pho]['weight'] = min(999999, $phonetics[$kw_pho]['weight']+$kw['weight']);
+                        $phonetics[$kw_pho]['ratio'] = min(1, $phonetics[$kw_pho]['ratio']+$ratio);
+                        $phonetics[$kw_pho]['relevance'] = min(100, $phonetics[$kw_pho]['relevance']+$relevance);
+                    }
+                }
+
+                // enregistrement du lien mot clé <-> enregistrement
+                $db->query("INSERT INTO ploopi_index_keyword_element(id_element, keyword, weight, ratio, relevance) VALUES('{$id_element}', '{$kw_value}', {$kw['weight']}, {$ratio}, {$relevance})");
+            }
+
+            $kw = next($words);
+            $kw_ratio = (empty($words_overall)) ? 1 : ($kw['weight']*100 / $words_overall);
+        }
+
+        foreach($stems as $stem => $detail) {
+            $db->query("INSERT INTO ploopi_index_stem_element(id_element, stem, weight, ratio, relevance) VALUES('{$id_element}', '{$stem}', {$detail['weight']}, {$detail['ratio']}, {$detail['relevance']})");
+        }
+
+        foreach($phonetics as $pho => $detail) {
+            $db->query("INSERT INTO ploopi_index_phonetic_element(id_element, phonetic, weight, ratio, relevance) VALUES('{$id_element}', '{$pho}', {$detail['weight']}, {$detail['ratio']}, {$detail['relevance']})");
+        }
     }
+
+
+    /**
+     * Renvoie l'index associé à un enregistrement d'un objet
+     *
+     * @param int $id_object identifiant de l'objet
+     * @param string $id_record identifiant de l'enregistrement
+     * @param int $limit nombre de lignes renvoyées
+     * @param int $id_module identifiant du module (optionnel)
+     * @return array tableau contenant l'index de l'enregistrement
+     *
+     * @see ploopi_search_generate_id
+     */
+
+    public static function get($id_object, $id_record, $limit = 100, $id_module = -1)
+    {
+        $db = self::getdb();
+
+        $index = array();
+
+        if (is_numeric($limit))
+        {
+            if ($id_module == -1 && !empty($_SESSION['ploopi']['moduleid'])) $id_module= $_SESSION['ploopi']['moduleid'];
+
+            $id_element = self::get_id($id_module,$id_object,$id_record);
+
+            $sql =  "
+                    SELECT      ke.*
+
+                    FROM        ploopi_index_keyword_element ke
+
+                    WHERE       ke.id_element = '{$id_element}'
+
+                    ORDER BY    ke.relevance DESC, ke.weight DESC, ke.keyword
+
+                    LIMIT       0,{$limit}
+                ";
+
+            $db->query($sql);
+            $index = $db->getarray();
+        }
+
+        return $index;
+    }
+
+
 
     /**
      * Effectue une recherche d'un ou plusieurs mots dans l'index
      *
-     * @param string $keywords mots cl�s recherch�s
-     * @param int $id_object identifiant de l'objet recherch� (optionnel)
-     * @param string $id_record tableau d'enregistrement ou masque d'enregistrement recherch�, recherche de type abc% (optionnel)
+     * @param string $keywords mots clés recherchés
+     * @param int $id_object identifiant de l'objet recherché (optionnel)
+     * @param string $id_record tableau d'enregistrement ou masque d'enregistrement recherché, recherche de type abc% (optionnel)
      * @param mixed $id_module identifiant du module ou tableau d'idenfiants de modules (optionnel)
-     * @param array $options tableau des options de recherche : 'orderby', 'sort', 'limit' (optionnel)
-     * @return array tableau contenant le r�sultat de la recherche
+     * @param array $options tableau des options de recherche : 'orderby', 'sort', 'limit', 'stem', 'phonetic', 'and' (optionnel)
+     * @return array tableau contenant le résultat de la recherche
      */
 
-    public static function search($keywords, $id_object = -1, $id_record = null, $id_module = null, $options = null)
+    public static function search($keywords, $id_object = -1, $id_record = null, $id_module = null, $options = array())
     {
-        $client = self::getdb();
-        if (is_null($client)) return;
+        $db = self::getdb();
 
-        // Contr�le et formatage des param�tres
+        $default_options = array(
+            'usecommonwords' => true,
+            'orderby' => 'relevance',
+            'sort' => 'DESC',
+            'limit' => 200,
+            'phonetic' => true,
+            'stem' => true,
+            'and' => false
+        );
+
+        $options = array_merge($default_options, $options);
+
         if ($id_module == -1 && !empty($_SESSION['ploopi']['moduleid'])) $id_module = $_SESSION['ploopi']['moduleid'];
+
+        // on récupère la liste des racines contenues dans la liste des mots clés
+        if ($options['stem']) {
+            list($arrStems) = str::getwords($keywords, isset($options['usecommonwords']) ? $options['usecommonwords'] : true, true);
+        }
+        else $arrStems = array();
+
+        // on récupère la liste des mots contenus dans la liste des mots clés
+        list($arrKeywords) = str::getwords($keywords, isset($options['usecommonwords']) ? $options['usecommonwords'] : true, false);
+
+        $arrSearch = array();
+        $arrRelevance = array();
+        $arrElements = array();
+
+        if (!empty($id_record))
+        {
+            if (is_array($id_record))
+            {
+                $arrIdRecord = array();
+                foreach($id_record as $rec) $arrIdRecord[] = "'".$db->addslashes($rec)."'";
+
+                $arrSearch[] = "e.id_record IN (".implode(',', $arrIdRecord).")";
+            }
+            elseif ($id_record != '') $arrSearch[] = "e.id_record LIKE '".$db->addslashes($id_record)."%'";
+        }
+
+        if ($id_object != -1) $arrSearch[] = sprintf("e.id_object = %d", $id_object);
 
         if (empty($id_module)) $id_module = array();
         elseif (!is_array($id_module)) $id_module = array($id_module);
 
-        if (empty($id_record)) $id_record = array();
-        elseif (!is_array($id_record)) $id_record = array($id_record);
+        // Prise en compte de la vue sur les données pour chaque module
+        $arrViewFilter = array();
+        foreach($id_module as $idm) $arrViewFilter[] = "(e.id_module = {$idm} AND e.id_workspace IN (-1,0,".system::viewworkspaces($idm)."))";
 
-        $limit = (isset($options['limit'])) ? $options['limit'] : 200;
+        // Intégration du filtre sur la vue dans le filtre global
+        if (!empty($arrViewFilter)) $arrSearch[] = '('.implode(' OR ', $arrViewFilter).')';
 
-        $orderby = (empty($options['orderby'])) ? '_score' : $options['orderby'];
+        $strSearch = (empty($arrSearch)) ? '' : ' WHERE '.implode(' AND ', $arrSearch);
 
-        $sort = (isset($options['sort'])) ? $options['sort'] : 'desc';
-        $sort = strtolower($sort);
-        if (!in_array($sort, array('desc', 'asc'))) $sort = 'asc';
-
-        // https://www.elastic.co/guide/en/elasticsearch/guide/current/_boosting_query_clauses.html
-        // http://stackoverflow.com/questions/28538760/elasticsearch-bool-query-combine-must-with-or
-        // https://www.elastic.co/guide/en/elasticsearch/guide/current/combining-filters.html
-        // http://elasticsearch-cheatsheet.jolicode.com/
-
-        $params = [
-            'index' => _PLOOPI_DB_DATABASE,
-            'type' => 'element',
-            'body' => [
-                'fields' => ['label', 'id_object', 'id_record', 'id_user', 'id_workspace', 'id_module', 'timestp_create', 'timestp_modify', 'timestp_lastindex'],
-                'size' => $limit,
-                'sort' => [$orderby => $sort],
-                // 'min_score' => 0.01,
-                'query' => [
-                    'bool' => [
-                        'must' => [
-                            'match' => [
-                                '_all' => [
-                                    'query' => utf8_encode($keywords),
-                                    // 'operator' => 'and'
-                                ],
-                            ],
-                        ],
-                        'should' => [
-                            [
-                                'match' => [
-                                    'label' => [
-                                        'query' => utf8_encode($keywords),
-                                    ]
-                                ]
-                            ],
-                            [
-                                'match' => [
-                                    'content' => [
-                                        'query' => utf8_encode($keywords),
-                                    ]
-                                ]
-                            ],
-                            [
-                                'match' => [
-                                    'meta' => [
-                                        'query' => utf8_encode($keywords),
-                                    ]
-                                ]
-                            ]
-                        ],
-                        'minimum_should_match' => 1,
-                    ]
-                ]
-            ]
-        ];
-
-        $filter = array();
+        $orderby = $options['orderby'];
+        $sort = $options['sort'];
+        $limit = $options['limit'];
 
 
-        // Filtre module
-        if (!empty($id_module)) $filter['terms']['id_module'] = $id_module;
+        if (empty($arrKeywords) && empty($arrStems))
+        {
+            $sql =  "
+                    SELECT      e.*
 
-        // Filtre objet
-        if ($id_object != -1) $filter['term']['id_object'] = $id_object;
+                    FROM        ploopi_index_element e
 
-        // Filtre record
-        if (!empty($id_record)) $filter['terms']['id_record'] = $id_record;
+                    {$strSearch}
 
-        // Prise en compte de la vue sur les donn�es pour chaque module
-        // ATTENTION, SIMULATION ASSEZ COMPLEXE DU "OR" SQL
-        foreach($id_module as $idm) {
-            $wsp = array_merge(array(-1,0), explode(',', system::viewworkspaces($idm)));
+                    ORDER BY    e.label
+                    ";
 
-            $filter['query']['bool']['should'][]['bool']['must'] = [
-                [
-                    'terms' => [
-                        'id_workspace' => $wsp
-                    ]
-                ],
-                [
-                    'term' => [
-                        'id_module' => $idm
-                    ]
-                ]
-            ];
+            $db->query($sql);
+
+            while ($row = $db->fetchrow())
+            {
+                $id = ($id_module != '') ? $row['id_record'] : $row['id'];
+
+                $arrElements[$id] = $row;
+                $arrRelevance[$id] = array(
+                    'relevance' => 100,
+                    'kw' => array(),
+                );
+
+            }
+
+        }
+        else
+        {
+
+            $stemmer = new French();
+            $soundex = new SoundexFr();
+
+            $arrSearchs = array('keyword' => array(), 'stem' => array(), 'phonetic' => array());
+            foreach($arrKeywords as $kw => $occ)
+            {
+                $arrSearchs['keyword'][$kw] = 1;
+
+                if ($options['stem']) {
+                    $stem = $stemmer->stem($kw);
+                    if ($stem != '') $arrSearchs['stem'][$stem] = 1;
+                }
+
+                if ($options['phonetic']) {
+                    $pho = mb_strtolower($soundex->phonetique($kw));
+                    if ($pho != '') $arrSearchs['phonetic'][$pho] = 1;
+                }
+            }
+
+            $intNbKw = sizeof($arrSearchs['keyword'])+sizeof($arrSearchs['stem'])+sizeof($arrSearchs['phonetic']);
+
+            $t1 = timer::get()->getexectime();
+
+            foreach($arrSearchs as $type => $detail) {
+                foreach(array_keys($detail) as $kw) {
+
+                    $id = ord(substr($kw,0,1))-96;
+
+                    $sql =  "
+                            SELECT       e.*,
+                                        ke.relevance
+
+                            FROM        ploopi_index_{$type}_element ke
+                            INNER JOIN  ploopi_index_element e ON e.id = ke.id_element
+
+                            {$strSearch}
+
+                            AND         ke.{$type} = '{$kw}'
+                            ";
+
+                    $db->query($sql);
+
+                    while ($row = $db->fetchrow())
+                    {
+                        $id = ($id_module != '') ? $row['id_record'] : $row['id'];
+
+                        if (!isset($arrElements[$id]))
+                        {
+                            $arrElements[$id] = $row;
+
+                            $arrRelevance[$id] = array(
+                                'relevance' => $row['relevance']/$intNbKw,
+                                $type => 1,
+                                'kw' => array($kw => 1)
+                            );
+
+                            /*
+                            $arrRelevance[$id]['relevance'] = $row['relevance']/$intNbKw;
+                            if (empty($arrRelevance[$id][$type])) $arrRelevance[$id][$type] = 1;
+                            else $arrRelevance[$id][$type]++;
+                            */
+                        }
+                        else
+                        {
+                            $arrRelevance[$id]['relevance'] += $row['relevance']/$intNbKw;
+                            if (empty($arrRelevance[$id]['kw'][$kw])) $arrRelevance[$id]['kw'][$kw] = 1;
+                            else $arrRelevance[$id]['kw'][$kw]++;
+                            if (empty($arrRelevance[$id][$type])) $arrRelevance[$id][$type] = 1;
+                            else $arrRelevance[$id][$type]++;
+                        }
+                    }
+                }
+            }
+
+            // Filtre AND
+            if ($options['and']) {
+                $matches_ok = sizeof($arrSearchs['keyword']);
+
+                foreach($arrRelevance as $id => $row) {
+                    $matches = 0;
+                    foreach(array_keys($arrSearchs) as $type) {
+                        if (isset($row[$type])) $matches = max($matches, $row[$type]);
+                    }
+
+                    // Suppression des résultats qui ne matchent pas strictement
+                    if ($matches < $matches_ok) {
+                        unset($arrRelevance[$id]);
+                        unset($arrElements[$id]);
+                    }
+                }
+
+            }
         }
 
-        $filter['query']['bool']['minimum_should_match'] = 1;
+        // tri du résultat en fonction du champ et de l'ordre
+        $compare_sign = ($sort == 'DESC') ? '>' : '<';
 
-        // Int�gration du filtre dans la requete
-        $params['body']['query']['bool']['filter'] = $filter;
+        uasort($arrRelevance, create_function('$a,$b', 'return $b[\''.$orderby.'\'] '.$compare_sign.' $a[\''.$orderby.'\'];'));
 
-        // output::print_r($params);
-        $response = $client->search($params);
 
-        // Mise en forme des r�sultats
-        $arrRelevance = array();
-
-        foreach($response['hits']['hits'] as $row) {
-            $arrRelevance[] = [
-                'relevance' => min(round($row['_score']*100), 100),
-                'label' => $row['fields']['label'][0],
-                'id_object' => $row['fields']['id_object'][0],
-                'id_record' => $row['fields']['id_record'][0],
-                'id_user' => $row['fields']['id_user'][0],
-                'id_workspace' => $row['fields']['id_workspace'][0],
-                'id_module' => $row['fields']['id_module'][0],
-                'timestp_create' => $row['fields']['timestp_create'][0],
-                'timestp_modify' => $row['fields']['timestp_modify'][0],
-                'timestp_lastindex' => $row['fields']['timestp_lastindex'][0],
-            ];
+        $c = 0;
+        reset($arrRelevance);
+        $arrResult = array();
+        while (current($arrRelevance) !== false && $c++ < $limit) {
+            $k = key($arrRelevance);
+            $arrResult[$k] = array_merge($arrElements[$k], $arrRelevance[$k]);
+            next($arrRelevance);
         }
 
-        // output::print_r($arrRelevance);
-        output::print_r($response);
+        return $arrResult;
+    }
 
-        return $arrRelevance;
+    /**
+     * Met en valeur les mots recherchés dans un texte et génère des extraits.
+     * Grandement inspiré du code de phpdig.
+     *
+     * @param string $content contenu du texte
+     * @param string $words mots recherchés
+     * @param int $snippet_length longueur de l'extrait
+     * @param int $snippet_num nombre d'extraits
+     * @param string $highlight_class classe css utilisée pour la mise en valeur des mots
+     * @return string extraits avec les mots clés
+     */
+
+    public static function highlight($content, $words, $snippet_length = 150, $snippet_num = 3, $highlight_class = 'ploopi_highlight')
+    {
+        // on calcule l'encodeur
+        $string_subst = 'A:ÀÁÂÃÄÅ,a:àáâãäå,O:ÒÓÔÕÖØ,o:òóôõöø,E:ÈÉÊË,e:èéêë,C:Ç,c:ç,I:ÌÍÎÏ,i:ìíîï,U:ÙÚÛÜ,u:ùúûü,Y:Ý,y:ÿý,N:Ñ,n:ñ';
+
+        $arrEncoder = array();
+
+        $tempArray = explode(',',$string_subst);
+
+        $arrEncoder['str'] = '';
+        $arrEncoder['tr'] = '';
+        $arrEncoder['char'] = array();
+        $arrEncoder['ereg'] = array();
+
+        foreach ($tempArray as $tempSubstitution)
+        {
+            $chrs = explode(':',$tempSubstitution);
+            $arrEncoder['char'][strtolower($chrs[0])] = strtolower($chrs[0]);
+            settype($arrEncoder['ereg'][strtolower($chrs[0])],'string');
+            $arrEncoder['ereg'][strtolower($chrs[0])] .= $chrs[0].$chrs[1];
+            for($i=0; $i < strlen($chrs[1]); $i++)
+            {
+                $arrEncoder['str'] .= $chrs[1][$i];
+                $arrEncoder['tr']  .= $chrs[0];
+            }
+        }
+        foreach($arrEncoder['ereg'] as $id => $ereg)
+        {
+            $arrEncoder['ereg'][$id] = '['.$ereg.']';
+        }
+
+        $string = str_replace('\\','',implode('@#@',$words));
+
+        $string = str_replace('Æ','ae',str_replace('æ','ae',$string));
+        $string = strtr($string, $arrEncoder['str'], $arrEncoder['tr']);
+
+        $string = preg_quote(strtolower($string));
+        $string = str_replace($arrEncoder['char'],$arrEncoder['ereg'],$string);
+
+        $reg_strings = str_replace('@#@','|', $string);
+        $stop_regs = "[][(){}[:blank:]=&?!&#%\$£*@+%:;,\/\.'\"]";
+        $reg_strings = "/({$stop_regs}{1}|^)({$reg_strings})()/i";
+
+        $num_extracts = 0;
+        $c = 0;
+        $my_extract_size = $snippet_length;
+        $extract = '';
+
+        $content_size = strlen($content);
+
+        while (($num_extracts == 0) && ($my_extract_size <= $content_size))
+        {
+            while($num_extracts < $snippet_num && $extract_content = preg_replace("/([ ]{2,}|\n|\r|\r\n)/"," ",substr($content, $c*$snippet_length, $snippet_length)))
+            {
+                if(preg_match($reg_strings,$extract_content))
+                {
+                    $match_this_spot = preg_replace($reg_strings,"\\1<\\2>\\3",$extract_content);
+                    $first_bold_spot = strpos($match_this_spot,"<");
+                    $first_bold_spot = max($first_bold_spot - round(($snippet_length/ 2),0), 0);
+                    $extract_content = substr($extract_content,$first_bold_spot,$snippet_length);
+
+                    $extract_content = @preg_replace($reg_strings,"\\1<^#_>\\2</_#^>\\3",@preg_replace($reg_strings,"\\1<^#_>\\2</_#^>\\3",$extract_content));
+                    $extract_content = str_replace("^#_","span class=\"$highlight_class\"",str_replace("_#^","span",$extract_content));
+
+                    $extract .= " ...{$extract_content}... ";
+                    $num_extracts++;
+                }
+
+                $c++;
+            }
+
+            if ($my_extract_size < $content_size)
+            {
+                $my_extract_size *= 100;
+                if ($my_extract_size > $content_size)
+                {
+                    $my_extract_size = $content_size;
+                }
+            }
+            else
+            {
+                $my_extract_size++;
+            }
+        }
+
+        return($extract);
     }
 
 
     /**
-     * Retourne les enregistrements index�s pour un objet d'un module
+     * Retourne les enregistrements indexés pour un objet d'un module
      *
      * @param int $id_object (optionnel)
      * @param int $id_module (optionnel)
-     * @return array tableau des id_record d'enregistrements index�s
+     * @return array tableau des id_record d'enregistrements indexés
      */
 
-    /*
-    function ploopi_search_get_records($id_object = null, $id_module = null)
+    public static function get_records($id_object = null, $id_module = null)
     {
         $db = self::getdb();
 
@@ -544,5 +754,4 @@ abstract class search_index
 
         return $db->getarray($rs, true);
     }
-    */
 }

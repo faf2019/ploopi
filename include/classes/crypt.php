@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,14 +25,13 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Fonctions permettant de mettre en place des mécanismes de chiffrement
- * Voir également la classe crypt.
+ * Gestion des mécanismes de chiffrement
  *
  * @package ploopi
  * @subpackage crypt
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  *
  * @see ploopi_cipher
  */

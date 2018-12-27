@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,13 +21,13 @@
 */
 
 /**
- * Opérations sur les partages
+ * OpÃ©rations sur les partages
  *
  * @package ploopi
  * @subpackage share
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 switch($ploopi_op)
@@ -50,7 +50,7 @@ switch($ploopi_op)
             {
                 ?>
                 <p class="ploopi_va" style="padding:2px;">
-                    <a class="ploopi_share_delete_user" href="javascript:void(0);" onclick="ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_select_user&share_id=<?php echo urlencode($_GET['share_id']); ?>&remove_group_id=<?php echo $group->fields['id']; ?>', 'div_share_users_selected_<?php echo ploopi\str::htmlentities($_GET['share_id']); ?>');">
+                    <a class="ploopi_share_delete_user" href="javascript:void(0);" onclick="ploopi.xhr.todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_select_user&share_id=<?php echo urlencode($_GET['share_id']); ?>&remove_group_id=<?php echo $group->fields['id']; ?>', 'div_share_users_selected_<?php echo ploopi\str::htmlentities($_GET['share_id']); ?>');">
                         <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/btn_delete.png" />
                         <span>Groupe &laquo; </span><strong><?php echo ploopi\str::htmlentities($group->fields['label']); ?></strong><span></span> &raquo; (Cliquez pour supprimer)</span>
                     </a>
@@ -66,7 +66,7 @@ switch($ploopi_op)
             {
                 ?>
                 <p class="ploopi_va" style="padding:2px;">
-                    <a class="ploopi_share_delete_user" href="javascript:void(0);" onclick="ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_select_user&share_id=<?php echo urlencode($_GET['share_id']); ?>&remove_user_id=<?php echo $user->fields['id']; ?>', 'div_share_users_selected_<?php echo ploopi\str::htmlentities($_GET['share_id']); ?>');">
+                    <a class="ploopi_share_delete_user" href="javascript:void(0);" onclick="ploopi.xhr.todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_select_user&share_id=<?php echo urlencode($_GET['share_id']); ?>&remove_user_id=<?php echo $user->fields['id']; ?>', 'div_share_users_selected_<?php echo ploopi\str::htmlentities($_GET['share_id']); ?>');">
                         <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/btn_delete.png" />
                         <strong><?php echo ploopi\str::htmlentities("{$user->fields['lastname']} {$user->fields['firstname']}"); ?></strong><span>&nbsp;(Cliquez pour supprimer)</span>
                     </a>
@@ -119,7 +119,7 @@ switch($ploopi_op)
             }
         }
 
-        // Tri des espaces par priorité/label
+        // Tri des espaces par prioritÃ©/label
         uasort($list['workspaces'], function ($a,$b) { return sprintf("%03d_%s", intval($b['priority']), $b['label']) < sprintf("%03d_%s", intval($a['priority']), $a['label']); });
 
         if (!empty($list['workspaces'])) {
@@ -244,7 +244,7 @@ switch($ploopi_op)
                         {
                             $user = &$list['users'][$id_user];
                             ?>
-                            <a class="ploopi_share_select_user" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_select_user&share_id=<?php echo urlencode($_GET['share_id']); ?>&user_id=<?php echo $id_user; ?>', 'div_share_users_selected_<?php echo ploopi\str::htmlentities($_GET['share_id']); ?>');">
+                            <a class="ploopi_share_select_user" href="javascript:void(0);" onclick="javascript:ploopi.xhr.todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_select_user&share_id=<?php echo urlencode($_GET['share_id']); ?>&user_id=<?php echo $id_user; ?>', 'div_share_users_selected_<?php echo ploopi\str::htmlentities($_GET['share_id']); ?>');">
                                 <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span><?php echo ploopi\str::htmlentities("{$user['lastname']} {$user['firstname']}"); ?></span></p>
                             </a>
                             <?php
@@ -257,7 +257,7 @@ switch($ploopi_op)
                         {
                             $group = &$list['groups'][$id_grp];
                             ?>
-                            <a class="ploopi_share_select_usergroup" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_select_user&share_id=<?php echo urlencode($_GET['share_id']); ?>&group_id=<?php echo $id_grp; ?>', 'div_share_users_selected_<?php echo ploopi\str::htmlentities($_GET['share_id']); ?>');">
+                            <a class="ploopi_share_select_usergroup" href="javascript:void(0);" onclick="javascript:ploopi.xhr.todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_select_user&share_id=<?php echo urlencode($_GET['share_id']); ?>&group_id=<?php echo $id_grp; ?>', 'div_share_users_selected_<?php echo ploopi\str::htmlentities($_GET['share_id']); ?>');">
                                 <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_group.png"><span><?php echo ploopi\str::htmlentities($list['groups'][$id_grp]['label']);  ?></span></p>
                             </a>
                             <?php
@@ -267,7 +267,7 @@ switch($ploopi_op)
                                 {
                                     $user = &$list['users'][$id_user];
                                     ?>
-                                    <a class="ploopi_share_select_usergroup_user" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_select_user&share_id=<?php echo urlencode($_GET['share_id']); ?>&user_id=<?php echo $id_user; ?>', 'div_share_users_selected_<?php echo ploopi\str::htmlentities($_GET['share_id']); ?>');">
+                                    <a class="ploopi_share_select_usergroup_user" href="javascript:void(0);" onclick="javascript:ploopi.xhr.todiv('admin.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_select_user&share_id=<?php echo urlencode($_GET['share_id']); ?>&user_id=<?php echo $id_user; ?>', 'div_share_users_selected_<?php echo ploopi\str::htmlentities($_GET['share_id']); ?>');">
                                         <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span><?php echo ploopi\str::htmlentities("{$user['lastname']} {$user['firstname']}"); ?></span></p>
                                     </a>
                                     <?php
@@ -281,7 +281,7 @@ switch($ploopi_op)
             </div>
             <div class="ploopi_share_select_legend">
                 <p class="ploopi_va">
-                    <strong>Légende:&nbsp;</strong>
+                    <strong>LÃ©gende:&nbsp;</strong>
                     <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_workgroup.png"><span>Espace de Travail</span>
                     <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_group.png"><span>Groupe d'Utilisateur</span>
                     <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span>Utilisateur</span>

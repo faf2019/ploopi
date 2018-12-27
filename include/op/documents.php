@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,19 +21,19 @@
 */
 
 /**
- * Opérations sur les documents
+ * OpÃ©rations sur les documents
  *
  * @package ploopi
  * @subpackage document
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 switch($ploopi_op)
 {
 
-    // Appelé depuis fonction javascript d'ouverture du popup de navigation/sélection de fichier
+    // AppelÃ© depuis fonction javascript d'ouverture du popup de navigation/sÃ©lection de fichier
     case 'documents_selectfile':
         if (empty($_REQUEST['documents_id'])) return;
 
@@ -50,18 +50,18 @@ switch($ploopi_op)
         $content = ob_get_contents();
         ob_end_clean();
 
-        ploopi\system::kill($skin->create_popup('Explorateur de fichiers', $content, 'ploopi_documents_popup'));
+        ploopi\system::kill(ploopi\skin::get()->create_popup('Explorateur de fichiers', $content, 'ploopi_documents_popup'));
     break;
 
 
 
     case 'documents_browser':
-        // Vérification de l'id de l'instance
+        // VÃ©rification de l'id de l'instance
         if (!isset($_REQUEST['documents_id'])) return;
 
         $documents_id = $_REQUEST['documents_id'];
 
-        // Vérification des paramètres de l'instance
+        // VÃ©rification des paramÃ¨tres de l'instance
         if (!isset($_SESSION['documents'][$documents_id])) return;
 
 
@@ -116,7 +116,7 @@ switch($ploopi_op)
                         $objZip->close();
                     }
 
-                    // Téléchargement du fichier zip
+                    // TÃ©lÃ©chargement du fichier zip
                     ploopi\fs::downloadfile($zip_path._PLOOPI_SEP.$zip_filename, $zip_filename, true, true, false);
 
                     // Suppression du dossier temporaire
@@ -136,9 +136,9 @@ switch($ploopi_op)
         $documentsfolder = new ploopi\documentsfolder();
         $documentsfolder_parent = new ploopi\documentsfolder();
 
-        // Contrôle currentfolder
+        // ContrÃ´le currentfolder
         if (!isset($_GET['currentfolder']) || !$documentsfolder_parent->openmd5($_GET['currentfolder'])) ploopi\system::kill();
-        // Contrôle id instance
+        // ContrÃ´le id instance
         if (!isset($_GET['documents_id']) || !isset($_SESSION['documents'][$_GET['documents_id']])) ploopi\system::kill();
 
         $currentfolder = $_GET['currentfolder'];
@@ -173,8 +173,8 @@ switch($ploopi_op)
         }
         ?>
         <script type="text/javascript">
-            window.parent.ploopi\documents::browser('<?php echo ploopi\crypt::queryencode("ploopi_op=documents_browser&currentfolder={$currentfolder}&documents_id={$documents_id}"); ?>', '<?php echo ploopi\str::htmlentities($documents_id); ?>');
-            window.parent.ploopi_hidepopup('ploopi_documents_openfolder_popup');
+            window.parent.ploopi.documents.browser('<?php echo ploopi\crypt::queryencode("ploopi_op=documents_browser&currentfolder={$currentfolder}&documents_id={$documents_id}"); ?>', '<?php echo ploopi\str::htmlentities($documents_id); ?>');
+            window.parent.ploopi.popup.hide('ploopi_documents_openfolder_popup');
         </script>
         <?php
         ploopi\system::kill();
@@ -208,7 +208,7 @@ switch($ploopi_op)
         <div class="ploopi_form">
             <div class="documents_formcontent">
                 <p>
-                    <label>Libellé:</label>
+                    <label>LibellÃ©:</label>
                     <input type="text" class="text" name="documentsfolder_name" value="<?php echo ploopi\str::htmlentities($documentsfolder->fields['name']); ?>">
                 </p>
                 <p>
@@ -228,7 +228,7 @@ switch($ploopi_op)
                 </script>
             </div>
             <div class="documents_formcontent" style="text-align:right;padding:4px;">
-                <input type="button" class="flatbutton" style="width:100px;" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:ploopi_hidepopup('ploopi_documents_openfolder_popup');">
+                <input type="button" class="flatbutton" style="width:100px;" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:ploopi.popup.hide('ploopi_documents_openfolder_popup');">
                 <input type="submit" class="flatbutton" style="width:100px;" value="<?php echo _PLOOPI_SAVE; ?>">
             </div>
         </div>
@@ -238,16 +238,16 @@ switch($ploopi_op)
         $content = ob_get_contents();
         ob_end_clean();
 
-        echo $skin->create_popup($title, $content, 'ploopi_documents_openfolder_popup');
+        echo ploopi\skin::get()->create_popup($title, $content, 'ploopi_documents_openfolder_popup');
         ploopi\system::kill();
     break;
 
     case 'documents_savemultiplefile':
         $documentsfolder = new ploopi\documentsfolder();
 
-        // Contrôle currentfolder
+        // ContrÃ´le currentfolder
         if (!isset($_GET['currentfolder']) || !$documentsfolder->openmd5($_GET['currentfolder'])) ploopi\system::kill();
-        // Contrôle id instance
+        // ContrÃ´le id instance
         if (!isset($_GET['documents_id']) || !isset($_SESSION['documents'][$_GET['documents_id']])) ploopi\system::kill();
 
         $currentfolder = $_GET['currentfolder'];
@@ -280,8 +280,8 @@ switch($ploopi_op)
 
         ?>
         <script type="text/javascript">
-            window.parent.ploopi\documents::browser('<?php echo ploopi\crypt::queryencode("ploopi_op=documents_browser&currentfolder={$currentfolder}&documents_id={$documents_id}"); ?>', '<?php echo ploopi\str::htmlentities($documents_id); ?>');
-            window.parent.ploopi_hidepopup('ploopi_documents_openfile_popup');
+            window.parent.ploopi.documents.browser('<?php echo ploopi\crypt::queryencode("ploopi_op=documents_browser&currentfolder={$currentfolder}&documents_id={$documents_id}"); ?>', '<?php echo ploopi\str::htmlentities($documents_id); ?>');
+            window.parent.ploopi.popup.hide('ploopi_documents_openfile_popup');
         </script>
         <?php
         ploopi\system::kill();
@@ -292,9 +292,9 @@ switch($ploopi_op)
         $documentsfile = new ploopi\documentsfile();
         $documentsfolder = new ploopi\documentsfolder();
 
-        // Contrôle currentfolder
+        // ContrÃ´le currentfolder
         if (!isset($_GET['currentfolder']) || !$documentsfolder->openmd5($_GET['currentfolder'])) ploopi\system::kill();
-        // Contrôle id instance
+        // ContrÃ´le id instance
         if (!isset($_GET['documents_id']) || !isset($_SESSION['documents'][$_GET['documents_id']])) ploopi\system::kill();
 
         $currentfolder = $_GET['currentfolder'];
@@ -335,12 +335,12 @@ switch($ploopi_op)
             ?>
             <script type="text/javascript">
                 <?php
-                // Sélection directe d'un fichier
+                // SÃ©lection directe d'un fichier
                 if (isset($_GET['selectfile'])) {
 
                     if ($_SESSION['documents'][$documents_id]['mode'] == 'tofield')
                     {
-                        echo "dest = $('{$_SESSION['documents'][$documents_id]['target']}'); if (dest.type) dest.value='{$documentsfile->fields['name']}'; else dest.innerHTML='{$documentsfile->fields['name']}'; ploopi_getelem('{$_SESSION['documents'][$documents_id]['target']}_id').value='{$documentsfile->fields['id']}';ploopi_hidepopup('ploopi_documents_popup');";
+                        echo "dest = $('{$_SESSION['documents'][$documents_id]['target']}'); if (dest.type) dest.value='{$documentsfile->fields['name']}'; else dest.innerHTML='{$documentsfile->fields['name']}'; ploopi.getelem('{$_SESSION['documents'][$documents_id]['target']}_id').value='{$documentsfile->fields['id']}';ploopi.popup.hide('ploopi_documents_popup');";
                     }
                     elseif ($_SESSION['documents'][$documents_id]['mode'] == 'tocallback')
                     {
@@ -348,14 +348,14 @@ switch($ploopi_op)
                     }
 
                 }
-                // Mise à jour du navigateur
+                // Mise Ã  jour du navigateur
                 else {
                     ?>
-                    window.parent.ploopi\documents::browser('<?php echo ploopi\crypt::queryencode("ploopi_op=documents_browser&currentfolder={$currentfolder}&documents_id={$documents_id}"); ?>', '<?php echo ploopi\str::htmlentities($documents_id); ?>');
+                    window.parent.ploopi.documents.browser('<?php echo ploopi\crypt::queryencode("ploopi_op=documents_browser&currentfolder={$currentfolder}&documents_id={$documents_id}"); ?>', '<?php echo ploopi\str::htmlentities($documents_id); ?>');
                     <?php
                 }
                 ?>
-                window.parent.ploopi_hidepopup('ploopi_documents_openfile_popup');
+                window.parent.ploopi.popup.hide('ploopi_documents_openfile_popup');
             </script>
             <?php
         }
@@ -379,7 +379,7 @@ switch($ploopi_op)
                 </p>
             </div>
             <div class="documents_formcontent" style="text-align:right;padding:4px;">
-                <input type="button" class="flatbutton" style="width:100px;" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:ploopi_hidepopup('ploopi_documents_openfile_popup');">
+                <input type="button" class="flatbutton" style="width:100px;" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:ploopi.popup.hide('ploopi_documents_openfile_popup');">
                 <input type="submit" class="flatbutton" style="width:100px;" value="<?php echo _PLOOPI_SAVE; ?>" tabindex="7">
             </div>
         </div>
@@ -389,7 +389,7 @@ switch($ploopi_op)
         $content = ob_get_contents();
         ob_end_clean();
 
-        echo $skin->create_popup("Ajout mutiple de fichiers", $content, 'ploopi_documents_openfile_popup');
+        echo ploopi\skin::get()->create_popup("Ajout mutiple de fichiers", $content, 'ploopi_documents_openfile_popup');
         ploopi\system::kill();
     break;
 
@@ -459,11 +459,11 @@ switch($ploopi_op)
                 }
                 ?>
                 <p>
-                    <label>Libellé:</label>
+                    <label>LibellÃ©:</label>
                     <input class="text" name="documentsfile_label" value="<?php echo ploopi\str::htmlentities($documentsfile->fields['label']); ?>" tabindex="3" style="width:250px;">
                 </p>
                 <p>
-                    <label>Référence:</label>
+                    <label>RÃ©fÃ©rence:</label>
                     <input class="text" name="documentsfile_ref" value="<?php echo ploopi\str::htmlentities($documentsfile->fields['ref']); ?>" tabindex="4" style="width:250px;">
                 </p>
                 <p>
@@ -491,7 +491,7 @@ switch($ploopi_op)
             </div>
 
             <div class="documents_formcontent" style="text-align:right;padding:4px;">
-                <input type="button" class="flatbutton" style="width:100px;" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:ploopi_hidepopup('ploopi_documents_openfile_popup');">
+                <input type="button" class="flatbutton" style="width:100px;" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:ploopi.popup.hide('ploopi_documents_openfile_popup');">
                 <input type="submit" class="flatbutton" style="width:100px;" value="<?php echo _PLOOPI_SAVE; ?>" tabindex="7">
             </div>
         </div>
@@ -501,12 +501,12 @@ switch($ploopi_op)
         $content = ob_get_contents();
         ob_end_clean();
 
-        echo $skin->create_popup($title, $content, 'ploopi_documents_openfile_popup');
+        echo ploopi\skin::get()->create_popup($title, $content, 'ploopi_documents_openfile_popup');
         ploopi\system::kill();
     break;
 
     case 'documents_deletefile':
-        // Vérification de l'id de l'instance
+        // VÃ©rification de l'id de l'instance
         if (!isset($_REQUEST['documents_id'])) return;
 
         if (!isset($_GET['currentfolder'])) return;
@@ -525,7 +525,7 @@ switch($ploopi_op)
     break;
 
     case 'documents_deletefolder':
-        // Vérification de l'id de l'instance
+        // VÃ©rification de l'id de l'instance
         if (!isset($_REQUEST['documents_id'])) return;
 
         if (!isset($_GET['currentfolder'])) return;

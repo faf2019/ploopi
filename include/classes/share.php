@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,31 +25,19 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Gestion des partages
+ * Gestion des partages (table ploopi_share)
  *
  * @package ploopi
  * @subpackage share
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
- */
-
-/**
- * Classe d'accès à la table ploopi_share
- *
- * @package ploopi
- * @subpackage share
- * @copyright Ovensia
- * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 class share extends data_object
 {
     /**
      * Constructeur de la classe
-     *
-     * @return share
      */
     public function __construct()
     {
@@ -57,7 +45,7 @@ class share extends data_object
     }
 
     /**
-     * Génère l'identifiant d'un bloc de partages
+     * GÃ©nÃ¨re l'identifiant d'un bloc de partages
      *
      * @param int $id_object identifiant de l'objet
      * @param string $id_record identifiant de l'enregistrement
@@ -74,7 +62,7 @@ class share extends data_object
     }
 
     /**
-     * Insère le bloc de partage pour un enregistrement d'un objet
+     * InsÃ¨re le bloc de partage pour un enregistrement d'un objet
      *
      * @param int $id_object identifiant de l'objet
      * @param string $id_record identifiant de l'enregistrement
@@ -120,7 +108,7 @@ class share extends data_object
         }
 
         ?>
-        <a class="ploopi_share_title" href="javascript:void(0);" onclick="javascript:ploopi_switchdisplay('ploopi_share_<?php echo $strShareId; ?>');">
+        <a class="ploopi_share_title" href="javascript:void(0);" onclick="javascript:ploopi.switchdisplay('ploopi_share_<?php echo $strShareId; ?>');">
             <p class="ploopi_va">
                 <img src="<?php echo empty($strPathIcon) ? "{$_SESSION['ploopi']['template_path']}/img/share/share.png" : $strPathIcon; ?>">
                 <span><?php echo $strTitle; ?></span>
@@ -130,21 +118,21 @@ class share extends data_object
             <div class="ploopi_share_search_form">
                 <p class="ploopi_va">
                     <span>Recherche groupes/utilisateurs:&nbsp;</span>
-                    <input type="text" id="ploopi_share_userfilter" class="text" onkeyup="javascript:if (event.keyCode == 13) { ploopi_ajaxloader('div_share_search_result_<?php echo $strShareId; ?>'); ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_search_users&share_id=<?php echo $strShareId; ?>&ploopi_share_userfilter='+ploopi_getelem('ploopi_share_userfilter').value,'div_share_search_result_<?php echo $strShareId; ?>'); }" />
-                    <img onmouseover="javascript:this.style.cursor='pointer';" onclick="javascript:ploopi_ajaxloader('div_share_search_result_<?php echo $strShareId; ?>'); ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_search_users&share_id=<?php echo $strShareId; ?>&ploopi_share_userfilter='+ploopi_getelem('ploopi_share_userfilter').value,'div_share_search_result_<?php echo $strShareId; ?>');" style="border:0px" src="<?php echo "{$_SESSION['ploopi']['template_path']}/img/share/search.png"; ?>">
+                    <input type="text" id="ploopi_share_userfilter" class="text" onkeyup="javascript:if (event.keyCode == 13) { ploopi.xhr.ajaxloader('div_share_search_result_<?php echo $strShareId; ?>'); ploopi.xhr.todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_search_users&share_id=<?php echo $strShareId; ?>&ploopi_share_userfilter='+ploopi.getelem('ploopi_share_userfilter').value,'div_share_search_result_<?php echo $strShareId; ?>'); }" />
+                    <img onmouseover="javascript:this.style.cursor='pointer';" onclick="javascript:ploopi.xhr.ajaxloader('div_share_search_result_<?php echo $strShareId; ?>'); ploopi.xhr.todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_search_users&share_id=<?php echo $strShareId; ?>&ploopi_share_userfilter='+ploopi.getelem('ploopi_share_userfilter').value,'div_share_search_result_<?php echo $strShareId; ?>');" style="border:0px" src="<?php echo "{$_SESSION['ploopi']['template_path']}/img/share/search.png"; ?>">
                 </p>
             </div>
             <div id="div_share_search_result_<?php echo $strShareId; ?>"></div>
 
-            <div class="ploopi_share_title">Sélection actuelle :</div>
+            <div class="ploopi_share_title">SÃ©lection actuelle :</div>
             <div class="ploopi_share_authorizedlist" id="div_share_users_selected_<?php echo $strShareId; ?>"><?php if (empty($_SESSION['ploopi']['share'][$strShareId])) echo 'Aucune autorisation'; ?></div>
             <?php
             if (!empty($_SESSION['ploopi']['share'][$strShareId]))
             {
                 ?>
                 <script type="text/javascript">
-                    ploopi_ajaxloader('div_share_users_selected_<?php echo $strShareId; ?>');
-                    ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_select_user&share_id=<?php echo $strShareId; ?>', 'div_share_users_selected_<?php echo $strShareId; ?>')
+                    ploopi.xhr.ajaxloader('div_share_users_selected_<?php echo $strShareId; ?>');
+                    ploopi.xhr.todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_select_user&share_id=<?php echo $strShareId; ?>', 'div_share_users_selected_<?php echo $strShareId; ?>')
                 </script>
                 <?php
             }
@@ -156,7 +144,7 @@ class share extends data_object
     }
 
     /**
-     * Enregistre les partages sélectionnés pour un enregistrement d'un objet
+     * Enregistre les partages sÃ©lectionnÃ©s pour un enregistrement d'un objet
      *
      * @param int $id_object identifiant de l'objet
      * @param string $id_record identifiant de l'enregistrement
@@ -167,7 +155,6 @@ class share extends data_object
     public static function add($id_object = -1, $id_record = -1, $id_module = -1, $strForceShareId = null)
     {
         $db = db::get();
-        include_once './include/classes/share.php';
 
         if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];
 

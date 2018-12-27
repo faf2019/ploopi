@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,51 +25,95 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Génération de documents dans différents formats "bureautique" (ODT, ODS, DOC, XLS, RTF, PDF, etc...) à partir de modèles OpenDocument.
+ * GÃ©nÃ©ration de documents dans diffÃ©rents formats "bureautique" (ODT, ODS, DOC, XLS, RTF, PDF, etc...) Ã  partir de modÃ¨les OpenDocument.
+ * Fonctionne comme un moteur de template.
+ * Il est possible de dÃ©finir des variables ou des blocs de variables qui seront ensuite remplacÃ©s dans le modÃ¨le via un parser XML.
  *
  * @package ploopi
  * @subpackage odf
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
- */
-
-/**
- * Classe permettant de générer un document bureautique (ODT, ODS, DOC, XLS, PDF, RTF, etc.) à partir d'un modèle OpenDocument.
- * Cette classe fonctionne comme un moteur de template.
- * Il est possible de définir des variables ou des blocs de variables qui seront ensuite remplacés dans le modèle via un parser XML.
- *
- * @package ploopi
- * @subpackage odf
- * @copyright Ovensia
- * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 class odf_parser
 {
+    /**
+     * Fichier template ODF
+     *
+     * @var string
+     */
     private $filename;
+
+    /**
+     * Contenu XML du fichier content.xml
+     *
+     * @var string
+     */
     private $content_xml;
+
+    /**
+     * Contenu XML du fichier styles.xml
+     *
+     * @var string
+     */
     private $styles_xml;
+
+    /**
+     * Contenu XML du fichier manifest.xml
+     *
+     * @var string
+     */
     private $manifest_xml;
+
+    /**
+     * Variables du emplate
+     *
+     * @var array
+     */
     private $vars = array();
+
+    /**
+     * Images du template
+     *
+     * @var array
+     */
     private $images = array();
+
+    /**
+     * Variables de type bloc du template
+     *
+     * @var array
+     */
     private $blockvars = array();
+
+    /**
+     * Blocs extraits du template
+     *
+     * @var array
+     */
     private $blocktemplates = array();
 
+    /**
+     * Parseur XML
+     *
+     * @var resource
+     */
     private $xml_parser;
-    private $xml_data = array();
-    private $parsed_content_xml;
 
+    /**
+     * Objet ZipArchive
+     *
+     * @var ZipArchive
+     */
     private $zip;
 
     /**
      * Constructeur de la classe.
-     * Ouvre le fichier modèle ODF.
+     * Ouvre le fichier modÃ¨le ODF.
      * Extrait les contenus XML (styles+content).
      *
-     * @param string $filename nom du fichier du modèle ODF
-     * @return odf_parser
+     * @param string $filename nom du fichier du modÃ¨le ODF
      */
 
     public function __construct($filename)
@@ -85,13 +129,13 @@ class odf_parser
         }
         else
         {
-            exit("Erreur à l'ouverture du fichier '{$filename}'\n");
+            exit("Erreur Ã  l'ouverture du fichier '{$filename}'\n");
         }
     }
 
 
     /**
-     * Ajoute une image à la liste des images et génère le code xml associé
+     * Ajoute une image Ã  la liste des images et gÃ©nÃ¨re le code xml associÃ©
      * @param string $image chemin absolu vers le fichier image
      * @param string $width largeur de l'image
      * @param string $height hauteur de l'image
@@ -111,11 +155,11 @@ class odf_parser
     }
 
     /**
-     * Nettoie une chaîne (décode les entités html) et l'encode en UTF8
+     * Nettoie une chaÃ®ne (dÃ©code les entitÃ©s html) et l'encode en UTF8
      * + traitement des URLs
      *
-     * @param string $value chaîne brute
-     * @return string chaîne "nettoyée"
+     * @param string $value chaÃ®ne brute
+     * @return string chaÃ®ne "nettoyÃ©e"
      *
      */
     public function clean_var($value)
@@ -126,12 +170,12 @@ class odf_parser
 
 
     /**
-     * Définit une variable template et lui affecte une valeur
+     * DÃ©finit une variable template et lui affecte une valeur
      *
      * @param string $key nom de la variable
      * @param string $value valeur
-     * @param boolean $clean true si le contenu de la valeur doit être nettoyée
-     * @param boolean $html true si le contenu est fourni en html (attention il doit être propre)
+     * @param boolean $clean true si le contenu de la valeur doit Ãªtre nettoyÃ©e
+     * @param boolean $html true si le contenu est fourni en html (attention il doit Ãªtre propre)
      *
      * @see odf_parser::clean_var
      */
@@ -145,7 +189,7 @@ class odf_parser
     }
 
     /**
-     * Définit une variable template de type "image"
+     * DÃ©finit une variable template de type "image"
      *
      * @param string $key nom de la variable
      * @param string $value chemin absolu vers le fichier image
@@ -161,7 +205,7 @@ class odf_parser
     }
 
     /**
-     * Définit une variable template de type bloc et lui affecte un tableau de valeurs
+     * DÃ©finit une variable template de type bloc et lui affecte un tableau de valeurs
      *
      * @param unknown_type $blockname
      * @param unknown_type $block
@@ -183,7 +227,7 @@ class odf_parser
     }
 
     /**
-     * Définit une variable template de type bloc et lui affecte un tableau de valeurs
+     * DÃ©finit une variable template de type bloc et lui affecte un tableau de valeurs
      * Le tableau peut contenir des images
      *
      * @param unknown_type $blockname
@@ -228,12 +272,12 @@ class odf_parser
     }
 
     /**
-     * Parse le contenu du modèle et remplace les variables du template par leurs valeurs
+     * Parse le contenu du modÃ¨le et remplace les variables du template par leurs valeurs
      */
 
     public function parse()
     {
-        // Traitement du fichier manifest pour intégrer la description des images
+        // Traitement du fichier manifest pour intÃ©grer la description des images
         if ($this->manifest_xml != NULL)
         {
             if ($this->images && preg_match('@<manifest:file-entry.*/>@i', $this->manifest_xml, $arrMatches, PREG_OFFSET_CAPTURE))
@@ -257,7 +301,7 @@ class odf_parser
 
             $this->blocktemplates = &$blockparser->get_blocktemplates();
 
-            // le contenu XML sans les blocks (mais avec des nouvelles variables à la place)
+            // le contenu XML sans les blocks (mais avec des nouvelles variables Ã  la place)
             $this->content_xml = $blockparser->get_xml();
 
             // traitement des blocks
@@ -290,7 +334,7 @@ class odf_parser
         }
         else
         {
-            exit("Rien à parser - vérifiez que les fichiers content.xml et styles.xml sont correctement formés\n");
+            exit("Rien Ã  parser - vÃ©rifiez que les fichiers content.xml et styles.xml sont correctement formÃ©s\n");
         }
     }
 
@@ -305,14 +349,14 @@ class odf_parser
     }
 
     /**
-     * Enregistre le document ODF généré
+     * Enregistre le document ODF gÃ©nÃ©rÃ©
      *
      * @param string $newfilename chemin du fichier de destination (ODF)
      *
      * @see ZipArchive
      */
 
-    function save($newfilename)
+    public function save($newfilename)
     {
         if ($newfilename != $this->filename)
         {

@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,31 +25,19 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Gestion de la couche validation
+ * Gestion de la couche validation (table ploopi_validation)
  *
  * @package ploopi
  * @subpackage validation
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
- */
-
-/**
- * Classe d'accès à la table ploopi_validation
- *
- * @package ploopi
- * @subpackage validation
- * @copyright Ovensia
- * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 class validation extends data_object
 {
     /**
      * Constructeur de la classe
-     *
-     * @return validation
      */
 
     public function __construct()
@@ -58,7 +46,7 @@ class validation extends data_object
     }
 
     /**
-     * Génère l'identifiant d'un bloc de validateur
+     * GÃ©nÃ¨re l'identifiant d'un bloc de validateur
      *
      * @param int $id_object identifiant de l'objet
      * @param string $id_record identifiant de l'enregistrement
@@ -76,7 +64,7 @@ class validation extends data_object
 
 
     /**
-     * Insère le bloc de sélection des validateurs pour un enregistrement d'un objet
+     * InsÃ¨re le bloc de sÃ©lection des validateurs pour un enregistrement d'un objet
      *
      * @param int $id_object identifiant de l'objet
      * @param string $id_record identifiant de l'enregistrement
@@ -119,7 +107,7 @@ class validation extends data_object
         }
 
         ?>
-        <a class="ploopi_validation_title" href="javascript:void(0);" onclick="javascript:ploopi_switchdisplay('ploopi_validation_<?php echo $strValidationId; ?>');">
+        <a class="ploopi_validation_title" href="javascript:void(0);" onclick="javascript:ploopi.switchdisplay('ploopi_validation_<?php echo $strValidationId; ?>');">
             <p class="ploopi_va">
                 <img src="<?php echo "{$_SESSION['ploopi']['template_path']}/img/validation/validation.png"; ?>">
                 <span><?php echo $strTitle; ?></span>
@@ -130,22 +118,22 @@ class validation extends data_object
                 <p class="ploopi_va">
                     <span>Recherche groupes/utilisateurs:&nbsp;</span>
                     <input type="text" id="ploopi_validation_userfilter_<?php echo $strValidationId; ?>" class="text">
-                    <img onmouseover="javascript:this.style.cursor='pointer';" onclick="ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=validation_search_users&validation_id=<?php echo $strValidationId; ?>&ploopi_validation_userfilter='+ploopi_getelem('ploopi_validation_userfilter_<?php echo $strValidationId; ?>').value+'&id_action=<?php echo $id_action; ?>', 'div_validation_search_result_<?php echo $strValidationId; ?>');" style="border:0px" src="<?php echo "{$_SESSION['ploopi']['template_path']}/img/validation/search.png"; ?>">
+                    <img onmouseover="javascript:this.style.cursor='pointer';" onclick="ploopi.xhr.todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=validation_search_users&validation_id=<?php echo $strValidationId; ?>&ploopi_validation_userfilter='+ploopi.getelem('ploopi_validation_userfilter_<?php echo $strValidationId; ?>').value+'&id_action=<?php echo $id_action; ?>', 'div_validation_search_result_<?php echo $strValidationId; ?>');" style="border:0px" src="<?php echo "{$_SESSION['ploopi']['template_path']}/img/validation/search.png"; ?>">
                 </p>
             </div>
             <div id="div_validation_search_result_<?php echo $strValidationId; ?>"></div>
 
-            <div class="ploopi_validation_title">Sélection actuelle :</div>
+            <div class="ploopi_validation_title">SÃ©lection actuelle :</div>
             <div class="ploopi_validation_authorizedlist" id="div_validation_users_selected_<?php echo $strValidationId; ?>">
-            <?php if (empty($_SESSION['ploopi']['validation'][$strValidationId]['users_selected'])) echo 'Aucune accrédidation'; ?>
+            <?php if (empty($_SESSION['ploopi']['validation'][$strValidationId]['users_selected'])) echo 'Aucune accrÃ©didation'; ?>
             </div>
             <?php
             if (!empty($_SESSION['ploopi']['validation'][$strValidationId]))
             {
                 ?>
                 <script type="text/javascript">
-                    ploopi_ajaxloader('div_validation_users_selected_<?php echo $strValidationId; ?>');
-                    ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=validation_select_user&validation_id=<?php echo $strValidationId; ?>', 'div_validation_users_selected_<?php echo $strValidationId; ?>');
+                    ploopi.xhr.ajaxloader('div_validation_users_selected_<?php echo $strValidationId; ?>');
+                    ploopi.xhr.todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=validation_select_user&validation_id=<?php echo $strValidationId; ?>', 'div_validation_users_selected_<?php echo $strValidationId; ?>');
                 </script>
                 <?php
             }
@@ -166,7 +154,6 @@ class validation extends data_object
     public static function add($id_object = 0, $id_record = '', $id_module = -1, $strForceValidationId = null)
     {
         $db = db::get();
-        include_once './include/classes/validation.php';
 
         if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];
 
@@ -273,7 +260,7 @@ class validation extends data_object
     }
 
     /**
-     * Supprime les informations de validation attachées à un objet/enregistrement/utilisateur
+     * Supprime les informations de validation attachÃ©es Ã  un objet/enregistrement/utilisateur
      *
      * @param int $id_object identifiant de l'objet
      * @param string $id_record identifiant de l'enregistrement

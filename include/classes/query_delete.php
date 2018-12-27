@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,8 +25,15 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Classe permettant de construire une requête SQL de type DELETE
+ * Gestion de requÃªtes SQL construites de type DELETE
+ *
+ * @package ploopi
+ * @subpackage ploopi_query
+ * @copyright Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Ovensia
  */
+
 class query_delete extends query_sud
 {
 
@@ -54,7 +61,7 @@ class query_delete extends query_sud
     /**
      * Constructeur de la classe
      *
-     * @param resource $objDb Connexion à la BDD
+     * @param db $objDb Connexion Ã  la BDD
      */
     public function __construct($objDb = null)
     {
@@ -62,7 +69,7 @@ class query_delete extends query_sud
         $this->arrInnerJoin = array();
         $this->arrLeftJoin = array();
 
-        return parent::__construct('delete', $objDb);
+        parent::__construct('delete', $objDb);
     }
 
     /**
@@ -77,7 +84,7 @@ class query_delete extends query_sud
     }
 
     /**
-     * Ajoute une clause LEFT JOIN à la requête
+     * Ajoute une clause LEFT JOIN Ã  la requÃªte
      *
      * @param string $strLeftJoin Clause LEFT JOIN
      */
@@ -88,7 +95,7 @@ class query_delete extends query_sud
     }
 
     /**
-     * Ajoute une clause INNER JOIN à la requête
+     * Ajoute une clause INNER JOIN Ã  la requÃªte
      *
      * @param string $strInnerJoin Clause INNER JOIN
      */
@@ -135,9 +142,9 @@ class query_delete extends query_sud
     }
 
     /**
-     * Génération de la requête SQL
+     * GÃ©nÃ©ration de la requÃªte SQL
      *
-     * @return string Chaîne contenant la requête SQL générée
+     * @return string ChaÃ®ne contenant la requÃªte SQL gÃ©nÃ©rÃ©e
      */
     public function get_sql()
     {

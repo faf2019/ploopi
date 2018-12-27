@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,23 +25,43 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Classe permettant de traiter les variables simples d'un modèle de document OpenDocument.
+ * Traitement des variables simples d'un modÃ¨le de document ODF
  *
  * @package ploopi
  * @subpackage odf
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 class odf_varparser
 {
+    /**
+     * Variables Ã  remplacer
+     *
+     * @var array
+     */
     private $vars = array();
 
+    /**
+     * Parseur XML
+     *
+     * @var resource
+     */
     private $xml_parser;
-    private $xml_data = array();
+
+    /**
+     * RÃ©sultat du traitement (XML)
+     *
+     * @var string
+     */
     private $parsed_data;
 
+    /**
+     * Styles XML prÃ©dÃ©finis
+     *
+     * @var string
+     */
     private static $_ploopi_styles = '
         <style:style style:name="PLOOPI_BOLD" style:family="text">
             <style:text-properties fo:font-weight="bold" style:font-weight-asian="bold" style:font-weight-complex="bold"/>
@@ -85,7 +105,7 @@ class odf_varparser
     ';
 
     /**
-     * Constructeur de la classe. Crée le parser.
+     * Constructeur de la classe. CrÃ©e le parser.
      *
      * @return odf_varparser
      *
@@ -102,17 +122,15 @@ class odf_varparser
         xml_set_object($this->xml_parser, $this);
         xml_parser_set_option($this->xml_parser, XML_OPTION_CASE_FOLDING, 0);
 
-        xml_set_element_handler($this->xml_parser, "tag_open", "tag_close");
-        xml_set_character_data_handler($this->xml_parser, "cdata");
+        xml_set_element_handler($this->xml_parser, '_tag_open', '_tag_close');
+        xml_set_character_data_handler($this->xml_parser, '_cdata');
     }
 
     /**
-     * Parse les données dans le but de remplacer des balises
+     * Parse les donnÃ©es dans le but de remplacer des balises
      *
-     * @param string $data données à parser
-     * @param array $vars tableau des balises à remplacer
-     *
-     * @see xml_parse
+     * @param string $data donnÃ©es Ã  parser
+     * @param array $vars tableau des balises Ã  remplacer
      */
 
     public function parse($data, $vars)
@@ -122,17 +140,17 @@ class odf_varparser
     }
 
     /**
-     * Gestionnaires de début de balise XML
+     * Gestionnaires de dÃ©but de balise XML
      *
      * @param resource $parser parser XML
      * @param string $tag balise XML
      * @param string $attribs attributs de la balise XML
      */
 
-    private function tag_open($parser, $tag, $attribs)
+    private function _tag_open($parser, $tag, $attribs)
     {
-        // construction de la chaine de paramètres
-        // + un petit hack pour gérer correctement les urls
+        //Â construction de la chaine de paramÃ¨tres
+        // + un petit hack pour gÃ©rer correctement les urls
         $params = array();
         foreach($attribs as $param => $value) $params[] = "{$param}=\"".str_replace('&', '&amp;', $value)."\"";
         $params_str = implode(' ',$params);
@@ -157,7 +175,7 @@ class odf_varparser
      * @param string $tag balise XML
      */
 
-    private function tag_close($parser, $tag)
+    private function _tag_close($parser, $tag)
     {
         $this->parsed_data .= "</{$tag}>";
 
@@ -165,16 +183,16 @@ class odf_varparser
     }
 
     /**
-     * Gestionnaire du flux de données, remplace les balises par leur valeur. Traite les espaces et les retours à la ligne.
+     * Gestionnaire du flux de donnÃ©es, remplace les balises par leur valeur. Traite les espaces et les retours Ã  la ligne.
      *
      * @param resource $parser parser XML
-     * @param string $data données
+     * @param string $data donnÃ©es
      *
      * @uses preg_replace
      * @uses preg_replace_callback
      */
 
-    private function cdata($parser, $data)
+    private function _cdata($parser, $data)
     {
         $s = sizeof($this->xmltags)-1;
         $tag = $this->xmltags[$s];
@@ -211,13 +229,13 @@ class odf_varparser
     }
 
     /**
-     * Retourne le contenu XML parsé
+     * Retourne le contenu XML parsÃ©
      *
-     * @return string contenu XML parsé
+     * @return string contenu XML parsÃ©
      */
 
     public function get_xml()
     {
-        return($this->parsed_data);
+        return $this->parsed_data;
     }
 }

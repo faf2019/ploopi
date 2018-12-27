@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,52 +25,55 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Classe de gestion des champs de type "checkbox" d'un formulaire
+ * Gestion des champs de type liste de "checkbox" de formulaires
  *
+ * @package ploopi
+ * @subpackage form
+ * @copyright Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Ovensia
  */
+
 class form_checkbox_list extends form_field
 {
     /**
-     * Valeurs sélectionnées dans les checkboxes
+     * Valeurs sÃ©lectionnÃ©es dans les checkboxes
      *
      * @var array
      */
     private $arrSelected;
 
     /**
-     * Options par défaut d'une liste de checkboxes
+     * Options par dÃ©faut d'une liste de checkboxes
      *
      * @var array
      */
-    protected static $_arrDefaultOptions = array(
-    );
+    protected static $_arrDefaultOptions = array();
 
     /**
      * Constructeur de la classe
      *
-     * @param string $strLabel libellé du champ
+     * @param string $strLabel libellÃ© du champ
      * @param array $arrValues valeur(s) du champ
-     * @param string $arrSelected valeurs des éléments sélectionnés
-     * @param string $strName propriété "name" du champ
-     * @param string $strId propriété "id" du champ
+     * @param string $arrSelected valeurs des Ã©lÃ©ments sÃ©lectionnÃ©s
+     * @param string $strName propriÃ©tÃ© "name" du champ
+     * @param string $strId propriÃ©tÃ© "id" du champ
      * @param array $arrOptions options du champ
-     *
-     * @return form_select
      */
     public function __construct($strLabel, $arrValues = array(), $arrSelected, $strName, $strId = null, $arrOptions = null)
     {
-        if (!is_array($arrValues)) trigger_error('Ce type d\'élément attend un tableau de valeurs', E_USER_ERROR);
-        if (!is_array($arrSelected)) trigger_error('Ce type d\'élément attend un tableau de valeurs', E_USER_ERROR);
+        if (!is_array($arrValues)) trigger_error('Ce type d\'Ã©lÃ©ment attend un tableau de valeurs', E_USER_ERROR);
+        if (!is_array($arrSelected)) trigger_error('Ce type d\'Ã©lÃ©ment attend un tableau de valeurs', E_USER_ERROR);
 
         parent::__construct('input:checkbox', $strLabel, $arrValues, $strName, $strId, is_null($arrOptions) ? self::$_arrDefaultOptions : array_merge(self::$_arrDefaultOptions, $arrOptions));
 
-        $this->arrSelected = arr::map('str::htmlentities', $arrSelected);
+        $this->arrSelected = arr::map('form::htmlentities', $arrSelected);
     }
 
     /**
-     * Génère le rendu html du champ
+     * GÃ©nÃ¨re le rendu html du champ
      *
-     * @param int $intTabindex tabindex du champs dans le formulaire
+     * @param int $intTabindex tabindex du champ dans le formulaire
      * @return string code html
      */
     public function render($intTabindex = null)
@@ -81,18 +84,38 @@ class form_checkbox_list extends form_field
         $strProperties = $this->generateProperties();
 
         $intNumCheck = 0;
-        foreach($arrValues = $this->_arrValues as $strKey => $strValue)
+        foreach($arrValues = $this->_arrValues as $strKey => $mixValue)
         {
-            $strValue = str::htmlentities($strValue);
-            $strKey = str::htmlentities($strKey);
+            $arrDataset = array();
+            if (is_array($mixValue))
+            {
+                if (isset($mixValue['label']))
+                {
+                    foreach ($mixValue as $key => $value) {
+                        if($key != 'label') {
+                            $value = form::htmlentities($value);
+                            $arrDataset[] = "data-".$key."=\"{$value}\"";
+                        }
+                    }
+                    $mixValue = $mixValue['label'];
+                }
+                else
+                {
+                    trigger_error('Valeur d\'option incorrecte', E_USER_ERROR);
+                }
+            }
 
+            $strValue = form::htmlentities($strValue);
+            $strKey = form::htmlentities($strKey);
+
+            $strDataset = implode(' ', $arrDataset);
             $strChecked = in_array($strKey, $this->arrSelected) ? ' checked="checked"' : '';
-            $strOutput .= "<span class=\"checkbutton\"><input type=\"checkbox\" name=\"{$this->_strName}[]\" id=\"{$this->_strId}_{$intNumCheck}\" value=\"{$strKey}\" tabindex=\"{$intTabindex}\" {$strChecked}{$strProperties}{$strEvents}><label for=\"{$this->_strId}_{$intNumCheck}\">{$strValue}</label></span>";
+            $strOutput .= "<span class=\"checkbutton\"><input type=\"checkbox\" {$strDataset} name=\"{$this->_strName}[]\" id=\"{$this->_strId}_{$intNumCheck}\" value=\"{$strKey}\" tabindex=\"{$intTabindex}\" {$strChecked}{$strProperties}{$strEvents}><label for=\"{$this->_strId}_{$intNumCheck}\">{$strValue}</label></span>";
 
             $intNumCheck++;
         }
 
-        return $this->renderForm("<span class=\"onclick\">{$strOutput}</span>");
+        return $this->renderForm("<span id=\"{$this->_strId}\" class=\"onclick\">{$strOutput}</span>");
     }
 }
 

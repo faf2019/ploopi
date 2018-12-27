@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -23,31 +23,32 @@
 namespace ploopi;
 
 use ploopi;
+use LSS\Array2XML;
 
 /**
- * Opérations sur les tableaux
+ * OpÃ©rations sur les tableaux
  *
  * @package ploopi
  * @subpackage array
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 abstract class arr
 {
 
     /**
-     * Applique récursivement une fonction sur les éléments d'un tableau
-     * Les éléments peuvent être des tableaux récursifs ou des objets récursifs
+     * Applique rÃ©cursivement une fonction sur les Ã©lÃ©ments d'un tableau
+     * Les Ã©lÃ©ments peuvent Ãªtre des tableaux rÃ©cursifs ou des objets rÃ©cursifs
      *
-     * @param callback $func fonction à appliquer sur le tableau
-     * @param array $var variable à modifier
-     * @return array le tableau modifié
+     * @param callback $func fonction Ã  appliquer sur le tableau
+     * @param array $var variable Ã  modifier
+     * @return array le tableau modifiÃ©
      *
      * @copyright Ovensia
      * @license GNU General Public License (GPL)
-     * @author Stéphane Escaich
+     * @author Ovensia
      *
      * @see array_map
      */
@@ -62,8 +63,8 @@ abstract class arr
     /**
      * Retourne le contenu d'un tableau multidimensionnel au format JSON
      *
-     * @param array $arrArray tableau de données
-     * @param boolean $booForceUTF8 true si les données doivent être convertie en UTF-8 (depuis ISO-8859-1)
+     * @param array $arrArray tableau de donnÃ©es
+     * @param boolean $booForceUTF8 true si les donnÃ©es doivent Ãªtre convertie en UTF-8 (depuis ISO-8859-1)
      * @return string contenu JSON
      */
 
@@ -75,20 +76,20 @@ abstract class arr
     /**
      * Retourne le contenu d'un tableau multidimensionnel au format XML
      *
-     * @param array $arrArray tableau de données
+     * @param array $arrArray tableau de donnÃ©es
      * @param string $strRootName nom du noeud racine
      * @param string $strDefaultTagName nom des noeuds 'anonymes'
-     * @param string $strEncoding charset utilisé
+     * @param string $strEncoding charset utilisÃ©
      * @return string contenu XML
      */
 
     /**
      * Retourne le contenu d'un tableau multidimensionnel au format XML
      *
-     * @param array $arrArray tableau de données
+     * @param array $arrArray tableau de donnÃ©es
      * @param string $strRootName nom du noeud racine
      * @param string $strDefaultTagName nom des noeuds 'anonymes'
-     * @param string $strEncoding charset utilisé
+     * @param string $strEncoding charset utilisÃ©
      * @return string contenu XML
      */
 
@@ -96,16 +97,16 @@ abstract class arr
     {
         $arrArray = self::map('utf8_encode', $arrArray);
 
-        LSS\Array2XML::init('1.0', $strEncoding);
-        $xml = LSS\Array2XML::createXML($strRootName, array($strDefaultTagName => $arrArray));
+        Array2XML::init('1.0', $strEncoding);
+        $xml = Array2XML::createXML($strRootName, array($strDefaultTagName => $arrArray));
         return $xml->saveXML();
     }
 
     /**
-     * Retourne le contenu d'un tableau à 2 dimensions au format CSV
+     * Retourne le contenu d'un tableau Ã  2 dimensions au format CSV
      *
-     * @param array $arrArray tableau de données
-     * @param array $arrOptions options du format CSV : booHeader:true si la ligne d'entête doit être ajoutée (nom des colonnes), strFieldSep:séparateur de champs, strLineSep:séparateur de lignes, strTextSep:caractère d'encapsulation des contenus
+     * @param array $arrArray tableau de donnÃ©es
+     * @param array $arrOptions options du format CSV : booHeader:true si la ligne d'entÃªte doit Ãªtre ajoutÃ©e (nom des colonnes), strFieldSep:sÃ©parateur de champs, strLineSep:sÃ©parateur de lignes, strTextSep:caractÃ¨re d'encapsulation des contenus
      * @param array $arrTitles nom des colonnes (optionnel)
      * @return string contenu CSV
      */
@@ -129,7 +130,7 @@ abstract class arr
         {
             if ($arrOptions['booClean']) $arrArray = self::map(array(__NAMESPACE__.'\\str', 'iso8859_clean'), $arrArray);
 
-            // Fonction d'échappement & formatage du contenu
+            // Fonction d'Ã©chappement & formatage du contenu
             $funcLineEchap = null;
 
             if ($arrOptions['strTextSep'] != '') {
@@ -138,7 +139,7 @@ abstract class arr
                 $funcLineEchap = create_function('$value', 'return str_replace(\''.$arrOptions['strFieldSep'].'\', \'\\'.$arrOptions['strFieldSep'].'\', $value);');
             }
 
-            // Ajout de la ligne d'entête
+            // Ajout de la ligne d'entÃªte
             if ($arrOptions['booHeader']) $arrCSV[] = implode($arrOptions['strFieldSep'], is_null($funcLineEchap) ? array_keys(reset($arrArray)) : self::map($funcLineEchap, array_keys(reset($arrArray))));
 
             // Traitement des contenus
@@ -150,7 +151,7 @@ abstract class arr
     }
 
     /**
-     * Retourne le contenu d'un tableau à 2 dimensions au format HTML
+     * Retourne le contenu d'un tableau Ã  2 dimensions au format HTML
      *
      * @param unknown_type $arrArray
      * @param unknown_type $booHeader
@@ -165,7 +166,7 @@ abstract class arr
 
         if (!empty($arrArray))
         {
-            // Ajout de la ligne d'entête
+            // Ajout de la ligne d'entÃªte
             if ($booHeader) $arrHTML[] = '<tr>'.implode('', self::map(function($value) { return '<th>'.str::htmlentities($value).'</th>'; }, array_keys(reset($arrArray)))).'</tr>';
 
             // Traitement des contenus
@@ -177,10 +178,10 @@ abstract class arr
     }
 
     /**
-     * Retourne le contenu d'un tableau à 2 dimensions aux formats XLSX / XLS
+     * Retourne le contenu d'un tableau Ã  2 dimensions aux formats XLSX / XLS
      *
-     * @param array $arrArray tableau de données
-     * @param boolean $booHeader true si la ligne d'entête doit être ajoutée (nom des colonnes)
+     * @param array $arrArray tableau de donnÃ©es
+     * @param boolean $booHeader true si la ligne d'entÃªte doit Ãªtre ajoutÃ©e (nom des colonnes)
      * @param string $strFileName nom du fichier
      * @param string $strSheetName nom de la feuille dans le document XLS
      * @param array $arrDataFormats formats des colonnes ('title', 'type', 'width')
@@ -223,7 +224,7 @@ abstract class arr
         }
 
 
-        // Style par défaut pour toute la feuille
+        // Style par dÃ©faut pour toute la feuille
         $rowDefaultStyle = array(
             'font'  => array(
                 'bold'  => false,
@@ -267,11 +268,11 @@ abstract class arr
 
         }
 
-        // Style par défaut pour la feuille
+        // Style par dÃ©faut pour la feuille
         $objWorkSheet->getDefaultStyle()->applyFromArray($rowDefaultStyle);
 
         // Titre
-        $objWorkSheet->setTitle(utf8_encode($strSheetName));
+        $objWorkSheet->setTitle($strSheetName);
 
         // Fit to page
         $objWorkSheet->getPageSetup()->setFitToWidth($arrOptions['fitpage_width']);
@@ -292,7 +293,7 @@ abstract class arr
             if (!empty($arrOptions['headers'])) {
                 foreach($arrOptions['headers'] as $strHeader) {
 
-                    $objWorkSheet->setCellValueByColumnAndRow(0, $intLine, utf8_encode($strHeader));
+                    $objWorkSheet->setCellValueByColumnAndRow(0, $intLine, $strHeader);
 
                     $objWorkSheet->getStyle("A{$intLine}:{$chrMaxCol}{$intLine}")->applyFromArray($rowTitleStyle);
                     $objWorkSheet->mergeCells("A{$intLine}:{$chrMaxCol}{$intLine}");
@@ -301,11 +302,11 @@ abstract class arr
                 }
             }
 
-            // Ajout de la ligne d'entête
+            // Ajout de la ligne d'entÃªte
             if ($booHeader)
             {
                 $intCol = -1;
-                foreach(array_keys(reset($arrArray)) as $strKey) $objWorkSheet->setCellValueByColumnAndRow(++$intCol, $intLine, utf8_encode($arrDataFormats[$strKey]['title']));
+                foreach(array_keys(reset($arrArray)) as $strKey) $objWorkSheet->setCellValueByColumnAndRow(++$intCol, $intLine, $arrDataFormats[$strKey]['title']);
 
                 // Calcul colonne type Excel "Bijective base-26"
                 $chrCol = ($intCol>25 ? chr(64+floor($intCol/26)) : '').chr(65+$intCol%26);
@@ -337,11 +338,11 @@ abstract class arr
 
                     switch($arrDataFormats[$strKey]['type']) {
                         case 'string':
-                            $objWorkSheet->setCellValueExplicit("{$chrCol}{$intLine}", utf8_encode($strValue), \PHPExcel_Cell_DataType::TYPE_STRING);
+                            $objWorkSheet->setCellValueExplicit("{$chrCol}{$intLine}", $strValue, \PHPExcel_Cell_DataType::TYPE_STRING);
                         break;
 
                         default:
-                            $objWorkSheet->setCellValueByColumnAndRow($intCol, $intLine, utf8_encode($strValue));
+                            $objWorkSheet->setCellValueByColumnAndRow($intCol, $intLine, $strValue);
                         break;
                     }
 
@@ -364,7 +365,7 @@ abstract class arr
             $intCol = 0;
 
 
-            // Mise en forme des données
+            // Mise en forme des donnÃ©es
             foreach(array_keys(reset($arrArray)) as $strKey)
             {
                 if (empty($arrDataFormats[$strKey]['type'])) $arrDataFormats[$strKey]['type'] = 'string';
@@ -391,10 +392,10 @@ abstract class arr
 
                     case 'float': $strFormat = '0.00'; break;
                     case 'float_percent': $strFormat = '0.00%'; break;
-                    case 'float_euro': $strFormat = '[$EUR ]#,##0.00_-'; break;
+                    case 'float_euro': $strFormat = '#,##0.00_-[$EUR]'; break;
                     case 'integer': $strFormat = '0'; break;
                     case 'integer_percent': $strFormat = '0%'; break;
-                    case 'integer_euro': $strFormat = '[$EUR ]#,##0_-'; break;
+                    case 'integer_euro': $strFormat = '#,##0_-[$EUR]'; break;
                     case 'date': $strFormat = 'dd/mm/yyyy'; break;
                     case 'datetime' : $strFormat = 'dd/mm/yyyy hh:mm:ss'; break;
 
@@ -403,12 +404,12 @@ abstract class arr
 
                 }
 
-                // Impact du format de donnée sur le style
+                // Impact du format de donnÃ©e sur le style
                 $rowStyle['numberformat'] = array(
                     'code' => $strFormat
                 );
 
-                // Alignement à droite des dates, valeurs numériques
+                // Alignement Ã  droite des dates, valeurs numÃ©riques
                 if ($arrDataFormats[$strKey]['type'] != 'string') {
                     $rowStyle['alignment'] = array(
                         'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_RIGHT,
@@ -427,7 +428,7 @@ abstract class arr
         }
 
 
-        // Sélection du writer
+        // SÃ©lection du writer
         switch($arrOptions['writer']) {
 
             case 'excel5':
@@ -466,13 +467,13 @@ abstract class arr
 
         }
 
-        // Création du document
+        // CrÃ©ation du document
         if ($arrOptions['tofile']) {
             $objWriter->save($strFileName);
         }
         else {
             ob_start();
-            // Les headers ne sont pas envoyés
+            // Les headers ne sont pas envoyÃ©s
             $objWriter->save('php://output');
             return ob_get_clean();
         }
@@ -483,10 +484,10 @@ abstract class arr
 
 
     /**
-     * Retourne le contenu d'un tableau à 2 dimensions au format ODS
+     * Retourne le contenu d'un tableau Ã  2 dimensions au format ODS
      *
-     * @param array $arrArray tableau de données
-     * @param boolean $booHeader true si la ligne d'entête doit être ajoutée (nom des colonnes)
+     * @param array $arrArray tableau de donnÃ©es
+     * @param boolean $booHeader true si la ligne d'entÃªte doit Ãªtre ajoutÃ©e (nom des colonnes)
      * @param string $strFileName nom du fichier
      * @param string $strSheetName nom de la feuille dans le document ODS
      * @param array $arrDataFormats formats des colonnes ('type', 'width') // EXPERIMENTAL ou NON IMPLEMENTE
@@ -510,7 +511,7 @@ abstract class arr
 
         if (!empty($arrArray))
         {
-            // Ajout de la ligne d'entête
+            // Ajout de la ligne d'entÃªte
             if ($booHeader)
             {
                 $intCol = 0;
@@ -540,7 +541,7 @@ abstract class arr
             }
         }
 
-        // Génération du document
+        // GÃ©nÃ©ration du document
         if ($arrDefautOptions['tofile']) $strFile = $strFileName;
         else $strFile = tempnam(sys_get_temp_dir(), 'ods').'.ods';
 
@@ -563,10 +564,10 @@ abstract class arr
 
 
     /**
-     * "Nettoie" les clés d'un tableau multidimensionnel afin que les clés soient compatibles avec des noms d'entités ou de variables
+     * "Nettoie" les clÃ©s d'un tableau multidimensionnel afin que les clÃ©s soient compatibles avec des noms d'entitÃ©s ou de variables
      *
-     * @param array $arrArray tableau à nettoyer
-     * @return array tableau nettoyé
+     * @param array $arrArray tableau Ã  nettoyer
+     * @return array tableau nettoyÃ©
      */
     public static function cleankeys($arrArray)
     {
@@ -578,7 +579,7 @@ abstract class arr
         {
             $strKey = preg_replace("/[^a-z0-9_]/", "_", strtolower(str::convertaccents($strKey)));
 
-            // Cas particulier des clés non conformes
+            // Cas particulier des clÃ©s non conformes
             if (strlen($strKey) == 0) $strKey = 'xml';
             elseif (substr($strKey,0,1) == '_') $strKey = 'xml'.$strKey;
 
@@ -589,11 +590,29 @@ abstract class arr
         return $arrNewArray;
     }
 
-    public static function page($intPage, $strLabel, $strUrlMask, $intPageSel = 0)
+    /**
+     * GÃ©nÃ©ration d'un lien de page pour la consultation d'un tableau multipage
+     *
+     * @param integer $intPage numÃ©ro de page
+     * @param string $strLabel libellÃ© de page
+     * @param string $strUrlMask masque d'URL
+     * @param integer $intPageSel page sÃ©lectionnÃ©e
+     * @return string lien de page
+     */
+    private static function _page($intPage, $strLabel, $strUrlMask, $intPageSel = 0)
     {
         return $intPageSel == $intPage ? str_replace('{l}', $strLabel, '<strong>{l}</strong>') : str_replace(array('{p}', '{l}'), array($intPage, $strLabel), '<a href="'.$strUrlMask.'">{l}</a>');
     }
 
+    /**
+     * Retourne un tableau de liens vers des pages pour la consultation d'un tableau multipage
+     *
+     * @param integer $intNumRows nombre de lignes dans le tableau
+     * @param integer $intMaxLines nombre de lignes max par pages
+     * @param string $strUrlMask masque d'URL. {p} = numÃ©ro de page
+     * @param integer $intPageSel page sÃ©lectionnÃ©e
+     * @return array tableau de liens vers des pages
+     */
     public static function getpages($intNumRows, $intMaxLines = 50, $strUrlMask = '?page={p}', $intPageSel = 1)
     {
         $arrPages = array();
@@ -603,29 +622,29 @@ abstract class arr
         {
             $intNumPages = ceil($intNumRows / $intMaxLines);
 
-            // Fleche page précédente
-            if ($intPageSel > 1) $arrPages[] = self::page($intPageSel-1, '&laquo;', $strUrlMask, $intPageSel);
+            // Fleche page prÃ©cÃ©dente
+            if ($intPageSel > 1) $arrPages[] = self::_page($intPageSel-1, '&laquo;', $strUrlMask, $intPageSel);
 
             // On affiche toujours la premiere page
-            $arrPages[] = self::page(1, 1, $strUrlMask, $intPageSel);
+            $arrPages[] = self::_page(1, 1, $strUrlMask, $intPageSel);
 
-            // Affichage "..." après première page
+            // Affichage "..." aprÃ¨s premiÃ¨re page
             if ($intPageSel > 4) $arrPages[] = '...';
 
-            // Boucle sur les pages autour de la page sélectionnée (-2 à +2 si existe)
+            // Boucle sur les pages autour de la page sÃ©lectionnÃ©e (-2 Ã  +2 si existe)
             for ($i = $intPageSel - 2; $i <= $intPageSel + 2; $i++)
             {
-                if ($i>1 && $i<$intNumPages) $arrPages[] = self::page($i, $i, $strUrlMask, $intPageSel);
+                if ($i>1 && $i<$intNumPages) $arrPages[] = self::_page($i, $i, $strUrlMask, $intPageSel);
             }
 
-            // Affichage "..." avant dernière page
+            // Affichage "..." avant derniÃ¨re page
             if ($intPageSel < $intNumPages - 3) $arrPages[] = '...';
 
-            // Dernière page
-            if ($intNumPages>1) $arrPages[] = self::page($intNumPages, $intNumPages, $strUrlMask, $intPageSel);
+            // DerniÃ¨re page
+            if ($intNumPages>1) $arrPages[] = self::_page($intNumPages, $intNumPages, $strUrlMask, $intPageSel);
 
             // Fleche page suivante
-            if ($intPageSel < $intNumPages) $arrPages[] = self::page($intPageSel+1, '&raquo;', $strUrlMask, $intPageSel);
+            if ($intPageSel < $intNumPages) $arrPages[] = self::_page($intPageSel+1, '&raquo;', $strUrlMask, $intPageSel);
         }
 
         return implode(' ', $arrPages);

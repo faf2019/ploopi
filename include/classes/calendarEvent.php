@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,31 +26,48 @@ use ploopi;
 
 /**
  * Classe de gestion des événements du calendrier
+ *
+ * @package ploopi
+ * @subpackage calendar
+ * @copyright Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Ovensia
  */
+
 class calendarEvent
 {
     /**
      * Heure de début au format timestamp
+     *
+     * @var integer
      */
     private $intTimestpBegin;
 
     /**
      * Heure de fin au format timestamp
+     *
+     * @var integer
      */
     private $intTimestpEnd;
 
     /**
      * Titre
+     *
+     * @var string
      */
     private $strTitle;
 
     /**
      * Contenu
+     *
+     * @var string
      */
     private $strContent;
 
     /**
      * Canal de rattachement
+     *
+     * @var string
      */
     private $strChannelId;
 
@@ -59,7 +76,6 @@ class calendarEvent
      *
      * @var array
      */
-
     private $arrOptions;
 
 

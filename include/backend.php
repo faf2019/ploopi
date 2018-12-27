@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,16 +21,16 @@
 */
 
 /**
- * Point d'entrée pour l'affichage des flux
+ * Point d'entrÃ©e pour l'affichage des flux
  *
  * @package ploopi
  * @subpackage backend
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
-// La requête doit forcément porter sur un module valide
+// La requÃªte doit forcÃ©ment porter sur un module valide
 if (isset($_REQUEST['ploopi_moduleid']) && is_numeric($_REQUEST['ploopi_moduleid']) && isset($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['modules'][$_REQUEST['ploopi_moduleid']]))
 {
     ploopi\db::get()->query( "

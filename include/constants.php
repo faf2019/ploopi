@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,17 +21,17 @@
 */
 
 /**
- * Définition des constantes génériques utilisées par PLOOPI
+ * DÃ©finition des constantes gÃ©nÃ©riques utilisÃ©es par PLOOPI
  *
  * @package ploopi
  * @subpackage global
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
-define ('_PLOOPI_VERSION', '1.9.7.0');
-define ('_PLOOPI_REVISION', '161012');
+define ('_PLOOPI_VERSION', '1.9.7.1');
+define ('_PLOOPI_REVISION', '181213');
 
 define ('_PLOOPI_MSG_DBERROR',  'Database connection error, please contact administrator');
 define ('_SYSTEM_SYSTEMADMIN',  0);

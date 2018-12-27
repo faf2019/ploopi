@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,31 +25,19 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Gestion des logs
+ * Gestion des logs (table ploopi_log)
  *
  * @package ploopi
  * @subpackage log
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author StÈphane Escaich
- */
-
-/**
- * Classe d'accËs ‡ la table ploopi_log.
- *
- * @package ploopi
- * @subpackage log
- * @copyright Ovensia
- * @license GNU General Public License (GPL)
- * @author StÈphane Escaich
+ * @author Ovensia
  */
 
 class log extends data_object
 {
     /**
      * Constructeur de la classe
-     *
-     * @return log
      */
 
     public function __construct()
@@ -58,6 +46,12 @@ class log extends data_object
 
         if (session::get_usedb()) $this->setdb($this->getdb());
     }
+
+    /**
+     * Retourne le connecteur √† la base de donn√©es utilis√©e
+     *
+     * @return db connecteur √† la base de donn√©es
+     */
 
     public static function getdb()
     {

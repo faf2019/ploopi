@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,13 +21,13 @@
 */
 
 /**
- * Opérations sur les tickets (messages)
+ * OpÃ©rations sur les tickets (messages)
  *
  * @package ploopi
  * @subpackage ticket
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 switch($ploopi_op)
@@ -43,12 +43,12 @@ switch($ploopi_op)
         ?>
         <p class="ploopi_va" style="padding:4px;">
             <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/tickets/newmail.png">
-            <a href="<?php echo ploopi\crypt::urlencode("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets"); ?>"><b>Vous avez reçu un nouveau message !</b></a>
+            <a href="<?php echo ploopi\crypt::urlencode("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets"); ?>"><b>Vous avez reÃ§u un nouveau message !</b></a>
         </p>
         <?php
         $content = ob_get_contents();
         ob_end_clean();
-        echo $skin->create_popup('Nouveau Message !', $content, 'popup_tickets_new_alert');
+        echo ploopi\skin::get()->create_popup('Nouveau Message !', $content, 'popup_tickets_new_alert');
         ploopi\system::kill();
     break;
 
@@ -60,7 +60,7 @@ switch($ploopi_op)
         <script type="text/javascript">
             ploopi_tickets_validate = function (form)
             {
-                if(ploopi_validatefield('Titre',form.ticket_title,'string'))
+                if(ploopi.validatefield('Titre',form.ticket_title,'string'))
                 if(ploopi_ticket_validateTo('Destinataire',form.system_ticket_ctrl_user_to))
                     return true;
                 return false;
@@ -113,7 +113,7 @@ switch($ploopi_op)
             ?>
             <?php
             /*
-            <p class="ploopi_va" style="padding:4px 0; cursor:pointer;" onclick="javascript:ploopi_checkbox_click(event, 'ticket_needed_validation');">
+            <p class="ploopi_va" style="padding:4px 0; cursor:pointer;" onclick="javascript:ploopi.checkbox_click(event, 'ticket_needed_validation');">
                 <input type="checkbox" name="ticket_needed_validation" id="ticket_needed_validation" style="cursor:pointer;" value="1"><span><?php echo _PLOOPI_LABEL_TICKET_VALIDATIONREQUIRED; ?></span>
             </p>
             */
@@ -125,7 +125,7 @@ switch($ploopi_op)
                 ?>
             </div>
             <div style="text-align:right;">
-                    <input type="button" class="flatbutton" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:ploopi_hidepopup('system_popupticket');">
+                    <input type="button" class="flatbutton" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:ploopi.popup.hide('system_popupticket');">
                     <input type="submit" class="flatbutton" value="Envoyer" style="font-weight:bold;">
             </div>
             </form>
@@ -134,7 +134,7 @@ switch($ploopi_op)
         <?php
         $content = ob_get_contents();
         ob_end_clean();
-        echo $skin->create_popup(_PLOOPI_LABEL_NEWTICKET, $content, 'system_popupticket');
+        echo ploopi\skin::get()->create_popup(_PLOOPI_LABEL_NEWTICKET, $content, 'system_popupticket');
         ploopi\system::kill();
     break;
 
@@ -172,7 +172,7 @@ switch($ploopi_op)
             <script type="text/javascript">
                 ploopi_tickets_validate = function (form)
                 {
-                    return (ploopi_validatefield('Titre',form.ticket_title,'string'));
+                    return (ploopi.validatefield('Titre',form.ticket_title,'string'));
                 }
             </script>
             <div id="tickets_new">
@@ -201,7 +201,7 @@ switch($ploopi_op)
                     ?>
                 </div>
                 <div style="text-align:right;">
-                        <input type="button" class="flatbutton" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:ploopi_hidepopup('system_popupticket');">
+                        <input type="button" class="flatbutton" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:ploopi.popup.hide('system_popupticket');">
                         <input type="submit" class="flatbutton" value="<?php echo $button_value; ?>" style="font-weight:bold;">
                 </div>
                 </form>
@@ -211,7 +211,7 @@ switch($ploopi_op)
         }
         $content = ob_get_contents();
         ob_end_clean();
-        echo $skin->create_popup($popup_title, $content, 'system_popupticket');
+        echo ploopi\skin::get()->create_popup($popup_title, $content, 'system_popupticket');
         ploopi\system::kill();
     break;
 
@@ -268,7 +268,7 @@ switch($ploopi_op)
         {
             ?>
             <script type="text/javascript">
-                window.parent.ploopi_hidepopup('system_popupticket');
+                window.parent.ploopi.popup.hide('system_popupticket');
             </script>
             <?php
         }
@@ -336,7 +336,7 @@ switch($ploopi_op)
             $filtered_search_field = ploopi\db::get()->addslashes($_POST['ploopi_ticket_userfilter']);
             $search_pattern_user = ($_POST['ploopi_ticket_typefilter'] == 'user') ? "AND (u.login LIKE '%{$filtered_search_field}%' OR u.lastname LIKE '%{$filtered_search_field}%' OR u.firstname LIKE '%{$filtered_search_field}%') " : '';
 
-            // construction de la liste des groupes de travail et des groupes d'utilisateurs rattachés (pour l'utilisateur courant)
+            // construction de la liste des groupes de travail et des groupes d'utilisateurs rattachÃ©s (pour l'utilisateur courant)
             foreach ($_SESSION['ploopi']['workspaces'] as $wsp) // pour chaque groupe de travail
             {
                 if (isset($wsp['adminlevel']) && $wsp['backoffice'])
@@ -365,7 +365,7 @@ switch($ploopi_op)
             {
                 if ($_POST['ploopi_ticket_typefilter'] != 'group')
                 {
-                    // recherche des utilisateurs attachés aux espaces précédemment sélectionnés
+                    // recherche des utilisateurs attachÃ©s aux espaces prÃ©cÃ©demment sÃ©lectionnÃ©s
                     ploopi\db::get()->query("
                         SELECT      u.*,
                                     wu.id_workspace
@@ -381,7 +381,7 @@ switch($ploopi_op)
                         ORDER BY    u.lastname, u.firstname, u.login
                     ");
 
-                    // affectation des utilisateurs à leurs groupes de rattachement
+                    // affectation des utilisateurs Ã  leurs groupes de rattachement
                     while ($fields = ploopi\db::get()->fetchrow())
                     {
                         // Si l'espace contient au moins 1 utilisateur, il n'est pas vide
@@ -419,7 +419,7 @@ switch($ploopi_op)
 
                 if (!empty($list['usr']))
                 {
-                    // On vérifie que chaque espace contient bien qqchose
+                    // On vÃ©rifie que chaque espace contient bien qqchose
                     foreach($list['wsp'] as $id_wsp => $wsp)
                     {
                         // On ne teste que les espaces encore vides (ceux qui n'ont pas encore au moins 1 utilisateur)
@@ -445,7 +445,7 @@ switch($ploopi_op)
                                     if ($booEmptySearch) $booEmptySearch = false;
 
                                     ?>
-                                    <a class="system_tickets_select_user" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_select_user&user_id=<?php echo $id_user; ?>', 'div_ticket_users_selected');">
+                                    <a class="system_tickets_select_user" href="javascript:void(0);" onclick="javascript:ploopi.xhr.todiv('admin.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_select_user&user_id=<?php echo $id_user; ?>', 'div_ticket_users_selected');">
                                         <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span><?php echo ploopi\str::htmlentities("{$list['usr'][$id_user]['lastname']} {$list['usr'][$id_user]['firstname']}"); ?></span></p>
                                     </a>
                                     <?php
@@ -459,7 +459,7 @@ switch($ploopi_op)
                                     if (!empty($list['grp'][$id_grp]['users']))
                                     {
                                         ?>
-                                        <a class="system_tickets_select_usergroup" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_select_user&group_id=<?php echo $id_grp; ?>', 'div_ticket_users_selected');">
+                                        <a class="system_tickets_select_usergroup" href="javascript:void(0);" onclick="javascript:ploopi.xhr.todiv('admin.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_select_user&group_id=<?php echo $id_grp; ?>', 'div_ticket_users_selected');">
                                             <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_group.png"><span><?php echo ploopi\str::htmlentities($list['grp'][$id_grp]['label']); ?></span></p>
                                         </a>
                                         <?php
@@ -467,7 +467,7 @@ switch($ploopi_op)
                                         {
                                             if ($booEmptySearch) $booEmptySearch = false;
                                             ?>
-                                            <a class="system_tickets_select_usergroup_user" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_todiv('admin.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_select_user&user_id=<?php echo $id_user; ?>', 'div_ticket_users_selected');">
+                                            <a class="system_tickets_select_usergroup_user" href="javascript:void(0);" onclick="javascript:ploopi.xhr.todiv('admin.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_select_user&user_id=<?php echo $id_user; ?>', 'div_ticket_users_selected');">
                                                 <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span><?php echo ploopi\str::htmlentities("{$list['usr'][$id_user]['lastname']} {$list['usr'][$id_user]['firstname']}"); ?></span></p>
                                             </a>
                                             <?php
@@ -484,7 +484,7 @@ switch($ploopi_op)
             {
                 ?>
                 <div style="padding:4px;" class="error">
-                    Aucune réponse
+                    Aucune rÃ©ponse
                 </div>
                 <?php
             }
@@ -494,7 +494,7 @@ switch($ploopi_op)
         </div>
         <div class="system_tickets_select_legend">
             <p class="ploopi_va">
-                <span style="font-weight:bold;">Légende:</span>
+                <span style="font-weight:bold;">LÃ©gende:</span>
                 <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_workgroup.png"><span>Espace de Travail</span>
                 <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_group.png"><span>Groupe d'Utilisateur</span>
                 <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span>Utilisateur</span>

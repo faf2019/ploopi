@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -31,15 +31,37 @@ use ploopi;
  * @subpackage error
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 abstract class error
 {
-
+    /**
+     * Messages d'erreur
+     *
+     * @var string
+     */
     public static $msg = '';
+
+    /**
+     * Nombre d'erreurs
+     *
+     * @var integer
+     */
     public static $nb = 0;
+
+    /**
+     * Niveau d'erreur
+     *
+     * @var integer
+     */
     public static $level = 0;
+
+    /**
+     * Tableau des types d'erreur
+     *
+     * @var array
+     */
     public static $errortype = array(
         E_ERROR          => 'Error',
         E_WARNING        => 'Warning',
@@ -58,6 +80,11 @@ abstract class error
         E_USER_DEPRECATED => 'User Deprecated'
     );
 
+    /**
+     * Tableau des niveaux d'erreur
+     *
+     * @var array
+     */
     public static $errorlevel = array(
         0 => 'OK',
         1 => 'WARNING',
@@ -70,9 +97,9 @@ abstract class error
      *
      * @param int $errno le niveau d'erreur
      * @param string $errstr le message d'erreur
-     * @param string $errfile le nom du fichier dans lequel l'erreur a été identifiée
-     * @param int $errline le numéro de ligne à laquelle l'erreur a été identifiée
-     * @param array $vars tableau avec toutes les variables qui existaient lorsque l'erreur a été déclenchée
+     * @param string $errfile le nom du fichier dans lequel l'erreur a Ã©tÃ© identifiÃ©e
+     * @param int $errline le numÃ©ro de ligne Ã  laquelle l'erreur a Ã©tÃ© identifiÃ©e
+     * @param array $vars tableau avec toutes les variables qui existaient lorsque l'erreur a Ã©tÃ© dÃ©clenchÃ©e
      *
      * @see _PLOOPI_DISPLAY_ERRORS
      * @see _PLOOPI_ERROR_REPORTING
@@ -162,7 +189,7 @@ abstract class error
     }
 
     /**
-     * Active le gestionnaire d'erreur interne à Ploopi
+     * Active le gestionnaire d'erreur interne Ã  Ploopi
      */
     public static function set_handler()
     {
@@ -171,7 +198,7 @@ abstract class error
     }
 
     /**
-     * Désactive le gestionnaire d'erreur interne à Ploopi
+     * DÃ©sactive le gestionnaire d'erreur interne Ã  Ploopi
      */
     public static function unset_handler()
     {

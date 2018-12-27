@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -31,17 +31,17 @@ use ploopi;
  * @subpackage buffer
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 abstract class output
 {
 
     /**
-     * Affiche des informations lisibles pour une variable php (basé sur la fonction php print_r())
+     * Affiche des informations lisibles pour une variable php (basÃ© sur la fonction php print_r())
      *
-     * @param mixed $var variable à afficher
-     * @param boolean $return true si le contenu doit être retourné, false si le contenu doit être affiché (false par défaut)
+     * @param mixed $var variable Ã  afficher
+     * @param boolean $return true si le contenu doit Ãªtre retournÃ©, false si le contenu doit Ãªtre affichÃ© (false par dÃ©faut)
      * @return mixed rien si $return = false, sinon les informations lisibles de la variable (html)
      */
 
@@ -54,9 +54,7 @@ abstract class output
 
 
     /**
-     * Version spéciale de output::redirect qui nécessite que les paramètres soient déjà urlencodés (via la fonction urlencode())
-     *
-     * @see output::redirect
+     * Version spÃ©ciale de output::redirect qui nÃ©cessite que les paramÃ¨tres soient dÃ©jÃ  urlencodÃ©s (via la fonction urlencode())
      */
     public static function redirect_trusted($url, $urlencode = true, $internal = true, $refresh = 0)
     {
@@ -67,9 +65,9 @@ abstract class output
      * Redirige le script vers une url et termine le script courant
      *
      * @param string $url URL de redirection
-     * @param boolean $urlencode true si l'URL doit être chiffrée (true par défaut)
-     * @param boolean $internal true si la redirection est interne au site (true par défaut)
-     * @param int $refresh durée en seconde avant la redirection (0 par défaut)
+     * @param boolean $urlencode true si l'URL doit Ãªtre chiffrÃ©e (true par dÃ©faut)
+     * @param boolean $internal true si la redirection est interne au site (true par dÃ©faut)
+     * @param int $refresh durÃ©e en seconde avant la redirection (0 par dÃ©faut)
      */
 
     public static function redirect($url, $urlencode = true, $internal = true, $refresh = 0, $trusted = false)
@@ -80,19 +78,13 @@ abstract class output
         if (empty($refresh) || !is_numeric($refresh))
         {
             header("Location: {$url}");
-            die();
+            system::kill();
         }
         else header("Refresh: {$refresh}; url={$url}");
     }
 
     /**
-     * Renvoie une erreur 404 dans les entêtes
-     *
-     * @copyright Ovensia
-     * @license GNU General Public License (GPL)
-     * @author Stéphane Escaich
-     *
-     * @see header
+     * Renvoie l'attribut d'erreur 404 dans les entÃªtes
      */
 
     public static function h404() { header("HTTP/1.0 404 Not Found"); }

@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,13 +25,20 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Classe abstraite de gestion des éléments de formulaire
+ * Gestion des Ã©lÃ©ments de formulaires
  *
+ * @package ploopi
+ * @subpackage form
+ * @copyright Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Ovensia
  */
+
 abstract class form_element
 {
     /**
-     * Liste des variables utilisables dans le getter générique
+     * Liste des variables utilisables dans le getter gÃ©nÃ©rique
+     *
      * @var array
      */
     private static $_arrAllowedGetters = array(
@@ -43,6 +50,11 @@ abstract class form_element
         '_arrOptions'
     );
 
+    /**
+     * Liste des Ã©vÃ©nements gÃ©rÃ©s
+     *
+     * @var array
+     */
     private static $_arrEvents = array(
         'onblur',
         'onchange',
@@ -60,7 +72,7 @@ abstract class form_element
     );
 
     /**
-     * Différents types acceptés pour un élément
+     * DiffÃ©rents types acceptÃ©s pour un Ã©lÃ©ment
      *
      * @var array
      */
@@ -93,42 +105,42 @@ abstract class form_element
     );
 
     /**
-     * Type de l'élément
+     * Type de l'Ã©lÃ©ment
      *
      * @var string
      */
     private $_strType;
 
     /**
-     * Libellé de l'élément
+     * LibellÃ© de l'Ã©lÃ©ment
      *
      * @var string
      */
     private $_strLabel;
 
     /**
-     * Valeurs de l'éléments
+     * Valeurs de l'Ã©lÃ©ments
      *
      * @var array
      */
     private $_arrValues;
 
     /**
-     * Propriété "name" de l'élément
+     * PropriÃ©tÃ© "name" de l'Ã©lÃ©ment
      *
      * @var string
      */
     private $_strName;
 
     /**
-     * Propriété "id" de l'élément
+     * PropriÃ©tÃ© "id" de l'Ã©lÃ©ment
      *
      * @var string
      */
     private $_strId;
 
     /**
-     * Options de l'élément
+     * Options de l'Ã©lÃ©ment
      *
      * @var array
      */
@@ -136,39 +148,41 @@ abstract class form_element
 
     /**
      * Object form "parent"
+     *
+     * @var form
      */
     protected $_objParentForm;
 
 
     /**
-     * Petit raccourci pour inclure les propriétés de balises
+     * Petit raccourci pour inclure les propriÃ©tÃ©s de balises
      * @param string $strProperty
      * @param string $strContent
      */
     protected static function _getProperty($strProperty, $strContent = null) { return is_null($strContent) ? '' : " {$strProperty}=\"{$strContent}\""; }
 
     /**
-     * Petit raccourci pour inclure les événements de balises
+     * Petit raccourci pour inclure les Ã©vÃ©nements de balises
      * @param string $strProperty
      * @param string $strContent
      */
     protected static function _getEvent($strProperty, $strContent = null) { return is_null($strContent) ? '' : " {$strProperty}=\"javascript:{$strContent}\""; }
 
     /**
-     * Génère les événements d'une balise
+     * GÃ©nÃ¨re les Ã©vÃ©nements d'une balise
      * @return string
      */
     protected function generateEvents()
     {
         $strEvents = '';
 
-        // Pour chaque événement référencé
+        // Pour chaque Ã©vÃ©nement rÃ©fÃ©rencÃ©
         foreach(self::$_arrEvents as $strEvent)
         {
-            // S'il est présent dans les options
+            // S'il est prÃ©sent dans les options
             if (isset($this->_arrOptions[$strEvent]))
             {
-                // On génère la chaine à insérer dans la balise
+                // On gÃ©nÃ¨re la chaine Ã  insÃ©rer dans la balise
                 $strEvents .= self::_getEvent($strEvent, $this->_arrOptions[$strEvent]);
             }
         }
@@ -177,8 +191,12 @@ abstract class form_element
     }
 
     /**
-     * Génère les événements d'une balise
-     * @return string
+     * GÃ©nÃ¨re les propriÃ©tÃ©s d'une balise
+     *
+     * @param string $strClass classe CSS
+     * @param string $strStyle style CSS
+
+     * @return string propriÃ©tÃ©s (HTML)
      */
     protected function generateProperties($strClass = null, $strStyle = null)
     {
@@ -200,10 +218,10 @@ abstract class form_element
      * Constructeur de la classe
      *
      * @param string $strType type du champ
-     * @param string $strLabel libellé du champ
+     * @param string $strLabel libellÃ© du champ
      * @param array $arrValues valeur(s) du champ
-     * @param string $strName propriété "name" du champ
-     * @param string $strId propriété "id" du champ
+     * @param string $strName propriÃ©tÃ© "name" du champ
+     * @param string $strId propriÃ©tÃ© "id" du champ
      * @param array $arrOptions options du champ
      *
      * @return form_element
@@ -233,12 +251,12 @@ abstract class form_element
     /**
      * Attribution du type
      *
-     * @param string $strType type de l'élément
+     * @param string $strType type de l'Ã©lÃ©ment
      * @return boolean
      */
     public function setType($strType) {
         if (!in_array($strType, self::$_arrTypes)) {
-            trigger_error('Ce type d\'élément n\'existe pas', E_USER_ERROR);
+            trigger_error('Ce type d\'Ã©lÃ©ment n\'existe pas', E_USER_ERROR);
             return false;
         }
         else {
@@ -256,8 +274,10 @@ abstract class form_element
         $this->_arrOptions = array_merge($this->_arrOptions, $arrOptions);
     }
 
-     /**
+    /**
      * Affecte le lien vers le formulaire "parent"
+     *
+     * @param form $objParentForm formulaire parent
      */
     public function setParentForm(form $objParentForm)
     {
@@ -265,9 +285,9 @@ abstract class form_element
     }
 
    /**
-     * Méthode abstraite de rendu d'un libellé. Cette méthode doit être redéfinie dans les classes filles
+     * MÃ©thode abstraite de rendu d'un libellÃ©. Cette mÃ©thode doit Ãªtre redÃ©finie dans les classes filles
      *
-     * @param int $intTabindex tabindex de l'élément dans le formulaire
+     * @param int $intTabindex tabindex de l'Ã©lÃ©ment dans le formulaire
      */
     abstract protected function render($intTabindex = null);
 }

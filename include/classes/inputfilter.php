@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,8 +25,8 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Classe permettant de filter le contenu d'une variable et de supprimer les entit�s HTML.
- * Permet d'�viter les injections de type XSS
+ * Filtrage du contenu d'une variable et de supprimer les entités HTML.
+ * Permet d'éviter les injections de type XSS
  */
 
 class inputfilter
@@ -39,18 +39,19 @@ class inputfilter
      */
     public static function process($strSource)
     {
-        return filter_var(strip_tags(self::decode($strSource)));
+        return filter_var(strip_tags(self::_decode($strSource)));
     }
 
     /**
      * Essaye de convertir le texte en Plaintext.
      *
-     * @copyright: Daniel Morris
-     * @email: dan@rootcube.com
-     * @param   string  $strSource
-     * @return  string  Plaintext string
+     * @copyright Daniel Morris
+     * @email dan@rootcube.com
+     * @param string $strSource texte non décodé
+     *
+     * @return string Texte décodé
      */
-    private static function decode($strSource)
+    private static function _decode($strSource)
     {
         // url decode
         $strSource = html_entity_decode($strSource, ENT_QUOTES, "ISO-8859-1");

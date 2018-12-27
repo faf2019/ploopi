@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -31,19 +31,19 @@ use ploopi;
  * @subpackage buffer
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 abstract class buffer
 {
     /**
-     * Gère la sortie du buffer principal.
-     * Met à jour le rendu final en mettant à jour les variables d'éxection.
-     * Compresse éventuellement le contenu.
+     * GÃ¨re la sortie du buffer principal.
+     * Met Ã  jour le rendu final en mettant Ã  jour les variables d'Ã©xection.
+     * Compresse Ã©ventuellement le contenu.
      * Ecrit dans le log.
      *
      * @param string $buffer contenu du buffer de sortie
-     * @return string buffer modifié
+     * @return string buffer modifiÃ©
      *
      * @see _PLOOPI_USE_OUTPUT_COMPRESSION
      * @see ob_start
@@ -51,13 +51,11 @@ abstract class buffer
 
     public static function callback($buffer)
     {
-
-        global $ploopi_timer;
         $db = db::connected() ? db::get() : null;
 
         if (!strlen(trim($buffer))) return '';
 
-        // On essaye de récupérer le content-type du contenu du buffer
+        // On essaye de rÃ©cupÃ©rer le content-type du contenu du buffer
         $content_type = 'text/html';
         $headers = headers_list();
         $booDownloadFile = false;
@@ -100,9 +98,9 @@ abstract class buffer
             $ploopi_stats['sql_exectime'] = 0;
         }
 
-        if (isset($ploopi_timer))
+        if (timer::exists())
         {
-            $ploopi_stats['total_exectime'] = round($ploopi_timer->getexectime()*1000,1);
+            $ploopi_stats['total_exectime'] = round(timer::get()->getexectime()*1000,1);
             $ploopi_stats['sql_ratiotime'] = round(($ploopi_stats['sql_exectime']*100)/$ploopi_stats['total_exectime'] ,0);
             $ploopi_stats['php_ratiotime'] = 100 - $ploopi_stats['sql_ratiotime'];
         }
@@ -179,8 +177,8 @@ abstract class buffer
         }
         else
         {
-            // Attention, Content-Encoding: none ET Content-Type: text/html ne font pas bon ménage !
-            // => Problème avec le validateur W3C : Line 1, Column 0: end of document in prolog
+            // Attention, Content-Encoding: none ET Content-Type: text/html ne font pas bon mÃ©nage !
+            // => ProblÃ¨me avec le validateur W3C : Line 1, Column 0: end of document in prolog
             if ($content_type != 'text/html') header("Content-Encoding: none");
         }
 
@@ -191,10 +189,10 @@ abstract class buffer
 
 
     /**
-     * Vide les buffers de sortie ouverts en préservant le buffer principal
+     * Vide les buffers de sortie ouverts en prÃ©servant le buffer principal
      * @copyright Ovensia
      * @license GNU General Public License (GPL)
-     * @author Stéphane Escaich
+     * @author Ovensia
      *
      * @see ploopi\buffer::callback
      */
@@ -212,13 +210,13 @@ abstract class buffer
 
 
     /**
-     * Détecte si le navigateur supporte la compression gzip
+     * DÃ©tecte si le navigateur supporte la compression gzip
      *
      * @return boolean true si le navigateur supporte la compression gzip
      *
      * @copyright tellinya.com
      * @license GNU General Public License (GPL)
-     * @author Stéphane Escaich
+     * @author Ovensia
      *
      * @link http://www.tellinya.com/read/2007/09/09/106.html
      */

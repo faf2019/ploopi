@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,14 +25,14 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Fonctions de base pour le traitement des dates, des timestamps MYSQL et des fuseaux horaires.
+ * Gestion des dates, des timestamps MYSQL et des fuseaux horaires.
  * Conversion de formats, conversion de fuseaux, calculs...
  *
  * @package ploopi
  * @subpackage date
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 abstract class date {
@@ -53,9 +53,9 @@ abstract class date {
     public static function gettime() {return date(_PLOOPI_TIMEFORMAT);}
 
     /**
-     * Vérifie le format de la date en fonction du format local
+     * VÃ©rifie le format de la date en fonction du format local
      *
-     * @param string $mydate date à vérifier
+     * @param string $mydate date Ã  vÃ©rifier
      * @return boolean true si le format de la date est valide
      */
 
@@ -78,16 +78,16 @@ abstract class date {
     }
 
     /**
-     * Vérifie le format de l'heure en fonction du format local
+     * VÃ©rifie le format de l'heure en fonction du format local
      *
-     * @param string $mytime heure à vérifier
+     * @param string $mytime heure Ã  vÃ©rifier
      * @return boolean true si le format de l'heure est valide
      */
 
     public static function timeverify($mytime) { return preg_match(_PLOOPI_TIMEFORMAT_EREG, $mytime, $regs) === 1; }
 
     /**
-     * Renvoie le détail d'un timestamp au format MYSQL (AAAAMMJJhhmmss) sous forme d'un tableau
+     * Renvoie le dÃ©tail d'un timestamp au format MYSQL (AAAAMMJJhhmmss) sous forme d'un tableau
      * $regs[_PLOOPI_DATE_YEAR] => Year
      * $regs[_PLOOPI_DATE_MONTH] => Month
      * $regs[_PLOOPI_DATE_DAY] => Day
@@ -96,7 +96,7 @@ abstract class date {
      * $regs[_PLOOPI_DATE_SECOND] => Second
      *
      * @param string $mytimestamp
-     * @return array tableau contenant le détail de la date
+     * @return array tableau contenant le dÃ©tail de la date
      */
 
     public static function gettimestampdetail($mytimestamp)
@@ -106,7 +106,7 @@ abstract class date {
     }
 
     /**
-     * Crée un timestamp de la date du serveur au format MYSQL (AAAAMMJJhhmmss)
+     * CrÃ©e un timestamp de la date du serveur au format MYSQL (AAAAMMJJhhmmss)
      *
      * @return string
      */
@@ -114,7 +114,7 @@ abstract class date {
     public static function createtimestamp() { return date(_PLOOPI_TIMESTAMPFORMAT_MYSQL); }
 
     /**
-     * Crée un datetime de la date du serveur au format MYSQL (AAAA-MM-JJ hh:mm:ss)
+     * CrÃ©e un datetime de la date du serveur au format MYSQL (AAAA-MM-JJ hh:mm:ss)
      *
      * @return string
      */
@@ -281,7 +281,7 @@ abstract class date {
      * Convertit un date locale au format timestamp MYSQL (AAAAMMJJhhmmss)
      *
      * @param string $mydate date au format local
-     * @param string $mytime heure au format local (optionnel, par défaut '00:00:00')
+     * @param string $mytime heure au format local (optionnel, par dÃ©faut '00:00:00')
      * @return string timestamp MYSQL
      */
 
@@ -316,7 +316,7 @@ abstract class date {
      * Convertit un date locale au format datetime MYSQL (AAAA-MM-JJ hh:mm:ss)
      *
      * @param string $mydate date au format local
-     * @param string $mytime heure au format local (optionnel, par défaut '00:00:00')
+     * @param string $mytime heure au format local (optionnel, par dÃ©faut '00:00:00')
      * @return string timestamp MYSQL
      */
 
@@ -346,16 +346,16 @@ abstract class date {
     }
 
     /**
-     * Ajoute un durée (positive ou négative) à un timestamp MYSQL (AAAAMMJJhhmmss)
+     * Ajoute un durÃ©e (positive ou nÃ©gative) Ã  un timestamp MYSQL (AAAAMMJJhhmmss)
      *
      * @param string $timestp timestamp MYSQL
-     * @param int $h nombre d'heures à ajouter
-     * @param int $mn nombre de minutes à ajouter
-     * @param int $s nombre de secondes à ajouter
-     * @param int $m nombre de mois à ajouter
-     * @param int $d nombre de jours à ajouter
-     * @param int $y nombre d'année à ajouter
-     * @return string timestamp MYSQL mis à jour
+     * @param int $h nombre d'heures Ã  ajouter
+     * @param int $mn nombre de minutes Ã  ajouter
+     * @param int $s nombre de secondes Ã  ajouter
+     * @param int $m nombre de mois Ã  ajouter
+     * @param int $d nombre de jours Ã  ajouter
+     * @param int $y nombre d'annÃ©e Ã  ajouter
+     * @return string timestamp MYSQL mis Ã  jour
      */
 
     public static function timestamp_add($timestp, $h=0, $mn=0, $s=0, $m=0, $d=0, $y=0)
@@ -377,16 +377,16 @@ abstract class date {
     }
 
     /**
-     * Ajoute un durée (positive ou négative) à un datetime MYSQL (AAAA-MM-JJ hh:mm:ss)
+     * Ajoute un durÃ©e (positive ou nÃ©gative) Ã  un datetime MYSQL (AAAA-MM-JJ hh:mm:ss)
      *
      * @param string $datetime datetime MYSQL
-     * @param int $h nombre d'heures à ajouter
-     * @param int $mn nombre de minutes à ajouter
-     * @param int $s nombre de secondes à ajouter
-     * @param int $m nombre de mois à ajouter
-     * @param int $d nombre de jours à ajouter
-     * @param int $y nombre d'année à ajouter
-     * @return string datetime MYSQL mis à jour
+     * @param int $h nombre d'heures Ã  ajouter
+     * @param int $mn nombre de minutes Ã  ajouter
+     * @param int $s nombre de secondes Ã  ajouter
+     * @param int $m nombre de mois Ã  ajouter
+     * @param int $d nombre de jours Ã  ajouter
+     * @param int $y nombre d'annÃ©e Ã  ajouter
+     * @return string datetime MYSQL mis Ã  jour
      */
 
     public static function datetime_add($datetime, $h=0, $mn=0, $s=0, $m=0, $d=0, $y=0)
@@ -411,14 +411,14 @@ abstract class date {
     /**
      * Retourne un timestamp unix de la date du 1er jour d'une semaine
      *
-     * @param int $intNumWeek Numéro de la semaine dans l'année
-     * @param int $intYear Année
+     * @param int $intNumWeek NumÃ©ro de la semaine dans l'annÃ©e
+     * @param int $intYear AnnÃ©e
      * @return int timestamp unix de la date du premier jour de la semaine
      */
     public static function numweek2unixtimestamp($intNumWeek, $intYear)
     {
-        // On va chercher quand commence la semaine 1 de l'année en cours dans le but de connaître le 1er jour de n'importe quelle semaine de l'année
-        // 1. On se positionne qques jours avant la fin de l'année (la semaine 1 commence au plus tôt le 29/12 : cf ISO-8601)
+        // On va chercher quand commence la semaine 1 de l'annÃ©e en cours dans le but de connaÃ®tre le 1er jour de n'importe quelle semaine de l'annÃ©e
+        // 1. On se positionne qques jours avant la fin de l'annÃ©e (la semaine 1 commence au plus tÃ´t le 29/12 : cf ISO-8601)
         $date_firstweek = mktime(0, 0, 0, 12, 29, $intYear - 1);
         $d = -1;
         do
@@ -436,12 +436,12 @@ abstract class date {
 
 
     /**
-     * Retourne un booléen indiquant si une date correspond à un jour férié
+     * Retourne un boolÃ©en indiquant si une date correspond Ã  un jour fÃ©riÃ©
      *
      * @copyright Olravet (http://olravet.fr/)
      *
      * @param int $timestamp date au format timestamp unix
-     * @return boolean true si le jour est férié
+     * @return boolean true si le jour est fÃ©riÃ©
      */
 
     public static function holiday($timestamp)
@@ -452,7 +452,7 @@ abstract class date {
 
         $booIsHoliday = false;
 
-        // dates fériées fixes
+        // dates fÃ©riÃ©es fixes
         if($intDay == 1 && $intMonth == 1) $booIsHoliday = true; // 1er janvier
         elseif($intDay == 1 && $intMonth == 5) $booIsHoliday = true; // 1er mai
         elseif($intDay == 8 && $intMonth == 5) $booIsHoliday = true; // 8 mai
@@ -460,19 +460,19 @@ abstract class date {
         elseif($intDay == 15 && $intMonth == 8) $booIsHoliday = true; // 15 aout
         elseif($intDay == 1 && $intMonth == 11) $booIsHoliday = true; // 1 novembre
         elseif($intDay == 11 && $intMonth == 11) $booIsHoliday = true; // 11 novembre
-        elseif($intDay == 25 && $intMonth == 12) $booIsHoliday = true; // 25 décembre
+        elseif($intDay == 25 && $intMonth == 12) $booIsHoliday = true; // 25 dÃ©cembre
 
-        // fêtes religieuses mobiles
+        // fÃªtes religieuses mobiles
 
         $pak = easter_date($intYear);
         $jp = date("d", $pak);
         $mp = date("m", $pak);
-        if($jp == $intDay && $mp == $intMonth) { $booIsHoliday = true;} // Pâques
+        if($jp == $intDay && $mp == $intMonth) { $booIsHoliday = true;} // PÃ¢ques
 
         $lpk = mktime(date("H", $pak), date("i", $pak), date("s", $pak), date("m", $pak), date("d", $pak) +1, date("Y", $pak) );
         $jp = date("d", $lpk);
         $mp = date("m", $lpk);
-        if($jp == $intDay && $mp == $intMonth){ $booIsHoliday = true; } // Lundi de Pâques
+        if($jp == $intDay && $mp == $intMonth){ $booIsHoliday = true; } // Lundi de PÃ¢ques
 
         $asc = mktime(date("H", $pak), date("i", $pak), date("s", $pak), date("m", $pak), date("d", $pak) + 39, date("Y", $pak) );
         $jp = date("d", $asc);
@@ -482,25 +482,25 @@ abstract class date {
         $pe = mktime(date("H", $pak), date("i", $pak), date("s", $pak), date("m", $pak), date("d", $pak) + 49, date("Y", $pak) );
         $jp = date("d", $pe);
         $mp = date("m", $pe);
-        if($jp == $intDay && $mp == $intMonth) {$booIsHoliday = true;} // Pentecôte
+        if($jp == $intDay && $mp == $intMonth) {$booIsHoliday = true;} // PentecÃ´te
 
         $lp = mktime(date("H", $asc), date("i", $pak), date("s", $pak), date("m", $pak), date("d", $pak) + 50, date("Y", $pak) );
         $jp = date("d", $lp);
         $mp = date("m", $lp);
-        if($jp == $intDay && $mp == $intMonth) {$booIsHoliday = true;} // lundi Pentecôte
+        if($jp == $intDay && $mp == $intMonth) {$booIsHoliday = true;} // lundi PentecÃ´te
 
         return $booIsHoliday;
     }
 
     /**
-     * Crée le timestamp MYSQL (AAAAMMJJhhmmss) de la date actuelle pour un fuseau horaire donné (par défaut UTC+0)
+     * CrÃ©e le timestamp MYSQL (AAAAMMJJhhmmss) de la date actuelle pour un fuseau horaire donnÃ© (par dÃ©faut UTC+0)
      *
-     * @param string $timezone_name identifiant du fuseau horaire (par défaut 'UTC') ou 'user' ou 'server'
+     * @param string $timezone_name identifiant du fuseau horaire (par dÃ©faut 'UTC') ou 'user' ou 'server'
      * @return timestamp timestamp au format MYSQL
      *
      * @copyright Ovensia
      * @license GNU General Public License (GPL)
-     * @author Stéphane Escaich
+     * @author Ovensia
      *
      * @link http://fr.php.net/timezones
      * @see timezone_identifiers_list
@@ -523,7 +523,7 @@ abstract class date {
     }
 
     /**
-     * Convertit un timestamp MYSQL (AAAAMMJJhhmmss) d'un fuseau à un autre
+     * Convertit un timestamp MYSQL (AAAAMMJJhhmmss) d'un fuseau Ã  un autre
      *
      * @param string $ts timestamp au format MYSQL
      * @param unknown_type identifiant du fuseau horaire d'origine ou 'user' ou 'server'
@@ -532,7 +532,7 @@ abstract class date {
      *
      * @copyright Ovensia
      * @license GNU General Public License (GPL)
-     * @author Stéphane Escaich
+     * @author Ovensia
      *
      * @link http://fr.php.net/timezones
      * @see timezone_identifiers_list
@@ -540,7 +540,7 @@ abstract class date {
 
     public static function tz_timestamp2timestamp($ts, $timezone_name_src = 'UTC', $timezone_name_dst = 'UTC')
     {
-        if (empty($ts)) return $ts;
+    if (empty($_SESSION['ploopi']['user']) || empty($ts)) return $ts;
 
         switch($timezone_name_src)
         {
@@ -572,10 +572,10 @@ abstract class date {
         error::set_handler();
 
 
-        // on parse le timestamp 'mysql' pour créer un timestamp unix
+        // on parse le timestamp 'mysql' pour crÃ©er un timestamp unix
         if (!preg_match(_PLOOPI_TIMESTAMPFORMAT_MYSQL_EREG, $ts, $tsregs)) $tsregs = array(0,0,0,0,0,0,0);
 
-        // on crée l'objet date sur le fuseau source
+        // on crÃ©e l'objet date sur le fuseau source
         date_default_timezone_set($timezone_name_src);
         $date = date_create('@'.mktime($tsregs[4], $tsregs[5], $tsregs[6], $tsregs[2], $tsregs[3], $tsregs[1]));
         date_default_timezone_set($default_tz);
@@ -589,21 +589,21 @@ abstract class date {
             // changement de fuseau horaire (dest)
             date_timezone_set($date, $tz_dst);
 
-            // on renvoie la date formatée timestamp mysql
+            // on renvoie la date formatÃ©e timestamp mysql
             return(date_format($date, _PLOOPI_TIMESTAMPFORMAT_MYSQL));
         }
         else return false;
     }
 
     /**
-     * Renvoie une chaine indiquant le décalage d'un fuseau par rapport à l'heure UTC. Ex : UTC +02:00
+     * Renvoie une chaine indiquant le dÃ©calage d'un fuseau par rapport Ã  l'heure UTC. Ex : UTC +02:00
      *
      * @param string identifiant du fuseau horaire ou 'user' ou 'server'
-     * @return string chaine UTC formatée
+     * @return string chaine UTC formatÃ©e
      *
      * @copyright Ovensia
      * @license GNU General Public License (GPL)
-     * @author Stéphane Escaich
+     * @author Ovensia
      *
      * @link http://fr.php.net/timezones
      * @see timezone_identifiers_list
@@ -614,7 +614,11 @@ abstract class date {
         switch($timezone_name)
         {
             case 'user':
-                $timezone_name = $_SESSION['ploopi']['user']['timezone'];
+                if (empty($_SESSION['ploopi']['user'])) {
+                    // detect server timezone
+                    $timezone_name = timezone_name_get(date_timezone_get(date_create()));
+                }
+                else $timezone_name = $_SESSION['ploopi']['user']['timezone'];
             break;
 
             case 'server':
@@ -633,7 +637,7 @@ abstract class date {
     /**
      * Affiche une petite image de calendrier qui permet d'ouvrir le calendrier/popup de choix d'une date
      *
-     * @param string $strInputFieldId identifiant du champ input associé
+     * @param string $strInputFieldId identifiant du champ input associÃ©
      */
     public static function open_calendar($strInputFieldId, $booEcho = true, $strClass = null, $strStyle = null)
     {
@@ -643,7 +647,7 @@ abstract class date {
         $strStyle = $strStyle == null ? '' : " style=\"{$strStyle}\"";
 
         $strEcho = "
-            <a href=\"javascript:void(0);\" onclick=\"javascript:ploopi_xmlhttprequest_topopup(192, event, 'ploopi_popup_calendar', '".crypt::urlencode("{$strScript}-light.php?ploopi_op=calendar_open")."', 'selected_date='+$('{$strInputFieldId}').value+'&inputfield_id={$strInputFieldId}', 'POST', true);\" {$strClass}{$strStyle}>
+            <a href=\"javascript:void(0);\" onclick=\"javascript:ploopi.xhr.topopup(192, event, 'ploopi_popup_calendar', '".crypt::urlencode("{$strScript}-light.php?ploopi_op=calendar_open")."', 'selected_date='+$('{$strInputFieldId}').value+'&inputfield_id={$strInputFieldId}', 'POST', true);\" {$strClass}{$strStyle}>
             <img src=\"./img/calendar/calendar.gif\" />
             </a>
         ";

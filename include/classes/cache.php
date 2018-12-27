@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,55 +25,57 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Gestion de la mise en cache
+ * Gestion du cache
  *
  * @package ploopi
  * @subpackage cache
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
- */
-
-/**
- * Classe de gestion du cache
- *
- * @package ploopi
- * @subpackage cache
- * @copyright Ovensia
- * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 class cache
 {
     /**
-     * Cache activé ?
+     * Cache activÃ© ?
+     *
+     * @var boolean
      */
     static private $_booActivated;
 
     /**
-     * Nombre d'écriture dans la page
+     * Nombre d'Ã©criture dans la page
+     *
+     * @var integer
      */
     static private $_intWritten;
 
     /**
      * Nombre de lecture dans la page
+     *
+     * @var integer
      */
     static private $_intRead;
 
     /**
      * Id du cache
+     *
+     * @var string
      */
     private $_strCacheId;
 
     /**
-     * Id du cache
+     * Id du groupe
+     *
+     * @var string
      */
     private $_strCacheGroup = 'default';
 
 
     /**
-     * Object Cache_Lite_Output
+     * Object \Cache_Lite_Output
+     *
+     * @var Cache_Lite_Output
      */
     private $_objCache = null;
 
@@ -94,17 +96,19 @@ class cache
     public static function getread() { return self::$_intRead; }
 
     /**
-     * Retourne le nombre d'écriture dans la page
+     * Retourne le nombre d'Ã©criture dans la page
      */
     public static function getwritten() { return self::$_intWritten; }
 
     /**
-     * Retourne true si le cache est activé
+     * Retourne true si le cache est activÃ©
      */
     public static function getactivated() { return self::$_booActivated; }
 
-    /*
+    /**
      * Modifie le groupe de cache
+     *
+     * @param string $strGroup nom du groupe
      */
     public function set_groupe($strGroup = 'default') { if(is_string($strGroup)) $this->_strCacheGroup = $strGroup; }
 
@@ -112,7 +116,7 @@ class cache
      * Constructeur de la classe
      *
      * @param string $id identifiant du cache
-     * @param int $lifetime durée de vie du cache (en secondes)
+     * @param int $lifetime durÃ©e de vie du cache (en secondes)
      * @return ploopi_cache
      */
 
@@ -128,7 +132,7 @@ class cache
     }
 
     /**
-     * Retourne la date de dernière modification du cache
+     * Retourne la date de derniÃ¨re modification du cache
      *
      * @return int date/heure (format ?)
      */
@@ -145,10 +149,10 @@ class cache
     }
 
     /**
-     * Démarre une mise en cache
+     * DÃ©marre une mise en cache
      *
-     * @param boolean $force_caching true si la mise en cache est forcée
-     * @return mixed contenu du cache ou false si le cache est désactivé ou vide
+     * @param boolean $force_caching true si la mise en cache est forcÃ©e
+     * @return mixed contenu du cache ou false si le cache est dÃ©sactivÃ© ou vide
      */
 
     public function start($booForceCaching = false)
@@ -178,7 +182,7 @@ class cache
         }
     }
 
-    /*
+    /**
      * Vide le cache d'un groupe
      */
     public function clean()

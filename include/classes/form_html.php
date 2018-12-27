@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,19 +25,29 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Classe de gestion des contenus libres
+ * Gestion des zones HTML (contenu libre) de formulaires
+ *
+ * @package ploopi
+ * @subpackage form
+ * @copyright Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Ovensia
  */
-
 class form_html extends form_field
 {
 
     /**
-     * Contenu de l'�l�ment
+     * Contenu de l'élément
      *
      * @var string
      */
     private $strContent;
 
+    /**
+     * Constructeur de la classe
+     *
+     * @param string $strContent Contenu de l'élément
+     */
     public function __construct($strContent)
     {
         $this->strContent = $strContent;
@@ -45,6 +55,9 @@ class form_html extends form_field
 
     /**
      * Retourne le contenu html
+     *
+     * @param int $intTabindex tabindex du champ dans le formulaire
+     * @return string code html
      */
     public function render($intTabindex = null)
     {

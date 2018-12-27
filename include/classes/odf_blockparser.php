@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,30 +25,46 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Classe permettant d'extraire les blocs de variables d'un modèle de document ODF.
+ * Extraction des blocs de variables d'un modÃ¨le de document ODF.
  *
  * @package ploopi
- * @subpackage odf
+ * @subpackage module
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 class odf_blockparser
 {
+    /**
+     * Blocs Ã  extraire
+     *
+     * @var array
+     */
     private $blockvars = array();
+
+    /**
+     * Blocs extraits
+     */
     private $blocktemplates = array();
 
+    /**
+     * Parseur XML
+     *
+     * @var resource
+     */
     private $xml_parser;
-    private $xml_data = array();
+
+    /**
+     * DonnÃ©es analysÃ©es
+     *
+     * @var array
+     */
     private $parsed_data;
 
     /**
-     * Constructeur de la classe. Crée le parser.
-     *
-     * @return odf_blockparser
-     *
-     * @see xml_parser_create
+     * Constructeur de la classe.
+     * Initialise le parseur XML.
      */
 
     public function __construct()
@@ -61,15 +77,15 @@ class odf_blockparser
         xml_set_object($this->xml_parser, $this);
         xml_parser_set_option($this->xml_parser, XML_OPTION_CASE_FOLDING, 0); // surtout ne pas mettre 1 !
 
-        xml_set_element_handler($this->xml_parser, "tag_open", "tag_close");
-        xml_set_character_data_handler($this->xml_parser, "cdata");
+        xml_set_element_handler($this->xml_parser, '_tag_open',  '_tag_close');
+        xml_set_character_data_handler($this->xml_parser, '_cdata');
     }
 
     /**
-     * Parse les données dans le but d'extraire des blocs identifiés (tableaux nommés)
+     * Parse les donnÃ©es dans le but d'extraire des blocs identifiÃ©s (tableaux nommÃ©s)
      *
      * @param string $data
-     * @param array $blockvars tableau des blocs à extraire
+     * @param array $blockvars tableau des blocs Ã  extraire
      *
      * @see xml_parse
      */
@@ -81,23 +97,23 @@ class odf_blockparser
     }
 
     /**
-     * Gestionnaires de début de balise XML. On cherche les tableaux correspondant aux blocs.
+     * Gestionnaires de dÃ©but de balise XML. On cherche les tableaux correspondant aux blocs.
      *
      * @param resource $parser parser XML
      * @param string $tag balise XML
      * @param string $attribs attributs de la balise XML
      */
 
-    private function tag_open($parser, $tag, $attribs)
+    private function _tag_open($parser, $tag, $attribs)
     {
         switch($tag)
         {
             case 'table:table':
-                // on augmente de 1 la profondeur des tableaux imbriqués
+                // on augmente de 1 la profondeur des tableaux imbriquÃ©s
                 reset($this->blocktemplates);
                 foreach($this->blocktemplates as $blockname => $tpl) if (!$tpl['end']) $this->blocktemplates[$blockname]['depth']++;
 
-                if (isset($attribs['table:name']) && isset($this->blockvars[$attribs['table:name']])) // si ce tableau correpond à un bloc
+                if (isset($attribs['table:name']) && isset($this->blockvars[$attribs['table:name']])) // si ce tableau correpond Ã  un bloc
                 {
                     // initialisation du template de bloc
                     $this->blocktemplates[$attribs['table:name']] = array('content' => '', 'end' => 0, 'depth' => 0);
@@ -107,7 +123,7 @@ class odf_blockparser
             break;
         }
 
-        // construction de la chaine de paramètres
+        //Â construction de la chaine de paramÃ¨tres
         $params = array();
         foreach($attribs as $param => $value) $params[] = "{$param}=\"{$value}\"";
         $params_str = implode(' ',$params);
@@ -136,7 +152,7 @@ class odf_blockparser
      * @param string $tag balise XML
      */
 
-    private function tag_close($parser, $tag)
+    private function _tag_close($parser, $tag)
     {
         $keep_content = true;
 
@@ -171,13 +187,13 @@ class odf_blockparser
     }
 
     /**
-     * Gestionnaire du flux de données, récupère le contenu des blocs.
+     * Gestionnaire du flux de donnÃ©es, rÃ©cupÃ¨re le contenu des blocs.
      *
      * @param resource $parser parser XML
-     * @param string $data données
+     * @param string $data donnÃ©es
      */
 
-    private function cdata($parser, $data)
+    private function _cdata($parser, $data)
     {
         $tag = &$this->xmltags[sizeof($this->xmltags)-1];
 
@@ -198,9 +214,9 @@ class odf_blockparser
     }
 
     /**
-     * Retourne le contenu XML parsé
+     * Retourne le contenu XML parsÃ©
      *
-     * @return string contenu XML parsé
+     * @return string contenu XML parsÃ©
      */
 
     public function get_xml()
@@ -211,7 +227,7 @@ class odf_blockparser
     /**
      * Retourne les blocs et leur contenu
      *
-     * @return unknown
+     * @return array blocs
      */
 
     public function get_blocktemplates()

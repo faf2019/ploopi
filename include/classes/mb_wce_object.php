@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,24 +25,22 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Classe d'accès à la table ploopi_mb_wce_object
+ * Gestion les objets WCE de la metabase (table ploopi_mb_wce_object)
  *
  * @package ploopi
  * @subpackage metabase
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 class mb_wce_object extends data_object
 {
     /**
      * Constructeur de la classe
-     *
-     * @return mb_wce_object
      */
 
-    function __construct()
+    public function __construct()
     {
         parent::__construct('ploopi_mb_wce_object');
     }

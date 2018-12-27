@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,35 +25,41 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Gestion interne des documents
+ * Gestion interne des documents (fichiers)
  *
  * @package ploopi
  * @subpackage document
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
- */
-
-/**
- * Classe de gestion des documents (ne pas confondre avec le module DOC)
- *
- * @package ploopi
- * @subpackage document
- * @copyright Ovensia
- * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 class documentsfile extends data_object
 {
+    /**
+     * Ancien nom du document
+     *
+     * @var string
+     */
     private $oldname;
+
+    /**
+     * Chemin vers le fichier temporaire
+     *
+     * @var string
+     */
     private $tmpfile;
+
+    /**
+     * Chemin vers le fichier Ã  importer
+     *
+     * @var string
+     */
     private $file;
+
 
     /**
      * Constructeur de la classe
-     *
-     * @return documentsfile
      */
     public function __construct()
     {
@@ -75,7 +81,7 @@ class documentsfile extends data_object
      * Ouvre un document
      *
      * @param int $id identifiant du document
-     * @return boolean true si le document a été ouvert
+     * @return boolean true si le document a Ã©tÃ© ouvert
      */
     public function open(...$args)
     {
@@ -88,7 +94,7 @@ class documentsfile extends data_object
      * Ouvre un document avec son identifiant MD5
      *
      * @param string $md5id identifiant MD5 du document
-     * @return boolean true si le document a été ouvert
+     * @return boolean true si le document a Ã©tÃ© ouvert
      */
 
     function openmd5($md5id)
@@ -102,7 +108,7 @@ class documentsfile extends data_object
 
     /**
      * Enregistre le document.
-     * Gère la sauvegarde physique du fichier, le renommage.
+     * GÃ¨re la sauvegarde physique du fichier, le renommage.
      *
      * @return int identifiant du document
      */
@@ -223,7 +229,7 @@ class documentsfile extends data_object
     }
 
     /**
-     * Supprime le document (physiquement et dans la base de données)
+     * Supprime le document (physiquement et dans la base de donnÃ©es)
      */
     public function delete()
     {
@@ -243,7 +249,7 @@ class documentsfile extends data_object
 
     /**
      * Retourne le chemin physique de stockage du document.
-     * Crée le dossier si nécessaire.
+     * CrÃ©e le dossier si nÃ©cessaire.
      *
      * @return string chemin de stockage du document
      */
@@ -265,10 +271,10 @@ class documentsfile extends data_object
     }
 
     /**
-     * Retourne l'URL permettant de télécharger le document
+     * Retourne l'URL permettant de tÃ©lÃ©charger le document
      *
-     * @param boolean $attachement true si le fichier doit être "attaché"
-     * @return string URL de téléchargement
+     * @param boolean $attachement true si le fichier doit Ãªtre "attachÃ©"
+     * @return string URL de tÃ©lÃ©chargement
      */
     public function geturl($attachement = true)
     {
@@ -276,7 +282,7 @@ class documentsfile extends data_object
     }
 
     /**
-     * Permet de définir l'emplacement du fichier manuellement (ajout uniquement)
+     * Permet de dÃ©finir l'emplacement du fichier manuellement (ajout uniquement)
      *
      * @param string $file chemin du fichier
      */
@@ -287,7 +293,7 @@ class documentsfile extends data_object
     }
 
     /**
-     * Permet de définir l'emplacement du fichier temporaire (après upload)
+     * Permet de dÃ©finir l'emplacement du fichier temporaire (aprÃ¨s upload)
      *
      * @param string $file chemin du fichier
      */

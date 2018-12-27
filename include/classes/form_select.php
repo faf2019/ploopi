@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,19 +25,26 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Classe de gestion des champs de type "select" d'un formulaire
+ * Gestion des champs de type "select" de formulaires
+ *
+ * @package ploopi
+ * @subpackage form
+ * @copyright Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Ovensia
  */
+
 class form_select extends form_field
 {
     /**
-     * Valeur(s) sélectionnée(s) dans le select
+     * Valeur(s) sÃ©lectionnÃ©e(s) dans le select
      *
      * @var string
      */
     private $_arrSelected;
 
     /**
-     * Options par défaut d'un select
+     * Options par dÃ©faut d'un select
      *
      * @var array
      */
@@ -50,30 +57,28 @@ class form_select extends form_field
     /**
      * Constructeur de la classe
      *
-     * @param string $strLabel libellé du champ
+     * @param string $strLabel libellÃ© du champ
      * @param array $arrValues valeur(s) du champ
-     * @param string $strSelected valeur de l'élément sélectionné
-     * @param string $strName propriété "name" du champ
-     * @param string $strId propriété "id" du champ
+     * @param string $strSelected valeur de l'Ã©lÃ©ment sÃ©lectionnÃ©
+     * @param string $strName propriÃ©tÃ© "name" du champ
+     * @param string $strId propriÃ©tÃ© "id" du champ
      * @param array $arrOptions options du champ
-     *
-     * @return form_select
      */
     public function __construct($strLabel, $arrValues = array(), $arrSelected, $strName, $strId = null, $arrOptions = null)
     {
-        if (!is_array($arrValues)) trigger_error('Ce type d\'élément attend un tableau de valeurs', E_USER_ERROR);
+        if (!is_array($arrValues)) trigger_error('Ce type d\'Ã©lÃ©ment attend un tableau de valeurs', E_USER_ERROR);
 
         if (!is_array($arrSelected)) { $strTmp = $arrSelected; unset($arrSelected); $arrSelected[] = $strTmp; }
 
         parent::__construct('select', $strLabel, $arrValues, $strName, $strId, is_null($arrOptions) ? self::$_arrDefaultOptions : array_merge(self::$_arrDefaultOptions, $arrOptions));
 
-        $this->_arrSelected = arr::map('str::htmlentities', $arrSelected);
+        $this->_arrSelected = arr::map('form::htmlentities', $arrSelected);
     }
 
     /**
-     * Génère le rendu html du champ
+     * GÃ©nÃ¨re le rendu html du champ
      *
-     * @param int $intTabindex tabindex du champs dans le formulaire
+     * @param int $intTabindex tabindex du champ dans le formulaire
      * @return string code html
      */
     public function render($intTabindex = null)
@@ -95,7 +100,7 @@ class form_select extends form_field
     }
 
     /**
-     * Génère le rendu des valeurs (récursif)
+     * GÃ©nÃ¨re le rendu des valeurs (rÃ©cursif)
      * @param array tableau des valeurs
      * @return string code html
      */
@@ -107,7 +112,8 @@ class form_select extends form_field
 
         foreach($arrValues as $mixKey => $mixValue)
         {
-            $mixKey = str::htmlentities($mixKey);
+            $mixKey = form::htmlentities($mixKey);
+            $arrDataset = array();
             $booSelected = in_array($mixKey, $this->_arrSelected);
 
             if (is_object($mixValue) && $mixValue instanceof form_select_option)
@@ -120,7 +126,13 @@ class form_select extends form_field
                 {
                     if (isset($mixValue['label']))
                     {
-                        $strGroup = isset($mixValue['group']) ? str::htmlentities($mixValue['group']) : '';
+                        $strGroup = isset($mixValue['group']) ? form::htmlentities($mixValue['group']) : '';
+                        foreach ($mixValue as $key => $value) {
+                            if($key != 'group' && $key != 'label') {
+                                $value = form::htmlentities($value);
+                                $arrDataset[] = "data-".$key."=\"{$value}\"";
+                            }
+                        }
                         $mixValue = $mixValue['label'];
                     }
                     else
@@ -131,7 +143,7 @@ class form_select extends form_field
 
                 if ($strGroup != $strCurrentGroup)
                 {
-                    // Fermeture du précédent groupe
+                    // Fermeture du prÃ©cÃ©dent groupe
                     if ($strCurrentGroup != '') $strOutput .= "</optgroup>";
 
                     // Ouverture nouveau groupe
@@ -141,14 +153,15 @@ class form_select extends form_field
                 }
 
 
-                $mixValue = str_replace(' ', '&nbsp;', str::htmlentities($mixValue));
+                $mixValue = str_replace(' ', '&nbsp;', form::htmlentities($mixValue));
 
+                $strDataset = implode(' ', $arrDataset);
                 $strSelected = $booSelected ? ' selected="selected"' : '';
-                $strOutput .= "<option value=\"{$mixKey}\"{$strSelected}>{$mixValue}</option>";
+                $strOutput .= "<option {$strDataset} value=\"{$mixKey}\"{$strSelected}>{$mixValue}</option>";
             }
         }
 
-        // Fermeture du précédent groupe
+        // Fermeture du prÃ©cÃ©dent groupe
         if ($strCurrentGroup != '') $strOutput .= "</optgroup>";
 
         return $strOutput;

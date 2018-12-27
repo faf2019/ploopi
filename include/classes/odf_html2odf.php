@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,29 +25,66 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Conversion de balises HTML en version ODF
- * Pour le moment : strong, b, em, u, i, img, h1, h2, h3 ?
+ * Gestion de la conversion de balises HTML en version ODF.
+ * Pour le moment : strong, b, em, u, i, img, h1, h2, h3.
+ *
+ * @package ploopi
+ * @subpackage module
+ * @copyright Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Ovensia
  */
 
 class odf_html2odf
 {
-    // Contenu HTML ‡ convertir
+    /**
+     * Contenu HTML √† convertir
+     *
+     * @var string
+     */
     private $_html;
-    // Parser XML/HTMl
+
+    /**
+     * Parseur XML/HTMl
+     *
+     * @var resource
+     */
     private $_html_parser;
-    // RÈsultat de la conversion
+
+    /**
+     * R√©sultat XML de la conversion
+     *
+     * @var string
+     */
     private $_result;
 
+    /**
+     * Pile d'√©l√©ments
+     *
+     * @var array
+     */
     private $_stack = array();
 
+    /**
+     * Parseur ODF
+     *
+     * @var odf_parser
+     */
     private $_odf_parser = null;
+
+    /**
+     * Constructeur de la classe.
+     *
+     * @param string $html code HTML √† convertir en XML/ODF
+     * @param odf_parser $odf_parser parseur ODF
+     */
 
     public function __construct($html, $odf_parser)
     {
 
         $this->_odf_parser = $odf_parser;
 
-        // On contrÙle la qualitÈ du code HTML fourni
+        // On contr√¥le la qualit√© du code HTML fourni
         $this->_html = str::htmlpurifier($html);
         $this->_result = '';
 
@@ -56,14 +93,19 @@ class odf_html2odf
         xml_set_object($this->_html_parser, $this);
         xml_parser_set_option($this->_html_parser, XML_OPTION_CASE_FOLDING, 0);
 
-        xml_set_element_handler($this->_html_parser, "tag_open", "tag_close");
-        xml_set_character_data_handler($this->_html_parser, "cdata");
+        xml_set_element_handler($this->_html_parser, '_tag_open',  '_tag_close');
+        xml_set_character_data_handler($this->_html_parser, '_cdata');
     }
 
+    /**
+     * Conversion des entit√©s HTML en XML/ODF
+     *
+     * @return string contenu XML/ODF
+     */
     public function convert()
     {
         /**
-         * Attention le parser XML est buguÈ avec les entitÈs html...
+         * Attention le parser XML est bugu√© avec les entit√©s html...
          * http://drupal.org/node/384060
          */
 
@@ -71,7 +113,14 @@ class odf_html2odf
         return $this->_result;
     }
 
-    public function tag_open($parser, $tag, $attribs)
+    /**
+     * Gestionnaire d'ouverture de balises pour le parseur XML
+     * @param resource $parser parseur XML
+     * @param string $tag balise XML
+     * @param array $attribs propri√©t√©s de la balise XML
+     */
+
+    private function _tag_open($parser, $tag, $attribs)
     {
         switch(strtolower($tag))
         {
@@ -87,7 +136,7 @@ class odf_html2odf
 
                 if (file_exists($attribs['src'])) {
 
-                    // RÈcupÈration des styles (largeur, hauteur, alignement)
+                    // R√©cup√©ration des styles (largeur, hauteur, alignement)
                     if (!empty($attribs['style'])) {
                         $arrStyle = explode(';', $attribs['style']);
                         foreach($arrStyle as $key => $rowStyle) {
@@ -152,8 +201,8 @@ class odf_html2odf
             break;
 
             case 'hr':
-                // Astuce pour traiter les retours ‡ la ligne :
-                // Fermer tous les span/a ouverts et les rÈouvrir
+                // Astuce pour traiter les retours √† la ligne :
+                // Fermer tous les span/a ouverts et les r√©ouvrir
                 foreach($this->_stack as $row) {
                     switch($row[0]) {
                         case 'a':
@@ -165,7 +214,7 @@ class odf_html2odf
                     }
                 }
 
-                $this->_result .= "[ploopi-hr]"; // Ils sont traitÈs plus tard
+                $this->_result .= "[ploopi-hr]"; // Ils sont trait√©s plus tard
 
                 foreach($this->_stack as $row) $this->_result .= $row[1];
             break;
@@ -173,8 +222,8 @@ class odf_html2odf
 
             case 'p':
             case 'br':
-                // Astuce pour traiter les retours ‡ la ligne :
-                // Fermer tous les span/a ouverts et les rÈouvrir
+                // Astuce pour traiter les retours √† la ligne :
+                // Fermer tous les span/a ouverts et les r√©ouvrir
                 foreach($this->_stack as $row) {
                     switch($row[0]) {
                         case 'a':
@@ -186,7 +235,7 @@ class odf_html2odf
                     }
                 }
 
-                $this->_result .= "[ploopi-br]"; // Ils sont traitÈs plus tard
+                $this->_result .= "[ploopi-br]"; // Ils sont trait√©s plus tard
 
                 foreach($this->_stack as $row) $this->_result .= $row[1];
             break;
@@ -196,7 +245,13 @@ class odf_html2odf
         }
     }
 
-    public function tag_close($parser, $tag)
+    /**
+     * Gestionnaire de fermeture de balises pour le parseur XML
+     * @param resource $parser parseur XML
+     * @param string $tag balise XML
+     */
+
+    private function _tag_close($parser, $tag)
     {
         switch(strtolower($tag))
         {
@@ -235,9 +290,15 @@ class odf_html2odf
         }
     }
 
-    public function cdata($parser, $data)
+    /**
+     * Gestionnaire du contenu des balises pour le parseur XML
+     * @param resource $parser parseur XML
+     * @param string $data contenu de la balise
+     */
+
+    private function _cdata($parser, $data)
     {
-        // Conversion en entitÈs XML
+        // Conversion en entit√©s XML
         $data = $this->_xmlize(str_replace('[ploopi-amp]', '&', $data));
         // Traitement des espaces multiples
         $data = preg_replace_callback('@\s{2,}@', array($this, '_replace_spaces'), $data);
@@ -246,18 +307,21 @@ class odf_html2odf
     }
 
     /**
-     * Nettoie une chaÓne (dÈcode les entitÈs html) et l'encode en UTF8
+     * Nettoie une cha√Æne (d√©code les entit√©s html) et l'encode en UTF8
      *
-     * @param string $value chaÓne brute
-     * @return string chaÓne "nettoyÈe"
-     *
+     * @param string $value cha√Æne brute
+     * @return string cha√Æne "nettoy√©e"
      */
-
     private function _xmlize($data)
     {
         return str::xmlentities(html_entity_decode(iconv('ISO-8859-15', 'UTF-8', strip_tags($data)), ENT_QUOTES, 'UTF-8'), true);
     }
 
+    /**
+     * Remplacement des espaces par des entit√©es ODF/XML
+     * @param array $matches tableau d'occurences
+     * @return string contenu XML
+     */
     private function _replace_spaces($matches)
     {
         return ' <text:s text:c="'.(strlen($matches[0])-1).'"/>';

@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,14 +25,21 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Classe de gestion des recordsets retournés par ploopi_query
+ * Gestion des recordset rÃ©sultant de requÃªtes SQL construites via Query
+ *
+ * @package ploopi
+ * @subpackage ploopi_query
+ * @copyright Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Ovensia
  */
+
 class recordset
 {
     /**
-     * Connexion à la BDD
+     * Connexion Ã  la BDD
      *
-     * @var resource
+     * @var db
      */
     private $objDb;
 
@@ -46,7 +53,7 @@ class recordset
     /**
      * Constructeur de la classe
      *
-     * @param resource $objDb Connexion à la BDD
+     * @param resource $objDb Connexion Ã  la BDD
      * @param resource $resRs Recordset
      */
     public function __construct($objDb, $resRs)
@@ -76,10 +83,10 @@ class recordset
     }
 
     /**
-     * Déplace le pointeur interne sur un enregistrement particulier
+     * DÃ©place le pointeur interne sur un enregistrement particulier
      *
      * @param integer $intPos position dans le recordset
-     * @return boolean true si le déplacement a été effectué sinon false
+     * @return boolean true si le dÃ©placement a Ã©tÃ© effectuÃ© sinon false
      */
     public function dataseek($intPos = 0)
     {
@@ -89,8 +96,8 @@ class recordset
     /**
      * Retourne dans un tableau le contenu du recordset
      *
-     * @param $booFirstColKey $firstcolkey true si la première colonne doit servir d'index pour le tableau (optionnel)
-     * @return mixed un tableau indexé contenant les enregistrements du recordset ou false si le recordset n'est pas valide
+     * @param $booFirstColKey $firstcolkey true si la premiÃ¨re colonne doit servir d'index pour le tableau (optionnel)
+     * @return mixed un tableau indexÃ© contenant les enregistrements du recordset ou false si le recordset n'est pas valide
      */
     public function getarray($booFirstColKey = false)
     {
@@ -100,8 +107,8 @@ class recordset
     /**
      * Retourne au format JSON le contenu du recordset
      *
-     * @param boolean $booUtf8 true si le contenu doit être encodé en utf8, false sinon (true par défaut)
-     * @return string une chaîne au format JSON contenant les enregistrements du recordset ou false si le recordset n'est pas valide
+     * @param boolean $booUtf8 true si le contenu doit Ãªtre encodÃ© en utf8, false sinon (true par dÃ©faut)
+     * @return string une chaÃ®ne au format JSON contenant les enregistrements du recordset ou false si le recordset n'est pas valide
      */
     public function getjson($booUtf8 = true)
     {
@@ -112,8 +119,8 @@ class recordset
     /**
      * Retourne au format CSV le contenu du recordset
      *
-     * @param array $arrOptions options du format CSV : booHeader:true si la ligne d'entête doit être ajoutée (nom des colonnes), strFieldSep:séparateur de champs, strLineSep:séparateur de lignes, strTextSep:caractère d'encapsulation des contenus
-     * @return string une chaîne au format CSV contenant les enregistrements du recordset ou false si le recordset n'est pas valide
+     * @param array $arrOptions options du format CSV : booHeader:true si la ligne d'entÃªte doit Ãªtre ajoutÃ©e (nom des colonnes), strFieldSep:sÃ©parateur de champs, strLineSep:sÃ©parateur de lignes, strTextSep:caractÃ¨re d'encapsulation des contenus
+     * @return string une chaÃ®ne au format CSV contenant les enregistrements du recordset ou false si le recordset n'est pas valide
      */
     public function getcsv($arrOptions = array()) {
 
@@ -127,7 +134,7 @@ class recordset
 
         $arrOptions = array_merge($arrDefaultOptions, $arrOptions);
 
-        // Fonction d'échappement & formatage du contenu
+        // Fonction d'Ã©chappement & formatage du contenu
         $funcLineEchap = null;
 
         if ($arrOptions['strTextSep'] != '') {
@@ -143,7 +150,7 @@ class recordset
 
             if ($arrOptions['booClean']) $row = arr::map('str::iso8859_clean', $row);
 
-            // Ajout de la ligne d'entête
+            // Ajout de la ligne d'entÃªte
             if ($arrOptions['booHeader'] && !$booHeader) {
                 $booHeader = true;
                 $strCsv = implode($arrOptions['strFieldSep'], is_null($funcLineEchap) ? array_keys($row) : arr::map($funcLineEchap, array_keys($row))).$arrOptions['strLineSep'];

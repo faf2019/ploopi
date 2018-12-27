@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,21 +25,19 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Classe d'accès à la table ploopi_ticket_status
+ * Gestion des statuts de tickets (table ploopi_ticket_status)
  *
  * @package ploopi
  * @subpackage ticket
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 class ticket_status extends data_object
 {
     /**
      * Constructeur de la classe
-     *
-     * @return ticket_status
      */
 
     public function ticket_status()
@@ -48,7 +46,7 @@ class ticket_status extends data_object
     }
 
     /**
-     * Enregistre l'état d'un ticket pour un utilisateur
+     * Enregistre l'Ã©tat d'un ticket pour un utilisateur
      */
 
     public function save()

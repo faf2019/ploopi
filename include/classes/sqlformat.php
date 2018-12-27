@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,19 +25,26 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Classe abstraite permettant de formater un contenu SQL à la manière de printf
+ * Formatage d'un contenu SQL Ã  la maniÃ¨re de printf
+ *
+ * @package ploopi
+ * @subpackage query
+ * @copyright Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Ovensia
  */
+
 abstract class sqlformat
 {
     /**
-     * Regex utilisée pour détecter point d'injection de données
+     * Regex utilisÃ©e pour dÃ©tecter point d'injection de donnÃ©es
      *
      * @var string
      */
     private static $strRegExFormat = '|%(([0-9]*)\$){0,1}([s,d,f,t,e,g,r])|';
 
     /**
-     * Numéro du paramètre traité
+     * NumÃ©ro du paramÃ¨tre traitÃ©
      *
      * @var int
      * @see replace
@@ -53,17 +60,17 @@ abstract class sqlformat
     private static $arrValues = null;
 
     /**
-     * Connexion à la BDD
+     * Connexion Ã  la BDD
      *
      * @var resource
      */
     private static $objDb = null;
 
     /**
-     * Méthode de remplacement appelée en callback via preg_replace_callback
+     * MÃ©thode de remplacement appelÃ©e en callback via preg_replace_callback
      *
      * @param array $arrMatches Tableau contenant le texte satisfaisant au masque de recherche
-     * @return string chaîne modifiée
+     * @return string chaÃ®ne modifiÃ©e
      * @link http://fr.php.net/manual/fr/function.preg-replace-callback.php
      */
     private static function cb_replace($arrMatches)
@@ -74,7 +81,7 @@ abstract class sqlformat
         {
             $intNumParam = empty($arrMatches[2]) ? ++self::$intNumParam - 1 : intval($arrMatches[2]) - 1;
 
-            // La valeur correspondante du paramètre peut être un tableau de valeurs ou une valeur simple
+            // La valeur correspondante du paramÃ¨tre peut Ãªtre un tableau de valeurs ou une valeur simple
             $mixValue = isset(self::$arrValues[$intNumParam]) ? self::$arrValues[$intNumParam] : null;
 
             switch($arrMatches[3])
@@ -125,18 +132,18 @@ abstract class sqlformat
     }
 
     /**
-     * Méthode publique de remplacement
+     * MÃ©thode publique de remplacement
      *
-     * @param array $arrData tableau associatif contenant la chaîne SQL brute (rawsql) et les valeurs de remplacement (values)
-     * @param resource $objDb connexion à la BDD
-     * @return string chaîne modifiée
+     * @param array $arrData tableau associatif contenant la chaÃ®ne SQL brute (rawsql) et les valeurs de remplacement (values)
+     * @param resource $objDb connexion Ã  la BDD
+     * @return string chaÃ®ne modifiÃ©e
      */
     public static function replace($arrData, $objDb = null)
     {
-        // Initialisation du numéro de paramètre en cours de traitement
+        // Initialisation du numÃ©ro de paramÃ¨tre en cours de traitement
         self::$intNumParam = 0;
 
-        // Initialisation de la connexion à la BDD
+        // Initialisation de la connexion Ã  la BDD
         if (is_null($objDb)) { $db = db::get(); self::$objDb = $db; }
         else self::$objDb = $objDb;
 

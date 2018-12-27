@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,30 +25,20 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Gestion de la connexion à la base MySQL.
+ * Gestion de la connexion Ã  la base MySQL/MariaDB
+ * Permet de se connecter, d'exÃ©cuter des requÃªtes, etc...
  *
  * @package ploopi
  * @subpackage database
  * @copyright Ovensia
  * @license GNU General var License (GPL)
- * @author Stéphane Escaich
- */
-
-/**
- * Classe MySQL d'accès aux données.
- * Permet de se connecter, d'exécuter des requêtes, etc...
- *
- * @package ploopi
- * @subpackage database
- * @copyright Ovensia
- * @license GNU General var License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 class db
 {
     /**
-     * Détermine si la connexion est permanente
+     * DÃ©termine si la connexion est permanente
      *
      * @var boolean
      */
@@ -56,7 +46,7 @@ class db
     private $persistency;
 
     /**
-     * Nom d'utilisateur pour la connexion à la BDD
+     * Nom d'utilisateur pour la connexion Ã  la BDD
      *
      * @var string
      */
@@ -64,7 +54,7 @@ class db
     private $user;
 
     /**
-     * Mot de passe pour la connexion à la BDD
+     * Mot de passe pour la connexion Ã  la BDD
      *
      * @var string
      */
@@ -72,7 +62,7 @@ class db
     private $password;
 
     /**
-     * Nom du serveur (hôte, ip) pour la connexion à la BDD
+     * Nom du serveur (hÃ´te, ip) pour la connexion Ã  la BDD
      *
      * @var string
      */
@@ -80,7 +70,7 @@ class db
     private $server;
 
     /**
-     * Port pour la connexion à la BDD
+     * Port pour la connexion Ã  la BDD
      *
      * @var string
      */
@@ -88,7 +78,7 @@ class db
     private $port;
 
     /**
-     * Nom de la base de données pour la connexion à la BDD
+     * Nom de la base de donnÃ©es pour la connexion Ã  la BDD
      *
      * @var string
      */
@@ -104,7 +94,7 @@ class db
     private $connection_id;
 
     /**
-     * Pointeur sur le résultat de la dernière requête exécutée
+     * Pointeur sur le rÃ©sultat de la derniÃ¨re requÃªte exÃ©cutÃ©e
      *
      * @var ressource
      */
@@ -112,7 +102,7 @@ class db
     private $query_result;
 
     /**
-     * Compteur de requêtes exécutées
+     * Compteur de requÃªtes exÃ©cutÃ©es
      *
      * @var int
      */
@@ -120,14 +110,14 @@ class db
     private $num_queries;
 
     /**
-     * Temps d'exécution SQL global depuis le début du script (en ms)
+     * Temps d'exÃ©cution SQL global depuis le dÃ©but du script (en ms)
      *
      * @var int
      */
     private $exectime_queries;
 
     /**
-     * Timer d'exécution
+     * Timer d'exÃ©cution
      *
      * @var timer
      */
@@ -135,7 +125,7 @@ class db
     private $db_timer;
 
     /**
-     * Log des requêtes exécutées par l'instance
+     * Log des requÃªtes exÃ©cutÃ©es par l'instance
      *
      * @var array
      */
@@ -143,7 +133,7 @@ class db
     private  $arrLog;
 
     /**
-     * Activation du log de requête ou non
+     * Activation du log de requÃªte ou non
      *
      * @var boolean
      */
@@ -152,23 +142,25 @@ class db
 
 
     /**
-     * Singleton de connexion à la base de donnée
+     * Singleton de connexion Ã  la base de donnÃ©e
+     *
+     * @var db
      */
     private static $_objDb = null;
 
 
     /**
-     * Constructeur de la classe. Connexion à une base de données, sélection de la base.
+     * Constructeur de la classe. Connexion Ã  une base de donnÃ©es, sÃ©lection de la base.
      *
      * @param string $server adresse du serveur mysql
-     * @param string $user nom utilisateur pour la connexion à mysql
-     * @param string $password mot de passe utilisateur pour la connexion à mysql
-     * @param string $database base à sélectionner
-     * @param boolean $persistency true si connexion persistente, false sinon. Par défaut : false
-     * @return mixed false si problème de connexion, id de connexion sinon
+     * @param string $user nom utilisateur pour la connexion Ã  mysql
+     * @param string $password mot de passe utilisateur pour la connexion Ã  mysql
+     * @param string $database base Ã  sÃ©lectionner
+     * @param boolean $persistency true si connexion persistente, false sinon. Par dÃ©faut : false
+     * @return mixed false si problÃ¨me de connexion, id de connexion sinon
      */
 
-    public function __construct($server, $user, $password = '', $database = '', $persistency = false, $log = false)
+    public function __construct($server, $user, $password = '', $database = '', $persistency = false, $log = false, $timeout = 1)
     {
         $this->persistency = $persistency;
         $this->user = $user;
@@ -191,7 +183,10 @@ class db
         if ($this->persistency) $this->server = 'p:'.$this->server;
 
         $this->timer_start();
-        $this->mysqli = @new \mysqli($this->server, $this->user, $this->password, $this->database, $this->port);
+        $this->mysqli = mysqli_init();
+        $this->mysqli->options(MYSQLI_OPT_CONNECT_TIMEOUT, $timeout);
+        @$this->mysqli->real_connect($this->server, $this->user, $this->password, $this->database, $this->port);
+
         $this->timer_stop();
 
         if ($this->mysqli->connect_errno) {
@@ -199,15 +194,15 @@ class db
             $this->mysqli = null;
         }
         else {
-            $this->mysqli->set_charset('latin1');
+            $this->mysqli->set_charset('utf8');
         }
     }
 
 
     /**
-     * Retourne le connecteur vers la base de données
+     * Retourne le connecteur vers la base de donnÃ©es
      *
-     * @return db instance du connecteur à la base de donnée
+     * @return db instance du connecteur Ã  la base de donnÃ©e
      */
 
     public static function get() {
@@ -220,9 +215,9 @@ class db
     }
 
     /**
-     * Indique si une connexion en cours à la base de données
+     * Indique si une connexion en cours Ã  la base de donnÃ©es
      *
-     * @return boolean true s'il existe une connexion à la base de donnée
+     * @return boolean true s'il existe une connexion Ã  la base de donnÃ©e
      */
 
     public static function connected() {
@@ -233,8 +228,8 @@ class db
     /**
      * Choix d'une base
      *
-     * @param string $database nom de la base de données
-     * @return boolean true si sélection ok
+     * @param string $database nom de la base de donnÃ©es
+     * @return boolean true si sÃ©lection ok
      */
 
     public function selectdb($database)
@@ -247,7 +242,7 @@ class db
     }
 
     /**
-     * Détermine si la connexion est active
+     * DÃ©termine si la connexion est active
      *
      * @return boolean true si la connexion est active, false sinon
      */
@@ -258,9 +253,9 @@ class db
     }
 
     /**
-     * Ferme la connexion à la base de données
+     * Ferme la connexion Ã  la base de donnÃ©es
      *
-     * @return boolean true si la connexion a été fermée
+     * @return boolean true si la connexion a Ã©tÃ© fermÃ©e
      */
 
     public function close()
@@ -278,10 +273,10 @@ class db
     }
 
     /**
-     * Exécute une requête SQL
+     * ExÃ©cute une requÃªte SQL
      *
-     * @param string $query requête SQL à exécuter
-     * @return mixed un pointeur sur le recordset (resource) ou false si la requête n'a pas pu être exécutée
+     * @param string $query requÃªte SQL Ã  exÃ©cuter
+     * @return mixed un pointeur sur le recordset (resource) ou false si la requÃªte n'a pas pu Ãªtre exÃ©cutÃ©e
      */
 
     public function query($query = '')
@@ -289,22 +284,6 @@ class db
         if (empty($query)) return false;
 
         if (!$this->isconnected()) return false;
-
-        /*
-        if($query != '')
-        {
-            $this->num_queries++;
-
-            $this->timer_start();
-
-            $this->query_result = $this->mysqli->query($query);
-
-            $stop = $this->timer_stop();
-            if ($this->log) $this->arrLog[] = array ('query' => $query, 'time' => $stop);
-
-            if ($this->query_result === false) trigger_error($this->mysqli->error."<br /><b>query:</b> {$query}", E_USER_WARNING);
-
-        }*/
 
         if($query != '')
         {
@@ -314,11 +293,30 @@ class db
 
             $this->query_result = null;
 
-            if ($this->mysqli->real_query($query)) {
+
+            $res = false;
+
+            if ($res = $this->mysqli->real_query($query)) {
                 $this->query_result = $this->mysqli->store_result();
                 if ($this->log) $this->arrLog[] = array ('query' => $query, 'time' => $stop);
             }
-            else trigger_error($this->mysqli->error."<br /><b>query:</b> {$query}", E_USER_WARNING);
+            else {
+                // Deadlock found when trying to get lock; try restarting transaction  ?
+                // On lance la requÃªte 1 nouvelle fois
+                // On applique Ã©galement le principe en cas de table manquante (parfois juste en phase de regÃ©nÃ©ration)
+                if (in_array($this->mysqli->errno, array(1213, 1146))) {
+                    $count = 0;
+                    while (in_array($this->mysqli->errno, array(1213, 1146)) && $count++ < 5) {
+                        sleep(3);
+                        if (($res = $this->mysqli->real_query($query))) {
+                            $this->query_result = $this->mysqli->store_result();
+                            if ($this->log) $this->arrLog[] = array ('query' => $query, 'time' => $stop);
+                        }
+                    }
+                }
+
+                if (!$res) trigger_error($this->mysqli->error.' ('.$this->mysqli->errno.") <br /><b>query:</b> {$query}", E_USER_WARNING);
+            }
 
             $stop = $this->timer_stop();
 
@@ -329,10 +327,10 @@ class db
 
 
     /**
-     * Exécute plusieurs requêtes SQL
+     * ExÃ©cute plusieurs requÃªtes SQL
      *
-     * @param string $queries requêtes
-     * @return mixed un pointeur sur le recordset (resource) ou false si la requête n'a pas pu être exécutée
+     * @param string $queries requÃªtes
+     * @return mixed un pointeur sur le recordset (resource) ou false si la requÃªte n'a pas pu Ãªtre exÃ©cutÃ©e
      */
 
     public function multiplequeries($query = '')
@@ -369,9 +367,9 @@ class db
 
 
     /**
-     * Renvoie le nombre d'enregistrement de la dernière requête ou du recordset passé en paramètre
+     * Renvoie le nombre d'enregistrement de la derniÃ¨re requÃªte ou du recordset passÃ© en paramÃ¨tre
      *
-     * @param resource $query_id recordset (optionnel), sinon prend le recordset de la dernière requête exécutée
+     * @param resource $query_id recordset (optionnel), sinon prend le recordset de la derniÃ¨re requÃªte exÃ©cutÃ©e
      * @return mixed nombre de lignes dans le recordset ou false si le recordset n'est pas valide
      */
 
@@ -387,9 +385,9 @@ class db
     }
 
     /**
-     * Renvoie le nombre de lignes affectées par la dernière requête
+     * Renvoie le nombre de lignes affectÃ©es par la derniÃ¨re requÃªte
      *
-     * @return mixed nombre de lignes affectées par la dernière requête
+     * @return mixed nombre de lignes affectÃ©es par la derniÃ¨re requÃªte
      */
 
     public function affectedrows()
@@ -400,9 +398,9 @@ class db
     }
 
     /**
-     * Renvoie l'enregistrement courant de la dernière requête ou du recordset passé en paramètre
+     * Renvoie l'enregistrement courant de la derniÃ¨re requÃªte ou du recordset passÃ© en paramÃ¨tre
      *
-     * @param resource $query_id recordset (optionnel), sinon prend le recordset de la dernière requête exécutée
+     * @param resource $query_id recordset (optionnel), sinon prend le recordset de la derniÃ¨re requÃªte exÃ©cutÃ©e
      * @return mixed l'enregistrement courant (sous forme d'un tableau associatif) ou false si le recordset n'est pas valide
      */
 
@@ -418,9 +416,9 @@ class db
     }
 
     /**
-     * Retourne le dernier id inséré
+     * Retourne le dernier id insÃ©rÃ©
      *
-     * @return mixed dernier id inséré ou false si la connexion n'est pas valide
+     * @return mixed dernier id insÃ©rÃ© ou false si la connexion n'est pas valide
      */
 
     public function insertid()
@@ -431,9 +429,9 @@ class db
     }
 
     /**
-     * Renvoie la liste des tables de la base de données sélectionnée
+     * Renvoie la liste des tables de la base de donnÃ©es sÃ©lectionnÃ©e
      *
-     * @return array tableau indexé contenant les tables de la base de données sélectionnée
+     * @return array tableau indexÃ© contenant les tables de la base de donnÃ©es sÃ©lectionnÃ©e
      */
 
     public function listtables()
@@ -446,9 +444,9 @@ class db
     }
 
     /**
-    * Renvoie la liste des champs d'une table dont le nom est passé en paramètre
+    * Renvoie la liste des champs d'une table dont le nom est passÃ© en paramÃ¨tre
     *
-    * @return array tableau à une dimension contenant le nom des champs de la table
+    * @return array tableau Ã  une dimension contenant le nom des champs de la table
     */
      public function listfields($table)
     {
@@ -461,9 +459,9 @@ class db
     }
 
     /**
-     * Renvoie le nombre de champs de la dernière requête ou du recordset passé en paramètre
+     * Renvoie le nombre de champs de la derniÃ¨re requÃªte ou du recordset passÃ© en paramÃ¨tre
      *
-     * @param resource $query_id recordset (optionnel), sinon prend le recordset de la dernière requête exécutée
+     * @param resource $query_id recordset (optionnel), sinon prend le recordset de la derniÃ¨re requÃªte exÃ©cutÃ©e
      * @return mixed nombre de champs ou false si le recordset n'est pas valide
      */
 
@@ -479,9 +477,9 @@ class db
     }
 
     /**
-     * Renvoie le nom du champs de la dernière requête ou du recordset passé en paramètre selon son indice
+     * Renvoie le nom du champs de la derniÃ¨re requÃªte ou du recordset passÃ© en paramÃ¨tre selon son indice
      *
-     * @param resource $query_id recordset (optionnel), sinon prend le recordset de la dernière requête exécutée
+     * @param resource $query_id recordset (optionnel), sinon prend le recordset de la derniÃ¨re requÃªte exÃ©cutÃ©e
      * @param integer $i indice du champs
      * @return mixed
      */
@@ -500,11 +498,11 @@ class db
     }
 
     /**
-     * Retourne dans un tableau le contenu de la dernière requête ou du recordset passé en paramètre
+     * Retourne dans un tableau le contenu de la derniÃ¨re requÃªte ou du recordset passÃ© en paramÃ¨tre
      *
-     * @param resource $query_id recordset (optionnel), sinon prend le recordset de la dernière requête exécutée
-     * @param boolean $firstcolkey true si la première colonne doit servir d'index pour le tableau (optionnel)
-     * @return mixed un tableau indexé contenant les enregistrements du recordset ou false si le recordset n'est pas valide
+     * @param resource $query_id recordset (optionnel), sinon prend le recordset de la derniÃ¨re requÃªte exÃ©cutÃ©e
+     * @param boolean $firstcolkey true si la premiÃ¨re colonne doit servir d'index pour le tableau (optionnel)
+     * @return mixed un tableau indexÃ© contenant les enregistrements du recordset ou false si le recordset n'est pas valide
      */
 
     public function getarray($query_id = null, $firstcolkey = false)
@@ -539,9 +537,9 @@ class db
     }
 
     /**
-     * Retourne dans une chaine le contenu de la dernière requête ou du recordset passé en paramètre
+     * Retourne dans une chaine le contenu de la derniÃ¨re requÃªte ou du recordset passÃ© en paramÃ¨tre
      *
-     * @param resource $query_id recordset (optionnel), sinon prend le recordset de la dernière requête exécutée
+     * @param resource $query_id recordset (optionnel), sinon prend le recordset de la derniÃ¨re requÃªte exÃ©cutÃ©e
      * @param string $gluebloc ',' jointure des bloc d'enregistrement
      * @param string $gluevalue ',' jointure des valeur dans les enregsitrements
      * @return string une chaine contenant les enregistrements du recordset ou false si le recordset n'est pas valide
@@ -586,11 +584,11 @@ class db
     }
 
     /**
-     * Retourne au format JSON le contenu de la dernière requête ou du recordset passé en paramètre
+     * Retourne au format JSON le contenu de la derniÃ¨re requÃªte ou du recordset passÃ© en paramÃ¨tre
      *
-     * @param resource $query_id recordset (optionnel), sinon prend le recordset de la dernière requête exécutée
-     * @param boolean $utf8 true si le contenu doit être encodé en utf8, false sinon (true par défaut)
-     * @return string une chaîne au format JSON contenant les enregistrements du recordset ou false si le recordset n'est pas valide
+     * @param resource $query_id recordset (optionnel), sinon prend le recordset de la derniÃ¨re requÃªte exÃ©cutÃ©e
+     * @param boolean $utf8 true si le contenu doit Ãªtre encodÃ© en utf8, false sinon (true par dÃ©faut)
+     * @return string une chaÃ®ne au format JSON contenant les enregistrements du recordset ou false si le recordset n'est pas valide
      */
 
     public function getjson($query_id = null, $utf8 = true)
@@ -618,11 +616,11 @@ class db
     }
 
     /**
-     * Déplace le pointeur interne sur un enregistrement de la dernière requête ou du recordset passé en paramètre
+     * DÃ©place le pointeur interne sur un enregistrement de la derniÃ¨re requÃªte ou du recordset passÃ© en paramÃ¨tre
      *
-     * @param resource $query_id recordset (optionnel), sinon prend le recordset de la dernière requête exécutée
+     * @param resource $query_id recordset (optionnel), sinon prend le recordset de la derniÃ¨re requÃªte exÃ©cutÃ©e
      * @param integer $pos position dans le recordset
-     * @return boolean true si le déplacement a été effectué sinon false
+     * @return boolean true si le dÃ©placement a Ã©tÃ© effectuÃ© sinon false
      */
 
     public function dataseek($query_id = null, $pos = 0)
@@ -637,10 +635,10 @@ class db
     }
 
     /**
-     * Protège les caractères spéciaux d'une chaîne de caractère
+     * ProtÃ¨ge les caractÃ¨res spÃ©ciaux d'une chaÃ®ne de caractÃ¨re
      *
-     * @param string $strVar chaîne à échapper
-     * @return chaîne échappée
+     * @param string $strVar chaÃ®ne Ã  Ã©chapper
+     * @return chaÃ®ne Ã©chappÃ©e
      */
     public function escape_string($strVar)
     {
@@ -648,21 +646,21 @@ class db
     }
 
     /**
-     * Protège les caractères spéciaux d'une variable
+     * ProtÃ¨ge les caractÃ¨res spÃ©ciaux d'une variable
      *
-     * @param mixed $var variable à échapper
-     * @return mixed variable échappée ou false si la connexion est fermée
+     * @param mixed $var variable Ã  Ã©chapper
+     * @return mixed variable Ã©chappÃ©e ou false si la connexion est fermÃ©e
      */
 
     public function addslashes($var)
     {
         if (!$this->isconnected()) return false;
 
-        return ploopi\arr::map(array($this, 'escape_string'), $var);
+        return arr::map(array($this, 'escape_string'), $var);
     }
 
     /**
-     * Démarre le timer
+     * DÃ©marre le timer
      *
      * @see timer
      * @see timer::start
@@ -670,14 +668,14 @@ class db
 
     public function timer_start()
     {
-        $this->db_timer = new ploopi\timer();
+        $this->db_timer = new timer();
         $this->db_timer->start();
     }
 
     /**
-     * Met à jour le temps d'exécution global avec le timer en cours
+     * Met Ã  jour le temps d'exÃ©cution global avec le timer en cours
      *
-     * @return int temps écoulé en microsecondes
+     * @return int temps Ã©coulÃ© en microsecondes
      *
      * @see timer
      * @see timer::getexectime

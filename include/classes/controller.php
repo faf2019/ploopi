@@ -62,7 +62,10 @@ abstract class controller
      */
     private static $_intModuleTypeId = 0;
 
-
+    /**
+     * Instance de block (gestion de l'intégration du menu dans Ploopi)
+     * @var ploopi\block
+     */
     private static $_objBlock = null;
 
     /**
@@ -96,7 +99,7 @@ abstract class controller
 
         if(!self::$_booLight)
         {
-            $strModuleHeader = $strModulePath.'/header.php';
+            $strModuleHeader = $strModulePath.'/actions/_header.php';
             $strEntityHeader = $strActionPath.'/'.self::$_strEntity.'/_header.php';
 
             if (is_readable($strModuleHeader)) include_once $strModulePath.'/header.php';
@@ -108,7 +111,7 @@ abstract class controller
 
         if(!self::$_booLight)
         {
-            $strModuleFooter = $strModulePath.'/footer.php';
+            $strModuleFooter = $strModulePath.'/actions/_footer.php';
             $strEntityFooter = $strActionPath.'/'.self::$_strEntity.'/_footer.php';
 
             if (is_readable($strEntityFooter)) include_once $strEntityFooter;
@@ -164,12 +167,20 @@ abstract class controller
         return false;
     }
 
+    /**
+     * Retourne l'instance de block
+     *
+     * @return ploopi\block
+     */
     public static function getBlock() {
         if (is_null(self::$_objBlock)) self::$_objBlock = new ploopi\block();
 
         return self::$_objBlock;
     }
 
+    /**
+     * Met à jour le block de menu
+     */
     public static function setBlock() { }
 
    /**
@@ -189,7 +200,8 @@ abstract class controller
 
     /**
      * Retourne le module ID (notamment pour l'appel via CLI sans Session)
-     * @return integer Id du module RAA
+     *
+     * @return integer Id du module
      */
     public static function getModuleId()
     {
@@ -215,7 +227,8 @@ abstract class controller
 
     /**
      * Retourne l'ID du type de module (notamment pour l'appel via CLI sans Session)
-     * @return integer Id du type du module RAA
+     *
+     * @return integer Id du type du module
      */
     public static function getModuleTypeId()
     {
@@ -239,7 +252,8 @@ abstract class controller
     }
 
     /**
-     * Retourne la valeur d'un paramètre du module (uniquement système)
+     * Retourne la valeur d'un paramètre du module (uniquement système, pour appel CLI essentiellement)
+     *
      * @param string $strParam nom du paramètre à retourner
      * @return string valeur du paramètre
      */

@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -24,7 +24,7 @@
  * Initialisation du rendu backoffice.
  * Initialisation du moteur de template.
  * Initialisation du moteur de skin.
- * Définition des variables templates générales.
+ * DÃ©finition des variables templates gÃ©nÃ©rales.
  * Insertion des blocs.
  * Inclusions JS/CSS.
  * Appel du module.
@@ -33,7 +33,7 @@
  * @subpackage backoffice
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
@@ -71,23 +71,22 @@ $template_body->set_filenames(
  * inclusion des scripts JS
  * */
 
-$template_body->assign_block_vars('ploopi_js',
-    array(
-        'PATH' => './lib/protoaculous/protoaculous.min.js?v='.urlencode(_PLOOPI_VERSION.','._PLOOPI_REVISION)
-    )
-);
+$template_body->assign_block_vars('ploopi_js', array(
+    'PATH' => './vendor/components/jquery/jquery.min.js?v='.urlencode(_PLOOPI_VERSION.','._PLOOPI_REVISION)
+));
 
-$template_body->assign_block_vars('ploopi_js',
-    array(
-        'PATH' => './js/functions.pack.js?v='.urlencode(_PLOOPI_VERSION.','._PLOOPI_REVISION)
-    )
-);
+$template_body->assign_block_vars('ploopi_js', array(
+    'PATH' => './lib/jquery-ui/jquery-ui.min.js?v='.urlencode(_PLOOPI_VERSION.','._PLOOPI_REVISION)
+));
 
-$template_body->assign_block_vars('ploopi_js',
-    array(
+
+$template_body->assign_block_vars('ploopi_js', array(
+    'PATH' => './js/functions.pack.js?v='.urlencode(_PLOOPI_VERSION.','._PLOOPI_REVISION)
+));
+
+$template_body->assign_block_vars('ploopi_js', array(
         'PATH' => './vendor/EastDesire/jscolor/jscolor.min.js?v='.urlencode(_PLOOPI_VERSION.','._PLOOPI_REVISION)
-    )
-);
+));
 
 $ploopi_additional_head = '';
 $ploopi_additional_javascript = '';
@@ -148,7 +147,7 @@ if ($_SESSION['ploopi']['connected'])
 
             if (isset($mod['menu']))
             {
-                if ($idmod == $_SESSION['ploopi']['moduleid']) // Module sélectionné
+                if ($idmod == $_SESSION['ploopi']['moduleid']) // Module sÃ©lectionnÃ©
                 {
                     $template_body->assign_block_vars('switch_user_logged_in.switch_blockmenu.switch_blocksel',array(
                             'ID' => $idmod,
@@ -170,7 +169,7 @@ if ($_SESSION['ploopi']['connected'])
 
                 foreach($mod['menu'] as $menu)
                 {
-                    if ($idmod == $_SESSION['ploopi']['moduleid']) // Module sélectionné
+                    if ($idmod == $_SESSION['ploopi']['moduleid']) // Module sÃ©lectionnÃ©
                     {
                         $template_body->assign_block_vars('switch_user_logged_in.switch_blockmenu.switch_blocksel.menu',array(
                                 'LABEL' => $menu['label'],
@@ -204,7 +203,7 @@ if ($_SESSION['ploopi']['connected'])
             $strControllerFile::dispatch();
         }
         else {
-            // Rétrocompatibilité
+            // RÃ©trocompatibilitÃ©
             if ($_SESSION['ploopi']['action'] == 'admin')
             {
                 if (file_exists("./modules/{$_SESSION['ploopi']['moduletype']}/admin.php")) include_once "./modules/{$_SESSION['ploopi']['moduletype']}/admin.php";
@@ -315,14 +314,14 @@ else
 }
 
 /**
- * Gestion du cas où on demande à l'utilisateur de compléter son profil
+ * Gestion du cas oÃ¹ on demande Ã  l'utilisateur de complÃ©ter son profil
  */
 
 if (!empty($_SESSION['ploopi']['updateprofile']) && ploopi\param::get('system_profile_edit_allowed', _PLOOPI_MODULE_SYSTEM) == '1') {
     $ploopi_additional_javascript .= "
-        Event.observe(window, 'load', function() {
-            ploopi_showpopup('', 750, null, true, 'system_popup_update_profile')
-            ploopi_xmlhttprequest_todiv('admin-light.php', '".ploopi\crypt::queryencode("ploopi_op=system_update_profile")."', 'system_popup_update_profile');
+        jQuery(function() {
+            ploopi.popup.show('', 750, null, true, 'system_popup_update_profile')
+            ploopi.xhr.todiv('admin-light.php', '".ploopi\crypt::queryencode("ploopi_op=system_update_profile")."', 'system_popup_update_profile');
         });
     ";
 
@@ -350,30 +349,6 @@ $template_body->assign_vars(array(
     'PLOOPI_VERSION'                => _PLOOPI_VERSION,
     'PLOOPI_REVISION'               => _PLOOPI_REVISION
 ));
-
-// Message "ok" envoyé par le module
-if(isset($_GET['ploopi_mod_msg']) && defined($_GET['ploopi_mod_msg']))
-{
-    $template_body->assign_block_vars('switch_mod_message',array(
-        'MSG'       => constant($_GET['ploopi_mod_msg']),
-        'MSG4JS'    => addslashes(constant($_GET['ploopi_mod_msg'])),
-        'MSG_ID'    => uniqid('ploopi_mod_mess_'),
-        'MSG_CLASS' => 'ploopi_mod_mess_ok'
-        )
-    );
-}
-
-// Message "erreur" envoyé par le module
-if(isset($_GET['ploopi_mod_error']) && defined($_GET['ploopi_mod_error']))
-{
-    $template_body->assign_block_vars('switch_mod_message',array(
-        'MSG'       => constant($_GET['ploopi_mod_error']),
-        'MSG4JS'    => addslashes(constant($_GET['ploopi_mod_error'])),
-        'MSG_ID'    => uniqid('ploopi_mod_error_'),
-        'MSG_CLASS' => 'ploopi_mod_mess_error'
-        )
-    );
-}
 
 unset($_SESSION['ploopi']['errorcode']);
 

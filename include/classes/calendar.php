@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,18 +25,15 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Gestion de calendrier
+ * Affichage d'un calendrier/agenda
  *
  * @package ploopi
  * @subpackage calendar
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
-/**
- * Classe d'affichage d'un calendrier/agenda
- */
 class calendar
 {
     /**
@@ -72,7 +69,7 @@ class calendar
     protected $arrOptions;
 
     /**
-     * Evénements du calendrier
+     * EvÃ©nements du calendrier
      *
      * @var array
      */
@@ -104,7 +101,7 @@ class calendar
         $this->strDisplayType = $strDisplayType;
 
         $this->arrOptions = array(
-            'strClassName' => 'ploopi_calendar_'.($strDisplayType == 'month' ? 'm' : 'd'), // class de style (css) utilisée
+            'strClassName' => 'ploopi_calendar_'.($strDisplayType == 'month' ? 'm' : 'd'), // class de style (css) utilisÃ©e
 
             'intMonth' => '', // valable pour display_type = 'month'
             'intYear' => '',
@@ -136,12 +133,12 @@ class calendar
     }
 
     /**
-     * Permet de définir les options d'affichage :
+     * Permet de dÃ©finir les options d'affichage :
      *
      * string 'strClassName' class de rendu (defaut: ploopi_calendar_m ou ploopi_calendar_d en fonction du type de planning monthly/daily)
-     * integer 'intMonth' mois à afficher pour l'affichage mensuel
-     * integer 'intYear' année à afficher
-     * string 'strDateBegin' date de début
+     * integer 'intMonth' mois Ã  afficher pour l'affichage mensuel
+     * integer 'intYear' annÃ©e Ã  afficher
+     * string 'strDateBegin' date de dÃ©but
      * string 'strDateEnd' date de fin
      * integer 'intHourBegin' heure min (defaut: 6)
      * integer 'intHourEnd' heure max (defaut: 21)
@@ -152,7 +149,7 @@ class calendar
      * integer 'intHoursColWidth' largeur de la colonne des heures pour l'affichage hebdomadaire (defaut: 25)
      * integer 'intDaysLabelHeight' hauteur de la ligne des jours pour l'affichage hebdomadaire (defaut: 20)
      *
-     * @param array $arrOptions tableau des options à modifier
+     * @param array $arrOptions tableau des options Ã  modifier
      */
 
     public function setOptions($arrOptions)
@@ -206,7 +203,7 @@ class calendar
     }
 
     /**
-     * Affichage du calendrier multi-journées
+     * Affichage du calendrier multi-journÃ©es
      *
      */
 
@@ -214,13 +211,13 @@ class calendar
     {
         global $ploopi_days;
 
-        // Préparation des événéments
+        // PrÃ©paration des Ã©vÃ©nÃ©ments
         $arrEvents = $this->_prepare_events();
 
         // 1er jour de l'intervalle (timestp unix)
         $firstday = date::timestamp2unixtimestamp(sprintf("%0-14s", $this->arrOptions['strDateBegin']));
 
-        // jour/mois/année du 1er jour
+        // jour/mois/annÃ©e du 1er jour
         $firstday_d = date('j', $firstday);
         $firstday_m = date('n', $firstday);
         $firstday_y = date('Y', $firstday);
@@ -243,25 +240,25 @@ class calendar
         // Nombre d'heures par jour
         $intNbHours = $this->arrOptions['intHourEnd'] - $this->arrOptions['intHourBegin'];
 
-        // Hauteur entre chaque séparateur d'heure
+        // Hauteur entre chaque sÃ©parateur d'heure
         $intHourHeight = floor(($this->intHeight - ($this->arrOptions['intDaysLabelHeight'] * $this->arrOptions['booDisplayDaysLabel']) - ($this->arrOptions['intChannelsLabelHeight'] * $this->arrOptions['booDisplayChannelsLabel'])) / $intNbHours);
 
-        // Largeur d'une journée (incluant les bordures des canaux)
+        // Largeur d'une journÃ©e (incluant les bordures des canaux)
         $intDayWidth = ($intChannelWidth * $intNbChan) + ($intNbChan - 1);
 
-        // Largeur du séparateur d'heure
+        // Largeur du sÃ©parateur d'heure
         $intHourWidth = $intDayWidth;
 
-        // Hauteur d'une journée
+        // Hauteur d'une journÃ©e
         $intDayHeight = $intHourHeight * $intNbHours;
 
-        // Style du bloc "journée"
+        // Style du bloc "journÃ©e"
         $strDayStyle = "width:".$intDayWidth."px;height:".($intDayHeight - 1)."px;";
 
-        // Style du bloc "heures" (entête des heures)
+        // Style du bloc "heures" (entÃªte des heures)
         $strHoursStyle = "width:".($this->arrOptions['intHoursColWidth'] - 1)."px;height:".($intDayHeight - 1)."px;";
 
-        // Style des entêtes (heures, jours)
+        // Style des entÃªtes (heures, jours)
         $strDayHeaderStyle = "width:".$intDayWidth."px;height:".($this->arrOptions['intDaysLabelHeight'] - 1)."px;";
         $strHourHeaderStyle = "height:".$intHourHeight."px;";
         $strChannelHeaderStyle = "width:".$intDayWidth."px;height:".($this->arrOptions['intChannelsLabelHeight'] - 1)."px;";
@@ -270,13 +267,13 @@ class calendar
         $intCalendarWidth = $intNbDays * $intDayWidth + ($this->arrOptions['intHoursColWidth'] * $this->arrOptions['booDisplayHours']) + $intNbDays;
         $intCalendarHeight = $intDayHeight + ($this->arrOptions['intDaysLabelHeight'] * $this->arrOptions['booDisplayDaysLabel']) + ($this->arrOptions['intChannelsLabelHeight'] * $this->arrOptions['booDisplayChannelsLabel']);
 
-        // Chaîne contenant le code javascript à éxécuter (draggables/droppables/fonctions)
+        // ChaÃ®ne contenant le code javascript Ã  Ã©xÃ©cuter (draggables/droppables/fonctions)
         $strJsCode = '';
         ?>
         <div class="days_inner" style=width:<?php echo $intCalendarWidth; ?>px;height:<?php echo $intCalendarHeight; ?>px;">
 
             <?php
-            // Affichage des libellés de jours si demandé
+            // Affichage des libellÃ©s de jours si demandÃ©
             if ($this->arrOptions['booDisplayDaysLabel'])
             {
                 ?>
@@ -290,10 +287,10 @@ class calendar
                         <?php
                     }
 
-                    // On boucle sur les jours à afficher (1 = premier jour de l'intervalle)
+                    // On boucle sur les jours Ã  afficher (1 = premier jour de l'intervalle)
                     for ($d = 1; $d <= $intNbDays; $d++)
                     {
-                        // Détermination de la date du jour à afficher
+                        // DÃ©termination de la date du jour Ã  afficher
                         $dateday = mktime(0, 0, 0, $firstday_m, $firstday_d + $d - 1, $firstday_y);
 
                         // Date locale
@@ -317,7 +314,7 @@ class calendar
                 </div>
                 <?php
             }
-            // Affichage des libellés de canaux si demandé
+            // Affichage des libellÃ©s de canaux si demandÃ©
             if ($this->arrOptions['booDisplayChannelsLabel'])
             {
             ?>
@@ -331,7 +328,7 @@ class calendar
                         <?php
                     }
 
-                    // On boucle sur les jours à afficher (1 = premier jour de l'intervalle)
+                    // On boucle sur les jours Ã  afficher (1 = premier jour de l'intervalle)
                     for ($d = 1; $d <= $intNbDays; $d++)
                     {
                         ?>
@@ -379,7 +376,7 @@ class calendar
                             <div class="hour_header_num"><?php echo sprintf("%02d", $h); ?></div>
                         </div>
                         <?php
-                        // Affichage du séparateur d'heures
+                        // Affichage du sÃ©parateur d'heures
                         if ($h > $this->arrOptions['intHourBegin'])
                         {
                             ?>
@@ -396,12 +393,12 @@ class calendar
 
             <div id="calendar_days" style="overflow:hidden;">
                 <?php
-                // Affichage des journées
+                // Affichage des journÃ©es
 
-                // On boucle sur les jours à afficher (1 = premier jour de l'intervalle)
+                // On boucle sur les jours Ã  afficher (1 = premier jour de l'intervalle)
                 for ($d = 1; $d <= $intNbDays; $d++)
                 {
-                    // Détermination de la date du jour à afficher
+                    // DÃ©termination de la date du jour Ã  afficher
                     $dateday = mktime(0, 0, 0, $firstday_m, $firstday_d + $d - 1, $firstday_y);
 
                     $extra_class = '';
@@ -433,7 +430,7 @@ class calendar
                             <?php
                         }
 
-                        // Clé de date pour lire dans le tableau des événements
+                        // ClÃ© de date pour lire dans le tableau des Ã©vÃ©nements
                         $strEventsKey = sprintf("%04d%02d%02d",date('Y', $dateday), date('n', $dateday), date('j', $dateday));
                         $strJsCode .= "calendar_days[$d] = '{$strEventsKey}';";
 
@@ -455,7 +452,7 @@ class calendar
                                     ?><div class="channelborder" style="height:<?php echo $intDayHeight - 1; ?>px;"></div><?php
                                 }
 
-                                // Affichage des événements
+                                // Affichage des Ã©vÃ©nements
                                 if (!empty($arrEvents[$strEventsKey][$strChannelId]))
                                 {
                                     foreach($arrEvents[$strEventsKey][$strChannelId] as $intId)
@@ -465,25 +462,25 @@ class calendar
                                             $arrDateBegin = date::timestamp2local($this->arrEvents[$intId]->intTimestpBegin);
                                             $arrDateEnd = date::timestamp2local($this->arrEvents[$intId]->intTimestpEnd);
 
-                                            // Détermination heure de début (ajustement de l'heure de début en fonction de la date de l'événement)
+                                            // DÃ©termination heure de dÃ©but (ajustement de l'heure de dÃ©but en fonction de la date de l'Ã©vÃ©nement)
                                             $intTsDateBegin = date::timestamp2unixtimestamp($this->arrEvents[$intId]->intTimestpBegin);
                                             $floTimeBegin = (substr($this->arrEvents[$intId]->intTimestpBegin, 0 ,8) == $strEventsKey) ? date('G', $intTsDateBegin) + (intval(date('i', $intTsDateBegin), 10) / 60) : 0 ;
 
-                                            // Détermination heure de fin (ajustement de l'heure de fin en fonction de la date de l'événement)
+                                            // DÃ©termination heure de fin (ajustement de l'heure de fin en fonction de la date de l'Ã©vÃ©nement)
                                             $intTsDateEnd = date::timestamp2unixtimestamp($this->arrEvents[$intId]->intTimestpEnd);
                                             $floTimeEnd = (substr($this->arrEvents[$intId]->intTimestpEnd, 0 ,8) == $strEventsKey) ? date('G', $intTsDateEnd) + (intval(date('i', $intTsDateEnd), 10) / 60) : 24;
 
-                                            // On adapte ensuite les heures de début/fin aux limites d'affichage du planning
+                                            // On adapte ensuite les heures de dÃ©but/fin aux limites d'affichage du planning
                                             if ($floTimeBegin < $this->arrOptions['intHourBegin']) $floTimeBegin = $this->arrOptions['intHourBegin'];
                                             if ($floTimeEnd > $this->arrOptions['intHourEnd']) $floTimeEnd = $this->arrOptions['intHourEnd'];
 
-                                            // Durée de l'événement en heures
+                                            // DurÃ©e de l'Ã©vÃ©nement en heures
                                             $floTimeLength = $floTimeEnd - $floTimeBegin;
 
-                                            // Début de l'événement en pix
+                                            // DÃ©but de l'Ã©vÃ©nement en pix
                                             $intEventTop = floor(($floTimeBegin - $this->arrOptions['intHourBegin']) * $intHourHeight);
 
-                                            // Hauteur de l'événement en pix
+                                            // Hauteur de l'Ã©vÃ©nement en pix
                                             $intEventHeight = floor($floTimeLength * $intHourHeight);
 
                                             ?>
@@ -520,10 +517,10 @@ class calendar
                                                 </a>
                                             </div>
                                             <?php
-                                            // Paramètres ondrop de l'événement
+                                            // ParamÃ¨tres ondrop de l'Ã©vÃ©nement
                                             if (!is_null($this->arrEvents[$intId]->arrOnDrop))
                                             {
-                                                // Création du draggable (événement)
+                                                // CrÃ©ation du draggable (Ã©vÃ©nement)
                                                 $strJsCode .= "new Draggable('calendar_event{$intId}', { handle: 'calendar_event{$intId}_handle', snap: calendar_drag_snap, onEnd: calendar_drag_onend });";
                                                 $strJsCode .= "calendar_events[{$intId}] = ['{$intNumChan}', '{$this->arrEvents[$intId]->arrOnDrop['url']}','{$this->arrEvents[$intId]->arrOnDrop['element_id']}'];";
                                             }
@@ -541,7 +538,7 @@ class calendar
                         ?>
                     </div>
                     <?php
-                    // Création du droppable (jour)
+                    // CrÃ©ation du droppable (jour)
                     $strJsCode .= "Droppables.add('calendar_day{$d}', { accept: 'event', onHover: calendar_drop_onhover });";
                 }
                 ?>
@@ -565,31 +562,31 @@ class calendar
 
                 // jour
                 day = droppable.id.substring(12,13);
-                // id de l'événement
+                // id de l'Ã©vÃ©nement
                 event = draggable.id.substring(14,15);
 
-                // On détache l'événement du jour d'origine
+                // On dÃ©tache l'Ã©vÃ©nement du jour d'origine
                 draggable.parentNode.removeChild(draggable);
-                // On force l'alignement à gauche
+                // On force l'alignement Ã  gauche
                 draggable.style.left = calendar_channels[calendar_events[event][0]]+'px';
 
-                // On calcule la demi-heure la plus proche en fonction des coordonnées
+                // On calcule la demi-heure la plus proche en fonction des coordonnÃ©es
 
                 var top = parseInt(draggable.style.top);
                 var hour = Math.round((calendar_h_begin + top / calendar_h_height)*2)/2;
 
                 // On calcule la nouvelle position en fonction de la demi-heure la plus proche
                 draggable.style.top = (hour - calendar_h_begin)*calendar_h_height + 'px';
-                // On attache l'événement au nouveau jour
+                // On attache l'Ã©vÃ©nement au nouveau jour
                 droppable.appendChild(draggable);
 
-                // Enregistrement de la nouvelle position de l'événement, retour vers l'application métier
-                ploopi_xmlhttprequest_todiv(calendar_events[event][1], 'calendar_event_date='+calendar_days[day]+'&calendar_event_hour='+hour, calendar_events[event][2]);
+                // Enregistrement de la nouvelle position de l'Ã©vÃ©nement, retour vers l'application mÃ©tier
+                ploopi.xhr.todiv(calendar_events[event][1], 'calendar_event_date='+calendar_days[day]+'&calendar_event_hour='+hour, calendar_events[event][2]);
             }
 
             function calendar_drag_snap(x, y, draggable) {
                 day = draggable.element.parentNode;
-                days = $('calendar_days');
+                days = jQuery('#calendar_days')[0];
 
                 // test haut
                 if (y < 0) y = 0;
@@ -627,7 +624,7 @@ class calendar
     {
         global $ploopi_days;
 
-        // Préparation des événéments
+        // PrÃ©paration des Ã©vÃ©nÃ©ments
         $arrEvents = $this->_prepare_events();
 
         // 1er jour du mois (timestp unix)
@@ -636,16 +633,16 @@ class calendar
         // dernier jour du mois (timestp unix)
         $lastday = mktime(0, 0, 0, $this->arrOptions['intMonth']+1, 0, $this->arrOptions['intYear']);
 
-        // Jour de la semaine où tombe le 1er jour du mois : 1 - 7
+        // Jour de la semaine oÃ¹ tombe le 1er jour du mois : 1 - 7
         $weekday = $firstweekday = date('N', $firstday);
 
-        // Jour de la semaine où tombe le dernier jour du mois : 1 - 7
+        // Jour de la semaine oÃ¹ tombe le dernier jour du mois : 1 - 7
         $lastweekday = date('N', $lastday);
 
         // Nombre de jours dans le mois : 0 - 31
         $intNbDays = date('t', $firstday);
 
-        // Nombre de semaines dans le mois (entamées)
+        // Nombre de semaines dans le mois (entamÃ©es)
         $intNbWeeks = floor($intNbDays / 7) + ($intNbDays % 7 > 0) + ($firstweekday > $lastweekday);
 
         // Style (hauteur/largeur) du jour
@@ -653,7 +650,7 @@ class calendar
         $intDayHeight = floor(($this->intHeight - ($this->arrOptions['intDaysLabelHeight'] * $this->arrOptions['booDisplayDaysLabel'])) / $intNbWeeks);
         $strDayStyle = "width:".($intDayWidth - 1)."px;height:".($intDayHeight - 1)."px;";
 
-        // Style des entêtes (semaines, jours)
+        // Style des entÃªtes (semaines, jours)
         $strDayHeaderStyle = "width:".($intDayWidth - 1)."px;height:".($this->arrOptions['intDaysLabelHeight'] - 1)."px;";
         $strWeekHeaderStyle = "width:".($this->arrOptions['intNumWeeksColWidth'] - 1)."px;height:".($intDayHeight - 1)."px;";
 
@@ -663,7 +660,7 @@ class calendar
         ?>
         <div class="month_inner" style=width:<?php echo $intCalendarWidth; ?>px;height:<?php echo $intCalendarHeight; ?>px;">
             <?php
-            // Affichage des libellés de jours si demandé
+            // Affichage des libellÃ©s de jours si demandÃ©
             if ($this->arrOptions['booDisplayDaysLabel'])
             {
                 ?>
@@ -690,10 +687,10 @@ class calendar
                 <?php
             }
 
-            // Boucle n°1 : Si le 1er jour du mois n'est pas un lundi, on affiche la fin du mois précédent
+            // Boucle nÂ°1 : Si le 1er jour du mois n'est pas un lundi, on affiche la fin du mois prÃ©cÃ©dent
             if ($weekday > 1)
             {
-                // Numéro de la semaine
+                // NumÃ©ro de la semaine
                 $w = date('W', $firstday);
                 ?>
                 <div class="row">
@@ -735,16 +732,16 @@ class calendar
                 }
             }
 
-            // Boucle n°2 : tous les jours du mois
+            // Boucle nÂ°2 : tous les jours du mois
             for ($d = 1; $d <= date('t', $firstday) ; $d++)
             {
-                // Arrivé en fin de semaine, on se repositionne au début
+                // ArrivÃ© en fin de semaine, on se repositionne au dÃ©but
                 if ($weekday == 8) $weekday = 1;
 
-                // Chaque début de semaine = une nouvelle ligne
+                // Chaque dÃ©but de semaine = une nouvelle ligne
                 if ($weekday == 1)
                 {
-                    // Numéro de la semaine
+                    // NumÃ©ro de la semaine
                     $w = date('W', mktime(0, 0, 0, $this->arrOptions['intMonth'], $d,  $this->arrOptions['intYear']));
                     ?>
                     <div class="row">
@@ -784,7 +781,7 @@ class calendar
                 $weekday++;
             }
 
-            // Boucle n°3 : Si le mois ne se termine pas un dimanche, on affiche le début du mois suivant
+            // Boucle nÂ°3 : Si le mois ne se termine pas un dimanche, on affiche le dÃ©but du mois suivant
             if ($weekday <= 7)
             {
                 for ($c = $weekday; $c <= 7 ; $c++)
@@ -822,9 +819,9 @@ class calendar
     }
 
     /**
-     * Affiche un événement dans le planning mensuel
+     * Affiche un Ã©vÃ©nement dans le planning mensuel
      *
-     * @param int $arrIdEvents id de l'événement
+     * @param int $arrIdEvents id de l'Ã©vÃ©nement
      */
 
     protected function _display_month_events($arrIdEvents)
@@ -856,23 +853,23 @@ class calendar
     }
 
     /**
-     * Prépare les événement en les répartissant par jour dans un tableau associatif
+     * PrÃ©pare les Ã©vÃ©nement en les rÃ©partissant par jour dans un tableau associatif
      *
-     * @return array événéments (id) par jour  (clé : AAAAMMJJ)
+     * @return array Ã©vÃ©nÃ©ments (id) par jour  (clÃ© : AAAAMMJJ)
      */
 
     protected function _prepare_events()
     {
         $arrEvents = array();
 
-        // Préparation des événements à afficher (on va les ranger jour par jour)
+        // PrÃ©paration des Ã©vÃ©nements Ã  afficher (on va les ranger jour par jour)
         foreach($this->arrEvents as $key => $objEvent)
         {
-            // Vérification de l'intégrité
+            // VÃ©rification de l'intÃ©gritÃ©
             if ($objEvent->intTimestpBegin <= $objEvent->intTimestpEnd)
             {
                 $currentday = substr($objEvent->intTimestpBegin, 0, 8).'000000';
-                // Si l'événement tient sur plusieurs jours on l'affecte pour chaque jour
+                // Si l'Ã©vÃ©nement tient sur plusieurs jours on l'affecte pour chaque jour
                 do {
                     $arrEvents[substr($currentday, 0, 8)][$objEvent->strChannelId][] = $key;
                     $currentday = date::timestamp_add($currentday, 0, 0, 0, 0, 1, 0);
@@ -886,23 +883,23 @@ class calendar
 
 
     /**
-     * Prépare les événement en les répartissant par jour dans un tableau associatif
+     * PrÃ©pare les Ã©vÃ©nement en les rÃ©partissant par jour dans un tableau associatif
      *
-     * @return array événéments (id) par jour  (clé : AAAAMMJJ)
+     * @return array Ã©vÃ©nÃ©ments (id) par jour  (clÃ© : AAAAMMJJ)
      */
 
     protected function _prepare_events_OLD()
     {
         $arrEvents = array();
 
-        // Préparation des événements à afficher (on va les ranger jour par jour)
+        // PrÃ©paration des Ã©vÃ©nements Ã  afficher (on va les ranger jour par jour)
         foreach($this->arrEvents as $key => $objEvent)
         {
-            // Vérification de l'intégrité
+            // VÃ©rification de l'intÃ©gritÃ©
             if ($objEvent->intTimestpBegin <= $objEvent->intTimestpEnd)
             {
                 $currentday = substr($objEvent->intTimestpBegin, 0, 8).'000000';
-                // Si l'événement tient sur plusieurs jours on l'affecte pour chaque jour
+                // Si l'Ã©vÃ©nement tient sur plusieurs jours on l'affecte pour chaque jour
                 do {
                     $arrEvents[substr($currentday, 0, 8)][] = $key;
                     $currentday = date::timestamp_add($currentday, 0, 0, 0, 0, 1, 0);

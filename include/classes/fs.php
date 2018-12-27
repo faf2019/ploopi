@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,26 +25,27 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Fonction d'accès à l'espace physique de stockage.
- * Création de dossier, copie de fichiers, téléchargement de fichiers...
+ * Gestion d'accÃ¨s Ã  l'espace physique de stockage.
+ * CrÃ©ation de dossier, copie de fichiers, tÃ©lÃ©chargement de fichiers...
  *
  * @package ploopi
  * @subpackage filesystem
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 abstract class fs
 {
     /**
-     * Copie récursive du contenu d'un dossier source vers un dossier destination
+     * Copie rÃ©cursive du contenu d'un dossier source vers un dossier destination
      *
      * @param string $src dossier source
      * @param string $dest dossier destination
-     * @param string $folder_mode mode attribué aux dossiers
-     * @param string $file_mode mode attribué aux fichiers
-     * @return boolean true si pas de problème de copie
+     * @param string $folder_mode mode attribuÃ© aux dossiers
+     * @param string $file_mode mode attribuÃ© aux fichiers
+     *
+     * @return boolean true si pas de problÃ¨me de copie
      */
 
     public static function copydir($src , $dest, $folder_mode = 0750, $file_mode = 0640)
@@ -75,7 +76,7 @@ abstract class fs
                     {
                         copy($src_file, $dest_file);
 
-                        // changement des droits uniquement le processus courant est propriétaire du fichier
+                        // changement des droits uniquement le processus courant est propriÃ©taire du fichier
                         if (_PLOOPI_SERVER_OSTYPE == 'unix' && fileowner($dest_file) == $processid) chmod($dest_file, $file_mode);
                     }
                     else $ok = false;
@@ -86,9 +87,9 @@ abstract class fs
     }
 
     /**
-     * Suppression récursive du contenu d'un dossier source vers un dossier destination
+     * Suppression rÃ©cursive du contenu d'un dossier source vers un dossier destination
      *
-     * @param string dossier à supprimer
+     * @param string dossier Ã  supprimer
      */
 
     public static function deletedir($strPath)
@@ -113,9 +114,9 @@ abstract class fs
     }
 
     /**
-     * Création récursive d'un dossier
+     * CrÃ©ation rÃ©cursive d'un dossier
      *
-     * @param string chemin à créer
+     * @param string chemin Ã  crÃ©er
      */
 
     public static function makedir($strPath, $octMode = 0750)
@@ -145,8 +146,6 @@ abstract class fs
      *
      * @param string $filename chemin du fichier
      * @return string type mime
-     *
-     * @see ploopi_downloadfile
      */
 
     public static function getmimetype($filename)
@@ -155,7 +154,7 @@ abstract class fs
 
         $db = db::get();
 
-        // Si mimetype = '' ou pas trouvé c'est que c'est un octetstream donc on passe
+        // Si mimetype = '' ou pas trouvÃ© c'est que c'est un octetstream donc on passe
         $sqlMime = $db->query("SELECT mimetype FROM ploopi_mimetype WHERE ext = '".$db->addslashes($ext)."' AND mimetype != ''");
         if($db->numrows($sqlMime))
         {
@@ -179,17 +178,15 @@ abstract class fs
     }
 
     /**
-     * Téléchargement d'un fichier vers le navigateur. Complète automatiquement les entêtes en renseignant notamment le type mime.
+     * TÃ©lÃ©chargement d'un fichier vers le navigateur. ComplÃ¨te automatiquement les entÃªtes en renseignant notamment le type mime.
      *
      * @param string $filepath chemin physique du fichier
-     * @param string $destfilename nom du fichier tel qu'il apparaîtra au moment du téléchargement
-     * @param boolean $deletefile true si le fichier doit être supprimé après téléchargement
-     * @param boolean $attachment true si le fichier doit être envoyé en "attachment", false si il doit être envoyé "inline"
-     * @param boolean $die true si la fonction doit arrêter le script
-     * @return boolean false si le fichier n'existe pas, rien sinon
+     * @param string $destfilename nom du fichier tel qu'il apparaÃ®tra au moment du tÃ©lÃ©chargement
+     * @param boolean $deletefile true si le fichier doit Ãªtre supprimÃ© aprÃ¨s tÃ©lÃ©chargement
+     * @param boolean $attachment true si le fichier doit Ãªtre envoyÃ© en "attachment", false si il doit Ãªtre envoyÃ© "inline"
+     * @param boolean $die true si la fonction doit arrÃªter le script
      *
-     * @see ploopi_getmimetype
-     * @see ploopi_file_getextension
+     * @return boolean false si le fichier n'existe pas, rien sinon
      */
 
     public static function downloadfile($filepath, $destfilename, $deletefile = false, $attachment = true, $die = true)
@@ -207,7 +204,7 @@ abstract class fs
 
             $chunksize = 1*(1024*1024);
 
-            header('Content-Type: ' . fs::getmimetype($destfilename));
+            header('Content-Type: '.fs::getmimetype($destfilename));
             header('Content-Length: '.$size);
 
             if (fs::file_getextension($destfilename) == 'svgz') header('Content-Encoding: gzip');
@@ -264,9 +261,11 @@ abstract class fs
     /**
      * Renvoie un identifiant unique pour l'explorateur
      *
-     * @return string identifiant du bloc
+     * @param string $strBasePath chemin physique vers le dossier
+     * @param string $strDestField id du champ rÃ©cupÃ©rant le fichier
+     * @param string $strFilExplorerId identifiant du bloc (optionnel)
      *
-     * @see md5
+     * @return string identifiant du bloc
      */
 
     public static function filexplorer_init($strBasePath, $strDestField, $strFilExplorerId = '')

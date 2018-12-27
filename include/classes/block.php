@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,28 +25,29 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Gestion du template backoffice
+ * Gestion des blocs de menus
  *
  * @package ploopi
  * @subpackage template
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
- */
-
-/**
- * Classe de gestion des blocs de menus
- *
- * @package ploopi
- * @subpackage template
- * @copyright Ovensia
- * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 class block
 {
+    /**
+     * Tableau des menus
+     *
+     * @var array
+     */
     private $menu;
+
+    /**
+     * Contenu additionnel (HTML)
+     *
+     * @var string
+     */
     private $content;
 
     /**
@@ -61,12 +62,12 @@ class block
     }
 
     /**
-     * Ajoute un menu à un block
+     * Ajoute un menu Ã  un block
      *
-     * @param string $label intitulé du menu
+     * @param string $label intitulÃ© du menu
      * @param string $url adresse du lien vers le menu
-     * @param boolean $selected true si le menu est sélectionné (optionnel, false par défaut)
-     * @param string $target cible du lien (optionnel, par défaut vide)
+     * @param boolean $selected true si le menu est sÃ©lectionnÃ© (optionnel, false par dÃ©faut)
+     * @param string $target cible du lien (optionnel, par dÃ©faut vide)
      */
 
     public function addmenu($label, $url, $selected = false, $target = '')
@@ -81,9 +82,9 @@ class block
     }
 
     /**
-     * Ajoute du contenu à un block
+     * Ajoute du contenu Ã  un block
      *
-     * @param string $content contenu html à ajouter au bloc
+     * @param string $content contenu html Ã  ajouter au bloc
      */
 
     public function addcontent($content)
@@ -94,7 +95,7 @@ class block
     /**
      * Mutateur pour le menu
      *
-     * @return array tableau contenu les éléments du menu du block
+     * @return array tableau contenu les Ã©lÃ©ments du menu du block
      */
 
     public function getmenu()

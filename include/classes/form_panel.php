@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,20 +25,26 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Classe de gestion des panels
+ * Gestion des blocs de formulaires
  *
+ * @package ploopi
+ * @subpackage form
+ * @copyright Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Ovensia
  */
+
 class form_panel
 {
     /**
-     * Propriété "id" du panel
+     * PropriÃ©tÃ© "id" du panel
      *
      * @var string
      */
     private $_strId;
 
     /**
-     * Libellé du panel
+     * LibellÃ© du panel
      *
      * @var string
      */
@@ -63,20 +69,29 @@ class form_panel
      */
     private $_objParentForm;
 
-    static private $_arrDefaultOptions = array(
+
+    /**
+     * Options par dÃ©faut d'un bloc
+     *
+     * @var array
+     */
+     static private $_arrDefaultOptions = array(
         'style'     => null,
         'class'     => null
     );
 
+    /**
+     * Nom par dÃ©faut d'un bloc
+     *
+     * @const
+     */
     const strDefaultPanel = 'ploopi_panel_default';
 
     /**
      * Constructeur du panel
      * @param string $strId identifiant du panel
-     * @param string $strLabel libellé du panel
+     * @param string $strLabel libellÃ© du panel
      * @param array $arrOptions options du panel
-     *
-     * @return form_panel
      */
     public function __construct($strId, $strLabel = null, $arrOptions = null)
     {
@@ -108,6 +123,8 @@ class form_panel
 
     /**
      * Affecte le lien vers le formulaire "parent"
+     *
+     * @param form $objParentForm formulaire parent
      */
     public function setParentForm(form $objParentForm)
     {
@@ -115,14 +132,14 @@ class form_panel
     }
 
     /**
-     * Lecture de la propriété "id"
+     * Lecture de la propriÃ©tÃ© "id"
      *
      * @return string
      */
     public function getId() { return $this->_strId; }
 
     /**
-     * Lecture de la propriété "label"
+     * Lecture de la propriÃ©tÃ© "label"
      *
      * @return string
      */
@@ -151,7 +168,7 @@ class form_panel
     public function getFields() { return $this->_arrFields; }
 
     /**
-     * Génère le rendu html du panel
+     * GÃ©nÃ¨re le rendu html du panel
      *
      * @param string $strFields contenu du panel
      * @return string code html
@@ -160,13 +177,13 @@ class form_panel
     {
         $strOutputFields = '';
 
-        // Génération des champs
+        // GÃ©nÃ©ration des champs
         $strOutputFields = '';
 
         foreach($this->_arrFields as $objField)
         {
             $strOutputFields .= $objField->render($intTabindex++);
-            // On détermine si le formulaire dispose d'un champ FILE
+            // On dÃ©termine si le formulaire dispose d'un champ FILE
             // if (!$booHasFile && $objField->getType() == 'input:file') $booHasFile = true;
         }
 

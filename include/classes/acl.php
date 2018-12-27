@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,24 +25,24 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Fonctions de contrôle des droits
+ * Fonctions de contrÃ´le des droits
  *
  * @package ploopi
  * @subpackage acl
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 abstract class acl
 {
     /**
-     * Renvoie un tableau des utilisateurs qui peuvent exécuter une action
+     * Renvoie un tableau des utilisateurs qui peuvent exÃ©cuter une action
      *
      * @param mixed $id_action identifiant de l'action
      * @param integer $id_module identifiant du module (optionnel)
      * @param mixed $id_workspace identifiant de l'espace (optionnel)
-     * @return array tableau des utilisateurs (tableau indexé d'id)
+     * @return array tableau des utilisateurs (tableau indexÃ© d'id)
      */
 
     function actions_getusers($id_action, $id_module = -1, $id_workspace = -1)
@@ -90,10 +90,10 @@ abstract class acl
 
 
     /**
-     * Indique si l'utilisateur courant est administrateur système (niveau maxi) dans l'espace courant
+     * Indique si l'utilisateur courant est administrateur systÃ¨me (niveau maxi) dans l'espace courant
      *
      * @param int $workspaceid identifiant de l'espace (optionnel)
-     * @return boolean true si l'utilisateur est administrateur système dans cet espace
+     * @return boolean true si l'utilisateur est administrateur systÃ¨me dans cet espace
      */
 
     public static function isadmin($workspaceid = -1)
@@ -118,12 +118,12 @@ abstract class acl
     }
 
     /**
-     * Indique si l'utilisateur courant à la droit d'exécuter une action
+     * Indique si l'utilisateur courant Ã  la droit d'exÃ©cuter une action
      *
      * @param int $actionid identifiant de l'action (optionnel)
      * @param int $workspaceid identifiant de l'espace (optionnel)
      * @param int $moduleid identifiant du module (optionnel)
-     * @return boolean true si l'utilisateur courant à la droit d'exécuter cette action
+     * @return boolean true si l'utilisateur courant Ã  la droit d'exÃ©cuter cette action
      */
 
     public static function isactionallowed($actionid = -1, $workspaceid = -1, $moduleid = -1)
@@ -154,12 +154,12 @@ abstract class acl
     }
 
     /**
-     * Indique si l'utilisateur courant peut accéder à un module
+     * Indique si l'utilisateur courant peut accÃ©der Ã  un module
      *
      * @param string $moduletype type de module
      * @param int $moduleid identifiant du module (optionnel)
      * @param int $workspaceid identidiant de l'espace (optionnel)
-     * @return boolean true l'utilisateur courant peut accéder au module
+     * @return boolean true l'utilisateur courant peut accÃ©der au module
      */
 
     public static function ismoduleallowed($moduletype, $moduleid = -1, $workspaceid = -1)
@@ -167,7 +167,7 @@ abstract class acl
         if ($workspaceid == -1) $workspaceid = $_SESSION['ploopi']['workspaceid']; // get session value if not defined
         if ($moduleid == -1) $moduleid = $_SESSION['ploopi']['moduleid']; // get session value if not defined
 
-        // module existe && module du type indiqué && module affecté à l'espace courant
+        // module existe && module du type indiquÃ© && module affectÃ© Ã  l'espace courant
         return(
                 !empty($_SESSION['ploopi']['modules'][$moduleid])
             &&  $_SESSION['ploopi']['modules'][$moduleid]['moduletype'] == $moduletype

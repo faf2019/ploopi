@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,18 +25,28 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Classe de gestion des canaux du calendrier
+ * Gestion des canaux du calendrier
+ *
+ * @package ploopi
+ * @subpackage calendar
+ * @copyright Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Ovensia
  */
 
 class calendarChannel
 {
     /**
      * Titre
+     *
+     * @var string
      */
     private $strTitle;
 
     /**
      * Couleur
+     *
+     * @var string
      */
     private $strColor;
 
@@ -56,10 +66,10 @@ class calendarChannel
     }
 
     /**
-     * Getter par défaut
+     * Getter par dÃ©faut
      *
-     * @param string $strName nom de la propriété à lire
-     * @return string valeur de la propriété si elle existe
+     * @param string $strName nom de la propriÃ©tÃ© Ã  lire
+     * @return string valeur de la propriÃ©tÃ© si elle existe
      */
     public function __get($strName)
     {

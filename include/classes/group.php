@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,31 +25,19 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Gestion des groupes d'utilisateurs.
+ * Gestion des groupes d'utilisateurs (table ploopi_group)
  *
  * @package ploopi
  * @subpackage group
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author StÈphane Escaich
- */
-
-/**
- * Classe d'accËs ‡ la table ploopi_group
- *
- * @package ploopi
- * @subpackage group
- * @copyright Ovensia
- * @license GNU General Public License (GPL)
- * @author StÈphane Escaich
+ * @author Ovensia
  */
 
 class group extends data_object
 {
     /**
      * Constructeur de la classe
-     *
-     * @return group
      */
 
     public function __construct()
@@ -58,7 +46,7 @@ class group extends data_object
     }
 
     /**
-     * Enregistre le groupe et met ‡ jour le champ 'depth'
+     * Enregistre le groupe et met √† jour le champ 'depth'
      *
      * @return int identifiant du groupe
      */
@@ -103,9 +91,9 @@ class group extends data_object
     }
 
     /**
-     * Retourne un tableau contenant tous les identifiants des groupes frËres du groupe
+     * Retourne un tableau contenant tous les identifiants des groupes fr√®res du groupe
      *
-     * @return array tableau des groupes frËres du groupe (identifiants)
+     * @return array tableau des groupes fr√®res du groupe (identifiants)
      */
 
     public function getbrothers()
@@ -134,9 +122,9 @@ class group extends data_object
     }
 
     /**
-     * Retourne le groupe pËre ou false
+     * Retourne le groupe p√®re ou false
      *
-     * @return group le groupe pËre ou false
+     * @return group le groupe p√®re ou false
      */
 
     public function getfather()
@@ -147,7 +135,7 @@ class group extends data_object
     }
 
     /**
-     * Retourne un tableau associatif (id => fields) contenant les utilisateurs du groupe (non rÈcursif)
+     * Retourne un tableau associatif (id => fields) contenant les utilisateurs du groupe (non r√©cursif)
      *
      * @return array tableau des utilisateurs
      */
@@ -198,7 +186,7 @@ class group extends data_object
     }
 
     /**
-     * CrÈe un double du groupe
+     * Cr√©e un double du groupe
      *
      * @return group
      */
@@ -221,8 +209,6 @@ class group extends data_object
 
     public function attachtogroup($workspaceid)
     {
-        include_once './include/classes/workspace.php';
-
         $db = db::get();
 
         $workspace_group = new workspace_group();
@@ -232,10 +218,10 @@ class group extends data_object
     }
 
     /**
-     * Retourne un tableau des actions autorisÈes pour ce groupe.
+     * Retourne un tableau des actions autoris√©es pour ce groupe.
      * $actions[id_workspace][id_module][$fields['id_action']]
      *
-     * @param array $actions tableau d'actions dÈj‡ existant (optionnel)
+     * @param array $actions tableau d'actions d√©j√† existant (optionnel)
      * @return array tableau des actions
      */
 

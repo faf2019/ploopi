@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Copyright (c) 2009 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
@@ -22,13 +22,13 @@
 */
 
 /**
- * Définition de quelques variables javascript liées à php
+ * DÃ©finition de quelques variables javascript liÃ©es Ã  php
  *
  * @package ploopi
  * @subpackage javascript
  * @copyright Ovensia, HeXad
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  *
  */
 

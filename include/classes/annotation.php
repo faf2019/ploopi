@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -31,17 +31,7 @@ use ploopi;
  * @subpackage annotation
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
- */
-
-/**
- * Classe d'accès à la table ploopi_annotation
- *
- * @package ploopi
- * @subpackage annotation
- * @copyright Ovensia
- * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 class annotation extends data_object
@@ -49,17 +39,15 @@ class annotation extends data_object
 
     /**
      * Constructeur de la classe
-     *
-     * @return annotation
      */
 
     public function __construct()
     {
-        parent::__construct('ploopi_annotation','id');
+        parent::__construct('ploopi_annotation', 'id');
     }
 
     /**
-     * Enregistre l'annotation et les tags associés
+     * Enregistre l'annotation et les tags associÃ©s
      *
      * @return int identifiant de l'annotation
      */
@@ -166,11 +154,11 @@ class annotation extends data_object
     }
 
     /**
-     * Insère le bloc d'annotation pour un enregistrement d'un objet
+     * InsÃ¨re le bloc d'annotation pour un enregistrement d'un objet
      *
      * @param int $id_object identifiant de l'objet
      * @param string $id_record identifiant de l'enregistrement
-     * @param string $object_label libellé de l'objet
+     * @param string $object_label libellÃ© de l'objet
      */
 
     public static function display($id_object, $id_record, $object_label = '')
@@ -225,7 +213,7 @@ class annotation extends data_object
         ?>
         <a name="annotation_<?php echo $id_annotation; ?>" style="display:none;"></a>
         <div style="overflow:hidden;">
-            <a id="annotation_count_<?php echo $id_annotation; ?>" class="ploopi_annotation_viewlist" href="javascript:void(0);" onclick="javascript:ploopi_getelem('annotation_list_<?php echo $id_annotation; ?>').style.display=(ploopi_getelem('annotation_list_<?php echo $id_annotation; ?>').style.display=='block') ? 'none' : 'block'; ploopi_xmlhttprequest('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=annotation_show&object_id=<?php echo $id_annotation; ?>');">
+            <a id="annotation_count_<?php echo $id_annotation; ?>" class="ploopi_annotation_viewlist" href="javascript:void(0);" onclick="javascript:ploopi.getelem('annotation_list_<?php echo $id_annotation; ?>').style.display=(ploopi.getelem('annotation_list_<?php echo $id_annotation; ?>').style.display=='block') ? 'none' : 'block'; ploopi.xhr.send('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=annotation_show&object_id=<?php echo $id_annotation; ?>');">
                 <img border="0" src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/annotation.png">
                 <span><?php echo $nbanno; ?> annotation<?php echo ($nbanno>1) ? 's' : ''; ?></span>
             </a>
@@ -272,13 +260,13 @@ class annotation extends data_object
                     $numrow = (!isset($numrow) || $numrow == 2) ? 1 : 2;
 
                     $private = '';
-                    if ($fields['private']) $private = '<div style="float:right;font-weight:bold;color:#a60000;">[ Privé ]</div>';
+                    if ($fields['private']) $private = '<div style="float:right;font-weight:bold;color:#a60000;">[ PrivÃ© ]</div>';
 
                     ?>
                     <div class="ploopi_annotation_row_<?php echo $numrow; ?>">
                         <div style="padding:2px 4px;">
                             <?php echo $private; ?>
-                            <div style="float:right;padding:0 4px;">par <strong><?php echo ploopi\str::htmlentities("{$fields['firstname']} {$fields['lastname']}"); ?></strong> le <?php echo $ldate['date']; ?> à <?php echo $ldate['time']; ?></div>
+                            <div style="float:right;padding:0 4px;">par <strong><?php echo ploopi\str::htmlentities("{$fields['firstname']} {$fields['lastname']}"); ?></strong> le <?php echo $ldate['date']; ?> Ã  <?php echo $ldate['time']; ?></div>
                             <?php
                             if (isset($anno['tags']) && is_array($anno['tags']))
                             {
@@ -286,7 +274,7 @@ class annotation extends data_object
                                 foreach($anno['tags'] as $idtag => $tag)
                                 {
                                     ?>
-                                    <a href="javascript:void(0);" onclick="javascript:ploopi_showpopup('','400',event,'click');ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=annotation_taghistory&id_tag=<?php echo $idtag; ?>', 'ploopi_popup');return false;"><?php echo ploopi\str::htmlentities($tag); ?></a>
+                                    <a href="javascript:void(0);" onclick="javascript:ploopi.popup.show('','400',event,'click');ploopi.xhr.todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=annotation_taghistory&id_tag=<?php echo $idtag; ?>', 'ploopi_popup');return false;"><?php echo ploopi\str::htmlentities($tag); ?></a>
                                     <?php
                                 }
                             }
@@ -301,7 +289,7 @@ class annotation extends data_object
                             {
                                 ?>
                                 <div style="float:right;padding:2px 4px;">
-                                    <a href="javascript:ploopi_annotation_delete('<?php echo $id_annotation; ?>', '<?php echo $fields['id']; ?>');">supprimer</a>
+                                    <a href="javascript:ploopi.annotations.remove('<?php echo $id_annotation; ?>', '<?php echo $fields['id']; ?>');">supprimer</a>
                                 </div>
                                 <?php
                             }
@@ -316,12 +304,12 @@ class annotation extends data_object
                 $numrow = (!isset($numrow) || $numrow == 2) ? 1 : 2;
                 ?>
                 <div class="ploopi_annotation_row_<?php echo $numrow; ?>">
-                    <form action="" method="post" id="form_annotation_<?php echo $id_annotation; ?>" target="form_annotation_target_<?php echo $id_annotation; ?>" onsubmit="return ploopi_annotation_validate(this);">
+                    <form action="" method="post" id="form_annotation_<?php echo $id_annotation; ?>" target="form_annotation_target_<?php echo $id_annotation; ?>" onsubmit="return ploopi.annotations.validate(this);">
                     <input type="hidden" name="ploopi_op" value="annotation_save">
                     <input type="hidden" name="id_annotation" value="<?php echo $id_annotation; ?>">
 
-                    <div class="ploopi_annotation_titleform">Ajout d'une Annotation <?php echo (isset($ploopi_annotation_private)) ? 'privée' : ''; ?></div>
-                    <div style="padding:2px 4px;"><input type="checkbox" name="ploopi_annotation_private" value="1">Privée (visible par vous uniquement)</div>
+                    <div class="ploopi_annotation_titleform">Ajout d'une Annotation <?php echo (isset($ploopi_annotation_private)) ? 'privÃ©e' : ''; ?></div>
+                    <div style="padding:2px 4px;"><input type="checkbox" name="ploopi_annotation_private" value="1">PrivÃ©e (visible par vous uniquement)</div>
                     <div style="padding:2px 4px;">Tags:</div>
                     <div style="padding:2px 4px;"><input type="text" class="text" style="width:99%;" name="ploopi_annotationtags" id="ploopi_annotationtags_<?php echo $id_annotation; ?>" autocomplete="off"></div>
                     <div style="padding:2px 4px;" id="tagsfound_<?php echo $id_annotation; ?>"></div>
@@ -329,7 +317,7 @@ class annotation extends data_object
                     <div style="padding:2px 4px;"><textarea class="text" style="width:99%;" rows="4" name="ploopi_annotation_content"></textarea></div>
 
                     <div style="padding:2px 4px;text-align:right;">
-                        <input type="button" onclick="ploopi_getelem('form_annotation_<?php echo $id_annotation; ?>').ploopi_op.value=''; ploopi_getelem('form_annotation_<?php echo $id_annotation; ?>').submit()" class="flatbutton" value="<?php echo _PLOOPI_CANCEL; ?>">
+                        <input type="button" onclick="ploopi.getelem('form_annotation_<?php echo $id_annotation; ?>').ploopi_op.value=''; ploopi.getelem('form_annotation_<?php echo $id_annotation; ?>').submit()" class="flatbutton" value="<?php echo _PLOOPI_CANCEL; ?>">
                         <input type="submit" class="flatbutton" value="<?php echo _PLOOPI_SAVE; ?>">
                     </div>
                     </form>
@@ -339,85 +327,10 @@ class annotation extends data_object
         <iframe name="form_annotation_target_<?php echo $id_annotation; ?>" src="./img/blank.gif" style="display:none;"></iframe>
 
         <script type="text/javascript">
-            ploopi_annotation_tag_init('<?php echo $id_annotation; ?>');
+            ploopi.annotations.tag_init('<?php echo $id_annotation; ?>');
         </script>
         <?php
     }
 
 
-}
-
-/**
- * Classe d'accès à la table ploopi_annotation_tag
- *
- * @package ploopi
- * @subpackage annotation
- * @copyright Ovensia
- * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
- */
-
-class annotation_tag extends data_object
-{
-    /**
-     * Constructeur de la classe
-     *
-     * @return annotation_tag
-     */
-
-    public function annotation_tag()
-    {
-        parent::__construct('ploopi_annotation_tag','id_annotation','id_tag');
-    }
-
-    /**
-     * Supprime le tag s'il n'est plus utilisé
-     */
-
-    public function delete()
-    {
-        $db = db::get();
-
-        $select =   "
-                    SELECT  count(*) as c
-                    FROM    ploopi_annotation_tag
-                    WHERE   id_tag = {$this->fields['id_tag']}
-                    AND     id_annotation <> {$this->fields['id_annotation']}
-                    ";
-
-        $rs = $db->query($select);
-        if (!($row = $db->fetchrow($rs)) || $row['c'] == 0)
-        {
-            $tag = new tag();
-            $tag->open($this->fields['id_tag']);
-            $tag->delete();
-        }
-
-        parent::delete();
-    }
-
-}
-
-/**
- * Classe d'accès à la table ploopi_tag
- *
- * @package ploopi
- * @subpackage annotation
- * @copyright Ovensia
- * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
- */
-
-class tag extends data_object
-{
-    /**
-     * Constructeur de la classe
-     *
-     * @return tag
-     */
-
-    public function tag()
-    {
-        parent::__construct('ploopi_tag','id');
-    }
 }

@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,13 +21,13 @@
 */
 
 /**
- * Chargement des blocs de menus en fonction de l'espace de travail sélectionné
+ * Chargement des blocs de menus en fonction de l'espace de travail sÃ©lectionnÃ©
  *
  * @package ploopi
  * @subpackage backoffice
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 global $block;
@@ -52,7 +52,7 @@ switch ($_SESSION['ploopi']['mainmenu'])
                     $arrBlocks[_PLOOPI_MODULE_SYSTEM] =
                         array(
                             'title'=> _PLOOPI_GENERAL_ADMINISTRATION,
-                            'description' => 'Installation des Modules, Paramétrage, Monitoring',
+                            'description' => 'Installation des Modules, ParamÃ©trage, Monitoring',
                             'url' => ploopi\crypt::urlencode("admin.php?ploopi_moduleid="._PLOOPI_MODULE_SYSTEM.'&ploopi_action=admin&system_level='.($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_SYSTEMADMIN ? 'system' : _SYSTEM_WORKSPACES)),
                             'admin' => true,
                             'file' => $blockpath
@@ -92,7 +92,7 @@ switch ($_SESSION['ploopi']['mainmenu'])
                             $arrBlocks[$menu_moduleid]['content'] = $block->getcontent();
                         }
                         else {
-                            // Rétrocompatibilité
+                            // RÃ©trocompatibilitÃ©
                             $blockpath = "./modules/{$strmtype}/block.php";
 
                             if (file_exists($blockpath))
@@ -139,7 +139,7 @@ switch ($_SESSION['ploopi']['mainmenu'])
             $arrBlocks[_PLOOPI_MODULE_SYSTEM] =
                 array(
                     'title'=> _PLOOPI_LABEL_MYWORKSPACE,
-                    'description' => 'Profil, paramètres, annotations, tickets',
+                    'description' => 'Profil, paramÃ¨tres, annotations, tickets',
                     'url' => ploopi\crypt::urlencode("admin.php?ploopi_moduleid="._PLOOPI_MODULE_SYSTEM.'&ploopi_action=public'),
                     'file' => $blockpath
                 );
