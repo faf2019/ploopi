@@ -1,6 +1,6 @@
 <?php
 /*
-  Copyright (c) 2007-2016 Ovensia
+  Copyright (c) 2007-2018 Ovensia
   Contributors hold Copyright (c) to their code submissions.
 
   This file is part of Ploopi.
@@ -126,7 +126,7 @@ if (!empty($_POST)) {
     $arrControl = array();
 
     $arrControl[] = field_control('DATAPATH', $S['saved']['DATAPATH']);
-    $arrControl[] = field_control('ELASTIC_HOST', $S['saved']['ELASTIC_HOST']);
+    //$arrControl[] = field_control('ELASTIC_HOST', $S['saved']['ELASTIC_HOST']);
     $arrControl[] = field_control('DB_SERVER', $S['saved']['DB_SERVER']);
     $arrControl[] = field_control('DB_LOGIN', array(
         'server' => $S['saved']['DB_SERVER'],
@@ -171,7 +171,7 @@ if (!empty($_POST)) {
             header('Location: .');
         }
 
-        $mysqli->set_charset('latin1');
+        $mysqli->set_charset('utf8');
 
         @$mysqli->real_query("DROP DATABASE IF EXISTS `{$S['saved']['DB_DATABASE']}`");
         $mysqli->next_result();
@@ -249,12 +249,15 @@ $arrVariables = [
             'Nom de la base',
             '',
             'ploopi'
-        ],
+        ]
+        /*
+        ,
         'ELASTIC_HOST' => [
             'Adresse du serveur ElasticSearch',
             '',
             'localhost:9200'
         ],
+        */
     ],
     'misc' => [
         'DATAPATH' => [
@@ -349,9 +352,26 @@ if (empty($S['saved'])) {
 }
 
 $tabid = 1;
+
+header('Expires: Sat, 1 Jan 2000 05:00:00 GMT');
+header('Last-Modified: ' . gmdate("D, d M Y H:i:s"));
+
+// HTTP/1.1
+header('Cache-Control: private_no_expire, must-revalidate');
+
+// HTTP/1.0
+header('Pragma: no-cache');
+
+// On génère un Etag unique
+header('Etag: '.microtime());
+
+header('Accept-Ranges: bytes');
+header('Content-type: text/html; charset=utf-8');
+
 ?>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
 <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <title>Installation de Ploopi <?php echo _PLOOPI_VERSION; ?> (<?php echo _PLOOPI_REVISION; ?>)</title>
     <link rel="icon" href="./templates/backoffice/eyeos/img/favicon.png" type="image/png" />
     <style>
@@ -374,7 +394,7 @@ $tabid = 1;
     }
     </style>
     <link type="text/css" rel="stylesheet" href="./templates/install/css/styles.css" media="screen" />
-    <script type="text/javascript" src="./lib/protoaculous/protoaculous.min.js"></script>
+    <script type="text/javascript" src="./templates/install/js/protoaculous/protoaculous.min.js"></script>
 
 </head>
 <body>

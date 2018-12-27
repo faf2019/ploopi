@@ -21,55 +21,55 @@
 */
 
 /**
- * Définition des constantes de configuration utilisées par PLOOPI.
- * Possibilité de dissocier la configuration par nom d'hôte.
+ * DÃ©finition des constantes de configuration utilisÃ©es par PLOOPI.
+ * PossibilitÃ© de dissocier la configuration par nom d'hÃ´te.
  *
  * @package ploopi
  * @subpackage config
  * @copyright Netlor, Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author StÃ©phane Escaich
  */
 
 /**
- * Récupération du nom d'hôte si la variable existe (ce n'est pas le cas en ligne de commande)
+ * RÃ©cupÃ©ration du nom d'hÃ´te si la variable existe (ce n'est pas le cas en ligne de commande)
  */
 $http_host = (isset($_SERVER['HTTP_HOST'])) ? $_SERVER['HTTP_HOST'] : '';
 
 /**
- * Distinction des configurations par nom d'hôte
+ * Distinction des configurations par nom d'hÃ´te
  */
 switch($http_host)
 {
     default:
         /**
-         * Type de SGBD utilisé. Seul MySQLi est supporté pour le moment.
+         * Type de SGBD utilisÃ©. Seul MySQLi est supportÃ© pour le moment.
          */
 
         define ('_PLOOPI_SQL_LAYER','mysqli');
 
         /**
-         * Le serveur de base de données.
-         * Il peut aussi inclure le numéro de port.
-         * C'est-à-dire "hostname:port" ou le chemin vers le socket local, c'est-à-dire ":/path/to/socket" pour localhost.
+         * Le serveur de base de donnÃ©es.
+         * Il peut aussi inclure le numÃ©ro de port.
+         * C'est-Ã -dire "hostname:port" ou le chemin vers le socket local, c'est-Ã -dire ":/path/to/socket" pour localhost.
          */
 
         define ('_PLOOPI_DB_SERVER','<DB_SERVER>');
 
         /**
-         * Le nom de l'utilisateur pour la connexion à la base de données
+         * Le nom de l'utilisateur pour la connexion Ã  la base de donnÃ©es
          */
 
         define ('_PLOOPI_DB_LOGIN','<DB_LOGIN>');
 
         /**
-         * Le mot de passe pour la connexion à la base de données
+         * Le mot de passe pour la connexion Ã  la base de donnÃ©es
          */
 
         define ('_PLOOPI_DB_PASSWORD','<DB_PASSWORD>');
 
         /**
-         * Le nom de la base de données
+         * Le nom de la base de donnÃ©es
          */
 
         define ('_PLOOPI_DB_DATABASE','<DB_DATABASE>');
@@ -81,7 +81,7 @@ switch($http_host)
         define ('_PLOOPI_PATHDATA', realpath('<DATAPATH>'));
 
         /**
-         * Le chemin physique vers le dossier partagé (ftp)
+         * Le chemin physique vers le dossier partagÃ© (ftp)
          */
 
         define ('_PLOOPI_PATHSHARED', _PLOOPI_PATHDATA.'/shared');
@@ -100,8 +100,8 @@ switch($http_host)
         define ('_PLOOPI_USE_CACHE', false);
 
         /**
-         * Taille maximum autorisée pour un fichier uploadé (octets).
-         * Vérifier également les directives de configuration de PHP : post_max_size & upload_max_filesize
+         * Taille maximum autorisÃ©e pour un fichier uploadÃ© (octets).
+         * VÃ©rifier Ã©galement les directives de configuration de PHP : post_max_size & upload_max_filesize
          *
          * @link http://fr.php.net/manual/fr/ini.core.php#ini.post-max-size
          * @link http://fr.php.net/manual/fr/ini.core.php#ini.upload-max-filesize
@@ -110,9 +110,9 @@ switch($http_host)
         define ('_PLOOPI_MAXFILESIZE', '16777216');
 
         /**
-         * Durée maximum d'une session en secondes.
+         * DurÃ©e maximum d'une session en secondes.
          * Si vous utilisez le gestionnaire de session interne de Ploopi, c'est la seule valeur prise en compte.
-         * Si vous n'utilisez pas le gestionnaire interne, vérifiez la valeur de la directive session.gc_maxlifetime du fichier php.ini
+         * Si vous n'utilisez pas le gestionnaire interne, vÃ©rifiez la valeur de la directive session.gc_maxlifetime du fichier php.ini
          *
          * @link http://fr.php.net/manual/fr/session.configuration.php#ini.session.gc-maxlifetime
          */
@@ -121,68 +121,68 @@ switch($http_host)
 
         /**
          * Choix du gestionnaire de session
-         * php : gestionnaire natif de php, indispensable pour l'usage de la fonctionnalité d'upload_progress intégrée à php 5.4
-         * db : gestionnaire propre à Ploopi qui stocke les sessions en base de données. Incompatible avec upload_progress.
-         * file : gestionnaire propre à Ploopi qui stock les sessions dans le dossier "data". Incompatible avec upload_progress.
+         * php : gestionnaire natif de php, indispensable pour l'usage de la fonctionnalitÃ© d'upload_progress intÃ©grÃ©e Ã  php 5.4
+         * db : gestionnaire propre Ã  Ploopi qui stocke les sessions en base de donnÃ©es. Incompatible avec upload_progress.
+         * file : gestionnaire propre Ã  Ploopi qui stock les sessions dans le dossier "data". Incompatible avec upload_progress.
          */
 
         define ('_PLOOPI_SESSION_HANDLER', 'php'); // php, db, memcached, file
 
         /**
-         * Niveau de compression des sessions de 0 à 9.
-         * Uniquement pour les gestionnaires propres à Ploopi.
-         * 0 = aucune compression (consommation CPU allégée)
-         * 9 = maximum compression (consommation place allégée)
+         * Niveau de compression des sessions de 0 Ã  9.
+         * Uniquement pour les gestionnaires propres Ã  Ploopi.
+         * 0 = aucune compression (consommation CPU allÃ©gÃ©e)
+         * 9 = maximum compression (consommation place allÃ©gÃ©e)
          */
 
         define ('_PLOOPI_SESSION_COMPRESSION', 1); // level of gzip compression (0:none - 9:maximum)
 
         /**
-         * Le serveur de base de données pour les sessions.
+         * Le serveur de base de donnÃ©es pour les sessions.
          * Uniquement pour le gestionnaire de session "db"
-         * Il peut aussi inclure le numéro de port.
-         * C'est-à-dire "hostname:port" ou le chemin vers le socket local, c'est-à-dire ":/path/to/socket" pour localhost.
+         * Il peut aussi inclure le numÃ©ro de port.
+         * C'est-Ã -dire "hostname:port" ou le chemin vers le socket local, c'est-Ã -dire ":/path/to/socket" pour localhost.
          */
 
         define ('_PLOOPI_SESSION_DB_SERVER', _PLOOPI_DB_SERVER);
 
         /**
-         * Le nom de l'utilisateur pour la connexion à la base de données des sessions
+         * Le nom de l'utilisateur pour la connexion Ã  la base de donnÃ©es des sessions
          */
 
         define ('_PLOOPI_SESSION_DB_LOGIN', _PLOOPI_DB_LOGIN);
 
         /**
-         * Le mot de passe pour la connexion à la base de données des sessions
+         * Le mot de passe pour la connexion Ã  la base de donnÃ©es des sessions
          */
 
         define ('_PLOOPI_SESSION_DB_PASSWORD', _PLOOPI_DB_PASSWORD);
 
         /**
-         * Le nom de la base de données des sessions
+         * Le nom de la base de donnÃ©es des sessions
          */
 
         define ('_PLOOPI_SESSION_DB_DATABASE', _PLOOPI_DB_DATABASE);
 
         /**
-         * Le serveur memcached utilisé
+         * Le serveur memcached utilisÃ©
          */
         define ('_PLOOPI_MEMCACHED_SERVER', 'localhost');
 
         /**
-         * Le port utilisé pour la connexion au serveur memcached
+         * Le port utilisÃ© pour la connexion au serveur memcached
          */
         define ('_PLOOPI_MEMCACHED_PORT', '11211');
 
         /**
-         * Le serveur elasticsearch utilisé
+         * Le serveur elasticsearch utilisÃ©
          */
         define ('_PLOOPI_ELASTICSEARCH_HOST', '<ELASTIC_HOST>');
 
         /**
          * Active ou non l'affichage des erreurs.
-         * Vérifiez également la valeur de la directive de configuration 'display_errors' du fichier php.ini
-         * Vous pouvez également paramétrer le niveau de reporting d'erreur avec la constante _PLOOPI_ERROR_REPORTING
+         * VÃ©rifiez Ã©galement la valeur de la directive de configuration 'display_errors' du fichier php.ini
+         * Vous pouvez Ã©galement paramÃ©trer le niveau de reporting d'erreur avec la constante _PLOOPI_ERROR_REPORTING
          *
          * @see _PLOOPI_ERROR_REPORTING
          *
@@ -192,7 +192,7 @@ switch($http_host)
         define ('_PLOOPI_DISPLAY_ERRORS', false);
 
         /**
-         * Définit le niveau de sensibilité du gestionnaire d'erreur.
+         * DÃ©finit le niveau de sensibilitÃ© du gestionnaire d'erreur.
          * Valeurs possibles : E_ALL, E_ERROR,  E_WARNING,  E_PARSE,  E_NOTICE
          *
          * @link http://fr.php.net/manual/fr/errorfunc.constants.php
@@ -201,9 +201,9 @@ switch($http_host)
         define ('_PLOOPI_ERROR_REPORTING', E_ALL);
 
         /**
-         * Active ou on l'envoi d'un mail si une erreur est rencontrée.
-         * Le mail envoyé est une synthèse de l'ensemble des erreurs rencontrées durant l'exécution de la page.
-         * L'adresse du destinataire est définie par la constante _PLOOPI_ADMINMAIL.
+         * Active ou on l'envoi d'un mail si une erreur est rencontrÃ©e.
+         * Le mail envoyÃ© est une synthÃ¨se de l'ensemble des erreurs rencontrÃ©es durant l'exÃ©cution de la page.
+         * L'adresse du destinataire est dÃ©finie par la constante _PLOOPI_ADMINMAIL.
          *
          * @see _PLOOPI_ADMINMAIL
          */
@@ -211,8 +211,8 @@ switch($http_host)
         define ('_PLOOPI_MAIL_ERRORS', false);
 
         /**
-         * Active ou on l'écriture des erreurs dans un fichier de log.
-         * Le chemin du fichier de log est défini par la constante _PLOOPI_LOG_ERRORS_FILE.
+         * Active ou on l'Ã©criture des erreurs dans un fichier de log.
+         * Le chemin du fichier de log est dÃ©fini par la constante _PLOOPI_LOG_ERRORS_FILE.
          *
          * @see _PLOOPI_LOG_ERRORS_FILE
          */
@@ -220,7 +220,7 @@ switch($http_host)
         define ('_PLOOPI_LOG_ERRORS', true);
 
         /**
-         * Fichier contenant les erreurs générées depuis Ploopi
+         * Fichier contenant les erreurs gÃ©nÃ©rÃ©es depuis Ploopi
          *
          * @see _PLOOPI_LOG_ERRORS
          */
@@ -228,8 +228,8 @@ switch($http_host)
 
         /**
          * Adresse destinatrice des mails d'erreurs.
-         * Plusieurs destinataires peuvent être saisis.
-         * Chaque adresse doit être séparée par une virgule.
+         * Plusieurs destinataires peuvent Ãªtre saisis.
+         * Chaque adresse doit Ãªtre sÃ©parÃ©e par une virgule.
          *
          * @see _PLOOPI_MAIL_ERRORS
          */
@@ -237,23 +237,23 @@ switch($http_host)
         define ('_PLOOPI_SYSMAIL', '<SYS_MAIL>');
 
         /**
-         * Adresse émettrice des mails du portail incluant erreurs, alertes, tickets
-         * C'est aussi l'adresse utilisée par défaut lorsque l'utilisateur n'en dispose pas.
+         * Adresse Ã©mettrice des mails du portail incluant erreurs, alertes, tickets
+         * C'est aussi l'adresse utilisÃ©e par dÃ©faut lorsque l'utilisateur n'en dispose pas.
          * Ce champ ne peut contenir qu'une seule adresse !
-         * Si plusieurs adresses, seule la première est prise en compte.
+         * Si plusieurs adresses, seule la premiÃ¨re est prise en compte.
          */
 
         define ('_PLOOPI_ADMINMAIL', '<ADMIN_MAIL>');
 
         /**
          * Active ou non le log interne
-         * Attention, en fonction du trafic du site, veillez à vider la table 'ploopi_log' régulièrement
+         * Attention, en fonction du trafic du site, veillez Ã  vider la table 'ploopi_log' rÃ©guliÃ¨rement
          */
 
         define ('_PLOOPI_ACTIVELOG', false);
 
         /**
-         * Active ou non le filtrage des VARIABLES (true très recommandé !)
+         * Active ou non le filtrage des VARIABLES (true trÃ¨s recommandÃ© !)
          */
 
         define ('_PLOOPI_FILTER_VARS', true);
@@ -290,7 +290,7 @@ switch($http_host)
 
         /**
          * Vecteur d'initialisation pour le chiffrement des URL.
-         * Le vecteur doit être une chaîne de 32 caractères (il est automatiquement ajusté au mode de chiffrement)
+         * Le vecteur doit Ãªtre une chaÃ®ne de 32 caractÃ¨res (il est automatiquement ajustÃ© au mode de chiffrement)
          *
          * @see http://www.php.net/manual/fr/mcrypt.ciphers.php
          */
@@ -298,15 +298,15 @@ switch($http_host)
         define ('_PLOOPI_CIPHER_IV', '12345678ABCDEFGHIJKLMNOPQRSTUVWX');
 
         /**
-         * Algorithme utilisé pour la génération des valeurs de hachage (stockage des mots de passe).
-         * Recommandé : bcrypt, sha256, sha384, sha512, whirlpool
-         * Compatibilité Ploopi < 1.9.7 : md5
+         * Algorithme utilisÃ© pour la gÃ©nÃ©ration des valeurs de hachage (stockage des mots de passe).
+         * RecommandÃ© : bcrypt, sha256, sha384, sha512, whirlpool
+         * CompatibilitÃ© Ploopi < 1.9.7 : md5
          */
 
         define ('_PLOOPI_HASH_ALGO', '<HASH_ALGO>');
 
         /**
-         * Clé secrète utilisée pour le chiffrement des URL et des mots de passe
+         * ClÃ© secrÃ¨te utilisÃ©e pour le chiffrement des URL et des mots de passe
          */
 
         define ('_PLOOPI_SECRETKEY', '<SECRETKEY>');
@@ -318,29 +318,29 @@ switch($http_host)
         define ('_PLOOPI_TOKEN', true);
 
         /**
-         * Durée maximum de validité d'un jeton.
-         * Passé ce délai, le jeton est considérée comme invalide et l'utilisateur est déconnecté.
+         * DurÃ©e maximum de validitÃ© d'un jeton.
+         * PassÃ© ce dÃ©lai, le jeton est considÃ©rÃ©e comme invalide et l'utilisateur est dÃ©connectÃ©.
          */
 
         define ('_PLOOPI_TOKENTIME', _PLOOPI_SESSIONTIME); // time in second
 
         /**
          * Nombre maximum de jetons.
-         * Un chiffre trop faible peut être gênant en utilisation multi-onglet.
+         * Un chiffre trop faible peut Ãªtre gÃªnant en utilisation multi-onglet.
          */
 
         define ('_PLOOPI_TOKENMAX', 200);
 
         /**
-         * Active ou non l'accès frontoffice.
-         * Si l'accès est activé, il faut également paramétrer un epsace de travail avec un module WebEdit pour que l'accès frontoffice soit définitivement activé.
+         * Active ou non l'accÃ¨s frontoffice.
+         * Si l'accÃ¨s est activÃ©, il faut Ã©galement paramÃ©trer un epsace de travail avec un module WebEdit pour que l'accÃ¨s frontoffice soit dÃ©finitivement activÃ©.
          */
 
         define ('_PLOOPI_FRONTOFFICE', true); // true if frontoffice is activated
 
         /**
-         * Active ou non la réécriture de règle au niveau des url frontoffice générées par Ploopi.
-         * Attention pour que ces règles puissent être interprétées par Apache, n'oubliez pas d'activer le module 'Rewrite' et les règles de réécriture inverse.
+         * Active ou non la rÃ©Ã©criture de rÃ¨gle au niveau des url frontoffice gÃ©nÃ©rÃ©es par Ploopi.
+         * Attention pour que ces rÃ¨gles puissent Ãªtre interprÃ©tÃ©es par Apache, n'oubliez pas d'activer le module 'Rewrite' et les rÃ¨gles de rÃ©Ã©criture inverse.
          *
          * RewriteEngine on
          * RewriteRule ^(.*)-h([0-9]*)a([0-9]*).html(.*)$ index.php?headingid=$2&articleid=$3$4 [L]
@@ -353,31 +353,31 @@ switch($http_host)
         define ('_PLOOPI_FRONTOFFICE_REWRITERULE', true); // true if frontoffice rewrite rules are activated
 
         /**
-         * Template backoffice par défaut (si le template utilisé n'existe pas)
+         * Template backoffice par dÃ©faut (si le template utilisÃ© n'existe pas)
          */
 
         define ('_PLOOPI_DEFAULT_TEMPLATE', 'eyeos');
 
         /**
-         * Force l'utilisateur à utiliser un mot de passe complexe
+         * Force l'utilisateur Ã  utiliser un mot de passe complexe
          */
 
          define ('_PLOOPI_USE_COMPLEXE_PASSWORD', false);
 
         /**
-         * Longueur minimale d'un mot de passe complexe (utile uniquement si le paramètre _PLOOPI_USE_COMPLEXE_PASSWORD est activé)
+         * Longueur minimale d'un mot de passe complexe (utile uniquement si le paramÃ¨tre _PLOOPI_USE_COMPLEXE_PASSWORD est activÃ©)
          */
 
          define ('_PLOOPI_COMPLEXE_PASSWORD_MIN_SIZE', 8);
 
         /**
-         * Nombre de tentatives de connexion autorisées avant blocage
+         * Nombre de tentatives de connexion autorisÃ©es avant blocage
          */
 
          define ('_PLOOPI_MAX_CONNECTION_ATTEMPS', 3);
 
         /**
-         * Durée de blocage lors d'un trop grand nombre de tentatives de connexion, en secondes
+         * DurÃ©e de blocage lors d'un trop grand nombre de tentatives de connexion, en secondes
          */
 
          define ('_PLOOPI_JAILING_TIME', 600);
@@ -389,34 +389,34 @@ switch($http_host)
         define ('_PLOOPI_USE_OUTPUT_COMPRESSION', true);
 
         /**
-         * Nom d'hôte du serveur proxy pour l'accès internet
+         * Nom d'hÃ´te du serveur proxy pour l'accÃ¨s internet
          */
 
         define ('_PLOOPI_INTERNETPROXY_HOST', '');
 
         /**
-         * Port du serveur proxy pour l'accès internet
+         * Port du serveur proxy pour l'accÃ¨s internet
          */
 
         define ('_PLOOPI_INTERNETPROXY_PORT', '');
 
         /**
-         * Nom d'utilisateur du serveur proxy pour l'accès internet
+         * Nom d'utilisateur du serveur proxy pour l'accÃ¨s internet
          */
 
         define ('_PLOOPI_INTERNETPROXY_USER', '');
 
         /**
-         * Mot de passe du serveur proxy pour l'accès internet
+         * Mot de passe du serveur proxy pour l'accÃ¨s internet
          */
 
         define ('_PLOOPI_INTERNETPROXY_PASS', '');
 
         /**
-         * Liste des séparateurs de mots (fonctions d'indexation)
+         * Liste des sÃ©parateurs de mots (fonctions d'indexation)
          */
 
-        define ('_PLOOPI_INDEXATION_WORDSEPARATORS', " :;,.!?'^`'\"«»~-_|()[]{}<>\$£µ&#§@%=+/*\\/\n\r");
+        define ('_PLOOPI_INDEXATION_WORDSEPARATORS', " :;,.!?'^`'\"Â«Â»~-_|()[]{}<>\$Â£Âµ&#Â§@%=+/*\\/\n\r");
 
         /**
          * Longueur minimale d'un mot indexable
@@ -443,39 +443,39 @@ switch($http_host)
         define ('_PLOOPI_INDEXATION_RATIOMIN', 0.01);
 
         /**
-         * Pourcentage de mots indexés dans un document (expérimental, laisser 100)
+         * Pourcentage de mots indexÃ©s dans un document (expÃ©rimental, laisser 100)
          */
 
         define ('_PLOOPI_INDEXATION_KEYWORDSMAXPCENT', 100);
 
         /**
-         * Le serveur de base de données pour l'index
-         * Il peut aussi inclure le numéro de port.
-         * C'est-à-dire "hostname:port" ou le chemin vers le socket local, c'est-à-dire ":/path/to/socket" pour localhost.
+         * Le serveur de base de donnÃ©es pour l'index
+         * Il peut aussi inclure le numÃ©ro de port.
+         * C'est-Ã -dire "hostname:port" ou le chemin vers le socket local, c'est-Ã -dire ":/path/to/socket" pour localhost.
          */
 
         define ('_PLOOPI_INDEXATION_DB_SERVER', _PLOOPI_DB_SERVER);
 
         /**
-         * Le nom de l'utilisateur pour la connexion à la base de données de l'index
+         * Le nom de l'utilisateur pour la connexion Ã  la base de donnÃ©es de l'index
          */
 
         define ('_PLOOPI_INDEXATION_DB_LOGIN', _PLOOPI_DB_LOGIN);
 
         /**
-         * Le mot de passe pour la connexion à la base de données de l'index
+         * Le mot de passe pour la connexion Ã  la base de donnÃ©es de l'index
          */
 
         define ('_PLOOPI_INDEXATION_DB_PASSWORD', _PLOOPI_DB_PASSWORD);
 
         /**
-         * Le nom de la base de données de l'index
+         * Le nom de la base de donnÃ©es de l'index
          */
 
         define ('_PLOOPI_INDEXATION_DB_DATABASE', _PLOOPI_DB_DATABASE);
 
         /**
-         * Nombre de coeurs affectés au rendu des pages (permet d'ajuster le calcul de la charge).
+         * Nombre de coeurs affectÃ©s au rendu des pages (permet d'ajuster le calcul de la charge).
          */
 
         define ('_PLOOPI_LOAD_NBCORE', <NBCORE>);
