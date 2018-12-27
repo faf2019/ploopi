@@ -3,7 +3,7 @@
 # Pour l'export SQL :
 # mysqldump -uroot -p<PASS> --opt --default-character-set=latin1 --comments=FALSE ploopixxxx > install/system/ploopi.sql
 
-export DEST=ploopi_1.9.7.0
+export DEST=ploopi_1.9.7.1
 
 #################################
 # compression des fichiers
@@ -21,6 +21,7 @@ echo "create redist in $DEST"
 mkdir $DEST
 
 cp *.php $DEST
+cp composer.json $DEST
 cp .htaccess_modele $DEST/.htaccess
 cp cron $DEST
 cp cli $DEST
@@ -33,7 +34,6 @@ cp data/index.html $DEST/data
 mkdir $DEST/doc
 cp doc/{CHANGELOG,COPYRIGHT,FLOSS,INSTALL,LICENSE} $DEST/doc
 
-cp -r cgi $DEST
 cp -r config $DEST
 cp -r img $DEST
 cp -r include $DEST
@@ -42,21 +42,8 @@ cp -r lib $DEST
 rm $DEST/config/config.php
 
 mkdir $DEST/install
-cp -r install/booking $DEST/install
-cp -r install/chat $DEST/install
-cp -r install/dbreport $DEST/install
 cp -r install/directory $DEST/install
 cp -r install/doc $DEST/install
-cp -r install/forms $DEST/install
-cp -r install/forum $DEST/install
-cp -r install/gallery $DEST/install
-cp -r install/news $DEST/install
-cp -r install/newsletter $DEST/install
-cp -r install/planning $DEST/install
-cp -r install/rss $DEST/install
-cp -r install/webedit $DEST/install
-cp -r install/wiki $DEST/install
-cp -r install/weathertools $DEST/install
 cp -r install/system $DEST/install
 cp install/index.html $DEST/install
 

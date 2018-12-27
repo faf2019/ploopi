@@ -73,22 +73,22 @@ for ($i=1;$i<$argc;$i++)
 if($booHelp)
 {
     echo<<<STDOUT
-Usage: {$argv[0]} module=[MODULE]... op=[OPERATION]...\r
-Effectuer une opération automatique propre au module ploopi\r
+Usage: {$argv[0]} module=[MODULE]... action=[ACTION]...\r
+Effectuer une action automatique propre au module ploopi\r
 Réindexation, génération de vignettes,...\r\n
-  module=MODULE       indique le module responsable de l'opération à effectuer\r
+  module=MODULE     indique le module responsable de l'action à effectuer\r
                     (ex. doc)\r
-  op=OPERATION        l'opération à effectuer\r
+  action=ACTION     l'action à effectuer\r
                     (ex. reindex, thumbnails)\n
 STDOUT;
 }
-elseif (!empty($module) && !empty($op))
+elseif (!empty($module) && !empty($action))
 {
     $strControllerFile = "ploopi\\{$module}\\controller";
     if (ploopi\loader::classExists($strControllerFile)) {
         // Wrapper pour compatibilité avec le contrôleur du module
         $_REQUEST['entity'] = 'cli';
-        $_REQUEST['action'] = $op;
+        $_REQUEST['action'] = $action;
         $strControllerFile::dispatch();
     }
     else {

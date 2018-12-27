@@ -21,8 +21,8 @@
 */
 
 /**
- * Point d'entrée pour le frontoffice.
- * Renvoie vers le backoffice si le frontoffice n'est pas activé.
+ * Point d'entrÃ©e pour le frontoffice.
+ * Renvoie vers le backoffice si le frontoffice n'est pas activÃ©.
  *
  * @package ploopi
  * @subpackage index
