@@ -1,6 +1,6 @@
 /*
     Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -20,8 +20,8 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-function ploopi_openwin(url,w,h,name)
-{
+
+ploopi.openwin = function(url,w,h,name) {
    var top = (screen.height-(h+60))/2;
    var left = (screen.width-w)/2;
 
@@ -32,117 +32,83 @@ function ploopi_openwin(url,w,h,name)
    ploopiwin.focus();
 
    return(ploopiwin);
-}
+};
 
-function ploopi_confirmform(form, message)
-{
+ploopi.confirmform = function(form, message) {
     if (confirm(message)) form.submit();
-}
+};
 
-function ploopi_confirmlink(link, message)
-{
+ploopi.confirmlink = function(link, message) {
     if (confirm(message)) location.href = link;
-}
+};
 
-function ploopi_switchdisplay(id)
-{
-    e = $(id);
-    if (e) e.style.display = (e.style.display == 'none') ? 'block' : 'none';
-}
+ploopi.switchdisplay = function(id) {
+    e = jQuery('#'+id);
+    if (e) e.css('display', e.css('display') == 'none' ? 'block' : 'none');
+};
+
+
+ploopi.getelem = function(elem, obj) {
+    if (typeof(obj) != 'object') obj = document;
+
+    return (obj.getElementById) ? obj.getElementById(elem) : eval("document.all['"+ploopi.addslashes(elem)+"']");
+};
+
+ploopi.innerHTML = function(id, html) {
+    if (jQuery('#'+id).length) jQuery('#'+id).html(html);
+};
+
 
 // clic sur une zone checkbox/radio
 // génère un event équivalent au clic direct sur l'élément
+ploopi.checkbox_click = function(e, inputfield_id) {
 
-function ploopi_checkbox_click(e, inputfield_id)
-{
-    src = (e.srcElement) ? e.srcElement : e.target;
+    var element = jQuery('#'+inputfield_id)[0];
 
-    if (typeof(src.id) == 'undefined' || src.id != inputfield_id)
-    {
-        if (Prototype.Browser.IE)
-        {
-            switch ($(inputfield_id).type)
-            {
-                case 'radio':
-                    $(inputfield_id).checked = true;
-                break;
+    if (e.target == element) return;
 
-                default:
-                    $(inputfield_id).checked = !$(inputfield_id).checked;
-                break;
-            }
+    switch(element.type) {
+        case 'radio':
+            element.checked = true;
+        break;
 
-            $(inputfield_id).fireEvent('onchange');
-        }
-        else
-        {
-            var e = document.createEvent('MouseEvents');
-            e.initEvent('click', false, false);
-            $(inputfield_id).dispatchEvent(e);
-        }
+        default:
+            element.checked = !element.checked;
+        break;
+
     }
-}
 
-function ploopi_checkall(form, mask, value, byid)
-{
-    var len = form.elements.length;
-    var reg = new RegExp(mask,"g");
+    ploopi.event.dispatch_onchange('inputfield_id');
+};
 
-    if (!byid) byid = false;
 
-    for (var i = 0; i < len; i++)
-    {
-        var e = form.elements[i];
 
-        if (byid)
-        {
-            if (e.id.match(reg)) e.checked = value;
-        }
-        else
-        {
-            if (e.name.match(reg)) e.checked = value;
-        }
-    }
-}
 
-function ploopi_getelem(elem, obj)
-{
-    if (typeof(obj) != 'object') obj = document;
 
-    return (obj.getElementById) ? obj.getElementById(elem) : eval("document.all['"+ploopi_addslashes(elem)+"']");
-}
 
-/**
- * Copie d'un contenu HTML avec évaluation des scripts JS
- */
-function ploopi_innerHTML(div, html)
-{
-    if ($(div))
-    {
-        $(div).innerHTML = html;
-        $(div).innerHTML.evalScripts();
-    }
-}
+
+
+
 
 /**
  * Insertion d'un texte dans un champ à la position du curseur
  */
-function ploopi_insertatcursor(field, value) 
+function ploopi_insertatcursor(field, value)
 {
     //IE support
-    if (document.selection) 
+    if (document.selection)
     {
         field.focus();
         sel = document.selection.createRange();
         sel.text = value;
     }
     //MOZILLA/NETSCAPE support
-    else if (field.selectionStart || field.selectionStart == '0') 
+    else if (field.selectionStart || field.selectionStart == '0')
     {
         var startPos = field.selectionStart;
         var endPos = field.selectionEnd;
         field.value = field.value.substring(0, startPos) + value + field.value.substring(endPos, field.value.length);
-    } 
+    }
     else
     {
        field.value += value;

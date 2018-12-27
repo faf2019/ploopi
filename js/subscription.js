@@ -1,6 +1,5 @@
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -20,24 +19,26 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-function ploopi_subscription(ploopi_subscription_id, next)
+ploopi.subscription = {};
+
+ploopi.subscription.display = function(ploopi_subscription_id, next)
 {
     if (typeof(next) == 'undefined') next = '';
-    ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=subscription&ploopi_subscription_id='+ploopi_subscription_id+'&next='+next, 'ploopi_subscription_'+ploopi_subscription_id);
-}
+    ploopi.xhr.todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=subscription&ploopi_subscription_id='+ploopi_subscription_id+'&next='+next, 'ploopi_subscription_'+ploopi_subscription_id);
+};
 
-function ploopi_subscription_checkaction(id_subscription, id_action)
+ploopi.subscription.checkaction = function (id_subscription, id_action)
 {
-    var ck = (id_action == -1) ? $('ploopi_subscription_unsubscribe') : $('ploopi_subscription_action_'+id_action);
+    var ck = (id_action == -1) ? jQuery('#ploopi_subscription_unsubscribe')[0] : jQuery('#ploopi_subscription_action_'+id_action)[0];
 
     ck.checked = !ck.checked
 
-    if (id_action == -1 && ck.checked) ploopi_checkall($('ploopi_form_subscription_'+id_subscription), 'ploopi_subscription_action_', false, true)
+    if (id_action == -1 && ck.checked) jQuery('.ploopi_subscription_action').each(function(item) { this.checked = false; }); /* ploopi_checkall($('ploopi_form_subscription_'+id_subscription), 'ploopi_subscription_action_', false, true); */
 
-    if (id_action > -1 && $('ploopi_subscription_unsubscribe') && $('ploopi_subscription_unsubscribe').checked) $('ploopi_subscription_unsubscribe').checked = false;
+    if (id_action > -1 && jQuery('#ploopi_subscription_unsubscribe')[0] && jQuery('#ploopi_subscription_unsubscribe')[0].checked) jQuery('#ploopi_subscription_unsubscribe')[0].checked = false;
 
-    if (id_action == 0 && ck.checked) ploopi_checkall($('ploopi_form_subscription_'+id_subscription), 'ploopi_subscription_action_', true, true)
+    if (id_action == 0 && ck.checked) jQuery('.ploopi_subscription_action').each(function(item) { this.checked = true; }); /* ploopi_checkall($('ploopi_form_subscription_'+id_subscription), 'ploopi_subscription_action_', true, true); */
 
-    if (id_action > 0 && !ck.checked && $('ploopi_subscription_action_0').checked) $('ploopi_subscription_action_0').checked = false;
-}
+    if (id_action > 0 && !ck.checked && jQuery('#ploopi_subscription_action_0')[0].checked) jQuery('#ploopi_subscription_action_0')[0].checked = false;
+};
 

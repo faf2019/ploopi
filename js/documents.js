@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2007-2013 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -20,59 +20,53 @@
 */
 
 /* DOCUMENTS FUNCTIONS */
+ploopi.documents = {};
 
-function ploopi_documents_openfolder(query, event)
-{
-    ploopi_showpopup('', 460, event, 'click', 'ploopi_documents_openfolder_popup');
-    ploopi_xmlhttprequest_todiv('admin-light.php', query, 'ploopi_documents_openfolder_popup');
-}
+ploopi.documents.openfolder = function(query, event) {
+    ploopi.popup.show('', 460, event, 'click', 'ploopi_documents_openfolder_popup');
+    ploopi.xhr.todiv('admin-light.php', query, 'ploopi_documents_openfolder_popup');
+};
 
-function ploopi_documents_openfile(query, event)
-{
-    ploopi_showpopup('', 460, event, 'click', 'ploopi_documents_openfile_popup');
-    ploopi_xmlhttprequest_todiv('admin-light.php', query, 'ploopi_documents_openfile_popup');
-}
+ploopi.documents.openfile = function(query, event) {
+    ploopi.popup.show('', 460, event, 'click', 'ploopi_documents_openfile_popup');
+    ploopi.xhr.todiv('admin-light.php', query, 'ploopi_documents_openfile_popup');
+};
 
-function ploopi_documents_deletefile(query, documents_id)
-{
-    ploopi_xmlhttprequest_todiv('admin-light.php',query, 'ploopidocuments_'+documents_id);
-}
+ploopi.documents.deletefile = function(query, documents_id) {
+    ploopi.xhr.todiv('admin-light.php',query, 'ploopidocuments_'+documents_id);
+};
 
-function ploopi_documents_deletefolder(query, documents_id)
-{
-    ploopi_xmlhttprequest_todiv('admin-light.php', query, 'ploopidocuments_'+documents_id);
-}
+ploopi.documents.deletefolder = function(query, documents_id) {
+    ploopi.xhr.todiv('admin-light.php', query, 'ploopidocuments_'+documents_id);
+};
 
-function ploopi_documents_browser(query, documents_id, asynchronous)
-{
+ploopi.documents.browser = function(query, documents_id, asynchronous) {
     if (typeof(asynchronous) == 'undefined') asynchronous = false;
 
     if (asynchronous)
     {
-        ploopi_ajaxloader('ploopidocuments_'+documents_id);
-        ploopi_xmlhttprequest_todiv('admin-light.php', query,'ploopidocuments_'+documents_id);
+        ploopi.xhr.ajaxloader('ploopidocuments_'+documents_id);
+        ploopi.xhr.todiv('admin-light.php', query,'ploopidocuments_'+documents_id);
     }
-    else ploopi_innerHTML('ploopidocuments_'+documents_id, ploopi_xmlhttprequest('admin-light.php', query));
-}
+    else ploopi.innerHTML('ploopidocuments_'+documents_id, ploopi.xhr.send('admin-light.php', query));
+};
 
-function ploopi_documents_validate(form)
-{
+ploopi.documents.validate = function(form) {
     if (form.documentsfile_name)
     {
-        if (!ploopi_validatefield('Fichier',form.documentsfile_name,"string")) return false;
+        if (!ploopi.validatefield('Fichier',form.documentsfile_name,"string")) return false;
     }
-    else if (!ploopi_validatefield('Fichier',form.documentsfile_file,"string")) return false;
+    else if (!ploopi.validatefield('Fichier',form.documentsfile_file,"string")) return false;
 
-    if (ploopi_validatefield('Libellé',form.documentsfile_label,"string"))
+    if (ploopi.validatefield('Libellé',form.documentsfile_label,"string"))
     return true;
 
     return false;
-}
+};
 
 // Ouverture d'un popup de sélection de fichier
-function ploopi_documents_selectfile(query, event, width)
-{
+ploopi.documents.selectfile = function(query, event, width) {
     if (typeof(width) == 'undefined') width = 600;
-    ploopi_showpopup(ploopi_ajaxloader_content, width, event, 'click', 'ploopi_documents_popup');
-    ploopi_xmlhttprequest_todiv('admin-light.php', query, 'ploopi_documents_popup', 'get');
-}
+    ploopi.popup.show(ploopi.xhr.ajaxloader_content, width, event, 'click', 'ploopi_documents_popup');
+    ploopi.xhr.todiv('admin-light.php', query, 'ploopi_documents_popup', 'get');
+};

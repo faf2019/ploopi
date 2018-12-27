@@ -1,6 +1,5 @@
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -20,12 +19,14 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+ploopi.tickets = {};
+
 /**
  * Ouverture d'un popup pour envoyer un nouveau message
  */
 
-function ploopi_tickets_new(event, id_object, id_record, object_label, id_user, reload, x, y)
-{
+// ploopi_tickets_new
+ploopi.tickets.alertnew = function(event, id_object, id_record, object_label, id_user, reload, x, y) {
     var data = '';
 
     if (typeof(object_label) != 'undefined' && object_label != null) data += '&ploopi_tickets_object_label='+object_label;
@@ -37,58 +38,62 @@ function ploopi_tickets_new(event, id_object, id_record, object_label, id_user, 
     if (typeof(x) == 'undefined' || x == null) x = 0;
     if (typeof(y) == 'undefined' || y == null) y = 0;
 
-    ploopi_showpopup('', 550, event, true, 'system_popupticket', x, y);
-    ploopi_ajaxloader('system_popupticket');
-    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_new'+data,'system_popupticket');
-}
+    ploopi.popup.show('', 550, event, true, 'system_popupticket', x, y);
+    ploopi.xhr.ajaxloader('system_popupticket');
+    ploopi.xhr.todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_new'+data,'system_popupticket');
+};
+
 
 /**
  * Rafraichissement de la zone indiquant le nombre de tickets non lus + alerte sur nouveau ticket
  */
 
-function ploopi_tickets_refresh(lastnewticket, timeout, str_left, str_right)
-{
+// ploopi_tickets_refresh
+ploopi.tickets.refresh = function(lastnewticket, timeout, str_left, str_right) {
+
     var intPloopiLastNewTicket = lastnewticket;
     var boolAlert = false;
 
     if (typeof(str_left) == 'undefined') str_left = '';
     if (typeof(str_right) == 'undefined') str_right = '';
 
-    new PeriodicalExecuter( function(pe) {
-        new Ajax.Request('index-quick.php?ploopi_op=tickets_getnum', {
-            method:     'get',
-            encoding:   'iso-8859-15',
-            onSuccess:  function(transport) {
-                if (transport.getHeader('Ploopi-Connected') != '1') {
-                    console.log('Not connected');
-                    pe.stop();
-                }
+    (function worker() {
+        jQuery.get('index-quick.php?ploopi_op=tickets_getnum', function(data, textStatus, request) {
+            console.log(data);
+            console.log(request.getResponseHeader('Ploopi-Connected'));
 
-                var res = transport.responseText.split(',');
+            if (request.getResponseHeader('Ploopi-Connected') == '1') {
+
+                var res = data.split(',');
                 if (res.length == 2) {
                     var nb = parseInt(res[0],10);
                     var last = parseInt(res[1],10);
 
-                    $('tpl_ploopi_tickets_new').innerHTML =  str_left+nb+str_right;
+                    $('#tpl_ploopi_tickets_new').html(str_left+nb+str_right);
 
                     if (last > intPloopiLastNewTicket && !boolAlert)
                     {
-                        ploopi_tickets_alert();
+                        ploopi.tickets.alert();
                         boolAlert = true;
                     }
                     intPloopiLastNewTicket = last;
                 }
+
+                setTimeout(worker, timeout*1000);
+            }
+            else {
+                console.log('Not connected');
             }
         });
-    }, timeout);
-}
+    })();
+};
 
 /**
  * Recherche de destinataires pour un message
  */
+// ploopi_tickets_select_users
+ploopi.tickets.select_users = function(query, filtertype, filter, dest) {
 
-function ploopi_tickets_select_users(query, filtertype, filter, dest)
-{
     new Ajax.Request('admin-light.php?'+query,
         {
             method:     'post',
@@ -99,18 +104,21 @@ function ploopi_tickets_select_users(query, filtertype, filter, dest)
             }
         }
     );
-}
+
+};
+
 
 /**
  * Affiche un popup d'alerte à la réception de nouveaux messages
  */
 
-function ploopi_tickets_alert()
+// ploopi_tickets_alert
+ploopi.tickets.alert = function()
 {
-    ploopi_showpopup('', 350, null, true, 'popup_tickets_new_alert', 0, 200);
-    ploopi_ajaxloader('popup_tickets_new_alert');
-    ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_alert', 'popup_tickets_new_alert');
-}
+    ploopi.popup.show('', 350, null, true, 'popup_tickets_new_alert', 0, 200);
+    ploopi.xhr.ajaxloader('popup_tickets_new_alert');
+    ploopi.xhr.todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_alert', 'popup_tickets_new_alert');
+};
 
 
 /**
@@ -119,8 +127,8 @@ function ploopi_tickets_alert()
 
 function ploopi_tickets_selectusers_init()
 {
-    $('ploopi_ticket_userfilter').onkeyup = ploopi_tickets_selectusers_keypress;
-    $('ploopi_ticket_userfilter').onkeypress = ploopi_tickets_selectusers_keypress;
+    jQuery('#ploopi_ticket_userfilter')[0].onkeyup = ploopi_tickets_selectusers_keypress;
+    jQuery('#ploopi_ticket_userfilter')[0].onkeypress = ploopi_tickets_selectusers_keypress;
 }
 
 function ploopi_tickets_selectusers_prevent(e)
@@ -138,7 +146,7 @@ function ploopi_tickets_selectusers_keypress(e)
     {
         case 9: case 13:
             ploopi_tickets_selectusers_prevent(e);
-            ploopi_dispatch_onclick('ploopi_ticket_search_btn');
+            ploopi.event.dispatch_onclick('ploopi_ticket_search_btn');
         break;
 
         default:

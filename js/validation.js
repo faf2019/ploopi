@@ -1,7 +1,5 @@
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2009 Ovensia
-    Copyright (c) 2009-2010 HeXad
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -28,8 +26,7 @@
  * @license Use it if you like it
  */
 
-function ploopi_rgbcolor(color_string)
-{
+ploopi.rgbcolor = function(color_string) {
     this.ok = false;
 
     // strip any leading #
@@ -295,7 +292,7 @@ function ploopi_rgbcolor(color_string)
         for (var i = 0; i < examples.length; i++) {
             try {
                 var list_item = document.createElement('li');
-                var list_color = new ploopi_rgbcolor(examples[i]);
+                var list_color = new ploopi.rgbcolor(examples[i]);
                 var example_div = document.createElement('div');
                 example_div.style.cssText =
                         'margin: 3px; '
@@ -316,10 +313,9 @@ function ploopi_rgbcolor(color_string)
         return xml;
 
     };
-}
+};
 
-function ploopi_validatefield(field_label, field_object, field_type)
-{
+ploopi.validatefield = function(field_label, field_object, field_type) {
     var ok = true;
     var i;
     var nbpoint = 0;
@@ -329,7 +325,8 @@ function ploopi_validatefield(field_label, field_object, field_type)
     if (field_object)
     {
         field_value = field_object.value;
-        field_label = field_label.stripTags();
+        /* strip tags */
+        field_label = field_label.replace(/(<([^>]+)>)/ig,"");
 
         /* Vérifie qu'un élément de liste a été sélectionné */
         if (field_type == 'selected')
@@ -395,7 +392,7 @@ function ploopi_validatefield(field_label, field_object, field_type)
         /* Vérifie que le champ contient une couleur valide */
         if (field_type == 'color')
         {
-            var color = new ploopi_rgbcolor(field_value);
+            var color = new ploopi.rgbcolor(field_value);
             if (!color.ok)
             {
                 ok = false;
@@ -493,17 +490,16 @@ function ploopi_validatefield(field_label, field_object, field_type)
         alert(msg.replace(reg,field_label));
         if (field_type != 'checked')
         {
-            field_object.addClassName('ploopi_validate_error');
+            $(field_object).addClass('ploopi_validate_error');
             field_object.focus();
         }
     }
 
     return (ok);
-}
+};
 
-function ploopi_validatereset(form)
-{
+ploopi.validatereset = function (form) {
     form.select('input,textarea,select').each(function(item) {
-        item.removeClassName('ploopi_validate_error');
+        $(item).removeClass('ploopi_validate_error');
     });
-}
+};

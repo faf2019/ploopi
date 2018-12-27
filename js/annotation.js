@@ -1,6 +1,5 @@
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -20,47 +19,93 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-function ploopi_annotation(id_annotation)
+/* ANNOTATIONS FUNCTIONS */
+ploopi.annotations = {};
+
+ploopi.annotations.tag_timer = null;
+ploopi.annotations.search = '';
+ploopi.annotations.tag_lastedit = '';
+ploopi.annotations.tag_results = new Array();
+ploopi.annotations.tag_new_array = new Array();
+ploopi.annotations.tag_modified = -1;
+
+ploopi.annotations.display = function(id_annotation)
 {
-    ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=annotation&id_annotation='+id_annotation, 'ploopiannotation_'+id_annotation);
-}
+    ploopi.xhr.todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=annotation&id_annotation='+id_annotation, 'ploopiannotation_'+id_annotation);
+};
 
-var tag_timer;
-var tag_search;
-var tag_results = new Array();
+ploopi.annotations.tag_init = function(id_annotation) {
+    /*
+    $('#ploopi_annotationtags_'+id_annotation)[0].onkeyup = ploopi.annotations.tag_keyup;
+    $('#ploopi_annotationtags_'+id_annotation)[0].onkeypress = ploopi.annotations.tag_keypress;
+    */
 
-var tag_last_array = new Array();
-var tag_new_array = new Array();
+    //$('#ploopi_annotationtags_'+id_annotation).bind('keypress', self.tag_keypress);
 
-var tag_lastedit = '';
-var tag_modified = -1
+    jQuery('#ploopi_annotationtags_'+id_annotation).bind('keyup', function(e) {
+        src = e.target; // get source field
 
-function ploopi_annotation_tag_init(id_annotation)
-{
-    $('ploopi_annotationtags_'+id_annotation).onkeyup = ploopi_annotation_tag_keyup;
-    $('ploopi_annotationtags_'+id_annotation).onkeypress = ploopi_annotation_tag_keypress;
-}
+        idrecord = src.id.split('_')[2]; // get id record from source field id
 
-function ploopi_annotation_tag_search(id_annotation, search)
-{
-    clearTimeout(tag_timer);
-    tag_search = search;
-    tag_timer = setTimeout("ploopi_annotation_tag_searchtimeout('"+id_annotation+"')", 100);
-}
+        switch(e.keyCode)
+        {
+            case 38: case 40:
+                ploopi.annotations.tag_prevent(e);
+            break
+            case 9:
+                ploopi.annotations.tag_complete(idrecord);
+                ploopi.annotations.tag_prevent(e);
+            break
+            case 13:
+                ploopi.annotations.tag_complete(idrecord);
+                ploopi.annotations.tag_prevent(e);
+            break
+            case 35: //end
+            case 36: //home
+            case 39: //right
+            case 37: //left
+            //case 32: //space
+            break
+            default:
+                tag_last_array = new Array();
+                ploopi.annotations.tag_new_array = new Array();
 
-function ploopi_annotation_tag_searchtimeout(id_annotation)
-{
-    // replace(/(^\s*)|(\s*$)/g,'') = TRIM
-    list_tags = tag_search.split(' ');
+                tag_last_array = ploopi.annotations.tag_lastedit.split(' ');
+                ploopi.annotations.tag_new_array = src.value.split(' ');
 
-    if (list_tags.length>0) ploopi_xmlhttprequest_tofunction('index-quick.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=annotation_searchtags&tag='+list_tags[list_tags.length-1],ploopi_annotation_tag_display,id_annotation);
-}
+                ploopi.annotations.tag_modified = -1;
+                for (i=0;i<ploopi.annotations.tag_new_array.length;i++)
+                {
+                    if (ploopi.annotations.tag_new_array[i] != tag_last_array[i])
+                    {
+                        if (ploopi.annotations.tag_modified == -1) ploopi.annotations.tag_modified = i;
+                        else ploopi.annotations.tag_modified = -2
+                    }
+                }
+                if (ploopi.annotations.tag_modified>=0) ploopi.annotations.tag_search(idrecord, ploopi.annotations.tag_new_array[ploopi.annotations.tag_modified]);
+            break;
+        }
 
-function ploopi_annotation_tag_display(result,ticket)
-{
+    });
+
+};
+
+ploopi.annotations.tag_search = function(id_annotation, search) {
+    clearTimeout(ploopi.annotations.tag_timer);
+    ploopi.annotations.search = search;
+    ploopi.annotations.tag_timer = setTimeout("ploopi.annotations.tag_searchtimeout('"+id_annotation+"')", 100);
+};
+
+ploopi.annotations.tag_searchtimeout = function(id_annotation) {
+    list_tags = ploopi.annotations.search.split(' ');
+
+    if (list_tags.length>0) ploopi.xhr.tocb('index-quick.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=annotation_searchtags&tag='+list_tags[list_tags.length-1], ploopi.annotations.tag_display, id_annotation);
+};
+
+ploopi.annotations.tag_display = function(result,ticket) {
     if (result != '')
     {
-        tag_results = new Array();
+        ploopi.annotations.tag_results = new Array();
 
         splited_result = result.split('|');
         tagstoprint = '';
@@ -70,9 +115,9 @@ function ploopi_annotation_tag_display(result,ticket)
             detail = splited_result[i].split(';');
             if (tagstoprint != '') tagstoprint += ' ';
             if (i==0) tagstoprint += '<b>';
-            tagstoprint += '<a href="javascript:ploopi_annotation_tag_complete(\''+ticket+'\','+i+')">'+detail[0]+'</a> ('+detail[1]+')';
+            tagstoprint += '<a href="javascript:ploopi.annotations.tag_complete(\''+ticket+'\','+i+')">'+detail[0]+'</a> ('+detail[1]+')';
             if (i==0) tagstoprint += '</b>';
-            tag_results[i] = detail[0];
+            ploopi.annotations.tag_results[i] = detail[0];
         }
 
         $('tagsfound_'+ticket).innerHTML = tagstoprint;
@@ -80,115 +125,67 @@ function ploopi_annotation_tag_display(result,ticket)
     else
     {
         $('tagsfound_'+ticket).innerHTML = '';
-        tag_results = new Array();
+        ploopi.annotations.tag_results = new Array();
     }
-}
+};
 
-function ploopi_annotation_tag_prevent(e)
-{
+ploopi.annotations.tag_prevent = function(e) {
     if (window.event) window.event.returnValue = false
     else e.preventDefault()
-}
+};
 
-function ploopi_annotation_tag_keypress(e)
-{
+ploopi.annotations.tag_keypress = function(e) {
     e=e||window.event;
     src = (e.srcElement) ? e.srcElement : e.target;
 
-    switch(e.keyCode)
-    {
-        case 38: case 40:
-            ploopi_annotation_tag_prevent(e)
-        break
-        case 9:
-            ploopi_annotation_tag_prevent(e)
-        break
-        case 13:
-            ploopi_annotation_tag_prevent(e)
-        break
-        default:
-            tag_lastedit = $(src.id).value;
-        break;
-    }
-}
-
-function ploopi_annotation_tag_keyup(e)
-{
-    e=e||window.event;
-    src = (e.srcElement) ? e.srcElement : e.target; // get source field
-    idrecord = src.id.split('_')[2]; // get id record from source field id
+    console.log(self.tag_lastedit);
 
     switch(e.keyCode)
     {
         case 38: case 40:
-            ploopi_annotation_tag_prevent(e);
+            ploopi.annotations.tag_prevent(e)
         break
         case 9:
-            ploopi_annotation_tag_complete(idrecord);
-            ploopi_annotation_tag_prevent(e);
+            ploopi.annotations.tag_prevent(e)
         break
         case 13:
-            ploopi_annotation_tag_complete(idrecord);
-            ploopi_annotation_tag_prevent(e);
-        break
-        case 35: //end
-        case 36: //home
-        case 39: //right
-        case 37: //left
-        //case 32: //space
+            ploopi.annotations.tag_prevent(e)
         break
         default:
-            tag_last_array = new Array();
-            tag_new_array = new Array();
-
-            tag_last_array = tag_lastedit.split(' ');
-            tag_new_array = $(src.id).value.split(' ');
-
-            tag_modified = -1;
-            for (i=0;i<tag_new_array.length;i++)
-            {
-                if (tag_new_array[i] != tag_last_array[i])
-                {
-                    if (tag_modified == -1) tag_modified = i;
-                    else tag_modified = -2
-                }
-            }
-            if (tag_modified>=0) ploopi_annotation_tag_search(idrecord, tag_new_array[tag_modified]);
+            ploopi.annotations.tag_lastedit = $(src.id).value;
         break;
     }
-}
+};
 
-function ploopi_annotation_tag_complete(idrecord, idtag)
-{
+
+ploopi.annotations.tag_complete = function(idrecord, idtag) {
     if (!(idtag>=0)) idtag = 0;
 
-    if (tag_results[idtag])
+    if (ploopi.annotations.tag_results[idtag])
     {
-        tag_new_array[tag_modified] = tag_results[idtag];
+        ploopi.annotations.tag_new_array[ploopi.annotations.tag_modified] = ploopi.annotations.tag_results[idtag];
 
         taglist = '';
-        for (i=0;i<tag_new_array.length;i++)
+        for (i=0;i<ploopi.annotations.tag_new_array.length;i++)
         {
             if (taglist != '') taglist += ' ';
-            taglist += tag_new_array[i]
+            taglist += ploopi.annotations.tag_new_array[i]
         }
 
         $('ploopi_annotationtags_'+idrecord).value = taglist.replace(/(^\s*)|(\s*$)/g,'')+' ';
         $('tagsfound_'+idrecord).innerHTML = '';
     }
 
-    tag_results = new Array();
-}
+    ploopi.annotations.tag_results = new Array();
+};
 
-function ploopi_annotation_delete(id_annotation, id)
-{
-    if (confirm('Êtes vous certain de vouloir supprimer cette annotation ?')) ploopi_xmlhttprequest('index-quick.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=annotation_delete&ploopi_annotation_id='+id);
-    ploopi_annotation(id_annotation);
-}
+ploopi.annotations.remove = function(id_annotation, id) {
+    if (confirm('Êtes vous certain de vouloir supprimer cette annotation ?')) ploopi.xhr.send('index-quick.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=annotation_delete&ploopi_annotation_id='+id);
+    ploopi.annotations.display(id_annotation);
+};
 
-function ploopi_annotation_validate(form)
-{
-    if (ploopi_validatefield('Titre',form.ploopi_annotationtags,"string")) return true;
+ploopi.annotations.validate = function(form) {
+    if (ploopi.validatefield('Titre', form.ploopi_annotationtags, "string")) return true;
 
     return false;
-}
+};

@@ -1,6 +1,5 @@
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2012 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -20,67 +19,91 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+ploopi.skin = {};
+
+
+// ploopi_skin_array_refresh
+ploopi.skin.array_refresh = function(array_id, array_orderby, array_page, callback) {
+    ploopi.xhr.todiv(
+        'admin-light.php',
+        {
+            ploopi_env: _PLOOPI_ENV,
+            ploopi_op: 'ploopi_skin_array_refresh',
+            array_id: array_id,
+            array_orderby: array_orderby,
+            array_page: array_page,
+            ploopi_randomize: Math.random()
+        },
+        'ploopi_explorer_main_'+array_id,
+        'GET'
+    );
+};
+
 /**
  * Met à jour l'affichage des tableaux générés par la classe skin.
  * Il faut corriger certains problèmes liés à l'affichage ou non d'une barre de défilement vertical.
  * Il faut également corriger les lacunes de IE.
  */
 
-function ploopi_skin_array_renderupdate(array_id)
-{
-    greater = $('ploopi_explorer_values_inner_'+array_id).offsetHeight > $('ploopi_explorer_values_outer_'+array_id).offsetHeight;
+ploopi.skin.array_renderupdate = function(array_id) {
+    var greater = jQuery('#ploopi_explorer_values_inner_'+array_id)[0].offsetHeight > jQuery('#ploopi_explorer_values_outer_'+array_id)[0].offsetHeight;
 
     if (greater)
     {
         // N'existe pas ?
-        if (!$('ploopi_explorer_spacer_'+array_id)) {
+        if (!jQuery('#ploopi_explorer_spacer_'+array_id).length) {
+
             // Récupération de la largeur de la scrollbar verticale
-            scrollbar_width = $('ploopi_explorer_values_outer_'+array_id).offsetWidth - $('ploopi_explorer_values_inner_'+array_id).offsetWidth;
+            var scrollbar_width = $('#ploopi_explorer_values_outer_'+array_id)[0].offsetWidth - $('#ploopi_explorer_values_inner_'+array_id)[0].offsetWidth;
 
             // Insertion d'un bloc de la largeur de la scrollbar dans la ligne de titre
-            $('ploopi_explorer_title_'+array_id).innerHTML = '<div id="ploopi_explorer_spacer_'+array_id+'" style=\'float:right;width:'+scrollbar_width+'px;\'>&nbsp;</div>'+$('ploopi_explorer_title_'+array_id).innerHTML;
+            $('#ploopi_explorer_title_'+array_id).html(
+                '<div id="ploopi_explorer_spacer_'+array_id+'" style=\'float:right;width:'+scrollbar_width+'px;\'>&nbsp;</div>'+$('#ploopi_explorer_title_'+array_id).html()
+            );
 
-            columns = $('ploopi_explorer_main_'+array_id).getElementsByClassName('ploopi_explorer_column');
+            var columns = $('#ploopi_explorer_main_'+array_id+' .ploopi_explorer_column');
 
             for (j=0;j<columns.length;j++)
             {
                 if (columns[j].style.right != '')
                 {
-                    columns[j].style.right = (parseInt(columns[j].style.right)+scrollbar_width)+'px';
+                    columns[j].style.right = (parseInt(columns[j].style.right, 10)+scrollbar_width)+'px';
                 }
             }
         }
     }
     else {
-        if ($('ploopi_explorer_spacer_'+array_id)) {
-            scrollbar_width = $('ploopi_explorer_spacer_'+array_id).getWidth();
-            $('ploopi_explorer_spacer_'+array_id).remove();
 
-            columns = $('ploopi_explorer_main_'+array_id).getElementsByClassName('ploopi_explorer_column');
+        if (jQuery('#ploopi_explorer_spacer_'+array_id).length) {
+
+            var scrollbar_width = $('#ploopi_explorer_spacer_'+array_id).width();
+
+            $('#ploopi_explorer_spacer_'+array_id).remove();
+
+            var columns = $('#ploopi_explorer_main_'+array_id+' .ploopi_explorer_column');
 
             for (j=0;j<columns.length;j++)
             {
                 if (columns[j].style.right != '')
                 {
-                    columns[j].style.right = (parseInt(columns[j].style.right)-scrollbar_width)+'px';
+                    columns[j].style.right = (parseInt(columns[j].style.right, 10)-scrollbar_width)+'px';
+                    console.log(columns[j].style.right);
                 }
             }
-
         }
     }
 
-    if (Prototype.Browser.IE)
+    if (jQuery.browser == 'msie')
     {
-        columns = $('ploopi_explorer_main_'+array_id).getElementsByClassName('ploopi_explorer_column');
+        var columns = $('#ploopi_explorer_main_'+array_id+' .ploopi_explorer_column');
         for (j=0;j<columns.length;j++)
         {
-            columns[j].style.height = $('ploopi_explorer_main_'+array_id).offsetHeight+'px';
+            columns[j].style.height = $('#ploopi_explorer_main_'+array_id)[0].offsetHeight+'px';
         }
     }
-}
+};
 
-function ploopi_skin_treeview_shownode(node_id, query, script)
-{
+ploopi.skin.treeview_shownode = function(node_id, query, script) {
 
     if (typeof(script) == 'undefined') script = 'admin-light.php';
 
@@ -100,7 +123,7 @@ function ploopi_skin_treeview_shownode(node_id, query, script)
             //$(dest).style.display='block';
             if ($(dest).innerHTML.length < 20)
             {
-                $(dest).innerHTML = ploopi_xmlhttprequest(script, query);
+                $(dest).innerHTML = ploopi.xhr.send(script, query);
             }
             new Effect.BlindDown(
                 dest,
@@ -121,24 +144,4 @@ function ploopi_skin_treeview_shownode(node_id, query, script)
             );
         }
     }
-}
-
-function ploopi_skin_array_refresh(array_id, array_orderby, array_page, callback)
-{
-    new Ajax.Request('admin-light.php', {
-        method: 'GET',
-        parameters: {
-            ploopi_env: _PLOOPI_ENV,
-            ploopi_op: 'ploopi_skin_array_refresh',
-            array_id: array_id,
-            array_orderby: array_orderby,
-            array_page: array_page,
-            ploopi_randomize: Math.random()
-        },
-        encoding:   'iso-8859-15',
-        onSuccess:  function(transport) {
-            ploopi_innerHTML('ploopi_explorer_main_'+array_id, transport.responseText);
-            if (callback != '') eval(callback+'()');
-        }
-    });
-}
+};

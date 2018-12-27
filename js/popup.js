@@ -1,6 +1,5 @@
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2012 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -20,56 +19,39 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-var ploopi_nbpopup = 0;
-var ploopi_arrpopup = new Array();
+ploopi.popup = {};
+ploopi.popup.nb = 0;
+ploopi.popup.hooks = null;
 
-
-var ploopi_hooks = null;
-
-Event.observe(window, 'load', function() {
-    ploopi_hooks = $$('.hook');
-    if (!ploopi_hooks.length) ploopi_hooks = document.getElementsByTagName('body');
+jQuery(function() {
+    ploopi.popup.hooks = jQuery('.hook');
+    if (!ploopi.popup.hooks.length) ploopi.popup.hooks = jQuery('body');
 });
 
-function ploopi_showpopup(popup_content, w, e, centered, id, pposx, pposy, enable_esc)
-{
+ploopi.popup.show = function(popup_content, w, e, centered, id, pposx, pposy) {
+
     var ploopi_popup;
     var active_effect = false;
 
     if (!id) id = 'ploopi_popup';
-    if(typeof(enable_esc) == 'undefined') enable_esc = false;
 
-    if (!$(id)) // Nouvelle popup
+
+    if (!jQuery('#'+id).length) // Nouvelle popup
     {
-        ploopi_nbpopup++;
+        ploopi.popup.nb++;
         ploopi_popup = document.createElement('div');
         ploopi_popup.setAttribute('class', 'ploopi_popup');
         ploopi_popup.setAttribute('className', 'ploopi_popup'); // IE
         ploopi_popup.setAttribute('id', id);
-        ploopi_popup.setAttribute('style', 'z-index:'+(10000+ploopi_nbpopup)+';');
+        ploopi_popup.setAttribute('style', 'z-index:'+(10000+ploopi.popup.nb)+';');
         ploopi_popup.style.display = 'none';
 
-        ploopi_hooks[0].appendChild(ploopi_popup);
+        ploopi.popup.hooks[0].appendChild(ploopi_popup);
 
         active_effect = true;
-
-        if (enable_esc) { ploopi_arrpopup.push(id); }
     }
-    else // id existe
-    {
-        ploopi_popup = $(id);
 
-        if (enable_esc && ploopi_arrpopup[ploopi_arrpopup.length-1] != id)
-        {
-            // supprime le id popup déjà ouvert pour le basculer en fin de table de ploopi_arrpopup
-            var ploopi_arrpopup_tmp = new Array();
-            for (var i=0; i < ploopi_arrpopup.length; ++i) {
-                if(ploopi_arrpopup[i] != id) ploopi_arrpopup_tmp.push(ploopi_arrpopup[i]);
-            }
-            ploopi_arrpopup = ploopi_arrpopup_tmp;
-            ploopi_arrpopup.push(id); // On remet a la fin
-        }
-    }
+    ploopi_popup = $('#'+id).eq(0);
 
     w = parseInt(w);
     if (!w) w = 200;
@@ -85,17 +67,16 @@ function ploopi_showpopup(popup_content, w, e, centered, id, pposx, pposy, enabl
 
     if(e) // event ok
     {
+        wd = jQuery(window);
+        ph = jQuery(ploopi.popup.hooks[0]);
+
         if (e.pageX || e.pageY) {
-            var coordScroll = ploopi_hooks[0].cumulativeScrollOffset();
-            var hookScroll = document.viewport.getScrollOffsets();
-            posx = e.pageX-ploopi_hooks[0].cumulativeOffset().left + coordScroll.left + hookScroll.left;
-            posy = e.pageY-ploopi_hooks[0].cumulativeOffset().top + coordScroll.top + hookScroll.top;
+            posx = e.pageX - ph.offset().left + ph.scrollLeft() + wd.scrollLeft();
+            posy = e.pageY - ph.offset().top + ph.scrollTop() + wd.scrollTop();
         }
         else if (e.clientX || e.clientY) {
-            var coordScroll = ploopi_hooks[0].cumulativeScrollOffset();
-            var hookScroll = document.viewport.getScrollOffsets();
-            posx = e.clientX + coordScroll.left + hookScroll.left;
-            posy = e.clientY + coordScroll.top + hookScroll.top;
+            posx = e.clientX - ph.scrollLeft() + wd.scrollLeft();
+            posy = e.clientY - ph.scrollTop() + wd.scrollTop();
         }
     }
     else
@@ -107,65 +88,68 @@ function ploopi_showpopup(popup_content, w, e, centered, id, pposx, pposy, enabl
 
            default:
            case true:
-                var coordScroll = ploopi_hooks[0].cumulativeScrollOffset();
-                var hookScroll = document.viewport.getScrollOffsets();
-                if (!posx) posx = parseInt(document.viewport.getWidth()/2)-parseInt(w/2)+coordScroll.left+hookScroll.left;
-                if (!posy) posy = coordScroll.top + hookScroll.left + 20;
+                wd = jQuery(window);
+                ph = jQuery(ploopi.popup.hooks[0]);
+
+                if (!posx) posx = wd.width()/2 - w/2 + ph.scrollLeft() + wd.scrollLeft();
+                if (!posy) posy = ph.scrollTop() + wd.scrollTop() + 20;
+
             break;
         }
     }
 
-    with (ploopi_popup.style)
-    {
-        if (typeof(popup_content) != 'undefined') ploopi_innerHTML(id, popup_content);
 
-        tmpleft = parseInt(posx) + 20;
-        tmptop = parseInt(posy);
+    if (typeof(popup_content) != 'undefined') ploopi_popup.html(popup_content);
 
-        if (w > 0) width = w+'px';
-        else w = parseInt(ploopi_popup.offsetWidth);
+    tmpleft = parseInt(posx) + 20;
+    tmptop = parseInt(posy);
 
-        if (e && ((20 + w + parseInt(tmpleft)) > parseInt(document.viewport.getWidth())))
-        {
-            tmpleft = parseInt(tmpleft) - w - 40;
-        }
-
-        left = tmpleft+'px';
-        top = tmptop+'px';
-    }
-
-    if (active_effect) new Effect.Appear(id, { duration: 0.4, from: 0.0, to: 1 });
-
-    if (enable_esc)
-    {
-        Event.stopObserving(document, 'keydown');
-        ploopi_popupEnableEscape();
-
-        // Tableau des popups ouvertes pour dépilage via esc
-        // On surveille les clics sur les popup pour repasser la popup active à la fin de ploopi_arrpopup pour les escapes
-        Event.observe(id, 'click', function(event) {
-            if(ploopi_arrpopup[ploopi_arrpopup.length-1] != id) // Dernier est déjà id, rien à faire.
-            {
-                // supprime le id popup déjà ouvert pour le basculer en fin de table de ploopi_arrpopup
-                var ploopi_arrpopup_tmp = new Array();
-                for (var i=0; i < ploopi_arrpopup.length; ++i) {
-                    if(ploopi_arrpopup[i] != id) ploopi_arrpopup_tmp.push(ploopi_arrpopup[i]);
-                }
-                ploopi_arrpopup = ploopi_arrpopup_tmp;
-                // on le remet à la fin
-                ploopi_arrpopup.push(id);
-            }
+    if (w > 0) {
+        ploopi_popup.css({
+            width: w
         });
     }
-}
+    else w = parseInt(ploopi_popup.width());
 
-function ploopi_movepopup(id, e, pposx, pposy, popup_content)
-{
+    if (e && ((20 + w + parseInt(tmpleft)) > parseInt(jQuery(window).width())))
+    {
+        tmpleft = parseInt(tmpleft) - w - 40;
+    }
+
+    ploopi_popup.css({
+        left: tmpleft,
+        top: tmptop
+    });
+
+    if (active_effect) ploopi_popup.fadeIn();
+};
+
+
+ploopi.popup.hide = function(id) {
+    if (!id) id = 'ploopi_popup';
+
+    if (jQuery('#'+id).length) {
+        jQuery('#'+id).eq(0).fadeOut('normal', function() { this.remove(); });
+    }
+};
+
+
+ploopi.popup.hideall = function() {
+
+    var popups = jQuery('.ploopi_popup');
+
+    jQuery('.ploopi_popup').each(function(key, item) {
+        item.remove();
+    });
+};
+
+
+ploopi.popup.move = function(id, e, pposx, pposy, popup_content) {
     var ploopi_popup;
 
     if (!id) id = 'ploopi_popup';
 
-    ploopi_popup = $(id);
+    ploopi_popup = $('#'+id).eq(0);
 
     posx = 0;
     posy = 0;
@@ -188,75 +172,31 @@ function ploopi_movepopup(id, e, pposx, pposy, popup_content)
         }
     }
 
-    with (ploopi_popup.style)
+    ploopi_popup.html(popup_content);
+
+    tmpleft = parseInt(posx) + 20;
+    tmptop = parseInt(posy);
+
+    w = parseInt(ploopi_popup.offsetWidth);
+
+    if (20 + w + parseInt(tmpleft) > parseInt(document.body.offsetWidth))
     {
-        ploopi_innerHTML(id, popup_content);
-
-        tmpleft = parseInt(posx) + 20;
-        tmptop = parseInt(posy);
-
-        w = parseInt(ploopi_popup.offsetWidth);
-
-        if (20 + w + parseInt(tmpleft) > parseInt(document.body.offsetWidth))
-        {
-            tmpleft = parseInt(tmpleft) - w - 40;
-        }
-
-        left = tmpleft+'px';
-        top = tmptop+'px';
+        tmpleft = parseInt(tmpleft) - w - 40;
     }
 
-}
+    ploopi_popup.css({
+        left: tmpleft,
+        top: tmptop
+    });
 
-function ploopi_hidepopup(id)
-{
-    if (!id) id = 'ploopi_popup';
+};
 
-    if ($(id))
-    {
-        new Effect.Fade(id,
-                {
-                    duration: 0.3,
-                    afterFinish:function()
-                    {
-                        ploopi_hooks[0].removeChild($(id));
 
-                        if(ploopi_arrpopup.length > 0)
-                        {
-                            // Enleve la popup de ploopi_arrpopup
-                            var ploopi_arrpopup_tmp = new Array();
-                            for (var i=0; i < ploopi_arrpopup.length; ++i) {
-                                if(ploopi_arrpopup[i] != id) ploopi_arrpopup_tmp.push(ploopi_arrpopup[i]);
-                            }
-                            ploopi_arrpopup = ploopi_arrpopup_tmp;
 
-                            // Si plus de popup on arrete les Event.observe
-                            Event.stopObserving(id, 'click');
-                            if(ploopi_arrpopup.length == 0) { Event.stopObserving(document, 'keydown'); }
-                        }
-                    }
-                }
-             );
-    }
-}
 
-function ploopi_hideallpopups()
-{
-    var popups = document.getElementsByClassName('ploopi_popup');
-    var l = popups.length;
-    for (var i = 0; i < l; i++)
-    {
-        ploopi_hooks[0].removeChild(popups[i]);
-        Event.stopObserving(popups[i], 'click');
 
-    }
-    // On vide le tableau des popup et on arrete le Event.observe
-    if(ploopi_arrpopup.length > 0)
-    {
-        ploopi_arrpopup = new Array();
-        Event.stopObserving(document, 'keydown');
-    }
-}
+
+
 
 function ploopi_popupize(id, w, centered, pposx, pposy)
 {
@@ -267,7 +207,7 @@ function ploopi_popupize(id, w, centered, pposx, pposy)
         ploopi_popup = $(id);
         ploopi_popup.setAttribute('class', 'ploopi_popup');
         ploopi_popup.setAttribute('className', 'ploopi_popup'); // IE
-        ploopi_popup.setAttribute('style', 'display:block;z-index:'+(10000+ploopi_nbpopup)+';');
+        ploopi_popup.setAttribute('style', 'display:block;z-index:'+(10000+ploopi.popup.nb)+';');
 
         w = parseInt(w);
         if (!w) w = 200;
@@ -295,17 +235,6 @@ function ploopi_popupize(id, w, centered, pposx, pposy)
             width = w+'px';
         }
 
-        ploopi_hooks[0].appendChild(ploopi_popup);
+        ploopi.popup.hooks[0].appendChild(ploopi_popup);
     }
-}
-
-function ploopi_popupEnableEscape()
-{
-    // on va fermer le dernier popup ouvert grâce à ploopi_arrpopup
-    Event.observe(document, 'keydown', function(event) {
-        if (event.keyCode == Event.KEY_ESC) {
-            ploopi_hidepopup(ploopi_arrpopup[ploopi_arrpopup.length-1]);
-            ploopi_arrpopup.pop();
-        }
-    });
 }

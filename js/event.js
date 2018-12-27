@@ -1,6 +1,5 @@
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -20,6 +19,18 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+ploopi.event = {};
+
+ploopi.event.dispatch_onchange = function(inputfield_id) {
+    jQuery('#'+inputfield_id).trigger('change');
+};
+
+ploopi.event.dispatch_onclick = function(inputfield_id) {
+    jQuery('#'+inputfield_id).trigger('click');
+};
+
+
+/*
 var ploopi_window_onload_functions = new Array();
 var ploopi_window_onunload_functions = new Array();
 
@@ -49,7 +60,7 @@ function ploopi_window_onunload_launch()
     }
 }
 
-function ploopi_dispatch_onchange(inputfield_id)
+function ploopi.event.dispatch_onchange(inputfield_id)
 {
     if (Prototype.Browser.IE)
     {
@@ -63,7 +74,7 @@ function ploopi_dispatch_onchange(inputfield_id)
     }
 }
 
-function ploopi_dispatch_onclick(inputfield_id)
+function ploopi.event.dispatch_onclick(inputfield_id)
 {
     if (Prototype.Browser.IE)
     {
@@ -71,12 +82,13 @@ function ploopi_dispatch_onclick(inputfield_id)
     }
     else
     {
-	    var e = document.createEvent('MouseEvents');
-	    e.initEvent('click', false, false);
-	    $(inputfield_id).dispatchEvent(e);
+        var e = document.createEvent('MouseEvents');
+        e.initEvent('click', false, false);
+        $(inputfield_id).dispatchEvent(e);
     }
 }
 
 
 ploopi_window_onload_launch();
 ploopi_window_onunload_launch();
+*/

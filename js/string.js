@@ -1,6 +1,5 @@
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -24,9 +23,9 @@
 // public domain.  It would be nice if you left this header intact.
 // Base64 code from Tyler Akins -- http://rumkin.com
 
-var keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_=";
+ploopi.keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_=";
 
-function ploopi_base64_encode(input) {
+ploopi.base64_encode = function(input) {
    var output = "";
    var chr1, chr2, chr3;
    var enc1, enc2, enc3, enc4;
@@ -48,14 +47,14 @@ function ploopi_base64_encode(input) {
          enc4 = 64;
       }
 
-      output = output + keyStr.charAt(enc1) + keyStr.charAt(enc2) +
-         keyStr.charAt(enc3) + keyStr.charAt(enc4);
+      output = output + ploopi.keyStr.charAt(enc1) + ploopi.keyStr.charAt(enc2) +
+         ploopi.keyStr.charAt(enc3) + ploopi.keyStr.charAt(enc4);
    } while (i < input.length);
 
    return output;
-}
+};
 
-function ploopi_base64_decode(input) {
+ploopi.base64_decode = function(input) {
    var output = "";
    var chr1, chr2, chr3;
    var enc1, enc2, enc3, enc4;
@@ -65,10 +64,10 @@ function ploopi_base64_decode(input) {
    input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
 
    do {
-      enc1 = keyStr.indexOf(input.charAt(i++));
-      enc2 = keyStr.indexOf(input.charAt(i++));
-      enc3 = keyStr.indexOf(input.charAt(i++));
-      enc4 = keyStr.indexOf(input.charAt(i++));
+      enc1 = ploopi.keyStr.indexOf(input.charAt(i++));
+      enc2 = ploopi.keyStr.indexOf(input.charAt(i++));
+      enc3 = ploopi.keyStr.indexOf(input.charAt(i++));
+      enc4 = ploopi.keyStr.indexOf(input.charAt(i++));
 
       chr1 = (enc1 << 2) | (enc2 >> 4);
       chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
@@ -85,13 +84,13 @@ function ploopi_base64_decode(input) {
    } while (i < input.length);
 
    return output;
-}
+};
 
-function ploopi_addslashes(str)
-{
+
+ploopi.addslashes = function(str) {
     str = String(str);
     str = str.replace(/\\/g,"\\\\");
     str = str.replace(/\'/g,"\\'");
     str = str.replace(/\"/g,"\\\"");
     return(str);
-}
+};
