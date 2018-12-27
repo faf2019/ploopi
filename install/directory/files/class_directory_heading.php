@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2009 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -27,7 +27,7 @@
  * @subpackage heading
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
@@ -69,7 +69,7 @@ class directory_heading extends ploopi\data_object
         {
             if (!$booForcePos)
             {
-                if ($this->position != $this->fields['position']) // nouvelle position définie
+                if ($this->position != $this->fields['position']) // nouvelle position dÃ©finie
                 {
                     if ($this->fields['position'] < 1) $this->fields['position'] = 1;
                     else
@@ -85,7 +85,7 @@ class directory_heading extends ploopi\data_object
                         if ($this->fields['position'] > $row['maxpos']) $this->fields['position'] = $row['maxpos'];
                     }
 
-                    // Mise à jour de la position des autres rubriques
+                    // Mise Ã  jour de la position des autres rubriques
                     if ($this->fields['position'] > $this->position)
                     {
                         $db->query("
@@ -114,7 +114,7 @@ class directory_heading extends ploopi\data_object
     }
 
     /**
-     * Supprime la rubrique et les sous-rubriques associées
+     * Supprime la rubrique et les sous-rubriques associÃ©es
      *
      * @return boolean
      */
@@ -125,7 +125,7 @@ class directory_heading extends ploopi\data_object
 
         $db = ploopi\db::get();
 
-        // Effacer les contacts attachés
+        // Effacer les contacts attachÃ©s
         $rs_contact = $db->query("SELECT id FROM ploopi_mod_directory_contact WHERE id_heading = {$this->fields['id']}");
         while ($row = $db->fetchrow($rs_contact))
         {
@@ -133,7 +133,7 @@ class directory_heading extends ploopi\data_object
             if ($objContact->open($row['id'])) $objContact->delete();
         }
 
-        // Mise à jour de la position des autres rubriques
+        // Mise Ã  jour de la position des autres rubriques
         $db->query("UPDATE ploopi_mod_directory_heading SET position = position - 1 WHERE position > {$this->fields['position']} AND id_heading = {$this->fields['id_heading']}");
 
         // Suppression des gestionnaires (workflow)
@@ -151,7 +151,7 @@ class directory_heading extends ploopi\data_object
     }
 
     /**
-     * Crée une rubrique fils
+     * CrÃ©e une rubrique fils
      *
      * @return directory_heading
      */

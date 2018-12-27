@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -27,11 +27,11 @@
  * @subpackage global
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
- * Définition des constantes
+ * DÃ©finition des constantes
  */
 
 define ('_DIRECTORY_MANAGE_GROUP',  1);
@@ -60,19 +60,19 @@ define ('_DIRECTORY_OBJECT_CONTACT',        2);
 global $arrDirectoryImportFields;
 $arrDirectoryImportFields = array(
     'lastname'      =>  "Nom",
-    'firstname'     =>  "Prénom",
-    'civility'     =>   "Civilité",
+    'firstname'     =>  "PrÃ©nom",
+    'civility'     =>   "CivilitÃ©",
 
     'service'       =>  "Service",
     'function'      =>  "Fonction",
     'rank'          =>  "Grade/Niveau",
-    'number'        =>  "Numéro de Poste",
-    'phone'         =>  "Numéro de Téléphone",
-    'mobile'        =>  "Numéro de Portable",
-    'fax'           =>  "Numéro de Fax",
-    'email'         =>  "Adresse mèl",
+    'number'        =>  "NumÃ©ro de Poste",
+    'phone'         =>  "NumÃ©ro de TÃ©lÃ©phone",
+    'mobile'        =>  "NumÃ©ro de Portable",
+    'fax'           =>  "NumÃ©ro de Fax",
+    'email'         =>  "Adresse mÃ¨l",
 
-    'building'      =>  "Bâtiment",
+    'building'      =>  "BÃ¢timent",
     'floor'         =>  "Etage",
     'office'        =>  "Bureau",
     'address'       =>  "Adresse",
@@ -145,7 +145,7 @@ function directory_getheadings($intIdHeading = 0)
 }
 
 /**
- * Retourne l'ensemble des contacts partagés triés par rubrique dans un tableau
+ * Retourne l'ensemble des contacts partagÃ©s triÃ©s par rubrique dans un tableau
  *
  * @return array tableau contenant les contacts
  */
@@ -169,7 +169,7 @@ function directory_getcontacts()
 }
 
 /**
- * Retourne l'arbre des rubriques pour la méthode skin::display_treeview()
+ * Retourne l'arbre des rubriques pour la mÃ©thode skin::display_treeview()
  *
  * @param array $rubriques les rubriques
  * @return array treeview
@@ -203,7 +203,7 @@ function directory_gettreeview($headings = array(), $booPopup = false)
             $strNodeOnClick = "ploopi_skin_treeview_shownode('{$strNodeId}', '".ploopi\crypt::queryencode("ploopi_op=directory_heading_detail&directory_heading_id={$fields['id']}&directory_option=popup")."', 'admin-light.php');";
 
             $strLink = 'javascript:void(0);';
-            $strOnClick = $fields['isvalidator'] ? 'javascript:directory_heading_choose(\''.$fields['id'].'\', \''.addslashes($fields['label']).'\');' : "javascript:alert('Vous ne disposez pas des autorisations nécessaires');";
+            $strOnClick = $fields['isvalidator'] ? 'javascript:directory_heading_choose(\''.$fields['id'].'\', \''.addslashes($fields['label']).'\');' : "javascript:alert('Vous ne disposez pas des autorisations nÃ©cessaires');";
 
             if (!$fields['isvalidator']) $icon = 'ico_heading_false.png';
         }
@@ -238,12 +238,12 @@ function directory_gettreeview($headings = array(), $booPopup = false)
 }
 
 /**
- * Affichage frontoffice de l'annuaire complet (intégration template)
+ * Affichage frontoffice de l'annuaire complet (intÃ©gration template)
  *
  * @param object $template_body template
  * @param array $arrHeadings tableau des rubriques
  * @param array $arrContacts tableau des contacts
- * @param int $intHeadingId rubrique à afficher
+ * @param int $intHeadingId rubrique Ã  afficher
  */
 
 function directory_template_display(&$template_body, &$arrHeadings, &$arrContacts, $intHeadingId = 0)
@@ -272,7 +272,7 @@ function directory_template_display(&$template_body, &$arrHeadings, &$arrContact
             if (file_exists($objContact->getphotopath())) $row['photopath'] = ploopi\crypt::urlencode("index-light.php?ploopi_op=directory_contact_getphoto&directory_contact_id={$row['id']}");
             else $row['photopath'] = './modules/directory/img/nopic.gif';
 
-            // Récupération des rubriques du contact
+            // RÃ©cupÃ©ration des rubriques du contact
             $arrContactHeadings = array();
 
             foreach(preg_split('/;/', $arrHeadings['list'][$intHeadingId]['parents']) as $intHid)
@@ -363,11 +363,11 @@ function directory_template_display(&$template_body, &$arrHeadings, &$arrContact
 }
 
 /**
- * Affichage frontoffice de l'organigramme (intégration template)
+ * Affichage frontoffice de l'organigramme (intÃ©gration template)
  *
  * @param object $template_body template
  * @param array $arrHeadings tableau des rubriques
- * @param int $intHeadingId rubrique à afficher
+ * @param int $intHeadingId rubrique Ã  afficher
  */
 
 function directory_template_display_organigram(&$template_body, &$arrHeadings, $intHeadingId = 0)

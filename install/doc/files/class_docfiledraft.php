@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -27,18 +27,18 @@
  * @subpackage file
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
- * Classe d'accès à la table ploopi_mod_doc_file_draft.
- * Gère l'enregistrement physique, la publication.
+ * Classe d'accÃ¨s Ã  la table ploopi_mod_doc_file_draft.
+ * GÃ¨re l'enregistrement physique, la publication.
  *
  * @package doc
  * @subpackage file
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 class docfiledraft extends ploopi\data_object
@@ -67,7 +67,7 @@ class docfiledraft extends ploopi\data_object
      * Ouvre un brouillon de document avec son identifiant MD5
      *
      * @param string $md5id identifiant MD5 du document
-     * @return boolean true si le document a été ouvert
+     * @return boolean true si le document a Ã©tÃ© ouvert
      */
 
     function openmd5($md5id)
@@ -83,7 +83,7 @@ class docfiledraft extends ploopi\data_object
     /**
      * Enregistre le brouillon de document
      *
-     * @return int numéro d'erreur
+     * @return int numÃ©ro d'erreur
      *
      * @see _DOC_ERROR_EMPTYFILE
      * @see _DOC_ERROR_FILENOTWRITABLE
@@ -145,7 +145,7 @@ class docfiledraft extends ploopi\data_object
     }
 
     /**
-     * Retourne le chemin physique de stockage des documents et le crée s'il n'existe pas
+     * Retourne le chemin physique de stockage des documents et le crÃ©e s'il n'existe pas
      *
      * @return string chemin physique de stockage des documents
      *

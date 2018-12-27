@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Copyright (c) 2009 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
@@ -22,15 +22,15 @@
 */
 
 /**
- * Point d'entrée pour la ligne de commande
- * Permet d'exécuter des opérations de maintenance
+ * Point d'entrÃ©e pour la ligne de commande
+ * Permet d'exÃ©cuter des opÃ©rations de maintenance
  * ex: ./cli module=doc op=reindex
  *
  * @package doc
  * @subpackage cli
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  *
  */
 
@@ -109,7 +109,7 @@ switch($op)
 
         include_once './modules/doc/class_docfile.php';
 
-        // On lit les paramètres complémentaires (nom du fichier, p, m)
+        // On lit les paramÃ¨tres complÃ©mentaires (nom du fichier, p, m)
         if ($argc == 5) {
             $file = explode('=', $argv[3]);
             $limit = explode('=', $argv[4]);
@@ -118,10 +118,10 @@ switch($op)
 
                 // Fichier de communication
                 $file = $file[1];
-                // Limite de traitement des événements
+                // Limite de traitement des Ã©vÃ©nements
                 $limit = $limit[1];
 
-                // Possible d'écrire dans le fichier ?
+                // Possible d'Ã©crire dans le fichier ?
                 if (is_writable($file)) {
 
                     // Action
@@ -141,7 +141,7 @@ switch($op)
 
                     }
 
-                    // Action terminée, suppression du fichier
+                    // Action terminÃ©e, suppression du fichier
                     unlink($file);
                 }
             }
@@ -151,17 +151,17 @@ switch($op)
     case 'reindex':
         set_time_limit(0);
 
-        // Nombre de processus à paralléliser
+        // Nombre de processus Ã  parallÃ©liser
         $intNbProc = ploopi\system::getnbcore()*2;
-        // Nombre d'enregistrement à traiter par processus
+        // Nombre d'enregistrement Ã  traiter par processus
         $intPageSize = 50;
-        // Sélection de l'ensemble des documents
+        // SÃ©lection de l'ensemble des documents
         $rs = ploopi\db::get()->query("SELECT id FROM ploopi_mod_doc_file");
-        // Nombre d'éléments à traiter
+        // Nombre d'Ã©lÃ©ments Ã  traiter
         $intNbElt = ploopi\db::get()->numrows();
-        // Page de démarrage
+        // Page de dÃ©marrage
         $intCurrentPage = 0;
-        // Nombre de page traitées
+        // Nombre de page traitÃ©es
         $intTermine = 0;
         // Nb Page Max
         $intNbPage = ceil($intNbElt/$intPageSize);
@@ -169,7 +169,7 @@ switch($op)
         // Taille de la barre de progression (affichage)
         $intSize = 45;
 
-        // Paramètre proc
+        // ParamÃ¨tre proc
         foreach($argv as $arg) {
             $arg = explode('=', $arg);
             if ($arg[0] == 'proc' && isset($arg[1])) $intNbProc = max(1, intval($arg[1]));
@@ -184,41 +184,41 @@ switch($op)
 
         $booFirst = true;
 
-        // Pour chaque page à traiter (et tant qu'un processus encore actif
+        // Pour chaque page Ã  traiter (et tant qu'un processus encore actif
         while ($intCurrentPage < $intNbPage || !empty($arrProcessus)) {
 
             $booTermine = false;
 
-            // Un processus est-il terminé ?
+            // Un processus est-il terminÃ© ?
             foreach($arrProcessus as $p => $file) {
                 if (!file_exists($file)) {
                     $intTermine++;
                     $booTermine = true;
-                    // printf("\033[1;33mProcessus {$p} terminé\033[0m\n\n");
-                    // Libération du processus
+                    // printf("\033[1;33mProcessus {$p} terminÃ©\033[0m\n\n");
+                    // LibÃ©ration du processus
                     unset($arrProcessus[$p]);
                 }
             }
 
             // Peut-on lancer de nouveaux processus ?
             for ($p = 1; $p <= $intNbProc; $p++) {
-                // Encore des pages à traiter ?
+                // Encore des pages Ã  traiter ?
                 if ($intCurrentPage < $intNbPage) {
                     // Processus disponible ?
                     if (!isset($arrProcessus[$p])) {
-                        // Création d'un fichier temporaire de communication
+                        // CrÃ©ation d'un fichier temporaire de communication
                         $arrProcessus[$p] = tempnam(sys_get_temp_dir(), 'doc');
                         if (is_writable(dirname($arrProcessus[$p]))) {
                             $handle = fopen($arrProcessus[$p], 'w');
                             fclose($handle);
 
-                            // Calcul de la limite à traiter
+                            // Calcul de la limite Ã  traiter
                             $intLimit = $intCurrentPage*$intPageSize;
 
-                            // On lance un processus sans attendre la fin d'exécution, il va écrire son statut dans le fichier $tmpfile
+                            // On lance un processus sans attendre la fin d'exÃ©cution, il va Ã©crire son statut dans le fichier $tmpfile
                             exec('php ./'.basename($argv[0])." module=doc op=mpreindex file={$arrProcessus[$p]} limit={$intLimit},{$intPageSize} >/dev/null 2>&1 &");
 
-                            // On passe à la page suivante
+                            // On passe Ã  la page suivante
                             $intCurrentPage++;
                         }
                     }
@@ -232,7 +232,7 @@ switch($op)
             $intBarSize = round($floPcent*$intSize);
 
             if ($booTermine || $booFirst) {
-                // Projection de la durée du calcul en seconde
+                // Projection de la durÃ©e du calcul en seconde
                 $intProjection = $floPcent ? round($floCurTime / $floPcent) : 0;
             }
 
@@ -246,11 +246,11 @@ switch($op)
             $booFirst = false;
 
             // Permet au script de ne pas occuper 100% du cpu pour rien
-            // On va effectuer un contrôle par seconde uniquement
+            // On va effectuer un contrÃ´le par seconde uniquement
             sleep(1);
         }
 
-        printf("\n\n\033[1;33mTerminé\033[0m\n\n");
+        printf("\n\n\033[1;33mTerminÃ©\033[0m\n\n");
 
     break;
 

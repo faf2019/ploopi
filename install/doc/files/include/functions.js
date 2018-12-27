@@ -1,6 +1,5 @@
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -27,10 +26,10 @@ function doc_folder_validate(form, tovalidate)
     next = false;
     doc_upload_error = false;
 
-    if (ploopi_validatefield('Nom du Dossier', form.docfolder_name, 'string'))
+    if (ploopi.validatefield('Nom du Dossier', form.docfolder_name, 'string'))
     if (tovalidate)
     {
-        next = confirm('Cette action va envoyer\nune demande de publication\naux validateurs du dossier parent\n\n tes-vous certain de vouloir continuer ?');
+        next = confirm('Cette action va envoyer\nune demande de publication\naux validateurs du dossier parent\n\n√ätes-vous certain de vouloir continuer ?');
     }
     else next = true;
 
@@ -45,12 +44,12 @@ function doc_file_validate(form, newfile, tovalidate, sid, cgipath)
 
     if (newfile)
     {
-        if (tovalidate) res = confirm('Cette action va envoyer\nune demande de publication\naux validateurs de ce dossier\n\n tes-vous certain de vouloir continuer ?');
+        if (tovalidate) res = confirm('Cette action va envoyer\nune demande de publication\naux validateurs de ce dossier\n\n√ätes-vous certain de vouloir continuer ?');
         else res = true;
     }
     else
     {
-        if (tovalidate && form.docfile_file.value != '') res = confirm('Cette action va envoyer\nune demande de publication\naux validateurs de ce dossier\n\n tes-vous certain de vouloir continuer ?');
+        if (tovalidate && form.docfile_file.value != '') res = confirm('Cette action va envoyer\nune demande de publication\naux validateurs de ce dossier\n\n√ätes-vous certain de vouloir continuer ?');
         else res = true;
     }
 
@@ -59,21 +58,21 @@ function doc_file_validate(form, newfile, tovalidate, sid, cgipath)
 
 function doc_upload(sid)
 {
-    if ($('doc_progressbar'))
+    if (jQuery('#doc_progressbar')[0])
     {
-        $('doc_progressbar').style.display = 'block';
+        jQuery('#doc_progressbar')[0].style.display = 'block';
 
-        rc = ploopi_xmlhttprequest('index-quick.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=doc_getstatus&sid='+sid);
+        rc = ploopi.xhr.send('index-quick.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=doc_getstatus&sid='+sid);
         if (rc=='')
         {
-            $('doc_progressbar_bg').style.width = ($('doc_progressbar').offsetWidth-2)+'px';
-            $('doc_progressbar_txt').innerHTML = '<b>TerminÈ</b>';
+            jQuery('#doc_progressbar_bg')[0].style.width = (jQuery('#doc_progressbar')[0].offsetWidth-2)+'px';
+            jQuery('#doc_progressbar_txt')[0].innerHTML = '<b>Termin√©</b>';
         }
         else
         {
             if (rc == 'notfound')
             {
-                alert("Impossible d'envoyer ce fichier,\nvÈrifiez qu'il n'est pas trop volumineux.");
+                alert("Impossible d'envoyer ce fichier,\nv√©rifiez qu'il n'est pas trop volumineux.");
                 //document.location.reload();
             }
             else
@@ -84,15 +83,15 @@ function doc_upload(sid)
 
                 if (rc.length == 6)
                 {
-                    // 0 : taille uploadÈe
+                    // 0 : taille upload√©e
                     // 1 : taille totale
                     // 2 : ?
                     // 3 : fichier en cours d'upload
                     // 4 : vitesse ko/s
                     // 5 : % avancement
 
-                    $('doc_progressbar_bg').style.width = ((($('doc_progressbar').offsetWidth-2)*rc[5])/100)+'px';
-                    $('doc_progressbar_txt').innerHTML = '<b>'+rc[5]+'%</b> ('+rc[0]+'/'+rc[1]+'ko)<br />Envoi de <b>'+rc[3]+'</b> ‡ <i>'+rc[4]+' ko/s</i>';
+                    jQuery('#doc_progressbar_bg')[0].style.width = (((jQuery('#doc_progressbar')[0].offsetWidth-2)*rc[5])/100)+'px';
+                    jQuery('#doc_progressbar_txt')[0].innerHTML = '<b>'+rc[5]+'%</b> ('+rc[0]+'/'+rc[1]+'ko)<br />Envoi de <b>'+rc[3]+'</b> √† <i>'+rc[4]+' ko/s</i>';
                 }
 
                 setTimeout('doc_upload(\''+sid+'\');',500);
@@ -103,36 +102,36 @@ function doc_upload(sid)
 
 function doc_parser_add()
 {
-    $('docparser_form').style.display = 'block';
-    $('docparser_id').value = '';
-    $('docparser_label').value = '';
-    $('docparser_extension').value = '';
-    $('docparser_path').value = '';
-    $('docparser_label').focus();
+    jQuery('#docparser_form')[0].style.display = 'block';
+    jQuery('#docparser_id')[0].value = '';
+    jQuery('#docparser_label')[0].value = '';
+    jQuery('#docparser_extension')[0].value = '';
+    jQuery('#docparser_path')[0].value = '';
+    jQuery('#docparser_label')[0].focus();
 }
 
 function doc_search()
 {
-    ploopi_ajaxloader('doc_browser');
-    ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=doc_search&currentfolder=0', 'doc_browser');
+    ploopi.xhr.ajaxloader('doc_browser');
+    ploopi.xhr.todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=doc_search&currentfolder=0', 'doc_browser');
 }
 
 function doc_search_next()
 {
-    ploopi_ajaxloader('doc_search_result');
-    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=doc_search_next&doc_search_keywords='+encodeURIComponent($('doc_search_keywords').value)+'&doc_search_filetype='+encodeURIComponent($('doc_search_filetype').value)+'&doc_search_user='+$('doc_search_user').value+'&doc_search_workspace='+$('doc_search_workspace').value+'&doc_search_date1='+$('doc_search_date1').value+'&doc_search_date2='+$('doc_search_date2').value,'doc_search_result');
+    ploopi.xhr.ajaxloader('doc_search_result');
+    ploopi.xhr.todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=doc_search_next&doc_search_keywords='+encodeURIComponent(jQuery('#doc_search_keywords')[0].value)+'&doc_search_filetype='+encodeURIComponent(jQuery('#doc_search_filetype')[0].value)+'&doc_search_user='+jQuery('#doc_search_user')[0].value+'&doc_search_workspace='+jQuery('#doc_search_workspace')[0].value+'&doc_search_date1='+jQuery('#doc_search_date1')[0].value+'&doc_search_date2='+jQuery('#doc_search_date2')[0].value+'&doc_search_stem='+(jQuery('#doc_search_stem')[0].checked?1:0)+'&doc_search_phonetic='+(jQuery('#doc_search_phonetic')[0].checked?1:0)+'&doc_search_and='+(jQuery('#doc_search_and')[0].checked?1:0),'doc_search_result');
 }
 
 function doc_openhelp(e)
 {
-    ploopi_showpopup('', 300, e, 'click', 'dochelp');
-    ploopi_ajaxloader('dochelp');
-    ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=doc_help', 'dochelp');
+    ploopi.popup.show('', 300, e, 'click', 'dochelp');
+    ploopi.xhr.ajaxloader('dochelp');
+    ploopi.xhr.todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=doc_help', 'dochelp');
 }
 
 function doc_fckexplorer_set_folder(idfolder, ploopi_op)
 {
-    cf = $('doc_choosefolder');
+    cf = jQuery('#doc_choosefolder')[0];
     trouve = false;
     i=0;
     while (i<=cf.length && !trouve)
@@ -147,7 +146,7 @@ function doc_fckexplorer_set_folder(idfolder, ploopi_op)
 
 function doc_fckexplorer_selectfile(fileUrl, text)
 {
-    window.opener.CKEDITOR.tools.callFunction( $('CKEditorFuncNum').value, fileUrl, function() {
+    window.opener.CKEDITOR.tools.callFunction( jQuery('#CKEditorFuncNum')[0].value, fileUrl, function() {
         // Get the reference to a dialog window.
         var dialog = this.getDialog();
         // Check if this is the Image Properties dialog window.
@@ -179,7 +178,7 @@ function doc_fckexplorer_switch_folder(idfolder, ploopi_op)
                 if (json)
                 {
 
-                    fb = $('doc_filebrowser');
+                    fb = jQuery('#doc_filebrowser')[0];
                     fb.innerHTML = '';
                     for (i=0;i<json.length;i++)
                     {
@@ -188,7 +187,7 @@ function doc_fckexplorer_switch_folder(idfolder, ploopi_op)
                         if (ploopi_op == 'doc_selectimage')
                         {
                             /*
-                            fb.innerHTML +=     '<a class="doc_fckexplorer_vignette" href="javascript:void(0);" onclick="javascript:var title = ploopi_getelem(\'cke_80_textInput\',opener.document);var alt = ploopi_getelem(\'cke_80_textInput\',opener.document); if (title) title.value=\''+ploopi_addslashes(json[i]['name'])+'\';if (alt) alt.value=\''+ploopi_addslashes(json[i]['name'])+'\';doc_fckexplorer_selectfile(\''+json[i]['url']+'\');">'+
+                            fb.innerHTML +=     '<a class="doc_fckexplorer_vignette" href="javascript:void(0);" onclick="javascript:var title = ploopi.getelem(\'cke_80_textInput\',opener.document);var alt = ploopi.getelem(\'cke_80_textInput\',opener.document); if (title) title.value=\''+ploopi.addslashes(json[i]['name'])+'\';if (alt) alt.value=\''+ploopi.addslashes(json[i]['name'])+'\';doc_fckexplorer_selectfile(\''+json[i]['url']+'\');">'+
                                                     '<img style="height:75px;" src="index-quick.php?ploopi_op=doc_image_get&docfile_md5id='+json[i]['md5id']+'&version='+json[i]['version']+'&width=125&height=75" />'+
                                                     '<div style="font-weight:bold;">'+json[i]['name']+'</div>'+
                                                     '<div>'+filesize+' ko</div>'+
@@ -212,7 +211,7 @@ function doc_fckexplorer_switch_folder(idfolder, ploopi_op)
                         }
                         else
                         {
-                            fb.innerHTML +=     '<a class="doc_fckexplorer_vignette" href="javascript:void(0);" onclick="javascript:var prot = ploopi_getelem(\'cmbLinkProtocol\',opener.document); if (prot) prot.value=\'\';var title = ploopi_getelem(\'txtAttTitle\',opener.document); if (title) title.value=\''+ploopi_addslashes(json[i]['name'])+'\';doc_fckexplorer_selectfile(\''+json[i]['url']+'\');">'+
+                            fb.innerHTML +=     '<a class="doc_fckexplorer_vignette" href="javascript:void(0);" onclick="javascript:var prot = ploopi.getelem(\'cmbLinkProtocol\',opener.document); if (prot) prot.value=\'\';var title = ploopi.getelem(\'txtAttTitle\',opener.document); if (title) title.value=\''+ploopi.addslashes(json[i]['name'])+'\';doc_fckexplorer_selectfile(\''+json[i]['url']+'\');">'+
                                                     '<img style="height:75px;" src="index-quick.php?ploopi_op=doc_image_get&docfile_md5id='+json[i]['md5id']+'&version='+json[i]['version']+'&width=125&height=75" />'+
                                                     '<div style="font-weight:bold;">'+json[i]['name']+'</div>'+
                                                     '<div>'+filesize+' ko</div>'+

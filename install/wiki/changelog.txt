@@ -1,164 +1,170 @@
+== Module Wiki - version 1.4.1 ====================================================
+
+2018-12-27  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Migration UTF-8
+
 == Module Wiki - version 1.4.0 ====================================================
 
-2016-08-08  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2016-08-08  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
 * Version pour Ploopi 1.9.7+ / PHP 7+
 
 == Module Wiki - version 1.3.0 ====================================================
 
-2015-06-08  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2015-06-08  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Génération automatique d'un index du contenu lorsqu'une page contient au moins 5 titres (h1,h2...)
-* Correction d'un bug lors de l'édition d'un contenu avec des balises
+* GÃ©nÃ©ration automatique d'un index du contenu lorsqu'une page contient au moins 5 titres (h1,h2...)
+* Correction d'un bug lors de l'Ã©dition d'un contenu avec des balises
 * Correction d'un bug dans la gestion de l'historique avec plusieurs instances
 
 == Module Wiki - version 1.2.5 ====================================================
 
-2015-01-20  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2015-01-20  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Correction d'un bug lié à la modification du comportement de html_entity_decode avec PHP 5.4
+* Correction d'un bug liÃ© Ã  la modification du comportement de html_entity_decode avec PHP 5.4
 
 == Module Wiki - version 1.2.4 ====================================================
 
-2014-12-22  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2014-12-22  StÃ©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
-* Modification de la fonction wiki_make_links pour corriger un problème de compatibilité avec PHP 5.5
+* Modification de la fonction wiki_make_links pour corriger un problÃ¨me de compatibilitÃ© avec PHP 5.5
 
 == Module Wiki - version 1.2.3 ====================================================
 
-2013-12-17  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2013-12-17  StÃ©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
-* Ajout de contrôles d'affichage pour éviter les injections XSS
-* Amélioration de la version imprimable
+* Ajout de contrÃ´les d'affichage pour Ã©viter les injections XSS
+* AmÃ©lioration de la version imprimable
 
 == Module Wiki - version 1.2.2b ====================================================
 
-2013-07-22  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2013-07-22  StÃ©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
-* Correction d'un bug lié à la modification du comportement de htmlentities avec PHP 5.4
+* Correction d'un bug liÃ© Ã  la modification du comportement de htmlentities avec PHP 5.4
 
 == Module Wiki - version 1.2.2a ====================================================
 
-2013-03-20  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2013-03-20  StÃ©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
-* Correction d'un bug de chargement de dépendance avec Horde/Text/Diff
+* Correction d'un bug de chargement de dÃ©pendance avec Horde/Text/Diff
 
 == Module Wiki - version 1.2.2 ====================================================
 
-2013-03-18  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2013-03-18  StÃ©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
 * Remplacement de Text/Diff par Horde/Text/Diff
-* Mise à jour de la librairie Textile
+* Mise Ã  jour de la librairie Textile
 
 == Module Wiki - version 1.2.1b ====================================================
 
-2012-03-30  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2012-03-30  StÃ©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
- * Amélioration de la gestion des liens (conflit url/email)
+ * AmÃ©lioration de la gestion des liens (conflit url/email)
 
 == Module Wiki - version 1.2.1a ====================================================
 
-2012-03-27  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2012-03-27  StÃ©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
  * Correction d'une erreur lors de l'instanciation du module
 
 == Module Wiki - version 1.2.0 ====================================================
 
-2011-10-03  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2011-10-03  StÃ©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
- * Possibilité d'intégrer le wiki dans un article webedit comme objet frontoffice (consultation seulement)
- * Mise en place d'URLs réécrites pour la version frontoffice
- * Mise à jour du moteur de rendu vers Textile 2.2
- * Création automatique de liens sur les urls non marquées
- * Création automatique de liens sur les adresses de courriel
- * Indexation des pages au niveau du moteur de recherche intégral
- * Interfaces avec le module WebEdit pour intégration des résultats de recherche en frontoffice
+ * PossibilitÃ© d'intÃ©grer le wiki dans un article webedit comme objet frontoffice (consultation seulement)
+ * Mise en place d'URLs rÃ©Ã©crites pour la version frontoffice
+ * Mise Ã  jour du moteur de rendu vers Textile 2.2
+ * CrÃ©ation automatique de liens sur les urls non marquÃ©es
+ * CrÃ©ation automatique de liens sur les adresses de courriel
+ * Indexation des pages au niveau du moteur de recherche intÃ©gral
+ * Interfaces avec le module WebEdit pour intÃ©gration des rÃ©sultats de recherche en frontoffice
 
 == Module Wiki - version 1.1.0d ====================================================
 
-2011-09-27  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2011-09-27  StÃ©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
- * Corrections de compatibilité avec php5.3
+ * Corrections de compatibilitÃ© avec php5.3
 
 == Module Wiki - version 1.1.0c ====================================================
 
-2011-03-29  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2011-03-29  StÃ©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
- * Corrections de compatibilité avec php5.3
+ * Corrections de compatibilitÃ© avec php5.3
 
 == Module Wiki - version 1.1.0b ====================================================
 
-2011-03-25  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2011-03-25  StÃ©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
- * Corrections de compatibilité avec php5.3
+ * Corrections de compatibilitÃ© avec php5.3
 
 == Module Wiki - version 1.1.0a ====================================================
 
-2010-10-13  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2010-10-13  StÃ©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
  * Correction de quelques petits oublis de la version 1.1.0
 
 == Module Wiki - version 1.1.0 ====================================================
 
-2010-10-13  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2010-10-13  StÃ©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
- * Correction d'un problème avec le rendu des apostrophes
- * Correction d'un problème avec les listes imbriquées (mise à jour de la classe "textile")
- * Ajout du support de la colorisation de code (css, php, java, ruby, sh, sql, cpp, xml, etc.) avec numérotation de lignes
- * Mise à jour de la sortie HTML pour impression
+ * Correction d'un problÃ¨me avec le rendu des apostrophes
+ * Correction d'un problÃ¨me avec les listes imbriquÃ©es (mise Ã  jour de la classe "textile")
+ * Ajout du support de la colorisation de code (css, php, java, ruby, sh, sql, cpp, xml, etc.) avec numÃ©rotation de lignes
+ * Mise Ã  jour de la sortie HTML pour impression
 
 == Module Wiki - version 1.0.1a ====================================================
 
-2010-01-08  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2010-01-08  StÃ©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
- * Mise à niveau intégrant les correctifs effectués sur la branche stable.
+ * Mise Ã  niveau intÃ©grant les correctifs effectuÃ©s sur la branche stable.
 
 == Module Wiki - version 1.0.1 ====================================================
 
-2009-10-13  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2009-10-13  StÃ©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
- * Correction du bug #22 : [Wiki 1.0.0b] Problèmes avec les liens sur des entités comportant des caractères spéciaux
- * Correction d'un problème avec des caractères spéciaux non reconnus à l'enregistrement d'un article
+ * Correction du bug #22 : [Wiki 1.0.0b] ProblÃ¨mes avec les liens sur des entitÃ©s comportant des caractÃ¨res spÃ©ciaux
+ * Correction d'un problÃ¨me avec des caractÃ¨res spÃ©ciaux non reconnus Ã  l'enregistrement d'un article
  * Augmentation de la longueur du champ de contenu pour les pages et l'historique
 
 == Module Wiki - version 1.0.0b ====================================================
 
-2009-09-30  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2009-09-30  StÃ©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
  * Correction du bug #21 : [WIKI v1.0.0] Balise "pre" / Encodage des labels - fixes #21
- * Mise à jour de la métabase (mb.xml)
+ * Mise Ã  jour de la mÃ©tabase (mb.xml)
 
 == Module Wiki - version 1.0.0 ====================================================
 
-2009-08-31  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2009-08-31  StÃ©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
- * Ajout de liens vers des documentations complémentaires dans le popup d'aide
- * Ajout d'un fil d'ariane indiquant les 5 dernières pages vues
+ * Ajout de liens vers des documentations complÃ©mentaires dans le popup d'aide
+ * Ajout d'un fil d'ariane indiquant les 5 derniÃ¨res pages vues
 
 == Module Wiki - version 0.9.30.beta ====================================================
 
-2009-07-22  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2009-07-22  StÃ©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
- * Corrections d'orthographe sur le mot "Verrouiller" (rôles/interfaces web)
+ * Corrections d'orthographe sur le mot "Verrouiller" (rÃ´les/interfaces web)
 
 == Module Wiki - version 0.9.200beta ====================================================
 
-2009-06-20  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2009-06-20  StÃ©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
- * Envoi des tickets pour les abonnés
+ * Envoi des tickets pour les abonnÃ©s
  * Les liens n'ouvrent plus les articles en "modification"
  * Enregistrement des logs d'action
 
 == Module Wiki - version 0.9.000beta ====================================================
 
-2009-05-19  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2009-05-19  StÃ©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
  * Edition de pages au format Wiki/Textile
  * Gestion des liens internes vers d'autres pages (syntaxe : [[Lien]])
  * Gestion du verrouillage d'une page
- * Gestion des révisions
+ * Gestion des rÃ©visions
  * Affichage d'un historique des modifications d'une page
- * Affichage d'un différentiel colorisé entre 2 versions d'une même page
+ * Affichage d'un diffÃ©rentiel colorisÃ© entre 2 versions d'une mÃªme page
  * Gestion des annotations
  * Gestion des abonnements
  * Gestion du renommage avec redirection automatique des liens

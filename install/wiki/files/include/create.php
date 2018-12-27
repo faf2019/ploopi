@@ -22,13 +22,13 @@
 
 /**
  * "Constructeur" de l'instance.
- * Initialise les données du module lors de l'instanciation du module.
+ * Initialise les donnÃ©es du module lors de l'instanciation du module.
  *
  * @package wiki
  * @subpackage create
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
@@ -39,7 +39,7 @@ include_once './modules/wiki/classes/class_wiki_page.php';
 include_once './modules/wiki/include/global.php';
 
 /**
- * On crée la page racine (root)
+ * On crÃ©e la page racine (root)
  */
 $objWikiPage = new wiki_page();
 $objWikiPage->fields['id'] = 'Wiki';

@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2015 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,13 +21,13 @@
 */
 
 /**
- * Point d'entrée du webservice
+ * Point d'entrÃ©e du webservice
  *
  * @package doc
  * @subpackage webservice
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  * @version  $Revision$
  * @modifiedby $LastChangedBy$
  * @lastmodified $Date$

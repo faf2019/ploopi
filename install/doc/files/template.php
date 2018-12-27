@@ -21,7 +21,7 @@
 */
 
 /**
- * Gestion des variables insérables dans le template frontoffice
+ * Gestion des variables insÃ©rables dans le template frontoffice
  *
  * @package doc
  * @subpackage template

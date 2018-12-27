@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -27,11 +27,11 @@
  * @subpackage public
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
- * Création d'un buffer pour alimenter un popup
+ * CrÃ©ation d'un buffer pour alimenter un popup
  */
 
 ob_start();
@@ -58,14 +58,14 @@ elseif (!empty($_GET['directory_id_user']))
 }
 else ploopi\system::kill();
 
-$strName = ploopi\str::htmlentities(trim($usr->fields['lastname'].' '.$usr->fields['firstname']));
+$strName = trim($usr->fields['lastname'].' '.$usr->fields['firstname']);
 ?>
 
 <h1 class="directory_title" style="background-color:#c0c0c0;border-bottom:1px solid #a0a0a0;">
     <?php
     if (!$booPrintable)
     {
-        ?><a href="javascript:void(0);" onclick="javascript:ploopi_openwin('<?php echo ploopi\crypt::urlencode('admin-light.php?op=directory_view&directory_id_user='.(empty($_GET['directory_id_user']) ? '' : $_GET['directory_id_user']).'&directory_id_contact='.(empty($_GET['directory_id_contact']) ? '' : $_GET['directory_id_contact']).'&directory_print'); ?>',550,400);return false;"><img style="display:block;float:right" src="./modules/directory/img/ico_print.png" title="Imprimer" alt="Imprimer" /></a><?php
+        ?><a href="javascript:void(0);" onclick="javascript:ploopi.openwin('<?php echo ploopi\crypt::urlencode('admin-light.php?op=directory_view&directory_id_user='.(empty($_GET['directory_id_user']) ? '' : $_GET['directory_id_user']).'&directory_id_contact='.(empty($_GET['directory_id_contact']) ? '' : $_GET['directory_id_contact']).'&directory_print'); ?>',550,400);return false;"><img style="display:block;float:right" src="./modules/directory/img/ico_print.png" title="Imprimer" alt="Imprimer" /></a><?php
     }
     echo ploopi\str::htmlentities($strName);
     ?>
@@ -147,7 +147,7 @@ $strName = ploopi\str::htmlentities(trim($usr->fields['lastname'].' '.$usr->fiel
                 <span><?php echo implode('<br />', $arrAddress); ?></span>
             </p>
 
-            <h2 class="directory_title" style="background-color:#d0d0d0;border-bottom:1px solid #a0a0a0;">Informations complémentaires ( <a href="javascript:void(0);" onclick="javascript:ploopi_switchdisplay('directory_view_details');" >Afficher</a> )</h2>
+            <h2 class="directory_title" style="background-color:#d0d0d0;border-bottom:1px solid #a0a0a0;">Informations complÃ©mentaires ( <a href="javascript:void(0);" onclick="javascript:ploopi.switchdisplay('directory_view_details');" >Afficher</a> )</h2>
             <div id="directory_view_details" style="display:none;">
                 <p>
                     <label style="font-weight:bold;"><?php echo _DIRECTORY_COMMENTARY; ?>:</label>
@@ -164,7 +164,7 @@ $strName = ploopi\str::htmlentities(trim($usr->fields['lastname'].' '.$usr->fiel
                         <label style="font-weight:bold;">Rattachements (rubriques):</label>
                         <span>
                             <?php
-                            // Récupération des rubriques de contacts partagés
+                            // RÃ©cupÃ©ration des rubriques de contacts partagÃ©s
                             $arrHeadings = $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_sharedcontacts'] ? directory_getheadings() : array();
                             $arrTitle = array();
 
@@ -195,13 +195,13 @@ $strName = ploopi\str::htmlentities(trim($usr->fields['lastname'].' '.$usr->fiel
                                 <?php
                                 $user_gp = $usr->getgroups();
 
-                                // on met les libellés dans un tableau
+                                // on met les libellÃ©s dans un tableau
                                 $groups_list = array();
                                 $groups_list_id = array();
 
                                 foreach($user_gp as $gp) $groups_list[sprintf("%04d%s", $gp['depth'], $gp['label'])] = ploopi\str::htmlentities($gp['label']);
 
-                                // on trie par profondeur + libellé
+                                // on trie par profondeur + libellÃ©
                                 ksort($groups_list);
 
                                 // on affiche
@@ -216,11 +216,11 @@ $strName = ploopi\str::htmlentities(trim($usr->fields['lastname'].' '.$usr->fiel
                             <?php
                             $user_ws = $usr->getworkspaces();
 
-                            // on met les libellés dans un tableau
+                            // on met les libellÃ©s dans un tableau
                             $workspaces_list = array();
                             foreach($user_ws as $ws) $workspaces_list[sprintf("%04d%s", $ws['depth'], $ws['label'])] = ploopi\str::htmlentities($ws['label']);
 
-                            // on trie par profondeur + libellé
+                            // on trie par profondeur + libellÃ©
                             ksort($workspaces_list);
 
                             // on affiche
@@ -230,15 +230,15 @@ $strName = ploopi\str::htmlentities(trim($usr->fields['lastname'].' '.$usr->fiel
                     </p>
 
                     <p>
-                        <label style="font-weight:bold;">Attributions / Rôles:</label>
+                        <label style="font-weight:bold;">Attributions / RÃ´les:</label>
                         <span>
                             <?php
-                            // Recherche des rôles
+                            // Recherche des rÃ´les
                             $arrRoles = array();
 
                             if (!empty($user_ws))
                             {
-                                // recherche des rôles "groupe"
+                                // recherche des rÃ´les "groupe"
                                 if (!empty($user_gp))
                                 {
 
@@ -262,7 +262,7 @@ $strName = ploopi\str::htmlentities(trim($usr->fields['lastname'].' '.$usr->fiel
 
                                     while ($row = ploopi\db::get()->fetchrow()) $arrRoles["{$row['id_workspace']}_{$row['id']}"] = sprintf("%s : <strong>%s</strong> dans le module <strong>%s</strong>", ploopi\str::htmlentities($user_ws[$row['id_workspace']]['label']), ploopi\str::htmlentities($row['role_label']), ploopi\str::htmlentities($row['module_label']));
 
-                                    // recherche des rôles "utilisateur"
+                                    // recherche des rÃ´les "utilisateur"
                                     ploopi\db::get()->query("
                                         SELECT      wur.id_user,
                                                     wur.id_workspace,
@@ -287,11 +287,11 @@ $strName = ploopi\str::htmlentities(trim($usr->fields['lastname'].' '.$usr->fiel
 
                             if (empty($arrRoles))
                             {
-                                echo "<em>Aucun rôle</em>";
+                                echo "<em>Aucun rÃ´le</em>";
                             }
                             else
                             {
-                                // on trie par espace / rôle
+                                // on trie par espace / rÃ´le
                                 ksort($arrRoles);
 
                                 // on affiche
@@ -308,11 +308,11 @@ $strName = ploopi\str::htmlentities(trim($usr->fields['lastname'].' '.$usr->fiel
                     <label style="font-weight:bold;">Documents:</label>
                     <span style="overflow:hidden;">
                         <?php
-                        // Lecture du dossier racine de la mini ged associée à l'utilisateur ou au contact courant
+                        // Lecture du dossier racine de la mini ged associÃ©e Ã  l'utilisateur ou au contact courant
                         $objRootFolder = ploopi\documentsfolder::getroot(
                             $booContact ? _DIRECTORY_OBJECT_CONTACT : _SYSTEM_OBJECT_USER,
                             $usr->fields['id'],
-                            $booContact ? null : 1 // Il faut prendre l'id du module actuel ou l'id du module système
+                            $booContact ? null : 1 // Il faut prendre l'id du module actuel ou l'id du module systÃ¨me
                         );
 
                         if (!empty($objRootFolder))
@@ -321,11 +321,11 @@ $strName = ploopi\str::htmlentities(trim($usr->fields['lastname'].' '.$usr->fiel
 
                             foreach($arrFiles as $intIdFile => $rowFile)
                             {
-                                // Découpage du chemin pour modifier le fichier
+                                // DÃ©coupage du chemin pour modifier le fichier
                                 $arrPath = explode('/', $rowFile['path']);
 
                                 // On ajoute un lien sur le fichier
-                                $arrPath[sizeof($arrPath)-1] = '<a title="Télécharger le fichier" href="'.$rowFile['file']->geturl().'">'.$arrPath[sizeof($arrPath)-1].'</a>';
+                                $arrPath[sizeof($arrPath)-1] = '<a title="TÃ©lÃ©charger le fichier" href="'.$rowFile['file']->geturl().'">'.$arrPath[sizeof($arrPath)-1].'</a>';
 
                                 // Affichage
                                 echo '<div>'.' &raquo; '.implode(' &raquo; ', $arrPath).'</div>';
@@ -352,7 +352,7 @@ if ($booPrintable)
 else
 {
     /**
-     * On récupère le contenu du buffer
+     * On rÃ©cupÃ¨re le contenu du buffer
      */
 
     $content = ob_get_contents();

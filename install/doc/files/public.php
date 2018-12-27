@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -27,7 +27,7 @@
  * @subpackage public
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
@@ -41,7 +41,7 @@ include_once './modules/doc/class_docfile.php';
 include_once './modules/doc/class_docfolder.php';
 include_once './modules/doc/class_docfiledraft.php';
 
-// Met à jour la variable session permettant de savoir si unoconv est disponible (conversion de documents)
+// Met Ã  jour la variable session permettant de savoir si unoconv est disponible (conversion de documents)
 if (is_null(ploopi\session::getvar('unoconv')))
 {
     $strUnovconvPath = ploopi\param::get('system_unoconv', _PLOOPI_MODULE_SYSTEM);
@@ -70,10 +70,10 @@ if (ploopi\param::get('doc_explorer_displaytreeview'))
         <div id="doc_treeview">
             <div id="doc_treeview_inner">
                 <?php
-                // Récupération des dossiers visibles
+                // RÃ©cupÃ©ration des dossiers visibles
                 $arrFolders = doc_getfolders();
 
-                // Récupération de la structure du treeview
+                // RÃ©cupÃ©ration de la structure du treeview
                 $arrTreeview = doc_gettreeview($arrFolders);
                 echo ploopi\skin::get()->display_treeview($arrTreeview['list'], $arrTreeview['tree'], $currentfolder, -1);
                 ?>
@@ -111,7 +111,7 @@ else
                         switch($_GET['doc_error'])
                         {
                             case 'unknown_file':
-                                $strMsg = "Le fichier que vous avez tenté d'ouvrir n'existe plus";
+                                $strMsg = "Le fichier que vous avez tentÃ© d'ouvrir n'existe plus";
                             break;
 
                             default:
@@ -140,14 +140,14 @@ else
                         if (!doc_folder_contentisreadonly($objFolder->fields, _DOC_ACTION_ADDFILE))
                         {
                             ?>
-                            <a title="Créer un nouveau fichier" href="<?php echo ploopi\crypt::urlencode("admin.php?op=doc_fileform&currentfolder={$currentfolder}"); ?>" style="float:right;"><img src="./modules/doc/img/ico_newfile.png"></a>
+                            <a title="CrÃ©er un nouveau fichier" href="<?php echo ploopi\crypt::urlencode("admin.php?op=doc_fileform&currentfolder={$currentfolder}"); ?>" style="float:right;"><img src="./modules/doc/img/ico_newfile.png"></a>
                             <?php
                         }
 
                         if (!doc_folder_contentisreadonly($objFolder->fields, _DOC_ACTION_ADDFOLDER))
                         {
                             ?>
-                            <a title="Créer un nouveau Dossier" href="<?php echo ploopi\crypt::urlencode("admin.php?op=doc_folderform&currentfolder={$currentfolder}&addfolder=1"); ?>" style="float:right;"><img src="./modules/doc/img/ico_newfolder.png"></a>
+                            <a title="CrÃ©er un nouveau Dossier" href="<?php echo ploopi\crypt::urlencode("admin.php?op=doc_folderform&currentfolder={$currentfolder}&addfolder=1"); ?>" style="float:right;"><img src="./modules/doc/img/ico_newfolder.png"></a>
                             <?php
                         }
                         ?>
@@ -182,7 +182,7 @@ else
                                 else
                                 {
                                     ?>
-                                    <a <?php if ($currentfolder == $row['id']) echo 'class="doc_pathselected"'; ?> href="javascript:void(0);" onclick="javascript:alert('Vous n\'avez pas l\'autorisation d'\accéder à ce dossier');">
+                                    <a <?php if ($currentfolder == $row['id']) echo 'class="doc_pathselected"'; ?> href="javascript:void(0);" onclick="javascript:alert('Vous n\'avez pas l\'autorisation d'\accÃ©der Ã  ce dossier');">
                                     <?php
                                 }
                                 ?>

@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2009 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,13 +21,13 @@
 */
 
 /**
- * Partie publique du module permettant de gérer l'affichage des pages, l'historique (+diff) et le renommage
+ * Partie publique du module permettant de gÃ©rer l'affichage des pages, l'historique (+diff) et le renommage
  *
  * @package wiki
  * @subpackage public
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 switch($strWikiMenu)

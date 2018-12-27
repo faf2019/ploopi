@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS `ploopi_mod_doc_file` (
   KEY `id_folder` (`id_folder`),
   KEY `extension` (`extension`),
   KEY `md5id` (`md5id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `ploopi_mod_doc_file_draft`;
 CREATE TABLE IF NOT EXISTS `ploopi_mod_doc_file_draft` (
@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS `ploopi_mod_doc_file_draft` (
   `id_module` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `md5id` (`md5id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `ploopi_mod_doc_file_history`;
 CREATE TABLE IF NOT EXISTS `ploopi_mod_doc_file_history` (
@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS `ploopi_mod_doc_file_history` (
   `id_user_modify` int(10) unsigned NOT NULL default '0',
   `id_module` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id_docfile`,`version`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `ploopi_mod_doc_folder`;
 CREATE TABLE IF NOT EXISTS `ploopi_mod_doc_folder` (
@@ -92,7 +92,7 @@ CREATE TABLE IF NOT EXISTS `ploopi_mod_doc_folder` (
   KEY `id_group` (`id_workspace`),
   KEY `id_module` (`id_module`),
   KEY `id_folder` (`id_folder`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `ploopi_mod_doc_keyword`;
 CREATE TABLE IF NOT EXISTS `ploopi_mod_doc_keyword` (
@@ -104,7 +104,7 @@ CREATE TABLE IF NOT EXISTS `ploopi_mod_doc_keyword` (
   KEY `twoletter` (`twoletters`),
   KEY `keyword` (`keyword`),
   KEY `id_module` (`id_module`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `ploopi_mod_doc_keyword_file`;
 CREATE TABLE IF NOT EXISTS `ploopi_mod_doc_keyword_file` (
@@ -118,7 +118,7 @@ CREATE TABLE IF NOT EXISTS `ploopi_mod_doc_keyword_file` (
   KEY `weight` (`weight`),
   KEY `meta` (`meta`),
   KEY `id_module` (`id_module`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `ploopi_mod_doc_meta`;
 CREATE TABLE IF NOT EXISTS `ploopi_mod_doc_meta` (
@@ -128,7 +128,7 @@ CREATE TABLE IF NOT EXISTS `ploopi_mod_doc_meta` (
   KEY `value` (`value`),
   KEY `meta` (`meta`),
   KEY `id_file` (`id_file`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `ploopi_mod_doc_parser`;
 CREATE TABLE IF NOT EXISTS `ploopi_mod_doc_parser` (
@@ -137,14 +137,14 @@ CREATE TABLE IF NOT EXISTS `ploopi_mod_doc_parser` (
   `path` varchar(255) NOT NULL default '',
   `extension` varchar(10) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
-INSERT INTO `ploopi_mod_doc_parser` (`id`, `label`, `path`, `extension`) VALUES 
-(1, 'Microsoft WORD', 'catdoc -s 8859-15 -d 8859-15 -f ascii %f', 'doc'),
+INSERT INTO `ploopi_mod_doc_parser` (`id`, `label`, `path`, `extension`) VALUES
+(1, 'Microsoft WORD', 'catdoc -d UTF-8 %f', 'doc'),
 (2, 'Acrobat PDF', 'pdftotext -nopgbrk %f -', 'pdf'),
 (3, 'TEXTE', 'cat %f', 'txt'),
 (4, 'Microsoft EXCEL', 'xls2csv %f', 'xls'),
-(6, 'Microsoft PowerPoint', 'catppt -s 8859-15 -d 8859-15 %f', 'ppt'),
+(6, 'Microsoft PowerPoint', 'catppt -d UTF-8 %f', 'ppt'),
 (7, 'OpenOffice 2.0 Writer', 'bin/oo2txt.sh %f', 'odt'),
 (8, 'OpenOffice 1.0 Writer', 'bin/oo2txt.sh %f', 'sxw'),
 (9, 'Rich Text Format RTF', 'unrtf --text --nopict %f', 'rtf'),
@@ -156,7 +156,8 @@ INSERT INTO `ploopi_mod_doc_parser` (`id`, `label`, `path`, `extension`) VALUES
 (15, 'OpenOffice 2.0 Impress', 'bin/oo2txt.sh %f', 'odp'),
 (16, 'CSV', 'cat %f', 'csv');
 
-
 UPDATE `ploopi_mod_doc_folder` SET `readonly` = `readonly_content`;
 ALTER TABLE `ploopi_mod_doc_folder` DROP `readonly_content`;
 UPDATE `ploopi_mod_doc_file` fi, `ploopi_mod_doc_folder` fo SET fi.`readonly` = fo.`readonly` WHERE fi.`id_folder` = fo.`id`;
+
+UPDATE ploopi_mod_doc_parser SET `path` = 'unoconv --format=txt --stdout %f' WHERE id IN(7,8,13,14,15);

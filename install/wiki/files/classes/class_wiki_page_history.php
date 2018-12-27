@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2009 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,18 +26,18 @@
  * @package wiki
  * @subpackage page_history
  * @copyright Ovensia
- * @author Stéphane Escaich
+ * @author Ovensia
  * @version  $Revision$
  * @modifiedby $LastChangedBy$
  * @lastmodified $Date$
  */
 
 /**
- * Classe d'accès à la table 'ploopi_mod_wiki_page_history'
+ * Classe d'accÃ¨s Ã  la table 'ploopi_mod_wiki_page_history'
  *
  * @package wiki
  * @subpackage page_history
- * @author Stéphane Escaich
+ * @author Ovensia
  * @copyright Ovensia
  */
 

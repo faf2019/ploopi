@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Copyright (c) 2009 HeXad
 
     Contributors hold Copyright (c) to their code submissions.
@@ -23,24 +23,24 @@
 */
 
 /**
- * OpÈrations
+ * Op√©rations
  *
  * @package doc
  * @subpackage op
  * @copyright Ovensia, HeXad
  * @license GNU General Public License (GPL)
- * @author StÈphane Escaich
+ * @author Ovensia
  */
 
 /**
- * Si l'utilisateur est connectÈ
+ * Si l'utilisateur est connect√©
  */
 
 if ($_SESSION['ploopi']['connected'])
 {
     /**
-     * On vÈrifie qu'on est bien dans le module DOC.
-     * Ces opÈrations ne peuvent Ítre effectuÈes que depuis le module DOC.
+     * On v√©rifie qu'on est bien dans le module DOC.
+     * Ces op√©rations ne peuvent √™tre effectu√©es que depuis le module DOC.
      */
     if (ploopi\acl::ismoduleallowed('doc'))
     {
@@ -64,13 +64,13 @@ if ($_SESSION['ploopi']['connected'])
                 {
                     ploopi\module::init('doc');
 
-                    // Dossiers ‡ exclure dans le choix
+                    // Dossiers √† exclure dans le choix
                     $arrExcludes = array();
                     if (!empty($_GET['doc_excludes']) && is_numeric($_GET['doc_excludes'])) $arrExcludes = explode(',', $_GET['doc_excludes']);
 
                     $strPrefix = isset($_GET['doc_prefix']) ? $_GET['doc_prefix'] : '';
 
-                    // RÈcupÈration de la structure du treeview
+                    // R√©cup√©ration de la structure du treeview
                     $arrTreeview = doc_gettreeview(doc_getfolders(), $strPrefix, $arrExcludes);
 
                     echo ploopi\skin::get()->display_treeview($arrTreeview['list'], $arrTreeview['tree'], $strPrefix.$currentfolder, $strPrefix.$_GET['doc_folder_id']);
@@ -90,13 +90,13 @@ if ($_SESSION['ploopi']['connected'])
 
                 ploopi\module::init('doc');
 
-                // Brouillon nÈcessitant validation ?
+                // Brouillon n√©cessitant validation ?
                 $draft = false;
 
                 // nouveau fichier ?
                 $newfile = empty($_REQUEST['docfile_md5id']);
 
-                // Le currentfolder peut changer en fonction du dossier de destination (cas d'un dÈplacement)
+                // Le currentfolder peut changer en fonction du dossier de destination (cas d'un d√©placement)
                 if (!empty($_REQUEST['docfile_id_folder'])) $currentfolder = $_REQUEST['docfile_id_folder'];
 
                 $docfolder = new docfolder();
@@ -104,15 +104,14 @@ if ($_SESSION['ploopi']['connected'])
                 if ($currentfolder) $docfolder->open($currentfolder);
 
 
-                // VÈrification des droits de l'utilisateur
+                // V√©rification des droits de l'utilisateur
                 // 1. Peut il modifier le fichier ?
-                // 2. Peut il Ècrire dans ce dossier ?
+                // 2. Peut il √©crire dans ce dossier ?
 
                 $readonly = false;
-
                 if ($newfile)
                 {
-                    // cas de la racine gÈrÈ
+                    // cas de la racine g√©r√©
                     $readonly = doc_folder_contentisreadonly($docfolder->fields, _DOC_ACTION_ADDFILE);
                 }
                 else
@@ -155,7 +154,7 @@ if ($_SESSION['ploopi']['connected'])
                 }
 
 
-                // on crÈe des documents "draft" s'il existe des validateurs et que l'utilisateur courant n'en fait pas partie
+                // on cr√©e des documents "draft" s'il existe des validateurs et que l'utilisateur courant n'en fait pas partie
                 $draft = ((!empty($arrWfUsers['user']) || !empty($arrWfUsers['group'])) && !$booWfVal);
 
                 if ($newfile)
@@ -170,7 +169,7 @@ if ($_SESSION['ploopi']['connected'])
                         $filename = '';
                         $filesize = 0;
 
-                        // rÈcupÈration des infos sur le fichier en fonction du mode d'envoi
+                        // r√©cup√©ration des infos sur le fichier en fonction du mode d'envoi
                         switch($_REQUEST['doc_mode'])
                         {
                             case 'host':
@@ -209,7 +208,7 @@ if ($_SESSION['ploopi']['connected'])
 
                         if(!$error) // si pas d'erreur
                         {
-                            // Ce n'est pas un fichier compressÈ, on enregistre le document
+                            // Ce n'est pas un fichier compress√©, on enregistre le document
                             if (empty($_REQUEST["docfile_decompress_{$i}"]))
                             {
                                 $arrListFic[] = array(
@@ -221,9 +220,9 @@ if ($_SESSION['ploopi']['connected'])
                                     'uncompress'  => false
                                 );
                             }
-                            elseif(!empty($_REQUEST["docfile_decompress_{$i}"])) // Si c'est un fichier ‡ dÈcompresser
+                            elseif(!empty($_REQUEST["docfile_decompress_{$i}"])) // Si c'est un fichier √† d√©compresser
                             {
-                                // CrÈation d'un dossier de travail temporaire
+                                // Cr√©ation d'un dossier de travail temporaire
                                 $tmpfoldername = md5(uniqid(rand(), true));
                                 $uncompress_path = doc_getpath()._PLOOPI_SEP.'zip'._PLOOPI_SEP.$tmpfoldername;
                                 if (!is_dir($uncompress_path)) ploopi\fs::makedir($uncompress_path);
@@ -273,7 +272,7 @@ if ($_SESSION['ploopi']['connected'])
                                     $docfile->fields['id_folder'] = $currentfolder;
                                     $docfile->fields['id_user_modify'] = $_SESSION['ploopi']['userid'];
 
-                                    // si le fichier vient d'un dossier partagÈ, il ne faut pas le dÈplacer mais le copier
+                                    // si le fichier vient d'un dossier partag√©, il ne faut pas le d√©placer mais le copier
                                     if($fic['uncompress'])
                                     {
                                         if ($_REQUEST['doc_mode'] == 'server') $docfile->sharedfile = $uncompress_path._PLOOPI_SEP.$fic['file'];
@@ -297,7 +296,7 @@ if ($_SESSION['ploopi']['connected'])
                                             $_SESSION['ploopi']['tickets']['users_selected'] = $arrWfUsersOnly;
                                             ploopi\ticket::send(
                                                 "Demande de validation du document <strong>\"{$docfile->fields['name']}\"</strong> (module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']})",
-                                                "Ceci est un message automatique envoyÈ suite ‡ une demande de validation du document \"{$docfile->fields['name']}\" du module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']}<br /><br />Vous pouvez accÈder ‡ ce document pour le valider en cliquant sur le lien ci-dessous.",
+                                                "Ceci est un message automatique envoy√© suite √† une demande de validation du document \"{$docfile->fields['name']}\" du module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']}<br /><br />Vous pouvez acc√©der √† ce document pour le valider en cliquant sur le lien ci-dessous.",
                                                 true,
                                                 0,
                                                 _DOC_OBJECT_FILEDRAFT,
@@ -308,11 +307,11 @@ if ($_SESSION['ploopi']['connected'])
 
                                         if (!$draft && $currentfolder != 0)
                                         {
-                                            // On va chercher les abonnÈs
+                                            // On va chercher les abonn√©s
                                             $arrSubscribers = $docfolder->getSubscribers(array(_DOC_ACTION_ADDFILE, _DOC_ACTION_MODIFYFILE));
 
                                             // on envoie le ticket de notification d'action sur l'objet
-                                            if (!empty($arrSubscribers)) ploopi\subscription::notify(_DOC_OBJECT_FILE, $docfile->fields['md5id'], _DOC_ACTION_ADDFILE, $docfile->fields['name'], array_keys($arrSubscribers), 'Cet objet ‡ ÈtÈ crÈÈ');
+                                            if (!empty($arrSubscribers)) ploopi\subscription::notify(_DOC_OBJECT_FILE, $docfile->fields['md5id'], _DOC_ACTION_ADDFILE, $docfile->fields['name'], array_keys($arrSubscribers), 'Cet objet √† √©t√© cr√©√©');
                                         }
 
                                         ploopi\user_action_log::record(_DOC_ACTION_ADDFILE, $docfile->fields['id']);
@@ -324,9 +323,9 @@ if ($_SESSION['ploopi']['connected'])
                         }
                     }
                 }
-                // Mise ‡ jour d'un (unique) fichier
-                // Attention un fichier existant peut Ítre dÈplacÈ et redevenir un brouillon nÈcessitant validation (en fonction de la destination)
-                // /!\ Dans ce cas le fichier original est supprimÈ
+                // Mise √† jour d'un (unique) fichier
+                // Attention un fichier existant peut √™tre d√©plac√© et redevenir un brouillon n√©cessitant validation (en fonction de la destination)
+                // /!\ Dans ce cas le fichier original est supprim√©
                 else
                 {
                     $docfile = new docfile();
@@ -334,7 +333,7 @@ if ($_SESSION['ploopi']['connected'])
                     if (empty($_GET['docfile_md5id']) || !$docfile->openmd5($_GET['docfile_md5id'])) ploopi\output::redirect('admin.php');
                     $docfile_id = $docfile->fields['id'];
 
-                    // On va d'abord vÈrifier si le fichier est dÈplacÈ
+                    // On va d'abord v√©rifier si le fichier est d√©plac√©
                     $booMoved = !empty($_POST['docfile_id_folder']) && $_POST['docfile_id_folder'] != $docfile->fields['id_folder'];
 
 
@@ -346,7 +345,7 @@ if ($_SESSION['ploopi']['connected'])
                     $filesize = 0;
 
 
-                    // rÈcupÈration des infos sur le fichier en fonction du mode d'envoi
+                    // r√©cup√©ration des infos sur le fichier en fonction du mode d'envoi
                     switch($_REQUEST['doc_mode'])
                     {
                         case 'host':
@@ -387,7 +386,7 @@ if ($_SESSION['ploopi']['connected'])
 
 
 
-                    // Attention on dÈplace un fichier dans un dossier nÈcessitant validation !
+                    // Attention on d√©place un fichier dans un dossier n√©cessitant validation !
 
                     $docfile->setvalues($_POST,'docfile_');
 
@@ -397,7 +396,7 @@ if ($_SESSION['ploopi']['connected'])
                     {
                         $docfile->fields['id_user_modify'] = $_SESSION['ploopi']['userid'];
 
-                        // si le fichier vient d'un dossier partagÈ, il ne faut pas le dÈplacer mais le copier
+                        // si le fichier vient d'un dossier partag√©, il ne faut pas le d√©placer mais le copier
                         if ($_REQUEST['doc_mode'] == 'server') $docfile->sharedfile = $tmpfile;
                         else $docfile->tmpfile = $tmpfile;
 
@@ -410,20 +409,20 @@ if ($_SESSION['ploopi']['connected'])
                     if ($booMoved && $draft)
                     {
 
-                        // on n'est pas ‡ la racine (pas d'abonnement sur la racine)
+                        // on n'est pas √† la racine (pas d'abonnement sur la racine)
                         if (!empty($docfile->fields['id_folder']))
                         {
-                            // On va chercher les abonnÈs
+                            // On va chercher les abonn√©s
                             $arrSubscribers = $docfolder->getSubscribers(array(_DOC_ACTION_MODIFYFILE, _DOC_ACTION_DELETEFILE));
 
                             // on envoie le ticket de notification d'action sur l'objet
-                            if (!empty($arrSubscribers)) ploopi\subscription::notify(_DOC_OBJECT_FILE, $docfile->fields['md5id'], _DOC_ACTION_DELETEFILE, $docfile->fields['name'], array_keys($arrSubscribers), 'Cet objet ‡ ÈtÈ supprimÈ');
+                            if (!empty($arrSubscribers)) ploopi\subscription::notify(_DOC_OBJECT_FILE, $docfile->fields['md5id'], _DOC_ACTION_DELETEFILE, $docfile->fields['name'], array_keys($arrSubscribers), 'Cet objet √† √©t√© supprim√©');
                         }
 
                         ploopi\user_action_log::record(_DOC_ACTION_DELETEFILE, $docfile->fields['id']);
 
 
-                        // CrÈe le brouillon et supprime le fichier d'origine
+                        // Cr√©e le brouillon et supprime le fichier d'origine
                         $docfile = $docfile->movetodraft();
                     }
 
@@ -435,7 +434,7 @@ if ($_SESSION['ploopi']['connected'])
                             $_SESSION['ploopi']['tickets']['users_selected'] = $arrWfUsersOnly;
                             ploopi\ticket::send(
                                 "Demande de validation du document <strong>\"{$docfile->fields['name']}\"</strong> (module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']})",
-                                "Ceci est un message automatique envoyÈ suite ‡ une demande de validation du document \"{$docfile->fields['name']}\" du module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']}<br /><br />Vous pouvez accÈder ‡ ce document pour le valider en cliquant sur le lien ci-dessous.",
+                                "Ceci est un message automatique envoy√© suite √† une demande de validation du document \"{$docfile->fields['name']}\" du module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']}<br /><br />Vous pouvez acc√©der √† ce document pour le valider en cliquant sur le lien ci-dessous.",
                                 true,
                                 0,
                                 _DOC_OBJECT_FILEDRAFT,
@@ -448,11 +447,11 @@ if ($_SESSION['ploopi']['connected'])
                             $docfolder = new docfolder();
                             $docfolder->open($docfile->fields['id_folder']);
 
-                            // On va chercher les abonnÈs
+                            // On va chercher les abonn√©s
                             $arrSubscribers = $docfolder->getSubscribers(array(_DOC_ACTION_MODIFYFILE));
 
                             // on envoie le ticket de notification d'action sur l'objet
-                            if (!empty($arrSubscribers)) ploopi\subscription::notify(_DOC_OBJECT_FILE, $docfile->fields['md5id'], _DOC_ACTION_MODIFYFILE, $docfile->fields['name'], array_keys($arrSubscribers), 'Cet objet ‡ ÈtÈ modifiÈ');
+                            if (!empty($arrSubscribers)) ploopi\subscription::notify(_DOC_OBJECT_FILE, $docfile->fields['md5id'], _DOC_ACTION_MODIFYFILE, $docfile->fields['name'], array_keys($arrSubscribers), 'Cet objet √† √©t√© modifi√©');
                         }
                         ploopi\user_action_log::record(_DOC_ACTION_MODIFYFILE, $docfile_id);
                     }
@@ -481,7 +480,7 @@ if ($_SESSION['ploopi']['connected'])
 
                 if (!$error)
                 {
-                    // CrÈation d'un dossier de travail temporaire
+                    // Cr√©ation d'un dossier de travail temporaire
                     $tmpfoldername = md5(uniqid(rand(), true));
                     $zip_path = doc_getpath()._PLOOPI_SEP.'zip'._PLOOPI_SEP.$tmpfoldername;
                     if (!is_dir($zip_path)) ploopi\fs::makedir($zip_path);
@@ -497,7 +496,7 @@ if ($_SESSION['ploopi']['connected'])
                             $objZip->close();
                         }
 
-                        // TÈlÈchargement du fichier zip
+                        // T√©l√©chargement du fichier zip
                         ploopi\fs::downloadfile($zip_path._PLOOPI_SEP.$zip_filename, $zip_filename, true, true, false);
 
                         // Suppression du dossier temporaire
@@ -533,7 +532,7 @@ if ($_SESSION['ploopi']['connected'])
                         {
                             if ($ploopi_op == 'doc_fileview' && !empty($_GET['doc_viewmode']) && $_GET['doc_viewmode'] == 'pdf' && ploopi\session::getvar('unoconv') === true)
                             {
-                                // Conversion PDF demandÈe
+                                // Conversion PDF demand√©e
                                 $strUnoconvPath = ploopi\param::get('system_unoconv', _PLOOPI_MODULE_SYSTEM);
 
                                 // Fichier temporaire
@@ -590,17 +589,17 @@ if ($_SESSION['ploopi']['connected'])
                         {
                             $error = $docfile->delete();
 
-                            // on n'est pas ‡ la racine (pas d'abonnement sur la racine)
+                            // on n'est pas √† la racine (pas d'abonnement sur la racine)
                             if (!empty($docfile->fields['id_folder']))
                             {
                                 $docfolder = new docfolder();
                                 $docfolder->open($docfile->fields['id_folder']);
 
-                                // On va chercher les abonnÈs
+                                // On va chercher les abonn√©s
                                 $arrSubscribers = $docfolder->getSubscribers(array(_DOC_ACTION_MODIFYFILE, _DOC_ACTION_DELETEFILE));
 
                                 // on envoie le ticket de notification d'action sur l'objet
-                                if (!empty($arrSubscribers)) ploopi\subscription::notify(_DOC_OBJECT_FILE, $docfile->fields['md5id'], _DOC_ACTION_DELETEFILE, $docfile->fields['name'], array_keys($arrSubscribers), 'Cet objet ‡ ÈtÈ supprimÈ');
+                                if (!empty($arrSubscribers)) ploopi\subscription::notify(_DOC_OBJECT_FILE, $docfile->fields['md5id'], _DOC_ACTION_DELETEFILE, $docfile->fields['name'], array_keys($arrSubscribers), 'Cet objet √† √©t√© supprim√©');
                             }
 
                             ploopi\user_action_log::record(_DOC_ACTION_DELETEFILE, $docfile->fields['id']);
@@ -657,11 +656,11 @@ if ($_SESSION['ploopi']['connected'])
                         {
                             $docfolder->publish();
 
-                            // On va chercher les abonnÈs
+                            // On va chercher les abonn√©s
                             $arrSubscribers = $docfolder->getSubscribers(array(_DOC_ACTION_MODIFYFOLDER));
 
                             // on envoie le ticket de notification d'action sur l'objet
-                            if (!empty($arrSubscribers)) ploopi\subscription::notify(_DOC_OBJECT_FOLDER, $docfolder->fields['id'], _DOC_ACTION_MODIFYFOLDER, $docfolder->fields['name'], array_keys($arrSubscribers), 'Cet objet ‡ ÈtÈ publiÈ');
+                            if (!empty($arrSubscribers)) ploopi\subscription::notify(_DOC_OBJECT_FOLDER, $docfolder->fields['id'], _DOC_ACTION_MODIFYFOLDER, $docfolder->fields['name'], array_keys($arrSubscribers), 'Cet objet √† √©t√© publi√©');
                         }
                     }
                 }
@@ -684,11 +683,11 @@ if ($_SESSION['ploopi']['connected'])
 
                         if (!doc_folder_isreadonly($docfolder->fields, _DOC_ACTION_DELETEFOLDER) && ($docfolder->fields['nbelements'] == 0 || ploopi\acl::isadmin() || ploopi\acl::isactionallowed(_DOC_ACTION_ADMIN)))
                         {
-                            // On va chercher les abonnÈs
+                            // On va chercher les abonn√©s
                             $arrSubscribers = $docfolder->getSubscribers(array(_DOC_ACTION_DELETEFOLDER, _DOC_ACTION_MODIFYFOLDER));
 
                             // on envoie le ticket de notification d'action sur l'objet
-                            if (!empty($arrSubscribers)) ploopi\subscription::notify(_DOC_OBJECT_FOLDER, $docfolder->fields['id'], _DOC_ACTION_DELETEFOLDER, $docfolder->fields['name'], array_keys($arrSubscribers), 'Cet objet ‡ ÈtÈ supprimÈ');
+                            if (!empty($arrSubscribers)) ploopi\subscription::notify(_DOC_OBJECT_FOLDER, $docfolder->fields['id'], _DOC_ACTION_DELETEFOLDER, $docfolder->fields['name'], array_keys($arrSubscribers), 'Cet objet √† √©t√© supprim√©');
 
                             $docfolder->delete();
                             ploopi\user_action_log::record(_DOC_ACTION_DELETEFOLDER, $docfolder->fields['id']);
@@ -704,7 +703,7 @@ if ($_SESSION['ploopi']['connected'])
 
                 include_once './modules/doc/class_docfolder.php';
 
-                // ContrÙle de donnÈes (le dossier ne peut pas Ítre son propre parent)
+                // Contr√¥le de donn√©es (le dossier ne peut pas √™tre son propre parent)
                 if (isset($_POST['docfolder_id_folder']) && isset($_GET['docfolder_id']) && $_POST['docfolder_id_folder'] == $_GET['docfolder_id'])  ploopi\system::kill();
 
 
@@ -752,7 +751,7 @@ if ($_SESSION['ploopi']['connected'])
                     // L'utilisateur peut il modifier ce dossier ?
                     if ($docfolder->open($_GET['docfolder_id']) && !doc_folder_isreadonly($docfolder->fields, _DOC_ACTION_MODIFYFOLDER))
                     {
-                        // L'utilisateur peut-il Ècrire dans ce dossier ? (si changement de dossier)
+                        // L'utilisateur peut-il √©crire dans ce dossier ? (si changement de dossier)
                         if (!isset($_POST['docfolder_id_folder']) || $_POST['docfolder_id_folder'] == $docfolder->fields['id_folder'] || !doc_folder_contentisreadonly($parentfolder->fields, _DOC_ACTION_ADDFOLDER))
                         {
                             $docfolder->setvalues($_POST,'docfolder_');
@@ -765,7 +764,7 @@ if ($_SESSION['ploopi']['connected'])
                                 $docfolder->fields['published'] = 0;
 
                                 $_SESSION['ploopi']['tickets']['users_selected'] = $arrWfUsersOnly;
-                                ploopi\ticket::send("Demande de validation du dossier <strong>\"{$docfolder->fields['name']}\"</strong> (module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']})", "Ceci est un message automatique envoyÈ suite ‡ une demande de validation du dossier \"{$docfolder->fields['name']}\" du module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']}<br /><br />Vous pouvez accÈder ‡ ce dossier pour le valider en cliquant sur le lien ci-dessous.", true, 0, _DOC_OBJECT_FILEDRAFT, $currentfolder, $docfolder->fields['name']);
+                                ploopi\ticket::send("Demande de validation du dossier <strong>\"{$docfolder->fields['name']}\"</strong> (module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']})", "Ceci est un message automatique envoy√© suite √† une demande de validation du dossier \"{$docfolder->fields['name']}\" du module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']}<br /><br />Vous pouvez acc√©der √† ce dossier pour le valider en cliquant sur le lien ci-dessous.", true, 0, _DOC_OBJECT_FILEDRAFT, $currentfolder, $docfolder->fields['name']);
                             }
                             else
                             {
@@ -778,11 +777,11 @@ if ($_SESSION['ploopi']['connected'])
 
                             $currentfolder = $docfolder->save();
 
-                            // On va chercher les abonnÈs
+                            // On va chercher les abonn√©s
                             $arrSubscribers = $docfolder->getSubscribers(array(_DOC_ACTION_MODIFYFOLDER));
 
                             // on envoie le ticket de notification d'action sur l'objet
-                            if (!empty($arrSubscribers)) ploopi\subscription::notify(_DOC_OBJECT_FOLDER, $docfolder->fields['id'], _DOC_ACTION_MODIFYFOLDER, $docfolder->fields['name'], array_keys($arrSubscribers), 'Cet objet ‡ ÈtÈ modifiÈ');
+                            if (!empty($arrSubscribers)) ploopi\subscription::notify(_DOC_OBJECT_FOLDER, $docfolder->fields['id'], _DOC_ACTION_MODIFYFOLDER, $docfolder->fields['name'], array_keys($arrSubscribers), 'Cet objet √† √©t√© modifi√©');
 
                             // SHARES
                             ploopi\share::add(_DOC_OBJECT_FOLDER, $docfolder->fields['id'], -1, 'doc_share_folder');
@@ -799,7 +798,7 @@ if ($_SESSION['ploopi']['connected'])
                 }
                 else // Nouveau dossier
                 {
-                    // L'utilisateur peut-il Ècrire dans ce dossier ? (si changement de dossier)
+                    // L'utilisateur peut-il √©crire dans ce dossier ? (si changement de dossier)
                     if (!doc_folder_contentisreadonly($parentfolder->fields, _DOC_ACTION_ADDFOLDER))
                     {
                         $docfolder->setvalues($_POST,'docfolder_');
@@ -813,7 +812,7 @@ if ($_SESSION['ploopi']['connected'])
                             $docfolder->fields['published'] = 0;
 
                             $_SESSION['ploopi']['tickets']['users_selected'] = $arrWfUsersOnly;
-                            ploopi\ticket::send("Demande de validation du dossier <strong>\"{$docfolder->fields['name']}\"</strong> (module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']})", "Ceci est un message automatique envoyÈ suite ‡ une demande de validation du dossier \"{$docfolder->fields['name']}\" du module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']}<br /><br />Vous pouvez accÈder ‡ ce dossier pour le valider en cliquant sur le lien ci-dessous.", true, 0, _DOC_OBJECT_FILEDRAFT, $currentfolder, $docfolder->fields['name']);
+                            ploopi\ticket::send("Demande de validation du dossier <strong>\"{$docfolder->fields['name']}\"</strong> (module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']})", "Ceci est un message automatique envoy√© suite √† une demande de validation du dossier \"{$docfolder->fields['name']}\" du module {$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['label']}<br /><br />Vous pouvez acc√©der √† ce dossier pour le valider en cliquant sur le lien ci-dessous.", true, 0, _DOC_OBJECT_FILEDRAFT, $currentfolder, $docfolder->fields['name']);
                         }
                         else
                         {
@@ -827,11 +826,11 @@ if ($_SESSION['ploopi']['connected'])
 
                         $currentfolder = $docfolder->save();
 
-                        // On va chercher les abonnÈs
+                        // On va chercher les abonn√©s
                         $arrSubscribers = $docfolder->getSubscribers(array(_DOC_ACTION_ADDFOLDER, _DOC_ACTION_MODIFYFOLDER));
 
                         // on envoie le ticket de notification d'action sur l'objet
-                        if (!empty($arrSubscribers)) ploopi\subscription::notify(_DOC_OBJECT_FOLDER, $docfolder->fields['id'], _DOC_ACTION_ADDFOLDER, $docfolder->fields['name'], array_keys($arrSubscribers), 'Cet objet ‡ ÈtÈ crÈÈ');
+                        if (!empty($arrSubscribers)) ploopi\subscription::notify(_DOC_OBJECT_FOLDER, $docfolder->fields['id'], _DOC_ACTION_ADDFOLDER, $docfolder->fields['name'], array_keys($arrSubscribers), 'Cet objet √† √©t√© cr√©√©');
 
                         // SHARES
                         ploopi\share::add(_DOC_OBJECT_FOLDER, $docfolder->fields['id'], -1, 'doc_share_folder');
@@ -853,7 +852,7 @@ if ($_SESSION['ploopi']['connected'])
                 ob_start();
                 ploopi\module::init('doc');
 
-                // Dossiers ‡ exclure dans le choix (le dossier actuel)
+                // Dossiers √† exclure dans le choix (le dossier actuel)
                 $arrExcludes = array();
                 if (!empty($_GET['doc_excludes']) && is_numeric($_GET['doc_excludes'])) $arrExcludes = explode(',', $_GET['doc_excludes']);
 
@@ -862,7 +861,7 @@ if ($_SESSION['ploopi']['connected'])
                 ?>
                 <div style="padding:4px;height:350px;overflow:auto;">
                 <?php
-                // RÈcupÈration de la structure du treeview
+                // R√©cup√©ration de la structure du treeview
                 $arrTreeview = doc_gettreeview(doc_getfolders(), 'p_', $arrExcludes);
                 echo ploopi\skin::get()->display_treeview($arrTreeview['list'], $arrTreeview['tree'], 'p_'.$currentfolder, 'p_-1');
                 ?>
@@ -878,7 +877,7 @@ if ($_SESSION['ploopi']['connected'])
     }
 
     /**
-     * Autre opÈrations qui ne nÈcessite pas que l'on soit dans le module DOC
+     * Autre op√©rations qui ne n√©cessite pas que l'on soit dans le module DOC
      */
     switch($ploopi_op)
     {
@@ -901,7 +900,7 @@ if ($_SESSION['ploopi']['connected'])
                 }
 
                 // on cherche les fichiers du dossier "idfolder"
-                // en vÈrifiant au passage que le module est accessible et que le dossier est public
+                // en v√©rifiant au passage que le module est accessible et que le dossier est public
 
                 $arrModules = ploopi\module::getid('doc', false);
                 $arrFiles = array();
@@ -954,7 +953,7 @@ if ($_SESSION['ploopi']['connected'])
         case 'doc_selectimage':
         case 'doc_selectflash':
             // http://docs.ckeditor.com/#!/guide/dev_file_browser_api
-            // Important, paramËtres fournis par ckeditor :
+            // Important, param√®tres fournis par ckeditor :
             // CKEditor (= editor)
             // CKEditorFuncNum (= 0)
             // langCode (= fr)
@@ -995,7 +994,7 @@ if ($_SESSION['ploopi']['connected'])
 }
 
 /**
- * Autres opÈrations publiques (utilisateur non connectÈ, frontoffice)
+ * Autres op√©rations publiques (utilisateur non connect√©, frontoffice)
  */
 
 switch($ploopi_op)
@@ -1012,10 +1011,10 @@ switch($ploopi_op)
 
             ploopi\buffer::clean();
 
-            $objCache = new ploopi\cache(md5('doc_thumb_'.$_GET['docfile_md5id'].'_'.$_GET['version']), $intTimeCache); // Attribution d'un groupe spÈcifique pour le cache pour permettre un clean prÈcis
+            $objCache = new ploopi\cache(md5('doc_thumb_'.$_GET['docfile_md5id'].'_'.$_GET['version']), $intTimeCache); // Attribution d'un groupe sp√©cifique pour le cache pour permettre un clean pr√©cis
             $objCache->set_groupe('module_doc_'.$_SESSION['ploopi']['workspaceid'].'_'.$_SESSION['ploopi']['moduleid']);
 
-            if(!$objCache->start()) // si pas de cache on le crÈe
+            if(!$objCache->start()) // si pas de cache on le cr√©e
             {
                 ploopi\module::init('doc', false, false, false);
 
@@ -1053,7 +1052,7 @@ switch($ploopi_op)
     break;
 }
 
-// Point d'entrÈe vers le webservice
+// Point d'entr√©e vers le webservice
 if ($ploopi_op == 'doc_webservice') {
     include_once './modules/doc/webservice.php';
     ploopi\system::kill();

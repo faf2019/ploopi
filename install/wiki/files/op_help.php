@@ -1,6 +1,6 @@
 <?php
 /*
- Copyright (c) 2009 Ovensia
+ Copyright (c) 2007-2016 Ovensia
  Contributors hold Copyright (c) to their code submissions.
 
  This file is part of Ploopi.
@@ -26,7 +26,7 @@
  * @package wiki
  * @subpackage op
  * @copyright Ovensia
- * @author Stéphane Escaich
+ * @author Ovensia
  * @version  $Revision$
  * @modifiedby $LastChangedBy$
  * @lastmodified $Date$
@@ -187,13 +187,13 @@
         <th colspan="3">Pour aller plus loin...</th>
     </tr>
     <tr>
-        <td colspan="3"><a href="http://redcloth.org/hobix.com/textile/" target=_"new"><strong>Guide complet</strong> : Syntaxe avancée</a></td>
+        <td colspan="3"><a href="http://redcloth.org/hobix.com/textile/" target=_"new"><strong>Guide complet</strong> : Syntaxe avancÃ©e</a></td>
     </tr>
     <tr>
-        <td colspan="3"><a href="http://redcloth.org/hobix.com/textile/quick.html" target=_"new"><strong>Guide Complet</strong> : Version simplifiée</a></td>
+        <td colspan="3"><a href="http://redcloth.org/hobix.com/textile/quick.html" target=_"new"><strong>Guide Complet</strong> : Version simplifiÃ©e</a></td>
     </tr>
     <tr>
-        <td colspan="3"><a href="http://fr.wikipedia.org/wiki/Textile_(langage)" target=_"new"><strong>Wikipedia</strong> : Présentation de Textile</a></td>
+        <td colspan="3"><a href="http://fr.wikipedia.org/wiki/Textile_(langage)" target=_"new"><strong>Wikipedia</strong> : PrÃ©sentation de Textile</a></td>
     </tr>
     
 </table>

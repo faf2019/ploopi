@@ -52,7 +52,7 @@ doc_getshare();
 // + du module
 // + du dossier
 
-// + publié + (utilisateur = propriétaire) ou (partagé a l'utilisateur) ou (public) ou (dossier à valider et utilisateur = validateur du dossier)
+// + publiÃ© + (utilisateur = propriÃ©taire) ou (partagÃ© a l'utilisateur) ou (public) ou (dossier Ã  valider et utilisateur = validateur du dossier)
 // ou validateur
 
 $arrWhere = array();
@@ -65,17 +65,17 @@ $arrWhere['folder'] = "f.id_folder = {$currentfolder}";
 // Utilisateur "standard"
 if (!$wf_validator && !ploopi\acl::isadmin())
 {
-    // Publié (ou propriétaire)
+    // PubliÃ© (ou propriÃ©taire)
     $arrWhere['published'] = "(f.published = 1 OR f.id_user = {$_SESSION['ploopi']['userid']})";
 
-    // Prioriétaire
+    // PrioriÃ©taire
     $arrWhere['visibility']['user'] = "f.id_user = {$_SESSION['ploopi']['userid']}";
-    // Partagé
+    // PartagÃ©
     if (!empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['share']['folders'])) $arrWhere['visibility']['shared'] = "(f.foldertype = 'shared' AND f.id IN (".implode(',', $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['share']['folders'])."))";
     // Public
     $arrWhere['visibility']['public'] = "(f.foldertype = 'public' AND f.id_workspace IN (".ploopi\system::viewworkspaces()."))";
 
-    // Synthèse visibilité
+    // SynthÃ¨se visibilitÃ©
     $arrWhere['visibility'] = '('.implode(' OR ', $arrWhere['visibility']).')';
 }
 
@@ -124,11 +124,11 @@ while ($row = ploopi\db::get()->fetchrow($rs))
 
     if (ploopi\acl::isadmin() || (ploopi\acl::isactionallowed(_DOC_ACTION_DELETEFOLDER) && (!$readonly) && ($row['nbelements'] == 0)))
     {
-        $tools = '<a title="Supprimer" style="padding-left: 4px;display:block;float:right;" href="javascript:void(0);" onclick="javascript:if (confirm(\'Êtes vous certain de vouloir supprimer ce dossier ?\')) document.location.href=\''.ploopi\crypt::urlencode("admin.php?ploopi_op=doc_folderdelete&docfolder_id={$row['id']}").'\'; return(false);"><img src="./modules/doc/img/ico_trash.png" /></a>';
+        $tools = '<a title="Supprimer" style="padding-left: 4px;display:block;float:right;" href="javascript:void(0);" onclick="javascript:if (confirm(\'ÃŠtes vous certain de vouloir supprimer ce dossier ?\')) document.location.href=\''.ploopi\crypt::urlencode("admin.php?ploopi_op=doc_folderdelete&docfolder_id={$row['id']}").'\'; return(false);"><img src="./modules/doc/img/ico_trash.png" /></a>';
     }
     else
     {
-        $tools = '<a style="padding-left: 4px;display:block;float:right;" href="javascript:void(0);" onclick="javascript:alert(\'Vous ne disposez pas des autorisations nécessaires pour supprimer ce dossier\');"><img src="./modules/doc/img/ico_trash_grey.png" /></a>';
+        $tools = '<a style="padding-left: 4px;display:block;float:right;" href="javascript:void(0);" onclick="javascript:alert(\'Vous ne disposez pas des autorisations nÃ©cessaires pour supprimer ce dossier\');"><img src="./modules/doc/img/ico_trash_grey.png" /></a>';
     }
 
     if (!$row['published'] && ($wf_validator || ploopi\acl::isadmin()))
@@ -156,7 +156,7 @@ while ($row = ploopi\db::get()->fetchrow($rs))
     <div class="doc_thumb" <?php echo ($row['published']) ? '' : 'style="background-color:#ffe0e0;"'; ?>>
         <a href="<?php echo ploopi\crypt::urlencode("admin.php?op=doc_browser&currentfolder={$row['id']}"); ?>" title="<?php echo strtolower($row['name'].' '.$link); ?>" >
             <p style="height: 59px; padding-top: 20px;"><img alt="<?php  echo strtolower($row['name'].' '.$link); ?>" src="<?php  echo "./modules/doc/img/{$ico}" ?>" ></p>
-            <p style="height: 10px; font-size: 0.8em; font-style: italic;"><?php  echo "{$row['nbelements']} élément".($row['nbelements']>1 ? 's' : ''); ?></p>
+            <p style="height: 10px; font-size: 0.8em; font-style: italic;"><?php  echo "{$row['nbelements']} Ã©lÃ©ment".($row['nbelements']>1 ? 's' : ''); ?></p>
             <p style="height: 8px;"><?php  echo ploopi\str::cut(strtolower($row['name'].' '.$link),18,'middle'); ?></p>
         </a>
         <p style="height: 15px;"><?php echo $tools; ?></p>
@@ -216,17 +216,17 @@ while ($row = ploopi\db::get()->fetchrow())
     //if (ploopi\acl::isactionallowed(_DOC_ACTION_DELETEFILE) && (!$docfolder_readonly_content || $row['id_user'] == $_SESSION['ploopi']['userid']))
     if (ploopi\acl::isadmin() || (ploopi\acl::isactionallowed(_DOC_ACTION_DELETEFILE) && ((!$docfolder_readonly_content && !$row['readonly']) || $row['id_user'] == $_SESSION['ploopi']['userid'])))
     {
-        $tools = '<a title="Supprimer" style="padding-left: 4px; display:block;float:right;" href="javascript:void(0);" onclick="javascript:if (confirm(\'Êtes vous certain de vouloir supprimer ce fichier ?\')) document.location.href=\''.ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_filedelete&currentfolder={$currentfolder}&docfile_md5id={$row['md5id']}").'\'; return(false);"><img src="./modules/doc/img/ico_trash.png" /></a>';
+        $tools = '<a title="Supprimer" style="padding-left: 4px; display:block;float:right;" href="javascript:void(0);" onclick="javascript:if (confirm(\'ÃŠtes vous certain de vouloir supprimer ce fichier ?\')) document.location.href=\''.ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_filedelete&currentfolder={$currentfolder}&docfile_md5id={$row['md5id']}").'\'; return(false);"><img src="./modules/doc/img/ico_trash.png" /></a>';
     }
     else
     {
-        $tools = '<a title="Supprimer" style="padding-left: 4px;display:block;float:right;" href="javascript:void(0);" onclick="javascript:alert(\'Vous ne disposez pas des autorisations nécessaires pour supprimer ce fichier\');"><img src="./modules/doc/img/ico_trash_grey.png" /></a>';
+        $tools = '<a title="Supprimer" style="padding-left: 4px;display:block;float:right;" href="javascript:void(0);" onclick="javascript:alert(\'Vous ne disposez pas des autorisations nÃ©cessaires pour supprimer ce fichier\');"><img src="./modules/doc/img/ico_trash_grey.png" /></a>';
     }
 
     $tools .= '
         <a title="Modifier" style="padding-left: 4px;display:block; float:right;" href="'.ploopi\crypt::urlencode("admin.php?op=doc_fileform&currentfolder={$currentfolder}&docfile_md5id={$row['md5id']}&docfile_tab=modify").'"><img src="./modules/doc/img/ico_modify.png" /></a>
-        <a title="Télécharger" style="padding-left: 4px;display:block;float:right;" href="'.ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_filedownload&docfile_md5id={$row['md5id']}").'"><img src="./modules/doc/img/ico_download.png" /></a>
-        <a title="Télécharger (ZIP)" style="padding-left: 4px;display:block;float:right;" href="'.ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_filedownloadzip&docfile_md5id={$row['md5id']}").'"><img src="./modules/doc/img/ico_download_zip.png" /></a>
+        <a title="TÃ©lÃ©charger" style="padding-left: 4px;display:block;float:right;" href="'.ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_filedownload&docfile_md5id={$row['md5id']}").'"><img src="./modules/doc/img/ico_download.png" /></a>
+        <a title="TÃ©lÃ©charger (ZIP)" style="padding-left: 4px;display:block;float:right;" href="'.ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_filedownloadzip&docfile_md5id={$row['md5id']}").'"><img src="./modules/doc/img/ico_download_zip.png" /></a>
     ';
     
     ?>
@@ -307,21 +307,21 @@ while ($row = ploopi\db::get()->fetchrow())
 
     if (ploopi\acl::isadmin() || (ploopi\acl::isactionallowed(_DOC_ACTION_DELETEFILE) && (!$docfolder_readonly_content || $row['id_user'] == $_SESSION['ploopi']['userid'])))
     {
-        $tools = '<a title="Supprimer" style="padding-left: 4px; display:block;float:right;" href="javascript:void(0);" onclick="javascript:if (confirm(\'Êtes vous certain de vouloir supprimer ce fichier ?\')) document.location.href=\''.ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_filedraftdelete&currentfolder={$currentfolder}&docfiledraft_md5id={$row['md5id']}").'\'; return(false);"><img src="./modules/doc/img/ico_trash.png" /></a>';
+        $tools = '<a title="Supprimer" style="padding-left: 4px; display:block;float:right;" href="javascript:void(0);" onclick="javascript:if (confirm(\'ÃŠtes vous certain de vouloir supprimer ce fichier ?\')) document.location.href=\''.ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_filedraftdelete&currentfolder={$currentfolder}&docfiledraft_md5id={$row['md5id']}").'\'; return(false);"><img src="./modules/doc/img/ico_trash.png" /></a>';
     }
     else
     {
-        $tools = '<a title="Supprimer" style="padding-left: 4px; display:block;float:right;" href="javascript:void(0);" onclick="javascript:alert(\'Vous ne disposez pas des autorisations nécessaires pour supprimer ce fichier\');"><img src="./modules/doc/img/ico_trash_grey.png" /></a>';
+        $tools = '<a title="Supprimer" style="padding-left: 4px; display:block;float:right;" href="javascript:void(0);" onclick="javascript:alert(\'Vous ne disposez pas des autorisations nÃ©cessaires pour supprimer ce fichier\');"><img src="./modules/doc/img/ico_trash_grey.png" /></a>';
     }
 
     if ($wf_validator || ploopi\acl::isadmin())
     {
-        $tools .= '<a title="Publier" style="padding-left: 4px; display:block;float:right;" href="javascript:void(0);" onclick="javascript:if (confirm(\'Êtes vous certain de vouloir publier ce fichier ?\')) document.location.href=\''.ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_filepublish&currentfolder={$currentfolder}&docfiledraft_md5id={$row['md5id']}").'\'; return(false);"><img src="./modules/doc/img/ico_validate.png" /></a>';
+        $tools .= '<a title="Publier" style="padding-left: 4px; display:block;float:right;" href="javascript:void(0);" onclick="javascript:if (confirm(\'ÃŠtes vous certain de vouloir publier ce fichier ?\')) document.location.href=\''.ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_filepublish&currentfolder={$currentfolder}&docfiledraft_md5id={$row['md5id']}").'\'; return(false);"><img src="./modules/doc/img/ico_validate.png" /></a>';
     }
 
     $tools .= '
-        <a title="Télécharger" style="padding-left: 4px; display:block;float:right;" href="'.ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_filedownload&docfiledraft_md5id={$row['md5id']}").'"><img src="./modules/doc/img/ico_download.png" /></a>
-        <a title="Télécharger (ZIP)" style="padding-left: 4px; display:block;float:right;" href="'.ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_filedownloadzip&docfiledraft_md5id={$row['md5id']}").'"><img src="./modules/doc/img/ico_download_zip.png" /></a>
+        <a title="TÃ©lÃ©charger" style="padding-left: 4px; display:block;float:right;" href="'.ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_filedownload&docfiledraft_md5id={$row['md5id']}").'"><img src="./modules/doc/img/ico_download.png" /></a>
+        <a title="TÃ©lÃ©charger (ZIP)" style="padding-left: 4px; display:block;float:right;" href="'.ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_filedownloadzip&docfiledraft_md5id={$row['md5id']}").'"><img src="./modules/doc/img/ico_download_zip.png" /></a>
     ';
     
     $name = $row['name'];
@@ -353,14 +353,14 @@ while ($row = ploopi\db::get()->fetchrow())
     if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_explorer_displayuser'])
         $values[$c]['values']['user'] =
             array(
-                'label' => empty($row['user_id']) ? '<em>supprimé</em>' : "{$row['lastname']} {$row['firstname']}",
+                'label' => empty($row['user_id']) ? '<em>supprimÃ©</em>' : "{$row['lastname']} {$row['firstname']}",
                 'sort_label' => '3 '.(empty($row['user_id']) ? '' : strtolower("{$row['lastname']} {$row['firstname']}"))
             );
 
     if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_explorer_displayworkspace'])
         $values[$c]['values']['workspace']  =
             array(
-                'label' => empty($row['workspace_id']) ? '<em>supprimé</em>' : $row['label'],
+                'label' => empty($row['workspace_id']) ? '<em>supprimÃ©</em>' : $row['label'],
                 'sort_label' => '3 '.(empty($row['workspace_id']) ? '' : strtolower($row['label']))
             );
 

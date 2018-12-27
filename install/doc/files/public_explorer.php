@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -27,7 +27,7 @@
  * @subpackage public
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 ?>
@@ -80,7 +80,7 @@ if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_explore
 if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_explorer_displayuser'])
     $columns['right']['user'] =
         array(
-            'label' => 'Propriétaire',
+            'label' => 'PropriÃ©taire',
             'width' => 120,
             'options' => array('sort' => true)
         );
@@ -102,7 +102,7 @@ $c = 0;
 // + du module
 // + du dossier
 
-// + publié + (utilisateur = propriétaire) ou (partagé a l'utilisateur) ou (public) ou (dossier à valider et utilisateur = validateur du dossier)
+// + publiÃ© + (utilisateur = propriÃ©taire) ou (partagÃ© a l'utilisateur) ou (public) ou (dossier Ã  valider et utilisateur = validateur du dossier)
 // ou validateur
 
 $arrWhere = array();
@@ -115,17 +115,17 @@ $arrWhere['folder'] = "f.id_folder = {$currentfolder}";
 // Utilisateur "standard"
 if (!$wf_validator && !ploopi\acl::isadmin() && !ploopi\acl::isactionallowed(_DOC_ACTION_ADMIN))
 {
-    // Publié (ou propriétaire)
+    // PubliÃ© (ou propriÃ©taire)
     $arrWhere['published'] = "(f.published = 1 OR f.id_user = {$_SESSION['ploopi']['userid']})";
 
-    // Prioriétaire
+    // PrioriÃ©taire
     $arrWhere['visibility']['user'] = "f.id_user = {$_SESSION['ploopi']['userid']}";
-    // Partagé
+    // PartagÃ©
     if (!empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['share']['folders'])) $arrWhere['visibility']['shared'] = "(f.foldertype = 'shared' AND f.id IN (".implode(',', $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['share']['folders'])."))";
     // Public
     $arrWhere['visibility']['public'] = "(f.foldertype = 'public' AND f.id_workspace IN (".ploopi\system::viewworkspaces()."))";
 
-    // Synthèse visibilité
+    // SynthÃ¨se visibilitÃ©
     $arrWhere['visibility'] = '('.implode(' OR ', $arrWhere['visibility']).')';
 }
 
@@ -168,13 +168,13 @@ while ($row = ploopi\db::get()->fetchrow($rs))
 
     $tools = '';
 
-    // Le dossier peut être supprimé ?
+    // Le dossier peut Ãªtre supprimÃ© ?
     if (!doc_folder_isreadonly($row, _DOC_ACTION_DELETEFOLDER))
     {
-        // Contrôle du nombre d'éléments
+        // ContrÃ´le du nombre d'Ã©lÃ©ments
         if (ploopi\acl::isadmin() || ploopi\acl::isactionallowed(_DOC_ACTION_ADMIN) || $row['nbelements'] == 0)
         {
-            $tools = '<a title="Supprimer" style="display:block;float:right;" href="javascript:void(0);" onclick="javascript:if (confirm(\'Êtes vous certain de vouloir supprimer ce dossier ?\')) document.location.href=\''.ploopi\crypt::urlencode("admin.php?ploopi_op=doc_folderdelete&docfolder_id={$row['id']}").'\'; return(false);"><img src="./modules/doc/img/ico_trash.png" /></a>';
+            $tools = '<a title="Supprimer" style="display:block;float:right;" href="javascript:void(0);" onclick="javascript:if (confirm(\'ÃŠtes vous certain de vouloir supprimer ce dossier ?\')) document.location.href=\''.ploopi\crypt::urlencode("admin.php?ploopi_op=doc_folderdelete&docfolder_id={$row['id']}").'\'; return(false);"><img src="./modules/doc/img/ico_trash.png" /></a>';
         }
         else
         {
@@ -183,7 +183,7 @@ while ($row = ploopi\db::get()->fetchrow($rs))
     }
     else
     {
-        $tools = '<a style="display:block;float:right;" href="javascript:void(0);" onclick="javascript:alert(\'Vous ne disposez pas des autorisations nécessaires pour supprimer ce dossier\');"><img src="./modules/doc/img/ico_trash_grey.png" /></a>';
+        $tools = '<a style="display:block;float:right;" href="javascript:void(0);" onclick="javascript:alert(\'Vous ne disposez pas des autorisations nÃ©cessaires pour supprimer ce dossier\');"><img src="./modules/doc/img/ico_trash_grey.png" /></a>';
     }
 
     if (!$row['published'] && ($wf_validator || ploopi\acl::isadmin() || ploopi\acl::isactionallowed(_DOC_ACTION_ADMIN)))
@@ -213,7 +213,7 @@ while ($row = ploopi\db::get()->fetchrow($rs))
     if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_explorer_displaysize'])
         $values[$c]['values']['size'] =
             array(
-                'label' => ploopi\str::htmlentities("{$row['nbelements']} élément".($row['nbelements']>1 ? 's' : '')),
+                'label' => ploopi\str::htmlentities("{$row['nbelements']} Ã©lÃ©ment".($row['nbelements']>1 ? 's' : '')),
                 'style' => 'text-align:right',
                 'sort_label' => sprintf("0 %016d", $row['nbelements'])
             );
@@ -221,14 +221,14 @@ while ($row = ploopi\db::get()->fetchrow($rs))
     if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_explorer_displayuser'])
         $values[$c]['values']['user'] =
             array(
-                'label' => empty($row['user_id']) ? '<em>supprimé</em>' : ploopi\str::htmlentities("{$row['lastname']} {$row['firstname']}"),
+                'label' => empty($row['user_id']) ? '<em>supprimÃ©</em>' : ploopi\str::htmlentities("{$row['lastname']} {$row['firstname']}"),
                 'sort_label' => '0 '.(empty($row['user_id']) ? '' : strtolower("{$row['lastname']} {$row['firstname']}"))
             );
 
     if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_explorer_displayworkspace'])
         $values[$c]['values']['workspace'] =
             array(
-                'label' => empty($row['workspace_id']) ? '<em>supprimé</em>' : ploopi\str::htmlentities($row['label']),
+                'label' => empty($row['workspace_id']) ? '<em>supprimÃ©</em>' : ploopi\str::htmlentities($row['label']),
                 'sort_label' => '0 '.(empty($row['workspace_id']) ? '' : strtolower($row['label']))
             );
 
@@ -297,20 +297,20 @@ while ($row = ploopi\db::get()->fetchrow())
 
     $tools = '';
 
-    // Le fichier peut être supprimé ?
+    // Le fichier peut Ãªtre supprimÃ© ?
     if (!doc_file_isreadonly($row, _DOC_ACTION_DELETEFILE))
     {
-        $tools = '<a title="Supprimer" style="display:block;float:right;" href="javascript:void(0);" onclick="javascript:if (confirm(\'Êtes vous certain de vouloir supprimer ce fichier ?\')) document.location.href=\''.ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_filedelete&currentfolder={$currentfolder}&docfile_md5id={$row['md5id']}").'\'; return(false);"><img src="./modules/doc/img/ico_trash.png" /></a>';
+        $tools = '<a title="Supprimer" style="display:block;float:right;" href="javascript:void(0);" onclick="javascript:if (confirm(\'ÃŠtes vous certain de vouloir supprimer ce fichier ?\')) document.location.href=\''.ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_filedelete&currentfolder={$currentfolder}&docfile_md5id={$row['md5id']}").'\'; return(false);"><img src="./modules/doc/img/ico_trash.png" /></a>';
     }
     else
     {
-        $tools = '<a title="Supprimer" style="display:block;float:right;" href="javascript:void(0);" onclick="javascript:alert(\'Vous ne disposez pas des autorisations nécessaires pour supprimer ce fichier\');"><img src="./modules/doc/img/ico_trash_grey.png" /></a>';
+        $tools = '<a title="Supprimer" style="display:block;float:right;" href="javascript:void(0);" onclick="javascript:alert(\'Vous ne disposez pas des autorisations nÃ©cessaires pour supprimer ce fichier\');"><img src="./modules/doc/img/ico_trash_grey.png" /></a>';
     }
 
     $tools .= '
         <a title="Modifier" style="display:block;float:right;" href="'.ploopi\crypt::urlencode("admin.php?op=doc_fileform&currentfolder={$currentfolder}&docfile_md5id={$row['md5id']}&docfile_tab=modify").'"><img src="./modules/doc/img/ico_main.png" /></a>
-        <a title="Télécharger" style="display:block;float:right;" href="'.ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_filedownload&docfile_md5id={$row['md5id']}").'"><img src="./modules/doc/img/ico_download.png" /></a>
-        <a title="Télécharger (ZIP)" style="display:block;float:right;" href="'.ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_filedownloadzip&docfile_md5id={$row['md5id']}").'"><img src="./modules/doc/img/ico_download_zip.png" /></a>
+        <a title="TÃ©lÃ©charger" style="display:block;float:right;" href="'.ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_filedownload&docfile_md5id={$row['md5id']}").'"><img src="./modules/doc/img/ico_download.png" /></a>
+        <a title="TÃ©lÃ©charger (ZIP)" style="display:block;float:right;" href="'.ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_filedownloadzip&docfile_md5id={$row['md5id']}").'"><img src="./modules/doc/img/ico_download_zip.png" /></a>
     ';
 
     if ($booConv)
@@ -337,14 +337,14 @@ while ($row = ploopi\db::get()->fetchrow())
     if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_explorer_displayuser'])
         $values[$c]['values']['user'] =
             array(
-                'label' => empty($row['user_id']) ? '<em>supprimé</em>' : ploopi\str::htmlentities("{$row['lastname']} {$row['firstname']}"),
+                'label' => empty($row['user_id']) ? '<em>supprimÃ©</em>' : ploopi\str::htmlentities("{$row['lastname']} {$row['firstname']}"),
                 'sort_label' => '1 '.(empty($row['user_id']) ? '' : strtolower("{$row['lastname']} {$row['firstname']}"))
             );
 
     if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_explorer_displayworkspace'])
         $values[$c]['values']['workspace'] =
             array(
-                'label' => empty($row['workspace_id']) ? '<em>supprimé</em>' : ploopi\str::htmlentities($row['label']),
+                'label' => empty($row['workspace_id']) ? '<em>supprimÃ©</em>' : ploopi\str::htmlentities($row['label']),
                 'sort_label' => '1 '.(empty($row['workspace_id']) ? '' : strtolower($row['label']))
             );
 
@@ -421,21 +421,21 @@ while ($row = ploopi\db::get()->fetchrow())
 
     if (ploopi\acl::isadmin() || ploopi\acl::isactionallowed(_DOC_ACTION_ADMIN) || (ploopi\acl::isactionallowed(_DOC_ACTION_DELETEFILE) && (!$docfolder_readonly_content || $row['id_user'] == $_SESSION['ploopi']['userid'])))
     {
-        $tools = '<a title="Supprimer" style="display:block;float:right;" href="javascript:void(0);" onclick="javascript:if (confirm(\'Êtes vous certain de vouloir supprimer ce fichier ?\')) document.location.href=\''.ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_filedraftdelete&currentfolder={$currentfolder}&docfiledraft_md5id={$row['md5id']}").'\'; return(false);"><img src="./modules/doc/img/ico_trash.png" /></a>';
+        $tools = '<a title="Supprimer" style="display:block;float:right;" href="javascript:void(0);" onclick="javascript:if (confirm(\'ÃŠtes vous certain de vouloir supprimer ce fichier ?\')) document.location.href=\''.ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_filedraftdelete&currentfolder={$currentfolder}&docfiledraft_md5id={$row['md5id']}").'\'; return(false);"><img src="./modules/doc/img/ico_trash.png" /></a>';
     }
     else
     {
-        $tools = '<a title="Supprimer" style="display:block;float:right;" href="javascript:void(0);" onclick="javascript:alert(\'Vous ne disposez pas des autorisations nécessaires pour supprimer ce fichier\');"><img src="./modules/doc/img/ico_trash_grey.png" /></a>';
+        $tools = '<a title="Supprimer" style="display:block;float:right;" href="javascript:void(0);" onclick="javascript:alert(\'Vous ne disposez pas des autorisations nÃ©cessaires pour supprimer ce fichier\');"><img src="./modules/doc/img/ico_trash_grey.png" /></a>';
     }
 
     if ($wf_validator || ploopi\acl::isadmin() || ploopi\acl::isactionallowed(_DOC_ACTION_ADMIN))
     {
-        $tools .= '<a title="Publier" style="display:block;float:right;" href="javascript:void(0);" onclick="javascript:if (confirm(\'Êtes vous certain de vouloir publier ce fichier ?\')) document.location.href=\''.ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_filepublish&currentfolder={$currentfolder}&docfiledraft_md5id={$row['md5id']}").'\'; return(false);"><img src="./modules/doc/img/ico_validate.png" /></a>';
+        $tools .= '<a title="Publier" style="display:block;float:right;" href="javascript:void(0);" onclick="javascript:if (confirm(\'ÃŠtes vous certain de vouloir publier ce fichier ?\')) document.location.href=\''.ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_filepublish&currentfolder={$currentfolder}&docfiledraft_md5id={$row['md5id']}").'\'; return(false);"><img src="./modules/doc/img/ico_validate.png" /></a>';
     }
 
     $tools .= '
-        <a title="Télécharger" style="display:block;float:right;" href="'.ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_filedownload&docfiledraft_md5id={$row['md5id']}").'"><img src="./modules/doc/img/ico_download.png" /></a>
-        <a title="Télécharger (ZIP)" style="display:block;float:right;" href="'.ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_filedownloadzip&docfiledraft_md5id={$row['md5id']}").'"><img src="./modules/doc/img/ico_download_zip.png" /></a>
+        <a title="TÃ©lÃ©charger" style="display:block;float:right;" href="'.ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_filedownload&docfiledraft_md5id={$row['md5id']}").'"><img src="./modules/doc/img/ico_download.png" /></a>
+        <a title="TÃ©lÃ©charger (ZIP)" style="display:block;float:right;" href="'.ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_filedownloadzip&docfiledraft_md5id={$row['md5id']}").'"><img src="./modules/doc/img/ico_download_zip.png" /></a>
     ';
 
     $name = $row['name'];
@@ -457,14 +457,14 @@ while ($row = ploopi\db::get()->fetchrow())
     if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_explorer_displayuser'])
         $values[$c]['values']['user'] =
             array(
-                'label' => empty($row['user_id']) ? '<em>supprimé</em>' : ploopi\str::htmlentities("{$row['lastname']} {$row['firstname']}"),
+                'label' => empty($row['user_id']) ? '<em>supprimÃ©</em>' : ploopi\str::htmlentities("{$row['lastname']} {$row['firstname']}"),
                 'sort_label' => '3 '.(empty($row['user_id']) ? '' : strtolower("{$row['lastname']} {$row['firstname']}"))
             );
 
     if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_explorer_displayworkspace'])
         $values[$c]['values']['workspace']  =
             array(
-                'label' => empty($row['workspace_id']) ? '<em>supprimé</em>' : ploopi\str::htmlentities($row['label']),
+                'label' => empty($row['workspace_id']) ? '<em>supprimÃ©</em>' : ploopi\str::htmlentities($row['label']),
                 'sort_label' => '3 '.(empty($row['workspace_id']) ? '' : strtolower($row['label']))
             );
 

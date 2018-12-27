@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,40 +21,29 @@
 */
 
 /**
- * Interface de résultat du moteur de recherche
+ * Interface de rÃ©sultat du moteur de recherche
  *
  * @package doc
  * @subpackage public
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  *
  * @see doc_getshare
  * @see ploopi_search
  */
 
 /**
- * Récupération des paramètres de recherche et remplissage de la variable session du module
+ * RÃ©cupÃ©ration des paramÃ¨tres de recherche et remplissage de la variable session du module
  */
-if (isset($_GET['doc_search_keywords']))    $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords'] = $_GET['doc_search_keywords'];
-if (isset($_GET['doc_search_filetype']))    $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_filetype'] = $_GET['doc_search_filetype'];
-if (isset($_GET['doc_search_user']))        $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_user'] = $_GET['doc_search_user'];
-if (isset($_GET['doc_search_workspace']))   $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_workspace'] = $_GET['doc_search_workspace'];
-if (isset($_GET['doc_search_date1']))       $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date1'] = $_GET['doc_search_date1'];
-if (isset($_GET['doc_search_date2']))       $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date2'] = $_GET['doc_search_date2'];
+
+foreach(array('keywords', 'filetype', 'user', 'workspace', 'date1', 'date2', 'stem', 'phonetic', 'and') as $p) {
+    $param = 'doc_search_'.$p;
+    if (isset($_GET[$param])) $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_'.$p] = $_GET[$param];
+}
 
 /**
- * Initialisation de la variable session si elle n'est pas définie
- */
-if (!isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords'])) $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords'] = '';
-if (!isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_filetype'])) $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_filetype'] = '';
-if (!isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_user'])) $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_user'] = '';
-if (!isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_workspace'])) $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_workspace'] = '';
-if (!isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date1'])) $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date1'] = '';
-if (!isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date2'])) $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date2'] = '';
-
-/**
- * On démarre la recherche si au moins un mot clé a été saisi
+ * On dÃ©marre la recherche si au moins un mot clÃ© a Ã©tÃ© saisi
  */
 if (isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords']))
 {
@@ -77,36 +66,48 @@ if (isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords']))
 
     if (!empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords']))
     {
+        $arrOptions = array(
+            'stem' => !empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_stem']),
+            'phonetic' => !empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_phonetic']),
+            'and' => !empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_and'])
+        );
+
         /**
          * Appel de la fonction de recherche du moteur d'indexation interne.
-         * Renvoie une liste de fichiers correspondants au mots clés.
+         * Renvoie une liste de fichiers correspondants au mots clÃ©s.
          */
 
-        $arrRelevance = ploopi\search_index::search($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords'], _DOC_OBJECT_FILE, '', $_SESSION['ploopi']['moduleid']);
+        $arrRelevance = ploopi\search_index::search($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords'], _DOC_OBJECT_FILE, '', $_SESSION['ploopi']['moduleid'], $arrOptions);
     }
 
     /**
-     * Construction de la requête SQL de recherche avec les champs spécifiques du module DOC
+     * Construction de la requÃªte SQL de recherche avec les champs spÃ©cifiques du module DOC
      */
 
-    if (!empty($arrRelevance)) $search[] = " f.md5id IN ('".implode("','",array_keys($arrRelevance))."') ";
+    if (empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords']) || !empty($arrRelevance)) {
 
-    if (!empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_name'])) $search[] = " f.name LIKE '%".ploopi\db::get()->addslashes(trim($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_name']))."%' ";
-    if (!empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_filetype'])) $search[] = " e.filetype LIKE '%".ploopi\db::get()->addslashes($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_filetype'])."%' ";
-    if (!empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_user'])) $search[] = " u.login LIKE '%".ploopi\db::get()->addslashes(trim($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_user']))."%' ";
-    if (!empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_workspace'])) $search[] = " w.label LIKE '%".ploopi\db::get()->addslashes(trim($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_workspace']))."%' ";
+        if (!empty($arrRelevance)) $search[] = " f.md5id IN ('".implode("','",array_keys($arrRelevance))."') ";
 
-    if (!empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date1']) && !empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date2'])) $search[] = " f.timestp_modify BETWEEN '".ploopi\date::local2timestamp($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date1'])."' AND '".ploopi\date::timestamp_add(ploopi\date::local2timestamp($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date2']),0,0,0,0,1)."'";
-    else
-    {
-        if (!empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date1'])) $search[] = " f.timestp_modify >= '".ploopi\date::local2timestamp($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date1'])."' ";
-        if (!empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date2'])) $search[] = " f.timestp_modify < '".ploopi\date::timestamp_add(ploopi\date::local2timestamp($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date2']),0,0,0,0,1)."' ";
+
+        if (!empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_name'])) $search[] = " f.name LIKE '%".ploopi\db::get()->addslashes(trim($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_name']))."%' ";
+        if (!empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_filetype'])) $search[] = " e.filetype LIKE '%".ploopi\db::get()->addslashes($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_filetype'])."%' ";
+        if (!empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_user'])) $search[] = " u.login LIKE '%".ploopi\db::get()->addslashes(trim($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_user']))."%' ";
+        if (!empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_workspace'])) $search[] = " w.label LIKE '%".ploopi\db::get()->addslashes(trim($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_workspace']))."%' ";
+
+        if (!empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date1']) && !empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date2'])) $search[] = " f.timestp_modify BETWEEN '".ploopi\date::local2timestamp($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date1'])."' AND '".ploopi\date::timestamp_add(ploopi\date::local2timestamp($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date2']),0,0,0,0,1)."'";
+        else
+        {
+            if (!empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date1'])) $search[] = " f.timestp_modify >= '".ploopi\date::local2timestamp($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date1'])."' ";
+            if (!empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date2'])) $search[] = " f.timestp_modify < '".ploopi\date::timestamp_add(ploopi\date::local2timestamp($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date2']),0,0,0,0,1)."' ";
+        }
     }
+
+
 
     if (empty($search))
     {
         ?>
-        <div style="padding:4px;font-weight:bold;background-color:#f0f0f0;border-bottom:1px solid #c0c0c0;">Saisissez un mot clé puis cliquez sur "Rechercher" ou appuyez sur "Entrée"</div>
+        <div style="padding:4px;font-weight:bold;background-color:#f0f0f0;border-bottom:1px solid #c0c0c0;">Saisissez un mot clÃ© puis cliquez sur "Rechercher" ou appuyez sur "EntrÃ©e"</div>
         <?php
     }
     else
@@ -120,12 +121,12 @@ if (isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords']))
         // Utilisateur "standard"
         if (!ploopi\acl::isadmin() && !ploopi\acl::isactionallowed(_DOC_ACTION_ADMIN))
         {
-            // Publié (ou propriétaire)
+            // PubliÃ© (ou propriÃ©taire)
             $arrWhere['published'] = "(f.published = 1 OR f.id_user = {$_SESSION['ploopi']['userid']})";
 
-            // Prioriétaire
+            // PrioriÃ©taire
             $arrWhere['visibility']['user'] = "f.id_user = {$_SESSION['ploopi']['userid']}";
-            // Partagé
+            // PartagÃ©
             if (!empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['share']['folders'])) $arrWhere['visibility']['shared'] = "(f.foldertype = 'shared' AND f.id IN (".implode(',', $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['share']['folders'])."))";
             // Public
             $arrWhere['visibility']['public'] = "(f.foldertype = 'public' AND f.id_workspace IN (".ploopi\system::viewworkspaces()."))";
@@ -136,7 +137,7 @@ if (isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords']))
                 $arrWhere['visibility']['validator'] = "f.waiting_validation IN (".implode(',', $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['validation']['folders']).")";
             }
 
-            // Synthèse visibilité
+            // SynthÃ¨se visibilitÃ©
             $arrWhere['visibility'] = '('.implode(' OR ', $arrWhere['visibility']).')';
         }
 
@@ -243,8 +244,8 @@ if (isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords']))
             );
 
         if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_explorer_displayuser'])
-            $columns['right']['propriétaire'] = array(
-                'label' => 'Propriétaire',
+            $columns['right']['propriÃ©taire'] = array(
+                'label' => 'PropriÃ©taire',
                 'width' => 120,
                 'options' => array('sort' => true)
             );
@@ -269,13 +270,13 @@ if (isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords']))
         if (ploopi\db::get()->numrows())
         {
             ?>
-            <div style="padding:4px;font-weight:bold;background-color:#f0f0f0;border-bottom:1px solid #c0c0c0;"><?php echo ploopi\db::get()->numrows(); ?> fichier(s) trouvé(s)</div>
+            <div style="padding:4px;font-weight:bold;background-color:#f0f0f0;border-bottom:1px solid #c0c0c0;"><?php echo ploopi\db::get()->numrows(); ?> fichier(s) trouvÃ©(s)</div>
             <?php
         }
         else
         {
             ?>
-            <div style="padding:4px;font-weight:bold;background-color:#f0f0f0;border-bottom:1px solid #c0c0c0;">Aucun fichier trouvé</div>
+            <div style="padding:4px;font-weight:bold;background-color:#f0f0f0;border-bottom:1px solid #c0c0c0;">Aucun fichier trouvÃ©</div>
             <?php
         }
 
@@ -300,17 +301,17 @@ if (isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords']))
 
             if (!doc_file_isreadonly($row, _DOC_ACTION_DELETEFILE))
             {
-                $tools = '<a title="Supprimer" style="display:block;float:right;" href="javascript:void(0);" onclick="javascript:if (confirm(\'Êtes vous certain de vouloir supprimer ce fichier ?\')) document.location.href=\''.ploopi\crypt::urlencode("admin.php?ploopi_op=doc_filedelete&currentfolder={$row['id_folder']}&docfile_md5id={$row['md5id']}").'\';"><img src="./modules/doc/img/ico_trash.png" /></a>';
+                $tools = '<a title="Supprimer" style="display:block;float:right;" href="javascript:void(0);" onclick="javascript:if (confirm(\'ÃŠtes vous certain de vouloir supprimer ce fichier ?\')) document.location.href=\''.ploopi\crypt::urlencode("admin.php?ploopi_op=doc_filedelete&currentfolder={$row['id_folder']}&docfile_md5id={$row['md5id']}").'\';"><img src="./modules/doc/img/ico_trash.png" /></a>';
             }
             else
             {
-                $tools = '<a title="Supprimer" style="display:block;float:right;" href="javascript:void(0);" onclick="javascript:alert(\'Vous ne disposez pas des autorisations nécessaires pour supprimer ce fichier\');"><img src="./modules/doc/img/ico_trash_grey.png" /></a>';
+                $tools = '<a title="Supprimer" style="display:block;float:right;" href="javascript:void(0);" onclick="javascript:alert(\'Vous ne disposez pas des autorisations nÃ©cessaires pour supprimer ce fichier\');"><img src="./modules/doc/img/ico_trash_grey.png" /></a>';
             }
 
             $tools .= '
                 <a title="Modifier" style="display:block;float:right;" href="'.ploopi\crypt::urlencode("admin.php?op=doc_fileform&currentfolder={$row['id_folder']}&docfile_md5id={$row['md5id']}&docfile_tab=modify").'"><img src="./modules/doc/img/ico_main.png" /></a>
-                <a title="Télécharger" style="display:block;float:right;" href="'.ploopi\crypt::urlencode("admin.php?ploopi_op=doc_filedownload&docfile_md5id={$row['md5id']}").'"><img src="./modules/doc/img/ico_download.png" /></a>
-                <a title="Télécharger (ZIP)" style="display:block;float:right;" href="'.ploopi\crypt::urlencode("admin.php?ploopi_op=doc_filedownloadzip&docfile_md5id={$row['md5id']}").'"><img src="./modules/doc/img/ico_download_zip.png" /></a>
+                <a title="TÃ©lÃ©charger" style="display:block;float:right;" href="'.ploopi\crypt::urlencode("admin.php?ploopi_op=doc_filedownload&docfile_md5id={$row['md5id']}").'"><img src="./modules/doc/img/ico_download.png" /></a>
+                <a title="TÃ©lÃ©charger (ZIP)" style="display:block;float:right;" href="'.ploopi\crypt::urlencode("admin.php?ploopi_op=doc_filedownloadzip&docfile_md5id={$row['md5id']}").'"><img src="./modules/doc/img/ico_download_zip.png" /></a>
             ';
 
             if ($booConv)
@@ -321,7 +322,7 @@ if (isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords']))
 
             $blue = 128;
 
-            // Résultats direct sans passer par l'index
+            // RÃ©sultats direct sans passer par l'index
             if (!isset($arrRelevance[$row['md5id']]))
             {
                 $arrRelevance[$row['md5id']]['relevance'] = 100;
@@ -365,8 +366,8 @@ if (isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords']))
             );
 
             if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_explorer_displayuser'])
-                $values[$c]['values']['propriétaire'] = array(
-                    'label' => empty($row['user_id']) ? '<em>supprimé</em>' : ploopi\str::htmlentities($row['login'])
+                $values[$c]['values']['propriÃ©taire'] = array(
+                    'label' => empty($row['user_id']) ? '<em>supprimÃ©</em>' : ploopi\str::htmlentities($row['login'])
                 );
 
             if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_explorer_displayworkspace'])

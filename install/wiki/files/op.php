@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2009 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,19 +21,19 @@
 */
 
 /**
- * Opérations du module wiki
+ * OpÃ©rations du module wiki
  *
  * @package wiki
  * @subpackage op
  * @copyright Ovensia
- * @author Stéphane Escaich
+ * @author Ovensia
  * @version  $Revision$
  * @modifiedby $LastChangedBy$
  * @lastmodified $Date$
  */
 
 /**
- * On vérifie qu'on est bien dans le module Booking.
+ * On vÃ©rifie qu'on est bien dans le module Booking.
  */
 
 if (ploopi\acl::ismoduleallowed('wiki'))
@@ -65,8 +65,9 @@ if (ploopi\acl::ismoduleallowed('wiki'))
                     <script type="text/javascript">window.onload = function() { print(); };</script>
                 </head>
                 <body class="wiki_print">
+                    <div id="wiki_page_print_info">R&eacute;vision num&eacute;ro <? echo ploopi\str::htmlentities($objWikiPage->fields['revision']); ?> modifi&eacute; le <? echo implode(' Ã  ', ploopi\date::timestamp2local($objWikiPage->fields['ts_modified'])); ?></div>
                     <div id="wiki_page" class="wiki_page"><?php echo wiki_render($objWikiPage->fields['content']); ?></div>
-                    <div id="wiki_page_print_info">R&eacute;vision num&eacute;ro <?php echo ploopi\str::htmlentities($objWikiPage->fields['revision']); ?> modifi&eacute; le <?php echo implode(' à ', ploopi\date::timestamp2local($objWikiPage->fields['ts_modified'])); ?></div>
+                    <div id="wiki_page_print_info">R&eacute;vision num&eacute;ro <?php echo ploopi\str::htmlentities($objWikiPage->fields['revision']); ?> modifi&eacute; le <?php echo implode(' Ã  ', ploopi\date::timestamp2local($objWikiPage->fields['ts_modified'])); ?></div>
                 </body>
                 </html>
                 <?php
@@ -110,7 +111,7 @@ if (ploopi\acl::ismoduleallowed('wiki'))
                         array(_WIKI_ACTION_PAGE_MODIFY)
                     )
                 ),
-                'Cet objet à été modifié'
+                'Cet objet Ã  Ã©tÃ© modifiÃ©'
             );
 
             ploopi\user_action_log::record(_WIKI_ACTION_PAGE_MODIFY, $objWikiPage->fields['id']);
@@ -146,7 +147,7 @@ if (ploopi\acl::ismoduleallowed('wiki'))
                             array(_WIKI_ACTION_PAGE_DELETE)
                         )
                     ),
-                    'Cet objet à été supprimé'
+                    'Cet objet Ã  Ã©tÃ© supprimÃ©'
                 );
 
                 ploopi\user_action_log::record(_WIKI_ACTION_PAGE_DELETE, $strWikiPageId);
@@ -181,7 +182,7 @@ if (ploopi\acl::ismoduleallowed('wiki'))
                 if ($_POST['wiki_page_newid'] == $_GET['wiki_page_id']) ploopi\output::redirect_trusted("admin.php?wiki_page_id=".urlencode($_GET['wiki_page_id']));
                 else
                 {
-                    // On va vérifier que le "nouvel" ID n'existe pas déjà
+                    // On va vÃ©rifier que le "nouvel" ID n'existe pas dÃ©jÃ 
                     $objWikiPageVerif = new wiki_page();
                     $objWikiPage = new wiki_page();
                     if (!$objWikiPageVerif->open($_POST['wiki_page_newid']) && $objWikiPage->open($_GET['wiki_page_id']))

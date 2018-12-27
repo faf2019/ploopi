@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -27,7 +27,7 @@
  * @subpackage public
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  *
  * @see ploopi_share_get
  * @see ploopi_validation_get
@@ -57,17 +57,17 @@ if (!empty($currentfolder))
         <div style="float:left;height:40px;">
             <p style="margin:0;padding:4px 8px;">
                 <strong><?php echo ploopi\str::htmlentities($objFolder->fields['name']); ?></strong>
-                <br />Dossier <?php echo ploopi\str::htmlentities($foldertypes[$objFolder->fields['foldertype']]); ?><?php if ($objFolder->fields['readonly']) echo ' protégé'; ?>
+                <br />Dossier <?php echo ploopi\str::htmlentities($foldertypes[$objFolder->fields['foldertype']]); ?><?php if ($objFolder->fields['readonly']) echo ' protÃ©gÃ©'; ?>
             </p>
         </div>
         <div style="float:left;height:40px;border-left:1px solid #e0e0e0;">
             <p style="margin:0;padding:4px 8px;">
-                <strong>Propriétaire</strong>:
+                <strong>PropriÃ©taire</strong>:
                 <br />
                 <?php
                 $user = new ploopi\user();
                 if ($user->open($objFolder->fields['id_user'])) echo ploopi\str::htmlentities("{$user->fields['lastname']} {$user->fields['firstname']}");
-                else echo '<i>supprimé</i>';
+                else echo '<i>supprimÃ©</i>';
                 ?>
             </p>
         </div>
@@ -81,14 +81,14 @@ if (!empty($currentfolder))
             <div style="float:left;height:40px;border-left:1px solid #e0e0e0;">
                 <p style="margin:0;padding:4px 8px;">
                     <strong>Information</strong>
-                    <br />Les données de ce dossier sont exclusivement privées
+                    <br />Les donnÃ©es de ce dossier sont exclusivement privÃ©es
                 </p>
             </div>
             <?php
         }
 
         /**
-         * si dossier partagés, affichage des partages
+         * si dossier partagÃ©s, affichage des partages
          */
         if ($objFolder->fields['foldertype'] == 'shared')
         {
@@ -133,7 +133,7 @@ if (!empty($currentfolder))
         }
 
         /**
-         * Pour les dossiers non privés, affichage des validateurs s'ils existent
+         * Pour les dossiers non privÃ©s, affichage des validateurs s'ils existent
          */
         if ($objFolder->fields['foldertype'] != 'private')
         {
@@ -169,7 +169,7 @@ if (!empty($currentfolder))
                             while ($row = ploopi\db::get()->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi\str::htmlentities($row['name'])."&nbsp;</span>";
                         }
                     }
-                    else echo '<span>Aucune accréditation</span>';
+                    else echo '<span>Aucune accrÃ©ditation</span>';
                     ?>
                     </p>
                 </div>
@@ -201,7 +201,7 @@ else
         <div style="float:left;height:40px;border-left:1px solid #e0e0e0;">
             <p style="margin:0;padding:4px 8px;">
                 <strong>Information</strong>
-                <br />Les données de ce dossier sont exclusivement privées
+                <br />Les donnÃ©es de ce dossier sont exclusivement privÃ©es
             </p>
         </div>
     </div>

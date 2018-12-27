@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -27,7 +27,7 @@
  * @subpackage public
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  *
  * @see _DOC_OBJECT_FOLDER
  * @see ploopi_subscription_subscribed
@@ -36,7 +36,7 @@
  */
 
 /**
- * On affiche d'abord le bloc d'abonnement seulement si le dossier n'est pas privé/personnel
+ * On affiche d'abord le bloc d'abonnement seulement si le dossier n'est pas privÃ©/personnel
  */
 ?>
 <div style="border-bottom:1px solid #c0c0c0;">
@@ -61,7 +61,7 @@ if ($objFolder->fields['foldertype'] != 'private')
             $objDocFolderSub->open($parents[$i])
             ?>
             <div style="padding:4px;font-weight:bold;border-bottom:1px solid #c0c0c0;">
-            Vous héritez de l'abonnement à &laquo; <a href="<?php echo ploopi\crypt::urlencode("admin.php?op=doc_browser&currentfolder={$parents[$i]}"); ?>"><?php echo ploopi\str::htmlentities($objDocFolderSub->fields['name']); ?></a> &raquo;
+            Vous hÃ©ritez de l'abonnement Ã  &laquo; <a href="<?php echo ploopi\crypt::urlencode("admin.php?op=doc_browser&currentfolder={$parents[$i]}"); ?>"><?php echo ploopi\str::htmlentities($objDocFolderSub->fields['name']); ?></a> &raquo;
             </div>
             <?php
         }

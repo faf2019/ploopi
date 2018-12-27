@@ -8,20 +8,21 @@ wiki_toc = function() {
     var c = 0;
 
     // Récupération des titres de rubriques
-    var headers = $('wiki_page').select('h1,h2,h3,h4');
-    
+    var headers = jQuery('#wiki_page h1,h2,h3,h4');
+    console.log(headers.length);
+
     // Nombre minimal de titres pour afficher la TOC
     if (headers.length < 5) return;
 
+    ul[0] = $('<div></div>').addClass('wiki_page_toc');
+
     // Insertion de la TOC dans le contenu
-    $('wiki_page').insert({
-        top: ul[0] = new Element('div', {
-            'class': 'wiki_page_toc'
-        })
-    });
-    
+    jQuery('#wiki_page').prepend(ul[0]);
+
     // Pour chaque titre de la page
-    headers.each(function(title) {
+    headers.each(function(index) {
+        title = this;
+
         // Lien courant
         var a = null;
         // Conteneur actuel des liens
@@ -32,17 +33,15 @@ wiki_toc = function() {
         // Création des sous-listes non définies
         for(var i = 1; i < h; i++) {
             if (!ul[i]) {
-                ul[i-1].insert({
-                    bottom: ul[i] = new Element('ul')
-                });
+                ul[i] = jQuery('<ul></ul>');
+                jQuery(ul[i-1]).append(ul[i]);
             }
         }
-        
+
         if (h > 1) {
+            linkcontainer = jQuery('<li></li>');
             // Création d'un nouvel item
-            ul[h-1].insert({
-                bottom: linkcontainer = new Element('li')
-            });
+            jQuery(ul[h-1]).append(linkcontainer);
         }
         else linkcontainer = ul[0];
 
@@ -52,22 +51,15 @@ wiki_toc = function() {
         }
 
         // Insertion d'un lien vers le titre
-        linkcontainer.insert({
-            bottom: a = new Element('a', {
-                'class': 'h'+h, 
-                'href': '#toc'+c 
-            })
-        });
-        
-        a.innerHTML = title.innerHTML;
+        jQuery(linkcontainer).append(
+            jQuery('<a></a>').attr({href:'#toc'+c}).addClass('h'+h).html(jQuery(title).html())
+        );
 
         // Insertion d'une ancre avant le titre concerné
-        title.insert({
-            before: new Element('a', {
-                'name': 'toc'+c 
-            })
-        });
-        
+        jQuery(title).before(
+            jQuery('<a></a>').attr({name:'toc'+c})
+        );
+
         c++;
     });
 };

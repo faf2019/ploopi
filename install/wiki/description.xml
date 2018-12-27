@@ -28,7 +28,7 @@
         </action>
         <action>
             <id_action>21</id_action>
-            <label>Déverrouiller une page</label>
+            <label>DÃ©verrouiller une page</label>
             <role_enabled>0</role_enabled>
         </action>
     </moduletype>

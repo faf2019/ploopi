@@ -1,12 +1,12 @@
 h1. titre 1
 
-h1>. titre 1 à droite
+h1>. titre 1 Ã  droite
 
-h1=. titre 1 à droite
+h1=. titre 1 Ã  droite
 
 h2. titre2
 
-h2>. titre 2 à droite
+h2>. titre 2 Ã  droite
 
 h3. titre3
 
@@ -14,9 +14,9 @@ _texte en italique_
 
 *texte en gras*
 
-+texte souligné+
++texte soulignÃ©+
 
--texte barré-
+-texte barrÃ©-
 
 ??citation??
 
@@ -34,7 +34,7 @@ bc. Exemple de bloc
 
 Exemple de citation: 
 
-bq.:http://fr.wikipedia.org/wiki/w3c Le World Wide Web Consortium, abrégé W3C, est un consortium fondé en octobre 1994 pour promouvoir la compatibilité des technologies du World Wide Web telles que HTML, XHTML, XML, RDF, CSS, PNG, SVG et SOAP. Le W3C n'émet pas des normes au sens européen, mais des recommandations à valeur de standards industriels.
+bq.:http://fr.wikipedia.org/wiki/w3c Le World Wide Web Consortium, abrÃ©gÃ© W3C, est un consortium fondÃ© en octobre 1994 pour promouvoir la compatibilitÃ© des technologies du World Wide Web telles que HTML, XHTML, XML, RDF, CSS, PNG, SVG et SOAP. Le W3C n'Ã©met pas des normes au sens europÃ©en, mais des recommandations Ã  valeur de standards industriels.
 
 Lien vers un "site externe":http://www.ovensia.fr
 
@@ -61,34 +61,34 @@ Listes:
 Lien vers une note de bas de page[1].
 Lien vers une autre note de bas de page[2].
 
-Caractères spéciaux : one(TM), two(R), three(C).
+CaractÃ¨res spÃ©ciaux : one(TM), two(R), three(C).
 
 p. *Paragraphe standard:* Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ullamcorper, libero id lobortis pharetra, est nunc volutpat ligula, eu bibendum felis velit quis urna. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Pellentesque faucibus, augue at vestibulum bibendum, magna nisl auctor ligula, convallis facilisis nisl nisl vitae orci. Pellentesque mollis venenatis sollicitudin. Morbi gravida elit sed purus convallis ac ultrices tellus ornare. Aliquam tempor imperdiet sem, nec venenatis massa vestibulum et. Duis non nibh scelerisque augue suscipit varius id vel eros. Nunc commodo sapien et neque commodo dignissim accumsan lectus facilisis. Nam vestibulum, metus fermentum auctor porta, diam ante tempus nunc, et rutrum nunc nisl sit amet tortor. Nullam rhoncus commodo tellus eu fringilla. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Donec cursus orci sit amet mi aliquet sit amet egestas sapien dignissim. Aliquam erat volutpat. Proin lacinia est vel enim pretium rutrum. 
 
-p<>. *Paragraphe justifié:* Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ullamcorper, libero id lobortis pharetra, est nunc volutpat ligula, eu bibendum felis velit quis urna. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Pellentesque faucibus, augue at vestibulum bibendum, magna nisl auctor ligula, convallis facilisis nisl nisl vitae orci. Pellentesque mollis venenatis sollicitudin. Morbi gravida elit sed purus convallis ac ultrices tellus ornare. Aliquam tempor imperdiet sem, nec venenatis massa vestibulum et. Duis non nibh scelerisque augue suscipit varius id vel eros. Nunc commodo sapien et neque commodo dignissim accumsan lectus facilisis. Nam vestibulum, metus fermentum auctor porta, diam ante tempus nunc, et rutrum nunc nisl sit amet tortor. Nullam rhoncus commodo tellus eu fringilla. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Donec cursus orci sit amet mi aliquet sit amet egestas sapien dignissim. Aliquam erat volutpat. Proin lacinia est vel enim pretium rutrum. 
+p<>. *Paragraphe justifiÃ©:* Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ullamcorper, libero id lobortis pharetra, est nunc volutpat ligula, eu bibendum felis velit quis urna. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Pellentesque faucibus, augue at vestibulum bibendum, magna nisl auctor ligula, convallis facilisis nisl nisl vitae orci. Pellentesque mollis venenatis sollicitudin. Morbi gravida elit sed purus convallis ac ultrices tellus ornare. Aliquam tempor imperdiet sem, nec venenatis massa vestibulum et. Duis non nibh scelerisque augue suscipit varius id vel eros. Nunc commodo sapien et neque commodo dignissim accumsan lectus facilisis. Nam vestibulum, metus fermentum auctor porta, diam ante tempus nunc, et rutrum nunc nisl sit amet tortor. Nullam rhoncus commodo tellus eu fringilla. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Donec cursus orci sit amet mi aliquet sit amet egestas sapien dignissim. Aliquam erat volutpat. Proin lacinia est vel enim pretium rutrum. 
 
-p>. *Paragraphe aligné à droite:* Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ullamcorper, libero id lobortis pharetra, est nunc volutpat ligula, eu bibendum felis velit quis urna. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Pellentesque faucibus, augue at vestibulum bibendum, magna nisl auctor ligula, convallis facilisis nisl nisl vitae orci. Pellentesque mollis venenatis sollicitudin. Morbi gravida elit sed purus convallis ac ultrices tellus ornare. Aliquam tempor imperdiet sem, nec venenatis massa vestibulum et. Duis non nibh scelerisque augue suscipit varius id vel eros. Nunc commodo sapien et neque commodo dignissim accumsan lectus facilisis. Nam vestibulum, metus fermentum auctor porta, diam ante tempus nunc, et rutrum nunc nisl sit amet tortor. Nullam rhoncus commodo tellus eu fringilla. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Donec cursus orci sit amet mi aliquet sit amet egestas sapien dignissim. Aliquam erat volutpat. Proin lacinia est vel enim pretium rutrum. 
+p>. *Paragraphe alignÃ© Ã  droite:* Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ullamcorper, libero id lobortis pharetra, est nunc volutpat ligula, eu bibendum felis velit quis urna. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Pellentesque faucibus, augue at vestibulum bibendum, magna nisl auctor ligula, convallis facilisis nisl nisl vitae orci. Pellentesque mollis venenatis sollicitudin. Morbi gravida elit sed purus convallis ac ultrices tellus ornare. Aliquam tempor imperdiet sem, nec venenatis massa vestibulum et. Duis non nibh scelerisque augue suscipit varius id vel eros. Nunc commodo sapien et neque commodo dignissim accumsan lectus facilisis. Nam vestibulum, metus fermentum auctor porta, diam ante tempus nunc, et rutrum nunc nisl sit amet tortor. Nullam rhoncus commodo tellus eu fringilla. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Donec cursus orci sit amet mi aliquet sit amet egestas sapien dignissim. Aliquam erat volutpat. Proin lacinia est vel enim pretium rutrum. 
 
-p=. *Paragraphe centré:* Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ullamcorper, libero id lobortis pharetra, est nunc volutpat ligula, eu bibendum felis velit quis urna. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Pellentesque faucibus, augue at vestibulum bibendum, magna nisl auctor ligula, convallis facilisis nisl nisl vitae orci. Pellentesque mollis venenatis sollicitudin. Morbi gravida elit sed purus convallis ac ultrices tellus ornare. Aliquam tempor imperdiet sem, nec venenatis massa vestibulum et. Duis non nibh scelerisque augue suscipit varius id vel eros. Nunc commodo sapien et neque commodo dignissim accumsan lectus facilisis. Nam vestibulum, metus fermentum auctor porta, diam ante tempus nunc, et rutrum nunc nisl sit amet tortor. Nullam rhoncus commodo tellus eu fringilla. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Donec cursus orci sit amet mi aliquet sit amet egestas sapien dignissim. Aliquam erat volutpat. Proin lacinia est vel enim pretium rutrum. 
+p=. *Paragraphe centrÃ©:* Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ullamcorper, libero id lobortis pharetra, est nunc volutpat ligula, eu bibendum felis velit quis urna. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Pellentesque faucibus, augue at vestibulum bibendum, magna nisl auctor ligula, convallis facilisis nisl nisl vitae orci. Pellentesque mollis venenatis sollicitudin. Morbi gravida elit sed purus convallis ac ultrices tellus ornare. Aliquam tempor imperdiet sem, nec venenatis massa vestibulum et. Duis non nibh scelerisque augue suscipit varius id vel eros. Nunc commodo sapien et neque commodo dignissim accumsan lectus facilisis. Nam vestibulum, metus fermentum auctor porta, diam ante tempus nunc, et rutrum nunc nisl sit amet tortor. Nullam rhoncus commodo tellus eu fringilla. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Donec cursus orci sit amet mi aliquet sit amet egestas sapien dignissim. Aliquam erat volutpat. Proin lacinia est vel enim pretium rutrum. 
 
-p(. Indentation à gauche de 1 élément
+p(. Indentation Ã  gauche de 1 Ã©lÃ©ment
 
-p(((. Indentation à gauche de 3 éléments
+p(((. Indentation Ã  gauche de 3 Ã©lÃ©ments
 
 *Jouer avec les CSS :*
 
 %{color:green}Texte% %{color:blue}en couleur%.
 
-p{color:blue;margin:30px}. Décalage+Couleur
+p{color:blue;margin:30px}. DÃ©calage+Couleur
 
 p{font-size:14px; line-height:25px}. *Modification de la taille de texte et de l'interligne:* Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ullamcorper, libero id lobortis pharetra, est nunc volutpat ligula, eu bibendum felis velit quis urna. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Pellentesque faucibus, augue at vestibulum bibendum, magna nisl auctor ligula, convallis facilisis nisl nisl vitae orci. Pellentesque mollis venenatis sollicitudin. Morbi gravida elit sed purus convallis ac ultrices tellus ornare. Aliquam tempor imperdiet sem, nec venenatis massa vestibulum et. Duis non nibh scelerisque augue suscipit varius id vel eros. Nunc commodo sapien et neque commodo dignissim accumsan lectus facilisis. Nam vestibulum, metus fermentum auctor porta, diam ante tempus nunc, et rutrum nunc nisl sit amet tortor. Nullam rhoncus commodo tellus eu fringilla. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Donec cursus orci sit amet mi aliquet sit amet egestas sapien dignissim. Aliquam erat volutpat. Proin lacinia est vel enim pretium rutrum. 
 
 
-*Text préformaté simple:*
+*Text prÃ©formatÃ© simple:*
 
-pre.                                Décalage avec des espaces
+pre.                                DÃ©calage avec des espaces
 
-*Text préformaté multiligne:*
+*Text prÃ©formatÃ© multiligne:*
 
 <pre>
     <Directory "/usr/share/doc/">
@@ -100,7 +100,7 @@ pre.                                Décalage avec des espaces
     </Directory>
 </pre>
 
-*Text préformaté avec lignes:*
+*Text prÃ©formatÃ© avec lignes:*
 
 <code class="">    <Directory "/usr/share/doc/">
         Options Indexes MultiViews FollowSymLinks
@@ -139,10 +139,10 @@ tsclient -x /home/test/scripts/rdp.rdp
 
 <code class="php"><?php
 /**
- * Traitement des liens externes et ancres (href) par expression regulière
+ * Traitement des liens externes et ancres (href) par expression reguliÃ¨re
  *
  * @param array $arrMatches Tableau des correspondances
- * @return string lien modifié
+ * @return string lien modifiÃ©
  *
  * @see wiki_render
  */
@@ -150,14 +150,14 @@ function wiki_links($arrMatches)
 {
     if (sizeof($arrMatches) == 3)
     {
-        switch($arrMatches[1][0]) // On regarde le 1er caractère du lien
+        switch($arrMatches[1][0]) // On regarde le 1er caractÃ¨re du lien
         {
             case '#': // cas particulier : ancre
-                return '<span class="wiki_link_ext"><a title="Aller à l\'ancre « '.htmlentities(strip_tags($arrMatches[2])).' »" href="'.$arrMatches[1].'">'.$arrMatches[2].'</a><img src="./modules/wiki/img/ico_link_anchor.png" /></span>';
+                return '<span class="wiki_link_ext"><a title="Aller Ã  l\'ancre Â« '.htmlentities(strip_tags($arrMatches[2])).' Â»" href="'.$arrMatches[1].'">'.$arrMatches[2].'</a><img src="./modules/wiki/img/ico_link_anchor.png" /></span>';
             break;
 
             default: // autres cas : liens externes
-                return '<span class="wiki_link_ext"><a title="Ouvrir le lien externe « '.htmlentities(strip_tags($arrMatches[1])).' »" href="'.$arrMatches[1].'">'.$arrMatches[2].'</a><img src="./modules/wiki/img/ico_link_ext.png" /></span>';
+                return '<span class="wiki_link_ext"><a title="Ouvrir le lien externe Â« '.htmlentities(strip_tags($arrMatches[1])).' Â»" href="'.$arrMatches[1].'">'.$arrMatches[2].'</a><img src="./modules/wiki/img/ico_link_ext.png" /></span>';
             break;
 
         }
@@ -232,7 +232,7 @@ table{border:3px solid black}.
 {background:#ffaacc}. | john | 29 | h |
 | bella | 45 | f |
 
-Image à droite:
+Image Ã  droite:
 !>http://www.ovensia.fr/templates/frontoffice/ovensia_officiel/gfx/logo.png!
 
 Image:
@@ -246,4 +246,4 @@ Lien sur une image :
 
 fn1. Note de bas de page
 
-fn2. Note de bas de page n°1
+fn2. Note de bas de page nÂ°1

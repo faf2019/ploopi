@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,28 +21,28 @@
 */
 
 /**
- * Gère le rewriting inverse des URL du module DOC
+ * GÃ¨re le rewriting inverse des URL du module DOC
  *
  * @package doc
  * @subpackage rewrite
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 // webservice "wsdoc"
 if ($booRewriteRuleFound = (strpos($arrParsedURI['path'], '/wsdoc') === 0))
 {
-    // Choix du point d'entrée dans Ploopi
+    // Choix du point d'entrÃ©e dans Ploopi
     self::$script = 'webservice';
 
-    // On indique le module utilisé
+    // On indique le module utilisÃ©
     $_REQUEST['module'] = $_GET['module'] = 'doc';
 
-    // On force Ploopi à ne pas rediriger la requête entrante lors d'une identification
+    // On force Ploopi Ã  ne pas rediriger la requÃªte entrante lors d'une identification
     $_REQUEST['noredir'] = $_GET['noredir'] = '1';
 
-    // Lecture de l'action à effectuer dans l'url (routage)
+    // Lecture de l'action Ã  effectuer dans l'url (routage)
     if (preg_match('/wsdoc\/([^\/]*)/', $arrParsedURI['path'], $arrMatches) == 1 && sizeof($arrMatches) == 2)
     {
         $_REQUEST['op'] = $_GET['op'] = $arrMatches[1];
@@ -58,6 +58,26 @@ if (preg_match('/^\/documents\/([a-z0-9]{32})\/(.*)\.[a-zA-Z0-9]*(.*)/', $arrPar
         self::$script = 'quick';
         $_REQUEST['ploopi_op'] = $_GET['ploopi_op'] = 'doc_file_download';
         $_REQUEST['docfile_md5id'] = $_GET['docfile_md5id'] = $arrMatches[1];
+        if (!empty($_SESSION['ploopi']['tokens'])) {
+            end($_SESSION['ploopi']['tokens']);
+            $_REQUEST['ploopi_token'] = key($_SESSION['ploopi']['tokens']);
+        }
+        $booRewriteRuleFound = true;
+    }
+}
+
+// documents inline
+elseif (preg_match('/^\/inlinedocs\/([a-z0-9]{32})\/(.*)\.[a-zA-Z0-9]*(.*)/', $arrParsedURI['path'], $arrMatches) == 1)
+{
+    if (!empty($arrMatches[2]))
+    {
+        self::$script = 'quick';
+        $_REQUEST['ploopi_op'] = $_GET['ploopi_op'] = 'doc_file_view';
+        $_REQUEST['docfile_md5id'] = $_GET['docfile_md5id'] = $arrMatches[1];
+        if (!empty($_SESSION['ploopi']['tokens'])) {
+            end($_SESSION['ploopi']['tokens']);
+            $_REQUEST['ploopi_token'] = key($_SESSION['ploopi']['tokens']);
+        }
         $booRewriteRuleFound = true;
     }
 }
@@ -69,9 +89,14 @@ elseif (preg_match('/^\/media\/([a-z0-9]{32})\/(.*)\.[a-zA-Z0-9]*(.*)/', $arrPar
         self::$script = 'quick';
         $_REQUEST['ploopi_op'] = $_GET['ploopi_op'] = 'doc_file_view';
         $_REQUEST['docfile_md5id'] = $_GET['docfile_md5id'] = $arrMatches[1];
+        if (!empty($_SESSION['ploopi']['tokens'])) {
+            end($_SESSION['ploopi']['tokens']);
+            $_REQUEST['ploopi_token'] = key($_SESSION['ploopi']['tokens']);
+        }
         $booRewriteRuleFound = true;
     }
 }
+
 //flux RSS/Atom
 elseif (preg_match('/^\/doc\/(rss|atom)\/(.*)-m([0-9]*)f([0-9]*)\.xml/', $arrParsedURI['path'], $arrMatches) == 1)
 {

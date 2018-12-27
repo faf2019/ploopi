@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -27,14 +27,14 @@
  * @subpackage public
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
-// Récupération des rubriques de contacts partagés
+// RÃ©cupÃ©ration des rubriques de contacts partagÃ©s
 $arrHeadings = $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_sharedcontacts'] ? directory_getheadings() : array();
 
 /**
- * Création du tableau des favoris
+ * CrÃ©ation du tableau des favoris
  */
 
 if (!empty($_GET['directory_favorites_id_list']) && is_numeric($_GET['directory_favorites_id_list'])) $_SESSION['directory']['id_list'] = $_GET['directory_favorites_id_list'];
@@ -113,19 +113,19 @@ foreach($result as $row)
             $field_id = 'user_id';
             $level_display = (empty($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_users'])) ? _DIRECTORY_USERS : $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_users'];
 
-            // on va chercher les espaces auxquels l'utilisateur peut accéder
+            // on va chercher les espaces auxquels l'utilisateur peut accÃ©der
             $user = new ploopi\user();
             $user->open($row['id']);
             $user_ws = $user->getworkspaces();
 
-            // on met les libellés dans un tableau
+            // on met les libellÃ©s dans un tableau
             $workspaces_list = array();
             foreach($user_ws as $ws) $workspaces_list[sprintf("%04d%s", $ws['depth'], $ws['label'])] = $ws['label'];
 
-            // on trie par profondeur + libellé
+            // on trie par profondeur + libellÃ©
             ksort($workspaces_list);
 
-            // on met tout ça dans une chaine
+            // on met tout Ã§a dans une chaine
             $workspaces_list = implode(', ',$workspaces_list);
 
             //$arrValues[$c]['link'] = 'javascript:void(0);';
@@ -144,7 +144,7 @@ foreach($result as $row)
                 $level_display = (empty($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_mycontacts'])) ? _DIRECTORY_MYCONTACTS : $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_mycontacts'];
                 $workspaces_list = '';
             }
-            else // contact partagé
+            else // contact partagÃ©
             {
                 $level_display = (empty($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_sharedcontacts'])) ? _DIRECTORY_SHAREDCONTACTS : $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_sharedcontacts'];
 

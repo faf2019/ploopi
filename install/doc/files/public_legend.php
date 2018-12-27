@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,19 +21,19 @@
 */
 
 /**
- * Légende (popup)
+ * LÃ©gende (popup)
  *
  * @package doc
  * @subpackage public
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  *
  * @see skin::create_popup
  */
 
 /**
- * On démarre un buffer spécifique pour envoyer le contenu dans un popup
+ * On dÃ©marre un buffer spÃ©cifique pour envoyer le contenu dans un popup
  */
 
 ob_start();
@@ -52,10 +52,10 @@ ob_start();
         <img src="./modules/doc/img/ico_search.png"><span style="margin-left:4px;">Rechercher</span>
     </p>
     <p class="ploopi_va" style="margin:2px;">
-        <img src="./modules/doc/img/ico_download.png"><span style="margin-left:4px;">Télécharger</span>
+        <img src="./modules/doc/img/ico_download.png"><span style="margin-left:4px;">TÃ©lÃ©charger</span>
     </p>
     <p class="ploopi_va" style="margin:2px;">
-        <img src="./modules/doc/img/ico_download_zip.png"><span style="margin-left:4px;">Télécharger (ZIP)</span>
+        <img src="./modules/doc/img/ico_download_zip.png"><span style="margin-left:4px;">TÃ©lÃ©charger (ZIP)</span>
     </p>
     <p class="ploopi_va" style="margin:2px;">
         <img src="./modules/doc/img/ico_modify.png"><span style="margin-left:4px;">Voir/Modifier</span>
@@ -70,21 +70,21 @@ ob_start();
         <img src="./modules/doc/img/ico_folder_public.png"><span style="margin-left:4px;">Dossier Public</span>
     </p>
     <p class="ploopi_va" style="margin:2px;">
-        <img src="./modules/doc/img/ico_folder_public_locked.png"><span style="margin-left:4px;">Dossier Public protégé</span>
+        <img src="./modules/doc/img/ico_folder_public_locked.png"><span style="margin-left:4px;">Dossier Public protÃ©gÃ©</span>
     </p>
     <p class="ploopi_va" style="margin:2px;">
-        <img src="./modules/doc/img/ico_folder_shared.png"><span style="margin-left:4px;">Dossier Partagé</span>
+        <img src="./modules/doc/img/ico_folder_shared.png"><span style="margin-left:4px;">Dossier PartagÃ©</span>
     </p>
     <p class="ploopi_va" style="margin:2px;">
-        <img src="./modules/doc/img/ico_folder_shared_locked.png"><span style="margin-left:4px;">Dossier Partagé protégé</span>
+        <img src="./modules/doc/img/ico_folder_shared_locked.png"><span style="margin-left:4px;">Dossier PartagÃ© protÃ©gÃ©</span>
     </p>
     <p class="ploopi_va" style="background-color:#ffe0e0;padding:2px 0;margin:2px;">
-        <span style="margin-left:4px;">Dossier ou fichier à valider</span>
+        <span style="margin-left:4px;">Dossier ou fichier Ã  valider</span>
     </p>
 </div>
 <?php
 /**
- * On récupère le contenu du buffer et on supprime le buffer
+ * On rÃ©cupÃ¨re le contenu du buffer et on supprime le buffer
  */
 $content = ob_get_contents();
 ob_end_clean();
@@ -92,5 +92,5 @@ ob_end_clean();
 /**
  * Affichage du popup
  */
-echo ploopi\skin::get()->create_popup('Légende', $content, 'dochelp');
+echo ploopi\skin::get()->create_popup('LÃ©gende', $content, 'dochelp');
 ?>

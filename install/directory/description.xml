@@ -8,7 +8,7 @@
       <description>Annuaire des Utilisateurs</description>
       <paramtype>
          <name>directory_myfavorites</name>
-         <label>Accéder à l'onglet "Favoris"</label>
+         <label>AccÃ©der Ã  l'onglet "Favoris"</label>
          <default_value>1</default_value>
          <public>1</public>
          <description/>
@@ -23,7 +23,7 @@
       </paramtype>
       <paramtype>
          <name>directory_mycontacts</name>
-         <label>Accéder à l'onglet "Contacts Personnels"</label>
+         <label>AccÃ©der Ã  l'onglet "Contacts Personnels"</label>
          <default_value>1</default_value>
          <public>1</public>
          <description/>
@@ -38,7 +38,7 @@
       </paramtype>
       <paramtype>
          <name>directory_mygroup</name>
-         <label>Accéder à l'onglet "Espace de Travail"</label>
+         <label>AccÃ©der Ã  l'onglet "Espace de Travail"</label>
          <default_value>1</default_value>
          <public>1</public>
          <description/>
@@ -53,7 +53,7 @@
       </paramtype>
       <paramtype>
          <name>directory_organizationchart</name>
-         <label>Accéder à l'onglet "Organigramme"</label>
+         <label>AccÃ©der Ã  l'onglet "Organigramme"</label>
          <default_value>1</default_value>
          <public>1</public>
          <description/>
@@ -68,7 +68,7 @@
       </paramtype>
       <paramtype>
          <name>directory_sharedcontacts</name>
-         <label>Accéder à l'onglet "Contacts Partagés"</label>
+         <label>AccÃ©der Ã  l'onglet "Contacts PartagÃ©s"</label>
          <default_value>1</default_value>
          <public>1</public>
          <description/>
@@ -83,7 +83,7 @@
       </paramtype>
       <paramtype>
          <name>directory_speeddialing</name>
-         <label>Accéder à l'onglet "Numéros Abrégés"</label>
+         <label>AccÃ©der Ã  l'onglet "NumÃ©ros AbrÃ©gÃ©s"</label>
          <default_value>1</default_value>
          <public>1</public>
          <description/>
@@ -98,7 +98,7 @@
       </paramtype>
       <paramtype>
          <name>directory_search</name>
-         <label>Accéder à l'onglet "Recherche"</label>
+         <label>AccÃ©der Ã  l'onglet "Recherche"</label>
          <default_value>1</default_value>
          <public>1</public>
          <description/>
@@ -128,106 +128,106 @@
       </paramtype>
       <paramtype>
          <name>directory_label_myfavorites</name>
-         <label>Libellé de l'onglet "Favoris"</label>
+         <label>LibellÃ© de l'onglet "Favoris"</label>
          <default_value></default_value>
          <public>1</public>
          <description/>
       </paramtype>
       <paramtype>
          <name>directory_label_mycontacts</name>
-         <label>Libellé de l'onglet "Contacts Personnels"</label>
+         <label>LibellÃ© de l'onglet "Contacts Personnels"</label>
          <default_value></default_value>
          <public>1</public>
          <description/>
       </paramtype>
       <paramtype>
          <name>directory_label_mygroup</name>
-         <label>Libellé de l'onglet "Espace de Travail"</label>
+         <label>LibellÃ© de l'onglet "Espace de Travail"</label>
          <default_value></default_value>
          <public>1</public>
          <description/>
       </paramtype>
       <paramtype>
          <name>directory_label_organizationchart</name>
-         <label>Libellé de l'onglet "Organigramme"</label>
+         <label>LibellÃ© de l'onglet "Organigramme"</label>
          <default_value></default_value>
          <public>1</public>
          <description/>
       </paramtype>
       <paramtype>
          <name>directory_label_sharedcontacts</name>
-         <label>Libellé de l'onglet "Contacts Partagés"</label>
+         <label>LibellÃ© de l'onglet "Contacts PartagÃ©s"</label>
          <default_value></default_value>
          <public>1</public>
          <description/>
       </paramtype>
       <paramtype>
          <name>directory_label_speeddialing</name>
-         <label>Libellé de l'onglet "Numéros Abrégés"</label>
+         <label>LibellÃ© de l'onglet "NumÃ©ros AbrÃ©gÃ©s"</label>
          <default_value></default_value>
          <public>1</public>
          <description/>
       </paramtype>
       <paramtype>
          <name>directory_label_search</name>
-         <label>Libellé de l'onglet "Recherche"</label>
+         <label>LibellÃ© de l'onglet "Recherche"</label>
          <default_value></default_value>
          <public>1</public>
          <description/>
       </paramtype>
       <paramtype>
          <name>directory_label_depth1</name>
-         <label>Libellé des Rubriques de 1er niveau</label>
+         <label>LibellÃ© des Rubriques de 1er niveau</label>
          <default_value>une/cette/racine</default_value>
          <public>1</public>
          <description/>
       </paramtype>
       <paramtype>
          <name>directory_label_depth2</name>
-         <label>Libellé des Rubriques de 2ème niveau</label>
+         <label>LibellÃ© des Rubriques de 2Ã¨me niveau</label>
          <default_value>une/cette/rubrique</default_value>
          <public>1</public>
          <description/>
       </paramtype>
       <paramtype>
          <name>directory_label_depth3</name>
-         <label>Libellé des Rubriques de 3ème niveau</label>
+         <label>LibellÃ© des Rubriques de 3Ã¨me niveau</label>
          <default_value>une/cette/rubrique</default_value>
          <public>1</public>
          <description/>
       </paramtype>
       <paramtype>
          <name>directory_label_depth4</name>
-         <label>Libellé des Rubriques de 4ème niveau</label>
+         <label>LibellÃ© des Rubriques de 4Ã¨me niveau</label>
          <default_value>une/cette/rubrique</default_value>
          <public>1</public>
          <description/>
       </paramtype>
       <paramtype>
          <name>directory_label_depth5</name>
-         <label>Libellé des Rubriques de 5ème niveau</label>
+         <label>LibellÃ© des Rubriques de 5Ã¨me niveau</label>
          <default_value>une/cette/rubrique</default_value>
          <public>1</public>
          <description/>
       </paramtype>
       <paramtype>
          <name>directory_pagesize</name>
-         <label>Nombre d'enregistrements affichés par page</label>
+         <label>Nombre d'enregistrements affichÃ©s par page</label>
          <default_value>50</default_value>
          <public>1</public>
          <description/>
       </paramtype>
       <action>
          <id_action>1</id_action>
-         <label>Gérer les rubriques/contacts</label>
+         <label>GÃ©rer les rubriques/contacts</label>
       </action>
       <action>
          <id_action>2</id_action>
-         <label>Gérer les gestionnaires</label>
+         <label>GÃ©rer les gestionnaires</label>
       </action>
       <action>
          <id_action>3</id_action>
-         <label>Gérer les numéros abrégés</label>
+         <label>GÃ©rer les numÃ©ros abrÃ©gÃ©s</label>
       </action>
       <action>
          <id_action>10</id_action>
@@ -261,17 +261,17 @@
       </action>
       <action>
          <id_action>20</id_action>
-         <label>Ajouter un numéro abrégé</label>
+         <label>Ajouter un numÃ©ro abrÃ©gÃ©</label>
          <role_enabled>0</role_enabled>
       </action>
       <action>
          <id_action>21</id_action>
-         <label>Supprimer un numéro abrégé</label>
+         <label>Supprimer un numÃ©ro abrÃ©gÃ©</label>
          <role_enabled>0</role_enabled>
       </action>
       <action>
          <id_action>22</id_action>
-         <label>Modifier un numéro abrégé</label>
+         <label>Modifier un numÃ©ro abrÃ©gÃ©</label>
          <role_enabled>0</role_enabled>
       </action>
    </moduletype>

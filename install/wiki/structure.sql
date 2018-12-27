@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS `ploopi_mod_wiki_page` (
   KEY `id_workspace` (`id_workspace`),
   KEY `id_module` (`id_module`),
   KEY `revision` (`revision`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `ploopi_mod_wiki_page_history`;
 CREATE TABLE IF NOT EXISTS `ploopi_mod_wiki_page_history` (
@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS `ploopi_mod_wiki_page_history` (
   KEY `id_workspace` (`id_workspace`),
   KEY `id_module` (`id_module`),
   KEY `revision` (`revision`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 ALTER TABLE `ploopi_mod_wiki_page` CHANGE `content` `content` LONGTEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL;
 ALTER TABLE `ploopi_mod_wiki_page_history` CHANGE `content` `content` LONGTEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL;

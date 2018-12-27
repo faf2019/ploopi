@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,23 +21,23 @@
 */
 
 /**
- * Gestion des numéros abrégés
+ * Gestion des numÃ©ros abrÃ©gÃ©s
  *
  * @package directory
  * @subpackage speeddialing
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
- * Classe d'accès à la table ploopi_mod_directory_speeddialing
+ * Classe d'accÃ¨s Ã  la table ploopi_mod_directory_speeddialing
  *
  * @package directory
  * @subpackage contacts
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 class directory_speeddialing extends ploopi\data_object

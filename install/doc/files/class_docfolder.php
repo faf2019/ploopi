@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -27,7 +27,7 @@
  * @subpackage folder
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
@@ -37,13 +37,13 @@
 include_once './modules/doc/class_docfile.php';
 
 /**
- * Classe d'accès à la table ploopi_mod_doc_folder
+ * Classe d'accÃ¨s Ã  la table ploopi_mod_doc_folder
  *
  * @package doc
  * @subpackage folder
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 class docfolder extends ploopi\data_object
@@ -81,7 +81,7 @@ class docfolder extends ploopi\data_object
     /**
      * Enregistre le dossier.
      * Les dossiers n'existent pas physiquement.
-     * Mise à jour du nombre d'élément du dossier parent.
+     * Mise Ã  jour du nombre d'Ã©lÃ©ment du dossier parent.
      *
      * @return int identifiant du dossier
      *
@@ -107,7 +107,7 @@ class docfolder extends ploopi\data_object
         }
 
 
-        // Cas d'un changement de parent, il faut mettre à jour en cascade tous les enfants
+        // Cas d'un changement de parent, il faut mettre Ã  jour en cascade tous les enfants
         if ($this->fields['id_folder'] != $this->id_folder)
         {
             $objCol = new ploopi\data_object_collection('docfolder');
@@ -141,9 +141,9 @@ class docfolder extends ploopi\data_object
     }
 
     /**
-     * Détermine si le dossier est accessible par l'utilisateur connecté
+     * DÃ©termine si le dossier est accessible par l'utilisateur connectÃ©
      *
-     * @return boolean true si me dossier est accessible par l'utilisateur connecté
+     * @return boolean true si me dossier est accessible par l'utilisateur connectÃ©
      */
 
     public function isEnabled()
@@ -204,38 +204,38 @@ class docfolder extends ploopi\data_object
     }
 
     /**
-     * Retourne la liste des abonnés au dossier (en vérifiant les partages)
+     * Retourne la liste des abonnÃ©s au dossier (en vÃ©rifiant les partages)
      *
-     * @return array tableau des utilisateurs abonnés
+     * @return array tableau des utilisateurs abonnÃ©s
      */
 
     public function getSubscribers($arrActions)
     {
         $arrSubscribers = array();
 
-        // Si le dossier n'est pas privé
+        // Si le dossier n'est pas privÃ©
         if ($this->fields['foldertype'] != 'private')
         {
             // on construit la liste des objets parents (y compris l'objet courant)
             $arrFolderList = preg_split('/,/', "{$this->fields['parents']},{$this->fields['id']}");
 
-            // on cherche la liste des abonnés à chacun des objets pour construire une liste globale d'abonnés
+            // on cherche la liste des abonnÃ©s Ã  chacun des objets pour construire une liste globale d'abonnÃ©s
             foreach ($arrFolderList as $intObjectId)
                 $arrSubscribers += ploopi\subscription::getusers(_DOC_OBJECT_FOLDER, $intObjectId, $arrActions);
 
-            // Si dossier partagé, on vérifie que l'abonné est dans les partages
+            // Si dossier partagÃ©, on vÃ©rifie que l'abonnÃ© est dans les partages
             if ($this->fields['foldertype'] == 'shared')
             {
-                // On récupère les utilisateurs pour lesquels le dossier est partagé
+                // On rÃ©cupÃ¨re les utilisateurs pour lesquels le dossier est partagÃ©
                 $arrShareUsers = ploopi\share::get(-1, _DOC_OBJECT_FOLDER, $intObjectId);
 
-                // Tableau résultat des utilisateurs abonnés et pour lesquels le dossier est partagé
+                // Tableau rÃ©sultat des utilisateurs abonnÃ©s et pour lesquels le dossier est partagÃ©
                 $arrShareSubscribers = array();
 
-                // On ne garde que les utilisateurs pour qui le dossier est partagé
+                // On ne garde que les utilisateurs pour qui le dossier est partagÃ©
                 foreach($arrShareUsers as $u) if ($u['type_share'] == 'user' && isset($arrSubscribers[$u['id_share']])) $arrShareSubscribers[$u['id_share']] = $arrSubscribers[$u['id_share']];
 
-                // On affecte les utilisateurs que l'on garde à la liste des destinataires de l'abonnement
+                // On affecte les utilisateurs que l'on garde Ã  la liste des destinataires de l'abonnement
                 $arrSubscribers = $arrShareSubscribers;
             }
         }

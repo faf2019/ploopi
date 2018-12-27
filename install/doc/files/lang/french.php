@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Copyright (c) 2009 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
@@ -22,24 +22,24 @@
 */
 
 /**
- * Fichier de langue franÁais
+ * Fichier de langue fran√ßais
  *
  * @package doc
  * @subpackage lang
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author StÈphane Escaich
+ * @author Ovensia
  */
 
 /**
- * DÈfinition des constantes
+ * D√©finition des constantes
  */
 
 define ('_DOC_PAGE_TITLE', 'Gestion des Documents du module \'LABEL\'');
 
 define ('_DOC_TAB_TITLE_PARSERS',       'Gestion des analyseurs');
 define ('_DOC_TAB_TITLE_INDEX',         'Indexation');
-define ('_DOC_TAB_TITLE_CLEAN_CACHE',   'Vidage des diffÈrents caches');
+define ('_DOC_TAB_TITLE_CLEAN_CACHE',   'Vidage des diff√©rents caches');
 define ('_DOC_TAB_TITLE_STATS',         'Statistiques');
 
 
@@ -49,18 +49,18 @@ define ('_DOC_SEARCH', 'Recherche');
 
 define ('_DOC_LABEL_ADMIN', 'Administration');
 
-define ("_DOC_MSG_CONFIRMDELETEFILE", "Etes-vous s˚r de vouloir supprimer ce fichier ?");
-define ("_DOC_MSG_CONFIRMDELETEFOLDER", "Etes-vous s˚r de vouloir supprimer ce dossier ?");
+define ("_DOC_MSG_CONFIRMDELETEFILE", "Etes-vous s√ªr de vouloir supprimer ce fichier ?");
+define ("_DOC_MSG_CONFIRMDELETEFOLDER", "Etes-vous s√ªr de vouloir supprimer ce dossier ?");
 
-define ("_DOC_LABEL_ERROR_FOLDEREXISTS",        '<b>Erreur ! </b>CrÈation du dossier impossible - le dossier existe dÈj‡');
-define ("_DOC_LABEL_ERROR_UNAVAILABLEPATH",     '<b>Erreur ! </b>CrÈation du dossier impossible - le chemin n\'est pas valide');
-define ("_DOC_LABEL_ERROR_FOLDERNOTWRITABLE",   '<b>Erreur ! </b>CrÈation du dossier impossible - le rÈpertoire physique n\'est pas accessible en Ècriture');
+define ("_DOC_LABEL_ERROR_FOLDEREXISTS",        '<b>Erreur ! </b>Cr√©ation du dossier impossible - le dossier existe d√©j√†');
+define ("_DOC_LABEL_ERROR_UNAVAILABLEPATH",     '<b>Erreur ! </b>Cr√©ation du dossier impossible - le chemin n\'est pas valide');
+define ("_DOC_LABEL_ERROR_FOLDERNOTWRITABLE",   '<b>Erreur ! </b>Cr√©ation du dossier impossible - le r√©pertoire physique n\'est pas accessible en √©criture');
 
 define ("_DOC_LABEL_ERROR_EMPTYFILE",           '<b>Erreur ! </b>Enregistrement du fichier impossible - le fichier est vide');
-define ("_DOC_LABEL_ERROR_FILENOTWRITABLE",     '<b>Erreur ! </b>Enregistrement du fichier impossible - le fichier n\'est pas accessible en Ècriture');
+define ("_DOC_LABEL_ERROR_FILENOTWRITABLE",     '<b>Erreur ! </b>Enregistrement du fichier impossible - le fichier n\'est pas accessible en √©criture');
 define ("_DOC_LABEL_ERROR_MAXFILESIZE",         '<b>Erreur ! </b>Enregistrement du fichier impossible - le fichier est trop volumineux');
 
 global $foldertypes;
-$foldertypes = array ('private' => 'Personnel', 'shared' => 'PartagÈ', 'public' => 'Public');
+$foldertypes = array ('private' => 'Personnel', 'shared' => 'Partag√©', 'public' => 'Public');
 
 ?>

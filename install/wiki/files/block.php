@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2009 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -27,7 +27,7 @@
  * @subpackage block
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
@@ -38,9 +38,9 @@ ploopi\module::init('wiki', false, false, false);
 
 $strWikiMenu = isset($_GET['wiki_menu']) ? $_GET['wiki_menu'] : '';
 
-$block->addmenu('Page de démarrage', ploopi\crypt::urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && $strWikiMenu == '');
+$block->addmenu('Page de dÃ©marrage', ploopi\crypt::urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && $strWikiMenu == '');
 $block->addmenu('Index par titre', ploopi\crypt::urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&wiki_menu=index_title"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && $strWikiMenu == 'index_title');
 $block->addmenu('Index par date', ploopi\crypt::urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&wiki_menu=index_date"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && $strWikiMenu == 'index_date');
-if (ploopi\acl::isadmin()) $block->addmenu('<strong>Réindexer</strong>', ploopi\crypt::urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&wiki_menu=reindex"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && $strWikiMenu == 'reindex');
+if (ploopi\acl::isadmin()) $block->addmenu('<strong>RÃ©indexer</strong>', ploopi\crypt::urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&wiki_menu=reindex"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'public' && $strWikiMenu == 'reindex');
 ?>
 

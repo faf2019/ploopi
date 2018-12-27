@@ -6,4 +6,4 @@ CREATE TABLE IF NOT EXISTS `ploopi_mod_directory_speeddialing` (
   `shortnumber` varchar(16) NOT NULL,
   `heading` varchar(255) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;

@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,25 +26,25 @@
  * @subpackage file
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
- * Inclusion des dépendances
+ * Inclusion des dÃ©pendances
  */
 
 include_once './modules/doc/class_docfolder.php';
 include_once './modules/doc/class_docmeta.php';
 
 /**
- * Classe d'accès à la table ploopi_mod_doc_file.
- * Gère l'enregistrement physique, l'extraction du contenu, l'indexation, la suppression.
+ * Classe d'accÃ¨s Ã  la table ploopi_mod_doc_file.
+ * GÃ¨re l'enregistrement physique, l'extraction du contenu, l'indexation, la suppression.
  *
  * @package doc
  * @subpackage file
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 class docfile extends ploopi\data_object
@@ -95,7 +95,7 @@ class docfile extends ploopi\data_object
      * Ouvre un document avec son identifiant MD5
      *
      * @param string $md5id identifiant MD5 du document
-     * @return boolean true si le document a été ouvert
+     * @return boolean true si le document a Ã©tÃ© ouvert
      */
 
     function openmd5($md5id)
@@ -110,7 +110,7 @@ class docfile extends ploopi\data_object
     /**
      * Enregistre le document
      *
-     * @return int numéro d'erreur
+     * @return int numÃ©ro d'erreur
      *
      * @see _DOC_ERROR_EMPTYFILE
      * @see _DOC_ERROR_FILENOTWRITABLE
@@ -197,7 +197,7 @@ class docfile extends ploopi\data_object
 
                     if (!$error)
                     {
-                        // on déplace l'ancien fichier
+                        // on dÃ©place l'ancien fichier
                         /*
                         if (file_exists($filepath) && is_writable($basepath))
                         {
@@ -332,12 +332,12 @@ class docfile extends ploopi\data_object
     }
 
     /**
-     * Déplace un fichier vers un brouillon
+     * DÃ©place un fichier vers un brouillon
      */
 
     function movetodraft()
     {
-        // Création d'un draft à partir du fichier d'origine
+        // CrÃ©ation d'un draft Ã  partir du fichier d'origine
         $docfiledraft = new docfiledraft();
 
         foreach(array('name', 'description', 'timestp_create', 'size', 'readonly', 'extension', 'id_folder', 'id_user_modify', 'id_user', 'id_workspace', 'id_module') as $key)
@@ -352,7 +352,7 @@ class docfile extends ploopi\data_object
     }
 
     /**
-     * Retourne le chemin physique de stockage des documents et le crée s'il n'existe pas
+     * Retourne le chemin physique de stockage des documents et le crÃ©e s'il n'existe pas
      *
      * @return string chemin physique de stockage des documents
      *
@@ -381,7 +381,7 @@ class docfile extends ploopi\data_object
     /**
      * Retourne l'historique d'un fichier dans un tableau
      *
-     * @return array historique d'un fichier indexé par version
+     * @return array historique d'un fichier indexÃ© par version
      */
 
     function gethistory()
@@ -419,7 +419,7 @@ class docfile extends ploopi\data_object
     }
 
     /**
-     * Crée un historique à partir de ce document
+     * CrÃ©e un historique Ã  partir de ce document
      */
 
     function createhistory()
@@ -477,8 +477,7 @@ class docfile extends ploopi\data_object
     {
         $db = ploopi\db::get();
 
-        global $ploopi_timer;
-        if ($debug) printf("<br />START: %0.2f",$ploopi_timer->getexectime()*1000);
+        if ($debug) printf("<br />START: %0.2f", timer::get()->getexectime()*1000);
 
         if (!ini_get('safe_mode')) @set_time_limit(0);
 
@@ -497,7 +496,7 @@ class docfile extends ploopi\data_object
 
         $res_txt = '';
 
-        // on recherche les parsers adaptés au format du fichier
+        // on recherche les parsers adaptÃ©s au format du fichier
         $sql =  "
                 select      lcase(f.extension) as ext,
                             p.path
@@ -536,7 +535,7 @@ class docfile extends ploopi\data_object
             $res_txt = "<div style=\"background-color:#e0e0e0;border-bottom:1px solid #c0c0c0;padding:1px;margin-top:2px;\"><b>{$this->fields['name']}</b> : {$exec}</div>\n";
 
             exec($exec,$array_result);
-            if ($debug) printf("<br />META: %0.2f",$ploopi_timer->getexectime()*1000);
+            if ($debug) printf("<br />META: %0.2f", timer::get()->getexectime()*1000);
 
             // delete existing meta for current file
             $db->query("DELETE FROM ploopi_mod_doc_meta WHERE id_file = {$this->fields['id']}");
@@ -586,7 +585,7 @@ class docfile extends ploopi\data_object
             }
             unset($array_result);
 
-            if ($debug) printf("<br />META 2: %0.2f",$ploopi_timer->getexectime()*1000);
+            if ($debug) printf("<br />META 2: %0.2f", timer::get()->getexectime()*1000);
 
             /* EXTRACTION DES CONTENUS */
 
@@ -600,25 +599,9 @@ class docfile extends ploopi\data_object
                 $res_txt .= "<div style=\"background-color:#ffe0e0;border-bottom:1px solid #c0c0c0;padding:1px;margin-top:2px;\">{$exec}</div>\n";
 
                 exec($exec,$array_result);
-                if ($debug) printf("<br />CONTENT: %0.2f",$ploopi_timer->getexectime()*1000);
+                if ($debug) printf("<br />CONTENT: %0.2f", timer::get()->getexectime()*1000);
 
-                foreach($array_result as $key => $value)
-                {
-                    if ($value!="")
-                    {
-                        switch($fields['ext'])
-                        {
-                            case 'odg':
-                            case 'odt':
-                            case 'ods':
-                            case 'odp':
-                            case 'sxw':
-                                $value = iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $value);
-                            break;
-                        }
-                        $content .= $value.' ';
-                    }
-                }
+                $content = implode(' ', $array_result);
 
                 unset($array_result);
             }
@@ -627,7 +610,9 @@ class docfile extends ploopi\data_object
 
             $metakeywords_str .= " {$this->fields['name']} {$this->fields['description']}";
 
+
             ploopi\search_index::remove(_DOC_OBJECT_FILE, $this->fields['md5id'], $this->fields['id_module']);
+
             ploopi\search_index::add(
                 _DOC_OBJECT_FILE,
                 $this->fields['md5id'],

@@ -22,13 +22,13 @@
 */
 
 /**
- * Suppression des données relatives au module lors d'une suppression d'instance
+ * Suppression des donnÃ©es relatives au module lors d'une suppression d'instance
  *
  * @package wiki
  * @subpackage delete
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**

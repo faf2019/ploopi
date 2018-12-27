@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Copyright (c) 2009 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
@@ -28,7 +28,7 @@
  * @subpackage public
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  *
  * @see doc_getvalidation
  * @see ploopi_validation_get
@@ -36,7 +36,7 @@
  */
 
 /**
- * Traitement différent pour ajout et modification de dossier
+ * Traitement diffÃ©rent pour ajout et modification de dossier
  */
 $newfolder = false;
 $docfolder = new docfolder();
@@ -139,7 +139,7 @@ else // creating
                     {
                         ?>
                         <input type="hidden" name="docfolder_id_folder" id="docfolder_id_folder" value="<?php echo $docfolder->fields['id_folder']; ?>" />
-                        <a title="Choisir un autre dossier parent" href="javascript:void(0);" onclick="javascript:ploopi_showpopup(ploopi_xmlhttprequest('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=doc_folderselect&doc_excludes=<?php echo $currentfolder; ?>&doc_id_folder='+$('docfolder_id_folder').value, false), 300, event, 'click', 'doc_popup_folderselect');" class="ploopi_va">
+                        <a title="Choisir un autre dossier parent" href="javascript:void(0);" onclick="javascript:ploopi.popup.show(ploopi.xhr.send('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=doc_folderselect&doc_excludes=<?php echo $currentfolder; ?>&doc_id_folder='+jQuery('#docfolder_id_folder')[0].value, false), 300, event, 'click', 'doc_popup_folderselect');" class="ploopi_va">
                             <span style="width:auto;" id="docfolder_id_folder_name"><?php echo ploopi\str::htmlentities($strParent); ?></span><img style="margin-left:6px;" src="./modules/doc/img/ico_folder.png" />
                         </a>
                         <?php
@@ -174,7 +174,7 @@ else // creating
                     ?>
                 </p>
                 <p>
-                    <label>Contenu protégé:<br /><em>(Les autres utilisateurs ne peuvent pas déposer de fichier)</em></label>
+                    <label>Contenu protÃ©gÃ©:<br /><em>(Les autres utilisateurs ne peuvent pas dÃ©poser de fichier)</em></label>
                     <?php
                     if ($readonly)
                     //if ($readonly || ($docfolder->fields['id_user'] != $_SESSION['ploopi']['userid'] && !ploopi\acl::isadmin() && !ploopi\acl::isactionallowed(_DOC_ACTION_ADMIN)))
@@ -225,7 +225,7 @@ else // creating
                         else
                         {
                             ?>
-                            <input type="checkbox" name="docfolder_allow_feeds" value="1" <?php if ($docfolder->fields['allow_feeds']) echo 'checked'; ?> onchange="javascript:($('doc_feed_url').style.display == 'none') ? $('doc_feed_url').show() : $('doc_feed_url').hide();" tabindex="7">
+                            <input type="checkbox" name="docfolder_allow_feeds" value="1" <?php if ($docfolder->fields['allow_feeds']) echo 'checked'; ?> onchange="javascript:(jQuery('#doc_feed_url')[0].style.display == 'none') ? jQuery('#doc_feed_url')[0].show() : jQuery('#doc_feed_url')[0].hide();" tabindex="7">
                             <?php
                         }
                         ?>
@@ -250,13 +250,13 @@ else // creating
                                     </a>
                                     </span>
                                 </p>
-                                <div style="text-align: center; font-size: 0.8em;">nb: les flux ne sont actifs qu'après enregistrement</div>
+                                <div style="text-align: center; font-size: 0.8em;">nb: les flux ne sont actifs qu'aprÃ¨s enregistrement</div>
                                 <?php
                             }
                             else
                             {
                                 ?>
-                                <div style="text-align: center; font-size: 0.8em;">Les flux ne seront affichés qu'après enregistrement</div>
+                                <div style="text-align: center; font-size: 0.8em;">Les flux ne seront affichÃ©s qu'aprÃ¨s enregistrement</div>
                                 <?php
                             }
                             ?>
@@ -285,7 +285,7 @@ else // creating
         <div id="doc_private" style="clear:both;<?php echo ($docfolder->fields['foldertype'] == 'private') ? 'display:block;' : 'display:none;'; ?>">
             <div style="margin:4px;border:1px solid #c0c0c0;padding:4px;background-color:#f8f8f8;">
                 <strong>Attention !</strong>
-                <br />Seuls les administrateurs &laquo; Système &raquo; ainsi que le propriétaire du dossier pourront accéder à ce dossier.
+                <br />Seuls les administrateurs &laquo; SystÃ¨me &raquo; ainsi que le propriÃ©taire du dossier pourront accÃ©der Ã  ce dossier.
             </div>
         </div>
         <?php
@@ -318,7 +318,7 @@ if (!$readonly)
 {
     ?>
     <script type="text/javascript">
-    $('docfolder_name').focus();
+    jQuery('#docfolder_name')[0].focus();
 
     switch_foldertype = function(select) {
         switch (select.value)
@@ -328,12 +328,12 @@ if (!$readonly)
                 $('doc_private', 'doc_allow_feeds').invoke('hide');
                 break;
             case 'private':
-                $('doc_private').show();
+                jQuery('#doc_private')[0].show();
                 $('doc_share', 'doc_validation', 'doc_allow_feeds').invoke('hide');
                 break;
             case 'public':
                 $('doc_validation', 'doc_allow_feeds').invoke('show');
-                $('doc_share').hide();
+                jQuery('#doc_share')[0].hide();
                 break;
         }
     }

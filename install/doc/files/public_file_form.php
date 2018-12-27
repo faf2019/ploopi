@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Copyright (c) 2009 HeXad
 
     Contributors hold Copyright (c) to their code submissions.
@@ -29,7 +29,7 @@
  * @subpackage public
  * @copyright Ovensia, HeXad
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  *
  * @see _DOC_OBJECT_FILE
  * @see _PLOOPI_PATHSHARED
@@ -54,7 +54,7 @@ $newfile = !(isset($_GET['docfile_md5id']) && $docfile->openmd5($_GET['docfile_m
 $booServerModeAvailable = (_PLOOPI_PATHSHARED != '' && file_exists(_PLOOPI_PATHSHARED) && is_readable(_PLOOPI_PATHSHARED));
 
 /**
- * Nouveaux fichiers à déposer
+ * Nouveaux fichiers Ã  dÃ©poser
  */
 
 if ($newfile)
@@ -72,13 +72,13 @@ if ($newfile)
         {
             ?>
             <div style="padding:4px;">
-                <div>Les fichiers sont situés : </div>
-                <p class="ploopi_checkbox" style="padding:2px 0;" onclick="javascript:ploopi_checkbox_click(event, '_docfile_location_host');">
-                    <input type="radio" name="_docfile_location" id="_docfile_location_host" value="host" checked="checked" onchange="javascript:$('doc_form_host').style.display = 'block'; $('doc_form_server').style.display = 'none';" />
+                <div>Les fichiers sont situÃ©s : </div>
+                <p class="ploopi_checkbox" style="padding:2px 0;" onclick="javascript:ploopi.checkbox_click(event, '_docfile_location_host');">
+                    <input type="radio" name="_docfile_location" id="_docfile_location_host" value="host" checked="checked" onchange="javascript:jQuery('#doc_form_host')[0].style.display = 'block'; jQuery('#doc_form_server')[0].style.display = 'none';" />
                     <span>sur mon poste</span>
                 </p>
-                <p class="ploopi_checkbox" style="padding:2px 0;" onclick="javascript:ploopi_checkbox_click(event, '_docfile_location_server');">
-                    <input type="radio" name="_docfile_location" id="_docfile_location_server" value="server" onchange="javascript:$('doc_form_host').style.display = 'none'; $('doc_form_server').style.display = 'block';" />
+                <p class="ploopi_checkbox" style="padding:2px 0;" onclick="javascript:ploopi.checkbox_click(event, '_docfile_location_server');">
+                    <input type="radio" name="_docfile_location" id="_docfile_location_server" value="server" onchange="javascript:jQuery('#doc_form_host')[0].style.display = 'none'; jQuery('#doc_form_server')[0].style.display = 'block';" />
                     <span>sur le serveur</span>
                 </p>
             </div>
@@ -106,13 +106,13 @@ if ($newfile)
                     ?>
                     <p class="ploopi_va" style="margin-bottom:2px;">
                         <input type="file" name="docfile_file_<?php echo $i; ?>" />&nbsp;<input type="text" style="width:250px;" maxlength="100" name="docfile_description_<?php echo $i; ?>" placeholder="Commentaire" />
-                        <span class="ploopi_checkbox" onclick="javascript:ploopi_checkbox_click(event, 'docfile_readonly_<?php echo $i; ?>_host');">
+                        <span class="ploopi_checkbox" onclick="javascript:ploopi.checkbox_click(event, 'docfile_readonly_<?php echo $i; ?>_host');">
                             <input type="checkbox" name="docfile_readonly_<?php echo $i; ?>" id="docfile_readonly_<?php echo $i; ?>_host" value="1">
-                            <span>Contenu protégé</span>
+                            <span>Contenu protÃ©gÃ©</span>
                         </span>
-                        <span class="ploopi_checkbox" onclick="javascript:ploopi_checkbox_click(event, 'docfile_decompress_<?php echo $i; ?>_host');">
+                        <span class="ploopi_checkbox" onclick="javascript:ploopi.checkbox_click(event, 'docfile_decompress_<?php echo $i; ?>_host');">
                             <input type="checkbox" name="docfile_decompress_<?php echo $i; ?>" id="docfile_decompress_<?php echo $i; ?>_host" value="1">
-                            <span>A décompresser (zip uniquement)</span>
+                            <span>A dÃ©compresser (zip uniquement)</span>
                         </span>
                     </p>
                     <?php
@@ -122,8 +122,8 @@ if ($newfile)
                 <div id="doc_progressbar" style="display:none;"><div id="doc_progressbar_bg"></div></div>
                 <div id="doc_progressbar_txt"></div>
 
-                <div>Taille maxi autorisée par fichier : <b><?php echo ($max_filesize) ? "{$max_filesize} ko" : 'pas de limite'; ?></b></div>
-                <div>Taille maxi autorisée par envoi : <b><?php echo ($max_formsize) ? "{$max_formsize} ko" : 'pas de limite'; ?></b></div>
+                <div>Taille maxi autorisÃ©e par fichier : <b><?php echo ($max_filesize) ? "{$max_filesize} ko" : 'pas de limite'; ?></b></div>
+                <div>Taille maxi autorisÃ©e par envoi : <b><?php echo ($max_formsize) ? "{$max_formsize} ko" : 'pas de limite'; ?></b></div>
 
                 <div style="padding:4px;text-align:right;">
                     <input type="button" class="flatbutton" value="<?php echo _PLOOPI_BACK; ?>" onclick="javascript:doc_explorer(<?php echo $currentfolder; ?>);">
@@ -148,13 +148,13 @@ if ($newfile)
                         <p class="ploopi_va" style="margin-bottom:2px;">
                             <input type="text" class="text" name="docfile_file_<?php echo $i; ?>" id="docfile_file_server_<?php echo $i; ?>" value="" style="width:160px;cursor:pointer;" onclick="javascript:ploopi_filexplorer_popup('<?php echo ploopi\fs::filexplorer_init(_PLOOPI_PATHSHARED, "docfile_file_server_{$i}", "docfile_explorer_{$i}"); ?>', event);" readonly="readonly" />
                             <input type="button" class="button" value="Parcourir" style="width:90px;" onclick="javascript:ploopi_filexplorer_popup('<?php echo ploopi\fs::filexplorer_init(_PLOOPI_PATHSHARED, "docfile_file_server_{$i}", "docfile_explorer_{$i}"); ?>', event);" />&nbsp;<input type="text" style="width:250px;" maxlength="100" class="text" name="docfile_description_<?php echo $i; ?>" />
-                            <span class="ploopi_checkbox" onclick="javascript:ploopi_checkbox_click(event, 'docfile_readonly_<?php echo $i; ?>_server');">
+                            <span class="ploopi_checkbox" onclick="javascript:ploopi.checkbox_click(event, 'docfile_readonly_<?php echo $i; ?>_server');">
                                 <input type="checkbox" name="docfile_readonly_<?php echo $i; ?>" id="docfile_readonly_<?php echo $i; ?>_server" value="1">
-                                <span>Contenu protégé</span>
+                                <span>Contenu protÃ©gÃ©</span>
                             </span>
-                            <span class="ploopi_checkbox" onclick="javascript:ploopi_checkbox_click(event, 'docfile_decompress_<?php echo $i; ?>_server');">
+                            <span class="ploopi_checkbox" onclick="javascript:ploopi.checkbox_click(event, 'docfile_decompress_<?php echo $i; ?>_server');">
                                 <input type="checkbox" name="docfile_decompress_<?php echo $i; ?>" id="docfile_decompress_<?php echo $i; ?>_server" value="1">
-                                <span>A décompresser</span>
+                                <span>A dÃ©compresser</span>
                             </span>
                         </p>
                         <?php
@@ -177,12 +177,12 @@ if ($newfile)
 else
 {
     /**
-     * on vérifie que l'utilisateur a bien le droit de modifier ce fichier (en fonction du statut du dossier parent)
+     * on vÃ©rifie que l'utilisateur a bien le droit de modifier ce fichier (en fonction du statut du dossier parent)
      */
 
     $readonly = doc_file_isreadonly($docfile->fields, _DOC_ACTION_MODIFYFILE);
 
-    $title = $readonly ? '(Contenu protégé)' : '';
+    $title = $readonly ? '(Contenu protÃ©gÃ©)' : '';
 
     $docfile_tab = empty($_GET['docfile_tab']) ? 'open' : $_GET['docfile_tab'];
 
@@ -193,22 +193,22 @@ else
     ?>
 
     <div class="doc_fileinfo">
-        <a href="javascript:void(0);" onclick="javascript:ploopi_tickets_new(event, '<?php echo _DOC_OBJECT_FILE ?>','<?php echo $docfile->fields['md5id']; ?>', '<?php echo addslashes(ploopi\str::htmlentities($docfile->fields['name'])); ?>');" title="Envoyer en Pièce Jointe">
+        <a href="javascript:void(0);" onclick="javascript:ploopi_tickets_new(event, '<?php echo _DOC_OBJECT_FILE ?>','<?php echo $docfile->fields['md5id']; ?>', '<?php echo addslashes(ploopi\str::htmlentities($docfile->fields['name'])); ?>');" title="Envoyer en PiÃ¨ce Jointe">
             <p class="ploopi_va">
                 <img src="./modules/doc/img/send.png" />
                 <span>Envoyer</span>
             </p>
         </a>
-        <a href="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_filedownloadzip&docfile_md5id={$docfile->fields['md5id']}"); ?>" title="Télécharger Zip">
+        <a href="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_filedownloadzip&docfile_md5id={$docfile->fields['md5id']}"); ?>" title="TÃ©lÃ©charger Zip">
             <p class="ploopi_va">
                 <img src="./modules/doc/img/downloadzip.png" />
-                <span>Télécharger Zip</span>
+                <span>TÃ©lÃ©charger Zip</span>
             </p>
         </a>
-        <a href="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_filedownload&docfile_md5id={$docfile->fields['md5id']}"); ?>" title="Télécharger">
+        <a href="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_filedownload&docfile_md5id={$docfile->fields['md5id']}"); ?>" title="TÃ©lÃ©charger">
             <p class="ploopi_va">
                 <img src="./modules/doc/img/download.png" />
-                <span>Télécharger</span>
+                <span>TÃ©lÃ©charger</span>
             </p>
         </a>
 
@@ -228,7 +228,7 @@ else
         ?>
         <p class="ploopi_va" style="padding:4px;border-bottom:1px solid #aaa;background-color:#ddd;">
             <strong>URL publique du fichier :</strong>
-            <a title="URL publique permettant de télécharger ce fichier" href="<?php echo $strPublicUrl; ?>"><?php echo $strPublicUrl; ?></a>
+            <a title="URL publique permettant de tÃ©lÃ©charger ce fichier" href="<?php echo $strPublicUrl; ?>"><?php echo $strPublicUrl; ?></a>
         </p>
         <?php
     }
@@ -236,8 +236,8 @@ else
 
     <div class="ploopi_tabs" style="margin-top:1px;">
         <a <?php if ($docfile_tab == 'history') echo 'style="font-weight:bold;"'; ?> href="<?php echo ploopi\crypt::urlencode("admin.php?op=doc_fileform&currentfolder={$currentfolder}&docfile_md5id={$docfile->fields['md5id']}&docfile_tab=history"); ?>"><img src="./modules/doc/img/ico_history.png"><span>Anciennes versions</span></a>
-        <a <?php if ($docfile_tab == 'keywords') echo 'style="font-weight:bold;"'; ?> href="<?php echo ploopi\crypt::urlencode("admin.php?op=doc_fileform&currentfolder={$currentfolder}&docfile_md5id={$docfile->fields['md5id']}&docfile_tab=keywords"); ?>" title="Mots clés"><img src="./modules/doc/img/ico_keywords.png"><span>Mots clés</span></a>
-        <a <?php if ($docfile_tab == 'meta') echo 'style="font-weight:bold;"'; ?> href="<?php echo ploopi\crypt::urlencode("admin.php?op=doc_fileform&currentfolder={$currentfolder}&docfile_md5id={$docfile->fields['md5id']}&docfile_tab=meta"); ?>" title="Métadonnées / Propriétés"><img src="./modules/doc/img/ico_meta.png"><span>Métadonnées</span></a>
+        <a <?php if ($docfile_tab == 'keywords') echo 'style="font-weight:bold;"'; ?> href="<?php echo ploopi\crypt::urlencode("admin.php?op=doc_fileform&currentfolder={$currentfolder}&docfile_md5id={$docfile->fields['md5id']}&docfile_tab=keywords"); ?>" title="Mots clÃ©s"><img src="./modules/doc/img/ico_keywords.png"><span>Mots clÃ©s</span></a>
+        <a <?php if ($docfile_tab == 'meta') echo 'style="font-weight:bold;"'; ?> href="<?php echo ploopi\crypt::urlencode("admin.php?op=doc_fileform&currentfolder={$currentfolder}&docfile_md5id={$docfile->fields['md5id']}&docfile_tab=meta"); ?>" title="MÃ©tadonnÃ©es / PropriÃ©tÃ©s"><img src="./modules/doc/img/ico_meta.png"><span>MÃ©tadonnÃ©es</span></a>
         <a <?php if ($docfile_tab == 'modify') echo 'style="font-weight:bold;"'; ?> href="<?php echo ploopi\crypt::urlencode("admin.php?op=doc_fileform&currentfolder={$currentfolder}&docfile_md5id={$docfile->fields['md5id']}&docfile_tab=modify"); ?>" title="Modifier le fichier"><img src="./modules/doc/img/ico_main.png"><span>Modifier</span></a>
         <?php
         if (ploopi\session::getvar('unoconv') === true)
@@ -260,7 +260,7 @@ else
         switch($docfile_tab)
         {
             /**
-             * Affichage du contenu du fichier (texte, multimédia)
+             * Affichage du contenu du fichier (texte, multimÃ©dia)
              */
             case 'pdf':
             case 'open':
@@ -311,7 +311,7 @@ else
                     case 'video':
                         /* <?php echo ploopi\str::urlrewrite("index.php?ploopi_op=doc_file_download&docfile_md5id={$docfile->fields['md5id']}", doc_getrewriterules(), $docfile->fields['name'], null, true); ?> */
                         ?>
-                        <video id='v1' src="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_filedownload&docfile_md5id={$docfile->fields['md5id']}"); ?>" controls="true"><div style="padding:10px;">Votre navigateur ne supporte pas la balise "video".<br /><a href="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_filedownload&docfile_md5id={$docfile->fields['md5id']}"); ?>">Cliquez sur ce lien pour télécharger le document</a></div></video>
+                        <video id='v1' src="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_filedownload&docfile_md5id={$docfile->fields['md5id']}"); ?>" controls="true"><div style="padding:10px;">Votre navigateur ne supporte pas la balise "video".<br /><a href="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_filedownload&docfile_md5id={$docfile->fields['md5id']}"); ?>">Cliquez sur ce lien pour tÃ©lÃ©charger le document</a></div></video>
                         <?php
                     break;
 
@@ -328,16 +328,30 @@ else
                 $array_columns = array();
                 $array_values = array();
 
-                $array_columns['right']['occ'] =
+                $array_columns['right']['ratio'] =
                     array(
-                        'label' => 'Occurences',
+                        'label' => 'Ratio',
+                        'width' => '60',
+                        'options' => array('sort' => true)
+                    );
+
+                $array_columns['right']['weight'] =
+                    array(
+                        'label' => 'Poids',
+                        'width' => '60',
+                        'options' => array('sort' => true)
+                    );
+
+                $array_columns['right']['relevance'] =
+                    array(
+                        'label' => 'Pertinence',
                         'width' => '100',
                         'options' => array('sort' => true)
                     );
 
                 $array_columns['auto']['keyword'] =
                     array(
-                        'label' => 'Mot Clé',
+                        'label' => 'Mot ClÃ©',
                         'options' => array('sort' => true)
                     );
 
@@ -345,15 +359,28 @@ else
 
                 $c = 1;
 
-                foreach ($index as $k => $v)
+                foreach ($index as $row)
                 {
-                    $array_values[$c]['values']['occ']    = array('label' => sprintf("%d", $v));
-                    $array_values[$c]['values']['keyword']  = array('label' => ploopi\str::htmlentities($k));
+                    $array_values[$c]['values']['relevance']= array('label' => $row['relevance'], 'sort_label' => sprintf("%03d%06d", $row['relevance'], $row['weight']));
+                    $array_values[$c]['values']['ratio']    = array('label' => sprintf("%0.3f", $row['ratio']));
+
+                    if ($row['weight'] == _PLOOPI_INDEXATION_METAWEIGHT) // META
+                    {
+                        $array_values[$c]['values']['weight']   = array('label' => 'meta');
+                    }
+                    else
+                    {
+                        $array_values[$c]['values']['weight']   = array('label' => $row['weight']);
+                    }
+
+                    $array_values[$c]['values']['keyword']  = array('label' => ploopi\str::htmlentities($row['keyword']));
+                    $array_values[$c]['description'] = ploopi\str::htmlentities("{$c} - {$row['keyword']}");
                     $c++;
                 }
 
-                ploopi\skin::get()->display_array($array_columns, $array_values, 'docfile_words', array('sortable' => true, 'orderby_default' => 'occ', 'sort_default' => 'DESC'));
+                ploopi\skin::get()->display_array($array_columns, $array_values, 'docfile_words', array('sortable' => true, 'orderby_default' => 'relevance', 'sort_default' => 'DESC'));
                 break;
+
 
             case 'meta':
                 $sql = "SELECT * FROM ploopi_mod_doc_meta WHERE id_file = {$docfile->fields['id']}";
@@ -364,7 +391,7 @@ else
 
                 $array_columns['left']['meta'] =
                     array(
-                        'label' => 'Propriété',
+                        'label' => 'PropriÃ©tÃ©',
                         'width' => '150',
                         'options' => array('sort' => true)
                     );
@@ -417,7 +444,7 @@ else
 
                 $array_columns['right']['modif'] =
                     array(
-                        'label' => 'Modifié le',
+                        'label' => 'ModifiÃ© le',
                         'width' => '140',
                         'options' => array('sort' => true)
                     );
@@ -472,18 +499,18 @@ else
                         {
                             ?>
                             <fieldset style="border:1px solid #c0c0c0;margin:4px 4px 0 0;">
-                                <legend>Mettre à jour avec un fichier situé</LEGEND>
+                                <legend>Mettre Ã  jour avec un fichier situÃ©</LEGEND>
                                 <?php
                                 if ($booServerModeAvailable)
                                 {
                                     ?>
                                     <div style="padding:4px;">
-                                        <p class="ploopi_checkbox" style="padding:2px 0;" onclick="javascript:ploopi_checkbox_click(event, '_docfile_location_host');">
-                                            <input type="radio" name="_docfile_location" id="_docfile_location_host" value="host" checked="checked" onchange="javascript:$('doc_form_host').style.display = 'block'; $('doc_form_server').style.display = 'none'; $('docfile_file_server').value = ''; $('doc_mode').value='host'; " />
+                                        <p class="ploopi_checkbox" style="padding:2px 0;" onclick="javascript:ploopi.checkbox_click(event, '_docfile_location_host');">
+                                            <input type="radio" name="_docfile_location" id="_docfile_location_host" value="host" checked="checked" onchange="javascript:jQuery('#doc_form_host')[0].style.display = 'block'; jQuery('#doc_form_server')[0].style.display = 'none'; jQuery('#docfile_file_server')[0].value = ''; jQuery('#doc_mode')[0].value='host'; " />
                                             <span>sur mon poste</span>
                                         </p>
-                                        <p class="ploopi_checkbox" style="padding:2px 0;" onclick="javascript:ploopi_checkbox_click(event, '_docfile_location_server');">
-                                            <input type="radio" name="_docfile_location" id="_docfile_location_server" value="server" onchange="javascript:$('doc_form_host').style.display = 'none'; $('doc_form_server').style.display = 'block'; $('docfile_file_host').value = ''; $('doc_mode').value='server';" />
+                                        <p class="ploopi_checkbox" style="padding:2px 0;" onclick="javascript:ploopi.checkbox_click(event, '_docfile_location_server');">
+                                            <input type="radio" name="_docfile_location" id="_docfile_location_server" value="server" onchange="javascript:jQuery('#doc_form_host')[0].style.display = 'none'; jQuery('#doc_form_server')[0].style.display = 'block'; jQuery('#docfile_file_host')[0].value = ''; jQuery('#doc_mode')[0].value='server';" />
                                             <span>sur le serveur</span>
                                         </p>
                                     </div>
@@ -522,10 +549,10 @@ else
                         $user_modify = new ploopi\user();
 
                         if ($user->open($docfile->fields['id_user'])) $user_name = "{$user->fields['lastname']} {$user->fields['firstname']}";
-                        else $user_name = "<i>supprimé</i>";
+                        else $user_name = "<i>supprimÃ©</i>";
 
                         if ($user_modify->open($docfile->fields['id_user_modify'])) $user_modify_name = "{$user->fields['lastname']} {$user->fields['firstname']}";
-                        else $user_modify_name = "<i>supprimé</i>";
+                        else $user_modify_name = "<i>supprimÃ©</i>";
 
                         $ldate_modify = (!empty($docfile->fields['timestp_modify'])) ? ploopi\date::timestamp2local($docfile->fields['timestp_modify']) : array('date' => '', 'time' => '');
                         ?>
@@ -560,7 +587,7 @@ else
                                 {
                                     ?>
                                     <input type="hidden" name="docfile_id_folder" id="docfolder_id_folder" value="<?php echo $docfile->fields['id_folder']; ?>" />
-                                    <a title="Choisir un autre dossier parent" href="javascript:void(0);" onclick="javascript:ploopi_showpopup(ploopi_xmlhttprequest('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=doc_folderselect&doc_id_folder='+$('docfolder_id_folder').value, false), 300, event, 'click', 'doc_popup_folderselect');" class="ploopi_va">
+                                    <a title="Choisir un autre dossier parent" href="javascript:void(0);" onclick="javascript:ploopi.popup.show(ploopi.xhr.send('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=doc_folderselect&doc_id_folder='+jQuery('#docfolder_id_folder')[0].value, false), 300, event, 'click', 'doc_popup_folderselect');" class="ploopi_va">
                                         <span style="width:auto;" id="docfolder_id_folder_name"><?php echo ploopi\str::htmlentities($strParent); ?></span><img style="margin-left:6px;" src="./modules/doc/img/ico_folder.png" />
                                     </a>
                                     <?php
@@ -576,19 +603,19 @@ else
                                 <span><?php printf("%0.2f kio", ($docfile->fields['size']/1024)); ?></span>
                             </p>
                             <p>
-                                <label>Propriétaire:</label>
+                                <label>PropriÃ©taire:</label>
                                 <span><?php echo ploopi\str::htmlentities($user_name); ?></span>
                             </p>
                             <p>
-                                <label>Modifié par:</label>
+                                <label>ModifiÃ© par:</label>
                                 <span><?php echo ploopi\str::htmlentities($user_modify_name); ?></span>
                             </p>
                             <p>
-                                <label>Dernière modification:</label>
+                                <label>DerniÃ¨re modification:</label>
                                 <span><?php echo ploopi\str::htmlentities("{$ldate_modify['date']} {$ldate_modify['time']}"); ?></span>
                             </p>
-                            <p class="checkbox" onclick="javascript:ploopi_checkbox_click(event, 'docfile_readonly');">
-                                <label>Contenu protégé:</label>
+                            <p class="checkbox" onclick="javascript:ploopi.checkbox_click(event, 'docfile_readonly');">
+                                <label>Contenu protÃ©gÃ©:</label>
                                 <?php
                                 if ($readonly) echo ($docfile->fields['readonly']) ? 'oui' : 'non';
                                 else
@@ -619,7 +646,7 @@ else
                         if (!$readonly)
                         {
                             ?>
-                            <input type="button" class="flatbutton" value="Ré-indéxer" onclick="javascript:document.location.href='<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_fileindex&currentfolder={$currentfolder}&docfile_md5id={$_GET['docfile_md5id']}"); ?>';">
+                            <input type="button" class="flatbutton" value="RÃ©-indÃ©xer" onclick="javascript:document.location.href='<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_fileindex&currentfolder={$currentfolder}&docfile_md5id={$_GET['docfile_md5id']}"); ?>';">
                             <input type="submit" class="flatbutton" value="<?php echo _PLOOPI_SAVE; ?>">
                             <?php
                         }
@@ -664,7 +691,7 @@ else
                 $objDocFolderSub->open($parents[$i])
                 ?>
                 <div style="padding:4px;font-weight:bold;border-bottom:1px solid #c0c0c0;">
-                Vous héritez de l'abonnement à &laquo; <a href="<?php echo ploopi\crypt::urlencode("admin.php?op=doc_browser&currentfolder={$parents[$i]}"); ?>"><?php echo ploopi\str::htmlentities($objDocFolderSub->fields['name']); ?></a> &raquo;
+                Vous hÃ©ritez de l'abonnement Ã  &laquo; <a href="<?php echo ploopi\crypt::urlencode("admin.php?op=doc_browser&currentfolder={$parents[$i]}"); ?>"><?php echo ploopi\str::htmlentities($objDocFolderSub->fields['name']); ?></a> &raquo;
                 </div>
                 <?php
             }

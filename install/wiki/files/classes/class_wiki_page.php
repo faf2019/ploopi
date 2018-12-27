@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2009 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,7 +26,7 @@
  * @package wiki
  * @subpackage page
  * @copyright Ovensia
- * @author Stéphane Escaich
+ * @author Ovensia
  * @version  $Revision$
  * @modifiedby $LastChangedBy$
  * @lastmodified $Date$
@@ -38,11 +38,11 @@
 include_once './modules/wiki/classes/class_wiki_page_history.php';
 
 /**
- * Classe d'accès à la table 'ploopi_mod_wiki_page'
+ * Classe d'accÃ¨s Ã  la table 'ploopi_mod_wiki_page'
  *
  * @package wiki
  * @subpackage page
- * @author Stéphane Escaich
+ * @author Ovensia
  * @copyright Ovensia
  */
 
@@ -72,7 +72,7 @@ class wiki_page extends ploopi\data_object
      * Ouvre une page
      *
      * @param string $strIdPage identifiant de la page
-     * @param int $intIdModule identifiant du module (optionnel, par défaut le module courant)
+     * @param int $intIdModule identifiant du module (optionnel, par dÃ©faut le module courant)
      *
      * @return boolean true si la page existe
      */
@@ -129,11 +129,11 @@ class wiki_page extends ploopi\data_object
     }
 
     /**
-     * Gère la redirection des liens après un renommage de page (modification de l'id)
+     * GÃ¨re la redirection des liens aprÃ¨s un renommage de page (modification de l'id)
      *
      * @param string $strNewId nouvel id
      *
-     * @return boolean true si la page a pu être enregistrée
+     * @return boolean true si la page a pu Ãªtre enregistrÃ©e
      */
     public function redirectLinks($strNewId)
     {
@@ -145,11 +145,11 @@ class wiki_page extends ploopi\data_object
     }
 
     /**
-     * Vérouille la page et l'enregistre sans mettre à jour l'historique des modifications
+     * VÃ©rouille la page et l'enregistre sans mettre Ã  jour l'historique des modifications
      *
-     * @param $booLock boolean true si la page doit être vérouillée
+     * @param $booLock boolean true si la page doit Ãªtre vÃ©rouillÃ©e
      *
-     * @return boolean true si la page a pu être enregistrée
+     * @return boolean true si la page a pu Ãªtre enregistrÃ©e
      */
     public function lock($booLock = true)
     {
@@ -179,12 +179,12 @@ class wiki_page extends ploopi\data_object
     }
 
     /**
-     * Renomme une page, redirige éventuellement les liens depuis d'autres pages vers cette page
+     * Renomme une page, redirige Ã©ventuellement les liens depuis d'autres pages vers cette page
      *
      * @param string $strNewId nouvel identifiant de la page
-     * @param boolean $booRedirectLinks true si les liens vers cette page doivent être redirigés
+     * @param boolean $booRedirectLinks true si les liens vers cette page doivent Ãªtre redirigÃ©s
      *
-     * @return boolean true si la page a pu être enregistrée
+     * @return boolean true si la page a pu Ãªtre enregistrÃ©e
      */
     public function rename($strNewId, $booRedirectLinks)
     {
@@ -195,7 +195,7 @@ class wiki_page extends ploopi\data_object
         // Renommer l'historique
         $db->query("UPDATE ploopi_mod_wiki_page_history SET id_page = '".$db->addslashes($strNewId)."' WHERE id_page = '".$db->addslashes($this->fields['id'])."' AND id_module = {$this->fields['id_module']}");
 
-        // Renommer les liens vers le nouvel ID (on sélectionne d'abord les pages du module)
+        // Renommer les liens vers le nouvel ID (on sÃ©lectionne d'abord les pages du module)
         $rs = $db->query("SELECT id FROM ploopi_mod_wiki_page WHERE id_module = {$this->fields['id_module']}");
         while ($row = $db->fetchrow($rs))
         {
@@ -220,7 +220,7 @@ class wiki_page extends ploopi\data_object
     }
 
     /**
-     * Ajoute la page à l'index de recherche
+     * Ajoute la page Ã  l'index de recherche
      */
     public function index()
     {

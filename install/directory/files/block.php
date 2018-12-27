@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -27,7 +27,7 @@
  * @subpackage block
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
@@ -68,7 +68,7 @@ if ($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_organizationchart'
 */
 
 /**
- * Menu 'Contacts partagés'
+ * Menu 'Contacts partagÃ©s'
  */
 
 if ($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_sharedcontacts'])
@@ -77,7 +77,7 @@ if ($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_sharedcontacts'])
 }
 
 /**
- * Menu 'Numéros abrégés'
+ * Menu 'NumÃ©ros abrÃ©gÃ©s'
  */
 
 if ($_SESSION['ploopi']['modules'][$menu_moduleid]['directory_speeddialing'])

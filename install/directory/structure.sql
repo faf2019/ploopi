@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS `ploopi_mod_directory_contact` (
   KEY `id_workspace` (`id_workspace`),
   KEY `id_module` (`id_module`),
   FULLTEXT KEY `FT` (`lastname`,`firstname`,`city`,`country`,`service`,`function`,`number`,`office`,`comments`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `ploopi_mod_directory_favorites`;
 CREATE TABLE IF NOT EXISTS `ploopi_mod_directory_favorites` (
@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS `ploopi_mod_directory_favorites` (
   `id_ploopi_user` int(10) unsigned NOT NULL default '0',
   `id_list` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id_contact`,`id_user`,`id_ploopi_user`,`id_list`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `ploopi_mod_directory_heading`;
 CREATE TABLE IF NOT EXISTS `ploopi_mod_directory_heading` (
@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS `ploopi_mod_directory_heading` (
   `id_module` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `id_rubrique` (`id_heading`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `ploopi_mod_directory_list`;
 CREATE TABLE IF NOT EXISTS `ploopi_mod_directory_list` (
@@ -72,7 +72,7 @@ CREATE TABLE IF NOT EXISTS `ploopi_mod_directory_list` (
   KEY `id_user` (`id_user`),
   KEY `id_workspace` (`id_workspace`),
   KEY `id_module` (`id_module`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `ploopi_mod_directory_speeddialing`;
 CREATE TABLE IF NOT EXISTS `ploopi_mod_directory_speeddialing` (
@@ -82,4 +82,4 @@ CREATE TABLE IF NOT EXISTS `ploopi_mod_directory_speeddialing` (
   `shortnumber` varchar(16) NOT NULL,
   `heading` varchar(255) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;

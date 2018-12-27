@@ -2,16 +2,16 @@
 ploopi\module::init('wiki');
 include_once './modules/wiki/classes/class_wiki_page.php';
 
-// HÈritÈ de webedit
-global $articleid; // Id article sÈlectionnÈ
-global $headingid; // Id rubrique sÈlectionnÈe
+// H√©rit√© de webedit
+global $articleid; // Id article s√©lectionn√©
+global $headingid; // Id rubrique s√©lectionn√©e
 global $template_name; // Template
 global $template_path; // Chemin template
 global $arrHeadings; // Rubriques
-global $article; // Objet article sÈlectionnÈ
+global $article; // Objet article s√©lectionn√©
 
 
-// RÈcupÈration du module_id du module intÈgrÈ
+// R√©cup√©ration du module_id du module int√©gr√©
 $intIdModule = $obj['module_id'];
 
 $strWikiPageId = (empty($_GET['wikipageid'])) ? '' : $_GET['wikipageid'];
@@ -28,7 +28,7 @@ if ($strWikiPageId == '' || !$objWikiPage->open($strWikiPageId, $intIdModule))
         $strWikiPageId = $row['id'];
         $objWikiPage->open($strWikiPageId, $intIdModule);
     }
-    // Pas de page root ! => ProblËme !!!!
+    // Pas de page root ! => Probl√®me !!!!
     else return;
 }
 
@@ -51,10 +51,10 @@ ploopi\session::setvar('history_front', $arrPageHistory, $intIdModule);
 $arrUrlHistory = array();
 foreach($arrPageHistory as $strPageId) $arrUrlHistory[] = "<a href=\"".wiki_generatefronturl($strPageId, $headingid, $articleid, $article->fields['metatitle'], $arrParents)."\">{$strPageId}</a>";
 
-// Appel du moteur de rendu avec une fonction anonyme de rÈÈcriture de liens basÈe sur le rËgles de rÈÈcriture du frontoffice
+// Appel du moteur de rendu avec une fonction anonyme de r√©√©criture de liens bas√©e sur le r√®gles de r√©√©criture du frontoffice
 ?>
 <div class="wiki_history" style="margin:4px 8px;padding-bottom:4px;border-bottom:1px dotted #ccc;">
-    Pages visitÈes : <?php echo implode(' &raquo; ', $arrUrlHistory); ?>
+    Pages visit√©es : <?php echo implode(' &raquo; ', $arrUrlHistory); ?>
 </div>
 
 <div id="wiki_page" class="wiki_page wiki_page_front"><?php echo wiki_render($objWikiPage->fields['content'], function($arrMatches) use($intIdModule, $articleid, $headingid, $article, $arrParents) {

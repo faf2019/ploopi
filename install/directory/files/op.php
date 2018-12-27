@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,17 +21,17 @@
 */
 
 /**
- * Opérations
+ * OpÃ©rations
  *
  * @package directory
  * @subpackage op
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
- * Si on est connecté
+ * Si on est connectÃ©
  */
 
 if ($_SESSION['ploopi']['connected'])
@@ -60,16 +60,16 @@ if ($_SESSION['ploopi']['connected'])
                 <input type="hidden" name="directory_favorites_id_list" value="<?php echo $directory_list->fields['id']; ?>">
                 <div class="ploopi_form">
                     <p>
-                        <label>Libellé:</label>
+                        <label>LibellÃ©:</label>
                         <input type="text" class="text" name="directory_list_label" value="<?php echo ploopi\str::htmlentities($directory_list->fields['label']); ?>">
                     </p>
                 </div>
                 <div style="padding:0 4px 4px 0;text-align:right">
-                    <input type="button" class="button" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:ploopi_hidepopup('popup_directory_list_form');">
+                    <input type="button" class="button" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:ploopi.popup.hide('popup_directory_list_form');">
                     <?php
                     if ($ploopi_op == 'directory_list_addnew')
                     {
-                        $title = 'Création d\'une nouvelle liste';
+                        $title = 'CrÃ©ation d\'une nouvelle liste';
                         ?><input type="submit" class="button" value="<?php echo _PLOOPI_ADD; ?>"><?php
                     }
                     else
@@ -102,6 +102,7 @@ if ($_SESSION['ploopi']['connected'])
             break;
 
             case 'directory_getlists':
+                ob_start();
                 if (!empty($_GET['directory_favorites_id_user']) && is_numeric($_GET['directory_favorites_id_user']))
                 {
                     $where = "AND f.id_ploopi_user = {$_GET['directory_favorites_id_user']}";
@@ -149,7 +150,7 @@ if ($_SESSION['ploopi']['connected'])
                     {
                         ?>
                         <div style="padding:4px;">
-                            <a href="<?php echo ploopi\crypt::urlencode("admin.php?directoryTabItem=tabFavorites"); ?>"><i>Attention, vous devez ajouter au moins une liste pour gérer vos favoris !</i></a>
+                            <a href="<?php echo ploopi\crypt::urlencode("admin.php?directoryTabItem=tabFavorites"); ?>"><i>Attention, vous devez ajouter au moins une liste pour gÃ©rer vos favoris !</i></a>
                         </div>
                         <?php
                     }
@@ -176,7 +177,7 @@ if ($_SESSION['ploopi']['connected'])
                     }
                     ?>
                     <div style="padding:4px;background-color:#e0e0e0;border-top:1px solid #c0c0c0;text-align:right;">
-                        <input type="button" class="button" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:ploopi_hidepopup('popup_directory_addtofavorites');">
+                        <input type="button" class="button" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:ploopi.popup.hide('popup_directory_addtofavorites');">
                         <?php
                         if (!empty($arrLists))
                         {
@@ -188,6 +189,11 @@ if ($_SESSION['ploopi']['connected'])
                     </div>
                 </form>
                 <?php
+                $content = ob_get_contents();
+                ob_end_clean();
+                echo ploopi\skin::get()->create_popup('Gestion des favoris' , $content, 'popup_directory_addtofavorites');
+                ploopi\system::kill();
+
                 ploopi\system::kill();
             break;
 
@@ -246,14 +252,14 @@ if ($_SESSION['ploopi']['connected'])
                 }
                 else $booForcePos = false;
 
-                // Rattachement à une rubrique
+                // Rattachement Ã  une rubrique
                 if (!empty($_GET['directory_heading_id']) && is_numeric($_GET['directory_heading_id']))
                 {
                     $directory_heading = new directory_heading();
                     if ($directory_heading->open($_GET['directory_heading_id'])) $directory_contact->fields['id_heading'] = $_GET['directory_heading_id'];
                 }
 
-                // Rattachement à une rubrique
+                // Rattachement Ã  une rubrique
                 if (!empty($_POST['directory_heading_id']) && is_numeric($_POST['directory_heading_id']))
                 {
                     $directory_heading = new directory_heading();
@@ -271,7 +277,7 @@ if ($_SESSION['ploopi']['connected'])
                 {
                     ploopi\fs::makedir(_PLOOPI_PATHDATA._PLOOPI_SEP.'directory');
 
-                    // photo temporaire présente => copie dans le dossier définitif
+                    // photo temporaire prÃ©sente => copie dans le dossier dÃ©finitif
                     rename($_SESSION['directory']['contact_photopath'], $directory_contact->getphotopath());
                     unset($_SESSION['directory']['contact_photopath']);
                 }
@@ -380,7 +386,7 @@ if ($_SESSION['ploopi']['connected'])
                     // reset suppression
                     ploopi\session::setvar("deletephoto_{$_GET['directory_photo_id']}", 0);
 
-                    // On vérifie qu'un fichier a bien été uploadé
+                    // On vÃ©rifie qu'un fichier a bien Ã©tÃ© uploadÃ©
                     if (!empty($_FILES['directory_contact_photo']['tmp_name']))
                     {
                         $strTmpPath = _PLOOPI_PATHDATA._PLOOPI_SEP.'tmp';
@@ -391,8 +397,8 @@ if ($_SESSION['ploopi']['connected'])
                     ?>
                     <script type="text/javascript">
                         new function() {
-                            window.parent.ploopi_getelem('directory_contact_photo<?php echo ploopi\str::htmlentities($_GET['directory_photo_id']); ?>', window.parent.document).innerHTML = '<img src="<?php echo ploopi\crypt::urlencode('admin-light.php?ploopi_op=directory_get_photo&'.ploopi\date::createtimestamp()); ?>" />';
-                            window.parent.ploopi_hidepopup('popup_directory_choose_photo');
+                            window.parent.ploopi.getelem('directory_contact_photo<?php echo ploopi\str::htmlentities($_GET['directory_photo_id']); ?>', window.parent.document).innerHTML = '<img src="<?php echo ploopi\crypt::urlencode('admin-light.php?ploopi_op=directory_get_photo&'.ploopi\date::createtimestamp()); ?>" />';
+                            window.parent.ploopi.popup.hide('popup_directory_choose_photo');
                         }
                     </script>
                     <?php
@@ -464,7 +470,7 @@ if ($_SESSION['ploopi']['connected'])
 
                     if (!isset($row['maxpos'])) $row['maxpos'] = 0;
 
-                    // on va créer une racine
+                    // on va crÃ©er une racine
                     $objHeadingChild = new directory_heading();
                     $objHeadingChild->fields['label'] = 'Nouvelle Racine';
                     $objHeadingChild->fields['id_heading'] = 0;
@@ -502,10 +508,10 @@ if ($_SESSION['ploopi']['connected'])
 
                 ploopi\module::init('directory', false, false, false);
 
-                // Récupération des rubriques
+                // RÃ©cupÃ©ration des rubriques
                 $arrHeadings = directory_getheadings();
 
-                // Récupération de la structure du treeview
+                // RÃ©cupÃ©ration de la structure du treeview
                 $arrTreeview = directory_gettreeview($arrHeadings, true);
                 ?>
                 <div style="height:150px;overflow:auto;padding:4px;">
@@ -578,15 +584,15 @@ if ($_SESSION['ploopi']['connected'])
                             <input type="text" name="_directory_speeddialing_newheading" class="text" value="Nouvelle rubrique" tabindex="111" onfocus="javascript:this.value = '';" />
                         </p>
                         <p>
-                            <label>Libellé:</label>
+                            <label>LibellÃ©:</label>
                             <input type="text" name="directory_speeddialing_label" value="<?php echo ploopi\str::htmlentities($objSpeedDialing->fields['label']); ?>" class="text" tabindex="115" />
                         </p>
                         <p>
-                            <label>Numéro:</label>
+                            <label>NumÃ©ro:</label>
                             <input type="text" name="directory_speeddialing_number" value="<?php echo ploopi\str::htmlentities($objSpeedDialing->fields['number']); ?>" class="text" style="width:90px;" maxlength="16" tabindex="116" />
                         </p>
                         <p>
-                            <label>Abrégé:</label>
+                            <label>AbrÃ©gÃ©:</label>
                             <input type="text" name="directory_speeddialing_shortnumber" value="<?php echo ploopi\str::htmlentities($objSpeedDialing->fields['shortnumber']); ?>" class="text" style="width:60px;" maxlength="32" tabindex="117" />
                         </p>
                     </div>
@@ -599,7 +605,7 @@ if ($_SESSION['ploopi']['connected'])
                     $content = ob_get_contents();
                     ob_end_clean();
 
-                    echo ploopi\skin::get()->create_popup("Modification d'un numéro", $content, 'popup_directory_speeddialing_modify');
+                    echo ploopi\skin::get()->create_popup("Modification d'un numÃ©ro", $content, 'popup_directory_speeddialing_modify');
                 }
 
                 ploopi\system::kill();
@@ -623,6 +629,7 @@ if ($_SESSION['ploopi']['connected'])
 
             case 'directory_import':
                 ploopi\module::init('directory', false, false, false);
+                global $arrDirectoryImportFields;
 
                 if (empty($_GET['directory_heading_id']) && !is_numeric($_GET['directory_heading_id'])) ploopi\system::kill();
 
@@ -638,7 +645,7 @@ if ($_SESSION['ploopi']['connected'])
                         {
                             if (isset($arrContact['lastname']) && isset($arrContact['firstname']))
                             {
-                                // Vérification de doublon
+                                // VÃ©rification de doublon
                                 ploopi\db::get()->query("SELECT * FROM ploopi_mod_directory_contact WHERE id_heading = ".$_GET['directory_heading_id']." AND lastname = '".addslashes($arrContact['lastname'])."' AND firstname = '".addslashes($arrContact['firstname'])."'");
                                 if (ploopi\db::get()->numrows() == 0)
                                 {
@@ -659,7 +666,7 @@ if ($_SESSION['ploopi']['connected'])
                         }
                         ?>
                         <div style="margin:4px;padding:4px;border:1px solid #c0c0c0;background:#e0e0e0;">
-                            <div><?php echo $intCount; ?> contact(s) importés, <?php echo $intDoublon; ?> doublons détecté(s).</div>
+                            <div><?php echo $intCount; ?> contact(s) importÃ©s, <?php echo $intDoublon; ?> doublons dÃ©tectÃ©(s).</div>
                             <div style="text-align:right;">
                                 <input type="button" class="button" value="Continuer" onclick="javascript:document.location.href='<?php echo ploopi\crypt::urlencode('admin.php'); ?>';" style="font-weight:bold;" />
                             </div>
@@ -679,7 +686,7 @@ if ($_SESSION['ploopi']['connected'])
                     if (!empty($_FILES['directory_import_file']) && !empty($_FILES['directory_import_file']['name']))
                     {
 
-                        // Récupération & contrôle du séparateur de champs
+                        // RÃ©cupÃ©ration & contrÃ´le du sÃ©parateur de champs
                         $strSep = empty($_POST['directory_import_sep']) ? ',' : $_POST['directory_import_sep'];
                         if (!in_array($strSep, array(',', ';'))) $strSep = ',';
 
@@ -710,23 +717,23 @@ if ($_SESSION['ploopi']['connected'])
 
                         ?>
                         <div style="margin:4px;padding:4px;border:1px solid #c0c0c0;background:#e0e0e0;">
-                            <div><strong>Le fichier envoyé (<?php echo ploopi\str::htmlentities($_FILES['directory_import_file']['name']); ?>) contient <?php echo $intCount; ?> ligne(s) et <?php echo sizeof($arrLineHeader) ?> colonnes dont <?php echo sizeof($arrLineHeader) - sizeof($arrInvalidCols) ?> sont connues.</strong></div>
+                            <div><strong>Le fichier envoyÃ© (<?php echo ploopi\str::htmlentities($_FILES['directory_import_file']['name']); ?>) contient <?php echo $intCount; ?> ligne(s) et <?php echo sizeof($arrLineHeader) ?> colonnes dont <?php echo sizeof($arrLineHeader) - sizeof($arrInvalidCols) ?> sont connues.</strong></div>
                             <?php
-                            if ($booDataError) echo '<div>Des erreurs de données ont été rencontrées</div>';
+                            if ($booDataError) echo '<div>Des erreurs de donnÃ©es ont Ã©tÃ© rencontrÃ©es</div>';
                             if (!empty($arrInvalidCols)) echo '<div>Les colonnes suivantes sont inconnues : '.implode(', ', $arrInvalidCols).'</div>';
                             ?>
 
-                            <div>Aperçu du fichier :</div>
+                            <div>AperÃ§u du fichier :</div>
                             <div style="overflow:auto;border:1px solid #c0c0c0;margin:4px;padding:4px;background:#fff;"><?php echo ploopi\arr::tohtml($arrDataExcerpt); ?></div>
                             <div style="text-align:right;">
                                 <input type="button" class="button" value="Annuler" onclick="javascript:document.location.href='<?php echo ploopi\crypt::urlencode('admin.php'); ?>';"/>
                                 <?php
-                                if (sizeof($arrData) && isset($arrData[0]['lastname']) && isset($arrData[0]['firstname'])) // Données valides
+                                if (sizeof($arrData) && isset($arrData[0]['lastname']) && isset($arrData[0]['firstname'])) // DonnÃ©es valides
                                 {
-                                    // Sauvegarde des données importées en SESSION
+                                    // Sauvegarde des donnÃ©es importÃ©es en SESSION
                                     ploopi\session::setvar('contact_import', $arrData);
                                     ?>
-                                    <input type="button" class="button" value="Continuer" style="font-weight:bold;" onclick="javascript:ploopi_xmlhttprequest_todiv('admin-light.php', '<?php echo ploopi\crypt::queryencode("ploopi_op=directory_import&directory_step=2&directory_heading_id={$_GET['directory_heading_id']}"); ?>', 'directory_import_info');" />
+                                    <input type="button" class="button" value="Continuer" style="font-weight:bold;" onclick="javascript:ploopi.xhr.todiv('admin-light.php', '<?php echo ploopi\crypt::queryencode("ploopi_op=directory_import&directory_step=2&directory_heading_id={$_GET['directory_heading_id']}"); ?>', 'directory_import_info');" />
                                     <?php
                                 }
                                 ?>
@@ -742,6 +749,8 @@ if ($_SESSION['ploopi']['connected'])
 
             case 'directory_export':
                 ploopi\module::init('directory', false, false, false);
+
+                global $arrDirectoryImportFields;
 
                 if (empty($_GET['directory_heading_id']) || !is_numeric($_GET['directory_heading_id']) || !isset($_GET['directory_format'])) ploopi\system::kill();
 

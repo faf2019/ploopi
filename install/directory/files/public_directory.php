@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -27,7 +27,7 @@
  * @subpackage public
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
@@ -43,7 +43,7 @@ echo ploopi\skin::get()->open_simplebloc(ploopi\str::htmlentities($title));
 <div style="overflow:hidden;">
 <?php
 /**
- * On récupère les favoris
+ * On rÃ©cupÃ¨re les favoris
  */
 
 $favorites = array();
@@ -70,7 +70,7 @@ switch($_SESSION['directory']['directoryTabItem'])
         $directory_contact = new directory_contact();
         $directory_contact->init_description();
         ?>
-        <a class="ploopi_form_title" href="javascript:void(0);" onclick="javascript:$('directory_addcontact').style.display='block';">
+        <a class="ploopi_form_title" href="javascript:void(0);" onclick="javascript:jQuery('#directory_addcontact')[0].style.display='block';">
             <p class="ploopi_va">
                 <img border="0" src="./modules/directory/img/ico_add_contact.png">
                 <span><?php echo _DIRECTORY_ADDNEWCONTACT; ?></span>
@@ -186,7 +186,7 @@ switch($_SESSION['directory']['directoryTabItem'])
             $actions = '
                 <a href="javascript:void(0);" onclick="javascript:directory_view(event, \'\', \''.$row['id'].'\');"><img title="Voir le Profil" src="./modules/directory/img/ico_open.png"></a>
                 <a href="javascript:void(0);" onclick="javascript:directory_modify(event, \''.$row['id'].'\');"><img title="Modifier le Contact" src="./modules/directory/img/ico_modify.png"></a>
-                <a href="javascript:ploopi_confirmlink(\''.ploopi\crypt::urlencode("admin.php?ploopi_op=directory_contact_delete&directory_contact_id={$row['id']}").'\',\''._DIRECTORY_CONFIRM_DELETECONTACT.'\')"><img title="Supprimer" src="./modules/directory/img/ico_delete.png"></a>
+                <a href="javascript:ploopi.confirmlink(\''.ploopi\crypt::urlencode("admin.php?ploopi_op=directory_contact_delete&directory_contact_id={$row['id']}").'\',\''._DIRECTORY_CONFIRM_DELETECONTACT.'\')"><img title="Supprimer" src="./modules/directory/img/ico_delete.png"></a>
             ';
 
             if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_myfavorites'])
@@ -270,19 +270,19 @@ switch($_SESSION['directory']['directoryTabItem'])
                 else $actions .='<a href="javascript:void(0);" onclick="javascript:directory_addtofavorites(event, \''.$row['id'].'\');"><img title="Modifier les favoris" src="./modules/directory/img/ico_fav_modify.png"></a>';
             }
 
-            // on va chercher les espaces auxquels l'utilisateur peut accéder
+            // on va chercher les espaces auxquels l'utilisateur peut accÃ©der
             $user = new ploopi\user();
             $user->open($row['id']);
             $user_ws = $user->getworkspaces();
 
-            // on met les libellés dans un tableau
+            // on met les libellÃ©s dans un tableau
             $workspaces_list = array();
             foreach($user_ws as $ws) $workspaces_list[sprintf("%04d%s", $ws['depth'], $ws['label'])] = $ws['label'];
 
-            // on trie par profondeur + libellé
+            // on trie par profondeur + libellÃ©
             ksort($workspaces_list);
 
-            // on met tout ça dans une chaine
+            // on met tout Ã§a dans une chaine
             $workspaces_list = implode(', ',$workspaces_list);
 
             $arrValues[$c]['values']['name'] = array('label' => ploopi\str::htmlentities("{$row['lastname']} {$row['firstname']}"));
@@ -314,7 +314,7 @@ switch($_SESSION['directory']['directoryTabItem'])
         ?>
         <div style="padding:4px;background-color:#d8d8d8;border-bottom:2px solid #c0c0c0;">
             <p class="ploopi_va">
-                <span>Choix de la liste à afficher :</span>
+                <span>Choix de la liste Ã  afficher :</span>
                 <select class="select" onchange="javascript:directory_list_change(this);" id="directory_favorites_id_list">
                 <option value="0">(tous)</option>
                 <?php
@@ -350,16 +350,16 @@ switch($_SESSION['directory']['directoryTabItem'])
                     <img src="./modules/directory/img/ico_newlist.png" title="Ajouter une liste" /><span style="margin:0 10px 0 2px;">Ajouter une liste</span>
                 </span>
                 <span onclick="javascript:directory_list_modify(event);" style="cursor:pointer;display:<?php echo ($id_list>0) ? 'inline' : 'none'; ?>;" id="directory_list_modify_link" >
-                    <img src="./modules/directory/img/ico_modify.png" title="Modifier la liste sélectionnée"  /><span style="margin:0 10px 0 2px;">Modifier la liste sélectionnée</span>
+                    <img src="./modules/directory/img/ico_modify.png" title="Modifier la liste sÃ©lectionnÃ©e"  /><span style="margin:0 10px 0 2px;">Modifier la liste sÃ©lectionnÃ©e</span>
                 </span>
-                <span onclick="javascript:ploopi_confirmlink('<?php echo ploopi\crypt::urlencode("admin.php?ploopi_op=directory_list_delete")."&directory_favorites_id_list="; ?>'+$('directory_favorites_id_list').value, 'Êtes vous certain de vouloir supprimer cette liste ?');" style="cursor:pointer;display:<?php echo ($id_list>0) ? 'inline' : 'none'; ?>;" id="directory_list_delete_link">
-                    <img src="./modules/directory/img/ico_delete.png" title="Supprimer la liste sélectionnée" /><span style="margin:0 10px 0 2px;">Supprimer la liste sélectionnée</span>
+                <span onclick="javascript:ploopi.confirmlink('<?php echo ploopi\crypt::urlencode("admin.php?ploopi_op=directory_list_delete")."&directory_favorites_id_list="; ?>'+jQuery('#directory_favorites_id_list')[0].value, 'ÃŠtes vous certain de vouloir supprimer cette liste ?');" style="cursor:pointer;display:<?php echo ($id_list>0) ? 'inline' : 'none'; ?>;" id="directory_list_delete_link">
+                    <img src="./modules/directory/img/ico_delete.png" title="Supprimer la liste sÃ©lectionnÃ©e" /><span style="margin:0 10px 0 2px;">Supprimer la liste sÃ©lectionnÃ©e</span>
                 </span>
 
                 <?php
                 if (empty($arrLists))
                 {
-                    ?><span><i>Attention, vous devez ajouter au moins une liste pour gérer vos favoris !</i></span><?php
+                    ?><span><i>Attention, vous devez ajouter au moins une liste pour gÃ©rer vos favoris !</i></span><?php
                 }
                 ?>
             </p>
@@ -376,7 +376,7 @@ switch($_SESSION['directory']['directoryTabItem'])
 
     case 'tabSearch':
 
-        // Récupération des rubriques de contacts partagés
+        // RÃ©cupÃ©ration des rubriques de contacts partagÃ©s
         $arrHeadings = $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_sharedcontacts'] ? directory_getheadings() : array();
 
         $arrColumns = array();
@@ -470,7 +470,7 @@ switch($_SESSION['directory']['directoryTabItem'])
         if (sizeof($result)>200)
         {
             ?>
-            <div style="padding:4px;font-weight:bold;border-bottom:1px solid #c0c0c0;">Il y a trop de réponses. Vous devriez préciser vos critères de recherche.</div>
+            <div style="padding:4px;font-weight:bold;border-bottom:1px solid #c0c0c0;">Il y a trop de rÃ©ponses. Vous devriez prÃ©ciser vos critÃ¨res de recherche.</div>
             <?php
         }
         else
@@ -494,19 +494,19 @@ switch($_SESSION['directory']['directoryTabItem'])
                             else $actions .='<a href="javascript:void(0);" onclick="javascript:directory_addtofavorites(event, \''.$row['id'].'\', \'\');"><img title="Modifier les favoris" src="./modules/directory/img/ico_fav_modify.png"></a>';
                         }
 
-                        // on va chercher les espaces auxquels l'utilisateur peut accéder
+                        // on va chercher les espaces auxquels l'utilisateur peut accÃ©der
                         $user = new ploopi\user();
                         $user->open($row['id']);
                         $user_ws = $user->getworkspaces();
 
-                        // on met les libellés dans un tableau
+                        // on met les libellÃ©s dans un tableau
                         $workspaces_list = array();
                         foreach($user_ws as $ws) $workspaces_list[sprintf("%04d%s", $ws['depth'], $ws['label'])] = $ws['label'];
 
-                        // on trie par profondeur + libellé
+                        // on trie par profondeur + libellÃ©
                         ksort($workspaces_list);
 
-                        // on met tout ça dans une chaine
+                        // on met tout Ã§a dans une chaine
                         $workspaces_list = implode(', ',$workspaces_list);
 
                         $ticket = '<a href="javascript:void(0);" onclick="javascript:ploopi_tickets_new(event, null, null, null, '.$row['id'].');"><img title="'._DIRECTORY_SEND_TICKET.'" src="./modules/directory/img/ico_ticket.png"></a>';
@@ -526,7 +526,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                             $level_display = (empty($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_mycontacts'])) ? _DIRECTORY_MYCONTACTS : $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_mycontacts'];
                             $workspaces_list = '';
                         }
-                        else // contact partagé
+                        else // contact partagÃ©
                         {
                             $level_display = (empty($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_sharedcontacts'])) ? _DIRECTORY_SHAREDCONTACTS : $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_label_sharedcontacts'];
 
@@ -570,7 +570,7 @@ switch($_SESSION['directory']['directoryTabItem'])
         // Largeur du panneau de gauche (treeview)
         $intLeftPanelWidth = 250;
 
-        // Récupération des rubriques
+        // RÃ©cupÃ©ration des rubriques
         $arrHeadings = directory_getheadings();
 
         if (empty($arrHeadings['tree'][0])) $arrHeadings['tree'][0][] = 0;
@@ -578,10 +578,10 @@ switch($_SESSION['directory']['directoryTabItem'])
         if (isset($_REQUEST['directory_heading_id'])) $_SESSION['directory']['directory_heading_id'] = $_REQUEST['directory_heading_id'];
         if (empty($_SESSION['directory']['directory_heading_id'])) $_SESSION['directory']['directory_heading_id'] = current($arrHeadings['tree'][0]);
 
-        // Id de la rubrique sélectionnée
+        // Id de la rubrique sÃ©lectionnÃ©e
         $intHeadingId = $_SESSION['directory']['directory_heading_id'];
 
-        // Récupération de la structure du treeview
+        // RÃ©cupÃ©ration de la structure du treeview
         $arrTreeview = directory_gettreeview($arrHeadings);
 
         // Instanciation de l'objet 'Rubrique'
@@ -602,17 +602,17 @@ switch($_SESSION['directory']['directoryTabItem'])
                     // Ouverture de la rubrique
                     if ($objHeading->open($intHeadingId))
                     {
-                        // calcul de profondeur pour affichage du libellé de rubrique
+                        // calcul de profondeur pour affichage du libellÃ© de rubrique
                         $intDepth = sizeof($arrTreeview['list'][$intHeadingId]['parents']);
 
-                        // Construction du tableau des libellés de niveaux de rubriques
+                        // Construction du tableau des libellÃ©s de niveaux de rubriques
                         foreach(array(1, $intDepth, $intDepth+1) as $d)
                         {
                             $strHeadingLabel = !empty($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]["directory_label_depth{$d}"]) ? $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]["directory_label_depth{$d}"] : 'une/cette/rubrique';
                             $arrHeadingLabel[$d] = preg_split('/\//', $strHeadingLabel);
                         }
 
-                        // On récupère les gestionnaires
+                        // On rÃ©cupÃ¨re les gestionnaires
                         $arrWfUsers = array();
                         $arrWf = ploopi\validation::get(_DIRECTORY_OBJECT_HEADING, $intHeadingId);
                         $intWfHeadingId = $intHeadingId;
@@ -636,7 +636,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                         $arrGroups = $objUser->getgroups(true);
 
                         /**
-                         * L'utilisateur connecté est-il gestionnaire de la rubrique (admin ou validateur) ?
+                         * L'utilisateur connectÃ© est-il gestionnaire de la rubrique (admin ou validateur) ?
                          */
                         $booModify = ploopi\acl::isadmin() || $arrHeadings['list'][$intHeadingId]['isvalidator'];
 
@@ -655,7 +655,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                         {
                             ?>
                             <div class="ploopi_tabs">
-                                <a href="javascript:void(0);" onclick="javascript:if (confirm('Êtes vous certain de vouloir supprimer <?php printf("%s %s", ploopi\str::htmlentities($arrHeadingLabel[$intDepth][1]), ploopi\str::htmlentities($arrHeadingLabel[$intDepth][2])); ?> (et les sous-rubriques attachées) ?')) document.location.href='<?php echo ploopi\crypt::urlencode("admin.php?ploopi_op=directory_heading_delete&directory_heading_id={$objHeading->fields['id']}"); ?>';return false;"><img src="./modules/directory/img/ico_delete.png">Supprimer</a>
+                                <a href="javascript:void(0);" onclick="javascript:if (confirm('ÃŠtes vous certain de vouloir supprimer <?php printf("%s %s", ploopi\str::htmlentities($arrHeadingLabel[$intDepth][1]), ploopi\str::htmlentities($arrHeadingLabel[$intDepth][2])); ?> (et les sous-rubriques attachÃ©es) ?')) document.location.href='<?php echo ploopi\crypt::urlencode("admin.php?ploopi_op=directory_heading_delete&directory_heading_id={$objHeading->fields['id']}"); ?>';return false;"><img src="./modules/directory/img/ico_delete.png">Supprimer</a>
                                 <a href="<?php echo ploopi\crypt::urlencode("admin.php?ploopi_op=directory_heading_add&directory_heading_id_heading={$objHeading->fields['id']}"); ?>"><img src="./modules/directory/img/ico_new.png">Ajouter <?php printf("%s %s", ploopi\str::htmlentities($arrHeadingLabel[$intDepth+1][0]), ploopi\str::htmlentities($arrHeadingLabel[$intDepth+1][2])); ?></a>
                                 <?php if (ploopi\acl::isadmin()) { ?><a href="<?php echo ploopi\crypt::urlencode("admin.php?ploopi_op=directory_heading_add&directory_heading_id_heading=0"); ?>"><img src="./modules/directory/img/ico_newroot.png">Ajouter <?php printf("%s %s", ploopi\str::htmlentities($arrHeadingLabel[1][0]), ploopi\str::htmlentities($arrHeadingLabel[1][2])); ?></a><?php } ?>
                             </div>
@@ -663,7 +663,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                         }
 
 
-                        if ($op == 'directory_modify') // interface débloquée
+                        if ($op == 'directory_modify') // interface dÃ©bloquÃ©e
                         {
                             if ($booModify)
                             {
@@ -687,7 +687,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                                         <span><?php echo ploopi\str::htmlentities($arrHeadingLabel[$intDepth][2]); ?></span>
                                     </p>
                                     <p>
-                                        <label>Libellé:</label>
+                                        <label>LibellÃ©:</label>
                                         <input name="directory_heading_label" id="directory_heading_label" type="text" class="text" value="<?php echo ploopi\str::htmlentities($objHeading->fields['label']); ?>" />
                                     </p>
                                     <p>
@@ -700,7 +700,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                                         <input type="checkbox" class="checkbox" name="_directory_heading_forcepos" value="1" />Forcer la position
                                     </p>
                                     <p>
-                                        <label>Téléphone:</label>
+                                        <label>TÃ©lÃ©phone:</label>
                                         <input name="directory_heading_phone" type="text" class="text" value="<?php echo ploopi\str::htmlentities($objHeading->fields['phone']); ?>" style="width:140px;" />
                                     </p>
                                     <p>
@@ -748,7 +748,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                                 ?><div style="padding:4px;"><em><?php echo ploopi\str::nl2br(ploopi\str::htmlentities($objHeading->fields['description'])); ?></em></div><?php
                             }
 
-                            // Construction de la chaîne de téléphone
+                            // Construction de la chaÃ®ne de tÃ©lÃ©phone
                             $arrPhone = array();
                             if (!empty($objHeading->fields['phone'])) $arrPhone[] = ploopi\str::htmlentities("Tel: ".$objHeading->fields['phone']);
                             if (!empty($objHeading->fields['fax'])) $arrPhone[] = ploopi\str::htmlentities("Fax: ".$objHeading->fields['fax']);
@@ -758,7 +758,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                                 ?><div style="padding:4px;"><?php echo implode(' - ', $arrPhone); ?></div><?php
                             }
 
-                            // Construction de la chaîne d'adresse
+                            // Construction de la chaÃ®ne d'adresse
                             $arrAddress = array();
                             if (!empty($objHeading->fields['address'])) $arrAddress[] = ploopi\str::nl2br(ploopi\str::htmlentities($objHeading->fields['address']));
                             if (!empty($objHeading->fields['postalcode']) || !empty($row['city'])) $arrAddress[] = ploopi\str::nl2br(ploopi\str::htmlentities(trim($objHeading->fields['postalcode'].' '.$objHeading->fields['city'])));
@@ -771,14 +771,14 @@ switch($_SESSION['directory']['directoryTabItem'])
 
                         }
 
-                        if ($op == 'directory_modify') // interface débloquée
+                        if ($op == 'directory_modify') // interface dÃ©bloquÃ©e
                         {
                             if (ploopi\acl::isactionallowed(_DIRECTORY_ACTION_MANAGERS)) // Gestion des gestionnaires
                             {
                                 ?>
                                 <div style="clear:both;padding:4px;">
                                     <fieldset class="fieldset" style="padding:6px;">
-                                        <legend><strong>Gestionnaires <?php if ($intWfHeadingId != $intHeadingId) echo "<em>(Hérités de &laquo; <a href=\"".ploopi\crypt::urlencode("admin.php?directory_heading_id={$intWfHeadingId}")."\">{$arrHeadings['list'][$intWfHeadingId]['label']}</a> &raquo;)</em>"; ?></strong></legend>
+                                        <legend><strong>Gestionnaires <?php if ($intWfHeadingId != $intHeadingId) echo "<em>(HÃ©ritÃ©s de &laquo; <a href=\"".ploopi\crypt::urlencode("admin.php?directory_heading_id={$intWfHeadingId}")."\">{$arrHeadings['list'][$intWfHeadingId]['label']}</a> &raquo;)</em>"; ?></strong></legend>
 
                                         <p class="ploopi_va" style="padding:0 2px 2px 2px;">
                                             <?php
@@ -805,7 +805,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                                                     while ($row = ploopi\db::get()->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi\str::htmlentities($row['name'])."&nbsp;</span>";
                                                 }
                                             }
-                                            else echo '<em>Aucune accréditation</em>';
+                                            else echo '<em>Aucune accrÃ©ditation</em>';
                                             ?>
                                         </p>
                                         <div style="clear:both;padding:4px;">
@@ -837,7 +837,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                             <div class="directory_shared_managers">
                                 <div style="float:left;">
                                     <em>
-                                        <strong>Gestionnaires <?php if ($intWfHeadingId != $intHeadingId) echo "(Hérités de &laquo; <a href=\"".ploopi\crypt::urlencode("admin.php?directory_heading_id={$intWfHeadingId}")."\">{$arrHeadings['list'][$intWfHeadingId]['label']}</a> &raquo;)"; ?></strong>:
+                                        <strong>Gestionnaires <?php if ($intWfHeadingId != $intHeadingId) echo "(HÃ©ritÃ©s de &laquo; <a href=\"".ploopi\crypt::urlencode("admin.php?directory_heading_id={$intWfHeadingId}")."\">{$arrHeadings['list'][$intWfHeadingId]['label']}</a> &raquo;)"; ?></strong>:
 
                                         <div style="clear:both;padding:4px;">
                                             <p class="ploopi_va" style="padding:0 2px 2px 2px;">
@@ -865,14 +865,14 @@ switch($_SESSION['directory']['directoryTabItem'])
                                                         while ($row = ploopi\db::get()->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi\str::htmlentities($row['name'])."&nbsp;</span>";
                                                     }
                                                 }
-                                                else echo '<em>Aucune accréditation</em>';
+                                                else echo '<em>Aucune accrÃ©ditation</em>';
                                                 ?>
                                             </p>
                                         </div>
                                     </em>
                                 </div>
                                 <?php
-                                if (($booModify || ploopi\acl::isactionallowed(_DIRECTORY_ACTION_MANAGERS)) && empty($op)) // interface bloquée
+                                if (($booModify || ploopi\acl::isactionallowed(_DIRECTORY_ACTION_MANAGERS)) && empty($op)) // interface bloquÃ©e
                                 {
                                     ?>
                                         <div style="clear:both;text-align:right;">
@@ -892,7 +892,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                             if ($booModify) // Version modifiable
                             {
                                 ?>
-                                <a class="ploopi_form_title" href="javascript:void(0);" onclick="javascript:ploopi_switchdisplay('directory_import');">
+                                <a class="ploopi_form_title" href="javascript:void(0);" onclick="javascript:ploopi.switchdisplay('directory_import');">
                                     <p class="ploopi_va">
                                         <img border="0" src="./modules/directory/img/ico_import.png">
                                         <span><?php echo _DIRECTORY_IMPORTCONTACTS; ?></span>
@@ -906,7 +906,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                                 $directory_contact->init_description();
                                 $directory_contact->fields['id_heading'] = $intHeadingId;
                                 ?>
-                                <a class="ploopi_form_title" href="javascript:void(0);" onclick="javascript:ploopi_switchdisplay('directory_addcontact');">
+                                <a class="ploopi_form_title" href="javascript:void(0);" onclick="javascript:ploopi.switchdisplay('directory_addcontact');">
                                     <p class="ploopi_va">
                                         <img border="0" src="./modules/directory/img/ico_add_contact.png">
                                         <span><?php echo _DIRECTORY_ADDNEWCONTACT; ?></span>
@@ -922,7 +922,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                                 <a href="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=directory_export&directory_format=csv&directory_heading_id={$intHeadingId}"); ?>" style="margin-left:6px;display:block;float:right;" title="Export CSV"><img src="./modules/directory/img/mime/csv.png" /></a>
                                 <a href="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=directory_export&directory_format=xls&directory_heading_id={$intHeadingId}"); ?>" style="margin-left:6px;display:block;float:right;" title="Export XLS"><img src="./modules/directory/img/mime/xls.png" /></a>
                                 <a href="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=directory_export&directory_format=xml&directory_heading_id={$intHeadingId}"); ?>" style="margin-left:6px;display:block;float:right;" title="Export XML"><img src="./modules/directory/img/mime/xml.png" /></a>
-                                <span>Liste des contacts rattachés à <?php printf("%s %s", ploopi\str::htmlentities($arrHeadingLabel[$intDepth][1]), ploopi\str::htmlentities($arrHeadingLabel[$intDepth][2])); ?></span>
+                                <span>Liste des contacts rattachÃ©s Ã  <?php printf("%s %s", ploopi\str::htmlentities($arrHeadingLabel[$intDepth][1]), ploopi\str::htmlentities($arrHeadingLabel[$intDepth][2])); ?></span>
                             </div>
                             <?php
                             $arrColumns = array();
@@ -954,7 +954,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                                     $arrActions = array();
                                     $arrActions[] = '<a href="javascript:void(0);" onclick="javascript:directory_view(event, \'\', \''.$row['id'].'\');"><img title="Voir le Profil" src="./modules/directory/img/ico_open.png"></a>';
                                     if ($booModify) $arrActions[] = '<a href="javascript:void(0);" onclick="javascript:directory_modify(event, \''.$row['id'].'\');"><img title="Modifier le Contact" src="./modules/directory/img/ico_modify.png"></a>';
-                                    if ($booModify) $arrActions[] = '<a href="javascript:ploopi_confirmlink(\''.ploopi\crypt::urlencode("admin.php?ploopi_op=directory_contact_delete&directory_contact_id={$row['id']}").'\',\''._DIRECTORY_CONFIRM_DELETECONTACT.'\')"><img title="Supprimer" src="./modules/directory/img/ico_delete.png"></a>';
+                                    if ($booModify) $arrActions[] = '<a href="javascript:ploopi.confirmlink(\''.ploopi\crypt::urlencode("admin.php?ploopi_op=directory_contact_delete&directory_contact_id={$row['id']}").'\',\''._DIRECTORY_CONFIRM_DELETECONTACT.'\')"><img title="Supprimer" src="./modules/directory/img/ico_delete.png"></a>';
 
                                     if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_myfavorites'])
                                     {
@@ -979,7 +979,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                             if (!ploopi\db::get()->numrows($rs))
                             {
                                 ?>
-                                <div style="padding:4px;text-align:center;">Il n'y a pas de contact rattaché à <?php printf("%s %s", ploopi\str::htmlentities($arrHeadingLabel[$intDepth][1]), ploopi\str::htmlentities($arrHeadingLabel[$intDepth][2])); ?></div>
+                                <div style="padding:4px;text-align:center;">Il n'y a pas de contact rattachÃ© Ã  <?php printf("%s %s", ploopi\str::htmlentities($arrHeadingLabel[$intDepth][1]), ploopi\str::htmlentities($arrHeadingLabel[$intDepth][2])); ?></div>
                                 <?php
                             }
                             ?>
@@ -988,7 +988,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                     }
                     else
                     {
-                        // récupération du libellé des rubriques de niveau 1
+                        // rÃ©cupÃ©ration du libellÃ© des rubriques de niveau 1
                         $strHeadingLabel = !empty($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]["directory_label_depth1"]) ? $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]["directory_label_depth1"] : 'une/cette/rubrique';
                         $arrHeadingLabel[1] = preg_split('/\//', $strHeadingLabel);
                         ?>
@@ -999,7 +999,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                         if (empty($arrHeadings['list']))
                         {
                             ?>
-                            <div class="error" style="padding:10px;text-align:center;">Vous devez d'abord créer <?php printf("%s %s", ploopi\str::htmlentities($arrHeadingLabel[1][0]), ploopi\str::htmlentities($arrHeadingLabel[1][2])); ?></div>
+                            <div class="error" style="padding:10px;text-align:center;">Vous devez d'abord crÃ©er <?php printf("%s %s", ploopi\str::htmlentities($arrHeadingLabel[1][0]), ploopi\str::htmlentities($arrHeadingLabel[1][2])); ?></div>
                             <?php
                         }
                         else
@@ -1020,8 +1020,8 @@ switch($_SESSION['directory']['directoryTabItem'])
             <script type="text/javascript">
             ploopi_window_onload_stock(
                 function() {
-                        $('directory_heading_label').focus();
-                        $('directory_heading_label').select();
+                        jQuery('#directory_heading_label')[0].focus();
+                        jQuery('#directory_heading_label')[0].select();
                     }
                 );
             </script>
@@ -1044,7 +1044,7 @@ switch($_SESSION['directory']['directoryTabItem'])
         if (ploopi\acl::isactionallowed(_DIRECTORY_ACTION_SPEEDDIALING))
         {
             ?>
-            <a class="ploopi_form_title" href="javascript:void(0);" onclick="javascript:$('directory_addnumber').style.display='block';">
+            <a class="ploopi_form_title" href="javascript:void(0);" onclick="javascript:jQuery('#directory_addnumber')[0].style.display='block';">
                 <p class="ploopi_va">
                     <img border="0" src="./modules/directory/img/ico_phone.png">
                     <span><?php echo _DIRECTORY_ADDNEWNUMBER; ?></span>
@@ -1060,11 +1060,11 @@ switch($_SESSION['directory']['directoryTabItem'])
                     </select>
                     <em>ou</em>
                     <input type="text" name="_directory_speeddialing_newheading" class="text" style="width:100px;" value="Nouvelle rubrique" tabindex="111" onfocus="javascript:this.value = '';" />
-                    <span>Libellé:</span>
+                    <span>LibellÃ©:</span>
                     <input type="text" name="directory_speeddialing_label" class="text" style="width:150px;" tabindex="115" />
-                    <span>Numéro:</span>
+                    <span>NumÃ©ro:</span>
                     <input type="text" name="directory_speeddialing_number" class="text" style="width:90px;" maxlength="32" tabindex="116" />
-                    <span>Abrégé:</span>
+                    <span>AbrÃ©gÃ©:</span>
                     <input type="text" name="directory_speeddialing_shortnumber" class="text" style="width:60px;" maxlength="16" tabindex="117" />
                     <input type="button" class="button" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<?php echo ploopi\crypt::urlencode("admin.php"); ?>';" tabindex="121" />
                     <input type="submit" class="button" value="<?php echo _PLOOPI_SAVE; ?>" tabindex="120" />
@@ -1077,16 +1077,16 @@ switch($_SESSION['directory']['directoryTabItem'])
         ?>
         <div style="border-bottom:1px solid #c0c0c0;overflow:auto;">
             <div class="ploopi_form_title">
-                <span>Liste des numéros abrégés</span>
+                <span>Liste des numÃ©ros abrÃ©gÃ©s</span>
             </div>
             <?php
             $arrColumns = array();
             $arrValues = array();
 
             $arrColumns['left']['heading'] = array('label' => 'Rubrique', 'width' => 200, 'options' => array('sort' => true));
-            $arrColumns['auto']['label'] = array('label' => 'Libellé', 'options' => array('sort' => true));
-            $arrColumns['right']['shortnumber'] = array('label' => 'Abrégé', 'width' => 90, 'options' => array('sort' => true));
-            $arrColumns['right']['number'] = array('label' => 'Numéro', 'width' => 120, 'options' => array('sort' => true));
+            $arrColumns['auto']['label'] = array('label' => 'LibellÃ©', 'options' => array('sort' => true));
+            $arrColumns['right']['shortnumber'] = array('label' => 'AbrÃ©gÃ©', 'width' => 90, 'options' => array('sort' => true));
+            $arrColumns['right']['number'] = array('label' => 'NumÃ©ro', 'width' => 120, 'options' => array('sort' => true));
             if (ploopi\acl::isactionallowed(_DIRECTORY_ACTION_SPEEDDIALING))
             {
                 $arrColumns['actions_right']['actions'] = array('label' => '&nbsp;', 'width' => 42);
@@ -1112,8 +1112,8 @@ switch($_SESSION['directory']['directoryTabItem'])
                     if (ploopi\acl::isactionallowed(_DIRECTORY_ACTION_SPEEDDIALING))
                     {
                         $arrActions = array();
-                        $arrActions[] = '<a href="javascript:void(0);" onclick="javascript:directory_speeddialing_modify(event, \''.$row['id'].'\');"><img title="Modifier le numéro" src="./modules/directory/img/ico_modify.png"></a>';
-                        $arrActions[] = '<a href="javascript:ploopi_confirmlink(\''.ploopi\crypt::urlencode("admin-light.php?ploopi_op=directory_speeddialing_delete&directory_speeddialing_id={$row['id']}").'\',\''._DIRECTORY_CONFIRM_DELETENUMBER.'\')"><img title="Supprimer" src="./modules/directory/img/ico_delete.png"></a>';
+                        $arrActions[] = '<a href="javascript:void(0);" onclick="javascript:directory_speeddialing_modify(event, \''.$row['id'].'\');"><img title="Modifier le numÃ©ro" src="./modules/directory/img/ico_modify.png"></a>';
+                        $arrActions[] = '<a href="javascript:ploopi.confirmlink(\''.ploopi\crypt::urlencode("admin-light.php?ploopi_op=directory_speeddialing_delete&directory_speeddialing_id={$row['id']}").'\',\''._DIRECTORY_CONFIRM_DELETENUMBER.'\')"><img title="Supprimer" src="./modules/directory/img/ico_delete.png"></a>';
                         $arrValues[$c]['values']['actions'] = array('label' => implode('', $arrActions));
                         $arrValues[$c]['link'] = 'javascript:void(0);';
                         $arrValues[$c]['onclick'] = 'directory_speeddialing_modify(event, \''.$row['id'].'\');';
@@ -1127,7 +1127,7 @@ switch($_SESSION['directory']['directoryTabItem'])
             if (!ploopi\db::get()->numrows($rs))
             {
                 ?>
-                <div style="padding:4px;text-align:center;">Il n'y a pas de numéro abrégé</div>
+                <div style="padding:4px;text-align:center;">Il n'y a pas de numÃ©ro abrÃ©gÃ©</div>
                 <?php
             }
             ?>

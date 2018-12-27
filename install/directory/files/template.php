@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2008 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,12 +21,12 @@
 */
 
 /**
- * Point d'entrée de l'affichage template de l'annuaire
+ * Point d'entrÃ©e de l'affichage template de l'annuaire
  *
  * @package directory
  * @subpackage template
  * @copyright Ovensia
- * @author Stéphane Escaich
+ * @author Ovensia
  * @version  $Revision$
  * @modifiedby $LastChangedBy$
  * @lastmodified $Date$

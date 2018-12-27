@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -27,7 +27,7 @@
  * @subpackage block
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
@@ -61,17 +61,17 @@ if ($_SESSION['ploopi']['modules'][$menu_moduleid]['doc_viewfoldersinblock'])
     // Utilisateur "standard"
     if (!ploopi\acl::isadmin() && !ploopi\acl::isactionallowed(_DOC_ACTION_ADMIN, $_SESSION['ploopi']['workspaceid'], $menu_moduleid))
     {
-        // Publié (ou propriétaire)
+        // PubliÃ© (ou propriÃ©taire)
         $arrWhere['published'] = "(f.published = 1 OR f.id_user = {$_SESSION['ploopi']['userid']})";
 
-        // Prioriétaire
+        // PrioriÃ©taire
         $arrWhere['visibility']['user'] = "f.id_user = {$_SESSION['ploopi']['userid']}";
-        // Partagé
+        // PartagÃ©
         if (!empty($_SESSION['doc'][$menu_moduleid]['share']['folders'])) $arrWhere['visibility']['shared'] = "(f.foldertype = 'shared' AND f.id IN (".implode(',', $_SESSION['doc'][$menu_moduleid]['share']['folders'])."))";
         // Public
         $arrWhere['visibility']['public'] = "(f.foldertype = 'public' AND f.id_workspace IN (".ploopi\system::viewworkspaces($menu_moduleid)."))";
 
-        // Synthèse visibilité
+        // SynthÃ¨se visibilitÃ©
         $arrWhere['visibility'] = '('.implode(' OR ', $arrWhere['visibility']).')';
     }
 

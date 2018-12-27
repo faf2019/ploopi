@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2011 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,16 +21,16 @@
 */
 
 /**
- * Partie publique du module permettant de réindexer les pages
+ * Partie publique du module permettant de rÃ©indexer les pages
  *
  * @package wiki
  * @subpackage public
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
-echo ploopi\skin::get()->open_simplebloc('Réindexation des pages');
+echo ploopi\skin::get()->open_simplebloc('RÃ©indexation des pages');
 ?>
 <div id="wiki_index">
 <?php
@@ -52,6 +52,6 @@ echo ploopi\skin::get()->open_simplebloc('Réindexation des pages');
 
 
     ?>
-    Résultat de l'indexation : <?php echo $intI; ?> page(s) traitée(s)
+    RÃ©sultat de l'indexation : <?php echo $intI; ?> page(s) traitÃ©e(s)
 </div>
 <?php echo ploopi\skin::get()->close_simplebloc(); ?>

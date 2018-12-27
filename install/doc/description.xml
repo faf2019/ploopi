@@ -38,7 +38,7 @@
         </paramtype>
         <paramtype>
             <name>doc_displayshortcuts</name>
-            <label>Afficher les Raccourcis à la Racine</label>
+            <label>Afficher les Raccourcis Ã  la Racine</label>
             <default_value>1</default_value>
             <public>1</public>
             <description/>
@@ -105,7 +105,7 @@
         </paramtype>
         <paramtype>
             <name>doc_index_maxwordspercent</name>
-            <label>Mots clés à indéxer dans un document (%)</label>
+            <label>Mots clÃ©s Ã  indÃ©xer dans un document (%)</label>
             <default_value>50</default_value>
             <public>1</public>
             <description/>
@@ -134,7 +134,7 @@
         </paramtype>
         <paramtype>
             <name>doc_explorer_displayuser</name>
-            <label>Afficher la colonne "Propriétaire" dans l'explorateur</label>
+            <label>Afficher la colonne "PropriÃ©taire" dans l'explorateur</label>
             <default_value>1</default_value>
             <public>1</public>
             <description/>
@@ -186,7 +186,7 @@
         </paramtype>
         <paramtype>
             <name>doc_rootwritable</name>
-            <label>Possibilité de déposer des fichiers dans le dossier Racine</label>
+            <label>PossibilitÃ© de dÃ©poser des fichiers dans le dossier Racine</label>
             <default_value>1</default_value>
             <public>1</public>
             <description/>
@@ -247,19 +247,19 @@
         </action>
         <action>
             <id_action>7</id_action>
-            <label>Gérer les Validateurs</label>
+            <label>GÃ©rer les Validateurs</label>
         </action>
         <action>
             <id_action>8</id_action>
-            <label>Accéder au webservice</label>
+            <label>AccÃ©der au webservice</label>
         </action>
         <action>
             <id_action>9</id_action>
-            <label>Administrer (accès à tous les documents)</label>
+            <label>Administrer (accÃ¨s Ã  tous les documents)</label>
         </action>
         <action>
             <id_action>99</id_action>
-            <label>Paramétrer (parsers, indexation, stats)</label>
+            <label>ParamÃ©trer (parsers, indexation, stats)</label>
         </action>
     </moduletype>
 </ploopi>

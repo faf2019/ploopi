@@ -27,12 +27,12 @@
  * @subpackage backend
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 include_once './modules/doc/class_docfolder.php';
 
-// Contrôles
+// ContrÃ´les
 if(empty($_GET['id_folder'])) { echo ''; ploopi\system::kill(); }
 
 $objFolder = new docfolder();
@@ -51,7 +51,7 @@ $format = (empty($_GET['format'])) ? 'atom' : strtolower($_GET['format']);
 
 // Mise en cache
 $objCache = new ploopi\cache(md5('doc_feeds_folder_'.$format.'_'.$_GET['id_folder']), 300);
-$objCache->set_groupe('module_doc_feeds_'.$objFolder->fields['id_workspace'].'_'.$objFolder->fields['id_module']);  // Attribution d'un groupe spécifique pour le cache pour permettre un clean précis
+$objCache->set_groupe('module_doc_feeds_'.$objFolder->fields['id_workspace'].'_'.$objFolder->fields['id_module']);  // Attribution d'un groupe spÃ©cifique pour le cache pour permettre un clean prÃ©cis
 
 // Vidage du buffer
 ploopi\buffer::clean();
@@ -59,12 +59,12 @@ ploopi\buffer::clean();
 if (!$objCache->start())
 {
     /**
-     * Inclusions des fonctions sur les dates et les chaînes (l'appel via backend.php est minimal, les fonctions ne sont donc pas déjà incluses)
+     * Inclusions des fonctions sur les dates et les chaÃ®nes (l'appel via backend.php est minimal, les fonctions ne sont donc pas dÃ©jÃ  incluses)
      */
     include_once './include/start/functions.php';
 
     /**
-     * FeedWriter qui permet de générer le flux
+     * FeedWriter qui permet de gÃ©nÃ©rer le flux
      */
     include_once './lib/feedwriter/FeedWriter.php';
 
@@ -99,7 +99,7 @@ if (!$objCache->start())
         $objDocFeed->setChannelElement('author', array('name '=> $meta_author));
     }
 
-    // On recherche tous les dossiers enfants publics du dossier selectionné
+    // On recherche tous les dossiers enfants publics du dossier selectionnÃ©
     $select = "
         SELECT      id, name
         FROM        ploopi_mod_doc_folder
@@ -154,7 +154,7 @@ if (!$objCache->start())
 
     while ($file = ploopi\db::get()->fetchrow($sql_file))
     {
-        // Création d'un nouvel item
+        // CrÃ©ation d'un nouvel item
         $link = _PLOOPI_BASEPATH.'/'.ploopi\str::urlrewrite("index.php?ploopi_op=doc_file_download&docfile_md5id={$file['md5id']}", doc_getrewriterules(), $file['name'], null, true);
         $img  = _PLOOPI_BASEPATH.'/'.ploopi\crypt::urlencode("index-light.php?ploopi_op=doc_getthumbnail&docfile_md5id={$file['md5id']}&version={$file['version']}");
 
@@ -181,7 +181,7 @@ if (!$objCache->start())
         $objDocFeed->addItem($objDocItem);
     }
 
-    // Génération du flux
+    // GÃ©nÃ©ration du flux
     $objDocFeed->generateFeed();
 
     $objCache->end();

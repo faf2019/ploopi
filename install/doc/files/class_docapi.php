@@ -13,7 +13,7 @@ include_once './modules/doc/class_docfolder.php';
 // http://gipsy/projets/ploopidev/wsdoc/delete_file?ploopi_login=admin&ploopi_password=Baghy.c0m&module_id=6&file_md5id=749f97f451fd11c059d5eeb05a2e8c6e
 
 /**
- * Non géré :
+ * Non gÃ©rÃ© :
  * - Abonnements
  * - Partages
  * - Validateurs
@@ -44,17 +44,17 @@ class docapi {
      */
 
     private static $_arrErrMsg = array(
-        self::_ERROR_ACTION_NOT_FOUND => "L'action demandée n'existe pas",
-        self::_ERROR_PARAMETER_NOT_FOUND => "Il manque au moins un paramètre",
-        self::_ERROR_FILE_NOT_FOUND_DB => "Fichier non trouvé dans la base de données",
-        self::_ERROR_FILE_NOT_FOUND_FS => "Fichier non trouvé sur le système de fichiers",
-        self::_ERROR_FILE_CHECKSUM => "Erreur dans la vérification de la somme de contrôle lors du transfert des données",
-        self::_ERROR_FILE_NOT_WRITABLE => "Impossible d'écrire ou modifier ce fichier",
-        self::_ERROR_FOLDER_NOT_FOUND => "Dossier non trouvé",
-        self::_ERROR_FOLDER_NOT_WRITABLE => "Impossible d'écrire ou modifier ce dossier",
+        self::_ERROR_ACTION_NOT_FOUND => "L'action demandÃ©e n'existe pas",
+        self::_ERROR_PARAMETER_NOT_FOUND => "Il manque au moins un paramÃ¨tre",
+        self::_ERROR_FILE_NOT_FOUND_DB => "Fichier non trouvÃ© dans la base de donnÃ©es",
+        self::_ERROR_FILE_NOT_FOUND_FS => "Fichier non trouvÃ© sur le systÃ¨me de fichiers",
+        self::_ERROR_FILE_CHECKSUM => "Erreur dans la vÃ©rification de la somme de contrÃ´le lors du transfert des donnÃ©es",
+        self::_ERROR_FILE_NOT_WRITABLE => "Impossible d'Ã©crire ou modifier ce fichier",
+        self::_ERROR_FOLDER_NOT_FOUND => "Dossier non trouvÃ©",
+        self::_ERROR_FOLDER_NOT_WRITABLE => "Impossible d'Ã©crire ou modifier ce dossier",
         self::_ERROR_FOLDER_NOT_EMPTY => "Dossier non vide",
-        self::_ERROR_USER_NOT_ALLOWED => "Utilisateur non autorisé",
-        self::_ERROR_USER_NOT_CONNECTED => "Aucun utilisateur connecté",
+        self::_ERROR_USER_NOT_ALLOWED => "Utilisateur non autorisÃ©",
+        self::_ERROR_USER_NOT_CONNECTED => "Aucun utilisateur connectÃ©",
     );
 
     /**
@@ -64,7 +64,7 @@ class docapi {
     private $_arrResult = array();
 
     /**
-     * Constructeur privé (singleton)
+     * Constructeur privÃ© (singleton)
      */
 
     private function __construct() {
@@ -80,7 +80,7 @@ class docapi {
     }
 
     /**
-     * Crée/retourne le singleton
+     * CrÃ©e/retourne le singleton
      */
 
     static public function getInstance()
@@ -93,7 +93,7 @@ class docapi {
     }
 
     /**
-     * Convertit une action en nom de méthode
+     * Convertit une action en nom de mÃ©thode
      */
 
     private function _getMethodNameFromOp($op) {
@@ -102,7 +102,7 @@ class docapi {
     }
 
     /**
-     * Exécute une action du webservice
+     * ExÃ©cute une action du webservice
      */
 
     public function launch($arrRequest) {
@@ -126,7 +126,7 @@ class docapi {
     }
 
     /**
-     * Met à jour le code d'erreur à retourner
+     * Met Ã  jour le code d'erreur Ã  retourner
      */
 
     private function _setError($intErrorCode) {
@@ -138,7 +138,7 @@ class docapi {
     }
 
     /**
-     * Met à jour les données à retourner
+     * Met Ã  jour les donnÃ©es Ã  retourner
      */
 
     private function _setData($arrData = array()) {
@@ -148,7 +148,7 @@ class docapi {
     }
 
     /**
-     * Retourne le résultat de l'action demandée
+     * Retourne le rÃ©sultat de l'action demandÃ©e
      */
 
     public function getResult() {
@@ -156,7 +156,7 @@ class docapi {
     }
 
     /**
-     * Imprime le résultat dans la sortie standard au format JSON
+     * Imprime le rÃ©sultat dans la sortie standard au format JSON
      */
 
     public function printResult($strFormat = 'json') {
@@ -177,7 +177,7 @@ class docapi {
     }
 
     /**
-     * Vérification du module_id et du rôle de l'utilisateur
+     * VÃ©rification du module_id et du rÃ´le de l'utilisateur
      */
 
     private function _isAllowed($arrParams) {
@@ -209,7 +209,7 @@ class docapi {
         $objRs = $objQuery->execute();
         $arrData = array();
         while ($row = $objRs->fetchrow()) {
-            // Vérification des autorisations d'accès au webservice
+            // VÃ©rification des autorisations d'accÃ¨s au webservice
             if (ploopi\acl::isactionallowed(_DOC_ACTION_WEBSERVICE, -1, $row['id'])) $arrData[] = $row;
         }
 
@@ -220,9 +220,9 @@ class docapi {
 
     /**
      * Retourne le contenu d'un dossier
-     * Paramètres :
+     * ParamÃ¨tres :
      * - module_id (voir actionListModules)
-     * - folder_id (optionnel, racine par défaut)
+     * - folder_id (optionnel, racine par dÃ©faut)
      */
     public function actionListContent($arrParams) {
 
@@ -230,7 +230,7 @@ class docapi {
 
         if (!$this->_isAllowed($arrParams)) return $this;
 
-        // Vérification des paramètres
+        // VÃ©rification des paramÃ¨tres
         $intModuleId = $arrParams['module_id'];
         $intFolderId = isset($arrParams['folder_id']) ? intval($arrParams['folder_id']) : 0;
 
@@ -241,7 +241,7 @@ class docapi {
         // Chargement partages
         doc_getshare($intModuleId);
 
-        // Construction de la requête SQL des DOSSIERS
+        // Construction de la requÃªte SQL des DOSSIERS
         $arrWhere = array();
 
         // Module
@@ -252,17 +252,17 @@ class docapi {
         // Utilisateur "standard"
         if (!$wf_validator && !ploopi\acl::isadmin() && !ploopi\acl::isactionallowed(_DOC_ACTION_ADMIN, -1, $intModuleId))
         {
-            // Publié (ou propriétaire)
+            // PubliÃ© (ou propriÃ©taire)
             $arrWhere['published'] = "(f.published = 1 OR f.id_user = {$_SESSION['ploopi']['userid']})";
 
-            // Prioriétaire
+            // PrioriÃ©taire
             $arrWhere['visibility']['user'] = "f.id_user = {$_SESSION['ploopi']['userid']}";
-            // Partagé
+            // PartagÃ©
             if (!empty($_SESSION['doc'][$intModuleId]['share']['folders'])) $arrWhere['visibility']['shared'] = "(f.foldertype = 'shared' AND f.id IN (".implode(',', $_SESSION['doc'][$intModuleId]['share']['folders'])."))";
             // Public
             $arrWhere['visibility']['public'] = "(f.foldertype = 'public' AND f.id_workspace IN (".ploopi\system::viewworkspaces($intModuleId)."))";
 
-            // Synthèse visibilité
+            // SynthÃ¨se visibilitÃ©
             $arrWhere['visibility'] = '('.implode(' OR ', $arrWhere['visibility']).')';
         }
 
@@ -293,7 +293,7 @@ class docapi {
 
         $rs_folders = $db->query($sql);
 
-        // Construction de la requête SQL des FICHIERS
+        // Construction de la requÃªte SQL des FICHIERS
         $arrWhere = array();
 
         // Module
@@ -339,8 +339,8 @@ class docapi {
     }
 
     /**
-     * Dépose un fichier
-     * Paramètres :
+     * DÃ©pose un fichier
+     * ParamÃ¨tres :
      * - module_id (voir actionListModules)
      * - folder_id
      * - file_name
@@ -369,7 +369,7 @@ class docapi {
         // Racine ?
         if (empty($arrParams['folder_id'])) $objDocFolder->init_description();
         else {
-            // Vérification de l'existence du dossier
+            // VÃ©rification de l'existence du dossier
             if (!$objDocFolder->open($arrParams['folder_id'])) {
                 $this->_setError(self::_ERROR_FOLDER_NOT_FOUND);
                 return $this;
@@ -383,16 +383,16 @@ class docapi {
         }
 
 
-        // Décodage du contenu
+        // DÃ©codage du contenu
         $strContent = base64_decode($arrParams['base64']);
 
-        // Vérification du checksum
+        // VÃ©rification du checksum
         if (isset($arrParams['crc32']) && $arrParams['crc32'] != crc32($strContent)) {
             $this->_setError(self::_ERROR_FILE_CHECKSUM);
             return $this;
         }
 
-        // Création d'un fichier temporaire pour l'import
+        // CrÃ©ation d'un fichier temporaire pour l'import
         file_put_contents($tmpfname = tempnam(sys_get_temp_dir(), 'wsdoc'), $strContent);
 
         if (!is_readable($tmpfname)) {
@@ -428,7 +428,7 @@ class docapi {
 
     /**
      * Supprime un fichier
-     * Paramètres :
+     * ParamÃ¨tres :
      * - module_id (voir actionListModules)
      * - file_md5id
      */
@@ -444,13 +444,13 @@ class docapi {
 
         $objDocFile = new docfile();
 
-        // Vérification d'existence du fichier dans la DB
+        // VÃ©rification d'existence du fichier dans la DB
         if (!$objDocFile->openmd5($arrParams['file_md5id'])) {
             $this->_setError(self::_ERROR_FILE_NOT_FOUND_DB);
             return $this;
         }
 
-        // Vérification d'existence du fichier sur le FS
+        // VÃ©rification d'existence du fichier sur le FS
         if (!file_exists($objDocFile->getfilepath())) {
             $this->_setError(self::_ERROR_FILE_NOT_FOUND_FS);
             return $this;
@@ -467,7 +467,7 @@ class docapi {
 
     /**
      * Retourne un fichier
-     * Paramètres :
+     * ParamÃ¨tres :
      * - module_id (voir actionListModules)
      * - file_md5id
      */
@@ -483,13 +483,13 @@ class docapi {
 
         $objDocFile = new docfile();
 
-        // Vérification d'existence du fichier dans la DB
+        // VÃ©rification d'existence du fichier dans la DB
         if (!$objDocFile->openmd5($arrParams['file_md5id'])) {
             $this->_setError(self::_ERROR_FILE_NOT_FOUND_DB);
             return $this;
         }
 
-        // Vérification d'existence du fichier sur le FS
+        // VÃ©rification d'existence du fichier sur le FS
         if (!file_exists($objDocFile->getfilepath())) {
             $this->_setError(self::_ERROR_FILE_NOT_FOUND_FS);
             return $this;
@@ -505,13 +505,13 @@ class docapi {
     }
 
     /**
-     * Crée un dossier
-     * Paramètres :
+     * CrÃ©e un dossier
+     * ParamÃ¨tres :
      * - module_id (voir actionListModules)
      * - folder_id : dossier parent
      * - folder_name : nom du dossier
      * - folder_description : description du dossier
-     * - folder_type (optionnel) : type de dossier (public, private), public par défaut
+     * - folder_type (optionnel) : type de dossier (public, private), public par dÃ©faut
      * - folder_readonly (optionnel) : 0/1
      *
      */
@@ -530,14 +530,14 @@ class docapi {
         // Racine ?
         if (empty($arrParams['folder_id'])) $objParentFolder->init_description();
         else {
-            // Vérification de l'existence du dossier
+            // VÃ©rification de l'existence du dossier
             if (!$objParentFolder->open($arrParams['folder_id'])) {
                 $this->_setError(self::_ERROR_FOLDER_NOT_FOUND);
                 return $this;
             }
         }
 
-        // L'utilisateur peut écrire dans ce dossier ?
+        // L'utilisateur peut Ã©crire dans ce dossier ?
         if (!doc_folder_contentisreadonly($objParentFolder->fields, _DOC_ACTION_ADDFOLDER, $arrParams['module_id'])) {
 
             $objDocFolder = new docfolder();
@@ -564,9 +564,9 @@ class docapi {
 
     /**
      * Supprime un dossier
-     * Paramètres :
+     * ParamÃ¨tres :
      * - module_id (voir actionListModules)
-     * - folder_id : dossier à supprimer
+     * - folder_id : dossier Ã  supprimer
      */
 
     public function actionDeleteFolder($arrParams) {
@@ -580,19 +580,19 @@ class docapi {
 
         $objDocFolder = new docfolder();
 
-        // Vérification que dossier existe
+        // VÃ©rification que dossier existe
         if (!$objDocFolder->open($_GET['folder_id'])) {
             $this->_setError(self::_ERROR_FOLDER_NOT_FOUND);
             return $this;
         }
 
-        // Vérification que dossier modifiable
+        // VÃ©rification que dossier modifiable
         if (doc_folder_isreadonly($objDocFolder->fields, _DOC_ACTION_DELETEFOLDER, $arrParams['module_id'])) {
             $this->_setError(self::_ERROR_FOLDER_NOT_WRITABLE);
             return $this;
         }
 
-        // Vérification que dossier vide (ou droit spécial)
+        // VÃ©rification que dossier vide (ou droit spÃ©cial)
         if ($objDocFolder->fields['nbelements'] > 0 && !ploopi\acl::isadmin() && !ploopi\acl::isactionallowed(_DOC_ACTION_ADMIN, -1, $arrParams['module_id'])) {
             $this->_setError(self::_ERROR_FOLDER_NOT_EMPTY);
             return $this;

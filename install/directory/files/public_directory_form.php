@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -27,7 +27,7 @@
  * @subpackage public
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
@@ -130,7 +130,7 @@ if (!empty($directory_contact->fields['id'])) ploopi\session::setvar("deletephot
                             <label>Rubrique parent:</label>
                             <input type="hidden" value="<?php echo $directory_contact->fields['id_heading']; ?>" name="directory_heading_id" id="directory_heading_id" />
                             <input type="text" class="text" value="<?php echo ploopi\str::htmlentities($objDirectoryHeading->fields['label']); ?>" id="directory_heading_id_label" tabindex="115" style="width:55%;" readonly />
-                            <a href="javascript:void(0);" onclick="javascript:directory_heading_choose_popup(event, $('directory_heading_id').value);" ><img src="./modules/directory/img/ico_heading.png" title="Modifier la rubrique de rattachement" tabindex="116" /></a>
+                            <a href="javascript:void(0);" onclick="javascript:directory_heading_choose_popup(event, jQuery('#directory_heading_id')[0].value);" ><img src="./modules/directory/img/ico_heading.png" title="Modifier la rubrique de rattachement" tabindex="116" /></a>
                         </p>
                     </div>
                 </fieldset>
@@ -175,7 +175,7 @@ if (!empty($directory_contact->fields['id'])) ploopi\session::setvar("deletephot
                 </div>
             </fieldset>
             <fieldset class="fieldset">
-                <legend>Informations complémentaires</legend>
+                <legend>Informations complÃ©mentaires</legend>
                 <div class="ploopi_form">
                     <p>
                         <label><?php echo _DIRECTORY_COMMENTARY; ?>:</label>
@@ -209,7 +209,7 @@ if (!empty($directory_contact->fields['id'])) ploopi\session::setvar("deletephot
 </form>
 
 <fieldset class="fieldset" style="padding:0px;margin:4px;">
-    <legend>Documents liés au contact</legend>
+    <legend>Documents liÃ©s au contact</legend>
     <?php
     ploopi\documents::insert(
         _DIRECTORY_OBJECT_CONTACT, 

@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -27,17 +27,17 @@
  * @subpackage file
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
- * Classe d'accès à la table ploopi_mod_doc_file_history
+ * Classe d'accÃ¨s Ã  la table ploopi_mod_doc_file_history
  *
  * @package doc
  * @subpackage file
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 class docfilehistory extends ploopi\data_object
@@ -54,7 +54,7 @@ class docfilehistory extends ploopi\data_object
     }
 
     /**
-     * Retourne le chemin physique de stockage des documents et le crée s'il n'existe pas
+     * Retourne le chemin physique de stockage des documents et le crÃ©e s'il n'existe pas
      *
      * @return string chemin physique de stockage des documents
      *

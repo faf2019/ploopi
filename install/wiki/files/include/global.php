@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2009 Ovensia
+    Copyright (c) 2007-2016 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,14 +26,14 @@
  * @package wiki
  * @subpackage global
  * @copyright Ovensia
- * @author Stéphane Escaich
+ * @author Ovensia
  * @version  $Revision$
  * @modifiedby $LastChangedBy$
  * @lastmodified $Date$
  */
 
 /**
- * Définition des constantes
+ * DÃ©finition des constantes
  */
 
 /**
@@ -74,10 +74,10 @@ define ('_WIKI_OBJECT_PAGE',            1);
 
 
 /**
- * Traitement des liens internes par expression régulière
+ * Traitement des liens internes par expression rÃ©guliÃ¨re
  *
  * @param array $arrMatches Tableau des correspondances
- * @return string lien modifié
+ * @return string lien modifiÃ©
  *
  * @see wiki_render
  */
@@ -99,7 +99,7 @@ function wiki_internal_links($arrMatches, $intIdModule = null)
         else
         {
             $strLinkClass = 'wiki_link_notfound';
-            $strTitle = 'Créer la page &laquo; '.ploopi\str::htmlentities($strPageId).' &raquo;';
+            $strTitle = 'CrÃ©er la page &laquo; '.ploopi\str::htmlentities($strPageId).' &raquo;';
             $strOp = 'op=wiki_page_modify&';
         }
 
@@ -111,10 +111,10 @@ function wiki_internal_links($arrMatches, $intIdModule = null)
 }
 
 /**
- * Traitement des liens externes et ancres (href) par expression regulière
+ * Traitement des liens externes et ancres (href) par expression reguliÃ¨re
  *
  * @param array $arrMatches Tableau des correspondances
- * @return string lien modifié
+ * @return string lien modifiÃ©
  *
  * @see wiki_render
  */
@@ -122,10 +122,10 @@ function wiki_links($arrMatches)
 {
     if (sizeof($arrMatches) == 3)
     {
-        switch($arrMatches[1][0]) // On regarde le 1er caractère du lien
+        switch($arrMatches[1][0]) // On regarde le 1er caractÃ¨re du lien
         {
             case '#': // cas particulier : ancre
-                return '<span class="wiki_link_ext"><a title="Aller à l\'ancre &laquo; '.ploopi\str::htmlentities(strip_tags($arrMatches[2])).' &raquo;" href="'.$arrMatches[1].'">'.$arrMatches[2].'</a><img src="./modules/wiki/img/ico_link_anchor.png" /></span>';
+                return '<span class="wiki_link_ext"><a title="Aller Ã  l\'ancre &laquo; '.ploopi\str::htmlentities(strip_tags($arrMatches[2])).' &raquo;" href="'.$arrMatches[1].'">'.$arrMatches[2].'</a><img src="./modules/wiki/img/ico_link_anchor.png" /></span>';
             break;
 
             default: // autres cas : liens externes
@@ -139,7 +139,7 @@ function wiki_links($arrMatches)
 }
 
 /**
- * Fonction de callback pour la création de liens sur les adresse email
+ * Fonction de callback pour la crÃ©ation de liens sur les adresse email
  */
 
 function wiki_make_links_cb($arrMatches)
@@ -150,8 +150,8 @@ function wiki_make_links_cb($arrMatches)
 /**
  * Rend les liens simples et les adresses de courriel cliquables
  *
- * @param string $text le texte à traiter
- * @return string le texte modifié
+ * @param string $text le texte Ã  traiter
+ * @return string le texte modifiÃ©
  */
 function wiki_make_links($strContent)
 {
@@ -167,7 +167,7 @@ function wiki_make_links($strContent)
 /**
  * Rendu de la page via le moteur de rendu Textile
  *
- * @param string $strContent chaîne brute utilisant la syntaxe Wiki Textile
+ * @param string $strContent chaÃ®ne brute utilisant la syntaxe Wiki Textile
  * @return string contenu HTML
  *
  * @see wiki_internal_links
@@ -177,8 +177,8 @@ function wiki_render($strContent, $cbInternalLinks = 'wiki_internal_links')
 {
     $objTextile = new \Netcarver\Textile\Parser();
 
-    // Pré-traitement du formatage de code
-    // Extraction des zones à formater
+    // PrÃ©-traitement du formatage de code
+    // Extraction des zones Ã  formater
     preg_match_all('@(<code[^>]*class="([a-z0-9]*)"[^>]*>(.*?)</code>)@si', $strContent, $arrMatches);
 
     $arrSearch = array();
@@ -211,9 +211,9 @@ function wiki_render($strContent, $cbInternalLinks = 'wiki_internal_links')
 
 
 /**
- * Génère la mise en forme du code source inséré
- * @param string $strContent contenu à mettre en forme
- * @param string $strFormat formattage à utiliser (php, c, java, etc...)
+ * GÃ©nÃ¨re la mise en forme du code source insÃ©rÃ©
+ * @param string $strContent contenu Ã  mettre en forme
+ * @param string $strFormat formattage Ã  utiliser (php, c, java, etc...)
  */
 function wiki_highlight($strContent, $strFormat = 'php')
 {
@@ -240,9 +240,9 @@ function wiki_highlight($strContent, $strFormat = 'php')
 
 
 /**
- * Retourne un tableau contenant les règles de réécriture proposées par le module WIKI
+ * Retourne un tableau contenant les rÃ¨gles de rÃ©Ã©criture proposÃ©es par le module WIKI
  *
- * @return array tableau contenant les règles de réécriture
+ * @return array tableau contenant les rÃ¨gles de rÃ©Ã©criture
  */
 function wiki_getrewriterules()
 {
@@ -260,7 +260,7 @@ function wiki_getrewriterules()
 }
 
 /**
- * Génére une URL de page pour le frontoffice
+ * GÃ©nÃ©re une URL de page pour le frontoffice
  * en fonction du contexte courant (rubriques, page, ...)
  */
 function wiki_generatefronturl($strPageId, $intHeadingId, $intArticleId, $strArticleTitle, $arrParents) { return ploopi\str::urlrewrite("index.php?headingid={$intHeadingId}&articleid={$intArticleId}&wikipageid=".ploopi\str::rawurlencode($strPageId), wiki_getrewriterules(), $strArticleTitle, $arrParents); }
@@ -276,8 +276,8 @@ function wiki_object_search($strQueryString, $rowObject)
 }
 
 /**
- * Résultat de recherche dans l'objet
- * Met à jour le template
+ * RÃ©sultat de recherche dans l'objet
+ * Met Ã  jour le template
  */
 function wiki_object_searchresult($template_body, $rowResult, $objArticle, $arrHeadings)
 {

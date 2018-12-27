@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Copyright (c) 2009 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
@@ -28,11 +28,11 @@
  * @subpackage global
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
- * Définition des constantes
+ * DÃ©finition des constantes
  */
 
 define ('_DOC_TAB_PARSERS',     1);
@@ -207,10 +207,10 @@ function doc_getpath($id_module = -1, $createpath = false)
 }
 
 /**
- * Retourne le nombre d'éléments (fichiers/dossiers) d'un dossier
+ * Retourne le nombre d'Ã©lÃ©ments (fichiers/dossiers) d'un dossier
  *
  * @param int $id_folder identifiant du dossier
- * @return int nombre d'éléments
+ * @return int nombre d'Ã©lÃ©ments
  */
 
 function doc_countelements($id_folder)
@@ -228,7 +228,7 @@ function doc_countelements($id_folder)
     return($c);
 }
 /**
- * Chargement des partages en session (pour éviter les multiples rechargements)
+ * Chargement des partages en session (pour Ã©viter les multiples rechargements)
  *
  * @param int $id_module identifiant du module
  *
@@ -277,7 +277,7 @@ function doc_resetshare($id_module = -1)
 }
 
 /**
- * Chargement des droits de validation en session (pour éviter les multiples rechargements)
+ * Chargement des droits de validation en session (pour Ã©viter les multiples rechargements)
  *
  * @param int $id_module identifiant du module
  *
@@ -347,7 +347,7 @@ function doc_max_formsize()
 }
 
 /**
- * Vérifie qu'un enregistrement d'un objet est accessible dans un certain contexte par un utilisateur
+ * VÃ©rifie qu'un enregistrement d'un objet est accessible dans un certain contexte par un utilisateur
  *
  * @param int $id_object identifiant de l'objet
  * @param string $id_record identifiant de l'enregistrement
@@ -419,7 +419,7 @@ function doc_record_isenabled($id_object, $id_record, $id_module)
             include_once './modules/doc/class_docfiledraft.php';
             include_once './modules/doc/class_docfolder.php';
 
-            // ok si propriétaire du fichier ou validateur du dossier
+            // ok si propriÃ©taire du fichier ou validateur du dossier
             $objFile = new docfiledraft();
             if ($objFile->openmd5($id_record))
             {
@@ -441,7 +441,7 @@ function doc_record_isenabled($id_object, $id_record, $id_module)
 }
 
 /**
- * Retourne la liste complète des dossiers sous forme d'un tableau
+ * Retourne la liste complÃ¨te des dossiers sous forme d'un tableau
  * en prenant compte la vue de l'utilisateur (partages, etc.)
  *
  * @return array tableau des dossiers
@@ -473,21 +473,21 @@ function doc_getfolders()
     // Utilisateur "standard"
     if (!ploopi\acl::isadmin() && !ploopi\acl::isactionallowed(_DOC_ACTION_ADMIN))
     {
-        // Publié (ou propriétaire)
+        // PubliÃ© (ou propriÃ©taire)
         $arrWhere['published'] = "(f.published = 1 OR f.id_user = {$id_user})";
 
-        // Prioriétaire
+        // PrioriÃ©taire
         $arrWhere['visibility']['user'] = "f.id_user = {$id_user}";
 
         if (!empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['validation']['folders'])) $arrWhere['visibility']['wf'] = "f.id_folder IN (".implode(', ', $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['validation']['folders']).")";
 
 
-        // Partagé
+        // PartagÃ©
         if (!empty($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['share']['folders'])) $arrWhere['visibility']['shared'] = "(f.foldertype = 'shared' AND f.id IN (".implode(',', $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['share']['folders'])."))";
         // Public
         $arrWhere['visibility']['public'] = "(f.foldertype = 'public' AND f.id_workspace IN (".ploopi\system::viewworkspaces()."))";
 
-        // Synthèse visibilité
+        // SynthÃ¨se visibilitÃ©
         $arrWhere['visibility'] = '('.implode(' OR ', $arrWhere['visibility']).')';
     }
 
@@ -588,7 +588,7 @@ function doc_gettreeview($arrFolders = array(), $strPrefix = '', $arrExcludes = 
                 $strLink = ploopi\crypt::urlencode("admin.php?op=doc_browser&currentfolder={$fields['id']}");
                 $strOnClick = '';
             }
-            // Arbre de sélection
+            // Arbre de sÃ©lection
             else
             {
                 // On ne propose que les dossiers qui ne sont pas en lecture seule
@@ -598,7 +598,7 @@ function doc_gettreeview($arrFolders = array(), $strPrefix = '', $arrExcludes = 
                 $strLink = 'javascript:void(0);';
                 if ($id == 0 || !doc_folder_contentisreadonly($arrFolders['list'][$id]))
                 {
-                    $strOnClick = "$('docfolder_id_folder').value='{$fields['id']}'; $('docfolder_id_folder_name').innerHTML='".addslashes(ploopi\str::htmlentities($fields['name']))."'; ploopi_hidepopup('doc_popup_folderselect');";
+                    $strOnClick = "jQuery('#docfolder_id_folder')[0].value='{$fields['id']}'; jQuery('#docfolder_id_folder_name')[0].innerHTML='".addslashes(ploopi\str::htmlentities($fields['name']))."'; ploopi.popup.hide('doc_popup_folderselect');";
                 }
                 else
                 {
@@ -628,11 +628,11 @@ function doc_gettreeview($arrFolders = array(), $strPrefix = '', $arrExcludes = 
 }
 
 /**
- * Retourne un tableau contenant les règles de réécriture proposées par le module DOC
+ * Retourne un tableau contenant les rÃ¨gles de rÃ©Ã©criture proposÃ©es par le module DOC
  *
- * @return array tableau contenant les règles de réécriture
+ * @return array tableau contenant les rÃ¨gles de rÃ©Ã©criture
  */
-function doc_getrewriterules()
+function doc_getrewriterules($inline = false)
 {
     return array(
         'patterns' => array(
@@ -643,7 +643,7 @@ function doc_getrewriterules()
         ),
 
         'replacements' => array(
-            'documents/$1/<TITLE>.<EXT>',
+            $inline ? 'inlinedocs/$1/<TITLE>.<EXT>' : 'documents/$1/<TITLE>.<EXT>',
             'media/$1/<TITLE>.<EXT>',
             // Flux RSS/Atom
             'doc/$1/<TITLE>-m$2f$3.<EXT>'
@@ -652,10 +652,10 @@ function doc_getrewriterules()
 }
 
 /**
- * Affichage des dossiers dans l'explorateur de fichiers appelé depuis FCK Editor
+ * Affichage des dossiers dans l'explorateur de fichiers appelÃ© depuis FCK Editor
  *
- * @param array $arrFolders tableau contenant les dossiers à afficher
- * @param int $intIdFolder Identifiant du dossier à afficher
+ * @param array $arrFolders tableau contenant les dossiers Ã  afficher
+ * @param int $intIdFolder Identifiant du dossier Ã  afficher
  * @param string $strPath Chemin complet du dossier
  */
 function doc_fckexplorer_displayfolders(&$arrFolders, $intIdFolder = 0, $strPath = ' ')
@@ -685,7 +685,7 @@ function doc_getrenderer($strExtension)
 
 /**
  * Retourne true si le dossier n'est pas modifiable
- * Modifiable par l'admin sys, le rôle admin, le propriétaire, accessible + role sup
+ * Modifiable par l'admin sys, le rÃ´le admin, le propriÃ©taire, accessible + role sup
  */
 function doc_folder_isreadonly($row, $action = null)
 {
@@ -696,17 +696,17 @@ function doc_folder_isreadonly($row, $action = null)
 
 /**
  * Retourne true si le dossier est accessible dans le contexte courant
- * Equivalent de la méthode doc->isEnabled
+ * Equivalent de la mÃ©thode doc->isEnabled
  */
 function doc_folder_isenabled($row)
 {
     doc_getshare();
 
-    return  $row['id_user'] == $_SESSION['ploopi']['userid'] // Propriétaire ?
+    return  $row['id_user'] == $_SESSION['ploopi']['userid'] // PropriÃ©taire ?
             || ploopi\acl::isadmin() // Admin sys ?
-            || ploopi\acl::isactionallowed(_DOC_ACTION_ADMIN) // Rôle admin ?
+            || ploopi\acl::isactionallowed(_DOC_ACTION_ADMIN) // RÃ´le admin ?
             || ($row['foldertype'] == 'public' && in_array($row['id_workspace'], explode(',', ploopi\system::viewworkspaces()))) // Public pour l'espace courant ?
-            || ($row['foldertype'] == 'shared' &&  in_array($row['id'], $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['share']['folders'])); // Partagé pour l'utilisateur ?
+            || ($row['foldertype'] == 'shared' &&  in_array($row['id'], $_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['share']['folders'])); // PartagÃ© pour l'utilisateur ?
 }
 
 
@@ -718,25 +718,25 @@ function doc_folder_contentisreadonly($row, $action = null, $id_module = -1)
 
     $root = empty($row['id']);
 
-    // On peut écrire dans le dossier si
-    // - racine & le droit d'écrire dans la racine & actionOK
+    // On peut Ã©crire dans le dossier si
+    // - racine & le droit d'Ã©crire dans la racine & actionOK
     // - pas racine & pas en lecture seule & actionOK
-    // - propriétaire du dossier & actionOK
+    // - propriÃ©taire du dossier & actionOK
     // - admin du module
     // - super admin
-    return !((((!$root && !$row['readonly']) || $row['id_user'] == $_SESSION['ploopi']['userid'] || ($root && ploopi\param::get('doc_rootwritable', $id_module))) && $booActionIsOk) || ploopi\acl::isadmin() || ploopi\acl::isactionallowed(_DOC_ACTION_ADMIN, -1, $id_module));
+    return !((((!$root && empty(['readonly'])) || $row['id_user'] == $_SESSION['ploopi']['userid'] || ($root && ploopi\param::get('doc_rootwritable', $id_module))) && $booActionIsOk) || ploopi\acl::isadmin() || ploopi\acl::isactionallowed(_DOC_ACTION_ADMIN, -1, $id_module));
 }
 
 
 /**
  * Retourne true si le fichier n'est pas modifiable
- * Modifiable par l'admin sys, le rôle admin, le propriétaire, non readonly + role sup
+ * Modifiable par l'admin sys, le rÃ´le admin, le propriÃ©taire, non readonly + role sup
  */
 
 function doc_file_isreadonly($row, $action = null)
 {
     $booActionIsOk = is_null($action) || ploopi\acl::isactionallowed($action);
 
-    return !(ploopi\acl::isadmin() || ploopi\acl::isactionallowed(_DOC_ACTION_ADMIN) || $row['id_user'] == $_SESSION['ploopi']['userid'] || ($booActionIsOk && !$row['readonly']));
+    return !(ploopi\acl::isadmin() || ploopi\acl::isactionallowed(_DOC_ACTION_ADMIN) || $row['id_user'] == $_SESSION['ploopi']['userid'] || ($booActionIsOk && empty($row['readonly'])));
 }
 ?>

@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS `ploopi_mod_directory_list` (
   `id_workspace` int(10) unsigned NOT NULL default '0',
   `id_module` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 ALTER TABLE `ploopi_mod_directory_favorites` ADD `id_list` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0';
 

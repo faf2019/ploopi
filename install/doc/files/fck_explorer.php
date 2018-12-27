@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,17 +21,17 @@
 */
 
 /**
- * Explorateur de documents intégré à FCKeditor
+ * Explorateur de documents intÃ©grÃ© Ã  FCKeditor
  *
  * @package doc
  * @subpackage fckeditor
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
- * On commence par tester si une instance du module DOC est présente.
+ * On commence par tester si une instance du module DOC est prÃ©sente.
  */
 
 $arrModules = ploopi\module::getid('doc', false);
