@@ -16,12 +16,12 @@ CREATE TABLE `ploopi_annotation` (
   `id_element` char(32) NOT NULL DEFAULT '0',
   `id_module` int(10) UNSIGNED DEFAULT '0',
   `id_module_type` int(10) DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE `ploopi_annotation_tag` (
   `id_annotation` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `id_tag` int(10) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE `ploopi_captcha` (
   `id` varchar(255) NOT NULL,
@@ -29,13 +29,13 @@ CREATE TABLE `ploopi_captcha` (
   `codesound` varchar(20) NOT NULL,
   `code` varchar(20) NOT NULL,
   `time` int(20) UNSIGNED NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE `ploopi_confirmation_code` (
   `action` varchar(255) NOT NULL,
   `timestp` bigint(14) UNSIGNED NOT NULL DEFAULT '0',
   `code` varchar(32) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE `ploopi_connecteduser` (
   `sid` char(32) NOT NULL DEFAULT '0',
@@ -45,12 +45,12 @@ CREATE TABLE `ploopi_connecteduser` (
   `workspace_id` int(10) DEFAULT NULL,
   `module_id` int(10) UNSIGNED DEFAULT '0',
   `timestp` bigint(14) DEFAULT '0'
-) ENGINE=MEMORY DEFAULT CHARSET=latin1;
+) ENGINE=MEMORY DEFAULT CHARSET=utf8;
 
 CREATE TABLE `ploopi_documents_ext` (
   `ext` varchar(10) NOT NULL DEFAULT '',
   `filetype` varchar(16) DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 INSERT INTO `ploopi_documents_ext` (`ext`, `filetype`) VALUES
 ('odt', 'document'),
@@ -101,7 +101,7 @@ CREATE TABLE `ploopi_documents_file` (
   `id_module` int(10) UNSIGNED DEFAULT '0',
   `id_record` varchar(255) NOT NULL,
   `id_object` int(10) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE `ploopi_documents_folder` (
   `id` int(10) UNSIGNED NOT NULL,
@@ -120,7 +120,7 @@ CREATE TABLE `ploopi_documents_folder` (
   `id_module` int(10) UNSIGNED DEFAULT '0',
   `id_record` varchar(255) NOT NULL,
   `id_object` int(10) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE `ploopi_group` (
   `id` int(10) UNSIGNED NOT NULL,
@@ -132,7 +132,7 @@ CREATE TABLE `ploopi_group` (
   `depth` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `id_workspace` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `shared` tinyint(1) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 INSERT INTO `ploopi_group` (`id`, `id_group`, `label`, `system`, `protected`, `parents`, `depth`, `id_workspace`, `shared`) VALUES
 (1, 0, 'system', 1, 1, '0', 1, 0, 0),
@@ -141,7 +141,7 @@ INSERT INTO `ploopi_group` (`id`, `id_group`, `label`, `system`, `protected`, `p
 CREATE TABLE `ploopi_group_user` (
   `id_user` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `id_group` int(10) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 INSERT INTO `ploopi_group_user` (`id_user`, `id_group`) VALUES
 (2, 3);
@@ -157,7 +157,7 @@ CREATE TABLE `ploopi_index_element` (
   `id_user` smallint(5) UNSIGNED NOT NULL DEFAULT '0',
   `id_workspace` smallint(5) UNSIGNED NOT NULL DEFAULT '0',
   `id_module` smallint(5) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE `ploopi_index_keyword_element` (
   `id_element` int(10) UNSIGNED NOT NULL,
@@ -165,7 +165,7 @@ CREATE TABLE `ploopi_index_keyword_element` (
   `weight` mediumint(10) UNSIGNED NOT NULL DEFAULT '0',
   `ratio` float UNSIGNED NOT NULL DEFAULT '0',
   `relevance` tinyint(3) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 PACK_KEYS=1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 PACK_KEYS=1;
 
 CREATE TABLE `ploopi_index_phonetic_element` (
   `id_element` int(10) UNSIGNED NOT NULL,
@@ -173,7 +173,7 @@ CREATE TABLE `ploopi_index_phonetic_element` (
   `weight` mediumint(10) UNSIGNED NOT NULL DEFAULT '0',
   `ratio` float UNSIGNED NOT NULL DEFAULT '0',
   `relevance` tinyint(3) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 PACK_KEYS=1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 PACK_KEYS=1;
 
 CREATE TABLE `ploopi_index_stem_element` (
   `id_element` int(10) UNSIGNED NOT NULL,
@@ -181,7 +181,7 @@ CREATE TABLE `ploopi_index_stem_element` (
   `weight` mediumint(10) UNSIGNED NOT NULL DEFAULT '0',
   `ratio` float UNSIGNED NOT NULL DEFAULT '0',
   `relevance` tinyint(3) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 PACK_KEYS=1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 PACK_KEYS=1;
 
 CREATE TABLE `ploopi_log` (
   `id` int(10) UNSIGNED NOT NULL,
@@ -205,7 +205,7 @@ CREATE TABLE `ploopi_log` (
   `php_percent_time` int(10) UNSIGNED DEFAULT '0',
   `numqueries` int(10) UNSIGNED DEFAULT '0',
   `page_size` int(10) UNSIGNED DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE `ploopi_mb_action` (
   `id_module_type` int(10) UNSIGNED NOT NULL DEFAULT '0',
@@ -215,43 +215,43 @@ CREATE TABLE `ploopi_mb_action` (
   `id_workspace` int(10) DEFAULT NULL,
   `id_object` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `role_enabled` tinyint(1) UNSIGNED NOT NULL DEFAULT '1'
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 INSERT INTO `ploopi_mb_action` (`id_module_type`, `id_action`, `label`, `description`, `id_workspace`, `id_object`, `role_enabled`) VALUES
 (1, 1, 'Installer un Module', NULL, 0, 0, 1),
-(1, 2, 'Désinstaller un Module', NULL, 0, 0, 1),
-(1, 3, 'Modifier les Paramètres d\'un Module', NULL, 0, 0, 1),
+(1, 2, 'DÃ©sinstaller un Module', NULL, 0, 0, 1),
+(1, 3, 'Modifier les ParamÃ¨tres d\'un Module', NULL, 0, 0, 1),
 (1, 4, 'Instancier / Utiliser un Module', NULL, 0, 0, 1),
-(1, 5, 'Modifier les Propriétés d\'un Module', NULL, 0, 0, 1),
+(1, 5, 'Modifier les PropriÃ©tÃ©s d\'un Module', NULL, 0, 0, 1),
 (1, 6, 'Modifier la Page d\'Accueil', NULL, 0, 0, 1),
 (1, 7, 'Installer un Skin', NULL, 0, 0, 1),
-(1, 8, 'Désinstaller un Skin', NULL, 0, 0, 1),
-(1, 9, 'Créer un Groupe', NULL, 0, 0, 1),
+(1, 8, 'DÃ©sinstaller un Skin', NULL, 0, 0, 1),
+(1, 9, 'CrÃ©er un Groupe', NULL, 0, 0, 1),
 (1, 10, 'Modifier un Groupe', NULL, 0, 0, 1),
 (1, 11, 'Supprimer un Groupe', NULL, 0, 0, 1),
 (1, 12, 'Cloner un Groupe', NULL, 0, 0, 1),
-(1, 13, 'Créer un Rôle', NULL, 0, 0, 1),
-(1, 14, 'Modifier un Rôle', NULL, 0, 0, 1),
-(1, 15, 'Supprimer un Rôle', NULL, 0, 0, 1),
-(1, 16, 'Créer un Profil', NULL, 0, 0, 1),
+(1, 13, 'CrÃ©er un RÃ´le', NULL, 0, 0, 1),
+(1, 14, 'Modifier un RÃ´le', NULL, 0, 0, 1),
+(1, 15, 'Supprimer un RÃ´le', NULL, 0, 0, 1),
+(1, 16, 'CrÃ©er un Profil', NULL, 0, 0, 1),
 (1, 17, 'Modifier un Profil', NULL, 0, 0, 1),
 (1, 18, 'Supprimer un Profil', NULL, 0, 0, 1),
 (1, 19, 'Ajouter un Utilisateur', NULL, 0, 0, 1),
 (1, 20, 'Modifier un Utilisateur', NULL, 0, 0, 1),
 (1, 21, 'Supprimer un Utilisateur', NULL, 0, 0, 1),
-(1, 22, 'Détacher un Module', NULL, 0, 0, 1),
+(1, 22, 'DÃ©tacher un Module', NULL, 0, 0, 1),
 (1, 23, 'Supprimer un Module', NULL, 0, 0, 1),
-(1, 24, 'Mettre à jour la Métabase', NULL, 0, 0, 1),
+(1, 24, 'Mettre Ã  jour la MÃ©tabase', NULL, 0, 0, 1),
 (1, 25, 'Connexion Utilisateur', NULL, 0, 0, 1),
 (1, 26, 'Erreur de Connexion', NULL, 0, 0, 1),
-(1, 27, 'Déplacer un Utilisateur', NULL, 0, 0, 1),
+(1, 27, 'DÃ©placer un Utilisateur', NULL, 0, 0, 1),
 (1, 28, 'Attacher un Utilisateur', NULL, 0, 0, 1),
-(1, 29, 'Détacher un Utilisateur', NULL, 0, 0, 1),
-(1, 32, 'Mettre à jour un module', NULL, 0, 0, 1),
-(1, 39, 'Créer un Espace de Travail', NULL, 0, 0, 1),
+(1, 29, 'DÃ©tacher un Utilisateur', NULL, 0, 0, 1),
+(1, 32, 'Mettre Ã  jour un module', NULL, 0, 0, 1),
+(1, 39, 'CrÃ©er un Espace de Travail', NULL, 0, 0, 1),
 (1, 40, 'Modifier un Espace de Travail', NULL, 0, 0, 1),
 (1, 41, 'Supprimer un Espace de Travail', NULL, 0, 0, 1),
-(1, 42, 'Clôner un Espace de Travail', NULL, 0, 0, 1);
+(1, 42, 'ClÃ´ner un Espace de Travail', NULL, 0, 0, 1);
 
 CREATE TABLE `ploopi_mb_field` (
   `tablename` varchar(100) NOT NULL DEFAULT '',
@@ -260,7 +260,7 @@ CREATE TABLE `ploopi_mb_field` (
   `type` varchar(50) DEFAULT NULL,
   `visible` tinyint(1) UNSIGNED DEFAULT NULL,
   `id_module_type` int(10) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 INSERT INTO `ploopi_mb_field` (`tablename`, `name`, `label`, `type`, `visible`, `id_module_type`) VALUES
 ('ploopi_group', 'shared', 'shared', 'tinyint(1) unsigned', 1, 1),
@@ -340,7 +340,7 @@ CREATE TABLE `ploopi_mb_object` (
   `label` varchar(255) DEFAULT NULL,
   `script` varchar(255) DEFAULT NULL,
   `id_module_type` int(10) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 INSERT INTO `ploopi_mb_object` (`id`, `label`, `script`, `id_module_type`) VALUES
 (2, 'Groupe d\'Utilisateur', 'ploopi_workspaceid=<IDWORKSPACE>&ploopi_moduleid=1&ploopi_action=admin&system_level=org&groupid=<IDRECORD>', 1),
@@ -352,7 +352,7 @@ CREATE TABLE `ploopi_mb_relation` (
   `tabledest` varchar(100) DEFAULT NULL,
   `fielddest` varchar(100) DEFAULT NULL,
   `id_module_type` int(10) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 INSERT INTO `ploopi_mb_relation` (`tablesrc`, `fieldsrc`, `tabledest`, `fielddest`, `id_module_type`) VALUES
 ('ploopi_group', 'id_workspace', 'ploopi_workspace', 'id', 1),
@@ -364,7 +364,7 @@ CREATE TABLE `ploopi_mb_schema` (
   `tablesrc` varchar(100) NOT NULL DEFAULT '',
   `tabledest` varchar(100) NOT NULL DEFAULT '',
   `id_module_type` int(10) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 INSERT INTO `ploopi_mb_schema` (`tablesrc`, `tabledest`, `id_module_type`) VALUES
 ('ploopi_group', 'ploopi_workspace', 1),
@@ -377,7 +377,7 @@ CREATE TABLE `ploopi_mb_table` (
   `label` varchar(255) DEFAULT NULL,
   `visible` tinyint(1) UNSIGNED DEFAULT '1',
   `id_module_type` int(10) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 INSERT INTO `ploopi_mb_table` (`name`, `label`, `visible`, `id_module_type`) VALUES
 ('ploopi_group', 'group', 1, 1),
@@ -393,7 +393,7 @@ CREATE TABLE `ploopi_mb_wce_object` (
   `select_id` varchar(64) DEFAULT NULL,
   `select_label` varchar(64) DEFAULT NULL,
   `select_table` varchar(64) DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 INSERT INTO `ploopi_mb_wce_object` (`id`, `label`, `id_module_type`, `script`, `select_id`, `select_label`, `select_table`) VALUES
 (1, 'Affichage Trombinscope', 1, '?object=\'display\'', NULL, NULL, NULL);
@@ -403,7 +403,7 @@ CREATE TABLE `ploopi_mimetype` (
   `mimetype` varchar(255) NOT NULL,
   `filetype` varchar(50) NOT NULL,
   `group` varchar(30) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 INSERT INTO `ploopi_mimetype` (`ext`, `mimetype`, `filetype`, `group`) VALUES
 ('txt', 'text/plain', 'text', 'text'),
@@ -806,10 +806,10 @@ CREATE TABLE `ploopi_module` (
   `viewmode` int(10) UNSIGNED DEFAULT '1',
   `transverseview` tinyint(1) UNSIGNED DEFAULT '0',
   `autoconnect` tinyint(1) UNSIGNED DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 INSERT INTO `ploopi_module` (`id`, `label`, `id_module_type`, `id_workspace`, `active`, `visible`, `public`, `shared`, `herited`, `adminrestricted`, `viewmode`, `transverseview`, `autoconnect`) VALUES
-(1, 'Système', 1, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0),
+(1, 'SystÃ¨me', 1, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0),
 (-1, 'Recherche', 1, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0);
 
 CREATE TABLE `ploopi_module_type` (
@@ -821,24 +821,24 @@ CREATE TABLE `ploopi_module_type` (
   `version` varchar(32) DEFAULT NULL,
   `author` varchar(255) DEFAULT NULL,
   `date` varchar(14) NOT NULL DEFAULT ''
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 INSERT INTO `ploopi_module_type` (`id`, `label`, `system`, `publicparam`, `description`, `version`, `author`, `date`) VALUES
-(1, 'system', 1, 0, 'Noyau du système', '1.9.7.0', 'Ovensia', '20160602000000');
+(1, 'system', 1, 0, 'Noyau du systÃ¨me', '1.9.7.1', 'Ovensia', '20181213000000');
 
 CREATE TABLE `ploopi_module_workspace` (
   `id_module` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `id_workspace` int(10) NOT NULL DEFAULT '0',
   `position` tinyint(2) NOT NULL DEFAULT '0',
   `blockposition` char(10) NOT NULL DEFAULT 'left'
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE `ploopi_param_choice` (
   `id_module_type` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `name` varchar(64) NOT NULL DEFAULT '',
   `value` varchar(255) NOT NULL DEFAULT '',
   `displayed_value` varchar(100) DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 INSERT INTO `ploopi_param_choice` (`id_module_type`, `name`, `value`, `displayed_value`) VALUES
 (1, 'system_generate_htpasswd', '0', 'non'),
@@ -869,7 +869,7 @@ CREATE TABLE `ploopi_param_default` (
   `name` varchar(64) NOT NULL DEFAULT '',
   `value` text NOT NULL,
   `id_module_type` int(10) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 INSERT INTO `ploopi_param_default` (`id_module`, `name`, `value`, `id_module_type`) VALUES
 (1, 'system_generate_htpasswd', '0', 1),
@@ -897,26 +897,26 @@ CREATE TABLE `ploopi_param_type` (
   `public` tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
   `description` longtext,
   `label` varchar(100) DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 INSERT INTO `ploopi_param_type` (`id_module_type`, `name`, `default_value`, `public`, `description`, `label`) VALUES
-(1, 'system_generate_htpasswd', '1', 0, '', 'Générer un fichier htpasswd'),
-(1, 'system_language', '', 1, '', 'Langue du système'),
+(1, 'system_generate_htpasswd', '1', 0, '', 'GÃ©nÃ©rer un fichier htpasswd'),
+(1, 'system_language', '', 1, '', 'Langue du systÃ¨me'),
 (1, 'system_jodwebservice', '', 0, '', 'URL du webservice JODConverter'),
 (1, 'system_focus_popup', '0', 0, '', 'Activer le Focus sur les Popups'),
 (1, 'system_search_displaymodule', '0', 0, '', 'Afficher la colonne "Module" dans la recherche'),
-(1, 'system_search_displayindexed', '0', 0, '', 'Afficher la colonne "Indexé le" dans la recherche'),
+(1, 'system_search_displayindexed', '0', 0, '', 'Afficher la colonne "IndexÃ© le" dans la recherche'),
 (1, 'system_search_displayworkspace', '0', 0, '', 'Afficher la colonne "Espace" dans la recherche'),
 (1, 'system_search_displayuser', '0', 0, '', 'Afficher la colonne "Utilisateur" dans la recherche'),
-(1, 'system_search_displaydatetime', '0', 0, '', 'Afficher la colonne "Ajouté le" dans la recherche'),
+(1, 'system_search_displaydatetime', '0', 0, '', 'Afficher la colonne "AjoutÃ© le" dans la recherche'),
 (1, 'system_search_displayobjecttype', '0', 0, '', 'Afficher la colonne "Type d\'Objet" dans la recherche'),
 (1, 'system_submenu_display', '1', 0, NULL, 'Afficher les sous-menus de (Mon Espace)'),
 (1, 'system_unoconv', '', 0, '', 'Chemin vers UNOCONV'),
 (1, 'system_user_required_fields', 'email,phone,service,function,city', 0, NULL, 'Champs requis dans le profil utilisateur'),
 (1, 'system_password_force_update', '0', 0, NULL, 'Forcer le changement de mot de passe lors de la prochaine connexion'),
-(1, 'system_password_validity', '0', 0, NULL, 'Durée de validité du mot de passe en jours'),
+(1, 'system_password_validity', '0', 0, NULL, 'DurÃ©e de validitÃ© du mot de passe en jours'),
 (1, 'system_profile_edit_allowed', '1', 0, NULL, 'L\'utilisateur peut modifier son profil'),
-(1, 'system_trombi_maxlines', '25', 0, NULL, 'Nombre de réponses maxi dans la recherche (sinon index alphabétique)');
+(1, 'system_trombi_maxlines', '25', 0, NULL, 'Nombre de rÃ©ponses maxi dans la recherche (sinon index alphabÃ©tique)');
 
 CREATE TABLE `ploopi_param_user` (
   `id_module` int(10) UNSIGNED NOT NULL DEFAULT '0',
@@ -924,7 +924,7 @@ CREATE TABLE `ploopi_param_user` (
   `id_user` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `value` text NOT NULL,
   `id_module_type` int(10) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE `ploopi_param_workspace` (
   `id_module` int(10) NOT NULL DEFAULT '0',
@@ -932,7 +932,7 @@ CREATE TABLE `ploopi_param_workspace` (
   `id_workspace` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `value` text NOT NULL,
   `id_module_type` int(10) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE `ploopi_role` (
   `id` int(10) UNSIGNED NOT NULL,
@@ -942,25 +942,25 @@ CREATE TABLE `ploopi_role` (
   `description` varchar(255) DEFAULT NULL,
   `def` tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
   `shared` tinyint(1) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE `ploopi_role_action` (
   `id_role` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `id_action` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `id_module_type` int(10) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE `ploopi_serializedvar` (
   `id` char(32) NOT NULL,
   `id_session` char(32) NOT NULL,
   `data` longblob
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE `ploopi_session` (
   `id` char(32) NOT NULL,
   `access` int(10) UNSIGNED DEFAULT NULL,
   `data` longblob
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE `ploopi_share` (
   `id` int(10) UNSIGNED NOT NULL,
@@ -970,7 +970,7 @@ CREATE TABLE `ploopi_share` (
   `type_share` varchar(16) DEFAULT '0',
   `id_share` int(10) UNSIGNED DEFAULT '0',
   `id_module_type` int(10) DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE `ploopi_subscription` (
   `id` char(32) NOT NULL,
@@ -979,19 +979,19 @@ CREATE TABLE `ploopi_subscription` (
   `id_record` varchar(255) NOT NULL,
   `id_user` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `allactions` tinyint(1) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE `ploopi_subscription_action` (
   `id_subscription` char(32) NOT NULL,
   `id_action` int(10) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE `ploopi_tag` (
   `id` int(10) UNSIGNED NOT NULL,
   `tag` char(32) NOT NULL,
   `tag_clean` char(32) NOT NULL,
   `id_user` int(10) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE `ploopi_ticket` (
   `id` int(10) UNSIGNED NOT NULL,
@@ -1015,26 +1015,26 @@ CREATE TABLE `ploopi_ticket` (
   `root_id` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `deleted` tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
   `id_module_type` int(10) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE `ploopi_ticket_dest` (
   `id_user` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `id_ticket` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `deleted` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE `ploopi_ticket_status` (
   `id_ticket` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `id_user` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `status` tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
   `timestp` bigint(14) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE `ploopi_ticket_watch` (
   `id_ticket` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `id_user` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `notify` tinyint(1) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE `ploopi_user` (
   `id` int(10) UNSIGNED NOT NULL,
@@ -1074,7 +1074,7 @@ CREATE TABLE `ploopi_user` (
   `failed_attemps` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `jailed_since` bigint(14) UNSIGNED NOT NULL DEFAULT '0',
   `last_connection` bigint(14) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 INSERT INTO `ploopi_user` (`id`, `lastname`, `firstname`, `login`, `password`, `date_creation`, `date_expire`, `email`, `phone`, `fax`, `comments`, `address`, `mobile`, `entity`, `service`, `service2`, `function`, `number`, `postalcode`, `city`, `country`, `ticketsbyemail`, `servertimezone`, `color`, `timezone`, `building`, `floor`, `office`, `civility`, `rank`, `password_force_update`, `password_validity`, `password_last_update`, `disabled`, `failed_attemps`, `jailed_since`, `last_connection`) VALUES
 (2, 'Administrateur', '', 'admin', 'feee4f3ca6345d6562972e7c3a9dad9b', 20150608225254, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, 1, '', '0', '', '', '', '', '', 0, 0, 20150608225254, 0, 0, 0, 0);
@@ -1093,7 +1093,7 @@ CREATE TABLE `ploopi_user_action_log` (
   `action` char(100) NOT NULL,
   `module_type` char(100) NOT NULL,
   `module` char(100) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE `ploopi_validation` (
   `id` int(10) UNSIGNED NOT NULL,
@@ -1103,7 +1103,7 @@ CREATE TABLE `ploopi_validation` (
   `type_validation` varchar(16) DEFAULT '0',
   `id_validation` int(10) UNSIGNED DEFAULT '0',
   `id_module_type` int(10) DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE `ploopi_workspace` (
   `id` int(10) UNSIGNED NOT NULL,
@@ -1129,7 +1129,7 @@ CREATE TABLE `ploopi_workspace` (
   `meta_robots` varchar(255) NOT NULL DEFAULT 'index, follow, all',
   `frontoffice_domainlist` longtext,
   `priority` int(10) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 INSERT INTO `ploopi_workspace` (`id`, `id_workspace`, `label`, `code`, `system`, `protected`, `parents`, `iprules`, `macrules`, `template`, `depth`, `mustdefinerule`, `backoffice`, `frontoffice`, `backoffice_domainlist`, `title`, `meta_description`, `meta_keywords`, `meta_author`, `meta_copyright`, `meta_robots`, `frontoffice_domainlist`, `priority`) VALUES
 (2, 1, 'Espace Principal', '', 0, 0, '0;1', '', '', 'eyeos', 2, 0, 1, 0, '*\r\n', '', '', '', '', '', '', '*', 1),
@@ -1139,20 +1139,20 @@ CREATE TABLE `ploopi_workspace_group` (
   `id_group` int(10) NOT NULL DEFAULT '0',
   `id_workspace` int(10) NOT NULL DEFAULT '0',
   `adminlevel` tinyint(3) UNSIGNED DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE `ploopi_workspace_group_role` (
   `id_group` int(10) NOT NULL DEFAULT '0',
   `id_workspace` int(10) NOT NULL DEFAULT '0',
   `id_role` int(10) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE `ploopi_workspace_user` (
   `id_user` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `id_workspace` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `id_profile` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `adminlevel` tinyint(3) UNSIGNED DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 INSERT INTO `ploopi_workspace_user` (`id_user`, `id_workspace`, `id_profile`, `adminlevel`) VALUES
 (2, 2, 1, 99);
@@ -1161,7 +1161,7 @@ CREATE TABLE `ploopi_workspace_user_role` (
   `id_user` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `id_workspace` int(10) NOT NULL DEFAULT '0',
   `id_role` int(10) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 
 ALTER TABLE `ploopi_annotation`
