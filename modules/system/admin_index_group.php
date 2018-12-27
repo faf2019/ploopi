@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -28,7 +28,7 @@
  * @subpackage admin
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
@@ -45,7 +45,7 @@ echo ploopi\skin::get()->open_simplebloc();
             $sizeof_groups = (!empty($groups['tree'][$groupid])) ? sizeof($groups['tree'][$groupid]) : 0;
             ?>
             <div style="padding:4px;">
-                Ce groupe est composé de
+                Ce groupe est composÃ© de
                 <br /><strong><?php echo $sizeof_groups; ?> groupe(s)</strong>
                 <br /><strong><?php echo $sizeof_users; ?> utilisateur(s)</strong>
             </div>

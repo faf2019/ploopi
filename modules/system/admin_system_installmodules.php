@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,13 +21,13 @@
 */
 
 /**
- * Installation/Mise à jour/Désinstallation des modules
+ * Installation/Mise Ã  jour/DÃ©sinstallation des modules
  *
  * @package system
  * @subpackage system
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
@@ -114,7 +114,7 @@ while ($fields = ploopi\db::get()->fetchrow($result))
     if (ploopi\db::get()->numrows()) $has_actions = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/check_on.png\" align=\"middle\">";
     else $has_actions = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/check_off.png\" align=\"middle\">";
 
-    // Recherche de métabase pour ce module
+    // Recherche de mÃ©tabase pour ce module
     $select = "SELECT * FROM ploopi_mb_table WHERE id_module_type = {$fields['id']}";
     ploopi\db::get()->query($select);
     if (ploopi\db::get()->numrows()) $has_mb = "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/check_on.png\" align=\"middle\">";
@@ -131,16 +131,16 @@ while ($fields = ploopi\db::get()->fetchrow($result))
     $values[$c]['values']['desc'] = array('label' => ploopi\str::htmlentities($fields['description']));
     $values[$c]['values']['mtype'] = array('label' => ploopi\str::htmlentities($fields['label']));
     $values[$c]['values']['author'] = array('label' => ploopi\str::htmlentities($fields['author']));
-    $values[$c]['values']['version'] = array('label' => "<a title=\""._PLOOPI_UPDATE."\" href=\"javascript:ploopi_confirmlink('".ploopi\crypt::urlencode("admin.php?ploopi_op=updatedesc&moduletype={$fields['label']}&idmoduletype={$fields['id']}")."','"._SYSTEM_MSG_CONFIRMDESCUPDATE."')\">{$fields['version']}</a>");
+    $values[$c]['values']['version'] = array('label' => "<a title=\""._PLOOPI_UPDATE."\" href=\"javascript:ploopi.confirmlink('".ploopi\crypt::urlencode("admin.php?ploopi_op=updatedesc&moduletype={$fields['label']}&idmoduletype={$fields['id']}")."','"._SYSTEM_MSG_CONFIRMDESCUPDATE."')\">{$fields['version']}</a>");
     $values[$c]['values']['date'] = array('label' => $ldate['date'], 'sort_label' => $fields['date']);
     $values[$c]['values']['actions'] = array('label' => $has_actions, 'style' => 'text-align:center');
-    $values[$c]['values']['metabase'] = array('label' => "<a title=\""._PLOOPI_UPDATE."\" href=\"javascript:ploopi_confirmlink('".ploopi\crypt::urlencode("admin-light.php?ploopi_op=updatemb&moduletype={$fields['label']}&idmoduletype={$fields['id']}")."','"._SYSTEM_MSG_CONFIRMMBUPDATE."')\">{$has_mb}</a>", 'style' => 'text-align:center');
+    $values[$c]['values']['metabase'] = array('label' => "<a title=\""._PLOOPI_UPDATE."\" href=\"javascript:ploopi.confirmlink('".ploopi\crypt::urlencode("admin-light.php?ploopi_op=updatemb&moduletype={$fields['label']}&idmoduletype={$fields['id']}")."','"._SYSTEM_MSG_CONFIRMMBUPDATE."')\">{$has_mb}</a>", 'style' => 'text-align:center');
     $values[$c]['values']['wce'] = array('label' => $has_cmsop, 'style' => 'text-align:center');
 
     if ($fields['id'] == _PLOOPI_MODULE_SYSTEM) // module system
         $values[$c]['values']['action'] = array('label' => '&nbsp;');
     else
-        $values[$c]['values']['action'] = array('label' => "<a href=\"javascript:ploopi_confirmlink('".ploopi\crypt::urlencode("admin.php?op=uninstall&uninstallidmoduletype={$fields['id']}")."','"._SYSTEM_MSG_CONFIRMMODULEUNINSTAL."')\">"._SYSTEM_LABEL_UNINSTALL."</a>", 'style' => 'text-align:center;');
+        $values[$c]['values']['action'] = array('label' => "<a href=\"javascript:ploopi.confirmlink('".ploopi\crypt::urlencode("admin.php?op=uninstall&uninstallidmoduletype={$fields['id']}")."','"._SYSTEM_MSG_CONFIRMMODULEUNINSTAL."')\">"._SYSTEM_LABEL_UNINSTALL."</a>", 'style' => 'text-align:center;');
 
     $values[$c]['description'] = ploopi\str::htmlentities($fields['description']);
     $values[$c]['style'] = ($fields['id'] == _PLOOPI_MODULE_SYSTEM) ? 'background-color:#f0e0e0;' : '';
@@ -171,7 +171,7 @@ foreach($tabmoduletype_install as $label => $fields)
 {
     if (isset($tabmoduletype_installed[$label])) // new ploopi\module version if already defined in installed module and greater version
     {
-        // Correction version (temporaire en attente de nouvelle déclaration)
+        // Correction version (temporaire en attente de nouvelle dÃ©claration)
         $v_install = explode('.', preg_replace('@([0-9]+)([a-zA-Z]+)@','$1.$2', $tabmoduletype_install[$label]['version']));
         $v_installed = explode('.', preg_replace('@([0-9]+)([a-zA-Z]+)@','$1.$2', $tabmoduletype_installed[$label]['version']));
 

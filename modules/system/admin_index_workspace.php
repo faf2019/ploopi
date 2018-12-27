@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -28,7 +28,7 @@
  * @subpackage admin
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
@@ -46,7 +46,7 @@ echo ploopi\skin::get()->open_simplebloc();
             $nbworkspaces = (!empty($workspaces['tree'][$workspaceid])) ? sizeof($workspaces['tree'][$workspaceid]) : 0;
             ?>
             <div style="padding:4px;">
-                Cet espace est composé de
+                Cet espace est composÃ© de
                 <br /><strong><?php echo $nbworkspaces; ?> espace(s)</strong>
                 <br /><strong><?php echo $nbgroups; ?> groupe(s)</strong>
                 <br /><strong><?php echo $nbusers; ?> utilisateur(s)</strong>
@@ -277,7 +277,7 @@ echo ploopi\skin::get()->open_simplebloc();
                     ?>
                     <div class="system_wce_warning">
                         <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/attention.png" style="display:block;float:left;margin:0 4px 4px 0;">
-                        Attention, pour pouvoir activer l'accès Frontoffice, vous devez créer une instance du module <strong>WebEdit</strong>
+                        Attention, pour pouvoir activer l'accÃ¨s Frontoffice, vous devez crÃ©er une instance du module <strong>WebEdit</strong>
                     </div>
                     <?php
                 }
@@ -315,7 +315,7 @@ echo ploopi\skin::get()->open_simplebloc();
                 ?>
             </p>
             <p>
-                <label>Mots Clés:</label>
+                <label>Mots ClÃ©s:</label>
                 <?php
                 if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPADMIN)
                 {

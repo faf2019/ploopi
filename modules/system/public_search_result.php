@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,17 +21,17 @@
 */
 
 /**
- * Interface de résultat du moteur de recherche intégrale
+ * Interface de rÃ©sultat du moteur de recherche intÃ©grale
  *
  * @package system
  * @subpackage public
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
- * Récupération des paramètres de recherche
+ * RÃ©cupÃ©ration des paramÃ¨tres de recherche
  */
 
 if (isset($_REQUEST['system_search_keywords']))     $_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords'] = $_REQUEST['system_search_keywords'];
@@ -54,11 +54,11 @@ if (!empty($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords']))
 {
     /* Mini Algo
      *
-     * 1. On extrait les racines (stem) et mots clés (keyword) de la requête de recherche
-     * 2. On effectue deux recherches. Une sur les racines, l'autre sur les mots clés.
-     * 3. On traite les résultats de recherche en indiquant pour chaque élément de réponse la pertinence (relevance) totale, le nombre de liens (mot clé  ou stem / élément)
-     * 4. On calcule ensuite le ratio mots clés trouvés / mots clés cherchés
-     * 5. On calcule ensuite la pertinence moyenne avec cette formule : ((pertinence totale)/(mots clés trouvés))*(ratio mots clés trouvés)
+     * 1. On extrait les racines (stem) et mots clÃ©s (keyword) de la requÃªte de recherche
+     * 2. On effectue deux recherches. Une sur les racines, l'autre sur les mots clÃ©s.
+     * 3. On traite les rÃ©sultats de recherche en indiquant pour chaque Ã©lÃ©ment de rÃ©ponse la pertinence (relevance) totale, le nombre de liens (mot clÃ©  ou stem / Ã©lÃ©ment)
+     * 4. On calcule ensuite le ratio mots clÃ©s trouvÃ©s / mots clÃ©s cherchÃ©s
+     * 5. On calcule ensuite la pertinence moyenne avec cette formule : ((pertinence totale)/(mots clÃ©s trouvÃ©s))*(ratio mots clÃ©s trouvÃ©s)
      *
      * */
 
@@ -108,7 +108,7 @@ if (!empty($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords']))
     {
         ?>
         <div style="padding:4px;font-weight:bold;background-color:#f0f0f0;border-top:2px solid #c0c0c0;">
-        Saisissez un mot clé puis cliquez sur "Rechercher" ou appuyez sur "Entrée"
+        Saisissez un mot clÃ© puis cliquez sur "Rechercher" ou appuyez sur "EntrÃ©e"
         </div>
         <?php
     }
@@ -119,13 +119,13 @@ if (!empty($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords']))
         $c = 0;
 
         $columns['left']['relevance']       = array('label' => 'Pert.', 'width' => 65, 'options' => array('sort' => true));
-        $columns['auto']['label']           = array('label' => 'Libellé', 'options' => array('sort' => true));
+        $columns['auto']['label']           = array('label' => 'LibellÃ©', 'options' => array('sort' => true));
 
         if (!empty($_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_search_displayindexed']))
-            $columns['right']['timestp_lastindex']      = array('label' => 'Indexé le', 'width' => '90', 'options' => array('sort' => true));
+            $columns['right']['timestp_lastindex']      = array('label' => 'IndexÃ© le', 'width' => '90', 'options' => array('sort' => true));
 
         if (!empty($_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_search_displaydatetime']))
-            $columns['right']['timestp_create']         = array('label' => 'Ajouté le', 'width' => '140', 'options' => array('sort' => true));
+            $columns['right']['timestp_create']         = array('label' => 'AjoutÃ© le', 'width' => '140', 'options' => array('sort' => true));
 
         if (!empty($_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_search_displayuser']))
             $columns['right']['user']           = array('label' => 'Utilisateur', 'width' => '120', 'options' => array('sort' => true));
@@ -139,7 +139,7 @@ if (!empty($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords']))
         if (!empty($_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_search_displayobjecttype']))
             $columns['right']['object_type']    = array('label' => 'Type d\'Objet', 'width' => '120', 'options' => array('sort' => true));
 
-        // on parcourt le tableau des réponses
+        // on parcourt le tableau des rÃ©ponses
         foreach ($arrRelevance as $row)
         {
             if (isset($arrObjectTypes[$row['id_module']]['objects'][$row['id_object']]))
@@ -149,7 +149,7 @@ if (!empty($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords']))
                 $objUser = new ploopi\user();
                 $strUserName = ($objUser->open($row['id_user'])) ? "{$objUser->fields['firstname']} {$objUser->fields['lastname']}" : '';
 
-                // inclusion des fonctions/constantes proposées par le module
+                // inclusion des fonctions/constantes proposÃ©es par le module
                 ploopi\module::init($type, false, false, false);
 
                 // on cherche si on fonction de validation d'objet existe pour ce module

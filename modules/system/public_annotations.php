@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -27,11 +27,11 @@
  * @subpackage public
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
- * Switch entre les différentes opérations
+ * Switch entre les diffÃ©rentes opÃ©rations
  */
 
 switch($op)
@@ -73,7 +73,7 @@ switch($op)
                 {
                     $size = $minsize + $maxsize * $tag['c'] / $max_c;
                     ?>
-                    <a title="utilisé <?php echo $tag['c']; ?> fois" class="system_annotation_tag<?php if (!empty($_GET['idtag']) && $_GET['idtag'] == $idt) echo 'sel'; ?>" style="font-size: <?php echo $size; ?>px;" href="<?php echo ploopi\crypt::urlencode("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=annotation&idtag={$idt}"); ?>"><?php echo ploopi\str::htmlentities($tag['tag']); ?><span style="vertical-align: 4px; font-size: 7px"> <?php echo $tag['c']; ?></span></a>
+                    <a title="utilisÃ© <?php echo $tag['c']; ?> fois" class="system_annotation_tag<?php if (!empty($_GET['idtag']) && $_GET['idtag'] == $idt) echo 'sel'; ?>" style="font-size: <?php echo $size; ?>px;" href="<?php echo ploopi\crypt::urlencode("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=annotation&idtag={$idt}"); ?>"><?php echo ploopi\str::htmlentities($tag['tag']); ?><span style="vertical-align: 4px; font-size: 7px"> <?php echo $tag['c']; ?></span></a>
                     <?php
                 }
 
@@ -197,7 +197,7 @@ switch($op)
                             <a href="<?php echo ploopi\crypt::urlencode("admin.php?ploopi_mainmenu=1&{$object_script}"); ?>"><?php echo ploopi\str::htmlentities($annotation['object_label']); ?></a>
                         </div>
                         <div class="system_annotation_date">
-                            le <?php echo ploopi\str::htmlentities($ldate['date']); ?> à <?php echo ploopi\str::htmlentities($ldate['time']); ?>
+                            le <?php echo ploopi\str::htmlentities($ldate['date']); ?> Ã  <?php echo ploopi\str::htmlentities($ldate['time']); ?>
                         </div>
 
                         <div  class="system_annotation_content"><?php echo ploopi\str::make_links(ploopi\str::nl2br(ploopi\str::htmlentities($annotation['content']))); ?></div>

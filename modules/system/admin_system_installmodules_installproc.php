@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,13 +21,13 @@
 */
 
 /**
- * ProcÈdure d'installation d'un module
+ * Proc√©dure d'installation d'un module
  *
  * @package system
  * @subpackage system
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author StÈphane Escaich
+ * @author Ovensia
  */
 
 /**
@@ -52,7 +52,7 @@ ploopi\db::get()->query($select);
 if (ploopi\db::get()->numrows())
 {
     ?>
-    <div style="padding:4px;text-align:center;font-weight:bold;color:#a60000;">Module dÈj‡ installÈ !</div>
+    <div style="padding:4px;text-align:center;font-weight:bold;color:#a60000;">Module d√©j√† install√© !</div>
     <?php
 }
 else
@@ -80,7 +80,7 @@ else
         if (is_writable(realpath("./modules/")))
         {
             ploopi\fs::copydir($srcfiles , $destfiles);
-            $detail = 'Fichiers copiÈs';
+            $detail = 'Fichiers copi√©s';
         }
         else
         {
@@ -89,14 +89,14 @@ else
             $critical_error = true;
         }
     }
-    else $detail = 'Aucun fichier ‡ copier.';
+    else $detail = 'Aucun fichier √† copier.';
 
     $rapport[] = array('operation' => 'Copie des fichiers', 'detail' => $detail, 'res' => $testok);
 
     if (!$critical_error)
     {
         /**
-         * OPERATION 2 : Chargement des paramËtres/actions
+         * OPERATION 2 : Chargement des param√®tres/actions
          */
         $testok = true;
         $detail = '';
@@ -188,30 +188,30 @@ else
                     }
                 }
 
-                $detail = "Fichier '{$xmlfile_desc}' importÈ.";
+                $detail = "Fichier '{$xmlfile_desc}' import√©.";
             }
             else
             {
-                $detail = "Fichier '{$xmlfile_desc}' mal formÈ. VÈrifiez la structure XML du document.";
+                $detail = "Fichier '{$xmlfile_desc}' mal form√©. V√©rifiez la structure XML du document.";
                 $testok = false;
                 $critical_error = true;
             }
         }
         else
         {
-            $detail = "Fichier '{$xmlfile_desc}' non trouvÈ.";
+            $detail = "Fichier '{$xmlfile_desc}' non trouv√©.";
             $testok = false;
             $critical_error = true;
         }
 
-        $rapport[] = array('operation' => 'Chargement des paramËtres/actions', 'detail' => $detail, 'res' => $testok);
+        $rapport[] = array('operation' => 'Chargement des param√®tres/actions', 'detail' => $detail, 'res' => $testok);
 
         if (!$critical_error)
         {
             ploopi\user_action_log::record(_SYSTEM_ACTION_INSTALLMODULE, $_GET['installmoduletype']);
 
             /**
-             * OPERATION 3 : CrÈation des tables/champs
+             * OPERATION 3 : Cr√©ation des tables/champs
              */
             $testok = true;
             $detail = '';
@@ -219,14 +219,14 @@ else
             if (file_exists($sqlfile))
             {
                 ploopi\db::get()->multiplequeries(file_get_contents($sqlfile));
-                $detail = "Fichier '{$sqlfile}' importÈ";
+                $detail = "Fichier '{$sqlfile}' import√©";
             }
-            else $detail = "Fichier '{$sqlfile}' non trouvÈ";
+            else $detail = "Fichier '{$sqlfile}' non trouv√©";
 
-            $rapport[] = array('operation' => 'CrÈation des tables/champs', 'detail' => $detail, 'res' => $testok);
+            $rapport[] = array('operation' => 'Cr√©ation des tables/champs', 'detail' => $detail, 'res' => $testok);
 
             /**
-             * OPERATION 4 : Chargement des donnÈes spÈcifiques
+             * OPERATION 4 : Chargement des donn√©es sp√©cifiques
              */
             $testok = true;
             $detail = '';
@@ -236,19 +236,19 @@ else
                 $xml_parser = xmlparser_mod();
                 if (!xml_parse($xml_parser, file_get_contents($xmlfile_data)))
                 {
-                    $detail = sprintf("Erreur XML: %s ‡ la ligne %d dans '%s'\n", xml_error_string(xml_get_error_code($xml_parser)), xml_get_current_line_number($xml_parser), $xmlfile_data);
+                    $detail = sprintf("Erreur XML: %s √† la ligne %d dans '%s'\n", xml_error_string(xml_get_error_code($xml_parser)), xml_get_current_line_number($xml_parser), $xmlfile_data);
                     $testok = false;
                 }
-                else $detail = "Fichier '{$xmlfile_data}' importÈ";
+                else $detail = "Fichier '{$xmlfile_data}' import√©";
 
                 xml_parser_free($xml_parser);
             }
-            else $detail = "Fichier '{$xmlfile_data}' non trouvÈ";
+            else $detail = "Fichier '{$xmlfile_data}' non trouv√©";
 
-            $rapport[] = array('operation' => 'Chargement des donnÈes spÈcifiques', 'detail' => $detail, 'res' => $testok);
+            $rapport[] = array('operation' => 'Chargement des donn√©es sp√©cifiques', 'detail' => $detail, 'res' => $testok);
 
             /**
-             * OPERATION 5 : Chargement de la mÈtabase
+             * OPERATION 5 : Chargement de la m√©tabase
              */
             $testok = true;
             $detail = '';
@@ -258,24 +258,24 @@ else
                 $xml_parser = xmlparser_mb();
                 if (!xml_parse($xml_parser,  file_get_contents($mbfile)))
                 {
-                    $stop = sprintf("Erreur XML: %s ‡ la ligne %d dans '%s'\n", xml_error_string(xml_get_error_code($xml_parser)), xml_get_current_line_number($xml_parser), $mbfile);
+                    $stop = sprintf("Erreur XML: %s √† la ligne %d dans '%s'\n", xml_error_string(xml_get_error_code($xml_parser)), xml_get_current_line_number($xml_parser), $mbfile);
                     $testok = false;
                 }
-                else $detail = "Fichier '{$mbfile}' importÈ";
+                else $detail = "Fichier '{$mbfile}' import√©";
 
                 xml_parser_free($xml_parser);
             }
-            else $detail = "Fichier '{$mbfile}' non trouvÈ";
+            else $detail = "Fichier '{$mbfile}' non trouv√©";
 
-            $rapport[] = array('operation' => 'Chargement de la mÈtabase', 'detail' => $detail, 'res' => $testok);
+            $rapport[] = array('operation' => 'Chargement de la m√©tabase', 'detail' => $detail, 'res' => $testok);
         }
     }
 
     $columns = array();
     $values = array();
 
-    $columns['left']['operation']   = array('label' => 'OpÈration', 'width' => '250', 'options' => array('sort' => true));
-    $columns['auto']['detail']      = array('label' => 'DÈtail', 'options' => array('sort' => true));
+    $columns['left']['operation']   = array('label' => 'Op√©ration', 'width' => '250', 'options' => array('sort' => true));
+    $columns['auto']['detail']      = array('label' => 'D√©tail', 'options' => array('sort' => true));
     $columns['right']['result']     = array('label' => 'Etat', 'width' => '60', 'options' => array('sort' => true));
 
     $c = 0;

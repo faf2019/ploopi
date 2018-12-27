@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,17 +21,17 @@
 */
 
 /**
- * Procédure de désinstallation d'un module
+ * ProcÃ©dure de dÃ©sinstallation d'un module
  *
  * @package system
  * @subpackage system
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
- * On vérifie le contenu de la variable GET
+ * On vÃ©rifie le contenu de la variable GET
  */
 if (empty($_GET['uninstallidmoduletype'])) ploopi\output::redirect('admin.php');
 

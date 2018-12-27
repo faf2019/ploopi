@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,13 +21,13 @@
 */
 
 /**
- * Interface de création d'un rôle
+ * Interface de crÃ©ation d'un rÃ´le
  *
  * @package system
  * @subpackage admin
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
@@ -36,19 +36,19 @@
 echo ploopi\skin::get()->open_simplebloc();
 
 /**
- * On récupère la liste des modules de l'espace de travail courant
+ * On rÃ©cupÃ¨re la liste des modules de l'espace de travail courant
  */
 $modules = $workspace->getmodules();
 ?>
 
 <div style="padding:4px;">
-    <div style="margin-bottom:4px;">Module concerné :</div>
+    <div style="margin-bottom:4px;">Module concernÃ© :</div>
     <?php
     switch ($op)
     {
         case 'add_role':
         case 'modify_role':
-            $role = new role();
+            $role = new ploopi\role();
 
             if ($op == 'modify_role')
             {
@@ -85,9 +85,9 @@ $modules = $workspace->getmodules();
 
             <p class="ploopi_va">
                 <input type="checkbox" name="role_shared" id="role_shared" value="1" <?php if ($role->fields['shared']) echo 'checked'; ?>>
-                <span style="cursor:pointer;" onclick="javascript:$('role_shared').checked = !$('role_shared').checked;"><?php echo _SYSTEM_LABEL_SHARED; ?></span>
+                <label style="cursor:pointer;" for="role_shared"><?php echo _SYSTEM_LABEL_SHARED; ?></label>
             </p>
-            <div style="margin:4px 0;font-weight:bold;">Choix des Actions : <a href="javascript:void(0);" onclick="javascript:system_checkall('input.role_action', true);">cocher tout</a> / <a href="javascript:void(0);" onclick="javascript:system_checkall('input.role_action', false);">décocher tout</a></div>
+            <div style="margin:4px 0;font-weight:bold;">Choix des Actions : <a href="javascript:void(0);" onclick="javascript:jQuery('input.role_action').each(function(key, item) { item.checked = true; });">cocher tout</a> / <a href="javascript:void(0);" onclick="javascript:jQuery('input.role_action').each(function(key, item) { item.checked = false; });">dÃ©cocher tout</a></div>
 
             <?php
             $module_type = new ploopi\module_type();
@@ -100,7 +100,7 @@ $modules = $workspace->getmodules();
                 ?>
                 <p class="ploopi_va">
                     <input type="checkbox" class="role_action" id="role_action_<?php echo $action['id_action']; ?>" name="id_action[]" <?php echo (isset($actions_checked[$id])) ? 'checked' : ''; ?> value="<?php echo ploopi\str::htmlentities($action['id_action']); ?>">
-                    <span style="cursor:pointer;" onclick="javascript:$('role_action_<?php echo $action['id_action']; ?>').checked = !$('role_action_<?php echo $action['id_action']; ?>').checked;"><?php echo ploopi\str::htmlentities("{$action['id_action']} - {$action['label']}"); ?></span>
+                    <label style="cursor:pointer;" for="role_action_<?php echo $action['id_action']; ?>"><?php echo ploopi\str::htmlentities("{$action['id_action']} - {$action['label']}"); ?></label>
                 </p>
                 <?php
             }

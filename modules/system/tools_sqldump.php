@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,14 +21,14 @@
 */
 
 /**
- * Outil permettant de créer un dump SQL de la base de données sans passer par les outils en ligne de commande.
- * Attention, ce script n'est pas adaptés aux grosses bases de données.
+ * Outil permettant de crÃ©er un dump SQL de la base de donnÃ©es sans passer par les outils en ligne de commande.
+ * Attention, ce script n'est pas adaptÃ©s aux grosses bases de donnÃ©es.
  *
  * @package system
  * @subpackage system_tools
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
@@ -147,7 +147,7 @@ if(empty($tables)) echo $strNoTablesFound;
 else
 {
     /**
-     * Génération du fichier SQL dans le dossier data/tmp
+     * GÃ©nÃ©ration du fichier SQL dans le dossier data/tmp
      */
 
     $filepath = _PLOOPI_PATHDATA._PLOOPI_SEP.'tmp';
@@ -189,7 +189,7 @@ else
     fclose($fp);
     
     /**
-     * Génération du fichier zip
+     * GÃ©nÃ©ration du fichier zip
      */
 
     

@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -27,7 +27,7 @@
  * @subpackage admin
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
@@ -64,7 +64,7 @@ else
     <?php
     $tabs_char = array();
 
-    // Génération des onglets
+    // GÃ©nÃ©ration des onglets
     for($i=1;$i<27;$i++)
         $tabs_char[$i] =
             array(
@@ -179,7 +179,7 @@ while ($fields = ploopi\db::get()->fetchrow($result))
     $str_parents = '';
     foreach($array_parents as $parent) $str_parents .= ($str_parents == '') ? $parent['label']: " > {$parent['label']}";
 
-    $action = '<a href="javascript:ploopi_confirmlink(\''.ploopi\crypt::urlencode("admin.php?op=detach_group&orgid={$fields['id']}").'\',\''._SYSTEM_MSG_CONFIRMGROUPDETACH.'\')"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_cut.png" title="'._SYSTEM_TITLE_GROUPDETACH.'"></a>';
+    $action = '<a href="javascript:ploopi.confirmlink(\''.ploopi\crypt::urlencode("admin.php?op=detach_group&orgid={$fields['id']}").'\',\''._SYSTEM_MSG_CONFIRMGROUPDETACH.'\')"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_cut.png" title="'._SYSTEM_TITLE_GROUPDETACH.'"></a>';
 
     $values[$c]['values']['label']      = array('label' => ploopi\str::htmlentities($fields['label']));
     $values[$c]['values']['parents']    = array('label' => ploopi\str::htmlentities($str_parents));
@@ -218,7 +218,7 @@ if ($_SESSION['system']['level'] == _SYSTEM_WORKSPACES)
 {
     ?>
     <p class="ploopi_va" style="padding:4px;">
-        <span style="margin-right:5px;">Légende:</span>
+        <span style="margin-right:5px;">LÃ©gende:</span>
         <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/adminlevels/level_user.png" />
         <span style="margin-right:5px;"><?php echo ploopi\str::htmlentities($ploopi_system_levels[_PLOOPI_ID_LEVEL_USER]); ?></span>
         <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/adminlevels/level_groupmanager.png" />

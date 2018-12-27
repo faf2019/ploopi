@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -27,7 +27,7 @@
  * @subpackage admin
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author StÈphane Escaich
+ * @author Ovensia
  */
 
 /**
@@ -43,11 +43,11 @@ if (empty($_GET['user_id']) || !is_numeric($_GET['user_id']) || !$user->open($_G
 {
     $user->init_description();
     $user->fields['servertimezone'] = 1;
-    // Lecture des paramËtres "systËme"
+    // Lecture des param√®tres "syst√®me"
     $user->fields['password_force_update'] = ploopi\param::get('system_password_force_update');
     $user->fields['password_validity'] = ploopi\param::get('system_password_validity');
 
-    // RÈcuÈration des donnÈes de l'utilisateur (problËme lors de la crÈation) => pour remplir le formulaire
+    // R√©cu√©ration des donn√©es de l'utilisateur (probl√®me lors de la cr√©ation) => pour remplir le formulaire
     if (!empty($_SESSION['system']['save_user']))
     {
         foreach($user->fields as $field => $value)
@@ -77,85 +77,85 @@ $arrRequiredFields = explode(',', ploopi\param::get('system_user_required_fields
 <script type="text/javascript">
 function system_user_validate(form, isnew)
 {
-    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_LASTNAME; ?>",form.user_lastname,"string"))
-    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_FIRSTNAME; ?>",form.user_firstname,"string"))
+    if (ploopi.validatefield("<?php echo _SYSTEM_LABEL_LASTNAME; ?>",form.user_lastname,"string"))
+    if (ploopi.validatefield("<?php echo _SYSTEM_LABEL_FIRSTNAME; ?>",form.user_firstname,"string"))
     <?php if (in_array('civility', $arrRequiredFields)) { ?>
-    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_CIVILITY; ?>", form.user_civility, 'select'))
+    if (ploopi.validatefield("<?php echo _SYSTEM_LABEL_CIVILITY; ?>", form.user_civility, 'select'))
     <?php } ?>
 
     <?php if (in_array('entity', $arrRequiredFields)) { ?>
-    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_ENTITY; ?>", form.user_entity, 'string'))
+    if (ploopi.validatefield("<?php echo _SYSTEM_LABEL_ENTITY; ?>", form.user_entity, 'string'))
     <?php } ?>
     <?php if (in_array('service', $arrRequiredFields)) { ?>
-    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_SERVICE; ?>", form.user_service, 'string'))
+    if (ploopi.validatefield("<?php echo _SYSTEM_LABEL_SERVICE; ?>", form.user_service, 'string'))
     <?php } ?>
     <?php if (in_array('service2', $arrRequiredFields)) { ?>
-    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_SERVICE2; ?>", form.user_service2, 'string'))
+    if (ploopi.validatefield("<?php echo _SYSTEM_LABEL_SERVICE2; ?>", form.user_service2, 'string'))
     <?php } ?>
     <?php if (in_array('function', $arrRequiredFields)) { ?>
-    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_FUNCTION; ?>", form.user_function, 'string'))
+    if (ploopi.validatefield("<?php echo _SYSTEM_LABEL_FUNCTION; ?>", form.user_function, 'string'))
     <?php } ?>
     <?php if (in_array('rank', $arrRequiredFields)) { ?>
-    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_RANK; ?>", form.user_rank, 'string'))
+    if (ploopi.validatefield("<?php echo _SYSTEM_LABEL_RANK; ?>", form.user_rank, 'string'))
     <?php } ?>
     <?php if (in_array('number', $arrRequiredFields)) { ?>
-    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_NUMBER; ?>", form.user_number, 'string'))
+    if (ploopi.validatefield("<?php echo _SYSTEM_LABEL_NUMBER; ?>", form.user_number, 'string'))
     <?php } ?>
 
     <?php if (in_array('phone', $arrRequiredFields)) { ?>
-    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_PHONE; ?>",form.user_phone,"phone"))
+    if (ploopi.validatefield("<?php echo _SYSTEM_LABEL_PHONE; ?>",form.user_phone,"phone"))
     <?php } else { ?>
-    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_PHONE; ?>",form.user_phone,"emptyphone"))
+    if (ploopi.validatefield("<?php echo _SYSTEM_LABEL_PHONE; ?>",form.user_phone,"emptyphone"))
     <?php } ?>
     <?php if (in_array('mobile', $arrRequiredFields)) { ?>
-    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_MOBILE; ?>",form.user_mobile,"phone"))
+    if (ploopi.validatefield("<?php echo _SYSTEM_LABEL_MOBILE; ?>",form.user_mobile,"phone"))
     <?php } else { ?>
-    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_MOBILE; ?>",form.user_mobile,"emptyphone"))
+    if (ploopi.validatefield("<?php echo _SYSTEM_LABEL_MOBILE; ?>",form.user_mobile,"emptyphone"))
     <?php } ?>
     <?php if (in_array('fax', $arrRequiredFields)) { ?>
-    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_FAX; ?>",form.user_fax,"phone"))
+    if (ploopi.validatefield("<?php echo _SYSTEM_LABEL_FAX; ?>",form.user_fax,"phone"))
     <?php } else { ?>
-    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_FAX; ?>",form.user_fax,"emptyphone"))
+    if (ploopi.validatefield("<?php echo _SYSTEM_LABEL_FAX; ?>",form.user_fax,"emptyphone"))
     <?php } ?>
 
     <?php if (in_array('email', $arrRequiredFields)) { ?>
-    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_EMAIL; ?>",form.user_email,"email"))
+    if (ploopi.validatefield("<?php echo _SYSTEM_LABEL_EMAIL; ?>",form.user_email,"email"))
     <?php } else { ?>
-    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_EMAIL; ?>",form.user_email,"emptyemail"))
+    if (ploopi.validatefield("<?php echo _SYSTEM_LABEL_EMAIL; ?>",form.user_email,"emptyemail"))
     <?php } ?>
 
     <?php if (in_array('building', $arrRequiredFields)) { ?>
-    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_BUILDING; ?>", form.user_building, 'string'))
+    if (ploopi.validatefield("<?php echo _SYSTEM_LABEL_BUILDING; ?>", form.user_building, 'string'))
     <?php } ?>
     <?php if (in_array('floor', $arrRequiredFields)) { ?>
-    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_FLOOR; ?>", form.user_floor, 'string'))
+    if (ploopi.validatefield("<?php echo _SYSTEM_LABEL_FLOOR; ?>", form.user_floor, 'string'))
     <?php } ?>
     <?php if (in_array('office', $arrRequiredFields)) { ?>
-    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_OFFICE; ?>", form.user_office, 'string'))
+    if (ploopi.validatefield("<?php echo _SYSTEM_LABEL_OFFICE; ?>", form.user_office, 'string'))
     <?php } ?>
     <?php if (in_array('address', $arrRequiredFields)) { ?>
-    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_ADDRESS; ?>", form.user_address, 'string'))
+    if (ploopi.validatefield("<?php echo _SYSTEM_LABEL_ADDRESS; ?>", form.user_address, 'string'))
     <?php } ?>
     <?php if (in_array('postalcode', $arrRequiredFields)) { ?>
-    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_POSTALCODE; ?>", form.user_postalcode, 'string'))
+    if (ploopi.validatefield("<?php echo _SYSTEM_LABEL_POSTALCODE; ?>", form.user_postalcode, 'string'))
     <?php } ?>
     <?php if (in_array('city', $arrRequiredFields)) { ?>
-    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_CITY; ?>", form.user_city, 'string'))
+    if (ploopi.validatefield("<?php echo _SYSTEM_LABEL_CITY; ?>", form.user_city, 'string'))
     <?php } ?>
     <?php if (in_array('country', $arrRequiredFields)) { ?>
-    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_COUNTRY; ?>", form.user_country, 'string'))
+    if (ploopi.validatefield("<?php echo _SYSTEM_LABEL_COUNTRY; ?>", form.user_country, 'string'))
     <?php } ?>
     {
         if (isnew)
         {
-            if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_LOGIN; ?>",form.user_login,"string"))
+            if (ploopi.validatefield("<?php echo _SYSTEM_LABEL_LOGIN; ?>",form.user_login,"string"))
             if ((form.usernewpass_confirm.value != form.usernewpass.value) || form.usernewpass.value == '' || form.usernewpass_confirm.value == '') alert('<?php echo _SYSTEM_MSG_PASSWORDERROR_JS; ?>');
             else
             {
-                rep = ploopi_xmlhttprequest('admin.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=ploopi_checkpasswordvalidity&password='+encodeURIComponent(form.usernewpass.value), false, false, 'POST');
+                rep = ploopi.xhr.send('admin.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=ploopi_checkpasswordvalidity&password='+encodeURIComponent(form.usernewpass.value), false, false, 'POST');
                 if (rep == 0)
                 {
-                    alert('Le mot de passe est invalide\n\nil doit contenir au moins 8 caractËres,\nun caractËre minuscule,\nun caractËre majuscule,\nun chiffre et un caractËre de ponctuation');
+                    alert('Le mot de passe est invalide\n\nil doit contenir au moins 8 caract√®res,\nun caract√®re minuscule,\nun caract√®re majuscule,\nun chiffre et un caract√®re de ponctuation');
                 }
                 else return true;
             }
@@ -168,10 +168,10 @@ function system_user_validate(form, isnew)
                 if (form.usernewpass_confirm.value != form.usernewpass.value) alert('<?php echo _SYSTEM_MSG_PASSWORDERROR_JS; ?>');
                 else
                 {
-                    rep = ploopi_xmlhttprequest('admin.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=ploopi_checkpasswordvalidity&password='+encodeURIComponent(form.usernewpass.value), false, false, 'POST');
+                    rep = ploopi.xhr.send('admin.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=ploopi_checkpasswordvalidity&password='+encodeURIComponent(form.usernewpass.value), false, false, 'POST');
                     if (rep == 0)
                     {
-                        alert('Le mot de passe est invalide\n\nil doit contenir au moins 8 caractËres,\nun caractËre minuscule,\nun caractËre majuscule,\nun chiffre et un caractËre de ponctuation\nex:Pl00p!Rocks');
+                        alert('Le mot de passe est invalide\n\nil doit contenir au moins 8 caract√®res,\nun caract√®re minuscule,\nun caract√®re majuscule,\nun chiffre et un caract√®re de ponctuation\nex:Pl00p!Rocks');
                     }
                     else return true;
                 }
@@ -468,7 +468,7 @@ if (isset($_REQUEST['confirm']))
                             if (isset($_REQUEST['confirm']) && !empty($booLoginWarning))
                             {
                                 ?>
-                                <div class="error">Attention ! &laquo; <?php echo ploopi\str::htmlentities($user->fields['login']); ?> &raquo; existe dÈj‡. Vous devez modifier la propriÈtÈ &laquo; <?php echo _SYSTEM_LABEL_LOGIN; ?> &raquo; pour pouvoir crÈer un nouvel utilisateur.</div>
+                                <div class="error">Attention ! &laquo; <?php echo ploopi\str::htmlentities($user->fields['login']); ?> &raquo; existe d√©j√†. Vous devez modifier la propri√©t√© &laquo; <?php echo _SYSTEM_LABEL_LOGIN; ?> &raquo; pour pouvoir cr√©er un nouvel utilisateur.</div>
                                 <?php
                             }
                         }
@@ -503,18 +503,18 @@ if (isset($_REQUEST['confirm']))
                         <?php
                     }
                     ?>
-                    <div id="protopass"></div>
+                    <div id="checkpass"></div>
 
                     <p>
                         <label><?php echo _SYSTEM_LABEL_PASSWORD_CONFIRM; ?>:</label>
                         <input type="password" class="text" name="usernewpass_confirm" id="usernewpass_confirm" value="" tabindex="23" style="width:180px;" />
                     </p>
-                    <p class="checkbox" onclick="javascript:ploopi_checkbox_click(event,'user_password_force_update');">
-                        <label>Forcer le changement de mot de passe ‡ la prochaine connexion:</label>
+                    <p class="checkbox" onclick="javascript:ploopi.checkbox_click(event,'user_password_force_update');">
+                        <label>Forcer le changement de mot de passe √† la prochaine connexion:</label>
                         <input type="checkbox" id="user_password_force_update" name="user_password_force_update" value="1" <?php if ($user->fields['password_force_update']) echo 'checked="checked"'; ?> tabindex="23" />
                     </p>
                     <p>
-                        <label>DurÈe de validitÈ du mot de passe en jours <em>(0 = pas de limite)</em> :</label>
+                        <label>Dur√©e de validit√© du mot de passe en jours <em>(0 = pas de limite)</em> :</label>
                         <input type="text" class="text" style="width:60px;" name="user_password_validity" id="user_password_validity" value="<?php echo htmlentities($user->fields['password_validity']); ?>" tabindex="23" />
                     </p>
 
@@ -530,15 +530,15 @@ if (isset($_REQUEST['confirm']))
                         <input type="text" style="width:100px;" class="text" name="user_date_expire" id="user_date_expire" value="<?php echo ploopi\str::htmlentities($user_date_expire['date']); ?>" tabindex="24" />
                         <?php ploopi\date::open_calendar('user_date_expire'); ?>
                     </p>
-                    <p class="checkbox" onclick="javascript:ploopi_checkbox_click(event,'user_disabled');">
-                        <label>Compte dÈsactivÈ:</label>
+                    <p class="checkbox" onclick="javascript:ploopi.checkbox_click(event,'user_disabled');">
+                        <label>Compte d√©sactiv√©:</label>
                         <input type="checkbox" id="user_disabled" name="user_disabled" value="1" <?php if ($user->fields['disabled']) echo 'checked="checked"'; ?> tabindex="24" />
                     </p>
                     <p>
                         <label><?php echo _SYSTEM_LABEL_EMAIL; ?><?php if (in_array('email', $arrRequiredFields)) echo ' *'; ?>:</label>
                         <input type="text" class="text" name="user_email"  value="<?php echo ploopi\str::htmlentities($user->fields['email']); ?>" tabindex="25" />
                     </p>
-                    <p class="checkbox" onclick="javascript:ploopi_checkbox_click(event,'user_ticketsbyemail');">
+                    <p class="checkbox" onclick="javascript:ploopi.checkbox_click(event,'user_ticketsbyemail');">
                         <label><?php echo _SYSTEM_LABEL_TICKETSBYEMAIL; ?>:</label>
                         <input style="width:16px;" type="checkbox" id="user_ticketsbyemail" name="user_ticketsbyemail" value="1" <?php if ($user->fields['ticketsbyemail']) echo 'checked'; ?> tabindex="26" />
                     </p>
@@ -553,10 +553,10 @@ if (isset($_REQUEST['confirm']))
                     $mm = floor((abs($offset) % 3600) / 60);
                     ?>
 
-                    <p class="checkbox" onclick="javascript:ploopi_checkbox_click(event,'user_servertimezone');">
+                    <p class="checkbox" onclick="javascript:ploopi.checkbox_click(event,'user_servertimezone');">
                         <label><?php echo _SYSTEM_LABEL_SERVERTIMEZONE; ?>:</label>
                         <span>
-                            <input style="width:16px;" type="checkbox" id="user_servertimezone" name="user_servertimezone" value="1" <?php if ($user->fields['servertimezone']) echo 'checked'; ?> tabindex="27" onchange="$('user_timezone_choice').style.display = (this.checked) ? 'none' : 'block';"/>
+                            <input style="width:16px;" type="checkbox" id="user_servertimezone" name="user_servertimezone" value="1" <?php if ($user->fields['servertimezone']) echo 'checked'; ?> tabindex="27" onchange="jQuery('#user_timezone_choice')[0].style.display = (this.checked) ? 'none' : 'block';"/>
                             <?php echo "{$server_timezoneid} (". (($offset == 0) ? 'UTC' : sprintf("UTC %s%02dh%02d",$s, $hh, $mm)). ")"; ?>
                         </span>
                     </p>
@@ -624,7 +624,7 @@ if (isset($_REQUEST['confirm']))
                         $booPhotoExists = file_exists($user->getphotopath());
                         ?>
                         <a href="javascript:void(0);" onclick="javascript:system_choose_photo(event, '<?php echo $user->fields['id']; ?>');"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/btn_edit.png" /></a>
-                        <?php if ($booPhotoExists) { ?> <a href="javascript:void(0);" onclick="javascript:$('system_user_photo').innerHTML = ''; system_delete_photo('<?php echo $user->fields['id']; ?>');"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/btn_delete.png" /></a><?php } ?>
+                        <?php if ($booPhotoExists) { ?> <a href="javascript:void(0);" onclick="javascript:jQuery('#system_user_photo')[0].innerHTML = ''; system_delete_photo('<?php echo $user->fields['id']; ?>');"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/btn_delete.png" /></a><?php } ?>
                         <br /><span id="system_user_photo">
                         <?php
                         if ($booPhotoExists) { ?><img src="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=ploopi_get_userphoto&ploopi_user_id={$user->fields['id']}"); ?>" /><?php } ?>
@@ -663,7 +663,7 @@ if (isset($_REQUEST['confirm']))
                 </div>
             </fieldset>
             <fieldset class="fieldset">
-                <legend>Informations complÈmentaires</legend>
+                <legend>Informations compl√©mentaires</legend>
                 <div class="ploopi_form">
                     <p>
                         <label><?php echo _SYSTEM_LABEL_COMMENTS; ?>:</label>
@@ -675,7 +675,7 @@ if (isset($_REQUEST['confirm']))
     </div>
 </div>
 <div style="clear:both;padding:4px;text-align:right;">
-    <em><?php if ($user->isnew()) echo '<sup>(1)</sup> Champs utilisÈs pour tester la prÈsence de l\'utilisateur / '; ?>(*) Champs obligatoires</em>&nbsp;
+    <em><?php if ($user->isnew()) echo '<sup>(1)</sup> Champs utilis√©s pour tester la pr√©sence de l\'utilisateur / '; ?>(*) Champs obligatoires</em>&nbsp;
     <?php
     if (isset($_REQUEST['confirm']))
     {
@@ -698,7 +698,7 @@ if (!$user->isnew())
 {
     ?>
     <fieldset class="fieldset" style="padding:0px;margin:4px;">
-        <legend>Documents liÈs ‡ l'utilisateur</legend>
+        <legend>Documents li√©s √† l'utilisateur</legend>
         <?php
         ploopi\documents::insert(
             _SYSTEM_OBJECT_USER,
@@ -738,14 +738,15 @@ if (!$user->isnew())
 
 
 <style>
-    #protopass {padding:0;margin:0;margin-left:30%;padding-left:0.5em;width:195px;} #protopass * {font-size:10px;}
-    #protopass .password-strength-bar {border-radius:2px;}
+    #checkpass {padding:0;margin:0;margin-left:30%;padding-left:0.5em;width:195px;}
+    #checkpass * {font-size:10px;}
+    #checkpass .password-strength-bar {border-radius:2px;}
 </style>
 
 <script type="text/javascript">
-    Event.observe(window, 'load', function() {
-        $('usernewpass').value = '';
-        $('usernewpass_confirm').value = '';
+    jQuery(function() {
+        jQuery('#usernewpass')[0].value = '';
+        jQuery('#usernewpass_confirm')[0].value = '';
 
 
         <?php if (_PLOOPI_USE_COMPLEXE_PASSWORD) { ?>
@@ -760,14 +761,13 @@ if (!$user->isnew())
         };
         <?php } ?>
 
-        new Protopass('usernewpass', 'protopass', options);
+        new ploopi.checkpass('usernewpass', 'checkpass', options);
 
-        Event.observe($('usernewpass_confirm'), 'change', function() {
-
-            if ($('usernewpass').value == $('usernewpass_confirm').value) {
-                $('usernewpass_confirm').style.backgroundColor = $('usernewpass').style.backgroundColor = 'lightgreen';
+        jQuery('#usernewpass_confirm').on('change', function() {
+            if (jQuery('#usernewpass')[0].value == jQuery('#usernewpass_confirm')[0].value) {
+                jQuery('#usernewpass_confirm').get(0).style.backgroundColor = jQuery('#usernewpass').get(0).style.backgroundColor = 'lightgreen';
             } else {
-                $('usernewpass_confirm').style.backgroundColor = $('usernewpass').style.backgroundColor = 'indianred';
+                jQuery('#usernewpass_confirm').get(0).style.backgroundColor = jQuery('#usernewpass').get(0).style.backgroundColor = 'indianred';
             }
         });
 

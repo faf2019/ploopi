@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -28,7 +28,7 @@
  * @subpackage admin
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane ESCAICH
+ * @author Ovensia
  */
 
 
@@ -73,14 +73,14 @@ foreach($arrNeededFields as $strFieldName => $booFound)
 {
     if (!$booFound) 
     {
-        $arrErrors[] = "Champ '{$strFieldName}' non trouvé";
+        $arrErrors[] = "Champ '{$strFieldName}' non trouvÃ©";
         $booCriticalError = true;
     }
 }
 
 for ($intI = 1; $intI < count($_SESSION['system']['user_import']); $intI++)
 {
-    if (count($_SESSION['system']['user_import'][$intI]) != count($_SESSION['system']['user_import'][0])) $arrErrors[] = "Taille de l'enregistrement n° {$intI} invalide";
+    if (count($_SESSION['system']['user_import'][$intI]) != count($_SESSION['system']['user_import'][0])) $arrErrors[] = "Taille de l'enregistrement nÂ° {$intI} invalide";
 }
 
 if ($booCriticalError) $arrErrors[] = "Erreur critique, impossible d'importer le fichier";
@@ -107,7 +107,7 @@ else
 if (!$booCriticalError)
 {
     ?>
-    <div style="padding:2px;border-bottom:1px solid #a0a0a0;background-color:#e0e0e0;"><strong>Aperçu de l'import (<a href="<?php echo ploopi\crypt::urlencode("admin.php?usrTabItem=tabUserImport&op=import"); ?>">Confirmer l'import</a>):</strong></div>
+    <div style="padding:2px;border-bottom:1px solid #a0a0a0;background-color:#e0e0e0;"><strong>AperÃ§u de l'import (<a href="<?php echo ploopi\crypt::urlencode("admin.php?usrTabItem=tabUserImport&op=import"); ?>">Confirmer l'import</a>):</strong></div>
     <?php
     
     $columns = array();

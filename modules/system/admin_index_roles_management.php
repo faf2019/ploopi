@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,13 +21,13 @@
 */
 
 /**
- * Interface de gestion des rôles
+ * Interface de gestion des rÃ´les
  *
  * @package system
  * @subpackage admin
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
@@ -38,7 +38,7 @@ echo ploopi\skin::get()->open_simplebloc();
 
 $parents = str_replace(';',',',$workspace->fields['parents']);
 
-// on recherche les rôles des modules de l'espace sélectionné (ou hérités des espaces parents)
+// on recherche les rÃ´les des modules de l'espace sÃ©lectionnÃ© (ou hÃ©ritÃ©s des espaces parents)
 $sql =  "
         SELECT      r.id,
                     r.label,
@@ -75,8 +75,8 @@ $c = 0;
 
 $columns['auto']['desc']        = array('label' => 'Description', 'options' => array('sort' => true));
 $columns['left']['module']      = array('label' => 'Module', 'width' => '150', 'options' => array('sort' => true));
-$columns['left']['role']        = array('label' => 'Rôle', 'width' => '200', 'options' => array('sort' => true));
-$columns['right']['shared']     = array('label' => 'Partagé', 'width' => '65');
+$columns['left']['role']        = array('label' => 'RÃ´le', 'width' => '200', 'options' => array('sort' => true));
+$columns['right']['shared']     = array('label' => 'PartagÃ©', 'width' => '65');
 $columns['right']['origine']    = array('label' => 'Origine', 'width' => '150', 'options' => array('sort' => true));
 $columns['actions_right']['actions'] = array('label' => '&nbsp;', 'width' => '44');
 
@@ -86,7 +86,7 @@ while($row = ploopi\db::get()->fetchrow())
     {
         $actions =  '
                     <a href="'.ploopi\crypt::urlencode("admin.php?op=modify_role&roleid={$row['id']}").'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_edit.png" alt="'._SYSTEM_LABEL_MODIFY.'"></a>
-                    <a href="javascript:ploopi_confirmlink(\''.ploopi\crypt::urlencode("admin.php?op=delete_role&roleid={$row['id']}").'\',\''._SYSTEM_MSG_CONFIRMROLEDELETE.'\')"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_delete.png" alt="'._SYSTEM_LABEL_DELETE.'"></a>
+                    <a href="javascript:ploopi.confirmlink(\''.ploopi\crypt::urlencode("admin.php?op=delete_role&roleid={$row['id']}").'\',\''._SYSTEM_MSG_CONFIRMROLEDELETE.'\')"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_delete.png" alt="'._SYSTEM_LABEL_DELETE.'"></a>
                     ';
     }
     else $actions = '&nbsp;';

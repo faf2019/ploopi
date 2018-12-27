@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,13 +21,13 @@
 */
 
 /**
- * Gestion des interfaces d'administration "système"
+ * Gestion des interfaces d'administration "systÃ¨me"
  *
  * @package system
  * @subpackage system
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
@@ -42,8 +42,8 @@ ploopi\db::get()->query('SELECT version FROM ploopi_module_type WHERE id = 1');
 $row = ploopi\db::get()->fetchrow();
 
 /**
- * On compare la version des fichiers (_PLOOPI_VERSION) avec celle de la base de données.
- * Si les versions ne concordent pas, on propose une mise à jour du système.
+ * On compare la version des fichiers (_PLOOPI_VERSION) avec celle de la base de donnÃ©es.
+ * Si les versions ne concordent pas, on propose une mise Ã  jour du systÃ¨me.
  */
 
 if (version_compare(_PLOOPI_VERSION, $row['version']) > 0)

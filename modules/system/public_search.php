@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,17 +21,17 @@
 */
 
 /**
- * Interface de recherche du moteur de recherche intégrale
+ * Interface de recherche du moteur de recherche intÃ©grale
  *
  * @package system
  * @subpackage public
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
- * Récupération des paramètres de recherche
+ * RÃ©cupÃ©ration des paramÃ¨tres de recherche
  */
 
 if (isset($_REQUEST['system_search_keywords']))     $_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords'] = $_REQUEST['system_search_keywords'];
@@ -55,7 +55,7 @@ echo ploopi\skin::get()->open_simplebloc('Formulaire de recherche');
 ?>
 <form action="<?php echo ploopi\crypt::urlencode('admin.php?op=search_next'); ?>" onsubmit="javascript:system_search_next();return false;" method="post">
 <div class="dims_va" style="padding:4px;">
-    <span>Mots Clés:</span>
+    <span>Mots ClÃ©s:</span>
     <input type="text" class="text" name="system_search_keywords" id="system_search_keywords" value="<?php echo ploopi\str::htmlentities($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords']); ?>" />
 
     <span>Module:</span>
@@ -93,9 +93,3 @@ echo ploopi\skin::get()->open_simplebloc('Formulaire de recherche');
 <?php
 echo ploopi\skin::get()->close_simplebloc();
 ?>
-
-<script type="text/javascript">
-//<!--
-if ($('system_search_keywords')) $('system_search_keywords').focus();
-//-->
-</script>

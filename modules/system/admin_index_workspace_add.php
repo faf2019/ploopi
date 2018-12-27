@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -27,7 +27,7 @@
  * @subpackage admin
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
@@ -119,7 +119,7 @@ echo ploopi\str::htmlentities(ploopi\skin::get()->open_simplebloc());
         <input type="text" class="text" name="workspace_meta_description" value="<?php echo ploopi\str::htmlentities($workspace->fields['meta_description']); ?>">
     </p>
     <p>
-        <label>Mots Clés:</label>
+        <label>Mots ClÃ©s:</label>
         <input type="text" class="text" name="workspace_meta_keywords" value="<?php echo ploopi\str::htmlentities($workspace->fields['meta_keywords']); ?>">
     </p>
     <p>

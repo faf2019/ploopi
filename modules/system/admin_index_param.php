@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,17 +21,17 @@
 */
 
 /**
- * Interface de gestion des paramètres de modules.
+ * Interface de gestion des paramÃ¨tres de modules.
  *
  * @package system
  * @subpackage admin
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
- * Récupération de l'identifiant de module
+ * RÃ©cupÃ©ration de l'identifiant de module
  */
 if (!empty($_REQUEST['idmodule'])) $idmodule = $_REQUEST['idmodule'];
 
@@ -53,7 +53,7 @@ else
 {
     ?>
     <form id="form_modparam" action="<?php echo ploopi\crypt::urlencode('admin.php'); ?>" method="post">
-        <select class="select" name="idmodule" onchange="javascript:$('form_modparam').submit();">
+        <select class="select" name="idmodule" onchange="javascript:jQuery('#form_modparam').submit();">
         <?php
         foreach($modules as $mod)
         {

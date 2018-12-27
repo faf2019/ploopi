@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Copyright (c) 2008 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
@@ -28,7 +28,7 @@
  * @subpackage system
  * @copyright Ovensia, HeXad
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
@@ -39,7 +39,7 @@ echo ploopi\skin::get()->open_simplebloc(_SYSTEM_LABEL_ACTIONHISTORY);
 
 $intLimit = 5000;
 
-//Paramètre de filtre
+//ParamÃ¨tre de filtre
 $arrSearchPattern = array();
 $arrSearchPattern['date'] = (isset($_POST['filter_date'])) ? $_POST['filter_date'] : '';
 $arrSearchPattern['date2'] = (isset($_POST['filter_date2'])) ? $_POST['filter_date2'] : '';
@@ -100,7 +100,7 @@ if (!empty($_POST['historyoption']))
             {
                 foreach($row as &$value) $value = str_replace('"', '\"', $value);
                 $date_local = ploopi\date::timestamp2local($row['timestp']);
-                
+
                 echo "\"{$date_local['date']}\";\"{$date_local['time']}\";\"{$row['ip']}\";\"{$row['id_user']}\";\"{$row['user']}\";\"{$row['id_workspace']}\";\"{$row['workspace']}\";{$row['id_module']};\"{$row['module']}\";\"{$row['id_action']}\";\"{$row['action']}\";\"".addslashes($row['id_record'])."\"\r\n";
             }
 
@@ -152,8 +152,8 @@ if (!empty($_POST['historyoption']))
         </p>
     </div>
     <div style="clear:both;text-align:right;padding:4px;">
-        <input type="button" class="button" value="Effacer les logs (selon le filtre)" onclick="javascript:if (confirm('<?php echo _SYSTEM_MSG_CONFIRMLOGDELETE; ?>')) {$('historyoption').value='delete';$('form_loghistory').submit();}">
-        <input type="button" class="button" value="Export CSV" onclick="javascript:$('historyoption').value='exportcsv';$('form_loghistory').submit();">
+        <input type="button" class="button" value="Effacer les logs (selon le filtre)" onclick="javascript:if (confirm('<?php echo _SYSTEM_MSG_CONFIRMLOGDELETE; ?>')) {jQuery('#historyoption')[0].value='delete';jQuery('#form_loghistory').submit();}">
+        <input type="button" class="button" value="Export CSV" onclick="javascript:jQuery('#historyoption')[0].value='exportcsv';jQuery('#form_loghistory').submit();">
         <input type="submit" class="button" value="Filtrer">
     </div>
 </div>
@@ -169,7 +169,7 @@ ploopi\user_action_log::getdb()->query($sql);
 $row = ploopi\user_action_log::getdb()->fetchrow();
 $intCount = $row['c'];
 ?>
-<div style="padding:4px;border-bottom:1px solid #c0c0c0;background:#e0e0e0;"><b><?php echo $intCount; ?> élément(s) trouvés</b> <?php if ($intCount > $intLimit) { ?>- Affichage des <?php echo $intLimit; ?> premiers enregistrements - Utilisez les filtres ci-dessus pour des résultats plus précis <?php } ?></div>
+<div style="padding:4px;border-bottom:1px solid #c0c0c0;background:#e0e0e0;"><b><?php echo $intCount; ?> Ã©lÃ©ment(s) trouvÃ©s</b> <?php if ($intCount > $intLimit) { ?>- Affichage des <?php echo $intLimit; ?> premiers enregistrements - Utilisez les filtres ci-dessus pour des rÃ©sultats plus prÃ©cis <?php } ?></div>
 <?php
 $sql =  "
         SELECT      ploopi_user_action_log.*
@@ -238,7 +238,7 @@ while($row = ploopi\user_action_log::getdb()->fetchrow())
     $arrValues[$c]['values']['user']     = array('label' => ploopi\str::htmlentities($row['user']));
 
     $arrValues[$c]['values']['workspace']     = array('label' => ploopi\str::htmlentities($row['workspace']));
-    
+
     $arrValues[$c]['values']['module']    = array('label' => ploopi\str::htmlentities($row['module']));
 
     $arrValues[$c]['values']['action']    = array('label' => ploopi\str::htmlentities($row['action']));

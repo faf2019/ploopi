@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2009 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,13 +21,13 @@
 */
 
 /**
- * Gestion des objets insérables dans une page de contenu (WebEdit)
+ * Gestion des objets insÃ©rables dans une page de contenu (WebEdit)
  *
  * @package system
  * @subpackage wce
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 global $articleid;
@@ -39,7 +39,7 @@ $op = empty($_REQUEST['op']) ? '' : $_REQUEST['op'];
 // Nb lignes max par pages (sinon index)
 $intMaxLines = ploopi\param::get('system_trombi_maxlines', 1);
 
-// Lettre sélectionnée dans l'index
+// Lettre sÃ©lectionnÃ©e dans l'index
 $strIndexSel = '';
 
 /**
@@ -53,11 +53,11 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
 {
     $objTplDirectory->set_filenames(array('system_trombi' => 'system_trombi.tpl'));
 
-    // Récupération des paramètres
+    // RÃ©cupÃ©ration des paramÃ¨tres
     global $arrFilter;
     $arrFilter = array();
 
-    // On ne veut pas les caractères % et | dans la recherche avec LIKE
+    // On ne veut pas les caractÃ¨res % et | dans la recherche avec LIKE
     $pattern = '/%|_/';
 
     // Lecture SESSION
@@ -87,7 +87,7 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
     if (isset($_POST['system_city']) && !preg_match($pattern, $_POST['system_city'])) $arrFilter['system_city'] = $_POST['system_city'];
     if (isset($_POST['system_postalcode']) && !preg_match($pattern, $_POST['system_postalcode'])) $arrFilter['system_postalcode'] = $_POST['system_postalcode'];
 
-    // Affectation de valeurs par défaut si non défini
+    // Affectation de valeurs par dÃ©faut si non dÃ©fini
     if (!isset($arrFilter['system_lastname'])) $arrFilter['system_lastname'] = '';
     if (!isset($arrFilter['system_firstname'])) $arrFilter['system_firstname'] = '';
     if (!isset($arrFilter['system_entity'])) $arrFilter['system_entity'] = '';
@@ -192,11 +192,11 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
         );
     }
 
-    // Construction de la liste des données brutes pour traitement via JS
+    // Construction de la liste des donnÃ©es brutes pour traitement via JS
     $rs = ploopi\db::get()->query("SELECT service, service2, office, function, number, rank, building, floor, country, city, postalcode FROM ploopi_user");
     $objTplDirectory->assign_var('SYSTEM_TROMBI_JSDATA', json_encode(ploopi\arr::map('ploopi\str::utf8encode', ploopi\arr::map('ucfirst', ploopi\db::get()->getarray()))));
 
-    // Construction des autres listes génériques
+    // Construction des autres listes gÃ©nÃ©riques
     foreach(array('service', 'service2', 'login', 'email', 'office', 'function', 'number', 'rank', 'building', 'floor', 'country', 'city', 'postalcode') as $strField)
     {
         // Construction de la liste des services
@@ -271,7 +271,7 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
                 )
             );
 
-            // Construction de la requête de recherche
+            // Construction de la requÃªte de recherche
             $arrWhere = array();
             $arrWhere[] = '1';
 
@@ -296,7 +296,7 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
             if (!empty($arrFilter['system_city'])) $arrWhere[] = "u.city LIKE '".ploopi\db::get()->addslashes($arrFilter['system_city'])."%'";
             if (!empty($arrFilter['system_postalcode'])) $arrWhere[] = "u.postalcode LIKE '".ploopi\db::get()->addslashes($arrFilter['system_postalcode'])."%'";
 
-            // Exécution de la requête principale permettant de lister les utilisateurs selon le filtre
+            // ExÃ©cution de la requÃªte principale permettant de lister les utilisateurs selon le filtre
             $ptrRs = ploopi\db::get()->query("
                 SELECT      u.id,
                             u.lastname,
@@ -347,7 +347,7 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
                     $arrUser[$row['id']]['groups'] = array();
                 }
 
-                // groupe lié
+                // groupe liÃ©
                 if (!empty($row['groupid']))
                 {
                     $arrUser[$row['id']]['groups'][$row['groupid']] = $row['label'];
@@ -355,20 +355,20 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
                 }
             }
 
-            // liste des groupes trouvés
+            // liste des groupes trouvÃ©s
             $strGroupList = implode(',', array_keys($arrGroup));
 
-            // liste des utilisateurs trouvés
+            // liste des utilisateurs trouvÃ©s
             $strUserList = implode(',', array_keys($arrUser));
 
-            // tableau contenant les rôles pour les utilisateurs/groupes trouvés
+            // tableau contenant les rÃ´les pour les utilisateurs/groupes trouvÃ©s
             $arrRoles = array('groups' => array(), 'users' => array());
 
             if (!empty($strUserList))
             {
                 if (!empty($strGroupList))
                 {
-                    // recherche des rôles "groupe"
+                    // recherche des rÃ´les "groupe"
                     ploopi\db::get()->query("
                         SELECT      wgr.id_group,
                                     wgr.id_workspace,
@@ -389,7 +389,7 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
                     while ($row = ploopi\db::get()->fetchrow()) $arrRoles['groups'][$row['id_workspace']][$row['id_group']][$row['id']] = $row;
                 }
 
-                // recherche des rôles "utilisateur"
+                // recherche des rÃ´les "utilisateur"
                 ploopi\db::get()->query("
                     SELECT      wur.id_user,
                                 wur.id_workspace,
@@ -414,12 +414,12 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
                 $objUser = new ploopi\user();
                 $objUser->fields['id'] = $row['id'];
 
-                // récupération et tri des espaces de travail de l'utilisateur
+                // rÃ©cupÃ©ration et tri des espaces de travail de l'utilisateur
                 $arrUser[$row['id']]['workspaces'] = $objUser->getworkspaces(true);
 
                 if (!empty($arrFilter['system_workspace']) && !in_array($arrFilter['system_workspace'], array_keys($arrUser[$row['id']]['workspaces'])))
                 {
-                    // Suppression des utilisateurs n'appartenant pas à l'espace de travail
+                    // Suppression des utilisateurs n'appartenant pas Ã  l'espace de travail
                     unset($arrUser[$row['id']]);
                 }
                 else
@@ -438,7 +438,7 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
 
                     $arrUser[$row['id']]['roles'] = array();
 
-                    // tableau qui va contenir les rôles dont dispose l'utilisateur dans l'espace courant
+                    // tableau qui va contenir les rÃ´les dont dispose l'utilisateur dans l'espace courant
                     $arrUserWspRoles = array();
 
                     foreach($arrUser[$row['id']]['workspaces'] as $intIdWsp => $lbl)
@@ -447,7 +447,7 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
                         {
                             foreach($arrRoles['groups'][$intIdWsp] as $intIdGrp => $arrDetail)
                             {
-                                // L'utilisateur appartient au groupe (donc il a les rôles)
+                                // L'utilisateur appartient au groupe (donc il a les rÃ´les)
                                 if (in_array($intIdGrp, array_keys($row['groups'])))
                                 {
                                     foreach($arrDetail as $intIdRole => $arrR)
@@ -473,18 +473,18 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
                 }
             }
 
-            // Aucune réponse
+            // Aucune rÃ©ponse
             if (empty($arrUser))
             {
                 $objTplDirectory->assign_block_vars('system_trombi_switch_result.switch_message',
                     array(
-                        'CONTENT' => "Il n'y a aucune réponse pour votre recherche"
+                        'CONTENT' => "Il n'y a aucune rÃ©ponse pour votre recherche"
                     )
                 );
             }
             else
             {
-                // true si l'index est actif (si trop de réponses)
+                // true si l'index est actif (si trop de rÃ©ponses)
                 $booIndex = sizeof($arrUser) > $intMaxLines;
 
                 // Affichage d'un index
@@ -498,7 +498,7 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
                         $arrIndex[$strIndex]++;
                     }
 
-                    // Lecture de l'index sélectionné ou choix par défaut du 1er élément
+                    // Lecture de l'index sÃ©lectionnÃ© ou choix par dÃ©faut du 1er Ã©lÃ©ment
                     $strIndexSel = isset($_GET['idx']) && isset($arrIndex[$_GET['idx']]) ? $_GET['idx'] : key($arrIndex);
 
                     $arrUrlParams = array();
@@ -566,7 +566,7 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
                             )
                         );
 
-                        // Lecture du dossier racine de la mini ged associée à l'utilisateur
+                        // Lecture du dossier racine de la mini ged associÃ©e Ã  l'utilisateur
                         $objRootFolder = ploopi\documentsfolder::getroot(
                             _SYSTEM_OBJECT_USER,
                             $row['id'],
@@ -581,7 +581,7 @@ if (file_exists("./templates/frontoffice/{$template_name}/system_trombi.tpl"))
 
                             foreach($arrFiles as $intIdFile => $rowFile)
                             {
-                                // Découpage du chemin pour modifier le fichier
+                                // DÃ©coupage du chemin pour modifier le fichier
                                 $arrPath = explode('/', $rowFile['path']);
                                 $strFileName = $arrPath[sizeof($arrPath)-1];
                                 array_pop($arrPath);

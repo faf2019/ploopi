@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2008 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -22,17 +22,17 @@
 
 /**
  * Outil permettant d'afficher de statistiques d'utilisation de Ploopi
- * Nb User, Nb Group, Nb Workspace, utilisateurs par modules métiers, nb connexions, nb pages vues
+ * Nb User, Nb Group, Nb Workspace, utilisateurs par modules mÃ©tiers, nb connexions, nb pages vues
  *
  * @package system
  * @subpackage system_tools
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
- * Initialisation des données
+ * Initialisation des donnÃ©es
  */
 $current_ts = ploopi\date::createtimestamp();
 $intMaxRequests = 50;
@@ -57,7 +57,7 @@ $load['m5']['title'] = '5 minutes';
 $load['m15']['title'] = '15 minutes';
 $load['m30']['title'] = '30 minutes';
 $load['m60']['title'] = '1 heure';
-$load['h24']['title'] = '1 journée';
+$load['h24']['title'] = '1 journÃ©e';
 
 // Calcul Charge :
 foreach($load as $key => $l)
@@ -79,8 +79,8 @@ foreach($load as $key => $l)
     if ($row = ploopi\db::get()->fetchrow())
     {
         $load[$key]['res'] = $row;
-        $load[$key]['res']['load'] = ($row['total_exec_time'] / ($l['time']*10)) / _PLOOPI_LOAD_NBCORE; // charge (ratio tps d'exec/tps écoulé) en %
-        $load[$key]['res']['rps'] = $row['numqueries'] / $l['time']; // requêtes par seconde
+        $load[$key]['res']['load'] = ($row['total_exec_time'] / ($l['time']*10)) / _PLOOPI_LOAD_NBCORE; // charge (ratio tps d'exec/tps Ã©coulÃ©) en %
+        $load[$key]['res']['rps'] = $row['numqueries'] / $l['time']; // requÃªtes par seconde
         $load[$key]['res']['bw'] = $row['page_size'] / ($l['time']*1024); // bande passante (ko/s)
         $load[$key]['res']['pps'] = $row['numpages'] / $l['time']; // page per second
         $load[$key]['res']['tpp'] = ($row['numpages']) ? $row['total_exec_time'] / $row['numpages'] : 0; // time per page
@@ -97,10 +97,10 @@ foreach($load as $key => $l)
 $columns = array();
 $values = array();
 
-$columns['left']['title'] = array('label' => 'Période', 'width' => 100, 'style' => 'text-align:right;');
+$columns['left']['title'] = array('label' => 'PÃ©riode', 'width' => 100, 'style' => 'text-align:right;');
 $columns['left']['load'] = array('label' => 'Charge (%)', 'width' => 100, 'style' => 'text-align:right;');
-$columns['left']['tpp'] = array('label' => 'Tps de Réponse (ms)', 'width' => 180, 'style' => 'text-align:right;');
-$columns['left']['rps'] = array('label' => 'Requêtes/s', 'width' => 100, 'style' => 'text-align:right;');
+$columns['left']['tpp'] = array('label' => 'Tps de RÃ©ponse (ms)', 'width' => 180, 'style' => 'text-align:right;');
+$columns['left']['rps'] = array('label' => 'RequÃªtes/s', 'width' => 100, 'style' => 'text-align:right;');
 $columns['left']['pps'] = array('label' => 'Pages/s', 'width' => 100, 'style' => 'text-align:right;');
 $columns['left']['bw'] = array('label' => 'Bande passante (ko)', 'width' => 150, 'style' => 'text-align:right;');
 
@@ -128,12 +128,12 @@ foreach($load as $key => $l)
 
 ?>
 <p class="ploopi_va" style="padding:4px;background-color:#e0e0e0;border-bottom:2px solid #c0c0c0;font-weight:bold;">
-    <span>Charge du système en temps réel (nombre de coeurs : <?php echo _PLOOPI_LOAD_NBCORE; ?>)&nbsp;&nbsp;</span><img src="./img/loading.gif" style="visibility:hidden;" id="system_serverload_loading"/>
+    <span>Charge du systÃ¨me en temps rÃ©el (nombre de coeurs : <?php echo _PLOOPI_LOAD_NBCORE; ?>)&nbsp;&nbsp;</span><img src="./img/loading.gif" style="visibility:hidden;" id="system_serverload_loading"/>
 </p>
 <?php
 ploopi\skin::get()->display_array($columns, $values, 'array_load');
 
-// Analyse des x dernières requêtes
+// Analyse des x derniÃ¨res requÃªtes
 
 ploopi\db::get()->query( "
             SELECT  ts,
@@ -190,7 +190,7 @@ while ($row = ploopi\db::get()->fetchrow())
 
 ?>
 <div style="padding:4px;background-color:#e0e0e0;border-bottom:2px solid #c0c0c0;border-top:2px solid #c0c0c0;font-weight:bold;">
-    Historique : <?php echo $intMaxRequests; ?> dernières requêtes
+    Historique : <?php echo $intMaxRequests; ?> derniÃ¨res requÃªtes
 </div>
 <?php
 ploopi\skin::get()->display_array($columns, $values, 'array_requests');

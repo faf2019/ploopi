@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,13 +21,13 @@
 */
 
 /**
- * Mise à jour du système
+ * Mise Ã  jour du systÃ¨me
  *
  * @package system
  * @subpackage system
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
@@ -82,13 +82,13 @@ switch($op)
             else
             {
                 ?>
-                <div style="padding:4px;color:#a60000;">Impossible de lire le fichier <b><?php echo ploopi\str::htmlentities("{$strSysInstallPath}{$strSqlFile}") ?></b>, vérifiez les droits en lecture</div>
+                <div style="padding:4px;color:#a60000;">Impossible de lire le fichier <b><?php echo ploopi\str::htmlentities("{$strSysInstallPath}{$strSqlFile}") ?></b>, vÃ©rifiez les droits en lecture</div>
                 <?php
             }
         }
         ?>
         <div style="padding:4px;">
-        <b>Mise à jour terminée</b>
+        <b>Mise Ã  jour terminÃ©e</b>
         </div>
         <div style="padding:4px;">
         <button onclick="javascript:document.location.href='<?php echo ploopi\crypt::urlencode('admin.php?reloadsession'); ?>';">Continuer</button>
@@ -99,13 +99,13 @@ switch($op)
     default:
         ?>
         <div style="padding:4px;">
-        Vous venez de mettre à jour Ploopi.
-        <br />Vous aviez la version <b><?php echo ploopi\str::htmlentities($strSysVersion); ?></b> et le système a été mis à jour en version <b><?php echo _PLOOPI_VERSION; ?></b>
-        <br />Pour terminer la mise à jour vous devez mettre à jour la base de données.
+        Vous venez de mettre Ã  jour Ploopi.
+        <br />Vous aviez la version <b><?php echo ploopi\str::htmlentities($strSysVersion); ?></b> et le systÃ¨me a Ã©tÃ© mis Ã  jour en version <b><?php echo _PLOOPI_VERSION; ?></b>
+        <br />Pour terminer la mise Ã  jour vous devez mettre Ã  jour la base de donnÃ©es.
         </div>
 
         <div style="padding:4px;">
-        <button onclick="javascript:document.location.href='<?php echo ploopi\crypt::urlencode("admin.php?op=system_update_execute"); ?>';">Mettre à jour la Base de Données</button>
+        <button onclick="javascript:document.location.href='<?php echo ploopi\crypt::urlencode("admin.php?op=system_update_execute"); ?>';">Mettre Ã  jour la Base de DonnÃ©es</button>
         </div>
         <?php
    break;

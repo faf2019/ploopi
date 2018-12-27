@@ -1,6 +1,5 @@
 /*
-    Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,99 +24,85 @@ function system_showgroup(typetree, gid, str)
     if (typetree == 'groups') dest = 'g'+gid;
     else dest = 'w'+gid;
 
-    elt = $('n'+dest);
+    elt = jQuery('#n'+dest)[0];
 
     if (elt.src.indexOf('plus')  != -1) elt.src = elt.src.replace('plus', 'minus');
     else if (elt.src.indexOf('minus')  != -1) elt.src = elt.src.replace('minus', 'plus');
 
-    if ($(dest))
+    if (jQuery('#'+dest).length)
     {
-        if ($(dest).style.display == 'none')
+        dest_elt = jQuery('#'+dest).get(0);
+
+        if (dest_elt.style.display == 'none')
         {
-            if ($(dest).innerHTML.length < 20)
+            if (dest_elt.innerHTML.length < 20)
             {
-                $(dest).innerHTML = ploopi_xmlhttprequest('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&op=xml_detail_group&typetree='+typetree+'&gid='+gid+'&str='+str);
+                dest_elt.innerHTML = ploopi.xhr.send('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&op=xml_detail_group&typetree='+typetree+'&gid='+gid+'&str='+str);
             }
-            new Effect.BlindDown(
-                dest,
-                {
-                    duration: 0.2
-                }
-            );
+
+            jQuery('#'+dest).eq(0).slideDown('fast');
         }
         else
         {
-            new Effect.BlindUp(
-                dest,
-                {
-                    duration: 0.2
-                }
-            );
+            jQuery('#'+dest).eq(0).slideUp('fast');
         }
     }
-}
-
-function system_checkall(type_element, val)
-{
-    for (i=0;i<$$(type_element).length;i++) $$(type_element)[i].checked = val;
 }
 
 function system_roleusers(roleid)
 {
-    if ($('system_roleusers_detail'+roleid).style.display != 'block')
+    detail = jQuery('#system_roleusers_detail'+roleid).get(0);
+
+    if (detail.style.display != 'block')
     {
-        ploopi_ajaxloader('system_roleusers_list'+roleid);
-        $('system_roleusers_detail'+roleid).style.display = 'block';
-        ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=system_roleusers&system_roleusers_roleid='+roleid,'system_roleusers_list'+roleid);
+        ploopi.xhr.ajaxloader('system_roleusers_list'+roleid);
+        detail.style.display = 'block';
+        ploopi.xhr.todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=system_roleusers&system_roleusers_roleid='+roleid,'system_roleusers_list'+roleid);
     }
-    else $('system_roleusers_detail'+roleid).style.display = 'none';
+    else detail.style.display = 'none';
 }
 
 function system_roleusers_search(roleid)
 {
-    ploopi_ajaxloader('system_roleusers_search_result');
-    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=system_roleusers_search&system_roleusers_roleid='+roleid+'&system_roleusers_filter='+$('system_roleusers_filter').value,'system_roleusers_search_result');
+    ploopi.xhr.ajaxloader('system_roleusers_search_result');
+    ploopi.xhr.todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=system_roleusers_search&system_roleusers_roleid='+roleid+'&system_roleusers_filter='+jQuery('#system_roleusers_filter')[0].value,'system_roleusers_search_result');
 }
 
 function system_roleusers_select(roleid, userid, type)
 {
-    ploopi_ajaxloader('system_roleusers_list');
-    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=system_roleusers_select_'+type+'&system_roleusers_roleid='+roleid+'&system_roleusers_'+type+'id='+userid,'system_roleusers_list');
-    alert('Le rôle a été attribué');
+    ploopi.xhr.ajaxloader('system_roleusers_list');
+    ploopi.xhr.todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=system_roleusers_select_'+type+'&system_roleusers_roleid='+roleid+'&system_roleusers_'+type+'id='+userid,'system_roleusers_list');
+    alert('Le rÃ´le a Ã©tÃ© attribuÃ©');
 }
 
 function system_roleusers_delete(roleid, userid, type)
 {
-    ploopi_ajaxloader('system_roleusers_list');
-    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=system_roleusers_delete_'+type+'&system_roleusers_roleid='+roleid+'&system_roleusers_'+type+'id='+userid,'system_roleusers_list');
-    alert('L\'attribution du rôle a été retirée');
+    ploopi.xhr.ajaxloader('system_roleusers_list');
+    ploopi.xhr.todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=system_roleusers_delete_'+type+'&system_roleusers_roleid='+roleid+'&system_roleusers_'+type+'id='+userid,'system_roleusers_list');
+    alert('L\'attribution du rÃ´le a Ã©tÃ© retirÃ©e');
 }
 
 /* TICKETS FUNCTIONS */
 
 function system_tickets_display(ticket_id, opened, isroot, tpl_path)
 {
-    disp = $('tickets_detail_'+ticket_id);
+    disp = jQuery('#tickets_detail_'+ticket_id)[0];
 
     if (disp.style.display == 'block') disp.style.display='none';
     else
     {
         if (isroot) // get responses
         {
-            $('watch_notify_'+ticket_id).innerHTML = '<img src="'+tpl_path+'/img/system/email_read.png">';
-            resp = $('tickets_responses_'+ticket_id);
+            jQuery('#watch_notify_'+ticket_id)[0].innerHTML = '<img src="'+tpl_path+'/img/system/email_read.png">';
+            resp = jQuery('#tickets_responses_'+ticket_id)[0];
             // if empty
-            if (resp.innerHTML.length < 5)  ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_open_responses&ticket_id='+ticket_id,'tickets_responses_'+ticket_id);
+            if (resp.innerHTML.length < 5)  ploopi.xhr.todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_open_responses&ticket_id='+ticket_id,'tickets_responses_'+ticket_id);
         }
-        ploopi_xmlhttprequest('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_open&ticket_id='+ticket_id);
+        ploopi.xhr.send('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_open&ticket_id='+ticket_id);
 
         if (!opened)
         {
-            /*
-            puce = $('tickets_puce_'+ticket_id);
-            puce.style.backgroundColor = '#2020ff';
-            */
-            title = $('tickets_title_'+ticket_id);
+            title = jQuery('#tickets_title_'+ticket_id)[0];
             title.style.fontWeight = 'normal';
         }
         disp.style.display='block';
@@ -126,31 +111,37 @@ function system_tickets_display(ticket_id, opened, isroot, tpl_path)
 
 function system_search_next()
 {
-    ploopi_ajaxloader('system_search_result');
-    ploopi_xmlhttprequest_todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=system_search&system_search_keywords='+$('system_search_keywords').value+'&system_search_module='+$('system_search_module').value+'&system_search_date1='+$('system_search_date1').value+'&system_search_date2='+$('system_search_date2').value,'system_search_result');
+    ploopi.xhr.ajaxloader('system_search_result');
+    ploopi.xhr.todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=system_search&system_search_keywords='+jQuery('#system_search_keywords')[0].value+'&system_search_module='+jQuery('#system_search_module')[0].value+'&system_search_date1='+jQuery('#system_search_date1')[0].value+'&system_search_date2='+jQuery('#system_search_date2')[0].value,'system_search_result');
 }
 
 function system_serverload()
 {
-    pe_serverload = new PeriodicalExecuter(function(pe) {
-        $('system_serverload_loading').style.visibility = 'visible';
-        new Ajax.Request('admin-light.php?ploopi_env='+_PLOOPI_ENV+'&ploopi_op=system_serverload',
-            {
-                method:     'get',
-                encoding:   'iso-8859-15',
-                onSuccess:  function(transport) {$('system_serverload').innerHTML =  transport.responseText;}
+    (function worker() {
+        jQuery.get('admin-light.php?ploopi_env='+_PLOOPI_ENV+'&ploopi_op=system_serverload', function(data, textStatus, request) {
+
+            console.log(request.getResponseHeader('Ploopi-Connected'));
+
+            if (request.getResponseHeader('Ploopi-Connected') == '1') {
+
+                jQuery('#system_serverload')[0].innerHTML =  data;
+
+                setTimeout(worker, 1000);
             }
-        );
-    }, 15);
+            else {
+                console.log('Not connected');
+            }
+        });
+    })();
 }
 
 function system_choose_photo(e, user_id)
 {
-    ploopi_showpopup(ploopi_ajaxloader_content, 400, e, false, 'popup_system_choose_photo');
-    ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=system_choose_photo&system_user_id='+user_id, 'popup_system_choose_photo');
+    ploopi.popup.show(ploopi.xhr.ajaxloader_content, 400, e, false, 'popup_system_choose_photo');
+    ploopi.xhr.todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=system_choose_photo&system_user_id='+user_id, 'popup_system_choose_photo');
 }
 
 function system_delete_photo(user_id)
 {
-    ploopi_xmlhttprequest('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=system_delete_photo&system_user_id='+user_id);
+    ploopi.xhr.send('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=system_delete_photo&system_user_id='+user_id);
 }

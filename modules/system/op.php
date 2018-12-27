@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,17 +21,17 @@
 */
 
 /**
- * Opération du module 'Système'
+ * OpÃ©ration du module 'SystÃ¨me'
  *
  * @package system
  * @subpackage op
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
- * Opérations accessibles pour les utilisateurs connectés
+ * OpÃ©rations accessibles pour les utilisateurs connectÃ©s
  */
 
 if ($_SESSION['ploopi']['connected'])
@@ -60,18 +60,18 @@ if ($_SESSION['ploopi']['connected'])
             {
                 if ($_POST['usernewpass'] != '')
                 {
-                    // Vérification de l'ancien mot de passe
+                    // VÃ©rification de l'ancien mot de passe
                     if (strcmp($user->fields['password'], user::generate_hash($_POST['useroldpass'], $user->fields['login'])) == 0)
                     {
-                        // Mots de passes équivalents
+                        // Mots de passes Ã©quivalents
                         if ($_POST['usernewpass'] == $_POST['usernewpass_confirm'])
                         {
-                            // Complexité ok
+                            // ComplexitÃ© ok
                             if (!_PLOOPI_USE_COMPLEXE_PASSWORD || ploopi\security::checkpasswordvalidity($_POST['usernewpass']))
                             {
                                 // Affectation du mot de passe
                                 $user->setpassword($_POST['usernewpass']);
-                                // Mise à jour htpasswd
+                                // Mise Ã  jour htpasswd
                                 if ($_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_generate_htpasswd']) system_generate_htpasswd($user->fields['login'], $_POST['usernewpass']);
                             }
                             else $error = 'passrejected';
@@ -87,7 +87,7 @@ if ($_SESSION['ploopi']['connected'])
 
             ob_start();
             ?>
-            <div style="padding:10px;text-align:center;"><strong>Profil enregistré !</strong></div>
+            <div style="padding:10px;text-align:center;"><strong>Profil enregistrÃ© !</strong></div>
             <?php
             if ($error) {
                 switch($error)
@@ -120,7 +120,7 @@ if ($_SESSION['ploopi']['connected'])
             ?>
             <script type="text/javascript">
             new PeriodicalExecuter(function(pe) {
-                ploopi_hidepopup('system_popup_update_profile');
+                ploopi.popup.hide('system_popup_update_profile');
                 pe.stop();
             }, 2);
             </script>
@@ -139,7 +139,7 @@ if ($_SESSION['ploopi']['connected'])
             $strDisabled = $booReadonly ? 'disabled="disabled"' : '';
 
             /**
-             * Ouverture de l'instance de l'utilisateur à modifier
+             * Ouverture de l'instance de l'utilisateur Ã  modifier
              */
             $user = new ploopi\user();
             $user->open($_SESSION['ploopi']['userid']);
@@ -148,79 +148,79 @@ if ($_SESSION['ploopi']['connected'])
 
             if (!$booReadonly) {
 
-                // Fonction javascript de validation du formulaire (créée en fonction des champs requis)
+                // Fonction javascript de validation du formulaire (crÃ©Ã©e en fonction des champs requis)
                 ?>
                 <script type="text/javascript">
                 system_user_validate = function (form)
                 {
-                    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_LASTNAME; ?>", form.user_lastname, 'string'))
-                    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_FIRSTNAME; ?>", form.user_firstname, 'string'))
+                    if (ploopi.validatefield("<?php echo _SYSTEM_LABEL_LASTNAME; ?>", form.user_lastname, 'string'))
+                    if (ploopi.validatefield("<?php echo _SYSTEM_LABEL_FIRSTNAME; ?>", form.user_firstname, 'string'))
 
                     <?php if (in_array('civility', $arrRequiredFields)) { ?>
-                    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_CIVILITY; ?>", form.user_civility, 'select'))
+                    if (ploopi.validatefield("<?php echo _SYSTEM_LABEL_CIVILITY; ?>", form.user_civility, 'select'))
                     <?php } ?>
 
                     <?php if (in_array('entity', $arrRequiredFields)) { ?>
-                    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_ENTITY; ?>", form.user_entity, 'string'))
+                    if (ploopi.validatefield("<?php echo _SYSTEM_LABEL_ENTITY; ?>", form.user_entity, 'string'))
                     <?php } ?>
                     <?php if (in_array('service', $arrRequiredFields)) { ?>
-                    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_SERVICE; ?>", form.user_service, 'string'))
+                    if (ploopi.validatefield("<?php echo _SYSTEM_LABEL_SERVICE; ?>", form.user_service, 'string'))
                     <?php } ?>
                     <?php if (in_array('service2', $arrRequiredFields)) { ?>
-                    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_SERVICE2; ?>", form.user_service2, 'string'))
+                    if (ploopi.validatefield("<?php echo _SYSTEM_LABEL_SERVICE2; ?>", form.user_service2, 'string'))
                     <?php } ?>
                     <?php if (in_array('function', $arrRequiredFields)) { ?>
-                    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_FUNCTION; ?>", form.user_function, 'string'))
+                    if (ploopi.validatefield("<?php echo _SYSTEM_LABEL_FUNCTION; ?>", form.user_function, 'string'))
                     <?php } ?>
                     <?php if (in_array('rank', $arrRequiredFields)) { ?>
-                    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_RANK; ?>", form.user_rank, 'string'))
+                    if (ploopi.validatefield("<?php echo _SYSTEM_LABEL_RANK; ?>", form.user_rank, 'string'))
                     <?php } ?>
                     <?php if (in_array('number', $arrRequiredFields)) { ?>
-                    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_NUMBER; ?>", form.user_number, 'string'))
+                    if (ploopi.validatefield("<?php echo _SYSTEM_LABEL_NUMBER; ?>", form.user_number, 'string'))
                     <?php } ?>
 
                     <?php if (in_array('phone', $arrRequiredFields)) { ?>
-                    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_PHONE; ?>",form.user_phone,"phone"))
+                    if (ploopi.validatefield("<?php echo _SYSTEM_LABEL_PHONE; ?>",form.user_phone,"phone"))
                     <?php } else { ?>
-                    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_PHONE; ?>",form.user_phone,"emptyphone"))
+                    if (ploopi.validatefield("<?php echo _SYSTEM_LABEL_PHONE; ?>",form.user_phone,"emptyphone"))
                     <?php } ?>
                     <?php if (in_array('mobile', $arrRequiredFields)) { ?>
-                    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_MOBILE; ?>",form.user_mobile,"phone"))
+                    if (ploopi.validatefield("<?php echo _SYSTEM_LABEL_MOBILE; ?>",form.user_mobile,"phone"))
                     <?php } else { ?>
-                    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_MOBILE; ?>",form.user_mobile,"emptyphone"))
+                    if (ploopi.validatefield("<?php echo _SYSTEM_LABEL_MOBILE; ?>",form.user_mobile,"emptyphone"))
                     <?php } ?>
                     <?php if (in_array('fax', $arrRequiredFields)) { ?>
-                    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_FAX; ?>",form.user_fax,"phone"))
+                    if (ploopi.validatefield("<?php echo _SYSTEM_LABEL_FAX; ?>",form.user_fax,"phone"))
                     <?php } else { ?>
-                    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_FAX; ?>",form.user_fax,"emptyphone"))
+                    if (ploopi.validatefield("<?php echo _SYSTEM_LABEL_FAX; ?>",form.user_fax,"emptyphone"))
                     <?php } ?>
 
                     <?php if (in_array('email', $arrRequiredFields)) { ?>
-                    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_EMAIL; ?>",form.user_email,"email"))
+                    if (ploopi.validatefield("<?php echo _SYSTEM_LABEL_EMAIL; ?>",form.user_email,"email"))
                     <?php } else { ?>
-                    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_EMAIL; ?>",form.user_email,"emptyemail"))
+                    if (ploopi.validatefield("<?php echo _SYSTEM_LABEL_EMAIL; ?>",form.user_email,"emptyemail"))
                     <?php } ?>
 
                     <?php if (in_array('building', $arrRequiredFields)) { ?>
-                    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_BUILDING; ?>", form.user_building, 'string'))
+                    if (ploopi.validatefield("<?php echo _SYSTEM_LABEL_BUILDING; ?>", form.user_building, 'string'))
                     <?php } ?>
                     <?php if (in_array('floor', $arrRequiredFields)) { ?>
-                    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_FLOOR; ?>", form.user_floor, 'string'))
+                    if (ploopi.validatefield("<?php echo _SYSTEM_LABEL_FLOOR; ?>", form.user_floor, 'string'))
                     <?php } ?>
                     <?php if (in_array('office', $arrRequiredFields)) { ?>
-                    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_OFFICE; ?>", form.user_office, 'string'))
+                    if (ploopi.validatefield("<?php echo _SYSTEM_LABEL_OFFICE; ?>", form.user_office, 'string'))
                     <?php } ?>
                     <?php if (in_array('address', $arrRequiredFields)) { ?>
-                    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_ADDRESS; ?>", form.user_address, 'string'))
+                    if (ploopi.validatefield("<?php echo _SYSTEM_LABEL_ADDRESS; ?>", form.user_address, 'string'))
                     <?php } ?>
                     <?php if (in_array('postalcode', $arrRequiredFields)) { ?>
-                    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_POSTALCODE; ?>", form.user_postalcode, 'string'))
+                    if (ploopi.validatefield("<?php echo _SYSTEM_LABEL_POSTALCODE; ?>", form.user_postalcode, 'string'))
                     <?php } ?>
                     <?php if (in_array('city', $arrRequiredFields)) { ?>
-                    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_CITY; ?>", form.user_city, 'string'))
+                    if (ploopi.validatefield("<?php echo _SYSTEM_LABEL_CITY; ?>", form.user_city, 'string'))
                     <?php } ?>
                     <?php if (in_array('country', $arrRequiredFields)) { ?>
-                    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_COUNTRY; ?>", form.user_country, 'string'))
+                    if (ploopi.validatefield("<?php echo _SYSTEM_LABEL_COUNTRY; ?>", form.user_country, 'string'))
                     <?php } ?>
                     {
                         if (form.usernewpass_confirm.value == form.usernewpass.value && form.usernewpass.value == '') return true;
@@ -230,9 +230,9 @@ if ($_SESSION['ploopi']['connected'])
                             else {
                                 if (form.useroldpass.value == '') alert('<?php echo _SYSTEM_MSG_PASSWORDERROR2_JS; ?>');
                                 else {
-                                    rep = ploopi_xmlhttprequest('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=ploopi_checkpasswordvalidity&password='+encodeURIComponent(form.usernewpass.value), false, false, 'POST');
+                                    rep = ploopi.xhr.send('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=ploopi_checkpasswordvalidity&password='+encodeURIComponent(form.usernewpass.value), false, false, 'POST');
 
-                                    if (rep == 0) alert('Le mot de passe est invalide\n\nil doit contenir au moins 8 caractères,\nun caractère minuscule,\nun caractère majuscule,\nun chiffre et un caractère de ponctuation');
+                                    if (rep == 0) alert('Le mot de passe est invalide\n\nil doit contenir au moins 8 caractÃ¨res,\nun caractÃ¨re minuscule,\nun caractÃ¨re majuscule,\nun chiffre et un caractÃ¨re de ponctuation');
                                     else return true;
                                 }
                             }
@@ -243,7 +243,7 @@ if ($_SESSION['ploopi']['connected'])
                 </script>
 
                 <?php
-                // Vérification de la validité du profil
+                // VÃ©rification de la validitÃ© du profil
                 $booUpdateProfile = false;
                 foreach($arrRequiredFields as $strField)
                 {
@@ -255,14 +255,14 @@ if ($_SESSION['ploopi']['connected'])
                 {
                     ?>
                     <div style="padding:10px;text-align:center;">
-                        Votre profil utilisateur n'est pas complet. Merci de remplir les champs marqués d'une étoile.
-                        <br /><em>Vous pouvez passer cette étape en cliquant en bas sur le bouton "Annuler".</em>
+                        Votre profil utilisateur n'est pas complet. Merci de remplir les champs marquÃ©s d'une Ã©toile.
+                        <br /><em>Vous pouvez passer cette Ã©tape en cliquant en bas sur le bouton "Annuler".</em>
                     </div>
                     <?php
                 }
                 ?>
 
-                <form name="form_modify_user" action="<?php echo ploopi\crypt::urlencode('admin-light.php?ploopi_op=system_update_profile_save'); ?>" method="POST" onsubmit="javascript:ploopi_xmlhttprequest_submitform(this, 'system_popup_update_profile', system_user_validate ); return false;  ">
+                <form name="form_modify_user" action="<?php echo ploopi\crypt::urlencode('admin-light.php?ploopi_op=system_update_profile_save'); ?>" method="POST" onsubmit="javascript:ploopi.xhr.submit(this, 'system_popup_update_profile', system_user_validate ); return false;  ">
                 <?php
             }
             ?>
@@ -345,7 +345,7 @@ if ($_SESSION['ploopi']['connected'])
                                     <label><?php echo _SYSTEM_LABEL_EMAIL; ?><?php if (in_array('email', $arrRequiredFields)) echo ' *'; ?>:</label>
                                     <input type="text" class="text" name="user_email"  value="<?php echo ploopi\str::htmlentities($user->fields['email']); ?>" <?php echo $strDisabled; ?> tabindex="25" />
                                 </p>
-                                <p class="checkbox" onclick="javascript:ploopi_checkbox_click(event,'user_ticketsbyemail');">
+                                <p class="checkbox" onclick="javascript:ploopi.checkbox_click(event,'user_ticketsbyemail');">
                                     <label><?php echo _SYSTEM_LABEL_TICKETSBYEMAIL; ?>:</label>
                                     <input style="width:16px;" type="checkbox" id="user_ticketsbyemail" name="user_ticketsbyemail" value="1" <?php if ($user->fields['ticketsbyemail']) echo 'checked'; ?> <?php echo $strDisabled; ?> tabindex="26" />
                                 </p>
@@ -373,7 +373,7 @@ if ($_SESSION['ploopi']['connected'])
                                     <label>Nouveau mot de passe:</label>
                                     <input type="password" class="text" name="usernewpass" id="usernewpass" value="" tabindex="22" <?php echo $strDisabled; ?> style="width:180px;" />
                                 </p>
-                                <div id="protopass"></div>
+                                <div id="checkpass"></div>
                                 <p>
                                     <label><?php echo _SYSTEM_LABEL_PASSWORD_CONFIRM; ?>:</label>
                                     <input type="password" class="text" name="usernewpass_confirm" id="usernewpass_confirm" value="" tabindex="23" <?php echo $strDisabled; ?> style="width:180px;" />
@@ -421,15 +421,21 @@ if ($_SESSION['ploopi']['connected'])
             <?php if (!$booReadonly) { ?>
 
                 <div style="clear:both;text-align:right;padding:4px;">
-                    <input type="button" class="button" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:ploopi_hidepopup('system_popup_update_profile');" />
+                    <input type="button" class="button" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:ploopi.popup.hide('system_popup_update_profile');" />
                     <input type="submit" class="button" value="<?php echo _PLOOPI_SAVE; ?>" />
                 </div>
                 </form>
-                <script type="text/javascript">
-                    $('useroldpass').value = '';
-                    $('usernewpass').value = '';
-                    $('usernewpass_confirm').value = '';
 
+                <style>
+                    #checkpass {padding:0;margin:0;margin-left:30%;padding-left:0.5em;width:195px;}
+                    #checkpass * {font-size:10px;}
+                    #checkpass .password-strength-bar {border-radius:2px;}
+                </style>
+
+                <script type="text/javascript">
+                    jQuery('#useroldpass')[0].value = '';
+                    jQuery('#usernewpass')[0].value = '';
+                    jQuery('#usernewpass_confirm')[0].value = '';
 
                     <?php if (_PLOOPI_USE_COMPLEXE_PASSWORD) { ?>
                     var options = {
@@ -443,14 +449,13 @@ if ($_SESSION['ploopi']['connected'])
                     };
                     <?php } ?>
 
-                    new Protopass('usernewpass', 'protopass', options);
+                    new ploopi.checkpass('usernewpass', 'checkpass', options);
 
-                    Event.observe($('usernewpass_confirm'), 'change', function() {
-
-                        if ($('usernewpass').value == $('usernewpass_confirm').value) {
-                            $('usernewpass_confirm').style.backgroundColor = $('usernewpass').style.backgroundColor = 'lightgreen';
+                    jQuery('#usernewpass_confirm').on('change', function() {
+                        if (jQuery('#usernewpass')[0].value == jQuery('#usernewpass_confirm')[0].value) {
+                            jQuery('#usernewpass_confirm').get(0).style.backgroundColor = jQuery('#usernewpass').get(0).style.backgroundColor = 'lightgreen';
                         } else {
-                            $('usernewpass_confirm').style.backgroundColor = $('usernewpass').style.backgroundColor = 'indianred';
+                            jQuery('#usernewpass_confirm').get(0).style.backgroundColor = jQuery('#usernewpass').get(0).style.backgroundColor = 'indianred';
                         }
                     });
                 </script>
@@ -458,15 +463,10 @@ if ($_SESSION['ploopi']['connected'])
             <?php } else { ?>
 
                 <div style="clear:both;text-align:right;padding:4px;">
-                    <input type="button" class="button" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:ploopi_hidepopup('system_popup_update_profile');" />
+                    <input type="button" class="button" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:ploopi.popup.hide('system_popup_update_profile');" />
                 </div>
 
             <?php } ?>
-
-            <style>
-                #protopass {padding:0;margin:0;margin-left:30%;padding-left:0.5em;width:195px;} #protopass * {font-size:10px;}
-                #protopass .password-strength-bar {border-radius:2px;}
-            </style>
 
             <?php
             $content = ob_get_contents();
@@ -496,7 +496,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
 }
 
 /**
- * Opérations accessibles pour les utilisateurs connectés dans le module système
+ * OpÃ©rations accessibles pour les utilisateurs connectÃ©s dans le module systÃ¨me
  */
 if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOOPI_MODULE_SYSTEM)
 {
@@ -505,13 +505,13 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
         case 'system_directory_export':
             ploopi\module::init('system');
 
-            // Type du document demandé
+            // Type du document demandÃ©
             $strTypeDoc = empty($_GET['system_directory_typedoc']) ? 'xls' : strtolower($_GET['system_directory_typedoc']);
 
-            // Récupération de la requête utilisateur
+            // RÃ©cupÃ©ration de la requÃªte utilisateur
             $strSql = ploopi\session::getvar('directory_sql');
 
-            // Préparation du jeu de données
+            // PrÃ©paration du jeu de donnÃ©es
             $arrData = array();
 
             if (!empty($strSql)) {
@@ -519,16 +519,16 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
 
                 while ($row = ploopi\db::get()->fetchrow($res)) {
 
-                    // on va chercher les espaces auxquels l'utilisateur peut accéder
+                    // on va chercher les espaces auxquels l'utilisateur peut accÃ©der
                     $objUser = new ploopi\user();
                     $objUser->open($row['id']);
-                    // on met les libellés dans un tableau
+                    // on met les libellÃ©s dans un tableau
                     $arrWspList = array();
                     foreach($objUser->getworkspaces() as $rowW) $arrWspList[sprintf("%04d%s", $rowW['depth'], $rowW['label'])] = $rowW['label'];
-                    // on trie par profondeur + libellé
+                    // on trie par profondeur + libellÃ©
                     ksort($arrWspList);
 
-                    // Traitement spécial XLS (date)
+                    // Traitement spÃ©cial XLS (date)
                     if ($strTypeDoc == 'xls' || $strTypeDoc == 'xlsx' || $strTypeDoc == 'ods' || $strTypeDoc == 'sxc' || $strTypeDoc == 'pdf') {
                         $row['date_creation'] = ploopi\date::timestamp2unixtimestamp($row['date_creation']);
                         $row['last_connection'] = ploopi\date::timestamp2unixtimestamp($row['last_connection']);
@@ -563,7 +563,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                         'last_connection' => $row['last_connection']
                     );
 
-                    // Traitement spécial vCard
+                    // Traitement spÃ©cial vCard
                     if ($strTypeDoc != 'vcf') {
                         unset($rowData['lastname']);
                         unset($rowData['firstname']);
@@ -578,11 +578,11 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
             $strOutputPath = _PLOOPI_PATHDATA.'/tmp/system_directory';
             ploopi\fs::makedir($strOutputPath);
 
-            // Nom du fichier envoyé à l'utilisateur
+            // Nom du fichier envoyÃ© Ã  l'utilisateur
             $strFileName = "utilisateurs.{$strTypeDoc}";
 
 
-            // Format d'export (XLS et dérivés)
+            // Format d'export (XLS et dÃ©rivÃ©s)
             $arrFormats = array(
                 'login' => array(
                     'title' => 'Identifiant',
@@ -620,12 +620,12 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                     'width' => 20
                 ),
                 'number' => array(
-                    'title' => 'Numéro de Poste',
+                    'title' => 'NumÃ©ro de Poste',
                     'type' => 'string',
                     'width' => 20
                 ),
                 'phone' => array(
-                    'title' => 'Téléphone',
+                    'title' => 'TÃ©lÃ©phone',
                     'type' => 'string',
                     'width' => 20
                 ),
@@ -645,7 +645,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                     'width' => 35
                 ),
                 'building' => array(
-                    'title' => 'Bâtiment',
+                    'title' => 'BÃ¢timent',
                     'type' => 'string',
                     'width' => 20
                 ),
@@ -680,12 +680,12 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                     'width' => 20
                 ),
                 'date_creation' => array(
-                    'title' => 'Date de création',
+                    'title' => 'Date de crÃ©ation',
                     'type' => 'datetime',
                     'width' => 35
                 ),
                 'last_connection' => array(
-                    'title' => 'Dernière connexion',
+                    'title' => 'DerniÃ¨re connexion',
                     'type' => 'datetime',
                     'width' => 35
                 )
@@ -727,7 +727,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                 case 'ods':
                 case 'sxc':
                 case 'pdf':
-                    // Génération XLSX
+                    // GÃ©nÃ©ration XLSX
                     file_put_contents($strTmpFile = $strOutputPath.'/'.uniqid().'.xlsx', ploopi\arr::toexcel($arrData, true, $strFileName, 'Export', $arrFormats, array('writer' => 'excel2007')));
 
                     // Chemin unoconv
@@ -751,7 +751,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
         break;
 
         /**
-         * Opérations sur les tickets
+         * OpÃ©rations sur les tickets
          */
         case 'tickets_delete':
             $arrTickets = array();
@@ -890,7 +890,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
 
         default:
             /**
-             * Autres opérations nécessitant un niveau d'accrédiation plus élevé (gestionnaire ou admin sys)
+             * Autres opÃ©rations nÃ©cessitant un niveau d'accrÃ©diation plus Ã©levÃ© (gestionnaire ou admin sys)
              */
 
             if (ploopi\acl::isadmin())
@@ -959,7 +959,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                         ploopi\system::kill();
                     break;
 
-                    // suppression de l'affectation d'un rôle à un utilisateur
+                    // suppression de l'affectation d'un rÃ´le Ã  un utilisateur
                     case 'system_roleusers_delete_user':
                         if (empty($_GET['system_roleusers_userid']) || empty($_GET['system_roleusers_roleid']) || empty($_SESSION['system']['workspaceid'])) ploopi\system::kill();
 
@@ -971,7 +971,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                         //ploopi\output::redirect("admin.php?op=assign_role&roleid={$_GET['system_roleusers_roleid']}");
                     break;
 
-                    // suppression de l'affectation d'un rôle à un groupe
+                    // suppression de l'affectation d'un rÃ´le Ã  un groupe
                     case 'system_roleusers_delete_group':
                         if (empty($_GET['system_roleusers_groupid']) || empty($_GET['system_roleusers_roleid']) || empty($_SESSION['system']['workspaceid'])) ploopi\system::kill();
 
@@ -983,7 +983,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                         //ploopi\output::redirect("admin.php?op=assign_role&roleid={$_GET['system_roleusers_roleid']}");
                     break;
 
-                    // affectation d'un rôle à un utilisateur
+                    // affectation d'un rÃ´le Ã  un utilisateur
                     case 'system_roleusers_select_user':
                         if (empty($_GET['system_roleusers_userid']) || empty($_GET['system_roleusers_roleid']) || empty($_SESSION['system']['workspaceid'])) ploopi\system::kill();
 
@@ -1000,7 +1000,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                         ploopi\output::redirect("admin-light.php?ploopi_op=system_roleusers&system_roleusers_roleid={$_GET['system_roleusers_roleid']}");
                     break;
 
-                    // affectation d'un rôle à un groupe
+                    // affectation d'un rÃ´le Ã  un groupe
                     case 'system_roleusers_select_group':
                         if (empty($_GET['system_roleusers_groupid']) || empty($_GET['system_roleusers_roleid']) || empty($_SESSION['system']['workspaceid'])) ploopi\system::kill();
 
@@ -1017,7 +1017,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                         ploopi\output::redirect("admin-light.php?ploopi_op=system_roleusers&system_roleusers_roleid={$_GET['system_roleusers_roleid']}");
                     break;
 
-                    // résultat de la recherche utilisateurs / groupes
+                    // rÃ©sultat de la recherche utilisateurs / groupes
                     case 'system_roleusers_search':
                         if (!isset($_GET['system_roleusers_filter'])) ploopi\system::kill();
 
@@ -1082,7 +1082,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                                 foreach($groups as $group)
                                 {
                                     ?>
-                                    <a class="system_roleusers_select" title="Sélectionner ce groupe et lui attribuer ce rôle" href="javascript:void(0);" onclick="javascript:system_roleusers_select(<?php echo ploopi\str::htmlentities($_GET['system_roleusers_roleid']); ?>, <?php echo $group['id']; ?>, 'group');">
+                                    <a class="system_roleusers_select" title="SÃ©lectionner ce groupe et lui attribuer ce rÃ´le" href="javascript:void(0);" onclick="javascript:system_roleusers_select(<?php echo ploopi\str::htmlentities($_GET['system_roleusers_roleid']); ?>, <?php echo $group['id']; ?>, 'group');">
                                         <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_group.png"><span><?php echo ploopi\str::htmlentities("{$group['label']}"); ?></span></p>
                                     </a>
                                     <?php
@@ -1093,7 +1093,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                                 foreach($users as $user)
                                 {
                                     ?>
-                                    <a class="system_roleusers_select" title="Sélectionner cet utilisateur et lui attribuer ce rôle" href="javascript:void(0);" onclick="javascript:system_roleusers_select(<?php echo ploopi\str::htmlentities($_GET['system_roleusers_roleid']); ?>, <?php echo $user['id']; ?>, 'user');">
+                                    <a class="system_roleusers_select" title="SÃ©lectionner cet utilisateur et lui attribuer ce rÃ´le" href="javascript:void(0);" onclick="javascript:system_roleusers_select(<?php echo ploopi\str::htmlentities($_GET['system_roleusers_roleid']); ?>, <?php echo $user['id']; ?>, 'user');">
                                         <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span><?php echo ploopi\str::htmlentities("{$user['lastname']} {$user['firstname']} ({$user['login']})"); ?></span></p>
                                     </a>
                                     <?php
@@ -1102,7 +1102,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                             </div>
                             <div id="system_roleusers_legend">
                                 <p class="ploopi_va" style="float:right;">
-                                    <span style="font-weight:bold;">Légende:&nbsp;&nbsp;&nbsp;</span>
+                                    <span style="font-weight:bold;">LÃ©gende:&nbsp;&nbsp;&nbsp;</span>
                                     <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_group.png"><span>&nbsp;Groupe d'Utilisateur&nbsp;&nbsp;</span>
                                     <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span>&nbsp;Utilisateur</span>
                                 </p>
@@ -1178,7 +1178,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                         if (!empty($_GET['system_user_id']) && is_numeric($_GET['system_user_id']))
                         {
                             // Envoi d'une photo temporaire dans la fiche utilisateur
-                            // On vérifie qu'un fichier a bien été uploadé
+                            // On vÃ©rifie qu'un fichier a bien Ã©tÃ© uploadÃ©
                             if (!empty($_FILES['system_user_photo']['tmp_name']))
                             {
                                 // reset suppression
@@ -1192,8 +1192,8 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                             ?>
                             <script type="text/javascript">
                                 new function() {
-                                    window.parent.ploopi_getelem('system_user_photo', window.parent.document).innerHTML = '<img src="<?php echo ploopi\crypt::urlencode('admin-light.php?ploopi_op=system_get_photo'); ?>" />';
-                                    window.parent.ploopi_hidepopup('popup_system_choose_photo');
+                                    window.parent.ploopi.getelem('system_user_photo', window.parent.document).innerHTML = '<img src="<?php echo ploopi\crypt::urlencode('admin-light.php?ploopi_op=system_get_photo'); ?>" />';
+                                    window.parent.ploopi.popup.hide('popup_system_choose_photo');
                                 }
                             </script>
                             <?php
@@ -1236,7 +1236,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
 
                         if (!empty($_FILES['system_user_file']) && !empty($_FILES['system_user_file']['name']))
                         {
-                            // Récupération & contrôle du séparateur de champs
+                            // RÃ©cupÃ©ration & contrÃ´le du sÃ©parateur de champs
                             $strSep = empty($_POST['system_user_sep']) ? ',' : $_POST['system_user_sep'];
                             if (!in_array($strSep, array(',', ';'))) $strSep = ',';
 

@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,22 +21,22 @@
 */
 
 /**
- * Interface publique de gestion de paramètres de modules pour un utilisateur
+ * Interface publique de gestion de paramÃ¨tres de modules pour un utilisateur
  *
  * @package system
  * @subpackage public
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
- * Récupération de l'identifiant du module
+ * RÃ©cupÃ©ration de l'identifiant du module
  */
 if (!empty($_REQUEST['idmodule']) && is_numeric($_REQUEST['idmodule'])) $idmodule = $_REQUEST['idmodule'];
 
 echo ploopi\skin::get()->create_pagetitle(_PLOOPI_LABEL_MYWORKSPACE);
-echo ploopi\skin::get()->open_simplebloc(_PLOOPI_LABEL_MYPARAMS); 
+echo ploopi\skin::get()->open_simplebloc(_PLOOPI_LABEL_MYPARAMS);
 ?>
 <div style="padding:4px;">
 <?php
@@ -66,10 +66,10 @@ else
     ?>
     <form id="form_modparam" action="<?php echo ploopi\crypt::urlencode('admin.php'); ?>" method="post">
         <input type="hidden" name="op" value="param">
-        <select class="select" name="idmodule" onchange="javascript:$('form_modparam').submit();">
+        <select class="select" name="idmodule" onchange="javascript:jQuery('#form_modparam').submit();">
         <?php
         usort($arrModList, create_function('$a,$b', 'return strcasecmp($_SESSION[\'ploopi\'][\'modules\'][$a][\'label\'], $_SESSION[\'ploopi\'][\'modules\'][$b][\'label\']);'));
-        
+
         foreach($arrModList as $idm)
         {
             $mod = &$_SESSION['ploopi']['modules'][$idm];

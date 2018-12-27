@@ -1,6 +1,6 @@
 <?php
 /*
- Copyright (c) 2007-2016 Ovensia
+ Copyright (c) 2007-2018 Ovensia
  Contributors hold Copyright (c) to their code submissions.
 
  This file is part of Ploopi.
@@ -21,13 +21,13 @@
  */
 
 /**
- * Affichage des utilisateurs "rattachables" à l'espace de travail ou au groupe courant
+ * Affichage des utilisateurs "rattachables" Ã  l'espace de travail ou au groupe courant
  *
  * @package system
  * @subpackage admin
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
@@ -36,7 +36,7 @@
  */
 $arrFilter = array();
 
-// On ne veut pas les caractères % et | dans la recherche avec LIKE
+// On ne veut pas les caractÃ¨res % et | dans la recherche avec LIKE
 $pattern = '/%|_/';
 
 // Lecture SESSION
@@ -50,7 +50,7 @@ if (isset($_POST['ploopi_email']) && !preg_match($pattern, $_POST['ploopi_email'
 if (isset($_POST['ploopi_last_connection_1'])) $arrFilter['ploopi_last_connection_1'] = $_POST['ploopi_last_connection_1'];
 if (isset($_POST['ploopi_last_connection_2'])) $arrFilter['ploopi_last_connection_2'] = $_POST['ploopi_last_connection_2'];
 
-// Affectation de valeurs par défaut si non défini
+// Affectation de valeurs par dÃ©faut si non dÃ©fini
 if (!isset($arrFilter['ploopi_lastname'])) $arrFilter['ploopi_lastname'] = '';
 if (!isset($arrFilter['ploopi_firstname'])) $arrFilter['ploopi_firstname'] = '';
 if (!isset($arrFilter['ploopi_login'])) $arrFilter['ploopi_login'] = '';
@@ -69,7 +69,7 @@ switch ($_SESSION['system']['level'])
     case _SYSTEM_GROUPS :
         if (!ploopi\acl::isadmin())
         {
-            // filtrage sur les groupes partagés
+            // filtrage sur les groupes partagÃ©s
             if (!empty($groups['list'][$groupid]['groups'])) $arrWhere[] = '( gu.id_group IN ('.implode(',',array_keys($groups['list'][$groupid]['groups'])).'))';
             else $arrWhere[] = 'gu.id_group = 0';
         }
@@ -88,7 +88,7 @@ switch ($_SESSION['system']['level'])
     case _SYSTEM_WORKSPACES :
         if (!ploopi\acl::isadmin())
         {
-            // filtrage sur les groupes partagés
+            // filtrage sur les groupes partagÃ©s
             if (!empty($workspaces['list'][$workspaceid]['groups'])) $arrWhere[] = 'gu.id_group IN ('.implode(',',array_keys($workspaces['list'][$workspaceid]['groups'])).')';
             else $arrWhere[] = "gu.id_group = 0";
         }
@@ -111,7 +111,7 @@ $strWhere = (empty($arrWhere)) ? '' : ' AND '.implode(' AND ', $arrWhere);
 if (trim(implode('', $arrFilter)) != '') $alphaTabItem = 99; // tous
 else
 {
-    // aucun caractère de filtrage sélectionné. On recherche si on en met un par défaut (si trop d'utilisateurs) ou si on sélectionne "tous"
+    // aucun caractÃ¨re de filtrage sÃ©lectionnÃ©. On recherche si on en met un par dÃ©faut (si trop d'utilisateurs) ou si on sÃ©lectionne "tous"
 
     $alphaTabItem = (empty($_GET['alphaTabItem'])) ? ploopi\session::getvar('system_alphatabitem') : $_GET['alphaTabItem'];
 
@@ -133,7 +133,7 @@ else
 
         if ($_SESSION['system']['level'] == _SYSTEM_GROUPS)
         {
-            // Utilisateurs non rattachés
+            // Utilisateurs non rattachÃ©s
             ploopi\db::get()->query("
                 SELECT      count(distinct(u.id)) as nbuser
 
@@ -157,7 +157,7 @@ ploopi\session::setvar('system_alphatabitem', $alphaTabItem);
     <?php
     $tabs_char = array();
 
-    // Génération des onglets
+    // GÃ©nÃ©ration des onglets
     for($i=1;$i<27;$i++)
         $tabs_char[$i] =
             array(
@@ -186,7 +186,7 @@ ploopi\session::setvar('system_alphatabitem', $alphaTabItem);
     <label>Nom: </label>
     <input type="text" class="text" name="ploopi_lastname" value="<?php echo ploopi\str::htmlentities($arrFilter['ploopi_lastname']); ?>" style="width:100px;" tabindex="100" />
 
-    <label>Prénom: </label>
+    <label>PrÃ©nom: </label>
     <input type="text" class="text" name="ploopi_firstname" value="<?php echo ploopi\str::htmlentities($arrFilter['ploopi_firstname']); ?>" style="width:100px;" tabindex="105" />
 
     <label>Identifiant: </label>
@@ -203,7 +203,7 @@ ploopi\session::setvar('system_alphatabitem', $alphaTabItem);
     <?php ploopi\date::open_calendar('ploopi_last_connection_2'); ?>
 
     <input type="submit" class="button" value="Filtrer" tabindex="150" />
-    <input type="button" class="button" value="Réinitialiser" onclick="document.location.href='<?php echo ploopi\crypt::urlencode('admin.php?usrTabItem=tabUserAttach&reset'); ?>';" tabindex="160" />
+    <input type="button" class="button" value="RÃ©initialiser" onclick="document.location.href='<?php echo ploopi\crypt::urlencode('admin.php?usrTabItem=tabUserAttach&reset'); ?>';" tabindex="160" />
 </div>
 </form>
 
@@ -254,7 +254,7 @@ $arrUsers = ploopi\db::get()->getarray();
 
 if ($_SESSION['system']['level'] == _SYSTEM_GROUPS)
 {
-    // Utilisateurs non rattachés
+    // Utilisateurs non rattachÃ©s
     ploopi\db::get()->query("
         SELECT      u.id,
                     u.lastname,
@@ -280,7 +280,7 @@ $intNbRep = sizeof($arrUsers);
 if ($intNbRep > 2000)
 {
     ?>
-    <div style="padding:4px;text-align:center;" class="error">Trop de réponses (<?php echo $intNbRep; ?>)</div>
+    <div style="padding:4px;text-align:center;" class="error">Trop de rÃ©ponses (<?php echo $intNbRep; ?>)</div>
     <?php
 }
 else
@@ -344,7 +344,7 @@ else
         }
         else
         {
-            $values[$c]['values']['origin']     = array('label' => 'non rattaché', 'style' => 'font-style:italic;');
+            $values[$c]['values']['origin']     = array('label' => 'non rattachÃ©', 'style' => 'font-style:italic;');
         }
 
         $values[$c]['values']['name']       = array('label' => ploopi\str::htmlentities("{$fields['lastname']}, {$fields['firstname']}"));
@@ -362,7 +362,7 @@ if ($_SESSION['system']['level'] == _SYSTEM_WORKSPACES)
 {
     ?>
     <p class="ploopi_va" style="padding: 4px;">
-        <span style="margin-right: 5px;">Légende:</span>
+        <span style="margin-right: 5px;">LÃ©gende:</span>
         <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/adminlevels/level_user.png" />
         <span style="margin-right: 5px;"><?php echo ploopi\str::htmlentities($ploopi_system_levels[_PLOOPI_ID_LEVEL_USER]); ?></span>
         <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/adminlevels/level_groupmanager.png" />

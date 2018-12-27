@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,13 +21,13 @@
 */
 
 /**
- * Fonctions du module Système
+ * Fonctions du module SystÃ¨me
  *
  * @package system
  * @subpackage global
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
@@ -44,7 +44,7 @@ function system_mergegroups($array1, $array2)
 }
 
 /**
- * Retourne l'arborescence complète des espaces de travail et des groupes d'utilisateurs
+ * Retourne l'arborescence complÃ¨te des espaces de travail et des groupes d'utilisateurs
  *
  * @return array tableau contenant le tableau des espaces de travail et le tableau des groupes
  */
@@ -64,17 +64,17 @@ function system_getwg()
     while ($fields = $db->fetchrow($result))
     {
         /**
-         * true si l'espace est ajouté à l'arbre des espaces
+         * true si l'espace est ajoutÃ© Ã  l'arbre des espaces
          */
         $add = true;
 
         /**
-         * Test du niveau d'accréditation (adminlevel) pour déterminer quels sont les espaces accessibles pour l'utilisateur
+         * Test du niveau d'accrÃ©ditation (adminlevel) pour dÃ©terminer quels sont les espaces accessibles pour l'utilisateur
          */
         if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPMANAGER && $_SESSION['ploopi']['adminlevel'] < _PLOOPI_ID_LEVEL_SYSTEMADMIN)
         {
             /**
-             * L'utilisateur n'est pas administrateur système => on filtre sur les espaces accessibles
+             * L'utilisateur n'est pas administrateur systÃ¨me => on filtre sur les espaces accessibles
              */
             $array_parents = explode(';',$fields['parents']);
             if (!($fields['id'] == $_SESSION['ploopi']['workspaceid'] || in_array($_SESSION['ploopi']['workspaceid'],$array_parents))) $add = false;
@@ -83,7 +83,7 @@ function system_getwg()
         if ($add)
         {
             /**
-             * les propriétés "groups" & "groups_shared" sont remplies par la fonction qui traite les groupes "system_getgroups()"
+             * les propriÃ©tÃ©s "groups" & "groups_shared" sont remplies par la fonction qui traite les groupes "system_getgroups()"
              */
             $fields['groups'] = array();
             $fields['groups_shared'] = array();
@@ -93,7 +93,7 @@ function system_getwg()
     }
 
     /**
-     * Construction de l'arbre des groupes, complétion de l'arbre des espaces
+     * Construction de l'arbre des groupes, complÃ©tion de l'arbre des espaces
      */
 
     $groups = array('list' => array(), 'tree' => array(), 'workspace_tree' => array(), 'workspaceid' => $_SESSION['ploopi']['workspaceid']);
@@ -103,7 +103,7 @@ function system_getwg()
 
     while ($fields = $db->fetchrow($result))
     {
-        // Vérification du droit d'accès au groupe
+        // VÃ©rification du droit d'accÃ¨s au groupe
         $add = false;
         // Espace d'appartenance du groupe (si existe)
         if (!empty($fields['id_workspace']) && isset($workspaces['list'][$fields['id_workspace']])) $add = true;
@@ -121,21 +121,21 @@ function system_getwg()
             $fields['groups'] = array();
             $groups['list'][$fields['id']] = $fields;
             $groups['tree'][$fields['id_group']][] = $fields['id'];
-            // Groupe attaché à un espace (existant / autorisé)
+            // Groupe attachÃ© Ã  un espace (existant / autorisÃ©)
             if (!empty($fields['id_workspace']) && isset($workspaces['list'][$fields['id_workspace']]))
             {
                 $groups['workspace_tree'][$fields['id_workspace']][] = $fields['id'];
                 $workspaces['list'][$fields['id_workspace']]['groups'][$fields['id']] = 0;
                 if ($groups['list'][$fields['id']]['shared']) $workspaces['list'][$fields['id_workspace']]['groups_shared'][$fields['id']] = 0;
 
-                // code remplacé par la boucle ci dessous... semble plus rapide...
+                // code remplacÃ© par la boucle ci dessous... semble plus rapide...
                 //$groups['list'][$fields['id']]['parents_workspace'] = $workspaces['list'][$fields['id_workspace']]['parents'].";{$fields['id_workspace']};{$fields['id']}";
             }
         }
     }
 
     // $groups['workspace_tree'] contient l'arbre de rattachement des groupes aux espaces
-    // => mise à jour du lien parents pour chaque groupe rattaché à un espace (le lien parents contient les id des parents séparés par des ";"
+    // => mise Ã  jour du lien parents pour chaque groupe rattachÃ© Ã  un espace (le lien parents contient les id des parents sÃ©parÃ©s par des ";"
     foreach($groups['workspace_tree'] as $idw => $list_idg)
     {
         foreach($list_idg as $idg)
@@ -145,8 +145,8 @@ function system_getwg()
         }
     }
 
-    // Application de l'héritage du lien de parenté entre un espace et un groupe et aux sous groupes
-    // Ainsi, chaque groupe connaît ses espaces parents
+    // Application de l'hÃ©ritage du lien de parentÃ© entre un espace et un groupe et aux sous groupes
+    // Ainsi, chaque groupe connaÃ®t ses espaces parents
     foreach($groups['tree'] as $idg => $list_idg)
     {
         foreach($list_idg as $idg_child)
@@ -160,8 +160,8 @@ function system_getwg()
 
     foreach($workspaces['list'] as $idw => $workspace)
     {
-        // récupération des sous-groupes
-        // on met à jour le champ 'group' de workspaces pour y inclure les sous-groupes des groupes déjà rattachés
+        // rÃ©cupÃ©ration des sous-groupes
+        // on met Ã  jour le champ 'group' de workspaces pour y inclure les sous-groupes des groupes dÃ©jÃ  rattachÃ©s
         while (list($idg) = each($workspaces['list'][$idw]['groups']))
         {
             if (isset($groups['tree'][$idg]))
@@ -174,8 +174,8 @@ function system_getwg()
             }
         }
 
-        // Héritage des partages
-        // Des groupes peuvent être partagés par les espaces parents => on les rattache aussi comme groupes de l'espace
+        // HÃ©ritage des partages
+        // Des groupes peuvent Ãªtre partagÃ©s par les espaces parents => on les rattache aussi comme groupes de l'espace
         if (isset($workspaces['tree'][$idw]) && !empty($workspaces['list'][$idw]['groups']))
         {
             foreach($workspaces['tree'][$idw] as $idw2)
@@ -573,7 +573,7 @@ function system_tickets_displayresponses($parents, $tickets, $rootid)
         ?>
         <div class="system_tickets_response">
             <div class="system_tickets_head" onclick="javascript:system_tickets_display(<?php echo $fields['id']; ?>,<?php echo (empty($fields['status'])) ? 0 : 1; ?>, 0);">
-                <div  class="system_tickets_date"><?php echo ploopi\str::htmlentities($localdate['date']); ?> à <?php echo ploopi\str::htmlentities($localdate['time']); ?></div>
+                <div  class="system_tickets_date"><?php echo ploopi\str::htmlentities($localdate['date']); ?> Ã  <?php echo ploopi\str::htmlentities($localdate['time']); ?></div>
                 <div class="system_tickets_sender"><b><?php echo ploopi\str::htmlentities("{$fields['firstname']} {$fields['lastname']}"); ?></b></div>
                 <div class="system_tickets_title" id="tickets_title_<?php echo $fields['id']; ?>" <?php if (is_null($fields['status'])) echo 'style="font-weight:bold;"'; ?>><?php echo ploopi\str::htmlentities($fields['title']); ?></div>
             </div>
@@ -585,19 +585,19 @@ function system_tickets_displayresponses($parents, $tickets, $rootid)
                 if ($fields['lastedit_timestp'])
                 {
                     $lastedit_local = ploopi\date::timestamp2local($fields['lastedit_timestp']);
-                    echo "<i>Dernière modification le {$lastedit_local['date']} à {$lastedit_local['time']}</i>";
+                    echo "<i>DerniÃ¨re modification le {$lastedit_local['date']} Ã  {$lastedit_local['time']}</i>";
                 }
                 ?>
                 </div>
                 <div class="system_tickets_buttons">
                     <p class="ploopi_va">
-                        <a href="javascript:void(0);" onclick="javascript:ploopi_showpopup('','550',event,'click','system_popupticket');ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_replyto&ticket_id=<?php echo $fields['id']; ?>', 'system_popupticket');"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/email_reply.png">Répondre</a>
+                        <a href="javascript:void(0);" onclick="javascript:ploopi.popup.show('','550',event,'click','system_popupticket');ploopi.xhr.todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_replyto&ticket_id=<?php echo $fields['id']; ?>', 'system_popupticket');"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/email_reply.png">RÃ©pondre</a>
                         <?php
-                        /* <a href="javascript:void(0);" onclick="javascript:ploopi_showpopup('','400',event,'click','system_popupticket');ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_replyto&ticket_id=<?php echo $fields['id']; ?>&quoted=true', 'system_popupticket');"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/email_quote.png">Citer</a> */
+                        /* <a href="javascript:void(0);" onclick="javascript:ploopi.popup.show('','400',event,'click','system_popupticket');ploopi.xhr.todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_replyto&ticket_id=<?php echo $fields['id']; ?>&quoted=true', 'system_popupticket');"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/email_quote.png">Citer</a> */
                         if ($fields['sender_uid'] == $_SESSION['ploopi']['userid'])
                         {
                             ?>
-                            <a href="javascript:void(0);" onclick="javascript:ploopi_showpopup('','550',event,'click','system_popupticket');ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_modify&ticket_id=<?php echo $fields['id']; ?>', 'system_popupticket');"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/email_modify.png">Modifier</a>
+                            <a href="javascript:void(0);" onclick="javascript:ploopi.popup.show('','550',event,'click','system_popupticket');ploopi.xhr.todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_modify&ticket_id=<?php echo $fields['id']; ?>', 'system_popupticket');"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/email_modify.png">Modifier</a>
                             <?php
                         }
                         ?>
@@ -641,7 +641,7 @@ function system_serverload_getcolor($min, $max, $x)
  * Retourne les parents d'un espace de travail ou d'un groupe d'utilisateur
  *
  * @param string $parents id des parents
- * @param string $type type d'élément cherché (workspace/group)
+ * @param string $type type d'Ã©lÃ©ment cherchÃ© (workspace/group)
  * @return array
  */
 
@@ -662,10 +662,10 @@ function system_getparents($parents, $type)
 
 
 /**
- * Formatage d'un numéro de téléphone
+ * Formatage d'un numÃ©ro de tÃ©lÃ©phone
  *
- * @param string $strPhone numéro de téléphone à formater
- * @return string numéro formaté
+ * @param string $strPhone numÃ©ro de tÃ©lÃ©phone Ã  formater
+ * @return string numÃ©ro formatÃ©
  */
 function system_directory_formatphone($strPhone)
 {

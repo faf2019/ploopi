@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -27,7 +27,7 @@
  * @subpackage admin
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
@@ -36,7 +36,7 @@
  */
 $arrFilter = array();
 
-// On ne veut pas les caractères % et | dans la recherche avec LIKE
+// On ne veut pas les caractÃ¨res % et | dans la recherche avec LIKE
 $pattern = '/%|_/';
 
 // Lecture SESSION
@@ -50,7 +50,7 @@ if (isset($_POST['ploopi_email']) && !preg_match($pattern, $_POST['ploopi_email'
 if (isset($_POST['ploopi_last_connection_1'])) $arrFilter['ploopi_last_connection_1'] = $_POST['ploopi_last_connection_1'];
 if (isset($_POST['ploopi_last_connection_2'])) $arrFilter['ploopi_last_connection_2'] = $_POST['ploopi_last_connection_2'];
 
-// Affectation de valeurs par défaut si non défini
+// Affectation de valeurs par dÃ©faut si non dÃ©fini
 if (!isset($arrFilter['ploopi_lastname'])) $arrFilter['ploopi_lastname'] = '';
 if (!isset($arrFilter['ploopi_firstname'])) $arrFilter['ploopi_firstname'] = '';
 if (!isset($arrFilter['ploopi_login'])) $arrFilter['ploopi_login'] = '';
@@ -68,7 +68,7 @@ else
 
     if (is_null($alphaTabItem))
     {
-        // aucun caractère de filtrage sélectionné. On recherche si on en met un par défaut (si trop d'utilisateurs) ou si on sélectionne "tous"
+        // aucun caractÃ¨re de filtrage sÃ©lectionnÃ©. On recherche si on en met un par dÃ©faut (si trop d'utilisateurs) ou si on sÃ©lectionne "tous"
         switch ($_SESSION['system']['level'])
         {
             case _SYSTEM_GROUPS :
@@ -89,7 +89,7 @@ ploopi\session::setvar('system_alphatabitem', $alphaTabItem);
     <?php
     $tabs_char = array();
 
-    // Génération des onglets
+    // GÃ©nÃ©ration des onglets
     for($i=1;$i<27;$i++)
         $tabs_char[$i] =
             array(
@@ -118,7 +118,7 @@ ploopi\session::setvar('system_alphatabitem', $alphaTabItem);
     <label>Nom: </label>
     <input type="text" class="text" name="ploopi_lastname" value="<?php echo ploopi\str::htmlentities($arrFilter['ploopi_lastname']); ?>" style="width:100px;" tabindex="100" />
 
-    <label>Prénom: </label>
+    <label>PrÃ©nom: </label>
     <input type="text" class="text" name="ploopi_firstname" value="<?php echo ploopi\str::htmlentities($arrFilter['ploopi_firstname']); ?>" style="width:100px;" tabindex="105" />
 
     <label>Identifiant: </label>
@@ -135,7 +135,7 @@ ploopi\session::setvar('system_alphatabitem', $alphaTabItem);
     <?php ploopi\date::open_calendar('ploopi_last_connection_2'); ?>
 
     <input type="submit" class="button" value="Filtrer" tabindex="150" />
-    <input type="button" class="button" value="Réinitialiser" onclick="document.location.href='<?php echo ploopi\crypt::urlencode('admin.php?wspToolbarItem=tabUsers&reset'); ?>';" tabindex="160" />
+    <input type="button" class="button" value="RÃ©initialiser" onclick="document.location.href='<?php echo ploopi\crypt::urlencode('admin.php?wspToolbarItem=tabUsers&reset'); ?>';" tabindex="160" />
 </div>
 
 <div class="ploopi_tabs">
@@ -284,7 +284,7 @@ $columns['actions_right']['actions'] =
 
 $c = 0;
 
-// Sauvegarde de la dernière requête SQL pour export
+// Sauvegarde de la derniÃ¨re requÃªte SQL pour export
 ploopi\session::setvar('directory_sql', $strSql);
 
 $result = ploopi\db::get()->query($strSql);
@@ -294,7 +294,7 @@ $intNbRep = ploopi\db::get()->numrows($result);
 if ($intNbRep > 2000)
 {
     ?>
-    <div style="padding:4px;text-align:center;" class="error">Trop de réponses (<?php echo $intNbRep; ?>)</div>
+    <div style="padding:4px;text-align:center;" class="error">Trop de rÃ©ponses (<?php echo $intNbRep; ?>)</div>
     <?php
 }
 else
@@ -305,8 +305,8 @@ else
         $groups = $user->getgroups();
         $currentgroup = current($groups);
 
-        $action = ' <a href="javascript:ploopi_confirmlink(\''.ploopi\crypt::urlencode("admin.php?op=detach_user&user_id={$fields['id']}").'\',\''._SYSTEM_MSG_CONFIRMUSERDETACH.'\')"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_cut.png" title="'._SYSTEM_TITLE_USERDETACH.'"></a>
-                    <a href="javascript:ploopi_confirmlink(\''.ploopi\crypt::urlencode("admin.php?op=delete_user&user_id={$fields['id']}").'\',\''._SYSTEM_MSG_CONFIRMUSERDELETE.'\')"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_delete.png" title="'._SYSTEM_LABEL_DELETE.'"></a>
+        $action = ' <a href="javascript:ploopi.confirmlink(\''.ploopi\crypt::urlencode("admin.php?op=detach_user&user_id={$fields['id']}").'\',\''._SYSTEM_MSG_CONFIRMUSERDETACH.'\')"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_cut.png" title="'._SYSTEM_TITLE_USERDETACH.'"></a>
+                    <a href="javascript:ploopi.confirmlink(\''.ploopi\crypt::urlencode("admin.php?op=delete_user&user_id={$fields['id']}").'\',\''._SYSTEM_MSG_CONFIRMUSERDELETE.'\')"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_delete.png" title="'._SYSTEM_LABEL_DELETE.'"></a>
                     ';
 
         $values[$c]['values']['name']       = array('label' => ploopi\str::htmlentities("{$fields['lastname']}, {$fields['firstname']}"));
@@ -364,7 +364,7 @@ if ($_SESSION['system']['level'] == _SYSTEM_WORKSPACES)
 {
     ?>
     <p class="ploopi_va" style="padding:4px;">
-        <span style="margin-right:5px;">Légende:</span>
+        <span style="margin-right:5px;">LÃ©gende:</span>
         <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/adminlevels/level_user.png" />
         <span style="margin-right:5px;"><?php echo ploopi\str::htmlentities($ploopi_system_levels[_PLOOPI_ID_LEVEL_USER]); ?></span>
         <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/adminlevels/level_groupmanager.png" />

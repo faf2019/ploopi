@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,13 +21,13 @@
 */
 
 /**
- * Gestion des rôles
+ * Gestion des rÃ´les
  *
  * @package system
  * @subpackage admin
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
@@ -39,7 +39,7 @@ switch($op)
     case 'delete_role':
         if (!empty($_GET['roleid']) && is_numeric($_GET['roleid']))
         {
-            $role = new role();
+            $role = new ploopi\role();
             $role->open($_GET['roleid']);
             ploopi\user_action_log::record(_SYSTEM_ACTION_DELETEROLE, "{$role->fields['label']} ({$role->fields['id']})");
             $role->delete();
@@ -49,7 +49,7 @@ switch($op)
     break;
 
     case 'save_role':
-        $role = new role();
+        $role = new ploopi\role();
 
         if (!empty($_POST['roleid']) && is_numeric($_POST['roleid'])) $role->open($_POST['roleid']);
 
@@ -63,7 +63,8 @@ switch($op)
         $module = new ploopi\module();
         if ($module->open($_POST['role_id_module']))
         {
-            $role->save($_POST['id_action'], $module->fields['id_module_type']);
+            $role->save();
+            $role->saveactions($_POST['id_action'], $module->fields['id_module_type']);
             ploopi\user_action_log::record(($isnew) ?_SYSTEM_ACTION_CREATEROLE : _SYSTEM_ACTION_MODIFYROLE, "{$role->fields['label']} ({$role->fields['id']})");
             ploopi\output::redirect("admin.php?roleTabItem=tabRoleManagement&reloadsession");
         }
@@ -82,7 +83,7 @@ $tabs['tabRoleManagement'] = array (
 );
 
 $tabs['tabRoleAdd'] = array (
-    'title' => 'Ajouter un Rôle',
+    'title' => 'Ajouter un RÃ´le',
     'url' => "admin.php?roleTabItem=tabRoleAdd"
 );
 

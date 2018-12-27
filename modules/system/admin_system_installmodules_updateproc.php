@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,13 +21,13 @@
 */
 
 /**
- * ProcÈdure de mise ‡ jour d'un module
+ * Proc√©dure de mise √† jour d'un module
  *
  * @package system
  * @subpackage system
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author StÈphane Escaich
+ * @author Ovensia
  */
 
 /**
@@ -55,7 +55,7 @@ ploopi\db::get()->query($select);
 if (ploopi\db::get()->numrows())
 {
     ?>
-    <div style="padding:4px;text-align:center;font-weight:bold;color:#a60000;">Module dÈj‡ mis ‡ jour !</div>
+    <div style="padding:4px;text-align:center;font-weight:bold;color:#a60000;">Module d√©j√† mis √† jour !</div>
     <?php
 }
 else
@@ -109,7 +109,7 @@ else
         if (is_writable(realpath($destfiles)))
         {
             ploopi\fs::copydir($srcfiles , $destfiles);
-            $detail = 'Fichiers copiÈs';
+            $detail = 'Fichiers copi√©s';
         }
         else
         {
@@ -118,14 +118,14 @@ else
             $critical_error = true;
         }
     }
-    else $detail = 'Aucun fichier ‡ copier.';
+    else $detail = 'Aucun fichier √† copier.';
 
     $rapport[] = array('operation' => 'Copie des fichiers', 'detail' => $detail, 'res' => $testok);
 
     if (!$critical_error)
     {
         // =============
-        // OPERATION 2 : Chargement des paramËtres/actions
+        // OPERATION 2 : Chargement des param√®tres/actions
         // =============
 
         $module_type = new ploopi\module_type();
@@ -136,7 +136,7 @@ else
         if (!$critical_error)
         {
             // =============
-            // OPERATION 3 : Mise ‡ jour SQL
+            // OPERATION 3 : Mise √† jour SQL
             // =============
             $testok = true;
             $detail = array();
@@ -146,15 +146,15 @@ else
                 if (file_exists("{$sqlpath}/{$sqlfile}"))
                 {
                     ploopi\db::get()->multiplequeries(file_get_contents("{$sqlpath}/{$sqlfile}"));
-                    $detail[] = "Fichier '{$sqlfile}' importÈ";
+                    $detail[] = "Fichier '{$sqlfile}' import√©";
                 }
-                else $detail[] = "Fichier '{$sqlfile}' non trouvÈ";
+                else $detail[] = "Fichier '{$sqlfile}' non trouv√©";
             }
 
-            $rapport[] = array('operation' => 'Mise ‡ jour des tables/champs', 'detail' => implode('<br />', $detail), 'res' => $testok);
+            $rapport[] = array('operation' => 'Mise √† jour des tables/champs', 'detail' => implode('<br />', $detail), 'res' => $testok);
 
             // =============
-            // OPERATION 4 : Chargement de la mÈtabase
+            // OPERATION 4 : Chargement de la m√©tabase
             // =============
             $testok = true;
             $detail = '';
@@ -173,23 +173,23 @@ else
                 $xml_parser = xmlparser_mb();
                 if (!xml_parse($xml_parser,  file_get_contents($mbfile)))
                 {
-                    $stop = sprintf("Erreur XML: %s ‡ la ligne %d dans '%s'\n", xml_error_string(xml_get_error_code($xml_parser)), xml_get_current_line_number($xml_parser), $mbfile);
+                    $stop = sprintf("Erreur XML: %s √† la ligne %d dans '%s'\n", xml_error_string(xml_get_error_code($xml_parser)), xml_get_current_line_number($xml_parser), $mbfile);
                     $testok = false;
                 }
-                else $detail = "Fichier '{$mbfile}' importÈ";
+                else $detail = "Fichier '{$mbfile}' import√©";
 
                 xml_parser_free($xml_parser);
             }
-            else $detail = "Fichier '{$mbfile}' non trouvÈ";
+            else $detail = "Fichier '{$mbfile}' non trouv√©";
 
-            $rapport[] = array('operation' => 'Chargement de la mÈtabase', 'detail' => $detail, 'res' => $testok);
+            $rapport[] = array('operation' => 'Chargement de la m√©tabase', 'detail' => $detail, 'res' => $testok);
         }
     }
     $columns = array();
     $values = array();
 
-    $columns['left']['operation']   = array('label' => 'OpÈration', 'width' => '250', 'options' => array('sort' => true));
-    $columns['auto']['detail']      = array('label' => 'DÈtail', 'options' => array('sort' => true));
+    $columns['left']['operation']   = array('label' => 'Op√©ration', 'width' => '250', 'options' => array('sort' => true));
+    $columns['auto']['detail']      = array('label' => 'D√©tail', 'options' => array('sort' => true));
     $columns['right']['result']     = array('label' => 'Etat', 'width' => '60', 'options' => array('sort' => true));
 
     $c = 0;

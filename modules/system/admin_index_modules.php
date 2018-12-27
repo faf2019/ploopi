@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -22,13 +22,13 @@
 
 /**
  * Interface de gestion des modules d'un espace de travail.
- * Permet d'instancier, hériter, modifier la configuration d'un module.
+ * Permet d'instancier, hÃ©riter, modifier la configuration d'un module.
  *
  * @package system
  * @subpackage admin
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
@@ -37,7 +37,7 @@
 $installedmodules = system_getinstalledmodules();
 
 /**
- * Modules partagés
+ * Modules partagÃ©s
  */
 $sharedmodules = $workspace->getsharedmodules();
 
@@ -79,13 +79,13 @@ foreach ($ownmodules as $index => $module)
     if ($module['instanceworkspace'] == $workspaceid)
     {
         $modify = '<a href="'.ploopi\crypt::urlencode("admin.php?op=modify&moduleid={$module['instanceid']}").'#modify"><img style="margin:0 2px;" src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_edit.png"></a>';
-        $delete = '<a href="javascript:ploopi_confirmlink(\''.ploopi\crypt::urlencode("admin.php?op=delete&moduleid={$module['instanceid']}").'\',\''._SYSTEM_MSG_CONFIRMMODULEDELETE.'\')"><img style="margin:0 2px;" src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_delete.png"></a>';
+        $delete = '<a href="javascript:ploopi.confirmlink(\''.ploopi\crypt::urlencode("admin.php?op=delete&moduleid={$module['instanceid']}").'\',\''._SYSTEM_MSG_CONFIRMMODULEDELETE.'\')"><img style="margin:0 2px;" src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_delete.png"></a>';
     }
     else
     {
         $modify = '<img style="margin:0 2px;" src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_noway.png">';
         if ($module['adminrestricted']) $delete = '<img style="margin:0 2px;" src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_noway.png">';
-        else $delete = '<a href="javascript:ploopi_confirmlink(\''.ploopi\crypt::urlencode("admin.php?op=unlinkinstance&moduleid={$module['instanceid']}").'\',\''._SYSTEM_MSG_CONFIRMMODULEDETACH.'\')"><img style="margin:0 2px;" src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_cut.png"></a>';
+        else $delete = '<a href="javascript:ploopi.confirmlink(\''.ploopi\crypt::urlencode("admin.php?op=unlinkinstance&moduleid={$module['instanceid']}").'\',\''._SYSTEM_MSG_CONFIRMMODULEDETACH.'\')"><img style="margin:0 2px;" src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_cut.png"></a>';
     }
 
     $updown =   '
@@ -141,14 +141,14 @@ if ($op == 'modify' && !empty($_GET['moduleid']) && is_numeric($_GET['moduleid']
         <div style="padding:2px;">
             <p>
                 <label><?php echo _SYSTEM_LABEL_MODULENAME; ?>:</label>
-                <input type="text" class="text" name="module_label" id="module_label" value="<?php echo ploopi\str::htmlentities($module->fields['label']); ?>" tabindex="1" />
+                <input type="text" class="text" name="module_label" id="module_label" autofocus value="<?php echo ploopi\str::htmlentities($module->fields['label']); ?>" tabindex="1" />
             </p>
             <p>
                 <label>&nbsp;</label>
                 <span><em><?php echo _SYSTEM_EXPLAIN_MODULENAME; ?></em></span>
             </p>
 
-            <p class="checkbox" onclick="javascript:ploopi_checkbox_click(event, 'module_active');">
+            <p class="checkbox" onclick="javascript:ploopi.checkbox_click(event, 'module_active');">
                 <label><?php echo _SYSTEM_LABEL_ACTIVE; ?>:</label>
                 <input type="checkbox" class="checkbox" name="module_active" id="module_active" value="1" <?php if ($module->fields['active']) echo 'checked="checked"'; ?> tabindex="2" />
             </p>
@@ -157,7 +157,7 @@ if ($op == 'modify' && !empty($_GET['moduleid']) && is_numeric($_GET['moduleid']
                 <span><em><?php echo _SYSTEM_EXPLAIN_ACTIVE; ?></em></span>
             </p>
 
-            <p class="checkbox" onclick="javascript:ploopi_checkbox_click(event, 'module_visible');">
+            <p class="checkbox" onclick="javascript:ploopi.checkbox_click(event, 'module_visible');">
                 <label><?php echo _SYSTEM_LABEL_VISIBLE; ?>:</label>
                 <input type="checkbox" class="checkbox" name="module_visible" id="module_visible" value="1" <?php if ($module->fields['visible']) echo 'checked="checked"'; ?> tabindex="3" />
             </p>
@@ -166,7 +166,7 @@ if ($op == 'modify' && !empty($_GET['moduleid']) && is_numeric($_GET['moduleid']
                 <span><em><?php echo _SYSTEM_EXPLAIN_VISIBLE; ?></em></span>
             </p>
 
-            <p class="checkbox" onclick="javascript:ploopi_checkbox_click(event, 'module_autoconnect');">
+            <p class="checkbox" onclick="javascript:ploopi.checkbox_click(event, 'module_autoconnect');">
                 <label><?php echo _SYSTEM_LABEL_AUTOCONNECT; ?>:</label>
                 <input type="checkbox" class="checkbox" name="module_autoconnect" id="module_autoconnect" value="1" <?php if ($module->fields['autoconnect']) echo 'checked="checked"'; ?> tabindex="4" />
             </p>
@@ -175,7 +175,7 @@ if ($op == 'modify' && !empty($_GET['moduleid']) && is_numeric($_GET['moduleid']
                 <span><em><?php echo _SYSTEM_EXPLAIN_AUTOCONNECT; ?></em></span>
             </p>
 
-            <p class="checkbox" onclick="javascript:ploopi_checkbox_click(event, 'module_shared');">
+            <p class="checkbox" onclick="javascript:ploopi.checkbox_click(event, 'module_shared');">
                 <label><?php echo _SYSTEM_LABEL_SHARED; ?>:</label>
                 <input type="checkbox" class="checkbox" name="module_shared" id="module_shared" value="1" <?php if ($module->fields['shared']) echo 'checked="checked"'; ?> tabindex="5" />
             </p>
@@ -184,7 +184,7 @@ if ($op == 'modify' && !empty($_GET['moduleid']) && is_numeric($_GET['moduleid']
                 <span><em><?php echo _SYSTEM_EXPLAIN_SHARED; ?></em></span>
             </p>
 
-            <p class="checkbox" onclick="javascript:ploopi_checkbox_click(event, 'module_herited');">
+            <p class="checkbox" onclick="javascript:ploopi.checkbox_click(event, 'module_herited');">
                 <label><?php echo _SYSTEM_LABEL_HERITED; ?>:</label>
                 <input type="checkbox" class="checkbox" name="module_herited" id="module_herited" value="1" <?php if ($module->fields['herited']) echo 'checked="checked"'; ?> tabindex="6" />
             </p>
@@ -192,7 +192,7 @@ if ($op == 'modify' && !empty($_GET['moduleid']) && is_numeric($_GET['moduleid']
                 <label>&nbsp;</label>
                 <span><a href="<?php echo ploopi\crypt::urlencode("admin.php?op=apply_heritage&moduleid={$module->fields['id']}"); ?>"><?php echo _SYSTEM_APPLYHERITAGE; ?></a><br /><em><?php echo _SYSTEM_EXPLAIN_HERITED; ?></em></span>
             </p>
-            <p class="checkbox" onclick="javascript:ploopi_checkbox_click(event, 'module_adminrestricted');">
+            <p class="checkbox" onclick="javascript:ploopi.checkbox_click(event, 'module_adminrestricted');">
                 <label><?php echo _SYSTEM_LABEL_ADMINRESTRICTED; ?>:</label>
                 <input type="checkbox" class="checkbox" name="module_adminrestricted" id="module_adminrestricted" value="1" <?php if ($module->fields['adminrestricted']) echo 'checked="checked"'; ?> tabindex="7" />
             </p>
@@ -216,7 +216,7 @@ if ($op == 'modify' && !empty($_GET['moduleid']) && is_numeric($_GET['moduleid']
                 ?>
                 </select>
             </p>
-            <p class="checkbox" onclick="javascript:ploopi_checkbox_click(event, 'module_transverseview');">
+            <p class="checkbox" onclick="javascript:ploopi.checkbox_click(event, 'module_transverseview');">
                 <label><?php echo _SYSTEM_LABEL_TRANSVERSE; ?>:</label>
                 <input type="checkbox" class="checkbox" name="module_transverseview" id="module_transverseview" value="1" <?php if ($module->fields['transverseview']) echo 'checked="checked"'; ?> tabindex="9" />
             </p>
@@ -230,13 +230,6 @@ if ($op == 'modify' && !empty($_GET['moduleid']) && is_numeric($_GET['moduleid']
         </div>
     </div>
     </form>
-    <script type="text/javascript">
-        ploopi_window_onload_stock(
-            function() {
-                $('module_label').focus();
-            }
-        );
-    </script>
     <?php
     echo ploopi\skin::get()->close_simplebloc();
 }
@@ -255,7 +248,7 @@ foreach ($sharedmodules AS $instanceid => $instance)
 {
     if (!array_key_exists($instanceid,$ownmodules))
     {
-        $desc = sprintf("<span>%s / <b>%s</b> partagé par<b>&nbsp;</span><a href=\"%s\">%s</a></b>", ploopi\str::htmlentities($instance['description']), ploopi\str::htmlentities($instance['label']), ploopi\crypt::urlencode("admin.php?workspaceid={$instance['id_workspace']}"), ploopi\str::htmlentities($instance['workspacelabel']));;
+        $desc = sprintf("<span>%s / <b>%s</b> partagÃ© par<b>&nbsp;</span><a href=\"%s\">%s</a></b>", ploopi\str::htmlentities($instance['description']), ploopi\str::htmlentities($instance['label']), ploopi\crypt::urlencode("admin.php?workspaceid={$instance['id_workspace']}"), ploopi\str::htmlentities($instance['workspacelabel']));;
         $values[$c]['values']['type'] = array('label' => ploopi\str::htmlentities($instance['moduletype']));
         $values[$c]['values']['desc'] = array('label' => $desc);
         $values[$c]['values']['actions'] = array('label' => '<a href="'.ploopi\crypt::urlencode("admin.php?op=add&instance=SHARED,{$workspaceid},{$instanceid}").'">utiliser</a>', 'sort_label' => 0);

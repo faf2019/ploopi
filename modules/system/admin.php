@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,17 +21,17 @@
 */
 
 /**
- * Gestion de l'interface générale et des accès aux différentes interfaces d'administration
+ * Gestion de l'interface gÃ©nÃ©rale et des accÃ¨s aux diffÃ©rentes interfaces d'administration
  *
  * @package system
  * @subpackage admin
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
- * Si l'utilisateur n'est pas gestionnaire, il n'a rien à faire ici => []
+ * Si l'utilisateur n'est pas gestionnaire, il n'a rien Ã  faire ici => []
  */
 if (!ploopi\acl::ismanager()) ploopi\output::redirect('admin.php?ploopi_logout');
 else
@@ -50,7 +50,7 @@ else
     switch($_SESSION['system']['level'])
     {
         /**
-         * Historiquement les 2 cas étaient séparés (groupes d'utilisateurs / espaces de travail)
+         * Historiquement les 2 cas Ã©taient sÃ©parÃ©s (groupes d'utilisateurs / espaces de travail)
          * Ils ne le sont plus.
          */
 
@@ -88,7 +88,7 @@ else
                 $workspaceid = $_SESSION['system']['workspaceid'];
             }
 
-            // toujours rien de sélectionné => recherche workspaceid par défaut
+            // toujours rien de sÃ©lectionnÃ© => recherche workspaceid par dÃ©faut
             if (empty($groupid) && empty($workspaceid))
             {
                 if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPMANAGER && $_SESSION['ploopi']['adminlevel'] < _PLOOPI_ID_LEVEL_SYSTEMADMIN) $workspaceid = $_SESSION['ploopi']['workspaceid'];
@@ -96,14 +96,14 @@ else
             }
 
             // test si workspaceid valide
-            if (!empty($workspaceid) && ($workspaceid == 1 || !isset($workspaces['list'][$workspaceid]))) // workspace non autorisé !!!
+            if (!empty($workspaceid) && ($workspaceid == 1 || !isset($workspaces['list'][$workspaceid]))) // workspace non autorisÃ© !!!
             {
                 if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPMANAGER && $_SESSION['ploopi']['adminlevel'] < _PLOOPI_ID_LEVEL_SYSTEMADMIN) $workspaceid = $_SESSION['ploopi']['workspaceid'];
                 else $workspaceid = $workspaces['tree'][1][0];
             }
 
             // test si groupid valide
-            if (!empty($groupid) && ($groupid == 1 || !isset($groups['list'][$groupid]))) // groupe non autorisé !!!
+            if (!empty($groupid) && ($groupid == 1 || !isset($groups['list'][$groupid]))) // groupe non autorisÃ© !!!
             {
                 $groupid = 0;
 
@@ -161,7 +161,7 @@ else
         break;
 
         /**
-         * Point d'entrée vers l'interface d'administration "système"
+         * Point d'entrÃ©e vers l'interface d'administration "systÃ¨me"
          */
         case 'system':
             if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_SYSTEMADMIN)

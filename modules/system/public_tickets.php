@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -28,7 +28,7 @@
  * @subpackage public
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author StÈphane Escaich
+ * @author Ovensia
  */
 
 /**
@@ -83,13 +83,13 @@ switch($sort)
     break;
 }
 
-// vÈrification du droit de visualisation des personnes concernÈes
+// v√©rification du droit de visualisation des personnes concern√©es
 $usr=new ploopi\user();
 $usr->open($_SESSION['ploopi']['userid']);
 
 // liste des users visibles par le user courant
 $lstusers=$usr->getgroups();
-// liste des espaces de travail rattachÈs
+// liste des espaces de travail rattach√©s
 $lstworkspace=array_keys($usr->getworkspaces());
 
 $sql =  "
@@ -113,7 +113,7 @@ $sql =  "
 
                     u.id as sender_user_id,
                     IFNULL(u.login, 'system') as login,
-                    IFNULL(u.firstname, 'SystËme') as firstname,
+                    IFNULL(u.firstname, 'Syst√®me') as firstname,
                     IFNULL(u.lastname, '') as lastname,
 
                     tw.notify,
@@ -199,7 +199,7 @@ if (!empty($ticket_list))
     {
         if (!isset($tickets[$fields['id_ticket']]['dest'][$fields['id']]))
         {
-            $tickets[$fields['id_ticket']]['dest'][$fields['id']] = (!is_null($fields['login'])) ? array( 'login' => $fields['login'], 'firstname' => $fields['firstname'], 'lastname' => $fields['lastname']) : array( 'login' => '<i>SupprimÈ</i>', 'firstname' => '', 'lastname' => '<i>SupprimÈ</i>');
+            $tickets[$fields['id_ticket']]['dest'][$fields['id']] = (!is_null($fields['login'])) ? array( 'login' => $fields['login'], 'firstname' => $fields['firstname'], 'lastname' => $fields['lastname']) : array( 'login' => '<i>Supprim√©</i>', 'firstname' => '', 'lastname' => '<i>Supprim√©</i>');
         }
 
         $tickets[$fields['id_ticket']]['dest'][$fields['id']]['status'][$fields['status']] = $fields['timestp'];
@@ -280,7 +280,7 @@ if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
         <div style="clear:both;text-align:right;">
             <b>Tri:</b>
             <a <?php if ($sort=='dateticket') echo 'style="font-weight:bold;"'; ?> href="<?php echo ploopi\crypt::urlencode("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets&sort=dateticket"); ?>">Date des messages</a>&nbsp;-
-            <a <?php if ($sort=='datereply') echo 'style="font-weight:bold;"'; ?> href="<?php echo ploopi\crypt::urlencode("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets&sort=datereply"); ?>">Date des rÈponses</a>&nbsp;
+            <a <?php if ($sort=='datereply') echo 'style="font-weight:bold;"'; ?> href="<?php echo ploopi\crypt::urlencode("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets&sort=datereply"); ?>">Date des r√©ponses</a>&nbsp;
         </div>
 
         <?php
@@ -296,7 +296,7 @@ if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
             &nbsp;&nbsp;
             <b>Tri:</b>
             <a <?php if ($sort=='dateticket') echo 'style="font-weight:bold;"'; ?> href="<?php echo ploopi\crypt::urlencode("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets&sort=dateticket"); ?>">Date des messages</a>&nbsp;-
-            <a <?php if ($sort=='datereply') echo 'style="font-weight:bold;"'; ?> href="<?php echo ploopi\crypt::urlencode("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets&sort=datereply"); ?>">Date des rÈponses</a>&nbsp;
+            <a <?php if ($sort=='datereply') echo 'style="font-weight:bold;"'; ?> href="<?php echo ploopi\crypt::urlencode("admin.php?ploopi_mainmenu="._PLOOPI_MENU_MYWORKSPACE."&op=tickets&sort=datereply"); ?>">Date des r√©ponses</a>&nbsp;
         </div>
         */
         ?>
@@ -309,9 +309,9 @@ if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
     <div style="float:left;width:20px;text-align:center;"><input type="checkbox" class="checkbox" onclick="javascript:ploopi_checkall(document.form_tickets_delete,'tickets_delete_id', this.checked);"></div>
     <div style="float:left;width:20px;">&nbsp;</div>
     <div style="float:left;width:20px;">&nbsp;</div>
-    <div style="float:right;width:160px;">PostÈ le</div>
+    <div style="float:right;width:160px;">Post√© le</div>
     <div style="float:right;width:180px;">Emetteur</div>
-    <div style="float:right;width:160px;">Derniere rÈponse</div>
+    <div style="float:right;width:160px;">Derniere r√©ponse</div>
     <div style="float:right;width:40px;">Vu</div>
     <div style="float:right;width:40px;">Rep</div>
     <div style="float:right;width:20px;">A</div>
@@ -426,9 +426,9 @@ if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
                     }
                     ?></div>
 
-                    <div class="system_tickets_date"><?php echo ploopi\str::htmlentities($timestp['date']); ?> ‡ <?php echo ploopi\str::htmlentities($timestp['time']); ?></div>
+                    <div class="system_tickets_date"><?php echo ploopi\str::htmlentities($timestp['date']); ?> √† <?php echo ploopi\str::htmlentities($timestp['time']); ?></div>
                     <div class="system_tickets_sender"><?php echo ploopi\str::htmlentities($username); ?></div>
-                    <div class="system_tickets_date"><?php echo ploopi\str::htmlentities($lastreply_timestp['date']); ?> ‡ <?php echo ploopi\str::htmlentities($lastreply_timestp['time']); ?></div>
+                    <div class="system_tickets_date"><?php echo ploopi\str::htmlentities($lastreply_timestp['date']); ?> √† <?php echo ploopi\str::htmlentities($lastreply_timestp['time']); ?></div>
                     <div class="system_tickets_count"><?php echo ploopi\str::htmlentities($fields['count_read']); ?></div>
                     <div class="system_tickets_count"><?php echo ploopi\str::htmlentities($fields['count_replies']); ?></div>
                     <div class="system_tickets_attachment">
@@ -464,13 +464,13 @@ if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
                                 if ($done = isset($tickets[$fields['id']]['dest'][$iddest]['status'][_PLOOPI_TICKETS_DONE]))
                                 {
                                     $ldate = ploopi\date::timestamp2local($tickets[$fields['id']]['dest'][$iddest]['status'][_PLOOPI_TICKETS_DONE]);
-                                    $strdate = "<br />(validÈ le {$ldate['date']} ‡ {$ldate['time']})";
+                                    $strdate = "<br />(valid√© le {$ldate['date']} √† {$ldate['time']})";
                                     $puce = 'green';
                                 }
                                 elseif ($opened = isset($tickets[$fields['id']]['dest'][$iddest]['status'][_PLOOPI_TICKETS_OPENED]))
                                 {
                                     $ldate = ploopi\date::timestamp2local($tickets[$fields['id']]['dest'][$iddest]['status'][_PLOOPI_TICKETS_OPENED]);
-                                    $strdate = "<br />(lu le {$ldate['date']} ‡ {$ldate['time']})";
+                                    $strdate = "<br />(lu le {$ldate['date']} √† {$ldate['time']})";
                                     $puce = 'blue';
                                 }
                                 else
@@ -498,7 +498,7 @@ if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
                         if ($fields['lastedit_timestp'])
                         {
                             $lastedit_local = ploopi\date::timestamp2local($fields['lastedit_timestp']);
-                            echo "<i>DerniËre modification le {$lastedit_local['date']} ‡ {$lastedit_local['time']}</i>";
+                            echo "<i>Derni√®re modification le {$lastedit_local['date']} √† {$lastedit_local['time']}</i>";
                         }
 
                         if ($fields['needed_validation'] > 0 && $_SESSION['ploopi']['userid'] == $tickets[$fields['id']]['id_user'] && !isset($tickets[$fields['id']]['dest'][$_SESSION['ploopi']['userid']]['status'][_PLOOPI_TICKETS_DONE]))
@@ -507,7 +507,7 @@ if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
                             <a href="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=tickets_validate&ticket_id={$fields['id']}"); ?>" class="system_tickets_tovalidate">
                                 <div class="system_tickets_tovalidate_msg">
                                     <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/attention.png">
-                                    <span>L'expÈditeur vous demande de valider ce message</span>
+                                    <span>L'exp√©diteur vous demande de valider ce message</span>
                                 </div>
                                 <div class="system_tickets_tovalidate_button">
                                     <p class="ploopi_va">
@@ -537,7 +537,7 @@ if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
                     <div class="system_tickets_buttons">
                         <p class="ploopi_va">
                             <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/tickets/attachment.png" />
-                            <span><strong>Objet liÈ</strong>: </span>
+                            <span><strong>Objet li√©</strong>: </span>
                             <?php
                             if($boolRecordIsEnabled)
                             {
@@ -559,20 +559,20 @@ if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
                 ?>
                 <div class="system_tickets_buttons">
                     <p class="ploopi_va">
-                        <a href="javascript:void(0);" onclick="javascript:ploopi_showpopup('','550',event,'click','system_popupticket');ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_replyto&ticket_id=<?php echo $fields['id']; ?>', 'system_popupticket');"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/email_reply.png">RÈpondre</a>
-                        <a href="javascript:void(0);" onclick="javascript:ploopi_showpopup('','550',event,'click','system_popupticket');ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_replyto&ticket_id=<?php echo $fields['id']; ?>&quoted=true', 'system_popupticket');"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/email_quote.png">Citer</a>
+                        <a href="javascript:void(0);" onclick="javascript:ploopi.popup.show('','550',event,'click','system_popupticket');ploopi.xhr.todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_replyto&ticket_id=<?php echo $fields['id']; ?>', 'system_popupticket');"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/email_reply.png">R√©pondre</a>
+                        <a href="javascript:void(0);" onclick="javascript:ploopi.popup.show('','550',event,'click','system_popupticket');ploopi.xhr.todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_replyto&ticket_id=<?php echo $fields['id']; ?>&quoted=true', 'system_popupticket');"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/email_quote.png">Citer</a>
                         <?php
                         if ($fields['sender_uid'] == $_SESSION['ploopi']['userid'])
                         {
                             ?>
-                            <a href="javascript:void(0);" onclick="javascript:ploopi_showpopup('','550',event,'click','system_popupticket');ploopi_xmlhttprequest_todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_modify&ticket_id=<?php echo $fields['id']; ?>', 'system_popupticket');"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/email_modify.png">Modifier</a>
+                            <a href="javascript:void(0);" onclick="javascript:ploopi.popup.show('','550',event,'click','system_popupticket');ploopi.xhr.todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_modify&ticket_id=<?php echo $fields['id']; ?>', 'system_popupticket');"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/email_modify.png">Modifier</a>
                             <?php
                         }
 
                         if (!($fields['needed_validation'] > 0 && $fields['sender_uid'] != $_SESSION['ploopi']['userid'] && !isset($tickets[$fields['id']]['dest'][$_SESSION['ploopi']['userid']]['status'][_PLOOPI_TICKETS_DONE])))
                         {
                             ?>
-                            <a href="javascript:ploopi_confirmlink('<?php echo ploopi\crypt::urlencode("admin.php?ploopi_op=tickets_delete&ticket_id={$fields['id']}"); ?>','<?php echo addslashes(_PLOOPI_LABEL_TICKET_CONFIRMDELETE); ?>');"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/email_delete.png">Supprimer</a>
+                            <a href="javascript:ploopi.confirmlink('<?php echo ploopi\crypt::urlencode("admin.php?ploopi_op=tickets_delete&ticket_id={$fields['id']}"); ?>','<?php echo addslashes(_PLOOPI_LABEL_TICKET_CONFIRMDELETE); ?>');"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/email_delete.png">Supprimer</a>
                             <?php
                         }
                         ?>
@@ -590,13 +590,13 @@ if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
 
 <p class="ploopi_va" style="padding:2px;">
     <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/arrow_all.png" /><span>&nbsp;</span><a href="javascript:void(0);" onclick="javascript:if (confirm('<?php echo addslashes(_PLOOPI_LABEL_TICKET_CONFIRMDELETE_CHECKED); ?>')) document.form_tickets_delete.submit(); return false;"><?php echo _PLOOPI_LABEL_TICKET_DELETE_CHECKED; ?></a>
-    <span>&nbsp;&nbsp;//&nbsp;LÈgende:&nbsp;&nbsp;</span>
-    <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/email_read.png" /><span>&nbsp;dÈj‡ vu&nbsp;&nbsp;</span>
+    <span>&nbsp;&nbsp;//&nbsp;L√©gende:&nbsp;&nbsp;</span>
+    <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/email_read.png" /><span>&nbsp;d√©j√† vu&nbsp;&nbsp;</span>
     <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/email_new.png" /><span>&nbsp;nouveau&nbsp;&nbsp;</span>
-    <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/attention.png" /><span>&nbsp;‡ valider&nbsp;&nbsp;</span>
+    <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/attention.png" /><span>&nbsp;√† valider&nbsp;&nbsp;</span>
     <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/p_red.png" /><span>&nbsp;non lu&nbsp;&nbsp;</span>
     <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/p_blue.png" /><span>&nbsp;lu&nbsp;&nbsp;</span>
-    <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/p_green.png" /><span>&nbsp;validÈ&nbsp;&nbsp;</span>
-    <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/tickets/attachment.png" /><span>&nbsp;objet liÈ&nbsp;&nbsp;</span>
+    <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/p_green.png" /><span>&nbsp;valid√©&nbsp;&nbsp;</span>
+    <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/tickets/attachment.png" /><span>&nbsp;objet li√©&nbsp;&nbsp;</span>
 </p>
 <?php echo ploopi\skin::get()->close_simplebloc(); ?>

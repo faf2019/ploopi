@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -27,14 +27,14 @@
  * @subpackage cron
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 
-// semaine dernière
+// semaine derniÃ¨re
 $strTsDelete = ploopi\date::timestamp_add(ploopi\date::createtimestamp(), 0, 0, 0, 0, -7, 0);
 
-// suppression des données périmées
+// suppression des donnÃ©es pÃ©rimÃ©es
 ploopi\db::get()->query("DELETE FROM `ploopi_log` WHERE ts < {$strTsDelete}");
 
 // optimisation des tables

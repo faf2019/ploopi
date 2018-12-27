@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,13 +21,13 @@
 */
 
 /**
- * Interface publique du module système (tickets, annotations, recherche, etc..)
+ * Interface publique du module systÃ¨me (tickets, annotations, recherche, etc..)
  *
  * @package system
  * @subpackage public
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
@@ -89,18 +89,18 @@ switch($op)
         {
             if ($_POST['usernewpass'] != '')
             {
-                // Vérification de l'ancien mot de passe
+                // VÃ©rification de l'ancien mot de passe
                 if (strcmp($user->fields['password'], user::generate_hash($_POST['useroldpass'], $user->fields['login'])) == 0)
                 {
-                    // Mots de passes équivalents
+                    // Mots de passes Ã©quivalents
                     if ($_POST['usernewpass'] == $_POST['usernewpass_confirm'])
                     {
-                        // Complexité ok
+                        // ComplexitÃ© ok
                         if (!_PLOOPI_USE_COMPLEXE_PASSWORD || ploopi\security::checkpasswordvalidity($_POST['usernewpass']))
                         {
                             // Affectation du mot de passe
                             $user->setpassword($_POST['usernewpass']);
-                            // Mise à jour htpasswd
+                            // Mise Ã  jour htpasswd
                             if ($_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_generate_htpasswd']) system_generate_htpasswd($user->fields['login'], $_POST['usernewpass']);
                         }
                         else $error = 'passrejected';
@@ -117,7 +117,7 @@ switch($op)
         {
             ploopi\fs::makedir(_PLOOPI_PATHDATA._PLOOPI_SEP.'system');
 
-            // photo temporaire présente => copie dans le dossier définitif
+            // photo temporaire prÃ©sente => copie dans le dossier dÃ©finitif
             rename($_SESSION['system']['user_photopath'], $user->getphotopath());
             unset($_SESSION['system']['user_photopath']);
         }

@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -27,11 +27,11 @@
  * @subpackage public
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
- * Création du titre de la page
+ * CrÃ©ation du titre de la page
  */
 echo ploopi\skin::get()->create_pagetitle(_PLOOPI_LABEL_MYWORKSPACE);
 echo ploopi\skin::get()->open_simplebloc(_PLOOPI_LABEL_MYDATA);
@@ -53,7 +53,7 @@ foreach ($_SESSION['ploopi']['workspaces'] as $group)
 {
     if (!empty($group['adminlevel']) && $group['id'] != _PLOOPI_SYSTEMGROUP)
     {
-        echo ploopi\skin::get()->open_simplebloc(ploopi\str::htmlentities("Espace « {$group['label']} »"));
+        echo ploopi\skin::get()->open_simplebloc(ploopi\str::htmlentities("Espace Â« {$group['label']} Â»"));
 
         $columns = array();
         $values = array();

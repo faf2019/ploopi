@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2008 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,17 +21,17 @@
 */
 
 /**
- * Interface de gestion des affectations de rôles
+ * Interface de gestion des affectations de rÃ´les
  *
  * @package system
  * @subpackage admin
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
- * Recherche des utilisateurs qui possèdent le rôle
+ * Recherche des utilisateurs qui possÃ¨dent le rÃ´le
  */
 
 $sql =  "
@@ -48,7 +48,7 @@ ploopi\db::get()->query($sql);
 $users = ploopi\db::get()->getarray();
 
 /**
- * Recherche des groupes d'utilisateurs qui possèdent le rôle
+ * Recherche des groupes d'utilisateurs qui possÃ¨dent le rÃ´le
  */
 
 $sql =  "
@@ -67,7 +67,7 @@ $groups = ploopi\db::get()->getarray();
 if (empty($groups) && empty($users))
 {
     ?>
-    <div style="padding:4px;font-weight:bold;">Aucun utilisateur ou groupe affecté à ce rôle, utilisez la recherche pour en ajouter</div>
+    <div style="padding:4px;font-weight:bold;">Aucun utilisateur ou groupe affectÃ© Ã  ce rÃ´le, utilisez la recherche pour en ajouter</div>
     <?php
     }
     else

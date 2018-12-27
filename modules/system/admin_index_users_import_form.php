@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -28,9 +28,9 @@
  * @subpackage admin
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane ESCAICH
+ * @author Ovensia
  *
- * @todo Améliorer l'interface et les fonctionnalités
+ * @todo AmÃ©liorer l'interface et les fonctionnalitÃ©s
  */
 
 /**
@@ -39,22 +39,22 @@
 
 $arrFields = array(
     'lastname'      =>  "Nom (obligatoire)",
-    'firstname'     =>  "Prénom (obligatoire)",
+    'firstname'     =>  "PrÃ©nom (obligatoire)",
     'login'         =>  "Identifiant utilisateur (obligatoire)",
     'password'      =>  "Mot de passe (obligatoire)",
-    'adminlevel'    =>  "Niveau du compte. S'il n'est pas renseigné, il sera affecté au niveau le plus bas",
+    'adminlevel'    =>  "Niveau du compte. S'il n'est pas renseignÃ©, il sera affectÃ© au niveau le plus bas",
     'email'         =>  "Adresse de courriel",
-    'phone'         =>  "Numéro de Téléphone",
-    'fax'           =>  "Numéro de Fax",
-    'mobile'        =>  "Numéro de Portable",
-    'number'        =>  "Numéro de Poste",
+    'phone'         =>  "NumÃ©ro de TÃ©lÃ©phone",
+    'fax'           =>  "NumÃ©ro de Fax",
+    'mobile'        =>  "NumÃ©ro de Portable",
+    'number'        =>  "NumÃ©ro de Poste",
 
     'address'       =>  "Adresse",
     'postalcode'    =>  "Code Postal",
     'city'          =>  "Ville",
     'country'       =>  "Pays",
 
-    'building'      =>  "Bâtiment",
+    'building'      =>  "BÃ¢timent",
     'floor'         =>  "Etage",
     'office'        =>  "Bureau",
 
@@ -66,13 +66,13 @@ $arrFields = array(
     'date_expire'   => "Date d'expiration du compte (AAAAMMJJHHMMSS)",
     'service2'      => "Bureau",
     'ticketsbyemail' => "Copie des messages par Courriel (1/0)",
-    'servertimezone' => "Synchronisé avec le fuseau horaire du serveur (1/0)",
-    'timezone'      => "Fuseau horaire spécifique (<a href=\"http://php.net/manual/fr/timezones.php)\" target=\"_new\">http://php.net/manual/fr/timezones.php</a>)",
+    'servertimezone' => "SynchronisÃ© avec le fuseau horaire du serveur (1/0)",
+    'timezone'      => "Fuseau horaire spÃ©cifique (<a href=\"http://php.net/manual/fr/timezones.php)\" target=\"_new\">http://php.net/manual/fr/timezones.php</a>)",
     'color'         => "Code couleur (#0F0F0F)",
-    'civility'      => "Civilité (M/Mme/Mlle)",
-    'password_force_update' => "Forcer le changement du mot de passe à la prochaine connexion (1/0)",
-    'password_validity'     => "Durée de validité du mot de passe en jours (0 = illimité)",
-    'disabled'      => "Compte désactivé",
+    'civility'      => "CivilitÃ© (M/Mme/Mlle)",
+    'password_force_update' => "Forcer le changement du mot de passe Ã  la prochaine connexion (1/0)",
+    'password_validity'     => "DurÃ©e de validitÃ© du mot de passe en jours (0 = illimitÃ©)",
+    'disabled'      => "Compte dÃ©sactivÃ©",
 
 
     'comments'      =>  "Commentaires"
@@ -88,7 +88,7 @@ $arrFields = array(
             <input type="file" class="text" name="system_user_file" tabindex="100" />
         </p>
         <p>
-            <label>Séparateur:</label>
+            <label>SÃ©parateur:</label>
             <select class="select" name="system_user_sep" tabindex="102" style="width:40px;">
                 <option value="<?php echo ploopi\str::htmlentities(',') ?>"><?php echo ploopi\str::htmlentities(',') ?></option>
                 <option value="<?php echo ploopi\str::htmlentities(';') ?>"><?php echo ploopi\str::htmlentities(';') ?></option>
@@ -100,8 +100,8 @@ $arrFields = array(
     </div>
 
     <div style="padding:4px;">
-        Le fichier source doit être au format CSV standard ( séparateur : , ou ; / délimiteur : " / caractère d'échappement : \ )<br>
-        La première ligne doit être une ligne de description des colonnes.<br>
+        Le fichier source doit Ãªtre au format CSV standard ( sÃ©parateur : , ou ; / dÃ©limiteur : " / caractÃ¨re d'Ã©chappement : \ )<br>
+        La premiÃ¨re ligne doit Ãªtre une ligne de description des colonnes.<br>
         Cela signifie qu'elle contient certains ou tous les champs de la liste ci-dessous :<br>
         <ul>
             <?php

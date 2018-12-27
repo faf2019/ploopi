@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,13 +21,13 @@
 */
 
 /**
- * Affichage des groupes d'utilisateurs "rattachables" à l'espace de travail courant
+ * Affichage des groupes d'utilisateurs "rattachables" Ã  l'espace de travail courant
  *
  * @package system
  * @subpackage admin
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
@@ -41,7 +41,7 @@ $arrWhere[] = 'ploopi_group.system = 0';
 
 $arrCurrentGroups = array_keys($workspace->getgroups());
 
-if (!ploopi\acl::isadmin()) // filtrage des groupes visibles si l'utilisateur n'est pas admin système
+if (!ploopi\acl::isadmin()) // filtrage des groupes visibles si l'utilisateur n'est pas admin systÃ¨me
 {
     // liste des groupes (id) "rattachables" (sans filtrage)
     $grp_list = array_diff(array_keys($workspaces['list'][$workspaceid]['groups']), $arrCurrentGroups);
@@ -72,7 +72,7 @@ else
 
     if ($alphaTabItem == -1)
     {
-        // aucun caractère de filtrage sélectionné. On recherche si on en met un par défaut (si trop de groupes) ou si on sélectionne "tous"
+        // aucun caractÃ¨re de filtrage sÃ©lectionnÃ©. On recherche si on en met un par dÃ©faut (si trop de groupes) ou si on sÃ©lectionne "tous"
         if ($nbgroup < 25) $alphaTabItem = 99;
     }
 }
@@ -82,7 +82,7 @@ else
     <?php
     $tabs_char = array();
 
-    // Génération des onglets
+    // GÃ©nÃ©ration des onglets
     for($i=1;$i<27;$i++)
         $tabs_char[$i] =
             array(

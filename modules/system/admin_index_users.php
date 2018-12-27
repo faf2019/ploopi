@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -27,7 +27,7 @@
  * @subpackage admin
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
@@ -53,22 +53,33 @@ switch($op)
 
             $_SESSION['system']['save_user'] = $_POST;
 
-            if (!isset($_GET['confirm'])) // pas de confirmation de création demandée
+            if (!isset($_GET['confirm'])) // pas de confirmation de crÃ©ation demandÃ©e
             {
-                // test si utilisateur existe déjà => demande de confirmation de création (homonyme ?)
-                ploopi\db::get()->query("SELECT id FROM ploopi_user WHERE (lastname = '{$_POST['user_lastname']}' AND firstname = '{$_POST['user_firstname']}') OR (login = '".ploopi\db::get()->addslashes($_POST['user_login'])."')");
-                if(ploopi\db::get()->numrows()) ploopi\output::redirect("admin.php?op=manage_account&confirm");
+                if (isset($_POST['user_lastname']) && isset($_POST['user_firstname'])) {
+                    // test si utilisateur existe dÃ©jÃ  => demande de confirmation de crÃ©ation (homonyme ?)
+                    ploopi\db::get()->query("
+                        SELECT  id
+                        FROM    ploopi_user
+                        WHERE   (
+                                lastname = '".ploopi\db::get()->addslashes($_POST['user_lastname'])."'
+                            AND firstname = '".ploopi\db::get()->addslashes($_POST['user_firstname'])."'
+                        )
+                        OR login = '".ploopi\db::get()->addslashes($_POST['user_login'])."'
+                    ");
+
+                    if(ploopi\db::get()->numrows()) ploopi\output::redirect("admin.php?op=manage_account&confirm");
+                }
             }
-            else // on vérifie qd même le doublon de login
+            else // on vÃ©rifie qd mÃªme le doublon de login
             {
                 // test si login deja existant
                 ploopi\db::get()->query("SELECT id FROM ploopi_user WHERE login = '".ploopi\db::get()->addslashes($_POST['user_login'])."'");
-                // problème, ce login existe déjà => redirect
+                // problÃ¨me, ce login existe dÃ©jÃ  => redirect
                 if(ploopi\db::get()->numrows()) ploopi\output::redirect("admin.php?op=manage_account&confirm");
             }
         }
 
-        // on efface la sauvegarde des données utilisateur si elles existent
+        // on efface la sauvegarde des donnÃ©es utilisateur si elles existent
         if (isset($_SESSION['system']['save_user'])) unset($_SESSION['system']['save_user']);
 
         if (!isset($_POST['user_ticketsbyemail'])) $user->fields['ticketsbyemail'] = 0;
@@ -99,15 +110,15 @@ switch($op)
         {
             if ($user->new || $_POST['usernewpass'] != '')
             {
-                // Mots de passes équivalents
+                // Mots de passes Ã©quivalents
                 if ($_POST['usernewpass'] == $_POST['usernewpass_confirm'])
                 {
-                    // Complexité ok
+                    // ComplexitÃ© ok
                     if (!_PLOOPI_USE_COMPLEXE_PASSWORD || ploopi\security::checkpasswordvalidity($_POST['usernewpass']))
                     {
                         // Affectation du mot de passe
                         $user->setpassword($_POST['usernewpass']);
-                        // Mise à jour htpasswd
+                        // Mise Ã  jour htpasswd
                         if ($_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_generate_htpasswd']) system_generate_htpasswd($user->fields['login'], $_POST['usernewpass']);
                     }
                     else $error = 'passrejected';
@@ -136,7 +147,7 @@ switch($op)
         {
             ploopi\fs::makedir(_PLOOPI_PATHDATA._PLOOPI_SEP.'system');
 
-            // photo temporaire présente => copie dans le dossier définitif
+            // photo temporaire prÃ©sente => copie dans le dossier dÃ©finitif
             rename($_SESSION['system']['user_photopath'], $user->getphotopath());
             unset($_SESSION['system']['user_photopath']);
         }
@@ -395,7 +406,7 @@ switch($_SESSION['system']['usrTabItem'])
             break;
 
             case 'attach_user':
-                // on efface la sauvegarde des données utilisateur si elles existent
+                // on efface la sauvegarde des donnÃ©es utilisateur si elles existent
                 if (isset($_SESSION['system']['save_user'])) unset($_SESSION['system']['save_user']);
 
                 $user = new ploopi\user();
@@ -513,7 +524,7 @@ switch($_SESSION['system']['usrTabItem'])
             case 'end':
                 ?>
                 <div style="padding:2px;border-bottom:1px solid #a0a0a0;background-color:#e0e0e0;"><strong>Import d'un fichier CSV contenant des utilisateurs :</strong></div>
-                <div style="padding:4px;">Traitement terminé</div>
+                <div style="padding:4px;">Traitement terminÃ©</div>
                 <?php
                 if (!empty($_SESSION['system']['user_import_errors']))
                 {
@@ -561,7 +572,7 @@ switch($_SESSION['system']['usrTabItem'])
                             $intJ++;
                         }
 
-                        // On vérifie que le login n'existe pas déjà
+                        // On vÃ©rifie que le login n'existe pas dÃ©jÃ 
                         ploopi\db::get()->query("
                             SELECT  login
                             FROM    ploopi_user
@@ -575,12 +586,12 @@ switch($_SESSION['system']['usrTabItem'])
                             // On ajoute l'utilisateur
                             $objUser->save();
 
-                            // On le rattache au groupe sélectionné
+                            // On le rattache au groupe sÃ©lectionnÃ©
                             $objUser->attachtogroup($groupid);
                         }
                         else
                         {
-                            $_SESSION['system']['user_import_errors'][] = "Un utilisateur existe déjà avec le login '{$objUser->fields['login']}'";
+                            $_SESSION['system']['user_import_errors'][] = "Un utilisateur existe dÃ©jÃ  avec le login '{$objUser->fields['login']}'";
                         }
                     }
                 }

@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -27,7 +27,7 @@
  * @subpackage admin
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
@@ -271,7 +271,7 @@ switch ($_SESSION['system']['level'])
                     break;
 
                     case 'save_workspace' :
-                        // Il faut être admin d'espace ou mieux pour pouvoir sauvegarder un espace de travail
+                        // Il faut Ãªtre admin d'espace ou mieux pour pouvoir sauvegarder un espace de travail
                         if ($_SESSION['ploopi']['adminlevel'] <= _PLOOPI_ID_LEVEL_GROUPMANAGER) ploopi\output::redirect("admin.php?workspaceid={$workspace_id}");
 
                         $workspace = new ploopi\workspace();

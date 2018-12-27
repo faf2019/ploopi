@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,13 +21,13 @@
 */
 
 /**
- * Affichage temps réel du log 'utilisateurs connectés'
+ * Affichage temps rÃ©el du log 'utilisateurs connectÃ©s'
  *
  * @package system
  * @subpackage system
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
@@ -94,14 +94,14 @@ ploopi\skin::get()->display_array($columns, $values, 'array_connectedusers', arr
 if (isset($_GET['monitoring']))
 {
     ?>
-    <input type="button" class="button" onclick="javascript:document.location.href='<?php echo ploopi\crypt::urlencode("admin.php?op=connectedusers"); ?>'" value="Arrêter le  monitoring">
+    <input type="button" class="button" onclick="javascript:document.location.href='<?php echo ploopi\crypt::urlencode("admin.php?op=connectedusers"); ?>'" value="ArrÃªter le  monitoring">
     <?php
 }
 else
 {
     ?>
     <input type="text" class="text" value="<?php echo (isset($_GET['monitoring'])) ? ploopi\str::htmlentities($_GET['monitoring']) : 2; ?>" size="2" id="system_monitoring_delay">
-    <input type="button" class="button" onclick="javascript:document.location.href='<?php echo ploopi\crypt::urlencode("admin.php?op=connectedusers"); ?>&monitoring='+$('system_monitoring_delay').value;" value="Monitoring">
+    <input type="button" class="button" onclick="javascript:document.location.href='<?php echo ploopi\crypt::urlencode("admin.php?op=connectedusers"); ?>&monitoring='+jQuery('#system_monitoring_delay')[0].value;" value="Monitoring">
     <?php
 }
 ?>

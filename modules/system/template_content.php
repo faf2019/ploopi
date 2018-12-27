@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,13 +21,13 @@
 */
 
 /**
- * Interfaces systËmes intÈgrables dans le template frontoffice (EXPERIMENTAL !)
+ * Interfaces syst√®mes int√©grables dans le template frontoffice (EXPERIMENTAL !)
  *
  * @package system
  * @subpackage template
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author StÈphane Escaich
+ * @author Ovensia
  *
  * @todo Finaliser/Tester/Renforcer
  */
@@ -46,14 +46,14 @@ switch($op)
         $template_body->assign_block_vars("switch_content_module_system.switch_tickets", array());
 
         $template_body->assign_block_vars('switch_content_module_system.switch_tickets.menu' , array(
-                                'LABEL' => 'Messages reÁus',
+                                'LABEL' => 'Messages re√ßus',
                                 'URL' => ploopi\crypt::urlencode("index.php?modcontent={$template_moduleid}&op=showtickets&menu=received"),
                                 'SELECTED' => (!isset($_GET['menu']) || (isset($_GET['menu']) && $_GET['menu'] == 'received')) ? 'sel' : 'notsel'
                                 )
                             );
 
         $template_body->assign_block_vars('switch_content_module_system.switch_tickets.menu' , array(
-                                'LABEL' => 'Messages envoyÈs',
+                                'LABEL' => 'Messages envoy√©s',
                                 'URL' => ploopi\crypt::urlencode("index.php?modcontent={$template_moduleid}&op=showtickets&menu=sent"),
                                 'SELECTED' => (isset($_GET['menu']) && $_GET['menu'] == 'sent') ? 'sel' : 'notsel'
                                 )
@@ -61,7 +61,7 @@ switch($op)
 
         if (!isset($_GET['menu']) || (isset($_GET['menu']) && $_GET['menu'] == 'received'))
         {
-            $template_body->assign_vars(array('TICKETS_TITLE' => 'Messages reÁus'));
+            $template_body->assign_vars(array('TICKETS_TITLE' => 'Messages re√ßus'));
 
             $sql =  "
                     SELECT      t.id,
@@ -118,7 +118,7 @@ switch($op)
 
         if (isset($_GET['menu']) && $_GET['menu'] == 'sent')
         {
-            $template_body->assign_vars(array('TICKETS_TITLE' => 'Messages envoyÈs'));
+            $template_body->assign_vars(array('TICKETS_TITLE' => 'Messages envoy√©s'));
 
             $sql =  "
                     SELECT      t.id,

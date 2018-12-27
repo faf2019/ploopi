@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,13 +21,13 @@
 */
 
 /**
- * Fonctions javascript dynamique du module Système
+ * Fonctions javascript dynamique du module SystÃ¨me
  *
  * @package system
  * @subpackage javascript
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
@@ -39,21 +39,21 @@ ploopi\module::init('system', false, false, false);
 ?>
 function system_group_validate(form)
 {
-    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_GROUP_NAME; ?>",form.group_label,"string")) return(true);
+    if (ploopi.validatefield("<?php echo _SYSTEM_LABEL_GROUP_NAME; ?>",form.group_label,"string")) return(true);
 
     return(false);
 }
 
 function system_workspace_validate(form)
 {
-    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_GROUP_NAME; ?>",form.workspace_label,"string")) return(true);
+    if (ploopi.validatefield("<?php echo _SYSTEM_LABEL_GROUP_NAME; ?>",form.workspace_label,"string")) return(true);
 
     return(false);
 }
 
 function role_validate(form)
 {
-    if (ploopi_validatefield("<?php echo _SYSTEM_LABEL_LABEL; ?>",form.role_label,"string"))
+    if (ploopi.validatefield("<?php echo _SYSTEM_LABEL_LABEL; ?>",form.role_label,"string"))
         return true;
 
     return false;

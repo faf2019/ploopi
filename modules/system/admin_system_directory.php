@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -27,7 +27,7 @@
  * @subpackage system
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
@@ -40,7 +40,7 @@ $intMaxResponse = 500;
 
 $arrFilter = array();
 
-// On ne veut pas les caractères % et | dans la recherche avec LIKE
+// On ne veut pas les caractÃ¨res % et | dans la recherche avec LIKE
 $pattern = '/%|_/';
 
 // Lecture SESSION
@@ -56,7 +56,7 @@ if (isset($_POST['ploopi_email']) && !preg_match($pattern, $_POST['ploopi_email'
 if (isset($_POST['ploopi_last_connection_1'])) $arrFilter['ploopi_last_connection_1'] = $_POST['ploopi_last_connection_1'];
 if (isset($_POST['ploopi_last_connection_2'])) $arrFilter['ploopi_last_connection_2'] = $_POST['ploopi_last_connection_2'];
 
-// Affectation de valeurs par défaut si non défini
+// Affectation de valeurs par dÃ©faut si non dÃ©fini
 if (!isset($arrFilter['ploopi_lastname'])) $arrFilter['ploopi_lastname'] = '';
 if (!isset($arrFilter['ploopi_firstname'])) $arrFilter['ploopi_firstname'] = '';
 if (!isset($arrFilter['ploopi_login'])) $arrFilter['ploopi_login'] = '';
@@ -74,7 +74,7 @@ $_SESSION['system']['directoryform'] = $arrFilter;
     <label>Nom: </label>
     <input type="text" class="text" name="ploopi_lastname" value="<?php echo ploopi\str::htmlentities($arrFilter['ploopi_lastname']); ?>" style="width:100px;" tabindex="100" />
 
-    <label>Prénom: </label>
+    <label>PrÃ©nom: </label>
     <input type="text" class="text" name="ploopi_firstname" value="<?php echo ploopi\str::htmlentities($arrFilter['ploopi_firstname']); ?>" style="width:100px;" tabindex="105" />
 
     <label>Login: </label>
@@ -97,14 +97,14 @@ $_SESSION['system']['directoryform'] = $arrFilter;
     <?php ploopi\date::open_calendar('ploopi_last_connection_2'); ?>
 
     <input type="submit" class="button" value="Filtrer" tabindex="150" />
-    <input type="submit" class="button" name="delete" value="Supprimer" style="color:#a60000" tabindex="155" onclick="if (!confirm('Attention vous allez supprimer définitivement les utilisateurs correspondant à ce filtre.\nContinuer ?')) return false;" />
-    <input type="button" class="button" value="Réinitialiser" onclick="document.location.href='<?php echo ploopi\crypt::urlencode('admin.php?sysToolbarItem=directory&system_filter_reset'); ?>';" tabindex="160" />
+    <input type="submit" class="button" name="delete" value="Supprimer" style="color:#a60000" tabindex="155" onclick="if (!confirm('Attention vous allez supprimer dÃ©finitivement les utilisateurs correspondant Ã  ce filtre.\nContinuer ?')) return false;" />
+    <input type="button" class="button" value="RÃ©initialiser" onclick="document.location.href='<?php echo ploopi\crypt::urlencode('admin.php?sysToolbarItem=directory&system_filter_reset'); ?>';" tabindex="160" />
 </div>
 </form>
 <?php
 
-// On charge un maximum de données dans des tableaux pour simplifier les recherches par la suite
-// et pour résoudre des cas complexes (retrouver un utilisateur dans un espace attaché à un sous-groupe d'utilisateur dans un sous-espace de travail)
+// On charge un maximum de donnÃ©es dans des tableaux pour simplifier les recherches par la suite
+// et pour rÃ©soudre des cas complexes (retrouver un utilisateur dans un espace attachÃ© Ã  un sous-groupe d'utilisateur dans un sous-espace de travail)
 
 // ETAPE 1 : CHARGEMENT
 
@@ -174,7 +174,7 @@ while ($row = $objRs->fetchrow()) $arrGroups[$row['id']] = array('desc' => $row,
 // Chargement de tous les groupes en fonction du filtre de recherche
 if ($arrFilter['ploopi_group'] != '')
 {
-    // Chargement des groupes autorisés
+    // Chargement des groupes autorisÃ©s
     $objQuery = new ploopi\query_select();
     $objQuery->add_select('id');
     $objQuery->add_from('ploopi_group');
@@ -258,8 +258,8 @@ while ($row = $objRs->fetchrow())
     }
 }
 
-// On construit pour chaque espace, la liste des sous-groupes inclus (partie 2, héritage des sous-espaces)
-// PAS OPTIMISE ! IL FAUDRAIT PARTIR DES BRANCHES ET REMONTER, ça reste acceptable.
+// On construit pour chaque espace, la liste des sous-groupes inclus (partie 2, hÃ©ritage des sous-espaces)
+// PAS OPTIMISE ! IL FAUDRAIT PARTIR DES BRANCHES ET REMONTER, Ã§a reste acceptable.
 foreach($arrWorkspaces as $intId => $row)
 {
     $arrWorkspaces[$intId]['groups_included'] = $arrWorkspaces[$intId]['groups_family'];
@@ -278,13 +278,13 @@ foreach($arrWorkspaces as $intId => $row)
 }
 
 // On cherche :
-// * Les utilisateurs inclus dans l'espace sélectionné, c'est à dire :
-//   Tous les utilisateurs de l'espace courant et des sous-espaces, en incluant les rattachements de groupes et sous-groupes (et les utilisateurs rattachés en direct)
-// * Il faut donc utiliser la propriété "groups_included" de l'espace de travail qui contient tous les sous-groupes (directs, indirects, sous-espaces)
-// * Il faut également vérifier l'appartenance aux groupes/espaces filtrés (par le nom)
+// * Les utilisateurs inclus dans l'espace sÃ©lectionnÃ©, c'est Ã  dire :
+//   Tous les utilisateurs de l'espace courant et des sous-espaces, en incluant les rattachements de groupes et sous-groupes (et les utilisateurs rattachÃ©s en direct)
+// * Il faut donc utiliser la propriÃ©tÃ© "groups_included" de l'espace de travail qui contient tous les sous-groupes (directs, indirects, sous-espaces)
+// * Il faut Ã©galement vÃ©rifier l'appartenance aux groupes/espaces filtrÃ©s (par le nom)
 
 
-// Sélection des utilisateurs
+// SÃ©lection des utilisateurs
 $objQuery = new ploopi\query_select();
 $objQuery->add_from('ploopi_user u');
 
@@ -300,7 +300,7 @@ if ($arrFilter['ploopi_last_connection_2'] != '') $objQuery->add_where('u.last_c
 $objQuery->add_leftjoin('ploopi_workspace_user wu ON wu.id_user = u.id');
 $objQuery->add_leftjoin('ploopi_group_user gu ON gu.id_user = u.id');
 
-// Détermination des espaces/groupes à utiliser dans le filtre
+// DÃ©termination des espaces/groupes Ã  utiliser dans le filtre
 $arrQueryGroups = array();
 $arrQueryWorkspaces = array();
 
@@ -312,10 +312,10 @@ if ($_SESSION['system']['level'] == 'work')
 
     if (!empty($arrWorkspaces[$workspaceid]['groups_included'])) $arrQueryGroups = $arrWorkspaces[$workspaceid]['groups_included'];
 
-    // Intersection entre les groupes possibles et les groupes filtrés
+    // Intersection entre les groupes possibles et les groupes filtrÃ©s
     if (!empty($arrQueryGroups) && !empty($arrFilteredGroups)) $arrQueryGroups = array_intersect($arrQueryGroups, $arrFilteredGroups);
 
-    // Intersection entre les espaces possibles et les espaces filtrés
+    // Intersection entre les espaces possibles et les espaces filtrÃ©s
     if (!empty($arrQueryWorkspaces) && !empty($arrFilteredWorkspaces)) $arrQueryWorkspaces = array_intersect($arrQueryWorkspaces, $arrFilteredWorkspaces);
 }
 else
@@ -353,7 +353,7 @@ else
     {
         $objQuery->add_where('(wu.id_workspace IN (%e) AND gu.id_group IN (%e))', array($arrQueryWorkspaces, $arrQueryGroups));
     }
-    else // Au moins un filtre sur espace ou groupe (les espaces sont filtrés en amont)
+    else // Au moins un filtre sur espace ou groupe (les espaces sont filtrÃ©s en amont)
     {
         if ($arrFilter['ploopi_workspace'] != '')
         {
@@ -368,20 +368,20 @@ else
 
 $objQueryCount = clone $objQuery;
 
-// On distingue la requête "Count" de la requête "Data"
+// On distingue la requÃªte "Count" de la requÃªte "Data"
 $objQuery->add_select('DISTINCT u.id, u.*');
 $objQuery->add_orderby('u.lastname, u.firstname');
 $objQueryCount->add_select('COUNT(DISTINCT u.id) as c');
 
-// Sauvegarde de la dernière requête SQL pour export
+// Sauvegarde de la derniÃ¨re requÃªte SQL pour export
 ploopi\session::setvar('directory_sql', $objQuery->get_sql());
 
-// Lecture du nombre de réponses
+// Lecture du nombre de rÃ©ponses
 $intNbRep = current($objQueryCount->execute()->fetchrow());
 
 if (isset($_REQUEST['delete'])) {
 
-    // Exécution de la requête principale permettant de lister les utilisateurs selon le filtre
+    // ExÃ©cution de la requÃªte principale permettant de lister les utilisateurs selon le filtre
     $objRs = $objQuery->execute();
     while ($row = $objRs->fetchrow()) {
         $objUser = new ploopi\user();
@@ -403,7 +403,7 @@ if (isset($_REQUEST['delete'])) {
     if ($_SESSION['system']['level'] == 'system')
     {
         ?>
-        <span>Vous pouvez retrouver ici l'ensemble des utilisateurs du sytème avec leur profil complet.<br />Vous ne pouvez cependant pas les gérer. Pour cela vous devez accéder à l'<a href="<?php echo ploopi\crypt::urlencode('admin.php?system_level=work'); ?>">interface d'administration des espaces de travail</a>.</span>
+        <span>Vous pouvez retrouver ici l'ensemble des utilisateurs du sytÃ¨me avec leur profil complet.<br />Vous ne pouvez cependant pas les gÃ©rer. Pour cela vous devez accÃ©der Ã  l'<a href="<?php echo ploopi\crypt::urlencode('admin.php?system_level=work'); ?>">interface d'administration des espaces de travail</a>.</span>
         <?php
     }
     else
@@ -417,13 +417,13 @@ if (isset($_REQUEST['delete'])) {
     if ($intNbRep > $intMaxResponse)
     {
         ?>
-        <br /><strong class="error">Il y a <?php echo $intNbRep ?> réponses (<?php echo $intMaxResponse; ?> max), vous devriez préciser votre recherche ou exporter les données.</strong>
+        <br /><strong class="error">Il y a <?php echo $intNbRep ?> rÃ©ponses (<?php echo $intMaxResponse; ?> max), vous devriez prÃ©ciser votre recherche ou exporter les donnÃ©es.</strong>
         <?php
     }
     else
     {
         ?>
-        <br /><strong><?php echo $intNbRep; ?> utilisateur(s) trouvé(s).</strong>
+        <br /><strong><?php echo $intNbRep; ?> utilisateur(s) trouvÃ©(s).</strong>
         <?php
     }
     ?>
@@ -450,14 +450,14 @@ if (isset($_REQUEST['delete'])) {
 <?php
 if ($intNbRep <= $intMaxResponse && $intNbRep > 0)
 {
-    // Définition des colonnes du tableau (interface)
+    // DÃ©finition des colonnes du tableau (interface)
     $arrResult = array(
         'columns' => array(),
         'rows' => array()
     );
 
     $arrResult['columns']['left']['nom'] = array(
-        'label' => 'Nom/prénom',
+        'label' => 'Nom/prÃ©nom',
         'width' => '200',
         'options' => array('sort' => true)
     );
@@ -480,7 +480,7 @@ if ($intNbRep <= $intMaxResponse && $intNbRep > 0)
     );
 
     $arrResult['columns']['auto']['workspaces'] = array(
-        'label' => 'Espaces de travail / Rôles',
+        'label' => 'Espaces de travail / RÃ´les',
         'options' => array('sort' => true)
     );
 
@@ -492,25 +492,25 @@ if ($intNbRep <= $intMaxResponse && $intNbRep > 0)
         );
     }
 
-    // Exécution de la requête principale permettant de lister les utilisateurs selon le filtre
+    // ExÃ©cution de la requÃªte principale permettant de lister les utilisateurs selon le filtre
     $arrUser = $objQuery->execute()->getarray(true);
 
 
-    // Requête permettant de connaître les groupes attachés aux utilisateurs
+    // RequÃªte permettant de connaÃ®tre les groupes attachÃ©s aux utilisateurs
     $objQuery = new ploopi\query_select();
     $objQuery->add_select('gu.*');
     $objQuery->add_from('ploopi_group_user gu');
     $objQuery->add_where('gu.id_user IN (%e)', array(array_keys($arrUser)));
     $objRs = $objQuery->execute();
 
-    $arrGroupsId = array(); // Contient les Id des groupes concernés par les utilisateurs affichés
+    $arrGroupsId = array(); // Contient les Id des groupes concernÃ©s par les utilisateurs affichÃ©s
     while ($row = $objRs->fetchrow())
     {
         $arrUser[$row['id_user']]['groups'][$row['id_group']] = $arrGroups[$row['id_group']]['desc']['label'];
         $arrGroupsId[$row['id_group']] = $row['id_group'];
     }
 
-    // Requête permettant de connaître les "adminlevel" des groupes rattachés aux espaces de la recherche
+    // RequÃªte permettant de connaÃ®tre les "adminlevel" des groupes rattachÃ©s aux espaces de la recherche
     $objQuery = new ploopi\query_select();
     $objQuery->add_select('wg.*');
     $objQuery->add_from('ploopi_workspace_group wg');
@@ -521,7 +521,7 @@ if ($intNbRep <= $intMaxResponse && $intNbRep > 0)
 
     while ($row = $objRs->fetchrow()) $arrAdminLevel[$row['id_workspace']][$row['id_group']] = $row['adminlevel'];
 
-    // Récupération des espaces des utilisateurs trouvés (via les rattachements de groupes)
+    // RÃ©cupÃ©ration des espaces des utilisateurs trouvÃ©s (via les rattachements de groupes)
     foreach($arrUser as $intIdUser => $rowUser)
     {
         if (!empty($rowUser['groups']))
@@ -530,12 +530,12 @@ if ($intNbRep <= $intMaxResponse && $intNbRep > 0)
             {
                 if (empty($arrUser[$intIdUser]['workspaces'][$intIdWorkspace]))
                 {
-                    // Permet de déterminer sur l'utilisateur est attaché à cet espace
+                    // Permet de dÃ©terminer sur l'utilisateur est attachÃ© Ã  cet espace
                     $arrInt = array_intersect(array_keys($rowUser['groups']), $rowWorkspace['groups_family']);
 
                     $intAdminLevel = _PLOOPI_ID_LEVEL_VISITOR;
 
-                    if (!empty($arrInt)) // L'utilisateur est attaché à cet espace
+                    if (!empty($arrInt)) // L'utilisateur est attachÃ© Ã  cet espace
                     {
                         // On cherche son adminlevel
                         foreach($arrInt as $intIdGroupInt)
@@ -573,7 +573,7 @@ if ($intNbRep <= $intMaxResponse && $intNbRep > 0)
         }
     }
 
-    // Récupération des espaces des utilisateurs trouvés (via les rattachements directs)
+    // RÃ©cupÃ©ration des espaces des utilisateurs trouvÃ©s (via les rattachements directs)
     $objQuery = new ploopi\query_select();
     $objQuery->add_select('wu.*');
     $objQuery->add_from('ploopi_workspace_user wu');
@@ -592,12 +592,12 @@ if ($intNbRep <= $intMaxResponse && $intNbRep > 0)
     }
 
 
-    // tableau contenant les rôles pour les utilisateurs/groupes trouvés
+    // tableau contenant les rÃ´les pour les utilisateurs/groupes trouvÃ©s
     $arrRoles = array('groups' => array(), 'users' => array());
 
     if (!empty($arrGroupsId))
     {
-        // recherche des rôles "groupe"
+        // recherche des rÃ´les "groupe"
         $objQuery = new ploopi\query_select();
         $objQuery->add_select('wgr.id_group, wgr.id_workspace');
         $objQuery->add_select('r.id, r.id_module, r.label as role_label');
@@ -613,7 +613,7 @@ if ($intNbRep <= $intMaxResponse && $intNbRep > 0)
         while ($row = $objRs->fetchrow()) $arrRoles['groups'][$row['id_workspace']][$row['id_group']][$row['id']] = $row;
     }
 
-    // recherche des rôles "utilisateur"
+    // recherche des rÃ´les "utilisateur"
     $objQuery = new ploopi\query_select();
     $objQuery->add_select('wur.id_user, wur.id_workspace');
     $objQuery->add_select('r.id, r.id_module, r.label as role_label');
@@ -650,19 +650,19 @@ if ($intNbRep <= $intMaxResponse && $intNbRep > 0)
             {
                 $arrSortLabelWorkspaces[] = $rowWorkspace['label'];
 
-                // tableau qui va contenir les rôles dont dispose l'utilisateur dans l'espace courant
+                // tableau qui va contenir les rÃ´les dont dispose l'utilisateur dans l'espace courant
                 $arrUserWspRoles = array();
                 if (isset($arrRoles['groups'][$intIdWorkspace]))
                 {
                     foreach($arrRoles['groups'][$intIdWorkspace] as $intIdGrp => $arrDetail)
                     {
-                        // L'utilisateur appartient au groupe (donc il a les rôles)
+                        // L'utilisateur appartient au groupe (donc il a les rÃ´les)
                         if (!empty($row['groups']) && in_array($intIdGrp, array_keys($row['groups'])))
                         {
                             foreach($arrDetail as $intIdRole => $arrR)
                                 $arrUserWspRoles[$intIdRole] = $_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_SYSTEMADMIN ?
                                     sprintf(
-                                        "<a title=\"Accéder à ce rôle\" href=\"%s\">%s</a><span>&nbsp;(</span><a title=\"Accéder à ce module\" href=\"%s\">%s</a><span>)</span>",
+                                        "<a title=\"AccÃ©der Ã  ce rÃ´le\" href=\"%s\">%s</a><span>&nbsp;(</span><a title=\"AccÃ©der Ã  ce module\" href=\"%s\">%s</a><span>)</span>",
                                         ploopi\crypt::urlencode("admin.php?system_level=work&workspaceid={$intIdWorkspace}&wspToolbarItem=tabRoles&op=modify_role&roleid={$intIdRole}"),
                                         ploopi\str::htmlentities($arrR['role_label']),
                                         ploopi\crypt::urlencode("admin.php?system_level=work&workspaceid={$intIdWorkspace}&wspToolbarItem=tabModules&op=modify&moduleid={$arrR['id_module']}"),
@@ -677,7 +677,7 @@ if ($intNbRep <= $intMaxResponse && $intNbRep > 0)
                     foreach($arrRoles['users'][$intIdWorkspace][$intUserId] as $intIdRole => $arrR)
                         $arrUserWspRoles[$intIdRole] = $_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_SYSTEMADMIN ?
                             sprintf(
-                                    "<a title=\"Accéder à ce rôle\" href=\"%s\">%s</a><span>&nbsp;(</span><a title=\"Accéder à ce module\" href=\"%s\">%s</a><span>)</span>",
+                                    "<a title=\"AccÃ©der Ã  ce rÃ´le\" href=\"%s\">%s</a><span>&nbsp;(</span><a title=\"AccÃ©der Ã  ce module\" href=\"%s\">%s</a><span>)</span>",
                                     ploopi\crypt::urlencode("admin.php?system_level=work&workspaceid={$intIdWorkspace}&wspToolbarItem=tabRoles&op=modify_role&roleid={$intIdRole}"),
                                     ploopi\str::htmlentities($arrR['role_label']),
                                     ploopi\crypt::urlencode("admin.php?system_level=work&workspaceid={$intIdWorkspace}&wspToolbarItem=tabModules&op=modify&moduleid={$arrR['id_module']}"),
@@ -685,7 +685,7 @@ if ($intNbRep <= $intMaxResponse && $intNbRep > 0)
                                 ) : sprintf("%s (%s)", ploopi\str::htmlentities($arrR['role_label']), ploopi\str::htmlentities($arrR['module_label']));
                 }
 
-                // Chaine contenant, pour un utilisateur et un espace, la liste des rôles
+                // Chaine contenant, pour un utilisateur et un espace, la liste des rÃ´les
                 $strUserWspRoles = empty($arrUserWspRoles) ? '' : '<span>&nbsp;:&nbsp;</span>'.implode('<span>,&nbsp;</span>', $arrUserWspRoles);
 
                 if ($rowWorkspace['adminlevel'] >= _PLOOPI_ID_LEVEL_SYSTEMADMIN) $icon = 'level_systemadmin';
@@ -694,7 +694,7 @@ if ($intNbRep <= $intMaxResponse && $intNbRep > 0)
                 else $icon = 'level_user';
 
                 $row['workspaces'][$intIdWorkspace] = sprintf(
-                    "<img style=\"float:left;\" src=\"%s\" /><span style=\"display:block;margin-left:20px;\"><a title=\"Accéder à cet espace\" href=\"%s\">%s</a>%s</span>",
+                    "<img style=\"float:left;\" src=\"%s\" /><span style=\"display:block;margin-left:20px;\"><a title=\"AccÃ©der Ã  cet espace\" href=\"%s\">%s</a>%s</span>",
                     "{$_SESSION['ploopi']['template_path']}/img/system/adminlevels/{$icon}.png",
                     ploopi\crypt::urlencode("admin.php?system_level=work&workspaceid={$intIdWorkspace}"),
                     ploopi\str::htmlentities($rowWorkspace['label']),
@@ -703,12 +703,12 @@ if ($intNbRep <= $intMaxResponse && $intNbRep > 0)
             }
         }
 
-        // conversion du tableau de libellé de groupes en un tableau de liens vers les groupes
+        // conversion du tableau de libellÃ© de groupes en un tableau de liens vers les groupes
         if (!empty($row['groups']))
         {
             foreach($row['groups'] as $intId => $strLabel)
                 $row['groups'][$intId] = sprintf(
-                    "<a title=\"Accéder à ce groupe\" href=\"%s\">%s</a>",
+                    "<a title=\"AccÃ©der Ã  ce groupe\" href=\"%s\">%s</a>",
                     ploopi\crypt::urlencode("admin.php?system_level=work&groupid={$intId}"),
                     ploopi\str::htmlentities($strLabel)
                 );
@@ -717,18 +717,18 @@ if ($intNbRep <= $intMaxResponse && $intNbRep > 0)
         $strUserLabel = ploopi\str::htmlentities(sprintf("%s %s", $row['lastname'], $row['firstname']));
         $strUserLogin = ploopi\str::htmlentities($row['login']);
 
-        // si l'utilisateur est attaché à un groupe, on met un lien vers la fiche de l'utilisateur pour pouvoir la modifier
+        // si l'utilisateur est attachÃ© Ã  un groupe, on met un lien vers la fiche de l'utilisateur pour pouvoir la modifier
         if (!empty($row['groups']))
         {
             reset($row['groups']);
             $strUserLabel = sprintf(
-                "<a title=\"Accéder à cet utilisateur\" href=\"%s\">%s</a>",
+                "<a title=\"AccÃ©der Ã  cet utilisateur\" href=\"%s\">%s</a>",
                 ploopi\crypt::urlencode("admin.php?system_level=work&groupid=".key($row['groups'])."&wspToolbarItem=tabUsers&op=modify_user&user_id={$intUserId}"),
                 $strUserLabel
             );
 
             $strUserLogin = sprintf(
-                "<a title=\"Accéder à cet utilisateur\" href=\"%s\">%s</a>",
+                "<a title=\"AccÃ©der Ã  cet utilisateur\" href=\"%s\">%s</a>",
                 ploopi\crypt::urlencode("admin.php?system_level=work&groupid=".key($row['groups'])."&wspToolbarItem=tabUsers&op=modify_user&user_id={$intUserId}"),
                 $strUserLogin
             );
@@ -748,7 +748,7 @@ if ($intNbRep <= $intMaxResponse && $intNbRep > 0)
                     'label' => (empty($row['workspaces'])) ? '<em>Pas d\'espace</em>' : implode('', $row['workspaces']),
                     'sort_label' => implode(',', $arrSortLabelWorkspaces)
                 ),
-                'actions' => array('label' => '<a href="javascript:ploopi_confirmlink(\''.ploopi\crypt::urlencode("admin.php?ploopi_op=system_delete_user&system_user_id={$intUserId}").'\',\''._SYSTEM_MSG_CONFIRMUSERDELETE.'\')"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_delete.png" title="'._SYSTEM_LABEL_DELETE.'"></a>')
+                'actions' => array('label' => '<a href="javascript:ploopi.confirmlink(\''.ploopi\crypt::urlencode("admin.php?ploopi_op=system_delete_user&system_user_id={$intUserId}").'\',\''._SYSTEM_MSG_CONFIRMUSERDELETE.'\')"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/btn_delete.png" title="'._SYSTEM_LABEL_DELETE.'"></a>')
             )
         );
     }
@@ -769,7 +769,7 @@ echo ploopi\skin::get()->close_simplebloc();
 ?>
 
 <p class="ploopi_va" style="padding:4px;">
-    <span style="margin-right:5px;">Légende:</span>
+    <span style="margin-right:5px;">LÃ©gende:</span>
     <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/adminlevels/level_user.png" />
     <span style="margin-right:5px;"><?php echo ploopi\str::htmlentities($ploopi_system_levels[_PLOOPI_ID_LEVEL_USER]); ?></span>
     <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/adminlevels/level_groupmanager.png" />
