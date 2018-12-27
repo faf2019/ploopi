@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1" ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<!-- Réalisation: Ovensia 2007 // Template pour PLOOPI -->
+<!-- RÃ©alisation: Ovensia 2007 // Template pour PLOOPI -->
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
 <head>
     <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
@@ -99,9 +99,9 @@
 
             <div id="path">
                 <div id="lastupdate">
-                    Dernière mise à jour le {LASTUPDATE_DATE} à {LASTUPDATE_TIME}
+                    DerniÃ¨re mise Ã  jour le {LASTUPDATE_DATE} Ã  {LASTUPDATE_TIME}
                 </div>
-                Vous êtes ici :
+                Vous Ãªtes ici :
                 <!-- BEGIN path -->
                     &raquo;&nbsp;<a href="{path.LINK}">{path.LABEL}</a>
                 <!-- END path -->
@@ -120,7 +120,7 @@
                                     <input type="text" title="Champ de recherche" alt="Champ de recherche" class="text" name="query_string" value="{PAGE_QUERYSTRING}" onfocus="javascript:this.value='';" />
                                     <input type="submit" title="Bouton pour valider la recherche" class="button" value="go" />
                                 </div>
-                                <a href="./recherche.html">Recherche avancée</a>
+                                <a href="./recherche.html">Recherche avancÃ©e</a>
                            </fieldset>
                         </form>
                     </div>
@@ -175,11 +175,11 @@
 
                     <img class="box_bg" src="{TEMPLATE_PATH}/gfx/box.png" alt="fond menu vertical" title="fond menu vertical" />
                     <div class="box">
-                        <h1>Actualités</h1>
+                        <h1>ActualitÃ©s</h1>
                         <marquee behavior="scroll" direction="up" width="100%" scrollamount="2"  scrolldelay="70" onmouseover="javascript:this.stop();" onmouseout="javascript:this.start();">
                          <!-- BEGIN news -->
                              <div><strong>{news.TITLE}</strong></div>
-                             <div class="news_date">le {news.DATE} à {news.TIME}</div>
+                             <div class="news_date">le {news.DATE} Ã  {news.TIME}</div>
                              <div class="news_content">{news.CONTENT}</div>
                              <div style="padding-bottom:4px;"><a href="{news.URL}" target="_blank">{news.URLTITLE}</a></div>
                          <!-- END news -->
@@ -201,12 +201,12 @@
 
                 <div id="page_content">
                     <!-- BEGIN switch_advanced_search -->
-                        <h2>Recherche avancée</h2>
+                        <h2>Recherche avancÃ©e</h2>
 
                         <form id="form_advanced_search" method="post" action="./recherche.html">
 
                             <div>
-                                <label for="query_string">Mot(s) recherché(s):</label>
+                                <label for="query_string">Mot(s) recherchÃ©(s):</label>
                                 <br /><input type="text" alt="recherche" id="search_query_string" name="query_string" value="{PAGE_QUERYSTRING}" />
                             </div>
 
@@ -254,7 +254,7 @@
                     <!-- END switch_advanced_search -->
 
                     <!-- BEGIN switch_search -->
-                    <h1>Résultat de la recherche pour "{PAGE_QUERYSTRING}"</h1>
+                    <h1>RÃ©sultat de la recherche pour "{PAGE_QUERYSTRING}"</h1>
                     <div id="search_result">
                         <!-- BEGIN result -->
                             <a href="{switch_search.result.LINK}" title="Lien vers {switch_search.result.TITLE}">
@@ -265,7 +265,7 @@
                         <!-- END result -->
                     </div>
                     <!-- BEGIN switch_notfound -->
-                    <p>Aucun résultat pour cette recherche</p>
+                    <p>Aucun rÃ©sultat pour cette recherche</p>
                     <!-- END switch_notfound -->
                     <!-- END switch_search -->
 
@@ -341,7 +341,7 @@
                             </p>
                         <!-- END switch_tags -->
                         {PAGE_CONTENT}
-                        <div id="page_lastupdate">Dernière modification le {PAGE_LASTUPDATE_DATE} à {PAGE_LASTUPDATE_TIME}</div>
+                        <div id="page_lastupdate">DerniÃ¨re modification le {PAGE_LASTUPDATE_DATE} Ã  {PAGE_LASTUPDATE_TIME}</div>
                     <!-- END switch_content_page -->
 
                     <!-- BEGIN switch_content_error -->
@@ -358,11 +358,11 @@
 
                     <!-- BEGIN switch_newsletter_unsubscrib -->
                       <div style="text-align: center;">
-                        <h2>Desinscription à la NewsLetter:</h2>
+                        <h2>Desinscription Ã  la NewsLetter:</h2>
                         <form method="post" action="{switch_newsletter_unsubscrib.ACTION}">
                             <div>
                                 <input type="text" title="Entrez votre adresse email" alt="Entrez votre adresse email" class="text" name="unsubcrib_email" value="Entrez votre adresse email" onfocus="javascript:this.value='';" />
-                                <input type="submit" title="Bouton pour valider la désinscription" class="button" value="désinscrire" />
+                                <input type="submit" title="Bouton pour valider la dÃ©sinscription" class="button" value="dÃ©sinscrire" />
                             </div>
                         </form>
                       </div>
@@ -388,9 +388,9 @@
         <div id="page_bas"></div>
     </div>
     <div id="pied">
-    Réalisation <a href="http://www.ovensia.fr" title="Aller sur le site ovensia.fr"><strong>Ovensia</strong></a> &#149; Template <a href="http://www.ovensia.fr" title="Aller sur le site ovensia.fr"><strong>Ovensia</strong></a> &#149; Propulsé par <strong>PLOOPI</strong>&nbsp;&nbsp;
+    RÃ©alisation <a href="http://www.ovensia.fr" title="Aller sur le site ovensia.fr"><strong>Ovensia</strong></a> &#149; Template <a href="http://www.ovensia.fr" title="Aller sur le site ovensia.fr"><strong>Ovensia</strong></a> &#149; PropulsÃ© par <strong>PLOOPI</strong>&nbsp;&nbsp;
     <div id="execinfo">
-        Ce site est valide <a href="http://validator.w3.org/check?uri=referer" title="Vérifier la validité XHTML 1.0 strict"><strong>XHTML 1.0 strict</strong></a>, <a href="http://jigsaw.w3.org/css-validator/check/referer" title="Vérifier la validité CSS"><strong>CSS 2</strong></a>, <a href="http://www.ocawa.com/autotest/validate.php" title="Page testée par Ocawa, testez cette page sur le site ocawa"><strong>ADAE argent</strong> / <strong>WCAG 1.0 Niv3</strong></a>&nbsp;&nbsp;
+        Ce site est valide <a href="http://validator.w3.org/check?uri=referer" title="VÃ©rifier la validitÃ© XHTML 1.0 strict"><strong>XHTML 1.0 strict</strong></a>, <a href="http://jigsaw.w3.org/css-validator/check/referer" title="VÃ©rifier la validitÃ© CSS"><strong>CSS 2</strong></a>, <a href="http://www.ocawa.com/autotest/validate.php" title="Page testÃ©e par Ocawa, testez cette page sur le site ocawa"><strong>ADAE argent</strong> / <strong>WCAG 1.0 Niv3</strong></a>&nbsp;&nbsp;
         <br />[ page: <PLOOPI_PAGE_SIZE> ko | exec: <PLOOPI_EXEC_TIME> ms | sql: <PLOOPI_NUMQUERIES> req (<PLOOPI_SQL_P100> %) | session: <PLOOPI_SESSION_SIZE> ko | mem: <PLOOPI_PHP_MEMORY> ko ]&nbsp;&nbsp;
     </div>
     </div>

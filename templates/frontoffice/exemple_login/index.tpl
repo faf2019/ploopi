@@ -84,7 +84,7 @@
                     <div>
                         Bonjour<br /><strong>{USER_FIRSTNAME} {USER_LASTNAME}</strong>
                         <form action="{USER_DECONNECT}" method="post">
-                        <input type="submit" class="button" value="&raquo; Déconnexion"/>
+                        <input type="submit" class="button" value="&raquo; DÃ©connexion"/>
                         </form>
                     </div>
                     <!-- END switch_user_logged_in -->
@@ -125,7 +125,7 @@
                         <form name="form_search" method="post" action="{SITE_HOME}">
                         <input type="text" alt="recherche" id="recherche_field" name="query_string" value="{PAGE_QUERYSTRING}" class="text" />
                         <input type="submit" value="go" class="button" />
-                        <a href="./recherche.html">Recherche avancée</a>
+                        <a href="./recherche.html">Recherche avancÃ©e</a>
                         </form>
                     </div>
 
@@ -253,22 +253,22 @@
 
                     <!-- BEGIN switch_private -->
                         <!-- BEGIN switch_notconnected -->
-                        <h2>Cette rubrique est privée</h2>
-                        Vous devez vous identifier pour accéder à cette rubrique
+                        <h2>Cette rubrique est privÃ©e</h2>
+                        Vous devez vous identifier pour accÃ©der Ã  cette rubrique
                         <!-- END switch_notconnected -->
                         <!-- BEGIN switch_notallowed -->
-                        <h2>Cette rubrique est privée</h2>
-                        Vous n'êtes pas autorisé à accéder à cette rubrique
+                        <h2>Cette rubrique est privÃ©e</h2>
+                        Vous n'Ãªtes pas autorisÃ© Ã  accÃ©der Ã  cette rubrique
                         <!-- END switch_notallowed -->
                     <!-- END switch_private -->
 
                     <!-- BEGIN switch_advanced_search -->
-                        <h2>Recherche avancée</h2>
+                        <h2>Recherche avancÃ©e</h2>
 
                         <form id="form_advanced_search" method="post" action="./recherche.html">
 
                             <div>
-                                <label for="query_string">Mot(s) recherché(s):</label>
+                                <label for="query_string">Mot(s) recherchÃ©(s):</label>
                                 <br /><input type="text" alt="recherche" id="search_query_string" name="query_string" value="{PAGE_QUERYSTRING}" />
                             </div>
 
@@ -316,7 +316,7 @@
                     <!-- END switch_advanced_search -->
 
                     <!-- BEGIN switch_search -->
-                        <h2>Résultat de la recherche pour "{PAGE_QUERYSTRING}"</h2>
+                        <h2>RÃ©sultat de la recherche pour "{PAGE_QUERYSTRING}"</h2>
                         <div id="search_result">
                             <!-- BEGIN result -->
                                 <a href="{switch_search.result.LINK}" title="Lien vers {switch_search.result.TITLE}">
@@ -327,7 +327,7 @@
                             <!-- END result -->
                         </div>
                         <!-- BEGIN switch_notfound -->
-                        <p>Aucun résultat pour cette recherche</p>
+                        <p>Aucun rÃ©sultat pour cette recherche</p>
                         <!-- END switch_notfound -->
                     <!-- END switch_search -->
 
@@ -377,7 +377,7 @@
                                                 <label>Nom(*) :</label><input type="text" class="text" id="comment_nickname" name="comment_nickname"  maxlength="50"/>
                                             </p>
                                             <p>
-                                                <label>Email (ne sera pas affiché) :</label><input type="text" class="text" id="comment_email" name="comment_email" maxlength="255"/>
+                                                <label>Email (ne sera pas affichÃ©) :</label><input type="text" class="text" id="comment_email" name="comment_email" maxlength="255"/>
                                             </p>
                                             <p>
                                                 <label>Commentaire(*) :</label><textarea class="textarea" id="comment_comment" name="comment_comment"></textarea>
@@ -415,10 +415,10 @@
                                     <script type="text/javascript">
                                     function comment_validate(form)
                                     {
-                                        if (ploopi_validatefield('Nom', form.comment_nickname, 'string'))
-                                        if (ploopi_validatefield('Email', form.comment_email, 'emptyemail'))
-                                        if (ploopi_validatefield('Commentaire', form.comment_comment, 'string'))
-                                        if (ploopi_validatefield('Code', form.captcha_code_{switch_content_page.sw_comment.IDCAPTCHA}, 'captcha', '{PAGE_URL_CONTROLCAPTCHA}', 'img_captcha_{switch_content_page.sw_comment.IDCAPTCHA}', '{PAGE_URL_UPDATECAPTCHA}'))
+                                        if (ploopi.validatefield('Nom', form.comment_nickname, 'string'))
+                                        if (ploopi.validatefield('Email', form.comment_email, 'emptyemail'))
+                                        if (ploopi.validatefield('Commentaire', form.comment_comment, 'string'))
+                                        if (ploopi.validatefield('Code', form.captcha_code_{switch_content_page.sw_comment.IDCAPTCHA}, 'captcha', '{PAGE_URL_CONTROLCAPTCHA}', 'img_captcha_{switch_content_page.sw_comment.IDCAPTCHA}', '{PAGE_URL_UPDATECAPTCHA}'))
                                           return(true);
 
                                         return(false);
@@ -446,7 +446,7 @@
                             </div>
                             <div style="clear: both; font-size: 9px; padding: 5px 20px 0 0; text-align: center;">
                                 <!-- BEGIN sw_modify -->
-                                <div style="float: right;">modifié le : {switch_content_blog.article.PAGE_LASTUPDATE_DATE}</div>
+                                <div style="float: right;">modifiÃ© le : {switch_content_blog.article.PAGE_LASTUPDATE_DATE}</div>
                                 <!-- END sw_modify -->
                                 <div style="float: left;">{switch_content_blog.article.PAGE_AUTHOR} - {switch_content_blog.article.PAGE_DATE}</div>
                                 <!-- BEGIN sw_comment -->
@@ -485,7 +485,7 @@
                             <a href="javascript:void(0);" onclick="javascript:window.location.href='{switch_content_blog.page_after.URL}'; return false;" style="float: right; padding: 10px 10px 0 0;">pages suivantes&nbsp;&gt;&gt;</a>
                             <!-- END page_after -->
                             <!-- BEGIN page_before -->
-                            <a href="javascript:void(0);" onclick="javascript:window.location.href='{switch_content_blog.page_before.URL}'; return false;" style="float: left; padding: 10px 0 0 0;">&lt;&lt;&nbsp;pages précédentes</a>
+                            <a href="javascript:void(0);" onclick="javascript:window.location.href='{switch_content_blog.page_before.URL}'; return false;" style="float: left; padding: 10px 0 0 0;">&lt;&lt;&nbsp;pages prÃ©cÃ©dentes</a>
                             <!-- END page_before -->
                         </div>
                     <!-- END switch_content_blog -->
@@ -603,11 +603,11 @@
 
                     <!-- BEGIN switch_newsletter_unsubscrib -->
                       <div style="text-align: center;">
-                          <h2>Desinscription à la NewsLetter:</h2>
+                          <h2>Desinscription Ã  la NewsLetter:</h2>
                                                 <form method="post" action="{switch_newsletter_unsubscrib.ACTION}">
                                                     <div>
                                                         <input type="text" title="Entrez votre adresse email" alt="Entrez votre adresse email" class="text" name="unsubcrib_email" value="Entrez votre adresse email" onfocus="javascript:this.value='';" />
-                                                        <input type="submit" title="Bouton pour valider la désinscription" class="button" value="désinscrire" />
+                                                        <input type="submit" title="Bouton pour valider la dÃ©sinscription" class="button" value="dÃ©sinscrire" />
                                                     </div>
                                                 </form>
                                             </div>
@@ -623,17 +623,17 @@
                     <!-- BEGIN directory_switch_result -->
                     <div class="directory">
                         <div class="directory_result">
-                        <div class="directory_title1">Résultat de recherche dans l'annuaire</div>
+                        <div class="directory_title1">RÃ©sultat de recherche dans l'annuaire</div>
                             <table cellspacing="0" cellpadding="0" border="1">
                                 <tr class="directory_title">
-                                    <th>Nom/Prénom</th>
+                                    <th>Nom/PrÃ©nom</th>
                                     <th>Fonction</th>
                                     <th>Grade</th>
                                     <th>Poste</th>
-                                    <th>Téléphone</th>
+                                    <th>TÃ©lÃ©phone</th>
                                 </tr>
                                 <!-- BEGIN contact -->
-                                    <tr class="directory_contact{directory_switch_result.contact.ALTERNATE_STYLE}" onclick="javascript:document.location.href='{directory_switch_result.contact.LINK}';return false;" title="Ouvrir la fiche détaillée de {directory_switch_result.contact.LASTNAME} {directory_switch_result.contact.FIRSTNAME}">
+                                    <tr class="directory_contact{directory_switch_result.contact.ALTERNATE_STYLE}" onclick="javascript:document.location.href='{directory_switch_result.contact.LINK}';return false;" title="Ouvrir la fiche dÃ©taillÃ©e de {directory_switch_result.contact.LASTNAME} {directory_switch_result.contact.FIRSTNAME}">
                                         <td>{directory_switch_result.contact.LASTNAME} {directory_switch_result.contact.FIRSTNAME}</td>
                                         <td>{directory_switch_result.contact.FUNCTION}</td>
                                         <td>{directory_switch_result.contact.RANK}</td>
@@ -661,13 +661,13 @@
                                     <div>
                                     <table class="directory_contact_form">
                                         <tr>
-                                            <th>N° de Poste:</th>
+                                            <th>NÂ° de Poste:</th>
                                             <td>{directory_switch_contact.NUMBER}</td>
-                                            <th>Bâtiment:</th>
+                                            <th>BÃ¢timent:</th>
                                             <td>{directory_switch_contact.BUILDING}</td>
                                         </tr>
                                         <tr>
-                                            <th>Téléphone:</th>
+                                            <th>TÃ©lÃ©phone:</th>
                                             <td>{directory_switch_contact.PHONE}</td>
                                             <th>Etage:</th>
                                             <td>{directory_switch_contact.FLOOR}</td>
@@ -685,7 +685,7 @@
                                             <td>{directory_switch_contact.HEADING_ADDRESS_FULL}</td>
                                         </tr>
                                         <tr>
-                                            <th>Rattaché à:</th>
+                                            <th>RattachÃ© Ã :</th>
                                             <td colspan="3">{directory_switch_contact.HEADINGS}</td>
                                         </tr>
                                     </table>
@@ -694,17 +694,17 @@
                             </div>
                         </div>
                         <div>
-                            <div class="directory_title2">Autres personnes de la même rubrique:</div>
+                            <div class="directory_title2">Autres personnes de la mÃªme rubrique:</div>
                             <table cellspacing="0" cellpadding="0" border="1">
                                 <tr class="directory_title">
-                                    <th>Nom/Prénom</th>
+                                    <th>Nom/PrÃ©nom</th>
                                     <th>Fonction</th>
                                     <th>Grade</th>
                                     <th>Poste</th>
-                                    <th>Téléphone</th>
+                                    <th>TÃ©lÃ©phone</th>
                                 </tr>
                                 <!-- BEGIN contact -->
-                                    <tr class="directory_contact{directory_switch_contact.contact.ALTERNATE_STYLE}" onclick="javascript:document.location.href='{directory_switch_contact.contact.LINK}';return false;" title="Ouvrir la fiche détaillée de {directory_switch_contact.contact.LASTNAME} {directory_switch_contact.contact.FIRSTNAME}">
+                                    <tr class="directory_contact{directory_switch_contact.contact.ALTERNATE_STYLE}" onclick="javascript:document.location.href='{directory_switch_contact.contact.LINK}';return false;" title="Ouvrir la fiche dÃ©taillÃ©e de {directory_switch_contact.contact.LASTNAME} {directory_switch_contact.contact.FIRSTNAME}">
                                         <td>{directory_switch_contact.contact.CIVILITY} {directory_switch_contact.contact.LASTNAME} {directory_switch_contact.contact.FIRSTNAME}</td>
                                         <td>{directory_switch_contact.contact.FUNCTION}</td>
                                         <td>{directory_switch_contact.contact.RANK}</td>
@@ -725,27 +725,27 @@
                             <div class="directory_title2">Rubrique
                                 &nbsp;&raquo;&nbsp;<a href="{DIRECTORY_LINK_FULL}" title="Ouvrir l'annuaire complet">Tout</a>
                                 <!-- BEGIN heading -->
-                                &nbsp;&raquo;&nbsp;<a href="{directory_switch_full.switch_selected_heading.heading.LINK}" title="Ouvrir l'annuaire détaillé de {directory_switch_full.switch_selected_heading.heading.LABEL}">{directory_switch_full.switch_selected_heading.heading.LABEL}</a>
+                                &nbsp;&raquo;&nbsp;<a href="{directory_switch_full.switch_selected_heading.heading.LINK}" title="Ouvrir l'annuaire dÃ©taillÃ© de {directory_switch_full.switch_selected_heading.heading.LABEL}">{directory_switch_full.switch_selected_heading.heading.LABEL}</a>
                                 <!-- END heading -->
                             </div>
                         <!-- END switch_selected_heading -->
                         <table cellspacing="0" cellpadding="0" border="1">
                             <tr class="directory_title">
-                                <th>Nom/Prénom</th>
+                                <th>Nom/PrÃ©nom</th>
                                 <th>Fonction</th>
                                 <th>Grade</th>
                                 <th>Poste</th>
-                                <th>Téléphone</th>
+                                <th>TÃ©lÃ©phone</th>
                             </tr>
                             <!-- BEGIN line -->
                                 <!-- BEGIN heading -->
-                                    <tr class="directory_heading" onclick="javascript:document.location.href='{directory_switch_full.line.heading.LINK}';return false;" title="Ouvrir l'annuaire détaillé de {directory_switch_full.line.heading.LABEL}">
+                                    <tr class="directory_heading" onclick="javascript:document.location.href='{directory_switch_full.line.heading.LINK}';return false;" title="Ouvrir l'annuaire dÃ©taillÃ© de {directory_switch_full.line.heading.LABEL}">
                                         <td colspan="5" class="heading{directory_switch_full.line.heading.DEPTH}">&#149;&nbsp;{directory_switch_full.line.heading.LABEL}</td>
                                     </tr>
                                 <!-- END heading -->
 
                                 <!-- BEGIN contact -->
-                                    <tr class="directory_contact{directory_switch_full.line.contact.ALTERNATE_STYLE}" onclick="javascript:document.location.href='{directory_switch_full.line.contact.LINK}';return false;" title="Ouvrir la fiche détaillée de {directory_switch_full.line.contact.LASTNAME} {directory_switch_full.line.contact.FIRSTNAME}">
+                                    <tr class="directory_contact{directory_switch_full.line.contact.ALTERNATE_STYLE}" onclick="javascript:document.location.href='{directory_switch_full.line.contact.LINK}';return false;" title="Ouvrir la fiche dÃ©taillÃ©e de {directory_switch_full.line.contact.LASTNAME} {directory_switch_full.line.contact.FIRSTNAME}">
                                         <td>{directory_switch_full.line.contact.CIVILITY} {directory_switch_full.line.contact.LASTNAME} {directory_switch_full.line.contact.FIRSTNAME}</td>
                                         <td>{directory_switch_full.line.contact.FUNCTION}</td>
                                         <td>{directory_switch_full.line.contact.RANK}</td>

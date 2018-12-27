@@ -68,12 +68,12 @@ a:hover {
 <body>
 Bonjour,
 <br /><br />
-Vous avez reçu un nouveau message envoyé par <strong><a href="mailto:{USER_FROM_EMAIL}">{USER_FROM_NAME}</a></strong> depuis le site <a href="{HTTP_HOST}">{HTTP_HOST}</a> :
+Vous avez reÃ§u un nouveau message envoyÃ© par <strong><a href="mailto:{USER_FROM_EMAIL}">{USER_FROM_NAME}</a></strong> depuis le site <a href="{HTTP_HOST}">{HTTP_HOST}</a> :
 <div id="mailcontent">
     {MAIL_CONTENT}
     <!-- BEGIN sw_linkedobject -->
     <div id="linkedobject">
-        <span><strong>Objet lié</strong>: </span><a href="{OBJECT_URL}">{MODULE_LABEL} / {OBJECT_TYPE} <b>"{OBJECT_LABEL}"</b></a>
+        <span><strong>Objet liÃ©</strong>: </span><a href="{OBJECT_URL}">{MODULE_LABEL} / {OBJECT_TYPE} <b>"{OBJECT_LABEL}"</b></a>
     </div>
     <!-- END sw_linkedobject -->
 </div>

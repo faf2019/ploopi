@@ -1,7 +1,7 @@
 <!-- BEGIN gallery1 -->
 <div class="gallerymain">
     <div class="gallerycontent" style="position:relative;">
-        <a href="javascript:void(0);" id="arrowprev-{gallery1.ID_UNIQ}" class="arrowprev" title="Image Précédente" onclick="javascript:objGal{gallery1.ID_UNIQ}.click_arrow('-');return false;"></a>
+        <a href="javascript:void(0);" id="arrowprev-{gallery1.ID_UNIQ}" class="arrowprev" title="Image PrÃ©cÃ©dente" onclick="javascript:objGal{gallery1.ID_UNIQ}.click_arrow('-');return false;"></a>
         <a href="javascript:void(0);" id="arrownext-{gallery1.ID_UNIQ}" class="arrownext" title="Image Suivante" onclick="javascript:objGal{gallery1.ID_UNIQ}.click_arrow('+');return false;"></a>
         <div id="galleryview-{gallery1.ID_UNIQ}">
             <img id="galleryimage-{gallery1.ID_UNIQ}" src="{gallery1.URL_VIEW}" width="{gallery1.VIEW_WIDTH}" height="{gallery1.VIEW_HEIGHT}" class="galleryimage" />

@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -19,10 +19,6 @@
     along with Ploopi; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-
-namespace ploopi;
-
-use ploopi;
 
 /**
  * Gestion du skin 'ploopi_menus'
@@ -48,7 +44,7 @@ use ploopi;
  * @see skin_common
  */
 
-class skin extends skin_common
+class skin extends ploopi\skin
 {
     /**
      * Construction de la classe skin 'ploopi_menus'

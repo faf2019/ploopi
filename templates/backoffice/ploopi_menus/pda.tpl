@@ -12,16 +12,16 @@
 //<!--
 
 var lstmsg = new Array();
-lstmsg[0] = "L'adresse mèl n'est pas valide.\nIl n'y a pas de caractère @\nUne adresse mèl valide est du type \"adresse@domaine.com\"";
-lstmsg[1] = "L'adresse mèl n'est pas valide.\nIl ne peut pas y avoir un point (.) juste après @\nUne adresse mèl valide est du type \"adresse@domaine.com\"";
-lstmsg[2] = "L'adresse mèl n'est pas valide.\nL'adresse mèl ne peut pas finir par un point (.)\nUne adresse mèl valide est du type \"adresse@domaine.com\"";
-lstmsg[3] = "L'adresse mèl n'est pas valide.\nL'adresse mèl ne peut pas contenir 2 points (.) qui se suivent.\nUne adresse mèl valide est du type \"adresse@domaine.com\"";
-lstmsg[4] = "Le champ '<FIELD_LABEL>' ne doit pas être vide";
-lstmsg[5] = "Le champ '<FIELD_LABEL>' doit être un nombre entier valide";
-lstmsg[6] = "Le champ '<FIELD_LABEL>' doit être un nombre réel valide";
-lstmsg[7] = "Le champ '<FIELD_LABEL>' doit être une date valide";
-lstmsg[8] = "Le champ '<FIELD_LABEL>' doit être une heure valide";
-lstmsg[9] = "Vous devez sélectionner une valeur pour le champ '<FIELD_LABEL>'";
+lstmsg[0] = "L'adresse mÃ¨l n'est pas valide.\nIl n'y a pas de caractÃ¨re @\nUne adresse mÃ¨l valide est du type \"adresse@domaine.com\"";
+lstmsg[1] = "L'adresse mÃ¨l n'est pas valide.\nIl ne peut pas y avoir un point (.) juste aprÃ¨s @\nUne adresse mÃ¨l valide est du type \"adresse@domaine.com\"";
+lstmsg[2] = "L'adresse mÃ¨l n'est pas valide.\nL'adresse mÃ¨l ne peut pas finir par un point (.)\nUne adresse mÃ¨l valide est du type \"adresse@domaine.com\"";
+lstmsg[3] = "L'adresse mÃ¨l n'est pas valide.\nL'adresse mÃ¨l ne peut pas contenir 2 points (.) qui se suivent.\nUne adresse mÃ¨l valide est du type \"adresse@domaine.com\"";
+lstmsg[4] = "Le champ '<FIELD_LABEL>' ne doit pas Ãªtre vide";
+lstmsg[5] = "Le champ '<FIELD_LABEL>' doit Ãªtre un nombre entier valide";
+lstmsg[6] = "Le champ '<FIELD_LABEL>' doit Ãªtre un nombre rÃ©el valide";
+lstmsg[7] = "Le champ '<FIELD_LABEL>' doit Ãªtre une date valide";
+lstmsg[8] = "Le champ '<FIELD_LABEL>' doit Ãªtre une heure valide";
+lstmsg[9] = "Vous devez sÃ©lectionner une valeur pour le champ '<FIELD_LABEL>'";
 error_bgcolor = "#FCE6D6";
 
 //-->
@@ -66,7 +66,7 @@ error_bgcolor = "#FCE6D6";
     &#149;&nbsp;<a class="{MAINMENU_SHOWTICKETS_SEL}" href="{MAINMENU_SHOWTICKETS_URL}">Mes Tickets</a>
     &#149;&nbsp;<a class="{MAINMENU_SHOWANNOTATIONS_SEL}" href="{MAINMENU_SHOWANNOTATIONS_URL}">Mes Annotations</a>
     &#149;&nbsp;<a class="{MAINMENU_SHOWPROFILE_SEL}" href="{MAINMENU_SHOWPROFILE_URL}">Mon Profil</a>
-    &#149;&nbsp;<a href="{USER_DECONNECT}">Déconnexion</a>
+    &#149;&nbsp;<a href="{USER_DECONNECT}">DÃ©connexion</a>
 </div>
 <!-- END switch_user_logged_in -->
 

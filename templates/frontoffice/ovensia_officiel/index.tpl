@@ -1,8 +1,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <!--
     // OVENSIA ~ Template pour PLOOPI
-    // Réalisation: Ovensia 2007 ~ www.ovensia.fr
-    // Testé avec IE 6, IE 7, Firefox 2, Safari 3, Opera 9.2, Konqueror 3.5.6
+    // RÃ©alisation: Ovensia 2007 ~ www.ovensia.fr
+    // TestÃ© avec IE 6, IE 7, Firefox 2, Safari 3, Opera 9.2, Konqueror 3.5.6
     // Valide XHTML 1.0 Strict, CSS 2, ADAE argent, WCAG 1.0 Niv3
     -->
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
@@ -87,11 +87,11 @@
             <div id="page_menu">
                 <!-- BEGIN root1 -->
                     <!-- BEGIN heading1 -->
-                        <img src="{TEMPLATE_PATH}/gfx/root1_sep.png" alt="séparateur" />
+                        <img src="{TEMPLATE_PATH}/gfx/root1_sep.png" alt="sÃ©parateur" />
                         <a href="{root1.heading1.LINK}" title="{root1.heading1.LABEL}"><img src="{TEMPLATE_PATH}/gfx/root1_{root1.heading1.POSITION}.png" alt="{root1.heading1.LABEL}" title="{root1.heading1.LABEL}" /></a>
                     <!-- END heading1 -->
                 <!-- END root1 -->
-                <img src="{TEMPLATE_PATH}/gfx/root1_sep.png" alt="séparateur" />
+                <img src="{TEMPLATE_PATH}/gfx/root1_sep.png" alt="sÃ©parateur" />
             </div>
             <div id="title">
                 <div id="slogan">Architecte de vos solutions informatiques libres</div>
@@ -100,9 +100,9 @@
 
             <div id="path">
                 <div id="lastupdate">
-                    Mis à jour le {LASTUPDATE_DATE} à {LASTUPDATE_TIME}
+                    Mis Ã  jour le {LASTUPDATE_DATE} Ã  {LASTUPDATE_TIME}
                 </div>
-                Vous êtes ici :
+                Vous Ãªtes ici :
                 <!-- BEGIN path -->
                     &raquo;&nbsp;<a href="{path.LINK}">{path.LABEL}</a>
                 <!-- END path -->
@@ -121,7 +121,7 @@
                                     <input type="text" title="Champ de recherche" alt="Champ de recherche" class="text" name="query_string" value="{PAGE_QUERYSTRING}" onfocus="javascript:this.value='';" />
                                     <input type="submit" title="Bouton pour valider la recherche" class="button" value="go" />
                                 </div>
-                                <a href="./recherche.html">Recherche avancée</a>
+                                <a href="./recherche.html">Recherche avancÃ©e</a>
                           </fieldset>
                         </form>
                     </div>
@@ -190,11 +190,11 @@
 
                     <img class="box_bg" src="{TEMPLATE_PATH}/gfx/box.png" alt="fond menu vertical" title="fond menu vertical" />
                     <div class="box">
-                        <h1>Actualités</h1>
+                        <h1>ActualitÃ©s</h1>
                         <!-- BEGIN news -->
                             <div class="news">
                                 <div class="title">{news.TITLE}</div>
-                                <div class="date">le {news.DATE} à {news.TIME}</div>
+                                <div class="date">le {news.DATE} Ã  {news.TIME}</div>
                                 <div class="content">{news.CONTENT}</div>
                                 <!--div style="padding-bottom:4px;"><a href="{news.URL}">{news.URLTITLE}</a></div-->
                             </div>
@@ -212,12 +212,12 @@
 
                 <div id="page_content">
                     <!-- BEGIN switch_advanced_search -->
-                        <h2>Recherche avancée</h2>
+                        <h2>Recherche avancÃ©e</h2>
 
                         <form id="form_advanced_search" method="post" action="./recherche.html">
 
                             <div>
-                                <label for="query_string">Mot(s) recherché(s):</label>
+                                <label for="query_string">Mot(s) recherchÃ©(s):</label>
                                 <br /><input type="text" alt="recherche" id="search_query_string" name="query_string" value="{PAGE_QUERYSTRING}" />
                             </div>
 
@@ -265,7 +265,7 @@
                     <!-- END switch_advanced_search -->
 
                     <!-- BEGIN switch_search -->
-                    <h1>Résultat de la recherche pour "{PAGE_QUERYSTRING}"</h1>
+                    <h1>RÃ©sultat de la recherche pour "{PAGE_QUERYSTRING}"</h1>
                     <div id="search_result">
                         <!-- BEGIN result -->
                             <a href="{switch_search.result.LINK}" title="Lien vers {switch_search.result.TITLE}">
@@ -276,7 +276,7 @@
                         <!-- END result -->
                     </div>
                     <!-- BEGIN switch_notfound -->
-                    <p>Aucun résultat pour cette recherche</p>
+                    <p>Aucun rÃ©sultat pour cette recherche</p>
                     <!-- END switch_notfound -->
                     <!-- END switch_search -->
 
@@ -352,7 +352,7 @@
                             </p>
                         <!-- END switch_tags -->
                         <div>{PAGE_CONTENT}</div>
-                        <div id="page_lastupdate">Auteur: {PAGE_LASTUPDATE_USER_FIRSTNAME} {PAGE_LASTUPDATE_USER_LASTNAME} - Modifié le: {PAGE_LASTUPDATE_DATE} à {PAGE_LASTUPDATE_TIME}</div>
+                        <div id="page_lastupdate">Auteur: {PAGE_LASTUPDATE_USER_FIRSTNAME} {PAGE_LASTUPDATE_USER_LASTNAME} - ModifiÃ© le: {PAGE_LASTUPDATE_DATE} Ã  {PAGE_LASTUPDATE_TIME}</div>
                     <!-- END switch_content_page -->
 
                     <!-- BEGIN switch_content_error -->
@@ -369,11 +369,11 @@
 
                     <!-- BEGIN switch_newsletter_unsubscrib -->
                       <div style="text-align: center;">
-                        <h2>Desinscription à la NewsLetter:</h2>
+                        <h2>Desinscription Ã  la NewsLetter:</h2>
                         <form method="post" action="{switch_newsletter_unsubscrib.ACTION}">
                             <div>
                                 <input type="text" title="Entrez votre adresse email" alt="Entrez votre adresse email" class="text" name="unsubcrib_email" value="Entrez votre adresse email" onfocus="javascript:this.value='';" />
-                                <input type="submit" title="Bouton pour valider la désinscription" class="button" value="désinscrire" />
+                                <input type="submit" title="Bouton pour valider la dÃ©sinscription" class="button" value="dÃ©sinscrire" />
                             </div>
                         </form>
                       </div>
@@ -400,9 +400,9 @@
         <div id="page_bas"></div>
     </div>
     <div id="pied">
-    Réalisation <a href="http://www.ovensia.fr" title="Aller sur le site ovensia.fr"><strong>Ovensia</strong></a> &#149; Template <a href="http://www.ovensia.fr" title="Aller sur le site ovensia.fr"><strong>Ovensia</strong></a> &#149; Propulsé par <strong><a title="Accéder au site de PLOOPI" href="http://www.ploopi.org">PLOOPI</a></strong>&nbsp;&nbsp;
+    RÃ©alisation <a href="http://www.ovensia.fr" title="Aller sur le site ovensia.fr"><strong>Ovensia</strong></a> &#149; Template <a href="http://www.ovensia.fr" title="Aller sur le site ovensia.fr"><strong>Ovensia</strong></a> &#149; PropulsÃ© par <strong><a title="AccÃ©der au site de PLOOPI" href="http://www.ploopi.org">PLOOPI</a></strong>&nbsp;&nbsp;
     <div id="execinfo">
-        Ce site est valide <a href="http://validator.w3.org/check?uri=referer" title="Vérifier la validité XHTML 1.0 strict"><strong>XHTML 1.0 strict</strong></a>, <a href="http://jigsaw.w3.org/css-validator/check/referer" title="Vérifier la validité CSS"><strong>CSS 2</strong></a> (sauf overflow-x / CSS3), <a href="http://www.ocawa.com/autotest/validate.php" title="Page testée par Ocawa, testez cette page sur le site ocawa"><strong>ADAE argent</strong> / <strong>WCAG 1.0 Niv3</strong></a>&nbsp;&nbsp;
+        Ce site est valide <a href="http://validator.w3.org/check?uri=referer" title="VÃ©rifier la validitÃ© XHTML 1.0 strict"><strong>XHTML 1.0 strict</strong></a>, <a href="http://jigsaw.w3.org/css-validator/check/referer" title="VÃ©rifier la validitÃ© CSS"><strong>CSS 2</strong></a> (sauf overflow-x / CSS3), <a href="http://www.ocawa.com/autotest/validate.php" title="Page testÃ©e par Ocawa, testez cette page sur le site ocawa"><strong>ADAE argent</strong> / <strong>WCAG 1.0 Niv3</strong></a>&nbsp;&nbsp;
         <br />[ page: <PLOOPI_PAGE_SIZE> ko | exec: <PLOOPI_EXEC_TIME> ms | sql: <PLOOPI_NUMQUERIES> req (<PLOOPI_SQL_P100> %) | session: <PLOOPI_SESSION_SIZE> ko | mem: <PLOOPI_PHP_MEMORY> ko ]&nbsp;&nbsp;
     </div>
     </div>

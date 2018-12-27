@@ -31,64 +31,44 @@
     //<!--
     {ADDITIONAL_JAVASCRIPT}
 
+    ploopi.template = {
+    };
+
     <!-- BEGIN switch_user_logged_out -->
-    var effect = false;
+    ploopi.template.passwordlost = function() {
+        jQuery('#lostpassword_form').eq(0).fadeIn(
+            'slow'
+        );
+    };
 
-    function tpl_passwordlost() {
-        if (effect) return false;
-        effect = true;
-        new Effect.Appear(
-            'lostpassword_form', {
-                from: 0.0,
-                to: 1.0,
-                duraction: 0.2,
-                fps: 25,
-                afterFinish:function() {
-                    $('ploopi_lostpassword_login').focus();
-                    effect = false;
-                }
-            }
+    ploopi.template.passwordlost_cancel = function() {
+        jQuery('#lostpassword_form').eq(0).fadeOut(
+            'slow'
         );
     }
 
-    function tpl_passwordlost_cancel() {
-        if (effect) return false;
-        effect = true;
-        new Effect.Appear(
-            'lostpassword_form', {
-                from: 1.0,
-                to: 0.0,
-                duraction: 0.2,
-                fps: 25,
-                afterFinish:function() {
-                    $('ploopi_login').focus();
-                    effect = false;
-                }
-            }
-        );
-    }
-
-    Event.observe(window, 'load', function() {
-        if ($('ploopi_password_new')) $('ploopi_password_new').focus();
-        else if ($('ploopi_login')) $('ploopi_login').focus();
+    jQuery(function() {
+        if (jQuery('#ploopi_password_new').length) jQuery('#ploopi_password_new')[0].focus();
+        else if (jQuery('#ploopi_login').length) jQuery('#ploopi_login')[0].focus();
     });
 
     <!-- END switch_user_logged_out -->
 
     <!-- BEGIN switch_user_logged_in -->
-    function tpl_resize_content() {
-        var height = document.viewport.getHeight() - $('statusbar').getHeight() - $('dock').getHeight();
-        $('pagecontent').style.height = height+'px';
-        $$('.blockmenu').each(function(item) {
-            item.setStyle({
-                'max-height': height+'px',
-                'overflow': 'auto'
-            });
-        });
-    }
+    ploopi.template.resize_content = function() {
+        var height = jQuery(window).height() - jQuery('#statusbar').height() - jQuery('#dock').height();
 
-    function tpl_display_time()
-    {
+        jQuery('#pagecontent')[0].style.height = height+'px';
+
+        jQuery('.blockmenu').each(function(key, item) {
+            jQuery(item).css([
+                'max-height:'+height+'px',
+                'overflow:auto'
+            ]);
+        });
+    };
+
+    ploopi.template.display_time = function() {
         var now = new Date();
         var hours = now.getHours();
         var minutes = now.getMinutes();
@@ -100,17 +80,20 @@
         day = ((day < 10) ? "0" : "") + day;
         month = ((month < 10) ? "0" : "") + month;
 
-
         var clock = day + "/" + month + "/" + year + " " + hours + ":" + minutes;
-        $('status_time').innerHTML =  clock;
-        timer = setTimeout("tpl_display_time()",50000);
-    }
+        jQuery('#status_time').html(clock);
+        timer = setTimeout(ploopi.template.display_time, 30000);
+    };
 
-    Event.observe(window, 'load', function() {
-        tpl_resize_content();
-        tpl_display_time();
-        Event.observe(window, 'resize', tpl_resize_content);
-        ploopi_tickets_refresh({LAST_NEWTICKET}, 30, '(', ')');
+    jQuery(function() {
+
+        with(ploopi.template) {
+            resize_content();
+            display_time();
+            jQuery(window).resize(resize_content);
+        }
+
+        ploopi.tickets.refresh({LAST_NEWTICKET}, 30, '(', ')');
     });
 
     <!-- END switch_user_logged_in -->
@@ -142,37 +125,36 @@
                     <div style="min-height:30px;">
                         <!-- BEGIN switch_passwordreset -->
                             <style>
-                                #protopass * {font-size:10px; }
-                                #protopass .password-strength-bar {border-radius:2px;}
+                                #checkpass * {font-size:10px; }
+                                #checkpass .password-strength-bar {border-radius:2px;}
                             </style>
 
-                            <span style="color:#ffff00;"><strong>Votre mot de passe a expiré.</strong><br />Vous devez en saisir un nouveau ci-dessous:</span>
+                            <span style="color:#ffff00;"><strong>Votre mot de passe a expirÃ©.</strong><br />Vous devez en saisir un nouveau ci-dessous:</span>
                             <p>
                                 <label for="ploopi_password_new">Nouveau mot de passe:&nbsp;</label>
                                 <input type="password" class="text" id="ploopi_password_new" name="ploopi_password_new" title="Saisir votre mot de passe" placeholder="Saisir votre mot de passe" tabindex="2" />
                             </p>
-                            <div id="protopass"></div>
+                            <div id="checkpass"></div>
                             <p>
                                 <label for="ploopi_password_new_confirm">Confirmation mot de passe:&nbsp;</label>
                                 <input type="password" class="text" id="ploopi_password_new_confirm" name="ploopi_password_new_confirm" title="Saisir votre mot de passe" placeholder="Saisir votre mot de passe" tabindex="2" />
                             </p>
 
                             <script type="text/javascript">
-                                var backupColor = $('ploopi_password_new').style.backgroundColor;
+                                var backupColor = jQuery('#ploopi_password_new')[0].style.backgroundColor;
 
-                                function tpl_verif_pass() {
-                                    if ($('ploopi_password_new').value != '' && $('ploopi_password_new_confirm').value != '') {
-                                        if ($('ploopi_password_new').value == $('ploopi_password_new_confirm').value) {
-                                            $('ploopi_password_new_confirm').style.backgroundColor = $('ploopi_password_new').style.backgroundColor = 'lightgreen';
+                                ploopi.template.verif_pass = function() {
+                                    if (jQuery('#ploopi_password_new')[0].value != '' && jQuery('#ploopi_password_new_confirm')[0].value != '') {
+                                        if (jQuery('#ploopi_password_new')[0].value == jQuery('#ploopi_password_new_confirm')[0].value) {
+                                            jQuery('#ploopi_password_new_confirm')[0].style.backgroundColor = jQuery('#ploopi_password_new')[0].style.backgroundColor = 'lightgreen';
                                         } else {
-                                            $('ploopi_password_new_confirm').style.backgroundColor = $('ploopi_password_new').style.backgroundColor = 'indianred';
+                                            jQuery('#ploopi_password_new_confirm')[0].style.backgroundColor = jQuery('#ploopi_password_new')[0].style.backgroundColor = 'indianred';
                                         }
                                     }
-                                    else $('ploopi_password_new_confirm').style.backgroundColor = $('ploopi_password_new').style.backgroundColor = backupColor;
+                                    else jQuery('#ploopi_password_new_confirm')[0].style.backgroundColor = jQuery('#ploopi_password_new')[0].style.backgroundColor = backupColor;
                                 }
 
-                                Event.observe(window, 'load', function() {
-
+                                jQuery(function() {
                                     <!-- BEGIN switch_np -->
                                         var options = {
                                             minchar: 6,
@@ -188,23 +170,22 @@
                                     <!-- END switch_cp -->
 
 
-                                    new Protopass('ploopi_password_new', 'protopass', options);
+                                    new ploopi.checkpass('ploopi_password_new', 'checkpass', options);
 
-                                    Event.observe($('ploopi_password_new'), 'change', function() { tpl_verif_pass(); });
-                                    Event.observe($('ploopi_password_new_confirm'), 'change', function() { tpl_verif_pass(); });
+                                    jQuery('#ploopi_password_new').on('change', function() { ploopi.template.verif_pass(); });
+                                    jQuery('#ploopi_password_new_confirm').on('change', function() { ploopi.template.verif_pass(); });
 
-                                    Event.observe($('login_form'), 'submit', function(e) {
+                                    jQuery('#login_form').on('submit', function(e) {
 
-
-                                        if ($('ploopi_password_new').value == '' && $('ploopi_password_new_confirm').value == '') {
-                                            alert('Votre mot de passe a expiré.\nVous devez redéfinir votre mot de passe.');
-                                            e.stop();
+                                        if (jQuery('#ploopi_password_new')[0].value == '' && jQuery('#ploopi_password_new_confirm')[0].value == '') {
+                                            alert('Votre mot de passe a expirÃ©.\nVous devez redÃ©finir votre mot de passe.');
+                                            e.stopPropagation();
                                             return;
                                         }
 
-                                        if ($('ploopi_password_new').value != $('ploopi_password_new_confirm').value) {
-                                            alert('Les deux saisies sont différentes.\nVous devez corriger votre saisie.');
-                                            e.stop();
+                                        if (jQuery('#ploopi_password_new')[0].value != jQuery('#ploopi_password_new_confirm')[0].value) {
+                                            alert('Les deux saisies sont diffÃ©rentes.\nVous devez corriger votre saisie.');
+                                            e.stopPropagation();
                                             return;
                                         }
                                     });
@@ -235,7 +216,7 @@
                     </button>
                 </div>
                 <div class="login_btn_left">
-                    <a href="javascript:void(0);" onclick="javascript:tpl_passwordlost();"><img src="{TEMPLATE_PATH}/img/template/lost.png" /><span style="margin-left:6px;">Mot de passe perdu</span></a>
+                    <a href="javascript:void(0);" onclick="javascript:ploopi.template.passwordlost();"><img src="{TEMPLATE_PATH}/img/template/lost.png" /><span style="margin-left:6px;">Mot de passe perdu</span></a>
                 </div>
                 </form>
             </div>
@@ -250,7 +231,7 @@
                         <input type="text" class="text" id="ploopi_lostpassword_email" name="ploopi_lostpassword_email" size="20" title="Saisissez votre adresse email" tabindex="12" />
                     </p>
                     <div style="color:#ffff00;margin-top:10px;">
-                        <em><strong>ATTENTION</strong>, une demande de mot de passe génère un nouveau mot de passe automatique.</em>
+                        <em><strong>ATTENTION</strong>, une demande de mot de passe gÃ©nÃ¨re un nouveau mot de passe automatique.</em>
                     </div>
                 </div>
                 <div class="login_btn_right">
@@ -260,14 +241,14 @@
                     </button>
                 </div>
                 <div class="login_btn_left">
-                    <a href="javascript:void(0);" onclick="javascript:tpl_passwordlost_cancel();"><img src="{TEMPLATE_PATH}/img/template/cancel.png" /><span style="margin-left:6px;">Annuler</span></a>
+                    <a href="javascript:void(0);" onclick="javascript:ploopi.template.passwordlost_cancel();"><img src="{TEMPLATE_PATH}/img/template/cancel.png" /><span style="margin-left:6px;">Annuler</span></a>
                 </div>
             </form>
         </div>
 
     </div>
     <div id="login_statusbar">
-        Template:&nbsp;<a href="http://www.ovensia.fr">{TEMPLATE_NAME}</a> |&nbsp;Propulsé par&nbsp;<a href="http://www.ploopi.fr">Ploopi</a>&nbsp;&#169;&nbsp;2016&nbsp;<a href="http://www.ovensia.fr">Ovensia</a>&nbsp;|&nbsp;<a href="http://www.ploopi.org/#Utilisation">Documentation utilisateur</a>&nbsp;|&nbsp;<a href="http://www.mozilla-europe.org/fr/products/firefox/">Préférez Firefox</a>
+        Template:&nbsp;<a href="http://www.ovensia.fr">{TEMPLATE_NAME}</a> |&nbsp;PropulsÃ© par&nbsp;<a href="http://www.ploopi.fr">Ploopi</a>&nbsp;&#169;&nbsp;2016&nbsp;<a href="http://www.ovensia.fr">Ovensia</a>&nbsp;|&nbsp;<a href="http://www.ploopi.org/#Utilisation">Documentation utilisateur</a>&nbsp;|&nbsp;<a href="http://www.mozilla-europe.org/fr/products/firefox/">PrÃ©fÃ©rez Firefox</a>
     </div>
     <!-- END switch_user_logged_out -->
 
@@ -278,13 +259,13 @@
         <ul id="mainmenu">
             <!-- BEGIN block -->
                 <li>
-                    <a class="mainmenu {switch_user_logged_in.switch_blockmenu.block.SELECTED}" href="{switch_user_logged_in.switch_blockmenu.block.URL}" title="Accéder au module &laquo; {switch_user_logged_in.switch_blockmenu.block.TITLE} &raquo;">{switch_user_logged_in.switch_blockmenu.block.TITLE}</a>
+                    <a class="mainmenu {switch_user_logged_in.switch_blockmenu.block.SELECTED}" href="{switch_user_logged_in.switch_blockmenu.block.URL}" title="AccÃ©der au module &laquo; {switch_user_logged_in.switch_blockmenu.block.TITLE} &raquo;">{switch_user_logged_in.switch_blockmenu.block.TITLE}</a>
                     <div class="blockmenu">
                     <!-- BEGIN switch_content -->
                         <div class="blockcontent" style="overflow:auto;">{switch_user_logged_in.switch_blockmenu.block.switch_content.CONTENT}</div>
                     <!-- END switch_content -->
                     <!-- BEGIN menu -->
-                        <a class="blockmenu {switch_user_logged_in.switch_blockmenu.block.menu.SELECTED}" href="{switch_user_logged_in.switch_blockmenu.block.menu.URL}" target="{switch_user_logged_in.switch_blockmenu.block.menu.TARGET}" title="Accéder au menu &laquo; {switch_user_logged_in.switch_blockmenu.block.menu.CLEANED_LABEL} &raquo;">{switch_user_logged_in.switch_blockmenu.block.menu.LABEL}</a>
+                        <a class="blockmenu {switch_user_logged_in.switch_blockmenu.block.menu.SELECTED}" href="{switch_user_logged_in.switch_blockmenu.block.menu.URL}" target="{switch_user_logged_in.switch_blockmenu.block.menu.TARGET}" title="AccÃ©der au menu &laquo; {switch_user_logged_in.switch_blockmenu.block.menu.CLEANED_LABEL} &raquo;">{switch_user_logged_in.switch_blockmenu.block.menu.LABEL}</a>
                     <!-- END menu -->
                     </div>
                 </li>
@@ -307,21 +288,21 @@
             <li>
                 <a class="menu" href="javascript:void(0);" title="A propos de Ploopi"><img style="margin-top:8px;" src="{TEMPLATE_PATH}/img/template/icons/about.png" /></a>
                 <div>
-                    <a href="http://www.ploopi.fr">Propulsé par <strong>Ploopi</strong></a>
-                    <a href="http://www.mozilla-europe.org/fr/products/firefox/">Ce template ne fonctionne pas avec IE6. <strong>Préférez Firefox</strong></a>
+                    <a href="http://www.ploopi.fr">PropulsÃ© par <strong>Ploopi</strong></a>
+                    <a href="http://www.mozilla-europe.org/fr/products/firefox/">Ce template ne fonctionne pas avec IE6. <strong>PrÃ©fÃ©rez Firefox</strong></a>
                     <a href="http://www.ploopi.org/#Utilisation"><strong>Documentation utilisateur</strong></a>
                     <p><strong>Informations Utilisateur :</strong>
                         <label>Identifiant</label><span>{USER_LOGIN}</span>
                         <label>Nom</label><span>{USER_FIRSTNAME} {USER_LASTNAME}</span>
                     </p>
-                    <p><strong>Informations Système :</strong>
+                    <p><strong>Informations SystÃ¨me :</strong>
                         <label>Gabarit</label><span>{TEMPLATE_NAME}</span>
-                        <label>Exécution</label><span><PLOOPI_EXEC_TIME> ms</span>
+                        <label>ExÃ©cution</label><span><PLOOPI_EXEC_TIME> ms</span>
                         <label>SQL</label><span><PLOOPI_NUMQUERIES> req (<PLOOPI_SQL_P100> %)</span>
                         <label>Session</label><span><PLOOPI_SESSION_SIZE> KB</span>
-                        <label>Mémoire</label><span><PLOOPI_PHP_MEMORY> KB</span>
+                        <label>MÃ©moire</label><span><PLOOPI_PHP_MEMORY> KB</span>
                         <label>Page</label><span><PLOOPI_PAGE_SIZE> KB </span>
-                        <label>Connectés</label><span>{SITE_CONNECTEDUSERS}</span>
+                        <label>ConnectÃ©s</label><span>{SITE_CONNECTEDUSERS}</span>
                         <label>Anonymes</label><span>{SITE_ANONYMOUSUSERS}</span>
                     </p>
                 </div>
@@ -334,7 +315,7 @@
                     <form method="post" id="form_recherche" action="{MAINMENU_SHOWSEARCH_URL}">
                     <p style="margin:0;padding:10px;overflow:auto;">
                         <input type="text" name="system_search_keywords" class="text" style="width:180px;float:left;" value="{SEARCH_KEYWORDS}">
-                        <img src="{TEMPLATE_PATH}/img/template/icons/search.png" value="Recherche" style="cursor:pointer;float:left;margin-left:4px;margin-top:4px;" onclick="$('form_recherche').submit();">
+                        <img src="{TEMPLATE_PATH}/img/template/icons/search.png" value="Recherche" style="cursor:pointer;float:left;margin-left:4px;margin-top:4px;" onclick="jQuery('#form_recherche')[0].submit();">
                     </p>
                     </form>
                 </div>
@@ -343,25 +324,25 @@
             <!-- END switch_search -->
         </ul>
 
-        <a style="position:relative;padding-left:30px;" class="menu_right {MAINMENU_SHOWTICKETS_SEL}" href="{MAINMENU_SHOWTICKETS_URL}" title="Accéder à &laquo; {MAINMENU_TICKETS} &raquo;"><img style="position:absolute;left:10px;top:8px;" src="{TEMPLATE_PATH}/img/template/icons/tickets.png" />{MAINMENU_TICKETS}<em id="tpl_ploopi_tickets_new">({NEWTICKETS})</em></a>
+        <a style="position:relative;padding-left:30px;" class="menu_right {MAINMENU_SHOWTICKETS_SEL}" href="{MAINMENU_SHOWTICKETS_URL}" title="AccÃ©der Ã  &laquo; {MAINMENU_TICKETS} &raquo;"><img style="position:absolute;left:10px;top:8px;" src="{TEMPLATE_PATH}/img/template/icons/tickets.png" />{MAINMENU_TICKETS}<em id="tpl_ploopi_tickets_new">({NEWTICKETS})</em></a>
         <img class="menu_right" src="{TEMPLATE_PATH}/img/template/status_sep.png" />
 
-        <a style="position:relative;padding-left:30px;" class="menu_right {MAINMENU_SHOWANNOTATIONS_SEL}" href="{MAINMENU_SHOWANNOTATIONS_URL}" title="Accéder à &laquo; {MAINMENU_ANNOTATIONS} &raquo;"><img style="position:absolute;left:10px;top:8px;" src="{TEMPLATE_PATH}/img/system/annotation.png" />{MAINMENU_ANNOTATIONS}</a>
+        <a style="position:relative;padding-left:30px;" class="menu_right {MAINMENU_SHOWANNOTATIONS_SEL}" href="{MAINMENU_SHOWANNOTATIONS_URL}" title="AccÃ©der Ã  &laquo; {MAINMENU_ANNOTATIONS} &raquo;"><img style="position:absolute;left:10px;top:8px;" src="{TEMPLATE_PATH}/img/system/annotation.png" />{MAINMENU_ANNOTATIONS}</a>
         <img class="menu_right" src="{TEMPLATE_PATH}/img/template/status_sep.png" />
 
-        <a style="position:relative;padding-left:30px;" class="menu_right {MAINMENU_SHOWPROFILE_SEL}" href="{MAINMENU_SHOWPROFILE_URL}" title="Accéder à &laquo; {MAINMENU_PROFILE} &raquo;"><img style="position:absolute;left:10px;top:8px;" src="{TEMPLATE_PATH}/img/template/icons/user.png" />{MAINMENU_PROFILE}</a>
+        <a style="position:relative;padding-left:30px;" class="menu_right {MAINMENU_SHOWPROFILE_SEL}" href="{MAINMENU_SHOWPROFILE_URL}" title="AccÃ©der Ã  &laquo; {MAINMENU_PROFILE} &raquo;"><img style="position:absolute;left:10px;top:8px;" src="{TEMPLATE_PATH}/img/template/icons/user.png" />{MAINMENU_PROFILE}</a>
         <img class="menu_right" src="{TEMPLATE_PATH}/img/template/status_sep.png" />
 
-        <div id="workspace" style="float:left;line-height:30px;height:30px;padding:0 10px;">Espace de travail sélectionné :</div>
+        <div id="workspace" style="float:left;line-height:30px;height:30px;padding:0 10px;">Espace de travail sÃ©lectionnÃ© :</div>
         <img src="{TEMPLATE_PATH}/img/template/status_sep.png" style="display:block;float:left;" />
         <ul id="workspacemenu" class="statusmenu">
             <li>
-                <a class="menu" href="javascript:void(0);" title="Sélectionner un autre espace de travail">{WORKSPACE_LABEL}</a>
+                <a class="menu" href="javascript:void(0);" title="SÃ©lectionner un autre espace de travail">{WORKSPACE_LABEL}</a>
                 <div>
                 <!-- BEGIN workspace -->
-                    <a href="{switch_user_logged_in.workspace.URL}" class="{switch_user_logged_in.workspace.SELECTED}" title="Sélectionner l'espace de travail &laquo; {switch_user_logged_in.workspace.TITLE} &raquo;">{switch_user_logged_in.workspace.TITLE}</a>
+                    <a href="{switch_user_logged_in.workspace.URL}" class="{switch_user_logged_in.workspace.SELECTED}" title="SÃ©lectionner l'espace de travail &laquo; {switch_user_logged_in.workspace.TITLE} &raquo;">{switch_user_logged_in.workspace.TITLE}</a>
                 <!-- END workspace -->
-                <a href="{USER_WORKSPACE_URL}" class="{USER_WORKSPACE_SEL}" title="Sélectionner l'espace de travail &laquo; {USER_WORKSPACE_LABEL} &raquo;"><em>{USER_WORKSPACE_LABEL}</em></a>
+                <a href="{USER_WORKSPACE_URL}" class="{USER_WORKSPACE_SEL}" title="SÃ©lectionner l'espace de travail &laquo; {USER_WORKSPACE_LABEL} &raquo;"><em>{USER_WORKSPACE_LABEL}</em></a>
                 </div>
             </li>
         </ul>
@@ -379,16 +360,5 @@
     <!-- END switch_user_logged_in -->
 
 </div>
-
-<!-- BEGIN switch_mod_message -->
-<script type="text/javascript">
-Event.observe(window, 'load', function() {
-    $('ploopi_mod_mess').innerHTML = '{switch_mod_message.MSG4JS}';
-    $('ploopi_mod_mess').className = '{switch_mod_message.MSG_CLASS}';
-    $('ploopi_mod_mess').fade({ duration: 3.0 });
-});
-</script>
-<!-- END switch_mod_message -->
-
 </body>
 </html>

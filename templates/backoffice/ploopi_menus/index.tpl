@@ -135,7 +135,7 @@
                         #protopass .password-strength-bar {border-radius:2px;}
                     </style>
 
-                    <div style="color:#ff8800;padding:2px;"><strong>Votre mot de passe a expiré.</strong><br />Vous devez en saisir un nouveau ci-dessous:</div>
+                    <div style="color:#ff8800;padding:2px;"><strong>Votre mot de passe a expirÃ©.</strong><br />Vous devez en saisir un nouveau ci-dessous:</div>
 
                     <div class="loginbox_line">
                         <label for="ploopi_password_new">Nouveau mot de passe:&nbsp;</label>
@@ -189,13 +189,13 @@
 
 
                                 if ($('ploopi_password_new').value == '' && $('ploopi_password_new_confirm').value == '') {
-                                    alert('Votre mot de passe a expiré.\nVous devez redéfinir votre mot de passe.');
+                                    alert('Votre mot de passe a expirÃ©.\nVous devez redÃ©finir votre mot de passe.');
                                     e.stop();
                                     return;
                                 }
 
                                 if ($('ploopi_password_new').value != $('ploopi_password_new_confirm').value) {
-                                    alert('Les deux saisies sont différentes.\nVous devez corriger votre saisie.');
+                                    alert('Les deux saisies sont diffÃ©rentes.\nVous devez corriger votre saisie.');
                                     e.stop();
                                     return;
                                 }
@@ -223,7 +223,7 @@
                     <input type="text" class="text" id="ploopi_lostpassword_email" name="ploopi_lostpassword_email" tabindex="11" />
                 </div>
                 <div class="loginbox_line">
-                    <em><strong>ATTENTION</strong>, une demande de mot de passe génère un nouveau mot de passe automatique.</em>
+                    <em><strong>ATTENTION</strong>, une demande de mot de passe gÃ©nÃ¨re un nouveau mot de passe automatique.</em>
                 </div>
                 <div class="loginbox_line">
                     <input type="submit" value="Envoyer" class="button" style="width:49%;float:right;" tabindex="13" />
@@ -272,7 +272,7 @@
         <div id="choix_espace">
             <p class="ploopi_va">
                 <img id="choix_style_large" alt="Agrandir" title="Agrandir" src="{TEMPLATE_PATH}/img/template/view-fullscreen.png" onclick="cacher();setActiveStyleSheet('large');" />
-                <img id="choix_style_short" alt="Réduire" title="Réduire" style="cursor:pointer;" src="{TEMPLATE_PATH}/img/template/view-restore.png" onclick="cacher();setActiveStyleSheet('short');" />
+                <img id="choix_style_short" alt="RÃ©duire" title="RÃ©duire" style="cursor:pointer;" src="{TEMPLATE_PATH}/img/template/view-restore.png" onclick="cacher();setActiveStyleSheet('short');" />
                 <span>Bienvenue <b>{USER_FIRSTNAME} {USER_LASTNAME}</b>, choisissez votre espace :</span>
                 <select class="select" onchange="javascript:if (this.value!='') document.location.href = this.value;" style="width:150px;">
                 <!-- BEGIN workspace -->
@@ -333,54 +333,26 @@
 <!-- END switch_user_logged_in -->
 
 <p id="footer">
-Template:&nbsp;<a href="http://www.ovensia.fr">{TEMPLATE_NAME}</a> |&nbsp;Propulsé par&nbsp;<a href="http://www.ploopi.fr">Ploopi</a>&nbsp;&#169;&nbsp;2016&nbsp;<a href="http://www.ovensia.fr">Ovensia</a>&nbsp;|&nbsp;<a href="http://www.ploopi.org/#Utilisation">Documentation utilisateur</a>&nbsp;|&nbsp;<a href="http://www.mozilla-europe.org/fr/products/firefox/">Préférez Firefox</a>&nbsp;
+Template:&nbsp;<a href="http://www.ovensia.fr">{TEMPLATE_NAME}</a> |&nbsp;PropulsÃ© par&nbsp;<a href="http://www.ploopi.fr">Ploopi</a>&nbsp;&#169;&nbsp;2016&nbsp;<a href="http://www.ovensia.fr">Ovensia</a>&nbsp;|&nbsp;<a href="http://www.ploopi.org/#Utilisation">Documentation utilisateur</a>&nbsp;|&nbsp;<a href="http://www.mozilla-europe.org/fr/products/firefox/">PrÃ©fÃ©rez Firefox</a>&nbsp;
 </p>
 
 
-<!-- BEGIN switch_mod_message -->
-<script type="text/javascript">
-$('ploopi_mod_mess_mess').innerHTML = '{switch_mod_message.MSG4JS}';
-$('ploopi_mod_mess').className = '{switch_mod_message.MSG_CLASS}';
-ploopi_window_onload_stock( function() { new Effect.SlideUp('ploopi_mod_mess', { duration: 3.0 }); } );
-</script>
-<!-- END switch_mod_message -->
-
 <!-- BEGIN switch_user_logged_out -->
 <script type="text/javascript">
-Event.observe(window, 'load', function() {
-    if ($('ploopi_password_new')) $('ploopi_password_new').focus();
-    else if ($('ploopi_login')) $('ploopi_login').focus();
+jQuery(function() {
+    if ($('#ploopi_password_new').length) $('#ploopi_password_new')[0].focus();
+    else if ($('#ploopi_login').length) $('#ploopi_login')[0].focus();
 });
 
-var effect = false;
-
 function tpl_passwordlost() {
-    if (effect) return false;
-    effect = true;
-    new Effect.BlindDown(
-        'formpasswordlost',
-        {
-            duration: 0.3,
-            afterFinish:function() {
-                $('ploopi_lostpassword_login').focus();
-                effect = false;
-            }
-        }
+    $('#formpasswordlost').eq(0).fadeIn(
+        'slow'
     );
 }
 
 function tpl_passwordlost_cancel() {
-    if (effect) return false;
-    effect = true;
-    new Effect.BlindUp(
-        'formpasswordlost',
-        {
-            duration: 0.3,
-            afterFinish:function() {
-                $('ploopi_login').focus();
-                effect = false;
-            }
-        }
+    $('#formpasswordlost').eq(0).fadeOut(
+        'slow'
     );
 }
 

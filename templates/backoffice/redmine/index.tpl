@@ -75,7 +75,7 @@
                         #protopass .password-strength-bar {border-radius:2px;}
                     </style>
 
-                    <div style="color:#ff8800;text-align:center;padding:10px;"><strong>Votre mot de passe a expiré.</strong><br />Vous devez en saisir un nouveau ci-dessous:</div>
+                    <div style="color:#ff8800;text-align:center;padding:10px;"><strong>Votre mot de passe a expirÃ©.</strong><br />Vous devez en saisir un nouveau ci-dessous:</div>
 
                     <div class="loginbox_line" style="text-align:right;">
                         <label for="ploopi_password_new">Nouveau mot de passe:&nbsp;</label>
@@ -131,13 +131,13 @@
 
 
                                 if ($('ploopi_password_new').value == '' && $('ploopi_password_new_confirm').value == '') {
-                                    alert('Votre mot de passe a expiré.\nVous devez redéfinir votre mot de passe.');
+                                    alert('Votre mot de passe a expirÃ©.\nVous devez redÃ©finir votre mot de passe.');
                                     e.stop();
                                     return;
                                 }
 
                                 if ($('ploopi_password_new').value != $('ploopi_password_new_confirm').value) {
-                                    alert('Les deux saisies sont différentes.\nVous devez corriger votre saisie.');
+                                    alert('Les deux saisies sont diffÃ©rentes.\nVous devez corriger votre saisie.');
                                     e.stop();
                                     return;
                                 }
@@ -160,11 +160,11 @@
                     <input type="text" class="text" id="ploopi_lostpassword_login" name="ploopi_lostpassword_login" style="width:150px;" title="Saisissez votre identifiant" tabindex="10" />
                 </div>
                 <div class="loginbox_line" style="text-align:right;">
-                    <label for="ploopi_lostpassword_email">(ou) Mèl:&nbsp;</label>
-                    <input type="text" class="text" id="ploopi_lostpassword_email" name="ploopi_lostpassword_email" style="width:150px;" title="Saisissez votre mèl" tabindex="11" />
+                    <label for="ploopi_lostpassword_email">(ou) MÃ¨l:&nbsp;</label>
+                    <input type="text" class="text" id="ploopi_lostpassword_email" name="ploopi_lostpassword_email" style="width:150px;" title="Saisissez votre mÃ¨l" tabindex="11" />
                 </div>
                 <div class="loginbox_line">
-                    <em><strong>ATTENTION</strong>, une demande de mot de passe génère un nouveau mot de passe automatique.</em>
+                    <em><strong>ATTENTION</strong>, une demande de mot de passe gÃ©nÃ¨re un nouveau mot de passe automatique.</em>
                 </div>
                 <div class="loginbox_line">
                     <input type="submit" value="Envoyer" class="button" style="float:right;width:49%;" title="Cliquez pour envoyer votre demande de mot de passe" tabindex="13" />
@@ -190,39 +190,23 @@
     </div>
 
     <script type="text/javascript">
-    ploopi_window_onload_stock(function() { if ($('ploopi_login')) $('ploopi_login').focus(); } );
-
-    var effect = false;
+    jQuery(function() {
+        if ($('#ploopi_password_new').length) $('#ploopi_password_new')[0].focus();
+        else if ($('#ploopi_login').length) $('#ploopi_login')[0].focus();
+    });
 
     function tpl_passwordlost() {
-        if (effect) return false;
-        effect = true;
-        new Effect.BlindDown(
-            'formpasswordlost',
-            {
-                duration: 0.3,
-                afterFinish:function() {
-                    $('ploopi_lostpassword_login').focus();
-                    effect = false;
-                }
-            }
+        $('#formpasswordlost').eq(0).fadeIn(
+            'slow'
         );
     }
 
     function tpl_passwordlost_cancel() {
-        if (effect) return false;
-        effect = true;
-        new Effect.BlindUp(
-            'formpasswordlost',
-            {
-                duration: 0.3,
-                afterFinish:function() {
-                    $('ploopi_login').focus();
-                    effect = false;
-                }
-            }
+        $('#formpasswordlost').eq(0).fadeOut(
+            'slow'
         );
-    }
+        }
+
 
     function tpl_passwordlost_submit() {
         if ($('ploopi_lostpassword_login').value != '' || $('ploopi_lostpassword_email').value != '') return true;
@@ -243,13 +227,13 @@
                 <li><a href="{USER_DECONNECT}">{MAINMENU_DISCONNECTION}</a></li>
             </ul>
         </div>
-        <span>Connecté en tant que &nbsp;<b>{USER_FIRSTNAME}&nbsp;{USER_LASTNAME}</b></span>
+        <span>ConnectÃ© en tant que &nbsp;<b>{USER_FIRSTNAME}&nbsp;{USER_LASTNAME}</b></span>
     </div>
 
     <div id="header">
         <div id="workspace-menu">
             <select class="select" onchange="javascript:if (this.value != '') window.location = this.value;">
-                <option value="" selected="selected">Aller à un espace...</option>
+                <option value="" selected="selected">Aller Ã  un espace...</option>
                 <option value="" disabled="disabled">---</option>
                 <!-- BEGIN workspace -->
                     <option value="{switch_user_logged_in.workspace.URL}" {switch_user_logged_in.workspace.SELECTED}>{switch_user_logged_in.workspace.TITLE}</option>
@@ -277,7 +261,7 @@
             <div id="main-menu">
                 <ul>
                     <!-- BEGIN block -->
-                        <li><a class="{switch_user_logged_in.switch_blockmenu.block.SELECTED}" href="{switch_user_logged_in.switch_blockmenu.block.URL}" title="Accéder au module &laquo; {switch_user_logged_in.switch_blockmenu.block.TITLE} &raquo;">{switch_user_logged_in.switch_blockmenu.block.TITLE}</a></li>
+                        <li><a class="{switch_user_logged_in.switch_blockmenu.block.SELECTED}" href="{switch_user_logged_in.switch_blockmenu.block.URL}" title="AccÃ©der au module &laquo; {switch_user_logged_in.switch_blockmenu.block.TITLE} &raquo;">{switch_user_logged_in.switch_blockmenu.block.TITLE}</a></li>
                     <!-- END block -->
                 </ul>
             </div>
@@ -295,7 +279,7 @@
                     <!-- END switch_content -->
                     <ul>
                     <!-- BEGIN menu -->
-                        <li><a class="{switch_user_logged_in.switch_blockmenu.switch_blocksel.menu.SELECTED}" href="{switch_user_logged_in.switch_blockmenu.switch_blocksel.menu.URL}" target="{switch_user_logged_in.switch_blockmenu.switch_blocksel.menu.TARGET}" title="Accéder au menu &laquo; {switch_user_logged_in.switch_blockmenu.switch_blocksel.menu.CLEANED_LABEL} &raquo;">{switch_user_logged_in.switch_blockmenu.switch_blocksel.menu.LABEL}</a></li>
+                        <li><a class="{switch_user_logged_in.switch_blockmenu.switch_blocksel.menu.SELECTED}" href="{switch_user_logged_in.switch_blockmenu.switch_blocksel.menu.URL}" target="{switch_user_logged_in.switch_blockmenu.switch_blocksel.menu.TARGET}" title="AccÃ©der au menu &laquo; {switch_user_logged_in.switch_blockmenu.switch_blocksel.menu.CLEANED_LABEL} &raquo;">{switch_user_logged_in.switch_blockmenu.switch_blocksel.menu.LABEL}</a></li>
                     <!-- END menu -->
                     </ul>
                 </div>
@@ -314,13 +298,8 @@
 <!-- END switch_user_logged_in -->
 
 <div id="footer">
-    Template:&nbsp;<a href="http://www.ovensia.fr">{TEMPLATE_NAME}</a> |&nbsp;Propulsé par&nbsp;<a href="http://www.ploopi.fr">Ploopi</a>&nbsp;&#169;&nbsp;2016&nbsp;<a href="http://www.ovensia.fr">Ovensia</a>&nbsp;|&nbsp;<a href="http://www.ploopi.org/#Utilisation">Documentation utilisateur</a>&nbsp;|&nbsp;<a href="http://www.mozilla-europe.org/fr/products/firefox/">Préférez Firefox</a>&nbsp;
+    Template:&nbsp;<a href="http://www.ovensia.fr">{TEMPLATE_NAME}</a> |&nbsp;PropulsÃ© par&nbsp;<a href="http://www.ploopi.fr">Ploopi</a>&nbsp;&#169;&nbsp;2016&nbsp;<a href="http://www.ovensia.fr">Ovensia</a>&nbsp;|&nbsp;<a href="http://www.ploopi.org/#Utilisation">Documentation utilisateur</a>&nbsp;|&nbsp;<a href="http://www.mozilla-europe.org/fr/products/firefox/">PrÃ©fÃ©rez Firefox</a>&nbsp;
 </div>
-
-<!-- BEGIN switch_mod_message -->
-<div id="{switch_mod_message.MSG_ID}" class="{switch_mod_message.MSG_CLASS}">{switch_mod_message.MSG}</div>
-<script type="text/javascript">ploopi_window_onload_stock(function() { $('{switch_mod_message.MSG_ID}').fade({ duration: 3.0}); });</script>
-<!-- END switch_mod_message -->
 
 </body>
 </html>

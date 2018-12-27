@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -32,10 +32,6 @@
  * @see skin_common
  */
 
-namespace ploopi;
-
-use ploopi;
-
 /**
  * Gestion de l'affichage du skin 'ovensia'
  *
@@ -48,7 +44,7 @@ use ploopi;
  * @see skin_common
  */
 
-class skin extends skin_common
+class skin extends ploopi\skin
 {
     /**
      * Construction de la classe skin 'ovensia'

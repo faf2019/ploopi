@@ -127,7 +127,7 @@ Lightbox.prototype = {
         //  </div>
 
 
-        var objBody = $$('body')[0];
+        var objBody = $jQuery('#body')[0][0];
 
 		objBody.appendChild(Builder.node('div',{id:'overlay'}));
 	
@@ -162,13 +162,13 @@ Lightbox.prototype = {
         ]));
 
 
-		$('overlay').hide().observe('click', (function() { this.end(); }).bind(this));
-		$('lightbox').hide().observe('click', (function(event) { if (event.element().id == 'lightbox') this.end(); }).bind(this));
-		$('outerImageContainer').setStyle({ width: size, height: size });
-		$('prevLink').observe('click', (function(event) { event.stop(); this.changeImage(this.activeImage - 1); }).bindAsEventListener(this));
-		$('nextLink').observe('click', (function(event) { event.stop(); this.changeImage(this.activeImage + 1); }).bindAsEventListener(this));
-		$('loadingLink').observe('click', (function(event) { event.stop(); this.end(); }).bind(this));
-		$('bottomNavClose').observe('click', (function(event) { event.stop(); this.end(); }).bind(this));
+		jQuery('#overlay')[0].hide().observe('click', (function() { this.end(); }).bind(this));
+		jQuery('#lightbox')[0].hide().observe('click', (function(event) { if (event.element().id == 'lightbox') this.end(); }).bind(this));
+		jQuery('#outerImageContainer')[0].setStyle({ width: size, height: size });
+		jQuery('#prevLink')[0].observe('click', (function(event) { event.stop(); this.changeImage(this.activeImage - 1); }).bindAsEventListener(this));
+		jQuery('#nextLink')[0].observe('click', (function(event) { event.stop(); this.changeImage(this.activeImage + 1); }).bindAsEventListener(this));
+		jQuery('#loadingLink')[0].observe('click', (function(event) { event.stop(); this.end(); }).bind(this));
+		jQuery('#bottomNavClose')[0].observe('click', (function(event) { event.stop(); this.end(); }).bind(this));
 
         var th = this;
         (function(){
@@ -206,7 +206,7 @@ Lightbox.prototype = {
 
         // stretch overlay to fill page and fade in
         var arrayPageSize = this.getPageSize();
-        $('overlay').setStyle({ width: arrayPageSize[0] + 'px', height: arrayPageSize[1] + 'px' });
+        jQuery('#overlay')[0].setStyle({ width: arrayPageSize[0] + 'px', height: arrayPageSize[1] + 'px' });
 
         new Effect.Appear(this.overlay, { duration: this.overlayDuration, from: 0.0, to: LightboxOptions.overlayOpacity });
 

@@ -15,15 +15,15 @@ ClassGallerySlide = function(idUniq,withThumb) {
 	this.add_URL = function (id,url)
 	{
 		this.arrGalleryUrl[id] = url;
-	    //les tableaux associatif ne reconnaissent pas la propriété length...
+	    //les tableaux associatif ne reconnaissent pas la propriÃ©tÃ© length...
 		this.maxindex++;
 		this.maxposition = -1*(this.maxindex-4)*this.withthumb;
-		// max position = -1 car decalage négatif
+		// max position = -1 car decalage nÃ©gatif
 	    //              et (maxindex-4) car 2 premieres et 2 dernieres cases ne bougent pas donc on bouge de n-4 cases en tout 
 	}
 	
 	/*
-	 * ajout du libellé en dessous de la vignette 
+	 * ajout du libellÃ© en dessous de la vignette 
 	 */
 	this.show_tooltip = function (myDivHover)
 	{   
@@ -33,7 +33,7 @@ ClassGallerySlide = function(idUniq,withThumb) {
 	        function(myDiv) {
 	        	if(myDiv.tagName == "DIV" && myDiv.id.indexOf('thumb-') > -1) 
 	        	{
-		        	// Passage en 'hover' mais en concervant éventuellement le 'active'
+		        	// Passage en 'hover' mais en concervant Ã©ventuellement le 'active'
 		            if(myDiv.id == 'thumb-'+idUniqLocal+'-'+myDivHover)
 		            {
 		                $(myDiv.id).className = ($(myDiv.id).className.indexOf('active') > -1) ? 'active hover' : 'hover';
@@ -49,7 +49,7 @@ ClassGallerySlide = function(idUniq,withThumb) {
 	
 
 	/*
-	 * Ajout de la bordure de la vignette sélectionnée 
+	 * Ajout de la bordure de la vignette sÃ©lectionnÃ©e 
 	 */
 	this.show_border = function (myDivSelect)
 	{
@@ -59,7 +59,7 @@ ClassGallerySlide = function(idUniq,withThumb) {
 	        function(myDiv) {
 	        	if(myDiv.tagName == "DIV" && myDiv.id.indexOf('thumb-') > -1) 
 	        	{
-		            // Passage en 'active' mais en concervant éventuellement le 'hover'
+		            // Passage en 'active' mais en concervant Ã©ventuellement le 'hover'
 		            if(myDiv.id == 'thumb-'+idUniqLocal+'-'+myDivSelect)
 		            {
 		                $(myDiv.id).className = ($(myDiv.id).className.indexOf('hover') > -1) ? 'active hover' : 'active';
@@ -88,7 +88,7 @@ ClassGallerySlide = function(idUniq,withThumb) {
 	}
 
 	/*
-	 * Clic sur les flêches droite/gauche
+	 * Clic sur les flÃªches droite/gauche
 	 */
 	this.click_arrow = function (direction)
 	{
@@ -109,7 +109,7 @@ ClassGallerySlide = function(idUniq,withThumb) {
 	}
 	
 	/*
-	 * Systeme de déplacement de la barre de vignette
+	 * Systeme de dÃ©placement de la barre de vignette
 	 */
 	this.slide_thumbnail = function(numThumb) 
 	{

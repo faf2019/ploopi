@@ -73,7 +73,6 @@ border-top:1px solid #fff;
 border-left:1px solid #fff;
 border-right:1px solid #fff;
 border-radius:3px 3px 0 0;
-font-variant:small-caps;
 letter-spacing:1px;
 font-weight:bold;
 text-align:left;
@@ -83,7 +82,7 @@ padding:2px 6px;
 .simplebloc_titleleft {
 padding:0 4px;
 height:20px;
-line-height:20px;
+line-height:22px;
 }
 
 .simplebloc_title a {
@@ -174,6 +173,34 @@ background: -webkit-linear-gradient(top, rgba(200,200,200,1) 0%, rgba(230,230,23
 
 input[type='submit'], button[type='submit'] {
 font-weight:bold;
+}
+
+input[type='checkbox'], input[type='radio'], input[type='checkbox']:focus, input[type='radio']:focus, input[type='checkbox']:hover, input[type='radio']:hover {
+box-shadow:none;
+-moz-box-shadow:none;
+-webkit-box-shadow:none;
+}
+
+input[type='checkbox'],
+input[type='radio'] {
+border-radius:0;
+-moz-border-radius:0;
+-webkit-border-radius:0;
+color: #2c4056;
+padding: 0;
+border: 0;
+box-shadow:none;
+-moz-box-shadow:none;
+-webkit-box-shadow:none;
+background: transparent;
+}
+
+input[type='checkbox']:focus,
+input[type='radio']:focus {
+box-shadow:none;
+-moz-box-shadow:none;
+-webkit-box-shadow:none;
+background: transparent;
 }
 
 *[disabled=disabled],
@@ -389,7 +416,7 @@ overflow:auto;
     margin:0;
 }
 
-.ploopi_va > * {
+.ploopi_va * {
     display: inline-block;
     vertical-align: middle;
 }
@@ -602,7 +629,6 @@ a.ploopi_explorer_link {
     display:block;
     overflow:hidden;
     text-decoration:none;
-    outline:none;
 }
 
 a.ploopi_explorer_link:hover {
@@ -918,7 +944,8 @@ background: url(../img/template/tabs.png) 0 -20px no-repeat;
     margin:2px 0 5px 0;
 }
 
-.ploopi_generate_form > form > div > fieldset > div > input[type='checkbox'] {
+.ploopi_generate_form > form > div > fieldset > div > input[type='checkbox'],
+.ploopi_generate_form > form > div > fieldset > div > input[type='radio'] {
     width:auto;
 }
 

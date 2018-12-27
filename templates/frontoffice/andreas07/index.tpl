@@ -53,7 +53,7 @@
 
 <div id="leftside">
     <h1>{SITE_TITLE}</h1>
-    <h2>Slogan à modifier</h2>
+    <h2>Slogan Ã  modifier</h2>
 
     <div id="menu">
         <!-- BEGIN root1 -->
@@ -63,8 +63,8 @@
         <!-- END root1 -->
     </div>
 
-    <h3>Dernière mise à jour:</h3>
-    <p>{LASTUPDATE_DATE} à {LASTUPDATE_TIME}</p>
+    <h3>DerniÃ¨re mise Ã  jour:</h3>
+    <p>{LASTUPDATE_DATE} Ã  {LASTUPDATE_TIME}</p>
 </div>
 
 <div id="extras">
@@ -73,7 +73,7 @@
         <input type="text" alt="recherche" id="recherche_field" name="query_string" value="{PAGE_QUERYSTRING}" class="text" style="width:75%" />
         <input type="submit" value="go" class="button" style="width:20%" />
     </form>
-                        <a href="./recherche.html">Recherche avancée</a>
+                        <a href="./recherche.html">Recherche avancÃ©e</a>
 
     <!-- BEGIN switch_subscription -->
         <h2>Abonnement</h2>
@@ -189,7 +189,7 @@
                                 <label>Nom(*) :</label><input type="text" class="text" id="comment_nickname" name="comment_nickname"  maxlength="50"/>
                             </p>
                             <p>
-                                <label>Email (ne sera pas affiché) :</label><input type="text" class="text" id="comment_email" name="comment_email" maxlength="255"/>
+                                <label>Email (ne sera pas affichÃ©) :</label><input type="text" class="text" id="comment_email" name="comment_email" maxlength="255"/>
                             </p>
                             <p>
                                 <label>Commentaire(*) :</label><textarea class="textarea" id="comment_comment" name="comment_comment"></textarea>
@@ -227,10 +227,10 @@
                     <script type="text/javascript">
                     function comment_validate(form)
                     {
-                        if (ploopi_validatefield('Nom', form.comment_nickname, 'string'))
-                        if (ploopi_validatefield('Email', form.comment_email, 'emptyemail'))
-                        if (ploopi_validatefield('Commentaire', form.comment_comment, 'string'))
-                        if (ploopi_validatefield('Code', form.captcha_code_{switch_content_page.sw_comment.IDCAPTCHA}, 'captcha', '{PAGE_URL_CONTROLCAPTCHA}', 'img_captcha_{switch_content_page.sw_comment.IDCAPTCHA}', '{PAGE_URL_UPDATECAPTCHA}'))
+                        if (ploopi.validatefield('Nom', form.comment_nickname, 'string'))
+                        if (ploopi.validatefield('Email', form.comment_email, 'emptyemail'))
+                        if (ploopi.validatefield('Commentaire', form.comment_comment, 'string'))
+                        if (ploopi.validatefield('Code', form.captcha_code_{switch_content_page.sw_comment.IDCAPTCHA}, 'captcha', '{PAGE_URL_CONTROLCAPTCHA}', 'img_captcha_{switch_content_page.sw_comment.IDCAPTCHA}', '{PAGE_URL_UPDATECAPTCHA}'))
                           return(true);
 
                         return(false);
@@ -250,7 +250,7 @@
             <p>{switch_content_blog.article.PAGE_CONTENT}</p>
             <div style="clear: both; font-size: 9px; padding: 5px 20px 0 0; text-align: center;">
                 <!-- BEGIN sw_modify -->
-                <div style="float: right;">modifié le : {switch_content_blog.article.PAGE_LASTUPDATE_DATE}</div>
+                <div style="float: right;">modifiÃ© le : {switch_content_blog.article.PAGE_LASTUPDATE_DATE}</div>
                 <!-- END sw_modify -->
                 <div style="float: left;">{switch_content_blog.article.PAGE_AUTHOR} - {switch_content_blog.article.PAGE_DATE}</div>
                 <!-- BEGIN sw_comment -->
@@ -289,7 +289,7 @@
             <a href="javascript:void(0);" onclick="javascript:window.location.href='{switch_content_blog.page_after.URL}'; return false;" style="float: right; padding: 10px 10px 0 0;">pages suivantes&nbsp;&gt;&gt;</a>
             <!-- END page_after -->
             <!-- BEGIN page_before -->
-            <a href="javascript:void(0);" onclick="javascript:window.location.href='{switch_content_blog.page_before.URL}'; return false;" style="float: left; padding: 10px 0 0 0;">&lt;&lt;&nbsp;pages précédentes</a>
+            <a href="javascript:void(0);" onclick="javascript:window.location.href='{switch_content_blog.page_before.URL}'; return false;" style="float: left; padding: 10px 0 0 0;">&lt;&lt;&nbsp;pages prÃ©cÃ©dentes</a>
             <!-- END page_before -->
         </div>
     <!-- END switch_content_blog -->
@@ -306,12 +306,12 @@
 
 
     <!-- BEGIN switch_advanced_search -->
-        <h2>Recherche avancée</h2>
+        <h2>Recherche avancÃ©e</h2>
 
         <form id="form_advanced_search" method="post" action="./recherche.html">
 
             <div>
-                <label for="query_string">Mot(s) recherché(s):</label>
+                <label for="query_string">Mot(s) recherchÃ©(s):</label>
                 <br /><input type="text" alt="recherche" id="search_query_string" name="query_string" value="{PAGE_QUERYSTRING}" />
             </div>
 
@@ -359,10 +359,10 @@
     <!-- END switch_advanced_search -->
 
     <!-- BEGIN switch_search -->
-        <h1>Résultat de la recherche</h1>
-        <h2>Mot clé: {PAGE_QUERYSTRING}</h2>
+        <h1>RÃ©sultat de la recherche</h1>
+        <h2>Mot clÃ©: {PAGE_QUERYSTRING}</h2>
         <!-- BEGIN switch_notfound -->
-            <p>Aucun résultat pour cette recherche</p>
+            <p>Aucun rÃ©sultat pour cette recherche</p>
         <!-- END switch_notfound -->
         <div id="search_result">
             <!-- BEGIN result -->
@@ -376,7 +376,7 @@
     <!-- END switch_search -->
 
     <!-- BEGIN switch_tagsearch -->
-        <h1>Articles tagués</h1>
+        <h1>Articles taguÃ©s</h1>
         <h2>{PAGE_QUERYTAG}</h2>
         <div id="search_result">
             <!-- BEGIN result -->
@@ -443,7 +443,7 @@
 
 
     <h3>Informations sur le site</h3>
-    <p>&copy; 2008 <a href="#">{WORKSPACE_META_COPYRIGHT}</a> | Original design by <a href="http://andreasviklund.com/">Andreas Viklund</a> | Propulsé par <a href="http://www.ploopi.org" target="_blank">Ploopi</a></p>
+    <p>&copy; 2008 <a href="#">{WORKSPACE_META_COPYRIGHT}</a> | Original design by <a href="http://andreasviklund.com/">Andreas Viklund</a> | PropulsÃ© par <a href="http://www.ploopi.org" target="_blank">Ploopi</a></p>
 </div>
 
 </div>
