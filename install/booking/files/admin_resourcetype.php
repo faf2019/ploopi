@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2008 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,7 +26,7 @@
  * @package booking
  * @subpackage admin
  * @copyright Ovensia
- * @author Stéphane Escaich
+ * @author StÃ©phane Escaich
  * @version  $Revision$
  * @modifiedby $LastChangedBy$
  * @lastmodified $Date$
@@ -34,10 +34,10 @@
 ?>
 
 <div class="booking_toolbar">
-    <em style="float:left;color:#a60000;margin-left:4px;">En rouge, les éléments inactifs</em>
-    <a href="javascript:void(0);" onclick="javascript:booking_element_check();"><img src="./modules/booking/img/ico_checkbox.png">Cocher/Décocher tout</a>
-    <a href="javascript:void(0);" onclick="javascript:booking_element_delete('resourcetype');"><img src="./modules/booking/img/ico_trash.png">Supprimer les éléments cochés</a>
-    <a href="javascript:void(0);" onclick="javascript:booking_element_add('resourcetype', event);"><img src="./modules/booking/img/ico_new.png">Ajouter un élément</a>
+    <em style="float:left;color:#a60000;margin-left:4px;">En rouge, les Ã©lÃ©ments inactifs</em>
+    <a href="javascript:void(0);" onclick="javascript:booking_element_check();"><img src="./modules/booking/img/ico_checkbox.png">Cocher/DÃ©cocher tout</a>
+    <a href="javascript:void(0);" onclick="javascript:booking_element_delete('resourcetype');"><img src="./modules/booking/img/ico_trash.png">Supprimer les Ã©lÃ©ments cochÃ©s</a>
+    <a href="javascript:void(0);" onclick="javascript:booking_element_add('resourcetype', event);"><img src="./modules/booking/img/ico_new.png">Ajouter un Ã©lÃ©ment</a>
 </div>
 
 <?php
@@ -50,7 +50,7 @@ $arrResult =
     
 $arrResult['columns']['auto']['name'] = 
     array(    
-        'label' => 'Intitulé',
+        'label' => 'IntitulÃ©',
         'options' => array('sort' => true)
     );
     
@@ -70,7 +70,7 @@ $arrResult['columns']['right']['active'] =
     
 $arrResult['columns']['right']['workspace'] = 
     array( 
-        'label' => 'Créé par',
+        'label' => 'CrÃ©Ã© par',
         'width' => '150',
         'options' => array('sort' => true)
     );

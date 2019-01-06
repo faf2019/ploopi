@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2008 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,18 +26,18 @@
  * @package booking
  * @subpackage wce
  * @copyright Ovensia
- * @author StÈphane Escaich
+ * @author St√©phane Escaich
  * @version  $Revision$
  * @modifiedby $LastChangedBy$
  * @lastmodified $Date$
  */
 
 /*
- * ParticularitÈs frontoffice :
+ * Particularit√©s frontoffice :
  * - le module_id n'est pas en session, il faut utiliser $obj['module_id'];
- * - l'id article "hÙte" est dispo via webedit_get_articleid()
- * - l'id rubrique "hÙte" est dispo via webedit_get_headingid()
- * - le template "hÙte" est dispo via webedit_get_template_name()
+ * - l'id article "h√¥te" est dispo via webedit_get_articleid()
+ * - l'id rubrique "h√¥te" est dispo via webedit_get_headingid()
+ * - le template "h√¥te" est dispo via webedit_get_template_name()
  */
 
 if (isset($object))
@@ -49,18 +49,17 @@ if (isset($object))
     global $arrBookingSize;
     global $arrBookingColor;
 
-    // RÈcupÈration du module_id du module intÈgrÈ
+    // R√©cup√©ration du module_id du module int√©gr√©
     $booking_moduleid = $obj['module_id'];
 
-    // RÈcupÈration des variables d'environnement de l'article en cours d'affichage
+    // R√©cup√©ration des variables d'environnement de l'article en cours d'affichage
     global $articleid;
     global $headingid;
     global $template_name;
     global $template_path;
+    global ploopi\skin::get();
 
-    $skin = ploopi\skin::get();
-
-    if (!empty($skin))
+    if (!empty(ploopi\skin::get()))
     {
         // Url de base de l'article
         // $url = webedit_get_url();
@@ -68,7 +67,7 @@ if (isset($object))
 
         $_SESSION['booking'][$booking_moduleid]['article_url'] = $url;
 
-        // RÈcupÈration du paramËtre "op"
+        // R√©cup√©ration du param√®tre "op"
         $op = (empty($_REQUEST['op'])) ? '' : $_REQUEST['op'];
 
         switch($object)
@@ -79,42 +78,48 @@ if (isset($object))
                 <?php
                 include './modules/booking/wce_display.php';
                 /**
-                 * Affichage du popup de sÈlection des ressources
+                 * Affichage du popup de s√©lection des ressources
                  */
                 ob_start();
 
                 ?>
 
                 <div id="booking_ressource_list">
-                <form id="booking_resource_list_form" action="<?php echo ploopi\crypt::urlencode("index-light.php?ploopi_op=booking_setresources&booking_moduleid={$booking_moduleid}"); ?>" method="post" onsubmit="javascript:ploopi_xmlhttprequest_submitform($('booking_resource_list_form'), 'booking_main'); return false;">
+                <form id="booking_resource_list_form" action="<?php echo ploopi\crypt::urlencode("index-light.php?ploopi_op=booking_setresources&booking_moduleid={$booking_moduleid}"); ?>" method="post" onsubmit="javascript:ploopi.xhr.submit(jQuery('#booking_resource_list_form')[0], 'booking_main'); return false;">
                 <?php
                 $strResourceType = '';
+
                 foreach ($arrResources as $row)
                 {
-                    if ($row['rt_name'] != $strResourceType) // nouveau type de ressource => affichage sÈparateur
+                    if ($row['rt_name'] != $strResourceType) // nouveau type de ressource => affichage s√©parateur
                     {
                         if ($strResourceType != '') echo '</div>';
                         $strResourceType = $row['rt_name'];
                         ?>
-                        <div style="float:left;height:18px;margin:0;">
-                            <input type="checkbox" style="display:inline;" onclick="ploopi_checkall(booking_resource_list_form, 'booking_resource<?php echo $row['rt_name']; ?>', this.checked, true);$('booking_resource_list_form').onsubmit();" />
-                        </div>
-                        <a href="javascript:void(0);" onclick="javascript:with ($('booking_<?php echo ploopi\str::htmlentities($strResourceType); ?>_list')) { style.display = (style.display == 'block') ? 'none' : 'block'; }">
-                            <div class="ploopi_va" style="border-width:1px 0;border-style:solid;border-color:#bbb;background-color:#ddd;height:18px;">
+
+                        <div style="border-width:1px 0;border-style:solid;border-color:#bbb;background-color:#ddd;overflow:auto;clear:both;padding:2px;">
+                            <input type="checkbox" autocomplete="off" id="booking_rt<?php echo $row['id_resourcetype']; ?>" style="display:block;float:left;margin:0;" onclick="ploopi_checkall(booking_resource_list_form, 'booking_resource<?php echo $row['id_resourcetype']; ?>', this.checked, true);jQuery('#booking_resource_list_form')[0].onsubmit();" />
+                            <a style="display:block;margin-left:20px;" href="javascript:void(0);" onclick="javascript:with ($('booking_<?php echo $strResourceType; ?>_list')) { style.display = (style.display == 'block') ? 'none' : 'block'; }">
                                 <strong><?php echo ploopi\str::htmlentities($strResourceType); ?></strong>
-                            </div>
-                        </a>
+                            </a>
+                        </div>
+                        <script type="text/javascript">
+                            Event.observe(window, 'load', function() { booking_rt_autocheck(<?php echo $row['id_resourcetype']; ?>); });
+                        </script>
+
                         <div id="booking_<?php echo ploopi\str::htmlentities($row['rt_name']); ?>_list" style="display:block;">
                         <?php
                     }
                     ?>
-                    <p class="checkbox" style="background-color:<?php echo ploopi\str::htmlentities($row['color']); ?>;" onclick="javascript:ploopi_checkbox_click(event, 'booking_resource<?php echo $row['id']; ?>');">
-                        <input type="checkbox" name="booking_resources[<?php echo $row['id']; ?>]" id="booking_resource<?php echo $row['rt_name'].$row['id']; ?>" value="<?php echo $row['id']; ?>" <?php if (!empty($arrSearchPattern['booking_resources'][$row['id']])) echo 'checked="checked"'; ?> onchange="javascript:$('booking_resource_list_form').onsubmit();" />
+                    <p class="checkbox" style="background-color:<?php echo ploopi\str::htmlentities($row['color']); ?>;" onclick="javascript:ploopi.checkbox_click(event, 'booking_resource<?php echo $row['id_resourcetype'].$row['id']; ?>');">
+                        <input type="checkbox" autocomplete="off" name="booking_resources[<?php echo $row['id']; ?>]" id="booking_resource<?php echo $row['id_resourcetype'].$row['id']; ?>" class="booking_rt<?php echo $row['id_resourcetype']; ?>" value="<?php echo $row['id']; ?>" <?php if (!empty($arrSearchPattern['booking_resources'][$row['id']])) echo 'checked="checked"'; ?> onchange="javascript:booking_rt_autocheck(<?php echo $row['id_resourcetype']; ?>); jQuery('#booking_resource_list_form')[0].onsubmit();" />
                         <span><?php echo ploopi\str::htmlentities($row['name']); ?><span>
                     </p>
+
                     <?php
                 }
                 if ($strResourceType != '') echo '</div>';
+
                 ?>
                 </form>
                 </div>
@@ -124,7 +129,7 @@ if (isset($object))
 
 
                 echo ploopi\skin::get()->open_popup(
-                    'Ressources affichÈes',
+                    'Ressources affich√©es',
                     $content,
                     'popup_booking',
                     array(
@@ -144,6 +149,6 @@ if (isset($object))
         }
 
     }
-    else echo "ProblËme de compatibilitÈ avec ce template";
+    else echo "Probl√®me de compatibilit√© avec ce template";
 }
 ?>

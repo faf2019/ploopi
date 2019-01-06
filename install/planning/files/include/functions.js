@@ -4,60 +4,60 @@
 
 function planning_nextmonth()
 {
-    if ($('planning_month').value < 12) $('planning_month').selectedIndex++;
-    else {$('planning_month').selectedIndex = 0; $('planning_year').selectedIndex++;}
+    if (jQuery('#planning_month')[0].value < 12) jQuery('#planning_month')[0].selectedIndex++;
+    else {jQuery('#planning_month')[0].selectedIndex = 0; jQuery('#planning_year')[0].selectedIndex++;}
 
-    $('planning_form_view').onsubmit();
+    jQuery('#planning_form_view')[0].onsubmit();
 }
 
 function planning_prevmonth()
 {
-    if ($('planning_month').value > 1) $('planning_month').selectedIndex--;
-    else {$('planning_month').selectedIndex = 11; $('planning_year').selectedIndex--;}
+    if (jQuery('#planning_month')[0].value > 1) jQuery('#planning_month')[0].selectedIndex--;
+    else {jQuery('#planning_month')[0].selectedIndex = 11; jQuery('#planning_year')[0].selectedIndex--;}
 
-    $('planning_form_view').onsubmit();
+    jQuery('#planning_form_view')[0].onsubmit();
 }
 
 function planning_nextweek()
 {
-    if ($('planning_week').selectedIndex < $('planning_week').length - 1) $('planning_week').selectedIndex++;
-    else {$('planning_week').selectedIndex = 0; $('planning_year').selectedIndex++;}
+    if (jQuery('#planning_week')[0].selectedIndex < jQuery('#planning_week')[0].length - 1) jQuery('#planning_week')[0].selectedIndex++;
+    else {jQuery('#planning_week')[0].selectedIndex = 0; jQuery('#planning_year')[0].selectedIndex++;}
 
-    $('planning_form_view').onsubmit();
+    jQuery('#planning_form_view')[0].onsubmit();
 }
 
 function planning_prevweek()
 {
-    if ($('planning_week').selectedIndex > 0) $('planning_week').selectedIndex--;
-    else {$('planning_week_previousyear').value = '1'; $('planning_year').selectedIndex--;}
+    if (jQuery('#planning_week')[0].selectedIndex > 0) jQuery('#planning_week')[0].selectedIndex--;
+    else {jQuery('#planning_week_previousyear')[0].value = '1'; jQuery('#planning_year')[0].selectedIndex--;}
 
-    $('planning_form_view').onsubmit();
+    jQuery('#planning_form_view')[0].onsubmit();
 }
 
 function planning_nextday()
 {
-    if ($('planning_day').selectedIndex < $('planning_day').length - 1)
+    if (jQuery('#planning_day')[0].selectedIndex < jQuery('#planning_day')[0].length - 1)
     {
-        $('planning_day').selectedIndex++;
-        $('planning_form_view').onsubmit();
+        jQuery('#planning_day')[0].selectedIndex++;
+        jQuery('#planning_form_view')[0].onsubmit();
     }
     else
     {
-        $('planning_day').selectedIndex = 0;
+        jQuery('#planning_day')[0].selectedIndex = 0;
         planning_nextmonth();
     }
 }
 
 function planning_prevday()
 {
-    if ($('planning_day').selectedIndex > 0)
+    if (jQuery('#planning_day')[0].selectedIndex > 0)
     {
-        $('planning_day').selectedIndex--;
-        $('planning_form_view').onsubmit();
+        jQuery('#planning_day')[0].selectedIndex--;
+        jQuery('#planning_form_view')[0].onsubmit();
     }
     else
     {
-        $('planning_week_previousmonth').value = '1'
+        jQuery('#planning_week_previousmonth')[0].value = '1'
         planning_prevmonth();
     }
 }
@@ -67,11 +67,11 @@ function planning_prevday()
  */
 function planning_event_validate(form)
 {
-    if (ploopi_validatefield('Objet',form.planning_event_object, 'string'))
-    if (ploopi_validatefield('Date de début',form._planning_event_timestp_begin_d, 'date'))
-    if (!form._planning_event_timestp_end_d || ploopi_validatefield('Date de fin',form._planning_event_timestp_end_d, 'date'))
+    if (ploopi.validatefield('Objet',form.planning_event_object, 'string'))
+    if (ploopi.validatefield('Date de dÃ©but',form._planning_event_timestp_begin_d, 'date'))
+    if (!form._planning_event_timestp_end_d || ploopi.validatefield('Date de fin',form._planning_event_timestp_end_d, 'date'))
     {
-        ploopi_hidepopup('popup_planning_event');
+        ploopi.popup.hide('popup_planning_event');
         return true;
     }
 

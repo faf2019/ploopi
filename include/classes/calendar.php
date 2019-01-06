@@ -418,15 +418,15 @@ class calendar
                             $intHourPx = $intHourHeight * ($h - $this->arrOptions['intHourBegin']);
                             $intHalfHourPx = floor($intHourPx + $intHourHeight / 2);
                             ?>
-                            <div class="tick" style="top:<?php echo $intHalfHourPx; ?>px;width:<?php echo $intDayWidth-1; ?>px;"></div>
                             <?php
                             if ($h > $this->arrOptions['intHourBegin'])
                             {
                                 ?>
-                                <div class="tick-half" style="top:<?php echo $intHourPx; ?>px;width:<?php echo $intDayWidth-1; ?>px;"></div>
+                                <div class="tick" style="top:<?php echo $intHourPx; ?>px;width:<?php echo $intDayWidth-1; ?>px;"></div>
                                 <?php
                             }
                             ?>
+                            <div class="tick-half" style="top:<?php echo $intHalfHourPx; ?>px;width:<?php echo $intDayWidth-1; ?>px;"></div>
                             <?php
                         }
 
@@ -521,7 +521,16 @@ class calendar
                                             if (!is_null($this->arrEvents[$intId]->arrOnDrop))
                                             {
                                                 // Création du draggable (événement)
-                                                $strJsCode .= "new Draggable('calendar_event{$intId}', { handle: 'calendar_event{$intId}_handle', snap: calendar_drag_snap, onEnd: calendar_drag_onend });";
+                                                $strJsCode .= "jQuery('#calendar_event{$intId}').draggable({
+                                                    zindex: 99999,
+                                                    handle: '#calendar_event{$intId}_handle',
+                                                    snap: '.tick,.tick-half,.day',
+                                                    snapMode: 'inner',
+                                                    grid: [ {$intDayWidth}, ".($intHourHeight / 2)." ],
+                                                    containment : '#calendar_days'
+                                                });";
+
+                                                //$strJsCode .= "new Draggable('calendar_event{$intId}', { handle: 'calendar_event{$intId}_handle', snap: calendar_drag_snap, onEnd: calendar_drag_onend });";
                                                 $strJsCode .= "calendar_events[{$intId}] = ['{$intNumChan}', '{$this->arrEvents[$intId]->arrOnDrop['url']}','{$this->arrEvents[$intId]->arrOnDrop['element_id']}'];";
                                             }
                                         }
@@ -538,8 +547,31 @@ class calendar
                         ?>
                     </div>
                     <?php
+
+
+
+
+
                     // Création du droppable (jour)
-                    $strJsCode .= "Droppables.add('calendar_day{$d}', { accept: 'event', onHover: calendar_drop_onhover });";
+                    //$strJsCode .= "Droppables.add('calendar_day{$d}', { accept: 'event', onHover: calendar_drop_onhover });";
+                    $strJsCode .= "jQuery('#calendar_day{$d}').droppable({
+                        over: function(event, ui) {
+                        },
+                        drop: function(event, ui) {
+                            var droppable = this
+                            var day = droppable.id.substring(12,13);
+                            var event = ui.draggable[0].id.substring(14,15);
+
+                            // On calcule la demi-heure la plus proche en fonction des coordonnées
+
+                            var top = parseInt(ui.draggable.position().top);
+                            var hour = Math.round((calendar_h_begin + top / calendar_h_height)*2)/2;
+
+                            // Enregistrement de la nouvelle position de l'événement, retour vers l'application métier
+                            ploopi.xhr.todiv(calendar_events[event][1], 'calendar_event_date='+calendar_days[day]+'&calendar_event_hour='+hour, calendar_events[event][2]);
+
+                        }
+                    });";
                 }
                 ?>
             </div>
@@ -552,63 +584,6 @@ class calendar
             var calendar_channels = [];
             var calendar_h_begin = <?php echo $this->arrOptions['intHourBegin']; ?>;
             var calendar_h_height = <?php echo $intHourHeight; ?>;
-
-            function calendar_drop_onhover(draggable, droppable, pcent) {
-                if (droppable != calendar_lastdroppable) droppable.highlight();
-                calendar_lastdroppable = droppable;
-            }
-
-            function calendar_drop_ondrop(draggable, droppable) {
-
-                // jour
-                day = droppable.id.substring(12,13);
-                // id de l'événement
-                event = draggable.id.substring(14,15);
-
-                // On détache l'événement du jour d'origine
-                draggable.parentNode.removeChild(draggable);
-                // On force l'alignement à gauche
-                draggable.style.left = calendar_channels[calendar_events[event][0]]+'px';
-
-                // On calcule la demi-heure la plus proche en fonction des coordonnées
-
-                var top = parseInt(draggable.style.top);
-                var hour = Math.round((calendar_h_begin + top / calendar_h_height)*2)/2;
-
-                // On calcule la nouvelle position en fonction de la demi-heure la plus proche
-                draggable.style.top = (hour - calendar_h_begin)*calendar_h_height + 'px';
-                // On attache l'événement au nouveau jour
-                droppable.appendChild(draggable);
-
-                // Enregistrement de la nouvelle position de l'événement, retour vers l'application métier
-                ploopi.xhr.todiv(calendar_events[event][1], 'calendar_event_date='+calendar_days[day]+'&calendar_event_hour='+hour, calendar_events[event][2]);
-            }
-
-            function calendar_drag_snap(x, y, draggable) {
-                day = draggable.element.parentNode;
-                days = jQuery('#calendar_days')[0];
-
-                // test haut
-                if (y < 0) y = 0;
-                // test bas
-                if (y + draggable.element.getHeight() > day.getHeight()) y = day.getHeight() - draggable.element.getHeight();
-
-                // test gauche
-                min_x = - (day.cumulativeOffset().left - days.cumulativeOffset().left - 1);
-                if (x < min_x) x = min_x;
-                // test droite
-                max_x = days.getWidth() - day.cumulativeOffset().left + days.cumulativeOffset().left - draggable.element.getWidth();
-
-                if (x > max_x) x = max_x;
-
-                return [ x, y ];
-            }
-
-            // permet de capter le ondrop hors zone de drop
-            function calendar_drag_onend(draggable, event)
-            {
-                calendar_drop_ondrop(draggable.element, calendar_lastdroppable, event);
-            }
 
             <?php echo $strJsCode; ?>
         </script>

@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS `ploopi_mod_planning_event` (
   KEY `id_user` (`id_user`),
   KEY `id_workspace` (`id_workspace`),
   KEY `id_module` (`id_module`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS `ploopi_mod_planning_event_detail` (
   `id_event` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `id_event` (`id_event`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -51,4 +51,4 @@ CREATE TABLE IF NOT EXISTS `ploopi_mod_planning_event_detail_resource` (
   `id_event` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id_event_detail`,`id_resource`,`type_resource`),
   KEY `id_event` (`id_event`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;

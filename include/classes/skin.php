@@ -308,8 +308,7 @@ class skin
                     <div class="simplebloc_footer handle_'.$popupid.'" style="cursor:move;"></div>
                 </div>
                 <script type="text/javascript">
-                console.log($(\'#'.$popupid.'\'));
-                $(\'#'.$popupid.'\').draggable({ zindex: 99999, handle: \'.handle_'.$popupid.'\'});
+                jQuery(\'#'.$popupid.'\').draggable({ zindex: 99999, handle: \'.handle_'.$popupid.'\'});
                 '.$strOptionAnchor.'
                 </script>
                 ';
@@ -352,19 +351,18 @@ class skin
                         <div class="simplebloc_title">
                             <div class="simplebloc_titleleft">
                                 '.$strClosable.'
-                                <div style="overflow:auto;cursor:move;" id="handle_'.$popupid.'">'.$title.'</div>
+                                <div style="overflow:auto;cursor:move;" class="handle_'.$popupid.'">'.$title.'</div>
                             </div>
                         </div>
                         <div class="simplebloc_content">'.$content.'</div>
-                        <div class="simplebloc_footer" style="cursor:move;" id="handlebottom_'.$popupid.'"></div>
+                        <div class="simplebloc_footer" style="cursor:move;" class="handle_'.$popupid.'"></div>
                     </div>
                 </div>
                 <script type="text/javascript">
-                    Event.observe(window, \'load\', function() {
+                    jQuery(function() {
                         '.$arrOptions['stringJsBeforeStart'].'
-                        ploopi_popupize(\''.$popupid.'\', '.$arrOptions['intWidth'].', '.($arrOptions['booCentered'] ? 'true' : 'false').', '.$arrOptions['intPosx'].', '.$arrOptions['intPosy'].');
-                        new Draggable(\''.$popupid.'\', { zindex:99999, handle: \'handle_'.$popupid.'\'});
-                        new Draggable(\''.$popupid.'\', { zindex:99999, handle: \'handlebottom_'.$popupid.'\'});
+                        ploopi.popup.ize(\''.$popupid.'\', '.$arrOptions['intWidth'].', '.($arrOptions['booCentered'] ? 'true' : 'false').', '.$arrOptions['intPosx'].', '.$arrOptions['intPosy'].');
+                        jQuery(\'#'.$popupid.'\').draggable({ zindex: 99999, handle: \'.handle_'.$popupid.'\'});
                         '.$arrOptions['stringJsAfterFinish'].'
                         '.$strOptionAnchor.'
                     });

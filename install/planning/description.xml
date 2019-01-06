@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <ploopi>
     <moduletype>
         <label>planning</label>
-        <version>1.0.0</version>
+        <version>1.0.1</version>
         <author>Ovensia</author>
-        <date>20160808000000</date>
-        <description>Planning partagé</description>
+        <date>20190106000000</date>
+        <description>Planning partagÃ©</description>
         <paramtype>
             <name>planning_width</name>
             <label>Largeur du planning</label>
@@ -37,7 +37,7 @@
         </paramtype>
         <action>
             <id_action>10</id_action>
-            <label>Ajouter un événement</label>
+            <label>Ajouter un Ã©vÃ©nement</label>
         </action>
     </moduletype>
 </ploopi>

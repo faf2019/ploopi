@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2008 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,19 +21,19 @@
 */
 
 /**
- * Opérations sur les ressources
+ * OpÃ©rations sur les ressources
  *
  * @package booking
  * @subpackage op
  * @copyright Ovensia
- * @author Stéphane Escaich
+ * @author StÃ©phane Escaich
  * @version  $Revision$
  * @modifiedby $LastChangedBy$
  * @lastmodified $Date$
  */
 
 /**
- * Switch sur les différentes opérations possibles
+ * Switch sur les diffÃ©rentes opÃ©rations possibles
  */
 
 switch($_REQUEST['ploopi_op'])
@@ -70,7 +70,7 @@ switch($_REQUEST['ploopi_op'])
 
         $intIdRes = $objResource->save();
 
-        // suppression des espaces déjà rattachés
+        // suppression des espaces dÃ©jÃ  rattachÃ©s
         ploopi\db::get()->query("
             DELETE FROM ploopi_mod_booking_resource_workspace
             WHERE       id_resource = {$intIdRes}
@@ -115,11 +115,11 @@ switch($_REQUEST['ploopi_op'])
         <form action="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=booking_resource_save&booking_resource_id={$objResource->fields['id']}"); ?>" method="post" onsubmit="javascript:return booking_resource_validate(this);">
         <div class=ploopi_form>
             <p>
-                <label>Intitulé:</label>
+                <label>IntitulÃ©:</label>
                 <input name="booking_resource_name" type="text" class="text" value="<?php echo ploopi\str::htmlentities($objResource->fields['name']); ?>">
             </p>
             <p>
-                <label>Référence:</label>
+                <label>RÃ©fÃ©rence:</label>
                 <input name="booking_resource_reference" type="text" class="text" value="<?php echo ploopi\str::htmlentities($objResource->fields['reference']); ?>">
             </p>
             <p>
@@ -140,13 +140,13 @@ switch($_REQUEST['ploopi_op'])
                 </select>
             </p>
             <p>
-                <label>Géré par:</label>
+                <label>GÃ©rÃ© par:</label>
                 <div id="booking_treeview">
                     <?php
-                    // Espaces concernés par la ressource
+                    // Espaces concernÃ©s par la ressource
                     $arrResWorkspaces = $objResource->getworkspaces();
 
-                    // Arbre complet des espaces ayant accès au module "booking"
+                    // Arbre complet des espaces ayant accÃ¨s au module "booking"
                     $arrWorkspacesTree = booking_get_workspaces($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['id_workspace'], $arrResWorkspaces);
 
                     echo booking_display_workspaces($arrWorkspacesTree, 'booking_resourceworkspace_id_workspace[]', $arrResWorkspaces);
@@ -160,22 +160,15 @@ switch($_REQUEST['ploopi_op'])
                 </span>
 
 
-                <script type="text/javascript">
-                    try {
-                        new jscolor($('booking_resource_color'), {hash:true})
-                    }
-                    catch(e) {
-                        console.log(e);
-                    }
-                </script>
+                <script type="text/javascript">new jscolor.color(jQuery('#booking_resource_color')[0], {hash:true})</script>
             </p>
-            <p onclick="javascript:ploopi_checkbox_click(event,'booking_resource_active');">
+            <p onclick="javascript:ploopi.checkbox_click(event,'booking_resource_active');">
                 <label for="booking_resource_active">Actif:</label>
                 <input name="booking_resource_active" id="booking_resource_active" type="checkbox" class="checkbox" value="1" <?php if ($objResource->fields['active']) echo 'checked'; ?> tabindex="111" />
             </p>
         </div>
         <div style="padding:4px;text-align:right;">
-            <input type="reset" class="button" value="Réinitialiser" />
+            <input type="reset" class="button" value="RÃ©initialiser" />
             <input type="submit" class="button" value="Enregistrer" />
         </div>
         </form>

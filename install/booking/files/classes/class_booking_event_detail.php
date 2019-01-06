@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2008 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,20 +26,25 @@
  * @package booking
  * @subpackage event_detail
  * @copyright Ovensia
- * @author Stéphane Escaich
+ * @author StÃ©phane Escaich
  * @version  $Revision$
  * @modifiedby $LastChangedBy$
  * @lastmodified $Date$
  */
 
+/**
+ * Inclusion de la classe parent
+ */
+include_once './include/classes/data_object.php';
+
 include_once './modules/booking/classes/class_booking_event.php';
 
 /**
- * Classe d'accès à la table 'ploopi_mod_booking_event_detail'
+ * Classe d'accÃ¨s Ã  la table 'ploopi_mod_booking_event_detail'
  *
  * @package booking
  * @subpackage event_detail
- * @author Stéphane Escaich
+ * @author StÃ©phane Escaich
  * @copyright Ovensia
  */
 
@@ -51,13 +56,13 @@ class booking_event_detail extends ploopi\data_object
      * @return booking_event_detail
      */
 
-    public function __construct()
+    public function booking_event_detail()
     {
         parent::__construct('ploopi_mod_booking_event_detail', 'id');
     }
 
     /**
-     * Supprime un détail en vérifiant que l'événement peut être supprimé ou non (booking_event)
+     * Supprime un dÃ©tail en vÃ©rifiant que l'Ã©vÃ©nement peut Ãªtre supprimÃ© ou non (booking_event)
      *
      * @return unknown
      */
@@ -65,13 +70,13 @@ class booking_event_detail extends ploopi\data_object
     {
         $db = ploopi\db::get();
 
-        // Recherche si l'event contient d'autres détails.
+        // Recherche si l'event contient d'autres dÃ©tails.
         // S'il n'en contient pas, on le supprime
         $db->query("
             SELECT id FROM ploopi_mod_booking_event_detail WHERE id_event = {$this->fields['id_event']} AND id != {$this->fields['id']}
         ");
 
-        // Pas d'autres détails rattachés
+        // Pas d'autres dÃ©tails rattachÃ©s
         if ($db->numrows() == 0)
         {
             include_once './modules/booking/classes/class_booking_event.php';
@@ -84,7 +89,7 @@ class booking_event_detail extends ploopi\data_object
     }
 
     /**
-     * Détermine si un détail d'événement est valide, c'est à dire qu'il n'y a pas de collision avec un détail déjà validé
+     * DÃ©termine si un dÃ©tail d'Ã©vÃ©nement est valide, c'est Ã  dire qu'il n'y a pas de collision avec un dÃ©tail dÃ©jÃ  validÃ©
      */
     public function isvalid(booking_event $objEvent = null) {
         if (empty($objEvent)) {
@@ -92,7 +97,7 @@ class booking_event_detail extends ploopi\data_object
             if (!$objEvent->open($this->fields['id_event'])) return false;
         }
 
-        // Recherche des événments validés dans l'intervalle de la demande principale
+        // Recherche des Ã©vÃ©nments validÃ©s dans l'intervalle de la demande principale
         $arrEvents = booking_get_events(
             $objEvent->fields['id_resource'],
             true,
@@ -113,10 +118,10 @@ class booking_event_detail extends ploopi\data_object
             $timestp_begin = $this->fields['timestp_begin'];
             $timestp_end = $this->fields['timestp_end'];
 
-            // Recherche plus précise de collisions
+            // Recherche plus prÃ©cise de collisions
             foreach($arrEvents as $row) {
                 if (($timestp_begin >= $row['timestp_begin'] && $timestp_begin < $row['timestp_end']) || ($timestp_end > $row['timestp_begin'] && $timestp_end <= $row['timestp_end']) || ($timestp_begin <= $row['timestp_begin'] && $timestp_end >= $row['timestp_end'])) {
-                    // Collision détectée
+                    // Collision dÃ©tectÃ©e
                     return false;
                 }
             }

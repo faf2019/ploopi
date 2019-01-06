@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2008 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,18 +26,23 @@
  * @package booking
  * @subpackage event
  * @copyright Ovensia
- * @author Stéphane Escaich
+ * @author StÃ©phane Escaich
  * @version  $Revision$
  * @modifiedby $LastChangedBy$
  * @lastmodified $Date$
  */
 
 /**
- * Classe d'accès à la table 'ploopi_mod_booking_event'
+ * Inclusion de la classe parent
+ */
+include_once './include/classes/data_object.php';
+
+/**
+ * Classe d'accÃ¨s Ã  la table 'ploopi_mod_booking_event'
  *
  * @package booking
  * @subpackage event
- * @author Stéphane Escaich
+ * @author StÃ©phane Escaich
  * @copyright OVENSIA
  */
 
@@ -54,17 +59,17 @@ class booking_event extends ploopi\data_object
      * @return booking_event
      */
 
-    public function __construct()
+    public function booking_event()
     {
         parent::__construct('ploopi_mod_booking_event', 'id');
         $this->details = array();
         $this->subresources = array();
     }
 
-    public function open(...$args) {
+    public function open($intId) {
         $db = ploopi\db::get();
 
-        $res = parent::open($args[0]);
+        $res = parent::open($intId);
         $this->subresources = array();
 
         if ($res) {
@@ -76,7 +81,7 @@ class booking_event extends ploopi\data_object
     }
 
     /**
-     * Enregistre l'événement
+     * Enregistre l'Ã©vÃ©nement
      *
      * @return int id de la ressource
      */
@@ -107,18 +112,18 @@ class booking_event extends ploopi\data_object
 
 
 
-            if (!empty($this->fields['periodicity']) && !empty($this->details['periodicity_end_date'])) // Périodicité définie
+            if (!empty($this->fields['periodicity']) && !empty($this->details['periodicity_end_date'])) // PÃ©riodicitÃ© dÃ©finie
             {
-                // Timestp unix de la date de début du premier événement
+                // Timestp unix de la date de dÃ©but du premier Ã©vÃ©nement
                 $intUxTsEventBegin = ploopi\date::timestamp2unixtimestamp($objEventDetail->fields['timestp_begin']);
 
-                // Timestp unix de la date de fin du premier événement
+                // Timestp unix de la date de fin du premier Ã©vÃ©nement
                 $intUxTsEventEnd = ploopi\date::timestamp2unixtimestamp($objEventDetail->fields['timestp_end']);
 
-                // Timestp unix de la date de fin de périodicité
+                // Timestp unix de la date de fin de pÃ©riodicitÃ©
                 $intUxTsPeriodEnd = ploopi\date::timestamp2unixtimestamp(substr(ploopi\date::local2timestamp($this->details['periodicity_end_date']), 0, 8).'235959');
 
-                // Date de début du premier événement : Version tableau
+                // Date de dÃ©but du premier Ã©vÃ©nement : Version tableau
                 $arrBegin =
                     array(
                         'd' => date('j', $intUxTsEventBegin),
@@ -129,7 +134,7 @@ class booking_event extends ploopi\data_object
                         'se' => intval(date('s', $intUxTsEventBegin), 10)
                     );
 
-                // Date de fin du premier événement : Version tableau
+                // Date de fin du premier Ã©vÃ©nement : Version tableau
                 $arrEnd =
                     array(
                         'd' => date('j', $intUxTsEventEnd),
@@ -144,13 +149,13 @@ class booking_event extends ploopi\data_object
                 {
                     case 'day':
                     case 'week':
-                        // durée de la période en jours
+                        // durÃ©e de la pÃ©riode en jours
                         $d = $period = $this->fields['periodicity'] == 'week' ? 7 : 1;
 
-                        // Timestp du début du nouvel événément à tester
+                        // Timestp du dÃ©but du nouvel Ã©vÃ©nÃ©ment Ã  tester
                         $intUxTs = mktime($arrBegin['ho'], $arrBegin['mi'], $arrBegin['se'], $arrBegin['m'], $arrBegin['d'] + $d, $arrBegin['y']);
 
-                        // Si la date du nouvel événement est compatible avec la date de fin de périodicité
+                        // Si la date du nouvel Ã©vÃ©nement est compatible avec la date de fin de pÃ©riodicitÃ©
                         while ($intUxTs < $intUxTsPeriodEnd)
                         {
                             $objEventDetail = new booking_event_detail();
@@ -166,13 +171,13 @@ class booking_event extends ploopi\data_object
 
                     case 'month':
                     case 'year':
-                        // durée de la période en mois
+                        // durÃ©e de la pÃ©riode en mois
                         $m = $period = $this->fields['periodicity'] == 'year' ? 12 : 1;
 
-                        // Timestp du début du nouvel événément à tester
+                        // Timestp du dÃ©but du nouvel Ã©vÃ©nÃ©ment Ã  tester
                         $intUxTs = mktime($arrBegin['ho'], $arrBegin['mi'], $arrBegin['se'], $arrBegin['m'] + $m, $arrBegin['d'], $arrBegin['y']);
 
-                        // Si la date du nouvel événement est compatible avec la date de fin de périodicité
+                        // Si la date du nouvel Ã©vÃ©nement est compatible avec la date de fin de pÃ©riodicitÃ©
                         while ($intUxTs < $intUxTsPeriodEnd)
                         {
                             $objEventDetail = new booking_event_detail();
@@ -205,7 +210,7 @@ class booking_event extends ploopi\data_object
     }
 
     /**
-     * Détermine si un événement est valide, c'est à dire qu'il n'y a pas de collision avec un événement déjà validé
+     * DÃ©termine si un Ã©vÃ©nement est valide, c'est Ã  dire qu'il n'y a pas de collision avec un Ã©vÃ©nement dÃ©jÃ  validÃ©
      */
     public function isvalid($booValidated = true)
     {
@@ -215,7 +220,7 @@ class booking_event extends ploopi\data_object
             $timestp_begin = ploopi\date::local2timestamp($this->details['timestp_begin_d'], sprintf("%02d:%02d:00", $this->details['timestp_begin_h'], $this->details['timestp_begin_m']));
             $timestp_end = ploopi\date::local2timestamp($this->details['timestp_end_d'], sprintf("%02d:%02d:00", $this->details['timestp_end_h'], $this->details['timestp_end_m']));
 
-            // Recherche des événments validés dans l'intervalle de la demande principale
+            // Recherche des Ã©vÃ©nments validÃ©s dans l'intervalle de la demande principale
             $arrEvents = booking_get_events(
                 $this->fields['id_resource'],
                 true,
@@ -231,30 +236,27 @@ class booking_event extends ploopi\data_object
 
             if (!empty($arrEvents)) {
 
-                // Recherche plus précise de collisions
+                // Recherche plus prÃ©cise de collisions
                 foreach($arrEvents as $row) {
-
-                    if ($row['id'] != $this->fields['id'] && ($timestp_begin >= $row['timestp_begin'] && $timestp_begin < $row['timestp_end']) || ($timestp_end > $row['timestp_begin'] && $timestp_end <= $row['timestp_end']) || ($timestp_begin <= $row['timestp_begin'] && $timestp_end >= $row['timestp_end'])) {
-                        // Collision détectée
-                        echo "je sors";
+                    if ($row['id'] != $this->fields['id'] && (($timestp_begin >= $row['timestp_begin'] && $timestp_begin < $row['timestp_end']) || ($timestp_end > $row['timestp_begin'] && $timestp_end <= $row['timestp_end']) || ($timestp_begin <= $row['timestp_begin'] && $timestp_end >= $row['timestp_end']))) {
+                        // Collision dÃ©tectÃ©e
                         return false;
                     }
                 }
-
             }
 
-            if (!empty($this->fields['periodicity']) && !empty($this->details['periodicity_end_date'])) // Périodicité définie
+            if (!empty($this->fields['periodicity']) && !empty($this->details['periodicity_end_date'])) // PÃ©riodicitÃ© dÃ©finie
             {
-                // Timestp unix de la date de début du premier événement
+                // Timestp unix de la date de dÃ©but du premier Ã©vÃ©nement
                 $intUxTsEventBegin = ploopi\date::timestamp2unixtimestamp($timestp_begin);
 
-                // Timestp unix de la date de fin du premier événement
+                // Timestp unix de la date de fin du premier Ã©vÃ©nement
                 $intUxTsEventEnd = ploopi\date::timestamp2unixtimestamp($timestp_end);
 
-                // Timestp unix de la date de fin de périodicité
+                // Timestp unix de la date de fin de pÃ©riodicitÃ©
                 $intUxTsPeriodEnd = ploopi\date::timestamp2unixtimestamp(substr(ploopi\date::local2timestamp($this->details['periodicity_end_date']), 0, 8).'235959');
 
-                // Date de début du premier événement : Version tableau
+                // Date de dÃ©but du premier Ã©vÃ©nement : Version tableau
                 $arrBegin =
                     array(
                         'd' => date('j', $intUxTsEventBegin),
@@ -265,7 +267,7 @@ class booking_event extends ploopi\data_object
                         'se' => intval(date('s', $intUxTsEventBegin), 10)
                     );
 
-                // Date de fin du premier événement : Version tableau
+                // Date de fin du premier Ã©vÃ©nement : Version tableau
                 $arrEnd =
                     array(
                         'd' => date('j', $intUxTsEventEnd),
@@ -280,18 +282,18 @@ class booking_event extends ploopi\data_object
                 {
                     case 'day':
                     case 'week':
-                        // durée de la période en jours
+                        // durÃ©e de la pÃ©riode en jours
                         $d = $period = $this->fields['periodicity'] == 'week' ? 7 : 1;
 
-                        // Timestp du début du nouvel événement à tester
+                        // Timestp du dÃ©but du nouvel Ã©vÃ©nement Ã  tester
                         $intUxTs = mktime($arrBegin['ho'], $arrBegin['mi'], $arrBegin['se'], $arrBegin['m'], $arrBegin['d'] + $d, $arrBegin['y']);
 
-                        // Si la date du nouvel événement est compatible avec la date de fin de périodicité
+                        // Si la date du nouvel Ã©vÃ©nement est compatible avec la date de fin de pÃ©riodicitÃ©
                         while ($intUxTs < $intUxTsPeriodEnd)
                         {
                             $intUxTs2 = mktime($arrEnd['ho'], $arrEnd['mi'], $arrEnd['se'], $arrEnd['m'], $arrEnd['d'] + $d, $arrEnd['y']);
 
-                            // Recherche des événments validés dans l'intervalle
+                            // Recherche des Ã©vÃ©nments validÃ©s dans l'intervalle
                             $arrEvents = booking_get_events(
                                 $this->fields['id_resource'],
                                 true,
@@ -306,13 +308,13 @@ class booking_event extends ploopi\data_object
                             );
 
 
-                            // Recherche plus précise de collisions
+                            // Recherche plus prÃ©cise de collisions
                             foreach($arrEvents as $row) {
                                 $timestp_begin = date('YmdHis', $intUxTs);
                                 $timestp_end = date('YmdHis', $intUxTs2);
 
                                 if (($timestp_begin >= $row['timestp_begin'] && $timestp_begin < $row['timestp_end']) || ($timestp_end > $row['timestp_begin'] && $timestp_end <= $row['timestp_end']) || ($timestp_begin <= $row['timestp_begin'] && $timestp_end >= $row['timestp_end'])) {
-                                    // Collision détectée
+                                    // Collision dÃ©tectÃ©e
                                     return false;
                                 }
                             }
@@ -324,20 +326,20 @@ class booking_event extends ploopi\data_object
 
                     case 'month':
                     case 'year':
-                        // durée de la période en mois
+                        // durÃ©e de la pÃ©riode en mois
                         $m = $period = $this->fields['periodicity'] == 'year' ? 12 : 1;
 
-                        // Timestp du début du nouvel événément à tester
+                        // Timestp du dÃ©but du nouvel Ã©vÃ©nÃ©ment Ã  tester
                         $intUxTs = mktime($arrBegin['ho'], $arrBegin['mi'], $arrBegin['se'], $arrBegin['m'] + $m, $arrBegin['d'], $arrBegin['y']);
 
-                        // Si la date du nouvel événement est compatible avec la date de fin de périodicité
+                        // Si la date du nouvel Ã©vÃ©nement est compatible avec la date de fin de pÃ©riodicitÃ©
                         while ($intUxTs < $intUxTsPeriodEnd)
                         {
                             $intUxTs2 = mktime($arrEnd['ho'], $arrEnd['mi'], $arrEnd['se'], $arrEnd['m'] + $m, $arrEnd['d'], $arrEnd['y']);
 
                             echo '<br />'.date('d/m/Y', $intUxTs).' -> '.date('d/m/Y', $intUxTs2);
 
-                            // Recherche des événments validés dans l'intervalle
+                            // Recherche des Ã©vÃ©nments validÃ©s dans l'intervalle
                             $arrEvents = booking_get_events(
                                 $this->fields['id_resource'],
                                 true,
@@ -351,12 +353,12 @@ class booking_event extends ploopi\data_object
                                 $this->fields['id_module'] // moduleid
                             );
 
-                            // Recherche plus précise de collisions
+                            // Recherche plus prÃ©cise de collisions
                             foreach($arrEvents as $row) {
                                 $timestp_begin = date('YmdHis', $intUxTs);
                                 $timestp_end = date('YmdHis', $intUxTs2);
                                 if (($timestp_begin >= $row['timestp_begin'] && $timestp_begin < $row['timestp_end']) || ($timestp_end > $row['timestp_begin'] && $timestp_end <= $row['timestp_end']) || ($timestp_begin <= $row['timestp_begin'] && $timestp_end >= $row['timestp_end'])) {
-                                    // Collision détectée
+                                    // Collision dÃ©tectÃ©e
                                     return false;
                                 }
                             }
@@ -373,10 +375,12 @@ class booking_event extends ploopi\data_object
         return true;
     }
 
-    public function setdetails($values, $prefix)
+    public function setdetails($values = array(), $prefix = '')
     {
-        // Détermine le longueur du préfixe des variables
+        // DÃ©termine le longueur du prÃ©fixe des variables
         $intPrefixLength = strlen($prefix);
+
+        $this->details = array();
 
         foreach ($values as $key => $value)
         {
@@ -390,12 +394,15 @@ class booking_event extends ploopi\data_object
     }
 
 
-    public function getdetails()
+    public function getdetails($id = 0)
     {
         $db = ploopi\db::get();
 
-        // Recherche des détails liés à l'événement
-        $db->query("SELECT * FROM ploopi_mod_booking_event_detail WHERE id_event = {$this->fields['id']} ORDER BY timestp_begin, timestp_end");
+        $filter = '';
+        if (!empty($id) && is_numeric($id)) $filter = " AND id = {$id} ";
+
+        // Recherche des dÃ©tails liÃ©s Ã  l'Ã©vÃ©nement
+        $db->query("SELECT * FROM ploopi_mod_booking_event_detail WHERE id_event = {$this->fields['id']} {$filter} ORDER BY timestp_begin, timestp_end");
         return $db->getarray();
     }
 

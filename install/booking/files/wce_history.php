@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2008 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,7 +26,7 @@
  * @package booking
  * @subpackage wce
  * @copyright Ovensia
- * @author Stéphane Escaich
+ * @author StÃ©phane Escaich
  * @version  $Revision$
  * @modifiedby $LastChangedBy$
  * @lastmodified $Date$
@@ -59,7 +59,7 @@ if ($_SESSION['ploopi']['connected'])
 
     $_SESSION['booking'][$_SESSION['ploopi']['moduleid']]['monitoring_request'] = $arrSearchPattern;
 
-    // Récupération de la liste des ressources
+    // RÃ©cupÃ©ration de la liste des ressources
     $arrMenu = array();
     $arrResources = booking_get_resources(false, $booking_moduleid);
     $strResourceType = '';
@@ -73,7 +73,7 @@ if ($_SESSION['ploopi']['connected'])
             <?php
             foreach ($arrResources as $row)
             {
-                if ($row['rt_name'] != $strResourceType) // nouveau type de ressource => affichage séparateur
+                if ($row['rt_name'] != $strResourceType) // nouveau type de ressource => affichage sÃ©parateur
                 {
                     if ($strResourceType != '') echo '</optgroup>';
                     $strResourceType = $row['rt_name'];
@@ -90,7 +90,7 @@ if ($_SESSION['ploopi']['connected'])
             ?>
         </select>
 
-        <label style="margin-left:10px;">Traitée :</label>
+        <label style="margin-left:10px;">TraitÃ©e :</label>
         <select class="select" name="booking_event_managed">
             <option value="0" <?php if ($arrSearchPattern['booking_event_managed'] == 0) echo 'selected="selected"'; ?>>Non</option>
             <option value="1" <?php if ($arrSearchPattern['booking_event_managed'] == 1) echo 'selected="selected"'; ?>>Oui</option>
@@ -100,13 +100,13 @@ if ($_SESSION['ploopi']['connected'])
         <input type="text" class="text" name="booking_event_object" value="<?php echo ploopi\str::htmlentities($arrSearchPattern['booking_event_object']); ?>" style="width:200px;" />
     </p>
     <p class="ploopi_va" style="padding:4px;border-bottom:1px solid #c0c0c0;">
-        <label>Demande effectuée entre le :</label>
+        <label>Demande effectuÃ©e entre le :</label>
         <input type="text" class="text" name="booking_event_from" id="booking_event_from" value="<?php echo ploopi\str::htmlentities($arrSearchPattern['booking_event_from']); ?>" style="width:70px;" />
-        <a href="javascript:void(0);" onclick="javascript:ploopi_calendar_open('booking_event_from', event);"><img align="top" src="./img/calendar/calendar.gif" /></a>
+        <a href="javascript:void(0);" onclick="javascript:ploopi.calendar.open('booking_event_from', event);"><img align="top" src="./img/calendar/calendar.gif" /></a>
 
         <label>et le :</label>
         <input type="text" class="text" name="booking_event_to" id="booking_event_to" value="<?php echo ploopi\str::htmlentities($arrSearchPattern['booking_event_to']); ?>" style="width:70px;" />
-        <a href="javascript:void(0);" onclick="javascript:ploopi_calendar_open('booking_event_to', event);"><img align="top" src="./img/calendar/calendar.gif" /></a>
+        <a href="javascript:void(0);" onclick="javascript:ploopi.calendar.open('booking_event_to', event);"><img align="top" src="./img/calendar/calendar.gif" /></a>
 
         <input type="submit" class="button" value="Filtrer" />
     </p>
@@ -115,7 +115,7 @@ if ($_SESSION['ploopi']['connected'])
     <?php
     if (!empty($arrResources))
     {
-        // Recherche des événements
+        // Recherche des Ã©vÃ©nements
         $arrEvents =
             booking_get_events(
                 $arrSearchPattern['booking_resource_id'],
@@ -130,7 +130,7 @@ if ($_SESSION['ploopi']['connected'])
                 $booking_moduleid
             );
 
-        // Regroupement des événements (on rassemble les détails)
+        // Regroupement des Ã©vÃ©nements (on rassemble les dÃ©tails)
         $arrRequests = array();
         foreach($arrEvents as $row)
         {
@@ -143,7 +143,7 @@ if ($_SESSION['ploopi']['connected'])
                 );
         }
 
-        // Préparation du tableau d'affichage
+        // PrÃ©paration du tableau d'affichage
         $arrResult =
             array(
                 'columns' => array(),
@@ -173,7 +173,7 @@ if ($_SESSION['ploopi']['connected'])
 
         $arrResult['columns']['right']['managed'] =
             array(
-                'label' => 'Traitée',
+                'label' => 'TraitÃ©e',
                 'width' => 70,
                 'options' => array('sort' => true)
             );
@@ -187,26 +187,26 @@ if ($_SESSION['ploopi']['connected'])
 
         $arrResult['columns']['right']['datetime'] =
             array(
-                'label' => 'Durée / Période',
+                'label' => 'DurÃ©e / PÃ©riode',
                 'width' => 130,
                 'options' => array('sort' => true)
             );
 
-        // Affectation des données dans le tableau
+        // Affectation des donnÃ©es dans le tableau
         foreach($arrRequests as $row)
         {
             $arrDateBegin = ploopi\date::timestamp2local($row['timestp_begin']);
             $arrDateEnd = ploopi\date::timestamp2local($row['timestp_end']);
 
             if ($arrDateBegin['date'] == $arrDateEnd['date']) // Un seul jour
-                $strDateTime = sprintf("Le %s<br />de %s à %s", $arrDateBegin['date'], substr($arrDateBegin['time'], 0, 5), substr($arrDateEnd['time'], 0 ,5));
+                $strDateTime = sprintf("Le %s<br />de %s Ã  %s", $arrDateBegin['date'], substr($arrDateBegin['time'], 0, 5), substr($arrDateEnd['time'], 0 ,5));
             else
-                $strDateTime = sprintf("Du %s à %s<br />au %s à %s", $arrDateBegin['date'], substr($arrDateBegin['time'], 0, 5), $arrDateEnd['date'], substr($arrDateEnd['time'], 0, 5));
+                $strDateTime = sprintf("Du %s Ã  %s<br />au %s Ã  %s", $arrDateBegin['date'], substr($arrDateBegin['time'], 0, 5), $arrDateEnd['date'], substr($arrDateEnd['time'], 0, 5));
 
 
             if (!empty($row['periodicity']) && !empty($arrBookingPeriodicity[$row['periodicity']]))
             {
-                $strDateTime .= "<br /><em>Périodicité : {$arrBookingPeriodicity[$row['periodicity']]}</em><br />Occurences : ".sizeof($row['details']);
+                $strDateTime .= "<br /><em>PÃ©riodicitÃ© : {$arrBookingPeriodicity[$row['periodicity']]}</em><br />Occurences : ".sizeof($row['details']);
             }
 
             $arrResult['rows'][] =
@@ -256,7 +256,7 @@ if ($_SESSION['ploopi']['connected'])
 else
 {
     ?>
-    Vous devez être connecté pour consulter l'historique des demandes
+    Vous devez Ãªtre connectÃ© pour consulter l'historique des demandes
     <?php
 }
 

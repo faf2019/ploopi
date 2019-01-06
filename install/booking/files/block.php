@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2008 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,7 +26,7 @@
  * @package booking
  * @subpackage block
  * @copyright Ovensia
- * @author Stéphane Escaich
+ * @author StÃ©phane Escaich
  * @version  $Revision$
  * @modifiedby $LastChangedBy$
  * @lastmodified $Date$
@@ -43,7 +43,7 @@ $block->addmenu('Voir le planning', ploopi\crypt::urlencode("admin.php?ploopi_mo
 
 $block->addmenu('Suivi des demandes', ploopi\crypt::urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&booking_menu=monitoring"), ($_SESSION['ploopi']['moduleid'] == $menu_moduleid && isset($_GET['booking_menu']) && $_GET['booking_menu'] == 'monitoring'));
 
-// Administration des données (ressources, types de ressources)
+// Administration des donnÃ©es (ressources, types de ressources)
 if (ploopi\acl::isactionallowed(array(_BOOKING_ACTION_ADMIN_TYPERESOURCE, _BOOKING_ACTION_ADMIN_RESOURCE), $_SESSION['ploopi']['workspaceid'], $menu_moduleid))
     $block->addmenu('<b>Administration</b>', ploopi\crypt::urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=admin"), ($_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'admin'));
 

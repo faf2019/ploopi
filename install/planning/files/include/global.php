@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2009 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,23 +26,23 @@
  * @package webedit
  * @subpackage global
  * @copyright Ovensia
- * @author Stéphane Escaich
+ * @author Ovensia
  * @version  $Revision$
  * @modifiedby $LastChangedBy$
  * @lastmodified $Date$
  */
 
 /**
- * Définition des constantes
+ * DÃ©finition des constantes
  */
 
 /**
- * Action : Ajout d'un événement
+ * Action : Ajout d'un Ã©vÃ©nement
  */
 define ('_PLANNING_ADD_EVENT',   10);
 
 /**
- * Objet 'événement'
+ * Objet 'Ã©vÃ©nement'
  */
 define ('_PLANNING_OBJECT_EVENT',   1);
 
@@ -125,7 +125,7 @@ function planning_get_events($arrResources, $intTimepstpBegin = null, $intTimeps
     if (!empty($intTimepstpEnd)) $arrWhere['ed'][] = "ed.timestp_begin <= $intTimepstpEnd";
 
     /**
-     * Selection des événements (+ détails)
+     * Selection des Ã©vÃ©nements (+ dÃ©tails)
      */
     $db->query("
         SELECT      e.*,

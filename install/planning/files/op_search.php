@@ -10,7 +10,7 @@ switch($ploopi_op) {
         if (empty($arrSearchPattern['planning_resources']['user']) && empty($arrSearchPattern['planning_resources']['group']))
         {
             ?>
-            <div style="padding:4px;">Vous devez sélectionner au moins un utilisateur ou un groupe.</div>
+            <div style="padding:4px;">Vous devez sÃ©lectionner au moins un utilisateur ou un groupe.</div>
             <?php
         }
         else
@@ -48,7 +48,7 @@ switch($ploopi_op) {
 
             $columns['auto']['event'] =
                 array(
-                    'label'     => 'Evénement',
+                    'label'     => 'EvÃ©nement',
                     'style'     => 'text-align:center;',
                     'options'   => array('sort' => true)
                 );
@@ -57,7 +57,7 @@ switch($ploopi_op) {
 
             while($row = $objRecordSet->fetchrow())
             {
-                // Nouvel événement
+                // Nouvel Ã©vÃ©nement
                 if(!isset($arrSearchResult[$row['id']]))
                 {
                     $arrSearchResult[$row['id']] = array(
@@ -71,23 +71,23 @@ switch($ploopi_op) {
                     );
                 }
 
-                // Affectation de la ressource à l'événement
+                // Affectation de la ressource Ã  l'Ã©vÃ©nement
                 $arrSearchResult[$row['id']]['resources'][$row['type_resource']][$row['id_resource']] = $row['id_resource'];
             }
 
-            // Pour chaque événement
+            // Pour chaque Ã©vÃ©nement
             foreach($arrSearchResult as $id => $row)
             {
-                // On vérifie l'intersection entre les utilisateurs de l'événement et les utilisateurs à afficher (idem pour les groupes)
+                // On vÃ©rifie l'intersection entre les utilisateurs de l'Ã©vÃ©nement et les utilisateurs Ã  afficher (idem pour les groupes)
                 if (array_intersect($arrSearchResult[$id]['resources']['group'], $arrSearchPattern['planning_resources']['group']) || array_intersect($arrSearchResult[$id]['resources']['user'], $arrSearchPattern['planning_resources']['user']))
                 {
                     $arrEventBegin = ploopi\date::timestamp2local($row['timestp_begin']);
                     $arrEventEnd = ploopi\date::timestamp2local($row['timestp_end']);
 
-                    // Construction de la liste des utilisateurs/groupes à afficher
+                    // Construction de la liste des utilisateurs/groupes Ã  afficher
                     $arrWho = array();
 
-                    // Pour chaque groupe associé à l'événement
+                    // Pour chaque groupe associÃ© Ã  l'Ã©vÃ©nement
                     foreach($arrSearchResult[$id]['resources']['group'] as $intIdGroup)
                     {
                         $objGroup = new ploopi\group();
@@ -98,7 +98,7 @@ switch($ploopi_op) {
                         }
                     }
 
-                    // Pour chaque utilisateur associé à l'événement
+                    // Pour chaque utilisateur associÃ© Ã  l'Ã©vÃ©nement
                     foreach($arrSearchResult[$id]['resources']['user'] as $intIdUser)
                     {
                         $objUser = new ploopi\user();
@@ -110,7 +110,7 @@ switch($ploopi_op) {
                         }
                     }
 
-                    // Conversion de la date de début au format Unix (pour utiliser la fonction date)
+                    // Conversion de la date de dÃ©but au format Unix (pour utiliser la fonction date)
                     $intUnixEventBegin = ploopi\date::timestamp2unixtimestamp($row['timestp_begin']);
 
                     $values[$i]['values']['event'] =
@@ -120,9 +120,9 @@ switch($ploopi_op) {
                             'sort_label'   => $row['timestp_begin']
                         );
 
-                    $values[$i]['description'] = 'Aller sur l\'événement';
+                    $values[$i]['description'] = 'Aller sur l\'Ã©vÃ©nement';
                     $values[$i]['link'] = 'javascript:void(0);';
-                    $values[$i]['onclick'] = "ploopi_xmlhttprequest_todiv('admin-light.php', '".ploopi\crypt::queryencode('ploopi_op=planning_refresh&planning_display_type=day&planning_day='.date('j',$intUnixEventBegin).'&planning_month='.date('n',$intUnixEventBegin).'&planning_year='.date('Y',$intUnixEventBegin))."', 'planning_main');";
+                    $values[$i]['onclick'] = "ploopi.xhr.todiv('admin-light.php', '".ploopi\crypt::queryencode('ploopi_op=planning_refresh&planning_display_type=day&planning_day='.date('j',$intUnixEventBegin).'&planning_month='.date('n',$intUnixEventBegin).'&planning_year='.date('Y',$intUnixEventBegin))."', 'planning_main');";
 
 
                     $i += 1;

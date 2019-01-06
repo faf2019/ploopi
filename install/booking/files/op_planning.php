@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2009 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,19 +21,19 @@
 */
 
 /**
- * Opérations sur le planning
+ * OpÃ©rations sur le planning
  *
  * @package booking
  * @subpackage op
  * @copyright Ovensia
- * @author Stéphane Escaich
+ * @author StÃ©phane Escaich
  * @version  $Revision$
  * @modifiedby $LastChangedBy$
  * @lastmodified $Date$
  */
 
 /**
- * Switch sur les différentes opérations possibles
+ * Switch sur les diffÃ©rentes opÃ©rations possibles
  */
 
 switch($ploopi_op)

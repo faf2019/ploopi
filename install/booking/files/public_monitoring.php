@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2008 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,7 +26,7 @@
  * @package booking
  * @subpackage public
  * @copyright Ovensia
- * @author StÈphane Escaich
+ * @author St√©phane Escaich
  * @version  $Revision$
  * @modifiedby $LastChangedBy$
  * @lastmodified $Date$
@@ -59,7 +59,7 @@ if (!isset($arrSearchPattern['booking_event_to'])) $arrSearchPattern['booking_ev
 
 $_SESSION['booking'][$_SESSION['ploopi']['moduleid']]['monitoring_request'] = $arrSearchPattern;
 
-// RÈcupÈration de la liste des ressources
+// R√©cup√©ration de la liste des ressources
 $arrMenu = array();
 $arrResources = booking_get_resources();
 $strResourceType = '';
@@ -72,7 +72,7 @@ $strResourceType = '';
         <?php
         foreach ($arrResources as $row)
         {
-            if ($row['rt_name'] != $strResourceType) // nouveau type de ressource => affichage sÈparateur
+            if ($row['rt_name'] != $strResourceType) // nouveau type de ressource => affichage s√©parateur
             {
                 if ($strResourceType != '') echo '</optgroup>';
                 $strResourceType = $row['rt_name'];
@@ -89,7 +89,7 @@ $strResourceType = '';
         ?>
     </select>
 
-    <label style="margin-left:10px;">TraitÈe :</label>
+    <label style="margin-left:10px;">Trait√©e :</label>
     <select class="select" name="booking_event_managed">
         <option value="0" <?php if ($arrSearchPattern['booking_event_managed'] == 0) echo 'selected="selected"'; ?>>Non</option>
         <option value="1" <?php if ($arrSearchPattern['booking_event_managed'] == 1) echo 'selected="selected"'; ?>>Oui</option>
@@ -99,7 +99,7 @@ $strResourceType = '';
     <input type="text" class="text" name="booking_event_object" value="<?php echo ploopi\str::htmlentities($arrSearchPattern['booking_event_object']); ?>" style="width:200px;" />
 </p>
 <p class="ploopi_va" style="padding:4px;border-bottom:1px solid #c0c0c0;">
-    <label>DemandÈ par :</label>
+    <label>Demand√© par :</label>
     <input type="text" class="text" name="booking_event_requestedby" value="<?php echo ploopi\str::htmlentities($arrSearchPattern['booking_event_requestedby']); ?>" style="width:150px;" />
 
     <label style="margin-left:10px;">Entre le :</label>
@@ -111,13 +111,14 @@ $strResourceType = '';
     <?php ploopi\date::open_calendar('booking_event_to'); ?>
 
     <input type="submit" class="button" value="Filtrer" />
+    <input type="submit" class="button" name="xls" value="Extraction XLS" />
 </p>
 </form>
 
 <?php
 if (!empty($arrResources))
 {
-    // Recherche des ÈvÈnements
+    // Recherche des √©v√©nements
 
     $arrEvents =
         booking_get_events(
@@ -132,7 +133,7 @@ if (!empty($arrResources))
             $arrSearchPattern['booking_event_to']
         );
 
-    // Regroupement des ÈvÈnements (on rassemble les dÈtails)
+    // Regroupement des √©v√©nements (on rassemble les d√©tails)
     $arrRequests = array();
     foreach($arrEvents as $row)
     {
@@ -145,7 +146,68 @@ if (!empty($arrResources))
             );
     }
 
-    // PrÈparation du tableau d'affichage
+
+    if (isset($_REQUEST['xls'])) {
+
+        // Pr√©paration des donn√©es pour l'export XLS
+        $arrData = array();
+        foreach($arrRequests as $row) {
+
+            $arrDateBegin = ploopi\date::timestamp2local($row['timestp_begin']);
+            $arrDateEnd = ploopi\date::timestamp2local($row['timestp_end']);
+
+            if ($arrDateBegin['date'] == $arrDateEnd['date']) // Un seul jour
+                $strDateTime = sprintf("Le %s\r\nde %s √† %s", $arrDateBegin['date'], substr($arrDateBegin['time'], 0, 5), substr($arrDateEnd['time'], 0 ,5));
+            else
+                $strDateTime = sprintf("Du %s √† %s\r\nau %s √† %s", $arrDateBegin['date'], substr($arrDateBegin['time'], 0, 5), $arrDateEnd['date'], substr($arrDateEnd['time'], 0, 5));
+
+
+            if (!empty($row['periodicity']) && !empty($arrBookingPeriodicity[$row['periodicity']]))
+            {
+                $strDateTime .= "\r\nP√©riodicit√© : {$arrBookingPeriodicity[$row['periodicity']]}\r\nOccurences : ".sizeof($row['details']);
+            }
+
+            $arrData[] = array(
+                'resourcetype' => $row['rt_name'],
+                'resource' => $row['r_name'],
+                'subresources' => $row['subresources'],
+                'object' => $row['object'],
+                'datetime' => $strDateTime,
+                'user' => trim("{$row['u_lastname']} {$row['u_firstname']}"),
+                'workspace' => $row['w_label'],
+                'timestp_request' => current(ploopi\date::timestamp2local($row['timestp_request'])),
+                'managed' => $row['managed'] ? 'Oui' : 'Non',
+            );
+        }
+
+        include_once './include/functions/array.php';
+
+        ploopi\buffer::clean();
+
+        ploopi_array2xls(
+            $arrData,
+            true,
+            'booking_suivi_demandes.xls',
+            'pieces',
+            array(
+                'resourcetype' => array('width' => 20, 'title' => 'Type'),
+                'resource' => array('width' => 20, 'title' => 'Ressource'),
+                'subresources' => array('width' => 25, 'title' => 'Sous-ressources'),
+                'object' => array('width' => 40, 'title' => 'Objet'),
+                'datetime' => array('width' => 40, 'title' => 'Dur√©e / P√©riode'),
+                'user' => array('width' => 25, 'title' => 'Demand√© par'),
+                'workspace' => array('width' => 25, 'title' => 'Espace'),
+                'timestp_request' => array('width' => 20, 'title' => 'Date demande'),
+                'managed' => array('width' => 10, 'title' => 'Trait√©'),
+            )
+        );
+
+
+        ploopi\system::kill();
+
+    }
+
+    // Pr√©paration du tableau d'affichage
     $arrResult =
         array(
             'columns' => array(),
@@ -167,6 +229,13 @@ if (!empty($arrResources))
             'options' => array('sort' => true)
         );
 
+    $arrResult['columns']['left']['subresources'] =
+        array(
+            'label' => 'Sous-Ressources',
+            'width' => 180,
+            'options' => array('sort' => true)
+        );
+
     $arrResult['columns']['auto']['object'] =
         array(
             'label' => 'Objet',
@@ -175,7 +244,7 @@ if (!empty($arrResources))
 
     $arrResult['columns']['right']['managed'] =
         array(
-            'label' => 'TraitÈe',
+            'label' => 'Trait√©e',
             'width' => 70,
             'options' => array('sort' => true)
         );
@@ -189,33 +258,33 @@ if (!empty($arrResources))
 
     $arrResult['columns']['right']['user'] =
         array(
-            'label' => 'DemandÈ par',
+            'label' => 'Demand√© par',
             'width' => 150,
             'options' => array('sort' => true)
         );
 
     $arrResult['columns']['right']['datetime'] =
         array(
-            'label' => 'DurÈe / PÈriode',
+            'label' => 'Dur√©e / P√©riode',
             'width' => 200,
             'options' => array('sort' => true)
         );
 
-    // Affectation des donnÈes dans le tableau
+    // Affectation des donn√©es dans le tableau
     foreach($arrRequests as $row)
     {
         $arrDateBegin = ploopi\date::timestamp2local($row['timestp_begin']);
         $arrDateEnd = ploopi\date::timestamp2local($row['timestp_end']);
 
         if ($arrDateBegin['date'] == $arrDateEnd['date']) // Un seul jour
-            $strDateTime = sprintf("Le %s<br />de %s ‡ %s", $arrDateBegin['date'], substr($arrDateBegin['time'], 0, 5), substr($arrDateEnd['time'], 0 ,5));
+            $strDateTime = sprintf("Le %s<br />de %s √† %s", $arrDateBegin['date'], substr($arrDateBegin['time'], 0, 5), substr($arrDateEnd['time'], 0 ,5));
         else
-            $strDateTime = sprintf("Du %s ‡ %s<br />au %s ‡ %s", $arrDateBegin['date'], substr($arrDateBegin['time'], 0, 5), $arrDateEnd['date'], substr($arrDateEnd['time'], 0, 5));
+            $strDateTime = sprintf("Du %s √† %s<br />au %s √† %s", $arrDateBegin['date'], substr($arrDateBegin['time'], 0, 5), $arrDateEnd['date'], substr($arrDateEnd['time'], 0, 5));
 
 
         if (!empty($row['periodicity']) && !empty($arrBookingPeriodicity[$row['periodicity']]))
         {
-            $strDateTime .= "<br /><em>PÈriodicitÈ : {$arrBookingPeriodicity[$row['periodicity']]}</em><br />Occurences : ".sizeof($row['details']);
+            $strDateTime .= "<br /><em>P√©riodicit√© : {$arrBookingPeriodicity[$row['periodicity']]}</em><br />Occurences : ".sizeof($row['details']);
         }
 
         $arrResult['rows'][] =
@@ -224,6 +293,7 @@ if (!empty($arrResources))
                     array(
                         'resourcetype' => array('label' => ploopi\str::htmlentities($row['rt_name'])),
                         'resource' => array('label' => ploopi\str::htmlentities($row['r_name'])),
+                        'subresources' => array('label' => ploopi\str::htmlentities($row['subresources'])),
                         'object' => array('label' => ploopi\str::htmlentities($row['object'])),
                         'managed' =>
                             array(

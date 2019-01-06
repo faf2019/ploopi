@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2008 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,19 +21,19 @@
 */
 
 /**
- * Opérations sur les sous-ressources
+ * OpÃ©rations sur les sous-ressources
  *
  * @package booking
  * @subpackage op
  * @copyright Ovensia
- * @author Stéphane Escaich
+ * @author StÃ©phane Escaich
  * @version  $Revision$
  * @modifiedby $LastChangedBy$
  * @lastmodified $Date$
  */
 
 /**
- * Switch sur les différentes opérations possibles
+ * Switch sur les diffÃ©rentes opÃ©rations possibles
  */
 
 switch($_REQUEST['ploopi_op'])
@@ -94,15 +94,15 @@ switch($_REQUEST['ploopi_op'])
         <form action="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=booking_subresource_save&booking_subresource_id={$objSubresource->fields['id']}"); ?>" method="post" onsubmit="javascript:return booking_subresource_validate(this);">
         <div class=ploopi_form>
             <p>
-                <label>Intitulé:</label>
+                <label>IntitulÃ©:</label>
                 <input name="booking_subresource_name" type="text" class="text" value="<?php echo ploopi\str::htmlentities($objSubresource->fields['name']); ?>">
             </p>
             <p>
-                <label>Référence:</label>
+                <label>RÃ©fÃ©rence:</label>
                 <input name="booking_subresource_reference" type="text" class="text" value="<?php echo ploopi\str::htmlentities($objSubresource->fields['reference']); ?>">
             </p>
             <p>
-                <label>Ressource liée:</label>
+                <label>Ressource liÃ©e:</label>
                 <?php
                 ploopi\db::get()->query("SELECT * FROM ploopi_mod_booking_resource WHERE id_module = {$_SESSION['ploopi']['moduleid']} ORDER BY name");
                 ?>
@@ -118,13 +118,13 @@ switch($_REQUEST['ploopi_op'])
                     ?>
                 </select>
             </p>
-            <p onclick="javascript:ploopi_checkbox_click(event,'booking_subresource_active');">
+            <p onclick="javascript:ploopi.checkbox_click(event,'booking_subresource_active');">
                 <label for="booking_subresource_active">Actif:</label>
                 <input name="booking_subresource_active" id="booking_subresource_active" type="checkbox" class="checkbox" value="1" <?php if ($objSubresource->fields['active']) echo 'checked'; ?> tabindex="111" />
             </p>
         </div>
         <div style="padding:4px;text-align:right;">
-            <input type="reset" class="button" value="Réinitialiser" />
+            <input type="reset" class="button" value="RÃ©initialiser" />
             <input type="submit" class="button" value="Enregistrer" />
         </div>
         </form>

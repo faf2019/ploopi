@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2008 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,18 +26,22 @@
  * @package booking
  * @subpackage resource
  * @copyright Ovensia
- * @author Stéphane Escaich
+ * @author StÃ©phane Escaich
  * @version  $Revision$
  * @modifiedby $LastChangedBy$
  * @lastmodified $Date$
  */
+/**
+ * Inclusion de la classe parent
+ */
+include_once './include/classes/data_object.php';
 
 /**
- * Classe d'accès à la table 'ploopi_mod_booking_resource'
+ * Classe d'accÃ¨s Ã  la table 'ploopi_mod_booking_resource'
  *
  * @package booking
  * @subpackage resource
- * @author Stéphane Escaich
+ * @author StÃ©phane Escaich
  * @copyright OVENSIA
  */
 
@@ -49,7 +53,7 @@ class booking_resource extends ploopi\data_object
      * @return booking_resource
      */
 
-    public function __construct()
+    public function booking_resource()
     {
         parent::__construct('ploopi_mod_booking_resource', 'id');
     }
@@ -103,7 +107,7 @@ class booking_resource extends ploopi\data_object
     {
         $arrUsers = array();
 
-        // On récupère les espaces gestionnaires de la ressource
+        // On rÃ©cupÃ¨re les espaces gestionnaires de la ressource
         $arrWorkspaces = $this->getworkspaces();
 
         foreach($arrWorkspaces as $intIdWsp)
@@ -111,16 +115,16 @@ class booking_resource extends ploopi\data_object
             $objWorkspace = new ploopi\workspace();
             if ($objWorkspace->open($intIdWsp))
             {
-                // On récupère les utilisateurs des espaces gestionnaires
+                // On rÃ©cupÃ¨re les utilisateurs des espaces gestionnaires
                 foreach($objWorkspace->getusers(true) as $arrUser)
                 {
-                    if (!isset($arrUsers[$arrUser['id']])) // Utilisateur non sélectionné
+                    if (!isset($arrUsers[$arrUser['id']])) // Utilisateur non sÃ©lectionnÃ©
                     {
                         $objUser = new ploopi\user();
 
                         if ($objUser->open($arrUser['id']))
                         {
-                            // S'il n'est pas administrateur système, on vérifie les actions dont il dispose
+                            // S'il n'est pas administrateur systÃ¨me, on vÃ©rifie les actions dont il dispose
                             $arrActions = $objUser->getactions(null, true);
 
                             // Si l'utilisateur dispose de l'action de validation sur le module booking dans l'espace gestionnaire

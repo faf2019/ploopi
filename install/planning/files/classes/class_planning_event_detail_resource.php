@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2009 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,23 +21,23 @@
 */
 
 /**
- * Gestion des événements/ressources
+ * Gestion des Ã©vÃ©nements/ressources
  *
  * @package planning
  * @subpackage event_detail_resource
  * @copyright Ovensia
- * @author Stéphane Escaich
+ * @author Ovensia
  * @version  $Revision$
  * @modifiedby $LastChangedBy$
  * @lastmodified $Date$
  */
 
 /**
- * Classe d'accès à la table 'ploopi_mod_planning_event_detail'
+ * Classe d'accÃ¨s Ã  la table 'ploopi_mod_planning_event_detail'
  *
  * @package planning
  * @subpackage event_detail_resource
- * @author Stéphane Escaich
+ * @author Ovensia
  * @copyright Ovensia
  */
 

@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2009 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,24 +26,24 @@
  * @package planning
  * @subpackage event_detail
  * @copyright Ovensia
- * @author Stéphane Escaich
+ * @author Ovensia
  * @version  $Revision$
  * @modifiedby $LastChangedBy$
  * @lastmodified $Date$
  */
 
 /**
- * Inclusion des autres classes utilisées
+ * Inclusion des autres classes utilisÃ©es
  */
 include_once './modules/planning/classes/class_planning_event_detail_resource.php';
 
 
 /**
- * Classe d'accès à la table 'ploopi_mod_planning_event_detail'
+ * Classe d'accÃ¨s Ã  la table 'ploopi_mod_planning_event_detail'
  *
  * @package planning
  * @subpackage event_detail
- * @author Stéphane Escaich
+ * @author Ovensia
  * @copyright Ovensia
  */
 
@@ -75,7 +75,7 @@ class planning_event_detail extends ploopi\data_object
 
             $this->initresources();
 
-            // Recherche des ressources liées à l'événement
+            // Recherche des ressources liÃ©es Ã  l'Ã©vÃ©nement
             $db->query("SELECT * FROM ploopi_mod_planning_event_detail_resource WHERE id_event_detail = {$this->fields['id']} ORDER BY type_resource, id_resource");
             while ($row = $db->fetchrow()) $this->arrResource[$row['type_resource']][$row['id_resource']] = $row['id_resource'];
 
@@ -89,11 +89,11 @@ class planning_event_detail extends ploopi\data_object
         if (!$this->isnew())
         {
             $db = ploopi\db::get();
-            // Suppression des resources associées au détail
+            // Suppression des resources associÃ©es au dÃ©tail
             $db->query("DELETE FROM ploopi_mod_planning_event_detail_resource WHERE id_event_detail = {$this->fields['id']}");
         }
 
-        // Problème entre heure de début et fin
+        // ProblÃ¨me entre heure de dÃ©but et fin
         if ($this->fields['timestp_begin'] > $this->fields['timestp_end'])
         {
             $intTs = $this->fields['timestp_begin'];
@@ -129,7 +129,7 @@ class planning_event_detail extends ploopi\data_object
     }
 
     /**
-     * Supprime un détail en vérifiant que l'événement peut être supprimé ou non (planning_event)
+     * Supprime un dÃ©tail en vÃ©rifiant que l'Ã©vÃ©nement peut Ãªtre supprimÃ© ou non (planning_event)
      *
      * @return boolean
      */
@@ -137,19 +137,19 @@ class planning_event_detail extends ploopi\data_object
     {
         $db = ploopi\db::get();
 
-        // Suppression des ressources liées
+        // Suppression des ressources liÃ©es
         $db->query("
             DELETE FROM ploopi_mod_planning_event_detail_resource WHERE id_event_detail = {$this->fields['id']}
         ");
 
 
-        // Recherche si l'événement contient d'autres détails.
+        // Recherche si l'Ã©vÃ©nement contient d'autres dÃ©tails.
         // S'il n'en contient pas, on le supprime
         $db->query("
             SELECT id FROM ploopi_mod_planning_event_detail WHERE id_event = {$this->fields['id_event']} AND id != {$this->fields['id']}
         ");
 
-        // Pas d'autres détails rattachés
+        // Pas d'autres dÃ©tails rattachÃ©s
         if ($db->numrows() == 0)
         {
             include_once './modules/planning/classes/class_planning_event.php';
@@ -162,10 +162,10 @@ class planning_event_detail extends ploopi\data_object
     }
 
     /**
-     * Affecte les ressources concernées
+     * Affecte les ressources concernÃ©es
      *
      * @param array $arrResource tableau des ressources (groupes/utilisateurs)
-     * @param boolean $booVerify true s'il faut vérifier le contenu de la variable
+     * @param boolean $booVerify true s'il faut vÃ©rifier le contenu de la variable
      */
 
     public function setresources($arrResource, $booVerify = true)

@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2008 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,19 +21,19 @@
 */
 
 /**
- * Opérations sur les événements
+ * OpÃ©rations sur les Ã©vÃ©nements
  *
  * @package booking
  * @subpackage op
  * @copyright Ovensia
- * @author Stéphane Escaich
+ * @author StÃ©phane Escaich
  * @version  $Revision$
  * @modifiedby $LastChangedBy$
  * @lastmodified $Date$
  */
 
 /**
- * Switch sur les différentes opérations possibles
+ * Switch sur les diffÃ©rentes opÃ©rations possibles
  */
 
 if ($_SESSION['ploopi']['connected'])
@@ -80,6 +80,7 @@ if ($_SESSION['ploopi']['connected'])
 
             if (!empty($_POST['_booking_event_timestp_begin_d']) && !empty($_POST['booking_event_object']))
             {
+                $booking_no_collision = 0;
                 $objEvent = new booking_event();
 
                 $objEvent->setvalues($_POST, 'booking_event_');
@@ -87,17 +88,22 @@ if ($_SESSION['ploopi']['connected'])
                 $objEvent->setsubresources(isset($_POST['booking_sr']) ? $_POST['booking_sr'] : array());
 
                 $objEvent->setuwm();
-                if ($_SESSION['ploopi']['mode'] == 'frontoffice') $objEvent->fields['id_module'] = $_GET['booking_moduleid'];
-
+                if ($_SESSION['ploopi']['mode'] == 'frontoffice') {
+                    $objEvent->fields['id_module'] = $_GET['booking_moduleid'];
+                    $booking_no_collision = ploopi\param::get('booking_default_no_collision',$objEvent->fields['id_module']);
+                } else {
+                    $booking_no_collision = ploopi\param::get('booking_default_no_collision');
+                }
 
                 $booError = !$objEvent->isvalid();
                 $booWarning = !$objEvent->isvalid(false);
+                if ($booking_no_collision) $booError = $booWarning;
 
-                // Non valide, collision avec un autre événement
+                // Non valide, collision avec un autre Ã©vÃ©nement
                 if ($booError) {
                     $intTs = ploopi\date::timestamp2unixtimestamp(ploopi\date::local2timestamp($_POST['_booking_event_timestp_begin_d']));
 
-                    // Tableau des paramètres complémentaires pour la redirection dans le planning
+                    // Tableau des paramÃ¨tres complÃ©mentaires pour la redirection dans le planning
                     $arrParams = array();
                     $arrParams[] = "booking_resource_id={$objEvent->fields['id_resource']}";
                     $arrParams[] = "booking_month=".date('n', $intTs);
@@ -120,7 +126,7 @@ if ($_SESSION['ploopi']['connected'])
                 $objResource = new booking_resource();
                 if ($objResource->open($objEvent->fields['id_resource']))
                 {
-                    // On récupère les utilisateurs gestionnaires de la ressource
+                    // On rÃ©cupÃ¨re les utilisateurs gestionnaires de la ressource
                     $arrUsers = $objResource->getusers();
 
                     $objEvent->save();
@@ -132,8 +138,8 @@ if ($_SESSION['ploopi']['connected'])
                     $strResource = $objResource->fields['name'];
 
                     $rowDetails = $objEvent->getrawdetails();
-                    $strBegin = $rowDetails['timestp_begin_d'].' à '.sprintf("%02dh%02d", $rowDetails['timestp_begin_h'], $rowDetails['timestp_begin_m']);
-                    $strEnd = $rowDetails['timestp_end_d'].' à '.sprintf("%02dh%02d", $rowDetails['timestp_end_h'], $rowDetails['timestp_end_m']);
+                    $strBegin = $rowDetails['timestp_begin_d'].' Ã  '.sprintf("%02dh%02d", $rowDetails['timestp_begin_h'], $rowDetails['timestp_begin_m']);
+                    $strEnd = $rowDetails['timestp_end_d'].' Ã  '.sprintf("%02dh%02d", $rowDetails['timestp_end_h'], $rowDetails['timestp_end_m']);
 
                     $arrSR = array();
                     if (!empty($_POST['booking_sr'])) {
@@ -145,8 +151,8 @@ if ($_SESSION['ploopi']['connected'])
 
                     $strSR = empty($arrSR) ? '' : ' (incluant: '.implode(', ', $arrSR).')';
 
-                    $strTitle = "Demande de réservation pour {$strResource}{$strSR} du {$strBegin} au {$strEnd}";
-                    $strMessage = "Nouvelle demande de réservation pour {$strResource}{$strSR} pour la période du {$strBegin} au {$strEnd} pour le motif suivant : <br /><br />".ploopi\str::nl2br(ploopi\str::htmlentities($_POST['booking_event_object'])).'<br /><br />Observations:<br /><br />'.ploopi\str::nl2br(ploopi\str::htmlentities($rowDetails['message']));
+                    $strTitle = "Demande de rÃ©servation pour {$strResource}{$strSR} du {$strBegin} au {$strEnd}";
+                    $strMessage = "Nouvelle demande de rÃ©servation pour {$strResource}{$strSR} pour la pÃ©riode du {$strBegin} au {$strEnd} pour le motif suivant : <br /><br />".ploopi\str::nl2br(ploopi\str::htmlentities($_POST['booking_event_object'])).'<br /><br />Observations:<br /><br />'.ploopi\str::nl2br(ploopi\str::htmlentities($rowDetails['message']));
 
                     // Envoi du ticket
                     ploopi\ticket::send($strTitle, $strMessage);
@@ -154,7 +160,7 @@ if ($_SESSION['ploopi']['connected'])
 
                 $intTs = ploopi\date::timestamp2unixtimestamp(ploopi\date::local2timestamp($_POST['_booking_event_timestp_begin_d']));
 
-                // Tableau des paramètres complémentaires pour la redirection dans le planning
+                // Tableau des paramÃ¨tres complÃ©mentaires pour la redirection dans le planning
                 $arrParams = array();
                 $arrParams[] = "booking_resource_id={$objEvent->fields['id_resource']}";
                 $arrParams[] = "booking_month=".date('n', $intTs);
@@ -162,7 +168,7 @@ if ($_SESSION['ploopi']['connected'])
                 $arrParams[] = "booking_week=".date('W', $intTs);
                 $arrParams[] = "booking_day=".date('j', $intTs);
 
-                // Attention, collision avec un autre événement
+                // Attention, collision avec un autre Ã©vÃ©nement
                 if ($booWarning) $arrParams[] = 'warning=collision';
 
                 if ($_SESSION['ploopi']['mode'] == 'frontoffice') ploopi\output::redirect($_SESSION['booking'][$_GET['booking_moduleid']]['article_url'].'&'.implode('&', $arrParams));
@@ -183,8 +189,9 @@ if ($_SESSION['ploopi']['connected'])
             include_once './modules/booking/classes/class_booking_resource.php';
             include_once './modules/booking/classes/class_booking_subresource.php';
 
+            $booking_no_collision = 0;
+
             $objEvent = new booking_event();
-            $booGlobalError = false;
 
             if (!empty($_GET['booking_event_id']) && is_numeric($_GET['booking_event_id'])) $objEvent->open($_GET['booking_event_id']);
             else ploopi\output::redirect("admin.php");
@@ -192,8 +199,61 @@ if ($_SESSION['ploopi']['connected'])
             $objEvent->setvalues($_POST, 'booking_event_');
             $objEvent->setsubresources(isset($_POST['booking_sr']) ? $_POST['booking_sr'] : array());
 
+
+            if ($_SESSION['ploopi']['mode'] == 'frontoffice') {
+                $booking_no_collision = ploopi\param::get('booking_default_no_collision',$objEvent->fields['id_module']);
+            } else {
+                $booking_no_collision = ploopi\param::get('booking_default_no_collision');
+            }
+
+            // Calcul de la validitÃ©
+            // Ici on transforme le tableau en autant de dÃ©tails d'Ã©vÃ©nements diffÃ©rents
+            // Afin de valider les dÃ©tails un Ã  un comme dans la procÃ©dure de crÃ©ation d'Ã©vÃ©nement
+            $arrDetails = array();
+
+            foreach($_POST as $k => $v) {
+                if (is_array($v) && substr($k, 0, strlen('_booking_event_')) == '_booking_event_') {
+                    foreach($v as $k2 => $v2) {
+                        $arrDetails[$k2][$k] = $v2;
+                    }
+                }
+            }
+
+            $booError = $booWarning = false;
+
+            foreach($arrDetails as $rowDetail) {
+                if (empty($rowDetail['_booking_event_validated']) || $rowDetail['_booking_event_validated'] != 1) {
+                    $objEvent->setdetails($rowDetail, '_booking_event_');
+                    $booError = $booError || !$objEvent->isvalid();
+                    $booWarning = $booWarning || !$objEvent->isvalid(false);
+                    // Reset dÃ©tail
+                    $objEvent->setdetails();
+                }
+            }
+
+            if ($booking_no_collision) $booError = $booWarning;
+
+            // Non valide, collision avec un autre Ã©vÃ©nement
+            if ($booError) {
+                $intTs = ploopi\date::timestamp2unixtimestamp(ploopi\date::local2timestamp(current($_POST['_booking_event_timestp_begin_d'])));
+
+                // Tableau des paramÃ¨tres complÃ©mentaires pour la redirection dans le planning
+                $arrParams = array();
+                $arrParams[] = "booking_resource_id={$objEvent->fields['id_resource']}";
+                $arrParams[] = "booking_month=".date('n', $intTs);
+                $arrParams[] = "booking_year=".date('Y', $intTs);
+                $arrParams[] = "booking_week=".date('W', $intTs);
+                $arrParams[] = "booking_day=".date('j', $intTs);
+                $arrParams[] = 'error=collision';
+
+                if ($_SESSION['ploopi']['mode'] == 'frontoffice') ploopi\output::redirect($_SESSION['booking'][$_GET['booking_moduleid']]['article_url'].'&'.implode('&', $arrParams));
+                else ploopi\output::redirect('admin.php?'.implode('&', $arrParams));
+            }
+
+
             $objResource = new booking_resource();
             $strResource = $objResource->open($objEvent->fields['id_resource']) ? $objResource->fields['name'] : 'inconnu';
+
 
             $arrSR = array();
             if (!empty($_POST['booking_sr'])) {
@@ -212,8 +272,6 @@ if ($_SESSION['ploopi']['connected'])
 
                 foreach($_POST['_booking_event_timestp_begin_d'] as $intIdEventDetail => $_booking_event_timestp_begin_d)
                 {
-                    $booError = false;
-
                     $objEventDetail = new booking_event_detail();
                     if ($objEventDetail->open($intIdEventDetail))
                     {
@@ -238,7 +296,7 @@ if ($_SESSION['ploopi']['connected'])
                         $objEventDetail->fields['message'] = isset($_POST['_booking_event_message'][$intIdEventDetail]) ? $_POST['_booking_event_message'][$intIdEventDetail] : '';
                         $objEventDetail->fields['emails'] = isset($_POST['_booking_event_emails'][$intIdEventDetail]) ? $_POST['_booking_event_emails'][$intIdEventDetail] : '';
 
-                        // Date de début/fin au format local
+                        // Date de dÃ©but/fin au format local
                         $arrDateBegin = ploopi\date::timestamp2local($objEventDetail->fields['timestp_begin']);
                         $arrDateEnd = ploopi\date::timestamp2local($objEventDetail->fields['timestp_end']);
 
@@ -253,7 +311,7 @@ if ($_SESSION['ploopi']['connected'])
                         $_SESSION['ploopi']['tickets']['users_selected'] = array();
 
 
-                        // Changement d'état (Validation, annulation...)
+                        // Changement d'Ã©tat (Validation, annulation...)
                         if (isset($_POST['_booking_event_validated'][$intIdEventDetail])) {
 
                             switch($_POST['_booking_event_validated'][$intIdEventDetail]) {
@@ -262,21 +320,18 @@ if ($_SESSION['ploopi']['connected'])
                                     $objEventDetail->fields['validated'] = 1;
                                     $objEventDetail->fields['canceled'] = 0;
 
-                                    if ($objEventDetail->isvalid($objEvent)) {
-                                        // envoyer un ticket, demande validée
+                                    // envoyer un ticket, demande validÃ©e
 
-                                        // On récupère les utilisateurs gestionnaires de la ressource
-                                        $arrUsers = $objResource->getusers();
+                                    // On rÃ©cupÃ¨re les utilisateurs gestionnaires de la ressource
+                                    $arrUsers = $objResource->getusers();
 
-                                        // Selection des destinataires du ticket
-                                        foreach(array_keys($arrUsers) as $intIdUser) $_SESSION['ploopi']['tickets']['users_selected'][] = $intIdUser;
+                                    // Selection des destinataires du ticket
+                                    foreach(array_keys($arrUsers) as $intIdUser) $_SESSION['ploopi']['tickets']['users_selected'][] = $intIdUser;
 
-                                        if (!in_array($objEvent->fields['id_user'], $_SESSION['ploopi']['tickets']['users_selected'])) $_SESSION['ploopi']['tickets']['users_selected'][] = $objEvent->fields['id_user'];
+                                    if (!in_array($objEvent->fields['id_user'], $_SESSION['ploopi']['tickets']['users_selected'])) $_SESSION['ploopi']['tickets']['users_selected'][] = $objEvent->fields['id_user'];
 
-                                        $strMessage = "La demande de réservation pour {$strResource}{$strSR} du {$arrDateBegin['date']} à ".substr($arrDateBegin['time'], 0, 5)." au {$arrDateEnd['date']} à ".substr($arrDateEnd['time'], 0, 5)." a été validée par {$_SESSION['ploopi']['user']['lastname']} {$_SESSION['ploopi']['user']['firstname']}<br /><br />".ploopi\str::nl2br(ploopi\str::htmlentities($objEventDetail->fields['message']));
-                                        $strTitle = "Validation de la demande de réservation pour {$strResource}{$strSR}";
-                                    }
-                                    else $booError = true;
+                                    $strMessage = "La demande de rÃ©servation pour {$strResource}{$strSR} du {$arrDateBegin['date']} Ã  ".substr($arrDateBegin['time'], 0, 5)." au {$arrDateEnd['date']} Ã  ".substr($arrDateEnd['time'], 0, 5)." a Ã©tÃ© validÃ©e par {$_SESSION['ploopi']['user']['lastname']} {$_SESSION['ploopi']['user']['firstname']}<br /><br />".ploopi\str::nl2br(ploopi\str::htmlentities($objEventDetail->fields['message']));
+                                    $strTitle = "Validation de la demande de rÃ©servation pour {$strResource}{$strSR}";
                                 break;
 
                                 // Annulation de la demande
@@ -284,9 +339,9 @@ if ($_SESSION['ploopi']['connected'])
                                     $objEventDetail->fields['canceled'] = 1;
                                     $objEventDetail->fields['validated'] = 0;
 
-                                    // envoyer un ticket, demande annulée
+                                    // envoyer un ticket, demande annulÃ©e
 
-                                    // On récupère les utilisateurs gestionnaires de la ressource
+                                    // On rÃ©cupÃ¨re les utilisateurs gestionnaires de la ressource
                                     $arrUsers = $objResource->getusers();
 
                                     // Selection des destinataires du ticket
@@ -294,16 +349,16 @@ if ($_SESSION['ploopi']['connected'])
 
                                     if (!in_array($objEvent->fields['id_user'], $_SESSION['ploopi']['tickets']['users_selected'])) $_SESSION['ploopi']['tickets']['users_selected'][] = $objEvent->fields['id_user'];
 
-                                    $strMessage = "La demande de réservation pour {$strResource}{$strSR} du {$arrDateBegin['date']} à ".substr($arrDateBegin['time'], 0, 5)." au {$arrDateEnd['date']} à ".substr($arrDateEnd['time'], 0, 5)." a été refusée par {$_SESSION['ploopi']['user']['lastname']} {$_SESSION['ploopi']['user']['firstname']} pour le motif suivant : <br /><br />".ploopi\str::nl2br(ploopi\str::htmlentities($objEventDetail->fields['message']));
-                                    $strTitle = "Refus de la demande de réservation pour {$strResource}{$strSR}";
+                                    $strMessage = "La demande de rÃ©servation pour {$strResource}{$strSR} du {$arrDateBegin['date']} Ã  ".substr($arrDateBegin['time'], 0, 5)." au {$arrDateEnd['date']} Ã  ".substr($arrDateEnd['time'], 0, 5)." a Ã©tÃ© refusÃ©e par {$_SESSION['ploopi']['user']['lastname']} {$_SESSION['ploopi']['user']['firstname']} pour le motif suivant : <br /><br />".ploopi\str::nl2br(ploopi\str::htmlentities($objEventDetail->fields['message']));
+                                    $strTitle = "Refus de la demande de rÃ©servation pour {$strResource}{$strSR}";
                                 break;
 
                                 // Suppression de la demande
                                 case '9':
 
-                                    // envoyer un ticket, demande annulée
+                                    // envoyer un ticket, demande annulÃ©e
 
-                                    // On récupère les utilisateurs gestionnaires de la ressource
+                                    // On rÃ©cupÃ¨re les utilisateurs gestionnaires de la ressource
                                     $arrUsers = $objResource->getusers();
 
                                     // Selection des destinataires du ticket
@@ -311,38 +366,35 @@ if ($_SESSION['ploopi']['connected'])
 
                                     if (!in_array($objEvent->fields['id_user'], $_SESSION['ploopi']['tickets']['users_selected'])) $_SESSION['ploopi']['tickets']['users_selected'][] = $objEvent->fields['id_user'];
 
-                                    $strMessage = "La demande de réservation pour {$strResource}{$strSR} du {$arrDateBegin['date']} à ".substr($arrDateBegin['time'], 0, 5)." au {$arrDateEnd['date']} à ".substr($arrDateEnd['time'], 0, 5)." a été supprimée par {$_SESSION['ploopi']['user']['lastname']} {$_SESSION['ploopi']['user']['firstname']} pour le motif suivant : <br /><br />".ploopi\str::nl2br(ploopi\str::htmlentities($objEventDetail->fields['message']));
-                                    $strTitle = "Suppression de la demande de réservation pour {$strResource}{$strSR}";
+                                    $strMessage = "La demande de rÃ©servation pour {$strResource}{$strSR} du {$arrDateBegin['date']} Ã  ".substr($arrDateBegin['time'], 0, 5)." au {$arrDateEnd['date']} Ã  ".substr($arrDateEnd['time'], 0, 5)." a Ã©tÃ© supprimÃ©e par {$_SESSION['ploopi']['user']['lastname']} {$_SESSION['ploopi']['user']['firstname']} pour le motif suivant : <br /><br />".ploopi\str::nl2br(ploopi\str::htmlentities($objEventDetail->fields['message']));
+                                    $strTitle = "Suppression de la demande de rÃ©servation pour {$strResource}{$strSR}";
                                 break;
                             }
                         }
                         // Modification "simple"
                         else {
 
-                            if (!$objEventDetail->isvalid($objEvent)) $booError = true;
-                            else {
-                                $strMessage = "La demande de réservation pour {$strResource}{$strSR} du {$arrDateBegin['date']} à ".substr($arrDateBegin['time'], 0, 5)." au {$arrDateEnd['date']} à ".substr($arrDateEnd['time'], 0, 5)." a été modifiée par {$_SESSION['ploopi']['user']['lastname']} {$_SESSION['ploopi']['user']['firstname']} pour le motif suivant : <br /><br />".ploopi\str::nl2br(ploopi\str::htmlentities($objEventDetail->fields['message']));
-                                $strTitle = "Modification de la demande de réservation pour {$strResource}{$strSR}";
+                            $strMessage = "La demande de rÃ©servation pour {$strResource}{$strSR} du {$arrDateBegin['date']} Ã  ".substr($arrDateBegin['time'], 0, 5)." au {$arrDateEnd['date']} Ã  ".substr($arrDateEnd['time'], 0, 5)." a Ã©tÃ© modifiÃ©e par {$_SESSION['ploopi']['user']['lastname']} {$_SESSION['ploopi']['user']['firstname']} pour le motif suivant : <br /><br />".ploopi\str::nl2br(ploopi\str::htmlentities($objEventDetail->fields['message']));
+                            $strTitle = "Modification de la demande de rÃ©servation pour {$strResource}{$strSR}";
 
-                                // On récupère les utilisateurs gestionnaires de la ressource
-                                $arrUsers = $objResource->getusers();
+                            // On rÃ©cupÃ¨re les utilisateurs gestionnaires de la ressource
+                            $arrUsers = $objResource->getusers();
 
-                                // Selection des destinataires du ticket
-                                foreach(array_keys($arrUsers) as $intIdUser) $_SESSION['ploopi']['tickets']['users_selected'][] = $intIdUser;
+                            // Selection des destinataires du ticket
+                            foreach(array_keys($arrUsers) as $intIdUser) $_SESSION['ploopi']['tickets']['users_selected'][] = $intIdUser;
 
-                                if (!in_array($objEvent->fields['id_user'], $_SESSION['ploopi']['tickets']['users_selected'])) $_SESSION['ploopi']['tickets']['users_selected'][] = $objEvent->fields['id_user'];
-                            }
+                            if (!in_array($objEvent->fields['id_user'], $_SESSION['ploopi']['tickets']['users_selected'])) $_SESSION['ploopi']['tickets']['users_selected'][] = $objEvent->fields['id_user'];
                         }
 
                         if (!empty($strMessage))
                         {
-                            // Envoi d'un ticket à l'initiateur de la demande
+                            // Envoi d'un ticket Ã  l'initiateur de la demande
                             ploopi\ticket::send(
                                 $strTitle,
                                 $strMessage
                             );
 
-                            // Envoi d'un mail aux autres personnes concernées
+                            // Envoi d'un mail aux autres personnes concernÃ©es
                             if (!empty($objEventDetail->fields['emails']))
                             {
                                 $arrEmails = explode(",", $objEventDetail->fields['emails']);
@@ -395,16 +447,14 @@ if ($_SESSION['ploopi']['connected'])
                         }
                         else {
                             // Pas d'erreur ? On peut enregistrer
-                            if (!$booError) $objEventDetail->save();
+                            $objEventDetail->save();
                         }
                     }
-
-                    $booGlobalError = $booGlobalError || $booError;
                 }
             }
 
 
-            // On vérifie si le traitement de la demandée est terminée en vérifiant les détails
+            // On vÃ©rifie si le traitement de la demandÃ©e est terminÃ©e en vÃ©rifiant les dÃ©tails
             ploopi\db::get()->query("
                 SELECT  count(*) as c
                 FROM    ploopi_mod_booking_event_detail
@@ -417,9 +467,9 @@ if ($_SESSION['ploopi']['connected'])
 
             $objEvent->save();
 
-            if ($booGlobalError) {
-                if ($_SESSION['ploopi']['mode'] == 'frontoffice') ploopi\output::redirect($_SESSION['booking'][$_GET['booking_moduleid']]['article_url'].'&error=collision2');
-                else ploopi\output::redirect('admin.php?error=collision2');
+            if ($booWarning) {
+                if ($_SESSION['ploopi']['mode'] == 'frontoffice') ploopi\output::redirect($_SESSION['booking'][$_GET['booking_moduleid']]['article_url'].'&warning=collision');
+                else ploopi\output::redirect('admin.php?warning=collision');
             }
 
             if ($_SESSION['ploopi']['mode'] == 'frontoffice') ploopi\output::redirect($_SESSION['booking'][$_GET['booking_moduleid']]['article_url']);
@@ -433,7 +483,7 @@ if ($_SESSION['ploopi']['connected'])
             global $arrBookingColor;
             global $arrBookingPeriodicity;
 
-            // Cas particulier du mode frontoffice, on teste la présence de moduleid
+            // Cas particulier du mode frontoffice, on teste la prÃ©sence de moduleid
             if ($_SESSION['ploopi']['mode'] == 'frontoffice' && (empty($_GET['booking_moduleid']) || !is_numeric($_GET['booking_moduleid']) || !ploopi\acl::isactionallowed(_BOOKING_ACTION_ASKFOREVENT, $_SESSION['ploopi']['workspaceid'], $_GET['booking_moduleid']))) ploopi\system::kill();
 
             $strDate = empty($_GET['booking_resource_date']) ? '' : date('d/m/Y', $_GET['booking_resource_date']);
@@ -442,18 +492,18 @@ if ($_SESSION['ploopi']['connected'])
 
             $arrResources = ($_SESSION['ploopi']['mode'] == 'frontoffice') ? booking_get_resources(false, $_GET['booking_moduleid']) : booking_get_resources();
 
-            if (empty($arrResources)) $arrResources = array(0);
-
-            ploopi\db::get()->query("SELECT * FROM ploopi_mod_booking_subresource WHERE id_resource IN (".implode(',', array_keys($arrResources)).") AND active = 1 ORDER BY name");
-            ?>
-            <script type="text/javascript">
-                booking_json_sr = <?php echo json_encode(ploopi\arr::map('ploopi\str::utf8encode', ploopi\db::get()->getarray())); ?>;
-            </script>
-            <?php
+            if (!empty($arrResources)) {
+                ploopi\db::get()->query("SELECT * FROM ploopi_mod_booking_subresource WHERE id_resource IN (".implode(',', array_keys($arrResources)).") AND active = 1 ORDER BY name");
+                ?>
+                <script type="text/javascript">
+                    booking_json_sr = <?php echo json_encode(ploopi\arr::map('ploopi\str::utf8encode', ploopi\db::get()->getarray())); ?>;
+                </script>
+                <?php
+            }
 
             $objEvent = new booking_event();
             $objEvent->init_description();
-            // Si une ressource est passée en paramètre, on la sélectionne par défaut
+            // Si une ressource est passÃ©e en paramÃ¨tre, on la sÃ©lectionne par dÃ©faut
             if (!empty($_GET['booking_resource_id']) && is_numeric($_GET['booking_resource_id'])) $objEvent->fields['id_resource'] = $_GET['booking_resource_id'];
 
 
@@ -469,7 +519,7 @@ if ($_SESSION['ploopi']['connected'])
                         $strResourceType = '';
                         foreach ($arrResources as $row)
                         {
-                            if ($row['rt_name'] != $strResourceType) // nouveau type de ressource => affichage séparateur
+                            if ($row['rt_name'] != $strResourceType) // nouveau type de ressource => affichage sÃ©parateur
                             {
                                 if ($strResourceType != '') echo '</optgroup>';
                                 $strResourceType = $row['rt_name'];
@@ -491,8 +541,8 @@ if ($_SESSION['ploopi']['connected'])
                     <input name="booking_event_object" type="text" class="text" value="<?php echo ploopi\str::htmlentities($objEvent->fields['object']); ?>">
                 </p>
                 <p>
-                    <label>Date/heure de début:</label>
-                    <input name="_booking_event_timestp_begin_d" id="_booking_event_timestp_begin_d" class="text" type="text" value="<?php echo ploopi\str::htmlentities($strDate); ?>" style="width:80px;" onchange="javascript:$('_booking_event_timestp_end_d').value = this.value;" />
+                    <label>Date/heure de dÃ©but:</label>
+                    <input name="_booking_event_timestp_begin_d" id="_booking_event_timestp_begin_d" class="text" type="text" value="<?php echo ploopi\str::htmlentities($strDate); ?>" style="width:80px;" onchange="javascript:jQuery('#_booking_event_timestp_end_d')[0].value = this.value;" />
                     <span style="float:left;width:auto;margin:0;padding:1px;"><?php ploopi\date::open_calendar('_booking_event_timestp_begin_d'); ?></span>
                     <select name="_booking_event_timestp_begin_h" id="_booking_event_timestp_begin_h" class="select" style="width:60px;">
                     <?php
@@ -524,7 +574,7 @@ if ($_SESSION['ploopi']['connected'])
                     }
                     ?>
                     </select>
-                    <select name="_booking_event_timestp_end_m" id="_booking_event_timestp_end_h" class="select" style="width:45px;">
+                    <select name="_booking_event_timestp_end_m" id="_booking_event_timestp_end_m" class="select" style="width:45px;">
                     <?php
                     for ($i = 0; $i < 12; $i++)
                     {
@@ -534,7 +584,7 @@ if ($_SESSION['ploopi']['connected'])
                     </select>
                 </p>
                 <p>
-                    <label>Périodicité:</label>
+                    <label>PÃ©riodicitÃ©:</label>
                     <select name="booking_event_periodicity" class="select" style="width:100px;">
                         <option value="">(Aucune)</option>
                         <?php
@@ -552,15 +602,15 @@ if ($_SESSION['ploopi']['connected'])
                 </p>
                 <p>
                     <label>Commentaire:</label>
-                    <textarea style="height:60px;" class="text" name="_booking_event_message" id="_booking_event_message" placeholder="Indiquez éventuellement les autres ressources nécessaires"></textarea>
+                    <textarea style="height:60px;" class="text" name="_booking_event_message" id="_booking_event_message" placeholder="Indiquez Ã©ventuellement les autres ressources nÃ©cessaires"></textarea>
                 </p>
                 <p>
-                    <label>Destinataires complémentaires (adresses de courriel séparées par &laquo; , &raquo;:</label>
-                    <textarea style="height:60px;" class="text" name="_booking_event_emails" id="_booking_event_emails" placeholder="Indiquez éventuellement les adresses de courriel des personnes à avertir lors de la validation"></textarea>
+                    <label>Destinataires complÃ©mentaires (adresses de courriel sÃ©parÃ©es par &laquo; , &raquo;:</label>
+                    <textarea style="height:60px;" class="text" name="_booking_event_emails" id="_booking_event_emails" placeholder="Indiquez Ã©ventuellement les adresses de courriel des personnes Ã  avertir lors de la validation"></textarea>
                 </p>
             </div>
             <div style="padding:4px;text-align:right;">
-                <input type="reset" class="button" value="Réinitialiser" />
+                <input type="reset" class="button" value="RÃ©initialiser" />
                 <input type="submit" class="button" value="Enregistrer" />
             </div>
             </form>
@@ -570,13 +620,13 @@ if ($_SESSION['ploopi']['connected'])
 
             include_once './modules/booking/include/global.php';
 
-            echo ploopi\skin::get()->create_popup("Ajout d'une demande de réservation", $content, 'popup_event');
+            echo ploopi\skin::get()->create_popup("Ajout d'une demande de rÃ©servation", $content, 'popup_event');
             ploopi\system::kill();
         break;
 
 
         /**
-         * Permet de déverrouiller un événement déjà traité
+         * Permet de dÃ©verrouiller un Ã©vÃ©nement dÃ©jÃ  traitÃ©
          */
         case 'booking_event_unlock':
             ploopi\module::init('booking', false, false, false);
@@ -646,8 +696,8 @@ if ($_SESSION['ploopi']['connected'])
                     $rowDetailsB = ploopi\date::timestamp2local($objEventDetail->fields['timestp_begin']);
                     $rowDetailsE = ploopi\date::timestamp2local($objEventDetail->fields['timestp_end']);
 
-                    $strBegin = $rowDetailsB['date'].' à '.sprintf("%02dh%02d", substr($rowDetailsB['time'], 0, 2), substr($rowDetailsB['time'], 3, 2));
-                    $strEnd = $rowDetailsE['date'].' à '.sprintf("%02dh%02d", substr($rowDetailsE['time'], 0, 2), substr($rowDetailsE['time'], 3, 2));
+                    $strBegin = $rowDetailsB['date'].' Ã  '.sprintf("%02dh%02d", substr($rowDetailsB['time'], 0, 2), substr($rowDetailsB['time'], 3, 2));
+                    $strEnd = $rowDetailsE['date'].' Ã  '.sprintf("%02dh%02d", substr($rowDetailsE['time'], 0, 2), substr($rowDetailsE['time'], 3, 2));
 
                     $arrSR = array();
                     foreach($objEvent->getsubresources() as $intIdSR) {
@@ -659,7 +709,7 @@ if ($_SESSION['ploopi']['connected'])
 
                     $_SESSION['ploopi']['tickets']['users_selected'] = array();
 
-                    // On récupère les utilisateurs gestionnaires de la ressource
+                    // On rÃ©cupÃ¨re les utilisateurs gestionnaires de la ressource
                     $arrUsers = $objResource->getusers();
 
                     // Selection des destinataires du ticket
@@ -667,10 +717,10 @@ if ($_SESSION['ploopi']['connected'])
 
                     if (!in_array($objEvent->fields['id_user'], $_SESSION['ploopi']['tickets']['users_selected'])) $_SESSION['ploopi']['tickets']['users_selected'][] = $objEvent->fields['id_user'];
 
-                    $strMessage = "La demande de réservation pour {$strResource}{$strSR} du {$strBegin} au {$strEnd} a été supprimée par {$_SESSION['ploopi']['user']['lastname']} {$_SESSION['ploopi']['user']['firstname']}";
-                    $strTitle = "Suppression de la demande de réservation pour {$strResource}{$strSR}";
+                    $strMessage = "La demande de rÃ©servation pour {$strResource}{$strSR} du {$strBegin} au {$strEnd} a Ã©tÃ© supprimÃ©e par {$_SESSION['ploopi']['user']['lastname']} {$_SESSION['ploopi']['user']['firstname']}";
+                    $strTitle = "Suppression de la demande de rÃ©servation pour {$strResource}{$strSR}";
 
-                    // Envoi d'un ticket à l'initiateur de la demande
+                    // Envoi d'un ticket Ã  l'initiateur de la demande
                     ploopi\ticket::send(
                         $strTitle,
                         $strMessage
@@ -700,7 +750,7 @@ switch($ploopi_op)
 
         if (!empty($_GET['booking_element_id']))
         {
-            // $_GET['booking_element_id'] contient l'id de l'événement ou l'id de l'événement et l'id du détail
+            // $_GET['booking_element_id'] contient l'id de l'Ã©vÃ©nement ou l'id de l'Ã©vÃ©nement et l'id du dÃ©tail
             // $arrId[0] = event_id
             // $arrId[1] = event_detail_id (option)
             $arrId = explode(',', $_GET['booking_element_id']);
@@ -726,18 +776,18 @@ switch($ploopi_op)
                 // Validateur ?
                 $booValidator = ($_SESSION['ploopi']['mode'] == 'backoffice') && ploopi\acl::isactionallowed(_BOOKING_ACTION_VALIDATE) && $objResourceWorkspace->open($objEvent->fields['id_resource'], $_SESSION['ploopi']['workspaceid']);
 
-                // Modification possible si "traitement non terminé" (managed=0) et "backoffice"
-                // Penser à gérer également les droits de modif
+                // Modification possible si "traitement non terminÃ©" (managed=0) et "backoffice"
+                // Penser Ã  gÃ©rer Ã©galement les droits de modif
                 $booModify = ($objEvent->fields['managed'] == 0 && $booValidator);
 
-                // Récupération des détails de l'événement
-                $arrDetails = $objEvent->getdetails();
+                // RÃ©cupÃ©ration des dÃ©tails de l'Ã©vÃ©nement
+                $arrDetails = $objEvent->getdetails(isset($arrId[1]) ? $arrId[1] : 0);
 
-                // True si au moins un événement modifiable
+                // True si au moins un Ã©vÃ©nement modifiable
                 $booModifyEventGlobal = $booModify;
 
-                // On boucle sur l'affichage des détails d'événement
-                // Pour savoir si au moins un élément est modifiable
+                // On boucle sur l'affichage des dÃ©tails d'Ã©vÃ©nement
+                // Pour savoir si au moins un Ã©lÃ©ment est modifiable
                 foreach($arrDetails as $detail)
                 {
                     $booValidate = ($objEvent->fields['managed'] == 0 && $booValidator && $detail['canceled'] == 0 && $detail['validated'] == 0);
@@ -760,7 +810,7 @@ switch($ploopi_op)
                 }
                 ?>
 
-                <?php if ($booModifyEventGlobal) { ?><form action="<?php echo $strUrl; ?>" method="post"><?php } ?>
+                <?php if ($booModifyEventGlobal) { ?><form action="<?php echo $strUrl; ?>" method="post" onsubmit="javascript:return booking_event_validate_2(this);"><?php } ?>
 
                 <div class=ploopi_form>
                     <p>
@@ -775,7 +825,7 @@ switch($ploopi_op)
                                 $strResourceType = '';
                                 foreach ($arrResources as $row)
                                 {
-                                    if ($row['rt_name'] != $strResourceType) // nouveau type de ressource => affichage séparateur
+                                    if ($row['rt_name'] != $strResourceType) // nouveau type de ressource => affichage sÃ©parateur
                                     {
                                         if ($strResourceType != '') echo '</optgroup>';
                                         $strResourceType = $row['rt_name'];
@@ -806,7 +856,7 @@ switch($ploopi_op)
                     {
                         ?>
                         <script type="text/javascript">
-                            booking_resource_onchange($('booking_event_id_resource')[$('booking_event_id_resource').selectedIndex]);
+                            booking_resource_onchange(jQuery('#booking_event_id_resource')[0][jQuery('#booking_event_id_resource')[0].selectedIndex]);
                             <?php
                             foreach($objEvent->getsubresources() as $intIdSR) {
                                 ?>
@@ -822,25 +872,18 @@ switch($ploopi_op)
                         if (!empty($subresources)) {
                             ?>
                             <script type="text/javascript">
-                                $('booking_subresources').insert(
+                                jQuery('#booking_subresources')[0].insert(
                                     '<p><label>Sous-ressources</label><span id="booking_subresources_ct"></span>'
                                 );
 
                                 booking_json_sr.each(function(row) {
                                     if (row.id_resource == <?php echo intval($objEvent->fields['id_resource']); ?>) {
                                         console.log(row);
-                                        $('booking_subresources_ct').insert(
+                                        jQuery('#booking_subresources_ct')[0].insert(
                                             '<span>'+row.name+'</span>'
                                         );
                                     }
                                 });
-                                <?php
-                                foreach($objEvent->getsubresources() as $intIdSR) {
-                                    ?>
-                                    $('booking_sr_<?php echo $intIdSR; ?>').checked = true;
-                                    <?php
-                                }
-                                ?>
                             </script>
                             <?php
                         }
@@ -863,23 +906,23 @@ switch($ploopi_op)
                     {
                         ?>
                         <p>
-                            <label>Périodicité:</label>
+                            <label>PÃ©riodicitÃ©:</label>
                             <span><?php echo ploopi\str::htmlentities($arrBookingPeriodicity[$objEvent->fields['periodicity']]); ?></span>
                         </p>
                         <?php
                     }
                     ?>
-                    <div style="background-color:#c0c0c0;margin:1px;padding:4px;font-weight:bold;">Détail des événements associés à cette demande:</div>
+                    <div style="background-color:#c0c0c0;margin:1px;padding:4px;font-weight:bold;">DÃ©tail des Ã©vÃ©nements associÃ©s Ã  cette demande:</div>
                         <div>
                         <?php
-                        // True si au moins un événement modifiable
+                        // True si au moins un Ã©vÃ©nement modifiable
                         $booModifyEventGlobal = $booModify;
                         /* <div <?php if (sizeof($arrDetails) >2) {?>style="height:300px;overflow:auto;<?php } ?>"> */
 
-                        // On boucle sur l'affichage des détail d'événement
+                        // On boucle sur l'affichage des dÃ©tail d'Ã©vÃ©nement
                         foreach($arrDetails as $detail)
                         {
-                            // On n'affiche que si validé ou validateur connecté ou propriétaire (ou option de filtrage désactivée)
+                            // On n'affiche que si validÃ© ou validateur connectÃ© ou propriÃ©taire (ou option de filtrage dÃ©sactivÃ©e)
                             if ($detail['validated'] || $booValidator  || ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['userid'] == $objEvent->fields['id_user']) || !$_SESSION['ploopi']['modules'][$booking_moduleid]['booking_eventfilter'])
                             {
                                 //$booModify = ($objEvent->fields['managed'] == 0 && $_SESSION['ploopi']['mode'] == 'backoffice' && (!isset($arrId[1]) || (isset($arrId[1]) && $arrId[1] == $detail['id'])));
@@ -889,7 +932,7 @@ switch($ploopi_op)
                                 $booModifyEventGlobal = $booModifyEventGlobal || $booModifyEvent;
 
 
-                                // Date de début/fin au format local
+                                // Date de dÃ©but/fin au format local
                                 $arrDateBegin = ploopi\date::timestamp2local($detail['timestp_begin']);
                                 $arrDateEnd = ploopi\date::timestamp2local($detail['timestp_end']);
 
@@ -899,20 +942,20 @@ switch($ploopi_op)
                                 $arrDateEnd_h = intval(substr($arrDateEnd['time'], 0, 2), 10);
                                 $arrDateEnd_m = intval(substr($arrDateEnd['time'], 3, 2), 10);
 
-                                // Détermination de la couleur de fond
+                                // DÃ©termination de la couleur de fond
                                 $strBgcolor = 'background-color:'.($detail['validated'] ? $arrBookingColor['validated'] : ($detail['canceled'] ? $arrBookingColor['canceled'] : $arrBookingColor['unknown'])).';';
 
-                                // Si un détail doit être sélectionné
+                                // Si un dÃ©tail doit Ãªtre sÃ©lectionnÃ©
                                 $strBorderColor = isset($arrId[1]) && $arrId[1] == $detail['id'] ? 'border:4px solid #8888ff' : 'border:1px solid #c0c0c0';
                                 ?>
                                 <div style="<?php echo $strBorderColor; ?>;margin:1px;<?php echo $strBgcolor; ?>" id="booking_event_bg<?php echo $detail['id']; ?>">
                                     <p>
-                                        <label>Date/heure de début:</label>
+                                        <label>Date/heure de dÃ©but:</label>
                                         <?php
                                         if ($booModifyEvent)
                                         {
                                             ?>
-                                            <input name="_booking_event_timestp_begin_d[<?php echo $detail['id']; ?>]" id="_booking_event_timestp_begin_d<?php echo $detail['id']; ?>" class="text" type="text" value="<?php echo ploopi\str::htmlentities($arrDateBegin['date']); ?>" style="width:80px;" onchange="javascript:if ($('_booking_event_timestp_end_d<?php echo $detail['id']; ?>').value == '') $('_booking_event_timestp_end_d<?php echo $detail['id']; ?>').value = this.value;" />
+                                            <input name="_booking_event_timestp_begin_d[<?php echo $detail['id']; ?>]" id="_booking_event_timestp_begin_d<?php echo $detail['id']; ?>" data-id="<?php echo $detail['id']; ?>" class="booking_date text" type="text" value="<?php echo ploopi\str::htmlentities($arrDateBegin['date']); ?>" style="width:80px;" onchange="javascript:if ($('_booking_event_timestp_end_d<?php echo $detail['id']; ?>').value == '') $('_booking_event_timestp_end_d<?php echo $detail['id']; ?>').value = this.value;" />
                                             <span style="float:left;width:auto;margin:0;padding:1px;"><?php ploopi\date::open_calendar("_booking_event_timestp_begin_d{$detail['id']}"); ?></span>
                                             <select name="_booking_event_timestp_begin_h[<?php echo $detail['id']; ?>]" id="_booking_event_timestp_begin_h<?php echo $detail['id']; ?>" class="select" style="width:60px;">
                                             <?php
@@ -939,24 +982,24 @@ switch($ploopi_op)
                                                 <?php
                                                 echo ploopi\str::htmlentities($arrDateBegin['date']).' '.substr($arrDateBegin['time'], 0, 5);
 
-                                                echo '<strong style="margin-left:10px;">'.($detail['validated'] ? 'Validé' : ($detail['canceled'] ? 'Refusé' : 'Indeterminé')).'</strong>';
+                                                echo '<strong style="margin-left:10px;">'.($detail['validated'] ? 'ValidÃ©' : ($detail['canceled'] ? 'RefusÃ©' : 'IndeterminÃ©')).'</strong>';
 
                                                 // Peuvent supprimer :
-                                                // Propriétaire si non validé/refusé
-                                                // Gestionnaire si validé/refusé
-                                                // Et si non vérouillé
+                                                // PropriÃ©taire si non validÃ©/refusÃ©
+                                                // Gestionnaire si validÃ©/refusÃ©
+                                                // Et si non vÃ©rouillÃ©
 
                                                 if ($objEvent->fields['managed'] == 0 && (($_SESSION['ploopi']['userid'] == $objEvent->fields['id_user'] && $detail['validated'] == 0 && $detail['canceled'] == 0)))
                                                 {
                                                     $strUrl = ploopi\crypt::urlencode($_SESSION['ploopi']['mode'] == 'backoffice' ? "admin-light.php?ploopi_op=booking_event_detail_delete&booking_event_detail_id={$detail['id']}" : "index-light.php?ploopi_op=booking_event_detail_delete&booking_moduleid={$_GET['booking_moduleid']}&booking_event_detail_id={$detail['id']}");
                                                     ?>
-                                                    <strong style="margin-left:10px;">(<a href="javascript:void(0);" onclick="javascript:if (confirm('Attention cette action va supprimer définitivement la demande de réservation.\nVoulez vous continuer ?')) document.location.href = '<?php echo $strUrl; ?>';" style="color:#a60000;" title="Supprimer cette réservation">Supprimer</a>)</strong>
+                                                    <strong style="margin-left:10px;">(<a href="javascript:void(0);" onclick="javascript:if (confirm('Attention cette action va supprimer dÃ©finitivement la demande de rÃ©servation.\nVoulez vous continuer ?')) document.location.href = '<?php echo $strUrl; ?>';" style="color:#a60000;" title="Supprimer cette rÃ©servation">Supprimer</a>)</strong>
                                                     <?php
                                                 }
 
                                                 // Peuvent annuler :
-                                                // Gestionnaire si validé/refusé
-                                                // Et si non vérouillé
+                                                // Gestionnaire si validÃ©/refusÃ©
+                                                // Et si non vÃ©rouillÃ©
 
                                                 if ($objEvent->fields['managed'] == 0  && $booValidator && ($detail['validated'] == 1 || $detail['canceled'] == 1))
                                                 {
@@ -987,7 +1030,7 @@ switch($ploopi_op)
                                             }
                                             ?>
                                             </select>
-                                            <select name="_booking_event_timestp_end_m[<?php echo $detail['id']; ?>]" id="_booking_event_timestp_end_h<?php echo $detail['id']; ?>" class="select" style="width:45px;">
+                                            <select name="_booking_event_timestp_end_m[<?php echo $detail['id']; ?>]" id="_booking_event_timestp_end_m<?php echo $detail['id']; ?>" class="select" style="width:45px;">
                                             <?php
                                             for ($i = 0; $i < 12; $i++)
                                             {
@@ -1011,28 +1054,28 @@ switch($ploopi_op)
                                     {
                                         ?>
                                         <div style="font-weight:bold;padding-left:10px;" class="ploopi_va">
-                                            <strong>Décision :</strong>
+                                            <strong>DÃ©cision :</strong>
                                             <?php
-                                            // calcul de la différence entre le moment actuel et la date de fin mission
-                                            // si mission est passée, on ne peut plus la supprimer
+                                            // calcul de la diffÃ©rence entre le moment actuel et la date de fin mission
+                                            // si mission est passÃ©e, on ne peut plus la supprimer
                                             $diff=time()-ploopi\date::timestamp2unixtimestamp($detail['timestp_end']);
                                             if (($diff/24/3600)+1 < 1) {
                                                 ?>
                                                 <input type="radio" class="checkbox" name="_booking_event_validated[<?php echo $detail['id']; ?>]" id="_booking_event_validated<?php echo $detail['id']; ?>_9" value="9" onchange="javascript:$('booking_event_bg<?php echo $detail['id']; ?>').style.backgroundColor = '<?php echo $arrBookingColor['deleted']; ?>';" />
-                                                <a href="javascript:void(0);" onclick="javascript:ploopi_checkbox_click(event, '_booking_event_validated<?php echo $detail['id']; ?>_9');">Supprimer</a>
+                                                <a href="javascript:void(0);" onclick="javascript:ploopi.checkbox_click(event, '_booking_event_validated<?php echo $detail['id']; ?>_9');">Supprimer</a>
                                                 <?php
                                             }
                                             ?>
                                             <input type="radio" class="checkbox" name="_booking_event_validated[<?php echo $detail['id']; ?>]" id="_booking_event_validated<?php echo $detail['id']; ?>_0" value="0" onchange="javascript:$('booking_event_bg<?php echo $detail['id']; ?>').style.backgroundColor = '<?php echo $arrBookingColor['canceled']; ?>';" <?php if ($detail['canceled']) echo 'checked="checked"'; ?> />
-                                            <a href="javascript:void(0);" onclick="javascript:ploopi_checkbox_click(event, '_booking_event_validated<?php echo $detail['id']; ?>_0');">Refuser</a>
+                                            <a href="javascript:void(0);" onclick="javascript:ploopi.checkbox_click(event, '_booking_event_validated<?php echo $detail['id']; ?>_0');">Refuser</a>
 
                                             <input type="radio" class="checkbox" name="_booking_event_validated[<?php echo $detail['id']; ?>]" id="_booking_event_validated<?php echo $detail['id']; ?>_1" value="1" onchange="javascript:$('booking_event_bg<?php echo $detail['id']; ?>').style.backgroundColor = '<?php echo $arrBookingColor['validated']; ?>';" <?php if ($detail['validated']) echo 'checked="checked"'; ?> />
-                                            <a href="javascript:void(0);" onclick="javascript:ploopi_checkbox_click(event, '_booking_event_validated<?php echo $detail['id']; ?>_1');">Valider</a>
+                                            <a href="javascript:void(0);" onclick="javascript:ploopi.checkbox_click(event, '_booking_event_validated<?php echo $detail['id']; ?>_1');">Valider</a>
                                         </div>
                                         <?php
                                     }
 
-                                    // seuls les validateurs et propriétaires peuvent voire "commentaire" et "emails"
+                                    // seuls les validateurs et propriÃ©taires peuvent voire "commentaire" et "emails"
                                     ?>
                                     <p>
                                         <label>Commentaire:</label>
@@ -1042,7 +1085,7 @@ switch($ploopi_op)
                                         ?>
                                     </p>
                                     <p>
-                                        <label>Destinataires complémentaires (adresses de courriel séparées par &laquo; , &raquo;:</label>
+                                        <label>Destinataires complÃ©mentaires (adresses de courriel sÃ©parÃ©es par &laquo; , &raquo;:</label>
                                         <?php
                                         if ($booModifyEvent) { ?><textarea style="height:60px;" class="text" name="_booking_event_emails[<?php echo $detail['id']; ?>]" id="_booking_event_emails<?php echo $detail['id']; ?>"><?php echo ploopi\str::htmlentities($detail['emails']); ?></textarea><?php }
                                         else echo '<span>'.ploopi\str::nl2br(ploopi\str::htmlentities($detail['emails'])).'</span>';
@@ -1063,28 +1106,28 @@ switch($ploopi_op)
                         {
                             $strUrl = ploopi\crypt::urlencode($_SESSION['ploopi']['mode'] == 'backoffice' ? "admin-light.php?ploopi_op=booking_event_detail_delete&booking_event_detail_id={$detail['id']}" : "index-light.php?ploopi_op=booking_event_detail_delete&booking_moduleid={$_GET['booking_moduleid']}&booking_event_detail_id={$detail['id']}");
                             ?>
-                                <input type="button" class="button" value="Supprimer" title="Supprimer cette réservation" style="color:#a60000;font-weight:bold;" onclick="javascript:if (confirm('Attention cette action va supprimer définitivement la demande de réservation.\nVoulez vous continuer ?')) document.location.href = '<?php echo $strUrl; ?>';" />
+                                <input type="button" class="button" value="Supprimer" title="Supprimer cette rÃ©servation" style="color:#a60000;font-weight:bold;" onclick="javascript:if (confirm('Attention cette action va supprimer dÃ©finitivement la demande de rÃ©servation.\nVoulez vous continuer ?')) document.location.href = '<?php echo $strUrl; ?>';" />
                             <?php
                         }
                         ?>
-                        <input type="reset" class="button" value="Réinitialiser" />
+                        <input type="reset" class="button" value="RÃ©initialiser" />
                         <input type="submit" class="button" value="Enregistrer" />
                         <?php
                     }
-                    // Déverrouillage
+                    // DÃ©verrouillage
                     elseif ($objEvent->fields['managed'] == 1 && ploopi\acl::isactionallowed(_BOOKING_ACTION_VALIDATE)) {
 
                         if ($_SESSION['ploopi']['mode'] == 'frontoffice') {
-                            $strUrl = "ploopi_xmlhttprequest_todiv('index-light.php','".ploopi\crypt::queryencode("ploopi_op=booking_event_unlock&booking_element_id={$_GET['booking_element_id']}&booking_moduleid={$_GET['booking_moduleid']}")."', 'popup_event');";
+                            $strUrl = "ploopi.xhr.todiv('index-light.php','".ploopi\crypt::queryencode("ploopi_op=booking_event_unlock&booking_element_id={$_GET['booking_element_id']}&booking_moduleid={$_GET['booking_moduleid']}")."', 'popup_event');";
                         } else {
-                            $strUrl = "ploopi_xmlhttprequest_todiv('admin-light.php','".ploopi\crypt::queryencode("ploopi_op=booking_event_unlock&booking_element_id={$_GET['booking_element_id']}")."', 'popup_event');";
+                            $strUrl = "ploopi.xhr.todiv('admin-light.php','".ploopi\crypt::queryencode("ploopi_op=booking_event_unlock&booking_element_id={$_GET['booking_element_id']}")."', 'popup_event');";
                         }
 
                         ?>
-                        <div style="margin-bottom:2px;"><strong style="color:#a60000;">Cette demande est verrouillée car son traitement est terminé</strong></div>
+                        <div style="margin-bottom:2px;"><strong style="color:#a60000;">Cette demande est verrouillÃ©e car son traitement est terminÃ©</strong></div>
                         <div>
                             <input type="button" class="button" value="Deverrouiller" onclick="javascript:<?php echo $strUrl; ?>"/>
-                            <input type="button" class="button" value="Fermer" onclick="javascript:ploopi_hidepopup('popup_event');"/>
+                            <input type="button" class="button" value="Fermer" onclick="javascript:ploopi.popup.hide('popup_event');"/>
                         </div>
                         <?php
                     }
@@ -1093,7 +1136,7 @@ switch($ploopi_op)
                     {
                         ?>
                         <div>
-                            <input type="button" class="button" value="Fermer" onclick="javascript:ploopi_hidepopup('popup_event');"/>
+                            <input type="button" class="button" value="Fermer" onclick="javascript:ploopi.popup.hide('popup_event');"/>
                         </div>
                         <?php
                     }
@@ -1115,7 +1158,7 @@ switch($ploopi_op)
 
             include_once './modules/booking/include/global.php';
 
-            echo ploopi\skin::get()->create_popup("Consultation d'une demande de réservation", $content, 'popup_event');
+            echo ploopi\skin::get()->create_popup("Consultation d'une demande de rÃ©servation", $content, 'popup_event');
         }
         ploopi\system::kill();
     break;

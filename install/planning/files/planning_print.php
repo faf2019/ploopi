@@ -4,7 +4,7 @@ $strPrintType = "";
 // Lecture cookie de recherche
 $arrSearchPattern = planning_getcookie();
 
-//Récupération du type d'affichage
+//RÃ©cupÃ©ration du type d'affichage
 switch($arrSearchPattern['planning_display_type'])
 {
     case 'month':
@@ -29,11 +29,11 @@ switch($arrSearchPattern['planning_display_type'])
     break;
 
     case 'week':
-        // On détermine les dates de la semaine courante
+        // On dÃ©termine les dates de la semaine courante
         $date_begin = ploopi\date::numweek2unixtimestamp($arrSearchPattern['planning_week'], $arrSearchPattern['planning_year']);
         $date_end = mktime(0, 0, 0, date('n', $date_begin), date('j', $date_begin)+6, date('Y', $date_begin));
 
-        // Détermination du numéro de semaine max de l'année (on se positionne sur le 31/12)
+        // DÃ©termination du numÃ©ro de semaine max de l'annÃ©e (on se positionne sur le 31/12)
         $intMaxWeek = date('W', mktime(0, 0, 0, 12, 31, $arrSearchPattern['planning_year']));
 
         if ($intMaxWeek == 1) $intMaxWeek = 52;
@@ -42,7 +42,7 @@ switch($arrSearchPattern['planning_display_type'])
 
         for ($intWeek = 1; $intWeek <= $intMaxWeek; $intWeek++)
         {
-            // Date de début de la semaine en cours d'affichage dans la liste
+            // Date de dÃ©but de la semaine en cours d'affichage dans la liste
             $date_week = mktime(0, 0, 0, date('n', $date_firstweek), date('j', $date_firstweek)+(($intWeek - 1) * 7), date('Y', $date_firstweek));
             if ($arrSearchPattern['planning_week'] == $intWeek)
             {
@@ -54,7 +54,7 @@ switch($arrSearchPattern['planning_display_type'])
     default:
     case 'today':
     case 'day':
-        // On détermine la date du jour
+        // On dÃ©termine la date du jour
         $date_end = $date_begin = mktime(0, 0, 0, $arrSearchPattern['planning_month'], $arrSearchPattern['planning_day'], $arrSearchPattern['planning_year']);
 
         $strPrintType = sprintf("Planning du %02d/%02d/%4d", $arrSearchPattern['planning_day'], $arrSearchPattern['planning_month'], $arrSearchPattern['planning_year']);
@@ -63,10 +63,10 @@ switch($arrSearchPattern['planning_display_type'])
 
 //ploopi\output::print_r($arrSearchPattern);
 
-// Recherche des événements
+// Recherche des Ã©vÃ©nements
 $arrEvents = array();
 
-// Recherche des événements
+// Recherche des Ã©vÃ©nements
 $arrEvents = planning_get_events(
     $arrSearchPattern['planning_resources'],
     ploopi\date::unixtimestamp2timestamp($date_begin),
@@ -145,7 +145,7 @@ $strGroupEventLabel = "";
             echo implode(', ', $arrWho);
             ?>
                 </span><br />
-                <span class="planning_event_time">De : <?php echo substr($arrEventBegin['time'], 0, 2) ?>h<?php echo substr($arrEventBegin['time'], 3, 2) ?> à <?php echo substr($arrEventEnd['time'], 0, 2) ?>h<?php echo substr($arrEventEnd['time'], 3, 2) ?></span>
+                <span class="planning_event_time">De : <?php echo substr($arrEventBegin['time'], 0, 2) ?>h<?php echo substr($arrEventBegin['time'], 3, 2) ?> Ã  <?php echo substr($arrEventEnd['time'], 0, 2) ?>h<?php echo substr($arrEventEnd['time'], 3, 2) ?></span>
                 <span class="planning_event_time">
                     <?php
                     if($arrEventEnd['date'] != $arrEventBegin['date'])

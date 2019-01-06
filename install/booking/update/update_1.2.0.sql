@@ -15,11 +15,11 @@ CREATE TABLE IF NOT EXISTS `ploopi_mod_booking_subresource` (
   KEY `id_user` (`id_user`),
   KEY `id_workspace` (`id_workspace`),
   KEY `id_module` (`id_module`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `ploopi_mod_booking_event_subresource`;
 CREATE TABLE IF NOT EXISTS `ploopi_mod_booking_event_subresource` (
   `id_event` int(10) unsigned NOT NULL DEFAULT '0',
   `id_subresource` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_event`,`id_subresource`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;

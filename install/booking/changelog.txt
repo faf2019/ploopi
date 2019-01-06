@@ -1,52 +1,59 @@
+== Module BOOKING - version 1.3.1 ====================================================
+
+2019-01-06  St√©phane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Migration UTF-8
+* Conversion jQuery
+
 == Module BOOKING - version 1.3.0 ====================================================
 
-2016-08-08  StÈphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2016-08-08  St√©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
 * Version pour Ploopi 1.9.7+ / PHP 7+
 
 == Module BOOKING - version 1.2.8 ====================================================
 
-2016-05-19  StÈphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2016-05-19  St√©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
 * Correction de notices
 
 == Module BOOKING - version 1.2.7 ====================================================
 
-2016-05-03  StÈphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2016-05-03  St√©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
-* Correction d'un bug sur la gestion de la portÈe des sous-ressources (visibilitÈ inter-instance)
+* Correction d'un bug sur la gestion de la port√©e des sous-ressources (visibilit√© inter-instance)
 
 == Module BOOKING - version 1.2.6 ====================================================
 
-2016-03-14  StÈphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2016-03-14  St√©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
-* DÈsactivation de l'affichage dÈtaillÈ des rÈservations en mode multi-colonne et en affichage hebdomadaire (contribution JPP@MI)
+* D√©sactivation de l'affichage d√©taill√© des r√©servations en mode multi-colonne et en affichage hebdomadaire (contribution JPP@MI)
 
 == Module BOOKING - version 1.2.5 ====================================================
 
-2016-02-23  StÈphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2016-02-23  St√©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
-* Envoi d'un ticket lors de la suppression d'une demande de rÈservation
+* Envoi d'un ticket lors de la suppression d'une demande de r√©servation
 
 == Module BOOKING - version 1.2.4 ====================================================
 
-2016-02-15  StÈphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2016-02-15  St√©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
-* Correction d'un bug lors de la dÈtection des collisions de demandes non validÈes
-* Correction d'un bug dans la mÈthode booking_resource::getusers (rÈcupÈration des utilisateurs gestionnaires de la ressource)
+* Correction d'un bug lors de la d√©tection des collisions de demandes non valid√©es
+* Correction d'un bug dans la m√©thode booking_resource::getusers (r√©cup√©ration des utilisateurs gestionnaires de la ressource)
 
 == Module BOOKING - version 1.2.3 ====================================================
 
-2016-02-12  StÈphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2016-02-12  St√©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
 * Corrections d'un bug lors de la suppression d'une ressource
-* Affichage d'un popup d'avertissement sur la rÈservation d'une ressource dÈj‡ rÈservÈe
-* Envoi d'un ticket sur la modification d'une rÈservation
-* Insertion des sous-ressources dans le contenu des tickets envoyÈs (demande de rÈservation, modification...)
+* Affichage d'un popup d'avertissement sur la r√©servation d'une ressource d√©j√† r√©serv√©e
+* Envoi d'un ticket sur la modification d'une r√©servation
+* Insertion des sous-ressources dans le contenu des tickets envoy√©s (demande de r√©servation, modification...)
 
 == Module BOOKING - version 1.2.2 ====================================================
 
-2016-01-15  StÈphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2016-01-15  St√©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
 * Corrections sur l'affichage du popup des ressources
 * Correction d'un notice
@@ -55,88 +62,88 @@
 
 2016-01-14  Jean-Pierre PAWLAK ~ SGAMI-EST/DSIC  <jean-pierre.pawlak@interieur.gouv.fr>
 
-* Nouveaux paramËtres de module : Visualisation du calendrier par dÈfaut, Multi-colonnes par dÈfaut
-* Cochage/dÈcochage de l'ensemble des ressources d'un type sur la pop-up du planning
+* Nouveaux param√®tres de module : Visualisation du calendrier par d√©faut, Multi-colonnes par d√©faut
+* Cochage/d√©cochage de l'ensemble des ressources d'un type sur la pop-up du planning
 
 == Module BOOKING - version 1.2.0 ====================================================
 
-2015-12-02  StÈphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2015-12-02  St√©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
 * Gestion des sous-ressources
 
 == Module BOOKING - version 1.1.1 ====================================================
 
-2015-07-13  StÈphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2015-07-13  St√©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
-* Ajout d'un contrÙle de non collision de demandes de rÈservation lors de l'enregistrement (ajout/modification/validation)
+* Ajout d'un contr√¥le de non collision de demandes de r√©servation lors de l'enregistrement (ajout/modification/validation)
 
 == Module BOOKING - version 1.1.0 ====================================================
 
-2015-07-10  StÈphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2015-07-10  St√©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
-* Ajout d'un bouton de suppression des ÈvÈnements en frontoffice (propriÈtaire uniquement, non validÈ...)
-* Correction d'URLs non valides en frontoffice (jetons manquants, contenus erronÈs, mauvaises redirections)
-* Ajout de la possibilitÈ de modifier manuellement le code couleur d'une ressource
+* Ajout d'un bouton de suppression des √©v√©nements en frontoffice (propri√©taire uniquement, non valid√©...)
+* Correction d'URLs non valides en frontoffice (jetons manquants, contenus erron√©s, mauvaises redirections)
+* Ajout de la possibilit√© de modifier manuellement le code couleur d'une ressource
 
 == Module BOOKING - version 1.0.8 ====================================================
 
-2015-03-20  StÈphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2015-03-20  St√©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
-* Ajout des champs "commentaire" et "emails" lors de la demande de rÈservation
-* Les champs restent modifiables par le demandeur ou le validateur tant que le demande n'est pas validÈe
+* Ajout des champs "commentaire" et "emails" lors de la demande de r√©servation
+* Les champs restent modifiables par le demandeur ou le validateur tant que le demande n'est pas valid√©e
 * Petites retouches ergonomiques
 
 == Module BOOKING - version 1.0.7 ====================================================
 
-2014-12-05  StÈphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2014-12-05  St√©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
-* Correction d'un bug avec la classe skin en intÈgration webedit
+* Correction d'un bug avec la classe skin en int√©gration webedit
 
 == Module BOOKING - version 1.0.6 ====================================================
 
-2014-11-20  StÈphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2014-11-20  St√©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
-* Petite modification sur le css de rendu des ÈvÈnements en frontoffice
+* Petite modification sur le css de rendu des √©v√©nements en frontoffice
 
 == Module BOOKING - version 1.0.5 ====================================================
 
-2014-06-20  StÈphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2014-06-20  St√©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
-* L'administrateur systËme n'est plus inclus automatiquement dans les destinataires de tickets lors de la demande de rÈservation d'une ressource.
+* L'administrateur syst√®me n'est plus inclus automatiquement dans les destinataires de tickets lors de la demande de r√©servation d'une ressource.
 
 == Module BOOKING - version 1.0.4e ====================================================
 
-2014-01-29  StÈphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2014-01-29  St√©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
 * Correction d'un bug dans la gestion du cookie de sauvegarde
 
 == Module BOOKING - version 1.0.4d ====================================================
 
-2013-07-22  StÈphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2013-07-22  St√©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
-* Ajout de contrÙles d'affichage pour Èviter les injections XSS
+* Ajout de contr√¥les d'affichage pour √©viter les injections XSS
 
 == Module BOOKING - version 1.0.4c ====================================================
 
-2013-07-22  StÈphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2013-07-22  St√©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
-* Correction d'un bug liÈ ‡ la modification du comportement de htmlentities avec PHP 5.4
+* Correction d'un bug li√© √† la modification du comportement de htmlentities avec PHP 5.4
 
 == Module BOOKING - version 1.0.4b ====================================================
 
-2013-04-03  StÈphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2013-04-03  St√©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
-* Corrections suite ‡ la modification du loader de Ploopi
+* Corrections suite √† la modification du loader de Ploopi
 
 == Module BOOKING - version 1.0.4a ====================================================
 
-2013-03-18  StÈphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2013-03-18  St√©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
 * Correction de notices
 
 == Module BOOKING - version 1.0.4 ====================================================
 
-2013-01-21  StÈphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2013-01-21  St√©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
 * Correction d'un notice
 
@@ -144,7 +151,7 @@
 
 2011-10-14  Corinne Leclaire ~ SZSIC Metz
 
-* Ajout d'un contrÙle de date lors de l'affichage du bouton de suppression d'une rÈservation
+* Ajout d'un contr√¥le de date lors de l'affichage du bouton de suppression d'une r√©servation
 
 == Module BOOKING - version 1.0.2b ====================================================
 
@@ -154,183 +161,183 @@
 
 == Module BOOKING - version 1.0.2a ====================================================
 
-2011-02-16  StÈphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2011-02-16  St√©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
 * Correction d'une erreur sur l'affichage du calendrier dans le suivi des demandes
-* RÈ-intÈgration d'un fichier absent sur le dÈpÙt
+* R√©-int√©gration d'un fichier absent sur le d√©p√¥t
 
 == Module BOOKING - version 1.0.2 ====================================================
 
-2010-11-30  StÈphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2010-11-30  St√©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
-* Sauvegarde des paramËtres de visualisation dans un cookie (date, format, ressources affichÈes, etc...)
+* Sauvegarde des param√®tres de visualisation dans un cookie (date, format, ressources affich√©es, etc...)
 
 == Module BOOKING - version 1.0.1 ====================================================
 
-2010-11-30  StÈphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2010-11-30  St√©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * IntÈgration du nouveau colorpicker
+ * Int√©gration du nouveau colorpicker
 
 == Module BOOKING - version 1.0.0b ====================================================
 
-2010-05-28  StÈphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2010-05-28  St√©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Suppression du tag "IMG" sur les types de ressources dans le choix des ressources affichÈes (back/front)
+ * Suppression du tag "IMG" sur les types de ressources dans le choix des ressources affich√©es (back/front)
 
 == Module BOOKING - version 1.0.0 ====================================================
 
-2010-05-21  StÈphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2010-05-21  St√©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * IntÈgration de la nouvelle classe "calendar" : affichage multi-colonne des ressources
- * Gestion du rÙle "Faire une demande" en frontoffice
- * Nouveau mode de sÈlection des ressources ‡ afficher (multi-choix)
+ * Int√©gration de la nouvelle classe "calendar" : affichage multi-colonne des ressources
+ * Gestion du r√¥le "Faire une demande" en frontoffice
+ * Nouveau mode de s√©lection des ressources √† afficher (multi-choix)
 
 == Module BOOKING - version 0.9.9a ====================================================
 
-2010-03-26  StÈphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2010-03-26  St√©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Correction d'un bug lors de la suppression d'une demande en frontoffice. Si l'encodage des url Ètait activÈ, l'utilisateur Ètait redirigÈ vers le backoffice.
+ * Correction d'un bug lors de la suppression d'une demande en frontoffice. Si l'encodage des url √©tait activ√©, l'utilisateur √©tait redirig√© vers le backoffice.
 
 == Module BOOKING - version 0.9.9 ====================================================
 
-2010-03-22  StÈphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2010-03-22  St√©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
  * Corrections sur l'appel des calendriers
 
 == Module BOOKING - version 0.9.2g ====================================================
 
-2010-01-27  StÈphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2010-01-27  St√©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
  * Ajustement de la taille des colonnes dans l'affichage des demandes en frontoffice
- * Corrections de mise en page sur le formulaire de crÈation/modification d'une demande
+ * Corrections de mise en page sur le formulaire de cr√©ation/modification d'une demande
 
 == Module BOOKING - version 0.9.2f ====================================================
 
-2009-10-07  StÈphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2009-10-07  St√©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Correction d'un bug liÈ ‡ une modification sur $db->getarray()
+ * Correction d'un bug li√© √† une modification sur $db->getarray()
 
 == Module BOOKING - version 0.9.2e ====================================================
 
-2009-09-29  StÈphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2009-09-29  St√©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Correction d'un bug dans la sÈparation des donnÈes "type de ressource" entre diffÈrences instances du module
- * Correction d'un bug dans la navigation liÈ ‡ la version 1.6.0.0 de Ploopi
+ * Correction d'un bug dans la s√©paration des donn√©es "type de ressource" entre diff√©rences instances du module
+ * Correction d'un bug dans la navigation li√© √† la version 1.6.0.0 de Ploopi
 
 == Module BOOKING - version 0.9.2d ====================================================
 
-2009-08-27  StÈphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2009-08-27  St√©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Correction d'un bug dans la gestion des opÈrations frontoffice gÈnÈrant un blocage pour les fonctionnalitÈs frontoffice des autres modules instanciÈs
+ * Correction d'un bug dans la gestion des op√©rations frontoffice g√©n√©rant un blocage pour les fonctionnalit√©s frontoffice des autres modules instanci√©s
 
 == Module BOOKING - version 0.9.2c ====================================================
 
-2009-08-21  StÈphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2009-08-21  St√©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Correction d'un bug sur une variable non dÈfinie (notice)
+ * Correction d'un bug sur une variable non d√©finie (notice)
 
 == Module BOOKING - version 0.9.2b ====================================================
 
-2009-08-12  StÈphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2009-08-12  St√©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Correction d'un bug sur une variable non dÈfinie (notice)
+ * Correction d'un bug sur une variable non d√©finie (notice)
 
 == Module BOOKING - version 0.9.2 ====================================================
 
-2009-07-31  StÈphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2009-07-31  St√©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * IntÈgration et compatibilitÈ Ploopi 1.5
+ * Int√©gration et compatibilit√© Ploopi 1.5
  * Optimisations dans la navigation par date (mois/semaine/jour)
 
 == Module BOOKING - version 0.9.1 ====================================================
 
-2009-04-09  StÈphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2009-04-09  St√©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Correctif mineur sur la fonctionnalitÈ d'annulation d'une rÈservation
- * Changement de numÈration de la version du module (alignement Ploopi)
+ * Correctif mineur sur la fonctionnalit√© d'annulation d'une r√©servation
+ * Changement de num√©ration de la version du module (alignement Ploopi)
 
 == Module BOOKING - version 0.90 ====================================================
 
-2009-04-09  StÈphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2009-04-09  St√©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Ajout de la possibilitÈ d'annuler une demande de rÈservation validÈe ou refusÈe (ne supprime pas la demande).
- * Correction d'un bug ‡ la suppression d'une demande de rÈservation (mauvaise url de retour).
- * Ajout d'une option (paramËtre du module) permettant d'activer ou non l'affichage des ÈvÈnements en fonction de leur validation ou non.
- * Ajout d'un envoi d'alerte au gestionnaire lors de la crÈation d'une nouvelle demande de rÈservation.
- * A la crÈation d'une demande, modification du comportement du champ "date de fin", se positionne automatiquement sur la date de dÈbut.
+ * Ajout de la possibilit√© d'annuler une demande de r√©servation valid√©e ou refus√©e (ne supprime pas la demande).
+ * Correction d'un bug √† la suppression d'une demande de r√©servation (mauvaise url de retour).
+ * Ajout d'une option (param√®tre du module) permettant d'activer ou non l'affichage des √©v√©nements en fonction de leur validation ou non.
+ * Ajout d'un envoi d'alerte au gestionnaire lors de la cr√©ation d'une nouvelle demande de r√©servation.
+ * A la cr√©ation d'une demande, modification du comportement du champ "date de fin", se positionne automatiquement sur la date de d√©but.
 
 == Module BOOKING - version 0.83 ====================================================
 
-2009-03-02  StÈphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2009-03-02  St√©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Modification de la mise en page du formulaire d'ajout d'un ÈvÈnement pour une meilleure compatibilitÈ avec IE6 (problËme de z-index entre div et select)
- * PrÈ-remplissage des champs "date" du formualaire d'ajout d'un ÈvÈnement pour que la calendrier s'ouvrre ‡ la date de visualisation du planning
+ * Modification de la mise en page du formulaire d'ajout d'un √©v√©nement pour une meilleure compatibilit√© avec IE6 (probl√®me de z-index entre div et select)
+ * Pr√©-remplissage des champs "date" du formualaire d'ajout d'un √©v√©nement pour que la calendrier s'ouvrre √† la date de visualisation du planning
 
 == Module BOOKING - version 0.82 ====================================================
 
-2009-02-03  StÈphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2009-02-03  St√©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Correction d'un bug dans l'historique des demandes sur le filtre "Demande effectuÈe entre le..."
+ * Correction d'un bug dans l'historique des demandes sur le filtre "Demande effectu√©e entre le..."
 
 == Module BOOKING - version 0.81 ====================================================
 
-2009-02-02  StÈphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2009-02-02  St√©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Correction d'un bug dans l'affichage frontoffice du planning en mode dÈconnectÈ
+ * Correction d'un bug dans l'affichage frontoffice du planning en mode d√©connect√©
  * Diverses optimisations
  * Suppression de fonctions inutiles
  * Ajout de commentaires sur certaines fonctions
 
 == Module BOOKING - version 0.80 ====================================================
 
-2009-01-13  StÈphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2009-01-13  St√©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Mise en place des droits de validation/visualisation des donnÈes
+ * Mise en place des droits de validation/visualisation des donn√©es
  * Nouvelle mise en forme des options de validation : valider/refuser/supprimer
- * Ajout d'un champ "commentaire" sur chaque dÈtail d'ÈvÈnement
- * Envoi de mails sur annulation/validation d'une demande (adresses complÈmentaires)
+ * Ajout d'un champ "commentaire" sur chaque d√©tail d'√©v√©nement
+ * Envoi de mails sur annulation/validation d'une demande (adresses compl√©mentaires)
  * Correctifs d'interface avec IE
 
 == Module BOOKING - version 0.60 ====================================================
 
-2008-12-11  StÈphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2008-12-11  St√©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
  * Envoi de tickets sur annulation/validation d'une demande
- * Correctif sur l'ouverture d'une demande en front quand l'utilisateur n'est pas connectÈ
+ * Correctif sur l'ouverture d'une demande en front quand l'utilisateur n'est pas connect√©
 
 == Module BOOKING - version 0.51 ====================================================
 
-2008-12-09  StÈphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2008-12-09  St√©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Correction d'un bug dans la classe "booking_resource" (chargement des espaces sÈlectionnÈs)
- * Ajout de paramËtres de taille pour l'affichage frontoffice du planning (objets "WCE")
+ * Correction d'un bug dans la classe "booking_resource" (chargement des espaces s√©lectionn√©s)
+ * Ajout de param√®tres de taille pour l'affichage frontoffice du planning (objets "WCE")
 
 == Module BOOKING - version 0.5 ====================================================
 
-2008-12-09  StÈphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2008-12-09  St√©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * CrÈation de 2 objets "WCE" intÈgrables dans des articles WebEdit
+ * Cr√©ation de 2 objets "WCE" int√©grables dans des articles WebEdit
  * Modification du fichier de description des objets : mb.xml
 
 == Module BOOKING - version 0.4 ====================================================
 
-2008-12-04  StÈphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2008-12-04  St√©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * CrÈation d'une interface de suivi des demandes de rÈservation
- * CrÈation d'un mode de visualisation hebdomadaire
- * AmÈliorations gÈnÈrales
+ * Cr√©ation d'une interface de suivi des demandes de r√©servation
+ * Cr√©ation d'un mode de visualisation hebdomadaire
+ * Am√©liorations g√©n√©rales
  * Modification de la structure SQL d'install
 
 == Module BOOKING - version 0.3 ====================================================
 
-2008-11-26  StÈphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2008-11-26  St√©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * CrÈation d'une classe "calendar" permettant d'afficher un planning mensuel
- * CrÈation d'une interface de consultation / rÈservation en backoffice
+ * Cr√©ation d'une classe "calendar" permettant d'afficher un planning mensuel
+ * Cr√©ation d'une interface de consultation / r√©servation en backoffice
 
  == Module BOOKING - version 0.1 ====================================================
 
-2008-11-17  StÈphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2008-11-17  St√©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * DÈmarrage du projet
- * CrÈation de la structure SQL
+ * D√©marrage du projet
+ * Cr√©ation de la structure SQL

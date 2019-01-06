@@ -1,58 +1,65 @@
+== Module Planning - version 1.0.1 ====================================================
+
+2019-01-06  St√©phane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Migration UTF-8
+* Conversion jQuery
+
 == Module Planning - version 1.0.0 ====================================================
 
-2016-08-08  StÈphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2016-08-08  St√©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
 * Version pour Ploopi 1.9.7+ / PHP 7+
 
 == Module Planning - version 0.9.0 ====================================================
 
-2016-01-15  StÈphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2016-01-15  St√©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
 * Correction d'un notice
-* SÈcurisation de certains affichages
+* S√©curisation de certains affichages
 
 == Module Planning - version 0.8.2 ====================================================
 
-2014-12-22  StÈphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2014-12-22  St√©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
 * Ajout d'une image manquante
 
 == Module Planning - version 0.8.1a ====================================================
 
-2013-07-22  StÈphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2013-07-22  St√©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
-* Correction d'un bug liÈ ‡ la modification du comportement de htmlentities avec PHP 5.4
+* Correction d'un bug li√© √† la modification du comportement de htmlentities avec PHP 5.4
 
 == Module Planning - version 0.8.1 ====================================================
 
-2013-04-03  StÈphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2013-04-03  St√©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
-* Corrections suite ‡ la modification du loader de Ploopi
+* Corrections suite √† la modification du loader de Ploopi
 
 == Module Planning - version 0.8.0c ====================================================
 
-2013-03-20  StÈphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2013-03-20  St√©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
-* Correction d'un problËme de compatibilitÈ entre les cookies zippÈs et le module suhosin (encodage des cookies en base64). Attention impact sur la taille des cookies.
+* Correction d'un probl√®me de compatibilit√© entre les cookies zipp√©s et le module suhosin (encodage des cookies en base64). Attention impact sur la taille des cookies.
 
 == Module Planning - version 0.8.0b ====================================================
 
-2013-01-29  StÈphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2013-01-29  St√©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
-* Correction d'un bug sur la recherche (si pas d'utilisateur/groupe cochÈ)
+* Correction d'un bug sur la recherche (si pas d'utilisateur/groupe coch√©)
 
 == Module Planning - version 0.8.0a ====================================================
 
-2013-01-29  StÈphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2013-01-29  St√©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
-* Correction d'un bug sur la recherche (lecture des paramËtres du filtre)
-* Correction d'un bug sur l'impression (lecture des paramËtres du filtre)
+* Correction d'un bug sur la recherche (lecture des param√®tres du filtre)
+* Correction d'un bug sur l'impression (lecture des param√®tres du filtre)
 
 == Module Planning - version 0.8.0 ====================================================
 
-2013-01-24  StÈphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2013-01-24  St√©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
-* Correction sur les droits de modification/suppression pour un utilisateur sans rÙle
+* Correction sur les droits de modification/suppression pour un utilisateur sans r√¥le
 * Corrections d'affichage
 
 == Module Planning - version 0.7.9c ====================================================
@@ -63,80 +70,80 @@
 
 == Module Planning - version 0.7.9b ====================================================
 
-2010-11-30  StÈphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2010-11-30  St√©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
 * Ajustement sur le nom du cookie pour la gestion multi-instance
 
 == Module Planning - version 0.7.9 ====================================================
 
-2010-11-30  StÈphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2010-11-30  St√©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
-* Sauvegarde des paramËtres de visualisation dans un cookie (date, format, ressources affichÈes, etc...)
+* Sauvegarde des param√®tres de visualisation dans un cookie (date, format, ressources affich√©es, etc...)
 
 == Module Planning - version 0.7.8 ====================================================
 
-2010-05-28  StÈphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2010-05-28  St√©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
- * IntÈgration des annotations sur les ÈvÈnements
- * Gestion du lien entre l'annotation et l'ÈvÈnement associÈ
+ * Int√©gration des annotations sur les √©v√©nements
+ * Gestion du lien entre l'annotation et l'√©v√©nement associ√©
 
 == Module Planning - version 0.7.7 ====================================================
 
-2010-05-21  StÈphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2010-05-21  St√©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
- * IntÈgration de la nouvelle classe "calendar" : affichage multi-colonne des ressources, gestion du dÈplacement en multi-colonne
+ * Int√©gration de la nouvelle classe "calendar" : affichage multi-colonne des ressources, gestion du d√©placement en multi-colonne
 
 == Module Planning - version 0.7.6 ====================================================
 
-2010-03-16  StÈphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2010-03-16  St√©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
- * Gestion de la vue des donnÈes (possibilitÈ de voir les donnÈes en provenances d'autres espaces de travail)
- * PossibilitÈ de replier/dÈplier la liste des groupes/utilisateurs dans la boite de sÈlection des ressources ‡ visualiser.
+ * Gestion de la vue des donn√©es (possibilit√© de voir les donn√©es en provenances d'autres espaces de travail)
+ * Possibilit√© de replier/d√©plier la liste des groupes/utilisateurs dans la boite de s√©lection des ressources √† visualiser.
 
 == Module Planning - version 0.7.5a ====================================================
 
-2010-03-08  StÈphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2010-03-08  St√©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
- * Correction d'un bug de la fonctionnalitÈ de recherche avec IE6
+ * Correction d'un bug de la fonctionnalit√© de recherche avec IE6
 
 == Module Planning - version 0.7.5 ====================================================
 
 2010-03-03  Audrey Gilbert ~ Ovensia  <audrey@ovensia.fr>
 
- * Recherche dans les ÈvÈnements, affichage du rÈsultat, lien vers la journÈe de l'ÈvÈnement
+ * Recherche dans les √©v√©nements, affichage du r√©sultat, lien vers la journ√©e de l'√©v√©nement
 
 == Module Planning - version 0.7.0 ====================================================
 
 2010-01-22  Audrey Gilbert ~ Ovensia  <audrey@ovensia.fr>
 
  * Synchronisation avec la version 0.6.0.beta (branche stable)
- * Ajout d'un bouton "imprimer" qui gÈnËre une page HTML adaptÈe ‡ l'impression
+ * Ajout d'un bouton "imprimer" qui g√©n√®re une page HTML adapt√©e √† l'impression
 
 == Module Planning - version 0.5.10.beta ====================================================
 
-2009-07-22  StÈphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2009-07-22  St√©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
- * Ajout du rÙle "Ajout d'un ÈvÈnement" dans le fichier description.xml
+ * Ajout du r√¥le "Ajout d'un √©v√©nement" dans le fichier description.xml
 
 == Module Planning - version 0.5.10.beta ====================================================
 
-2009-07-22  StÈphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2009-07-22  St√©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
- * Ajout du rÙle "Ajout d'un ÈvÈnement" dans le fichier description.xml
+ * Ajout du r√¥le "Ajout d'un √©v√©nement" dans le fichier description.xml
 
 == Module Planning - version 0.5.000beta ====================================================
 
-2009-05-07  StÈphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2009-05-07  St√©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
- * Gestion d'un planning partagÈ
+ * Gestion d'un planning partag√©
  * Affichages quotidien/hebdomadaire/mensuel
  * Multi-utilisateur / Multi-groupe
- * Support du glisser/dÈposer (hebdomadaire et quotidien seulement)
+ * Support du glisser/d√©poser (hebdomadaire et quotidien seulement)
 
 Roadmap 1.0
 
    * Support IE6 (ahemmmm)
    * Gestion des droits de modification/publication entre utilisateurs
-   * Alertes par tickets (relance, ajout d'un ÈvÈnement pour un autre utilisateurs, etc.)
+   * Alertes par tickets (relance, ajout d'un √©v√©nement pour un autre utilisateurs, etc.)
    * Impression (?)
-   * Recherche de disponibilitÈ d'une plage de temps
+   * Recherche de disponibilit√© d'une plage de temps

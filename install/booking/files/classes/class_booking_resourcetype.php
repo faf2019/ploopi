@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2008 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,17 +25,22 @@
  *
  * @package booking
  * @subpackage resourcetype
- * @author Stéphane Escaich
+ * @author StÃ©phane Escaich
  * @copyright OVENSIA
  */
 
 /**
- * Classe d'accès à la table 'ploopi_mod_booking_resourcetype'
+ * Inclusion de la classe parent
+ */
+include_once './include/classes/data_object.php';
+
+/**
+ * Classe d'accÃ¨s Ã  la table 'ploopi_mod_booking_resourcetype'
  *
  * @package booking
  * @subpackage resourcetype
  * @copyright Ovensia
- * @author Stéphane Escaich
+ * @author StÃ©phane Escaich
  * @version  $Revision$
  * @modifiedby $LastChangedBy$
  * @lastmodified $Date$
@@ -49,7 +54,7 @@ class booking_resourcetype extends ploopi\data_object
      * @return booking_resourcetype
      */
 
-    public function __construct()
+    public function booking_resourcetype()
     {
         parent::__construct('ploopi_mod_booking_resourcetype', 'id');
     }

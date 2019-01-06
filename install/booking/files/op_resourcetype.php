@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2008 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,19 +21,19 @@
 */
 
 /**
- * Opérations sur les types de ressources
+ * OpÃ©rations sur les types de ressources
  *
  * @package booking
  * @subpackage op
  * @copyright Ovensia
- * @author Stéphane Escaich
+ * @author StÃ©phane Escaich
  * @version  $Revision$
  * @modifiedby $LastChangedBy$
  * @lastmodified $Date$
  */
 
 /**
- * Switch sur les différentes opérations possibles
+ * Switch sur les diffÃ©rentes opÃ©rations possibles
  */
 
 switch($_REQUEST['ploopi_op'])
@@ -95,16 +95,16 @@ switch($_REQUEST['ploopi_op'])
         <form action="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=booking_resourcetype_save&booking_resourcetype_id={$objResourceType->fields['id']}"); ?>" method="post" onsubmit="javascript:return booking_resourcetype_validate(this);">
         <div class=ploopi_form>
             <p>
-                <label>Intitulé:</label>
+                <label>IntitulÃ©:</label>
                 <input name="booking_resourcetype_name" type="text" class="text" value="<?php echo ploopi\str::htmlentities($objResourceType->fields['name']); ?>">
             </p>
-            <p onclick="javascript:ploopi_checkbox_click(event,'booking_resourcetype_active');">
+            <p onclick="javascript:ploopi.checkbox_click(event,'booking_resourcetype_active');">
                 <label for="booking_resourcetype_active">Actif:</label>
                 <input name="booking_resourcetype_active" id="booking_resourcetype_active" type="checkbox" class="checkbox" value="1" <?php if ($objResourceType->fields['active']) echo 'checked'; ?> tabindex="111" />
             </p>
         </div>
         <div style="padding:4px;text-align:right;">
-            <input type="reset" class="button" value="Réinitialiser" />
+            <input type="reset" class="button" value="RÃ©initialiser" />
             <input type="submit" class="button" value="Enregistrer" />
         </div>
         </form>

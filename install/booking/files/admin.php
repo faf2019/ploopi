@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2008 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,7 +26,7 @@
  * @package booking
  * @subpackage admin
  * @copyright Ovensia
- * @author Stéphane Escaich
+ * @author StÃ©phane Escaich
  * @version  $Revision$
  * @modifiedby $LastChangedBy$
  * @lastmodified $Date$
@@ -43,7 +43,7 @@ if (isset($_GET['booking_tab'])) $_SESSION['booking']['booking_tab'] = $_GET['bo
 if (empty($_SESSION['booking']['booking_tab'])) $_SESSION['booking']['booking_tab'] = 'resourcetype';
 
 /**
- * Définition des onglets
+ * DÃ©finition des onglets
  */
 $tabs = array();
 $tabs['resourcetype'] =  array(

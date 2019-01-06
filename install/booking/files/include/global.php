@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2008 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,28 +26,28 @@
  * @package webedit
  * @subpackage global
  * @copyright Ovensia
- * @author Stéphane Escaich
+ * @author StÃ©phane Escaich
  * @version  $Revision$
  * @modifiedby $LastChangedBy$
  * @lastmodified $Date$
  */
 
 /**
- * Définition des constantes
+ * DÃ©finition des constantes
  */
 
 /**
- * Action : Gérer les types de ressources
+ * Action : GÃ©rer les types de ressources
  */
 define ('_BOOKING_ACTION_ADMIN_TYPERESOURCE',   10);
 
 /**
- * Action : Gérer les ressources
+ * Action : GÃ©rer les ressources
  */
 define ('_BOOKING_ACTION_ADMIN_RESOURCE',       11);
 
 /**
- * Action : Gérer les validations
+ * Action : GÃ©rer les validations
  */
 define ('_BOOKING_ACTION_VALIDATE',             20);
 
@@ -109,7 +109,7 @@ function booking_get_workspaces($idw = 0)
         'tree' => array()
     );
 
-    // on recherche les groupes dont on est le groupe père (les fils en fait) et qui ont accès au module
+    // on recherche les groupes dont on est le groupe pÃ¨re (les fils en fait) et qui ont accÃ¨s au module
     $result = $db->query("
         SELECT  w.*
         FROM    ploopi_workspace w,
@@ -131,7 +131,7 @@ function booking_get_workspaces($idw = 0)
         if (empty($arrWorkspaces['tree'])) $arrWorkspaces['tree'][0][] = $fields['id'];
         else $arrWorkspaces['tree'][$fields['id_workspace']][] = $fields['id'];
 
-        // mise à jour du nombre de fils pour chaque espace
+        // mise Ã  jour du nombre de fils pour chaque espace
         $parent = $fields['id_workspace'];
         while (isset($arrWorkspaces['list'][$parent]))
         {
@@ -139,17 +139,17 @@ function booking_get_workspaces($idw = 0)
             $parent = $arrWorkspaces['list'][$parent]['id_workspace'];
         }
     }
-    // si le groupe de l'utilisateur connecté a des groupes fils, ont doit en trouver la liste dans $workspaces['tree'][$_SESSION['ploopi']['workspaceid']]
+    // si le groupe de l'utilisateur connectÃ© a des groupes fils, ont doit en trouver la liste dans $workspaces['tree'][$_SESSION['ploopi']['workspaceid']]
 
     return($arrWorkspaces);
 }
 
 /**
- * Affiche l'arborescence des espaces fils avec des cases à cocher
+ * Affiche l'arborescence des espaces fils avec des cases Ã  cocher
  *
  * @param array $arrWorkspaces tableau des espaces
- * @param string $fieldname nom du champ à utiliser dans les checkbox
- * @param int $widsel identifiant de l'espace sélectionné
+ * @param string $fieldname nom du champ Ã  utiliser dans les checkbox
+ * @param int $widsel identifiant de l'espace sÃ©lectionnÃ©
  * @param int $wid identifiant du noeud (espace) courant
  * @return string code html de l'arbre
  */
@@ -185,7 +185,7 @@ function booking_display_workspaces(&$arrWorkspaces, $fieldname, &$widsel = arra
 
             if ($has_children)
             {
-                $link_start = "<a style=\"display:block;margin-left:20px;padding-left:4px;\" id=\"booking_tnode_{$wid_child}\" href=\"javascript:void(0);\" onclick=\"javascript:ploopi_switchdisplay('booking_subtree_{$wid_child}');\">";
+                $link_start = "<a style=\"display:block;margin-left:20px;padding-left:4px;\" id=\"booking_tnode_{$wid_child}\" href=\"javascript:void(0);\" onclick=\"javascript:ploopi.switchdisplay('booking_subtree_{$wid_child}');\">";
                 $link_stop = "</a>";
             }
             else
@@ -221,7 +221,7 @@ function booking_display_workspaces(&$arrWorkspaces, $fieldname, &$widsel = arra
 /**
  * Retourne les resources actives
  *
- * @param boolean $strict true si on ne veut que les resources gérées par l'espace courant
+ * @param boolean $strict true si on ne veut que les resources gÃ©rÃ©es par l'espace courant
  * @param int $moduleid identifiant du module
  * @param int $moduleid identifiant de l'espace de travail
  * @return array tableau des resources actives
@@ -262,7 +262,7 @@ function booking_get_resources($strict = false, $moduleid = -1, $workspaceid = -
 
         while ($row = $db->fetchrow()) $arrResources[$row['id']] = $row;
 
-        // Récupération des espaces gestionnaires
+        // RÃ©cupÃ©ration des espaces gestionnaires
         $db->query("
             SELECT      r.id,
                         w.id as w_id
@@ -295,7 +295,7 @@ function booking_get_resources($strict = false, $moduleid = -1, $workspaceid = -
             // Validateur oui/non ?
             $arrResources[$key]['validator'] = ($booWorkspaceValidator && ploopi\acl::isactionallowed(_BOOKING_ACTION_VALIDATE)) ? 1 : 0;
 
-            // Application du filtre "strict" : On ne renvoit que les ressources gérées par l'espace courant
+            // Application du filtre "strict" : On ne renvoit que les ressources gÃ©rÃ©es par l'espace courant
             if ($strict && !$booWorkspaceValidator) unset($arrResources[$key]);
         }
     }
@@ -304,19 +304,19 @@ function booking_get_resources($strict = false, $moduleid = -1, $workspaceid = -
 }
 
 /**
- * Retourne les événements
+ * Retourne les Ã©vÃ©nements
  *
  * @param mixed $mixId identifiant de la ressource (entier/tableau d'entier)
- * @param boolean $extended true si la fonction doit retourne des informations complémentaires sur les événements
- * @param boolean $strict true si la fonction ne doit renvoyer que des éléments validés
- * @param int $validated vaut 0 : indéterminé, 1 : validé, -1 : refusé ou null
- * @param int $managed vaut 0 (non traité) ou 1 (traité) ou null
+ * @param boolean $extended true si la fonction doit retourne des informations complÃ©mentaires sur les Ã©vÃ©nements
+ * @param boolean $strict true si la fonction ne doit renvoyer que des Ã©lÃ©ments validÃ©s
+ * @param int $validated vaut 0 : indÃ©terminÃ©, 1 : validÃ©, -1 : refusÃ© ou null
+ * @param int $managed vaut 0 (non traitÃ©) ou 1 (traitÃ©) ou null
  * @param string $object objet de la recherche
- * @param string $requestedby initiateur de la demande de réservation
- * @param string $from date de début de la recherche
+ * @param string $requestedby initiateur de la demande de rÃ©servation
+ * @param string $from date de dÃ©but de la recherche
  * @param string $to date de fin de la recherche
  * @param int $moduleid identifiant du module
- * @return array tableau des événements
+ * @return array tableau des Ã©vÃ©nements
  */
 
 function booking_get_events($mixId = null, $extended = false, $strict = false, $validated = null, $managed = null, $object = '', $requestedby = '', $from = '', $to = '', $moduleid = -1)
@@ -339,7 +339,7 @@ function booking_get_events($mixId = null, $extended = false, $strict = false, $
         case '-1':  $arrWhere[] = " ed.canceled = 1 "; break;
     }
 
-    // On cherche les événements de l'utilisateur courant (sauf si pas connecté) et ceux qui sont validés et ceux dont l'utilisateur gère la resource :
+    // On cherche les Ã©vÃ©nements de l'utilisateur courant (sauf si pas connectÃ©) et ceux qui sont validÃ©s et ceux dont l'utilisateur gÃ¨re la resource :
     $arrWhereDetail = array();
 
     if ($_SESSION['ploopi']['modules'][$moduleid]['booking_eventfilter']) // Option du module permettant de passer outre le filtrage
@@ -355,7 +355,7 @@ function booking_get_events($mixId = null, $extended = false, $strict = false, $
     if (!empty($arrResources)) $arrWhereDetail[] = "e.id_resource IN (".implode(',', array_keys($arrResources)).")";
     if (!empty($arrWhereDetail)) $arrWhere[] = '('.implode(' OR ', $arrWhereDetail).')';
 
-    // Recherche des événements
+    // Recherche des Ã©vÃ©nements
     if ($extended)
     {
         if ($managed == '1' || $managed == '0') $arrWhere[] = " e.managed = '".$db->addslashes($managed)."' ";
@@ -366,7 +366,7 @@ function booking_get_events($mixId = null, $extended = false, $strict = false, $
 
         $strWhere = ' AND '.implode(' AND ', $arrWhere);
 
-        $db->query("
+        $db->query($sql = "
             SELECT      e.*,
                         ed.id as ed_id,
                         ed.timestp_begin,
@@ -379,29 +379,32 @@ function booking_get_events($mixId = null, $extended = false, $strict = false, $
                         rt.name as rt_name,
                         w.label as w_label,
                         u.firstname as u_firstname,
-                        u.lastname as u_lastname
+                        u.lastname as u_lastname,
+                        GROUP_CONCAT(DISTINCT s.name SEPARATOR ', ') as subresources
 
-            FROM        (ploopi_mod_booking_event e,
-                        ploopi_mod_booking_event_detail ed,
-                        ploopi_mod_booking_resource r,
-                        ploopi_mod_booking_resourcetype rt,
-                        ploopi_workspace w,
-                        ploopi_user u)
+            FROM        ploopi_mod_booking_event e
 
-            WHERE       e.id = ed.id_event
-            AND         e.id_resource = r.id
-            AND         e.id_module = {$moduleid}
-            AND         r.id_resourcetype = rt.id
-            AND         e.id_workspace = w.id
-            AND         e.id_user = u.id
+            INNER JOIN  ploopi_mod_booking_event_detail ed ON e.id = ed.id_event
+            INNER JOIN  ploopi_mod_booking_resource r ON e.id_resource = r.id
+            INNER JOIN  ploopi_mod_booking_resourcetype rt ON r.id_resourcetype = rt.id
+
+            LEFT JOIN   ploopi_mod_booking_event_subresource es ON es.id_event = e.id
+            LEFT JOIN   ploopi_mod_booking_subresource s ON s.id = es.id_subresource
+
+            LEFT JOIN   ploopi_workspace w ON e.id_workspace = w.id
+            LEFT JOIN   ploopi_user u ON e.id_user = u.id
+
+            WHERE       e.id_module = {$moduleid}
             {$strWhere}
 
+            GROUP BY    ed.id
             ORDER BY    ed.timestp_begin, ed.timestp_end
         ");
+
     }
     else
     {
-       $strWhere = ' AND '.implode(' AND ', $arrWhere);
+        $strWhere = ' AND '.implode(' AND ', $arrWhere);
 
         $db->query("
             SELECT      e.*,
@@ -413,13 +416,12 @@ function booking_get_events($mixId = null, $extended = false, $strict = false, $
                         r.color,
                         r.reference
 
-            FROM        ploopi_mod_booking_event e,
-                        ploopi_mod_booking_event_detail ed,
-                        ploopi_mod_booking_resource r
+            FROM        ploopi_mod_booking_event e
 
-            WHERE       e.id = ed.id_event
-            AND         e.id_resource = r.id
-            AND         e.id_module = {$moduleid}
+            INNER JOIN  ploopi_mod_booking_event_detail ed ON e.id = ed.id_event
+            INNER JOIN  ploopi_mod_booking_resource r ON e.id_resource = r.id
+
+            WHERE       e.id_module = {$moduleid}
             {$strWhere}
 
             ORDER BY    ed.timestp_begin, ed.timestp_end

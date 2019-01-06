@@ -83,7 +83,7 @@ class xml2array
     public function parse($xmlcontent="")
     {
         // set up a new XML parser to do all the work for us
-        $this->parser = xml_parser_create('ISO-8859-1');
+        $this->parser = xml_parser_create('UTF-8');
         xml_set_object($this->parser, $this);
         xml_parser_set_option($this->parser, XML_OPTION_CASE_FOLDING, false);
         xml_set_element_handler($this->parser, "startElement", "endElement");

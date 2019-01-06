@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2009 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,35 +21,35 @@
 */
 
 /**
- * Opérations du module planning
+ * OpÃ©rations du module planning
  * 
  * @package planning
  * @subpackage op
  * @copyright Ovensia
- * @author Stéphane Escaich
+ * @author Ovensia
  * @version  $Revision$
  * @modifiedby $LastChangedBy$
  * @lastmodified $Date$
  */
 
 /**
- * On vérifie qu'on est bien dans le module Booking.
+ * On vÃ©rifie qu'on est bien dans le module Booking.
  */
 
 if (ploopi\acl::ismoduleallowed('planning'))
 {
     /**
-     * Opérations sur les événements
+     * OpÃ©rations sur les Ã©vÃ©nements
      */
     include_once './modules/planning/op_event.php';
     
     /**
-     * Opérations sur le planning
+     * OpÃ©rations sur le planning
      */
     include_once './modules/planning/op_planning.php';
     
     /**
-     * Opérations sur la recherche
+     * OpÃ©rations sur la recherche
      */
     include_once './modules/planning/op_search.php';
 }

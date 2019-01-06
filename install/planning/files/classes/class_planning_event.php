@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2009 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,23 +26,23 @@
  * @package planning
  * @subpackage event
  * @copyright Ovensia
- * @author Stéphane Escaich
+ * @author Ovensia
  * @version  $Revision$
  * @modifiedby $LastChangedBy$
  * @lastmodified $Date$
  */
 
 /**
- * Inclusion des autres classes utilisées
+ * Inclusion des autres classes utilisÃ©es
  */
 include_once './modules/planning/classes/class_planning_event_detail.php';
 
 /**
- * Classe d'accès à la table 'ploopi_mod_planning_event'
+ * Classe d'accÃ¨s Ã  la table 'ploopi_mod_planning_event'
  *
  * @package planning
  * @subpackage event
- * @author Stéphane Escaich
+ * @author Ovensia
  * @copyright OVENSIA
  */
 
@@ -70,7 +70,7 @@ class planning_event extends ploopi\data_object
     }
 
     /**
-     * Enregistre l'événement
+     * Enregistre l'Ã©vÃ©nement
      *
      * @return int id de la ressource
      */
@@ -94,18 +94,18 @@ class planning_event extends ploopi\data_object
                 $objEventDetail->setresources($this->arrResource, false);
                 $objEventDetail->save();
 
-                if (!empty($this->fields['periodicity']) && !empty($this->arrDetails['periodicity_end_date'])) // Périodicité définie
+                if (!empty($this->fields['periodicity']) && !empty($this->arrDetails['periodicity_end_date'])) // PÃ©riodicitÃ© dÃ©finie
                 {
-                    // Timestp unix de la date de début du premier événement
+                    // Timestp unix de la date de dÃ©but du premier Ã©vÃ©nement
                     $intUxTsEventBegin = ploopi\date::timestamp2unixtimestamp($objEventDetail->fields['timestp_begin']);
 
-                    // Timestp unix de la date de fin du premier événement
+                    // Timestp unix de la date de fin du premier Ã©vÃ©nement
                     $intUxTsEventEnd = ploopi\date::timestamp2unixtimestamp($objEventDetail->fields['timestp_end']);
 
-                    // Timestp unix de la date de fin de périodicité
+                    // Timestp unix de la date de fin de pÃ©riodicitÃ©
                     $intUxTsPeriodEnd = ploopi\date::timestamp2unixtimestamp(substr(ploopi\date::local2timestamp($this->arrDetails['periodicity_end_date']), 0, 8).'235959');
 
-                    // Date de début du premier événement : Version tableau
+                    // Date de dÃ©but du premier Ã©vÃ©nement : Version tableau
                     $arrBegin =
                         array(
                             'd' => date('j', $intUxTsEventBegin),
@@ -116,7 +116,7 @@ class planning_event extends ploopi\data_object
                             'se' => intval(date('s', $intUxTsEventBegin), 10)
                         );
 
-                    // Date de fin du premier événement : Version tableau
+                    // Date de fin du premier Ã©vÃ©nement : Version tableau
                     $arrENd =
                         array(
                             'd' => date('j', $intUxTsEventEnd),
@@ -131,13 +131,13 @@ class planning_event extends ploopi\data_object
                     {
                         case 'day':
                         case 'week':
-                            // durée de la période en jours
+                            // durÃ©e de la pÃ©riode en jours
                             $d = $period = $this->fields['periodicity'] == 'week' ? 7 : 1;
 
-                            // Timestp du début du nouvel événément à tester
+                            // Timestp du dÃ©but du nouvel Ã©vÃ©nÃ©ment Ã  tester
                             $intUxTs = mktime($arrBegin['ho'], $arrBegin['mi'], $arrBegin['se'], $arrBegin['m'], $arrBegin['d'] + $d, $arrBegin['y']);
 
-                            // Si la date du nouvel événement est compatible avec la date de fin de périodicité
+                            // Si la date du nouvel Ã©vÃ©nement est compatible avec la date de fin de pÃ©riodicitÃ©
                             while ($intUxTs < $intUxTsPeriodEnd)
                             {
                                 $objEventDetail = new planning_event_detail();
@@ -154,13 +154,13 @@ class planning_event extends ploopi\data_object
 
                         case 'month':
                         case 'year':
-                            // durée de la période en mois
+                            // durÃ©e de la pÃ©riode en mois
                             $m = $period = $this->fields['periodicity'] == 'year' ? 12 : 1;
 
-                            // Timestp du début du nouvel événément à tester
+                            // Timestp du dÃ©but du nouvel Ã©vÃ©nÃ©ment Ã  tester
                             $intUxTs = mktime($arrBegin['ho'], $arrBegin['mi'], $arrBegin['se'], $arrBegin['m'] + $m, $arrBegin['d'], $arrBegin['y']);
 
-                            // Si la date du nouvel événement est compatible avec la date de fin de périodicité
+                            // Si la date du nouvel Ã©vÃ©nement est compatible avec la date de fin de pÃ©riodicitÃ©
                             while ($intUxTs < $intUxTsPeriodEnd)
                             {
                                 $objEventDetail = new planning_event_detail();
@@ -178,7 +178,7 @@ class planning_event extends ploopi\data_object
                 }
             }
         }
-        else // mise à jour
+        else // mise Ã  jour
         {
             parent::save();
         }
@@ -188,13 +188,13 @@ class planning_event extends ploopi\data_object
     }
 
     /**
-     * Affecte les détails concernés
+     * Affecte les dÃ©tails concernÃ©s
      *
-     * @param $arrValues tableau des détails
+     * @param $arrValues tableau des dÃ©tails
      */
     public function setdetails($arrValues, $strPrefix)
     {
-        // Détermine le longueur du préfixe des variables
+        // DÃ©termine le longueur du prÃ©fixe des variables
         $intPrefixLength = strlen($strPrefix);
 
         foreach ($arrValues as $strKey => $strValue)
@@ -209,10 +209,10 @@ class planning_event extends ploopi\data_object
     }
 
     /**
-     * Affecte les ressources concernées
+     * Affecte les ressources concernÃ©es
      *
      * @param array $arrResource tableau des ressources (groupes/utilisateurs)
-     * @param boolean $booVerify true s'il faut vérifier le contenu de la variable
+     * @param boolean $booVerify true s'il faut vÃ©rifier le contenu de la variable
      */
 
     public function setresources($arrResource, $booVerify = true)
@@ -253,15 +253,15 @@ class planning_event extends ploopi\data_object
     }
 
     /**
-     * Retourne un tableau contenant les détails
+     * Retourne un tableau contenant les dÃ©tails
      *
-     * @return array tableau des détails
+     * @return array tableau des dÃ©tails
      */
     public function getdetails()
     {
         $db = ploopi\db::get();
 
-        // Recherche des détails liés à l'événement
+        // Recherche des dÃ©tails liÃ©s Ã  l'Ã©vÃ©nement
         $db->query("SELECT * FROM ploopi_mod_planning_event_detail WHERE id_event = {$this->fields['id']} ORDER BY timestp_begin, timestp_end");
         return $db->getarray();
     }

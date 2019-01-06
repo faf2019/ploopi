@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2008 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,12 +21,12 @@
 */
 
 /**
- * Gestion des espaces attachés aux ressources
+ * Gestion des espaces attachÃ©s aux ressources
  *
  * @package booking
  * @subpackage resource_workspace
  * @copyright Ovensia
- * @author Stéphane Escaich
+ * @author StÃ©phane Escaich
  * @version  $Revision$
  * @modifiedby $LastChangedBy$
  * @lastmodified $Date$
@@ -44,7 +44,7 @@ class booking_resource_workspace extends ploopi\data_object {
      * @return agrid_resource_workspace
      */
 
-    public function __construct() {
+    public function booking_resource_workspace() {
 
         parent::__construct(
             'ploopi_mod_booking_resource_workspace',

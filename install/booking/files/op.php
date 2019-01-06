@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2008 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,50 +21,50 @@
 */
 
 /**
- * Opérations du module Booking
+ * OpÃ©rations du module Booking
  *
  * @package booking
  * @subpackage op
  * @copyright Ovensia
- * @author Stéphane Escaich
+ * @author StÃ©phane Escaich
  * @version  $Revision$
  * @modifiedby $LastChangedBy$
  * @lastmodified $Date$
  */
 
 /**
- * On vérifie qu'on est bien dans le module Booking.
+ * On vÃ©rifie qu'on est bien dans le module Booking.
  */
 
 if ($_SESSION['ploopi']['mode'] == 'backoffice' && ploopi\acl::ismoduleallowed('booking'))
 {
     /**
-     * Opérations sur les types de ressources
+     * OpÃ©rations sur les types de ressources
      */
     include_once './modules/booking/op_resourcetype.php';
 
     /**
-     * Opérations sur les ressources
+     * OpÃ©rations sur les ressources
      */
     include_once './modules/booking/op_resource.php';
 
     /**
-     * Opérations sur les sous-ressources
+     * OpÃ©rations sur les sous-ressources
      */
     include_once './modules/booking/op_subresource.php';
 
     /**
-     * Opérations sur les événements
+     * OpÃ©rations sur les Ã©vÃ©nements
      */
     include_once './modules/booking/op_event.php';
 
     /**
-     * Opérations sur le planning
+     * OpÃ©rations sur le planning
      */
     include_once './modules/booking/op_planning.php';
 
 }
-else // on n'est pas dans le module, peut être une requête frontoffice ?
+else // on n'est pas dans le module, peut Ãªtre une requÃªte frontoffice ?
 {
     if ($_SESSION['ploopi']['mode'] == 'frontoffice' && !empty($_GET['booking_moduleid']) && is_numeric($_GET['booking_moduleid']) && ploopi\acl::ismoduleallowed('booking', $_GET['booking_moduleid']))
     {
@@ -73,7 +73,7 @@ else // on n'est pas dans le module, peut être une requête frontoffice ?
         include_once './modules/booking/op_event.php';
 
         /**
-         * Opérations sur le planning
+         * OpÃ©rations sur le planning
          */
         include_once './modules/booking/op_wce_planning.php';
 

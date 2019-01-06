@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2008 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,18 +26,22 @@
  * @package booking
  * @subpackage subsubresource
  * @copyright Ovensia
- * @author Stéphane Escaich
+ * @author StÃ©phane Escaich
  * @version  $Revision$
  * @modifiedby $LastChangedBy$
  * @lastmodified $Date$
  */
+/**
+ * Inclusion de la classe parent
+ */
+include_once './include/classes/data_object.php';
 
 /**
- * Classe d'accès à la table 'ploopi_mod_booking_subresource'
+ * Classe d'accÃ¨s Ã  la table 'ploopi_mod_booking_subresource'
  *
  * @package booking
  * @subpackage subresource
- * @author Stéphane Escaich
+ * @author StÃ©phane Escaich
  * @copyright OVENSIA
  */
 

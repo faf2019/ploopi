@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2008 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -26,7 +26,7 @@
  * @package booking
  * @subpackage admin
  * @copyright Ovensia
- * @author Stéphane Escaich
+ * @author StÃ©phane Escaich
  * @version  $Revision$
  * @modifiedby $LastChangedBy$
  * @lastmodified $Date$
@@ -34,10 +34,10 @@
 ?>
 
 <div class="booking_toolbar">
-    <em style="float:left;color:#a60000;margin-left:4px;">En rouge, les éléments inactifs</em>
-    <a href="javascript:void(0);" onclick="javascript:booking_element_check();"><img src="./modules/booking/img/ico_checkbox.png">Cocher/Décocher tout</a>
-    <a href="javascript:void(0);" onclick="javascript:booking_element_delete('resource');"><img src="./modules/booking/img/ico_trash.png">Supprimer les éléments cochés</a>
-    <a href="javascript:void(0);" onclick="javascript:booking_element_add('resource', event);"><img src="./modules/booking/img/ico_new.png">Ajouter un élément</a>
+    <em style="float:left;color:#a60000;margin-left:4px;">En rouge, les Ã©lÃ©ments inactifs</em>
+    <a href="javascript:void(0);" onclick="javascript:booking_element_check();"><img src="./modules/booking/img/ico_checkbox.png">Cocher/DÃ©cocher tout</a>
+    <a href="javascript:void(0);" onclick="javascript:booking_element_delete('resource');"><img src="./modules/booking/img/ico_trash.png">Supprimer les Ã©lÃ©ments cochÃ©s</a>
+    <a href="javascript:void(0);" onclick="javascript:booking_element_add('resource', event);"><img src="./modules/booking/img/ico_new.png">Ajouter un Ã©lÃ©ment</a>
 </div>
 
 <?php
@@ -58,14 +58,14 @@ $arrResult['columns']['left']['type'] =
     
 $arrResult['columns']['left']['reference'] = 
     array(    
-        'label' => 'Référence',
+        'label' => 'RÃ©fÃ©rence',
         'width' => 120,
         'options' => array('sort' => true)
     );
     
 $arrResult['columns']['auto']['name'] = 
     array(    
-        'label' => 'Intitulé',
+        'label' => 'IntitulÃ©',
         'options' => array('sort' => true)
     );
     
@@ -91,14 +91,14 @@ $arrResult['columns']['right']['color'] =
     
 $arrResult['columns']['right']['workspace'] = 
     array( 
-        'label' => 'Créé par',
+        'label' => 'CrÃ©Ã© par',
         'width' => '150',
         'options' => array('sort' => true)
     );
         
 $arrResult['columns']['right']['resworkspace'] = 
     array( 
-        'label' => 'Géré par',
+        'label' => 'GÃ©rÃ© par',
         'width' => '150',
         'options' => array('sort' => true)
     );
@@ -109,7 +109,7 @@ $arrResult['columns']['actions_right']['actions'] =
         'width' => '24'
     );    
     
-// Récupération des espaces gestionnaires
+// RÃ©cupÃ©ration des espaces gestionnaires
 ploopi\db::get()->query("
     SELECT      r.id,
                 w.label
@@ -130,7 +130,7 @@ ploopi\db::get()->query("
 $arrResWorkspaces = array();
 while ($row = ploopi\db::get()->fetchrow()) $arrResWorkspaces[$row['id']][] = ploopi\str::htmlentities($row['label']);
 
-// Récupération des ressources
+// RÃ©cupÃ©ration des ressources
 ploopi\db::get()->query("
     SELECT      r.*,
                 rt.name as rt_name,

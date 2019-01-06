@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <ploopi>
     <moduletype>
         <label>booking</label>
-        <version>1.3.0</version>
+        <version>1.3.1</version>
         <author>Ovensia</author>
-        <date>20160808000000</date>
-        <description>Gestion de réservation</description>
+        <date>20190106000000</date>
+        <description>Gestion de rÃ©servation</description>
       <paramtype>
          <name>booking_front_planning_width</name>
          <label>Largeur du planning (front)</label>
@@ -22,7 +22,7 @@
       </paramtype>
       <paramtype>
          <name>booking_eventfilter</name>
-         <label>Visualiser seulement les événements validés</label>
+         <label>Visualiser seulement les Ã©vÃ©nements validÃ©s</label>
          <default_value>1</default_value>
          <public>1</public>
          <description/>
@@ -37,7 +37,7 @@
       </paramtype>
       <paramtype>
          <name>booking_default_display_type</name>
-         <label>Visualisation par défaut</label>
+         <label>Visualisation par dÃ©faut</label>
          <default_value>month</default_value>
          <public>1</public>
          <description/>
@@ -51,7 +51,7 @@
          </paramchoice>
          <paramchoice>
             <value>day</value>
-            <displayed_value>Journalière</displayed_value>
+            <displayed_value>JournaliÃ¨re</displayed_value>
          </paramchoice>
           <paramchoice>
             <value>today</value>
@@ -60,7 +60,7 @@
      </paramtype>
       <paramtype>
          <name>booking_default_channels</name>
-         <label>Multi-colonnes par défaut</label>
+         <label>Multi-colonnes par dÃ©faut</label>
          <default_value>1</default_value>
          <public>1</public>
          <description/>
@@ -75,15 +75,15 @@
       </paramtype>
       <action>
             <id_action>10</id_action>
-            <label>Gérer les types de ressources</label>
+            <label>GÃ©rer les types de ressources</label>
         </action>
         <action>
             <id_action>11</id_action>
-            <label>Gérer les ressources</label>
+            <label>GÃ©rer les ressources</label>
         </action>
         <action>
             <id_action>20</id_action>
-            <label>Gérer les validations</label>
+            <label>GÃ©rer les validations</label>
         </action>
         <action>
             <id_action>30</id_action>
