@@ -57,13 +57,27 @@ switch($op)
     break;
 
     default:
-        echo $skin->create_pagetitle(ploopi_htmlentities($_SESSION['ploopi']['modulelabel']));
-        echo $skin->open_simplebloc('Voir les articles');
+        $iframe_type = ploopi_getparam('iframe_type');
         $options = '';
         if (!empty($_REQUEST['headingid'])) $options = "&headingid={$_REQUEST['headingid']}";
         if (!empty($_REQUEST['articleid'])) $options = "&articleid={$_REQUEST['articleid']}";
-        ?><iframe id="webedit_frame_editor" style="border:0;width:100%;height:400px;margin:0;padding:0;" src="<?php echo "index.php?moduleid={$_SESSION['ploopi']['moduleid']}{$options}&webedit_mode=render&type="; ?>"></iframe><?php
-        echo $skin->close_simplebloc();
+        switch($iframe_type) {
+            case 'plain':
+                ?><iframe id="webedit_frame_editor"
+                    style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;margin:0;padding:0;"
+                    src="<?php echo "index.php?moduleid={$_SESSION['ploopi']['moduleid']}{$options}&webedit_mode=render&type="; ?>"></iframe><?php
+            break;
+            default :
+                $iframe_h = ploopi_getparam('iframe_height');
+                echo $skin->create_pagetitle(ploopi_htmlentities($_SESSION['ploopi']['modulelabel']));
+                echo $skin->open_simplebloc('Voir les articles');
+                ?><iframe id="webedit_frame_editor"
+                    style="border:0;width:100%;height:<? echo $iframe_h; ?>px;margin:0;padding:0;"
+                    src="<?php echo "index.php?moduleid={$_SESSION['ploopi']['moduleid']}{$options}&webedit_mode=render&type="; ?>"></iframe><?php
+                echo $skin->close_simplebloc();
+            break;
+        }
     break;
 }
+
 ?>

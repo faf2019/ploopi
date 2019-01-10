@@ -1,8 +1,15 @@
+== Module WebEdit - version 2.6.9 ============================================
+
+2019-01-10 Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Paramétrage de la hauteur de l'iframe en navigation backoffice (modification de JPP)
+* Possibilité d'insérer une ancre dans une lien vers un article
+
 == Module WebEdit - version 2.6.8 ============================================
 
 2018-06-18 Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Correction d'un bug dans l'affichage des flux RSS/ATOM en frontoffice 
+* Correction d'un bug dans l'affichage des flux RSS/ATOM en frontoffice
 
 == Module WebEdit - version 2.6.7 ============================================
 

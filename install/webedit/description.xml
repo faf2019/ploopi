@@ -2,9 +2,9 @@
 <ploopi>
     <moduletype>
         <label>webedit</label>
-        <version>2.6.8</version>
+        <version>2.6.9</version>
         <author>Ovensia / HeXad</author>
-        <date>20170618000000</date>
+        <date>20190110000000</date>
         <description>Editeur de Contenus Web</description>
         <paramtype>
             <name>display_type</name>
@@ -20,6 +20,28 @@
                 <value>advanced</value>
                 <displayed_value>Avancé</displayed_value>
             </paramchoice>
+        </paramtype>
+        <paramtype>
+            <name>iframe_type</name>
+            <label>Type d'iframe (backoffice)</label>
+            <default_value>classic</default_value>
+            <public>0</public>
+            <description/>
+            <paramchoice>
+                <value>plain</value>
+                <displayed_value>Pleine hauteur</displayed_value>
+            </paramchoice>
+            <paramchoice>
+                <value>classic</value>
+                <displayed_value>Hauteur fixe</displayed_value>
+            </paramchoice>
+        </paramtype>
+        <paramtype>
+            <name>iframe_height</name>
+            <label>Hauteur fixe iframe en px</label>
+            <default_value>500</default_value>
+            <public>1</public>
+            <description/>
         </paramtype>
         <paramtype>
             <name>nb_art_blog</name>

@@ -986,25 +986,27 @@ function webedit_replace_links($objArticle, $mode, &$arrHeadings)
             }
         }
 
-        preg_match_all('/(index\.php[^\"]+articleid=([0-9]+)[^\"]*)/i', $strContent, $arrMatches);
+        preg_match_all('/(index\.php[^\"]+articleid=([0-9]+)(#[^\"]+)?[^\"]*)/i', $strContent, $arrMatches);
+
         foreach($arrMatches[2] as $key => $idart)
         {
             $objLinkArticle = new webedit_article();
             if (!empty($idart) && $objLinkArticle->open($idart)) // article trouvé
             {
                 $arrSearch[] = $arrMatches[1][$key];
+                $strAnchor = empty($arrMatches[3][0]) ? '' : $arrMatches[3][0];
 
                 switch ($mode)
                 {
                     case 'render':
-                        $arrReplace[] = "index.php?webedit_mode={$mode}&headingid={$objLinkArticle->fields['id_heading']}&articleid={$idart}";
+                        $arrReplace[] = "index.php?webedit_mode={$mode}&headingid={$objLinkArticle->fields['id_heading']}&articleid={$idart}{$strAnchor}";
                     break;
 
                     default:
                         $arrParents = array();
                         if (isset($arrHeadings['list'][$objLinkArticle->fields['id_heading']])) foreach(preg_split('/;/', $arrHeadings['list'][$objLinkArticle->fields['id_heading']]['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
 
-                        $arrReplace[] = ploopi_urlrewrite("index.php?headingid={$objLinkArticle->fields['id_heading']}&articleid={$idart}", webedit_getrewriterules(), $objLinkArticle->fields['metatitle'], $arrParents);
+                        $arrReplace[] = ploopi_urlrewrite("index.php?headingid={$objLinkArticle->fields['id_heading']}&articleid={$idart}", webedit_getrewriterules(), $objLinkArticle->fields['metatitle'], $arrParents).$strAnchor;
                     break;
                 }
             }
