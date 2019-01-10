@@ -203,6 +203,7 @@ abstract class form_element
             self::_getProperty('autocorrect',  isset($this->_arrOptions['autocorrect']) && !$this->_arrOptions['autocorrect'] ? 'off' : null).
             self::_getProperty('autocapitalize',  isset($this->_arrOptions['autocapitalize']) && !$this->_arrOptions['autocapitalize'] ? 'off' : null).
             self::_getProperty('spellcheck',  isset($this->_arrOptions['spellcheck']) && !$this->_arrOptions['spellcheck'] ? 'false' : null);
+            self::_getProperty('accept',  isset($this->_arrOptions['accept']) ? $this->_arrOptions['accept'] : null);
     }
 
     /**
