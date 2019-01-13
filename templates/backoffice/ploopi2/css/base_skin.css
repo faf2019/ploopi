@@ -1,0 +1,1047 @@
+/*
+    Copyright (c) 2007-2018 Ovensia
+    Contributors hold Copyright (c) to their code submissions.
+
+    This file is part of Ploopi.
+
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
+/**
+ * #0174DF => #25464E
+ * #2E9AFE => #4F8999
+ * x #4A6E78 => #4F8999
+ * #A9D0F5 => #AAD3DE
+ */
+
+.ploopi_popup {
+position:absolute;
+top:0px;
+left:0px;
+width:200px;
+overflow:hidden;
+background:#ecedf1;
+border:2px solid #25464E;
+border-radius:2px;
+box-shadow: 0 0 5px rgba(40, 50, 78, 0.3);
+}
+
+.ploopi_popup .simplebloc {
+margin:0;
+border-radius:0;
+}
+
+.ploopi_popup .simplebloc_title {
+border-radius:0;
+}
+
+.calendardiv {
+position:absolute;
+visibility:hidden;
+background-color:#ffffff;
+top:0px;
+left:0px;
+z-index:1000;
+height:auto;
+width:150px;
+}
+
+.pagetitle {
+color:#fff;
+background-color:rgba(0,0,0,0.5);
+font-size:14px;
+font-weight:bold;
+padding:6px 10px;
+}
+
+.pagetitle p {
+float:left;
+margin:0;
+padding-left:6px;
+}
+
+.simplebloc_title {
+color:#fff;
+background: linear-gradient(left, rgba(37,70,78,1) 0%, rgba(37,70,78,1) 25%, rgba(37,70,78,0.8) 100%);
+background: -moz-linear-gradient(left, rgba(37,70,78,1) 0%, rgba(37,70,78,1) 25%, rgba(37,70,78,0.8) 100%);
+background: -webkit-linear-gradient(left, rgba(37,70,78,1) 0%, rgba(37,70,78,1) 25%, rgba(37,70,78,0.8) 100%);
+border-radius:2px;
+/*font-variant:small-caps;*/
+font-weight:bold;
+text-align:left;
+height:30px;
+line-height:30px;
+padding-left:6px;
+}
+
+.simplebloc_titleleft {
+padding:0 4px;
+}
+
+.simplebloc_title a {
+color:#fff;
+text-decoration:none;
+}
+
+
+.simplebloc_titleleft a {
+display:block;
+float:left;
+background:#25464E;
+border-radius:2px;
+color:#fff;
+padding:0 10px;
+font-weight:normal;
+height:20px;
+line-height:18px;
+margin-top:3px;
+margin-right:10px;
+border: 2px solid #25464E;
+}
+
+.simplebloc_titleleft a:hover {
+border: 2px solid #FFFFFF;
+}
+
+.simplebloc_titleleft a * {
+display:inline-block;
+vertical-align:middle;
+padding:0;
+}
+
+.simplebloc_titleleft a img {
+margin-right:2px;
+}
+
+.simplebloc_titleleft span:first-child  {
+display:block;
+float:left;
+margin-right:20px;
+}
+
+
+
+
+.simplebloc_content {
+position:relative;
+margin:2px;
+padding:2px;
+}
+
+.simplebloc {
+margin:2px;
+background:rgba(255,255,255,0.8);
+border-radius:2px;
+padding-bottom:6px;
+}
+
+.simplebloc_footer {
+}
+
+select,
+input,
+textarea,
+button {
+border-radius:2px;
+color: #2c4056;
+padding: 4px;
+border: 2px solid rgba(0,0,0,0.2);
+background: rgba(255,255,255,0.5);
+}
+
+input::-webkit-input-placeholder { color:#888; }
+input:-moz-placeholder { color:#888; }
+
+select:focus,
+input:focus,
+textarea:focus {
+background: rgba(255,255,255,0.8);
+}
+
+
+input[type='button'],
+input[type='reset'],
+input[type='submit'],
+button {
+border:2px solid transparent;
+padding:3px;
+background:#25464E;
+color:#FFFFFF;
+cursor: pointer;
+}
+
+input[type='submit'],
+button[type='submit'] {
+font-weight:bold;
+}
+
+
+input[type='button']:hover,
+input[type='submit']:hover,
+input[type='reset']:hover,
+button:hover {
+background: transparent;
+border:2px solid #25464E;
+color: #25464E;
+cursor: pointer;
+}
+
+input[disabled=disabled],
+button[disabled=disabled],
+input[readonly=readonly],
+button[readonly=readonly]{
+    color:#888;
+}
+
+
+.toolbar {
+padding-bottom:2px;
+overflow:auto;
+margin:2px;
+}
+
+.toolbar > div > div:first-child > a {
+    border-radius:2px 0 0 2px;
+}
+
+.toolbar > div > div:first-child > a > p {
+    border-radius:0 0 0 2px;
+}
+
+.toolbar > div > div:last-child > a {
+    border-radius:0 2px 2px 0;
+}
+
+.toolbar > div > div:last-child > a > p {
+    border-radius:0 0 2px 0;
+}
+
+.toolbar > div > div.toolbar_icon_vertical:first-child > a,
+.toolbar > div > div.toolbar_icon_vertical:last-child > a {
+    border-radius:2px;
+}
+
+.toolbar > div > div.toolbar_icon_vertical:last-child > a > p {
+    border-radius:0 0 2px 2px;
+}
+
+.toolbar_left {
+}
+
+.toolbar_right {
+float:right;
+}
+
+.toolbar_icon_vertical {
+display:block;
+margin-bottom:2px;
+}
+
+.toolbar_icon_vertical a {
+display:block;
+text-decoration:none;
+user-select: none;
+-moz-user-select: none;
+-webkit-user-select: none;
+background:#AAD3DE;
+border-radius:2px;
+}
+
+.toolbar_icon_vertical a:hover {
+text-decoration:none;
+background:#4F8999;
+}
+
+.toolbar_icon_vertical a:hover p {
+background:#25464E;
+color:#fff;
+}
+
+.toolbar_icon_vertical p {
+margin:0;
+text-align:center;
+padding:6px 10px;
+background:#4F8999;
+color:#000000;
+border-radius:0 0 2px 2px;
+}
+
+.toolbar_icon {
+display:block;
+float:left;
+width:100px;
+}
+
+.toolbar_icon a {
+display:block;
+text-decoration:none;
+user-select: none;
+-moz-user-select: none;
+-webkit-user-select: none;
+background:#AAD3DE;
+}
+
+.toolbar_icon a:hover {
+text-decoration:none;
+background:#4F8999;
+}
+
+.toolbar_icon a:hover p {
+background:#25464E;
+color:#fff;
+}
+
+.toolbar_icon_image {
+text-align:center;
+padding:6px;
+}
+
+.toolbar_icon p {
+margin:0;
+text-align:center;
+padding:6px 10px;
+background:#4F8999;
+color:#000000;
+}
+
+.toolbar_icon_title {
+text-align:center;
+padding:2px 10px;
+background:#4f8999;
+}
+
+.toolbar_icon_sel {
+display:block;
+float:left;
+width:100px;
+}
+
+.toolbar_icon_sel a {
+display:block;
+text-decoration:none;
+user-select: none;
+-moz-user-select: none;
+-webkit-user-select: none;
+background:#4F8999;
+}
+
+.toolbar_icon_sel a:hover {
+text-decoration:none;
+}
+
+.toolbar_icon_sel a:hover p {
+
+}
+
+.toolbar_icon_sel p {
+margin:0;
+text-align:center;
+padding:6px 10px;
+background:#25464E;
+color:#FFFFFF;
+}
+
+
+.tabs {
+color:#000000;
+background:#4F8999;
+overflow:auto;
+border-radius:2px;
+margin:2px;
+}
+
+.tabs a {
+display:block;
+float:left;
+color:#000000;
+/* padding:6px 10px 4px 10px; */
+padding:6px 10px;
+white-space:nowrap;
+user-select: none;
+-moz-user-select: none;
+-webkit-user-select: none;
+}
+
+.tabs a:hover {
+background-color:#25464E;
+color:#fff;
+text-decoration:none;
+}
+
+.tabs a.selected {
+background-color:#25464E;
+color:#FFFFFF;
+text-decoration:none;
+}
+
+
+.ploopi_error {
+clear:both;
+color:#ff0000;
+background-color:#ffffaa;
+border:#ff0000 1px solid;
+padding:10px;
+margin:2px;
+font-size:10px;
+}
+
+.ploopi_error span{
+color:#000000;
+}
+
+.ploopi_overflowauto {
+overflow:auto;
+}
+
+/* vertical alignement : IE / FF / Opera */
+.ploopi_va {
+    margin:0;
+}
+
+.ploopi_va img,
+.ploopi_va span,
+.ploopi_va label,
+.ploopi_va strong,
+.ploopi_va em,
+.ploopi_va input,
+.ploopi_va select,
+.ploopi_va a {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.ploopi_form {
+    overflow:hidden;
+}
+
+.ploopi_form fieldset, .fieldset {
+    margin: 0;
+    padding: 0.2em;
+    margin: 0.2em;
+    border:1px solid #ccc;
+}
+
+.ploopi_form legend, .fieldset legend {
+    font-weight: bold;
+    background: transparent;
+}
+
+.ploopi_form h1 {
+    margin:4px 0;
+    font-size:16px;
+    font-weight:bold;
+}
+
+.ploopi_form h2 {
+    margin:4px 0;
+    font-size:14px;
+    font-weight:bold;
+}
+
+.ploopi_form h3 {
+    margin:4px 0;
+    font-size:12px;
+    font-weight:bold;
+}
+
+.ploopi_form h4 {
+    margin:4px 0;
+    font-size:10px;
+    font-weight:bold;
+}
+
+.ploopi_form p {
+    display:block;
+    margin:4px 2px;
+    overflow:auto;
+}
+
+.ploopi_form p label {
+    float: left;
+    width: 30%;
+    text-align: right;
+    margin: 0;
+    padding: 2px .5em 0 0;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+ }
+
+.ploopi_form p input[type='text'],
+.ploopi_form p input[type='password'],
+.ploopi_form p input[type='file'],
+.ploopi_form p select,
+.ploopi_form p textarea,
+.ploopi_form p span {
+    width: 65%;
+    float:left;
+}
+
+.ploopi_form p input.checkbox {
+    width:14px;
+}
+
+.ploopi_form p span {
+    float:left;
+}
+
+.ploopi_form p textarea{
+    height: 6em;
+}
+
+.ploopi_form p span.checkbox {
+    cursor:pointer;
+    width:100%;
+}
+
+.ploopi_form p span.checkbox img, .ploopi_form p span.checkbox input {
+    cursor:pointer;
+}
+
+.ploopi_form p.checkbox {
+    cursor:pointer;
+    width:100%;
+}
+
+.ploopi_form p.checkbox label, .ploopi_form p.checkbox img, .ploopi_form p.checkbox input {
+    cursor:pointer;
+}
+
+.ploopi_form_title {
+    display:block;
+    clear:both;
+    font-weight:bold;
+    background-color:#ddd;
+    border-bottom:1px solid #bbb;
+    padding:4px;
+    text-decoration:none;
+}
+
+.ploopi_form_title:hover {
+    text-decoration:none;
+}
+
+a.ploopi_form_title * {
+    cursor:pointer;
+}
+
+.ploopi_checkbox {
+    margin:0;
+    cursor:pointer;
+}
+
+.ploopi_checkbox * {
+    display: inline-block;
+    vertical-align: middle;
+    cursor:pointer;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+}
+
+.error {
+    color:#a60000;
+    font-weight:bold;
+}
+
+.information {
+    color:#00a600;
+    font-weight:bold;
+}
+
+.Title td {
+    font-weight:bold;
+}
+
+div.ploopi_explorer_main {
+    position:relative;
+    overflow:hidden;
+}
+
+div.ploopi_explorer_maintitle {
+    padding:4px;
+    overflow:auto;
+}
+
+div.ploopi_explorer_title {
+    color:#000000;
+    background:#4F8999;
+    overflow:hidden;
+    border-bottom:2px solid #25464E;
+}
+
+div.ploopi_explorer_title a {
+    color:#000000;
+}
+
+div.ploopi_explorer_title a:hover {
+    color:#FFFFFF;
+    background:#25464E;
+    text-decoration:none;
+}
+
+div.ploopi_explorer_title a.ploopi_explorer_element_selected {
+    background:#25464E;
+    color:#FFFFFF;
+}
+
+div.ploopi_explorer_title a p,
+div.ploopi_explorer_title span p {
+    padding:6px 8px;
+}
+
+div.ploopi_explorer_column {
+    position:absolute;
+    height:100%;
+    border-left:1px solid rgba(40, 50, 78, 0.5);
+    z-index:1000;
+}
+
+*.ploopi_explorer_element {
+    display:block;
+    overflow:hidden;
+    word-wrap:break-word;
+}
+
+a.ploopi_explorer_element * {
+    cursor:pointer;
+}
+
+*.ploopi_explorer_element p {
+    margin:0;
+    padding:4px 4px;
+}
+
+*.ploopi_explorer_element p img, *.ploopi_explorer_element p span, *.ploopi_explorer_element p a {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+a.ploopi_explorer_element:hover {
+    text-decoration:none;
+}
+
+a.ploopi_explorer_link {
+    display:block;
+    overflow:hidden;
+    text-decoration:none;
+    outline:none;
+}
+
+a.ploopi_explorer_link:hover {
+    text-decoration:none;
+    background:rgba(79,137,153, 0.2);
+}
+
+div.ploopi_explorer_line_1 {
+    overflow:hidden;
+    background:#f0f0f0;
+    margin-bottom:2px;
+}
+
+div.ploopi_explorer_line_2 {
+    overflow:hidden;
+    background:#e0e0e0;
+    margin-bottom:2px;
+}
+
+div.ploopi_explorer_tools {
+    overflow:hidden;
+}
+
+div.ploopi_explorer_tools a {
+    display:block;
+    float:left;
+    padding:1px 2px;
+}
+
+.treeview_node {
+    overflow:hidden;
+}
+
+.treeview_node img {
+    display:block;
+    float:left;
+}
+
+.treeview_node_loading {
+    overflow:hidden;
+}
+
+.treeview_node_loading img {
+    display:block;
+    float:left;
+}
+
+.treeview_node_loading * {
+    cursor:wait;
+}
+
+div.ploopi_page_cut {
+    clear:both;
+    overflow: auto;
+    margin: 0;
+    padding: 2px;
+    text-align: center;
+}
+
+input.ploopi_page_cut_select, input.ploopi_page_cut {
+    margin: 0 1px;
+    padding:0 2px;
+    border: 1px solid #2c4056;
+    background:#7a8f7c url(../img/template/bouton.png) top left repeat-x;
+    color: #000000;
+    text-align:center;
+    cursor: pointer;
+    font-weight: normal;
+    min-width: 22px;
+}
+
+input.ploopi_page_cut_select {
+    font-weight: bold;
+    font-style: italic;
+}
+
+input.ploopi_page_cut_disable {
+    margin: 0 1px;
+    padding:0 2px;
+    border: 1px solid #2c4056;
+    background:#7a8f7c url(../img/template/bouton.png) top left repeat-x;
+    color: #000000;
+    text-align:center;
+    font-weight: normal;
+    width: 18px;
+}
+
+select.ploopi_page_by {
+    border: 1px solid #606060;
+    background: #f0f0f0;
+    color: #2c4056;
+}
+
+/**
+ * LISTE DE CHOIX
+ */
+
+.ploopi_selectbox {
+    text-align: left;
+}
+
+.ploopi_selectbox_button {
+    margin:0;
+    background: #f0f0f0 url(../img/template/selectbox.gif) right no-repeat;
+    padding:2px 4px;
+    border: 1px solid #808080;
+    cursor:pointer;
+}
+
+.ploopi_selectbox_button_content {
+    margin:0;
+    padding:0;
+    margin-right:16px;
+    overflow:hidden;
+    white-space:nowrap;
+}
+
+.ploopi_selectbox_button img,
+.ploopi_selectbox_button span {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.ploopi_selectbox:hover .ploopi_selectbox_button {
+    background-color: #d0d0d0;
+}
+
+.ploopi_selectbox_list {
+    margin-top: -1px;;
+    padding: 0;
+    background: #f0f0f0;
+    z-index: 10000;
+    position: absolute;
+}
+
+.ploopi_selectbox_list ul {
+    border-width: 1px;
+    border-style: solid;
+    border-color: #808080;
+    margin:0;
+    padding:0;
+}
+
+.ploopi_selectbox_list li {
+    margin:0;
+    padding:0;
+    list-style-type: none;
+}
+
+.ploopi_selectbox_list li a {
+    display:block;
+    padding:2px 4px;
+    padding-left:10px;
+    cursor:pointer;
+}
+
+.ploopi_selectbox_list li a:hover {
+    background:#d0d0d0; /* Change background color of hovered links in drop down */
+    text-decoration:none;
+}
+
+.ploopi_selectbox_list li a img,
+.ploopi_selectbox_list li a span {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.ploopi_selectbox_list li strong {
+    display:block;
+    padding:2px 4px;
+    margin:0;
+}
+
+.ploopi_tabs {
+    overflow:hidden;
+    color:#000000;
+    border-bottom:1px solid #25464E;
+}
+
+
+.ploopi_tabs input {
+    display:block;
+    float:left;
+    margin:3px 3px 0 0;
+}
+
+.ploopi_tabs > a {
+    display:block;
+    float:right;
+    padding:4px 10px;
+    padding-right:14px;
+    text-decoration:none;
+    background:#4F8999;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    color:#000;
+    position:relative;
+}
+
+.ploopi_tabs > a > span,
+.ploopi_tabs > a > img {
+    display:inline-block;
+    vertical-align:middle;
+}
+
+.ploopi_tabs > a:after {
+    content:'';
+    position:absolute;
+    z-index: 1;
+    top: 0;
+    left: -4px;
+    height:3em;
+    width:10px;
+    background:#4F8999;
+    border-left:1px solid #25464E;
+    transform: skew(-10deg);
+}
+
+.ploopi_tabs > a.left {
+    float:left;
+    padding:4px 10px;
+    padding-left:14px;
+}
+
+.ploopi_tabs > a.left:first-child {
+    padding-left:10px;
+}
+
+.ploopi_tabs > a.left:after {
+    float:left;
+    left: auto;
+    right: -4px;
+    border-left:0;
+    border-right:2px solid #25464E;
+    transform: skew(10deg);
+}
+
+.ploopi_tabs > a:hover {
+    background:#25464E;
+    color:#fff;
+}
+
+.ploopi_tabs > a:hover:after {
+    background:#25464E;
+}
+
+.ploopi_tabs > a > span {
+    padding-left:4px;
+}
+
+.ploopi_tabs > span.title {
+    display:block;
+}
+
+.ploopi_tabs a.selected {
+    background:#25464E;
+    color:#fff;
+}
+
+.ploopi_tabs a.selected:after {
+    background:#25464E;
+}
+
+.ploopi_generate_form {
+    overflow:hidden;
+}
+
+.ploopi_generate_form p,
+.ploopi_generate_form h1,
+.ploopi_generate_form h2,
+.ploopi_generate_form h3,
+.ploopi_generate_form form {
+    border:0;
+    margin:0;
+    padding:0;
+}
+
+.ploopi_generate_form h1,
+.ploopi_generate_form h2,
+.ploopi_generate_form h3{
+    clear:both;
+    display:block;
+    font-weight:bold;
+    margin-bottom:20px;
+    border-bottom:solid 1px #d6d6d6;
+    padding-bottom:10px;
+}
+
+.ploopi_generate_form h1 {
+    font-size:1.5em;
+}
+
+.ploopi_generate_form h2 {
+    font-size:1.3em;
+}
+
+.ploopi_generate_form h3 {
+    font-size:1.1em;
+}
+
+.ploopi_generate_form .spacer{
+    clear:both;
+    height:1px;
+}
+
+.ploopi_generate_form .onclick,
+.ploopi_generate_form .onclick *{
+    cursor:pointer;
+}
+
+.ploopi_generate_form h1 p{
+    font-size:0.9em;
+    color:#666;
+    margin-top:8px;
+    font-weight:normal;
+}
+
+.ploopi_generate_form label{
+    display:block;
+    text-align:right;
+    padding-top:2px;
+    width:30%;
+    float:left;
+    clear:both;
+    padding-right:10px;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+}
+
+.ploopi_generate_form label.required{
+    background:url(../img/forms/required.png) no-repeat right top;
+}
+
+.ploopi_generate_form label span{
+    color:#666;
+    display:block;
+    font-weight:normal;
+    text-align:right;
+    width:100%;
+}
+
+.ploopi_generate_form input,
+.ploopi_generate_form select,
+.ploopi_generate_form textarea{
+    float:left;
+    width:60%;
+    margin:0 0 5px 0;
+}
+
+.ploopi_generate_form select option, .ploopi_generate_form select optgroup {
+    background: #f8f8f8;
+}
+
+.ploopi_generate_form input[type=password]{
+    letter-spacing:2px;
+}
+
+.ploopi_generate_form span{
+    display:block;
+    float:left;
+    margin:2px 0 5px 0;
+    width:60%;
+}
+
+
+.ploopi_generate_form span *{
+    width:auto;
+}
+.ploopi_generate_form span label{
+    display:block;
+    float:left;
+    clear:none;
+    padding:0 6px 0 2px;
+    font-weight:normal;
+    width:auto;
+}
+
+.ploopi_generate_form span input{
+    margin:2px 0;
+}
+
+.ploopi_generate_form fieldset {
+    clear:both;
+    display:block;
+    margin: 0;
+    padding: 0.2em;
+    margin: 0.2em;
+    border:1px solid #ccc;
+}
+
+.ploopi_generate_form fieldset legend {
+    padding:0 4px;
+    font-weight:bold;
+}
+
+.ploopi_generate_form .buttons {
+    clear:both;
+    margin:2px 8%;
+    overflow:auto;
+}
+
+.ploopi_generate_form button {
+    float:right;
+    cursor: pointer;
+}

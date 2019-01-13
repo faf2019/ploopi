@@ -1,0 +1,3872 @@
+/*
+    Copyright (c) 2002-2007 Netlor
+    Copyright (c) 2007-2008 Ovensia
+    Contributors hold Copyright (c) to their code submissions.
+
+    This file is part of Ploopi.
+
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+/******************
+  SYSTEM.ANNOTATIONS
+*******************/
+
+#system_annotation_tags {
+float:right;
+width:250px;
+}
+
+#system_annotation_list {
+overflow:auto;
+border-right:1px solid #d0d0d0;
+}
+
+#system_annotation_titlebar {
+padding:2px 4px;
+border-bottom:1px solid #d0d0d0;
+background-color:#f0f0f0;
+overflow:auto;
+}
+
+.system_annotation_row {
+clear:both;
+overflow:auto;
+border-bottom: 1px solid #d0d0d0;
+padding:2px;
+}
+
+.system_annotation_title {
+font-weight:bold;
+font-size:1.1em;
+float:left;
+padding:2px 2px 4px 2px;
+}
+
+.system_annotation_date {
+float:right;
+padding:2px;
+}
+
+.system_annotation_content {
+clear:both;
+padding:2px;
+}
+
+.system_annotation_taglist {
+clear:both;
+float:left;
+padding:2px;
+}
+
+.system_annotation_module {
+float:right;
+}
+
+a.system_annotation_tag {
+display:block;
+float:left;
+padding:2px 6px;
+height:22px;
+line-height:22px;
+white-space:nowrap;
+}
+
+a.system_annotation_tag:hover {
+display:block;
+background-color:#c0c0c0;
+text-decoration:none;
+}
+
+a.system_annotation_tagsel {
+display:block;
+float:left;
+padding:2px 6px;
+height:22px;
+line-height:22px;
+white-space:nowrap;
+background-color:#d0d0d0;
+}
+
+a.system_annotation_tagsel:hover {
+display:block;
+background-color:#c0c0c0;
+text-decoration:none;
+}
+
+.system_annotation_page {
+display:block;
+float:left;
+background-color:#f0f0f0;
+padding: 0px 4px;
+margin-left:1px;
+text-decoration:none;
+color:#000000;
+border:1px solid #d0d0d0;
+}
+
+.system_annotation_page:hover {
+background-color:#e0e0e0;
+text-decoration:none;
+}
+
+.system_annotation_page_sel {
+display:block;
+float:left;
+background-color:#f0f0f0;
+padding: 0px 4px;
+margin-left:1px;
+text-decoration:none;
+color:#000000;
+border:1px solid #000000;
+}
+
+.system_annotation_page_sel:hover {
+background-color:#e0e0e0;
+text-decoration:none;
+}
+
+.ploopi_annotation_row_1 {
+border-top: 1px solid #d0d0d0;
+background-color:#faffd9;
+overflow:auto;
+}
+
+.ploopi_annotation_row_2 {
+border-top: 1px solid #d0d0d0;
+background-color:#f6ffd9;
+overflow:auto;
+}
+
+.ploopi_annotation_viewlist {
+display:block;
+background-color:#eeffb3;
+text-decoration:none;
+height:24px;
+line-height:24px;
+font-weight:bold;
+margin:0;
+padding:0 6px;
+overflow:hidden;
+}
+
+.ploopi_annotation_viewlist:hover {
+background-color:#e2ff80;
+text-decoration:none;
+}
+
+.ploopi_annotation_viewlist img, .ploopi_annotation_viewlist span {
+    vertical-align: middle;
+}
+
+.ploopi_annotation_viewlist span {
+   padding-left: 5px;
+}
+
+.ploopi_annotation_popup {
+background-color:#eeffb3;
+}
+
+.ploopi_annotation_popup_list {
+height:200px;
+overflow:auto;
+}
+
+.ploopi_annotation_titleform {
+display:block;
+font-weight:bold;
+background-color:#eeffb3;
+line-height:24px;
+height:24px;
+padding-left:6px;
+border-bottom:1px solid #d0d0d0;
+}
+
+.ploopi_annotation_titleform img, .ploopi_annotation_titleform span {
+    vertical-align: middle;
+}
+
+.ploopi_annotation_titleform span {
+   padding-left: 5px;
+}
+/*
+    Copyright (c) 2007-2009 Ovensia
+    Contributors hold Copyright (c) to their code submissions.
+
+    This file is part of Ploopi.
+
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
+#calendar {
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    user-select: none;
+}
+
+.calendar_row {
+    clear:both;
+    overflow:auto;
+}
+
+.calendar_week {
+    float:left;
+    width:28px;
+    height:22px;
+    line-height:22px;
+    text-align:center;
+    color:#606060;
+    font-size:0.9em;
+}
+
+.calendar_day {
+    float:left;
+    width:22px;
+    height:22px;
+    line-height:22px;
+    text-align:center;
+}
+
+.calendar_day div {
+    width:18px;
+    height:18px;
+    line-height:18px;
+    border:1px solid #d8d8d8;
+}
+
+.calendar_day a {
+    display:block;
+    text-decoration:none;
+    width:18px;
+    height:18px;
+    line-height:18px;
+    border:1px solid #c0c0c0;
+}
+
+.calendar_day a:hover {
+    background-color:#4E68A6;
+    color:#ffffff;
+    text-decoration:none;
+}
+
+.calendar_day_selected {
+    background-color:#4E68A6;
+    color:#ffffff;
+    text-decoration:none;
+}
+
+.calendar_day_today {
+    background-color:#ffffff;
+}
+
+.calendar_outmonth {
+    border:1px solid #d8d8d8;
+    color:#808080;
+}
+
+.calendar_arrow {
+    float:left;
+    width:40px;
+    height:22px;
+    line-height:22px;
+    text-align:center;
+}
+
+.calendar_month {
+    height:30px;
+    line-height:15px;
+    text-align:center;
+    font-weight:bold;
+}
+
+/**
+ * Styles liés à la class calendar
+ */
+
+.ploopi_calendar_m {
+    color:#202020;
+}
+
+.ploopi_calendar_m div.month_inner {
+    border-width: 1px 1px 0 0;
+    border-color:#a0a0a0;
+    border-style:solid;
+    background:#a0a0a0;
+}
+
+.ploopi_calendar_m div.row {
+    clear:both;
+}
+
+.ploopi_calendar_m div.day_header {
+    float:left;
+    position:relative;
+    margin:0 0 1px 1px;
+    display:inline; /* IE hack pour margin */
+    background-color:#c0c0c0;
+}
+
+.ploopi_calendar_m div.day_header div.day_header_label {
+    padding:2px;
+    text-align:center;
+    font-size:0.9em;
+    font-weight:bold;
+}
+
+.ploopi_calendar_m div.day {
+    float:left;
+    position:relative;
+    background:#f0f0f0;
+    margin:0 0 1px 1px;
+    display:inline; /* IE hack pour margin */
+    overflow:hidden;
+}
+
+.ploopi_calendar_m div.day_weekend {
+    background:#e0f0f0;
+}
+
+.ploopi_calendar_m div.day_holiday {
+    background:#f0e0e0;
+}
+
+.ploopi_calendar_m div.day div.day_num {
+    padding:2px;
+    background-color:#d0d0d0;
+    text-align:right;
+    font-size:0.9em;
+}
+
+.ploopi_calendar_m div.day div.day_num_grayed {
+    padding:2px;
+    background-color:#d0d0d0;
+    text-align:right;
+    font-size:0.9em;
+    color:#808080;
+}
+
+.ploopi_calendar_m div.day_weekend div.day_num {
+    background:#c0d0d0;
+}
+
+.ploopi_calendar_m div.day_holiday div.day_num {
+    background:#d0c0c0;
+}
+
+.ploopi_calendar_m div.day_weekend div.day_num_grayed {
+    background:#c0d0d0;
+}
+
+.ploopi_calendar_m div.day_holiday div.day_num_grayed {
+    background:#d0c0c0;
+}
+
+.ploopi_calendar_m div.week_header {
+    float:left;
+    position:relative;
+    background:#f0f0f0;
+    margin:0 0 1px 1px;
+    display:inline; /* IE hack pour margin */
+    background-color:#e0e0e0;
+}
+
+.ploopi_calendar_m div.week_header div.week_header_num {
+    padding:2px;
+    text-align:right;
+    font-size:14px;
+    font-weight:bold;
+    color:#808080;
+}
+
+.ploopi_calendar_m div.day .event {
+    display:block;
+    margin:1px;
+    background-color:#c0c0c0;
+    text-decoration:none;
+    font-size:0.9em;
+}
+
+.ploopi_calendar div.day .event div.event_inner {
+    padding:1px 2px;
+}
+
+.ploopi_calendar_m div.day .event div.event_inner span.event_h {
+    font-weight:bold;
+    margin-right:2px;
+}
+
+.ploopi_calendar_d div.row {
+    clear:both;
+}
+
+.ploopi_calendar_d div.days_inner {
+    border-width: 1px 1px 0 0;
+    border-color:#a0a0a0;
+    border-style:solid;
+    background:#a0a0a0;
+}
+
+.ploopi_calendar_d div.day {
+    float:left;
+    position:relative;
+    background:#f0f0f0;
+    margin:0 0 1px 1px;
+    display:inline; /* IE hack pour margin */
+}
+
+.ploopi_calendar_d div.day_weekend {
+    background:#e0f0f0;
+}
+
+.ploopi_calendar_d div.day_holiday {
+    background:#f0e0e0;
+}
+
+.ploopi_calendar_d div.channel_header {
+    float:left;
+    position:relative;
+    margin:0 0 1px 1px;
+    display:inline; /* IE hack pour margin */
+    background-color:#d0d0d0;
+}
+
+.ploopi_calendar_d div.channel_header .channel {
+    display:block;
+    position:absolute;
+    text-align:center;
+    overflow:hidden;
+}
+
+.ploopi_calendar_d div.day_header {
+    float:left;
+    position:relative;
+    margin:0 0 1px 1px;
+    display:inline; /* IE hack pour margin */
+    background-color:#c0c0c0;
+}
+
+.ploopi_calendar_d div.day_header div.day_header_label {
+    padding:2px;
+    text-align:center;
+    font-size:0.9em;
+    font-weight:bold;
+}
+
+.ploopi_calendar_d div.day_header_weekend {
+    background-color:#b0c0c0;
+}
+
+.ploopi_calendar_d div.day_header_holiday {
+    background-color:#c0b0b0;
+}
+
+.ploopi_calendar_d div.hours {
+    float:left;
+    position:relative;
+    background-color:#e0e0e0;
+    margin:0 0 1px 1px;
+    display:inline; /* IE hack pour margin */
+}
+
+.ploopi_calendar_d div.hours div.hour_header {
+}
+
+.ploopi_calendar_d div.hours div.hour_header div.hour_header_num {
+    text-align:right;
+    font-size:14px;
+    font-weight:bold;
+    color:#808080;
+    padding:2px;
+}
+
+.ploopi_calendar_d div.day div.tick {
+    position:absolute;
+    border-top:1px solid #e0e0e0;
+    z-index:100;
+}
+
+.ploopi_calendar_d div.day div.tick-half {
+    position:absolute;
+    border-top:1px solid #e0e0e0;
+    z-index:100;
+    opacity:0.5;
+}
+
+.ploopi_calendar_d div.hours div.tick {
+    position:absolute;
+    border-top:1px solid #a0a0a0;
+    z-index:100;
+}
+
+.ploopi_calendar_d div.day .channel {
+    display:block;
+    position:absolute;
+}
+
+.ploopi_calendar_d div.day .channelborder {
+    display:block;
+    position:absolute;
+    left:-1px;
+    width:1px;
+    border-left:1px dotted #aaa;
+}
+
+.ploopi_calendar_d div.day .event {
+    display:block;
+    position:absolute;
+    background-color:#c0c0c0;
+    text-decoration:none;
+    font-size:0.9em;
+    color:#fff;
+    z-index:1000;
+    overflow:hidden;
+}
+
+.ploopi_calendar_d div.day .event div.event_title {
+    border-bottom:1px solid #a0a0a0;
+    font-size:0.9em;
+    font-weight:bold;
+    background-color:#b0b0b0;
+    padding:0 2px;
+}
+
+.ploopi_calendar_d div.day .event div.event_title img {
+    margin:2px;
+}
+
+.ploopi_calendar_d div.day .event a.event_inner {
+    display:block;
+    overflow:hidden;
+    text-decoration:none;
+}
+
+.hoverActive {
+    border:1px solid blue;
+}
+.ploopi_barchart {
+    font-size:9px;
+    clear:both;
+    overflow:auto;
+    padding:6px 2px;
+    }
+
+.ploopi_barchart .vlegend {
+    color: #666;
+    width:30px;
+    float:left;
+    position:relative;
+    }
+
+.ploopi_barchart .vlegend div {
+    position:absolute;
+    width:25px;
+    left:0px;
+    text-align:right;
+}
+
+.ploopi_barchart .chart {
+    border-bottom: 3px solid #333;
+    margin:0;
+    padding:0;
+    position: relative;
+    }
+
+.ploopi_barchart .chart li {
+    border: 1px solid #555;
+    border-bottom: none;
+    bottom: 0;
+    color: #fff;
+    background:#a0a0a0;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    list-style: none;
+    text-align: center;
+    opacity:0.9;
+    }
+
+.ploopi_barchart .chart li.p1 {
+    background-color:#666;
+    }
+
+.ploopi_barchart .chart li.p2 {
+    background-color:#888;
+    }
+
+.ploopi_barchart .chart li.p3 {
+    background-color:#aaa;
+    }
+
+.ploopi_barchart .chart div.grid {
+    position:absolute;
+    border-style: solid;
+    border-color: #a0a0a0;
+    border-width: 0 0 1px 0;
+    width:100%;
+    }
+
+.ploopi_barchart .hlegend {
+    padding:4px 0;
+    position: relative;
+    }
+
+.ploopi_barchart .hlegend div {
+    float: left;
+    color: #666;
+    text-align: center;
+    }/**
+ * Script original de colorjack.
+ * Adapté pour Ploopi par Stéphane Escaich / OVENSIA
+ *
+ * @link http://www.colorjack.com/software/dhtml+color+picker.html
+ */
+
+#plugin {
+   color: #444;
+   display: block;
+   padding: 7px 10px 11px 10px;
+   overflow:auto;
+}
+
+#SV {
+    background: #ff0000 url('../../../../img/colorpicker/satval.png');
+    position: relative;
+    cursor: pointer;
+    float: left;
+    height: 166px;
+    width: 167px;
+    margin-right: 10px;
+    border:1px solid #000;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    user-select: none;
+}
+
+#SVslide {
+    background: url('../../../../img/colorpicker/slide.gif');
+    height: 9px;
+    width: 9px;
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    line-height: 1px;
+}
+
+#H {
+    border: 1px solid #000;
+    cursor: pointer;
+    float: left;
+    height: 166px;
+    position: relative;
+    width: 19px;
+    padding: 0;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    user-select: none;
+}
+
+#Hslide {
+    background: url('../../../../img/colorpicker/slideHue.gif');
+    top:-2px;
+    left:-8px;
+    height: 5px;
+    width: 33px;
+    position: absolute;
+    line-height: 1px;
+}
+
+#Hmodel {
+    position: relative;
+}
+
+#Hmodel div {
+    height: 1px;
+    width: 19px;
+    line-height: 1px;
+    margin: 0;
+    padding: 0;
+}
+
+#colorpicker_footer {
+    clear:both;
+    padding-top:4px;
+    overflow:auto;
+}
+
+#colorpicker_footer .text {
+    float:left;
+    width:60px;
+    margin-left:3px;
+}
+
+#colorpicker_footer .button {
+    float:left;
+    margin-left:3px;
+}
+
+#plugCUR {
+    float: left;
+    width: 18px;
+    height: 16px;
+    background: #FFF;
+    border:1px solid #000;
+    margin-left:3px;
+}
+/*
+    Copyright (c) 2002-2007 Netlor
+    Copyright (c) 2007-2008 Ovensia
+    Contributors hold Copyright (c) to their code submissions.
+
+    This file is part of Ploopi.
+
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+/******************
+  ARTICLE.COMMENT
+*******************/
+
+.webedit_comment_viewlist {
+display:block;
+background-color:#B6FAC2;
+text-decoration:none;
+height:24px;
+line-height:24px;
+font-weight:bold;
+margin:0;
+padding:0 6px;
+overflow:hidden;
+}
+
+.webedit_comment_viewlist:hover {
+background-color:#A7FAB6;
+text-decoration:none;
+}
+
+.webedit_comment_viewlist img, .webedit_comment_viewlist span {
+    vertical-align: middle;
+}
+
+.webedit_comment_viewlist span {
+   padding-left: 5px;
+}
+
+.webedit_comment_publish {
+	padding: 0 0 0 4px;
+	float: left;
+	font-weight:bold;
+	cursor: pointer;
+}
+
+.webedit_comment_row_1 {
+border-top: 1px solid #d0d0d0;
+background-color:#C9FFD3;
+overflow:auto;
+}
+
+.webedit_comment_row_2 {
+border-top: 1px solid #d0d0d0;
+background-color:#D9FFDF;
+overflow:auto;
+}
+/*
+.crisorsec_titre {
+text-align:center;
+font-weight:bold;
+padding:6px;
+border-bottom:1px solid #808080;
+background-color:#d8d8d8;
+}
+
+.crisorsec_titre h1 {
+margin:0;
+font-size:16px;
+}
+
+.crisorsec_titre h2 {
+margin:0;
+font-size:12px;
+}
+
+.crisorsec_titre h3 {
+margin:0;
+font-size:10px;
+}
+*/
+
+.crisorsec_toolbar {
+background-color:#CEDAE6;
+border-bottom:1px solid #808080;
+overflow:hidden;
+line-height:20px;
+height:20px;
+}
+
+.crisorsec_toolbar img {
+display:block;
+float:left;
+margin:2px 3px 0 0;
+}
+
+.crisorsec_toolbar input {
+display:block;
+float:left;
+margin:3px 3px 0 0;
+}
+
+.crisorsec_toolbar a {
+display:block;
+float:right;
+padding-left:12px;
+padding-right:6px;
+text-decoration:none;
+background: url(../img/template/menu.png) 0 0 no-repeat;
+
+}
+
+.crisorsec_toolbar a:hover {
+background: url(../img/template/menu.png) 0 -20px no-repeat;
+}
+
+/* IFRAME */
+
+.crisorsec_iframe {
+width:0;
+height:0;
+visibility:hidden;
+display:none;
+}
+
+.crisorsec_iframe_debug {
+width:100%;
+height:250px;
+}
+
+
+/* POPUPS */
+
+.crisorsec_popup {
+font-size:11px;
+border:1px solid #404040;
+}
+
+.crisorsec_popup_header {
+padding:4px;
+background-color:#c0c0c0;
+border-bottom:1px solid #a0a0a0;
+}
+
+.crisorsec_popup_header h1 {
+margin:0;
+padding:0;
+font-size:12px;
+font-weight:bold;
+}
+
+.crisorsec_popup_header h2 {
+margin:0;
+padding:0;
+font-size:12px;
+font-weight:normal;
+}
+
+.crisorsec_popup_footer {
+padding:2px 4px;
+background-color:#c0c0c0;
+border-top:1px solid #a0a0a0;
+text-align:right;
+}
+
+/* FORMULAIRES */
+
+
+.crisorsec_form {
+    overflow:hidden;
+}
+
+.crisorsec_form fieldset {
+    margin: 0;
+    padding: 0.2em;
+    margin: 0.2em;
+    border:1px solid #193c1c;
+}
+
+.crisorsec_form legend {
+    font-weight: bold;
+    background: transparent;
+}
+
+.crisorsec_form h1 {
+    font-size:12px;
+    font-weight:bold;
+    padding:6px;
+    margin:2px 0;
+    text-align:left;
+    background-color:#BBBBBB;
+    display:block;
+    clear:both;
+    overflow:auto;
+    }
+
+.crisorsec_form h2 {
+    font-size:10px;
+    font-weight:bold;
+    padding:4px;
+    margin:2px 0;
+    text-align:left;
+    background-color:#BBBBBB;
+}
+
+.crisorsec_form p {
+    display:block;
+    margin:4px 2px;
+    overflow:auto;
+}
+
+.crisorsec_form p label {
+    float: left;
+    width: 30%;
+    font-weight: bold;
+    text-align: right;
+    margin: 0;
+    padding: 0 .5em 0 0;
+}
+
+.crisorsec_form p input[type='text'],
+.crisorsec_form p input[type='password'],
+.crisorsec_form p select,
+.crisorsec_form p textarea,
+.crisorsec_form p span {
+    width: 65%;
+}
+
+.crisorsec_form p input.checkbox {
+    width:14px;
+}
+
+.crisorsec_form p span {
+    float:left;
+}
+
+.crisorsec_form p textarea{
+    height: 6em;
+}
+
+.crisorsec_form p span.checkbox {
+    cursor:pointer;
+    width:100%;
+}
+
+.crisorsec_form p span.checkbox img, .crisorsec_form p span.checkbox input {
+    cursor:pointer;
+}
+
+input.crisorsec_buttoncarto {
+background: linear-gradient(top, rgba(230,230,230,0.7) 0%, rgba(150,150,150,0.6) 100%), url(../img/template/carto.png) top left repeat-x;
+background: -moz-linear-gradient(top, rgba(230,230,230,0.7) 0%, rgba(150,150,150,0.6) 100%), url(../img/template/carto.png) top left repeat-x;
+background: -webkit-linear-gradient(top, rgba(230,230,230,0.7) 0%, rgba(150,150,150,0.6) 100%), url(../img/template/carto.png) top left repeat-x;
+}
+
+input.crisorsec_buttoncarto:hover {
+background: linear-gradient(top, rgba(150,150,150,0.6) 0%, rgba(230,230,230,0.7) 100%), url(../img/template/carto.png) top left repeat-x;
+background: -moz-linear-gradient(top, rgba(150,150,150,0.6) 0%, rgba(230,230,230,0.7) 100%), url(../img/template/carto.png) top left repeat-x;
+background: -webkit-linear-gradient(top, rgba(150,150,150,0.6) 0%, rgba(230,230,230,0.7) 100%), url(../img/template/carto.png) top left repeat-x;
+}
+
+
+#crisorsec_treeview {
+height:200px;
+overflow:auto;
+overflow-x:hidden;
+width:300px;
+border-radius:2px;
+color: #2c4056;
+padding: 3px;
+border: 2px solid rgba(0,0,0,0.2);
+background: #fff;
+}
+
+#crisorsec_treeview a {
+text-decoration:none;
+border-bottom:1px dotted #c0c0c0;
+}
+
+#crisorsec_treeview a:hover {
+background-color:#d0d0d0;
+border-bottom:1px solid #c0c0c0;
+}
+/*
+    Copyright (c) 2002-2007 Netlor
+    Copyright (c) 2007-2008 Ovensia
+    Contributors hold Copyright (c) to their code submissions.
+
+    This file is part of Ploopi.
+
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+.documents_browser {
+    overflow:auto;
+}
+
+.documents_path {
+    padding:4px;
+    border-bottom:1px solid #c0c0c0;
+    background-color:#f0f0f0;
+    overflow:auto;
+}
+
+.documents_path div {
+    display:block;
+    float:left;
+    padding:4px;
+    border:1px;
+}
+
+.documents_path a {
+    display:block;
+    float:left;
+    padding:4px;
+    margin-left:2px;
+    border:1px solid #d8d8d8;
+    background-color:#f8f8f8;
+}
+
+.documents_path a:hover {
+    border:1px solid #c0c0c0;
+    background-color:#e0e0e0;
+    text-decoration:none;
+}
+
+a.documents_pathselected {
+    border:1px solid #c0c0c0;
+    background-color:#e0e0e0;
+
+}
+
+div.documents_formtitle {
+    font-weight:bold;
+    background-color:#e0e0e0;
+    border-bottom:solid 1px #c0c0c0;
+    padding:4px;
+}
+
+div.documents_formcontent {
+    background-color:#f0f0f0;
+    padding:2px;
+}
+/*
+light : #0080FF
+dark : #2E9AFE
+link : #000000
+hover menu 1 : #0174DF *
+hover menu 2 : #37668C *
+selected text : #FFFFFF
+*/
+
+/*
+    Copyright (c) 2002-2007 Netlor
+    Copyright (c) 2007-2008 Ovensia
+    Contributors hold Copyright (c) to their code submissions.
+
+    This file is part of Ploopi.
+
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
+/******************
+  MAIN LAYOUT
+*******************/
+
+/* GENERICS */
+@font-face {
+    font-family:'Ubuntu';
+    font-style:normal;
+    font-weight:100;
+    src: url('../fonts/Ubuntu-L-webfont.eot');
+    src: url('../fonts/Ubuntu-L-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/Ubuntu-L-webfont.woff') format('woff'),
+         url('../fonts/Ubuntu-L-webfont.ttf') format('truetype'),
+         url('../fonts/Ubuntu-L-webfont.svg#UbuntuRegular') format('svg');
+}
+
+@font-face {
+    font-family:'Ubuntu';
+    font-style:italic;
+    font-weight:100;
+    src: url('../fonts/Ubuntu-LI-webfont.eot');
+    src: url('../fonts/Ubuntu-LI-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/Ubuntu-LI-webfont.woff') format('woff'),
+         url('../fonts/Ubuntu-LI-webfont.ttf') format('truetype'),
+         url('../fonts/Ubuntu-LI-webfont.svg#UbuntuRegular') format('svg');
+}
+
+@font-face {
+    font-family:'Ubuntu';
+    font-style:normal;
+    font-weight:400;
+    src: url('../fonts/Ubuntu-R-webfont.eot');
+    src: url('../fonts/Ubuntu-R-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/Ubuntu-R-webfont.woff') format('woff'),
+         url('../fonts/Ubuntu-R-webfont.ttf') format('truetype'),
+         url('../fonts/Ubuntu-R-webfont.svg#UbuntuRegular') format('svg');
+}
+
+@font-face {
+    font-family:'Ubuntu';
+    font-style:italic;
+    font-weight:400;
+    src: url('../fonts/Ubuntu-RI-webfont.eot');
+    src: url('../fonts/Ubuntu-RI-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/Ubuntu-RI-webfont.woff') format('woff'),
+         url('../fonts/Ubuntu-RI-webfont.ttf') format('truetype'),
+         url('../fonts/Ubuntu-RI-webfont.svg#UbuntuRegular') format('svg');
+}
+
+@font-face {
+    font-family:'Ubuntu';
+    font-style:normal;
+    font-weight:600;
+    src: url('../fonts/Ubuntu-M-webfont.eot');
+    src: url('../fonts/Ubuntu-M-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/Ubuntu-M-webfont.woff') format('woff'),
+         url('../fonts/Ubuntu-M-webfont.ttf') format('truetype'),
+         url('../fonts/Ubuntu-M-webfont.svg#UbuntuRegular') format('svg');
+}
+
+@font-face {
+    font-family:'Ubuntu';
+    font-style:italic;
+    font-weight:600;
+    src: url('../fonts/Ubuntu-MI-webfont.eot');
+    src: url('../fonts/Ubuntu-MI-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/Ubuntu-MI-webfont.woff') format('woff'),
+         url('../fonts/Ubuntu-MI-webfont.ttf') format('truetype'),
+         url('../fonts/Ubuntu-MI-webfont.svg#UbuntuRegular') format('svg');
+}
+
+
+
+/*
+@font-face {
+    font-family:'Myriad Set Pro';
+    font-style:normal;
+    font-weight:100;
+    src:local('Ã¢ËÂºÃ¯Â¸Å½'), url("../fonts/myriad-set-pro_ultralight.woff") format("woff"), url("/wss/fonts/Myriad-Set-Pro/v1/myriad-set-pro_ultralight.ttf") format("truetype");
+}
+
+@font-face {
+    font-family:'Myriad Set Pro';
+    font-style:italic;
+    font-weight:100;
+    src:local('Ã¢ËÂºÃ¯Â¸Å½'), url("../fonts/myriad-set-pro_ultralight-italic.woff") format("woff"), url("/wss/fonts/Myriad-Set-Pro/v1/myriad-set-pro_ultralight-italic.ttf") format("truetype");
+}
+
+@font-face {
+    font-family:'Myriad Set Pro';
+    font-style:normal;
+    font-weight:200;
+    src:local('Ã¢ËÂºÃ¯Â¸Å½'), url("../fonts/myriad-set-pro_thin.woff") format("woff"), url("/wss/fonts/Myriad-Set-Pro/v1/myriad-set-pro_thin.ttf") format("truetype");
+}
+
+@font-face {
+    font-family:'Myriad Set Pro';
+    font-style:italic;
+    font-weight:200;
+    src:local('Ã¢ËÂºÃ¯Â¸Å½'), url("../fonts/myriad-set-pro_thin-italic.woff") format("woff"), url("/wss/fonts/Myriad-Set-Pro/v1/myriad-set-pro_thin-italic.ttf") format("truetype");
+}
+
+@font-face {
+    font-family:'Myriad Set Pro';
+    font-style:italic;
+    font-weight:400;
+    src:local('Ã¢ËÂºÃ¯Â¸Å½'), url("../fonts/myriad-set-pro_text-italic.woff") format("woff"), url("/wss/fonts/Myriad-Set-Pro/v1/myriad-set-pro_text-italic.ttf") format("truetype");
+}
+
+@font-face {
+    font-family:'Myriad Set Pro';
+    font-style:normal;
+    font-weight:500;
+    src:local('Ã¢ËÂºÃ¯Â¸Å½'), url("../fonts/myriad-set-pro_medium.woff") format("woff"), url("/wss/fonts/Myriad-Set-Pro/v1/myriad-set-pro_medium.ttf") format("truetype");
+}
+
+@font-face {
+    font-family:'Myriad Set Pro';
+    font-style:italic;
+    font-weight:500;
+    src:local('Ã¢ËÂºÃ¯Â¸Å½'), url("../fonts/myriad-set-pro_medium-italic.woff") format("woff"), url("/wss/fonts/Myriad-Set-Pro/v1/myriad-set-pro_medium-italic.ttf") format("truetype");
+}
+
+
+@font-face {
+    font-family:'Myriad Set Pro';
+    font-style:normal;
+    font-weight:600;
+    src:local('Ã¢ËÂºÃ¯Â¸Å½'), url("../fonts/myriad-set-pro_semibold.woff") format("woff"), url("/wss/fonts/Myriad-Set-Pro/v1/myriad-set-pro_semibold.ttf") format("truetype");
+}
+
+@font-face {
+    font-family:'Myriad Set Pro';
+    font-style:italic;
+    font-weight:600;
+    src:local('Ã¢ËÂºÃ¯Â¸Å½'), url("../fonts/myriad-set-pro_semibold-italic.woff") format("woff"), url("/wss/fonts/Myriad-Set-Pro/v1/myriad-set-pro_semibold-italic.ttf") format("truetype");
+}
+
+@font-face {
+    font-family:'Myriad Set Pro';
+    font-style:normal;
+    font-weight:700;
+    src:local('Ã¢ËÂºÃ¯Â¸Å½'), url("../fonts/myriad-set-pro_bold.woff") format("woff"), url("/wss/fonts/Myriad-Set-Pro/v1/myriad-set-pro_bold.ttf") format("truetype");
+}
+
+@font-face {
+    font-family:'Myriad Set Pro';
+    font-style:italic;
+    font-weight:700;
+    src:local('Ã¢ËÂºÃ¯Â¸Å½'), url("../fonts/myriad-set-pro_bold-italic.woff") format("woff"), url("/wss/fonts/Myriad-Set-Pro/v1/myriad-set-pro_bold-italic.ttf") format("truetype");
+}
+*/
+
+
+body, form, table, td, input, select, textarea, button {
+font: normal 12px 'Ubuntu', serif;
+font-weight : normal;
+}
+
+
+body, form  {
+margin: 0;
+}
+
+body.index {
+color: #2E9AFE;
+position: relative;
+}
+
+body.popup {
+margin: 0;
+padding: 2px;
+}
+
+a {
+text-decoration: none;
+color: #000000;
+}
+
+
+a:hover {
+text-decoration: underline;
+}
+
+a img {
+border:0;
+}
+
+h1, h2, h3, h4 {
+font-family: "Ubuntu", serif;
+}
+
+
+
+#background {
+height:100%;
+min-height:400px;
+min-width:500px;
+position:absolute;
+width:100%;
+overflow:hidden;
+background:transparent url(../img/template/wallpaper.jpg) no-repeat scroll 0 0;
+}
+
+
+#dock {
+display:block;
+position:absolute;
+width:100%;
+top:0px;
+background:#283137;
+white-space:nowrap;
+}
+
+#mainmenu {
+margin:0;
+padding:0;
+-moz-user-select: none;
+-khtml-user-select: none;
+user-select: none;
+}
+
+#mainmenu li {
+display:block;
+position:relative;
+float:left;
+list-style-image:none;
+list-style-position:outside;
+list-style-type:none;
+background-color:transparent;
+}
+
+#mainmenu li a.mainmenu {
+display:block;
+color:#fff;
+height:31px;
+line-height:31px;
+padding:0 10px;
+text-decoration:none;
+}
+
+#mainmenu li a.selected {
+color:#eeee00;
+}
+
+#mainmenu li:hover {
+background:#e0e0e0;
+}
+
+#mainmenu li:hover a {
+color:#000;
+}
+
+#mainmenu li:hover div.blockmenu {
+display:block;
+}
+
+#mainmenu img {
+display:block;
+float:left;
+}
+
+#mainmenu li div.blockmenu {
+background:#e0e0e0;
+padding: 0px;
+margin: 0px;
+position: absolute;
+top: 31px;
+left: 0px;
+display: none;
+width:200px;
+z-index:10000;
+}
+
+#mainmenu div.blockmenu a.blockmenu {
+display:block;
+position:relative;
+word-wrap:break-word;
+white-space:normal;
+overflow:hidden;
+color:#000;
+text-decoration:none;
+padding:10px;
+}
+
+#mainmenu div.blockmenu a.blockmenu:hover {
+background-color:#f0f0f0;
+}
+
+#mainmenu div.blockmenu a.selected {
+background-color:#f8f8f8;
+}
+
+#mainmenu div.blockmenu a.blockmenu img {
+border:0;
+}
+
+#mainmenu div.blockmenu div.blockcontent {
+background:#e0e0e0;
+border-bottom:1px solid #f0f0f0;
+padding:6px 8px;
+overflow:auto;
+}
+
+#pagecontent {
+position:absolute;
+top:33px;
+width:100%;
+overflow:auto;
+z-index:1;
+}
+
+#statusbar {
+position:absolute;
+height:20px;
+line-height:20px;
+bottom:0px;
+width:100%;
+user-select: none;
+-moz-user-select: none;
+-webkit-user-select: none;
+background: #2E9AFE;
+text-align:center;
+z-index:100000;
+color:#fff;
+border-top:2px solid #2E9AFE;
+}
+
+#statusbar a {
+color:#fff;
+}
+
+#statusbar > div {
+display:inline-block;
+position:relative;
+z-index: 2;
+padding-right:20px;
+}
+
+#statusbar > div:last-child {
+padding-right:10px;
+}
+
+#statusbar > div::after{
+content:'';
+height:100%;
+-webkit-transform:skew(-30deg);
+-moz-transform:skew(-30deg);
+-o-transform:skew(-30deg);
+tranform:skew(-30deg);
+left:-25px;
+width:0;
+top:0;
+position:absolute;
+z-index: -1;
+padding:20px;
+border-left:2px solid #2E9AFE;
+border-radius:5px;
+}
+
+#statusbar > div:first-child,
+#statusbar > div:first-child::after {
+/*224,32.2,23.1
+223,25.3,37.3 (-6.9 , 14.2)*/
+background:hsl(223,28.75%,30.2%);
+}
+
+#statusbar > div:nth-child(2),
+#statusbar > div:nth-child(2)::after {
+background:hsl(223,25.3%,37.3%);
+}
+
+#statusbar > div:nth-child(3),
+#statusbar > div:nth-child(3)::after {
+background:hsl(223,21.85%,44.4%);
+}
+
+#statusbar > div:nth-child(4),
+#statusbar > div:nth-child(4)::after {
+background:hsl(224,18.4%,51.5%);
+}
+
+#statusbar > div:nth-child(5),
+#statusbar > div:nth-child(5)::after {
+background:hsl(224,14.95%,58.6%);
+}
+
+
+
+
+#login_rond {
+display:block;
+position:absolute;
+top:120px;
+width:500px;
+margin:auto;
+left:50%;
+margin-left:-250px;
+}
+
+#login_window {
+display:block;
+position:absolute;
+width:261px;
+height:180px;
+left:50%;
+top:290px;
+margin-left:-130px;
+color:#fff;
+}
+
+#login_window {
+display:block;
+position:absolute;
+width:261px;
+left:50%;
+top:288px;
+margin-left:-130px;
+color:#fff;
+}
+
+#login {
+position:relative;
+width:261px;
+border-radius:15px;
+border:2px solid #fff;
+background: #A1483D;
+background: linear-gradient(top, #D0A49F 0%, #A1483D 10%, #A1483D 90%, #A85349 100%);
+background: -moz-linear-gradient(top, #D0A49F 0%, #A1483D 10%, #A1483D 90%, #A85349 100%);
+background: -webkit-linear-gradient(top, #D0A49F 0%, #A1483D 10%, #A1483D 90%, #A85349 100%);
+background: -ms-linear-gradient(top, #D0A49F 0%, #A1483D 10%, #A1483D 90%, #A85349 100%);
+z-index:2;
+box-shadow:0px 2px 3px rgba(0,0,0,0.5);
+padding-bottom:30px;
+}
+
+#login_form {
+margin:0;
+padding:0;
+}
+
+
+.login_form_box {
+display:block;
+position:relative;
+padding:10px 30px;
+}
+
+.login_form_box label {
+display:block;
+margin-top:6px;
+}
+
+.login_form_box input.text {
+display:block;
+border: 2px solid rgba(255,255,255,1);
+width:100%;
+padding-left:4px;
+padding-right:4px;
+margin-top:6px;
+box-sizing: border-box; /* css3 rec */
+-moz-box-sizing: border-box; /* ff2 */
+-ms-box-sizing: border-box; /* ie8 */
+-webkit-box-sizing: border-box; /* safari3 */
+-khtml-box-sizing: border-box; /* konqueror */
+}
+
+.login_btn_right {
+position:absolute;
+bottom:10px;
+right:8px;
+z-index:2;
+}
+
+.login_btn_right button {
+background:transparent;
+border:none;
+color:#fff;
+box-shadow:none;
+margin:0;
+padding:0;
+}
+
+.login_btn_right button:hover {
+background:transparent;
+border:none;
+color:#fff;
+box-shadow:none;
+}
+
+.login_btn_right button img,
+.login_btn_right button span {
+display: inline-block;
+vertical-align: middle;
+}
+
+.login_btn_right button img {
+border:0;
+opacity:0.7;
+}
+
+.login_btn_right button:hover img {
+opacity:1;
+}
+
+
+.login_btn_left {
+position:absolute;
+bottom:10px;
+left:10px;
+z-index:2;
+}
+
+.login_btn_left a {
+color:#fff;
+text-decoration:none;
+font-weight:bold;
+}
+
+.login_btn_left a img,
+.login_btn_left a span {
+display: inline-block;
+vertical-align: middle;
+}
+
+.login_btn_left a img {
+border:0;
+opacity:0.7;
+}
+
+.login_btn_left a:hover img {
+opacity:1;
+}
+
+
+#lostpassword_form {
+position:absolute;
+left:5px;
+bottom:-230px;
+height:230px;
+width:250px;
+border-radius:0 0 15px 15px;
+border:2px solid #fff;
+background: #A1483D;
+background: linear-gradient(top, #A1483D 0%, #A1483D 90%, #A85349 100%);
+background: -moz-linear-gradient(top, #A1483D 0%, #A1483D 90%, #A85349 100%);
+background: -webkit-linear-gradient(top, #A1483D 0%, #A1483D 90%, #A85349 100%);
+background: -ms-linear-gradient(top, #A1483D 0%, #A1483D 90%, #A85349 100%);
+box-shadow: 0px 2px 3px rgba(0,0,0,0.5);
+}
+
+
+
+#userbox {
+display:block;
+float:right;
+user-select: none;
+-moz-user-select: none;
+-webkit-user-select: none;
+text-align:right;
+color:#FFFFFF;
+}
+
+
+#userbox a {
+color:#fff;
+height:31px;
+line-height:31px;
+padding:0 10px;
+}
+
+#userbox > * {
+display:inline-block;
+position:relative;
+z-index: 2;
+padding:4px 10px;
+text-decoration:none;
+}
+
+#userbox > * > * {
+display:inline-block;
+vertical-align:middle;
+}
+
+#userbox > * > img {
+margin-right:4px;
+}
+
+
+#userbox > a:hover {
+color:#eeee00;
+}
+
+#userbox > a > * {
+opacity:0.7;
+}
+
+
+#userbox > a:hover > * {
+opacity:1;
+}
+
+
+/*
+#bandeau .title {
+position:absolute;
+top:10px;
+left:200px;
+width:260px;
+height:60px;
+font-family: "Qlassik",Tahoma,Verdana,Arial,sans-serif;
+font-size: 30px ;
+letter-spacing:5px;
+word-spacing:10px;
+color:#fff;
+text-shadow: 0px 0px 4px #000;
+}
+*/
+
+/*
+#bandeau .userbox {
+position:absolute;
+top:8px;
+right:8px;
+}
+
+#bandeau .userbox a {
+display:block;
+float:left;
+line-height:22px;
+height:22px;
+padding:0 5px;
+margin-left:2px;
+text-decoration:none;
+color:rgba(255,255,255,0.8);
+border-radius:5px;
+-moz-border-radius:5px;
+-webkit-border-radius:5px;
+-moz-transition-property: background-color;
+-moz-transition-duration: 0.5s;
+-moz-transition-timing-function: ease;
+-webkit-transition-property: background-color;
+-webkit-transition-duration: 0.5s;
+-webkit-transition-timing-function: ease;
+}
+
+#bandeau .userbox a * {
+display: inline-block;
+vertical-align: middle;
+}
+
+#bandeau .userbox a img {
+margin-right:2px;
+opacity:0.5;
+}
+
+#bandeau .userbox a:hover {
+background-color:rgba(255,255,255,0.2);
+-moz-transition-duration: 0s;
+-webkit-transition-duration: 0s;
+}
+
+#bandeau .userbox a:hover img {
+opacity:1;
+}
+
+#bandeau .userbox strong.user,
+#bandeau .userbox span.user {
+display:block;
+float:left;
+line-height:22px;
+height:22px;
+padding:0 5px;
+margin-left:2px;
+text-decoration:none;
+color:rgba(255,255,255,0.8);
+border-radius:5px;
+-moz-border-radius:5px;
+-webkit-border-radius:5px;
+background-color:rgba(0,0,0,0.2);
+}
+*/
+
+#msg_unread {
+margin-left:6px;
+color:rgba(255,255,255,0.6);
+}
+
+#userbox a.msg_unread { animation: blinker 2s ease infinite; }
+
+#userbox a.msg_unread,
+#userbox a.msg_unread * { font-weight:bold; color:rgba(255,255,0,1); opacity:1; }
+#userbox a.msg_unread:hover { animation: none; }
+
+@keyframes blinker { 50% { opacity: 0.5; } }
+
+/*
+    Copyright (c) 2009 HeXad
+    Contributors hold Copyright (c) to their code submissions.
+
+    This file is part of Ploopi.
+
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+/******************
+  SYSTEM.MODULE.MESSAGE
+*******************/
+.ploopi_mod_mess_ok
+{
+    position: absolute;
+    right: 35px;    
+    top: 46px;
+    margin: 0;
+    padding: 0;
+    font-size: 12px;
+    font-weight: bold;
+    color: #bfdfd8;
+    z-index:100;
+}
+
+.ploopi_mod_mess_error
+{
+    position: absolute;
+    right: 35px;    
+    top: 46px;
+    margin: 0;
+    padding: 0;
+    font-size: 12px;
+    font-weight: bold;
+    color: #ff0000;
+    z-index:100;
+}
+/*
+    Copyright (c) 2002-2007 Netlor
+    Copyright (c) 2007-2008 Ovensia
+    Contributors hold Copyright (c) to their code submissions.
+
+    This file is part of Ploopi.
+
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+div.ploopi_share_title {
+    font-weight:bold;
+    padding:4px;
+    background-color:#ffe9b2;
+}
+
+a.ploopi_share_title {
+    display:block;
+    font-weight:bold;
+    padding:4px;
+    background-color:#ffe9b2;
+    text-decoration:none;
+}
+
+a.ploopi_share_title:hover {
+    text-decoration:none;
+}
+
+.ploopi_share_search_form {
+    padding:4px;
+    background-color:#fff1d9;
+}
+
+.ploopi_share_authorizedlist {
+    padding:4px;
+    background-color:#fff1d9;
+}
+
+.ploopi_share_select_workgroup {
+    font-weight:bold;
+    background-color:#e0e0e0;
+    border-bottom:1px solid #c0c0c0;
+    padding:1px;
+}
+
+.ploopi_share_select_workgroup span {
+    margin-left:4px;
+}
+
+.ploopi_share_select_user {
+    display:block;
+    background-color:#f0f0f0;
+    border-bottom:1px solid #c0c0c0;
+    color:#404040;
+    padding:1px 1px 1px 20px;
+    text-decoration:none;
+}
+
+.ploopi_share_select_user:hover {
+    text-decoration:none;
+    background-color:#fff5d9;
+    color:#000000;
+}
+
+.ploopi_share_select_user span {
+    padding-left:4px;
+}
+
+.ploopi_share_select_usergroup {
+    display:block;
+    font-weight:bold;
+    background-color:#e8e8e8;
+    border-bottom:1px solid #c0c0c0;
+    color:#404040;
+    padding:1px 1px 1px 20px;
+    text-decoration:none;
+}
+
+.ploopi_share_select_usergroup:hover {
+    text-decoration:none;
+    background-color:#fff5d9;
+    color:#000000;
+}
+
+.ploopi_share_select_usergroup span {
+    padding-left:4px;
+}
+
+.ploopi_share_select_usergroup_user {
+    display:block;
+    background-color:#f0f0f0;
+    border-bottom:1px solid #c0c0c0;
+    color:#404040;
+    padding:1px 1px 1px 40px;
+    text-decoration:none;
+}
+
+.ploopi_share_select_usergroup_user:hover {
+    text-decoration:none;
+    background-color:#fff5d9;
+    color:#000000;
+}
+
+.ploopi_share_select_usergroup_user span {
+    padding-left:4px;
+}
+
+.ploopi_share_select_legend {
+    padding:2px 1px;
+    text-align:right;
+}
+.ploopi_share_select_legend span {
+    padding:0 4px;
+}
+
+.ploopi_share_select_empty {
+    padding:4px;
+}
+.ploopi_share_select_empty span {
+    padding:0 4px;
+}
+
+a.ploopi_share_delete_user {
+    text-decoration:none;
+}
+
+a.ploopi_share_delete_user:hover {
+    text-decoration:none;
+}
+
+a.ploopi_share_delete_user img {
+    border:0;
+}
+
+/*
+    Copyright (c) 2007-2018 Ovensia
+    Contributors hold Copyright (c) to their code submissions.
+
+    This file is part of Ploopi.
+
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
+/**
+ * #0174DF => #25464E
+ * #2E9AFE => #4F8999
+ * x #4A6E78 => #4F8999
+ * #A9D0F5 => #AAD3DE
+ */
+
+.ploopi_popup {
+position:absolute;
+top:0px;
+left:0px;
+width:200px;
+overflow:hidden;
+background:#ecedf1;
+border:2px solid #25464E;
+border-radius:2px;
+box-shadow: 0 0 5px rgba(40, 50, 78, 0.3);
+}
+
+.ploopi_popup .simplebloc {
+margin:0;
+border-radius:0;
+}
+
+.ploopi_popup .simplebloc_title {
+border-radius:0;
+}
+
+.calendardiv {
+position:absolute;
+visibility:hidden;
+background-color:#ffffff;
+top:0px;
+left:0px;
+z-index:1000;
+height:auto;
+width:150px;
+}
+
+.pagetitle {
+color:#fff;
+background-color:rgba(0,0,0,0.5);
+font-size:14px;
+font-weight:bold;
+padding:6px 10px;
+}
+
+.pagetitle p {
+float:left;
+margin:0;
+padding-left:6px;
+}
+
+.simplebloc_title {
+color:#fff;
+background: linear-gradient(left, rgba(37,70,78,1) 0%, rgba(37,70,78,1) 25%, rgba(37,70,78,0.8) 100%);
+background: -moz-linear-gradient(left, rgba(37,70,78,1) 0%, rgba(37,70,78,1) 25%, rgba(37,70,78,0.8) 100%);
+background: -webkit-linear-gradient(left, rgba(37,70,78,1) 0%, rgba(37,70,78,1) 25%, rgba(37,70,78,0.8) 100%);
+border-radius:2px;
+/*font-variant:small-caps;*/
+font-weight:bold;
+text-align:left;
+height:30px;
+line-height:30px;
+padding-left:6px;
+}
+
+.simplebloc_titleleft {
+padding:0 4px;
+}
+
+.simplebloc_title a {
+color:#fff;
+text-decoration:none;
+}
+
+
+.simplebloc_titleleft a {
+display:block;
+float:left;
+background:#25464E;
+border-radius:2px;
+color:#fff;
+padding:0 10px;
+font-weight:normal;
+height:20px;
+line-height:18px;
+margin-top:3px;
+margin-right:10px;
+border: 2px solid #25464E;
+}
+
+.simplebloc_titleleft a:hover {
+border: 2px solid #FFFFFF;
+}
+
+.simplebloc_titleleft a * {
+display:inline-block;
+vertical-align:middle;
+padding:0;
+}
+
+.simplebloc_titleleft a img {
+margin-right:2px;
+}
+
+.simplebloc_titleleft span:first-child  {
+display:block;
+float:left;
+margin-right:20px;
+}
+
+
+
+
+.simplebloc_content {
+position:relative;
+margin:2px;
+padding:2px;
+}
+
+.simplebloc {
+margin:2px;
+background:rgba(255,255,255,0.8);
+border-radius:2px;
+padding-bottom:6px;
+}
+
+.simplebloc_footer {
+}
+
+select,
+input,
+textarea,
+button {
+border-radius:2px;
+color: #2c4056;
+padding: 4px;
+border: 2px solid rgba(0,0,0,0.2);
+background: rgba(255,255,255,0.5);
+}
+
+input::-webkit-input-placeholder { color:#888; }
+input:-moz-placeholder { color:#888; }
+
+select:focus,
+input:focus,
+textarea:focus {
+background: rgba(255,255,255,0.8);
+}
+
+
+input[type='button'],
+input[type='reset'],
+input[type='submit'],
+button {
+border:2px solid transparent;
+padding:3px;
+background:#25464E;
+color:#FFFFFF;
+cursor: pointer;
+}
+
+input[type='submit'],
+button[type='submit'] {
+font-weight:bold;
+}
+
+
+input[type='button']:hover,
+input[type='submit']:hover,
+input[type='reset']:hover,
+button:hover {
+background: transparent;
+border:2px solid #25464E;
+color: #25464E;
+cursor: pointer;
+}
+
+input[disabled=disabled],
+button[disabled=disabled],
+input[readonly=readonly],
+button[readonly=readonly]{
+    color:#888;
+}
+
+
+.toolbar {
+padding-bottom:2px;
+overflow:auto;
+margin:2px;
+}
+
+.toolbar > div > div:first-child > a {
+    border-radius:2px 0 0 2px;
+}
+
+.toolbar > div > div:first-child > a > p {
+    border-radius:0 0 0 2px;
+}
+
+.toolbar > div > div:last-child > a {
+    border-radius:0 2px 2px 0;
+}
+
+.toolbar > div > div:last-child > a > p {
+    border-radius:0 0 2px 0;
+}
+
+.toolbar > div > div.toolbar_icon_vertical:first-child > a,
+.toolbar > div > div.toolbar_icon_vertical:last-child > a {
+    border-radius:2px;
+}
+
+.toolbar > div > div.toolbar_icon_vertical:last-child > a > p {
+    border-radius:0 0 2px 2px;
+}
+
+.toolbar_left {
+}
+
+.toolbar_right {
+float:right;
+}
+
+.toolbar_icon_vertical {
+display:block;
+margin-bottom:2px;
+}
+
+.toolbar_icon_vertical a {
+display:block;
+text-decoration:none;
+user-select: none;
+-moz-user-select: none;
+-webkit-user-select: none;
+background:#AAD3DE;
+border-radius:2px;
+}
+
+.toolbar_icon_vertical a:hover {
+text-decoration:none;
+background:#4F8999;
+}
+
+.toolbar_icon_vertical a:hover p {
+background:#25464E;
+color:#fff;
+}
+
+.toolbar_icon_vertical p {
+margin:0;
+text-align:center;
+padding:6px 10px;
+background:#4F8999;
+color:#000000;
+border-radius:0 0 2px 2px;
+}
+
+.toolbar_icon {
+display:block;
+float:left;
+width:100px;
+}
+
+.toolbar_icon a {
+display:block;
+text-decoration:none;
+user-select: none;
+-moz-user-select: none;
+-webkit-user-select: none;
+background:#AAD3DE;
+}
+
+.toolbar_icon a:hover {
+text-decoration:none;
+background:#4F8999;
+}
+
+.toolbar_icon a:hover p {
+background:#25464E;
+color:#fff;
+}
+
+.toolbar_icon_image {
+text-align:center;
+padding:6px;
+}
+
+.toolbar_icon p {
+margin:0;
+text-align:center;
+padding:6px 10px;
+background:#4F8999;
+color:#000000;
+}
+
+.toolbar_icon_title {
+text-align:center;
+padding:2px 10px;
+background:#4f8999;
+}
+
+.toolbar_icon_sel {
+display:block;
+float:left;
+width:100px;
+}
+
+.toolbar_icon_sel a {
+display:block;
+text-decoration:none;
+user-select: none;
+-moz-user-select: none;
+-webkit-user-select: none;
+background:#4F8999;
+}
+
+.toolbar_icon_sel a:hover {
+text-decoration:none;
+}
+
+.toolbar_icon_sel a:hover p {
+
+}
+
+.toolbar_icon_sel p {
+margin:0;
+text-align:center;
+padding:6px 10px;
+background:#25464E;
+color:#FFFFFF;
+}
+
+
+.tabs {
+color:#000000;
+background:#4F8999;
+overflow:auto;
+border-radius:2px;
+margin:2px;
+}
+
+.tabs a {
+display:block;
+float:left;
+color:#000000;
+/* padding:6px 10px 4px 10px; */
+padding:6px 10px;
+white-space:nowrap;
+user-select: none;
+-moz-user-select: none;
+-webkit-user-select: none;
+}
+
+.tabs a:hover {
+background-color:#25464E;
+color:#fff;
+text-decoration:none;
+}
+
+.tabs a.selected {
+background-color:#25464E;
+color:#FFFFFF;
+text-decoration:none;
+}
+
+
+.ploopi_error {
+clear:both;
+color:#ff0000;
+background-color:#ffffaa;
+border:#ff0000 1px solid;
+padding:10px;
+margin:2px;
+font-size:10px;
+}
+
+.ploopi_error span{
+color:#000000;
+}
+
+.ploopi_overflowauto {
+overflow:auto;
+}
+
+/* vertical alignement : IE / FF / Opera */
+.ploopi_va {
+    margin:0;
+}
+
+.ploopi_va img,
+.ploopi_va span,
+.ploopi_va label,
+.ploopi_va strong,
+.ploopi_va em,
+.ploopi_va input,
+.ploopi_va select,
+.ploopi_va a {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.ploopi_form {
+    overflow:hidden;
+}
+
+.ploopi_form fieldset, .fieldset {
+    margin: 0;
+    padding: 0.2em;
+    margin: 0.2em;
+    border:1px solid #ccc;
+}
+
+.ploopi_form legend, .fieldset legend {
+    font-weight: bold;
+    background: transparent;
+}
+
+.ploopi_form h1 {
+    margin:4px 0;
+    font-size:16px;
+    font-weight:bold;
+}
+
+.ploopi_form h2 {
+    margin:4px 0;
+    font-size:14px;
+    font-weight:bold;
+}
+
+.ploopi_form h3 {
+    margin:4px 0;
+    font-size:12px;
+    font-weight:bold;
+}
+
+.ploopi_form h4 {
+    margin:4px 0;
+    font-size:10px;
+    font-weight:bold;
+}
+
+.ploopi_form p {
+    display:block;
+    margin:4px 2px;
+    overflow:auto;
+}
+
+.ploopi_form p label {
+    float: left;
+    width: 30%;
+    text-align: right;
+    margin: 0;
+    padding: 2px .5em 0 0;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+ }
+
+.ploopi_form p input[type='text'],
+.ploopi_form p input[type='password'],
+.ploopi_form p input[type='file'],
+.ploopi_form p select,
+.ploopi_form p textarea,
+.ploopi_form p span {
+    width: 65%;
+    float:left;
+}
+
+.ploopi_form p input.checkbox {
+    width:14px;
+}
+
+.ploopi_form p span {
+    float:left;
+}
+
+.ploopi_form p textarea{
+    height: 6em;
+}
+
+.ploopi_form p span.checkbox {
+    cursor:pointer;
+    width:100%;
+}
+
+.ploopi_form p span.checkbox img, .ploopi_form p span.checkbox input {
+    cursor:pointer;
+}
+
+.ploopi_form p.checkbox {
+    cursor:pointer;
+    width:100%;
+}
+
+.ploopi_form p.checkbox label, .ploopi_form p.checkbox img, .ploopi_form p.checkbox input {
+    cursor:pointer;
+}
+
+.ploopi_form_title {
+    display:block;
+    clear:both;
+    font-weight:bold;
+    background-color:#ddd;
+    border-bottom:1px solid #bbb;
+    padding:4px;
+    text-decoration:none;
+}
+
+.ploopi_form_title:hover {
+    text-decoration:none;
+}
+
+a.ploopi_form_title * {
+    cursor:pointer;
+}
+
+.ploopi_checkbox {
+    margin:0;
+    cursor:pointer;
+}
+
+.ploopi_checkbox * {
+    display: inline-block;
+    vertical-align: middle;
+    cursor:pointer;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+}
+
+.error {
+    color:#a60000;
+    font-weight:bold;
+}
+
+.information {
+    color:#00a600;
+    font-weight:bold;
+}
+
+.Title td {
+    font-weight:bold;
+}
+
+div.ploopi_explorer_main {
+    position:relative;
+    overflow:hidden;
+}
+
+div.ploopi_explorer_maintitle {
+    padding:4px;
+    overflow:auto;
+}
+
+div.ploopi_explorer_title {
+    color:#000000;
+    background:#4F8999;
+    overflow:hidden;
+    border-bottom:2px solid #25464E;
+}
+
+div.ploopi_explorer_title a {
+    color:#000000;
+}
+
+div.ploopi_explorer_title a:hover {
+    color:#FFFFFF;
+    background:#25464E;
+    text-decoration:none;
+}
+
+div.ploopi_explorer_title a.ploopi_explorer_element_selected {
+    background:#25464E;
+    color:#FFFFFF;
+}
+
+div.ploopi_explorer_title a p,
+div.ploopi_explorer_title span p {
+    padding:6px 8px;
+}
+
+div.ploopi_explorer_column {
+    position:absolute;
+    height:100%;
+    border-left:1px solid rgba(40, 50, 78, 0.5);
+    z-index:1000;
+}
+
+*.ploopi_explorer_element {
+    display:block;
+    overflow:hidden;
+    word-wrap:break-word;
+}
+
+a.ploopi_explorer_element * {
+    cursor:pointer;
+}
+
+*.ploopi_explorer_element p {
+    margin:0;
+    padding:4px 4px;
+}
+
+*.ploopi_explorer_element p img, *.ploopi_explorer_element p span, *.ploopi_explorer_element p a {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+a.ploopi_explorer_element:hover {
+    text-decoration:none;
+}
+
+a.ploopi_explorer_link {
+    display:block;
+    overflow:hidden;
+    text-decoration:none;
+    outline:none;
+}
+
+a.ploopi_explorer_link:hover {
+    text-decoration:none;
+    background:rgba(79,137,153, 0.2);
+}
+
+div.ploopi_explorer_line_1 {
+    overflow:hidden;
+    background:#f0f0f0;
+    margin-bottom:2px;
+}
+
+div.ploopi_explorer_line_2 {
+    overflow:hidden;
+    background:#e0e0e0;
+    margin-bottom:2px;
+}
+
+div.ploopi_explorer_tools {
+    overflow:hidden;
+}
+
+div.ploopi_explorer_tools a {
+    display:block;
+    float:left;
+    padding:1px 2px;
+}
+
+.treeview_node {
+    overflow:hidden;
+}
+
+.treeview_node img {
+    display:block;
+    float:left;
+}
+
+.treeview_node_loading {
+    overflow:hidden;
+}
+
+.treeview_node_loading img {
+    display:block;
+    float:left;
+}
+
+.treeview_node_loading * {
+    cursor:wait;
+}
+
+div.ploopi_page_cut {
+    clear:both;
+    overflow: auto;
+    margin: 0;
+    padding: 2px;
+    text-align: center;
+}
+
+input.ploopi_page_cut_select, input.ploopi_page_cut {
+    margin: 0 1px;
+    padding:0 2px;
+    border: 1px solid #2c4056;
+    background:#7a8f7c url(../img/template/bouton.png) top left repeat-x;
+    color: #000000;
+    text-align:center;
+    cursor: pointer;
+    font-weight: normal;
+    min-width: 22px;
+}
+
+input.ploopi_page_cut_select {
+    font-weight: bold;
+    font-style: italic;
+}
+
+input.ploopi_page_cut_disable {
+    margin: 0 1px;
+    padding:0 2px;
+    border: 1px solid #2c4056;
+    background:#7a8f7c url(../img/template/bouton.png) top left repeat-x;
+    color: #000000;
+    text-align:center;
+    font-weight: normal;
+    width: 18px;
+}
+
+select.ploopi_page_by {
+    border: 1px solid #606060;
+    background: #f0f0f0;
+    color: #2c4056;
+}
+
+/**
+ * LISTE DE CHOIX
+ */
+
+.ploopi_selectbox {
+    text-align: left;
+}
+
+.ploopi_selectbox_button {
+    margin:0;
+    background: #f0f0f0 url(../img/template/selectbox.gif) right no-repeat;
+    padding:2px 4px;
+    border: 1px solid #808080;
+    cursor:pointer;
+}
+
+.ploopi_selectbox_button_content {
+    margin:0;
+    padding:0;
+    margin-right:16px;
+    overflow:hidden;
+    white-space:nowrap;
+}
+
+.ploopi_selectbox_button img,
+.ploopi_selectbox_button span {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.ploopi_selectbox:hover .ploopi_selectbox_button {
+    background-color: #d0d0d0;
+}
+
+.ploopi_selectbox_list {
+    margin-top: -1px;;
+    padding: 0;
+    background: #f0f0f0;
+    z-index: 10000;
+    position: absolute;
+}
+
+.ploopi_selectbox_list ul {
+    border-width: 1px;
+    border-style: solid;
+    border-color: #808080;
+    margin:0;
+    padding:0;
+}
+
+.ploopi_selectbox_list li {
+    margin:0;
+    padding:0;
+    list-style-type: none;
+}
+
+.ploopi_selectbox_list li a {
+    display:block;
+    padding:2px 4px;
+    padding-left:10px;
+    cursor:pointer;
+}
+
+.ploopi_selectbox_list li a:hover {
+    background:#d0d0d0; /* Change background color of hovered links in drop down */
+    text-decoration:none;
+}
+
+.ploopi_selectbox_list li a img,
+.ploopi_selectbox_list li a span {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.ploopi_selectbox_list li strong {
+    display:block;
+    padding:2px 4px;
+    margin:0;
+}
+
+.ploopi_tabs {
+    overflow:hidden;
+    color:#000000;
+    border-bottom:1px solid #25464E;
+}
+
+
+.ploopi_tabs input {
+    display:block;
+    float:left;
+    margin:3px 3px 0 0;
+}
+
+.ploopi_tabs > a {
+    display:block;
+    float:right;
+    padding:4px 10px;
+    padding-right:14px;
+    text-decoration:none;
+    background:#4F8999;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    color:#000;
+    position:relative;
+}
+
+.ploopi_tabs > a > span,
+.ploopi_tabs > a > img {
+    display:inline-block;
+    vertical-align:middle;
+}
+
+.ploopi_tabs > a:after {
+    content:'';
+    position:absolute;
+    z-index: 1;
+    top: 0;
+    left: -4px;
+    height:3em;
+    width:10px;
+    background:#4F8999;
+    border-left:1px solid #25464E;
+    transform: skew(-10deg);
+}
+
+.ploopi_tabs > a.left {
+    float:left;
+    padding:4px 10px;
+    padding-left:14px;
+}
+
+.ploopi_tabs > a.left:first-child {
+    padding-left:10px;
+}
+
+.ploopi_tabs > a.left:after {
+    float:left;
+    left: auto;
+    right: -4px;
+    border-left:0;
+    border-right:2px solid #25464E;
+    transform: skew(10deg);
+}
+
+.ploopi_tabs > a:hover {
+    background:#25464E;
+    color:#fff;
+}
+
+.ploopi_tabs > a:hover:after {
+    background:#25464E;
+}
+
+.ploopi_tabs > a > span {
+    padding-left:4px;
+}
+
+.ploopi_tabs > span.title {
+    display:block;
+}
+
+.ploopi_tabs a.selected {
+    background:#25464E;
+    color:#fff;
+}
+
+.ploopi_tabs a.selected:after {
+    background:#25464E;
+}
+
+.ploopi_generate_form {
+    overflow:hidden;
+}
+
+.ploopi_generate_form p,
+.ploopi_generate_form h1,
+.ploopi_generate_form h2,
+.ploopi_generate_form h3,
+.ploopi_generate_form form {
+    border:0;
+    margin:0;
+    padding:0;
+}
+
+.ploopi_generate_form h1,
+.ploopi_generate_form h2,
+.ploopi_generate_form h3{
+    clear:both;
+    display:block;
+    font-weight:bold;
+    margin-bottom:20px;
+    border-bottom:solid 1px #d6d6d6;
+    padding-bottom:10px;
+}
+
+.ploopi_generate_form h1 {
+    font-size:1.5em;
+}
+
+.ploopi_generate_form h2 {
+    font-size:1.3em;
+}
+
+.ploopi_generate_form h3 {
+    font-size:1.1em;
+}
+
+.ploopi_generate_form .spacer{
+    clear:both;
+    height:1px;
+}
+
+.ploopi_generate_form .onclick,
+.ploopi_generate_form .onclick *{
+    cursor:pointer;
+}
+
+.ploopi_generate_form h1 p{
+    font-size:0.9em;
+    color:#666;
+    margin-top:8px;
+    font-weight:normal;
+}
+
+.ploopi_generate_form label{
+    display:block;
+    text-align:right;
+    padding-top:2px;
+    width:30%;
+    float:left;
+    clear:both;
+    padding-right:10px;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+}
+
+.ploopi_generate_form label.required{
+    background:url(../img/forms/required.png) no-repeat right top;
+}
+
+.ploopi_generate_form label span{
+    color:#666;
+    display:block;
+    font-weight:normal;
+    text-align:right;
+    width:100%;
+}
+
+.ploopi_generate_form input,
+.ploopi_generate_form select,
+.ploopi_generate_form textarea{
+    float:left;
+    width:60%;
+    margin:0 0 5px 0;
+}
+
+.ploopi_generate_form select option, .ploopi_generate_form select optgroup {
+    background: #f8f8f8;
+}
+
+.ploopi_generate_form input[type=password]{
+    letter-spacing:2px;
+}
+
+.ploopi_generate_form span{
+    display:block;
+    float:left;
+    margin:2px 0 5px 0;
+    width:60%;
+}
+
+
+.ploopi_generate_form span *{
+    width:auto;
+}
+.ploopi_generate_form span label{
+    display:block;
+    float:left;
+    clear:none;
+    padding:0 6px 0 2px;
+    font-weight:normal;
+    width:auto;
+}
+
+.ploopi_generate_form span input{
+    margin:2px 0;
+}
+
+.ploopi_generate_form fieldset {
+    clear:both;
+    display:block;
+    margin: 0;
+    padding: 0.2em;
+    margin: 0.2em;
+    border:1px solid #ccc;
+}
+
+.ploopi_generate_form fieldset legend {
+    padding:0 4px;
+    font-weight:bold;
+}
+
+.ploopi_generate_form .buttons {
+    clear:both;
+    margin:2px 8%;
+    overflow:auto;
+}
+
+.ploopi_generate_form button {
+    float:right;
+    cursor: pointer;
+}
+/*
+    Copyright (c) 2007-2008 Ovensia
+    Contributors hold Copyright (c) to their code submissions.
+
+    This file is part of Ploopi.
+
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
+.ploopi_subscription_viewdetail {
+    display:block;
+    background-color:#CCE3FF;
+    text-decoration:none;
+    height:24px;
+    line-height:24px;
+    font-weight:bold;
+    margin:0;
+    padding:0 6px;
+    overflow:hidden;
+    cursor:pointer;
+}
+
+.ploopi_subscription_viewdetail:hover {
+    background-color:#A1C9FF; /*99c5ff*/
+    text-decoration:none;
+}
+
+.ploopi_subscription_viewdetail img, .ploopi_annotation_viewlist span {
+    vertical-align: middle;
+}
+
+.ploopi_subscription_viewdetail span {
+   padding-left: 5px;
+}
+
+.ploopi_subscription_detail {
+    background-color:#d9edff;
+    border-top:1px solid #d0d0d0;
+}
+
+.ploopi_subscription_checkbox {
+    padding:2px 4px;
+    overflow:auto;
+    clear:both;
+    cursor:pointer;
+    line-height:16px;
+}
+
+.ploopi_subscription_checkbox input {
+    display:block;
+    float:left;
+    cursor:pointer;
+}
+
+.ploopi_subscription_unsubscribe {
+    color:#a60000;
+    font-weight:bold;
+}
+
+.subscription_saved {
+    padding:4px;
+    font-weight:bold;
+    color:#00a600;
+}
+
+.subscription_canceled {
+    padding:4px;
+    font-weight:bold;
+    color:#a60000;
+}
+
+/* #D9EDFF */.syn_titre {
+text-align:center;
+font-weight:bold;
+padding:6px;
+border-bottom:1px solid #808080;
+background-color:#d8d8d8;
+}
+
+.syn_titre h1 {
+margin:0;
+font-size:16px;
+}
+
+.syn_titre h2 {
+margin:0;
+font-size:12px;
+}
+
+.syn_titre h3 {
+margin:0;
+font-size:10px;
+}
+
+.syn_toolbar {
+background-color:#CEDAE6;
+border-bottom:1px solid #808080;
+overflow:hidden;
+line-height:20px;
+height:20px;
+}
+
+.syn_toolbar img {
+display:block;
+float:left;
+margin:2px 3px 0 0;
+}
+
+.syn_toolbar input {
+display:block;
+float:left;
+margin:3px 3px 0 0;
+}
+
+.syn_toolbar a {
+display:block;
+float:right;
+padding-left:12px;
+padding-right:6px;
+text-decoration:none;
+background: url(../img/template/menu.png) 0 0 no-repeat;
+
+}
+
+.syn_toolbar a:hover {
+background: url(../img/template/menu.png) 0 -20px no-repeat;
+}
+
+/* IFRAME */
+
+.syn_iframe {
+width:0;
+height:0;
+visibility:hidden;
+display:none;
+}
+
+.syn_iframe_debug {
+width:100%;
+height:250px;
+}
+
+
+/* POPUPS */
+
+.syn_popup {
+font-size:11px;
+border:1px solid #404040;
+}
+
+.syn_popup_header {
+padding:4px;
+background-color:#c0c0c0;
+border-bottom:1px solid #a0a0a0;
+}
+
+.syn_popup_header h1 {
+margin:0;
+padding:0;
+font-size:12px;
+font-weight:bold;
+}
+
+.syn_popup_header h2 {
+margin:0;
+padding:0;
+font-size:12px;
+font-weight:normal;
+}
+
+.syn_popup_footer {
+padding:2px 4px;
+background-color:#c0c0c0;
+border-top:1px solid #a0a0a0;
+text-align:right;
+}
+
+/* FORMULAIRES */
+
+
+.syn_form {
+    overflow:hidden;
+}
+
+.syn_form fieldset {
+    margin: 0;
+    padding: 0.2em;
+    margin: 0.2em;
+    border:1px solid #193c1c;
+}
+
+.syn_form legend {
+    font-weight: bold;
+    background: transparent;
+}
+
+.syn_form h1 {
+    font-size:12px;
+    font-weight:bold;
+    padding:2px 4px;
+    margin:2px 0;
+    text-align:left;
+    background-color:#d0d0d0;
+    border-top:1px solid #c0c0C0;
+    border-bottom:1px solid #c0c0C0;
+    display:block;
+    clear:both;
+    overflow:auto;
+    }
+
+.syn_form h2 {
+    font-size:10px;
+    font-weight:bold;
+    padding:2px 4px;
+    margin:2px 0;
+    text-align:left;
+    background-color:#d0d0d0;
+    border-top:1px solid #c0c0C0;
+    border-bottom:1px solid #c0c0C0;
+}
+
+.syn_form p {
+    display:block;
+    margin:4px 2px;
+    overflow:auto;
+}
+
+.syn_form p label {
+    float: left;
+    width: 30%;
+    font-weight: bold;
+    text-align: right;
+    margin: 0;
+    padding: 0 .5em 0 0;
+}
+
+.syn_form p input[type='text'],
+.syn_form p input[type='password'],
+.syn_form p select,
+.syn_form p textarea,
+.syn_form p span {
+    width: 65%;
+}
+
+.syn_form p input.checkbox {
+    width:14px;
+}
+
+.syn_form p span {
+    float:left;
+}
+
+.syn_form p textarea{
+    height: 6em;
+}
+
+.syn_form p span.checkbox {
+    cursor:pointer;
+    width:100%;
+}
+
+.syn_form p span.checkbox img, .syn_form p span.checkbox input {
+    cursor:pointer;
+}
+
+input.syn_buttoncarto {
+background: linear-gradient(top, rgba(230,230,230,0.7) 0%, rgba(150,150,150,0.6) 100%), url(../img/template/carto.png) top left repeat-x;
+background: -moz-linear-gradient(top, rgba(230,230,230,0.7) 0%, rgba(150,150,150,0.6) 100%), url(../img/template/carto.png) top left repeat-x;
+background: -webkit-linear-gradient(top, rgba(230,230,230,0.7) 0%, rgba(150,150,150,0.6) 100%), url(../img/template/carto.png) top left repeat-x;
+}
+
+input.syn_buttoncarto:hover {
+background: linear-gradient(top, rgba(150,150,150,0.6) 0%, rgba(230,230,230,0.7) 100%), url(../img/template/carto.png) top left repeat-x;
+background: -moz-linear-gradient(top, rgba(150,150,150,0.6) 0%, rgba(230,230,230,0.7) 100%), url(../img/template/carto.png) top left repeat-x;
+background: -webkit-linear-gradient(top, rgba(150,150,150,0.6) 0%, rgba(230,230,230,0.7) 100%), url(../img/template/carto.png) top left repeat-x;
+}
+/*
+    Copyright (c) 2002-2007 Netlor
+    Copyright (c) 2007-2008 Ovensia
+    Contributors hold Copyright (c) to their code submissions.
+
+    This file is part of Ploopi.
+
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+/******************
+  SYSTEM.TICKETS
+*******************/
+
+#system_tickets_titlebar {
+padding:2px 4px;
+border-bottom:1px solid #d0d0d0;
+background-color:#f0f0f0;
+overflow:auto;
+}
+
+.system_tickets_row_title {
+clear:both;
+background-color:#e0e0e0;
+border-bottom:1px solid #b0b0b0;
+overflow:auto;
+font-weight:bold;
+height:20px;
+line-height:20px;
+}
+
+.system_tickets_row {
+clear:both;
+border-bottom:1px solid #b0b0b0;
+overflow:auto;
+}
+
+.system_tickets_head {
+cursor:pointer;
+}
+
+.system_tickets_detail {
+clear:both;
+overflow:auto;
+display:none;
+margin-left:40px;
+}
+
+.system_tickets_sender {
+float:right;
+width:180px;
+padding:2px 0;
+}
+
+.system_tickets_date {
+float:right;
+width:160px;
+padding:2px 0;
+}
+
+.system_tickets_count {
+float:right;
+width:40px;
+padding:2px 0;
+}
+
+.system_tickets_attachment {
+float:right;
+text-align:center;
+width:20px;
+padding:2px 0;
+}
+
+.system_tickets_title {
+}
+
+.system_tickets_detail_content {
+padding-right:4px;
+overflow:auto;
+}
+
+.system_tickets_message {
+padding:4px;
+margin-right:4px;
+background-color:#fafafa;
+border:1px solid #d0d0d0;
+overflow:auto;
+}
+
+.system_tickets_buttons {
+clear: both;
+float: left;
+margin: 4px 0 4px 0px;
+padding: 2px 4px;
+border:1px solid #c0c0c0;
+background-color:#d0d0d0;
+}
+
+.system_tickets_buttons img {
+    margin-right:2px;
+}
+
+.system_tickets_buttons a {
+    margin-right:4px;
+    text-decoration:none;
+}
+
+.system_tickets_user {
+width: 250px;
+text-align: left;
+background-color:#fafafa;
+border: 1px solid #d0d0d0;
+padding:4px;
+float: right;
+}
+
+.system_tickets_user_detail img, .system_tickets_user_detail span {
+    vertical-align: middle;
+}
+
+.system_tickets_user_puce {
+float:left;
+width:20px;
+height: 16px;
+text-align: center;
+}
+
+.system_tickets_response {
+clear:both;
+border-left: 1px solid #b0b0b0;
+border-top: 1px solid #b0b0b0;
+padding:2px 0 0 12px;
+overflow:auto;
+}
+
+.system_tickets_response_detail {
+padding:0;
+clear:both;
+margin:0;
+display:none;
+}
+
+.system_tickets_tovalidate {
+display:block;
+float:left;
+background-color:#ffffe0;
+border: 1px solid #d0d0d0;
+margin:4px 0;
+padding:4px;
+overflow:auto;
+cursor:pointer;
+}
+
+.system_tickets_tovalidate:hover {
+text-decoration:none;
+}
+
+.system_tickets_tovalidate_msg img, .system_tickets_tovalidate_msg span{
+    vertical-align: middle;
+}
+
+.system_tickets_tovalidate_msg img {
+padding-right:4px;
+}
+
+.system_tickets_tovalidate_msg {
+}
+
+.system_tickets_tovalidate_button {
+    margin-top:4px;
+    text-align:right;
+}
+
+.system_tickets_tovalidate_button img {
+    margin-right:2px;
+}
+
+.system_tickets_tovalidate_button a {
+    margin-right:4px;
+    text-decoration:none;
+}
+
+.system_tickets_legend {
+    clear:both;
+    padding:4px;
+    overflow:auto;
+}
+
+.system_tickets_legend img {
+    float:left;
+    margin-left:10px;
+    margin-right:2px;
+}
+
+.system_tickets_legend div {
+    float:left;
+}
+
+#tickets_new {
+    padding:4px;
+    background-color:#f8f8f8;
+}
+
+.system_tickets_page {
+display:block;
+float:left;
+background-color:#f0f0f0;
+padding: 0px 4px;
+margin-left:1px;
+text-decoration:none;
+color:#000000;
+border:1px solid #d0d0d0;
+}
+
+.system_tickets_page:hover {
+background-color:#e0e0e0;
+text-decoration:none;
+}
+
+.system_tickets_page_sel {
+display:block;
+float:left;
+background-color:#f0f0f0;
+padding: 0px 4px;
+margin-left:1px;
+text-decoration:none;
+color:#000000;
+border:1px solid #000000;
+}
+
+.system_tickets_page_sel:hover {
+background-color:#e0e0e0;
+text-decoration:none;
+}
+
+.system_tickets_select_workgroup {
+    font-weight:bold;
+    background-color:#e0e0e0;
+    border-bottom:1px solid #c0c0c0;
+    padding:1px;
+}
+
+.system_tickets_select_workgroup span {
+    margin-left:4px;
+}
+
+.system_tickets_select_user {
+    display:block;
+    background-color:#f0f0f0;
+    border-bottom:1px solid #c0c0c0;
+    color:#404040;
+    padding:1px 1px 1px 20px;
+    text-decoration:none;
+}
+
+.system_tickets_select_user:hover {
+    text-decoration:none;
+    background-color:#F2F6FF;
+    color:#000000;
+}
+
+.system_tickets_select_user span {
+    padding-left:4px;
+}
+
+.system_tickets_select_usergroup {
+    display:block;
+    background-color:#e8e8e8;
+    border-bottom:1px solid #c0c0c0;
+    color:#404040;
+    padding:1px 1px 1px 20px;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+.system_tickets_select_usergroup:hover {
+    text-decoration:none;
+    background-color:#F2F6FF;
+    color:#000000;
+}
+
+.system_tickets_select_usergroup span {
+    padding-left:4px;
+}
+
+.system_tickets_select_usergroup_user {
+    display:block;
+    background-color:#f0f0f0;
+    border-bottom:1px solid #c0c0c0;
+    color:#404040;
+    padding:1px 1px 1px 40px;
+    text-decoration:none;
+}
+
+.system_tickets_select_usergroup_user:hover {
+    text-decoration:none;
+    background-color:#F2F6FF;
+    color:#000000;
+}
+
+.system_tickets_select_usergroup_user span {
+    padding-left:4px;
+}
+
+.system_tickets_select_legend {
+    padding:2px 1px;
+    text-align:right;
+}
+.system_tickets_select_legend span {
+    padding:0 4px;
+}
+
+.system_tickets_select_empty {
+    padding:2px 1px;
+}
+.system_tickets_select_empty span {
+    padding:0 4px;
+}
+
+a.system_tickets_delete_user {
+    text-decoration:none;
+}
+
+a.system_tickets_delete_user:hover {
+    text-decoration:none;
+}
+
+a.system_tickets_delete_user img {
+    border:0;
+}
+
+.system_tickets_quoted_user {
+    margin:2px 2px 0 2px;
+    padding:2px 4px;
+    border-left:2px solid #c0c0c0;
+    background-color:#f0f0f0;
+}
+
+.system_tickets_quoted_message {
+    margin:0 2px 2px 2px;
+    padding:2px 4px;
+    border-left:2px solid #c0c0c0;
+    background-color:#f0f0f0;
+}
+
+#system_tickets_button {
+    text-decoration:none;
+    border:1px solid #c0c0c0;
+    background-color:#f8f8f8;
+    padding:2px 4px;
+    margin:2px 2px 2px 0;
+    display:block;
+    float:left;
+}
+
+#system_tickets_button:hover {
+    background-color:#e0e0e0;
+}
+/*
+    Copyright (c) 2002-2007 Netlor
+    Copyright (c) 2007-2008 Ovensia
+    Contributors hold Copyright (c) to their code submissions.
+
+    This file is part of Ploopi.
+
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
+div.ploopi_validation_title {
+    font-weight:bold;
+    padding:4px;
+    background-color:#ffc3b2;
+}
+
+a.ploopi_validation_title {
+    display:block;
+    font-weight:bold;
+    padding:4px;
+    background-color:#ffc3b2;
+    text-decoration:none;
+    cursor:pointer;
+}
+
+a.ploopi_validation_title:hover {
+    text-decoration:none;
+}
+
+.ploopi_validation_search_form {
+    padding:4px;
+    background-color:#ffded9;
+}
+
+.ploopi_validation_authorizedlist {
+    padding:4px;
+    background-color:#ffded9;
+}
+
+.ploopi_validation_select_workgroup {
+    font-weight:bold;
+    background-color:#e0e0e0;
+    border-bottom:1px solid #c0c0c0;
+    padding:1px;
+}
+
+.ploopi_validation_select_workgroup span {
+    margin-left:4px;
+}
+
+.ploopi_validation_select_user {
+    display:block;
+    background-color:#f0f0f0;
+    border-bottom:1px solid #c0c0c0;
+    color:#404040;
+    padding:1px 1px 1px 20px;
+    text-decoration:none;
+}
+
+.ploopi_validation_select_user:hover {
+    text-decoration:none;
+    background-color:#ffe2d9;
+    color:#000000;
+}
+
+.ploopi_validation_select_user span {
+    padding-left:4px;
+}
+
+.ploopi_validation_select_usergroup {
+    display:block;
+    font-weight:bold;
+    background-color:#e8e8e8;
+    border-bottom:1px solid #c0c0c0;
+    color:#404040;
+    padding:1px 1px 1px 20px;
+    text-decoration:none;
+}
+
+.ploopi_validation_select_usergroup:hover {
+    text-decoration:none;
+    background-color:#ffe2d9;
+    color:#000000;
+}
+
+.ploopi_validation_select_usergroup span {
+    padding-left:4px;
+}
+
+.ploopi_validation_select_usergroup_user {
+    display:block;
+    background-color:#f0f0f0;
+    border-bottom:1px solid #c0c0c0;
+    color:#404040;
+    padding:1px 1px 1px 40px;
+    text-decoration:none;
+}
+
+.ploopi_validation_select_usergroup_user:hover {
+    text-decoration:none;
+    background-color:#ffe2d9;
+    color:#000000;
+}
+
+.ploopi_validation_select_usergroup_user span {
+    padding-left:4px;
+}
+
+.ploopi_validation_select_legend {
+    padding:2px 1px;
+    text-align:right;
+}
+.ploopi_validation_select_legend span {
+    padding:0 4px;
+}
+
+.ploopi_validation_select_empty {
+    padding:4px;
+}
+.ploopi_validation_select_empty span {
+    padding:0 4px;
+}
+
+a.ploopi_validation_delete_user {
+    text-decoration:none;
+}
+
+a.ploopi_validation_delete_user:hover {
+    text-decoration:none;
+}
+
+a.ploopi_validation_delete_user img {
+    border:0;
+}

@@ -1,0 +1,226 @@
+/*
+.crisorsec_titre {
+text-align:center;
+font-weight:bold;
+padding:6px;
+border-bottom:1px solid #808080;
+background-color:#d8d8d8;
+}
+
+.crisorsec_titre h1 {
+margin:0;
+font-size:16px;
+}
+
+.crisorsec_titre h2 {
+margin:0;
+font-size:12px;
+}
+
+.crisorsec_titre h3 {
+margin:0;
+font-size:10px;
+}
+*/
+
+.crisorsec_toolbar {
+background-color:#CEDAE6;
+border-bottom:1px solid #808080;
+overflow:hidden;
+line-height:20px;
+height:20px;
+}
+
+.crisorsec_toolbar img {
+display:block;
+float:left;
+margin:2px 3px 0 0;
+}
+
+.crisorsec_toolbar input {
+display:block;
+float:left;
+margin:3px 3px 0 0;
+}
+
+.crisorsec_toolbar a {
+display:block;
+float:right;
+padding-left:12px;
+padding-right:6px;
+text-decoration:none;
+background: url(../img/template/menu.png) 0 0 no-repeat;
+
+}
+
+.crisorsec_toolbar a:hover {
+background: url(../img/template/menu.png) 0 -20px no-repeat;
+}
+
+/* IFRAME */
+
+.crisorsec_iframe {
+width:0;
+height:0;
+visibility:hidden;
+display:none;
+}
+
+.crisorsec_iframe_debug {
+width:100%;
+height:250px;
+}
+
+
+/* POPUPS */
+
+.crisorsec_popup {
+font-size:11px;
+border:1px solid #404040;
+}
+
+.crisorsec_popup_header {
+padding:4px;
+background-color:#c0c0c0;
+border-bottom:1px solid #a0a0a0;
+}
+
+.crisorsec_popup_header h1 {
+margin:0;
+padding:0;
+font-size:12px;
+font-weight:bold;
+}
+
+.crisorsec_popup_header h2 {
+margin:0;
+padding:0;
+font-size:12px;
+font-weight:normal;
+}
+
+.crisorsec_popup_footer {
+padding:2px 4px;
+background-color:#c0c0c0;
+border-top:1px solid #a0a0a0;
+text-align:right;
+}
+
+/* FORMULAIRES */
+
+
+.crisorsec_form {
+    overflow:hidden;
+}
+
+.crisorsec_form fieldset {
+    margin: 0;
+    padding: 0.2em;
+    margin: 0.2em;
+    border:1px solid #193c1c;
+}
+
+.crisorsec_form legend {
+    font-weight: bold;
+    background: transparent;
+}
+
+.crisorsec_form h1 {
+    font-size:12px;
+    font-weight:bold;
+    padding:6px;
+    margin:2px 0;
+    text-align:left;
+    background-color:#BBBBBB;
+    display:block;
+    clear:both;
+    overflow:auto;
+    }
+
+.crisorsec_form h2 {
+    font-size:10px;
+    font-weight:bold;
+    padding:4px;
+    margin:2px 0;
+    text-align:left;
+    background-color:#BBBBBB;
+}
+
+.crisorsec_form p {
+    display:block;
+    margin:4px 2px;
+    overflow:auto;
+}
+
+.crisorsec_form p label {
+    float: left;
+    width: 30%;
+    font-weight: bold;
+    text-align: right;
+    margin: 0;
+    padding: 0 .5em 0 0;
+}
+
+.crisorsec_form p input[type='text'],
+.crisorsec_form p input[type='password'],
+.crisorsec_form p select,
+.crisorsec_form p textarea,
+.crisorsec_form p span {
+    width: 65%;
+}
+
+.crisorsec_form p input.checkbox {
+    width:14px;
+}
+
+.crisorsec_form p span {
+    float:left;
+}
+
+.crisorsec_form p textarea{
+    height: 6em;
+}
+
+.crisorsec_form p span.checkbox {
+    cursor:pointer;
+    width:100%;
+}
+
+.crisorsec_form p span.checkbox img, .crisorsec_form p span.checkbox input {
+    cursor:pointer;
+}
+
+input.crisorsec_buttoncarto {
+background: linear-gradient(top, rgba(230,230,230,0.7) 0%, rgba(150,150,150,0.6) 100%), url(../img/template/carto.png) top left repeat-x;
+background: -moz-linear-gradient(top, rgba(230,230,230,0.7) 0%, rgba(150,150,150,0.6) 100%), url(../img/template/carto.png) top left repeat-x;
+background: -webkit-linear-gradient(top, rgba(230,230,230,0.7) 0%, rgba(150,150,150,0.6) 100%), url(../img/template/carto.png) top left repeat-x;
+}
+
+input.crisorsec_buttoncarto:hover {
+background: linear-gradient(top, rgba(150,150,150,0.6) 0%, rgba(230,230,230,0.7) 100%), url(../img/template/carto.png) top left repeat-x;
+background: -moz-linear-gradient(top, rgba(150,150,150,0.6) 0%, rgba(230,230,230,0.7) 100%), url(../img/template/carto.png) top left repeat-x;
+background: -webkit-linear-gradient(top, rgba(150,150,150,0.6) 0%, rgba(230,230,230,0.7) 100%), url(../img/template/carto.png) top left repeat-x;
+}
+
+
+#crisorsec_treeview {
+height:200px;
+overflow:auto;
+overflow-x:hidden;
+width:300px;
+border-radius:2px;
+color: #2c4056;
+padding: 3px;
+border: 2px solid rgba(0,0,0,0.2);
+background: #fff;
+}
+
+#crisorsec_treeview a {
+text-decoration:none;
+border-bottom:1px dotted #c0c0c0;
+}
+
+#crisorsec_treeview a:hover {
+background-color:#d0d0d0;
+border-bottom:1px solid #c0c0c0;
+}

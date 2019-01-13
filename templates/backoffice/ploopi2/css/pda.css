@@ -1,0 +1,205 @@
+/*
+    Copyright (c) 2002-2007 Netlor
+    Copyright (c) 2007-2008 Ovensia
+    Contributors hold Copyright (c) to their code submissions.
+
+    This file is part of Ploopi.
+
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+/* andreas02 - an open source xhtml/css website layout by Andreas Viklund (http://andreasviklund.com). Made for OSWD.org, free to use as-is for any purpose as long as the proper credits are given for the original design work. For design assistance and support, contact me through my website or through http://oswd.org/email.phtml?user=Andreas
+
+Version: 1.0
+(July 27, 2005)
+
+Screen layout: */
+
+body {
+padding: 0;
+margin: 0;
+font: 76% tahoma, verdana, sans-serif;
+background: #ffffff;
+color: #303030;
+}
+
+table {
+padding: 0;
+margin: 0;
+font: 76% tahoma, verdana, sans-serif;
+}
+
+a {
+text-decoration: none;
+color: #4E68A6;
+}
+
+a:hover {
+text-decoration: underline;
+}
+
+a.headlink {
+text-decoration: none;
+color: #000000;
+}
+
+a.headlink:hover {
+text-decoration: none;
+}
+
+form {
+padding:0px;
+margin:0px;
+}
+
+#header {
+background: #d0d0d0;
+padding:2px;
+font-weight:bold;
+border-bottom:solid 1px #a0a0a0;
+}
+
+#login {
+padding:2px;
+border-bottom:solid 1px #a0a0a0;
+}
+
+
+#mainmenu {
+padding:2px;
+clear: both;
+overflow:auto;
+background: #e0e0e0;
+border-bottom:solid 1px #a0a0a0;
+}
+
+#mainmenu a {
+margin:0px;
+text-decoration: none;
+font-weight:normal;
+}
+
+#mainmenu a.notsel {
+/* background: #d0d0d0 ; */
+}
+
+#mainmenu a.notsel:hover {
+text-decoration: none;
+background: #e0e0e0;
+}
+
+#mainmenu a.sel {
+color: #ffffff;
+background: #e2001a;
+}
+
+#mainmenu a.sel:hover {
+text-decoration: none;
+}
+
+#block_modules {
+padding:2px;
+clear: both;
+overflow:auto;
+background: #f0f0f0;
+border-bottom:solid 1px #a0a0a0;
+}
+
+#block_modules a {
+margin:0px;
+text-decoration: none;
+font-weight:normal;
+}
+
+#block_modules a.notsel {
+/* background: #d0d0d0 ; */
+}
+
+#block_modules a.notsel:hover {
+text-decoration: none;
+background: #e0e0e0;
+}
+
+#block_modules a.sel {
+color: #ffffff;
+background: #e2001a;
+}
+
+#block_modules a.sel:hover {
+text-decoration: none;
+}
+
+
+#footer {
+background: #e0e0e0;
+padding:2px;
+font-weight:bold;
+overflow:auto;
+clear:both;
+}
+
+div.simplebloc {
+background-color:#fafafa;
+border-bottom:1px solid #a0a0a0;
+padding:0px;
+/*
+ margin-bottom:2px;
+ */
+overflow:auto;
+font-size:0.9em;
+}
+
+div.simplebloc_title {
+background-color:#e0e0e0;
+border-bottom:1px solid #c0c0c0;
+padding:4px;
+font-size:1em;
+text-align:left;
+font-weight:bold;
+}
+
+.tabs {
+clear:both;
+overflow:auto;
+background-color:#ffffff;
+}
+
+.tabs a {
+display:block;
+float:left;
+margin:0px;
+text-decoration: none;
+font-weight:normal;
+border-right:1px solid #a0a0a0;
+border-bottom:1px solid #a0a0a0;
+padding:0px 2px;
+}
+
+.tabs a.notsel {
+}
+
+.tabs a.notsel:hover {
+text-decoration: none;
+background: #e0e0e0;
+}
+
+.tabs a.selected {
+color: #ffffff;
+background: #e2001a;
+}
+
+.tabs a.selected:hover {
+text-decoration: none;
+}
+
