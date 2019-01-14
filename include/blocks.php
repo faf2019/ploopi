@@ -97,7 +97,8 @@ switch ($_SESSION['ploopi']['mainmenu'])
                                         'title'=> $_SESSION['ploopi']['modules'][$menu_moduleid]['label'],
                                         'description' => '',
                                         'url' => ploopi_urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public"),
-                                        'file' => $blockpath
+                                        'file' => $blockpath,
+                                        'type' => $_SESSION['ploopi']['modules'][$menu_moduleid]['moduletype']
                                     );
 
                                 $block = new block();

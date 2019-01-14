@@ -144,9 +144,9 @@ if ($_SESSION['ploopi']['connected'])
                     'TITLE' => ploopi_htmlentities($mod['title']),
                     'URL' => $mod['url'],
                     'DESCRIPTION' => '',
-                    'SELECTED' => ($idmod == $_SESSION['ploopi']['moduleid']) ? 'selected' : ''
-                )
-            );
+                    'SELECTED' => ($idmod == $_SESSION['ploopi']['moduleid']) ? 'selected' : '',
+                    'TYPE' => isset($mod['type']) ? $mod['type'] : ''
+            ));
 
             if (!empty($mod['content']))
             {
@@ -164,9 +164,9 @@ if ($_SESSION['ploopi']['connected'])
                             'ID' => $idmod,
                             'TITLE' => ploopi_htmlentities($mod['title']),
                             'URL' => $mod['url'],
-                            'DESCRIPTION' => ''
-                        )
-                    );
+                            'DESCRIPTION' => '',
+                            'TYPE' => isset($mod['type']) ? $mod['type'] : ''
+                    ));
 
                     if (!empty($mod['content']))
                     {
