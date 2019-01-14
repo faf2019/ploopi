@@ -204,6 +204,7 @@ abstract class form_element
             self::_getProperty('autocapitalize',  isset($this->_arrOptions['autocapitalize']) && !$this->_arrOptions['autocapitalize'] ? 'off' : null).
             self::_getProperty('spellcheck',  isset($this->_arrOptions['spellcheck']) && !$this->_arrOptions['spellcheck'] ? 'false' : null);
             self::_getProperty('accept',  isset($this->_arrOptions['accept']) ? $this->_arrOptions['accept'] : null);
+            self::_getProperty('title',  isset($this->_arrOptions['title']) ? $this->_arrOptions['title'] : null);
     }
 
     /**
@@ -327,6 +328,7 @@ class form_field extends form_element
         'readonly' => false,
         'disabled' => false,
         'accesskey' => null,
+        'title' => null,
         'htmlentities' => true,
         'onblur' => null,
         'onchange' => null,
@@ -396,8 +398,9 @@ class form_field extends form_element
         $strStyleform = is_null($this->_arrOptions['style_form']) ? '' : " style=\"{$this->_arrOptions['style_form']}\"";
         $strClassform = is_null($this->_arrOptions['class_form']) ? '' : " class=\"{$this->_arrOptions['class_form']}\"";
         $strDesc = is_null($this->_arrOptions['description']) ? '' : "<span>{$this->_arrOptions['description']}</span>";
-
-        return "<div id=\"{$this->_strId}_form\"{$strStyleform}{$strClassform}><label for=\"{$this->_strId}\"{$strAccesskey}{$strRequired}>{$this->_strLabel}{$strDesc}</label>{$strOutputField}</div>";
+        $strTitle = is_null($this->_arrOptions['title']) ? '' : " title=\"{$this->_arrOptions['title']}\"";
+        
+        return "<div id=\"{$this->_strId}_form\"{$strStyleform}{$strClassform}><label for=\"{$this->_strId}\"{$strAccesskey}{$strRequired}{$strTitle}>{$this->_strLabel}{$strDesc}</label>{$strOutputField}</div>";
     }
 
     /**
@@ -866,8 +869,9 @@ class form_checkbox extends form_field
         $strProperties = $this->generateProperties('onclick'.(is_null($this->_arrOptions['class']) ? '' : ' '.$this->_arrOptions['class']));
         $strChecked = $this->_booChecked ? ' checked="checked"' : '';
         $strValue = $this->_arrOptions['htmlentities'] ? form::htmlentities($this->_arrValues[0]) : $strValue;
-
-        return $this->renderForm("<input type=\"checkbox\" name=\"{$this->_strName}\" id=\"{$this->_strId}\" value=\"{$strValue}\" title=\"{$this->_strLabel}\" tabindex=\"{$intTabindex}\" {$strChecked}{$strProperties}{$strEvents} />");
+        $strTitle = isset($this->_arrOptions['title']) ? form::htmlentities($this->_arrOptions['title']) : $this->_strLabel;
+        
+        return $this->renderForm("<input type=\"checkbox\" name=\"{$this->_strName}\" id=\"{$this->_strId}\" value=\"{$strValue}\" title=\"{$strTitle}\" tabindex=\"{$intTabindex}\" {$strChecked}{$strProperties}{$strEvents} />");
     }
 }
 
