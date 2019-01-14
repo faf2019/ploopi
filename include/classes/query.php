@@ -476,6 +476,13 @@ class ploopi_query_select extends ploopi_query_sud
     private $arrLeftJoin;
 
     /**
+     * Tableau de la clause RIGHT JOIN
+     *
+     * @var array
+     */
+    private $arrRightJoin;
+
+    /**
      * Tableau de la clause GROUP BY
      *
      * @var array
@@ -499,6 +506,7 @@ class ploopi_query_select extends ploopi_query_sud
         $this->arrSelect = array();
         $this->arrInnerJoin = array();
         $this->arrLeftJoin = array();
+        $this->arrRightJoin = array();
         $this->arrGroupBy = array();
         $this->arrHaving = array();
 
@@ -526,6 +534,17 @@ class ploopi_query_select extends ploopi_query_sud
     {
         if (!empty($mixValues) && !is_array($mixValues)) $mixValues = array($mixValues);
         $this->arrLeftJoin[] = array('rawsql' => $strLeftJoin, 'values' => $mixValues);
+    }
+
+    /**
+     * Ajoute une clause RIGHT JOIN à la requête
+     *
+     * @param string $strRightJoin Clause RIGHT JOIN
+     */
+    public function add_rightjoin($strRightJoin, $mixValues = null)
+    {
+        if (!empty($mixValues) && !is_array($mixValues)) $mixValues = array($mixValues);
+        $this->arrRightJoin[] = array('rawsql' => $strRightJoin, 'values' => $mixValues);
     }
 
     /**
@@ -593,6 +612,19 @@ class ploopi_query_select extends ploopi_query_sud
     }
 
     /**
+     * Retourne la clause RIGHT JOIN
+     *
+     * @return string
+     */
+    protected function get_rightjoin()
+    {
+        $arrRightJoin = array();
+        foreach($this->arrRightJoin as $arrRightJoinDetail) $arrRightJoin[] = ploopi_sqlformat::replace($arrRightJoinDetail, $this->objDb);
+
+        return empty($arrRightJoin) ? '' : ' RIGHT JOIN '.implode(' RIGHT JOIN ', $arrRightJoin);
+    }
+
+    /**
      * Retourne la clause INNER JOIN
      *
      * @return string
@@ -636,6 +668,11 @@ class ploopi_query_select extends ploopi_query_sud
     public function remove_leftjoin() { $this->arrLeftJoin = array(); }
 
     /**
+     * Supprime la clause RIGHT JOIN
+     */
+    public function remove_rightjoin() { $this->arrRightJoin = array(); }
+
+    /**
      * Supprime la clause INNER JOIN
      */
     public function remove_innerjoin() { $this->arrInnerJoin = array(); }
@@ -665,6 +702,7 @@ class ploopi_query_select extends ploopi_query_sud
                 $this->get_from().
                 $this->get_innerjoin().
                 $this->get_leftjoin().
+                $this->get_rightjoin().
                 $this->get_where().
                 $this->get_groupby().
                 $this->get_having().
@@ -708,6 +746,13 @@ class ploopi_query_delete extends ploopi_query_sud
     private $arrLeftJoin;
 
     /**
+     * Tableau de la clause RIGHT JOIN
+     *
+     * @var array
+     */
+    private $arrRightJoin;
+
+    /**
      * Constructeur de la classe
      *
      * @param resource $objDb Connexion à la BDD
@@ -717,6 +762,7 @@ class ploopi_query_delete extends ploopi_query_sud
         $this->arrDelete = array();
         $this->arrInnerJoin = array();
         $this->arrLeftJoin = array();
+        $this->arrRightJoin = array();
 
         return parent::__construct('delete', $objDb);
     }
@@ -741,6 +787,17 @@ class ploopi_query_delete extends ploopi_query_sud
     {
         if (!empty($mixValues) && !is_array($mixValues)) $mixValues = array($mixValues);
         $this->arrLeftJoin[] = array('rawsql' => $strLeftJoin, 'values' => $mixValues);
+    }
+
+    /**
+     * Ajoute une clause RIGHT JOIN à la requête
+     *
+     * @param string $strRightJoin Clause RIGHT JOIN
+     */
+    public function add_rightjoin($strRightJoin, $mixValues = null)
+    {
+        if (!empty($mixValues) && !is_array($mixValues)) $mixValues = array($mixValues);
+        $this->arrRightJoin[] = array('rawsql' => $strRightJoin, 'values' => $mixValues);
     }
 
     /**
@@ -778,6 +835,19 @@ class ploopi_query_delete extends ploopi_query_sud
     }
 
     /**
+     * Retourne la clause RIGHT JOIN
+     *
+     * @return string
+     */
+    protected function get_rightjoin()
+    {
+        $arrRightJoin = array();
+        foreach($this->arrRightJoin as $arrRightJoinDetail) $arrRightJoin[] = ploopi_sqlformat::replace($arrRightJoinDetail, $this->objDb);
+
+        return empty($arrRightJoin) ? '' : ' LEFT JOIN '.implode(' LEFT JOIN ', $arrRightJoin);
+    }
+
+    /**
      * Retourne la clause INNER JOIN
      *
      * @return string
@@ -805,6 +875,7 @@ class ploopi_query_delete extends ploopi_query_sud
                 $this->get_from().
                 $this->get_innerjoin().
                 $this->get_leftjoin().
+                $this->get_rightjoin().
                 $this->get_where().
                 $this->get_orderby().
                 $this->get_limit().
