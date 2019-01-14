@@ -525,13 +525,14 @@ if (ploopi_ismoduleallowed('dbreport'))
 
             if (isset($_GET['dbreport_query_id']) && is_numeric($_GET['dbreport_query_id']) && $objDbrQuery->open($_GET['dbreport_query_id']))
             {
-                if (isset($_GET['dbreport_queryrelation_src']) && isset($_GET['dbreport_queryrelation_dest']) && isset($_GET['dbreport_queryrelation_active']))
+                if (isset($_GET['dbreport_queryrelation_src']) && isset($_GET['dbreport_queryrelation_dest']))
                 {
                    list($strTableSrc, $strFieldSrc) = explode(',', $_GET['dbreport_queryrelation_src']);
                    list($strTableDest, $strFieldDest) = explode(',', $_GET['dbreport_queryrelation_dest']);
 
                    if ($objDbrQueryRelation->open($_GET['dbreport_query_id'], $strTableSrc, $strFieldSrc, $strTableDest, $strFieldDest)) {
-                       $objDbrQueryRelation->fields['active'] = $_GET['dbreport_queryrelation_active'];
+                       if (isset($_GET['dbreport_queryrelation_active'])) $objDbrQueryRelation->fields['active'] = $_GET['dbreport_queryrelation_active'];
+                       if (isset($_GET['dbreport_queryrelation_type_join'])) $objDbrQueryRelation->fields['type_join'] = $_GET['dbreport_queryrelation_type_join'];
                        $objDbrQueryRelation->save();
                    }
                 }

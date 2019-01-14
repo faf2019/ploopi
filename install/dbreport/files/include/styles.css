@@ -186,3 +186,14 @@
 
 .dbreport_format_howto th {
     background-color:#ccc;
+}
+
+a.dbreport_action {
+    display: block;
+    padding: 2px;
+    margin-top: 2px;
+    margin-left: 2px;
+    border: 1px solid rgba(0,0,0,0.2);
+    background-color: rgba(0,0,0,0.1);
+    border-radius: 2px;
+}

@@ -1070,8 +1070,11 @@ class dbreport_query extends data_object
         while ($row = $objRs->fetchrow())
         {
             // Stockage des jointures suivant l'origine
-            $arrJoins[$row['tablename_src']][$row['tablename_dest']][] = "`{$row['tablename_src']}`.`{$row['fieldname_src']}` = `{$row['tablename_dest']}`.`{$row['fieldname_dest']}`";
-            $arrJoins[$row['tablename_dest']][$row['tablename_src']][] = "`{$row['tablename_dest']}`.`{$row['fieldname_dest']}` = `{$row['tablename_src']}`.`{$row['fieldname_src']}`";
+            $arrJoins[$row['tablename_src']][$row['tablename_dest']]['type_join'] = $row['type_join'];
+            $arrJoins[$row['tablename_dest']][$row['tablename_src']]['type_join'] = $row['type_join'];
+
+            $arrJoins[$row['tablename_src']][$row['tablename_dest']]['relation'][] = "`{$row['tablename_src']}`.`{$row['fieldname_src']}` = `{$row['tablename_dest']}`.`{$row['fieldname_dest']}`";
+            $arrJoins[$row['tablename_dest']][$row['tablename_src']]['relation'][] = "`{$row['tablename_dest']}`.`{$row['fieldname_dest']}` = `{$row['tablename_src']}`.`{$row['fieldname_src']}`";
         }
 
         if (!empty($arrTables)) {
@@ -1089,7 +1092,20 @@ class dbreport_query extends data_object
                 // Recherche des jointures entre la table courante et les tables connues
                 foreach($arrKnownTables as $strKnownTable) {
                     if (!empty($arrJoins[$strTable][$strKnownTable])) {
-                        $this->objQuery->add_innerjoin("`{$strTable}` ON ".implode(' AND ', $arrJoins[$strTable][$strKnownTable]));
+                        switch($arrJoins[$strTable][$strKnownTable]['type_join']) {
+                            case 'right':
+                                $this->objQuery->add_rightjoin("`{$strTable}` ON ".implode(' AND ', $arrJoins[$strTable][$strKnownTable]['relation']));
+                            break;
+
+                            case 'left':
+                                $this->objQuery->add_leftjoin("`{$strTable}` ON ".implode(' AND ', $arrJoins[$strTable][$strKnownTable]['relation']));
+                            break;
+
+                            default:
+                            case 'inner':
+                                $this->objQuery->add_innerjoin("`{$strTable}` ON ".implode(' AND ', $arrJoins[$strTable][$strKnownTable]['relation']));
+                            break;
+                        }
                     }
                 }
 

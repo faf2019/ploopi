@@ -197,6 +197,11 @@ if (isset($_GET['dbreport_query_id']) && is_numeric($_GET['dbreport_query_id']) 
             'options' => array('sort' => true)
         );
 
+        $arrColumns['left']['type_join'] = array(
+            'label' => 'Jointure',
+            'width' => 100,
+            'options' => array('sort' => true)
+        );
 
         $arrColumns['auto']['comment'] = array(
             'label' => 'Commentaire',
@@ -219,11 +224,21 @@ if (isset($_GET['dbreport_query_id']) && is_numeric($_GET['dbreport_query_id']) 
                     'tabledest' => array('label' => ploopi_htmlentities($row['tablename_dest'])),
                     'fieldsrc' => array('label' => ploopi_htmlentities($row['fieldname_src'])),
                     'fielddest' => array('label' => ploopi_htmlentities($row['fieldname_dest'])),
-                    'active' => array('label' => $row['active'] ? 'Oui' : 'Non', 'style' => 'font-weight:bold;color:#'.($row['active'] ? '00a600' : 'a60000')),
+                    'type_join' => array('label' =>
+                        '<select style="width:100%;padding-top:1px;padding-bottom:1px;" onchange="document.location.href=\''.ploopi_urlencode("admin.php?ploopi_op=dbreport_queryrelation_modify&dbreport_query_id={$objDbrQuery->fields['id']}&dbreport_queryrelation_src={$row['tablename_src']},{$row['fieldname_src']}&dbreport_queryrelation_dest={$row['tablename_dest']},{$row['fieldname_dest']}").'&dbreport_queryrelation_type_join=\'+this.value;">
+                            <option value="inner" '.($row['type_join'] == 'inner' ? 'selected="selected"' : '').'>INNER</option>
+                            <option value="left" '.($row['type_join'] == 'left' ? 'selected="selected"' : '').'>LEFT</option>
+                            <option value="right" '.($row['type_join'] == 'right' ? 'selected="selected"' : '').'>RIGHT</option>
+                        </select>',
+                        'sort_label' => $row['type_join']
+                    ),
+                    'active' => array(
+                        'label' => '<a style="font-weight:bold;color:#'.($row['active'] ? '00a600' : 'a60000').'" href="'.ploopi_urlencode("admin.php?ploopi_op=dbreport_queryrelation_modify&dbreport_query_id={$objDbrQuery->fields['id']}&dbreport_queryrelation_src={$row['tablename_src']},{$row['fieldname_src']}&dbreport_queryrelation_dest={$row['tablename_dest']},{$row['fieldname_dest']}&dbreport_queryrelation_active=".($row['active'] ? 0 : 1)).'">'.($row['active'] ? 'Oui' : 'Non').'</a>',
+                        'style' => ''
+                    ),
                     'comment' => array('label' => $strComment, 'style' => $booMulti ? 'color:#a60000;' : 'color:#aaa;')
                 ),
-                'description' => 'Activer/Désactiver la relation',
-                'link' => ploopi_urlencode("admin.php?ploopi_op=dbreport_queryrelation_modify&dbreport_query_id={$objDbrQuery->fields['id']}&dbreport_queryrelation_src={$row['tablename_src']},{$row['fieldname_src']}&dbreport_queryrelation_dest={$row['tablename_dest']},{$row['fieldname_dest']}&dbreport_queryrelation_active=".($row['active'] ? 0 : 1))
+                'description' => ''
             );
         }
 

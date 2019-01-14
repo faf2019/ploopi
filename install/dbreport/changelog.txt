@@ -1,3 +1,10 @@
+== Module DBREPORT - version 2.0.4 ====================================================
+
+2019-01-14  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Possibilité de définir le type de jointure
+* Accès direct au graphique configuré dans la liste des requêtes
+
 == Module DBREPORT - version 2.0.3 ====================================================
 
 2018-10-24  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
