@@ -779,13 +779,19 @@ function webedit_template_assign_headings(&$arrHeadings, &$arrArticles, &$arrSha
                         $ldate_lastupdate = (!empty($row['lastupdate_timestp'])) ? ploopi_timestamp2local($row['lastupdate_timestp']) : array('date' => '', 'time' => '');
                         $ldate_timestp = (!empty($row['timestp'])) ? ploopi_timestamp2local($row['timestp']) : array('date' => '');
 
-                        $var_tpl_page =
+						// Ajout contenu
+						$objArticle = new webedit_article();
+						$objArticle->fields = $row; // astuce pour pouvoir se servir de webedit_replace_links() !
+						$content = preg_replace_callback('/\[\[(.*)\]\]/i','webedit_getobjectcontent', $webedit_mode == 'edit' ? $row['content_cleaned'] : webedit_replace_links($objArticle, $webedit_mode, $arrHeadings) );
+
+						$var_tpl_page =
                             array(
                                 'REFERENCE'     => ploopi_htmlentities($row['reference']),
                                 'LABEL'         => ploopi_htmlentities($row['title']),
                                 'LABEL_RAW'     => $row['title'],
                                 'AUTHOR'        => ploopi_htmlentities($row['author']),
                                 'AUTHOR_RAW'    => $row['author'],
+								'CONTENT'       => $content,
                                 'VERSION'       => ploopi_htmlentities($row['version']),
                                 'DATE'          => ploopi_htmlentities($ldate_timestp['date']),
                                 'LASTUPDATE_DATE' => ploopi_htmlentities($ldate_lastupdate['date']),
@@ -965,7 +971,7 @@ function webedit_replace_links($objArticle, $mode, &$arrHeadings)
         $arrReplace = array();
         $strContent = $objArticle->fields['content'];
 
-        // Traitement des ancres (incompatibilité fckeditor / <base href>)
+        // Traitement des ancres internes (incompatibilité fckeditor / <base href>)
         preg_match_all('/(href=\"(#[^\"]*)\")/i', $strContent, $arrMatches);
         foreach($arrMatches[2] as $key => $strAnchor)
         {
@@ -986,6 +992,7 @@ function webedit_replace_links($objArticle, $mode, &$arrHeadings)
             }
         }
 
+        // Articles
         preg_match_all('/(index\.php[^\"]+articleid=([0-9]+)(#[^\"]+)?[^\"]*)/i', $strContent, $arrMatches);
 
         foreach($arrMatches[2] as $key => $idart)
@@ -994,7 +1001,7 @@ function webedit_replace_links($objArticle, $mode, &$arrHeadings)
             if (!empty($idart) && $objLinkArticle->open($idart)) // article trouvé
             {
                 $arrSearch[] = $arrMatches[1][$key];
-                $strAnchor = empty($arrMatches[3][0]) ? '' : $arrMatches[3][0];
+                $strAnchor = empty($arrMatches[3][$key]) ? '' : $arrMatches[3][$key];
 
                 switch ($mode)
                 {
@@ -1011,6 +1018,34 @@ function webedit_replace_links($objArticle, $mode, &$arrHeadings)
                 }
             }
         }
+
+        // Rubriques restantes
+        preg_match_all('/(index\.php\?headingid=([0-9]+)(#[^\"]+)?[^\"]*)/i', $strContent, $arrMatches);
+
+        foreach($arrMatches[2] as $key => $idhead)
+        {
+            if (!empty($idhead) && !empty($arrHeadings['list'][$idhead])) // rubrique trouvée
+            {
+                $arrSearch[] = $arrMatches[1][$key];
+                $strAnchor = empty($arrMatches[3][$key]) ? '' : $arrMatches[3][$key];
+
+                switch ($mode)
+                {
+                    case 'render':
+                        $arrReplace[] = "index.php?webedit_mode={$mode}&headingid={$idhead}{$strAnchor}";
+                    break;
+
+                    default:
+                        $arrHeading = $arrHeadings['list'][$idhead];
+
+                        $arrParents = array();
+                        foreach(preg_split('/;/', $arrHeading['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
+                        $arrReplace[] = ploopi_urlrewrite("index.php?headingid={$idhead}", webedit_getrewriterules(), $arrHeading['label'], $arrParents).$strAnchor;
+                    break;
+                }
+            }
+        }
+
 
         if (ploopi_init_module('doc', false, false, false))
         {

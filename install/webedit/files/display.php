@@ -1317,7 +1317,7 @@ else // affichage standard rubrique/page
 
             $db->query("
                 SELECT      id, visible, metatitle, timestp_published, timestp_unpublished, lastupdate_timestp,
-                            timestp, reference, title, content_cleaned, author, version, position, id_heading
+                            timestp, reference, title, content, content_cleaned, author, version, position, id_heading
                 FROM        ploopi_mod_webedit_article
                 WHERE       id_module = {$_SESSION['ploopi']['moduleid']}
                 AND         (timestp_published <= {$today} OR timestp_published = 0)
@@ -1364,7 +1364,7 @@ else // affichage standard rubrique/page
             case 'draft':
                 $select =   "
                             SELECT      id, visible, metatitle, timestp_published, timestp_unpublished, lastupdate_timestp,
-                                        timestp, reference, title, content_cleaned, author, version,position
+                                        timestp, reference, title, content, content_cleaned, author, version,position
                             FROM        ploopi_mod_webedit_article_draft
                             WHERE       id_module = {$_SESSION['ploopi']['moduleid']}
                             AND         id_heading = {$headingid}
@@ -1377,7 +1377,7 @@ else // affichage standard rubrique/page
             default:
                 $select =   "
                             SELECT      id, visible, metatitle, timestp_published, timestp_unpublished, lastupdate_timestp,
-                                        timestp, reference, title, content_cleaned, author, version,position
+                                        timestp, reference, title, content, content_cleaned, author, version,position
                             FROM        ploopi_mod_webedit_article
                             WHERE       id_module = {$_SESSION['ploopi']['moduleid']}
                             AND         id_heading = {$headingid}
@@ -1445,12 +1445,18 @@ else // affichage standard rubrique/page
                     $ldate_lastupdate = (!empty($row['lastupdate_timestp'])) ? ploopi_timestamp2local($row['lastupdate_timestp']) : array('date' => '', 'time' => '');
                     $ldate_timestp = (!empty($row['timestp'])) ? ploopi_timestamp2local($row['timestp']) : array('date' => '');
 
+					// Ajout contenu
+					$objArticle = new webedit_article();
+					$objArticle->fields = $row; // astuce pour pouvoir se servir de webedit_replace_links() !
+					$content = preg_replace_callback('/\[\[(.*)\]\]/i','webedit_getobjectcontent', $webedit_mode == 'edit' ? $row['content_cleaned'] : webedit_replace_links($objArticle, $webedit_mode, $arrHeadings) );
+
                     $var_tpl_page =
                         array(
                             'REFERENCE'     => ploopi_htmlentities($row['reference']),
                             'LABEL'         => ploopi_htmlentities($row['title']),
                             'LABEL_RAW'     => $row['title'],
-                            'CONTENT'       => ploopi_htmlentities($row['content_cleaned']),
+                            'CONTENT'       => $content,
+                            'CONTENT_CLEANED' => ploopi_htmlentities($row['content_cleaned']),
                             'AUTHOR'        => ploopi_htmlentities($row['author']),
                             'AUTHOR_RAW'    => $row['author'],
                             'VERSION'       => ploopi_htmlentities($row['version']),

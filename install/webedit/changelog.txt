@@ -1,3 +1,10 @@
+== Module WebEdit - version 2.6.10 ============================================
+
+2019-01-30 Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Correction d'un bug dans la ré-écriture des liens avec ancres
+* Possibilité d'afficher le contenu d'articles dans le mode "contenu des sous-rubrique"
+
 == Module WebEdit - version 2.6.9 ============================================
 
 2019-01-10 Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
