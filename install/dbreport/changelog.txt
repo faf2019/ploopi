@@ -1,79 +1,107 @@
+== Module DBREPORT - version 2.1.0 ====================================================
+
+2019-02-13  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Migration UTF-8
+* Migration JQuery
+* Version pour Ploopi 1.9.7+ / PHP 7+
+* GÃ©nÃ©rateur graphique non migrÃ©
+
+== Module DBREPORT - version 2.0.4 ====================================================
+
+2019-01-14  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* PossibilitÃ© de dÃ©finir le type de jointure
+* AccÃ¨s direct au graphique configurÃ© dans la liste des requÃªtes
+
+== Module DBREPORT - version 2.0.3 ====================================================
+
+2018-10-24  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Correction d'un bug dans la traitement des positions lors du clonage d'une requÃªte
+
+== Module DBREPORT - version 2.0.2 ====================================================
+
+2017-08-18  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Modification du type et de la longueur des champs de valeurs dans la base de donnÃ©e
+
 == Module DBREPORT - version 2.0.1b ====================================================
 
-2013-12-17  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2013-12-17  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Ajout de contrôles d'affichage pour éviter les injections XSS
+* Ajout de contrÃ´les d'affichage pour Ã©viter les injections XSS
 
 == Module DBREPORT - version 2.0.1a ====================================================
 
-2013-07-26  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2013-07-26  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Correction d'un bug lors de la génération SQL des jointures
+* Correction d'un bug lors de la gÃ©nÃ©ration SQL des jointures
 
 == Module DBREPORT - version 2.0.1 ====================================================
 
-2013-07-25  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2013-07-25  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
 * Ajout de la fonction de groupement "COUNT(DISTINCT)"
-* Ajout d'une limite de lignes par résultat (paramétrable)
-* Correction d'un bug d'encodage lors de la génération des graphiques (légendes, formats)
-* Ajout d'un paramètre permettant d'appliquer une fonction après groupement (en + de avant)
+* Ajout d'une limite de lignes par rÃ©sultat (paramÃ©trable)
+* Correction d'un bug d'encodage lors de la gÃ©nÃ©ration des graphiques (lÃ©gendes, formats)
+* Ajout d'un paramÃ¨tre permettant d'appliquer une fonction aprÃ¨s groupement (en + de avant)
 
 == Module DBREPORT - version 2.0.0e ====================================================
 
-2013-07-25  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2013-07-25  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Ajout de fonctions de groupement pour les champs de requêtes (variance, écart type)
-* Correction d'un bug lors du clônage d'une requête
-* Correction d'un bug lors de la définition de l'alias par défaut d'un champ lors de la génération SQL de la requête
+* Ajout de fonctions de groupement pour les champs de requÃªtes (variance, Ã©cart type)
+* Correction d'un bug lors du clÃ´nage d'une requÃªte
+* Correction d'un bug lors de la dÃ©finition de l'alias par dÃ©faut d'un champ lors de la gÃ©nÃ©ration SQL de la requÃªte
 
 == Module DBREPORT - version 2.0.0d ====================================================
 
-2013-07-24  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2013-07-24  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Correction d'un bug lié à une inclusion de fichier erronée
+* Correction d'un bug liÃ© Ã  une inclusion de fichier erronÃ©e
 
 == Module DBREPORT - version 2.0.0c ====================================================
 
-2013-07-24  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2013-07-24  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Correction liée à une variable indéfinie lors de l'ajout d'un champ dans une requête
+* Correction liÃ©e Ã  une variable indÃ©finie lors de l'ajout d'un champ dans une requÃªte
 
 == Module DBREPORT - version 2.0.0b ====================================================
 
-2013-07-22  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2013-07-22  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Correction d'un bug lié à la modification du comportement de htmlentities avec PHP 5.4
+* Correction d'un bug liÃ© Ã  la modification du comportement de htmlentities avec PHP 5.4
 
 == Module DBREPORT - version 2.0.0 ====================================================
 
-2013-05-24  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2013-05-24  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Modification de la gestion des relations. Permet de gérer des cas plus complexes /!\ incompatibilité avec v1
-* Gestion simplifiée de la position des champs dans le requêteur
+* Modification de la gestion des relations. Permet de gÃ©rer des cas plus complexes /!\ incompatibilitÃ© avec v1
+* Gestion simplifiÃ©e de la position des champs dans le requÃªteur
 * Ajout d'une liste de fonctions "Date" dans la configuration des champs
-* Possibilité d'activer une option "tableau croisé" pour l'export des données
-* Générateur de graphiques avec de nombreuses options et de nombreux formats
-* Aperçu automatique du code SQL généré
+* PossibilitÃ© d'activer une option "tableau croisÃ©" pour l'export des donnÃ©es
+* GÃ©nÃ©rateur de graphiques avec de nombreuses options et de nombreux formats
+* AperÃ§u automatique du code SQL gÃ©nÃ©rÃ©
 
 == Module DBREPORT - version 1.0.8b ====================================================
 
-2013-03-22  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2013-03-22  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Modification de l'export CSV pour pouvoir traiter les gros volumes de données (suppression de la bufferisation, pas de stockage mémoire, traitement à la volée)
-* Choix par défaut du format CSV pour l'export des données
+* Modification de l'export CSV pour pouvoir traiter les gros volumes de donnÃ©es (suppression de la bufferisation, pas de stockage mÃ©moire, traitement Ã  la volÃ©e)
+* Choix par dÃ©faut du format CSV pour l'export des donnÃ©es
 
 == Module DBREPORT - version 1.0.8a ====================================================
 
-2013-03-20  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2013-03-20  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Corrections d'affichage lors de la sélection des champs
+* Corrections d'affichage lors de la sÃ©lection des champs
 * Modification mineures d'affichage
 * Correctif mineur sur le webservice
 
 == Module DBREPORT - version 1.0.8 ====================================================
 
-2013-03-18  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2013-03-18  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
 * Modification de l'export XLS (via PhpExcel)
 * Ajout de l'export XLSX (via PhpExcel)
@@ -81,134 +109,134 @@
 
 == Module DBREPORT - version 1.0.7 ====================================================
 
-2012-03-21  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2012-03-21  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Correction liée à un problème de performance sur les grosses bases de données (transtypage à la volée mal supporté)
+* Correction liÃ©e Ã  un problÃ¨me de performance sur les grosses bases de donnÃ©es (transtypage Ã  la volÃ©e mal supportÃ©)
 
 == Module DBREPORT - version 1.0.6a ====================================================
 
-2011-08-08  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2011-08-08  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Corrections de compatibilité pour PHP 5.3.x
+* Corrections de compatibilitÃ© pour PHP 5.3.x
 
 == Module DBREPORT - version 1.0.6 ====================================================
 
-2011-06-28  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2011-06-28  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Ajout de l'opérateur "IN" (Dans la liste de valeurs) pour les filtres dans les requêtes
+ * Ajout de l'opÃ©rateur "IN" (Dans la liste de valeurs) pour les filtres dans les requÃªtes
 
 == Module DBREPORT - version 1.0.5 ====================================================
 
-2010-09-06  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2010-09-06  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Mise à jour pour ploopi 1.7.9
+* Mise Ã  jour pour ploopi 1.7.9
 
 == Module DBREPORT - version 1.0.4 ====================================================
 
-2010-08-26  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2010-08-26  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Autodétection des contenus pour les champs typés en "texte" de manière générique
+* AutodÃ©tection des contenus pour les champs typÃ©s en "texte" de maniÃ¨re gÃ©nÃ©rique
 
 == Module DBREPORT - version 1.0.3 ====================================================
 
-2010-06-29  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2010-06-29  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Modification du système de mise en cache des résultats de requêtes
-* API php pour exécuter une requête et récupérer le résultat dans une variable : dbreport_getdata($strWsId, $arrParams, $strFormat = 'raw')
+* Modification du systÃ¨me de mise en cache des rÃ©sultats de requÃªtes
+* API php pour exÃ©cuter une requÃªte et rÃ©cupÃ©rer le rÃ©sultat dans une variable : dbreport_getdata($strWsId, $arrParams, $strFormat = 'raw')
 
 == Module DBREPORT - version 1.0.2 ====================================================
 
-2010-05-17  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2010-05-17  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Un gestionnaire de requête peut désormais cloner une requête verrouillée
-* Lors d'un clonage, une requête clonée perd sa propriété "verrouillée"
+* Un gestionnaire de requÃªte peut dÃ©sormais cloner une requÃªte verrouillÃ©e
+* Lors d'un clonage, une requÃªte clonÃ©e perd sa propriÃ©tÃ© "verrouillÃ©e"
 
 == Module DBREPORT - version 1.0.1 ====================================================
 
-2010-04-19  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2010-04-19  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Réorganisation des menus dans l'interface de modification d'une requête, la fonctionnalité "Exécuter / Exporter" regroupe les différents formats et gère désormais les paramètres
-* Ajout d'une demande de confirmation avant de cloner une requête
+* RÃ©organisation des menus dans l'interface de modification d'une requÃªte, la fonctionnalitÃ© "ExÃ©cuter / Exporter" regroupe les diffÃ©rents formats et gÃ¨re dÃ©sormais les paramÃ¨tres
+* Ajout d'une demande de confirmation avant de cloner une requÃªte
 
 == Module DBREPORT - version 1.0.0 ====================================================
 
-2010-04-16  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2010-04-16  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Possibilité de cloner une requête
-* Possibilité de bloquer les modifications d'une requête
-* Ajout d'un rôle 'Gérer les requêtes' (Désormais un utilisateur sans rôle, ne peut qu'exécuter/exporter une requête)
-* Ajout d'un rôle 'Verrouiller les requêtes'
-* Nouveau format d'export expérimental : ODT (nécessite mise à jour PLOOPI)
-* Réagencement de la liste des requêtes
+* PossibilitÃ© de cloner une requÃªte
+* PossibilitÃ© de bloquer les modifications d'une requÃªte
+* Ajout d'un rÃ´le 'GÃ©rer les requÃªtes' (DÃ©sormais un utilisateur sans rÃ´le, ne peut qu'exÃ©cuter/exporter une requÃªte)
+* Ajout d'un rÃ´le 'Verrouiller les requÃªtes'
+* Nouveau format d'export expÃ©rimental : ODT (nÃ©cessite mise Ã  jour PLOOPI)
+* RÃ©agencement de la liste des requÃªtes
 
 == Module DBREPORT - version 0.9.7a ====================================================
 
-2010-03-19  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2010-03-19  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
 * Correction d'un bug sur la clause OR dans certaines situations
 
 == Module DBREPORT - version 0.9.7 ====================================================
 
-2010-03-18  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2010-03-18  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
 * Correction d'un bug sur l'application d'un filtre avec une valeur vide
 * Meilleur traitement des champs de type "date". Si la valeur est vide, la date n'est pas convertie (renvoyait un masque vide par erreur).
 
 == Module DBREPORT - version 0.9.6 ====================================================
 
-2010-01-15  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2010-01-15  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
  * Mise en place effective du filtrage par IP
 
 == Module DBREPORT - version 0.9.5c ====================================================
 
-2009-12-09  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2009-12-09  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Correction d'un problème avec les fichiers .gz
+ * Correction d'un problÃ¨me avec les fichiers .gz
 
 == Module DBREPORT - version 0.9.5b ====================================================
 
-2009-11-26  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2009-11-26  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Correction d'un bug sur la récupération des paramètres par le webservice
- * Petite amélioration dans la liste des requêtes (affichage de l'identifiant de la ressource au niveau du webservice)
+ * Correction d'un bug sur la rÃ©cupÃ©ration des paramÃ¨tres par le webservice
+ * Petite amÃ©lioration dans la liste des requÃªtes (affichage de l'identifiant de la ressource au niveau du webservice)
 
 == Module DBREPORT - version 0.9.5 ====================================================
 
-2009-10-23  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2009-10-23  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Gestion du paramétrage des relations
+ * Gestion du paramÃ©trage des relations
  * Ajout des formats d'export PDF/ODS
- * L'URI affichée intègre les paramètres "utilisateur"
- * Gestion de la mise en cache des données
- * Ajout d'un paramètre permettant de gérer la durée de mise en cache des résultats de requête et des fichiers générés
+ * L'URI affichÃ©e intÃ¨gre les paramÃ¨tres "utilisateur"
+ * Gestion de la mise en cache des donnÃ©es
+ * Ajout d'un paramÃ¨tre permettant de gÃ©rer la durÃ©e de mise en cache des rÃ©sultats de requÃªte et des fichiers gÃ©nÃ©rÃ©s
 
 == Module DBREPORT - version 0.9.0 ====================================================
 
-2009-10-06  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2009-10-06  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Corrections diverses erreurs sur le moteur de génération de requête
- * Ajout de la possibilité de modifier la valeur d'un filtre via un paramètre de l'url du webservice
- * Détection d'erreurs lors de la préparation de la requête
+ * Corrections diverses erreurs sur le moteur de gÃ©nÃ©ration de requÃªte
+ * Ajout de la possibilitÃ© de modifier la valeur d'un filtre via un paramÃ¨tre de l'url du webservice
+ * DÃ©tection d'erreurs lors de la prÃ©paration de la requÃªte
 
 == Module DBREPORT - version 0.8.8b ====================================================
 
-2009-10-01  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2009-10-01  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Correction d'un bug à la création d'une requête (variable non définie)
+ * Correction d'un bug Ã  la crÃ©ation d'une requÃªte (variable non dÃ©finie)
 
 == Module DBREPORT - version 0.8.8 ====================================================
 
-2009-09-28  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2009-09-28  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Possibilité d'activer ou non le webservice associé à une requête
- * Finalisation de l'interface de sélection des modules (paramètres)
- * Utilisation intégrale de la classe "ploopi_query" en remplacement de "db"
+ * PossibilitÃ© d'activer ou non le webservice associÃ© Ã  une requÃªte
+ * Finalisation de l'interface de sÃ©lection des modules (paramÃ¨tres)
+ * Utilisation intÃ©grale de la classe "ploopi_query" en remplacement de "db"
 
 == Module DBREPORT - version 0.8.5 ====================================================
 
-2009-09-24  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2009-09-24  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Ajout du choix des modules sur lesquels porte la requête
- * Paramétrage du webservice associé à la requête
+ * Ajout du choix des modules sur lesquels porte la requÃªte
+ * ParamÃ©trage du webservice associÃ© Ã  la requÃªte
  * Maquette fonctionnelle du webservice

@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2009 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,13 +21,13 @@
 */
 
 /**
- * Point d'entrée du webservice
+ * Point d'entrÃ©e du webservice
  *
  * @package dbreport
  * @subpackage webservice
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author StÃ©phane Escaich
  * @version  $Revision$
  * @modifiedby $LastChangedBy$
  * @lastmodified $Date$
@@ -36,7 +36,7 @@
 /**
  * Initialisation du module
  */
-ploopi_init_module('dbreport', false, false, false);
+ploopi\module::init('dbreport', false, false, false);
 
 $strDbreportWsId = empty($_REQUEST['dbreport_ws_id']) ? '' : $_REQUEST['dbreport_ws_id'];
 $strDbreportFormat = empty($_REQUEST['format']) ? 'xml' : strtolower($_REQUEST['format']);
@@ -45,12 +45,12 @@ $strError = '';
 
 $strFileName = "dbreport.{$strDbreportFormat}";
 
-ploopi_ob_clean();
+ploopi\buffer::clean();
 
 echo dbreport::getData($strDbreportWsId, $_REQUEST, $strDbreportFormat, $strDbreportCode);
 
 
-header('Content-Type: ' . ploopi_getmimetype($strFileName).'; charset=iso-8859-1');
+header('Content-Type: ' . ploopi\fs::getmimetype($strFileName).'; charset=iso-8859-1');
 header('Content-Disposition: inline; Filename="'.$strFileName.'"');
 header('Cache-Control: private');
 header('Pragma: private');

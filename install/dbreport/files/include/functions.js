@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2009 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,7 +21,7 @@
 
 function dbreport_functionlist_onchange(f)
 {
-    ploopi_insertatcursor($('dbreport_queryfield_function'), f.value);
+    ploopi_insertatcursor(jQuery('#dbreport_queryfield_function')[0], f.value);
     f.selectedIndex = 0; 
-    $('dbreport_queryfield_function').focus();
+    jQuery('#dbreport_queryfield_function')[0].focus();
 }

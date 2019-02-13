@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2009 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,12 +21,12 @@
 */
 
 /**
- * Gestion des relations d'une requête
+ * Gestion des relations d'une requÃªte
  *
  * @package dbreport
  * @subpackage queryrelation
  * @copyright Ovensia
- * @author Stéphane Escaich
+ * @author StÃ©phane Escaich
  * @version  $Revision$
  * @modifiedby $LastChangedBy$
  * @lastmodified $Date$
@@ -41,10 +41,10 @@ include_once './modules/dbreport/classes/class_dbreport_query.php';
 
 
 /**
- * Classe de gestion des relations d'une requête
+ * Classe de gestion des relations d'une requÃªte
  */
 
-class dbreport_queryrelation extends data_object
+class dbreport_queryrelation extends ploopi\data_object
 {
     /**
      * Constructeur de la classe
@@ -55,7 +55,7 @@ class dbreport_queryrelation extends data_object
     }
 
     /**
-     * Enregistrement du lien relation/requête
+     * Enregistrement du lien relation/requÃªte
      *
      * @return int id
      */
@@ -68,11 +68,11 @@ class dbreport_queryrelation extends data_object
     }
 
     /**
-     * Suppression du lien relation/requête
+     * Suppression du lien relation/requÃªte
      */
     public function delete()
     {
-        // Mise à jour de la requête
+        // Mise Ã  jour de la requÃªte
         $objDbrQuery = new dbreport_query();
         if ($objDbrQuery->open($this->fields['id_query'])) $objDbrQuery->save();
 

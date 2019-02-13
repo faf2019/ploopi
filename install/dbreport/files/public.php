@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2009 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -27,21 +27,21 @@
  * @subpackage public
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author StÃ©phane Escaich
  */
 
-ploopi_init_module('dbreport');
+ploopi\module::init('dbreport');
 
 include_once './include/classes/query.php';
 
-echo $skin->create_pagetitle(ploopi_htmlentities($_SESSION['ploopi']['modulelabel']));
+echo ploopi\skin::get()->create_pagetitle(ploopi\str::htmlentities($_SESSION['ploopi']['modulelabel']));
 
 $strDbReportOp = isset($_REQUEST['dbreport_op']) ? $_REQUEST['dbreport_op'] : '';
 
 switch($strDbReportOp)
 {
     case 'query_modify':
-        if (!ploopi_isactionallowed(dbreport::_ACTION_MANAGE)) ploopi_logout();
+        if (!ploopi\acl::isactionallowed(dbreport::_ACTION_MANAGE)) ploopi\system::logout();
         include_once './modules/dbreport/public_query_modify.php';
     break;
 

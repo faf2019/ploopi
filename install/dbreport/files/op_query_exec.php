@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2009 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,13 +21,13 @@
 */
 
 /**
- * Exécution d'une requête + export dans le format demandé
+ * ExÃ©cution d'une requÃªte + export dans le format demandÃ©
  *
  * @package dbreport
  * @subpackage op
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author StÃ©phane Escaich
  * @version  $Revision$
  * @modifiedby $LastChangedBy$
  * @lastmodified $Date$
@@ -39,15 +39,14 @@ $objDbrQuery = new dbreport_query();
 
 if (isset($_REQUEST['dbreport_format']) && isset($_REQUEST['dbreport_query_id']) && is_numeric($_REQUEST['dbreport_query_id']) && $objDbrQuery->open($_REQUEST['dbreport_query_id']))
 {
+    $intCacheLifetime = ploopi\param::get('dbreport_cache_lifetime');
 
-    $intCacheLifetime = ploopi_getparam('dbreport_cache_lifetime');
-
-    if (!$objDbrQuery->generate($_REQUEST)) ploopi_die();
+    if (!$objDbrQuery->generate($_REQUEST)) ploopi\system::kill();
 
     $strFileName = 'dbreport.'.strtolower($_REQUEST['dbreport_format']);
 
-    // Instanciation du cache fichier (id unique en fonction de la requête)
-    $objCache = new ploopi_cache($objDbrQuery->getcacheid()."/{$strFileName}", $intCacheLifetime);
+    // Instanciation du cache fichier (id unique en fonction de la requÃªte)
+    $objCache = new ploopi\cache($objDbrQuery->getcacheid()."/{$strFileName}", $intCacheLifetime);
 
     // Cache existe ?
     if (!$objCache->start())
@@ -58,14 +57,14 @@ if (isset($_REQUEST['dbreport_format']) && isset($_REQUEST['dbreport_query_id'])
         }
         elseif ($_REQUEST['dbreport_format'] == 'csv' && empty($objDbrQuery->fields['transformation']))
         {
-            // Traitement spécial CSV
+            // Traitement spÃ©cial CSV
             // PAS DE MISE EN CACHE
-            // Spécial gros fichiers
+            // SpÃ©cial gros fichiers
             $objDbrQuery->export_raw_csv();
         }
         else
         {
-            $objDbrQuery->exec($intCacheLifetime); // Gestion interne d'un cache de données indépendant du cache sur le fichier
+            $objDbrQuery->exec($intCacheLifetime); // Gestion interne d'un cache de donnÃ©es indÃ©pendant du cache sur le fichier
             $objDbrQuery->export($_REQUEST['dbreport_format']);
         }
 
@@ -73,5 +72,5 @@ if (isset($_REQUEST['dbreport_format']) && isset($_REQUEST['dbreport_query_id'])
         $objCache->end();
     }
 }
-ploopi_die();
+ploopi\system::kill();
 ?>

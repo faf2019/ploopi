@@ -35,7 +35,7 @@
 
 .dbreport_checkboxes > form > div > fieldset > div {
     position:relative;
-    overflow:auto;
+    overflow:hidden;
 }
 
 .dbreport_checkboxes > form > div > fieldset > div > label {
@@ -50,11 +50,15 @@
     background-color:rgba(0,0,0,0.1);
 }
 
-.dbreport_checkboxes > form > div > fieldset > div > input {
+.dbreport_checkboxes > form > div > fieldset > div > input[type='checkbox'],
+.dbreport_checkboxes > form > div > fieldset > div > input[type='radio'] {
+    display:block;
     position:absolute;
     left:2px;
-    display:block;
-    float:auto;
+    top:0;
+    float:none;
+    padding:0;
+    margin-top:4px;
 }
 
 .dbreport_checkboxes > form > div > fieldset > div > label > em {
@@ -106,27 +110,21 @@
 
 
 .dbreport_table {
-    border:1px solid #aaa;
-    border-radius:3px;
+    border:2px solid #aaa;
     float:left;
     width:230px;
     margin:10px;
-    box-shadow:0 0 5px rgba(0,0,0,0.2);
 }
 
 .dbreport_table_title {
     font-weight:bold;
     padding:4px;
     border-bottom:1px solid #ccc;
-    background: linear-gradient(top, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.25) 100%);
-    background: -moz-linear-gradient(top, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.25) 100%);
-    background: -webkit-linear-gradient(top, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.25) 100%);
+    background: rgba(0,0,0,0.15);
 }
 
 .dbreport_table_title > a {
-    border:1px solid rgba(0,0,0,0.4);
-    border-radius:5px;
-    padding:0 2px;
+    padding:1px 4px;
     background-color:rgba(0,0,0,0.2);
 }
 
@@ -138,7 +136,7 @@
 .dbreport_table_field {
     padding:2px 4px;
     word-wrap: break-word;
-    border-bottom:1px solid #ccc;
+    border-bottom:2px solid #ccc;
 }
 
 .dbreport_table_field:last-child {
@@ -159,10 +157,7 @@
 
 .dbreport_table_info {
     color:#444;
-    background: linear-gradient(top, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.15) 20%, rgba(0,0,0,0.1) 100%);
-    background: -moz-linear-gradient(top, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.15) 20%, rgba(0,0,0,0.1) 100%);
-    background: -webkit-linear-gradient(top, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.15) 20%, rgba(0,0,0,0.1) 100%);
-    border-top:2px solid #aaa;
+    background: rgba(0,0,0,0.25);
 }
 
 .dbreport_table_info > div {
@@ -186,3 +181,14 @@
 
 .dbreport_format_howto th {
     background-color:#ccc;
+}
+
+a.dbreport_action {
+    display: block;
+    padding: 2px;
+    margin-top: 2px;
+    margin-left: 2px;
+    border: 1px solid rgba(0,0,0,0.2);
+    background-color: rgba(0,0,0,0.1);
+    border-radius: 2px;
+}

@@ -77,7 +77,7 @@ CREATE TABLE IF NOT EXISTS `ploopi_mod_dbreport_query` (
   KEY `pivot_y` (`pivot_y`),
   KEY `chart_x` (`chart_x`),
   KEY `chart_y` (`chart_y`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `ploopi_mod_dbreport_queryfield`;
 CREATE TABLE IF NOT EXISTS `ploopi_mod_dbreport_queryfield` (
@@ -101,7 +101,7 @@ CREATE TABLE IF NOT EXISTS `ploopi_mod_dbreport_queryfield` (
   PRIMARY KEY (`id`),
   KEY `id_module_type` (`id_module_type`),
   KEY `id_query` (`id_query`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `ploopi_mod_dbreport_queryrelation`;
 CREATE TABLE IF NOT EXISTS `ploopi_mod_dbreport_queryrelation` (
@@ -112,7 +112,7 @@ CREATE TABLE IF NOT EXISTS `ploopi_mod_dbreport_queryrelation` (
   `fieldname_dest` varchar(100) NOT NULL,
   `active` tinyint(1) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id_query`,`tablename_src`,`fieldname_src`,`tablename_dest`,`fieldname_dest`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `ploopi_mod_dbreport_querytable`;
 CREATE TABLE IF NOT EXISTS `ploopi_mod_dbreport_querytable` (
@@ -125,16 +125,22 @@ CREATE TABLE IF NOT EXISTS `ploopi_mod_dbreport_querytable` (
   UNIQUE KEY `tablename` (`tablename`,`alias`,`id_query`),
   KEY `id_module_type` (`id_module_type`),
   KEY `id_query` (`id_query`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `ploopi_mod_dbreport_query_module_type`;
 CREATE TABLE IF NOT EXISTS `ploopi_mod_dbreport_query_module_type` (
   `id_query` int(10) unsigned NOT NULL DEFAULT '0',
   `id_module_type` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_query`,`id_module_type`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 
 ALTER TABLE `ploopi_mod_dbreport_query` ADD `rowlimit` INT( 10 ) UNSIGNED NOT NULL DEFAULT '10000' AFTER `ws_ip`;
 ALTER TABLE `ploopi_mod_dbreport_query` CHANGE `chart_tooltip_format` `chart_tooltip_format` VARCHAR( 255 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL DEFAULT '<span style="color:{series.color}">{series.name}</span>: <b>{point.y:.0f}</b> ({point.percentage:.0f}%)<br/>';
 ALTER TABLE `ploopi_mod_dbreport_queryfield` ADD `function_group` VARCHAR( 255 ) NOT NULL AFTER `function`;
+
+ALTER TABLE  `ploopi_mod_dbreport_queryfield` CHANGE  `criteria`  `criteria` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL ,
+CHANGE  `or`  `or` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL ,
+CHANGE  `intervals`  `intervals` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL ;
+
+ALTER TABLE `ploopi_mod_dbreport_queryrelation` ADD `type_join` VARCHAR(16) NOT NULL DEFAULT 'inner' AFTER `fieldname_dest`;

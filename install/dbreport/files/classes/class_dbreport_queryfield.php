@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2009 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,12 +21,12 @@
 */
 
 /**
- * Gestion des champs d'une requête
+ * Gestion des champs d'une requÃªte
  *
  * @package dbreport
  * @subpackage queryfield
  * @copyright Ovensia
- * @author Stéphane Escaich
+ * @author StÃ©phane Escaich
  * @version  $Revision$
  * @modifiedby $LastChangedBy$
  * @lastmodified $Date$
@@ -41,10 +41,10 @@ include_once './include/classes/query.php';
 include_once './modules/dbreport/classes/class_dbreport_query.php';
 
 /**
- * Classe de gestion des champs d'une requête
+ * Classe de gestion des champs d'une requÃªte
  */
 
-class dbreport_queryfield extends data_object
+class dbreport_queryfield extends ploopi\data_object
 {
     private $_intOriginalPosition;
 
@@ -62,9 +62,9 @@ class dbreport_queryfield extends data_object
     /**
      * Ouverture d'un champ
      */
-    public function open($intId)
+    public function open(...$args)
     {
-        $booOpen = parent::open($intId);
+        $booOpen = parent::open($args[0]);
 
         $this->_intOriginalPosition = $this->fields['position'];
 
@@ -80,8 +80,8 @@ class dbreport_queryfield extends data_object
         /*
         if ($this->new)
         {
-            // Détermination de la nouvelle position
-            $objQuery = new ploopi_query_select();
+            // DÃ©termination de la nouvelle position
+            $objQuery = new ploopi\query_select();
             $objQuery->add_select('MAX(position) AS maxposition');
             $objQuery->add_from('ploopi_mod_dbreport_queryfield');
             $objQuery->add_where('id_query = %d', $this->fields['id_query']);
@@ -95,11 +95,11 @@ class dbreport_queryfield extends data_object
 
         // Traitement de la position
 
-        // Contrôle de validité de la position (min/max)
+        // ContrÃ´le de validitÃ© de la position (min/max)
         if (is_numeric($this->fields['position']) && $this->fields['position'] < 1 && !$booIsNew) $this->fields['position'] = 1;
         else
         {
-            $objQuery = new ploopi_query_select();
+            $objQuery = new ploopi\query_select();
             $objQuery->add_select('MAX(position) AS maxpos');
             $objQuery->add_from('ploopi_mod_dbreport_queryfield');
             $objQuery->add_where('id_query = %d', $this->fields['id_query']);
@@ -110,8 +110,8 @@ class dbreport_queryfield extends data_object
 
         if ($booIsNew)
         {
-            // Déplacer tous les champs en dessous de la position d'insertion vers le bas
-            $objQuery = new ploopi_query_update();
+            // DÃ©placer tous les champs en dessous de la position d'insertion vers le bas
+            $objQuery = new ploopi\query_update();
             $objQuery->add_set('position = position + 1');
             $objQuery->add_from('ploopi_mod_dbreport_queryfield');
             $objQuery->add_where('id_query = %d', $this->fields['id_query']);
@@ -120,13 +120,13 @@ class dbreport_queryfield extends data_object
         }
         else
         {
-            // Nouvelle position définie
+            // Nouvelle position dÃ©finie
             if ($this->fields['position'] != $this->_intOriginalPosition)
             {
                 if ($this->fields['position'] > $this->_intOriginalPosition)
                 {
-                    // Déplacer tous les champs entre la position d'origine et la position de destination vers le haut
-                    $objQuery = new ploopi_query_update();
+                    // DÃ©placer tous les champs entre la position d'origine et la position de destination vers le haut
+                    $objQuery = new ploopi\query_update();
                     $objQuery->add_set('position = position - 1');
                     $objQuery->add_from('ploopi_mod_dbreport_queryfield');
                     $objQuery->add_where('id_query = %d', $this->fields['id_query']);
@@ -135,8 +135,8 @@ class dbreport_queryfield extends data_object
                 }
                 else
                 {
-                    // Déplacer tous les champs entre la position de destination et la position d'origine vers le bas
-                    $objQuery = new ploopi_query_update();
+                    // DÃ©placer tous les champs entre la position de destination et la position d'origine vers le bas
+                    $objQuery = new ploopi\query_update();
                     $objQuery->add_set('position = position + 1');
                     $objQuery->add_from('ploopi_mod_dbreport_queryfield');
                     $objQuery->add_where('id_query = %d', $this->fields['id_query']);
@@ -146,7 +146,7 @@ class dbreport_queryfield extends data_object
             }
         }
 
-        // Mise à jour de la requête
+        // Mise Ã  jour de la requÃªte
         $objDbrQuery = new dbreport_query();
         if ($objDbrQuery->open($this->fields['id_query'])) $objDbrQuery->save();
 
@@ -158,15 +158,15 @@ class dbreport_queryfield extends data_object
      */
     public function delete()
     {
-        // Mise à jour des positions des autres champs
-        $objQuery = new ploopi_query_update();
+        // Mise Ã  jour des positions des autres champs
+        $objQuery = new ploopi\query_update();
         $objQuery->add_from('ploopi_mod_dbreport_queryfield');
         $objQuery->add_set('position = position - 1');
         $objQuery->add_where('id_query = %d', $this->fields['id_query']);
         $objQuery->add_where('position > %d', $this->fields['position']);
         $objQuery->execute();
 
-        // Mise à jour de la requête
+        // Mise Ã  jour de la requÃªte
         $objDbrQuery = new dbreport_query();
         if ($objDbrQuery->open($this->fields['id_query'])) $objDbrQuery->save();
 

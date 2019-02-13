@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2009 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,13 +21,13 @@
 */
 
 /**
- * Popup d'ajout de champs dans une requête
+ * Popup d'ajout de champs dans une requÃªte
  *
  * @package dbreport
  * @subpackage op
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author StÃ©phane Escaich
  * @version  $Revision$
  * @modifiedby $LastChangedBy$
  * @lastmodified $Date$
@@ -37,7 +37,7 @@ include_once './include/classes/form.php';
 include_once './include/classes/query.php';
 include_once './modules/dbreport/classes/class_dbreport_query.php';
 
-ploopi_init_module('dbreport', false, false, false);
+ploopi\module::init('dbreport', false, false, false);
 
 ob_start();
 
@@ -45,7 +45,7 @@ $objDbrQuery = new dbreport_query();
 
 if (isset($_POST['dbreport_query_id']) && is_numeric($_POST['dbreport_query_id']) && $objDbrQuery->open($_POST['dbreport_query_id']))
 {
-    $objQuery = new ploopi_query_select();
+    $objQuery = new ploopi\query_select();
     $objQuery->add_select('drt.*, mbt.label, mt.label as mt_label');
     $objQuery->add_from('ploopi_mod_dbreport_querytable drt');
     $objQuery->add_from('ploopi_mb_table mbt');
@@ -58,9 +58,9 @@ if (isset($_POST['dbreport_query_id']) && is_numeric($_POST['dbreport_query_id']
 
     if ($objRs->numrows())
     {
-        $objForm = new form(
+        $objForm = new ploopi\form(
             'dbreport_queryfield_add_form',
-            ploopi_urlencode("admin.php?ploopi_op=dbreport_queryfield_save&dbreport_query_id={$_POST['dbreport_query_id']}"),
+            ploopi\crypt::urlencode("admin.php?ploopi_op=dbreport_queryfield_save&dbreport_query_id={$_POST['dbreport_query_id']}"),
             'post',
             array(
                 'class' => 'ploopi_generate_form dbreport_checkboxes',
@@ -68,14 +68,14 @@ if (isset($_POST['dbreport_query_id']) && is_numeric($_POST['dbreport_query_id']
             )
         );
 
-        $objForm->addButton( new form_button('input:reset', 'Réinitialiser') );
-        $objForm->addButton( new form_button('input:submit', 'Enregistrer', null, null, array('style' => 'margin-left:2px;')) );
+        $objForm->addButton( new ploopi\form_button('input:reset', 'RÃ©initialiser') );
+        $objForm->addButton( new ploopi\form_button('input:submit', 'Enregistrer', null, null, array('style' => 'margin-left:2px;')) );
 
         while($row = $objRs->fetchrow())
         {
-            $objForm->addPanel($objPanel = new form_panel("dbreport_panel_{$row['mt_label']}_{$row['label']}", "Table &laquo; [{$row['mt_label']}] {$row['label']} &raquo;"));
+            $objForm->addPanel($objPanel = new ploopi\form_panel("dbreport_panel_{$row['mt_label']}_{$row['label']}", "Table &laquo; [{$row['mt_label']}] {$row['label']} &raquo;"));
 
-            $objQuery = new ploopi_query_select();
+            $objQuery = new ploopi\query_select();
             $objQuery->add_from('ploopi_mb_field');
             $objQuery->add_where('tablename = %s', $row['tablename']);
             $objQuery->add_where('visible = 1');
@@ -84,15 +84,15 @@ if (isset($_POST['dbreport_query_id']) && is_numeric($_POST['dbreport_query_id']
 
             while($row2 = $objRs2->fetchrow())
             {
-                $objPanel->addField( new form_checkbox("<strong>".ploopi_htmlentities($row2['label'])."</strong>".($row2['label'] != $row2['name'] ? "<span>&nbsp;(".ploopi_htmlentities($row2['name']).")</span>" : '')."<em>".dbreport::getType(dbreport::getBasicType($row2['type']))."</em>", "{$row2['tablename']}.{$row2['name']}", false, 'dbreport_fieldnames[]', "{$row2['tablename']}.{$row2['name']}", array('class_form' => 'onclick')) );
+                $objPanel->addField( new ploopi\form_checkbox("<strong>".ploopi\str::htmlentities($row2['label'])."</strong>".($row2['label'] != $row2['name'] ? "<span>&nbsp;(".ploopi\str::htmlentities($row2['name']).")</span>" : '')."<em>".dbreport::getType(dbreport::getBasicType($row2['type']))."</em>", "{$row2['tablename']}.{$row2['name']}", false, 'dbreport_fieldnames[]', "{$row2['tablename']}.{$row2['name']}", array('class_form' => 'onclick')) );
             }
         }
 
         $strContent = $objForm->render();
 
     }
-    else $strContent = "<div style=\"padding:4px;\">Vous devez d'abord sélectionner une ou plusieurs tables</div>";
+    else $strContent = "<div style=\"padding:4px;\">Vous devez d'abord sÃ©lectionner une ou plusieurs tables</div>";
 }
 
-ploopi_die($skin->create_popup('Ajout de champs', $strContent, 'dbreport_queryfield_add'));
+ploopi\system::kill(ploopi\skin::get()->create_popup('Ajout de champs', $strContent, 'dbreport_queryfield_add'));
 ?>

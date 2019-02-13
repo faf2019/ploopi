@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2009 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,13 +21,13 @@
 */
 
 /**
- * Interface de modification d'une requête
+ * Interface de modification d'une requÃªte
  *
  * @package dbreport
  * @subpackage public
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author StÃ©phane Escaich
  * @version  $Revision$
  * @modifiedby $LastChangedBy$
  * @lastmodified $Date$
@@ -43,133 +43,128 @@ $objDbrQuery = new dbreport_query();
 
 if (isset($_GET['dbreport_query_id']) && is_numeric($_GET['dbreport_query_id']) && $objDbrQuery->open($_GET['dbreport_query_id']))
 {
-    if ($objDbrQuery->fields['locked'] && !ploopi_isactionallowed(dbreport::_ACTION_LOCK)) ploopi_logout();
+    if ($objDbrQuery->fields['locked'] && !ploopi\acl::isactionallowed(dbreport::_ACTION_LOCK)) ploopi\system::logout();
 
-    echo $skin->open_simplebloc('Modification de la requête &laquo; '.ploopi_htmlentities($objDbrQuery->fields['label']).' &raquo;');
+    echo ploopi\skin::get()->open_simplebloc('Modification de la requÃªte &laquo; '.ploopi\str::htmlentities($objDbrQuery->fields['label']).' &raquo;');
     ?>
-    <div class="ploopi_tabs">
-        <a title="Ajouter des tables à la requête" style="font-weight:bold;" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_topopup(400, event, 'dbreport_querytable_add', 'admin-light.php', '<?php echo ploopi_queryencode("ploopi_op=dbreport_querytable_add&dbreport_query_id={$_GET['dbreport_query_id']}"); ?>', 'POST');"><img src="./modules/dbreport/img/ico_add_table.png" /><span>Ajouter des tables</span></a>
-        <a title="Ajouter des champs à la requête" style="font-weight:bold;" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_topopup(650, event, 'dbreport_queryfield_add', 'admin-light.php', '<?php echo ploopi_queryencode("ploopi_op=dbreport_queryfield_add&dbreport_query_id={$_GET['dbreport_query_id']}"); ?>', 'POST');"><img src="./modules/dbreport/img/ico_add_field.png" /><span>Ajouter des champs</span></a>
-        <a title="Paramètres de la requête" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_topopup(400, event, 'dbreport_query_modify', 'admin-light.php', '<?php echo ploopi_queryencode("ploopi_op=dbreport_query_modify&dbreport_query_id={$_GET['dbreport_query_id']}"); ?>', 'POST');"><img src="./modules/dbreport/img/ico_param.png" /><span>Paramètres</span></a>
-        <a title="Exécuter / Exporter la requête" href="javascript:void(0);" onclick="javascript:ploopi_xmlhttprequest_topopup(550, event, 'dbreport_query_export_popup', 'admin-light.php', '<?php echo ploopi_queryencode("ploopi_op=dbreport_query_export&dbreport_query_id={$_GET['dbreport_query_id']}");?>', 'POST');"><img src="./modules/dbreport/img/ico_execute.png" /><span>Exécuter / Exporter</span></a>
-        <a title="Cloner la requête" href="javascript:void(0);" onclick="if (confirm('Êtes vous certains de vouloir cloner cette requête ?')) document.location.href='<?php echo ploopi_urlencode("admin-light.php?ploopi_op=dbreport_query_clone&dbreport_query_id={$_GET['dbreport_query_id']}"); ?>';"><img src="./modules/dbreport/img/ico_clone.png" /><span>Cloner</span></a>
-        <a title="Retour à la liste des requêtes" href="<?php echo ploopi_urlencode('admin.php'); ?>"><img src="./modules/dbreport/img/ico_back.png" /><span>Retour à la liste des requêtes</span></a>
+    <div class="ploopi_tabs" style="border:0;">
+        <a title="Ajouter des tables Ã  la requÃªte" style="font-weight:bold;" href="javascript:void(0);" onclick="javascript:ploopi.xhr.topopup(400, event, 'dbreport_querytable_add', 'admin-light.php', '<?php echo ploopi\crypt::queryencode("ploopi_op=dbreport_querytable_add&dbreport_query_id={$_GET['dbreport_query_id']}"); ?>', 'POST');"><img src="./modules/dbreport/img/ico_add_table.png" /><span>Ajouter des tables</span></a>
+        <a title="Ajouter des champs Ã  la requÃªte" style="font-weight:bold;" href="javascript:void(0);" onclick="javascript:ploopi.xhr.topopup(650, event, 'dbreport_queryfield_add', 'admin-light.php', '<?php echo ploopi\crypt::queryencode("ploopi_op=dbreport_queryfield_add&dbreport_query_id={$_GET['dbreport_query_id']}"); ?>', 'POST');"><img src="./modules/dbreport/img/ico_add_field.png" /><span>Ajouter des champs</span></a>
+        <a title="ParamÃ¨tres de la requÃªte" href="javascript:void(0);" onclick="javascript:ploopi.xhr.topopup(400, event, 'dbreport_query_modify', 'admin-light.php', '<?php echo ploopi\crypt::queryencode("ploopi_op=dbreport_query_modify&dbreport_query_id={$_GET['dbreport_query_id']}"); ?>', 'POST');"><img src="./modules/dbreport/img/ico_param.png" /><span>ParamÃ¨tres</span></a>
+        <a title="ExÃ©cuter / Exporter la requÃªte" href="javascript:void(0);" onclick="javascript:ploopi.xhr.topopup(550, event, 'dbreport_query_export_popup', 'admin-light.php', '<?php echo ploopi\crypt::queryencode("ploopi_op=dbreport_query_export&dbreport_query_id={$_GET['dbreport_query_id']}");?>', 'POST');"><img src="./modules/dbreport/img/ico_execute.png" /><span>ExÃ©cuter / Exporter</span></a>
+        <a title="Cloner la requÃªte" href="javascript:void(0);" onclick="if (confirm('ÃŠtes vous certains de vouloir cloner cette requÃªte ?')) document.location.href='<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=dbreport_query_clone&dbreport_query_id={$_GET['dbreport_query_id']}"); ?>';"><img src="./modules/dbreport/img/ico_clone.png" /><span>Cloner</span></a>
+        <a title="Retour Ã  la liste des requÃªtes" href="<?php echo ploopi\crypt::urlencode('admin.php'); ?>"><img src="./modules/dbreport/img/ico_back.png" /><span>Retour Ã  la liste des requÃªtes</span></a>
     </div>
 
-    <div>
-        <h1 class="dbreport_title">Tables</h1>
-        <div style="box-shadow:inset 0 0 6px rgba(0,0,0,0.2);border-bottom:1px solid #aaa;overflow:auto;">
-            <?php
-            // Sélection des relations de la requete courante
-            $objQuery = new ploopi_query_select();
-            $objQuery->add_select('mbs.tablesrc, mbs.tabledest');
-            $objQuery->add_from('ploopi_mod_dbreport_querytable as tablesrc');
-            $objQuery->add_from('ploopi_mod_dbreport_querytable as tabledest');
-            $objQuery->add_from('ploopi_mb_schema mbs');
-            $objQuery->add_where('tablesrc.tablename = mbs.tablesrc');
-            $objQuery->add_where('tabledest.tablename = mbs.tabledest');
-            $objQuery->add_where('tablesrc.id_query = %d', $_GET['dbreport_query_id']);
-            $objQuery->add_where('tabledest.id_query = %d', $_GET['dbreport_query_id']);
-            $objRs = $objQuery->execute();
-
-            // Tables de relations/dépendances
-            $arrTableRelation = array();
-
-            // Tables à garder
-            $arrTableToKeep = array();
-
-            while ($row = $objRs->fetchrow())
-            {
-                $arrTableRelation[$row['tablesrc']][$row['tabledest']] = 1;
-                $arrTableRelation[$row['tabledest']][$row['tablesrc']] = 1;
-            }
-
-            // Cas particulier, 2 tables ou moins, on peut supprimer toutes les tables
-            // Sinon on détecte les relations "fragiles" (celles qui n'ont qu'une table liée (on ne doit pas supprimer la table liée)
-            if (sizeof($arrTableRelation) > 2) foreach($arrTableRelation as $arrRelation) if (sizeof($arrRelation) == '1') $arrTableToKeep[key($arrRelation)] = 1;
-
-            $arrTableRelation = $objRs->getarray();
-
-            // Sélection des tables de la requête
-            $objQuery = new ploopi_query_select();
-            $objQuery->add_select('drt.tablename, drt.id, mbt.label');
-            $objQuery->add_from('ploopi_mod_dbreport_querytable drt');
-            $objQuery->add_from('ploopi_mb_table mbt');
-            $objQuery->add_where('id_query = %d', $_GET['dbreport_query_id']);
-            $objQuery->add_where('drt.tablename = mbt.name');
-            $objQuery->add_orderby('drt.tablename');
-
-            $arrTableReq = $objQuery->execute()->getarray();
-            $arrTableDetail = array();
-
-            // pour toutes les tables de la requête (peut on les supprimer ?)
-            foreach($arrTableReq as $intKey => $rowTable)
-            {
-                // ploopi_print_r($rowTable);
-                // ploopi_print_r(dbreport::getTableInfo($rowTable['tablename']));
-                // ploopi_print_r(dbreport::getTableFields($rowTable['tablename']));
-                // ploopi_print_r(dbreport::getTableIndexes($rowTable['tablename']));
-
-                $rowTableInfo = $arrTableDetail[$rowTable['tablename']]['info'] = dbreport::getTableInfo($rowTable['tablename']);
-                $arrTableDetail[$rowTable['tablename']]['fields'] = dbreport::getTableFields($rowTable['tablename']);
-                $arrTableDetail[$rowTable['tablename']]['indexes'] = dbreport::getTableIndexes($rowTable['tablename']);
-
-                ?>
-                <div class="dbreport_table">
-                    <div class="dbreport_table_title">
-                        <?php
-                        // Peut-on supprimer la table ?
-                        if (!isset($arrTableToKeep[$rowTable['tablename']]))
-                        {
-                            ?>
-                            <a title="Supprimer la table &laquo; <?php echo ploopi_htmlentities($rowTable['label']);?> &raquo;" href="javascript:void(0);" onclick="javascript:if (confirm('Êtes-vous certain de vouloir supprimer cette table ?')) document.location.href='<?php echo ploopi_urlencode("admin-light.php?ploopi_op=dbreport_querytable_delete&dbreport_query_id={$_GET['dbreport_query_id']}&dbreport_querytable_id={$rowTable['id']}"); ?>';"><img src="./modules/dbreport/img/ico_close.png" /></a>
-                            <?php
-                        }
-                        ?>
-
-                        <span><?php echo ploopi_htmlentities($rowTable['label']);?></span>
-                    </div>
-                    <div class="dbreport_table_fields">
-                        <?php
-                        $objQuery = new ploopi_query_select();
-                        $objQuery->add_from('ploopi_mb_field');
-                        $objQuery->add_where('tablename = %s', $rowTable['tablename']);
-                        $objQuery->add_where('visible = 1');
-                        $objRs = $objQuery->execute();
-
-                        while($row = $objRs->fetchrow())
-                        {
-                            ?>
-                            <div class="dbreport_table_field"><strong><?php echo ploopi_htmlentities($row['label']); ?></strong><?php if ($row['label'] != $row['name']) echo "<span>(".ploopi_htmlentities($row['name']).")</span>"; ?><br /><em style="color:#888;"><?php echo dbreport::getType(dbreport::getBasicType($row['type'])); ?></em></div>
-                            <?php
-                        }
-                        ?>
-                    </div>
-                    <div class="dbreport_table_info">
-                        <div><strong>Lignes : </strong><span><?php echo number_format($rowTableInfo['Rows']/1000, 2, '.', ' '); ?> k&nbsp;&nbsp;</span><strong>Volume : </strong><span><?php echo number_format($rowTableInfo['Data_length']/(1024*1024), 2, '.', ' '); ?> Mo</span></div>
-                    </div>
-                </div>
-                <?php
-            }
-            ?>
-        </div>
-    </div>
-
-
-    <?php
-
-    $arrTableRelationDetail = array();
-
-    // Sélection des relations de la requete courante
-    $objQuery = new ploopi_query_select();
-    $objQuery->add_from('ploopi_mod_dbreport_queryrelation qr');
-    $objQuery->add_where('qr.id_query = %d', $_GET['dbreport_query_id']);
-    $objRs = $objQuery->execute();
-
-    ?>
-    <div>
-        <h1 class="dbreport_title">Relations</h1>
+    <?php echo ploopi\skin::get()->open_simplebloc('Tables'); ?>
         <?php
+        // SÃ©lection des relations de la requete courante
+        $objQuery = new ploopi\query_select();
+        $objQuery->add_select('mbs.tablesrc, mbs.tabledest');
+        $objQuery->add_from('ploopi_mod_dbreport_querytable as tablesrc');
+        $objQuery->add_from('ploopi_mod_dbreport_querytable as tabledest');
+        $objQuery->add_from('ploopi_mb_schema mbs');
+        $objQuery->add_where('tablesrc.tablename = mbs.tablesrc');
+        $objQuery->add_where('tabledest.tablename = mbs.tabledest');
+        $objQuery->add_where('tablesrc.id_query = %d', $_GET['dbreport_query_id']);
+        $objQuery->add_where('tabledest.id_query = %d', $_GET['dbreport_query_id']);
+        $objRs = $objQuery->execute();
+
+        // Tables de relations/dÃ©pendances
+        $arrTableRelation = array();
+
+        // Tables Ã  garder
+        $arrTableToKeep = array();
+
+        while ($row = $objRs->fetchrow())
+        {
+            $arrTableRelation[$row['tablesrc']][$row['tabledest']] = 1;
+            $arrTableRelation[$row['tabledest']][$row['tablesrc']] = 1;
+        }
+
+        // Cas particulier, 2 tables ou moins, on peut supprimer toutes les tables
+        // Sinon on dÃ©tecte les relations "fragiles" (celles qui n'ont qu'une table liÃ©e (on ne doit pas supprimer la table liÃ©e)
+        if (sizeof($arrTableRelation) > 2) foreach($arrTableRelation as $arrRelation) if (sizeof($arrRelation) == '1') $arrTableToKeep[key($arrRelation)] = 1;
+
+        $arrTableRelation = $objRs->getarray();
+
+        // SÃ©lection des tables de la requÃªte
+        $objQuery = new ploopi\query_select();
+        $objQuery->add_select('drt.tablename, drt.id, mbt.label');
+        $objQuery->add_from('ploopi_mod_dbreport_querytable drt');
+        $objQuery->add_from('ploopi_mb_table mbt');
+        $objQuery->add_where('id_query = %d', $_GET['dbreport_query_id']);
+        $objQuery->add_where('drt.tablename = mbt.name');
+        $objQuery->add_orderby('drt.tablename');
+
+        $arrTableReq = $objQuery->execute()->getarray();
+        $arrTableDetail = array();
+
+        // pour toutes les tables de la requÃªte (peut on les supprimer ?)
+        foreach($arrTableReq as $intKey => $rowTable)
+        {
+            // ploopi\output::print_r($rowTable);
+            // ploopi\output::print_r(dbreport::getTableInfo($rowTable['tablename']));
+            // ploopi\output::print_r(dbreport::getTableFields($rowTable['tablename']));
+            // ploopi\output::print_r(dbreport::getTableIndexes($rowTable['tablename']));
+
+            $rowTableInfo = $arrTableDetail[$rowTable['tablename']]['info'] = dbreport::getTableInfo($rowTable['tablename']);
+            $arrTableDetail[$rowTable['tablename']]['fields'] = dbreport::getTableFields($rowTable['tablename']);
+            $arrTableDetail[$rowTable['tablename']]['indexes'] = dbreport::getTableIndexes($rowTable['tablename']);
+
+            ?>
+            <div class="dbreport_table">
+                <div class="dbreport_table_title">
+                    <?php
+                    // Peut-on supprimer la table ?
+                    if (!isset($arrTableToKeep[$rowTable['tablename']]))
+                    {
+                        ?>
+                        <a title="Supprimer la table &laquo; <?php echo ploopi\str::htmlentities($rowTable['label']);?> &raquo;" href="javascript:void(0);" onclick="javascript:if (confirm('ÃŠtes-vous certain de vouloir supprimer cette table ?')) document.location.href='<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=dbreport_querytable_delete&dbreport_query_id={$_GET['dbreport_query_id']}&dbreport_querytable_id={$rowTable['id']}"); ?>';"><img src="./modules/dbreport/img/ico_close.png" /></a>
+                        <?php
+                    }
+                    ?>
+
+                    <span><?php echo ploopi\str::htmlentities($rowTable['label']);?></span>
+                </div>
+                <div class="dbreport_table_fields">
+                    <?php
+                    $objQuery = new ploopi\query_select();
+                    $objQuery->add_from('ploopi_mb_field');
+                    $objQuery->add_where('tablename = %s', $rowTable['tablename']);
+                    $objQuery->add_where('visible = 1');
+                    $objRs = $objQuery->execute();
+
+                    while($row = $objRs->fetchrow())
+                    {
+                        ?>
+                        <div class="dbreport_table_field"><strong><?php echo ploopi\str::htmlentities($row['label']); ?></strong><?php if ($row['label'] != $row['name']) echo "<span>(".ploopi\str::htmlentities($row['name']).")</span>"; ?><br /><em style="color:#888;"><?php echo dbreport::getType(dbreport::getBasicType($row['type'])); ?></em></div>
+                        <?php
+                    }
+                    ?>
+                </div>
+                <div class="dbreport_table_info">
+                    <div><strong>Lignes : </strong><span><?php echo number_format($rowTableInfo['Rows']/1000, 2, '.', ' '); ?> k&nbsp;&nbsp;</span><strong>Volume : </strong><span><?php echo number_format($rowTableInfo['Data_length']/(1024*1024), 2, '.', ' '); ?> Mo</span></div>
+                </div>
+            </div>
+            <?php
+        }
+        ?>
+    <?php echo ploopi\skin::get()->close_simplebloc(); ?>
+
+
+    <?php echo ploopi\skin::get()->open_simplebloc('Relations'); ?>
+        <?php
+
+        $arrTableRelationDetail = array();
+
+        // SÃ©lection des relations de la requete courante
+        $objQuery = new ploopi\query_select();
+        $objQuery->add_from('ploopi_mod_dbreport_queryrelation qr');
+        $objQuery->add_where('qr.id_query = %d', $_GET['dbreport_query_id']);
+        $objRs = $objQuery->execute();
+
+
         $arrColumns = array();
         $arrValues = array();
 
@@ -197,6 +192,11 @@ if (isset($_GET['dbreport_query_id']) && is_numeric($_GET['dbreport_query_id']) 
             'options' => array('sort' => true)
         );
 
+        $arrColumns['left']['type_join'] = array(
+            'label' => 'Jointure',
+            'width' => 100,
+            'options' => array('sort' => true)
+        );
 
         $arrColumns['auto']['comment'] = array(
             'label' => 'Commentaire',
@@ -215,48 +215,58 @@ if (isset($_GET['dbreport_query_id']) && is_numeric($_GET['dbreport_query_id']) 
 
             $arrValues[] = array(
                 'values' => array(
-                    'tablesrc' => array('label' => ploopi_htmlentities($row['tablename_src']), 'sort_label' => "{$row['tablename_dest']}.{$row['fieldname_dest']}"),
-                    'tabledest' => array('label' => ploopi_htmlentities($row['tablename_dest'])),
-                    'fieldsrc' => array('label' => ploopi_htmlentities($row['fieldname_src'])),
-                    'fielddest' => array('label' => ploopi_htmlentities($row['fieldname_dest'])),
-                    'active' => array('label' => $row['active'] ? 'Oui' : 'Non', 'style' => 'font-weight:bold;color:#'.($row['active'] ? '00a600' : 'a60000')),
+                    'tablesrc' => array('label' => ploopi\str::htmlentities($row['tablename_src']), 'sort_label' => "{$row['tablename_dest']}.{$row['fieldname_dest']}"),
+                    'tabledest' => array('label' => ploopi\str::htmlentities($row['tablename_dest'])),
+                    'fieldsrc' => array('label' => ploopi\str::htmlentities($row['fieldname_src'])),
+                    'fielddest' => array('label' => ploopi\str::htmlentities($row['fieldname_dest'])),
+                    'type_join' => array('label' =>
+                        '<select style="width:100%;padding-top:1px;padding-bottom:1px;" onchange="document.location.href=\''.ploopi\crypt::urlencode("admin.php?ploopi_op=dbreport_queryrelation_modify&dbreport_query_id={$objDbrQuery->fields['id']}&dbreport_queryrelation_src={$row['tablename_src']},{$row['fieldname_src']}&dbreport_queryrelation_dest={$row['tablename_dest']},{$row['fieldname_dest']}").'&dbreport_queryrelation_type_join=\'+this.value;">
+                            <option value="inner" '.($row['type_join'] == 'inner' ? 'selected="selected"' : '').'>INNER</option>
+                            <option value="left" '.($row['type_join'] == 'left' ? 'selected="selected"' : '').'>LEFT</option>
+                            <option value="right" '.($row['type_join'] == 'right' ? 'selected="selected"' : '').'>RIGHT</option>
+                        </select>',
+                        'sort_label' => $row['type_join']
+                    ),
+                    'active' => array(
+                        'label' => '<a style="font-weight:bold;color:#'.($row['active'] ? '00a600' : 'a60000').'" href="'.ploopi\crypt::urlencode("admin.php?ploopi_op=dbreport_queryrelation_modify&dbreport_query_id={$objDbrQuery->fields['id']}&dbreport_queryrelation_src={$row['tablename_src']},{$row['fieldname_src']}&dbreport_queryrelation_dest={$row['tablename_dest']},{$row['fieldname_dest']}&dbreport_queryrelation_active=".($row['active'] ? 0 : 1)).'">'.($row['active'] ? 'Oui' : 'Non').'</a>',
+                        'style' => ''
+                    ),
                     'comment' => array('label' => $strComment, 'style' => $booMulti ? 'color:#a60000;' : 'color:#aaa;')
                 ),
-                'description' => 'Activer/Désactiver la relation',
-                'link' => ploopi_urlencode("admin.php?ploopi_op=dbreport_queryrelation_modify&dbreport_query_id={$objDbrQuery->fields['id']}&dbreport_queryrelation_src={$row['tablename_src']},{$row['fieldname_src']}&dbreport_queryrelation_dest={$row['tablename_dest']},{$row['fieldname_dest']}&dbreport_queryrelation_active=".($row['active'] ? 0 : 1))
+                'description' => ''
             );
         }
 
 
-        $skin->display_array($arrColumns, $arrValues, 'dbreport_relation_list', array('sortable' => true, 'orderby_default' => 'tablesrc', 'limit' => 25));
+        ploopi\skin::get()->display_array($arrColumns, $arrValues, 'dbreport_relation_list', array('sortable' => true, 'orderby_default' => 'tablesrc', 'limit' => 25));
 
         if (!$objRs->numrows()) {
             ?>
-            <div style="background-color:#eee;border-bottom:1px solid #aaa;padding:2px 4px;">
-                Aucune relation pour cette requête
+            <div style="padding:6px;">
+                Aucune relation pour cette requÃªte
             </div>
             <?php
         }
         ?>
-    </div>
+
+    <?php echo ploopi\skin::get()->close_simplebloc(); ?>
 
 
-    <div class="dbreport_query_block">
+    <?php echo ploopi\skin::get()->open_simplebloc('Champs / PropriÃ©tÃ©s'); ?>
         <a name="dbreport_fields"></a>
-        <h1 class="dbreport_title">Champs / Propriétés</h1>
         <?php
         $arrColumns = array();
         $arrValues = array();
 
         $arrColumns['auto']['field'] =
             array(
-                'label' => 'Module / Table / Champ / Intitulé / Type',
+                'label' => 'Module / Table / Champ / IntitulÃ© / Type',
             );
 
         $arrColumns['right']['position'] =
             array(
                 'label' => 'Pos',
-                'width' => 50,
+                'width' => 60,
                 'options' => array('sort' => true)
             );
 
@@ -274,7 +284,7 @@ if (isset($_GET['dbreport_query_id']) && is_numeric($_GET['dbreport_query_id']) 
 
         /*$arrColumns['right']['series'] =
             array(
-                'label' => 'Série',
+                'label' => 'SÃ©rie',
                 'width' => 50,
             );*/
 
@@ -292,7 +302,7 @@ if (isset($_GET['dbreport_query_id']) && is_numeric($_GET['dbreport_query_id']) 
 
         $arrColumns['right']['operation'] =
             array(
-                'label' => 'Opération',
+                'label' => 'OpÃ©ration',
                 'width' => 100,
             );
 
@@ -309,7 +319,7 @@ if (isset($_GET['dbreport_query_id']) && is_numeric($_GET['dbreport_query_id']) 
             );
 
 
-        $objQuery = new ploopi_query_select();
+        $objQuery = new ploopi\query_select();
         $objQuery->add_select('
             dqf.*,
             mbf.name as field_name,
@@ -333,15 +343,15 @@ if (isset($_GET['dbreport_query_id']) && is_numeric($_GET['dbreport_query_id']) 
 
         $arrLabels = array();
 
-        // Tableau des champs visibles (pour paramétrage de transformation)
+        // Tableau des champs visibles (pour paramÃ©trage de transformation)
         $arrVisibleFields = array();
 
         while ($row = $objRs->fetchrow())
         {
-            // Indexé ?
+            // IndexÃ© ?
             $booIndex = isset($arrTableDetail[$row['table_name']]['indexes'][$row['field_name']]);
 
-            $strIndex = $booIndex ? ' <em style="color:green;">indexé</em>' : ' <em style="color:orange;">non indexé</em>';
+            $strIndex = $booIndex ? ' <em style="color:green;">indexÃ©</em>' : ' <em style="color:orange;">non indexÃ©</em>';
 
             $strCriteria = dbreport::getCriteria($row['type_criteria']) ? dbreport::getCriteria($row['type_criteria'])." {$row['criteria']}" : '';
             $strOr = dbreport::getCriteria($row['type_or']) ? dbreport::getCriteria($row['type_or'])." {$row['or']}" : '';
@@ -351,30 +361,30 @@ if (isset($_GET['dbreport_query_id']) && is_numeric($_GET['dbreport_query_id']) 
             if (!$booIndex && ($strCriteria != '' || $strOr != '')) $strStyle = 'color:red;';
 
             $arrFunctions = array();
-            if (trim($row['function']) != '') $arrFunctions[] = ploopi_htmlentities($row['function']);
-            if (trim($row['function_group']) != '') $arrFunctions[] = ploopi_htmlentities($row['function_group']);
+            if (trim($row['function']) != '') $arrFunctions[] = ploopi\str::htmlentities($row['function']);
+            if (trim($row['function_group']) != '') $arrFunctions[] = ploopi\str::htmlentities($row['function_group']);
 
             $arrValues[] = array(
                 'values' => array(
-                    'field' => array('label' => ploopi_htmlentities("[{$row['mt_label']}] {$row['table_name']}.{$row['field_name']} : ")."<strong>".ploopi_htmlentities($row['label'])."</strong>". (isset($arrLabels[$row['label']]) ? "<em style=\"color:#a60000;\">&nbsp;(Doublon d'intitulé)</em>" : '') ."<br /><em style=\"color:#888;\">".dbreport::getType(dbreport::getBasicType($row['type'])).'</em>'.$strIndex, 'style' => $strStyle),
-                    'label' => array('label' => isset($arrLabels[$row['label']]) ? "<em style=\"color:#a60000;\">".ploopi_htmlentities($row['label'])." (Doublon d'intitulé)</em>" : ploopi_htmlentities($row['label'])),
+                    'field' => array('label' => ploopi\str::htmlentities("[{$row['mt_label']}] {$row['table_name']}.{$row['field_name']} : ")."<strong>".ploopi\str::htmlentities($row['label'])."</strong>". (isset($arrLabels[$row['label']]) ? "<em style=\"color:#a60000;\">&nbsp;(Doublon d'intitulÃ©)</em>" : '') ."<br /><em style=\"color:#888;\">".dbreport::getType(dbreport::getBasicType($row['type'])).'</em>'.$strIndex, 'style' => $strStyle),
+                    'label' => array('label' => isset($arrLabels[$row['label']]) ? "<em style=\"color:#a60000;\">".ploopi\str::htmlentities($row['label'])." (Doublon d'intitulÃ©)</em>" : ploopi\str::htmlentities($row['label'])),
                     'function' => array('label' => implode('<br />', $arrFunctions)),
-                    'operation' => array('label' => ploopi_htmlentities(dbreport::getOperation($row['operation']))),
-                    'sort' => array('label' => ploopi_htmlentities(dbreport::getSort($row['sort']))),
+                    'operation' => array('label' => ploopi\str::htmlentities(dbreport::getOperation($row['operation']))),
+                    'sort' => array('label' => ploopi\str::htmlentities(dbreport::getSort($row['sort']))),
                     'visible' => array('label' => $row['visible'] ? 'Oui' : 'Non'),
                     'series' => array('label' => $row['series'] ? 'Oui' : 'Non'),
-                    'criteria' => array('label' => ploopi_htmlentities($strCriteria), 'style' => $strStyle),
-                    'or' => array('label' => ploopi_htmlentities($strOr), 'style' => $strStyle),
+                    'criteria' => array('label' => ploopi\str::htmlentities($strCriteria), 'style' => $strStyle),
+                    'or' => array('label' => ploopi\str::htmlentities($strOr), 'style' => $strStyle),
                     'actions' => array(
                         'label' => '
-                            <a title="Supprimer le champ" href="javascript:void(0);" onclick="javascript:if (confirm(\'Êtes vous certain de vouloir supprimer cette ligne ?\')) document.location.href=\''.ploopi_urlencode("admin-light.php?ploopi_op=dbreport_queryfield_delete&dbreport_query_id={$_GET['dbreport_query_id']}&dbreport_queryfield_id={$row['id']}").'\';"><img src="./modules/dbreport/img/ico_delete.png" /></a>
+                            <a title="Supprimer le champ" href="javascript:void(0);" onclick="javascript:if (confirm(\'ÃŠtes vous certain de vouloir supprimer cette ligne ?\')) document.location.href=\''.ploopi\crypt::urlencode("admin-light.php?ploopi_op=dbreport_queryfield_delete&dbreport_query_id={$_GET['dbreport_query_id']}&dbreport_queryfield_id={$row['id']}").'\';"><img src="./modules/dbreport/img/ico_delete.png" /></a>
                         '
                     ),
-                    'position' => array('label' => ploopi_htmlentities($row['position']), 'sort_label' => $row['position'])
+                    'position' => array('label' => ploopi\str::htmlentities($row['position']), 'sort_label' => $row['position'])
                 ),
                 'description' => 'Modifier le champ',
                 'link' => 'javascript:void(0);',
-                'onclick' => "ploopi_xmlhttprequest_topopup('600', null, 'dbreport_queryfield_modify', 'admin-light.php', '".ploopi_queryencode("ploopi_op=dbreport_queryfield_modify&dbreport_query_id={$_GET['dbreport_query_id']}&dbreport_queryfield_id={$row['id']}")."','POST')",
+                'onclick' => "ploopi.xhr.topopup('600', null, 'dbreport_queryfield_modify', 'admin-light.php', '".ploopi\crypt::queryencode("ploopi_op=dbreport_queryfield_modify&dbreport_query_id={$_GET['dbreport_query_id']}&dbreport_queryfield_id={$row['id']}")."','POST')",
                 'style' => ''
             );
 
@@ -384,190 +394,183 @@ if (isset($_GET['dbreport_query_id']) && is_numeric($_GET['dbreport_query_id']) 
             if ($row['visible']) $arrVisibleFields[$row['id']] = $row['label'];
         }
 
-        $skin->display_array($arrColumns, $arrValues, 'dbreport_field_list', array('sortable' => true, 'orderby_default' => 'position', 'limit' => 25));
+        ploopi\skin::get()->display_array($arrColumns, $arrValues, 'dbreport_field_list', array('sortable' => true, 'orderby_default' => 'position', 'limit' => 25));
 
         if (!$objRs->numrows()) {
             ?>
-            <div style="background-color:#eee;border-bottom:1px solid #aaa;padding:2px 4px;">
-                Aucun champ pour cette requête
+            <div style="padding:6px;">
+                Aucun champ pour cette requÃªte
             </div>
             <?php
         }
         ?>
-    </div>
+    <?php echo ploopi\skin::get()->close_simplebloc(); ?>
 
-    <div>
+
+    <?php echo ploopi\skin::get()->open_simplebloc('Transformation'); ?>
         <a name="dbreport_trans"></a>
-        <h1 class="dbreport_title">Transformation</h1>
-        <div style="border-bottom:1px solid #aaa;padding:4px;">
-            <?php
-            if (sizeof($arrVisibleFields) >= 3) {
+        <?php
+        if (sizeof($arrVisibleFields) >= 3) {
 
 
-                $objForm = new form(
-                    'dbreport_form_pivot_modify',
-                    ploopi_urlencode("admin-light.php?ploopi_op=dbreport_transformation_save&dbreport_query_id={$objDbrQuery->fields['id']}"),
-                    'post'
-                );
+            $objForm = new ploopi\form(
+                'dbreport_form_pivot_modify',
+                ploopi\crypt::urlencode("admin-light.php?ploopi_op=dbreport_transformation_save&dbreport_query_id={$objDbrQuery->fields['id']}"),
+                'post'
+            );
 
-                $objForm->addPanel($objPanel = new form_panel('dbreport_panel_pivot', 'Tableau croisé', array('style' => 'margin:0 4px;')));
+            $objForm->addPanel($objPanel = new ploopi\form_panel('dbreport_panel_pivot', 'Tableau croisÃ©', array('style' => 'margin:0 4px;')));
 
-                $objPanel->addField( new form_checkbox('Activé:', 'pivot_table', $objDbrQuery->fields['transformation'] == 'pivot_table', 'dbreport_query_transformation', 'dbreport_query_transformation') );
-                $objPanel->addField( new form_select('Colonnes:', array('') + $arrVisibleFields, $objDbrQuery->fields['pivot_x'], 'dbreport_query_pivot_x', 'dbreport_query_pivot_x') );
-                $objPanel->addField( new form_select('Lignes:', array('') + $arrVisibleFields, $objDbrQuery->fields['pivot_y'], 'dbreport_query_pivot_y', 'dbreport_query_pivot_y') );
-                $objPanel->addField( new form_select('Données:', array('') + $arrVisibleFields, $objDbrQuery->fields['pivot_val'], 'dbreport_query_pivot_val', 'dbreport_query_pivot_val') );
+            $objPanel->addField( new ploopi\form_checkbox('ActivÃ©:', 'pivot_table', $objDbrQuery->fields['transformation'] == 'pivot_table', 'dbreport_query_transformation', 'dbreport_query_transformation') );
+            $objPanel->addField( new ploopi\form_select('Colonnes:', array('') + $arrVisibleFields, $objDbrQuery->fields['pivot_x'], 'dbreport_query_pivot_x', 'dbreport_query_pivot_x') );
+            $objPanel->addField( new ploopi\form_select('Lignes:', array('') + $arrVisibleFields, $objDbrQuery->fields['pivot_y'], 'dbreport_query_pivot_y', 'dbreport_query_pivot_y') );
+            $objPanel->addField( new ploopi\form_select('DonnÃ©es:', array('') + $arrVisibleFields, $objDbrQuery->fields['pivot_val'], 'dbreport_query_pivot_val', 'dbreport_query_pivot_val') );
 
-                $objForm->addButton( new form_button('input:reset', 'Réinitialiser') );
-                $objForm->addButton( new form_button('input:submit', 'Enregistrer', null, null, array('style' => 'margin-left:2px;')) );
+            $objForm->addButton( new ploopi\form_button('input:reset', 'RÃ©initialiser') );
+            $objForm->addButton( new ploopi\form_button('input:submit', 'Enregistrer', null, null, array('style' => 'margin-left:2px;')) );
 
-                echo $objForm->render();
-            }
-            else {
-                // Impossibilité de traiter le tableau croisé
-                if ($objDbrQuery->fields['transformation'] != '') {
-                    $objDbrQuery->fields['transformation'] = '';
-                    $objDbrQuery->save();
-                }
-                ?>
-                Vous pourriez créer un tableau croisé avec au moins 3 champs visibles.
-                <?php
+            echo $objForm->render();
+        }
+        else {
+            // ImpossibilitÃ© de traiter le tableau croisÃ©
+            if ($objDbrQuery->fields['transformation'] != '') {
+                $objDbrQuery->fields['transformation'] = '';
+                $objDbrQuery->save();
             }
             ?>
-        </div>
-    </div>
+            Vous pourriez crÃ©er un tableau croisÃ© avec au moins 3 champs visibles.
+            <?php
+        }
+        ?>
+    <?php echo ploopi\skin::get()->close_simplebloc(); ?>
 
-    <div>
+
+    <?php echo ploopi\skin::get()->open_simplebloc('ReprÃ©sentation graphique'); ?>
         <a name="dbreport_chart"></a>
-        <h1 class="dbreport_title">Représentation graphique</h1>
-        <div style="border-bottom:1px solid #aaa;padding:4px;">
-            <?php
-            if (sizeof($arrVisibleFields) >= 2) {
+        <?php
+        if (sizeof($arrVisibleFields) >= 2) {
 
-                $objForm = new form(
-                    'dbreport_form_chart_modify',
-                    ploopi_urlencode("admin-light.php?ploopi_op=dbreport_chart_save&dbreport_query_id={$objDbrQuery->fields['id']}"),
-                    'post',
-                    array(
-                        'class' => 'ploopi_generate_form dbreport_panels',
-                    )
-                );
+            $objForm = new ploopi\form(
+                'dbreport_form_chart_modify',
+                ploopi\crypt::urlencode("admin-light.php?ploopi_op=dbreport_chart_save&dbreport_query_id={$objDbrQuery->fields['id']}"),
+                'post',
+                array(
+                    'class' => 'ploopi_generate_form dbreport_panels',
+                )
+            );
 
-                $objForm->addPanel($objPanel = new form_panel('dbreport_panel_chart', 'Forme'));
+            $objForm->addPanel($objPanel = new ploopi\form_panel('dbreport_panel_chart', 'Forme'));
 
-                $objPanel->addField( new form_select('Type:', array('(Choisissez un type de graphique)') + dbreport_query::getChartTypes(), $objDbrQuery->fields['chart'], 'dbreport_query_chart', 'dbreport_query_chart', array('style' => 'width:180px;', 'onchange' => "$('dbreport_query_chart_limit_y_form').style.display = $('dbreport_query_chart_sort_y_form').style.display = $('dbreport_query_chart_y_form').style.display = (this.value == 'pie' || this.value == 'doughnut') ? 'none' : 'block';")) );
-                $objPanel->addField( new form_field('input:text', 'Largeur (px):', $objDbrQuery->fields['chart_width'], 'dbreport_query_chart_width', 'dbreport_query_chart_width', array('style' => 'width:100px;')) );
-                $objPanel->addField( new form_field('input:text', 'Hauteur (px):', $objDbrQuery->fields['chart_height'], 'dbreport_query_chart_height', 'dbreport_query_chart_height', array('style' => 'width:100px;')) );
-                $objPanel->addField( new form_field('input:text', 'Titre:', $objDbrQuery->fields['chart_title'], 'dbreport_query_chart_title', 'dbreport_query_chart_title') );
-                $objPanel->addField( new form_field('input:text', 'Sous-titre:', $objDbrQuery->fields['chart_subtitle'], 'dbreport_query_chart_subtitle', 'dbreport_query_chart_subtitle') );
-                $objPanel->addField( new form_checkbox('Animations:', 1, $objDbrQuery->fields['chart_animation'], 'dbreport_query_chart_animation', 'dbreport_query_chart_animation') );
+            $objPanel->addField( new ploopi\form_select('Type:', array('(Choisissez un type de graphique)') + dbreport_query::getChartTypes(), $objDbrQuery->fields['chart'], 'dbreport_query_chart', 'dbreport_query_chart', array('style' => 'width:180px;', 'onchange' => "jQuery('#dbreport_query_chart_limit_y_form')[0].style.display = jQuery('#dbreport_query_chart_sort_y_form')[0].style.display = jQuery('#dbreport_query_chart_y_form')[0].style.display = (this.value == 'pie' ||Â this.value == 'doughnut') ? 'none' : 'block';")) );
+            $objPanel->addField( new ploopi\form_field('input:text', 'Largeur (px):', $objDbrQuery->fields['chart_width'], 'dbreport_query_chart_width', 'dbreport_query_chart_width', array('style' => 'width:100px;')) );
+            $objPanel->addField( new ploopi\form_field('input:text', 'Hauteur (px):', $objDbrQuery->fields['chart_height'], 'dbreport_query_chart_height', 'dbreport_query_chart_height', array('style' => 'width:100px;')) );
+            $objPanel->addField( new ploopi\form_field('input:text', 'Titre:', $objDbrQuery->fields['chart_title'], 'dbreport_query_chart_title', 'dbreport_query_chart_title') );
+            $objPanel->addField( new ploopi\form_field('input:text', 'Sous-titre:', $objDbrQuery->fields['chart_subtitle'], 'dbreport_query_chart_subtitle', 'dbreport_query_chart_subtitle') );
+            $objPanel->addField( new ploopi\form_checkbox('Animations:', 1, $objDbrQuery->fields['chart_animation'], 'dbreport_query_chart_animation', 'dbreport_query_chart_animation') );
 
-                $objForm->addPanel($objPanel = new form_panel('dbreport_panel_chart_data', 'Données'));
+            $objForm->addPanel($objPanel = new ploopi\form_panel('dbreport_panel_chart_data', 'DonnÃ©es'));
 
-                $objPanel->addField( new form_select('Jeu de données:', array('(Choisissez un champ)') + $arrVisibleFields, $objDbrQuery->fields['chart_x'], 'dbreport_query_chart_x', 'dbreport_query_chart_x') );
-                $objPanel->addField( new form_select('Tri (jeu):', array('' => '(par défaut)') + dbreport_query::getChartSorts(), $objDbrQuery->fields['chart_sort_x'], 'dbreport_query_chart_sort_x', 'dbreport_query_chart_sort_x', array('style' => 'width:150px;')) );
-                $objPanel->addField( new form_field('input:text', 'Limité à (jeu):', $objDbrQuery->fields['chart_limit_x'], 'dbreport_query_chart_limit_x', 'dbreport_query_chart_limit_x', array('style' => 'width:50px;', 'datatype' => 'int')) );
-                $objPanel->addField( new form_select('Valeurs:', array('(Choisissez un champ)') + $arrVisibleFields, $objDbrQuery->fields['chart_val'], 'dbreport_query_chart_val', 'dbreport_query_chart_val') );
-                $objPanel->addField( new form_select('Séries de données (opt):', array('(Choisissez un champ)') + $arrVisibleFields, $objDbrQuery->fields['chart_y'], 'dbreport_query_chart_y', 'dbreport_query_chart_y', array('style_form' => in_array($objDbrQuery->fields['chart'], array('pie', 'doughnut')) ? 'display:none;' : 'display:block;' )) );
-                $objPanel->addField( new form_select('Tri (séries):', array('' => '(par défaut)') + dbreport_query::getChartSorts(), $objDbrQuery->fields['chart_sort_y'], 'dbreport_query_chart_sort_y', 'dbreport_query_chart_sort_y', array('style' => 'width:150px;', 'style_form' => in_array($objDbrQuery->fields['chart'], array('pie', 'doughnut')) ? 'display:none;' : 'display:block;')) );
-                $objPanel->addField( new form_field('input:text', 'Limité à (séries):', $objDbrQuery->fields['chart_limit_y'], 'dbreport_query_chart_limit_y', 'dbreport_query_chart_limit_y', array('style' => 'width:50px;', 'datatype' => 'int', 'style_form' => in_array($objDbrQuery->fields['chart'], array('pie', 'doughnut')) ? 'display:none;' : 'display:block;')) );
+            $objPanel->addField( new ploopi\form_select('Jeu de donnÃ©es:', array('(Choisissez un champ)') + $arrVisibleFields, $objDbrQuery->fields['chart_x'], 'dbreport_query_chart_x', 'dbreport_query_chart_x') );
+            $objPanel->addField( new ploopi\form_select('Tri (jeu):', array('' => '(par dÃ©faut)') + dbreport_query::getChartSorts(), $objDbrQuery->fields['chart_sort_x'], 'dbreport_query_chart_sort_x', 'dbreport_query_chart_sort_x', array('style' => 'width:150px;')) );
+            $objPanel->addField( new ploopi\form_field('input:text', 'LimitÃ© Ã  (jeu):', $objDbrQuery->fields['chart_limit_x'], 'dbreport_query_chart_limit_x', 'dbreport_query_chart_limit_x', array('style' => 'width:50px;', 'datatype' => 'int')) );
+            $objPanel->addField( new ploopi\form_select('Valeurs:', array('(Choisissez un champ)') + $arrVisibleFields, $objDbrQuery->fields['chart_val'], 'dbreport_query_chart_val', 'dbreport_query_chart_val') );
+            $objPanel->addField( new ploopi\form_select('SÃ©ries de donnÃ©es (opt):', array('(Choisissez un champ)') + $arrVisibleFields, $objDbrQuery->fields['chart_y'], 'dbreport_query_chart_y', 'dbreport_query_chart_y', array('style_form' => in_array($objDbrQuery->fields['chart'], array('pie', 'doughnut')) ? 'display:none;' : 'display:block;' )) );
+            $objPanel->addField( new ploopi\form_select('Tri (sÃ©ries):', array('' => '(par dÃ©faut)') + dbreport_query::getChartSorts(), $objDbrQuery->fields['chart_sort_y'], 'dbreport_query_chart_sort_y', 'dbreport_query_chart_sort_y', array('style' => 'width:150px;', 'style_form' => in_array($objDbrQuery->fields['chart'], array('pie', 'doughnut')) ? 'display:none;' : 'display:block;')) );
+            $objPanel->addField( new ploopi\form_field('input:text', 'LimitÃ© Ã  (sÃ©ries):', $objDbrQuery->fields['chart_limit_y'], 'dbreport_query_chart_limit_y', 'dbreport_query_chart_limit_y', array('style' => 'width:50px;', 'datatype' => 'int', 'style_form' => in_array($objDbrQuery->fields['chart'], array('pie', 'doughnut')) ? 'display:none;' : 'display:block;')) );
 
-                $objForm->addPanel($objPanel = new form_panel('dbreport_panel_chart_style', 'Style'));
-                $objPanel->addField( new form_select('Thème de couleurs:', array('' => '(monochrome)') + array_combine(array_keys(dbreport_query::getChartColorSets()), array_keys(dbreport_query::getChartColorSets())), $objDbrQuery->fields['chart_colorset'], 'dbreport_query_chart_colorset', 'dbreport_query_chart_colorset', array('style' => 'width:150px;', 'onchange' => "$('dbreport_query_chart_color_form').style.display = (this.value == '') ? 'block' : 'none';")) );
-                $objPanel->addField( new form_field('input:text', 'Couleur (monochrome):', $objDbrQuery->fields['chart_color'], 'dbreport_query_chart_color', 'dbreport_query_chart_color', array('class' => 'color {hash:true,required:true}', 'style' => 'cursor:pointer;width:100px;', 'style_form' => $objDbrQuery->fields['chart_colorset'] == '' ? 'display:block;' : 'display:none;')) );
-                $objPanel->addField( new form_field('input:text', 'Couleur fond:', $objDbrQuery->fields['chart_background'], 'dbreport_query_chart_background', 'dbreport_query_chart_background', array('class' => 'color {hash:true,required:true}', 'style' => 'cursor:pointer;width:100px;')) );
-                $objPanel->addField( new form_field('input:text', 'Epaisseur bordure:', $objDbrQuery->fields['chart_border_width'], 'dbreport_query_chart_border_width', 'dbreport_query_chart_border_width', array('datatype' => 'int', 'style' => 'width:50px;')) );
-                $objPanel->addField( new form_field('input:text', 'Couleur bordure:', $objDbrQuery->fields['chart_border_color'], 'dbreport_query_chart_border_color', 'dbreport_query_chart_border_color', array('class' => 'color {hash:true,required:true}', 'style' => 'cursor:pointer;width:100px;')) );
-                $objPanel->addField( new form_select('Famille de police:', dbreport_query::getChartFonts(), $objDbrQuery->fields['chart_font'], 'dbreport_query_chart_font', 'dbreport_query_chart_font', array('style' => 'width:150px;')) );
-                $objPanel->addField( new form_field('input:text', 'Taille titre:', $objDbrQuery->fields['chart_title_font_size'], 'dbreport_query_chart_title_font_size', 'dbreport_query_chart_title_font_size', array('datatype' => 'int', 'style' => 'width:100px;')) );
-                $objPanel->addField( new form_field('input:text', 'Couleur titre:', $objDbrQuery->fields['chart_title_font_color'], 'dbreport_query_chart_title_font_color', 'dbreport_query_chart_title_font_color', array('class' => 'color {hash:true,required:true}', 'style' => 'cursor:pointer;width:100px;')) );
-                $objPanel->addField( new form_field('input:text', 'Epaisseur tracés:', $objDbrQuery->fields['chart_line_thickness'], 'dbreport_query_chart_line_thickness', 'dbreport_query_chart_line_thickness', array('datatype' => 'int', 'style' => 'width:50px;')) );
+            $objForm->addPanel($objPanel = new ploopi\form_panel('dbreport_panel_chart_style', 'Style'));
+            $objPanel->addField( new ploopi\form_select('ThÃ¨me de couleurs:', array('' => '(monochrome)') + array_combine(array_keys(dbreport_query::getChartColorSets()), array_keys(dbreport_query::getChartColorSets())), $objDbrQuery->fields['chart_colorset'], 'dbreport_query_chart_colorset', 'dbreport_query_chart_colorset', array('style' => 'width:150px;', 'onchange' => "jQuery('#dbreport_query_chart_color_form')[0].style.display = (this.value == '') ? 'block' : 'none';")) );
+            $objPanel->addField( new ploopi\form_field('input:text', 'Couleur (monochrome):', $objDbrQuery->fields['chart_color'], 'dbreport_query_chart_color', 'dbreport_query_chart_color', array('class' => 'color {hash:true,required:true}', 'style' => 'cursor:pointer;width:100px;', 'style_form' => $objDbrQuery->fields['chart_colorset'] == '' ? 'display:block;' : 'display:none;')) );
+            $objPanel->addField( new ploopi\form_field('input:text', 'Couleur fond:', $objDbrQuery->fields['chart_background'], 'dbreport_query_chart_background', 'dbreport_query_chart_background', array('class' => 'color {hash:true,required:true}', 'style' => 'cursor:pointer;width:100px;')) );
+            $objPanel->addField( new ploopi\form_field('input:text', 'Epaisseur bordure:', $objDbrQuery->fields['chart_border_width'], 'dbreport_query_chart_border_width', 'dbreport_query_chart_border_width', array('datatype' => 'int', 'style' => 'width:50px;')) );
+            $objPanel->addField( new ploopi\form_field('input:text', 'Couleur bordure:', $objDbrQuery->fields['chart_border_color'], 'dbreport_query_chart_border_color', 'dbreport_query_chart_border_color', array('class' => 'color {hash:true,required:true}', 'style' => 'cursor:pointer;width:100px;')) );
+            $objPanel->addField( new ploopi\form_select('Famille de police:', dbreport_query::getChartFonts(), $objDbrQuery->fields['chart_font'], 'dbreport_query_chart_font', 'dbreport_query_chart_font', array('style' => 'width:150px;')) );
+            $objPanel->addField( new ploopi\form_field('input:text', 'Taille titre:', $objDbrQuery->fields['chart_title_font_size'], 'dbreport_query_chart_title_font_size', 'dbreport_query_chart_title_font_size', array('datatype' => 'int', 'style' => 'width:100px;')) );
+            $objPanel->addField( new ploopi\form_field('input:text', 'Couleur titre:', $objDbrQuery->fields['chart_title_font_color'], 'dbreport_query_chart_title_font_color', 'dbreport_query_chart_title_font_color', array('class' => 'color {hash:true,required:true}', 'style' => 'cursor:pointer;width:100px;')) );
+            $objPanel->addField( new ploopi\form_field('input:text', 'Epaisseur tracÃ©s:', $objDbrQuery->fields['chart_line_thickness'], 'dbreport_query_chart_line_thickness', 'dbreport_query_chart_line_thickness', array('datatype' => 'int', 'style' => 'width:50px;')) );
 
-                $objForm->addPanel($objPanel = new form_panel('dbreport_panel_chart_axis', 'Axes'));
-                $objPanel->addField( new form_field('input:text', 'Epaisseur x:', $objDbrQuery->fields['chart_axis_x_thickness'], 'dbreport_query_chart_axis_x_thickness', 'dbreport_query_chart_axis_x_thickness', array('datatype' => 'int', 'style' => 'width:100px;')) );
-                $objPanel->addField( new form_field('input:text', 'Epaisseur y:', $objDbrQuery->fields['chart_axis_y_thickness'], 'dbreport_query_chart_axis_y_thickness', 'dbreport_query_chart_axis_y_thickness', array('datatype' => 'int', 'style' => 'width:100px;')) );
-                $objPanel->addField( new form_field('input:text', 'Couleur:', $objDbrQuery->fields['chart_axis_color'], 'dbreport_query_chart_axis_color', 'dbreport_query_chart_axis_color', array('class' => 'color {hash:true,required:true}', 'style' => 'cursor:pointer;width:100px;')) );
-                $objPanel->addField( new form_field('input:text', 'Taille texte:', $objDbrQuery->fields['chart_axis_font_size'], 'dbreport_query_chart_axis_font_size', 'dbreport_query_chart_axis_font_size', array('datatype' => 'int', 'style' => 'width:100px;')) );
-                $objPanel->addField( new form_field('input:text', 'Couleur texte:', $objDbrQuery->fields['chart_axis_font_color'], 'dbreport_query_chart_axis_font_color', 'dbreport_query_chart_axis_font_color', array('class' => 'color {hash:true,required:true}', 'style' => 'cursor:pointer;width:100px;')) );
+            $objForm->addPanel($objPanel = new ploopi\form_panel('dbreport_panel_chart_axis', 'Axes'));
+            $objPanel->addField( new ploopi\form_field('input:text', 'Epaisseur x:', $objDbrQuery->fields['chart_axis_x_thickness'], 'dbreport_query_chart_axis_x_thickness', 'dbreport_query_chart_axis_x_thickness', array('datatype' => 'int', 'style' => 'width:100px;')) );
+            $objPanel->addField( new ploopi\form_field('input:text', 'Epaisseur y:', $objDbrQuery->fields['chart_axis_y_thickness'], 'dbreport_query_chart_axis_y_thickness', 'dbreport_query_chart_axis_y_thickness', array('datatype' => 'int', 'style' => 'width:100px;')) );
+            $objPanel->addField( new ploopi\form_field('input:text', 'Couleur:', $objDbrQuery->fields['chart_axis_color'], 'dbreport_query_chart_axis_color', 'dbreport_query_chart_axis_color', array('class' => 'color {hash:true,required:true}', 'style' => 'cursor:pointer;width:100px;')) );
+            $objPanel->addField( new ploopi\form_field('input:text', 'Taille texte:', $objDbrQuery->fields['chart_axis_font_size'], 'dbreport_query_chart_axis_font_size', 'dbreport_query_chart_axis_font_size', array('datatype' => 'int', 'style' => 'width:100px;')) );
+            $objPanel->addField( new ploopi\form_field('input:text', 'Couleur texte:', $objDbrQuery->fields['chart_axis_font_color'], 'dbreport_query_chart_axis_font_color', 'dbreport_query_chart_axis_font_color', array('class' => 'color {hash:true,required:true}', 'style' => 'cursor:pointer;width:100px;')) );
 
 
-                $objForm->addPanel($objPanel = new form_panel('dbreport_panel_chart_grid', 'Grille'));
-                $objPanel->addField( new form_field('input:text', 'Epaisseur x:', $objDbrQuery->fields['chart_grid_x_thickness'], 'dbreport_query_chart_grid_x_thickness', 'dbreport_query_chart_grid_x_thickness', array('datatype' => 'int', 'style' => 'width:100px;')) );
-                $objPanel->addField( new form_field('input:text', 'Epaisseur y:', $objDbrQuery->fields['chart_grid_y_thickness'], 'dbreport_query_chart_grid_y_thickness', 'dbreport_query_chart_grid_y_thickness', array('datatype' => 'int', 'style' => 'width:100px;')) );
-                $objPanel->addField( new form_field('input:text', 'Couleur:', $objDbrQuery->fields['chart_grid_color'], 'dbreport_query_chart_grid_color', 'dbreport_query_chart_grid_color', array('class' => 'color {hash:true,required:true}', 'style' => 'cursor:pointer;width:100px;')) );
+            $objForm->addPanel($objPanel = new ploopi\form_panel('dbreport_panel_chart_grid', 'Grille'));
+            $objPanel->addField( new ploopi\form_field('input:text', 'Epaisseur x:', $objDbrQuery->fields['chart_grid_x_thickness'], 'dbreport_query_chart_grid_x_thickness', 'dbreport_query_chart_grid_x_thickness', array('datatype' => 'int', 'style' => 'width:100px;')) );
+            $objPanel->addField( new ploopi\form_field('input:text', 'Epaisseur y:', $objDbrQuery->fields['chart_grid_y_thickness'], 'dbreport_query_chart_grid_y_thickness', 'dbreport_query_chart_grid_y_thickness', array('datatype' => 'int', 'style' => 'width:100px;')) );
+            $objPanel->addField( new ploopi\form_field('input:text', 'Couleur:', $objDbrQuery->fields['chart_grid_color'], 'dbreport_query_chart_grid_color', 'dbreport_query_chart_grid_color', array('class' => 'color {hash:true,required:true}', 'style' => 'cursor:pointer;width:100px;')) );
 
-                $objForm->addPanel($objPanel = new form_panel('dbreport_panel_chart_interlaced', 'Intervalles'));
-                $objPanel->addField( new form_checkbox('Afficher:', 1, $objDbrQuery->fields['chart_interlaced_display'], 'dbreport_query_chart_interlaced_display', 'dbreport_query_chart_interlaced_display') );
-                $objPanel->addField( new form_field('input:text', 'Couleur colonnes:', $objDbrQuery->fields['chart_interlaced_x_color'], 'dbreport_query_chart_interlaced_x_color', 'dbreport_query_chart_interlaced_x_color', array('class' => 'color {hash:true,required:true}', 'style' => 'cursor:pointer;width:100px;')) );
-                $objPanel->addField( new form_field('input:text', 'Couleur lignes:', $objDbrQuery->fields['chart_interlaced_y_color'], 'dbreport_query_chart_interlaced_y_color', 'dbreport_query_chart_interlaced_y_color', array('class' => 'color {hash:true,required:true}', 'style' => 'cursor:pointer;width:100px;')) );
+            $objForm->addPanel($objPanel = new ploopi\form_panel('dbreport_panel_chart_interlaced', 'Intervalles'));
+            $objPanel->addField( new ploopi\form_checkbox('Afficher:', 1, $objDbrQuery->fields['chart_interlaced_display'], 'dbreport_query_chart_interlaced_display', 'dbreport_query_chart_interlaced_display') );
+            $objPanel->addField( new ploopi\form_field('input:text', 'Couleur colonnes:', $objDbrQuery->fields['chart_interlaced_x_color'], 'dbreport_query_chart_interlaced_x_color', 'dbreport_query_chart_interlaced_x_color', array('class' => 'color {hash:true,required:true}', 'style' => 'cursor:pointer;width:100px;')) );
+            $objPanel->addField( new ploopi\form_field('input:text', 'Couleur lignes:', $objDbrQuery->fields['chart_interlaced_y_color'], 'dbreport_query_chart_interlaced_y_color', 'dbreport_query_chart_interlaced_y_color', array('class' => 'color {hash:true,required:true}', 'style' => 'cursor:pointer;width:100px;')) );
 
-                $objForm->addPanel($objPanel = new form_panel('dbreport_panel_chart_legend', 'Légende'));
-                $objPanel->addField( new form_checkbox('Afficher:', 1, $objDbrQuery->fields['chart_legend_display'], 'dbreport_query_chart_legend_display', 'dbreport_query_chart_legend_display') );
-                $objPanel->addField( new form_field('input:text', 'Taille texte:', $objDbrQuery->fields['chart_legend_font_size'], 'dbreport_query_chart_legend_font_size', 'dbreport_query_chart_legend_font_size', array('datatype' => 'int', 'style' => 'width:100px;')) );
-                $objPanel->addField( new form_field('input:text', 'Couleur texte:', $objDbrQuery->fields['chart_legend_font_color'], 'dbreport_query_chart_legend_font_color', 'dbreport_query_chart_legend_font_color', array('class' => 'color {hash:true,required:true}', 'style' => 'cursor:pointer;width:100px;')) );
-                $objPanel->addField( new form_select('Position horizontale:', dbreport_query::getChartAligns(), $objDbrQuery->fields['chart_legend_align'], 'dbreport_query_chart_legend_align', 'dbreport_query_chart_legend_align', array('style' => 'width:150px;')) );
-                $objPanel->addField( new form_select('Position verticale:', dbreport_query::getChartValigns(), $objDbrQuery->fields['chart_legend_valign'], 'dbreport_query_chart_legend_valign', 'dbreport_query_chart_legend_valign', array('style' => 'width:150px;')) );
+            $objForm->addPanel($objPanel = new ploopi\form_panel('dbreport_panel_chart_legend', 'LÃ©gende'));
+            $objPanel->addField( new ploopi\form_checkbox('Afficher:', 1, $objDbrQuery->fields['chart_legend_display'], 'dbreport_query_chart_legend_display', 'dbreport_query_chart_legend_display') );
+            $objPanel->addField( new ploopi\form_field('input:text', 'Taille texte:', $objDbrQuery->fields['chart_legend_font_size'], 'dbreport_query_chart_legend_font_size', 'dbreport_query_chart_legend_font_size', array('datatype' => 'int', 'style' => 'width:100px;')) );
+            $objPanel->addField( new ploopi\form_field('input:text', 'Couleur texte:', $objDbrQuery->fields['chart_legend_font_color'], 'dbreport_query_chart_legend_font_color', 'dbreport_query_chart_legend_font_color', array('class' => 'color {hash:true,required:true}', 'style' => 'cursor:pointer;width:100px;')) );
+            $objPanel->addField( new ploopi\form_select('Position horizontale:', dbreport_query::getChartAligns(), $objDbrQuery->fields['chart_legend_align'], 'dbreport_query_chart_legend_align', 'dbreport_query_chart_legend_align', array('style' => 'width:150px;')) );
+            $objPanel->addField( new ploopi\form_select('Position verticale:', dbreport_query::getChartValigns(), $objDbrQuery->fields['chart_legend_valign'], 'dbreport_query_chart_legend_valign', 'dbreport_query_chart_legend_valign', array('style' => 'width:150px;')) );
 
-                $objForm->addPanel($objPanel = new form_panel('dbreport_panel_chart_format', 'Formatage des données'));
-                $objPanel->addField( new form_field('input:text', 'Préfixe (x):', $objDbrQuery->fields['chart_value_x_prefix'], 'dbreport_query_chart_value_x_prefix', 'dbreport_query_chart_value_x_prefix', array('style' => 'width:100px;')) );
-                $objPanel->addField( new form_field('input:text', 'Suffixe (x):', $objDbrQuery->fields['chart_value_x_suffix'], 'dbreport_query_chart_value_x_suffix', 'dbreport_query_chart_value_x_suffix', array('style' => 'width:100px;')) );
-                $objPanel->addField( new form_field('input:text', 'Préfixe (y):', $objDbrQuery->fields['chart_value_y_prefix'], 'dbreport_query_chart_value_y_prefix', 'dbreport_query_chart_value_y_prefix', array('style' => 'width:100px;')) );
-                $objPanel->addField( new form_field('input:text', 'Suffixe (y):', $objDbrQuery->fields['chart_value_y_suffix'], 'dbreport_query_chart_value_y_suffix', 'dbreport_query_chart_value_y_suffix', array('style' => 'width:100px;')) );
-                $objPanel->addField( new form_field('textarea', 'Contenu popup:<br />Ex: <em>{x}, {y}, {total}, {percentage:.2f}, {point.x}, {point.y}, {point.name}, {point.color}, {series.color}, {series.name}</em>', $objDbrQuery->fields['chart_tooltip_format'], 'fck_dbreport_query_chart_tooltip_format', 'fck_dbreport_query_chart_tooltip_format', array('style' => 'height:80px;')) );
+            $objForm->addPanel($objPanel = new ploopi\form_panel('dbreport_panel_chart_format', 'Formatage des donnÃ©es'));
+            $objPanel->addField( new ploopi\form_field('input:text', 'PrÃ©fixe (x):', $objDbrQuery->fields['chart_value_x_prefix'], 'dbreport_query_chart_value_x_prefix', 'dbreport_query_chart_value_x_prefix', array('style' => 'width:100px;')) );
+            $objPanel->addField( new ploopi\form_field('input:text', 'Suffixe (x):', $objDbrQuery->fields['chart_value_x_suffix'], 'dbreport_query_chart_value_x_suffix', 'dbreport_query_chart_value_x_suffix', array('style' => 'width:100px;')) );
+            $objPanel->addField( new ploopi\form_field('input:text', 'PrÃ©fixe (y):', $objDbrQuery->fields['chart_value_y_prefix'], 'dbreport_query_chart_value_y_prefix', 'dbreport_query_chart_value_y_prefix', array('style' => 'width:100px;')) );
+            $objPanel->addField( new ploopi\form_field('input:text', 'Suffixe (y):', $objDbrQuery->fields['chart_value_y_suffix'], 'dbreport_query_chart_value_y_suffix', 'dbreport_query_chart_value_y_suffix', array('style' => 'width:100px;')) );
+            $objPanel->addField( new ploopi\form_field('textarea', 'Contenu popup:<br />Ex: <em>{x}, {y}, {total}, {percentage:.2f}, {point.x}, {point.y}, {point.name}, {point.color}, {series.color}, {series.name}</em>', $objDbrQuery->fields['chart_tooltip_format'], 'fck_dbreport_query_chart_tooltip_format', 'fck_dbreport_query_chart_tooltip_format', array('style' => 'height:80px;')) );
 
-                $objForm->addPanel($objPanel = new form_panel('dbreport_panel_chart_indexes', 'Indices'));
-                $objPanel->addField( new form_checkbox('Afficher:', 1, $objDbrQuery->fields['chart_indexes_display'], 'dbreport_query_chart_indexes_display', 'dbreport_query_chart_indexes_display') );
-                $objPanel->addField( new form_field('textarea', 'Contenu:<br />Ex: <em>{x}, {y}, {total}, {percentage:.2f}, {point.x}, {point.y}, {point.name}, {point.color}, {series.color}, {series.name}</em>', $objDbrQuery->fields['chart_indexes_format'], 'fck_dbreport_query_chart_indexes_format', 'fck_dbreport_query_chart_indexes_format', array('style' => 'height:80px;')) );
-                $objPanel->addField( new form_field('input:text', 'Taille texte (px):', $objDbrQuery->fields['chart_indexes_font_size'], 'dbreport_query_chart_indexes_font_size', 'dbreport_query_chart_indexes_font_size', array('datatype' => 'int', 'style' => 'width:50px;')) );
-                $objPanel->addField( new form_field('input:text', 'Couleur texte:', $objDbrQuery->fields['chart_indexes_font_color'], 'dbreport_query_chart_indexes_font_color', 'dbreport_query_chart_indexes_font_color', array('class' => 'color {hash:true,required:true}', 'style' => 'cursor:pointer;width:100px;')) );
-                $objPanel->addField( new form_field('input:text', 'Rotation (deg):', $objDbrQuery->fields['chart_indexes_rotation'], 'dbreport_query_chart_indexes_rotation', 'dbreport_query_chart_indexes_rotation', array('datatype' => 'int', 'style' => 'width:50px;')) );
-                $objPanel->addField( new form_field('input:text', 'Décalage (x):', $objDbrQuery->fields['chart_indexes_x'], 'dbreport_query_chart_indexes_x', 'dbreport_query_chart_indexes_x', array('datatype' => 'int', 'style' => 'width:50px;')) );
-                $objPanel->addField( new form_field('input:text', 'Décalage (y):', $objDbrQuery->fields['chart_indexes_y'], 'dbreport_query_chart_indexes_y', 'dbreport_query_chart_indexes_y', array('datatype' => 'int', 'style' => 'width:50px;')) );
+            $objForm->addPanel($objPanel = new ploopi\form_panel('dbreport_panel_chart_indexes', 'Indices'));
+            $objPanel->addField( new ploopi\form_checkbox('Afficher:', 1, $objDbrQuery->fields['chart_indexes_display'], 'dbreport_query_chart_indexes_display', 'dbreport_query_chart_indexes_display') );
+            $objPanel->addField( new ploopi\form_field('textarea', 'Contenu:<br />Ex: <em>{x}, {y}, {total}, {percentage:.2f}, {point.x}, {point.y}, {point.name}, {point.color}, {series.color}, {series.name}</em>', $objDbrQuery->fields['chart_indexes_format'], 'fck_dbreport_query_chart_indexes_format', 'fck_dbreport_query_chart_indexes_format', array('style' => 'height:80px;')) );
+            $objPanel->addField( new ploopi\form_field('input:text', 'Taille texte (px):', $objDbrQuery->fields['chart_indexes_font_size'], 'dbreport_query_chart_indexes_font_size', 'dbreport_query_chart_indexes_font_size', array('datatype' => 'int', 'style' => 'width:50px;')) );
+            $objPanel->addField( new ploopi\form_field('input:text', 'Couleur texte:', $objDbrQuery->fields['chart_indexes_font_color'], 'dbreport_query_chart_indexes_font_color', 'dbreport_query_chart_indexes_font_color', array('class' => 'color {hash:true,required:true}', 'style' => 'cursor:pointer;width:100px;')) );
+            $objPanel->addField( new ploopi\form_field('input:text', 'Rotation (deg):', $objDbrQuery->fields['chart_indexes_rotation'], 'dbreport_query_chart_indexes_rotation', 'dbreport_query_chart_indexes_rotation', array('datatype' => 'int', 'style' => 'width:50px;')) );
+            $objPanel->addField( new ploopi\form_field('input:text', 'DÃ©calage (x):', $objDbrQuery->fields['chart_indexes_x'], 'dbreport_query_chart_indexes_x', 'dbreport_query_chart_indexes_x', array('datatype' => 'int', 'style' => 'width:50px;')) );
+            $objPanel->addField( new ploopi\form_field('input:text', 'DÃ©calage (y):', $objDbrQuery->fields['chart_indexes_y'], 'dbreport_query_chart_indexes_y', 'dbreport_query_chart_indexes_y', array('datatype' => 'int', 'style' => 'width:50px;')) );
 
-                $objForm->addButton( new form_button('input:button', 'Voir', '', '', array('onclick' => "ploopi_openwin('".ploopi_urlencode("admin-light.php?ploopi_op=dbreport_chart_generate&dbreport_query_id={$objDbrQuery->fields['id']}")."', ".($objDbrQuery->fields['chart_width']+20).", ".($objDbrQuery->fields['chart_height']+30).");")) );
-                $objForm->addButton( new form_button('input:submit', 'Enregistrer', null, null, array('style' => 'margin-left:2px;')) );
+            $objForm->addButton( new ploopi\form_button('input:button', 'Voir', '', '', array('onclick' => "ploopi.openwin('".ploopi\crypt::urlencode("admin-light.php?ploopi_op=dbreport_chart_generate&dbreport_query_id={$objDbrQuery->fields['id']}")."', ".($objDbrQuery->fields['chart_width']+20).", ".($objDbrQuery->fields['chart_height']+30).");")) );
+            $objForm->addButton( new ploopi\form_button('input:submit', 'Enregistrer', null, null, array('style' => 'margin-left:2px;')) );
 
-                echo $objForm->render();
-            }
-            else {
-                // Impossibilité de traiter les graphiques
-                if ($objDbrQuery->fields['chart'] != '') {
-                    $objDbrQuery->fields['chart'] = '';
-                    $objDbrQuery->save();
-                }
-                ?>
-                Vous pourriez créer un graphique avec au moins 2 champs visibles.
-                <?php
+            echo $objForm->render();
+        }
+        else {
+            // ImpossibilitÃ© de traiter les graphiques
+            if ($objDbrQuery->fields['chart'] != '') {
+                $objDbrQuery->fields['chart'] = '';
+                $objDbrQuery->save();
             }
             ?>
-        </div>
+            Vous pourriez crÃ©er un graphique avec au moins 2 champs visibles.
+            <?php
+        }
+        ?>
+    <?php echo ploopi\skin::get()->close_simplebloc(); ?>
 
-    </div>
 
 
     <?php
-    // Génération du code SQL;
+    // GÃ©nÃ©ration du code SQL;
     $objDbrQuery->generate();
 
     $strSql = $objDbrQuery->getquery();
     if ($strSql != '') {
         ?>
-        <div style="overflow:auto;">
-            <h1 class="dbreport_title">Aperçu SQL</h1>
-            <div style="background-color:#fff;border:1px solid #ccc;border-radius:5px;padding:0 10px;margin:5px;">
-                <?php
-                include_once './modules/dbreport/lib/SqlFormatter.php';
+        <?php echo ploopi\skin::get()->open_simplebloc('AperÃ§u SQL'); ?>
+            <?php
+            include_once './modules/dbreport/lib/SqlFormatter.php';
 
-                echo utf8_decode(SqlFormatter::format(utf8_encode($objDbrQuery->getquery())));
-                ?>
-            </div>
-        </div>
+            echo utf8_decode(SqlFormatter::format(utf8_encode($objDbrQuery->getquery())));
+            ?>
+        <?php echo ploopi\skin::get()->close_simplebloc(); ?>
         <?php
     }
 }
 else
 {
-    echo $skin->open_simplebloc('Requête inconnue');
+    echo ploopi\skin::get()->open_simplebloc('RequÃªte inconnue');
 }
 
-echo $skin->close_simplebloc();
+echo ploopi\skin::get()->close_simplebloc();
 ?>

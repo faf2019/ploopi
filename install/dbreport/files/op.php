@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2009 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,32 +21,32 @@
 */
 
 /**
- * OpÈrations du module dbreport
+ * Op√©rations du module dbreport
  *
  * @package dbreport
  * @subpackage op
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author StÈphane Escaich
+ * @author St√©phane Escaich
  * @version  $Revision$
  * @modifiedby $LastChangedBy$
  * @lastmodified $Date$
  */
 
 /**
- * On vÈrifie qu'on est bien dans le module dbreport.
+ * On v√©rifie qu'on est bien dans le module dbreport.
  */
 
-if (ploopi_ismoduleallowed('dbreport'))
+if (ploopi\acl::ismoduleallowed('dbreport'))
 {
     switch($ploopi_op)
     {
-        // Popup d'ajout/modif d'une requÍte
+        // Popup d'ajout/modif d'une requ√™te
         case 'dbreport_query_add':
         case 'dbreport_query_modify':
-            ploopi_init_module('dbreport',false, false, false);
+            ploopi\module::init('dbreport',false, false, false);
 
-            if (!ploopi_isactionallowed(dbreport::_ACTION_MANAGE)) ploopi_logout();
+            if (!ploopi\acl::isactionallowed(dbreport::_ACTION_MANAGE)) ploopi\system::logout();
 
             include_once './include/classes/form.php';
             include_once './include/classes/query.php';
@@ -59,16 +59,16 @@ if (ploopi_ismoduleallowed('dbreport'))
             {
                 $strUrl .= "&dbreport_query_id={$_POST['dbreport_query_id']}";
 
-                // Recherche des modules sÈlectionnÈs pour la requÍte
-                $objQuery = new ploopi_query_select();
+                // Recherche des modules s√©lectionn√©s pour la requ√™te
+                $objQuery = new ploopi\query_select();
                 $objQuery->add_select('id_module_type');
                 $objQuery->add_from('ploopi_mod_dbreport_query_module_type');
                 $objQuery->add_where('id_query = %d', $_POST['dbreport_query_id']);
                 $objRs = $objQuery->execute();
                 $arrModuleSel = $objRs->getarray(true);
 
-                // RÈcupÈration des modules utilisÈs dans la requÍte
-                $objQuery = new ploopi_query_select();
+                // R√©cup√©ration des modules utilis√©s dans la requ√™te
+                $objQuery = new ploopi\query_select();
                 $objQuery->add_select('DISTINCT mbt.id_module_type, 1 as active');
                 $objQuery->add_from('ploopi_mod_dbreport_querytable drt');
                 $objQuery->add_from('ploopi_mb_table mbt');
@@ -77,7 +77,7 @@ if (ploopi_ismoduleallowed('dbreport'))
                 $objRs = $objQuery->execute();
                 $arrActiveModuleTypes = $objRs->getarray(true);
 
-                $strTitle = "Modification d'une requÍte";
+                $strTitle = "Modification d'une requ√™te";
             }
             else
             {
@@ -85,20 +85,20 @@ if (ploopi_ismoduleallowed('dbreport'))
                 $arrModuleSel = array();
                 $arrActiveModuleTypes = array();
 
-                $strTitle = "CrÈation d'une nouvelle requÍte";
+                $strTitle = "Cr√©ation d'une nouvelle requ√™te";
             }
 
-            $objForm = new form( 'dbreport_form_query_add', ploopi_urlencode($strUrl), 'post', array('legend' => '* Champs obligatoires', 'style' => 'border-bottom:1px solid #aaa;background:#f8f8f8;padding:4px;') );
-            $objForm->addField( new form_field('input:text', 'LibellÈ:', $objDbrQuery->fields['label'], 'dbreport_query_label', null, array('required' => true)) );
+            $objForm = new ploopi\form( 'dbreport_form_query_add', ploopi\crypt::urlencode($strUrl), 'post', array('legend' => '* Champs obligatoires', 'style' => 'border-bottom:1px solid #aaa;background:#f8f8f8;padding:4px;') );
+            $objForm->addField( new ploopi\form_field('input:text', 'Libell√©:', $objDbrQuery->fields['label'], 'dbreport_query_label', null, array('required' => true)) );
 
-            if (ploopi_isactionallowed(dbreport::_ACTION_LOCK))
-                $objForm->addField( new form_checkbox('Verrouiller:', '1', $objDbrQuery->fields['locked'], 'dbreport_query_locked') );
+            if (ploopi\acl::isactionallowed(dbreport::_ACTION_LOCK))
+                $objForm->addField( new ploopi\form_checkbox('Verrouiller:', '1', $objDbrQuery->fields['locked'], 'dbreport_query_locked') );
 
             // Panel "Modules dispos"
-            $objForm->addPanel($objPanel = new form_panel('dbreport_panel_modules', 'Modules disponibles', array('style' => 'margin:0 4px;')));
+            $objForm->addPanel($objPanel = new ploopi\form_panel('dbreport_panel_modules', 'Modules disponibles', array('style' => 'margin:0 4px;')));
 
-            // Recherche des modules dispos (mÈtabase)
-            $objQuery = new ploopi_query_select();
+            // Recherche des modules dispos (m√©tabase)
+            $objQuery = new ploopi\query_select();
             $objQuery->add_select('distinct(mt.id), mt.label');
             $objQuery->add_from('ploopi_mb_table mbt');
             $objQuery->add_from('ploopi_module_type mt');
@@ -106,65 +106,65 @@ if (ploopi_ismoduleallowed('dbreport'))
             $objQuery->add_orderby('mt.label');
             $objRs = $objQuery->execute();
 
-            // Affichage des cases ‡ cocher pour chaque module
+            // Affichage des cases √† cocher pour chaque module
             while ($row = $objRs->fetchrow())
             {
-                $objPanel->addField( new form_checkbox("{$row['label']}:", $row['id'], in_array($row['id'], $arrModuleSel), '_dbreport_query_id_module_type[]', "dbreport_query_id_module_type_{$row['id']}", array('disabled' => isset($arrActiveModuleTypes[$row['id']]))));
+                $objPanel->addField( new ploopi\form_checkbox("{$row['label']}:", $row['id'], in_array($row['id'], $arrModuleSel), '_dbreport_query_id_module_type[]', "dbreport_query_id_module_type_{$row['id']}", array('disabled' => isset($arrActiveModuleTypes[$row['id']]))));
 
-                // Module utilisÈ : cas particulier, il faut ajouter un champ hidden pour "compenser" la propriÈtÈ "disabled" de la checkbox prÈcÈdente
-                if (isset($arrActiveModuleTypes[$row['id']])) $objPanel->addField( new form_hidden($row['id'], '_dbreport_query_id_module_type[]') );
+                // Module utilis√© : cas particulier, il faut ajouter un champ hidden pour "compenser" la propri√©t√© "disabled" de la checkbox pr√©c√©dente
+                if (isset($arrActiveModuleTypes[$row['id']])) $objPanel->addField( new ploopi\form_hidden($row['id'], '_dbreport_query_id_module_type[]') );
             }
 
-            // Panel "RequÍte"
+            // Panel "Requ√™te"
 
-            $objForm->addPanel($objPanel = new form_panel('dbreport_panel_query', 'RequÍte', array('style' => 'margin:0 4px;')));
-            $objPanel->addField( new form_field('input:text', 'Nombre de lignes max:', $objDbrQuery->fields['rowlimit'], 'dbreport_query_rowlimit') );
+            $objForm->addPanel($objPanel = new ploopi\form_panel('dbreport_panel_query', 'Requ√™te', array('style' => 'margin:0 4px;')));
+            $objPanel->addField( new ploopi\form_field('input:text', 'Nombre de lignes max:', $objDbrQuery->fields['rowlimit'], 'dbreport_query_rowlimit') );
 
             // Panel "WebService" (modification uniquement)
             if (!$objDbrQuery->isnew())
             {
 
-                $objForm->addPanel($objPanel = new form_panel('dbreport_panel_webservice', 'Webservice', array('style' => 'margin:0 4px;')));
-                $objPanel->addField( new form_checkbox('ActivÈ:', '1', $objDbrQuery->fields['ws_activated'], 'dbreport_query_ws_activated') );
-                $objPanel->addField( new form_field('input:text', 'Identifiant unique:', $objDbrQuery->fields['ws_id'], 'dbreport_query_ws_id') );
-                $objPanel->addField( new form_field('input:text', 'Code d\'accËs:', $objDbrQuery->fields['ws_code'], 'dbreport_query_ws_code') );
-                $objPanel->addField( new form_field('input:text', 'IP autorisÈe:', $objDbrQuery->fields['ws_ip'], 'dbreport_query_ws_ip') );
+                $objForm->addPanel($objPanel = new ploopi\form_panel('dbreport_panel_webservice', 'Webservice', array('style' => 'margin:0 4px;')));
+                $objPanel->addField( new ploopi\form_checkbox('Activ√©:', '1', $objDbrQuery->fields['ws_activated'], 'dbreport_query_ws_activated') );
+                $objPanel->addField( new ploopi\form_field('input:text', 'Identifiant unique:', $objDbrQuery->fields['ws_id'], 'dbreport_query_ws_id') );
+                $objPanel->addField( new ploopi\form_field('input:text', 'Code d\'acc√®s:', $objDbrQuery->fields['ws_code'], 'dbreport_query_ws_code') );
+                $objPanel->addField( new ploopi\form_field('input:text', 'IP autoris√©e:', $objDbrQuery->fields['ws_ip'], 'dbreport_query_ws_ip') );
                 if ($objDbrQuery->fields['ws_id'] != '')
                 {
                     $strWsUri = $objDbrQuery->getwsuri();
-                    $objPanel->addField( new form_text('URI:', "<a href=\"{$strWsUri}\" target=\"_blank\">{$strWsUri}</a>") );
+                    $objPanel->addField( new ploopi\form_text('URI:', "<a href=\"{$strWsUri}\" target=\"_blank\">{$strWsUri}</a>") );
                 }
             }
 
-            $objForm->addButton( new form_button('input:reset', 'RÈinitialiser') );
-            $objForm->addButton( new form_button('input:submit', 'Enregistrer', null, null, array('style' => 'margin-left:2px;')) );
+            $objForm->addButton( new ploopi\form_button('input:reset', 'R√©initialiser') );
+            $objForm->addButton( new ploopi\form_button('input:submit', 'Enregistrer', null, null, array('style' => 'margin-left:2px;')) );
 
-            ploopi_die($skin->create_popup($strTitle, $objForm->render(), $ploopi_op));
+            ploopi\system::kill(ploopi\skin::get()->create_popup($strTitle, $objForm->render(), $ploopi_op));
         break;
 
-        // Enregistrement d'une requÍte
+        // Enregistrement d'une requ√™te
         case 'dbreport_query_save':
-            ploopi_init_module('dbreport',false, false, false);
+            ploopi\module::init('dbreport',false, false, false);
 
-            if (!ploopi_isactionallowed(dbreport::_ACTION_MANAGE)) ploopi_logout();
+            if (!ploopi\acl::isactionallowed(dbreport::_ACTION_MANAGE)) ploopi\system::logout();
 
             include_once './include/classes/query.php';
             include_once './modules/dbreport/classes/class_dbreport_query.php';
             include_once './modules/dbreport/classes/class_dbreport_query_module_type.php';
 
             // Si pas d'action, interdiction de modifier la valeur
-            if (!ploopi_isactionallowed(dbreport::_ACTION_LOCK)) unset($_POST['dbreport_query_locked']);
+            if (!ploopi\acl::isactionallowed(dbreport::_ACTION_LOCK)) unset($_POST['dbreport_query_locked']);
 
             $objDbrQuery = new dbreport_query();
             if (isset($_GET['dbreport_query_id']) && is_numeric($_GET['dbreport_query_id'])) $objDbrQuery->open($_GET['dbreport_query_id']);
             $objDbrQuery->setvalues($_POST,'dbreport_query_');
             if (!isset($_POST['dbreport_query_ws_activated'])) $objDbrQuery->fields['ws_activated'] = 0;
-            if (ploopi_isactionallowed(dbreport::_ACTION_LOCK) && !isset($_POST['dbreport_query_locked'])) $objDbrQuery->fields['locked'] = 0;
+            if (ploopi\acl::isactionallowed(dbreport::_ACTION_LOCK) && !isset($_POST['dbreport_query_locked'])) $objDbrQuery->fields['locked'] = 0;
             $objDbrQuery->setuwm();
             $objDbrQuery->save();
 
-            // Suppression des modules associÈs ‡ la requÍtes
-            $objQuery = new ploopi_query_delete();
+            // Suppression des modules associ√©s √† la requ√™tes
+            $objQuery = new ploopi\query_delete();
             $objQuery->add_from('ploopi_mod_dbreport_query_module_type');
             $objQuery->add_where('id_query = %d', $objDbrQuery->fields['id']);
             $objQuery->execute();
@@ -179,29 +179,29 @@ if (ploopi_ismoduleallowed('dbreport'))
                     $objDbrQMT->save();
                 }
             }
-            ploopi_redirect("admin.php?dbreport_op=query_modify&dbreport_query_id={$objDbrQuery->fields['id']}");
+            ploopi\output::redirect("admin.php?dbreport_op=query_modify&dbreport_query_id={$objDbrQuery->fields['id']}");
         break;
 
-        // Suppression d'une requÍte
+        // Suppression d'une requ√™te
         case 'dbreport_query_delete':
-            ploopi_init_module('dbreport',false, false, false);
+            ploopi\module::init('dbreport',false, false, false);
 
-            if (!ploopi_isactionallowed(dbreport::_ACTION_MANAGE)) ploopi_logout();
+            if (!ploopi\acl::isactionallowed(dbreport::_ACTION_MANAGE)) ploopi\system::logout();
 
             include_once './modules/dbreport/classes/class_dbreport_query.php';
 
             $objDbrQuery = new dbreport_query();
             if (isset($_GET['dbreport_query_id']) && is_numeric($_GET['dbreport_query_id']) && $objDbrQuery->open($_GET['dbreport_query_id'])) $objDbrQuery->delete();
 
-            ploopi_redirect('admin.php');
+            ploopi\output::redirect('admin.php');
         break;
 
 
         // Enregistrement d'une transformation
         case 'dbreport_transformation_save':
-            ploopi_init_module('dbreport',false, false, false);
+            ploopi\module::init('dbreport',false, false, false);
 
-            if (!ploopi_isactionallowed(dbreport::_ACTION_MANAGE)) ploopi_logout();
+            if (!ploopi\acl::isactionallowed(dbreport::_ACTION_MANAGE)) ploopi\system::logout();
 
             include_once './modules/dbreport/classes/class_dbreport_query.php';
 
@@ -212,14 +212,14 @@ if (ploopi_ismoduleallowed('dbreport'))
             $objDbrQuery->setuwm();
             $objDbrQuery->save();
 
-            ploopi_redirect("admin.php?dbreport_op=query_modify&dbreport_query_id={$objDbrQuery->fields['id']}#dbreport_trans");
+            ploopi\output::redirect("admin.php?dbreport_op=query_modify&dbreport_query_id={$objDbrQuery->fields['id']}#dbreport_trans");
         break;
 
         // Enregistrement d'un graphique
         case 'dbreport_chart_save':
-            ploopi_init_module('dbreport',false, false, false);
+            ploopi\module::init('dbreport',false, false, false);
 
-            if (!ploopi_isactionallowed(dbreport::_ACTION_MANAGE)) ploopi_logout();
+            if (!ploopi\acl::isactionallowed(dbreport::_ACTION_MANAGE)) ploopi\system::logout();
 
             include_once './modules/dbreport/classes/class_dbreport_query.php';
 
@@ -242,43 +242,43 @@ if (ploopi_ismoduleallowed('dbreport'))
             $objDbrQuery->setuwm();
             $objDbrQuery->save();
 
-            ploopi_redirect("admin.php?dbreport_op=query_modify&dbreport_query_id={$objDbrQuery->fields['id']}#dbreport_chart");
+            ploopi\output::redirect("admin.php?dbreport_op=query_modify&dbreport_query_id={$objDbrQuery->fields['id']}#dbreport_chart");
         break;
 
         case 'dbreport_canvas2png':
             if (!empty($_POST['image'])) {
-                // Extraction des donnÈes
+                // Extraction des donn√©es
                 list($type, $image) = explode(',', $_POST['image']);
                 // Fichier temporaire
                 $strFileName = tempnam(_PLOOPI_PATHDATA, 'dbreport_canvas');
                 file_put_contents($strFileName, base64_decode($image));
 
-                ploopi_downloadfile($strFileName, 'graphique.png', true, true, true);
+                ploopi\fs::downloadfile($strFileName, 'graphique.png', true, true, true);
             }
-            ploopi_die();
+            ploopi\system::kill();
         break;
 
 
-        // GÈnÈration d'un graphique
+        // G√©n√©ration d'un graphique
         case 'dbreport_chart_generate':
             include_once './modules/dbreport/op_chart_generate.php';
         break;
 
 
-        // Popup d'ajout d'un champ dans une requÍte
+        // Popup d'ajout d'un champ dans une requ√™te
         case 'dbreport_queryfield_add':
-            ploopi_init_module('dbreport',false, false, false);
+            ploopi\module::init('dbreport',false, false, false);
 
-            if (!ploopi_isactionallowed(dbreport::_ACTION_MANAGE)) ploopi_logout();
+            if (!ploopi\acl::isactionallowed(dbreport::_ACTION_MANAGE)) ploopi\system::logout();
 
             include_once './modules/dbreport/op_queryfield_add.php';
         break;
 
-        // Ajout d'une sÈlection de champs dans une requÍte
+        // Ajout d'une s√©lection de champs dans une requ√™te
         case 'dbreport_queryfield_save':
-            ploopi_init_module('dbreport',false, false, false);
+            ploopi\module::init('dbreport',false, false, false);
 
-            if (!ploopi_isactionallowed(dbreport::_ACTION_MANAGE)) ploopi_logout();
+            if (!ploopi\acl::isactionallowed(dbreport::_ACTION_MANAGE)) ploopi\system::logout();
 
             include_once './modules/dbreport/classes/class_dbreport_query.php';
             include_once './modules/dbreport/classes/class_dbreport_queryfield.php';
@@ -297,7 +297,7 @@ if (ploopi_ismoduleallowed('dbreport'))
 
                         $key = explode(".", $strFieldName);
 
-                        $objMbField = new mb_field();
+                        $objMbField = new ploopi\mb_field();
                         $objMbField->open($key[0],$key[1]);
 
                         $objDbrQueryField->fields['tablename'] = $key[0];
@@ -318,25 +318,25 @@ if (ploopi_ismoduleallowed('dbreport'))
                     }
                 }
 
-                ploopi_redirect("admin.php?dbreport_op=query_modify&dbreport_query_id={$_GET['dbreport_query_id']}#dbreport_fields");
+                ploopi\output::redirect("admin.php?dbreport_op=query_modify&dbreport_query_id={$_GET['dbreport_query_id']}#dbreport_fields");
             }
 
-            ploopi_redirect('admin.php');
+            ploopi\output::redirect('admin.php');
         break;
 
         case 'dbreport_queryfield_modify':
-            ploopi_init_module('dbreport',false, false, false);
+            ploopi\module::init('dbreport',false, false, false);
 
-            if (!ploopi_isactionallowed(dbreport::_ACTION_MANAGE)) ploopi_logout();
+            if (!ploopi\acl::isactionallowed(dbreport::_ACTION_MANAGE)) ploopi\system::logout();
 
             include_once './modules/dbreport/op_queryfield_modify.php';
         break;
 
-        // Suppression d'un champ dans une requÍte
+        // Suppression d'un champ dans une requ√™te
         case 'dbreport_queryfield_delete':
-            ploopi_init_module('dbreport',false, false, false);
+            ploopi\module::init('dbreport',false, false, false);
 
-            if (!ploopi_isactionallowed(dbreport::_ACTION_MANAGE)) ploopi_logout();
+            if (!ploopi\acl::isactionallowed(dbreport::_ACTION_MANAGE)) ploopi\system::logout();
 
             include_once './modules/dbreport/classes/class_dbreport_queryfield.php';
             $objDbrQueryField = new dbreport_queryfield();
@@ -346,15 +346,15 @@ if (ploopi_ismoduleallowed('dbreport'))
                 $objDbrQueryField->delete();
             }
 
-            if (isset($_GET['dbreport_query_id']) && is_numeric($_GET['dbreport_query_id'])) ploopi_redirect("admin.php?dbreport_op=query_modify&dbreport_query_id={$_GET['dbreport_query_id']}#dbreport_fields");
-            ploopi_redirect('admin.php');
+            if (isset($_GET['dbreport_query_id']) && is_numeric($_GET['dbreport_query_id'])) ploopi\output::redirect("admin.php?dbreport_op=query_modify&dbreport_query_id={$_GET['dbreport_query_id']}#dbreport_fields");
+            ploopi\output::redirect('admin.php');
         break;
 
         // Modification de la position d'un champ
         case 'dbreport_queryfield_position':
-            ploopi_init_module('dbreport',false, false, false);
+            ploopi\module::init('dbreport',false, false, false);
 
-            if (!ploopi_isactionallowed(dbreport::_ACTION_MANAGE)) ploopi_logout();
+            if (!ploopi\acl::isactionallowed(dbreport::_ACTION_MANAGE)) ploopi\system::logout();
 
             include_once './include/classes/query.php';
             include_once './modules/dbreport/classes/class_dbreport_query.php';
@@ -366,7 +366,7 @@ if (ploopi_ismoduleallowed('dbreport'))
             {
                 if (isset($_GET['dbreport_fieldposition']) && isset($_GET['dbreport_queryfield_id']) && is_numeric($_GET['dbreport_queryfield_id']) && $objDbrQueryField->open($_GET['dbreport_queryfield_id']))
                 {
-                    $objQuery = new ploopi_query_select();
+                    $objQuery = new ploopi\query_select();
                     $objQuery->add_select('MIN(position) AS minposition, MAX(position) as maxposition');
                     $objQuery->add_from('ploopi_mod_dbreport_queryfield');
                     $objQuery->add_where('id_query = %d', $_GET['dbreport_query_id']);
@@ -385,53 +385,53 @@ if (ploopi_ismoduleallowed('dbreport'))
 
                     if ($intLimitPos != $objDbrQueryField->fields['position']) // ce n'est pas le dernier champ
                     {
-                        // ÈlÈment 1 qu'on va remplacer
-                        $objQuery = new ploopi_query_update();
+                        // √©l√©ment 1 qu'on va remplacer
+                        $objQuery = new ploopi\query_update();
                         $objQuery->add_from('ploopi_mod_dbreport_queryfield');
                         $objQuery->add_set('position = 0');
                         $objQuery->add_where('position = %d AND id_query = %d', array($objDbrQueryField->fields['position'] + $intMove, $_GET['dbreport_query_id']));
                         $objQuery->execute();
 
-                        // on dÈplace l'ÈlÈment 2 vers le bas
-                        $objQuery = new ploopi_query_update();
+                        // on d√©place l'√©l√©ment 2 vers le bas
+                        $objQuery = new ploopi\query_update();
                         $objQuery->add_from('ploopi_mod_dbreport_queryfield');
                         $objQuery->add_set('position = %d', $objDbrQueryField->fields['position'] + $intMove);
                         $objQuery->add_where('position = %d AND id_query = %d', array($objDbrQueryField->fields['position'], $_GET['dbreport_query_id']));
                         $objQuery->execute();
 
-                        // on remet l'ÈlÈment 1 ‡ la place du 2
-                        $objQuery = new ploopi_query_update();
+                        // on remet l'√©l√©ment 1 √† la place du 2
+                        $objQuery = new ploopi\query_update();
                         $objQuery->add_from('ploopi_mod_dbreport_queryfield');
                         $objQuery->add_set('position = %d', $objDbrQueryField->fields['position']);
                         $objQuery->add_where('position = 0 AND id_query = %d', $_GET['dbreport_query_id']);
                         $objQuery->execute();
 
-                        // Mise ‡ jour de la requÍte
+                        // Mise √† jour de la requ√™te
                         $objDbrQuery = new dbreport_query();
                         if ($objDbrQuery->open($_GET['dbreport_query_id'])) $objDbrQuery->save();
                     }
                 }
 
-                ploopi_redirect("admin.php?dbreport_op=query_modify&dbreport_query_id={$_GET['dbreport_query_id']}#dbreport_fields");
+                ploopi\output::redirect("admin.php?dbreport_op=query_modify&dbreport_query_id={$_GET['dbreport_query_id']}#dbreport_fields");
             }
 
-            ploopi_redirect('admin.php');
+            ploopi\output::redirect('admin.php');
         break;
 
-        // Popup d'ajout d'une table dans une requÍte
+        // Popup d'ajout d'une table dans une requ√™te
         case 'dbreport_querytable_add':
-            ploopi_init_module('dbreport',false, false, false);
+            ploopi\module::init('dbreport',false, false, false);
 
-            if (!ploopi_isactionallowed(dbreport::_ACTION_MANAGE)) ploopi_logout();
+            if (!ploopi\acl::isactionallowed(dbreport::_ACTION_MANAGE)) ploopi\system::logout();
 
             include_once './modules/dbreport/op_querytable_add.php';
         break;
 
-        // Ajout d'une sÈlection de table dans une requÍte
+        // Ajout d'une s√©lection de table dans une requ√™te
         case 'dbreport_querytable_save':
-            ploopi_init_module('dbreport',false, false, false);
+            ploopi\module::init('dbreport',false, false, false);
 
-            if (!ploopi_isactionallowed(dbreport::_ACTION_MANAGE)) ploopi_logout();
+            if (!ploopi\acl::isactionallowed(dbreport::_ACTION_MANAGE)) ploopi\system::logout();
 
             include_once './modules/dbreport/classes/class_dbreport_query.php';
             include_once './modules/dbreport/classes/class_dbreport_querytable.php';
@@ -445,20 +445,20 @@ if (ploopi_ismoduleallowed('dbreport'))
 
                 foreach ($arrTableNames as $strTableName)
                 {
-                    // SÈlection des tables de la requÍte (pour chercher les relations avec les tables qu'on ajoute
-                    $objQuery = new ploopi_query_select();
+                    // S√©lection des tables de la requ√™te (pour chercher les relations avec les tables qu'on ajoute
+                    $objQuery = new ploopi\query_select();
                     $objQuery->add_select('tablename');
                     $objQuery->add_from('ploopi_mod_dbreport_querytable');
                     $objQuery->add_where('id_query = %d', $objDbrQuery->fields['id']);
                     $arrTables = $objQuery->execute()->getarray(true);
 
-                    // SÈlection des relations en rapport avec la table qu'on ajoute
-                    $objQuery = new ploopi_query_select();
+                    // S√©lection des relations en rapport avec la table qu'on ajoute
+                    $objQuery = new ploopi\query_select();
                     $objQuery->add_from('ploopi_mb_relation mbr');
                     $objQuery->add_where('(mbr.tablesrc = %1$s AND mbr.tabledest IN (%2$t)) OR (mbr.tabledest = %1$s AND mbr.tablesrc IN (%2$t))', array($strTableName, implode(',', $arrTables)));
                     $objRs = $objQuery->execute();
 
-                    // Enregistrement des relations propres ‡ la requÍte
+                    // Enregistrement des relations propres √† la requ√™te
                     while($row = $objRs->fetchrow())
                     {
                         $objDbrQueryRelation = new dbreport_queryrelation();
@@ -470,23 +470,23 @@ if (ploopi_ismoduleallowed('dbreport'))
                         $objDbrQueryRelation->save();
                     }
 
-                    // Ajout de la table ‡ la requÍte
+                    // Ajout de la table √† la requ√™te
                     $objDbrQueryTable = new dbreport_querytable();
                     $objDbrQueryTable->fields['tablename'] = $strTableName;
                     $objDbrQueryTable->fields['id_query'] = $objDbrQuery->fields['id'];
                     $objDbrQueryTable->save();
                 }
 
-                ploopi_redirect("admin.php?dbreport_op=query_modify&dbreport_query_id={$objDbrQuery->fields['id']}");
+                ploopi\output::redirect("admin.php?dbreport_op=query_modify&dbreport_query_id={$objDbrQuery->fields['id']}");
             }
-            ploopi_redirect('admin.php');
+            ploopi\output::redirect('admin.php');
         break;
 
-        // Suppression d'une table dans la requÍte
+        // Suppression d'une table dans la requ√™te
         case 'dbreport_querytable_delete':
-            ploopi_init_module('dbreport',false, false, false);
+            ploopi\module::init('dbreport',false, false, false);
 
-            if (!ploopi_isactionallowed(dbreport::_ACTION_MANAGE)) ploopi_logout();
+            if (!ploopi\acl::isactionallowed(dbreport::_ACTION_MANAGE)) ploopi\system::logout();
 
             include_once './modules/dbreport/classes/class_dbreport_query.php';
             include_once './modules/dbreport/classes/class_dbreport_querytable.php';
@@ -499,22 +499,22 @@ if (ploopi_ismoduleallowed('dbreport'))
 
                 if (isset($_GET['dbreport_querytable_id']) && is_numeric($_GET['dbreport_querytable_id']) && $objDbrQueryTable->open($_GET['dbreport_querytable_id'])) $objDbrQueryTable->delete();
 
-                ploopi_redirect("admin.php?dbreport_op=query_modify&dbreport_query_id={$_GET['dbreport_query_id']}");
+                ploopi\output::redirect("admin.php?dbreport_op=query_modify&dbreport_query_id={$_GET['dbreport_query_id']}");
             }
 
-            ploopi_redirect('admin.php');
+            ploopi\output::redirect('admin.php');
         break;
 
 
-        // ExÈcution de la requÍte
+        // Ex√©cution de la requ√™te
         case 'dbreport_query_exec':
             include_once './modules/dbreport/op_query_exec.php';
         break;
 
         case 'dbreport_queryrelation_modify':
-            ploopi_init_module('dbreport',false, false, false);
+            ploopi\module::init('dbreport',false, false, false);
 
-            if (!ploopi_isactionallowed(dbreport::_ACTION_MANAGE)) ploopi_logout();
+            if (!ploopi\acl::isactionallowed(dbreport::_ACTION_MANAGE)) ploopi\system::logout();
 
             include_once './modules/dbreport/classes/class_dbreport_query.php';
             include_once './modules/dbreport/classes/class_dbreport_queryrelation.php';
@@ -525,26 +525,27 @@ if (ploopi_ismoduleallowed('dbreport'))
 
             if (isset($_GET['dbreport_query_id']) && is_numeric($_GET['dbreport_query_id']) && $objDbrQuery->open($_GET['dbreport_query_id']))
             {
-                if (isset($_GET['dbreport_queryrelation_src']) && isset($_GET['dbreport_queryrelation_dest']) && isset($_GET['dbreport_queryrelation_active']))
+                if (isset($_GET['dbreport_queryrelation_src']) && isset($_GET['dbreport_queryrelation_dest']))
                 {
                    list($strTableSrc, $strFieldSrc) = explode(',', $_GET['dbreport_queryrelation_src']);
                    list($strTableDest, $strFieldDest) = explode(',', $_GET['dbreport_queryrelation_dest']);
 
                    if ($objDbrQueryRelation->open($_GET['dbreport_query_id'], $strTableSrc, $strFieldSrc, $strTableDest, $strFieldDest)) {
-                       $objDbrQueryRelation->fields['active'] = $_GET['dbreport_queryrelation_active'];
+                       if (isset($_GET['dbreport_queryrelation_active'])) $objDbrQueryRelation->fields['active'] = $_GET['dbreport_queryrelation_active'];
+                       if (isset($_GET['dbreport_queryrelation_type_join'])) $objDbrQueryRelation->fields['type_join'] = $_GET['dbreport_queryrelation_type_join'];
                        $objDbrQueryRelation->save();
                    }
                 }
-                ploopi_redirect("admin.php?dbreport_op=query_modify&dbreport_query_id={$objDbrQuery->fields['id']}");
+                ploopi\output::redirect("admin.php?dbreport_op=query_modify&dbreport_query_id={$objDbrQuery->fields['id']}");
             }
-            ploopi_redirect("admin.php");
+            ploopi\output::redirect("admin.php");
 
         break;
 
         case 'dbreport_query_clone':
-            ploopi_init_module('dbreport',false, false, false);
+            ploopi\module::init('dbreport',false, false, false);
 
-            if (!ploopi_isactionallowed(dbreport::_ACTION_MANAGE)) ploopi_logout();
+            if (!ploopi\acl::isactionallowed(dbreport::_ACTION_MANAGE)) ploopi\system::logout();
 
             include_once './modules/dbreport/classes/class_dbreport_query.php';
 
@@ -552,16 +553,16 @@ if (ploopi_ismoduleallowed('dbreport'))
 
             if (isset($_GET['dbreport_query_id']) && is_numeric($_GET['dbreport_query_id']) && $objDbrQuery->open($_GET['dbreport_query_id']))
             {
-                // Clonage objet et dÈpendances
+                // Clonage objet et d√©pendances
                 $objDbrQueryClone = clone $objDbrQuery;
-                ploopi_redirect("admin.php?dbreport_op=query_modify&dbreport_query_id={$objDbrQueryClone->fields['id']}");
+                ploopi\output::redirect("admin.php?dbreport_op=query_modify&dbreport_query_id={$objDbrQueryClone->fields['id']}");
             }
 
-            ploopi_redirect('admin.php');
+            ploopi\output::redirect('admin.php');
         break;
 
         case 'dbreport_query_export':
-            ploopi_init_module('dbreport',false, false, false);
+            ploopi\module::init('dbreport',false, false, false);
             include_once './modules/dbreport/classes/class_dbreport_query.php';
 
             ob_start();
@@ -572,24 +573,24 @@ if (ploopi_ismoduleallowed('dbreport'))
             {
                 ?>
                 <div style="padding:2px;">
-                    <form action="<?php echo ploopi_urlencode("admin-light.php?ploopi_op=dbreport_query_exec&dbreport_query_id={$_POST['dbreport_query_id']}"); ?>" method="post">
+                    <form action="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=dbreport_query_exec&dbreport_query_id={$_POST['dbreport_query_id']}"); ?>" method="post">
                     <?php
-                    // Lecture des paramËtres de la requÍte
+                    // Lecture des param√®tres de la requ√™te
                     $arrParams = $objDbrQuery->getparams();
 
-                    // La requÍte requiert des paramËtres
+                    // La requ√™te requiert des param√®tres
                     if (!empty($arrParams))
                     {
                         ?>
-                        <div style="padding:2px;"><b>ParamËtres :</b></div>
+                        <div style="padding:2px;"><b>Param√®tres :</b></div>
                         <div class="ploopi_form">
                         <?php
                         foreach($arrParams as $strParam => $arrParam)
                         {
                             ?>
                             <p>
-                                <label><?php echo ploopi_htmlentities($strParam.' ('.$arrParam['label'].')'); ?>:</label>
-                                <input type="text" class="text" name="<?php echo ploopi_htmlentities($strParam); ?>"  value="%"  />
+                                <label><?php echo ploopi\str::htmlentities($strParam.' ('.$arrParam['label'].')'); ?>:</label>
+                                <input type="text" class="text" name="<?php echo ploopi\str::htmlentities($strParam); ?>"  value="%"  />
                             </p>
                             <?php
                         }
@@ -599,44 +600,49 @@ if (ploopi_ismoduleallowed('dbreport'))
 
                     <div style="padding:2px;"><b>Choix du format :</b></div>
                     <div style="width:49%;float:left;">
-                        <p class="ploopi_checkbox" style="padding:2px;" onclick="javascript:ploopi_checkbox_click(event,'dbreport_format_ods');">
+                        <p class="ploopi_checkbox" style="padding:2px;" onclick="javascript:ploopi.checkbox_click(event,'dbreport_format_ods');">
                             <input type="radio" class="radio" name="dbreport_format" id="dbreport_format_ods" value="ods" />
                             <img src="./modules/dbreport/img/mime/ods.png" />
                             <strong>ODS</strong><span>&nbsp;(OpenOffice Calc &#174;)</span>
                         </p>
-                        <p class="ploopi_checkbox" style="padding:2px;" onclick="javascript:ploopi_checkbox_click(event,'dbreport_format_xls');">
-                            <input type="radio" class="radio" name="dbreport_format" id="dbreport_format_xls" value="xlsx" />
+                        <p class="ploopi_checkbox" style="padding:2px;" onclick="javascript:ploopi.checkbox_click(event,'dbreport_format_xls');">
+                            <input type="radio" class="radio" name="dbreport_format" id="dbreport_format_xls" value="xls" />
+                            <img src="./modules/dbreport/img/mime/xls.png" />
+                            <strong>XLS</strong><span>&nbsp;(Microsoft Excel &#174;)</span>
+                        </p>
+                        <p class="ploopi_checkbox" style="padding:2px;" onclick="javascript:ploopi.checkbox_click(event,'dbreport_format_xlsx');">
+                            <input type="radio" class="radio" name="dbreport_format" id="dbreport_format_xlsx" value="xlsx" />
                             <img src="./modules/dbreport/img/mime/xls.png" />
                             <strong>XLSX</strong><span>&nbsp;(Microsoft Excel &#174;)</span>
                         </p>
-                        <p class="ploopi_checkbox" style="padding:2px;" onclick="javascript:ploopi_checkbox_click(event,'dbreport_format_csv');">
+                        <p class="ploopi_checkbox" style="padding:2px;" onclick="javascript:ploopi.checkbox_click(event,'dbreport_format_csv');">
                             <input type="radio" class="radio" name="dbreport_format" id="dbreport_format_csv" value="csv" checked />
                             <img src="./modules/dbreport/img/mime/csv.png" />
                             <strong>CSV</strong><span style="color:red;">&nbsp;(RECOMMANDE)</span>
                         </p>
-                        <p class="ploopi_checkbox" style="padding:2px;" onclick="javascript:ploopi_checkbox_click(event,'dbreport_format_pdf');">
+                    </div>
+                    <div style="width:51%;float:right;">
+                        <p class="ploopi_checkbox" style="padding:2px;" onclick="javascript:ploopi.checkbox_click(event,'dbreport_format_pdf');">
                             <input type="radio" class="radio" name="dbreport_format" id="dbreport_format_pdf" value="pdf" />
                             <img src="./modules/dbreport/img/mime/pdf.png" />
                             <strong>PDF</strong><span>&nbsp;(Adobe Acrobat &#174;)</span>
                         </p>
-                    </div>
-                    <div style="width:51%;float:right;">
-                        <p class="ploopi_checkbox" style="padding:2px;" onclick="javascript:ploopi_checkbox_click(event,'dbreport_format_html');">
+                        <p class="ploopi_checkbox" style="padding:2px;" onclick="javascript:ploopi.checkbox_click(event,'dbreport_format_html');">
                             <input type="radio" class="radio" name="dbreport_format" id="dbreport_format_html" value="html" />
                             <img src="./modules/dbreport/img/mime/html.png" />
                             <strong>HTML</strong><span>&nbsp;(HyperText Markup Language)</span>
                         </p>
-                        <p class="ploopi_checkbox" style="padding:2px;" onclick="javascript:ploopi_checkbox_click(event,'dbreport_format_odt');">
+                        <!--p class="ploopi_checkbox" style="padding:2px;" onclick="javascript:ploopi.checkbox_click(event,'dbreport_format_odt');">
                             <input type="radio" class="radio" name="dbreport_format" id="dbreport_format_odt" value="odt" />
                             <img src="./modules/dbreport/img/mime/odt.png" />
                             <strong>ODT</strong><span>&nbsp;(OpenOffice Writer &#174;)</span>
-                        </p>
-                        <p class="ploopi_checkbox" style="padding:2px;" onclick="javascript:ploopi_checkbox_click(event,'dbreport_format_xml');">
+                        </p-->
+                        <p class="ploopi_checkbox" style="padding:2px;" onclick="javascript:ploopi.checkbox_click(event,'dbreport_format_xml');">
                             <input type="radio" class="radio" name="dbreport_format" id="dbreport_format_xml" value="xml" />
                             <img src="./modules/dbreport/img/mime/xml.png" />
                             <strong>XML</strong><span>&nbsp;(eXtensible Markup Language)</span>
                         </p>
-                        <p class="ploopi_checkbox" style="padding:2px;" onclick="javascript:ploopi_checkbox_click(event,'dbreport_format_json');">
+                        <p class="ploopi_checkbox" style="padding:2px;" onclick="javascript:ploopi.checkbox_click(event,'dbreport_format_json');">
                             <input type="radio" class="radio" name="dbreport_format" id="dbreport_format_json" value="json" />
                             <img src="./modules/dbreport/img/mime/json.png" />
                             <strong>JSON</strong><span>&nbsp;(JavaScript Object Notation)</span>
@@ -644,8 +650,8 @@ if (ploopi_ismoduleallowed('dbreport'))
                     </div>
 
                     <div style="clear:both;padding:2px;text-align:right;">
-                        <input type="button" class="button" value="Annuler" onclick="javascript:ploopi_hidepopup('dbreport_query_export_popup');"/>
-                        <input type="submit" class="button" value="GÈnÈrer" />
+                        <input type="button" class="button" value="Annuler" onclick="javascript:ploopi.popup.hide('dbreport_query_export_popup');"/>
+                        <input type="submit" class="button" value="G√©n√©rer" />
                     </div>
                     </form>
                 </div>
@@ -655,9 +661,9 @@ if (ploopi_ismoduleallowed('dbreport'))
             $strContent = ob_get_contents();
             ob_end_clean();
 
-            echo $skin->create_popup('GÈnÈration du rÈsultat', $strContent, 'dbreport_query_export_popup');
+            echo ploopi\skin::get()->create_popup('G√©n√©ration du r√©sultat', $strContent, 'dbreport_query_export_popup');
 
-            ploopi_die();
+            ploopi\system::kill();
         break;
     }
 }

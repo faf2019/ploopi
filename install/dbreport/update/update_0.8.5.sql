@@ -7,4 +7,4 @@ CREATE TABLE IF NOT EXISTS `ploopi_mod_dbreport_query_module_type` (
   `id_query` int(10) unsigned NOT NULL default '0',
   `id_module_type` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id_query`,`id_module_type`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;

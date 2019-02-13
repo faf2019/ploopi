@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2009 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,12 +21,12 @@
 */
 
 /**
- * Gestion des requêtes
+ * Gestion des requÃªtes
  *
  * @package dbreport
  * @subpackage query
  * @copyright Ovensia
- * @author Stéphane Escaich
+ * @author StÃ©phane Escaich
  * @version  $Revision$
  * @modifiedby $LastChangedBy$
  * @lastmodified $Date$
@@ -43,13 +43,13 @@ include_once './modules/dbreport/classes/class_dbreport_queryfield.php';
 include_once './modules/dbreport/classes/class_dbreport_querytable.php';
 
 /**
- * Classe de gestion des requêtes
+ * Classe de gestion des requÃªtes
  *
  */
-class dbreport_query extends data_object
+class dbreport_query extends ploopi\data_object
 {
     /**
-     * Requête SQL générée
+     * RequÃªte SQL gÃ©nÃ©rÃ©e
      *
      * @var string
      */
@@ -58,19 +58,19 @@ class dbreport_query extends data_object
     /**
      * Objet Query
      *
-     * @var ploopi_query_select
+     * @var ploopi\query_select
      */
     private $objQuery;
 
     /**
-     * Tableau contenant les champs de la requête
+     * Tableau contenant les champs de la requÃªte
      *
      * @var array
      */
     private $arrFields;
 
     /**
-     * Tableau contenant le résultat de la requête
+     * Tableau contenant le rÃ©sultat de la requÃªte
      *
      * @var array
      */
@@ -91,14 +91,14 @@ class dbreport_query extends data_object
     private static $_ERROR_OK       = 0;
 
     /**
-     * code d'erreur "request" : erreur dans la requête
+     * code d'erreur "request" : erreur dans la requÃªte
      *
      * @var int
      */
     private static $_ERROR_REQUEST  = 1;
 
     /**
-     * code d'erreur "param" : erreur de paramètre
+     * code d'erreur "param" : erreur de paramÃ¨tre
      *
      * @var int
      */
@@ -119,28 +119,28 @@ class dbreport_query extends data_object
         // 'stepLine' => 'Escaliers',
 
         'bar' => 'Barres',
-        'stackedBar' => 'Barres cumulées',
-        'stackedBar100' => 'Barres cumulées à 100%',
+        'stackedBar' => 'Barres cumulÃ©es',
+        'stackedBar100' => 'Barres cumulÃ©es Ã  100%',
 
         'column' => 'Colonnes',
-        'stackedColumn' => 'Colonnes cumulées',
-        'stackedColumn100' => 'Colonnes cumulées à 100%',
+        'stackedColumn' => 'Colonnes cumulÃ©es',
+        'stackedColumn100' => 'Colonnes cumulÃ©es Ã  100%',
 
         'line' => 'Lignes',
-        'stackedLine' => 'Lignes cumulées',
-        'stackedLine100' => 'Lignes cumulées à 100%',
+        'stackedLine' => 'Lignes cumulÃ©es',
+        'stackedLine100' => 'Lignes cumulÃ©es Ã  100%',
 
         'spline' => 'Courbes',
-        'stackedSpline' => 'Courbes cumulées',
-        'stackedSpline100' => 'Courbes cumulées à 100%',
+        'stackedSpline' => 'Courbes cumulÃ©es',
+        'stackedSpline100' => 'Courbes cumulÃ©es Ã  100%',
 
         'area' => 'Zones droites',
-        'stackedArea' => 'Zones droites cumulées',
-        'stackedArea100' => 'Zones droites cumulées à 100%',
+        'stackedArea' => 'Zones droites cumulÃ©es',
+        'stackedArea100' => 'Zones droites cumulÃ©es Ã  100%',
 
         'splineArea' => 'Zones courbes',
-        'stackedSplineArea' => 'Zones courbes cumulées',
-        'stackedSplineArea100' => 'Zones courbes cumulées à 100%',
+        'stackedSplineArea' => 'Zones courbes cumulÃ©es',
+        'stackedSplineArea100' => 'Zones courbes cumulÃ©es Ã  100%',
 
     );
 
@@ -170,11 +170,11 @@ class dbreport_query extends data_object
      /*
     private static $_arrChartTypes = array(
         'bar' => 'Barres',
-        'stackedBar' => 'Barres cumulées',
-        'stackedBar100' => 'Barres cumulées à 100%',
+        'stackedBar' => 'Barres cumulÃ©es',
+        'stackedBar100' => 'Barres cumulÃ©es Ã  100%',
         'column' => 'Colonnes',
-        'stackedColumn' => 'Colonnes cumulées',
-        'stackedColumn100' => 'Colonnes cumulées à 100%',
+        'stackedColumn' => 'Colonnes cumulÃ©es',
+        'stackedColumn100' => 'Colonnes cumulÃ©es Ã  100%',
         'stepLine' => 'Escaliers',
         'line' => 'Lignes',
         'spline' => 'Courbes',
@@ -222,7 +222,7 @@ class dbreport_query extends data_object
         'lighter' => 'Fin',
         'normal' => 'Normal',
         'bold' => 'Epais',
-        'bolder' => 'Très épais '
+        'bolder' => 'TrÃ¨s Ã©pais '
     );
 
     /**
@@ -254,7 +254,7 @@ class dbreport_query extends data_object
      */
     private static $_arrChartMarkers = array(
         'circle' => 'Rond',
-        'square' => 'Carré',
+        'square' => 'CarrÃ©',
         'triangle' => 'Triangle',
         'cross' => 'Croix'
     );
@@ -448,8 +448,7 @@ class dbreport_query extends data_object
      */
     private function _setFr()
     {
-        global $db;
-        $db->query("SET lc_time_names = 'fr_FR'");
+        ploopi\db::get()->query("SET lc_time_names = 'fr_FR'");
     }
 
     /**
@@ -460,26 +459,26 @@ class dbreport_query extends data_object
         parent::__construct('ploopi_mod_dbreport_query');
 
         $this->strSqlQuery = '';
-        $this->objQuery = new ploopi_query_select();
+        $this->objQuery = new ploopi\query_select();
         $this->arrResult = array();
         $this->intErrorCode = self::$_ERROR_OK;
     }
 
     /**
-     * Enregistrement de la requête
+     * Enregistrement de la requÃªte
      */
     public function save()
     {
-        $this->fields['timestp_update'] = ploopi_createtimestamp();
+        $this->fields['timestp_update'] = ploopi\date::createtimestamp();
         return parent::save();
     }
 
     /**
-     * Suppression de la requête
+     * Suppression de la requÃªte
      */
     public function delete()
     {
-        $objQuery = new ploopi_query_select();
+        $objQuery = new ploopi\query_select();
         $objQuery->add_from('ploopi_mod_dbreport_querytable');
         $objQuery->add_where('id_query = %d', $this->fields['id']);
         $objRs = $objQuery->execute();
@@ -496,7 +495,7 @@ class dbreport_query extends data_object
 
 
     /**
-     * Gère le clone et les entités liées
+     * GÃ¨re le clone et les entitÃ©s liÃ©es
      *
      * @return dbreport_query
      */
@@ -512,25 +511,26 @@ class dbreport_query extends data_object
         $this->fields['locked'] = 0;
         $this->fields['id'] = null;
 
-        // Enregistrement du clone pour récupérer une nouvel ID
+        // Enregistrement du clone pour rÃ©cupÃ©rer une nouvel ID
         $this->save();
 
         // Clonage de la relation avec "ploopi_mod_dbreport_querytable"
-        $objQuerySel = new ploopi_query_select();
+        $objQuerySel = new ploopi\query_select();
         $objQuerySel->add_select('null, `tablename`, `alias`, `id_module_type`, %d', $this->fields['id']);
         $objQuerySel->add_from("ploopi_mod_dbreport_querytable");
         $objQuerySel->add_where('id_query = %d', $intClonedId);
 
-        $objQueryIns = new ploopi_query_insert();
+        $objQueryIns = new ploopi\query_insert();
         $objQueryIns->set_table("ploopi_mod_dbreport_querytable");
         $objQueryIns->add_raw(" ".$objQuerySel->get_sql());
         $objQueryIns->execute();
 
         // Clonage de la relation avec "ploopi_mod_dbreport_queryfield"
-        $objQuerySel = new ploopi_query_select();
+        $objQuerySel = new ploopi\query_select();
         $objQuerySel->add_select('`id`, `tablename`, `id_module_type`, `fieldname`, `label`, `function`, `visible`, `sort`, `criteria`, `type_criteria`, `or`, `type_or`, `intervals`, `operation`, `position`, `series`');
         $objQuerySel->add_from("ploopi_mod_dbreport_queryfield");
         $objQuerySel->add_where('id_query = %d', $intClonedId);
+        $objQuerySel->add_orderby('position');
         $objRs = $objQuerySel->execute();
 
         $arrQueryFields = array();
@@ -543,7 +543,7 @@ class dbreport_query extends data_object
             $arrQueryFields[$row['id']] = $objQueryField->save();
         }
 
-        // Traitement des champs liés (graphique)
+        // Traitement des champs liÃ©s (graphique)
         foreach(array('pivot_x','pivot_y','pivot_val','chart_x','chart_y','chart_val') as $key) {
             $this->fields[$key] = isset($arrQueryFields[$this->fields[$key]]) ? $arrQueryFields[$this->fields[$key]] : 0;
         }
@@ -551,45 +551,45 @@ class dbreport_query extends data_object
         $this->save();
 
         // Clonage de la relation avec "ploopi_mod_dbreport_queryrelation"
-        $objQuerySel = new ploopi_query_select();
+        $objQuerySel = new ploopi\query_select();
         $objQuerySel->add_select('%d, `tablename_src`, `fieldname_src`,`tablename_dest`, `fieldname_dest`,`active`', $this->fields['id']);
         $objQuerySel->add_from("ploopi_mod_dbreport_queryrelation");
         $objQuerySel->add_where('id_query = %d', $intClonedId);
 
-        $objQueryIns = new ploopi_query_insert();
+        $objQueryIns = new ploopi\query_insert();
         $objQueryIns->set_table("ploopi_mod_dbreport_queryrelation");
         $objQueryIns->add_raw(" ".$objQuerySel->get_sql());
         $objQueryIns->execute();
 
         // Clonage de la relation avec "ploopi_mod_dbreport_query_module_type"
-        $objQuerySel = new ploopi_query_select();
+        $objQuerySel = new ploopi\query_select();
         $objQuerySel->add_select('%d, `id_module_type`', $this->fields['id']);
         $objQuerySel->add_from("ploopi_mod_dbreport_query_module_type");
         $objQuerySel->add_where('id_query = %d', $intClonedId);
 
-        $objQueryIns = new ploopi_query_insert();
+        $objQueryIns = new ploopi\query_insert();
         $objQueryIns->set_table("ploopi_mod_dbreport_query_module_type");
         $objQueryIns->add_raw(" ".$objQuerySel->get_sql());
         $objQueryIns->execute();
     }
 
     /**
-     * Prépare la requête SQL
+     * PrÃ©pare la requÃªte SQL
      *
-     * @param array $arrParam tableau de paramètre
-     * @return boolean true si la requête a pu être préparée
+     * @param array $arrParam tableau de paramÃ¨tre
+     * @return boolean true si la requÃªte a pu Ãªtre prÃ©parÃ©e
      */
     public function generate($arrParam = null)
     {
-        ploopi_init_module('dbreport', false, false, false);
+        ploopi\module::init('dbreport', false, false, false);
 
         /**
-         * Génération de la requête SQL
+         * GÃ©nÃ©ration de la requÃªte SQL
          * @todo Nettoyage des nom de critere ? (%)
          */
 
         $this->strSqlQuery = '';
-        $this->objQuery = new ploopi_query_select();
+        $this->objQuery = new ploopi\query_select();
 
         $arrSqlSelect = array();
         $arrSqlFrom = array();
@@ -600,10 +600,10 @@ class dbreport_query extends data_object
         $arrSqlHaving = array();
         $arrSqlQuery = array();
 
-        $this->arrFields = array(); // tableau des champs de la requête
+        $this->arrFields = array(); // tableau des champs de la requÃªte
 
-        /* Boucle sur les champs de la requête (avec le type de champ) */
-        $objQuery = new ploopi_query_select();
+        /* Boucle sur les champs de la requÃªte (avec le type de champ) */
+        $objQuery = new ploopi\query_select();
         $objQuery->add_select('drf.*, mbf.type');
         $objQuery->add_from('ploopi_mod_dbreport_queryfield drf');
         $objQuery->add_from('ploopi_mb_field mbf');
@@ -621,10 +621,10 @@ class dbreport_query extends data_object
             $strSqlWhere = '';
             $strSqlHaving = '';
 
-            // Paramètre de la clause SELECT
+            // ParamÃ¨tre de la clause SELECT
             $arrSelectParams = array();
 
-            // Nom du champ dans la requête (init)
+            // Nom du champ dans la requÃªte (init)
             $strQueryField = "`{$row['tablename']}`.`{$row['fieldname']}`";
 
             if ($row['function'] != '')  $strQueryField = str_replace('%', $strQueryField, $row['function']);
@@ -655,19 +655,19 @@ class dbreport_query extends data_object
                         // Exemple d'intervalle :
                         // If(auteur_affaire.age BETWEEN 12 AND 16,'12-16',If(auteur_affaire.age BETWEEN 17 AND 19,'17-19','20 et +')) as tranche,
 
-                        // On va se servir de IF imbriqués
+                        // On va se servir de IF imbriquÃ©s
 
-                        // Nombre de parenthèses ouvertes (à fermer)
+                        // Nombre de parenthÃ¨ses ouvertes (Ã  fermer)
                         $intParenthesis = 0;
 
                         $arrSqlWhereOr = array();
                         $strSqlWhereOr = '';
                         $arrWhereParams = array();
 
-                        // Supprime le ; en trop à la fin (si il existe) dans la saisie des intervalles par l'utilisateur
+                        // Supprime le ; en trop Ã  la fin (si il existe) dans la saisie des intervalles par l'utilisateur
                         if (substr($row['intervals'], -1) == ';') $row['intervals'] = substr($row['intervals'], 0, -1);
 
-                        // On crée un tableau avec les intervalles (; pour séparer)
+                        // On crÃ©e un tableau avec les intervalles (; pour sÃ©parer)
                         $arrIntervals = explode(';', $row['intervals']);
 
                         $intI = 1;
@@ -676,19 +676,19 @@ class dbreport_query extends data_object
                         {
                             if ($strInterval != '')
                             {
-                                // On décompose l'intervalle (séparateur: "-")
+                                // On dÃ©compose l'intervalle (sÃ©parateur: "-")
                                 $arrInterval = explode('-', $strInterval);
                                 if (sizeof($arrInterval) <= 2)
                                 {
                                     if (sizeof($arrInterval) == 1) $arrInterval[1] = $arrInterval[0];
 
-                                    // IntervalSql va contenir les dates transformées pour SQL
+                                    // IntervalSql va contenir les dates transformÃ©es pour SQL
                                     $arrIntervalSql = $arrInterval;
 
                                     if ($row['type'] == 'date')
                                     {
-                                        $arrIntervalSql[0] = ploopi_local2timestamp($arrInterval[0]);
-                                        if ($arrInterval[1] != '+') $arrIntervalSql[1] = ploopi_local2timestamp($arrInterval[1]);
+                                        $arrIntervalSql[0] = ploopi\date::local2timestamp($arrInterval[0]);
+                                        if ($arrInterval[1] != '+') $arrIntervalSql[1] = ploopi\date::local2timestamp($arrInterval[1]);
                                     }
 
                                     if ($intI < sizeof($arrIntervals))
@@ -697,11 +697,11 @@ class dbreport_query extends data_object
                                         $arrWhereParams[] = $arrIntervalSql[0];
                                         $arrWhereParams[] = $arrIntervalSql[1];
 
-                                        // cas général
+                                        // cas gÃ©nÃ©ral
                                         $strSqlSelect .= "if ({$strQueryField} BETWEEN %s AND %s, %s, ";
                                         $arrSelectParams[] = $arrIntervalSql[0];
                                         $arrSelectParams[] = $arrIntervalSql[1];
-                                        $arrSelectParams[] = "{$arrInterval[0]} à {$arrInterval[1]}";
+                                        $arrSelectParams[] = "{$arrInterval[0]} Ã  {$arrInterval[1]}";
 
                                         $intParenthesis++;
                                     }
@@ -712,7 +712,7 @@ class dbreport_query extends data_object
                                             $arrSqlWhereOr[] = "{$strQueryField} >= %s";
                                             $arrWhereParams[] = $arrIntervalSql[0];
 
-                                            // tout ce qui est supérieur
+                                            // tout ce qui est supÃ©rieur
                                             $strSqlSelect .= "%s";
                                             $arrSelectParams[] = "{$arrInterval[0]} et {$arrInterval[1]}";
                                         }
@@ -726,7 +726,7 @@ class dbreport_query extends data_object
                                             $strSqlSelect .= "if ({$strQueryField} BETWEEN %s AND %s, %s,null";
                                             $arrSelectParams[] = $arrIntervalSql[0];
                                             $arrSelectParams[] = $arrIntervalSql[1];
-                                            $arrSelectParams[] = "{$arrInterval[0]} à {$arrInterval[1]}";
+                                            $arrSelectParams[] = "{$arrInterval[0]} Ã  {$arrInterval[1]}";
 
                                             $intParenthesis++;
                                         }
@@ -741,7 +741,7 @@ class dbreport_query extends data_object
                         $this->objQuery->add_where('('.implode(' OR ', $arrSqlWhereOr).')', $arrWhereParams);
 
                         // Clause SELECT
-                        // On ferme les parenthèses en fonction du nombre de IF
+                        // On ferme les parenthÃ¨ses en fonction du nombre de IF
                         $strSqlSelect .= str_repeat(')', $intParenthesis);
 
                         // Clause GROUP BY
@@ -751,7 +751,7 @@ class dbreport_query extends data_object
                     case 'count_distinct':
                         $strOpName = 'COUNT';
 
-                        // /!\ On change le label par défaut en incluant le nom de l'opération
+                        // /!\ On change le label par dÃ©faut en incluant le nom de l'opÃ©ration
                         $strDefaultLabel = dbreport::getOperation($row['operation'])." de {$strDefaultLabel}";
 
                         $strSqlSelect .= "{$strOpName}(DISTINCT {$strQueryField})";
@@ -760,7 +760,7 @@ class dbreport_query extends data_object
                     default: // AUTRES OPERATIONS
                         $strOpName = strtoupper($row['operation']);
 
-                        // /!\ On change le label par défaut en incluant le nom de l'opération
+                        // /!\ On change le label par dÃ©faut en incluant le nom de l'opÃ©ration
                         $strDefaultLabel = dbreport::getOperation($row['operation'])." de {$strDefaultLabel}";
 
                         $strSqlSelect .= "{$strOpName}({$strQueryField})";
@@ -793,19 +793,19 @@ class dbreport_query extends data_object
 
             /**
              * Construction des clauses WHERE et HAVING
-             * Traitement fusionné de "criteria" et "or"
+             * Traitement fusionnÃ© de "criteria" et "or"
              * Impacte $strSqlWhere et $strSqlHaving
              */
 
             $arrWhereParams = array();
             $arrHavingParams = array();
 
-            // Lecture des critères depuis l'URL
+            // Lecture des critÃ¨res depuis l'URL
             foreach(array('criteria', 'or') as $strCrit)
             {
                 if ($row["type_{$strCrit}"] != '')
                 {
-                    // Cas particulier ou le filtre est un paramètre
+                    // Cas particulier ou le filtre est un paramÃ¨tre
                     if (strlen($row[$strCrit]) > 0 && $row[$strCrit][0] == '@')
                     {
                         if (isset($arrParam[$row[$strCrit]]))
@@ -821,7 +821,7 @@ class dbreport_query extends data_object
                 }
             }
 
-            // Permet de déterminé sur la clause OR est applicable ou non sur ce champ
+            // Permet de dÃ©terminÃ© sur la clause OR est applicable ou non sur ce champ
             $booOrIsValid = ($row['type_criteria'] != '') && ($row['type_or'] != '') && ($row['criteria'] != '%') && ($row['or'] != '%');
 
             foreach(array('criteria', 'or') as $strCrit)
@@ -830,7 +830,7 @@ class dbreport_query extends data_object
                 {
                     if ($row[$strCrit] != '%')
                     {
-                        $arrCriteria = ($row["type_{$strCrit}"] == 'between') ? explode('-',$row[$strCrit]) : null; // Explosition du critère si BETWEEN
+                        $arrCriteria = ($row["type_{$strCrit}"] == 'between') ? explode('-',$row[$strCrit]) : null; // Explosition du critÃ¨re si BETWEEN
 
                         if ($row["type_{$strCrit}"] != 'between' || ($row["type_{$strCrit}"] == 'between' && sizeof($arrCriteria) == 2))
                         {
@@ -882,10 +882,10 @@ class dbreport_query extends data_object
                                     elseif ($row["type_{$strCrit}"] == 'between')
                                     {
                                         $strSqlWhere .= "BETWEEN %s AND %s";
-                                        $arrWhereParams[] = ploopi_local2timestamp($arrCriteria[0]);
-                                        $arrWhereParams[] = ploopi_local2timestamp($arrCriteria[1]);
+                                        $arrWhereParams[] = ploopi\date::local2timestamp($arrCriteria[0]);
+                                        $arrWhereParams[] = ploopi\date::local2timestamp($arrCriteria[1]);
                                     }
-                                    else $strValue = ploopi_local2timestamp($row[$strCrit]);
+                                    else $strValue = ploopi\date::local2timestamp($row[$strCrit]);
                                 }
                                 else // Type char/text/enum/???
                                 {
@@ -931,9 +931,9 @@ class dbreport_query extends data_object
 
                                 if ($strCrit == 'or' && $booOrIsValid) $strSqlWhere .= ')';
                             }
-                            else // Critère sur une opération de type 'Compte', 'Somme', etc....
+                            else // CritÃ¨re sur une opÃ©ration de type 'Compte', 'Somme', etc....
                             {
-                                // un critère sur une opération nécessite l'utilisation de HAVING
+                                // un critÃ¨re sur une opÃ©ration nÃ©cessite l'utilisation de HAVING
 
                                 if ($strCrit == 'criteria' && $booOrIsValid) $strSqlHaving .= '(';
                                 if ($strCrit == 'or' && $booOrIsValid) $strSqlHaving .= ' OR ';
@@ -941,7 +941,7 @@ class dbreport_query extends data_object
                                 $strSqlHaving .= ($row['label']) ? "`{$row['label']}` " : "`{$strDefaultLabel}` ";
                                 $strValue = '';
 
-                                if (strstr($row['type'],'double') || strstr($row['type'],'float') || in_array($row['operation'], array('count', 'sum', 'avg'))) // type double ou opération arithmétique
+                                if (strstr($row['type'],'double') || strstr($row['type'],'float') || in_array($row['operation'], array('count', 'sum', 'avg'))) // type double ou opÃ©ration arithmÃ©tique
                                 {
                                     if ($row["type_{$strCrit}"] == 'in')
                                     {
@@ -981,10 +981,10 @@ class dbreport_query extends data_object
                                     elseif ($row["type_{$strCrit}"] == 'between')
                                     {
                                         $strSqlHaving .= "BETWEEN %s AND %s";
-                                        $arrHavingParams[] = ploopi_local2timestamp($arrCriteria[0]);
-                                        $arrHavingParams[] = ploopi_local2timestamp($arrCriteria[1]);
+                                        $arrHavingParams[] = ploopi\date::local2timestamp($arrCriteria[0]);
+                                        $arrHavingParams[] = ploopi\date::local2timestamp($arrCriteria[1]);
                                     }
-                                    else $strValue = ploopi_local2timestamp($row[$strCrit]);
+                                    else $strValue = ploopi\date::local2timestamp($row[$strCrit]);
                                 }
                                 else // Type char/text/enum/???
                                 {
@@ -1045,8 +1045,8 @@ class dbreport_query extends data_object
          * Construction de la clause FROM
          */
 
-        // Recherche des tables de la requête
-        $objQuery = new ploopi_query_select();
+        // Recherche des tables de la requÃªte
+        $objQuery = new ploopi\query_select();
         $objQuery->add_from('ploopi_mod_dbreport_querytable');
         $objQuery->add_where('id_query = %d', $this->fields['id']);
         $objQuery->add_orderby('id');
@@ -1060,7 +1060,7 @@ class dbreport_query extends data_object
         /**
          * Construction de la clause JOIN
          */
-        $objQuery = new ploopi_query_select();
+        $objQuery = new ploopi\query_select();
         $objQuery->add_from('ploopi_mod_dbreport_queryrelation qr');
         $objQuery->add_where('qr.id_query = %d', $this->fields['id']);
         $objQuery->add_where('qr.active = 1');
@@ -1069,8 +1069,11 @@ class dbreport_query extends data_object
         while ($row = $objRs->fetchrow())
         {
             // Stockage des jointures suivant l'origine
-            $arrJoins[$row['tablename_src']][$row['tablename_dest']][] = "`{$row['tablename_src']}`.`{$row['fieldname_src']}` = `{$row['tablename_dest']}`.`{$row['fieldname_dest']}`";
-            $arrJoins[$row['tablename_dest']][$row['tablename_src']][] = "`{$row['tablename_dest']}`.`{$row['fieldname_dest']}` = `{$row['tablename_src']}`.`{$row['fieldname_src']}`";
+            $arrJoins[$row['tablename_src']][$row['tablename_dest']]['type_join'] = $row['type_join'];
+            $arrJoins[$row['tablename_dest']][$row['tablename_src']]['type_join'] = $row['type_join'];
+
+            $arrJoins[$row['tablename_src']][$row['tablename_dest']]['relation'][] = "`{$row['tablename_src']}`.`{$row['fieldname_src']}` = `{$row['tablename_dest']}`.`{$row['fieldname_dest']}`";
+            $arrJoins[$row['tablename_dest']][$row['tablename_src']]['relation'][] = "`{$row['tablename_dest']}`.`{$row['fieldname_dest']}` = `{$row['tablename_src']}`.`{$row['fieldname_src']}`";
         }
 
         if (!empty($arrTables)) {
@@ -1081,14 +1084,27 @@ class dbreport_query extends data_object
             $arrKnownTables = array();
             $arrKnownTables[] = key($arrTables);
 
-            // On parcourt les autres tables pour créer des jointures INNER
+            // On parcourt les autres tables pour crÃ©er des jointures INNER
             while (next($arrTables) !== false) {
                 $strTable = key($arrTables);
 
                 // Recherche des jointures entre la table courante et les tables connues
                 foreach($arrKnownTables as $strKnownTable) {
                     if (!empty($arrJoins[$strTable][$strKnownTable])) {
-                        $this->objQuery->add_innerjoin("`{$strTable}` ON ".implode(' AND ', $arrJoins[$strTable][$strKnownTable]));
+                        switch($arrJoins[$strTable][$strKnownTable]['type_join']) {
+                            case 'right':
+                                $this->objQuery->add_rightjoin("`{$strTable}` ON ".implode(' AND ', $arrJoins[$strTable][$strKnownTable]['relation']));
+                            break;
+
+                            case 'left':
+                                $this->objQuery->add_leftjoin("`{$strTable}` ON ".implode(' AND ', $arrJoins[$strTable][$strKnownTable]['relation']));
+                            break;
+
+                            default:
+                            case 'inner':
+                                $this->objQuery->add_innerjoin("`{$strTable}` ON ".implode(' AND ', $arrJoins[$strTable][$strKnownTable]['relation']));
+                            break;
+                        }
                     }
                 }
 
@@ -1105,38 +1121,38 @@ class dbreport_query extends data_object
     }
 
     /**
-     * Exécute la requête
+     * ExÃ©cute la requÃªte
      *
-     * @param int $intCacheLifetime durée de vie du cache
+     * @param int $intCacheLifetime durÃ©e de vie du cache
      * @param boolean $booGetRaw si true, n'applique pas la transformation
-     * @return boolean true si la requête a pu être exécutée
+     * @return boolean true si la requÃªte a pu Ãªtre exÃ©cutÃ©e
      */
     public function exec($intCacheLifetime = 0, $booGetRaw = false)
     {
-        // Génération de la requête
+        // GÃ©nÃ©ration de la requÃªte
         //if ($this->generate($arrParam))
         if (!empty($this->strSqlQuery))
         {
-            $objCache = new ploopi_cache($this->getcacheid(), $intCacheLifetime);
+            $objCache = new ploopi\cache($this->getcacheid(), $intCacheLifetime);
 
             if (!$this->arrResult = $objCache->get_var())
             {
                 if (!ini_get('safe_mode')) ini_set('max_execution_time', 0);
-                // Exécution de la requête
+                // ExÃ©cution de la requÃªte
 
                 $this->_setFr();
 
                 set_time_limit(0);
-                // Exécution de la requête
+                // ExÃ©cution de la requÃªte
                 $objRs = $this->objQuery->execute();
 
                 $this->arrResult = $objRs->getarray();
 
                 if (!$booGetRaw) {
-                    // Tableau croisé ?
+                    // Tableau croisÃ© ?
                     if ($this->fields['transformation'] == 'pivot_table')
                     {
-                        // Champs configurés ?
+                        // Champs configurÃ©s ?
                         if (!empty($this->fields['pivot_x']) && !empty($this->fields['pivot_y']) && !empty($this->fields['pivot_val']))
                         {
                             // Champs valides ?
@@ -1147,14 +1163,14 @@ class dbreport_query extends data_object
                                 $strPivotyField = $this->arrFields[$this->fields['pivot_y']]['label'];
                                 $strPivotvalField = $this->arrFields[$this->fields['pivot_val']]['label'];
 
-                                // Construction du jeu de données
+                                // Construction du jeu de donnÃ©es
                                 $arrPivot = array();
 
                                 // Construction du tableau de valeurs pour l'abscisse
                                 $arrPivotX = array();
                                 foreach($this->arrResult as $row) $arrPivotX[$row[$strPivotxField]] = 1;
 
-                                // Ensuite on crée le tableau croisé
+                                // Ensuite on crÃ©e le tableau croisÃ©
                                 foreach($this->arrResult as $row)
                                 {
                                     if (!isset($arrPivot[$row[$strPivotyField]])) {
@@ -1184,10 +1200,10 @@ class dbreport_query extends data_object
 
 
     /**
-     * Exécute la requête
+     * ExÃ©cute la requÃªte
      *
-     * @param array $arrParam tableau optionnel de paramètres
-     * @return boolean true si la requête a pu être exécutée
+     * @param array $arrParam tableau optionnel de paramÃ¨tres
+     * @return boolean true si la requÃªte a pu Ãªtre exÃ©cutÃ©e
      */
     public function getrs()
     {
@@ -1196,7 +1212,7 @@ class dbreport_query extends data_object
             $this->_setFr();
 
             set_time_limit(0);
-            // Exécution de la requête
+            // ExÃ©cution de la requÃªte
             return $this->objQuery->execute();
         }
 
@@ -1205,7 +1221,7 @@ class dbreport_query extends data_object
 
 
     /**
-     * Retourne l'id du cache pour la requête
+     * Retourne l'id du cache pour la requÃªte
      *
      * @return string id du cache
      */
@@ -1215,14 +1231,14 @@ class dbreport_query extends data_object
     }
 
     /**
-     * Retourne un tableau contenant le résultat de la requête
+     * Retourne un tableau contenant le rÃ©sultat de la requÃªte
      *
      * @return array
      */
     public function getresult() { return $this->arrResult; }
 
     /**
-     * Retourne un tableau optimisé contenant le résultat de la requête
+     * Retourne un tableau optimisÃ© contenant le rÃ©sultat de la requÃªte
      *
      * @return array
      */
@@ -1234,7 +1250,7 @@ class dbreport_query extends data_object
         {
             // Stockage des titres
             if (empty($arrNewArray['titles'])) foreach($arrLine as $strKey => $strValue) $arrNewArray['titles'][] = $strKey;
-            // Stockage des données
+            // Stockage des donnÃ©es
             foreach($arrLine as $strKey => $strValue) $arrNewArray['data'][$intIdLine][] = $strValue;
         }
 
@@ -1242,7 +1258,7 @@ class dbreport_query extends data_object
     }
 
     /**
-     * Retourne le code SQL généré de la requête
+     * Retourne le code SQL gÃ©nÃ©rÃ© de la requÃªte
      *
      * @return string
      */
@@ -1251,15 +1267,15 @@ class dbreport_query extends data_object
 
 
     /**
-     * Fonction d'export optimisée pour traiter les gros volumes de données.
-     * Pas de bufferisation, pas de stockage des données en mémoire.
+     * Fonction d'export optimisÃ©e pour traiter les gros volumes de donnÃ©es.
+     * Pas de bufferisation, pas de stockage des donnÃ©es en mÃ©moire.
      */
     public function export_raw_csv($strFileName = null, $booSetHeaders = true, $strContentDisposition = 'attachment') {
 
         $strFormat = 'csv';
         $strCharset = 'iso-8859-1';
 
-        ploopi_ob_clean(true);
+        ploopi\buffer::clean(true);
         ob_start();
 
         $intSize = 0;
@@ -1299,29 +1315,26 @@ class dbreport_query extends data_object
 
         if (is_null($strFileName)) $strFileName = "dbreport.{$strFormat}";
 
-        header('Content-Type: '.ploopi_getmimetype($strFileName).'; charset='.$strCharset);
+        header('Content-Type: '.ploopi\fs::getmimetype($strFileName).'; charset='.$strCharset);
         header('Content-Disposition: '.$strContentDisposition.'; Filename="'.$strFileName.'"');
         header('Cache-Control: private');
         header('Pragma: private');
         header('Content-Length: '.$intSize);
         header('Content-Encoding: none');
-        ploopi_die();
+        ploopi\system::kill();
     }
 
 
     /**
-     * Génère le contenu du fichier
+     * GÃ©nÃ¨re le contenu du fichier
      *
      * @param string $strFormat Format du fichier parmi sql, html, xls, sxc, ods, pdf, csv, json, json_opt, xml, ser, txt
      * @param string $strFileName Nom du fichier (sans extension)
-     * @param boolean $booSetHeaders true si le headers doivent être générés (true par défaut)
+     * @param boolean $booSetHeaders true si le headers doivent Ãªtre gÃ©nÃ©rÃ©s (true par dÃ©faut)
      * @param string $strContentDisposition Type de disposition parmi 'attachment', 'inline'
      */
     public function export($strFormat = 'xml', $strFileName = null, $booSetHeaders = true, $strContentDisposition = 'attachment')
     {
-        include_once './include/functions/array.php';
-        include_once './include/classes/odf.php';
-
         set_time_limit(300);
 
         $strFormat = strtolower($strFormat);
@@ -1345,19 +1358,23 @@ class dbreport_query extends data_object
                         th {background-color:#ddd;}
                         </style>
                     </head>
-                    <body>'.ploopi_array2html($this->getresult()).'</body></html>';
+                    <body>'.ploopi\arr::tohtml($this->getresult()).'</body></html>';
             break;
 
             case 'xls':
-                echo ploopi_array2excel($this->getresult(), true, 'dbreport.xls', 'query', null, array('writer' => 'excel5'));
+                echo ploopi\arr::toexcel($this->getresult(), true, 'dbreport.xls', 'query', null, array('writer' => 'excel5'));
             break;
 
             case 'xlsx':
-                echo ploopi_array2excel($this->getresult(), true, 'dbreport.xlsx', 'query', null, array('writer' => 'excel2007'));
+                echo ploopi\arr::toexcel($this->getresult(), true, 'dbreport.xlsx', 'query', null, array('writer' => 'excel2007'));
+            break;
+
+            case 'ods':
+                echo ploopi\arr::toexcel($this->getresult(), true, 'dbreport.ods', 'query', null, array('writer' => 'ods'));
             break;
 
             case 'odt': // experimental
-                $strHtml = ploopi_utf8encode('
+                $strHtml = ploopi\str::utf8encode('
                     <html>
                     <head>
                         <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
@@ -1368,21 +1385,21 @@ class dbreport_query extends data_object
                         th {background-color:#ddd;}
                         </style>
                     </head>
-                    <body>'.ploopi_array2html($this->getresult()).'</body></html>');
+                    <body>'.ploopi\arr::tohtml($this->getresult()).'</body></html>');
                 $strCharset = 'UTF-8';
 
                 include_once './lib/xhtml2odt/class.odt.odtfile.php';
                 ODTFile::get($strHtml, realpath('.').'/modules/dbreport/odt/template.odt');
             break;
 
-            case 'sxc':
-            case 'ods':
             case 'pdf':
-                // Génération du fichier XLSX
-                $strXlsContent = ploopi_array2excel($this->getresult(), true,  'dbreport.xlsx', 'query', null, array('writer' => 'excel2007'));
+                echo ploopi\arr::toexcel($this->getresult(), true, 'dbreport.pdf', 'query', null, array('writer' => 'pdf'));
+                /*
+                // GÃ©nÃ©ration du fichier XLSX
+                $strXlsContent = ploopi\arr::toexcel($this->getresult(), true,  'dbreport.xlsx', 'query', null, array('writer' => 'excel2007'));
 
                 // Instanciation du convertisseur ODF
-                $objOdfConverter = new odf_converter(ploopi_getparam('system_jodwebservice', _PLOOPI_MODULE_SYSTEM));
+                $objOdfConverter = new ploopi\odf_converter(ploopi\param::get('system_jodwebservice', _PLOOPI_MODULE_SYSTEM));
 
                 switch($strFormat)
                 {
@@ -1399,27 +1416,28 @@ class dbreport_query extends data_object
                     break;
                 }
 
-                // Conversion du document dans le format sélectionné
+                // Conversion du document dans le format sÃ©lectionnÃ©
                 echo $objOdfConverter->convert($strXlsContent, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', $strOuputMime);
+                */
             break;
 
             case 'csv':
-                echo ploopi_array2csv($this->getresult());
+                echo ploopi\arr::tocsv($this->getresult());
             break;
 
             case 'json':
-                echo ploopi_array2json($this->getresult());
+                echo ploopi\arr::tojson($this->getresult());
                 $strCharset = 'UTF-8';
             break;
 
             case 'json_opt':
-                echo ploopi_array2json($this->getresult_opt());
+                echo ploopi\arr::tojson($this->getresult_opt());
                 $strCharset = 'UTF-8';
             break;
 
             case 'xml':
-                //ploopi_die($objDbrQuery->getresult());
-                echo ploopi_array2xml($this->getresult());
+                //ploopi\system::kill($objDbrQuery->getresult());
+                echo ploopi\arr::toxml($this->getresult());
             break;
 
             case 'ser':
@@ -1436,18 +1454,18 @@ class dbreport_query extends data_object
         {
             if (is_null($strFileName)) $strFileName = "dbreport.{$strFormat}";
 
-            header('Content-Type: '.ploopi_getmimetype($strFileName).'; charset='.$strCharset);
+            header('Content-Type: '.ploopi\fs::getmimetype($strFileName).'; charset='.$strCharset);
             header('Content-Disposition: '.$strContentDisposition.'; Filename="'.$strFileName.'"');
             header('Cache-Control: private');
             header('Pragma: private');
             header('Content-Length: '.ob_get_length());
             header("Content-Encoding: None");
-            header("X-Ploopi: Download"); // Permet d'indiquer au gestionnaire de buffer qu'il s'agit d'un téléchargement de fichier @see ploopi_ob_callback
+            header("X-Ploopi: Download"); // Permet d'indiquer au gestionnaire de buffer qu'il s'agit d'un tÃ©lÃ©chargement de fichier @see ploopi\buffer::callback
         }
     }
 
     /**
-     * Retourne l'uri du webservice associé à la requête
+     * Retourne l'uri du webservice associÃ© Ã  la requÃªte
      *
      * @return string
      */
@@ -1455,7 +1473,7 @@ class dbreport_query extends data_object
     {
         $arrParams = $this->getparams();
 
-        // Construction de la chaine de paramètres
+        // Construction de la chaine de paramÃ¨tres
         $arrUrlParams = array();
         $arrUrlParams['format'] = 'format=xml';
         if (!empty($this->fields['ws_code'])) $arrUrlParams['code'] = "code={$this->fields['ws_code']}";
@@ -1466,32 +1484,32 @@ class dbreport_query extends data_object
     }
 
     /**
-     * Retourne le détail des champs de la requête
+     * Retourne le dÃ©tail des champs de la requÃªte
      *
      * @return array tableau des champs
      */
     public function getfields()
     {
-        $objCol = new data_object_collection('dbreport_queryfield');
+        $objCol = new ploopi\data_object_collection('dbreport_queryfield');
         $objCol->add_where('id_query = %d', $this->fields['id']);
         return $objCol->get_objects();
     }
 
     /**
-     * Retourne le détail des paramètres de la requête
+     * Retourne le dÃ©tail des paramÃ¨tres de la requÃªte
      *
-     * @return array tableau des paramètres
+     * @return array tableau des paramÃ¨tres
      */
     public function getparams()
     {
         $arrParams = array();
 
-        // Recherche des champs de la requête et détection des paramètres utilisateur
+        // Recherche des champs de la requÃªte et dÃ©tection des paramÃ¨tres utilisateur
         $arrObjFields = $this->getfields();
-        // Pour chaque champ de la requête
+        // Pour chaque champ de la requÃªte
         foreach($arrObjFields as $objField)
         {
-            // Pour chaque type de critère
+            // Pour chaque type de critÃ¨re
             foreach(array('criteria', 'or') as $strCrit)
             {
                 if (!empty($objField->fields[$strCrit]) && $objField->fields[$strCrit][0] == '@') $arrParams[$objField->fields[$strCrit]] = $objField->fields;
@@ -1502,23 +1520,21 @@ class dbreport_query extends data_object
     }
 
     /**
-     * Retourne le dernier code d'erreur rencontré
+     * Retourne le dernier code d'erreur rencontrÃ©
      *
      * @return int
      */
     public function geterror() { return $this->intErrorCode; }
 
     /**
-     * Retourne un objet en fonction de l'id utilisé pour le webservice
+     * Retourne un objet en fonction de l'id utilisÃ© pour le webservice
      *
-     * @param string $strWsId id utilisé pour le webservice
+     * @param string $strWsId id utilisÃ© pour le webservice
      * @return dbreport_query instance de dbreport_query
      */
     public static function getInstanceByWsId($strWsId)
     {
-        include_once './include/classes/data_object_collection.php';
-
-        $objCol = new data_object_collection('dbreport_query');
+        $objCol = new ploopi\data_object_collection('dbreport_query');
         $objCol->add_where('ws_id = %s', $strWsId);
 
         return current($objCol->get_objects());
@@ -1526,10 +1542,10 @@ class dbreport_query extends data_object
 
 
     /**
-     * Retourne les données de la requête dans un format exploitable pour la contruction d'un graphique
+     * Retourne les donnÃ©es de la requÃªte dans un format exploitable pour la contruction d'un graphique
      *
-     * @param boolean $booAutocomplete true pour compléter les données manquantes dans les séries
-     * @return array Tableau des données
+     * @param boolean $booAutocomplete true pour complÃ©ter les donnÃ©es manquantes dans les sÃ©ries
+     * @return array Tableau des donnÃ©es
      */
     private function _getChartData($booAutocomplete = true) {
 
@@ -1545,25 +1561,25 @@ class dbreport_query extends data_object
             $strChartyField = !in_array($this->fields['chart'], array('pie', 'doughnut')) && isset($this->arrFields[$this->fields['chart_y']]['label']) ? $this->arrFields[$this->fields['chart_y']]['label'] : null;
             $strChartvalField = $this->arrFields[$this->fields['chart_val']]['label'];
 
-            // Copie du résultat
+            // Copie du rÃ©sultat
             $arrResult = $this->arrResult;
 
             if ($booAutocomplete && isset($strChartyField)) {
 
-                // Calcul des séries pour X et Y
+                // Calcul des sÃ©ries pour X et Y
                 $arrValuesX = array();
                 $arrValuesY = array();
-                // Index des données (on cherche les données manquantes)
+                // Index des donnÃ©es (on cherche les donnÃ©es manquantes)
                 $arrIndex = array();
 
-                // Création des séries de valeurs pour X et Y
+                // CrÃ©ation des sÃ©ries de valeurs pour X et Y
                 foreach($arrResult as $row) {
                     $arrValuesX[$row[$strChartxField]] = 1;
                     $arrValuesY[$row[$strChartyField]] = 1;
                     $arrIndex[$row[$strChartxField]][$row[$strChartyField]] = 1;
                 }
 
-                // On complète ce qu'il manque
+                // On complÃ¨te ce qu'il manque
                 foreach(array_keys($arrValuesX) as $strValueX) {
                     foreach(array_keys($arrValuesY) as $strValueY) {
                         if (!isset($arrIndex[$strValueX][$strValueY])) {
@@ -1577,7 +1593,7 @@ class dbreport_query extends data_object
                 }
             }
 
-            // Calcul des totaux par série (Pour: calcul de %, tri des séries par valeur, limit)
+            // Calcul des totaux par sÃ©rie (Pour: calcul de %, tri des sÃ©ries par valeur, limit)
             $arrSeriesY = array();
             $arrSeriesX = array();
             foreach($arrResult as $row) {
@@ -1600,7 +1616,7 @@ class dbreport_query extends data_object
             $strChartSortY = $this->fields['chart_sort_y'];
 
 
-            // Sélection des données en fonction de la limite pour chaque dimension
+            // SÃ©lection des donnÃ©es en fonction de la limite pour chaque dimension
             if ($this->fields['chart_limit_x'] || $this->fields['chart_limit_y']) {
                 $intLimitX = $this->fields['chart_limit_x'];
                 $intLimitY = $this->fields['chart_limit_y'];
@@ -1652,13 +1668,13 @@ class dbreport_query extends data_object
                 }
 
 
-                // Suppression des données hors limite
+                // Suppression des donnÃ©es hors limite
                 foreach($arrResult as $key => $row) {
                     if (isset($strChartxField) && $this->fields['chart_limit_x'] && !isset($arrSeriesX[$row[$strChartxField]])) unset($arrResult[$key]);
                     elseif (isset($strChartyField) && $this->fields['chart_limit_y'] && !isset($arrSeriesY[$row[$strChartyField]])) unset($arrResult[$key]);
                 }
             }
-            // Tri des données sur Y puis X, éventuellement par valeur sur X ou Y
+            // Tri des donnÃ©es sur Y puis X, Ã©ventuellement par valeur sur X ou Y
             usort($arrResult, function($a, $b) use ($strChartxField, $strChartyField, $strChartSortX, $strChartSortY, $arrSeriesX, $arrSeriesY) {
                 $intCmp = 0;
                 if (isset($strChartyField)) {
@@ -1716,7 +1732,7 @@ class dbreport_query extends data_object
             foreach($arrResult as $key => $row) {
 
                 $strSerie = utf8_encode(isset($strChartyField) ? $row[$strChartyField] : $strChartxField);
-                // Nouvelle série ?
+                // Nouvelle sÃ©rie ?
                 if (!isset($arrSeries[$strSerie])) $arrSeries[$strSerie] = sizeof($arrSeries);
 
                 $keySerie = $arrSeries[$strSerie];
@@ -1776,7 +1792,7 @@ class dbreport_query extends data_object
         // Dimension 2 ok ?
         if (empty($this->fields['chart_val']) || !isset($this->arrFields[$this->fields['chart_val']])) return;
 
-        // Lecture des données du graphique
+        // Lecture des donnÃ©es du graphique
         $arrData = $this->_getChartData();
 
         $strChartxField = $this->arrFields[$this->fields['chart_x']]['label'];
@@ -1796,10 +1812,10 @@ class dbreport_query extends data_object
                 lang: {
                     decimalPoint: '.',
                     thousandsSep: ' ',
-                    downloadJPEG: '<?php echo utf8_encode('Télécharger JPG'); ?>',
-                    downloadPDF: '<?php echo utf8_encode('Télécharger PDF'); ?>',
-                    downloadPNG: '<?php echo utf8_encode('Télécharger PNG'); ?>',
-                    downloadSVG: '<?php echo utf8_encode('Télécharger SVG'); ?>',
+                    downloadJPEG: '<?php echo utf8_encode('TÃ©lÃ©charger JPG'); ?>',
+                    downloadPDF: '<?php echo utf8_encode('TÃ©lÃ©charger PDF'); ?>',
+                    downloadPNG: '<?php echo utf8_encode('TÃ©lÃ©charger PNG'); ?>',
+                    downloadSVG: '<?php echo utf8_encode('TÃ©lÃ©charger SVG'); ?>',
                     printChart: '<?php echo utf8_encode('Imprimer'); ?>',
                     contextButtonTitle: '<?php echo utf8_encode('Menu contextuel'); ?>',
                 },

@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2013 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -25,7 +25,7 @@
  *
  * @package dbreport
  * @copyright Ovensia
- * @author Stéphane Escaich
+ * @author StÃ©phane Escaich
  * @version  $Revision$
  * @modifiedby $LastChangedBy$
  * @lastmodified $Date$
@@ -34,15 +34,15 @@
 abstract class dbreport {
 
     /**
-     * ACTION : Gérer les requêtes
+     * ACTION : GÃ©rer les requÃªtes
      */
     const _ACTION_MANAGE = 10;
     /**
-     * ACTION : Verrouiller les requêtes
+     * ACTION : Verrouiller les requÃªtes
      */
     const _ACTION_LOCK = 99;
 
-    // Liste des opérations
+    // Liste des opÃ©rations
     private static $_arrOperations = array(
         'groupby' => 'Regroupement',
         'intervals' => 'Regroupement par Intervalles',
@@ -53,18 +53,18 @@ abstract class dbreport {
         'count' => "Nombre d'occurences",
         'count_distinct' => "Nombre d'occurences distinctes",
         'stddev_pop' => 'Ecart type de la population',
-        'stddev_samp' => "Ecart type de l'échantillon",
+        'stddev_samp' => "Ecart type de l'Ã©chantillon",
         'var_pop' => 'Variance de la population',
-        'var_samp' => "Variance de l'échantillon"
+        'var_samp' => "Variance de l'Ã©chantillon"
     );
 
     // Liste des ordres de tri
     private static $_arrSorts = array(
         'asc' => 'Croissant',
-        'desc' => 'Décroissant'
+        'desc' => 'DÃ©croissant'
     );
 
-    // Liste des critères pour les filtres
+    // Liste des critÃ¨res pour les filtres
     private static $_arrCriterias = array(
         '=' => '=',
         '<' => '<',
@@ -79,7 +79,7 @@ abstract class dbreport {
         'in' => 'Dans la liste de valeurs'
     );
 
-    // Liste des fonctions proposées (MySQL)
+    // Liste des fonctions proposÃ©es (MySQL)
     private static $_arrFunctions = array(
         'math' => array(
             'ABS( % )',
@@ -168,12 +168,12 @@ abstract class dbreport {
         )
     );
 
-    // Liste des types supportés
+    // Liste des types supportÃ©s
     private static $_arrTypes = array(
         'integer' => 'Nombre entier',
-        'float' => 'Nombre décimal',
-        'string' => 'Chaîne de caractères',
-        'boolean' => 'Booléen',
+        'float' => 'Nombre dÃ©cimal',
+        'string' => 'ChaÃ®ne de caractÃ¨res',
+        'boolean' => 'BoolÃ©en',
         'date' => 'Date'
     );
 
@@ -232,47 +232,46 @@ abstract class dbreport {
     {
         global $objCache;
 
-        // Récupération du paramètre de durée de cache
-        $intCacheLifetime = ploopi_getparam('dbreport_cache_lifetime', ploopi_getmoduleid('dbreport')); // Attention, ici on prend le premier module trouvé, ne fonctionne pas en multi-instance !
+        // RÃ©cupÃ©ration du paramÃ¨tre de durÃ©e de cache
+        $intCacheLifetime = ploopi\param::get('dbreport_cache_lifetime', ploopi\module::getid('dbreport')); // Attention, ici on prend le premier module trouvÃ©, ne fonctionne pas en multi-instance !
 
         // Instanciation du cache
         $objCache = new ploopi_cache($strWsId.','.implode(',', $arrParams), $intCacheLifetime);
 
-        // Lecture du cache, présent ?
+        // Lecture du cache, prÃ©sent ?
         if (!$mixedVar = $objCache->get_var())
         {
-            if (empty($strWsId)) $strError = "Requête non fournie";
+            if (empty($strWsId)) $strError = "RequÃªte non fournie";
             else
             {
                 include_once './modules/dbreport/classes/class_dbreport_query.php';
-                include_once './include/classes/data_object_collection.php';
 
                 set_time_limit(300);
 
                 $mixedVar = null;
 
-                $objDOC = new data_object_collection('dbreport_query');
+                $objDOC = new ploopi\data_object_collection('dbreport_query');
                 $objDOC->add_where('ws_id = %s', $strWsId);
                 $objDOC->add_where('ws_activated = 1');
                 $arrQueries = $objDOC->get_objects();
 
-                if(sizeof($arrQueries) == 1) //  Id de requête unique trouvé
+                if(sizeof($arrQueries) == 1) //  Id de requÃªte unique trouvÃ©
                 {
                     $row = $arrQueries[0]->fields;
 
                     if ($row['ws_code'] == '' || $row['ws_code'] == $strDbreportCode)
                     {
-                        // Lecture de l'IP du client (c'est un tableau il peut en avoir plusieurs à cause notamment des proxies)
+                        // Lecture de l'IP du client (c'est un tableau il peut en avoir plusieurs Ã  cause notamment des proxies)
                         $arrRemoteIp = $_SESSION['ploopi']['remote_ip'];
 
                         if ($row['ws_ip'] == '' || in_array($row['ws_ip'], $arrRemoteIp))
                         {
                             $objDbrQuery = $arrQueries[0];
 
-                            // Génération de la requête SQL
-                            if (!$objDbrQuery->generate($arrParams)) ploopi_die();
+                            // GÃ©nÃ©ration de la requÃªte SQL
+                            if (!$objDbrQuery->generate($arrParams)) ploopi\system::kill();
 
-                            // Exécution de la requête et stockage du résultat
+                            // ExÃ©cution de la requÃªte et stockage du rÃ©sultat
                             if ($strFormat != 'sql') $objDbrQuery->exec($intCacheLifetime);
 
                             switch($strFormat)
@@ -290,29 +289,33 @@ abstract class dbreport {
                                         td, th {padding:2px 4px;border:1px solid #888;}
                                         th {background-color:#ddd;}
                                         </style><body>
-                                    '.ploopi_array2html($objDbrQuery->getresult()).'</body></html>';
+                                    '.ploopi\arr::tohtml($objDbrQuery->getresult()).'</body></html>';
                                 break;
 
                                 case 'xls':
                                     include_once './include/functions/array.php';
-                                    $mixedVar = ploopi_array2excel($objDbrQuery->getresult(), true, 'dbreport.xls', 'query', null, array('writer' => 'excel5'));
+                                    $mixedVar = ploopi\arr::toexcel($objDbrQuery->getresult(), true, 'dbreport.xls', 'query', null, array('writer' => 'excel5'));
                                 break;
 
                                 case 'xlsx':
                                     include_once './include/functions/array.php';
-                                    $mixedVar = ploopi_array2excel($objDbrQuery->getresult(), true, 'dbreport.xlsx', 'query', null, array('writer' => 'excel2007'));
+                                    $mixedVar = ploopi\arr::toexcel($objDbrQuery->getresult(), true, 'dbreport.xlsx', 'query', null, array('writer' => 'excel2007'));
                                 break;
 
                                 case 'sxc':
                                 case 'ods':
+                                    include_once './include/functions/array.php';
+                                    $mixedVar = ploopi\arr::toexcel($objDbrQuery->getresult(), true, 'dbreport.ods', 'query', null, array('writer' => 'ods'));
+                                break;
+
                                 case 'pdf':
                                     include_once './include/classes/odf.php';
 
-                                    // Génération du fichier XLSX
-                                    $strXlsContent = ploopi_array2excel($objDbrQuery->getresult(), true,  'dbreport.xlsx', 'query', null, array('writer' => 'excel2007'));
+                                    // GÃ©nÃ©ration du fichier XLSX
+                                    $strXlsContent = ploopi\arr::toexcel($objDbrQuery->getresult(), true,  'dbreport.xlsx', 'query', null, array('writer' => 'excel2007'));
 
                                     // Instanciation du convertisseur ODF
-                                    $objOdfConverter = new odf_converter(ploopi_getparam('system_webservice_jodconverter', ploopi_getmoduleid('system')));
+                                    $objOdfConverter = new odf_converter(ploopi\param::get('system_webservice_jodconverter', ploopi\module::getid('system')));
 
                                     switch($strFormat)
                                     {
@@ -329,28 +332,28 @@ abstract class dbreport {
                                         break;
                                     }
 
-                                    // Conversion du document dans le format sélectionné
+                                    // Conversion du document dans le format sÃ©lectionnÃ©
                                     $mixedVar = $objOdfConverter->convert($strXlsContent, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', $strOuputMime);
                                 break;
 
                                 case 'csv':
                                     include_once './include/functions/array.php';
-                                    $mixedVar = ploopi_array2csv($objDbrQuery->getresult());
+                                    $mixedVar = ploopi\arr::tocsv($objDbrQuery->getresult());
                                 break;
 
                                 case 'json':
                                     include_once './include/functions/array.php';
-                                    $mixedVar = ploopi_array2json($objDbrQuery->getresult());
+                                    $mixedVar = ploopi\arr::tojson($objDbrQuery->getresult());
                                 break;
 
                                 case 'json_opt':
                                     include_once './include/functions/array.php';
-                                    $mixedVar = ploopi_array2json($objDbrQuery->getresult_opt());
+                                    $mixedVar = ploopi\arr::tojson($objDbrQuery->getresult_opt());
                                 break;
 
                                 case 'xml':
                                     include_once './include/functions/array.php';
-                                    $mixedVar = ploopi_array2xml($objDbrQuery->getresult());
+                                    $mixedVar = ploopi\arr::toxml($objDbrQuery->getresult());
                                 break;
 
                                 case 'ser':
@@ -376,7 +379,7 @@ abstract class dbreport {
                 else $strError = "Identifiant &laquo; {$strWsId} &raquo; incorrect";
             }
 
-            if (!empty($strError)) ploopi_die($strError);
+            if (!empty($strError)) ploopi\system::kill($strError);
 
             // Sauvegarde de la variable en cache
             $objCache->save_var($mixedVar);
@@ -395,7 +398,7 @@ abstract class dbreport {
      */
     public static function getTableInfo($strTableName) {
 
-        $objQuery = new ploopi_query_select();
+        $objQuery = new ploopi\query_select();
         $objQuery->add_raw("SHOW TABLE STATUS WHERE name = %s", $strTableName);
         $objRs = $objQuery->execute();
 
@@ -404,7 +407,7 @@ abstract class dbreport {
 
             $rowInfo = $objRs->fetchrow();
 
-            $objQuery = new ploopi_query_select();
+            $objQuery = new ploopi\query_select();
             $objQuery->add_raw("SHOW INDEX FROM %r WHERE Key_name = 'PRIMARY'", $strTableName);
             $objRs = $objQuery->execute();
             $rowInfo['Primary'] = '';
@@ -429,7 +432,7 @@ abstract class dbreport {
 
         $arrFields = array();
 
-        $objQuery = new ploopi_query_select();
+        $objQuery = new ploopi\query_select();
         $objQuery->add_raw("SHOW FULL COLUMNS FROM `%r`", $strTableName);
         $objRs = $objQuery->execute();
         while ($row = $objRs->fetchrow()) $arrFields[$row['Field']] = $row;
@@ -446,7 +449,7 @@ abstract class dbreport {
 
         $arrIndexes = array();
 
-        $objQuery = new ploopi_query_select();
+        $objQuery = new ploopi\query_select();
         $objQuery->add_raw("SHOW INDEX FROM `%r`", $strTableName);
         $objRs = $objQuery->execute();
         while ($row = $objRs->fetchrow()) $arrIndexes[$row['Column_name']] = $row;
