@@ -106,7 +106,7 @@ function characterData_mod($parser, $data)
 
 function xmlparser_mod()
 {
-    $xml_parser = xml_parser_create('ISO-8859-1');
+    $xml_parser = xml_parser_create('UTF-8');
 
     xml_parser_set_option($xml_parser, XML_OPTION_CASE_FOLDING, 1);
     xml_set_element_handler($xml_parser, "startElement_mod", "endElement_mod");

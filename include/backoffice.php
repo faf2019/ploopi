@@ -320,7 +320,7 @@ else
 if (!empty($_SESSION['ploopi']['updateprofile']) && ploopi\param::get('system_profile_edit_allowed', _PLOOPI_MODULE_SYSTEM) == '1') {
     $ploopi_additional_javascript .= "
         jQuery(function() {
-            ploopi.popup.show('', 750, null, true, 'system_popup_update_profile')
+            ploopi.popup.show('', 950, null, true, 'system_popup_update_profile')
             ploopi.xhr.todiv('admin-light.php', '".ploopi\crypt::queryencode("ploopi_op=system_update_profile")."', 'system_popup_update_profile');
         });
     ";

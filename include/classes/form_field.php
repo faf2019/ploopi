@@ -122,7 +122,8 @@ class form_field extends form_element
         'onmouseover' => null,
         'onmouseup' => null,
         'min' => null,
-        'max' => null
+        'max' => null,
+        'dataset' => null
     );
 
     /**

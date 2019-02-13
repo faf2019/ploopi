@@ -43,7 +43,7 @@ class data_object
      * @var string
      */
 
-    private $classname;
+    protected $classname;
 
     /**
      * Nom de la table
@@ -51,7 +51,7 @@ class data_object
      * @var string
      */
 
-    private $tablename;
+    protected $tablename;
 
     /**
      * Nom de la table (intégration SQL)
@@ -59,7 +59,7 @@ class data_object
      * @var string
      */
 
-    private $tablename_quoted;
+    protected $tablename_quoted;
 
     /**
      * Tableau indexé des champs qui composent la clé primaire
@@ -67,7 +67,7 @@ class data_object
      * @var array
      */
 
-    private $idfields;
+    protected $idfields;
 
     /**
      * Tableau associatif des valeurs qui composent la clé primaire
@@ -75,7 +75,7 @@ class data_object
      * @var array
      */
 
-    private $id;
+    protected $id;
 
     /**
      * Objet de connexion à la base de données

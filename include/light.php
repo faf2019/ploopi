@@ -59,17 +59,18 @@ if ($_SESSION['ploopi']['mode'] == 'backoffice')
         );
 
         // PLOOPI JS
-        $template_body->assign_block_vars('ploopi_js',
-            array(
-            'PATH' => './lib/protoaculous/protoaculous.min.js?v='.urlencode(_PLOOPI_VERSION.','._PLOOPI_REVISION)
-            )
-        );
+        $template_body->assign_block_vars('ploopi_js', array(
+            'PATH' => './vendor/components/jquery/jquery.min.js?v='.urlencode(_PLOOPI_VERSION.','._PLOOPI_REVISION)
+        ));
 
-        $template_body->assign_block_vars('ploopi_js',
-            array(
-                'PATH' => './js/functions.pack.js?v='.urlencode(_PLOOPI_VERSION.','._PLOOPI_REVISION)
-            )
-        );
+        $template_body->assign_block_vars('ploopi_js', array(
+            'PATH' => './lib/jquery-ui/jquery-ui.min.js?v='.urlencode(_PLOOPI_VERSION.','._PLOOPI_REVISION)
+        ));
+
+
+        $template_body->assign_block_vars('ploopi_js', array(
+            'PATH' => './js/functions.pack.js?v='.urlencode(_PLOOPI_VERSION.','._PLOOPI_REVISION)
+        ));
 
         $ploopi_additional_head = '';
         $ploopi_additional_javascript = '';

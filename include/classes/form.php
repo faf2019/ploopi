@@ -339,7 +339,7 @@ class form
                 {
                     $strFormField = "form['{$objField->_strName}']";
 
-                    $strCond = "$('{$objField->_strId}_form').style.display == 'none' ||";
+                    $strCond = "jQuery('#{$objField->_strId}_form').css('display') == 'none' ||";
 
                     switch ($objField->_strType)
                     {
@@ -372,7 +372,7 @@ class form
                         break;
 
                         case 'datetime':
-                            $strCond = "$('{$objField->_strId}_form').style.display == 'none' ||";
+                            $strCond = "jQuery('#{$objField->_strId}_form').css('display') == 'none' ||";
 
                             $strFormField = "form['{$objField->_strName}_date']";
                             $strFormat = ($objField->_arrOptions['required'] ? 'date' : 'emptydate');

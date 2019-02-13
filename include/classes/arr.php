@@ -191,7 +191,7 @@ abstract class arr
 
     public static function toexcel($arrArray, $booHeader = true, $strFileName = 'document.xlsx', $strSheetName = 'Feuille', $arrDataFormats = null, $arrOptions = null)
     {
-        $objWorkBook = new \PHPExcel();
+        $objWorkBook = new \PhpOffice\PhpSpreadsheet\Spreadsheet;
         $objWorkSheet = $objWorkBook->getActiveSheet();
 
         $arrDefautOptions = array(
@@ -199,7 +199,7 @@ abstract class arr
             'fitpage_width' => true,
             'fitpage_height' => false,
             'tofile' => false,
-            'setborder' => false,
+            'setborder' => true,
             'writer' => 'excel2007' // excel2007, excel5, csv, html, pdf (instable)
         );
 
@@ -230,11 +230,11 @@ abstract class arr
                 'bold'  => false,
                 'size'  => 10,
                 'name'  => 'Arial',
-                'color' => array('rgb' => '000000')
+                'color' => array('argb' => '000000')
             ),
             'alignment' => array(
-                'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
-                'vertical' => \PHPExcel_Style_Alignment::VERTICAL_CENTER,
+                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT,
+                'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
                 'wrap' => true,
                 'shrinkToFit' => true,
             )
@@ -246,12 +246,12 @@ abstract class arr
                 'bold'  => true,
             ),
             'alignment' => array(
-                'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
                 'wrap' => true,
                 'shrinkToFit' => true,
             ),
             'fill' => array(
-                'type' => \PHPExcel_Style_Fill::FILL_SOLID,
+                'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
                 'color'=> array('rgb' => 'DDDDDD')
             )
         );
@@ -260,8 +260,8 @@ abstract class arr
         if ($arrOptions['setborder']) {
 
             $rowTitleStyle['borders'] = array(
-                'allborders' => array(
-                    'style' => \PHPExcel_Style_Border::BORDER_THIN,
+                'outline' => array(
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
                     'color' => array('rgb' => '000000')
                 )
             );
@@ -269,7 +269,7 @@ abstract class arr
         }
 
         // Style par défaut pour la feuille
-        $objWorkSheet->getDefaultStyle()->applyFromArray($rowDefaultStyle);
+        $objWorkSheet->getParent()->getDefaultStyle()->applyFromArray($rowDefaultStyle);
 
         // Titre
         $objWorkSheet->setTitle($strSheetName);
@@ -279,7 +279,7 @@ abstract class arr
         $objWorkSheet->getPageSetup()->setFitToHeight($arrOptions['fitpage_height']);
 
         // Paysage
-        if ($arrOptions['landscape']) $objWorkSheet->getPageSetup()->setOrientation(\PHPExcel_Worksheet_PageSetup::ORIENTATION_LANDSCAPE);
+        if ($arrOptions['landscape']) $objWorkSheet->getPageSetup()->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
 
         if (!empty($arrArray))
         {
@@ -293,7 +293,7 @@ abstract class arr
             if (!empty($arrOptions['headers'])) {
                 foreach($arrOptions['headers'] as $strHeader) {
 
-                    $objWorkSheet->setCellValueByColumnAndRow(0, $intLine, $strHeader);
+                    $objWorkSheet->setCellValueByColumnAndRow(1, $intLine, $strHeader);
 
                     $objWorkSheet->getStyle("A{$intLine}:{$chrMaxCol}{$intLine}")->applyFromArray($rowTitleStyle);
                     $objWorkSheet->mergeCells("A{$intLine}:{$chrMaxCol}{$intLine}");
@@ -305,13 +305,21 @@ abstract class arr
             // Ajout de la ligne d'entête
             if ($booHeader)
             {
-                $intCol = -1;
+                $intCol = 0;
                 foreach(array_keys(reset($arrArray)) as $strKey) $objWorkSheet->setCellValueByColumnAndRow(++$intCol, $intLine, $arrDataFormats[$strKey]['title']);
 
                 // Calcul colonne type Excel "Bijective base-26"
                 $chrCol = ($intCol>25 ? chr(64+floor($intCol/26)) : '').chr(65+$intCol%26);
 
-                $objWorkSheet->getStyle("A{$intLine}:{$chrCol}{$intLine}")->applyFromArray($rowTitleStyle);
+                for ($c = 0; $c < $intCol; $c++) {
+                    $chrCol = ($c>25 ? chr(64+floor($c/26)) : '').chr(65+$c%26);
+                    $objWorkSheet->getStyle("A{$intLine}:{$chrCol}{$intLine}")->applyFromArray($rowTitleStyle);
+                }
+
+                //$objWorkSheet->getStyle("A{$intLine}:{$chrCol}{$intLine}")->applyFromArray($rowTitleStyle);
+                //echo "A{$intLine}:{$chrCol}{$intLine}";
+                //die();
+
 
                 $objWorkSheet->getRowDimension(1)->setRowHeight(24);
 
@@ -321,7 +329,7 @@ abstract class arr
             // Traitement des contenus
             foreach($arrArray as $row)
             {
-                $intCol = 0;
+                $intCol = 1;
                 foreach($row as $strKey => $mixValue)
                 {
                     if (is_array($mixValue)) {
@@ -338,7 +346,7 @@ abstract class arr
 
                     switch($arrDataFormats[$strKey]['type']) {
                         case 'string':
-                            $objWorkSheet->setCellValueExplicit("{$chrCol}{$intLine}", $strValue, \PHPExcel_Cell_DataType::TYPE_STRING);
+                            $objWorkSheet->setCellValueExplicit("{$chrCol}{$intLine}", $strValue, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
                         break;
 
                         default:
@@ -379,8 +387,8 @@ abstract class arr
                 if ($arrOptions['setborder']) {
 
                     $rowStyle['borders'] = array(
-                        'allborders' => array(
-                            'style' => \PHPExcel_Style_Border::BORDER_THIN,
+                        'outline' => array(
+                            'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
                             'color' => array('rgb' => '000000')
                         )
                     );
@@ -412,7 +420,7 @@ abstract class arr
                 // Alignement à droite des dates, valeurs numériques
                 if ($arrDataFormats[$strKey]['type'] != 'string') {
                     $rowStyle['alignment'] = array(
-                        'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_RIGHT,
+                        'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT,
                     );
                 }
 
@@ -432,36 +440,44 @@ abstract class arr
         switch($arrOptions['writer']) {
 
             case 'excel5':
-                $objWriter = new \PHPExcel_Writer_Excel5($objWorkBook);
+                $objWriter = new \PhpOffice\PhpSpreadsheet\Writer\Xls($objWorkBook);
             break;
 
             case 'pdf':
-                $objWriter = new \PHPExcel_Writer_PDF($objWorkBook);
+                $objWriter = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($objWorkBook, 'Mpdf');
+                //$objWriter = new \PhpOffice\PhpSpreadsheet\Writer\Mpdf($objWorkBook);
                 $objWriter->setSheetIndex(0);
+                /*
                 header('Content-type: application/pdf');
                 header("Content-Disposition:inline;filename={$strFileName}");
 
                 $objWriter->save('php://output');
                 die();
+                */
 
 
             break;
 
             case 'csv':
+                $objWriter = new \PhpOffice\PhpSpreadsheet\Writer\Csv($objWorkBook);
                 $objWriter = new \PHPExcel_Writer_CSV($objWorkBook);
                 $objWriter->setSheetIndex(0);
                 $writer->setDelimiter(",");
-
             break;
 
             case 'html':
-                $objWriter = new \PHPExcel_Writer_HTML($objWorkBook);
+                $objWriter = new \PhpOffice\PhpSpreadsheet\Writer\Html($objWorkBook);
                 $objWriter->setSheetIndex(0);
+            break;
+
+            case 'ods':
+                $objWriter = new \PhpOffice\PhpSpreadsheet\Writer\Ods($objWorkBook);
             break;
 
             case 'excel2007':
             default:
-                $objWriter = new \PHPExcel_Writer_Excel2007($objWorkBook);
+                $objWriter = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($objWorkBook);
+                //$objWriter = new \PHPExcel_Writer_Excel2007($objWorkBook);
                 $objWriter->setOffice2003Compatibility(true);
             break;
 

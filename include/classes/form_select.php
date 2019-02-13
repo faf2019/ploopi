@@ -72,7 +72,7 @@ class form_select extends form_field
 
         parent::__construct('select', $strLabel, $arrValues, $strName, $strId, is_null($arrOptions) ? self::$_arrDefaultOptions : array_merge(self::$_arrDefaultOptions, $arrOptions));
 
-        $this->_arrSelected = arr::map('form::htmlentities', $arrSelected);
+        $this->_arrSelected = arr::map('ploopi\form::htmlentities', $arrSelected);
     }
 
     /**
@@ -90,7 +90,7 @@ class form_select extends form_field
         $strSize = is_null($this->_arrOptions['size']) ? '' : " size=\"{$this->_arrOptions['size']}\"";
         $strMultiple = $this->_arrOptions['multiple'] ? " multiple=\"multiple\"" : '';
 
-        $strOutput .= "<select name=\"{$this->_strName}\" id=\"{$this->_strId}\" tabindex=\"{$intTabindex}\" {$strProperties}{$strSize}{$strMultiple}{$strEvents} />";
+        $strOutput .= "<select name=\"{$this->_strName}\" id=\"{$this->_strId}\" tabindex=\"{$intTabindex}\" {$strProperties}{$strSize}{$strMultiple}{$strEvents}>";
 
         $strOutput .= $this->_renderOptions($this->_arrValues, $intTabindex);
 

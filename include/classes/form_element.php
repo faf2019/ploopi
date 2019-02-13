@@ -202,16 +202,28 @@ abstract class form_element
     {
         $arrParentOptions = $this->_objParentForm->getOptions();
 
+        $strDataSet = '';
+        if (!empty($this->_arrOptions['dataset']) && is_array($this->_arrOptions['dataset'])) {
+            foreach($this->_arrOptions['dataset'] as $k => $v) {
+                $strDataSet .= self::_getProperty('data-'.str::tourl($k), $v);
+            }
+        }
+
         return
+            $strDataSet.
             self::_getProperty('style',  is_null($strStyle) ? $this->_arrOptions['style'] : $strStyle).
             self::_getProperty('class',  is_null($strClass) ? $this->_arrOptions['class'] : $strClass).
             self::_getProperty('readonly',  $arrParentOptions['readonly'] || $this->_arrOptions['readonly'] ? 'readonly' : null).
             self::_getProperty('disabled',  $arrParentOptions['disabled'] || $this->_arrOptions['disabled'] ? 'disabled' : null).
+            self::_getProperty('required',  isset($this->_arrOptions['required']) && $this->_arrOptions['required'] ? 'required' : null).
             self::_getProperty('autofocus',  $this->_arrOptions['autofocus'] ? 'autofocus' : null).
             self::_getProperty('autocomplete',  isset($this->_arrOptions['autocomplete']) && !$this->_arrOptions['autocomplete'] ? 'off' : null).
             self::_getProperty('autocorrect',  isset($this->_arrOptions['autocorrect']) && !$this->_arrOptions['autocorrect'] ? 'off' : null).
             self::_getProperty('autocapitalize',  isset($this->_arrOptions['autocapitalize']) && !$this->_arrOptions['autocapitalize'] ? 'off' : null).
-            self::_getProperty('spellcheck',  isset($this->_arrOptions['spellcheck']) && !$this->_arrOptions['spellcheck'] ? 'false' : null);
+            self::_getProperty('spellcheck',  isset($this->_arrOptions['spellcheck']) && !$this->_arrOptions['spellcheck'] ? 'false' : null).
+            self::_getProperty('accept',  isset($this->_arrOptions['accept']) ? $this->_arrOptions['accept'] : null).
+            self::_getProperty('title',  isset($this->_arrOptions['title']) ? form::htmlentities($this->_arrOptions['title']) : null).
+            self::_getProperty('pattern',  isset($this->_arrOptions['pattern']) ? $this->_arrOptions['pattern'] : null);
     }
 
     /**
