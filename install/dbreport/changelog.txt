@@ -1,3 +1,9 @@
+== Module DBREPORT - version 2.0.5 ====================================================
+
+2019-02-26  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Possibilité d'utiliser un filtre brut (sans application des apostrophes, notamment pour utiliser des fonctions)
+
 == Module DBREPORT - version 2.0.4 ====================================================
 
 2019-01-14  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

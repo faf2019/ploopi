@@ -528,7 +528,7 @@ class dbreport_query extends data_object
 
         // Clonage de la relation avec "ploopi_mod_dbreport_queryfield"
         $objQuerySel = new ploopi_query_select();
-        $objQuerySel->add_select('`id`, `tablename`, `id_module_type`, `fieldname`, `label`, `function`, `visible`, `sort`, `criteria`, `type_criteria`, `or`, `type_or`, `intervals`, `operation`, `position`, `series`');
+        $objQuerySel->add_select('`id`, `tablename`, `id_module_type`, `fieldname`, `label`, `function`, `visible`, `sort`, `criteria`, `type_criteria`, `raw_criteria`, `or`, `type_or`, `raw_or`, `intervals`, `operation`, `position`, `series`');
         $objQuerySel->add_from("ploopi_mod_dbreport_queryfield");
         $objQuerySel->add_where('id_query = %d', $intClonedId);
         $objQuerySel->add_orderby('position');
@@ -822,7 +822,7 @@ class dbreport_query extends data_object
                 }
             }
 
-            // Permet de déterminé sur la clause OR est applicable ou non sur ce champ
+            // Permet de déterminer sur la clause OR est applicable ou non sur ce champ
             $booOrIsValid = ($row['type_criteria'] != '') && ($row['type_or'] != '') && ($row['criteria'] != '%') && ($row['or'] != '%');
 
             foreach(array('criteria', 'or') as $strCrit)
@@ -831,6 +831,9 @@ class dbreport_query extends data_object
                 {
                     if ($row[$strCrit] != '%')
                     {
+                        $strFormat = '%s';
+                        if ($row["raw_{$strCrit}"]) $strFormat = '%r';
+
                         $arrCriteria = ($row["type_{$strCrit}"] == 'between') ? explode('-',$row[$strCrit]) : null; // Explosition du critère si BETWEEN
 
                         if ($row["type_{$strCrit}"] != 'between' || ($row["type_{$strCrit}"] == 'between' && sizeof($arrCriteria) == 2))
@@ -882,7 +885,7 @@ class dbreport_query extends data_object
                                     }
                                     elseif ($row["type_{$strCrit}"] == 'between')
                                     {
-                                        $strSqlWhere .= "BETWEEN %s AND %s";
+                                        $strSqlWhere .= "BETWEEN {$strFormat} AND {$strFormat}";
                                         $arrWhereParams[] = ploopi_local2timestamp($arrCriteria[0]);
                                         $arrWhereParams[] = ploopi_local2timestamp($arrCriteria[1]);
                                     }
@@ -897,7 +900,7 @@ class dbreport_query extends data_object
                                     }
                                     elseif ($row["type_{$strCrit}"] == 'between')
                                     {
-                                        $strSqlWhere .= "BETWEEN %s AND %s";
+                                        $strSqlWhere .= "BETWEEN {$strFormat} AND {$strFormat}";
                                         $arrWhereParams[] = $arrCriteria[0];
                                         $arrWhereParams[] = $arrCriteria[1];
                                     }
@@ -909,22 +912,22 @@ class dbreport_query extends data_object
                                     switch($row["type_{$strCrit}"])
                                     {
                                         case 'like':
-                                            $strSqlWhere .= "LIKE %s";
+                                            $strSqlWhere .= "LIKE {$strFormat}";
                                             $arrWhereParams[] = "%{$strValue}%";
                                         break;
 
                                         case 'begining':
-                                            $strSqlWhere .= "LIKE %s";
+                                            $strSqlWhere .= "LIKE {$strFormat}";
                                             $arrWhereParams[] = "{$strValue}%";
                                         break;
 
                                         case 'ending':
-                                            $strSqlWhere .= "LIKE %s";
+                                            $strSqlWhere .= "LIKE {$strFormat}";
                                             $arrWhereParams[] = "%{$strValue}";
                                         break;
 
                                         default:
-                                            $strSqlWhere .= $row["type_{$strCrit}"].' %s';
+                                            $strSqlWhere .= $row["type_{$strCrit}"]." {$strFormat}";
                                             $arrWhereParams[] = $strValue;
                                         break;
                                     }
@@ -981,7 +984,7 @@ class dbreport_query extends data_object
                                     }
                                     elseif ($row["type_{$strCrit}"] == 'between')
                                     {
-                                        $strSqlHaving .= "BETWEEN %s AND %s";
+                                        $strSqlHaving .= "BETWEEN {$strFormat} AND {$strFormat}";
                                         $arrHavingParams[] = ploopi_local2timestamp($arrCriteria[0]);
                                         $arrHavingParams[] = ploopi_local2timestamp($arrCriteria[1]);
                                     }
@@ -996,7 +999,7 @@ class dbreport_query extends data_object
                                     }
                                     elseif ($row["type_{$strCrit}"] == 'between')
                                     {
-                                        $strSqlHaving .= "BETWEEN %s AND %s";
+                                        $strSqlHaving .= "BETWEEN {$strFormat} AND {$strFormat}";
                                         $arrHavingParams[] = $arrCriteria[0];
                                         $arrHavingParams[] = $arrCriteria[1];
                                     }
@@ -1008,22 +1011,22 @@ class dbreport_query extends data_object
                                     switch($row["type_{$strCrit}"])
                                     {
                                         case 'like':
-                                            $strSqlHaving .= "LIKE %s";
+                                            $strSqlHaving .= "LIKE {$strFormat}";
                                             $arrHavingParams[] = "%{$strValue}%";
                                         break;
 
                                         case 'begining':
-                                            $strSqlHaving .= "LIKE %s";
+                                            $strSqlHaving .= "LIKE {$strFormat}";
                                             $arrHavingParams[] = "{$strValue}%";
                                         break;
 
                                         case 'ending':
-                                            $strSqlHaving .= "LIKE %s";
+                                            $strSqlHaving .= "LIKE {$strFormat}";
                                             $arrHavingParams[] = "%{$strValue}";
                                         break;
 
                                         default:
-                                            $strSqlHaving .= $row["type_{$strCrit}"].' %s';
+                                            $strSqlHaving .= $row["type_{$strCrit}"]." {$strFormat}";
                                             $arrHavingParams[] = $strValue;
                                         break;
                                     }
