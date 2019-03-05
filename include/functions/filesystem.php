@@ -202,7 +202,7 @@ function ploopi_downloadfile($filepath, $destfilename, $deletefile = false, $att
 
         $chunksize = 1*(1024*1024);
 
-        header('Content-Type: ' . ploopi_getmimetype($destfilename));
+        header('Content-Type: ' . ($ct = ploopi_getmimetype($destfilename)));
         header('Content-Length: '.$size);
 
         if (ploopi_file_getextension($destfilename) == 'svgz') header('Content-Encoding: gzip');
@@ -210,10 +210,18 @@ function ploopi_downloadfile($filepath, $destfilename, $deletefile = false, $att
 
         if ($attachment) header("Content-disposition: attachment; filename=\"{$destfilename}\"");
         else header("Content-disposition: inline; filename=\"{$destfilename}\"");
-        header('Expires: Sat, 1 Jan 2000 05:00:00 GMT');
+
         header('Accept-Ranges: bytes');
-        header('Cache-control: private');
         header('Pragma: private');
+
+        if (current(explode('/', $ct)) == 'image') {
+            header("Expires: " . date(DATE_RFC822, time()+315360000));
+            header('Cache-Control: private, max-age=315360000, pre-check=315360000');
+        }
+        else {
+            header('Expires: Sat, 1 Jan 2000 05:00:00 GMT');
+            header('Cache-control: private');
+        }
 
         ob_start();
         if ($fp = fopen($filepath, 'r'))
