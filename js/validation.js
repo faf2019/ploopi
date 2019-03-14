@@ -331,18 +331,18 @@ function ploopi_validatefield(field_label, field_object, field_type)
         field_value = field_object.value;
         field_label = field_label.stripTags();
 
-        /* Vérifie qu'un élément de liste a été sélectionné */
+        /* Vï¿½rifie qu'un ï¿½lï¿½ment de liste a ï¿½tï¿½ sï¿½lectionnï¿½ */
         if (field_type == 'selected')
         {
             msg = lstmsg[9];
             ok = (field_object.selectedIndex >= 0 && field_object.value != '');
         }
 
-        /* Vérifie qu'une checkbox (ou bouton radio) à été cochée */
+        /* Vï¿½rifie qu'une checkbox (ou bouton radio) ï¿½ ï¿½tï¿½ cochï¿½e */
         if (field_type == 'checked')
         {
             ok = false;
-            if(field_object.length == undefined) // Une seule case à cocher
+            if(field_object.length == undefined) // Une seule case ï¿½ cocher
             {
                 msg = lstmsg[14];
                 if (field_object.checked) ok = true;
@@ -357,7 +357,7 @@ function ploopi_validatefield(field_label, field_object, field_type)
             }
         }
 
-        /* Vérifie que le champ contient une numéro de téléphone valide */
+        /* Vï¿½rifie que le champ contient une numï¿½ro de tï¿½lï¿½phone valide */
         if (field_type == 'phone' || field_type == 'emptyphone')
         {
             if (field_type == 'emptyphone' && field_value.length == 0)
@@ -368,18 +368,18 @@ function ploopi_validatefield(field_label, field_object, field_type)
             if (!ok) msg = (field_type == 'phone' && field_value.length == 0) ? lstmsg[4] : lstmsg[11];
         }
 
-        /* Vérifie que le champ contient une adresse email valide */
+        /* Vï¿½rifie que le champ contient une adresse email valide */
         if (field_type == 'email' || field_type == 'emptyemail')
         {
             if(field_type == 'emptyemail' && field_value.length == 0)
                 ok = true;
             else
-                ok = (field_value.search(/^[a-zA-Z0-9]{1}([a-zA-Z0-9._-])+@[a-zA-Z0-9]{1}([a-zA-Z0-9.-])+\.[a-zA-Z]{2,4}$/) != -1);
+                ok = (field_value.search(/^[a-zA-Z0-9]{1}([a-zA-Z0-9._-])+@[a-zA-Z0-9]{1}([a-zA-Z0-9.-])+\.[a-zA-Z]{2,64}$/) != -1);
 
             if (!ok) msg = (field_type == 'email' && field_value.length == 0) ? lstmsg[4] : lstmsg[0];
         }
 
-        /* Vérifie que le champ contient une URL valide
+        /* Vï¿½rifie que le champ contient une URL valide
          * ftp, http ou https, avec ou sans login/mot de passe, avec ou sans numero de port.
          */
         if (field_type == 'url' || field_type == 'emptyurl')
@@ -392,7 +392,7 @@ function ploopi_validatefield(field_label, field_object, field_type)
             if (!ok) msg = (field_type == 'url' && field_value.length == 0) ? lstmsg[4] : lstmsg[13];
         }
 
-        /* Vérifie que le champ contient une couleur valide */
+        /* Vï¿½rifie que le champ contient une couleur valide */
         if (field_type == 'color')
         {
             var color = new ploopi_rgbcolor(field_value);
@@ -403,14 +403,14 @@ function ploopi_validatefield(field_label, field_object, field_type)
             }
         }
 
-        /* Vérifie que le champ contient une chaîne non vide (espace non compris) */
+        /* Vï¿½rifie que le champ contient une chaï¿½ne non vide (espace non compris) */
         if (field_type == 'string')
         {
             ok = (field_value.replace(/(^\s*)|(\s*$)/g,'').length > 0)
             if (!ok) msg = lstmsg[4];
         }
 
-        /* Vérifie que le champ contient une valeur entière ou vide */
+        /* Vï¿½rifie que le champ contient une valeur entiï¿½re ou vide */
         if (field_type == 'int' || field_type == 'emptyint')
         {
             if (field_type == 'emptyint' && field_value.length == 0)
@@ -421,7 +421,7 @@ function ploopi_validatefield(field_label, field_object, field_type)
             if (!ok) msg = (field_type == 'int' && field_value.length == 0) ? lstmsg[4] : lstmsg[5];
         }
 
-        /* Vérifie que le champ contient une valeur réelle ou vide */
+        /* Vï¿½rifie que le champ contient une valeur rï¿½elle ou vide */
 
         if (field_type == 'float' || field_type == 'emptyfloat')
         {
@@ -433,7 +433,7 @@ function ploopi_validatefield(field_label, field_object, field_type)
             if (!ok) msg = (field_type == 'float' && field_value.length == 0) ? lstmsg[4] : lstmsg[6];
         }
 
-        /* Vérifie que le champ contient une date valide ou vide */
+        /* Vï¿½rifie que le champ contient une date valide ou vide */
         if (field_type == 'date' || field_type == 'emptydate')
         {
             if (field_type == 'emptydate' && field_value.length == 0)
@@ -453,7 +453,7 @@ function ploopi_validatefield(field_label, field_object, field_type)
             if (!ok) msg = (field_type == 'date' && field_value.length == 0) ? lstmsg[4] : lstmsg[7];
         }
 
-        /* Vérifie que le champ contient une heure valide ou vide */
+        /* Vï¿½rifie que le champ contient une heure valide ou vide */
         if (field_type == 'time' || field_type == 'emptytime')
         {
             if (field_type == 'emptytime' && field_value.length == 0)
@@ -464,7 +464,7 @@ function ploopi_validatefield(field_label, field_object, field_type)
             if (!ok) msg = (field_type == 'time' && field_value.length == 0) ? lstmsg[4] : lstmsg[8];
         }
 
-        /* Vérifie que le champ captcha est correct */
+        /* Vï¿½rifie que le champ captcha est correct */
         if (field_type == 'captcha')
         {
             ok = false;

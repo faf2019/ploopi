@@ -138,7 +138,7 @@ function ploopi_skin_array_refresh(array_id, array_orderby, array_page, callback
         encoding:   'iso-8859-15',
         onSuccess:  function(transport) {
             ploopi_innerHTML('ploopi_explorer_main_'+array_id, transport.responseText);
-            if (callback != '') eval(callback+'()');
+            if (callback != '') window[callback](array_id, array_orderby, array_page);
         }
     });
 }

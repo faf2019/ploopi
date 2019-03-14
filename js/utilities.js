@@ -127,22 +127,24 @@ function ploopi_innerHTML(div, html)
 /**
  * Insertion d'un texte dans un champ à la position du curseur
  */
-function ploopi_insertatcursor(field, value) 
+function ploopi_insertatcursor(field, value)
 {
     //IE support
-    if (document.selection) 
+    if (document.selection)
     {
         field.focus();
         sel = document.selection.createRange();
         sel.text = value;
     }
     //MOZILLA/NETSCAPE support
-    else if (field.selectionStart || field.selectionStart == '0') 
+    else if (field.selectionStart || field.selectionStart == '0')
     {
         var startPos = field.selectionStart;
         var endPos = field.selectionEnd;
         field.value = field.value.substring(0, startPos) + value + field.value.substring(endPos, field.value.length);
-    } 
+        field.selectionStart = startPos + value.length;
+        field.selectionEnd = startPos + value.length;
+    }
     else
     {
        field.value += value;
