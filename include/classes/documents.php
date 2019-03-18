@@ -518,18 +518,19 @@ abstract class documents {
         <div class="documents_browser">
 
             <div class="documents_path">
-                <?php
-                if ($_SESSION['documents'][$documents_id]['rights']['DOCUMENT_CREATE'])
-                {
-                    ?><a title="<?php echo $_SESSION['documents'][$documents_id]['new_files']; ?>" href="javascript:void(0);" style="float:right;" onclick="javascript:ploopi.documents.openfile('<?php echo crypt::queryencode("ploopi_op=documents_addmultiplefiles&currentfolder={$currentfolder}&documents_id={$documents_id}&documentsfile_id="); ?>', event);"><img src="<?php echo $_SESSION['documents'][$documents_id]['new_files_img']; ?>"></a><?php
-                    ?><a title="<?php echo $_SESSION['documents'][$documents_id]['new_file']; ?>" href="javascript:void(0);" style="float:right;" onclick="javascript:ploopi.documents.openfile('<?php echo crypt::queryencode("ploopi_op=documents_openfile&currentfolder={$currentfolder}&documents_id={$documents_id}&documentsfile_id="); ?>', event);"><img src="<?php echo $_SESSION['documents'][$documents_id]['new_file_img']; ?>"></a><?php
-                }
-                if ($_SESSION['documents'][$documents_id]['rights']['FOLDER_CREATE'])
-                {
-                    ?><a title="<?php echo $_SESSION['documents'][$documents_id]['new_folder']; ?>" href="javascript:void(0);" style="float:right;" onclick="javascript:ploopi.documents.openfolder('<?php echo crypt::queryencode("ploopi_op=documents_openfolder&currentfolder={$currentfolder}&documents_id={$documents_id}&documentsfolder_id="); ?>', event);"><img src="<?php echo $_SESSION['documents'][$documents_id]['new_folder_img']; ?>"></a><?php
-                }
-                ?>
-                <a title="<?php echo $_SESSION['documents'][$documents_id]['root_place']; ?>" href="javascript:void(0);" style="float:right;" onclick="javascript:ploopi.documents.browser('<?php echo crypt::queryencode("ploopi_op=documents_browser&documents_id={$documents_id}&mode={$_SESSION['documents'][$documents_id]['mode']}"); ?>', '<?php echo $documents_id; ?>', true);"><img src="<?php echo $_SESSION['documents'][$documents_id]['root_place_img']; ?>"></a>
+                <div style="float:right;padding:0;">
+                    <?
+                    if ($_SESSION['documents'][$documents_id]['rights']['FOLDER_CREATE'])
+                    {
+                        ?><button title="<?php echo $_SESSION['documents'][$documents_id]['new_folder']; ?>" class="icon invert icon_foldernew" onclick="javascript:ploopi.documents.openfolder('<?php echo crypt::queryencode("ploopi_op=documents_openfolder&currentfolder={$currentfolder}&documents_id={$documents_id}&documentsfolder_id="); ?>', event);">Nouveau dossier</button><?php
+                    }
+                    if ($_SESSION['documents'][$documents_id]['rights']['DOCUMENT_CREATE'])
+                    {
+                        ?><button title="<?php echo $_SESSION['documents'][$documents_id]['new_file']; ?>" class="icon invert icon_filenew" onclick="javascript:ploopi.documents.openfile('<?php echo crypt::queryencode("ploopi_op=documents_openfile&currentfolder={$currentfolder}&documents_id={$documents_id}&documentsfile_id="); ?>', event);">Nouveau fichier</button><?php
+                    }
+                    ?>
+
+                </div>
 
                 <div>Emplacement :</div>
                 <?php
@@ -543,12 +544,7 @@ abstract class documents {
                         // change root name
                         $foldername = (!$row['id_folder']) ? $_SESSION['documents'][$documents_id]['root_name'] : $row['name'];
                         ?>
-                        <a <?php if ($currentfolder == $row['md5id']) echo 'class="doc_pathselected"'; ?> href="javascript:void(0);" onclick="javascript:ploopi.documents.browser('<?php echo crypt::queryencode("ploopi_op=documents_browser&currentfolder={$row['md5id']}&documents_id={$documents_id}&mode={$_SESSION['documents'][$documents_id]['mode']}"); ?>', '<?php echo $_SESSION['documents'][$documents_id]['documents_id']; ?>', true);">
-                            <p class="ploopi_va">
-                                <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/documents/ico_folder.png" />
-                                <span><?php echo str::htmlentities($foldername); ?></span>
-                            </p>
-                        </a>
+                        <button class="icon invert icon_folder<?php if ($currentfolder == $row['md5id']) echo ' selected'; ?>" onclick="javascript:ploopi.documents.browser('<?php echo crypt::queryencode("ploopi_op=documents_browser&currentfolder={$row['md5id']}&documents_id={$documents_id}&mode={$_SESSION['documents'][$documents_id]['mode']}"); ?>', '<?php echo $_SESSION['documents'][$documents_id]['documents_id']; ?>', true);"><?php echo str::htmlentities($foldername); ?></button>
                         <?php
                     }
                 }
@@ -628,7 +624,7 @@ abstract class documents {
                 $documents_columns['actions_right']['actions'] =
                     array(
                         'label' => 'Actions',
-                        'width' => 85
+                        'width' => 230
                     );
 
             $documents_values = array();
@@ -654,7 +650,7 @@ abstract class documents {
                     array(
                         'name' =>
                             array(
-                                'label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/documents/ico_folder".($row['system'] ? '_locked' : '').".png\" /><span>&nbsp;{$row['name']}</span>",
+                                'label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/documents/folder".($row['system'] ? '_locked' : '').".svg\" style=\"width:16px;height:16px;\" /><span>&nbsp;{$row['name']}</span>",
                                 'sort_label' => '1_'.$row['name']
                             ),
                         'type' =>
@@ -686,14 +682,16 @@ abstract class documents {
                     );
 
                 $actions = '';
-                if ($_SESSION['documents'][$documents_id]['rights']['FOLDER_DELETE']) $actions .= '<a title="Supprimer" style="display:block;float:right;" href="javascript:void(0);" onclick="javascript:if (confirm(\'Attention, cette action va supprimer définitivement le dossier et son contenu\')) ploopi.documents.deletefolder(\''.crypt::queryencode("ploopi_op=documents_deletefolder&currentfolder={$currentfolder}&documents_id={$documents_id}&documentsfolder_id={$row['md5id']}").'\',\''.$_SESSION['documents'][$documents_id]['documents_id'].'\');"><img src="'.$_SESSION['ploopi']['template_path'].'/img/documents/ico_trash.png" /></a>';
-                if ($_SESSION['documents'][$documents_id]['rights']['FOLDER_MODIFY']) $actions .= '<a title="Modifier" style="display:block;float:right;" href="javascript:void(0);" onclick="javascript:ploopi.documents.openfolder(\''.crypt::queryencode("ploopi_op=documents_openfolder&currentfolder={$currentfolder}&documents_id={$documents_id}&documentsfolder_id={$row['md5id']}").'\',event);"><img src="'.$_SESSION['ploopi']['template_path'].'/img/documents/ico_modify.png" /></a>';
+                if ($_SESSION['documents'][$documents_id]['rights']['FOLDER_MODIFY']) $actions .= '<button title="Modifier" class="icon small_icon invert icon_edit" onclick="javascript:ploopi.documents.openfolder(\''.crypt::queryencode("ploopi_op=documents_openfolder&currentfolder={$currentfolder}&documents_id={$documents_id}&documentsfolder_id={$row['md5id']}").'\',event);">Modif.</a>';
+                if ($_SESSION['documents'][$documents_id]['rights']['FOLDER_DELETE']) $actions .= '<button title="Supprimer" style="margin-right:4px;" class="icon small_icon invert icon_delete" onclick="javascript:if (confirm(\'Attention, cette action va supprimer définitivement le dossier et son contenu\')) ploopi.documents.deletefolder(\''.crypt::queryencode("ploopi_op=documents_deletefolder&currentfolder={$currentfolder}&documents_id={$documents_id}&documentsfolder_id={$row['md5id']}").'\',\''.$_SESSION['documents'][$documents_id]['documents_id'].'\');">Suppr.</button>';
+
 
                 if ($actions == '') $actions = '&nbsp;';
 
                 $documents_values[$i]['values']['actions'] =
                     array(
                         'label' => (empty($_SESSION['documents'][$documents_id]['mode']) && !$row['system']) ? $actions : '&nbsp;',
+                        'style' => 'text-align:right;'
                     );
 
                 $documents_values[$i]['description'] = '';
@@ -730,18 +728,20 @@ abstract class documents {
 
                 $ldate_file = ($row['timestp_file'] != 0) ? date::timestamp2local($row['timestp_file']) : array('date' => '');
 
-                $ico = (file_exists("{$_SESSION['ploopi']['template_path']}/img/documents/mimetypes/ico_{$row['filetype']}.png")) ? "ico_{$row['filetype']}.png" : 'ico_default.png';
+                $ico = 'file-alt.svg';
+                if (file_exists("{$_SESSION['ploopi']['template_path']}/img/documents/file-{$row['extension']}.svg")) $ico = "file-{$row['extension']}.svg";
+                elseif (file_exists("{$_SESSION['ploopi']['template_path']}/img/documents/file-{$row['filetype']}.svg")) $ico = "file-{$row['filetype']}.svg";
 
-                $actions = '';
+                $actions = '<button title="Télécharger" class="icon small_icon invert icon_download" onclick="document.location.href=\''.crypt::urlencode("admin.php?ploopi_op=documents_downloadfile&documentsfile_id={$row['md5id']}").'\';">Téléch.</button>';
+                if ($_SESSION['documents'][$documents_id]['rights']['DOCUMENT_MODIFY']) $actions .= '<button title="Modifier" class="icon small_icon invert icon_edit" onclick="javascript:ploopi.documents.openfile(\''.crypt::queryencode("ploopi_op=documents_openfile&currentfolder={$currentfolder}&documents_id={$documents_id}&documentsfile_id={$row['md5id']}").'\',event);">Modif.</button>';
+                if ($_SESSION['documents'][$documents_id]['rights']['DOCUMENT_DELETE']) $actions .= '<button title="Supprimer" style="margin-right:4px;" class="icon small_icon invert icon_delete" onclick="if (confirm(\'Attention, cette action va supprimer définitivement le fichier\')) ploopi.documents.deletefile(\''.crypt::queryencode("ploopi_op=documents_deletefile&currentfolder={$currentfolder}&documents_id={$documents_id}&documentsfile_id={$row['md5id']}").'\',\''.$_SESSION['documents'][$documents_id]['documents_id'].'\');">Suppr.</button>';
 
-                if ($_SESSION['documents'][$documents_id]['rights']['DOCUMENT_DELETE']) $actions .= '<a title="Supprimer" style="display:block;float:right;" href="javascript:if (confirm(\'Attention, cette action va supprimer définitivement le fichier\')) ploopi.documents.deletefile(\''.crypt::queryencode("ploopi_op=documents_deletefile&currentfolder={$currentfolder}&documents_id={$documents_id}&documentsfile_id={$row['md5id']}").'\',\''.$_SESSION['documents'][$documents_id]['documents_id'].'\');"><img src="'.$_SESSION['ploopi']['template_path'].'/img/documents/ico_trash.png" /></a>';
-                if ($_SESSION['documents'][$documents_id]['rights']['DOCUMENT_MODIFY']) $actions .= '<a title="Modifier" style="display:block;float:right;" href="javascript:void(0);" onclick="javascript:ploopi.documents.openfile(\''.crypt::queryencode("ploopi_op=documents_openfile&currentfolder={$currentfolder}&documents_id={$documents_id}&documentsfile_id={$row['md5id']}").'\',event);"><img src="'.$_SESSION['ploopi']['template_path'].'/img/documents/ico_modify.png" /></a>';
 
                 $documents_values[$i]['values'] =
                     array(
                         'name' =>
                             array(
-                                'label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/documents/mimetypes/{$ico}\" /><span>&nbsp;".str::htmlentities($row['name'])."</span>",
+                                'label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/documents/{$ico}\" style=\"width:16px;height:16px;\" /><span>&nbsp;".str::htmlentities($row['name'])."</span>",
                                 'sort_label' => '2_'.$row['name']
                             ),
                         'type' =>
@@ -775,11 +775,10 @@ abstract class documents {
                             )
                     );
 
-                $documents_values[$i]['values']['actions'] =
-                    array(
-                        'label' => $actions.'<a title="Télécharger" style="display:block;float:right;" href="'.crypt::urlencode("admin.php?ploopi_op=documents_downloadfile&documentsfile_id={$row['md5id']}").'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/documents/ico_download.png" /></a>
-                                             <a title="Télécharger (ZIP)" style="display:block;float:right;" href="'.crypt::urlencode("admin.php?ploopi_op=documents_downloadfile_zip&documentsfile_id={$row['md5id']}").'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/documents/ico_download_zip.png" /></a>',
-                    );
+                $documents_values[$i]['values']['actions'] = array(
+                    'label' => $actions,
+                    'style' => 'text-align:right;'
+                );
 
                 $documents_values[$i]['description'] = '';
 

@@ -300,34 +300,62 @@ switch($ploopi_op)
         $currentfolder = $_GET['currentfolder'];
         $documents_id = $_GET['documents_id'];
 
-        if (!empty($_GET['documentsfile_id'])) $documentsfile->openmd5($_GET['documentsfile_id']);
+
+        // Modification
+        if (!empty($_GET['documentsfile_id'])) {
+            $documentsfile->openmd5($_GET['documentsfile_id']);
+            $documentsfile->fields['id_folder'] = $documentsfolder->fields['id'];
+            $documentsfile->setvalues($_POST,'documentsfile_');
+
+            if (isset($_POST['fck_documentsfile_description']))
+                $documentsfile->fields['description'] = $_POST['fck_documentsfile_description'];
+
+            if (isset($documentsfile->fields['timestp_file'])) $documentsfile->fields['timestp_file'] = sprintf("%014s", preg_replace('@[^0-9]@', '', $documentsfile->fields['timestp_file']));
+
+            if (!empty($_FILES['documentsfile_file']['name']))
+            {
+                $documentsfile->fields['id_user_modify'] = $_SESSION['ploopi']['userid'];
+                $documentsfile->settmpfile($_FILES['documentsfile_file']['tmp_name']);
+                $documentsfile->fields['name'] = $_FILES['documentsfile_file']['name'];
+                $documentsfile->fields['size'] = $_FILES['documentsfile_file']['size'];
+            }
+
+            $error = $documentsfile->save();
+
+        }
         else
         {
-            $documentsfile->fields['id_object'] = $_SESSION['documents'][$documents_id]['id_object'];
-            $documentsfile->fields['id_record'] = $_SESSION['documents'][$documents_id]['id_record'];
-            $documentsfile->fields['id_module'] = $_SESSION['documents'][$documents_id]['id_module'];
-            $documentsfile->fields['id_user'] = $_SESSION['documents'][$documents_id]['id_user'];
-            $documentsfile->fields['id_workspace'] = $_SESSION['documents'][$documents_id]['id_workspace'];
+            // Fichiers fournis?
+            if (!empty($_FILES)) {
+                for($i = 0; $i < 100; $i++) {
+                    if (!empty($_FILES['documentsfile_file'.$i]['tmp_name'])) {
+                        $documentsfile = new ploopi\documentsfile();
+                        $documentsfile->setvalues($_POST,'documentsfile_');
+                        if (isset($_POST['fck_documentsfile_description'])) $documentsfile->fields['description'] = $_POST['fck_documentsfile_description'];
+                        if (isset($documentsfile->fields['timestp_file'])) $documentsfile->fields['timestp_file'] = sprintf("%014s", preg_replace('@[^0-9]@', '', $documentsfile->fields['timestp_file']));
+
+                        $documentsfile->fields['id_object'] = $_SESSION['documents'][$documents_id]['id_object'];
+                        $documentsfile->fields['id_record'] = $_SESSION['documents'][$documents_id]['id_record'];
+                        $documentsfile->fields['id_module'] = $_SESSION['documents'][$documents_id]['id_module'];
+                        $documentsfile->fields['id_user'] = $_SESSION['documents'][$documents_id]['id_user'];
+                        $documentsfile->fields['id_workspace'] = $_SESSION['documents'][$documents_id]['id_workspace'];
+                        $documentsfile->fields['id_folder'] = $documentsfolder->fields['id'];
+                        $documentsfile->fields['timestp_file'] = ploopi\date::createtimestamp();
+                        $documentsfile->fields['id_user_modify'] = $_SESSION['ploopi']['userid'];
+                        $documentsfile->settmpfile($_FILES['documentsfile_file'.$i]['tmp_name']);
+                        $documentsfile->fields['name'] = $_FILES['documentsfile_file'.$i]['name'];
+                        $documentsfile->fields['size'] = $_FILES['documentsfile_file'.$i]['size'];
+                        $error = $documentsfile->save();
+                        if (!$error) {
+                            if (!empty($_SESSION['documents'][$documents_id]['callback_inc'])) include_once $_SESSION['documents'][$documents_id]['callback_inc'];
+                            if (!empty($_SESSION['documents'][$documents_id]['callback_func'])) $_SESSION['documents'][$documents_id]['callback_func']('savefile', $documentsfile, $k == sizeof($_FILES['documentsfile_file'.$i]['name'])-1);
+                        }
+                    }
+                }
+            }
         }
 
-        $documentsfile->fields['id_folder'] = $documentsfolder->fields['id'];
-        $documentsfile->setvalues($_POST,'documentsfile_');
 
-        if (isset($_POST['fck_documentsfile_description']))
-            $documentsfile->fields['description'] = $_POST['fck_documentsfile_description'];
-
-        if (isset($documentsfile->fields['timestp_file'])) $documentsfile->fields['timestp_file'] = ploopi\date::local2timestamp($documentsfile->fields['timestp_file']);
-
-
-        if (!empty($_FILES['documentsfile_file']['name']))
-        {
-            $documentsfile->fields['id_user_modify'] = $_SESSION['ploopi']['userid'];
-            $documentsfile->settmpfile($_FILES['documentsfile_file']['tmp_name']);
-            $documentsfile->fields['name'] = $_FILES['documentsfile_file']['name'];
-            $documentsfile->fields['size'] = $_FILES['documentsfile_file']['size'];
-        }
-
-        $error = $documentsfile->save();
 
         if (!$error) {
             if (!empty($_SESSION['documents'][$documents_id]['callback_inc'])) include $_SESSION['documents'][$documents_id]['callback_inc'];
@@ -412,24 +440,31 @@ switch($ploopi_op)
             $title = "Modification du Fichier";
         }
 
-        $ldate = ($documentsfile->fields['timestp_file']!=0 && $documentsfile->fields['timestp_file']!='') ? ploopi\date::timestamp2local($documentsfile->fields['timestp_file']) : array('date' => '');
+        //$ldate = ($documentsfile->fields['timestp_file']!=0 && $documentsfile->fields['timestp_file']!='') ? ploopi\date::timestamp2local($documentsfile->fields['timestp_file']) : array('date' => '');
 
         $url = "admin-light.php?ploopi_op=documents_savefile&currentfolder={$_GET['currentfolder']}&documents_id={$_GET['documents_id']}";
         if (!empty($_GET['documentsfile_id'])) $url .= "&documentsfile_id={$_GET['documentsfile_id']}";
         if (isset($_GET['selectfile'])) $url .= "&selectfile";
 
         ?>
-        <form id="documents_folderform" action="<?php echo ploopi\crypt::urlencode($url); ?>" method="post" target="documents_fileform_iframe" enctype="multipart/form-data" onsubmit="javascript:return ploopi_documents_validate(this)">
+        <form id="documents_folderform" action="<?php echo ploopi\crypt::urlencode($url); ?>" method="post" target="documents_fileform_iframe" enctype="multipart/form-data">
         <div class="ploopi_form">
             <div class="documents_formcontent">
                 <?php
                 if (empty($_GET['documentsfile_id']))
                 {
                     ?>
-                    <p>
+                    <div id="documents_dropzone">
+                        <div style="padding:10px;">
+                            Glissez-déposez vos fichiers dans cette zone<br />ou cliquez pour ouvrir une fenêtre de sélection.
+                        </div>
+                        <div id="documents_filelist"></div>
+                    </div>
+
+                    <!--p>
                         <label>Fichier:</label>
                         <input type="file" class="text" name="documentsfile_file" tabindex="1">
-                    </p>
+                    </p-->
                     <?php
                 }
                 else
@@ -437,11 +472,11 @@ switch($ploopi_op)
                     ?>
                     <p>
                         <label>Nom du Fichier:</label>
-                        <input type="input" class="text" name="documentsfile_name" value="<?php echo ploopi\str::htmlentities($documentsfile->fields['name']); ?>" tabindex="2">
+                        <input type="text" name="documentsfile_name" value="<?php echo ploopi\str::htmlentities($documentsfile->fields['name']); ?>" tabindex="2">
                     </p>
                     <p>
                         <label>Nouveau Fichier:</label>
-                        <input type="file" class="text" name="documentsfile_file" tabindex="2">
+                        <input type="file" name="documentsfile_file" tabindex="2">
                     </p>
                     <p>
                         <label>Dossier Parent:</label>
@@ -460,16 +495,15 @@ switch($ploopi_op)
                 ?>
                 <p>
                     <label>Libellé:</label>
-                    <input class="text" name="documentsfile_label" value="<?php echo ploopi\str::htmlentities($documentsfile->fields['label']); ?>" tabindex="3" style="width:250px;">
+                    <input type="text" name="documentsfile_label" value="<?php echo ploopi\str::htmlentities($documentsfile->fields['label']); ?>" tabindex="3" style="width:250px;">
                 </p>
                 <p>
                     <label>Référence:</label>
-                    <input class="text" name="documentsfile_ref" value="<?php echo ploopi\str::htmlentities($documentsfile->fields['ref']); ?>" tabindex="4" style="width:250px;">
+                    <input type="text" name="documentsfile_ref" value="<?php echo ploopi\str::htmlentities($documentsfile->fields['ref']); ?>" tabindex="4" style="width:250px;">
                 </p>
                 <p>
                     <label>Date:</label>
-                    <input class="text" id="documentsfile_timestp_file" name="documentsfile_timestp_file" value="<?php echo ploopi\str::htmlentities($ldate['date']); ?>" readonly style="width:75px;" onclick="javascript:ploopi_calendar_open('documentsfile_timestp_file', event);" tabindex="5">
-                    <a href="javascript:void(0);" onclick="javascript:ploopi_calendar_open('documentsfile_timestp_file', event);"><img src="./img/calendar/calendar.gif" width="31" height="18" align="top" border="0"></a>
+                    <input type="date" id="documentsfile_timestp_file" name="documentsfile_timestp_file" value="<?php echo date('Y-m-d', empty($documentsfile->fields['timestp_file']) ? time() : ploopi\date::timestamp2unixtimestamp($documentsfile->fields['timestp_file'])); ?>" style="width:120px;" tabindex="5">
                 </p>
 
                 <p>
@@ -496,6 +530,78 @@ switch($ploopi_op)
             </div>
         </div>
         </form>
+        <?php
+        if (empty($_GET['documentsfile_id']))
+        {
+            ?>
+            <script>
+                objDropZone = new ploopi.documents.dropzoneupload({
+                    dropzone: 'documents_dropzone',
+                    status: 'documents_status',
+                    loading: 'documents_loading',
+                    filelist: 'documents_filelist',
+                    form: 'documents_folderform',
+                    filesize: 50000000
+                });
+
+                jQuery('#documents_folderform').on('submit', function(e) {
+                    if (!ploopi.documents.validate(this)) {
+                        e.preventDefault();
+                        return;
+                    }
+
+                    e.preventDefault();
+
+                    var formElement = document.getElementById('documents_folderform');
+                    var formData = new FormData(formElement);
+                    console.log(formData);
+
+                    var xhr = new XMLHttpRequest();
+
+                    xhr.open('POST', formElement.action);
+
+                    var size = 0;
+                    for (var i = 0; i < objDropZone.files.length; i++) {
+                        formData.append('documentsfile_file'+i, objDropZone.files[i]);
+                        size += objDropZone.files[i].size;
+                    }
+
+                    xhr.onload = function() {
+                        ploopi.documents.browser('<?php echo ploopi\crypt::queryencode("ploopi_op=documents_browser&currentfolder={$_GET['currentfolder']}&documents_id={$_GET['documents_id']}"); ?>', '<?php echo ploopi\str::htmlentities($_GET['documents_id']); ?>');
+                        ploopi.popup.hide('ploopi_documents_openfile_popup');
+                    };
+
+                    xhr.onerror = function() {
+                        //console.log('xhr onerror');
+                    };
+
+                    xhr.upload.onprogress = function(e) {
+                        //console.log('xhr onprogress');
+                        //console.log(e.lengthComputable, e.loaded, e.total, e.loaded / e.total * 100);
+                    };
+
+                    xhr.send(formData);
+                });
+
+            </script>
+            <?
+        }
+        else {
+            ?>
+            <script>
+
+                jQuery('#documents_folderform').on('submit', function(e) {
+                    if (!ploopi.documents.validate(this)) {
+                        e.preventDefault();
+                        return;
+                    }
+                    alert('submit');
+                });
+
+            </script>
+            <?
+        }
+        ?>
         <iframe name="documents_fileform_iframe" src="./img/blank.gif" style="display:none;"></iframe>
         <?php
         $content = ob_get_contents();

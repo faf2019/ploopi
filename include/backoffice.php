@@ -42,24 +42,27 @@
 
 include_once './lib/template/template.php';
 
-$template_body = new \Template($_SESSION['ploopi']['template_path']);
-
 $template_filename = 'index.tpl';
 
 if (!empty($_GET['ploopi_tpl']) && file_exists("{$_SESSION['ploopi']['template_path']}/{$_GET['ploopi_tpl']}.tpl")) $template_filename = "{$_GET['ploopi_tpl']}.tpl";
-else if (isset($_SESSION['ploopi']['remote_pda']) && $_SESSION['ploopi']['remote_pda'] && file_exists("{$_SESSION['ploopi']['template_path']}/pda.tpl")) $template_filename = 'pda.tpl';
 
 if (!file_exists("{$_SESSION['ploopi']['template_path']}/{$template_filename}") || ! is_readable("{$_SESSION['ploopi']['template_path']}/{$template_filename}")) {
 
-    ploopi\system::kill(
-        str_replace(
-            array('<FILE>', '<TEMPLATE>'),
-            array($template_filename, $_SESSION['ploopi']['template_path']),
-            _PLOOPI_ERROR_TEMPLATE_FILE
-        )
-    );
+    $_SESSION['ploopi']['template_path'] = './templates/backoffice/ploopi2';
+
+    if (!file_exists("{$_SESSION['ploopi']['template_path']}/{$template_filename}") || ! is_readable("{$_SESSION['ploopi']['template_path']}/{$template_filename}")) {
+        ploopi\system::kill(
+            str_replace(
+                array('<FILE>', '<TEMPLATE>'),
+                array($template_filename, $_SESSION['ploopi']['template_path']),
+                _PLOOPI_ERROR_TEMPLATE_FILE
+            )
+        );
+    }
 
 }
+
+$template_body = new \Template($_SESSION['ploopi']['template_path']);
 
 $template_body->set_filenames(
     array(
@@ -76,7 +79,7 @@ $template_body->assign_block_vars('ploopi_js', array(
 ));
 
 $template_body->assign_block_vars('ploopi_js', array(
-    'PATH' => './lib/jquery-ui/jquery-ui.min.js?v='.urlencode(_PLOOPI_VERSION.','._PLOOPI_REVISION)
+    'PATH' => './vendor/components/jquery-ui/jquery-ui.min.js?v='.urlencode(_PLOOPI_VERSION.','._PLOOPI_REVISION)
 ));
 
 

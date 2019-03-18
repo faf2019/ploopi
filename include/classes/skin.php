@@ -300,7 +300,7 @@ class skin
                     <a name="anchor_'.$popupid.'"></a>
                     <div class="simplebloc_title">
                         <div class="simplebloc_titleleft">
-                            <img alt="Fermer" title="Fermer le popup" id="close_'.$popupid.'" onclick="javascript:ploopi.popup.hide(\''.$popupid.'\');" style="display:block;float:right;margin:2px;cursor:pointer;" src="'.$this->values['path'].'/template/close_popup.png">
+                            <img alt="Fermer" title="Fermer le popup" id="close_'.$popupid.'" onclick="javascript:ploopi.popup.hide(\''.$popupid.'\');" style="display:block;float:right;cursor:pointer;" src="'.$this->values['path'].'/template/close_popup.png">
                             <div style="overflow:auto;cursor:move;" class="handle_'.$popupid.'">'.$title.'</div>
                         </div>
                     </div>
@@ -495,7 +495,7 @@ class skin
         $objSV = new serializedvar($strArrayId);
         $objSV->save($array);
         ?>
-        <div class="ploopi_explorer_main" id="ploopi_explorer_main_<?php echo $strArrayId; ?>" style="visibility:visible;">
+        <div class="ploopi_explorer_main<?php if (isset($arrOptions['class'])) echo ' '.$arrOptions['class']; ?>" id="ploopi_explorer_main_<?php echo $strArrayId; ?>" style="visibility:visible;">
         <?php $this->display_array_refresh($strArrayId); ?>
         </div>
         <?php
@@ -533,18 +533,19 @@ class skin
         // si le tableau est "triable" (option)
         if (!empty($array['options']['sortable']) && $array['options']['sortable'])
         {
+            // On crée une liste applatie des colonnes pour vérifier l'existence de la colonne de tri
+            $columns = array();
+            if (!empty($array['columns']['auto'])) $columns += $array['columns']['auto'];
+            if (!empty($array['columns']['right'])) $columns += $array['columns']['right'];
+            if (!empty($array['columns']['left'])) $columns += $array['columns']['left'];
+            if (!empty($array['columns']['actions_right'])) $columns += $array['columns']['actions_right'];
+            if (!empty($array['columns']['actions_left'])) $columns += $array['columns']['actions_left'];
+
             // initialisation  du tri par défaut pour le tableau courant
             if (empty($array['orderby']))
             {
                 if (!empty($_SESSION['ploopi']['arrays'][$strArrayId]))
                 {
-                    // On crée une liste applatie des colonnes pour vérifier l'existence de la colonne de tri
-                    $columns = array();
-                    if (!empty($array['columns']['auto'])) $columns += $array['columns']['auto'];
-                    if (!empty($array['columns']['right'])) $columns += $array['columns']['right'];
-                    if (!empty($array['columns']['left'])) $columns += $array['columns']['left'];
-                    if (!empty($array['columns']['actions_right'])) $columns += $array['columns']['actions_right'];
-                    if (!empty($array['columns']['actions_left'])) $columns += $array['columns']['actions_left'];
 
                     if (isset($columns[$_SESSION['ploopi']['arrays'][$strArrayId]['orderby']]))
                     {
@@ -559,6 +560,8 @@ class skin
                     elseif (!empty($array['sortable_columns'][0])) $array['orderby'] = $array['sortable_columns'][0];
                 }
             }
+
+            $array['sort_flag'] = isset($columns[$array['orderby']]['options']['sort_flag']) ? $columns[$array['orderby']]['options']['sort_flag'] : SORT_STRING;
 
             if (empty($array['sort']))
             {
@@ -583,7 +586,7 @@ class skin
                 $array['index'][$idx] = $key;
             }
 
-            $flag = isset($value['values'][$array['orderby']]['sort_flag']) ? $value['values'][$array['orderby']]['sort_flag'] : SORT_STRING;
+            $flag = isset($array['sort_flag']) ? $array['sort_flag'] : SORT_STRING;
 
             if ($array['sort'] == 'ASC') ksort($array['index'], $flag);
             else krsort($array['index'], $flag);
