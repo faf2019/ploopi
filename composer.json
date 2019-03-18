@@ -22,10 +22,6 @@
             "url": "https://pear.horde.org"
         },
         {
-            "type": "pear",
-            "url": "https://pear.php.net"
-        },
-        {
             "type":"package",
             "package": {
               "name": "swfobject/swfobject",
@@ -67,13 +63,13 @@
         "box/spout": "^2.5",
         "components/highlightjs": "^9.5",
         "ckeditor/ckeditor": "^4.5",
-        "pear-pear.php.net/HTTP_Request2": "^2.3",
-        "pear-pear.php.net/XML_Serializer": "^0.21.0",
-        "pear-pear.php.net/Cache_Lite": "^1.8",
         "pear-pear.horde.org/Horde_Text_Diff": "2.1.2",
         "elasticsearch/elasticsearch": "^2.2",
         "components/jquery": "^3.1",
         "keller/soundex-fr-bundle": "dev-master",
-        "wamania/php-stemmer": "^1.2"
+        "wamania/php-stemmer": "^1.2",
+        "pear/http_request2": "^2.3",
+        "pear/xml_serializer": "^0.22.0",
+        "pear/cache_lite": "^1.8"
     }
 }
