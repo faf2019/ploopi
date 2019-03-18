@@ -133,8 +133,9 @@
     {ADDITIONAL_HEAD}
 </head>
 
-<body class="hook">
+<body>
 
+<div id="background" style="min-width:1180px;">
 
 <!-- BEGIN switch_user_logged_out -->
     <div id="login_window">
@@ -259,7 +260,7 @@
                         <input type="text" class="text" id="ploopi_lostpassword_email" name="ploopi_lostpassword_email" size="20" title="Saisissez votre adresse email" tabindex="12" />
                     </p>
                     <div style="color:#ffff00;margin-top:10px;">
-                        <em><strong>ATTENTION</strong>, une demande de mot de passe génÃšre un nouveau mot de passe automatique.</em>
+                        <em><strong>ATTENTION</strong>, une demande de mot de passe génère un nouveau mot de passe automatique.</em>
                     </div>
                 </div>
                 <div class="login_btn_right">
@@ -276,13 +277,11 @@
 
     </div>
     <div id="login_statusbar">
-        Template:&nbsp;<a href="http://www.ovensia.fr">{TEMPLATE_NAME}</a> |&nbsp;Propulsé par&nbsp;<a href="http://www.ploopi.fr">Ploopi</a>&nbsp;&#169;&nbsp;2016&nbsp;<a href="http://www.ovensia.fr">Ovensia</a>&nbsp;|&nbsp;<a href="http://www.ploopi.org/#Utilisation">Documentation utilisateur</a>&nbsp;|&nbsp;<a href="http://www.mozilla-europe.org/fr/products/firefox/">Préférez Firefox</a>
+        Propulsé par&nbsp;<a href="http://www.ploopi.fr">Ploopi</a>&nbsp;|&nbsp;Une création&nbsp;<a href="http://www.ovensia.fr">Ovensia</a>
     </div>
-
 <!-- END switch_user_logged_out -->
 
 <!-- BEGIN switch_user_logged_in -->
-<div id="background" style="min-width:1180px;">
 
     <div id="dock">
         <!-- BEGIN switch_blockmenu -->
@@ -303,31 +302,40 @@
         </ul>
         <!-- END switch_blockmenu -->
 
+
+
+
+
         <div id="userbox">
             <div><img src="{TEMPLATE_PATH}/img/template/user.png" /><span>{USER_FIRSTNAME} {USER_LASTNAME}</span></div>
-            <!-- BEGIN switch_messagerie -->
-            <a id="msg_link" href="{switch_user_logged_in.switch_messagerie.URL}"><img src="{TEMPLATE_PATH}/img/template/mail.png" /><span>{MAINMENU_TICKETS}</span><span id="msg_unread"></span></a>
-            <!-- END switch_messagerie -->
+            <a href="javascript:void(0);" title="{MAINMENU_PROFILE}" onclick="tpl_open_profile();"><img src="{TEMPLATE_PATH}/img/template/profile.png" /></a>
+            <a href="{USER_DECONNECT}" title="{MAINMENU_DISCONNECTION}" ><img src="{TEMPLATE_PATH}/img/template/door.png" /></a>
+        </div>
 
-            <a href="{MAINMENU_SHOWPROFILE_URL}"><img src="{TEMPLATE_PATH}/img/template/profile.png" /><span>{MAINMENU_PROFILE}</span></a>
-            <a href="{USER_DECONNECT}"><img src="{TEMPLATE_PATH}/img/template/door.png" /><span>{MAINMENU_DISCONNECTION}</span></a>
+        <form id="searchbox" action="{MAINMENU_SHOWSEARCH_URL}" method="post">
+            <input type="text" name="system_search_keywords" class="text" value="{SEARCH_KEYWORDS}" placeholder="Recherche" title="Recherche intégrale">
+            <button type="submit"><img src="{TEMPLATE_PATH}/img/template/search.png" /></button>
+        </form>
 
-            <!--span class="user">{USER_FIRSTNAME} {USER_LASTNAME}</span>
-            <a href="javascript:void(0);" onclick="javascript:tpl_open_webmail();"><img src="{TEMPLATE_PATH}/img/template/mail.png" /><span>{MAINMENU_TICKETS}</span><span id="tickets_unread"></span></a>
-            <a href="javascript:void(0);" onclick="javascript:tpl_open_profile();"><img src="{TEMPLATE_PATH}/img/template/user.png" /><span>{MAINMENU_PROFILE}</span></a>
-            <a href="{USER_DECONNECT}"><img src="{TEMPLATE_PATH}/img/template/door.png" /><span>{MAINMENU_DISCONNECTION}</span></a-->
+        <div id="workspace">
+            <select class="dropdown" onchange="javascript:if (this.value!='') document.location.href = this.value;" title="Choix d'un espace">
+                <!-- BEGIN workspace -->
+                <option value="{switch_user_logged_in.workspace.URL}" {switch_user_logged_in.workspace.SELECTED}>{switch_user_logged_in.workspace.TITLE}</option>
+                <!-- END workspace -->
+                <option value="" {USER_WORKSPACE_SEL}>(Choisir un espace)</option>
+            </select>
         </div>
 
     </div>
 
     <div id="ploopi_mod_mess" class=""></div>
 
-    <div id="pagecontent">
+    <div id="pagecontent" class="hook">
         {PAGE_CONTENT}
     </div>
-</div>
 <!-- END switch_user_logged_in -->
 
+</div>
 
 
 <script type="text/javascript">
@@ -369,14 +377,15 @@ function tpl_passwordlost_cancel() {
     );
 }
 
+
 <!-- END switch_user_logged_out -->
 
 <!-- BEGIN switch_user_logged_in -->
 
-
-
-
-
+function tpl_open_profile() {
+    ploopi.popup.show('', 950, null, true, 'system_popup_update_profile')
+    ploopi.xhr.todiv('admin-light.php', '{POPUP_PROFLE}', 'system_popup_update_profile');
+}
 
 console.log('page: <PLOOPI_PAGE_SIZE> ko | exec: <PLOOPI_EXEC_TIME> ms | sql: <PLOOPI_NUMQUERIES> req (<PLOOPI_SQL_P100> %) | session: <PLOOPI_SESSION_SIZE> ko | mem: <PLOOPI_PHP_MEMORY> ko');
 <!-- END switch_user_logged_in -->

@@ -32,19 +32,41 @@ top:0px;
 left:0px;
 width:200px;
 overflow:hidden;
-background:#ecedf1;
-border:2px solid #25464E;
-border-radius:2px;
-box-shadow: 0 0 5px rgba(40, 50, 78, 0.3);
+background:#e0e0e0;
+/* border-radius:2px; */
+/* box-shadow: 0 0 5px rgba(40, 50, 78, 0.3); */
+}
+
+.ploopi_popup > * {
+    opacity:0.8;
+}
+
+.ploopi_popup:hover > * {
+    opacity:1;
 }
 
 .ploopi_popup .simplebloc {
 margin:0;
 border-radius:0;
+border: 2px solid #283137;
 }
 
 .ploopi_popup .simplebloc_title {
 border-radius:0;
+line-height:24px;
+height:24px;
+background:#283137;
+}
+
+.ploopi_popup .simplebloc_content {
+margin:0;
+padding:0;
+}
+
+.ploopi_popup .simplebloc_titleleft img {
+padding:3px;
+max-width:16px;
+opacity:0.8;
 }
 
 .calendardiv {
@@ -159,6 +181,12 @@ color: #2c4056;
 padding: 4px;
 border: 2px solid rgba(0,0,0,0.2);
 background: rgba(255,255,255,0.5);
+outline: none;
+transition: border-color .2s ease-in;
+}
+
+select {
+    padding: 3px 4px;
 }
 
 input::-webkit-input-placeholder { color:#888; }
@@ -168,6 +196,10 @@ select:focus,
 input:focus,
 textarea:focus {
 background: rgba(255,255,255,0.8);
+outline: none;
+border-color:#4F8999;
+
+transition: border-color 0s ease-in;
 }
 
 
@@ -175,10 +207,10 @@ input[type='button'],
 input[type='reset'],
 input[type='submit'],
 button {
-border:2px solid transparent;
-padding:3px;
-background:#25464E;
-color:#FFFFFF;
+border:0;
+padding:6px 10px;
+background:#4F8999;
+color: #fff;
 cursor: pointer;
 }
 
@@ -191,20 +223,96 @@ font-weight:bold;
 input[type='button']:hover,
 input[type='submit']:hover,
 input[type='reset']:hover,
-button:hover {
-background: transparent;
-border:2px solid #25464E;
-color: #25464E;
+button:hover,
+input[type='button'].selected,
+input[type='submit'].selected,
+input[type='reset'].selected,
+button.selected {
+background: #25464E;
+border:0;
+color: #fff;
 cursor: pointer;
 }
 
-input[disabled=disabled],
-button[disabled=disabled],
-input[readonly=readonly],
-button[readonly=readonly]{
-    color:#888;
+button.icon {
+position: relative;
+padding-left:28px;
+margin-left:4px;
 }
 
+button.icon::before {
+position: absolute;
+left: 6px;
+background-size: 16px 16px;
+background-repeat: no-repeat;
+display: inline-block;
+width: 16px;
+height: 16px;
+content:"";
+color:#fff;
+}
+
+button.small_icon::before {
+left: 5px;
+top: 3px;
+width: 14px;
+height: 14px;
+background-size: 14px 14px;
+}
+
+button.small_icon {
+padding-left:24px;
+margin-left:4px;
+}
+
+button.invert::before {
+filter: invert(1);
+}
+
+button.icon_home::before {
+    background-image: url('../img/documents/cloud.svg');
+}
+
+button.icon_foldernew::before {
+    background-image: url('../img/documents/folder-plus.svg');
+}
+
+button.icon_folder::before {
+    background-image: url('../img/documents/folder.svg');
+}
+
+button.icon_filenew::before {
+    background-image: url('../img/documents/file-import.svg');
+}
+
+button.icon_download::before {
+    background-image: url('../img/documents/download.svg');
+}
+
+button.icon_edit::before {
+    background-image: url('../img/documents/edit.svg');
+}
+
+button.icon_delete::before {
+    background-image: url('../img/documents/trash-alt.svg');
+}
+
+*[disabled=disabled],
+*[disabled],
+*[readonly=readonly],
+*[readonly] {
+    color:#888;
+    cursor:not-allowed !important;
+}
+
+button[disabled=disabled],
+button[disabled] {
+    color:#ccc;
+}
+
+label {
+cursor:pointer;
+}
 
 .toolbar {
 padding-bottom:2px;
@@ -365,7 +473,7 @@ margin:2px;
 .tabs a {
 display:block;
 float:left;
-color:#000000;
+color:rgba(255,255,255,0.8);
 /* padding:6px 10px 4px 10px; */
 padding:6px 10px;
 white-space:nowrap;
@@ -473,7 +581,7 @@ overflow:auto;
     width: 30%;
     text-align: right;
     margin: 0;
-    padding: 2px .5em 0 0;
+    padding: 6px .5em 0 0;
     user-select: none;
     -moz-user-select: none;
     -webkit-user-select: none;
@@ -576,14 +684,14 @@ div.ploopi_explorer_maintitle {
 }
 
 div.ploopi_explorer_title {
-    color:#000000;
+    color:rgba(255,255,255,0.8);
     background:#4F8999;
     overflow:hidden;
     border-bottom:2px solid #25464E;
 }
 
 div.ploopi_explorer_title a {
-    color:#000000;
+    color:rgba(255,255,255,0.8);
 }
 
 div.ploopi_explorer_title a:hover {
@@ -624,6 +732,11 @@ a.ploopi_explorer_element * {
     padding:4px 4px;
 }
 
+.ploopi_explorer_line_1 p,
+.ploopi_explorer_line_2 p {
+    line-height:1.4em;
+}
+
 *.ploopi_explorer_element p img, *.ploopi_explorer_element p span, *.ploopi_explorer_element p a {
     display: inline-block;
     vertical-align: middle;
@@ -647,13 +760,13 @@ a.ploopi_explorer_link:hover {
 
 div.ploopi_explorer_line_1 {
     overflow:hidden;
-    background:#f0f0f0;
+    background:rgba(210,210,210,0.8);
     margin-bottom:2px;
 }
 
 div.ploopi_explorer_line_2 {
     overflow:hidden;
-    background:#e0e0e0;
+    background:rgba(230,230,230,0.8);
     margin-bottom:2px;
 }
 
@@ -665,6 +778,20 @@ div.ploopi_explorer_tools a {
     display:block;
     float:left;
     padding:1px 2px;
+}
+
+div.ploopi_explorer_tools > button {
+    display:inline-block;
+    padding-top:2px;
+    padding-bottom:2px;
+    margin-top:3px;
+    margin-left:2px;
+}
+
+div.ploopi_explorer_tools > button > img {
+    margin:4px 5px 2px 5px;
+    width:12px;
+    height:12px;
 }
 
 .treeview_node {
@@ -910,7 +1037,7 @@ select.ploopi_page_by {
 .ploopi_generate_form h1,
 .ploopi_generate_form h2,
 .ploopi_generate_form h3,
-.ploopi_generate_form form {
+.ploopi_generate_form > form {
     border:0;
     margin:0;
     padding:0;
@@ -956,10 +1083,10 @@ select.ploopi_page_by {
     font-weight:normal;
 }
 
-.ploopi_generate_form label{
+.ploopi_generate_form > form > div > fieldset > div > label{
     display:block;
     text-align:right;
-    padding-top:2px;
+    padding-top:5px;
     width:30%;
     float:left;
     clear:both;
@@ -969,11 +1096,11 @@ select.ploopi_page_by {
     -webkit-user-select: none;
 }
 
-.ploopi_generate_form label.required{
+.ploopi_generate_form > form > div > fieldset > div >  label.required{
     background:url(../img/forms/required.png) no-repeat right top;
 }
 
-.ploopi_generate_form label span{
+.ploopi_generate_form > form > div > fieldset > div > label > span{
     color:#666;
     display:block;
     font-weight:normal;
@@ -981,23 +1108,30 @@ select.ploopi_page_by {
     width:100%;
 }
 
-.ploopi_generate_form input,
-.ploopi_generate_form select,
-.ploopi_generate_form textarea{
+.ploopi_generate_form > form > div > fieldset > div > input,
+.ploopi_generate_form > form > div > fieldset > div > select,
+.ploopi_generate_form > form > div > fieldset > div > textarea{
     float:left;
     width:60%;
     margin:0 0 5px 0;
 }
 
-.ploopi_generate_form select option, .ploopi_generate_form select optgroup {
+.ploopi_generate_form > form > div > fieldset > div > input[type='checkbox'],
+.ploopi_generate_form > form > div > fieldset > div > input[type='radio'] {
+    width:auto;
+    margin-top:6px;
+}
+
+.ploopi_generate_form > form > div > fieldset > div > select option,
+.ploopi_generate_form > form > div > fieldset > div > select optgroup {
     background: #f8f8f8;
 }
 
-.ploopi_generate_form input[type=password]{
+.ploopi_generate_form > form > div > fieldset > div > input[type=password]{
     letter-spacing:2px;
 }
 
-.ploopi_generate_form span{
+.ploopi_generate_form > form > div > fieldset > div > span {
     display:block;
     float:left;
     margin:2px 0 5px 0;
@@ -1005,10 +1139,11 @@ select.ploopi_page_by {
 }
 
 
-.ploopi_generate_form span *{
-    width:auto;
+.ploopi_generate_form > form > div > fieldset > div > span *{
+   /*  width:auto; */
 }
-.ploopi_generate_form span label{
+
+.ploopi_generate_form > form > div > fieldset > div > span > label {
     display:block;
     float:left;
     clear:none;
@@ -1017,11 +1152,11 @@ select.ploopi_page_by {
     width:auto;
 }
 
-.ploopi_generate_form span input{
+.ploopi_generate_form > form > div > fieldset > div > span > input{
     margin:2px 0;
 }
 
-.ploopi_generate_form fieldset {
+.ploopi_generate_form > form > div > fieldset {
     clear:both;
     display:block;
     margin: 0;
@@ -1030,7 +1165,7 @@ select.ploopi_page_by {
     border:1px solid #ccc;
 }
 
-.ploopi_generate_form fieldset legend {
+.ploopi_generate_form > form > div > fieldset > legend {
     padding:0 4px;
     font-weight:bold;
 }
@@ -1043,5 +1178,6 @@ select.ploopi_page_by {
 
 .ploopi_generate_form button {
     float:right;
+    margin-left:4px;
     cursor: pointer;
 }

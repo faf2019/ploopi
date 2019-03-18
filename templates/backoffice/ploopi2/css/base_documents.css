@@ -69,3 +69,45 @@ div.documents_formcontent {
     background-color:#f0f0f0;
     padding:2px;
 }
+
+
+#documents_dropzone {
+    display: block;
+    position: relative;
+    border: 2px solid rgba(0,0,0,0.2);
+    background-color: rgba(255,255,255,0.5);
+    text-align: center;
+    font-size: 20px;
+}
+
+#documents_dropzone:hover {
+    cursor:pointer;
+}
+
+#documents_dropzone.dragover {
+    border: 2px solid rgba(0,0,0,0.4);
+    background-color: rgba(255,255,255,0.3);
+}
+
+#documents_filelist {
+    display: block;
+    font-size:12px;
+    padding:2px;
+    min-height:100px;
+    max-height:250px;
+    overflow:auto;
+}
+
+#documents_filelist > div {
+    display:block;
+    float:left;
+    padding:2px 4px;
+    border:1px solid #ccc;
+    background-color:rgba(255,255,255,0.3);
+    margin-left:2px;
+    margin-bottom:2px;
+    max-width: 250px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

@@ -32,160 +32,20 @@ selected text : #FFFFFF
 /******************
   MAIN LAYOUT
 *******************/
-
-/* GENERICS */
 @font-face {
-    font-family:'Ubuntu';
-    font-style:normal;
-    font-weight:100;
-    src: url('../fonts/Ubuntu-L-webfont.eot');
-    src: url('../fonts/Ubuntu-L-webfont.eot?#iefix') format('embedded-opentype'),
-         url('../fonts/Ubuntu-L-webfont.woff') format('woff'),
-         url('../fonts/Ubuntu-L-webfont.ttf') format('truetype'),
-         url('../fonts/Ubuntu-L-webfont.svg#UbuntuRegular') format('svg');
+    font-family: 'OpenSans';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Open Sans'),
+         local('OpenSans'),
+         url('../fonts/OpenSans.woff2') format('woff2'),
+         url('../fonts/OpenSans.woff') format('woff'),
+         url('../fonts/OpenSans-Regular.ttf') format('truetype'),
+         url('../fonts/OpenSans-Bold.ttf') format('truetype');
 }
-
-@font-face {
-    font-family:'Ubuntu';
-    font-style:italic;
-    font-weight:100;
-    src: url('../fonts/Ubuntu-LI-webfont.eot');
-    src: url('../fonts/Ubuntu-LI-webfont.eot?#iefix') format('embedded-opentype'),
-         url('../fonts/Ubuntu-LI-webfont.woff') format('woff'),
-         url('../fonts/Ubuntu-LI-webfont.ttf') format('truetype'),
-         url('../fonts/Ubuntu-LI-webfont.svg#UbuntuRegular') format('svg');
-}
-
-@font-face {
-    font-family:'Ubuntu';
-    font-style:normal;
-    font-weight:400;
-    src: url('../fonts/Ubuntu-R-webfont.eot');
-    src: url('../fonts/Ubuntu-R-webfont.eot?#iefix') format('embedded-opentype'),
-         url('../fonts/Ubuntu-R-webfont.woff') format('woff'),
-         url('../fonts/Ubuntu-R-webfont.ttf') format('truetype'),
-         url('../fonts/Ubuntu-R-webfont.svg#UbuntuRegular') format('svg');
-}
-
-@font-face {
-    font-family:'Ubuntu';
-    font-style:italic;
-    font-weight:400;
-    src: url('../fonts/Ubuntu-RI-webfont.eot');
-    src: url('../fonts/Ubuntu-RI-webfont.eot?#iefix') format('embedded-opentype'),
-         url('../fonts/Ubuntu-RI-webfont.woff') format('woff'),
-         url('../fonts/Ubuntu-RI-webfont.ttf') format('truetype'),
-         url('../fonts/Ubuntu-RI-webfont.svg#UbuntuRegular') format('svg');
-}
-
-@font-face {
-    font-family:'Ubuntu';
-    font-style:normal;
-    font-weight:600;
-    src: url('../fonts/Ubuntu-M-webfont.eot');
-    src: url('../fonts/Ubuntu-M-webfont.eot?#iefix') format('embedded-opentype'),
-         url('../fonts/Ubuntu-M-webfont.woff') format('woff'),
-         url('../fonts/Ubuntu-M-webfont.ttf') format('truetype'),
-         url('../fonts/Ubuntu-M-webfont.svg#UbuntuRegular') format('svg');
-}
-
-@font-face {
-    font-family:'Ubuntu';
-    font-style:italic;
-    font-weight:600;
-    src: url('../fonts/Ubuntu-MI-webfont.eot');
-    src: url('../fonts/Ubuntu-MI-webfont.eot?#iefix') format('embedded-opentype'),
-         url('../fonts/Ubuntu-MI-webfont.woff') format('woff'),
-         url('../fonts/Ubuntu-MI-webfont.ttf') format('truetype'),
-         url('../fonts/Ubuntu-MI-webfont.svg#UbuntuRegular') format('svg');
-}
-
-
-
-/*
-@font-face {
-    font-family:'Myriad Set Pro';
-    font-style:normal;
-    font-weight:100;
-    src:local('Ã¢ËÂºÃ¯Â¸Å½'), url("../fonts/myriad-set-pro_ultralight.woff") format("woff"), url("/wss/fonts/Myriad-Set-Pro/v1/myriad-set-pro_ultralight.ttf") format("truetype");
-}
-
-@font-face {
-    font-family:'Myriad Set Pro';
-    font-style:italic;
-    font-weight:100;
-    src:local('Ã¢ËÂºÃ¯Â¸Å½'), url("../fonts/myriad-set-pro_ultralight-italic.woff") format("woff"), url("/wss/fonts/Myriad-Set-Pro/v1/myriad-set-pro_ultralight-italic.ttf") format("truetype");
-}
-
-@font-face {
-    font-family:'Myriad Set Pro';
-    font-style:normal;
-    font-weight:200;
-    src:local('Ã¢ËÂºÃ¯Â¸Å½'), url("../fonts/myriad-set-pro_thin.woff") format("woff"), url("/wss/fonts/Myriad-Set-Pro/v1/myriad-set-pro_thin.ttf") format("truetype");
-}
-
-@font-face {
-    font-family:'Myriad Set Pro';
-    font-style:italic;
-    font-weight:200;
-    src:local('Ã¢ËÂºÃ¯Â¸Å½'), url("../fonts/myriad-set-pro_thin-italic.woff") format("woff"), url("/wss/fonts/Myriad-Set-Pro/v1/myriad-set-pro_thin-italic.ttf") format("truetype");
-}
-
-@font-face {
-    font-family:'Myriad Set Pro';
-    font-style:italic;
-    font-weight:400;
-    src:local('Ã¢ËÂºÃ¯Â¸Å½'), url("../fonts/myriad-set-pro_text-italic.woff") format("woff"), url("/wss/fonts/Myriad-Set-Pro/v1/myriad-set-pro_text-italic.ttf") format("truetype");
-}
-
-@font-face {
-    font-family:'Myriad Set Pro';
-    font-style:normal;
-    font-weight:500;
-    src:local('Ã¢ËÂºÃ¯Â¸Å½'), url("../fonts/myriad-set-pro_medium.woff") format("woff"), url("/wss/fonts/Myriad-Set-Pro/v1/myriad-set-pro_medium.ttf") format("truetype");
-}
-
-@font-face {
-    font-family:'Myriad Set Pro';
-    font-style:italic;
-    font-weight:500;
-    src:local('Ã¢ËÂºÃ¯Â¸Å½'), url("../fonts/myriad-set-pro_medium-italic.woff") format("woff"), url("/wss/fonts/Myriad-Set-Pro/v1/myriad-set-pro_medium-italic.ttf") format("truetype");
-}
-
-
-@font-face {
-    font-family:'Myriad Set Pro';
-    font-style:normal;
-    font-weight:600;
-    src:local('Ã¢ËÂºÃ¯Â¸Å½'), url("../fonts/myriad-set-pro_semibold.woff") format("woff"), url("/wss/fonts/Myriad-Set-Pro/v1/myriad-set-pro_semibold.ttf") format("truetype");
-}
-
-@font-face {
-    font-family:'Myriad Set Pro';
-    font-style:italic;
-    font-weight:600;
-    src:local('Ã¢ËÂºÃ¯Â¸Å½'), url("../fonts/myriad-set-pro_semibold-italic.woff") format("woff"), url("/wss/fonts/Myriad-Set-Pro/v1/myriad-set-pro_semibold-italic.ttf") format("truetype");
-}
-
-@font-face {
-    font-family:'Myriad Set Pro';
-    font-style:normal;
-    font-weight:700;
-    src:local('Ã¢ËÂºÃ¯Â¸Å½'), url("../fonts/myriad-set-pro_bold.woff") format("woff"), url("/wss/fonts/Myriad-Set-Pro/v1/myriad-set-pro_bold.ttf") format("truetype");
-}
-
-@font-face {
-    font-family:'Myriad Set Pro';
-    font-style:italic;
-    font-weight:700;
-    src:local('Ã¢ËÂºÃ¯Â¸Å½'), url("../fonts/myriad-set-pro_bold-italic.woff") format("woff"), url("/wss/fonts/Myriad-Set-Pro/v1/myriad-set-pro_bold-italic.ttf") format("truetype");
-}
-*/
-
 
 body, form, table, td, input, select, textarea, button {
-font: normal 12px 'Ubuntu', serif;
-font-weight : normal;
+    font: normal 12px 'OpenSans', serif;
 }
 
 
@@ -230,7 +90,8 @@ min-width:500px;
 position:absolute;
 width:100%;
 overflow:hidden;
-background:transparent url(../img/template/wallpaper.jpg) no-repeat scroll 0 0;
+background:url(../img/template/wallpaper.jpg) no-repeat center center;
+background-size:cover;
 }
 
 
@@ -297,10 +158,12 @@ padding: 0px;
 margin: 0px;
 position: absolute;
 top: 31px;
-left: 0px;
+left: -2px;
 display: none;
 width:200px;
 z-index:10000;
+border:2px solid #283137;
+border-top:0;
 }
 
 #mainmenu div.blockmenu a.blockmenu {
@@ -419,49 +282,26 @@ background:hsl(224,14.95%,58.6%);
 
 
 
-#login_rond {
-display:block;
-position:absolute;
-top:120px;
-width:500px;
-margin:auto;
-left:50%;
-margin-left:-250px;
-}
-
 #login_window {
 display:block;
 position:absolute;
-width:261px;
-height:180px;
+width:301px;
+height:220px;
 left:50%;
-top:290px;
-margin-left:-130px;
+top:50%;
+margin-left:-150px;
+margin-top:-210px;
 color:#fff;
-}
 
-#login_window {
-display:block;
-position:absolute;
-width:261px;
-left:50%;
-top:288px;
-margin-left:-130px;
-color:#fff;
 }
 
 #login {
 position:relative;
-width:261px;
-border-radius:15px;
+width:301px;
+border-radius:5px;
 border:2px solid #fff;
-background: #A1483D;
-background: linear-gradient(top, #D0A49F 0%, #A1483D 10%, #A1483D 90%, #A85349 100%);
-background: -moz-linear-gradient(top, #D0A49F 0%, #A1483D 10%, #A1483D 90%, #A85349 100%);
-background: -webkit-linear-gradient(top, #D0A49F 0%, #A1483D 10%, #A1483D 90%, #A85349 100%);
-background: -ms-linear-gradient(top, #D0A49F 0%, #A1483D 10%, #A1483D 90%, #A85349 100%);
+background: rgba(0,0,0,0.6);
 z-index:2;
-box-shadow:0px 2px 3px rgba(0,0,0,0.5);
 padding-bottom:30px;
 }
 
@@ -474,7 +314,7 @@ padding:0;
 .login_form_box {
 display:block;
 position:relative;
-padding:10px 30px;
+padding:10px 50px;
 }
 
 .login_form_box label {
@@ -486,8 +326,10 @@ margin-top:6px;
 display:block;
 border: 2px solid rgba(255,255,255,1);
 width:100%;
+/*
 padding-left:4px;
 padding-right:4px;
+*/
 margin-top:6px;
 box-sizing: border-box; /* css3 rec */
 -moz-box-sizing: border-box; /* ff2 */
@@ -567,17 +409,29 @@ opacity:1;
 #lostpassword_form {
 position:absolute;
 left:5px;
-bottom:-230px;
+bottom:-232px;
 height:230px;
-width:250px;
-border-radius:0 0 15px 15px;
+width:290px;
+border-radius:0 0 5px 5px;
 border:2px solid #fff;
-background: #A1483D;
-background: linear-gradient(top, #A1483D 0%, #A1483D 90%, #A85349 100%);
-background: -moz-linear-gradient(top, #A1483D 0%, #A1483D 90%, #A85349 100%);
-background: -webkit-linear-gradient(top, #A1483D 0%, #A1483D 90%, #A85349 100%);
-background: -ms-linear-gradient(top, #A1483D 0%, #A1483D 90%, #A85349 100%);
-box-shadow: 0px 2px 3px rgba(0,0,0,0.5);
+background: rgba(0,0,0,0.6);
+}
+
+#login_statusbar {
+position:absolute;
+height:20px;
+line-height:20px;
+bottom:0px;
+width:100%;
+-moz-user-select: none;
+-khtml-user-select: none;
+user-select: none;
+color:#0f3d61;
+text-align:center;
+}
+
+#login_statusbar a {
+/* font-weight:bold; */
 }
 
 
@@ -597,7 +451,7 @@ color:#FFFFFF;
 color:#fff;
 height:31px;
 line-height:31px;
-padding:0 10px;
+padding:0 4px;
 }
 
 #userbox > * {
@@ -631,86 +485,119 @@ opacity:0.7;
 opacity:1;
 }
 
-
-/*
-#bandeau .title {
-position:absolute;
-top:10px;
-left:200px;
-width:260px;
-height:60px;
-font-family: "Qlassik",Tahoma,Verdana,Arial,sans-serif;
-font-size: 30px ;
-letter-spacing:5px;
-word-spacing:10px;
-color:#fff;
-text-shadow: 0px 0px 4px #000;
-}
-*/
-
-/*
-#bandeau .userbox {
-position:absolute;
-top:8px;
-right:8px;
-}
-
-#bandeau .userbox a {
+#workspace {
 display:block;
-float:left;
-line-height:22px;
-height:22px;
-padding:0 5px;
-margin-left:2px;
-text-decoration:none;
-color:rgba(255,255,255,0.8);
-border-radius:5px;
--moz-border-radius:5px;
--webkit-border-radius:5px;
--moz-transition-property: background-color;
--moz-transition-duration: 0.5s;
--moz-transition-timing-function: ease;
--webkit-transition-property: background-color;
--webkit-transition-duration: 0.5s;
--webkit-transition-timing-function: ease;
+float:right;
+position:relative;
+margin-top:3px;
+margin-right:5px;
 }
 
-#bandeau .userbox a * {
+/* http://cssdeck.com/labs/styling-select-box-with-css3 */
+#workspace .dropdown {
+position:relative;
+background:#535A5F;
+border:2px solid rgba(255,255,255,0.3);
+border-radius:2px;
+padding:2px 5px;
+padding-right:30px;
+outline:none;
 display: inline-block;
-vertical-align: middle;
+-webkit-appearance:none;
+-moz-appearance:none;
+appearance:none;
+-moz-user-select: none;
+-webkit-user-select: none;
+-ms-user-select: none;
+-o-user-select: none;
+user-select: none;
+color: transparent;
+text-shadow: 0 0 0 #fff;
+cursor:pointer;
+-moz-box-sizing: content-box;
+-webkit-box-sizing:content-box;
+box-sizing:content-box;
+box-shadow:none;
+height:17px;
 }
 
-#bandeau .userbox a img {
-margin-right:2px;
+#workspace .dropdown option {
+color:#fff;
+}
+
+#workspace:after {
+content: url(../img/template/arrow-circle-o-down.png);
+position:absolute;
+right:3px;
+top:4px;
 opacity:0.5;
 }
 
-#bandeau .userbox a:hover {
-background-color:rgba(255,255,255,0.2);
--moz-transition-duration: 0s;
--webkit-transition-duration: 0s;
-}
 
-#bandeau .userbox a:hover img {
-opacity:1;
-}
-
-#bandeau .userbox strong.user,
-#bandeau .userbox span.user {
+#searchbox {
 display:block;
-float:left;
-line-height:22px;
-height:22px;
-padding:0 5px;
-margin-left:2px;
-text-decoration:none;
-color:rgba(255,255,255,0.8);
-border-radius:5px;
--moz-border-radius:5px;
--webkit-border-radius:5px;
-background-color:rgba(0,0,0,0.2);
+float:right;
+position:relative;
+margin-top:3px;
+margin-right:5px;
 }
-*/
+
+#searchbox input {
+width:80px;
+background:#535A5F;
+border:2px solid rgba(255,255,255,0.3);
+border-radius:2px;
+padding:2px 5px;
+outline:none;
+padding-right:22px;
+color:#fff;
+outline:none;
+-webkit-appearance:none;
+-moz-appearance:none;
+appearance:none;
+cursor:pointer;
+-moz-box-sizing: content-box;
+-webkit-box-sizing:content-box;
+box-sizing:content-box;
+box-shadow:none;
+height:17px;
+-webkit-transition: all .25s ease;
+-moz-transition: all .25s ease;
+transition: all .25s ease;
+}
+
+#searchbox input:focus {
+   width: 150px;
+}
+
+
+
+#searchbox input::-webkit-input-placeholder { color:rgba(255,255,255,0.7); }
+#searchbox input::-moz-placeholder { color:rgba(255,255,255,0.7); }
+
+#searchbox input:focus::-webkit-input-placeholder { color:rgba(255,255,255,0); }
+#searchbox input:focus::-moz-placeholder { color:rgba(255,255,255,0); }
+
+#searchbox button {
+position:absolute;
+right:-3px;
+top:-2px;
+border:0;
+background:transparent;
+opacity:0.5;
+box-shadow:none;
+-moz-box-shadow:none;
+-webkit-box-shadow:none;
+-moz-box-sizing: content-box;
+-webkit-box-sizing:content-box;
+box-sizing:content-box;
+}
+
+#search:focus {
+border-color:rgba(255,255,255,1);
+}
+
+
 
 #msg_unread {
 margin-left:6px;

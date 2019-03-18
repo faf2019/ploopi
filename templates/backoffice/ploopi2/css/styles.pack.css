@@ -1100,6 +1100,48 @@ div.documents_formcontent {
     background-color:#f0f0f0;
     padding:2px;
 }
+
+
+#documents_dropzone {
+    display: block;
+    position: relative;
+    border: 2px solid rgba(0,0,0,0.2);
+    background-color: rgba(255,255,255,0.5);
+    text-align: center;
+    font-size: 20px;
+}
+
+#documents_dropzone:hover {
+    cursor:pointer;
+}
+
+#documents_dropzone.dragover {
+    border: 2px solid rgba(0,0,0,0.4);
+    background-color: rgba(255,255,255,0.3);
+}
+
+#documents_filelist {
+    display: block;
+    font-size:12px;
+    padding:2px;
+    min-height:100px;
+    max-height:250px;
+    overflow:auto;
+}
+
+#documents_filelist > div {
+    display:block;
+    float:left;
+    padding:2px 4px;
+    border:1px solid #ccc;
+    background-color:rgba(255,255,255,0.3);
+    margin-left:2px;
+    margin-bottom:2px;
+    max-width: 250px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 /*
 light : #0080FF
 dark : #2E9AFE
@@ -1134,160 +1176,20 @@ selected text : #FFFFFF
 /******************
   MAIN LAYOUT
 *******************/
-
-/* GENERICS */
 @font-face {
-    font-family:'Ubuntu';
-    font-style:normal;
-    font-weight:100;
-    src: url('../fonts/Ubuntu-L-webfont.eot');
-    src: url('../fonts/Ubuntu-L-webfont.eot?#iefix') format('embedded-opentype'),
-         url('../fonts/Ubuntu-L-webfont.woff') format('woff'),
-         url('../fonts/Ubuntu-L-webfont.ttf') format('truetype'),
-         url('../fonts/Ubuntu-L-webfont.svg#UbuntuRegular') format('svg');
+    font-family: 'OpenSans';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Open Sans'),
+         local('OpenSans'),
+         url('../fonts/OpenSans.woff2') format('woff2'),
+         url('../fonts/OpenSans.woff') format('woff'),
+         url('../fonts/OpenSans-Regular.ttf') format('truetype'),
+         url('../fonts/OpenSans-Bold.ttf') format('truetype');
 }
-
-@font-face {
-    font-family:'Ubuntu';
-    font-style:italic;
-    font-weight:100;
-    src: url('../fonts/Ubuntu-LI-webfont.eot');
-    src: url('../fonts/Ubuntu-LI-webfont.eot?#iefix') format('embedded-opentype'),
-         url('../fonts/Ubuntu-LI-webfont.woff') format('woff'),
-         url('../fonts/Ubuntu-LI-webfont.ttf') format('truetype'),
-         url('../fonts/Ubuntu-LI-webfont.svg#UbuntuRegular') format('svg');
-}
-
-@font-face {
-    font-family:'Ubuntu';
-    font-style:normal;
-    font-weight:400;
-    src: url('../fonts/Ubuntu-R-webfont.eot');
-    src: url('../fonts/Ubuntu-R-webfont.eot?#iefix') format('embedded-opentype'),
-         url('../fonts/Ubuntu-R-webfont.woff') format('woff'),
-         url('../fonts/Ubuntu-R-webfont.ttf') format('truetype'),
-         url('../fonts/Ubuntu-R-webfont.svg#UbuntuRegular') format('svg');
-}
-
-@font-face {
-    font-family:'Ubuntu';
-    font-style:italic;
-    font-weight:400;
-    src: url('../fonts/Ubuntu-RI-webfont.eot');
-    src: url('../fonts/Ubuntu-RI-webfont.eot?#iefix') format('embedded-opentype'),
-         url('../fonts/Ubuntu-RI-webfont.woff') format('woff'),
-         url('../fonts/Ubuntu-RI-webfont.ttf') format('truetype'),
-         url('../fonts/Ubuntu-RI-webfont.svg#UbuntuRegular') format('svg');
-}
-
-@font-face {
-    font-family:'Ubuntu';
-    font-style:normal;
-    font-weight:600;
-    src: url('../fonts/Ubuntu-M-webfont.eot');
-    src: url('../fonts/Ubuntu-M-webfont.eot?#iefix') format('embedded-opentype'),
-         url('../fonts/Ubuntu-M-webfont.woff') format('woff'),
-         url('../fonts/Ubuntu-M-webfont.ttf') format('truetype'),
-         url('../fonts/Ubuntu-M-webfont.svg#UbuntuRegular') format('svg');
-}
-
-@font-face {
-    font-family:'Ubuntu';
-    font-style:italic;
-    font-weight:600;
-    src: url('../fonts/Ubuntu-MI-webfont.eot');
-    src: url('../fonts/Ubuntu-MI-webfont.eot?#iefix') format('embedded-opentype'),
-         url('../fonts/Ubuntu-MI-webfont.woff') format('woff'),
-         url('../fonts/Ubuntu-MI-webfont.ttf') format('truetype'),
-         url('../fonts/Ubuntu-MI-webfont.svg#UbuntuRegular') format('svg');
-}
-
-
-
-/*
-@font-face {
-    font-family:'Myriad Set Pro';
-    font-style:normal;
-    font-weight:100;
-    src:local('Ã¢ËÂºÃ¯Â¸Å½'), url("../fonts/myriad-set-pro_ultralight.woff") format("woff"), url("/wss/fonts/Myriad-Set-Pro/v1/myriad-set-pro_ultralight.ttf") format("truetype");
-}
-
-@font-face {
-    font-family:'Myriad Set Pro';
-    font-style:italic;
-    font-weight:100;
-    src:local('Ã¢ËÂºÃ¯Â¸Å½'), url("../fonts/myriad-set-pro_ultralight-italic.woff") format("woff"), url("/wss/fonts/Myriad-Set-Pro/v1/myriad-set-pro_ultralight-italic.ttf") format("truetype");
-}
-
-@font-face {
-    font-family:'Myriad Set Pro';
-    font-style:normal;
-    font-weight:200;
-    src:local('Ã¢ËÂºÃ¯Â¸Å½'), url("../fonts/myriad-set-pro_thin.woff") format("woff"), url("/wss/fonts/Myriad-Set-Pro/v1/myriad-set-pro_thin.ttf") format("truetype");
-}
-
-@font-face {
-    font-family:'Myriad Set Pro';
-    font-style:italic;
-    font-weight:200;
-    src:local('Ã¢ËÂºÃ¯Â¸Å½'), url("../fonts/myriad-set-pro_thin-italic.woff") format("woff"), url("/wss/fonts/Myriad-Set-Pro/v1/myriad-set-pro_thin-italic.ttf") format("truetype");
-}
-
-@font-face {
-    font-family:'Myriad Set Pro';
-    font-style:italic;
-    font-weight:400;
-    src:local('Ã¢ËÂºÃ¯Â¸Å½'), url("../fonts/myriad-set-pro_text-italic.woff") format("woff"), url("/wss/fonts/Myriad-Set-Pro/v1/myriad-set-pro_text-italic.ttf") format("truetype");
-}
-
-@font-face {
-    font-family:'Myriad Set Pro';
-    font-style:normal;
-    font-weight:500;
-    src:local('Ã¢ËÂºÃ¯Â¸Å½'), url("../fonts/myriad-set-pro_medium.woff") format("woff"), url("/wss/fonts/Myriad-Set-Pro/v1/myriad-set-pro_medium.ttf") format("truetype");
-}
-
-@font-face {
-    font-family:'Myriad Set Pro';
-    font-style:italic;
-    font-weight:500;
-    src:local('Ã¢ËÂºÃ¯Â¸Å½'), url("../fonts/myriad-set-pro_medium-italic.woff") format("woff"), url("/wss/fonts/Myriad-Set-Pro/v1/myriad-set-pro_medium-italic.ttf") format("truetype");
-}
-
-
-@font-face {
-    font-family:'Myriad Set Pro';
-    font-style:normal;
-    font-weight:600;
-    src:local('Ã¢ËÂºÃ¯Â¸Å½'), url("../fonts/myriad-set-pro_semibold.woff") format("woff"), url("/wss/fonts/Myriad-Set-Pro/v1/myriad-set-pro_semibold.ttf") format("truetype");
-}
-
-@font-face {
-    font-family:'Myriad Set Pro';
-    font-style:italic;
-    font-weight:600;
-    src:local('Ã¢ËÂºÃ¯Â¸Å½'), url("../fonts/myriad-set-pro_semibold-italic.woff") format("woff"), url("/wss/fonts/Myriad-Set-Pro/v1/myriad-set-pro_semibold-italic.ttf") format("truetype");
-}
-
-@font-face {
-    font-family:'Myriad Set Pro';
-    font-style:normal;
-    font-weight:700;
-    src:local('Ã¢ËÂºÃ¯Â¸Å½'), url("../fonts/myriad-set-pro_bold.woff") format("woff"), url("/wss/fonts/Myriad-Set-Pro/v1/myriad-set-pro_bold.ttf") format("truetype");
-}
-
-@font-face {
-    font-family:'Myriad Set Pro';
-    font-style:italic;
-    font-weight:700;
-    src:local('Ã¢ËÂºÃ¯Â¸Å½'), url("../fonts/myriad-set-pro_bold-italic.woff") format("woff"), url("/wss/fonts/Myriad-Set-Pro/v1/myriad-set-pro_bold-italic.ttf") format("truetype");
-}
-*/
-
 
 body, form, table, td, input, select, textarea, button {
-font: normal 12px 'Ubuntu', serif;
-font-weight : normal;
+    font: normal 12px 'OpenSans', serif;
 }
 
 
@@ -1332,7 +1234,8 @@ min-width:500px;
 position:absolute;
 width:100%;
 overflow:hidden;
-background:transparent url(../img/template/wallpaper.jpg) no-repeat scroll 0 0;
+background:url(../img/template/wallpaper.jpg) no-repeat center center;
+background-size:cover;
 }
 
 
@@ -1399,10 +1302,12 @@ padding: 0px;
 margin: 0px;
 position: absolute;
 top: 31px;
-left: 0px;
+left: -2px;
 display: none;
 width:200px;
 z-index:10000;
+border:2px solid #283137;
+border-top:0;
 }
 
 #mainmenu div.blockmenu a.blockmenu {
@@ -1521,49 +1426,26 @@ background:hsl(224,14.95%,58.6%);
 
 
 
-#login_rond {
-display:block;
-position:absolute;
-top:120px;
-width:500px;
-margin:auto;
-left:50%;
-margin-left:-250px;
-}
-
 #login_window {
 display:block;
 position:absolute;
-width:261px;
-height:180px;
+width:301px;
+height:220px;
 left:50%;
-top:290px;
-margin-left:-130px;
+top:50%;
+margin-left:-150px;
+margin-top:-210px;
 color:#fff;
-}
 
-#login_window {
-display:block;
-position:absolute;
-width:261px;
-left:50%;
-top:288px;
-margin-left:-130px;
-color:#fff;
 }
 
 #login {
 position:relative;
-width:261px;
-border-radius:15px;
+width:301px;
+border-radius:5px;
 border:2px solid #fff;
-background: #A1483D;
-background: linear-gradient(top, #D0A49F 0%, #A1483D 10%, #A1483D 90%, #A85349 100%);
-background: -moz-linear-gradient(top, #D0A49F 0%, #A1483D 10%, #A1483D 90%, #A85349 100%);
-background: -webkit-linear-gradient(top, #D0A49F 0%, #A1483D 10%, #A1483D 90%, #A85349 100%);
-background: -ms-linear-gradient(top, #D0A49F 0%, #A1483D 10%, #A1483D 90%, #A85349 100%);
+background: rgba(0,0,0,0.6);
 z-index:2;
-box-shadow:0px 2px 3px rgba(0,0,0,0.5);
 padding-bottom:30px;
 }
 
@@ -1576,7 +1458,7 @@ padding:0;
 .login_form_box {
 display:block;
 position:relative;
-padding:10px 30px;
+padding:10px 50px;
 }
 
 .login_form_box label {
@@ -1588,8 +1470,10 @@ margin-top:6px;
 display:block;
 border: 2px solid rgba(255,255,255,1);
 width:100%;
+/*
 padding-left:4px;
 padding-right:4px;
+*/
 margin-top:6px;
 box-sizing: border-box; /* css3 rec */
 -moz-box-sizing: border-box; /* ff2 */
@@ -1669,17 +1553,29 @@ opacity:1;
 #lostpassword_form {
 position:absolute;
 left:5px;
-bottom:-230px;
+bottom:-232px;
 height:230px;
-width:250px;
-border-radius:0 0 15px 15px;
+width:290px;
+border-radius:0 0 5px 5px;
 border:2px solid #fff;
-background: #A1483D;
-background: linear-gradient(top, #A1483D 0%, #A1483D 90%, #A85349 100%);
-background: -moz-linear-gradient(top, #A1483D 0%, #A1483D 90%, #A85349 100%);
-background: -webkit-linear-gradient(top, #A1483D 0%, #A1483D 90%, #A85349 100%);
-background: -ms-linear-gradient(top, #A1483D 0%, #A1483D 90%, #A85349 100%);
-box-shadow: 0px 2px 3px rgba(0,0,0,0.5);
+background: rgba(0,0,0,0.6);
+}
+
+#login_statusbar {
+position:absolute;
+height:20px;
+line-height:20px;
+bottom:0px;
+width:100%;
+-moz-user-select: none;
+-khtml-user-select: none;
+user-select: none;
+color:#0f3d61;
+text-align:center;
+}
+
+#login_statusbar a {
+/* font-weight:bold; */
 }
 
 
@@ -1699,7 +1595,7 @@ color:#FFFFFF;
 color:#fff;
 height:31px;
 line-height:31px;
-padding:0 10px;
+padding:0 4px;
 }
 
 #userbox > * {
@@ -1733,86 +1629,119 @@ opacity:0.7;
 opacity:1;
 }
 
-
-/*
-#bandeau .title {
-position:absolute;
-top:10px;
-left:200px;
-width:260px;
-height:60px;
-font-family: "Qlassik",Tahoma,Verdana,Arial,sans-serif;
-font-size: 30px ;
-letter-spacing:5px;
-word-spacing:10px;
-color:#fff;
-text-shadow: 0px 0px 4px #000;
-}
-*/
-
-/*
-#bandeau .userbox {
-position:absolute;
-top:8px;
-right:8px;
-}
-
-#bandeau .userbox a {
+#workspace {
 display:block;
-float:left;
-line-height:22px;
-height:22px;
-padding:0 5px;
-margin-left:2px;
-text-decoration:none;
-color:rgba(255,255,255,0.8);
-border-radius:5px;
--moz-border-radius:5px;
--webkit-border-radius:5px;
--moz-transition-property: background-color;
--moz-transition-duration: 0.5s;
--moz-transition-timing-function: ease;
--webkit-transition-property: background-color;
--webkit-transition-duration: 0.5s;
--webkit-transition-timing-function: ease;
+float:right;
+position:relative;
+margin-top:3px;
+margin-right:5px;
 }
 
-#bandeau .userbox a * {
+/* http://cssdeck.com/labs/styling-select-box-with-css3 */
+#workspace .dropdown {
+position:relative;
+background:#535A5F;
+border:2px solid rgba(255,255,255,0.3);
+border-radius:2px;
+padding:2px 5px;
+padding-right:30px;
+outline:none;
 display: inline-block;
-vertical-align: middle;
+-webkit-appearance:none;
+-moz-appearance:none;
+appearance:none;
+-moz-user-select: none;
+-webkit-user-select: none;
+-ms-user-select: none;
+-o-user-select: none;
+user-select: none;
+color: transparent;
+text-shadow: 0 0 0 #fff;
+cursor:pointer;
+-moz-box-sizing: content-box;
+-webkit-box-sizing:content-box;
+box-sizing:content-box;
+box-shadow:none;
+height:17px;
 }
 
-#bandeau .userbox a img {
-margin-right:2px;
+#workspace .dropdown option {
+color:#fff;
+}
+
+#workspace:after {
+content: url(../img/template/arrow-circle-o-down.png);
+position:absolute;
+right:3px;
+top:4px;
 opacity:0.5;
 }
 
-#bandeau .userbox a:hover {
-background-color:rgba(255,255,255,0.2);
--moz-transition-duration: 0s;
--webkit-transition-duration: 0s;
-}
 
-#bandeau .userbox a:hover img {
-opacity:1;
-}
-
-#bandeau .userbox strong.user,
-#bandeau .userbox span.user {
+#searchbox {
 display:block;
-float:left;
-line-height:22px;
-height:22px;
-padding:0 5px;
-margin-left:2px;
-text-decoration:none;
-color:rgba(255,255,255,0.8);
-border-radius:5px;
--moz-border-radius:5px;
--webkit-border-radius:5px;
-background-color:rgba(0,0,0,0.2);
+float:right;
+position:relative;
+margin-top:3px;
+margin-right:5px;
 }
-*/
+
+#searchbox input {
+width:80px;
+background:#535A5F;
+border:2px solid rgba(255,255,255,0.3);
+border-radius:2px;
+padding:2px 5px;
+outline:none;
+padding-right:22px;
+color:#fff;
+outline:none;
+-webkit-appearance:none;
+-moz-appearance:none;
+appearance:none;
+cursor:pointer;
+-moz-box-sizing: content-box;
+-webkit-box-sizing:content-box;
+box-sizing:content-box;
+box-shadow:none;
+height:17px;
+-webkit-transition: all .25s ease;
+-moz-transition: all .25s ease;
+transition: all .25s ease;
+}
+
+#searchbox input:focus {
+   width: 150px;
+}
+
+
+
+#searchbox input::-webkit-input-placeholder { color:rgba(255,255,255,0.7); }
+#searchbox input::-moz-placeholder { color:rgba(255,255,255,0.7); }
+
+#searchbox input:focus::-webkit-input-placeholder { color:rgba(255,255,255,0); }
+#searchbox input:focus::-moz-placeholder { color:rgba(255,255,255,0); }
+
+#searchbox button {
+position:absolute;
+right:-3px;
+top:-2px;
+border:0;
+background:transparent;
+opacity:0.5;
+box-shadow:none;
+-moz-box-shadow:none;
+-webkit-box-shadow:none;
+-moz-box-sizing: content-box;
+-webkit-box-sizing:content-box;
+box-sizing:content-box;
+}
+
+#search:focus {
+border-color:rgba(255,255,255,1);
+}
+
+
 
 #msg_unread {
 margin-left:6px;
@@ -2054,19 +1983,41 @@ top:0px;
 left:0px;
 width:200px;
 overflow:hidden;
-background:#ecedf1;
-border:2px solid #25464E;
-border-radius:2px;
-box-shadow: 0 0 5px rgba(40, 50, 78, 0.3);
+background:#e0e0e0;
+/* border-radius:2px; */
+/* box-shadow: 0 0 5px rgba(40, 50, 78, 0.3); */
+}
+
+.ploopi_popup > * {
+    opacity:0.8;
+}
+
+.ploopi_popup:hover > * {
+    opacity:1;
 }
 
 .ploopi_popup .simplebloc {
 margin:0;
 border-radius:0;
+border: 2px solid #283137;
 }
 
 .ploopi_popup .simplebloc_title {
 border-radius:0;
+line-height:24px;
+height:24px;
+background:#283137;
+}
+
+.ploopi_popup .simplebloc_content {
+margin:0;
+padding:0;
+}
+
+.ploopi_popup .simplebloc_titleleft img {
+padding:3px;
+max-width:16px;
+opacity:0.8;
 }
 
 .calendardiv {
@@ -2181,6 +2132,12 @@ color: #2c4056;
 padding: 4px;
 border: 2px solid rgba(0,0,0,0.2);
 background: rgba(255,255,255,0.5);
+outline: none;
+transition: border-color .2s ease-in;
+}
+
+select {
+    padding: 3px 4px;
 }
 
 input::-webkit-input-placeholder { color:#888; }
@@ -2190,6 +2147,10 @@ select:focus,
 input:focus,
 textarea:focus {
 background: rgba(255,255,255,0.8);
+outline: none;
+border-color:#4F8999;
+
+transition: border-color 0s ease-in;
 }
 
 
@@ -2197,10 +2158,10 @@ input[type='button'],
 input[type='reset'],
 input[type='submit'],
 button {
-border:2px solid transparent;
-padding:3px;
-background:#25464E;
-color:#FFFFFF;
+border:0;
+padding:6px 10px;
+background:#4F8999;
+color: #fff;
 cursor: pointer;
 }
 
@@ -2213,20 +2174,96 @@ font-weight:bold;
 input[type='button']:hover,
 input[type='submit']:hover,
 input[type='reset']:hover,
-button:hover {
-background: transparent;
-border:2px solid #25464E;
-color: #25464E;
+button:hover,
+input[type='button'].selected,
+input[type='submit'].selected,
+input[type='reset'].selected,
+button.selected {
+background: #25464E;
+border:0;
+color: #fff;
 cursor: pointer;
 }
 
-input[disabled=disabled],
-button[disabled=disabled],
-input[readonly=readonly],
-button[readonly=readonly]{
-    color:#888;
+button.icon {
+position: relative;
+padding-left:28px;
+margin-left:4px;
 }
 
+button.icon::before {
+position: absolute;
+left: 6px;
+background-size: 16px 16px;
+background-repeat: no-repeat;
+display: inline-block;
+width: 16px;
+height: 16px;
+content:"";
+color:#fff;
+}
+
+button.small_icon::before {
+left: 5px;
+top: 3px;
+width: 14px;
+height: 14px;
+background-size: 14px 14px;
+}
+
+button.small_icon {
+padding-left:24px;
+margin-left:4px;
+}
+
+button.invert::before {
+filter: invert(1);
+}
+
+button.icon_home::before {
+    background-image: url('../img/documents/cloud.svg');
+}
+
+button.icon_foldernew::before {
+    background-image: url('../img/documents/folder-plus.svg');
+}
+
+button.icon_folder::before {
+    background-image: url('../img/documents/folder.svg');
+}
+
+button.icon_filenew::before {
+    background-image: url('../img/documents/file-import.svg');
+}
+
+button.icon_download::before {
+    background-image: url('../img/documents/download.svg');
+}
+
+button.icon_edit::before {
+    background-image: url('../img/documents/edit.svg');
+}
+
+button.icon_delete::before {
+    background-image: url('../img/documents/trash-alt.svg');
+}
+
+*[disabled=disabled],
+*[disabled],
+*[readonly=readonly],
+*[readonly] {
+    color:#888;
+    cursor:not-allowed !important;
+}
+
+button[disabled=disabled],
+button[disabled] {
+    color:#ccc;
+}
+
+label {
+cursor:pointer;
+}
 
 .toolbar {
 padding-bottom:2px;
@@ -2387,7 +2424,7 @@ margin:2px;
 .tabs a {
 display:block;
 float:left;
-color:#000000;
+color:rgba(255,255,255,0.8);
 /* padding:6px 10px 4px 10px; */
 padding:6px 10px;
 white-space:nowrap;
@@ -2495,7 +2532,7 @@ overflow:auto;
     width: 30%;
     text-align: right;
     margin: 0;
-    padding: 2px .5em 0 0;
+    padding: 6px .5em 0 0;
     user-select: none;
     -moz-user-select: none;
     -webkit-user-select: none;
@@ -2598,14 +2635,14 @@ div.ploopi_explorer_maintitle {
 }
 
 div.ploopi_explorer_title {
-    color:#000000;
+    color:rgba(255,255,255,0.8);
     background:#4F8999;
     overflow:hidden;
     border-bottom:2px solid #25464E;
 }
 
 div.ploopi_explorer_title a {
-    color:#000000;
+    color:rgba(255,255,255,0.8);
 }
 
 div.ploopi_explorer_title a:hover {
@@ -2646,6 +2683,11 @@ a.ploopi_explorer_element * {
     padding:4px 4px;
 }
 
+.ploopi_explorer_line_1 p,
+.ploopi_explorer_line_2 p {
+    line-height:1.4em;
+}
+
 *.ploopi_explorer_element p img, *.ploopi_explorer_element p span, *.ploopi_explorer_element p a {
     display: inline-block;
     vertical-align: middle;
@@ -2669,13 +2711,13 @@ a.ploopi_explorer_link:hover {
 
 div.ploopi_explorer_line_1 {
     overflow:hidden;
-    background:#f0f0f0;
+    background:rgba(210,210,210,0.8);
     margin-bottom:2px;
 }
 
 div.ploopi_explorer_line_2 {
     overflow:hidden;
-    background:#e0e0e0;
+    background:rgba(230,230,230,0.8);
     margin-bottom:2px;
 }
 
@@ -2687,6 +2729,20 @@ div.ploopi_explorer_tools a {
     display:block;
     float:left;
     padding:1px 2px;
+}
+
+div.ploopi_explorer_tools > button {
+    display:inline-block;
+    padding-top:2px;
+    padding-bottom:2px;
+    margin-top:3px;
+    margin-left:2px;
+}
+
+div.ploopi_explorer_tools > button > img {
+    margin:4px 5px 2px 5px;
+    width:12px;
+    height:12px;
 }
 
 .treeview_node {
@@ -2932,7 +2988,7 @@ select.ploopi_page_by {
 .ploopi_generate_form h1,
 .ploopi_generate_form h2,
 .ploopi_generate_form h3,
-.ploopi_generate_form form {
+.ploopi_generate_form > form {
     border:0;
     margin:0;
     padding:0;
@@ -2978,10 +3034,10 @@ select.ploopi_page_by {
     font-weight:normal;
 }
 
-.ploopi_generate_form label{
+.ploopi_generate_form > form > div > fieldset > div > label{
     display:block;
     text-align:right;
-    padding-top:2px;
+    padding-top:5px;
     width:30%;
     float:left;
     clear:both;
@@ -2991,11 +3047,11 @@ select.ploopi_page_by {
     -webkit-user-select: none;
 }
 
-.ploopi_generate_form label.required{
+.ploopi_generate_form > form > div > fieldset > div >  label.required{
     background:url(../img/forms/required.png) no-repeat right top;
 }
 
-.ploopi_generate_form label span{
+.ploopi_generate_form > form > div > fieldset > div > label > span{
     color:#666;
     display:block;
     font-weight:normal;
@@ -3003,23 +3059,30 @@ select.ploopi_page_by {
     width:100%;
 }
 
-.ploopi_generate_form input,
-.ploopi_generate_form select,
-.ploopi_generate_form textarea{
+.ploopi_generate_form > form > div > fieldset > div > input,
+.ploopi_generate_form > form > div > fieldset > div > select,
+.ploopi_generate_form > form > div > fieldset > div > textarea{
     float:left;
     width:60%;
     margin:0 0 5px 0;
 }
 
-.ploopi_generate_form select option, .ploopi_generate_form select optgroup {
+.ploopi_generate_form > form > div > fieldset > div > input[type='checkbox'],
+.ploopi_generate_form > form > div > fieldset > div > input[type='radio'] {
+    width:auto;
+    margin-top:6px;
+}
+
+.ploopi_generate_form > form > div > fieldset > div > select option,
+.ploopi_generate_form > form > div > fieldset > div > select optgroup {
     background: #f8f8f8;
 }
 
-.ploopi_generate_form input[type=password]{
+.ploopi_generate_form > form > div > fieldset > div > input[type=password]{
     letter-spacing:2px;
 }
 
-.ploopi_generate_form span{
+.ploopi_generate_form > form > div > fieldset > div > span {
     display:block;
     float:left;
     margin:2px 0 5px 0;
@@ -3027,10 +3090,11 @@ select.ploopi_page_by {
 }
 
 
-.ploopi_generate_form span *{
-    width:auto;
+.ploopi_generate_form > form > div > fieldset > div > span *{
+   /*  width:auto; */
 }
-.ploopi_generate_form span label{
+
+.ploopi_generate_form > form > div > fieldset > div > span > label {
     display:block;
     float:left;
     clear:none;
@@ -3039,11 +3103,11 @@ select.ploopi_page_by {
     width:auto;
 }
 
-.ploopi_generate_form span input{
+.ploopi_generate_form > form > div > fieldset > div > span > input{
     margin:2px 0;
 }
 
-.ploopi_generate_form fieldset {
+.ploopi_generate_form > form > div > fieldset {
     clear:both;
     display:block;
     margin: 0;
@@ -3052,7 +3116,7 @@ select.ploopi_page_by {
     border:1px solid #ccc;
 }
 
-.ploopi_generate_form fieldset legend {
+.ploopi_generate_form > form > div > fieldset > legend {
     padding:0 4px;
     font-weight:bold;
 }
@@ -3065,6 +3129,7 @@ select.ploopi_page_by {
 
 .ploopi_generate_form button {
     float:right;
+    margin-left:4px;
     cursor: pointer;
 }
 /*
