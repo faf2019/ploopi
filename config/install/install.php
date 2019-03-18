@@ -373,7 +373,7 @@ header('Content-type: text/html; charset=utf-8');
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <title>Installation de Ploopi <?php echo _PLOOPI_VERSION; ?> (<?php echo _PLOOPI_REVISION; ?>)</title>
-    <link rel="icon" href="./templates/backoffice/eyeos/img/favicon.png" type="image/png" />
+    <link rel="icon" href="./templates/backoffice/ploopi2/img/favicon.png" type="image/png" />
     <style>
     #background {display:none;}
     #htaccess {
@@ -436,7 +436,7 @@ header('Content-type: text/html; charset=utf-8');
             <div class="login_btn_right">
                 <button type="submit">
                     <strong style="margin-right:4px;">Installer</strong>
-                    <img src="./templates/backoffice/eyeos/img/template/enter.png" />
+                    <img src="./templates/backoffice/ploopi2/img/template/enter.png" />
                 </button>
             </div>
             </form>

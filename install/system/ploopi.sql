@@ -1132,8 +1132,8 @@ CREATE TABLE `ploopi_workspace` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 INSERT INTO `ploopi_workspace` (`id`, `id_workspace`, `label`, `code`, `system`, `protected`, `parents`, `iprules`, `macrules`, `template`, `depth`, `mustdefinerule`, `backoffice`, `frontoffice`, `backoffice_domainlist`, `title`, `meta_description`, `meta_keywords`, `meta_author`, `meta_copyright`, `meta_robots`, `frontoffice_domainlist`, `priority`) VALUES
-(2, 1, 'Espace Principal', '', 0, 0, '0;1', '', '', 'eyeos', 2, 0, 1, 0, '*\r\n', '', '', '', '', '', '', '*', 1),
-(1, 0, 'system', '', 1, 0, '0', NULL, NULL, 'eyeos', 1, 0, 1, 0, NULL, '', '', '', '', '', 'index, follow, all', '', 0);
+(2, 1, 'Espace Principal', '', 0, 0, '0;1', '', '', 'ploopi2', 2, 0, 1, 0, '*\r\n', '', '', '', '', '', '', '*', 1),
+(1, 0, 'system', '', 1, 0, '0', NULL, NULL, 'ploopi2', 1, 0, 1, 0, NULL, '', '', '', '', '', 'index, follow, all', '', 0);
 
 CREATE TABLE `ploopi_workspace_group` (
   `id_group` int(10) NOT NULL DEFAULT '0',

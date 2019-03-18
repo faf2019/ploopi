@@ -356,7 +356,7 @@ switch($http_host)
          * Template backoffice par défaut (si le template utilisé n'existe pas)
          */
 
-        define ('_PLOOPI_DEFAULT_TEMPLATE', 'eyeos');
+        define ('_PLOOPI_DEFAULT_TEMPLATE', 'ploopi2');
 
         /**
          * Force l'utilisateur à utiliser un mot de passe complexe
