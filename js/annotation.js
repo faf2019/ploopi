@@ -180,7 +180,7 @@ ploopi.annotations.tag_complete = function(idrecord, idtag) {
 };
 
 ploopi.annotations.remove = function(id_annotation, id) {
-    if (confirm('Êtes vous certain de vouloir supprimer cette annotation ?')) ploopi.xhr.send('index-quick.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=annotation_delete&ploopi_annotation_id='+id);
+    if (confirm('ÃŠtes vous certain de vouloir supprimer cette annotation ?')) ploopi.xhr.send('index-quick.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=annotation_delete&ploopi_annotation_id='+id);
     ploopi.annotations.display(id_annotation);
 };
 

@@ -44,7 +44,7 @@ ploopi.xhr.send = function(url, data, asynchronous, getxml, method) {
         data: data,
         async: asynchronous,
         dataType: getxml ? 'xml' : 'html',
-        contentType: 'application/x-www-form-urlencoded;charset=ISO-8859-15'
+        contentType: 'application/x-www-form-urlencoded'
     });
 
     request.done(function(txt) {
@@ -56,12 +56,12 @@ ploopi.xhr.send = function(url, data, asynchronous, getxml, method) {
 
 
 /**
- * Affiche le contenu contenu d'une requête HTTP dans un élément de la page
+ * Affiche le contenu contenu d'une requÃªte HTTP dans un Ã©lÃ©ment de la page
  *
- * @param string url nom du script à appeler
- * @param string data paramètres complémentaires
- * @param string div identifiant de l'élément
- * @param string method méthode http à utiliser (GET/POST)
+ * @param string url nom du script Ã  appeler
+ * @param string data paramÃ¨tres complÃ©mentaires
+ * @param string div identifiant de l'Ã©lÃ©ment
+ * @param string method mÃ©thode http Ã  utiliser (GET/POST)
  */
 
 ploopi.xhr.todiv = function(url, data, id, method) {
@@ -72,7 +72,7 @@ ploopi.xhr.todiv = function(url, data, id, method) {
         url: url,
         data: data,
         dataType: 'html',
-        contentType: 'application/x-www-form-urlencoded;charset=ISO-8859-15'
+        contentType: 'application/x-www-form-urlencoded'
     });
 
     request.done(function(html) {
@@ -90,7 +90,7 @@ ploopi.xhr.tocb = function(url, data, callback, ticket, getxml, method) {
         url: url,
         data: data,
         dataType: getxml ? 'xml' : 'html',
-        contentType: 'application/x-www-form-urlencoded;charset=ISO-8859-15'
+        contentType: 'application/x-www-form-urlencoded'
     });
 
     request.done(function(txt) {
@@ -100,14 +100,14 @@ ploopi.xhr.tocb = function(url, data, callback, ticket, getxml, method) {
 };
 
 /**
- * Permet d'ouvrir un popup avec le contenu d'une requête HTTP
+ * Permet d'ouvrir un popup avec le contenu d'une requÃªte HTTP
  *
  * @param int width largeur du popup
- * @param event e événement déclencheur
+ * @param event e Ã©vÃ©nement dÃ©clencheur
  * @param string id identifiant du popup
- * @param string url nom du script à appeler
- * @param string data paramètres complémentaires
- * @param string method méthode http à utiliser (GET/POST)
+ * @param string url nom du script Ã  appeler
+ * @param string data paramÃ¨tres complÃ©mentaires
+ * @param string method mÃ©thode http Ã  utiliser (GET/POST)
  * @param boolean true|false active la capture de la touche escape pour fermeture de la popup
  */
 
@@ -117,3 +117,24 @@ ploopi.xhr.topopup = function(width, e, id, url, data, method) {
     ploopi.popup.show(ploopi.xhr.ajaxloader_content, width, e, 'click', id, null, null);
     ploopi.xhr.todiv(url, data, id, method);
 };
+
+
+/**
+ * Permet de valider automatiquement un formulaire via xmlhttprequest
+ *
+ * @param object form formulaire
+ * @param string id identifiant du popup
+ * @param function beforesubmit fonction appelÃ©e avant validation (doit retourner true/false)
+ *
+ * @todo possibilitÃ© de ne pas renvoyer la rÃ©ponse vers du contenu
+ */
+
+ploopi.xhr.submit = function(form, id, beforesubmit)
+{
+    var submit = true;
+    if (typeof(beforesubmit) == 'function') submit = beforesubmit(form);
+
+    query = jQuery(form).serialize();
+    query += (query == '' ? '' : '&')+'ploopi_xhr=1';
+    if (submit) ploopi.xhr.todiv(form.action, query, id, 'POST');
+}

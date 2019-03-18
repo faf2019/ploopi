@@ -24,9 +24,11 @@ ploopi.skin = {};
 
 // ploopi_skin_array_refresh
 ploopi.skin.array_refresh = function(array_id, array_orderby, array_page, callback) {
-    ploopi.xhr.todiv(
-        'admin-light.php',
-        {
+
+    jQuery.ajax({
+        type: 'GET',
+        url: 'admin-light.php',
+        data:         {
             ploopi_env: _PLOOPI_ENV,
             ploopi_op: 'ploopi_skin_array_refresh',
             array_id: array_id,
@@ -34,15 +36,20 @@ ploopi.skin.array_refresh = function(array_id, array_orderby, array_page, callba
             array_page: array_page,
             ploopi_randomize: Math.random()
         },
-        'ploopi_explorer_main_'+array_id,
-        'GET'
-    );
+        async: true,
+        dataType: 'html',
+        contentType: 'application/x-www-form-urlencoded'
+    }).done(function(html) {
+        jQuery('#ploopi_explorer_main_'+array_id).html(html);
+        if (callback != '') ploopi.execute_function(callback, window, array_id, array_orderby, array_page);
+    });
 };
 
+
 /**
- * Met à jour l'affichage des tableaux générés par la classe skin.
- * Il faut corriger certains problèmes liés à l'affichage ou non d'une barre de défilement vertical.
- * Il faut également corriger les lacunes de IE.
+ * Met Ã  jour l'affichage des tableaux gÃ©nÃ©rÃ©s par la classe skin.
+ * Il faut corriger certains problÃ¨mes liÃ©s Ã  l'affichage ou non d'une barre de dÃ©filement vertical.
+ * Il faut Ã©galement corriger les lacunes de IE.
  */
 
 ploopi.skin.array_renderupdate = function(array_id) {
@@ -53,7 +60,7 @@ ploopi.skin.array_renderupdate = function(array_id) {
         // N'existe pas ?
         if (!jQuery('#ploopi_explorer_spacer_'+array_id).length) {
 
-            // Récupération de la largeur de la scrollbar verticale
+            // RÃ©cupÃ©ration de la largeur de la scrollbar verticale
             var scrollbar_width = $('#ploopi_explorer_values_outer_'+array_id)[0].offsetWidth - $('#ploopi_explorer_values_inner_'+array_id)[0].offsetWidth;
 
             // Insertion d'un bloc de la largeur de la scrollbar dans la ligne de titre

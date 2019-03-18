@@ -11,7 +11,7 @@
 
 ploopi.checkpass = function(item, hook, options) {
 
-    // Permet de gérer le conflit this
+    // Permet de gÃ©rer le conflit this
     var that = this;
 
     that.initialize = function(item, hook, options) {
@@ -19,7 +19,7 @@ ploopi.checkpass = function(item, hook, options) {
         that.hook = jQuery('#' + hook).eq(0);
         that.field_name = that.item.id;
         that.options = {
-            messages: ["Non sûr!", "Trop court", "Très faible", "Faible", "Moyen", "Fort", "Très fort"],
+            messages: ["Non sÃ»r!", "Trop court", "TrÃ¨s faible", "Faible", "Moyen", "Fort", "TrÃ¨s fort"],
             colors: ["#f00", "#999", "#f00", "#c06", "#f60", "#3c0", "#2c0"],
             scores: [10, 15, 30, 40],
             common: ["password", "123456", "123", "1234", "mypass", "pass", "letmein", "azerty", "qsdfgh", "wxcvbn"],

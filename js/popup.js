@@ -51,7 +51,7 @@ ploopi.popup.show = function(popup_content, w, e, centered, id, pposx, pposy) {
         active_effect = true;
     }
 
-    ploopi_popup = $('#'+id).eq(0);
+    ploopi_popup = jQuery('#'+id).eq(0);
 
     w = parseInt(w);
     if (!w) w = 200;
@@ -149,7 +149,7 @@ ploopi.popup.move = function(id, e, pposx, pposy, popup_content) {
 
     if (!id) id = 'ploopi_popup';
 
-    ploopi_popup = $('#'+id).eq(0);
+    ploopi_popup = jQuery('#'+id).eq(0);
 
     posx = 0;
     posy = 0;
@@ -192,22 +192,16 @@ ploopi.popup.move = function(id, e, pposx, pposy, popup_content) {
 };
 
 
-
-
-
-
-
-
-function ploopi_popupize(id, w, centered, pposx, pposy)
+ploopi.popup.ize = function (id, w, centered, pposx, pposy)
 {
     var ploopi_popup;
 
-    if ($(id))
+    if (jQuery('#'+id).length)
     {
-        ploopi_popup = $(id);
-        ploopi_popup.setAttribute('class', 'ploopi_popup');
-        ploopi_popup.setAttribute('className', 'ploopi_popup'); // IE
-        ploopi_popup.setAttribute('style', 'display:block;z-index:'+(10000+ploopi.popup.nb)+';');
+        ploopi_popup = jQuery('#'+id);
+        ploopi_popup.attr('class', 'ploopi_popup');
+        ploopi_popup.attr('className', 'ploopi_popup'); // IE
+        ploopi_popup.attr('style', 'display:block;z-index:'+(10000+ploopi.popup.nb)+';');
 
         w = parseInt(w);
         if (!w) w = 200;
@@ -220,6 +214,7 @@ function ploopi_popupize(id, w, centered, pposx, pposy)
             break;
 
             default:
+
             case true:
                var coordScroll = document.viewport.getScrollOffsets();
                posx = parseInt(document.viewport.getWidth()/2)-parseInt(w/2)+coordScroll.left;
@@ -227,14 +222,12 @@ function ploopi_popupize(id, w, centered, pposx, pposy)
             break;
         }
 
+        ploopi_popup.css({
+            left: posx,
+            top: posy,
+            width: w
+        });
 
-        with(ploopi_popup.style)
-        {
-            left = posx+'px';
-            top = posy+'px';
-            width = w+'px';
-        }
-
-        ploopi.popup.hooks[0].appendChild(ploopi_popup);
+        jQuery(ploopi.popup.hooks[0]).append(ploopi_popup);
     }
-}
+};

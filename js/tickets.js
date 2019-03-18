@@ -109,7 +109,7 @@ ploopi.tickets.select_users = function(query, filtertype, filter, dest) {
 
 
 /**
- * Affiche un popup d'alerte à la réception de nouveaux messages
+ * Affiche un popup d'alerte Ã  la rÃ©ception de nouveaux messages
  */
 
 // ploopi_tickets_alert
@@ -155,7 +155,7 @@ function ploopi_tickets_selectusers_keypress(e)
 }
 
 /*
- * Contrôle spécifique au ticket, vérif qu'au moins un destinataire est sélectionné
+ * ContrÃ´le spÃ©cifique au ticket, vÃ©rif qu'au moins un destinataire est sÃ©lectionnÃ©
  */
 function ploopi_ticket_validateTo(field_label, field_object)
 {

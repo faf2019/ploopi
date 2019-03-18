@@ -22,7 +22,7 @@
 ploopi.calendar = {};
 
 /**
- * Ne plus utiliser cette fonction, utiliser de préférence l'appel PHP : ploopi_open_calendar()
+ * Ne plus utiliser cette fonction, utiliser de prÃ©fÃ©rence l'appel PHP : ploopi_open_calendar()
  */
 ploopi.calendar.open = function(inputfield_id, event) {
     ploopi.popup.show(ploopi.xhr.send('index-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=calendar_open&selected_date='+jQuery('#'+inputfield_id)[0].value+'&inputfield_id='+inputfield_id), 192, event, false, 'ploopi_popup_calendar',null,null, true);

@@ -60,7 +60,7 @@ ploopi.innerHTML = function(id, html) {
 
 
 // clic sur une zone checkbox/radio
-// génère un event équivalent au clic direct sur l'élément
+// gÃ©nÃ¨re un event Ã©quivalent au clic direct sur l'Ã©lÃ©ment
 ploopi.checkbox_click = function(e, inputfield_id) {
 
     var element = jQuery('#'+inputfield_id)[0];
@@ -83,6 +83,17 @@ ploopi.checkbox_click = function(e, inputfield_id) {
 
 
 
+ploopi.execute_function = function(functionName, context) {
+  var args = Array.prototype.slice.call(arguments, 2);
+  var namespaces = functionName.split(".");
+  var func = namespaces.pop();
+  for(var i = 0; i < namespaces.length; i++) {
+    context = context[namespaces[i]];
+  }
+  return context[func].apply(context, args);
+};
+
+
 
 
 
@@ -91,7 +102,7 @@ ploopi.checkbox_click = function(e, inputfield_id) {
 
 
 /**
- * Insertion d'un texte dans un champ à la position du curseur
+ * Insertion d'un texte dans un champ Ã  la position du curseur
  */
 function ploopi_insertatcursor(field, value)
 {
