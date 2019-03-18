@@ -113,7 +113,7 @@ class Template {
     {
         if (!$this->loadfile($handle))
         {
-            ploopi_die("Template->pparse(): Couldn't load template file for handle $handle");
+            die("Template->pparse(): Couldn't load template file for handle $handle");
         }
 
         // actually compile the template now.
@@ -140,7 +140,7 @@ class Template {
     {
         if (!$this->loadfile($handle))
         {
-            ploopi_die("Template->assign_var_from_handle(): Couldn't load template file for handle $handle");
+            die("Template->assign_var_from_handle(): Couldn't load template file for handle $handle");
         }
 
         // Compile it, with the "no echo statements" option on.
@@ -235,7 +235,7 @@ class Template {
 
         if (!file_exists($filename))
         {
-            ploopi_die("Template->make_filename(): Error - file $filename does not exist");
+            die("Template->make_filename(): Error - file $filename does not exist");
         }
 
         return $filename;
