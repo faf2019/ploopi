@@ -73,7 +73,9 @@
         "components/jqueryui": "^1.12",
         "mpdf/mpdf": "^7.1"
     },
-    "config": {
-        "secure-http":false
+    "scripts": {
+        "post-install-cmd": [
+            "cp .htaccess_modele .htaccess"
+        ]
     }
 }
