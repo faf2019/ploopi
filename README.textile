@@ -1,26 +1,31 @@
-INSTALLATION
-============
+h1. PLOOPI
 
-## Installation des paquets (Debian/Ubuntu)
+h2. A propos
 
+http://www.ploopi.org/
+
+h2. Avertissement
+
+Version de dÃ©veloppement
+
+h2. Installation
+
+h3. PrÃ©requis
+
+<code class="sh">
 sudo apt-get update
 sudo apt-get upgrade
 sudo apt-get install --yes apache2 libapache2-mod-php php php-mysql php-gd php-zip php-mcrypt php-curl php-cli memcached php-memcached mariadb-server unoconv composer python-hachoir-metadata catdoc xpdf-utils jhead unrtf unzip zip
-
-## Activation des modules Apache
-
 sudo a2enmod rewrite expires headers
 sudo systemctl restart apache2
-
-## Paramétrage MariaDB
-
 sudo mysql -uroot -p -e "GRANT ALL PRIVILEGES ON ploopi.* TO 'ploopi'@'localhost' IDENTIFIED BY 'ploopi' WITH GRANT OPTION;"
+</code>
 
-## Installation de Ploopi et ses dépendances via composer
+h3. Installation Ploopi
 
-mkdir /var/www/ploopi
+<code class="sh">mkdir /var/www/ploopi
 cd /var/www/ploopi
-svn export http://svn.ploopi.org/trunk . --force
+svn export --force http://svn.ploopi.org/trunk .
 composer update
 cp .htaccess_modele .htaccess
 chown -R www-data:www-data .
@@ -28,26 +33,29 @@ find . -type d -print0 | xargs -0 -n 1 chmod 500
 find . -type f -print0 | xargs -0 -n 1 chmod 400
 find {data,config,modules} -type d -print0 | xargs -0 -n 1 chmod 700
 find {data,config,modules} -type f -print0 | xargs -0 -n 1 chmod 600
+</code>
 
-## Configuration Apache
+h3. Config Apache
 
-Création d'un Virtual Host (optionnel mais recommandé).
+CrÃ©ation d'un Virtual Host (optionnel mais recommandÃ©) :
 
-sudo nano /etc/apache2/sites-available/ploopi
+<code class="sh">sudo nano /etc/apache2/sites-available/ploopi</code>
 
-Puis insérez les lignes suivantes :
+Puis insÃ©rez les lignes suivantes :
 
 <VirtualHost *>
-        ServerName ploopi
+    ServerName ploopi
 
-        DocumentRoot /var/www/ploopi/
+    DocumentRoot /var/www/ploopi/
 
-        <Directory /var/www/ploopi/>
-                AllowOverride All
-        </Directory>
+    <Directory /var/www/ploopi/>
+            AllowOverride All
+    </Directory>
 </VirtualHost>
 
+<code class="sh">sudo a2ensite ploopi
+sudo service apache2 reload</code>
 
-sudo a2ensite ploopi
-sudo service apache2 reload
+h2 Licence
 
+GPL 2.0

@@ -430,7 +430,7 @@ header('Content-type: text/html; charset=utf-8');
             <?php if (!$writable) { ?>
             <div class="error">
                 <img src="./templates/install/gfx/error.png" />
-                <span>Le dossier &laquo; config &raquo; n'est pas accessible en écriture à l'utilisateur &laquo; <? echo $S['processuser'] ?> &raquo;</span>
+                <span>Le dossier &laquo; config &raquo; n'est pas accessible en écriture à l'utilisateur &laquo; <?php echo $S['processuser'] ?> &raquo;</span>
             </div>
             <?php } ?>
             <div class="login_btn_right">
