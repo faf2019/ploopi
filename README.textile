@@ -25,8 +25,7 @@ h3. Installation Ploopi
 
 <code class="sh">mkdir /var/www/ploopi
 cd /var/www/ploopi
-svn export --force http://svn.ploopi.org/trunk .
-composer update
+composer create-project ovensia/ploopi:dev-trunk .
 cp .htaccess_modele .htaccess
 chown -R www-data:www-data .
 find . -type d -print0 | xargs -0 -n 1 chmod 500
