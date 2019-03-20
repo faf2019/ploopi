@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <title>phpDox - ploopi\sqlformat</title>
+    <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+  </head>
+  <body>
+    <nav class="topnav">
+      <ul>
+        <li>
+          <div class="logo"><span>/**</span>phpDox</div>
+        </li>
+        <li class="separator">
+          <a href="../index.xhtml">Overview</a>
+        </li>
+        <li class="separator">
+          <a href="../namespaces.xhtml">Namespaces</a>
+        </li>
+        <li>
+          <a href="../classes.xhtml">Classes</a>
+        </li>
+        <li class="separator">
+          <a href="../source/index.xhtml">Source</a>
+        </li>
+      </ul>
+    </nav>
+    <div id="mainstage">
+      <div class="box">
+        <ul class="breadcrumb">
+          <li>
+            <a href="../index.xhtml">Overview</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.xhtml">Classes</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.xhtml#ploopi">ploopi</a>
+          </li>
+          <li class="separator">sqlformat</li>
+        </ul>
+      </div>
+      <nav class="box">
+        <ul>
+          <li>
+            <a href="#introduction">Introduction</a>
+          </li>
+          <li>
+            <a href="#synopsis">Synopsis</a>
+          </li>
+          <li>
+            <a href="#members">Members</a>
+          </li>
+          <li>
+            <a href="#methods">Methods</a>
+          </li>
+          <li>
+            <a href="../source/classes/sqlformat.php.xhtml#line37">Source</a>
+          </li>
+        </ul>
+      </nav>
+      <section>
+        <h1 id="introduction"><small>ploopi\</small>sqlformat</h1>
+        <h4>Formatage d'un contenu SQL à la manière de printf</h4>
+        <p/>
+        <ul>
+          <li>Author: Ovensia</li>
+          <li>Copyright: Ovensia</li>
+          <li>License: GNU General Public License (GPL)</li>
+        </ul>
+        <h2 id="synopsis">Synopsis</h2>
+        <div class="synopsis">class sqlformat
+            {<br/><ul class="none"><li>// members</li><li>private static string <a href="#members">$strRegExFormat</a> =
+                        '|%(([0-9]*)\$){0,1}([s,d,f,t,e,g,r])|';
+                    </li><li>private static integer <a href="#members">$intNumParam</a> =
+                        0;
+                    </li><li>private static  <a href="#members">$arrValues</a> =
+                        NULL;
+                    </li><li>private static  <a href="#members">$objDb</a> =
+                        NULL;
+                    </li></ul><ul class="none"><li>// methods</li><li>private static string <a title="ploopi\sqlformat" href="../classes/ploopi_sqlformat/cb_replace.xhtml">cb_replace</a>()
+                    </li><li>public static string <a title="ploopi\sqlformat" href="../classes/ploopi_sqlformat/replace.xhtml">replace</a>()
+                    </li></ul>
+
+            }<br/></div>
+        <h2 id="members">Members</h2>
+        <div class="styled members">
+          <h4>private</h4>
+          <ul class="members">
+            <li id="arrValues"><strong>$arrValues</strong>
+                —
+                array<br/><span class="indent">Tableau des valeurs de remplacement</span></li>
+            <li id="intNumParam"><strong>$intNumParam</strong>
+                —
+                int<br/><span class="indent">Numéro du paramètre traité</span></li>
+            <li id="objDb"><strong>$objDb</strong>
+                —
+                resource<br/><span class="indent">Connexion à la BDD</span></li>
+            <li id="strRegExFormat"><strong>$strRegExFormat</strong>
+                —
+                string<br/><span class="indent">Regex utilisée pour détecter point d'injection de données</span></li>
+          </ul>
+        </div>
+        <h2 id="methods">Methods</h2>
+        <div class="styled">
+          <h4>private</h4>
+          <ul>
+            <li id="cb_replace"><a title="ploopi\sqlformat" href="../classes/ploopi_sqlformat/cb_replace.xhtml">cb_replace()</a>
+                — Méthode de remplacement appelée en callback via preg_replace_callback</li>
+          </ul>
+          <h4>public</h4>
+          <ul>
+            <li id="replace"><a title="ploopi\sqlformat" href="../classes/ploopi_sqlformat/replace.xhtml">replace()</a>
+                — Méthode publique de remplacement</li>
+          </ul>
+        </div>
+      </section>
+    </div>
+    <footer>
+      <span>Generated using phpDox 0.11.2 - Copyright (C) 2010 - 2019 by Arne Blankerts and Contributors</span>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <title>phpDox - ploopi\session</title>
+    <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+  </head>
+  <body>
+    <nav class="topnav">
+      <ul>
+        <li>
+          <div class="logo"><span>/**</span>phpDox</div>
+        </li>
+        <li class="separator">
+          <a href="../index.xhtml">Overview</a>
+        </li>
+        <li class="separator">
+          <a href="../namespaces.xhtml">Namespaces</a>
+        </li>
+        <li>
+          <a href="../classes.xhtml">Classes</a>
+        </li>
+        <li class="separator">
+          <a href="../source/index.xhtml">Source</a>
+        </li>
+      </ul>
+    </nav>
+    <div id="mainstage">
+      <div class="box">
+        <ul class="breadcrumb">
+          <li>
+            <a href="../index.xhtml">Overview</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.xhtml">Classes</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.xhtml#ploopi">ploopi</a>
+          </li>
+          <li class="separator">session</li>
+        </ul>
+      </div>
+      <nav class="box">
+        <ul>
+          <li>
+            <a href="#introduction">Introduction</a>
+          </li>
+          <li>
+            <a href="#synopsis">Synopsis</a>
+          </li>
+          <li>
+            <a href="#members">Members</a>
+          </li>
+          <li>
+            <a href="#methods">Methods</a>
+          </li>
+          <li>
+            <a href="../source/classes/session.php.xhtml#line38">Source</a>
+          </li>
+        </ul>
+      </nav>
+      <section>
+        <h1 id="introduction"><small>ploopi\</small>session</h1>
+        <h4>Gestionnaire de sessions.</h4>
+        <p>Remplace le gestionnaire de session par défaut.</p>
+        <ul>
+          <li>Author: Ovensia</li>
+          <li>Copyright: Ovensia</li>
+          <li>License: GNU General Public License (GPL)</li>
+        </ul>
+        <h2 id="synopsis">Synopsis</h2>
+        <div class="synopsis">class session
+            {<br/><ul class="none"><li>// members</li><li>private static boolean <a href="#members">$booCompress</a> =
+                        true;
+                    </li><li>private static  <a href="#members">$booUseDb</a> =
+                        NULL;
+                    </li><li>private static  <a href="#members">$booUseMc</a> =
+                        NULL;
+                    </li><li>private static <span title="ploopi\db">db</span> <a href="#members">$objDb</a> =
+                        NULL;
+                    </li><li>private static <span title="\Memcached">Memcached</span> <a href="#members">$objMc</a> =
+                        NULL;
+                    </li><li>private static  <a href="#members">$fpLock</a> =
+                        NULL;
+                    </li></ul><ul class="none"><li>// methods</li><li>private static string <a title="ploopi\session" href="../classes/ploopi_session/get_basepath.xhtml">get_basepath</a>()
+                    </li><li>public static string <a title="ploopi\session" href="../classes/ploopi_session/get_path.xhtml">get_path</a>()
+                    </li><li>private static string <a title="ploopi\session" href="../classes/ploopi_session/compress.xhtml">compress</a>()
+                    </li><li>private static données <a title="ploopi\session" href="../classes/ploopi_session/uncompress.xhtml">uncompress</a>()
+                    </li><li>public static void <a title="ploopi\session" href="../classes/ploopi_session/set_usemc.xhtml">set_usemc</a>()
+                    </li><li>public static boolean <a title="ploopi\session" href="../classes/ploopi_session/get_usemc.xhtml">get_usemc</a>()
+                    </li><li>public static Memcached <a title="ploopi\session" href="../classes/ploopi_session/get_mc.xhtml">get_mc</a>()
+                    </li><li>public static void <a title="ploopi\session" href="../classes/ploopi_session/set_usedb.xhtml">set_usedb</a>()
+                    </li><li>public static boolean <a title="ploopi\session" href="../classes/ploopi_session/get_usedb.xhtml">get_usedb</a>()
+                    </li><li>public static void <a title="ploopi\session" href="../classes/ploopi_session/set_db.xhtml">set_db</a>()
+                    </li><li>public static db <a title="ploopi\session" href="../classes/ploopi_session/get_db.xhtml">get_db</a>()
+                    </li><li>public static string <a title="ploopi\session" href="../classes/ploopi_session/get_id.xhtml">get_id</a>()
+                    </li><li>private static void <a title="ploopi\session" href="../classes/ploopi_session/_initdb.xhtml">_initdb</a>()
+                    </li><li>public static boolean <a title="ploopi\session" href="../classes/ploopi_session/open.xhtml">open</a>()
+                    </li><li>public static boolean <a title="ploopi\session" href="../classes/ploopi_session/close.xhtml">close</a>()
+                    </li><li>public static array <a title="ploopi\session" href="../classes/ploopi_session/read.xhtml">read</a>()
+                    </li><li>public static boolean <a title="ploopi\session" href="../classes/ploopi_session/write.xhtml">write</a>()
+                    </li><li>public static boolean <a title="ploopi\session" href="../classes/ploopi_session/destroy.xhtml">destroy</a>()
+                    </li><li>public static boolean <a title="ploopi\session" href="../classes/ploopi_session/gc.xhtml">gc</a>()
+                    </li><li>public static void <a title="ploopi\session" href="../classes/ploopi_session/reset.xhtml">reset</a>()
+                    </li><li>public static void <a title="ploopi\session" href="../classes/ploopi_session/update.xhtml">update</a>()
+                    </li><li>public static bool <a title="ploopi\session" href="../classes/ploopi_session/setflag.xhtml">setflag</a>()
+                    </li><li>public static mixed <a title="ploopi\session" href="../classes/ploopi_session/getvar.xhtml">getvar</a>()
+                    </li><li>public static void <a title="ploopi\session" href="../classes/ploopi_session/setvar.xhtml">setvar</a>()
+                    </li></ul>
+
+            }<br/></div>
+        <h2 id="members">Members</h2>
+        <div class="styled members">
+          <h4>private</h4>
+          <ul class="members">
+            <li id="booCompress"><strong>$booCompress</strong>
+                —
+                boolean<br/><span class="indent">Compression active</span></li>
+            <li id="booUseDb"><strong>$booUseDb</strong>
+                —
+                boolean<br/><span class="indent">Gestion via base de données</span></li>
+            <li id="booUseMc"><strong>$booUseMc</strong>
+                —
+                boolean<br/><span class="indent">Gestion via Memcached</span></li>
+            <li id="fpLock"><strong>$fpLock</strong>
+                —
+                resource<br/><span class="indent">Lock fichier</span></li>
+            <li id="objDb"><strong>$objDb</strong>
+                —
+                <a title="ploopi\db" href="../classes/ploopi_db.xhtml">ploopi\db</a><br/><span class="indent">Objet db</span></li>
+            <li id="objMc"><strong>$objMc</strong>
+                —
+                <a title="\Memcached" href="../classes/_Memcached.xhtml">\Memcached</a><br/><span class="indent">Objet Memcached</span></li>
+          </ul>
+        </div>
+        <h2 id="methods">Methods</h2>
+        <div class="styled">
+          <h4>private</h4>
+          <ul>
+            <li id="_initdb"><a title="ploopi\session" href="../classes/ploopi_session/_initdb.xhtml">_initdb()</a>
+                — Initialise le connecteur</li>
+            <li id="compress"><a title="ploopi\session" href="../classes/ploopi_session/compress.xhtml">compress()</a>
+                — Compresse les données</li>
+            <li id="get_basepath"><a title="ploopi\session" href="../classes/ploopi_session/get_basepath.xhtml">get_basepath()</a>
+                — Retourne le chemin de stockage des fichiers</li>
+            <li id="uncompress"><a title="ploopi\session" href="../classes/ploopi_session/uncompress.xhtml">uncompress()</a>
+                — Décompresse les données</li>
+          </ul>
+          <h4>public</h4>
+          <ul>
+            <li id="close"><a title="ploopi\session" href="../classes/ploopi_session/close.xhtml">close()</a>
+                — Ferme le gestionnaire de session</li>
+            <li id="destroy"><a title="ploopi\session" href="../classes/ploopi_session/destroy.xhtml">destroy()</a>
+                — Suppression de la session</li>
+            <li id="gc"><a title="ploopi\session" href="../classes/ploopi_session/gc.xhtml">gc()</a>
+                — Suppression des sessions périmées (Garbage collector)</li>
+            <li id="get_db"><a title="ploopi\session" href="../classes/ploopi_session/get_db.xhtml">get_db()</a>
+                — Retourne le connecteur db</li>
+            <li id="get_id"><a title="ploopi\session" href="../classes/ploopi_session/get_id.xhtml">get_id()</a>
+                — Retourne l'identifiant de session</li>
+            <li id="get_mc"><a title="ploopi\session" href="../classes/ploopi_session/get_mc.xhtml">get_mc()</a>
+                — Retourne le connecteur Memcached</li>
+            <li id="get_path"><a title="ploopi\session" href="../classes/ploopi_session/get_path.xhtml">get_path()</a>
+                — Retourne le chemin et le nom du fichier de la session</li>
+            <li id="get_usedb"><a title="ploopi\session" href="../classes/ploopi_session/get_usedb.xhtml">get_usedb()</a>
+                — Indique si le gestionnaire utilise db</li>
+            <li id="get_usemc"><a title="ploopi\session" href="../classes/ploopi_session/get_usemc.xhtml">get_usemc()</a>
+                — Indique si le gestionnaire utilise Memcached</li>
+            <li id="getvar"><a title="ploopi\session" href="../classes/ploopi_session/getvar.xhtml">getvar()</a>
+                — Lit une variable de module en session</li>
+            <li id="open"><a title="ploopi\session" href="../classes/ploopi_session/open.xhtml">open()</a>
+                — Ouvre le gestionnaire de session</li>
+            <li id="read"><a title="ploopi\session" href="../classes/ploopi_session/read.xhtml">read()</a>
+                — Lecture de la session</li>
+            <li id="reset"><a title="ploopi\session" href="../classes/ploopi_session/reset.xhtml">reset()</a>
+                — Réinitialise la session</li>
+            <li id="set_db"><a title="ploopi\session" href="../classes/ploopi_session/set_db.xhtml">set_db()</a>
+                — Fournit le connecteur db</li>
+            <li id="set_usedb"><a title="ploopi\session" href="../classes/ploopi_session/set_usedb.xhtml">set_usedb()</a>
+                — Indique au gestionnaire d'utiliser db</li>
+            <li id="set_usemc"><a title="ploopi\session" href="../classes/ploopi_session/set_usemc.xhtml">set_usemc()</a>
+                — Indique au gestionnaire d'utiliser Memcached</li>
+            <li id="setflag"><a title="ploopi\session" href="../classes/ploopi_session/setflag.xhtml">setflag()</a>
+                — Vérifie si un drapeau a été posé et met à jour le drapeau</li>
+            <li id="setvar"><a title="ploopi\session" href="../classes/ploopi_session/setvar.xhtml">setvar()</a>
+                — Enregistre une variable de module en session</li>
+            <li id="update"><a title="ploopi\session" href="../classes/ploopi_session/update.xhtml">update()</a>
+                — Met à jour les données et vérifie la validité de la session</li>
+            <li id="write"><a title="ploopi\session" href="../classes/ploopi_session/write.xhtml">write()</a>
+                — Ecriture de la session</li>
+          </ul>
+        </div>
+      </section>
+    </div>
+    <footer>
+      <span>Generated using phpDox 0.11.2 - Copyright (C) 2010 - 2019 by Arne Blankerts and Contributors</span>
+    </footer>
+  </body>
+</html>

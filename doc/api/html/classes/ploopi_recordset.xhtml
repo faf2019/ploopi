@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <title>phpDox - ploopi\recordset</title>
+    <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+  </head>
+  <body>
+    <nav class="topnav">
+      <ul>
+        <li>
+          <div class="logo"><span>/**</span>phpDox</div>
+        </li>
+        <li class="separator">
+          <a href="../index.xhtml">Overview</a>
+        </li>
+        <li class="separator">
+          <a href="../namespaces.xhtml">Namespaces</a>
+        </li>
+        <li>
+          <a href="../classes.xhtml">Classes</a>
+        </li>
+        <li class="separator">
+          <a href="../source/index.xhtml">Source</a>
+        </li>
+      </ul>
+    </nav>
+    <div id="mainstage">
+      <div class="box">
+        <ul class="breadcrumb">
+          <li>
+            <a href="../index.xhtml">Overview</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.xhtml">Classes</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.xhtml#ploopi">ploopi</a>
+          </li>
+          <li class="separator">recordset</li>
+        </ul>
+      </div>
+      <nav class="box">
+        <ul>
+          <li>
+            <a href="#introduction">Introduction</a>
+          </li>
+          <li>
+            <a href="#synopsis">Synopsis</a>
+          </li>
+          <li>
+            <a href="#members">Members</a>
+          </li>
+          <li>
+            <a href="#methods">Methods</a>
+          </li>
+          <li>
+            <a href="../source/classes/recordset.php.xhtml#line37">Source</a>
+          </li>
+        </ul>
+      </nav>
+      <section>
+        <h1 id="introduction"><small>ploopi\</small>recordset</h1>
+        <h4>Gestion des recordset résultant de requêtes SQL construites via Query</h4>
+        <p/>
+        <ul>
+          <li>Author: Ovensia</li>
+          <li>Copyright: Ovensia</li>
+          <li>License: GNU General Public License (GPL)</li>
+        </ul>
+        <h2 id="synopsis">Synopsis</h2>
+        <div class="synopsis">class recordset
+            {<br/><ul class="none"><li>// members</li><li>private <span title="ploopi\db">db</span> <a href="#members">$objDb</a>;
+                    </li><li>private  <a href="#members">$resRs</a>;
+                    </li></ul><ul class="none"><li>// methods</li><li>public void <a title="ploopi\recordset" href="../classes/ploopi_recordset/__construct.xhtml">__construct</a>()
+                    </li><li>public array <a title="ploopi\recordset" href="../classes/ploopi_recordset/fetchrow.xhtml">fetchrow</a>()
+                    </li><li>public integer <a title="ploopi\recordset" href="../classes/ploopi_recordset/numrows.xhtml">numrows</a>()
+                    </li><li>public boolean <a title="ploopi\recordset" href="../classes/ploopi_recordset/dataseek.xhtml">dataseek</a>()
+                    </li><li>public mixed <a title="ploopi\recordset" href="../classes/ploopi_recordset/getarray.xhtml">getarray</a>()
+                    </li><li>public string <a title="ploopi\recordset" href="../classes/ploopi_recordset/getjson.xhtml">getjson</a>()
+                    </li><li>public string <a title="ploopi\recordset" href="../classes/ploopi_recordset/getcsv.xhtml">getcsv</a>()
+                    </li></ul>
+
+            }<br/></div>
+        <h2 id="members">Members</h2>
+        <div class="styled members">
+          <h4>private</h4>
+          <ul class="members">
+            <li id="objDb"><strong>$objDb</strong>
+                —
+                <a title="ploopi\db" href="../classes/ploopi_db.xhtml">ploopi\db</a><br/><span class="indent">Connexion à la BDD</span></li>
+            <li id="resRs"><strong>$resRs</strong>
+                —
+                resource<br/><span class="indent">Recordset courant</span></li>
+          </ul>
+        </div>
+        <h2 id="methods">Methods</h2>
+        <div class="styled">
+          <h4>public</h4>
+          <ul>
+            <li id="__construct"><a title="ploopi\recordset" href="../classes/ploopi_recordset/__construct.xhtml">__construct()</a>
+                — Constructeur de la classe</li>
+            <li id="dataseek"><a title="ploopi\recordset" href="../classes/ploopi_recordset/dataseek.xhtml">dataseek()</a>
+                — Déplace le pointeur interne sur un enregistrement particulier</li>
+            <li id="fetchrow"><a title="ploopi\recordset" href="../classes/ploopi_recordset/fetchrow.xhtml">fetchrow()</a>
+                — Retourne l'enregistrement courant du recordset et avance le pointeur sur l'enregistrement suivant</li>
+            <li id="getarray"><a title="ploopi\recordset" href="../classes/ploopi_recordset/getarray.xhtml">getarray()</a>
+                — Retourne dans un tableau le contenu du recordset</li>
+            <li id="getcsv"><a title="ploopi\recordset" href="../classes/ploopi_recordset/getcsv.xhtml">getcsv()</a>
+                — Retourne au format CSV le contenu du recordset</li>
+            <li id="getjson"><a title="ploopi\recordset" href="../classes/ploopi_recordset/getjson.xhtml">getjson()</a>
+                — Retourne au format JSON le contenu du recordset</li>
+            <li id="numrows"><a title="ploopi\recordset" href="../classes/ploopi_recordset/numrows.xhtml">numrows()</a>
+                — Retourne le nombre d'enregistrements du recordset</li>
+          </ul>
+        </div>
+      </section>
+    </div>
+    <footer>
+      <span>Generated using phpDox 0.11.2 - Copyright (C) 2010 - 2019 by Arne Blankerts and Contributors</span>
+    </footer>
+  </body>
+</html>

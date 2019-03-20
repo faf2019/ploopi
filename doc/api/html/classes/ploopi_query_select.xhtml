@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <title>phpDox - ploopi\query_select</title>
+    <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+  </head>
+  <body>
+    <nav class="topnav">
+      <ul>
+        <li>
+          <div class="logo"><span>/**</span>phpDox</div>
+        </li>
+        <li class="separator">
+          <a href="../index.xhtml">Overview</a>
+        </li>
+        <li class="separator">
+          <a href="../namespaces.xhtml">Namespaces</a>
+        </li>
+        <li>
+          <a href="../classes.xhtml">Classes</a>
+        </li>
+        <li class="separator">
+          <a href="../source/index.xhtml">Source</a>
+        </li>
+      </ul>
+    </nav>
+    <div id="mainstage">
+      <div class="box">
+        <ul class="breadcrumb">
+          <li>
+            <a href="../index.xhtml">Overview</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.xhtml">Classes</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.xhtml#ploopi">ploopi</a>
+          </li>
+          <li class="separator">query_select</li>
+        </ul>
+      </div>
+      <nav class="box">
+        <ul>
+          <li>
+            <a href="#introduction">Introduction</a>
+          </li>
+          <li>
+            <a href="#synopsis">Synopsis</a>
+          </li>
+          <li>
+            <a href="#hierarchy">Hierarchy</a>
+          </li>
+          <li>
+            <a href="#members">Members</a>
+          </li>
+          <li>
+            <a href="#methods">Methods</a>
+          </li>
+          <li>
+            <a href="../source/classes/query_select.php.xhtml#line37">Source</a>
+          </li>
+        </ul>
+      </nav>
+      <section>
+        <h1 id="introduction"><small>ploopi\</small>query_select</h1>
+        <h4>Gestion de requêtes SQL construites de type SELECT</h4>
+        <p/>
+        <ul>
+          <li>Author: Ovensia</li>
+          <li>Copyright: Ovensia</li>
+          <li>License: GNU General Public License (GPL)</li>
+        </ul>
+        <h2 id="synopsis">Synopsis</h2>
+        <div class="synopsis">class query_select
+                extends <a title="ploopi\query_sud" href="../classes/ploopi_query_sud.xhtml">query_sud</a>
+            {<br/><ul class="none"><li>// members</li><li>private  <a href="#members">$arrSelect</a>;
+                    </li><li>private  <a href="#members">$arrInnerJoin</a>;
+                    </li><li>private  <a href="#members">$arrLeftJoin</a>;
+                    </li><li>private  <a href="#members">$arrGroupBy</a>;
+                    </li><li>private  <a href="#members">$arrHaving</a>;
+                    </li></ul><ul class="none"><li>// Inherited members from <span title="ploopi\query_sud">query_sud</span></li><li>protected  <a href="#members">$arrFrom</a>;
+                        </li><li>protected static array <a href="#members">$arrType</a>;
+                        </li></ul><ul class="none"><li>// Inherited members from <span title="ploopi\query">query</span></li><li>protected  <a href="#members">$objDb</a>;
+                        </li><li>protected  <a href="#members">$arrRaw</a>;
+                        </li></ul><ul class="none"><li>// methods</li><li>public void <a title="ploopi\query_select" href="../classes/ploopi_query_select/__construct.xhtml">__construct</a>()
+                    </li><li>public void <a title="ploopi\query_select" href="../classes/ploopi_query_select/add_select.xhtml">add_select</a>()
+                    </li><li>public void <a title="ploopi\query_select" href="../classes/ploopi_query_select/add_leftjoin.xhtml">add_leftjoin</a>()
+                    </li><li>public void <a title="ploopi\query_select" href="../classes/ploopi_query_select/add_innerjoin.xhtml">add_innerjoin</a>()
+                    </li><li>public void <a title="ploopi\query_select" href="../classes/ploopi_query_select/add_groupby.xhtml">add_groupby</a>()
+                    </li><li>public void <a title="ploopi\query_select" href="../classes/ploopi_query_select/add_having.xhtml">add_having</a>()
+                    </li><li>protected string <a title="ploopi\query_select" href="../classes/ploopi_query_select/get_select.xhtml">get_select</a>()
+                    </li><li>protected string <a title="ploopi\query_select" href="../classes/ploopi_query_select/get_leftjoin.xhtml">get_leftjoin</a>()
+                    </li><li>protected string <a title="ploopi\query_select" href="../classes/ploopi_query_select/get_innerjoin.xhtml">get_innerjoin</a>()
+                    </li><li>protected string <a title="ploopi\query_select" href="../classes/ploopi_query_select/get_groupby.xhtml">get_groupby</a>()
+                    </li><li>protected string <a title="ploopi\query_select" href="../classes/ploopi_query_select/get_having.xhtml">get_having</a>()
+                    </li><li>public void <a title="ploopi\query_select" href="../classes/ploopi_query_select/remove_select.xhtml">remove_select</a>()
+                    </li><li>public void <a title="ploopi\query_select" href="../classes/ploopi_query_select/remove_leftjoin.xhtml">remove_leftjoin</a>()
+                    </li><li>public void <a title="ploopi\query_select" href="../classes/ploopi_query_select/remove_innerjoin.xhtml">remove_innerjoin</a>()
+                    </li><li>public void <a title="ploopi\query_select" href="../classes/ploopi_query_select/remove_groupby.xhtml">remove_groupby</a>()
+                    </li><li>public void <a title="ploopi\query_select" href="../classes/ploopi_query_select/remove_having.xhtml">remove_having</a>()
+                    </li><li>public string <a title="ploopi\query_select" href="../classes/ploopi_query_select/get_sql.xhtml">get_sql</a>()
+                    </li></ul><ul class="none"><li>// Inherited methods from <span title="ploopi\query_sud">query_sud</span></li><li>public void <a title="ploopi\query_sud" href="../classes/ploopi_query_sud/__construct.xhtml">__construct</a>()
+                        </li><li>public void <a title="ploopi\query_sud" href="../classes/ploopi_query_sud/add_where.xhtml">add_where</a>()
+                        </li><li>public void <a title="ploopi\query_sud" href="../classes/ploopi_query_sud/add_from.xhtml">add_from</a>()
+                        </li><li>public void <a title="ploopi\query_sud" href="../classes/ploopi_query_sud/add_orderby.xhtml">add_orderby</a>()
+                        </li><li>public void <a title="ploopi\query_sud" href="../classes/ploopi_query_sud/add_limit.xhtml">add_limit</a>()
+                        </li><li>public void <a title="ploopi\query_sud" href="../classes/ploopi_query_sud/remove_where.xhtml">remove_where</a>()
+                        </li><li>public void <a title="ploopi\query_sud" href="../classes/ploopi_query_sud/remove_orderby.xhtml">remove_orderby</a>()
+                        </li><li>public void <a title="ploopi\query_sud" href="../classes/ploopi_query_sud/remove_limit.xhtml">remove_limit</a>()
+                        </li><li>protected string <a title="ploopi\query_sud" href="../classes/ploopi_query_sud/get_from.xhtml">get_from</a>()
+                        </li><li>protected string <a title="ploopi\query_sud" href="../classes/ploopi_query_sud/get_where.xhtml">get_where</a>()
+                        </li><li>protected string <a title="ploopi\query_sud" href="../classes/ploopi_query_sud/get_orderby.xhtml">get_orderby</a>()
+                        </li><li>protected string <a title="ploopi\query_sud" href="../classes/ploopi_query_sud/get_limit.xhtml">get_limit</a>()
+                        </li></ul><ul class="none"><li>// Inherited methods from <span title="ploopi\query">query</span></li><li>public void <a title="ploopi\query" href="../classes/ploopi_query/__construct.xhtml">__construct</a>()
+                        </li><li>public void <a title="ploopi\query" href="../classes/ploopi_query/add_raw.xhtml">add_raw</a>()
+                        </li><li>protected string <a title="ploopi\query" href="../classes/ploopi_query/get_raw.xhtml">get_raw</a>()
+                        </li><li>public ploopi_recordset <a title="ploopi\query" href="../classes/ploopi_query/execute.xhtml">execute</a>()
+                        </li><li>public void <a title="ploopi\query" href="../classes/ploopi_query/set_db.xhtml">set_db</a>()
+                        </li><li>public integer <a title="ploopi\query" href="../classes/ploopi_query/affectedrows.xhtml">affectedrows</a>()
+                        </li><li>public void <a title="ploopi\query" href="../classes/ploopi_query/__wakeup.xhtml">__wakeup</a>()
+                        </li></ul>
+
+            }<br/></div>
+        <h2 id="hierarchy">Hierarchy</h2>
+        <div class="styled">
+          <h4>Extends</h4>
+          <ul>
+            <li>
+              <a title="ploopi\query_sud" href="../classes/ploopi_query_sud.xhtml">ploopi\query_sud</a>
+            </li>
+          </ul>
+        </div>
+        <h2 id="members">Members</h2>
+        <div class="styled members">
+          <h4>private</h4>
+          <ul class="members">
+            <li id="arrGroupBy"><strong>$arrGroupBy</strong>
+                —
+                array<br/><span class="indent">Tableau de la clause GROUP BY</span></li>
+            <li id="arrHaving"><strong>$arrHaving</strong>
+                —
+                array<br/><span class="indent">Tableau de la clause HAVING</span></li>
+            <li id="arrInnerJoin"><strong>$arrInnerJoin</strong>
+                —
+                array<br/><span class="indent">Tableau de la clause INNER JOIN</span></li>
+            <li id="arrLeftJoin"><strong>$arrLeftJoin</strong>
+                —
+                array<br/><span class="indent">Tableau de la clause LEFT JOIN</span></li>
+            <li id="arrSelect"><strong>$arrSelect</strong>
+                —
+                array<br/><span class="indent">Tableau de la clause SELECT</span></li>
+          </ul>
+          <h4>protected</h4>
+          <ul class="members">
+            <li id="arrFrom"><strong>$arrFrom</strong>
+                —
+                array<br/><span class="indent">Tableau de la clause FROM</span></li>
+            <li id="arrRaw"><strong>$arrRaw</strong>
+                —
+                array<br/><span class="indent">Tableau de clauses SQL brutes</span></li>
+            <li id="arrType"><strong>$arrType</strong>
+                —
+                array<br/><span class="indent">Différents types acceptés pour un élément</span></li>
+            <li id="objDb"><strong>$objDb</strong>
+                —
+                resource<br/><span class="indent">Connexion à la BDD</span></li>
+          </ul>
+        </div>
+        <h2 id="methods">Methods</h2>
+        <div class="styled">
+          <h4>protected</h4>
+          <ul>
+            <li id="get_groupby"><a title="ploopi\query_select" href="../classes/ploopi_query_select/get_groupby.xhtml">get_groupby()</a>
+                — Retourne la clause GROUP BY</li>
+            <li id="get_having"><a title="ploopi\query_select" href="../classes/ploopi_query_select/get_having.xhtml">get_having()</a>
+                — Retourne la clause HAVING</li>
+            <li id="get_innerjoin"><a title="ploopi\query_select" href="../classes/ploopi_query_select/get_innerjoin.xhtml">get_innerjoin()</a>
+                — Retourne la clause INNER JOIN</li>
+            <li id="get_leftjoin"><a title="ploopi\query_select" href="../classes/ploopi_query_select/get_leftjoin.xhtml">get_leftjoin()</a>
+                — Retourne la clause LEFT JOIN</li>
+            <li id="get_select"><a title="ploopi\query_select" href="../classes/ploopi_query_select/get_select.xhtml">get_select()</a>
+                — Retourne la clause SELECT</li>
+          </ul>
+          <h4>public</h4>
+          <ul>
+            <li id="__construct"><a title="ploopi\query_select" href="../classes/ploopi_query_select/__construct.xhtml">__construct()</a>
+                — Constructeur de la classe</li>
+            <li id="add_groupby"><a title="ploopi\query_select" href="../classes/ploopi_query_select/add_groupby.xhtml">add_groupby()</a>
+                — Ajoute une clause GROUP BY à la requête Si plusieurs clauses GROUP BY sont ajoutées, elles sont séparées par ","</li>
+            <li id="add_having"><a title="ploopi\query_select" href="../classes/ploopi_query_select/add_having.xhtml">add_having()</a>
+                — Ajout d'une clause HAVING à la requête Si plusieurs clauses HAVING sont ajoutées, elles sont séparées par AND</li>
+            <li id="add_innerjoin"><a title="ploopi\query_select" href="../classes/ploopi_query_select/add_innerjoin.xhtml">add_innerjoin()</a>
+                — Ajoute une clause INNER JOIN à la requête</li>
+            <li id="add_leftjoin"><a title="ploopi\query_select" href="../classes/ploopi_query_select/add_leftjoin.xhtml">add_leftjoin()</a>
+                — Ajoute une clause LEFT JOIN à la requête</li>
+            <li id="add_select"><a title="ploopi\query_select" href="../classes/ploopi_query_select/add_select.xhtml">add_select()</a>
+                — Ajoute une clause SELECT</li>
+            <li id="get_sql"><a title="ploopi\query_select" href="../classes/ploopi_query_select/get_sql.xhtml">get_sql()</a>
+                — Génération de la requête SQL</li>
+            <li id="remove_groupby"><a title="ploopi\query_select" href="../classes/ploopi_query_select/remove_groupby.xhtml">remove_groupby()</a>
+                — Supprime la clause GROUP BY</li>
+            <li id="remove_having"><a title="ploopi\query_select" href="../classes/ploopi_query_select/remove_having.xhtml">remove_having()</a>
+                — Supprime la clause HAVING</li>
+            <li id="remove_innerjoin"><a title="ploopi\query_select" href="../classes/ploopi_query_select/remove_innerjoin.xhtml">remove_innerjoin()</a>
+                — Supprime la clause INNER JOIN</li>
+            <li id="remove_leftjoin"><a title="ploopi\query_select" href="../classes/ploopi_query_select/remove_leftjoin.xhtml">remove_leftjoin()</a>
+                — Supprime la clause LEFT JOIN</li>
+            <li id="remove_select"><a title="ploopi\query_select" href="../classes/ploopi_query_select/remove_select.xhtml">remove_select()</a>
+                — Supprime la clause SELECT</li>
+          </ul>
+          <h3>Inherited from <a title="ploopi\query_sud" href="../classes/ploopi_query_sud.xhtml">ploopi\query_sud</a></h3>
+          <h4>protected</h4>
+          <ul>
+            <li id="get_from"><a title="ploopi\query_sud" href="../classes/ploopi_query_sud/get_from.xhtml">get_from()</a>
+                — Retourne la clause FROM</li>
+            <li id="get_limit"><a title="ploopi\query_sud" href="../classes/ploopi_query_sud/get_limit.xhtml">get_limit()</a>
+                — Retourne la clause LIMIT</li>
+            <li id="get_orderby"><a title="ploopi\query_sud" href="../classes/ploopi_query_sud/get_orderby.xhtml">get_orderby()</a>
+                — Retourne la clause ORDER BY</li>
+            <li id="get_where"><a title="ploopi\query_sud" href="../classes/ploopi_query_sud/get_where.xhtml">get_where()</a>
+                — Retourne la clause WHERE</li>
+          </ul>
+          <h4>public</h4>
+          <ul>
+            <li id="add_from"><a title="ploopi\query_sud" href="../classes/ploopi_query_sud/add_from.xhtml">add_from()</a>
+                — Ajoute une clause FROM à la requête (select/delete/update uniquement) Si plusieurs clauses FROM sont ajoutées, elles sont séparées par ","</li>
+            <li id="add_limit"><a title="ploopi\query_sud" href="../classes/ploopi_query_sud/add_limit.xhtml">add_limit()</a>
+                — Définit la clause LIMIT de la requête</li>
+            <li id="add_orderby"><a title="ploopi\query_sud" href="../classes/ploopi_query_sud/add_orderby.xhtml">add_orderby()</a>
+                — Ajoute une clause ORDER BY à la requête Si plusieurs clauses ORDER BY sont ajoutées, elles sont séparées par ","</li>
+            <li id="add_where"><a title="ploopi\query_sud" href="../classes/ploopi_query_sud/add_where.xhtml">add_where()</a>
+                — Ajout d'une clause WHERE à la requête Si plusieurs clauses WHERE sont ajoutées, elles sont séparées par AND</li>
+            <li id="remove_limit"><a title="ploopi\query_sud" href="../classes/ploopi_query_sud/remove_limit.xhtml">remove_limit()</a>
+                — Supprime la clause LIMIT</li>
+            <li id="remove_orderby"><a title="ploopi\query_sud" href="../classes/ploopi_query_sud/remove_orderby.xhtml">remove_orderby()</a>
+                — Supprime la clause ORDER BY</li>
+            <li id="remove_where"><a title="ploopi\query_sud" href="../classes/ploopi_query_sud/remove_where.xhtml">remove_where()</a>
+                — Supprime la clause WHERE</li>
+          </ul>
+          <h3>Inherited from <a title="ploopi\query" href="../classes/ploopi_query.xhtml">ploopi\query</a></h3>
+          <h4>protected</h4>
+          <ul>
+            <li id="get_raw"><a title="ploopi\query" href="../classes/ploopi_query/get_raw.xhtml">get_raw()</a>
+                — Retourne la clause Brute</li>
+          </ul>
+          <h4>public</h4>
+          <ul>
+            <li id="__wakeup"><a title="ploopi\query" href="../classes/ploopi_query/__wakeup.xhtml">__wakeup()</a>
+                — Permet de redéfinir la connexion à la BDD au réveil de l'objet  (utile notamment après désérialisation)</li>
+            <li id="add_raw"><a title="ploopi\query" href="../classes/ploopi_query/add_raw.xhtml">add_raw()</a>
+                — Ajoute une clause SQL brute, non filtrée</li>
+            <li id="affectedrows"><a title="ploopi\query" href="../classes/ploopi_query/affectedrows.xhtml">affectedrows()</a>
+                — Retourne le nombre de lignes affectées lors de la dernières requête INSERT, UPDATE, REPLACE, DELETE</li>
+            <li id="execute"><a title="ploopi\query" href="../classes/ploopi_query/execute.xhtml">execute()</a>
+                — Exécute la requête SQL</li>
+            <li id="set_db"><a title="ploopi\query" href="../classes/ploopi_query/set_db.xhtml">set_db()</a>
+                — Permet de redéfinir la connexion à la BDD</li>
+          </ul>
+        </div>
+      </section>
+    </div>
+    <footer>
+      <span>Generated using phpDox 0.11.2 - Copyright (C) 2010 - 2019 by Arne Blankerts and Contributors</span>
+    </footer>
+  </body>
+</html>

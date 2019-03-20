@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <title>phpDox - ploopi\image::resize</title>
+    <link rel="stylesheet" type="text/css" href="../../css/style.css" media="screen"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+  </head>
+  <body>
+    <nav class="topnav">
+      <ul>
+        <li>
+          <div class="logo"><span>/**</span>phpDox</div>
+        </li>
+        <li class="separator">
+          <a href="../../index.xhtml">Overview</a>
+        </li>
+        <li class="separator">
+          <a href="../../namespaces.xhtml">Namespaces</a>
+        </li>
+        <li>
+          <a href="../../classes.xhtml">Classes</a>
+        </li>
+        <li class="separator">
+          <a href="../../source/index.xhtml">Source</a>
+        </li>
+      </ul>
+    </nav>
+    <div id="mainstage">
+      <div class="box">
+        <ul class="breadcrumb">
+          <li>
+            <a href="../../index.xhtml">Overview</a>
+          </li>
+          <li class="separator">
+            <a href="../../classes.xhtml">Classes</a>
+          </li>
+          <li class="separator">
+            <a href="../../classes.xhtml#ploopi">ploopi</a>
+          </li>
+          <li class="separator">
+            <a title="ploopi\image" href="../../classes/ploopi_image.xhtml">image</a>
+          </li>
+          <li class="separator">resize</li>
+        </ul>
+      </div>
+      <nav class="box">
+        <ul>
+          <li>
+            <a href="#introduction">Introduction</a>
+          </li>
+          <li>
+            <a href="#synopsis">Synopsis</a>
+          </li>
+          <li>
+            <a href="#parameter">Parameter</a>
+          </li>
+          <li>
+            <a href="#return">Return</a>
+          </li>
+          <li>
+            <a href="../../source/classes/image.php.xhtml#line58">Source</a>
+          </li>
+        </ul>
+      </nav>
+      <section>
+        <h1><small>ploopi\image::</small>resize</h1>
+        <h4>Redimensionne une image et l'enregistre dans un fichier ou la renvoie vers le navigateur</h4>
+        <p/>
+        <ul/>
+        <h2 id="signature">Signature</h2>
+        <div class="styled synopsis">
+          <code>public function resize(string
+        $imagefile,
+            [integer
+        $coef = 0,
+            [integer
+        $wmax = 0,
+            [integer
+        $hmax = 0,
+            [string
+        $format = '',
+            [integer
+        $nbcolor = 0,
+            [string
+        $filename = '',
+            [boolean
+        $centerwidthcolor = false,
+            [boolean
+        $bgcolor = false]]]]]]]] )
+            </code>
+        </div>
+        <h2 id="parameterlist">Parameters</h2>
+        <dl class="styled">
+          <dt><code>$imagefile</code>
+                —
+                string</dt>
+          <dd>chemin vers le fichier image</dd>
+          <dt><code>$coef</code>
+                —
+                integer</dt>
+          <dd>ratio de redimensionnement de l'image destination</dd>
+          <dt><code>$wmax</code>
+                —
+                integer</dt>
+          <dd>largeur max de l'image destination</dd>
+          <dt><code>$hmax</code>
+                —
+                integer</dt>
+          <dd>hauteur max de l'image destination</dd>
+          <dt><code>$format</code>
+                —
+                string</dt>
+          <dd>format de l'image destination (jpg, png, gif) ou array(format,qualité), qualité pour le jpg 0&lt;qualite&lt;100<br/><br/><br/>      </dd>
+          <dt><code>$nbcolor</code>
+                —
+                integer</dt>
+          <dd>taille de la palette de l'image destination</dd>
+          <dt><code>$filename</code>
+                —
+                string</dt>
+          <dd>nom du fichier image destination, si vide renvoit l'image vers le navigateur</dd>
+          <dt><code>$centerwidthcolor</code>
+                —
+                boolean</dt>
+          <dd/>
+          <dt><code>$bgcolor</code>
+                —
+                boolean</dt>
+          <dd/>
+        </dl>
+        <h2 id="return">Returns</h2>
+        <dl class="styled">
+          <dt>boolean</dt>
+          <dd>true si redimensionnement ok</dd>
+        </dl>
+      </section>
+    </div>
+    <footer>
+      <span>Generated using phpDox 0.11.2 - Copyright (C) 2010 - 2019 by Arne Blankerts and Contributors</span>
+    </footer>
+  </body>
+</html>

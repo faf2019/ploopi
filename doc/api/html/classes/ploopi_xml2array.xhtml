@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <title>phpDox - ploopi\xml2array</title>
+    <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+  </head>
+  <body>
+    <nav class="topnav">
+      <ul>
+        <li>
+          <div class="logo"><span>/**</span>phpDox</div>
+        </li>
+        <li class="separator">
+          <a href="../index.xhtml">Overview</a>
+        </li>
+        <li class="separator">
+          <a href="../namespaces.xhtml">Namespaces</a>
+        </li>
+        <li>
+          <a href="../classes.xhtml">Classes</a>
+        </li>
+        <li class="separator">
+          <a href="../source/index.xhtml">Source</a>
+        </li>
+      </ul>
+    </nav>
+    <div id="mainstage">
+      <div class="box">
+        <ul class="breadcrumb">
+          <li>
+            <a href="../index.xhtml">Overview</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.xhtml">Classes</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.xhtml#ploopi">ploopi</a>
+          </li>
+          <li class="separator">xml2array</li>
+        </ul>
+      </div>
+      <nav class="box">
+        <ul>
+          <li>
+            <a href="#introduction">Introduction</a>
+          </li>
+          <li>
+            <a href="#synopsis">Synopsis</a>
+          </li>
+          <li>
+            <a href="#members">Members</a>
+          </li>
+          <li>
+            <a href="#methods">Methods</a>
+          </li>
+          <li>
+            <a href="../source/classes/xml2array.php.xhtml#line37">Source</a>
+          </li>
+        </ul>
+      </nav>
+      <section>
+        <h1 id="introduction"><small>ploopi\</small>xml2array</h1>
+        <h4>Conversion d'un flux de données XML en tableau PHP</h4>
+        <p/>
+        <ul>
+          <li>Author: Ovensia</li>
+          <li>Copyright: Ovensia</li>
+          <li>License: GNU General Public License (GPL)</li>
+        </ul>
+        <h2 id="synopsis">Synopsis</h2>
+        <div class="synopsis">class xml2array
+            {<br/><ul class="none"><li>// members</li><li>private  <a href="#members">$parser</a>;
+                    </li><li>private array <a href="#members">$node_stack</a> =
+                        ;
+                    </li><li>private array <a href="#members">$xmlarray</a> =
+                        ;
+                    </li><li>private string <a href="#members">$currentdata</a> =
+                        '';
+                    </li></ul><ul class="none"><li>// methods</li><li>public array <a title="ploopi\xml2array" href="../classes/ploopi_xml2array/parse.xhtml">parse</a>()
+                    </li><li>public array <a title="ploopi\xml2array" href="../classes/ploopi_xml2array/parseFile.xhtml">parseFile</a>()
+                    </li><li>private void <a title="ploopi\xml2array" href="../classes/ploopi_xml2array/startElement.xhtml">startElement</a>()
+                    </li><li>private void <a title="ploopi\xml2array" href="../classes/ploopi_xml2array/endElement.xhtml">endElement</a>()
+                    </li><li>private void <a title="ploopi\xml2array" href="../classes/ploopi_xml2array/characterData.xhtml">characterData</a>()
+                    </li></ul>
+
+            }<br/></div>
+        <h2 id="members">Members</h2>
+        <div class="styled members">
+          <h4>private</h4>
+          <ul class="members">
+            <li id="currentdata"><strong>$currentdata</strong>
+                —
+                string<br/><span class="indent">Données en cours de lecture</span></li>
+            <li id="node_stack"><strong>$node_stack</strong>
+                —
+                array<br/><span class="indent">Tableau contenant la pile des noeuds XML</span></li>
+            <li id="parser"><strong>$parser</strong>
+                —
+                resource<br/><span class="indent">Analyseur XML</span></li>
+            <li id="xmlarray"><strong>$xmlarray</strong>
+                —
+                array<br/><span class="indent">Tableau contenant la structure et les données XML</span></li>
+          </ul>
+        </div>
+        <h2 id="methods">Methods</h2>
+        <div class="styled">
+          <h4>private</h4>
+          <ul>
+            <li id="characterData"><a title="ploopi\xml2array" href="../classes/ploopi_xml2array/characterData.xhtml">characterData()</a>
+                — Gestionnaire de données XML</li>
+            <li id="endElement"><a title="ploopi\xml2array" href="../classes/ploopi_xml2array/endElement.xhtml">endElement()</a>
+                — Gestionnaire de fin de balise XML</li>
+            <li id="startElement"><a title="ploopi\xml2array" href="../classes/ploopi_xml2array/startElement.xhtml">startElement()</a>
+                — Gestionnaire de début de balise XML</li>
+          </ul>
+          <h4>public</h4>
+          <ul>
+            <li id="parse"><a title="ploopi\xml2array" href="../classes/ploopi_xml2array/parse.xhtml">parse()</a>
+                — Parse une chaîne XML et retourne un tableau</li>
+            <li id="parseFile"><a title="ploopi\xml2array" href="../classes/ploopi_xml2array/parseFile.xhtml">parseFile()</a>
+                — Parse un fichier XML et retourne un tableau</li>
+          </ul>
+        </div>
+      </section>
+    </div>
+    <footer>
+      <span>Generated using phpDox 0.11.2 - Copyright (C) 2010 - 2019 by Arne Blankerts and Contributors</span>
+    </footer>
+  </body>
+</html>

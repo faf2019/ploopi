@@ -1,8 +1,5 @@
 #!/bin/sh
-# wget http://phpdox.de/releases/phpdox.phar
-# chmod +x phpdox.phar
-# mv phpdox.phar /usr/local/bin/phpdox
-# phpdox --version
-#
+# Génération de la documentation du framework
+php vendor/phploc/phploc/phploc include --log-xml phploc.xml
+php vendor/theseer/phpdox
 
-phpdox

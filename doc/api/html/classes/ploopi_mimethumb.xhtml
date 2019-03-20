@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <title>phpDox - ploopi\mimethumb</title>
+    <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+  </head>
+  <body>
+    <nav class="topnav">
+      <ul>
+        <li>
+          <div class="logo"><span>/**</span>phpDox</div>
+        </li>
+        <li class="separator">
+          <a href="../index.xhtml">Overview</a>
+        </li>
+        <li class="separator">
+          <a href="../namespaces.xhtml">Namespaces</a>
+        </li>
+        <li>
+          <a href="../classes.xhtml">Classes</a>
+        </li>
+        <li class="separator">
+          <a href="../source/index.xhtml">Source</a>
+        </li>
+      </ul>
+    </nav>
+    <div id="mainstage">
+      <div class="box">
+        <ul class="breadcrumb">
+          <li>
+            <a href="../index.xhtml">Overview</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.xhtml">Classes</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.xhtml#ploopi">ploopi</a>
+          </li>
+          <li class="separator">mimethumb</li>
+        </ul>
+      </div>
+      <nav class="box">
+        <ul>
+          <li>
+            <a href="#introduction">Introduction</a>
+          </li>
+          <li>
+            <a href="#synopsis">Synopsis</a>
+          </li>
+          <li>
+            <a href="#members">Members</a>
+          </li>
+          <li>
+            <a href="#methods">Methods</a>
+          </li>
+          <li>
+            <a href="../source/classes/mimethumb.php.xhtml#line38">Source</a>
+          </li>
+        </ul>
+      </nav>
+      <section>
+        <h1 id="introduction"><small>ploopi\</small>mimethumb</h1>
+        <h4>Gestion des vignettes en fonction des types mime</h4>
+        <p/>
+        <ul>
+          <li>Author: Xavier Toussaint</li>
+          <li>Copyright: HeXad</li>
+          <li>License: GNU General Public License (GPL)</li>
+        </ul>
+        <h2 id="synopsis">Synopsis</h2>
+        <div class="synopsis">class mimethumb
+            {<br/><ul class="none"><li>// members</li><li>private boolean <a href="#members">$booDebug</a> =
+                        false;
+                    </li><li>private integer <a href="#members">$intWidth</a> =
+                        100;
+                    </li><li>private integer <a href="#members">$intHeight</a> =
+                        100;
+                    </li><li>private integer <a href="#members">$floatCoef</a> =
+                        0;
+                    </li><li>private string <a href="#members">$strExport</a> =
+                        'png';
+                    </li><li>private  <a href="#members">$strExtension</a>;
+                    </li><li>private string <a href="#members">$strTypeMime</a> =
+                        '';
+                    </li><li>private string <a href="#members">$strFileType</a> =
+                        '';
+                    </li><li>private string <a href="#members">$strGroupType</a> =
+                        '';
+                    </li><li>private string <a href="#members">$strBorderColor</a> =
+                        '';
+                    </li><li>private  <a href="#members">$strPathFile</a>;
+                    </li><li>private  <a href="#members">$intIdModule</a>;
+                    </li><li>private  <a href="#members">$intIdWorkspace</a>;
+                    </li></ul><ul class="none"><li>// methods</li><li>public void <a title="ploopi\mimethumb" href="../classes/ploopi_mimethumb/__construct.xhtml">__construct</a>()
+                    </li><li>public true <a title="ploopi\mimethumb" href="../classes/ploopi_mimethumb/setWith.xhtml">setWith</a>()
+                    </li><li>public true <a title="ploopi\mimethumb" href="../classes/ploopi_mimethumb/setHeight.xhtml">setHeight</a>()
+                    </li><li>public true <a title="ploopi\mimethumb" href="../classes/ploopi_mimethumb/setCoef.xhtml">setCoef</a>()
+                    </li><li>public true <a title="ploopi\mimethumb" href="../classes/ploopi_mimethumb/setExport.xhtml">setExport</a>()
+                    </li><li>public true <a title="ploopi\mimethumb" href="../classes/ploopi_mimethumb/setBorder.xhtml">setBorder</a>()
+                    </li><li>public void <a title="ploopi\mimethumb" href="../classes/ploopi_mimethumb/setIdmw.xhtml">setIdmw</a>()
+                    </li><li>public vignette <a title="ploopi\mimethumb" href="../classes/ploopi_mimethumb/getThumbnail.xhtml">getThumbnail</a>()
+                    </li><li>public true <a title="ploopi\mimethumb" href="../classes/ploopi_mimethumb/getMimeTypeDefault.xhtml">getMimeTypeDefault</a>()
+                    </li><li>public true <a title="ploopi\mimethumb" href="../classes/ploopi_mimethumb/getMimeTypeIco.xhtml">getMimeTypeIco</a>()
+                    </li><li>private true <a title="ploopi\mimethumb" href="../classes/ploopi_mimethumb/_thumbImage.xhtml">_thumbImage</a>()
+                    </li><li>private true <a title="ploopi\mimethumb" href="../classes/ploopi_mimethumb/_thumbImagick.xhtml">_thumbImagick</a>()
+                    </li><li>private true <a title="ploopi\mimethumb" href="../classes/ploopi_mimethumb/_thumbOpenOffice.xhtml">_thumbOpenOffice</a>()
+                    </li><li>private true <a title="ploopi\mimethumb" href="../classes/ploopi_mimethumb/_thumbJodconverter.xhtml">_thumbJodconverter</a>()
+                    </li><li>private true <a title="ploopi\mimethumb" href="../classes/ploopi_mimethumb/_thumbSvg.xhtml">_thumbSvg</a>()
+                    </li><li>private true <a title="ploopi\mimethumb" href="../classes/ploopi_mimethumb/_thumbVideo.xhtml">_thumbVideo</a>()
+                    </li></ul>
+
+            }<br/></div>
+        <h2 id="members">Members</h2>
+        <div class="styled members">
+          <h4>private</h4>
+          <ul class="members">
+            <li id="booDebug">
+              <strong>$booDebug</strong>
+              <br/>
+              <span class="indent">Passage en mode debug</span>
+            </li>
+            <li id="floatCoef">
+              <strong>$floatCoef</strong>
+              <br/>
+              <span class="indent">Coefficient d'agrandissement/reduction à appliquer à l'image</span>
+            </li>
+            <li id="intHeight">
+              <strong>$intHeight</strong>
+              <br/>
+              <span class="indent">hauteur de la vignette</span>
+            </li>
+            <li id="intIdModule">
+              <strong>$intIdModule</strong>
+            </li>
+            <li id="intIdWorkspace">
+              <strong>$intIdWorkspace</strong>
+            </li>
+            <li id="intWidth">
+              <strong>$intWidth</strong>
+              <br/>
+              <span class="indent">longueur de la vignette</span>
+            </li>
+            <li id="strBorderColor">
+              <strong>$strBorderColor</strong>
+              <br/>
+              <span class="indent">couleur de la bordure de la vignette (#aaff99, 'transparent', '' (defaut))</span>
+            </li>
+            <li id="strExport">
+              <strong>$strExport</strong>
+              <br/>
+              <span class="indent">format d'export de la vignette</span>
+            </li>
+            <li id="strExtension">
+              <strong>$strExtension</strong>
+              <br/>
+              <span class="indent">extension du fichier input</span>
+            </li>
+            <li id="strFileType">
+              <strong>$strFileType</strong>
+            </li>
+            <li id="strGroupType">
+              <strong>$strGroupType</strong>
+            </li>
+            <li id="strPathFile">
+              <strong>$strPathFile</strong>
+              <br/>
+              <span class="indent">Chemin+nom du fichier à traiter</span>
+            </li>
+            <li id="strTypeMime">
+              <strong>$strTypeMime</strong>
+              <br/>
+              <span class="indent">MimeType, fileType et group du fichier à traiter (si connu)</span>
+            </li>
+          </ul>
+        </div>
+        <h2 id="methods">Methods</h2>
+        <div class="styled">
+          <h4>private</h4>
+          <ul>
+            <li id="_thumbImage"><a title="ploopi\mimethumb" href="../classes/ploopi_mimethumb/_thumbImage.xhtml">_thumbImage()</a>
+                — simple resize via ploopi_resizeimage d'une image (jpeg / jpg / gig / png)</li>
+            <li id="_thumbImagick"><a title="ploopi\mimethumb" href="../classes/ploopi_mimethumb/_thumbImagick.xhtml">_thumbImagick()</a>
+                — Convertion de format + génération de vignette via imagick</li>
+            <li id="_thumbJodconverter"><a title="ploopi\mimethumb" href="../classes/ploopi_mimethumb/_thumbJodconverter.xhtml">_thumbJodconverter()</a>
+                — Transformation de document via jodconverter + génération d'une vignette via imagick Taille maxi du fichier 512ko avec jod webservice Limité à UNIX et taille maxi du fichier 2Mo en jod local</li>
+            <li id="_thumbOpenOffice"><a title="ploopi\mimethumb" href="../classes/ploopi_mimethumb/_thumbOpenOffice.xhtml">_thumbOpenOffice()</a>
+                — Ouverture des fichiers openoffice (zip) + extraction du thumbnail + ploopi_resizeimage</li>
+            <li id="_thumbSvg"><a title="ploopi\mimethumb" href="../classes/ploopi_mimethumb/_thumbSvg.xhtml">_thumbSvg()</a>
+                — Conversion des fichier svg via inkscape + génération de la vignette via ploopi_resizeimage</li>
+            <li id="_thumbVideo"><a title="ploopi\mimethumb" href="../classes/ploopi_mimethumb/_thumbVideo.xhtml">_thumbVideo()</a>
+                — crée des vignettes vidéo</li>
+          </ul>
+          <h4>public</h4>
+          <ul>
+            <li id="__construct"><a title="ploopi\mimethumb" href="../classes/ploopi_mimethumb/__construct.xhtml">__construct()</a>
+                — Constructeur de la classe</li>
+            <li id="getMimeTypeDefault"><a title="ploopi\mimethumb" href="../classes/ploopi_mimethumb/getMimeTypeDefault.xhtml">getMimeTypeDefault()</a>
+                — recherche de la vignette par defaut en fonction du format + ploopi_resizeimage</li>
+            <li id="getMimeTypeIco"><a title="ploopi\mimethumb" href="../classes/ploopi_mimethumb/getMimeTypeIco.xhtml">getMimeTypeIco()</a>
+                — recherche de l'icone par defaut en fonction du format</li>
+            <li id="getThumbnail"><a title="ploopi\mimethumb" href="../classes/ploopi_mimethumb/getThumbnail.xhtml">getThumbnail()</a>
+                — Retourne une vignette du fichier passé en paramètre</li>
+            <li id="setBorder"><a title="ploopi\mimethumb" href="../classes/ploopi_mimethumb/setBorder.xhtml">setBorder()</a>
+                — Paramétrage de la couleur de bordure (si non indiqué pas de bordure)</li>
+            <li id="setCoef"><a title="ploopi\mimethumb" href="../classes/ploopi_mimethumb/setCoef.xhtml">setCoef()</a>
+                — Paramétrage du coefficient</li>
+            <li id="setExport"><a title="ploopi\mimethumb" href="../classes/ploopi_mimethumb/setExport.xhtml">setExport()</a>
+                — Paramétrage du format d'export</li>
+            <li id="setHeight"><a title="ploopi\mimethumb" href="../classes/ploopi_mimethumb/setHeight.xhtml">setHeight()</a>
+                — Paramétrage de la hauteur</li>
+            <li id="setIdmw"><a title="ploopi\mimethumb" href="../classes/ploopi_mimethumb/setIdmw.xhtml">setIdmw()</a>
+                — Paramétrage de idmodule et idworkspave pour la version cli de jodconverter</li>
+            <li id="setWith"><a title="ploopi\mimethumb" href="../classes/ploopi_mimethumb/setWith.xhtml">setWith()</a>
+                — Paramétrage de la longueur</li>
+          </ul>
+        </div>
+      </section>
+    </div>
+    <footer>
+      <span>Generated using phpDox 0.11.2 - Copyright (C) 2010 - 2019 by Arne Blankerts and Contributors</span>
+    </footer>
+  </body>
+</html>

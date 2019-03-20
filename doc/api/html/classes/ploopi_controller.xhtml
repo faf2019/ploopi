@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <title>phpDox - ploopi\controller</title>
+    <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+  </head>
+  <body>
+    <nav class="topnav">
+      <ul>
+        <li>
+          <div class="logo"><span>/**</span>phpDox</div>
+        </li>
+        <li class="separator">
+          <a href="../index.xhtml">Overview</a>
+        </li>
+        <li class="separator">
+          <a href="../namespaces.xhtml">Namespaces</a>
+        </li>
+        <li>
+          <a href="../classes.xhtml">Classes</a>
+        </li>
+        <li class="separator">
+          <a href="../source/index.xhtml">Source</a>
+        </li>
+      </ul>
+    </nav>
+    <div id="mainstage">
+      <div class="box">
+        <ul class="breadcrumb">
+          <li>
+            <a href="../index.xhtml">Overview</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.xhtml">Classes</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.xhtml#ploopi">ploopi</a>
+          </li>
+          <li class="separator">controller</li>
+        </ul>
+      </div>
+      <nav class="box">
+        <ul>
+          <li>
+            <a href="#introduction">Introduction</a>
+          </li>
+          <li>
+            <a href="#synopsis">Synopsis</a>
+          </li>
+          <li>
+            <a href="#members">Members</a>
+          </li>
+          <li>
+            <a href="#methods">Methods</a>
+          </li>
+          <li>
+            <a href="../source/classes/controller.php.xhtml#line15">Source</a>
+          </li>
+        </ul>
+      </nav>
+      <section>
+        <h1 id="introduction"><small>ploopi\</small>controller</h1>
+        <h4>Noyau et contôleur du module.</h4>
+        <p/>
+        <ul/>
+        <h2 id="synopsis">Synopsis</h2>
+        <div class="synopsis">class controller
+            {<br/><ul class="none"><li>// members</li><li>private static string <a href="#members">$_strEntityDef</a> =
+                        'home';
+                    </li><li>private static string <a href="#members">$_strEntityError</a> =
+                        'error';
+                    </li><li>private static string <a href="#members">$_strActionDef</a> =
+                        'default';
+                    </li><li>private static string <a href="#members">$_strEntity</a> =
+                        '';
+                    </li><li>private static string <a href="#members">$_strAction</a> =
+                        '';
+                    </li><li>private static boolean <a href="#members">$_booLight</a> =
+                        false;
+                    </li><li>private static integer <a href="#members">$_intModuleId</a> =
+                        0;
+                    </li><li>private static integer <a href="#members">$_intModuleTypeId</a> =
+                        0;
+                    </li><li>private static <span title="ploopi\ploopi\block">block</span> <a href="#members">$_objBlock</a> =
+                        NULL;
+                    </li></ul><ul class="none"><li>// methods</li><li>public static void <a title="ploopi\controller" href="../classes/ploopi_controller/dispatch.xhtml">dispatch</a>()
+                    </li><li>public static string <a title="ploopi\controller" href="../classes/ploopi_controller/getEntity.xhtml">getEntity</a>()
+                    </li><li>public static string <a title="ploopi\controller" href="../classes/ploopi_controller/getAction.xhtml">getAction</a>()
+                    </li><li>protected static boolean <a title="ploopi\controller" href="../classes/ploopi_controller/addBlockMenu.xhtml">addBlockMenu</a>()
+                    </li><li>public static block <a title="ploopi\controller" href="../classes/ploopi_controller/getBlock.xhtml">getBlock</a>()
+                    </li><li>public static void <a title="ploopi\controller" href="../classes/ploopi_controller/setBlock.xhtml">setBlock</a>()
+                    </li><li>private static string <a title="ploopi\controller" href="../classes/ploopi_controller/_cleanParam.xhtml">_cleanParam</a>()
+                    </li><li>public static integer <a title="ploopi\controller" href="../classes/ploopi_controller/getModuleId.xhtml">getModuleId</a>()
+                    </li><li>public static integer <a title="ploopi\controller" href="../classes/ploopi_controller/getModuleTypeId.xhtml">getModuleTypeId</a>()
+                    </li><li>private static string <a title="ploopi\controller" href="../classes/ploopi_controller/_getParam.xhtml">_getParam</a>()
+                    </li></ul>
+
+            }<br/></div>
+        <h2 id="members">Members</h2>
+        <div class="styled members">
+          <h4>private</h4>
+          <ul class="members">
+            <li id="_booLight"><strong>$_booLight</strong>
+                —
+                boolean<br/><span class="indent">Mode d'affichage (light true/false)</span></li>
+            <li id="_intModuleId"><strong>$_intModuleId</strong>
+                —
+                integer<br/><span class="indent">Identifiant du module (notamment pour appels alternatifs via CLI)</span></li>
+            <li id="_intModuleTypeId"><strong>$_intModuleTypeId</strong>
+                —
+                integer<br/><span class="indent">Identifiant du type de module (notamment pour appels alternatifs via CLI)</span></li>
+            <li id="_objBlock"><strong>$_objBlock</strong>
+                —
+                <a title="ploopi\ploopi\block" href="../classes/ploopi_ploopi_block.xhtml">ploopi\ploopi\block</a><br/><span class="indent">Instance de block (gestion de l'intégration du menu dans Ploopi)</span></li>
+            <li id="_strAction"><strong>$_strAction</strong>
+                —
+                string<br/><span class="indent">Action courante</span></li>
+            <li id="_strActionDef"><strong>$_strActionDef</strong>
+                —
+                string<br/><span class="indent">Action par défaut</span></li>
+            <li id="_strEntity"><strong>$_strEntity</strong>
+                —
+                string<br/><span class="indent">Entité courante</span></li>
+            <li id="_strEntityDef"><strong>$_strEntityDef</strong>
+                —
+                string<br/><span class="indent">Entité par défaut (home)</span></li>
+            <li id="_strEntityError"><strong>$_strEntityError</strong>
+                —
+                string<br/><span class="indent">Entité d'erreur</span></li>
+          </ul>
+        </div>
+        <h2 id="methods">Methods</h2>
+        <div class="styled">
+          <h4>private</h4>
+          <ul>
+            <li id="_cleanParam"><a title="ploopi\controller" href="../classes/ploopi_controller/_cleanParam.xhtml">_cleanParam()</a>
+                — Nettoyage de paramètre d'url  - Enlever les accents  - Mettre en minuscule  - Remplacer tout ce qui n'est pas a-z0-9/_ par une chaîne vide</li>
+            <li id="_getParam"><a title="ploopi\controller" href="../classes/ploopi_controller/_getParam.xhtml">_getParam()</a>
+                — Retourne la valeur d'un paramètre du module (uniquement système, pour appel CLI essentiellement)</li>
+          </ul>
+          <h4>protected</h4>
+          <ul>
+            <li id="addBlockMenu"><a title="ploopi\controller" href="../classes/ploopi_controller/addBlockMenu.xhtml">addBlockMenu()</a>
+                — Fonction générique d'ajout de ligne dans le menu du module RAA (block.php)</li>
+          </ul>
+          <h4>public</h4>
+          <ul>
+            <li id="dispatch"><a title="ploopi\controller" href="../classes/ploopi_controller/dispatch.xhtml">dispatch()</a>
+                — Contrôleur du module</li>
+            <li id="getAction"><a title="ploopi\controller" href="../classes/ploopi_controller/getAction.xhtml">getAction()</a>
+                — Retourne l'action appelée</li>
+            <li id="getBlock"><a title="ploopi\controller" href="../classes/ploopi_controller/getBlock.xhtml">getBlock()</a>
+                — Retourne l'instance de block</li>
+            <li id="getEntity"><a title="ploopi\controller" href="../classes/ploopi_controller/getEntity.xhtml">getEntity()</a>
+                — Retourne l'entité appelée</li>
+            <li id="getModuleId"><a title="ploopi\controller" href="../classes/ploopi_controller/getModuleId.xhtml">getModuleId()</a>
+                — Retourne le module ID (notamment pour l'appel via CLI sans Session)</li>
+            <li id="getModuleTypeId"><a title="ploopi\controller" href="../classes/ploopi_controller/getModuleTypeId.xhtml">getModuleTypeId()</a>
+                — Retourne l'ID du type de module (notamment pour l'appel via CLI sans Session)</li>
+            <li id="setBlock"><a title="ploopi\controller" href="../classes/ploopi_controller/setBlock.xhtml">setBlock()</a>
+                — Met à jour le block de menu</li>
+          </ul>
+        </div>
+      </section>
+    </div>
+    <footer>
+      <span>Generated using phpDox 0.11.2 - Copyright (C) 2010 - 2019 by Arne Blankerts and Contributors</span>
+    </footer>
+  </body>
+</html>

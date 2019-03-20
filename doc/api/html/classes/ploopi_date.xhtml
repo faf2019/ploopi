@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <title>phpDox - ploopi\date</title>
+    <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+  </head>
+  <body>
+    <nav class="topnav">
+      <ul>
+        <li>
+          <div class="logo"><span>/**</span>phpDox</div>
+        </li>
+        <li class="separator">
+          <a href="../index.xhtml">Overview</a>
+        </li>
+        <li class="separator">
+          <a href="../namespaces.xhtml">Namespaces</a>
+        </li>
+        <li>
+          <a href="../classes.xhtml">Classes</a>
+        </li>
+        <li class="separator">
+          <a href="../source/index.xhtml">Source</a>
+        </li>
+      </ul>
+    </nav>
+    <div id="mainstage">
+      <div class="box">
+        <ul class="breadcrumb">
+          <li>
+            <a href="../index.xhtml">Overview</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.xhtml">Classes</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.xhtml#ploopi">ploopi</a>
+          </li>
+          <li class="separator">date</li>
+        </ul>
+      </div>
+      <nav class="box">
+        <ul>
+          <li>
+            <a href="#introduction">Introduction</a>
+          </li>
+          <li>
+            <a href="#synopsis">Synopsis</a>
+          </li>
+          <li>
+            <a href="#methods">Methods</a>
+          </li>
+          <li>
+            <a href="../source/classes/date.php.xhtml#line38">Source</a>
+          </li>
+        </ul>
+      </nav>
+      <section>
+        <h1 id="introduction"><small>ploopi\</small>date</h1>
+        <h4>Gestion des dates, des timestamps MYSQL et des fuseaux horaires.</h4>
+        <p>Conversion de formats, conversion de fuseaux, calculs...</p>
+        <ul>
+          <li>Author: Ovensia</li>
+          <li>Copyright: Ovensia</li>
+          <li>License: GNU General Public License (GPL)</li>
+        </ul>
+        <h2 id="synopsis">Synopsis</h2>
+        <div class="synopsis">class date
+            {<br/><ul class="none"><li>// methods</li><li>public static string <a title="ploopi\date" href="../classes/ploopi_date/getdate.xhtml">getdate</a>()
+                    </li><li>public static string <a title="ploopi\date" href="../classes/ploopi_date/gettime.xhtml">gettime</a>()
+                    </li><li>public static boolean <a title="ploopi\date" href="../classes/ploopi_date/dateverify.xhtml">dateverify</a>()
+                    </li><li>public static boolean <a title="ploopi\date" href="../classes/ploopi_date/timeverify.xhtml">timeverify</a>()
+                    </li><li>public static array <a title="ploopi\date" href="../classes/ploopi_date/gettimestampdetail.xhtml">gettimestampdetail</a>()
+                    </li><li>public static string <a title="ploopi\date" href="../classes/ploopi_date/createtimestamp.xhtml">createtimestamp</a>()
+                    </li><li>public static string <a title="ploopi\date" href="../classes/ploopi_date/createdatetime.xhtml">createdatetime</a>()
+                    </li><li>public static string <a title="ploopi\date" href="../classes/ploopi_date/unixtimestamp2local.xhtml">unixtimestamp2local</a>()
+                    </li><li>public static string <a title="ploopi\date" href="../classes/ploopi_date/unixtimestamp2timestamp.xhtml">unixtimestamp2timestamp</a>()
+                    </li><li>public static string <a title="ploopi\date" href="../classes/ploopi_date/unixtimestamp2datetime.xhtml">unixtimestamp2datetime</a>()
+                    </li><li>public static int <a title="ploopi\date" href="../classes/ploopi_date/timestamp2unixtimestamp.xhtml">timestamp2unixtimestamp</a>()
+                    </li><li>public static int <a title="ploopi\date" href="../classes/ploopi_date/datetime2timestamp.xhtml">datetime2timestamp</a>()
+                    </li><li>public static int <a title="ploopi\date" href="../classes/ploopi_date/datetime2unixtimestamp.xhtml">datetime2unixtimestamp</a>()
+                    </li><li>public static array <a title="ploopi\date" href="../classes/ploopi_date/datetime2local.xhtml">datetime2local</a>()
+                    </li><li>public static array <a title="ploopi\date" href="../classes/ploopi_date/timestamp2local.xhtml">timestamp2local</a>()
+                    </li><li>public static int <a title="ploopi\date" href="../classes/ploopi_date/timestamp2xls.xhtml">timestamp2xls</a>()
+                    </li><li>public static string <a title="ploopi\date" href="../classes/ploopi_date/local2timestamp.xhtml">local2timestamp</a>()
+                    </li><li>public static string <a title="ploopi\date" href="../classes/ploopi_date/local2datetime.xhtml">local2datetime</a>()
+                    </li><li>public static string <a title="ploopi\date" href="../classes/ploopi_date/timestamp_add.xhtml">timestamp_add</a>()
+                    </li><li>public static string <a title="ploopi\date" href="../classes/ploopi_date/datetime_add.xhtml">datetime_add</a>()
+                    </li><li>public static int <a title="ploopi\date" href="../classes/ploopi_date/numweek2unixtimestamp.xhtml">numweek2unixtimestamp</a>()
+                    </li><li>public static boolean <a title="ploopi\date" href="../classes/ploopi_date/holiday.xhtml">holiday</a>()
+                    </li><li>public static timestamp <a title="ploopi\date" href="../classes/ploopi_date/tz_createtimestamp.xhtml">tz_createtimestamp</a>()
+                    </li><li>public static string <a title="ploopi\date" href="../classes/ploopi_date/tz_timestamp2timestamp.xhtml">tz_timestamp2timestamp</a>()
+                    </li><li>public static string <a title="ploopi\date" href="../classes/ploopi_date/tz_getutc.xhtml">tz_getutc</a>()
+                    </li><li>public static void <a title="ploopi\date" href="../classes/ploopi_date/open_calendar.xhtml">open_calendar</a>()
+                    </li></ul>
+
+            }<br/></div>
+        <h2 id="methods">Methods</h2>
+        <div class="styled">
+          <h4>public</h4>
+          <ul>
+            <li id="createdatetime"><a title="ploopi\date" href="../classes/ploopi_date/createdatetime.xhtml">createdatetime()</a>
+                — CrÃ©e un datetime de la date du serveur au format MYSQL (AAAA-MM-JJ hh:mm:ss)</li>
+            <li id="createtimestamp"><a title="ploopi\date" href="../classes/ploopi_date/createtimestamp.xhtml">createtimestamp()</a>
+                — CrÃ©e un timestamp de la date du serveur au format MYSQL (AAAAMMJJhhmmss)</li>
+            <li id="datetime2local"><a title="ploopi\date" href="../classes/ploopi_date/datetime2local.xhtml">datetime2local()</a>
+                — Convertit un datetime MYSQL (AAAA-MM-JJ hh:mm:ss) au format local (date+heure)</li>
+            <li id="datetime2timestamp"><a title="ploopi\date" href="../classes/ploopi_date/datetime2timestamp.xhtml">datetime2timestamp()</a>
+                — Convertit un datetime MYSQL (AAAA-MM-JJ hh:mm:ss) en timestamp MySQL (AAAAMMJJhhmmss)</li>
+            <li id="datetime2unixtimestamp"><a title="ploopi\date" href="../classes/ploopi_date/datetime2unixtimestamp.xhtml">datetime2unixtimestamp()</a>
+                — Convertit un datetime MYSQL (AAAA-MM-JJ hh:mm:ss) en timestamp UNIX</li>
+            <li id="datetime_add"><a title="ploopi\date" href="../classes/ploopi_date/datetime_add.xhtml">datetime_add()</a>
+                — Ajoute un durÃ©e (positive ou nÃ©gative) Ã  un datetime MYSQL (AAAA-MM-JJ hh:mm:ss)</li>
+            <li id="dateverify"><a title="ploopi\date" href="../classes/ploopi_date/dateverify.xhtml">dateverify()</a>
+                — VÃ©rifie le format de la date en fonction du format local</li>
+            <li id="getdate"><a title="ploopi\date" href="../classes/ploopi_date/getdate.xhtml">getdate()</a>
+                — Retourne la date du serveur au format local (_PLOOPI_DATEFORMAT)</li>
+            <li id="gettime"><a title="ploopi\date" href="../classes/ploopi_date/gettime.xhtml">gettime()</a>
+                — Retourne l'heure au format local (_PLOOPI_TIMEFORMAT)</li>
+            <li id="gettimestampdetail"><a title="ploopi\date" href="../classes/ploopi_date/gettimestampdetail.xhtml">gettimestampdetail()</a>
+                — Renvoie le dÃ©tail d'un timestamp au format MYSQL (AAAAMMJJhhmmss) sous forme d'un tableau $regs[_PLOOPI_DATE_YEAR] =&gt; Year $regs[_PLOOPI_DATE_MONTH] =&gt; Month $regs[_PLOOPI_DATE_DAY] =&gt; Day $regs[_PLOOPI_DATE_HOUR] =&gt; Hour $regs[_PLOOPI_DATE_MINUTE] =&gt; Minute $regs[_PLOOPI_DATE_SECOND] =&gt; Second</li>
+            <li id="holiday"><a title="ploopi\date" href="../classes/ploopi_date/holiday.xhtml">holiday()</a>
+                — Retourne un boolÃ©en indiquant si une date correspond Ã  un jour fÃ©riÃ©</li>
+            <li id="local2datetime"><a title="ploopi\date" href="../classes/ploopi_date/local2datetime.xhtml">local2datetime()</a>
+                — Convertit un date locale au format datetime MYSQL (AAAA-MM-JJ hh:mm:ss)</li>
+            <li id="local2timestamp"><a title="ploopi\date" href="../classes/ploopi_date/local2timestamp.xhtml">local2timestamp()</a>
+                — Convertit un date locale au format timestamp MYSQL (AAAAMMJJhhmmss)</li>
+            <li id="numweek2unixtimestamp"><a title="ploopi\date" href="../classes/ploopi_date/numweek2unixtimestamp.xhtml">numweek2unixtimestamp()</a>
+                — Retourne un timestamp unix de la date du 1er jour d'une semaine</li>
+            <li id="open_calendar"><a title="ploopi\date" href="../classes/ploopi_date/open_calendar.xhtml">open_calendar()</a>
+                — Affiche une petite image de calendrier qui permet d'ouvrir le calendrier/popup de choix d'une date</li>
+            <li id="timestamp2local"><a title="ploopi\date" href="../classes/ploopi_date/timestamp2local.xhtml">timestamp2local()</a>
+                — Convertit un timestamp MYSQL (AAAAMMJJhhmmss) au format local (date+heure)</li>
+            <li id="timestamp2unixtimestamp"><a title="ploopi\date" href="../classes/ploopi_date/timestamp2unixtimestamp.xhtml">timestamp2unixtimestamp()</a>
+                — Convertit un timestamp MYSQL (AAAAMMJJhhmmss) en timestamp UNIX</li>
+            <li id="timestamp2xls"><a title="ploopi\date" href="../classes/ploopi_date/timestamp2xls.xhtml">timestamp2xls()</a>
+                — Convertit un timestamp MYSQL (AAAAMMJJhhmmss) au format XLS</li>
+            <li id="timestamp_add"><a title="ploopi\date" href="../classes/ploopi_date/timestamp_add.xhtml">timestamp_add()</a>
+                — Ajoute un durÃ©e (positive ou nÃ©gative) Ã  un timestamp MYSQL (AAAAMMJJhhmmss)</li>
+            <li id="timeverify"><a title="ploopi\date" href="../classes/ploopi_date/timeverify.xhtml">timeverify()</a>
+                — VÃ©rifie le format de l'heure en fonction du format local</li>
+            <li id="tz_createtimestamp"><a title="ploopi\date" href="../classes/ploopi_date/tz_createtimestamp.xhtml">tz_createtimestamp()</a>
+                — CrÃ©e le timestamp MYSQL (AAAAMMJJhhmmss) de la date actuelle pour un fuseau horaire donnÃ© (par dÃ©faut UTC+0)</li>
+            <li id="tz_getutc"><a title="ploopi\date" href="../classes/ploopi_date/tz_getutc.xhtml">tz_getutc()</a>
+                — Renvoie une chaine indiquant le dÃ©calage d'un fuseau par rapport Ã  l'heure UTC. Ex : UTC +02:00</li>
+            <li id="tz_timestamp2timestamp"><a title="ploopi\date" href="../classes/ploopi_date/tz_timestamp2timestamp.xhtml">tz_timestamp2timestamp()</a>
+                — Convertit un timestamp MYSQL (AAAAMMJJhhmmss) d'un fuseau Ã  un autre</li>
+            <li id="unixtimestamp2datetime"><a title="ploopi\date" href="../classes/ploopi_date/unixtimestamp2datetime.xhtml">unixtimestamp2datetime()</a>
+                — Convertit un timestamp UNIX en datetime MYSQL (AAAA-MM-JJ hh:mm:ss)</li>
+            <li id="unixtimestamp2local"><a title="ploopi\date" href="../classes/ploopi_date/unixtimestamp2local.xhtml">unixtimestamp2local()</a>
+                — Renvoie un timestamp UNIX au format local (_PLOOPI_TIMEFORMAT)</li>
+            <li id="unixtimestamp2timestamp"><a title="ploopi\date" href="../classes/ploopi_date/unixtimestamp2timestamp.xhtml">unixtimestamp2timestamp()</a>
+                — Convertit un timestamp UNIX en timestamp MYSQL (AAAAMMJJhhmmss)</li>
+          </ul>
+        </div>
+      </section>
+    </div>
+    <footer>
+      <span>Generated using phpDox 0.11.2 - Copyright (C) 2010 - 2019 by Arne Blankerts and Contributors</span>
+    </footer>
+  </body>
+</html>

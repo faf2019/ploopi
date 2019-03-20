@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <title>phpDox - ploopi\odf_parser</title>
+    <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+  </head>
+  <body>
+    <nav class="topnav">
+      <ul>
+        <li>
+          <div class="logo"><span>/**</span>phpDox</div>
+        </li>
+        <li class="separator">
+          <a href="../index.xhtml">Overview</a>
+        </li>
+        <li class="separator">
+          <a href="../namespaces.xhtml">Namespaces</a>
+        </li>
+        <li>
+          <a href="../classes.xhtml">Classes</a>
+        </li>
+        <li class="separator">
+          <a href="../source/index.xhtml">Source</a>
+        </li>
+      </ul>
+    </nav>
+    <div id="mainstage">
+      <div class="box">
+        <ul class="breadcrumb">
+          <li>
+            <a href="../index.xhtml">Overview</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.xhtml">Classes</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.xhtml#ploopi">ploopi</a>
+          </li>
+          <li class="separator">odf_parser</li>
+        </ul>
+      </div>
+      <nav class="box">
+        <ul>
+          <li>
+            <a href="#introduction">Introduction</a>
+          </li>
+          <li>
+            <a href="#synopsis">Synopsis</a>
+          </li>
+          <li>
+            <a href="#members">Members</a>
+          </li>
+          <li>
+            <a href="#methods">Methods</a>
+          </li>
+          <li>
+            <a href="../source/classes/odf_parser.php.xhtml#line39">Source</a>
+          </li>
+        </ul>
+      </nav>
+      <section>
+        <h1 id="introduction"><small>ploopi\</small>odf_parser</h1>
+        <h4>Génération de documents dans différents formats "bureautique" (ODT, ODS, DOC, XLS, RTF, PDF, etc...) à partir de modèles OpenDocument.</h4>
+        <p>Fonctionne comme un moteur de template.<br/>Il est possible de définir des variables ou des blocs de variables qui seront ensuite remplacés dans le modèle via un parser XML.</p>
+        <ul>
+          <li>Author: Ovensia</li>
+          <li>Copyright: Ovensia</li>
+          <li>License: GNU General Public License (GPL)</li>
+        </ul>
+        <h2 id="synopsis">Synopsis</h2>
+        <div class="synopsis">class odf_parser
+            {<br/><ul class="none"><li>// members</li><li>private  <a href="#members">$filename</a>;
+                    </li><li>private  <a href="#members">$content_xml</a>;
+                    </li><li>private  <a href="#members">$styles_xml</a>;
+                    </li><li>private  <a href="#members">$manifest_xml</a>;
+                    </li><li>private array <a href="#members">$vars</a> =
+                        ;
+                    </li><li>private array <a href="#members">$images</a> =
+                        ;
+                    </li><li>private array <a href="#members">$blockvars</a> =
+                        ;
+                    </li><li>private array <a href="#members">$blocktemplates</a> =
+                        ;
+                    </li><li>private  <a href="#members">$xml_parser</a>;
+                    </li><li>private <span title="ploopi\ZipArchive">ZipArchive</span> <a href="#members">$zip</a>;
+                    </li></ul><ul class="none"><li>// methods</li><li>public void <a title="ploopi\odf_parser" href="../classes/ploopi_odf_parser/__construct.xhtml">__construct</a>()
+                    </li><li>public string <a title="ploopi\odf_parser" href="../classes/ploopi_odf_parser/add_image.xhtml">add_image</a>()
+                    </li><li>public string <a title="ploopi\odf_parser" href="../classes/ploopi_odf_parser/clean_var.xhtml">clean_var</a>()
+                    </li><li>public void <a title="ploopi\odf_parser" href="../classes/ploopi_odf_parser/set_var.xhtml">set_var</a>()
+                    </li><li>public void <a title="ploopi\odf_parser" href="../classes/ploopi_odf_parser/set_image.xhtml">set_image</a>()
+                    </li><li>public void <a title="ploopi\odf_parser" href="../classes/ploopi_odf_parser/set_blockvar.xhtml">set_blockvar</a>()
+                    </li><li>public void <a title="ploopi\odf_parser" href="../classes/ploopi_odf_parser/set_blockvar_advanced.xhtml">set_blockvar_advanced</a>()
+                    </li><li>public void <a title="ploopi\odf_parser" href="../classes/ploopi_odf_parser/parse.xhtml">parse</a>()
+                    </li><li>public string <a title="ploopi\odf_parser" href="../classes/ploopi_odf_parser/__tostring.xhtml">__tostring</a>()
+                    </li><li>public void <a title="ploopi\odf_parser" href="../classes/ploopi_odf_parser/save.xhtml">save</a>()
+                    </li></ul>
+
+            }<br/></div>
+        <h2 id="members">Members</h2>
+        <div class="styled members">
+          <h4>private</h4>
+          <ul class="members">
+            <li id="blocktemplates"><strong>$blocktemplates</strong>
+                —
+                array<br/><span class="indent">Blocs extraits du template</span></li>
+            <li id="blockvars"><strong>$blockvars</strong>
+                —
+                array<br/><span class="indent">Variables de type bloc du template</span></li>
+            <li id="content_xml"><strong>$content_xml</strong>
+                —
+                string<br/><span class="indent">Contenu XML du fichier content.xml</span></li>
+            <li id="filename"><strong>$filename</strong>
+                —
+                string<br/><span class="indent">Fichier template ODF</span></li>
+            <li id="images"><strong>$images</strong>
+                —
+                array<br/><span class="indent">Images du template</span></li>
+            <li id="manifest_xml"><strong>$manifest_xml</strong>
+                —
+                string<br/><span class="indent">Contenu XML du fichier manifest.xml</span></li>
+            <li id="styles_xml"><strong>$styles_xml</strong>
+                —
+                string<br/><span class="indent">Contenu XML du fichier styles.xml</span></li>
+            <li id="vars"><strong>$vars</strong>
+                —
+                array<br/><span class="indent">Variables du emplate</span></li>
+            <li id="xml_parser"><strong>$xml_parser</strong>
+                —
+                resource<br/><span class="indent">Parseur XML</span></li>
+            <li id="zip"><strong>$zip</strong>
+                —
+                <a title="ploopi\ZipArchive" href="../classes/ploopi_ZipArchive.xhtml">ploopi\ZipArchive</a><br/><span class="indent">Objet ZipArchive</span></li>
+          </ul>
+        </div>
+        <h2 id="methods">Methods</h2>
+        <div class="styled">
+          <h4>public</h4>
+          <ul>
+            <li id="__construct"><a title="ploopi\odf_parser" href="../classes/ploopi_odf_parser/__construct.xhtml">__construct()</a>
+                — Constructeur de la classe.</li>
+            <li id="__tostring"><a title="ploopi\odf_parser" href="../classes/ploopi_odf_parser/__tostring.xhtml">__tostring()</a>
+                — Affichage du contenu des variables depuis un appel de type echo ou print</li>
+            <li id="add_image"><a title="ploopi\odf_parser" href="../classes/ploopi_odf_parser/add_image.xhtml">add_image()</a>
+                — Ajoute une image à la liste des images et génère le code xml associé</li>
+            <li id="clean_var"><a title="ploopi\odf_parser" href="../classes/ploopi_odf_parser/clean_var.xhtml">clean_var()</a>
+                — Nettoie une chaîne (décode les entités html) et l'encode en UTF8 + traitement des URLs</li>
+            <li id="parse"><a title="ploopi\odf_parser" href="../classes/ploopi_odf_parser/parse.xhtml">parse()</a>
+                — Parse le contenu du modèle et remplace les variables du template par leurs valeurs</li>
+            <li id="save"><a title="ploopi\odf_parser" href="../classes/ploopi_odf_parser/save.xhtml">save()</a>
+                — Enregistre le document ODF généré</li>
+            <li id="set_blockvar"><a title="ploopi\odf_parser" href="../classes/ploopi_odf_parser/set_blockvar.xhtml">set_blockvar()</a>
+                — Définit une variable template de type bloc et lui affecte un tableau de valeurs</li>
+            <li id="set_blockvar_advanced"><a title="ploopi\odf_parser" href="../classes/ploopi_odf_parser/set_blockvar_advanced.xhtml">set_blockvar_advanced()</a>
+                — Définit une variable template de type bloc et lui affecte un tableau de valeurs Le tableau peut contenir des images</li>
+            <li id="set_image"><a title="ploopi\odf_parser" href="../classes/ploopi_odf_parser/set_image.xhtml">set_image()</a>
+                — Définit une variable template de type "image"</li>
+            <li id="set_var"><a title="ploopi\odf_parser" href="../classes/ploopi_odf_parser/set_var.xhtml">set_var()</a>
+                — Définit une variable template et lui affecte une valeur</li>
+          </ul>
+        </div>
+      </section>
+    </div>
+    <footer>
+      <span>Generated using phpDox 0.11.2 - Copyright (C) 2010 - 2019 by Arne Blankerts and Contributors</span>
+    </footer>
+  </body>
+</html>

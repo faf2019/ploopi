@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <title>phpDox - ploopi\loader</title>
+    <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+  </head>
+  <body>
+    <nav class="topnav">
+      <ul>
+        <li>
+          <div class="logo"><span>/**</span>phpDox</div>
+        </li>
+        <li class="separator">
+          <a href="../index.xhtml">Overview</a>
+        </li>
+        <li class="separator">
+          <a href="../namespaces.xhtml">Namespaces</a>
+        </li>
+        <li>
+          <a href="../classes.xhtml">Classes</a>
+        </li>
+        <li class="separator">
+          <a href="../source/index.xhtml">Source</a>
+        </li>
+      </ul>
+    </nav>
+    <div id="mainstage">
+      <div class="box">
+        <ul class="breadcrumb">
+          <li>
+            <a href="../index.xhtml">Overview</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.xhtml">Classes</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.xhtml#ploopi">ploopi</a>
+          </li>
+          <li class="separator">loader</li>
+        </ul>
+      </div>
+      <nav class="box">
+        <ul>
+          <li>
+            <a href="#introduction">Introduction</a>
+          </li>
+          <li>
+            <a href="#synopsis">Synopsis</a>
+          </li>
+          <li>
+            <a href="#members">Members</a>
+          </li>
+          <li>
+            <a href="#methods">Methods</a>
+          </li>
+          <li>
+            <a href="../source/classes/loader.php.xhtml#line38">Source</a>
+          </li>
+        </ul>
+      </nav>
+      <section>
+        <h1 id="introduction"><small>ploopi\</small>loader</h1>
+        <h4>Initialisation de Ploopi Autoload, bufferisation, chargement de session, connexion à la base de données...</h4>
+        <p/>
+        <ul>
+          <li>Author: Ovensia</li>
+          <li>Copyright: Ovensia</li>
+          <li>License: GNU General Public License (GPL)</li>
+        </ul>
+        <h2 id="synopsis">Synopsis</h2>
+        <div class="synopsis">class loader
+            {<br/><ul class="none"><li>// members</li><li>private static boolean <a href="#members">$initsession</a> =
+                        false;
+                    </li><li>private static string <a href="#members">$script</a> =
+                        'index';
+                    </li><li>private static array <a href="#members">$workspaces</a> =
+                        ;
+                    </li><li>private static array <a href="#members">$workspace</a> =
+                        ;
+                    </li><li>private static array <a href="#members">$_arrLoaded</a> =
+                        ;
+                    </li></ul><ul class="none"><li>// methods</li><li>private static string <a title="ploopi\loader" href="../classes/ploopi_loader/_classToFile.xhtml">_classToFile</a>()
+                    </li><li>public static boolean <a title="ploopi\loader" href="../classes/ploopi_loader/classExists.xhtml">classExists</a>()
+                    </li><li>private static void <a title="ploopi\loader" href="../classes/ploopi_loader/_autoload.xhtml">_autoload</a>()
+                    </li><li>public static void <a title="ploopi\loader" href="../classes/ploopi_loader/boot.xhtml">boot</a>()
+                    </li><li>public static void <a title="ploopi\loader" href="../classes/ploopi_loader/boot_cli.xhtml">boot_cli</a>()
+                    </li><li>private static void <a title="ploopi\loader" href="../classes/ploopi_loader/_importgpr.xhtml">_importgpr</a>()
+                    </li><li>private static void <a title="ploopi\loader" href="../classes/ploopi_loader/_setheader.xhtml">_setheader</a>()
+                    </li><li>private static void <a title="ploopi\loader" href="../classes/ploopi_loader/_setheader_connected.xhtml">_setheader_connected</a>()
+                    </li><li>public static void <a title="ploopi\loader" href="../classes/ploopi_loader/dispatch.xhtml">dispatch</a>()
+                    </li><li>private static void <a title="ploopi\loader" href="../classes/ploopi_loader/_rewrite.xhtml">_rewrite</a>()
+                    </li><li>public static void <a title="ploopi\loader" href="../classes/ploopi_loader/start.xhtml">start</a>()
+                    </li><li>public static void <a title="ploopi\loader" href="../classes/ploopi_loader/startlight.xhtml">startlight</a>()
+                    </li><li>private static void <a title="ploopi\loader" href="../classes/ploopi_loader/_getworkspaces.xhtml">_getworkspaces</a>()
+                    </li><li>private static void <a title="ploopi\loader" href="../classes/ploopi_loader/_getmodules.xhtml">_getmodules</a>()
+                    </li><li>public static array <a title="ploopi\loader" href="../classes/ploopi_loader/getworkspace.xhtml">getworkspace</a>()
+                    </li><li>public static array <a title="ploopi\loader" href="../classes/ploopi_loader/getscript.xhtml">getscript</a>()
+                    </li></ul>
+
+            }<br/></div>
+        <h2 id="members">Members</h2>
+        <div class="styled members">
+          <h4>private</h4>
+          <ul class="members">
+            <li id="_arrLoaded"><strong>$_arrLoaded</strong>
+                —
+                array<br/><span class="indent">Liste des classes chargées par l'autoload</span></li>
+            <li id="initsession"><strong>$initsession</strong>
+                —
+                boolean<br/><span class="indent">Session initialisée ?</span></li>
+            <li id="script"><strong>$script</strong>
+                —
+                string<br/><span class="indent">Script principal appelé index/admin/light/quick/webservice/backend...</span></li>
+            <li id="workspace"><strong>$workspace</strong>
+                —
+                string<br/><span class="indent">Espace de travail sélectionné</span></li>
+            <li id="workspaces"><strong>$workspaces</strong>
+                —
+                array<br/><span class="indent">Liste des espaces de travail</span></li>
+          </ul>
+        </div>
+        <h2 id="methods">Methods</h2>
+        <div class="styled">
+          <h4>private</h4>
+          <ul>
+            <li id="_autoload"><a title="ploopi\loader" href="../classes/ploopi_loader/_autoload.xhtml">_autoload()</a>
+                — Autoload</li>
+            <li id="_classToFile"><a title="ploopi\loader" href="../classes/ploopi_loader/_classToFile.xhtml">_classToFile()</a>
+                — Conversion d'un nom de classe en chemin physique</li>
+            <li id="_getmodules"><a title="ploopi\loader" href="../classes/ploopi_loader/_getmodules.xhtml">_getmodules()</a>
+                — Chargement des modules + paramètres</li>
+            <li id="_getworkspaces"><a title="ploopi\loader" href="../classes/ploopi_loader/_getworkspaces.xhtml">_getworkspaces()</a>
+                — Chargement des espaces de travail (avec application du filtrage par nom de domaine)</li>
+            <li id="_importgpr"><a title="ploopi\loader" href="../classes/ploopi_loader/_importgpr.xhtml">_importgpr()</a>
+                — Filtre les superglobales $_GET / $_POST / $_REQUEST / $_COOKIE / $_SERVER Déchiffre l'URL si elle est chiffrée.</li>
+            <li id="_rewrite"><a title="ploopi\loader" href="../classes/ploopi_loader/_rewrite.xhtml">_rewrite()</a>
+                — Gère le rewriting inverse des URL</li>
+            <li id="_setheader"><a title="ploopi\loader" href="../classes/ploopi_loader/_setheader.xhtml">_setheader()</a>
+                — Modifie les entêtes HTTP envoyées.</li>
+            <li id="_setheader_connected"><a title="ploopi\loader" href="../classes/ploopi_loader/_setheader_connected.xhtml">_setheader_connected()</a>
+                — Indique dans les entêtes si l'utilisateur est connecté</li>
+          </ul>
+          <h4>public</h4>
+          <ul>
+            <li id="boot"><a title="ploopi\loader" href="../classes/ploopi_loader/boot.xhtml">boot()</a>
+                — Partie commune des scripts de chargement de l'environnement Ploopi Démarrage du timer principal.</li>
+            <li id="boot_cli"><a title="ploopi\loader" href="../classes/ploopi_loader/boot_cli.xhtml">boot_cli()</a>
+                — Chargement de l'environnement Ploopi en mode CLI Démarrage du timer principal.</li>
+            <li id="classExists"><a title="ploopi\loader" href="../classes/ploopi_loader/classExists.xhtml">classExists()</a>
+                — Vérifie l'existence d'une classe</li>
+            <li id="dispatch"><a title="ploopi\loader" href="../classes/ploopi_loader/dispatch.xhtml">dispatch()</a>
+                — Dispatcher en fonction du point d'entrée</li>
+            <li id="getscript"><a title="ploopi\loader" href="../classes/ploopi_loader/getscript.xhtml">getscript()</a>
+                — Retourne le type de script</li>
+            <li id="getworkspace"><a title="ploopi\loader" href="../classes/ploopi_loader/getworkspace.xhtml">getworkspace()</a>
+                — Retourne les informations de l'espace courant</li>
+            <li id="start"><a title="ploopi\loader" href="../classes/ploopi_loader/start.xhtml">start()</a>
+                — Chargement de l'environnement Ploopi.</li>
+            <li id="startlight"><a title="ploopi\loader" href="../classes/ploopi_loader/startlight.xhtml">startlight()</a>
+                — Chargement très simplifié de l'environnement Ploopi.</li>
+          </ul>
+        </div>
+      </section>
+    </div>
+    <footer>
+      <span>Generated using phpDox 0.11.2 - Copyright (C) 2010 - 2019 by Arne Blankerts and Contributors</span>
+    </footer>
+  </body>
+</html>

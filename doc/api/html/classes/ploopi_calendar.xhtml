@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <title>phpDox - ploopi\calendar</title>
+    <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+  </head>
+  <body>
+    <nav class="topnav">
+      <ul>
+        <li>
+          <div class="logo"><span>/**</span>phpDox</div>
+        </li>
+        <li class="separator">
+          <a href="../index.xhtml">Overview</a>
+        </li>
+        <li class="separator">
+          <a href="../namespaces.xhtml">Namespaces</a>
+        </li>
+        <li>
+          <a href="../classes.xhtml">Classes</a>
+        </li>
+        <li class="separator">
+          <a href="../source/index.xhtml">Source</a>
+        </li>
+      </ul>
+    </nav>
+    <div id="mainstage">
+      <div class="box">
+        <ul class="breadcrumb">
+          <li>
+            <a href="../index.xhtml">Overview</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.xhtml">Classes</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.xhtml#ploopi">ploopi</a>
+          </li>
+          <li class="separator">calendar</li>
+        </ul>
+      </div>
+      <nav class="box">
+        <ul>
+          <li>
+            <a href="#introduction">Introduction</a>
+          </li>
+          <li>
+            <a href="#synopsis">Synopsis</a>
+          </li>
+          <li>
+            <a href="#members">Members</a>
+          </li>
+          <li>
+            <a href="#methods">Methods</a>
+          </li>
+          <li>
+            <a href="../source/classes/calendar.php.xhtml#line37">Source</a>
+          </li>
+        </ul>
+      </nav>
+      <section>
+        <h1 id="introduction"><small>ploopi\</small>calendar</h1>
+        <h4>Affichage d'un calendrier/agenda</h4>
+        <p/>
+        <ul>
+          <li>Author: Ovensia</li>
+          <li>Copyright: Ovensia</li>
+          <li>License: GNU General Public License (GPL)</li>
+        </ul>
+        <h2 id="synopsis">Synopsis</h2>
+        <div class="synopsis">class calendar
+            {<br/><ul class="none"><li>// members</li><li>protected  <a href="#members">$intWidth</a>;
+                    </li><li>protected  <a href="#members">$intHeight</a>;
+                    </li><li>protected  <a href="#members">$strDisplayType</a>;
+                    </li><li>protected  <a href="#members">$arrOptions</a>;
+                    </li><li>protected  <a href="#members">$arrEvents</a>;
+                    </li><li>protected  <a href="#members">$arrChannels</a>;
+                    </li></ul><ul class="none"><li>// methods</li><li>public calendar <a title="ploopi\calendar" href="../classes/ploopi_calendar/__construct.xhtml">__construct</a>()
+                    </li><li>public void <a title="ploopi\calendar" href="../classes/ploopi_calendar/setOptions.xhtml">setOptions</a>()
+                    </li><li>public void <a title="ploopi\calendar" href="../classes/ploopi_calendar/getOptions.xhtml">getOptions</a>()
+                    </li><li>public void <a title="ploopi\calendar" href="../classes/ploopi_calendar/setEvents.xhtml">setEvents</a>()
+                    </li><li>public void <a title="ploopi\calendar" href="../classes/ploopi_calendar/addEvent.xhtml">addEvent</a>()
+                    </li><li>public void <a title="ploopi\calendar" href="../classes/ploopi_calendar/setChannels.xhtml">setChannels</a>()
+                    </li><li>public void <a title="ploopi\calendar" href="../classes/ploopi_calendar/addChannel.xhtml">addChannel</a>()
+                    </li><li>public void <a title="ploopi\calendar" href="../classes/ploopi_calendar/display.xhtml">display</a>()
+                    </li><li>private void <a title="ploopi\calendar" href="../classes/ploopi_calendar/_displayDays.xhtml">_displayDays</a>()
+                    </li><li>private void <a title="ploopi\calendar" href="../classes/ploopi_calendar/_displayMonth.xhtml">_displayMonth</a>()
+                    </li><li>protected void <a title="ploopi\calendar" href="../classes/ploopi_calendar/_display_month_events.xhtml">_display_month_events</a>()
+                    </li><li>protected array <a title="ploopi\calendar" href="../classes/ploopi_calendar/_prepare_events.xhtml">_prepare_events</a>()
+                    </li><li>protected array <a title="ploopi\calendar" href="../classes/ploopi_calendar/_prepare_events_OLD.xhtml">_prepare_events_OLD</a>()
+                    </li></ul>
+
+            }<br/></div>
+        <h2 id="members">Members</h2>
+        <div class="styled members">
+          <h4>protected</h4>
+          <ul class="members">
+            <li id="arrChannels"><strong>$arrChannels</strong>
+                —
+                array<br/><span class="indent">Canaux d'affichage du calendrier</span></li>
+            <li id="arrEvents"><strong>$arrEvents</strong>
+                —
+                array<br/><span class="indent">Evénements du calendrier</span></li>
+            <li id="arrOptions"><strong>$arrOptions</strong>
+                —
+                array<br/><span class="indent">Options du calendrier</span></li>
+            <li id="intHeight"><strong>$intHeight</strong>
+                —
+                int<br/><span class="indent">Hauteur du calendrier</span></li>
+            <li id="intWidth"><strong>$intWidth</strong>
+                —
+                int<br/><span class="indent">Largeur du calendrier</span></li>
+            <li id="strDisplayType"><strong>$strDisplayType</strong>
+                —
+                string<br/><span class="indent">Type de calendrier : month/days</span></li>
+          </ul>
+        </div>
+        <h2 id="methods">Methods</h2>
+        <div class="styled">
+          <h4>private</h4>
+          <ul>
+            <li id="_displayDays"><a title="ploopi\calendar" href="../classes/ploopi_calendar/_displayDays.xhtml">_displayDays()</a>
+                — Affichage du calendrier multi-journées</li>
+            <li id="_displayMonth"><a title="ploopi\calendar" href="../classes/ploopi_calendar/_displayMonth.xhtml">_displayMonth()</a>
+                — Affichage du calendrier mensuel</li>
+          </ul>
+          <h4>protected</h4>
+          <ul>
+            <li id="_display_month_events"><a title="ploopi\calendar" href="../classes/ploopi_calendar/_display_month_events.xhtml">_display_month_events()</a>
+                — Affiche un événement dans le planning mensuel</li>
+            <li id="_prepare_events"><a title="ploopi\calendar" href="../classes/ploopi_calendar/_prepare_events.xhtml">_prepare_events()</a>
+                — Prépare les événement en les répartissant par jour dans un tableau associatif</li>
+            <li id="_prepare_events_OLD"><a title="ploopi\calendar" href="../classes/ploopi_calendar/_prepare_events_OLD.xhtml">_prepare_events_OLD()</a>
+                — Prépare les événement en les répartissant par jour dans un tableau associatif</li>
+          </ul>
+          <h4>public</h4>
+          <ul>
+            <li id="__construct"><a title="ploopi\calendar" href="../classes/ploopi_calendar/__construct.xhtml">__construct()</a>
+                — Constructeur de la classe</li>
+            <li id="addChannel">
+              <a title="ploopi\calendar" href="../classes/ploopi_calendar/addChannel.xhtml">addChannel()</a>
+            </li>
+            <li id="addEvent">
+              <a title="ploopi\calendar" href="../classes/ploopi_calendar/addEvent.xhtml">addEvent()</a>
+            </li>
+            <li id="display">
+              <a title="ploopi\calendar" href="../classes/ploopi_calendar/display.xhtml">display()</a>
+            </li>
+            <li id="getOptions">
+              <a title="ploopi\calendar" href="../classes/ploopi_calendar/getOptions.xhtml">getOptions()</a>
+            </li>
+            <li id="setChannels">
+              <a title="ploopi\calendar" href="../classes/ploopi_calendar/setChannels.xhtml">setChannels()</a>
+            </li>
+            <li id="setEvents">
+              <a title="ploopi\calendar" href="../classes/ploopi_calendar/setEvents.xhtml">setEvents()</a>
+            </li>
+            <li id="setOptions"><a title="ploopi\calendar" href="../classes/ploopi_calendar/setOptions.xhtml">setOptions()</a>
+                — Permet de définir les options d'affichage :</li>
+          </ul>
+        </div>
+      </section>
+    </div>
+    <footer>
+      <span>Generated using phpDox 0.11.2 - Copyright (C) 2010 - 2019 by Arne Blankerts and Contributors</span>
+    </footer>
+  </body>
+</html>

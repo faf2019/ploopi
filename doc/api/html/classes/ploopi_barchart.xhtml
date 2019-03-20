@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <title>phpDox - ploopi\barchart</title>
+    <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+  </head>
+  <body>
+    <nav class="topnav">
+      <ul>
+        <li>
+          <div class="logo"><span>/**</span>phpDox</div>
+        </li>
+        <li class="separator">
+          <a href="../index.xhtml">Overview</a>
+        </li>
+        <li class="separator">
+          <a href="../namespaces.xhtml">Namespaces</a>
+        </li>
+        <li>
+          <a href="../classes.xhtml">Classes</a>
+        </li>
+        <li class="separator">
+          <a href="../source/index.xhtml">Source</a>
+        </li>
+      </ul>
+    </nav>
+    <div id="mainstage">
+      <div class="box">
+        <ul class="breadcrumb">
+          <li>
+            <a href="../index.xhtml">Overview</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.xhtml">Classes</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.xhtml#ploopi">ploopi</a>
+          </li>
+          <li class="separator">barchart</li>
+        </ul>
+      </div>
+      <nav class="box">
+        <ul>
+          <li>
+            <a href="#introduction">Introduction</a>
+          </li>
+          <li>
+            <a href="#synopsis">Synopsis</a>
+          </li>
+          <li>
+            <a href="#members">Members</a>
+          </li>
+          <li>
+            <a href="#methods">Methods</a>
+          </li>
+          <li>
+            <a href="../source/classes/barchart.php.xhtml#line37">Source</a>
+          </li>
+        </ul>
+      </nav>
+      <section>
+        <h1 id="introduction"><small>ploopi\</small>barchart</h1>
+        <h4>Gestion des diagrammes en barre</h4>
+        <p/>
+        <ul>
+          <li>Author: Ovensia, Frédéric Belloy, Laurent Ulrich</li>
+          <li>Copyright: Ovensia, CII67</li>
+          <li>License: GNU General Public License (GPL)</li>
+        </ul>
+        <h2 id="synopsis">Synopsis</h2>
+        <div class="synopsis">class barchart
+            {<br/><ul class="none"><li>// members</li><li>private  <a href="#members">$width</a>;
+                    </li><li>private  <a href="#members">$height</a>;
+                    </li><li>private  <a href="#members">$datasets</a>;
+                    </li><li>private  <a href="#members">$legend</a>;
+                    </li><li>private  <a href="#members">$options</a>;
+                    </li><li>private  <a href="#members">$nb_columns</a>;
+                    </li><li>private  <a href="#members">$value_max</a>;
+                    </li></ul><ul class="none"><li>// methods</li><li>public barchart <a title="ploopi\barchart" href="../classes/ploopi_barchart/__construct.xhtml">__construct</a>()
+                    </li><li>public void <a title="ploopi\barchart" href="../classes/ploopi_barchart/setvalues.xhtml">setvalues</a>()
+                    </li><li>public void <a title="ploopi\barchart" href="../classes/ploopi_barchart/setlegend.xhtml">setlegend</a>()
+                    </li><li>public void <a title="ploopi\barchart" href="../classes/ploopi_barchart/setoptions.xhtml">setoptions</a>()
+                    </li><li>public void <a title="ploopi\barchart" href="../classes/ploopi_barchart/draw.xhtml">draw</a>()
+                    </li></ul>
+
+            }<br/></div>
+        <h2 id="members">Members</h2>
+        <div class="styled members">
+          <h4>private</h4>
+          <ul class="members">
+            <li id="datasets"><strong>$datasets</strong>
+                —
+                array<br/><span class="indent">Données du diagramme</span></li>
+            <li id="height"><strong>$height</strong>
+                —
+                int<br/><span class="indent">Hauteur du diagramme</span></li>
+            <li id="legend"><strong>$legend</strong>
+                —
+                array<br/><span class="indent">Légende du diagramme</span></li>
+            <li id="nb_columns"><strong>$nb_columns</strong>
+                —
+                int<br/><span class="indent">Nombre de colonnes à afficher</span></li>
+            <li id="options"><strong>$options</strong>
+                —
+                array<br/><span class="indent">Options du diagramme</span></li>
+            <li id="value_max"><strong>$value_max</strong>
+                —
+                float<br/><span class="indent">Valeur max du diagramme</span></li>
+            <li id="width"><strong>$width</strong>
+                —
+                int<br/><span class="indent">Largeur du diagramme</span></li>
+          </ul>
+        </div>
+        <h2 id="methods">Methods</h2>
+        <div class="styled">
+          <h4>public</h4>
+          <ul>
+            <li id="__construct"><a title="ploopi\barchart" href="../classes/ploopi_barchart/__construct.xhtml">__construct()</a>
+                — Constructeur de la classe</li>
+            <li id="draw"><a title="ploopi\barchart" href="../classes/ploopi_barchart/draw.xhtml">draw()</a>
+                — Affiche le diagramme</li>
+            <li id="setlegend"><a title="ploopi\barchart" href="../classes/ploopi_barchart/setlegend.xhtml">setlegend()</a>
+                — Ajoute une légende au diagramme</li>
+            <li id="setoptions"><a title="ploopi\barchart" href="../classes/ploopi_barchart/setoptions.xhtml">setoptions()</a>
+                — Permet de définir les options : grid_width:int, autofit_scale:boolean, display_grid:boolean, display_legend:boolean, display_ticks:boolean, display_titles:boolean, display_values:boolean, bar_arrange:string ('merge', 'stack', 'side_by_side'), padding:int, yaxis_pos:int, class_name:string</li>
+            <li id="setvalues"><a title="ploopi\barchart" href="../classes/ploopi_barchart/setvalues.xhtml">setvalues()</a>
+                — Ajoute un jeu de données au diagramme</li>
+          </ul>
+        </div>
+      </section>
+    </div>
+    <footer>
+      <span>Generated using phpDox 0.11.2 - Copyright (C) 2010 - 2019 by Arne Blankerts and Contributors</span>
+    </footer>
+  </body>
+</html>

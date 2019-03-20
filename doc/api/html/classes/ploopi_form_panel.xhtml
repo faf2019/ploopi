@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <title>phpDox - ploopi\form_panel</title>
+    <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+  </head>
+  <body>
+    <nav class="topnav">
+      <ul>
+        <li>
+          <div class="logo"><span>/**</span>phpDox</div>
+        </li>
+        <li class="separator">
+          <a href="../index.xhtml">Overview</a>
+        </li>
+        <li class="separator">
+          <a href="../namespaces.xhtml">Namespaces</a>
+        </li>
+        <li>
+          <a href="../classes.xhtml">Classes</a>
+        </li>
+        <li class="separator">
+          <a href="../source/index.xhtml">Source</a>
+        </li>
+      </ul>
+    </nav>
+    <div id="mainstage">
+      <div class="box">
+        <ul class="breadcrumb">
+          <li>
+            <a href="../index.xhtml">Overview</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.xhtml">Classes</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.xhtml#ploopi">ploopi</a>
+          </li>
+          <li class="separator">form_panel</li>
+        </ul>
+      </div>
+      <nav class="box">
+        <ul>
+          <li>
+            <a href="#introduction">Introduction</a>
+          </li>
+          <li>
+            <a href="#synopsis">Synopsis</a>
+          </li>
+          <li>
+            <a href="#constants">Constants</a>
+          </li>
+          <li>
+            <a href="#members">Members</a>
+          </li>
+          <li>
+            <a href="#methods">Methods</a>
+          </li>
+          <li>
+            <a href="../source/classes/form_panel.php.xhtml#line37">Source</a>
+          </li>
+        </ul>
+      </nav>
+      <section>
+        <h1 id="introduction"><small>ploopi\</small>form_panel</h1>
+        <h4>Gestion des blocs de formulaires</h4>
+        <p/>
+        <ul>
+          <li>Author: Ovensia</li>
+          <li>Copyright: Ovensia</li>
+          <li>License: GNU General Public License (GPL)</li>
+        </ul>
+        <h2 id="synopsis">Synopsis</h2>
+        <div class="synopsis">class form_panel
+            {<br/><ul class="none"><li>// constants</li><li>const strDefaultPanel = 'ploopi_panel_default';</li></ul><ul class="none"><li>// members</li><li>private  <a href="#members">$_strId</a>;
+                    </li><li>private  <a href="#members">$_strLabel</a>;
+                    </li><li>private  <a href="#members">$_arrFields</a>;
+                    </li><li>private  <a href="#members">$_arrOptions</a>;
+                    </li><li>private  <a href="#members">$_objParentForm</a>;
+                    </li><li>private static array <a href="#members">$_arrDefaultOptions</a> =
+                        ;
+                    </li></ul><ul class="none"><li>// methods</li><li>public void <a title="ploopi\form_panel" href="../classes/ploopi_form_panel/__construct.xhtml">__construct</a>()
+                    </li><li>public void <a title="ploopi\form_panel" href="../classes/ploopi_form_panel/addField.xhtml">addField</a>()
+                    </li><li>public void <a title="ploopi\form_panel" href="../classes/ploopi_form_panel/setParentForm.xhtml">setParentForm</a>()
+                    </li><li>public string <a title="ploopi\form_panel" href="../classes/ploopi_form_panel/getId.xhtml">getId</a>()
+                    </li><li>public string <a title="ploopi\form_panel" href="../classes/ploopi_form_panel/getLabel.xhtml">getLabel</a>()
+                    </li><li>public array <a title="ploopi\form_panel" href="../classes/ploopi_form_panel/getOptions.xhtml">getOptions</a>()
+                    </li><li>public int <a title="ploopi\form_panel" href="../classes/ploopi_form_panel/getNbFields.xhtml">getNbFields</a>()
+                    </li><li>public array <a title="ploopi\form_panel" href="../classes/ploopi_form_panel/getFields.xhtml">getFields</a>()
+                    </li><li>public string <a title="ploopi\form_panel" href="../classes/ploopi_form_panel/render.xhtml">render</a>()
+                    </li><li>public void <a title="ploopi\form_panel" href="../classes/ploopi_form_panel/getFormValidateFunc.xhtml">getFormValidateFunc</a>()
+                    </li></ul>
+
+            }<br/></div>
+        <h2 id="constants">Constants</h2>
+        <table class="styled">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td id="strDefaultPanel">strDefaultPanel</td>
+              <td>'ploopi_panel_default'</td>
+            </tr>
+          </tbody>
+        </table>
+        <h2 id="members">Members</h2>
+        <div class="styled members">
+          <h4>private</h4>
+          <ul class="members">
+            <li id="_arrDefaultOptions"><strong>$_arrDefaultOptions</strong>
+                —
+                array<br/><span class="indent">Options par défaut d'un bloc</span></li>
+            <li id="_arrFields"><strong>$_arrFields</strong>
+                —
+                array<br/><span class="indent">Champs du panel</span></li>
+            <li id="_arrOptions"><strong>$_arrOptions</strong>
+                —
+                array<br/><span class="indent">Options du panel</span></li>
+            <li id="_objParentForm">
+              <strong>$_objParentForm</strong>
+              <br/>
+              <span class="indent">Object form "parent"</span>
+            </li>
+            <li id="_strId"><strong>$_strId</strong>
+                —
+                string<br/><span class="indent">Propriété "id" du panel</span></li>
+            <li id="_strLabel"><strong>$_strLabel</strong>
+                —
+                string<br/><span class="indent">Libellé du panel</span></li>
+          </ul>
+        </div>
+        <h2 id="methods">Methods</h2>
+        <div class="styled">
+          <h4>public</h4>
+          <ul>
+            <li id="__construct"><a title="ploopi\form_panel" href="../classes/ploopi_form_panel/__construct.xhtml">__construct()</a>
+                — Constructeur du panel</li>
+            <li id="addField"><a title="ploopi\form_panel" href="../classes/ploopi_form_panel/addField.xhtml">addField()</a>
+                — Ajoute un objet de type form_field au panel</li>
+            <li id="getFields"><a title="ploopi\form_panel" href="../classes/ploopi_form_panel/getFields.xhtml">getFields()</a>
+                — Retourne les champs du panel</li>
+            <li id="getFormValidateFunc">
+              <a title="ploopi\form_panel" href="../classes/ploopi_form_panel/getFormValidateFunc.xhtml">getFormValidateFunc()</a>
+            </li>
+            <li id="getId"><a title="ploopi\form_panel" href="../classes/ploopi_form_panel/getId.xhtml">getId()</a>
+                — Lecture de la propriété "id"</li>
+            <li id="getLabel"><a title="ploopi\form_panel" href="../classes/ploopi_form_panel/getLabel.xhtml">getLabel()</a>
+                — Lecture de la propriété "label"</li>
+            <li id="getNbFields"><a title="ploopi\form_panel" href="../classes/ploopi_form_panel/getNbFields.xhtml">getNbFields()</a>
+                — Lecture du nombre de champs</li>
+            <li id="getOptions"><a title="ploopi\form_panel" href="../classes/ploopi_form_panel/getOptions.xhtml">getOptions()</a>
+                — Lecture des options</li>
+            <li id="render"><a title="ploopi\form_panel" href="../classes/ploopi_form_panel/render.xhtml">render()</a>
+                — Génère le rendu html du panel</li>
+            <li id="setParentForm"><a title="ploopi\form_panel" href="../classes/ploopi_form_panel/setParentForm.xhtml">setParentForm()</a>
+                — Affecte le lien vers le formulaire "parent"</li>
+          </ul>
+        </div>
+      </section>
+    </div>
+    <footer>
+      <span>Generated using phpDox 0.11.2 - Copyright (C) 2010 - 2019 by Arne Blankerts and Contributors</span>
+    </footer>
+  </body>
+</html>

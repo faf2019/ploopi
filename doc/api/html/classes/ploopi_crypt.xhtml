@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <title>phpDox - ploopi\crypt</title>
+    <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+  </head>
+  <body>
+    <nav class="topnav">
+      <ul>
+        <li>
+          <div class="logo"><span>/**</span>phpDox</div>
+        </li>
+        <li class="separator">
+          <a href="../index.xhtml">Overview</a>
+        </li>
+        <li class="separator">
+          <a href="../namespaces.xhtml">Namespaces</a>
+        </li>
+        <li>
+          <a href="../classes.xhtml">Classes</a>
+        </li>
+        <li class="separator">
+          <a href="../source/index.xhtml">Source</a>
+        </li>
+      </ul>
+    </nav>
+    <div id="mainstage">
+      <div class="box">
+        <ul class="breadcrumb">
+          <li>
+            <a href="../index.xhtml">Overview</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.xhtml">Classes</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.xhtml#ploopi">ploopi</a>
+          </li>
+          <li class="separator">crypt</li>
+        </ul>
+      </div>
+      <nav class="box">
+        <ul>
+          <li>
+            <a href="#introduction">Introduction</a>
+          </li>
+          <li>
+            <a href="#synopsis">Synopsis</a>
+          </li>
+          <li>
+            <a href="#methods">Methods</a>
+          </li>
+          <li>
+            <a href="../source/classes/crypt.php.xhtml#line39">Source</a>
+          </li>
+        </ul>
+      </nav>
+      <section>
+        <h1 id="introduction"><small>ploopi\</small>crypt</h1>
+        <h4>Gestion des mécanismes de chiffrement</h4>
+        <p/>
+        <ul>
+          <li>Author: Ovensia</li>
+          <li>Copyright: Ovensia</li>
+          <li>License: GNU General Public License (GPL)</li>
+        </ul>
+        <h2 id="synopsis">Synopsis</h2>
+        <div class="synopsis">class crypt
+            {<br/><ul class="none"><li>// methods</li><li>public static string <a title="ploopi\crypt" href="../classes/ploopi_crypt/htpasswd.xhtml">htpasswd</a>()
+                    </li><li>public static void <a title="ploopi\crypt" href="../classes/ploopi_crypt/urltoken.xhtml">urltoken</a>()
+                    </li><li>public static void <a title="ploopi\crypt" href="../classes/ploopi_crypt/urlencode_trusted.xhtml">urlencode_trusted</a>()
+                    </li><li>public static string <a title="ploopi\crypt" href="../classes/ploopi_crypt/urlencode.xhtml">urlencode</a>()
+                    </li><li>public static void <a title="ploopi\crypt" href="../classes/ploopi_crypt/queryencode_trusted.xhtml">queryencode_trusted</a>()
+                    </li><li>public static string <a title="ploopi\crypt" href="../classes/ploopi_crypt/queryencode.xhtml">queryencode</a>()
+                    </li><li>public static string <a title="ploopi\crypt" href="../classes/ploopi_crypt/base64_encode.xhtml">base64_encode</a>()
+                    </li><li>public static string <a title="ploopi\crypt" href="../classes/ploopi_crypt/base64_decode.xhtml">base64_decode</a>()
+                    </li><li>public static string <a title="ploopi\crypt" href="../classes/ploopi_crypt/serialize.xhtml">serialize</a>()
+                    </li><li>public static mixed <a title="ploopi\crypt" href="../classes/ploopi_crypt/unserialize.xhtml">unserialize</a>()
+                    </li></ul>
+
+            }<br/></div>
+        <h2 id="methods">Methods</h2>
+        <div class="styled">
+          <h4>public</h4>
+          <ul>
+            <li id="base64_decode"><a title="ploopi\crypt" href="../classes/ploopi_crypt/base64_decode.xhtml">base64_decode()</a>
+                — Décode une chaîne en MIME base64 (méthode url-safe base64)</li>
+            <li id="base64_encode"><a title="ploopi\crypt" href="../classes/ploopi_crypt/base64_encode.xhtml">base64_encode()</a>
+                — Encode une chaîne en MIME base64 avec compatibilité du codage pour les URL (méthode url-safe base64)</li>
+            <li id="htpasswd"><a title="ploopi\crypt" href="../classes/ploopi_crypt/htpasswd.xhtml">htpasswd()</a>
+                — Génère un mot de passe pour écrire dans le fichier .htpasswd</li>
+            <li id="queryencode"><a title="ploopi\crypt" href="../classes/ploopi_crypt/queryencode.xhtml">queryencode()</a>
+                — Chiffre une chaîne de paramètres après avoir ajouté les paramètres d'environnement "ploopi"</li>
+            <li id="queryencode_trusted"><a title="ploopi\crypt" href="../classes/ploopi_crypt/queryencode_trusted.xhtml">queryencode_trusted()</a>
+                — Version spéciale de self::queryencode qui nécessite que les paramètres soient déjà urlencodés (via la fonction urlencode())</li>
+            <li id="serialize"><a title="ploopi\crypt" href="../classes/ploopi_crypt/serialize.xhtml">serialize()</a>
+                — Sérialise et compresse une variable</li>
+            <li id="unserialize"><a title="ploopi\crypt" href="../classes/ploopi_crypt/unserialize.xhtml">unserialize()</a>
+                — Désérialise une chaîne</li>
+            <li id="urlencode"><a title="ploopi\crypt" href="../classes/ploopi_crypt/urlencode.xhtml">urlencode()</a>
+                — Chiffre une url après avoir ajouté les paramètres d'environnement "ploopi"</li>
+            <li id="urlencode_trusted"><a title="ploopi\crypt" href="../classes/ploopi_crypt/urlencode_trusted.xhtml">urlencode_trusted()</a>
+                — Version spéciale de self::urlencode qui nécessite que les paramètres soient déjà urlencodés (via la fonction urlencode())</li>
+            <li id="urltoken"><a title="ploopi\crypt" href="../classes/ploopi_crypt/urltoken.xhtml">urltoken()</a>
+                — Injecte le jeton courant dans une url existante Notamment utilisé lors de la redirection vers une URL interne après la phase d'identification de l'utilisation</li>
+          </ul>
+        </div>
+      </section>
+    </div>
+    <footer>
+      <span>Generated using phpDox 0.11.2 - Copyright (C) 2010 - 2019 by Arne Blankerts and Contributors</span>
+    </footer>
+  </body>
+</html>

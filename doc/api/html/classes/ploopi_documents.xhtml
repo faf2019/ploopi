@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <title>phpDox - ploopi\documents</title>
+    <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+  </head>
+  <body>
+    <nav class="topnav">
+      <ul>
+        <li>
+          <div class="logo"><span>/**</span>phpDox</div>
+        </li>
+        <li class="separator">
+          <a href="../index.xhtml">Overview</a>
+        </li>
+        <li class="separator">
+          <a href="../namespaces.xhtml">Namespaces</a>
+        </li>
+        <li>
+          <a href="../classes.xhtml">Classes</a>
+        </li>
+        <li class="separator">
+          <a href="../source/index.xhtml">Source</a>
+        </li>
+      </ul>
+    </nav>
+    <div id="mainstage">
+      <div class="box">
+        <ul class="breadcrumb">
+          <li>
+            <a href="../index.xhtml">Overview</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.xhtml">Classes</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.xhtml#ploopi">ploopi</a>
+          </li>
+          <li class="separator">documents</li>
+        </ul>
+      </div>
+      <nav class="box">
+        <ul>
+          <li>
+            <a href="#introduction">Introduction</a>
+          </li>
+          <li>
+            <a href="#synopsis">Synopsis</a>
+          </li>
+          <li>
+            <a href="#methods">Methods</a>
+          </li>
+          <li>
+            <a href="../source/classes/documents.php.xhtml#line38">Source</a>
+          </li>
+        </ul>
+      </nav>
+      <section>
+        <h1 id="introduction"><small>ploopi\</small>documents</h1>
+        <h4>Gestion d'un bloc de documents associé à un enregistrement d'un objet.</h4>
+        <p>Permet notamment de gérer des pièces jointes à n'importe quel objet de ploopi.</p>
+        <ul>
+          <li>Author: Ovensia</li>
+          <li>Copyright: Ovensia</li>
+          <li>License: GNU General Public License (GPL)</li>
+        </ul>
+        <h2 id="synopsis">Synopsis</h2>
+        <div class="synopsis">class documents
+            {<br/><ul class="none"><li>// methods</li><li>public static string <a title="ploopi\documents" href="../classes/ploopi_documents/getid.xhtml">getid</a>()
+                    </li><li>public static string <a title="ploopi\documents" href="../classes/ploopi_documents/getopenfilejs.xhtml">getopenfilejs</a>()
+                    </li><li>public static string <a title="ploopi\documents" href="../classes/ploopi_documents/getselectfilejs.xhtml">getselectfilejs</a>()
+                    </li><li>public static string <a title="ploopi\documents" href="../classes/ploopi_documents/insert.xhtml">insert</a>()
+                    </li><li>public static string <a title="ploopi\documents" href="../classes/ploopi_documents/getpath.xhtml">getpath</a>()
+                    </li><li>public static int <a title="ploopi\documents" href="../classes/ploopi_documents/countelements.xhtml">countelements</a>()
+                    </li><li>public static array <a title="ploopi\documents" href="../classes/ploopi_documents/getfiles.xhtml">getfiles</a>()
+                    </li><li>public static array <a title="ploopi\documents" href="../classes/ploopi_documents/getfolders.xhtml">getfolders</a>()
+                    </li><li>public static array <a title="ploopi\documents" href="../classes/ploopi_documents/listfolders.xhtml">listfolders</a>()
+                    </li><li>private static void <a title="ploopi\documents" href="../classes/ploopi_documents/_listfolders_rec.xhtml">_listfolders_rec</a>()
+                    </li><li>public static void <a title="ploopi\documents" href="../classes/ploopi_documents/savefile.xhtml">savefile</a>()
+                    </li><li>public static void <a title="ploopi\documents" href="../classes/ploopi_documents/savefolder.xhtml">savefolder</a>()
+                    </li><li>public static void <a title="ploopi\documents" href="../classes/ploopi_documents/browser.xhtml">browser</a>()
+                    </li></ul>
+
+            }<br/></div>
+        <h2 id="methods">Methods</h2>
+        <div class="styled">
+          <h4>private</h4>
+          <ul>
+            <li id="_listfolders_rec"><a title="ploopi\documents" href="../classes/ploopi_documents/_listfolders_rec.xhtml">_listfolders_rec()</a>
+                — Dépendance "privée" de "documents::listfolders"</li>
+          </ul>
+          <h4>public</h4>
+          <ul>
+            <li id="browser"><a title="ploopi\documents" href="../classes/ploopi_documents/browser.xhtml">browser()</a>
+                — Affiche l'explorateur de documents</li>
+            <li id="countelements"><a title="ploopi\documents" href="../classes/ploopi_documents/countelements.xhtml">countelements()</a>
+                — Renvoie le nombre d'éléments d'un dossier</li>
+            <li id="getfiles"><a title="ploopi\documents" href="../classes/ploopi_documents/getfiles.xhtml">getfiles()</a>
+                — Renvoie un tableau de fichiers attachés à enregistrement d'un objet</li>
+            <li id="getfolders"><a title="ploopi\documents" href="../classes/ploopi_documents/getfolders.xhtml">getfolders()</a>
+                — Renvoie un tableau de dossiers attachés à un enregistrement d'un objet</li>
+            <li id="getid"><a title="ploopi\documents" href="../classes/ploopi_documents/getid.xhtml">getid()</a>
+                — Renvoie l'identifiant d'un bloc de documents pour un enregistrement d'un objet</li>
+            <li id="getopenfilejs"><a title="ploopi\documents" href="../classes/ploopi_documents/getopenfilejs.xhtml">getopenfilejs()</a>
+                — Retourne le code d'appel javascript du popup de création de fichier</li>
+            <li id="getpath"><a title="ploopi\documents" href="../classes/ploopi_documents/getpath.xhtml">getpath()</a>
+                — Renvoie le dossier de stockage des documents</li>
+            <li id="getselectfilejs"><a title="ploopi\documents" href="../classes/ploopi_documents/getselectfilejs.xhtml">getselectfilejs()</a>
+                — Retourne le code d'appel javascript du popup de sélection de fichier</li>
+            <li id="insert"><a title="ploopi\documents" href="../classes/ploopi_documents/insert.xhtml">insert()</a>
+                — Insère un bloc de documents pour un enregistrement d'un objet</li>
+            <li id="listfolders"><a title="ploopi\documents" href="../classes/ploopi_documents/listfolders.xhtml">listfolders()</a>
+                — Renvoie un tableau de dossiers attachés à un enregistrement d'un objet (liste récursive)</li>
+            <li id="savefile"><a title="ploopi\documents" href="../classes/ploopi_documents/savefile.xhtml">savefile()</a>
+                — Sauvegarde un fichier dans un dossier attaché à un enregistrement d'un objet</li>
+            <li id="savefolder"><a title="ploopi\documents" href="../classes/ploopi_documents/savefolder.xhtml">savefolder()</a>
+                — Sauvegarde un dossier attaché à un enregistrement d'un objet</li>
+          </ul>
+        </div>
+      </section>
+    </div>
+    <footer>
+      <span>Generated using phpDox 0.11.2 - Copyright (C) 2010 - 2019 by Arne Blankerts and Contributors</span>
+    </footer>
+  </body>
+</html>
