@@ -74,7 +74,7 @@
         "mpdf/mpdf": "^7.1"
     },
     "scripts": {
-        "post-install-cmd": [
+        "post-create-project-cmd": [
             "cp .htaccess_modele .htaccess"
         ]
     }
