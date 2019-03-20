@@ -52,26 +52,26 @@
         "ext-gd": "*",
         "ext-zip": "*",
         "ext-curl": "*",
-        "EastDesire/jscolor": "2.0.4",
-        "swfobject/swfobject": "2.3",
         "donatj/phpuseragentparser": "^0.5.1",
         "phpoffice/phpspreadsheet": "1.6.0",
+        "mpdf/mpdf": "^7.1"
         "netcarver/textile": "^3.5",
         "ezyang/htmlpurifier": "^4.8",
         "mibe/feedwriter": "^1.0",
         "openlss/lib-array2xml": "^0.0.10",
         "box/spout": "^2.5",
-        "components/highlightjs": "^9.5",
-        "ckeditor/ckeditor": "^4.5",
-        "pear-pear.horde.org/Horde_Text_Diff": "2.1.2",
-        "components/jquery": "^3.1",
         "keller/soundex-fr-bundle": "dev-master",
         "wamania/php-stemmer": "^1.2",
         "pear/http_request2": "^2.3",
         "pear/xml_serializer": "^0.22.0",
         "pear/cache_lite": "^1.8",
+        "pear-pear.horde.org/Horde_Text_Diff": "2.1.2",
+        "components/jquery": "^3.1",
         "components/jqueryui": "^1.12",
-        "mpdf/mpdf": "^7.1"
+        "components/highlightjs": "^9.5",
+        "EastDesire/jscolor": "2.0.4",
+        "swfobject/swfobject": "2.3",
+        "ckeditor/ckeditor": "^4.5"
     },
     "scripts": {
         "post-create-project-cmd": [
