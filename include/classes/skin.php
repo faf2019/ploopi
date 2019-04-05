@@ -730,12 +730,12 @@ class skin
 
                         if (!empty($c['url']) || !empty($c['onclick'])) {
                             ?>
-                            <a href="<?php echo (!empty($c['url'])) ? $c['url'] : 'javascript:void(0);'; ?>" <?php if (!empty($c['onclick'])) echo "onclick=\"javascript:{$c['onclick']}\""; ?>" style="width:<?php echo $c['width']; ?>px;float:right;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element"><p><span><?php echo $c['label']; ?>&nbsp;</span><?php echo $img; ?></p></a>
+                            <a href="<?php echo (!empty($c['url'])) ? $c['url'] : 'javascript:void(0);'; ?>" <?php if (!empty($c['onclick'])) echo "onclick=\"javascript:{$c['onclick']}\""; ?>" style="width:<?php echo $c['width']; ?>px;float:right;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element"><p><span><?php echo $c['label'] == '' ? '&nbsp;' : $c['label']; ?></span><?php echo $img; ?></p></a>
                             <?php
                         }
                         else {
                             ?>
-                            <span style="width:<?php echo $c['width']; ?>px;float:right;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element"><p><span><?php echo $c['label']; ?>&nbsp;</span><?php echo $img; ?></p></span>
+                            <span style="width:<?php echo $c['width']; ?>px;float:right;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element"><p><span><?php echo $c['label'] == '' ? '&nbsp;' : $c['label']; ?></span><?php echo $img; ?></p></span>
                             <?php
                         }
                     }
@@ -760,12 +760,12 @@ class skin
 
                         if (!empty($c['url']) || !empty($c['onclick'])) {
                             ?>
-                            <a href="<?php echo (!empty($c['url'])) ? $c['url'] : 'javascript:void(0);'; ?>" <?php if (!empty($c['onclick'])) echo "onclick=\"javascript:{$c['onclick']}\""; ?>" style="width:<?php echo $c['width']; ?>px;float:right;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element ploopi_explorer_element_right <?php echo $class; ?>"><p><span><?php echo $c['label']; ?>&nbsp;</span><?php echo $img; ?></p></a>
+                            <a href="<?php echo (!empty($c['url'])) ? $c['url'] : 'javascript:void(0);'; ?>" <?php if (!empty($c['onclick'])) echo "onclick=\"javascript:{$c['onclick']}\""; ?>" style="width:<?php echo $c['width']; ?>px;float:right;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element ploopi_explorer_element_right <?php echo $class; ?>"><p><span><?php echo $c['label'] == '' ? '&nbsp;' : $c['label']; ?></span><?php echo $img; ?></p></a>
                             <?php
                         }
                         else {
                             ?>
-                            <span style="width:<?php echo $c['width']; ?>px;float:right;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element ploopi_explorer_element_right <?php echo $class; ?>"><p><span><?php echo $c['label']; ?>&nbsp;</span><?php echo $img; ?></p></span>
+                            <span style="width:<?php echo $c['width']; ?>px;float:right;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element ploopi_explorer_element_right <?php echo $class; ?>"><p><span><?php echo $c['label'] == '' ? '&nbsp;' : $c['label']; ?></span><?php echo $img; ?></p></span>
                             <?php
                         }
                     }
@@ -790,12 +790,12 @@ class skin
 
                         if (!empty($c['url']) || !empty($c['onclick'])) {
                             ?>
-                            <a href="<?php echo (!empty($c['url'])) ? $c['url'] : 'javascript:void(0);'; ?>" <?php if (!empty($c['onclick'])) echo "onclick=\"javascript:{$c['onclick']}\""; ?>" style="width:<?php echo $c['width']; ?>px;float:left;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element <?php echo $class; ?>"><p><span><?php echo $c['label']; ?>&nbsp;</span><?php echo $img; ?></p></a>
+                            <a href="<?php echo (!empty($c['url'])) ? $c['url'] : 'javascript:void(0);'; ?>" <?php if (!empty($c['onclick'])) echo "onclick=\"javascript:{$c['onclick']}\""; ?>" style="width:<?php echo $c['width']; ?>px;float:left;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element <?php echo $class; ?>"><p><span><?php echo $c['label'] == '' ? '&nbsp;' : $c['label']; ?></span><?php echo $img; ?></p></a>
                             <?php
                         }
                         else {
                             ?>
-                            <span style="width:<?php echo $c['width']; ?>px;float:left;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element <?php echo $class; ?>"><p><span><?php echo $c['label']; ?>&nbsp;</span><?php echo $img; ?></p></span>
+                            <span style="width:<?php echo $c['width']; ?>px;float:left;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element <?php echo $class; ?>"><p><span><?php echo $c['label'] == '' ? '&nbsp;' : $c['label']; ?></span><?php echo $img; ?></p></span>
                             <?php
                         }
                     }
@@ -820,12 +820,12 @@ class skin
 
                         if (!empty($c['url']) || !empty($c['onclick'])) {
                             ?>
-                            <a href="<?php echo (!empty($c['url'])) ? $c['url'] : 'javascript:void(0);'; ?>" <?php if (!empty($c['onclick'])) echo "onclick=\"javascript:{$c['onclick']}\""; ?>" style="width:<?php echo $c['width']; ?>px;float:left;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element <?php echo $class; ?>"><p><span><?php echo $c['label']; ?>&nbsp;</span><?php echo $img; ?></p></a>
+                            <a href="<?php echo (!empty($c['url'])) ? $c['url'] : 'javascript:void(0);'; ?>" <?php if (!empty($c['onclick'])) echo "onclick=\"javascript:{$c['onclick']}\""; ?>" style="width:<?php echo $c['width']; ?>px;float:left;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element <?php echo $class; ?>"><p><span><?php echo $c['label'] == '' ? '&nbsp;' : $c['label']; ?></span><?php echo $img; ?></p></a>
                             <?php
                         }
                         else {
                             ?>
-                            <span style="width:<?php echo $c['width']; ?>px;float:left;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element <?php echo $class; ?>"><p><span><?php echo $c['label']; ?>&nbsp;</span><?php echo $img; ?></p></span>
+                            <span style="width:<?php echo $c['width']; ?>px;float:left;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element <?php echo $class; ?>"><p><span><?php echo $c['label'] == '' ? '&nbsp;' : $c['label']; ?></span><?php echo $img; ?></p></span>
                             <?php
                         }
                     }
@@ -850,12 +850,12 @@ class skin
 
                         if (!empty($c['url']) || !empty($c['onclick'])) {
                             ?>
-                            <a href="<?php echo (!empty($c['url'])) ? $c['url'] : 'javascript:void(0);'; ?>" <?php if (!empty($c['onclick'])) echo "onclick=\"javascript:{$c['onclick']}\""; ?>" style="overflow:auto;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element <?php echo $class; ?>"><p><span><?php echo $c['label']; ?>&nbsp;</span><?php echo $img; ?></p></a>
+                            <a href="<?php echo (!empty($c['url'])) ? $c['url'] : 'javascript:void(0);'; ?>" <?php if (!empty($c['onclick'])) echo "onclick=\"javascript:{$c['onclick']}\""; ?>" style="<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element <?php echo $class; ?>"><p><span><?php echo $c['label'] == '' ? '&nbsp;' : $c['label']; ?></span><?php echo $img; ?></p></a>
                             <?php
                         }
                         else {
                             ?>
-                            <span style="overflow:auto;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element <?php echo $class; ?>"><p><span><?php echo $c['label']; ?>&nbsp;</span><?php echo $img; ?></p></span>
+                            <span style="overflow:auto;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element <?php echo $class; ?>"><p><span><?php echo $c['label'] == '' ? '&nbsp;' : $c['label']; ?></span><?php echo $img; ?></p></span>
                             <?php
                         }
 

@@ -584,7 +584,7 @@ switch($ploopi_op)
                 });
 
             </script>
-            <?
+            <?php
         }
         else {
             ?>
@@ -599,7 +599,7 @@ switch($ploopi_op)
                 });
 
             </script>
-            <?
+            <?php
         }
         ?>
         <iframe name="documents_fileform_iframe" src="./img/blank.gif" style="display:none;"></iframe>

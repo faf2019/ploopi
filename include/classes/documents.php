@@ -519,7 +519,7 @@ abstract class documents {
 
             <div class="documents_path">
                 <div style="float:right;padding:0;">
-                    <?
+                    <?php
                     if ($_SESSION['documents'][$documents_id]['rights']['FOLDER_CREATE'])
                     {
                         ?><button title="<?php echo $_SESSION['documents'][$documents_id]['new_folder']; ?>" class="icon invert icon_foldernew" onclick="javascript:ploopi.documents.openfolder('<?php echo crypt::queryencode("ploopi_op=documents_openfolder&currentfolder={$currentfolder}&documents_id={$documents_id}&documentsfolder_id="); ?>', event);">Nouveau dossier</button><?php

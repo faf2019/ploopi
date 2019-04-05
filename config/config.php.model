@@ -266,36 +266,24 @@ switch($http_host)
 
         /**
          * Mode de chiffrement des URL.
-         * Du plus rapide au moins rapide:
          *
-         * MCRYPT_CAST_128
-         * MCRYPT_GOST
-         * MCRYPT_RIJNDAEL_128
-         * MCRYPT_CAST_256
-         * MCRYPT_TWOFISH
-         * MCRYPT_LOKI97
-         * MCRYPT_SAFERPLUS
-         * MCRYPT_SERPENT
-         * MCRYPT_XTEA
-         * MCRYPT_RC2
-         * MCRYPT_RIJNDAEL_256
-         * MCRYPT_BLOWFISH
-         * MCRYPT_DES
-         * MCRYPT_TRIPLEDES
+         * AES-128-CBC
+         * AES-128-CTR
+         * AES-256-OFB
+         * BF-OFB
+         * DES-EDE3-CBC
+         * ...
          *
-         * @see http://www.php.net/manual/fr/mcrypt.ciphers.php
+         * @see https://www.php.net/manual/fr/function.openssl-get-cipher-methods.php
          */
 
-        define ('_PLOOPI_CIPHER', <CIPHER>);
+        define ('_PLOOPI_CIPHER', '<CIPHER>');
 
         /**
          * Vecteur d'initialisation pour le chiffrement des URL.
-         * Le vecteur doit être une chaîne de 32 caractères (il est automatiquement ajusté au mode de chiffrement)
-         *
-         * @see http://www.php.net/manual/fr/mcrypt.ciphers.php
          */
 
-        define ('_PLOOPI_CIPHER_IV', '12345678ABCDEFGHIJKLMNOPQRSTUVWX');
+        define ('_PLOOPI_CIPHER_IV', '<CIPHER_IV>');
 
         /**
          * Algorithme utilisé pour la génération des valeurs de hachage (stockage des mots de passe).

@@ -25,7 +25,7 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Gestion du chiffrement/déchiffrement (basé sur mcrypt), notamment utilisée pour chiffrer les URL
+ * Gestion du chiffrement/déchiffrement (basé sur openssl), notamment utilisée pour chiffrer les URL
  *
  * @package ploopi
  * @subpackage crypt
@@ -33,7 +33,7 @@ use ploopi;
  * @license GNU General Public License (GPL)
  * @author Ovensia
  *
- * @see mcrypt
+ * @see openssl
  * @see _PLOOPI_SECRETKEY
  */
 
@@ -64,6 +64,12 @@ class cipher
     private $cipher;
 
     /**
+     * Longueur du vecteur d'initialisation
+     */
+
+    private $len;
+
+    /**
      * Instance de la classe (singleton)
      *
      * @var cipher
@@ -80,9 +86,10 @@ class cipher
 
     public function __construct($key = _PLOOPI_SECRETKEY, $iv = _PLOOPI_CIPHER_IV, $c = _PLOOPI_CIPHER)
     {
-        $this->cipher = mcrypt_module_open($c,'','cbc','');
-        $this->key = substr($key, 0, mcrypt_enc_get_key_size($this->cipher));
-        $this->iv = substr($iv, 0, mcrypt_enc_get_block_size($this->cipher));
+        $this->cipher = $c;
+        $this->key = $key;
+        $this->iv = $iv;
+        $this->len = openssl_cipher_iv_length($this->cipher);
     }
 
     /**
@@ -102,7 +109,6 @@ class cipher
     }
 
 
-
     /**
      * Chiffre une chaine
      *
@@ -114,10 +120,10 @@ class cipher
     {
         if (!empty($str))
         {
-            mcrypt_generic_init($this->cipher, $this->key, $this->iv);
-            $encrypted = crypt::base64_encode(mcrypt_generic($this->cipher, gzcompress($str)));
-            mcrypt_generic_deinit($this->cipher);
-            return($encrypted);
+            $ciphertext_raw = openssl_encrypt($str, $this->cipher, $key, $options = OPENSSL_RAW_DATA, $this->iv);
+            $hmac = hash_hmac('sha256', $ciphertext_raw, $key, $as_binary = true);
+            $encrypted = crypt::base64_encode($this->iv.$hmac.$ciphertext_raw);
+            return $encrypted;
         }
         else return(false);
     }
@@ -131,15 +137,17 @@ class cipher
 
     function decrypt($strEncrypted)
     {
-        if (empty($strEncrypted)) return(false);
+        if (empty($strEncrypted)) return false;
 
-        $strDecoded = crypt::base64_decode($strEncrypted);
-        mcrypt_generic_init($this->cipher, $this->key, $this->iv);
-        error::unset_handler();
-        $strDecoded = strlen($strDecoded) > 0 ? gzuncompress(mdecrypt_generic($this->cipher, $strDecoded)) : '';
-        error::set_handler();
-        mcrypt_generic_deinit($this->cipher);
+        $c = crypt::base64_decode($strEncrypted);
+        $iv = substr($c, 0, $this->len);
+        $hmac = substr($c, $this->len, $sha2len = 32);
+        $ciphertext_raw = substr($c, $this->len + $sha2len);
+        $strDecoded = openssl_decrypt($ciphertext_raw, $this->cipher, $key, $options = OPENSSL_RAW_DATA, $this->iv);
+        $calcmac = hash_hmac('sha256', $ciphertext_raw, $key, $as_binary = true);
 
-        return($strDecoded);
+        if (hash_equals($hmac, $calcmac)) return $strDecoded;
+
+        return false;
     }
 }

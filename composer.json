@@ -48,7 +48,7 @@
     ],
     "require": {
         "php": ">=7.0.0",
-        "ext-mcrypt": "*",
+        "ext-openssl": "*",
         "ext-gd": "*",
         "ext-zip": "*",
         "ext-curl": "*",
@@ -77,5 +77,9 @@
         "post-create-project-cmd": [
             "cp .htaccess_modele .htaccess"
         ]
+    },
+    "require-dev": {
+        "phploc/phploc": "^4.0",
+        "theseer/phpdox": "0.11.2"
     }
 }

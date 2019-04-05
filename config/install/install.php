@@ -154,6 +154,11 @@ if (!empty($_POST)) {
             $replacements[] = $v;
         }
 
+        // Génération IV
+        $len = openssl_cipher_iv_length($S['saved']['CIPHER']);
+        $tags[] = "<CIPHER_IV>";
+        $replacements[] = substr(base64_encode(openssl_random_pseudo_bytes($len)), 0, $len);
+
         // Génération du fichier config.php
         file_put_contents($config, str_replace($tags, $replacements, file_get_contents($model)));
         chmod($config, 0640);
@@ -281,23 +286,8 @@ $arrVariables = [
         'CIPHER' => [
             'Algorithme de chiffrement des URLs',
             '',
-            'MCRYPT_RIJNDAEL_128',
-            [
-                'MCRYPT_CAST_128' => 'CAST-128',
-                'MCRYPT_GOST' => 'GOST',
-                'MCRYPT_RIJNDAEL_128' => 'RIJNDAEL-128',
-                'MCRYPT_CAST_256' => 'CAST-128',
-                'MCRYPT_TWOFISH' => 'TWOFISH',
-                'MCRYPT_LOKI97' => 'LOKI97',
-                'MCRYPT_SAFERPLUS' => 'SAFER+',
-                'MCRYPT_SERPENT' => 'SERPENT',
-                'MCRYPT_XTEA' => 'XTEA',
-                'MCRYPT_RC2' => 'TC2',
-                'MCRYPT_RIJNDAEL_256' => 'RIJNDAEL-256',
-                'MCRYPT_BLOWFISH' => 'BLOWFISH',
-                'MCRYPT_DES' => 'DES',
-                'MCRYPT_TRIPLEDES' => '3DES',
-            ]
+            'AES-128-CBC',
+            []
         ],
         'HASH_ALGO' => [
             'Algorithme de hashage pour le stockage des mots de passe',
@@ -333,6 +323,11 @@ $arrVariables = [
         ]
     ]
 ];
+
+foreach(openssl_get_cipher_methods() as $method) {
+    $method = strtoupper($method);
+    $arrVariables['security']['CIPHER'][3][$method] = $method;
+}
 
 // Init groupes
 $arrGroupes = [

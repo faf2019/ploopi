@@ -26,7 +26,7 @@ use ploopi;
 
 
 /**
- * Classe d'accÃ¨s Ã  la table ploopi_tag
+ * Classe d'accès à la table ploopi_tag
  *
  * @package ploopi
  * @subpackage annotation

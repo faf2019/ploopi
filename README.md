@@ -17,7 +17,7 @@ Installation des paquets logiciels nécessaires
 ```console
 sudo apt-get update
 sudo apt-get upgrade
-sudo apt-get install --yes apache2 libapache2-mod-php php php-mysql php-gd php-zip php-mcrypt php-curl php-cli memcached php-memcached mariadb-server unoconv composer python-hachoir-metadata catdoc xpdf-utils jhead unrtf unzip zip
+sudo apt-get install --yes apache2 libapache2-mod-php php php-mysql php-gd php-zip php-curl php-cli memcached php-memcached mariadb-server unoconv composer python-hachoir-metadata catdoc xpdf-utils jhead unrtf unzip zip openssl subversion
 sudo a2enmod rewrite expires headers
 sudo service apache2 restart
 ```

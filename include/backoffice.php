@@ -79,7 +79,7 @@ $template_body->assign_block_vars('ploopi_js', array(
 ));
 
 $template_body->assign_block_vars('ploopi_js', array(
-    'PATH' => './vendor/components/jquery-ui/jquery-ui.min.js?v='.urlencode(_PLOOPI_VERSION.','._PLOOPI_REVISION)
+    'PATH' => './vendor/components/jqueryui/jquery-ui.min.js?v='.urlencode(_PLOOPI_VERSION.','._PLOOPI_REVISION)
 ));
 
 

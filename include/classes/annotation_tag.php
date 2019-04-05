@@ -25,7 +25,7 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Classe d'accÃ¨s Ã  la table ploopi_annotation_tag
+ * Classe d'accès à la table ploopi_annotation_tag
  *
  * @package ploopi
  * @subpackage annotation
@@ -48,7 +48,7 @@ class annotation_tag extends data_object
     }
 
     /**
-     * Supprime le tag s'il n'est plus utilisÃ©
+     * Supprime le tag s'il n'est plus utilisé
      */
 
     public function delete()
