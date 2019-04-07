@@ -1,10 +1,10 @@
-<?xml version="1.0" encoding="ISO-8859-15"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <ploopi>
     <moduletype>
         <label>doc</label>
-        <version>4.10.0</version>
-        <author>Ovensia / HeXad</author>
-        <date>20160808000000</date>
+        <version>4.10.1</version>
+        <author>Ovensia</author>
+        <date>20181227000000</date>
         <description>Gestion de Documents</description>
         <paramtype>
             <name>doc_viewfoldersinblock</name>

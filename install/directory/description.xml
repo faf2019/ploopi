@@ -1,14 +1,14 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <ploopi>
    <moduletype>
       <label>directory</label>
-      <version>2.5.0</version>
+      <version>2.5.1</version>
       <author>Ovensia</author>
-      <date>20160808000000</date>
+      <date>20181227000000</date>
       <description>Annuaire des Utilisateurs</description>
       <paramtype>
          <name>directory_myfavorites</name>
-         <label>Accéder à l'onglet "Favoris"</label>
+         <label>Accéder à l'onglet "Favoris"</label>
          <default_value>1</default_value>
          <public>1</public>
          <description/>
@@ -23,7 +23,7 @@
       </paramtype>
       <paramtype>
          <name>directory_mycontacts</name>
-         <label>Accéder à l'onglet "Contacts Personnels"</label>
+         <label>Accéder à l'onglet "Contacts Personnels"</label>
          <default_value>1</default_value>
          <public>1</public>
          <description/>
@@ -38,7 +38,7 @@
       </paramtype>
       <paramtype>
          <name>directory_mygroup</name>
-         <label>Accéder à l'onglet "Espace de Travail"</label>
+         <label>Accéder à l'onglet "Espace de Travail"</label>
          <default_value>1</default_value>
          <public>1</public>
          <description/>
@@ -53,7 +53,7 @@
       </paramtype>
       <paramtype>
          <name>directory_organizationchart</name>
-         <label>Accéder à l'onglet "Organigramme"</label>
+         <label>Accéder à l'onglet "Organigramme"</label>
          <default_value>1</default_value>
          <public>1</public>
          <description/>
@@ -68,7 +68,7 @@
       </paramtype>
       <paramtype>
          <name>directory_sharedcontacts</name>
-         <label>Accéder à l'onglet "Contacts Partagés"</label>
+         <label>Accéder à l'onglet "Contacts Partagés"</label>
          <default_value>1</default_value>
          <public>1</public>
          <description/>
