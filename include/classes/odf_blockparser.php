@@ -195,6 +195,8 @@ class odf_blockparser
 
     private function _cdata($parser, $data)
     {
+        $data = str::xmlentities($data);
+
         $tag = &$this->xmltags[sizeof($this->xmltags)-1];
 
         $keep_content = true;

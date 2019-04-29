@@ -913,7 +913,7 @@ class skin
                                 {
                                     if (!isset($v['values'][$id]['label']) || $v['values'][$id]['label'] == '') $v['values'][$id]['label'] = '&nbsp;';
                                     ?>
-                                    <div class="ploopi_explorer_tools" style="width:<?php echo $c['width']; ?>px;float:right;<?php if (!empty($v['values'][$id]['style'])) echo $v['values'][$id]['style']; ?>"><?php echo $v['values'][$id]['label']; ?></div>
+                                    <div class="ploopi_explorer_tools<?php if (!empty($v['values'][$id]['class'])) echo ' '.$v['values'][$id]['class']; ?>" style="width:<?php echo $c['width']; ?>px;float:right;<?php if (!empty($v['values'][$id]['style'])) echo $v['values'][$id]['style']; ?>"><?php echo $v['values'][$id]['label']; ?></div>
                                     <?php
                                 }
                             }
@@ -924,7 +924,7 @@ class skin
                                 {
                                     if (!isset($v['values'][$id]['label']) || $v['values'][$id]['label'] == '') $v['values'][$id]['label'] = '&nbsp;';
                                     ?>
-                                    <div class="ploopi_explorer_tools" style="width:<?php echo $c['width']; ?>px;float:left;<?php if (!empty($v['values'][$id]['style'])) echo $v['values'][$id]['style']; ?>"><?php echo $v['values'][$id]['label']; ?></div>
+                                    <div class="ploopi_explorer_tools<?php if (!empty($v['values'][$id]['class'])) echo ' '.$v['values'][$id]['class']; ?>" style="width:<?php echo $c['width']; ?>px;float:left;<?php if (!empty($v['values'][$id]['style'])) echo $v['values'][$id]['style']; ?>"><?php echo $v['values'][$id]['label']; ?></div>
                                     <?php
                                 }
                             }
@@ -947,7 +947,7 @@ class skin
                                 {
                                     if (!isset($v['values'][$id]['label']) || $v['values'][$id]['label'] == '') $v['values'][$id]['label'] = '&nbsp;';
                                     ?>
-                                    <div style="width:<?php echo $c['width']; ?>px;float:right;<?php if (!empty($v['values'][$id]['style'])) echo $v['values'][$id]['style']; ?>" class="ploopi_explorer_element"><p><?php echo $v['values'][$id]['label']; ?></p></div>
+                                    <div style="width:<?php echo $c['width']; ?>px;float:right;<?php if (!empty($v['values'][$id]['style'])) echo $v['values'][$id]['style']; ?>" class="ploopi_explorer_element<?php if (!empty($v['values'][$id]['class'])) echo ' '.$v['values'][$id]['class']; ?>"><p><?php echo $v['values'][$id]['label']; ?></p></div>
                                     <?php
                                 }
                             }
@@ -958,7 +958,7 @@ class skin
                                 {
                                     if (!isset($v['values'][$id]['label']) || $v['values'][$id]['label'] == '') $v['values'][$id]['label'] = '&nbsp;';
                                     ?>
-                                    <div style="width:<?php echo $c['width']; ?>px;float:left;<?php if (!empty($v['values'][$id]['style'])) echo $v['values'][$id]['style']; ?>" class="ploopi_explorer_element"><p><?php echo $v['values'][$id]['label']; ?></p></div>
+                                    <div style="width:<?php echo $c['width']; ?>px;float:left;<?php if (!empty($v['values'][$id]['style'])) echo $v['values'][$id]['style']; ?>" class="ploopi_explorer_element<?php if (!empty($v['values'][$id]['class'])) echo ' '.$v['values'][$id]['class']; ?>"><p><?php echo $v['values'][$id]['label']; ?></p></div>
                                     <?php
                                 }
                             }
@@ -969,7 +969,7 @@ class skin
                                 {
                                     if (!isset($v['values'][$id]['label']) || $v['values'][$id]['label'] == '') $v['values'][$id]['label'] = '&nbsp;';
                                     ?>
-                                    <div style="<?php if (!empty($v['values'][$id]['style'])) echo $v['values'][$id]['style']; ?>" class="ploopi_explorer_element"><p><?php echo $v['values'][$id]['label']; ?></p></div>
+                                    <div style="<?php if (!empty($v['values'][$id]['style'])) echo $v['values'][$id]['style']; ?>" class="ploopi_explorer_element<?php if (!empty($v['values'][$id]['class'])) echo ' '.$v['values'][$id]['class']; ?>"><p><?php echo $v['values'][$id]['label']; ?></p></div>
                                     <?php
                                 }
                             }

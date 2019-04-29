@@ -170,7 +170,7 @@ abstract class error
                 }
                 else // Affichage cli, sortie texte brut
                 {
-                    fwrite(STDOUT, "=== ".self::$errortype[$errno]." ==================================\r{$errstr}\r{$strErrorStack}\r");
+                    fwrite(STDOUT, "=== ".self::$errortype[$errno]." ==================================\r\n{$errstr}\r\n{$strErrorStack}\r\n");
                 }
 
                 // critical error

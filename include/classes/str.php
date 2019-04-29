@@ -238,7 +238,7 @@ abstract class str {
      * @return string chaîne encodée
      */
 
-    public static function xmlentities($str, $utf8 = false, $extended = true)
+    public static function xmlentities($str, $utf8 = false, $extended = false)
     {
         if ($extended) for($i=128; $i<256; $i++) $asc2uni[$utf8 ? utf8_encode(chr($i)) : chr($i)] = "&#x".dechex($i).";";
 

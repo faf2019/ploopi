@@ -67,11 +67,18 @@ class odf_parser
     private $manifest_xml;
 
     /**
-     * Variables du emplate
+     * Variables du template
      *
      * @var array
      */
     private $vars = array();
+
+    /**
+     * Frames du template
+     *
+     * @var array
+     */
+    private $frames = array();
 
     /**
      * Images du template
@@ -119,7 +126,7 @@ class odf_parser
     public function __construct($filename)
     {
         $this->filename = $filename;
-        $this->zip = new ZipArchive();
+        $this->zip = new \ZipArchive();
         if ($this->zip->open($this->filename) === true)
         {
             $this->content_xml = $this->zip->getFromName('content.xml');
@@ -202,6 +209,32 @@ class odf_parser
     public function set_image($key, $value, $width = '5cm', $height = '5cm', $align = 'left', $anchortype = 'paragraph')
     {
         $this->set_var($key, $this->add_image($value, $width, $height, $align, $anchortype), false, true);
+    }
+
+    /**
+     * Insère une frame/image pour les documents de type "présentation/odp"
+     *
+     * @param string $value chemin absolu vers le fichier image
+     * @param string $width largeur de l'image
+     * @param string $height hauteur de l'image
+     * @param string $x
+     * @param string $y
+     */
+
+    public function set_frame($image, $width = '5cm', $height = '5cm', $x = '5cm', $y = '5cm', $mimetype = 'image/jpeg')
+    {
+        $file = basename($image);
+        $this->images[$image] = $file;
+        $name = 'image'.sizeof($this->images);
+        //draw:style-name="gr11" draw:text-style-name="P16"
+
+        $this->frames[] = '
+            <draw:frame draw:layer="layout" svg:width="'.$width.'" svg:height="'.$height.'" svg:x="'.$x.'" svg:y="'.$y.'">
+                <draw:image xlink:href="Pictures/'.$file.'" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad" loext:mime-type="'.$mimetype.'">
+                    <text:p />
+                </draw:image>
+            </draw:frame>
+        ';
     }
 
     /**
@@ -299,7 +332,7 @@ class odf_parser
 
             $blockparser->parse($this->content_xml, $this->blockvars);
 
-            $this->blocktemplates = &$blockparser->get_blocktemplates();
+            $this->blocktemplates = $blockparser->get_blocktemplates();
 
             // le contenu XML sans les blocks (mais avec des nouvelles variables à la place)
             $this->content_xml = $blockparser->get_xml();
@@ -327,6 +360,10 @@ class odf_parser
             $varparser = new odf_varparser();
             $varparser->parse($this->content_xml, $this->vars);
             $this->content_xml = $varparser->get_xml();
+
+            if (!empty($this->frames)) {
+                echo $this->content_xml = str_replace('</draw:page>', implode('',$this->frames).'</draw:page>', $this->content_xml);
+            }
 
             $varparser = new odf_varparser();
             $varparser->parse($this->styles_xml, $this->vars);
@@ -364,7 +401,7 @@ class odf_parser
             $this->filename = $newfilename;
         }
 
-        if ($this->zip->open($this->filename, ZIPARCHIVE::CREATE) === TRUE)
+        if ($this->zip->open($this->filename, \ZIPARCHIVE::CREATE) === TRUE)
         {
 
             if (!$this->zip->addFromString('content.xml', $this->content_xml))

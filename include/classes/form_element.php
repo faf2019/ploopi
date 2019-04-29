@@ -200,7 +200,7 @@ abstract class form_element
      */
     protected function generateProperties($strClass = null, $strStyle = null)
     {
-        $arrParentOptions = $this->_objParentForm->getOptions();
+        $arrParentOptions = empty($this->_objParentForm) ? array() : $this->_objParentForm->getOptions();
 
         $strDataSet = '';
         if (!empty($this->_arrOptions['dataset']) && is_array($this->_arrOptions['dataset'])) {
@@ -213,8 +213,8 @@ abstract class form_element
             $strDataSet.
             self::_getProperty('style',  is_null($strStyle) ? $this->_arrOptions['style'] : $strStyle).
             self::_getProperty('class',  is_null($strClass) ? $this->_arrOptions['class'] : $strClass).
-            self::_getProperty('readonly',  $arrParentOptions['readonly'] || $this->_arrOptions['readonly'] ? 'readonly' : null).
-            self::_getProperty('disabled',  $arrParentOptions['disabled'] || $this->_arrOptions['disabled'] ? 'disabled' : null).
+            self::_getProperty('readonly',  !empty($arrParentOptions['readonly']) || !empty($this->_arrOptions['readonly']) ? 'readonly' : null).
+            self::_getProperty('disabled',  !empty($arrParentOptions['disabled']) || !empty($this->_arrOptions['disabled']) ? 'disabled' : null).
             self::_getProperty('required',  isset($this->_arrOptions['required']) && $this->_arrOptions['required'] ? 'required' : null).
             self::_getProperty('autofocus',  $this->_arrOptions['autofocus'] ? 'autofocus' : null).
             self::_getProperty('autocomplete',  isset($this->_arrOptions['autocomplete']) && !$this->_arrOptions['autocomplete'] ? 'off' : null).

@@ -123,6 +123,7 @@ class form_field extends form_element
         'onmouseup' => null,
         'min' => null,
         'max' => null,
+        'step' => null,
         'dataset' => null
     );
 
@@ -201,6 +202,7 @@ class form_field extends form_element
                 $strMinMax = '';
                 if (isset($this->_arrOptions['min']) && is_numeric($this->_arrOptions['min'])) $strMinMax .= " min=\"{$this->_arrOptions['min']}\"";
                 if (isset($this->_arrOptions['max']) && is_numeric($this->_arrOptions['max'])) $strMinMax .= " max=\"{$this->_arrOptions['max']}\"";
+                if (isset($this->_arrOptions['step']) && is_numeric($this->_arrOptions['step'])) $strMinMax .= " step=\"{$this->_arrOptions['step']}\"";
 
                 $strOutput .= "<input type=\"number\" name=\"{$this->_strName}\" id=\"{$this->_strId}\" value=\"{$strValue}\" tabindex=\"{$intTabindex}\"{$strProperties}{$strMaxLength}{$strEvents}{$strPlaceHolder}{$strMinMax} />";
             break;
@@ -210,10 +212,11 @@ class form_field extends form_element
             break;
 
             case 'input:date':
+                $strOutput .= "<input type=\"date\" name=\"{$this->_strName}\" id=\"{$this->_strId}\" value=\"{$strValue}\" tabindex=\"{$intTabindex}\"{$strProperties}{$strMaxLength}{$strEvents}{$strPlaceHolder} />";
+            break;
+
             case 'input:text':
-                $arrParentOptions = $this->_objParentForm->getOptions();
                 $strOutput .= "<input type=\"text\" name=\"{$this->_strName}\" id=\"{$this->_strId}\" value=\"{$strValue}\" tabindex=\"{$intTabindex}\"{$strProperties}{$strMaxLength}{$strEvents}{$strPlaceHolder} />";
-                if ($this->_arrOptions['datatype'] == 'date' && !$this->_arrOptions['readonly'] && !$this->_arrOptions['disabled'] && !$arrParentOptions['readonly'] && !$arrParentOptions['disabled']) $strOutput .= date::open_calendar($this->_strId, false, null, 'display:block;float:left;margin-left:-35px;margin-top:5px;');
             break;
 
             case 'input:password':

@@ -198,7 +198,7 @@ class odf_varparser
         $tag = $this->xmltags[$s];
 
         // remplacement des variables template
-        $data = str_replace(array_keys($this->vars), array_values($this->vars), str::xmlentities($data, true));
+        $data = str_replace(array_keys($this->vars), array_values($this->vars), str::xmlentities($data));
 
         // Cas d'un retour chariot dans le contenu
         if (strpos($data, '[ploopi-br]') !== false)
