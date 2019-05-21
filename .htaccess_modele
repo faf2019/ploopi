@@ -10,7 +10,7 @@
 # Attention, ce fichier est une configuration generique qu'il convient d'adapter a votre environnement.
 # Il existe des configurations plus solides que vous pouvez utiliser si vous pouvez directement modifier le fichier de configuration d'apache.
 
-AddDefaultCharset ISO-8859-15
+AddDefaultCharset UTF-8
 
 <IfModule mod_dir.c>
     DirectoryIndex index.html index.php
@@ -81,6 +81,7 @@ AddDefaultCharset ISO-8859-15
 
 <IfModule mod_headers.c>
   Header unset ETag
+  Header always set X-Frame-Options "SAMEORIGIN"
 </IfModule>
 
 FileETag None
