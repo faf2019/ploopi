@@ -878,31 +878,14 @@ abstract class loader
                 $_SESSION['ploopi']['actions'] = array();
                 $_SESSION['ploopi']['actions'] = $user->getactions($_SESSION['ploopi']['actions']);
 
-                // get all workspaces of current user
-                $db->query("
-                    SELECT      w.id,
-                                w.iprules,
-                                w.mustdefinerule,
-                                MAX(GREATEST(IFNULL(wu.adminlevel,0), IFNULL(wg.adminlevel,0))) as adlvl,
-                                GROUP_CONCAT(wg.id_group) as groups
-                    FROM        ploopi_workspace w
-                    LEFT JOIN   ploopi_workspace_user wu ON wu.id_workspace = w.id AND wu.id_user = {$_SESSION['ploopi']['userid']}
-                    LEFT JOIN   ploopi_workspace_group wg ON wg.id_workspace = w.id AND wg.id_group IN (SELECT g.id FROM ploopi_group g INNER JOIN ploopi_group_user gu ON gu.id_group = g.id WHERE gu.id_user = {$_SESSION['ploopi']['userid']})
-                    GROUP BY    w.id
-                    HAVING      adlvl > 0
-                    ORDER BY    w.id
-                ");
-
-                $user_workspaces = array();
-                while ($row = $db->fetchrow()) $user_workspaces[$row['id']] = $row;
-
+                $user_workspaces = $user->getworkspaces();
+                foreach($user_workspaces as &$row) {
+                    $row['adlvl'] = $row['adminlevel'];
+                    $row['groups'] = implode(',', $row['groups']);
+                }
 
                 $_SESSION['ploopi']['frontoffice']['connected'] = 0;
                 $_SESSION['ploopi']['backoffice']['connected'] = 0;
-
-                //var_dump($_SESSION['ploopi']['backoffice']);
-                //var_dump($_SESSION['ploopi']['mode']);
-                //var_dump($_SESSION['ploopi']['connected']);
 
                 foreach ($user_workspaces as $wid => $fields)
                 {

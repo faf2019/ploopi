@@ -120,8 +120,8 @@ class cipher
     {
         if (!empty($str))
         {
-            $ciphertext_raw = openssl_encrypt($str, $this->cipher, $key, $options = OPENSSL_RAW_DATA, $this->iv);
-            $hmac = hash_hmac('sha256', $ciphertext_raw, $key, $as_binary = true);
+            $ciphertext_raw = openssl_encrypt($str, $this->cipher, $this->key, $options = OPENSSL_RAW_DATA, $this->iv);
+            $hmac = hash_hmac('sha256', $ciphertext_raw, $this->key, $as_binary = true);
             $encrypted = crypt::base64_encode($this->iv.$hmac.$ciphertext_raw);
             return $encrypted;
         }
@@ -143,8 +143,8 @@ class cipher
         $iv = substr($c, 0, $this->len);
         $hmac = substr($c, $this->len, $sha2len = 32);
         $ciphertext_raw = substr($c, $this->len + $sha2len);
-        $strDecoded = openssl_decrypt($ciphertext_raw, $this->cipher, $key, $options = OPENSSL_RAW_DATA, $this->iv);
-        $calcmac = hash_hmac('sha256', $ciphertext_raw, $key, $as_binary = true);
+        $strDecoded = openssl_decrypt($ciphertext_raw, $this->cipher, $this->key, $options = OPENSSL_RAW_DATA, $this->iv);
+        $calcmac = hash_hmac('sha256', $ciphertext_raw, $this->key, $as_binary = true);
 
         if (hash_equals($hmac, $calcmac)) return $strDecoded;
 
