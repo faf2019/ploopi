@@ -2,7 +2,7 @@
 
 <!--
     Ploopi ~ Template pour Ploopi
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2018 Ovensia
 
     This file is part of Ploopi.
 
@@ -23,7 +23,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
 <head>
-    <meta http-equiv="content-type" content="text/html; charset=iso-8859-15" />
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <meta name="description" content="{WORKSPACE_META_DESCRIPTION}" />
     <meta name="keywords" content="{WORKSPACE_META_KEYWORDS}" />
     <meta name="author" content="{WORKSPACE_META_AUTHOR}" />

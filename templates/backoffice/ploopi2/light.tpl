@@ -2,7 +2,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
 <head>
-    <meta http-equiv="content-type" content="text/html; charset=iso-8859-15" />
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <meta name="description" content="{WORKSPACE_META_DESCRIPTION}" />
     <meta name="keywords" content="{WORKSPACE_META_KEYWORDS}" />
     <meta name="author" content="{WORKSPACE_META_AUTHOR}" />
