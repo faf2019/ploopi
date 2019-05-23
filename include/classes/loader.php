@@ -881,7 +881,7 @@ abstract class loader
                 $user_workspaces = $user->getworkspaces();
                 foreach($user_workspaces as &$row) {
                     $row['adlvl'] = $row['adminlevel'];
-                    $row['groups'] = implode(',', $row['groups']);
+                    $row['groups'] = isset($row['groups']) ? implode(',', $row['groups']) : array();
                 }
 
                 $_SESSION['ploopi']['frontoffice']['connected'] = 0;
