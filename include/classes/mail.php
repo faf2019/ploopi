@@ -71,7 +71,7 @@ abstract class mail
         {
             foreach($to as $detail)
             {
-                if (mail::check($detail['address']))
+                if (self::check($detail['address']))
                 {
                     if ($str_to != '') $str_to .= ', ';
                     $str_to .= mb_encode_mimeheader($detail['name'])." <{$detail['address']}>";
@@ -80,7 +80,7 @@ abstract class mail
         }
         else
         {
-            if (mail::check($to)) $str_to = $to;
+            if (self::check($to)) $str_to = $to;
         }
 
         $str_from = '';
@@ -88,12 +88,12 @@ abstract class mail
         {
             $detail = current($from);
             $detail['address'] = trim(current(explode(',', $detail['address'])));
-            if (mail::check($detail['address'])) $str_from = mb_encode_mimeheader($detail['name'])." <{$detail['address']}>";
+            if (self::check($detail['address'])) $str_from = mb_encode_mimeheader($detail['name'])." <{$detail['address']}>";
         }
         else
         {
             $from = trim(current(explode(',', $from)));
-            if (mail::check($from)) $str_from = $from;
+            if (self::check($from)) $str_from = $from;
         }
 
         $str_cc = '';
@@ -101,7 +101,7 @@ abstract class mail
         {
             foreach($cc as $detail)
             {
-                if (mail::check($detail['address']))
+                if (self::check($detail['address']))
                 {
                     if ($str_cc != '') $str_cc .= ', ';
                     $str_cc .= mb_encode_mimeheader($detail['name'])." <{$detail['address']}>";
@@ -114,7 +114,7 @@ abstract class mail
         {
             foreach($bcc as $detail)
             {
-                if (mail::check($detail['address']))
+                if (self::check($detail['address']))
                 {
                     if ($str_bcc != '') $str_bcc .= ', ';
                     $str_bcc .= mb_encode_mimeheader($detail['name'])." <{$detail['address']}>";
@@ -127,7 +127,7 @@ abstract class mail
         {
             foreach($replyto as $detail)
             {
-                if (mail::check($detail['address']))
+                if (self::check($detail['address']))
                 {
                     if ($str_replyto != '') $str_replyto .= ', ';
                     $str_replyto .= mb_encode_mimeheader($detail['name'])." <{$detail['address']}>";
@@ -136,7 +136,7 @@ abstract class mail
         }
         else
         {
-            if (mail::check($replyto)) $str_replyto = $replyto;
+            if (self::check($replyto)) $str_replyto = $replyto;
         }
 
         $headers = '';
@@ -242,12 +242,7 @@ abstract class mail
 
     public static function send_smtp($from, $to, $subject, $message, $params = null, $cc = null, $bcc = null, $replyto = null, $files = null, $html = true)
     {
-        require_once 'Mail.php';
-        require_once 'Mail/mime.php';
-
-        mb_internal_encoding('ISO-8859-15');
-
-        $objMail = Mail::factory('smtp', array (
+        $objMail = \Mail::factory('smtp', array (
             'host' => isset($params['host']) ? $params['host'] : 'localhost',
             'port' => isset($params['port']) ? $params['port'] : 25,
             'auth' => isset($params['auth']) ? $params['auth'] : false,
@@ -260,7 +255,7 @@ abstract class mail
         {
             foreach($to as $detail)
             {
-                if (mail::check($detail['address']))
+                if (self::check($detail['address']))
                 {
                     if ($str_to != '') $str_to .= ', ';
                     $str_to .= mb_encode_mimeheader($detail['name'])." <{$detail['address']}>";
@@ -269,7 +264,7 @@ abstract class mail
         }
         else
         {
-            if (mail::check($to)) $str_to = $to;
+            if (self::check($to)) $str_to = $to;
         }
 
         $str_from = '';
@@ -277,7 +272,7 @@ abstract class mail
         {
             foreach($from as $detail)
             {
-                if (mail::check($detail['address']))
+                if (self::check($detail['address']))
                 {
                     if ($str_from != '') $str_from .= ', ';
                     $str_from .= mb_encode_mimeheader($detail['name'])." <{$detail['address']}>";
@@ -286,7 +281,7 @@ abstract class mail
         }
         else
         {
-            if (mail::check($from)) $str_from = $from;
+            if (self::check($from)) $str_from = $from;
         }
 
         $str_cc = '';
@@ -294,7 +289,7 @@ abstract class mail
         {
             foreach($cc as $detail)
             {
-                if (mail::check($detail['address']))
+                if (self::check($detail['address']))
                 {
                     if ($str_cc != '') $str_cc .= ', ';
                     $str_cc .= mb_encode_mimeheader($detail['name'])." <{$detail['address']}>";
@@ -307,7 +302,7 @@ abstract class mail
         {
             foreach($bcc as $detail)
             {
-                if (mail::check($detail['address']))
+                if (self::check($detail['address']))
                 {
                     if ($str_bcc != '') $str_bcc .= ', ';
                     $str_bcc .= mb_encode_mimeheader($detail['name'])." <{$detail['address']}>";
@@ -320,7 +315,7 @@ abstract class mail
         {
             foreach($replyto as $detail)
             {
-                if (mail::check($detail['address']))
+                if (self::check($detail['address']))
                 {
                     if ($str_replyto != '') $str_replyto .= ', ';
                     $str_replyto .= mb_encode_mimeheader($detail['name'])." <{$detail['address']}>";
@@ -329,7 +324,7 @@ abstract class mail
         }
         else
         {
-            if (mail::check($replyto)) $str_replyto = $replyto;
+            if (self::check($replyto)) $str_replyto = $replyto;
         }
 
 
@@ -362,7 +357,7 @@ abstract class mail
         );
 
         // Création du message
-        $objMessage = new Mail_mime();
+        $objMessage = new \Mail_mime();
 
         // Intégration des pièces jointes
         if (!empty($files))
@@ -404,7 +399,7 @@ abstract class mail
         $headers = $objMessage->headers($arrHeaders);
         $mail = $objMail->send($str_to, $headers, $body);
 
-        return PEAR::isError($mail) ? $mail->getMessage() : true;
+        return \PEAR::isError($mail) ? $mail->getMessage() : true;
     }
 
     /**
