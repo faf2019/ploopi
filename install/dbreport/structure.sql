@@ -1,12 +1,13 @@
 DROP TABLE IF EXISTS `ploopi_mod_dbreport_query`;
 CREATE TABLE IF NOT EXISTS `ploopi_mod_dbreport_query` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+`id` int(10) unsigned NOT NULL,
   `label` varchar(255) DEFAULT NULL,
   `standard` tinyint(1) unsigned DEFAULT '0',
   `ws_activated` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `ws_id` varchar(32) NOT NULL,
   `ws_code` varchar(32) NOT NULL,
   `ws_ip` varchar(16) NOT NULL,
+  `rowlimit` int(10) unsigned NOT NULL DEFAULT '10000',
   `transformation` enum('','pivot_table') NOT NULL DEFAULT '',
   `pivot_x` int(10) unsigned NOT NULL DEFAULT '0',
   `pivot_y` int(10) unsigned NOT NULL DEFAULT '0',
@@ -62,46 +63,35 @@ CREATE TABLE IF NOT EXISTS `ploopi_mod_dbreport_query` (
   `chart_limit_y` tinyint(3) NOT NULL DEFAULT '0',
   `chart_line_thickness` tinyint(2) unsigned NOT NULL DEFAULT '2',
   `chart_animation` tinyint(1) unsigned NOT NULL DEFAULT '1',
-  `chart_tooltip_format` varchar(255) NOT NULL DEFAULT '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.percentage:.0f}%)<br/>',
+  `chart_tooltip_format` varchar(255) NOT NULL DEFAULT '<span style="color:{series.color}">{series.name}</span>: <b>{point.y:.0f}</b> ({point.percentage:.0f}%)<br/>',
   `locked` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `id_user` int(10) unsigned DEFAULT '0',
   `id_workspace` int(10) unsigned DEFAULT '0',
   `id_module` int(10) unsigned DEFAULT '0',
-  `timestp_update` bigint(14) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
-  KEY `id_user` (`id_user`),
-  KEY `id_workspace` (`id_workspace`),
-  KEY `id_module` (`id_module`),
-  KEY `locked` (`locked`),
-  KEY `pivot_x` (`pivot_x`),
-  KEY `pivot_y` (`pivot_y`),
-  KEY `chart_x` (`chart_x`),
-  KEY `chart_y` (`chart_y`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+  `timestp_update` bigint(14) unsigned NOT NULL DEFAULT '0'
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `ploopi_mod_dbreport_queryfield`;
 CREATE TABLE IF NOT EXISTS `ploopi_mod_dbreport_queryfield` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+`id` int(10) unsigned NOT NULL,
   `tablename` varchar(100) NOT NULL,
   `id_module_type` int(10) unsigned NOT NULL DEFAULT '0',
   `fieldname` varchar(100) NOT NULL,
   `label` varchar(100) NOT NULL,
   `function` varchar(255) NOT NULL,
+  `function_group` varchar(255) NOT NULL,
   `visible` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `sort` varchar(20) NOT NULL,
-  `criteria` varchar(100) NOT NULL,
+  `criteria` text NOT NULL,
   `type_criteria` varchar(20) NOT NULL,
-  `or` varchar(100) NOT NULL,
+  `or` text NOT NULL,
   `type_or` varchar(20) NOT NULL,
-  `intervals` varchar(255) NOT NULL,
+  `intervals` text NOT NULL,
   `operation` varchar(16) NOT NULL,
   `position` int(10) unsigned NOT NULL DEFAULT '0',
   `series` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `id_query` int(10) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
-  KEY `id_module_type` (`id_module_type`),
-  KEY `id_query` (`id_query`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+  `id_query` int(10) unsigned NOT NULL DEFAULT '0'
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `ploopi_mod_dbreport_queryrelation`;
 CREATE TABLE IF NOT EXISTS `ploopi_mod_dbreport_queryrelation` (
@@ -110,37 +100,45 @@ CREATE TABLE IF NOT EXISTS `ploopi_mod_dbreport_queryrelation` (
   `fieldname_src` varchar(100) NOT NULL,
   `tablename_dest` varchar(100) NOT NULL,
   `fieldname_dest` varchar(100) NOT NULL,
-  `active` tinyint(1) unsigned NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id_query`,`tablename_src`,`fieldname_src`,`tablename_dest`,`fieldname_dest`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+  `type_join` varchar(16) NOT NULL DEFAULT 'inner',
+  `active` tinyint(1) unsigned NOT NULL DEFAULT '1'
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 DROP TABLE IF EXISTS `ploopi_mod_dbreport_querytable`;
 CREATE TABLE IF NOT EXISTS `ploopi_mod_dbreport_querytable` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+`id` int(10) unsigned NOT NULL,
   `tablename` varchar(100) NOT NULL,
   `alias` varchar(100) NOT NULL,
   `id_module_type` int(10) unsigned NOT NULL DEFAULT '0',
-  `id_query` int(10) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `tablename` (`tablename`,`alias`,`id_query`),
-  KEY `id_module_type` (`id_module_type`),
-  KEY `id_query` (`id_query`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+  `id_query` int(10) unsigned NOT NULL DEFAULT '0'
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `ploopi_mod_dbreport_query_module_type`;
 CREATE TABLE IF NOT EXISTS `ploopi_mod_dbreport_query_module_type` (
   `id_query` int(10) unsigned NOT NULL DEFAULT '0',
-  `id_module_type` int(10) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id_query`,`id_module_type`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+  `id_module_type` int(10) unsigned NOT NULL DEFAULT '0'
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 
-ALTER TABLE `ploopi_mod_dbreport_query` ADD `rowlimit` INT( 10 ) UNSIGNED NOT NULL DEFAULT '10000' AFTER `ws_ip`;
-ALTER TABLE `ploopi_mod_dbreport_query` CHANGE `chart_tooltip_format` `chart_tooltip_format` VARCHAR( 255 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL DEFAULT '<span style="color:{series.color}">{series.name}</span>: <b>{point.y:.0f}</b> ({point.percentage:.0f}%)<br/>';
-ALTER TABLE `ploopi_mod_dbreport_queryfield` ADD `function_group` VARCHAR( 255 ) NOT NULL AFTER `function`;
+ALTER TABLE `ploopi_mod_dbreport_query`
+ ADD PRIMARY KEY (`id`), ADD KEY `id_user` (`id_user`), ADD KEY `id_workspace` (`id_workspace`), ADD KEY `id_module` (`id_module`), ADD KEY `locked` (`locked`), ADD KEY `pivot_x` (`pivot_x`), ADD KEY `pivot_y` (`pivot_y`), ADD KEY `chart_x` (`chart_x`), ADD KEY `chart_y` (`chart_y`);
 
-ALTER TABLE  `ploopi_mod_dbreport_queryfield` CHANGE  `criteria`  `criteria` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL ,
-CHANGE  `or`  `or` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL ,
-CHANGE  `intervals`  `intervals` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL ;
+ALTER TABLE `ploopi_mod_dbreport_queryfield`
+ ADD PRIMARY KEY (`id`), ADD KEY `id_module_type` (`id_module_type`), ADD KEY `id_query` (`id_query`);
 
-ALTER TABLE `ploopi_mod_dbreport_queryrelation` ADD `type_join` VARCHAR(16) NOT NULL DEFAULT 'inner' AFTER `fieldname_dest`;
+ALTER TABLE `ploopi_mod_dbreport_queryrelation`
+ ADD PRIMARY KEY (`id_query`,`tablename_src`,`fieldname_src`,`tablename_dest`,`fieldname_dest`);
+
+ALTER TABLE `ploopi_mod_dbreport_querytable`
+ ADD PRIMARY KEY (`id`), ADD UNIQUE KEY `tablename` (`tablename`,`alias`,`id_query`), ADD KEY `id_module_type` (`id_module_type`), ADD KEY `id_query` (`id_query`);
+
+ALTER TABLE `ploopi_mod_dbreport_query_module_type`
+ ADD PRIMARY KEY (`id_query`,`id_module_type`);
+
+
+ALTER TABLE `ploopi_mod_dbreport_query`
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT;
+ALTER TABLE `ploopi_mod_dbreport_queryfield`
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT;
+ALTER TABLE `ploopi_mod_dbreport_querytable`
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT;
