@@ -105,7 +105,7 @@ class form_checkbox_list extends form_field
                 }
             }
 
-            $strValue = form::htmlentities($strValue);
+            $strValue = form::htmlentities($mixValue);
             $strKey = form::htmlentities($strKey);
 
             $strDataset = implode(' ', $arrDataset);
