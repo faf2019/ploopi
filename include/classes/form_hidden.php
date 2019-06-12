@@ -59,10 +59,11 @@ class form_hidden extends form_field
     {
         $strOutput = '';
 
+        $strProperties = $this->generateProperties();
         $strClass = is_null($this->_arrOptions['class']) ? '' : " {$this->_arrOptions['class']}";
         $strValue = form::htmlentities($this->_arrValues[0]);
 
-        $strOutput .= "<input type=\"hidden\" name=\"{$this->_strName}\" id=\"{$this->_strId}\" value=\"{$strValue}\"{$strClass} />";
+        $strOutput .= "<input type=\"hidden\" name=\"{$this->_strName}\" id=\"{$this->_strId}\" value=\"{$strValue}\"{$strClass}{$strProperties} />";
 
         return $strOutput;
     }
