@@ -204,7 +204,7 @@ class form_field extends form_element
                 if (isset($this->_arrOptions['max']) && is_numeric($this->_arrOptions['max'])) $strMinMax .= " max=\"{$this->_arrOptions['max']}\"";
                 if (isset($this->_arrOptions['step']) && is_numeric($this->_arrOptions['step'])) $strMinMax .= " step=\"{$this->_arrOptions['step']}\"";
 
-                $strOutput .= "<input type=\"number\" name=\"{$this->_strName}\" id=\"{$this->_strId}\" value=\"{$strValue}\" tabindex=\"{$intTabindex}\"{$strProperties}{$strMaxLength}{$strEvents}{$strPlaceHolder}{$strMinMax} />";
+                $strOutput .= "<input type=\"number\" lang=\"en\" name=\"{$this->_strName}\" id=\"{$this->_strId}\" value=\"{$strValue}\" tabindex=\"{$intTabindex}\"{$strProperties}{$strMaxLength}{$strEvents}{$strPlaceHolder}{$strMinMax} />";
             break;
 
             case 'input:email':
