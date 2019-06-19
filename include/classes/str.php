@@ -67,11 +67,11 @@ abstract class str {
             switch($mode)
             {
                 case 'left':
-                    $str = substr($str,0,$len).'...';
+                    $str = mb_substr($str,0,$len).'...';
                 break;
 
                 case 'middle':
-                    $str = substr($str,0,($len-3)/2).'...'.substr($str,-($len-3)/2,($len-3)/2);
+                    $str = mb_substr($str,0,($len-3)/2).'...'.mb_substr($str,-($len-3)/2,($len-3)/2);
                 break;
             }
 
