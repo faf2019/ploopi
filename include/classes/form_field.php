@@ -146,6 +146,7 @@ class form_field extends form_element
             case 'input:number':
             case 'input:email':
             case 'input:date':
+            case 'input:month':
             case 'input:password':
             case 'input:button':
             case 'input:submit':
@@ -213,6 +214,10 @@ class form_field extends form_element
 
             case 'input:date':
                 $strOutput .= "<input type=\"date\" name=\"{$this->_strName}\" id=\"{$this->_strId}\" value=\"{$strValue}\" tabindex=\"{$intTabindex}\"{$strProperties}{$strMaxLength}{$strEvents}{$strPlaceHolder} />";
+            break;
+
+            case 'input:month':
+                $strOutput .= "<input type=\"month\" name=\"{$this->_strName}\" id=\"{$this->_strId}\" value=\"{$strValue}\" tabindex=\"{$intTabindex}\"{$strProperties}{$strMaxLength}{$strEvents}{$strPlaceHolder} />";
             break;
 
             case 'input:text':

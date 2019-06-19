@@ -82,6 +82,7 @@ abstract class form_element
         'input:number',
         'input:email',
         'input:date',
+        'input:month',
         'input:password',
         'input:file',
         'textarea',
