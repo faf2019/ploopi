@@ -236,7 +236,7 @@ abstract class arr
                 'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT,
                 'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
                 'wrap' => true,
-                'shrinkToFit' => true,
+                //'shrinkToFit' => false,
             )
         );
 
@@ -247,8 +247,9 @@ abstract class arr
             ),
             'alignment' => array(
                 'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+                'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
                 'wrap' => true,
-                'shrinkToFit' => true,
+                //'shrinkToFit' => false,
             ),
             'fill' => array(
                 'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
@@ -270,6 +271,7 @@ abstract class arr
 
         // Style par défaut pour la feuille
         $objWorkSheet->getParent()->getDefaultStyle()->applyFromArray($rowDefaultStyle);
+        $objWorkSheet->getParent()->getDefaultStyle()->getAlignment()->setWrapText(true);
 
         // Titre
         $objWorkSheet->setTitle($strSheetName);
@@ -277,6 +279,7 @@ abstract class arr
         // Fit to page
         $objWorkSheet->getPageSetup()->setFitToWidth($arrOptions['fitpage_width']);
         $objWorkSheet->getPageSetup()->setFitToHeight($arrOptions['fitpage_height']);
+        $objWorkSheet->getDefaultRowDimension()->setRowHeight(-1);
 
         // Paysage
         if ($arrOptions['landscape']) $objWorkSheet->getPageSetup()->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
@@ -363,12 +366,9 @@ abstract class arr
                     $intCol++;
                 }
 
-                //$objWorkSheet->getRowDimension($intLine)->setRowHeight(-1);
                 $intLine++;
             }
 
-            $objWorkSheet->getDefaultRowDimension()->setRowHeight(-1);
-            //$objWorkSheet->getColumnDimension(A)->setAutoSize(true);
             // Traitement des contenus
             $intCol = 0;
 
@@ -429,6 +429,8 @@ abstract class arr
 
                 // Largeur de colonne
                 if (isset($arrDataFormats[$strKey]['width'])) $objWorkSheet->getColumnDimension(chr($intCol+65))->setWidth($arrDataFormats[$strKey]['width']);
+                // Largeur de colonne automatique
+                else $objWorkSheet->getColumnDimension($chrCol)->setAutoSize(true);
 
                 $intCol++;
 
