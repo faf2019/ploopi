@@ -390,9 +390,9 @@ abstract class loader
         unset($strGlobalVar);
         unset($_REQUEST['ploopi_url']);
 
-        $_GET = security::filtervar($_GET, null, !empty($_POST['ploopi_xhr']));;
-        $_POST = security::filtervar($_POST, null, !empty($_POST['ploopi_xhr']));
-        $_REQUEST = security::filtervar($_REQUEST, null, !empty($_POST['ploopi_xhr']));
+        $_GET = security::filtervar($_GET);
+        $_POST = security::filtervar($_POST);
+        $_REQUEST = security::filtervar($_REQUEST);
         $_COOKIE = security::filtervar($_COOKIE);
         $_SERVER = security::filtervar($_SERVER);
     }

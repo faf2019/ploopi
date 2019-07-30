@@ -109,20 +109,18 @@ abstract class security
      * @author Ovensia
      */
 
-    public static function filtervar($mixVar, $strVarName = null, $booUtf8 = false)
+    public static function filtervar($mixVar, $strVarName = null)
     {
         if (is_array($mixVar))
         {
             foreach($mixVar as $strKey => $mixValue)
             {
-                $mixVar[$strKey] = self::filtervar($mixValue, is_null($strVarName) ? $strKey : $strVarName, $booUtf8);
+                $mixVar[$strKey] = self::filtervar($mixValue, is_null($strVarName) ? $strKey : $strVarName);
             }
         }
         else
         {
             if (get_magic_quotes_gpc()) $mixVar = stripslashes($mixVar);
-
-            if ($booUtf8) $mixVar = utf8_decode($mixVar);
 
             if ((!defined(_PLOOPI_FILTER_VARS) || _PLOOPI_FILTER_VARS) && substr($strVarName,0,4) != 'fck_') $mixVar = inputfilter::process($mixVar);
         }
