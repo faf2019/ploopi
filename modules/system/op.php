@@ -50,8 +50,7 @@ if ($_SESSION['ploopi']['connected'])
             unset($_POST['user_password']);
             unset($_POST['user_login']);
 
-            $user->setvalues($_POST,'user_');
-
+            $user->setvalues(array_map('utf8_decode', $_POST),'user_');
 
             // Affectation nouveau mot de passe
             $error = '';
@@ -61,7 +60,7 @@ if ($_SESSION['ploopi']['connected'])
                 if ($_POST['usernewpass'] != '')
                 {
                     // Vérification de l'ancien mot de passe
-                    if (strcmp($user->fields['password'], user::generate_hash($_POST['useroldpass'], $user->fields['login'])) == 0)
+                    if (ploopi\user::password_verify($_POST['useroldpass'], $user->fields['login'], $user->fields['password']))
                     {
                         // Mots de passes équivalents
                         if ($_POST['usernewpass'] == $_POST['usernewpass_confirm'])
