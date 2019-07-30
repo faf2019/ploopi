@@ -50,7 +50,7 @@ if ($_SESSION['ploopi']['connected'])
             unset($_POST['user_password']);
             unset($_POST['user_login']);
 
-            $user->setvalues(array_map('utf8_decode', $_POST),'user_');
+            $user->setvalues($_POST,'user_');
 
             // Affectation nouveau mot de passe
             $error = '';
