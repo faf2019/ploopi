@@ -99,6 +99,7 @@ class form_field extends form_element
         'class' => null,
         'class_form' => null,
         'required' => false,
+        'raw' => false,
         'datatype' => 'string',
         'maxlength' => null,
         'autocomplete' => true,
@@ -172,6 +173,8 @@ class form_field extends form_element
      */
     protected function renderForm($strOutputField = '')
     {
+        if ($this->_arrOptions['raw']) return $strOutputField;
+
         $strRequired = $this->_arrOptions['required'] ? ' class="required"' : '';
         $strAccesskey = is_null($this->_arrOptions['accesskey']) ? '' : " accesskey=\"{$this->_arrOptions['accesskey']}\"";
         $strStyleform = is_null($this->_arrOptions['style_form']) ? '' : " style=\"{$this->_arrOptions['style_form']}\"";
