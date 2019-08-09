@@ -76,7 +76,7 @@ class serializedvar
     {
         if (session::get_usedb())
         {
-            return (session::get_db()->query("SELECT `data` FROM `ploopi_serializedvar` WHERE `id` = '".ploopi_session::get_db()->addslashes($this->strId)."' AND `id_session` = '".ploopi_session::get_db()->addslashes(session_id())."'") && $arrRecord = ploopi_session::get_db()->fetchrow()) ? unserialize(gzuncompress($arrRecord['data'])) : false;
+            return (session::get_db()->query("SELECT `data` FROM `ploopi_serializedvar` WHERE `id` = '".session::get_db()->addslashes($this->strId)."' AND `id_session` = '".session::get_db()->addslashes(session_id())."'") && $arrRecord = session::get_db()->fetchrow()) ? unserialize(gzuncompress($arrRecord['data'])) : false;
         }
         elseif (session::get_usemc())
         {

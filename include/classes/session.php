@@ -304,7 +304,7 @@ class session
     {
         if (self::$booUseDb)
         {
-            self::$objDb->query("DELETE FROM `crypt::serializedvar` WHERE `id_session` = '".self::$objDb->addslashes($id)."'");
+            self::$objDb->query("DELETE FROM `ploopi_serializedvar` WHERE `id_session` = '".self::$objDb->addslashes($id)."'");
             self::$objDb->query("DELETE FROM `ploopi_session` WHERE `id` = '".self::$objDb->addslashes($id)."'");
         }
         elseif (self::$booUseMc)
@@ -332,7 +332,7 @@ class session
         if (self::$booUseDb)
         {
             // Delete serialized vars
-            self::$objDb->query("DELETE `crypt::serializedvar` FROM  `ploopi_session`, `crypt::serializedvar` WHERE `ploopi_session`.`access` < '".self::$objDb->addslashes((time() - $max))."' AND  `ploopi_session`.`id` =  `crypt::serializedvar`.`id_session`");
+            self::$objDb->query("DELETE `ploopi_serializedvar` FROM  `ploopi_session`, `ploopi_serializedvar` WHERE `ploopi_session`.`access` < '".self::$objDb->addslashes((time() - $max))."' AND  `ploopi_session`.`id` =  `ploopi_serializedvar`.`id_session`");
             // Delete session vars
             self::$objDb->query("DELETE `ploopi_session` FROM  `ploopi_session` WHERE `ploopi_session`.`access` < '".self::$objDb->addslashes((time() - $max))."'");
         }
