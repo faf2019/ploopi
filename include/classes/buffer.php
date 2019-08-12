@@ -51,6 +51,8 @@ abstract class buffer
 
     public static function callback($buffer)
     {
+        include_once './include/classes/db.php';
+
         $db = db::connected() ? db::get() : null;
 
         if (!strlen(trim($buffer))) return '';

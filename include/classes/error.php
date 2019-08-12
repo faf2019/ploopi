@@ -189,7 +189,7 @@ abstract class error
     }
 
     /**
-     * Active le gestionnaire d'erreur interne Ã  Ploopi
+     * Active le gestionnaire d'erreur interne de Ploopi
      */
     public static function set_handler()
     {
@@ -198,7 +198,7 @@ abstract class error
     }
 
     /**
-     * DÃ©sactive le gestionnaire d'erreur interne Ã  Ploopi
+     * Désactive le gestionnaire d'erreur interne de Ploopi
      */
     public static function unset_handler()
     {

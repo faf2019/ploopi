@@ -217,9 +217,6 @@ class session
      */
     public static function open()
     {
-        ini_set('session.gc_probability', 10);
-        ini_set('session.gc_maxlifetime', _PLOOPI_SESSIONTIME);
-
         self::_initdb();
 
         return true;

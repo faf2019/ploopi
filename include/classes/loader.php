@@ -228,6 +228,8 @@ abstract class loader
         /**
          * Démarrage de la session
          */
+        ini_set('session.gc_probability', 10);
+        ini_set('session.gc_maxlifetime', _PLOOPI_SESSIONTIME);
         session_start();
 
         /**

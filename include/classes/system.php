@@ -59,7 +59,7 @@ abstract class system
                 mail(
                     _PLOOPI_SYSMAIL,
                     "[".error::$errorlevel[error::$level]."] sur [{$strHost}]",
-                    "{error::$nb} erreur(s) sur {error::$msg}".
+                    error::$nb." erreur(s) sur ".error::$msg.
                     "\n_SERVER:\n".print_r($_SERVER, true).
                     "\n_POST:\n".print_r($_POST, true).
                     "\n_GET:\n".print_r($_GET, true),
