@@ -275,7 +275,7 @@ class session
         }
         elseif (self::$booUseMc)
         {
-            self::$objMc->set("session_{$id}", $data, 0, _PLOOPI_SESSIONTIME);
+            self::$objMc->set("session_{$id}", $data, _PLOOPI_SESSIONTIME);
         }
         else
         {
