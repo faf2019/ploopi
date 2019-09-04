@@ -175,11 +175,6 @@ abstract class loader
         include_once './vendor/autoload.php';
 
         /**
-         * Création du buffer principal.
-         */
-        ob_start(array(__NAMESPACE__.'\\buffer', 'callback'));
-
-        /**
          * Chargement du fichier de configuration
          */
         if (!file_exists('./config/config.php'))
@@ -189,6 +184,11 @@ abstract class loader
         }
 
         include_once './config/config.php'; // load config (mysql, path, etc.)
+
+        /**
+         * Création du buffer principal.
+         */
+        buffer::start();
 
         /**
          * Initialisation du gestionnaire d'erreur
