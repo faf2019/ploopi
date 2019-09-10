@@ -78,7 +78,8 @@
         "ckeditor/ckeditor": "^4.5",
         "pear/net_smtp": "^1.8",
         "pear/mail": "^1.4",
-        "pear/mail_mime": "^1.10"
+        "pear/mail_mime": "^1.10",
+        "pear/spreadsheet_excel_writer": "^0.9.4"
     },
     "scripts": {
         "post-create-project-cmd": [

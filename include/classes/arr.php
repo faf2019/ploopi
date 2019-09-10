@@ -178,6 +178,145 @@ abstract class arr
     }
 
     /**
+     * Retourne le contenu d'un tableau à 2 dimensions au format XLS (ISO-8859-1)
+     *
+     * @param array $arrArray tableau de données
+     * @param boolean $booHeader true si la ligne d'entête doit être ajoutée (nom des colonnes)
+     * @param string $strFileName nom du fichier
+     * @param string $strSheetName nom de la feuille dans le document XLS
+     * @param array $arrDataFormats formats des colonnes ('title', 'type', 'width')
+     * @param array $arrOptions Options de configuration de l'export ('landscape', 'fitpage_width', 'fitpage_height', 'tofile', 'setborder', 'textwrap')
+     * @return binary contenu XLS
+     */
+    function toxls($arrArray, $booHeader = true, $strFileName = 'document.xls', $strSheetName = 'Feuille', $arrDataFormats = null, $arrOptions = null)
+    {
+        $arrDefautOptions = array(
+            'landscape' => true,
+            'fitpage_width' => true,
+            'fitpage_height' => false,
+            'tofile' => false,
+            'setborder' => false,
+            'textwrap' => true,
+        );
+
+        $arrOptions = empty($arrOptions) ? $arrDefautOptions : array_merge($arrDefautOptions, $arrOptions);
+
+        // Création du document
+        if ($arrOptions['tofile']) $objWorkBook = new \Spreadsheet_Excel_Writer($strFileName);
+        else { $objWorkBook = new \Spreadsheet_Excel_Writer(); $objWorkBook->send($strFileName); }
+
+
+        $objFormatTitle = $objWorkBook->addFormat( array( 'Align' => 'center', 'TextWrap' => 1, 'Bold'  => 1, 'Color'  => 'black', 'Size'  => 10, 'vAlign' => 'vcenter', 'FgColor' => 'silver'));
+        if ($arrOptions['setborder']) { $objFormatTitle->setBorder(1); $objFormatTitle->setBorderColor('black'); }
+        if ($arrOptions['textwrap']) { $objFormatTitle->setTextWrap(); }
+        $objFormatDefault = $objWorkBook->addFormat( array( 'TextWrap' => 1, 'Align' => 'left', 'Bold'  => 0, 'Color'  => 'black', 'Size'  => 10, 'vAlign' => 'vcenter'));
+        if ($arrOptions['setborder']) { $objFormatDefault->setBorder(1); $objFormatDefault->setBorderColor('black'); }
+        if ($arrOptions['textwrap']) { $objFormatDefault->setTextWrap(); }
+
+        // Définition des différents formats numériques/text
+        $arrFormats = array(
+            'string' => null,
+            'float' => null,
+            'float_percent' => null,
+            'float_euro' => null,
+            'integer' => null,
+            'integer_percent' => null,
+            'integer_euro' => null,
+            'date' => null,
+            'datetime' => null
+        );
+
+        foreach($arrFormats as $strKey => &$objFormat)
+        {
+            $objFormat = $objWorkBook->addFormat( array( 'Align' => 'right', 'TextWrap' => 1, 'Bold'  => 0, 'Color'  => 'black', 'Size'  => 10, 'vAlign' => 'vcenter'));
+            if ($arrOptions['setborder']) { $objFormat->setBorder(1); $objFormat->setBorderColor('black'); }
+            if ($arrOptions['textwrap']) { $objFormat->setTextWrap(); }
+
+            switch($strKey)
+            {
+                case 'string': $objFormat->setAlign('left'); break;
+                case 'float': $objFormat->setNumFormat('#,##0.00;-#,##0.00'); break;
+                case 'float_percent': $objFormat->setNumFormat('#,##0.00 %;-#,##0.00 %'); break;
+                case 'float_euro': $objFormat->setNumFormat(utf8_decode('#,##0.00 ;-#,##0.00 ')); break;
+                case 'integer': $objFormat->setNumFormat('#,##0;-#,##0'); break;
+                case 'integer_percent': $objFormat->setNumFormat('#,##0 %;-#,##0 %'); break;
+                case 'integer_euro': $objFormat->setNumFormat('#,##0 ;-#,##0 '); break;
+                case 'date': $objFormat->setNumFormat('DD/MM/YYYY'); break;
+                case 'datetime' : $objFormat->setNumFormat('DD/MM/YYYY HH:MM:SS'); break;
+            }
+        }
+        unset($objFormat);
+
+        $objWorkSheet = $objWorkBook->addWorksheet($strSheetName);
+        /*
+        $objWorkBook->setVersion(8);
+        $objWorkSheet->setInputEncoding('UTF-8');
+        */
+
+        if ($arrOptions['fitpage_width'] || $arrOptions['fitpage_height']) $objWorkSheet->fitToPages($arrOptions['fitpage_width'] ? 1 : 0, $arrOptions['fitpage_height'] ? 1 : 0);
+        if ($arrOptions['landscape']) $objWorkSheet->setLandscape();
+
+        if (!empty($arrArray))
+        {
+            // Définition des formats de colonnes
+            if (!empty($arrDataFormats))
+            {
+                $intCol = 0;
+                foreach(array_keys(reset($arrArray)) as $strKey)
+                {
+                    if (isset($arrDataFormats[$strKey]['width'])) $objWorkSheet->setColumn($intCol, $intCol, $arrDataFormats[$strKey]['width']);
+                    $intCol++;
+                }
+            }
+
+            // Ajout de la ligne d'entête
+            if ($booHeader)
+            {
+                $intCol = 0;
+                foreach(array_keys(reset($arrArray)) as $strKey) $objWorkSheet->writeString(0, $intCol++, isset($arrDataFormats[$strKey]['title']) ? utf8_decode($arrDataFormats[$strKey]['title']) : $strKey, $objFormatTitle);
+            }
+            // Traitement des contenus
+            $intLine = 1;
+            foreach($arrArray as $row)
+            {
+                $intCol = 0;
+                foreach($row as $strKey => $strValue)
+                {
+                    if (empty($arrDataFormats[$strKey]['type'])) $arrDataFormats[$strKey]['type'] = 'string';
+
+                    // On vérifie si un format de donné est proposé pour le champ
+                    $objFormat = (!empty($arrDataFormats[$strKey]['type']) && !empty($arrFormats[$arrDataFormats[$strKey]['type']])) ? $arrFormats[$arrDataFormats[$strKey]['type']] : $objFormatDefault;
+
+                    switch($arrDataFormats[$strKey]['type'])
+                    {
+                        case 'float':
+                        case 'float_percent':
+                        case 'float_euro':
+                        case 'integer':
+                        case 'integer_percent':
+                        case 'integer_euro':
+                        case 'date':
+                        case 'datetime':
+                            if ($strValue != '') $objWorkSheet->writeNumber($intLine, $intCol, $strValue, $objFormat);
+                        break;
+
+                        default:
+                            $objWorkSheet->writeString($intLine, $intCol, utf8_decode($strValue), $objFormat);
+                        break;
+                    }
+                    $intCol++;
+                }
+                $intLine++;
+            }
+        }
+
+        // fermeture du document
+        $objWorkBook->close();
+
+        return true;
+    }
+
+    /**
      * Retourne le contenu d'un tableau à 2 dimensions aux formats XLSX / XLS
      *
      * @param array $arrArray tableau de données
