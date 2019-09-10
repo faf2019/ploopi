@@ -188,7 +188,7 @@ abstract class arr
      * @param array $arrOptions Options de configuration de l'export ('landscape', 'fitpage_width', 'fitpage_height', 'tofile', 'setborder', 'textwrap')
      * @return binary contenu XLS
      */
-    function toxls($arrArray, $booHeader = true, $strFileName = 'document.xls', $strSheetName = 'Feuille', $arrDataFormats = null, $arrOptions = null)
+    public static function toxls($arrArray, $booHeader = true, $strFileName = 'document.xls', $strSheetName = 'Feuille', $arrDataFormats = null, $arrOptions = null)
     {
         $arrDefautOptions = array(
             'landscape' => true,
@@ -240,7 +240,7 @@ abstract class arr
                 case 'float_euro': $objFormat->setNumFormat(utf8_decode('#,##0.00 ;-#,##0.00 ')); break;
                 case 'integer': $objFormat->setNumFormat('#,##0;-#,##0'); break;
                 case 'integer_percent': $objFormat->setNumFormat('#,##0 %;-#,##0 %'); break;
-                case 'integer_euro': $objFormat->setNumFormat('#,##0 ;-#,##0 '); break;
+                case 'integer_euro': $objFormat->setNumFormat(utf8_decode('#,##0 ;-#,##0 ')); break;
                 case 'date': $objFormat->setNumFormat('DD/MM/YYYY'); break;
                 case 'datetime' : $objFormat->setNumFormat('DD/MM/YYYY HH:MM:SS'); break;
             }
@@ -273,7 +273,7 @@ abstract class arr
             if ($booHeader)
             {
                 $intCol = 0;
-                foreach(array_keys(reset($arrArray)) as $strKey) $objWorkSheet->writeString(0, $intCol++, isset($arrDataFormats[$strKey]['title']) ? utf8_decode($arrDataFormats[$strKey]['title']) : $strKey, $objFormatTitle);
+                foreach(array_keys(reset($arrArray)) as $strKey) $objWorkSheet->writeString(0, $intCol++, isset($arrDataFormats[$strKey]['title']) ? iconv('UTF-8', 'CP1252', $arrDataFormats[$strKey]['title']) : $strKey, $objFormatTitle);
             }
             // Traitement des contenus
             $intLine = 1;
@@ -301,7 +301,7 @@ abstract class arr
                         break;
 
                         default:
-                            $objWorkSheet->writeString($intLine, $intCol, utf8_decode($strValue), $objFormat);
+                            $objWorkSheet->writeString($intLine, $intCol, iconv('UTF-8', 'CP1252', $strValue), $objFormat);
                         break;
                     }
                     $intCol++;
