@@ -86,12 +86,12 @@ class db
     private $database;
 
     /**
-     * Identifiant de connexion MySQL
+     * Objet mysqli
      *
-     * @var ressource
+     * @var mysqli
      */
 
-    private $connection_id;
+    private $mysqli;
 
     /**
      * Pointeur sur le résultat de la dernière requête exécutée
@@ -224,6 +224,15 @@ class db
         return !is_null(self::$_objDb);
     }
 
+    /**
+     * Retourne le connecteur vers la base de données
+     *
+     * @reeturn mysqli
+     */
+
+    public function getconnector() {
+        return $this->mysqli;
+    }
 
     /**
      * Choix d'une base
@@ -697,5 +706,6 @@ class db
     public function get_log() { return $this->arrLog; }
 
     public function flush_log() { $this->arrLog = array(); }
+
 
 }
