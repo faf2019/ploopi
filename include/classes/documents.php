@@ -223,7 +223,12 @@ abstract class documents {
         // on va chercher la racine
         $db->query("SELECT md5id FROM ploopi_documents_folder WHERE id_folder = 0 AND id_object = '{$_SESSION['documents'][$documents_id]['id_object']}' AND id_module = '{$_SESSION['documents'][$documents_id]['id_module']}' AND id_record = '".addslashes($_SESSION['documents'][$documents_id]['id_record'])."'");
 
-        if ($row = $db->fetchrow()) $currentfolder = $row['md5id'];
+        if ($row = $db->fetchrow()) {
+            $currentfolder = $row['md5id'];
+            $id = $row['id'];
+            $documentsfolder = new documentsfolder();
+            $documentsfolder->open($id);
+        }
         else // racine inexistante, il faut la créer
         {
             $documentsfolder = new documentsfolder();
@@ -236,11 +241,26 @@ abstract class documents {
             $documentsfolder->fields['id_workspace'] = $_SESSION['documents'][$documents_id]['id_workspace'];
             $id =  $documentsfolder->save();
             $currentfolder = $documentsfolder->fields['md5id'];
+        }
 
-            if (is_array($default_folders))
+        if (is_array($default_folders))
+        {
+            // on vérifie si les sous-dossiers ont déjà été créés.
+            $rs = $db->query("
+                SELECT  name
+                FROM    ploopi_documents_folder
+                WHERE   id_folder = {$id}
+                AND     id_object = '{$_SESSION['documents'][$documents_id]['id_object']}'
+                AND     id_module = '{$_SESSION['documents'][$documents_id]['id_module']}'
+                AND     id_record = '".addslashes($_SESSION['documents'][$documents_id]['id_record'])."'
+                AND     system = 1
+            ");
+
+            $folders = $db->getarray($rs, true);
+
+            foreach ($default_folders as $foldername)
             {
-                foreach ($default_folders as $foldername)
-                {
+                if (!isset($folders[$foldername])) {
                     $documentsfolder = new documentsfolder();
                     $documentsfolder->fields['id_folder'] = $id;
                     $documentsfolder->fields['id_object'] = $_SESSION['documents'][$documents_id]['id_object'];
