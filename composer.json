@@ -73,7 +73,7 @@
         "components/jquery": "^3.1",
         "components/jqueryui": "^1.12",
         "components/highlightjs": "^9.5",
-        "EastDesire/jscolor": "2.0.4",
+        "eastdesire/jscolor": "2.0.4",
         "swfobject/swfobject": "2.3",
         "ckeditor/ckeditor": "^4.5",
         "pear/net_smtp": "^1.8",
