@@ -1,3 +1,9 @@
+== Module FORMS - version 3.6.7 =====================================================
+
+2019-10-21  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+* Correction d'un bug dans le filtre sur les espaces de travail
+
 == Module FORMS - version 3.6.6 =====================================================
 
 2018-09-06  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>

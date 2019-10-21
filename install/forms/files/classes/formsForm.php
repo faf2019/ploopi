@@ -302,7 +302,8 @@ class formsForm extends data_object
             break;
 
             case 'desc':
-                $arrWorkspaces = explode(';',$_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['parents']);
+                if (isset($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['parents'])) $arrWorkspaces = explode(';',$_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['parents']);
+                else $arrWorkspaces = array();
                 $arrWorkspaces[] = $_SESSION['ploopi']['workspaceid'];
                 $strWorkspaces = implode(',', $arrWorkspaces);
             break;
