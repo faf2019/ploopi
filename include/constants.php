@@ -30,8 +30,8 @@
  * @author Ovensia
  */
 
-define ('_PLOOPI_VERSION', '1.9.7.1');
-define ('_PLOOPI_REVISION', '181213');
+define ('_PLOOPI_VERSION', '1.9.7.2');
+define ('_PLOOPI_REVISION', '191205');
 
 define ('_PLOOPI_MSG_DBERROR',  'Database connection error, please contact administrator');
 define ('_SYSTEM_SYSTEMADMIN',  0);

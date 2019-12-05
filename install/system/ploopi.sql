@@ -824,7 +824,7 @@ CREATE TABLE `ploopi_module_type` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 INSERT INTO `ploopi_module_type` (`id`, `label`, `system`, `publicparam`, `description`, `version`, `author`, `date`) VALUES
-(1, 'system', 1, 0, 'Noyau du système', '1.9.7.1', 'Ovensia', '20181213000000');
+(1, 'system', 1, 0, 'Noyau du système', '1.9.7.1', 'Ovensia', '20190430000000');
 
 CREATE TABLE `ploopi_module_workspace` (
   `id_module` int(10) UNSIGNED NOT NULL DEFAULT '0',
@@ -1491,3 +1491,6 @@ ALTER TABLE `ploopi_validation`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 ALTER TABLE `ploopi_workspace`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+UPDATE `ploopi_module_type` SET `version` = '1.9.7.2', `author` = 'Ovensia', `date` = '20191205000000', `description` = 'Noyau du système' WHERE `ploopi_module_type`.`id` = 1;
+  
