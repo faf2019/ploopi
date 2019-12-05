@@ -254,23 +254,27 @@ function ploopi_tickets_getnew()
     global $db;
 
     $sql =  "
-            SELECT      t.id
+        SELECT      t.id
+        FROM        ploopi_ticket t
+        LEFT JOIN   ploopi_ticket_watch tw
+        ON          tw.id_ticket = t.id
+        AND         tw.id_user = {$_SESSION['ploopi']['userid']}
+        WHERE       t.id_user = {$_SESSION['ploopi']['userid']} AND t.deleted = 0
+        AND         isnull(tw.notify)
 
-            FROM        ploopi_ticket t
+        UNION
 
-            INNER JOIN  ploopi_ticket_dest td
-            ON          td.id_ticket = t.id
-
-            LEFT JOIN   ploopi_ticket_watch tw
-            ON          tw.id_ticket = t.id
-            AND         tw.id_user = {$_SESSION['ploopi']['userid']}
-
-            WHERE       ((t.id_user = {$_SESSION['ploopi']['userid']} AND t.deleted = 0) OR (td.id_user = {$_SESSION['ploopi']['userid']} AND td.deleted = 0))
-            AND         isnull(tw.notify)
-
-            GROUP BY t.id
-            ORDER BY t.id DESC
-            ";
+        SELECT      t.id
+        FROM        ploopi_ticket t
+        INNER JOIN  ploopi_ticket_dest td
+        ON          td.id_ticket = t.id
+        AND         td.id_user = {$_SESSION['ploopi']['userid']}
+        AND         td.deleted = 0
+        LEFT JOIN   ploopi_ticket_watch tw
+        ON          tw.id_ticket = t.id
+        AND         tw.id_user = {$_SESSION['ploopi']['userid']}
+        WHERE       isnull(tw.notify)
+    ";
 
     $rs = $db->query($sql);
 
