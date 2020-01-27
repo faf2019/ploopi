@@ -1,3 +1,10 @@
+== Module FORMS - version 3.6.8 =====================================================
+
+2020-01-27  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+* Correction d'un bug dans la mise en cache des données du formulaire (jeton manquant)
+* Correction d'un bug dans l'utilisation du cache des données du formulaire (pré-remplissage avec des données d'un autre enregistrement)
+
 == Module FORMS - version 3.6.7 =====================================================
 
 2019-10-21  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>

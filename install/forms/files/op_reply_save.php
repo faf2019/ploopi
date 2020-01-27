@@ -362,7 +362,7 @@ if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open
 
     // Sauvegarde en session
     ploopi_setsessionvar($strVarName, null);
-    setcookie($strVarName, null, 0);
+    setcookie($strVarName, '', time() - 3600);
 
     /**
      * Il y avait au moins un champ de type "file"

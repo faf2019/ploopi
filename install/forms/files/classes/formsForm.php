@@ -2180,7 +2180,7 @@ class formsForm extends data_object
 
             ploopi.{$strFormId}_quicksave = function(mode) {
                 query = $('{$strFormId}').serialize();
-                query += (query == '' ? '' : '&')+'ploopi_xhr=1&ploopi_op=forms_quicksave&forms_form_id={$this->fields['id']}&forms_mode='+mode+'&forms_panel='+ploopi.currentpanel;
+                query += (query == '' ? '' : '&')+'".ploopi_queryencode("ploopi_xhr=1&ploopi_op=forms_quicksave&forms_form_id={$this->fields['id']}")."&forms_mode='+mode+'&forms_panel='+ploopi.currentpanel;
                 ploopi_xmlhttprequest('admin-light.php', query, false, false, 'POST');
             };
 

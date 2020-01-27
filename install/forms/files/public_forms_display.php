@@ -56,6 +56,11 @@ switch($op)
 
 $intReplyId = isset($_REQUEST['record_id']) && is_numeric($_REQUEST['record_id']) ? $_REQUEST['record_id'] : null;
 
+$strVarName = formsForm::getVarName($objForm->fields['id']).'_save';
+ploopi_setsessionvar($strVarName, null);
+setcookie($strVarName, '', time() - 3600);
+unset($_COOKIE[$strVarName]);
+
 echo $skin->open_simplebloc();
 
 $objForm->render($intReplyId, $strRenderMode);
