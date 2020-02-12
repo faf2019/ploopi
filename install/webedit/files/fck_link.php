@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,19 +21,19 @@
 */
 
 /**
- * Explorateur de rubriques/pages intégré à FCKeditor
+ * Explorateur de rubriques/pages intÃ©grÃ© Ã  FCKeditor
  *
  * @package webedit
  * @subpackage fckeditor
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
- * Ce script peut être appelé depuis le module WebEdit (lien vers un article) ou depuis un module externe (via FCKeditor).
+ * Ce script peut Ãªtre appelÃ© depuis le module WebEdit (lien vers un article) ou depuis un module externe (via FCKeditor).
  * Il faut donc 'choisir' le moduleid de travail.
- * Par défaut on prend le module WEBEDIT sur lequel on est déjà.
+ * Par dÃ©faut on prend le module WEBEDIT sur lequel on est dÃ©jÃ .
  */
 if (isset($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['moduletype']) && $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['moduletype'] == 'webedit')
 {

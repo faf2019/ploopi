@@ -1,6 +1,6 @@
 <?php
 /*
- Copyright (c) 2007-2016 Ovensia
+ Copyright (c) 2007-2018 Ovensia
  Copyright (c) 2009 HeXad
  Contributors hold Copyright (c) to their code submissions.
 
@@ -22,13 +22,13 @@
  */
 
 /**
- * Affichage du backend des pages publiées en frontoffice
+ * Affichage du backend des pages publiÃ©es en frontoffice
  *
  * @package webedit
  * @subpackage backend
  * @copyright Ovensia, HeXad
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 $strbackendtype = isset($_GET['backendtype']) ? $_GET['backendtype'] : '';
@@ -37,7 +37,7 @@ switch ($strbackendtype)
 {
     case 'tagcloud3D':
         /**
-         * Génération du fichier XML pour le nuage de tags en fonction des articles publiés
+         * GÃ©nÃ©ration du fichier XML pour le nuage de tags en fonction des articles publiÃ©s
          */
 
         $query_tag = (empty($_REQUEST['query_tag'])) ? '' : $_REQUEST['query_tag'];
@@ -56,10 +56,10 @@ switch ($strbackendtype)
             $strBasePath = _PLOOPI_BASEPATH;
             if (substr($strBasePath, -1) != '/') $strBasePath .= '/';
 
-            // récupération des rubriques
+            // rÃ©cupÃ©ration des rubriques
             $arrHeadings = webedit_getheadings($_GET['ploopi_moduleid']);
 
-            // récupération des partages (mode connecté uniquement)
+            // rÃ©cupÃ©ration des partages (mode connectÃ© uniquement)
             $arrShares = webedit_getshare(null, $_GET['ploopi_moduleid']);
 
             $sql =  "
@@ -84,7 +84,7 @@ switch ($strbackendtype)
             {
                 if (!$arrHeadings['list'][$row['id_heading']]['private']
                     || isset($arrShares[$arrHeadings['list'][$row['id_heading']]['herited_private']])
-                    || isset($_SESSION['webedit']['allowedheading'][$_GET['ploopi_moduleid']][$arrHeadings['list'][$row['id_heading']]['herited_private']])) // Rubrique non privée ou accessible par l'utilisateur
+                    || isset($_SESSION['webedit']['allowedheading'][$_GET['ploopi_moduleid']][$arrHeadings['list'][$row['id_heading']]['herited_private']])) // Rubrique non privÃ©e ou accessible par l'utilisateur
                 {
                     $strTag = strtolower(ploopi\str::convertaccents($row['tag']));
                     if (!isset($arrTags[$strTag])) $arrTags[$strTag] = 0;
@@ -146,13 +146,13 @@ switch ($strbackendtype)
             include_once './modules/webedit/class_heading.php';
 
             /**
-             * FeedWriter qui permet de générer le flux
+             * FeedWriter qui permet de gÃ©nÃ©rer le flux
              */
             // include_once './lib/feedwriter/FeedWriter.php';
 
             ploopi\module::init('webedit', false, false, false);
 
-            // récupération des rubriques
+            // rÃ©cupÃ©ration des rubriques
             $arrHeadings = webedit_getheadings();
 
             $intTsToday = ploopi\date::createtimestamp();
@@ -168,7 +168,7 @@ switch ($strbackendtype)
                 $feed_author = $objWorkspace->fields['meta_author'];
             }
 
-            // Si une rubrique est définie, le flux porte le titre de la rubrique
+            // Si une rubrique est dÃ©finie, le flux porte le titre de la rubrique
             if (isset($_REQUEST['headingid']))
             {
                 $objHeading = new webedit_heading();
@@ -235,7 +235,7 @@ switch ($strbackendtype)
 
                     $url = ploopi\str::urlrewrite("index.php?headingid={$article['id_heading']}&articleid={$article['id']}", webedit_getrewriterules(), "{$article['metatitle']} {$article['metakeywords']}", $arrParents);
 
-                    // Création d'un nouvel item
+                    // CrÃ©ation d'un nouvel item
                     $item = $feed->createNewItem();
 
                     $item->setTitle(ploopi\str::xmlentities(utf8_encode($article['title']), true));
@@ -248,7 +248,7 @@ switch ($strbackendtype)
                 }
             }
 
-            // Génération du flux
+            // GÃ©nÃ©ration du flux
             $feed->printFeed();
 
             $objCache->end();

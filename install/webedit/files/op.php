@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Copyright (c) 2009 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
@@ -22,19 +22,19 @@
 */
 
 /**
- * Opérations
+ * OpÃ©rations
  *
  * @package webedit
  * @subpackage op
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 switch($ploopi_op)
 {
     case 'webedit_unsubscribe':
-        // Désabonnement par mail
+        // DÃ©sabonnement par mail
 
         ploopi\module::init('webedit');
 
@@ -118,7 +118,7 @@ switch($ploopi_op)
 }
 
 /**
- * Opérations accessibles pour les utilisateurs connectés
+ * OpÃ©rations accessibles pour les utilisateurs connectÃ©s
  */
 if ($_SESSION['ploopi']['connected'])
 {
@@ -168,8 +168,8 @@ if ($_SESSION['ploopi']['connected'])
     }
 
     /**
-     * On vérifie qu'on est bien dans le module WebEdit.
-     * Ces opérations ne peuvent être effectuées que depuis le module WebEdit.
+     * On vÃ©rifie qu'on est bien dans le module WebEdit.
+     * Ces opÃ©rations ne peuvent Ãªtre effectuÃ©es que depuis le module WebEdit.
      */
     if (ploopi\acl::ismoduleallowed('webedit'))
     {
@@ -274,7 +274,7 @@ if ($_SESSION['ploopi']['connected'])
                         $rs = ploopi\db::get()->query("SELECT distinct(month) FROM ploopi_mod_webedit_counter WHERE id_article = {$intArticleId} AND year = {$intYearSel} ORDER BY month");
                         $arrSelectMonth = ploopi\db::get()->getarray($rs, true);
 
-                        $strPopupTitle = "Statistiques de fréquentation de l'article &laquo; ".ploopi\str::htmlentities($objArticle->fields['title'])." &raquo;";
+                        $strPopupTitle = "Statistiques de frÃ©quentation de l'article &laquo; ".ploopi\str::htmlentities($objArticle->fields['title'])." &raquo;";
                     break;
 
                     case 'heading':
@@ -320,14 +320,14 @@ if ($_SESSION['ploopi']['connected'])
 
                         $arrSelectMonth = ploopi\db::get()->getarray($rs, true);
 
-                        $strPopupTitle = "Statistiques de fréquentation de la rubrique &laquo; ".ploopi\str::htmlentities($objHeading->fields['label'])." &raquo;";
+                        $strPopupTitle = "Statistiques de frÃ©quentation de la rubrique &laquo; ".ploopi\str::htmlentities($objHeading->fields['label'])." &raquo;";
                     break;
                 }
 
-                // aucun mois sélectionné
+                // aucun mois sÃ©lectionnÃ©
                 if (empty($intMonthSel))
                 {
-                    // année en cours
+                    // annÃ©e en cours
                     if ($intYearSel == date('Y')) $intMonthSel = date('n');
                     else $intMonthSel = current($arrSelectMonth);
                 }
@@ -337,7 +337,7 @@ if ($_SESSION['ploopi']['connected'])
                 <div id="webedit_stats">
                     <div id="webedit_stats_select">
                         <p>
-                            <strong>Année:</strong>
+                            <strong>AnnÃ©e:</strong>
                             <?php
                             foreach($arrSelectYear as $year)
                             {
@@ -360,7 +360,7 @@ if ($_SESSION['ploopi']['connected'])
                         </p>
                     </div>
                     <?php
-                    // 1er Diagramme : année par mois
+                    // 1er Diagramme : annÃ©e par mois
 
                     $dataset = array();
                     $legend = array();
@@ -414,7 +414,7 @@ if ($_SESSION['ploopi']['connected'])
                     while ($row = ploopi\db::get()->fetchrow()) $dataset[$row['month']] = $row['counter'];
 
                     $objBarChartYear = new ploopi\barchart(550, 150, array('padding' => 1));
-                    $objBarChartYear->setvalues($dataset, 'Fréquentation mensuelle', '#1E64A1', '#f0f0f0');
+                    $objBarChartYear->setvalues($dataset, 'FrÃ©quentation mensuelle', '#1E64A1', '#f0f0f0');
                     $objBarChartYear->setlegend($legend);
 
                     // 1er Diagramme : mois par jours
@@ -476,17 +476,17 @@ if ($_SESSION['ploopi']['connected'])
                     while ($row = ploopi\db::get()->fetchrow()) $dataset[$row['day']] = $row['counter'];
 
                     $objBarChartMonth = new ploopi\barchart(550, 150, array('padding' => 1));
-                    $objBarChartMonth->setvalues($dataset, 'Fréquentation quotidienne', '#4FA11E', '#f0f0f0');
+                    $objBarChartMonth->setvalues($dataset, 'FrÃ©quentation quotidienne', '#4FA11E', '#f0f0f0');
                     $objBarChartMonth->setlegend($legend);
 
                     // Affichage
                     ?>
                     <div class="webedit_stats_graph">
-                        <h1>Statistiques de fréquentation pour <em><?php echo $intYearSel ?></em> (nombre de visites)</h1>
+                        <h1>Statistiques de frÃ©quentation pour <em><?php echo $intYearSel ?></em> (nombre de visites)</h1>
                         <div><?php $objBarChartYear->draw(); ?></div>
                     </div>
                     <div class="webedit_stats_graph">
-                        <h1>Statistiques de fréquentation pour <em><?php echo $ploopi_months[$intMonthSel] ?> <?php echo $intYearSel ?></em> (nombre de visites)</h1>
+                        <h1>Statistiques de frÃ©quentation pour <em><?php echo $ploopi_months[$intMonthSel] ?> <?php echo $intYearSel ?></em> (nombre de visites)</h1>
                         <div><?php $objBarChartMonth->draw(); ?></div>
                     </div>
                 </div>

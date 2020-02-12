@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2008 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,23 +21,23 @@
 */
 
 /**
- * Gestion des abonnés aux rubriques (frontoffice)
+ * Gestion des abonnÃ©s aux rubriques (frontoffice)
  *
  * @package webedit
  * @subpackage heading_subscriber
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
- * Classe d'accès à la table ploopi_mod_webedit_heading_subscriber
+ * Classe d'accÃ¨s Ã  la table ploopi_mod_webedit_heading_subscriber
  *
  * @package webedit
  * @subpackage heading_subscriber
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 class webedit_heading_subscriber extends ploopi\data_object

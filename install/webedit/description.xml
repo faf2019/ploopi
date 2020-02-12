@@ -1,24 +1,24 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <ploopi>
     <moduletype>
         <label>webedit</label>
-        <version>2.7.0</version>
+        <version>2.7.1</version>
         <author>Ovensia / HeXad</author>
-        <date>20160808000000</date>
+        <date>20200212000000</date>
         <description>Editeur de Contenus Web</description>
         <paramtype>
             <name>display_type</name>
-            <label>Type d'affichage par défaut</label>
+            <label>Type d'affichage par dÃ©faut</label>
             <default_value>beginner</default_value>
             <public>1</public>
             <description/>
             <paramchoice>
                 <value>beginner</value>
-                <displayed_value>Simplifié</displayed_value>
+                <displayed_value>SimplifiÃ©</displayed_value>
             </paramchoice>
             <paramchoice>
                 <value>advanced</value>
-                <displayed_value>Avancé</displayed_value>
+                <displayed_value>AvancÃ©</displayed_value>
             </paramchoice>
         </paramtype>
         <paramtype>
@@ -37,7 +37,7 @@
         </paramtype>
         <paramtype>
             <name>comment_ctrl</name>
-            <label>Contrôler les commentaires à priori</label>
+            <label>ContrÃ´ler les commentaires Ã  priori</label>
             <default_value>1</default_value>
             <public>1</public>
             <description/>
@@ -52,27 +52,27 @@
         </paramtype>
         <action>
             <id_action>1</id_action>
-            <label>Gérer les articles (Global)</label>
+            <label>GÃ©rer les articles (Global)</label>
         </action>
         <action>
             <id_action>2</id_action>
-            <label>Être sélectionnable dans la liste des Validateurs (Global)</label>
+            <label>ÃŠtre sÃ©lectionnable dans la liste des Validateurs (Global)</label>
         </action>
         <action>
             <id_action>3</id_action>
-            <label>Gérer les rubriques (Global)</label>
+            <label>GÃ©rer les rubriques (Global)</label>
         </action>
         <action>
             <id_action>4</id_action>
-            <label>Gérer les validateurs (À la rubrique) - (Nécessite d'être Gestionnaire de rubrique)</label>
+            <label>GÃ©rer les validateurs (Ã€ la rubrique) - (NÃ©cessite d'Ãªtre Gestionnaire de rubrique)</label>
         </action>
         <action>
             <id_action>5</id_action>
-            <label>Gérer les abonnés (À la rubrique)</label>
+            <label>GÃ©rer les abonnÃ©s (Ã€ la rubrique)</label>
         </action>
         <action>
             <id_action>6</id_action>
-            <label>Gérer les autorisations d'accès (À la rubrique) - (Nécessite d'être Gestionnaire de rubrique)</label>
+            <label>GÃ©rer les autorisations d'accÃ¨s (Ã€ la rubrique) - (NÃ©cessite d'Ãªtre Gestionnaire de rubrique)</label>
         </action>
         <action>
             <id_action>8</id_action>
@@ -80,19 +80,19 @@
         </action>
         <action>
             <id_action>9</id_action>
-            <label>Réindéxer le contenu (Global)</label>
+            <label>RÃ©indÃ©xer le contenu (Global)</label>
         </action>
         <action>
             <id_action>10</id_action>
-            <label>Gérer les commentaires (À la rubrique)</label>
+            <label>GÃ©rer les commentaires (Ã€ la rubrique)</label>
         </action>
         <action>
             <id_action>11</id_action>
-            <label>Gérer les rédacteurs (À la rubrique) - (Nécessite d'être Gestionnaire de rubrique)</label>
+            <label>GÃ©rer les rÃ©dacteurs (Ã€ la rubrique) - (NÃ©cessite d'Ãªtre Gestionnaire de rubrique)</label>
         </action>
         <action>
             <id_action>12</id_action>
-            <label>Être sélectionnable dans la liste des Rédacteurs (Global)</label>
+            <label>ÃŠtre sÃ©lectionnable dans la liste des RÃ©dacteurs (Global)</label>
         </action>
     </moduletype>
 </ploopi>

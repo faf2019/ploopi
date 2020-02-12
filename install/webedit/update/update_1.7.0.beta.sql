@@ -14,4 +14,4 @@ CREATE TABLE IF NOT EXISTS `ploopi_mod_webedit_counter` (
   KEY `id_module` (`id_module`),
   KEY `hits` (`hits`),
   KEY `week` (`week`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;

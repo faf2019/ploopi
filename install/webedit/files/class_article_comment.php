@@ -31,7 +31,7 @@
  */
 
 /**
- * Classe d'accès à la table ploopi_mod_webedit_article_comment
+ * Classe d'accÃ¨s Ã  la table ploopi_mod_webedit_article_comment
  *
  * @package webedit
  * @subpackage comment
@@ -64,7 +64,7 @@ class webedit_article_comment extends ploopi\data_object
         if(empty($moduleid) || !is_numeric($moduleid)) $moduleid = $_SESSION['ploopi']['moduleid'];
         if(empty($workspaceid) || !is_numeric($workspaceid)) $workspaceid = $_SESSION['ploopi']['workspaceid'];
 
-        // Contrôle des commentaire a priori ?
+        // ContrÃ´le des commentaire a priori ?
         $this->fields['publish'] = ($_SESSION['ploopi']['modules'][$moduleid]['comment_ctrl'] == 1) ? 0 : 1;
 
         $this->fields['timestp'] = ploopi\date::createtimestamp();
@@ -86,7 +86,7 @@ class webedit_article_comment extends ploopi\data_object
     }
 
     /**
-     * Insère le bloc de commentaire dans la fiche article
+     * InsÃ¨re le bloc de commentaire dans la fiche article
      *
      * @param int $id_article identifiant de l'article
      */
@@ -165,7 +165,7 @@ class webedit_article_comment extends ploopi\data_object
                     ?>
                     <div class="webedit_comment_row_<?php echo $numrow; ?>">
                         <div style="padding: 2px 0 0 8px;">
-                            <div style="float: left;">Par <strong><?php echo ploopi\str::htmlentities($fields['nickname']); ?></strong> le <?php echo $ldate['date']; ?> à <?php echo $ldate['time']; ?></div>
+                            <div style="float: left;">Par <strong><?php echo ploopi\str::htmlentities($fields['nickname']); ?></strong> le <?php echo $ldate['date']; ?> Ã  <?php echo $ldate['time']; ?></div>
                             <?php
                             if (ploopi\acl::isactionallowed(_WEBEDIT_ACTION_COMMENT))
                             {

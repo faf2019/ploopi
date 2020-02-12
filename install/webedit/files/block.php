@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -27,7 +27,7 @@
  * @subpackage block
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
@@ -42,7 +42,7 @@ $block->addmenu('Voir les articles', ploopi\crypt::urlencode("admin.php?ploopi_m
 $webedit_menu = ($_SESSION['ploopi']['moduleid'] == $menu_moduleid && !empty($_REQUEST['webedit_menu'])) ? $_REQUEST['webedit_menu'] : '';
 
 /**
- * Il faut que l'utilisateur dispose au moins d'une action pour accéder à la partie 'admin'
+ * Il faut que l'utilisateur dispose au moins d'une action pour accÃ©der Ã  la partie 'admin'
  */
 
 if (ploopi\acl::isactionallowed(-1, $_SESSION['ploopi']['workspaceid'], $menu_moduleid))
@@ -60,12 +60,12 @@ if (ploopi\acl::isactionallowed(_WEBEDIT_ACTION_STATS, $_SESSION['ploopi']['work
 }
 
 /**
- * Réindexation du contenu
+ * RÃ©indexation du contenu
  */
 
 if (ploopi\acl::isactionallowed(_WEBEDIT_ACTION_REINDEX, $_SESSION['ploopi']['workspaceid'], $menu_moduleid))
 {
-    $block->addmenu('<b>Réindexation</b>', ploopi\crypt::urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=admin&webedit_menu=reindex"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'admin' && $webedit_menu == 'reindex');
+    $block->addmenu('<b>RÃ©indexation</b>', ploopi\crypt::urlencode("admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=admin&webedit_menu=reindex"), $_SESSION['ploopi']['moduleid'] == $menu_moduleid && $_SESSION['ploopi']['action'] == 'admin' && $webedit_menu == 'reindex');
 }
 
 ?>

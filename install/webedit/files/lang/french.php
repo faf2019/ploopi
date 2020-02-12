@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,44 +21,44 @@
 */
 
 /**
- * Fichier de langue français
+ * Fichier de langue franÃ§ais
  *
  * @package webedit
  * @subpackage lang
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
- * Définition des constantes
+ * DÃ©finition des constantes
  */
 
-define ('_WEBEDIT_PAGE_TITLE', 'Gestion du Module «LABEL»');
+define ('_WEBEDIT_PAGE_TITLE', 'Gestion du Module Â«LABELÂ»');
 
 /**
- * Messages liés à l'abonnement en frontoffice
+ * Messages liÃ©s Ã  l'abonnement en frontoffice
  */
 
 global $webedit_subscription_messages;
 
 $webedit_subscription_messages =
     array(
-        _WEBEDIT_SUBSCRIPTION_SUBSCRIBED => 'Votre abonnement a été validé.',
-        _WEBEDIT_SUBSCRIPTION_UNSUBSCRIBED => 'Votre désabonnement a été validé.',
+        _WEBEDIT_SUBSCRIPTION_SUBSCRIBED => 'Votre abonnement a Ã©tÃ© validÃ©.',
+        _WEBEDIT_SUBSCRIPTION_UNSUBSCRIBED => 'Votre dÃ©sabonnement a Ã©tÃ© validÃ©.',
         _WEBEDIT_SUBSCRIPTION_ERROR_EMAIL => 'Votre adresse email n\'est pas valide.',
-        _WEBEDIT_SUBSCRIPTION_ERROR_PARAM => 'Paramètre incorrect.'
+        _WEBEDIT_SUBSCRIPTION_ERROR_PARAM => 'ParamÃ¨tre incorrect.'
 
     );
 
 define ('_WEBEDIT_COMMENT_SHOWALL',         'Voir tous les commentaires');
 define ('_WEBEDIT_COMMENT_POST',            'Envoyer un commentaire');
 define ('_WEBEDIT_COMMENT_COMMENT',         'commentaire(s)');
-define ('_WEBEDIT_COMMENT_COMMENT_POSTBY',  'Posté par %s le %s à %s');
+define ('_WEBEDIT_COMMENT_COMMENT_POSTBY',  'PostÃ© par %s le %s Ã  %s');
 
-define ('_WEBEDIT_COMMENT_COMMENT_SEND_0',  'Erreur - Votre commentaire n\'a pas été enregistré.');
-define ('_WEBEDIT_COMMENT_COMMENT_SEND_1',  'Commentaire Enregistré');
-define ('_WEBEDIT_COMMENT_COMMENT_SEND_2',  'Commentaire Enregistré.<br/>Il sera contrôlé par un modérateur avant d\'être publié.');
+define ('_WEBEDIT_COMMENT_COMMENT_SEND_0',  'Erreur - Votre commentaire n\'a pas Ã©tÃ© enregistrÃ©.');
+define ('_WEBEDIT_COMMENT_COMMENT_SEND_1',  'Commentaire EnregistrÃ©');
+define ('_WEBEDIT_COMMENT_COMMENT_SEND_2',  'Commentaire EnregistrÃ©.<br/>Il sera contrÃ´lÃ© par un modÃ©rateur avant d\'Ãªtre publiÃ©.');
 
 
 ?>

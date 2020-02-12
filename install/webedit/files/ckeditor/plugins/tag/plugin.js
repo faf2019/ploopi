@@ -5,17 +5,17 @@
 CKEDITOR.plugins.add( 'tag', {
     init: function( editor ) {
 
-        // Définition du bouton "Tag"
+        // DÃ©finition du bouton "Tag"
         editor.ui.addButton( 'Tag', {
-            label: 'Insérer un objet',
-            command: 'tagDialog', // Commande à appeler (autre test : 'insertTag')
+            label: 'InsÃ©rer un objet',
+            command: 'tagDialog', // Commande Ã  appeler (autre test : 'insertTag')
             icon: this.path + 'icons/ploopiobjects.gif',
-            //toolbar: 'insert' // Permet de l'intégrer directement dans une toolbar
+            //toolbar: 'insert' // Permet de l'intÃ©grer directement dans une toolbar
         });
 
         editor.addCommand( 'tagDialog', new CKEDITOR.dialogCommand( 'tagDialog' ) );
 
-        // On capte l'événement double click sur l'éditeur
+        // On capte l'Ã©vÃ©nement double click sur l'Ã©diteur
         editor.on( 'doubleclick', function( evt ) {
 
             var selection = editor.getSelection();
@@ -23,7 +23,7 @@ CKEDITOR.plugins.add( 'tag', {
 
             if ( selectedElement && selectedElement.is( 'span' )  && selectedElement.hasClass( 'ckTag' ) ) {
 
-                // Sélection de l'élément complet
+                // SÃ©lection de l'Ã©lÃ©ment complet
                 selection.selectElement(selectedElement);
 
                 var element = selectedElement.$;
@@ -39,7 +39,7 @@ CKEDITOR.plugins.add( 'tag', {
         CKEDITOR.dialog.add( 'tagDialog', function ( editor ) {
 
             return {
-                title: 'Insérer un objet',
+                title: 'InsÃ©rer un objet',
                 minWidth: 250,
                 minHeight: 150,
                 contents: [{
@@ -68,16 +68,16 @@ CKEDITOR.plugins.add( 'tag', {
 
                 onShow: function() {
 
-                    // Détection de l'élément sélectionné (cf doubleclick)
+                    // DÃ©tection de l'Ã©lÃ©ment sÃ©lectionnÃ© (cf doubleclick)
                     var selection = editor.getSelection();
                     var selectedElement = selection.getStartElement();
 
                     var dialog = this;
 
-                    // Détection de l'élément sélectionné
+                    // DÃ©tection de l'Ã©lÃ©ment sÃ©lectionnÃ©
                     var tag = '';
 
-                    // L'élément est bien celui qu'on cherche
+                    // L'Ã©lÃ©ment est bien celui qu'on cherche
                     if ( selectedElement && selectedElement.is( 'span' )  && selectedElement.hasClass( 'ckTag' ) ) {
                         tag = selectedElement.$.innerHTML.replace('[[', '').replace(']]', '').split('/')[0];
                     }
@@ -91,7 +91,7 @@ CKEDITOR.plugins.add( 'tag', {
                     newOpt.value = '';
                     newOpt.text = '(Choisir)';
 
-                    // Remplissage de la liste avec une requête AJAX/JSON
+                    // Remplissage de la liste avec une requÃªte AJAX/JSON
                     new Ajax.Request(editor.config.objectBrowserUrl, {
                         method: 'get',
                         onSuccess:  function(transport, json) {

@@ -8,4 +8,4 @@ CREATE TABLE IF NOT EXISTS `ploopi_mod_webedit_docfile` (
   KEY `md5id_docfile` (`md5id_docfile`),
   KEY `id_module` (`id_module`),
   KEY `id_module_docfile` (`id_module_docfile`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;

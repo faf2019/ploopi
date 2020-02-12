@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -27,17 +27,17 @@
  * @subpackage article
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
- * Classe d'accès à la table ploopi_mod_webedit_article_backup
+ * Classe d'accÃ¨s Ã  la table ploopi_mod_webedit_article_backup
  *
  * @package webedit
  * @subpackage article
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 class webedit_article_backup extends ploopi\data_object

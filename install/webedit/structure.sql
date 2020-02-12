@@ -26,7 +26,7 @@ CREATE TABLE `ploopi_mod_webedit_article` (
   `tags` varchar(255) NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `lastupdate_timestp` (`lastupdate_timestp`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `ploopi_mod_webedit_article_backup`;
 CREATE TABLE `ploopi_mod_webedit_article_backup` (
@@ -38,7 +38,7 @@ CREATE TABLE `ploopi_mod_webedit_article_backup` (
   `id_module` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id_article`,`timestp`),
   KEY `timestp` (`timestp`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `ploopi_mod_webedit_article_comment`;
 CREATE TABLE IF NOT EXISTS `ploopi_mod_webedit_article_comment` (
@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS `ploopi_mod_webedit_article_comment` (
   KEY `id_module` (`id_module`),
   KEY `id_workspace` (`id_workspace`),
   KEY `id_article` (`id_article`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `ploopi_mod_webedit_article_draft`;
 CREATE TABLE `ploopi_mod_webedit_article_draft` (
@@ -86,7 +86,7 @@ CREATE TABLE `ploopi_mod_webedit_article_draft` (
   `status` varchar(16) NOT NULL default '',
   `tags` varchar(255) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `ploopi_mod_webedit_article_tag`;
 CREATE TABLE `ploopi_mod_webedit_article_tag` (
@@ -94,7 +94,7 @@ CREATE TABLE `ploopi_mod_webedit_article_tag` (
   `id_tag` int(10) unsigned NOT NULL default '0',
   KEY `id_article` (`id_article`),
   KEY `id_tag` (`id_tag`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `ploopi_mod_webedit_counter`;
 CREATE TABLE `ploopi_mod_webedit_counter` (
@@ -112,7 +112,7 @@ CREATE TABLE `ploopi_mod_webedit_counter` (
   KEY `id_module` (`id_module`),
   KEY `hits` (`hits`),
   KEY `week` (`week`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `ploopi_mod_webedit_docfile`;
 CREATE TABLE `ploopi_mod_webedit_docfile` (
@@ -125,7 +125,7 @@ CREATE TABLE `ploopi_mod_webedit_docfile` (
   KEY `md5id_docfile` (`md5id_docfile`),
   KEY `id_module` (`id_module`),
   KEY `id_module_docfile` (`id_module_docfile`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `ploopi_mod_webedit_heading`;
 CREATE TABLE `ploopi_mod_webedit_heading` (
@@ -156,7 +156,7 @@ CREATE TABLE `ploopi_mod_webedit_heading` (
   PRIMARY KEY  (`id`),
   UNIQUE KEY `id` (`id`),
   KEY `id_2` (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `ploopi_mod_webedit_heading_subscriber`;
 CREATE TABLE `ploopi_mod_webedit_heading_subscriber` (
@@ -165,7 +165,7 @@ CREATE TABLE `ploopi_mod_webedit_heading_subscriber` (
   `validated` tinyint(1) unsigned NOT NULL default '0',
   `id_module` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id_heading`,`email`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `ploopi_mod_webedit_tag`;
 CREATE TABLE `ploopi_mod_webedit_tag` (
@@ -175,7 +175,7 @@ CREATE TABLE `ploopi_mod_webedit_tag` (
   PRIMARY KEY  (`id`),
   KEY `id_module` (`id_module`),
   KEY `tag` (`tag`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 ALTER TABLE `ploopi_mod_webedit_article_draft` ADD `disabledfilter` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '0';
 ALTER TABLE `ploopi_mod_webedit_article` ADD `disabledfilter` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '0';
@@ -198,4 +198,4 @@ CREATE TABLE IF NOT EXISTS `ploopi_mod_webedit_article_object` (
   `id_module` int(10) unsigned NOT NULL DEFAULT '0',
   `id_record` varchar(255) NOT NULL,
   PRIMARY KEY (`id_article`,`id_wce_object`,`id_module_type`,`id_module`,`id_record`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;

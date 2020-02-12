@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2008 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -27,17 +27,17 @@
  * @subpackage counter
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
- * Classe d'accès aux table ploopi_mod_webedit_counter
+ * Classe d'accÃ¨s aux table ploopi_mod_webedit_counter
  *
  * @package webedit
  * @subpackage counter
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 class webedit_counter extends ploopi\data_object
@@ -57,7 +57,7 @@ class webedit_counter extends ploopi\data_object
     /**
      * Enregistre un nouveau hit
      *
-     * @return boolean true si l'enregistrement a été correctement exécuté
+     * @return boolean true si l'enregistrement a Ã©tÃ© correctement exÃ©cutÃ©
      */
 
     public function hit()

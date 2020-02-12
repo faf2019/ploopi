@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,13 +21,13 @@
 */
 
 /**
- * Gère le rewriting inverse des URL du module WEBEDIT
+ * GÃ¨re le rewriting inverse des URL du module WEBEDIT
  *
  * @package webedit
  * @subpackage rewrite
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 // sitemap
@@ -61,7 +61,7 @@ elseif (preg_match('/recherche\/(.*)\.[a-zA-Z0-9]*(.*)/', $arrParsedURI['path'],
     $booRewriteRuleFound = true;
 }
 
-// recherche avancée
+// recherche avancÃ©e
 elseif ($arrParsedURI['path'] == '/recherche.html')
 {
     $_REQUEST['advanced_search'] = $_GET['advanced_search'] = 1;
@@ -127,7 +127,7 @@ elseif (preg_match('/web\/rss\/(.*)\.xml/', $arrParsedURI['path'], $arrMatches) 
     $booRewriteRuleFound = true;
 }
 
-// Désinscription
+// DÃ©sinscription
 elseif (preg_match('/unsubscribe\/([a-z0-9]{32})\/index\.[a-zA-Z0-9](.*)/', $arrParsedURI['path'], $arrMatches) == 1)
 {
     if (!empty($arrMatches[1]))

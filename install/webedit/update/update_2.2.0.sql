@@ -15,4 +15,4 @@ CREATE TABLE IF NOT EXISTS `ploopi_mod_webedit_article_comment` (
   KEY `id_module` (`id_module`),
   KEY `id_workspace` (`id_workspace`),
   KEY `id_article` (`id_article`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;

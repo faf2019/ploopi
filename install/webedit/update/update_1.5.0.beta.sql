@@ -7,14 +7,14 @@ CREATE TABLE `ploopi_mod_webedit_heading_subscriber` (
   `validated` tinyint(1) unsigned NOT NULL default '0',
   `id_module` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id_heading`,`email`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE `ploopi_mod_webedit_article_tag` (
   `id_article` int(10) unsigned NOT NULL default '0',
   `id_tag` int(10) unsigned NOT NULL default '0',
   KEY `id_article` (`id_article`),
   KEY `id_tag` (`id_tag`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE `ploopi_mod_webedit_tag` (
   `id` int(10) unsigned NOT NULL auto_increment,
@@ -23,4 +23,4 @@ CREATE TABLE `ploopi_mod_webedit_tag` (
   PRIMARY KEY  (`id`),
   KEY `id_module` (`id_module`),
   KEY `tag` (`tag`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;

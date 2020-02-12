@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -22,13 +22,13 @@
 
 /**
  * "Constructeur" de l'instance.
- * Initialise les données du module lors de l'instanciation du module.
+ * Initialise les donnÃ©es du module lors de l'instanciation du module.
  *
  * @package webedit
  * @subpackage create
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
@@ -38,7 +38,7 @@
 include_once './modules/webedit/class_heading.php';
 
 /**
- * On crée la rubrique racine
+ * On crÃ©e la rubrique racine
  */
 $webedit_heading = new webedit_heading();
 $webedit_heading->fields['label'] = 'Racine';

@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2008 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,23 +21,23 @@
 */
 
 /**
- * Gestion du lien étiquette-article
+ * Gestion du lien Ã©tiquette-article
  *
  * @package webedit
  * @subpackage article_tag
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
- * Classe d'accès à la table ploopi_mod_webedit_article_tag
+ * Classe d'accÃ¨s Ã  la table ploopi_mod_webedit_article_tag
  *
  * @package webedit
  * @subpackage article_tag
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 class webedit_article_tag extends ploopi\data_object

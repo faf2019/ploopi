@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -27,12 +27,12 @@
  * @subpackage admin
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 $article = new webedit_article($type);
 
-// récupère les validateurs
+// rÃ©cupÃ¨re les validateurs
 $arrWfUsers = array('group' => array(), 'user' => array());
 $arrWf = ploopi\validation::get(_WEBEDIT_OBJECT_HEADING, $headingid);
 $intWfHeadingId = $headingid;
@@ -43,7 +43,7 @@ $objUser->open($_SESSION['ploopi']['userid']);
 $arrGroups = $objUser->getgroups(true);
 
 /**
- * L'utilisateur connecté est-il validateur ?
+ * L'utilisateur connectÃ© est-il validateur ?
  */
 $booWfVal = false;
 foreach($arrWf as $value)
@@ -159,7 +159,7 @@ switch($op)
         ?>
         <div class="ploopi_form" style="float:left; width:54%;">
             <div style="padding:2px;">
-                <div style="padding:2px;"><strong>Propriétés principales:</strong></div>
+                <div style="padding:2px;"><strong>PropriÃ©tÃ©s principales:</strong></div>
                 <p>
                     <label>Identifiant:</label>
                     <?php
@@ -189,7 +189,7 @@ switch($op)
 
         <div class="ploopi_form" style="float:left; width:45%;">
             <div style="padding:2px;">
-                <div style="padding:2px;"><strong>Propriétés annexes:</strong></div>
+                <div style="padding:2px;"><strong>PropriÃ©tÃ©s annexes:</strong></div>
                 <p>
                     <label>Date:</label>
                     <?php
@@ -243,7 +243,7 @@ switch($op)
                 if (!$readonly && $op == 'bloc_modify')
                 {
                     ?>
-                    <div style="padding:2px;"><strong>Dernières modifications:</strong></div>
+                    <div style="padding:2px;"><strong>DerniÃ¨res modifications:</strong></div>
                     <div style="padding:2px;">
                     <?php
                     $sql =  "
@@ -293,7 +293,7 @@ switch($op)
 
         <div style="clear:both;">
             <div>
-                <label for="webedit_article_disabledfilter" style="cursor:pointer;">Désactiver le validateur XHTML 1.0 Strict (inclusion javascript, styles):</label>
+                <label for="webedit_article_disabledfilter" style="cursor:pointer;">DÃ©sactiver le validateur XHTML 1.0 Strict (inclusion javascript, styles):</label>
                 <?php
                 if (!$readonly)
                 {
@@ -349,7 +349,7 @@ switch($op)
                     {
                         ?>
                         <input style="width:100px;" class="text" type="text" name="webedit_article_timestp" id="webedit_article_timestp" value="<?php echo ploopi\str::htmlentities($article_timestp); ?>" tabindex="4" />
-                        <a href="javascript:void(0);" onclick="javascript:ploopi_calendar_open('webedit_article_timestp', event);"><img src="./img/calendar/calendar.gif" width="31" height="18" align="top" border="0"></a>
+                        <a href="javascript:void(0);" onclick="javascript:ploopi.calendar.open('webedit_article_timestp', event);"><img src="./img/calendar/calendar.gif" width="31" height="18" align="top" border="0"></a>
                         <?php
                     }
                     else echo '<span>'.ploopi\str::htmlentities($article_timestp, ENT_QUOTES).'</span>';
@@ -367,7 +367,7 @@ switch($op)
     <fieldset class="fieldset" style="padding:6px;">
         <legend><strong>Validateurs</strong> (utilisateurs qui peuvent publier)</legend>
 
-        <p class="ploopi_va" style="padding:0 2px 2px 2px;"><span>Validateurs </span><?php if ($intWfHeadingId != $headingid) echo "<em>&nbsp;héritées de &laquo;&nbsp;</em><a href=\"".ploopi\crypt::urlencode("admin.php?headingid={$intWfHeadingId}")."\">{$headings['list'][$intWfHeadingId]['label']}</a><em>&nbsp;&raquo;</em>"; ?><span>:</span>
+        <p class="ploopi_va" style="padding:0 2px 2px 2px;"><span>Validateurs </span><?php if ($intWfHeadingId != $headingid) echo "<em>&nbsp;hÃ©ritÃ©es de &laquo;&nbsp;</em><a href=\"".ploopi\crypt::urlencode("admin.php?headingid={$intWfHeadingId}")."\">{$headings['list'][$intWfHeadingId]['label']}</a><em>&nbsp;&raquo;</em>"; ?><span>:</span>
             <?php
             if (!empty($arrWfUsers))
             {
@@ -392,7 +392,7 @@ switch($op)
                     while ($row = ploopi\db::get()->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi\str::htmlentities($row['name'])."&nbsp;</span>";
                 }
             }
-            else echo '<em>Aucune accréditation</em>';
+            else echo '<em>Aucune accrÃ©ditation</em>';
             ?>
         </p>
     </fieldset>
@@ -404,7 +404,7 @@ switch($op)
     if ($op != 'bloc_addnew')
     {
         ?>
-        <strong>&nbsp;-&nbsp;Dernière modification le </strong><?php echo $lastupdate_timestp; ?><strong> par </strong><?php echo ploopi\str::htmlentities($lastupdate_user); ?>
+        <strong>&nbsp;-&nbsp;DerniÃ¨re modification le </strong><?php echo $lastupdate_timestp; ?><strong> par </strong><?php echo ploopi\str::htmlentities($lastupdate_user); ?>
         <?php
     }
 
@@ -457,7 +457,7 @@ switch($op)
     if ($op != 'article_addnew' && (ploopi\acl::isadmin() || $booWfVal || ($_SESSION['ploopi']['userid'] == $article->fields['id_user'] && $articles['list'][$articleid]['online_id'] == '')))
     {
         ?>
-        <input class="flatbutton" type="button" value="<?php echo _PLOOPI_DELETE; ?>" onclick="javascript:ploopi_confirmlink('<?php echo ploopi\crypt::urlencode("admin.php?op=article_delete&articleid={$article->fields['id']}"); ?>','Êtes-vous certain de vouloir supprimer l\'article &laquo; <?php echo addslashes($article->fields['title']); ?> &raquo; ?');">
+        <input class="flatbutton" type="button" value="<?php echo _PLOOPI_DELETE; ?>" onclick="javascript:ploopi.confirmlink('<?php echo ploopi\crypt::urlencode("admin.php?op=article_delete&articleid={$article->fields['id']}"); ?>','ÃŠtes-vous certain de vouloir supprimer l\'article &laquo; <?php echo addslashes($article->fields['title']); ?> &raquo; ?');">
         <?php
     }
     if ($type == 'draft')
@@ -530,7 +530,7 @@ switch($op)
     if ($op != 'article_addnew' && (ploopi\acl::isadmin() || $booWfVal || ($_SESSION['ploopi']['userid'] == $article->fields['id_user'] && $articles['list'][$articleid]['online_id'] == '')))
     {
         ?>
-        <input class="flatbutton" type="button" value="<?php echo _PLOOPI_DELETE; ?>" onclick="javascript:ploopi_confirmlink('<?php echo ploopi\crypt::urlencode("admin.php?op=article_delete&articleid={$article->fields['id']}"); ?>','Êtes-vous certain de vouloir supprimer l\'article &laquo; <?php echo addslashes($article->fields['title']); ?> &raquo; ?');">
+        <input class="flatbutton" type="button" value="<?php echo _PLOOPI_DELETE; ?>" onclick="javascript:ploopi.confirmlink('<?php echo ploopi\crypt::urlencode("admin.php?op=article_delete&articleid={$article->fields['id']}"); ?>','ÃŠtes-vous certain de vouloir supprimer l\'article &laquo; <?php echo addslashes($article->fields['title']); ?> &raquo; ?');">
         <?php
     }
     if ($type == 'draft')
@@ -561,7 +561,7 @@ if ($op != 'bloc_addnew')
     <div style="clear:both;">
         <?php $arrAllowedActions = array(_WEBEDIT_ACTION_ARTICLE_EDIT, _WEBEDIT_ACTION_ARTICLE_PUBLISH);?>
         <div style="border-bottom:1px solid #c0c0c0;">
-        <?php ploopi\subscription::display(_WEBEDIT_OBJECT_ARTICLE_ADMIN, $article->fields['id'], $arrAllowedActions, "à &laquo; {$article->fields['title']} &raquo;"); ?>
+        <?php ploopi\subscription::display(_WEBEDIT_OBJECT_ARTICLE_ADMIN, $article->fields['id'], $arrAllowedActions, "Ã  &laquo; {$article->fields['title']} &raquo;"); ?>
         </div>
         <div style="border-bottom:1px solid #c0c0c0;">
         <?php ploopi\annotation::display(_WEBEDIT_OBJECT_ARTICLE_ADMIN, $article->fields['id'], $article->fields['title']); ?>

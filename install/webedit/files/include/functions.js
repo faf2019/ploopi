@@ -1,6 +1,6 @@
 /*
     Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2009 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Copyright (c) 2009-2010 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
@@ -22,7 +22,7 @@
 */
 function webedit_heading_validate(form)
 {
-    if (ploopi_validatefield('LibellÈ', form.webedit_heading_label, 'string'))
+    if (ploopi.validatefield('Libell√©', form.webedit_heading_label, 'string'))
         return true;
 
     return false;
@@ -37,7 +37,7 @@ function webedit_article_validate(form, article_type, article_status, validator)
         if (form.webedit_article_status.value != article_status && form.webedit_article_status.value == 'wait' && !validator)
         {
             // confirm sending tickets on waiting validation
-            next = confirm('Cette action va envoyer\nune demande de publication\naux validateurs de cette rubrique\n\n tes-vous certain de vouloir continuer ?');
+            next = confirm('Cette action va envoyer\nune demande de publication\naux validateurs de cette rubrique\n\n√ätes-vous certain de vouloir continuer ?');
         }
     }
 
@@ -47,15 +47,15 @@ function webedit_article_validate(form, article_type, article_status, validator)
         else
         {
 
-            var fck_instance = $('webedit_frame_editor').contentWindow.CKEDITOR.instances['editor'];
+            var fck_instance = jQuery('#webedit_frame_editor')[0].contentWindow.CKEDITOR.instances['editor'];
 
             // get fckeditor content
-            $('fck_webedit_article_content').value = fck_instance.getData();
+            jQuery('#fck_webedit_article_content')[0].value = fck_instance.getData();
 
-            if (ploopi_validatefield('Titre', form.webedit_article_title, 'string'))
-            if ($('fck_webedit_article_content').value == '')
+            if (ploopi.validatefield('Titre', form.webedit_article_title, 'string'))
+            if (jQuery('#fck_webedit_article_content')[0].value == '')
             {
-                if (confirm("ATTENTION !! Cet article semble vide.\n\n Si vous l'enregistrez, vous perdrez tout son contenu\n\n tes-vous malgrÈ tout certain de vouloir enregistrer cet article ?")) return true;
+                if (confirm("ATTENTION !! Cet article semble vide.\n\n Si vous l'enregistrez, vous perdrez tout son contenu\n\n√ätes-vous malgr√© tout certain de vouloir enregistrer cet article ?")) return true;
             }
             else return true;
         }
@@ -74,7 +74,7 @@ function webedit_bloc_validate(form, article_type, article_status, validator)
         if (form.webedit_article_status.value != article_status && form.webedit_article_status.value == 'wait' && !validator)
         {
             // confirm sending tickets on waiting validation
-            next = confirm('Cette action va envoyer\nune demande de publication\naux validateurs de cette rubrique\n\n tes-vous certain de vouloir continuer ?');
+            next = confirm('Cette action va envoyer\nune demande de publication\naux validateurs de cette rubrique\n\n√ätes-vous certain de vouloir continuer ?');
         }
     }
 
@@ -85,10 +85,10 @@ function webedit_bloc_validate(form, article_type, article_status, validator)
         {
             var fck_instance = FCKeditorAPI.GetInstance('fck_webedit_article_content');
 
-            if (ploopi_validatefield('Identifiant', form.webedit_article_title, 'string'))
+            if (ploopi.validatefield('Identifiant', form.webedit_article_title, 'string'))
             if (fck_instance.GetData(true) == null || fck_instance.GetData(true) == '')
             {
-                if (confirm("ATTENTION !! Cet article semble vide.\n\n Si vous l'enregistrez, vous perdrez tout son contenu\n\n tes-vous malgrÈ tout certain de vouloir enregistrer cet article ?")) return true;
+                if (confirm("ATTENTION !! Cet article semble vide.\n\n Si vous l'enregistrez, vous perdrez tout son contenu\n\n√ätes-vous malgr√© tout certain de vouloir enregistrer cet article ?")) return true;
             }
             else return true;
         }
@@ -100,28 +100,28 @@ function webedit_bloc_validate(form, article_type, article_status, validator)
 
 function webedit_article_keywordscomplete(kw)
 {
-    var listekw = $('webedit_article_metakeywords').value;
+    var listekw = jQuery('#webedit_article_metakeywords')[0].value;
 
     if (listekw.length>0 && listekw[listekw.length-1] != ' ') listekw += ' ';
 
     listekw += kw;
 
-    $('webedit_article_metakeywords').value = listekw;
+    jQuery('#webedit_article_metakeywords')[0].value = listekw;
 }
 
 
 function webedit_backup_reload(bloc)
 {
-    if (confirm("ATTENTION !! Cette opÈration va remplacer le contenu de l'article\n\n tes-vous certain de vouloir continuer ?"))
+    if (confirm("ATTENTION !! Cette op√©ration va remplacer le contenu de l'article\n\n√ätes-vous certain de vouloir continuer ?"))
     {
-        var content = ploopi_xmlhttprequest('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=webedit_getbackup&backup_timestp='+$('article_backup').value+'&backup_id_article='+$('articleid').value);
+        var content = ploopi.xhr.send('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=webedit_getbackup&backup_timestp='+jQuery('#article_backup')[0].value+'&backup_id_article='+jQuery('#articleid')[0].value);
 
         var fck_instance = null;
 
         if (typeof(bloc) == 'undefined') bloc = false;
 
         if (bloc) fck_instance = FCKeditorAPI.GetInstance('fck_webedit_article_content');
-        else fck_instance = $('webedit_frame_editor').contentWindow.FCKeditorAPI.GetInstance('fck_webedit_article_content');
+        else fck_instance = jQuery('#webedit_frame_editor')[0].contentWindow.FCKeditorAPI.GetInstance('fck_webedit_article_content');
 
         fck_instance.SetData(content);
     }
@@ -129,9 +129,9 @@ function webedit_backup_reload(bloc)
 
 function webedit_bloc_backup_reload()
 {
-    if (confirm("ATTENTION !! Cette opÈration va remplacer le contenu de l'article\n\n tes-vous certain de vouloir continuer ?"))
+    if (confirm("ATTENTION !! Cette op√©ration va remplacer le contenu de l'article\n\n√ätes-vous certain de vouloir continuer ?"))
     {
-        c = ploopi_xmlhttprequest('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=webedit_getbackup&backup_timestp='+$('article_backup').value+'&backup_id_article='+$('articleid').value);
+        c = ploopi.xhr.send('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=webedit_getbackup&backup_timestp='+jQuery('#article_backup')[0].value+'&backup_id_article='+jQuery('#articleid')[0].value);
 
         var fck_instance = FCKeditorAPI.GetInstance('fck_webedit_article_content');
         fck_instance.SetData(c);
@@ -139,36 +139,36 @@ function webedit_bloc_backup_reload()
 }
 
 /**
- * SÈlectionne un article ou une rubrique en redirection sur une rubrique
+ * S√©lectionne un article ou une rubrique en redirection sur une rubrique
  */
 
 function webedit_select_article_or_heading(id, title, e)
 {
-    $('webedit_heading_linkedpage').value = id;
-    $('linkedpage_displayed').value = title;
-    ploopi_checkbox_click(e, 'heading_content_type_article_redirect');
-    ploopi_hidepopup('webedit_popup_selectredirect');
+    jQuery('#webedit_heading_linkedpage')[0].value = id;
+    jQuery('#linkedpage_displayed')[0].value = title;
+    ploopi.checkbox_click(e, 'heading_content_type_article_redirect');
+    ploopi.popup.hide('webedit_popup_selectredirect');
 }
 
 /**
- * SÈlectionne une nouvelle rubrique parent pour un article
+ * S√©lectionne une nouvelle rubrique parent pour un article
  */
 
 function webedit_select_heading(id, label, e)
 {
-    $('webedit_article_id_heading').value = id;
-    $('heading_displayed').value = label;
-    ploopi_hidepopup('webedit_popup_selectheading');
+    jQuery('#webedit_article_id_heading')[0].value = id;
+    jQuery('#heading_displayed')[0].value = label;
+    ploopi.popup.hide('webedit_popup_selectheading');
 }
 
 function webedit_switch_display_type(value)
 {
-    if ($('webedit_display_type').value != value) // nouvelle valeur
+    if (jQuery('#webedit_display_type')[0].value != value) // nouvelle valeur
     {
-        if (confirm('Attention, changer d\'affichage n\'enregistre pas vos derniËres modifications'))
+        if (confirm('Attention, changer d\'affichage n\'enregistre pas vos derni√®res modifications'))
         {
-            $('webedit_display_type').value = value;
-            $('webedit_form_display_type').submit();
+            jQuery('#webedit_display_type')[0].value = value;
+            jQuery('#webedit_form_display_type')[0].submit();
         }
     }
 }
@@ -180,8 +180,8 @@ function webedit_stats_open(article_id, heading_id, e)
     if (typeof(article_id) != 'undefined' && article_id != null) query += '&webedit_article_id='+article_id;
     if (typeof(heading_id) != 'undefined' && heading_id != null) query += '&webedit_heading_id='+heading_id;
 
-    ploopi_showpopup(
-        ploopi_xmlhttprequest(
+    ploopi.popup.show(
+        ploopi.xhr.send(
             'admin-light.php',
             query,
             false,
@@ -206,7 +206,7 @@ function webedit_stats_refresh(article_id, heading_id, year, month)
 
     ploopi_innerHTML(
         'popup_webedit_article_stats',
-        ploopi_xmlhttprequest(
+        ploopi.xhr.send(
             'admin-light.php',
             query,
             false,
@@ -230,7 +230,7 @@ function webedit_comment_publish(id_comment, id_article, publish)
 
 function webedit_comment_delete(id_comment,id_article)
 {
-    if (confirm(' tes vous certain de vouloir supprimer ce commentaire ?'))
+    if (confirm('√ätes vous certain de vouloir supprimer ce commentaire ?'))
     {
         new Ajax.Request('admin-light.php?ploopi_env='+_PLOOPI_ENV+'&ploopi_op=webedit_comment_delete&id_comment='+id_comment, {
             method: 'get',

@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -27,22 +27,22 @@
  * @subpackage article
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
- * Inclusion de la classe article_backup qui permet de gérer la sauvegarde des versions antérieures.
+ * Inclusion de la classe article_backup qui permet de gÃ©rer la sauvegarde des versions antÃ©rieures.
  */
 
 include_once './modules/webedit/class_article_backup.php';
 
 /**
- * Inclusion de la classe tag qui permet de gérer les étiquettes associées aux articles
+ * Inclusion de la classe tag qui permet de gÃ©rer les Ã©tiquettes associÃ©es aux articles
  */
 include_once './modules/webedit/class_tag.php';
 
 /**
- * Inclusion de la classe article_tag qui permet de gérer les étiquettes associées aux articles
+ * Inclusion de la classe article_tag qui permet de gÃ©rer les Ã©tiquettes associÃ©es aux articles
  */
 include_once './modules/webedit/class_article_tag.php';
 
@@ -51,13 +51,13 @@ include_once './modules/webedit/class_docfile.php';
 include_once './modules/webedit/class_article_object.php';
 
 /**
- * Classe d'accès aux table ploopi_mod_webedit_article et ploopi_mod_webedit_article_draft
+ * Classe d'accÃ¨s aux table ploopi_mod_webedit_article et ploopi_mod_webedit_article_draft
  *
  * @package webedit
  * @subpackage article
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 class webedit_article extends ploopi\data_object
@@ -85,7 +85,7 @@ class webedit_article extends ploopi\data_object
      * Ouvre un article
      *
      * @param int $id identifiant de l'article
-     * @return boolean true si l'article a été ouvert
+     * @return boolean true si l'article a Ã©tÃ© ouvert
      */
 
     public function open(...$args)
@@ -103,7 +103,7 @@ class webedit_article extends ploopi\data_object
      * @return int identifiant de l'article
      *
      * @copyright Ovensia
-     * @author Stéphane Escaich
+     * @author Ovensia
      */
 
     public function save()
@@ -116,11 +116,11 @@ class webedit_article extends ploopi\data_object
 
         $this->fields['content_cleaned'] = $this->fields['content'];
 
-        // filtre activé ?
+        // filtre activÃ© ?
         if (!$this->fields['disabledfilter']) $this->fields['content_cleaned'] = ploopi\str::htmlpurifier($this->fields['content_cleaned'], true);
 
         // Nettoyage des tags
-        // Note : les tags ne sont réellement enregistrés qu'à la publication
+        // Note : les tags ne sont rÃ©ellement enregistrÃ©s qu'Ã  la publication
         if (!empty($this->fields['tags']))
         {
             list($tags) = ploopi\str::getwords($this->fields['tags'], true, false, false);
@@ -141,17 +141,17 @@ class webedit_article extends ploopi\data_object
     }
 
     /**
-     * Supprime l'article et les données associées (sauvegardes, index du moteur de recherche)
+     * Supprime l'article et les donnÃ©es associÃ©es (sauvegardes, index du moteur de recherche)
      */
 
     public function delete()
     {
         $db = ploopi\db::get();
 
-        // mise à jour de la position des autres articles de la rubrique
+        // mise Ã  jour de la position des autres articles de la rubrique
         $db->query("UPDATE `".$this->gettablename()."` SET position = position - 1 WHERE position > {$this->fields['position']} AND id_heading = {$this->fields['id_heading']}");
 
-        // si brouillon, suppression de l'article associé
+        // si brouillon, suppression de l'article associÃ©
         if ($this->gettablename() == 'ploopi_mod_webedit_article_draft')
         {
             $article = new webedit_article();
@@ -174,7 +174,7 @@ class webedit_article extends ploopi\data_object
     /**
      * Publie un article (copie le contenu du brouillon dans l'article en ligne)
      *
-     * @return boolean true s'il s'agit d'une première publication
+     * @return boolean true s'il s'agit d'une premiÃ¨re publication
      */
 
     public function publish()
@@ -240,7 +240,7 @@ class webedit_article extends ploopi\data_object
     {
         $db = ploopi\db::get();
 
-        // Suppression des docs rattachés à l'article (on les récrée par la suite)
+        // Suppression des docs rattachÃ©s Ã  l'article (on les rÃ©crÃ©e par la suite)
         $db->query("DELETE FROM ploopi_mod_webedit_docfile WHERE id_article = {$this->fields['id']}");
 
         // Recherche des liens vers des documents (du module doc)
@@ -270,17 +270,17 @@ class webedit_article extends ploopi\data_object
             }
         }
 
-        // Suppression des objets rattachés à l'article (on les récrée par la suite)
+        // Suppression des objets rattachÃ©s Ã  l'article (on les rÃ©crÃ©e par la suite)
         $db->query("DELETE FROM ploopi_mod_webedit_article_object WHERE id_article = {$this->fields['id']}");
 
-        // Recherche des objets insérés
+        // Recherche des objets insÃ©rÃ©s
         if (preg_match_all('@\[\[(\d+),(\d+)(,([^/]+))?/([^\]]*)\]\]@i', ploopi\str::html_entity_decode($this->fields['content']), $arrMatches) !== false)
         {
             foreach(array_keys($arrMatches[0]) as $intKey)
             {
                 if (isset($_SESSION['ploopi']['modules'][$arrMatches[2][$intKey]])) // Module existe ?
                 {
-                    // Association des objets à l'article
+                    // Association des objets Ã  l'article
                     $objArticleObject = new webedit_article_object();
                     if (!$objArticleObject->open($this->fields['id'], $arrMatches[1][$intKey], $_SESSION['ploopi']['modules'][$arrMatches[2][$intKey]]['id_module_type'], $arrMatches[2][$intKey], $arrMatches[4][$intKey]))
                     {
@@ -300,7 +300,7 @@ class webedit_article extends ploopi\data_object
         $sql = "DELETE FROM ploopi_mod_webedit_article_tag WHERE id_article = {$this->fields['id']}";
         $db->query($sql);
 
-        // récupération des tags
+        // rÃ©cupÃ©ration des tags
         list($tags) = ploopi\str::getwords($this->fields['tags'], true, false, false);
         $tags = array_keys($tags);
         foreach($tags as $tag)
@@ -326,9 +326,9 @@ class webedit_article extends ploopi\data_object
     }
 
     /**
-     * Détermine si l'accès à cet article est autorisé
+     * DÃ©termine si l'accÃ¨s Ã  cet article est autorisÃ©
      *
-     * @return true si l'accès est autorisé
+     * @return true si l'accÃ¨s est autorisÃ©
      */
 
     public function isenabled()
@@ -358,7 +358,7 @@ class webedit_article extends ploopi\data_object
     }
 
     /**
-     * Retourne un tableau contenant les tags (étiquettes) associés à l'article
+     * Retourne un tableau contenant les tags (Ã©tiquettes) associÃ©s Ã  l'article
      *
      * @return array tableau des tags
      */

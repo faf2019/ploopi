@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2008 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,20 +21,20 @@
 */
 
 /**
- * Réindexation du contenu des articles pour tout le module
+ * RÃ©indexation du contenu des articles pour tout le module
  *
  * @package webedit
  * @subpackage public
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 switch($op)
 {
     default:
         echo ploopi\skin::get()->create_pagetitle(ploopi\str::htmlentities($_SESSION['ploopi']['modulelabel']));
-        echo ploopi\skin::get()->open_simplebloc('Réindexation');
+        echo ploopi\skin::get()->open_simplebloc('RÃ©indexation');
 
         ploopi\db::get()->query("SELECT count(*) as c FROM ploopi_mod_webedit_heading WHERE id_module = {$_SESSION['ploopi']['moduleid']}");
         $arrStats['headings'] = ($row = ploopi\db::get()->fetchrow()) ? $row['c'] : 0;
@@ -67,7 +67,7 @@ switch($op)
 
         ?>
         <div style="padding:4px;">
-            <input type="button" class="button" value="Réindexer le contenu du site" onclick="javascript:document.location.href='<?php echo ploopi\crypt::urlencode('admin.php?webedit_menu=reindex&op=reindex'); ?>';" />
+            <input type="button" class="button" value="RÃ©indexer le contenu du site" onclick="javascript:document.location.href='<?php echo ploopi\crypt::urlencode('admin.php?webedit_menu=reindex&op=reindex'); ?>';" />
         </div>
         <div style="padding:4px;">
             Le site contient :
@@ -85,7 +85,7 @@ switch($op)
             <strong><?php echo $arrStats['tags']; ?> tag(s)</strong>
         </div>
         <div style="padding:4px;">
-            <strong><?php echo $arrStats['keywords']; ?> mot(s) indexé(s)</strong>
+            <strong><?php echo $arrStats['keywords']; ?> mot(s) indexÃ©(s)</strong>
         </div>
         <?php
         echo ploopi\skin::get()->close_simplebloc();
@@ -100,7 +100,7 @@ switch($op)
         ?>
         <div style="padding:4px;">
         <?php
-        $index_start = $ploopi_timer->getexectime();
+        $index_start = timer::get()->getexectime();
 
         $rsArticles = ploopi\db::get()->query("SELECT id FROM ploopi_mod_webedit_article");
 
@@ -114,8 +114,8 @@ switch($op)
             }
         }
         ?>
-        indexation terminée en <?php printf("%.02fs", $ploopi_timer->getexectime() - $index_start); ?>
-        <?php if (isset($_REQUEST['force'])) echo "<br />Mode 'force' activé"; ?>
+        indexation terminÃ©e en <?php printf("%.02fs", timer::get()->getexectime() - $index_start); ?>
+        <?php if (isset($_REQUEST['force'])) echo "<br />Mode 'force' activÃ©"; ?>
         <br /><a title="Retour" href="<?php echo ploopi\crypt::urlencode('admin.php?webedit_menu=reindex'); ?>">Retour</a>
         </div>
         <?php

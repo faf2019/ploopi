@@ -1,165 +1,171 @@
+== Module WebEdit - version 2.7.1 ============================================
+
+2020-02-12  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* PrÃ©-version jQuery + Bascule UTF-8
+
 == Module WebEdit - version 2.7.0 ============================================
 
-2016-08-08  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2016-08-08  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
 * Version pour Ploopi 1.9.7+ / PHP 7+
-* Suppression de la dépendance à fckeditor
-* Intégration de ckeditor comme éditeur de contenu
-* Nouveau plugin d'intégration d'objets dynamiques
+* Suppression de la dÃ©pendance Ã  fckeditor
+* IntÃ©gration de ckeditor comme Ã©diteur de contenu
+* Nouveau plugin d'intÃ©gration d'objets dynamiques
 
 == Module WebEdit - version 2.6.2 ============================================
 
-2016-02-15  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2016-02-15  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Corrections sur la gestion de l'enregistrement des modifications de position + mise en place d'un système d'autocorrection des positions existantes
+* Corrections sur la gestion de l'enregistrement des modifications de position + mise en place d'un systÃ¨me d'autocorrection des positions existantes
 
 == Module WebEdit - version 2.6.1 ============================================
 
-2015-07-13  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2015-07-13  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Modification de la portée de la variable $template_moduleid pour compatibilité avec modules intégrables (directory)
+* Modification de la portÃ©e de la variable $template_moduleid pour compatibilitÃ© avec modules intÃ©grables (directory)
 
 == Module WebEdit - version 2.6.0 ============================================
 
-2015-07-07  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2015-07-07  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Correction d'un bug à l'enregistrement des dates lors de la publication d'un article "à valider"
+* Correction d'un bug Ã  l'enregistrement des dates lors de la publication d'un article "Ã  valider"
 
 == Module WebEdit - version 2.5.7 ============================================
 
-2015-04-13  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2015-04-13  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Ajout d'un jeton manquant sur la fonctionnalité de suppression d'un abonné
-* Ajout d'un jeton manquant sur la fonctionnalité de suppression d'un article
-* Correction d'un bug à l'affichage du message d'abonnement/désabonnement
+* Ajout d'un jeton manquant sur la fonctionnalitÃ© de suppression d'un abonnÃ©
+* Ajout d'un jeton manquant sur la fonctionnalitÃ© de suppression d'un article
+* Correction d'un bug Ã  l'affichage du message d'abonnement/dÃ©sabonnement
 
 == Module WebEdit - version 2.5.6 ============================================
 
-2015-03-02  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2015-03-02  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Correction d'un bug dans l'affichage du champ "Code supplémentaire" à cause d'un filtrage excessif du contenu.
+* Correction d'un bug dans l'affichage du champ "Code supplÃ©mentaire" Ã  cause d'un filtrage excessif du contenu.
 
 == Module WebEdit - version 2.5.5 ============================================
 
-2015-01-20  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2015-01-20  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Correction d'un bug lié à la modification du comportement de html_entity_decode avec PHP 5.4
+* Correction d'un bug liÃ© Ã  la modification du comportement de html_entity_decode avec PHP 5.4
 
 == Module WebEdit - version 2.5.4 ============================================
 
-2015-01-20  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2015-01-20  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Correction d'un bug à la suppression d'une rubrique (suite)
-* Possibilité de modifier manuellement le code hexa de la couleur de rubrique
+* Correction d'un bug Ã  la suppression d'une rubrique (suite)
+* PossibilitÃ© de modifier manuellement le code hexa de la couleur de rubrique
 
 == Module WebEdit - version 2.5.3 ============================================
 
-2014-11-20  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2014-11-20  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Correction d'un bug à la suppression d'une racine (problème de calcul de position)
+* Correction d'un bug Ã  la suppression d'une racine (problÃ¨me de calcul de position)
 
 == Module WebEdit - version 2.5.2 ============================================
 
-2014-10-30  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2014-10-30  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Correction d'un bug empêchant la création de racines au delà de 255 modules instanciés.
+* Correction d'un bug empÃªchant la crÃ©ation de racines au delÃ  de 255 modules instanciÃ©s.
 
 == Module WebEdit - version 2.5.1i ============================================
 
-2014-09-09  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2014-09-09  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Contournement d'un bug de FckEditor lorsqu'il est intégré dans une zone avec scrolling vertical (uniquement lorsque le menu est déporté). Le menu a été réintégré à la fenêtre d'édition. Il n'est donc plus déporté.
+* Contournement d'un bug de FckEditor lorsqu'il est intÃ©grÃ© dans une zone avec scrolling vertical (uniquement lorsque le menu est dÃ©portÃ©). Le menu a Ã©tÃ© rÃ©intÃ©grÃ© Ã  la fenÃªtre d'Ã©dition. Il n'est donc plus dÃ©portÃ©.
 
 == Module WebEdit - version 2.5.1h ============================================
 
-2014-09-08  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2014-09-08  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Correction d'un bug dans le rendu frontoffice. La variable $template_name était manquante.
+* Correction d'un bug dans le rendu frontoffice. La variable $template_name Ã©tait manquante.
 
 == Module WebEdit - version 2.5.1g ============================================
 
-2014-03-13  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2014-03-13  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
 * Correction d'un bug avec la gestion des liens et images dans fckeditor
 
 == Module WebEdit - version 2.5.1f ============================================
 
-2014-03-13  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2014-03-13  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Correction d'un bug avec l'intégration des objets dynamiques dans fckeditor
+* Correction d'un bug avec l'intÃ©gration des objets dynamiques dans fckeditor
 
 == Module WebEdit - version 2.5.1e ============================================
 
-2013-12-17  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2013-12-17  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Ajout de contrôles d'affichage pour éviter les injections XSS
+* Ajout de contrÃ´les d'affichage pour Ã©viter les injections XSS
 
 == Module WebEdit - version 2.5.1d ============================================
 
-2013-07-23  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2013-07-23  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Correction d'un bug lié à la modification du comportement de htmlentities avec PHP 5.4
+* Correction d'un bug liÃ© Ã  la modification du comportement de htmlentities avec PHP 5.4
 
 == Module WebEdit - version 2.5.1c ============================================
 
-2013-05-22  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2013-05-22  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Mise à jour liée à l'externalisation des données d'indexation
+* Mise Ã  jour liÃ©e Ã  l'externalisation des donnÃ©es d'indexation
 
 == Module WebEdit - version 2.5.1b ============================================
 
-2013-04-03  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2013-04-03  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Corrections suite à la modification du loader de Ploopi
+* Corrections suite Ã  la modification du loader de Ploopi
 
 == Module WebEdit - version 2.5.1a ============================================
 
-2013-03-20  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2013-03-20  StÃ©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
-* Amélioration de la recherche avancée
-* Meilleur contrôle de la rubrique sélectionnée au moment de l'enregistrement des modifications
-* Amélioration de l'affichage du formulaire de modification d'une rubrique
+* AmÃ©lioration de la recherche avancÃ©e
+* Meilleur contrÃ´le de la rubrique sÃ©lectionnÃ©e au moment de l'enregistrement des modifications
+* AmÃ©lioration de l'affichage du formulaire de modification d'une rubrique
 
 == Module WebEdit - version 2.5.1 ============================================
 
-2013-03-18  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2013-03-18  StÃ©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
-* Correction d'un bug sur la détection du module lors d'un appel externe pour création de liens
-* Correction d'un problème sur l'application de l'héritage des droits d'accès dans le cas d'une rubrique cochée privée mais sans sélection d'utilisateurs
+* Correction d'un bug sur la dÃ©tection du module lors d'un appel externe pour crÃ©ation de liens
+* Correction d'un problÃ¨me sur l'application de l'hÃ©ritage des droits d'accÃ¨s dans le cas d'une rubrique cochÃ©e privÃ©e mais sans sÃ©lection d'utilisateurs
 
 == Module WebEdit - version 2.5.0b ============================================
 
-2012-08-07  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2012-08-07  StÃ©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
- * Ré-intégration de la mise à jour SQL 2.5.0
+ * RÃ©-intÃ©gration de la mise Ã  jour SQL 2.5.0
 
  == Module WebEdit - version 2.5.0a ============================================
 
-2011-10-04  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2011-10-04  StÃ©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
  * Correction d'un bug lors de l'affichage "contenu des sous rubriques"
 
 == Module WebEdit - version 2.5.0 ============================================
 
-2011-10-03  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2011-10-03  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Possibilités d'indextion pour les objets insérés dans le contenu
+* PossibilitÃ©s d'indextion pour les objets insÃ©rÃ©s dans le contenu
 
 == Module WebEdit - version 2.4.2c ============================================
 
-2011-09-28  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2011-09-28  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
 * Correction lors de la suppression d'un article/bloc
 
 == Module WebEdit - version 2.4.2b ============================================
 
-2011-08-24  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2011-08-24  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Correction d'un bug dans l'arborescence des rubriques/articles si aucun bloc présent
+* Correction d'un bug dans l'arborescence des rubriques/articles si aucun bloc prÃ©sent
 
 == Module WebEdit - version 2.4.2 ============================================
 
-2011-06-16  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2011-06-16  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
 * Ajout des articles dans le plan de site (voir les templates frontoffice exemple*) via les blocs "page", par ex: {switch_content_sitemap.heading0.heading1.page.LABEL}
 
@@ -171,55 +177,55 @@
 
 == Module WebEdit - version 2.4.1e ============================================
 
-2011-01-21  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2011-01-21  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Correction d'un bug à l'enregistrement d'un nouvel article (l'article n'était pas associé au module et n'était pas retrouvé par la suite)
+* Correction d'un bug Ã  l'enregistrement d'un nouvel article (l'article n'Ã©tait pas associÃ© au module et n'Ã©tait pas retrouvÃ© par la suite)
 
 == Module WebEdit - version 2.4.1d ============================================
 
-2011-01-19  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2011-01-19  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Correction sur la recherche avancée : le filtrage par type de document ne retourne plus les articles non concernés
+* Correction sur la recherche avancÃ©e : le filtrage par type de document ne retourne plus les articles non concernÃ©s
 
 == Module WebEdit - version 2.4.1c ============================================
 
-2011-01-18  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2011-01-18  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
 * Correction mineure sur la fonction webedit_getobjectcontent()
 
 == Module WebEdit - version 2.4.1b ============================================
 
-2011-01-18  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2011-01-18  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
 * Recherche : correction d'un bug sur le filtrage par rubrique des articles
-* Recherche : n'affiche plus la totalité des résultats lors d'un appel direct au formulaire de recherche
+* Recherche : n'affiche plus la totalitÃ© des rÃ©sultats lors d'un appel direct au formulaire de recherche
 
 == Module WebEdit - version 2.4.1 ============================================
 
-2011-01-17  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2011-01-17  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Ajout des paramètres "largeur" et "hauteur" sur les blocs. Uniquement disponible pour l'administrateur "système".
-* Adaptation de l'éditeur de contenu à la largeur et la hauteur du bloc (si définies)
-* Correction d'un bug lors de la publication d'un nouveau bloc (nécessitait une 2e publication)
+* Ajout des paramÃ¨tres "largeur" et "hauteur" sur les blocs. Uniquement disponible pour l'administrateur "systÃ¨me".
+* Adaptation de l'Ã©diteur de contenu Ã  la largeur et la hauteur du bloc (si dÃ©finies)
+* Correction d'un bug lors de la publication d'un nouveau bloc (nÃ©cessitait une 2e publication)
 
 == Module WebEdit - version 2.4.0b ============================================
 
-2011-01-13  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2011-01-13  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Correction d'un bug d'affichage lors de la recherche (affichage d'une variable pour débogage)
-* Possibilité de faire une recherche sans mot clé
+* Correction d'un bug d'affichage lors de la recherche (affichage d'une variable pour dÃ©bogage)
+* PossibilitÃ© de faire une recherche sans mot clÃ©
 
 == Module WebEdit - version 2.4.0 ============================================
 
-2011-01-10  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2011-01-10  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
 * Gestion des blocs de contenus dynamiques (Nouvelle rubrique "blocs")
-** Support des rédacteurs
+** Support des rÃ©dacteurs
 ** Support des validateurs
 ** Support des annotations
 ** Support des abonnements
 
-* Gestion d'un mode de recherche avancée en frontoffice
+* Gestion d'un mode de recherche avancÃ©e en frontoffice
 ** Recherche par type de contenu (documents/articles)
 ** Recherche par type de document (extension de fichier)
 ** Recherche par date de publication (entre 2 dates)
@@ -227,97 +233,97 @@
 
 == Module WebEdit - version 2.3.3 ============================================
 
-2010-11-30  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2010-11-30  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Intégration du nouveau colorpicker
+* IntÃ©gration du nouveau colorpicker
 
 == Module WebEdit - version 2.3.2r ============================================
 
-2010-06-01  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2010-06-01  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Modification : un rédacteur ne peut plus créer de sous-rubrique
+* Modification : un rÃ©dacteur ne peut plus crÃ©er de sous-rubrique
 
 == Module WebEdit - version 2.3.2q ============================================
 
 2010-05-28  Xavier Toussaint ~ HeXad  <Xavier@hexad.fr>
 
-* Correction : warning sur le contrôle de l'action de gestion des commentaires (global.php de webedit non chargé)
+* Correction : warning sur le contrÃ´le de l'action de gestion des commentaires (global.php de webedit non chargÃ©)
 
 == Module WebEdit - version 2.3.2p ============================================
 
 2010-05-27  Xavier Toussaint ~ HeXad  <Xavier@hexad.fr>
 
-* Correction : adaptation au fonctionnement de la classe calendar qui a été profondement modifiée.
+* Correction : adaptation au fonctionnement de la classe calendar qui a Ã©tÃ© profondement modifiÃ©e.
 
 == Module WebEdit - version 2.3.2o ============================================
 
 2010-04-27  Xavier Toussaint ~ HeXad  <Xavier@hexad.fr>
 
-* Modification : le tag pour tpl switch_pages n'existe plus si pas de pages à afficher (ex : liste de pages).
+* Modification : le tag pour tpl switch_pages n'existe plus si pas de pages Ã  afficher (ex : liste de pages).
 
 == Module WebEdit - version 2.3.2n ============================================
 
 2010-03-04  Xavier Toussaint ~ HeXad  <Xavier@hexad.fr>
 
-* Correction d'un bug dans l'intégration de class_skin.php en utilisation frontoffice
+* Correction d'un bug dans l'intÃ©gration de class_skin.php en utilisation frontoffice
 
 == Module WebEdit - version 2.3.2m ============================================
 
-2010-02-05  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2010-02-05  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Correction d'un bug qui affiche parfois une couleur jaune en fond lors de l'intégration d'un objet
-* Correction d'un bug à la lecture des fichiers vidéo via fw_player en frontoffice : nécessite de générer une url absolue vers le fichier à lire (pourquoi ??)
+* Correction d'un bug qui affiche parfois une couleur jaune en fond lors de l'intÃ©gration d'un objet
+* Correction d'un bug Ã  la lecture des fichiers vidÃ©o via fw_player en frontoffice : nÃ©cessite de gÃ©nÃ©rer une url absolue vers le fichier Ã  lire (pourquoi ??)
 
 == Module WebEdit - version 2.3.2l ============================================
 
-2010-02-02  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2010-02-02  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Correction d'un bug dans le contrôle de disponibilité des objets intégrés en frontoffice (objets du module "système")
+* Correction d'un bug dans le contrÃ´le de disponibilitÃ© des objets intÃ©grÃ©s en frontoffice (objets du module "systÃ¨me")
 
 == Module WebEdit - version 2.3.2k ============================================
 
-2010-02-01  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2010-02-01  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Correction d'un bug dans le contrôle de disponibilité des objets intégrés en frontoffice
+* Correction d'un bug dans le contrÃ´le de disponibilitÃ© des objets intÃ©grÃ©s en frontoffice
 
 == Module WebEdit - version 2.3.2j ============================================
 
-2010-02-01  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2010-02-01  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Correction d'un problème de visibilité d'article pour les utilisateurs ne disposant que d'un rôle de validation
+* Correction d'un problÃ¨me de visibilitÃ© d'article pour les utilisateurs ne disposant que d'un rÃ´le de validation
 
 == Module WebEdit - version 2.3.2i ============================================
 
-2010-01-27  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2010-01-27  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Amélioration du contrôle de disponibilité des objets intégrés dans les articles
-* Ajout d'un bloc conditionnel "sw_separator" au niveau des variables template frontoffice sur les rubriques pour déterminer si un séparateur peut être affiché après une rubrique (signifiant la présence d'une rubrique suivante)
-* Correction d'un bug dans la génération des blocs de variables de rubriques pour la génération du frontoffice
+* AmÃ©lioration du contrÃ´le de disponibilitÃ© des objets intÃ©grÃ©s dans les articles
+* Ajout d'un bloc conditionnel "sw_separator" au niveau des variables template frontoffice sur les rubriques pour dÃ©terminer si un sÃ©parateur peut Ãªtre affichÃ© aprÃ¨s une rubrique (signifiant la prÃ©sence d'une rubrique suivante)
+* Correction d'un bug dans la gÃ©nÃ©ration des blocs de variables de rubriques pour la gÃ©nÃ©ration du frontoffice
 
 == Module WebEdit - version 2.3.2h ============================================
 
-2010-01-20  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2010-01-20  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Correction d'un bug dans la génération des variables templates frontoffice (notamment pour le PATH indiquant la liste des rubriques sélectionnées)
+ * Correction d'un bug dans la gÃ©nÃ©ration des variables templates frontoffice (notamment pour le PATH indiquant la liste des rubriques sÃ©lectionnÃ©es)
 
 == Module WebEdit - version 2.3.2g ============================================
 
 2010-01-19  Xavier Toussaint ~ HeXad  <Xavier@hexad.fr>
 
- * Modification : intitulé de rôles.
- * Correction : certain rôle ont des dépendances vis a vis d'autres rôles (ex pour être gestionnaire des validateurs il faut être gestionnaire de rubrique)
+ * Modification : intitulÃ© de rÃ´les.
+ * Correction : certain rÃ´le ont des dÃ©pendances vis a vis d'autres rÃ´les (ex pour Ãªtre gestionnaire des validateurs il faut Ãªtre gestionnaire de rubrique)
 
 == Module WebEdit - version 2.3.2f ============================================
 
 2010-01-12  Xavier Toussaint ~ HeXad  <Xavier@hexad.fr>
 
- * correction : la regexpr des flux RSS/ATOM n'était pas assez précise et volait les url des flux du module Doc
+ * correction : la regexpr des flux RSS/ATOM n'Ã©tait pas assez prÃ©cise et volait les url des flux du module Doc
 
 == Module WebEdit - version 2.3.2e ============================================
 
 2010-01-07  Xavier Toussaint ~ HeXad  <Xavier@hexad.fr>
 
- * correction : Url vers le captcha audio pouvait être erronée
+ * correction : Url vers le captcha audio pouvait Ãªtre erronÃ©e
 
 == Module WebEdit - version 2.3.2d ============================================
 
@@ -336,84 +342,84 @@
 2010-01-02  Xavier Toussaint ~ HeXad  <Xavier@hexad.fr>
 
 * Modification : Optimisation de plusieurs requetes dans le display (suppression des SELECT "*")
-* Modification : Optimisation de l'affichage blog : suppression d'au moins une requete par boucle d'article à afficher.
+* Modification : Optimisation de l'affichage blog : suppression d'au moins une requete par boucle d'article Ã  afficher.
 * Modification : Optimisation de plusieurs requetes dans le backend (suppression des SELECT "*")
 
 == Module WebEdit - version 2.3.2a ============================================
 
 2010-01-02  Xavier Toussaint ~ HeXad  <Xavier@hexad.fr>
 
-* Modification : Optimisation du contrôle de boucle sur la redirection rubrique -> rubrique
-* Correction bug : le contrôle de boucle ne verifiait pas le mode "redirect" (ou pas)
+* Modification : Optimisation du contrÃ´le de boucle sur la redirection rubrique -> rubrique
+* Correction bug : le contrÃ´le de boucle ne verifiait pas le mode "redirect" (ou pas)
 
 == Module WebEdit - version 2.3.2 ============================================
 
 2010-01-01  Xavier Toussaint ~ HeXad  <Xavier@hexad.fr>
 
-* Modification : Possibilité de rediriger une rubrique vers une autre rubrique. (Ex.: Racine -> rubrique "blog")
+* Modification : PossibilitÃ© de rediriger une rubrique vers une autre rubrique. (Ex.: Racine -> rubrique "blog")
 
 == Module WebEdit - version 2.3.1g ============================================
 
 2009-12-31  Xavier Toussaint ~ HeXad  <Xavier@hexad.fr>
 
-* Correction bug : Pour le résultat de la recherche par nuage de tags, il manque la balise {SHORT_LINK}
+* Correction bug : Pour le rÃ©sultat de la recherche par nuage de tags, il manque la balise {SHORT_LINK}
 
 == Module WebEdit - version 2.3.1f ============================================
 
 2009-12-30  Xavier Toussaint ~ HeXad  <Xavier@hexad.fr>
 
-* Correction bug : Passage d'un paramètre erroné au calendrier "blog"
+* Correction bug : Passage d'un paramÃ¨tre erronÃ© au calendrier "blog"
 
 == Module WebEdit - version 2.3.1e ============================================
 
 2009-12-19  Xavier Toussaint ~ HeXad  <Xavier@hexad.fr>
 
-* Correction bug : En affichage "Blog", les pages non visibles dans le menu apparaissent quand même.
+* Correction bug : En affichage "Blog", les pages non visibles dans le menu apparaissent quand mÃªme.
 
 == Module WebEdit - version 2.3.1d ============================================
 
 2009-12-16  Xavier Toussaint ~ HeXad  <Xavier@hexad.fr>
 
-* Correction bug : Problème d'affichage lorsqu'une rubrique n'a aucun user en autorisation d'accès meme en héritage (même sans restriction !)
+* Correction bug : ProblÃ¨me d'affichage lorsqu'une rubrique n'a aucun user en autorisation d'accÃ¨s meme en hÃ©ritage (mÃªme sans restriction !)
 
 == Module WebEdit - version 2.3.1c ============================================
 
 2009-12-16  Xavier Toussaint ~ HeXad  <Xavier@hexad.fr>
 
-* Correction bug : Le fichier XML utilisé par le cumulus de tag renvoyait des erreurs SI le user avait été précédement connecté en Back.
+* Correction bug : Le fichier XML utilisÃ© par le cumulus de tag renvoyait des erreurs SI le user avait Ã©tÃ© prÃ©cÃ©dement connectÃ© en Back.
 
 == Module WebEdit - version 2.3.1b ============================================
 
 2009-12-16  Xavier Toussaint ~ HeXad  <Xavier@hexad.fr>
 
-* Correction du bug #38 : Problème pour insérer des documents ou faire des liens vers des documents (Bug corrigé dans la branche stable par Stéphane Escaich)
+* Correction du bug #38 : ProblÃ¨me pour insÃ©rer des documents ou faire des liens vers des documents (Bug corrigÃ© dans la branche stable par StÃ©phane Escaich)
 
 == Module WebEdit - version 2.3.1a ============================================
 
 2009-12-15  Xavier Toussaint ~ HeXad  <Xavier@hexad.fr>
 
- * Correction du bug #37 : Problème avec les rewrite rules : indique "Page non trouvée" (Bug corrigé dans la branche stable par Stéphane Escaich)
+ * Correction du bug #37 : ProblÃ¨me avec les rewrite rules : indique "Page non trouvÃ©e" (Bug corrigÃ© dans la branche stable par StÃ©phane Escaich)
 
 == Module WebEdit - version 2.3.1 ============================================
 
-2009-12-07  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2009-12-07  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Modification : Génération automatique des variables "template" pour les 2 modes de navigation dans les rubriques (le fichier "config.php" dans le dossier du temmplate est donc devenu obsolète)
+ * Modification : GÃ©nÃ©ration automatique des variables "template" pour les 2 modes de navigation dans les rubriques (le fichier "config.php" dans le dossier du temmplate est donc devenu obsolÃ¨te)
 
 == Module WebEdit - version 2.3.0 ============================================
 
 2009-12-04  Xavier Toussaint ~ HeXad <Xavier@hexad.fr>
 
- * Ajout : Gestion des "rédacteurs" (Utilisateurs autorisés à modifier une partie des rubriques et leurs articles de webedit.)
+ * Ajout : Gestion des "rÃ©dacteurs" (Utilisateurs autorisÃ©s Ã  modifier une partie des rubriques et leurs articles de webedit.)
  * Ajout : http://"votredomaine"/tag3D/"moduleid_webedit".xml retourne un fichier XML format exploitable par le plugin flash WP-Cumulus (WP-Cumulus : Copyright Roy Tanck - www.roytanck.com)
- * Correction : Certains champs restaient accessibles même avec des droits restreints.
+ * Correction : Certains champs restaient accessibles mÃªme avec des droits restreints.
 
 == Module WebEdit - version 2.2.0a ============================================
 
 2009-11-26  Xavier Toussaint ~ HeXad <Xavier@hexad.fr>
 
- * Correction : faille potentielle de sécurité dans les commentaires
- * Correction : erreur lors de la redirection après enregistrement d'un commentaire
+ * Correction : faille potentielle de sÃ©curitÃ© dans les commentaires
+ * Correction : erreur lors de la redirection aprÃ¨s enregistrement d'un commentaire
 
 == Module WebEdit - version 2.2.0 ============================================
 
@@ -423,644 +429,644 @@
  * Ajout d'un calendrier pour la version "blog"
  * Ajout d'un historique des articles pour la version "blog"
 
- * Ajout : les articles gèrent les commentaires
+ * Ajout : les articles gÃ¨rent les commentaires
 
 == Module WebEdit - version 2.1.7 ============================================
 
-2009-10-13  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2009-10-13  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Correction du bug #27 : "module webedit : problème de suppression d'article"
-* Correction d'un bug lié à une modification sur $db->getarray()
+* Correction du bug #27 : "module webedit : problÃ¨me de suppression d'article"
+* Correction d'un bug liÃ© Ã  une modification sur $db->getarray()
 * Correction d'un bug dans l'insertion de liens/images avec fckeditor (uniquement si pas de virtualhost)
 
 == Module WebEdit - version 2.1.6c ============================================
 
-2009-09-25  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2009-09-25  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Correction d'un bug qui autorise l'affichage d'un document lié dans une page privée pour un utilisateur non identifié qui utilise la recherche
+ * Correction d'un bug qui autorise l'affichage d'un document liÃ© dans une page privÃ©e pour un utilisateur non identifiÃ© qui utilise la recherche
 
 == Module WebEdit - version 2.1.6b ============================================
 
-2009-09-25  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2009-09-25  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Correction d'un bug mineur à l'envoi d'un mail aux abonnés frontoffice : l'expéditeur était inclus plusieurs autant de fois que le message était envoyé
+ * Correction d'un bug mineur Ã  l'envoi d'un mail aux abonnÃ©s frontoffice : l'expÃ©diteur Ã©tait inclus plusieurs autant de fois que le message Ã©tait envoyÃ©
 
 == Module WebEdit - version 2.1.6 ============================================
 
-2009-09-25  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2009-09-25  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Correction d'un problème lors de l'abonnement en frontoffice sur la page d'accueil, ne prenait pas en compte la rubrique
- * Correction d'un bug empêchant la suppression d'un abonné frontoffice sur le site global
- * Ajout d'une information "tout le site" pour les abonnés frontoffice au site
+ * Correction d'un problÃ¨me lors de l'abonnement en frontoffice sur la page d'accueil, ne prenait pas en compte la rubrique
+ * Correction d'un bug empÃªchant la suppression d'un abonnÃ© frontoffice sur le site global
+ * Ajout d'une information "tout le site" pour les abonnÃ©s frontoffice au site
 
 == Module WebEdit - version 2.1.5c ============================================
 
-2009-09-16  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2009-09-16  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Les fichiers javascript.php et head.php des modules sont désormais gérés en frontoffice
+ * Les fichiers javascript.php et head.php des modules sont dÃ©sormais gÃ©rÃ©s en frontoffice
 
 == Module WebEdit - version 2.1.5b ============================================
 
-2009-09-15  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2009-09-15  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Correction d'un bug lors de l'affichage des validateurs hérités de rubriques parents
+ * Correction d'un bug lors de l'affichage des validateurs hÃ©ritÃ©s de rubriques parents
 
 == Module WebEdit - version 2.1.5 ============================================
 
-2009-09-11  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2009-09-11  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
  * Correction d'un conflit dans la gestion des ancres (fckeditor) et l'utilisation de la balise <base>
- * Optimisation des temps de réponse à l'affichage des articles avec mise en cache d'une partie du rendu (réécriture des urls)
- * Affichage des abonnés frontoffice à l'ensemble du site au même niveau que les abonnés d'une rubrique particulière
- * Prise en compte réelle des groupes dans la gestion des validateurs de rubriques
+ * Optimisation des temps de rÃ©ponse Ã  l'affichage des articles avec mise en cache d'une partie du rendu (rÃ©Ã©criture des urls)
+ * Affichage des abonnÃ©s frontoffice Ã  l'ensemble du site au mÃªme niveau que les abonnÃ©s d'une rubrique particuliÃ¨re
+ * Prise en compte rÃ©elle des groupes dans la gestion des validateurs de rubriques
 
  == Module WebEdit - version 2.1.4f ============================================
 
 2009-09-10  Xavier Toussaint ~ HeXad <Xavier@hexad.fr>
 
- * idem 2.1.4e - Correction d'un petit bug de régression sur les rubriques privées affichées "en force".
+ * idem 2.1.4e - Correction d'un petit bug de rÃ©gression sur les rubriques privÃ©es affichÃ©es "en force".
 
 == Module WebEdit - version 2.1.4e ============================================
 
 2009-09-10  Xavier Toussaint ~ HeXad <Xavier@hexad.fr>
 
- * Correction d'un petit bug de régression sur les rubriques privées affichées "en force".
+ * Correction d'un petit bug de rÃ©gression sur les rubriques privÃ©es affichÃ©es "en force".
 
 == Module WebEdit - version 2.1.4d ============================================
 
-2009-09-04  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2009-09-04  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Amélioration du format du fichier sitemap.xml (problème avec le champ lastmod et des dates vides)
+ * AmÃ©lioration du format du fichier sitemap.xml (problÃ¨me avec le champ lastmod et des dates vides)
 
 == Module WebEdit - version 2.1.4c ============================================
 
-2009-08-31  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2009-08-31  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Correction d'un bug empêchant l'accès à l'édition d'un article sur une rubrique privée
+ * Correction d'un bug empÃªchant l'accÃ¨s Ã  l'Ã©dition d'un article sur une rubrique privÃ©e
 
 == Module WebEdit - version 2.1.4b ============================================
 
 2009-08-25  Xavier Toussaint ~ HeXad <Xavier@hexad.fr>
 
- * Modification du fonctionnement des rubriques privées affichées "en force" depuis un autre module : $_SESSION['ploopi']['allowedheading']... -> $_SESSION['webedit']['allowedheading']
- Ceci afin de ne pas perdre l'info lors de la connexion/déconnexion
+ * Modification du fonctionnement des rubriques privÃ©es affichÃ©es "en force" depuis un autre module : $_SESSION['ploopi']['allowedheading']... -> $_SESSION['webedit']['allowedheading']
+ Ceci afin de ne pas perdre l'info lors de la connexion/dÃ©connexion
 
 == Module WebEdit - version 2.1.4 ============================================
 
-2009-08-13  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2009-08-13  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Modification de l'ordre d'affichage des éléments lors de l'intégration d'un module en frontoffice : template.php (habillage) est désormais traité avant template_content.php (contenu de page)
+ * Modification de l'ordre d'affichage des Ã©lÃ©ments lors de l'intÃ©gration d'un module en frontoffice : template.php (habillage) est dÃ©sormais traitÃ© avant template_content.php (contenu de page)
 
 == Module WebEdit - version 2.1.3b ============================================
 
-2009-08-13  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2009-08-13  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Corrections liées au refactoring de la fonction webedit_generate_sitemap() en webedit_sitemap()
+ * Corrections liÃ©es au refactoring de la fonction webedit_generate_sitemap() en webedit_sitemap()
 
 == Module WebEdit - version 2.1.3 ============================================
 
-2009-08-07  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2009-08-07  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
  * Refactoring de la fonction webedit_generate_sitemap() en webedit_sitemap()
- * La fonction webedit_sitemap() peut désormais appeler automatiquement les fonctions *_sitemap() des autres modules si elles existent
+ * La fonction webedit_sitemap() peut dÃ©sormais appeler automatiquement les fonctions *_sitemap() des autres modules si elles existent
 
 == Module WebEdit - version 2.1.2b ============================================
 
-2009-08-03  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2009-08-03  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
  * Utilisation de la nouvelle fonction ploopi_fckeditor()
- * Mise à jour de la configuration locale fckconfig.js
+ * Mise Ã  jour de la configuration locale fckconfig.js
 
 == Module WebEdit - version 2.1.2 ============================================
 
 2009-07-29  Xavier Toussaint ~ HeXad <Xavier@hexad.fr>
 
- * Gestion de l'affichage des rubriques privées affichées "en force" depuis un autre module
+ * Gestion de l'affichage des rubriques privÃ©es affichÃ©es "en force" depuis un autre module
 
-   * Ajout de la fonction webedit_allowheading permettant d'indiquer une liste de id_heading privés affichés "en force" depuis un autre module.
-   * Ajout de la fonction webedit_disallowheading permettant de supprimer des id_heading affichés en force depuis un autre module.
+   * Ajout de la fonction webedit_allowheading permettant d'indiquer une liste de id_heading privÃ©s affichÃ©s "en force" depuis un autre module.
+   * Ajout de la fonction webedit_disallowheading permettant de supprimer des id_heading affichÃ©s en force depuis un autre module.
    * Impact en frontoffice sur : affichage des rubriques/pages, moteur de recherche, nuage de tags, plan de site,
    * Impact sur la backend RSS/ATOM
 
 == Module WebEdit - version 2.1.1b ============================================
 
-2009-07-23  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2009-07-23  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Mise en évidence des articles déplacés pour re-publication
+ * Mise en Ã©vidence des articles dÃ©placÃ©s pour re-publication
 
 == Module WebEdit - version 2.1.1 ============================================
 
-2009-07-22  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2009-07-22  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Gestion des partages d'accès par groupes (au niveau des accès privés)
+ * Gestion des partages d'accÃ¨s par groupes (au niveau des accÃ¨s privÃ©s)
  * Gestion des validateurs de rubriques par groupes
- * Correction sur des appels par référence erronés
+ * Correction sur des appels par rÃ©fÃ©rence erronÃ©s
 
 == Module WebEdit - version 2.1.0e ============================================
 
-2009-06-23  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2009-06-23  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Correction d'un bug lors de l'indexation d'un article contenant plusieurs fois le même lien vers un même document
+ * Correction d'un bug lors de l'indexation d'un article contenant plusieurs fois le mÃªme lien vers un mÃªme document
 
 == Module WebEdit - version 2.1.0d ============================================
 
-2009-06-23  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2009-06-23  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Filtrage XHTML moins strict (inclusions javascript, intégration de vidéos flash)
- * Correction d'un bug lors de l'indexation des documents liés à un article
- * Correction d'un bug lors de la suppression d'une rubrique : ne modifiait pas la position des rubriques suivantes d'un même parent
+ * Filtrage XHTML moins strict (inclusions javascript, intÃ©gration de vidÃ©os flash)
+ * Correction d'un bug lors de l'indexation des documents liÃ©s Ã  un article
+ * Correction d'un bug lors de la suppression d'une rubrique : ne modifiait pas la position des rubriques suivantes d'un mÃªme parent
 
 == Module WebEdit - version 2.1.0c ============================================
 
-2009-06-13  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2009-06-13  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Modification du traitement du rewriting des urls pour prendre en compte les urls non comprises dans une balise <a> (vidéos flv par exemple)
- * Possibilité d'inclure des vidéos flv dans le contenu d'un article grâce au plugin flv de FCKEditor et au lecteur multimédia "FLV Player"
+ * Modification du traitement du rewriting des urls pour prendre en compte les urls non comprises dans une balise <a> (vidÃ©os flv par exemple)
+ * PossibilitÃ© d'inclure des vidÃ©os flv dans le contenu d'un article grÃ¢ce au plugin flv de FCKEditor et au lecteur multimÃ©dia "FLV Player"
 
 == Module WebEdit - version 2.1.0b ============================================
 
-2009-06-12  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2009-06-12  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Correction d'un bug à la génération du fichier sitemap.xml : on force le vidage du buffer
- * Correction d'un bug empêchant l'administrateur de supprimer les articles dont il n'est pas validateur
+ * Correction d'un bug Ã  la gÃ©nÃ©ration du fichier sitemap.xml : on force le vidage du buffer
+ * Correction d'un bug empÃªchant l'administrateur de supprimer les articles dont il n'est pas validateur
 
 == Module WebEdit - version 2.1.0 ============================================
 
-2009-06-08  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2009-06-08  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Gestion des accès privés aux rubriques en frontoffice
+ * Gestion des accÃ¨s privÃ©s aux rubriques en frontoffice
 
-   * Possibilité de définir une rubrique comme étant "privée"
-   * Possibilité de choisir les utilisateurs qui peuvent accéder à une rubrique privée
+   * PossibilitÃ© de dÃ©finir une rubrique comme Ã©tant "privÃ©e"
+   * PossibilitÃ© de choisir les utilisateurs qui peuvent accÃ©der Ã  une rubrique privÃ©e
    * Impact en frontoffice sur : affichage des rubriques/pages, moteur de recherche, nuage de tags, plan de site,
    * Impact sur la backend RSS/ATOM
 
- * Modifications au niveau de l'intégration des règles de réécriture (Modification Ploopi) :
+ * Modifications au niveau de l'intÃ©gration des rÃ¨gles de rÃ©Ã©criture (Modification Ploopi) :
 
-  * Ajout d'une fonction webedit_getrewriterules() qui retourne la liste des règles utilisées par le module
-  * Ajout d'un fichier ./include/rewrite.php permettant de gérer le rewriting inverse
+  * Ajout d'une fonction webedit_getrewriterules() qui retourne la liste des rÃ¨gles utilisÃ©es par le module
+  * Ajout d'un fichier ./include/rewrite.php permettant de gÃ©rer le rewriting inverse
 
 == Module WebEdit - version 2.0.7 ============================================
 
-2009-05-13  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2009-05-13  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
  * Ajout d'un fichier include/rewrite.php permettant d'effectuer le rewriting inverse sur les urls frontoffice
 
 == Module WebEdit - version 2.0.6b ============================================
 
-2009-04-30  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2009-04-30  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Correction d'un bug à l'appel du calendrier lors de la sélection d'une date dans un article
+ * Correction d'un bug Ã  l'appel du calendrier lors de la sÃ©lection d'une date dans un article
 
 == Module WebEdit - version 2.0.6 ============================================
 
-2009-04-22  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2009-04-22  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Correction d'un bug à l'affichage des statistiques pour un article non publié (suppression du lien "statistiques")
- * Mise à jour ergonomique (mise en conformité de l'ensemble des modules)
+ * Correction d'un bug Ã  l'affichage des statistiques pour un article non publiÃ© (suppression du lien "statistiques")
+ * Mise Ã  jour ergonomique (mise en conformitÃ© de l'ensemble des modules)
 
 == Module WebEdit - version 2.0.5 ============================================
 
-2009-04-07  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2009-04-07  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Correction d'un bug à l'affichage des résultats de type "document" dans le moteur de recherche en frontoffice
+ * Correction d'un bug Ã  l'affichage des rÃ©sultats de type "document" dans le moteur de recherche en frontoffice
 
 == Module WebEdit - version 2.0.4 ============================================
 
-2009-04-01  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2009-04-01  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Correction d'un problème de réécriture de lien lors de l'affichage d'un lien vers un article en navigation backoffice (interne au module)
+ * Correction d'un problÃ¨me de rÃ©Ã©criture de lien lors de l'affichage d'un lien vers un article en navigation backoffice (interne au module)
 
 == Module WebEdit - version 2.0.3 ============================================
 
-2009-03-30  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2009-03-30  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Ajout d'une propriété 'SHORT_LINK' (variable template : switch_search.result.SHORT_LINK ) sur les réponses du moteur de recherche en frontoffice. Cette variable permet de disposer d'un lien "court" vers l'article.
+ * Ajout d'une propriÃ©tÃ© 'SHORT_LINK' (variable template : switch_search.result.SHORT_LINK ) sur les rÃ©ponses du moteur de recherche en frontoffice. Cette variable permet de disposer d'un lien "court" vers l'article.
 
 == Module WebEdit - version 2.0.2 ============================================
 
-2009-03-27  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2009-03-27  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Ajout d'une nouvelle variable template "rootX.headingX.switch_submenu" qui indique la présence de sous rubrique à un niveau de rubrique donné.
+ * Ajout d'une nouvelle variable template "rootX.headingX.switch_submenu" qui indique la prÃ©sence de sous rubrique Ã  un niveau de rubrique donnÃ©.
 
 == Module WebEdit - version 2.0.1 ============================================
 
-2009-02-13  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2009-02-13  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Correction de plusieurs bugs dans la navigation interne lorsque le frontoffice est désactivé
+ * Correction de plusieurs bugs dans la navigation interne lorsque le frontoffice est dÃ©sactivÃ©
 
 == Module WebEdit - version 2.0 ============================================
 
-2009-02-08  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2009-02-08  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
  * Transformation des balises <? en <?php
- * L'administrateur peut publier par défaut (plus besoin de l'ajouter dans les validateurs)
+ * L'administrateur peut publier par dÃ©faut (plus besoin de l'ajouter dans les validateurs)
  * Correction d'un bug dans la consultation des rubriques depuis un module externe
- * Meilleur contrôle de positionnement dans le module pour les opérations courantes
- * Correction d'un bug dans la génération des flux ATOM/RSS (problème d'encodage UTF8)
+ * Meilleur contrÃ´le de positionnement dans le module pour les opÃ©rations courantes
+ * Correction d'un bug dans la gÃ©nÃ©ration des flux ATOM/RSS (problÃ¨me d'encodage UTF8)
 
 == Module WebEdit - version 1.9.1 ============================================
 
-2009-01-27  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2009-01-27  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Correction d'un bug dans la génération des flux ATOM/RSS (problème d'encodage UTF8)
- * Prise en compte des articles des sous-rubriques dans la génération des flux ATOM/RSS de rubriques
- * Modification de la génération des flux ATOM/RSS : Les flux n'intègrent désormais que les articles contenus dans des rubriques qui y ont souscrit
- * Amélioration de l'intégration du flux global ATOM/RSS (il suffit qu'une rubrique propose un flux pour que ce flux soit activé sur la page d'accueil)
- * L'abonnement au site concerne désormais l'ensemble du site et non plus la première racine
+ * Correction d'un bug dans la gÃ©nÃ©ration des flux ATOM/RSS (problÃ¨me d'encodage UTF8)
+ * Prise en compte des articles des sous-rubriques dans la gÃ©nÃ©ration des flux ATOM/RSS de rubriques
+ * Modification de la gÃ©nÃ©ration des flux ATOM/RSS : Les flux n'intÃ¨grent dÃ©sormais que les articles contenus dans des rubriques qui y ont souscrit
+ * AmÃ©lioration de l'intÃ©gration du flux global ATOM/RSS (il suffit qu'une rubrique propose un flux pour que ce flux soit activÃ© sur la page d'accueil)
+ * L'abonnement au site concerne dÃ©sormais l'ensemble du site et non plus la premiÃ¨re racine
 
 == Module WebEdit - version 1.9.0 ============================================
 
-2008-12-09  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2008-12-09  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Correction d'un bug dans l'intégration d'un objet WCE dans un article
+ * Correction d'un bug dans l'intÃ©gration d'un objet WCE dans un article
 
 == Module WebEdit - version 1.8.9 ============================================
 
-2008-12-08  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2008-12-08  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Test d'existence du fichier wce.php lors de l'intégration d'un objet frontoffice
- * Améliorations diverses pour faciliter l'intégration de modules frontoffice (expérimental)
- * Ajout des informations ~ (hors ligne) et * (attente de validation) dans l'arbre des rubriques/articles (supprimé malencontreusement)
- * Correction d'un bug d'affichage en mode édition si les dates de publications de l'article ne sont pas valides
+ * Test d'existence du fichier wce.php lors de l'intÃ©gration d'un objet frontoffice
+ * AmÃ©liorations diverses pour faciliter l'intÃ©gration de modules frontoffice (expÃ©rimental)
+ * Ajout des informations ~ (hors ligne) et * (attente de validation) dans l'arbre des rubriques/articles (supprimÃ© malencontreusement)
+ * Correction d'un bug d'affichage en mode Ã©dition si les dates de publications de l'article ne sont pas valides
 
 == Module WebEdit - version 1.8.8 ============================================
 
-2008-11-24  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2008-11-24  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Activation d'un switch permettant d'intégrer un module frontoffice dans le contenu de la page (?template_idmodule=X => template_content.php)
+ * Activation d'un switch permettant d'intÃ©grer un module frontoffice dans le contenu de la page (?template_idmodule=X => template_content.php)
 
 == Module WebEdit - version 1.8.7 ============================================
 
-2008-11-20  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2008-11-20  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Meilleur contrôle des dates de publication d'un article
+ * Meilleur contrÃ´le des dates de publication d'un article
  * Ajout d'un message d'erreur si l'article/la rubrique n'existe pas (voir /templates/frontoffice/exemple/index.tpl)
- * Découpage automatique des url trop longues pour affichage, création d'un tag spécifique : SHORT_LINK
+ * DÃ©coupage automatique des url trop longues pour affichage, crÃ©ation d'un tag spÃ©cifique : SHORT_LINK
 
 == Module WebEdit - version 1.8.6 ============================================
 
-2008-10-30  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2008-10-30  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
  * Corrections de bugs mineurs
  * Ajout d'un test si l'existence du template frontoffice au moment du rendu
 
 == Module WebEdit - version 1.8.5 ============================================
 
-2008-10-13  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2008-10-13  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
  * Correction d'un bug lors de la suppression d'un article (ne recharge pas correctement l'arbre)
  * Ajout de nouvelles balises (version, revision, etc.)
 
 == Module WebEdit - version 1.8.4 ============================================
 
-2008-10-07  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2008-10-07  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
  * Correction d'un bug lors de la redirection d'une rubrique vers un article si l'article n'existe plus
- * Correction d'un bug lors de la création d'un lien vers un article (lié à la mise en place du nouveau treeview)
- * Correction d'un bug dans le lien de désabonnement envoyé par mail si la réécriture d'URL n'est pas activée
+ * Correction d'un bug lors de la crÃ©ation d'un lien vers un article (liÃ© Ã  la mise en place du nouveau treeview)
+ * Correction d'un bug dans le lien de dÃ©sabonnement envoyÃ© par mail si la rÃ©Ã©criture d'URL n'est pas activÃ©e
 
 == Module WebEdit - version 1.8.3 ============================================
 
-2008-10-01  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2008-10-01  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
  * Correction d'un bug lors de la modification de position d'une rubrique
- * Correction d'un bug à l'affichage des stats si aucune donnée à afficher
+ * Correction d'un bug Ã  l'affichage des stats si aucune donnÃ©e Ã  afficher
 
 == Module WebEdit - version 1.8.2b ============================================
 
-2008-09-26  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2008-09-26  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
  * Correction d'un bug lors du chargement des sous-rubriques dans le treeview
 
 == Module WebEdit - version 1.8.2 ============================================
 
-2008-09-26  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2008-09-26  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Ajout de nouvelles balises templates "RAW" sans les entités HTML (les entités HTML peuvent poser problème)
- * Correction d'un bug dans la détection de modification d'un article (lié au fait que fckeditor modifie l'article à chaque chargement...). Attention la détection ne se fait plus que sur le contenu textuel brut.
+ * Ajout de nouvelles balises templates "RAW" sans les entitÃ©s HTML (les entitÃ©s HTML peuvent poser problÃ¨me)
+ * Correction d'un bug dans la dÃ©tection de modification d'un article (liÃ© au fait que fckeditor modifie l'article Ã  chaque chargement...). Attention la dÃ©tection ne se fait plus que sur le contenu textuel brut.
  * Suppression du dossier ./fckeditor/skins (ne sert plus)
  * Suppression du dossier ./fckeditor/plugins (ne sert plus)
 
 == Module WebEdit - version 1.8.1 ============================================
 
-2008-09-08  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2008-09-08  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
  * Correction d'un bug dans l'envoi des messages aux validateurs
 
 == Module WebEdit - version 1.8.0 ============================================
 
-2008-09-08  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2008-09-08  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Gestion du désabonnement depuis le frontoffice (attention, modification .htaccess nécessaire)
+ * Gestion du dÃ©sabonnement depuis le frontoffice (attention, modification .htaccess nÃ©cessaire)
 
 == Module WebEdit - version 1.7.9 ============================================
 
-2008-09-04  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2008-09-04  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Ajout d'un paramètre permettant de choisir le type d'affichage par défaut (au lieu de "simplifié")
+ * Ajout d'un paramÃ¨tre permettant de choisir le type d'affichage par dÃ©faut (au lieu de "simplifiÃ©")
 
 == Module WebEdit - version 1.7.8 ============================================
 
-2008-09-01  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2008-09-01  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Conversion en entités HTML des titres de rubriques
+ * Conversion en entitÃ©s HTML des titres de rubriques
 
 == Module WebEdit - version 1.7.7 ============================================
 
-2008-08-13  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2008-08-13  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Ajout d'une option sur les articles permettant de désactiver le validateur XHTML 1.0 Strict intégré (HTMLPurifier)
- * Ajout d'un champ sur les articles permettant d'insérer du code dans la balise <HEAD>
+ * Ajout d'une option sur les articles permettant de dÃ©sactiver le validateur XHTML 1.0 Strict intÃ©grÃ© (HTMLPurifier)
+ * Ajout d'un champ sur les articles permettant d'insÃ©rer du code dans la balise <HEAD>
 
 == Module WebEdit - version 1.7.6 ============================================
 
-2008-08-12  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2008-08-12  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Corrections d'un bug important lors de la validation d'un article (perte des valeurs des checkbox en mode 'simplifié')
- * Corrections d'un bug important lors de la validation d'une rubrique (perte des valeurs des checkbox en mode 'simplifié')
- * Intégration de la nouvelle classe barchart (couleurs, padding, etc.)
+ * Corrections d'un bug important lors de la validation d'un article (perte des valeurs des checkbox en mode 'simplifiÃ©')
+ * Corrections d'un bug important lors de la validation d'une rubrique (perte des valeurs des checkbox en mode 'simplifiÃ©')
+ * IntÃ©gration de la nouvelle classe barchart (couleurs, padding, etc.)
 
 == Module WebEdit - version 1.7.5 ============================================
 
-2008-08-11  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2008-08-11  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Mise à jour suite au refactoring des fonctions workflow (1.1.2)
+ * Mise Ã  jour suite au refactoring des fonctions workflow (1.1.2)
 
 == Module WebEdit - version 1.7.4 ============================================
 
-2008-08-07  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2008-08-07  StÃ©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
  * Correction de bugs visuels sur les statistiques avec IE6
- * Amélioration du système de réécriture d'URL pour une meilleure prise en compte des liens dans un article (document, articles) et des images
+ * AmÃ©lioration du systÃ¨me de rÃ©Ã©criture d'URL pour une meilleure prise en compte des liens dans un article (document, articles) et des images
 
 == Module WebEdit - version 1.7.3 ============================================
 
-2008-08-05  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2008-08-05  StÃ©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
- * Intégration d'un patch pour gérer les anciens liens vers des documents DIMS
+ * IntÃ©gration d'un patch pour gÃ©rer les anciens liens vers des documents DIMS
 
 == Module WebEdit - version 1.7.2 ============================================
 
-2008-08-05  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2008-08-05  StÃ©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
- * Correction d'un bug dans l'extraction des liens vers les documents insérés dans les articles
+ * Correction d'un bug dans l'extraction des liens vers les documents insÃ©rÃ©s dans les articles
 
 == Module WebEdit - version 1.7.1 ============================================
 
-2008-08-04  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2008-08-04  StÃ©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
- * Ajout d'un popup "statistiques" sur chaque rubrique (statistiques de fréquentation de la rubrique)
- * Ajout d'un menu "Statistiques" permettant de visualiser les statistiques globales de fréquentation
- * Ajout d'un action "stats" pour gérer l'accès aux stats depuis les rôles
+ * Ajout d'un popup "statistiques" sur chaque rubrique (statistiques de frÃ©quentation de la rubrique)
+ * Ajout d'un menu "Statistiques" permettant de visualiser les statistiques globales de frÃ©quentation
+ * Ajout d'un action "stats" pour gÃ©rer l'accÃ¨s aux stats depuis les rÃ´les
 
 == Module WebEdit - version 1.7.0.beta2 ============================================
 
-2008-08-01  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2008-08-01  StÃ©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
- * Correction d'un bug sur la classe article : accès à la propriété "tablename" de "data_object" devenue privée
+ * Correction d'un bug sur la classe article : accÃ¨s Ã  la propriÃ©tÃ© "tablename" de "data_object" devenue privÃ©e
 
 == Module WebEdit - version 1.7.0.beta ============================================
 
-2008-08-01  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2008-08-01  StÃ©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
- * Affichage de statistiques simples (sur chaque article : nombre de visites sur l'année, sur le mois). Bientôt des stats plus complètes : globales, par rubriques, etc...
+ * Affichage de statistiques simples (sur chaque article : nombre de visites sur l'annÃ©e, sur le mois). BientÃ´t des stats plus complÃ¨tes : globales, par rubriques, etc...
 
 == Module WebEdit - version 1.6.3 ============================================
 
-2008-07-30  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2008-07-30  StÃ©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
- * Mise à jour des appels à la fonction ploopi_xmlhttprequest_todiv()
+ * Mise Ã  jour des appels Ã  la fonction ploopi_xmlhttprequest_todiv()
 
 == Module WebEdit - version 1.6.2a ============================================
 
-2008-07-23  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2008-07-23  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Modification dans la gestion de la réécriture des URL. La réécriture n'est désormais traitée que lors de la publication d'un article (liens vers documents et articles)
- * Intégration de HTMLPurifier pour valider le contenu XHTML des articles
+ * Modification dans la gestion de la rÃ©Ã©criture des URL. La rÃ©Ã©criture n'est dÃ©sormais traitÃ©e que lors de la publication d'un article (liens vers documents et articles)
+ * IntÃ©gration de HTMLPurifier pour valider le contenu XHTML des articles
 
 == Module WebEdit - version 1.6.2 ============================================
 
-2008-07-23  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2008-07-23  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Modification dans la gestion de la réécriture des URL. La réécriture n'est désormais traitée que lors de la publication d'un article (liens vers documents et articles)
+ * Modification dans la gestion de la rÃ©Ã©criture des URL. La rÃ©Ã©criture n'est dÃ©sormais traitÃ©e que lors de la publication d'un article (liens vers documents et articles)
 
 == Module WebEdit - version 1.6.1 ============================================
 
-2008-07-22  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2008-07-22  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Frontoffice : Possibilité de rechercher dans les documents liés
- * Ajout d'un menu 'Réindexation' permettant de forcer la régénération de l'index de recherche pour le module. Les documents ne sont pas réindexés. C'est le module DOC qui gère cette réindexation.
+ * Frontoffice : PossibilitÃ© de rechercher dans les documents liÃ©s
+ * Ajout d'un menu 'RÃ©indexation' permettant de forcer la rÃ©gÃ©nÃ©ration de l'index de recherche pour le module. Les documents ne sont pas rÃ©indexÃ©s. C'est le module DOC qui gÃ¨re cette rÃ©indexation.
 
 == Module WebEdit - version 1.6.0.1 ============================================
 
-2008-07-16  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2008-07-16  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
  * Refactoring : ploopi_xmlencode => ploopi_xmlentities
 
 == Module WebEdit - version 1.6 ============================================
 
-2008-07-11  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2008-07-11  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Possibilité de passer d'un affichage simplifié à un affichage avancé
+ * PossibilitÃ© de passer d'un affichage simplifiÃ© Ã  un affichage avancÃ©
  * Nouvelle barre d'action en haut permettant d'afficher/cacher l'arbre des rubriques et de choisir le mode d'affichage
- * Possibilité de déplacer un article (choisir une nouvelle rubrique parent)
+ * PossibilitÃ© de dÃ©placer un article (choisir une nouvelle rubrique parent)
  * Quelques modifications d'interface
- * Réécriture du treeview, utilisation d'une méthode générique de la class skin
+ * RÃ©Ã©criture du treeview, utilisation d'une mÃ©thode gÃ©nÃ©rique de la class skin
 
 == Module WebEdit - version 1.5.2 ============================================
 
-2008-07-09  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2008-07-09  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Correction d'un bug dans l'affichage du résultat de recherche en frontoffice (ne prenait pas en compte les lemmes dans la colorisation des mots trouvés)
+ * Correction d'un bug dans l'affichage du rÃ©sultat de recherche en frontoffice (ne prenait pas en compte les lemmes dans la colorisation des mots trouvÃ©s)
 
 == Module WebEdit - version 1.5.1 ============================================
 
-2008-06-19  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2008-06-19  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Mise à jour du système de liens (ploopi_env) lié à la mise à jour de Ploopi
+ * Mise Ã  jour du systÃ¨me de liens (ploopi_env) liÃ© Ã  la mise Ã  jour de Ploopi
 
 == Module WebEdit - version 1.5.0.rc1 ============================================
 
-2008-06-18  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2008-06-18  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Correction d'un bug de détection de homepage et chargement du fichier spécifique home.tpl
+ * Correction d'un bug de dÃ©tection de homepage et chargement du fichier spÃ©cifique home.tpl
 
 == Module WebEdit - version 1.5.0.beta3 ============================================
 
-2008-06-17  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2008-06-17  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Correction d'un bug à l'ajout d'un article
+ * Correction d'un bug Ã  l'ajout d'un article
 
 == Module WebEdit - version 1.5.0.beta2 ============================================
 
-2008-06-17  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2008-06-17  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Réécriture du backend RSS permettant désormais de proposer un flux au format ATOM 1.0 et un flux RSS 2.0
+ * RÃ©Ã©criture du backend RSS permettant dÃ©sormais de proposer un flux au format ATOM 1.0 et un flux RSS 2.0
 
 == Module WebEdit - version 1.5.0.beta ============================================
 
-2008-06-16  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2008-06-16  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
  * Gestion des abonnements frontoffice sur rubriques ou sur site
- * Gestion des abonnés frontoffice depuis le backoffice (possibilité de les supprimer)
+ * Gestion des abonnÃ©s frontoffice depuis le backoffice (possibilitÃ© de les supprimer)
  * Flux rss optionnels sur rubriques
- * Possibilité d'ajouter des tags (étiquettes) sur un article
- * Possibilité d'insérer un nuage de tags en frontoffice
+ * PossibilitÃ© d'ajouter des tags (Ã©tiquettes) sur un article
+ * PossibilitÃ© d'insÃ©rer un nuage de tags en frontoffice
 
 == Module WebEdit - version 1.44 ===================================================
 
-2008-05-16  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2008-05-16  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Mise à jour des commentaires, nettoyage
+ * Mise Ã  jour des commentaires, nettoyage
 
 == Module WebEdit - version 1.43 ===================================================
 
-2008-05-07  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2008-05-07  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Meilleure gestion de la suppression d'une rubrique (ne supprimait pas les sous-rubriques + articles associés)
+ * Meilleure gestion de la suppression d'une rubrique (ne supprimait pas les sous-rubriques + articles associÃ©s)
  * Ajout du bloc conditionnel switch_notfound en variable frontoffice
  * Ajout de la variable frontoffice SEARCH_RESPONSES
 
 == Module WebEdit - version 1.42 ===================================================
 
-2008-04-30  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2008-04-30  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Personnalisation du skin pour l'édition
- * Correctifs sur l'intégration de FCKEditor (basehref, basepath)
- * Correctif de sécurité sur op.php suite à modification sur op.php principal
- * Correctif lors de la sauvegarde d'un article (perte de données lors du passage "attente de validation" / "modifiable")
+ * Personnalisation du skin pour l'Ã©dition
+ * Correctifs sur l'intÃ©gration de FCKEditor (basehref, basepath)
+ * Correctif de sÃ©curitÃ© sur op.php suite Ã  modification sur op.php principal
+ * Correctif lors de la sauvegarde d'un article (perte de donnÃ©es lors du passage "attente de validation" / "modifiable")
 
 == Module WebEdit - version 1.411 ===================================================
 
-2008-04-23  Stéphane Escaich  <stephane@ovensia.fr>
+2008-04-23  StÃ©phane Escaich  <stephane@ovensia.fr>
 
  * Correction d'un bug sur l'affichage des articles par date
 
 == Module WebEdit - version 1.41 ===================================================
 
-2008-04-22  Stéphane Escaich  <stephane@ovensia.fr>
+2008-04-22  StÃ©phane Escaich  <stephane@ovensia.fr>
 
  * Ajout du type 'plan de site ' comme contenu de rubrique
  * Evolution du type 'affichage des sous-rubriques' : ajout des articles de la rubrique courante
 
 == Module WebEdit - version 1.40 ===================================================
 
-2008-04-16  Stéphane Escaich  <stephane@ovensia.fr>
+2008-04-16  StÃ©phane Escaich  <stephane@ovensia.fr>
 
- * Possibilité de choisir plusieurs types de contenu pour une rubrique : lien vers le 1er article, lien vers un article au choix, lien vers une url, affichage des sous-rubriques
+ * PossibilitÃ© de choisir plusieurs types de contenu pour une rubrique : lien vers le 1er article, lien vers un article au choix, lien vers une url, affichage des sous-rubriques
 
 == Module WebEdit - version 1.39 ===================================================
 
-2008-04-14  Stéphane Escaich  <stephane@ovensia.fr>
+2008-04-14  StÃ©phane Escaich  <stephane@ovensia.fr>
 
  * Externalisation du plugin "ploopiobject"
  * Correctifs de chemins pour le chargement de FCKEditor
 
 == Module WebEdit - version 1.38 ===================================================
 
-2008-04-08  Stéphane Escaich  <stephane@ovensia.fr>
+2008-04-08  StÃ©phane Escaich  <stephane@ovensia.fr>
 
- * Intégration FCKEditor 2.6
+ * IntÃ©gration FCKEditor 2.6
  * Compression des fichiers JS/CSS
 
 == Module WebEdit - version 1.37 ===================================================
 
-2008-04-07  Stéphane Escaich  <stephane@ovensia.fr>
+2008-04-07  StÃ©phane Escaich  <stephane@ovensia.fr>
 
  * Correction d'un bug lors d'une recherche en frontoffice
  * Suppression de l'index lors de la suppression d'un article
 
 == Module WebEdit - version 1.35 ===================================================
 
-2008-03-07  Stéphane Escaich  <stephane@ovensia.fr>
+2008-03-07  StÃ©phane Escaich  <stephane@ovensia.fr>
 
- * Amélioration de l'intégration de FCKEditor (problème de BasePath avec IE corrigé)
- * Correction d'un bug sur la création de liens vers des articles dans l'éditeur
+ * AmÃ©lioration de l'intÃ©gration de FCKEditor (problÃ¨me de BasePath avec IE corrigÃ©)
+ * Correction d'un bug sur la crÃ©ation de liens vers des articles dans l'Ã©diteur
 
 == Module WebEdit - version 1.301 ==================================================
 
-2008-03-06  Stéphane Escaich  <stephane@ovensia.fr>
+2008-03-06  StÃ©phane Escaich  <stephane@ovensia.fr>
 
- * Correction d'un bug à la création d'une rubrique
+ * Correction d'un bug Ã  la crÃ©ation d'une rubrique
 
 == Module WebEdit - version 1.3 ====================================================
 
-2008-03-04  Stéphane Escaich  <stephane@ovensia.fr>
+2008-03-04  StÃ©phane Escaich  <stephane@ovensia.fr>
 
- * Ajout du sytème d'abonnement sur les actions (ajout/modif/suppression/publication) des rubriques et des articles
+ * Ajout du sytÃ¨me d'abonnement sur les actions (ajout/modif/suppression/publication) des rubriques et des articles
  * Ajout des annotation sur les rubriques
 
 == Module WebEdit - version 1.2 ====================================================
 
-2008-02-06  Stéphane Escaich  <stephane@ovensia.fr>
+2008-02-06  StÃ©phane Escaich  <stephane@ovensia.fr>
 
- * Ajout d'une fonction ( webedit_record_isenabled($id_object, $id_record, $id_module) ) permettant au moteur de recherche intégral de connaître la disponibilité d'un article pour un utilisateur (en fonction des dates de publication par ex.)
+ * Ajout d'une fonction ( webedit_record_isenabled($id_object, $id_record, $id_module) ) permettant au moteur de recherche intÃ©gral de connaÃ®tre la disponibilitÃ© d'un article pour un utilisateur (en fonction des dates de publication par ex.)
  * Correction d'un bug lors de la suppression d'une racine
 
-2008-01-06  Stéphane Escaich  <stephane@ovensia.fr>
+2008-01-06  StÃ©phane Escaich  <stephane@ovensia.fr>
 
- * Mise à niveau sécurité
+ * Mise Ã  niveau sÃ©curitÃ©
  * Migration Ploopi
- * Héritage des droits de publication pour les sous-rubriques
- * Intégration d'un backend RSS public sur le site complet et les rubriques
- * Mise à jour de la Métabase
+ * HÃ©ritage des droits de publication pour les sous-rubriques
+ * IntÃ©gration d'un backend RSS public sur le site complet et les rubriques
+ * Mise Ã  jour de la MÃ©tabase
 
 == Module WebEdit - version 1.12 ====================================================
 
-2008-01-03  Stéphane Escaich  <stephane@ovensia.fr>
+2008-01-03  StÃ©phane Escaich  <stephane@ovensia.fr>
 
  * Correction d'un bug lors de la visualisation des articles en backoffice pour les non administrateurs.
 
 == Module WebEdit - version 1.11 ====================================================
 
-2007-11-13  Stéphane Escaich  <stephane@ovensia.fr>
+2007-11-13  StÃ©phane Escaich  <stephane@ovensia.fr>
 
- * Mise à jour consécutive à l'intégration de la nouvelle version de FCKEditor (2.5)
+ * Mise Ã  jour consÃ©cutive Ã  l'intÃ©gration de la nouvelle version de FCKEditor (2.5)
 
 == Module WebEdit - version 1.10 ====================================================
 
-2007-11-12  Stéphane Escaich  <stephane@ovensia.fr>
+2007-11-12  StÃ©phane Escaich  <stephane@ovensia.fr>
 
- * Correction d'un bug lors de la création d'un lien. N'ouvre pas la liste des articles. (szsic)
- * Correction d'un bug lors de l'intégration d'un objet DIMS. Erreur SQL. (szsic)
+ * Correction d'un bug lors de la crÃ©ation d'un lien. N'ouvre pas la liste des articles. (szsic)
+ * Correction d'un bug lors de l'intÃ©gration d'un objet DIMS. Erreur SQL. (szsic)
 
 == Module WebEdit - version 1.09 ====================================================
 
-2007-11-07  Stéphane Escaich  <stephane@ovensia.fr>
+2007-11-07  StÃ©phane Escaich  <stephane@ovensia.fr>
 
- * Mise à jour importante concernant la stabilité des enregistrements d'articles. La procédure d'enregistrement a été revue et sécurisée. Une alerte a également été ajoutée si un problème d'enregistrement est supposé.
+ * Mise Ã  jour importante concernant la stabilitÃ© des enregistrements d'articles. La procÃ©dure d'enregistrement a Ã©tÃ© revue et sÃ©curisÃ©e. Une alerte a Ã©galement Ã©tÃ© ajoutÃ©e si un problÃ¨me d'enregistrement est supposÃ©.
  * Gestion d'un historique de modifications sur les articles permettant de recharger rapidement une ancienne version
- * Ajout d'un champ "description" utilisé pour le référencement (variable template : {PAGE_DESCRIPTION})
- * Réagencement des champs pour plus de lisibilité
+ * Ajout d'un champ "description" utilisÃ© pour le rÃ©fÃ©rencement (variable template : {PAGE_DESCRIPTION})
+ * RÃ©agencement des champs pour plus de lisibilitÃ©
 
 == Module WebEdit - version 1.08 ====================================================
 
-2007-11-02  Stéphane Escaich  <stephane@ovensia.fr>
+2007-11-02  StÃ©phane Escaich  <stephane@ovensia.fr>
 
  * Le module change de nom ! WCE devient WebEdit
 
 == Module WCE - version 1.07 ====================================================
 
-2007-10-18  Stéphane Escaich  <stephane@ovensia.fr>
+2007-10-18  StÃ©phane Escaich  <stephane@ovensia.fr>
 
- * Amélioration de l'interface de modification d'un article pour une meilleure lisibilité et une meilleure compatibilité avec IE6
+ * AmÃ©lioration de l'interface de modification d'un article pour une meilleure lisibilitÃ© et une meilleure compatibilitÃ© avec IE6
 
-2007-10-17  Stéphane Escaich  <stephane@ovensia.fr>
+2007-10-17  StÃ©phane Escaich  <stephane@ovensia.fr>
 
- * Gestion des rewrite_rules sur les liens 'rubriques' et 'articles', pas encore dans les liens internes du contenu - Optimisation pour le référencement
- * Ajout d'une série de boutons pour enregistrer/publier l'article au dessus de l'éditeur (ceux du bas sont peu visibles)
- * Ajout d'un champ mots-clés sur l'article
- * Proposition autoamtique des mots clés les plus intéressants en rapport avec le contenu de l'article
+ * Gestion des rewrite_rules sur les liens 'rubriques' et 'articles', pas encore dans les liens internes du contenu - Optimisation pour le rÃ©fÃ©rencement
+ * Ajout d'une sÃ©rie de boutons pour enregistrer/publier l'article au dessus de l'Ã©diteur (ceux du bas sont peu visibles)
+ * Ajout d'un champ mots-clÃ©s sur l'article
+ * Proposition autoamtique des mots clÃ©s les plus intÃ©ressants en rapport avec le contenu de l'article
 
-2007-10-15  Stéphane Escaich  <stephane@ovensia.fr>
+2007-10-15  StÃ©phane Escaich  <stephane@ovensia.fr>
 
- * Possibilité de founir un template différent en édition (plus adapté à FCKEditor) pour remplacer les fichiers templates par défaut index.tpl, home.tpl et search.tpl
+ * PossibilitÃ© de founir un template diffÃ©rent en Ã©dition (plus adaptÃ© Ã  FCKEditor) pour remplacer les fichiers templates par dÃ©faut index.tpl, home.tpl et search.tpl
    Il suffit d'ajouter au dossier template les fichiers suivants fck_index.tpl, fck_home.tpl, fck_search.tpl
 
-2007-10-10  Stéphane Escaich  <stephane@ovensia.fr>
+2007-10-10  StÃ©phane Escaich  <stephane@ovensia.fr>
 
- * Possibilité de fournir dans le template une liste de styles, une feuille de style pour l'édition et un fichier de modèles pour FCKEditor
+ * PossibilitÃ© de fournir dans le template une liste de styles, une feuille de style pour l'Ã©dition et un fichier de modÃ¨les pour FCKEditor
    Emplacement des fichiers :
    ./template/frontoffice/<dossier_template>/fckeditor/fck_editorarea.css
    ./template/frontoffice/<dossier_template>/fckeditor/fckstyles.xml
@@ -1069,48 +1075,48 @@
 
 == Module WCE - version 1.05 ====================================================
 
-2007-09-25  Stéphane Escaich  <stephane@escaich.fr>
+2007-09-25  StÃ©phane Escaich  <stephane@escaich.fr>
 
- * Ajout du caractère ~ pour visualiser les fichiers hors ligne (dont les dates ne sont pas valides)
+ * Ajout du caractÃ¨re ~ pour visualiser les fichiers hors ligne (dont les dates ne sont pas valides)
 
 == Module WCE - version 1.04 ====================================================
 
-2007-09-18  Stéphane Escaich  <stephane@escaich.fr>
+2007-09-18  StÃ©phane Escaich  <stephane@escaich.fr>
 
  * Correction d'un bug sur la gestion des droits du bouton supprimer de la liste des articles dans une rubrique
- * Correction d'un bug sur le choix du fichier home.tpl lorsqu'aucun article n'est défini en page d'accueil et que la racine est vide.
+ * Correction d'un bug sur le choix du fichier home.tpl lorsqu'aucun article n'est dÃ©fini en page d'accueil et que la racine est vide.
 
 == Module WCE - version 1.03 ====================================================
 
-2007-09-17  Stéphane Escaich  <stephane@escaich.fr>
+2007-09-17  StÃ©phane Escaich  <stephane@escaich.fr>
 
- * Correction d'un bug sur le choix du fichier home.tpl pour la homepage du site lors du rendu de prévisualisation
+ * Correction d'un bug sur le choix du fichier home.tpl pour la homepage du site lors du rendu de prÃ©visualisation
  * Optimisations et corrections sur le moteur de rendu
- * Ajout de la possibilité pour le propriétaire d'un article à l'état de brouillon non publié de l'effacer
+ * Ajout de la possibilitÃ© pour le propriÃ©taire d'un article Ã  l'Ã©tat de brouillon non publiÃ© de l'effacer
 
 == Module WCE - version 1.02 ====================================================
 
-2007-09-17  Stéphane Escaich  <stephane@escaich.fr>
+2007-09-17  StÃ©phane Escaich  <stephane@escaich.fr>
 
- * Modification du fichier de configuration de fckeditor pour régler le comportement de la touche "Enter"
+ * Modification du fichier de configuration de fckeditor pour rÃ©gler le comportement de la touche "Enter"
 
 == Module WCE - version 1.01 ====================================================
 
-2007-09-13  Stéphane Escaich  <stephane@escaich.fr>
+2007-09-13  StÃ©phane Escaich  <stephane@escaich.fr>
 
  * Correction de plusieurs bugs dans la gestion des validateurs
 
 == Module WCE - version 1.0 ====================================================
 
-2007-09-12  Stéphane Escaich  <stephane@escaich.fr>
+2007-09-12  StÃ©phane Escaich  <stephane@escaich.fr>
 
- * Correction d'un bug d'affichage du formulaire de modification d'une rubrique sous Firefox/Linux uniquement (testé sous Debian/Ubuntu)
- * Correction d'un problème de codage de caractère sur le fichier d'installation "description.xml"
+ * Correction d'un bug d'affichage du formulaire de modification d'une rubrique sous Firefox/Linux uniquement (testÃ© sous Debian/Ubuntu)
+ * Correction d'un problÃ¨me de codage de caractÃ¨re sur le fichier d'installation "description.xml"
 
-2007-09-06  Stéphane Escaich  <stephane@escaich.fr>
+2007-09-06  StÃ©phane Escaich  <stephane@escaich.fr>
 
- * Possibilités de tris sur la liste des articles dans la modification d'une rubrique
+ * PossibilitÃ©s de tris sur la liste des articles dans la modification d'une rubrique
 
-2007-09-03  Stéphane Escaich  <stephane@escaich.fr>
+2007-09-03  StÃ©phane Escaich  <stephane@escaich.fr>
 
  * Correction d'un bug dans display.php qui affectait la validation d'un article

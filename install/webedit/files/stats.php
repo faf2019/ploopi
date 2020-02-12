@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2008 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,13 +21,13 @@
 */
 
 /**
- * Affichage des statistiques de fréquentation du site
+ * Affichage des statistiques de frÃ©quentation du site
  *
  * @package webedit
  * @subpackage public
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 echo ploopi\skin::get()->create_pagetitle(ploopi\str::htmlentities($_SESSION['ploopi']['modulelabel']));
@@ -42,22 +42,22 @@ $arrSelectYear = ploopi\db::get()->getarray($rs, true);
 $rs = ploopi\db::get()->query("SELECT distinct(month) FROM ploopi_mod_webedit_counter WHERE id_module = {$_SESSION['ploopi']['moduleid']} AND year = {$intYearSel} ORDER BY month");
 $arrSelectMonth = ploopi\db::get()->getarray($rs, true);
 
-// aucun mois sélectionné
+// aucun mois sÃ©lectionnÃ©
 if (empty($intMonthSel))
 {
-    // année en cours
+    // annÃ©e en cours
     if ($intYearSel == date('Y')) $intMonthSel = date('n');
     else $intMonthSel = current($arrSelectMonth);
 }
 
-// récupération des rubriques
+// rÃ©cupÃ©ration des rubriques
 $arrHeadings = webedit_getheadings();
 
 ?>
 <div id="webedit_stats">
     <div id="webedit_stats_select">
         <p>
-            <strong>Année:</strong>
+            <strong>AnnÃ©e:</strong>
             <?php
             foreach($arrSelectYear as $year)
             {
@@ -80,7 +80,7 @@ $arrHeadings = webedit_getheadings();
         </p>
     </div>
     <?php
-    // 1er Diagramme : année par mois
+    // 1er Diagramme : annÃ©e par mois
 
     $dataset = array();
     $legend = array();
@@ -111,7 +111,7 @@ $arrHeadings = webedit_getheadings();
     }
 
     $objBarChartYear = new ploopi\barchart(700, 150, array('padding' => 1));
-    $objBarChartYear->setvalues($dataset, 'Fréquentation mensuelle', '#1E64A1', '#f0f0f0');
+    $objBarChartYear->setvalues($dataset, 'FrÃ©quentation mensuelle', '#1E64A1', '#f0f0f0');
     $objBarChartYear->setlegend($legend);
 
     // 2eme Diagramme : mois par jours
@@ -143,22 +143,22 @@ $arrHeadings = webedit_getheadings();
     while ($row = ploopi\db::get()->fetchrow()) $dataset[$row['day']] = $row['c'];
 
     $objBarChartMonth = new ploopi\barchart(700, 150, array('padding' => 1));
-    $objBarChartMonth->setvalues($dataset, 'Fréquentation quotidienne', '#4FA11E', '#f0f0f0');
+    $objBarChartMonth->setvalues($dataset, 'FrÃ©quentation quotidienne', '#4FA11E', '#f0f0f0');
     $objBarChartMonth->setlegend($legend);
 
     // Affichage
     ?>
     <div class="webedit_stats_graph">
-        <h1>Statistiques globales de fréquentation pour <em><?php echo $intYearSel ?></em> (nombre d'articles vus)</h1>
+        <h1>Statistiques globales de frÃ©quentation pour <em><?php echo $intYearSel ?></em> (nombre d'articles vus)</h1>
         <div><?php $objBarChartYear->draw(); ?></div>
     </div>
     <div class="webedit_stats_graph">
-        <h1>Statistiques globales de fréquentation pour <em><?php echo $ploopi_months[$intMonthSel] ?> <?php echo $intYearSel ?></em> (nombre d'articles vus)</h1>
+        <h1>Statistiques globales de frÃ©quentation pour <em><?php echo $ploopi_months[$intMonthSel] ?> <?php echo $intYearSel ?></em> (nombre d'articles vus)</h1>
         <div><?php $objBarChartMonth->draw(); ?></div>
     </div>
 
     <?php
-    // Recherche des articles les plus consultés
+    // Recherche des articles les plus consultÃ©s
 
     ploopi\db::get()->query(
         "
@@ -242,7 +242,7 @@ $arrHeadings = webedit_getheadings();
     ?>
 
     <div class="webedit_stats_array">
-        <h1>Articles les plus visités pour <em><?php echo $ploopi_months[$intMonthSel] ?> <?php echo $intYearSel ?></em> (nombre de visites)</h1>
+        <h1>Articles les plus visitÃ©s pour <em><?php echo $ploopi_months[$intMonthSel] ?> <?php echo $intYearSel ?></em> (nombre de visites)</h1>
         <div style="border-top:1px solid #c0c0c0;">
         <?php
         ploopi\skin::get()->display_array(
@@ -260,7 +260,7 @@ $arrHeadings = webedit_getheadings();
     </div>
 
     <?php
-    // Recherche des rubriques les plus consultées
+    // Recherche des rubriques les plus consultÃ©es
 
     ploopi\db::get()->query(
         "
@@ -330,7 +330,7 @@ $arrHeadings = webedit_getheadings();
     ?>
 
     <div class="webedit_stats_array">
-        <h1>Rubriques les plus visités pour <em><?php echo $ploopi_months[$intMonthSel] ?> <?php echo $intYearSel ?></em> (nombre de visites)</h1>
+        <h1>Rubriques les plus visitÃ©s pour <em><?php echo $ploopi_months[$intMonthSel] ?> <?php echo $intYearSel ?></em> (nombre de visites)</h1>
         <div style="border-top:1px solid #c0c0c0;">
         <?php
         ploopi\skin::get()->display_array(

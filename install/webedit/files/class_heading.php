@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Copyright (c) 2009-2010 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
@@ -28,17 +28,17 @@
  * @subpackage heading
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
- * Classe d'accès à la table ploopi_mod_webedit_heading
+ * Classe d'accÃ¨s Ã  la table ploopi_mod_webedit_heading
  *
  * @package webedit
  * @subpackage heading
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 class webedit_heading extends ploopi\data_object

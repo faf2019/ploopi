@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Copyright (c) 2009-2010 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
@@ -28,7 +28,7 @@
  * @subpackage admin
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 $heading = new webedit_heading();
@@ -39,7 +39,7 @@ $objUser = new ploopi\user();
 $objUser->open($_SESSION['ploopi']['userid']);
 $arrGroups = $objUser->getgroups(true);
 
-// Recupère les Rédacteurs
+// RecupÃ¨re les RÃ©dacteurs
 $intEditorHeadingId = 0;
 $arrEditorUsers = array();
 $booEditorHeadingIdIsRoot = true;
@@ -62,7 +62,7 @@ else
     $intEditorHeadingId = $headingid;
 
 /**
- * L'utilisateur connecté est-il rédacteur ?
+ * L'utilisateur connectÃ© est-il rÃ©dacteur ?
  */
 $booIsAllowedEdit = $booIsEditor = false;
 foreach($arrEditor as $value)
@@ -73,7 +73,7 @@ foreach($arrEditor as $value)
     $arrEditorUsers[$value['type_validation']][] = $value['id_validation'];
 }
 
-// Si l'utilisateur connecté n'est pas un "Rédacteur" on verif ses droits pour l'action _WEBEDIT_ACTION_CATEGORY_EDIT
+// Si l'utilisateur connectÃ© n'est pas un "RÃ©dacteur" on verif ses droits pour l'action _WEBEDIT_ACTION_CATEGORY_EDIT
 if(!$booIsAllowedEdit) $booIsAllowedEdit = ploopi\acl::isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT);
 ?>
 
@@ -114,7 +114,7 @@ if(!$booIsAllowedEdit) $booIsAllowedEdit = ploopi\acl::isactionallowed(_WEBEDIT_
         <?php
     }
 
-    //if ($booIsAllowedEdit) Modifié par SE le 01/06/2010 (demande SZSIC)
+    //if ($booIsAllowedEdit) ModifiÃ© par SE le 01/06/2010 (demande SZSIC)
     if (ploopi\acl::isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
     {
         ?>
@@ -124,8 +124,8 @@ if(!$booIsAllowedEdit) $booIsAllowedEdit = ploopi\acl::isactionallowed(_WEBEDIT_
         </p>
         <?php
     }
-    // Ici on ne controle pas si c'est un rédacteur car ils n'ont de toutes les façons pas le droit de créer des racines !
-    if (ploopi\acl::isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT) && $heading->fields['depth'] == 1) // root (Interdit au rédacteur !)
+    // Ici on ne controle pas si c'est un rÃ©dacteur car ils n'ont de toutes les faÃ§ons pas le droit de crÃ©er des racines !
+    if (ploopi\acl::isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT) && $heading->fields['depth'] == 1) // root (Interdit au rÃ©dacteur !)
     {
         ?>
         <p class="ploopi_va" style="float:left;padding:6px;cursor:pointer;" title="Ajouter une racine" onclick="javascript:document.location.href='<?php echo ploopi\crypt::urlencode("admin.php?op=heading_addroot"); ?>';" >
@@ -139,7 +139,7 @@ if(!$booIsAllowedEdit) $booIsAllowedEdit = ploopi\acl::isactionallowed(_WEBEDIT_
     if ((ploopi\acl::isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT) || ($booIsEditor && !$booEditorHeadingIdIsRoot)) && !($heading->fields['id_heading'] == 0 && $heading->fields['position'] == 1) )
     {
         ?>
-        <p class="ploopi_va" style="float:left;padding:6px;cursor:pointer;" title="Supprimer cette rubrique" onclick="javascript:ploopi_confirmlink('<?php echo ploopi\crypt::urlencode("admin.php?op=heading_delete"); ?>','<?php echo _PLOOPI_CONFIRM; ?>');" >
+        <p class="ploopi_va" style="float:left;padding:6px;cursor:pointer;" title="Supprimer cette rubrique" onclick="javascript:ploopi.confirmlink('<?php echo ploopi\crypt::urlencode("admin.php?op=heading_delete"); ?>','<?php echo _PLOOPI_CONFIRM; ?>');" >
             <img src="./modules/webedit/img/folder_del.png">
             <span>Supprimer cette rubrique</span>
         </p>
@@ -164,9 +164,9 @@ if ($display_type == 'advanced')
     ?>
     <div class="ploopi_form" style="float:left;width:45%;">
         <div style="padding:2px;">
-            <p style="font-weight:bold;">Propriétés principales:</p>
+            <p style="font-weight:bold;">PropriÃ©tÃ©s principales:</p>
             <p>
-                <label>Libellé:</label>
+                <label>LibellÃ©:</label>
                 <?php
                 if ($booIsAllowedEdit)
                 {
@@ -197,7 +197,7 @@ if ($display_type == 'advanced')
                     ?>
                     <select class="select" name="webedit_heading_template" tabindex="3">
                         <?php
-                        if (isset($headings['list'][$headingid]['herited_template']) && $headings['list'][$headingid]['herited_template']) $webedit_template_name = $headings['list'][$headingid]['template'].' (hérité)';
+                        if (isset($headings['list'][$headingid]['herited_template']) && $headings['list'][$headingid]['herited_template']) $webedit_template_name = $headings['list'][$headingid]['template'].' (hÃ©ritÃ©)';
                         else $webedit_template_name = '';
                         ?>
                         <option value=""><?php echo $webedit_template_name; ?></option>
@@ -215,7 +215,7 @@ if ($display_type == 'advanced')
                 }
                 else
                 {
-                    if (isset($headings['list'][$headingid]['herited_template']) && $headings['list'][$headingid]['herited_template']) $webedit_template_name = $headings['list'][$headingid]['template'].' (hérité)';
+                    if (isset($headings['list'][$headingid]['herited_template']) && $headings['list'][$headingid]['herited_template']) $webedit_template_name = $headings['list'][$headingid]['template'].' (hÃ©ritÃ©)';
                     else $webedit_template_name = $heading->fields['template'];
                     echo '<span>'.ploopi\str::htmlentities($webedit_template_name).'</span>';
                 }
@@ -248,7 +248,7 @@ if ($display_type == 'advanced')
                 ?>
             </p>
             <p>
-                <label for="webedit_heading_url_window" style="cursor:pointer;">Ouvrir une nouvelle fenêtre:</label>
+                <label for="webedit_heading_url_window" style="cursor:pointer;">Ouvrir une nouvelle fenÃªtre:</label>
                 <?php
                 if ($booIsAllowedEdit)
                 {
@@ -321,10 +321,10 @@ if ($display_type == 'advanced')
                     if ($booIsAllowedEdit)
                     {
                         ?>
-                        <span style="clear:both;cursor:pointer;" onclick="javascript:ploopi_checkbox_click(event, 'heading_content_type_article_first');">
+                        <span style="clear:both;cursor:pointer;" onclick="javascript:ploopi.checkbox_click(event, 'heading_content_type_article_first');">
                             <input style="cursor:pointer;" type="radio" name="webedit_heading_content_type" value="article_first" id="heading_content_type_article_first" <?php if ($heading->fields['content_type'] == 'article_first') echo 'checked'; ?> />Afficher le premier article
                         </span>
-                        <span style="clear:both;cursor:pointer;" onclick="javascript:ploopi_checkbox_click(event, 'heading_content_type_article_redirect');">
+                        <span style="clear:both;cursor:pointer;" onclick="javascript:ploopi.checkbox_click(event, 'heading_content_type_article_redirect');">
                             <input style="cursor:pointer;" type="radio" name="webedit_heading_content_type" value="article_redirect" id="heading_content_type_article_redirect" <?php if ($heading->fields['content_type'] == 'article_redirect') echo 'checked'; ?> />Redirection vers un article ou une rubrique
                         </span>
                         <span style="padding-left:20px;">
@@ -346,22 +346,22 @@ if ($display_type == 'advanced')
                             ?>
                             <input type="hidden" id="webedit_heading_linkedpage" name="webedit_heading_linkedpage" value="<?php echo ploopi\str::htmlentities($heading->fields['linkedpage']); ?>">
                             <input type="text" readonly class="text" style="width:150px;" id="linkedpage_displayed" value="<?php echo ploopi\str::htmlentities($redirect_title); ?>">
-                            <img src="./modules/webedit/img/ico_choose_article.png" style="display:block;float:left;cursor:pointer;margin:2px 4px;" title="Choisir un article" alt="Choisir" onclick="javascript:ploopi_showpopup(ploopi_xmlhttprequest('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=webedit_heading_selectredirect',false), 300, event, 'click', 'webedit_popup_selectredirect');" />
-                            <img src="./modules/webedit/img/ico_clear_article.png" style="display:block;float:left;cursor:pointer;margin:2px 4px;" title="Effacer la redirection" alt="Choisir" onclick="javascript:ploopi_getelem('webedit_heading_linkedpage').value='';ploopi_getelem('linkedpage_displayed').value='';" />
+                            <img src="./modules/webedit/img/ico_choose_article.png" style="display:block;float:left;cursor:pointer;margin:2px 4px;" title="Choisir un article" alt="Choisir" onclick="javascript:ploopi.popup.show(ploopi.xhr.send('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=webedit_heading_selectredirect',false), 300, event, 'click', 'webedit_popup_selectredirect');" />
+                            <img src="./modules/webedit/img/ico_clear_article.png" style="display:block;float:left;cursor:pointer;margin:2px 4px;" title="Effacer la redirection" alt="Choisir" onclick="javascript:ploopi.getelem('webedit_heading_linkedpage').value='';ploopi.getelem('linkedpage_displayed').value='';" />
                         </span>
-                        <span style="cursor:pointer;" onclick="javascript:ploopi_checkbox_click(event, 'heading_content_type_url_redirect');">
+                        <span style="cursor:pointer;" onclick="javascript:ploopi.checkbox_click(event, 'heading_content_type_url_redirect');">
                             <input style="cursor:pointer;" type="radio" name="webedit_heading_content_type" value="url_redirect" id="heading_content_type_url_redirect" <?php if ($heading->fields['content_type'] == 'url_redirect') echo 'checked'; ?> />Redirection vers une URL
                         </span>
                         <span style="padding-left:20px;">
-                            <input type="text" class="text" name="webedit_heading_url" style="width:100%;" value="<?php echo ploopi\str::htmlentities($heading->fields['url']); ?>" onkeyup="javascript:if (this.value.length>0 && !$('heading_content_type_url_redirect').checked) ploopi_checkbox_click(event, 'heading_content_type_url_redirect');" tabindex="8" />
+                            <input type="text" class="text" name="webedit_heading_url" style="width:100%;" value="<?php echo ploopi\str::htmlentities($heading->fields['url']); ?>" onkeyup="javascript:if (this.value.length>0 && !jQuery('#heading_content_type_url_redirect')[0].checked) ploopi.checkbox_click(event, 'heading_content_type_url_redirect');" tabindex="8" />
                         </span>
-                        <span style="cursor:pointer;" onclick="javascript:ploopi_checkbox_click(event, 'heading_content_type_headings');">
+                        <span style="cursor:pointer;" onclick="javascript:ploopi.checkbox_click(event, 'heading_content_type_headings');">
                             <input style="cursor:pointer;" type="radio" name="webedit_heading_content_type" value="headings" id="heading_content_type_headings" <?php if ($heading->fields['content_type'] == 'headings') echo 'checked'; ?> />Afficher le contenu des sous rubriques
                         </span>
-                        <span style="cursor:pointer;" onclick="javascript:ploopi_checkbox_click(event, 'heading_content_type_blog');">
+                        <span style="cursor:pointer;" onclick="javascript:ploopi.checkbox_click(event, 'heading_content_type_blog');">
                             <input style="cursor:pointer;" type="radio" name="webedit_heading_content_type" value="blog" id="heading_content_type_blog" <?php if ($heading->fields['content_type'] == 'blog') echo 'checked'; ?> />Afficher comme Blog
                         </span>
-                        <span style="cursor:pointer;" onclick="javascript:ploopi_checkbox_click(event, 'heading_content_type_sitemap');">
+                        <span style="cursor:pointer;" onclick="javascript:ploopi.checkbox_click(event, 'heading_content_type_sitemap');">
                             <input style="cursor:pointer;" type="radio" name="webedit_heading_content_type" value="sitemap" id="heading_content_type_sitemap" <?php if ($heading->fields['content_type'] == 'sitemap') echo 'checked'; ?> />Afficher le plan du site
                         </span>
                         <?php
@@ -416,7 +416,7 @@ if ($display_type == 'advanced')
                 </span>
             </p>
 
-            <p style="font-weight:bold;">Propriétés annexes:</p>
+            <p style="font-weight:bold;">PropriÃ©tÃ©s annexes:</p>
             <p>
                 <label>Couleur:</label>
                 <?php
@@ -492,7 +492,7 @@ else
     <div class="ploopi_form" style="float:left;width:45%;">
         <div style="padding:2px;">
             <p>
-                <label>Libellé:</label>
+                <label>LibellÃ©:</label>
                 <?php
                 if ($booIsAllowedEdit)
                 {
@@ -511,7 +511,7 @@ else
                     ?>
                     <select class="select" name="webedit_heading_template" tabindex="3">
                         <?php
-                        if (isset($headings['list'][$headingid]['herited_template']) && $headings['list'][$headingid]['herited_template']) $webedit_template_name = $headings['list'][$headingid]['template'].' (hérité)';
+                        if (isset($headings['list'][$headingid]['herited_template']) && $headings['list'][$headingid]['herited_template']) $webedit_template_name = $headings['list'][$headingid]['template'].' (hÃ©ritÃ©)';
                         else $webedit_template_name = '';
                         ?>
                         <option value=""><?php echo $webedit_template_name; ?></option>
@@ -529,7 +529,7 @@ else
                 }
                 else
                 {
-                    if (isset($headings['list'][$headingid]['herited_template']) && $headings['list'][$headingid]['herited_template']) $webedit_template_name = $headings['list'][$headingid]['template'].' (hérité)';
+                    if (isset($headings['list'][$headingid]['herited_template']) && $headings['list'][$headingid]['herited_template']) $webedit_template_name = $headings['list'][$headingid]['template'].' (hÃ©ritÃ©)';
                     else $webedit_template_name = $heading->fields['template'];
                     echo '<span>'.ploopi\str::htmlentities($webedit_template_name).'</span>';
                 }
@@ -585,7 +585,7 @@ else
 
 <?php
 
-// récupère les validateurs
+// rÃ©cupÃ¨re les validateurs
 $arrWfUsers = array();
 $arrWf = ploopi\validation::get(_WEBEDIT_OBJECT_HEADING, $headingid);
 $intWfHeadingId = $headingid;
@@ -605,7 +605,7 @@ if (empty($arrWf)) // pas de validateur pour cette rubrique, on recherche sur le
 }
 
 /**
- * L'utilisateur connecté est-il validateur ?
+ * L'utilisateur connectÃ© est-il validateur ?
  */
 $booWfVal = false;
 foreach($arrWf as $value)
@@ -616,7 +616,7 @@ foreach($arrWf as $value)
     $arrWfUsers[$value['type_validation']][] = $value['id_validation'];
 }
 
-// récupère les partages
+// rÃ©cupÃ¨re les partages
 $arrSharesUsers = array();
 $intSharesHeadingId = 0;
 $arrShares = ploopi\share::get(-1, _WEBEDIT_OBJECT_HEADING, $headingid);
@@ -644,7 +644,7 @@ foreach($arrShares as $value) $arrSharesUsers[$value['type_share']][] = $value['
     <fieldset class="fieldset" style="padding:6px;">
         <legend><strong>Validateurs</strong> (utilisateurs qui peuvent publier)</legend>
 
-        <p class="ploopi_va" style="padding:0 2px 2px 2px;"><span>Validateurs </span><?php if ($intWfHeadingId && $intWfHeadingId != $headingid) echo "<em>&nbsp;héritées de &laquo;&nbsp;</em><a href=\"".ploopi\crypt::urlencode("admin.php?headingid={$intWfHeadingId}")."\">{$headings['list'][$intWfHeadingId]['label']}</a><em>&nbsp;&raquo;</em>"; ?><span>:</span>
+        <p class="ploopi_va" style="padding:0 2px 2px 2px;"><span>Validateurs </span><?php if ($intWfHeadingId && $intWfHeadingId != $headingid) echo "<em>&nbsp;hÃ©ritÃ©es de &laquo;&nbsp;</em><a href=\"".ploopi\crypt::urlencode("admin.php?headingid={$intWfHeadingId}")."\">{$headings['list'][$intWfHeadingId]['label']}</a><em>&nbsp;&raquo;</em>"; ?><span>:</span>
             <?php
             if (!empty($arrWfUsers))
             {
@@ -669,7 +669,7 @@ foreach($arrShares as $value) $arrSharesUsers[$value['type_share']][] = $value['
                     while ($row = ploopi\db::get()->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi\str::htmlentities($row['name'])."&nbsp;</span>";
                 }
             }
-            else echo '<em>Aucune accréditation</em>';
+            else echo '<em>Aucune accrÃ©ditation</em>';
             ?>
         </p>
 
@@ -678,7 +678,7 @@ foreach($arrShares as $value) $arrSharesUsers[$value['type_share']][] = $value['
         {
             ?>
             <div style="border:1px solid #c0c0c0;overflow:hidden;">
-            <?php ploopi\validation::selectusers(_WEBEDIT_OBJECT_HEADING, $heading->fields['id'], -1, _WEBEDIT_ACTION_ARTICLE_PUBLISH, $intWfHeadingId == $headingid ? 'Modifier la listes des validateurs :' : 'Définir une nouvelle liste de validateurs :'); ?>
+            <?php ploopi\validation::selectusers(_WEBEDIT_OBJECT_HEADING, $heading->fields['id'], -1, _WEBEDIT_ACTION_ARTICLE_PUBLISH, $intWfHeadingId == $headingid ? 'Modifier la listes des validateurs :' : 'DÃ©finir une nouvelle liste de validateurs :'); ?>
             </div>
             <?php
         }
@@ -688,9 +688,9 @@ foreach($arrShares as $value) $arrSharesUsers[$value['type_share']][] = $value['
 
 <div style="clear:both;padding:4px;">
     <fieldset class="fieldset" style="padding:6px;">
-        <legend><strong>Rédacteurs</strong> (utilisateurs qui peuvent gérer cette branche)</legend>
+        <legend><strong>RÃ©dacteurs</strong> (utilisateurs qui peuvent gÃ©rer cette branche)</legend>
 
-        <p class="ploopi_va" style="padding:0 2px 2px 2px;"><span>Rédacteurs </span><?php if ($intEditorHeadingId && $intEditorHeadingId != $headingid) echo "<em>&nbsp;héritées de &laquo;&nbsp;</em><a href=\"".ploopi\crypt::urlencode("admin.php?headingid={$intEditorHeadingId}")."\">{$headings['list'][$intEditorHeadingId]['label']}</a><em>&nbsp;&raquo;</em>"; ?><span>:</span>
+        <p class="ploopi_va" style="padding:0 2px 2px 2px;"><span>RÃ©dacteurs </span><?php if ($intEditorHeadingId && $intEditorHeadingId != $headingid) echo "<em>&nbsp;hÃ©ritÃ©es de &laquo;&nbsp;</em><a href=\"".ploopi\crypt::urlencode("admin.php?headingid={$intEditorHeadingId}")."\">{$headings['list'][$intEditorHeadingId]['label']}</a><em>&nbsp;&raquo;</em>"; ?><span>:</span>
             <?php
             if (!empty($arrEditorUsers))
             {
@@ -715,7 +715,7 @@ foreach($arrShares as $value) $arrSharesUsers[$value['type_share']][] = $value['
                     while ($row = ploopi\db::get()->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi\str::htmlentities($row['name'])."&nbsp;</span>";
                 }
             }
-            else echo '<em>Aucune accréditation</em>';
+            else echo '<em>Aucune accrÃ©ditation</em>';
             ?>
         </p>
 
@@ -724,7 +724,7 @@ foreach($arrShares as $value) $arrSharesUsers[$value['type_share']][] = $value['
         {
             ?>
             <div style="border:1px solid #c0c0c0;overflow:hidden;">
-            <?php ploopi\validation::selectusers(_WEBEDIT_OBJECT_HEADING_BACK_EDITOR, $heading->fields['id'], -1,_WEBEDIT_ACTION_HEADING_BACK_EDITOR, $intEditorHeadingId == $headingid ? 'Modifier la listes des rédacteurs :' : 'Définir une nouvelle liste de rédacteurs :'); ?>
+            <?php ploopi\validation::selectusers(_WEBEDIT_OBJECT_HEADING_BACK_EDITOR, $heading->fields['id'], -1,_WEBEDIT_ACTION_HEADING_BACK_EDITOR, $intEditorHeadingId == $headingid ? 'Modifier la listes des rÃ©dacteurs :' : 'DÃ©finir une nouvelle liste de rÃ©dacteurs :'); ?>
             </div>
             <?php
         }
@@ -734,14 +734,14 @@ foreach($arrShares as $value) $arrSharesUsers[$value['type_share']][] = $value['
 
 <div style="clear:both; padding:4px;">
     <fieldset class="fieldset" style="padding:6px;">
-        <legend><strong>Autorisations d'accès</strong> (utilisateurs qui peuvent accéder à une rubrique privée)</legend>
+        <legend><strong>Autorisations d'accÃ¨s</strong> (utilisateurs qui peuvent accÃ©der Ã  une rubrique privÃ©e)</legend>
         <p class="ploopi_checkbox" style="padding: 0 0 0 2px;">
-            <label for="heading_private">Rubrique privée (accès avec un compte utilisateur):</label>
+            <label for="heading_private">Rubrique privÃ©e (accÃ¨s avec un compte utilisateur):</label>
             <?php
             if (ploopi\acl::isactionallowed(_WEBEDIT_ACTION_ACCESS_MANAGE))
             {
                 ?>
-                <input type="checkbox" name="webedit_heading_private" id="webedit_heading_private" value="1" <?php if ($heading->fields['private']) echo 'checked="checked"'; ?> onchange="javascript:$('heading_private_form').style.display = (this.checked) ? 'block' : 'none';"/>
+                <input type="checkbox" name="webedit_heading_private" id="webedit_heading_private" value="1" <?php if ($heading->fields['private']) echo 'checked="checked"'; ?> onchange="javascript:jQuery('#heading_private_form')[0].style.display = (this.checked) ? 'block' : 'none';"/>
                 <?php
             }
             else
@@ -763,7 +763,7 @@ foreach($arrShares as $value) $arrSharesUsers[$value['type_share']][] = $value['
                     echo ($heading->fields['private_visible']) ? 'oui' : 'non';
                 ?>
             </p>
-            <p class="ploopi_va" style="padding:6px 2px 2px 2px;"><span>Autorisations d'accès </span><?php if ($intSharesHeadingId && $intSharesHeadingId != $headingid) echo "<em>&nbsp;héritées de &laquo;&nbsp;</em><a href=\"".ploopi\crypt::urlencode("admin.php?headingid={$intSharesHeadingId}")."\">{$headings['list'][$intSharesHeadingId]['label']}</a><em>&nbsp;&raquo;</em>"; ?><span>:</span>
+            <p class="ploopi_va" style="padding:6px 2px 2px 2px;"><span>Autorisations d'accÃ¨s </span><?php if ($intSharesHeadingId && $intSharesHeadingId != $headingid) echo "<em>&nbsp;hÃ©ritÃ©es de &laquo;&nbsp;</em><a href=\"".ploopi\crypt::urlencode("admin.php?headingid={$intSharesHeadingId}")."\">{$headings['list'][$intSharesHeadingId]['label']}</a><em>&nbsp;&raquo;</em>"; ?><span>:</span>
                 <?php
                 if (!empty($arrSharesUsers))
                 {
@@ -788,7 +788,7 @@ foreach($arrShares as $value) $arrSharesUsers[$value['type_share']][] = $value['
                         while ($row = ploopi\db::get()->fetchrow()) echo "{$strIcon}<span>&nbsp;".ploopi\str::htmlentities($row['name'])."&nbsp;</span>";
                     }
                 }
-                else echo '<em>Aucune accréditation</em>';
+                else echo '<em>Aucune accrÃ©ditation</em>';
                 ?>
             </p>
             <?php
@@ -797,7 +797,7 @@ foreach($arrShares as $value) $arrSharesUsers[$value['type_share']][] = $value['
                 ?>
                 <div style="border:1px solid #c0c0c0;overflow:hidden;">
                 <?php
-                    ploopi\share::selectusers(_WEBEDIT_OBJECT_HEADING, $heading->fields['id'], -1, ($intSharesHeadingId && $intSharesHeadingId == $headingid) ? 'Modifier la listes des autorisations d\'accès:' : 'Définir une nouvelle liste d\'autorisations d\'accès:');
+                    ploopi\share::selectusers(_WEBEDIT_OBJECT_HEADING, $heading->fields['id'], -1, ($intSharesHeadingId && $intSharesHeadingId == $headingid) ? 'Modifier la listes des autorisations d\'accÃ¨s:' : 'DÃ©finir une nouvelle liste d\'autorisations d\'accÃ¨s:');
                 ?>
                 </div>
                 <?php
@@ -839,10 +839,10 @@ if ($booIsAllowedEdit)
     $articles_columns['auto']['titre'] = array('label' => 'Titre', 'options' => array('sort' => true));
     $articles_columns['right']['auteur'] = array('label' => 'Auteur', 'width' => '130', 'options' => array('sort' => true));
     $articles_columns['right']['misenligne'] = array('label' => 'Mise en ligne', 'width' => '140');
-    $articles_columns['right']['vers'] = array('label' => 'Vers.', 'width' => '60', 'options' => array('sort' => true));
+    $articles_columns['right']['vers'] = array('label' => 'Vers.', 'width' => '70', 'options' => array('sort' => true));
     $articles_columns['right']['date'] = array('label' => 'Date', 'width' => '80', 'options' => array('sort' => true));
 
-    $articles_columns['left']['pos'] = array('label' => 'P.', 'width' => '35', 'options' => array('sort' => true));
+    $articles_columns['left']['pos'] = array('label' => 'P.', 'width' => '55', 'options' => array('sort' => true));
     $articles_columns['left']['ref'] = array('label' => 'Ref.', 'width' => '60', 'options' => array('sort' => true));
 
     $articles_columns['actions_right']['actions'] = array('label' => '&nbsp;', 'width' => '22');
@@ -864,7 +864,7 @@ if ($booIsAllowedEdit)
             $timestp_published_local = (!empty($row['timestp_published'])) ? ploopi\date::timestamp2local($row['timestp_published']) : array('date' => '');
             $timestp_unpublished_local = (!empty($row['timestp_unpublished'])) ? ploopi\date::timestamp2local($row['timestp_unpublished']) : array('date' => '');
 
-            $published = (!empty($timestp_published_local['date'])) ? "à partir du {$timestp_published_local['date']}" : '';
+            $published = (!empty($timestp_published_local['date'])) ? "Ã  partir du {$timestp_published_local['date']}" : '';
             $published .= (!empty($timestp_unpublished_local['date'])) ? (empty($published) ? '' : '<br />')."jusqu'au {$timestp_unpublished_local['date']}" : '';
 
             $art_title = ($row['status'] == 'wait') ? "{$row['title']} *" : $row['title'];
@@ -879,7 +879,7 @@ if ($booIsAllowedEdit)
 
             if (ploopi\acl::isadmin() || $booWfVal || $booIsEditor || ($_SESSION['ploopi']['userid'] == $row['id_user'] && $articles['list'][$row['id']]['online_id'] == ''))
             {
-                $articles_values[$c]['values']['actions'] = array('label' =>  "<a style=\"display:block;float:right;\" title=\"Supprimer\" href=\"javascript:ploopi_confirmlink('".ploopi\crypt::urlencode("admin.php?op=article_delete&articleid={$row['id']}")."','Êtes-vous certain de vouloir supprimer l\'article &laquo; ".addslashes($row['title'])." &raquo; ?');\"><img style=\"border:0px;\" src=\"./modules/webedit/img/doc_del.png\"></a>", 'style' => '');
+                $articles_values[$c]['values']['actions'] = array('label' =>  "<a style=\"display:block;float:right;\" title=\"Supprimer\" href=\"javascript:ploopi.confirmlink('".ploopi\crypt::urlencode("admin.php?op=article_delete&articleid={$row['id']}")."','ÃŠtes-vous certain de vouloir supprimer l\'article &laquo; ".addslashes($row['title'])." &raquo; ?');\"><img style=\"border:0px;\" src=\"./modules/webedit/img/doc_del.png\"></a>", 'style' => '');
             }
             else $articles_values[$c]['values']['actions'] = array('label' => '&nbsp;', 'style' => '');
 
@@ -912,12 +912,12 @@ if ($booIsAllowedEdit)
 </div>
 
 <?php
-if (ploopi\acl::isactionallowed(_WEBEDIT_ACTION_SUBSCRIBERS_MANAGE)) // Gestion des abonnés ?
+if (ploopi\acl::isactionallowed(_WEBEDIT_ACTION_SUBSCRIBERS_MANAGE)) // Gestion des abonnÃ©s ?
 {
     ?>
     <div style="margin:0 4px 4px 4px;border-style:solid;border-width:1px 1px 0 1px;border-color:#c0c0c0;">
         <p class="ploopi_va" style="background-color:#e0e0e0;border-bottom:1px solid #c0c0c0;padding:4px 6px;overflow:auto;">
-            <b>Liste des abonnés frontoffice (anonymes) de la rubrique &laquo; <?php echo ploopi\str::htmlentities($heading->fields['label']); ?> &raquo;</b>
+            <b>Liste des abonnÃ©s frontoffice (anonymes) de la rubrique &laquo; <?php echo ploopi\str::htmlentities($heading->fields['label']); ?> &raquo;</b>
         </p>
         <?php
         $subscribers_columns = array();
@@ -950,7 +950,7 @@ if (ploopi\acl::isactionallowed(_WEBEDIT_ACTION_SUBSCRIBERS_MANAGE)) // Gestion 
 
             $subscribers_values[$c]['values']['actions'] =
                 array(
-                    'label' => "<img style=\"cursor:pointer;\" title=\"Supprimer cet abonné\" alt=\"Supprimer\" onclick=\"javascript:ploopi_confirmlink('".ploopi\crypt::urlencode("admin-light.php?ploopi_op=webedit_subscriber_delete&webedit_subscriber_email={$row['email']}&webedit_subscriber_id_heading={$row['id_heading']}")."','Êtes-vous certain de vouloir supprimer cet abonné ?');\" src=\"./modules/webedit/img/ico_trash.png\"></a>",
+                    'label' => "<img style=\"cursor:pointer;\" title=\"Supprimer cet abonnÃ©\" alt=\"Supprimer\" onclick=\"javascript:ploopi.confirmlink('".ploopi\crypt::urlencode("admin-light.php?ploopi_op=webedit_subscriber_delete&webedit_subscriber_email={$row['email']}&webedit_subscriber_id_heading={$row['id_heading']}")."','ÃŠtes-vous certain de vouloir supprimer cet abonnÃ© ?');\" src=\"./modules/webedit/img/ico_trash.png\"></a>",
                     'style' => 'text-align:center;'
                 );
 
@@ -972,7 +972,7 @@ for ($i = 0; $i < sizeof($parents); $i++)
     {
         ?>
         <div style="padding:2px 4px;font-weight:bold;">
-        Vous héritez de l'abonnement à &laquo; <a href="<?php echo ploopi\crypt::urlencode("admin.php?headingid={$parents[$i]}"); ?>"><?php echo ploopi\str::htmlentities($headings['list'][$parents[$i]]['label']); ?></a> &raquo;
+        Vous hÃ©ritez de l'abonnement Ã  &laquo; <a href="<?php echo ploopi\crypt::urlencode("admin.php?headingid={$parents[$i]}"); ?>"><?php echo ploopi\str::htmlentities($headings['list'][$parents[$i]]['label']); ?></a> &raquo;
         </div>
         <?php
     }
@@ -985,7 +985,7 @@ $arrAllowedActions = array(
 );
 
 
-ploopi\subscription::display(_WEBEDIT_OBJECT_HEADING, $headingid, $arrAllowedActions, "à « {$heading->fields['label']} »");
+ploopi\subscription::display(_WEBEDIT_OBJECT_HEADING, $headingid, $arrAllowedActions, "Ã  Â« {$heading->fields['label']} Â»");
 ?>
 <div style="border-top:1px solid #c0c0c0;">
 <?php ploopi\annotation::display(_WEBEDIT_OBJECT_HEADING, $headingid, $heading->fields['label']); ?>

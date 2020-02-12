@@ -21,7 +21,7 @@
 */
 
 /**
- * Affichage d'un calendrier spécifique aux besoins de l'affichage type "Blog"
+ * Affichage d'un calendrier spÃ©cifique aux besoins de l'affichage type "Blog"
  *
  * @package webedit
  * @subpackage blog
@@ -31,13 +31,13 @@
  */
 
 /**
- * Classe d'accès à la table ploopi_mod_webedit_article_backup
+ * Classe d'accÃ¨s Ã  la table ploopi_mod_webedit_article_backup
  *
  * @package webedit
  * @subpackage article
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 class webedit_calendar_blog extends ploopi\calendar
@@ -47,7 +47,7 @@ class webedit_calendar_blog extends ploopi\calendar
         global $ploopi_days;
         global $ploopi_months;
 
-        // Préparation des événéments
+        // PrÃ©paration des Ã©vÃ©nÃ©ments
         $arrEvents = $this->_prepare_events();
 
         // 1er jour du mois (timestp unix)
@@ -56,16 +56,16 @@ class webedit_calendar_blog extends ploopi\calendar
         // dernier jour du mois (timestp unix)
         $lastday = mktime(0, 0, 0, $this->arrOptions['month']+1, 0, $this->arrOptions['year']);
 
-        // Jour de la semaine où tombe le 1er jour du mois : 1 - 7
+        // Jour de la semaine oÃ¹ tombe le 1er jour du mois : 1 - 7
         $weekday = $firstweekday = date('N', $firstday);
 
-        // Jour de la semaine où tombe le dernier jour du mois : 1 - 7
+        // Jour de la semaine oÃ¹ tombe le dernier jour du mois : 1 - 7
         $lastweekday = date('N', $lastday);
 
         // Nombre de jours dans le mois : 0 - 31
         $nbdays = date('t', $firstday);
 
-        // Nombre de semaines dans le mois (entamées)
+        // Nombre de semaines dans le mois (entamÃ©es)
         $nbweeks = floor($nbdays / 7) + ($nbdays % 7 > 0) + ($firstweekday > $lastweekday);
 
         // Style (hauteur/largeur) du jour
@@ -112,7 +112,7 @@ class webedit_calendar_blog extends ploopi\calendar
                     <div><?php echo $ploopi_months[intval($this->arrOptions['month'])].' '.$this->arrOptions['year']; ?></div>
                 </div>
                 <?php
-                // Boucle n°1 : Si le 1er jour du mois n'est pas un lundi, on affiche la fin du mois précédent
+                // Boucle nÂ°1 : Si le 1er jour du mois n'est pas un lundi, on affiche la fin du mois prÃ©cÃ©dent
                 if ($weekday > 1)
                 {
                     ?>
@@ -165,13 +165,13 @@ class webedit_calendar_blog extends ploopi\calendar
                         <?php
                     }
                 }
-                // Boucle n°2 : tous les jours du mois
+                // Boucle nÂ°2 : tous les jours du mois
                 for ($d = 1; $d <= date('t', $firstday) ; $d++)
                 {
-                    // Arrivé en fin de semaine, on se repositionne au début
+                    // ArrivÃ© en fin de semaine, on se repositionne au dÃ©but
                     if ($weekday == 8) $weekday = 1;
 
-                    // Chaque début de semaine = une nouvelle ligne
+                    // Chaque dÃ©but de semaine = une nouvelle ligne
                     if ($weekday == 1)
                     {
                         ?>
@@ -223,7 +223,7 @@ class webedit_calendar_blog extends ploopi\calendar
                     $weekday++;
                 }
 
-                // Boucle n°3 : Si le mois ne se termine pas un dimanche, on affiche le début du mois suivant
+                // Boucle nÂ°3 : Si le mois ne se termine pas un dimanche, on affiche le dÃ©but du mois suivant
                 if ($weekday <= 7)
                 {
                     for ($c = $weekday; $c <= 7 ; $c++)

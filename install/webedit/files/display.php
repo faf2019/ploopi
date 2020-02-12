@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Copyright (c) 2009-2010 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
@@ -28,14 +28,14 @@
  * @subpackage frontoffice
  * @copyright Ovensia, HeXad
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  *
  * @global Template $template_body template
  * @global string $template_path chemin vers le template
- * @global string $webedit_mode mode d'édition : edit (édition) / render (rendu backoffice) / display (rendu frontoffice)
+ * @global string $webedit_mode mode d'Ã©dition : edit (Ã©dition) / render (rendu backoffice) / display (rendu frontoffice)
  */
 
-// webedit_mode : edit / render / display => mode édition / rendu backoffice / affichage frontoffice
+// webedit_mode : edit / render / display => mode Ã©dition / rendu backoffice / affichage frontoffice
 // readonly : true / false => article modifiable oui/non (charge fckeditor si false)
 // type : draft / online => type du document : brouillon / en ligne
 
@@ -51,8 +51,8 @@ include_once './modules/webedit/class_article.php';
 include_once './modules/webedit/class_heading.php';
 
 /**
- * Déclaration des variables globales
- * (les plugins/objets sont appelées par des fonctions et ont besoin de ces variables)
+ * DÃ©claration des variables globales
+ * (les plugins/objets sont appelÃ©es par des fonctions et ont besoin de ces variables)
  */
 
 global $template_body;
@@ -70,25 +70,25 @@ global $webedit_subscription_messages;
 $ploopi_additional_head = '';
 $ploopi_additional_javascript = '';
 
-// Date du jour (utile pour vérifier les dates de publication)
+// Date du jour (utile pour vÃ©rifier les dates de publication)
 $today = ploopi\date::createtimestamp();
 
 $type = (empty($_GET['type'])) ? '' : $_GET['type'];
 $webedit_mode = (empty($_GET['webedit_mode'])) ? 'display' : $_GET['webedit_mode'];
 $readonly = (empty($_GET['readonly'])) ? 0 : $_GET['readonly'];
 
-// id article passé en param ?
+// id article passÃ© en param ?
 $articleid = (!empty($_REQUEST['articleid']) && is_numeric($_REQUEST['articleid'])) ? $_REQUEST['articleid'] : '';
 
-// id rubrique passé en param ?
+// id rubrique passÃ© en param ?
 $headingid = (!empty($_REQUEST['headingid']) && is_numeric($_REQUEST['headingid'])) ? $_REQUEST['headingid'] : '';
 
 // On verif que ce
 
-// code d'erreur renvoyé (principalement 404)
+// code d'erreur renvoyÃ© (principalement 404)
 $intErrorCode = 0;
 
-// vérification des paramètres
+// vÃ©rification des paramÃ¨tres
 if ($webedit_mode == 'edit' && !(ploopi\acl::isactionallowed(_WEBEDIT_ACTION_ARTICLE_EDIT) || webedit_isEditor($headingid))) $webedit_mode = 'display';
 
 if ($webedit_mode == 'render')
@@ -97,7 +97,7 @@ if ($webedit_mode == 'render')
     $type = '';
 }
 
-// requête de recherche ?
+// requÃªte de recherche ?
 $query_string = (empty($_REQUEST['query_string'])) ? '' : $_REQUEST['query_string'];
 $query_content_type = (empty($_REQUEST['query_content_type'])) ? '' : $_REQUEST['query_content_type'];
 $query_heading_id = (empty($_REQUEST['query_heading_id'])) ? '' : $_REQUEST['query_heading_id'];
@@ -106,19 +106,19 @@ $query_date_e = (empty($_REQUEST['query_date_e'])) ? '' : $_REQUEST['query_date_
 $query_mime_type = (empty($_REQUEST['query_mime_type'])) ? '' : strtolower($_REQUEST['query_mime_type']);
 $advanced_search = (empty($_REQUEST['advanced_search'])) ? false : true;
 
-// requête sur un tag ?
+// requÃªte sur un tag ?
 $query_tag = (empty($_REQUEST['query_tag'])) ? '' : $_REQUEST['query_tag'];
 
 // module frontoffice ?
 $intTemplateModuleId = (empty($_REQUEST['template_moduleid']) || !is_numeric($_REQUEST['template_moduleid']) || !isset($_SESSION['ploopi']['modules'][$_REQUEST['template_moduleid']]) || !file_exists("./modules/{$_SESSION['ploopi']['modules'][$_REQUEST['template_moduleid']]['moduletype']}/template_content.php")) ? '' : $_REQUEST['template_moduleid'];
 
-// récupération des rubriques
+// rÃ©cupÃ©ration des rubriques
 $arrHeadings = webedit_getheadings();
 
-// récupération des partages (mode connecté uniquement)
+// rÃ©cupÃ©ration des partages (mode connectÃ© uniquement)
 $arrShares = webedit_getshare();
 
-if ($query_string != '') // Recherche intégrale
+if ($query_string != '') // Recherche intÃ©grale
 {
     $headingid = $arrHeadings['tree'][0][0];
 }
@@ -126,7 +126,7 @@ elseif ($query_tag != '') // Recherche par tag
 {
     $headingid = $arrHeadings['tree'][0][0];
 }
-elseif ($advanced_search) // Recherche avancée
+elseif ($advanced_search) // Recherche avancÃ©e
 {
     $headingid = $arrHeadings['tree'][0][0];
 }
@@ -136,19 +136,19 @@ elseif (!empty($intTemplateModuleId)) // Module frontoffice
 }
 else // affichage standard rubrique/page ou blog
 {
-    // on recherche d'abord la rubrique (qui détermine le template)
+    // on recherche d'abord la rubrique (qui dÃ©termine le template)
     // en fonction des parametres articleid et headingid
 
     if (empty($articleid)) // pas de lien vers un article
     {
         // homepage
         if (empty($headingid)) $headingid = $arrHeadings['tree'][0][0];
-        else // accès par une rubrique
+        else // accÃ¨s par une rubrique
         {
             // rubrique inconnue
             if (!isset($arrHeadings['list'][$headingid]))
             {
-                // renvoi à la racine
+                // renvoi Ã  la racine
                 $headingid = $arrHeadings['tree'][0][0];
                 $intErrorCode = 404;
             }
@@ -170,7 +170,7 @@ else // affichage standard rubrique/page ou blog
             } while(!empty($objHeading->fields['linkedpage']) && substr($objHeading->fields['linkedpage'],0,1) == 'h');
         }
 
-        if (!$arrHeadings['list'][$headingid]['private'] || isset($arrShares[$arrHeadings['list'][$headingid]['herited_private']]) || isset($_SESSION['webedit']['allowedheading'][$_SESSION['ploopi']['moduleid']][$arrHeadings['list'][$headingid]['herited_private']])) // Rubrique non privée ou accessible par l'utilisateur
+        if (!$arrHeadings['list'][$headingid]['private'] || isset($arrShares[$arrHeadings['list'][$headingid]['herited_private']]) || isset($_SESSION['webedit']['allowedheading'][$_SESSION['ploopi']['moduleid']][$arrHeadings['list'][$headingid]['herited_private']])) // Rubrique non privÃ©e ou accessible par l'utilisateur
         {
             switch($arrHeadings['list'][$headingid]['content_type'])
             {
@@ -194,9 +194,9 @@ else // affichage standard rubrique/page ou blog
                 break;
 
                 case 'article_first':
-                    // Cas standard, traité plus bas
+                    // Cas standard, traitÃ© plus bas
                 case 'headings':
-                    // Traité à l'affichage
+                    // TraitÃ© Ã  l'affichage
                 case 'blog':
                     // Afficher tous les articles a la suite les uns des autres dans l'ordre inverse de date de parution.
                 break;
@@ -218,7 +218,7 @@ else // affichage standard rubrique/page ou blog
             }
             else // article iconnu
             {
-                // renvoi à la racine
+                // renvoi Ã  la racine
                 $headingid = $arrHeadings['tree'][0][0];
                 $intErrorCode = 404;
             }
@@ -231,7 +231,7 @@ else // affichage standard rubrique/page ou blog
                 if (!$article->open($articleid) || empty($arrHeadings['list'][$headingid]))
                 {
                     unset($articleid);
-                    // renvoi à la racine
+                    // renvoi Ã  la racine
                     $headingid = $arrHeadings['tree'][0][0];
                     $intErrorCode = 404;
                 }
@@ -245,7 +245,7 @@ if(isset($arrHeadings['list'][$headingid]['content_type']) && $arrHeadings['list
 {
     // Numero de page pour les blog
     $intNumPage = (!empty($_REQUEST['numpage']) && is_numeric($_REQUEST['numpage'])) ? $_REQUEST['numpage'] : '1';;
-    // Calcul des articles à afficher
+    // Calcul des articles Ã  afficher
     $intNumMinBlog = ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['nb_art_blog']*($intNumPage-1))+1;
     $intNumMaxBlog = $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['nb_art_blog']*$intNumPage;
 
@@ -257,7 +257,7 @@ if(isset($arrHeadings['list'][$headingid]['content_type']) && $arrHeadings['list
         // Pour facilier la lecture pointeur vers la session de 3km de long
         $arrSessionBlog = &$_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['blog'][$headingid];
 
-        // mois / année passé en parametre pour calendrier
+        // mois / annÃ©e passÃ© en parametre pour calendrier
         if(!isset($arrSessionBlog['year'])) $arrSessionBlog['year'] = date('Y');
         if(!isset($arrSessionBlog['month'])) $arrSessionBlog['month'] = date('m');
 
@@ -287,10 +287,10 @@ $template_path = _WEBEDIT_TEMPLATES_PATH."/$template_name";
 
 $template_body = new Template($template_path);
 
-// fichier template par défaut
+// fichier template par dÃ©faut
 $template_file = 'index.tpl';
 
-// Inclusion op modules en environnement frontoffice (permet par exemple de connaître le template frontoffice utilisé)
+// Inclusion op modules en environnement frontoffice (permet par exemple de connaÃ®tre le template frontoffice utilisÃ©)
 $_SESSION['ploopi']['frontoffice']['template_path'] = $template_path;
 
 if (!is_object($skin) && !empty($_SESSION['ploopi']['frontoffice']['template_path']) && file_exists("{$_SESSION['ploopi']['frontoffice']['template_path']}/class_skin.php"))
@@ -298,6 +298,7 @@ if (!is_object($skin) && !empty($_SESSION['ploopi']['frontoffice']['template_pat
     include_once "{$_SESSION['ploopi']['frontoffice']['template_path']}/class_skin.php";
     $skin = new ploopi\skin();
 }
+
 
 include_once './include/op.php';
 
@@ -327,20 +328,20 @@ if (!empty($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]
     }
 }
 
-if ($query_string != '' || $advanced_search) // recherche intégrale
+if ($query_string != '' || $advanced_search) // recherche intÃ©grale
 {
-    if ($advanced_search) // recherche intégrale avancée
+    if ($advanced_search) // recherche intÃ©grale avancÃ©e
     {
         $template_body->assign_block_vars('switch_advanced_search', array());
 
         /**
-         * Génération de la liste des rubriques pour la recherche étendue
+         * GÃ©nÃ©ration de la liste des rubriques pour la recherche Ã©tendue
          */
         webedit_headinglist2template($arrHeadings, $arrShares, $template_body, $query_heading_id);
 
     }
 
-    // résultat de la recherche
+    // rÃ©sultat de la recherche
     $arrRelevance = array();
 
     if (file_exists("./templates/frontoffice/{$template_name}/search.tpl")) $template_file = 'search.tpl';
@@ -358,7 +359,7 @@ if ($query_string != '' || $advanced_search) // recherche intégrale
         {
             if ($query_heading_id != '')
             {
-                // Liste des articles de la rubrique sélectionnée
+                // Liste des articles de la rubrique sÃ©lectionnÃ©e
                 $rs = ploopi\db::get()->query("
                     SELECT  a.id
                     FROM    ploopi_mod_webedit_heading h1,
@@ -388,10 +389,10 @@ if ($query_string != '' || $advanced_search) // recherche intégrale
             }
 
             /**
-             * Recherche dans les contenus d'objets intégrés dans les pages
+             * Recherche dans les contenus d'objets intÃ©grÃ©s dans les pages
              */
 
-            // Recherche des objets utilisés
+            // Recherche des objets utilisÃ©s
             $sql =
                 "
                 SELECT      ao.*,
@@ -409,9 +410,9 @@ if ($query_string != '' || $advanced_search) // recherche intégrale
 
             while ($row = ploopi\db::get()->fetchrow())
             {
-                if ($row['id_heading'] == 0 || !$arrHeadings['list'][$row['id_heading']]['private'] || isset($arrShares[$arrHeadings['list'][$row['id_heading']]['herited_private']]) || isset($_SESSION['webedit']['allowedheading'][$_SESSION['ploopi']['moduleid']][$arrHeadings['list'][$row['id_heading']]['herited_private']]) || $webedit_mode == 'edit') // Rubrique non privée ou accessible par l'utilisateur
+                if ($row['id_heading'] == 0 || !$arrHeadings['list'][$row['id_heading']]['private'] || isset($arrShares[$arrHeadings['list'][$row['id_heading']]['herited_private']]) || isset($_SESSION['webedit']['allowedheading'][$_SESSION['ploopi']['moduleid']][$arrHeadings['list'][$row['id_heading']]['herited_private']]) || $webedit_mode == 'edit') // Rubrique non privÃ©e ou accessible par l'utilisateur
                 {
-                    // Recherche par rubrique, on contrôle l'id de la rubrique (et parents) du document avec la rubrique sélectionnée
+                    // Recherche par rubrique, on contrÃ´le l'id de la rubrique (et parents) du document avec la rubrique sÃ©lectionnÃ©e
                     if ($query_heading_id != '')
                     {
                         $booObjectOk = false;
@@ -429,14 +430,14 @@ if ($query_string != '' || $advanced_search) // recherche intégrale
                 }
             }
 
-            // pour chaque objet, on récupère le résultat de la recherche
+            // pour chaque objet, on rÃ©cupÃ¨re le rÃ©sultat de la recherche
             foreach($arrObject as $rowObject)
             {
                 if (isset($_SESSION['ploopi']['modules'][$rowObject['id_module']]) && $_SESSION['ploopi']['modules'][$rowObject['id_module']]['active']) // Module existe et actif ?
                 {
                     // Charge le fichier global.php du module
                     ploopi\module::init($_SESSION['ploopi']['modules'][$rowObject['id_module']]['moduletype'], false, false, false);
-                    // Vérifie l'existence d'une fonction de recherche dans les objets
+                    // VÃ©rifie l'existence d'une fonction de recherche dans les objets
                     $cbSearchFunc = $_SESSION['ploopi']['modules'][$rowObject['id_module']]['moduletype'].'_object_search';
 
                     if (function_exists($cbSearchFunc))
@@ -449,17 +450,17 @@ if ($query_string != '' || $advanced_search) // recherche intégrale
                     }
                 }
             }
-            // tri général de la recherche
+            // tri gÃ©nÃ©ral de la recherche
             // uasort($arrRelevance, create_function('$a,$b', 'return $b[\'relevance\'] > $a[\'relevance\'];'));
         }
 
         // Recherche de documents ?
         if ($query_content_type != 'art')
         {
-            // booléen à true si le module DOC existe physiquement
+            // boolÃ©en Ã  true si le module DOC existe physiquement
             if ($boolModDocExists = ploopi\module::init('doc', false, false, false)) include_once './modules/doc/class_docfile.php';
 
-            // Recherche des modules DOC utilisés par les documents liés
+            // Recherche des modules DOC utilisÃ©s par les documents liÃ©s
             $sql =
                 "
                 SELECT      df.id_module_docfile,
@@ -484,9 +485,9 @@ if ($query_string != '' || $advanced_search) // recherche intégrale
 
             while ($row = ploopi\db::get()->fetchrow())
             {
-                if ($row['id_heading'] == 0 || !$arrHeadings['list'][$row['id_heading']]['private'] || isset($arrShares[$arrHeadings['list'][$row['id_heading']]['herited_private']]) || isset($_SESSION['webedit']['allowedheading'][$_SESSION['ploopi']['moduleid']][$arrHeadings['list'][$row['id_heading']]['herited_private']]) || $webedit_mode == 'edit') // Rubrique non privée ou accessible par l'utilisateur
+                if ($row['id_heading'] == 0 || !$arrHeadings['list'][$row['id_heading']]['private'] || isset($arrShares[$arrHeadings['list'][$row['id_heading']]['herited_private']]) || isset($_SESSION['webedit']['allowedheading'][$_SESSION['ploopi']['moduleid']][$arrHeadings['list'][$row['id_heading']]['herited_private']]) || $webedit_mode == 'edit') // Rubrique non privÃ©e ou accessible par l'utilisateur
                 {
-                    // Recherche par rubrique, on contrôle l'id de la rubrique (et parents) du document avec la rubrique sélectionnée
+                    // Recherche par rubrique, on contrÃ´le l'id de la rubrique (et parents) du document avec la rubrique sÃ©lectionnÃ©e
                     if ($query_heading_id != '')
                     {
                         $booDocOk = false;
@@ -502,9 +503,9 @@ if ($query_string != '' || $advanced_search) // recherche intégrale
                 }
             }
 
-            if (!empty($arrModDoc) && $boolModDocExists) // Il y a des documents indexés
+            if (!empty($arrModDoc) && $boolModDocExists) // Il y a des documents indexÃ©s
             {
-                // pour chaque module DOC, on récupère le résultat de la recherche
+                // pour chaque module DOC, on rÃ©cupÃ¨re le rÃ©sultat de la recherche
                 foreach($arrModDoc as $idModDoc => $arrDoc)
                 {
                     // Filtrage par extension
@@ -523,12 +524,12 @@ if ($query_string != '' || $advanced_search) // recherche intégrale
             }
         }
 
-        // tri général de la recherche
+        // tri gÃ©nÃ©ral de la recherche
         uasort($arrRelevance, create_function('$a,$b', 'return $b[\'relevance\'] > $a[\'relevance\'];'));
 
         $responses = 0;
 
-        // pour chaque réponse du moteur de recherche
+        // pour chaque rÃ©ponse du moteur de recherche
         foreach($arrRelevance as $key => $result)
         {
             if (isset($arrModDoc[$result['id_module']])) // s'agit-il d'un document ?
@@ -567,18 +568,18 @@ if ($query_string != '' || $advanced_search) // recherche intégrale
             {
                 $objArticle = new webedit_article();
 
-                // Soit l'id de l'article (si objet lié) ou id de l'enregistrement
+                // Soit l'id de l'article (si objet liÃ©) ou id de l'enregistrement
                 $idrecord = isset($result['id_article']) ? $result['id_article'] : $result['id_record'];
 
                 if ($objArticle->open($idrecord) && $objArticle->isenabled())
                 {
-                    // Contrôle de la date de publication (au sens création de l'article) si renseignée dans la recherche
+                    // ContrÃ´le de la date de publication (au sens crÃ©ation de l'article) si renseignÃ©e dans la recherche
                     if (($objArticle->fields['timestp'] >= $ts_date_b || empty($ts_date_b)) && ($objArticle->fields['timestp'] <= $ts_date_e || empty($ts_date_e)))
                     {
-                        // Rubrique non privée ou accessible par l'utilisateur
+                        // Rubrique non privÃ©e ou accessible par l'utilisateur
                         if (!$arrHeadings['list'][$objArticle->fields['id_heading']]['private'] || isset($arrShares[$arrHeadings['list'][$objArticle->fields['id_heading']]['herited_private']]) || isset($_SESSION['webedit']['allowedheading'][$_SESSION['ploopi']['moduleid']][$arrHeadings['list'][$objArticle->fields['id_heading']]['herited_private']]) || $webedit_mode == 'edit')
                         {
-                            // c'est un objet intégré dans un article
+                            // c'est un objet intÃ©grÃ© dans un article
                             if (isset($result['id_article']))
                             {
 
@@ -640,12 +641,12 @@ if ($query_string != '' || $advanced_search) // recherche intégrale
             }
         }
 
-        if ($responses == 0) // pas de réponse valide !
+        if ($responses == 0) // pas de rÃ©ponse valide !
         {
             $template_body->assign_block_vars('switch_search.switch_notfound',array());
         }
 
-        $title_raw = "Résultat de la recherche pour \" {$query_string} \"";
+        $title_raw = "RÃ©sultat de la recherche pour \" {$query_string} \"";
         $title = ploopi\str::htmlentities($title_raw);
 
         $template_body->assign_vars(
@@ -692,7 +693,7 @@ elseif($query_tag != '') // recherche par tag
 
     while ($row = ploopi\db::get()->fetchrow())
     {
-        if (!$arrHeadings['list'][$row['id_heading']]['private'] || isset($arrShares[$arrHeadings['list'][$row['id_heading']]['herited_private']]) || isset($_SESSION['webedit']['allowedheading'][$_SESSION['ploopi']['moduleid']][$arrHeadings['list'][$row['id_heading']]['herited_private']]) || $webedit_mode == 'edit') // Rubrique non privée ou accessible par l'utilisateur
+        if (!$arrHeadings['list'][$row['id_heading']]['private'] || isset($arrShares[$arrHeadings['list'][$row['id_heading']]['herited_private']]) || isset($_SESSION['webedit']['allowedheading'][$_SESSION['ploopi']['moduleid']][$arrHeadings['list'][$row['id_heading']]['herited_private']]) || $webedit_mode == 'edit') // Rubrique non privÃ©e ou accessible par l'utilisateur
         {
             $size = sprintf("%.02f", strlen(strip_tags(ploopi\str::html_entity_decode($row['content_cleaned'])))/1024);
 
@@ -766,9 +767,9 @@ elseif (!empty($intTemplateModuleId)) // contenu d'un module
         )
     );
 }
-elseif (!empty($ploopi_op) && $ploopi_op == 'webedit_unsubscribe') // message affiché lors du désabonnement (lien depuis email)
+elseif (!empty($ploopi_op) && $ploopi_op == 'webedit_unsubscribe') // message affichÃ© lors du dÃ©sabonnement (lien depuis email)
 {
-    $title_raw = 'Désabonnement';
+    $title_raw = 'DÃ©sabonnement';
     $title = ploopi\str::htmlentities($title_raw);
 
     $template_body->assign_block_vars('switch_content_message', array());
@@ -788,7 +789,7 @@ elseif (!empty($ploopi_op) && $ploopi_op == 'webedit_unsubscribe') // message af
             'PAGE_META_DESCRIPTION' => $title,
             'PAGE_META_DESCRIPTION_RAW' => $title_raw,
             'MESSAGE_TITLE' => $title,
-            'MESSAGE_CONTENT' => ploopi\str::htmlentities('Votre demande de désabonnement a été prise en compte.')
+            'MESSAGE_CONTENT' => ploopi\str::htmlentities('Votre demande de dÃ©sabonnement a Ã©tÃ© prise en compte.')
         )
     );
 }
@@ -798,7 +799,7 @@ elseif($arrHeadings['list'][$headingid]['content_type'] == 'blog' && $webedit_mo
 {
     if(isset($headingid))
     {
-        // Rubrique privée et non autorisée
+        // Rubrique privÃ©e et non autorisÃ©e
         if ($arrHeadings['list'][$headingid]['private'] && !isset($arrShares[$arrHeadings['list'][$headingid]['herited_private']]) && !isset($_SESSION['webedit']['allowedheading'][$_SESSION['ploopi']['moduleid']][$arrHeadings['list'][$headingid]['herited_private']]) && $webedit_mode != 'edit')
         {
             $template_body->assign_block_vars('switch_private', array());
@@ -864,18 +865,18 @@ elseif($arrHeadings['list'][$headingid]['content_type'] == 'blog' && $webedit_mo
                 $booIsHomePage = false;
                 // On a une page avant ?
                 $booPageBefore = false;
-                // On a une page après ?
+                // On a une page aprÃ¨s ?
                 $booPageAfter = false;
 
                 // nb d'article visible
                 $nbvisart = 0;
                 // compteur d'article
                 $intnumArt = 0;
-                // Tableau des id article à traiter
+                // Tableau des id article Ã  traiter
                 $arrShowArticle = array();
 
-                // On balaye TOUS les article du id heading pour générer les boutons
-                // On filtre aussi dans $arrShowArticle les articles à afficher
+                // On balaye TOUS les article du id heading pour gÃ©nÃ©rer les boutons
+                // On filtre aussi dans $arrShowArticle les articles Ã  afficher
                 while ($row = ploopi\db::get()->fetchrow($resSQL))
                 {
                     $arrDate = ploopi\date::gettimestampdetail($row['timestp']);
@@ -889,7 +890,7 @@ elseif($arrHeadings['list'][$headingid]['content_type'] == 'blog' && $webedit_mo
 
                     $booUseArticle = true;
 
-                    // Filtre sur les article à traiter (Filtre sur le mois ou sur le jour !)
+                    // Filtre sur les article Ã  traiter (Filtre sur le mois ou sur le jour !)
                     if(isset($_GET['yearmonth']) && is_numeric($_GET['yearmonth']) && isset($_GET['day']) && is_numeric($_GET['day']))
                         $booUseArticle = ($date == $_GET['yearmonth'].$_GET['day']);
                     elseif(isset($_GET['yearmonth']) && is_numeric($_GET['yearmonth']))
@@ -900,7 +901,7 @@ elseif($arrHeadings['list'][$headingid]['content_type'] == 'blog' && $webedit_mo
 
                     if($booUseArticle) $intnumArt++;
 
-                    // Array des pages à traiter immédiatement
+                    // Array des pages Ã  traiter immÃ©diatement
                     if($booUseArticle && ($intNumMaxBlog == 0 || ($intNumMaxBlog >= $intnumArt && $intnumArt >= $intNumMinBlog)))
                     {
                         $arrShowArticle[] = $row;
@@ -908,14 +909,14 @@ elseif($arrHeadings['list'][$headingid]['content_type'] == 'blog' && $webedit_mo
                     }
                     else
                     {
-                        // des pages avant ? donc date plus anciennes (pour "page précédente")
+                        // des pages avant ? donc date plus anciennes (pour "page prÃ©cÃ©dente")
                         if($booPageBefore || ($booUseArticle && $intNumMaxBlog != 0 && $intnumArt > $intNumMaxBlog)) $booPageBefore = true;
-                        // des pages apres ? donc date plus récentes en date (pour "Page suivante")
+                        // des pages apres ? donc date plus rÃ©centes en date (pour "Page suivante")
                         if($booPageAfter || ($booUseArticle && $intNumMaxBlog != 0 && $intnumArt < $intNumMinBlog)) $booPageAfter = true;
                     }
                 }
 
-                // Compteur pour comparer avec $nbvisart et générer le switch pour séparateur
+                // Compteur pour comparer avec $nbvisart et gÃ©nÃ©rer le switch pour sÃ©parateur
                 $numvisart = 0;
 
                 // AFFICHAGE DES ARTICLES
@@ -972,7 +973,7 @@ elseif($arrHeadings['list'][$headingid]['content_type'] == 'blog' && $webedit_mo
 
                     $content = '';
 
-                    // Test si l'article a déjà été visité pendant la session
+                    // Test si l'article a dÃ©jÃ  Ã©tÃ© visitÃ© pendant la session
                     if (!isset($_SESSION['webedit']['counter'][$row['id']]))
                     {
                         // Enregistrement d'un hit pour cet article
@@ -1003,7 +1004,7 @@ elseif($arrHeadings['list'][$headingid]['content_type'] == 'blog' && $webedit_mo
 
                     /**
                      * Traitement des objets WCE/WebEdit
-                     * avec détection de chaîne et remplacement par le contenu d'une fonction
+                     * avec dÃ©tection de chaÃ®ne et remplacement par le contenu d'une fonction
                      */
                     if (!empty($editor)) $content = $editor;
                     else
@@ -1118,7 +1119,7 @@ elseif($arrHeadings['list'][$headingid]['content_type'] == 'blog' && $webedit_mo
                     }
                     else
                     {
-                        // pas d'article par défaut, on teste si on est sur la rubrique d'accueil
+                        // pas d'article par dÃ©faut, on teste si on est sur la rubrique d'accueil
                         $booIsHomePage = (!empty($headingid) && $arrHeadings['tree'][0][0] == $headingid);
                     }
 
@@ -1277,7 +1278,7 @@ elseif($arrHeadings['list'][$headingid]['content_type'] == 'blog' && $webedit_mo
                     );
                 }
 
-                if (!empty($_GET['subscription_return']) && isset($webedit_subscription_messages[$_GET['subscription_return']])) // réponse suite à une demande d'abonnement
+                if (!empty($_GET['subscription_return']) && isset($webedit_subscription_messages[$_GET['subscription_return']])) // rÃ©ponse suite Ã  une demande d'abonnement
                 {
                     $template_body->assign_block_vars(
                         'switch_subscription.switch_response',
@@ -1294,7 +1295,7 @@ elseif($arrHeadings['list'][$headingid]['content_type'] == 'blog' && $webedit_mo
     }
     else // !isset($headingid)
     {
-        // renvoi à la racine
+        // renvoi Ã  la racine
         $headingid = $arrHeadings['tree'][0][0];
         $intErrorCode = 404;
     }
@@ -1302,7 +1303,7 @@ elseif($arrHeadings['list'][$headingid]['content_type'] == 'blog' && $webedit_mo
 else // affichage standard rubrique/page
 {
 
-    // Rubrique privée et non autorisée
+    // Rubrique privÃ©e et non autorisÃ©e
     if ($arrHeadings['list'][$headingid]['private'] && !isset($arrShares[$arrHeadings['list'][$headingid]['herited_private']]) && !isset($_SESSION['webedit']['allowedheading'][$_SESSION['ploopi']['moduleid']][$arrHeadings['list'][$headingid]['herited_private']]) && $webedit_mode != 'edit')
     {
         $template_body->assign_block_vars('switch_private', array());
@@ -1340,7 +1341,7 @@ else // affichage standard rubrique/page
             }
         }
 
-        // détermination du type de tri des articles
+        // dÃ©termination du type de tri des articles
         switch($arrHeadings['list'][$headingid]['sortmode'])
         {
             case 'bydate':
@@ -1409,8 +1410,8 @@ else // affichage standard rubrique/page
 
             foreach($article_array as $row)
             {
-                // pas d'article sélectionné
-                // choix du premier article par défaut (sauf si la rubrique affiche des sous-rubriques
+                // pas d'article sÃ©lectionnÃ©
+                // choix du premier article par dÃ©faut (sauf si la rubrique affiche des sous-rubriques
                 if (empty($articleid) && $arrHeadings['list'][$headingid]['content_type'] != 'headings' && $arrHeadings['list'][$headingid]['content_type'] != 'sitemap') $articleid = $row['id'];
 
                 if ($row['visible'])
@@ -1481,7 +1482,7 @@ else // affichage standard rubrique/page
 
         $booIsHomePage = false;
 
-        if (!empty($articleid)) // article à afficher
+        if (!empty($articleid)) // article Ã  afficher
         {
             $content = '';
 
@@ -1517,7 +1518,7 @@ else // affichage standard rubrique/page
                                 )
                         );
                 }
-                else $intErrorCode = 404; // article non trouvé
+                else $intErrorCode = 404; // article non trouvÃ©
             }
 
             if ($webedit_mode == 'edit')
@@ -1552,7 +1553,7 @@ else // affichage standard rubrique/page
                             filebrowserImageBrowseUrl: '<?php echo _PLOOPI_BASEPATH.'/admin-light.php?'.ploopi\crypt::queryencode('ploopi_op=doc_selectimage'); ?>',
                             // Url de choix des objets
                             objectBrowserUrl: '<?php echo _PLOOPI_BASEPATH.'/admin-light.php?'.ploopi\crypt::queryencode('ploopi_op=ploopi_getobjects'); ?>',
-                            // Chargement de styles complémentaires (on remet le fichier par défaut en 1er)
+                            // Chargement de styles complÃ©mentaires (on remet le fichier par dÃ©faut en 1er)
                             // Puis on ajoute la feuille de style des plugins...
                             contentsCss: [
                                 CKEDITOR.basePath+'contents.css',
@@ -1583,7 +1584,7 @@ else // affichage standard rubrique/page
             {
                 if (!$intErrorCode)
                 {
-                    // Test si l'article a déjà été visité pendant la session
+                    // Test si l'article a dÃ©jÃ  Ã©tÃ© visitÃ© pendant la session
                     if (!isset($_SESSION['webedit']['counter'][$article->fields['id']]))
                     {
                         // Enregistrement d'un hit pour cet article
@@ -1619,7 +1620,7 @@ else // affichage standard rubrique/page
 
                 /**
                  * Traitement des objets WCE/WebEdit
-                 * avec détection de chaîne et remplacement par le contenu d'une fonction
+                 * avec dÃ©tection de chaÃ®ne et remplacement par le contenu d'une fonction
                  */
 
                 if (!empty($editor)) $content = $editor;
@@ -1731,7 +1732,7 @@ else // affichage standard rubrique/page
                         'ACTION'        => ploopi\crypt::urlencode($action),
                         'IDCAPTCHA'     => $id_captcha,
                         'URLTOCAPTCHA'      => ploopi\crypt::urlencode('index-light.php?ploopi_op=ploopi_get_captcha&id_captcha='.$id_captcha),
-                        // Passage au flash nécessite constament une url_encodée
+                        // Passage au flash nÃ©cessite constament une url_encodÃ©e
                         'URLTOCAPTCHASOUND' => (defined('_PLOOPI_URL_ENCODE') && (_PLOOPI_URL_ENCODE)) ? ploopi\crypt::urlencode('index-light.php?ploopi_op=ploopi_get_captcha_sound&id_captcha='.$id_captcha) : urlencode('index-light.php?ploopi_op=ploopi_get_captcha_sound&id_captcha='.$id_captcha)
                     )
                 );
@@ -1790,7 +1791,7 @@ else // affichage standard rubrique/page
         }
         else
         {
-            // pas d'article par défaut, on teste si on est sur la rubrique d'accueil
+            // pas d'article par dÃ©faut, on teste si on est sur la rubrique d'accueil
             $booIsHomePage = (!empty($headingid) && $arrHeadings['tree'][0][0] == $headingid);
         }
 
@@ -1840,7 +1841,7 @@ else // affichage standard rubrique/page
                 )
             );
 
-            if (!empty($_GET['subscription_return']) && isset($webedit_subscription_messages[$_GET['subscription_return']])) // réponse suite à une demande d'abonnement
+            if (!empty($_GET['subscription_return']) && isset($webedit_subscription_messages[$_GET['subscription_return']])) // rÃ©ponse suite Ã  une demande d'abonnement
             {
                 $template_body->assign_block_vars(
                     'switch_subscription.switch_response',
@@ -1889,7 +1890,7 @@ if ($intErrorCode && $webedit_mode != 'edit')
 // load a specific template file in edition mode (if exists)
 if ($webedit_mode == 'edit' && file_exists("./templates/frontoffice/{$template_name}/fck_{$template_file}")) $template_file = "fck_{$template_file}";
 
-// on vérifie l'existence du fichier TPL, sinon => die
+// on vÃ©rifie l'existence du fichier TPL, sinon => die
 if (!file_exists("./templates/frontoffice/{$template_name}/{$template_file}") || ! is_readable("./templates/frontoffice/{$template_name}/{$template_file}")) {
 
     ploopi\system::kill(
@@ -1904,7 +1905,7 @@ if (!file_exists("./templates/frontoffice/{$template_name}/{$template_file}") ||
 
 $template_body->set_filenames(array('body' => $template_file));
 
-// Mode connecté, on propose les infos de l'utilisateur connecté
+// Mode connectÃ©, on propose les infos de l'utilisateur connectÃ©
 if ($_SESSION['ploopi']['connected'])
 {
     $template_body->assign_block_vars('switch_user_logged_in', array());
@@ -1918,7 +1919,7 @@ if ($_SESSION['ploopi']['connected'])
             'USER_SHOWTICKETS'      => ploopi\crypt::urlencode('index.php?modcontent='._PLOOPI_MODULE_SYSTEM.'&op=showtickets'),
             'USER_SHOWFAVORITES'    => ploopi\crypt::urlencode('index.php?modcontent='._PLOOPI_MODULE_SYSTEM.'&op=showfavorites'),
             'USER_ADMINISTRATION'   => ploopi\crypt::urlencode('admin.php'.''),
-            'USER_DECONNECT'        => ploopi\crypt::urlencode('index.php?ploopi_logout')
+            'USER_DECONNECT'        => ploopi\crypt::urlencode('index.php?ploopi\system::logout')
         )
     );
 }
@@ -1976,7 +1977,14 @@ list($keywords) = ploopi\str::getwords("{$wsp['title']} {$wsp['meta_keywords']} 
 $template_body->assign_block_vars(
     'ploopi_js',
     array(
-        'PATH' => './lib/protoaculous/protoaculous.min.js?v='.urlencode(_PLOOPI_VERSION.','._PLOOPI_REVISION)
+        'PATH' => './vendor/components/jquery/jquery.min.js?v='.urlencode(_PLOOPI_VERSION.','._PLOOPI_REVISION)
+    )
+);
+
+$template_body->assign_block_vars(
+    'ploopi_js',
+    array(
+        'PATH' => './lib/jquery-ui/jquery-ui.min.js?v='.urlencode(_PLOOPI_VERSION.','._PLOOPI_REVISION)
     )
 );
 
@@ -2063,7 +2071,7 @@ $template_body->assign_vars(
 );
 
 /**
- * Génération du nuage de tags en fonction des articles publiés
+ * GÃ©nÃ©ration du nuage de tags en fonction des articles publiÃ©s
  */
 $sql =  "
         SELECT      t.tag, a.id_heading
@@ -2091,7 +2099,7 @@ while ($row = ploopi\db::get()->fetchrow())
     if (!$arrHeadings['list'][$row['id_heading']]['private']
         || isset($arrShares[$arrHeadings['list'][$row['id_heading']]['herited_private']])
         || isset($_SESSION['webedit']['allowedheading'][$_SESSION['ploopi']['moduleid']][$arrHeadings['list'][$row['id_heading']]['herited_private']])
-        || $webedit_mode == 'edit') // Rubrique non privée ou accessible par l'utilisateur
+        || $webedit_mode == 'edit') // Rubrique non privÃ©e ou accessible par l'utilisateur
     {
         $strTag = strtolower(ploopi\str::convertaccents($row['tag']));
         if (!isset($arrTags[$strTag])) $arrTags[$strTag] = 0;
@@ -2116,7 +2124,7 @@ foreach($arrTags as $strTag => &$row)
     if ($row['size'] < $intMinSize) $row['size'] = $intMinSize;
 }
 
-// Tri des tags par ordre alphabétique
+// Tri des tags par ordre alphabÃ©tique
 ksort($arrTags);
 
 foreach ($arrTags as $strTag => $arrTag)
@@ -2169,7 +2177,7 @@ if(isset($arrHeadings['list'][$headingid]['content_type']) && $arrHeadings['list
         )
     );
 
-    // la requete a déjà été effectuée dans l'affichage "blog" ou "page" plus haut
+    // la requete a dÃ©jÃ  Ã©tÃ© effectuÃ©e dans l'affichage "blog" ou "page" plus haut
     if(isset($resSQL) && ploopi\db::get()->numrows($resSQL))
     {
         ploopi\db::get()->dataseek($resSQL); // Repositionne au debut;
@@ -2215,7 +2223,7 @@ if(isset($arrHeadings['list'][$headingid]['content_type']) && $arrHeadings['list
                 $arrArticleBlogArchive[$year][$month] = array('nbArt' => 1, 'url' => $scriptArchive);
             }
             // CALENDRIER
-            // On passe les jours où il y a des articles
+            // On passe les jours oÃ¹ il y a des articles
             $objCalendarBlog->addevent(
                 new ploopi\calendarEvent(
                     $date.'000000',
@@ -2233,25 +2241,25 @@ if(isset($arrHeadings['list'][$headingid]['content_type']) && $arrHeadings['list
         $maxTimeStpArt = substr($maxTimeStpArt,0,6);
         $minTimeStpArt = substr($minTimeStpArt,0,6);
 
-        // Controle si la date dans le calendrier ne va pas etre supérieur à la date de dernier article pour mémoriser en session
+        // Controle si la date dans le calendrier ne va pas etre supÃ©rieur Ã  la date de dernier article pour mÃ©moriser en session
         if(($arrSessionBlog['year'].$arrSessionBlog['month']) > $maxTimeStpArt)
         {
             $arrSessionBlog['year'] = substr($maxTimeStpArt,0,4);
             $arrSessionBlog['month'] = substr($maxTimeStpArt,4,2);
         }
 
-        // Controle si la date dans le calendrier ne va pas etre supérieur à la date de dernier article pour mémoriser en session
+        // Controle si la date dans le calendrier ne va pas etre supÃ©rieur Ã  la date de dernier article pour mÃ©moriser en session
         if(($arrSessionBlog['year'].$arrSessionBlog['month']) < $minTimeStpArt)
         {
             $arrSessionBlog['year'] = substr($minTimeStpArt,0,4);
             $arrSessionBlog['month'] = substr($minTimeStpArt,4,2);
         }
 
-        // Mois avant/après
+        // Mois avant/aprÃ¨s
         $intYearMonthPreced =  date("Ym", mktime(0, 0, 0, intval($arrSessionBlog['month'])-1, 1, intval($arrSessionBlog['year'])));
         $intYearMonthNext = date("Ym", mktime(0, 0, 0, intval($arrSessionBlog['month'])+1, 1, intval($arrSessionBlog['year'])));
 
-        // Masque pour le lien lors du clic sur le mois/années du calendrier
+        // Masque pour le lien lors du clic sur le mois/annÃ©es du calendrier
         if($webedit_mode == 'render')
         {
             $strUrlCalendarMonthNext = (substr($maxTimeStpArt,0,6) >= $intYearMonthNext) ? "index.php?webedit_mode=render&moduleid={$_SESSION['ploopi']['moduleid']}&headingid={$headingid}&yearmonth={$intYearMonthNext}" : '';
@@ -2304,7 +2312,7 @@ if(isset($arrHeadings['list'][$headingid]['content_type']) && $arrHeadings['list
         );
 
         // ARCHIVES
-        //krsort($arrArticleBlogByMonth); // la requete le fait déjà :)
+        //krsort($arrArticleBlogByMonth); // la requete le fait dÃ©jÃ  :)
         //ploopi\output::print_r($arrArticleBlogArchive);
         foreach($arrArticleBlogArchive as $year => $arrmonth)
         {

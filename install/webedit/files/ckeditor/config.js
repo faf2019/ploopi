@@ -5,7 +5,7 @@
 
 CKEDITOR.editorConfig = function( config ) {
 
-    // Comportement de la touche "ENTER" (inversé par rapport à la config par défaut)
+    // Comportement de la touche "ENTER" (inversé par rapport Ã  la config par défaut)
     config.enterMode = CKEDITOR.ENTER_BR;
     config.shiftEnterMode = CKEDITOR.ENTER_P;
 
@@ -27,7 +27,7 @@ CKEDITOR.editorConfig = function( config ) {
         'span(!ckTag);' + // Autorisation de la classe associée au tags
         'del ins';
 
-    config.allowedContent = true; // Désactivation complète du filtre
+    config.allowedContent = true; // Désactivation complÃ¨te du filtre
 
 
     // Barre d'outil personnalisée
