@@ -65,7 +65,7 @@
         "openlss/lib-array2xml": "^0.0.10",
         "box/spout": "^2.5",
         "keller/soundex-fr-bundle": "dev-master",
-        "wamania/php-stemmer": "^1.2",
+        "wamania/php-stemmer": "^2.0",
         "pear/http_request2": "^2.3",
         "pear/xml_serializer": "^0.22.0",
         "pear/cache_lite": "^1.8",
