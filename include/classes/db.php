@@ -209,7 +209,7 @@ class db
         if (!is_null(self::$_objDb)) return self::$_objDb;
 
         self::$_objDb = new self(_PLOOPI_DB_SERVER, _PLOOPI_DB_LOGIN, _PLOOPI_DB_PASSWORD, _PLOOPI_DB_DATABASE);
-        if(!self::$_objDb->isconnected()) trigger_error(_PLOOPI_MSG_DBERROR, E_USER_ERROR);
+        if(!self::$_objDb->isconnected()) trigger_error('Database connection error, please contact administrator', E_USER_ERROR);
 
         return self::$_objDb;
     }

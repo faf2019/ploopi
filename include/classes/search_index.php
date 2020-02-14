@@ -24,7 +24,7 @@ namespace ploopi;
 
 use ploopi;
 use Keller\SoundexFrBundle\Services\SoundexFr;
-use Wamania\Snowball\French;
+use Wamania\Snowball\Stemmer\French;
 
 /**
  * Gestion de la recherche et de l'indexation de contenu
