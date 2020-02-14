@@ -216,7 +216,11 @@ class form_field extends form_element
             break;
 
             case 'input:date':
-                $strOutput .= "<input type=\"date\" name=\"{$this->_strName}\" id=\"{$this->_strId}\" value=\"{$strValue}\" tabindex=\"{$intTabindex}\"{$strProperties}{$strMaxLength}{$strEvents}{$strPlaceHolder} />";
+                $strMinMax = '';
+                if (isset($this->_arrOptions['min'])) $strMinMax .= " min=\"{$this->_arrOptions['min']}\"";
+                if (isset($this->_arrOptions['max'])) $strMinMax .= " max=\"{$this->_arrOptions['max']}\"";
+
+                $strOutput .= "<input type=\"date\" name=\"{$this->_strName}\" id=\"{$this->_strId}\" value=\"{$strValue}\" tabindex=\"{$intTabindex}\"{$strProperties}{$strMaxLength}{$strEvents}{$strPlaceHolder}{$strMinMax} />";
             break;
 
             case 'input:month':

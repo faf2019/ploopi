@@ -61,7 +61,14 @@ class form_htmlfield extends form_field
         $strStyle = is_null($this->_arrOptions['style']) ? '' : " style=\"{$this->_arrOptions['style']}\"";
         $strClass = is_null($this->_arrOptions['class']) ? '' : " class=\"{$this->_arrOptions['class']}\"";
 
-        return $this->renderForm("<span name=\"{$this->_strName}\" id=\"{$this->_strId}\" {$strStyle}{$strClass}>{$this->_arrValues[0]}</span>");
+        $strDataSet = '';
+        if (!empty($this->_arrOptions['dataset']) && is_array($this->_arrOptions['dataset'])) {
+            foreach($this->_arrOptions['dataset'] as $k => $v) {
+                $strDataSet .= self::_getProperty('data-'.str::tourl($k), $v);
+            }
+        }
+
+        return $this->renderForm("<span name=\"{$this->_strName}\" id=\"{$this->_strId}\" {$strDataSet}{$strStyle}{$strClass}>{$this->_arrValues[0]}</span>");
     }
 }
 
