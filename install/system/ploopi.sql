@@ -1492,5 +1492,5 @@ ALTER TABLE `ploopi_validation`
 ALTER TABLE `ploopi_workspace`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
-UPDATE `ploopi_module_type` SET `version` = '1.9.7.2', `author` = 'Ovensia', `date` = '20191205000000', `description` = 'Noyau du système' WHERE `ploopi_module_type`.`id` = 1;
+UPDATE `ploopi_module_type` SET `version` = '1.9.7.3', `author` = 'Ovensia', `date` = '20200216000000', `description` = 'Noyau du système' WHERE `ploopi_module_type`.`id` = 1;
   

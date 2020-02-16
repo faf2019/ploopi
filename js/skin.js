@@ -61,14 +61,14 @@ ploopi.skin.array_renderupdate = function(array_id) {
         if (!jQuery('#ploopi_explorer_spacer_'+array_id).length) {
 
             // Récupération de la largeur de la scrollbar verticale
-            var scrollbar_width = $('#ploopi_explorer_values_outer_'+array_id)[0].offsetWidth - $('#ploopi_explorer_values_inner_'+array_id)[0].offsetWidth;
+            var scrollbar_width = jQuery('#ploopi_explorer_values_outer_'+array_id)[0].offsetWidth - jQuery('#ploopi_explorer_values_inner_'+array_id)[0].offsetWidth;
 
             // Insertion d'un bloc de la largeur de la scrollbar dans la ligne de titre
-            $('#ploopi_explorer_title_'+array_id).html(
-                '<div id="ploopi_explorer_spacer_'+array_id+'" style=\'float:right;width:'+scrollbar_width+'px;\'>&nbsp;</div>'+$('#ploopi_explorer_title_'+array_id).html()
+            jQuery('#ploopi_explorer_title_'+array_id).html(
+                '<div id="ploopi_explorer_spacer_'+array_id+'" style=\'float:right;width:'+scrollbar_width+'px;\'>&nbsp;</div>'+jQuery('#ploopi_explorer_title_'+array_id).html()
             );
 
-            var columns = $('#ploopi_explorer_main_'+array_id+' .ploopi_explorer_column');
+            var columns = jQuery('#ploopi_explorer_main_'+array_id+' .ploopi_explorer_column');
 
             for (j=0;j<columns.length;j++)
             {
@@ -83,11 +83,11 @@ ploopi.skin.array_renderupdate = function(array_id) {
 
         if (jQuery('#ploopi_explorer_spacer_'+array_id).length) {
 
-            var scrollbar_width = $('#ploopi_explorer_spacer_'+array_id).width();
+            var scrollbar_width = jQuery('#ploopi_explorer_spacer_'+array_id).width();
 
-            $('#ploopi_explorer_spacer_'+array_id).remove();
+            jQuery('#ploopi_explorer_spacer_'+array_id).remove();
 
-            var columns = $('#ploopi_explorer_main_'+array_id+' .ploopi_explorer_column');
+            var columns = jQuery('#ploopi_explorer_main_'+array_id+' .ploopi_explorer_column');
 
             for (j=0;j<columns.length;j++)
             {
@@ -102,10 +102,10 @@ ploopi.skin.array_renderupdate = function(array_id) {
 
     if (jQuery.browser == 'msie')
     {
-        var columns = $('#ploopi_explorer_main_'+array_id+' .ploopi_explorer_column');
+        var columns = jQuery('#ploopi_explorer_main_'+array_id+' .ploopi_explorer_column');
         for (j=0;j<columns.length;j++)
         {
-            columns[j].style.height = $('#ploopi_explorer_main_'+array_id)[0].offsetHeight+'px';
+            columns[j].style.height = jQuery('#ploopi_explorer_main_'+array_id)[0].offsetHeight+'px';
         }
     }
 };
@@ -114,41 +114,28 @@ ploopi.skin.treeview_shownode = function(node_id, query, script) {
 
     if (typeof(script) == 'undefined') script = 'admin-light.php';
 
-    elt = $('t'+node_id);
-    dest = $('n'+node_id);
-    treenode = $('treeview_node'+node_id);
+    elt = jQuery('#t'+node_id)[0];
+    dest = jQuery('#n'+node_id)[0];
+    treenode = jQuery('#treeview_node'+node_id)[0];
 
     treenode.className = 'treeview_node_loading';
 
     if (elt.src.indexOf('plus')  != -1) elt.src = elt.src.replace('plus', 'minus');
     else if (elt.src.indexOf('minus')  != -1) elt.src = elt.src.replace('minus', 'plus');
 
-    if ($(dest))
+    if (dest)
     {
-        if ($(dest).style.display == 'none')
+        if (dest.style.display == 'none')
         {
-            //$(dest).style.display='block';
-            if ($(dest).innerHTML.length < 20)
-            {
-                $(dest).innerHTML = ploopi.xhr.send(script, query);
-            }
-            new Effect.BlindDown(
-                dest,
-                {
-                    duration: 0.2,
-                    afterFinish: function() {treenode.className = 'treeview_node';}
-                }
-            );
+            if (dest.innerHTML.length < 20) dest.innerHTML = ploopi.xhr.send(script, query);
+
+            dest.style.display = 'block';
+            treenode.className = 'treeview_node';
         }
         else
         {
-            new Effect.BlindUp(
-                dest,
-                {
-                    duration: 0.2,
-                    afterFinish: function() {treenode.className = 'treeview_node';}
-                }
-            );
+            dest.style.display = 'none';
+            treenode.className = 'treeview_node';
         }
     }
 };

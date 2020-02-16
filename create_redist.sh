@@ -3,7 +3,7 @@
 # Pour l'export SQL :
 # mysqldump -uroot -p<PASS> --opt --default-character-set=latin1 --comments=FALSE ploopixxxx > install/system/ploopi.sql
 
-export DEST=ploopi_1.9.7.2
+export DEST=ploopi_1.9.7.3
 
 #################################
 # compression des fichiers
@@ -42,8 +42,14 @@ cp -r lib $DEST
 rm $DEST/config/config.php
 
 mkdir $DEST/install
+cp -r install/booking $DEST/install
+cp -r install/dbreport $DEST/install
 cp -r install/directory $DEST/install
 cp -r install/doc $DEST/install
+cp -r install/forms $DEST/install
+cp -r install/planning $DEST/install
+cp -r install/webedit $DEST/install
+cp -r install/wiki $DEST/install
 cp -r install/system $DEST/install
 cp install/index.html $DEST/install
 
