@@ -56,7 +56,7 @@ class booking_event_detail extends ploopi\data_object
      * @return booking_event_detail
      */
 
-    public function booking_event_detail()
+    public function __construct()
     {
         parent::__construct('ploopi_mod_booking_event_detail', 'id');
     }

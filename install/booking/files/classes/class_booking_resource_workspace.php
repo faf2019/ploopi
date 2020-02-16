@@ -44,7 +44,7 @@ class booking_resource_workspace extends ploopi\data_object {
      * @return agrid_resource_workspace
      */
 
-    public function booking_resource_workspace() {
+    public function __construct() {
 
         parent::__construct(
             'ploopi_mod_booking_resource_workspace',

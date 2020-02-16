@@ -1,3 +1,9 @@
+== Module BOOKING - version 1.3.2 ====================================================
+
+2020-02-13  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Corrections mineures liées à la migration version PHP 7
+
 == Module BOOKING - version 1.3.1 ====================================================
 
 2019-01-06  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

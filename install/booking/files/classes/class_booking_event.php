@@ -48,7 +48,6 @@ include_once './include/classes/data_object.php';
 
 class booking_event extends ploopi\data_object
 {
-
     private $details;
 
     private $subresources;
@@ -59,17 +58,18 @@ class booking_event extends ploopi\data_object
      * @return booking_event
      */
 
-    public function booking_event()
+    public function __construct()
     {
         parent::__construct('ploopi_mod_booking_event', 'id');
         $this->details = array();
         $this->subresources = array();
     }
 
-    public function open($intId) {
+    public function open(...$args)
+    {
         $db = ploopi\db::get();
 
-        $res = parent::open($intId);
+        $res = parent::open($args);
         $this->subresources = array();
 
         if ($res) {
