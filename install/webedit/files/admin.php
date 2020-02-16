@@ -875,7 +875,7 @@ switch($menu)
                                 'description' => 'Blocs',
                                 'parents' => array('h0'),
                                 'node_link' => '',
-                                'node_onclick' => "ploopi_skin_treeview_shownode('hb', '".ploopi\crypt::queryencode("ploopi_op=webedit_detail_heading&hid=r0&option=")."', 'admin-light.php')",
+                                'node_onclick' => "ploopi.skin.treeview_shownode('hb', '".ploopi\crypt::queryencode("ploopi_op=webedit_detail_heading&hid=r0&option=")."', 'admin-light.php')",
                                 'link' => ploopi\crypt::urlencode("admin.php?headingid=b"),
                                 'onclick' => '',
                                 'icon' => './modules/webedit/img/blocs.png'

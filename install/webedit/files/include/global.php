@@ -241,7 +241,7 @@ function webedit_gettreeview($arrHeadings = array(), $articles = array(), $optio
 
                 case 'selectlink':
                     $link = '';
-                    $onclick = "ploopi_skin_treeview_shownode('h{$prefix}{$fields['id']}', '".ploopi\crypt::queryencode("ploopi_op=webedit_detail_heading&hid=h{$prefix}{$fields['id']}&option={$option}")."', 'admin-light.php')";
+                    $onclick = "ploopi.skin.treeview_shownode('h{$prefix}{$fields['id']}', '".ploopi\crypt::queryencode("ploopi_op=webedit_detail_heading&hid=h{$prefix}{$fields['id']}&option={$option}")."', 'admin-light.php')";
                 break;
 
                 default:
@@ -257,7 +257,7 @@ function webedit_gettreeview($arrHeadings = array(), $articles = array(), $optio
                     'description' => $fields['description'],
                     'parents' => preg_split('/;/', $fields['parents']),
                     'node_link' => '',
-                    'node_onclick' => "ploopi_skin_treeview_shownode('h{$prefix}{$fields['id']}', '".ploopi\crypt::queryencode("ploopi_op=webedit_detail_heading&hid=h{$prefix}{$fields['id']}&option={$option}")."', 'admin-light.php')",
+                    'node_onclick' => "ploopi.skin.treeview_shownode('h{$prefix}{$fields['id']}', '".ploopi\crypt::queryencode("ploopi_op=webedit_detail_heading&hid=h{$prefix}{$fields['id']}&option={$option}")."', 'admin-light.php')",
                     'link' => $link,
                     'onclick' => $onclick,
                     'icon' => ($fields['id_heading'] == 0) ? './modules/webedit/img/base.png' : './modules/webedit/img/folder.png'
@@ -295,7 +295,27 @@ function webedit_gettreeview($arrHeadings = array(), $articles = array(), $optio
 
                         case 'selectlink':
                             $link = '';
-                            $onclick = "ploopi.getelem('txtArticle',parent.document).value='index.php?headingid={$fields['id_heading']}&articleid={$fields['id']}';ploopi.getelem('txtAttTitle',parent.document).value='".addslashes($fields['title'])."';";
+                            $CKEditorFuncNum = isset($_REQUEST['CKEditorFuncNum']) ? intval($_REQUEST['CKEditorFuncNum']) : 0;
+                            $onclick = "
+                                window.parent.opener.CKEDITOR.tools.callFunction(
+                                    {$CKEditorFuncNum},
+                                    'index.php?headingid={$fields['id_heading']}&articleid={$fields['id']}',
+                                    function() {
+                                        // Get the reference to a dialog window.
+                                        var dialog = this.getDialog();
+
+                                        // Check if this is the Image Properties dialog window.
+                                        if ( dialog.getName() == 'image' ) {
+                                            // Get the reference to a text field that stores the alt attribute.
+                                            var element = dialog.getContentElement( 'info', 'txtAlt' );
+                                            // Assign the new value.
+                                            if ( element )
+                                                element.setValue( 'alt text' );
+                                        }
+                                    }
+                                );
+                                window.parent.close();
+                            ";
                         break;
 
                         default:

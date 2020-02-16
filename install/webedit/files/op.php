@@ -136,6 +136,41 @@ if ($_SESSION['ploopi']['connected'])
             ploopi\output::redirect('admin.php');
         break;
 
+        case 'webedit_selector':
+            ob_start();
+            ?>
+            <style>body, html, div { border:0;padding:0;margin:0;display:block;height:100%;overflow:hidden; }</style>
+            <iframe style="height:100%;float:left;width:40%;border:0;border-right:1px solid #aaa;box-sizing:border-box;" src="<? echo ploopi\crypt::urlencode('admin-light.php?ploopi_op=webedit_selectlink&CKEditor='.(isset($_REQUEST['CKEditor'])?$_REQUEST['CKEditor']:'').'&CKEditorFuncNum='.(isset($_REQUEST['CKEditorFuncNum'])?$_REQUEST['CKEditorFuncNum']:'').'&langCode=fr'); ?>">
+            </iframe>
+            <iframe style="height:100%;float:left;width:60%;border:0;box-sizing:border-box;" src="<? echo ploopi\crypt::urlencode('admin-light.php?ploopi_op=doc_selectfile&CKEditor='.(isset($_REQUEST['CKEditor'])?$_REQUEST['CKEditor']:'').'&CKEditorFuncNum='.(isset($_REQUEST['CKEditorFuncNum'])?$_REQUEST['CKEditorFuncNum']:'').'&langCode=fr'); ?>">
+            </iframe>
+            <?
+            $main_content = ob_get_contents();
+            @ob_end_clean();
+
+            $template_body->assign_vars(array(
+                'TEMPLATE_PATH'         => $_SESSION['ploopi']['template_path'],
+                'ADDITIONAL_JAVASCRIPT' => $ploopi_additional_javascript,
+                'PAGE_CONTENT'          => $main_content
+                )
+            );
+
+            $template_body->assign_block_vars('module_css',
+                array(
+                    'PATH' => "./modules/webedit/include/styles.css"
+                )
+            );
+
+            $template_body->assign_block_vars('module_css_ie',
+                array(
+                     'PATH' => "./modules/webedit/include/styles_ie.css"
+                )
+            );
+
+            $template_body->pparse('body');
+            ploopi\system::kill();
+        break;
+
         case 'webedit_selectlink':
         case 'webedit_detail_heading';
             ob_start();

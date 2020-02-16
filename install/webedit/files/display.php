@@ -293,10 +293,10 @@ $template_file = 'index.tpl';
 // Inclusion op modules en environnement frontoffice (permet par exemple de connaître le template frontoffice utilisé)
 $_SESSION['ploopi']['frontoffice']['template_path'] = $template_path;
 
-if (!is_object($skin) && !empty($_SESSION['ploopi']['frontoffice']['template_path']) && file_exists("{$_SESSION['ploopi']['frontoffice']['template_path']}/class_skin.php"))
+if (!empty($_SESSION['ploopi']['frontoffice']['template_path']) && file_exists("{$_SESSION['ploopi']['frontoffice']['template_path']}/class_skin.php"))
 {
     include_once "{$_SESSION['ploopi']['frontoffice']['template_path']}/class_skin.php";
-    $skin = new ploopi\skin();
+    $skin = ploopi\skin::get();
 }
 
 
@@ -1549,7 +1549,8 @@ else // affichage standard rubrique/page
                         // http://docs.ckeditor.com/#!/guide/dev_file_browser_api
                         CKEDITOR.replace( 'editor', {
                             customConfig: '<?php echo _PLOOPI_BASEPATH.'/modules/webedit/ckeditor/config.js'; ?>',
-                            filebrowserBrowseUrl: '<?php echo _PLOOPI_BASEPATH.'/admin-light.php?'.ploopi\crypt::queryencode('ploopi_op=doc_selectfile'); ?>',
+                            // doc_selectfile
+                            filebrowserBrowseUrl: '<?php echo _PLOOPI_BASEPATH.'/admin-light.php?'.ploopi\crypt::queryencode('ploopi_op=webedit_selector'); ?>',
                             filebrowserImageBrowseUrl: '<?php echo _PLOOPI_BASEPATH.'/admin-light.php?'.ploopi\crypt::queryencode('ploopi_op=doc_selectimage'); ?>',
                             // Url de choix des objets
                             objectBrowserUrl: '<?php echo _PLOOPI_BASEPATH.'/admin-light.php?'.ploopi\crypt::queryencode('ploopi_op=ploopi_getobjects'); ?>',
