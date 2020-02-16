@@ -879,15 +879,18 @@ if ($_SESSION['ploopi']['connected'])
     /**
      * Autre opérations qui ne nécessite pas que l'on soit dans le module DOC
      */
+
     switch($ploopi_op)
     {
         case 'doc_getfiles':
+
             if (!empty($_GET['idfolder']) && is_numeric($_GET['idfolder']) && isset($_GET['filter']))
             {
+
                 switch($_GET['filter'])
                 {
                     case 'doc_selectimage':
-                        $arrFilter = array('jpg', 'jpeg', 'gif', 'png', 'bmp');
+                        $arrFilter = array('jpg', 'jpeg', 'gif', 'png', 'webp', 'bmp');
                     break;
 
                     case 'doc_selectflash':
@@ -943,7 +946,7 @@ if ($_SESSION['ploopi']['connected'])
                     }
                 }
 
-                ploopi\str::print_json($arrFiles);
+                echo json_encode($arrFiles);
             }
 
             ploopi\system::kill();
@@ -1021,7 +1024,7 @@ switch($ploopi_op)
                 include_once './modules/doc/class_docfile.php';
 
                 $objDoc = new docfile();
-                $objThumb = new mimethumb($width, $height, 0, 'png', 'transparent');
+                $objThumb = new ploopi\mimethumb($width, $height, 0, 'png', 'transparent');
 
                 if($objDoc->openmd5($_GET['docfile_md5id']))
                     $objThumb->getThumbnail($objDoc->getfilepath(),$objDoc->fields['extension']);

@@ -146,7 +146,7 @@ function doc_fckexplorer_set_folder(idfolder, ploopi_op)
 
 function doc_fckexplorer_selectfile(fileUrl, text)
 {
-    window.opener.CKEDITOR.tools.callFunction( jQuery('#CKEditorFuncNum')[0].value, fileUrl, function() {
+    window.parent.opener.CKEDITOR.tools.callFunction( jQuery('#CKEditorFuncNum')[0].value, fileUrl, function() {
         // Get the reference to a dialog window.
         var dialog = this.getDialog();
         // Check if this is the Image Properties dialog window.
@@ -157,70 +157,41 @@ function doc_fckexplorer_selectfile(fileUrl, text)
             if ( element )
                 element.setValue( text );
         }
-        // Return "false" to stop further execution. In such case CKEditor will ignore the second argument ("fileUrl")
-        // and the "onSelect" function assigned to the button that called the file manager (if defined).
-        // return false;
     });
 
-    window.close();
+    window.parent.close();
 };
 
 function doc_fckexplorer_switch_folder(idfolder, ploopi_op)
 {
-    new Ajax.Request('admin-light.php',
-        {
-            method:     'get',
-            parameters: {'ploopi_env': _PLOOPI_ENV, 'ploopi_op':  'doc_getfiles', 'idfolder': idfolder, 'filter': ploopi_op},
-            onSuccess:  function(transport, json)
+
+    var request = jQuery.ajax({
+        type: 'GET',
+        url: 'admin-light.php',
+        data: {
+            ploopi_env: _PLOOPI_ENV,
+            ploopi_op:  'doc_getfiles',
+            idfolder: idfolder,
+            filter: ploopi_op
+        },
+        dataType: 'json',
+        success: function (json, status) {
+
+            fb = jQuery('#doc_filebrowser')[0];
+            fb.innerHTML = '';
+
+            for (i=0;i<json.length;i++)
             {
-                if (!json && transport.responseText.isJSON()) json = transport.responseText.evalJSON();
+                var filesize = Math.round(parseInt(json[i]['size'],10)/1024);
 
-                if (json)
-                {
+                fb.innerHTML +=     '<a class="doc_fckexplorer_vignette" href="javascript:void(0);" onclick="javascript:doc_fckexplorer_selectfile(\''+json[i]['url']+'\', \''+json[i]['name']+'\');">'+
+                                        '<img style="height:75px;" src="index-quick.php?ploopi_op=doc_image_get&docfile_md5id='+json[i]['md5id']+'&version='+json[i]['version']+'&width=125&height=75" />'+
+                                        '<div style="font-weight:bold;">'+json[i]['name']+'</div>'+
+                                        '<div>'+filesize+' ko</div>'+
+                                    '</a>';
 
-                    fb = jQuery('#doc_filebrowser')[0];
-                    fb.innerHTML = '';
-                    for (i=0;i<json.length;i++)
-                    {
-                        var filesize = Math.round(parseInt(json[i]['size'],10)/1024);
-
-                        if (ploopi_op == 'doc_selectimage')
-                        {
-                            /*
-                            fb.innerHTML +=     '<a class="doc_fckexplorer_vignette" href="javascript:void(0);" onclick="javascript:var title = ploopi.getelem(\'cke_80_textInput\',opener.document);var alt = ploopi.getelem(\'cke_80_textInput\',opener.document); if (title) title.value=\''+ploopi.addslashes(json[i]['name'])+'\';if (alt) alt.value=\''+ploopi.addslashes(json[i]['name'])+'\';doc_fckexplorer_selectfile(\''+json[i]['url']+'\');">'+
-                                                    '<img style="height:75px;" src="index-quick.php?ploopi_op=doc_image_get&docfile_md5id='+json[i]['md5id']+'&version='+json[i]['version']+'&width=125&height=75" />'+
-                                                    '<div style="font-weight:bold;">'+json[i]['name']+'</div>'+
-                                                    '<div>'+filesize+' ko</div>'+
-                                                '</a>';
-                            */
-
-                            fb.innerHTML +=     '<a class="doc_fckexplorer_vignette" href="javascript:void(0);" onclick="javascript:doc_fckexplorer_selectfile(\''+json[i]['url']+'\', \''+json[i]['name']+'\');">'+
-                                                    '<img style="height:75px;" src="index-quick.php?ploopi_op=doc_image_get&docfile_md5id='+json[i]['md5id']+'&version='+json[i]['version']+'&width=125&height=75" />'+
-                                                    '<div style="font-weight:bold;">'+json[i]['name']+'</div>'+
-                                                    '<div>'+filesize+' ko</div>'+
-                                                '</a>';
-
-                        }
-                        else if (ploopi_op == 'doc_selectflash')
-                        {
-                            fb.innerHTML +=     '<a class="doc_fckexplorer_vignette" href="javascript:void(0);" onclick="javascript:doc_fckexplorer_selectfile(\''+json[i]['url']+'\', \''+json[i]['name']+'\');">'+
-                                                    '<img style="height:75px;" src="index-quick.php?ploopi_op=doc_image_get&docfile_md5id='+json[i]['md5id']+'&version='+json[i]['version']+'&width=125&height=75" />'+
-                                                    '<div style="font-weight:bold;">'+json[i]['name']+'</div>'+
-                                                    '<div>'+filesize+' ko</div>'+
-                                                '</a>';
-                        }
-                        else
-                        {
-                            fb.innerHTML +=     '<a class="doc_fckexplorer_vignette" href="javascript:void(0);" onclick="javascript:var prot = ploopi.getelem(\'cmbLinkProtocol\',opener.document); if (prot) prot.value=\'\';var title = ploopi.getelem(\'txtAttTitle\',opener.document); if (title) title.value=\''+ploopi.addslashes(json[i]['name'])+'\';doc_fckexplorer_selectfile(\''+json[i]['url']+'\');">'+
-                                                    '<img style="height:75px;" src="index-quick.php?ploopi_op=doc_image_get&docfile_md5id='+json[i]['md5id']+'&version='+json[i]['version']+'&width=125&height=75" />'+
-                                                    '<div style="font-weight:bold;">'+json[i]['name']+'</div>'+
-                                                    '<div>'+filesize+' ko</div>'+
-                                                '</a>';
-                        }
-
-                    }
-                }
             }
+
         }
-    );
+    });
 }

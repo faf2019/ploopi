@@ -162,7 +162,7 @@ class docfile extends ploopi\data_object
                     }
                     elseif ($this->tmpfile != null)
                     {
-                        if (!rename($this->tmpfile, $filepath)) $error = _DOC_ERROR_FILENOTWRITABLE;
+                        if (!move_uploaded_file($this->tmpfile, $filepath)) $error = _DOC_ERROR_FILENOTWRITABLE;
                     }
 
                     if (!$error)
