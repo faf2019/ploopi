@@ -29,12 +29,9 @@
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
-
-/**
- * Initialisation du module
- */
-ploopi\module::init('news2', false, false, false);
 ?>
+
+var news_doc_selectimage = '<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_selectimage"); ?>';
 
 function news_validate(form)
 {
@@ -47,5 +44,3 @@ function newscat_validate(form)
     if (ploopi_validatefield("<?php echo 'Titre'; ?>",form.newscat_title,"string")) return true;
     return false;
 }
-
-

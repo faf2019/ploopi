@@ -2,9 +2,9 @@
 <ploopi>
    <moduletype>
       <label>news2</label>
-      <version>3.0.2</version>
+      <version>3.0.3</version>
       <author>Sgami-Est / Ovensia / Netlor</author>
-      <date>20200224000000</date>
+      <date>20200225000000</date>
       <description>Gestion d'Actualités</description>
       <paramtype>
          <name>nbnewsdisplay</name>

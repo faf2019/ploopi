@@ -1,3 +1,9 @@
+== Module NEWS2 - version 3.0.3 ====================================================
+
+2020-02-25  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Modification de la fonction de sélection d'image depuis un formulaire
+
 == Module NEWS2 - version 3.0.2 ====================================================
 
 2020-02-24  Jean-Pierre Pawlak ~ SGAMI-Est <jean-pierre@interieur.gouv.fr>
