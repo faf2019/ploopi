@@ -883,6 +883,7 @@ if ($_SESSION['ploopi']['connected'])
     switch($ploopi_op)
     {
         case 'doc_getfiles':
+            ploopi\module::init('doc', false, false, false);
 
             if (!empty($_GET['idfolder']) && is_numeric($_GET['idfolder']) && isset($_GET['filter']))
             {
@@ -935,6 +936,7 @@ if ($_SESSION['ploopi']['connected'])
                             case 'doc_selectimage':
                             case 'doc_selectflash':
                                 $row['url'] = "index-quick.php?ploopi_op=doc_file_view&docfile_md5id={$row['md5id']}";
+                                $row['urldecod'] = ploopi\str::urlrewrite($row['url'], doc_getrewriterules(), $row['name'], null, true);	
                             break;
 
                             default:

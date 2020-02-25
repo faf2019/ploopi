@@ -144,21 +144,24 @@ function doc_fckexplorer_set_folder(idfolder, ploopi_op)
 }
 
 
-function doc_fckexplorer_selectfile(fileUrl, text)
+function doc_fckexplorer_selectfile(fileUrl, text, urldecod)
 {
-    window.parent.opener.CKEDITOR.tools.callFunction( jQuery('#CKEditorFuncNum')[0].value, fileUrl, function() {
-        // Get the reference to a dialog window.
-        var dialog = this.getDialog();
-        // Check if this is the Image Properties dialog window.
-        if ( dialog.getName() == 'image' ) {
-            // Get the reference to a text field that stores the "alt" attribute.
-            var element = dialog.getContentElement( 'info', 'txtAlt' );
-            // Assign the new value.
-            if ( element )
-                element.setValue( text );
-        }
-    });
-
+    if (ploopi.get_param('target') != 'undefined') {
+        window.opener.document.getElementById(ploopi.get_param('target')).value = urldecod;
+    } else {
+        window.parent.opener.CKEDITOR.tools.callFunction( jQuery('#CKEditorFuncNum')[0].value, fileUrl, function() {
+            // Get the reference to a dialog window.
+            var dialog = this.getDialog();
+            // Check if this is the Image Properties dialog window.
+            if ( dialog.getName() == 'image' ) {
+                // Get the reference to a text field that stores the "alt" attribute.
+                var element = dialog.getContentElement( 'info', 'txtAlt' );
+                // Assign the new value.
+                if ( element )
+                    element.setValue( text );
+            }
+        });
+    }
     window.parent.close();
 };
 
@@ -184,7 +187,7 @@ function doc_fckexplorer_switch_folder(idfolder, ploopi_op)
             {
                 var filesize = Math.round(parseInt(json[i]['size'],10)/1024);
 
-                fb.innerHTML +=     '<a class="doc_fckexplorer_vignette" href="javascript:void(0);" onclick="javascript:doc_fckexplorer_selectfile(\''+json[i]['url']+'\', \''+json[i]['name']+'\');">'+
+                fb.innerHTML +=     '<a class="doc_fckexplorer_vignette" href="javascript:void(0);" onclick="javascript:doc_fckexplorer_selectfile(\''+json[i]['url']+'\', \''+json[i]['name']+'\', \''+json[i]['urldecod']+'\');">'+
                                         '<img style="height:75px;" src="index-quick.php?ploopi_op=doc_image_get&docfile_md5id='+json[i]['md5id']+'&version='+json[i]['version']+'&width=125&height=75" />'+
                                         '<div style="font-weight:bold;">'+json[i]['name']+'</div>'+
                                         '<div>'+filesize+' ko</div>'+

@@ -1,3 +1,9 @@
+== Module DOC - version 4.10.3 ====================================================
+
+2020-02-25  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Possibilité d'utiliser le sélecteur de fichier/image depuis un champ de formulaire
+
 == Module DOC - version 4.10.2 ====================================================
 
 2020-02-16  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
