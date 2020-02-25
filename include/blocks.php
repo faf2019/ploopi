@@ -79,8 +79,8 @@ switch ($_SESSION['ploopi']['mainmenu'])
 
                         $strControllerFile = "ploopi\\{$strmtype}\\controller";
                         if (ploopi\loader::classExists($strControllerFile)) {
-                            $strControllerFile::setBlock();
-                            $block = $strControllerFile::getBlock();
+                            $strControllerFile::get($menu_moduleid)->setBlock();
+                            $block = $strControllerFile::get($menu_moduleid)->getBlock();
 
                             $arrBlocks[$menu_moduleid] = array(
                                 'title'=> $_SESSION['ploopi']['modules'][$menu_moduleid]['label'],

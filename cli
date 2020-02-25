@@ -89,7 +89,7 @@ elseif (!empty($module) && !empty($action))
         // Wrapper pour compatibilité avec le contrôleur du module
         $_REQUEST['entity'] = 'cli';
         $_REQUEST['action'] = $action;
-        $strControllerFile::dispatch();
+        $strControllerFile::get()->dispatch();
     }
     else {
         // Rétrocompatibilité

@@ -12,101 +12,127 @@ use ploopi;
 /**
  * Noyau et contôleur du module.
  */
-abstract class controller
+class controller
 {
     /**
      * Entité par défaut (home)
      * @var string
      */
-    private static $_strEntityDef = 'home';
+    private $_strEntityDef = 'home';
 
     /**
      * Entité d'erreur
      * @var string
      */
-    private static $_strEntityError = 'error';
+    private $_strEntityError = 'error';
 
     /**
      * Action par défaut
      * @var string
      */
-    private static $_strActionDef = 'default';
+    private $_strActionDef = 'default';
 
     /**
      * Entité courante
      * @var string
      */
-    private static $_strEntity = '';
+    private $_strEntity = '';
 
     /**
      * Action courante
      * @var string
      */
-    private static $_strAction = '';
+    private $_strAction = '';
 
     /**
      * Mode d'affichage (light true/false)
      * @var boolean
      */
-    private static $_booLight = false;
+    private $_booLight = false;
 
     /**
      * Identifiant du module (notamment pour appels alternatifs via CLI)
      * @var integer
      */
-    private static $_intModuleId = 0;
+    private $_intModuleId = 0;
 
     /**
      * Identifiant du type de module (notamment pour appels alternatifs via CLI)
      * @var integer
      */
-    private static $_intModuleTypeId = 0;
+    private $_intModuleTypeId = 0;
 
     /**
      * Instance de block (gestion de l'intégration du menu dans Ploopi)
      * @var ploopi\block
      */
-    private static $_objBlock = null;
+    private $_objBlock = null;
 
     /**
      * Nom du module
      * @var string
      */
-    private static $_strModuleName = '';
+    private $_strModuleName = '';
+
+
+    /**
+     * Liste des instances fabriquées
+     * @var array
+     */
+    private static $_arrInstances = [];
+
+
+    /**
+     * factory du contrôleur du module
+     * @param integer $intModuleId  Identifiant du module (optionnel)
+     * @return ploopi\controller
+     */
+    public static function get($intModuleId = null) {
+
+        if (empty($intModuleId)) $intModuleId = self::_getModuleId();
+
+        if (!isset(self::$_arrInstances[$intModuleId])) {
+            $strClassName = get_called_class();
+            self::$_arrInstances[$intModuleId] = new $strClassName();
+            self::$_arrInstances[$intModuleId]->_intModuleId = $intModuleId;
+        }
+
+        return self::$_arrInstances[$intModuleId];
+    }
 
     /**
      * Contrôleur du module
      * @return void
      */
-    public static function dispatch()
+    public function dispatch()
     {
         $arrClassPath = explode('\\', get_called_class());
-        self::$_strModuleName = $arrClassPath[1];
-        $strModulePath = './modules/'.self::$_strModuleName;
+        $this->_strModuleName = $arrClassPath[1];
+        $strModulePath = './modules/'.$this->_strModuleName;
         $strActionPath = $strModulePath.'/actions';
 
         // Appel light (save, ajax, cli...)
-        self::$_booLight = php_sapi_name() == 'cli' || ploopi\loader::getscript() == 'admin-light' || ploopi\loader::getscript() == 'webservice';
+        $this->_booLight = php_sapi_name() == 'cli' || ploopi\loader::getscript() == 'admin-light' || ploopi\loader::getscript() == 'webservice';
 
-        ploopi\module::init(self::$_strModuleName, !self::$_booLight, !self::$_booLight, !self::$_booLight);
+        ploopi\module::init($this->_strModuleName, !$this->_booLight, !$this->_booLight, !$this->_booLight);
 
-        self::$_strEntity = empty($_REQUEST['entity']) ? self::$_strEntityDef : self::_cleanParam($_REQUEST['entity']);
-        self::$_strAction = empty($_REQUEST['action']) ? self::$_strActionDef : self::_cleanParam($_REQUEST['action']);
+        $this->_strEntity = empty($_REQUEST['entity']) ? $this->_strEntityDef : self::_cleanParam($_REQUEST['entity']);
+        $this->_strAction = empty($_REQUEST['action']) ? $this->_strActionDef : self::_cleanParam($_REQUEST['action']);
 
-        $strFileAction = $strActionPath.'/'.self::$_strEntity.'/'.self::$_strAction.'.php';
+        $strFileAction = $strActionPath.'/'.$this->_strEntity.'/'.$this->_strAction.'.php';
 
         if(!file_exists($strFileAction))
         {
-            self::$_strEntity = self::$_strEntityError;
-            self::$_strAction = self::$_strActionDef;
-            $strFileAction = $strActionPath.'/'.self::$_strEntity.'/'.self::$_strAction.'.php';
+            $this->_strEntity = $this->_strEntityError;
+            $this->_strAction = $this->_strActionDef;
+            $strFileAction = $strActionPath.'/'.$this->_strEntity.'/'.$this->_strAction.'.php';
         }
 
 
-        if(!self::$_booLight)
+        if(!$this->_booLight)
         {
             $strModuleHeader = $strModulePath.'/actions/_header.php';
-            $strEntityHeader = $strActionPath.'/'.self::$_strEntity.'/_header.php';
+            $strEntityHeader = $strActionPath.'/'.$this->_strEntity.'/_header.php';
 
             if (is_readable($strModuleHeader)) include_once $strModulePath.'/header.php';
             if (is_readable($strEntityHeader)) include_once $strEntityHeader;
@@ -115,10 +141,10 @@ abstract class controller
 
         include_once $strFileAction;
 
-        if(!self::$_booLight)
+        if(!$this->_booLight)
         {
             $strModuleFooter = $strModulePath.'/actions/_footer.php';
-            $strEntityFooter = $strActionPath.'/'.self::$_strEntity.'/_footer.php';
+            $strEntityFooter = $strActionPath.'/'.$this->_strEntity.'/_footer.php';
 
             if (is_readable($strEntityFooter)) include_once $strEntityFooter;
             if (is_readable($strModuleFooter)) include_once $strModulePath.'/footer.php';
@@ -126,22 +152,23 @@ abstract class controller
         else ploopi\system::kill();
     }
 
+
     /**
      * Retourne l'entité appelée
      * @return string entité appelée
      */
-    public static function getEntity()
+    public function getEntity()
     {
-        return self::$_strEntity;
+        return $this->_strEntity;
     }
 
     /**
      * Retourne l'action appelée
      * @return string action appelée
      */
-    public static function getAction()
+    public function getAction()
     {
-        return self::$_strAction;
+        return $this->_strAction;
     }
 
     /**
@@ -153,19 +180,17 @@ abstract class controller
      * @param integer $intAction  Action nécessaire pour accéder au menu
      * @return boolean true si le block a été ajouté, false sinon
      */
-    protected static function addBlockMenu($strLabel, $strEntity, $strAction = '', $intAction = null)
+    protected function addBlockMenu($strLabel, $strEntity, $strAction = '', $intAction = null)
     {
-        global $menu_moduleid;
+        if(empty($intAction) || ploopi\acl::isactionallowed($intAction, -1, $this->_intModuleId)) {
 
-        if(empty($intAction) || ploopi\acl::isactionallowed($intAction, -1, $menu_moduleid)) {
-
-            $strUrl = "admin.php?ploopi_moduleid={$menu_moduleid}&ploopi_action=public&entity={$strEntity}";
+            $strUrl = "admin.php?ploopi_moduleid={$this->_intModuleId}&ploopi_action=public&entity={$strEntity}";
             if($strAction != '') $strUrl .= "&action={$strAction}";
 
-            $booSelected = $_SESSION['ploopi']['moduleid'] == $menu_moduleid && isset($_REQUEST['entity']) && current(explode('/', $_REQUEST['entity'])) == $strEntity;
+            $booSelected = $_SESSION['ploopi']['moduleid'] == $this->_intModuleId && isset($_REQUEST['entity']) && current(explode('/', $_REQUEST['entity'])) == $strEntity;
             if($strAction != '') $booSelected = $booSelected && isset($_REQUEST['action']) && $_REQUEST['action'] == $strAction;
 
-            self::getBlock()->addmenu($strLabel, ploopi\crypt::urlencode($strUrl), $booSelected);
+            $this->getBlock()->addmenu($strLabel, ploopi\crypt::urlencode($strUrl), $booSelected);
 
             return true;
         }
@@ -178,18 +203,115 @@ abstract class controller
      *
      * @return ploopi\block
      */
-    public static function getBlock() {
-        if (is_null(self::$_objBlock)) self::$_objBlock = new ploopi\block();
+    public function getBlock() {
+        if (is_null($this->_objBlock)) $this->_objBlock = new ploopi\block();
 
-        return self::$_objBlock;
+        return $this->_objBlock;
     }
 
     /**
      * Met à jour le block de menu
      */
-    public static function setBlock() { }
+    public function setBlock() { }
 
-   /**
+
+    /**
+     * Retourne le module ID (notamment pour l'appel via CLI sans Session)
+     *
+     * @return integer Id du module
+     */
+    public function getModuleId()
+    {
+        // Cas lecture depuis le cache
+        if (!empty($this->_intModuleId)) return $this->_intModuleId;
+
+        // Recherche étendue
+        return $this->_intModuleId = self::_getModuleId();
+
+    }
+
+    /**
+     * Retourne le module ID (notamment pour l'appel via CLI sans Session)
+     *
+     * @return integer Id du module
+     */
+
+    private static function _getModuleId() {
+        // Cas standard (lecture session)
+        if (isset($_SESSION['ploopi']['moduleid'])) return $_SESSION['ploopi']['moduleid'];
+
+        // Cas d'un appel depuis la CLI (lecture bdd)
+        $objQuery = new ploopi\query_select();
+        $objQuery->add_select('m.id');
+        $objQuery->add_from('ploopi_module m');
+        $objQuery->add_innerjoin('ploopi_module_type mt ON mt.id = m.id_module_type');
+        $objQuery->add_where('mt.label = %s', self::_getModuleName());
+        $objRs = $objQuery->execute();
+
+        if ($row = $objRs->fetchrow()) return $row['id'];
+
+        // Cas d'erreur
+        return 0;
+    }
+
+    /**
+     * Retourne le nom du module
+     *
+     * @return string Nom du module
+     */
+    private static function _getModuleName() {
+        $arrClassPath = explode('\\', get_called_class());
+        return $arrClassPath[1];
+    }
+
+    /**
+     * Retourne l'ID du type de module (notamment pour l'appel via CLI sans Session)
+     *
+     * @return integer Id du type du module
+     */
+    public function getModuleTypeId()
+    {
+        // Cas lecture depuis le cache
+        if (!empty($this->_intModuleTypeId)) return $this->_intModuleTypeId;
+
+        // Cas standard (lecture session)
+        if (isset($_SESSION['ploopi']['moduletypeid'])) return $this->_intModuleTypeId = $_SESSION['ploopi']['moduletypeid'];
+
+        // Cas d'un appel depuis la CLI (lecture bdd)
+        $objQuery = new ploopi\query_select();
+        $objQuery->add_select('mt.id');
+        $objQuery->add_from('ploopi_module_type mt');
+        $objQuery->add_where('mt.label = %s', $this->_strModuleName);
+        $objRs = $objQuery->execute();
+
+        if ($row = $objRs->fetchrow()) return $this->_intModuleTypeId = $row['id'];
+
+        // Cas d'erreur
+        return $this->_intModuleTypeId = 0;
+    }
+
+    /**
+     * Retourne la valeur d'un paramètre du module (uniquement système, pour appel CLI essentiellement)
+     *
+     * @param string $strParam nom du paramètre à retourner
+     * @return string valeur du paramètre
+     */
+    public function getParam($strParam)
+    {
+        // Cas d'un appel depuis la CLI (lecture bdd)
+        $objQuery = new ploopi\query_select();
+        $objQuery->add_select('value');
+        $objQuery->add_from('ploopi_param_default');
+        $objQuery->add_where('name = %s', $strParam);
+        $objQuery->add_where('id_module = %d', $this->_intModuleId);
+        $objRs = $objQuery->execute();
+        if ($row = $objRs->fetchrow()) return $row['value'];
+
+        return '';
+    }
+
+
+    /**
      * Nettoyage de paramètre d'url
      *  - Enlever les accents
      *  - Mettre en minuscule
@@ -203,77 +325,4 @@ abstract class controller
         return preg_replace('@[^a-z0-9/_]@', '', strtolower(ploopi\str::convertaccents($strParam)));
     }
 
-
-    /**
-     * Retourne le module ID (notamment pour l'appel via CLI sans Session)
-     *
-     * @return integer Id du module
-     */
-    public static function getModuleId()
-    {
-        // Cas lecture depuis le cache
-        if (!empty(self::$_intModuleId)) return self::$_intModuleId;
-
-        // Cas standard (lecture session)
-        if (isset($_SESSION['ploopi']['moduleid'])) return self::$_intModuleId = $_SESSION['ploopi']['moduleid'];
-
-        // Cas d'un appel depuis la CLI (lecture bdd)
-        $objQuery = new ploopi\query_select();
-        $objQuery->add_select('m.id');
-        $objQuery->add_from('ploopi_module m');
-        $objQuery->add_innerjoin('ploopi_module_type mt ON mt.id = m.id_module_type');
-        $objQuery->add_where('mt.label = %s', self::$_strModuleName);
-        $objRs = $objQuery->execute();
-
-        if ($row = $objRs->fetchrow()) return self::$_intModuleId = $row['id'];
-
-        // Cas d'erreur
-        return self::$_intModuleId = 0;
-    }
-
-    /**
-     * Retourne l'ID du type de module (notamment pour l'appel via CLI sans Session)
-     *
-     * @return integer Id du type du module
-     */
-    public static function getModuleTypeId()
-    {
-        // Cas lecture depuis le cache
-        if (!empty(self::$_intModuleTypeId)) return self::$_intModuleTypeId;
-
-        // Cas standard (lecture session)
-        if (isset($_SESSION['ploopi']['moduletypeid'])) return self::$_intModuleTypeId = $_SESSION['ploopi']['moduletypeid'];
-
-        // Cas d'un appel depuis la CLI (lecture bdd)
-        $objQuery = new ploopi\query_select();
-        $objQuery->add_select('mt.id');
-        $objQuery->add_from('ploopi_module_type mt');
-        $objQuery->add_where('mt.label = %s', self::$_strModuleName);
-        $objRs = $objQuery->execute();
-
-        if ($row = $objRs->fetchrow()) return self::$_intModuleTypeId = $row['id'];
-
-        // Cas d'erreur
-        return self::$_intModuleTypeId = 0;
-    }
-
-    /**
-     * Retourne la valeur d'un paramètre du module (uniquement système, pour appel CLI essentiellement)
-     *
-     * @param string $strParam nom du paramètre à retourner
-     * @return string valeur du paramètre
-     */
-    public static function getParam($strParam)
-    {
-        // Cas d'un appel depuis la CLI (lecture bdd)
-        $objQuery = new ploopi\query_select();
-        $objQuery->add_select('value');
-        $objQuery->add_from('ploopi_param_default');
-        $objQuery->add_where('name = %s', $strParam);
-        $objQuery->add_where('id_module = %d', self::getModuleId());
-        $objRs = $objQuery->execute();
-        if ($row = $objRs->fetchrow()) return $row['value'];
-
-        return '';
-    }
 }
