@@ -89,4 +89,16 @@ abstract class output
 
     public static function h404() { header("HTTP/1.0 404 Not Found"); }
 
+    /**
+     * Ecrit dans un fichier log
+     *
+     * @param string $data Données à écrire
+     */
+
+    public static function log($data) {
+        file_put_contents(_PLOOPI_PATHDATA.'/ploopi.log', date('Y-m-d H:i:s').' : '.$data."\n",FILE_APPEND);
+    }
+
+
+
 }
