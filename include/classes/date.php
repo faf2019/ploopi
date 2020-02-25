@@ -42,7 +42,7 @@ abstract class date {
      * @return string date au format local
      */
 
-    public static function getdate() {return date(_PLOOPI_DATEFORMAT);}
+    public static function getdate($dateformat = _PLOOPI_DATEFORMAT) {return date($dateformat);}
 
     /**
      * Retourne l'heure au format local (_PLOOPI_TIMEFORMAT)
@@ -214,10 +214,11 @@ abstract class date {
      * Convertit un timestamp MYSQL (AAAAMMJJhhmmss) au format local (date+heure)
      *
      * @param string $mytimestamp
+     * @param string $dateformat
      * @return array tableau associatif contenant la date et l'heure : Array('date' => '', 'time' => '');
      */
 
-    public static function timestamp2local($mytimestamp)
+    public static function timestamp2local($mytimestamp, $dateformat = _PLOOPI_DATEFORMAT)
     {
         // Output array declaration
         $mydate = array('date' => '', 'time' => '');
@@ -239,14 +240,14 @@ abstract class date {
             $second = $timestamparray[_PLOOPI_DATE_SECOND];
 
             // Re-constucting date depending on the "_PLOOPI_DATEFORMAT"
-            switch (_PLOOPI_DATEFORMAT)
+            switch ($dateformat)
             {
                 case _PLOOPI_DATEFORMAT_FR:
                     $localedate = $day . '/' .$month . '/' . $year;
                 break;
 
-                case _PLOOPI_DATEFORMAT_FR:
-                    $localedate = $year . '/' . $month . '/' . $day;
+                case _PLOOPI_DATEFORMAT_US:
+                    $localedate = $year . '-' . $month . '-' . $day;
                 break;
             }
 
@@ -281,17 +282,18 @@ abstract class date {
      * Convertit un date locale au format timestamp MYSQL (AAAAMMJJhhmmss)
      *
      * @param string $mydate date au format local
-     * @param string $mytime heure au format local (optionnel, par dÃ©faut '00:00:00')
+     * @param string $mytime heure au format local (optionnel, par défaut '00:00:00')
+     * @param string $dateformat format local forcé FR ou US
      * @return string timestamp MYSQL
      */
 
-    public static function local2timestamp($mydate, $mytime = '00:00:00')
+    public static function local2timestamp($mydate, $mytime = '00:00:00', $dateformat = _PLOOPI_DATEFORMAT)
     {
         // verify local format
         if (self::dateverify($mydate))// && self::timeverify($mytime))
         {
             preg_match(_PLOOPI_TIMEFORMAT_EREG, $mytime, $timeregs);
-            switch(_PLOOPI_DATEFORMAT)
+            switch($dateformat)
             {
                 case _PLOOPI_DATEFORMAT_FR:
                     preg_match(_PLOOPI_DATEFORMAT_EREG_FR, $mydate, $dateregs);
