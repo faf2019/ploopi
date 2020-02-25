@@ -89,7 +89,7 @@ if ($_SESSION['ploopi']['mode'] == 'backoffice')
         {
             $strControllerFile = "ploopi\\{$_SESSION['ploopi']['moduletype']}\\controller";
             if (ploopi\loader::classExists($strControllerFile)) {
-                $strControllerFile::dispatch();
+                $strControllerFile::get()->dispatch();
             }
             else {
                 // Rétrocompatibilité

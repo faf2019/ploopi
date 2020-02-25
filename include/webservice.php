@@ -34,7 +34,7 @@ if (empty($_REQUEST['module'])) ploopi\system::kill();
 
 $strControllerFile = "ploopi\\{$_REQUEST['module']}\\controller";
 if (ploopi\loader::classExists($strControllerFile)) {
-    $strControllerFile::dispatch();
+    $strControllerFile::get()->dispatch();
 }
 else {
     // Rétrocompatibilité
@@ -44,4 +44,3 @@ else {
 
     if (is_dir($webservice_path) && file_exists($webservice_rootfile)) include $webservice_rootfile;
 }
-
