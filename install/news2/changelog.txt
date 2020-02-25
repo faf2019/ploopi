@@ -1,0 +1,86 @@
+== Module NEWS2 - version 3.0.2 ====================================================
+
+2020-02-24  Jean-Pierre Pawlak ~ SGAMI-Est <jean-pierre@interieur.gouv.fr>
+
+* Corrections
+
+== Module NEWS2 - version 3.0.0 ====================================================
+
+2020-02-20  Jean-Pierre Pawlak ~ SGAMI-Est <jean-pierre@interieur.gouv.fr>
+
+* Refactorisation complète en module utilisant le contrôleur et l'API courante
+
+== Module NEWS2 - version 2.0.0 ====================================================
+
+2020-02-17  Jean-Pierre Pawlak ~ SGAMI-Est <jean-pierre@interieur.gouv.fr>
+
+* Adaptation à Ploopi 1.9.7 - Stretch
+
+== Module NEWS2 - version 1.3.2 ====================================================
+
+2019-02-08  Jean-Pierre Pawlak ~ SGAMI-Est <jean-pierre@interieur.gouv.fr>
+
+* Objet WCE avec pagination
+
+== Module NEWS2 - version 1.3.1 ====================================================
+
+2019-02-08  Jean-Pierre Pawlak ~ SGAMI-Est <jean-pierre@interieur.gouv.fr>
+
+* Passage de la longueur de champ de 100 à 256 pour title, url et urltitle
+
+== Module NEWS2 - version 1.3.0 ====================================================
+
+2019-02-07  Jean-Pierre Pawlak ~ SGAMI-Est <jean-pierre@interieur.gouv.fr>
+
+* Première version en tant qu'objet Ploopi. TPL spécifique si identifiant spécifique
+
+== Module NEWS2 - version 1.2.4 ====================================================
+
+2017-09-06  Jean-Pierre Pawlak ~ SGAMI-Est <jean-pierre@interieur.gouv.fr>
+
+* Correction dans global.php
+* news2.css
+
+== Module NEWS2 - version 1.2.3 ====================================================
+
+2017-08-01  Jean-Pierre Pawlak ~ SGAMI-Est <jean-pierre@interieur.gouv.fr>
+
+* news2.css et news2.js
+
+== Module NEWS2 - version 1.2.2 ====================================================
+
+2017-07-06  Jean-Pierre Pawlak ~ SGAMI-Est <jean-pierre@interieur.gouv.fr>
+
+* news2.css
+
+== Module NEWS2 - version 1.2.1 ====================================================
+
+2017-05-16  Jean-Pierre Pawlak ~ SGAMI-Est <jean-pierre@interieur.gouv.fr>
+
+* Corrections diverses
+
+== Module NEWS2 - version 1.2.0 ====================================================
+
+2017-05-12  Jean-Pierre Pawlak ~ SGAMI-Est <jean-pierre@interieur.gouv.fr>
+
+* Ajout lien vers article
+* Ajout background
+* Ajout news2_interval
+
+== Module NEWS2 - version 1.1.0 ====================================================
+
+2017-05-09  Jean-Pierre Pawlak ~ SGAMI-Est <jean-pierre@interieur.gouv.fr>
+
+* Ajout identifiant spécifique
+
+== Module NEWS2 - version 1.0.1 ====================================================
+
+2017-04-13  Jean-Pierre Pawlak ~ SGAMI-Est <jean-pierre@interieur.gouv.fr>
+
+* Correction bug lorsqu'aucune news n'est à la Une.
+
+== Module NEWS2 - version 1.0.0 ====================================================
+
+2017-04-13  Jean-Pierre Pawlak ~ SGAMI-Est <jean-pierre@interieur.gouv.fr>
+
+* Version initiale sur la base de news v2.5.4

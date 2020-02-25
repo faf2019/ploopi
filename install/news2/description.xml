@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ploopi>
+   <moduletype>
+      <label>news2</label>
+      <version>3.0.2</version>
+      <author>Sgami-Est / Ovensia / Netlor</author>
+      <date>20200224000000</date>
+      <description>Gestion d'Actualités</description>
+      <paramtype>
+         <name>nbnewsdisplay</name>
+         <label>Nombre d'actualités affichées</label>
+         <default_value>12</default_value>
+         <public>1</public>
+         <description/>
+      </paramtype>
+      <paramtype>
+         <name>specialid</name>
+         <label>Identifiant spécifique</label>
+         <default_value></default_value>
+         <public>1</public>
+         <description/>
+      </paramtype>
+      <paramtype>
+         <name>interval</name>
+         <label>Intervalle en secondes</label>
+         <default_value>10</default_value>
+         <public>1</public>
+         <description/>
+      </paramtype>
+       <paramtype>
+         <name>nbcol</name>
+         <label>Nombre de colonnes</label>
+         <default_value>3</default_value>
+         <public>1</public>
+         <description/>
+      </paramtype>
+     <action>
+         <id_action>1</id_action>
+         <label>Rédiger</label>
+      </action>
+      <action>
+         <id_action>2</id_action>
+         <label>Modifier</label>
+      </action>
+      <action>
+         <id_action>3</id_action>
+         <label>Effacer</label>
+      </action>
+      <action>
+         <id_action>4</id_action>
+         <label>Publier</label>
+      </action>
+      <action>
+         <id_action>5</id_action>
+         <label>Gérer Catégories</label>
+      </action>
+   </moduletype>
+</ploopi>
