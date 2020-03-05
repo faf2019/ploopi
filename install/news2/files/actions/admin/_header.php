@@ -4,18 +4,19 @@
  * Header du menu "admin"
  *
  */
+use ploopi\news2;
 
-if (!ploopi\acl::isactionallowed(ploopi\news2\tools::ACTION_ANY))
+if (!ploopi\acl::isactionallowed(news2\tools::ACTION_ANY))
 	ploopi\output::redirect(ploopi\crypt::urlencode('admin.php?entity=forbidden'));
 
 echo ploopi\skin::get()->create_pagetitle(ploopi\str::htmlentities($_SESSION['ploopi']['modulelabel']));
 
-$strTab = self::getAction();
+$strTab = $this->getAction();
 $arrTabs = array();
 
 if (
-		ploopi\acl::isactionallowed(ploopi\news2\tools::ACTION_MODIFY) 
-		|| ploopi\acl::isactionallowed(ploopi\news2\tools::ACTION_PUBLISH)
+		ploopi\acl::isactionallowed(news2\tools::ACTION_MODIFY) 
+		|| ploopi\acl::isactionallowed(news2\tools::ACTION_PUBLISH)
 ) {
 	$arrTabs['default'] = array(
         'title' => 'Liste des News',
@@ -23,14 +24,14 @@ if (
     );
 }
 
-if (ploopi\acl::isactionallowed(ploopi\news2\tools::ACTION_WRITE)) {
+if (ploopi\acl::isactionallowed(news2\tools::ACTION_WRITE)) {
 	$arrTabs['write'] = array(
         'title' => 'Rédiger une News',
         'url' => ploopi\crypt::urlencode("admin.php?entity=admin&action=write")
     );
 }
 
-if (ploopi\acl::isactionallowed(ploopi\news2\tools::ACTION_MANAGECAT)) {
+if (ploopi\acl::isactionallowed(news2\tools::ACTION_MANAGECAT)) {
 	$arrTabs['catmodify'] = array(
         'title' => 'Liste des Catégories',
         'url' => ploopi\crypt::urlencode("admin.php?entity=admin&action=catmodify")

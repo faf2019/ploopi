@@ -3,13 +3,13 @@
 /**
  * Publie ou dépublie la news
  */
-
+use ploopi\news2;
 
 if (	!empty($_GET['id']) 
 		&& is_numeric($_GET['id']) 
-		&& ploopi\acl::isactionallowed(ploopi\news2\tools::ACTION_PUBLISH)
+		&& ploopi\acl::isactionallowed(news2\tools::ACTION_PUBLISH)
 	) {
-		$news = new ploopi\news2\news2();
+		$news = new news2\news2();
 		if($news->open($_GET['id']))
 		{
 			if ($news->fields['published']) {
@@ -17,7 +17,7 @@ if (	!empty($_GET['id'])
 			} else {
  				$news->fields['published'] = 1;
 				ploopi\user_action_log::record(
-					ploopi\news2\tools::ACTION_PUBLISH, $news->fields['id']
+					news2\tools::ACTION_PUBLISH, $news->fields['id']
 				);
 			}
 			$news->save();

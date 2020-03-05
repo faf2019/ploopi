@@ -24,7 +24,6 @@ namespace ploopi\news2;
 use ploopi;
 use ploopi\news2;
 
-
 class controller extends ploopi\controller {
 
     public function setBlock() {

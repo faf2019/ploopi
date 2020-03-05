@@ -21,7 +21,6 @@
 */
 
 namespace ploopi\news2;
-
 use ploopi;
 
 
@@ -35,17 +34,12 @@ use ploopi;
  * @author Stéphane Escaich
  */
 
-class news2cat extends ploopi\data_object
-{
+class news2cat extends ploopi\data_object {
     /**
      * Contructeur de la classe
-     *
      * @return news2cat
      */
     
-    public function __construct()
-    {
-        parent::__construct('ploopi_mod_news2_cat');
-    }
+    public function __construct() { parent::__construct('ploopi_mod_news2_cat'); }
 }
 

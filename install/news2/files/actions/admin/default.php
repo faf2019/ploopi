@@ -30,14 +30,15 @@
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
+use ploopi\news2;
 
 // Droits
-if (!ploopi\acl::isactionallowed([ploopi\news2\tools::ACTION_MODIFY,ploopi\news2\tools::ACTION_PUBLISH])) {
+if (!ploopi\acl::isactionallowed([news2\tools::ACTION_MODIFY,news2\tools::ACTION_PUBLISH])) {
 	ploopi\output::redirect(ploopi\crypt::urlencode("admin.php?entity=forbidden"));
 }
 
 // Récupération du modèle
-$newsRs = ploopi\news2\tools::getNews(self::getModuleid(),false);
+$newsRs = news2\tools::getNews($this->getModuleid(),false);
 
 // Vue
 echo ploopi\skin::get()->open_simplebloc('Liste des news');
@@ -89,13 +90,13 @@ if ($newsRs->numrows()) {
 
 		$arrActions = array();
 		
-		if (ploopi\acl::isactionallowed(ploopi\news2\tools::ACTION_MODIFY)) {
+		if (ploopi\acl::isactionallowed(news2\tools::ACTION_MODIFY)) {
 		    $arrActions[] = '<a title="Modifier" href="'
 			.ploopi\crypt::urlencode("admin.php?entity=admin&action=default&id={$fields['id']}")
 			.'"><img alt="Modifier" src="./modules/news2/img/ico_modify.png" /></a>';
 		}
 		
-		if (ploopi\acl::isactionallowed(ploopi\news2\tools::ACTION_PUBLISH)) {
+		if (ploopi\acl::isactionallowed(news2\tools::ACTION_PUBLISH)) {
 		    if ($fields['published'])
 		        $arrActions[] = '<a title="Retirer" href="'
 				.ploopi\crypt::urlencode("admin.php?entity=admin&action=op_publish&id={$fields['id']}")
@@ -106,7 +107,7 @@ if ($newsRs->numrows()) {
 				.'"><img alt="Publier" src="./modules/news2/img/ico_publish.png" /></a>';
 		}
 		
-		if (ploopi\acl::isactionallowed(ploopi\news2\tools::ACTION_DELETE)) {
+		if (ploopi\acl::isactionallowed(news2\tools::ACTION_DELETE)) {
 		    $arrActions[] = '<a title="Supprimer" href="javascript:ploopi.confirmlink(\''
 			.ploopi\crypt::urlencode("admin.php?entity=admin&action=op_delete&id={$fields['id']}")
 			.'\',\'Êtes-vous certain de vouloir supprimer cette actualité ?\');">'
@@ -137,7 +138,7 @@ echo ploopi\skin::get()->close_simplebloc();
 /**
  * Modification d'une news
  */
-$news = new ploopi\news2\news2();
+$news = new news2\news2();
 if (!empty($_GET['id']) && is_numeric($_GET['id']) && $news->open($_GET['id'])) {
     include_once 'write.php';
 }

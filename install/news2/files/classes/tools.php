@@ -21,9 +21,7 @@
 */
 
 namespace ploopi\news2;
-
 use ploopi;
-
 
 abstract class tools
 {
@@ -123,7 +121,7 @@ abstract class tools
                 .'style="display:block;float:left;cursor:pointer;margin:2px 4px;" '
                 .'title="Choisir un article ou une rubrique" alt="Choisir" '
                 .'onclick="javascript:ploopi.popup.show(ploopi.xhr.send('
-                .'\'admin-light.php\',\'ploopi_env=\'+_PLOOPI_ENV+\'&amp;ploopi_op=news2_selectredirect\',false)'
+                .'\'admin-light.php\',\'ploopi_env=\'+_PLOOPI_ENV+\'&amp;entity=admin&amp;action=op_selectredirect\',false)'
                 .', 300, event, true,\'news2_popup_selectredirect\');"/>'
                 .'</div>'
             )
@@ -184,19 +182,14 @@ abstract class tools
         );
     }
 
-
-
     static function news2_gettreeview(
         $arrHeadings = array(),
         $articles = array(),
         $moduleid = -1,
         $onclickfct = 'news2_select_article_or_heading'
     ) {
-        //ploopi\module::init('webedit');
         include_once './modules/webedit/class_heading.php';
         include_once './modules/webedit/class_article.php';
-
-        // ploopi\loader::getdb();
 
         $prefix = 'r';
         $treeview = array('list' => array(), 'tree' => array());
@@ -214,7 +207,6 @@ abstract class tools
                     $fields['label'], $arrParents
                 );
                 $onclick = "{$onclickfct}('{$linkedurl}', '".addslashes($fields['label'])."')";
-                //$onclick = "{$onclickfct}('{$fields['id']}', '', '".addslashes($fields['label'])."')";
                 $node = array(
                     'id' => 'h'.$prefix.$fields['id'],
                     'label' => $fields['label'],
@@ -223,7 +215,7 @@ abstract class tools
                     'node_link' => '',
                     'node_onclick' =>
                         "ploopi.skin.treeview_shownode('h{$prefix}{$fields['id']}', '"
-                        .ploopi\crypt::queryencode("ploopi_op=news2_detail_heading&hid=h{$prefix}{$fields['id']}")
+                        .ploopi\crypt::queryencode("entity=admin&action=op_detail_heading&hid=h{$prefix}{$fields['id']}")
                         ."', 'admin-light.php')",
                     'link' => $link,
                     'onclick' => $onclick,

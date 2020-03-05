@@ -29,14 +29,15 @@
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
+use ploopi\news2;
 
 // Droits
-if (!ploopi\acl::isactionallowed(ploopi\news2\tools::ACTION_MANAGECAT)) {
+if (!ploopi\acl::isactionallowed(news2\tools::ACTION_MANAGECAT)) {
 	ploopi\output::redirect(ploopi\crypt::urlencode("admin.php?entity=forbidden"));
 }
 
 // Récupération du modèle
-$catRs = ploopi\news2\tools::getCategories(self::getModuleid());
+$catRs = news2\tools::getCategories($this->getModuleid());
 
 // Vue
 echo ploopi\skin::get()->open_simplebloc('Liste des Catégories');
@@ -90,7 +91,7 @@ echo ploopi\skin::get()->close_simplebloc();
 /**
  * Modification d'une catégorie
  */
-$newscat = new ploopi\news2\news2cat();
+$newscat = new news2\news2cat();
 if (!empty($_GET['id']) && is_numeric($_GET['id']) && $newscat->open($_GET['id'])) {
     include_once 'catwrite.php';
 }

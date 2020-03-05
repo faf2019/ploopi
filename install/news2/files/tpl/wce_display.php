@@ -30,6 +30,7 @@
  * @author Stéphane Escaich
  * @author Jean-Pierre Pawlak
  */
+use ploopi\news2;
 
 $template_news = new Template("./templates/frontoffice/{$template_name}");
 $specialid = ploopi\str::clean_filename(ploopi\param::get('specialid', $obj['module_id']));
@@ -42,7 +43,7 @@ if (file_exists("./templates/frontoffice/{$template_name}/{$fileTpl}.tpl"))
 	$template_news->assign_var("news2_nbcol",$nbCol);
 	$currentPage = (empty($_REQUEST['news2page'])) ? 1 : $_REQUEST['news2page'];
     $template_news->set_filenames(array('news_display' => "{$fileTpl}.tpl"));
-	$news_result = ploopi\news2\tools::getNews($obj['module_id']);
+	$news_result = news2\tools::getNews($obj['module_id']);
 	$news_count = $news_result->numrows();
 	$template_news->assign_block_vars($rootTpl, array('NEWS2_COUNT' => $news_count));
 
@@ -87,7 +88,7 @@ if (file_exists("./templates/frontoffice/{$template_name}/{$fileTpl}.tpl"))
 				$author_email = '';
 			}
 
-			$newscat = new ploopi\news2\news2cat();
+			$newscat = new news2\news2cat();
 			$category = ($newscat->open($news_fields['id_cat'])) ? $newscat->fields['title'] : 'Inconnue';
 
 			$template_news->assign_block_vars("{$rootTpl}.news" , array(

@@ -2,11 +2,12 @@
 /**
  * Affichage de la liste des news
  */
+use ploopi\news2;
 
 echo ploopi\skin::get()->open_simplebloc('Liste des news');
 
-$moduleid = self::getModuleId();
-$newsList = ploopi\news2\tools::getNews($moduleid);
+$moduleid = $this->getModuleId();
+$newsList = news2\tools::getNews($moduleid);
 
 if ($newsList->numrows()>0)
 {
@@ -53,7 +54,7 @@ if ($newsList->numrows()>0)
 				</tr>
 			</table>
 			<div style="clear:both;border-top:1px solid #c0c0c0;">
-				<?php ploopi\annotation::display(ploopi\news2\tools::OBJECT_NEWS2, $fields['id'], $fields['title']); ?>
+				<?php ploopi\annotation::display(news2\tools::OBJECT_NEWS2, $fields['id'], $fields['title']); ?>
 			</div>
 		</div>
         <?php

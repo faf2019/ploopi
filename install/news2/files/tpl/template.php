@@ -148,6 +148,5 @@ if ($news_count > 0) {
 			'LINKS'	=> $val['links']
 		));
 	}
-	//ploopi\output::log("ROOT_TPL : ".$rootTpl);
-	//ploopi\output::log(ploopi\output::print_r($template_body->_tpldata[$rootTpl.'.'],true));
+
 }

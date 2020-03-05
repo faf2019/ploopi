@@ -1,3 +1,16 @@
+== Module NEWS2 - version 3.0.5 ====================================================
+
+2020-02-26  Jean-Pierre Pawlak ~ SGAMI-Est <jean-pierre@interieur.gouv.fr>
+
+* Corrections cosmétiques
+
+== Module NEWS2 - version 3.0.4 ====================================================
+
+2020-02-26  Jean-Pierre Pawlak ~ SGAMI-Est <jean-pierre@interieur.gouv.fr>
+
+* Remplacement de op.php par les actions op_selectredirect.php et op_detail_heading.php
+* appels au contrôleur : remplacement de self:: par $this->
+
 == Module NEWS2 - version 3.0.3 ====================================================
 
 2020-02-25  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

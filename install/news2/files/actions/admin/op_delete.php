@@ -3,16 +3,16 @@
 /**
  * Supprime la news
  */
-
+use ploopi\news2;
 
 if (	!empty($_GET['id']) 
 		&& is_numeric($_GET['id']) 
-		&& ploopi\acl::isactionallowed(ploopi\news2\tools::ACTION_DELETE)
+		&& ploopi\acl::isactionallowed(news2\tools::ACTION_DELETE)
 	) {
-		$news = new ploopi\news2\news2();
+		$news = new news2\news2();
 		if($news->open($_GET['id']))
 		{
-			ploopi\user_action_log::record(ploopi\news2\tools::ACTION_DELETE, $news->fields['id']);
+			ploopi\user_action_log::record(news2\tools::ACTION_DELETE, $news->fields['id']);
 			$news->delete();
 			ploopi\output::redirect(ploopi\crypt::urlencode("admin.php?entity=admin"));
 		}

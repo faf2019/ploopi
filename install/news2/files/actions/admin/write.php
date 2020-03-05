@@ -1,13 +1,14 @@
 <?php
+use ploopi\news2;
 
 // Autorisation
-if (!ploopi\acl::isactionallowed(ploopi\news2\tools::ACTION_WRITE)) {
+if (!ploopi\acl::isactionallowed(news2\tools::ACTION_WRITE)) {
     ploopi\output::redirect(ploopi\crypt::urlencode('admin.php?entity=forbidden'));
 }
 
-$arrCateg = ploopi\news2\tools::getCategoriesArray(self::getModuleid());
+$arrCateg = news2\tools::getCategoriesArray($this->getModuleid());
 $arrHot = [ 0 => _PLOOPI_NO, 1 => _PLOOPI_YES];
-$news = new ploopi\news2\news2();
+$news = new news2\news2();
 
 // Affichage du titre en fonction du type d'opération (ajout/modif)
 if (!empty($_GET['id']) && is_numeric($_GET['id']) && $news->open($_GET['id'])) {
@@ -104,7 +105,7 @@ $objPanel->addField(new ploopi\form_field(
     ['title' => "Texte affiché pour le lien"]
 ));
 
-ploopi\news2\tools::addLink(
+news2\tools::addLink(
     $objPanel,
     'url',
     $news->fields['url'],
@@ -112,7 +113,7 @@ ploopi\news2\tools::addLink(
     'news_'
 );
 
-ploopi\news2\tools::addImg(
+news2\tools::addImg(
     $objPanel,
     'background',
     ploopi\str::htmlentities($news->fields['background']),

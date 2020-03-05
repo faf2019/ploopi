@@ -2,10 +2,11 @@
 /**
  * Enregistre la news
  */
+use ploopi\news2;
 
-if (ploopi\acl::isactionallowed([ploopi\news2\tools::ACTION_WRITE, ploopi\news2\tools::ACTION_MODIFY])) {
+if (ploopi\acl::isactionallowed([news2\tools::ACTION_WRITE, news2\tools::ACTION_MODIFY])) {
 
-	$news = new ploopi\news2\news2();
+	$news = new news2\news2();
     if (!empty($_GET['id'])) {
     	if (!is_numeric($_GET['id'])) {
 			ploopi\output::redirect(ploopi\crypt::urlencode("admin.php?entity=error"));
@@ -26,11 +27,7 @@ if (ploopi\acl::isactionallowed([ploopi\news2\tools::ACTION_WRITE, ploopi\news2\
 		</script>"; 
 		ploopi\system::kill();
 	}
-	/*
-	if (0 === strpos($news->fields['background'],'index-quick')) {
-		$news->fields['background'] = decode_url($news->fields['background']);
-	}
-	*/
+
     if (isset($_POST['fck_news_content'])) {
 		$news->fields['content'] = $_POST['fck_news_content'];
 	}
@@ -44,9 +41,9 @@ if (ploopi\acl::isactionallowed([ploopi\news2\tools::ACTION_WRITE, ploopi\news2\
     $news->save();
 
     if ($news->new) 
-		ploopi\user_action_log::record(ploopi\news2\tools::ACTION_WRITE, $news->fields['id']);
+		ploopi\user_action_log::record(news2\tools::ACTION_WRITE, $news->fields['id']);
     else 
-		ploopi\user_action_log::record(ploopi\news2\tools::ACTION_MODIFY, $news->fields['id']);
+		ploopi\user_action_log::record(news2\tools::ACTION_MODIFY, $news->fields['id']);
     ploopi\output::redirect(ploopi\crypt::urlencode("admin.php?entity=admin&action=default&id={$news->fields['id']}"));
 }
 

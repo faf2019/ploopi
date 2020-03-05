@@ -4,8 +4,9 @@
  * Affichage d'une news
  *
  */
+use ploopi\news2;
 
-$news = new ploopi\news2\news2();
+$news = new news2\news2();
 
 /**
  * On vérifie que l'identifiant de news est valide
@@ -21,7 +22,7 @@ if (!empty($_GET['id']) && is_numeric($_GET['id']) && $news->open($_GET['id'])) 
 
     $localdate = ploopi\date::timestamp2local($news->fields['date_publish']);
     $source = ($news->fields['source']=='') ? 'Inconnue' : $news->fields['source'];
-    $newscat = new ploopi\news2\news2cat();
+    $newscat = new news2\news2cat();
     $cat = ($newscat->open($news->fields['id_cat'])) ? $newscat->fields['title'] : 'Inconnue';
 
     ?>
@@ -61,7 +62,7 @@ if (!empty($_GET['id']) && is_numeric($_GET['id']) && $news->open($_GET['id'])) 
 		</table>
     </div>
     <div style="clear:both;border-top:1px solid #c0c0c0;">
-        <?php ploopi\annotation::display(ploopi\news2\tools::OBJECT_NEWS2, $news->fields['id'], $news->fields['title']); ?>
+        <?php ploopi\annotation::display(news2\tools::OBJECT_NEWS2, $news->fields['id'], $news->fields['title']); ?>
     </div>
     <?php
 

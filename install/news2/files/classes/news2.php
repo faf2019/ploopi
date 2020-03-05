@@ -21,10 +21,7 @@
 */
 
 namespace ploopi\news2;
-
 use ploopi;
-
-
 
 /**
  * Classe d'accès à la table ploopi_mod_news_entry
@@ -36,28 +33,20 @@ use ploopi;
  * @author Stéphane Escaich
  */
 
-class news2 extends ploopi\data_object
-{
+class news2 extends ploopi\data_object {
     /**
      * Constructeur de la classe
-     *
      * @return news2_entry
      */
     
-    public function __construct() 
-    {
-        parent::__construct('ploopi_mod_news2_entry');
-    }
+    public function __construct() { parent::__construct('ploopi_mod_news2_entry'); }
 
     /**
      * Enregistre la news
-     *
      * @return boolean true si l'enregistrement a été effectué
      */
 
-    public function save()
-    {
-		ploopi\output::log('content:'.$this->fields['content'] );
+    public function save() {
         // $this->fields['content'] = ploopi\str::htmlpurifier($this->fields['content']);
         return parent::save();
     }
