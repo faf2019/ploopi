@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Copyright (c) 2010 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
@@ -28,25 +28,25 @@
  * @subpackage global
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
- * Définition des constantes
+ * DÃ©finition des constantes
  */
 
 /**
- * Action : Ajouter une réponse dans un formulaire
+ * Action : Ajouter une rÃ©ponse dans un formulaire
  */
 define ("_FORMS_ACTION_ADDREPLY",   2);
 
 /**
- * Action : Exporter les données d'un formulaire
+ * Action : Exporter les donnÃ©es d'un formulaire
  */
 define ("_FORMS_ACTION_EXPORT",     3);
 
 /**
- * Action : Filtrer les données d'un formulaire
+ * Action : Filtrer les donnÃ©es d'un formulaire
  */
 define ("_FORMS_ACTION_FILTER",     4);
 
@@ -56,7 +56,7 @@ define ("_FORMS_ACTION_FILTER",     4);
 define ("_FORMS_ACTION_DELETE",     5);
 
 /**
- * Action : Gérer l'archivage des données d'un formulaire
+ * Action : GÃ©rer l'archivage des donnÃ©es d'un formulaire
  */
 define ("_FORMS_ACTION_BACKUP",     6);
 
@@ -66,7 +66,7 @@ define ("_FORMS_ACTION_BACKUP",     6);
 define ("_FORMS_ACTION_GRAPHICS",     7);
 
 /**
- * Action : Importer des données CSV
+ * Action : Importer des donnÃ©es CSV
  */
 define ("_FORMS_ACTION_IMPORT_CSV",     8);
 
@@ -81,7 +81,7 @@ define ('_FORMS_OBJECT_FORM',   1);
 
 
 /**
- * Définition des variables globales
+ * DÃ©finition des variables globales
  */
 
 /**
@@ -95,7 +95,7 @@ global $field_types;
 global $field_formats;
 
 /**
- * Opérateurs sur les champs (=, >, <, etc...)
+ * OpÃ©rateurs sur les champs (=, >, <, etc...)
  */
 global $field_operators;
 
@@ -115,28 +115,28 @@ global $forms_graphic_types;
 global $forms_graphic_line_aggregation;
 
 /**
- * Types d'opération
+ * Types d'opÃ©ration
  */
 global $forms_graphic_operation;
 
 
 $field_types = array(
     'text' => 'Texte Simple',
-    'textarea' => 'Texte Avancé',
-    'checkbox' => 'Case à Cocher',
+    'textarea' => 'Texte AvancÃ©',
+    'checkbox' => 'Case Ã  Cocher',
     'radio' => 'Boutons Radio',
     'select' => 'Liste de Choix',
     'tablelink' => 'Lien Formulaire',
     'file' => 'Fichier',
-    'autoincrement' => 'Numéro Auto',
+    'autoincrement' => 'NumÃ©ro Auto',
     'color' => 'Palette de Couleur',
     'calculation' => 'Calcul'
 );
 
 $field_formats = array(
-    'string' => 'Chaîne de caractères',
+    'string' => 'ChaÃ®ne de caractÃ¨res',
     'integer' => 'Nombre Entier',
-    'float' => 'Nombre Réel',
+    'float' => 'Nombre RÃ©el',
     'date' => 'Date',
     'time' => 'Heure',
     'email' => 'Email',
@@ -163,18 +163,18 @@ $form_types = array(
 
 $forms_graphic_types = array(
     'line' => 'Courbes',
-    'linec' => 'Courbes cumulées',
+    'linec' => 'Courbes cumulÃ©es',
     'bar' => 'Histogrammes',
-    'barc' => 'Histogrammes cumulés',
+    'barc' => 'Histogrammes cumulÃ©s',
     'radar' => 'Radars',
-    'radarc' => 'Radars cumulés',
+    'radarc' => 'Radars cumulÃ©s',
     'pie' => 'Secteurs',
     'pie3d' => 'Secteurs 3D'
 );
 
 $forms_graphic_line_aggregation = array(
     'hour' => 'Heure',
-    'day' => 'Journée',
+    'day' => 'JournÃ©e',
     'week' => 'Semaine (inactif)',
     'month' => 'Mois'
 );

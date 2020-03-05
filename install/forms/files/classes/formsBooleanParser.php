@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,24 +21,24 @@
 */
 
 /**
- * Gestion des expressions boolÈennes.
+ * Gestion des expressions bool√©ennes.
  *
  * @package forms
  * @subpackage BooleanParser
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author StÈphane Escaich
+ * @author Ovensia
  */
 
 /**
- * Classe permettant de valider et calculer une expression boolÈenne.
+ * Classe permettant de valider et calculer une expression bool√©enne.
  *
- * Accepte les opÈrateurs 'AND', 'OR', 'NOT', '&&', '||', '&', '|', '!'.
+ * Accepte les op√©rateurs 'AND', 'OR', 'NOT', '&&', '||', '&', '|', '!'.
  *
  * @package forms
  * @subpackage BooleanParser
  * @copyright Ovensia
- * @author StÈphane Escaich
+ * @author Ovensia
  * @version  $Revision$
  * @modifiedby $LastChangedBy$
  * @lastmodified $Date$
@@ -55,7 +55,7 @@ class formsBooleanParser
     private $strOperator;
 
     /**
-     * OpÈrateurs supportÈs
+     * Op√©rateurs support√©s
      *
      * @var array
      */
@@ -66,7 +66,7 @@ class formsBooleanParser
     );
 
     /**
-     * DÈfinition des OpÈrateurs
+     * D√©finition des Op√©rateurs
      *
      * @var array
      */
@@ -77,7 +77,7 @@ class formsBooleanParser
     );
 
     /**
-     * Expression rationnelle permettant de nettoyer une formule de ses caractËres non valides et/ou inutiles
+     * Expression rationnelle permettant de nettoyer une formule de ses caract√®res non valides et/ou inutiles
      *
      * @var unknown_type
      */
@@ -86,8 +86,8 @@ class formsBooleanParser
     /**
      * Constructeur de la classe
      *
-     * @param string $strExpression expression arithmÈtique ‡ Èvaluer
-     * @param array $arrValues tableau associant ‡ chaque variable de l'expression une valeur
+     * @param string $strExpression expression arithm√©tique √† √©valuer
+     * @param array $arrValues tableau associant √† chaque variable de l'expression une valeur
      */
     public function __construct($strExpression, $arrValues = array())
     {
@@ -139,18 +139,18 @@ class formsBooleanParser
             //on recupere la liste des arrOperators
             $arrOperators = self::$arrOperators;
 
-            // On parcourt l'expression caractËre par caractËre
-            // On compte les parenthËses ( et ) pour vÈrifier que le nombre est correct
+            // On parcourt l'expression caract√®re par caract√®re
+            // On compte les parenth√®ses ( et ) pour v√©rifier que le nombre est correct
             for ($i = 0; $i < $l; $i++)
             {
-                // ParenthËse ouvrante
+                // Parenth√®se ouvrante
                 if ($this->strExpression[$i] == '(') $p++;
-                // ParenthËse fermante
+                // Parenth√®se fermante
                 else if ($this->strExpression[$i] == ')') $p--;
-                // Pas de parenthËse encore ouverte
+                // Pas de parenth√®se encore ouverte
                 else if ($p == 0)
                 {
-                    // OpÈrateur OU (prio des opÈrateurs)
+                    // Op√©rateur OU (prio des op√©rateurs)
                     if ($this->strExpression[$i] == '|')
                     {
                         $arrOperators['&'] = false;
@@ -160,7 +160,7 @@ class formsBooleanParser
 
             if ($p!==0)
             {
-                throw new Exception('Nombre de parenthËses incorrect');
+                throw new Exception('Nombre de parenth√®ses incorrect');
             }
 
             for ($i = $l-1; $i >= 0; $i--)
@@ -170,27 +170,27 @@ class formsBooleanParser
                     $cp0++;
                 }
 
-                // ParenthËse ouvrante
+                // Parenth√®se ouvrante
                 if ($this->strExpression[$i] == '(') $p++;
-                // ParenthËse fermante
+                // Parenth√®se fermante
                 else if ($this->strExpression[$i] == ')') $p--;
-                // Pas de parenthËse encore ouverte && OpÈrateur connu && OpÈrateur "autorisÈ"
+                // Pas de parenth√®se encore ouverte && Op√©rateur connu && Op√©rateur "autoris√©"
                 else if ($p == 0 && in_array($this->strExpression[$i], array_keys(self::$arrOperators)) && $arrOperators[$this->strExpression[$i]])
                 {
-                    // OpÈrateur
+                    // Op√©rateur
                     $this->strOperator = $this->strExpression[$i];
 
                     if ($this->strOperator == '!')
                     {
-                        // DÈtection cas particulier double opÈrateur
+                        // D√©tection cas particulier double op√©rateur
                         if (isset($this->strExpression[$i-1]) && in_array($this->strExpression[$i-1], array_keys(self::$arrOperators)))
                         {
                             $this->strOperator = $this->strExpression[$i-1];
 
-                            // Expression A (partie ‡ gauche de l'opÈrateur)
+                            // Expression A (partie √† gauche de l'op√©rateur)
                             $this->objExprA = new self(substr($this->strExpression, 0, $i-1), $this->arrValues);
 
-                            // Expression B (partie ‡ droite de l'opÈrateur)
+                            // Expression B (partie √† droite de l'op√©rateur)
                             $this->objExprB = new self(substr($this->strExpression, $i), $this->arrValues);
 
                             break;
@@ -198,15 +198,15 @@ class formsBooleanParser
                         else
                         {
                             // CAS C1! non valide
-                            if (substr($this->strExpression, 0, $i) != '') throw new Exception ('Erreur dans l\'enchainement des opÈrateurs...');
-                            if (substr($this->strExpression, $i+1) == '') throw new Exception ('Erreur dans l\'enchainement des opÈrateurs...');
+                            if (substr($this->strExpression, 0, $i) != '') throw new Exception ('Erreur dans l\'enchainement des op√©rateurs...');
+                            if (substr($this->strExpression, $i+1) == '') throw new Exception ('Erreur dans l\'enchainement des op√©rateurs...');
                         }
                     }
 
-                    // Expression A (partie ‡ gauche de l'opÈrateur)
+                    // Expression A (partie √† gauche de l'op√©rateur)
                     $this->objExprA = new self(substr($this->strExpression, 0, $i), $this->arrValues);
 
-                    // Expression B (partie ‡ droite de l'opÈrateur)
+                    // Expression B (partie √† droite de l'op√©rateur)
                     $this->objExprB = new self(substr($this->strExpression, $i+1), $this->arrValues);
 
                     $this->strOperator;
@@ -229,7 +229,7 @@ class formsBooleanParser
     }
 
     /**
-     * Retourne les variables rencontrÈes dans l'expression
+     * Retourne les variables rencontr√©es dans l'expression
      */
 
     public function getVars()
@@ -260,13 +260,13 @@ class formsBooleanParser
     }
 
     /**
-     * Retourne l'expression nettoyÈe
+     * Retourne l'expression nettoy√©e
      */
 
     public function getExpression() { return $this->strExpression; }
 
     /**
-     * Retourne la valeur numÈrique de l'expression
+     * Retourne la valeur num√©rique de l'expression
      *
      * @return mixed
      */
@@ -279,7 +279,7 @@ class formsBooleanParser
         else if (is_null($this->objExprB))
         {
             if (is_null($this->objExprA))
-                throw new Exception ('Erreur dans l\'enchainement des opÈrateurs...');
+                throw new Exception ('Erreur dans l\'enchainement des op√©rateurs...');
             else
                 return $this->objExprA->getVal();
         }
@@ -304,7 +304,7 @@ class formsBooleanParser
         }
         else
         {
-            throw new Exception('OpÈrateur '.$this->strOperator.' non dÈfini');
+            throw new Exception('Op√©rateur '.$this->strOperator.' non d√©fini');
             return null;
         }
     }
@@ -334,7 +334,7 @@ class formsBooleanParser
 
 
     /**
-     * Retourne la notation polonaise inversÈe de l'expression arithmÈtique
+     * Retourne la notation polonaise invers√©e de l'expression arithm√©tique
      *
      * @return string
      */
@@ -352,7 +352,7 @@ class formsBooleanParser
 
 
     /**
-     * Affecte une valeur ‡ une variable
+     * Affecte une valeur √† une variable
      *
      * @param string $strVar variable
      * @param float $floVal valeur de la variable
@@ -376,9 +376,9 @@ class formsBooleanParser
     }
 
     /**
-     * Retourne la dÈfinition des fonctions disponibles
+     * Retourne la d√©finition des fonctions disponibles
      *
-     * @return array dÈfinition des fonctions disponibles
+     * @return array d√©finition des fonctions disponibles
      */
     static public function getFunctionsDef()
     {
@@ -386,9 +386,9 @@ class formsBooleanParser
     }
 
     /**
-     * Retourne les opÈrateurs disponibles
+     * Retourne les op√©rateurs disponibles
      *
-     * @return array opÈrateurs disponibles
+     * @return array op√©rateurs disponibles
      */
     static public function getOperators()
     {
@@ -396,9 +396,9 @@ class formsBooleanParser
     }
 
     /**
-     * Retourne la dÈfinition des opÈrateurs disponibles
+     * Retourne la d√©finition des op√©rateurs disponibles
      *
-     * @return array dÈfinition des opÈrateurs disponibles
+     * @return array d√©finition des op√©rateurs disponibles
      */
     static public function getOperatorsDef()
     {

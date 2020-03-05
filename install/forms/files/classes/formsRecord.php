@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -27,17 +27,17 @@
  * @subpackage reply
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
- * Classe d'accès à un enregistrement de formulaire
+ * Classe d'accÃ¨s Ã  un enregistrement de formulaire
  *
  * @package forms
  * @subpackage record
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 class formsRecord extends ploopi\data_object
@@ -62,7 +62,7 @@ class formsRecord extends ploopi\data_object
             $this->fields['ip'] = isset($_SESSION['ploopi']['remote_ip']) ? current($_SESSION['ploopi']['remote_ip']) : '';
         }
 
-        // Si champ vide, affectation de null (permet de ne pas imposer une valeur par défaut notamment pour les champs numériques pour lesquels une chaine vide est interprétée en 0)
+        // Si champ vide, affectation de null (permet de ne pas imposer une valeur par dÃ©faut notamment pour les champs numÃ©riques pour lesquels une chaine vide est interprÃ©tÃ©e en 0)
         foreach($this->fields as $strKey => $strVal) if ($strVal == '') $this->fields[$strKey] = null;
 
         return parent::save();

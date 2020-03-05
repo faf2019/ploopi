@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -27,17 +27,17 @@
  * @subpackage forms_group
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
- * Classe d'accès à la table ploopi_mod_forms_group
+ * Classe d'accÃ¨s Ã  la table ploopi_mod_forms_group
  *
  * @package forms
  * @subpackage forms_group
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 class formsGroup extends ploopi\data_object
@@ -51,7 +51,7 @@ class formsGroup extends ploopi\data_object
     public function __construct() { parent::__construct('ploopi_mod_forms_group'); }
 
     /**
-     * Gère le clone
+     * GÃ¨re le clone
      */
 
     public function __clone()
@@ -67,7 +67,7 @@ class formsGroup extends ploopi\data_object
 
     public function delete()
     {
-        // Suppression de la dépendance
+        // Suppression de la dÃ©pendance
         $objQuery = new ploopi\query_update();
         $objQuery->add_from('ploopi_mod_forms_field');
         $objQuery->add_set('id_group = 0');

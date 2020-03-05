@@ -1,6 +1,6 @@
 /*
     Copyright (c) 2002-2007 Netlor
-    Copyright (c) 2007-2008 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -23,8 +23,8 @@
 function forms_display_fieldvalues()
 {
     t = document.form_field.field_type;
-    if (t.value == 'textarea' || t.value == 'text' || t.value == 'file' || t.value == 'autoincrement' || t.value == 'tablelink' || t.value == 'calculation') $('fieldvalues').style.display='none';
-    else $('fieldvalues').style.display='block';
+    if (t.value == 'textarea' || t.value == 'text' || t.value == 'file' || t.value == 'autoincrement' || t.value == 'tablelink' || t.value == 'calculation') jQuery('#fieldvalues')[0].style.display='none';
+    else jQuery('#fieldvalues')[0].style.display='block';
 
     verifcolor = (t.value == 'color');
 }
@@ -32,33 +32,33 @@ function forms_display_fieldvalues()
 function forms_display_fieldformats()
 {
     t = document.form_field.field_type;
-    if (t.value == 'text') $('fieldformats').style.display='block';
-    else $('fieldformats').style.display='none';
+    if (t.value == 'text') jQuery('#fieldformats')[0].style.display='block';
+    else jQuery('#fieldformats')[0].style.display='none';
 }
 
 function forms_display_tablelink()
 {
     t = document.form_field.field_type;
-    if (t.value == 'tablelink') $('tablelink').style.display='block';
-    else $('tablelink').style.display='none';
+    if (t.value == 'tablelink') jQuery('#tablelink')[0].style.display='block';
+    else jQuery('#tablelink')[0].style.display='none';
 }
 
 function forms_display_calculation()
 {
     t = document.form_field.field_type;
-    if (t.value == 'calculation') $('calculation').style.display='block';
-    else $('calculation').style.display='none';
+    if (t.value == 'calculation') jQuery('#calculation')[0].style.display='block';
+    else jQuery('#calculation')[0].style.display='none';
 }
 
 function forms_field_add_value(lst,val)
 {
     if (val.value != '')
     {
-        if ((verifcolor && ploopi_validatefield('couleur', val, 'color')) || !verifcolor)
+        if ((verifcolor && ploopi.validatefield('couleur', val, 'color')) || !verifcolor)
         {
             if (verifcolor)
             {
-                color = new ploopi_rgbcolor(val.value);
+                color = new ploopi.rgbcolor(val.value);
                 rgbcolor = color.toHex();
                 lst.options[lst.length] = new Option('', rgbcolor);
                 lst.options[lst.length-1].style.backgroundColor = rgbcolor;
@@ -73,14 +73,14 @@ function forms_field_add_value(lst,val)
 
 function forms_field_modify_value(lst,val)
 {
-    if ((verifcolor && ploopi_validatefield('couleur', val, 'color')) || !verifcolor)
+    if ((verifcolor && ploopi.validatefield('couleur', val, 'color')) || !verifcolor)
     {
         sel = lst.selectedIndex;
         if (sel>-1)
         {
             if (verifcolor)
             {
-                color = new ploopi_rgbcolor(val.value);
+                color = new ploopi.rgbcolor(val.value);
                 rgbcolor = color.toHex();
                 lst.options[sel].value = rgbcolor;
                 lst.options[sel].text = '';
@@ -138,12 +138,12 @@ function forms_field_move_value(lst,mv)
 
 function forms_deletedata(form_id, event)
 {
-    if (ploopi_validatefield('date',$('forms_delete_date'),'date'))
+    if (ploopi.validatefield('date',jQuery('#forms_delete_date')[0],'date'))
     {
-        if (confirm('Êtes vous certain ?'))
+        if (confirm('ÃŠtes vous certain ?'))
         {
-            content = ploopi_xmlhttprequest('admin.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=forms_delete_data&form_id='+form_id+'&form_delete_date='+$('forms_delete_date').value)
-            ploopi_showpopup(content,'',event,'click','forms_deletedata');
+            content = ploopi.xhr.send('admin.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=forms_delete_data&form_id='+form_id+'&form_delete_date='+jQuery('#forms_delete_date')[0].value)
+            ploopi.popup.show(content,'',event,'click','forms_deletedata');
         }
     }
 }
@@ -153,44 +153,44 @@ function forms_display(fuid, options)
     options = (options) ? '&'+options : '';
 
     dest = 'form_'+fuid;
-    ploopi_ajaxloader(dest);
-    ploopi_xmlhttprequest_todiv('admin.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=forms_display&forms_fuid='+fuid+options,dest);
+    ploopi.xhr.ajaxloader(dest);
+    ploopi.xhr.todiv('admin.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=forms_display&forms_fuid='+fuid+options,dest);
 }
 
 function forms_openreply(fuid, id_reply, event)
 {
-    ploopi_showpopup(ploopi_ajaxloader_content,350,event,'click','popup_forms_openreply');
-    ploopi_xmlhttprequest_todiv('admin.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=forms_openreply&forms_fuid='+fuid+'&forms_record_id='+id_reply,'popup_forms_openreply');
+    ploopi.popup.show(ploopi.xhr.ajaxloader_content,350,event,'click','popup_forms_openreply');
+    ploopi.xhr.todiv('admin.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=forms_openreply&forms_fuid='+fuid+'&forms_record_id='+id_reply,'popup_forms_openreply');
 }
 
 function forms_changetype(t)
 {
     if (t.value == 'app')
     {
-        $('forms_type_cms').style.display = 'none';
-        $('forms_type_app').style.display = 'block';
+        jQuery('#forms_type_cms')[0].style.display = 'none';
+        jQuery('#forms_type_app')[0].style.display = 'block';
     }
 
     if (t.value == 'cms')
     {
-        $('forms_type_app').style.display = 'none';
-        $('forms_type_cms').style.display = 'block';
+        jQuery('#forms_type_app')[0].style.display = 'none';
+        jQuery('#forms_type_cms')[0].style.display = 'block';
     }
 }
 
 function forms_graphic_type_onchange(field)
 {
-    $('forms_graphic_pie').style.display = 'none';
-    $('forms_graphic_line').style.display = 'none';
+    jQuery('#forms_graphic_pie')[0].style.display = 'none';
+    jQuery('#forms_graphic_line')[0].style.display = 'none';
 
-    if (field.value == 'pie' || field.value == 'pie3d') $('forms_graphic_pie').style.display = 'block';
-    else if (field.value == 'line' || field.value == 'linec' || field.value == 'bar' || field.value == 'barc' || field.value == 'radar' || field.value == 'radarc') $('forms_graphic_line').style.display = 'block';
+    if (field.value == 'pie' || field.value == 'pie3d') jQuery('#forms_graphic_pie')[0].style.display = 'block';
+    else if (field.value == 'line' || field.value == 'linec' || field.value == 'bar' || field.value == 'barc' || field.value == 'radar' || field.value == 'radarc') jQuery('#forms_graphic_line')[0].style.display = 'block';
 }
 
 /**
- * Retourne le contenu d'une liste de choix liée à une table
- * @param current champ sélectionné
- * @param fields liste des champs imbriqués
+ * Retourne le contenu d'une liste de choix liÃ©e Ã  une table
+ * @param current champ sÃ©lectionnÃ©
+ * @param fields liste des champs imbriquÃ©s
  * @param url url controleur
  */
 function forms_field_tablelink_onchange(current, fields, url)
@@ -207,7 +207,7 @@ function forms_field_tablelink_onchange(current, fields, url)
         }
         else
         {
-            // Stockage de l'item demandé
+            // Stockage de l'item demandÃ©
             if (requested == '') requested = item;
             // Vidage des sous-listes
             while ($('field_'+item).length > 1) $('field_'+item).remove(1);
@@ -241,22 +241,22 @@ function forms_field_tablelink_onchange(current, fields, url)
 
 function forms_setcolumn(f)
 {
-    ploopi_insertatcursor($('field_formula'), 'C'+f.value);
+    ploopi_insertatcursor(jQuery('#field_formula')[0], 'C'+f.value);
     f.selectedIndex = 0;
-    $('field_formula').focus();
+    jQuery('#field_formula')[0].focus();
 }
 
 function forms_setfunction(f)
 {
-    ploopi_insertatcursor($('field_formula'), f.value+'()');
+    ploopi_insertatcursor(jQuery('#field_formula')[0], f.value+'()');
     f.selectedIndex = 0;
-    $('field_formula').focus();
+    jQuery('#field_formula')[0].focus();
 }
 
 function forms_setoperator(f)
 {
-    ploopi_insertatcursor($('field_formula'), f.value);
-    $('field_formula').focus();
+    ploopi_insertatcursor(jQuery('#field_formula')[0], f.value);
+    jQuery('#field_formula')[0].focus();
 }
 
 
@@ -283,14 +283,14 @@ function forms_savevalue(form_id, field_id, field_value)
 function forms_removeaccents(s)
 {
     var r=s.toLowerCase();
-    r = r.replace(new RegExp("[àáâãäå]", 'g'),"a");
-    r = r.replace(new RegExp("æ", 'g'),"ae");
-    r = r.replace(new RegExp("ç", 'g'),"c");
-    r = r.replace(new RegExp("[èéêë]", 'g'),"e");
-    r = r.replace(new RegExp("[ìíîï]", 'g'),"i");
-    r = r.replace(new RegExp("ñ", 'g'),"n");
-    r = r.replace(new RegExp("[òóôõö]", 'g'),"o");
-    r = r.replace(new RegExp("[ùúûü]", 'g'),"u");
-    r = r.replace(new RegExp("[ýÿ]", 'g'),"y");
+    r = r.replace(new RegExp("[Ã Ã¡Ã¢Ã£Ã¤Ã¥]", 'g'),"a");
+    r = r.replace(new RegExp("Ã¦", 'g'),"ae");
+    r = r.replace(new RegExp("Ã§", 'g'),"c");
+    r = r.replace(new RegExp("[Ã¨Ã©ÃªÃ«]", 'g'),"e");
+    r = r.replace(new RegExp("[Ã¬Ã­Ã®Ã¯]", 'g'),"i");
+    r = r.replace(new RegExp("Ã±", 'g'),"n");
+    r = r.replace(new RegExp("[Ã²Ã³Ã´ÃµÃ¶]", 'g'),"o");
+    r = r.replace(new RegExp("[Ã¹ÃºÃ»Ã¼]", 'g'),"u");
+    r = r.replace(new RegExp("[Ã½Ã¿]", 'g'),"y");
     return r;
 };

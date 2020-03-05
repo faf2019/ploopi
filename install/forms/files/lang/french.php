@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Copyright (c) 2010 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
@@ -22,44 +22,44 @@
 */
 
 /**
- * Fichier de langue français
+ * Fichier de langue franÃ§ais
  *
  * @package forms
  * @subpackage lang
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
- * Définition des constantes
+ * DÃ©finition des constantes
  */
 
 define ('_FORMS_LABELTAB_LIST',     'Liste des Formulaires');
-define ('_FORMS_LABELTAB_ADD',  'Création d\'un Formulaire');
+define ('_FORMS_LABELTAB_ADD',  'CrÃ©ation d\'un Formulaire');
 
 define ('_FORMS_ADMIN',     'Administration');
 
-define ('_FORMS_LABEL',     'Libellé');
+define ('_FORMS_LABEL',     'LibellÃ©');
 define ('_FORMS_TABLENAME',     'Nom de la Table');
 define ('_FORMS_DESCRIPTION',   'Description');
-define ('_FORMS_RESPONSE',      'Réponse après Validation (WebEdit)');
-define ('_FORMS_PUBDATESTART',  'Date de début de Publication');
+define ('_FORMS_RESPONSE',      'RÃ©ponse aprÃ¨s Validation (WebEdit)');
+define ('_FORMS_PUBDATESTART',  'Date de dÃ©but de Publication');
 define ('_FORMS_PUBDATEEND',    'Date de fin de Publication');
-define ('_FORMS_EMAIL',     'Envoyer par email à ');
-define ('_FORMS_EMAIL_EXPLAIN', '(Destinataires : Plusieurs adresses possibles séparées par des points-virgules et sans espace.)');
-define ('_FORMS_FROM',          'Expéditeur de l\'email');
+define ('_FORMS_EMAIL',     'Envoyer par email Ã  ');
+define ('_FORMS_EMAIL_EXPLAIN', '(Destinataires : Plusieurs adresses possibles sÃ©parÃ©es par des points-virgules et sans espace.)');
+define ('_FORMS_FROM',          'ExpÃ©diteur de l\'email');
 define ('_FORMS_WIDTH',     'Largeur (*: variable)');
-define ('_FORMS_ADD',           'Création d\'un Formulaire');
+define ('_FORMS_ADD',           'CrÃ©ation d\'un Formulaire');
 define ('_FORMS_MODIFICATION',  'Modification du Formulaire');
 define ('_FORMS_FIELDLIST',     'Liste des Champs');
 define ('_FORMS_ADDFIELD',      'Ajouter un Champ');
-define ('_FORMS_ADDSEPARATOR',  'Ajouter un Séparateur');
+define ('_FORMS_ADDSEPARATOR',  'Ajouter un SÃ©parateur');
 define ('_FORMS_ADDHTML',  'Ajouter un Contenu HTML');
 define ('_FORMS_ADDCAPTCHA',  'Ajouter un Captcha');
 define ('_FORMS_LIST',      'Liste des Formulaires');
 define ('_FORMS_FILL',      'Utiliser le Formulaire');
-define ('_FORMS_MODEL',     'Modèle d\'Affichage');
+define ('_FORMS_MODEL',     'ModÃ¨le d\'Affichage');
 define ('_FORMS_TYPEFORM',  'Type de Formulaire');
 define ('_FORMS_AUTOBACKUP', 'Archivage Automatique (En Jours)');
 define ('_FORMS_OBLIGATORY', 'Obligatoire');
@@ -71,14 +71,14 @@ define ('_FORMS_EXPORT_TO_TABLE',    'Stockage physique pour synchro DBREPORT');
 define ('_FORMS_STYLE',             'Style formulaire (optionnel)<br /><em>ex : width:500px; </em>');
 
 define ('_FORMS_FIELDCREATION',         'Ajout d\'un Champ');
-define ('_FORMS_SEPARATORCREATION',     'Ajout d\'un Séparateur');
+define ('_FORMS_SEPARATORCREATION',     'Ajout d\'un SÃ©parateur');
 define ('_FORMS_HTMLCREATION',     'Ajout d\'un Contenu HTML');
 define ('_FORMS_CAPTCHACREATION',     'Ajout d\'un Captcha');
 define ('_FORMS_GRAPHICCREATION',     'Ajout d\'un Graphique');
 define ('_FORMS_GROUPCREATION',     'Ajout d\'un Groupe Conditionnel');
 
 define ('_FORMS_FIELDMODIFICATION',         'Modification d\'un Champ');
-define ('_FORMS_SEPARATORMODIFICATION',     'Modification d\'un Séparateur');
+define ('_FORMS_SEPARATORMODIFICATION',     'Modification d\'un SÃ©parateur');
 define ('_FORMS_HTMLMODIFICATION',     'Modification d\'un Contenu HTML');
 define ('_FORMS_CAPTCHAMODIFICATION',       'Modification du Captcha');
 define ('_FORMS_GRAPHICMODIFICATION',         'Modification d\'un Graphique');
@@ -92,17 +92,17 @@ define ('_FORMS_DATEVALIDATION',    'Date de Validation');
 define ('_FORMS_NBLINE',    'Nb Ligne/Page');
 
 
-define ('_FORMS_PREVIEW',       'Aperçu');
+define ('_FORMS_PREVIEW',       'AperÃ§u');
 define ('_FORMS_VIEWRESULT',        'Basculer vers l\'interface utilisateur');
 define ('_FORMS_VIEWLIST',      'Mode Liste');
-define ('_FORMS_IMPORT',       'Import de données');
+define ('_FORMS_IMPORT',       'Import de donnÃ©es');
 
 define ('_FORMS_FILTER',        'Filtre');
 define ('_FORMS_EXPORT',        'Export');
-define ('_FORMS_MOREDETAILS',       'Plus de détails');
+define ('_FORMS_MOREDETAILS',       'Plus de dÃ©tails');
 
 
-define ('_FORMS_FIELD_NAME',        'Intitulé');
+define ('_FORMS_FIELD_NAME',        'IntitulÃ©');
 define ('_FORMS_FIELD_FIELDNAME',       'Nom du Champ');
 define ('_FORMS_FIELD_POSITION',        'Position');
 define ('_FORMS_FIELD_INTERLINE',       'Interligne');
@@ -111,40 +111,40 @@ define ('_FORMS_FIELD_TYPE',        'Type');
 define ('_FORMS_FIELD_GROUP',        'Groupe');
 define ('_FORMS_FIELD_FORMAT',      'Format');
 define ('_FORMS_FIELD_VALUES',      'Valeurs');
-define ('_FORMS_FIELD_MAXLENGTH',       'Longueur maximum (caractères)');
-define ('_FORMS_FIELD_STYLE_FORM',       'Style élément (optionnel)<br /><em>ex : color:red; </em>');
+define ('_FORMS_FIELD_MAXLENGTH',       'Longueur maximum (caractÃ¨res)');
+define ('_FORMS_FIELD_STYLE_FORM',       'Style Ã©lÃ©ment (optionnel)<br /><em>ex : color:red; </em>');
 define ('_FORMS_FIELD_STYLE_FIELD',       'Style champ (optionnel)<br /><em>ex : height:50px; </em>');
 define ('_FORMS_FIELD_NEEDED',      'Saisie Requise');
 define ('_FORMS_FIELD_PAGEBREAK',      'Saut de Page');
 define ('_FORMS_FIELD_FORMVIEW',      'Visible dans le Formulaire');
 define ('_FORMS_FIELD_EXPORTVIEW',      'Visible en Export');
 define ('_FORMS_FIELD_ARRAYVIEW',       'Visible en Liste');
-define ('_FORMS_FIELD_ADMINONLY',      'Limité aux administrateurs');
-define ('_FORMS_FIELD_DEFAULTVALUE',        'Valeur par Défaut');
+define ('_FORMS_FIELD_ADMINONLY',      'LimitÃ© aux administrateurs');
+define ('_FORMS_FIELD_DEFAULTVALUE',        'Valeur par DÃ©faut');
 define ('_FORMS_FIELD_FORMFIELD',       'Formulaire / Champ');
-define ('_FORMS_FIELD_WCEVIEW',         'Visible lors d\'une intégration en objet WebEdit (frontoffice)');
+define ('_FORMS_FIELD_WCEVIEW',         'Visible lors d\'une intÃ©gration en objet WebEdit (frontoffice)');
 define ('_FORMS_FIELD_FORMULA_EDITOR',         'Editeur de Formule');
-define ('_FORMS_FIELD_DISABLEXHTMLFILTER',      'Désactiver le filtre XHTML');
+define ('_FORMS_FIELD_DISABLEXHTMLFILTER',      'DÃ©sactiver le filtre XHTML');
 define ('_FORMS_FIELD_XHTMLCONTENT', 'Contenu HTML');
 define ('_FORMS_FIELD_EXPORT_WIDTH', 'Largeur export/impression<br /><em>PDF / ODS / XLS</em>');
 
 
-define ('_FORMS_FIELD_SEPARATOR_LEVEL',         'Niveau du Séparateur');
+define ('_FORMS_FIELD_SEPARATOR_LEVEL',         'Niveau du SÃ©parateur');
 define ('_FORMS_FIELD_SEPARATOR_FONTSIZE',      'Taille de Police (pix)');
-define ('_FORMS_FIELD_SEPARATOR_DESC',      'Séparateur de Niveau <LEVEL>');
+define ('_FORMS_FIELD_SEPARATOR_DESC',      'SÃ©parateur de Niveau <LEVEL>');
 
 define ('_FORMS_FIELD_MULTICOLDISPLAY',         'Affichage multi-colonne');
 
-define ('_FORMS_GRAPHIC_LABEL',       'Intitulé');
+define ('_FORMS_GRAPHIC_LABEL',       'IntitulÃ©');
 define ('_FORMS_GRAPHIC_TYPE',        'Type de graphique');
 define ('_FORMS_GRAPHIC_DESCRIPTION', 'Description');
-define ('_FORMS_GRAPHIC_LINE_AGGREGATION', 'Unité de temps');
-define ('_FORMS_GRAPHIC_DATASET', 'Jeu de données');
+define ('_FORMS_GRAPHIC_LINE_AGGREGATION', 'UnitÃ© de temps');
+define ('_FORMS_GRAPHIC_DATASET', 'Jeu de donnÃ©es');
 
-define ('_FORMS_GROUP_LABEL',       'Intitulé');
+define ('_FORMS_GROUP_LABEL',       'IntitulÃ©');
 define ('_FORMS_GROUP_DESCRIPTION', 'Description');
 define ('_FORMS_GROUP_CONDITION', 'Condition');
-define ('_FORMS_GROUP_FORMULA', 'Expression booléenne');
+define ('_FORMS_GROUP_FORMULA', 'Expression boolÃ©enne');
 
 
 define ('_FORMS_FIELD_NEEDED_SHORT',        'Req.');
@@ -154,16 +154,16 @@ define ('_FORMS_FIELD_EXPORTVIEW_SHORT',        'Exp.');
 define ('_FORMS_FIELD_ARRAYVIEW_SHORT',         'Lst.');
 define ('_FORMS_FIELD_ADMINONLY_SHORT',      'Adm.');
 
-define ('_FORMS_ALLREADYFILLED', 'Vous avez déjà rempli ce formulaire');
+define ('_FORMS_ALLREADYFILLED', 'Vous avez dÃ©jÃ  rempli ce formulaire');
 
 define ('_FORMS_OPTION_ONLYONE',            'Une seule saisie par utilisateur');
 define ('_FORMS_OPTION_ONLYONEDAY',         'Une seule saisie par jour');
 define ('_FORMS_OPTION_USER_VIEW',      'L\'utilisateur peut consulter ses saisies');
-define ('_FORMS_OPTION_GROUP_VIEW',         'Les utilisateurs du même espace peuvent consulter les saisies');
+define ('_FORMS_OPTION_GROUP_VIEW',         'Les utilisateurs du mÃªme espace peuvent consulter les saisies');
 define ('_FORMS_OPTION_ALL_VIEW',       'Tous les utilisateurs peuvent consulter les saisies');
 define ('_FORMS_OPTION_MODIFY',             'Droit de Modification');
 define ('_FORMS_OPTION_MODIFY_NOBODY',      'Personne');
-define ('_FORMS_OPTION_MODIFY_USER',        'Le propriétaire');
+define ('_FORMS_OPTION_MODIFY_USER',        'Le propriÃ©taire');
 define ('_FORMS_OPTION_MODIFY_GROUP',       'L\'espace');
 define ('_FORMS_OPTION_MODIFY_ALL',         'Tout le monde');
 define ('_FORMS_OPTION_ADMINONLY',      'Uniquement visible par les administrateurs');
@@ -171,44 +171,44 @@ define ('_FORMS_OPTIONS',      'Options');
 
 
 
-define ('_FORMS_OPTION_VIEW',               'Vue sur les données');
+define ('_FORMS_OPTION_VIEW',               'Vue sur les donnÃ©es');
 define ('_FORMS_OPTION_VIEW_GLOBAL',        'Globale');
-define ('_FORMS_OPTION_VIEW_PRIVATE',       'Privé');
+define ('_FORMS_OPTION_VIEW_PRIVATE',       'PrivÃ©');
 define ('_FORMS_OPTION_VIEW_ASC',           'Ascendante');
 define ('_FORMS_OPTION_VIEW_DESC',          'Descendante');
 
 
-define ('_FORMS_OPTION_DISPLAY_USER',       'Afficher « Utilisateur »');
-define ('_FORMS_OPTION_DISPLAY_GROUP',      'Afficher « Espace »');
-define ('_FORMS_OPTION_DISPLAY_DATE',       'Afficher « Date de Validation »');
-define ('_FORMS_OPTION_DISPLAY_IP',         'Afficher « Adresse IP »');
+define ('_FORMS_OPTION_DISPLAY_USER',       'Afficher Â« Utilisateur Â»');
+define ('_FORMS_OPTION_DISPLAY_GROUP',      'Afficher Â« Espace Â»');
+define ('_FORMS_OPTION_DISPLAY_DATE',       'Afficher Â« Date de Validation Â»');
+define ('_FORMS_OPTION_DISPLAY_IP',         'Afficher Â« Adresse IP Â»');
 
 define ('_FORMS_FIELDNEEDED', '* champs obligatoire');
 define ('_FORMS_FILLEDBY', 'Rempli par');
 define ('_FORMS_ANONYMOUS', 'Anonyme');
 
-define ('_FORMS_HELP_EMAIL', 'Vous pouvez saisir plusieurs adresses séparées par le caractère &laquo; ; &raquo;');
-define ('_FORMS_HELP_TYPEFORM', 'Certaines options sont spécifiques au type de formulaire que vous créez');
-define ('_FORMS_HELP_SEARCH', 'Vous pouvez filtrer un champs sur une liste de valeurs (séparateur &laquo; ; &raquo;) avec les opérateur &laquo; = &raquo;, &laquo; Contient &raquo; et &laquo; Commence par &raquo;');
+define ('_FORMS_HELP_EMAIL', 'Vous pouvez saisir plusieurs adresses sÃ©parÃ©es par le caractÃ¨re &laquo; ; &raquo;');
+define ('_FORMS_HELP_TYPEFORM', 'Certaines options sont spÃ©cifiques au type de formulaire que vous crÃ©ez');
+define ('_FORMS_HELP_SEARCH', 'Vous pouvez filtrer un champs sur une liste de valeurs (sÃ©parateur &laquo; ; &raquo;) avec les opÃ©rateur &laquo; = &raquo;, &laquo; Contient &raquo; et &laquo; Commence par &raquo;');
 
 define ('_FORMS_MESS_OK_DEFAULT',   'Ok');
-define ('_FORMS_MESS_OK_1',         'Formulaire enregistré !');
-define ('_FORMS_MESS_OK_2',         'Formulaire supprimé !');
-define ('_FORMS_MESS_OK_3',         'Champ enregistré !');
-define ('_FORMS_MESS_OK_4',         'Champ supprimé !');
-define ('_FORMS_MESS_OK_5',         'Graphique enregistré !');
-define ('_FORMS_MESS_OK_6',         'Graphique supprimé !');
-define ('_FORMS_MESS_OK_7',         'Champ déplacé !');
-define ('_FORMS_MESS_OK_8',         'Données importées !');
-define ('_FORMS_MESS_OK_9',         'Groupe enregistré !');
-define ('_FORMS_MESS_OK_10',         'Groupe supprimé !');
+define ('_FORMS_MESS_OK_1',         'Formulaire enregistrÃ© !');
+define ('_FORMS_MESS_OK_2',         'Formulaire supprimÃ© !');
+define ('_FORMS_MESS_OK_3',         'Champ enregistrÃ© !');
+define ('_FORMS_MESS_OK_4',         'Champ supprimÃ© !');
+define ('_FORMS_MESS_OK_5',         'Graphique enregistrÃ© !');
+define ('_FORMS_MESS_OK_6',         'Graphique supprimÃ© !');
+define ('_FORMS_MESS_OK_7',         'Champ dÃ©placÃ© !');
+define ('_FORMS_MESS_OK_8',         'DonnÃ©es importÃ©es !');
+define ('_FORMS_MESS_OK_9',         'Groupe enregistrÃ© !');
+define ('_FORMS_MESS_OK_10',         'Groupe supprimÃ© !');
 
 define ('_FORMS_ERROR_CAPTCHA',             'Erreur de captcha !'); // Front !
 
 define ('_FORMS_ERROR',         'ERREUR');
-define ('_FORMS_ERROR_DEFAULT', 'Erreur inconnue - Veuillez tenter de réitérer votre action.<br/><b>Si l\'erreur persiste, contactez l\'auteur du module concerné.</b>');
-define ('_FORMS_ERROR_1',       'Vous ne disposez pas des autorisations nécessaires pour effectuer cette action.');
+define ('_FORMS_ERROR_DEFAULT', 'Erreur inconnue - Veuillez tenter de rÃ©itÃ©rer votre action.<br/><b>Si l\'erreur persiste, contactez l\'auteur du module concernÃ©.</b>');
+define ('_FORMS_ERROR_1',       'Vous ne disposez pas des autorisations nÃ©cessaires pour effectuer cette action.');
 define ('_FORMS_ERROR_2',       'Tentative de modification de l\'url.');
-define ('_FORMS_ERROR_3',       'Vous ne pouvez insèrer qu\'un seul captcha par formulaire');
+define ('_FORMS_ERROR_3',       'Vous ne pouvez insÃ¨rer qu\'un seul captcha par formulaire');
 
 ?>

@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS `ploopi_mod_forms_field` (
   `interline` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `id_forms` (`id_form`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `ploopi_mod_forms_form`;
 CREATE TABLE IF NOT EXISTS `ploopi_mod_forms_form` (
@@ -56,7 +56,7 @@ CREATE TABLE IF NOT EXISTS `ploopi_mod_forms_form` (
   `id_workspace` int(10) unsigned default '0',
   `id_module` int(10) unsigned default '0',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `ploopi_mod_forms_graphic`;
 CREATE TABLE IF NOT EXISTS `ploopi_mod_forms_graphic` (
@@ -99,7 +99,7 @@ CREATE TABLE IF NOT EXISTS `ploopi_mod_forms_graphic` (
   `pie_color1` varchar(16) NOT NULL,
   `pie_color2` varchar(16) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 ALTER TABLE `ploopi_mod_forms_field` CHANGE `style` `style_field` VARCHAR( 255 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL;
 ALTER TABLE `ploopi_mod_forms_field` ADD `style_form` VARCHAR( 255 ) NOT NULL AFTER `style_field`;

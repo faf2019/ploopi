@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Copyright (c) 2010 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
@@ -22,28 +22,28 @@
 */
 
 /**
- * Opérations
+ * OpÃ©rations
  *
  * @package forms
  * @subpackage op
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
- * Opérations pour tous les utilisateurs connectés ou non
+ * OpÃ©rations pour tous les utilisateurs connectÃ©s ou non
  */
 
 switch($ploopi_op)
 {
-    // Sauvegarde rapide (et temporaire) des données du formulaire en cours de saisie
+    // Sauvegarde rapide (et temporaire) des donnÃ©es du formulaire en cours de saisie
     case 'forms_quicksave':
         include_once './modules/forms/classes/formsForm.php';
         if (!empty($_POST['forms_form_id']))
         {
             $strVarName = formsForm::getVarName($_POST['forms_form_id']).'_'.(isset($_POST['forms_mode']) ? $_POST['forms_mode'] : 'save');
-            // Lecture des valeurs pré-enregistrées du formulaire
+            // Lecture des valeurs prÃ©-enregistrÃ©es du formulaire
             // $arrValues = ploopi\session::getvar($strVarName);
 
             // Sauvegarde des nouvelles valeurs du formulaire
@@ -56,7 +56,7 @@ switch($ploopi_op)
                 }
             }
 
-            // Sauvegarde du panel sélectionné
+            // Sauvegarde du panel sÃ©lectionnÃ©
             if (isset($_POST['forms_panel'])) $arrValues['panel'] = $_POST['forms_panel'];
 
             // Sauvegarde en session
@@ -78,7 +78,7 @@ switch($ploopi_op)
             $arrParams = array();
             foreach($_GET['forms_params'] as $intFieldId => $strValue)
             {
-                // Requête Ajax en UTF8
+                // RequÃªte Ajax en UTF8
                 $strValue = utf8_decode($strValue);
 
                 $objField = new formsField();
@@ -89,13 +89,13 @@ switch($ploopi_op)
                 }
             }
 
-            // Champ à remplir
+            // Champ Ã  remplir
             $objField = new formsField();
             $objForm = new formsForm();
-            // On vérifie l'existence du champ, du formulaire et qu'il s'agit d'un formulaire CMS (donc public)
+            // On vÃ©rifie l'existence du champ, du formulaire et qu'il s'agit d'un formulaire CMS (donc public)
             if ($objField->open($_GET['forms_requested']) && ($_SESSION['ploopi']['connected'] || ($objForm->open($objField->fields['id_form']) && $objForm->fields['typeform'] == 'cms')))
             {
-                // Valeur de la table liée
+                // Valeur de la table liÃ©e
                 $objFieldValues = new formsField();
                 if ($objFieldValues->open($objField->fields['values']))
                 {
@@ -148,13 +148,13 @@ switch($ploopi_op)
 
 
 /**
- * Opérations pour les utilisateurs connectés uniquement
+ * OpÃ©rations pour les utilisateurs connectÃ©s uniquement
  */
 
 if ($_SESSION['ploopi']['connected'])
 {
     /**
-     * On vérifie qu'on est bien dans le module FORMS.
+     * On vÃ©rifie qu'on est bien dans le module FORMS.
      */
 
     if (ploopi\acl::ismoduleallowed('forms'))
@@ -191,12 +191,12 @@ if ($_SESSION['ploopi']['connected'])
                         // Suppression de la table de destination
                         ploopi\db::get()->query("DROP TABLE IF EXISTS `{$strCloneTable}`");
 
-                        // Création de la table de destination
+                        // CrÃ©ation de la table de destination
                         ploopi\db::get()->query($strCreateTable);
 
                         if (isset($_GET['data']) && $_GET['data'] == 'true')
                         {
-                            // Copie des données
+                            // Copie des donnÃ©es
                             ploopi\db::get()->query("INSERT INTO `{$strCloneTable}` SELECT * FROM `{$strSrcTable}`");
                         }
                     }
@@ -220,14 +220,14 @@ if ($_SESSION['ploopi']['connected'])
                 if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open($_GET['forms_id']))
                 {
                     $strUrl = '';
-                    // Retour différencié en fonction de l'origine de la demande
+                    // Retour diffÃ©renciÃ© en fonction de l'origine de la demande
                     if (isset($_GET['origin']) && $_GET['origin'] == 'viewreplies') $strUrl = "admin.php?op=forms_viewreplies&forms_id={$_GET['forms_id']}&ploopi_mod_msg=";
                     else $strUrl = "admin.php?op=forms_modify&forms_id={$_GET['forms_id']}&ploopi_mod_msg=";
                     $strErrorCode = '';
 
                     if (!empty($_FILES['forms_import_file']) && file_exists($_FILES['forms_import_file']['tmp_name']))
                     {
-                        // On fait sauter le timeout de php car le traitement peut être long
+                        // On fait sauter le timeout de php car le traitement peut Ãªtre long
                         if (!ini_get('safe_mode')) ini_set('max_execution_time', 0);
 
                         $ptrFileHandler = fopen($_FILES['forms_import_file']['tmp_name'], 'r');
@@ -294,13 +294,13 @@ if ($_SESSION['ploopi']['connected'])
 
                     $objForm = new ploopi\form('forms_import_form', ploopi\crypt::urlencode("admin-light.php?ploopi_op=forms_import_file&forms_id={$_POST['forms_id']}&origin={$strOrigin}"));
                     $objForm->addField( new ploopi\form_field( 'input:file', 'Fichier:', '', 'forms_import_file', 'forms_import_file', array('description' => 'Format CSV') ) );
-                    $objForm->addField( new ploopi\form_htmlfield('Séparateur de champs:', 'Virgule') );
-                    $objForm->addField( new ploopi\form_htmlfield('Séparateur de texte:', 'Double-quote') );
+                    $objForm->addField( new ploopi\form_htmlfield('SÃ©parateur de champs:', 'Virgule') );
+                    $objForm->addField( new ploopi\form_htmlfield('SÃ©parateur de texte:', 'Double-quote') );
                     $objForm->addField( new ploopi\form_htmlfield('Colonnes:', implode(', ', $arrFields)) );
-                    $objForm->addButton( new ploopi\form_button('input:button', 'Fermer', null, null, array('onclick' => "ploopi_hidepopup('forms_import');")) );
+                    $objForm->addButton( new ploopi\form_button('input:button', 'Fermer', null, null, array('onclick' => "ploopi.popup.hide('forms_import');")) );
                     $objForm->addButton( new ploopi\form_button('input:submit', 'Importer', null, null, array('style' => 'margin-left:2px;')) );
 
-                    echo ploopi\skin::get()->create_popup('Import de données CSV', $objForm->render(), 'forms_import');
+                    echo ploopi\skin::get()->create_popup('Import de donnÃ©es CSV', $objForm->render(), 'forms_import');
                 }
 
                 ploopi\system::kill();
@@ -316,7 +316,7 @@ if ($_SESSION['ploopi']['connected'])
                 $objForm = new formsForm();
                 if (!empty($_POST['forms_id']) && is_numeric($_POST['forms_id']) && $objForm->open($_POST['forms_id']))
                 {
-                    echo ploopi\skin::get()->create_popup('Aperçu du formulaire', $objForm->render(null, 'preview', false, false), 'forms_preview');
+                    echo ploopi\skin::get()->create_popup('AperÃ§u du formulaire', $objForm->render(null, 'preview', false, false), 'forms_preview');
                 }
 
                 ploopi\system::kill();
@@ -363,7 +363,7 @@ if ($_SESSION['ploopi']['connected'])
                             $field->fields['xhtmlcontent'] = $_POST['fck_field_xhtmlcontent'];
                             $field->fields['xhtmlcontent_cleaned'] = $field->fields['xhtmlcontent'];
 
-                            // filtre activé ? nettoyage contenu XHTML
+                            // filtre activÃ© ? nettoyage contenu XHTML
                             if (!$field->fields['option_disablexhtmlfilter']) $field->fields['xhtmlcontent_cleaned'] = ploopi\str::htmlpurifier($field->fields['xhtmlcontent_cleaned'], true);
                         }
                     }
@@ -416,7 +416,7 @@ if ($_SESSION['ploopi']['connected'])
                 if (!isset($_POST['forms_export_fitpage_width'])) $forms->fields['export_fitpage_width'] = 0;
                 if (!isset($_POST['forms_export_fitpage_height'])) $forms->fields['export_fitpage_height'] = 0;
 
-                // Sécurité pour les grosses tables
+                // SÃ©curitÃ© pour les grosses tables
                 if ($forms->fields['nbline'] > 500) $forms->fields['nbline'] = 500;
                 if ($forms->fields['nbline'] <= 0) $forms->fields['nbline'] = 100;
 
@@ -613,7 +613,7 @@ if ($_SESSION['ploopi']['connected'])
                         {
                             $objRecord->delete();
 
-                            // Doit on recalculer les données (uniquement si agrégat)
+                            // Doit on recalculer les donnÃ©es (uniquement si agrÃ©gat)
                             $booCalculation = false;
                             $booAggregate = false;
 
@@ -623,7 +623,7 @@ if ($_SESSION['ploopi']['connected'])
                                 {
                                     $booCalculation = true;
 
-                                    // On va détecter si le calcul fait appel à un agrégat (dans ce cas il faut recalculer toutes les données du formulaire)
+                                    // On va dÃ©tecter si le calcul fait appel Ã  un agrÃ©gat (dans ce cas il faut recalculer toutes les donnÃ©es du formulaire)
                                     $objParser = new formsArithmeticParser($objField->fields['formula']);
 
                                     // Extraction des variables de l'expression
@@ -676,7 +676,7 @@ if ($_SESSION['ploopi']['connected'])
                             );
                         }
                     }
-                    // On ne passe ici qu'en cas d'échec de téléchargement
+                    // On ne passe ici qu'en cas d'Ã©chec de tÃ©lÃ©chargement
                     ploopi\output::redirect("admin.php?op=forms_viewreplies&forms_id={$_GET['forms_id']}");
                 }
                 // Formulaire invalide
@@ -709,7 +709,7 @@ if ($_SESSION['ploopi']['connected'])
                 if (ploopi\acl::isactionallowed(_FORMS_ACTION_BACKUP))
                 {
                     ?>
-                    <div style="background:#f0f0f0;border:1px solid #c0c0c0;padding:2px;"><strong>Suppression des données</strong>
+                    <div style="background:#f0f0f0;border:1px solid #c0c0c0;padding:2px;"><strong>Suppression des donnÃ©es</strong>
                     <?php
                     $objForm = new formsForm();
                     if (!empty($_GET['form_id']) && $objForm->open($_GET['form_id']) && !empty($_GET['form_delete_date']))
@@ -717,7 +717,7 @@ if ($_SESSION['ploopi']['connected'])
                         $objForm->deleteToDate(ploopi\date::local2timestamp($_GET['form_delete_date'], '23:59:59'));
                     }
                     ?>
-                    <br /><a href="javascript:void(0);" onmouseup="javascript:ploopi_hidepopup('forms_deletedata');document.location.reload();">Fermer</a>
+                    <br /><a href="javascript:void(0);" onmouseup="javascript:ploopi.popup.hide('forms_deletedata');document.location.reload();">Fermer</a>
                     </div>
                     <?php
                 }
@@ -734,7 +734,7 @@ if ($_SESSION['ploopi']['connected'])
                     $strUrl = ploopi\crypt::urlencode("admin-light.php?ploopi_op=forms_graphic_generate&forms_graphic_id={$_POST['forms_graphic_id']}&forms_graphic_width={$_POST['forms_graphic_width']}&forms_rand=".microtime());
                     ?>
                     <p class="ploopi_va" style="padding:4px;background:#eee;border-bottom:1px solid #ccc;">
-                        <a class="forms_export_link" href="<?php echo $strUrl; ?>"><img src="./modules/forms/img/mime/png.png" /> Télécharger l'image</a>
+                        <a class="forms_export_link" href="<?php echo $strUrl; ?>"><img src="./modules/forms/img/mime/png.png" /> TÃ©lÃ©charger l'image</a>
                     </p>
                     <img style="margin:4px;display:block;clear:both;" src="<?php echo $strUrl; ?>" />
                     <?php

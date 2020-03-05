@@ -38,4 +38,4 @@ CREATE TABLE IF NOT EXISTS `ploopi_mod_forms_graphic` (
   `pie_color1` varchar(16) NOT NULL,
   `pie_color2` varchar(16) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;

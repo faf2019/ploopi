@@ -1,6 +1,6 @@
 <?php
 /*
- Copyright (c) 2007-2016 Ovensia
+ Copyright (c) 2007-2018 Ovensia
  Copyright (c) 2010 HeXad
  Contributors hold Copyright (c) to their code submissions.
 
@@ -28,7 +28,7 @@
  * @subpackage public
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
@@ -62,7 +62,7 @@ if ($op == 'forms_print')
         <form id="form"></form>
         </div>
         <script type="text/javascript">
-            $('form').innerHTML = window.opener.document.forms_form_<?php echo ploopi\str::htmlentities($_GET['forms_id']); ?>.innerHTML;
+            jQuery('#form')[0].innerHTML = window.opener.document.forms_form_<?php echo ploopi\str::htmlentities($_GET['forms_id']); ?>.innerHTML;
             Event.observe(window, 'load', function() {
                 <?php
                 for ($i=1; $i<=$objForm->getNbPanels();$i++)
@@ -121,7 +121,7 @@ switch($op)
     break;
 
     /**
-     * Consultation des données
+     * Consultation des donnÃ©es
      */
     case 'forms_viewreplies':
     case 'forms_filter':
@@ -141,7 +141,7 @@ switch($op)
             else
             {
                 /**
-                 * Lecture des données du formulaire
+                 * Lecture des donnÃ©es du formulaire
                  */
                 list($arrData, $intNumRows, $arrFormFilter) = $objForm->prepareData();
 

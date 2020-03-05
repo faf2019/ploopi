@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -27,7 +27,7 @@
  * @subpackage admin
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
@@ -96,12 +96,12 @@ while ($fields = ploopi\db::get()->fetchrow())
     $array_values[$c]['values']['date_end']     = array('label' => ploopi\str::htmlentities($pubdate_end['date']));
     $array_values[$c]['values']['actions']      = array('label' => '
         <a href="'.$open.'" title="Modifier le formulaire"><img src="./modules/forms/img/ico_modify.png" alt="Modifier le formulaire"></a>
-        <a href="javascript:void(0);" onclick="javascript:if (confirm(\'Attention cette action va cloner ce formulaire.\nÊtes vous certain de vouloir continuer ?\')) document.location.href=\''.$clone.'&data=\'+confirm(\'Copier les données ?\');" title="Cloner le formulaire"><img src="./modules/forms/img/ico_clone.png" alt="Cloner le formulaire"></a>
-        <a href="'.$view.'" title="Consulter les données du formulaire"><img src="./modules/forms/img/ico_view.png" alt="Consulter les données du formulaire"></a>
-        <a href="javascript:void(0);" onclick="javascript:ploopi_confirmlink(\''.$delete.'\',\'Attention cette action va supprimer définitivement le formulaire.\nÊtes vous certain de vouloir continuer ?\');"><img border="0" src="./modules/forms/img/ico_trash.png"></a>');
+        <a href="javascript:void(0);" onclick="javascript:if (confirm(\'Attention cette action va cloner ce formulaire.\nÃŠtes vous certain de vouloir continuer ?\')) document.location.href=\''.$clone.'&data=\'+confirm(\'Copier les donnÃ©es ?\');" title="Cloner le formulaire"><img src="./modules/forms/img/ico_clone.png" alt="Cloner le formulaire"></a>
+        <a href="'.$view.'" title="Consulter les donnÃ©es du formulaire"><img src="./modules/forms/img/ico_view.png" alt="Consulter les donnÃ©es du formulaire"></a>
+        <a href="javascript:void(0);" onclick="javascript:ploopi.confirmlink(\''.$delete.'\',\'Attention cette action va supprimer dÃ©finitivement le formulaire.\nÃŠtes vous certain de vouloir continuer ?\');"><img border="0" src="./modules/forms/img/ico_trash.png"></a>');
 
 
-//      <a href="'.admin.php.'?op=forms_generate_tables_from_list&forms_id='.$fields['id'].'" title="Générer les données physiques du formulaire""><img src="./modules/forms/img/ico_renew.png" alt="Générer les données physiques du formulaire"></a>
+//      <a href="'.admin.php.'?op=forms_generate_tables_from_list&forms_id='.$fields['id'].'" title="GÃ©nÃ©rer les donnÃ©es physiques du formulaire""><img src="./modules/forms/img/ico_renew.png" alt="GÃ©nÃ©rer les donnÃ©es physiques du formulaire"></a>
 
     $array_values[$c]['description'] = "Ouvrir le Formulaire";
     $array_values[$c]['link'] = $open;

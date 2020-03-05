@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,21 +21,21 @@
 */
 
 /**
- * Gestion des expressions arithmétiques.
+ * Gestion des expressions arithmÃ©tiques.
  *
  * @package forms
  * @subpackage ArithmeticParser
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
- * Classe permettant de valider et calculer une expression arithmétique.
+ * Classe permettant de valider et calculer une expression arithmÃ©tique.
  *
- * Accepte les opérateurs '+', '-', '/', '*', '%', '^'.
+ * Accepte les opÃ©rateurs '+', '-', '/', '*', '%', '^'.
  *
- * Accepte également les fonctions arithmétiques de php :
+ * Accepte Ã©galement les fonctions arithmÃ©tiques de php :
  *
  * abs : Valeur absolue
  * acos : Arc cosinus
@@ -44,33 +44,33 @@
  * asinh : Arc sinus hyperbolique
  * atan : Arc tangente
  * atanh : Arc tangente hyperbolique
- * ceil : Arrondit au nombre supérieur
+ * ceil : Arrondit au nombre supÃ©rieur
  * cos : Cosinus
  * cosh : Cosinus hyperbolique
- * deg2rad : Convertit un nombre de degrés en radians
+ * deg2rad : Convertit un nombre de degrÃ©s en radians
  * exp : Calcul l'exponentielle
- * floor : Arrondit à l'entier inférieur
+ * floor : Arrondit Ã  l'entier infÃ©rieur
  * fmod : Retourne le reste de la division
  * log10 : Logarithme en base 10
- * log1p : Calcule précisément log(1 + nombre)
- * log : Logarithme naturel (népérien)
+ * log1p : Calcule prÃ©cisÃ©ment log(1 + nombre)
+ * log : Logarithme naturel (nÃ©pÃ©rien)
  * pow : Expression exponentielle
- * rad2deg : Conversion de radians en degrés
- * round : Arrondi un nombre à virgule flottante
+ * rad2deg : Conversion de radians en degrÃ©s
+ * round : Arrondi un nombre Ã  virgule flottante
  * sin : Sinus
  * sinh : Sinus hyperbolique
- * sqrt : Racine carrée
+ * sqrt : Racine carrÃ©e
  * tan : Tangente
  * tanh : Tangente hyperbolique
  *
- * min : Détermine la plus petite valeur
- * max : Détermine la plus grande valeur
+ * min : DÃ©termine la plus petite valeur
+ * max : DÃ©termine la plus grande valeur
  *
  * @package forms
  * @subpackage ArithmeticParser
  * @copyright Ovensia/SZSIC
- * @license non définie (non libre)
- * @author Stéphane Escaich
+ * @license non dÃ©finie (non libre)
+ * @author Ovensia
  * @version  $Revision$
  * @modifiedby $LastChangedBy$
  * @lastmodified $Date$
@@ -88,7 +88,7 @@ class formsArithmeticParser
     private $strOperator;
 
     /**
-     * Opérateurs supportés
+     * OpÃ©rateurs supportÃ©s
      *
      * @var array
      */
@@ -102,7 +102,7 @@ class formsArithmeticParser
     );
 
     /**
-     * Définition des Opérateurs
+     * DÃ©finition des OpÃ©rateurs
      *
      * @var array
      */
@@ -117,7 +117,7 @@ class formsArithmeticParser
 
 
     /**
-     * Fonctions arithmétiques supportés
+     * Fonctions arithmÃ©tiques supportÃ©s
      *
      * @var array
      */
@@ -155,7 +155,7 @@ class formsArithmeticParser
     );
 
     /**
-     * Définition des fonctions arithmétiques
+     * DÃ©finition des fonctions arithmÃ©tiques
      *
      * @var array
      */
@@ -167,33 +167,33 @@ class formsArithmeticParser
         'asinh' => 'asinh(x) : Arc sinus hyperbolique',
         'atan' => 'atan(x) : Arc tangente',
         'atanh' => 'atanh(x) : Arc tangente hyperbolique',
-        'ceil' => 'ceil(x) : Arrondit au nombre supérieur',
+        'ceil' => 'ceil(x) : Arrondit au nombre supÃ©rieur',
         'cos' => 'cos(x) : Cosinus',
         'cosh' => 'cosh(x) : Cosinus hyperbolique',
-        'deg2rad' => 'deg2rad(x) : Convertit un nombre de degrés en radians',
+        'deg2rad' => 'deg2rad(x) : Convertit un nombre de degrÃ©s en radians',
         'exp' => 'exp(x) : Calcul l\'exponentielle',
-        'floor' => 'floor(x) : Arrondit à l\'entier inférieur',
+        'floor' => 'floor(x) : Arrondit Ã  l\'entier infÃ©rieur',
         'fmod' => 'fmod(x,y) : Retourne le reste de la division',
         'log10' => 'log10(x) : Logarithme en base 10',
-        'log1p' => 'logip(x) : Calcule précisément log(1 + nombre)',
-        'log' => 'log(x) : Logarithme naturel (népérien)',
-        'max' => 'max(x,y,z,...) : Détermine la plus grande valeur',
-        'min' => 'min(x,y,z,...) : Détermine la plus petite valeur',
+        'log1p' => 'logip(x) : Calcule prÃ©cisÃ©ment log(1 + nombre)',
+        'log' => 'log(x) : Logarithme naturel (nÃ©pÃ©rien)',
+        'max' => 'max(x,y,z,...) : DÃ©termine la plus grande valeur',
+        'min' => 'min(x,y,z,...) : DÃ©termine la plus petite valeur',
         'pow' => 'pow(x,y) : Expression exponentielle',
-        'rad2deg' => 'rad2deg(x) : Conversion de radians en degrés',
-        'round' => 'round(x,y) Arrondi un nombre à virgule flottante',
+        'rad2deg' => 'rad2deg(x) : Conversion de radians en degrÃ©s',
+        'round' => 'round(x,y) Arrondi un nombre Ã  virgule flottante',
         'sin' => 'sin(x) : Sinus',
         'sinh' => 'sinh(x) : Sinus hyperbolique',
-        'sqrt' => 'sqrt(x) : Racine carrée',
+        'sqrt' => 'sqrt(x) : Racine carrÃ©e',
         'tan' => 'tan(x) : Tangente',
         'tanh' => 'tanh(x) : Tangente hyperbolique',
         'mktime' => 'mktime(H, i, s, n, j, Y) : Timestamp unix',
-        'substr' => 'substr(x,y,z) : Sous-chaîne',
+        'substr' => 'substr(x,y,z) : Sous-chaÃ®ne',
         'time' => 'time() : Timestamp unix actuel',
     );
 
     /**
-     * Expression rationnelle permettant de nettoyer une formule de ses caractères non valides et/ou inutiles
+     * Expression rationnelle permettant de nettoyer une formule de ses caractÃ¨res non valides et/ou inutiles
      *
      * @var unknown_type
      */
@@ -202,8 +202,8 @@ class formsArithmeticParser
     /**
      * Constructeur de la classe
      *
-     * @param string $strExpression expression arithmétique à évaluer
-     * @param array $arrValues tableau associant à chaque variable de l'expression une valeur
+     * @param string $strExpression expression arithmÃ©tique Ã  Ã©valuer
+     * @param array $arrValues tableau associant Ã  chaque variable de l'expression une valeur
      */
     function __construct($strExpression, $arrValues = array())
     {
@@ -239,18 +239,18 @@ class formsArithmeticParser
             //on recupere la liste des arrOperators
             $arrOperators = self::$arrOperators;
 
-            // On parcourt l'expression caractère par caractère
-            // On compte les parenthèses ( et ) pour vérifier que le nombre est correct
+            // On parcourt l'expression caractÃ¨re par caractÃ¨re
+            // On compte les parenthÃ¨ses ( et ) pour vÃ©rifier que le nombre est correct
             for ($i = 0; $i < $l; $i++)
             {
-                // Parenthèse ouvrante
+                // ParenthÃ¨se ouvrante
                 if ($this->strExpression[$i] == '(') $p++;
-                // Parenthèse fermante
+                // ParenthÃ¨se fermante
                 else if ($this->strExpression[$i] == ')') $p--;
-                // Pas de parenthèse encore ouverte
+                // Pas de parenthÃ¨se encore ouverte
                 else if ($p == 0)
                 {
-                    // Opérateur + ou - (permet de gérer la prio des opérateurs)
+                    // OpÃ©rateur + ou - (permet de gÃ©rer la prio des opÃ©rateurs)
                     if ($this->strExpression[$i] == '+' || $this->strExpression[$i] == '-')
                     {
                         $arrOperators['*'] = false;
@@ -258,7 +258,7 @@ class formsArithmeticParser
                         $arrOperators['%'] = false;
                         $arrOperators['^'] = false;
                     }
-                    // Opérateur * ou /
+                    // OpÃ©rateur * ou /
                     else if ($this->strExpression[$i] =='*' || $this->strExpression[$i] =='/' || $this->strExpression[$i] =='%')
                     {
                         $arrOperators['^'] = false;
@@ -268,7 +268,7 @@ class formsArithmeticParser
 
             if ($p!==0)
             {
-                throw new Exception('Nombre de parenthèses incorrect');
+                throw new Exception('Nombre de parenthÃ¨ses incorrect');
             }
 
             for ($i = $l-1; $i >= 0; $i--)
@@ -278,28 +278,28 @@ class formsArithmeticParser
                     $cp0++;
                 }
 
-                // Parenthèse ouvrante
+                // ParenthÃ¨se ouvrante
                 if ($this->strExpression[$i] == '(') $p++;
-                // Parenthèse fermante
+                // ParenthÃ¨se fermante
                 else if ($this->strExpression[$i] == ')') $p--;
-                // Pas de parenthèse encore ouverte && Opérateur connu && Opérateur "autorisé"
+                // Pas de parenthÃ¨se encore ouverte && OpÃ©rateur connu && OpÃ©rateur "autorisÃ©"
                 else if ($p == 0 && in_array($this->strExpression[$i], array_keys(self::$arrOperators)) && $arrOperators[$this->strExpression[$i]])
                 {
 
-                    // Opérateur
+                    // OpÃ©rateur
                     $this->strOperator = $this->strExpression[$i];
 
                     if ($this->strOperator == '-')
                     {
-                        // Détection cas particulier double opérateur
+                        // DÃ©tection cas particulier double opÃ©rateur
                         if (isset($this->strExpression[$i-1]) && in_array($this->strExpression[$i-1], array_keys(self::$arrOperators)))
                         {
                             $this->strOperator = $this->strExpression[$i-1];
 
-                            // Expression A (partie à gauche de l'opérateur)
+                            // Expression A (partie Ã  gauche de l'opÃ©rateur)
                             $this->objExprA = new self(substr($this->strExpression, 0, $i-1), $this->arrValues);
 
-                            // Expression B (partie à droite de l'opérateur)
+                            // Expression B (partie Ã  droite de l'opÃ©rateur)
                             $this->objExprB = new self('0'.substr($this->strExpression, $i), $this->arrValues);
 
                             break;
@@ -307,11 +307,11 @@ class formsArithmeticParser
                     }
 
 
-                    // Expression A (partie à gauche de l'opérateur)
-                    // Cas particulier '-' en début d'expression (A est vide, on le remplace par 0)
+                    // Expression A (partie Ã  gauche de l'opÃ©rateur)
+                    // Cas particulier '-' en dÃ©but d'expression (A est vide, on le remplace par 0)
                     $this->objExprA = new self(($this->strOperator == '-' && substr($this->strExpression, 0, $i) == '') ? '0' : substr($this->strExpression, 0, $i), $this->arrValues);
 
-                    // Expression B (partie à droite de l'opérateur)
+                    // Expression B (partie Ã  droite de l'opÃ©rateur)
                     $this->objExprB = new self(substr($this->strExpression, $i+1), $this->arrValues);
 
                     break;
@@ -344,7 +344,7 @@ class formsArithmeticParser
                     }
                     else
                     {
-                        // Gestion des fonctions imbriquées à paramètres multiples
+                        // Gestion des fonctions imbriquÃ©es Ã  paramÃ¨tres multiples
 
                         $arrStrExpr = array();
                         $p = 0;
@@ -352,9 +352,9 @@ class formsArithmeticParser
 
                         for ($i = $first+1; $i <= $end-1; $i++)
                         {
-                            // Parenthèse ouvrante
+                            // ParenthÃ¨se ouvrante
                             if ($this->strExpression[$i] == '(') $p++;
-                            // Parenthèse fermante
+                            // ParenthÃ¨se fermante
                             elseif ($this->strExpression[$i] == ')') $p--;
 
                             if ($p === 0 && $this->strExpression[$i] == ',') $e++;
@@ -369,14 +369,14 @@ class formsArithmeticParser
                         foreach($arrStrExpr as $strExpr) $this->arrExpr[] = new self($strExpr, $this->arrValues);
                     }
                 }
-                // Ca doit être une variable
+                // Ca doit Ãªtre une variable
                 else $this->strVal = $this->strExpression;
             }
         }
     }
 
     /**
-     * Retourne les variables rencontrées dans l'expression
+     * Retourne les variables rencontrÃ©es dans l'expression
      */
 
     public function getVars()
@@ -395,7 +395,7 @@ class formsArithmeticParser
     }
 
     /**
-     * Retourne la valeur numérique d'une variable
+     * Retourne la valeur numÃ©rique d'une variable
      *
      * @param string $str variable
      * @return float/boolean
@@ -409,7 +409,7 @@ class formsArithmeticParser
     }
 
     /**
-     * Retourne la valeur numérique de l'expression
+     * Retourne la valeur numÃ©rique de l'expression
      *
      * @return mixed
      */
@@ -417,7 +417,7 @@ class formsArithmeticParser
     {
         if (!is_null($this->strFunc))
         {
-            // Analyse des paramètres de la fonction
+            // Analyse des paramÃ¨tres de la fonction
             $v = array();
             foreach($this->arrExpr as $strExpr) $v[] = $strExpr->getVal();
 
@@ -429,7 +429,7 @@ class formsArithmeticParser
             eval("\$res = {$this->strFunc}(".implode(',', $v).");");
             ploopi\error::set_handler();
 
-            if(is_null($res)) throw new Exception ("Erreur lors de l'évaluation de l'expression {$this->strFunc}(".implode(',', $v).");");
+            if(is_null($res)) throw new Exception ("Erreur lors de l'Ã©valuation de l'expression {$this->strFunc}(".implode(',', $v).");");
 
             return $res;
         }
@@ -439,7 +439,7 @@ class formsArithmeticParser
         else if (is_null($this->objExprB))
         {
             if (is_null($this->objExprA))
-                throw new Exception ('Erreur dans l\'enchainement des opérateurs...');
+                throw new Exception ('Erreur dans l\'enchainement des opÃ©rateurs...');
             else
                 return $this->objExprA->getVal();
         }
@@ -492,7 +492,7 @@ class formsArithmeticParser
         }
         else
         {
-            throw new Exception('Opérateur '.$this->strOperator.' non défini');
+            throw new Exception('OpÃ©rateur '.$this->strOperator.' non dÃ©fini');
             return null;
         }
     }
@@ -528,7 +528,7 @@ class formsArithmeticParser
 
 
     /**
-     * Retourne la notation polonaise inversée de l'expression arithmétique
+     * Retourne la notation polonaise inversÃ©e de l'expression arithmÃ©tique
      *
      * @return string
      */
@@ -553,7 +553,7 @@ class formsArithmeticParser
 
 
     /**
-     * Affecte une valeur à une variable
+     * Affecte une valeur Ã  une variable
      *
      * @param string $strVar variable
      * @param float $floVal valeur de la variable
@@ -577,9 +577,9 @@ class formsArithmeticParser
     }
 
     /**
-     * Retourne la définition des fonctions disponibles
+     * Retourne la dÃ©finition des fonctions disponibles
      *
-     * @return array définition des fonctions disponibles
+     * @return array dÃ©finition des fonctions disponibles
      */
     static public function getFunctionsDef()
     {
@@ -587,9 +587,9 @@ class formsArithmeticParser
     }
 
     /**
-     * Retourne les opérateurs disponibles
+     * Retourne les opÃ©rateurs disponibles
      *
-     * @return array opérateurs disponibles
+     * @return array opÃ©rateurs disponibles
      */
     static public function getOperators()
     {
@@ -597,9 +597,9 @@ class formsArithmeticParser
     }
 
     /**
-     * Retourne la définition des opérateurs disponibles
+     * Retourne la dÃ©finition des opÃ©rateurs disponibles
      *
-     * @return array définition des opérateurs disponibles
+     * @return array dÃ©finition des opÃ©rateurs disponibles
      */
     static public function getOperatorsDef()
     {
@@ -609,7 +609,7 @@ class formsArithmeticParser
     static public function test()
     {
         try {
-            // Problème opérateur
+            // ProblÃ¨me opÃ©rateur
             //$objParser = new self('C1 + C2 / / C3', array('C1' => 2, 'C2' => 4, 'C3' => 2));
             // ok
             //$objParser = new self('-(C1 + C2 / C3)', array('C1' => 2, 'C2' => 4, 'C3' => 2));

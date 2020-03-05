@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Copyright (c) 2010 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
@@ -28,7 +28,7 @@
  * @subpackage admin
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
@@ -38,7 +38,7 @@
 include_once './modules/forms/classes/formsArithmeticParser.php';
 
 /**
- * On commence par vérifier si l'identifiant du champ est valide.
+ * On commence par vÃ©rifier si l'identifiant du champ est valide.
  * Si ok => on l'ouvre. Sinon, nouveau champ.
  */
 
@@ -311,30 +311,30 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
 
     <p style="clear:both;padding:0 0 4px 4px;" class="ploopi_va">
         <input type="checkbox" class="checkbox" name="field_option_formview" id="field_option_formview" value="1" <?php if ($field->fields['option_formview']) echo 'checked'; ?> />
-        <span style="cursor:pointer;margin-right:15px;" onclick="javascript:$('field_option_formview').checked = !$('field_option_formview').checked;"><?php echo _FORMS_FIELD_FORMVIEW; ?></span>
+        <span style="cursor:pointer;margin-right:15px;" onclick="javascript:jQuery('#field_option_formview')[0].checked = !jQuery('#field_option_formview')[0].checked;"><?php echo _FORMS_FIELD_FORMVIEW; ?></span>
 
         <input type="checkbox" class="checkbox" name="field_option_arrayview" id="field_option_arrayview" value="1" <?php if ($field->fields['option_arrayview']) echo 'checked'; ?> />
-        <span style="cursor:pointer;margin-right:15px;" onclick="javascript:$('field_option_arrayview').checked = !$('field_option_arrayview').checked;"><?php echo _FORMS_FIELD_ARRAYVIEW; ?></span>
+        <span style="cursor:pointer;margin-right:15px;" onclick="javascript:jQuery('#field_option_arrayview')[0].checked = !jQuery('#field_option_arrayview')[0].checked;"><?php echo _FORMS_FIELD_ARRAYVIEW; ?></span>
 
         <input type="checkbox" class="checkbox" name="field_option_exportview" id="field_option_exportview" value="1" <?php if ($field->fields['option_exportview']) echo 'checked'; ?> />
-        <span style="cursor:pointer;margin-right:15px;" onclick="javascript:$('field_option_exportview').checked = !$('field_option_exportview').checked;"><?php echo _FORMS_FIELD_EXPORTVIEW; ?></span>
+        <span style="cursor:pointer;margin-right:15px;" onclick="javascript:jQuery('#field_option_exportview')[0].checked = !jQuery('#field_option_exportview')[0].checked;"><?php echo _FORMS_FIELD_EXPORTVIEW; ?></span>
 
         <input type="checkbox" class="checkbox" name="field_option_pagebreak" id="field_option_pagebreak" value="1" <?php if ($field->fields['option_pagebreak']) echo 'checked'; ?> />
-        <span style="cursor:pointer;margin-right:15px;" onclick="javascript:$('field_option_pagebreak').checked = !$('field_option_pagebreak').checked;"><?php echo _FORMS_FIELD_PAGEBREAK; ?></span>
+        <span style="cursor:pointer;margin-right:15px;" onclick="javascript:jQuery('#field_option_pagebreak')[0].checked = !jQuery('#field_option_pagebreak')[0].checked;"><?php echo _FORMS_FIELD_PAGEBREAK; ?></span>
     </p>
     <p style="clear:both;padding:0 0 4px 4px;" class="ploopi_va">
         <input type="checkbox" class="checkbox" name="field_option_needed" id="field_option_needed" value="1" <?php if ($field->fields['option_needed']) echo 'checked'; ?> />
-        <span style="cursor:pointer;margin-right:15px;" onclick="javascript:$('field_option_needed').checked = !$('field_option_needed').checked;"><?php echo _FORMS_FIELD_NEEDED; ?></span>
+        <span style="cursor:pointer;margin-right:15px;" onclick="javascript:jQuery('#field_option_needed')[0].checked = !jQuery('#field_option_needed')[0].checked;"><?php echo _FORMS_FIELD_NEEDED; ?></span>
 
         <input type="checkbox" class="checkbox" name="field_option_adminonly" id="field_option_adminonly" value="1" <?php if ($field->fields['option_adminonly']) echo 'checked'; ?> />
-        <span style="cursor:pointer;margin-right:15px;" onclick="javascript:$('field_option_adminonly').checked = !$('field_option_adminonly').checked;"><?php echo _FORMS_FIELD_ADMINONLY; ?></span>
+        <span style="cursor:pointer;margin-right:15px;" onclick="javascript:jQuery('#field_option_adminonly')[0].checked = !jQuery('#field_option_adminonly')[0].checked;"><?php echo _FORMS_FIELD_ADMINONLY; ?></span>
 
         <?php
         if ($objForm->fields['typeform'] == 'cms')
         {
             ?>
             <input type="checkbox" class="checkbox" name="field_option_wceview" id="field_option_wceview" value="1" <?php if ($field->fields['option_wceview']) echo 'checked'; ?> />
-            <span style="cursor:pointer;margin-right:15px;" onclick="javascript:$('field_option_wceview').checked = !$('field_option_wceview').checked;"><?php echo _FORMS_FIELD_WCEVIEW; ?></span>
+            <span style="cursor:pointer;margin-right:15px;" onclick="javascript:jQuery('#field_option_wceview')[0].checked = !jQuery('#field_option_wceview')[0].checked;"><?php echo _FORMS_FIELD_WCEVIEW; ?></span>
             <?php
         }
         ?>
@@ -350,7 +350,7 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
 
 
 <script language="javascript">
-ploopi_window_onload_stock(function() {
+jQuery(function() {
     forms_display_fieldvalues();
     forms_display_fieldformats();
     forms_display_tablelink();

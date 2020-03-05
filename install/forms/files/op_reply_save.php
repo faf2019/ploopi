@@ -14,7 +14,7 @@ if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open
 {
 
     /**
-     * En frontoffice on vérifie qu'il s'agit d'un formulaire dédié (et donc public)
+     * En frontoffice on vÃ©rifie qu'il s'agit d'un formulaire dÃ©diÃ© (et donc public)
      */
     if ($_SESSION['ploopi']['mode'] == 'frontoffice' && $objForm->fields['typeform'] != 'cms') ploopi\output::redirect();
 
@@ -26,7 +26,7 @@ if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open
     $objRecord = new formsRecord($objForm);
 
     /**
-     * On prépare l'email
+     * On prÃ©pare l'email
      * @var array
      */
 
@@ -40,29 +40,29 @@ if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open
         if (!empty($_GET['forms_record_id']))
         {
             $objRecord->open($_GET['forms_record_id']);
-            $arrEmailContent['Formulaire']['Opération'] = 'Modification d\'Enregistrement';
+            $arrEmailContent['Formulaire']['OpÃ©ration'] = 'Modification d\'Enregistrement';
         }
         else // Nouvel enregistrement
         {
-            $arrEmailContent['Formulaire']['Opération'] = 'Nouvel Enregistrement';
+            $arrEmailContent['Formulaire']['OpÃ©ration'] = 'Nouvel Enregistrement';
         }
     }
 
 
     /**
-     * Permet d'enregistrer la demande de stockage d'un champ de type fichier (il faut attendre de récupérer l'id de l'enregistrement avant de stocker le fichier)
+     * Permet d'enregistrer la demande de stockage d'un champ de type fichier (il faut attendre de rÃ©cupÃ©rer l'id de l'enregistrement avant de stocker le fichier)
      */
     $booFileToMove = false;
 
     /**
-     * Permet de stocker le contenu des variables numériques (pour les champs calculés)
+     * Permet de stocker le contenu des variables numÃ©riques (pour les champs calculÃ©s)
      */
     $arrVariables = array();
     $booCalculation = false;
     $booAggregate = false;
 
     /**
-     * Permet de stocker les groupes conditionnels utilisés
+     * Permet de stocker les groupes conditionnels utilisÃ©s
      */
     $arrGroups = array();
 
@@ -72,7 +72,7 @@ if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open
     $arrFields = $objForm->getFields();
 
     /**
-     * Traitement des champs et mise à jour de l'enregistrement
+     * Traitement des champs et mise Ã  jour de l'enregistrement
      */
 
     foreach($arrFields as $objField)
@@ -108,11 +108,11 @@ if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open
             break;
 
             case 'calculation':
-                // Non traité ici
+                // Non traitÃ© ici
                 $booFieldOk = true;
                 $booCalculation = true;
 
-                // On va détecter si le calcul fait appel à un agrégat (dans ce cas il faut recalculer toutes les données du formulaire)
+                // On va dÃ©tecter si le calcul fait appel Ã  un agrÃ©gat (dans ce cas il faut recalculer toutes les donnÃ©es du formulaire)
                 $objParser = new formsArithmeticParser($objField->fields['formula']);
 
                 // Extraction des variables de l'expression
@@ -159,12 +159,12 @@ if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open
 
         switch($objField->fields['type'])
         {
-            // Cas particulier, on n'écrase pas une valeur existante par une valeur vide
+            // Cas particulier, on n'Ã©crase pas une valeur existante par une valeur vide
             case 'file':
                 if (!empty($strValue)) $objRecord->fields[$objField->fields['fieldname']] = $strValue;
             break;
 
-            // Cas général, on enregistre la nouvelle valeur
+            // Cas gÃ©nÃ©ral, on enregistre la nouvelle valeur
             default:
                 $objRecord->fields[$objField->fields['fieldname']] = $strValue;
             break;
@@ -184,14 +184,14 @@ if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open
 
 
     /**
-     * Contrôle des champs autorisés selon les groupes conditionnels
+     * ContrÃ´le des champs autorisÃ©s selon les groupes conditionnels
      */
 
     foreach($arrFields as $objField)
     {
         if (!empty($objField->fields['id_group']))
         {
-            // Groupe non chargé
+            // Groupe non chargÃ©
             if (!isset($arrGroups[$objField->fields['id_group']]))
             {
                 // On va ouvrir le groupe
@@ -207,7 +207,7 @@ if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open
             if (isset($arrGroups[$objField->fields['id_group']]))
             {
                 $arrConditions = $objGroup->getConditions();
-                // Variables utilisées dans la condition
+                // Variables utilisÃ©es dans la condition
                 $arrCondVars = array();
 
                 // On va "calculer" chaque condition
@@ -249,30 +249,45 @@ if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open
                                     $booRes = $booRes || strpos($strValue, $row['value']) !== false;
                                 break;
 
+                                case 'in':
+                                    $booRes = $booRes || in_array($strValue, explode(',', $row['value']));
+                                break;
+
+                                case 'between':
+                                    $values = explode(';', $row['value']);
+                                    $booRes = $booRes || ($strValue >= $values[0] && (!isset($values[1]) || $strValue <= $values[1]));
+                                break;
+
                                 default:
                                     switch($row['op'])
                                     {
                                         case '=':
+                                        case 'eq':
                                             $booRes = $booRes || $strValue == $row['value'];
                                         break;
 
                                         case '>':
+                                        case 'gt':
                                             $booRes = $booRes || $strValue > $row['value'];
                                         break;
 
                                         case '>=':
+                                        case 'ge':
                                             $booRes = $booRes || $strValue >= $row['value'];
                                         break;
 
                                         case '<':
+                                        case 'lt':
                                             $booRes = $booRes || $strValue < $row['value'];
                                         break;
 
                                         case '<=':
+                                        case 'le':
                                             $booRes = $booRes || $strValue <= $row['value'];
                                         break;
 
                                         case '<>':
+                                        case 'ne':
                                             $booRes = $booRes || $strValue != $row['value'];
                                         break;
                                     }
@@ -286,10 +301,10 @@ if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open
                     }
                 }
 
-                // Condition valide par défaut (si erreur dans l'expression)
+                // Condition valide par dÃ©faut (si erreur dans l'expression)
                 $booRes = true;
 
-                // Calcul de l'expression booléenne globale du groupe
+                // Calcul de l'expression boolÃ©enne globale du groupe
                 try {
                     $objParser = new formsBooleanParser($objGroup->fields['formula'], $arrCondVars);
                     $booRes = $objParser->getVal();
@@ -301,7 +316,7 @@ if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open
             }
         }
 
-        // Mise à jour des variables pour les calculs
+        // Mise Ã  jour des variables pour les calculs
         $arrVariables['C'.$objField->fields['position']] = $objRecord->fields[$objField->fields['fieldname']];
         if (!is_numeric($arrVariables['C'.$objField->fields['position']])) $arrVariables['C'.$objField->fields['position']] = 0;
 
@@ -316,23 +331,23 @@ if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open
     {
         if ($booAggregate)
         {
-            // Pré-enregistrement (utile pour le calcul des agrégats)
+            // PrÃ©-enregistrement (utile pour le calcul des agrÃ©gats)
             $objRecord->save();
 
-            // Recalcul complet des données du formulaire
+            // Recalcul complet des donnÃ©es du formulaire
             $objForm->calculate();
 
-            // Actualisation du l'enregistrement avec les données calculées
+            // Actualisation du l'enregistrement avec les donnÃ©es calculÃ©es
             $objRecord->open($objRecord->fields['#id']);
         }
-        else // Calcul standard, juste l'enregistrement à mettre à jour
+        else // Calcul standard, juste l'enregistrement Ã  mettre Ã  jour
         {
             foreach($objForm->getFields() as $objField)
             {
                 if ($objField->fields['type'] == 'calculation')
                 {
                     try {
-                        // Interprétation du calcul
+                        // InterprÃ©tation du calcul
                         $objParser = new formsArithmeticParser($objField->fields['formula'], $arrVariables);
                         $arrVariables['C'.$objField->fields['position']] = $objRecord->fields[$objField->fields['fieldname']] = $objParser->getVal();
                     }
@@ -349,7 +364,7 @@ if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open
 
     // Sauvegarde en session
     ploopi\session::setvar($strVarName, null);
-    setcookie($strVarName, null, 0);
+    setcookie($strVarName, '', time() - 3600);
 
     /**
      * Il y avait au moins un champ de type "file"
@@ -392,17 +407,17 @@ if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open
     }
 
     /**
-     * Contrôle des champs autorisés selon les groupes conditionnels
+     * ContrÃ´le des champs autorisÃ©s selon les groupes conditionnels
      */
 
     $arrEmailContent['Formulaire']['Titre'] = $objForm->fields['label'];
     $arrEmailContent['Formulaire']['Date'] = $objRecord->fields['date_validation'];
     $arrEmailContent['Formulaire']['Adresse IP'] = $objRecord->fields['ip'];
-    $arrEmailContent['Formulaire']['Opération'] = 'Nouvel enregistrement';
+    $arrEmailContent['Formulaire']['OpÃ©ration'] = 'Nouvel enregistrement';
 
 
-    // On récupère les utilisateurs/groupes pour lesquels il faut envoyer un mail
-    // Le dernier paramètre est très important depuis un appel WCE (l'id module étant déterminé par le formulaire)
+    // On rÃ©cupÃ¨re les utilisateurs/groupes pour lesquels il faut envoyer un mail
+    // Le dernier paramÃ¨tre est trÃ¨s important depuis un appel WCE (l'id module Ã©tant dÃ©terminÃ© par le formulaire)
     $arrShares = ploopi\share::get(-1, _FORMS_OBJECT_FORM, $objForm->fields['id'], $objForm->fields['id_module']);
 
     $_SESSION['ploopi']['tickets']['users_selected'] = array();

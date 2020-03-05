@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -27,7 +27,7 @@
  * @subpackage field
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
@@ -39,13 +39,13 @@ include_once './modules/forms/classes/formsRecord.php';
 include_once './modules/forms/classes/formsArithmeticParser.php';
 
 /**
- * Classe d'accès à la table ploopi_mod_forms_field
+ * Classe d'accÃ¨s Ã  la table ploopi_mod_forms_field
  *
  * @package forms
  * @subpackage field
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 class formsField extends ploopi\data_object
@@ -58,7 +58,7 @@ class formsField extends ploopi\data_object
 
 
     /**
-     * Retourne le chemin physique d'un fichier stocké dans un champ
+     * Retourne le chemin physique d'un fichier stockÃ© dans un champ
      * @param integer $intFormsId
      * @param integer $intRecordId
      * @param string $strFileName
@@ -71,7 +71,7 @@ class formsField extends ploopi\data_object
     }
 
     /**
-     * Met à jour les formules de champs calculés lors d'un changement de position
+     * Met Ã  jour les formules de champs calculÃ©s lors d'un changement de position
      */
 
     private static function _updateFormulas($arrPositions)
@@ -108,7 +108,7 @@ class formsField extends ploopi\data_object
     }
 
     /**
-     * Gère le clone
+     * GÃ¨re le clone
      */
 
     public function __clone()
@@ -152,16 +152,16 @@ class formsField extends ploopi\data_object
     }
 
     /**
-     * Enregistre les données brutes du champ
+     * Enregistre les donnÃ©es brutes du champ
      *
-     * @return int identifiant du champ enregistré
+     * @return int identifiant du champ enregistrÃ©
      */
     public function quicksave() { return parent::save(); }
 
     /**
      * Enregistre le champ
      *
-     * @return int identifiant du champ enregistré
+     * @return int identifiant du champ enregistrÃ©
      */
     public function save($booUpdateTable = true)
     {
@@ -177,7 +177,7 @@ class formsField extends ploopi\data_object
          * Traitement de la position
          */
 
-        // Contrôle de validité de la position
+        // ContrÃ´le de validitÃ© de la position
         if (is_numeric($this->fields['position']) && $this->fields['position'] < 1) $this->fields['position'] = 1;
         else
         {
@@ -187,7 +187,7 @@ class formsField extends ploopi\data_object
             if (!is_numeric($this->fields['position']) || $this->fields['position'] > $row['maxpos']+(int)$booIsNew) $this->fields['position'] = $row['maxpos']+(int)$booIsNew;
         }
 
-        // Positions modifiées (utile pour modification des formules des champs calculés)
+        // Positions modifiÃ©es (utile pour modification des formules des champs calculÃ©s)
         $arrPositions = array();
 
         if ($booIsNew)
@@ -196,27 +196,27 @@ class formsField extends ploopi\data_object
             $intMax = current($db->fetchrow());
             for ($intI = $this->fields['position']; $intI <= $intMax; $intI++) $arrPositions[$intI] = $intI+1;
 
-            // Déplacer tous les champs en dessous de la position d'insertion vers le bas
+            // DÃ©placer tous les champs en dessous de la position d'insertion vers le bas
             $db->query("UPDATE ploopi_mod_forms_field SET position=position+1 where position >= {$this->fields['position']} AND id_form = {$this->fields['id_form']}");
         }
         else
         {
-            // Nouvelle position définie
+            // Nouvelle position dÃ©finie
             if ($this->fields['position'] != $this->_intOriginalPosition)
             {
-                // Il faut impacter les formules des champs calculés
+                // Il faut impacter les formules des champs calculÃ©s
                 $arrPositions[$this->_intOriginalPosition] = $this->fields['position'];
 
                 if ($this->fields['position'] > $this->_intOriginalPosition)
                 {
                     for ($intI = $this->_intOriginalPosition+1; $intI <= $this->fields['position']; $intI++) $arrPositions[$intI] = $intI-1;
-                    // Déplacer tous les champs entre la position d'origine et la position de destination vers le haut
+                    // DÃ©placer tous les champs entre la position d'origine et la position de destination vers le haut
                     $db->query("UPDATE ploopi_mod_forms_field SET position=position-1 WHERE position BETWEEN ".($this->_intOriginalPosition+1)." AND {$this->fields['position']} AND id_form = {$this->fields['id_form']}");
                 }
                 else
                 {
                     for ($intI = $this->fields['position']; $intI <= $this->_intOriginalPosition-1; $intI++) $arrPositions[$intI] = $intI+1;
-                    // Déplacer tous les champs entre la position de destination et la position d'origine vers le bas
+                    // DÃ©placer tous les champs entre la position de destination et la position d'origine vers le bas
                     $db->query("UPDATE ploopi_mod_forms_field SET position=position+1 where position BETWEEN {$this->fields['position']} AND ".($this->_intOriginalPosition-1)." AND id_form = {$this->fields['id_form']}");
                 }
             }
@@ -228,7 +228,7 @@ class formsField extends ploopi\data_object
         $res = parent::save();
 
         /**
-         * Mise à jour de la bdd
+         * Mise Ã  jour de la bdd
          */
         if ($booUpdateTable && !empty($this->fields['fieldname']))
         {
@@ -249,14 +249,14 @@ class formsField extends ploopi\data_object
                 else
                 {
                     /**
-                     * Mise à jour du champ physique
+                     * Mise Ã  jour du champ physique
                      */
 
                     // Modification de la structure si changement de nom ou de type
                     if ($this->_strOriginalFieldName != $this->fields['fieldname'] || $this->_strOriginalType != $strType)
                     {
-                        // Attention le changement de structure peut ne pas être compatible avec l'index existant.
-                        // Il faut donc supprimer l'index à chaque modification de structure, puis le recréer
+                        // Attention le changement de structure peut ne pas Ãªtre compatible avec l'index existant.
+                        // Il faut donc supprimer l'index Ã  chaque modification de structure, puis le recrÃ©er
                         $db->query("SHOW INDEXES FROM `".$objForm->getDataTableName()."` WHERE Key_name = '{$this->_strOriginalFieldName}'");
                         if ($db->numrows()) $db->query("ALTER TABLE `".$objForm->getDataTableName()."` DROP INDEX `{$this->_strOriginalFieldName}`");
 
@@ -285,12 +285,12 @@ class formsField extends ploopi\data_object
         }
 
         /**
-         * Mise à jour des formules de champs calculés
+         * Mise Ã  jour des formules de champs calculÃ©s
          */
         if (!empty($arrPositions)) self::_updateFormulas($arrPositions);
 
         /**
-         * Mise à jour des données de champs calculés
+         * Mise Ã  jour des donnÃ©es de champs calculÃ©s
          */
 
         if ($this->fields['type'] == 'calculation' && $this->fields['formula'] != $this->_strOriginalFormula)
@@ -322,7 +322,7 @@ class formsField extends ploopi\data_object
             if ($objForm->open($this->fields['id_form'])) $db->query("ALTER TABLE `".$objForm->getDataTableName()."` DROP `{$this->_strOriginalFieldName}`");
         }
 
-        // Il faut impacter les formules des champs calculés
+        // Il faut impacter les formules des champs calculÃ©s
         $arrPositions[$this->fields['position']] = null;
 
         // Autres changements de positions
@@ -331,7 +331,7 @@ class formsField extends ploopi\data_object
         for ($intI = $this->fields['position']+1; $intI <= $intMax; $intI++) $arrPositions[$intI] = $intI-1;
 
         /**
-         * Mise à jour des position des autres champs
+         * Mise Ã  jour des position des autres champs
          */
         $db->query("UPDATE `ploopi_mod_forms_field` SET position = position - 1 WHERE position > {$this->fields['position']} AND id_form = {$this->fields['id_form']}");
 
@@ -341,9 +341,9 @@ class formsField extends ploopi\data_object
     }
 
     /**
-     * Génère et met à jour le nom physique du champ utilisé pour l'export physique du formulaire.
-     * Attention, fonction récursive.
-     * @param boolean $booFixUnicity permet de gérer les problèmes de doublons
+     * GÃ©nÃ¨re et met Ã  jour le nom physique du champ utilisÃ© pour l'export physique du formulaire.
+     * Attention, fonction rÃ©cursive.
+     * @param boolean $booFixUnicity permet de gÃ©rer les problÃ¨mes de doublons
      */
     private function _createPhysicalName($intCount = 0)
     {
@@ -352,16 +352,16 @@ class formsField extends ploopi\data_object
         $strFieldName = '';
 
         /**
-         * Génération du nom physique
+         * GÃ©nÃ©ration du nom physique
          */
         if (empty($this->fields['fieldname']))
         {
             /**
              * Suppression des accents
              * Conversion en minuscule
-             * Conversion des caractères non alphanum
+             * Conversion des caractÃ¨res non alphanum
              * Suppression des espaces inutiles
-             * Ajout d'un préfixe obligatoire "form_"
+             * Ajout d'un prÃ©fixe obligatoire "form_"
              */
 
             $strFieldName = substr('_'.trim(preg_replace("/[^[:alnum:]]+/", "_", ploopi\str::convertaccents(strtolower(trim($this->fields['name'])))), '_'), 0, 60);
@@ -369,11 +369,11 @@ class formsField extends ploopi\data_object
         else $strFieldName = $strFieldName = substr('_'.trim(preg_replace("/[^[:alnum:]]+/", "_", ploopi\str::convertaccents(strtolower(trim($this->fields['fieldname'])))), '_'), 0, 60);
 
 
-        // Fix spécial doublon
+        // Fix spÃ©cial doublon
         if ($intCount > 0) $strFieldName .= '_'.$intCount;
 
         /**
-         * Vérification de l'unicité
+         * VÃ©rification de l'unicitÃ©
          */
         $objQuery = new ploopi\query_select();
         $objQuery->add_select('count(*) as c');
@@ -388,7 +388,7 @@ class formsField extends ploopi\data_object
 
 
     /**
-     * Génère le type SQL pour le champ
+     * GÃ©nÃ¨re le type SQL pour le champ
      * @return string $strType Type SQL
      */
     public function getSqlType()
@@ -479,9 +479,9 @@ class formsField extends ploopi\data_object
     }
 
     /**
-     * Retourne le résultat d'une fonction d'agrégat sur le champ
-     * @param string $strFunction fonction appliquée (CNT, SUM, MIN, MAX, AVG, AVG, STD, VAR)
-     * @return mixed résultat ou null
+     * Retourne le rÃ©sultat d'une fonction d'agrÃ©gat sur le champ
+     * @param string $strFunction fonction appliquÃ©e (CNT, SUM, MIN, MAX, AVG, AVG, STD, VAR)
+     * @return mixed rÃ©sultat ou null
      */
     public function getAggregate($strFunction)
     {

@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Copyright (c) 2010 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
@@ -22,13 +22,13 @@
 */
 
 /**
- * Gestion des objets insérables dans une page de contenu (WebEdit)
+ * Gestion des objets insÃ©rables dans une page de contenu (WebEdit)
  *
  * @package forms
  * @subpackage wce
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**

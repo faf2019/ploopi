@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -27,11 +27,11 @@
  * @subpackage forms_graphic
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
- * Inclusion des dépendances
+ * Inclusion des dÃ©pendances
  */
 include_once './modules/forms/classes/formsForm.php';
 include_once './modules/forms/classes/formsField.php';
@@ -39,13 +39,13 @@ include_once './modules/forms/classes/formsField.php';
 
 
 /**
- * Classe d'accès à la table ploopi_mod_forms_graphic
+ * Classe d'accÃ¨s Ã  la table ploopi_mod_forms_graphic
  *
  * @package forms
  * @subpackage forms_graphic
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 class formsGraphic extends ploopi\data_object
@@ -78,11 +78,11 @@ class formsGraphic extends ploopi\data_object
 
 
     /**
-     * Calcule la différence entre 2 dates (version simple)
+     * Calcule la diffÃ©rence entre 2 dates (version simple)
      * @param integer $intTs2
      * @param integer $intTs2
      * @param string $strType 'h' (hours), 'd' (days), 'w' (weeks), 'm' (months)
-     * @return integer différence dans l'unité demandée
+     * @return integer diffÃ©rence dans l'unitÃ© demandÃ©e
      */
     private static function __diffDate($intTs1, $intTs2, $strType = 'h')
     {
@@ -96,7 +96,7 @@ class formsGraphic extends ploopi\data_object
     }
 
     /**
-     * Calcule le dégradé par étape entre 2 couleurs
+     * Calcule le dÃ©gradÃ© par Ã©tape entre 2 couleurs
      */
     private static function __gradient($HexFrom, $HexTo, $ColorSteps)
     {
@@ -171,7 +171,7 @@ class formsGraphic extends ploopi\data_object
     public function __construct() { parent::__construct('ploopi_mod_forms_graphic'); }
 
     /**
-     * Gère le clone
+     * GÃ¨re le clone
      */
 
     public function __clone()
@@ -192,10 +192,10 @@ class formsGraphic extends ploopi\data_object
 
         $arrOptions = array();
 
-        // Recherche des paramètres
+        // Recherche des paramÃ¨tres
         foreach($this->fields as $strField => $strValue)
         {
-            // C'est un paramètre de graphique
+            // C'est un paramÃ¨tre de graphique
             if (substr($strField, 0, 6) == 'param_')
             {
                 $arrOptions[substr($strField, 6-strlen($strField))] = $strValue;
@@ -208,18 +208,18 @@ class formsGraphic extends ploopi\data_object
 
         if (!empty($this->fields['id_form']) && $objForm->open($this->fields['id_form']))
         {
-            // Lecture des données
+            // Lecture des donnÃ©es
             list($arrFormData) = $objForm->prepareData(true, true, false, true);
 
-            // Jeu de données vide => erreur
-            if (empty($arrFormData)) self::__renderError("Il n'y a pas de données à afficher", $intGraphWidth, $intGraphHeight);
+            // Jeu de donnÃ©es vide => erreur
+            if (empty($arrFormData)) self::__renderError("Il n'y a pas de donnÃ©es Ã  afficher", $intGraphWidth, $intGraphHeight);
 
             // Lecture des champs
             $arrFormFields = $objForm->getFields();
 
             switch($this->fields['type'])
             {
-                // Génération des secteurs + 3d
+                // GÃ©nÃ©ration des secteurs + 3d
                 case 'pie':
                 case 'pie3d':
                     include_once './modules/forms/jpgraph/jpgraph_pie.php';
@@ -240,8 +240,8 @@ class formsGraphic extends ploopi\data_object
                         }
                     }
 
-                    // Création du graph
-                    // On spécifie la largeur et la hauteur du graph
+                    // CrÃ©ation du graph
+                    // On spÃ©cifie la largeur et la hauteur du graph
                     $objGraph = new PieGraph($intGraphWidth, $intGraphHeight);
 
                     $objGraph->title->Set($this->fields['label']);
@@ -254,10 +254,10 @@ class formsGraphic extends ploopi\data_object
                     if ($this->fields['type'] == 'pie3d') $objPie = new PiePlot3D(array_values($arrData));
                     else $objPie = new PiePlot(array_values($arrData));
 
-                    // Position du graphique (0.5=centré)
+                    // Position du graphique (0.5=centrÃ©)
                     $objPie->SetCenter($arrOptions['center_x'], $arrOptions['center_y']);
 
-                    // Définition du format d'affichage
+                    // DÃ©finition du format d'affichage
                     if ($this->fields['percent'])
                     {
                         $objPie->value->SetFormat('%d %%');
@@ -276,7 +276,7 @@ class formsGraphic extends ploopi\data_object
                     $objGraph->Add($objPie);
                 break;
 
-                // Génération des histogrammes et des courbes + cumuls
+                // GÃ©nÃ©ration des histogrammes et des courbes + cumuls
                 case 'bar':
                 case 'barc':
                 case 'line':
@@ -287,24 +287,24 @@ class formsGraphic extends ploopi\data_object
                     include_once './modules/forms/jpgraph/jpgraph_bar.php';
                     include_once './modules/forms/jpgraph/jpgraph_radar.php';
 
-                    $arrLabels = array();        // tableau des libellés du graphique
+                    $arrLabels = array();        // tableau des libellÃ©s du graphique
                     $arrDataModel = array();     // tableau type d'un dataset (une courbe)
-                    $arrData = array();          // Tableau des données
+                    $arrData = array();          // Tableau des donnÃ©es
                     $arrCount = array();         // Tableau des compteurs (pour moyenne notamment)
                     $arrTotal = array();         // tableau contenant le total pour chaque indice (permet de calculer les valeurs en pourcentage)
 
                     $intTsNow = ploopi\date::createtimestamp();
 
                     /**
-                     * Lecture du champ qui sert de référence pour la base de temps
+                     * Lecture du champ qui sert de rÃ©fÃ©rence pour la base de temps
                      */
                     $strTimeField = $this->fields['timefield'];
                     if ($strTimeField == '0') $strTimeField = 'date_validation';
                     else $strTimeField = $arrFormFields[$strTimeField]->fields['fieldname'];
 
                     /**
-                     * Détermination du min/max de la base de temps en fonction du jeu de données
-                     * @todo optimiser la recherche (en adaptant la requête ?)
+                     * DÃ©termination du min/max de la base de temps en fonction du jeu de donnÃ©es
+                     * @todo optimiser la recherche (en adaptant la requÃªte ?)
                      */
 
                     $intTsMin = null;
@@ -319,12 +319,12 @@ class formsGraphic extends ploopi\data_object
                     }
 
                     /**
-                     * Initialisation des données
+                     * Initialisation des donnÃ©es
                      */
                     switch($this->fields['line_aggregation'])
                     {
                         case 'hour':
-                            // Définition de l'intervalle de données
+                            // DÃ©finition de l'intervalle de donnÃ©es
                             $intTsMin = substr($intTsMin, 0, 10).'0000';
                             $intTsMax = substr($intTsMax, 0, 10).'5959';
 
@@ -363,7 +363,7 @@ class formsGraphic extends ploopi\data_object
                         break;
 
                         case 'day':
-                            // Définition de l'intervalle de données
+                            // DÃ©finition de l'intervalle de donnÃ©es
                             $intTsMin = substr($intTsMin, 0, 8).'000000';
                             $intTsMax = substr($intTsMax, 0, 8).'235959';
 
@@ -407,7 +407,7 @@ class formsGraphic extends ploopi\data_object
                         break;
 
                         case 'month':
-                            // Définition de l'intervalle de données
+                            // DÃ©finition de l'intervalle de donnÃ©es
                             $intTsMin = substr($intTsMin, 0, 6).'01000000';
                             $intTsMax = substr($intTsMax, 0, 6).'31235959';
 
@@ -431,30 +431,30 @@ class formsGraphic extends ploopi\data_object
                                 if ($intGraphWidth < 500) $intGraphWidth = 500;
                             }
 
-                            $strTitleX = 'Mois / Année';
+                            $strTitleX = 'Mois / AnnÃ©e';
                         break;
                     }
 
                     // Intervalle trop petit => erreur
-                    if ($intI <= 1) self::__renderError("Il n'y a pas de données à afficher", $intGraphWidth, $intGraphHeight);
+                    if ($intI <= 1) self::__renderError("Il n'y a pas de donnÃ©es Ã  afficher", $intGraphWidth, $intGraphHeight);
 
                     // Initialisation des dataset avec 0
                     for ($intI = 1; $intI <= 5; $intI++) // Courbes
                     {
                         if (!empty($this->fields["line{$intI}_field"])) // Courbe valide
                         {
-                            $arrData[$intI] = $arrDataModel; // Un tableau de données par courbe
-                            $arrCount[$intI] = $arrDataModel; // Un tableau de données par courbe
+                            $arrData[$intI] = $arrDataModel; // Un tableau de donnÃ©es par courbe
+                            $arrCount[$intI] = $arrDataModel; // Un tableau de donnÃ©es par courbe
                         }
 
                     }
 
                     foreach($arrFormData as $arrLine)
                     {
-                        // 1. Filtrage sur la date par rapport à la période choisie
+                        // 1. Filtrage sur la date par rapport Ã  la pÃ©riode choisie
                         if ($arrLine[$strTimeField] >= $intTsMin && $arrLine[$strTimeField] <= $intTsMax)
                         {
-                            // 2. Détermination de l'appartenance à la courbe en fonction du filtre
+                            // 2. DÃ©termination de l'appartenance Ã  la courbe en fonction du filtre
                             foreach(array_keys($arrData) as $intI)
                             {
                                 $booFilterOk = false;
@@ -508,9 +508,9 @@ class formsGraphic extends ploopi\data_object
                                 }
                                 else $booFilterOk = true;
 
-                                if ($booFilterOk) // Filtre ok, la donnée appartient à cette courbe
+                                if ($booFilterOk) // Filtre ok, la donnÃ©e appartient Ã  cette courbe
                                 {
-                                    // Détermination de l'indice de la donnée sur la courbe
+                                    // DÃ©termination de l'indice de la donnÃ©e sur la courbe
                                     $intIndice = 0;
 
                                     switch($this->fields['line_aggregation'])
@@ -564,7 +564,7 @@ class formsGraphic extends ploopi\data_object
                         }
                     }
 
-                    // Post-traitement spécial pour calculer la moyenne
+                    // Post-traitement spÃ©cial pour calculer la moyenne
                     foreach($arrData as $intI => $arrDataDetail)
                     {
                         if ($this->fields["line{$intI}_operation"] == 'avg')
@@ -576,7 +576,7 @@ class formsGraphic extends ploopi\data_object
                         }
                     }
 
-                    // Post-traitement spécial pour calculer les valeurs en pourcentage
+                    // Post-traitement spÃ©cial pour calculer les valeurs en pourcentage
                     if ($this->fields["percent"])
                     {
                         foreach($arrData as $intI => $arrDataDetail)
@@ -589,7 +589,7 @@ class formsGraphic extends ploopi\data_object
                     }
 
 
-                    // Post-traitement spécial pour le calcul des cumuls
+                    // Post-traitement spÃ©cial pour le calcul des cumuls
                     if ($this->fields['type'] == 'linec' || $this->fields['type'] == 'barc' || $this->fields['type'] == 'radarc')
                     {
                         foreach(array_keys($arrDataModel) as $intIndice)
@@ -604,7 +604,7 @@ class formsGraphic extends ploopi\data_object
                     }
 
 
-                    // Post-traitement spécial pour calculer les valeurs en pourcentage
+                    // Post-traitement spÃ©cial pour calculer les valeurs en pourcentage
                     if ($this->fields["percent"])
                     {
                         foreach($arrData as $intI => $arrDataDetail)
@@ -658,10 +658,10 @@ class formsGraphic extends ploopi\data_object
                     $objGraph->title->Set($this->fields['label']);
                     $objGraph->title->SetFont($arrOptions['font'], FS_NORMAL, $arrOptions['font_size_title']);
 
-                    // Mise en forme de la légende
+                    // Mise en forme de la lÃ©gende
                     $objGraph->legend->SetFont($arrOptions['font'], FS_NORMAL, $arrOptions['font_size_legend']);
-                    //$objGraph->legend->SetLayout(LEGEND_HOR); // Bloc de légende horizontal
-                    $objGraph->legend->SetAbsPos(0, 40, "right", "top"); // Positionnement absolu de la légende
+                    //$objGraph->legend->SetLayout(LEGEND_HOR); // Bloc de lÃ©gende horizontal
+                    $objGraph->legend->SetAbsPos(0, 40, "right", "top"); // Positionnement absolu de la lÃ©gende
 
                     $objGraph->SetFrame(false); // Cadre
                     $objGraph->SetColor('white'); // Couleur de fond
@@ -685,7 +685,7 @@ class formsGraphic extends ploopi\data_object
                         {
                             case 'line':
                             case 'linec':
-                                // Création d'une série de points avec une courbe
+                                // CrÃ©ation d'une sÃ©rie de points avec une courbe
                                 $arrObjPlots[] = $objPlots = new LinePlot($arrPlots);
 
                                 // Chaque point de la courbe
@@ -700,7 +700,7 @@ class formsGraphic extends ploopi\data_object
 
                             case 'bar':
                             case 'barc':
-                                // Création d'une série de barres
+                                // CrÃ©ation d'une sÃ©rie de barres
                                 $arrObjPlots[] = $objPlots = new BarPlot($arrPlots);
                                 if ($this->fields['type'] == 'bar' || $intC == sizeof($arrData)-1)
                                 if ($arrOptions['shadow'])
@@ -768,7 +768,7 @@ class formsGraphic extends ploopi\data_object
 
                     if (in_array($this->fields['type'], array('linec', 'barc', 'radarc')))
                     {
-                        // Inversion de l'ordre d'affchage des courbes (notamment pour gérer correctement l'affichage des courbes cumulées)
+                        // Inversion de l'ordre d'affchage des courbes (notamment pour gÃ©rer correctement l'affichage des courbes cumulÃ©es)
                         $arrObjPlots = array_reverse($arrObjPlots);
                     }
 
@@ -791,7 +791,7 @@ class formsGraphic extends ploopi\data_object
             // Vidage du buffer de Ploopi
             ploopi\buffer::clean();
 
-            // Génération du graphique
+            // GÃ©nÃ©ration du graphique
             $objGraph->Stroke();
 
             $strDisposition = 'attachment';

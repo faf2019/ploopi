@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Copyright (c) 2010 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
@@ -22,13 +22,13 @@
 */
 
 /**
- * Affichage des données d'un formulaire
+ * Affichage des donnÃ©es d'un formulaire
  *
  * @package forms
  * @subpackage public
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 // Admin oui/non ?
@@ -51,13 +51,13 @@ echo ploopi\skin::get()->open_simplebloc(ploopi\str::htmlentities($objForm->fiel
     <?php
     if (ploopi\acl::isactionallowed(_FORMS_ACTION_FILTER))
     {
-        // Lecture des champs dynamiques et séparateurs du formulaire
+        // Lecture des champs dynamiques et sÃ©parateurs du formulaire
         $arrFields = $objForm->getFields(true);
 
         if (!isset($_SESSION['forms'][$_SESSION['ploopi']['moduleid']]['forms_filter_box'])) $_SESSION['forms'][$_SESSION['ploopi']['moduleid']]['forms_filter_box'] = 'none';
         ?>
-        <a class="ploopi_form_title" href="javascript:void(0);" onclick="javascript:ploopi_switchdisplay('forms_filter_box');ploopi_xmlhttprequest('index-quick.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=forms_xml_switchdisplay&switch=forms_filter_box&display='+$('forms_filter_box').style.display, true);">
-            Filtrage des données<sub style="font-weight:normal;">&nbsp;&nbsp;&nbsp;(cliquez pour ouvrir/fermer)</sub>
+        <a class="ploopi_form_title" href="javascript:void(0);" onclick="javascript:ploopi.switchdisplay('forms_filter_box');ploopi.xhr.send('index-quick.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=forms_xml_switchdisplay&switch=forms_filter_box&display='+jQuery('#forms_filter_box')[0].style.display, true);">
+            Filtrage des donnÃ©es<sub style="font-weight:normal;">&nbsp;&nbsp;&nbsp;(cliquez pour ouvrir/fermer)</sub>
         </a>
         <div id="forms_filter_box"  style="display:<?php echo ploopi\str::htmlentities($_SESSION['forms'][$_SESSION['ploopi']['moduleid']]['forms_filter_box']); ?>;">
             <form style="margin:0;" id="filtre_frm" action="<?php echo ploopi\crypt::urlencode('admin.php'); ?>" method="post">
@@ -126,7 +126,7 @@ echo ploopi\skin::get()->open_simplebloc(ploopi\str::htmlentities($objForm->fiel
             {
                 ?>
                 <p>
-                    <input type="checkbox" name="unlockbackup" <?php if ($_SESSION['forms'][$objForm->fields['id']]["unlockbackup"]) echo 'checked'; ?> value="1">Afficher les enregistrements archivés
+                    <input type="checkbox" name="unlockbackup" <?php if ($_SESSION['forms'][$objForm->fields['id']]["unlockbackup"]) echo 'checked'; ?> value="1">Afficher les enregistrements archivÃ©s
                 </p>
                 <?php
             }
@@ -136,7 +136,7 @@ echo ploopi\skin::get()->open_simplebloc(ploopi\str::htmlentities($objForm->fiel
                 if (ploopi\acl::isactionallowed(_FORMS_ACTION_DELETE))
                 {
                     ?>
-                    <input type="button" class="flatbutton" value="Supprimer les données filtrées" onclick="javascript:if (confirm('Attention, cette action va supprimer définitivement les données filtrées, continuer ?')) {$('filtre_frm').op.value='forms_deletedata';$('filtre_frm').submit();}">
+                    <input type="button" class="flatbutton" value="Supprimer les donnÃ©es filtrÃ©es" onclick="javascript:if (confirm('Attention, cette action va supprimer dÃ©finitivement les donnÃ©es filtrÃ©es, continuer ?')) {jQuery('#filtre_frm')[0].op.value='forms_deletedata';jQuery('#filtre_frm')[0].submit();}">
                     <?php
                 }
                 ?>
@@ -157,8 +157,8 @@ echo ploopi\skin::get()->open_simplebloc(ploopi\str::htmlentities($objForm->fiel
     {
         $autobackup_date = ($objForm->fields['autobackup_date']) ? ploopi\date::timestamp2local($objForm->fields['autobackup_date']) : array('date' => '');
         ?>
-        <a class="ploopi_form_title" href="javascript:void(0);" onclick="javascript:ploopi_switchdisplay('forms_archive_box');ploopi_xmlhttprequest('index-quick.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=forms_xml_switchdisplay&switch=forms_archive_box&display='+$('forms_archive_box').style.display, true);">
-            Archivage automatique des données<sub style="font-weight:normal;">&nbsp;&nbsp;&nbsp;(cliquez pour ouvrir/fermer)</sub>
+        <a class="ploopi_form_title" href="javascript:void(0);" onclick="javascript:ploopi.switchdisplay('forms_archive_box');ploopi.xhr.send('index-quick.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=forms_xml_switchdisplay&switch=forms_archive_box&display='+jQuery('#forms_archive_box')[0].style.display, true);">
+            Archivage automatique des donnÃ©es<sub style="font-weight:normal;">&nbsp;&nbsp;&nbsp;(cliquez pour ouvrir/fermer)</sub>
         </a>
         <div id="forms_archive_box" style="display:<?php echo ploopi\str::htmlentities($_SESSION['forms'][$_SESSION['ploopi']['moduleid']]['forms_archive_box']); ?>;">
             <form name="frm_modify" action="<?php echo ploopi\crypt::urlencode('admin.php'); ?>" method="post">
@@ -167,11 +167,11 @@ echo ploopi\skin::get()->open_simplebloc(ploopi\str::htmlentities($objForm->fiel
 
                 <div class="ploopi_form">
                     <p>
-                        <label>Archiver les données plus anciennes que :</label>
+                        <label>Archiver les donnÃ©es plus anciennes que :</label>
                         <input type="text" class="text" style="width:30px;" name="forms_autobackup" value="<?php echo ploopi\str::htmlentities($objForm->fields['autobackup']); ?>"> jours (0 = aucun archivage)
                     </p>
                     <p>
-                        <label>Archiver les données jusqu'au :</label>
+                        <label>Archiver les donnÃ©es jusqu'au :</label>
                         <input type="text" class="text" style="width:70px;" name="forms_autobackup_date" id="forms_autobackup_date" value="<?php echo ploopi\str::htmlentities($autobackup_date['date']); ?>">&nbsp;
                         <?php echo ploopi\date::open_calendar('forms_autobackup_date'); ?>
                     </p>
@@ -198,7 +198,7 @@ echo ploopi\skin::get()->open_simplebloc(ploopi\str::htmlentities($objForm->fiel
 
             if ($_SESSION['ploopi']['action'] == 'public')
             {
-                // Recherche du nombre de lignes déjà saisies pour le jour ou l'utilisateur
+                // Recherche du nombre de lignes dÃ©jÃ  saisies pour le jour ou l'utilisateur
                 if (!$objForm->getNumRowsOnly() &&  ploopi\acl::isactionallowed(_FORMS_ACTION_ADDREPLY))
                 {
                     ?>
@@ -258,7 +258,7 @@ echo ploopi\skin::get()->open_simplebloc(ploopi\str::htmlentities($objForm->fiel
                 if (ploopi\acl::isactionallowed(_FORMS_ACTION_IMPORT_CSV)) {
                     ?>
                     <span style="margin-left:10px;" >Import : </span>
-                    <a class="forms_export_link" title="<?php echo _FORMS_IMPORT; ?> CSV" href="#" onclick="javascript:ploopi_xmlhttprequest_topopup(450, event, 'forms_import', 'admin-light.php', '<?php echo ploopi\crypt::queryencode("ploopi_op=forms_import&forms_id={$objForm->fields['id']}&origin=viewreplies"); ?>', 'post');">
+                    <a class="forms_export_link" title="<?php echo _FORMS_IMPORT; ?> CSV" href="#" onclick="javascript:ploopi.xhr.topopup(450, event, 'forms_import', 'admin-light.php', '<?php echo ploopi\crypt::queryencode("ploopi_op=forms_import&forms_id={$objForm->fields['id']}&origin=viewreplies"); ?>', 'post');">
                     <img alt="<?php echo _FORMS_IMPORT; ?> title="<?php echo _FORMS_IMPORT; ?> CSV" src="./modules/forms/img/mime/csv.png">CSV</a>
                     <?php
                 }
@@ -277,8 +277,8 @@ echo ploopi\skin::get()->open_simplebloc(ploopi\str::htmlentities($objForm->fiel
                             <span style="margin-left:10px;">Graphique : </span>
                             <?php
                             ?>
-                            <select class="select" onchange="javascript:if (this.value != '') {ploopi_xmlhttprequest_topopup(750, event, 'forms_popup_graphic', 'admin-light.php', 'ploopi_op=forms_graphic_display&forms_graphic_id='+this.value+'&forms_graphic_width='+$('forms_graphic_width').value, 'POST');} else {ploopi_hidepopup('forms_popup_graphic');} this.selectedIndex = 0;">
-                                <option value="">(Sélectionner un graphique)</option>
+                            <select class="select" onchange="javascript:if (this.value != '') {ploopi.xhr.topopup(750, event, 'forms_popup_graphic', 'admin-light.php', '<? echo ploopi\crypt::queryencode('ploopi_op=forms_graphic_display'); ?>&forms_graphic_id='+this.value+'&forms_graphic_width='+jQuery('#forms_graphic_width')[0].value, 'POST');} else {ploopi.popup.hide('forms_popup_graphic');} this.selectedIndex = 0;">
+                                <option value="">(SÃ©lectionner un graphique)</option>
                                 <?php
                                 while ($row = ploopi\db::get()->fetchrow())
                                 {
@@ -384,7 +384,7 @@ echo ploopi\skin::get()->open_simplebloc(ploopi\str::htmlentities($objForm->fiel
                         }
                         else $strValue = '';
 
-                        // Alignement du contenu en fonction du format des données.
+                        // Alignement du contenu en fonction du format des donnÃ©es.
                         if ($row['format'] == 'float' || $row['format'] == 'integer') $strClass = 'data num';
                         else $strClass = 'data';
 
@@ -422,7 +422,7 @@ echo ploopi\skin::get()->open_simplebloc(ploopi\str::htmlentities($objForm->fiel
                             ))
                         {
                             ?>
-                            <a title="Supprimer" href="javascript:ploopi_confirmlink('<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=forms_reply_delete&forms_id={$objForm->fields['id']}&record_id={$intReplyId}"); ?>','<?php echo _PLOOPI_CONFIRM; ?>')"><img alt="supprimer" border="0" src="./modules/forms/img/ico_trash.png"></a>
+                            <a title="Supprimer" href="javascript:ploopi.confirmlink('<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=forms_reply_delete&forms_id={$objForm->fields['id']}&record_id={$intReplyId}"); ?>','<?php echo _PLOOPI_CONFIRM; ?>')"><img alt="supprimer" border="0" src="./modules/forms/img/ico_trash.png"></a>
                             <?php
                         }
                         ?>

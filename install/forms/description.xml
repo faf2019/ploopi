@@ -1,10 +1,10 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <ploopi>
    <moduletype>
       <label>forms</label>
-      <version>3.7.0</version>
+      <version>3.7.1</version>
       <author>Ovensia / HeXad</author>
-      <date>20160808000000</date>
+      <date>20200305000000</date>
       <description>Gestion de Formulaires</description>
       <paramtype>
          <name>forms_export_csvextension</name>
@@ -15,21 +15,21 @@
       </paramtype>
       <paramtype>
          <name>forms_export_fieldseparator</name>
-         <label>Séparateur de Champs</label>
+         <label>SÃ©parateur de Champs</label>
          <default_value>;</default_value>
          <public>0</public>
          <description/>
       </paramtype>
       <paramtype>
          <name>forms_export_lineseparator</name>
-         <label>Séparateur de Ligne</label>
+         <label>SÃ©parateur de Ligne</label>
          <default_value>(cr)(lf)</default_value>
          <public>0</public>
          <description/>
       </paramtype>
       <paramtype>
          <name>forms_export_textseparator</name>
-         <label>Séparateur Texte</label>
+         <label>SÃ©parateur Texte</label>
          <default_value>"</default_value>
          <public>0</public>
          <description/>
@@ -41,25 +41,32 @@
          <public>0</public>
          <description/>
       </paramtype>
+      <paramtype>
+         <name>form_nb_cond</name>
+         <label>Nombre de conditions maximum dans les groupes conditionnels</label>
+         <default_value>5</default_value>
+         <public>0</public>
+         <description/>
+      </paramtype>
       <action>
          <id_action>2</id_action>
-         <label>Saisir des Données</label>
+         <label>Saisir des DonnÃ©es</label>
       </action>
       <action>
          <id_action>3</id_action>
-         <label>Exporter des Données</label>
+         <label>Exporter des DonnÃ©es</label>
       </action>
       <action>
          <id_action>4</id_action>
-         <label>Filtrer des Données</label>
+         <label>Filtrer des DonnÃ©es</label>
       </action>
       <action>
          <id_action>5</id_action>
-         <label>Supprimer des Données</label>
+         <label>Supprimer des DonnÃ©es</label>
       </action>
       <action>
          <id_action>6</id_action>
-         <label>Paramétrer l'archivage</label>
+         <label>ParamÃ©trer l'archivage</label>
       </action>
       <action>
          <id_action>7</id_action>
@@ -67,7 +74,7 @@
       </action>
       <action>
          <id_action>8</id_action>
-         <label>Importer des Données CSV</label>
+         <label>Importer des DonnÃ©es CSV</label>
       </action>
       <action>
          <id_action>99</id_action>

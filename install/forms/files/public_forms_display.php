@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Copyright (c) 2010 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
@@ -22,17 +22,17 @@
 */
 
 /**
- * Préparation à l'affichage d'un formulaire
+ * PrÃ©paration Ã  l'affichage d'un formulaire
  *
  * @package forms
  * @subpackage public
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
- * On récupère les dates de publication du formulaire
+ * On rÃ©cupÃ¨re les dates de publication du formulaire
  */
 
 $pubdate_start = ($objForm->fields['pubdate_start']) ? ploopi\date::timestamp2local($objForm->fields['pubdate_start']) : array('date' => '');
@@ -56,10 +56,14 @@ switch($op)
 
 $intReplyId = isset($_REQUEST['record_id']) && is_numeric($_REQUEST['record_id']) ? $_REQUEST['record_id'] : null;
 
+$strVarName = formsForm::getVarName($objForm->fields['id']).'_save';
+ploopi\session::setvar($strVarName, null);
+setcookie($strVarName, '', time() - 3600);
+unset($_COOKIE[$strVarName]);
+
+
 echo ploopi\skin::get()->open_simplebloc();
 
 $objForm->render($intReplyId, $strRenderMode);
 
 echo ploopi\skin::get()->close_simplebloc();
-
-

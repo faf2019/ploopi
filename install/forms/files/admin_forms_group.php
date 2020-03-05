@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -27,12 +27,12 @@
  * @subpackage admin
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 
 /**
- * On commence par vérifier si l'identifiant du groupe est valide.
+ * On commence par vÃ©rifier si l'identifiant du groupe est valide.
  * Si ok => on l'ouvre. Sinon, nouveau groupe.
  */
 
@@ -69,16 +69,16 @@ if (!$objGroup->isnew()) $arrParams[] = "forms_group_id={$objGroup->fields['id']
             </p>
             <p>
                 <label><?php echo _FORMS_GROUP_FORMULA; ?>:<br /><em>ex: (C1 AND C2) OR C3</em></label>
-                <?php for ($i=1;$i<=5;$i++) { ?> <input type="button" class="button" value="C<?php echo $i; ?>" title="Insérer la condition C<?php echo $i; ?>" style="width:30px;" onclick="javascript:ploopi_insertatcursor($('forms_group_formula'), this.value); $('forms_group_formula').focus();" /> <?php } ?>
-                <input type="button" class="button" value="AND" title="Insérer l'opérateur AND" style="width:40px;" onclick="javascript:ploopi_insertatcursor($('forms_group_formula'), ' '+this.value+' '); $('forms_group_formula').focus();" />
-                <input type="button" class="button" value="OR" title="Insérer l'opérateur OR" style="width:40px;" onclick="javascript:ploopi_insertatcursor($('forms_group_formula'), ' '+this.value+' '); $('forms_group_formula').focus();" />
-                <input type="button" class="button" value="NOT" title="Insérer l'opérateur NOT" style="width:40px;" onclick="javascript:ploopi_insertatcursor($('forms_group_formula'), ' '+this.value+' '); $('forms_group_formula').focus();" />
-                <input type="button" class="button" value="(" title="Insérer une parenthèse ouvrante" style="width:20px;" onclick="javascript:ploopi_insertatcursor($('forms_group_formula'), this.value); $('forms_group_formula').focus();" />
-                <input type="button" class="button" value=")" title="Insérer une parenthèse fermante" style="width:20px;" onclick="javascript:ploopi_insertatcursor($('forms_group_formula'), this.value); $('forms_group_formula').focus();" />
+                <? for ($i = 1; $i <= ploopi\param::get('form_nb_cond'); $i++) { ?> <input type="button" class="button" value="C<?php echo $i; ?>" title="InsÃ©rer la condition C<?php echo $i; ?>" style="width:30px;" onclick="javascript:ploopi_insertatcursor(jQuery('#forms_group_formula')[0], this.value); jQuery('#forms_group_formula')[0].focus();" /> <?php } ?>
+                <input type="button" class="button" value="AND" title="InsÃ©rer l'opÃ©rateur AND" style="width:40px;" onclick="javascript:ploopi_insertatcursor(jQuery('#forms_group_formula')[0], ' '+this.value+' '); jQuery('#forms_group_formula')[0].focus();" />
+                <input type="button" class="button" value="OR" title="InsÃ©rer l'opÃ©rateur OR" style="width:40px;" onclick="javascript:ploopi_insertatcursor(jQuery('#forms_group_formula')[0], ' '+this.value+' '); jQuery('#forms_group_formula')[0].focus();" />
+                <input type="button" class="button" value="NOT" title="InsÃ©rer l'opÃ©rateur NOT" style="width:40px;" onclick="javascript:ploopi_insertatcursor(jQuery('#forms_group_formula')[0], ' '+this.value+' '); jQuery('#forms_group_formula')[0].focus();" />
+                <input type="button" class="button" value="(" title="InsÃ©rer une parenthÃ¨se ouvrante" style="width:20px;" onclick="javascript:ploopi_insertatcursor(jQuery('#forms_group_formula')[0], this.value); jQuery('#forms_group_formula')[0].focus();" />
+                <input type="button" class="button" value=")" title="InsÃ©rer une parenthÃ¨se fermante" style="width:20px;" onclick="javascript:ploopi_insertatcursor(jQuery('#forms_group_formula')[0], this.value); jQuery('#forms_group_formula')[0].focus();" />
                 <br />
                 <input style="margin-top:2px;" type="text" class="text" name="forms_group_formula" id="forms_group_formula" value="<?php echo ploopi\str::htmlentities($objGroup->fields['formula']); ?>">
                 <?php
-                // Test de l'expression booléenne
+                // Test de l'expression boolÃ©enne
                 include_once './modules/forms/classes/formsBooleanParser.php';
                 try {
                     $objParser = new formsBooleanParser($objGroup->fields['formula']);
@@ -94,7 +94,7 @@ if (!$objGroup->isnew()) $arrParams[] = "forms_group_id={$objGroup->fields['id']
         <?php
         $arrConditions = $objGroup->getConditions();
 
-        for ($intI = 1; $intI <= 5; $intI++)
+        for ($intI = 1; $intI <= ploopi\param::get('form_nb_cond'); $intI++)
         {
             ?>
             <p>

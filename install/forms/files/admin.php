@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Copyright (c) 2010 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
@@ -28,7 +28,7 @@
  * @subpackage admin
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
@@ -46,7 +46,7 @@ global $forms_graphic_line_aggregation;
 global $forms_graphic_operation;
 
 /**
- * On vérifie que l'utilisateur connecté est admin du module
+ * On vÃ©rifie que l'utilisateur connectÃ© est admin du module
  */
 
 if (ploopi\acl::isactionallowed(_FORMS_ACTION_ADMIN))
@@ -119,7 +119,7 @@ if (ploopi\acl::isactionallowed(_FORMS_ACTION_ADMIN))
     {
         ?>
         <script type="text/javascript">
-            alert('Terminé !');
+            alert('TerminÃ© !');
         </script>
         <?php
     }

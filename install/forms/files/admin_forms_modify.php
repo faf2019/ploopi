@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Copyright (c) 2010 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
@@ -28,11 +28,11 @@
  * @subpackage admin
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
- * On commence par vérifier si l'identifiant du formulaire est valide.
+ * On commence par vÃ©rifier si l'identifiant du formulaire est valide.
  * Si ok => on l'ouvre. Sinon, nouveau formulaire.
  */
 
@@ -42,7 +42,7 @@ if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']))
 {
     $objForm->open($_GET['forms_id']);
     $title = _FORMS_MODIFICATION.' &laquo; '.ploopi\str::htmlentities($objForm->fields['label']).' &raquo;';
-    $objForm->includeCss(); // permet la prévisu directe en popup ajax
+    $objForm->includeCss(); // permet la prÃ©visu directe en popup ajax
 }
 else
 {
@@ -76,15 +76,15 @@ sort($objForm_tpl);
     {
         ?>
         <div class="ploopi_form_title">
-            Paramétrage du formulaire
+            ParamÃ©trage du formulaire
         </div>
         <?php
     }
     else
     {
         ?>
-        <a class="ploopi_form_title" href="javascript:void(0);" onclick="javascript:ploopi_switchdisplay('forms_modify_options');ploopi_xmlhttprequest('index-quick.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=forms_xml_switchdisplay&switch=forms_modify_options&display='+$('forms_modify_options').style.display, true);">
-            <span>Paramétrage du formulaire</span><span style="font-weight:normal;font-size:0.8em;margin-left:20px;">(cliquez pour ouvrir/fermer)</span>
+        <a class="ploopi_form_title" href="javascript:void(0);" onclick="javascript:ploopi.switchdisplay('forms_modify_options');ploopi.xhr.send('index-quick.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=forms_xml_switchdisplay&switch=forms_modify_options&display='+jQuery('#forms_modify_options')[0].style.display, true);">
+            <span>ParamÃ©trage du formulaire</span><span style="font-weight:normal;font-size:0.8em;margin-left:20px;">(cliquez pour ouvrir/fermer)</span>
         </a>
         <?php
     }
@@ -189,12 +189,12 @@ sort($objForm_tpl);
                     <input type="text" class="text" style="width:30px;"name="forms_nbline" value="<?php echo ploopi\str::htmlentities($objForm->fields['nbline']); ?>" />
                 </p>
                 <p>
-                    <label style="cursor:pointer;" onclick="javascript:$('forms_option_displaydate').checked = !$('forms_option_displaydate').checked;"><?php echo _FORMS_OPTION_DISPLAY_DATE; ?>:</label>
+                    <label style="cursor:pointer;" onclick="javascript:jQuery('#forms_option_displaydate')[0].checked = !jQuery('#forms_option_displaydate')[0].checked;"><?php echo _FORMS_OPTION_DISPLAY_DATE; ?>:</label>
                     <input type="checkbox" class="checkbox" name="forms_option_displaydate" id="forms_option_displaydate" value="1" <?php if ($objForm->fields['option_displaydate']) echo 'checked'; ?> />
                 </p>
 
                 <p>
-                    <label style="cursor:pointer;" onclick="javascript:$('forms_option_displayip').checked = !$('forms_option_displayip').checked;"><?php echo _FORMS_OPTION_DISPLAY_IP; ?>:</label>
+                    <label style="cursor:pointer;" onclick="javascript:jQuery('#forms_option_displayip')[0].checked = !jQuery('#forms_option_displayip')[0].checked;"><?php echo _FORMS_OPTION_DISPLAY_IP; ?>:</label>
                     <input type="checkbox" class="checkbox" name="forms_option_displayip" id="forms_option_displayip" value="1" <?php if ($objForm->fields['option_displayip']) echo 'checked'; ?> />
                 </p>
 
@@ -221,16 +221,16 @@ sort($objForm_tpl);
                 {
                     ?>
                     <p>
-                        <label>Archiver les données plus anciennes que :</label>
+                        <label>Archiver les donnÃ©es plus anciennes que :</label>
                         <input type="text" class="text" style="width:30px;" name="forms_autobackup" value="<?php echo ploopi\str::htmlentities($objForm->fields['autobackup']); ?>">&nbsp;jours (0 = aucun archivage)
                     </p>
                     <p>
-                        <label>Archiver les données jusqu'au :</label>
+                        <label>Archiver les donnÃ©es jusqu'au :</label>
                         <input type="text" class="text" style="width:70px;" name="forms_autobackup_date" id="forms_autobackup_date" value="<?php echo ploopi\str::htmlentities($autobackup_date['date']); ?>">&nbsp;
                         <?php echo ploopi\date::open_calendar('forms_autobackup_date'); ?>
                     </p>
                     <p>
-                        <label>Supprimer les données jusqu'au :</label>
+                        <label>Supprimer les donnÃ©es jusqu'au :</label>
                         <input type="text" class="text" style="width:70px;" id="forms_delete_date">&nbsp;
                         <?php echo ploopi\date::open_calendar('forms_delete_date'); ?>
                         <a href="javascript:void(0);" onclick="javascript:forms_deletedata('<?php echo $objForm->fields['id']; ?>', event);"><img src="./modules/forms/img/ico_trash.png" /></a>
@@ -251,7 +251,7 @@ sort($objForm_tpl);
                     <input type="checkbox" class="checkbox" name="forms_option_multidisplaysave" id="forms_option_multidisplaysave" value="1" <?php if ($objForm->fields['option_multidisplaysave']) echo 'checked'; ?> />
                 </p>
                 <p>
-                    <label style="cursor:pointer;" for="forms_option_multidisplaypages">Afficher les numéros de pages:</label>
+                    <label style="cursor:pointer;" for="forms_option_multidisplaypages">Afficher les numÃ©ros de pages:</label>
                     <input type="checkbox" class="checkbox" name="forms_option_multidisplaypages" id="forms_option_multidisplaypages" value="1" <?php if ($objForm->fields['option_multidisplaypages']) echo 'checked'; ?> />
                 </p>
                 <p>
@@ -277,7 +277,7 @@ sort($objForm_tpl);
         </div>
 
         <div style="clear:both;border-top:1px solid #a0a0a0;overflow:auto;">
-        <?php ploopi\share::selectusers(_FORMS_OBJECT_FORM, $objForm->fields['id'], -1, 'Envoi des réponses par message à...', 'forms_send_email', './modules/forms/img/mail.png'); ?>
+        <?php ploopi\share::selectusers(_FORMS_OBJECT_FORM, $objForm->fields['id'], -1, 'Envoi des rÃ©ponses par message Ã ...', 'forms_send_email', './modules/forms/img/mail.png'); ?>
         </div>
 
 
@@ -286,7 +286,7 @@ sort($objForm_tpl);
                 <input type="button" class="flatbutton" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<?php echo ploopi\crypt::urlencode("admin.php?formsTabItem=formslist"); ?>'">
                 <input type="reset" class="flatbutton" value="<?php echo _PLOOPI_RESET; ?>">
                 <?php
-                if (!$objForm->new) //désactivé
+                if (!$objForm->new) //dÃ©sactivÃ©
                 {
                     ?>
 
@@ -298,12 +298,12 @@ sort($objForm_tpl);
 
             <div>
                 <?php
-                if (!$objForm->new) //désactivé
+                if (!$objForm->new) //dÃ©sactivÃ©
                 {
                     ?>
-                        <input type="button" class="flatbutton" value="<?php echo _FORMS_PREVIEW; ?>" onclick="javascript:ploopi_xmlhttprequest_topopup(780, event, 'forms_preview', 'admin-light.php', '<?php echo ploopi\crypt::queryencode("ploopi_op=forms_preview&forms_id={$objForm->fields['id']}"); ?>', 'post');" />
+                        <input type="button" class="flatbutton" value="<?php echo _FORMS_PREVIEW; ?>" onclick="javascript:ploopi.xhr.topopup(780, event, 'forms_preview', 'admin-light.php', '<?php echo ploopi\crypt::queryencode("ploopi_op=forms_preview&forms_id={$objForm->fields['id']}"); ?>', 'post');" />
                         <input type="button" class="flatbutton" value="<?php echo _FORMS_VIEWRESULT; ?>" onclick="javascript:document.location.href='<?php echo ploopi\crypt::urlencode("admin.php?ploopi_action=public&op=forms_viewreplies&forms_id={$objForm->fields['id']}"); ?>'">
-                        <input type="button" class="flatbutton" value="<?php echo _FORMS_IMPORT; ?>" onclick="javascript:ploopi_xmlhttprequest_topopup(450, event, 'forms_import', 'admin-light.php', '<?php echo ploopi\crypt::queryencode("ploopi_op=forms_import&forms_id={$objForm->fields['id']}"); ?>', 'post');" />
+                        <input type="button" class="flatbutton" value="<?php echo _FORMS_IMPORT; ?>" onclick="javascript:ploopi.xhr.topopup(450, event, 'forms_import', 'admin-light.php', '<?php echo ploopi\crypt::queryencode("ploopi_op=forms_import&forms_id={$objForm->fields['id']}"); ?>', 'post');" />
                     <?php
                 }
                 ?>
@@ -372,7 +372,7 @@ if (!$objForm->isnew())
 
     $array_columns['left']['pos'] = array(
         'label' => 'P.',
-        'width' => 35,
+        'width' => 45,
         'options' => array('sort' => true)
      );
 
@@ -433,10 +433,10 @@ if (!$objForm->isnew())
             $array_values[$c]['values']['actions']      = array('label' => '
                 <a href="'.ploopi\crypt::urlencode("admin.php?ploopi_op=forms_field_moveup&field_id={$row['id']}").'"><img src="./modules/forms/img/ico_up2.png"></a>
                 <a href="'.ploopi\crypt::urlencode("admin.php?ploopi_op=forms_field_movedown&field_id={$row['id']}").'"><img src="./modules/forms/img/ico_down2.png"></a>
-                <a style="margin-left:10px;" href="javascript:ploopi_confirmlink(\''.ploopi\crypt::urlencode("admin.php?op=forms_field_delete&field_id={$row['id']}").'\',\''._PLOOPI_CONFIRM.'\')"><img src="./modules/forms/img/ico_trash.png"></a>
+                <a style="margin-left:10px;" href="javascript:ploopi.confirmlink(\''.ploopi\crypt::urlencode("admin.php?op=forms_field_delete&field_id={$row['id']}").'\',\''._PLOOPI_CONFIRM.'\')"><img src="./modules/forms/img/ico_trash.png"></a>
             ');
 
-            $array_values[$c]['description'] = 'Ouvrir le Séparateur "'.ploopi\str::htmlentities($row['name']).'"';
+            $array_values[$c]['description'] = 'Ouvrir le SÃ©parateur "'.ploopi\str::htmlentities($row['name']).'"';
             $array_values[$c]['link'] = ploopi\crypt::urlencode("admin.php?op=forms_separator_modify&forms_id={$objForm->fields['id']}&field_id={$row['id']}").'#addform';
             $array_values[$c]['style'] = 'background-color:#ddeeff';
 
@@ -457,7 +457,7 @@ if (!$objForm->isnew())
             $array_values[$c]['values']['actions']      = array('label' => '
                 <a href="'.ploopi\crypt::urlencode("admin.php?ploopi_op=forms_field_moveup&field_id={$row['id']}").'"><img src="./modules/forms/img/ico_up2.png"></a>
                 <a href="'.ploopi\crypt::urlencode("admin.php?ploopi_op=forms_field_movedown&field_id={$row['id']}").'"><img src="./modules/forms/img/ico_down2.png"></a>
-                <a style="margin-left:10px;" href="javascript:ploopi_confirmlink(\''.ploopi\crypt::urlencode("admin.php?op=forms_field_delete&field_id={$row['id']}").'\',\''._PLOOPI_CONFIRM.'\')"><img src="./modules/forms/img/ico_trash.png"></a>
+                <a style="margin-left:10px;" href="javascript:ploopi.confirmlink(\''.ploopi\crypt::urlencode("admin.php?op=forms_field_delete&field_id={$row['id']}").'\',\''._PLOOPI_CONFIRM.'\')"><img src="./modules/forms/img/ico_trash.png"></a>
             ');
 
             $array_values[$c]['description'] = 'Ouvrir le Contenu HTML';
@@ -488,11 +488,11 @@ if (!$objForm->isnew())
         }
 
 
-        $array_values[$c]['values']['pos'] = array('label' =>  $row['position']);
+        $array_values[$c]['values']['pos'] = array('label' =>  $row['position'], 'sort_flag' => SORT_NUMERIC);
         $array_values[$c]['values']['actions'] = array('label' => '
             <a href="'.ploopi\crypt::urlencode("admin.php?ploopi_op=forms_field_moveup&forms_id={$objForm->fields['id']}&field_id={$row['id']}").'"><img src="./modules/forms/img/ico_up2.png"></a>
             <a href="'.ploopi\crypt::urlencode("admin.php?ploopi_op=forms_field_movedown&forms_id={$objForm->fields['id']}&field_id={$row['id']}").'"><img src="./modules/forms/img/ico_down2.png"></a>
-            <a style="margin-left:10px;" href="javascript:ploopi_confirmlink(\''.ploopi\crypt::urlencode("admin.php?ploopi_op=forms_field_delete&forms_id={$objForm->fields['id']}&field_id={$row['id']}").'\',\''._PLOOPI_CONFIRM.'\')"><img src="./modules/forms/img/ico_trash.png"></a>
+            <a style="margin-left:10px;" href="javascript:ploopi.confirmlink(\''.ploopi\crypt::urlencode("admin.php?ploopi_op=forms_field_delete&forms_id={$objForm->fields['id']}&field_id={$row['id']}").'\',\''._PLOOPI_CONFIRM.'\')"><img src="./modules/forms/img/ico_trash.png"></a>
         ');
 
         if (isset($_GET['field_id']) && $row['id'] == $_GET['field_id']) $array_values[$c]['style'] = 'background-color:#ffe0e0;';
@@ -563,7 +563,7 @@ if (!$objForm->isnew())
         $array_values[$c]['values']['description'] = array('label' =>  ploopi\str::nl2br(ploopi\str::htmlentities($row['description'])));
         $array_values[$c]['values']['formula'] = array('label' =>  ploopi\str::htmlentities($row['formula']));
         $array_values[$c]['values']['actions']  = array('label' => '
-            <a href="javascript:ploopi_confirmlink(\''.ploopi\crypt::urlencode("admin-light.php?ploopi_op=forms_group_delete&forms_id={$objForm->fields['id']}&forms_group_id={$row['id']}").'\',\''._PLOOPI_CONFIRM.'\')"><img src="./modules/forms/img/ico_trash.png"></a>
+            <a href="javascript:ploopi.confirmlink(\''.ploopi\crypt::urlencode("admin-light.php?ploopi_op=forms_group_delete&forms_id={$objForm->fields['id']}&forms_group_id={$row['id']}").'\',\''._PLOOPI_CONFIRM.'\')"><img src="./modules/forms/img/ico_trash.png"></a>
         ');
 
         $array_values[$c]['description'] = 'Ouvrir le Groupe &laquo; '.ploopi\str::htmlentities($row['label']).' &raquo;';
@@ -645,7 +645,7 @@ if (!$objForm->isnew())
         $array_values[$c]['values']['type'] = array('label' => ploopi\str::htmlentities(isset($forms_graphic_types[$row['type']]) ? $forms_graphic_types[$row['type']] : ''));
         $array_values[$c]['values']['line_aggregation'] = array('label' => isset($forms_graphic_line_aggregation[$row['line_aggregation']]) ? $forms_graphic_line_aggregation[$row['line_aggregation']] : '');
         $array_values[$c]['values']['actions']  = array('label' => '
-            <a href="javascript:ploopi_confirmlink(\''.ploopi\crypt::urlencode("admin-light.php?ploopi_op=forms_graphic_delete&forms_id={$objForm->fields['id']}&forms_graphic_id={$row['id']}").'\',\''._PLOOPI_CONFIRM.'\')"><img src="./modules/forms/img/ico_trash.png"></a>
+            <a href="javascript:ploopi.confirmlink(\''.ploopi\crypt::urlencode("admin-light.php?ploopi_op=forms_graphic_delete&forms_id={$objForm->fields['id']}&forms_graphic_id={$row['id']}").'\',\''._PLOOPI_CONFIRM.'\')"><img src="./modules/forms/img/ico_trash.png"></a>
         ');
 
         $array_values[$c]['description'] = 'Ouvrir le Graphique &laquo; '.ploopi\str::htmlentities($row['label']).' &raquo;';

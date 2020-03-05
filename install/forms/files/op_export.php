@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,13 +21,13 @@
 */
 
 /**
- * Export des données d'un formulaire aux formats XLS et CSV
+ * Export des donnÃ©es d'un formulaire aux formats XLS et CSV
  *
  * @package forms
  * @subpackage public
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  *
  * @see ploopi\buffer::clean
  * @link http://pear.php.net/package/Spreadsheet_Excel_Writer

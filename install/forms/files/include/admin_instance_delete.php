@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2011 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,13 +21,13 @@
 */
 
 /**
- * Suppression des données liées à l'instance du module
+ * Suppression des donnÃ©es liÃ©es Ã  l'instance du module
  *
  * @package forms
  * @subpackage instance_delete
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**

@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Copyright (c) 2010 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
@@ -28,12 +28,12 @@
  * @subpackage form
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 
 /**
- * Autres dépendances
+ * Autres dÃ©pendances
  */
 
 include_once './modules/forms/classes/formsField.php';
@@ -43,13 +43,13 @@ include_once './modules/forms/classes/formsBooleanParser.php';
 include_once './modules/forms/classes/formsArithmeticParser.php';
 
 /**
- * Classe d'accès à la table ploopi_mod_forms_form
+ * Classe d'accÃ¨s Ã  la table ploopi_mod_forms_form
  *
  * @package forms
  * @subpackage form
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 class formsForm extends ploopi\data_object
@@ -62,14 +62,14 @@ class formsForm extends ploopi\data_object
     private $_arrFields;
 
     /**
-     * Tableau des champs et séparateurs du formulaire
+     * Tableau des champs et sÃ©parateurs du formulaire
      * @var array
      */
 
     private $_arrFieldsWithSep;
 
     /**
-     * @var Nom de la table associée au formulaire
+     * @var Nom de la table associÃ©e au formulaire
      */
     private $_strTablename = null;
 
@@ -118,7 +118,7 @@ class formsForm extends ploopi\data_object
     }
 
     /**
-     * Retourne le nom de la variable pour le stockage temporaire des données (cookie/session)
+     * Retourne le nom de la variable pour le stockage temporaire des donnÃ©es (cookie/session)
      */
 
     public static function getVarName($intIdForm) { return sprintf("form_values_%d_%d", $intIdForm, $_SESSION['ploopi']['userid']); }
@@ -149,7 +149,7 @@ class formsForm extends ploopi\data_object
     }
 
     /**
-     * Gère le clone
+     * GÃ¨re le clone
      */
 
     public function __clone()
@@ -164,7 +164,7 @@ class formsForm extends ploopi\data_object
         $this->fields['id'] = null;
         $this->fields['viewed'] = 0;
 
-        // Enregistrement du clone pour récupérer une nouvel ID
+        // Enregistrement du clone pour rÃ©cupÃ©rer une nouvel ID
         $this->save();
 
         // Correspondances de clones
@@ -192,7 +192,7 @@ class formsForm extends ploopi\data_object
             $objClone = clone $obj;
             $objClone->fields['id_form'] = $this->fields['id'];
 
-            // Récupération du bon groupe (le clone)
+            // RÃ©cupÃ©ration du bon groupe (le clone)
             if (isset($arrGroups[$objClone->fields['id_group']])) $objClone->fields['id_group'] = $arrGroups[$objClone->fields['id_group']]->fields['id'];
             $objClone->quicksave();
 
@@ -207,7 +207,7 @@ class formsForm extends ploopi\data_object
             $objClone = clone $obj;
             $objClone->fields['id_form'] = $this->fields['id'];
 
-            // Récupération des bons champs (clones)
+            // RÃ©cupÃ©ration des bons champs (clones)
             for ($i=1;$i<=5;$i++) if (isset($arrFields[$objClone->fields["line{$i}_field"]])) $objClone->fields["line{$i}_field"] = $arrFields[$objClone->fields["line{$i}_field"]]->fields['id'];
 
             $objClone->save();
@@ -265,19 +265,19 @@ class formsForm extends ploopi\data_object
         // Suppression des groupes du formulaire
         foreach($this->getGroups() as $objGroup) $objGroup->delete();
 
-        // Suppression de la métabase associée
+        // Suppression de la mÃ©tabase associÃ©e
         $this->removeMetabase();
 
-        // Suppression de la représentation physique du formulaire
+        // Suppression de la reprÃ©sentation physique du formulaire
         $this->_dropTable();
 
-        // Suppression de la représentation conceptuelle du formulaire
+        // Suppression de la reprÃ©sentation conceptuelle du formulaire
         return parent::delete();
     }
 
     /**
      * Retourne une liste d'identifiants d'espaces de travail.
-     * Application de la vue aux données d'un formulaire.
+     * Application de la vue aux donnÃ©es d'un formulaire.
      */
 
     public function viewWorkspaces()
@@ -291,7 +291,8 @@ class formsForm extends ploopi\data_object
             break;
 
             case 'desc':
-                $arrWorkspaces = explode(';',$_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['parents']);
+                if (isset($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['parents'])) $arrWorkspaces = explode(';',$_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['parents']);
+                else $arrWorkspaces = array();
                 $arrWorkspaces[] = $_SESSION['ploopi']['workspaceid'];
                 $strWorkspaces = implode(',', $arrWorkspaces);
             break;
@@ -313,7 +314,7 @@ class formsForm extends ploopi\data_object
     }
 
     /**
-     * Initialise le nom utilisé pour la table physique
+     * Initialise le nom utilisÃ© pour la table physique
      */
 
     private function _setDataTableName()
@@ -322,7 +323,7 @@ class formsForm extends ploopi\data_object
     }
 
     /**
-     * Retourne le nom utilisé pour la table physique
+     * Retourne le nom utilisÃ© pour la table physique
      */
 
     public function getDataTableName()
@@ -334,7 +335,7 @@ class formsForm extends ploopi\data_object
     /**
      * Retourne la liste des graphiques
      *
-     * @return array tableau des graphiques indexés par les identifiants
+     * @return array tableau des graphiques indexÃ©s par les identifiants
      */
 
     public function getGraphics()
@@ -347,7 +348,7 @@ class formsForm extends ploopi\data_object
     /**
      * Retourne la liste des groupes
      *
-     * @return array tableau des groupes indexés par les identifiants
+     * @return array tableau des groupes indexÃ©s par les identifiants
      */
 
     public function getGroups()
@@ -360,8 +361,8 @@ class formsForm extends ploopi\data_object
     /**
      * Retourne la liste des champs du formulaire
      *
-     * @param boolean $booWidthSep true si on souhaite récupérer également les séparateurs
-     * @return array tableau des champs indexés par les identifiants
+     * @param boolean $booWidthSep true si on souhaite rÃ©cupÃ©rer Ã©galement les sÃ©parateurs
+     * @return array tableau des champs indexÃ©s par les identifiants
      */
 
     public function getFields($booNotOnlyFields = false)
@@ -470,7 +471,7 @@ class formsForm extends ploopi\data_object
 
 
     /**
-     * Retourne le nombre de lignes du formulaire en fonction de la visibilité de l'utilisateur sur les données
+     * Retourne le nombre de lignes du formulaire en fonction de la visibilitÃ© de l'utilisateur sur les donnÃ©es
      * @param boolean $booWorkspaceFilter true si on souhaite appliquer le filtrage par espace de travail
      * @return int nombre de lignes du formulaire
      */
@@ -494,14 +495,14 @@ class formsForm extends ploopi\data_object
     }
 
     /**
-     * Génère l'objet "ploopi_query" contenant la requête SQL permettant de lire les données du formulaire dans la base de données
+     * GÃ©nÃ¨re l'objet "ploopi_query" contenant la requÃªte SQL permettant de lire les donnÃ©es du formulaire dans la base de donnÃ©es
      * @param boolean $booWorkspaceFilter true si on souhaite appliquer le filtrage par espace de travail
-     * @param boolean $booBackupFilter true si on souhaite appliquer l'archivage des données
+     * @param boolean $booBackupFilter true si on souhaite appliquer l'archivage des donnÃ©es
      * @param array $arrFilter tableau permettant d'appliquer un filtre de recherche
-     * @param array $arrOrderBy tableau permettant de définir le tri
-     * @param integer $intNumPage numéro de la page à afficher
-     * @param boolean $booFieldNamesAsKey true pour utiliser les noms de champs comme clé du tableau de données
-     * @return ploopi_query la requête préparée
+     * @param array $arrOrderBy tableau permettant de dÃ©finir le tri
+     * @param integer $intNumPage numÃ©ro de la page Ã  afficher
+     * @param boolean $booFieldNamesAsKey true pour utiliser les noms de champs comme clÃ© du tableau de donnÃ©es
+     * @return ploopi_query la requÃªte prÃ©parÃ©e
      */
 
     public function getQuery($booWorkspaceFilter = false, $booBackupFilter = false, $arrFilter = array(), $arrOrderBy = array(), $intNumPage = 0, $booFieldNamesAsKey = false, $booExport = false, $booRawData = false, $booDelete = false)
@@ -515,17 +516,17 @@ class formsForm extends ploopi\data_object
         $arrObjField = $this->getFields();
 
         /**
-         * Structure de base de la requête de consultation des données du formulaire
+         * Structure de base de la requÃªte de consultation des donnÃ©es du formulaire
          */
         $objQuery = $booDelete ? new ploopi\query_delete() : new ploopi\query_select();
 
         $objQuery->add_from('`'.$this->getDataTableName().'` rec');
 
-        // Requête de suppression : pas besoin de sélectionner les champs
+        // RequÃªte de suppression : pas besoin de sÃ©lectionner les champs
         if (!$booDelete)
         {
             /**
-             * Attention, si booExport = true, on adapte la requête pour ne récupérer que les champs exportables (pour ne pas retraiter les données ensuite)
+             * Attention, si booExport = true, on adapte la requÃªte pour ne rÃ©cupÃ©rer que les champs exportables (pour ne pas retraiter les donnÃ©es ensuite)
              */
 
             // Seul l'admin peut exporter le champ ID, par contre on en a besoin en visu
@@ -575,7 +576,7 @@ class formsForm extends ploopi\data_object
         }
 
         /**
-         * Filtrage en fonction des paramètres d'archivage
+         * Filtrage en fonction des paramÃ¨tres d'archivage
          */
         if ($booBackupFilter)
         {
@@ -591,19 +592,19 @@ class formsForm extends ploopi\data_object
         if (!$booDelete)
         {
             /**
-             * Sélection des champ
+             * SÃ©lection des champ
              */
 
             foreach($arrObjField as $objField)
             {
-                // Choix de la colonne en fonction de critères multiples
-                // 1. Export + visibilité et droit admin
-                // 2. Affichage + visibilité
+                // Choix de la colonne en fonction de critÃ¨res multiples
+                // 1. Export + visibilitÃ© et droit admin
+                // 2. Affichage + visibilitÃ©
                 if (($booExport && $objField->fields['option_exportview'] && ($booIsAdmin || !$objField->fields['option_adminonly'])) || (!$booExport && $objField->fields['option_arrayview']))
                 {
                     $strAlias = $booFieldNamesAsKey ? $objField->fields['fieldname'] : $objField->fields['id'];
-                    // Traitement spécial des données DATE
-                    // Pas l'idéal de faire ça au niveau SQL mais permet d'éviter un post traitement
+                    // Traitement spÃ©cial des donnÃ©es DATE
+                    // Pas l'idÃ©al de faire Ã§a au niveau SQL mais permet d'Ã©viter un post traitement
                     if ($objField->fields['format'] == 'date')
                         $strSelect = $booRawData ? "IF(rec.`{$objField->fields['fieldname']}` = 0, '', CONCAT(rec.`{$objField->fields['fieldname']}`, '000000'))" : "IF(rec.`{$objField->fields['fieldname']}` = 0, '', CONCAT(SUBSTRING(rec.`{$objField->fields['fieldname']}`,7,2), '/', SUBSTRING(rec.`{$objField->fields['fieldname']}`,5,2), '/', SUBSTRING(rec.`{$objField->fields['fieldname']}`,1,4)))";
                     else
@@ -623,18 +624,18 @@ class formsForm extends ploopi\data_object
         {
             foreach($arrFieldFilter as $row)
             {
-                // On stocke la valeur du filtre dans un tableau (pour traitement générique)
+                // On stocke la valeur du filtre dans un tableau (pour traitement gÃ©nÃ©rique)
                 switch($row['op'])
                 {
                     case 'in':
-                        // Découpage sur la caractère ","
+                        // DÃ©coupage sur la caractÃ¨re ","
                         $arrValues = explode(',', $row['value']);
                     break;
 
                     case 'between':
-                        // Découpage sur la caractère ";"
+                        // DÃ©coupage sur la caractÃ¨re ";"
                         $arrValues = explode(';', $row['value']);
-                        // Contrôle du nombre de valeurs (2 attendues)
+                        // ContrÃ´le du nombre de valeurs (2 attendues)
                         if (sizeof($arrValues) < 2) $arrValues[1] = '';
                     break;
 
@@ -650,7 +651,7 @@ class formsForm extends ploopi\data_object
                         $strFieldName = "rec.`{$arrObjField[$strIdField]->fields['fieldname']}`";
 
                         /**
-                         * Traitement spécial sur les données du filtre en fonction du format du champ
+                         * Traitement spÃ©cial sur les donnÃ©es du filtre en fonction du format du champ
                          * Par exemple, si l'utilisateur saisit une date, on la transforme
                          */
                         switch ($arrObjField[$strIdField]->fields['format'])
@@ -700,7 +701,7 @@ class formsForm extends ploopi\data_object
                     }
                 }
 
-                // Intégration du filtre dans la requête SQL
+                // IntÃ©gration du filtre dans la requÃªte SQL
                 if (!empty($strFieldName))
                 {
                     switch($row['op'])
@@ -749,7 +750,7 @@ class formsForm extends ploopi\data_object
         {
 
             /**
-             * Application du critère de tri
+             * Application du critÃ¨re de tri
              */
 
             foreach($arrOrderBy as $strIdField => $strWay)
@@ -792,8 +793,8 @@ class formsForm extends ploopi\data_object
 
 
     /**
-     * Retourne toutes les données brutes du formulaire
-     * @return array données du formulaire
+     * Retourne toutes les donnÃ©es brutes du formulaire
+     * @return array donnÃ©es du formulaire
      */
 
     public function getRawData()
@@ -803,7 +804,7 @@ class formsForm extends ploopi\data_object
         // Lecture des champs du formulaire
         $arrObjFields = $this->getFields();
 
-        // Lecture des données
+        // Lecture des donnÃ©es
         $objQuery = new ploopi\query_select();
         $objQuery->add_from('`'.$this->getDataTableName().'` rec');
         $objQuery->add_orderby('`#id`');
@@ -821,20 +822,20 @@ class formsForm extends ploopi\data_object
     }
 
     /**
-     * Retourne les données filtrées du formulaire ainsi que le nombre de ligne (avec filtre, toutes pages comprises)
+     * Retourne les donnÃ©es filtrÃ©es du formulaire ainsi que le nombre de ligne (avec filtre, toutes pages comprises)
      * @param boolean $booWorkspaceFilter true si on souhaite appliquer le filtrage par espace de travail
-     * @param boolean $booBackupFilter true si on souhaite appliquer l'archivage des données
+     * @param boolean $booBackupFilter true si on souhaite appliquer l'archivage des donnÃ©es
      * @param array $arrFilter tableau permettant d'appliquer un filtre de recherche
-     * @param array $arrOrderBy tableau permettant de définir le tri
-     * @param integer $intNumPage numéro de la page à afficher
-     * @param boolean $booFieldNamesAsKey true pour utiliser les noms de champs comme clé du tableau de données
-     * @return array données du formulaire
+     * @param array $arrOrderBy tableau permettant de dÃ©finir le tri
+     * @param integer $intNumPage numÃ©ro de la page Ã  afficher
+     * @param boolean $booFieldNamesAsKey true pour utiliser les noms de champs comme clÃ© du tableau de donnÃ©es
+     * @return array donnÃ©es du formulaire
      */
 
     public function getData($booWorkspaceFilter = false, $booBackupFilter = false, $arrFilter = array(), $arrOrderBy = array(), $intNumPage = 0, $booFieldNamesAsKey = false, $booExport = false, $booRawData = false, $booDelete = false)
     {
         /**
-         * Construction de la requête
+         * Construction de la requÃªte
          * @var ploopi_query
          */
         $objQuery = $this->getQuery($booWorkspaceFilter, $booBackupFilter, $arrFilter, $arrOrderBy, $intNumPage, $booFieldNamesAsKey, $booExport, $booRawData, $booDelete);
@@ -847,7 +848,7 @@ class formsForm extends ploopi\data_object
         }
 
         /**
-         * Requête spéciale pour compter les enregistrements (sans "limit")
+         * RequÃªte spÃ©ciale pour compter les enregistrements (sans "limit")
          * @var ploopi_query
          */
         $objCount = clone $objQuery;
@@ -856,13 +857,13 @@ class formsForm extends ploopi\data_object
         $objCount->remove_limit();
 
         /**
-         * Retourne les données de la page sélectionnée et le nombre d'enregistrement total
+         * Retourne les donnÃ©es de la page sÃ©lectionnÃ©e et le nombre d'enregistrement total
          */
         return array($objQuery->execute()->getArray(), current($objCount->execute()->getarray(true)));
     }
 
     /**
-     * Suppression des données selon le filtre utilisateur
+     * Suppression des donnÃ©es selon le filtre utilisateur
      */
     public function deleteData()
     {
@@ -872,7 +873,7 @@ class formsForm extends ploopi\data_object
 
         $this->prepareData(false, false, false, false, true);
 
-        // Doit on recalculer les données ? (uniquement si agrégat)
+        // Doit on recalculer les donnÃ©es ? (uniquement si agrÃ©gat)
         $booCalculation = false;
         $booAggregate = false;
 
@@ -882,7 +883,7 @@ class formsForm extends ploopi\data_object
             {
                 $booCalculation = true;
 
-                // On va détecter si le calcul fait appel à un agrégat (dans ce cas il faut recalculer toutes les données du formulaire)
+                // On va dÃ©tecter si le calcul fait appel Ã  un agrÃ©gat (dans ce cas il faut recalculer toutes les donnÃ©es du formulaire)
                 $objParser = new formsArithmeticParser($objField->fields['formula']);
 
                 // Extraction des variables de l'expression
@@ -905,7 +906,7 @@ class formsForm extends ploopi\data_object
 
 
     /**
-     * Suppression des données plus anciennes qu'une date
+     * Suppression des donnÃ©es plus anciennes qu'une date
      */
     public function deleteToDate($intTs)
     {
@@ -917,8 +918,8 @@ class formsForm extends ploopi\data_object
 
 
     /**
-     * Prépare les données du formulaire et les retourne.
-     * Récupère les paramètres de la page, prépare la session, configuration du filtre de recherche et du tri.
+     * PrÃ©pare les donnÃ©es du formulaire et les retourne.
+     * RÃ©cupÃ¨re les paramÃ¨tres de la page, prÃ©pare la session, configuration du filtre de recherche et du tri.
      * @param boolean $booUnlockPageLimit
      * @return array
      */
@@ -946,7 +947,7 @@ class formsForm extends ploopi\data_object
         if (!isset($_SESSION['forms'][$this->fields['id']]['unlockbackup'])) $_SESSION['forms'][$this->fields['id']]['unlockbackup'] = 0;
 
         /**
-         * Récupération du filtre de recherche
+         * RÃ©cupÃ©ration du filtre de recherche
          */
 
         $arrFilter = array();
@@ -959,7 +960,7 @@ class formsForm extends ploopi\data_object
                 $arrFilter = ploopi\session::getvar('filter');
                 if (!is_array($arrFilter)) $arrFilter = array();
 
-                // Tableau spécifique pour le formulaire
+                // Tableau spÃ©cifique pour le formulaire
                 $arrFormFilter = ploopi\session::getvar('formfilter');
                 if (!is_array($arrFormFilter)) $arrFormFilter = array();
             }
@@ -977,13 +978,13 @@ class formsForm extends ploopi\data_object
         }
 
         /**
-         * Récupération du critère de tri
+         * RÃ©cupÃ©ration du critÃ¨re de tri
          */
         $arrOrderBy = array();
         $arrOrderBy[$_SESSION['forms'][$this->fields['id']]['orderby']] = $_SESSION['forms'][$this->fields['id']]['option'];
 
         /**
-         * Sélection page
+         * SÃ©lection page
          */
 
         if ($this->fields['nbline'] > 0 && !$booUnlockPageLimit) list($arrData, $intNumRows) = $this->getData(true, true, $arrFilter, $arrOrderBy, $_SESSION['forms'][$this->fields['id']]['page'], $booFieldNamesAsKey, $booExport, $booRawData, $booDelete);
@@ -993,18 +994,18 @@ class formsForm extends ploopi\data_object
     }
 
     /**
-     * Affiche les données du tableau dans un format bureautique (csv, xls, xml, html)
-     * @param string $strFormat format souhaité (csv, xls, xml, html)
+     * Affiche les donnÃ©es du tableau dans un format bureautique (csv, xls, xml, html)
+     * @param string $strFormat format souhaitÃ© (csv, xls, xml, html)
      */
 
     public function export($strFormat, $booExport = true)
     {
         set_time_limit(300);
 
-        // Lecture des données
+        // Lecture des donnÃ©es
         list($arrData) = $this->prepareData(true, true, $booExport, false);
 
-        // Suppression de la colonne 'id' pour l'impression (autorisé en export)
+        // Suppression de la colonne 'id' pour l'impression (autorisÃ© en export)
         if (!$booExport && !empty($arrData))
         {
             foreach(array_keys($arrData) as $strKey)
@@ -1026,7 +1027,7 @@ class formsForm extends ploopi\data_object
         switch($strFormat)
         {
             case 'csv':
-                // Lecture des paramètres CSV
+                // Lecture des paramÃ¨tres CSV
                 $strFormat = ploopi\param::get('forms_export_csvextension', $this->fields['id_module']);
                 $strFieldSep = str_replace('(tab)',"\t", ploopi\param::get('forms_export_fieldseparator', $this->fields['id_module']));
                 $strLineSep = str_replace(array('(cr)', '(lf)'), array("\r", "\n"), ploopi\param::get('forms_export_lineseparator', $this->fields['id_module']));
@@ -1060,7 +1061,7 @@ class formsForm extends ploopi\data_object
 
                 if ($booExport)
                 {
-                    // Préparation du document XLS, colonnes statiques
+                    // PrÃ©paration du document XLS, colonnes statiques
                     $arrTitles = array(
                         'id' => array('type' => 'integer', 'width' => 10),
                         'date_validation' => array('type' => 'datetime', 'width' => 20),
@@ -1076,7 +1077,7 @@ class formsForm extends ploopi\data_object
                 }
                 else
                 {
-                    // Préparation du document XLS, colonnes statiques
+                    // PrÃ©paration du document XLS, colonnes statiques
                     $arrTitles = array(
                         'date_validation' => array('type' => 'datetime', 'width' => 20, 'title' => 'Date de Validation'),
                         'ip' => array('type' => 'string', 'width' => 15, 'title' => 'Adresse IP'),
@@ -1114,7 +1115,7 @@ class formsForm extends ploopi\data_object
                     $arrTitles[$objField->fields['fieldname']] = array('type' => $strType, 'width' => empty($objField->fields['export_width']) ? null : $objField->fields['export_width'] );
                 }
 
-                // Attribution des libellés de colonnes (impression uniquement) (colonnes dynamiques)
+                // Attribution des libellÃ©s de colonnes (impression uniquement) (colonnes dynamiques)
                 if (!$booExport) foreach($this->getFields() as $strKey => $objField) $arrTitles[$objField->fields['fieldname']]['title'] = $objField->fields['name'];
 
                 // Traitement des dates XLS
@@ -1129,7 +1130,7 @@ class formsForm extends ploopi\data_object
                 }
 
 
-                // Détermination du type mime du format demandé
+                // DÃ©termination du type mime du format demandÃ©
                 switch($strFormat)
                 {
                     case 'xlsx':
@@ -1140,6 +1141,7 @@ class formsForm extends ploopi\data_object
                     case 'xls':
                         $arrOptions['writer'] = 'excel5';
                         echo ploopi\arr::toexcel($arrData, true, 'document.xls', 'Feuille', $arrTitles, $arrOptions);
+
                     break;
 
                     default:
@@ -1148,7 +1150,7 @@ class formsForm extends ploopi\data_object
                             // Init de l'interface avec le convertisseur
                             $objOdfConverter = new ploopi\odf_converter(ploopi\param::get('system_jodwebservice', _PLOOPI_MODULE_SYSTEM));
 
-                            // Détermination du type mime du format demandé
+                            // DÃ©termination du type mime du format demandÃ©
                             switch($strFormat)
                             {
                                 case 'pdf':
@@ -1164,7 +1166,7 @@ class formsForm extends ploopi\data_object
                                 break;
                             }
 
-                            // Génération XLS + Conversion
+                            // GÃ©nÃ©ration XLS + Conversion
                             $arrOptions['writer'] = 'excel2007';
                             echo $objOdfConverter->convert(ploopi\arr::toexcel($arrData, true, 'document.pdf', 'Feuille', $arrTitles, $arrOptions), 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', $strOuputMime);
                         }
@@ -1200,7 +1202,7 @@ class formsForm extends ploopi\data_object
 
 
     /**
-     * Suppression de la table liée au formulaire
+     * Suppression de la table liÃ©e au formulaire
      */
 
     private function _dropTable()
@@ -1211,7 +1213,7 @@ class formsForm extends ploopi\data_object
     }
 
     /**
-     * Génération de la table liée au formulaire (nouveau formulaire)
+     * GÃ©nÃ©ration de la table liÃ©e au formulaire (nouveau formulaire)
      */
 
     public function generateTable()
@@ -1221,17 +1223,17 @@ class formsForm extends ploopi\data_object
         $this->_setDataTableName();
 
         /**
-         * Suppression de la table si elle existe déjà
+         * Suppression de la table si elle existe dÃ©jÃ 
          */
 
         $this->_dropTable();
 
 
         /**
-         * Création de la table
+         * CrÃ©ation de la table
          */
 
-        // Traitement des champs par défaut
+        // Traitement des champs par dÃ©faut
         $arrDefaultFields = array(
             '#id' => 'INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY', //INT(10) DEFAULT 0',
             'date_validation' => 'BIGINT(14) DEFAULT 0',
@@ -1266,7 +1268,7 @@ class formsForm extends ploopi\data_object
         foreach($this->getFields() as $intId => $objField)
         {
             /**
-             * Création du nom physique pour le champ
+             * CrÃ©ation du nom physique pour le champ
              */
             $objField->save(false);
 
@@ -1284,13 +1286,13 @@ class formsForm extends ploopi\data_object
         $db->query("CREATE TABLE `{$this->_strTablename}` (".implode(', ', $arrSqlFields).") ENGINE=MyISAM;");
 
         /**
-         * Création des indexes
+         * CrÃ©ation des indexes
          */
         foreach($arrSqlIndexes as $strSql) $db->query($strSql);
     }
 
     /**
-     * Crée un export physique des données du formulaire (uniquement utile pour la transition entre 2.5 et 3.0)
+     * CrÃ©e un export physique des donnÃ©es du formulaire (uniquement utile pour la transition entre 2.5 et 3.0)
      */
 
     public function exportToTable()
@@ -1300,7 +1302,7 @@ class formsForm extends ploopi\data_object
         $this->generateTable();
 
         /**
-         * Insertion des données en injection directe
+         * Insertion des donnÃ©es en injection directe
          */
 
         $db->query("INSERT INTO `{$this->_strTablename}` ".$this->getQuery(false, false, array(), array(), 0, true)->get_sql());
@@ -1341,7 +1343,7 @@ class formsForm extends ploopi\data_object
     }
 
     /**
-     * Met à jour les données de la métabase pour le formulaire
+     * Met Ã  jour les donnÃ©es de la mÃ©tabase pour le formulaire
      */
 
     public function updateMetabase()
@@ -1399,7 +1401,7 @@ class formsForm extends ploopi\data_object
             {
                 //$objField->save(false);
 
-                $objMbField = new mb_field();
+                $objMbField = new ploopi\mb_field();
                 $objMbField->fields['tablename'] = $this->_strTablename;
                 $objMbField->fields['name'] = $objField->fields['fieldname'];
                 $objMbField->fields['label'] = $objField->fields['name'];
@@ -1444,11 +1446,11 @@ class formsForm extends ploopi\data_object
                     break;
 
                     case 'tablelink':
-                        // Ouverture du champ lié
+                        // Ouverture du champ liÃ©
                         $objLinkedField = new formsField();
                         if ($objLinkedField->open($objField->fields['values']))
                         {
-                            // Ouverture du formulaire lié
+                            // Ouverture du formulaire liÃ©
                             $objLinkedForm = new formsForm();
                             if ($objLinkedForm->open($objLinkedField->fields['id_form']))
                             {
@@ -1518,7 +1520,7 @@ class formsForm extends ploopi\data_object
         // Identifiant du formulaire
         $strFormId = 'forms_form_'.$this->fields['id'];
 
-        // Panel par défaut (numéro page)
+        // Panel par dÃ©faut (numÃ©ro page)
         $intDefaultPanel = 1;
 
         // L'utilisateur est admin ?
@@ -1527,13 +1529,13 @@ class formsForm extends ploopi\data_object
         // Contenu du formulaire
         $arrFieldsContent = array();
 
-        // Ouverture de l'enregistrement lié
+        // Ouverture de l'enregistrement liÃ©
         if (!empty($intIdRecord) && is_numeric($intIdRecord))
         {
             $objRecord = new formsRecord($this);
             if ($objRecord->open($intIdRecord))
             {
-                // Enregistrement existant, on charge les données
+                // Enregistrement existant, on charge les donnÃ©es
                 foreach($this->getFields() as $objField)
                 {
                     $objRecord->fields[$objField->fields['fieldname']];
@@ -1542,13 +1544,13 @@ class formsForm extends ploopi\data_object
 
                     if ($objField->fields['format'] == 'date') $arrFieldsContent[$objField->fields['id']][0] = empty($arrFieldsContent[$objField->fields['id']][0]) ? '' : current(ploopi\date::timestamp2local("{$arrFieldsContent[$objField->fields['id']][0]}000000"));
 
-                    if ($objField->fields['type'] == 'calculation') $arrFieldsContent[$objField->fields['id']][0] .= " (calculé lors de l'enregistrement)";
+                    if ($objField->fields['type'] == 'calculation') $arrFieldsContent[$objField->fields['id']][0] .= " (calculÃ© lors de l'enregistrement)";
                 }
             }
             else unset($objRecord);
         }
 
-        // Chargement des valeurs par défaut (nouvel enregistrement ou erreur)
+        // Chargement des valeurs par dÃ©faut (nouvel enregistrement ou erreur)
         if (empty($objRecord))
         {
             foreach($this->getFields() as $objField)
@@ -1556,11 +1558,11 @@ class formsForm extends ploopi\data_object
                 switch($objField->fields['type'])
                 {
                     case 'autoincrement':
-                        $arrFieldsContent[$objField->fields['id']][0] = ($objField->getAggregate('max')+1).' (à valider)';
+                        $arrFieldsContent[$objField->fields['id']][0] = ($objField->getAggregate('max')+1).' (Ã  valider)';
                     break;
 
                     case 'calculation':
-                        $arrFieldsContent[$objField->fields['id']][0] = "(calculé lors de l'enregistrement)";
+                        $arrFieldsContent[$objField->fields['id']][0] = "(calculÃ© lors de l'enregistrement)";
                     break;
 
                     default:
@@ -1651,7 +1653,7 @@ class formsForm extends ploopi\data_object
 
         $arrFormOptions['style'] = $this->fields['style'];
 
-        // Accès en modification ?
+        // AccÃ¨s en modification ?
         $booModify = $strRenderMode == 'modify' || $strRenderMode == 'frontoffice';
 
         // Instanciation de l'objet formulaire (affichage)
@@ -1666,8 +1668,8 @@ class formsForm extends ploopi\data_object
         $objForm->addField( new ploopi\form_html('<h1>'.ploopi\str::nl2br(ploopi\str::htmlentities($this->fields['label'])).$strDesc.'</h1>') );
 
         /**
-         * Pré-traitement nécessaire pour les liaisons multiples de champs liés à des formulaires (en français : listes imbriquées)
-         * Il faut détecter si plusieurs champs pointent vers des champs différents de la même table
+         * PrÃ©-traitement nÃ©cessaire pour les liaisons multiples de champs liÃ©s Ã  des formulaires (en franÃ§ais : listes imbriquÃ©es)
+         * Il faut dÃ©tecter si plusieurs champs pointent vers des champs diffÃ©rents de la mÃªme table
          */
         $arrLinkedFields = array();
 
@@ -1675,7 +1677,7 @@ class formsForm extends ploopi\data_object
         {
             if ($objField->fields['type'] == 'tablelink')
             {
-                // "values" contient l'id du champ lié
+                // "values" contient l'id du champ liÃ©
                 $objLinkedField = new formsField();
                 if ($objLinkedField->open($objField->fields['values']))
                 {
@@ -1736,7 +1738,7 @@ class formsForm extends ploopi\data_object
                 {
                     if($objField->fields['captcha'])
                     {
-                        $objPanel->addField( new ploopi\form_html('<div>Les CAPTCHAs ne sont pas gérés</div>') );
+                        $objPanel->addField( new ploopi\form_html('<div>Les CAPTCHAs ne sont pas gÃ©rÃ©s</div>') );
                     }
                     else
                     {
@@ -1744,7 +1746,7 @@ class formsForm extends ploopi\data_object
                         $strDataType = 'string';
                         $intMaxLength = 255;
 
-                        // Requis ? car général :
+                        // Requis ? car gÃ©nÃ©ral :
                         $booRequired = $objField->fields['option_needed'] == 1;
                         // Exceptions :
                         if ($objField->fields['type'] == 'file' && current($arrFieldsContent[$objField->fields['id']]) != '') $booRequired = false;
@@ -1760,7 +1762,7 @@ class formsForm extends ploopi\data_object
                         // Le champ fait partie d'un groupe conditionnel ? Si oui, on ne l'affiche pas
                         if ($objField->fields['id_group'] != 0) $arrOptions['style_form'] .= "display:none;";
 
-                        // Traitement automatique (sauvegarde des données) sur l'événement onchange
+                        // Traitement automatique (sauvegarde des donnÃ©es) sur l'Ã©vÃ©nement onchange
                         $arrOptions['onchange'] = "ploopi.{$strFormId}_onchange();";
 
                         if (!$booModify) $arrOptions['disabled'] = true;
@@ -1812,8 +1814,8 @@ class formsForm extends ploopi\data_object
 
                             case 'tablelink':
                                 /**
-                                  * On ne doit afficher les données que si le lien est unique vers la table ou si c'est le premier champ lié
-                                  * (les valeurs des autres champs sont déterminées en fonction des choix déjà effectués sur les précédents champs)
+                                  * On ne doit afficher les donnÃ©es que si le lien est unique vers la table ou si c'est le premier champ liÃ©
+                                  * (les valeurs des autres champs sont dÃ©terminÃ©es en fonction des choix dÃ©jÃ  effectuÃ©s sur les prÃ©cÃ©dents champs)
                                   */
                                 if (isset($arrLinkedFields['fields'][$objField->fields['values']]))
                                 {
@@ -1821,13 +1823,13 @@ class formsForm extends ploopi\data_object
 
                                     $objLinkedField = $arrLinkedFields['fields'][$objField->fields['values']];
 
-                                    // Initialisation de la liste des paramètres vers le formulaire X
+                                    // Initialisation de la liste des paramÃ¨tres vers le formulaire X
                                     if (!isset($arrParams[$objLinkedField->fields['id_form']])) $arrParams[$objLinkedField->fields['id_form']] = array();
 
-                                    // Lecture des valeurs du champs lié en fonction des paramètres déjà saisis
+                                    // Lecture des valeurs du champs liÃ© en fonction des paramÃ¨tres dÃ©jÃ  saisis
                                     $arrValues = array('' => '') + $objLinkedField->getValues($arrParams[$objLinkedField->fields['id_form']]);
 
-                                    // Mise à jour des paramètres déjà saisis pour le prochain champ imbriqué dans la boucle
+                                    // Mise Ã  jour des paramÃ¨tres dÃ©jÃ  saisis pour le prochain champ imbriquÃ© dans la boucle
                                     $arrParams[$objLinkedField->fields['id_form']][$objLinkedField->fields['fieldname']] = current($arrFieldsContent[$objField->fields['id']]);
 
                                     $arrOptions['onchange'] .= "forms_field_tablelink_onchange({$objField->fields['id']}, ".json_encode(array_keys($arrLinkedFields['forms'][$objLinkedField->fields['id_form']])).",'".ploopi\crypt::urlencode('admin-light.php?ploopi_op=forms_tablelink_values')."');";
@@ -1994,18 +1996,18 @@ class formsForm extends ploopi\data_object
                     $objForm->addButton( new ploopi\form_button('input:button', 'Retour', null, null, array('onclick' => "document.location.href='".ploopi\crypt::urlencode("admin.php?op=forms_viewreplies&forms_id={$this->fields['id']}")."';")) );
                 }
 
-                //$objForm->addButton( new ploopi\form_button('input:reset', 'Réinitialiser', null, null, array('style' => 'margin-right:10px;') ) );
-                $objForm->addButton( new ploopi\form_button('input:button', 'Réinitialiser', null, null, array('style' => 'margin-right:10px;', 'onclick' => "document.location.reload();")) );
-                $objForm->addButton( new ploopi\form_button('input:button', 'Imprimer', null, null, array('onclick' => "ploopi.{$strFormId}_quicksave('print'); ploopi_openwin('".ploopi\crypt::urlencode("index-light.php?ploopi_op=forms_print&forms_id={$this->fields['id']}&record_id={$intIdRecord}")."', 800, 600);")) );
+                //$objForm->addButton( new ploopi\form_button('input:reset', 'RÃ©initialiser', null, null, array('style' => 'margin-right:10px;') ) );
+                $objForm->addButton( new ploopi\form_button('input:button', 'RÃ©initialiser', null, null, array('style' => 'margin-right:10px;', 'onclick' => "document.location.reload();")) );
+                $objForm->addButton( new ploopi\form_button('input:button', 'Imprimer', null, null, array('onclick' => "ploopi.{$strFormId}_quicksave('print'); ploopi.openwin('".ploopi\crypt::urlencode("index-light.php?ploopi_op=forms_print&forms_id={$this->fields['id']}&record_id={$intIdRecord}")."', 800, 600);")) );
             break;
 
             case 'view':
                 $objForm->addButton( new ploopi\form_button('input:button', 'Retour', null, null, array('onclick' => "document.location.href='".ploopi\crypt::urlencode("admin.php?op=forms_viewreplies&forms_id={$this->fields['id']}")."';")) );
-                $objForm->addButton( new ploopi\form_button('input:button', 'Imprimer', null, null, array('onclick' => "ploopi.{$strFormId}_quicksave('print'); ploopi_openwin('".ploopi\crypt::urlencode("index-light.php?ploopi_op=forms_print&forms_id={$this->fields['id']}&record_id={$intIdRecord}")."', 800, 600);")) );
+                $objForm->addButton( new ploopi\form_button('input:button', 'Imprimer', null, null, array('onclick' => "ploopi.{$strFormId}_quicksave('print'); ploopi.openwin('".ploopi\crypt::urlencode("index-light.php?ploopi_op=forms_print&forms_id={$this->fields['id']}&record_id={$intIdRecord}")."', 800, 600);")) );
             break;
 
             case 'preview':
-                $objForm->addButton( new ploopi\form_button('input:button', 'Retour', null, null, array('onclick' => "ploopi_hidepopup('forms_preview');")) );
+                $objForm->addButton( new ploopi\form_button('input:button', 'Retour', null, null, array('onclick' => "ploopi.popup.hide('forms_preview');")) );
             break;
         }
 
@@ -2041,7 +2043,7 @@ class formsForm extends ploopi\data_object
                 {
                     $objFieldVar = $arrFields[$row['field']];
 
-                    // Stockage des valeurs du formulaire pour les variables concernées par la condition
+                    // Stockage des valeurs du formulaire pour les variables concernÃ©es par la condition
                     $strJsCond .= "\nvar V{$key} = new Array();";
                     switch($objFieldVar->fields['type'])
                     {
@@ -2063,15 +2065,16 @@ class formsForm extends ploopi\data_object
                     $strJsCond .= "\nvar C{$key} = false;";
                     $strJsCond .= "\nfor (i=0;i<V{$key}.length;i++) {";
 
+                    if (empty($row['op'])) $row['op'] = '=';
 
                     switch($row['op'])
                     {
-                        // Traité comme une chaîne (pas de sens en numérique)
+                        // TraitÃ© comme une chaÃ®ne (pas de sens en numÃ©rique)
                         case 'begin':
                             $strJsCond .= "C{$key} = C{$key} || (V{$key}[i].match(/".$strValue.".*/i));";
                         break;
 
-                        // Traité comme une chaîne (pas de sens en numérique)
+                        // TraitÃ© comme une chaÃ®ne (pas de sens en numÃ©rique)
                         case 'like':
                             $strJsCond .= "C{$key} = C{$key} || (V{$key}[i].match(/.*".$strValue.".*/i));";
                         break;
@@ -2117,7 +2120,7 @@ class formsForm extends ploopi\data_object
                             }
                         break;
 
-                        // Les opérateurs de base
+                        // Les opÃ©rateurs de base
                         default:
                             global $field_operators;
                             if (isset($field_operators[$row['op']])) $row['op'] = $field_operators[$row['op']];
@@ -2146,7 +2149,7 @@ class formsForm extends ploopi\data_object
                 }
             }
 
-            // Test de l'expression booléenne
+            // Test de l'expression boolÃ©enne
             try {
                 $objParser = new formsBooleanParser($objGroup->fields['formula']);
                 $strJsCond .= "\nreturn ".str_replace(array('&', '|'), array(' && ', ' || '), $objParser->getExpression()).';';
@@ -2165,13 +2168,13 @@ class formsForm extends ploopi\data_object
 
             ploopi.{$strFormId}_quicksave = function(mode) {
                 query = $('{$strFormId}').serialize();
-                query += (query == '' ? '' : '&')+'ploopi_xhr=1&ploopi_op=forms_quicksave&forms_form_id={$this->fields['id']}&forms_mode='+mode+'&forms_panel='+ploopi.currentpanel;
-                ploopi_xmlhttprequest('admin-light.php', query, false, false, 'POST');
+                query += (query == '' ? '' : '&')+'".ploopi_queryencode("ploopi_xhr=1&ploopi_op=forms_quicksave&forms_form_id={$this->fields['id']}")."&forms_mode='+mode+'&forms_panel='+ploopi.currentpanel;
+                ploopi.xhr.send('admin-light.php', query, false, false, 'POST');
             };
 
             {$strJsCond}
 
-            // Vérification des groupes
+            // VÃ©rification des groupes
             ploopi.{$strFormId}_checkgroups = function() {
                 {$strJsGroup}
             };
@@ -2181,7 +2184,7 @@ class formsForm extends ploopi\data_object
                 ploopi.{$strFormId}_checkgroups();
             };
 
-            // Sélection du bon panel au chargement
+            // SÃ©lection du bon panel au chargement
             Event.observe(window, 'load', function() {
                 $('{$strFocus}').focus();
                 ploopi.{$strFormId}_checkgroups();
@@ -2202,10 +2205,10 @@ class formsForm extends ploopi\data_object
             // Code JS du switch des fonctions de validation des panels
             $strJsSwitch = '';
 
-            $objForm->addButton( new ploopi\form_button('input:button', 'Précédent', null, "{$strFormId}_btn_prev", array('style' => 'margin-left:2px;font-weight:bold;display:none;', 'onclick' => "ploopi.{$strFormId}_prevpanel();")) );
+            $objForm->addButton( new ploopi\form_button('input:button', 'PrÃ©cÃ©dent', null, "{$strFormId}_btn_prev", array('style' => 'margin-left:2px;font-weight:bold;display:none;', 'onclick' => "ploopi.{$strFormId}_prevpanel();")) );
 
 
-            // Pour chaque panel, on affiche un bouton et on prépare le code JS
+            // Pour chaque panel, on affiche un bouton et on prÃ©pare le code JS
             foreach($arrPanels as $intNum => $strPanelId)
             {
                 $intId = $intNum+1;
@@ -2230,7 +2233,7 @@ class formsForm extends ploopi\data_object
             $objForm->addButton( new ploopi\form_button('input:button', 'Suivant', null, "{$strFormId}_btn_next", array('style' => 'margin-left:2px;font-weight:bold;', 'onclick' => "ploopi.{$strFormId}_nextpanel();")) );
 
             $objForm->addJs("
-                // Switch de panel avec vérification des données
+                // Switch de panel avec vÃ©rification des donnÃ©es
                 ploopi.{$strFormId}_switchpanel = function(panel, save) {
                     if (typeof(save) == 'undefined') save = true;
 
@@ -2246,7 +2249,7 @@ class formsForm extends ploopi\data_object
                     this.{$strFormId}_selectpanel(panel, save);
                 };
 
-                // Sélection d'un panel par le numéro de page + sauvegarde des données
+                // SÃ©lection d'un panel par le numÃ©ro de page + sauvegarde des donnÃ©es
                 ploopi.{$strFormId}_selectpanel = function(panel, save) {
                     if (typeof(save) == 'undefined') save = true;
 
@@ -2274,7 +2277,7 @@ class formsForm extends ploopi\data_object
                     }
                 };
 
-                // Panel précédent
+                // Panel prÃ©cÃ©dent
                 ploopi.{$strFormId}_prevpanel = function() {
                     panel = parseInt(this.currentpanel, 10) - 1;
                     if (panel < 1) panel = 1;
@@ -2291,7 +2294,7 @@ class formsForm extends ploopi\data_object
                     return true;
                 }
 
-                // Validation du formulaire (écrase la fonction d'origine de la classe form)
+                // Validation du formulaire (Ã©crase la fonction d'origine de la classe form)
                 ploopi.{$strFormId}_validate = function(form) {
                     for (p = 1; p <= ploopi.nbpanel ; p++)
                     {
@@ -2306,7 +2309,7 @@ class formsForm extends ploopi\data_object
                 };
 
 
-                // Sélection du bon panel au chargement
+                // SÃ©lection du bon panel au chargement
                 Event.observe(window, 'load', function() {
                     ploopi.{$strFormId}_switchpanel({$intDefaultPanel}, false);
                 });
@@ -2372,8 +2375,8 @@ class formsForm extends ploopi\data_object
     }
 
     /**
-     * Indique si un formulaire est publié à l'instant précis
-     * @return boolean true si le formulaire est publié
+     * Indique si un formulaire est publiÃ© Ã  l'instant prÃ©cis
+     * @return boolean true si le formulaire est publiÃ©
      */
     public function isPublished()
     {
@@ -2383,7 +2386,7 @@ class formsForm extends ploopi\data_object
     }
 
     /**
-     * Recalcule toutes les valeurs de champs calculés (appelé notamment lors de la modification de formule d'un champ calculé, ou lors de l'insertion d'un enregistrement contenant un champ calculé)
+     * Recalcule toutes les valeurs de champs calculÃ©s (appelÃ© notamment lors de la modification de formule d'un champ calculÃ©, ou lors de l'insertion d'un enregistrement contenant un champ calculÃ©)
      */
 
     public function calculate()
@@ -2398,26 +2401,26 @@ class formsForm extends ploopi\data_object
         $arrFieldsByPos = array();
         foreach($arrObjFields as $objField) $arrFieldsByPos[$objField->fields['position']] = $objField;
 
-        // Variables issues d'agrégats (à calculer)
+        // Variables issues d'agrÃ©gats (Ã  calculer)
         $arrStaticVariables = array();
 
-        // Chargement de l'ensemble des données brutes (donc non calculées) du formulaire
+        // Chargement de l'ensemble des donnÃ©es brutes (donc non calculÃ©es) du formulaire
         $arrData = $this->getRawData();
 
 
         // Traitement du formulaire, colonne par colonne
         foreach($arrObjFields as $objField)
         {
-            // On ne s'intéresse qu'aux colonnes calculées
+            // On ne s'intÃ©resse qu'aux colonnes calculÃ©es
             if ($objField->fields['type'] == 'calculation') {
 
-                // Pour chaque ligne de données
+                // Pour chaque ligne de donnÃ©es
                 foreach($arrData as $intId => $row) {
 
                     $arrVariables = $row;
 
                     try {
-                        // Interprétation du calcul
+                        // InterprÃ©tation du calcul
                         $objParser = new formsArithmeticParser($objField->fields['formula']);
 
                         // Extraction des variables de l'expression
@@ -2433,8 +2436,8 @@ class formsForm extends ploopi\data_object
                                 if (preg_match('/C([0-9]+)_?([A-Z]{0,3})/', $strVar, $arrMatches) > 0)
                                 {
                                     // $arrMatches[1] => position du champ
-                                    // $arrMatches[2] => agrégat (optionnel)
-                                    if (!empty($arrMatches[2])) // Ca nous intéresse, il faut calculer l'agrégat
+                                    // $arrMatches[2] => agrÃ©gat (optionnel)
+                                    if (!empty($arrMatches[2])) // Ca nous intÃ©resse, il faut calculer l'agrÃ©gat
                                     {
                                         $arrVariables[$strVar] = $arrStaticVariables[$strVar] = $arrFieldsByPos[$arrMatches[1]]->getAggregate($arrMatches[2]);
                                     }
@@ -2444,10 +2447,10 @@ class formsForm extends ploopi\data_object
 
                         $objParser = new formsArithmeticParser($objField->fields['formula'], $arrVariables);
 
-                        // Mise à jour du tableau de données
+                        // Mise Ã  jour du tableau de donnÃ©es
                         $arrData[$intId]['C'.$objField->fields['position']] = $objParser->getVal();
 
-                        // Enregistrement de la valeur modifiée en base de données (obligatoire pour le calcul des agrégats)
+                        // Enregistrement de la valeur modifiÃ©e en base de donnÃ©es (obligatoire pour le calcul des agrÃ©gats)
                         $objRecord = new formsRecord($this);
                         if ($objRecord->open($intId))
                         {

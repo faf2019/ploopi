@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -21,19 +21,19 @@
 */
 
 /**
- * Interface de modification d'un séparateur
+ * Interface de modification d'un sÃ©parateur
  *
  * @package forms
  * @subpackage admin
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
- * On commence par vérifier si l'identifiant du séparateur est valide.
- * Si ok => on l'ouvre. Sinon, nouveau séparateur.
- * Remarque : un séparateur et un champ particulier, on utilise donc la classe field.
+ * On commence par vÃ©rifier si l'identifiant du sÃ©parateur est valide.
+ * Si ok => on l'ouvre. Sinon, nouveau sÃ©parateur.
+ * Remarque : un sÃ©parateur et un champ particulier, on utilise donc la classe field.
  */
 
 $field = new formsField();
@@ -111,14 +111,14 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
     </div>
     <p style="clear:both;padding:0 0 4px 4px;" class="ploopi_va">
         <input type="checkbox" class="checkbox" name="field_option_pagebreak" id="field_option_pagebreak" value="1" <?php if ($field->fields['option_pagebreak']) echo 'checked'; ?> />
-        <span style="cursor:pointer;margin-right:15px;" onclick="javascript:$('field_option_pagebreak').checked = !$('field_option_pagebreak').checked;"><?php echo _FORMS_FIELD_PAGEBREAK; ?></span>
+        <span style="cursor:pointer;margin-right:15px;" onclick="javascript:jQuery('#field_option_pagebreak')[0].checked = !jQuery('#field_option_pagebreak')[0].checked;"><?php echo _FORMS_FIELD_PAGEBREAK; ?></span>
 
         <?php
         if ($objForm->fields['typeform'] == 'cms')
         {
             ?>
             <input type="checkbox" class="checkbox" name="field_option_wceview" id="field_option_wceview" value="1" <?php if ($field->fields['option_wceview']) echo 'checked'; ?> />
-            <span style="cursor:pointer;margin-right:15px;" onclick="javascript:$('field_option_wceview').checked = !$('field_option_wceview').checked;"><?php echo _FORMS_FIELD_WCEVIEW; ?></span>
+            <span style="cursor:pointer;margin-right:15px;" onclick="javascript:jQuery('#field_option_wceview')[0].checked = !jQuery('#field_option_wceview')[0].checked;"><?php echo _FORMS_FIELD_WCEVIEW; ?></span>
             <?php
         }
         ?>

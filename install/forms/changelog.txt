@@ -1,393 +1,402 @@
+== Module FORMS - version 3.7.1 =====================================================
+
+2020-03-05  StÃ©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
+
+* IntÃ©gration des patchs 3.6.4 -> 3.6.8
+* Rewriting
+* Migration UTF-8
+* Migration jQuery
+
 == Module FORMS - version 3.7.0 =====================================================
 
-2016-08-08  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2016-08-08  StÃ©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
 * Version pour Ploopi 1.9.7+ / PHP 7+
 
 == Module FORMS - version 3.6.3 =====================================================
 
-2016-02-23  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2016-02-23  StÃ©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
 * Correction d'un bug dans la mise en oeuvre des groupes conditionnels
-* Correction d'un bug d'affichage dans la liste des opérateurs des groupes conditionnels
-* Ajout de l'option "visible en frontoffice" pour les séparateurs
+* Correction d'un bug d'affichage dans la liste des opÃ©rateurs des groupes conditionnels
+* Ajout de l'option "visible en frontoffice" pour les sÃ©parateurs
 * Affichage de l'option "Frontoffice" dans la liste des champs du formulaire
-* Ajout de la propriété autocomplete="off" sur les champs de formulaire (impact sur la fonction "réinitialiser" qui permet de supprimer le remplissage automatique des champs géré par le navigateur)
-* Ajout de la propriété spellcheck="false" sur les champs de formulaire
-* Ajout de la propriété autocorrect="off" sur les champs de formulaire
-* Ajout de la propriété autocapitalize="false" sur les champs de formulaire
+* Ajout de la propriÃ©tÃ© autocomplete="off" sur les champs de formulaire (impact sur la fonction "rÃ©initialiser" qui permet de supprimer le remplissage automatique des champs gÃ©rÃ© par le navigateur)
+* Ajout de la propriÃ©tÃ© spellcheck="false" sur les champs de formulaire
+* Ajout de la propriÃ©tÃ© autocorrect="off" sur les champs de formulaire
+* Ajout de la propriÃ©tÃ© autocapitalize="false" sur les champs de formulaire
 
 == Module FORMS - version 3.6.2 =====================================================
 
-2016-02-19  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2016-02-19  StÃ©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
-* Correction d'un bug lors de l'enregistrement d'un champ de type "Numéro auto" (perte de la valeur)
+* Correction d'un bug lors de l'enregistrement d'un champ de type "NumÃ©ro auto" (perte de la valeur)
 
 == Module FORMS - version 3.6.1 =====================================================
 
-2016-02-15  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2016-02-15  StÃ©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
-* Correction d'un bug dans la prise en compte de l'option de visibilité des champs sur les formulaires publics
+* Correction d'un bug dans la prise en compte de l'option de visibilitÃ© des champs sur les formulaires publics
 
 == Module FORMS - version 3.6.0 =====================================================
 
-2015-09-22  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2015-09-22  StÃ©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
 * Correction d'un bug dans la prise en compte des filtres < > >= <=
 * Correction d'un bug d'affichage (print_r)
-* Correction d'un bug dans l'affichage des opérations de filtres sur les données des formulaires
+* Correction d'un bug dans l'affichage des opÃ©rations de filtres sur les donnÃ©es des formulaires
 
 == Module FORMS - version 3.5.6 =====================================================
 
-2015-01-20  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2015-01-20  StÃ©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
-* Correction d'un bug lié à la modification du comportement de html_entity_decode avec PHP 5.4
+* Correction d'un bug liÃ© Ã  la modification du comportement de html_entity_decode avec PHP 5.4
 
 == Module FORMS - version 3.5.5c =====================================================
 
-2014-06-30  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2014-06-30  StÃ©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
 * Correction d'un bug avec la gestion des liens et images dans fckeditor
 
 == Module FORMS - version 3.5.5b =====================================================
 
-2014-03-11  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2014-03-11  StÃ©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
-* Correction du lien de navigation page par page dans les données du formulaire
+* Correction du lien de navigation page par page dans les donnÃ©es du formulaire
 
 == Module FORMS - version 3.5.5a =====================================================
 
-2013-12-17  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2013-12-17  StÃ©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
-* Ajout de contrôles d'affichage pour éviter les injections XSS
+* Ajout de contrÃ´les d'affichage pour Ã©viter les injections XSS
 
 == Module FORMS - version 3.5.5 =====================================================
 
-2013-11-26  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2013-11-26  StÃ©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
-* Correction d'un bug lors du clonage d'un formulaire sans les données (ne créait pas la structure)
+* Correction d'un bug lors du clonage d'un formulaire sans les donnÃ©es (ne crÃ©ait pas la structure)
 
 2013-11-12  Bruno MORISSET ~ MI  <bruno.morisset@interieur.gouv.fr>
 
-* Déport de la fonction "import csv" admin vers utilisateur avec rôle ad hoc
+* DÃ©port de la fonction "import csv" admin vers utilisateur avec rÃ´le ad hoc
 
 == Module FORMS - version 3.5.4a =====================================================
 
-2013-09-03  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2013-09-03  StÃ©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
-* Correction d'un bug à la création d'un formulaire. La syntaxe SQL de création de la table n'était pas compatible avec MySQL 5.5+
+* Correction d'un bug Ã  la crÃ©ation d'un formulaire. La syntaxe SQL de crÃ©ation de la table n'Ã©tait pas compatible avec MySQL 5.5+
 
 == Module FORMS - version 3.5.4 =====================================================
 
-2013-08-26  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2013-08-26  StÃ©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
-* classe formsField : correction à l'ouverture d'un champ
-* classe formsForm : les méthodes getQuery et getData deviennent publiques
+* classe formsField : correction Ã  l'ouverture d'un champ
+* classe formsForm : les mÃ©thodes getQuery et getData deviennent publiques
 
 == Module FORMS - version 3.5.3b =====================================================
 
-2013-07-22  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2013-07-22  StÃ©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
-* Correction d'un bug lié à la modification du comportement de htmlentities avec PHP 5.4
+* Correction d'un bug liÃ© Ã  la modification du comportement de htmlentities avec PHP 5.4
 
 == Module FORMS - version 3.5.3a =====================================================
 
-2013-04-03  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2013-04-03  StÃ©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
-* Corrections suite à la modification du loader de Ploopi
+* Corrections suite Ã  la modification du loader de Ploopi
 
 == Module FORMS - version 3.5.3 =====================================================
 
-2013-03-18  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2013-03-18  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
 * Modification de l'export XLS (via PhpExcel)
 * Ajout de l'export XLSX (via PhpExcel)
 
 == Module FORMS - version 3.5.2e =====================================================
 
-2013-01-23  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2013-01-23  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Correction d'un bug lors de la copie des données sur le clonage d'un formulaire
+* Correction d'un bug lors de la copie des donnÃ©es sur le clonage d'un formulaire
 
 == Module FORMS - version 3.5.2d =====================================================
 
-2013-01-18  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2013-01-18  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Correction d'un bug sur le clonage d'un formulaire (non préservation des positions de champs)
+* Correction d'un bug sur le clonage d'un formulaire (non prÃ©servation des positions de champs)
 
 == Module FORMS - version 3.5.2c =====================================================
 
-2013-01-02  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2013-01-02  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Correction d'un bug sur l'évaluation des droits de modification et suppression d'une ligne
+* Correction d'un bug sur l'Ã©valuation des droits de modification et suppression d'une ligne
 
 == Module FORMS - version 3.5.2b =====================================================
 
-2012-11-16  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2012-11-16  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Correction d'un bug lors de l'enregistrement d'une réponse, ne supprimait pas le cookie de stockage temporaire des données
+* Correction d'un bug lors de l'enregistrement d'une rÃ©ponse, ne supprimait pas le cookie de stockage temporaire des donnÃ©es
 
 == Module FORMS - version 3.5.2a =====================================================
 
-2012-11-14  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2012-11-14  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Correction d'un bug dans le traitement des champs calculés (calculs en cascade avec prise en compte d'agrégats)
-* Correction d'un bug dans la gestion du contrôle d'unicité des réponse par jour/utilisateur
+* Correction d'un bug dans le traitement des champs calculÃ©s (calculs en cascade avec prise en compte d'agrÃ©gats)
+* Correction d'un bug dans la gestion du contrÃ´le d'unicitÃ© des rÃ©ponse par jour/utilisateur
 
 == Module FORMS - version 3.5.1g =====================================================
 
-2012-03-27  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2012-03-27  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Correction dans la gestion de la vue des données d'un formulaire
+* Correction dans la gestion de la vue des donnÃ©es d'un formulaire
 
 == Module FORMS - version 3.5.1f =====================================================
 
-2012-03-21  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2012-03-21  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Correction à l'ajout d'un enregistrement en frontoffice : n'envoyait pas le ticket et le mail associé
-* Correction sur les opérations de modification de structure de la table sous-jacente au formulaire
+* Correction Ã  l'ajout d'un enregistrement en frontoffice : n'envoyait pas le ticket et le mail associÃ©
+* Correction sur les opÃ©rations de modification de structure de la table sous-jacente au formulaire
 
 == Module FORMS - version 3.5.1e =====================================================
 
-2012-03-08  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2012-03-08  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Correction à la création d'un nouvel enregistrement suite à impression (problème de cookie)
+* Correction Ã  la crÃ©ation d'un nouvel enregistrement suite Ã  impression (problÃ¨me de cookie)
 
 == Module FORMS - version 3.5.1d =====================================================
 
-2012-03-08  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2012-03-08  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Correction d'un bug à l'impression : les champs optionnels n'aparaissaient pas
-* Correction d'un bug lors de la mise à jour d'un enregistrement contenant une pièce jointe en champ obligatoire
+* Correction d'un bug Ã  l'impression : les champs optionnels n'aparaissaient pas
+* Correction d'un bug lors de la mise Ã  jour d'un enregistrement contenant une piÃ¨ce jointe en champ obligatoire
 
 == Module FORMS - version 3.5.1c =====================================================
 
-2012-02-08  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2012-02-08  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
 * Correction d'un bug dans le script SQL d'install (incomplet)
 
 == Module FORMS - version 3.5.1b =====================================================
 
-2012-02-03  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2012-02-03  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
 * Correction d'un bug lors de la validation formulaire (admin)
-* Correction d'un bug lors de l'envoi d'une réponse de formulaire par ticket
+* Correction d'un bug lors de l'envoi d'une rÃ©ponse de formulaire par ticket
 
 == Module FORMS - version 3.5.1a =====================================================
 
-2012-02-02  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2012-02-02  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
 * Correction d'un bug lors de la suppression d'une instance du module
 
 == Module FORMS - version 3.5.1 =====================================================
 
-2012-01-30  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2012-01-30  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Augmentation de la longeur max de stockage des champs de type "texte avancé". On passe de 255 caractères (varchar) à environ 64ko (environ 65000 caractères)
+* Augmentation de la longeur max de stockage des champs de type "texte avancÃ©". On passe de 255 caractÃ¨res (varchar) Ã  environ 64ko (environ 65000 caractÃ¨res)
 
 == Module FORMS - version 3.5.0e =====================================================
 
-2011-11-14  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2011-11-14  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Suppression du contrôle sur le champ email (champ supprimé) lors de l'enregistrement du formulaire.
-* Ajout d'un message dans la zone de saisie d'un champ calculé (pour prévenir du calcul lors de l'enregistrement)
-* Correction d'une erreur dans le calcul des variables calculées lors de la création ou la modification d'un enregistrement
-* Correction d'une erreur dans le calcul des variables calculées avec agrégats lors de la suppression d'un enregistrement
-* Correction d'une erreur dans le calcul des variables calculées avec agrégats lors de la suppression de données via un filtre
-* Modification automatique des formules des variables calculées lors du déplacement de champs (modification de position, insertion, suppression) - Attention une variable supprimée n'est pas remplacée si elle est utilisée dans une formule
+* Suppression du contrÃ´le sur le champ email (champ supprimÃ©) lors de l'enregistrement du formulaire.
+* Ajout d'un message dans la zone de saisie d'un champ calculÃ© (pour prÃ©venir du calcul lors de l'enregistrement)
+* Correction d'une erreur dans le calcul des variables calculÃ©es lors de la crÃ©ation ou la modification d'un enregistrement
+* Correction d'une erreur dans le calcul des variables calculÃ©es avec agrÃ©gats lors de la suppression d'un enregistrement
+* Correction d'une erreur dans le calcul des variables calculÃ©es avec agrÃ©gats lors de la suppression de donnÃ©es via un filtre
+* Modification automatique des formules des variables calculÃ©es lors du dÃ©placement de champs (modification de position, insertion, suppression) - Attention une variable supprimÃ©e n'est pas remplacÃ©e si elle est utilisÃ©e dans une formule
 
 == Module FORMS - version 3.5.0d =====================================================
 
-2011-09-27  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2011-09-27  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Ajout d'un contrôle sur l'intitulé lors de l'enregistrement d'un graphique
-* Ajout d'un contrôle sur l'intitulé lors de l'enregistrement d'un groupe
+* Ajout d'un contrÃ´le sur l'intitulÃ© lors de l'enregistrement d'un graphique
+* Ajout d'un contrÃ´le sur l'intitulÃ© lors de l'enregistrement d'un groupe
 * Vidage du buffer de sortie lors de l'affichage d'un message d'erreur graphique
-* Quelques améliorations dans la détection des erreurs de rendu de graphiques
-* Possibilité de définir une liste d'utilisateurs du module comme destinataires du message contenant les données du formulaire (en remplacement de la saisie manuelle d'adresses de courriel)
- * Si ces utilisateurs disposent d'une adresse de courriel avec renvoi automatique des messages vers cette adresse, alors le formulaire est également envoyé par courriel
-* Suppression des anciens champs permettant de gérer les destinataires du formulaire (courriel)
+* Quelques amÃ©liorations dans la dÃ©tection des erreurs de rendu de graphiques
+* PossibilitÃ© de dÃ©finir une liste d'utilisateurs du module comme destinataires du message contenant les donnÃ©es du formulaire (en remplacement de la saisie manuelle d'adresses de courriel)
+ * Si ces utilisateurs disposent d'une adresse de courriel avec renvoi automatique des messages vers cette adresse, alors le formulaire est Ã©galement envoyÃ© par courriel
+* Suppression des anciens champs permettant de gÃ©rer les destinataires du formulaire (courriel)
 
 == Module FORMS - version 3.5.0c =====================================================
 
-2011-09-22  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2011-09-22  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Suppression d'un print_r résiduel à l'affichage d'un enregistrement
+* Suppression d'un print_r rÃ©siduel Ã  l'affichage d'un enregistrement
 
 == Module FORMS - version 3.5.0b =====================================================
 
-2011-09-21  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2011-09-21  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Suppression complète des données du module lors de la suppression de l'instance
-* Les valeurs par défaut des champs des tables de formulaires sont définies à NULL au lieu de 0 ou de "chaîne vide"
-* Un champ numérique non saisi ne contient plus "0" mais "null" (vide)
-* Groupes conditionnels : tests insensibles à la casse et aux accents lors de l'enregistrement de la ligne (et pas uniquement lors du contrôle JS côté client)
-* Correction sur les listes déroulantes 'Type de graphique' et 'Unité de temps'
-* Graphiques : filtres non sensibles à la casse et aux accents
-* Graphiques : différenciation entre le champ de filtre et le champ affiché pour chaque courbe
-* Graphiques : possibilité de personnaliser la légende de chaque courbe
+* Suppression complÃ¨te des donnÃ©es du module lors de la suppression de l'instance
+* Les valeurs par dÃ©faut des champs des tables de formulaires sont dÃ©finies Ã  NULL au lieu de 0 ou de "chaÃ®ne vide"
+* Un champ numÃ©rique non saisi ne contient plus "0" mais "null" (vide)
+* Groupes conditionnels : tests insensibles Ã  la casse et aux accents lors de l'enregistrement de la ligne (et pas uniquement lors du contrÃ´le JS cÃ´tÃ© client)
+* Correction sur les listes dÃ©roulantes 'Type de graphique' et 'UnitÃ© de temps'
+* Graphiques : filtres non sensibles Ã  la casse et aux accents
+* Graphiques : diffÃ©renciation entre le champ de filtre et le champ affichÃ© pour chaque courbe
+* Graphiques : possibilitÃ© de personnaliser la lÃ©gende de chaque courbe
 
 == Module FORMS - version 3.5.0a =====================================================
 
-2011-09-15  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2011-09-15  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Modification de la visibilité des données en vue "globale"
+* Modification de la visibilitÃ© des donnÃ©es en vue "globale"
 
 == Module FORMS - version 3.5.0 =====================================================
 
-2011-09-15  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2011-09-15  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Groupes conditionnels : tests insensibles à la casse et aux accents
-* Groupes conditionnels : expression booléenne insensible à la casse
-* Groupes conditionnels : ajout du support de l'opérateur 'entre'
-* Groupes conditionnels : ajout du support de l'opérateur 'dans la liste de valeurs'
-* Groupes conditionnels : Correction d'un bug dans l'application de la condition d'affichage aux séparateurs et aux contenus HTML
+* Groupes conditionnels : tests insensibles Ã  la casse et aux accents
+* Groupes conditionnels : expression boolÃ©enne insensible Ã  la casse
+* Groupes conditionnels : ajout du support de l'opÃ©rateur 'entre'
+* Groupes conditionnels : ajout du support de l'opÃ©rateur 'dans la liste de valeurs'
+* Groupes conditionnels : Correction d'un bug dans l'application de la condition d'affichage aux sÃ©parateurs et aux contenus HTML
 * Formulaire : Focus automatique sur le 1er champ accessible du formulaire
 * Admin : Modification des colonnes dans la liste des champs d'un formulaire pour affichage correct en 1024x768
-* Correction d'un bug sur la visibilité des données entre espaces de travail
+* Correction d'un bug sur la visibilitÃ© des donnÃ©es entre espaces de travail
 * Correction d'un bug sur l'affichage ou l'export de dates non saisies (correction ploopiArray->toXls)
-* Correction d'un bug de position (non prise en compte) lors de la création d'un champ/séparateur
+* Correction d'un bug de position (non prise en compte) lors de la crÃ©ation d'un champ/sÃ©parateur
 
 == Module FORMS - version 3.4.9c =====================================================
 
-2011-08-25  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2011-08-25  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Correction d'un bug sur l'intitulé des colonnes "système" lors de l'impression bureautique des enregistrements affichés
+* Correction d'un bug sur l'intitulÃ© des colonnes "systÃ¨me" lors de l'impression bureautique des enregistrements affichÃ©s
 
 == Module FORMS - version 3.4.9b =====================================================
 
-2011-08-24  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2011-08-24  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Correction d'un bug lors de l'affichage des colonnes "système" en mode "liste" (format de donnée non défini)
-* Correction de plusieurs bugs lors de l'impression d'un enregistrement (mode formulaire/écran)
+* Correction d'un bug lors de l'affichage des colonnes "systÃ¨me" en mode "liste" (format de donnÃ©e non dÃ©fini)
+* Correction de plusieurs bugs lors de l'impression d'un enregistrement (mode formulaire/Ã©cran)
 
 == Module FORMS - version 3.4.9 =====================================================
 
-2011-08-12  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2011-08-12  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Mode "liste": alignement à droite des contenus à valeur numérique
-* Mode "liste": correction de l'impression (libellés corrects des colonnes pour les formats ODS/PDF)
+* Mode "liste": alignement Ã  droite des contenus Ã  valeur numÃ©rique
+* Mode "liste": correction de l'impression (libellÃ©s corrects des colonnes pour les formats ODS/PDF)
 * Nouvelle option d'export pour les champs (XLS/ODS/PDF) : largeur de colonne
 * Nouvelle option d'export pour le formulaire (XLS/ODS/PDF) : pleine page, paysage/portrait,
-* Possibilité d'ajouter du contenu HTML (+ documents, + images, + vidéos) de la même manière qu'un champ
+* PossibilitÃ© d'ajouter du contenu HTML (+ documents, + images, + vidÃ©os) de la mÃªme maniÃ¨re qu'un champ
 * Validation des champs page par page
-* Renvoi à la bonne page si erreur de validation
-* Sauvegarde automatique des données à chaque changement de page en cookie (uniquement sur nouvel enregistrement)
-* Sauvegarde automatique du numéro de la page active (pour recharger le formulaire à la bonne page)
-* Correction d'un bug lors du contrôle d'un champ checkbox requis
+* Renvoi Ã  la bonne page si erreur de validation
+* Sauvegarde automatique des donnÃ©es Ã  chaque changement de page en cookie (uniquement sur nouvel enregistrement)
+* Sauvegarde automatique du numÃ©ro de la page active (pour recharger le formulaire Ã  la bonne page)
+* Correction d'un bug lors du contrÃ´le d'un champ checkbox requis
 * Correction d'un bug si champ obligatoire + autoincrement ou calcul
-* Correction de bugs dans l'intepréteur arithmétique (traitement du cas C1/-C2)
-* Ajout d'un interpréteur algébrique de Boole
-* Gestion de groupes conditionnels (ajout/modification/suppression), conditions multiples, expressions booléennes
-* Clonage d'un formulaire (avec ou sans données)
-* Agrégats disponibles dans les calculs (nombre, somme, moyenne, min, max, écart type, variance)
+* Correction de bugs dans l'inteprÃ©teur arithmÃ©tique (traitement du cas C1/-C2)
+* Ajout d'un interprÃ©teur algÃ©brique de Boole
+* Gestion de groupes conditionnels (ajout/modification/suppression), conditions multiples, expressions boolÃ©ennes
+* Clonage d'un formulaire (avec ou sans donnÃ©es)
+* AgrÃ©gats disponibles dans les calculs (nombre, somme, moyenne, min, max, Ã©cart type, variance)
 
 == Module FORMS - version 3.2.5a =====================================================
 
-2011-07-12  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2011-07-12  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Correction d'un bug dans la représentation mensuelle des graphiques
-* Correction d'un bug sur la suppression des données depuis l'interface d'administration du formulaire
-* Modification des champs affichés depuis la fonctionnalité "impression" disponible en mode "liste"
-* Ajout de quelques fonctions dans la liste des fonctions proposées par l'interpréteur arithmétique
-* Correction d'un bug à l'impression d'un formulaire (contenu sur une seule page, impression de pages blanches)
+* Correction d'un bug dans la reprÃ©sentation mensuelle des graphiques
+* Correction d'un bug sur la suppression des donnÃ©es depuis l'interface d'administration du formulaire
+* Modification des champs affichÃ©s depuis la fonctionnalitÃ© "impression" disponible en mode "liste"
+* Ajout de quelques fonctions dans la liste des fonctions proposÃ©es par l'interprÃ©teur arithmÃ©tique
+* Correction d'un bug Ã  l'impression d'un formulaire (contenu sur une seule page, impression de pages blanches)
 
 == Module FORMS - version 3.2.5 =====================================================
 
-2011-06-29  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2011-06-29  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Ajout de l'opérateur "<>" (Différent) pour les filtres lors de la consultation des données
- * Gestion des nouveaux opérateurs sur les filtres des graphiques
+ * Ajout de l'opÃ©rateur "<>" (DiffÃ©rent) pour les filtres lors de la consultation des donnÃ©es
+ * Gestion des nouveaux opÃ©rateurs sur les filtres des graphiques
  * Corrections sur les graphiques (notamment affichage mensuel et codes couleurs sur les courbes)
 
 == Module FORMS - version 3.2.4 =====================================================
 
-2011-06-28  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2011-06-28  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Ajout de l'opérateur "IN" (Dans la liste de valeurs) pour les filtres lors de la consultation des données
+ * Ajout de l'opÃ©rateur "IN" (Dans la liste de valeurs) pour les filtres lors de la consultation des donnÃ©es
 
 == Module FORMS - version 3.2.3 =====================================================
 
-2011-06-28  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2011-06-28  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Ajout d'un texte d'explication sur le format de fichier CSV à fournir pour l'import de données
- * Correction du bouton retour en mode "aperçu"
+ * Ajout d'un texte d'explication sur le format de fichier CSV Ã  fournir pour l'import de donnÃ©es
+ * Correction du bouton retour en mode "aperÃ§u"
 
 == Module FORMS - version 3.2.2 =====================================================
 
-2011-06-27  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2011-06-27  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Ajout d'une fonctionnalité d'impression (export XLS natif ainsi que ODS et PDF avec JOD Converter) des données du formulaire. Légèrement différent de la fonctionnalité d'export uniquement accessible via un rôle et qui exporte tous les champs, même les champs cachés (utilisateurs, ip, etc.).
+ * Ajout d'une fonctionnalitÃ© d'impression (export XLS natif ainsi que ODS et PDF avec JOD Converter) des donnÃ©es du formulaire. LÃ©gÃ¨rement diffÃ©rent de la fonctionnalitÃ© d'export uniquement accessible via un rÃ´le et qui exporte tous les champs, mÃªme les champs cachÃ©s (utilisateurs, ip, etc.).
 
 == Module FORMS - version 3.2.1a =====================================================
 
-2011-05-16  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2011-05-16  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
  * Correction d'un bug sur l'option d'affichage des boutons de pages (toujours actif)
 
 == Module FORMS - version 3.2.1 =====================================================
 
-2011-05-16  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2011-05-16  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
  * Ajout d'un bouton permettant d'imprimer le formulaire
  * Ajout d'une option permettant de d'afficher le bouton "enregistrer" sur toutes les pages (pour affichage multipage)
- * Ajout d'une option permettant de d'afficher un bouton pour accéder à chaque page (pour affichage multipage)
+ * Ajout d'une option permettant de d'afficher un bouton pour accÃ©der Ã  chaque page (pour affichage multipage)
 
 == Module FORMS - version 3.2.0b =====================================================
 
-2011-05-06  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2011-05-06  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Correction d'un bug empêchant l'affichage multipage lors de la visualisation d'un enregistrement (idem aperçu)
+ * Correction d'un bug empÃªchant l'affichage multipage lors de la visualisation d'un enregistrement (idem aperÃ§u)
 
 == Module FORMS - version 3.2.0a =====================================================
 
-2011-05-06  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2011-05-06  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Correction d'un bug empêchant de décocher la case "Saut de page" sur un séparateur
+ * Correction d'un bug empÃªchant de dÃ©cocher la case "Saut de page" sur un sÃ©parateur
 
 == Module FORMS - version 3.2.0 =====================================================
 
-2011-05-05  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2011-05-05  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Meilleure gestion des contraintes d'intégrité référentielles lors de la suppression d'un formulaire (données liées supprimées correctement)
+ * Meilleure gestion des contraintes d'intÃ©gritÃ© rÃ©fÃ©rentielles lors de la suppression d'un formulaire (donnÃ©es liÃ©es supprimÃ©es correctement)
  * Gestion de l'affichage multi-page d'un formulaire
 
 == Module FORMS - version 3.1.8e =====================================================
 
-2011-03-15  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2011-03-15  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Correction d'un bug à l'enregistrement d'une réponse du formulaire (ploopi_die() résiduel)
+ * Correction d'un bug Ã  l'enregistrement d'une rÃ©ponse du formulaire (ploopi_die() rÃ©siduel)
 
 == Module FORMS - version 3.1.8d =====================================================
 
-2011-03-07  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2011-03-07  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Correction d'un bug sur la recherche par date de validation. Il est désormais possible de rechercher sur une date précise avec l'opérateur "="
+ * Correction d'un bug sur la recherche par date de validation. Il est dÃ©sormais possible de rechercher sur une date prÃ©cise avec l'opÃ©rateur "="
 
 == Module FORMS - version 3.1.8c =====================================================
 
-2011-03-02  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2011-03-02  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Correction d'un bug lié au nombre d'index max que peut supporter une table MyISAM. Le nombre d'index est limité à 64 par formulaire. Les champs créés au delà de cette limite ne seront plus indexés.
- * Correction d'un bug lié à longueur max d'un intitulé de champ dans une table MyISAM. La longueur est désormais limitée à 60 caractères (+4 caractères réservés à la gestion des doublons).
+ * Correction d'un bug liÃ© au nombre d'index max que peut supporter une table MyISAM. Le nombre d'index est limitÃ© Ã  64 par formulaire. Les champs crÃ©Ã©s au delÃ  de cette limite ne seront plus indexÃ©s.
+ * Correction d'un bug liÃ© Ã  longueur max d'un intitulÃ© de champ dans une table MyISAM. La longueur est dÃ©sormais limitÃ©e Ã  60 caractÃ¨res (+4 caractÃ¨res rÃ©servÃ©s Ã  la gestion des doublons).
 
 == Module FORMS - version 3.1.8b =====================================================
 
-2011-02-28  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2011-02-28  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Amélioration de l'affichage des valeurs multiples pour les boutons radio et les checkboxes (modification des css suite à modification du rendu via la classe "form")
+ * AmÃ©lioration de l'affichage des valeurs multiples pour les boutons radio et les checkboxes (modification des css suite Ã  modification du rendu via la classe "form")
 
 == Module FORMS - version 3.1.8a =====================================================
 
-2011-02-23  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2011-02-23  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Correction d'un bug lors de la création d'un 3e (ou plus) champ avec homonyme.
+ * Correction d'un bug lors de la crÃ©ation d'un 3e (ou plus) champ avec homonyme.
 
 == Module FORMS - version 3.1.8 =====================================================
 
-2011-02-21  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2011-02-21  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Correction d'un problème à l'affichage du nombre d'enregistrement d'un formulaire (lié à la vue sur les données du formulaire)
+ * Correction d'un problÃ¨me Ã  l'affichage du nombre d'enregistrement d'un formulaire (liÃ© Ã  la vue sur les donnÃ©es du formulaire)
  * Corrections diverses
  * Changement de version pour cause de divergence avec la version stable
 
@@ -399,150 +408,150 @@
 
 == Module FORMS - version 3.1.7a =====================================================
 
-2011-01-19  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2011-01-19  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Correction d'un problème à l'affichage des séparateurs (affichait un champ lié reprenant l'intitulé du séparateur)
+ * Correction d'un problÃ¨me Ã  l'affichage des sÃ©parateurs (affichait un champ liÃ© reprenant l'intitulÃ© du sÃ©parateur)
 
 == Module FORMS - version 3.1.7 =====================================================
 
-2010-11-30  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2010-11-30  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Intégration du nouveau colorpicker
+ * IntÃ©gration du nouveau colorpicker
 
 == Module FORMS - version 3.1.6c =====================================================
 
-2010-10-26  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2010-10-26  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
 * Correction d'un bug dans la gestion des droits de modification d'un enregistrement
 
 == Module FORMS - version 3.1.6b =====================================================
 
-2010-10-25  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2010-10-25  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
 * Correction d'un bug avec la date d'archivage
-* Correction d'un bug de visibilité des données (application de la vue sur les espaces de travail)
+* Correction d'un bug de visibilitÃ© des donnÃ©es (application de la vue sur les espaces de travail)
 
 == Module FORMS - version 3.1.6 =====================================================
 
-2010-10-07  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2010-10-07  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Correction d'un bug d'affichage des séparateurs (ne s'affichaient pas)
-* Les liens formulaires ne sont plus limités aux formulaires de l'instance courante du module
+* Correction d'un bug d'affichage des sÃ©parateurs (ne s'affichaient pas)
+* Les liens formulaires ne sont plus limitÃ©s aux formulaires de l'instance courante du module
 
 == Module FORMS - version 3.1.5e =====================================================
 
-2010-09-16  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2010-09-16  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Correction d'un bug pour les graphiques dont l'échelle de temps est basée sur un champ utilisateur
+* Correction d'un bug pour les graphiques dont l'Ã©chelle de temps est basÃ©e sur un champ utilisateur
 
 == Module FORMS - version 3.1.5d =====================================================
 
-2010-09-15  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2010-09-15  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Correction d'un bug dans la gestion des tables liées
+* Correction d'un bug dans la gestion des tables liÃ©es
 
 == Module FORMS - version 3.1.5c =====================================================
 
-2010-09-15  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2010-09-15  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Correction d'un bug dans le parseur arithmétique. Ne gérait pas les fonctions imbriquées à paramètres multiples (ex: round(pow(C1, 3), 2) )
+* Correction d'un bug dans le parseur arithmÃ©tique. Ne gÃ©rait pas les fonctions imbriquÃ©es Ã  paramÃ¨tres multiples (ex: round(pow(C1, 3), 2) )
 
 == Module FORMS - version 3.1.5b =====================================================
 
-2010-09-15  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2010-09-15  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Correction d'un bug dans les listes imbriquées. Problème de décodage des requête Ajax (UTF8 => ISO-8859-1).
+* Correction d'un bug dans les listes imbriquÃ©es. ProblÃ¨me de dÃ©codage des requÃªte Ajax (UTF8 => ISO-8859-1).
 
 == Module FORMS - version 3.1.5a =====================================================
 
-2010-09-15  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2010-09-15  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Correction d'un bug dans le parseur arithmétique. Ne prenait pas en compte les variables négatives
+* Correction d'un bug dans le parseur arithmÃ©tique. Ne prenait pas en compte les variables nÃ©gatives
 * Correction d'un bug lors de l'affichage d'un formulaire en frontoffice (inclusion manquante)
-* Ajout de paramètres par défaut lors de la création d'un nouveau graphique
-* Correction sur la gestion de la visibilité des champs dans un formulaire
-* Correction sur la construction de la requête de récupération des données d'un formulaire (problème si espace ou utilisateur inexistant)
+* Ajout de paramÃ¨tres par dÃ©faut lors de la crÃ©ation d'un nouveau graphique
+* Correction sur la gestion de la visibilitÃ© des champs dans un formulaire
+* Correction sur la construction de la requÃªte de rÃ©cupÃ©ration des donnÃ©es d'un formulaire (problÃ¨me si espace ou utilisateur inexistant)
 
 == Module FORMS - version 3.1.5 =====================================================
 
-2010-09-15  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2010-09-15  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Correction d'un bug sur la suppression des données filtrées (non pris en compte)
-* Ajout d'une fonctionnalité permettant d'importer des données CSV dans un formulaire (administrateurs uniquement)
-* Corrections SQL sur la mise à jour précédente
+* Correction d'un bug sur la suppression des donnÃ©es filtrÃ©es (non pris en compte)
+* Ajout d'une fonctionnalitÃ© permettant d'importer des donnÃ©es CSV dans un formulaire (administrateurs uniquement)
+* Corrections SQL sur la mise Ã  jour prÃ©cÃ©dente
 
 == Module FORMS - version 3.1.0 =====================================================
 
-2010-09-14  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2010-09-14  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Mise en place des colonnes calculées (intégration d'un interpréteur arithmétique) :
-** Gestion des opérateurs arithmétiques standards : addition, soustraction, multiplication, division, modulo, exposant
+* Mise en place des colonnes calculÃ©es (intÃ©gration d'un interprÃ©teur arithmÃ©tique) :
+** Gestion des opÃ©rateurs arithmÃ©tiques standards : addition, soustraction, multiplication, division, modulo, exposant
 ** Gestion de nombreuses fonctions additionnelles : abs, sqrt, pow, min, max, cos, sin, tan, round, etc...
-** Gestion du parenthésage multi-niveau
+** Gestion du parenthÃ©sage multi-niveau
 ** Editeur de formule
-* Nombreuses corrections sur la visibilité des données selon les paramétrages
-* Possibilité de rendre une colonne uniquement visible pour le(s) administrateur(s) du module
-* Possibilité de rendre un formulaire uniquement visible pour le(s) administrateur(s) du module
-* Possibilité de prévisualiser le formulaire depuis l'interface d'administration
+* Nombreuses corrections sur la visibilitÃ© des donnÃ©es selon les paramÃ©trages
+* PossibilitÃ© de rendre une colonne uniquement visible pour le(s) administrateur(s) du module
+* PossibilitÃ© de rendre un formulaire uniquement visible pour le(s) administrateur(s) du module
+* PossibilitÃ© de prÃ©visualiser le formulaire depuis l'interface d'administration
 * Affiche une image en cas d'erreur de rendu (au lieu d'un popup vide)
-* Possibilité de télécharger l'image du graphique depuis un lien
+* PossibilitÃ© de tÃ©lÃ©charger l'image du graphique depuis un lien
 * Interface avec DBREPORT : Gestion des relations entre formulaires
-* Possibilité de paramétrages avancés des graphiques (police, tailles de police, marges, transparence, etc...)
+* PossibilitÃ© de paramÃ©trages avancÃ©s des graphiques (police, tailles de police, marges, transparence, etc...)
 
 == Module FORMS - version 3.0.2 =====================================================
 
-2010-09-07  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2010-09-07  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
-* Correction d'un bug à la suppression d'un enregistrement d'un formulaire.
+* Correction d'un bug Ã  la suppression d'un enregistrement d'un formulaire.
 
 == Module FORMS - version 3.0.1 =====================================================
 
-2010-09-06  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2010-09-06  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
 * Ajout d'images manquantes
-* Correction d'un bug à l'enregistrement d'un champ. Ne regénérait pas la métabase associée au formulaire
+* Correction d'un bug Ã  l'enregistrement d'un champ. Ne regÃ©nÃ©rait pas la mÃ©tabase associÃ©e au formulaire
 
 == Module FORMS - version 3.0 =====================================================
 
-2010-09-06  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2010-09-06  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
 * Moteur de stockage
-** Stockage des données dans une structure physique (une table), permettant la mise en place de formulaires avec une volumétrie importante de données
-** Mise à jour automatique de la structure physique depuis l'interface d'administration d'un formulaire
-** Ajout des données directement dans la stucture physique
+** Stockage des donnÃ©es dans une structure physique (une table), permettant la mise en place de formulaires avec une volumÃ©trie importante de donnÃ©es
+** Mise Ã  jour automatique de la structure physique depuis l'interface d'administration d'un formulaire
+** Ajout des donnÃ©es directement dans la stucture physique
 ** Indexation automatique des contenus
 
-* Consultation des données de formulaires
+* Consultation des donnÃ©es de formulaires
 ** Nouveaux formats d'exports, ou remise en forme de formats existants : XLS, CSV, HTML, XML, ODT (via OOo), PDF (via OOo)
-** Nouveau système de navigation par pages
+** Nouveau systÃ¨me de navigation par pages
 
 * Interface
-** Remplacement du moteur de template par un système basé sur des feuilles de style (CSS)
-** Ergonomie des formulaires nettement améliorée
+** Remplacement du moteur de template par un systÃ¨me basÃ© sur des feuilles de style (CSS)
+** Ergonomie des formulaires nettement amÃ©liorÃ©e
 
 * Connecteurs
-** Interfaçage automatique avec le module DBREPORT, permet de construire des requêtes sur les données de formulaires ou de mettre en place un webservice (XML, CSV, JSON, etc...)
+** InterfaÃ§age automatique avec le module DBREPORT, permet de construire des requÃªtes sur les donnÃ©es de formulaires ou de mettre en place un webservice (XML, CSV, JSON, etc...)
 
 * Graphiques
-** Les graphiques sont générés à partir du résultat de la requête et non plus sur une période déterminée
-** La largeur des graphiques est paramétrable par l'utilisateur
+** Les graphiques sont gÃ©nÃ©rÃ©s Ã  partir du rÃ©sultat de la requÃªte et non plus sur une pÃ©riode dÃ©terminÃ©e
+** La largeur des graphiques est paramÃ©trable par l'utilisateur
 
 == Module FORMS - version 2.5.4a =====================================================
 
 2010-03-22  Xavier Toussaint ~ HeXad <xavier@hexad.fr>
 
- * Bug : libellé contient un ' et bloque le javascript.php validate_form.
+ * Bug : libellÃ© contient un ' et bloque le javascript.php validate_form.
 
 == Module FORMS - version 2.5.4 =====================================================
 
 2010-03-22  Xavier Toussaint ~ HeXad <xavier@hexad.fr>
 
- * Ajout d'un email pour "from" dans les formulaires expédiés par email
+ * Ajout d'un email pour "from" dans les formulaires expÃ©diÃ©s par email
  * Ajout d'un commentaire explicatif pour les destinataires
 
 == Module FORMS - version 2.5.3c =====================================================
 
-2010-02-16  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2010-02-16  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
  * Correction du bug #41 dans la branche dev.
 
@@ -550,13 +559,13 @@
 
 2010-01-07  Xavier Toussaint ~ HeXad <xavier@hexad.fr>
 
- * correction : Url vers le captcha audio pouvait être erronée
+ * correction : Url vers le captcha audio pouvait Ãªtre erronÃ©e
 
 == Module FORMS - version 2.5.3a =====================================================
 
 2010-01-06  Xavier Toussaint ~ HeXad <xavier@hexad.fr>
 
- * correction : audio captcha erroné - urldecode -> urlencode pour flash
+ * correction : audio captcha erronÃ© - urldecode -> urlencode pour flash
 
 == Module FORMS - version 2.5.3 =====================================================
 
@@ -566,46 +575,46 @@
 
 == Module FORMS - version 2.5.2b =====================================================
 
-2009-12-03  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2009-12-03  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Correction d'un bug sur le calcul des positions suite à la suppression d'un champ
+ * Correction d'un bug sur le calcul des positions suite Ã  la suppression d'un champ
 
 == Module FORMS - version 2.5.2 =====================================================
 
-2009-11-27  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2009-11-27  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Paramétrage de la trame de temps
+ * ParamÃ©trage de la trame de temps
  * Nettoyage automatique des filtres
 
 == Module FORMS - version 2.5.1d =====================================================
 
-2009-11-24  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2009-11-24  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
  * Correction d'un bug sur le filtrage des champs de type "date"
 
 == Module FORMS - version 2.5.1c =====================================================
 
-2009-11-24  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2009-11-24  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Ajout d'un tri sur les données d'un champ de type 'Lien formulaire'
+ * Ajout d'un tri sur les donnÃ©es d'un champ de type 'Lien formulaire'
 
 == Module FORMS - version 2.5.1b =====================================================
 
-2009-11-24  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2009-11-24  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Correction d'un bug impactant la validation des champs de formulaire contenant le caractère "'"
+ * Correction d'un bug impactant la validation des champs de formulaire contenant le caractÃ¨re "'"
 
 == Module FORMS - version 2.5.1 =====================================================
 
-2009-11-23  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2009-11-23  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
  * Ajout des graphiques de type "radar"
- * Mise à jour de jpgraph
- * Correction d'un bug sur l'aggrégation des données par intervalles (en fonction de la période d'affichage)
+ * Mise Ã  jour de jpgraph
+ * Correction d'un bug sur l'aggrÃ©gation des donnÃ©es par intervalles (en fonction de la pÃ©riode d'affichage)
 
 == Module FORMS - version 2.5.0b =====================================================
 
-2009-11-23  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2009-11-23  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
  * Ajout des fichiers de langue de jpgraph
  * Ajout des fonts manquantes
@@ -613,68 +622,68 @@
 
 == Module FORMS - version 2.5.0 =====================================================
 
-2009-11-23  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2009-11-23  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Gestion des graphiques de type "courbes", "histogrammes", "secteurs". Plusieurs graphiques peuvent être associés à un formulaire. Nombreux paramétrages (couleur, période, pourcentage, cumul, etc.)
+ * Gestion des graphiques de type "courbes", "histogrammes", "secteurs". Plusieurs graphiques peuvent Ãªtre associÃ©s Ã  un formulaire. Nombreux paramÃ©trages (couleur, pÃ©riode, pourcentage, cumul, etc.)
 
 == Module FORMS - version 2.3.6b =====================================================
 
-2009-08-31  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2009-08-31  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Ajout du support des interlignes dans le template par défaut
- * Correction d'un bug mineur à l'affichage des champs d'un formulaire (Suppression du texte "0px")
+ * Ajout du support des interlignes dans le template par dÃ©faut
+ * Correction d'un bug mineur Ã  l'affichage des champs d'un formulaire (Suppression du texte "0px")
 
 == Module FORMS - version 2.3.6 =====================================================
 
-2009-06-15  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2009-06-15  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Ajout d'une propriété "style" sur les champs du formulaire ainsi que sur les séparateurs
- * Impact sur le template par défaut
+ * Ajout d'une propriÃ©tÃ© "style" sur les champs du formulaire ainsi que sur les sÃ©parateurs
+ * Impact sur le template par dÃ©faut
 
 == Module FORMS - version 2.3.5 =====================================================
 
-2009-05-04  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2009-05-04  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Correction sur la fonctionnalité d'export XLS (variables non définies)
+ * Correction sur la fonctionnalitÃ© d'export XLS (variables non dÃ©finies)
 
 == Module FORMS - version 2.3.4 =====================================================
 
-2009-04-22  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2009-04-22  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Mise à jour ergonomique (mise en conformité de l'ensemble des modules)
+ * Mise Ã  jour ergonomique (mise en conformitÃ© de l'ensemble des modules)
 
 == Module FORMS - version 2.3.2 =====================================================
 
-2009-03-17  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2009-03-17  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
  * Correction d'un bug dans la gestion du droit de suppression des enregistrements
- * La fonctionnalité "Supprimer les données filtrées" respecte les droits de l'utilisateur pour chaque enregistrement
+ * La fonctionnalitÃ© "Supprimer les donnÃ©es filtrÃ©es" respecte les droits de l'utilisateur pour chaque enregistrement
  * Remplacement des balises <? par <?php
 
 == Module FORMS - version 2.3.1 =====================================================
 
-2009-02-13  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2009-02-13  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Correction d'un bug dans la navigation backoffice, avec le frontoffice désactivé, lors de l'intégration d'un objet WCE/WebEdit de type formulaire.
+ * Correction d'un bug dans la navigation backoffice, avec le frontoffice dÃ©sactivÃ©, lors de l'intÃ©gration d'un objet WCE/WebEdit de type formulaire.
 
 == Module FORMS - version 2.3 =====================================================
 
-2009-02-05  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2009-02-05  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
  * Correction d'un bug sur le type du champ 'id_workspace' de la table 'ploopi_mod_forms_reply'
- * Correction de quelques bugs mineurs (variables non définies)
+ * Correction de quelques bugs mineurs (variables non dÃ©finies)
  * Transformation des balises <? en <?php
  * Meilleure compression des images png
 
 == Module FORMS - version 2.231 =====================================================
 
-2009-01-26  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2009-01-26  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Correction d'un bug (constante non définie)
+ * Correction d'un bug (constante non dÃ©finie)
 
 == Module FORMS - version 2.23 =====================================================
 
-2009-01-23  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2009-01-23  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
  * Correctif sur la fonction forms_getdata(), ne prenait pas en compte les options.
 
@@ -686,9 +695,9 @@
 
 == Module FORMS - version 2.22 =====================================================
 
-2008-09-22  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2008-09-22  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Correctifs et ajouts mineurs pour l'intégration d'un formulaire dans un module externe
+ * Correctifs et ajouts mineurs pour l'intÃ©gration d'un formulaire dans un module externe
 
 == Module FORMS - version 2.213 =====================================================
 
@@ -705,158 +714,158 @@
 
 == Module FORMS - version 2.211 =====================================================
 
-2008-09-01  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2008-09-01  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
  * Correction d'un bug sur les onglets en admin (ajout d'un formulaire) - merci Xavier
 
 == Module FORMS - version 2.21 =====================================================
 
-2008-08-12  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2008-08-12  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Correction d'un bug lors de la génération de la fonction javascript de validation d'un formulaire intégré en frontoffice
+ * Correction d'un bug lors de la gÃ©nÃ©ration de la fonction javascript de validation d'un formulaire intÃ©grÃ© en frontoffice
 
 == Module FORMS - version 2.20 =====================================================
 
-2008-07-30  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2008-07-30  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Mise à jour des appels à la fonction ploopi_xmlhttprequest_todiv()
+ * Mise Ã  jour des appels Ã  la fonction ploopi_xmlhttprequest_todiv()
  * Correction d'un bug lors de l'export XLS/CSV : non prise en compte du filtrage
 
 == Module FORMS - version 2.19 =====================================================
 
-2008-05-28  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2008-05-28  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Mise à jour du système de liens (ploopi_env) lié à la mise à jour de Ploopi
+ * Mise Ã  jour du systÃ¨me de liens (ploopi_env) liÃ© Ã  la mise Ã  jour de Ploopi
 
 == Module FORMS - version 2.18 =====================================================
 
-2008-05-28  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2008-05-28  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Correction d'un bug sur la gestion multipage lors de l'intégration d'un formulaire dans un objet externe (multipage inutile et supprimé)
+ * Correction d'un bug sur la gestion multipage lors de l'intÃ©gration d'un formulaire dans un objet externe (multipage inutile et supprimÃ©)
 
 == Module FORMS - version 2.17 =====================================================
 
-2008-05-16  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2008-05-16  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Mise à jour des commentaires, nettoyage
+ * Mise Ã  jour des commentaires, nettoyage
 
 == Module FORMS - version 2.16 =====================================================
 
-2008-04-28  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+2008-04-28  StÃ©phane Escaich ~ Ovensia <stephane@ovensia.fr>
 
- * Correctif de sécurité sur op.php suite à modification sur op.php principal
+ * Correctif de sÃ©curitÃ© sur op.php suite Ã  modification sur op.php principal
 
 == Module FORMS - version 2.15 =====================================================
 
-2008-04-17  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2008-04-17  StÃ©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
- * Ajout d'une fonction d'export de données forms_getdata()
+ * Ajout d'une fonction d'export de donnÃ©es forms_getdata()
 
 == Module FORMS - version 2.141 ====================================================
 
-2008-04-16  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2008-04-16  StÃ©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
  * Correction d'un pb de chargement d'image manquante
 
 == Module FORMS - version 2.13 ====================================================
 
-2008-04-11  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2008-04-11  StÃ©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
  * Correction sur le fonctionnement des checkbox/radio
- * Pas de valeur par défaut dans une liste liée à un champ d'un autre formulaire
+ * Pas de valeur par dÃ©faut dans une liste liÃ©e Ã  un champ d'un autre formulaire
 
 == Module FORMS - version 2.13 ====================================================
 
-2008-04-08  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2008-04-08  StÃ©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
  * Compression des fichiers JS/CSS
 
 == Module FORMS - version 2.12 ====================================================
 
-2008-04-08  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2008-04-08  StÃ©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
- * Correctifs sur les fonctionnalités d'intégration intermodule (SYNERGI) : upload/download file
+ * Correctifs sur les fonctionnalitÃ©s d'intÃ©gration intermodule (SYNERGI) : upload/download file
 
 == Module FORMS - version 2.11 ====================================================
 
-2008-04-08  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2008-04-08  StÃ©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
- * Correctifs sur les fonctionnalités d'intégration intermodule (SYNERGI)
+ * Correctifs sur les fonctionnalitÃ©s d'intÃ©gration intermodule (SYNERGI)
 
 == Module FORMS - version 2.10 ====================================================
 
-2008-04-08  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2008-04-08  StÃ©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
  * Gestion du maxlength sur les champs texte
- * Ajout du calendrier sur les champs date en frontoffice (nécessite calendar.css et calendar_ie.css)
- * Correction d'un bug affectant le numéro auto lors de la modification d'un enregistrement
+ * Ajout du calendrier sur les champs date en frontoffice (nÃ©cessite calendar.css et calendar_ie.css)
+ * Correction d'un bug affectant le numÃ©ro auto lors de la modification d'un enregistrement
  * Correction d'un bug affectant le champ 'fichier' lors de la modification d'un enregistrement
  * Correction d'un bug sur l'upload de fichiers
- * Plus de couleur par défaut dans la liste
- * Plus de choix par défaut dans la liste
- * Correction de problèmes d'affichage du template backoffice sous IE
- * Gestion multicolonne des cases à cocher et boutons radio (attention, nécessaite une modification du template frontoffice)
+ * Plus de couleur par dÃ©faut dans la liste
+ * Plus de choix par dÃ©faut dans la liste
+ * Correction de problÃ¨mes d'affichage du template backoffice sous IE
+ * Gestion multicolonne des cases Ã  cocher et boutons radio (attention, nÃ©cessaite une modification du template frontoffice)
 
 == Module FORMS - version 2.0 ====================================================
 
-2008-01-09  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2008-01-09  StÃ©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
- * Utilisation du moteur de template pour afficher le formulaire d'ajout/modif d'un enregistrement (le template par défaut est dans le dossier ./modules/forms/templates/default)
+ * Utilisation du moteur de template pour afficher le formulaire d'ajout/modif d'un enregistrement (le template par dÃ©faut est dans le dossier ./modules/forms/templates/default)
  * [DEV] Ajout d'une fonction permettant l'utilisation de formulaires depuis un autre module : forms_display($id_form, $id_module, $id_object, $id_record, $rights = array(), $options = array());
- * Mise à niveau sécurité
+ * Mise Ã  niveau sÃ©curitÃ©
  * Migration Ploopi
- * Modifications sur la structure SQL (nom des tables & clés étrangères)
- * Mise à jour de la Métabase
+ * Modifications sur la structure SQL (nom des tables & clÃ©s Ã©trangÃ¨res)
+ * Mise Ã  jour de la MÃ©tabase
 
 == Module FORMS - version 1.99 ====================================================
 
-2007-12-06  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2007-12-06  StÃ©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
- * Réécriture des interfaces d'administration pour supprimer la mise en page type TABLEAU
- * Amélioration de l'ergonomie et du look&feel
- * Optimisation de l'affichage des données en mode "liste"
+ * RÃ©Ã©criture des interfaces d'administration pour supprimer la mise en page type TABLEAU
+ * AmÃ©lioration de l'ergonomie et du look&feel
+ * Optimisation de l'affichage des donnÃ©es en mode "liste"
  * Ajout des fonctions d'archivage depuis le mode "liste".
 
 == Module FORMS - version 1.49 ====================================================
 
-2007-11-22  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2007-11-22  StÃ©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
- * Correction d'un bug sur les droits de suppression (màj 1.48)
+ * Correction d'un bug sur les droits de suppression (mÃ j 1.48)
 
 == Module FORMS - version 1.48 ====================================================
 
-2007-11-22  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2007-11-22  StÃ©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
- * Possibilité de supprimer (défintivement) les données d'un formulaire depuis l'interface utilisateur avec un rôle adapté. La suppression s'adapte au filtre appliqué et à la vue dont l'utilisateur dispose sur les données.
+ * PossibilitÃ© de supprimer (dÃ©fintivement) les donnÃ©es d'un formulaire depuis l'interface utilisateur avec un rÃ´le adaptÃ©. La suppression s'adapte au filtre appliquÃ© et Ã  la vue dont l'utilisateur dispose sur les donnÃ©es.
 
 == Module FORMS - version 1.47 ====================================================
 
-2007-11-02  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2007-11-02  StÃ©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
- * Correction d'un bug sur les droits du menu "Administration", apparaissait dès que l'utilisateur avait une action
- * Ajout d'un paramètre "jusqu'à date" pour l'archivage de données
- * Possibilité de supprimer (défintivement) les données d'un formulaire
+ * Correction d'un bug sur les droits du menu "Administration", apparaissait dÃ¨s que l'utilisateur avait une action
+ * Ajout d'un paramÃ¨tre "jusqu'Ã  date" pour l'archivage de donnÃ©es
+ * PossibilitÃ© de supprimer (dÃ©fintivement) les donnÃ©es d'un formulaire
 
 == Module FORMS - version 1.46 ====================================================
 
-2007-10-09  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2007-10-09  StÃ©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
- * Ajout des propriétés TABINDEX et REQUIRED au niveau du moteur de template du module formulaire (pour intégration dans frontoffice)
+ * Ajout des propriÃ©tÃ©s TABINDEX et REQUIRED au niveau du moteur de template du module formulaire (pour intÃ©gration dans frontoffice)
 
 == Module FORMS - version 1.45 ====================================================
 
-2007-10-04  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2007-10-04  StÃ©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
- * Correction d'un problème de mise en page en mode liste pour les formulaires composés de beaucoup de champs
+ * Correction d'un problÃ¨me de mise en page en mode liste pour les formulaires composÃ©s de beaucoup de champs
 
-2007-10-02  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>
+2007-10-02  StÃ©phane Escaich ~ Ovensia  <stephane@ovensia.fr>
 
- * Ajout d'un patch SQL pour corriger des problèmes antérieurs de mise à jour
- * Ajout de la possibilité pour l'administrateur de supprimer n'importe quel enregistrement du formulaire quelque soit la vue sur les données
+ * Ajout d'un patch SQL pour corriger des problÃ¨mes antÃ©rieurs de mise Ã  jour
+ * Ajout de la possibilitÃ© pour l'administrateur de supprimer n'importe quel enregistrement du formulaire quelque soit la vue sur les donnÃ©es
 
 == Module FORMS - version 1.43 ====================================================
 
-2007-09-04  Stéphane Escaich ~ Netlor <stephane@netlor.fr>
+2007-09-04  StÃ©phane Escaich ~ Netlor <stephane@netlor.fr>
 
- * Ajout d'une option "Visible lors d'une intégration en objet WCE" sur un champ de formulaire (non opérationnel)
+ * Ajout d'une option "Visible lors d'une intÃ©gration en objet WCE" sur un champ de formulaire (non opÃ©rationnel)
  * Correction d'un bug d'affichage du calendrier lors de la saisie d'un enregistrement de type "date"

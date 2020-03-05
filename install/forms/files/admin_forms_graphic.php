@@ -1,6 +1,6 @@
 <?php
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2018 Ovensia
     Copyright (c) 2010 HeXad
     Contributors hold Copyright (c) to their code submissions.
 
@@ -28,7 +28,7 @@
  * @subpackage admin
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author Ovensia
  */
 
 /**
@@ -38,7 +38,7 @@ include_once './modules/forms/jpgraph/jpgraph.php';
 include_once './modules/forms/jpgraph/jpgraph_ttf.inc.php';
 
 /**
- * On commence par vérifier si l'identifiant du graphique est valide.
+ * On commence par vÃ©rifier si l'identifiant du graphique est valide.
  * Si ok => on l'ouvre. Sinon, nouveau graphique.
  */
 
@@ -108,22 +108,22 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
                 <textarea class="text" name="forms_graphic_description"><?php echo ploopi\str::htmlentities($objGraphic->fields['description']); ?></textarea>
             </p>
             <p>
-                <label>Afficher les données en pourcentage:</label>
+                <label>Afficher les donnÃ©es en pourcentage:</label>
                 <input type="checkbox" name="forms_graphic_percent" value="1" <?php if ($objGraphic->fields['percent']) echo 'checked="checked"'; ?> style="width:16px;" />
             </p>
 
             <p class="ploopi_va forms_param_link" id="forms_graphic_params_link" style="display:block;">
-                <a onclick="javascript:$('forms_graphic_params_link').style.display = 'none'; $('forms_graphic_params').style.display = 'block';" href="javascript:void(0);">
+                <a onclick="javascript:jQuery('#forms_graphic_params_link')[0].style.display = 'none'; jQuery('#forms_graphic_params')[0].style.display = 'block';" href="javascript:void(0);">
                 <img src="./modules/forms/img/arrow_down.png" />
-                Paramètres avancés
+                ParamÃ¨tres avancÃ©s
                 </a>
             </p>
 
             <div id="forms_graphic_params" style="display:none;">
                 <fieldset>
-                    <legend>Paramètres généraux</legend>
+                    <legend>ParamÃ¨tres gÃ©nÃ©raux</legend>
                     <p>
-                        <label>Police de caractère:</label>
+                        <label>Police de caractÃ¨re:</label>
                         <?php
                         $arrFonts = array(
                             FF_VERA => 'Vera',
@@ -151,16 +151,16 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
                         <input type="text" class="text" style="width:40px;margin-right:2px;" name="forms_graphic_param_font_size_title" value="<?php echo ploopi\str::htmlentities($objGraphic->fields['param_font_size_title']); ?>" />
                     </p>
                     <p>
-                        <label>Taille de la légende:</label>
+                        <label>Taille de la lÃ©gende:</label>
                         <input type="text" class="text" style="width:40px;margin-right:2px;" name="forms_graphic_param_font_size_legend" value="<?php echo ploopi\str::htmlentities($objGraphic->fields['param_font_size_legend']); ?>" />
                     </p>
                     <p>
-                        <label>Taille des données:</label>
+                        <label>Taille des donnÃ©es:</label>
                         <input type="text" class="text" style="width:40px;margin-right:2px;" name="forms_graphic_param_font_size_data" value="<?php echo ploopi\str::htmlentities($objGraphic->fields['param_font_size_data']); ?>" />
                     </p>
                 </fieldset>
                 <fieldset>
-                    <legend>Paramètres Courbes/Histogrammes</legend>
+                    <legend>ParamÃ¨tres Courbes/Histogrammes</legend>
                     <p>
                         <label>Transparence du remplissage (%):</label>
                         <select class="select" name="forms_graphic_param_fill_transparency" style="width:80px;">
@@ -195,14 +195,14 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
                         <input type="text" class="text" style="width:40px;margin-right:2px;" name="forms_graphic_param_margin_bottom" value="<?php echo ploopi\str::htmlentities($objGraphic->fields['param_margin_bottom']); ?>" />
                     </p>
                     <p>
-                        <label>Rotation des libellés (%):</label>
+                        <label>Rotation des libellÃ©s (%):</label>
                         <input type="text" class="text" style="width:40px;margin-right:2px;" name="forms_graphic_param_label_angle" value="<?php echo ploopi\str::htmlentities($objGraphic->fields['param_label_angle']); ?>" />
                     </p>
                 </fieldset>
                 <fieldset>
-                    <legend>Paramètres Histogrammes</legend>
+                    <legend>ParamÃ¨tres Histogrammes</legend>
                     <p>
-                        <label>Ombre portée, transparence (%):</label>
+                        <label>Ombre portÃ©e, transparence (%):</label>
                         <select class="select" name="forms_graphic_param_shadow_transparency" style="width:80px;">
                             <?php
                             for ($i=0;$i<=10;$i++)
@@ -217,7 +217,7 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
                 </fieldset>
 
                 <fieldset>
-                    <legend>Paramètres Secteurs/Radars</legend>
+                    <legend>ParamÃ¨tres Secteurs/Radars</legend>
                     <p>
                         <label>Centre (%):<br /><em>X, Y</em></label>
                         <select class="select" name="forms_graphic_param_center_x" style="width:80px;margin-right:2px;">
@@ -244,7 +244,7 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
                 </fieldset>
                 <?php
                 $arrMarks = array(
-                    MARK_SQUARE => 'Carré',
+                    MARK_SQUARE => 'CarrÃ©',
                     MARK_CIRCLE => 'Cercle vide',
                     MARK_FILLEDCIRCLE => 'Cercle plein',
                     MARK_UTRIANGLE => 'Triangle vers le haut',
@@ -259,7 +259,7 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
                 );
                 ?>
                 <fieldset>
-                    <legend>Paramètres Courbes/Radars</legend>
+                    <legend>ParamÃ¨tres Courbes/Radars</legend>
                     <p>
                         <label>Type de marqueur:</label>
                         <select class="select" name="forms_graphic_param_mark_type">
@@ -317,11 +317,11 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
                         </select>
                     </p>
                     <p>
-                        <label>Couleur de dégradé 1:</label>
+                        <label>Couleur de dÃ©gradÃ© 1:</label>
                         <input type="text" class="text forms_noselect color {hash:true}" name="forms_graphic_pie_color1" id="forms_graphic_pie_color1" value="<?php echo ploopi\str::htmlentities($objGraphic->fields["pie_color1"]); ?>" style="float:left;width:100px;cursor:pointer;" readonly="readonly">
                     </p>
                     <p>
-                        <label>Couleur de dégradé 2:</label>
+                        <label>Couleur de dÃ©gradÃ© 2:</label>
                         <input type="text" class="text forms_noselect color {hash:true}" name="forms_graphic_pie_color2" id="forms_graphic_pie_color2" value="<?php echo ploopi\str::htmlentities($objGraphic->fields["pie_color2"]); ?>" style="float:left;width:100px;cursor:pointer;" readonly="readonly">
                     </p>
                 </fieldset>
@@ -370,7 +370,7 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
                     ?>
                         <div style="display:<?php echo ploopi\str::htmlentities($strDisplay); ?>;" id="forms_graphic_line<?php echo $intI; ?>_param">
                         <fieldset>
-                            <legend><?php echo _FORMS_GRAPHIC_DATASET.' n°'.$intI; ?></legend>
+                            <legend><?php echo _FORMS_GRAPHIC_DATASET.' nÂ°'.$intI; ?></legend>
                             <p>
                                 <label>Filtre :</label>
                                 <select class="select" name="forms_graphic_line<?php echo $intI; ?>_filter">
@@ -405,7 +405,7 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
                                 <input style="width:43%;" type="text" class="text" name="forms_graphic_line<?php echo $intI; ?>_filter_value" id="forms_graphic_line<?php echo $intI; ?>_filter_value" value="<?php echo ploopi\str::htmlentities($objGraphic->fields["line{$intI}_filter_value"]); ?>">
                             </p>
                             <p>
-                                <label>Champ affiché :</label>
+                                <label>Champ affichÃ© :</label>
                                 <select class="select" name="forms_graphic_line<?php echo $intI; ?>_field">
                                     <option value="">(aucun)</option>
                                     <?php
@@ -422,7 +422,7 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
                                 </select>
                             </p>
                             <p>
-                                <label>Opération :</label>
+                                <label>OpÃ©ration :</label>
                                 <select class="select" name="forms_graphic_line<?php echo $intI; ?>_operation">
                                     <?php
                                     global $forms_graphic_operation;
@@ -440,7 +440,7 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
                                 <input type="text" class="text forms_noselect color {hash:true}" name="forms_graphic_line<?php echo $intI; ?>_color" id="forms_graphic_line<?php echo $intI; ?>_color" value="<?php echo ploopi\str::htmlentities($objGraphic->fields["line{$intI}_color"]); ?>" style="float:left;width:100px;cursor:pointer;" readonly="readonly" />
                             </p>
                             <p>
-                                <label>Légende (optionnelle) :</label>
+                                <label>LÃ©gende (optionnelle) :</label>
                                 <input type="text" class="text" name="forms_graphic_line<?php echo $intI; ?>_legend" value="<?php echo ploopi\str::htmlentities($objGraphic->fields["line{$intI}_legend"]); ?>" />
                             </p>
 
@@ -454,7 +454,7 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
                         <p class="ploopi_va forms_param_link" id="forms_graphic_line<?php echo $intI; ?>_link" style="display:block;">
                             <a href="javascript:void(0);" onclick="javascript:$('forms_graphic_line<?php echo $intI; ?>_link').style.display = 'none'; $('forms_graphic_line<?php echo $intI; ?>_param').style.display = 'block';">
                             <img src="./modules/forms/img/arrow_down.png" />
-                            Paramétrer <?php echo _FORMS_GRAPHIC_DATASET.' n°'.$intI; ?>
+                            ParamÃ©trer <?php echo _FORMS_GRAPHIC_DATASET.' nÂ°'.$intI; ?>
                             </a>
                         </p>
                         <?php
