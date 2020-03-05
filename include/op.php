@@ -623,7 +623,7 @@ if (isset($_REQUEST['ploopi_op']))
                     else $array_modules["{$fields_object['id']},{$fields_object['module_id']}"] = "{$fields_object['module_label']} » {$fields_object['label']}";
                 }
 
-                ploopi\str::print_json($array_modules, true, false);
+                ploopi\str::print_json($array_modules, false, false);
 
                 ploopi\system::kill();
 
