@@ -338,6 +338,308 @@ abstract class arr
             'fitpage_width' => true,
             'fitpage_height' => false,
             'tofile' => false,
+            'setborder' => false,
+            'writer' => 'excel2007' // excel2007, excel5, csv, html, pdf (instable)
+        );
+
+        $arrOptions = empty($arrOptions) ? $arrDefautOptions : array_merge($arrDefautOptions, $arrOptions);
+
+
+        // Uniformisation des formats
+        if (!empty($arrArray)) {
+            foreach(array_keys(reset($arrArray)) as $strKey) {
+                if (!isset($arrDataFormats[$strKey])) {
+                    $arrDataFormats[$strKey] = array(
+                        'type' => '',
+                        'title' => $strKey
+                    );
+                }
+            }
+        }
+
+        foreach($arrDataFormats as $strKey => $row) {
+            if (!isset($row['type'])) $arrDataFormats[$strKey]['type'] = '';
+            if (!isset($row['title'])) $arrDataFormats[$strKey]['title'] = $strKey;
+        }
+
+
+        // Style par défaut pour toute la feuille
+        $rowDefaultStyle = array(
+            'font'  => array(
+                'bold'  => false,
+                'size'  => 10,
+                'name'  => 'Arial',
+                'color' => array('rgb' => '000000')
+            ),
+            'alignment' => array(
+                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT,
+                'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+                'wrap' => true,
+                'shrinkToFit' => true,
+            )
+        );
+
+        // Style titre
+        $rowTitleStyle = array(
+            'font'  => array(
+                'bold'  => true,
+            ),
+            'alignment' => array(
+                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+                'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+                'wrap' => true,
+                //'shrinkToFit' => true,
+            ),
+            'fill' => array(
+                'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                'color'=> array('rgb' => 'DDDDDD')
+            )
+        );
+
+        // Bordure optionnelle sur le titre
+        if ($arrOptions['setborder']) {
+
+            $rowTitleStyle['borders'] = array(
+                'allborders' => array(
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                    'color' => array('rgb' => '000000')
+                )
+            );
+
+        }
+
+        // Style par défaut pour la feuille
+        $objWorkSheet->getParent()->getDefaultStyle()->applyFromArray($rowDefaultStyle);
+        $objWorkSheet->getParent()->getDefaultStyle()->getAlignment()->setWrapText(true);
+
+        // Titre
+        $objWorkSheet->setTitle(utf8_encode($strSheetName));
+
+        // Fit to page
+        $objWorkSheet->getPageSetup()->setFitToWidth($arrOptions['fitpage_width']);
+        $objWorkSheet->getPageSetup()->setFitToHeight($arrOptions['fitpage_height']);
+        $objWorkSheet->getDefaultRowDimension()->setRowHeight(-1);
+
+        // Paysage
+        if ($arrOptions['landscape']) $objWorkSheet->getPageSetup()->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
+
+        if (!empty($arrArray))
+        {
+            $intLineMax = sizeof($arrArray)+1;
+
+            $intLine = 1;
+            $intMaxCol = sizeof(array_keys(reset($arrArray)))-1;
+            // Calcul colonne type Excel "Bijective base-26"
+            $chrMaxCol = ($intMaxCol>25 ? chr(64+floor($intMaxCol/26)) : '').chr(65+$intMaxCol%26);
+
+            if (!empty($arrOptions['headers'])) {
+                foreach($arrOptions['headers'] as $strHeader) {
+
+                    $objWorkSheet->setCellValueByColumnAndRow(0, $intLine, utf8_encode($strHeader));
+
+                    $objWorkSheet->getStyle("A{$intLine}:{$chrMaxCol}{$intLine}")->applyFromArray($rowTitleStyle);
+                    $objWorkSheet->mergeCells("A{$intLine}:{$chrMaxCol}{$intLine}");
+                    //On fusionne la plage
+                    $intLine++;
+                }
+            }
+
+            // Ajout de la ligne d'entête
+            if ($booHeader)
+            {
+                $intCol = 1;
+                foreach(array_keys(reset($arrArray)) as $strKey) $objWorkSheet->setCellValueByColumnAndRow($intCol++, $intLine, $arrDataFormats[$strKey]['title']);
+
+
+                $intCol -=2;
+
+                // Calcul colonne type Excel "Bijective base-26"
+                $chrCol = ($intCol>25 ? chr(64+floor($intCol/26)) : '').chr(65+$intCol%26);
+
+                $objWorkSheet->getStyle("A{$intLine}:{$chrCol}{$intLine}")->applyFromArray($rowTitleStyle);
+
+                $objWorkSheet->getRowDimension(1)->setRowHeight(24);
+
+                $intLine++;
+            }
+
+            // Traitement des contenus
+            foreach($arrArray as $row)
+            {
+                $intCol = 0;
+                foreach($row as $strKey => $mixValue)
+                {
+                    if (is_array($mixValue)) {
+                        $strValue = &$mixValue['content'];
+                    }
+                    else $strValue = &$mixValue;
+                    // Conversion date
+                    if (isset($arrDataFormats[$strKey]['type']) && in_array($arrDataFormats[$strKey]['type'], array('datetime', 'date'))) {
+                        $strValue = \PhpOffice\PhpSpreadsheet\Shared\Date::PHPToExcel(new \DateTime(date('Y-m-d H:i:s', $strValue)));
+                    }
+
+                    // Calcul colonne type Excel "Bijective base-26"
+                    $chrCol = ($intCol>25 ? chr(64+floor($intCol/26)) : '').chr(65+$intCol%26);
+
+
+                    switch($arrDataFormats[$strKey]['type']) {
+                        case 'string':
+                            $objWorkSheet->setCellValueExplicit("{$chrCol}{$intLine}", $strValue, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
+                        break;
+
+                        default:
+                            $objWorkSheet->setCellValueByColumnAndRow($intCol+1, $intLine, $strValue);
+                        break;
+                    }
+
+                    if (is_array($mixValue)) {
+                        if (isset($mixValue['style'])) {
+                            $objWorkSheet->getStyle("{$chrCol}{$intLine}")->applyFromArray($mixValue['style']);
+                        }
+                    }
+
+                    $intCol++;
+                }
+
+                $intLine++;
+            }
+
+
+            $objWorkSheet->getDefaultRowDimension()->setRowHeight(-1);
+            //$objWorkSheet->getColumnDimension(A)->setAutoSize(true);
+            // Traitement des contenus
+            $intCol = 0;
+
+
+            // Mise en forme des données
+            foreach(array_keys(reset($arrArray)) as $strKey)
+            {
+                if (empty($arrDataFormats[$strKey]['type'])) $arrDataFormats[$strKey]['type'] = 'string';
+
+                // Calcul colonne type Excel "Bijective base-26"
+                $chrCol = ($intCol>25 ? chr(64+floor($intCol/26)) : '').chr(65+$intCol%26);
+
+                $rowStyle = $rowDefaultStyle;
+
+                // Bordure optionnelle
+                if ($arrOptions['setborder']) {
+
+                    $rowStyle['borders'] = array(
+                        'outline' => array(
+                            'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                            'color' => array('rgb' => '000000')
+                        )
+                    );
+
+                }
+
+                // Application du format
+                switch($arrDataFormats[$strKey]['type']) {
+
+                    case 'float': $strFormat = '0.00'; break;
+                    case 'float_percent': $strFormat = '0.00%'; break;
+                    case 'float_euro': $strFormat = '#,##0.00_-[$EUR]'; break;
+                    case 'integer': $strFormat = '0'; break;
+                    case 'integer_percent': $strFormat = '0%'; break;
+                    case 'integer_euro': $strFormat = '#,##0_-[$EUR]'; break;
+                    case 'date': $strFormat = 'dd/mm/yyyy'; break;
+                    case 'datetime' : $strFormat = 'dd/mm/yyyy hh:mm:ss'; break;
+
+                    default:
+                    case 'string': $strFormat = 'General'; break;
+
+                }
+
+                // Alignement à droite des dates, valeurs numériques
+                if ($arrDataFormats[$strKey]['type'] != 'string') {
+                    $rowStyle['alignment'] = array(
+                        'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT
+                    );
+                }
+
+
+                // Application du style sur la colonne
+                $objWorkSheet->getStyle("{$chrCol}2:{$chrCol}{$intLineMax}")->applyFromArray($rowStyle);
+                // Application du format sur la colonne
+                $objWorkSheet->getStyle("{$chrCol}2:{$chrCol}{$intLineMax}")->getNumberFormat()->applyFromArray( [ 'formatCode' => $strFormat ] );
+
+                //echo "{$chrCol}2:{$chrCol}{$intLineMax}";
+                //ploopi\output::print_r($rowStyle);
+
+                // Largeur de colonne
+                if (isset($arrDataFormats[$strKey]['width'])) $objWorkSheet->getColumnDimension($chrCol)->setWidth($arrDataFormats[$strKey]['width']);
+
+                $intCol++;
+
+            }
+        }
+
+        //die();
+
+
+        // Sélection du writer
+        switch($arrOptions['writer']) {
+
+            case 'excel5':
+                $objWriter = new \PhpOffice\PhpSpreadsheet\Writer\Xls($objWorkBook);
+            break;
+
+            case 'pdf':
+                $objWriter = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($objWorkBook, 'Mpdf');
+                //$objWriter = new \PhpOffice\PhpSpreadsheet\Writer\Mpdf($objWorkBook);
+                $objWriter->setSheetIndex(0);
+            break;
+
+            case 'csv':
+                $objWriter = new \PhpOffice\PhpSpreadsheet\Writer\Csv($objWorkBook);
+                $objWriter = new \PHPExcel_Writer_CSV($objWorkBook);
+                $objWriter->setSheetIndex(0);
+                $writer->setDelimiter(",");
+            break;
+
+            case 'html':
+                $objWriter = new \PhpOffice\PhpSpreadsheet\Writer\Html($objWorkBook);
+                $objWriter->setSheetIndex(0);
+            break;
+
+            case 'ods':
+                $objWriter = new \PhpOffice\PhpSpreadsheet\Writer\Ods($objWorkBook);
+            break;
+
+            case 'excel2007':
+            default:
+                $objWriter = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($objWorkBook);
+                //$objWriter = new \PHPExcel_Writer_Excel2007($objWorkBook);
+                $objWriter->setOffice2003Compatibility(true);
+            break;
+        }
+
+        // Création du document
+        if ($arrOptions['tofile']) {
+            $objWriter->save($strFileName);
+        }
+        else {
+            ob_start();
+            // Les headers ne sont pas envoyés
+            $objWriter->save('php://output');
+            return ob_get_clean();
+        }
+
+        return true;
+    }
+
+
+/*
+
+    {
+        $objWorkBook = new \PhpOffice\PhpSpreadsheet\Spreadsheet;
+        $objWorkSheet = $objWorkBook->getActiveSheet();
+
+        $arrDefautOptions = array(
+            'landscape' => true,
+            'fitpage_width' => true,
+            'fitpage_height' => false,
+            'tofile' => false,
             'setborder' => true,
             'writer' => 'excel2007' // excel2007, excel5, csv, html, pdf (instable)
         );
@@ -447,21 +749,13 @@ abstract class arr
             // Ajout de la ligne d'entête
             if ($booHeader)
             {
-                $intCol = 0;
+                $intCol = -1;
                 foreach(array_keys(reset($arrArray)) as $strKey) $objWorkSheet->setCellValueByColumnAndRow(++$intCol, $intLine, $arrDataFormats[$strKey]['title']);
 
                 // Calcul colonne type Excel "Bijective base-26"
                 $chrCol = ($intCol>25 ? chr(64+floor($intCol/26)) : '').chr(65+$intCol%26);
 
-                for ($c = 0; $c < $intCol; $c++) {
-                    $chrCol = ($c>25 ? chr(64+floor($c/26)) : '').chr(65+$c%26);
-                    $objWorkSheet->getStyle("A{$intLine}:{$chrCol}{$intLine}")->applyFromArray($rowTitleStyle);
-                }
-
-                //$objWorkSheet->getStyle("A{$intLine}:{$chrCol}{$intLine}")->applyFromArray($rowTitleStyle);
-                //echo "A{$intLine}:{$chrCol}{$intLine}";
-                //die();
-
+                $objWorkSheet->getStyle("A{$intLine}:{$chrCol}{$intLine}")->applyFromArray($rowTitleStyle);
 
                 $objWorkSheet->getRowDimension(1)->setRowHeight(24);
 
@@ -471,7 +765,7 @@ abstract class arr
             // Traitement des contenus
             foreach($arrArray as $row)
             {
-                $intCol = 1;
+                $intCol = 0;
                 foreach($row as $strKey => $mixValue)
                 {
                     if (is_array($mixValue)) {
@@ -480,7 +774,7 @@ abstract class arr
                     else $strValue = &$mixValue;
                     // Conversion date
                     if (isset($arrDataFormats[$strKey]['type']) && in_array($arrDataFormats[$strKey]['type'], array('datetime', 'date'))) {
-                        $strValue = \PHPExcel_Shared_Date::PHPToExcel($strValue + date('Z', $strValue));
+                        $strValue = \PhpOffice\PhpSpreadsheet\Shared\Date::PHPToExcel($strValue + date('Z', $strValue));
                     }
 
                     // Calcul colonne type Excel "Bijective base-26"
@@ -507,6 +801,8 @@ abstract class arr
 
                 $intLine++;
             }
+
+            $objWorkSheet->getDefaultRowDimension()->setRowHeight(-1);
 
             // Traitement des contenus
             $intCol = 0;
@@ -588,15 +884,6 @@ abstract class arr
                 $objWriter = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($objWorkBook, 'Mpdf');
                 //$objWriter = new \PhpOffice\PhpSpreadsheet\Writer\Mpdf($objWorkBook);
                 $objWriter->setSheetIndex(0);
-                /*
-                header('Content-type: application/pdf');
-                header("Content-Disposition:inline;filename={$strFileName}");
-
-                $objWriter->save('php://output');
-                die();
-                */
-
-
             break;
 
             case 'csv':
@@ -638,7 +925,7 @@ abstract class arr
         return true;
     }
 
-
+*/
 
     /**
      * Retourne le contenu d'un tableau à 2 dimensions au format ODS
