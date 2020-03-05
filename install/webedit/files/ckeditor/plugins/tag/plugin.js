@@ -85,20 +85,19 @@ CKEDITOR.plugins.add( 'tag', {
                     var sel = dialog.getContentElement('tab1', 'object').getInputElement().$;
 
                     // Nettoyage de la liste existante
-                    sel.select('option').invoke('remove');
+                    //sel.select('option').invoke('remove');
+                    jQuery(sel).find('option').remove();
 
                     sel.appendChild(newOpt = document.createElement('option'));
                     newOpt.value = '';
                     newOpt.text = '(Choisir)';
 
-                    // Remplissage de la liste avec une requête AJAX/JSON
-                    new Ajax.Request(editor.config.objectBrowserUrl, {
-                        method: 'get',
-                        onSuccess:  function(transport, json) {
-                            if(null == json) {
-                                json = transport.responseText.evalJSON();
-                            }
-
+                    jQuery.ajax({
+                        url :        'admin-light.php',
+                        type :        'GET',
+                        data :         'ploopi_env='+ _PLOOPI_ENV +'&ploopi_op=ploopi_getobjects',
+                        dataType :    'json',
+                        success :    function(json,statut) {
                             if (json) {
                                 console.log(json);
                                 for(key in json) {
@@ -110,8 +109,11 @@ CKEDITOR.plugins.add( 'tag', {
                                 }
                             }
                         },
-                        onFailure: function(message) { alert(message); }
+                        error : function(resultat, statut, erreur) {
+                            alert(resultat + ' - ' + statut + ' - ' + erreur);
+                        }
                     });
+
                 },
 
                 onOk: function() {

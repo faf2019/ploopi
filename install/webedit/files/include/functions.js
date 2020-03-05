@@ -240,4 +240,3 @@ function webedit_comment_delete(id_comment,id_article)
         });
     }
 }
-

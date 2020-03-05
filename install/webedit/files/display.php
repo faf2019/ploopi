@@ -321,7 +321,7 @@ if (!empty($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]
             if (file_exists("./modules/{$_SESSION['ploopi']['modules'][$intModuleId]['moduletype']}/template.php"))
             {
                 $template_moduleid = $intModuleId;
-                include_once "./modules/{$_SESSION['ploopi']['modules'][$intModuleId]['moduletype']}/template.php";
+                include "./modules/{$_SESSION['ploopi']['modules'][$intModuleId]['moduletype']}/template.php";
                 unset($template_moduleid);
             }
         }
@@ -1985,7 +1985,7 @@ $template_body->assign_block_vars(
 $template_body->assign_block_vars(
     'ploopi_js',
     array(
-        'PATH' => './lib/jquery-ui/jquery-ui.min.js?v='.urlencode(_PLOOPI_VERSION.','._PLOOPI_REVISION)
+        'PATH' => './vendor/components/jqueryui/jquery-ui.min.js?v='.urlencode(_PLOOPI_VERSION.','._PLOOPI_REVISION)
     )
 );
 

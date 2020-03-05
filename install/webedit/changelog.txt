@@ -1,3 +1,11 @@
+== Module WebEdit - version 2.7.3 ============================================
+
+2020-03-05  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+            Jean-Pierre Pawlak ~ SGAMI-Est <jean-pierre.pawlak@interieur.gouv.fr>
+
+* Corrections sur le plugin sélecteur d'objet dans l'éditeur de contenu
+* Correction du lien vers jQuery UI dans le moteur de rendu
+
 == Module WebEdit - version 2.7.2 ============================================
 
 2020-02-16  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
