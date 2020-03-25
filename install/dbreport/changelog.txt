@@ -1,3 +1,9 @@
+== Module DBREPORT - version 2.0.6 ====================================================
+
+2020-03-25  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Ajout d'un filtre sur les requêtes
+
 == Module DBREPORT - version 2.0.5 ====================================================
 
 2019-02-26  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

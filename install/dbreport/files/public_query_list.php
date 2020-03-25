@@ -62,6 +62,10 @@ $objQuery = new ploopi_query_select();
 $objQuery->add_from('ploopi_mod_dbreport_query');
 $objQuery->add_where('id_workspace IN (%e)', ploopi_viewworkspaces());
 $objQuery->add_where('id_module = %d', $_SESSION['ploopi']['moduleid']);
+if (!empty($_REQUEST['dbreport_filtre'])) {
+    $arrKeywords = preg_split('@[\s\.:;\?!§<>*,/\-\(\[\'"~&|{=\+]+@', $_REQUEST['dbreport_filtre']);
+    $objQuery->add_where('MATCH(label, ws_id) AGAINST(%1$s IN BOOLEAN MODE)', array('+'.implode('* +', $arrKeywords).'*'));
+}
 $objRs = $objQuery->execute();
 
 while ($row = $objRs->fetchrow())
@@ -113,7 +117,17 @@ if (ploopi_isactionallowed(dbreport::_ACTION_MANAGE))
     </div>
     <?
 }
+?>
+<form action="<? echo ploopi_urlencode('admin.php'); ?>" method="post">
+<div style="padding:4px;border-bottom:1px solid #ccc;" class="ploopi_va">
+    <label style="padding:0 10px;">Filtre:</label>
+    <input type="text" name="dbreport_filtre" value="<? echo isset($_REQUEST['dbreport_filtre']) ? ploopi_htmlentities($_REQUEST['dbreport_filtre']) : ''; ?>" />
+    <button type="submit">Appliquer</button>
+    <button type="button" onclick="document.location.href='<? echo ploopi_urlencode('admin.php'); ?>';">Réinitialiser</button>
+</div>
+</form>
 
+<?
 $skin->display_array($arrColumns, $arrValues, 'dbreport_query_list', array('sortable' => true, 'orderby_default' => 'query', 'limit' => 25));
 
 echo $skin->close_simplebloc();
