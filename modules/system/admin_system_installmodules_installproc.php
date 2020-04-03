@@ -115,11 +115,11 @@ else
 
                 //ploopi\output::print_r($pt);
                 $module_type = new ploopi\module_type();
-                $module_type->fields = array(   'label'         => $pt['label'][0],
-                                                'version'       => $pt['version'][0],
-                                                'author'        => $pt['author'][0],
-                                                'date'          => $pt['date'][0],
-                                                'description'   => $pt['description'][0]
+                $module_type->fields = array(   'label'         => isset($pt['label'][0]) ? $pt['label'][0] : '',
+                                                'version'       => isset($pt['version'][0]) ? $pt['version'][0] : '',
+                                                'author'        => isset($pt['author'][0]) ? $pt['author'][0] : '',
+                                                'date'          => isset($pt['date'][0]) ? $pt['date'][0] : '',
+                                                'description'   => isset($pt['description'][0]) ? $pt['description'][0] : ''
                                             );
 
                 $idmoduletype = $module_type->save();
@@ -132,11 +132,11 @@ else
 
                         $param_type = new ploopi\param_type();
                         $param_type->fields = array(    'id_module_type'    => $module_type->fields['id'],
-                                                        'name'              => $value['name'][0],
-                                                        'label'             => $value['label'][0],
-                                                        'default_value'     => $value['default_value'][0],
-                                                        'public'            => $value['public'][0],
-                                                        'description'       => $value['description'][0]
+                                                        'name'              => isset($value['name'][0]) ? $value['name'][0] : '',
+                                                        'label'             => isset($value['label'][0]) ? $value['label'][0] : '',
+                                                        'default_value'     => isset($value['default_value'][0]) ? $value['default_value'][0] : '',
+                                                        'public'            => isset($value['public'][0]) ? $value['public'][0] : 0,
+                                                        'description'       => isset($value['description'][0]) ? $value['description'][0] : ''
                                                     );
 
                         $param_type->save();
@@ -147,9 +147,9 @@ else
                             {
                                 $param_choice = new ploopi\param_choice();
                                 $param_choice->fields = array(  'id_module_type'    => $module_type->fields['id'],
-                                                                'name'              => $param_type->fields['name'],
-                                                                'value'             => $cvalue['value'][0],
-                                                                'displayed_value'   => $cvalue['displayed_value'][0]
+                                                                'name'              => isset($param_type->fields['name']) ? $param_type->fields['name'] : '',
+                                                                'value'             => isset($cvalue['value'][0]) ? $cvalue['value'][0] : '',
+                                                                'displayed_value'   => isset($cvalue['displayed_value'][0]) ? $cvalue['displayed_value'][0] : ''
                                                             );
                                 $param_choice->save();
                             }
@@ -163,11 +163,11 @@ else
                     {
                         $mb_cms_object = new ploopi\mb_cms_object();
                         $mb_cms_object->fields = array( 'id_module_type'    => $module_type->fields['id'],
-                                                        'label' => $value['label'][0],
-                                                        'script' => $value['script'][0],
-                                                        'select_id' => $value['select_id'][0],
-                                                        'select_label' => $value['select_label'][0],
-                                                        'select_table' => $value['select_table'][0]
+                                                        'label' => isset($value['label'][0]) ? $value['label'][0] : '',
+                                                        'script' => isset($value['script'][0]) ? $value['script'][0] : '',
+                                                        'select_id' => isset($value['select_id'][0]) ? $value['select_id'][0] : '',
+                                                        'select_label' => isset($value['select_label'][0]) ? $value['select_label'][0] : '',
+                                                        'select_table' => isset($value['select_table'][0]) ? $value['select_table'][0] : ''
                                                     );
                         $mb_cms_object->save();
                     }
@@ -179,10 +179,10 @@ else
                     {
                         $mb_action = new ploopi\mb_action();
                         $mb_action->fields = array( 'id_module_type'    => $module_type->fields['id'],
-                                                    'id_action' => $value['id_action'][0],
-                                                    'label' => $value['label'][0],
-                                                    'id_object' => (isset($value['id_object'][0])) ? $value['id_object'][0] : 0,
-                                                    'role_enabled' => (isset($value['role_enabled'][0])) ? $value['role_enabled'][0] : 1
+                                                    'id_action' => isset($value['id_action'][0]) ? $value['id_action'][0] : 0,
+                                                    'label' => isset($value['label'][0]) ? $value['label'][0] : '',
+                                                    'id_object' => isset($value['id_object'][0]) ? $value['id_object'][0] : 0,
+                                                    'role_enabled' => isset($value['role_enabled'][0]) ? $value['role_enabled'][0] : 1
                         );
                         $mb_action->save();
                     }

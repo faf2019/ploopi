@@ -162,7 +162,7 @@ function system_getwg()
     {
         // récupération des sous-groupes
         // on met à jour le champ 'group' de workspaces pour y inclure les sous-groupes des groupes déjà rattachés
-        while (list($idg) = each($workspaces['list'][$idw]['groups']))
+        foreach($workspaces['list'][$idw]['groups'] as $idg)
         {
             if (isset($groups['tree'][$idg]))
             {

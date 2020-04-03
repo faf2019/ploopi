@@ -38,7 +38,7 @@ if (!empty($_REQUEST['idmodule']) && is_numeric($_REQUEST['idmodule'])) $idmodul
 echo ploopi\skin::get()->open_simplebloc(_SYSTEM_MODULESELECTED);
 
 $arrModules = $_SESSION['ploopi']['modules'];
-usort($arrModules, create_function('$a,$b', 'return strcasecmp($a[\'label\'], $b[\'label\']);'));
+usort($arrModules, function($a, $b) { return strcasecmp($a['label'], $b['label']); });
 
 ?>
 <div style="padding:4px;">
