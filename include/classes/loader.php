@@ -1272,9 +1272,9 @@ abstract class loader
             $objConnectedUser->fields['ip'] = implode(',', $_SESSION['ploopi']['remote_ip']);
             $objConnectedUser->fields['domain'] = (empty($_SESSION['ploopi']['host'])) ? '' : $_SESSION['ploopi']['host'];
             $objConnectedUser->fields['timestp'] = date::createtimestamp();
-            $objConnectedUser->fields['user_id'] = $_SESSION['ploopi']['userid'];
-            $objConnectedUser->fields['workspace_id'] = $_SESSION['ploopi']['workspaceid'];
-            $objConnectedUser->fields['module_id'] = $_SESSION['ploopi']['moduleid'];
+            $objConnectedUser->fields['user_id'] = isset($_SESSION['ploopi']['userid']) ? intval($_SESSION['ploopi']['userid'], 10) : 0;
+            $objConnectedUser->fields['workspace_id'] = isset($_SESSION['ploopi']['workspaceid']) ? intval($_SESSION['ploopi']['workspaceid'], 10) : 0;
+            $objConnectedUser->fields['module_id'] = isset($_SESSION['ploopi']['moduleid']) ? intval($_SESSION['ploopi']['moduleid'], 10) : 0;
             $objConnectedUser->fields['timestp'] = date::createtimestamp();
             $objConnectedUser->save();
             $db->query("SELECT count(*) as c FROM ploopi_connecteduser WHERE user_id > 0");

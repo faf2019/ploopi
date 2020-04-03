@@ -223,11 +223,11 @@ class module_type extends data_object
                     array_merge(
                         $this->fields,
                         array(
-                            'label'         => $pt['label'][0],
-                            'version'       => $pt['version'][0],
-                            'author'        => $pt['author'][0],
-                            'date'          => $pt['date'][0],
-                            'description'   => $pt['description'][0]
+                            'label'         => isset($pt['label'][0]) ? $pt['label'][0] : '',
+                            'version'       => isset($pt['version'][0]) ? $pt['version'][0] : '',
+                            'author'        => isset($pt['author'][0]) ? $pt['author'][0] : '',
+                            'date'          => isset($pt['date'][0]) ? $pt['date'][0] : '',
+                            'description'   => isset($pt['description'][0]) ? $pt['description'][0] : ''
                         )
                     );
 
@@ -243,11 +243,11 @@ class module_type extends data_object
                         $param_type->fields =
                             array(
                                 'id_module_type'    => $this->fields['id'],
-                                'name'              => $value['name'][0],
-                                'label'             => $value['label'][0],
-                                'default_value'     => $value['default_value'][0],
-                                'public'            => $value['public'][0],
-                                'description'       => $value['description'][0]
+                                'name'              => isset($value['name'][0]) ? $value['name'][0] : '',
+                                'label'             => isset($value['label'][0]) ? $value['label'][0] : '',
+                                'default_value'     => isset($value['default_value'][0]) ? $value['default_value'][0] : '',
+                                'public'            => isset($value['public'][0]) ? $value['public'][0] : 0,
+                                'description'       => isset($value['description'][0]) ? $value['description'][0] : ''
                             );
 
                         $param_type->save();
@@ -274,9 +274,9 @@ class module_type extends data_object
                             $param_default->fields =
                                 array(
                                     'id_module'         => $row['id'],
-                                    'name'              => $value['name'][0],
-                                    'value'             => is_null($value['default_value'][0]) ? '' : $value['default_value'][0],
-                                    'id_module_type'    => $this->fields['id']
+                                    'name'              => isset($value['name'][0]) ? $value['name'][0] : '',
+                                    'value'             => isset($value['default_value'][0]) ? $value['default_value'][0] : '',
+                                    'id_module_type'    => isset($this->fields['id']) ? $this->fields['id'] : 0
                                 );
 
                             $param_default->save();
@@ -290,9 +290,9 @@ class module_type extends data_object
                                 $param_choice->fields =
                                     array(
                                         'id_module_type'    => $this->fields['id'],
-                                        'name'              => $param_type->fields['name'],
-                                        'value'             => $cvalue['value'][0],
-                                        'displayed_value'   => $cvalue['displayed_value'][0]
+                                        'name'              => isset($param_type->fields['name']) ? $param_type->fields['name'] : '',
+                                        'value'             => isset($cvalue['value'][0]) ? $cvalue['value'][0] : '',
+                                        'displayed_value'   => isset($cvalue['displayed_value'][0]) ? $cvalue['displayed_value'][0] : ''
                                     );
                                 $param_choice->save();
                             }

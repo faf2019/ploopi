@@ -24,7 +24,7 @@ namespace ploopi;
 
 use ploopi;
 use Keller\SoundexFrBundle\Services\SoundexFr;
-use Wamania\Snowball\Stemmer\French;
+use Wamania\Snowball\StemmerFactory;
 
 /**
  * Gestion de la recherche et de l'indexation de contenu
@@ -300,7 +300,7 @@ abstract class search_index
 
         $stems = array();
         $phonetics = array();
-        $stemmer = new French();
+        $stemmer = StemmerFactory::create('fr');
         $soundex = new SoundexFr();
 
         for ($i = 1; ($i <= $max_kw && $kw_ratio >= _PLOOPI_INDEXATION_RATIOMIN) || $kw['meta']; $i++)
@@ -509,8 +509,7 @@ abstract class search_index
         }
         else
         {
-
-            $stemmer = new French();
+            $stemmer = StemmerFactory::create('fr');
             $soundex = new SoundexFr();
 
             $arrSearchs = array('keyword' => array(), 'stem' => array(), 'phonetic' => array());
@@ -607,7 +606,9 @@ abstract class search_index
         // tri du résultat en fonction du champ et de l'ordre
         $compare_sign = ($sort == 'DESC') ? '>' : '<';
 
-        uasort($arrRelevance, create_function('$a,$b', 'return $b[\''.$orderby.'\'] '.$compare_sign.' $a[\''.$orderby.'\'];'));
+        uasort($arrRelevance, function($a, $b) use ($orderby, $compare_sign) {
+            return $compare_sign == '>' ? $b[$orderby] > $a[$orderby] : $b[$orderby] < $a[$orderby];
+        });
 
 
         $c = 0;

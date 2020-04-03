@@ -23,7 +23,7 @@
 namespace ploopi;
 
 use ploopi;
-use Wamania\Snowball\French;
+use Wamania\Snowball\StemmerFactory;
 
 /**
  * Manipulation de chaînes de caractère
@@ -260,7 +260,7 @@ abstract class str {
     {
 
         if (is_null($encoding)) $encoding = 'UTF-8';
-        if (is_null($flags)) $flags = ENT_COMPAT | ENT_HTML401;
+        if (is_null($flags)) $flags = ENT_QUOTES | ENT_HTML401;
 
         return htmlentities($booStripTags ? strip_tags($str) : $str, $flags, $encoding);
     }
@@ -556,7 +556,9 @@ abstract class str {
             else $_SESSION['ploopi']['commonwords'] = array();
         }
 
-        if ($getstem) $stemmer = new French();
+        if ($getstem) {
+            $stemmer = StemmerFactory::create('fr');
+        }
 
         for ($kw = strtok($content, _PLOOPI_INDEXATION_WORDSEPARATORS); $kw !== false; $kw = strtok(_PLOOPI_INDEXATION_WORDSEPARATORS))
         {

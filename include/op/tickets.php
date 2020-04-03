@@ -95,12 +95,7 @@ switch($ploopi_op)
             <div><input type="text" name="ticket_title" class="text" value="" style="width:98%"></div>
             <div style="font-weight:bold;"><?php echo _PLOOPI_LABEL_TICKET_MESSAGE; ?></div>
             <div>
-                <?php
-                $arrConfig['CustomConfigurationsPath'] = _PLOOPI_BASEPATH.'/modules/system/fckeditor/fckconfig.js';
-                $arrConfig['EditorAreaCSS'] = _PLOOPI_BASEPATH.'/modules/system/fckeditor/fck_editorarea.css';
-
-                ploopi_fckeditor('fck_ticket_message', '', '100%', '200', $arrConfig);
-                ?>
+                <textarea id="fck_ticket_message" name="fck_ticket_message"></textarea>
             </div>
 
             <?php

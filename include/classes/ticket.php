@@ -141,7 +141,7 @@ class ticket extends data_object
             </select>
             <input type="text" id="ploopi_ticket_userfilter" class="text" />
             <?php /* Ne pas modifier, genère une erreur curieuse sinon... */ $strUrl = crypt::queryencode("ploopi_op=tickets_search_users"); ?>
-            <img id="ploopi_ticket_search_btn" style="cursor:pointer;" onclick="javascript:ploopi_tickets_select_users('<?php echo $strUrl; ?>', ploopi.getelem('ploopi_ticket_typefilter').value, ploopi.getelem('ploopi_ticket_userfilter').value, 'div_ticket_search_result');" src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/tickets/search.png">
+            <img id="ploopi_ticket_search_btn" style="cursor:pointer;" onclick="javascript:ploopi.tickets.select_users('<?php echo $strUrl; ?>', ploopi.getelem('ploopi_ticket_typefilter').value, ploopi.getelem('ploopi_ticket_userfilter').value, 'div_ticket_search_result');" src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/tickets/search.png">
         </p>
         <div id="div_ticket_search_result" style="padding:2px 0 6px 0;">
         </div>
@@ -150,7 +150,7 @@ class ticket extends data_object
         <?php if (!empty($_SESSION['ploopi']['tickets']['users_selected'])) ticket::displayusers(); ?>
         </div>
         <script type="text/javascript">
-        ploopi_tickets_selectusers_init();
+        ploopi.tickets.selectusers_init();
         </script>
         <?php
     }
@@ -394,4 +394,3 @@ class ticket extends data_object
 
 
 }
-
