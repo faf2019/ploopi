@@ -95,7 +95,8 @@ class Template {
         }
 
         reset($filename_array);
-        while(list($handle, $filename) = each($filename_array))
+        //while(list($handle, $filename) = each($filename_array))
+        foreach($filename_array as $handle=>$filename)
         {
             $this->files[$handle] = $this->make_filename($filename);
         }
@@ -113,7 +114,7 @@ class Template {
     {
         if (!$this->loadfile($handle))
         {
-            die("Template->pparse(): Couldn't load template file for handle $handle");
+            ploopi\system::kill("Template->pparse(): Couldn't load template file for handle $handle");
         }
 
         // actually compile the template now.
@@ -140,7 +141,7 @@ class Template {
     {
         if (!$this->loadfile($handle))
         {
-            die("Template->assign_var_from_handle(): Couldn't load template file for handle $handle");
+            ploopi\system::kill("Template->assign_var_from_handle(): Couldn't load template file for handle $handle");
         }
 
         // Compile it, with the "no echo statements" option on.
@@ -200,7 +201,8 @@ class Template {
     function assign_vars($vararray)
     {
         reset ($vararray);
-        while (list($key, $val) = each($vararray))
+        //while (list($key, $val) = each($vararray))
+        foreach ($vararray as $key=>$val)
         {
             $this->_tpldata['.'][0][$key] = $val;
         }
@@ -235,7 +237,7 @@ class Template {
 
         if (!file_exists($filename))
         {
-            die("Template->make_filename(): Error - file $filename does not exist");
+            ploopi\system::kill("Template->make_filename(): Error - file $filename does not exist");
         }
 
         return $filename;
@@ -257,7 +259,7 @@ class Template {
         // If we don't have a file assigned to this handle, die.
         if (!isset($this->files[$handle]))
         {
-            ploopi_die("Template->loadfile(): No file specified for handle $handle");
+            ploopi\system::kill("Template->loadfile(): No file specified for handle $handle");
         }
 
         $filename = $this->files[$handle];
@@ -265,7 +267,7 @@ class Template {
         $str = implode("", @file($filename));
         if (empty($str))
         {
-            ploopi_die("Template->loadfile(): File $filename for handle $handle is empty");
+            ploopi\system::kill("Template->loadfile(): File $filename for handle $handle is empty");
         }
 
         $this->uncompiled_code[$handle] = $str;
@@ -474,5 +476,3 @@ class Template {
     }
 
 }
-
-?>
