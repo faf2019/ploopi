@@ -66,7 +66,23 @@ Puis insérez les lignes suivantes :
 On active le site et on redémarre Apache :
 
 ```console
+sudo a2dissite 000-default
 sudo a2ensite ploopi
+sudo service apache2 reload
+```
+
+### Sécurité
+
+```console
+sudo nano /etc/apache2/conf-enabled/security.conf
+```
+
+```apacheconf
+ServerTokens Prod
+ServerSignature Off
+```
+
+```console
 sudo service apache2 reload
 ```
 
