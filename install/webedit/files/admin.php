@@ -333,6 +333,7 @@ switch($menu)
                     {
                         $strTypeTicket = 'new';
                         $article->init_description();
+                        unset($article->fields['id']);
                         $article->setuwm();
                         $article->fields['id_heading'] = 0; // Bloc
                     }
@@ -447,6 +448,7 @@ switch($menu)
                     if (!empty($_POST['articleid'])) ploopi\user_action_log::record(_WEBEDIT_ACTION_ARTICLE_EDIT, $articleid);
                     else ploopi\user_action_log::record(_WEBEDIT_ACTION_ARTICLE_EDIT, $articleid);
 
+
                     ploopi\output::redirect("admin.php?op=bloc_modify&articleid={$articleid}");
                 }
                 else ploopi\output::redirect('admin.php');
@@ -528,6 +530,7 @@ switch($menu)
                         $fields = ploopi\db::get()->fetchrow();
                         $maxpos = $fields['maxpos'];
                         if (!is_numeric($maxpos)) $maxpos = 0;
+                        unset($article->fields['id']);
                         $article->fields['position'] = $maxpos+1;
                         $article->fields['id_heading'] = $headingid;
                     }
@@ -746,6 +749,8 @@ switch($menu)
                         ");
                     }
 
+                    die();
+
                     ploopi\output::redirect("admin.php?op=article_modify&articleid={$articleid}");
                 }
                 else ploopi\output::redirect('admin.php');
@@ -884,7 +889,7 @@ switch($menu)
                             $treeview['list']['r0'] = $node;
                             $treeview['tree']['h0'][] = 'r0';
 
-                            // Ajout manu des blocs (articles déguisés) dans le menu "Blocs"
+                            // Ajout menu des blocs (articles déguisés) dans le menu "Blocs"
                             foreach($blocs['list'] as $article)
                             {
                                 $status = ($article['status'] == 'wait') ? '<sup style="margin-left:2px;color:#ff0000;font-weight:bold;">*</sup>' : '';
@@ -893,7 +898,7 @@ switch($menu)
                                 $node =
                                     array(
                                         'id' => 'a'.$article['id'],
-                                        'label' => $article['title'],
+                                        'label' => empty($article['title']) ? '<em>(vide)</em>' : $article['title'],
                                         'status' => $status.$dateok,
                                         'description' => $article['metadescription'],
                                         'parents' => array('h0', 'hb'),

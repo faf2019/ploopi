@@ -108,6 +108,10 @@ class webedit_article extends ploopi\data_object
 
     public function save()
     {
+        foreach(['visible', 'comments_allowed', 'timestp_published', 'timestp_unpublished', 'position', 'width', 'height'] as $f) {
+            if (isset($this->fields[$f])) $this->fields[$f] = intval($this->fields[$f], 10);
+        }
+
         if (empty($this->fields['metatitle'])) $this->fields['metatitle'] = $this->fields['title'];
 
         if (empty($this->fields['timestp'])) $this->fields['timestp'] = ploopi\date::createtimestamp();

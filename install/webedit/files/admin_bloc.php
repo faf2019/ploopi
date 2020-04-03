@@ -485,6 +485,7 @@ switch($op)
     <?php
     if (!$readonly)
     {
+        /*
         $arrConfig = array();
         $arrConfig['CustomConfigurationsPath'] = _PLOOPI_BASEPATH.'/modules/webedit/fckeditor/fckconfig_bloc.js';
         $arrConfig['ToolbarLocation'] = 'Out:xToolbar';
@@ -493,6 +494,64 @@ switch($op)
         $arrProperties['ToolbarSet'] = $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['display_type'] == 'beginner' ? 'Beginner': 'Default';
 
         ploopi_fckeditor('fck_webedit_article_content', $article->fields['content'], $article->fields['width'] ? $article->fields['width'] : '100%', $article->fields['height'] ? $article->fields['height'] : '500px', $arrConfig, $arrProperties);
+        */
+        ?>
+        <script src="./vendor/ckeditor/ckeditor/ckeditor.js"></script>
+        <textarea name="fck_webedit_article_content" id="editor"><?php echo $article->fields['content']; ?></textarea>
+        <script>
+
+            // Ajout d'un plugin externe
+            CKEDITOR.plugins.addExternal('tag', '<?php echo _PLOOPI_BASEPATH.'/modules/webedit/ckeditor/plugins/tag/'; ?>', 'plugin.js');
+
+            /*
+            // http://docs.ckeditor.com/#!/guide/plugin_sdk_styles
+            CKEDITOR.plugins.add( 'tag', {
+                init: function( editor ) {
+                    var pluginDirectory = '<?php echo _PLOOPI_BASEPATH.'/modules/webedit/ckeditor/plugins/tag/'; ?>';
+                    editor.addContentsCss( pluginDirectory + 'styles.css' );
+                }
+            } );
+            */
+
+            // http://docs.ckeditor.com/#!/guide/dev_file_browser_api
+            CKEDITOR.replace( 'editor', {
+                customConfig: '<?php echo _PLOOPI_BASEPATH.'/modules/webedit/ckeditor/config.js'; ?>',
+                // doc_selectfile
+                filebrowserBrowseUrl: '<?php echo _PLOOPI_BASEPATH.'/admin-light.php?'.ploopi\crypt::queryencode('ploopi_op=webedit_selector'); ?>',
+                filebrowserImageBrowseUrl: '<?php echo _PLOOPI_BASEPATH.'/admin-light.php?'.ploopi\crypt::queryencode('ploopi_op=doc_selectimage'); ?>',
+                // Url de choix des objets
+                objectBrowserUrl: '<?php echo _PLOOPI_BASEPATH.'/admin-light.php?'.ploopi\crypt::queryencode('ploopi_op=ploopi_getobjects'); ?>',
+                // Chargement de styles complémentaires (on remet le fichier par défaut en 1er)
+                // Puis on ajoute la feuille de style des plugins...
+                contentsCss: [
+                    CKEDITOR.basePath+'contents.css',
+                    '<?php echo _PLOOPI_BASEPATH; ?>/modules/webedit/ckeditor/plugins/tag/styles.css',
+                ],
+                extraPlugins: 'sharedspace',
+                removePlugins: 'elementspath',
+
+                sharedSpaces: {
+                    top : 'xToolbar',
+                },
+                width: '<? echo $article->fields['width'] ? $article->fields['width'] : '100%'; ?>',
+                height: '<? echo $article->fields['height'] ? $article->fields['height'] : '500px'; ?>',
+
+                <?php
+                if ($_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['display_type'] == 'beginner') {
+                    ?>
+                    toolbar: [
+                        ['Bold','Italic','Underline','Strike','Subscript','Superscript','-','RemoveFormat' ],
+                        ['Styles','Format','Font','FontSize'],
+                        ['TextColor','BGColor'],
+                        ['Image','Link','Unink'],
+                    ]
+                    <?php
+                }
+                ?>
+            });
+        </script>
+
+        <?php
     }
     else
     {
