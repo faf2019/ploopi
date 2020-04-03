@@ -356,14 +356,14 @@ echo ploopi\skin::get()->open_simplebloc(ploopi\str::htmlentities($strWikiPageId
                 $columns['actions_right']['diff2'] =
                     array(
                         'label' => '&nbsp;',
-                        'width' => 20,
+                        'width' => 40,
                         'options' => array('sort' => true)
                     );
 
                 $columns['actions_right']['diff1'] =
                     array(
                         'label' => '&nbsp;',
-                        'width' => 20,
+                        'width' => 40,
                         'options' => array('sort' => true)
                     );
 
@@ -399,7 +399,8 @@ echo ploopi\skin::get()->open_simplebloc(ploopi\str::htmlentities($strWikiPageId
                             'style' => 'text-align:right;'
                         ),
                         'diff1' => array(
-                            'label' => '<input type="radio" name="wiki_history_diff1" style="margin-left:2px;" value="'.$objWikiPage->fields['revision'].'" tabindex="100" checked="checked" />'
+                            'label' => '<input type="radio" name="wiki_history_diff1" style="margin-left:2px;" value="'.$objWikiPage->fields['revision'].'" tabindex="100" checked="checked" />',
+                            'style' => 'text-align:center;'
                         ),
                         'diff2' => array(
                             'label' => '&nbsp;'
@@ -434,7 +435,8 @@ echo ploopi\skin::get()->open_simplebloc(ploopi\str::htmlentities($strWikiPageId
                                 'label' => $booLast ? '&nbsp;' : '<input type="radio" name="wiki_history_diff1" style="margin-left:2px;" value="'.$arrPageHistory['revision'].'" tabindex="'.$intTabIndex++.'" />'
                             ),
                             'diff2' => array(
-                                'label' => '<input type="radio" name="wiki_history_diff2" style="margin-left:2px;" value="'.$arrPageHistory['revision'].'" tabindex="'.$intTabIndex++.'" '.($booChecked ? '' : 'checked="checked" ').'/>'
+                                'label' => '<input type="radio" name="wiki_history_diff2" style="margin-left:2px;" value="'.$arrPageHistory['revision'].'" tabindex="'.$intTabIndex++.'" '.($booChecked ? '' : 'checked="checked" ').'/>',
+                                'style' => 'text-align:center;'
                             ),
                             'user' => array(
                                 'label' => is_null($arrPageHistory['lastname']) ? '<em>Utilisateur supprimé</em>' : ploopi\str::htmlentities(trim("{$arrPageHistory['lastname']} {$arrPageHistory['firstname']}"))

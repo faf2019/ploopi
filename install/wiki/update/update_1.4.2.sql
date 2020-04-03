@@ -1,0 +1,10 @@
+UPDATE `ploopi_mod_wiki_page_history` SET `id_page` = '' WHERE ISNULL(`id_page`);
+ALTER TABLE `ploopi_mod_wiki_page_history` CHANGE `id_page` `id_page` varchar(255) NOT NULL DEFAULT ''  COMMENT '' ;
+UPDATE `ploopi_mod_wiki_page_history` SET `content` = '' WHERE ISNULL(`content`);
+ALTER TABLE `ploopi_mod_wiki_page_history` CHANGE `content` `content` longtext NOT NULL DEFAULT ''  COMMENT '' ;
+UPDATE `ploopi_mod_wiki_page` SET `id` = '' WHERE ISNULL(`id`);
+ALTER TABLE `ploopi_mod_wiki_page` CHANGE `id` `id` varchar(255) NOT NULL DEFAULT ''  COMMENT '' ;
+UPDATE `ploopi_mod_wiki_page` SET `content` = '' WHERE ISNULL(`content`);
+ALTER TABLE `ploopi_mod_wiki_page` CHANGE `content` `content` longtext NOT NULL DEFAULT ''  COMMENT '' ;
+UPDATE `ploopi_mod_wiki_page` SET `tags` = '' WHERE ISNULL(`tags`);
+ALTER TABLE `ploopi_mod_wiki_page` CHANGE `tags` `tags` varchar(255) NOT NULL DEFAULT ''  COMMENT '' ;

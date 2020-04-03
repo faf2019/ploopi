@@ -1,3 +1,10 @@
+== Module Wiki - version 1.4.2 ====================================================
+
+2020-03-13  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Mise à jour de compatibilité pour PHP 7.3 / MariaDB 10.3
+* Mise à jour de compatibilité avec la dernière version de Textile
+
 == Module Wiki - version 1.4.1 ====================================================
 
 2018-12-27  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

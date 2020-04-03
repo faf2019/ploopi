@@ -196,7 +196,7 @@ function wiki_render($strContent, $cbInternalLinks = 'wiki_internal_links')
     //$strContent = str_replace($arrSearch, $arrReplace, $strContent);
 
     // Renderer textile
-    $strTextile = utf8_decode($objTextile->textileThis(utf8_encode($strContent)));
+    $strTextile = utf8_decode($objTextile->parse(utf8_encode($strContent)));
 
     // Traitement des liens externes
     $strTextile = preg_replace_callback ('/<a[^>]*href="(.*)"[^>]*>(.*)<\/a>/i', 'wiki_links', $strTextile);
