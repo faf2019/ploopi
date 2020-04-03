@@ -1,3 +1,9 @@
+== Module DIRECTORY - version 2.5.2 ====================================================
+
+2020-03-16  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Mise à jour de compatibilité pour PHP 7.3 / MariaDB 10.3
+
 == Module DIRECTORY - version 2.5.1 ====================================================
 
 2018-12-27  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

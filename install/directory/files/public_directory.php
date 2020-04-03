@@ -163,7 +163,7 @@ switch($_SESSION['directory']['directoryTabItem'])
         $arrValues = array();
 
         $arrColumns['auto']['name'] = array('label' => _DIRECTORY_NAME, 'options' => array('sort' => true));
-        $arrColumns['right']['email'] = array('label' => _DIRECTORY_EMAIL,     'width' => 50, 'options' => array('sort' => true));
+        $arrColumns['right']['email'] = array('label' => _DIRECTORY_EMAIL,     'width' => 70, 'options' => array('sort' => true));
         $arrColumns['right']['phone'] = array('label' => _DIRECTORY_PHONE,     'width' => 100, 'options' => array('sort' => true));
         $arrColumns['right']['function'] = array('label' => _DIRECTORY_FUNCTION, 'width' => 120, 'options' => array('sort' => true));
         $arrColumns['right']['service'] = array('label' => _DIRECTORY_SERVICE, 'width' => 120, 'options' => array('sort' => true));
@@ -218,7 +218,7 @@ switch($_SESSION['directory']['directoryTabItem'])
 
 
         $arrColumns['auto']['name'] = array('label' => _DIRECTORY_NAME, 'options' => array('sort' => true));
-        $arrColumns['right']['email'] = array('label' => _DIRECTORY_EMAIL,     'width' => 50, 'options' => array('sort' => true));
+        $arrColumns['right']['email'] = array('label' => _DIRECTORY_EMAIL,     'width' => 70, 'options' => array('sort' => true));
         $arrColumns['right']['ticket'] = array('label' => _DIRECTORY_TICKET,     'width' => 55);
         $arrColumns['right']['phone'] = array('label' => _DIRECTORY_PHONE,     'width' => 100, 'options' => array('sort' => true));
         $arrColumns['right']['function'] = array('label' => _DIRECTORY_FUNCTION, 'width' => 150, 'options' => array('sort' => true));
@@ -259,7 +259,7 @@ switch($_SESSION['directory']['directoryTabItem'])
         while ($row = ploopi\db::get()->fetchrow($res))
         {
             $email = ($row['email']) ? '<a href="mailto:'.ploopi\str::htmlentities($row['email']).'" title="'.ploopi\str::htmlentities(_DIRECTORY_SEND_EMAIL.': '.$row['email']).'"><img src="./modules/directory/img/ico_email.png"></a>' : '';
-            $ticket = '<a href="javascript:void(0);" onclick="javascript:ploopi_tickets_new(event, null, null, null, '.$row['id'].');"><img title="'._DIRECTORY_SEND_TICKET.'" src="./modules/directory/img/ico_ticket.png"></a>';
+            $ticket = '<a href="javascript:void(0);" onclick="javascript:ploopi.tickets.create(event, null, null, null, '.$row['id'].');"><img title="'._DIRECTORY_SEND_TICKET.'" src="./modules/directory/img/ico_ticket.png"></a>';
 
             $actions =  '<a href="javascript:void(0);" onclick="javascript:directory_view(event, \''.$row['id'].'\', \'\');"><img title="Voir le Profil" src="./modules/directory/img/ico_open.png"></a>';
 
@@ -384,7 +384,7 @@ switch($_SESSION['directory']['directoryTabItem'])
 
         $arrColumns['left']['type'] = array('label' => _DIRECTORY_TYPE,        'width' => 90, 'options' => array('sort' => true));
         $arrColumns['auto']['name'] = array('label' => _DIRECTORY_NAME,        'options' => array('sort' => true));
-        $arrColumns['right']['email'] = array('label' => _DIRECTORY_EMAIL,     'width' => 50, 'options' => array('sort' => true));
+        $arrColumns['right']['email'] = array('label' => _DIRECTORY_EMAIL,     'width' => 70, 'options' => array('sort' => true));
         $arrColumns['right']['ticket'] = array('label' => _DIRECTORY_TICKET,     'width' => 55);
         $arrColumns['right']['phone'] = array('label' => _DIRECTORY_PHONE,     'width' => 100, 'options' => array('sort' => true));
         $arrColumns['right']['function'] = array('label' => _DIRECTORY_FUNCTION, 'width' => 150, 'options' => array('sort' => true));
@@ -509,7 +509,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                         // on met tout ça dans une chaine
                         $workspaces_list = implode(', ',$workspaces_list);
 
-                        $ticket = '<a href="javascript:void(0);" onclick="javascript:ploopi_tickets_new(event, null, null, null, '.$row['id'].');"><img title="'._DIRECTORY_SEND_TICKET.'" src="./modules/directory/img/ico_ticket.png"></a>';
+                        $ticket = '<a href="javascript:void(0);" onclick="javascript:ploopi.tickets.create(event, null, null, null, '.$row['id'].');"><img title="'._DIRECTORY_SEND_TICKET.'" src="./modules/directory/img/ico_ticket.png"></a>';
                     break;
 
                     case 'contact':
@@ -928,9 +928,9 @@ switch($_SESSION['directory']['directoryTabItem'])
                             $arrColumns = array();
                             $arrValues = array();
 
-                            $arrColumns['left']['position'] = array('label' => 'P.',     'width' => 35, 'options' => array('sort' => true));
+                            $arrColumns['left']['position'] = array('label' => 'P.',     'width' => 50, 'options' => array('sort' => true));
                             $arrColumns['auto']['name'] = array('label' => _DIRECTORY_NAME, 'options' => array('sort' => true));
-                            $arrColumns['right']['email'] = array('label' => _DIRECTORY_EMAIL,     'width' => 50, 'options' => array('sort' => true));
+                            $arrColumns['right']['email'] = array('label' => _DIRECTORY_EMAIL,     'width' => 70, 'options' => array('sort' => true));
                             $arrColumns['right']['phone'] = array('label' => _DIRECTORY_PHONE,     'width' => 100, 'options' => array('sort' => true));
                             $arrColumns['right']['function'] = array('label' => _DIRECTORY_FUNCTION, 'width' => 120, 'options' => array('sort' => true));
                             $arrColumns['right']['service'] = array('label' => _DIRECTORY_SERVICE, 'width' => 120, 'options' => array('sort' => true));

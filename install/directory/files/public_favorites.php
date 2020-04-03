@@ -47,14 +47,14 @@ $arrValues = array();
 
 $arrColumns['left']['type'] = array('label' => _DIRECTORY_TYPE,        'width' => 90, 'options' => array('sort' => true));
 $arrColumns['auto']['name'] = array('label' => _DIRECTORY_NAME,        'options' => array('sort' => true));
-$arrColumns['right']['email'] = array('label' => _DIRECTORY_EMAIL,     'width' => 50, 'options' => array('sort' => true));
+$arrColumns['right']['email'] = array('label' => _DIRECTORY_EMAIL,     'width' => 70, 'options' => array('sort' => true));
 $arrColumns['right']['ticket'] = array('label' => _DIRECTORY_TICKET,     'width' => 55);
 $arrColumns['right']['phone'] = array('label' => _DIRECTORY_PHONE,     'width' => 100, 'options' => array('sort' => true));
 $arrColumns['right']['function'] = array('label' => _DIRECTORY_FUNCTION, 'width' => 150, 'options' => array('sort' => true));
 $arrColumns['right']['service'] = array('label' => _DIRECTORY_SERVICE, 'width' => 150, 'options' => array('sort' => true));
 
 if (ploopi\param::get('directory_display_workspaces'))
-{        
+{
     $arrColumns['right']['groups'] = array('label' => _DIRECTORY_GROUPS,    'width' => 150, 'options' => array('sort' => true));
 }
 
@@ -130,7 +130,7 @@ foreach($result as $row)
 
             //$arrValues[$c]['link'] = 'javascript:void(0);';
             //$arrValues[$c]['onclick'] = "javascript:directory_view(event, '{$row['id']}', '');";
-            $ticket = '<a href="javascript:void(0);" onclick="javascript:ploopi_tickets_new(event, null, null, null, '.$row['id'].');"><img title="'._DIRECTORY_SEND_TICKET.'" src="./modules/directory/img/ico_ticket.png"></a>';
+            $ticket = '<a href="javascript:void(0);" onclick="javascript:ploopi.tickets.create(event, null, null, null, '.$row['id'].');"><img title="'._DIRECTORY_SEND_TICKET.'" src="./modules/directory/img/ico_ticket.png"></a>';
         break;
 
         case 'contact':

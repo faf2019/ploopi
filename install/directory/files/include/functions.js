@@ -75,7 +75,7 @@ function directory_view(e, id_user, id_contact)
 
 function directory_modify(e, id_contact)
 {
-    ploopi.popup.show(ploopi.xhr.ajaxloader_content, 700, e, 'click', 'popup_directory_modify');
+    ploopi.popup.show(ploopi.xhr.ajaxloader_content, 850, e, 'click', 'popup_directory_modify');
     ploopi.xhr.todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=directory_modify&directory_id_contact='+id_contact, 'popup_directory_modify');
 }
 
