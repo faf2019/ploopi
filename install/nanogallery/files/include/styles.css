@@ -1,0 +1,84 @@
+/* ---------------------------------------
+	STYLES pour le backoffice NANOGALLERY 
+   ---------------------------------------
+*/
+
+/* Proportion en largeur des labels 
+   --------------------------------
+*/
+.nano form > div > fieldset { margin:10px; }
+.nano form > div > fieldset > div > label { width:50%; }
+.nano form#nano_gen_form > div > fieldset > div > label { width:20%; }
+.nano label { line-height:0.9; }
+
+/* Boîtes de sélection 
+   -------------------
+*/
+select { font-family: 'OpenSans', arial; }
+
+/* Largeur des champs de saisie 
+   ----------------------------
+*/
+.nano form > div > fieldset > div > input { max-width:500px; }
+.nano input[maxlength="10"] { width:40px; text-align:right; }
+.nano form > div > fieldset > div > select { max-width:160px; }
+
+/* Place les saisies en 3 colonnes 
+   -------------------------------
+*/
+form#nano_gal_form > div > fieldset > div,
+form#nano_labels_form > div > fieldset > div,
+form#nano_nav_form > div > fieldset > div,
+form#nano_thumbs_form > div > fieldset > div { position:relative; width:31%; }
+form#nano_gal_form > div > fieldset > div,
+form#nano_labels_form > div > fieldset > div,
+form#nano_nav_form > div > fieldset > div,
+form#nano_thumbs_form > div > fieldset > div { float:left; }
+
+/* checkboxes stylés 
+   -----------------
+*/
+.nano_check{ display: none; }
+
+.nano form > div > fieldset > div > label.nano_clabel {
+	background-color: rgba(255, 255, 255, 0.5);
+	clear:none;
+	width:18px!important; 
+	height:18px; 
+	float: left;
+	padding: 2px;
+	border: 1px solid rgba(0, 0, 0, 0.5);
+	margin: 2px 0 5px;	
+	box-shadow: 0 1px 2px rgba(0,0,0,0.05), inset 0px -15px 10px -12px rgba(0,0,0,0.05);
+	border-radius: 3px;
+	cursor:pointer;
+	position:relative;
+}
+
+.nano_check:checked + label:after {
+	content: '\2714';
+	font-size: 16px;
+	position: absolute;
+	top: 3px;
+	left: 4px;
+	color: #4451FF;
+}
+
+/* Affichage des dossiers 
+   ----------------------
+*/
+#treeview_inner .treeview_node img { width:20px; height : 20px; }
+.nano textarea { clear: right; }
+#treeview_inner a { font-size: 115%; color:#008; -font-family: Consolas, "Courier New", Courier, monospace; }
+#treeview_inner a:hover { text-decoration:none; background:#CCC; }
+#treeview_inner a.active { color:#A00; font-weight:bold; }
+/* Arrangement de la racine */
+#treeview_node0 > div > div { margin-bottom:2px; }
+#treeview_node0 > div > div > a:hover { background: transparent; }
+#treeview_node0 > div > div > a {
+	text-decoration: none;
+	font-weight: bold;
+	cursor: default;
+	color:#000;
+}
+

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ploopi>
+   <moduletype>
+      <label>nanogallery</label>
+      <version>1.0.2</version>
+      <author>JPP</author>
+      <date>20200428000000</date>
+      <description>Galeries d'images</description>
+      <action>
+         <id_action>10</id_action>
+         <label>Création d'une galerie</label>
+      </action>
+      <action>
+         <id_action>20</id_action>
+         <label>Modification d'une galerie</label>
+      </action>
+      <action>
+         <id_action>30</id_action>
+         <label>Suppression d'une galerie</label>
+      </action>
+   </moduletype>
+</ploopi>
