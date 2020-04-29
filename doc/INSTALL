@@ -1,11 +1,11 @@
 INSTALLATION
 ============
 
-## Installation des paquets (Debian/Ubuntu)
+## Installation des paquets (Debian/Ubuntu)
 
-sudo apt-get update
-sudo apt-get upgrade
-sudo apt-get install --yes apache2 libapache2-mod-php php php-mysql php-gd php-zip php-curl php-cli php-xml php-mbstring memcached php-memcached mariadb-server unoconv composer python-hachoir-metadata catdoc xpdf-utils jhead unrtf unzip zip openssl subversion git netcat
+sudo apt update
+sudo apt upgrade
+sudo apt install --yes apache2 libapache2-mod-php php php-mysql php-gd php-zip php-curl php-cli php-xml php-mbstring memcached php-memcached mariadb-server unoconv composer catdoc poppler-utils jhead unrtf unzip zip openssl subversion git netcat
 
 ## Activation des modules Apache
 
@@ -46,6 +46,21 @@ Puis insérez les lignes suivantes :
 </VirtualHost>
 
 
+sudo a2dissite 000-default
 sudo a2ensite ploopi
 sudo service apache2 reload
 
+## Aller un peu plus loin
+
+sudo nano /etc/apache2/conf-enabled/security.conf
+
+Puis insérez les lignes suivantes :
+
+ServerTokens Prod
+ServerSignature Off
+
+sudo service apache2 reload
+
+## Installation directe
+
+https://daily.ploopi.org/
