@@ -290,7 +290,7 @@ abstract class date {
     public static function local2timestamp($mydate, $mytime = '00:00:00', $dateformat = _PLOOPI_DATEFORMAT)
     {
         // verify local format
-        if (self::dateverify($mydate))// && self::timeverify($mytime))
+        if (self::dateverify($mydate, $dateformat))// && self::timeverify($mytime))
         {
             preg_match(_PLOOPI_TIMEFORMAT_EREG, $mytime, $timeregs);
             switch($dateformat)
