@@ -29,6 +29,8 @@
  * @license GNU General Public License (GPL)
  * @author Stéphane Escaich
  */
+use ploopi\form_button;
+use ploopi\skin;
 
 // Droits
 if (!ploopi\acl::isactionallowed(ploopi\news2\tools::ACTION_MANAGECAT)) {
@@ -37,17 +39,16 @@ if (!ploopi\acl::isactionallowed(ploopi\news2\tools::ACTION_MANAGECAT)) {
 
 // Récupération du modèle
 $newscat = new ploopi\news2\news2cat();
-if (!empty($_GET['id']) && is_numeric($_GET['id']) && $newscat->open($_GET['id'])) {
-	;
-} else {
+if (!empty($_GET['id']) && is_numeric($_GET['id']) && $newscat->open($_GET['id'])) { ; } else {
 	$newscat->init_description();
 }
 
 // Vue
 if ($newscat->new) 
-	echo ploopi\skin::get()->open_simplebloc('Ajouter une Catégorie');
+	echo skin::get()->open_simplebloc('Ajouter une Catégorie');
 else 
-	echo ploopi\skin::get()->open_simplebloc(ploopi\str::htmlentities(str_replace("LABEL",$newscat->fields['title'],'Modifier la Catégorie \'LABEL\'')));
+	echo skin::get()->open_simplebloc(ploopi\str::htmlentities(str_replace(
+		"LABEL",$newscat->fields['title'],'Modifier la Catégorie \'LABEL\'')));
 
 // Formulaire
 $strUrl = "admin-light.php?entity=admin&action=op_catwrite";
@@ -56,58 +57,22 @@ $arrFormOptions = array('class' => 'ploopi_generate_form news2catform');
 $objForm = new ploopi\form('news2cat_form', ploopi\crypt::urlencode($strUrl), 'post', $arrFormOptions);
 
 // Panneau 1
-$objForm->addPanel($objPanel = new ploopi\form_panel(
-	'',
-	null,
-	['style' => 'width:49%;float:left;clear:none;border:none;']
-));
-
-$objForm->addField(new ploopi\form_field(
-	'input:text', 
-	'Titre :', 
-	$newscat->fields['title'], 
-	"newscat_title", 
-	"newscat_title", 
-	['title' => "Titre de la catégorie", 'required' => true]
-));
-
-$objForm->addField(new ploopi\form_field(
-	'textarea', 
-	'Description :', 
-	$newscat->fields['description'], 
-	"newscat_description", 
-	"newscat_description", 
-	['title' => "Description de la catégorie"]
-));
-
+$objForm->addPanel($objPanel = new ploopi\form_panel( '', null, ['style' => 'width:49%;float:left;clear:none;border:none;']));
+$objForm->addField(new ploopi\form_field( 'input:text', 'Titre :', $newscat->fields['title'], 
+	"newscat_title", "newscat_title", ['title' => "Titre de la catégorie", 'required' => true]));
+$objForm->addField(new ploopi\form_field( 'textarea', 'Description :', $newscat->fields['description'], 
+	"newscat_description", "newscat_description", ['title' => "Description de la catégorie"]));
 
 // Boutons
-$objForm->addButton( new ploopi\form_button(
-	'input:button', 
-	'Annuler', 
-	null, 
-	null, 
-	['style' => 'margin-left:4px;', 'onclick' => "document.location.href='".ploopi\crypt::urlencode("admin.php?entity=admin&action=catmodify")."';" ]
-));
-
-$objForm->addButton( new ploopi\form_button(
-	'input:reset', 
-	'Réinitialiser', 
-	null, 
-	null, 
-	['style' => 'margin-left:4px;']
-));
-
-$objForm->addButton( new ploopi\form_button(
-	'input:submit', 
-	'Enregistrer', 
-	null, 
-	null, 
-	['style' => 'margin-left:4px;']
-));
-
+$objForm->addButton( new form_button('input:button', 'Annuler', null, null, 
+	['style' => 'margin-left:4px;', 'onclick' => "document.location.href='"
+		.ploopi\crypt::urlencode("admin.php?entity=admin&action=catmodify")."';" ]));
+$objForm->addButton( new form_button('input:reset', 'Réinitialiser', null, null, 
+	['style' => 'margin-left:4px;']));
+$objForm->addButton( new form_button('input:submit', 'Enregistrer', null, null, 
+	['style' => 'margin-left:4px;']));
 
 // Rendu
 echo $objForm->render();
-echo ploopi\skin::get()->close_simplebloc(); 
+echo skin::get()->close_simplebloc(); 
 

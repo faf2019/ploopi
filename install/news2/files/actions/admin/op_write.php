@@ -2,17 +2,19 @@
 /**
  * Enregistre la news
  */
+use ploopi\crypt;
 use ploopi\news2;
+use ploopi\news2\tools;
 
-if (ploopi\acl::isactionallowed([news2\tools::ACTION_WRITE, news2\tools::ACTION_MODIFY])) {
+if (ploopi\acl::isactionallowed([tools::ACTION_WRITE, tools::ACTION_MODIFY])) {
 
 	$news = new news2\news2();
     if (!empty($_GET['id'])) {
     	if (!is_numeric($_GET['id'])) {
-			ploopi\output::redirect(ploopi\crypt::urlencode("admin.php?entity=error"));
+			ploopi\output::redirect(crypt::urlencode("admin.php?entity=error"));
 		}
 		if (!$news->open($_GET['id']))  {
-			ploopi\output::redirect(ploopi\crypt::urlencode("admin.php?entity=admin"));
+			ploopi\output::redirect(crypt::urlencode("admin.php?entity=admin"));
 		}
     } else {
 		$news->init_description();
@@ -23,7 +25,7 @@ if (ploopi\acl::isactionallowed([news2\tools::ACTION_WRITE, news2\tools::ACTION_
 	if (empty($news->fields['title'])) {
 		echo "<script>
 		alert('La nouvelle ne comporte pas de titre !');
-		{document.location.href='".ploopi\crypt::urlencode("admin.php?entity=error")."';}
+		{document.location.href='".crypt::urlencode("admin.php?entity=error")."';}
 		</script>"; 
 		ploopi\system::kill();
 	}
@@ -41,11 +43,11 @@ if (ploopi\acl::isactionallowed([news2\tools::ACTION_WRITE, news2\tools::ACTION_
     $news->save();
 
     if ($news->new) 
-		ploopi\user_action_log::record(news2\tools::ACTION_WRITE, $news->fields['id']);
+		ploopi\user_action_log::record(tools::ACTION_WRITE, $news->fields['id']);
     else 
-		ploopi\user_action_log::record(news2\tools::ACTION_MODIFY, $news->fields['id']);
-    ploopi\output::redirect(ploopi\crypt::urlencode("admin.php?entity=admin&action=default&id={$news->fields['id']}"));
+		ploopi\user_action_log::record(tools::ACTION_MODIFY, $news->fields['id']);
+    ploopi\output::redirect(crypt::urlencode("admin.php?entity=admin&action=default&id={$news->fields['id']}"));
 }
 
-ploopi\output::redirect(ploopi\crypt::urlencode("admin.php?entity=error"));
+ploopi\output::redirect(crypt::urlencode("admin.php?entity=error"));
 

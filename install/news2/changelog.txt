@@ -1,3 +1,30 @@
+== Module NEWS2 - version 3.2.0 ====================================================
+
+2020-04-17  Jean-Pierre Pawlak ~ SGAMI-Est <jean-pierre@interieur.gouv.fr>
+
+* Possibilité d'externaliser le code gérant news2 dans index.tpl dans index_news2.tpl avec {include_news2}.
+
+== Module NEWS2 - version 3.1.2 ====================================================
+
+2020-04-14  Jean-Pierre Pawlak ~ SGAMI-Est <jean-pierre@interieur.gouv.fr>
+
+* Bug workspace dans tools::getNews() corrigé
+
+== Module NEWS2 - version 3.1.1 ====================================================
+
+2020-04-08  Jean-Pierre Pawlak ~ SGAMI-Est <jean-pierre@interieur.gouv.fr>
+
+* Suppression des liens dans ckeditor (lien principal en conflit)
+* En front (template et wce) afficage du contenu complet et plus au travers de htmlentities 
+* Bug JS, Au départ, la 2e news était active au lieu de la première
+
+== Module NEWS2 - version 3.1.0 ====================================================
+
+2020-03-20  Jean-Pierre Pawlak ~ SGAMI-Est <jean-pierre@interieur.gouv.fr>
+
+* Ajout variable news2_nbgridcol en WCE
+* Ajout variable pages.ACTIVE en WCE
+
 == Module NEWS2 - version 3.0.5 ====================================================
 
 2020-02-26  Jean-Pierre Pawlak ~ SGAMI-Est <jean-pierre@interieur.gouv.fr>

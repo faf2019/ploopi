@@ -3,7 +3,6 @@ use ploopi\news2;
 
 if (ploopi\acl::isactionallowed([news2\tools::ACTION_WRITE, news2\tools::ACTION_MODIFY])) {
 
-	// $webeditid = $_SESSION['ploopi']['webeditmoduleid'];
 	$webeditid = 0;
 	foreach($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['modules'] as $idm) {
 		if (!empty($_SESSION['ploopi']['modules'][$idm]['active']) && $_SESSION['ploopi']['modules'][$idm]['moduletype'] == 'webedit') $webeditid = $idm;

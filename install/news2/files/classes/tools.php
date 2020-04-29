@@ -25,27 +25,14 @@ use ploopi;
 
 abstract class tools
 {
-
-    // Action : Une au moins
-    const ACTION_ANY        = -1;
-
-    // Action : Ajouter une news
-    const ACTION_WRITE      = 1;
-
-    // Action : Modifier une news
-    const ACTION_MODIFY     = 2;
-
-    // Action : Supprimer une news
-    const ACTION_DELETE     = 3;
-
-    // Action : Publier une news
-    const ACTION_PUBLISH    = 4;
-
-    // Action : Gérer les catégories
-    const ACTION_MANAGECAT  = 5;
-
-    // Objet NEWS2
-    const OBJECT_NEWS2      = 1;
+   
+	const ACTION_ANY        = -1;	// Action : Une au moins
+	const ACTION_WRITE      = 1;	// Action : Ajouter une news
+	const ACTION_MODIFY     = 2;	// Action : Modifier une news
+	const ACTION_DELETE     = 3;	// Action : Supprimer une news
+	const ACTION_PUBLISH    = 4;	// Action : Publier une news
+	const ACTION_MANAGECAT  = 5;	// Action : Gérer les catégories
+	const OBJECT_NEWS2      = 1;	// Objet NEWS2
 
 
     /**
@@ -89,6 +76,7 @@ abstract class tools
         }
         return $arrCat;
     }
+
 
     // Ajoute une saisie d'image
     // N'utilise pas la fonction standard pour intégrer le bouton

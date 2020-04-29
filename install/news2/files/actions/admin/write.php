@@ -1,4 +1,7 @@
 <?php
+use ploopi\form_field;
+use ploopi\form_button;
+use ploopi\str;
 use ploopi\news2;
 
 // Autorisation
@@ -30,133 +33,39 @@ $arrFormOptions = array('class' => 'ploopi_generate_form news2form');
 $objForm = new ploopi\form('news2_form', ploopi\crypt::urlencode($strUrl), 'post', $arrFormOptions);
 
 // Panneau 1
-$objForm->addPanel($objPanel = new ploopi\form_panel(
-    '',
-    null,
-    ['style' => 'width:49%;float:left;clear:none;border:none;']
-));
-
-$objPanel->addField(new ploopi\form_field(
-    'input:text',
-    'Titre :',
-    $news->fields['title'],
-    "news_title",
-    "news_title",
-    ['title' => "Titre de la nouvelle", 'required' => true]
-));
-
-$objPanel->addField(new ploopi\form_select(
-    'Catégorie :',
-    $arrCateg,
-    $news->fields['id_cat'],
-    "news_id_cat",
-    "news_id_cat",
-    ['title' => "Catégorie à laquelle appartient la nouvelle"]
-));
-
-$objPanel->addField(new ploopi\form_field(
-    'input:text', 'Source :',
-    $news->fields['source'],
-    "news_source",
-    "news_source",
-    ['title' => "Source d'où est tirée l'information"]
-));
-
-$objPanel->addField(new ploopi\form_select(
-    'A la Une :',
-    $arrHot,
-    $news->fields['hot'],
-    "news_hot",
-    "news_hot",
-    ['style' => "width:60px;"]
-));
+$objForm->addPanel($objPanel = new ploopi\form_panel('', null, ['style' => 'width:49%;float:left;clear:none;border:none;']));
+$objPanel->addField(new form_field('input:text', 'Titre :', $news->fields['title'], 
+	"news_title", "news_title", ['title' => "Titre de la nouvelle", 'required' => true]));
+$objPanel->addField(new ploopi\form_select('Catégorie :', $arrCateg, $news->fields['id_cat'], 
+	"news_id_cat", "news_id_cat", ['title' => "Catégorie à laquelle appartient la nouvelle"]));
+$objPanel->addField(new form_field('input:text', 'Source :', $news->fields['source'],
+    "news_source", "news_source", ['title' => "Source d'où est tirée l'information"]));
+$objPanel->addField(new ploopi\form_select('A la Une :', $arrHot, $news->fields['hot'],
+    "news_hot", "news_hot", ['style' => "width:60px;"]));
 
 // Panneau 2
-$objForm->addPanel($objPanel = new ploopi\form_panel(
-    '',
-    null,
-    ['style' => 'width:49%;float:left;clear:none;border:none;']
-));
-
-$objPanel->addField(new ploopi\form_field(
-    'input:date',
-    'Date de Publication',
-    ploopi\str::htmlentities($localdate['date']),
-    "news_date_publish",
-    "news_date_publish",
-    ['title' => "Date de Publication", 'style' => 'width:100px;']
-));
-
-$objPanel->addField(new ploopi\form_field(
-    'input:text',
-    'Heure de Publication',
-    ploopi\str::htmlentities($localdate['time']),
-    "newsx_time_publish",
-    "newsx_time_publish",
-    ['title' => "Heure de Publication", 'style' => 'width:100px;']
-));
-
-$objPanel->addField(new ploopi\form_field(
-    'input:text',
-    'Titre du Lien :',
-    $news->fields['urltitle'],
-    "news_urltitle",
-    "news_urltitle",
-    ['title' => "Texte affiché pour le lien"]
-));
-
-news2\tools::addLink(
-    $objPanel,
-    'url',
-    $news->fields['url'],
-    'Lien interne ou externe',
-    'news_'
-);
-
-news2\tools::addImg(
-    $objPanel,
-    'background',
-    ploopi\str::htmlentities($news->fields['background']),
-    'Image de fond',
-    'news_'
-);
+$objForm->addPanel($objPanel = new ploopi\form_panel('', null, ['style' => 'width:49%;float:left;clear:none;border:none;']));
+$objPanel->addField(new form_field('input:date', 'Date de Publication', str::htmlentities($localdate['date']),
+    "news_date_publish", "news_date_publish", ['title' => "Date de Publication", 'style' => 'width:100px;']));
+$objPanel->addField(new form_field('input:text', 'Heure de Publication', str::htmlentities($localdate['time']),
+    "newsx_time_publish", "newsx_time_publish", ['title' => "Heure de Publication", 'style' => 'width:100px;']));
+$objPanel->addField(new form_field('input:text', 'Titre du Lien :', $news->fields['urltitle'],
+    "news_urltitle", "news_urltitle", ['title' => "Texte affiché pour le lien"]));
+news2\tools::addLink($objPanel, 'url', $news->fields['url'], 'Lien interne ou externe', 'news_');
+news2\tools::addImg($objPanel, 'background', str::htmlentities($news->fields['background']), 'Image de fond', 'news_');
 
 // Panneau 3 - CKeditor
 $objForm->addPanel($objPanel = new ploopi\form_panel('',null,['style' => 'width:100%;border:none;']));
-
-$objPanel->addField(new ploopi\form_html(
-    '<textarea style="clear:both;width:95%;padding:0 5px;margin:0 5px;"
-    name="fck_news_content" id="editor">'.$news->fields['content'].'</textarea>'
-));
+$objPanel->addField(new ploopi\form_html('<textarea style="clear:both;width:95%;padding:0 5px;margin:0 5px;"
+    name="fck_news_content" id="editor">'.$news->fields['content'].'</textarea>'));
 
 // Boutons
-$objForm->addButton( new ploopi\form_button(
-    'input:button',
-    'Annuler',
-    null,
-    null,
-    [
-        'style' => 'margin-left:4px;',
-        'onclick' => "document.location.href='".ploopi\crypt::urlencode("admin.php?entity=admin&action=default")."';"
-    ]
+$objForm->addButton( new form_button('input:button', 'Annuler', null, null,
+    ['style' => 'margin-left:4px;',
+        'onclick' => "document.location.href='".ploopi\crypt::urlencode("admin.php?entity=admin&action=default")."';"]
 ));
-
-$objForm->addButton( new ploopi\form_button(
-    'input:reset',
-    'Réinitialiser',
-    null,
-    null,
-    ['style' => 'margin-left:4px;']
-));
-
-$objForm->addButton( new ploopi\form_button(
-    'input:submit',
-    'Enregistrer',
-    null,
-    null,
-    ['style' => 'margin-left:4px;']
-));
-
+$objForm->addButton( new form_button('input:reset', 'Réinitialiser', null, null, ['style' => 'margin-left:4px;']));
+$objForm->addButton( new form_button('input:submit', 'Enregistrer', null, null, ['style' => 'margin-left:4px;']));
 
 // Rendu
 echo $objForm->render();
@@ -166,7 +75,6 @@ echo ploopi\skin::get()->close_simplebloc();
 <script>
     // Ajout d'un plugin externe
     CKEDITOR.plugins.addExternal('tag', '<?php echo _PLOOPI_BASEPATH.'/modules/news2/include/ckeditor/plugins/tag/'; ?>', 'plugin.js');
-
     // http://docs.ckeditor.com/#!/guide/plugin_sdk_styles
     CKEDITOR.plugins.add( 'tag', {
         init: function( editor ) {
@@ -174,7 +82,6 @@ echo ploopi\skin::get()->close_simplebloc();
             editor.addContentsCss( pluginDirectory + 'styles.css' );
         }
     } );
-
     // http://docs.ckeditor.com/#!/guide/dev_file_browser_api
     CKEDITOR.replace( 'editor', {
         customConfig: '<?php echo _PLOOPI_BASEPATH.'/modules/news2/include/ckeditor/config.js'; ?>',

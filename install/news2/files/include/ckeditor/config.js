@@ -33,7 +33,6 @@ CKEDITOR.editorConfig = function( config ) {
     // Barre d'outil personnalisée
     config.toolbar = [
         ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo'],
-        ['Link','Unlink'],
         ['Image','Table','HorizontalRule','Smiley','SpecialChar','PageBreak','tag'],
         ['NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv','-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock'],
        // '/',

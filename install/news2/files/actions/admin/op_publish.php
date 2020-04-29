@@ -5,20 +5,17 @@
  */
 use ploopi\news2;
 
-if (	!empty($_GET['id']) 
+if (!empty($_GET['id']) 
 		&& is_numeric($_GET['id']) 
 		&& ploopi\acl::isactionallowed(news2\tools::ACTION_PUBLISH)
 	) {
 		$news = new news2\news2();
-		if($news->open($_GET['id']))
-		{
+		if($news->open($_GET['id'])) {
 			if ($news->fields['published']) {
 				$news->fields['published'] = 0;
 			} else {
  				$news->fields['published'] = 1;
-				ploopi\user_action_log::record(
-					news2\tools::ACTION_PUBLISH, $news->fields['id']
-				);
+				ploopi\user_action_log::record(news2\tools::ACTION_PUBLISH, $news->fields['id']);
 			}
 			$news->save();
 		}

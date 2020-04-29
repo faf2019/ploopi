@@ -34,6 +34,7 @@ use ploopi;
  */
 
 class news2 extends ploopi\data_object {
+
     /**
      * Constructeur de la classe
      * @return news2_entry

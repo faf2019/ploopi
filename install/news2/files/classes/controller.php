@@ -31,10 +31,9 @@ class controller extends ploopi\controller {
         $this->addBlockMenu('Toutes les News', 'public','all');
         $this->addBlockMenu('Administration', 'admin','default',  news2\tools::ACTION_ANY);
 
-        $result = news2\tools::getNews($this->getModuleId(),true, $this->getParam('nbnewsdisplay'));
+        $result = tools::getNews($this->getModuleId(),true, $this->getParam('nbnewsdisplay'));
         while ($news_fields = $result->fetchrow()) {
             $localdate = ploopi\date::timestamp2local($news_fields['date_publish']);
-            // $titre = '<div style="font-size:80%;margin:-6px 0 -8px 0;line-height:1;vertical-align:bottom;">'
             $titre = '<div style="font-size:80%;">'
                 .($news_fields['hot'] ? '<strong>' : '')
                 .ploopi\str::htmlentities($news_fields['title'])

@@ -30,14 +30,15 @@
  * @author Stéphane Escaich
  */
 use ploopi\news2;
+use ploopi\news2\tools;
 
 // Droits
-if (!ploopi\acl::isactionallowed(news2\tools::ACTION_MANAGECAT)) {
+if (!ploopi\acl::isactionallowed(tools::ACTION_MANAGECAT)) {
 	ploopi\output::redirect(ploopi\crypt::urlencode("admin.php?entity=forbidden"));
 }
 
 // Récupération du modèle
-$catRs = news2\tools::getCategories($this->getModuleid());
+$catRs = tools::getCategories($this->getModuleid());
 
 // Vue
 echo ploopi\skin::get()->open_simplebloc('Liste des Catégories');

@@ -14,14 +14,10 @@ if (ploopi\acl::isactionallowed([ploopi\news2\tools::ACTION_WRITE, ploopi\news2\
 		)
 	);
 	$template_body->assign_block_vars('module_css',
-		array(
-		    'PATH' => "./modules/webedit/include/styles.css"
-		)
+		array('PATH' => "./modules/webedit/include/styles.css")
 	);
 	$template_body->assign_block_vars('module_css_ie',
-		array(
-		     'PATH' => "./modules/webedit/include/styles_ie.css"
-		)
+		array('PATH' => "./modules/webedit/include/styles_ie.css")
 	);
 	$template_body->pparse('body');
 	ploopi\system::kill();

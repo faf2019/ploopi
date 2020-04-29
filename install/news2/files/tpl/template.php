@@ -30,8 +30,8 @@
  * @author Stéphane Escaich
  * @author Jean-Pierre Pawlak
  */
+use ploopi\str;
 
-//ploopi\module::init('news2');
 $news_result = ploopi\news2\tools::getNews($template_moduleid);
 $news_count = $news_result->numrows();
 
@@ -61,17 +61,17 @@ if ($news_count > 0) {
 		$template_body->assign_block_vars("{$rootTpl}.news" , array(
 			'RANK' => $rank,
 			'ID' => $news_fields['id'],
-			'TITLE' => ploopi\str::htmlentities($news_fields['title']),
-			'CONTENT' => $news_fields['content'],
+			'TITLE' => str::htmlentities($news_fields['title'], ENT_QUOTES),
+			'CONTENT' => $news_fields['content'], ENT_QUOTES,
 			'HOT' => $news_fields['hot'],
 			'DATE' => $localdate['date'],
 			'TIME' => $localdate['time'],
 			'URL' => $news_fields['url'],
-			'URLTITLE' => ploopi\str::htmlentities($news_fields['urltitle']),
+			'URLTITLE' => str::htmlentities($news_fields['urltitle'], ENT_QUOTES),
 			'BACKGROUND' => $news_fields['background'],
 			'LINK' => "modcontent={$template_moduleid}&newsid={$news_fields['id']}",
 			'CAT_ID' => $news_fields['id_cat'],
-			'CAT_LABEL' => $news_fields['titlecat']
+			'CAT_LABEL' => str::htmlentities($news_fields['titlecat'], ENT_QUOTES)
 		));
 
 		// Préparation propriétés ALL
@@ -85,7 +85,7 @@ if ($news_count > 0) {
 		// catalogue
 		$template_body->assign_block_vars("{$rootTpl}.catalog.all" , array(
 			'RANK' =>$all['count'],
-			'TITLE' => ploopi\str::htmlentities($news_fields['title']),			
+			'TITLE' => str::htmlentities($news_fields['title']),			
 		));
 		
 		// Préparation propriétés HOT
@@ -147,6 +147,14 @@ if ($news_count > 0) {
 			'COUNT' => $val['count'],
 			'LINKS'	=> $val['links']
 		));
+	}
+
+	// Permet le déport dans index_news2.tpl
+	global $template_name;
+	$dirname = 'index_news2.tpl';
+	if (file_exists("./templates/frontoffice/{$template_name}/$dirname") && is_readable("./templates/frontoffice/{$template_name}/$dirname")) {
+		$template_body->set_filenames(array('h_news2' => $dirname));
+		$template_body->assign_var_from_handle('include_news2', 'h_news2');
 	}
 
 }
