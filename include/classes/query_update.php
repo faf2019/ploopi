@@ -44,6 +44,13 @@ class query_update extends query_sud
     private $arrSet;
 
     /**
+     * Tableau de la clause INNER JOIN
+     *
+     * @var array
+     */
+    private $arrInnerJoin;
+
+    /**
      * Constructeur de la classe
      *
      * @param resource $objDb Connexion à la BDD
@@ -51,6 +58,7 @@ class query_update extends query_sud
     public function __construct($objDb = null)
     {
         $this->arrSet = array();
+        $this->arrInnerJoin = array();
 
         parent::__construct('update', $objDb);
     }
@@ -66,6 +74,17 @@ class query_update extends query_sud
     {
         if (!empty($mixValues) && !is_array($mixValues)) $mixValues = array($mixValues);
         $this->arrSet[] = array('rawsql' => $strSet, 'values' => $mixValues);
+    }
+
+    /**
+     * Ajoute une clause INNER JOIN à la requête
+     *
+     * @param string $strInnerJoin Clause INNER JOIN
+     */
+    public function add_innerjoin($strInnerJoin, $mixValues = null)
+    {
+        if (!empty($mixValues) && !is_array($mixValues)) $mixValues = array($mixValues);
+        $this->arrInnerJoin[] = array('rawsql' => $strInnerJoin, 'values' => $mixValues);
     }
 
     /**
@@ -92,6 +111,19 @@ class query_update extends query_sud
     }
 
     /**
+     * Retourne la clause INNER JOIN
+     *
+     * @return string
+     */
+    protected function get_innerjoin()
+    {
+        $arrInnerJoin = array();
+        foreach($this->arrInnerJoin as $arrInnerJoinDetail) $arrInnerJoin[] = sqlformat::replace($arrInnerJoinDetail, $this->objDb);
+
+        return empty($arrInnerJoin) ? '' : ' INNER JOIN '.implode(' INNER JOIN ', $arrInnerJoin);
+    }
+
+    /**
      * Génération de la requête SQL
      *
      * @return string Chaîne contenant la requête SQL générée
@@ -104,6 +136,7 @@ class query_update extends query_sud
         {
             $strSql = 'UPDATE'.
                 $this->get_from().
+                $this->get_innerjoin().
                 $this->get_set().
                 $this->get_where().
                 $this->get_orderby().
@@ -113,4 +146,17 @@ class query_update extends query_sud
 
         return $strSql;
     }
+
+
+    /**
+     * Supprime la clause SET
+     */
+    public function remove_set() { $this->arrSet = array(); }
+
+    /**
+     * Supprime la clause INNER JOIN
+     */
+    public function remove_innerjoin() { $this->arrInnerJoin = array(); }
+
+
 }
