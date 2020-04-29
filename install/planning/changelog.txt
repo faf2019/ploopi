@@ -1,3 +1,9 @@
+== Module Planning - version 1.0.2 ====================================================
+
+2020-04-29  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Mise à jour de compatibilité pour PHP 7.3 / MariaDB 10.3
+
 == Module Planning - version 1.0.1 ====================================================
 
 2019-01-06  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
