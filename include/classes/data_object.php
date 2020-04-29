@@ -369,14 +369,16 @@ class data_object
     }
 
     /**
-     * Initialise les propriétés de l'objet avec la structure de la table
+     * Initialise les propriétés de l'objet avec la structure et les valeurs par défaut de la table
      */
 
     public function init_description()
     {
         $this->sql = "DESCRIBE {$this->tablename_quoted}";
-        $result = $this->db->query($this->sql);
-        while ($fields = $this->db->fetchrow($result)) $this->fields[$fields['Field']] = '';
+        $rs = $this->db->query($this->sql);
+        while ($fields = $this->db->fetchrow($rs)) {
+            $this->fields[$fields['Field']] = $fields['Default'];
+        }
     }
 
     /**
