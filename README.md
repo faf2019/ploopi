@@ -86,6 +86,11 @@ ServerSignature Off
 sudo service apache2 reload
 ```
 
+## Téléchargement direct
+
+https://daily.ploopi.org/
+
+
 ## Licence
 
 GPL 2.0
