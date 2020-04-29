@@ -41,7 +41,8 @@ $objForm = new ploopi\form('nano_gen_form', ploopi\crypt::urlencode($strUrl), 'p
 // Panels
 $objForm->addPanel($objPanel = new ploopi\form_panel('nano_panel_gen','Propriétés générales'));
 $this->addText($objPanel, 'label', $gal['label'], "Label", $prefix, "Label de la galerie", true);
-$objPanel->addField(new ploopi\form_field('textarea', 'description', $gal['description'], $prefix.'description', null, array('style' => 'height:50px;')));
+$objPanel->addField(new ploopi\form_field('textarea', 'description', $gal['description'], $prefix.'Description', null, array('style' => 'height:50px;')));
+$this->addCBox($objPanel, 'useAlbums', $gal['useAlbums'], "Avec les sous-dossiers en albums", $prefix);
 $objPanel->addField(new ploopi\form_hidden($gal['id_folder'], $prefix.'id_folder','id_folder',['required' => "required",'label' => "Dossier associé"] ));
 $foldername = folders::getFolderName($gal['id_folder']);
 $objPanel->addField(new ploopi\form_html(

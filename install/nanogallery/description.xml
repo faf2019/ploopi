@@ -2,9 +2,9 @@
 <ploopi>
    <moduletype>
       <label>nanogallery</label>
-      <version>1.0.2</version>
+      <version>1.1.0</version>
       <author>JPP</author>
-      <date>20200428000000</date>
+      <date>20200429000000</date>
       <description>Galeries d'images</description>
       <action>
          <id_action>10</id_action>

@@ -41,7 +41,7 @@ $objForm = new ploopi\form('nano_nav_form', ploopi\crypt::urlencode($strUrl), 'p
 // Les éléments commentés ne seront utiles que lorsque la gestion des albums sera effective
 
 // Panels
-$objForm->addPanel($objPanel = new ploopi\form_panel('nano_panel_nav','Navigation : <span style="color:#F00;">La navigation et les albums ne sont pas gérées pour l\'instant</span>'));
+$objForm->addPanel($objPanel = new ploopi\form_panel('nano_panel_nav','Navigation'));
 $this->addCBox  ($objPanel, 'displayBreadcrumb', 			$gal['displayBreadcrumb'], "Affichage du chemin", $prefix);
 $this->addCBox  ($objPanel, 'breadcrumbAutoHideTopLevel', 	$gal['breadcrumbAutoHideTopLevel'], "Cacher Le 1e niveau", $prefix);
 $this->addCBox  ($objPanel, 'breadcrumbOnlyCurrentLevel', 	$gal['breadcrumbOnlyCurrentLevel'], "Uniquement le niveau courant", $prefix);

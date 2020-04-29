@@ -17,6 +17,8 @@ class nanogallery extends ploopi\data_object {
 	const ACTION_DELETE     = 30;	// Action : Supprimer une news
 	const OBJECT_NANOGAL    = 1;	// Objet NanoGallery
 
+	private $_folders = array();
+
     /**
      * Méthode statique qui
      * retourne la liste des galeries de l'instance du module
@@ -150,42 +152,114 @@ class nanogallery extends ploopi\data_object {
 			  }'>
 
 				<?php
-				$arrImages = $this->getImages();
-				$width = ($f['thumbnailWidth'] == 'auto' ? 200: $f['thumbnailWidth']) * 3;
-				$height = ($f['thumbnailHeight'] == 'auto' ? 200 : $f['thumbnailHeight']) * 3;
-				//$thumbs = new ploopi\mimethumb($width , $height, 0, 'jpg');
-				//$thumbs->getThumbnail($file);
-
-				foreach ($arrImages as $img) {
-					// $thumb = ploopi\crypt::urlencode("index-light.php?ploopi_op=nano_thumb&md5id=".$img['md5id']."&v=".$img['version']."&w=$width&h=$height");
-					echo '<a href="'.$img['file'].'" data-ngthumb="'.$img['file'].'" data-ngdesc="">'.$img['name'].'</a>';
-				}
+				$this->getFolderContent($f['id_folder'],true);
 				?>
 			</div>
 		<?php
 	}
 
+    /**
+     * Affiche le contenu de l'album (récursif s'il contient des albums)
+     */
+	private function getFolderContent($idFolder, $toplevel = false) {
+		// Albums
+		if ($this->fields['useAlbums']) {
+			$albums = $this->getAlbums($idFolder);
+			if (!empty($albums)) {
+				foreach($albums as $album) {
+					if (!is_null($album['thumbnailName'])) {
+						echo '<a href="" data-ngkind="album" data-ngthumb="'.$album['thumbnailName']
+							.'" data-ngid="'.$album['id'].'">ALBUM '.$album['name'].'</a>';
+					}
+					$this->getFolderContent($album['id']);
+				}
+			}
+		}
+		// Images
+		$arrImages = $this->getImages($idFolder);
+		$imgIdx = 1;
+		foreach ($arrImages as $img) {
+			$crtImgId = $idFolder.sprintf('%04s', $imgIdx++);
+			$size = $img['size'] >= 1000 ? number_format( $img['size'] / 1024 , 2, ",", " "). " Mo" : $img['size']." Ko";
+			$str = '<a href="'.$img['file'].'" data-ngthumb="'.$img['file'].'" data-ngid="'.$img['ngid'].'"';
+			if (!$toplevel) $str .= ' data-ngalbumid="'.$img['ngalbumid'].'"';
+			$str .= ' data-ngdesc="'.$img['size'].'">'.$img['title'].'</a>';
+			echo $str;
+		}		
+	}
 
     /**
      * Renvoie la liste des images de la galerie
      */
-	private function getImages() {
+	private function getImages($idFolder) {
+		$imgIdx = 1;
 		$arrImages = array();
         $objQuery = new ploopi\query_select();
-        $objQuery->add_select('f.id, f.md5id, f.name, f.version');
-        $objQuery->add_from('ploopi_mod_doc_file f');
-        $objQuery->add_where("f.id_folder = ".$this->fields['id_folder']);
-        $objQuery->add_where("LCASE(f.extension) IN ('jpg','jpeg','gif','png')");
+        $objQuery->add_select('id,md5id,name,version,size,lcase(extension) as extension');
+        $objQuery->add_from('ploopi_mod_doc_file');
+        $objQuery->add_where("id_folder = ".$idFolder);
+        $objQuery->add_where("LCASE(extension) IN ('jpg','jpeg','gif','png')");
 		$objResponse = $objQuery->execute();
-		if(!$objResponse->numrows($images)) { return arrImages; }
+		if(!$objResponse->numrows()) { return arrImages; }
 	    while ($image = $objResponse->fetchrow()) {
+			$row['ngid'] = $idFolder.sprintf('%04s', $imgIdx++);
+			$row['ngalbumid'] = $idFolder;
 			$row['file'] = "documents/".$image['md5id'].'/'.$image['name'];
 			$row['name'] = $image['name'];
+			$row['title'] = substr($image['name'], 0, strlen($image['name']) - strlen($image['extension']) - 1);
 			$row['md5id'] = $image['md5id'];
 			$row['version'] = $image['version'];
+			$row['extension'] = $image['extension'];
+			$size = intdiv( $image['size'], 1024);
+			$row['size'] = $size >= 1000 ? number_format( $size / 1024 , 2, ",", " "). " Mo" : $size." Ko";
 			$arrImages[] = $row;
 		}
+
 		return $arrImages;
 	}
+
+    /**
+     * Renvoie l'adresse de l'image de l'album
+	 * La première image, sinon une image standard du module
+     */
+	private function getAlbumThumbnail($idFolder) {
+        $objQuery = new ploopi\query_select();
+        $objQuery->add_select('id,md5id,name,version,size,lcase(extension) as extension');
+        $objQuery->add_from('ploopi_mod_doc_file');
+        $objQuery->add_where("id_folder = ".$idFolder);
+        $objQuery->add_where("LCASE(extension) IN ('jpg','jpeg','gif','png')");
+	    $objQuery->add_limit("1");
+		$objResponse = $objQuery->execute();
+		$thumbnailName = null;
+		if($objResponse->numrows() >= 1) { 
+			$image = $objResponse->fetchrow();
+			$thumbnailName = "documents/".$image['md5id'].'/'.$image['name'];
+		}
+	    return $thumbnailName;
+	}
+
+    /**
+     * Renvoie les albums contenus dans l'album courant
+     */
+	private function getAlbums($idFolder) {
+		$folders = $this->getfolders();
+		$childs = [];
+		$childsIds = $folders['tree'][$idFolder];
+		foreach($childsIds as $id) {
+			$thmb = $this->getAlbumThumbnail($id);
+			$childs[$id] = $folders['list'][$id];
+			$childs[$id]['thumbnailName'] = $this->getAlbumThumbnail($id);	
+		}
+		return $childs;
+	}
+
+    /**
+     * Charge er renvoie les données de l'arborescence de dossiers
+     */
+	private function getfolders() {
+		if (empty($this->_folders)) 
+			$this->_folders = ploopi\nanogallery\folders::getfolders($this->fields['id_module']);
+		return $this->_folders;
+	} 
 
 }

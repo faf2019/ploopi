@@ -38,12 +38,35 @@ abstract class folders {
 		$result = $objQuery->execute();
 		$arrFolders['tree'][-1][] = 0;
 		while ($fields = $result->fetchrow()) {
-			if ($fields['nbmedias'] > 0) {
-				$fields['parents'] = '-1;'.str_replace(',', ';', $fields['parents']);
-				$arrFolders['list'][$fields['id']] = $fields;
-				$arrFolders['tree'][$fields['id_folder']][] = $fields['id'];
-			}
+			$fields['parents'] = '-1;'.str_replace(',', ';', $fields['parents']);
+			$arrFolders['list'][$fields['id']] = $fields;
+			$arrFolders['tree'][$fields['id_folder']][] = $fields['id'];
 		}
+
+		// Suppression des dossiers feuille sans image
+		foreach($arrFolders['tree'] as $treeKey => $treeArray) {
+			if (empty($treeArray)) unset($arrFolders['tree'][$treeKey]);
+		}
+		do {
+			$toDelete = array();
+			foreach($arrFolders['list'] as $folder) {
+				if (($folder['nbmedias'] == 0) && !isset($arrFolders['tree'][$folder['id']])) {
+					$toDelete[] = $folder['id'];		
+				}
+			}
+			if (empty($toDelete)) continue;
+			foreach($toDelete as $id) {
+				unset($arrFolders['list'][$id]);
+				foreach($arrFolders['tree'] as $treeKey => $treeArray) {
+					$todel = array_search ( $id , $treeArray);
+					if (!is_null($todel) && $todel !== false) unset($arrFolders['tree'][$treeKey][$todel]);
+				}
+			}
+			foreach($arrFolders['tree'] as $treeKey => $treeArray) {
+				if (empty($treeArray)) unset($arrFolders['tree'][$treeKey]);
+			}
+		} while (!empty($toDelete));
+
 		return $arrFolders;
 	}
 
@@ -61,15 +84,6 @@ abstract class folders {
             $strId = $fields['id'];
             $strparents = preg_split('/;/', $fields['parents']);
 			$label = "&nbsp;".$fields['name'];
-			/*		
-			if ($strId != 0 ) { 
-				$strEnd = "{$fields['nbmedias']} images / {$fields['nbelements']} fichiers - (module {$fields['module_label']})";
-				$decal = count(explode( ",", $strparents));
-				$intMiddle = 100 - strlen($label) - strlen($strEnd) - ($decal * 7);
-				$strMiddle = str_repeat( "-" , $intMiddle );
-				$label .= $strMiddle.$strEnd;
-			}
-			*/
             $strOnClick = "nano_updateFolder(this, {$fields['id']},'{$fields['name']}')";
 	        $arrTreeview['list'][$strId] = array(
 	            'id' => $strId,
@@ -172,7 +186,7 @@ abstract class folders {
                 // label supplémentaire
                 $status = (empty($node['status'])) ? '' : $node['status'];
 				// Largeur
-				$width = 260 - ($node_depth * 20);
+				$width = 380 - ($node_depth * 20);
                 // génération du code html du noeud courant
                 $html .= "
                     <div class=\"treeview_node\" id=\"treeview_node{$node['id']}\">

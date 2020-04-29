@@ -66,6 +66,14 @@ echo ploopi\skin::get()->create_tabs($arrTabs, $strTab);
 <div class="ploopi_tabs">
 	<a href="<?php echo ploopi\crypt::urlencode("admin.php?entity=public&action=list"); ?>">
 		<img src="./modules/nanogallery/img/angle_double-left_alpha.png" style="width:20px;height:18px;"> Retour à la liste des galeries</a>
+	<?php 
+	if (!$isCreate) {
+		?>
+		<a href="<?php echo ploopi\crypt::urlencode("admin.php?entity=public&action=display&id={$_GET['id']}"); ?>">
+			<img src="./modules/nanogallery/img/angle_double-left_alpha.png" style="width:20px;height:18px;"> Afficher la galerie</a>
+		<?php
+	}
+	?>
 </div>
 <?php
 

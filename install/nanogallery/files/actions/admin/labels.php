@@ -50,7 +50,7 @@ $this->addCBox  ($objPanel, 'thumbnailLabelDisplay', 						$gal['thumbnailLabelD
 $this->addSelect($objPanel, 'thumbnailLabelPosition', 	$positionsValues,	$gal['thumbnailLabelPosition'], "Position", $prefix);
 $this->addSelect($objPanel, 'thumbnailLabelAlignement', $alignementValues,	$gal['thumbnailLabelAlignement'], "Alignement", $prefix);
 $this->addCBox  ($objPanel, 'thumbnailLabelTitleMultiline', 				$gal['thumbnailLabelTitleMultiline'], "Titre multi-lignes", $prefix);
-$objForm->addPanel($objDescPanel = new ploopi\form_panel('nano_panel_desc','Descriptions : <span style="color:#F00;">Les descriptions ne sont pas gérées pour l\'instant</span>'));
+$objForm->addPanel($objDescPanel = new ploopi\form_panel('nano_panel_desc','Descriptions'));
 $this->addCBox  ($objDescPanel, 'thumbnailLabelDisplayDescription', 		$gal['thumbnailLabelDisplayDescription'], "Affichage de la description", $prefix);
 $this->addCBox  ($objDescPanel, 'thumbnailLabelDescriptionMultiline', 		$gal['thumbnailLabelDescriptionMultiline'], "Description multi-lignes", $prefix);
 

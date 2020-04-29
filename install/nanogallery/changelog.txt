@@ -1,3 +1,7 @@
+== Module NANOGALLERY - version 1.1.0 ================================================
+2020-04-29  Jean-Pierre Pawlak ~ DSIC-EST <jean-pierre.pawlak@interieur.gouv.fr>
+* Gestion des albums
+
 == Module NANOGALLERY - version 1.0.2 ================================================
 2020-04-28  Jean-Pierre Pawlak ~ DSIC-EST <jean-pierre.pawlak@interieur.gouv.fr>
 * Finalisations et correction de bugs
