@@ -114,7 +114,9 @@ class form_panel
      */
     public function addField(form_field $objField)
     {
-        if ($objField->_strType == 'input:file' && !is_null($this->_objParentForm) && get_class($this->_objParentForm) == 'form') $this->_objParentForm->setOptions(array('enctype' => 'multipart/form-data'));
+        if ($objField->_strType == 'input:file' && !is_null($this->_objParentForm) && get_class($this->_objParentForm) == 'ploopi\form') {
+            $this->_objParentForm->setOptions(array('enctype' => 'multipart/form-data'));
+        }
 
         $objField->setParentForm($this->_objParentForm);
 
