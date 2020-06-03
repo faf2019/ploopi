@@ -413,7 +413,7 @@ abstract class str {
      * @author Ovensia
      */
 
-    public static function print_json($var, $utf8encode = false, $use_xjson = true)
+    public static function print_json($var, $utf8encode = false, $use_xjson = false)
     {
 
         if ($utf8encode) $var = arr::map('ploopi\str::utf8encode', $var);
