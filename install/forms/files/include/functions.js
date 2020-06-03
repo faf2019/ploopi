@@ -262,20 +262,19 @@ function forms_setoperator(f)
 
 function forms_savevalue(form_id, field_id, field_value)
 {
-    var params = new Hash();
+    var params = {};
 
-    params.set('ploopi_op', 'forms_save_value');
-    params.set('forms_form_id', form_id);
-    params.set('forms_field_id', field_id);
-    params.set('forms_field_value', field_value);
+    params.ploopi_op = 'forms_save_value';
+    params.forms_form_id = form_id;
+    params.forms_field_id = field_id;
+    params.forms_field_value = field_value;
 
-    new Ajax.Request('admin-light.php', {
-        method:     'get',
-        parameters: params,
-        encoding:   'utf-8',
-        onSuccess:  function(transport, json) {
-        },
-        onFailure: function(message) { alert('error: '+message); }
+    var request = jQuery.ajax({
+        type: 'GET',
+        url: 'admin-light.php',
+        data: params,
+        success: function (html, status) {
+        }
     });
 }
 

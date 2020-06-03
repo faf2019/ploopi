@@ -2,6 +2,8 @@
 
 2020-06-03  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
 
+* Correction d'un bug dans la gestion des sauts de page
+* Correction de l'image indiquant la présence d'un champ obligatoire
 * Correction d'un bug avec les zones HTML
 * Correction d'un bug avec le calcul de position automatique des nouveaux champs (désormais précalculé et affiché)
 * Correction d'un bug avec les listes déroulantes liées vers un formulaire

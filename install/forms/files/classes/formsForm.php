@@ -2024,7 +2024,7 @@ class formsForm extends ploopi\data_object
         {
             foreach($rowGroup as $intIdField)
             {
-                $strJsGroup .= "\n$('field_{$intIdField}_form').style.display = ploopi.{$strFormId}_checkgroup({$intIdGroup}) ? 'block' : 'none';";
+                $strJsGroup .= "\n$(#'field_{$intIdField}_form')[0].style.display = ploopi.{$strFormId}_checkgroup({$intIdGroup}) ? 'block' : 'none';";
             }
 
             $strJsCond .= "\ncase {$intIdGroup}:";
@@ -2048,15 +2048,15 @@ class formsForm extends ploopi\data_object
                     switch($objFieldVar->fields['type'])
                     {
                         case 'radio':
-                            $strJsCond .= "\nfor (i=0; i<$('{$strFormId}')['field_{$row['field']}'].length;i++) if ($('{$strFormId}')['field_{$row['field']}'][i].checked) V{$key}.push( forms_removeaccents($('{$strFormId}')['field_{$row['field']}'][i].value).toUpperCase() );";
+                            $strJsCond .= "\nfor (i=0; i<$(#'{$strFormId}')[0]['field_{$row['field']}'].length;i++) if ($('#{$strFormId}')[0]['field_{$row['field']}'][i].checked) V{$key}.push( forms_removeaccents($('#{$strFormId}')[0]['field_{$row['field']}'][i].value).toUpperCase() );";
                         break;
 
                         case 'checkbox':
-                            $strJsCond .= "\nfor (i=0; i<$('{$strFormId}')['field_{$row['field']}[]'].length;i++) if ($('{$strFormId}')['field_{$row['field']}[]'][i].checked) V{$key}.push( forms_removeaccents($('{$strFormId}')['field_{$row['field']}[]'][i].value).toUpperCase() );";
+                            $strJsCond .= "\nfor (i=0; i<$(#'{$strFormId}')[0]['field_{$row['field']}[]'].length;i++) if ($('#{$strFormId}')[0]['field_{$row['field']}[]'][i].checked) V{$key}.push( forms_removeaccents($('#{$strFormId}')[0]['field_{$row['field']}[]'][i].value).toUpperCase() );";
                         break;
 
                         default:
-                            $strJsCond .= "\nV{$key}.push( forms_removeaccents($('{$strFormId}').field_{$row['field']}.value).toUpperCase() );";
+                            $strJsCond .= "\nV{$key}.push( forms_removeaccents($('#{$strFormId}')[0].field_{$row['field']}.value).toUpperCase() );";
                         break;
                     }
 
@@ -2167,7 +2167,7 @@ class formsForm extends ploopi\data_object
             ploopi.nbpanel = ".sizeof($arrPanels).";
 
             ploopi.{$strFormId}_quicksave = function(mode) {
-                query = $('{$strFormId}').serialize();
+                query = $('#{$strFormId}').serialize();
                 query += (query == '' ? '' : '&')+'".ploopi\crypt::queryencode("ploopi_xhr=1&ploopi_op=forms_quicksave&forms_form_id={$this->fields['id']}")."&forms_mode='+mode+'&forms_panel='+ploopi.currentpanel;
                 ploopi.xhr.send('admin-light.php', query, false, false, 'POST');
             };
@@ -2186,7 +2186,7 @@ class formsForm extends ploopi\data_object
 
             // Sélection du bon panel au chargement
             jQuery(function() {
-                $('{$strFocus}').focus();
+                $('#{$strFocus}')[0].focus();
                 ploopi.{$strFormId}_checkgroups();
             });
 
@@ -2219,12 +2219,12 @@ class formsForm extends ploopi\data_object
 
                 if ($intNum == 0) $arrOptions['class'] = 'selected';
 
-                $strJsHidePanels .= "$('{$strPanelId}').style.display='none';";
+                $strJsHidePanels .= "$('#{$strPanelId}')[0].style.display='none';";
 
                 if ($this->fields['option_multidisplaypages'])
                 {
                     $objForm->addButton( new ploopi\form_button('input:button', 'Page '.($intNum+1), null, "{$strFormId}_btn_{$intId}", $arrOptions ) );
-                    $strJsHidePanels .= " $('{$strFormId}_btn_{$intId}').className = '';";
+                    $strJsHidePanels .= " $('#{$strFormId}_btn_{$intId}')[0].className = '';";
                 }
 
                 $strJsSwitch .= "\ncase {$intId}: return ploopi.{$strFormId}_{$strPanelId}_validate(form); break;";
@@ -2239,7 +2239,7 @@ class formsForm extends ploopi\data_object
 
                     for (p = 1; p < panel ; p++)
                     {
-                        if (!ploopi.{$strFormId}_validate_panel($('{$strFormId}'), p))
+                        if (!ploopi.{$strFormId}_validate_panel($('#{$strFormId}')[0], p))
                         {
                             this.{$strFormId}_selectpanel(p);
                             return;
@@ -2255,13 +2255,13 @@ class formsForm extends ploopi\data_object
 
                     {$strJsHidePanels}
 
-                    $('{$strFormId}_btn_prev').style.display = panel>1 ? 'block' : 'none';
-                    $('{$strFormId}_btn_next').style.display = panel<this.nbpanel ? 'block' : 'none';
+                    $('#{$strFormId}_btn_prev')[0].style.display = panel>1 ? 'block' : 'none';
+                    $('#{$strFormId}_btn_next')[0].style.display = panel<this.nbpanel ? 'block' : 'none';
 
-                    if ($('{$strFormId}_btn_'+panel)) $('{$strFormId}_btn_'+panel).className = 'selected';
-                    if ($('{$strFormId}_btn_submit')) $('{$strFormId}_btn_submit').style.display = panel == this.nbpanel ? 'block' : 'none';
+                    if ($('#{$strFormId}_btn_'+panel).length) $('#{$strFormId}_btn_'+panel)[0].className = 'selected';
+                    if ($('#{$strFormId}_btn_submit').length) $('#{$strFormId}_btn_submit')[0].style.display = panel == this.nbpanel ? 'block' : 'none';
 
-                    $('panel_'+panel).style.display='block';
+                    $('#panel_'+panel)[0].style.display='block';
                     this.currentpanel = panel;
 
                     if (save) ploopi.{$strFormId}_quicksave('save');
@@ -2269,7 +2269,7 @@ class formsForm extends ploopi\data_object
 
                 // Panel suivant
                 ploopi.{$strFormId}_nextpanel = function() {
-                    if (ploopi.{$strFormId}_validate_panel($('{$strFormId}'), this.currentpanel))
+                    if (ploopi.{$strFormId}_validate_panel($('#{$strFormId}')[0], this.currentpanel))
                     {
                         panel = parseInt(this.currentpanel, 10) + 1;
                         if (panel > this.nbpanel) panel = this.nbpanel;
