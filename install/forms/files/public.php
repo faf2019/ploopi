@@ -50,38 +50,6 @@ include_once './modules/forms/classes/formsRecord.php';
 
 $op = (empty($_REQUEST['op'])) ? '' : $_REQUEST['op'];
 
-/*
-if ($op == 'forms_print')
-{
-    $objForm = new formsForm();
-    if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open($_GET['forms_id']))
-    {
-        $objForm->includeCss(true);
-        ?>
-        <div class="forms_form">
-        <form id="form"></form>
-        </div>
-        <script type="text/javascript">
-            jQuery('#form')[0].innerHTML = window.opener.document.forms_form_<?php echo ploopi\str::htmlentities($_GET['forms_id']); ?>.innerHTML;
-            Event.observe(window, 'load', function() {
-                <?php
-                for ($i=1; $i<=$objForm->getNbPanels();$i++)
-                {
-                    ?>
-                    $('panel_<?php echo $i; ?>').style.display = 'block';
-                    <?php
-                }
-                ?>
-                window.print();
-                window.close();
-            });
-        </script>
-        <?php
-    }
-    return;
-}
-*/
-
 $sqllimitgroup = ' AND ploopi_mod_forms_form.id_workspace IN ('.ploopi\system::viewworkspaces($_SESSION['ploopi']['moduleid']).')';
 
 echo ploopi\skin::get()->create_pagetitle(ploopi\str::htmlentities($_SESSION['ploopi']['modulelabel']));

@@ -2185,7 +2185,7 @@ class formsForm extends ploopi\data_object
             };
 
             // Sélection du bon panel au chargement
-            Event.observe(window, 'load', function() {
+            jQuery(function() {
                 $('{$strFocus}').focus();
                 ploopi.{$strFormId}_checkgroups();
             });
@@ -2310,7 +2310,7 @@ class formsForm extends ploopi\data_object
 
 
                 // Sélection du bon panel au chargement
-                Event.observe(window, 'load', function() {
+                jQuery(function() {
                     ploopi.{$strFormId}_switchpanel({$intDefaultPanel}, false);
                 });
 

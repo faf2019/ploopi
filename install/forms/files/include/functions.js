@@ -195,14 +195,16 @@ function forms_graphic_type_onchange(field)
  */
 function forms_field_tablelink_onchange(current, fields, url)
 {
-    var params = new Hash();
+    var params = {};
     var lastparam = false;
     var requested = '';
 
-    fields.each(function(item) {
+
+    jQuery.each(fields, function(k, item) {
+
         if (!lastparam)
         {
-            params.set('forms_params['+item+']', $('field_'+item).value);
+            params['forms_params['+item+']'] = $('#field_'+item)[0].value;
             if (item == current) lastparam = true;
         }
         else
@@ -210,31 +212,29 @@ function forms_field_tablelink_onchange(current, fields, url)
             // Stockage de l'item demandé
             if (requested == '') requested = item;
             // Vidage des sous-listes
-            while ($('field_'+item).length > 1) $('field_'+item).remove(1);
+            while ($('#field_'+item)[0].length > 1) $('#field_'+item)[0].remove(1);
         }
     });
 
-    params.set('forms_fields', fields.join(','));
-    params.set('forms_requested', requested);
+    params.forms_fields = fields.join(',');
+    params.forms_requested = requested;
 
-    new Ajax.Request(url, {
-        method:     'get',
-        parameters: params,
-        encoding:   'utf-8',
-        onSuccess:  function(transport, json) {
-            if(null == json) {
-                json = transport.responseText.evalJSON();
-            }
+    var request = jQuery.ajax({
+        type: 'GET',
+        url: url,
+        data: params,
+        dataType: 'json',
+        success: function (json, status) {
 
             if (json) {
-                json.each(function(item) {
-                    $('field_'+requested).appendChild(newOpt = document.createElement("OPTION"));
+                jQuery.each(json, function(k, item) {
+                    $('#field_'+requested)[0].appendChild(newOpt = document.createElement("OPTION"));
                     newOpt.value = item;
                     newOpt.text = item;
                 });
             }
-        },
-        onFailure: function(message) { alert(message); }
+
+        }
     });
 }
 

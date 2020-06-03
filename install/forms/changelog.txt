@@ -1,3 +1,17 @@
+== Module FORMS - version 3.7.3 ====================================================
+
+2020-06-03  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Correction d'un bug avec les zones HTML
+* Correction d'un bug avec le calcul de position automatique des nouveaux champs (désormais précalculé et affiché)
+* Correction d'un bug avec les listes déroulantes liées vers un formulaire
+
+== Module FORMS - version 3.7.2 ====================================================
+
+2020-04-16  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Mise à jour de compatibilité pour PHP 7.3 / MariaDB 10.3
+
 == Module FORMS - version 3.7.1 =====================================================
 
 2020-03-05  Stéphane Escaich ~ Ovensia  <stephane@ovensia.fr>

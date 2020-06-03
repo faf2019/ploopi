@@ -341,6 +341,18 @@ class formsField extends ploopi\data_object
     }
 
     /**
+     * Retourne la nouvelle position disponible pour un nouveau champ
+     */
+
+    public function getnewpos() {
+        $db = ploopi\db::get();
+
+        $db->query("SELECT max(position)+1 as maxpos FROM `ploopi_mod_forms_field` WHERE id_form = {$this->fields['id_form']}");
+
+        return current($db->fetchrow());
+    }
+
+    /**
      * Génère et met à jour le nom physique du champ utilisé pour l'export physique du formulaire.
      * Attention, fonction récursive.
      * @param boolean $booFixUnicity permet de gérer les problèmes de doublons

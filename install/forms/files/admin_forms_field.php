@@ -42,6 +42,8 @@ include_once './modules/forms/classes/formsArithmeticParser.php';
  * Si ok => on l'ouvre. Sinon, nouveau champ.
  */
 
+if (empty($_GET['forms_id'])) ploopi\output::redirect('admin.php');
+
 $field = new formsField();
 
 if (!empty($_GET['field_id']) && is_numeric($_GET['field_id']) && $field->open($_GET['field_id']))
@@ -51,6 +53,8 @@ if (!empty($_GET['field_id']) && is_numeric($_GET['field_id']) && $field->open($
 else
 {
     $field->init_description();
+    $field->fields['id_form'] = $_GET['forms_id'];
+    $field->fields['position'] = $field->getnewpos();
     $field->fields['option_formview'] = 1;
     $field->fields['option_arrayview'] = 1;
     $field->fields['option_exportview'] = 1;

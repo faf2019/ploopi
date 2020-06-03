@@ -122,13 +122,14 @@ switch($ploopi_op)
             <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
             <head>
                 <meta http-equiv="content-type" content="text/html; charset=iso-8859-15" />
-                <script type="text/javascript" src="./lib/protoaculous/protoaculous.min.js"></script>
+                <script type="text/javascript" src="./vendor/components/jquery/jquery.min.js"></script>
+                <script type="text/javascript" src="./vendor/components/jqueryui/jquery-ui.min.js"></script>
                 <script type="text/javascript" src="./js/functions.pack.js"></script>
                 <script type="text/javascript" src="./modules/forms/include/functions.js"></script>
                 <script type="text/javascript">
                 ploopi = {};
-                Event.observe(window, 'load', function() {
-                    $('forms_form_<?php echo ploopi\str::htmlentities($_REQUEST['forms_id']); ?>').innerHTML = $('forms_form_<?php echo ploopi\str::htmlentities($_REQUEST['forms_id']); ?>').innerHTML.replace(/<(\/?)fieldset[^>]*>/ig, '').replace(/<legend[^>]*>.*<\/legend>/ig, '');
+                jQuery(function() {
+                    $('#forms_form_<?php echo ploopi\str::htmlentities($_REQUEST['forms_id']); ?>')[0].innerHTML = $('#forms_form_<?php echo ploopi\str::htmlentities($_REQUEST['forms_id']); ?>')[0].innerHTML.replace(/<(\/?)fieldset[^>]*>/ig, '').replace(/<legend[^>]*>.*<\/legend>/ig, '');
                     window.print();
                     window.close();
                 });
