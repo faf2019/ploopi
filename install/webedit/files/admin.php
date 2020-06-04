@@ -42,7 +42,6 @@ ploopi\module::init('webedit');
 global $article_status;
 global $heading_sortmodes;
 
-
 $op = (empty($_REQUEST['op'])) ? '' : $_REQUEST['op'];
 $menu = (empty($_REQUEST['webedit_menu'])) ? '' : $_REQUEST['webedit_menu'];
 
@@ -748,8 +747,6 @@ switch($menu)
                             DROP TABLE IF EXISTS article_pos;
                         ");
                     }
-
-                    die();
 
                     ploopi\output::redirect("admin.php?op=article_modify&articleid={$articleid}");
                 }

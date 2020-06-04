@@ -485,16 +485,6 @@ switch($op)
     <?php
     if (!$readonly)
     {
-        /*
-        $arrConfig = array();
-        $arrConfig['CustomConfigurationsPath'] = _PLOOPI_BASEPATH.'/modules/webedit/fckeditor/fckconfig_bloc.js';
-        $arrConfig['ToolbarLocation'] = 'Out:xToolbar';
-
-        $arrProperties = array();
-        $arrProperties['ToolbarSet'] = $_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['display_type'] == 'beginner' ? 'Beginner': 'Default';
-
-        ploopi_fckeditor('fck_webedit_article_content', $article->fields['content'], $article->fields['width'] ? $article->fields['width'] : '100%', $article->fields['height'] ? $article->fields['height'] : '500px', $arrConfig, $arrProperties);
-        */
         ?>
         <script src="./vendor/ckeditor/ckeditor/ckeditor.js"></script>
         <textarea name="fck_webedit_article_content" id="editor"><?php echo $article->fields['content']; ?></textarea>
@@ -527,7 +517,7 @@ switch($op)
                     CKEDITOR.basePath+'contents.css',
                     '<?php echo _PLOOPI_BASEPATH; ?>/modules/webedit/ckeditor/plugins/tag/styles.css',
                 ],
-                extraPlugins: 'sharedspace',
+                extraPlugins: 'sharedspace,colorbutton,print',
                 removePlugins: 'elementspath',
 
                 sharedSpaces: {

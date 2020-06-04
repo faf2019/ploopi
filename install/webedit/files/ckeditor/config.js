@@ -46,7 +46,7 @@ CKEDITOR.editorConfig = function( config ) {
     ];
 
     // Plugins additionnels
-    config.extraPlugins = 'autogrow,tag';
+    config.extraPlugins = 'autogrow,tag,colorbutton,print';
     config.removePlugins = 'elementspath';
     config.resize_enabled = false;
 

@@ -1,3 +1,11 @@
+== Module WebEdit - version 2.7.6 ============================================
+
+2020-06-04  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Correction d'un bug sur l'enregistrement d'un article
+* Correction d'un bug sur le tri des articles par position en admin
+* Ajout des outils de couleur sur l'éditeur de contenu (articles/blocs)
+
 == Module WebEdit - version 2.7.5 ============================================
 
 2020-04-03  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

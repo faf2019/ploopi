@@ -842,7 +842,7 @@ if ($booIsAllowedEdit)
     $articles_columns['right']['vers'] = array('label' => 'Vers.', 'width' => '70', 'options' => array('sort' => true));
     $articles_columns['right']['date'] = array('label' => 'Date', 'width' => '80', 'options' => array('sort' => true));
 
-    $articles_columns['left']['pos'] = array('label' => 'P.', 'width' => '55', 'options' => array('sort' => true));
+    $articles_columns['left']['pos'] = array('label' => 'P.', 'width' => '55', 'options' => array('sort' => true, 'sort_flag' => SORT_NUMERIC));
     $articles_columns['left']['ref'] = array('label' => 'Ref.', 'width' => '60', 'options' => array('sort' => true));
 
     $articles_columns['actions_right']['actions'] = array('label' => '&nbsp;', 'width' => '22');

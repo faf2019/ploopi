@@ -1021,7 +1021,7 @@ function webedit_replace_links($objArticle, $mode, &$arrHeadings)
 
                         $arrParents = array();
                         foreach(preg_split('/;/', $arrHeading['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
-                        $arrReplace[] = rite("index.php?headingid={$idhead}", webedit_getrewriterules(), $arrHeading['label'], $arrParents).$strAnchor;
+                        $arrReplace[] = ploopi\str::urlrewrite("index.php?headingid={$idhead}", webedit_getrewriterules(), $arrHeading['label'], $arrParents).$strAnchor;
                     break;
                 }
             }
