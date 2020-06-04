@@ -159,8 +159,9 @@ switch($_REQUEST['ploopi_op'])
                     <input name="booking_resource_color" id="booking_resource_color" class="text" type="text" value="<?php echo ploopi\str::htmlentities($objResource->fields['color']); ?>" style="width:60px;cursor:pointer;" />
                 </span>
 
-
-                <script type="text/javascript">new jscolor.color(jQuery('#booking_resource_color')[0], {hash:true})</script>
+                <script>
+                    new jscolor(jQuery('#booking_resource_color')[0], {hash:true});
+                </script>
             </p>
             <p onclick="javascript:ploopi.checkbox_click(event,'booking_resource_active');">
                 <label for="booking_resource_active">Actif:</label>

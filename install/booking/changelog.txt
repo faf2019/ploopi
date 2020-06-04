@@ -1,3 +1,11 @@
+== Module BOOKING - version 1.3.4 ====================================================
+
+2020-06-04  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Correction de l'export XLS des demandes
+* Correction de l'affichage des demandes
+* Correction de de l'affichage en frontoffice
+
 == Module BOOKING - version 1.3.3 ====================================================
 
 2020-03-16  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

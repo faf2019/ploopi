@@ -184,7 +184,7 @@ if (!empty($arrResources))
 
         ploopi\buffer::clean();
 
-        ploopi_array2xls(
+        ploopi\arr::toxls(
             $arrData,
             true,
             'booking_suivi_demandes.xls',
@@ -218,7 +218,7 @@ if (!empty($arrResources))
     $arrResult['columns']['left']['resourcetype'] =
         array(
             'label' => 'Type',
-            'width' => 100,
+            'width' => 120,
             'options' => array('sort' => true)
         );
 
@@ -245,14 +245,14 @@ if (!empty($arrResources))
     $arrResult['columns']['right']['managed'] =
         array(
             'label' => 'Traitée',
-            'width' => 70,
+            'width' => 80,
             'options' => array('sort' => true)
         );
 
     $arrResult['columns']['right']['timestp_request'] =
         array(
             'label' => 'Date demande',
-            'width' => 120,
+            'width' => 130,
             'options' => array('sort' => true)
         );
 
