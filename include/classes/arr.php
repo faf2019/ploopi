@@ -83,23 +83,73 @@ abstract class arr
      * @return string contenu XML
      */
 
-    /**
-     * Retourne le contenu d'un tableau multidimensionnel au format XML
-     *
-     * @param array $arrArray tableau de données
-     * @param string $strRootName nom du noeud racine
-     * @param string $strDefaultTagName nom des noeuds 'anonymes'
-     * @param string $strEncoding charset utilisé
-     * @return string contenu XML
-     */
-
-    public static function toxml($arrArray, $strRootName = 'data', $strDefaultTagName = 'row', $strEncoding = 'ISO-8859-1')
+    public static function toxml_deprecated($arrArray, $strRootName = 'data', $strDefaultTagName = 'row', $strEncoding = 'ISO-8859-1')
     {
         $arrArray = self::map('utf8_encode', $arrArray);
 
         Array2XML::init('1.0', $strEncoding);
         $xml = Array2XML::createXML($strRootName, array($strDefaultTagName => $arrArray));
         return $xml->saveXML();
+    }
+
+    /**
+     * Retourne le contenu d'un tableau multidimensionnel au format XML
+     *
+     * @param array $arrData tableau de données
+     * @param SimpleXMLElement $xml_data objet XML en cours de construction (laisser vide)
+     * @param string $parent noeud parent (laisser vide)
+     * @return string contenu XML
+     */
+
+    public static function toxml($arrData) {
+        return self::_toxml($arrData)->asXML();
+    }
+
+    /**
+     * Construit un objet XML à partir d'un tableau de données
+     *
+     * @param array $arrData tableau de données
+     * @param SimpleXMLElement $xml_data objet XML en cours de construction
+     * @param string $parent noeud parent
+     * @return SimpleXMLElement objet XML
+     */
+
+    private static function _toxml($arrData, $xml_data = null, $parent = null) {
+        if (is_null($xml_data)) {
+            $key = key($arrData);
+            $xml_data = new \SimpleXMLElement('<?xml version="1.0"?><'.$key.'></'.$key.'>');
+            self::_toxml(current($arrData), $xml_data);
+
+            return $xml_data;
+        }
+
+        foreach($arrData as $key => $value ) {
+            if (substr($key, 0, 1) === '@') {
+                $xml_data->addAttribute(substr($key, 1), htmlspecialchars($value));
+            }
+            else {
+                if(is_array($value)) {
+                    if(is_numeric($key)){
+                        $key = empty($parent) ? 'row' : $parent;
+                        $subnode = $xml_data->addChild($key);
+                        self::_toxml($value, $subnode);
+                    }
+                    else {
+                        if (is_array($value) && key($value) === 0) {
+                            self::_toxml($value, $xml_data, $key);
+                        }
+                        else {
+                            $subnode = $xml_data->addChild($key);
+                            self::_toxml($value, $subnode);
+                        }
+                    }
+                } else {
+                    $xml_data->addChild($key, htmlspecialchars($value));
+                }
+            }
+        }
+
+        return $xml_data;
     }
 
     /**
