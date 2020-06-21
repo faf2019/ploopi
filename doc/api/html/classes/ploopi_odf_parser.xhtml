@@ -77,6 +77,8 @@
                     </li><li>private  <a href="#members">$manifest_xml</a>;
                     </li><li>private array <a href="#members">$vars</a> =
                         ;
+                    </li><li>private array <a href="#members">$frames</a> =
+                        ;
                     </li><li>private array <a href="#members">$images</a> =
                         ;
                     </li><li>private array <a href="#members">$blockvars</a> =
@@ -90,6 +92,7 @@
                     </li><li>public string <a title="ploopi\odf_parser" href="../classes/ploopi_odf_parser/clean_var.xhtml">clean_var</a>()
                     </li><li>public void <a title="ploopi\odf_parser" href="../classes/ploopi_odf_parser/set_var.xhtml">set_var</a>()
                     </li><li>public void <a title="ploopi\odf_parser" href="../classes/ploopi_odf_parser/set_image.xhtml">set_image</a>()
+                    </li><li>public void <a title="ploopi\odf_parser" href="../classes/ploopi_odf_parser/set_frame.xhtml">set_frame</a>()
                     </li><li>public void <a title="ploopi\odf_parser" href="../classes/ploopi_odf_parser/set_blockvar.xhtml">set_blockvar</a>()
                     </li><li>public void <a title="ploopi\odf_parser" href="../classes/ploopi_odf_parser/set_blockvar_advanced.xhtml">set_blockvar_advanced</a>()
                     </li><li>public void <a title="ploopi\odf_parser" href="../classes/ploopi_odf_parser/parse.xhtml">parse</a>()
@@ -114,6 +117,9 @@
             <li id="filename"><strong>$filename</strong>
                 —
                 string<br/><span class="indent">Fichier template ODF</span></li>
+            <li id="frames"><strong>$frames</strong>
+                —
+                array<br/><span class="indent">Frames du template</span></li>
             <li id="images"><strong>$images</strong>
                 —
                 array<br/><span class="indent">Images du template</span></li>
@@ -125,7 +131,7 @@
                 string<br/><span class="indent">Contenu XML du fichier styles.xml</span></li>
             <li id="vars"><strong>$vars</strong>
                 —
-                array<br/><span class="indent">Variables du emplate</span></li>
+                array<br/><span class="indent">Variables du template</span></li>
             <li id="xml_parser"><strong>$xml_parser</strong>
                 —
                 resource<br/><span class="indent">Parseur XML</span></li>
@@ -154,6 +160,8 @@
                 — Définit une variable template de type bloc et lui affecte un tableau de valeurs</li>
             <li id="set_blockvar_advanced"><a title="ploopi\odf_parser" href="../classes/ploopi_odf_parser/set_blockvar_advanced.xhtml">set_blockvar_advanced()</a>
                 — Définit une variable template de type bloc et lui affecte un tableau de valeurs Le tableau peut contenir des images</li>
+            <li id="set_frame"><a title="ploopi\odf_parser" href="../classes/ploopi_odf_parser/set_frame.xhtml">set_frame()</a>
+                — Insère une frame/image pour les documents de type "présentation/odp"</li>
             <li id="set_image"><a title="ploopi\odf_parser" href="../classes/ploopi_odf_parser/set_image.xhtml">set_image()</a>
                 — Définit une variable template de type "image"</li>
             <li id="set_var"><a title="ploopi\odf_parser" href="../classes/ploopi_odf_parser/set_var.xhtml">set_var()</a>
@@ -163,7 +171,7 @@
       </section>
     </div>
     <footer>
-      <span>Generated using phpDox 0.11.2 - Copyright (C) 2010 - 2019 by Arne Blankerts and Contributors</span>
+      <span>Generated using phpDox 0.11.2 - Copyright (C) 2010 - 2020 by Arne Blankerts and Contributors</span>
     </footer>
   </body>
 </html>

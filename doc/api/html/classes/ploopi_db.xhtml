@@ -77,7 +77,7 @@
                     </li><li>private  <a href="#members">$server</a>;
                     </li><li>private  <a href="#members">$port</a>;
                     </li><li>private  <a href="#members">$database</a>;
-                    </li><li>private <span title="ploopi\ressource">ressource</span> <a href="#members">$connection_id</a>;
+                    </li><li>private <span title="ploopi\mysqli">mysqli</span> <a href="#members">$mysqli</a>;
                     </li><li>private <span title="ploopi\ressource">ressource</span> <a href="#members">$query_result</a>;
                     </li><li>private  <a href="#members">$num_queries</a>;
                     </li><li>private  <a href="#members">$exectime_queries</a>;
@@ -89,6 +89,7 @@
                     </li></ul><ul class="none"><li>// methods</li><li>public mixed <a title="ploopi\db" href="../classes/ploopi_db/__construct.xhtml">__construct</a>()
                     </li><li>public static db <a title="ploopi\db" href="../classes/ploopi_db/get.xhtml">get</a>()
                     </li><li>public static boolean <a title="ploopi\db" href="../classes/ploopi_db/connected.xhtml">connected</a>()
+                    </li><li>public void <a title="ploopi\db" href="../classes/ploopi_db/getconnector.xhtml">getconnector</a>()
                     </li><li>public boolean <a title="ploopi\db" href="../classes/ploopi_db/selectdb.xhtml">selectdb</a>()
                     </li><li>public boolean <a title="ploopi\db" href="../classes/ploopi_db/isconnected.xhtml">isconnected</a>()
                     </li><li>public boolean <a title="ploopi\db" href="../classes/ploopi_db/close.xhtml">close</a>()
@@ -127,9 +128,6 @@
             <li id="arrLog"><strong>$arrLog</strong>
                 —
                 array<br/><span class="indent">Log des requêtes exécutées par l'instance</span></li>
-            <li id="connection_id"><strong>$connection_id</strong>
-                —
-                <a title="ploopi\ressource" href="../classes/ploopi_ressource.xhtml">ploopi\ressource</a><br/><span class="indent">Identifiant de connexion MySQL</span></li>
             <li id="database"><strong>$database</strong>
                 —
                 string<br/><span class="indent">Nom de la base de données pour la connexion à la BDD</span></li>
@@ -142,6 +140,9 @@
             <li id="log"><strong>$log</strong>
                 —
                 boolean<br/><span class="indent">Activation du log de requête ou non</span></li>
+            <li id="mysqli"><strong>$mysqli</strong>
+                —
+                <a title="ploopi\mysqli" href="../classes/ploopi_mysqli.xhtml">ploopi\mysqli</a><br/><span class="indent">Objet mysqli</span></li>
             <li id="num_queries"><strong>$num_queries</strong>
                 —
                 int<br/><span class="indent">Compteur de requêtes exécutées</span></li>
@@ -203,6 +204,8 @@
             </li>
             <li id="getarray"><a title="ploopi\db" href="../classes/ploopi_db/getarray.xhtml">getarray()</a>
                 — Retourne dans un tableau le contenu de la dernière requête ou du recordset passé en paramètre</li>
+            <li id="getconnector"><a title="ploopi\db" href="../classes/ploopi_db/getconnector.xhtml">getconnector()</a>
+                — Retourne le connecteur vers la base de données</li>
             <li id="getimplode"><a title="ploopi\db" href="../classes/ploopi_db/getimplode.xhtml">getimplode()</a>
                 — Retourne dans une chaine le contenu de la dernière requête ou du recordset passé en paramètre</li>
             <li id="getjson"><a title="ploopi\db" href="../classes/ploopi_db/getjson.xhtml">getjson()</a>
@@ -234,7 +237,7 @@
       </section>
     </div>
     <footer>
-      <span>Generated using phpDox 0.11.2 - Copyright (C) 2010 - 2019 by Arne Blankerts and Contributors</span>
+      <span>Generated using phpDox 0.11.2 - Copyright (C) 2010 - 2020 by Arne Blankerts and Contributors</span>
     </footer>
   </body>
 </html>

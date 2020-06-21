@@ -62,7 +62,7 @@
       </nav>
       <section>
         <h1 id="introduction"><small>ploopi\</small>cipher</h1>
-        <h4>Gestion du chiffrement/déchiffrement (basé sur mcrypt), notamment utilisée pour chiffrer les URL</h4>
+        <h4>Gestion du chiffrement/déchiffrement (basé sur openssl), notamment utilisée pour chiffrer les URL</h4>
         <p/>
         <ul>
           <li>Author: Ovensia</li>
@@ -74,6 +74,7 @@
             {<br/><ul class="none"><li>// members</li><li>private  <a href="#members">$key</a>;
                     </li><li>private  <a href="#members">$iv</a>;
                     </li><li>private  <a href="#members">$cipher</a>;
+                    </li><li>private  <a href="#members">$len</a>;
                     </li><li>private static <span title="ploopi\cipher">cipher</span> <a href="#members">$objInstance</a>;
                     </li></ul><ul class="none"><li>// methods</li><li>public void <a title="ploopi\cipher" href="../classes/ploopi_cipher/__construct.xhtml">__construct</a>()
                     </li><li>public static cipher <a title="ploopi\cipher" href="../classes/ploopi_cipher/singleton.xhtml">singleton</a>()
@@ -95,6 +96,11 @@
             <li id="key"><strong>$key</strong>
                 —
                 string<br/><span class="indent">Clé secrète</span></li>
+            <li id="len">
+              <strong>$len</strong>
+              <br/>
+              <span class="indent">Longueur du vecteur d'initialisation</span>
+            </li>
             <li id="objInstance"><strong>$objInstance</strong>
                 —
                 <a title="ploopi\cipher" href="../classes/ploopi_cipher.xhtml">ploopi\cipher</a><br/><span class="indent">Instance de la classe (singleton)</span></li>
@@ -117,7 +123,7 @@
       </section>
     </div>
     <footer>
-      <span>Generated using phpDox 0.11.2 - Copyright (C) 2010 - 2019 by Arne Blankerts and Contributors</span>
+      <span>Generated using phpDox 0.11.2 - Copyright (C) 2010 - 2020 by Arne Blankerts and Contributors</span>
     </footer>
   </body>
 </html>

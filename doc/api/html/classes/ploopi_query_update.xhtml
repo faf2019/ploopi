@@ -76,15 +76,20 @@
         <div class="synopsis">class query_update
                 extends <a title="ploopi\query_sud" href="../classes/ploopi_query_sud.xhtml">query_sud</a>
             {<br/><ul class="none"><li>// members</li><li>private  <a href="#members">$arrSet</a>;
+                    </li><li>private  <a href="#members">$arrInnerJoin</a>;
                     </li></ul><ul class="none"><li>// Inherited members from <span title="ploopi\query_sud">query_sud</span></li><li>protected  <a href="#members">$arrFrom</a>;
                         </li><li>protected static array <a href="#members">$arrType</a>;
                         </li></ul><ul class="none"><li>// Inherited members from <span title="ploopi\query">query</span></li><li>protected  <a href="#members">$objDb</a>;
                         </li><li>protected  <a href="#members">$arrRaw</a>;
                         </li></ul><ul class="none"><li>// methods</li><li>public void <a title="ploopi\query_update" href="../classes/ploopi_query_update/__construct.xhtml">__construct</a>()
                     </li><li>public void <a title="ploopi\query_update" href="../classes/ploopi_query_update/add_set.xhtml">add_set</a>()
+                    </li><li>public void <a title="ploopi\query_update" href="../classes/ploopi_query_update/add_innerjoin.xhtml">add_innerjoin</a>()
                     </li><li>protected string <a title="ploopi\query_update" href="../classes/ploopi_query_update/get_from.xhtml">get_from</a>()
                     </li><li>protected string <a title="ploopi\query_update" href="../classes/ploopi_query_update/get_set.xhtml">get_set</a>()
+                    </li><li>protected string <a title="ploopi\query_update" href="../classes/ploopi_query_update/get_innerjoin.xhtml">get_innerjoin</a>()
                     </li><li>public string <a title="ploopi\query_update" href="../classes/ploopi_query_update/get_sql.xhtml">get_sql</a>()
+                    </li><li>public void <a title="ploopi\query_update" href="../classes/ploopi_query_update/remove_set.xhtml">remove_set</a>()
+                    </li><li>public void <a title="ploopi\query_update" href="../classes/ploopi_query_update/remove_innerjoin.xhtml">remove_innerjoin</a>()
                     </li></ul><ul class="none"><li>// Inherited methods from <span title="ploopi\query_sud">query_sud</span></li><li>public void <a title="ploopi\query_sud" href="../classes/ploopi_query_sud/__construct.xhtml">__construct</a>()
                         </li><li>public void <a title="ploopi\query_sud" href="../classes/ploopi_query_sud/add_where.xhtml">add_where</a>()
                         </li><li>public void <a title="ploopi\query_sud" href="../classes/ploopi_query_sud/add_from.xhtml">add_from</a>()
@@ -120,6 +125,9 @@
         <div class="styled members">
           <h4>private</h4>
           <ul class="members">
+            <li id="arrInnerJoin"><strong>$arrInnerJoin</strong>
+                —
+                array<br/><span class="indent">Tableau de la clause INNER JOIN</span></li>
             <li id="arrSet"><strong>$arrSet</strong>
                 —
                 array<br/><span class="indent">Tableau de la clause SET</span></li>
@@ -146,6 +154,8 @@
           <ul>
             <li id="get_from"><a title="ploopi\query_update" href="../classes/ploopi_query_update/get_from.xhtml">get_from()</a>
                 — Retourne la clause FROM</li>
+            <li id="get_innerjoin"><a title="ploopi\query_update" href="../classes/ploopi_query_update/get_innerjoin.xhtml">get_innerjoin()</a>
+                — Retourne la clause INNER JOIN</li>
             <li id="get_set"><a title="ploopi\query_update" href="../classes/ploopi_query_update/get_set.xhtml">get_set()</a>
                 — Retourne la clause SET</li>
           </ul>
@@ -153,10 +163,16 @@
           <ul>
             <li id="__construct"><a title="ploopi\query_update" href="../classes/ploopi_query_update/__construct.xhtml">__construct()</a>
                 — Constructeur de la classe</li>
+            <li id="add_innerjoin"><a title="ploopi\query_update" href="../classes/ploopi_query_update/add_innerjoin.xhtml">add_innerjoin()</a>
+                — Ajoute une clause INNER JOIN à la requête</li>
             <li id="add_set"><a title="ploopi\query_update" href="../classes/ploopi_query_update/add_set.xhtml">add_set()</a>
                 — Ajout d'une clause SET à la requête Si plusieurs clauses SET sont ajoutées, elles sont séparées par ,</li>
             <li id="get_sql"><a title="ploopi\query_update" href="../classes/ploopi_query_update/get_sql.xhtml">get_sql()</a>
                 — Génération de la requête SQL</li>
+            <li id="remove_innerjoin"><a title="ploopi\query_update" href="../classes/ploopi_query_update/remove_innerjoin.xhtml">remove_innerjoin()</a>
+                — Supprime la clause INNER JOIN</li>
+            <li id="remove_set"><a title="ploopi\query_update" href="../classes/ploopi_query_update/remove_set.xhtml">remove_set()</a>
+                — Supprime la clause SET</li>
           </ul>
           <h3>Inherited from <a title="ploopi\query_sud" href="../classes/ploopi_query_sud.xhtml">ploopi\query_sud</a></h3>
           <h4>protected</h4>
@@ -210,7 +226,7 @@
       </section>
     </div>
     <footer>
-      <span>Generated using phpDox 0.11.2 - Copyright (C) 2010 - 2019 by Arne Blankerts and Contributors</span>
+      <span>Generated using phpDox 0.11.2 - Copyright (C) 2010 - 2020 by Arne Blankerts and Contributors</span>
     </footer>
   </body>
 </html>
