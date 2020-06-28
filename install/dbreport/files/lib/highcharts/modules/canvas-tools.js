@@ -14,7 +14,7 @@
  Highcharts JS v3.0.1 (2013-04-09)
  CanVGRenderer Extension module
 
- (c) 2011-2012 Torstein Hønsi, Erik Olsson
+ (c) 2011-2012 Torstein HÃ¸nsi, Erik Olsson
 
  License: www.highcharts.com/license
 */

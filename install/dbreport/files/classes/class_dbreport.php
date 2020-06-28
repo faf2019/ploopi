@@ -236,7 +236,7 @@ abstract class dbreport {
         $intCacheLifetime = ploopi\param::get('dbreport_cache_lifetime', ploopi\module::getid('dbreport')); // Attention, ici on prend le premier module trouvé, ne fonctionne pas en multi-instance !
 
         // Instanciation du cache
-        $objCache = new ploopi_cache($strWsId.','.implode(',', $arrParams), $intCacheLifetime);
+        $objCache = new ploopi\cache($strWsId.','.implode(',', $arrParams), $intCacheLifetime);
 
         // Lecture du cache, présent ?
         if (!$mixedVar = $objCache->get_var())
@@ -281,7 +281,6 @@ abstract class dbreport {
                                 break;
 
                                 case 'html':
-                                    include_once './include/functions/array.php';
                                     $mixedVar = '
                                         <html><style>
                                         body {font: 11px Verdana,Tahoma,Arial,sans-serif;}
@@ -293,29 +292,24 @@ abstract class dbreport {
                                 break;
 
                                 case 'xls':
-                                    include_once './include/functions/array.php';
                                     $mixedVar = ploopi\arr::toexcel($objDbrQuery->getresult(), true, 'dbreport.xls', 'query', null, array('writer' => 'excel5'));
                                 break;
 
                                 case 'xlsx':
-                                    include_once './include/functions/array.php';
                                     $mixedVar = ploopi\arr::toexcel($objDbrQuery->getresult(), true, 'dbreport.xlsx', 'query', null, array('writer' => 'excel2007'));
                                 break;
 
                                 case 'sxc':
                                 case 'ods':
-                                    include_once './include/functions/array.php';
                                     $mixedVar = ploopi\arr::toexcel($objDbrQuery->getresult(), true, 'dbreport.ods', 'query', null, array('writer' => 'ods'));
                                 break;
 
                                 case 'pdf':
-                                    include_once './include/classes/odf.php';
-
                                     // Génération du fichier XLSX
                                     $strXlsContent = ploopi\arr::toexcel($objDbrQuery->getresult(), true,  'dbreport.xlsx', 'query', null, array('writer' => 'excel2007'));
 
                                     // Instanciation du convertisseur ODF
-                                    $objOdfConverter = new odf_converter(ploopi\param::get('system_webservice_jodconverter', ploopi\module::getid('system')));
+                                    $objOdfConverter = new ploopi\uno_converter(ploopi\param::get('system_webservice_jodconverter', ploopi\module::getid('system')));
 
                                     switch($strFormat)
                                     {
@@ -337,22 +331,18 @@ abstract class dbreport {
                                 break;
 
                                 case 'csv':
-                                    include_once './include/functions/array.php';
                                     $mixedVar = ploopi\arr::tocsv($objDbrQuery->getresult());
                                 break;
 
                                 case 'json':
-                                    include_once './include/functions/array.php';
                                     $mixedVar = ploopi\arr::tojson($objDbrQuery->getresult());
                                 break;
 
                                 case 'json_opt':
-                                    include_once './include/functions/array.php';
                                     $mixedVar = ploopi\arr::tojson($objDbrQuery->getresult_opt());
                                 break;
 
                                 case 'xml':
-                                    include_once './include/functions/array.php';
                                     $mixedVar = ploopi\arr::toxml($objDbrQuery->getresult());
                                 break;
 
