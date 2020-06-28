@@ -125,6 +125,30 @@ class db
     private $db_timer;
 
     /**
+     * Dernière erreur retournée
+     *
+     * @var string
+     */
+
+    private $last_error;
+
+    /**
+     * Dernier numéro d'erreur retourné
+     *
+     * @var int
+     */
+
+    private $last_errorno;
+
+    /**
+     * Dernière requête exécutée
+     *
+     * @var string
+     */
+
+    private $last_query;
+
+    /**
      * Log des requêtes exécutées par l'instance
      *
      * @var array
@@ -324,7 +348,12 @@ class db
                     }
                 }
 
-                if (!$res) trigger_error($this->mysqli->error.' ('.$this->mysqli->errno.") <br /><b>query:</b> {$query}", E_USER_WARNING);
+                if (!$res) {
+                    $this->last_error = $this->mysqli->error;
+                    $this->last_errorno = $this->mysqli->errno;
+                    $this->last_query = $query;
+                    trigger_error($this->mysqli->error.' ('.$this->mysqli->errno.") <br /><b>query:</b> {$query}", E_USER_WARNING);
+                }
             }
 
             $stop = $this->timer_stop();
@@ -365,7 +394,12 @@ class db
 
                 if ($this->log) $this->arrLog[] = array ('query' => $query, 'time' => $stop);
             }
-            else trigger_error($this->mysqli->error."<br /><b>query:</b> {$query}", E_USER_WARNING);
+            else {
+                $this->last_error = $this->mysqli->error;
+                $this->last_errorno = $this->mysqli->errno;
+                $this->last_query = $query;
+                trigger_error($this->mysqli->error."<br /><b>query:</b> {$query}", E_USER_WARNING);
+            }
 
             $stop = $this->timer_stop();
 
@@ -600,7 +634,7 @@ class db
      * @return string une chaîne au format JSON contenant les enregistrements du recordset ou false si le recordset n'est pas valide
      */
 
-    public function getjson($query_id = null, $utf8 = true)
+    public function getjson($query_id = null, $utf8 = false)
     {
         if (!$this->isconnected()) return false;
 
@@ -707,5 +741,7 @@ class db
 
     public function flush_log() { $this->arrLog = array(); }
 
-
+    public function get_last_error() { return($this->last_error); }
+    public function get_last_errorno() { return($this->last_errorno); }
+    public function get_last_query() { return($this->last_query); }
 }
