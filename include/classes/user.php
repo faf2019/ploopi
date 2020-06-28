@@ -426,18 +426,38 @@ class user extends data_object
      * @param string $strPassword mot de passe à vérifier
      * @param string $strLogin login de l'utilisateur
      * @param string $strHash hash du mot de passe
+     * @param boolean $booUseOldAlgo utilise l'algo précédent (en cas de migration)
      */
-    public static function password_verify($strPassword, $strLogin, $strHash)
+    public static function password_verify($strPassword, $strLogin, $strHash, $booUseOldAlgo = false)
     {
+        $booRes = false;
+
+        if ($booUseOldAlgo && !empty(_PLOOPI_HASH_ALGO_PREVIOUS)) {
+
+            switch(_PLOOPI_HASH_ALGO_PREVIOUS) {
+                case 'bcrypt':
+                    $booRes = password_verify(_PLOOPI_SECRETKEY."/{$strLogin}/{$strPassword}", $strHash);
+                break;
+
+                default:
+                    $booRes = $strHash == hash(_PLOOPI_HASH_ALGO_PREVIOUS, _PLOOPI_SECRETKEY."/{$strLogin}/".hash(_PLOOPI_HASH_ALGO_PREVIOUS, $strPassword));
+                break;
+            }
+
+            return $booRes;
+        }
+
         switch(_PLOOPI_HASH_ALGO) {
             case 'bcrypt':
-                return password_verify(_PLOOPI_SECRETKEY."/{$strLogin}/{$strPassword}", $strHash);
+                $booRes = password_verify(_PLOOPI_SECRETKEY."/{$strLogin}/{$strPassword}", $strHash);
             break;
 
             default:
-                return $strHash == hash(_PLOOPI_HASH_ALGO, _PLOOPI_SECRETKEY."/{$strLogin}/".hash(_PLOOPI_HASH_ALGO, $strPassword));
+                $booRes = $strHash == hash(_PLOOPI_HASH_ALGO, _PLOOPI_SECRETKEY."/{$strLogin}/".hash(_PLOOPI_HASH_ALGO, $strPassword));
             break;
         }
+
+        return $booRes;
     }
 
     /**

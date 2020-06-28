@@ -645,21 +645,31 @@ abstract class loader
                 }
 
                 // Mot de passe erronné
+                $booPasswordOk = true;
                 if (!user::password_verify($_REQUEST['ploopi_password'], $_REQUEST['ploopi_login'], $fields['password'])) {
-                    $objUser = new user();
-                    $objUser->open($fields['id']);
-                    $objUser->fields['failed_attemps']++;
-                    // Nombre de tentatives echouées trop élevé ? => case prison
-                    if (_PLOOPI_MAX_CONNECTION_ATTEMPS && $objUser->fields['failed_attemps'] >= _PLOOPI_MAX_CONNECTION_ATTEMPS) {
-                        $objUser->fields['jailed_since'] = date::createtimestamp();
-                    }
-                    $objUser->save();
+                    if (!user::password_verify($_REQUEST['ploopi_password'], $_REQUEST['ploopi_login'], $fields['password'], true)) {
+                    die('ici');
+                        $booPasswordOk = false;
 
-                    user_action_log::record(_SYSTEM_ACTION_LOGIN_ERR, $_REQUEST['ploopi_login'], _PLOOPI_MODULE_SYSTEM, _PLOOPI_MODULE_SYSTEM);
-                    error::syslog(LOG_INFO, "Mot de passe incorrect pour {$_REQUEST['ploopi_login']}");
-                    system::logout(_PLOOPI_ERROR_LOGINERROR);
+                        $objUser = new user();
+                        $objUser->open($fields['id']);
+                        $objUser->fields['failed_attemps']++;
+                        // Nombre de tentatives echouées trop élevé ? => case prison
+                        if (_PLOOPI_MAX_CONNECTION_ATTEMPS && $objUser->fields['failed_attemps'] >= _PLOOPI_MAX_CONNECTION_ATTEMPS) {
+                            $objUser->fields['jailed_since'] = date::createtimestamp();
+                        }
+                        $objUser->save();
+
+                        user_action_log::record(_SYSTEM_ACTION_LOGIN_ERR, $_REQUEST['ploopi_login'], _PLOOPI_MODULE_SYSTEM, _PLOOPI_MODULE_SYSTEM);
+                        error::syslog(LOG_INFO, "Mot de passe incorrect pour {$_REQUEST['ploopi_login']}");
+                        system::logout(_PLOOPI_ERROR_LOGINERROR);
+                    }
+                    // Connexion avec algo de chiffrement
+                    // Nécessité de changer de mot de passe
+                    else $fields['password_force_update'] = 1;
                 }
-                elseif (!empty($fields['failed_attemps']) || !empty($fields['jailed_since'])) {
+
+                if ($booPasswordOk && (!empty($fields['failed_attemps']) || !empty($fields['jailed_since']))) {
                     $objUser = new user();
                     $objUser->open($fields['id']);
                     $objUser->fields['failed_attemps'] = 0;
