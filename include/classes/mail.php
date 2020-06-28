@@ -61,8 +61,8 @@ abstract class mail
         // bcc : Array('name','address')
         // replyto : Array('name','address')
         // files : Array
-
-        mb_internal_encoding('ISO-8859-15');
+        
+        $subject = mb_encode_mimeheader($subject);
 
         $crlf = "\r\n";
 
@@ -183,8 +183,8 @@ abstract class mail
 
             $msg .= "--{$boundary}{$crlf}";
 
-            if ($html) $msg .= "Content-type: text/html; charset=iso-8859-1{$crlf}{$crlf}";
-            else $msg .= "Content-type: text/plain; charset=iso-8859-1{$crlf}{$crlf}";
+            if ($html) $msg .= "Content-type: text/html; charset=utf-8{$crlf}{$crlf}";
+            else $msg .= "Content-type: text/plain; charset=utf-8{$crlf}{$crlf}";
 
             $msg .= "$message{$crlf}{$crlf}";
 
@@ -211,8 +211,8 @@ abstract class mail
         }
         else
         {
-            if ($html) $headers .= "Content-type: text/html; charset=iso-8859-1{$crlf}{$crlf}";
-            else $headers .= "Content-type: text/plain; charset=iso-8859-1{$crlf}{$crlf}";
+            if ($html) $headers .= "Content-type: text/html; charset=utf-8{$crlf}{$crlf}";
+            else $headers .= "Content-type: text/plain; charset=utf-8{$crlf}{$crlf}";
 
             $msg = $message;
         }

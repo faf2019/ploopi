@@ -129,7 +129,7 @@ class recordset
             'strFieldSep' => ',',
             'strLineSep' => "\n",
             'strTextSep' => '"',
-            'booClean' => true
+            'booClean' => false
         );
 
         $arrOptions = array_merge($arrDefaultOptions, $arrOptions);
@@ -148,7 +148,7 @@ class recordset
 
         while ($row = $this->fetchrow()) {
 
-            if ($arrOptions['booClean']) $row = arr::map('str::iso8859_clean', $row);
+            if ($arrOptions['booClean']) $row = arr::map('ploopi\str::iso8859_clean', $row);
 
             // Ajout de la ligne d'entête
             if ($arrOptions['booHeader'] && !$booHeader) {

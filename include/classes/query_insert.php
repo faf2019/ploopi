@@ -96,7 +96,7 @@ class query_insert extends query
     protected function get_set()
     {
         $arrSet = array();
-        foreach($this->arrSet as $arrSetDetail) $arrSet[] = ploopi_sqlformat::replace($arrSetDetail, $this->objDb);
+        foreach($this->arrSet as $arrSetDetail) $arrSet[] = ploopi\sqlformat::replace($arrSetDetail, $this->objDb);
 
         return empty($arrSet) ? '' : ' SET '.implode(', ', $arrSet);
     }
