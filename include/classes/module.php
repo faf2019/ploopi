@@ -238,7 +238,8 @@ class module extends data_object
     {
         global $ploopi_additional_head;
         global $ploopi_additional_javascript;
-        global $template_body;
+
+        $template_body = ploopi\loader::get_template();
 
         if (is_dir($strModulePath = "./modules/{$moduletype}"))
         {
@@ -369,4 +370,3 @@ class module extends data_object
     }
 
 }
-

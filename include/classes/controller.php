@@ -112,7 +112,7 @@ class controller
         $strActionPath = $strModulePath.'/actions';
 
         // Appel light (save, ajax, cli...)
-        $this->_booLight = php_sapi_name() == 'cli' || ploopi\loader::getscript() == 'admin-light' || ploopi\loader::getscript() == 'webservice';
+        $this->_booLight = php_sapi_name() == 'cli' || ploopi\loader::get_script() == 'admin-light' || ploopi\loader::get_script() == 'webservice';
 
         ploopi\module::init($this->_strModuleName, !$this->_booLight, !$this->_booLight, !$this->_booLight);
 

@@ -377,7 +377,7 @@ class data_object
         $this->sql = "DESCRIBE {$this->tablename_quoted}";
         $rs = $this->db->query($this->sql);
         while ($fields = $this->db->fetchrow($rs)) {
-            $this->fields[$fields['Field']] = $fields['Default'];
+            $this->fields[$fields['Field']] = is_null($fields['Default']) ? '' : $fields['Default'];
         }
     }
 

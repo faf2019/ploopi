@@ -62,9 +62,10 @@ if (!file_exists("{$_SESSION['ploopi']['template_path']}/{$template_filename}") 
 
 }
 
-$template_body = new \Template($_SESSION['ploopi']['template_path']);
+// $template_body =
+self::$template_body = new \Template($_SESSION['ploopi']['template_path']);
 
-$template_body->set_filenames(
+self::$template_body->set_filenames(
     array(
         'body' => $template_filename
     )
@@ -74,20 +75,20 @@ $template_body->set_filenames(
  * inclusion des scripts JS
  * */
 
-$template_body->assign_block_vars('ploopi_js', array(
+self::$template_body->assign_block_vars('ploopi_js', array(
     'PATH' => './vendor/components/jquery/jquery.min.js?v='.urlencode(_PLOOPI_VERSION.','._PLOOPI_REVISION)
 ));
 
-$template_body->assign_block_vars('ploopi_js', array(
+self::$template_body->assign_block_vars('ploopi_js', array(
     'PATH' => './vendor/components/jqueryui/jquery-ui.min.js?v='.urlencode(_PLOOPI_VERSION.','._PLOOPI_REVISION)
 ));
 
 
-$template_body->assign_block_vars('ploopi_js', array(
+self::$template_body->assign_block_vars('ploopi_js', array(
     'PATH' => './js/functions.pack.js?v='.urlencode(_PLOOPI_VERSION.','._PLOOPI_REVISION)
 ));
 
-$template_body->assign_block_vars('ploopi_js', array(
+self::$template_body->assign_block_vars('ploopi_js', array(
         'PATH' => './vendor/EastDesire/jscolor/jscolor.js?v='.urlencode(_PLOOPI_VERSION.','._PLOOPI_REVISION)
 ));
 
@@ -103,12 +104,12 @@ include_once './include/op.php';
 
 if ($_SESSION['ploopi']['connected'])
 {
-    $template_body->assign_block_vars('switch_user_logged_in', array());
+    self::$template_body->assign_block_vars('switch_user_logged_in', array());
 
     // GET WORKSPACES
     foreach ($_SESSION['ploopi']['workspaces_allowed'] as $key)
     {
-        $template_body->assign_block_vars('switch_user_logged_in.workspace',array(
+        self::$template_body->assign_block_vars('switch_user_logged_in.workspace',array(
                 'TITLE' => ploopi\str::htmlentities($_SESSION['ploopi']['workspaces'][$key]['label']),
                 'URL' => $key == $_SESSION['ploopi']['workspaceid'] && $_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_WORKSPACES && $_SESSION['ploopi']['moduleid'] != -1 ? ploopi\crypt::urlencode('admin.php') : ploopi\crypt::urlencode('admin.php?ploopi_switch_workspace', _PLOOPI_MENU_WORKSPACES, $key, '', ''),
                 'SELECTED' => ($_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_WORKSPACES && $key == $_SESSION['ploopi']['workspaceid']) ? 'selected' : ''
@@ -121,7 +122,7 @@ if ($_SESSION['ploopi']['connected'])
 
     if (!empty($arrBlocks) || $_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_WORKSPACES)
     {
-        $template_body->assign_block_vars('switch_user_logged_in.switch_blockmenu',array());
+        self::$template_body->assign_block_vars('switch_user_logged_in.switch_blockmenu',array());
     }
 
     if (!empty($arrBlocks))
@@ -131,7 +132,7 @@ if ($_SESSION['ploopi']['connected'])
             if (empty($mod['url'])) $mod['url'] = '';
 
             // CAS 1 : liste standard de modules
-            $template_body->assign_block_vars('switch_user_logged_in.switch_blockmenu.block',array(
+            self::$template_body->assign_block_vars('switch_user_logged_in.switch_blockmenu.block',array(
                     'ID' => $idmod,
                     'TITLE' => ploopi\str::htmlentities($mod['title']),
                     'URL' => $mod['url'],
@@ -142,7 +143,7 @@ if ($_SESSION['ploopi']['connected'])
 
             if (!empty($mod['content']))
             {
-                $template_body->assign_block_vars('switch_user_logged_in.switch_blockmenu.block.switch_content',array(
+                self::$template_body->assign_block_vars('switch_user_logged_in.switch_blockmenu.block.switch_content',array(
                         'CONTENT' => $mod['content']
                     )
                 );
@@ -152,7 +153,7 @@ if ($_SESSION['ploopi']['connected'])
             {
                 if ($idmod == $_SESSION['ploopi']['moduleid']) // Module sélectionné
                 {
-                    $template_body->assign_block_vars('switch_user_logged_in.switch_blockmenu.switch_blocksel',array(
+                    self::$template_body->assign_block_vars('switch_user_logged_in.switch_blockmenu.switch_blocksel',array(
                             'ID' => $idmod,
                             'TITLE' => ploopi\str::htmlentities($mod['title']),
                             'URL' => $mod['url'],
@@ -162,7 +163,7 @@ if ($_SESSION['ploopi']['connected'])
 
                     if (!empty($mod['content']))
                     {
-                        $template_body->assign_block_vars('switch_user_logged_in.switch_blockmenu.switch_blocksel.switch_content',array(
+                        self::$template_body->assign_block_vars('switch_user_logged_in.switch_blockmenu.switch_blocksel.switch_content',array(
                                 'CONTENT' => $mod['content']
                             )
                         );
@@ -174,7 +175,7 @@ if ($_SESSION['ploopi']['connected'])
                 {
                     if ($idmod == $_SESSION['ploopi']['moduleid']) // Module sélectionné
                     {
-                        $template_body->assign_block_vars('switch_user_logged_in.switch_blockmenu.switch_blocksel.menu',array(
+                        self::$template_body->assign_block_vars('switch_user_logged_in.switch_blockmenu.switch_blocksel.menu',array(
                                 'LABEL' => $menu['label'],
                                 'CLEANED_LABEL' => $menu['cleaned_label'],
                                 'URL' => $menu['url'],
@@ -184,7 +185,7 @@ if ($_SESSION['ploopi']['connected'])
                         );
                     }
 
-                    $template_body->assign_block_vars('switch_user_logged_in.switch_blockmenu.block.menu',array(
+                    self::$template_body->assign_block_vars('switch_user_logged_in.switch_blockmenu.block.menu',array(
                             'LABEL' => $menu['label'],
                             'CLEANED_LABEL' => $menu['cleaned_label'],
                             'URL' => $menu['url'],
@@ -224,7 +225,7 @@ if ($_SESSION['ploopi']['connected'])
 
     list($newtickets, $lastticket) = ploopi\ticket::getnew();
 
-    $template_body->assign_vars(array(
+    self::$template_body->assign_vars(array(
         'PAGE_CONTENT'          => $page_content,
         'ADDITIONAL_HEAD'       => $ploopi_additional_head,
 
@@ -267,37 +268,37 @@ if ($_SESSION['ploopi']['connected'])
         'USER_DECONNECT'        => ploopi\crypt::urlencode("admin.php?ploopi_logout", null, null, null, null, false)
     ));
 
-    if ($newtickets) $template_body->assign_block_vars('switch_user_logged_in.switch_newtickets', array());
+    if ($newtickets) self::$template_body->assign_block_vars('switch_user_logged_in.switch_newtickets', array());
 
     if ($_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_WORKSPACES)
     {
-        $template_body->assign_block_vars('switch_user_logged_in.switch_search', array());
-        $template_body->assign_block_vars('switch_user_logged_in.switch_blockmenu.switch_search', array());
+        self::$template_body->assign_block_vars('switch_user_logged_in.switch_search', array());
+        self::$template_body->assign_block_vars('switch_user_logged_in.switch_blockmenu.switch_search', array());
     }
 
 }
 else
 {
-    $template_body->assign_block_vars('switch_user_logged_out', array(
+    self::$template_body->assign_block_vars('switch_user_logged_out', array(
         'FORM_URL' => ploopi\crypt::urlencode('admin.php')
     ));
 
     if (!empty($_SESSION['ploopi']['errorcode']))
     {
-        $template_body->assign_block_vars('switch_user_logged_out.switch_ploopierrormsg', array());
+        self::$template_body->assign_block_vars('switch_user_logged_out.switch_ploopierrormsg', array());
 
         // Cas particulier : demande de changement de mot de passe
         if (in_array($_SESSION['ploopi']['errorcode'], array( _PLOOPI_ERROR_PASSWORDRESET, _PLOOPI_ERROR_PASSWORDERROR, _PLOOPI_ERROR_PASSWORDINVALID)))
         {
-            $template_body->assign_block_vars('switch_user_logged_out.switch_passwordreset', array());
+            self::$template_body->assign_block_vars('switch_user_logged_out.switch_passwordreset', array());
 
             if (_PLOOPI_USE_COMPLEXE_PASSWORD) {
-                $template_body->assign_block_vars('switch_user_logged_out.switch_passwordreset.switch_cp', array('MIN_SIZE' => _PLOOPI_COMPLEXE_PASSWORD_MIN_SIZE));
+                self::$template_body->assign_block_vars('switch_user_logged_out.switch_passwordreset.switch_cp', array('MIN_SIZE' => _PLOOPI_COMPLEXE_PASSWORD_MIN_SIZE));
             } else {
-                $template_body->assign_block_vars('switch_user_logged_out.switch_passwordreset.switch_np', array());
+                self::$template_body->assign_block_vars('switch_user_logged_out.switch_passwordreset.switch_np', array());
             }
 
-            $template_body->assign_vars(array(
+            self::$template_body->assign_vars(array(
                 'USER_LOGIN'            => ploopi\str::htmlentities($_SESSION['ploopi']['login']),
                 'USER_PASSWORD'         => ploopi\str::htmlentities($_SESSION['ploopi']['password'])
             ));
@@ -306,10 +307,10 @@ else
 
     if (!empty($_SESSION['ploopi']['msgcode']))
     {
-        $template_body->assign_block_vars('switch_user_logged_out.switch_ploopimsg', array());
+        self::$template_body->assign_block_vars('switch_user_logged_out.switch_ploopimsg', array());
     }
 
-    $template_body->assign_vars(array(
+    self::$template_body->assign_vars(array(
         'PASSWORDLOST_URL'              => ploopi\crypt::urlencode('admin.php?ploopi_op=ploopi_lostpassword')
         )
     );
@@ -331,9 +332,9 @@ if (!empty($_SESSION['ploopi']['updateprofile']) && ploopi\param::get('system_pr
     $_SESSION['ploopi']['updateprofile'] = false;
 }
 
-$wsp = self::getworkspace();
+$wsp = self::get_workspace();
 
-$template_body->assign_vars(array(
+self::$template_body->assign_vars(array(
     'TEMPLATE_PATH'                 => $_SESSION['ploopi']['template_path'],
     'TEMPLATE_NAME'                 => $_SESSION['ploopi']['template_name'],
     'WORKSPACE_LABEL'               => $_SESSION['ploopi']['mainmenu'] == _PLOOPI_MENU_MYWORKSPACE ? ploopi\str::htmlentities(_PLOOPI_LABEL_MYWORKSPACE) : ploopi\str::htmlentities($wsp['label']),
@@ -355,4 +356,4 @@ $template_body->assign_vars(array(
 
 unset($_SESSION['ploopi']['errorcode']);
 
-$template_body->pparse('body');
+self::$template_body->pparse('body');

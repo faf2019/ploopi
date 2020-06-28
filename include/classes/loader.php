@@ -75,6 +75,14 @@ abstract class loader
 
 
     /**
+     * Objet template pour le rendu HTML
+     *
+     * @var \Template
+     */
+    private static $template_body = null;
+
+
+    /**
      * Conversion d'un nom de classe en chemin physique
      *
      * @param string $strClassName nom de classe
@@ -496,8 +504,8 @@ abstract class loader
             case 'quick':
                 if (empty($_SESSION['ploopi']['mode']))
                 {
-                    self::_getworkspaces();
-                    self::_getmodules();
+                    self::_get_workspaces();
+                    self::_get_modules();
 
                     if (!empty($_SESSION['ploopi']['hosts']['frontoffice'][0]))
                     {
@@ -802,7 +810,7 @@ abstract class loader
          * Chargement Espaces
          */
 
-        if (self::$initsession) self::_getworkspaces();
+        if (self::$initsession) self::_get_workspaces();
 
         /**
          * Switch entre backoffice et frontoffice en fonction du nom du script appelant (admin.php/index.php) et de la config du portail
@@ -873,7 +881,7 @@ abstract class loader
 
             if ($_SESSION['ploopi']['userid'] != 0)
             {
-                self::_getmodules();
+                self::_get_modules();
 
                 //include './include/start/load_param.php';
 
@@ -967,7 +975,7 @@ abstract class loader
             }
         }
 
-        if (!$_SESSION['ploopi']['paramloaded']) self::_getmodules();
+        if (!$_SESSION['ploopi']['paramloaded']) self::_get_modules();
 
 
         // Génération du token en mode backoffice uniquement
@@ -1333,7 +1341,7 @@ abstract class loader
 
     public static function startlight()
     {
-        if (self::$initsession) self::_getworkspaces();
+        if (self::$initsession) self::_get_workspaces();
 
         switch(self::$script)
         {
@@ -1361,7 +1369,7 @@ abstract class loader
                     $_SESSION['ploopi']['workspaceid'] = $_SESSION['ploopi']['hosts']['backoffice'][0];
                 else system::kill();
 
-                self::_getmodules();
+                self::_get_modules();
             break;
         }
 
@@ -1380,7 +1388,7 @@ abstract class loader
      * @author Ovensia
      */
 
-    private static function _getworkspaces()
+    private static function _get_workspaces()
     {
         $db = db::get();
 
@@ -1509,7 +1517,7 @@ abstract class loader
      * @author Ovensia
      */
 
-    private static function _getmodules()
+    private static function _get_modules()
     {
         $db = db::get();
 
@@ -1566,8 +1574,24 @@ abstract class loader
      * @return array
      */
 
-    public static function getworkspace() { return self::$workspace; }
+    public static function getworkspace() {
+        trigger_error("Deprecated function called.", E_USER_NOTICE);
+        return self::$workspace;
+    }
 
+
+    /**
+     * Retourne les informations de l'espace courant
+     *
+     * @package ploopi
+     * @subpackage loader
+     * @copyright Ovensia
+     * @license GNU General Public License (GPL)
+     * @author Ovensia
+     * @return array
+     */
+
+    public static function get_workspace() { return self::$workspace; }
 
     /**
      * Retourne le type de script
@@ -1580,6 +1604,50 @@ abstract class loader
      * @return array
      */
 
-    public static function getscript() { return self::$script; }
+    public static function getscript() {
+        trigger_error("Deprecated function called.", E_USER_NOTICE);
+        return self::$script;
+    }
 
+    /**
+     * Retourne le type de script
+     *
+     * @package ploopi
+     * @subpackage loader
+     * @copyright Ovensia
+     * @license GNU General Public License (GPL)
+     * @author Ovensia
+     * @return array
+     */
+
+    public static function get_script() { return self::$script; }
+
+    /**
+     * Retourne le template
+     *
+     * @package ploopi
+     * @subpackage loader
+     * @copyright Ovensia
+     * @license GNU General Public License (GPL)
+     * @author Ovensia
+     * @return \Template
+     */
+
+    public static function gettemplate() {
+        trigger_error("Deprecated function called.", E_USER_NOTICE);
+        return self::$template_body;
+    }
+
+    /**
+     * Retourne le template
+     *
+     * @package ploopi
+     * @subpackage loader
+     * @copyright Ovensia
+     * @license GNU General Public License (GPL)
+     * @author Ovensia
+     * @return \Template
+     */
+
+    public static function get_template() { return self::$template_body; }
 }
