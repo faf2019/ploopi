@@ -1970,7 +1970,7 @@ $ploopi_additional_javascript .= ob_get_contents();
 $lastupdate = ($lastupdate = webedit_getlastupdate()) ? ploopi\date::timestamp2local($lastupdate) : array('date' => '', 'time' => '');
 
 // template assignments
-$wsp = self::getworkspace();
+$wsp = self::get_workspace();
 
 list($keywords) = ploopi\str::getwords("{$wsp['title']} {$wsp['meta_keywords']} {$wsp['meta_author']}");
 
