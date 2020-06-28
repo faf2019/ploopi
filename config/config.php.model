@@ -288,10 +288,11 @@ switch($http_host)
         /**
          * Algorithme utilisé pour la génération des valeurs de hachage (stockage des mots de passe).
          * Recommandé : bcrypt, sha256, sha384, sha512, whirlpool
-         * Compatibilité Ploopi < 1.9.7 : md5
+         * Non recommandé : md5
          */
 
         define ('_PLOOPI_HASH_ALGO', '<HASH_ALGO>');
+        define ('_PLOOPI_HASH_ALGO_PREVIOUS', '');
 
         /**
          * Clé secrète utilisée pour le chiffrement des URL et des mots de passe
