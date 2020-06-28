@@ -648,7 +648,6 @@ abstract class loader
                 $booPasswordOk = true;
                 if (!user::password_verify($_REQUEST['ploopi_password'], $_REQUEST['ploopi_login'], $fields['password'])) {
                     if (!user::password_verify($_REQUEST['ploopi_password'], $_REQUEST['ploopi_login'], $fields['password'], true)) {
-                    die('ici');
                         $booPasswordOk = false;
 
                         $objUser = new user();
