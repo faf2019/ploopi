@@ -1492,7 +1492,7 @@ class formsForm extends ploopi\data_object
      */
     public function includeCss($booPrint = false)
     {
-        global $template_body;
+        $template_body = ploopi\loader::get_template();
 
         $strCssTemplate = (!empty($this->fields['model']) && file_exists("./modules/forms/templates/{$this->fields['model']}/style.css")) ? $this->fields['model'] : 'default';
 
@@ -2015,7 +2015,7 @@ class formsForm extends ploopi\data_object
          * Gestion des groupes conditionnels
          */
 
-        $strJsCond = "ploopi.{$strFormId}_checkgroup = function(g) {\nswitch(g) {";
+        $strJsCond = "ploopi.{$strFormId}_checkgroup = function(g) {\nswitch(g) { ";
         $strJsGroup = '';
 
         $arrFields = $this->getFields();
@@ -2024,7 +2024,7 @@ class formsForm extends ploopi\data_object
         {
             foreach($rowGroup as $intIdField)
             {
-                $strJsGroup .= "\n$(#'field_{$intIdField}_form')[0].style.display = ploopi.{$strFormId}_checkgroup({$intIdGroup}) ? 'block' : 'none';";
+                $strJsGroup .= "\n$('#field_{$intIdField}_form')[0].style.display = ploopi.{$strFormId}_checkgroup({$intIdGroup}) ? 'block' : 'none';";
             }
 
             $strJsCond .= "\ncase {$intIdGroup}:";
@@ -2033,119 +2033,122 @@ class formsForm extends ploopi\data_object
             $objGroup->open($intIdGroup);
             $arrConditions = $objGroup->getConditions();
 
-            foreach($arrConditions as $key => $row)
+            if (!empty($arrConditions))
             {
-                if (empty($row['field']) && empty($row['op']))
+                foreach($arrConditions as $key => $row)
                 {
-                    $strJsCond .= "\nvar C{$key} = true;";
-                }
-                else
-                {
-                    $objFieldVar = $arrFields[$row['field']];
-
-                    // Stockage des valeurs du formulaire pour les variables concernées par la condition
-                    $strJsCond .= "\nvar V{$key} = new Array();";
-                    switch($objFieldVar->fields['type'])
+                    if (empty($row['field']) && empty($row['op']))
                     {
-                        case 'radio':
-                            $strJsCond .= "\nfor (i=0; i<$(#'{$strFormId}')[0]['field_{$row['field']}'].length;i++) if ($('#{$strFormId}')[0]['field_{$row['field']}'][i].checked) V{$key}.push( forms_removeaccents($('#{$strFormId}')[0]['field_{$row['field']}'][i].value).toUpperCase() );";
-                        break;
-
-                        case 'checkbox':
-                            $strJsCond .= "\nfor (i=0; i<$(#'{$strFormId}')[0]['field_{$row['field']}[]'].length;i++) if ($('#{$strFormId}')[0]['field_{$row['field']}[]'][i].checked) V{$key}.push( forms_removeaccents($('#{$strFormId}')[0]['field_{$row['field']}[]'][i].value).toUpperCase() );";
-                        break;
-
-                        default:
-                            $strJsCond .= "\nV{$key}.push( forms_removeaccents($('#{$strFormId}')[0].field_{$row['field']}.value).toUpperCase() );";
-                        break;
+                        $strJsCond .= "\nvar C{$key} = true;";
                     }
-
-                    $strValue = addslashes(strtoupper(ploopi\str::convertaccents($row['value'])));
-
-                    $strJsCond .= "\nvar C{$key} = false;";
-                    $strJsCond .= "\nfor (i=0;i<V{$key}.length;i++) {";
-
-                    if (empty($row['op'])) $row['op'] = '=';
-
-                    switch($row['op'])
+                    else
                     {
-                        // Traité comme une chaîne (pas de sens en numérique)
-                        case 'begin':
-                            $strJsCond .= "C{$key} = C{$key} || (V{$key}[i].match(/".$strValue.".*/i));";
-                        break;
+                        $objFieldVar = $arrFields[$row['field']];
 
-                        // Traité comme une chaîne (pas de sens en numérique)
-                        case 'like':
-                            $strJsCond .= "C{$key} = C{$key} || (V{$key}[i].match(/.*".$strValue.".*/i));";
-                        break;
+                        // Stockage des valeurs du formulaire pour les variables concernées par la condition
+                        $strJsCond .= "\nvar V{$key} = new Array();";
+                        switch($objFieldVar->fields['type'])
+                        {
+                            case 'radio':
+                                $strJsCond .= "\nfor (i=0; i<$('#{$strFormId}')[0]['field_{$row['field']}'].length;i++) if ($('#{$strFormId}')[0]['field_{$row['field']}'][i].checked) V{$key}.push( forms_removeaccents($('#{$strFormId}')[0]['field_{$row['field']}'][i].value).toUpperCase() );";
+                            break;
 
-                        case 'between':
-                            $arrValues = array_map('trim', explode(',', $strValue));
-                            if (sizeof($arrValues) == 2)
-                            {
+                            case 'checkbox':
+                                $strJsCond .= "\nfor (i=0; i<$('#{$strFormId}')[0]['field_{$row['field']}[]'].length;i++) if ($('#{$strFormId}')[0]['field_{$row['field']}[]'][i].checked) V{$key}.push( forms_removeaccents($('#{$strFormId}')[0]['field_{$row['field']}[]'][i].value).toUpperCase() );";
+                            break;
+
+                            default:
+                                $strJsCond .= "\nV{$key}.push( forms_removeaccents($('#{$strFormId}')[0].field_{$row['field']}.value).toUpperCase() );";
+                            break;
+                        }
+
+                        $strValue = addslashes(strtoupper(ploopi\str::convertaccents($row['value'])));
+
+                        $strJsCond .= "\nvar C{$key} = false;";
+                        $strJsCond .= "\nfor (i=0;i<V{$key}.length;i++) {";
+
+                        if (empty($row['op'])) $row['op'] = '=';
+
+                        switch($row['op'])
+                        {
+                            // Traité comme une chaîne (pas de sens en numérique)
+                            case 'begin':
+                                $strJsCond .= "C{$key} = C{$key} || (V{$key}[i].match(/".$strValue.".*/i));";
+                            break;
+
+                            // Traité comme une chaîne (pas de sens en numérique)
+                            case 'like':
+                                $strJsCond .= "C{$key} = C{$key} || (V{$key}[i].match(/.*".$strValue.".*/i));";
+                            break;
+
+                            case 'between':
+                                $arrValues = array_map('trim', explode(',', $strValue));
+                                if (sizeof($arrValues) == 2)
+                                {
+                                    switch($objFieldVar->fields['format'])
+                                    {
+                                        case 'integer':
+                                            $strJsCond .= "C{$key} = C{$key} || (V{$key}[i] >= parseInt('".$arrValues[0]."', 10) && V{$key}[i] <= parseInt('".$arrValues[1]."', 10));";
+                                        break;
+
+                                        case 'float':
+                                            $strJsCond .= "C{$key} = C{$key} || (V{$key}[i] >= parseFloat('".$arrValues[0]."', 10) && V{$key}[i] <= parseFloat('".$arrValues[1]."', 10));";
+                                        break;
+
+                                        default:
+                                            $strJsCond .= "C{$key} = C{$key} || (V{$key}[i] >= '".$arrValues[0]."' && V{$key}[i] <= '".$arrValues[1]."');";
+                                        break;
+                                    }
+                                }
+                            break;
+
+                            case 'in':
+                                foreach(array_map('trim', explode(',', $strValue)) as $strValue)
+                                {
+                                    switch($objFieldVar->fields['format'])
+                                    {
+                                        case 'integer':
+                                            $strJsCond .= "C{$key} = C{$key} || (V{$key}[i] == parseInt('".$strValue."', 10));";
+                                        break;
+
+                                        case 'float':
+                                            $strJsCond .= "C{$key} = C{$key} || (V{$key}[i] == parseFloat('".$strValue."', 10));";
+                                        break;
+
+                                        default:
+                                            $strJsCond .= "C{$key} = C{$key} || (V{$key}[i] == '".$strValue."');";
+                                        break;
+                                    }
+                                }
+                            break;
+
+                            // Les opérateurs de base
+                            default:
+                                global $field_operators;
+                                if (isset($field_operators[$row['op']])) $row['op'] = $field_operators[$row['op']];
+
+                                if ($row['op'] == '=') $row['op'] = '==';
+                                if ($row['op'] == '<>') $row['op'] = '!=';
+
                                 switch($objFieldVar->fields['format'])
                                 {
                                     case 'integer':
-                                        $strJsCond .= "C{$key} = C{$key} || (V{$key}[i] >= parseInt('".$arrValues[0]."', 10) && V{$key}[i] <= parseInt('".$arrValues[1]."', 10));";
+                                        $strJsCond .= "C{$key} = C{$key} || (V{$key}[i] {$row['op']} parseInt('".$strValue."', 10));";
                                     break;
 
                                     case 'float':
-                                        $strJsCond .= "C{$key} = C{$key} || (V{$key}[i] >= parseFloat('".$arrValues[0]."', 10) && V{$key}[i] <= parseFloat('".$arrValues[1]."', 10));";
+                                        $strJsCond .= "C{$key} = C{$key} || (V{$key}[i] {$row['op']} parseFloat('".$strValue."', 10));";
                                     break;
 
                                     default:
-                                        $strJsCond .= "C{$key} = C{$key} || (V{$key}[i] >= '".$arrValues[0]."' && V{$key}[i] <= '".$arrValues[1]."');";
+                                        $strJsCond .= "C{$key} = C{$key} || (V{$key}[i] {$row['op']} '".$strValue."');";
                                     break;
                                 }
-                            }
-                        break;
+                            break;
+                        }
 
-                        case 'in':
-                            foreach(array_map('trim', explode(',', $strValue)) as $strValue)
-                            {
-                                switch($objFieldVar->fields['format'])
-                                {
-                                    case 'integer':
-                                        $strJsCond .= "C{$key} = C{$key} || (V{$key}[i] == parseInt('".$strValue."', 10));";
-                                    break;
-
-                                    case 'float':
-                                        $strJsCond .= "C{$key} = C{$key} || (V{$key}[i] == parseFloat('".$strValue."', 10));";
-                                    break;
-
-                                    default:
-                                        $strJsCond .= "C{$key} = C{$key} || (V{$key}[i] == '".$strValue."');";
-                                    break;
-                                }
-                            }
-                        break;
-
-                        // Les opérateurs de base
-                        default:
-                            global $field_operators;
-                            if (isset($field_operators[$row['op']])) $row['op'] = $field_operators[$row['op']];
-
-                            if ($row['op'] == '=') $row['op'] = '==';
-                            if ($row['op'] == '<>') $row['op'] = '!=';
-
-                            switch($objFieldVar->fields['format'])
-                            {
-                                case 'integer':
-                                    $strJsCond .= "C{$key} = C{$key} || (V{$key}[i] {$row['op']} parseInt('".$strValue."', 10));";
-                                break;
-
-                                case 'float':
-                                    $strJsCond .= "C{$key} = C{$key} || (V{$key}[i] {$row['op']} parseFloat('".$strValue."', 10));";
-                                break;
-
-                                default:
-                                    $strJsCond .= "C{$key} = C{$key} || (V{$key}[i] {$row['op']} '".$strValue."');";
-                                break;
-                            }
-                        break;
+                        $strJsCond .= "}";
                     }
-
-                    $strJsCond .= "}";
                 }
             }
 

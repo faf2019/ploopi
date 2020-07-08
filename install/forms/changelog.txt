@@ -1,3 +1,9 @@
+== Module FORMS - version 3.7.4 ====================================================
+
+2020-07-08  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Correction d'un bug dans la prise en compte des groupes conditionnels
+
 == Module FORMS - version 3.7.3 ====================================================
 
 2020-06-03  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

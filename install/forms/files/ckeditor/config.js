@@ -46,7 +46,7 @@ CKEDITOR.editorConfig = function( config ) {
     ];
 
     // Plugins additionnels
-    config.extraPlugins = '';
+    config.extraPlugins = 'colorbutton,print';
     config.removePlugins = 'elementspath';
     config.resize_enabled = false;
 
