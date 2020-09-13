@@ -254,10 +254,17 @@ class form
         // Génération des Panels
         $strOutputPanels = '';
         $booHasFile = false;
-        foreach($this->_arrPanels as $objPanel)
-        {
+        foreach($this->_arrPanels as $objPanel) {
             // Génération des panels (+ champs)
             if($objPanel->getNbFields()) $strOutputPanels .= $objPanel->render($intTabindex);
+        }
+
+        // On détermine si le formulaire dispose d'un champ FILE
+        foreach($objPanel->getFields() as $objField) {
+            if ($objField->_strType == 'input:file') {
+                $booHasFile = true;
+                break;
+            }
         }
 
         $strButtonStyle = is_null($this->_arrOptions['button_style']) ? '' : " style=\"{$this->_arrOptions['button_style']}\"";
