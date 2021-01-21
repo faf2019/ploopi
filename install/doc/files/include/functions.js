@@ -146,7 +146,7 @@ function doc_fckexplorer_set_folder(idfolder, ploopi_op)
 
 function doc_fckexplorer_selectfile(fileUrl, text, urldecod)
 {
-    if (ploopi.get_param('target') != 'undefined') {
+    if (ploopi.get_param('target') != undefined) {
         window.opener.document.getElementById(ploopi.get_param('target')).value = urldecod;
     } else {
         window.parent.opener.CKEDITOR.tools.callFunction( jQuery('#CKEditorFuncNum')[0].value, fileUrl, function() {

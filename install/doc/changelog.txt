@@ -1,3 +1,11 @@
+== Module DOC - version 4.10.5 ====================================================
+
+2021-01-21  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Correction de bugs avec PHP 7.3
+* Correction d'un bug avec template_body (suite refactoring)
+* Correction d'un bug JS
+
 == Module DOC - version 4.10.4 ====================================================
 
 2020-03-13  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

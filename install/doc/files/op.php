@@ -936,7 +936,7 @@ if ($_SESSION['ploopi']['connected'])
                             case 'doc_selectimage':
                             case 'doc_selectflash':
                                 $row['url'] = "index-quick.php?ploopi_op=doc_file_view&docfile_md5id={$row['md5id']}";
-                                $row['urldecod'] = ploopi\str::urlrewrite($row['url'], doc_getrewriterules(), $row['name'], null, true);	
+                                $row['urldecod'] = ploopi\str::urlrewrite($row['url'], doc_getrewriterules(), $row['name'], null, true);
                             break;
 
                             default:
@@ -957,6 +957,8 @@ if ($_SESSION['ploopi']['connected'])
         case 'doc_selectfile':
         case 'doc_selectimage':
         case 'doc_selectflash':
+            $template_body = ploopi\loader::get_template();
+
             // http://docs.ckeditor.com/#!/guide/dev_file_browser_api
             // Important, paramètres fournis par ckeditor :
             // CKEditor (= editor)
