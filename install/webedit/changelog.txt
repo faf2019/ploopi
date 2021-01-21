@@ -1,3 +1,10 @@
+== Module WebEdit - version 2.7.8 ============================================
+
+2021-01-21  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Correction d'un bug avec l'initialisation de template_body
+* Correction d'un bug avec le sélecteur de fichiers/images
+
 == Module WebEdit - version 2.7.7 ============================================
 
 2020-06-28  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

@@ -137,6 +137,8 @@ if ($_SESSION['ploopi']['connected'])
         break;
 
         case 'webedit_selector':
+            $template_body = ploopi\loader::get_template();
+
             ob_start();
             ?>
             <style>body, html, div { border:0;padding:0;margin:0;display:block;height:100%;overflow:hidden; }</style>
@@ -147,6 +149,7 @@ if ($_SESSION['ploopi']['connected'])
             <?
             $main_content = ob_get_contents();
             @ob_end_clean();
+
 
             $template_body->assign_vars(array(
                 'TEMPLATE_PATH'         => $_SESSION['ploopi']['template_path'],
@@ -173,6 +176,9 @@ if ($_SESSION['ploopi']['connected'])
 
         case 'webedit_selectlink':
         case 'webedit_detail_heading';
+            $template_body = ploopi\loader::get_template();
+
+
             ob_start();
             include_once './modules/webedit/fck_link.php';
             $main_content = ob_get_contents();

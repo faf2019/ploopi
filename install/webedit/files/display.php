@@ -285,7 +285,7 @@ if (!file_exists(_WEBEDIT_TEMPLATES_PATH."/$template_name")) $template_name = 'd
 
 $template_path = _WEBEDIT_TEMPLATES_PATH."/$template_name";
 
-$template_body = new Template($template_path);
+$template_body = self::$template_body = new Template($template_path);
 
 // fichier template par défaut
 $template_file = 'index.tpl';
