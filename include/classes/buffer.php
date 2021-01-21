@@ -55,6 +55,10 @@ abstract class buffer
         ob_start(function($buffer) use ($db) {
             if (!strlen(trim($buffer))) return '';
 
+            // Les classes chargées par l'autoloader ne sont plus disponibles ici
+            include_once './include/classes/session.php';
+            include_once './include/classes/arr.php';
+
             // On essaye de récupérer le content-type du contenu du buffer
             $content_type = 'text/html';
             $headers = headers_list();
@@ -129,7 +133,7 @@ abstract class buffer
                 $log->fields['ploopi_moduleid'] = (empty($_SESSION['ploopi']['moduleid'])) ? 0 : $_SESSION['ploopi']['moduleid'];
                 $log->fields['ploopi_userid'] = (empty($_SESSION['ploopi']['userid'])) ? 0 : $_SESSION['ploopi']['userid'];
                 $log->fields['ploopi_workspaceid'] = (empty($_SESSION['ploopi']['workspaceid'])) ? 0 : $_SESSION['ploopi']['workspaceid'];;
-                $log->fields['ts'] = date::createtimestamp();
+                $log->fields['ts'] = date('YmdHis');
 
                 $log->fields['browser'] = isset($_SESSION['ploopi']['remote_browser']) ? $_SESSION['ploopi']['remote_browser'] : '';
                 $log->fields['system'] = isset($_SESSION['ploopi']['remote_system']) ? $_SESSION['ploopi']['remote_system'] : '';

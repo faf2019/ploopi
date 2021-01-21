@@ -728,6 +728,8 @@ class skin
                             $img = $sortable_img;
                         }
 
+                        if (isset($c['class'])) $class = trim($class.' '.$c['class']);
+
                         if (!empty($c['url']) || !empty($c['onclick'])) {
                             ?>
                             <a href="<?php echo (!empty($c['url'])) ? $c['url'] : 'javascript:void(0);'; ?>" <?php if (!empty($c['onclick'])) echo "onclick=\"javascript:{$c['onclick']}\""; ?>" style="width:<?php echo $c['width']; ?>px;float:right;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element"><p><span><?php echo $c['label'] == '' ? '&nbsp;' : $c['label']; ?></span><?php echo $img; ?></p></a>
@@ -757,6 +759,8 @@ class skin
                         elseif (!empty($c['options']['sort'])) {
                             $img = $sortable_img;
                         }
+
+                        if (isset($c['class'])) $class = trim($class.' '.$c['class']);
 
                         if (!empty($c['url']) || !empty($c['onclick'])) {
                             ?>
@@ -788,6 +792,8 @@ class skin
                             $img = $sortable_img;
                         }
 
+                        if (isset($c['class'])) $class = trim($class.' '.$c['class']);
+
                         if (!empty($c['url']) || !empty($c['onclick'])) {
                             ?>
                             <a href="<?php echo (!empty($c['url'])) ? $c['url'] : 'javascript:void(0);'; ?>" <?php if (!empty($c['onclick'])) echo "onclick=\"javascript:{$c['onclick']}\""; ?>" style="width:<?php echo $c['width']; ?>px;float:left;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element <?php echo $class; ?>"><p><span><?php echo $c['label'] == '' ? '&nbsp;' : $c['label']; ?></span><?php echo $img; ?></p></a>
@@ -818,6 +824,8 @@ class skin
                             $img = $sortable_img;
                         }
 
+                        if (isset($c['class'])) $class = trim($class.' '.$c['class']);
+
                         if (!empty($c['url']) || !empty($c['onclick'])) {
                             ?>
                             <a href="<?php echo (!empty($c['url'])) ? $c['url'] : 'javascript:void(0);'; ?>" <?php if (!empty($c['onclick'])) echo "onclick=\"javascript:{$c['onclick']}\""; ?>" style="width:<?php echo $c['width']; ?>px;float:left;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element <?php echo $class; ?>"><p><span><?php echo $c['label'] == '' ? '&nbsp;' : $c['label']; ?></span><?php echo $img; ?></p></a>
@@ -847,6 +855,8 @@ class skin
                         elseif (!empty($c['options']['sort'])) {
                             $img = $sortable_img;
                         }
+
+                        if (isset($c['class'])) $class = trim($class.' '.$c['class']);
 
                         if (!empty($c['url']) || !empty($c['onclick'])) {
                             ?>

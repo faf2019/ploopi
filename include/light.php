@@ -38,7 +38,7 @@ if ($_SESSION['ploopi']['mode'] == 'backoffice')
     {
         include_once './lib/template/template.php';
 
-        $template_body = new \Template($_SESSION['ploopi']['template_path']);
+        self::$template_body = new \Template($_SESSION['ploopi']['template_path']);
 
         if (!file_exists("{$_SESSION['ploopi']['template_path']}/light.tpl") || ! is_readable("{$_SESSION['ploopi']['template_path']}/light.tpl")) {
 
@@ -52,23 +52,23 @@ if ($_SESSION['ploopi']['mode'] == 'backoffice')
 
         }
 
-        $template_body->set_filenames(
+        self::$template_body->set_filenames(
             array(
                 'body' => 'light.tpl'
             )
         );
 
         // PLOOPI JS
-        $template_body->assign_block_vars('ploopi_js', array(
+        self::$template_body->assign_block_vars('ploopi_js', array(
             'PATH' => './vendor/components/jquery/jquery.min.js?v='.urlencode(_PLOOPI_VERSION.','._PLOOPI_REVISION)
         ));
 
-        $template_body->assign_block_vars('ploopi_js', array(
+        self::$template_body->assign_block_vars('ploopi_js', array(
             'PATH' => './vendor/components/jqueryui/jquery-ui.min.js?v='.urlencode(_PLOOPI_VERSION.','._PLOOPI_REVISION)
         ));
 
 
-        $template_body->assign_block_vars('ploopi_js', array(
+        self::$template_body->assign_block_vars('ploopi_js', array(
             'PATH' => './js/functions.pack.js?v='.urlencode(_PLOOPI_VERSION.','._PLOOPI_REVISION)
         ));
 
@@ -106,7 +106,7 @@ if ($_SESSION['ploopi']['mode'] == 'backoffice')
         $main_content = ob_get_contents();
         @ob_end_clean();
 
-        $template_body->assign_vars(array(
+        self::$template_body->assign_vars(array(
             'TEMPLATE_PATH'         => $_SESSION['ploopi']['template_path'],
             'ADDITIONAL_HEAD'       => $ploopi_additional_head,
             'ADDITIONAL_JAVASCRIPT' => $ploopi_additional_javascript,
@@ -114,7 +114,7 @@ if ($_SESSION['ploopi']['mode'] == 'backoffice')
             )
         );
 
-        $template_body->pparse('body');
+        self::$template_body->pparse('body');
 
     }
     else
