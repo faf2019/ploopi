@@ -64,10 +64,10 @@ class odf_converter
     {
         require_once 'HTTP/Request2.php';
 
-        $objRequest = new HTTP_Request2($this->_url);
+        $objRequest = new \HTTP_Request2($this->_url);
 
         return $objRequest
-            ->setMethod(HTTP_Request2::METHOD_POST)
+            ->setMethod(\HTTP_Request2::METHOD_POST)
             ->setHeader("Content-Type", $inputType)
             ->setHeader("Accept", $outputType)
             ->setBody($inputData)
