@@ -79,7 +79,7 @@ switch($ploopi_op)
             foreach($_GET['forms_params'] as $intFieldId => $strValue)
             {
                 // Requête Ajax en UTF8
-                $strValue = utf8_decode($strValue);
+                $strValue = $strValue;
 
                 $objField = new formsField();
                 $objLinkedField = new formsField();
