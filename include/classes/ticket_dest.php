@@ -40,7 +40,7 @@ class ticket_dest extends data_object
      * Constructeur de la classe
      */
 
-    public function ticket_dest()
+    public function __construct()
     {
         parent::__construct('ploopi_ticket_dest','id_user','id_ticket');
     }

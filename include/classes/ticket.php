@@ -24,10 +24,6 @@ namespace ploopi;
 
 use ploopi;
 
-define ('_PLOOPI_TICKETS_NONE',     0);
-define ('_PLOOPI_TICKETS_OPENED',   1);
-define ('_PLOOPI_TICKETS_DONE',     2);
-
 
 /**
  * Gestion des tickets (table ploopi_ticket)
@@ -41,6 +37,10 @@ define ('_PLOOPI_TICKETS_DONE',     2);
 
 class ticket extends data_object
 {
+    const NONE = 0;
+    const OPENED = 1;
+    const DONE = 2;
+
     /**
      * Constructeur de la classe
      */
@@ -60,7 +60,7 @@ class ticket extends data_object
     {
         $db = db::get();
 
-        if (!$this->new && $this->fields['needed_validation'] > _PLOOPI_TICKETS_NONE && $this->fields['status'] < _PLOOPI_TICKETS_DONE)
+        if (!$this->new && $this->fields['needed_validation'] > self::NONE && $this->fields['status'] < self::DONE)
         {
             // update ticket status
 
@@ -80,7 +80,7 @@ class ticket extends data_object
                     ";
 
             $rs_status = $db->query($sql);
-            $global_status = _PLOOPI_TICKETS_DONE;
+            $global_status = self::DONE;
             while ($fields_status = $db->fetchrow($rs_status))
             {
                 if ($fields_status['max_status'] < $global_status) $global_status = $fields_status['max_status'];

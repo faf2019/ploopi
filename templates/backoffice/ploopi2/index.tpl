@@ -308,6 +308,13 @@
 
         <div id="userbox">
             <div><img src="{TEMPLATE_PATH}/img/template/user.png" /><span>{USER_FIRSTNAME} {USER_LASTNAME}</span></div>
+            <a class="{MAINMENU_SHOWTICKETS_SEL}" href="{MAINMENU_SHOWTICKETS_URL}">{MAINMENU_TICKETS}
+            <em id="tpl_ploopi_tickets_new">
+            ({NEWTICKETS})
+            </em>
+            </a>
+
+
             <a href="javascript:void(0);" title="{MAINMENU_PROFILE}" onclick="tpl_open_profile();"><img src="{TEMPLATE_PATH}/img/template/profile.png" /></a>
             <a href="{USER_DECONNECT}" title="{MAINMENU_DISCONNECTION}" ><img src="{TEMPLATE_PATH}/img/template/door.png" /></a>
         </div>

@@ -40,7 +40,7 @@ class ticket_status extends data_object
      * Constructeur de la classe
      */
 
-    public function ticket_status()
+    public function __construct()
     {
         parent::__construct('ploopi_ticket_status', 'id_ticket', 'id_user', 'status');
     }

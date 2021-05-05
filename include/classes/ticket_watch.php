@@ -42,7 +42,7 @@ class ticket_watch extends data_object
      * @return ticket_watch
      */
 
-    public function ticket_watch()
+    public function __construct()
     {
         parent::__construct('ploopi_ticket_watch', 'id_ticket', 'id_user');
     }

@@ -188,13 +188,9 @@ switch($ploopi_op)
                 <div><input type="text" name="ticket_title" class="text" value="<?php echo ploopi\str::htmlentities($ticket->fields['title']); ?>" style="width:98%"></div>
                 <div style="font-weight:bold;"><?php echo _PLOOPI_LABEL_TICKET_MESSAGE; ?></div>
                 <div>
-                    <?php
-                    $arrConfig['CustomConfigurationsPath'] = _PLOOPI_BASEPATH.'/modules/system/fckeditor/fckconfig.js';
-                    $arrConfig['EditorAreaCSS'] = _PLOOPI_BASEPATH.'/modules/system/fckeditor/fck_editorarea.css';
-
-                    ploopi_fckeditor('fck_ticket_message', $ticket->fields['message'], '100%', '200', $arrConfig);
-                    ?>
+                    <textarea id="fck_ticket_message" name="fck_ticket_message"><? echo $ticket->fields['message']; ?></textarea>
                 </div>
+
                 <div style="text-align:right;">
                         <input type="button" class="flatbutton" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:ploopi.popup.hide('system_popupticket');">
                         <input type="submit" class="flatbutton" value="<?php echo $button_value; ?>" style="font-weight:bold;">

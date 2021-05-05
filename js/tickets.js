@@ -25,8 +25,8 @@ ploopi.tickets = {};
  * Ouverture d'un popup pour envoyer un nouveau message
  */
 
-// ploopi_tickets_new
-ploopi.tickets.alertnew = function(event, id_object, id_record, object_label, id_user, reload, x, y) {
+// ploopi.tickets.create
+ploopi.tickets.create = function(event, id_object, id_record, object_label, id_user, reload, x, y) {
     var data = '';
 
     if (typeof(object_label) != 'undefined' && object_label != null) data += '&ploopi_tickets_object_label='+object_label;
@@ -40,7 +40,64 @@ ploopi.tickets.alertnew = function(event, id_object, id_record, object_label, id
 
     ploopi.popup.show('', 550, event, true, 'system_popupticket', x, y);
     ploopi.xhr.ajaxloader('system_popupticket');
-    ploopi.xhr.todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_new'+data,'system_popupticket');
+
+    var request = jQuery.ajax({
+        type: 'GET',
+        url: 'admin-light.php',
+        data: 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_new'+data,
+        dataType: 'html',
+        contentType: 'application/x-www-form-urlencoded'
+    });
+
+    request.done(function(html) {
+        var script = document.createElement('script');
+        script.onload = function () {
+            jQuery('#system_popupticket').html(html);
+            CKEDITOR.replace( 'fck_ticket_message', {
+                customConfig: _PLOOPI_BASEPATH+'/js/ckeditor/ck_config.js'
+            });
+        };
+        script.src = './vendor/ckeditor/ckeditor/ckeditor.js';
+        document.head.appendChild(script);
+    });
+
+};
+
+ploopi.tickets.open = function(event, query) {
+    var data = '';
+
+    if (typeof(object_label) != 'undefined' && object_label != null) data += '&ploopi_tickets_object_label='+object_label;
+    if (typeof(id_object) != 'undefined' && id_object != null) data += '&ploopi_tickets_id_object='+id_object;
+    if (typeof(id_record) != 'undefined' && id_record != null) data += '&ploopi_tickets_id_record='+id_record;
+    if (typeof(reload) != 'undefined' && reload != null) data += '&ploopi_tickets_reload='+reload;
+    if (typeof(id_user) != 'undefined' && id_user != null) data += '&ploopi_tickets_id_user='+id_user;
+
+    if (typeof(x) == 'undefined' || x == null) x = 0;
+    if (typeof(y) == 'undefined' || y == null) y = 0;
+
+    ploopi.popup.show('', 550, event, true, 'system_popupticket', x, y);
+    ploopi.xhr.ajaxloader('system_popupticket');
+
+    var request = jQuery.ajax({
+        type: 'GET',
+        url: 'admin-light.php',
+        data: query,
+        dataType: 'html',
+        contentType: 'application/x-www-form-urlencoded'
+    });
+
+    request.done(function(html) {
+        var script = document.createElement('script');
+        script.onload = function () {
+            jQuery('#system_popupticket').html(html);
+            CKEDITOR.replace( 'fck_ticket_message', {
+                customConfig: _PLOOPI_BASEPATH+'/js/ckeditor/ck_config.js'
+            });
+        };
+        script.src = './vendor/ckeditor/ckeditor/ckeditor.js';
+        document.head.appendChild(script);
+    });
+
 };
 
 
@@ -48,7 +105,7 @@ ploopi.tickets.alertnew = function(event, id_object, id_record, object_label, id
  * Rafraichissement de la zone indiquant le nombre de tickets non lus + alerte sur nouveau ticket
  */
 
-// ploopi_tickets_refresh
+// ploopi.tickets.refresh
 ploopi.tickets.refresh = function(lastnewticket, timeout, str_left, str_right) {
 
     var intPloopiLastNewTicket = lastnewticket;
@@ -69,7 +126,7 @@ ploopi.tickets.refresh = function(lastnewticket, timeout, str_left, str_right) {
                     var nb = parseInt(res[0],10);
                     var last = parseInt(res[1],10);
 
-                    $('#tpl_ploopi_tickets_new').html(str_left+nb+str_right);
+                    $('#tpl_ploopi.tickets.create').html(str_left+nb+str_right);
 
                     if (last > intPloopiLastNewTicket && !boolAlert)
                     {
@@ -91,20 +148,24 @@ ploopi.tickets.refresh = function(lastnewticket, timeout, str_left, str_right) {
 /**
  * Recherche de destinataires pour un message
  */
-// ploopi_tickets_select_users
+// ploopi.tickets.select_users
 ploopi.tickets.select_users = function(query, filtertype, filter, dest) {
 
-    new Ajax.Request('admin-light.php?'+query,
-        {
-            method:     'post',
-            parameters: {'ploopi_ticket_userfilter': filter, 'ploopi_ticket_typefilter': filtertype},
-            encoding:   'iso-8859-15',
-            onSuccess:  function(transport) {
-               ploopi_innerHTML(dest, transport.responseText);
-            }
-        }
-    );
+    var request = jQuery.ajax({
+        type: 'POST',
+        url: 'admin-light.php?'+query,
+        data: {
+            'ploopi_ticket_userfilter': filter,
+            'ploopi_ticket_typefilter': filtertype,
+            'ploopi_env': _PLOOPI_ENV
+        },
+        dataType: 'html',
+        contentType: 'application/x-www-form-urlencoded'
+    });
 
+    request.done(function(html) {
+        jQuery('#'+dest).html(html);
+    });
 };
 
 
@@ -112,7 +173,7 @@ ploopi.tickets.select_users = function(query, filtertype, filter, dest) {
  * Affiche un popup d'alerte à la réception de nouveaux messages
  */
 
-// ploopi_tickets_alert
+// ploopi.tickets.alert
 ploopi.tickets.alert = function()
 {
     ploopi.popup.show('', 350, null, true, 'popup_tickets_new_alert', 0, 200);
@@ -125,19 +186,19 @@ ploopi.tickets.alert = function()
  * Recherche utilisateur
  */
 
-function ploopi_tickets_selectusers_init()
+ploopi.tickets.selectusers_init = function()
 {
-    jQuery('#ploopi_ticket_userfilter')[0].onkeyup = ploopi_tickets_selectusers_keypress;
-    jQuery('#ploopi_ticket_userfilter')[0].onkeypress = ploopi_tickets_selectusers_keypress;
-}
+    jQuery('#ploopi_ticket_userfilter')[0].onkeyup = ploopi.tickets.selectusers_keypress;
+    jQuery('#ploopi_ticket_userfilter')[0].onkeypress = ploopi.tickets.selectusers_keypress;
+};
 
-function ploopi_tickets_selectusers_prevent(e)
+ploopi.tickets.selectusers_prevent = function(e)
 {
     if (window.event) window.event.returnValue = false
     else e.preventDefault()
-}
+};
 
-function ploopi_tickets_selectusers_keypress(e)
+ploopi.tickets.selectusers_keypress = function(e)
 {
     e=e||window.event;
     src = (e.srcElement) ? e.srcElement : e.target;
@@ -152,7 +213,7 @@ function ploopi_tickets_selectusers_keypress(e)
         default:
         break;
     }
-}
+};
 
 /*
  * Contrôle spécifique au ticket, vérif qu'au moins un destinataire est sélectionné

@@ -62,11 +62,11 @@ switch($filtertype)
 
     /*
     case 'tovalidate':
-        $where = " AND t.id_user <> {$_SESSION['ploopi']['userid']} AND t.needed_validation > 0 AND t.status < "._PLOOPI_TICKETS_DONE;
+        $where = " AND t.id_user <> {$_SESSION['ploopi']['userid']} AND t.needed_validation > 0 AND t.status < ".ploopi\ticket::DONE;
     break;
 
     case 'waitingvalidation':
-        $where = " AND t.id_user = {$_SESSION['ploopi']['userid']} AND t.needed_validation > 0 AND t.status < "._PLOOPI_TICKETS_DONE;
+        $where = " AND t.id_user = {$_SESSION['ploopi']['userid']} AND t.needed_validation > 0 AND t.status < ".ploopi\ticket::DONE;
     break;
     */
 }
@@ -163,7 +163,7 @@ $tickets = array();
 
 while ($fields = ploopi\db::get()->fetchrow($rs))
 {
-    $fields['status'] = _PLOOPI_TICKETS_DONE;
+    $fields['status'] = ploopi\ticket::DONE;
     if (!isset($tickets[$fields['id']])) $tickets[$fields['id']] = $fields;
 }
 
@@ -204,9 +204,9 @@ if (!empty($ticket_list))
 
         $tickets[$fields['id_ticket']]['dest'][$fields['id']]['status'][$fields['status']] = $fields['timestp'];
 
-        if (empty($fields['status'])) $fields['status'] = _PLOOPI_TICKETS_NONE;
+        if (empty($fields['status'])) $fields['status'] = ploopi\ticket::NONE;
 
-        if (empty($tickets[$fields['id_ticket']]['dest'][$fields['id']]['final_status'])) $tickets[$fields['id_ticket']]['dest'][$fields['id']]['final_status'] = _PLOOPI_TICKETS_NONE;
+        if (empty($tickets[$fields['id_ticket']]['dest'][$fields['id']]['final_status'])) $tickets[$fields['id_ticket']]['dest'][$fields['id']]['final_status'] = ploopi\ticket::NONE;
 
         if ($fields['status'] > $tickets[$fields['id_ticket']]['dest'][$fields['id']]['final_status']) $tickets[$fields['id_ticket']]['dest'][$fields['id']]['final_status'] = $fields['status'];
     }
@@ -253,7 +253,7 @@ if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
     ?>
 
     <div>
-        <a id="system_tickets_button" href="javascript:void(0);" onclick="javascript:ploopi_tickets_new(event, null, null, null, null, true);">
+        <a id="system_tickets_button" href="javascript:void(0);" onclick="javascript:ploopi.tickets.create(event, null, null, null, null, true);">
             <p class="ploopi_va">
                <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/tickets/newticket.png" /><span>&nbsp;<?php echo _PLOOPI_LABEL_NEWTICKET; ?></span>
             </p>
@@ -367,7 +367,7 @@ if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
             <div class="system_tickets_head">
                 <div class="system_tickets_user_puce">
                     <?php
-                    if (!($fields['needed_validation'] > 0 && $fields['sender_uid'] != $_SESSION['ploopi']['userid'] && !isset($tickets[$fields['id']]['dest'][$_SESSION['ploopi']['userid']]['status'][_PLOOPI_TICKETS_DONE])))
+                    if (!($fields['needed_validation'] > 0 && $fields['sender_uid'] != $_SESSION['ploopi']['userid'] && !isset($tickets[$fields['id']]['dest'][$_SESSION['ploopi']['userid']]['status'][ploopi\ticket::DONE])))
                     {
                         ?><input type="checkbox" class="checkbox" name="tickets_delete_id[]" value="<?php echo $fields['id']; ?>"><?php
                     }
@@ -395,15 +395,15 @@ if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
                         $username = "<span style=\"font-style:italic;\">{$fields['firstname']} {$fields['lastname']}</span>";
                         switch($fields['status'])
                         {
-                            case _PLOOPI_TICKETS_NONE:
+                            case ploopi\ticket::NONE:
                                 $puce = 'red';
                             break;
 
-                            case _PLOOPI_TICKETS_OPENED:
+                            case ploopi\ticket::OPENED:
                                 $puce = 'blue';
                             break;
 
-                            case _PLOOPI_TICKETS_DONE:
+                            case ploopi\ticket::DONE:
                                 $puce = 'green';
                             break;
                         }
@@ -419,7 +419,7 @@ if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
                             $username = "<i>{$username}</i>";
                         }
 
-                        if ($fields['needed_validation'] == 1 && $fields['sender_uid'] != $_SESSION['ploopi']['userid'] && !isset($tickets[$fields['id']]['dest'][$_SESSION['ploopi']['userid']]['status'][_PLOOPI_TICKETS_DONE]))
+                        if ($fields['needed_validation'] == 1 && $fields['sender_uid'] != $_SESSION['ploopi']['userid'] && !isset($tickets[$fields['id']]['dest'][$_SESSION['ploopi']['userid']]['status'][ploopi\ticket::DONE]))
                         {
                             ?><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/attention.png" alt="vous devez valider ce message !"><?php
                         }
@@ -461,15 +461,15 @@ if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
                                 $puce = '';
                                 $strdate = '';
 
-                                if ($done = isset($tickets[$fields['id']]['dest'][$iddest]['status'][_PLOOPI_TICKETS_DONE]))
+                                if ($done = isset($tickets[$fields['id']]['dest'][$iddest]['status'][ploopi\ticket::DONE]))
                                 {
-                                    $ldate = ploopi\date::timestamp2local($tickets[$fields['id']]['dest'][$iddest]['status'][_PLOOPI_TICKETS_DONE]);
+                                    $ldate = ploopi\date::timestamp2local($tickets[$fields['id']]['dest'][$iddest]['status'][ploopi\ticket::DONE]);
                                     $strdate = "<br />(validé le {$ldate['date']} à {$ldate['time']})";
                                     $puce = 'green';
                                 }
-                                elseif ($opened = isset($tickets[$fields['id']]['dest'][$iddest]['status'][_PLOOPI_TICKETS_OPENED]))
+                                elseif ($opened = isset($tickets[$fields['id']]['dest'][$iddest]['status'][ploopi\ticket::OPENED]))
                                 {
-                                    $ldate = ploopi\date::timestamp2local($tickets[$fields['id']]['dest'][$iddest]['status'][_PLOOPI_TICKETS_OPENED]);
+                                    $ldate = ploopi\date::timestamp2local($tickets[$fields['id']]['dest'][$iddest]['status'][ploopi\ticket::OPENED]);
                                     $strdate = "<br />(lu le {$ldate['date']} à {$ldate['time']})";
                                     $puce = 'blue';
                                 }
@@ -498,10 +498,10 @@ if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
                         if ($fields['lastedit_timestp'])
                         {
                             $lastedit_local = ploopi\date::timestamp2local($fields['lastedit_timestp']);
-                            echo "<i>Dernière modification le {$lastedit_local['date']} à {$lastedit_local['time']}</i>";
+                            echo "<div><i>Dernière modification le {$lastedit_local['date']} à {$lastedit_local['time']}</i></div>";
                         }
 
-                        if ($fields['needed_validation'] > 0 && $_SESSION['ploopi']['userid'] == $tickets[$fields['id']]['id_user'] && !isset($tickets[$fields['id']]['dest'][$_SESSION['ploopi']['userid']]['status'][_PLOOPI_TICKETS_DONE]))
+                        if ($fields['needed_validation'] > 0 && $_SESSION['ploopi']['userid'] == $tickets[$fields['id']]['id_user'] && !isset($tickets[$fields['id']]['dest'][$_SESSION['ploopi']['userid']]['status'][ploopi\ticket::DONE]))
                         {
                             ?>
                             <a href="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=tickets_validate&ticket_id={$fields['id']}"); ?>" class="system_tickets_tovalidate">
@@ -559,17 +559,20 @@ if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
                 ?>
                 <div class="system_tickets_buttons">
                     <p class="ploopi_va">
-                        <a href="javascript:void(0);" onclick="javascript:ploopi.popup.show('','550',event,'click','system_popupticket');ploopi.xhr.todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_replyto&ticket_id=<?php echo $fields['id']; ?>', 'system_popupticket');"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/email_reply.png">Répondre</a>
-                        <a href="javascript:void(0);" onclick="javascript:ploopi.popup.show('','550',event,'click','system_popupticket');ploopi.xhr.todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_replyto&ticket_id=<?php echo $fields['id']; ?>&quoted=true', 'system_popupticket');"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/email_quote.png">Citer</a>
+                        <a href="javascript:void(0);" onclick="javascript:ploopi.tickets.open(event, 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_replyto&ticket_id=<?php echo $fields['id']; ?>');"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/email_reply.png">Répondre</a-->
+                        <a href="javascript:void(0);" onclick="javascript:ploopi.tickets.open(event, 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_replyto&ticket_id=<?php echo $fields['id']; ?>&quoted=true');"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/email_quote.png">Citer</a>
+                        <!--a href="javascript:void(0);" onclick="javascript:ploopi.popup.show('','550',event,'click','system_popupticket');ploopi.xhr.todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_replyto&ticket_id=<?php echo $fields['id']; ?>', 'system_popupticket');"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/email_reply.png">Répondre</a-->
+                        <!--a href="javascript:void(0);" onclick="javascript:ploopi.popup.show('','550',event,'click','system_popupticket');ploopi.xhr.todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_replyto&ticket_id=<?php echo $fields['id']; ?>&quoted=true', 'system_popupticket');"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/email_quote.png">Citer</a-->
                         <?php
                         if ($fields['sender_uid'] == $_SESSION['ploopi']['userid'])
                         {
                             ?>
-                            <a href="javascript:void(0);" onclick="javascript:ploopi.popup.show('','550',event,'click','system_popupticket');ploopi.xhr.todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_modify&ticket_id=<?php echo $fields['id']; ?>', 'system_popupticket');"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/email_modify.png">Modifier</a>
+                            <a href="javascript:void(0);" onclick="javascript:ploopi.tickets.open(event, 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_modify&ticket_id=<?php echo $fields['id']; ?>');"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/email_modify.png">Modifier</a>
+                            <!--a href="javascript:void(0);" onclick="javascript:ploopi.popup.show('','550',event,'click','system_popupticket');ploopi.xhr.todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=tickets_modify&ticket_id=<?php echo $fields['id']; ?>', 'system_popupticket');"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/email_modify.png">Modifier</a-->
                             <?php
                         }
 
-                        if (!($fields['needed_validation'] > 0 && $fields['sender_uid'] != $_SESSION['ploopi']['userid'] && !isset($tickets[$fields['id']]['dest'][$_SESSION['ploopi']['userid']]['status'][_PLOOPI_TICKETS_DONE])))
+                        if (!($fields['needed_validation'] > 0 && $fields['sender_uid'] != $_SESSION['ploopi']['userid'] && !isset($tickets[$fields['id']]['dest'][$_SESSION['ploopi']['userid']]['status'][ploopi\ticket::DONE])))
                         {
                             ?>
                             <a href="javascript:ploopi.confirmlink('<?php echo ploopi\crypt::urlencode("admin.php?ploopi_op=tickets_delete&ticket_id={$fields['id']}"); ?>','<?php echo addslashes(_PLOOPI_LABEL_TICKET_CONFIRMDELETE); ?>');"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/email_delete.png">Supprimer</a>
