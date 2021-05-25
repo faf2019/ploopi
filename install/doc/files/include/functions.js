@@ -160,6 +160,12 @@ function doc_fckexplorer_selectfile(fileUrl, text, urldecod)
                 if ( element )
                     element.setValue( text );
             }
+            if ( dialog.getName() == 'link' ) {
+                var element = dialog.getContentElement( 'info', 'protocol' );
+                // Assign the new value.
+                if ( element )
+                    element.setValue( '' );
+            }
         });
     }
     window.parent.close();

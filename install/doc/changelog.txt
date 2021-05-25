@@ -1,3 +1,9 @@
+== Module DOC - version 4.10.6 ====================================================
+
+2021-02-01  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Correction d'un bug avec le sélecteur de document pour cKeditor / WebEdit.
+
 == Module DOC - version 4.10.5 ====================================================
 
 2021-01-21  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
