@@ -22,13 +22,13 @@
 */
 
 /**
- * Point d'entrée les appels via CRON
+ * Point d'entrÃ©e les appels via CRON
  *
  * @package ploopi
  * @subpackage cron
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author StÃ©phane Escaich
  *
  * <code>
  * * * * * * /var/www/ploopi/cron > /dev/null 2>&1
@@ -37,7 +37,7 @@
 
 /**
  * On se positionne dans le dossier de l'application
- * pour éviter les problèmes d'include.
+ * pour Ã©viter les problÃ¨mes d'include.
  * Solution temporaire en attendant mieux.
  */
 
@@ -53,7 +53,7 @@ include_once './include/classes/loader.php';
 
 ploopi\loader::boot_cli();
 
-$db = ploopi\loader::getdb();
+$db = ploopi\db::get();
 
 $cron_rs = $db->query("
     SELECT      label
@@ -64,16 +64,13 @@ while ($cron_fields = $db->fetchrow($cron_rs))
 {
     $strControllerFile = "ploopi\\{$cron_fields['label']}\\controller";
     if (ploopi\loader::classExists($strControllerFile)) {
-        // Wrapper pour compatibilité avec le contrôleur du module
+        // Wrapper pour compatibilitÃ© avec le contrÃ´leur du module
         $_REQUEST['entity'] = 'cron';
-        $strControllerFile::dispatch();
+        $strControllerFile::get()->dispatch();
     }
     else {
-        // Rétrocompatibilité
+        // RÃ©trocompatibilitÃ©
         $cronfile = "./modules/{$cron_fields['label']}/cron.php";
         if (file_exists($cronfile)) include $cronfile;
     }
 }
-
-ploopi_die();
-?>
