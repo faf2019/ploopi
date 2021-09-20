@@ -24,22 +24,10 @@
         {
             "type":"package",
             "package": {
-              "name": "swfobject/swfobject",
-              "version":"2.3",
-              "source": {
-                  "url": "https://github.com/swfobject/swfobject.git",
-                  "type": "git",
-                  "reference":"master"
-                }
-            }
-        },
-        {
-            "type":"package",
-            "package": {
               "name": "EastDesire/jscolor",
               "version":"2.0.4",
               "source": {
-                  "url": "https://github.com/EastDesire/jscolor.git",
+                  "url": "https://github.com/EastDesire/jscolor",
                   "type": "git",
                   "reference":"master"
                 }
@@ -74,7 +62,6 @@
         "components/jqueryui": "^1.12",
         "components/highlightjs": "^9.5",
         "eastdesire/jscolor": "2.0.4",
-        "swfobject/swfobject": "2.3",
         "ckeditor/ckeditor": "^4.5",
         "pear/net_smtp": "^1.8",
         "pear/mail": "^1.4",

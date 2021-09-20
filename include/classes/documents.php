@@ -82,7 +82,7 @@ abstract class documents {
 
         $query = crypt::queryencode("ploopi_op=documents_openfile&currentfolder={$_SESSION['documents'][$documents_id]['currentfolder']}&documents_id={$documents_id}&selectfile");
 
-        return "ploopi\documents::openfile('{$query}', event)";
+        return "ploopi.documents.openfile('{$query}', event)";
     }
 
     /**
@@ -112,7 +112,7 @@ abstract class documents {
 
         $query = crypt::queryencode("ploopi_op=documents_selectfile&documents_id={$documents_id}");
 
-        return "ploopi\documents::selectfile('{$query}', event, {$width})";
+        return "ploopi.documents.selectfile('{$query}', event, {$width})";
     }
 
 
@@ -644,7 +644,7 @@ abstract class documents {
                 $documents_columns['actions_right']['actions'] =
                     array(
                         'label' => 'Actions',
-                        'width' => 230
+                        'width' => 250
                     );
 
             $documents_values = array();

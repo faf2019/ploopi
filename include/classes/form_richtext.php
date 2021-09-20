@@ -71,21 +71,32 @@ class form_richtext extends form_field
      */
     public function render($intTabindex = null)
     {
+        /*
         $arrConfig = array();
         if (!is_null($this->_arrOptions['config'])) $arrConfig['CustomConfigurationsPath'] = _PLOOPI_BASEPATH.$this->_arrOptions['config'];
         if (!is_null($this->_arrOptions['css'])) $arrConfig['EditorAreaCSS'] = _PLOOPI_BASEPATH.$this->_arrOptions['css'];
 
         $arrProperties = array();
         if (!is_null($this->_arrOptions['toolbar'])) $arrProperties['ToolbarSet'] = $this->_arrOptions['toolbar'];
-
-        ob_start();
-        ploopi_fckeditor($this->_strId, $this->_arrValues[0], $this->_arrOptions['width'], $this->_arrOptions['height'], $arrConfig, $arrProperties);
-        $strContent = ob_get_contents();
-        ob_end_clean();
+        */
 
         $strStyle = is_null($this->_arrOptions['style']) ? '' : " style=\"{$this->_arrOptions['style']}\"";
 
-        return $this->renderForm("<span{$strStyle}>".$strContent.'</span>');
+        ob_start();
+        ?>
+        <span<? echo $strStyle; ?>><span id="<? echo $this->_strId; ?>"><? echo $this->_arrValues[0]; ?></span></span>
+        <script>
+
+            // http://docs.ckeditor.com/#!/guide/dev_file_browser_api
+            CKEDITOR.replace( '<? echo $this->_strId; ?>', {
+                customConfig: '<?php echo _PLOOPI_BASEPATH.'/js/ckeditor/ck_config.js'; ?>'
+            });
+        </script>
+
+        <?
+        $strContent = ob_get_contents();
+        ob_end_clean();
+
+        return $this->renderForm($strContent);
     }
 }
-

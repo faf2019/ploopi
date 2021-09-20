@@ -98,7 +98,6 @@ abstract class security
     /**
      * Filtre le contenu d'une variable.
      * Gère les tableaux multi-dimensionnels.
-     * Enlève les quotes si get_magic_quotes_gpc est activé.
      *
      * @param mixed $var variable à filtrer
      * @param string $varname nom de la variable (permet notamment de traiter un cas particulier avec les variables préfixées fck_)
@@ -120,8 +119,6 @@ abstract class security
         }
         else
         {
-            if (get_magic_quotes_gpc()) $mixVar = stripslashes($mixVar);
-
             if ((!defined(_PLOOPI_FILTER_VARS) || _PLOOPI_FILTER_VARS) && substr($strVarName,0,4) != 'fck_') $mixVar = inputfilter::process($mixVar);
         }
 

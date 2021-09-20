@@ -45,4 +45,3 @@ include_once './include/classes/loader.php';
 ploopi\loader::boot();
 ploopi\loader::dispatch();
 ploopi\system::kill();
-?>
