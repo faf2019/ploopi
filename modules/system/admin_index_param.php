@@ -41,7 +41,7 @@ echo ploopi\skin::get()->open_simplebloc(_SYSTEM_MODULESELECTED);
 <?php
 // get modules
 $modules = $workspace->getmodules();
-usort($modules, create_function('$a,$b', 'return strcasecmp($a[\'instancename\'], $b[\'instancename\']);'));
+usort($modules, function($a, $b) { return strcasecmp($a['instancename'], $b['instancename']); });
 
 if (empty($modules))
 {

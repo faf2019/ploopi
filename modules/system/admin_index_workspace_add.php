@@ -147,6 +147,30 @@ echo ploopi\str::htmlentities(ploopi\skin::get()->open_simplebloc());
 </div>
 
 <div class="ploopi_form_title">
+    Modèle de courriel
+</div>
+
+<div class="ploopi_form" id="system_filtering" style="clear:both;padding:2px;">
+    <p>
+        <label>Modèle de courriel (création de compte utilisateur):
+        <br /><em style="padding:4px;">Balises disponibles:</em>
+        <br /><em style="padding:4px;"><? foreach(array('firstname', 'lastname', 'email', 'login', 'password', 'date', 'time', 'url') as $key) { ?><a class="mail_model_tag" href="javascript:void(0);" onclick="ploopi_insertatcursor($('workspace_mail_model'), '{<? echo $key; ?>}');">{<? echo $key; ?>}</a> <? } ?></em>
+
+        </label>
+        <?php
+        if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPADMIN)
+        {
+            ?>
+            <textarea type="text" class="text" name="workspace_mail_model" id="workspace_mail_model"><?php echo $workspace->fields['mail_model']; ?></textarea>
+            <?php
+        }
+        else echo '<span>'.ploopi\str::htmlentities($workspace->fields['iprules']).'</span>';
+        ?>
+
+    </p>
+</div>
+
+<div class="ploopi_form_title">
     <?php echo ploopi\str::htmlentities($workspace->fields['label']); ?> &raquo; <?php echo _SYSTEM_LABEL_USEDMODULES; ?>
 </div>
 <div class="ploopi_form">

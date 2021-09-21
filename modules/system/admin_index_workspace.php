@@ -384,6 +384,48 @@ echo ploopi\skin::get()->open_simplebloc();
             </p>
         </div>
 
+
+        <div class="ploopi_form_title">
+            Modèle de courriel
+        </div>
+
+        <?php
+        if (empty(_PLOOPI_ADMINMAIL)) {
+            ?>
+            <div class="ploopi_form" style="clear:both;padding:2px;">
+                <p>
+                    <label>&nbsp;</label>
+                    <em style="color:red">
+                        <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/attention.png" style="display:block;float:left;margin:0 4px 4px 0;">
+                        Attention, l'adresse de courriel de l'administrateur du site n'est pas définie dans le fichier de configuration.
+                    </em>
+                </p>
+            </div>
+            <?
+        }
+        ?>
+
+        <div class="ploopi_form" id="system_filtering" style="clear:both;padding:2px;">
+            <p>
+                <label>Modèle de courriel (création de compte utilisateur):
+                <br /><em style="padding:4px;">Balises disponibles:</em>
+                <br /><em style="padding:4px;"><? foreach(array('firstname', 'lastname', 'email', 'login', 'password', 'date', 'time', 'url') as $key) { ?><a class="mail_model_tag" href="javascript:void(0);" onclick="ploopi_insertatcursor($('workspace_mail_model'), '{<? echo $key; ?>}');">{<? echo $key; ?>}</a> <? } ?></em>
+
+                </label>
+                <?php
+                if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPADMIN)
+                {
+                    ?>
+                    <textarea type="text" class="text" name="workspace_mail_model" id="workspace_mail_model"><?php echo $workspace->fields['mail_model']; ?></textarea>
+                    <?php
+                }
+                else echo '<span>'.nl2br(ploopi\str::htmlentities($workspace->fields['mail_model'])).'</span>';
+                ?>
+
+            </p>
+        </div>
+
+
         <?php
         if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_GROUPADMIN)
         {
