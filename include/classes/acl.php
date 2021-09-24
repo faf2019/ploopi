@@ -45,7 +45,7 @@ abstract class acl
      * @return array tableau des utilisateurs (tableau indexé d'id)
      */
 
-    function actions_getusers($id_action, $id_module = -1, $id_workspace = -1)
+    public static function actions_getusers($id_action, $id_module = -1, $id_workspace = -1)
     {
         $db = db::get();
 
