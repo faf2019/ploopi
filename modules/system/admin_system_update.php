@@ -77,7 +77,10 @@ switch($op)
                 ?>
                 <div style="padding:4px;">Import du fichier <b><?php echo ploopi\str::htmlentities($strSqlFile); ?></b></div>
                 <?php
-                ploopi\db::get()->multiplequeries(file_get_contents("{$strSysInstallPath}{$strSqlFile}"));
+                foreach(ploopi\db::split_sql(file_get_contents("{$strSysInstallPath}{$strSqlFile}")) as $query) {
+                    $query = trim($query);
+                    if (!empty($query)) ploopi\db::get()->query($query);
+                }
             }
             else
             {

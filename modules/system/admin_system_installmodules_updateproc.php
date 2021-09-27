@@ -145,7 +145,10 @@ else
             {
                 if (file_exists("{$sqlpath}/{$sqlfile}"))
                 {
-                    ploopi\db::get()->multiplequeries(file_get_contents("{$sqlpath}/{$sqlfile}"));
+                    foreach(ploopi\db::split_sql(file_get_contents("{$sqlpath}/{$sqlfile}")) as $query) {
+                        $query = trim($query);
+                        if (!empty($query)) ploopi\db::get()->query($query);
+                    }
                     $detail[] = "Fichier '{$sqlfile}' importé";
                 }
                 else $detail[] = "Fichier '{$sqlfile}' non trouvé";

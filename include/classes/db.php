@@ -408,6 +408,36 @@ class db
         return $this->query_result;
     }
 
+    /**
+     * Parse une suite de requêtes SQL et retourne un tableau de requêtes uniques.
+     * Source : https://stackoverflow.com/questions/14257663/letting-a-php-multi-query-continue-if-errors-occur
+     * @param string $queries requêtes
+     * @return array tableau de requêtes
+     */
+
+    public static function split_sql($queries) {
+        // Return array of ; terminated SQL statements in $queries.
+        $regex = '%(?#!php/x re_split_sql Rev:20170816_0600)
+            # Match an SQL record ending with ";"
+            \s*                                     # Discard leading whitespace.
+            (                                       # $1: Trimmed non-empty SQL record.
+              (?:                                   # Group for content alternatives.
+                \'[^\'\\\\]*(?:\\\\.[^\'\\\\]*)*\'  # Either a single quoted string,
+              | "[^"\\\\]*(?:\\\\.[^"\\\\]*)*"      # or a double quoted string,
+              | /\*[^*]*\*+(?:[^*/][^*]*\*+)*/      # or a multi-line comment,
+              | \#.*                                # or a # single line comment,
+              | --.*                                # or a -- single line comment,
+              | [^"\';#]                            # or one non-["\';#-]
+              )+                                    # One or more content alternatives
+              (?:;|$)                               # Record end is a ; or string end.
+            )                                       # End $1: Trimmed SQL record.
+            %x';  // End $re_split_sql.
+        if (preg_match_all($regex, $queries, $matches)) {
+            return $matches[1];
+        }
+        return array();
+    }
+
 
     /**
      * Renvoie le nombre d'enregistrement de la dernière requête ou du recordset passé en paramètre
