@@ -253,18 +253,18 @@ abstract class str {
      * @param string $str chaîne brute
      * @param int masque qui détermine la façon dans les guillemets sont gérés
      * @param string $encoding définit l'encodage utilisé durant la conversion
+     * @param string $striptags supprime les balises HTML
      * @return string chaîne convertie
      */
 
-    public static function htmlentities($str, $flags = null, $encoding = null, $booStripTags = true)
+    public static function htmlentities($str, $flags = null, $encoding = null, $striptags = false)
     {
 
         if (is_null($encoding)) $encoding = 'UTF-8';
-        if (is_null($flags)) $flags = ENT_QUOTES | ENT_HTML401;
+        if (is_null($flags)) $flags = ENT_QUOTES | ENT_SUBSTITUTE;
 
-        return htmlentities($booStripTags ? strip_tags($str) : $str, $flags, $encoding);
+        return htmlentities($striptags ? strip_tags($str) : $str, $flags, $encoding);
     }
-
 
     /**
      *  Convertit toutes les entités HTML en caractères normaux (via html_entity_decode) mais en ISO-8859-1 par défaut.

@@ -319,14 +319,17 @@ abstract class arr
                 }
             }
 
+            $intLine = 0;
+
             // Ajout de la ligne d'entête
             if ($booHeader)
             {
                 $intCol = 0;
+                $intLine = 1;
                 foreach(array_keys(reset($arrArray)) as $strKey) $objWorkSheet->writeString(0, $intCol++, isset($arrDataFormats[$strKey]['title']) ? iconv('UTF-8', 'CP1252', $arrDataFormats[$strKey]['title']) : $strKey, $objFormatTitle);
             }
+
             // Traitement des contenus
-            $intLine = 1;
             foreach($arrArray as $row)
             {
                 $intCol = 0;

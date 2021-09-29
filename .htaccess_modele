@@ -7,7 +7,7 @@
 # @modifiedby $LastChangedBy$
 # @lastmodified $Date$
 
-# Attention, ce fichier est une configuration generique qu'il convient d'adapter a votre environnement.
+# Attention, ce fichier est une configuration generique qu'il convient d'adapter aÂ votre environnement.
 # Il existe des configurations plus solides que vous pouvez utiliser si vous pouvez directement modifier le fichier de configuration d'apache.
 
 AddDefaultCharset UTF-8
@@ -36,7 +36,7 @@ AddDefaultCharset UTF-8
     php_flag session.use_trans_sid off
     php_flag session.use_only_cookies Off
     php_flag session.cookie_httponly On
-    # Recommandation de sécurité : mettre "On" si connexion chiffrée
+    # Recommandation de sÃ©curitÃ© : mettre "On" si connexion chiffrÃ©e
     php_flag session.cookie_secure Off
 
     php_value memory_limit 256M
@@ -89,7 +89,7 @@ FileETag None
 <IfModule rewrite_module>
     RewriteEngine on
 
-    # Exemple de blocage des urls publiques vers les documents (version rewritée)
+    # Exemple de blocage des urls publiques vers les documents (version rewritÃ©e)
     #RewriteRule ^documents/[a-z0-9]{32}/.*$ - [F]
 
     # Exemple de blocage des urls publiques vers les documents (version brute)
@@ -97,14 +97,14 @@ FileETag None
     #RewriteCond %{QUERY_STRING} docfile_md5id=[a-z0-9]{32}
     #RewriteRule ^(.+) - [F]
 
-    # Vérifie si le navigateur peut accepter les fichier gzip
+    # VÃ©rifie si le navigateur peut accepter les fichier gzip
     ReWriteCond %{HTTP:accept-encoding} gzip
     RewriteCond %{HTTP_USER_AGENT} !Safari
     # make sure there's no trailing .gz on the url
     ReWriteCond %{REQUEST_FILENAME} !^.+\.gz$
-    # Vérifie si une version .gz du fichier existe
+    # VÃ©rifie si une version .gz du fichier existe
     RewriteCond %{REQUEST_FILENAME}.gz -f
-    # Si toutes les conditions sont remplies on ajoute .gz à l'url du fichier (de manière transparente)
+    # Si toutes les conditions sont remplies on ajoute .gz Ã  l'url du fichier (de maniÃ¨re transparente)
     RewriteRule ^(.+) $1.gz [QSA,L]
 
     # Quelques restrictions d'acces
@@ -112,7 +112,7 @@ FileETag None
     RewriteRule ^(config|bin|data|doc|include|install|lang|tools)/.*$ - [F]
     # Fichiers interdits dans un sous-dossier
     RewriteRule ^[^/]*/(.*\.php[345]?|.*\.txt)$ - [F]
-    # Fichiers interdits à la racine
+    # Fichiers interdits Ã  la racine
     RewriteRule ^(cli|cron)$ - [F]
     # Fichiers interdits partout
     RewriteRule \.(sh|log|sql|inc|bak|.*~)$ - [F]
@@ -125,11 +125,11 @@ FileETag None
     RewriteRule ^(.*)-d([a-z0-9]{32})\.[a-zA-Z0-9]*(.*)$ index-quick.php?ploopi_op=doc_file_download&docfile_md5id=$2 [L]
     RewriteRule ^unsubscribe-([a-zA-Z0-9].*)\.html$ index.php?ploopi_op=webedit_unsubscribe&subscription_email=$1 [L]
 
-    # Interdiction complète d'exécuter autre chose que index.php
+    # Interdiction complÃ¨te d'exÃ©cuter autre chose que index.php
     # Redirection de tout script php vers index.php, sauf exception ci-dessus
     RewriteCond %{REQUEST_FILENAME} \.php[345]?$
-    # Exemple d'exception pour l'exécution d'un script particulier
-    # RewriteCond %{REQUEST_URI} !^/path/to/script\.php$
+    # Exemple d'exception pour l'exÃ©cution d'un script particulier
+    #Â RewriteCond %{REQUEST_URI} !^/path/to/script\.php$
     RewriteRule ^(.*) index.php [L]
 
     # Redirection de toute demande non satisfaite vers index.php
