@@ -741,7 +741,7 @@ function doc_folder_contentisreadonly($row, $action = null, $id_module = -1)
     // - propriétaire du dossier & actionOK
     // - admin du module
     // - super admin
-    return !((((!$root && empty(['readonly'])) || $row['id_user'] == $_SESSION['ploopi']['userid'] || ($root && ploopi\param::get('doc_rootwritable', $id_module))) && $booActionIsOk) || ploopi\acl::isadmin() || ploopi\acl::isactionallowed(_DOC_ACTION_ADMIN, -1, $id_module));
+    return !((((!$root && empty($row['readonly'])) || $row['id_user'] == $_SESSION['ploopi']['userid'] || ($root && ploopi\param::get('doc_rootwritable', $id_module))) && $booActionIsOk) || ploopi\acl::isadmin() || ploopi\acl::isactionallowed(_DOC_ACTION_ADMIN, -1, $id_module));
 }
 
 
