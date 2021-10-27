@@ -44,7 +44,7 @@ class form_richtext extends form_field
     private static $_arrDefaultOptions = array(
         'width' => '100%',
         'height' => '150px',
-        'config' => null,
+        'config' => '/js/ckeditor/ck_config.js',
         'css' => null,
         'toolbar'=> null
     );
@@ -89,7 +89,7 @@ class form_richtext extends form_field
 
             // http://docs.ckeditor.com/#!/guide/dev_file_browser_api
             CKEDITOR.replace( '<? echo $this->_strId; ?>', {
-                customConfig: '<?php echo _PLOOPI_BASEPATH.'/js/ckeditor/ck_config.js'; ?>'
+                customConfig: '<?php echo _PLOOPI_BASEPATH.$this->_arrOptions['config']; ?>'
             });
         </script>
 
