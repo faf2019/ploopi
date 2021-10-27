@@ -360,6 +360,9 @@ switch($ploopi_op)
         if (!$error) {
             if (!empty($_SESSION['documents'][$documents_id]['callback_inc'])) include $_SESSION['documents'][$documents_id]['callback_inc'];
             if (!empty($_SESSION['documents'][$documents_id]['callback_func'])) $_SESSION['documents'][$documents_id]['callback_func']('savefile', $documentsfile, true);
+            ploopi\str::print_json($documentsfile->fields);
+
+            /*
             ?>
             <script type="text/javascript">
                 <?php
@@ -386,7 +389,9 @@ switch($ploopi_op)
                 window.parent.ploopi.popup.hide('ploopi_documents_openfile_popup');
             </script>
             <?php
+            */
         }
+
         ploopi\system::kill();
     break;
 
@@ -531,6 +536,14 @@ switch($ploopi_op)
         </div>
         </form>
         <?php
+        // ploopi\output::print_r($_SESSION['documents'][$_GET['documents_id']]);
+        ?>
+
+
+
+        <?php
+        $documents_id = $_GET['documents_id'];
+
         if (empty($_GET['documentsfile_id']))
         {
             ?>
@@ -567,8 +580,46 @@ switch($ploopi_op)
                     }
 
                     xhr.onload = function() {
+                        var data = JSON.parse(xhr.responseText);
+                        <?
+                        if (isset($_GET['selectfile'])) {
+
+                            if ($_SESSION['documents'][$documents_id]['mode'] == 'tofield')
+                            {
+                                ?>
+                                dest = $('<? echo $_SESSION['documents'][$documents_id]['target']; ?>');
+                                if (dest.type) dest.value=data.name;
+                                else dest.innerHTML=data.name;
+                                ploopi.getelem('<? echo $_SESSION['documents'][$documents_id]['target']; ?>_id').value=data.id;
+                                ploopi.popup.hide('ploopi_documents_popup');
+                                <?
+                            }
+                            elseif ($_SESSION['documents'][$documents_id]['mode'] == 'tocallback')
+                            {
+                                ?>
+                                <? echo $_SESSION['documents'][$documents_id]['target']; ?>(
+                                    data.id,
+                                    data.name,
+                                    '<? echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=documents_downloadfile"); ?>&documentsfile_id='+data.md5id
+                                );
+                                ploopi.popup.hide('ploopi_documents_openfile_popup');
+                                <?
+                            }
+
+                        }
+                        // Mise à jour du navigateur
+                        else {
+                            ?>
+                            ploopi.documents.browser('<?php echo ploopi\crypt::queryencode("ploopi_op=documents_browser&currentfolder={$_GET['currentfolder']}&documents_id={$_GET['documents_id']}"); ?>', '<?php echo ploopi\str::htmlentities($_GET['documents_id']); ?>');
+                            ploopi.popup.hide('ploopi_documents_openfile_popup');
+                            <?php
+                        }
+                        ?>
+                        /*
                         ploopi.documents.browser('<?php echo ploopi\crypt::queryencode("ploopi_op=documents_browser&currentfolder={$_GET['currentfolder']}&documents_id={$_GET['documents_id']}"); ?>', '<?php echo ploopi\str::htmlentities($_GET['documents_id']); ?>');
                         ploopi.popup.hide('ploopi_documents_openfile_popup');
+                        */
+
                     };
 
                     xhr.onerror = function() {
