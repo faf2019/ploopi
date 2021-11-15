@@ -19,7 +19,7 @@ ALTER TABLE `ploopi_mod_webedit_heading` CHANGE `free1` `free1` varchar(255) NOT
 UPDATE `ploopi_mod_webedit_heading` SET `free2` = '' WHERE ISNULL(`free2`);
 ALTER TABLE `ploopi_mod_webedit_heading` CHANGE `free2` `free2` varchar(255) NOT NULL DEFAULT ''  COMMENT '' ;
 UPDATE `ploopi_mod_webedit_heading` SET `id_module` = 0  WHERE ISNULL(`id_module`);
-ALTER TABLE `ploopi_mod_webedit_heading` CHANGE `id_module` `id_module` tinyint(10) unsigned NOT NULL DEFAULT 0  COMMENT '' ;
+ALTER TABLE `ploopi_mod_webedit_heading` CHANGE `id_module` `id_module` int(10) unsigned NOT NULL DEFAULT 0  COMMENT '' ;
 UPDATE `ploopi_mod_webedit_heading` SET `id_user` = 0  WHERE ISNULL(`id_user`);
 ALTER TABLE `ploopi_mod_webedit_heading` CHANGE `id_user` `id_user` int(10) unsigned NOT NULL DEFAULT 0  COMMENT '' ;
 UPDATE `ploopi_mod_webedit_heading` SET `id_workspace` = 0  WHERE ISNULL(`id_workspace`);

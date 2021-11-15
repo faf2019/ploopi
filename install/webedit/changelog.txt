@@ -1,3 +1,9 @@
+== Module WebEdit - version 2.7.9 ============================================
+
+2021-11-15  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Correction d'un bug sur l'update SQL 2.7.4
+
 == Module WebEdit - version 2.7.8 ============================================
 
 2021-01-21  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
