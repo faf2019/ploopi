@@ -118,7 +118,7 @@ if (!empty($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords']))
         $values = array();
         $c = 0;
 
-        $columns['left']['relevance']       = array('label' => 'Pert.', 'width' => 65, 'options' => array('sort' => true));
+        $columns['left']['relevance']       = array('label' => 'Pert.', 'width' => 65, 'options' => array('sort' => true, 'sort_flag' => SORT_NUMERIC));
         $columns['auto']['label']           = array('label' => 'Libellé', 'options' => array('sort' => true));
 
         if (!empty($_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_search_displayindexed']))
@@ -197,7 +197,7 @@ if (!empty($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords']))
                     $objWorkspace = new ploopi\workspace();
                     $strWorkspaceLabel = ($objWorkspace->open($row['id_workspace'])) ? $objWorkspace->fields['label'] : '';
 
-                    $values[$c]['values']['relevance'] = array('label' => sprintf("<span style=\"width:12px;height:12px;float:left;border:1px solid #a0a0a0;background-color:#%s;margin-right:3px;\"></span>%d %%", $color, $row['relevance']), 'sort_label' => intval($row['relevance']), 'sort_flag' => SORT_NUMERIC);
+                    $values[$c]['values']['relevance'] = array('label' => sprintf("<span style=\"width:12px;height:12px;float:left;border:1px solid #a0a0a0;background-color:#%s;margin-right:3px;\"></span>%d %%", $color, $row['relevance']), 'sort_label' => intval($row['relevance']));
                     $values[$c]['values']['label'] = array('label' => ploopi\str::htmlentities($row['label']));
                     $values[$c]['values']['timestp_lastindex'] = array('label' => $l_timestp_lastindex['date'], 'sort_label' => $row['timestp_lastindex']);
                     $values[$c]['values']['timestp_create'] = array('label' => $l_timestp_create['date'].' '.$l_timestp_create['time'], 'sort_label' => $row['timestp_create']);
