@@ -34,7 +34,7 @@
  * Ouverture du bloc
  */
 
-echo ploopi\str::htmlentities(ploopi\skin::get()->open_simplebloc());
+echo ploopi\skin::get()->open_simplebloc();
 ?>
 
 <form name="" action="<?php echo ploopi\crypt::urlencode("admin.php?op=save_workspace&workspace_id_workspace={$workspace->fields['id']}"); ?>" method="post" onsubmit="javascript:return system_workspace_validate(this);">

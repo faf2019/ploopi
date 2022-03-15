@@ -247,6 +247,7 @@ abstract class arr
             'tofile' => false,
             'setborder' => false,
             'textwrap' => true,
+            'header' => []
         );
 
         $arrOptions = empty($arrOptions) ? $arrDefautOptions : array_merge($arrDefautOptions, $arrOptions);
@@ -321,12 +322,20 @@ abstract class arr
 
             $intLine = 0;
 
+            if (!empty($arrOptions['header'])) {
+                foreach($arrOptions['header'] as $row) {
+                    $intCol = 0;
+                    foreach($row as $strValue) $objWorkSheet->writeString($intLine, $intCol++, iconv('UTF-8', 'CP1252', $strValue), $objFormatDefault);
+                    $intLine++;
+                }
+            }
+
             // Ajout de la ligne d'entête
             if ($booHeader)
             {
                 $intCol = 0;
-                $intLine = 1;
-                foreach(array_keys(reset($arrArray)) as $strKey) $objWorkSheet->writeString(0, $intCol++, isset($arrDataFormats[$strKey]['title']) ? iconv('UTF-8', 'CP1252', $arrDataFormats[$strKey]['title']) : $strKey, $objFormatTitle);
+                foreach(array_keys(reset($arrArray)) as $strKey) $objWorkSheet->writeString($intLine, $intCol++, isset($arrDataFormats[$strKey]['title']) ? iconv('UTF-8', 'CP1252', $arrDataFormats[$strKey]['title']) : $strKey, $objFormatTitle);
+                $intLine++;
             }
 
             // Traitement des contenus
@@ -350,7 +359,7 @@ abstract class arr
                         case 'integer_euro':
                         case 'date':
                         case 'datetime':
-                            if ($strValue != '') $objWorkSheet->writeNumber($intLine, $intCol, $strValue, $objFormat);
+                            if ($strValue !== '') $objWorkSheet->writeNumber($intLine, $intCol, $strValue, $objFormat);
                         break;
 
                         default:

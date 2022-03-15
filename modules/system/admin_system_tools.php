@@ -42,7 +42,7 @@ $values = array();
 $columns['left']['tool'] =
     array(
         'label' => 'Outil',
-        'width' => '200',
+        'width' => '300',
         'options' => array('sort' => true)
     );
 

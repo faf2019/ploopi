@@ -193,6 +193,24 @@ function system_getwg()
         }
     }
 
+    // application des partages de groupes aux sous groupes
+    foreach($groups['list'] as $idg => $fields)
+    {
+        $grouplist = [];
+        if ($fields['shared']) {
+            $oidg = $idg;
+            while ($idg !== false && !empty($groups['tree'][$idg])) {
+                foreach($groups['tree'][$idg] as $g) {
+                    $grouplist[] = $g;
+                    $groups['list'][$g]['groups'][$oidg] = 0;
+                }
+                $idg = next($grouplist);
+            }
+        }
+    }
+
+
+
     return(array(&$workspaces, &$groups));
 }
 
