@@ -200,7 +200,7 @@ function directory_gettreeview($headings = array(), $booPopup = false)
 
             foreach($arrParents as &$strNodeParentId) $strNodeParentId = $strNodePrefix.$strNodeParentId;
 
-            $strNodeOnClick = "ploopi_skin_treeview_shownode('{$strNodeId}', '".ploopi\crypt::queryencode("ploopi_op=directory_heading_detail&directory_heading_id={$fields['id']}&directory_option=popup")."', 'admin-light.php');";
+            $strNodeOnClick = "ploopi.skin.treeview_shownode('{$strNodeId}', '".ploopi\crypt::queryencode("ploopi_op=directory_heading_detail&directory_heading_id={$fields['id']}&directory_option=popup")."', 'admin-light.php');";
 
             $strLink = 'javascript:void(0);';
             $strOnClick = $fields['isvalidator'] ? 'javascript:directory_heading_choose(\''.$fields['id'].'\', \''.addslashes($fields['label']).'\');' : "javascript:alert('Vous ne disposez pas des autorisations nécessaires');";
@@ -212,7 +212,7 @@ function directory_gettreeview($headings = array(), $booPopup = false)
             $strNodePrefix = '';
             $strNodeId = $fields['id'];
 
-            $strNodeOnClick = "ploopi_skin_treeview_shownode('{$strNodeId}', '".ploopi\crypt::queryencode("ploopi_op=directory_heading_detail&directory_heading_id={$fields['id']}")."', 'admin-light.php');";
+            $strNodeOnClick = "ploopi.skin.treeview_shownode('{$strNodeId}', '".ploopi\crypt::queryencode("ploopi_op=directory_heading_detail&directory_heading_id={$fields['id']}")."', 'admin-light.php');";
 
             $strLink = ploopi\crypt::urlencode("admin.php?directory_heading_id={$fields['id']}");
             $strOnClick = '';

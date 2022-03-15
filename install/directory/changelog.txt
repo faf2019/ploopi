@@ -1,3 +1,9 @@
+== Module DIRECTORY - version 2.5.3 ====================================================
+
+2022-03-15  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Correction d'un bug sur le treeview
+
 == Module DIRECTORY - version 2.5.2 ====================================================
 
 2020-03-16  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
