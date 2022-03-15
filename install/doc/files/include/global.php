@@ -629,7 +629,7 @@ function doc_gettreeview($arrFolders = array(), $strPrefix = '', $arrExcludes = 
                 'description' => $fields['name'],
                 'parents' => preg_split('/;/', $strPrefix.str_replace(';', ";{$strPrefix}", $fields['parents'])),
                 'node_link' => '',
-                'node_onclick' => "ploopi_skin_treeview_shownode('{$strId}', '".ploopi\crypt::queryencode("ploopi_op=doc_folder_detail&doc_folder_id={$fields['id']}&doc_prefix={$strPrefix}&doc_excludes={$strExcludes}")."', 'admin-light.php');",
+                'node_onclick' => "ploopi.skin.treeview_shownode('{$strId}', '".ploopi\crypt::queryencode("ploopi_op=doc_folder_detail&doc_folder_id={$fields['id']}&doc_prefix={$strPrefix}&doc_excludes={$strExcludes}")."', 'admin-light.php');",
                 'link' => $strLink,
                 'onclick' => $strOnClick,
                 'icon' => "./modules/doc/img/{$strIco}.png",

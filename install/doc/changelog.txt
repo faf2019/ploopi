@@ -1,3 +1,9 @@
+== Module DOC - version 4.10.8 ====================================================
+
+2022-03-15  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Correction d'un bug sur le treeview
+
 == Module DOC - version 4.10.7 ====================================================
 
 2021-10-13  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
