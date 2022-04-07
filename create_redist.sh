@@ -67,10 +67,7 @@ cp -r templates/frontoffice/exemple* $DEST/templates/frontoffice
 cp -r templates/frontoffice/ovensia $DEST/templates/frontoffice
 cp -r templates/frontoffice/ovensia_officiel $DEST/templates/frontoffice
 cp -r templates/frontoffice/default $DEST/templates/frontoffice
-cp -r templates/backoffice/eyeos $DEST/templates/backoffice
-cp -r templates/backoffice/ploopi $DEST/templates/backoffice
-cp -r templates/backoffice/ploopi_menus $DEST/templates/backoffice
-cp -r templates/backoffice/redmine $DEST/templates/backoffice
+cp -r templates/backoffice/ploopi2 $DEST/templates/backoffice
 cp -r templates/install $DEST/templates/
 
 cd $DEST
