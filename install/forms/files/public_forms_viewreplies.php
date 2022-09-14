@@ -228,7 +228,7 @@ echo ploopi\skin::get()->open_simplebloc(ploopi\str::htmlentities($objForm->fiel
                     <a class="forms_export_link" title="<?php echo _FORMS_EXPORT; ?> XLS" href="<?php echo ploopi\crypt::urlencode("admin.php?ploopi_op=forms_export&forms_id={$objForm->fields['id']}&forms_export_format=XLS"); ?>"><img alt="<?php echo _FORMS_EXPORT; ?> title="<?php echo _FORMS_EXPORT; ?> XLS" src="./modules/forms/img/mime/xls.png">XLS</a>
                     <a class="forms_export_link" title="<?php echo _FORMS_EXPORT; ?> XLSX" href="<?php echo ploopi\crypt::urlencode("admin.php?ploopi_op=forms_export&forms_id={$objForm->fields['id']}&forms_export_format=XLSX"); ?>"><img alt="<?php echo _FORMS_EXPORT; ?> title="<?php echo _FORMS_EXPORT; ?> XLSX" src="./modules/forms/img/mime/xls.png">XLSX</a>
                     <?php
-                    if (ploopi\param::get('system_jodwebservice', _PLOOPI_MODULE_SYSTEM) != '')
+                    if (ploopi\param::get('system_unoconv', _PLOOPI_MODULE_SYSTEM) != '')
                     {
                     ?>
                         <a class="forms_export_link" title="<?php echo _FORMS_EXPORT; ?> ODS" href="<?php echo ploopi\crypt::urlencode("admin.php?ploopi_op=forms_export&forms_id={$objForm->fields['id']}&forms_export_format=ODS"); ?>"><img alt="<?php echo _FORMS_EXPORT; ?> title="<?php echo _FORMS_EXPORT; ?> ODS" src="./modules/forms/img/mime/ods.png">ODS</a>
@@ -246,7 +246,7 @@ echo ploopi\skin::get()->open_simplebloc(ploopi\str::htmlentities($objForm->fiel
                 <a class="forms_export_link" title="Impression XLS" href="<?php echo ploopi\crypt::urlencode("admin.php?ploopi_op=forms_print_array&forms_id={$objForm->fields['id']}&forms_export_format=XLS"); ?>"><img alt="Impression XLS" title="Impression XLS" src="./modules/forms/img/mime/xls.png">XLS</a>
                 <a class="forms_export_link" title="Impression XLSX" href="<?php echo ploopi\crypt::urlencode("admin.php?ploopi_op=forms_print_array&forms_id={$objForm->fields['id']}&forms_export_format=XLSX"); ?>"><img alt="Impression XLSX" title="Impression XLSX" src="./modules/forms/img/mime/xls.png">XLSX</a>
                 <?php
-                if (ploopi\param::get('system_jodwebservice', _PLOOPI_MODULE_SYSTEM) != '')
+                if (ploopi\param::get('system_unoconv', _PLOOPI_MODULE_SYSTEM) != '')
                 {
                 ?>
                     <a class="forms_export_link" title="Impression ODS" href="<?php echo ploopi\crypt::urlencode("admin.php?ploopi_op=forms_print_array&forms_id={$objForm->fields['id']}&forms_export_format=ODS"); ?>"><img alt="Impression ODS" title="Impression ODS" src="./modules/forms/img/mime/ods.png">ODS</a>

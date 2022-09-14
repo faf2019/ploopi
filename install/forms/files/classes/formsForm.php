@@ -1145,30 +1145,34 @@ class formsForm extends ploopi\data_object
                     break;
 
                     default:
-                        if (ploopi\param::get('system_jodwebservice', _PLOOPI_MODULE_SYSTEM) != '')
+                        if (ploopi\param::get('system_unoconv', _PLOOPI_MODULE_SYSTEM) != '')
                         {
-                            // Init de l'interface avec le convertisseur
-                            $objOdfConverter = new ploopi\odf_converter(ploopi\param::get('system_jodwebservice', _PLOOPI_MODULE_SYSTEM));
+                            $strUnoconv = ploopi\param::get('system_unoconv', _PLOOPI_MODULE_SYSTEM);
+                            if (file_exists($strUnoconv)) {
 
-                            // Détermination du type mime du format demandé
-                            switch($strFormat)
-                            {
-                                case 'pdf':
-                                    $strOuputMime = 'application/pdf';
-                                break;
+                                // Fichier temporaire
+                                $strTmpPath = _PLOOPI_PATHDATA.'/tmp';
+                                $strTmpFile = $strTmpPath.'/'.uniqid().'.'.$strFormat;
+                                $strTmpXls = $strTmpPath.'/'.uniqid().'.xlsx';
+                                ploopi\fs::makedir($strTmpPath);
 
-                                case 'sxc':
-                                    $strOuputMime = 'application/vnd.sun.xml.calc';
-                                break;
+                                // Génération XLS + Conversion
+                                $arrOptions = [
+                                    'writer' => 'excel2007',
+                                    'tofile' => true
+                                ];
 
-                                case 'ods':
-                                    $strOuputMime = 'application/vnd.oasis.opendocument.spreadsheet';
-                                break;
+                                ploopi\arr::toexcel($arrData, true, $strTmpXls, 'Feuille', $arrTitles, $arrOptions);
+
+                                if (file_exists($strTmpXls)) {
+                                    exec("{$strUnoconv} -f {$strFormat} -o '{$strTmpFile}' '{$strTmpXls}'");
+                                    unlink($strTmpXls);
+                                    if (file_exists($strTmpFile)) {
+                                        echo file_get_contents($strTmpFile);
+                                        unlink($strTmpFile);
+                                    }
+                                }
                             }
-
-                            // Génération XLS + Conversion
-                            $arrOptions['writer'] = 'excel2007';
-                            echo $objOdfConverter->convert(ploopi\arr::toexcel($arrData, true, 'document.pdf', 'Feuille', $arrTitles, $arrOptions), 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', $strOuputMime);
                         }
                     break;
                 }
