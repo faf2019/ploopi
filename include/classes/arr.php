@@ -264,40 +264,6 @@ abstract class arr
         if ($arrOptions['setborder']) { $objFormatDefault->setBorder(1); $objFormatDefault->setBorderColor('black'); }
         if ($arrOptions['textwrap']) { $objFormatDefault->setTextWrap(); }
 
-        // Définition des différents formats numériques/text
-        $arrFormats = array(
-            'string' => null,
-            'float' => null,
-            'float_percent' => null,
-            'float_euro' => null,
-            'integer' => null,
-            'integer_percent' => null,
-            'integer_euro' => null,
-            'date' => null,
-            'datetime' => null
-        );
-
-        foreach($arrFormats as $strKey => &$objFormat)
-        {
-            $objFormat = $objWorkBook->addFormat( array( 'Align' => 'right', 'TextWrap' => 1, 'Bold'  => 0, 'Color'  => 'black', 'Size'  => 10, 'vAlign' => 'vcenter'));
-            if ($arrOptions['setborder']) { $objFormat->setBorder(1); $objFormat->setBorderColor('black'); }
-            if ($arrOptions['textwrap']) { $objFormat->setTextWrap(); }
-
-            switch($strKey)
-            {
-                case 'string': $objFormat->setAlign('left'); break;
-                case 'float': $objFormat->setNumFormat('#,##0.00;-#,##0.00'); break;
-                case 'float_percent': $objFormat->setNumFormat('#,##0.00 %;-#,##0.00 %'); break;
-                case 'float_euro': $objFormat->setNumFormat(utf8_decode('#,##0.00 ;-#,##0.00 ')); break;
-                case 'integer': $objFormat->setNumFormat('#,##0;-#,##0'); break;
-                case 'integer_percent': $objFormat->setNumFormat('#,##0 %;-#,##0 %'); break;
-                case 'integer_euro': $objFormat->setNumFormat(utf8_decode('#,##0 ;-#,##0 ')); break;
-                case 'date': $objFormat->setNumFormat('DD/MM/YYYY'); break;
-                case 'datetime' : $objFormat->setNumFormat('DD/MM/YYYY HH:MM:SS'); break;
-            }
-        }
-        unset($objFormat);
-
         $objWorkSheet = $objWorkBook->addWorksheet($strSheetName);
         /*
         $objWorkBook->setVersion(8);
@@ -338,16 +304,55 @@ abstract class arr
                 $intLine++;
             }
 
+            $idcolor = 15;
+
             // Traitement des contenus
             foreach($arrArray as $row)
             {
                 $intCol = 0;
                 foreach($row as $strKey => $strValue)
                 {
+                    $bgcolor = '';
+                    if (is_array($strValue)) {
+                        $value = '';
+                        if (isset($strValue['value'])) $value = $strValue['value'];
+                        if (isset($strValue['bgcolor'])) $bgcolor = $strValue['bgcolor'];
+                        $strValue = $value;
+                    }
+
                     if (empty($arrDataFormats[$strKey]['type'])) $arrDataFormats[$strKey]['type'] = 'string';
 
-                    // On vérifie si un format de donné est proposé pour le champ
-                    $objFormat = (!empty($arrDataFormats[$strKey]['type']) && !empty($arrFormats[$arrDataFormats[$strKey]['type']])) ? $arrFormats[$arrDataFormats[$strKey]['type']] : $objFormatDefault;
+                    $k = is_array($bgcolor) ? $strKey.implode('_', $bgcolor) : $strKey.$bgcolor;
+
+                    if (!isset($arrFormats[$k])) {
+                        $objFormat = $objWorkBook->addFormat( array( 'Align' => 'right', 'TextWrap' => 1, 'Bold'  => 0, 'Color'  => 'black', 'Size'  => 10, 'vAlign' => 'vcenter'));
+                        if ($arrOptions['setborder']) { $objFormat->setBorder(1); $objFormat->setBorderColor('black'); }
+                        if ($arrOptions['textwrap']) { $objFormat->setTextWrap(); }
+
+                        if (!empty($bgcolor)) {
+                            if (is_array($bgcolor)) {
+                                $objWorkBook->setCustomColor(++$idcolor, $bgcolor[0], $bgcolor[1], $bgcolor[2]);
+                                $objFormat->setFgColor($idcolor);
+                            }
+                            else $objFormat->setFgColor($bgcolor);
+                        }
+                        switch($strKey)
+                        {
+                            case 'float': $objFormat->setNumFormat('#,##0.00;-#,##0.00'); break;
+                            case 'float_percent': $objFormat->setNumFormat('#,##0.00 %;-#,##0.00 %'); break;
+                            case 'float_euro': $objFormat->setNumFormat(utf8_decode('#,##0.00 ;-#,##0.00 ')); break;
+                            case 'integer': $objFormat->setNumFormat('#,##0;-#,##0'); break;
+                            case 'integer_percent': $objFormat->setNumFormat('#,##0 %;-#,##0 %'); break;
+                            case 'integer_euro': $objFormat->setNumFormat(utf8_decode('#,##0 ;-#,##0 ')); break;
+                            case 'date': $objFormat->setNumFormat('DD/MM/YYYY'); break;
+                            case 'datetime' : $objFormat->setNumFormat('DD/MM/YYYY HH:MM:SS'); break;
+                            case 'string': default: $objFormat->setAlign('left'); break;
+                        }
+
+                        $arrFormats[$k] = $objFormat;
+                    }
+                    else $objFormat = $arrFormats[$k];
+
 
                     switch($arrDataFormats[$strKey]['type'])
                     {
