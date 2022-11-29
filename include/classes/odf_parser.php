@@ -376,6 +376,55 @@ class odf_parser
     }
 
     /**
+     * Retourne le contenu XML
+     */
+    public function getContentXml() {
+        return $this->content_xml;
+    }
+
+    /**
+     * Retourne le contenu XML des styles
+     */
+    public function getStylesXml() {
+        return $this->styles_xml;
+    }
+
+    /**
+     * Retourne le contenu XML du manifest
+     */
+    public function getManifestXml() {
+        return $this->manifest_xml;
+    }
+
+    /**
+     * Retourne les variables
+     */
+    public function getVars() {
+        return $this->vars;
+    }
+
+    /**
+     * Retourne les images
+     */
+    public function getImages() {
+        return $this->images;
+    }
+
+    /**
+     * Retourne les frames
+     */
+    public function getFrames() {
+        return $this->frames;
+    }
+
+    /**
+     * Retourne les variables block
+     */
+    public function getBlockvars() {
+        return $this->blockvars;
+    }
+
+    /**
      * Affichage du contenu des variables depuis un appel de type echo ou print
      *
      * @return string contenu du template
