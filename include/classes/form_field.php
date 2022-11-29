@@ -228,7 +228,7 @@ class form_field extends form_element
             break;
 
             case 'input:text':
-                $arrParentOptions = $this->_objParentForm->getOptions();
+                $arrParentOptions = empty($this->_objParentForm) ? array() : $this->_objParentForm->getOptions();
                 $strOutput .= "<input type=\"text\" name=\"{$this->_strName}\" id=\"{$this->_strId}\" value=\"{$strValue}\" tabindex=\"{$intTabindex}\"{$strProperties}{$strMaxLength}{$strEvents}{$strPlaceHolder} />";
                 if ($this->_arrOptions['datatype'] == 'date' && !$this->_arrOptions['readonly'] && !$this->_arrOptions['disabled'] && !$arrParentOptions['readonly'] && !$arrParentOptions['disabled']) $strOutput .= ploopi\date::open_calendar($this->_strId, false, null, 'display:block;float:left;margin-left:-35px;margin-top:5px;');
             break;
