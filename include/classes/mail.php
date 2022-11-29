@@ -61,7 +61,7 @@ abstract class mail
         // bcc : Array('name','address')
         // replyto : Array('name','address')
         // files : Array
-        
+
         $subject = mb_encode_mimeheader($subject);
 
         $crlf = "\r\n";
@@ -394,6 +394,9 @@ abstract class mail
                 mb_internal_encoding()
             )
         );
+
+        if (!empty($str_cc)) $str_to .= ', '.$str_cc;
+        if (!empty($str_bcc)) $str_to .= ', '.$str_bcc;
 
         $body = $objMessage->get($arrMimeParams);
         $headers = $objMessage->headers($arrHeaders);
