@@ -303,7 +303,7 @@ abstract class search_index
         $stemmer = StemmerFactory::create('fr');
         $soundex = new SoundexFr();
 
-        for ($i = 1; ($i <= $max_kw && $kw_ratio >= _PLOOPI_INDEXATION_RATIOMIN) || $kw['meta']; $i++)
+        for ($i = 1; ($i <= $max_kw && $kw_ratio >= _PLOOPI_INDEXATION_RATIOMIN) || !empty($kw['meta']); $i++)
         {
             $kw_value = key($words);
             if (strlen($kw_value) <= 20)
@@ -349,7 +349,7 @@ abstract class search_index
             }
 
             $kw = next($words);
-            $kw_ratio = (empty($words_overall)) ? 1 : ($kw['weight']*100 / $words_overall);
+            $kw_ratio = (empty($words_overall) || empty($kw['weight'])) ? 1 : ($kw['weight']*100 / $words_overall);
         }
 
         foreach($stems as $stem => $detail) {
