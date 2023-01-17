@@ -770,6 +770,16 @@ function webedit_template_assign_headings(&$arrHeadings, &$arrArticles, &$arrSha
                         $ldate_lastupdate = (!empty($row['lastupdate_timestp'])) ? ploopi\date::timestamp2local($row['lastupdate_timestp']) : array('date' => '', 'time' => '');
                         $ldate_timestp = (!empty($row['timestp'])) ? ploopi\date::timestamp2local($row['timestp']) : array('date' => '');
 
+                        // Ajout contenu
+                        $objArticle = new webedit_article();
+                        $objArticle->fields = $row; // astuce pour pouvoir se servir de webedit_replace_links() !
+                        $content = preg_replace_callback('/\[\[(.*)\]\]/i','webedit_getobjectcontent', $webedit_mode == 'edit' ? $row['content_cleaned'] : webedit_replace_links($objArticle, $webedit_mode, $arrHeadings) );
+
+                        // Ajout contenu
+                        $objArticle = new webedit_article();
+                        $objArticle->fields = $row; // astuce pour pouvoir se servir de webedit_replace_links() !
+                        $content = preg_replace_callback('/\[\[(.*)\]\]/i','webedit_getobjectcontent', $webedit_mode == 'edit' ? $row['content_cleaned'] : webedit_replace_links($objArticle, $webedit_mode, $arrHeadings) );
+
                         $var_tpl_page =
                             array(
                                 'REFERENCE'     => ploopi\str::htmlentities($row['reference']),
@@ -777,6 +787,7 @@ function webedit_template_assign_headings(&$arrHeadings, &$arrArticles, &$arrSha
                                 'LABEL_RAW'     => $row['title'],
                                 'AUTHOR'        => ploopi\str::htmlentities($row['author']),
                                 'AUTHOR_RAW'    => $row['author'],
+                                'CONTENT'       => $content,
                                 'VERSION'       => ploopi\str::htmlentities($row['version']),
                                 'DATE'          => ploopi\str::htmlentities($ldate_timestp['date']),
                                 'LASTUPDATE_DATE' => ploopi\str::htmlentities($ldate_lastupdate['date']),
@@ -788,7 +799,6 @@ function webedit_template_assign_headings(&$arrHeadings, &$arrArticles, &$arrSha
                                 'LINK'          => $scriptUrlArticle,
                                 'POSITION'      => $row['position'],
                             );
-
 
                         $template_body->assign_block_vars($localvar.".page" , $var_tpl_page);
                     }

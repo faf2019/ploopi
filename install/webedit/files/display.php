@@ -1317,7 +1317,7 @@ else // affichage standard rubrique/page
 
             ploopi\db::get()->query("
                 SELECT      id, visible, metatitle, timestp_published, timestp_unpublished, lastupdate_timestp,
-                            timestp, reference, title, content_cleaned, author, version, position, id_heading
+                            timestp, reference, title, content, content_cleaned, author, version, position, id_heading
                 FROM        ploopi_mod_webedit_article
                 WHERE       id_module = {$_SESSION['ploopi']['moduleid']}
                 AND         (timestp_published <= {$today} OR timestp_published = 0)
