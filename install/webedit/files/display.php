@@ -611,6 +611,8 @@ if ($query_string != '' || $advanced_search) // recherche intégrale
                                     break;
                                 }
 
+                                if (!isset($result['kw'])) $result['kw'] = [];
+                                if (!isset($result['stem'])) $result['stem'] = [];
 
                                 $template_body->assign_block_vars('switch_search.result',
                                     array(
