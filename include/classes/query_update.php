@@ -51,6 +51,13 @@ class query_update extends query_sud
     private $arrInnerJoin;
 
     /**
+     * Tableau de la clause LEFT JOIN
+     *
+     * @var array
+     */
+    private $arrLeftJoin;
+
+    /**
      * Constructeur de la classe
      *
      * @param resource $objDb Connexion à la BDD
@@ -59,6 +66,7 @@ class query_update extends query_sud
     {
         $this->arrSet = array();
         $this->arrInnerJoin = array();
+        $this->arrLeftJoin = array();
 
         parent::__construct('update', $objDb);
     }
@@ -74,6 +82,17 @@ class query_update extends query_sud
     {
         if (!empty($mixValues) && !is_array($mixValues)) $mixValues = array($mixValues);
         $this->arrSet[] = array('rawsql' => $strSet, 'values' => $mixValues);
+    }
+
+    /**
+     * Ajoute une clause LEFT JOIN à la requête
+     *
+     * @param string $strLeftJoin Clause LEFT JOIN
+     */
+    public function add_leftjoin($strLeftJoin, $mixValues = null)
+    {
+        if (!empty($mixValues) && !is_array($mixValues)) $mixValues = array($mixValues);
+        $this->arrLeftJoin[] = array('rawsql' => $strLeftJoin, 'values' => $mixValues);
     }
 
     /**
@@ -111,6 +130,19 @@ class query_update extends query_sud
     }
 
     /**
+     * Retourne la clause LEFT JOIN
+     *
+     * @return string
+     */
+    protected function get_leftjoin()
+    {
+        $arrLeftJoin = array();
+        foreach($this->arrLeftJoin as $arrLeftJoinDetail) $arrLeftJoin[] = sqlformat::replace($arrLeftJoinDetail, $this->objDb);
+
+        return empty($arrLeftJoin) ? '' : ' LEFT JOIN '.implode(' LEFT JOIN ', $arrLeftJoin);
+    }
+
+    /**
      * Retourne la clause INNER JOIN
      *
      * @return string
@@ -137,6 +169,7 @@ class query_update extends query_sud
             $strSql = 'UPDATE'.
                 $this->get_from().
                 $this->get_innerjoin().
+                $this->get_leftjoin().
                 $this->get_set().
                 $this->get_where().
                 $this->get_orderby().

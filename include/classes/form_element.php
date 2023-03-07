@@ -216,6 +216,7 @@ abstract class form_element
             self::_getProperty('class',  is_null($strClass) ? $this->_arrOptions['class'] : $strClass).
             self::_getProperty('readonly',  !empty($arrParentOptions['readonly']) || !empty($this->_arrOptions['readonly']) ? 'readonly' : null).
             self::_getProperty('disabled',  !empty($arrParentOptions['disabled']) || !empty($this->_arrOptions['disabled']) ? 'disabled' : null).
+            self::_getProperty('multiple',  !empty($arrParentOptions['multiple']) || !empty($this->_arrOptions['multiple']) ? 'multiple' : null).
             //self::_getProperty('required',  isset($this->_arrOptions['required']) && $this->_arrOptions['required'] ? 'required' : null).
             self::_getProperty('autofocus',  $this->_arrOptions['autofocus'] ? 'autofocus' : null).
             self::_getProperty('autocomplete',  isset($this->_arrOptions['autocomplete']) && !$this->_arrOptions['autocomplete'] ? 'off' : null).

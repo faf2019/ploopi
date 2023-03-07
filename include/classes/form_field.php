@@ -63,6 +63,7 @@ class form_field extends form_element
      *   'class'          : class du formulaire (champ uniquement)
      *   'class_form'     : class du formulaire
      *   'required'       : requis (true/false)
+     *   'multiple'       : multiple (true/false)
      *   'datatype'       : type de données attendu pour validation javascript 'string', 'integer', 'float', etc..
      *   'maxlength'      : longueur maximum en caractères
      *   'autocomplete'   : autocomplétion (true/False)
@@ -99,6 +100,7 @@ class form_field extends form_element
         'class' => null,
         'class_form' => null,
         'required' => false,
+        'multiple' => false,
         'raw' => false,
         'datatype' => 'string',
         'maxlength' => null,

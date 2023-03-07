@@ -436,6 +436,7 @@ class user extends data_object
 
             switch(_PLOOPI_HASH_ALGO_PREVIOUS) {
                 case 'bcrypt':
+                    if (strpos(substr($strHash, 7), '$') !== false) return false;
                     $booRes = password_verify(_PLOOPI_SECRETKEY."/{$strLogin}/{$strPassword}", $strHash);
                 break;
 
@@ -449,6 +450,7 @@ class user extends data_object
 
         switch(_PLOOPI_HASH_ALGO) {
             case 'bcrypt':
+                if (strpos(substr($strHash, 7), '$') !== false) return false;
                 $booRes = password_verify(_PLOOPI_SECRETKEY."/{$strLogin}/{$strPassword}", $strHash);
             break;
 

@@ -88,8 +88,8 @@ class cipher
     {
         $this->cipher = $c;
         $this->key = $key;
-        $this->iv = $iv;
         $this->len = openssl_cipher_iv_length($this->cipher);
+        $this->iv = substr($iv, 0, $this->len);
     }
 
     /**
