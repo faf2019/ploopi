@@ -365,7 +365,12 @@ class session
 
     public static function reset()
     {
-        $ua_info = parse_user_agent();
+        $ua_info = [];
+
+        try {
+            $ua_info = parse_user_agent();
+        }
+        catch(Exception $e) { }
 
         // Suppression des données de la session active
         // Regénération d'un ID
@@ -387,8 +392,8 @@ class session
             'mode' => '',
 
             'remote_ip' => ip::get(),
-            'remote_browser' => $ua_info['browser'].' '.$ua_info['version'],
-            'remote_system' => $ua_info['platform'],
+            'remote_browser' => empty($ua_info) ? '' : $ua_info['browser'].' '.$ua_info['version'],
+            'remote_system' => empty($ua_info) ? '' : $ua_info['platform'],
 
             'host' => $_SERVER['HTTP_HOST'],
             'scriptname' => basename($_SERVER['PHP_SELF']),
