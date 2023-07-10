@@ -1,0 +1,11 @@
+build/
+build_package.sh
+composer.lock
+config/config.php*
+data/
+install/
+*.sh
+*.sql
+modules/
+phploc.xml
+vendor/
