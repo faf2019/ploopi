@@ -264,6 +264,40 @@ abstract class arr
         if ($arrOptions['setborder']) { $objFormatDefault->setBorder(1); $objFormatDefault->setBorderColor('black'); }
         if ($arrOptions['textwrap']) { $objFormatDefault->setTextWrap(); }
 
+        // Définition des différents formats numériques/text
+        $arrFormats = array(
+            'string' => null,
+            'float' => null,
+            'float_percent' => null,
+            'float_euro' => null,
+            'integer' => null,
+            'integer_percent' => null,
+            'integer_euro' => null,
+            'date' => null,
+            'datetime' => null
+        );
+
+        foreach($arrFormats as $strKey => &$objFormat)
+        {
+            $objFormat = $objWorkBook->addFormat( array( 'Align' => 'right', 'TextWrap' => 1, 'Bold'  => 0, 'Color'  => 'black', 'Size'  => 10, 'vAlign' => 'vcenter'));
+            if ($arrOptions['setborder']) { $objFormat->setBorder(1); $objFormat->setBorderColor('black'); }
+            if ($arrOptions['textwrap']) { $objFormat->setTextWrap(); }
+
+            switch($strKey)
+            {
+                case 'string': $objFormat->setAlign('left'); break;
+                case 'float': $objFormat->setNumFormat('#,##0.00;-#,##0.00'); break;
+                case 'float_percent': $objFormat->setNumFormat('#,##0.00 %;-#,##0.00 %'); break;
+                case 'float_euro': $objFormat->setNumFormat(utf8_decode('#,##0.00 ;-#,##0.00 ')); break;
+                case 'integer': $objFormat->setNumFormat('#,##0;-#,##0'); break;
+                case 'integer_percent': $objFormat->setNumFormat('#,##0 %;-#,##0 %'); break;
+                case 'integer_euro': $objFormat->setNumFormat(utf8_decode('#,##0 ;-#,##0 ')); break;
+                case 'date': $objFormat->setNumFormat('DD/MM/YYYY'); break;
+                case 'datetime' : $objFormat->setNumFormat('DD/MM/YYYY HH:MM:SS'); break;
+            }
+        }
+        unset($objFormat);
+
         $objWorkSheet = $objWorkBook->addWorksheet($strSheetName);
         /*
         $objWorkBook->setVersion(8);
@@ -300,11 +334,12 @@ abstract class arr
             if ($booHeader)
             {
                 $intCol = 0;
-                foreach(array_keys(reset($arrArray)) as $strKey) $objWorkSheet->writeString($intLine, $intCol++, isset($arrDataFormats[$strKey]['title']) ? iconv('UTF-8', 'CP1252', $arrDataFormats[$strKey]['title']) : $strKey, $objFormatTitle);
+                foreach(array_keys(reset($arrArray)) as $strKey) $objWorkSheet->writeString($intLine, $intCol++, isset($arrDataFormats[$strKey]['title']) ? iconv('UTF-8', 'CP1252', $arrDataFormats[$strKey]['title']) : iconv('UTF-8', 'CP1252', $strKey), $objFormatTitle);
                 $intLine++;
             }
 
             $idcolor = 15;
+            $arrColors = [];
 
             // Traitement des contenus
             foreach($arrArray as $row)
@@ -331,12 +366,18 @@ abstract class arr
 
                         if (!empty($bgcolor)) {
                             if (is_array($bgcolor)) {
-                                $objWorkBook->setCustomColor(++$idcolor, $bgcolor[0], $bgcolor[1], $bgcolor[2]);
-                                $objFormat->setFgColor($idcolor);
+                                $colorcode = implode(',', $bgcolor);
+                                if (!isset($arrColors[$colorcode])) $arrColors[$colorcode] = ++$idcolor;
+
+                                $id = $arrColors[$colorcode];
+
+                                $objWorkBook->setCustomColor(++$id, $bgcolor[0], $bgcolor[1], $bgcolor[2]);
+                                $objFormat->setFgColor($id);
                             }
                             else $objFormat->setFgColor($bgcolor);
                         }
-                        switch($strKey)
+
+                        switch($arrDataFormats[$strKey]['type'])
                         {
                             case 'float': $objFormat->setNumFormat('#,##0.00;-#,##0.00'); break;
                             case 'float_percent': $objFormat->setNumFormat('#,##0.00 %;-#,##0.00 %'); break;
