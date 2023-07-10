@@ -370,7 +370,7 @@ class session
         try {
             $ua_info = parse_user_agent();
         }
-        catch(Exception $e) { }
+        catch(\Exception $e) { }
 
         // Suppression des données de la session active
         // Regénération d'un ID
