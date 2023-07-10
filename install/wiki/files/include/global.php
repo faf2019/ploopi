@@ -219,7 +219,7 @@ function wiki_highlight($strContent, $strFormat = 'php')
 {
     $arrAllowedFormats = array('cpp', 'css', 'diff', 'html', 'java', 'sql', 'ruby', 'php', 'xml', 'sh');
 
-    $strLines = implode(range(1, count(explode("\n", $strContent))), '<br />');
+    $strLines = implode('<br />', range(1, count(explode("\n", $strContent))));
 
     /*
     if (in_array($strFormat, $arrAllowedFormats))
