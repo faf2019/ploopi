@@ -11,14 +11,13 @@ use ploopi\nanogallery\nanogallery;
 if (!ploopi\acl::isactionallowed([nanogallery::ACTION_CREATE,nanogallery::ACTION_MODIFY]))
 	ploopi\output::redirect(ploopi\crypt::urlencode('admin.php?entity=forbidden'));
 
-// Récupération du modèle
+// Suite des tests et récupération du modèle
 $moduleid = $this->getModuleId();
 $objGallery = new nanogallery();
-if (!empty($_GET['id']) && is_numeric($_GET['id']) && $objGallery->open($_GET['id'])) { ; } else { $objGallery->open(); }
-$id = $objGallery->fields['id'];
-
-if (is_null($objGallery))
+if (empty($_GET['id']) || !is_numeric($_GET['id']) || !$objGallery->open($_GET['id'])) { 
 	ploopi\output::redirect(ploopi\crypt::urlencode('admin.php?entity=error'));
+}
+$id = $objGallery->fields['id'];
 $gal = $objGallery->fields;
 
 // Initialisations
@@ -87,24 +86,24 @@ $objForm = new ploopi\form('nano_thumbs_form', ploopi\crypt::urlencode($strUrl),
 // Panels
 $objForm->addPanel($objPanel = new ploopi\form_panel('nano_panel_thumbs','Vignettes'));
 $disabled = ($gal['galleryLayout'] == 'justified');
-$this->addInt   ($objPanel, 'thumbnailWidth', 			$gal['thumbnailWidth'], "Largeur vignette", $prefix, "en pixels", true, $disabled);
+$this->addInt   ($objPanel, $prefix.'thumbnailWidth', 						$gal['thumbnailWidth'], "Largeur vignette", "en pixels", true,0,1000, $disabled);
 $disabled = ($gal['galleryLayout'] == 'cascading');
-$this->addInt   ($objPanel, 'thumbnailHeight', 			$gal['thumbnailHeight'], "Hauteur vignette", $prefix, "en pixels", true, $disabled);
-$this->addInt   ($objPanel, 'thumbnailBorderVertical',	$gal['thumbnailBorderVertical'], "Epaisseur de la bordure verticale", $prefix, "en pixels", true);
-$this->addInt   ($objPanel, 'thumbnailBorderHorizontal',$gal['thumbnailBorderHorizontal'], "Epaisseur de la bordure horizontale", $prefix, "en pixels", true);
-$this->addClr   ($objPanel, 'thumbnailBorderColor', 	$gal['thumbnailBorderColor'], "Couleur du bord des vignettes", $prefix);
-$this->addClr   ($objPanel, 'thumbnailBgColor', 		$gal['thumbnailBgColor'], "Couleur du fond des vignettes", $prefix);
-$this->addSelect($objPanel, 'thumbnailDisplayTransition', $transitionValues, $gal['thumbnailDisplayTransition'], "Transition", $prefix);
-$this->addInt   ($objPanel, 'thumbnailDisplayTransitionDuration', $gal['thumbnailDisplayTransitionDuration'], "Durée de la transition", $prefix, "en ms", true);
-$this->addInt   ($objPanel, 'thumbnailDisplayInterval', $gal['thumbnailDisplayInterval'], "Intervalle de transition", $prefix, "en ms", true);
+$this->addInt   ($objPanel, $prefix.'thumbnailHeight', 						$gal['thumbnailHeight'], "Hauteur vignette", "en pixels", true,0,1000, $disabled);
+$this->addInt   ($objPanel, $prefix.'thumbnailBorderVertical',				$gal['thumbnailBorderVertical'], "Epaisseur de la bordure verticale", "en pixels", true,0,100);
+$this->addInt   ($objPanel, $prefix.'thumbnailBorderHorizontal',			$gal['thumbnailBorderHorizontal'], "Epaisseur de la bordure horizontale", "en pixels", true,0,100);
+$this->addClr   ($objPanel, $prefix.'thumbnailBorderColor', 				$gal['thumbnailBorderColor'], "Couleur du bord des vignettes");
+$this->addClr   ($objPanel, $prefix.'thumbnailBgColor', 					$gal['thumbnailBgColor'], "Couleur du fond des vignettes");
+$this->addSelect($objPanel, $prefix.'thumbnailDisplayTransition', $transitionValues, $gal['thumbnailDisplayTransition'], "Transition");
+$this->addInt   ($objPanel, $prefix.'thumbnailDisplayTransitionDuration', 	$gal['thumbnailDisplayTransitionDuration'], "Durée de la transition", "en ms", true,0,3000);
+$this->addInt   ($objPanel, $prefix.'thumbnailDisplayInterval', 			$gal['thumbnailDisplayInterval'], "Intervalle de transition", "en ms", true,0,300);
 
 $objForm->addPanel($objHoverPanel = new ploopi\form_panel('nano_panel_hover','Effets au passage'));
-$this->addSelect($objHoverPanel, 'thumbnailHoverEffect1', $hoverValues, $gal['thumbnailHoverEffect1'], "Effet 1", $prefix);
-$this->addSelect($objHoverPanel, 'thumbnailHoverEffect2', $hoverValues, $gal['thumbnailHoverEffect2'], "Effet 2", $prefix);
-$this->addSelect($objHoverPanel, 'thumbnailHoverEffect3', $hoverValues, $gal['thumbnailHoverEffect3'], "Effet 3", $prefix);
+$this->addSelect($objHoverPanel, $prefix.'thumbnailHoverEffect1', $hoverValues, $gal['thumbnailHoverEffect1'], "Effet 1");
+$this->addSelect($objHoverPanel, $prefix.'thumbnailHoverEffect2', $hoverValues, $gal['thumbnailHoverEffect2'], "Effet 2");
+$this->addSelect($objHoverPanel, $prefix.'thumbnailHoverEffect3', $hoverValues, $gal['thumbnailHoverEffect3'], "Effet 3");
 
 // Boutons
-$objForm->addButton( new ploopi\form_button('input:reset', 'Réinitialiser', null, null, array('style' => 'margin-left:4px;')));
+$objForm->addButton( new ploopi\form_button('input:reset', 'Réinitialiser', null, null, array('style' => 'margin-left:4px;','onclick' => "uiReset()")));
 $objForm->addButton( new ploopi\form_button('input:submit', 'Enregistrer', null, null, array('style' => 'margin-left:4px;')));
 
 // Rendu

@@ -1,22 +1,74 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ploopi>
-   <moduletype>
-      <label>nanogallery</label>
-      <version>1.1.0</version>
-      <author>JPP</author>
-      <date>20200429000000</date>
-      <description>Galeries d'images</description>
-      <action>
-         <id_action>10</id_action>
-         <label>Création d'une galerie</label>
-      </action>
-      <action>
-         <id_action>20</id_action>
-         <label>Modification d'une galerie</label>
-      </action>
-      <action>
-         <id_action>30</id_action>
-         <label>Suppression d'une galerie</label>
-      </action>
-   </moduletype>
+	<moduletype>
+		<label>nanogallery</label>
+		<version>1.6.1</version>
+		<author>JPP</author>
+		<date>20200525000000</date>
+		<description>Galeries d'images</description>
+		<paramtype>
+			<name>nbimgs</name>
+			<label>Nombre d'images par page</label>
+			<default_value>8</default_value>
+			<public>1</public>
+			<description/>
+		</paramtype>
+		<paramtype>
+			<name>nbgals</name>
+			<label>Nombre de galeries par page</label>
+			<default_value>25</default_value>
+			<public>1</public>
+			<description/>
+		</paramtype>
+		<paramtype>
+			<name>colorclass</name>
+			<label>Affichage de la saisie des couleurs</label>
+			<default_value>rect</default_value>
+			<public>1</public>
+			<description/>
+			<paramchoice>
+				<value>rect</value>
+				<displayed_value>Rectangle avec valeur</displayed_value>
+			</paramchoice>
+			<paramchoice>
+				<value>square</value>
+				<displayed_value>Carré</displayed_value>
+			</paramchoice>
+			<paramchoice>
+				<value>circle</value>
+				<displayed_value>Cercle</displayed_value>
+			</paramchoice>
+		</paramtype>
+		<paramtype>
+			<name>colortype</name>
+			<label>Type de saisie des couleurs</label>
+			<default_value>inputcolor</default_value>
+			<public>1</public>
+			<description/>
+			<paramchoice>
+				<value>inputcolor</value>
+				<displayed_value>Simple</displayed_value>
+			</paramchoice>
+			<paramchoice>
+				<value>btncolor</value>
+				<displayed_value>Bouton</displayed_value>
+			</paramchoice>
+		</paramtype>
+		<action>
+			<id_action>10</id_action>
+			<label>Création d'une galerie</label>
+		</action>
+		<action>
+			<id_action>20</id_action>
+			<label>Modification d'une galerie</label>
+		</action>
+		<action>
+			<id_action>30</id_action>
+			<label>Suppression d'une galerie</label>
+		</action>
+		<action>
+			<id_action>40</id_action>
+			<label>Mise à jour des titres et descriptions</label>
+		</action>
+	</moduletype>
 </ploopi>

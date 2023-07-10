@@ -15,7 +15,7 @@ if (!ploopi\acl::isactionallowed([nanogallery::ACTION_CREATE,nanogallery::ACTION
 // Récupération du modèle
 $moduleid = $this->getModuleId();
 $objGallery = new nanogallery();
-if (!empty($_GET['id']) && is_numeric($_GET['id']) && $objGallery->open($_GET['id'])) { ; } else { $objGallery->open(); }
+if (!empty($_GET['id']) && is_numeric($_GET['id']) && $objGallery->open($_GET['id'])) { ; } else { $objGallery->init_description(); }
 $id = $objGallery->fields['id'];
 
 if (is_null($objGallery))
@@ -24,7 +24,7 @@ $gal = $objGallery->fields;
 
 // Initialisations
 $prefix = 'nano_';
-$tab = 'edit';	// Pour retoursur le même onglet
+$tab = 'edit';	// Pour retour sur le même onglet
 
 // dossiers
 // Récupération des dossiers visibles
@@ -33,16 +33,18 @@ $arrFolders = folders::getfolders($moduleid);
 $arrTreeview = folders::gettreeview($arrFolders);
 
 // Formulaire
-$strUrl = "admin-light.php?entity=admin&action=op_save&id=$id&tab=$tab";
+$strUrl = "admin-light.php?entity=admin&action=op_save&tab=$tab";
+if (!empty($id)) $strUrl .= "&id=$id";
 $objForm = new ploopi\form('nano_gen_form', ploopi\crypt::urlencode($strUrl), 'post', array(
 	'class' => 'ploopi_generate_form nano'
 ));
 
 // Panels
 $objForm->addPanel($objPanel = new ploopi\form_panel('nano_panel_gen','Propriétés générales'));
-$this->addText($objPanel, 'label', $gal['label'], "Label", $prefix, "Label de la galerie", true);
+$this->addText($objPanel, $prefix.'label', 		$gal['label'], "Label", "Label de la galerie", true);
 $objPanel->addField(new ploopi\form_field('textarea', 'description', $gal['description'], $prefix.'Description', null, array('style' => 'height:50px;')));
-$this->addCBox($objPanel, 'useAlbums', $gal['useAlbums'], "Avec les sous-dossiers en albums", $prefix);
+$this->addCBox($objPanel, $prefix.'useAlbums', 	$gal['useAlbums'], "Avec les sous-dossiers en albums");
+$this->addCBox($objPanel, $prefix.'flatAlbums', $gal['flatAlbums'], "Aplatir l'arbo des albums");
 $objPanel->addField(new ploopi\form_hidden($gal['id_folder'], $prefix.'id_folder','id_folder',['required' => "required",'label' => "Dossier associé"] ));
 $foldername = folders::getFolderName($gal['id_folder']);
 $objPanel->addField(new ploopi\form_html(
@@ -61,10 +63,7 @@ $objPanel->addField(new ploopi\form_html(
 
 // Boutons
 $objForm->addButton( new ploopi\form_button('input:reset', 'Réinitialiser', 'reinit', 'reinit', 
-	array(
-		'style' => 'margin-left:4px;', 
-		'onclick' => "nano_initFolder(${gal['id_folder']});"
-	)
+	array('style' => 'margin-left:4px;', 'onclick' => "nano_initFolder(${gal['id_folder']});")
 ));
 $objForm->addButton( new ploopi\form_button('input:submit', 'Enregistrer', null, null, array('style' => 'margin-left:4px;')));
 

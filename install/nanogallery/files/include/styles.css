@@ -20,7 +20,7 @@ select { font-family: 'OpenSans', arial; }
    ----------------------------
 */
 .nano form > div > fieldset > div > input { max-width:500px; }
-.nano input[maxlength="10"] { width:40px; text-align:right; }
+.nano input[maxlength="10"] { width:50px; text-align: center; }
 .nano form > div > fieldset > div > select { max-width:160px; }
 
 /* Place les saisies en 3 colonnes 
@@ -29,11 +29,12 @@ select { font-family: 'OpenSans', arial; }
 form#nano_gal_form > div > fieldset > div,
 form#nano_labels_form > div > fieldset > div,
 form#nano_nav_form > div > fieldset > div,
-form#nano_thumbs_form > div > fieldset > div { position:relative; width:31%; }
-form#nano_gal_form > div > fieldset > div,
-form#nano_labels_form > div > fieldset > div,
-form#nano_nav_form > div > fieldset > div,
-form#nano_thumbs_form > div > fieldset > div { float:left; }
+form#nano_thumbs_form > div > fieldset > div { 
+	position:relative; 
+	width:33%; 
+	height:32px; 
+	float:left; 
+}
 
 /* checkboxes stylés 
    -----------------
@@ -81,4 +82,22 @@ form#nano_thumbs_form > div > fieldset > div { float:left; }
 	cursor: default;
 	color:#000;
 }
+
+/* Sliders
+   -------
+*/
+.ui-slider span.ui-slider-handle, .ui-slider .ui-state-default {
+	background :#4f8999;
+	border: 1px solid #25464e;
+}
+
+/* Couleurs rectangles
+   -------------------
+*/
+.thin.rectr .sp-preview { width:98%; }
+.fat.rectr .sp-preview { width:92%; }
+
+.thin.sp-replacer.rectr { width:47%; }
+.fat.sp-replacer.rectr { width:46%; }
+
 

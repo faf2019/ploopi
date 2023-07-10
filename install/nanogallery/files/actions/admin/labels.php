@@ -11,14 +11,13 @@ use ploopi\nanogallery\nanogallery;
 if (!ploopi\acl::isactionallowed([nanogallery::ACTION_CREATE,nanogallery::ACTION_MODIFY]))
 	ploopi\output::redirect(ploopi\crypt::urlencode('admin.php?entity=forbidden'));
 
-// Récupération du modèle
+// Suite des tests et récupération du modèle
 $moduleid = $this->getModuleId();
 $objGallery = new nanogallery();
-if (!empty($_GET['id']) && is_numeric($_GET['id']) && $objGallery->open($_GET['id'])) { ; } else { $objGallery->open(); }
-$id = $objGallery->fields['id'];
-
-if (is_null($objGallery))
+if (empty($_GET['id']) || !is_numeric($_GET['id']) || !$objGallery->open($_GET['id'])) { 
 	ploopi\output::redirect(ploopi\crypt::urlencode('admin.php?entity=error'));
+}
+$id = $objGallery->fields['id'];
 $gal = $objGallery->fields;
 
 // Initialisations
@@ -34,7 +33,7 @@ $positionsValues = array(
 
 $alignementValues = array(
 	'center'	=> ['label' => 'Au centre'],
-	'left' => ['label' => "A gauche"],
+	'left' 		=> ['label' => "A gauche"],
 	'right' 	=> ['label' => "A droite"],
 );
 
@@ -46,13 +45,14 @@ $objForm = new ploopi\form('nano_labels_form', ploopi\crypt::urlencode($strUrl),
 
 // Panels
 $objForm->addPanel($objPanel = new ploopi\form_panel('nano_panel_labels','Labels'));
-$this->addCBox  ($objPanel, 'thumbnailLabelDisplay', 						$gal['thumbnailLabelDisplay'], "Affichage du label", $prefix);
-$this->addSelect($objPanel, 'thumbnailLabelPosition', 	$positionsValues,	$gal['thumbnailLabelPosition'], "Position", $prefix);
-$this->addSelect($objPanel, 'thumbnailLabelAlignement', $alignementValues,	$gal['thumbnailLabelAlignement'], "Alignement", $prefix);
-$this->addCBox  ($objPanel, 'thumbnailLabelTitleMultiline', 				$gal['thumbnailLabelTitleMultiline'], "Titre multi-lignes", $prefix);
+$this->addCBox  ($objPanel, $prefix.'thumbnailLabelDisplay', 						$gal['thumbnailLabelDisplay'], "Affichage du label");
+$this->addSelect($objPanel, $prefix.'thumbnailLabelPosition', 	$positionsValues,	$gal['thumbnailLabelPosition'], "Position");
+$this->addSelect($objPanel, $prefix.'thumbnailLabelAlignement', $alignementValues,	$gal['thumbnailLabelAlignement'], "Alignement");
+$this->addCBox  ($objPanel, $prefix.'thumbnailLabelTitleMultiline', 				$gal['thumbnailLabelTitleMultiline'], "Titre multi-lignes");
+
 $objForm->addPanel($objDescPanel = new ploopi\form_panel('nano_panel_desc','Descriptions'));
-$this->addCBox  ($objDescPanel, 'thumbnailLabelDisplayDescription', 		$gal['thumbnailLabelDisplayDescription'], "Affichage de la description", $prefix);
-$this->addCBox  ($objDescPanel, 'thumbnailLabelDescriptionMultiline', 		$gal['thumbnailLabelDescriptionMultiline'], "Description multi-lignes", $prefix);
+$this->addCBox  ($objDescPanel, $prefix.'thumbnailLabelDisplayDescription', 		$gal['thumbnailLabelDisplayDescription'], "Affichage de la description");
+$this->addCBox  ($objDescPanel, $prefix.'thumbnailLabelDescriptionMultiline',		$gal['thumbnailLabelDescriptionMultiline'], "Description multi-lignes");
 
 // Boutons
 $objForm->addButton( new ploopi\form_button('input:reset', 'Réinitialiser', null, null, array('style' => 'margin-left:4px;')));

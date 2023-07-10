@@ -11,14 +11,13 @@ use ploopi\nanogallery\nanogallery;
 if (!ploopi\acl::isactionallowed([nanogallery::ACTION_CREATE,nanogallery::ACTION_MODIFY]))
 	ploopi\output::redirect(ploopi\crypt::urlencode('admin.php?entity=forbidden'));
 
-// Récupération du modèle
+// Suite des tests et récupération du modèle
 $moduleid = $this->getModuleId();
 $objGallery = new nanogallery();
-if (!empty($_GET['id']) && is_numeric($_GET['id']) && $objGallery->open($_GET['id'])) { ; } else { $objGallery->open(); }
-$id = $objGallery->fields['id'];
-
-if (is_null($objGallery))
+if (empty($_GET['id']) || !is_numeric($_GET['id']) || !$objGallery->open($_GET['id'])) { 
 	ploopi\output::redirect(ploopi\crypt::urlencode('admin.php?entity=error'));
+}
+$id = $objGallery->fields['id'];
 $gal = $objGallery->fields;
 
 // Initialisations
@@ -38,17 +37,15 @@ $objForm = new ploopi\form('nano_nav_form', ploopi\crypt::urlencode($strUrl), 'p
 	'class' => 'ploopi_generate_form nano'
 ));
 
-// Les éléments commentés ne seront utiles que lorsque la gestion des albums sera effective
-
 // Panels
 $objForm->addPanel($objPanel = new ploopi\form_panel('nano_panel_nav','Navigation'));
-$this->addCBox  ($objPanel, 'displayBreadcrumb', 			$gal['displayBreadcrumb'], "Affichage du chemin", $prefix);
-$this->addCBox  ($objPanel, 'breadcrumbAutoHideTopLevel', 	$gal['breadcrumbAutoHideTopLevel'], "Cacher Le 1e niveau", $prefix);
-$this->addCBox  ($objPanel, 'breadcrumbOnlyCurrentLevel', 	$gal['breadcrumbOnlyCurrentLevel'], "Uniquement le niveau courant", $prefix);
-$this->addCBox  ($objPanel, 'thumbnailLevelUp', 		$gal['thumbnailLevelUp'], "Lien vers le niveau sup.", $prefix);
+$this->addCBox  ($objPanel, $prefix.'displayBreadcrumb', 							$gal['displayBreadcrumb'], "Affichage du chemin");
+$this->addCBox  ($objPanel, $prefix.'breadcrumbAutoHideTopLevel',				 	$gal['breadcrumbAutoHideTopLevel'], "Cacher Le 1e niveau");
+$this->addCBox  ($objPanel, $prefix.'breadcrumbOnlyCurrentLevel',				 	$gal['breadcrumbOnlyCurrentLevel'], "Uniquement le niveau courant");
+$this->addCBox  ($objPanel, $prefix.'thumbnailLevelUp', 							$gal['thumbnailLevelUp'], "Lien vers le niveau sup.");
 
 $objForm->addPanel($objFilterPanel = new ploopi\form_panel('nano_panel_nav','Filtres'));
-$this->addSelect($objFilterPanel, 'galleryFilterTags', 			$filtertagsValues,	$gal['galleryFilterTags'], "Affichage du filtre", $prefix);
+$this->addSelect($objFilterPanel, $prefix.'galleryFilterTags', 	$filtertagsValues,	$gal['galleryFilterTags'], "Affichage du filtre");
 
 // Boutons
 $objForm->addButton( new ploopi\form_button('input:reset', 'Réinitialiser', null, null, array('style' => 'margin-left:4px;')));

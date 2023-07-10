@@ -33,14 +33,16 @@ echo ploopi\skin::get()->create_tabs($arrTabs, $strTab);
 // ------------------------------------------------
 // Colonnes
 $img_columns = array();
-$img_columns['left']['name'] = array('label' => 'Nom de la galerie', 'width' => 200, 'options' => array('sort' => true));
-$img_columns['right']['nbfiles'] = array('label' => 'Nb images', 'width' => 100, 'options' => array('sort' => true));
+$img_columns['left']['name'] = array('label' => 'Nom de la galerie', 'width' => 260, 'options' => array('sort' => true));
+$img_columns['right']['nbfiles'] = array('label' => 'Nb fichiers', 'width' => 100, 'options' => array('sort' => true));
+$img_columns['right']['nbmedias'] = array('label' => 'Nb images', 'width' => 100, 'options' => array('sort' => true));
 $img_columns['right']['folder'] = array('label' => 'Dossier', 'width' => 180, 'options' => array('sort' => true));
 $img_columns['auto']['description'] = array('label' => 'Description', 'options' => array('sort' => true));
 $img_columns['actions_right']['actions'] = array('label' => 'Actions', 'width' => 60);
 
 // Lignes
 $img_values = array();
+$pre = '00000';
 
 $c = 0;
 if (!empty($arrImg)) {
@@ -49,10 +51,18 @@ if (!empty($arrImg)) {
 		$img_values[$c]['values']['name'] = array('label' => str::htmlentities($img['label']));
 		$img_values[$c]['values']['description'] = array('label' => str::htmlentities($img['description']));
 		$img_values[$c]['values']['folder'] = array('label' => str::htmlentities($img['name']));
-		$img_values[$c]['values']['nbfiles'] = array('label' => str::htmlentities($img['nbelements']));
+		$img_values[$c]['values']['nbfiles'] = array(
+			'label' => str::htmlentities($img['nbelements']),
+			'sort_label' => substr($pre.$img['nbelements'],-5),
+			'style' => "text-align:right;padding-right:10px;width:90px;"
+		);
+		$img_values[$c]['values']['nbmedias'] = array(
+			'label' => str::htmlentities($img['nbmedias']),
+			'sort_label' => substr($pre.$img['nbmedias'],-5),
+			'style' => "text-align:right;padding-right:10px;width:90px;"
+		);
 
 		$arrActions = array();
-		
 		if (ploopi\acl::isactionallowed(nanogallery::ACTION_MODIFY)) {
 		    $arrActions[] = '<a title="Modifier" href="'
 			.ploopi\crypt::urlencode("admin.php?entity=admin&action=edit&id={$img['id']}")
@@ -74,10 +84,8 @@ if (!empty($arrImg)) {
 
 	// Affichage
 	ploopi\skin::get()->display_array(
-		$img_columns, 
-		$img_values, 
-		'array_imglist', 
-		['sortable' => true, 'orderby_default' => 'date', 'sort_default' => 'DESC', 'limit' => 10]
+		$img_columns, $img_values, 'array_imglist', 
+		['sortable' => true, 'orderby_default' => 'date', 'sort_default' => 'DESC', 'limit' => $this->getNbGallerysPerPage()]
 	);
 } else {
 	echo "Aucune galerie";

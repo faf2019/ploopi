@@ -1,3 +1,40 @@
+== Module NANOGALLERY - version 1.6.1 ================================================
+2020-05-25  Jean-Pierre Pawlak ~ DSIC-EST <jean-pierre.pawlak@interieur.gouv.fr>
+* Correction d'un bug sur la saisie du nom de la galerie
+* Ajout de la doc
+
+== Module NANOGALLERY - version 1.6.0 ================================================
+2020-05-20  Jean-Pierre Pawlak ~ DSIC-EST <jean-pierre.pawlak@interieur.gouv.fr>
+* Divers détails de présentation
+* Données tecchniques visibles dans la liste des photos de la galerie
+* Paramétrage du nombre de photos et de galleries par page dans les listes
+* Paramétrage du type de saisie de couleur
+
+== Module NANOGALLERY - version 1.5.0 ================================================
+2020-05-19  Jean-Pierre Pawlak ~ DSIC-EST <jean-pierre.pawlak@interieur.gouv.fr>
+* Possibilité de personnaliser les titres et descriptions des photos
+* Ajout de données techniques de la prise de vue dans la description
+
+== Module NANOGALLERY - version 1.4.1 ================================================
+2020-05-18  Jean-Pierre Pawlak ~ DSIC-EST <jean-pierre.pawlak@interieur.gouv.fr>
+* Différentes correction dans la liste des galeries
+* Reset pour sliders et couleurs
+
+== Module NANOGALLERY - version 1.4.0 ================================================
+2020-05-13  Jean-Pierre Pawlak ~ DSIC-EST <jean-pierre.pawlak@interieur.gouv.fr>
+* Ajout d'un lien vers la modification de la galerie depuis la visualisation
+* Changement d'une valeur par défaut
+* Correction dans la liste des galeries
+* Sliders pour la saisie des entiers
+
+== Module NANOGALLERY - version 1.3.0 ================================================
+2020-05-07  Jean-Pierre Pawlak ~ DSIC-EST <jean-pierre.pawlak@interieur.gouv.fr>
+* Couleurs avec gestion de la transparence
+
+== Module NANOGALLERY - version 1.2.0 ================================================
+2020-04-30  Jean-Pierre Pawlak ~ DSIC-EST <jean-pierre.pawlak@interieur.gouv.fr>
+* Gestion des albums : au choix arbo aplatie ou non
+
 == Module NANOGALLERY - version 1.1.0 ================================================
 2020-04-29  Jean-Pierre Pawlak ~ DSIC-EST <jean-pierre.pawlak@interieur.gouv.fr>
 * Gestion des albums

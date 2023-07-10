@@ -204,11 +204,10 @@ abstract class folders {
             }
         }
         return $html;
-
     }
 
 	/**
-	 * Retourne la liste du workspace où est instancié le module avec ses sous-espaces 
+	 * Retourne la liste : le workspace où est instancié le module avec ses sous-espaces 
 	 *
 	 * @param int $id id du module
 	 * @return string la liste des id de workspace séparés par des virgules

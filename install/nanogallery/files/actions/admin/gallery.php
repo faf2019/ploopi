@@ -11,19 +11,18 @@ use ploopi\nanogallery\nanogallery;
 if (!ploopi\acl::isactionallowed([nanogallery::ACTION_CREATE,nanogallery::ACTION_MODIFY]))
 	ploopi\output::redirect(ploopi\crypt::urlencode('admin.php?entity=forbidden'));
 
-// Récupération du modèle
+// Suite des tests et récupération du modèle
 $moduleid = $this->getModuleId();
 $objGallery = new nanogallery();
-if (!empty($_GET['id']) && is_numeric($_GET['id']) && $objGallery->open($_GET['id'])) { ; } else { $objGallery->open(); }
-$id = $objGallery->fields['id'];
-
-if (is_null($objGallery))
+if (empty($_GET['id']) || !is_numeric($_GET['id']) || !$objGallery->open($_GET['id'])) { 
 	ploopi\output::redirect(ploopi\crypt::urlencode('admin.php?entity=error'));
+}
+$id = $objGallery->fields['id'];
 $gal = $objGallery->fields;
 
 // Initialisations
 $prefix = 'nano_';
-$tab = 'gallery';	// Pour retoursur le même onglet
+$tab = 'gallery';	// Pour retour sur le même onglet
 
 $layoutValues = array(
 	'grid' 		=> ['label' => 'Grille'],
@@ -63,39 +62,39 @@ $objForm = new ploopi\form('nano_gal_form', ploopi\crypt::urlencode($strUrl), 'p
 
 // Panels
 $objForm->addPanel($objFramePanel = new ploopi\form_panel('nano_panel_frame','Propriétés du cadre'));
-$this->addClr   ($objFramePanel, 'frameBgColor', 			$gal['frameBgColor'], 				"Couleur du fond", $prefix);
-$this->addClr   ($objFramePanel, 'frameBorderColor', 		$gal['frameBorderColor'], 			"Couleur du bord", $prefix);
-$this->addInt   ($objFramePanel, 'frameBorderVertical', 	$gal['frameBorderVertical'], 		"Epaiseur de la bordure verticale", $prefix, "", true);
-$this->addInt   ($objFramePanel, 'frameBorderHorizontal', 	$gal['frameBorderHorizontal'], 		"Epaiseur de la bordure horizontale", $prefix, "", true);
-$this->addInt   ($objFramePanel, 'frameBorderRadius', 		$gal['frameBorderRadius'], 			"Arrondi de la bordure", $prefix, "", true);
-$this->addInt   ($objFramePanel, 'frameInternalVertical', 	$gal['frameInternalVertical'], 		"Espace interne vertical", $prefix, "", true);
-$this->addInt   ($objFramePanel, 'frameInternalHorizontal', $gal['frameInternalHorizontal'], 	"Espace interne horizontal", $prefix, "", true);
-$this->addInt   ($objFramePanel, 'frameExternalVertical', 	$gal['frameExternalVertical'], 		"Espace externe vertical", $prefix, "", true);
-$this->addInt   ($objFramePanel, 'frameExternalHorizontal', $gal['frameExternalHorizontal'], 	"Espace externe horizontal", $prefix, "", true);
+$this->addClr   ($objFramePanel, $prefix.'frameBgColor', 			$gal['frameBgColor'], 				"Couleur du fond");
+$this->addClr   ($objFramePanel, $prefix.'frameBorderColor', 		$gal['frameBorderColor'], 			"Couleur du bord");
+$this->addInt   ($objFramePanel, $prefix.'frameBorderVertical', 	$gal['frameBorderVertical'], 		"Epaiseur de la bordure verticale", "", true,0,100);
+$this->addInt   ($objFramePanel, $prefix.'frameBorderHorizontal', 	$gal['frameBorderHorizontal'], 		"Epaiseur de la bordure horizontale", "", true,0,100);
+$this->addInt   ($objFramePanel, $prefix.'frameBorderRadius', 		$gal['frameBorderRadius'], 			"Arrondi de la bordure", "", true,0,100);
+$this->addInt   ($objFramePanel, $prefix.'frameInternalVertical', 	$gal['frameInternalVertical'], 		"Espace interne vertical", "", true,0,100);
+$this->addInt   ($objFramePanel, $prefix.'frameInternalHorizontal', $gal['frameInternalHorizontal'], 	"Espace interne horizontal", "", true,0,100);
+$this->addInt   ($objFramePanel, $prefix.'frameExternalVertical', 	$gal['frameExternalVertical'], 		"Espace externe vertical", "", true,-10,100);
+$this->addInt   ($objFramePanel, $prefix.'frameExternalHorizontal', $gal['frameExternalHorizontal'], 	"Espace externe horizontal", "", true,-10,100);
 
 
 $objForm->addPanel($objPanel = new ploopi\form_panel('nano_panel_gen','Propriétés générales'));
-$this->addSelect($objPanel, 'galleryLayout', 		$layoutValues, 		$gal['galleryLayout'], "Présentation", $prefix);
-$this->addSelect($objPanel, 'galleryDisplayMode', 	$displayValues, 	$gal['galleryDisplayMode'], "Mode d'affichage", $prefix);
-$this->addInt   ($objPanel, 'galleryMaxRows', 							$gal['galleryMaxRows'], "Nombre max de lignes (au départ)"
-	, $prefix, "", true);
-$this->addInt   ($objPanel, 'galleryDisplayMoreStep', 					$gal['galleryDisplayMoreStep'], "Nombre de lignes par ajout", $prefix, "", true);
-$this->addCBox  ($objPanel, 'galleryLastRowFull', 						$gal['galleryLastRowFull'], "Dernière ligne complète", $prefix);
-$this->addSelect($objPanel, 'galleryPaginationMode',$paginationValues, 	$gal['galleryPaginationMode'], "Mode de pagination", $prefix);
-$this->addSelect($objPanel, 'gallerySorting', 		$sortingValues, 	$gal['gallerySorting'], "Tri", $prefix);
-$this->addInt   ($objPanel, 'galleryMaxItems', 							$gal['galleryMaxItems'], "Nombre max de photos", $prefix, "", true);
-$this->addSelect($objPanel, 'thumbnailAlignment', 	$alignValues, 		$gal['thumbnailAlignment'], "Alignement des vignettes", $prefix);
-$this->addInt   ($objPanel, 'thumbnailGutterWidth', 					$gal['thumbnailGutterWidth'], "Largeur des gouttières", $prefix, "", true);
-$this->addInt   ($objPanel, 'thumbnailGutterHeight', 					$gal['thumbnailGutterHeight'], "Hauteur des gouttières", $prefix, "", true);
+$this->addSelect($objPanel, $prefix.'galleryLayout', 			$layoutValues, 	$gal['galleryLayout'], "Présentation");
+$this->addSelect($objPanel, $prefix.'galleryDisplayMode', 		$displayValues, $gal['galleryDisplayMode'], "Mode d'affichage");
+$this->addInt   ($objPanel, $prefix.'galleryMaxRows', 							$gal['galleryMaxRows'], "Nombre max de lignes (au départ)", "", true,0,20);
+$this->addInt   ($objPanel, $prefix.'galleryDisplayMoreStep',					$gal['galleryDisplayMoreStep'], "Nombre de lignes par ajout", "", true,1,20);
+$this->addCBox  ($objPanel, $prefix.'galleryLastRowFull', 						$gal['galleryLastRowFull'], "Dernière ligne complète");
+$this->addSelect($objPanel, $prefix.'galleryPaginationMode',	$paginationValues, 	$gal['galleryPaginationMode'], "Mode de pagination");
+$this->addSelect($objPanel, $prefix.'gallerySorting', 			$sortingValues,	$gal['gallerySorting'], "Tri");
+$this->addInt   ($objPanel, $prefix.'galleryMaxItems', 							$gal['galleryMaxItems'], "Nombre max de photos", "", true,0,1000);
+$this->addSelect($objPanel, $prefix.'thumbnailAlignment', 		$alignValues, 	$gal['thumbnailAlignment'], "Alignement des vignettes");
+$this->addInt   ($objPanel, $prefix.'thumbnailGutterWidth', 					$gal['thumbnailGutterWidth'], "Largeur des gouttières", "", true,0,50);
+$this->addInt   ($objPanel, $prefix.'thumbnailGutterHeight', 					$gal['thumbnailGutterHeight'], "Hauteur des gouttières", "", true,0,50);
 
 $objForm->addPanel($objImagePanel = new ploopi\form_panel('nano_panel_image','Affichage des grandes images'));
-$this->addCBox  ($objImagePanel, 'thumbnailOpenImage', 	$gal['thumbnailOpenImage'], "activation du mode", $prefix);
+$this->addCBox  ($objImagePanel, $prefix.'thumbnailOpenImage', 					$gal['thumbnailOpenImage'], "activation du mode");
 
 // Boutons
-$objForm->addButton( new ploopi\form_button('input:reset', 'Réinitialiser', null, null, array('style' => 'margin-left:4px;')));
+$objForm->addButton( new ploopi\form_button('input:reset', 'Réinitialiser', null, null, array('style' => 'margin-left:4px;','onclick' => "uiReset()")));
 $objForm->addButton( new ploopi\form_button('input:submit', 'Enregistrer', null, null, array('style' => 'margin-left:4px;')));
 
 // Rendu
 echo $objForm->render();
 
+?>
 

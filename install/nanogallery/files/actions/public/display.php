@@ -13,13 +13,20 @@ if (empty($_GET['id']) || !is_numeric($_GET['id'])) {
 
 $objGallery = new ploopi\nanogallery\nanogallery();
 if($objGallery->open($_GET['id'])) {
-		?>
-		<div class="ploopi_tabs">
-			<a href="<?php echo ploopi\crypt::urlencode("admin.php?entity=public&action=list"); ?>">
-				<img src="./modules/nanogallery/img/angle_double-left_alpha.png" 
-					style="width:20px;height:18px;">Retour à la liste des galeries</a>
+		// Onglets
+		?><div class="ploopi_tabs"><?php
+		if (ploopi\acl::isactionallowed(ploopi\nanogallery\nanogallery::ACTION_MODIFY)) {
+		?><a href="<?php echo ploopi\crypt::urlencode("admin.php?entity=admin&action=edit&id={$_GET['id']}"); ?>">
+			<img src="./modules/nanogallery/img/edit_alpha.png" 
+				style="width:20px;height:18px;">Modifier la galerie</a>
+		<?php
+		}
+		?><a href="<?php echo ploopi\crypt::urlencode("admin.php?entity=public&action=list"); ?>">
+			<img src="./modules/nanogallery/img/angle_double-left_alpha.png" 
+				style="width:20px;height:18px;">Retour à la liste des galeries</a>
 		</div>
 		<?php
+		// Galerie
 		echo ploopi\skin::get()->open_simplebloc('Affichage de la galerie "'.$objGallery->fields['label'].'"');
 		$objGallery->display();
 		echo ploopi\skin::get()->close_simplebloc();

@@ -1,4 +1,10 @@
 <?php
+/**
+ * NanoGallery : Objet WCE dans le front-office
+ *
+ * @author JPP
+ * @copyright DSIC-EST
+ */
 use ploopi\nanogallery\nanogallery;
 
 $objGallery = new nanogallery();
