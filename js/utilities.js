@@ -108,15 +108,10 @@ ploopi.get_param = function(sParam) {
     }
 };
 
-
-
-
-
 /**
  * Insertion d'un texte dans un champ à la position du curseur
  */
-function ploopi_insertatcursor(field, value)
-{
+ploopi.insertatcursor = function(field, value) {
     //IE support
     if (document.selection)
     {
@@ -135,4 +130,8 @@ function ploopi_insertatcursor(field, value)
     {
        field.value += value;
     }
-}
+};
+
+ploopi_insertatcursor = function(field, value) {
+    ploopi.insertatcursor(field, value);
+};
