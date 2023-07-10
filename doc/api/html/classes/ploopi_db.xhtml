@@ -82,6 +82,9 @@
                     </li><li>private  <a href="#members">$num_queries</a>;
                     </li><li>private  <a href="#members">$exectime_queries</a>;
                     </li><li>private <span title="ploopi\timer">timer</span> <a href="#members">$db_timer</a>;
+                    </li><li>private  <a href="#members">$last_error</a>;
+                    </li><li>private  <a href="#members">$last_errorno</a>;
+                    </li><li>private  <a href="#members">$last_query</a>;
                     </li><li>private  <a href="#members">$arrLog</a>;
                     </li><li>private  <a href="#members">$log</a>;
                     </li><li>private static <span title="ploopi\db">db</span> <a href="#members">$_objDb</a> =
@@ -115,6 +118,9 @@
                     </li><li>public void <a title="ploopi\db" href="../classes/ploopi_db/get_exectime_queries.xhtml">get_exectime_queries</a>()
                     </li><li>public void <a title="ploopi\db" href="../classes/ploopi_db/get_log.xhtml">get_log</a>()
                     </li><li>public void <a title="ploopi\db" href="../classes/ploopi_db/flush_log.xhtml">flush_log</a>()
+                    </li><li>public void <a title="ploopi\db" href="../classes/ploopi_db/get_last_error.xhtml">get_last_error</a>()
+                    </li><li>public void <a title="ploopi\db" href="../classes/ploopi_db/get_last_errorno.xhtml">get_last_errorno</a>()
+                    </li><li>public void <a title="ploopi\db" href="../classes/ploopi_db/get_last_query.xhtml">get_last_query</a>()
                     </li></ul>
 
             }<br/></div>
@@ -137,6 +143,15 @@
             <li id="exectime_queries"><strong>$exectime_queries</strong>
                 —
                 int<br/><span class="indent">Temps d'exécution SQL global depuis le début du script (en ms)</span></li>
+            <li id="last_error"><strong>$last_error</strong>
+                —
+                string<br/><span class="indent">Dernière erreur retournée</span></li>
+            <li id="last_errorno"><strong>$last_errorno</strong>
+                —
+                int<br/><span class="indent">Dernier numéro d'erreur retourné</span></li>
+            <li id="last_query"><strong>$last_query</strong>
+                —
+                string<br/><span class="indent">Dernière requête exécutée</span></li>
             <li id="log"><strong>$log</strong>
                 —
                 boolean<br/><span class="indent">Activation du log de requête ou non</span></li>
@@ -195,6 +210,15 @@
                 — Retourne le connecteur vers la base de données</li>
             <li id="get_exectime_queries">
               <a title="ploopi\db" href="../classes/ploopi_db/get_exectime_queries.xhtml">get_exectime_queries()</a>
+            </li>
+            <li id="get_last_error">
+              <a title="ploopi\db" href="../classes/ploopi_db/get_last_error.xhtml">get_last_error()</a>
+            </li>
+            <li id="get_last_errorno">
+              <a title="ploopi\db" href="../classes/ploopi_db/get_last_errorno.xhtml">get_last_errorno()</a>
+            </li>
+            <li id="get_last_query">
+              <a title="ploopi\db" href="../classes/ploopi_db/get_last_query.xhtml">get_last_query()</a>
             </li>
             <li id="get_log">
               <a title="ploopi\db" href="../classes/ploopi_db/get_log.xhtml">get_log()</a>
