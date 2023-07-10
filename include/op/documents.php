@@ -581,7 +581,7 @@ switch($ploopi_op)
 
                     xhr.onload = function() {
                         var data = JSON.parse(xhr.responseText);
-                        <?
+                        <?php
                         if (isset($_GET['selectfile'])) {
 
                             if ($_SESSION['documents'][$documents_id]['mode'] == 'tofield')
@@ -592,18 +592,18 @@ switch($ploopi_op)
                                 else dest.innerHTML=data.name;
                                 ploopi.getelem('<? echo $_SESSION['documents'][$documents_id]['target']; ?>_id').value=data.id;
                                 ploopi.popup.hide('ploopi_documents_popup');
-                                <?
+                                <?php
                             }
                             elseif ($_SESSION['documents'][$documents_id]['mode'] == 'tocallback')
                             {
                                 ?>
-                                <? echo $_SESSION['documents'][$documents_id]['target']; ?>(
+                                <?php echo $_SESSION['documents'][$documents_id]['target']; ?>(
                                     data.id,
                                     data.name,
                                     '<? echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=documents_downloadfile"); ?>&documentsfile_id='+data.md5id
                                 );
                                 ploopi.popup.hide('ploopi_documents_openfile_popup');
-                                <?
+                                <?php
                             }
 
                         }

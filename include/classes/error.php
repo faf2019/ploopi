@@ -105,7 +105,7 @@ abstract class error
      * @see _PLOOPI_ERROR_REPORTING
      */
 
-    public static function handler($errno, $errstr, $errfile, $errline, $vars)
+    public static function handler($errno, $errstr, $errfile, $errline = 0, $vars = [])
     {
         if (error_reporting() == 0) return false;
 

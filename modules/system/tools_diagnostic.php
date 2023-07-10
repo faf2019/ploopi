@@ -143,9 +143,26 @@ $values[$c]['values']['comment']    = array('label' => ploopi\str::nl2br(ploopi\
 $values[$c]['values']['result']     = array('label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/p_{$bullet}.png\" />", 'style' => '');
 $c++;
 
+function return_bytes($val) {
+    $last = strtolower($val[strlen($val)-1]);
+    $val = substr($val, 0, -1);
+
+    switch($last) {
+        // Le modifieur 'G' est disponible
+        case 'g':
+            $val *= 1024;
+        case 'm':
+            $val *= 1024;
+        case 'k':
+            $val *= 1024;
+    }
+
+    return $val;
+}
+
 $ploopi_maxfilesize = sprintf('%.02f', _PLOOPI_MAXFILESIZE/1024);
-$upload_max_filesize =  intval(ini_get('upload_max_filesize')*1024);
-$post_max_size = intval(ini_get('post_max_size')*1024);
+$upload_max_filesize =  return_bytes(ini_get('upload_max_filesize'));
+$post_max_size = return_bytes(ini_get('post_max_size'));
 
 // Test la taille max d'upload de fichier
 $fmax = min($ploopi_maxfilesize, $upload_max_filesize, $post_max_size);
@@ -206,7 +223,7 @@ $c++;
 
 
 /* TEST 3 - Connectivité internet */
-$testurl = 'http://www.ploopi.org';
+$testurl = 'https://www.google.fr';
 
 $comment = 'Connexion internet ouverte.';
 $testok = true;

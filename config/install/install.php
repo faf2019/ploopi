@@ -47,9 +47,9 @@ function field_control($field, $value) {
             $host = explode(':', preg_replace('@[^0-9a-z\.:]@', '', strtolower($value)));
             if (empty($host[1])) $host[1] = 3306;
 
-            $str = exec($cmd = "nc -zv {$host[0]} {$host[1]}", $output, $return);
+            $fp = fsockopen($host[0], $host[1], $errno, $errstr, 1);
 
-            if ($return == 0) return 'ok';
+            if ($fp) return 'ok';
         break;
 
         case 'DB_LOGIN':

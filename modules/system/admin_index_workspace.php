@@ -401,7 +401,7 @@ echo ploopi\skin::get()->open_simplebloc();
                     </em>
                 </p>
             </div>
-            <?
+            <?php
         }
         ?>
 
