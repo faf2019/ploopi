@@ -1,8 +1,14 @@
+== Module NEWS2 - version 3.3.0 ====================================================
+
+2020-06-04  Jean-Pierre Pawlak ~ SGAMI-Est <jean-pierre@interieur.gouv.fr>
+
+* Ajout des outils de couleur sur l'éditeur de contenu des news
+
 == Module NEWS2 - version 3.2.0 ====================================================
 
 2020-04-17  Jean-Pierre Pawlak ~ SGAMI-Est <jean-pierre@interieur.gouv.fr>
 
-* Possibilité d'externaliser le code gérant news2 dans index.tpl dans index_news2.tpl avec {include_news2}.
+* Possibilité d'externaliser le code gérant les news dans index.tpl dans index_news2.tpl avec {include_news2}.
 
 == Module NEWS2 - version 3.1.2 ====================================================
 
