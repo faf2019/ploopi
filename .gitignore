@@ -9,3 +9,4 @@ install/
 modules/
 phploc.xml
 vendor/
+.htaccess
