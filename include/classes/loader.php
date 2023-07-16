@@ -879,7 +879,7 @@ abstract class loader
              * Chargement du profil utilisateur
              */
 
-            if ($_SESSION['ploopi']['userid'] != 0)
+            if (!empty($_SESSION['ploopi']['userid']))
             {
                 self::_get_modules();
 
