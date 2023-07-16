@@ -1022,6 +1022,14 @@ class formsForm extends ploopi\data_object
 
         $strFormat = strtolower($strFormat);
 
+        $strFileName = "export.{$strFormat}";
+
+        header('Content-Type: ' . ploopi\fs::getmimetype($strFileName));
+        header('Content-Disposition: attachment; Filename="'.$strFileName.'"');
+        header('Cache-Control: private');
+        header('Pragma: private');
+        header('Content-Encoding: None');
+
         ploopi\buffer::clean();
 
         switch($strFormat)
@@ -1051,6 +1059,8 @@ class formsForm extends ploopi\data_object
             case 'xls':
             case 'ods':
             case 'pdf':
+
+
                 // Options d'export
                 $arrOptions = array(
                     'landscape' => $this->fields['export_landscape'] == 1,
@@ -1136,6 +1146,7 @@ class formsForm extends ploopi\data_object
                     case 'xlsx':
                         $arrOptions['writer'] = 'excel2007';
                         echo ploopi\arr::toexcel($arrData, true, 'document.xlsx', 'Feuille', $arrTitles, $arrOptions);
+                        die();
                     break;
 
                     case 'xls':
@@ -1165,8 +1176,7 @@ class formsForm extends ploopi\data_object
                                 ploopi\arr::toexcel($arrData, true, $strTmpXls, 'Feuille', $arrTitles, $arrOptions);
 
                                 if (file_exists($strTmpXls)) {
-                                    exec("{$strUnoconv} -f {$strFormat} -o '{$strTmpFile}' '{$strTmpXls}'");
-                                    unlink($strTmpXls);
+                                    exec($cmd = "{$strUnoconv} -f {$strFormat} -o '{$strTmpFile}' '{$strTmpXls}'");
                                     if (file_exists($strTmpFile)) {
                                         echo file_get_contents($strTmpFile);
                                         unlink($strTmpFile);
@@ -1192,14 +1202,8 @@ class formsForm extends ploopi\data_object
             break;
         }
 
-        $strFileName = "export.{$strFormat}";
-
-        header('Content-Type: ' . ploopi\fs::getmimetype($strFileName));
-        header('Content-Disposition: attachment; Filename="'.$strFileName.'"');
-        header('Cache-Control: private');
-        header('Pragma: private');
         header('Content-Length: '.ob_get_length());
-        header('Content-Encoding: None');
+
         ploopi\system::kill();
 
     }
