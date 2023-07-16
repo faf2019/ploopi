@@ -184,9 +184,13 @@ abstract class arr
             $funcLineEchap = null;
 
             if ($arrOptions['strTextSep'] != '') {
-                $funcLineEchap = create_function('$value', 'return \''.$arrOptions['strTextSep'].'\'.str_replace(\''.$arrOptions['strTextSep'].'\', \''.$arrOptions['strTextSep'].$arrOptions['strTextSep'].'\', $value).\''.$arrOptions['strTextSep'].'\';');
+                $funcLineEchap = function($value) { 
+                    return $arrOptions['strTextSep'].str_replace($arrOptions['strTextSep'], $arrOptions['strTextSep'].$arrOptions['strTextSep'], $value).$arrOptions['strTextSep'];
+                };
             } elseif ($arrOptions['strFieldSep'] != '') {
-                $funcLineEchap = create_function('$value', 'return str_replace(\''.$arrOptions['strFieldSep'].'\', \'\\'.$arrOptions['strFieldSep'].'\', $value);');
+                $funcLineEchap = function($value) { 
+                    return str_replace($arrOptions['strFieldSep'], '\\'.$arrOptions['strFieldSep'], $value);
+                };
             }
 
             // Ajout de la ligne d'entête
