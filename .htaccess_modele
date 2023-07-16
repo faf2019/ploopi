@@ -21,7 +21,7 @@ AddDefaultCharset UTF-8
   ErrorDocument 404 "The requested file favicon.ico was not found."
 </Files>
 
-<IfModule mod_php7.c>
+<IfModule mod_php8.c>
     AddType application/x-httpd-php .php .php3 .php4 .php5
 
     php_flag display_startup_errors off
