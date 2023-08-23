@@ -1,7 +1,7 @@
 {
     "name": "ovensia/ploopi",
     "description": "Ploopi - plateforme de gestion web - contenus, wiki, documents, planning",
-    "version": "1.9.7-dev",
+    "version": "1.9.8",
     "keywords": ["PHP","ploopi","cms","content management system","editor","documents","planning","agenda","booking","wiki","webedit","forms","dbreport"],
     "homepage": "http://www.ploopi.org",
     "type": "project",
@@ -18,14 +18,10 @@
     ],
     "repositories": [
         {
-            "type": "pear",
-            "url": "https://pear.horde.org"
-        },
-        {
             "type":"package",
             "package": {
-              "name": "EastDesire/jscolor",
-              "version":"2.0.4",
+              "name": "eastdesire/jscolor",
+              "version":"2.5.1",
               "source": {
                   "url": "https://github.com/EastDesire/jscolor",
                   "type": "git",
@@ -57,11 +53,11 @@
         "pear/http_request2": "^2.3",
         "pear/xml_serializer": "^0.22.0",
         "pear/cache_lite": "^1.8",
-        "pear-pear.horde.org/horde_text_diff": "2.1.2",
+        "horde/text_diff": "*",
         "components/jquery": "^3.1",
         "components/jqueryui": "^1.12",
         "components/highlightjs": "^9.5",
-        "eastdesire/jscolor": "2.0.4",
+        "eastdesire/jscolor": "2.5.1",
         "ckeditor/ckeditor": "^4.5",
         "pear/net_smtp": "^1.8",
         "pear/mail": "^1.4",
@@ -74,7 +70,7 @@
         ]
     },
     "require-dev": {
-        "phploc/phploc": "^4.0",
+        "phploc/phploc": "*",
         "theseer/phpdox": "0.11.2"
     }
 }
