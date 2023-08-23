@@ -729,7 +729,7 @@ class db
     {
         if (!$this->isconnected()) return false;
 
-        return arr::map(array($this, 'escape_string'), $var);
+        return is_array($var) ? arr::map(array($this, 'escape_string'), $var) : $this->escape_string($var);
     }
 
     /**
