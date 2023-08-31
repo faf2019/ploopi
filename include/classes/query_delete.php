@@ -123,7 +123,7 @@ class query_delete extends query_sud
     protected function get_leftjoin()
     {
         $arrLeftJoin = array();
-        foreach($this->arrLeftJoin as $arrLeftJoinDetail) $arrLeftJoin[] = ploopi_sqlformat::replace($arrLeftJoinDetail, $this->objDb);
+        foreach($this->arrLeftJoin as $arrLeftJoinDetail) $arrLeftJoin[] = ploopi\sqlformat::replace($arrLeftJoinDetail, $this->objDb);
 
         return empty($arrLeftJoin) ? '' : ' LEFT JOIN '.implode(' LEFT JOIN ', $arrLeftJoin);
     }
@@ -136,7 +136,7 @@ class query_delete extends query_sud
     protected function get_innerjoin()
     {
         $arrInnerJoin = array();
-        foreach($this->arrInnerJoin as $arrInnerJoinDetail) $arrInnerJoin[] = ploopi_sqlformat::replace($arrInnerJoinDetail, $this->objDb);
+        foreach($this->arrInnerJoin as $arrInnerJoinDetail) $arrInnerJoin[] = ploopi\sqlformat::replace($arrInnerJoinDetail, $this->objDb);
 
         return empty($arrInnerJoin) ? '' : ' INNER JOIN '.implode(' INNER JOIN ', $arrInnerJoin);
     }
