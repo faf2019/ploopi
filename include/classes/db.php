@@ -340,7 +340,6 @@ class db
                 if (in_array($this->mysqli->errno, array(1213, 1146))) {
                     $count = 0;
                     while (in_array($this->mysqli->errno, array(1213, 1146)) && $count++ < 5) {
-                        sleep(3);
                         if (($res = $this->mysqli->real_query($query))) {
                             $this->query_result = $this->mysqli->store_result();
                             if ($this->log) $this->arrLog[] = array ('query' => $query, 'time' => $stop);
