@@ -2001,7 +2001,7 @@ $template_body->assign_block_vars(
 $template_body->assign_block_vars(
     'ploopi_js',
     array(
-        'PATH' => './vendor/EastDesire/jscolor/jscolor.min.js?v='.urlencode(_PLOOPI_VERSION.','._PLOOPI_REVISION)
+        'PATH' => './vendor/EastDesire/jscolor/jscolor.js?v='.urlencode(_PLOOPI_VERSION.','._PLOOPI_REVISION)
     )
 );
 
