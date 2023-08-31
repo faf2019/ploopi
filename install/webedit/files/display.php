@@ -1922,7 +1922,7 @@ if ($_SESSION['ploopi']['connected'])
             'USER_SHOWTICKETS'      => ploopi\crypt::urlencode('index.php?modcontent='._PLOOPI_MODULE_SYSTEM.'&op=showtickets'),
             'USER_SHOWFAVORITES'    => ploopi\crypt::urlencode('index.php?modcontent='._PLOOPI_MODULE_SYSTEM.'&op=showfavorites'),
             'USER_ADMINISTRATION'   => ploopi\crypt::urlencode('admin.php'.''),
-            'USER_DECONNECT'        => ploopi\crypt::urlencode('index.php?ploopi\system::logout')
+            'USER_DECONNECT'        => ploopi\crypt::urlencode('index.php?ploopi_logout')
         )
     );
 }

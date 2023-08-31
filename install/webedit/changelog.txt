@@ -3,6 +3,7 @@
 2023-08-31  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
 
 * Modification de l'inclusion de la dépendance jscolor
+* Correction du lien de déconnexion
 
 == Module WebEdit - version 2.7.11 ============================================
 
