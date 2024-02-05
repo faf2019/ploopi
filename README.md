@@ -15,11 +15,11 @@ Version de développement
 Installation des paquets logiciels nécessaires
 
 ```console
-sudo apt-get update
-sudo apt-get upgrade
-sudo apt-get install --yes apache2 libapache2-mod-php php php-mysql php-gd php-zip php-curl php-cli php-xml php-mbstring memcached php-memcached mariadb-server unoconv composer python-hachoir-metadata catdoc xpdf-utils jhead unrtf unzip zip openssl subversion git netcat
+sudo apt update
+sudo apt upgrade
+sudo apt install --yes apt-transport-https apache2 libapache2-mod-php php php-mysql php-gd php-zip php-curl php-cli php-xml php-mbstring memcached php-memcached mariadb-server unoconv composer catdoc poppler-utils jhead unrtf unzip zip openssl subversion git mediainfo
 sudo a2enmod rewrite expires headers
-sudo service apache2 restart
+sudo systemctl restart apache2
 ```
 
 Définitions des droits pour la base de données
@@ -68,7 +68,7 @@ On active le site et on redémarre Apache :
 ```console
 sudo a2dissite 000-default
 sudo a2ensite ploopi
-sudo service apache2 reload
+sudo systemctl restart apache2
 ```
 
 ### Sécurité
@@ -83,7 +83,7 @@ ServerSignature Off
 ```
 
 ```console
-sudo service apache2 reload
+sudo systemctl restart apache2
 ```
 
 ## Téléchargement direct
