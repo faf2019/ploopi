@@ -58,7 +58,7 @@
         "components/jqueryui": "^1.12",
         "components/highlightjs": "^9.5",
         "eastdesire/jscolor": "2.5.1",
-        "ckeditor/ckeditor": "^4.5",
+        "ckeditor/ckeditor": "4.22",
         "pear/net_smtp": "^1.8",
         "pear/mail": "^1.4",
         "pear/mail_mime": "^1.10",
