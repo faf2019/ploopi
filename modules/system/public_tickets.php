@@ -412,11 +412,11 @@ if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
                     }
                     else
                     {
-                        $username = "{$fields['firstname']} {$fields['lastname']}";
+                        $username = ploopi\str::htmlentities("{$fields['firstname']} {$fields['lastname']}");
 
                         if (is_null($fields['sender_user_id'])) // system ticket
                         {
-                            $username = "<i>{$username}</i>";
+                            $username = "<em>{$username}</em>";
                         }
 
                         if ($fields['needed_validation'] == 1 && $fields['sender_uid'] != $_SESSION['ploopi']['userid'] && !isset($tickets[$fields['id']]['dest'][$_SESSION['ploopi']['userid']]['status'][ploopi\ticket::DONE]))
@@ -427,7 +427,7 @@ if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
                     ?></div>
 
                     <div class="system_tickets_date"><?php echo ploopi\str::htmlentities($timestp['date']); ?> à <?php echo ploopi\str::htmlentities($timestp['time']); ?></div>
-                    <div class="system_tickets_sender"><?php echo ploopi\str::htmlentities($username); ?></div>
+                    <div class="system_tickets_sender"><?php echo $username; ?></div>
                     <div class="system_tickets_date"><?php echo ploopi\str::htmlentities($lastreply_timestp['date']); ?> à <?php echo ploopi\str::htmlentities($lastreply_timestp['time']); ?></div>
                     <div class="system_tickets_count"><?php echo ploopi\str::htmlentities($fields['count_read']); ?></div>
                     <div class="system_tickets_count"><?php echo ploopi\str::htmlentities($fields['count_replies']); ?></div>
