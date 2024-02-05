@@ -107,6 +107,7 @@ class barchart
         $this->height = $height;
         $this->values = array();
         $this->legend = array();
+        $this->datasets = array();
         $this->options =
             array(
                 'display_values' => true, // affichage des valeurs sur les barres optionnel
