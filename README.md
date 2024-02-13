@@ -33,7 +33,7 @@ sudo mysql -uroot -p -e "GRANT ALL PRIVILEGES ON ploopi.* TO 'ploopi'@'localhost
 ```console
 mkdir /var/www/ploopi
 cd /var/www/ploopi
-composer create-project --no-dev --no-interaction ovensia/ploopi:dev-trunk .
+composer create-project --no-dev --no-interaction ovensia/ploopi:dev-STABLE-1.9.7 .
 sudo chown -R www-data:www-data .
 sudo find . -type d -print0 | xargs -0 -n 1 chmod 500
 sudo find . -type f -print0 | xargs -0 -n 1 chmod 400
