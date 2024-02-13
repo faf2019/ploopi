@@ -76,6 +76,10 @@ class user extends data_object
 
     public function save() {
 
+        if ($this->isnew()) {
+            $this->fields['login'] = trim($this->fields['login']);
+        }
+
         // Modification de mot de passe ?
         if ($this->_strPreviousPassword != $this->fields['password']) {
             $this->fields['password_last_update'] = date::createtimestamp();
@@ -397,7 +401,7 @@ class user extends data_object
 
     public function setpassword($strPassword)
     {
-        $this->fields['password'] = self::generate_hash($strPassword, $this->fields['login']);
+        $this->fields['password'] = self::generate_hash($strPassword, trim($this->fields['login']));
     }
 
     /**
