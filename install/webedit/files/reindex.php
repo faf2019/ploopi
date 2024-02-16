@@ -100,7 +100,7 @@ switch($op)
         ?>
         <div style="padding:4px;">
         <?php
-        $index_start = timer::get()->getexectime();
+        $index_start = ploopi\timer::get()->getexectime();
 
         $rsArticles = ploopi\db::get()->query("SELECT id FROM ploopi_mod_webedit_article");
 
