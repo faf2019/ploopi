@@ -351,6 +351,8 @@ class form
                     switch ($objField->_strType)
                     {
                         case 'input:text':
+                        case 'input:date':
+                        case 'input:number':
                         case 'input:password':
                         case 'input:file':
                         case 'textarea':
