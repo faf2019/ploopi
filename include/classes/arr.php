@@ -70,7 +70,7 @@ abstract class arr
 
     public static function tojson($arrArray, $booForceUTF8 = true)
     {
-        return json_encode($booForceUTF8 ? self::map('utf8_encode',self::cleankeys($arrArray)) : self::cleankeys($arrArray));
+        return json_encode($booForceUTF8 ? self::map(function($str) { return mb_convert_encoding($str, 'UTF-8', 'ISO-8859-1'); },self::cleankeys($arrArray)) : self::cleankeys($arrArray));
     }
 
     /**
@@ -85,7 +85,7 @@ abstract class arr
 
     public static function toxml_deprecated($arrArray, $strRootName = 'data', $strDefaultTagName = 'row', $strEncoding = 'ISO-8859-1')
     {
-        $arrArray = self::map('utf8_encode', $arrArray);
+        $arrArray = self::map(function($str) { return mb_convert_encoding($str, 'UTF-8', 'ISO-8859-1'); }, $arrArray);
 
         Array2XML::init('1.0', $strEncoding);
         $xml = Array2XML::createXML($strRootName, array($strDefaultTagName => $arrArray));
@@ -184,11 +184,11 @@ abstract class arr
             $funcLineEchap = null;
 
             if ($arrOptions['strTextSep'] != '') {
-                $funcLineEchap = function($value) { 
+                $funcLineEchap = function($value) use($arrOptions) { 
                     return $arrOptions['strTextSep'].str_replace($arrOptions['strTextSep'], $arrOptions['strTextSep'].$arrOptions['strTextSep'], $value).$arrOptions['strTextSep'];
                 };
             } elseif ($arrOptions['strFieldSep'] != '') {
-                $funcLineEchap = function($value) { 
+                $funcLineEchap = function($value) use($arrOptions) { 
                     return str_replace($arrOptions['strFieldSep'], '\\'.$arrOptions['strFieldSep'], $value);
                 };
             }
@@ -525,7 +525,7 @@ abstract class arr
         $objWorkSheet->getParent()->getDefaultStyle()->getAlignment()->setWrapText(true);
 
         // Titre
-        $objWorkSheet->setTitle(utf8_encode($strSheetName));
+        $objWorkSheet->setTitle($strSheetName);
 
         // Fit to page
         $objWorkSheet->getPageSetup()->setFitToWidth($arrOptions['fitpage_width']);
@@ -547,7 +547,7 @@ abstract class arr
             if (!empty($arrOptions['headers'])) {
                 foreach($arrOptions['headers'] as $strHeader) {
 
-                    $objWorkSheet->setCellValueByColumnAndRow(0, $intLine, utf8_encode($strHeader));
+                    $objWorkSheet->setCellValueByColumnAndRow(0, $intLine, $strHeader);
 
                     $objWorkSheet->getStyle("A{$intLine}:{$chrMaxCol}{$intLine}")->applyFromArray($rowTitleStyle);
                     $objWorkSheet->mergeCells("A{$intLine}:{$chrMaxCol}{$intLine}");

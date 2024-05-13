@@ -488,6 +488,8 @@ abstract class mail
 
     public static function check($email)
     {
+        if (empty($email)) return false;
+        
         $atom   = '[-a-z0-9!#$%&\'*+\\/=?^_`{|}~]';   // caractères autorisés avant l'arobase
         $domain = '([a-z0-9]([-a-z0-9]*[a-z0-9]+)?)'; // caractères autorisés après l'arobase (nom de domaine)
 
@@ -499,6 +501,6 @@ abstract class mail
                                         // séparés par des points
         $domain . '{2,63}$/i';          // Suivi de 2 à 63 caractères autorisés pour le nom de domaine
 
-        return (preg_match($regex, $email));
+        return preg_match($regex, $email);
     }
 }

@@ -151,6 +151,6 @@ abstract class sqlformat
         self::$arrValues = $arrData['values'];
 
         // Remplacement des variables selon la regex
-        return preg_replace_callback(self::$strRegExFormat, array('self', 'cb_replace'), $arrData['rawsql']);
+        return preg_replace_callback(self::$strRegExFormat, array(self::class, 'cb_replace'), $arrData['rawsql']);
     }
 }

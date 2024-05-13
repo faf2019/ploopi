@@ -964,7 +964,7 @@ abstract class loader
 
                 // sorting workspaces by priority/label
                 uksort ($_SESSION['ploopi']['workspaces'], function($a, $b) {
-                    return (sprintf("%03d_%s", intval($_SESSION['ploopi']['workspaces'][$b]['priority']), $_SESSION['ploopi']['workspaces'][$b]['label']) < sprintf("%03d_%s", intval($_SESSION['ploopi']['workspaces'][$a]['priority']), $_SESSION['ploopi']['workspaces'][$a]['label']));
+                    return (integer)(sprintf("%03d_%s", intval($_SESSION['ploopi']['workspaces'][$b]['priority']), $_SESSION['ploopi']['workspaces'][$b]['label']) < sprintf("%03d_%s", intval($_SESSION['ploopi']['workspaces'][$a]['priority']), $_SESSION['ploopi']['workspaces'][$a]['label']));
                 });
 
                 // create a list with allowed workspaces only

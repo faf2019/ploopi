@@ -119,7 +119,7 @@ abstract class security
         }
         else
         {
-            if ((!defined(_PLOOPI_FILTER_VARS) || _PLOOPI_FILTER_VARS) && substr($strVarName,0,4) != 'fck_') $mixVar = inputfilter::process($mixVar);
+            if ((!defined(_PLOOPI_FILTER_VARS) || _PLOOPI_FILTER_VARS) && substr(is_null($strVarName) ? '' : $strVarName,0,4) != 'fck_') $mixVar = inputfilter::process($mixVar);
         }
 
         return $mixVar;

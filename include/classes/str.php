@@ -260,6 +260,7 @@ abstract class str {
     public static function htmlentities($str, $flags = null, $encoding = null, $striptags = false)
     {
 
+        if (is_null($str)) return '';
         if (is_null($encoding)) $encoding = 'UTF-8';
         if (is_null($flags)) $flags = ENT_QUOTES | ENT_SUBSTITUTE;
 

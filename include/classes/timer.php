@@ -49,9 +49,8 @@ class timer
      * Constructeur de la classe
      */
 
-    public function __construct()
-    {
-        $this->start = 0;
+    public function __construct() {
+        $this->_start = 0;
     }
 
     /**

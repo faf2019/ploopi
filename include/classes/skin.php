@@ -44,6 +44,8 @@ class skin
      */
     private static $_skin = null;
 
+    public $values = [];
+
     /**
      * Constructeur
      *
@@ -52,7 +54,7 @@ class skin
 
     public function __construct($skin)
     {
-        $this->values = array();
+        $this->values = [];
         $this->values['path'] = "./templates/{$_SESSION['ploopi']['mode']}/{$skin}/img";
         $this->values['inifile'] = "./templates/{$_SESSION['ploopi']['mode']}/{$skin}/skin.ini";
         if (file_exists($this->values['inifile'])) $this->values = array_merge($this->values,parse_ini_file($this->values['inifile']));
