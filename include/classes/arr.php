@@ -184,11 +184,11 @@ abstract class arr
             $funcLineEchap = null;
 
             if ($arrOptions['strTextSep'] != '') {
-                $funcLineEchap = function($value) { 
+                $funcLineEchap = function($value) use($arrOptions) {
                     return $arrOptions['strTextSep'].str_replace($arrOptions['strTextSep'], $arrOptions['strTextSep'].$arrOptions['strTextSep'], $value).$arrOptions['strTextSep'];
                 };
             } elseif ($arrOptions['strFieldSep'] != '') {
-                $funcLineEchap = function($value) { 
+                $funcLineEchap = function($value) use($arrOptions) {
                     return str_replace($arrOptions['strFieldSep'], '\\'.$arrOptions['strFieldSep'], $value);
                 };
             }
