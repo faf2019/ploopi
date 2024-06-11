@@ -116,9 +116,9 @@ abstract class arr
 
     private static function _toxml($arrData, $xml_data = null, $parent = null) {
         if (is_null($xml_data)) {
-            $key = key($arrData);
+            $key = 'root';
             $xml_data = new \SimpleXMLElement('<?xml version="1.0"?><'.$key.'></'.$key.'>');
-            self::_toxml(current($arrData), $xml_data);
+            self::_toxml($arrData, $xml_data);
 
             return $xml_data;
         }
