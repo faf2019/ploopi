@@ -433,14 +433,11 @@ ploopi.validatefield = function(field_label, field_object, field_type) {
         /* Vérifie que le champ contient une date valide ou vide */
         if (field_type == 'date' || field_type == 'emptydate')
         {
-            if (field_type == 'emptydate' && field_value.length == 0) ok = true;
-            else
-            {
-                ok = false;
-                if (field_type == 'date' && field_value.length > 0) ok = true;
-            }
+            ok = false
+            if (field_type == 'emptydate') ok = true;
+            else if (field_value.length > 0 && field_value != '0000-00-00') ok = true;
 
-            if (!ok) msg = (field_type == 'date' && field_value.length == 0) ? lstmsg[4] : '';
+            if (!ok) msg = lstmsg[4];
         }
 
         /* Vérifie que le champ contient une heure valide ou vide */
@@ -478,7 +475,7 @@ ploopi.validatefield = function(field_label, field_object, field_type) {
     }
     else ok = false;
 
-    if (!ok)
+    if (!ok && msg != '')
     {
         alert(msg.replace(reg,field_label));
         if (field_type != 'checked')
