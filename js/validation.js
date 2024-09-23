@@ -440,7 +440,6 @@ ploopi.validatefield = function(field_label, field_object, field_type) {
                 ok = false;
                 if (field_type == 'date' && field_value.length > 0)
                     ok = true;
-                }
             }
 
             if (!ok) msg = (field_type == 'date' && field_value.length == 0) ? lstmsg[4] : lstmsg[7];
