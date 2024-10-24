@@ -181,7 +181,7 @@ if (!empty($_POST)) {
         @$mysqli->real_query("DROP DATABASE IF EXISTS `{$S['saved']['DB_DATABASE']}`");
         $mysqli->next_result();
 
-        @$mysqli->real_query("CREATE DATABASE `{$S['saved']['DB_DATABASE']}`");
+        @$mysqli->real_query("CREATE DATABASE `{$S['saved']['DB_DATABASE']}` CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci");
         $mysqli->next_result();
 
         if (!$mysqli->select_db($S['saved']['DB_DATABASE'])) {
