@@ -43,7 +43,7 @@ class db
      * @var boolean
      */
 
-    private $persistency;
+    private $persistency = false;
 
     /**
      * Nom d'utilisateur pour la connexion à la BDD
@@ -51,7 +51,7 @@ class db
      * @var string
      */
 
-    private $user;
+    private $user = '';
 
     /**
      * Mot de passe pour la connexion à la BDD
@@ -59,7 +59,7 @@ class db
      * @var string
      */
 
-    private $password;
+    private $password = '';
 
     /**
      * Nom du serveur (hôte, ip) pour la connexion à la BDD
@@ -67,7 +67,7 @@ class db
      * @var string
      */
 
-    private $server;
+    private $server = '';
 
     /**
      * Port pour la connexion à la BDD
@@ -75,7 +75,7 @@ class db
      * @var string
      */
 
-    private $port;
+    private $port = '';
 
     /**
      * Nom de la base de données pour la connexion à la BDD
@@ -83,7 +83,7 @@ class db
      * @var string
      */
 
-    private $database;
+    private $database = '';
 
     /**
      * Objet mysqli
@@ -122,7 +122,7 @@ class db
      * @var timer
      */
 
-    private $db_timer;
+    private $db_timer = null;
 
     /**
      * Dernière erreur retournée
@@ -130,7 +130,7 @@ class db
      * @var string
      */
 
-    private $last_error;
+    private $last_error = '';
 
     /**
      * Dernier numéro d'erreur retourné
@@ -138,7 +138,7 @@ class db
      * @var int
      */
 
-    private $last_errorno;
+    private $last_errorno = '';
 
     /**
      * Dernière requête exécutée
@@ -146,7 +146,7 @@ class db
      * @var string
      */
 
-    private $last_query;
+    private $last_query = '';
 
     /**
      * Log des requêtes exécutées par l'instance
@@ -154,7 +154,7 @@ class db
      * @var array
      */
 
-    private  $arrLog;
+    private $arrLog = [];
 
     /**
      * Activation du log de requête ou non
@@ -162,7 +162,7 @@ class db
      * @var boolean
      */
 
-    private $log;
+    private $log = false;
 
 
     /**
@@ -331,18 +331,59 @@ class db
 
             if ($res = $this->mysqli->real_query($query)) {
                 $this->query_result = $this->mysqli->store_result();
-                if ($this->log) $this->arrLog[] = array ('query' => $query, 'time' => $stop);
+                if ($this->log) {
+                    $stop = $this->timer_stop();
+
+                    $arrTrace = debug_backtrace();
+                    $arrFiles = [];
+                    // parse debug trace
+                    $s = sizeof($arrTrace);
+                    for ($key = $s-1; $key>=0; $key--) {
+                        if (!empty($arrTrace[$key]['file']) && !empty($arrTrace[$key]['line'])) {
+                            $arrFiles[] = sprintf("%s (%s)", $arrTrace[$key]['file'],  $arrTrace[$key]['line']);
+                        }
+                    }
+
+                    $this->arrLog[] = array ('query' => $query, 'time' => $stop, 'trace' => $arrFiles);
+                }
             }
             else {
                 // Deadlock found when trying to get lock; try restarting transaction  ?
                 // On lance la requête 1 nouvelle fois
                 // On applique également le principe en cas de table manquante (parfois juste en phase de regénération)
-                if (in_array($this->mysqli->errno, array(1213, 1146))) {
-                    $count = 0;
-                    while (in_array($this->mysqli->errno, array(1213, 1146)) && $count++ < 5) {
+                $arrFiles = [];
+
+                if ($this->log) {
+                    $arrTrace = debug_backtrace();
+                    // parse debug trace
+                    $s = sizeof($arrTrace);
+                    for ($key = $s-1; $key>=0; $key--) {
+                        if (!empty($arrTrace[$key]['file']) && !empty($arrTrace[$key]['line'])) {
+                            $arrFiles[] = sprintf("%s (%s)", $arrTrace[$key]['file'],  $arrTrace[$key]['line']);
+                        }
+                    }
+
+                    $strLogFile = _PLOOPI_PATHDATA.'/mysql_error.log';
+                    file_put_contents($strLogFile, date('Y-m-d H:i:s')." ".$this->mysqli->error."\r\n".implode("\r\n", $arrFiles)."\r\nQuery: ".trim($query)."\r\n", FILE_APPEND);
+                }
+
+                $count = 0;
+                if (in_array($this->mysqli->errno, array(1205, 1213, 1146, 2006))) {
+                    while (in_array($this->mysqli->errno, array(1205, 1213, 1146, 2006)) && $count++ < 5) {
+                        // sleep($count);
+                        usleep($count*10000);
+                        $this->timer_start();
+
                         if (($res = $this->mysqli->real_query($query))) {
                             $this->query_result = $this->mysqli->store_result();
-                            if ($this->log) $this->arrLog[] = array ('query' => $query, 'time' => $stop);
+                            $stop = $this->timer_stop();
+
+                            if ($this->log) {
+                                $this->arrLog[] = array ('query' => $query, 'time' => $stop, 'trace' => $arrFiles);
+                            }
+                        }
+                        else {
+                            $stop = $this->timer_stop();
                         }
                     }
                 }
@@ -351,12 +392,9 @@ class db
                     $this->last_error = $this->mysqli->error;
                     $this->last_errorno = $this->mysqli->errno;
                     $this->last_query = $query;
-                    trigger_error($this->mysqli->error.' ('.$this->mysqli->errno.") <br /><b>query:</b> {$query}", E_USER_WARNING);
+                    trigger_error($this->mysqli->error.' ('.$this->mysqli->errno.") (Retries:".$count.")<br /><b>query:</b> {$query}", E_USER_WARNING);
                 }
             }
-
-            $stop = $this->timer_stop();
-
         }
 
         return $this->query_result;
@@ -767,6 +805,8 @@ class db
     public function get_exectime_queries() { return($this->exectime_queries); }
 
     public function get_log() { return $this->arrLog; }
+
+    public function enable_log($log) { $this->log = $log; }
 
     public function flush_log() { $this->arrLog = array(); }
 
