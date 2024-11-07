@@ -89,7 +89,7 @@ self::$template_body->assign_block_vars('ploopi_js', array(
 ));
 
 self::$template_body->assign_block_vars('ploopi_js', array(
-        'PATH' => './vendor/EastDesire/jscolor/jscolor.js?v='.urlencode(_PLOOPI_VERSION.','._PLOOPI_REVISION)
+        'PATH' => './vendor/eastdesire/jscolor/jscolor.js?v='.urlencode(_PLOOPI_VERSION.','._PLOOPI_REVISION)
 ));
 
 $ploopi_additional_head = '';
