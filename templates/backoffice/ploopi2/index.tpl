@@ -360,7 +360,7 @@ function tpl_passwordlost() {
             duraction: 0.2,
             fps: 25,
             afterFinish:function() {
-                $('ploopi_lostpassword_login').focus();
+                jQuery('#ploopi_lostpassword_login')[0].focus();
                 effect = false;
             }
         }
@@ -377,7 +377,7 @@ function tpl_passwordlost_cancel() {
             duraction: 0.2,
             fps: 25,
             afterFinish:function() {
-                $('ploopi_login').focus();
+                jQuery('#ploopi_login')[0].focus();
                 effect = false;
             }
         }
