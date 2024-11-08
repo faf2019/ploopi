@@ -160,6 +160,9 @@ abstract class error
                 // display message
                 if (php_sapi_name() != 'cli')  // Affichage standard, sortie HTML
                 {
+                    header("Content-Disposition: inline");
+                    header("Content-Type: text/html");
+
                     echo "<div class=\"ploopi_error\">
                             <div>
                             <strong>".self::$errortype[$errno]."</strong>
@@ -171,9 +174,6 @@ abstract class error
                 }
                 else // Affichage cli, sortie texte brut
                 {
-                    header("Content-Disposition: inline");
-                    header("Content-Type: text/html");
-
                     fwrite(STDOUT, "=== ".self::$errortype[$errno]." ==================================\r\n{$errstr}\r\n{$strErrorStack}\r\n");
                 }
 
