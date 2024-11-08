@@ -97,9 +97,9 @@ abstract class error
      *
      * @param int $errno le niveau d'erreur
      * @param string $errstr le message d'erreur
-     * @param string $errfile le nom du fichier dans lequel l'erreur a Ã©tÃ© identifiÃ©e
-     * @param int $errline le numÃ©ro de ligne Ã  laquelle l'erreur a Ã©tÃ© identifiÃ©e
-     * @param array $vars tableau avec toutes les variables qui existaient lorsque l'erreur a Ã©tÃ© dÃ©clenchÃ©e
+     * @param string $errfile le nom du fichier dans lequel l'erreur a été identifiée
+     * @param int $errline le numéro de ligne à laquelle l'erreur a été identifiée
+     * @param array $vars tableau avec toutes les variables qui existaient lorsque l'erreur a été déclenchée
      *
      * @see _PLOOPI_DISPLAY_ERRORS
      * @see _PLOOPI_ERROR_REPORTING
@@ -107,7 +107,8 @@ abstract class error
 
     public static function handler($errno, $errstr, $errfile, $errline = 0, $vars = [])
     {
-        if (error_reporting() == 0) return false;
+        // Fonctions appelées avec @ (PHP 8: 4437)
+        if (in_array(error_reporting(), [4437, 0])) return false;
 
         // translate error_level into "readable" array
         $bit = _PLOOPI_ERROR_REPORTING;
@@ -170,6 +171,9 @@ abstract class error
                 }
                 else // Affichage cli, sortie texte brut
                 {
+                    header("Content-Disposition: inline");
+                    header("Content-Type: text/html");
+
                     fwrite(STDOUT, "=== ".self::$errortype[$errno]." ==================================\r\n{$errstr}\r\n{$strErrorStack}\r\n");
                 }
 
