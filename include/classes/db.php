@@ -184,7 +184,7 @@ class db
      * @return mixed false si problème de connexion, id de connexion sinon
      */
 
-    public function __construct($server, $user, $password = '', $database = '', $persistency = false, $log = false, $timeout = 1)
+    public function __construct($server, $user, $password = '', $database = '', $persistency = false, $log = false, $timeout = 1, $charset = 'utf8')
     {
         $this->persistency = $persistency;
         $this->user = $user;
@@ -207,6 +207,9 @@ class db
         if ($this->persistency) $this->server = 'p:'.$this->server;
 
         $this->timer_start();
+
+        mysqli_report(MYSQLI_REPORT_OFF);
+        
         $this->mysqli = mysqli_init();
         $this->mysqli->options(MYSQLI_OPT_CONNECT_TIMEOUT, $timeout);
         @$this->mysqli->real_connect($this->server, $this->user, $this->password, $this->database, $this->port);
@@ -218,7 +221,7 @@ class db
             $this->mysqli = null;
         }
         else {
-            $this->mysqli->set_charset('utf8');
+            $this->mysqli->set_charset($charset);
         }
     }
 
@@ -423,23 +426,34 @@ class db
             $this->query_result = array();
 
             if ($this->mysqli->multi_query($query)) {
-                $this->query_result[] = $this->mysqli->store_result();
-                while ($this->mysqli->more_results()) {
-                    $this->mysqli->next_result();
+                do {
                     $this->query_result[] = $this->mysqli->store_result();
-                }
+                } while ($this->mysqli->next_result());
 
-                if ($this->log) $this->arrLog[] = array ('query' => $query, 'time' => $stop);
+                $stop = $this->timer_stop();
+
+                if ($this->log) {
+                    $arrTrace = debug_backtrace();
+                    $arrFiles = [];
+                    // parse debug trace
+                    $s = sizeof($arrTrace);
+                    for ($key = $s-1; $key>=0; $key--) {
+                        if (!empty($arrTrace[$key]['file']) && !empty($arrTrace[$key]['line'])) {
+                            $arrFiles[] = sprintf("%s (%s)", $arrTrace[$key]['file'],  $arrTrace[$key]['line']);
+                        }
+                    }
+
+                    $this->arrLog[] = array ('query' => $query, 'time' => $stop, 'trace' => $arrFiles);
+                }
             }
             else {
                 $this->last_error = $this->mysqli->error;
                 $this->last_errorno = $this->mysqli->errno;
                 $this->last_query = $query;
+
+                $stop = $this->timer_stop();
                 trigger_error($this->mysqli->error."<br /><b>query:</b> {$query}", E_USER_WARNING);
             }
-
-            $stop = $this->timer_stop();
-
         }
 
         return $this->query_result;
@@ -799,6 +813,8 @@ class db
 
         return $intExt;
     }
+
+    public function set_charset($charset) { $this->mysqli->set_charset($charset); }
 
     public function get_num_queries() { return($this->num_queries); }
 
