@@ -148,6 +148,7 @@ class form_field extends form_element
             case 'input:text':
             case 'input:number':
             case 'input:email':
+            case 'input:time':
             case 'input:date':
             case 'input:month':
             case 'input:password':
@@ -215,6 +216,15 @@ class form_field extends form_element
 
             case 'input:email':
                 $strOutput .= "<input type=\"email\" name=\"{$this->_strName}\" id=\"{$this->_strId}\" value=\"{$strValue}\" tabindex=\"{$intTabindex}\"{$strProperties}{$strMaxLength}{$strEvents}{$strPlaceHolder} />";
+            break;
+
+            case 'input:time':
+                $strMinMax = '';
+                if (isset($this->_arrOptions['min'])) $strMinMax .= " min=\"{$this->_arrOptions['min']}\"";
+                if (isset($this->_arrOptions['max'])) $strMinMax .= " max=\"{$this->_arrOptions['max']}\"";
+                if (isset($this->_arrOptions['step']) && is_numeric($this->_arrOptions['step'])) $strMinMax .= " step=\"{$this->_arrOptions['step']}\"";
+
+                $strOutput .= "<input type=\"time\" name=\"{$this->_strName}\" id=\"{$this->_strId}\" value=\"{$strValue}\" tabindex=\"{$intTabindex}\"{$strProperties}{$strMaxLength}{$strEvents}{$strPlaceHolder}{$strMinMax} />";
             break;
 
             case 'input:date':
