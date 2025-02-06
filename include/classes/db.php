@@ -308,6 +308,42 @@ class db
         return $res;
     }
 
+
+    /**
+     * Nouvelle transaction
+     */
+
+    public function begin_transaction() {
+
+        if (!$this->isconnected()) return false;
+
+        return $this->mysqli->begin_transaction();
+
+    }
+
+    /**
+     * Valide une transaction
+     */
+
+    public function commit() {
+
+        if (!$this->isconnected()) return false;
+
+        return $this->mysqli->commit();
+    }
+
+    /**
+     * Annule une transaction
+     */
+
+    public function rollback() {
+
+        if (!$this->isconnected()) return false;
+
+        return $this->mysqli->rollback();
+    }
+
+
     /**
      * Exécute une requête SQL
      *
