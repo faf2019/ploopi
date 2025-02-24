@@ -1,3 +1,9 @@
+== Module WebEdit - version 2.8.2 ============================================
+
+2025-02-24  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Désactivation d'un warning sur CkEditor (Anne-Lise, Johann)
+
 == Module WebEdit - version 2.8.1 ============================================
 
 2024-02-16  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

@@ -1,3 +1,9 @@
+== Module NEWS2 - version 3.3.1 ====================================================
+
+2025-02-24  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Désactivation d'un warning sur CkEditor (Anne-Lise, Johann)
+
 == Module NEWS2 - version 3.3.0 ====================================================
 
 2020-06-04  Jean-Pierre Pawlak ~ SGAMI-Est <jean-pierre@interieur.gouv.fr>
@@ -21,7 +27,7 @@
 2020-04-08  Jean-Pierre Pawlak ~ SGAMI-Est <jean-pierre@interieur.gouv.fr>
 
 * Suppression des liens dans ckeditor (lien principal en conflit)
-* En front (template et wce) afficage du contenu complet et plus au travers de htmlentities 
+* En front (template et wce) afficage du contenu complet et plus au travers de htmlentities
 * Bug JS, Au départ, la 2e news était active au lieu de la première
 
 == Module NEWS2 - version 3.1.0 ====================================================

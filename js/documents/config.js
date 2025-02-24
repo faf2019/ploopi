@@ -54,7 +54,7 @@ CKEDITOR.editorConfig = function( config ) {
     config.filebrowserImageWindowWidth = '800';
     config.filebrowserImageWindowHeight = '600';
 
-
+    config.versionCheck = false;
     // Define changes to default configuration here. For example:
     // config.language = 'fr';
     // config.uiColor = '#AADC6E';

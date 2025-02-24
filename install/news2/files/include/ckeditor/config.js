@@ -6,7 +6,7 @@
 CKEDITOR.editorConfig = function( config ) {
 
     // Comportement de la touche "ENTER" (inversé par rapport à la config par défaut)
-	config.enterMode = CKEDITOR.ENTER_BR;
+    config.enterMode = CKEDITOR.ENTER_BR;
     config.shiftEnterMode = CKEDITOR.ENTER_P;
 
     // Paramétrage du filtre ACF (filtre du contenu)
@@ -15,7 +15,7 @@ CKEDITOR.editorConfig = function( config ) {
     // file://ckeditor/samples/datafiltering.html
     // config.allowedContent = 'a[!href]; ul; li{text-align}(someclass)';
     // config.allowedContent = 'span[*]{*}(*)';
- 
+
    config.allowedContent =
         'h1 h2 h3 p blockquote strong em;' +
         'a[!href];' +
@@ -33,6 +33,7 @@ CKEDITOR.editorConfig = function( config ) {
     // Barre d'outil personnalisée
     config.toolbar = [
         ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo'],
+        ['Link','Unlink'],
         ['Image','Table','HorizontalRule','Smiley','SpecialChar','PageBreak','tag'],
         ['NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv','-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock'],
        // '/',
@@ -45,7 +46,7 @@ CKEDITOR.editorConfig = function( config ) {
     ];
 
     // Plugins additionnels
-    config.extraPlugins = 'autogrow,tag,colorbutton,print';
+    config.extraPlugins = 'autogrow,tag';
     config.removePlugins = 'elementspath';
     config.resize_enabled = false;
 
@@ -61,6 +62,7 @@ CKEDITOR.editorConfig = function( config ) {
     config.filebrowserImageWindowWidth = '800';
     config.filebrowserImageWindowHeight = '600';
 
+    config.versionCheck = false;
 
     // Define changes to default configuration here. For example:
     config.language = 'fr';

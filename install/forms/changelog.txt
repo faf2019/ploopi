@@ -1,3 +1,9 @@
+== Module FORMS - version 3.8.1 ====================================================
+
+2025-02-24  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Désactivation d'un warning sur CkEditor (Anne-Lise, Johann)
+
 == Module FORMS - version 3.8.0 ====================================================
 
 2023-07-16  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
