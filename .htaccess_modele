@@ -43,7 +43,7 @@ AddDefaultCharset UTF-8
     php_value post_max_size 32M
     php_value upload_max_filesize 32M
     php_value max_input_vars 5000
-    php_value output_buffering Off
+    php_value output_buffering 0
     php_value short_open_tag on
 
     php_value date.timezone Europe/Paris
