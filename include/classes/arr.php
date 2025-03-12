@@ -184,11 +184,11 @@ abstract class arr
             $funcLineEchap = null;
 
             if ($arrOptions['strTextSep'] != '') {
-                $funcLineEchap = function($value) use($arrOptions) { 
+                $funcLineEchap = function($value) use($arrOptions) {
                     return $arrOptions['strTextSep'].str_replace($arrOptions['strTextSep'], $arrOptions['strTextSep'].$arrOptions['strTextSep'], $value).$arrOptions['strTextSep'];
                 };
             } elseif ($arrOptions['strFieldSep'] != '') {
-                $funcLineEchap = function($value) use($arrOptions) { 
+                $funcLineEchap = function($value) use($arrOptions) {
                     return str_replace($arrOptions['strFieldSep'], '\\'.$arrOptions['strFieldSep'], $value);
                 };
             }
@@ -242,7 +242,7 @@ abstract class arr
      * @param array $arrOptions Options de configuration de l'export ('landscape', 'fitpage_width', 'fitpage_height', 'tofile', 'setborder', 'textwrap')
      * @return binary contenu XLS
      */
-    public static function toxls($arrArray, $booHeader = true, $strFileName = 'document.xls', $strSheetName = 'Feuille', $arrDataFormats = null, $arrOptions = null)
+    public static function toxls($arrArray, $booHeader = true, $strFileName = 'document.xls', $strSheetName = 'Feuille', $arrDataFormats = null, $arrOptions = null, $strComment = null)
     {
         $arrDefautOptions = array(
             'landscape' => true,
@@ -420,6 +420,11 @@ abstract class arr
                 }
                 $intLine++;
             }
+        }
+
+        if (!empty($strComment)) {
+            $objWorkSheetComment = $objWorkBook->addWorksheet('comment');
+            $objWorkSheetComment->writeString(0, 0, iconv('UTF-8', 'CP1252', $strComment));
         }
 
         // fermeture du document
