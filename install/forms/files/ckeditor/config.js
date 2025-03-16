@@ -59,7 +59,7 @@ CKEDITOR.editorConfig = function( config ) {
     config.filebrowserBrowseUrl = false;
     config.filebrowserImageBrowseUrl = false;
 
-
+    config.versionCheck = false;
     // Define changes to default configuration here. For example:
     // config.language = 'fr';
     // config.uiColor = '#AADC6E';

@@ -48,6 +48,8 @@ CKEDITOR.editorConfig = function( config ) {
     config.autoGrow_onStartup = true;
     config.autoGrow_minHeight = 200;
 
+    config.versionCheck = false;
+
     // Define changes to default configuration here. For example:
     // config.language = 'fr';
     // config.uiColor = '#AADC6E';

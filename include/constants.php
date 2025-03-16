@@ -30,8 +30,8 @@
  * @author Ovensia
  */
 
-define ('_PLOOPI_VERSION', '1.9.7.10');
-define ('_PLOOPI_REVISION', '240611');
+define ('_PLOOPI_VERSION', '1.9.7.11');
+define ('_PLOOPI_REVISION', '250316');
 
 define ('_SYSTEM_SYSTEMADMIN',  0);
 define ('_SYSTEM_WORKSPACES',   'work');
