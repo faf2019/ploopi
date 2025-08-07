@@ -64,7 +64,7 @@ class form_select extends form_field
      * @param string $strId propriété "id" du champ
      * @param array $arrOptions options du champ
      */
-    public function __construct($strLabel, $arrValues = array(), $arrSelected, $strName, $strId = null, $arrOptions = null)
+    public function __construct($strLabel, $arrValues, $arrSelected, $strName, $strId = null, $arrOptions = null)
     {
         if (!is_array($arrValues)) trigger_error('Ce type d\'élément attend un tableau de valeurs', E_USER_ERROR);
 

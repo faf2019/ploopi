@@ -40,10 +40,10 @@ class form_select_option extends form_element
     /**
      * Constructeur de la classe
      *
-     * @param string $strLabel libellÃ© de l'Ã©lÃ©ment
-     * @param string $strValue valeur de l'Ã©lÃ©ment
-     * @param string $strId propriÃ©tÃ© "id" de l'Ã©lÃ©ment
-     * @param array $arrOptions options du l'Ã©lÃ©ment
+     * @param string $strLabel libellé de l'élément
+     * @param string $strValue valeur de l'élément
+     * @param string $strId propriété "id" de l'élément
+     * @param array $arrOptions options du l'élément
      */
     public function __construct($strLabel, $strValue, $strId = null, $arrOptions = null)
     {
@@ -51,10 +51,10 @@ class form_select_option extends form_element
     }
 
     /**
-     * GÃ©nÃ¨re le rendu html de l'Ã©lÃ©ment
+     * Génère le rendu html de l'élément
      *
      * @param int $intTabindex tabindex du champ dans le formulaire
-     * @param boolean $booSelected true si sÃ©lectionnÃ©
+     * @param boolean $booSelected true si sélectionné
      *
      * @return string code html
      */
@@ -69,5 +69,3 @@ class form_select_option extends form_element
         return "<option value=\"{$strValue}\"{$strId}{$strStyle}{$strSelected}>{$strLabel}</option>";
     }
 }
-
-
