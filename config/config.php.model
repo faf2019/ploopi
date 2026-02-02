@@ -469,6 +469,42 @@ switch($http_host)
 
         define ('_PLOOPI_LOAD_NBCORE', <NBCORE>);
 
+        /**
+         * Active le stockage à distance.
+         */
+
+        define ('_PLOOPI_S3_ACTIVATED', <true>);
+
+        /**
+         * l'url de l'endpoint S3.
+         */
+
+        define ('_PLOOPI_S3_ENDPOINT_URL', <https://minio-api.example.com>);
+
+        /**
+         * la region de l'endpoint S3'.
+         */
+
+        define ('_PLOOPI_S3_REGION', <eu-west-1>);
+
+        /**
+         * le nom du bucket à utiliser.
+         */
+
+        define ('_PLOOPI_S3_BUCKET', <argosv1>);
+
+        /**
+         * la cle publique pour s'authentifier.
+         */
+
+        define ('_PLOOPI_S3_AUTH_KEY', <a>);
+
+        /**
+         * la cle privée pour s'authentifier.
+         */
+
+        define ('_PLOOPI_S3_AUTH_SECRET', <a>);
+
 
     break;
 }
