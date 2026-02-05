@@ -794,11 +794,11 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
             {
                 $ticket_status = new ploopi\ticket_status();
 
-                if (!$ticket_status->open($_GET['ticket_id'], $_SESSION['ploopi']['userid'], _PLOOPI_TICKETS_OPENED))
+                if (!$ticket_status->open($_GET['ticket_id'], $_SESSION['ploopi']['userid'], ploopi\ticket::OPENED))
                 {
                     $ticket_status->fields['id_ticket'] = $_GET['ticket_id'];
                     $ticket_status->fields['id_user'] = $_SESSION['ploopi']['userid'];
-                    $ticket_status->fields['status'] = _PLOOPI_TICKETS_OPENED;
+                    $ticket_status->fields['status'] = ploopi\ticket::OPENED;
                     $ticket_status->save();
                 }
 
@@ -875,11 +875,11 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
 
             if (!empty($_GET['ticket_id']) && is_numeric($_GET['ticket_id']))
             {
-                if (!$ticket_status->open($_GET['ticket_id'], $_SESSION['ploopi']['userid'], _PLOOPI_TICKETS_DONE))
+                if (!$ticket_status->open($_GET['ticket_id'], $_SESSION['ploopi']['userid'], _ploopi\ticket::DONE))
                 {
                     $ticket_status->fields['id_ticket'] = $_GET['ticket_id'];
                     $ticket_status->fields['id_user'] = $_SESSION['ploopi']['userid'];
-                    $ticket_status->fields['status'] = _PLOOPI_TICKETS_DONE;
+                    $ticket_status->fields['status'] = ploopi\ticket::DONE;
                     $ticket_status->save();
                 }
             }
