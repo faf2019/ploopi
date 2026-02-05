@@ -84,8 +84,12 @@ switch($ploopi_op)
                 $attachement = true;
 
                 if (isset($_GET['attachement']) && ($_GET['attachement'] == 0 || $_GET['attachement'] == 'false')) $attachement = false;
-
-                if (file_exists($documentsfile->getfilepath())) ploopi\fs::downloadfile($documentsfile->getfilepath(),$documentsfile->fields['name'], false, $attachement);
+                if (!isset($documentsfile->fields['s3_bucket']) || $documentsfile->fields['s3_bucket']==''){
+                    if (file_exists($documentsfile->getfilepath())) ploopi\fs::downloadfile($documentsfile->getfilepath(),$documentsfile->fields['name'], false, $attachement);
+                } else{
+                    // S3 download
+                    if (ploopi\fs_s3::file_exists($documentsfile->getfilepath())) ploopi\fs_s3::downloadfile($documentsfile->fields['s3_bucket'], $documentsfile->fields['id'],$documentsfile->fields['name'], false, $attachement);
+                }
             }
         }
 
@@ -105,25 +109,52 @@ switch($ploopi_op)
                 $zip_path = ploopi\documents::getpath()._PLOOPI_SEP.'zip'._PLOOPI_SEP.$tmpfoldername;
                 if (!is_dir($zip_path)) ploopi\fs::makedir($zip_path);
 
-                if (file_exists($documentsfile->getfilepath()) && is_writeable($zip_path))
-                {
-                    $zip_filename = $documentsfile->fields['name'].'.zip';
+                if (!isset($documentsfile->fields['s3_bucket']) || $documentsfile->fields['s3_bucket']=='') {
 
-                    $objZip = new ZipArchive();
-                    if ($objZip->open($zip_path._PLOOPI_SEP.$zip_filename, ZIPARCHIVE::CREATE) === TRUE)
-                    {
-                        $objZip->addFile($documentsfile->getfilepath(), '/'.$documentsfile->fields['name']);
-                        $objZip->close();
+                    if (file_exists($documentsfile->getfilepath()) && is_writeable($zip_path)) {
+                        $zip_filename = $documentsfile->fields['name'] . '.zip';
+
+                        $objZip = new ZipArchive();
+                        if ($objZip->open($zip_path . _PLOOPI_SEP . $zip_filename, ZIPARCHIVE::CREATE) === TRUE) {
+                            $objZip->addFile($documentsfile->getfilepath(), '/' . $documentsfile->fields['name']);
+                            $objZip->close();
+                        }
+
+                        // Téléchargement du fichier zip
+                        ploopi\fs::downloadfile($zip_path . _PLOOPI_SEP . $zip_filename, $zip_filename, true, true, false);
+
+                        // Suppression du dossier temporaire
+                        if (isset($zip_path) && is_dir($zip_path)) ploopi\fs::deletedir($zip_path);
+
+                        // Vidage buffer
+                        ploopi\system::kill(null, true);
+                    }
+                } else{
+                    // TODO download S3 zip file
+
+                    if (ploopi\fs_s3::file_exists($documentsfile->getfilepath()) && is_writeable($zip_path)) {
+                        $zip_filename = $documentsfile->fields['name'] . '.zip';
+                        $tmp_filepath = $documentsfile->fields['name'] . '.tmp';
+
+                        ploopi\fs_s3::downloadfilelocally($documentsfile->fields['s3_bucket'], $documentsfile->fields['id'],$tmp_filepath);
+
+
+                        $objZip = new ZipArchive();
+                        if ($objZip->open($zip_path . _PLOOPI_SEP . $zip_filename, ZIPARCHIVE::CREATE) === TRUE) {
+                            $objZip->addFile($tmp_filepath, '/' . $documentsfile->fields['name']);
+                            $objZip->close();
+                        }
+
+                        // Téléchargement du fichier zip
+                        ploopi\fs::downloadfile($zip_path . _PLOOPI_SEP . $zip_filename, $zip_filename, true, true, false);
+
+                        // Suppression du dossier temporaire
+                        if (isset($zip_path) && is_dir($zip_path)) ploopi\fs::deletedir($zip_path);
+
+                        // Vidage buffer
+                        ploopi\system::kill(null, true);
                     }
 
-                    // Téléchargement du fichier zip
-                    ploopi\fs::downloadfile($zip_path._PLOOPI_SEP.$zip_filename, $zip_filename, true, true, false);
-
-                    // Suppression du dossier temporaire
-                    if(isset($zip_path) && is_dir($zip_path)) ploopi\fs::deletedir($zip_path);
-
-                    // Vidage buffer
-                    ploopi\system::kill(null, true);
                 }
             }
         }
@@ -345,6 +376,9 @@ switch($ploopi_op)
                         $documentsfile->settmpfile($_FILES['documentsfile_file'.$i]['tmp_name']);
                         $documentsfile->fields['name'] = $_FILES['documentsfile_file'.$i]['name'];
                         $documentsfile->fields['size'] = $_FILES['documentsfile_file'.$i]['size'];
+                        if(_PLOOPI_S3_ACTIVATED == "true" && _PLOOPI_S3_BUCKET != "") {
+                            $documentsfile->fields['s3_bucket'] = _PLOOPI_S3_BUCKET;
+                        }
                         $error = $documentsfile->save();
                         if (!$error) {
                             if (!empty($_SESSION['documents'][$documents_id]['callback_inc'])) include_once $_SESSION['documents'][$documents_id]['callback_inc'];

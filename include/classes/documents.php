@@ -468,6 +468,10 @@ abstract class documents {
 
             $documentsfile->fields['id_user_modify'] = $documentsfile->fields['id_user'];
 
+            if(_PLOOPI_S3_ACTIVATED){
+                $documentsfile->fields['s3_bucket'] = _PLOOPI_S3_BUCKET;
+            }
+
             $documentsfile->setfile($file);
 
             return $documentsfile->save() ? null : $documentsfile->fields['id'];

@@ -71,6 +71,7 @@ class documentsfile extends data_object
         $this->fields['size'] = 0;
         $this->fields['nbclick'] = 0;
         $this->fields['name'] = '';
+        $this->fields['s3_bucket'] = '';
 
         $this->oldname = '';
         $this->tmpfile = 'none';
@@ -112,7 +113,7 @@ class documentsfile extends data_object
      *
      * @return int identifiant du document
      */
-    public function save()
+    public function save(): int
     {
         $db = db::get();
         $error = 0;
@@ -136,26 +137,35 @@ class documentsfile extends data_object
 
                 parent::save();
 
-                $basepath = $this->getbasepath();
-                $filepath = $this->getfilepath();
 
-                if (file_exists($filepath) && !is_writable($filepath)) $error = _PLOOPI_ERROR_FILENOTWRITABLE;
+                if($this->fields['s3_bucket'] == '') {
+                    $basepath = $this->getbasepath();
+                    $filepath = $this->getfilepath();
 
-                if (!$error && is_writable($basepath))
-                {
-                    if ($this->tmpfile != 'none')
-                    {
-                        if (!move_uploaded_file($this->tmpfile, $filepath)) $error = _PLOOPI_ERROR_FILENOTWRITABLE;
-                    }
+                    if (file_exists($filepath) && !is_writable($filepath)) $error = _PLOOPI_ERROR_FILENOTWRITABLE;
 
-                    if ($this->file != 'none')
-                    {
-                        if (!copy($this->file, $filepath)) $error = _PLOOPI_ERROR_FILENOTWRITABLE;
-                    }
+                    if (!$error && is_writable($basepath)) {
+                        if ($this->tmpfile != 'none') {
+                            if (!move_uploaded_file($this->tmpfile, $filepath)) $error = _PLOOPI_ERROR_FILENOTWRITABLE;
+                        }
 
-                    if (!$error) chmod($filepath, 0640);
+                        if ($this->file != 'none') {
+                            if (!copy($this->file, $filepath)) $error = _PLOOPI_ERROR_FILENOTWRITABLE;
+                        }
+
+                        if (!$error) chmod($filepath, 0640);
+                    } else $error = _PLOOPI_ERROR_FILENOTWRITABLE;
+                }else{
+                    // TODO S3 checks
+                        if ($this->tmpfile != 'none') {
+                            if (!ploopi\fs_s3::upload(_PLOOPI_S3_BUCKET,"{$this->fields['id']}.{$this->fields['extension']}", $this->tmpfile)) $error = _PLOOPI_ERROR_FILENOTWRITABLE;
+                        }
+
+                        if ($this->file != 'none') {
+                            if (!ploopi\fs_s3::upload(_PLOOPI_S3_BUCKET,"{$this->fields['id']}.{$this->fields['extension']}", $this->file)) $error = _PLOOPI_ERROR_FILENOTWRITABLE;
+                        }
+
                 }
-                else $error = _PLOOPI_ERROR_FILENOTWRITABLE;
             }
 
         }
@@ -169,23 +179,30 @@ class documentsfile extends data_object
                 {
                     $this->fields['extension'] = substr(strrchr($this->fields['name'], "."),1);
 
-                    $basepath = $this->getbasepath();
-                    $filepath = $this->getfilepath();
+                    if($this->fields['s3_bucket'] == '') {
+                        $basepath = $this->getbasepath();
+                        $filepath = $this->getfilepath();
 
-                    if (file_exists($filepath) && !is_writable($filepath)) $error = _PLOOPI_ERROR_FILENOTWRITABLE;
+                        if (file_exists($filepath) && !is_writable($filepath)) $error = _PLOOPI_ERROR_FILENOTWRITABLE;
 
-                    if (!$error)
-                    {
-                        // on copie le nouveau
-                        if (!$error && is_writable($basepath))
+                        if (!$error)
                         {
-                            if ($this->tmpfile != 'none')
+                            // on copie le nouveau
+                            if (!$error && is_writable($basepath))
                             {
-                                if (move_uploaded_file($this->tmpfile, $filepath)) chmod($filepath, 0640);
-                                else $error = _PLOOPI_ERROR_FILENOTWRITABLE;
+                                if ($this->tmpfile != 'none')
+                                {
+                                    if (move_uploaded_file($this->tmpfile, $filepath)) chmod($filepath, 0640);
+                                    else $error = _PLOOPI_ERROR_FILENOTWRITABLE;
+                                }
                             }
+                            else $error = _PLOOPI_ERROR_FILENOTWRITABLE;
                         }
-                        else $error = _PLOOPI_ERROR_FILENOTWRITABLE;
+                    } else {
+                        // TODO S3 checks
+                        if ($this->tmpfile != 'none'){
+                            if (!ploopi\fs_s3::upload(_PLOOPI_S3_BUCKET,"{$this->fields['id']}.{$this->fields['extension']}", $this->tmpfile)) $error = _PLOOPI_ERROR_FILENOTWRITABLE;
+                        } else $error = _PLOOPI_ERROR_EMPTYFILE;
                     }
                 }
 
@@ -200,17 +217,28 @@ class documentsfile extends data_object
                 // renommage avec modification de type
                 if (($newext = substr(strrchr($this->fields['name'], "."),1)) != $this->fields['extension'])
                 {
-                    $basepath = $this->getbasepath();
-                    $filepath = $this->getfilepath();
-                    $newfilepath = substr($filepath,0,strlen($filepath)-strlen($this->fields['extension'])).$newext;
+                    if($this->fields['s3_bucket'] == '') {
+                        $basepath = $this->getbasepath();
+                        $filepath = $this->getfilepath();
+                        $newfilepath = substr($filepath, 0, strlen($filepath) - strlen($this->fields['extension'])) . $newext;
 
-                    if (file_exists($filepath) && is_writable($basepath))
-                    {
-                        rename($filepath, $newfilepath);
-                        $this->fields['extension'] = $newext;
-                        parent::save();
+                        if (file_exists($filepath) && is_writable($basepath)) {
+                            rename($filepath, $newfilepath);
+                            $this->fields['extension'] = $newext;
+                            parent::save();
+                        } else $error = _PLOOPI_ERROR_FILENOTWRITABLE;
+                    } else {
+                        // TODO S3 checks
+                        $filepath = $this->fields['id'] . '.' . $this->fields['extension'];
+                        $newfilepath = substr($filepath, 0, strlen($filepath) - strlen($this->fields['extension'])) . $newext;
+
+                        if (ploopi\fs_s3::file_exists($this->getfilepath())) {
+                            ploopi\fs_s3::copy($this->fields['s3_bucket'],$this->fields['id'] . '.' . $this->fields['extension'], $newfilepath);
+                            $this->fields['extension'] = $newext;
+                            parent::save();
+                        } else $error = _PLOOPI_ERROR_FILENOTWRITABLE;
+
                     }
-                    else $error = _PLOOPI_ERROR_FILENOTWRITABLE;
                 }
                 else parent::save();
             }
@@ -233,8 +261,14 @@ class documentsfile extends data_object
      */
     public function delete()
     {
-        $filepath = $this->getfilepath();
-        if (file_exists($filepath)) unlink($filepath);
+        if($this->fields['s3_bucket'] == ''){
+            $filepath = $this->getfilepath();
+            if (file_exists($filepath)) unlink($filepath);
+        } else{
+            $filepath = $this->getfilepath();
+            if (ploopi\fs_s3::file_exists($filepath)) unlink($filepath);
+
+        }
 
         parent::delete();
 
@@ -267,7 +301,11 @@ class documentsfile extends data_object
      */
     public function getfilepath()
     {
-        return $this->getbasepath()._PLOOPI_SEP."{$this->fields['id']}.{$this->fields['extension']}";
+        if(!isset($this->fields['s3_bucket'])){
+            return $this->getbasepath()._PLOOPI_SEP."{$this->fields['id']}.{$this->fields['extension']}";
+        } else{
+            return 's3://'.$this->fields['s3_bucket'] . '/' . $this->fields['id'] . '.' . $this->fields['extension'];
+        }
     }
 
     /**

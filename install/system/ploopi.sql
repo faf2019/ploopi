@@ -1914,3 +1914,6 @@ INSERT INTO `ploopi_param_default` (`id_module`, `name`, `value`, `id_module_typ
 INSERT INTO `ploopi_param_choice` (`id_module_type`, `name`, `value`, `displayed_value`) VALUES (1, 'system_new_user_mail', '0', 'non'), (1, 'system_new_user_mail', '1', 'oui');
 
 UPDATE `ploopi_module_type` SET `version` = '1.10.0.0', `author` = 'Ovensia', `date` = '20240513000000', `description` = 'Noyau du système' WHERE `ploopi_module_type`.`id` = 1;
+
+
+ALTER TABLE `ploopi_documents_file` ADD `s3_bucket` TEXT NOT NULL DEFAULT '';
