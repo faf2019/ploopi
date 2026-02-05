@@ -450,8 +450,6 @@ if ($query_string != '' || $advanced_search) // recherche intégrale
                     }
                 }
             }
-            // tri général de la recherche
-            // uasort($arrRelevance, create_function('$a,$b', 'return $b[\'relevance\'] > $a[\'relevance\'];'));
         }
 
         // Recherche de documents ?
@@ -525,7 +523,9 @@ if ($query_string != '' || $advanced_search) // recherche intégrale
         }
 
         // tri général de la recherche
-        uasort($arrRelevance, create_function('$a,$b', 'return $b[\'relevance\'] > $a[\'relevance\'];'));
+        uasort($arrRelevance, function ($a, $b) {
+            return $b['relevance'] <=> $a['relevance']; // tri décroissant
+        });
 
         $responses = 0;
 

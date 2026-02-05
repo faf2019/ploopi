@@ -29,6 +29,7 @@
  * @license GNU General Public License (GPL)
  * @author Ovensia
  */
+die('coucou');
 
 switch($op)
 {
@@ -114,7 +115,7 @@ switch($op)
             }
         }
         ?>
-        indexation terminée en <?php printf("%.02fs", timer::get()->getexectime() - $index_start); ?>
+        indexation terminée en <?php printf("%.02fs", ploopi\timer::get()->getexectime() - $index_start); ?>
         <?php if (isset($_REQUEST['force'])) echo "<br />Mode 'force' activé"; ?>
         <br /><a title="Retour" href="<?php echo ploopi\crypt::urlencode('admin.php?webedit_menu=reindex'); ?>">Retour</a>
         </div>
@@ -122,4 +123,3 @@ switch($op)
         echo ploopi\skin::get()->close_simplebloc();
     break;
 }
-?>
