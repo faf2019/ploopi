@@ -278,6 +278,7 @@ abstract class arr
             'integer_percent' => null,
             'integer_euro' => null,
             'date' => null,
+            'datejjmmm' => null,
             'datetime' => null
         );
 
@@ -292,11 +293,12 @@ abstract class arr
                 case 'string': $objFormat->setAlign('left'); break;
                 case 'float': $objFormat->setNumFormat('#,##0.00;-#,##0.00'); break;
                 case 'float_percent': $objFormat->setNumFormat('#,##0.00 %;-#,##0.00 %'); break;
-                case 'float_euro': $objFormat->setNumFormat(utf8_decode('#,##0.00 ;-#,##0.00 ')); break;
+                case 'float_euro': $objFormat->setNumFormat(iconv('UTF-8', 'ISO-8859-1', '#,##0.00 ;-#,##0.00 ')); break;
                 case 'integer': $objFormat->setNumFormat('#,##0;-#,##0'); break;
                 case 'integer_percent': $objFormat->setNumFormat('#,##0 %;-#,##0 %'); break;
-                case 'integer_euro': $objFormat->setNumFormat(utf8_decode('#,##0 ;-#,##0 ')); break;
+                case 'integer_euro': $objFormat->setNumFormat(iconv('UTF-8', 'ISO-8859-1', '#,##0 ;-#,##0 ')); break;
                 case 'date': $objFormat->setNumFormat('DD/MM/YYYY'); break;
+                case 'datejjmmm': $objFormat->setNumFormat('DD-MMM'); break;
                 case 'datetime' : $objFormat->setNumFormat('DD/MM/YYYY HH:MM:SS'); break;
             }
         }
@@ -390,6 +392,7 @@ abstract class arr
                             case 'integer_percent': $objFormat->setNumFormat('#,##0 %;-#,##0 %'); break;
                             case 'integer_euro': $objFormat->setNumFormat(utf8_decode('#,##0 ;-#,##0 ')); break;
                             case 'date': $objFormat->setNumFormat('DD/MM/YYYY'); break;
+                            case 'datejjmmm': $objFormat->setNumFormat('DD-MMM'); break;
                             case 'datetime' : $objFormat->setNumFormat('DD/MM/YYYY HH:MM:SS'); break;
                             case 'string': default: $objFormat->setAlign('left'); break;
                         }
@@ -408,12 +411,13 @@ abstract class arr
                         case 'integer_percent':
                         case 'integer_euro':
                         case 'date':
+                        case 'datejjmmm':
                         case 'datetime':
                             if ($strValue !== '') $objWorkSheet->writeNumber($intLine, $intCol, $strValue, $objFormat);
                         break;
 
                         default:
-                            $objWorkSheet->writeString($intLine, $intCol, iconv('UTF-8', 'CP1252', $strValue), $objFormat);
+                            $objWorkSheet->writeString($intLine, $intCol, iconv('UTF-8', 'CP1252', $strValue ? ''), $objFormat);
                         break;
                     }
                     $intCol++;
