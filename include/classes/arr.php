@@ -417,7 +417,7 @@ abstract class arr
                         break;
 
                         default:
-                            $objWorkSheet->writeString($intLine, $intCol, iconv('UTF-8', 'CP1252', $strValue ? ''), $objFormat);
+                            $objWorkSheet->writeString($intLine, $intCol, iconv('UTF-8', 'CP1252', $strValue ?? ''), $objFormat);
                         break;
                     }
                     $intCol++;
