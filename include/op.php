@@ -130,38 +130,29 @@ if (isset($_REQUEST['ploopi_op']))
                                     // si action en cours avec le bon code de confirmation
                                     if ($confirmation_code->open("ploopi_lostpassword{$objUser->fields['id']}") && $confirmation_code->fields['code'] == $_GET['ploopi_lostpassword_confirmcode'])
                                     {
+                                        // vérification de la durée de vie du lien de confirmation (15 min par défaut)
+                                        $intCodeTime = ploopi\date::timestamp2unixtimestamp($confirmation_code->fields['timestp']);
 
-                                        // ok on peut générer le nouveau mot de passe et l'enregistrer
-                                        $strPass = ploopi\security::generatepassword();
-                                        $objUser->setpassword($strPass);
-                                        $objUser->fields['password_force_update'] = 1;
-                                        $objUser->save();
+                                        if (time() - $intCodeTime > _PLOOPI_LOSTPASSWORD_LIFETIME * 60)
+                                        {
+                                            // lien expiré : on supprime le code et on demande à l'utilisateur de refaire une demande
+                                            $confirmation_code->delete();
+                                            $intError = _PLOOPI_ERROR_LOSTPASSWORD_EXPIRED;
+                                        }
+                                        else
+                                        {
+                                            // ok on peut générer le nouveau mot de passe et l'enregistrer
+                                            $strPass = ploopi\security::generatepassword();
+                                            $objUser->setpassword($strPass);
+                                            $objUser->fields['password_force_update'] = 1;
+                                            $objUser->save();
 
-                                        // ok on peut envoyer le mail
-                                        ploopi\mail::send(
-                                            array(
-                                                array(
-                                                        'name' => $_SERVER['HTTP_HOST'],
-                                                        'address' => trim(current(explode(',', _PLOOPI_ADMINMAIL)))
-                                                )
-                                            ),
-                                            array(
-                                                array(
-                                                    'name' => "{$row['lastname']} {$row['firstname']}",
-                                                    'address' => $row['email']
-                                                )
-                                            ),
-                                            "{$_SERVER['HTTP_HOST']} : modification de votre mot de passe",
-                                            "Bonjour,\n\nvous recevez ce message car vous avez effectué une demande de mot de passe sur le site {$_SERVER['HTTP_HOST']}.\n\nVotre nouveau mot de passe est le suivant :\n\n{$strPass}",
-                                            null,
-                                            null,
-                                            null,
-                                            null,
-                                            false
-                                        );
+                                            // le mot de passe n'est plus envoyé par mail : il est affiché une seule fois dans Ploopi
+                                            $_SESSION['ploopi']['newpassword'] = $strPass;
 
-                                        $confirmation_code->delete();
-                                        $intMsg = _PLOOPI_MSG_PASSWORDSENT;
+                                            $confirmation_code->delete();
+                                            $intMsg = _PLOOPI_MSG_PASSWORDDISPLAYED;
+                                        }
                                     }
                                 }
                             }
@@ -194,7 +185,7 @@ if (isset($_REQUEST['ploopi_op']))
                                         )
                                     ),
                                     "{$_SERVER['HTTP_HOST']} : modification de votre mot de passe",
-                                    "Bonjour,\n\nvous recevez ce message car vous avez effectué une demande de mot de passe sur le site {$_SERVER['HTTP_HOST']}.\n\nVous devez confirmer cette demande en cliquant sur le lien suivant:\n\n"._PLOOPI_BASEPATH."/".ploopi\crypt::urlencode("admin.php?ploopi_op=ploopi_lostpassword_confirm&ploopi_lostpassword_login={$_REQUEST['ploopi_lostpassword_login']}&ploopi_lostpassword_email={$_REQUEST['ploopi_lostpassword_email']}&ploopi_lostpassword_confirmcode={$confirmation_code->fields['code']}"),
+                                    "Bonjour,\n\nvous recevez ce message car vous avez effectué une demande de mot de passe sur le site {$_SERVER['HTTP_HOST']}.\n\nVous devez confirmer cette demande en cliquant sur le lien suivant:\n\n"._PLOOPI_BASEPATH."/".ploopi\crypt::urlencode("admin.php?ploopi_op=ploopi_lostpassword_confirm&ploopi_lostpassword_login={$_REQUEST['ploopi_lostpassword_login']}&ploopi_lostpassword_email={$_REQUEST['ploopi_lostpassword_email']}&ploopi_lostpassword_confirmcode={$confirmation_code->fields['code']}")."\n\nVotre nouveau mot de passe sera alors affiché directement sur le site (il ne vous sera pas envoyé par courriel).\n\nATTENTION : ce lien n'est valable que "._PLOOPI_LOSTPASSWORD_LIFETIME." minutes. Passé ce délai, vous devrez effectuer une nouvelle demande.\n\nSi vous n'êtes pas à l'origine de cette demande, ignorez ce message.",
                                     null,
                                     null,
                                     null,

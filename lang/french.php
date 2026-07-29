@@ -239,8 +239,10 @@ $ploopi_errormsg[_PLOOPI_ERROR_ACCOUNTJAILED]       = 'Trop de tentatives de con
 $ploopi_errormsg[_PLOOPI_ERROR_LOSTPASSWORD_UNKNOWN]      = 'Ce compte est inconnu';
 $ploopi_errormsg[_PLOOPI_ERROR_LOSTPASSWORD_INVALID]      = 'Ce compte n\'a pas d\'adresse de courriel valide';
 $ploopi_errormsg[_PLOOPI_ERROR_LOSTPASSWORD_MANYRESPONSES] = 'Ce compte n\'est pas unique';
+$ploopi_errormsg[_PLOOPI_ERROR_LOSTPASSWORD_EXPIRED]     = 'Ce lien de réinitialisation a expiré. Merci d\'effectuer une nouvelle demande.';
 
 $ploopi_msg[_PLOOPI_MSG_MAILSENT]      = 'Un message vous a été envoyé';
 $ploopi_msg[_PLOOPI_MSG_PASSWORDSENT]  = 'Un nouveau mot de passe vous a été envoyé';
+$ploopi_msg[_PLOOPI_MSG_PASSWORDDISPLAYED] = 'Un nouveau mot de passe a été généré :';
 
 ?>
