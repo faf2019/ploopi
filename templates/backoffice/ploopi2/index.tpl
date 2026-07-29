@@ -230,6 +230,14 @@
                         </div>
                         <!-- END switch_ploopimsg -->
 
+                        <!-- BEGIN switch_newpassword -->
+                        <div style="color:#ffff00;overflow:auto;margin-top:8px;">
+                            <span style="display:block;">Votre nouveau mot de passe est&nbsp;:</span>
+                            <strong style="display:block;font-size:16px;margin:6px 0;letter-spacing:1px;word-break:break-all;">{switch_user_logged_out.switch_newpassword.NEW_PASSWORD}</strong>
+                            <em style="display:block;">Notez-le dès maintenant&nbsp;: pour votre sécurité, il ne vous est pas envoyé par courriel et ne sera plus affiché après cette page.</em>
+                        </div>
+                        <!-- END switch_newpassword -->
+
                        <!-- BEGIN switch_ploopierrormsg -->
                         <div style="color:#ff8800;overflow:auto;">
                             <img style="display:block;float:left;" src="{TEMPLATE_PATH}/img/system/attention.png" /><span style="display:block;margin-left:24px;">{PLOOPI_ERROR}</span>
@@ -260,7 +268,7 @@
                         <input type="text" class="text" id="ploopi_lostpassword_email" name="ploopi_lostpassword_email" size="20" title="Saisissez votre adresse email" tabindex="12" />
                     </p>
                     <div style="color:#ffff00;margin-top:10px;">
-                        <em><strong>ATTENTION</strong>, une demande de mot de passe génère un nouveau mot de passe automatique.</em>
+                        <em><strong>ATTENTION</strong>, un courriel de confirmation vous sera envoyé. Le lien qu'il contient, valable 15 minutes, affichera votre nouveau mot de passe directement sur le site.</em>
                     </div>
                 </div>
                 <div class="login_btn_right">

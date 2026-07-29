@@ -308,6 +308,14 @@ else
     if (!empty($_SESSION['ploopi']['msgcode']))
     {
         self::$template_body->assign_block_vars('switch_user_logged_out.switch_ploopimsg', array());
+
+        // Cas particulier : affichage du nouveau mot de passe généré (une seule fois)
+        if ($_SESSION['ploopi']['msgcode'] == _PLOOPI_MSG_PASSWORDDISPLAYED && !empty($_SESSION['ploopi']['newpassword']))
+        {
+            self::$template_body->assign_block_vars('switch_user_logged_out.switch_newpassword', array(
+                'NEW_PASSWORD' => ploopi\str::htmlentities($_SESSION['ploopi']['newpassword'])
+            ));
+        }
     }
 
     self::$template_body->assign_vars(array(
@@ -355,5 +363,9 @@ self::$template_body->assign_vars(array(
 ));
 
 unset($_SESSION['ploopi']['errorcode']);
+
+// Le message et le mot de passe généré ne doivent être affichés qu'une seule fois
+$_SESSION['ploopi']['msgcode'] = 0;
+unset($_SESSION['ploopi']['newpassword']);
 
 self::$template_body->pparse('body');

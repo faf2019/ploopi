@@ -372,6 +372,13 @@ switch($http_host)
          define ('_PLOOPI_JAILING_TIME', 600);
 
         /**
+         * Durée de vie, en minutes, du lien de confirmation envoyé lors d'une demande de mot de passe perdu.
+         * Passé ce délai, le lien n'est plus valide et l'utilisateur doit refaire une demande.
+         */
+
+         define ('_PLOOPI_LOSTPASSWORD_LIFETIME', 15);
+
+        /**
          * Permet d'activer la compression gzip du buffer de sortie
          */
 

@@ -53,10 +53,12 @@ define ('_PLOOPI_ERROR_LOSTPASSWORD_UNKNOWN',  11);
 define ('_PLOOPI_ERROR_LOSTPASSWORD_INVALID',  12);
 define ('_PLOOPI_ERROR_LOSTPASSWORD_MANYRESPONSES',  13);
 define ('_PLOOPI_ERROR_ACCOUNTJAILED',  14);
+define ('_PLOOPI_ERROR_LOSTPASSWORD_EXPIRED',  15);
 
 
 define ('_PLOOPI_MSG_MAILSENT',             1);
 define ('_PLOOPI_MSG_PASSWORDSENT',         2);
+define ('_PLOOPI_MSG_PASSWORDDISPLAYED',    3);
 
 define ('_PLOOPI_CACHE_DEFAULT_LIFETIME',   '60');
 
@@ -125,6 +127,9 @@ define('_PLOOPI_INDEXATION_METAWEIGHT',     999999);
 if (!defined('_PLOOPI_DISPLAY_ERRORS')) define('_PLOOPI_DISPLAY_ERRORS', false);
 if (!defined('_PLOOPI_MAIL_ERRORS')) define('_PLOOPI_MAIL_ERRORS', false);
 if (!defined('_PLOOPI_ADMINMAIL')) define('_PLOOPI_ADMINMAIL', '');
+
+// Durée de vie (en minutes) du lien de confirmation de réinitialisation de mot de passe
+if (!defined('_PLOOPI_LOSTPASSWORD_LIFETIME')) define('_PLOOPI_LOSTPASSWORD_LIFETIME', 15);
 
 // DOCUMENTS
 define('_PLOOPI_ERROR_MAXFILESIZE',        100);
