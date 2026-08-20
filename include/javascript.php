@@ -36,6 +36,7 @@
 
 _PLOOPI_ENV = '<?php echo $_SESSION['ploopi']['env']; ?>';
 _PLOOPI_BASEPATH = '<?php echo _PLOOPI_BASEPATH; ?>';
+_PLOOPI_DATEFORMAT = '<?php echo _PLOOPI_DATEFORMAT; ?>';
 
 var lstmsg = new Array();
 lstmsg[0] = "<?php echo _PLOOPI_JS_EMAIL_ERROR ?>";
