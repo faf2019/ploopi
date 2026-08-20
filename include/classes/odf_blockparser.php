@@ -56,6 +56,13 @@ class odf_blockparser
     private $xml_parser;
 
     /**
+     * Pile des balises XML ouvertes. Chaque élément est un couple array(balise, attributs).
+     *
+     * @var array
+     */
+    private $xmltags = array();
+
+    /**
      * Données analysées
      *
      * @var array
