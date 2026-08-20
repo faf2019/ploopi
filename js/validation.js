@@ -315,6 +315,53 @@ ploopi.rgbcolor = function(color_string) {
     };
 };
 
+/**
+ * Vérifie qu'une chaîne contient une date valide au format local (_PLOOPI_DATEFORMAT)
+ *
+ * Les séparateurs '/', '-' et '.' sont acceptés, ainsi que les jours/mois sur 1 ou 2
+ * chiffres et les années sur 2 à 4 chiffres, comme le fait ploopi\date::local2timestamp().
+ *
+ * @param string date à vérifier
+ * @return bool true si la date est valide
+ */
+ploopi.validatedate = function(field_value) {
+    var date_match;
+    var date_day;
+    var date_month;
+    var date_year;
+
+    field_value = String(field_value).replace(/(^\s*)|(\s*$)/g, '');
+
+    /* Format US : Y-m-d */
+    if (typeof _PLOOPI_DATEFORMAT != 'undefined' && _PLOOPI_DATEFORMAT == 'Y-m-d')
+    {
+        date_match = field_value.match(/^([0-9]{2,4})[-\/.]([0-9]{1,2})[-\/.]([0-9]{1,2})$/);
+        if (!date_match) return false;
+
+        date_year = parseInt(date_match[1], 10);
+        date_month = parseInt(date_match[2], 10);
+        date_day = parseInt(date_match[3], 10);
+    }
+    /* Format FR (défaut) : d/m/Y */
+    else
+    {
+        date_match = field_value.match(/^([0-9]{1,2})[-\/.]([0-9]{1,2})[-\/.]([0-9]{2,4})$/);
+        if (!date_match) return false;
+
+        date_day = parseInt(date_match[1], 10);
+        date_month = parseInt(date_match[2], 10);
+        date_year = parseInt(date_match[3], 10);
+    }
+
+    /* Année sur 2 chiffres : même règle que ploopi\date::local2timestamp() */
+    if (date_year < 100) date_year += 2000;
+
+    /* Vérifie que la date existe réellement (ex : 31/02/2026 est rejetée) */
+    var date_test = new Date(date_year, date_month - 1, date_day);
+
+    return (date_test.getFullYear() == date_year && date_test.getMonth() == date_month - 1 && date_test.getDate() == date_day);
+};
+
 ploopi.validatefield = function(field_label, field_object, field_type) {
     var ok = true;
     var i;
@@ -433,16 +480,14 @@ ploopi.validatefield = function(field_label, field_object, field_type) {
         /* Vérifie que le champ contient une date valide ou vide */
         if (field_type == 'date' || field_type == 'emptydate')
         {
-            if (field_type == 'emptydate' && field_value.length == 0)
-                ok = true;
-            else
-            {
-                ok = false;
-                if (field_type == 'date' && field_value.length > 0)
-                    ok = true;
-            }
+            var date_value = field_value.replace(/(^\s*)|(\s*$)/g,'');
 
-            if (!ok) msg = (field_type == 'date' && field_value.length == 0) ? lstmsg[4] : lstmsg[7];
+            if (date_value.length == 0)
+                ok = (field_type == 'emptydate');
+            else
+                ok = ploopi.validatedate(date_value);
+
+            if (!ok) msg = (date_value.length == 0) ? lstmsg[4] : lstmsg[7];
         }
 
         /* Vérifie que le champ contient une heure valide ou vide */
