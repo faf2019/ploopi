@@ -338,3 +338,47 @@ function definir_config_tests()
 
     return true;
 }
+
+/**
+ * Indique si la base de données configurée est joignable.
+ * Le contrôle est fait par une connexion mysqli directe : db::get() déclenche une
+ * erreur fatale quand la connexion échoue, ce qui interdirait d'ignorer proprement
+ * les suites concernées.
+ *
+ * @return boolean true si la base répond
+ */
+function bdd_disponible()
+{
+    static $booDisponible = null;
+
+    if (is_null($booDisponible))
+    {
+        amorcer_socle();
+
+        if (!defined('_PLOOPI_DB_DATABASE') || _PLOOPI_DB_DATABASE === '') return $booDisponible = false;
+
+        $objMysqli = @new mysqli(_PLOOPI_DB_SERVER, _PLOOPI_DB_LOGIN, _PLOOPI_DB_PASSWORD, _PLOOPI_DB_DATABASE);
+        $booDisponible = !$objMysqli->connect_errno;
+        if ($booDisponible) $objMysqli->close();
+    }
+
+    return $booDisponible;
+}
+
+/**
+ * Interrompt la suite courante, sans échec, si aucune base n'est disponible.
+ *
+ * @param string $strSuite nom de la suite
+ */
+function exiger_bdd($strSuite)
+{
+    if (bdd_disponible()) return;
+
+    T::skip('suite entière', 'aucune base de données joignable (voir tests/config.php.model)');
+    T::bilan($strSuite);
+}
+
+/**
+ * Préfixe des tables temporaires créées par les tests.
+ */
+define('_PLOOPI_TESTS_PREFIXE', 'ploopi_tests_');
