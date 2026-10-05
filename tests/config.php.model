@@ -1,0 +1,22 @@
+<?php
+/**
+ * Modèle de configuration des tests.
+ *
+ * Copier ce fichier en tests/config.php et renseigner une base de données DÉDIÉE
+ * (les suites y créent et y suppriment leurs propres tables). tests/config.php
+ * n'est pas versionné.
+ *
+ * Sans ce fichier, les suites qui ont besoin d'une base sont ignorées et les
+ * suites purement unitaires s'exécutent normalement.
+ *
+ * Si config/config.php existe (instance installée), c'est lui qui est utilisé pour
+ * la configuration générale ; tests/config.php ne sert alors que si vous voulez
+ * faire porter les tests sur une autre base.
+ */
+
+return array(
+    'db_server'   => 'localhost',
+    'db_login'    => 'ploopi',
+    'db_password' => 'ploopi',
+    'db_database' => 'ploopi_tests'
+);

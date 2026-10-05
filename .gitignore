@@ -9,3 +9,6 @@ modules/
 phploc.xml
 vendor/
 .htaccess
+
+# Configuration locale des tests (modèle : tests/config.php.model)
+tests/config.php
