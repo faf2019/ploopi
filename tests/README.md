@@ -23,6 +23,12 @@ le harnais définit une configuration de test minimale.
 | `01_sources` | Lint PHP de tout l'arbre + conventions (en-tête GPL, tabulations, nommage des classes, autoload, UTF-8) | — |
 | `02_str` | `ploopi\str` : coupe, accents, URL, échappement HTML, indexation | `vendor/` pour HTMLPurifier |
 | `03_date` | `ploopi\date` : format pivot `YmdHis`, conversions locales, fuseaux, jours fériés | — |
+| `04_arr` | `ploopi\arr` : exports JSON/CSV/HTML/XML, normalisation des clés, pagination | — |
+| `05_sql` | `ploopi\sqlformat`, `query_*`, `db` : échappement et exécution réelle, charges d'injection | base |
+| `06_data_object` | ORM : cycle de vie, `setvalues`, `setuwm`, collections, clé composite | base |
+| `07_securite` | `inputfilter`, `security`, `crypt`, `cipher` : filtrage, mots de passe, chiffrement d'URL | — |
+| `08_template` | Moteur de template : variables, blocs imbriqués, rendu des 52 `.tpl` du dépôt | — |
+| `09_installation` | Paquets `install/<module>/` : XML, versions, `id_action` vs `ACTION_*`, exécution des `structure.sql` | base |
 
 Les contrôles dont le prérequis manque sont **ignorés** (`--`), jamais comptés comme
 réussis : le bilan les affiche à part.
@@ -52,6 +58,23 @@ Deux règles de rigueur :
    constaté est discutable (validation de date purement formelle, débordement de
    `timestamp_add` sur les mois…), il est épinglé par un test et commenté : si quelqu'un
    le corrige un jour, le test le signalera au lieu de le laisser passer inaperçu.
+
+## Constats relevés par les tests
+
+Les tests épinglent plusieurs comportements du socle qui peuvent surprendre. Chacun
+est commenté à l'endroit où il est vérifié :
+
+| Où | Constat |
+|---|---|
+| `06_data_object` | `init_description()` pré-remplit la clé primaire avec `''`. Sous `sql_mode` strict — le défaut depuis MySQL 5.7 / MariaDB 10.2 — l'`INSERT` est **rejeté**. L'enchaînement `init_description()` puis `save()` ne fonctionne donc sur une table auto-incrémentée que sur un serveur permissif. Contournement : `unset($objet->fields['id'])` avant `save()`. |
+| `06_data_object` | Après un `open()` en échec, `fields` ne vaut pas `false` (contrairement à `CLAUDE.md` §17) mais contient la clé demandée, sans aucune colonne. |
+| `07_securite` | `crypt::htpasswd()` passe la constante `CRYPT_STD_DES` comme **sel** : `crypt()` retourne `*0` pour tout mot de passe. Le `.htpasswd` généré ne donne accès à personne. |
+| `07_securite` | Le vecteur d'initialisation de `cipher` est fixe : deux URL identiques donnent le même chiffré. |
+| `05_sql` | Un tableau passé en valeur est la **liste des paramètres**. Pour alimenter `%e`/`%t`/`%g`, l'encapsuler : `add_where('id IN (%e)', array($ids))`. |
+| `05_sql` | `%s` pose lui-même les apostrophes ; `%r` n'applique aucun traitement. |
+| `04_arr` | `arr::tojson()` double-encode par défaut un contenu déjà UTF-8. |
+| `08_template` | La directive `<!-- INCLUDE -->` documentée dans `CLAUDE.md` §10 n'est pas implémentée : le commentaire ressort tel quel. |
+| `01_sources` | Trois écarts aux conventions, listés nommément comme dérogations. |
 
 ## Base de données
 
