@@ -296,6 +296,7 @@ function definir_config_tests()
         '_PLOOPI_SESSION_HANDLER'           => 'php',
         '_PLOOPI_SESSION_COMPRESSION'       => 1,
         '_PLOOPI_DISPLAY_ERRORS'            => false,
+        '_PLOOPI_ERROR_REPORTING'           => E_ALL,
         '_PLOOPI_LOG_ERRORS'                => false,
         '_PLOOPI_MAIL_ERRORS'               => false,
         '_PLOOPI_SYSMAIL'                   => 'tests@localhost',
