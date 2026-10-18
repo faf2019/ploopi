@@ -2,7 +2,7 @@
 
 [![tests](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/faf2019/8992326b9a700fd3832d1f3ff85bb8cf/raw/ploopi-tests.json)](tests/README.md)
 [![dépendances](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/faf2019/8992326b9a700fd3832d1f3ff85bb8cf/raw/ploopi-dependances.json)](tests/README.md#badge-du-readme-facultatif)
-[![dernier commit](https://img.shields.io/github/last-commit/faf2019/ploopi/master)](https://github.com/faf2019/ploopi/commits/master)
+[![dernier commit](https://img.shields.io/github/last-commit/faf2019/ploopi?label=dernier%20commit)](https://github.com/faf2019/ploopi/commits/master)
 [![licence](https://img.shields.io/badge/licence-GPL--2.0--or--later-blue)](doc/licence.md)
 [![PHP](https://img.shields.io/badge/PHP-8.1%E2%80%938.5-777bb4?logo=php&logoColor=white)](doc/deploiement.md)
 [![base](https://img.shields.io/badge/base-MariaDB%20%7C%20MySQL-003545?logo=mariadb&logoColor=white)](doc/deploiement.md)
