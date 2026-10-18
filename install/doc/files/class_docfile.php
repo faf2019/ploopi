@@ -137,11 +137,14 @@ class docfile extends ploopi\data_object
 
             if (!$error)
             {
-                $this->fields['extension'] = substr(strrchr($this->fields['name'], "."),1);
+                // L'extension, reprise du nom fourni par l'utilisateur, entre dans le chemin
+                // du fichier sur le disque et dans les commandes d'indexation : lettres et
+                // chiffres seulement
+                $this->fields['extension'] = preg_replace('@[^A-Za-z0-9]@', '', (string)substr(strrchr($this->fields['name'], "."),1));
 
                 $id = parent::save();
 
-                $this->fields['md5id'] = md5(sprintf("%s_%d_%d", $this->fields['timestp_create'], $id, $this->fields['version']));
+                $this->fields['md5id'] = bin2hex(random_bytes(16));
 
                 parent::save();
 
@@ -186,7 +189,7 @@ class docfile extends ploopi\data_object
 
                 if (!$error)
                 {
-                    $this->fields['extension'] = substr(strrchr($this->fields['name'], "."),1);
+                    $this->fields['extension'] = preg_replace('@[^A-Za-z0-9]@', '', (string)substr(strrchr($this->fields['name'], "."),1));
 
                     $basepath = $this->getbasepath();
                     $filepath = $this->getfilepath();
@@ -255,7 +258,7 @@ class docfile extends ploopi\data_object
                 $booParse = true;
 
                 // renommage avec modification de type
-                if (($newext = substr(strrchr($this->fields['name'], "."),1)) != $this->fields['extension'])
+                if (($newext = preg_replace('@[^A-Za-z0-9]@', '', (string)substr(strrchr($this->fields['name'], "."),1))) != $this->fields['extension'])
                 {
                     $basepath = $this->getbasepath();
                     $filepath = $this->getfilepath();
@@ -479,7 +482,7 @@ class docfile extends ploopi\data_object
 
         if ($debug) printf("<br />START: %0.2f", timer::get()->getexectime()*1000);
 
-        if (!ini_get('safe_mode')) @set_time_limit(0);
+        @set_time_limit(0);
 
         $metakeywords_str = '';
 
@@ -519,16 +522,16 @@ class docfile extends ploopi\data_object
             switch($fields['ext'])
             {
                 case 'pdf':
-                    $exec = "pdfinfo \"{$path}\"";
+                    $exec = 'pdfinfo '.escapeshellarg($path);
                 break;
 
                 case 'jpg':
                 case 'jpeg':
-                    $exec = "jhead \"{$path}\"";
+                    $exec = 'jhead '.escapeshellarg($path);
                 break;
 
                 default:
-                    $exec = "hachoir-metadata --raw \"{$path}\"";
+                    $exec = 'hachoir-metadata --raw '.escapeshellarg($path);
                 break;
             }
 
@@ -594,7 +597,7 @@ class docfile extends ploopi\data_object
             if (!is_null($fields['path']))
             {
                 // parse doc content
-                $exec = str_replace('%f',"\"{$path}\"",$fields['path']);
+                $exec = str_replace('%f', escapeshellarg($path), $fields['path']);
 
                 $res_txt .= "<div style=\"background-color:#ffe0e0;border-bottom:1px solid #c0c0c0;padding:1px;margin-top:2px;\">{$exec}</div>\n";
 

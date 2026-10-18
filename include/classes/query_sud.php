@@ -94,7 +94,7 @@ abstract class query_sud extends query
 
         if (!in_array($strType, self::$arrType))
         {
-            trigger_error('Ce type de requête n\'existe pas', E_USER_ERROR);
+            throw new \ErrorException('Ce type de requête n\'existe pas');
         }
         else
         {

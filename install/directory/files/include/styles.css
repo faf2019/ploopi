@@ -42,6 +42,12 @@ h2.directory_title {
     width:30%;
 }
 
+/* Arbre repliable : résumé masqué (arbre toujours ouvert) ; les gabarits adaptatifs
+   l'affichent sur petit écran, et le socle replie alors l'arbre (ploopi.skin.fold) */
+.directory_tree_toggle > summary {
+    display:none;
+}
+
 .directory_shared_heading {
     border-left:1px solid #a0a0a0;
     overflow:hidden;
@@ -58,4 +64,103 @@ h2.directory_title {
     background-color:#f0f0f0;
     border-bottom:2px solid #c0c0c0;
     overflow:auto;
+}
+
+/* Anciens styles en ligne, devenus des classes (même aspect) */
+.directory_titre {
+    background-color:#d0d0d0;
+    border-bottom:1px solid #a0a0a0;
+}
+
+.directory_encadre {
+    margin:4px;
+    padding:4px;
+    border:1px solid #c0c0c0;
+    background:#e0e0e0;
+}
+
+.directory_photo {
+    border:1px solid #404040;
+    display:block;
+    margin:5px auto;
+}
+
+.directory_bandeau_titre {
+    padding:4px;
+    font-weight:bold;
+    border-bottom:1px solid #c0c0c0;
+}
+
+.directory_barre_boutons {
+    padding:4px;
+    background-color:#e0e0e0;
+    border-top:1px solid #c0c0c0;
+    text-align:right;
+}
+
+.directory_bandeau_fort {
+    padding:4px;
+    background-color:#e0e0e0;
+    border-bottom:2px solid #c0c0c0;
+}
+
+.directory_bandeau {
+    padding:4px;
+    background-color:#e0e0e0;
+    border-bottom:1px solid #c0c0c0;
+}
+
+.directory_bandeau_simple {
+    padding:4px;
+    background-color:#e0e0e0;
+}
+
+/* Paire icône + libellé de la légende : sans boîte propre (rendu historique inchangé) ;
+   les gabarits adaptatifs en font un groupe insécable */
+p.ploopi_va > span.directory_legend_item {
+    display:contents;
+}
+
+.directory_bandeau_sombre {
+    padding:4px;
+    background-color:#d8d8d8;
+    border-bottom:2px solid #c0c0c0;
+}
+
+.directory_cadre_blanc {
+    overflow:auto;
+    border:1px solid #c0c0c0;
+    margin:4px;
+    padding:4px;
+    background:#fff;
+}
+
+.directory_fiche_detail {
+    margin-left:110px;
+    border-left:1px solid #a0a0a0;
+}
+
+.directory_cadre {
+    border:1px solid #c0c0c0;
+    overflow:hidden;
+}
+
+.directory_filet_haut {
+    border-top:1px solid #a0a0a0;
+}
+
+.directory_filet_fort {
+    border-bottom:2px solid #c0c0c0;
+    padding:4px;
+    overflow:auto;
+}
+
+.directory_filet_bas {
+    border-bottom:1px solid #c0c0c0;
+    overflow:auto;
+}
+
+.directory_titre_fort {
+    background-color:#c0c0c0;
+    border-bottom:1px solid #a0a0a0;
 }

@@ -1,0 +1,695 @@
+/*
+    Copyright (c) 2007-2026 Ovensia
+    Contributors hold Copyright (c) to their code submissions.
+
+    This file is part of Ploopi.
+
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
+/******************
+  MODULES SOUS PLOOPI4
+  Propre à ploopi4 (ploopi3 n'est pas touché). Contrairement à base_5_* (repris de
+  ploopi3, géométrie inchangée), ces règles peuvent changer la mise en page des écrans
+  historiques des modules, sans modifier leur code : fenêtres, titre de page,
+  arborescences, formulaires et colonnes adaptés aux petits écrans. Les tableaux
+  (skin::display_array) ont leur feuille, base_9_tableaux.css.
+*******************/
+
+/* Fenêtres (skin::create_popup / open_popup surchargées dans class_skin.php) :
+   titre déplaçable, bouton de fermeture en icône */
+.ploopi_popup {
+    max-width: calc(100% - 16px);
+}
+
+.ploopi_popup .simplebloc_title.p4-popup-head {
+    height: auto;
+    line-height: 1.3;
+    padding: 0;
+}
+
+.p4-popup-head .simplebloc_titleleft {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 46px;
+    padding: 0 8px 0 16px;
+}
+
+.p4-popup-title {
+    flex: 1;
+    min-width: 0;
+    padding: 8px 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: 650;
+    cursor: move;
+}
+
+.p4-popup-head .p4-popup-close {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--text-2);
+    box-shadow: none;
+    cursor: pointer;
+}
+
+.p4-popup-head .p4-popup-close:hover {
+    background: var(--surface-3);
+    color: var(--text);
+}
+
+.p4-popup-head .p4-popup-close:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 1px;
+}
+
+/* Listes déroulantes à largeur fixée par le module (heures, minutes…) : la flèche du
+   navigateur mangeait le texte (« 0( » pour « 00 ») */
+:where(#pagecontent, .ploopi_popup) select[style*="width"]:not([multiple]) {
+    padding-left: 3px;
+    padding-right: 0;
+}
+
+/* GED : explorateur (arborescence + liste) */
+@media (max-width: 760px) {
+    body #doc_main {
+        background: none;
+    }
+
+    body #doc_treeview {
+        float: none;
+        width: auto;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 8px;
+    }
+
+    body #doc_browser {
+        margin-left: 0;
+    }
+}
+
+/* Actualités : colonne d'image vide (actualité sans image) */
+body .news td:empty {
+    display: none;
+}
+
+/* Colonnes des modules déclarées dans leurs feuilles (flottants en pourcentage) :
+   une seule colonne sur petit écran */
+@media (max-width: 760px) {
+    body .directory_shared_treeview,
+    body div.webedit_tree,
+    body .doc_moreinfo,
+    body .wiki_page_toc,
+    body .dbreport_panels > form > div > fieldset,
+    body :is(form#nano_gal_form, form#nano_labels_form, form#nano_nav_form, form#nano_thumbs_form) > div > fieldset > div {
+        float: none;
+        width: auto;
+    }
+
+    body .directory_shared_treeview,
+    body div.webedit_tree {
+        border-bottom: 1px solid var(--border);
+    }
+
+    body .directory_shared_heading {
+        border-left: 0;
+    }
+
+    body .webedit_form p label {
+        float: none;
+        width: auto;
+        margin-left: 0;
+        text-align: left;
+    }
+
+    body .webedit_form p span {
+        margin-left: 0;
+    }
+}
+
+/* Planning et réservations : la fenêtre « Ressources affichées » (open_popup, posée à
+   droite du calendrier) recouvrirait le calendrier ; elle reprend place sous la page */
+@media (max-width: 760px) {
+    body :is(#popup_planning, #popup_booking).ploopi_popup {
+        position: static !important;
+        width: auto !important;
+        max-width: none;
+        margin: 16px;
+    }
+}
+
+/* Petits écrans : les écrans historiques passent sur une colonne */
+@media (max-width: 760px) {
+    /* Colonnes posées en flottants à largeur en pourcentage (style en ligne des
+       modules, ex. fiche d'un contact de l'annuaire : 50 % / 49 %) */
+    :where(#pagecontent, .ploopi_popup) div:is([style*="float:left"], [style*="float: left"], [style*="float:right"], [style*="float: right"])[style*="width"][style*="%"] {
+        float: none !important;
+        width: auto !important;
+    }
+
+    /* Champs à largeur fixe en pixels : jamais plus larges que l'écran (pas les
+       blocs : le calendrier du planning, en pixels, se dessine à la largeur de l'écran
+       en taille « Auto », cf. planning_autosize()) */
+    :where(#pagecontent, .ploopi_popup) :is(fieldset, input, select, textarea)[style*="width"][style*="px"] {
+        max-width: 100%;
+    }
+
+    /* Formulaires du socle (.ploopi_form) : libellé au-dessus du champ */
+    :where(#pagecontent, .ploopi_popup) .ploopi_form p {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 4px 6px;
+    }
+
+    :where(#pagecontent, .ploopi_popup) .ploopi_form p > label {
+        flex: 0 0 100%;
+        float: none;
+        width: auto;
+        padding: 0;
+        text-align: left;
+    }
+
+    :where(#pagecontent, .ploopi_popup) .ploopi_form p > :is(input:not([type="checkbox"], [type="radio"], [type="button"], [type="submit"], [type="image"]), select, textarea) {
+        flex: 1 1 160px;
+        float: none;
+        width: auto;
+        min-width: 0;
+    }
+
+    :where(#pagecontent, .ploopi_popup) .ploopi_form p > span {
+        float: none;
+        width: auto;
+    }
+
+    .ploopi_form fieldset,
+    .fieldset {
+        margin-left: 0;
+        margin-right: 0;
+        min-width: 0;
+    }
+}
+
+/* Titre de page (skin::create_pagetitle surchargée) : un <h1> à l'aspect de l'en-tête
+   des écrans de ploopi4 */
+.pagetitle.p4-pagetitle h1 {
+    margin: 0;
+    font: inherit;
+    letter-spacing: inherit;
+    color: inherit;
+}
+
+.p4-pagetitle-extra {
+    margin-top: 2px;
+    font-size: var(--fs-sm);
+    font-weight: 400;
+    letter-spacing: 0;
+    color: var(--text-2);
+}
+
+/* Arborescences (skin::display_treeview surchargée) : chevron de dépliage, filets
+   des niveaux, nœud sélectionné surligné */
+.p4-tree-node {
+    overflow: visible;
+}
+
+.p4-tree-row {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    min-height: 26px;
+    padding: 1px 6px 1px 2px;
+    border-radius: var(--radius-sm, 6px);
+}
+
+.p4-tree-row:hover {
+    background: var(--surface-2);
+}
+
+.p4-tree-row.p4-tree-sel {
+    background: var(--primary-soft);
+}
+
+.p4-tree-row.p4-tree-sel > .p4-tree-label {
+    color: var(--primary-text);
+    font-weight: 650;
+}
+
+.p4-tree-node .p4-tree-row img.p4-tree-icon {
+    display: block;
+    float: none;
+    flex: none;
+    width: 16px;
+    height: 16px;
+    object-fit: contain;
+}
+
+.p4-tree-node a.p4-tree-label {
+    flex: 1;
+    min-width: 0;
+    padding: 2px 0;
+    color: var(--text);
+    text-decoration: none;
+    overflow-wrap: anywhere;
+}
+
+.p4-tree-node a.p4-tree-label:hover {
+    color: var(--primary-text);
+    text-decoration: underline;
+}
+
+.p4-tree-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    color: var(--text-3);
+}
+
+a.p4-tree-toggle:hover {
+    background: var(--surface-3);
+    color: var(--text);
+}
+
+a.p4-tree-toggle:focus-visible,
+.p4-tree-node a.p4-tree-label:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 1px;
+}
+
+.p4-tree-twisty {
+    display: inline-flex;
+}
+
+.p4-tree-twisty .p4-icon {
+    width: 14px;
+    height: 14px;
+    transition: transform .15s ease;
+}
+
+.p4-tree-twisty[data-p4-open="1"] .p4-icon {
+    transform: rotate(90deg);
+}
+
+/* Enfants : filet vertical aligné sur le chevron du parent ; ceux de la racine restent
+   au même retrait (comme le socle) */
+.p4-tree-node > .p4-tree-children {
+    margin-left: 11px;
+    padding-left: 6px;
+    border-left: 1px solid var(--border);
+}
+
+.p4-tree-node.p4-tree-root > .p4-tree-children {
+    margin-left: 0;
+    padding-left: 0;
+    border-left: 0;
+}
+
+.p4-tree-node.treeview_node_loading > .p4-tree-row {
+    cursor: wait;
+    opacity: .6;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .p4-tree-twisty .p4-icon { transition: none; }
+}
+
+/* Blocs repliables sur petit écran (<details class="ploopi_fold">, résumé masqué par la
+   feuille du module) : résumé affiché, bloc replié au chargement par le socle
+   (ploopi.skin.fold) — arbre des rubriques de l'annuaire, des dossiers de la GED.
+   Annuaire : légende par paires icône + libellé */
+@media (max-width: 760px) {
+    body details.ploopi_fold > summary {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 12px;
+        list-style: none;
+        cursor: pointer;
+        font-size: var(--fs-sm);
+        color: var(--text-2);
+    }
+
+    body details.ploopi_fold > summary::-webkit-details-marker {
+        display: none;
+    }
+
+    body details.ploopi_fold > summary strong {
+        flex: 1;
+        min-width: 0;
+        color: var(--text);
+        font-weight: 650;
+        overflow-wrap: anywhere;
+    }
+
+    body details.ploopi_fold > summary::after {
+        content: "";
+        flex: none;
+        width: 7px;
+        height: 7px;
+        margin: 0 4px 4px;
+        border-right: 2px solid currentColor;
+        border-bottom: 2px solid currentColor;
+        transform: rotate(45deg);
+        transition: transform .15s ease;
+    }
+
+    body details.ploopi_fold[open] > summary::after {
+        margin-bottom: -2px;
+        transform: rotate(-135deg);
+    }
+
+    body details.ploopi_fold > summary:focus-visible {
+        outline: 2px solid var(--focus);
+        outline-offset: -2px;
+    }
+
+    body details.ploopi_fold[open] > summary {
+        border-bottom: 1px solid var(--border);
+    }
+
+    body p.directory_bandeau_simple {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 4px 14px;
+        padding: 8px 10px;
+    }
+
+    body .directory_legend_item img {
+        margin: 0 4px 0 0 !important;
+        vertical-align: middle;
+    }
+}
+
+/* Paires icône + libellé de la légende de l'annuaire : jamais coupées (le module leur
+   retire leur boîte, display: contents, pour garder le rendu historique) */
+body p.ploopi_va > span.directory_legend_item {
+    display: inline-block;
+    white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body details.ploopi_fold > summary::after { transition: none; }
+}
+
+/* Formulaires : liste des saisies (public_forms_viewreplies.php). Tableau aux couleurs
+   des tableaux de ploopi4 ; sur petit écran, une carte par saisie (première colonne en
+   titre, autres en « libellé : valeur » grâce au data-label posé par le module, actions
+   en bas) et les en-têtes, qui portent le tri côté serveur, en pastilles « Trier par » */
+body table.forms_viewlist {
+    margin: 4px 0 8px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+}
+
+body table.forms_viewlist :is(td, th) {
+    border: 0;
+    border-bottom: 1px solid var(--border);
+}
+
+body table.forms_viewlist tr.forms_viewlist_head {
+    background: var(--surface-2) !important;
+}
+
+body table.forms_viewlist tr.forms_viewlist_head th a {
+    padding: 7px 10px;
+    color: var(--text-2);
+    font-weight: 650;
+}
+
+body table.forms_viewlist tr.forms_viewlist_head th a.selected {
+    background: var(--primary-soft);
+    color: var(--primary-text);
+}
+
+body table.forms_viewlist td {
+    padding: 6px 10px;
+}
+
+/* Lignes alternées : le module les colore par l'attribut bgcolor, qui ne lit pas les
+   jetons du gabarit (skin.ini) ; la feuille passe devant */
+body table.forms_viewlist tr[bgcolor] {
+    background-color: var(--surface);
+}
+
+body table.forms_viewlist tr[bgcolor]:nth-child(odd) {
+    background-color: var(--surface-2);
+}
+
+body table.forms_viewlist tr:hover td {
+    background: var(--primary-soft);
+}
+
+body table.forms_viewlist td.forms_viewlist_actions img {
+    vertical-align: middle;
+}
+
+@media (max-width: 760px) {
+    body :where(#pagecontent) a.ploopi_form_title > sub {
+        display: none;
+    }
+
+    body div#forms_info_box > div {
+        float: none !important;
+    }
+
+    body div#forms_info_box p.ploopi_va {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 4px 6px;
+    }
+
+    body div#forms_info_box p.ploopi_va > :is(span, input) {
+        margin-left: 0 !important;
+    }
+
+    /* Numéros de page (ploopi\arr::getpages) : cibles au doigt */
+    body div#forms_info_box p.ploopi_va > :is(a, b):not(.forms_export_link) {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 32px;
+        min-height: 32px;
+    }
+
+    body div.forms_viewlist {
+        overflow: visible;
+    }
+
+    body table.forms_viewlist,
+    body table.forms_viewlist > tbody {
+        display: block;
+        width: 100%;
+        border: 0;
+        background: none;
+    }
+
+    body table.forms_viewlist tr.forms_viewlist_head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 10px;
+        background: none !important;
+    }
+
+    body table.forms_viewlist tr.forms_viewlist_head::before {
+        content: attr(data-label);
+        margin-right: 2px;
+        color: var(--text-3);
+        font-size: var(--fs-sm);
+    }
+
+    body table.forms_viewlist tr.forms_viewlist_head th {
+        display: block;
+        border: 0;
+    }
+
+    body table.forms_viewlist tr.forms_viewlist_head th a {
+        display: block;
+        padding: 6px 10px;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        background: var(--surface);
+        font-weight: 600;
+    }
+
+    body table.forms_viewlist tr.forms_viewlist_head th a p {
+        margin: 0;
+    }
+
+    body table.forms_viewlist tr.forms_viewlist_head .forms_viewlist_actions {
+        display: none;
+    }
+
+    body table.forms_viewlist tr:not(.forms_viewlist_head) {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 8px;
+        padding: 10px 14px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        background: var(--surface) !important;
+    }
+
+    body table.forms_viewlist tr:not(.forms_viewlist_head) td {
+        display: block;
+        padding: 2px 0;
+        border: 0;
+        background: none !important;
+        text-align: left;
+        white-space: normal;
+        overflow-wrap: anywhere;
+    }
+
+    body table.forms_viewlist tr:not(.forms_viewlist_head) td:empty {
+        display: none;
+    }
+
+    body table.forms_viewlist tr:not(.forms_viewlist_head) td.data:first-child {
+        padding-bottom: 4px;
+        font-size: var(--fs);
+        font-weight: 600;
+    }
+
+    body table.forms_viewlist tr:not(.forms_viewlist_head) td.data:not(:first-child)[data-label]::before {
+        content: attr(data-label) " : ";
+        color: var(--text-3);
+        font-size: var(--fs-xs);
+        font-weight: 600;
+    }
+
+    body table.forms_viewlist td.forms_viewlist_actions {
+        margin-top: 6px;
+        padding-top: 6px !important;
+        border-top: 1px solid var(--border) !important;
+        text-align: right !important;
+    }
+
+    body table.forms_viewlist td.forms_viewlist_actions a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 36px;
+        min-height: 36px;
+    }
+}
+
+/* Barres d'actions des modules (.ploopi_tabs : annuaire, wiki, GED, dbreport,
+   nanogallery) sur petit écran : sur plusieurs lignes, dans l'ordre du grand écran.
+   Les liens y flottent à droite, donc en ordre inverse dans le code : row-reverse
+   les remet dans l'ordre de lecture, wrap-reverse garde la première ligne en haut. */
+@media (max-width: 760px) {
+    body :where(#pagecontent, .ploopi_popup) .ploopi_tabs:not(:has(> a.left, > input, > span.title)) {
+        display: flex;
+        flex-direction: row-reverse;
+        flex-wrap: wrap-reverse;
+        justify-content: flex-end;
+        gap: 2px;
+    }
+
+    body :where(#pagecontent, .ploopi_popup) .ploopi_tabs:not(:has(> a.left, > input, > span.title)) > a {
+        float: none;
+        margin: 0;
+    }
+}
+
+/* Formulaires : saisie dans le backoffice avec le modèle du formulaire (templates/<modèle>/
+   style.css, .forms_form). Ses couleurs sont celles d'une page du site ; dans le
+   backoffice, champs et textes secondaires prennent les jetons, pour suivre le thème. */
+body :where(#pagecontent, .ploopi_popup) .forms_form :is(h1 p, label span) {
+    color: var(--text-2);
+}
+
+body :where(#pagecontent, .ploopi_popup) .forms_form :is(input, select, textarea) {
+    background-color: var(--surface);
+    border-color: var(--border-field);
+    color: var(--text);
+}
+
+body :where(#pagecontent, .ploopi_popup) .forms_form :is(input, select, textarea):focus {
+    background-color: var(--surface);
+    border-color: var(--focus);
+    color: var(--text);
+}
+
+body :where(#pagecontent, .ploopi_popup) .forms_form :is([disabled], [readonly]) {
+    color: var(--text-3);
+}
+
+/* Réservations : actions de la barre d'administration sur un fond d'image clair
+   (menu.png), remplacé par les jetons pour suivre le thème */
+body .booking_toolbar a {
+    background: none;
+}
+
+body .booking_toolbar a:hover {
+    background: var(--p3-primary-softer);
+}
+
+/* webedit : fieldsets de droits (validateurs, rédacteurs, autorisations d'accès) en cartes */
+fieldset.webedit_rights {
+    margin: 0 0 12px;
+    padding: 14px 16px !important;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+}
+fieldset.webedit_rights > legend {
+    padding: 0 6px;
+    font-size: var(--fs-sm);
+    color: var(--text-2);
+}
+fieldset.webedit_rights > legend strong { font-size: var(--fs); color: var(--text); margin-right: 4px; }
+fieldset.webedit_rights .webedit_rights_current {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    padding: 0 0 4px !important;
+    color: var(--text-2);
+}
+fieldset.webedit_rights .webedit_rights_current > span:first-child { font-weight: 600; color: var(--text); }
+fieldset.webedit_rights .webedit_rights_current > em { color: var(--text-3); }
+fieldset.webedit_rights .webedit_rights_current > img { display: none; }
+fieldset.webedit_rights .webedit_rights_current > img + span {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 10px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--primary-soft);
+    color: var(--text);
+    font-size: var(--fs-sm);
+}
+fieldset.webedit_rights .webedit_cadre { border: 0; padding: 0; margin: 0; background: none; }
+fieldset.webedit_rights .webedit_cadre .p4-usel { margin-bottom: 0; }
+fieldset.webedit_rights .ploopi_checkbox { display: flex; align-items: center; gap: 8px; padding: 0 0 6px !important; }
+fieldset.webedit_rights .ploopi_checkbox label { width: auto !important; float: none !important; text-align: left !important; }

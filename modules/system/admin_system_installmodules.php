@@ -33,6 +33,19 @@
 /**
  * Ouverture du bloc
  */
+// Installation vierge : site de démonstration en un clic (ploopi\system\demo)
+if (ploopi\system\demo::isavailable())
+{
+    echo ploopi\skin::get()->open_simplebloc(_SYSTEM_SYSMOD_DEMO);
+    ?>
+    <div style="padding:8px;">
+        <p><?php echo ploopi\str::htmlentities(_SYSTEM_SYSMOD_DEMO_DESC); ?></p>
+        <a class="flatbutton" href="<?php echo ploopi\crypt::urlencode('admin.php?op=demo'); ?>" data-ploopi-confirm="<?php echo ploopi\str::htmlentities(_SYSTEM_SYSMOD_DEMO_CONFIRM); ?>"><?php echo ploopi\str::htmlentities(_SYSTEM_SYSMOD_DEMO_BUTTON); ?></a>
+    </div>
+    <?php
+    echo ploopi\skin::get()->close_simplebloc();
+}
+
 echo ploopi\skin::get()->open_simplebloc(_SYSTEM_LABEL_INSTALLEDMODULES);
 
 $tabmoduletype_installed = array();
@@ -143,7 +156,8 @@ while ($fields = ploopi\db::get()->fetchrow($result))
         $values[$c]['values']['action'] = array('label' => "<a href=\"javascript:ploopi.confirmlink('".ploopi\crypt::urlencode("admin.php?op=uninstall&uninstallidmoduletype={$fields['id']}")."','"._SYSTEM_MSG_CONFIRMMODULEUNINSTAL."')\">"._SYSTEM_LABEL_UNINSTALL."</a>", 'style' => 'text-align:center;');
 
     $values[$c]['description'] = ploopi\str::htmlentities($fields['description']);
-    $values[$c]['style'] = ($fields['id'] == _PLOOPI_MODULE_SYSTEM) ? 'background-color:#f0e0e0;' : '';
+    // Le module system ne se désinstalle pas
+    if ($fields['id'] == _PLOOPI_MODULE_SYSTEM) $values[$c]['class'] = 'system_line_system';
 
     $c++;
 

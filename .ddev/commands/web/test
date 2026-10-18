@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+##
+## Description: Suite de vérification complète sur une instance jetable (tests/instance.sh)
+## Usage: test [suite...]
+## Example: "ddev test" ou "ddev test 01_http"
+##
+## Monte une instance jetable (base dédiée, serveur PHP intégré), lance les
+## suites demandées (toutes par défaut), puis démonte tout.
+##
+## tests/instance.sh refuse de démarrer si config/config.php existe : un dépôt
+## qui sert déjà une instance n'est jamais touché. Dans DDEV, renommer
+## temporairement config/config.php, ou travailler dans un second clone.
+
+set -euo pipefail
+
+# Base DDEV : service « db », compte root (mot de passe « root »). Le compte
+# de test se connecte depuis le conteneur web, pas depuis localhost.
+export PLOOPI_TEST_DB_HOST=db
+export PLOOPI_TEST_DB_ADMIN=root
+export PLOOPI_TEST_DB_ADMINPWD=root
+export PLOOPI_TEST_DB_USER_HOSTS="localhost 127.0.0.1 %"
+
+cd /var/www/html
+exec bash tests/instance.sh test "$@"

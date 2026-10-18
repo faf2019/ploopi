@@ -1,3 +1,103 @@
+== Module DIRECTORY - version 2.5.12 ===================================================
+
+2026-10-11  Ovensia <stephane@ovensia.fr>
+
+* Ancre des rubriques de l'annuaire téléphonique (frontoffice) : construite par
+  ploopi\str::tourl(), qui découpe désormais en UTF-8. ç, ë, û, ã et õ n'y sont plus
+  coupés en octets (« Garçon » donnait « gar%C3-on »).
+
+== Module DIRECTORY - version 2.5.11 ===================================================
+
+2026-10-11  Ovensia <stephane@ovensia.fr>
+
+* Nouveau contact : le formulaire (masqué sous « Ajouter un nouveau contact ») ouvrait la GED du
+  contact, qui n'a pas encore d'identifiant. Un dossier racine était créé pour l'enregistrement
+  null : refusé en SQL strict (MariaDB de l'image Docker : requête suivante invalide, « WHERE
+  id_folder = »), partagé sinon par tous les nouveaux contacts. Les documents se joignent une fois
+  le contact enregistré (fenêtre de modification).
+
+== Module DIRECTORY - version 2.5.10 ===================================================
+
+2026-10-10  Ovensia <stephane@ovensia.fr>
+
+* Contacts partagés : l'arbre des rubriques est enveloppé dans un <details> ouvert dont le résumé
+  (« Rubrique : <rubrique courante> », libellé du niveau tiré de directory_label_depth<n>) est masqué
+  par include/styles.css : rendu inchangé sous ploopi2/ploopi3 et sur grand écran. Le gabarit ploopi4
+  affiche ce résumé sur petit écran ; le socle (ploopi.skin.fold, classe ploopi_fold) replie alors
+  l'arbre au chargement, pour montrer d'abord le contenu de la rubrique.
+* Légende : chaque paire icône + libellé est groupée (span.directory_legend_item, sans boîte propre
+  par display: contents, donc rendu historique identique) ; ploopi4 en fait un groupe insécable.
+
+== Module DIRECTORY - version 2.5.9 ====================================================
+
+2026-10-10  Ovensia <stephane@ovensia.fr>
+
+* Habillage : les styles en ligne des écrans d'administration (bandeaux gris, barres de boutons,
+  cadres et filets) deviennent des classes, déclarées dans include/styles.css avec exactement le même
+  aspect ; le gabarit ploopi3 les redessine dans sa palette (tools/ploopi3_modules.php). Les écrans
+  servis au frontoffice (wce, template, display), où la feuille du module n'est pas chargée, gardent
+  leurs styles en ligne.
+
+== Module DIRECTORY - version 2.5.8 ====================================================
+
+2026-10-10  Ovensia <stephane@ovensia.fr>
+
+* Icônes : jeu unifié de l'administration (Tabler Icons, au trait, palette du gabarit ploopi3), sous
+  les mêmes noms et aux mêmes tailles ; le code qui les appelle ne change pas. Correspondances dans
+  tools/icones/modules.js, régénération par tools/icones/generer.js.
+* Favoris : étoile grise (ajouter) ou dorée (déjà en favori), au lieu des pastilles rouge et verte.
+* nopic.gif (contact sans photo) : silhouette sur fond gris clair.
+
+== Module DIRECTORY - version 2.5.7 ====================================================
+
+2026-10-09  Ovensia <stephane@ovensia.fr>
+
+* Prototype (retiré au profit de jQuery) : sélection des listes de favoris ($$, $('id')), suppression de la photo
+  d'un contact et focus du formulaire de rubrique (ploopi_window_onload_stock).
+
+== Module DIRECTORY - version 2.5.6 ====================================================
+
+2026-10-09  Ovensia <stephane@ovensia.fr>
+
+* Fichiers .gz resynchronisés avec leurs sources (ils dataient d'une minification antérieure).
+
+== Module DIRECTORY - version 2.5.5 ====================================================
+
+2026-10-08  Ovensia <stephane@ovensia.fr>
+
+* Compatibilité PHP 8.4 (PR #63) : fgetcsv() reçoit explicitement son
+  caractère d'échappement, garde safe_mode retirée.
+
+== Module DIRECTORY - version 2.5.4 ====================================================
+
+2026-10-06  Ovensia <stephane@ovensia.fr>
+
+* Sécurité : les opérations appliquent les droits que l'interface affiche.
+
+  Aucune opération d'écriture ne contrôlait les droits : tout utilisateur ayant accès
+  au module pouvait, en appelant l'opération directement,
+  - supprimer, renommer, déplacer une rubrique de l'organigramme, y créer des
+    sous-rubriques ou des racines ;
+  - modifier, supprimer ou créer les contacts partagés de n'importe quelle rubrique,
+    y compris en forçant directory_contact_id_heading ;
+  - consulter, modifier ou supprimer les contacts personnels des autres ;
+  - supprimer ou renommer les listes de favoris des autres.
+
+  Règles désormais appliquées : une rubrique et ses contacts se gèrent par les
+  gestionnaires de la rubrique (validateurs, hérités des rubriques parentes) et
+  l'administrateur ; une racine se crée par l'administrateur ; un contact personnel
+  et une liste de favoris appartiennent à leur seul propriétaire. L'import exige
+  d'être gestionnaire de la rubrique (sa condition laissait passer un identifiant non
+  numérique).
+
+* Sécurité, frontoffice : un visiteur anonyme lisait la fiche de n'importe quel
+  contact personnel par son identifiant ; seuls les contacts partagés sont publics.
+  Les critères de recherche « rubrique » et « commentaires » étaient réinjectés sans
+  échappement dans le formulaire (XSS réfléchie).
+
+* Frontoffice : les photos des contacts sont de nouveau servies aux visiteurs
+  (include/publicops.php), les photos de contacts personnels à leur seul propriétaire.
+
 == Module DIRECTORY - version 2.5.3 ====================================================
 
 2022-03-15  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

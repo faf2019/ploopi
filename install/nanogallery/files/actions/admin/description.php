@@ -19,7 +19,7 @@ if (!ploopi\acl::isactionallowed(nanogallery::ACTION_DESCRIPTION))
 // Suite des tests
 $moduleid = $this->getModuleId();
 $objGallery = new nanogallery();
-if (empty($_GET['id']) || !is_numeric($_GET['id']) || !$objGallery->open($_GET['id'])) { 
+if (empty($_GET['id']) || !is_numeric($_GET['id']) || !$objGallery->open($_GET['id']) || $objGallery->fields['id_module'] != $moduleid) { 
 	ploopi\output::redirect(ploopi\crypt::urlencode('admin.php?entity=error'));
 }
 // Récupération du modèle
@@ -51,15 +51,15 @@ $pre = '00000';
 $c = 0;
 if (!empty($arrImages)) {
 	foreach ($arrImages as $img) {
-		$imgs[$c]['values']['image'] = array('label' => '<img src="'.$img['file'].'" style="height:75px;display:block;margin:auto;">' );
-		$imgs[$c]['values']['name'] = array('label' => $img['name']);
+		$imgs[$c]['values']['image'] = array('label' => '<img src="'.str::htmlentities($img['file']).'" style="height:75px;display:block;margin:auto;">' );
+		$imgs[$c]['values']['name'] = array('label' => str::htmlentities($img['name']));
 		$imgs[$c]['values']['specs'] = array('label' => $img['specs']);
 		$tmpid = '"title_'.$img['md5id'].'"';
-		$tmp = '<input type="text" id='.$tmpid.' name='.$tmpid.' value="'.$img['title'].'" style="width:95%;">';
+		$tmp = '<input type="text" id='.$tmpid.' name='.$tmpid.' value="'.str::htmlentities($img['title']).'" style="width:95%;">';
 		$imgs[$c]['values']['title'] = array('label' => $tmp);
 		$tmpid = '"desc_'.$img['md5id'].'"';
 		$tmp = '<textarea type="text" id='.$tmpid.' name='.$tmpid
-			.' rows="3" style="width:95%;max-height:60px!important;margin:1px 5px;">'.$img['description'].'</textarea>';
+			.' rows="3" style="width:95%;max-height:60px!important;margin:1px 5px;">'.str::htmlentities($img['description']).'</textarea>';
 		$imgs[$c]['values']['description'] = array('label' => $tmp);
 		$c++;
 	}

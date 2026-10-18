@@ -57,7 +57,7 @@ foreach($arrEditor as $value)
 if(!$booIsAllowedEdit) $booIsAllowedEdit = ploopi\acl::isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT);
 ?>
 
-<p class="ploopi_va" style="background-color:#e0e0e0;padding:6px;border-bottom:1px solid #c0c0c0;">
+<p class="ploopi_va webedit_titre_page">
     <img src="./modules/webedit/img/blocs.png">
     <span style="font-weight:bold;">Gestion des blocs</span>
 </p>
@@ -101,10 +101,10 @@ foreach($arrWf as $value)
 }
 ?>
 <div style="clear:both;padding:4px;">
-    <fieldset class="fieldset" style="padding:6px;">
+    <fieldset class="fieldset webedit_rights" style="padding:6px;">
         <legend><strong>Validateurs</strong> (utilisateurs qui peuvent publier)</legend>
 
-        <p class="ploopi_va" style="padding:0 2px 2px 2px;"><span>Validateurs </span><?php if ($intWfHeadingId && $intWfHeadingId != $headingid) echo "<em>&nbsp;héritées de &laquo;&nbsp;</em><a href=\"".ploopi\crypt::urlencode("admin.php?headingid={$intWfHeadingId}")."\">{$headings['list'][$intWfHeadingId]['label']}</a><em>&nbsp;&raquo;</em>"; ?><span>:</span>
+        <p class="ploopi_va webedit_rights_current" style="padding:0 2px 2px 2px;"><span>Validateurs </span><?php if ($intWfHeadingId && $intWfHeadingId != $headingid) echo "<em>&nbsp;héritées de &laquo;&nbsp;</em><a href=\"".ploopi\crypt::urlencode("admin.php?headingid={$intWfHeadingId}")."\">".ploopi\str::htmlentities($headings['list'][$intWfHeadingId]['label'])."</a><em>&nbsp;&raquo;</em>"; ?><span>:</span>
             <?php
             if (!empty($arrWfUsers))
             {
@@ -137,7 +137,7 @@ foreach($arrWf as $value)
         if (ploopi\acl::isactionallowed(_WEBEDIT_ACTION_WORKFLOW_MANAGE) && ploopi\acl::isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
         {
             ?>
-            <div style="border:1px solid #c0c0c0;overflow:hidden;">
+            <div class="webedit_cadre">
             <?php ploopi\validation::selectusers(_WEBEDIT_OBJECT_HEADING, $headingid, -1, _WEBEDIT_ACTION_ARTICLE_PUBLISH, $intWfHeadingId == $headingid ? 'Modifier la listes des validateurs :' : 'Définir une nouvelle liste de validateurs :'); ?>
             </div>
             <?php
@@ -147,10 +147,10 @@ foreach($arrWf as $value)
 </div>
 
 <div style="clear:both;padding:4px;">
-    <fieldset class="fieldset" style="padding:6px;">
+    <fieldset class="fieldset webedit_rights" style="padding:6px;">
         <legend><strong>Rédacteurs</strong> (utilisateurs qui peuvent gérer cette branche)</legend>
 
-        <p class="ploopi_va" style="padding:0 2px 2px 2px;"><span>Rédacteurs </span><?php if ($intEditorHeadingId && $intEditorHeadingId != $headingid) echo "<em>&nbsp;héritées de &laquo;&nbsp;</em><a href=\"".ploopi\crypt::urlencode("admin.php?headingid={$intEditorHeadingId}")."\">{$headings['list'][$intEditorHeadingId]['label']}</a><em>&nbsp;&raquo;</em>"; ?><span>:</span>
+        <p class="ploopi_va webedit_rights_current" style="padding:0 2px 2px 2px;"><span>Rédacteurs </span><?php if ($intEditorHeadingId && $intEditorHeadingId != $headingid) echo "<em>&nbsp;héritées de &laquo;&nbsp;</em><a href=\"".ploopi\crypt::urlencode("admin.php?headingid={$intEditorHeadingId}")."\">".ploopi\str::htmlentities($headings['list'][$intEditorHeadingId]['label'])."</a><em>&nbsp;&raquo;</em>"; ?><span>:</span>
             <?php
             if (!empty($arrEditorUsers))
             {
@@ -183,7 +183,7 @@ foreach($arrWf as $value)
         if (ploopi\acl::isactionallowed(_WEBEDIT_ACTION_HEADING_BACK_EDITOR_MANAGE) && ploopi\acl::isactionallowed(_WEBEDIT_ACTION_CATEGORY_EDIT))
         {
             ?>
-            <div style="border:1px solid #c0c0c0;overflow:hidden;">
+            <div class="webedit_cadre">
             <?php ploopi\validation::selectusers(_WEBEDIT_OBJECT_HEADING_BACK_EDITOR, $headingid, -1,_WEBEDIT_ACTION_HEADING_BACK_EDITOR, $intEditorHeadingId == $headingid ? 'Modifier la listes des rédacteurs :' : 'Définir une nouvelle liste de rédacteurs :'); ?>
             </div>
             <?php
@@ -205,8 +205,8 @@ if ($booIsAllowedEdit)
 }
 ?>
 
-<div style="margin:0 4px 4px 4px;border-style:solid;border-width:1px 1px 0 1px;border-color:#c0c0c0;">
-    <p class="ploopi_va" style="background-color:#e0e0e0;border-bottom:1px solid #c0c0c0;padding:4px 6px;overflow:auto;">
+<div class="webedit_liste">
+    <p class="ploopi_va webedit_liste_titre">
         <?php
         if (ploopi\acl::isactionallowed(_WEBEDIT_ACTION_ARTICLE_EDIT) || $booIsEditor)
         {
@@ -264,7 +264,7 @@ if ($booIsAllowedEdit)
 
             if (ploopi\acl::isadmin() || $booWfVal || $booIsEditor || ($_SESSION['ploopi']['userid'] == $row['id_user'] && $articles['list'][$row['id']]['online_id'] == ''))
             {
-                $articles_values[$c]['values']['actions'] = array('label' =>  "<a style=\"display:block;float:right;\" title=\"Supprimer\" href=\"javascript:ploopi.confirmlink('admin.php?op=article_delete&articleid={$row['id']}','Êtes-vous certain de vouloir supprimer l\'article &laquo; ".addslashes($row['title'])." &raquo; ?');\"><img style=\"border:0px;\" src=\"./modules/webedit/img/doc_del.png\"></a>", 'style' => '');
+                $articles_values[$c]['values']['actions'] = array('label' =>  "<a style=\"display:block;float:right;\" title=\"Supprimer\" href=\"javascript:ploopi.confirmlink('admin.php?op=article_delete&articleid={$row['id']}','Êtes-vous certain de vouloir supprimer l\'article &laquo; ".ploopi\str::htmlentities(addslashes($row['title']))." &raquo; ?');\"><img style=\"border:0px;\" src=\"./modules/webedit/img/doc_del.png\"></a>", 'style' => '');
             }
             else $articles_values[$c]['values']['actions'] = array('label' => '&nbsp;', 'style' => '');
 
@@ -290,6 +290,6 @@ $arrAllowedActions = array(
 
 ploopi\subscription::display(_WEBEDIT_OBJECT_HEADING, $headingid, $arrAllowedActions, "à &laquo; Blocs &raquo;");
 ?>
-<div style="border-top:1px solid #c0c0c0;">
+<div class="webedit_filet_haut">
 <?php ploopi\annotation::display(_WEBEDIT_OBJECT_HEADING, $headingid, 'Blocs'); ?>
 </div>

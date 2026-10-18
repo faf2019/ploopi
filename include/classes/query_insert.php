@@ -44,6 +44,13 @@ class query_insert extends query
     private $arrSet;
 
     /**
+     * Table visée (set_table)
+     *
+     * @var array
+     */
+    private $arrFrom = array();
+
+    /**
      * Constructeur de la classe
      *
      * @param db $objDb Connexion à la BDD

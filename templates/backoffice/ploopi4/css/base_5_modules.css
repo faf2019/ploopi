@@ -1,0 +1,901 @@
+/*
+    Généré par tools/ploopi3_modules.php : ne pas modifier à la main.
+
+    Les feuilles des modules (install/<module>/files/include/styles.css), avec leurs
+    seules couleurs, réécrites dans la palette de ploopi3. Préfixe « body » : la
+    feuille du module est chargée après celle du gabarit. Les retouches faites à
+    la main sont dans base_modules_retouches.css.
+*/
+
+/******************
+  BOOKING
+*******************/
+
+body .booking_toolbar {
+    background-color: var(--p3-surface-3);
+    border-bottom-color: var(--p3-border-strong);
+}
+
+body #booking_treeview {
+    border-color: var(--p3-border-strong);
+    background-color: var(--p3-surface-2);
+}
+
+body #booking_treeview a {
+    border-bottom-color: var(--p3-border-strong);
+}
+
+body #booking_treeview a:hover {
+    background-color: var(--p3-primary-softer);
+    border-bottom-color: var(--p3-border-strong);
+}
+
+body .booking_event_ressource_list {
+    border-color: var(--p3-border-strong);
+    background-color: var(--p3-surface);
+}
+
+body .booking_event_ressource_list_inner {
+    background-color: var(--p3-surface);
+}
+
+body .booking_event_ressource_list p:hover {
+    background-color: var(--p3-primary-softer);
+}
+
+body .booking_event_color {
+    border-color: var(--p3-border-field);
+}
+
+body .booking_event_color + div {
+    color: var(--p3-danger);
+}
+
+body .booking_filtre {
+    border-bottom-color: var(--p3-border-strong);
+}
+
+body .booking_bandeau {
+    border-color: var(--p3-border-strong);
+    background-color: var(--p3-surface-3);
+}
+
+/******************
+  DBREPORT
+*******************/
+
+body .dbreport_title {
+    border-bottom-color: var(--p3-border-strong);
+    background-color: var(--p3-surface-3);
+}
+
+body .dbreport_checkboxes > form > div > fieldset > div > label > em {
+    color: var(--p3-text-muted);
+}
+
+body .dbreport_checkboxes > form > div > fieldset {
+    border-color: var(--p3-border-strong);
+    background-color: var(--p3-surface-2);
+}
+
+body .dbreport_panels > form > div > fieldset {
+    border-top-color: var(--p3-border);
+}
+
+body .dbreport_table {
+    border-color: var(--p3-border-strong);
+}
+
+body .dbreport_table_title {
+    border-bottom-color: var(--p3-border);
+}
+
+body .dbreport_table_field {
+    border-bottom-color: var(--p3-border);
+}
+
+body .dbreport_table_info {
+    color: var(--p3-text);
+}
+
+body .dbreport_format_howto td,
+body .dbreport_format_howto th {
+    border-color: var(--p3-border-strong);
+}
+
+body .dbreport_format_howto th {
+    background-color: var(--p3-surface-3);
+}
+
+body a.dbreport_action {
+    border-color: var(--p3-border-field);
+}
+
+body .dbreport_bandeau {
+    border-bottom-color: var(--p3-border);
+}
+
+body pre.dbreport_sql {
+    color: var(--text, var(--p3-text));
+    background-color: var(--p3-surface-2);
+}
+
+body .dbreport_sql_quote {
+    color: var(--p3-success);
+}
+
+body .dbreport_sql_backtick_quote {
+    color: var(--p3-info);
+}
+
+body .dbreport_sql_number {
+    color: var(--p3-warning);
+}
+
+body .dbreport_sql_comment {
+    color: var(--p3-text-muted);
+}
+
+body .dbreport_sql_error {
+    background-color: var(--p3-danger-soft);
+    color: var(--p3-danger);
+}
+
+body [data-theme="dark"] .dbreport_sql_quote {
+    color: var(--p3-success);
+}
+
+body [data-theme="dark"] .dbreport_sql_backtick_quote {
+    color: var(--p3-info);
+}
+
+body [data-theme="dark"] .dbreport_sql_number {
+    color: var(--p3-warning);
+}
+
+body [data-theme="dark"] .dbreport_sql_comment {
+    color: var(--p3-text-muted);
+}
+
+body [data-theme="dark"] .dbreport_sql_error {
+    color: var(--p3-danger);
+}
+
+body :root:not([data-theme="light"]) .dbreport_sql_quote {
+    color: var(--p3-success);
+}
+
+body :root:not([data-theme="light"]) .dbreport_sql_backtick_quote {
+    color: var(--p3-info);
+}
+
+body :root:not([data-theme="light"]) .dbreport_sql_number {
+    color: var(--p3-warning);
+}
+
+body :root:not([data-theme="light"]) .dbreport_sql_comment {
+    color: var(--p3-text-muted);
+}
+
+/******************
+  DIRECTORY
+*******************/
+
+body .directory_shared_main {
+    border-bottom-color: var(--p3-border-strong);
+    background-color: var(--p3-surface-2);
+}
+
+body .directory_shared_heading {
+    border-left-color: var(--p3-border-strong);
+    background-color: var(--p3-surface-2);
+}
+
+body .directory_search {
+    background-color: var(--p3-surface-2);
+    border-bottom-color: var(--p3-border-strong);
+}
+
+body .directory_titre {
+    background-color: var(--p3-surface-3);
+    border-bottom-color: var(--p3-border-strong);
+}
+
+body .directory_encadre {
+    border-color: var(--p3-border-strong);
+    background-color: var(--p3-surface-3);
+}
+
+body .directory_photo {
+    border-color: var(--p3-border-field);
+}
+
+body .directory_bandeau_titre {
+    border-bottom-color: var(--p3-border-strong);
+}
+
+body .directory_barre_boutons {
+    background-color: var(--p3-surface-3);
+    border-top-color: var(--p3-border-strong);
+}
+
+body .directory_bandeau_fort {
+    background-color: var(--p3-surface-3);
+    border-bottom-color: var(--p3-border-strong);
+}
+
+body .directory_bandeau {
+    background-color: var(--p3-surface-3);
+    border-bottom-color: var(--p3-border-strong);
+}
+
+body .directory_bandeau_simple {
+    background-color: var(--p3-surface-3);
+}
+
+body .directory_bandeau_sombre {
+    background-color: var(--p3-surface-3);
+    border-bottom-color: var(--p3-border-strong);
+}
+
+body .directory_cadre_blanc {
+    border-color: var(--p3-border-strong);
+    background-color: var(--p3-surface);
+}
+
+body .directory_fiche_detail {
+    border-left-color: var(--p3-border-strong);
+}
+
+body .directory_cadre {
+    border-color: var(--p3-border-strong);
+}
+
+body .directory_filet_haut {
+    border-top-color: var(--p3-border-strong);
+}
+
+body .directory_filet_fort {
+    border-bottom-color: var(--p3-border-strong);
+}
+
+body .directory_filet_bas {
+    border-bottom-color: var(--p3-border-strong);
+}
+
+body .directory_titre_fort {
+    background-color: var(--p3-surface-3);
+    border-bottom-color: var(--p3-border-strong);
+}
+
+/******************
+  DOC
+*******************/
+
+body .doc_path {
+    border-bottom-color: var(--p3-border);
+}
+
+body .doc_path a {
+    border-color: var(--p3-border);
+    background-color: var(--p3-surface-2);
+}
+
+body .doc_path a:hover {
+    border-color: var(--p3-border);
+    background-color: var(--p3-primary-softer);
+}
+
+body a.doc_pathselected {
+    border-color: var(--p3-border);
+    background-color: var(--p3-surface-3);
+}
+
+body div.doc_folderinfo {
+    background-color: var(--p3-surface-2);
+}
+
+body div.doc_folderannotation {
+    border-color: var(--p3-border);
+    background-color: var(--p3-surface-2);
+}
+
+body div.doc_fileinfo {
+    border-bottom-color: var(--p3-border-strong);
+    background-color: var(--p3-surface-3);
+}
+
+body div.doc_fileinfo a {
+    border-left-color: var(--p3-border-strong);
+}
+
+body div.doc_fileinfo a:hover {
+    background-color: var(--p3-primary-softer);
+}
+
+body div.doc_explorer_main {
+    border-top-color: var(--p3-border);
+}
+
+body div.doc_moreinfo_title {
+    border-color: var(--p3-border);
+    background-color: var(--p3-surface-2);
+}
+
+body div.doc_moreinfo_box {
+    border-color: var(--p3-border);
+    background-color: var(--p3-surface-2);
+}
+
+body #doc_share {
+    border-color: var(--p3-border-strong);
+    background-color: var(--p3-surface-2);
+}
+
+body #doc_validation {
+    border-color: var(--p3-border-strong);
+    background-color: var(--p3-surface-2);
+}
+
+body div.doc_fileform {
+    border-color: var(--p3-border);
+    background-color: var(--p3-surface-2);
+}
+
+body div.doc_fileform_title {
+    background-color: var(--p3-surface-3);
+    border-bottom-color: var(--p3-border-strong);
+}
+
+body div.doc_fileform_main {
+    background-color: var(--p3-surface-2);
+}
+
+body div.doc_admin_titlebar {
+    border-bottom-color: var(--p3-border-strong);
+    background-color: var(--p3-surface-3);
+}
+
+body div.doc_admin_form {
+    border-bottom-color: var(--p3-border-strong);
+    background-color: var(--p3-surface-2);
+}
+
+body #doc_progressbar {
+    border-color: var(--p3-border-strong);
+}
+
+body #doc_progressbar_bg {
+    background-color: var(--p3-surface-3);
+}
+
+body a.doc_fckexplorer_vignette {
+    border-color: var(--p3-border-strong);
+    background-color: var(--p3-surface);
+}
+
+body a.doc_fckexplorer_vignette div {
+    background-color: var(--p3-surface);
+}
+
+body a.doc_fckexplorer_vignette:hover {
+    border-color: var(--p3-border-strong);
+    background-color: var(--p3-primary-softer);
+}
+
+body a.doc_fckexplorer_vignette:hover div {
+    background-color: var(--p3-primary-softer);
+}
+
+body a.doc_fckexplorer_file {
+    border-color: var(--p3-border-strong);
+    background-color: var(--p3-surface);
+}
+
+body a.doc_fckexplorer_file div {
+    background-color: var(--p3-surface);
+}
+
+body a.doc_fckexplorer_file:hover {
+    border-color: var(--p3-border-strong);
+    background-color: var(--p3-primary-softer);
+}
+
+body div.doc_thumb {
+    border-color: var(--p3-border-field);
+    background-color: var(--p3-surface-3);
+}
+
+body div.doc_thumb:hover {
+    background-color: var(--p3-primary-softer);
+}
+
+body .doc_hl-content {
+    background-color: var(--p3-surface-2);
+}
+
+body .doc_hl-content table td.doc_hl-num {
+    border-right-color: var(--p3-border-strong);
+    background-color: var(--p3-surface-3);
+    color: var(--p3-text-muted);
+}
+
+body .doc_draft {
+    background-color: var(--p3-danger-soft);
+}
+
+body .doc_separateur {
+    border-left-color: var(--p3-border);
+}
+
+body .doc_bandeau_titre {
+    background-color: var(--p3-surface-2);
+    border-bottom-color: var(--p3-border-strong);
+}
+
+body .doc_titre {
+    border-bottom-color: var(--p3-border-strong);
+}
+
+body .doc_filet_bas {
+    border-bottom-color: var(--p3-border-strong);
+}
+
+body .doc_bandeau {
+    border-bottom-color: var(--p3-border-strong);
+    background-color: var(--p3-surface-3);
+}
+
+body .doc_ligne {
+    border-bottom-color: var(--p3-border-strong);
+}
+
+body .doc_encadre {
+    border-color: var(--p3-border-strong);
+    background-color: var(--p3-surface-2);
+}
+
+body .doc_encadre_gris {
+    border-color: var(--p3-border-strong);
+    background-color: var(--p3-surface-2);
+}
+
+body .doc_cadre {
+    border-color: var(--p3-border-strong);
+}
+
+body .doc_legende_brouillon {
+    background-color: var(--p3-danger-soft);
+}
+
+/******************
+  FORMS
+*******************/
+
+body table.forms_viewlist {
+    border-color: var(--p3-border-strong);
+}
+
+body table.forms_viewlist td,
+body table.forms_viewlist th {
+    border-color: var(--p3-border-strong);
+}
+
+body table.forms_viewlist tr:hover {
+    background-color: var(--p3-primary-softer);
+}
+
+body table.forms_viewlist th a:hover {
+    background-color: var(--p3-primary-softer);
+}
+
+body table.forms_viewlist th a.selected {
+    background-color: var(--p3-surface-3);
+}
+
+body div#forms_filter_box {
+    background-color: var(--p3-surface-3);
+    border-bottom-color: var(--p3-border-strong);
+}
+
+body div#forms_info_box {
+    background-color: var(--p3-surface-2);
+    border-bottom-color: var(--p3-border-strong);
+}
+
+body div#forms_archive_box {
+    background-color: var(--p3-surface-3);
+    border-bottom-color: var(--p3-border-strong);
+}
+
+body a.forms_public_link:hover {
+    background-color: var(--p3-primary-softer);
+}
+
+body a.forms_public_link h1 {
+    border-bottom-color: var(--p3-border);
+}
+
+body .forms_noselect {
+    background-color: var(--p3-surface-2);
+}
+
+body .forms_export_link {
+    border-color: var(--p3-border);
+    background-color: var(--p3-surface);
+}
+
+body .forms_export_link:hover {
+    background-color: var(--p3-primary-softer);
+}
+
+body .forms_param_link a {
+    border-color: var(--p3-border-strong);
+    background-color: var(--p3-surface-2);
+}
+
+body .forms_param_link a:hover {
+    background-color: var(--p3-primary-softer);
+}
+
+body .forms_barre_boutons {
+    background-color: var(--p3-surface-3);
+    border-top-color: var(--p3-border-strong);
+}
+
+body .forms_barre_boutons_bas {
+    background-color: var(--p3-surface-3);
+    border-bottom-color: var(--p3-border-strong);
+}
+
+body .forms_bandeau {
+    background-color: var(--p3-surface-3);
+    border-top-color: var(--p3-border-strong);
+    border-bottom-color: var(--p3-border-strong);
+}
+
+body .forms_separation {
+    border-top-color: var(--p3-border-strong);
+}
+
+body .forms_ligne {
+    border-bottom-color: var(--p3-border-strong);
+}
+
+body .forms_encadre {
+    background-color: var(--p3-surface-2);
+    border-color: var(--p3-border-strong);
+}
+
+body .forms_fond {
+    background-color: var(--p3-surface);
+}
+
+body .forms_bandeau_clair {
+    background-color: var(--p3-surface-2);
+    border-bottom-color: var(--p3-border);
+}
+
+/******************
+  NANOGALLERY
+*******************/
+
+body .nano form > div > fieldset > div > label.nano_clabel {
+    background-color: var(--p3-surface);
+    border-color: var(--p3-border-field);
+}
+
+body .nano_check:checked + label:after {
+    color: var(--p3-info);
+}
+
+/******************
+  NEWS2
+*******************/
+
+body .news2_separation {
+    border-top-color: var(--p3-border-strong);
+}
+
+/******************
+  PLANNING
+*******************/
+
+body .planning_event_ressource_list {
+    border-color: var(--p3-border-strong);
+    background-color: var(--p3-surface);
+}
+
+body .planning_event_ressource_list em:hover {
+    background-color: var(--p3-primary-softer);
+}
+
+body .planning_bandeau {
+    border-color: var(--p3-border-strong);
+    background-color: var(--p3-surface-3);
+}
+
+body .planning_cartouche {
+    border-color: var(--p3-border-strong);
+    background-color: var(--p3-surface);
+}
+
+/******************
+  WEBEDIT
+*******************/
+
+body #webedit_header {
+    border-bottom-color: var(--p3-border-strong);
+    background-color: var(--p3-surface-3);
+}
+
+body div.webedit_main {
+    border-left-color: var(--p3-border-strong);
+    background-color: var(--p3-info-soft);
+}
+
+body div.webedit_main2 {
+    border-left-color: var(--p3-border-strong);
+    background-color: var(--p3-surface-2);
+}
+
+body #webedit_legende {
+    background-color: var(--p3-surface-2);
+    border-top-color: var(--p3-border-strong);
+    border-bottom-color: var(--p3-border-strong);
+}
+
+body .webedit_form p fieldset {
+    border-color: var(--p3-border-strong);
+    background-color: var(--p3-surface-3);
+}
+
+body #webedit_heading_toolbar {
+    background-color: var(--p3-surface-3);
+    border-bottom-color: var(--p3-border-strong);
+}
+
+body #webedit_stats {
+    background-color: var(--p3-surface);
+}
+
+body #webedit_stats_select p {
+    border-bottom-color: var(--p3-border-strong);
+    background-color: var(--p3-surface-2);
+}
+
+body #webedit_stats_select p a {
+    background-color: var(--p3-surface-3);
+    border-color: var(--p3-border-strong);
+}
+
+body #webedit_stats_select p a:hover {
+    background-color: var(--p3-primary-softer);
+    border-color: var(--p3-border-strong);
+}
+
+body #webedit_stats_select p a.selected {
+    background-color: var(--p3-surface);
+    border-color: var(--p3-border-strong);
+}
+
+body .webedit_stats_graph {
+    background-color: var(--p3-surface);
+}
+
+body .webedit_stats_array {
+    background-color: var(--p3-surface);
+}
+
+body .webedit_cadre {
+    border-color: var(--p3-border-strong);
+}
+
+body .webedit_filet_haut {
+    border-top-color: var(--p3-border-strong);
+}
+
+body .webedit_filet_bas {
+    border-bottom-color: var(--p3-border-strong);
+}
+
+body .webedit_liste {
+    border-color: var(--p3-border-strong);
+}
+
+body .webedit_liste_titre {
+    background-color: var(--p3-surface-3);
+    border-bottom-color: var(--p3-border-strong);
+}
+
+body .webedit_bandeau {
+    background-color: var(--p3-surface-3);
+    border-color: var(--p3-border-strong);
+}
+
+body .webedit_pied {
+    background-color: var(--p3-surface-3);
+    border-top-color: var(--p3-border-strong);
+}
+
+body .webedit_titre_page {
+    background-color: var(--p3-surface-3);
+    border-bottom-color: var(--p3-border-strong);
+}
+
+body .webedit_titre {
+    background-color: var(--p3-surface-3);
+    border-bottom-color: var(--p3-border-strong);
+}
+
+/******************
+  WIKI
+*******************/
+
+body #wiki_help {
+    background-color: var(--p3-surface);
+}
+
+body #wiki_help table td {
+    background-color: var(--p3-surface-2);
+}
+
+body .wiki_page h1 {
+    color: var(--p3-text);
+}
+
+body .wiki_page h2 {
+    color: var(--p3-text);
+}
+
+body .wiki_page h3 {
+    color: var(--p3-text);
+}
+
+body .wiki_page table {
+    border-color: var(--p3-border-field);
+}
+
+body .wiki_page table,
+body .wiki_page td,
+body .wiki_page th {
+    border-color: var(--p3-border-strong);
+}
+
+body .wiki_page a.new {
+    color: var(--p3-danger);
+}
+
+body .wiki_page pre {
+    background-color: var(--p3-surface-2);
+    border-color: var(--p3-border);
+}
+
+body .wiki_page ul.toc {
+    background-color: var(--p3-warning-soft);
+    border-color: var(--p3-border);
+}
+
+body .wiki_page ul.toc a {
+    color: var(--p3-text-muted);
+}
+
+body .wiki_page ul.toc a:hover {
+    color: var(--p3-danger);
+}
+
+body .wiki_page a.wiki-anchor:hover {
+    color: var(--p3-text-muted) !important;
+}
+
+body .wiki_page span.wiki_link_notfound a {
+    color: var(--p3-danger);
+}
+
+body .wiki_page .footnote {
+    color: var(--p3-text-muted);
+}
+
+body #wiki_page_print_info {
+    color: var(--p3-text-muted);
+}
+
+body #wiki_diff {
+    background-color: var(--p3-surface);
+    border-color: var(--p3-border);
+}
+
+body #wiki_index {
+    background-color: var(--p3-surface);
+    border-color: var(--p3-border);
+}
+
+body #wiki_index h1 {
+    border-bottom-color: var(--p3-border-strong);
+    color: var(--p3-text);
+}
+
+body .wiki_page .hl-content {
+    border-color: var(--p3-border);
+    background-color: var(--p3-surface-2);
+}
+
+body .wiki_page table td.hl-num {
+    border-right-color: var(--p3-border-strong);
+    background-color: var(--p3-surface-3);
+    color: var(--p3-text-muted);
+}
+
+body .wiki_page .hl-default {
+    color: var(--p3-text);
+}
+
+body .wiki_page .hl-code {
+    color: var(--p3-text-muted);
+}
+
+body .wiki_page .hl-string {
+    color: var(--p3-danger);
+}
+
+body .wiki_page .hl-identifier {
+    color: var(--p3-info);
+}
+
+body .wiki_page .hl-reserved {
+    color: var(--p3-success);
+}
+
+body .wiki_page .hl-inlinedoc {
+    color: var(--p3-info);
+}
+
+body .wiki_page .hl-url {
+    color: var(--p3-info);
+}
+
+body .wiki_page .hl-special {
+    color: var(--p3-info);
+}
+
+body .wiki_page .hl-number {
+    color: var(--p3-danger);
+}
+
+body .wiki_page .hl-inlinetags {
+    color: var(--p3-info);
+}
+
+html body.wiki_print a,
+html body.wiki_print a:visited {
+    color: var(--p3-info);
+}
+
+body .wiki_page_toc {
+    background-color: var(--p3-warning-soft);
+}
+
+body .wiki_page_toc a {
+    color: var(--p3-text-muted);
+}
+
+body .wiki_page_toc a:hover {
+    color: var(--p3-danger);
+}
+
+body .wiki_page_toc ul {
+    color: var(--p3-text-muted);
+}
+
+body .wiki_aide_cellule {
+    border-color: var(--p3-border-strong);
+}
+
+body .wiki_filet_haut {
+    border-top-color: var(--p3-border);
+}
+
+body .wiki_bandeau {
+    background-color: var(--p3-surface-3);
+    border-bottom-color: var(--p3-border);
+}

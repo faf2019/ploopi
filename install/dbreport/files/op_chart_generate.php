@@ -10,15 +10,19 @@ if (!isset($_GET['dbreport_query_id']) || !is_numeric($_GET['dbreport_query_id']
 header('Content-type: text/html; charset=utf-8');
 ploopi\buffer::clean();
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="fr">
     <head>
-        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <meta charset="utf-8" />
         <title>Graphique: <?php echo ploopi\str::htmlentities($objDbrQuery->fields['label']); ?></title>
-        <script src="./lib/protoaculous/protoaculous.min.js"></script>
-        <script src="./modules/dbreport/lib/highcharts/adapters/prototype-adapter.js"></script>
-        <script src="./modules/dbreport/lib/highcharts/highcharts.js"></script>
-        <script src="./modules/dbreport/lib/highcharts/modules/exporting.js"></script>
+        <?php /* Chart.js (MIT) : remplace Highcharts, dont la licence n'est pas libre */ ?>
+        <script src="./modules/dbreport/lib/chartjs/chart.umd.js"></script>
+        <script src="./modules/dbreport/include/chart.js"></script>
+        <style>
+            body { margin: 8px; font-family: sans-serif; }
+            .dbreport_chart_actions { font-size: 12px; }
+            @media print { .dbreport_chart_actions { display: none; } }
+        </style>
     </head>
     <body>
         <?php

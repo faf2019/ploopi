@@ -30,10 +30,18 @@
  * @author Ovensia
  */
 
+// Gabarits de génération 4 : écran refondu
+if (ploopi\skin::get()->version() >= 4)
+{
+    $strParamContext = 'workspace';
+    include './modules/system/admin_params_p4.php';
+    return;
+}
+
 /**
  * Récupération de l'identifiant de module
  */
-if (!empty($_REQUEST['idmodule'])) $idmodule = $_REQUEST['idmodule'];
+if (!empty($_REQUEST['idmodule']) && is_numeric($_REQUEST['idmodule'])) $idmodule = $_REQUEST['idmodule'];
 
 echo ploopi\skin::get()->open_simplebloc(_SYSTEM_MODULESELECTED);
 ?>

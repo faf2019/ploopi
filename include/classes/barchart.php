@@ -105,7 +105,6 @@ class barchart
     {
         $this->width = $width;
         $this->height = $height;
-        $this->values = array();
         $this->legend = array();
         $this->datasets = array();
         $this->options =

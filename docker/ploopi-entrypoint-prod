@@ -1,0 +1,27 @@
+#!/bin/sh
+# Préparation des volumes de l'image de production avant de lancer Apache
+# (docker-compose.prod.yml, voir docker/LISEZMOI.md). Apache tourne sous www-data,
+# le code de l'image appartient à root et n'est pas modifiable.
+set -e
+
+cd /var/www/html
+
+# modules/ (volume) : les modules versionnés (system) sont remis depuis l'image,
+# les modules installés depuis le backoffice sont rafraîchis depuis install/<module>/files :
+# une nouvelle image apporte ainsi leur nouveau code ; la mise à jour de leur base
+# se fait ensuite, comme d'habitude, depuis l'administration système.
+cp -a /opt/ploopi-modules/. modules/
+for strDir in modules/*/; do
+    strModule=$(basename "$strDir")
+    [ "$strModule" = system ] || [ ! -d "install/$strModule/files" ] \
+        || cp -a "install/$strModule/files/." "$strDir"
+done
+chown -R www-data:www-data modules
+
+# Configuration (PLOOPI_CONFIG) et documents : volumes inscriptibles par Apache seulement.
+strConfigDir=$(dirname "${PLOOPI_CONFIG:?PLOOPI_CONFIG doit désigner le fichier de configuration}")
+mkdir -p "$strConfigDir" /var/www/ploopi-data
+chown -R www-data:www-data "$strConfigDir" /var/www/ploopi-data
+chmod 700 "$strConfigDir"
+
+exec docker-php-entrypoint "$@"

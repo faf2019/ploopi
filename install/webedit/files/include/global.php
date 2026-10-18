@@ -126,9 +126,29 @@ define ('_WEBEDIT_SUBSCRIPTION_SUBSCRIBED', 1);
 define ('_WEBEDIT_SUBSCRIPTION_UNSUBSCRIBED', 2);
 
 /**
+ * Enregistrement d'un abonné : courriel de confirmation envoyé
+ */
+define ('_WEBEDIT_SUBSCRIPTION_PENDING', 3);
+
+/**
  * Enregistrement d'un abonné : adresse email invalide
  */
 define ('_WEBEDIT_SUBSCRIPTION_ERROR_EMAIL', 9);
+
+/**
+ * Enregistrement d'un abonné : lien de confirmation invalide ou périmé
+ */
+define ('_WEBEDIT_SUBSCRIPTION_ERROR_LINK', 10);
+
+/**
+ * Enregistrement d'un abonné : courriel impossible à envoyer
+ */
+define ('_WEBEDIT_SUBSCRIPTION_ERROR_SEND', 11);
+
+/**
+ * Durée de validité d'un lien de confirmation d'abonnement (secondes)
+ */
+define ('_WEBEDIT_SUBSCRIPTION_DELAY', 172800);
 
 /**
  * Enregistrement d'un abonné : paramètre incorrect
@@ -182,6 +202,20 @@ function webedit_getlastupdate($moduleid = -1)
 }
 
 /**
+ * Chaîne passée en argument d'une fonction JavaScript dans un attribut HTML (onclick des
+ * arbres de choix) : littéral JSON, échappé pour l'attribut. Un guillemet dans un titre
+ * ne referme plus l'attribut (addslashes n'échappait que pour le JavaScript).
+ *
+ * @param string $str chaîne
+ * @return string argument JavaScript
+ */
+
+function webedit_jsarg($str)
+{
+    return ploopi\str::htmlentities(json_encode((string)$str, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+}
+
+/**
  * Retourne un tableau contenant les données nécessaire à l'affiche du treeview
  *
  * @param string $option option d'affichage qui permet d'adapter le comportement des liens (l'arbre est utilisé de plusieurs manières)
@@ -210,7 +244,7 @@ function webedit_gettreeview($arrHeadings = array(), $articles = array(), $optio
             $prefix = 'r';
         break;
 
-        // choix d'un article pour faire un lien (fckeditor)
+        // choix d'un article pour faire un lien (éditeur)
         case 'selectlink':
             $prefix = 'l';
         break;
@@ -231,12 +265,12 @@ function webedit_gettreeview($arrHeadings = array(), $articles = array(), $optio
             {
                 case 'selectheading':
                     $link = '';
-                    $onclick = "webedit_select_heading('{$fields['id']}', '".addslashes($fields['label'])."', event)";
+                    $onclick = "webedit_select_heading('{$fields['id']}', ".webedit_jsarg($fields['label']).", event)";
                 break;
 
                 case 'selectredirect':
                     $link = '';
-                    $onclick = "webedit_select_article_or_heading('h{$fields['id']}', '".addslashes($fields['label'])."', event)";
+                    $onclick = "webedit_select_article_or_heading('h{$fields['id']}', ".webedit_jsarg($fields['label']).", event)";
                 break;
 
                 case 'selectlink':
@@ -287,35 +321,19 @@ function webedit_gettreeview($arrHeadings = array(), $articles = array(), $optio
 
                     switch($option)
                     {
-                        // used for fckeditor and link redirect on heading
+                        // redirection d'une rubrique vers un article
                         case 'selectredirect':
                             $link = '';
-                            $onclick = "webedit_select_article_or_heading('{$fields['id']}', '".addslashes($fields['title'])."', event)";
+                            $onclick = "webedit_select_article_or_heading('{$fields['id']}', ".webedit_jsarg($fields['title']).", event)";
                         break;
 
                         case 'selectlink':
                             $link = '';
                             $CKEditorFuncNum = isset($_REQUEST['CKEditorFuncNum']) ? intval($_REQUEST['CKEditorFuncNum']) : 0;
-                            $onclick = "
-                                window.parent.opener.CKEDITOR.tools.callFunction(
-                                    {$CKEditorFuncNum},
-                                    'index.php?headingid={$fields['id_heading']}&articleid={$fields['id']}',
-                                    function() {
-                                        // Get the reference to a dialog window.
-                                        var dialog = this.getDialog();
-
-                                        // Check if this is the Image Properties dialog window.
-                                        if ( dialog.getName() == 'image' ) {
-                                            // Get the reference to a text field that stores the alt attribute.
-                                            var element = dialog.getContentElement( 'info', 'txtAlt' );
-                                            // Assign the new value.
-                                            if ( element )
-                                                element.setValue( 'alt text' );
-                                        }
-                                    }
-                                );
-                                window.parent.close();
-                            ";
+                            // Retour à l'éditeur (js/editor.js), qui a ouvert la fenêtre de choix
+                            $onclick = "window.parent.opener.ploopi.editor.picked({$CKEditorFuncNum}, "
+                                .webedit_jsarg("index.php?headingid={$fields['id_heading']}&articleid={$fields['id']}").", {text: "
+                                .webedit_jsarg($fields['title'])."}); window.parent.close()";
                         break;
 
                         default:
@@ -550,16 +568,16 @@ function webedit_template_assign(&$arrHeadings, &$arrShares, &$nav, $hid, $var =
 
             switch($webedit_mode)
             {
-                case 'edit';
+                case 'edit':
                     $script = "javascript:window.parent.document.location.href='admin.php?headingid={$arrHeading['id']}';";
                 break;
 
-                case 'render';
+                case 'render':
                     $script = "index.php?webedit_mode=render&moduleid={$_SESSION['ploopi']['moduleid']}&headingid={$arrHeading['id']}";
                 break;
 
                 default:
-                case 'display';
+                case 'display':
                     $arrParents = array();
                     foreach(preg_split('/;/', $arrHeading['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
                     $script = ploopi\str::urlrewrite($script = "index.php?headingid={$arrHeading['id']}", webedit_getrewriterules(), $arrHeading['label'], $arrParents);
@@ -717,16 +735,16 @@ function webedit_template_assign_headings(&$arrHeadings, &$arrArticles, &$arrSha
 
                 switch($webedit_mode)
                 {
-                    case 'edit';
+                    case 'edit':
                         $script = "javascript:window.parent.document.location.href='admin.php?headingid={$id}';";
                     break;
 
-                    case 'render';
+                    case 'render':
                         $script = "index.php?webedit_mode=render&moduleid={$_SESSION['ploopi']['moduleid']}&headingid={$id}";
                     break;
 
                     default:
-                    case 'display';
+                    case 'display':
                         $arrParents = array();
                         foreach(preg_split('/;/', $arrHeading['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
                         $script = ploopi\str::urlrewrite($script = "index.php?headingid={$id}", webedit_getrewriterules(), $arrHeading['label'], $arrParents);
@@ -923,14 +941,14 @@ function webedit_record_isenabled($id_object, $id_record, $id_module)
 
     switch($id_object)
     {
-        case _WEBEDIT_OBJECT_ARTICLE_PUBLIC;
+        case _WEBEDIT_OBJECT_ARTICLE_PUBLIC:
             include_once './modules/webedit/class_article.php';
 
             $article = new webedit_article();
             if ($article->open($id_record)) return($article->isenabled());
         break;
 
-        case _WEBEDIT_ACTION_ARTICLE_EDIT;
+        case _WEBEDIT_ACTION_ARTICLE_EDIT:
             //if (ploopi\acl::isactionallowed(-1,$_SESSION['ploopi']['workspaceid'],$menu_moduleid))
             $enabled = true;
         break;
@@ -962,7 +980,7 @@ function webedit_replace_links($objArticle, $mode, &$arrHeadings)
         $arrReplace = array();
         $strContent = $objArticle->fields['content'];
 
-        // Traitement des ancres (incompatibilité fckeditor / <base href>)
+        // Traitement des ancres (incompatibilité éditeur / <base href>)
         preg_match_all('/(href=\"(#[^\"]*)\")/i', $strContent, $arrMatches);
         foreach($arrMatches[2] as $key => $strAnchor)
         {
@@ -1071,7 +1089,8 @@ function webedit_replace_links($objArticle, $mode, &$arrHeadings)
 function webedit_sitemap()
 {
     // Mise en cache
-    $objCache = new ploopi\cache('sitemap.xml', 300);
+    // L'instance entre dans l'identifiant : deux sites d'une installation ne partagent pas leur plan
+    $objCache = new ploopi\cache('sitemap-m'.$_SESSION['ploopi']['moduleid'].'.xml', 300);
 
     // Vidage du buffer
     ploopi\buffer::clean();
@@ -1099,6 +1118,13 @@ function webedit_sitemap()
 
         while ($row = $db->fetchrow())
         {
+            /**
+             * Le plan du site est public, et mis en cache pour tous : on n'y fait figurer
+             * aucun article de rubrique privée, quelle que soit la session qui le génère.
+             * La privatisation est héritée des rubriques parentes (webedit_getheadings).
+             */
+            if (isset($arrHeadings['list'][$row['id_heading']]) && $arrHeadings['list'][$row['id_heading']]['private']) continue;
+
             $arrParents = array();
             $floPriority = 1;
 
@@ -1124,6 +1150,8 @@ function webedit_sitemap()
         // Insertion des rubriques
         foreach($arrHeadings['list'] as $arrHeading)
         {
+            if ($arrHeading['private']) continue;
+
             $arrParents = array();
             if (isset($arrHeadings['list'][$arrHeading['id']]))
             {
@@ -1141,8 +1169,9 @@ function webedit_sitemap()
         }
 
         // Insertion des tags
+        // Une étiquette ne figure au plan que si elle porte au moins un article hors rubrique privée
         $db->query("
-            SELECT      t.*, count(*) as nb
+            SELECT      t.id, t.tag, a.id_heading
             FROM        ploopi_mod_webedit_tag t
 
             INNER JOIN  ploopi_mod_webedit_article_tag at
@@ -1154,14 +1183,22 @@ function webedit_sitemap()
             WHERE       t.id_module = {$_SESSION['ploopi']['moduleid']}
             AND         (a.timestp_published <= {$intToday} OR a.timestp_published = 0)
             AND         (a.timestp_unpublished >= {$intToday} OR a.timestp_unpublished = 0)
-
-            GROUP BY    t.id
-            ORDER BY    nb DESC
         ");
 
+        $arrTags = array();
         while ($row = $db->fetchrow())
         {
-            $strScript = ploopi\str::xmlentities(_PLOOPI_BASEPATH.'/'.ploopi\str::urlrewrite("index.php?query_tag={$row['tag']}", webedit_getrewriterules()));
+            if (isset($arrHeadings['list'][$row['id_heading']]) && $arrHeadings['list'][$row['id_heading']]['private']) continue;
+
+            if (!isset($arrTags[$row['id']])) $arrTags[$row['id']] = array('tag' => $row['tag'], 'nb' => 0);
+            $arrTags[$row['id']]['nb']++;
+        }
+
+        uasort($arrTags, function($a, $b) { return $b['nb'] - $a['nb']; });
+
+        foreach ($arrTags as $arrTag)
+        {
+            $strScript = ploopi\str::xmlentities(_PLOOPI_BASEPATH.'/'.ploopi\str::urlrewrite("index.php?query_tag={$arrTag['tag']}", webedit_getrewriterules()));
             $arrUrls[] = '<url><loc>'.$strScript.'</loc><lastmod>'.$strSiteLastMod.'</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>';
         }
 
@@ -1250,7 +1287,8 @@ function webedit_getrewriterules()
             '/index.php\?articleid=([0-9]*)&comment_return=([0-9]*)/',
             '/index.php\?articleid=([0-9]*)/',
             // Divers
-            '/index.php\?ploopi_op=webedit_unsubscribe&subscription_email=([a-z0-9]{32})/',
+            '/index.php\?ploopi_op=webedit_unsubscribe&subscription_token=([A-Za-z0-9_-]+\.[a-f0-9]{32})/',
+            '/index.php\?ploopi_op=webedit_subscription_confirm&subscription_token=([A-Za-z0-9_-]+\.[a-f0-9]{32})/',
             '/index.php\?query_tag=([a-zA-Z0-9]*)/',
             '/index.php\?ploopi_op=webedit_backend&format=([a-z]*)&headingid=([0-9]*)/',
             '/index.php\?ploopi_op=webedit_backend&format=([a-z]*)/',
@@ -1276,6 +1314,7 @@ function webedit_getrewriterules()
             'articles/<FOLDERS><TITLE>-a$1.<EXT>',
             // Divers
             'unsubscribe/$1/index.<EXT>',
+            'subscribe/$1/index.<EXT>',
             'tags/$1.<EXT>',
             'web/$1/<TITLE>-h$2.xml',
             'web/$1/<TITLE>.xml',
@@ -1489,5 +1528,87 @@ function webedit_headinglist2template(&$arrHeadings, &$arrShares, $template_body
             }
         }
     }
+}
+
+/**
+ * Jeton signé d'un lien d'abonnement envoyé par courriel.
+ *
+ * Le jeton porte la demande elle-même (type, instance, rubrique, échéance, adresse)
+ * et une signature HMAC tirée de _PLOOPI_SECRETKEY : le lien ne se devine pas depuis
+ * l'adresse, et rien n'est écrit en base avant que le destinataire ne le suive.
+ *
+ * @param string $strType 'c' (confirmation d'abonnement) ou 'u' (désabonnement)
+ * @param int $intModuleId instance de webedit
+ * @param int $intHeadingId rubrique (0 : le site entier)
+ * @param string $strEmail adresse de l'abonné
+ * @param int $intExpire échéance (timestamp unix), 0 : sans échéance
+ * @return string jeton [A-Za-z0-9_-]+.[a-f0-9]{32}
+ */
+
+function webedit_subscription_token($strType, $intModuleId, $intHeadingId, $strEmail, $intExpire = 0)
+{
+    $strCharge = rtrim(strtr(base64_encode($strType.'|'.intval($intModuleId).'|'.intval($intHeadingId).'|'.intval($intExpire).'|'.$strEmail), '+/', '-_'), '=');
+
+    return $strCharge.'.'.webedit_subscription_signature($strCharge);
+}
+
+/**
+ * Signature d'un jeton d'abonnement.
+ *
+ * @param string $strCharge charge encodée du jeton
+ * @return string signature hexadécimale (128 bits)
+ */
+
+function webedit_subscription_signature($strCharge)
+{
+    return substr(hash_hmac('sha256', $strCharge, hash_hmac('sha256', 'ploopi/webedit/subscription', _PLOOPI_SECRETKEY, true)), 0, 32);
+}
+
+/**
+ * Lit un jeton d'abonnement et en vérifie la signature et l'échéance.
+ *
+ * @param string $strToken jeton reçu
+ * @param string $strType type attendu ('c' ou 'u')
+ * @return array|false demande (moduleid, headingid, email), false si le jeton est invalide ou périmé
+ */
+
+function webedit_subscription_read($strToken, $strType)
+{
+    if (!is_string($strToken) || !preg_match('/^([A-Za-z0-9_-]+)\.([a-f0-9]{32})$/', $strToken, $arrMatches)) return false;
+    if (!hash_equals(webedit_subscription_signature($arrMatches[1]), $arrMatches[2])) return false;
+
+    $arrChamps = explode('|', (string)base64_decode(strtr($arrMatches[1], '-_', '+/')), 5);
+    if (count($arrChamps) != 5 || $arrChamps[0] !== $strType) return false;
+
+    list(, $intModuleId, $intHeadingId, $intExpire, $strEmail) = $arrChamps;
+    if (intval($intExpire) > 0 && intval($intExpire) < time()) return false;
+    if (!ploopi\mail::check($strEmail)) return false;
+
+    return array('moduleid' => intval($intModuleId), 'headingid' => intval($intHeadingId), 'email' => $strEmail);
+}
+
+/**
+ * Adresse du site pour les liens d'abonnement envoyés par courriel.
+ *
+ * L'hôte de la requête si une liste de domaines d'espace le déclare en clair (un
+ * frontoffice servi sur son propre domaine), sinon l'adresse publique du socle.
+ *
+ * @return string|false adresse sans « / » final, false si aucune n'est sûre
+ * @see ploopi\system::publicurl()
+ */
+
+function webedit_subscription_baseurl()
+{
+    if (!empty($_SERVER['HTTP_HOST']) && defined('_PLOOPI_BASEPATH'))
+    {
+        $arrListes = array();
+        $db = ploopi\db::get();
+        $rs = $db->query('SELECT frontoffice_domainlist FROM ploopi_workspace');
+        while ($row = $db->fetchrow($rs)) $arrListes[] = $row['frontoffice_domainlist'];
+
+        if (ploopi\system::trustedhost($_SERVER['HTTP_HOST'], $arrListes)) return rtrim(_PLOOPI_BASEPATH, '/');
+    }
+
+    return ploopi\system::publicurl();
 }
 ?>

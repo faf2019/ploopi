@@ -21,17 +21,17 @@
 */
 
 /**
- * Explorateur de rubriques/pages intégré à FCKeditor
+ * Choix d'une rubrique ou d'une page du site, pour un lien de l'éditeur (js/editor.js)
  *
  * @package webedit
- * @subpackage fckeditor
+ * @subpackage editor
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
  * @author Ovensia
  */
 
 /**
- * Ce script peut être appelé depuis le module WebEdit (lien vers un article) ou depuis un module externe (via FCKeditor).
+ * Ce script peut être appelé depuis le module WebEdit (lien vers un article) ou depuis un module externe (fenêtre de choix de l'éditeur).
  * Il faut donc 'choisir' le moduleid de travail.
  * Par défaut on prend le module WEBEDIT sur lequel on est déjà.
  */
@@ -70,7 +70,7 @@ if ($webedit_idm)
 
     switch($ploopi_op)
     {
-        case 'webedit_detail_heading';
+        case 'webedit_detail_heading':
             $option = (empty($_GET['option'])) ? '' : $_GET['option'];
             $treeview = webedit_gettreeview(webedit_getheadings($webedit_idm), webedit_getarticles($webedit_idm), $option);
             echo ploopi\skin::get()->display_treeview($treeview['list'], $treeview['tree'], null, $_GET['hid']);

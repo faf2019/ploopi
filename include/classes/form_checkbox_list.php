@@ -62,8 +62,8 @@ class form_checkbox_list extends form_field
      */
     public function __construct($strLabel, $arrValues, $arrSelected, $strName, $strId = null, $arrOptions = null)
     {
-        if (!is_array($arrValues)) trigger_error('Ce type d\'élément attend un tableau de valeurs', E_USER_ERROR);
-        if (!is_array($arrSelected)) trigger_error('Ce type d\'élément attend un tableau de valeurs', E_USER_ERROR);
+        if (!is_array($arrValues)) throw new \ErrorException('Ce type d\'élément attend un tableau de valeurs');
+        if (!is_array($arrSelected)) throw new \ErrorException('Ce type d\'élément attend un tableau de valeurs');
 
         parent::__construct('input:checkbox', $strLabel, $arrValues, $strName, $strId, is_null($arrOptions) ? self::$_arrDefaultOptions : array_merge(self::$_arrDefaultOptions, $arrOptions));
 
@@ -101,7 +101,7 @@ class form_checkbox_list extends form_field
                 }
                 else
                 {
-                    trigger_error('Valeur d\'option incorrecte', E_USER_ERROR);
+                    throw new \ErrorException('Valeur d\'option incorrecte');
                 }
             }
 

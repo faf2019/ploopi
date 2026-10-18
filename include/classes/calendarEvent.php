@@ -97,6 +97,10 @@ class calendarEvent
      * string 'strHref' Lien href sur l'événement
      * string 'strOnClose' Fonction javascript à exécuter sur l'événement "onclose"
      * string 'strStyle' Styles complémentaires à appliquer
+     * array 'arrAttrs' Attributs data-* du lien de l'événement, à la place de strOnClick
+     * array 'arrCloseAttrs' Attributs data-* de la croix, à la place de strOnClose
+     *   (js/actions.js : aucun gestionnaire en ligne, CSP stricte ; noms filtrés, valeurs
+     *   échappées, tableaux en JSON, cf. skin::treeview_attrs)
      */
 
     public function __construct($intTimestpBegin, $intTimestpEnd, $strTitle, $strContent, $strChannelId = null, $arrOptions = array())
@@ -114,7 +118,9 @@ class calendarEvent
             'strOnClick' => null,
             'strOnClose' => null,
             'arrOnDrop' => null,
-            'strStyle' => null
+            'strStyle' => null,
+            'arrAttrs' => null,
+            'arrCloseAttrs' => null
         );
 
         $this->setOptions($arrOptions);

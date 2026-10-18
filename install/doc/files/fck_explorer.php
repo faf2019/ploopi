@@ -21,7 +21,8 @@
 */
 
 /**
- * Explorateur de documents intégré à FCKeditor
+ * Fenêtre de choix d'un fichier ou d'une image de la GED pour l'éditeur du socle
+ * (TinyMCE, js/editor.js : ploopi.editor.picked)
  *
  * @package doc
  * @subpackage fckeditor
@@ -72,9 +73,10 @@ while ($fields = ploopi\db::get()->fetchrow())
 
 echo ploopi\skin::get()->open_simplebloc();
 ?>
-<input type="hidden" id="CKEditor" value="<?php echo isset($_REQUEST['CKEditor']) ? $_REQUEST['CKEditor'] : ''; ?>" />
-<input type="hidden" id="CKEditorFuncNum" value="<?php echo isset($_REQUEST['CKEditorFuncNum']) ? $_REQUEST['CKEditorFuncNum'] : ''; ?>" />
-<div style="padding:4px;border-bottom:1px solid #a0a0a0;">
+<input type="hidden" id="CKEditor" value="<?php echo isset($_REQUEST['CKEditor']) ? ploopi\str::htmlentities($_REQUEST['CKEditor']) : ''; ?>" />
+<?php // Numéro de retour vers l'éditeur (ploopi.editor.picked) : un entier ?>
+<input type="hidden" id="CKEditorFuncNum" value="<?php echo isset($_REQUEST['CKEditorFuncNum']) ? (int) $_REQUEST['CKEditorFuncNum'] : ''; ?>" />
+<div class="doc_ligne">
     Dossier :
     <select class="select" name="doc_choosefolder" id="doc_choosefolder" onchange="javascript:doc_fckexplorer_switch_folder(this.value, '<?php echo $ploopi_op; ?>');">
     <option value="0"></option>

@@ -52,7 +52,7 @@
     <script type="text/javascript" src="{module_js.PATH}"></script>
     <!-- END module_js -->
 
-    <script type="text/javascript">
+    <script type="text/javascript" nonce="{CSP_NONCE}">
     {ADDITIONAL_JAVASCRIPT}
 
 
@@ -64,6 +64,13 @@
         jQuery('#lostpassword_form').eq(0).fadeIn(
             'slow'
         );
+    };
+
+    // Identifiant ou adresse : l'un des deux suffit
+    ploopi.template.passwordlost_submit = function(form) {
+        if (jQuery.trim(form.ploopi_lostpassword_login.value) != '' || jQuery.trim(form.ploopi_lostpassword_email.value) != '') return true;
+        form.ploopi_lostpassword_login.focus();
+        return false;
     };
 
     ploopi.template.passwordlost_cancel = function() {
@@ -169,7 +176,7 @@
                                 <input type="password" class="text" id="ploopi_password_new_confirm" name="ploopi_password_new_confirm" title="Saisir votre mot de passe" placeholder="Saisir votre mot de passe" tabindex="2" />
                             </p>
 
-                            <script type="text/javascript">
+                            <script type="text/javascript" nonce="{CSP_NONCE}">
                                 var backupColor = jQuery('#ploopi_password_new')[0].style.backgroundColor;
 
                                 ploopi.template.verif_pass = function() {
@@ -249,7 +256,7 @@
                 </div>
                 </form>
             </div>
-            <form style="display:none;" id="lostpassword_form" action="{PASSWORDLOST_URL}" method="post" onsubmit="javascript:return tpl_passwordlost_submit();">
+            <form style="display:none;" id="lostpassword_form" action="{PASSWORDLOST_URL}" method="post" onsubmit="javascript:return ploopi.template.passwordlost_submit(this);">
                 <div class="login_form_box">
                     <p>
                         <label for="ploopi_lostpassword_login">Identifiant:&nbsp;</label>
@@ -345,46 +352,9 @@
 </div>
 
 
-<script type="text/javascript">
+<script type="text/javascript" nonce="{CSP_NONCE}">
 
 <!-- BEGIN switch_user_logged_out -->
-var effect = false;
-
-function tpl_passwordlost() {
-    if (effect) return false;
-    effect = true;
-    new Effect.Appear(
-        'lostpassword_form', {
-            from: 0.0,
-            to: 1.0,
-            duraction: 0.2,
-            fps: 25,
-            afterFinish:function() {
-                jQuery('#ploopi_lostpassword_login')[0].focus();
-                effect = false;
-            }
-        }
-    );
-}
-
-function tpl_passwordlost_cancel() {
-    if (effect) return false;
-    effect = true;
-    new Effect.Appear(
-        'lostpassword_form', {
-            from: 1.0,
-            to: 0.0,
-            duraction: 0.2,
-            fps: 25,
-            afterFinish:function() {
-                jQuery('#ploopi_login')[0].focus();
-                effect = false;
-            }
-        }
-    );
-}
-
-
 <!-- END switch_user_logged_out -->
 
 <!-- BEGIN switch_user_logged_in -->

@@ -30,7 +30,6 @@
  * @author Ovensia
  *
  * @see ploopi\buffer::clean
- * @link http://pear.php.net/package/Spreadsheet_Excel_Writer
  */
 
 /**
@@ -41,9 +40,10 @@ ploopi\buffer::clean();
 
 include_once './modules/forms/classes/formsForm.php';
 
-$objForm = new formsForm();
+// Le formulaire doit relever de l'instance courante, sur laquelle le droit d'exporter a été vérifié
+$objForm = formsForm::openInModule(isset($_GET['forms_id']) ? $_GET['forms_id'] : null);
 
-if (empty($_GET['forms_export_format']) || empty($_GET['forms_id']) || !is_numeric($_GET['forms_id']) || !$objForm->open($_GET['forms_id'])) ploopi\system::kill();
+if (empty($_GET['forms_export_format']) || !$objForm) ploopi\system::kill();
 
 $objForm->export($_GET['forms_export_format']);
 

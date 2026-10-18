@@ -35,8 +35,13 @@
  */
 include_once './modules/forms/classes/formsForm.php';
 include_once './modules/forms/classes/formsField.php';
-//include_once './modules/forms/jpgraph/jpgraph.php';
 
+include_once './modules/forms/classes/formsChart.php';
+
+/**
+ * Les graphiques sont dessinés par formsChart (GD seul, polices du dossier fonts/).
+ * JpGraph, sous licence QPL incompatible avec la GPL, n'est plus utilisé.
+ */
 
 /**
  * Classe d'accès à la table ploopi_mod_forms_graphic
@@ -54,7 +59,7 @@ class formsGraphic extends ploopi\data_object
         // GLOBAL
         'transparency' => '0.2',        // Transparence des courbes, contours, sauf pie/pie3d
         'fill_transparency' => '0.5',   // Transparence des remplissages, sauf pie/pie3d
-        'font' => FF_VERA,               // FF_VERDANA, FF_VERA, FF_VERAMONO, FF_VERASERIF, FF_DV_SANSSERIF, FF_DV_SERIF, FF_DV_SANSSERIFMONO, FF_DV_SERIFCOND, FF_DV_SANSSERIFCOND
+        'font' => formsChart::FONT_VERA,   // formsChart::FONT_*
         'font_size_title' => '15',
         'font_size_legend' => '8',
         'font_size_data' => '10',
@@ -67,7 +72,7 @@ class formsGraphic extends ploopi\data_object
         'center_x' => '0.5',
         'center_y' => '0.6',
         // LINE/RADAR
-        'mark_type' => MARK_SQUARE,
+        'mark_type' => formsChart::MARK_SQUARE,
         'mark_width' => 3,               // Largeur des marqueurs
         'mark_transparency' => '0.5',    // Transparence des marqueurs
         'line_weight' => '5',            // ??
@@ -128,7 +133,7 @@ class formsGraphic extends ploopi\data_object
                 $HexRGB['g'] = sprintf('%02x', ($RGB['g']));
                 $HexRGB['b'] = sprintf('%02x', ($RGB['b']));
 
-                $GradientColors[] = implode(NULL, $HexRGB);
+                $GradientColors[] = implode('', $HexRGB);
         }
 
         foreach($GradientColors as &$Color) $Color = "#{$Color}";
@@ -149,7 +154,7 @@ class formsGraphic extends ploopi\data_object
 
         imagefill($resImg, 0, 0, $white);
         imagerectangle($resImg, 0, 0, $intGraphWidth-1, $intGraphHeight-1, $black);
-        imagettftext($resImg, 20, 0, 20, 200, $black, "./modules/forms/fonts/verdana.ttf",  $strMsg);
+        imagettftext($resImg, 14, 0, 20, 60, $black, "./modules/forms/fonts/DejaVuSans.ttf", wordwrap($strMsg, max(20, (int)($intGraphWidth / 9)), "\n", true));
 
         ploopi\buffer::clean();
         header('Content-Type: image/png');
@@ -183,7 +188,27 @@ class formsGraphic extends ploopi\data_object
 
 
 
+    /**
+     * Génère le graphique au format PNG et termine la requête.
+     *
+     * Une erreur de rendu (données inexploitables, paramètre invalide) produit une
+     * image d'erreur plutôt qu'une page blanche.
+     *
+     * @param int $intGraphWidth largeur
+     * @param int $intGraphHeight hauteur
+     */
+
     public function render($intGraphWidth = null, $intGraphHeight = null)
+    {
+        try {
+            $this->_render($intGraphWidth, $intGraphHeight);
+        }
+        catch (Throwable $objErreur) {
+            self::__renderError('Graphique impossible : '.$objErreur->getMessage(), empty($intGraphWidth) ? 800 : $intGraphWidth, empty($intGraphHeight) ? 450 : $intGraphHeight);
+        }
+    }
+
+    private function _render($intGraphWidth = null, $intGraphHeight = null)
     {
         global $forms_graphic_operation;
 
@@ -222,9 +247,6 @@ class formsGraphic extends ploopi\data_object
                 // Génération des secteurs + 3d
                 case 'pie':
                 case 'pie3d':
-                    include_once './modules/forms/jpgraph/jpgraph_pie.php';
-                    include_once './modules/forms/jpgraph/jpgraph_pie3d.php';
-
                     if (empty($intGraphWidth)) $intGraphWidth = 700;
 
                     $arrData = array();
@@ -240,40 +262,22 @@ class formsGraphic extends ploopi\data_object
                         }
                     }
 
-                    // Création du graph
-                    // On spécifie la largeur et la hauteur du graph
-                    $objGraph = new PieGraph($intGraphWidth, $intGraphHeight);
+                    if (empty($arrData)) self::__renderError("Il n'y a pas de données à afficher", $intGraphWidth, $intGraphHeight);
 
-                    $objGraph->title->Set($this->fields['label']);
-                    $objGraph->title->SetFont($arrOptions['font'], FS_NORMAL, $arrOptions['font_size_title']);
-                    $objGraph->SetFrame(false); // optional, if you don't want a frame border
-                    $objGraph->legend->SetFont($arrOptions['font'], FS_NORMAL, $arrOptions['font_size_legend']);
-
-                    $objGraph->SetAntiAliasing();
-
-                    if ($this->fields['type'] == 'pie3d') $objPie = new PiePlot3D(array_values($arrData));
-                    else $objPie = new PiePlot(array_values($arrData));
-
-                    // Position du graphique (0.5=centré)
-                    $objPie->SetCenter($arrOptions['center_x'], $arrOptions['center_y']);
-
-                    // Définition du format d'affichage
-                    if ($this->fields['percent'])
-                    {
-                        $objPie->value->SetFormat('%d %%');
-                    }
-                    else
-                    {
-                        $objPie->value->SetFormat('%s');
-                        $objPie->SetValueType(PIE_VALUE_ABS);
-                    }
-                    $objPie->value->SetFont($arrOptions['font'], FS_NORMAL, $arrOptions['font_size_data']);
-
-                    $objPie->SetLegends(array_keys($arrData));
-
-                    $objPie->SetSliceColors(self::__gradient($this->fields['pie_color1'], $this->fields['pie_color2'], sizeof($arrData)));
-
-                    $objGraph->Add($objPie);
+                    $objChart = new formsChart($intGraphWidth, $intGraphHeight, $arrOptions['font'], './modules/forms/fonts');
+                    $objChart->title($this->fields['label'], $arrOptions['font_size_title']);
+                    $objChart->drawPie(
+                        $arrData,
+                        self::__gradient($this->fields['pie_color1'], $this->fields['pie_color2'], sizeof($arrData)),
+                        array(
+                            'center_x' => $arrOptions['center_x'],
+                            'center_y' => $arrOptions['center_y'],
+                            'font_size_legend' => $arrOptions['font_size_legend'],
+                            'font_size_data' => $arrOptions['font_size_data'],
+                            'percent' => !empty($this->fields['percent']),
+                            'depth3d' => ($this->fields['type'] == 'pie3d'),
+                        )
+                    );
                 break;
 
                 // Génération des histogrammes et des courbes + cumuls
@@ -283,10 +287,6 @@ class formsGraphic extends ploopi\data_object
                 case 'linec':
                 case 'radar':
                 case 'radarc':
-                    include_once './modules/forms/jpgraph/jpgraph_line.php';
-                    include_once './modules/forms/jpgraph/jpgraph_bar.php';
-                    include_once './modules/forms/jpgraph/jpgraph_radar.php';
-
                     $arrLabels = array();        // tableau des libellés du graphique
                     $arrDataModel = array();     // tableau type d'un dataset (une courbe)
                     $arrData = array();          // Tableau des données
@@ -616,126 +616,12 @@ class formsGraphic extends ploopi\data_object
                         }
                     }
 
-                    if (in_array($this->fields['type'], array('radar', 'radarc')))
-                    {
-                        $objGraph = new RadarGraph($intGraphWidth, $intGraphHeight, "auto");
-                        $objGraph->SetScale("lin");
-                        $objGraph->SetCenter($arrOptions['center_x'], $arrOptions['center_y']);
-
-                        $objGraph->axis->title->Set($strTitleX);
-                        $objGraph->axis->title->SetFont($arrOptions['font'], FS_NORMAL, $arrOptions['font_size_data']);
-                        $objGraph->axis->SetFont($arrOptions['font'], FS_NORMAL, $arrOptions['font_size_data']);
-
-                        $objGraph->grid->Show();
-                        $objGraph->grid->SetColor("lightgray");
-
-                        $objGraph->SetTitles($arrLabels);
-                    }
-                    else
-                    {
-                        $objGraph = new Graph($intGraphWidth, $intGraphHeight);
-                        $objGraph->SetScale("textlin");
-
-                        $objGraph->xaxis->title->Set($strTitleX);
-                        $objGraph->xaxis->title->SetFont($arrOptions['font'], FS_NORMAL, $arrOptions['font_size_data']);
-
-                        $objGraph->xaxis->SetFont($arrOptions['font'], FS_NORMAL, $arrOptions['font_size_data']);
-                        $objGraph->xaxis->SetTickLabels($arrLabels);
-                        $objGraph->xaxis->SetLabelAngle($arrOptions['label_angle']);
-                        $objGraph->xaxis->SetPos("min");
-                        $objGraph->xaxis->SetTitleMargin(30); // Marge pour le titre
-
-                        if ($this->fields['percent']) $objGraph->yaxis->title->Set('%');
-                        $objGraph->yaxis->title->SetFont($arrOptions['font'], FS_NORMAL, $arrOptions['font_size_data']);
-                        $objGraph->yaxis->SetFont($arrOptions['font'], FS_NORMAL, $arrOptions['font_size_data']);
-                        $objGraph->yaxis->SetLabelAngle($arrOptions['label_angle']);
-
-                    }
-
-                    // /!\ antialiasing non dispo dans la version de GD2 incluse dans debian etch
-                    //$objGraph->img->SetAntiAliasing(true);
-
-                    $objGraph->title->Set($this->fields['label']);
-                    $objGraph->title->SetFont($arrOptions['font'], FS_NORMAL, $arrOptions['font_size_title']);
-
-                    // Mise en forme de la légende
-                    $objGraph->legend->SetFont($arrOptions['font'], FS_NORMAL, $arrOptions['font_size_legend']);
-                    //$objGraph->legend->SetLayout(LEGEND_HOR); // Bloc de légende horizontal
-                    $objGraph->legend->SetAbsPos(0, 40, "right", "top"); // Positionnement absolu de la légende
-
-                    $objGraph->SetFrame(false); // Cadre
-                    $objGraph->SetColor('white'); // Couleur de fond
-                    $objGraph->img->SetTransparent('white');
-                    $objGraph->img->SetMargin(
-                        $arrOptions['margin_left'],
-                        $arrOptions['margin_right'],
-                        $arrOptions['margin_top'],
-                        $arrOptions['margin_bottom']
-                    );
-
-                    $arrObjPlots = array();
-
-                    $intC = 0;
+                    // Séries : couleur et légende de chaque courbe
+                    $arrSeries = array();
                     foreach($arrData as $intI => $arrPlots)
                     {
                         $strColor = $this->fields["line{$intI}_color"];
                         if (empty($strColor)) $strColor = 'black';
-
-                        switch($this->fields['type'])
-                        {
-                            case 'line':
-                            case 'linec':
-                                // Création d'une série de points avec une courbe
-                                $arrObjPlots[] = $objPlots = new LinePlot($arrPlots);
-
-                                // Chaque point de la courbe
-                                // Type de point
-                                $objPlots->mark->SetType($arrOptions['mark_type']);
-                                // Couleur de remplissage
-                                $objPlots->mark->SetFillColor("{$strColor}@{$arrOptions['mark_transparency']}");
-                                // Taille
-                                $objPlots->mark->SetWidth($arrOptions['mark_width']);
-
-                            break;
-
-                            case 'bar':
-                            case 'barc':
-                                // Création d'une série de barres
-                                $arrObjPlots[] = $objPlots = new BarPlot($arrPlots);
-                                if ($this->fields['type'] == 'bar' || $intC == sizeof($arrData)-1)
-                                if ($arrOptions['shadow'])
-                                {
-                                    $objPlots->SetShadow("{$strColor}@{$arrOptions['shadow_transparency']}");
-                                }
-
-                                $intC++;
-                            break;
-
-                            case 'radar':
-                            case 'radarc':
-                                $arrObjPlots[] = $objPlots = new RadarPlot($arrPlots);
-
-                                // Chaque point du radar
-                                // Type de point
-                                $objPlots->mark->SetType($arrOptions['mark_type']);
-                                // Couleur de remplissage
-                                $objPlots->mark->SetFillColor("{$strColor}@{$arrOptions['mark_transparency']}");
-                                // Taille
-                                $objPlots->mark->SetWidth($arrOptions['mark_width']);
-
-                                $objPlots->SetLineWeight(3);
-
-                            break;
-                        }
-
-
-                        // Couleur du trait/contour
-                        $objPlots->SetColor("{$strColor}@{$arrOptions['transparency']}");
-
-                        // Couleur de remplissage
-                        if ($this->fields['filled']) $objPlots->SetFillColor("{$strColor}@{$arrOptions['fill_transparency']}");
-                        else $objPlots->SetFillColor("{$strColor}@1");
-
 
                         $strLegend = $this->fields["line{$intI}_legend"];
 
@@ -762,29 +648,29 @@ class formsGraphic extends ploopi\data_object
                             }
                         }
 
-                        $objPlots->SetLegend($strLegend);
+                        $arrSeries[] = array('data' => array_values($arrPlots), 'color' => $strColor, 'legend' => $strLegend);
                     }
 
+                    $objChart = new formsChart($intGraphWidth, $intGraphHeight, $arrOptions['font'], './modules/forms/fonts');
+                    $objChart->title($this->fields['label'], $arrOptions['font_size_title']);
 
-                    if (in_array($this->fields['type'], array('linec', 'barc', 'radarc')))
+                    $arrChartOptions = $arrOptions + array(
+                        'filled' => !empty($this->fields['filled']),
+                        'percent' => !empty($this->fields['percent']),
+                        'title_x' => $strTitleX,
+                    );
+
+                    switch($this->fields['type'])
                     {
-                        // Inversion de l'ordre d'affchage des courbes (notamment pour gérer correctement l'affichage des courbes cumulées)
-                        $arrObjPlots = array_reverse($arrObjPlots);
+                        case 'radar':
+                        case 'radarc':
+                            $arrChartOptions['cumulative'] = ($this->fields['type'] == 'radarc');
+                            $objChart->drawRadar($arrLabels, $arrSeries, $arrChartOptions);
+                        break;
+
+                        default:
+                            $objChart->drawCartesian($this->fields['type'], $arrLabels, $arrSeries, $arrChartOptions);
                     }
-
-                    if (in_array($this->fields['type'], array('line', 'linec', 'barc', 'radar', 'radarc')))
-                    {
-                        // Attachement des courbes au conteneur
-                        foreach($arrObjPlots as $objPlots) $objGraph->Add($objPlots);
-                    }
-                    else
-                    {
-                        $objGroupBarPlot = new GroupBarPlot($arrObjPlots);
-                        $objGraph->Add($objGroupBarPlot);
-                    }
-
-
-
                 break;
             }
 
@@ -792,7 +678,7 @@ class formsGraphic extends ploopi\data_object
             ploopi\buffer::clean();
 
             // Génération du graphique
-            $objGraph->Stroke();
+            $strPng = $objChart->png();
 
             $strDisposition = 'attachment';
 
@@ -801,6 +687,9 @@ class formsGraphic extends ploopi\data_object
             header('Cache-Control: private');
             header('Pragma: private');
             header('Content-Encoding: None');
+            header('Content-Length: '.strlen($strPng));
+
+            echo $strPng;
 
         }
     }

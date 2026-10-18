@@ -1,0 +1,118 @@
+/*
+    Copyright (c) 2002-2007 Netlor
+    Copyright (c) 2007-2008 Ovensia
+    Contributors hold Copyright (c) to their code submissions.
+
+    This file is part of Ploopi.
+
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+.documents_browser {
+    overflow:auto;
+}
+
+.documents_path {
+    padding:4px;
+    border-bottom:1px solid var(--p3-border);
+    background-color:var(--p3-surface-2);
+    overflow:auto;
+}
+
+.documents_path div {
+    display:block;
+    float:left;
+    padding:4px;
+    border:1px;
+}
+
+.documents_path a {
+    display:block;
+    float:left;
+    padding:4px;
+    margin-left:2px;
+    border:1px solid var(--p3-border);
+    border-radius:var(--p3-radius-sm);
+    background-color:var(--p3-surface);
+}
+
+.documents_path a:hover {
+    border:1px solid var(--p3-primary);
+    background-color:var(--p3-primary-softer);
+    text-decoration:none;
+}
+
+a.documents_pathselected {
+    border:1px solid var(--p3-primary);
+    background-color:var(--p3-primary-soft);
+    font-weight:bold;
+
+}
+
+div.documents_formtitle {
+    font-weight:bold;
+    background-color:var(--p3-surface-3);
+    border-bottom:solid 1px var(--p3-border);
+    padding:4px;
+}
+
+div.documents_formcontent {
+    background-color:var(--p3-surface-2);
+    padding:2px;
+}
+
+
+#documents_dropzone {
+    display: block;
+    position: relative;
+    border: 2px dashed var(--p3-border-strong);
+    border-radius: var(--p3-radius);
+    background-color: var(--p3-surface-2);
+    color: var(--p3-text-muted);
+    text-align: center;
+    font-size: 20px;
+}
+
+#documents_dropzone:hover {
+    cursor:pointer;
+}
+
+#documents_dropzone.dragover {
+    border: 2px dashed var(--p3-primary);
+    background-color: var(--p3-primary-softer);
+}
+
+#documents_filelist {
+    display: block;
+    font-size:12px;
+    padding:2px;
+    min-height:100px;
+    max-height:250px;
+    overflow:auto;
+}
+
+#documents_filelist > div {
+    display:block;
+    float:left;
+    padding:2px 4px;
+    border:1px solid var(--p3-border);
+    border-radius:var(--p3-radius-sm);
+    background-color:var(--p3-surface);
+    margin-left:2px;
+    margin-bottom:2px;
+    max-width: 250px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

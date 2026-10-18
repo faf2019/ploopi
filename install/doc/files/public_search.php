@@ -78,13 +78,13 @@ $show_options = (
         </p>
     </div>
 
-    <div style="float:left;height:40px;border-left:1px solid #e0e0e0;">
+    <div class="doc_separateur">
         <p style="margin:0;padding:4px;float:left;">
             <input type="text" class="text" style="width:140px;" id="doc_search_keywords" autofocus value="<?php echo ploopi\str::htmlentities($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords']); ?>" placeholder="Fichier / Mot Clé" />
             <input type="submit" class="flatbutton" value="Rechercher" />
         </p>
     </div>
-    <div style="float:left;height:40px;border-left:1px solid #e0e0e0;">
+    <div class="doc_separateur">
         <p style="margin:0;padding:4px;float:left;">
             <a href="javascript:void(0);" onclick="javascript:ploopi.switchdisplay('doc_search_options');"><strong>Afficher/Cacher<br />les options supplémentaires</strong></a>
         </p>
@@ -116,13 +116,13 @@ $show_options = (
     <input type="text" style="width:90px;" placeholder="Propriétaire" value="<?php echo ploopi\str::htmlentities($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_user']); ?>" id="doc_search_user">
     <input type="text" style="width:90px;" placeholder="Espace" value="<?php echo ploopi\str::htmlentities($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_workspace']); ?>" id="doc_search_workspace">
     <input type="text" style="width:70px;" placeholder="Date (du)" value="<?php echo ploopi\str::htmlentities($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date1']); ?>" name="doc_search_date1" id="doc_search_date1">
-    <a href="javascript:void(0);" onclick="javascript:ploopi.calendar.open('doc_search_date1', event);"><img src="./img/calendar/calendar.gif" width="31" height="18" align="top" border="0"></a>
+    <a href="javascript:void(0);" onclick="javascript:ploopi.calendar.open('doc_search_date1', event);"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/calendar/calendar.png" align="top" border="0" alt="Choisir une date"></a>
     <input type="text" style="width:70px;" placeholder="Date (au)" value="<?php echo ploopi\str::htmlentities($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_date2']); ?>" name="doc_search_date2" id="doc_search_date2">
-    <a href="javascript:void(0);" onclick="javascript:ploopi.calendar.open('doc_search_date2', event);"><img src="./img/calendar/calendar.gif" width="31" height="18" align="top" border="0"></a>
-    <input type="checkbox" id="doc_search_stem" value="1" <? if ($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_stem']) echo 'checked="chedked"'; ?> /><label class="ploopi_checkbox" for="doc_search_stem">Recherche par racinisation</label>
-    <input type="checkbox" id="doc_search_phonetic" value="1" <? if ($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_phonetic']) echo 'checked="chedked"'; ?> /><label class="ploopi_checkbox" for="doc_search_phonetic">Recherche phonétique</label>
-    <input type="radio" id="doc_search_and" name="doc_search_and" value="1" <? if ($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_and'] === '1') echo 'checked="chedked"'; ?> /><label class="ploopi_checkbox" for="doc_search_and">ET</label>
-    <input type="radio" id="doc_search_or" name="doc_search_and" value="0" <? if ($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_and'] === '0') echo 'checked="chedked"'; ?> /><label class="ploopi_checkbox" for="doc_search_or">OU</label>
+    <a href="javascript:void(0);" onclick="javascript:ploopi.calendar.open('doc_search_date2', event);"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/calendar/calendar.png" align="top" border="0" alt="Choisir une date"></a>
+    <input type="checkbox" id="doc_search_stem" value="1" <?php if ($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_stem']) echo 'checked="chedked"'; ?> /><label class="ploopi_checkbox" for="doc_search_stem">Recherche par racinisation</label>
+    <input type="checkbox" id="doc_search_phonetic" value="1" <?php if ($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_phonetic']) echo 'checked="chedked"'; ?> /><label class="ploopi_checkbox" for="doc_search_phonetic">Recherche phonétique</label>
+    <input type="radio" id="doc_search_and" name="doc_search_and" value="1" <?php if ($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_and'] === '1') echo 'checked="chedked"'; ?> /><label class="ploopi_checkbox" for="doc_search_and">ET</label>
+    <input type="radio" id="doc_search_or" name="doc_search_and" value="0" <?php if ($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_and'] === '0') echo 'checked="chedked"'; ?> /><label class="ploopi_checkbox" for="doc_search_or">OU</label>
 </div>
 
 </form>

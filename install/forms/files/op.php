@@ -62,7 +62,7 @@ switch($ploopi_op)
             // Sauvegarde en session
             ploopi\session::setvar($strVarName, $arrValues);
             // Sauvegarde en cookie (json + gz + base64), 30 jours
-            setcookie($strVarName, ploopi\crypt::base64_encode(gzcompress(json_encode(ploopi\arr::map('utf8_encode', $arrValues)), 9)), time()+86400*30);
+            setcookie($strVarName, ploopi\crypt::base64_encode(gzcompress(json_encode(ploopi\arr::map(function($v) { return mb_convert_encoding($v, 'UTF-8', 'ISO-8859-1'); }, $arrValues)), 9)), time()+86400*30);
         }
         ploopi\system::kill();
     break;
@@ -92,8 +92,16 @@ switch($ploopi_op)
             // Champ à remplir
             $objField = new formsField();
             $objForm = new formsForm();
-            // On vérifie l'existence du champ, du formulaire et qu'il s'agit d'un formulaire CMS (donc public)
-            if ($objField->open($_GET['forms_requested']) && ($_SESSION['ploopi']['connected'] || ($objForm->open($objField->fields['id_form']) && $objForm->fields['typeform'] == 'cms')))
+            /**
+             * Le champ demandé doit être une liste liée (tablelink), d'un formulaire public
+             * (cms) ou, pour une session connectée, d'un formulaire de l'instance courante.
+             * Toute session connectée lisait jusqu'ici les valeurs d'un champ de n'importe
+             * quel formulaire de la plateforme.
+             */
+            if (is_numeric($_GET['forms_requested']) && $objField->open($_GET['forms_requested'])
+                && $objField->fields['type'] == 'tablelink'
+                && $objForm->open($objField->fields['id_form'])
+                && ($objForm->fields['typeform'] == 'cms' || ($_SESSION['ploopi']['connected'] && formsForm::openInModule($objForm->fields['id']))))
             {
                 // Valeur de la table liée
                 $objFieldValues = new formsField();
@@ -114,8 +122,21 @@ switch($ploopi_op)
 
     case 'forms_print':
         include_once './modules/forms/classes/formsForm.php';
-        $objForm = new formsForm();
-        if (!empty($_REQUEST['forms_id']) && is_numeric($_REQUEST['forms_id']) && $objForm->open($_REQUEST['forms_id']) && isset($_REQUEST['record_id']))
+
+        /**
+         * En backoffice, le formulaire doit relever de l'instance courante. Ailleurs, seul
+         * un formulaire public (cms) s'imprime, et uniquement la saisie en cours : une
+         * réponse enregistrée, désignée par son identifiant, peut être celle d'un autre.
+         */
+        if ($_SESSION['ploopi']['mode'] == 'backoffice') $objForm = formsForm::openInModule(isset($_REQUEST['forms_id']) ? $_REQUEST['forms_id'] : null);
+        else
+        {
+            $objForm = new formsForm();
+            if (empty($_REQUEST['forms_id']) || !is_numeric($_REQUEST['forms_id']) || !$objForm->open($_REQUEST['forms_id']) || $objForm->fields['typeform'] != 'cms') $objForm = false;
+            $_REQUEST['record_id'] = '';
+        }
+
+        if ($objForm && isset($_REQUEST['record_id']))
         {
             ?>
             <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -174,8 +195,7 @@ if ($_SESSION['ploopi']['connected'])
 
                 include_once './modules/forms/classes/formsForm.php';
 
-                $objForm = new formsForm();
-                if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open($_GET['forms_id']))
+                if ($objForm = formsForm::openInModule(isset($_GET['forms_id']) ? $_GET['forms_id'] : null))
                 {
                     // Clone le formulaire
                     $objFormClone = clone $objForm;
@@ -217,8 +237,7 @@ if ($_SESSION['ploopi']['connected'])
 
                 include_once './modules/forms/classes/formsForm.php';
 
-                $objForm = new formsForm();
-                if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open($_GET['forms_id']))
+                if ($objForm = formsForm::openInModule(isset($_GET['forms_id']) ? $_GET['forms_id'] : null))
                 {
                     $strUrl = '';
                     // Retour différencié en fonction de l'origine de la demande
@@ -229,7 +248,7 @@ if ($_SESSION['ploopi']['connected'])
                     if (!empty($_FILES['forms_import_file']) && file_exists($_FILES['forms_import_file']['tmp_name']))
                     {
                         // On fait sauter le timeout de php car le traitement peut être long
-                        if (!ini_get('safe_mode')) ini_set('max_execution_time', 0);
+                        ini_set('max_execution_time', 0);
 
                         $ptrFileHandler = fopen($_FILES['forms_import_file']['tmp_name'], 'r');
                         $arrData = array();
@@ -238,7 +257,7 @@ if ($_SESSION['ploopi']['connected'])
 
 
                         // Import CSV
-                        while (($arrLine = fgetcsv($ptrFileHandler)) !== false)
+                        while (($arrLine = fgetcsv($ptrFileHandler, null, ',', '"', '\\')) !== false)
                         {
                             if (empty($arrKeys)) $arrKeys = $arrLine;
                             else
@@ -285,8 +304,7 @@ if ($_SESSION['ploopi']['connected'])
 
                 include_once './modules/forms/classes/formsForm.php';
 
-                $objForm = new formsForm();
-                if (!empty($_POST['forms_id']) && is_numeric($_POST['forms_id']) && $objForm->open($_POST['forms_id']))
+                if ($objForm = formsForm::openInModule(isset($_POST['forms_id']) ? $_POST['forms_id'] : null))
                 {
                     $arrFields = array();
                     foreach($objForm->getFields() as $objField) $arrFields[] = $objField->fields['fieldname'];
@@ -314,8 +332,7 @@ if ($_SESSION['ploopi']['connected'])
 
                 include_once './modules/forms/classes/formsForm.php';
 
-                $objForm = new formsForm();
-                if (!empty($_POST['forms_id']) && is_numeric($_POST['forms_id']) && $objForm->open($_POST['forms_id']))
+                if ($objForm = formsForm::openInModule(isset($_POST['forms_id']) ? $_POST['forms_id'] : null))
                 {
                     echo ploopi\skin::get()->create_popup('Aperçu du formulaire', $objForm->render(null, 'preview', false, false), 'forms_preview');
                 }
@@ -333,20 +350,21 @@ if ($_SESSION['ploopi']['connected'])
 
                 include_once './modules/forms/classes/formsField.php';
 
+                include_once './modules/forms/classes/formsForm.php';
+
                 $field = new formsField();
 
-                if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']))
+                // Le formulaire doit relever de l'instance courante, et le champ modifié lui appartenir
+                $objForm = formsForm::openInModule(isset($_GET['forms_id']) ? $_GET['forms_id'] : null);
+                if ($objForm && !empty($_GET['field_id']) && (!is_numeric($_GET['field_id']) || !$field->open($_GET['field_id']) || $field->fields['id_form'] != $objForm->fields['id'])) $objForm = false;
+
+                if ($objForm)
                 {
-                    if (!empty($_GET['field_id']) && is_numeric($_GET['field_id']))
-                    {
-                        $field->open($_GET['field_id']);
-                    }
-                    else // nouveau
-                    {
-                        $field->fields['id_form'] = $_GET['forms_id'];
-                    }
+                    if ($field->isnew()) $field->fields['id_form'] = $objForm->fields['id'];
 
                     $field->setvalues($_POST,'field_');
+                    // Le rattachement ne se choisit pas par le formulaire de saisie
+                    $field->fields['id_form'] = $objForm->fields['id'];
 
                     if ($ploopi_op == 'forms_separator_save')
                     {
@@ -396,7 +414,12 @@ if ($_SESSION['ploopi']['connected'])
                 include_once './modules/forms/classes/formsForm.php';
 
                 $forms = new formsForm();
-                if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id'])) $forms->open($_GET['forms_id']);
+                if (!empty($_GET['forms_id']))
+                {
+                    // Modification : le formulaire doit relever de l'instance courante (setuwm() l'y déplacerait sinon)
+                    $forms = formsForm::openInModule($_GET['forms_id']);
+                    if (!$forms) ploopi\output::redirect('admin.php');
+                }
                 $forms->setvalues($_POST,'forms_');
                 $forms->fields['pubdate_start'] = ploopi\date::local2timestamp($forms->fields['pubdate_start']);
                 $forms->fields['pubdate_end'] = ploopi\date::local2timestamp($forms->fields['pubdate_end']);
@@ -439,8 +462,7 @@ if ($_SESSION['ploopi']['connected'])
 
                 include_once './modules/forms/classes/formsForm.php';
 
-                $forms = new formsForm();
-                if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $forms->open($_GET['forms_id'])) $forms->delete();
+                if ($forms = formsForm::openInModule(isset($_GET['forms_id']) ? $_GET['forms_id'] : null)) $forms->delete();
                 ploopi\output::redirect('admin.php?ploopi_mod_msg=_FORMS_MESS_OK_2');
             break;
 
@@ -451,10 +473,12 @@ if ($_SESSION['ploopi']['connected'])
 
                 include_once './modules/forms/classes/formsField.php';
 
+                include_once './modules/forms/classes/formsForm.php';
+
                 if (!empty($_GET['field_id']) && is_numeric($_GET['field_id']))
                 {
                     $field = new formsField();
-                    if ($field->open($_GET['field_id'])) $field->delete();
+                    if ($field->open($_GET['field_id']) && formsForm::openInModule($field->fields['id_form'])) $field->delete();
                     ploopi\output::redirect("admin.php?op=forms_modify&forms_id={$field->fields['id_form']}&ploopi_mod_msg=_FORMS_MESS_OK_4");
                 }
                 else ploopi\output::redirect('admin.php?ploopi_mod_msg=_FORMS_MESS_OK_4');
@@ -469,10 +493,11 @@ if ($_SESSION['ploopi']['connected'])
 
                 include_once './modules/forms/classes/formsField.php';
 
-                if (!empty($_GET['field_id']) && is_numeric($_GET['field_id']))
+                include_once './modules/forms/classes/formsForm.php';
+
+                $field = new formsField();
+                if (!empty($_GET['field_id']) && is_numeric($_GET['field_id']) && $field->open($_GET['field_id']) && formsForm::openInModule($field->fields['id_form']))
                 {
-                    $field = new formsField();
-                    $field->open($_GET['field_id']);
 
                     $select = "Select min(position) as minpos, max(position) as maxpos from ploopi_mod_forms_field where id_form = {$field->fields['id_form']}";
                     ploopi\db::get()->query($select);
@@ -510,13 +535,14 @@ if ($_SESSION['ploopi']['connected'])
 
                 $objGraphic = new formsGraphic();
 
-                if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']))
+                // Le formulaire doit relever de l'instance courante, et le graphique modifié lui appartenir
+                $objForm = formsForm::openInModule(isset($_GET['forms_id']) ? $_GET['forms_id'] : null);
+                if ($objForm && !empty($_GET['forms_graphic_id']) && (!is_numeric($_GET['forms_graphic_id']) || !$objGraphic->open($_GET['forms_graphic_id']) || $objGraphic->fields['id_form'] != $objForm->fields['id'])) $objForm = false;
+
+                if ($objForm)
                 {
-                    if (!empty($_GET['forms_graphic_id']) && is_numeric($_GET['forms_graphic_id'])) $objGraphic->open($_GET['forms_graphic_id']);
-
-                    if ($objGraphic->isnew()) $objGraphic->fields['id_form'] = $_GET['forms_id'];
-
                     $objGraphic->setvalues($_POST,'forms_graphic_');
+                    $objGraphic->fields['id_form'] = $objForm->fields['id'];
                     if (!isset($_POST['forms_graphic_percent'])) $objGraphic->fields['percent'] = 0;
                     if (!isset($_POST['forms_graphic_filled'])) $objGraphic->fields['filled'] = 0;
 
@@ -537,7 +563,7 @@ if ($_SESSION['ploopi']['connected'])
                 include_once './modules/forms/classes/formsGraphic.php';
 
                 $objGraphic = new formsGraphic();
-                if (!empty($_GET['forms_graphic_id']) && is_numeric($_GET['forms_graphic_id']) && $objGraphic->open($_GET['forms_graphic_id']))
+                if (!empty($_GET['forms_graphic_id']) && is_numeric($_GET['forms_graphic_id']) && $objGraphic->open($_GET['forms_graphic_id']) && formsForm::openInModule($objGraphic->fields['id_form']))
                 {
                     $objGraphic->delete();
                     ploopi\output::redirect("admin.php?op=forms_modify&forms_id={$objGraphic->fields['id_form']}&ploopi_mod_msg=_FORMS_MESS_OK_6");
@@ -555,15 +581,18 @@ if ($_SESSION['ploopi']['connected'])
 
                 include_once './modules/forms/classes/formsGroup.php';
 
+                include_once './modules/forms/classes/formsForm.php';
+
                 $objGroup = new formsGroup();
 
-                if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']))
+                // Le formulaire doit relever de l'instance courante, et le groupe modifié lui appartenir
+                $objForm = formsForm::openInModule(isset($_GET['forms_id']) ? $_GET['forms_id'] : null);
+                if ($objForm && !empty($_GET['forms_group_id']) && (!is_numeric($_GET['forms_group_id']) || !$objGroup->open($_GET['forms_group_id']) || $objGroup->fields['id_form'] != $objForm->fields['id'])) $objForm = false;
+
+                if ($objForm)
                 {
-                    if (!empty($_GET['forms_group_id']) && is_numeric($_GET['forms_group_id'])) $objGroup->open($_GET['forms_group_id']);
-
-                    if ($objGroup->isnew()) $objGroup->fields['id_form'] = $_GET['forms_id'];
-
                     $objGroup->setvalues($_POST,'forms_group_');
+                    $objGroup->fields['id_form'] = $objForm->fields['id'];
                     $objGroup->fields['conditions'] = isset($_POST['_forms_group_cond']) ? ploopi\crypt::serialize($_POST['_forms_group_cond']) : '';
                     $objGroup->save();
 
@@ -582,7 +611,9 @@ if ($_SESSION['ploopi']['connected'])
                 include_once './modules/forms/classes/formsGroup.php';
 
                 $objGroup = new formsGroup();
-                if (!empty($_GET['forms_group_id']) && is_numeric($_GET['forms_group_id']) && $objGroup->open($_GET['forms_group_id']))
+                include_once './modules/forms/classes/formsForm.php';
+
+                if (!empty($_GET['forms_group_id']) && is_numeric($_GET['forms_group_id']) && $objGroup->open($_GET['forms_group_id']) && formsForm::openInModule($objGroup->fields['id_form']))
                 {
                     $objGroup->delete();
                     ploopi\output::redirect("admin.php?op=forms_modify&forms_id={$objGroup->fields['id_form']}&ploopi_mod_msg=_FORMS_MESS_OK_10");
@@ -597,20 +628,13 @@ if ($_SESSION['ploopi']['connected'])
                 include_once './modules/forms/classes/formsForm.php';
                 include_once './modules/forms/classes/formsRecord.php';
 
-                $objForm = new formsForm();
-                if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open($_GET['forms_id']))
+                if ($objForm = formsForm::openInModule(isset($_GET['forms_id']) ? $_GET['forms_id'] : null))
                 {
                     $objRecord = new formsRecord($objForm);
 
                     if (!empty($_GET['record_id']) && is_numeric($_GET['record_id']) && $objRecord->open($_GET['record_id']))
                     {
-                        if (ploopi\acl::isadmin() || (
-                            ploopi\acl::isactionallowed(_FORMS_ACTION_DELETE) && (
-                                ($objForm->fields['option_modify'] == 'user' && $objRecord->fields['user_id'] == $_SESSION['ploopi']['userid']) ||
-                                ($objForm->fields['option_modify'] == 'group' && $objRecord->fields['workspace_id'] == $_SESSION['ploopi']['workspaceid'])  ||
-                                ($objForm->fields['option_modify'] == 'all')
-                            )
-                        ))
+                        if ($objForm->isRecordEditable($objRecord->fields, _FORMS_ACTION_DELETE))
                         {
                             $objRecord->delete();
 
@@ -658,10 +682,8 @@ if ($_SESSION['ploopi']['connected'])
                 include_once './modules/forms/classes/formsRecord.php';
                 include_once './modules/forms/classes/formsField.php';
 
-                $objForm = new formsForm();
-
-                // Ouverture formulaire
-                if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open($_GET['forms_id']))
+                // Ouverture formulaire, qui doit relever de l'instance courante
+                if ($objForm = formsForm::openInModule(isset($_GET['forms_id']) ? $_GET['forms_id'] : null))
                 {
                     $objRecord = new formsRecord($objForm);
                     $objField = new formsField();
@@ -700,7 +722,8 @@ if ($_SESSION['ploopi']['connected'])
 
             case 'forms_print_array':
                 ploopi\module::init('forms');
-                if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id'])) include './modules/forms/op_print.php';
+                // Même document que l'export, au format près : même droit
+                if (ploopi\acl::isactionallowed(_FORMS_ACTION_EXPORT) && !empty($_GET['forms_id']) && is_numeric($_GET['forms_id'])) include './modules/forms/op_print.php';
             break;
 
             case 'forms_delete_data':
@@ -710,10 +733,10 @@ if ($_SESSION['ploopi']['connected'])
                 if (ploopi\acl::isactionallowed(_FORMS_ACTION_BACKUP))
                 {
                     ?>
-                    <div style="background:#f0f0f0;border:1px solid #c0c0c0;padding:2px;"><strong>Suppression des données</strong>
+                    <div class="forms_encadre"><strong>Suppression des données</strong>
                     <?php
-                    $objForm = new formsForm();
-                    if (!empty($_GET['form_id']) && $objForm->open($_GET['form_id']) && !empty($_GET['form_delete_date']))
+                    $objForm = formsForm::openInModule(isset($_GET['form_id']) ? $_GET['form_id'] : null);
+                    if ($objForm && !empty($_GET['form_delete_date']))
                     {
                         $objForm->deleteToDate(ploopi\date::local2timestamp($_GET['form_delete_date'], '23:59:59'));
                     }
@@ -728,13 +751,13 @@ if ($_SESSION['ploopi']['connected'])
             case 'forms_graphic_display':
                 ob_start();
                 ?>
-                <div style="background-color:#fff;overflow:auto;">
+                <div class="forms_fond">
                 <?php
                 if (isset($_POST['forms_graphic_id']) && isset($_POST['forms_graphic_width']))
                 {
                     $strUrl = ploopi\crypt::urlencode("admin-light.php?ploopi_op=forms_graphic_generate&forms_graphic_id={$_POST['forms_graphic_id']}&forms_graphic_width={$_POST['forms_graphic_width']}&forms_rand=".microtime());
                     ?>
-                    <p class="ploopi_va" style="padding:4px;background:#eee;border-bottom:1px solid #ccc;">
+                    <p class="ploopi_va forms_bandeau_clair">
                         <a class="forms_export_link" href="<?php echo $strUrl; ?>"><img src="./modules/forms/img/mime/png.png" /> Télécharger l'image</a>
                     </p>
                     <img style="margin:4px;display:block;clear:both;" src="<?php echo $strUrl; ?>" />
@@ -753,11 +776,14 @@ if ($_SESSION['ploopi']['connected'])
             break;
 
             case 'forms_graphic_generate':
+                ploopi\module::init('forms');
+
                 include_once './modules/forms/classes/formsGraphic.php';
                 include_once './modules/forms/classes/formsField.php';
 
+                // Le graphique révèle les données : droit d'afficher les graphiques, sur un formulaire de l'instance courante
                 $objGraphic = new formsGraphic();
-                if (isset($_GET['forms_graphic_id']) && is_numeric($_GET['forms_graphic_id']) && $objGraphic->open($_GET['forms_graphic_id']))
+                if (ploopi\acl::isactionallowed(_FORMS_ACTION_GRAPHICS) && isset($_GET['forms_graphic_id']) && is_numeric($_GET['forms_graphic_id']) && $objGraphic->open($_GET['forms_graphic_id']) && formsForm::openInModule($objGraphic->fields['id_form']))
                 {
                     $intWidth = isset($_GET['forms_graphic_width']) && is_numeric($_GET['forms_graphic_width']) ? $_GET['forms_graphic_width'] : null;
 

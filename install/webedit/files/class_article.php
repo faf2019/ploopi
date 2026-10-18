@@ -267,7 +267,7 @@ class webedit_article extends ploopi\data_object
                         $objWebEditDocFile->fields['id_docfile'] = $objDocFile->fields['id'];
                         $objWebEditDocFile->fields['md5id_docfile'] = $objDocFile->fields['md5id'];
                         $objWebEditDocFile->fields['id_module_docfile'] = $objDocFile->fields['id_module'];
-                        $objWebEditDocFile->fields['id_module'] = $_SESSION['ploopi']['moduleid'];
+                        $objWebEditDocFile->fields['id_module'] = $this->fields['id_module'];
                         $objWebEditDocFile->save();
                     }
                 }
@@ -326,7 +326,10 @@ class webedit_article extends ploopi\data_object
             $objArticleTag->save();
         }
 
-        ploopi\search_index::add(_WEBEDIT_OBJECT_ARTICLE_PUBLIC, $this->fields['id'], $this->fields['title'], strip_tags(ploopi\str::html_entity_decode($this->fields['content'])), "{$this->fields['metatitle']} {$this->fields['metakeywords']} {$this->fields['metadescription']}", true, $this->fields['timestp'], $this->fields['lastupdate_timestp']);
+        // Index rattaché à l'article (auteur, espace, instance), pas à la session : la
+        // réindexation d'un site se fait depuis n'importe quel espace
+        $strContenu = strip_tags(ploopi\str::html_entity_decode($this->fields['content']));
+        ploopi\search_index::add(_WEBEDIT_OBJECT_ARTICLE_PUBLIC, $this->fields['id'], $this->fields['title'], $strContenu, "{$this->fields['metatitle']} {$this->fields['metakeywords']} {$this->fields['metadescription']}", true, $this->fields['timestp'], $this->fields['lastupdate_timestp'], $this->fields['id_user'], $this->fields['id_workspace'], $this->fields['id_module']);
     }
 
     /**

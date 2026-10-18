@@ -42,13 +42,27 @@ if (isset($_GET['sort'])) $_SESSION['tickets']['sort'] = $_GET['sort'];
 if (!isset($_SESSION['tickets']['sort'])) $_SESSION['tickets']['sort'] = 'datereply';
 $sort = $_SESSION['tickets']['sort'];
 
-echo ploopi\skin::get()->create_pagetitle(_PLOOPI_LABEL_MYWORKSPACE);
-echo ploopi\skin::get()->open_simplebloc(_PLOOPI_LABEL_MYTICKETS);
+// Gabarits de génération 4 : rendu de public_tickets_p4.php, après le chargement des messages
+$booSystemP4 = ploopi\skin::get()->version() >= 4;
+
+/**
+ * Recherche (ploopi4) : titre, contenu et expéditeur. Terme gardé en session, comme le
+ * filtre de l'annuaire, jusqu'à tickets_search_reset.
+ */
+if (isset($_POST['tickets_search'])) $_SESSION['tickets']['search'] = mb_substr(trim((string) $_POST['tickets_search']), 0, 100);
+if (isset($_GET['tickets_search_reset'])) $_SESSION['tickets']['search'] = '';
+$strSearch = ($booSystemP4 && isset($_SESSION['tickets']['search'])) ? (string) $_SESSION['tickets']['search'] : '';
+
+if (!$booSystemP4)
+{
+    echo ploopi\skin::get()->create_pagetitle(_PLOOPI_LABEL_MYWORKSPACE);
+    echo ploopi\skin::get()->open_simplebloc(_PLOOPI_LABEL_MYTICKETS);
+}
 
 $where = '';
 switch($filtertype)
 {
-    case 'all';
+    case 'all':
     break;
 
     case 'sendbox':
@@ -69,6 +83,21 @@ switch($filtertype)
         $where = " AND t.id_user = {$_SESSION['ploopi']['userid']} AND t.needed_validation > 0 AND t.status < ".ploopi\ticket::DONE;
     break;
     */
+}
+
+if ($strSearch !== '')
+{
+    // Terme cherché tel quel (jokers % et _ échappés), et sous la forme d'entités HTML
+    // que gardent les messages enregistrés par les anciens éditeurs (&eacute;…)
+    $arrSearchSql = array();
+    foreach(array_unique(array($strSearch, ploopi\str::htmlentities($strSearch))) as $strTerm)
+    {
+        $strLike = "LIKE '%".ploopi\db::get()->addslashes(addcslashes($strTerm, '%_\\'))."%'";
+        $arrSearchSql[] = "t.title {$strLike} OR t.message {$strLike}";
+    }
+    $strLike = "LIKE '%".ploopi\db::get()->addslashes(addcslashes($strSearch, '%_\\'))."%'";
+    $arrSearchSql[] = "u.login {$strLike} OR CONCAT_WS(' ', u.firstname, u.lastname) {$strLike} OR CONCAT_WS(' ', u.lastname, u.firstname) {$strLike}";
+    $where .= ' AND ('.implode(' OR ', $arrSearchSql).')';
 }
 
 $orderby = '';
@@ -202,7 +231,7 @@ if (!empty($ticket_list))
             $tickets[$fields['id_ticket']]['dest'][$fields['id']] = (!is_null($fields['login'])) ? array( 'login' => $fields['login'], 'firstname' => $fields['firstname'], 'lastname' => $fields['lastname']) : array( 'login' => '<i>Supprimé</i>', 'firstname' => '', 'lastname' => '<i>Supprimé</i>');
         }
 
-        $tickets[$fields['id_ticket']]['dest'][$fields['id']]['status'][$fields['status']] = $fields['timestp'];
+        if (!is_null($fields['status'])) $tickets[$fields['id_ticket']]['dest'][$fields['id']]['status'][$fields['status']] = $fields['timestp'];
 
         if (empty($fields['status'])) $fields['status'] = ploopi\ticket::NONE;
 
@@ -223,6 +252,12 @@ if (!empty($ticket_list))
 if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
 {
     //echo "test";
+}
+
+if ($booSystemP4)
+{
+    include './modules/system/public_tickets_p4.php';
+    return;
 }
 ?>
 
@@ -352,7 +387,7 @@ if ($filtertype == 'tovalidate' || $filtertype == 'waitingvalidation')
                 $fields['id_module'],
                 $fields['id_workspace']
             ),
-            $fields['script']
+            (string) $fields['script']
         );
 
         $color = (!isset($color) || $color == ploopi\skin::get()->values['bgline2']) ? ploopi\skin::get()->values['bgline1'] : ploopi\skin::get()->values['bgline2'];

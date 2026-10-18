@@ -60,12 +60,12 @@ if (ploopi\acl::ismoduleallowed('wiki'))
                     <link rel="stylesheet" href="./modules/wiki/include/styles.css" type="text/css" />
                     <link rel="stylesheet" href="./vendor/components/highlightjs/styles/vs.css">
                     <script src="./vendor/components/highlightjs/highlight.pack.min.js"></script>
-                    <script>hljs.initHighlightingOnLoad();</script>
+                    <script nonce="<?php echo ploopi\csp::nonce(); ?>">hljs.initHighlightingOnLoad();</script>
                     <style>@page { size : landscape }</style>
-                    <script type="text/javascript">window.onload = function() { print(); };</script>
+                    <script type="text/javascript" nonce="<?php echo ploopi\csp::nonce(); ?>">window.onload = function() { print(); };</script>
                 </head>
                 <body class="wiki_print">
-                    <div id="wiki_page_print_info">R&eacute;vision num&eacute;ro <? echo ploopi\str::htmlentities($objWikiPage->fields['revision']); ?> modifi&eacute; le <? echo implode(' à ', ploopi\date::timestamp2local($objWikiPage->fields['ts_modified'])); ?></div>
+                    <div id="wiki_page_print_info">R&eacute;vision num&eacute;ro <?php echo ploopi\str::htmlentities($objWikiPage->fields['revision']); ?> modifi&eacute; le <?php echo implode(' à ', ploopi\date::timestamp2local($objWikiPage->fields['ts_modified'])); ?></div>
                     <div id="wiki_page" class="wiki_page"><?php echo wiki_render($objWikiPage->fields['content']); ?></div>
                     <div id="wiki_page_print_info">R&eacute;vision num&eacute;ro <?php echo ploopi\str::htmlentities($objWikiPage->fields['revision']); ?> modifi&eacute; le <?php echo implode(' à ', ploopi\date::timestamp2local($objWikiPage->fields['ts_modified'])); ?></div>
                 </body>
@@ -89,13 +89,31 @@ if (ploopi\acl::ismoduleallowed('wiki'))
             ploopi\module::init('wiki', false, false, false);
             include_once './modules/wiki/classes/class_wiki_page.php';
 
+            /**
+             * Le droit se contrôle ICI et pas seulement dans la vue : op.php est
+             * appelable directement en HTTP (doc/reference.md §8.4). public_view.php refuse
+             * déjà d'afficher le formulaire sans ce droit, ou sur une page verrouillée.
+             */
+            if (!ploopi\acl::isactionallowed(_WIKI_ACTION_PAGE_MODIFY)) ploopi\system::kill();
+
             $strWikiPageId = (empty($_GET['wiki_page_id'])) ? 'wiki' : $_GET['wiki_page_id'];
 
             $objWikiPage = new wiki_page();
             $objWikiPage->open($strWikiPageId);
+
+            // Un verrou n'a de sens que s'il résiste aussi à un appel direct
+            if (!$objWikiPage->isnew() && !empty($objWikiPage->fields['locked'])) ploopi\system::kill();
+
             $objWikiPage->fields['id'] = $strWikiPageId;
 
-            if (isset($_POST['fck_wiki_page_content'])) $objWikiPage->fields['content'] = ploopi\str::iso8859_clean($_POST['fck_wiki_page_content']);
+            /**
+             * Le préfixe fck_ exempte la variable du filtre d'entrée (@see security::filtervar) :
+             * le contenu arrive donc tel que le rédacteur l'a saisi, balises comprises. Il est
+             * purifié à l'enregistrement, comme le fait déjà ticket::send() pour son propre
+             * champ fck_. wiki_render() purifie également à l'affichage, pour les pages
+             * enregistrées avant ce correctif.
+             */
+            if (isset($_POST['fck_wiki_page_content'])) $objWikiPage->fields['content'] = ploopi\str::htmlpurifier(ploopi\str::iso8859_clean($_POST['fck_wiki_page_content']));
             $objWikiPage->save();
 
             // on envoie le ticket de notification d'action sur l'objet
@@ -125,6 +143,8 @@ if (ploopi\acl::ismoduleallowed('wiki'))
         case 'wiki_page_delete':
             ploopi\module::init('wiki', false, false, false);
             include_once './modules/wiki/classes/class_wiki_page.php';
+
+            if (!ploopi\acl::isactionallowed(_WIKI_ACTION_PAGE_DELETE)) ploopi\system::kill();
 
             $strWikiPageId = (empty($_GET['wiki_page_id'])) ? 'wiki' : $_GET['wiki_page_id'];
 
@@ -161,6 +181,8 @@ if (ploopi\acl::ismoduleallowed('wiki'))
             ploopi\module::init('wiki', false, false, false);
             include_once './modules/wiki/classes/class_wiki_page.php';
 
+            if (!ploopi\acl::isactionallowed($ploopi_op == 'wiki_page_lock' ? _WIKI_ACTION_PAGE_LOCK : _WIKI_ACTION_PAGE_UNLOCK)) ploopi\system::kill();
+
             $strWikiPageId = (empty($_GET['wiki_page_id'])) ? '' : $_GET['wiki_page_id'];
 
             $objWikiPage = new wiki_page();
@@ -175,6 +197,8 @@ if (ploopi\acl::ismoduleallowed('wiki'))
         case 'wiki_page_rename':
             ploopi\module::init('wiki', false, false, false);
             include_once './modules/wiki/classes/class_wiki_page.php';
+
+            if (!ploopi\acl::isactionallowed(_WIKI_ACTION_PAGE_RENAME)) ploopi\system::kill();
 
             if (isset($_POST['wiki_page_newid']) && isset($_GET['wiki_page_id']))
             {

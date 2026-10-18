@@ -107,7 +107,7 @@ if (isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords']))
     if (empty($search))
     {
         ?>
-        <div style="padding:4px;font-weight:bold;background-color:#f0f0f0;border-bottom:1px solid #c0c0c0;">Saisissez un mot clé puis cliquez sur "Rechercher" ou appuyez sur "Entrée"</div>
+        <div class="doc_bandeau_titre">Saisissez un mot clé puis cliquez sur "Rechercher" ou appuyez sur "Entrée"</div>
         <?php
     }
     else
@@ -270,13 +270,13 @@ if (isset($_SESSION['doc'][$_SESSION['ploopi']['moduleid']]['search_keywords']))
         if (ploopi\db::get()->numrows())
         {
             ?>
-            <div style="padding:4px;font-weight:bold;background-color:#f0f0f0;border-bottom:1px solid #c0c0c0;"><?php echo ploopi\db::get()->numrows(); ?> fichier(s) trouvé(s)</div>
+            <div class="doc_bandeau_titre"><?php echo ploopi\db::get()->numrows(); ?> fichier(s) trouvé(s)</div>
             <?php
         }
         else
         {
             ?>
-            <div style="padding:4px;font-weight:bold;background-color:#f0f0f0;border-bottom:1px solid #c0c0c0;">Aucun fichier trouvé</div>
+            <div class="doc_bandeau_titre">Aucun fichier trouvé</div>
             <?php
         }
 

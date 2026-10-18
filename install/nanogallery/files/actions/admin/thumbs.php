@@ -103,7 +103,7 @@ $this->addSelect($objHoverPanel, $prefix.'thumbnailHoverEffect2', $hoverValues, 
 $this->addSelect($objHoverPanel, $prefix.'thumbnailHoverEffect3', $hoverValues, $gal['thumbnailHoverEffect3'], "Effet 3");
 
 // Boutons
-$objForm->addButton( new ploopi\form_button('input:reset', 'Réinitialiser', null, null, array('style' => 'margin-left:4px;','onclick' => "uiReset()")));
+$objForm->addButton( new ploopi\form_button('input:reset', 'Réinitialiser', null, null, array('style' => 'margin-left:4px;','dataset' => array('ploopi-action' => 'nano_uireset'))));
 $objForm->addButton( new ploopi\form_button('input:submit', 'Enregistrer', null, null, array('style' => 'margin-left:4px;')));
 
 // Rendu

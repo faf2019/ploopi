@@ -276,12 +276,12 @@ sort($objForm_tpl);
             </div>
         </div>
 
-        <div style="clear:both;border-top:1px solid #a0a0a0;overflow:auto;">
+        <div class="forms_separation">
         <?php ploopi\share::selectusers(_FORMS_OBJECT_FORM, $objForm->fields['id'], -1, 'Envoi des réponses par message à...', 'forms_send_email', './modules/forms/img/mail.png'); ?>
         </div>
 
 
-        <div style="clear:both;background-color:#d0d0d0;border-top:1px solid #a0a0a0;border-bottom:1px solid #a0a0a0;padding:4px;overflow:auto;">
+        <div class="forms_bandeau">
             <div style="float:right;">
                 <input type="button" class="flatbutton" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<?php echo ploopi\crypt::urlencode("admin.php?formsTabItem=formslist"); ?>'">
                 <input type="reset" class="flatbutton" value="<?php echo _PLOOPI_RESET; ?>">
@@ -330,7 +330,7 @@ if (!$objForm->isnew())
         case 'forms_field_add':
             ?>
             <a name="addform"></a>
-            <div style="padding:4px;border-bottom:1px solid #a0a0a0;">
+            <div class="forms_ligne">
             <?php include_once './modules/forms/admin_forms_field.php'; ?>
             </div>
             <?php
@@ -339,7 +339,7 @@ if (!$objForm->isnew())
         case 'forms_separator_modify':
         case 'forms_separator_add':
             ?>
-            <div style="padding:4px;border-bottom:1px solid #a0a0a0;">
+            <div class="forms_ligne">
             <a name="addform"></a>
             <?php include_once './modules/forms/admin_forms_separator.php'; ?>
             </div>
@@ -349,7 +349,7 @@ if (!$objForm->isnew())
         case 'forms_html_modify':
         case 'forms_html_add':
             ?>
-            <div style="padding:4px;border-bottom:1px solid #a0a0a0;">
+            <div class="forms_ligne">
             <a name="addform"></a>
             <?php include_once './modules/forms/admin_forms_html.php'; ?>
             </div>
@@ -358,7 +358,7 @@ if (!$objForm->isnew())
 
         default:
             ?>
-            <div style="clear:both;background-color:#d0d0d0;overflow:auto;text-align:right;padding:4px;border-bottom:1px solid #a0a0a0;">
+            <div class="forms_barre_boutons_bas">
                 <input type="button" onclick="javascript:document.location.href='<?php echo ploopi\crypt::urlencode("admin.php?op=forms_html_add&forms_id={$objForm->fields['id']}"); ?>#addform'" class="flatbutton" value="<?php echo _FORMS_ADDHTML; ?>">
                 <input type="button" onclick="javascript:document.location.href='<?php echo ploopi\crypt::urlencode("admin.php?op=forms_separator_add&forms_id={$objForm->fields['id']}"); ?>#addform'" class="flatbutton" value="<?php echo _FORMS_ADDSEPARATOR; ?>">
                 <input type="button" onclick="javascript:document.location.href='<?php echo ploopi\crypt::urlencode("admin.php?op=forms_field_add&forms_id={$objForm->fields['id']}"); ?>#addform'" class="flatbutton" value="<?php echo _FORMS_ADDFIELD; ?>">
@@ -511,7 +511,7 @@ if (!$objForm->isnew())
         case 'forms_group_add':
             ?>
             <a name="addgroup"></a>
-            <div style="padding:4px;border-bottom:1px solid #a0a0a0;">
+            <div class="forms_ligne">
             <?php include_once './modules/forms/admin_forms_group.php'; ?>
             </div>
             <?php
@@ -519,7 +519,7 @@ if (!$objForm->isnew())
 
         default:
             ?>
-            <div style="clear:both;background-color:#d0d0d0;overflow:auto;text-align:right;padding:4px;border-bottom:1px solid #a0a0a0;">
+            <div class="forms_barre_boutons_bas">
                 <input type="button" onclick="javascript:document.location.href='<?php echo ploopi\crypt::urlencode("admin.php?op=forms_group_add&forms_id={$objForm->fields['id']}"); ?>#addgroup'" class="flatbutton" value="<?php echo _FORMS_ADDGROUP; ?>">
             </div>
             <?php
@@ -586,7 +586,7 @@ if (!$objForm->isnew())
         case 'forms_graphic_add':
             ?>
             <a name="addgraphic"></a>
-            <div style="padding:4px;border-bottom:1px solid #a0a0a0;">
+            <div class="forms_ligne">
             <?php include_once './modules/forms/admin_forms_graphic.php'; ?>
             </div>
             <?php
@@ -594,7 +594,7 @@ if (!$objForm->isnew())
 
         default:
             ?>
-            <div style="clear:both;background-color:#d0d0d0;overflow:auto;text-align:right;padding:4px;border-bottom:1px solid #a0a0a0;">
+            <div class="forms_barre_boutons_bas">
                 <input type="button" onclick="javascript:document.location.href='<?php echo ploopi\crypt::urlencode("admin.php?op=forms_graphic_add&forms_id={$objForm->fields['id']}"); ?>#addgraphic'" class="flatbutton" value="<?php echo _FORMS_ADDGRAPHIC; ?>">
             </div>
             <?php

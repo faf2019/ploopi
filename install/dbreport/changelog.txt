@@ -1,3 +1,126 @@
+== Module DBREPORT - version 2.1.9 ====================================================
+
+2026-10-12  Ovensia <stephane@ovensia.fr>
+
+* Aperçu SQL : coloration par classes (thème clair ou sombre de ploopi4) au lieu de
+  styles en ligne sur fond blanc forcé, défilement borné, bouton « Copier la requête ».
+  La requête, déjà en UTF-8, était retranscodée deux fois : les accents s'abîmaient.
+* Content-Security-Policy stricte : écrans déclarés prêts (_DBREPORT_CSP). Plus aucun
+  gestionnaire en ligne ni URL javascript: — fenêtres par data-ploopi-topopup,
+  confirmations par data-ploopi-confirm, cases du choix du format par
+  ploopi_checkbox_zone, listes et boutons par les actions de include/functions.js
+  (ploopi.actions.dbreport_*), script du graphique avec le nonce.
+* Sélecteurs de couleur du graphique rétablis : ils s'installaient par la classe
+  « color {…} » de jscolor 1, que jscolor 2.5 ne reconnaît plus (champs texte nus) ;
+  data-jscolor en JSON strict.
+* Choix d'une fonction SQL : ploopi.insertatcursor (alias historique abandonné).
+* Création d'une requête, d'un champ, d'une table ou d'une relation : en SQL strict
+  (défaut de MariaDB), l'INSERT échouait sur la première colonne NOT NULL sans défaut
+  (ws_id, function_group…), sans message — aucune requête ne pouvait être créée. Les
+  colonnes absentes sont complétées par leur valeur par défaut (dbreport::defaults).
+* Clonage : les relations n'étaient pas copiées (INSERT … SELECT sans type_join) ; les
+  champs non plus (function_group manquant).
+* Graphique dont les valeurs viennent d'un champ texte : page d'erreur (TypeError en
+  PHP 8) ; valeurs converties en nombres, comme pour les données tracées.
+* Ajout de champs : inclusion de include/classes/mb.php, disparu (avertissement).
+
+== Module DBREPORT - version 2.1.8 ====================================================
+
+2026-10-10  Ovensia <stephane@ovensia.fr>
+
+* Habillage : les styles en ligne des écrans d'administration (bandeaux gris, barres de boutons,
+  cadres et filets) deviennent des classes, déclarées dans include/styles.css avec exactement le même
+  aspect ; le gabarit ploopi3 les redessine dans sa palette (tools/ploopi3_modules.php). Les écrans
+  servis au frontoffice (wce, template, display), où la feuille du module n'est pas chargée, gardent
+  leurs styles en ligne.
+
+== Module DBREPORT - version 2.1.7 ====================================================
+
+2026-10-10  Ovensia <stephane@ovensia.fr>
+
+* Icônes : jeu unifié de l'administration (Tabler Icons, au trait, palette du gabarit ploopi3), sous
+  les mêmes noms et aux mêmes tailles ; le code qui les appelle ne change pas. Correspondances dans
+  tools/icones/modules.js, régénération par tools/icones/generer.js.
+
+== Module DBREPORT - version 2.1.6 ====================================================
+
+2026-10-10  Ovensia <stephane@ovensia.fr>
+
+* Graphiques : Highcharts 3.0.1, dont la licence n'est pas libre (usage commercial
+  payant), est remplacé par Chart.js 4.4.9 (MIT, lib/chartjs). Les paramètres
+  enregistrés sont repris tels quels : types (secteurs, barres, colonnes, lignes,
+  courbes, zones, cumulés et à 100 %), couleurs, polices, titres, légende, axes,
+  grille, intervalles, indices, formats d'infobulle ({series.name}, {point.y:.0f},
+  {percentage:.2f}…). Téléchargement en PNG et impression conservés ; exports PDF,
+  SVG et JPEG retirés.
+
+* Les valeurs d'une série sont rangées sous leur catégorie (elles l'étaient dans
+  l'ordre d'arrivée), et la configuration est transmise en JSON : les libellés
+  saisis ne sont plus interpolés dans le JavaScript.
+
+== Module DBREPORT - version 2.1.5 ====================================================
+
+2026-10-09  Ovensia <stephane@ovensia.fr>
+
+* Balises PHP courtes « <? » remplacées par « <?php » : public_query_list.php (filtre de la liste des requêtes). Avec
+  short_open_tag à Off (php.ini de production), le code partait tel quel dans la page.
+
+== Module DBREPORT - version 2.1.4 ====================================================
+
+2026-10-09  Ovensia <stephane@ovensia.fr>
+
+* Graphiques : la page du graphique chargeait Prototype (./lib/protoaculous) et son
+  adaptateur Highcharts, retirés du socle au profit de jQuery : le graphique restait
+  blanc. Elle charge désormais jQuery, que Highcharts 3 utilise sans adaptateur.
+
+* Adaptateurs Highcharts Prototype et MooTools retirés du paquet (obsolete.txt :
+  supprimés à la mise à jour).
+
+== Module DBREPORT - version 2.1.3 ====================================================
+
+2026-10-09  Ovensia <stephane@ovensia.fr>
+
+* Graphiques : les libellés (titres, axes, séries, menu d'export) ne sont plus
+  convertis d'ISO-8859-1 vers UTF-8 alors qu'ils y sont déjà — les accents étaient
+  doublement encodés (« RÃ©partition »).
+
+* Exports HTML et CSV annoncés en UTF-8, l'encodage réel des données (ils
+  s'annonçaient en ISO-8859-1).
+
+* Fichiers .gz resynchronisés avec leurs sources (ils dataient d'une minification antérieure).
+
+== Module DBREPORT - version 2.1.2 ====================================================
+
+2026-10-08  Ovensia <stephane@ovensia.fr>
+
+* Correctif : l'affichage d'un graphique finissait en erreur fatale.
+
+  En remplaçant utf8_encode() (dépréciée en PHP 8.2), la PR #63 avait laissé
+  treize appels à mb_convert_encoding() sans encodage cible : ArgumentCountError
+  au rendu de tout graphique. Les appels retrouvent l'équivalent exact de
+  utf8_encode() (ISO-8859-1 vers UTF-8), comme les autres sites du fichier.
+
+* Compatibilité PHP 8.1 à 8.4 (PR #63) : utf8_encode()/utf8_decode()
+  remplacées par mb_convert_encoding(), garde safe_mode retirée.
+
+== Module DBREPORT - version 2.1.1 ====================================================
+
+2026-10-06  Ovensia <stephane@ovensia.fr>
+
+* Sécurité : les opérations ne s'appliquent qu'aux requêtes accessibles.
+
+  Les opérations recevaient l'identifiant d'une requête (directement, ou par l'un de
+  ses champs ou l'une de ses tables) sans contrôler à quelle requête il menait :
+  - tout utilisateur du module exportait ou exécutait la requête d'une autre
+    instance ou d'un autre espace, donc en lisait les données ;
+  - un gestionnaire de requêtes modifiait ou supprimait les requêtes d'une autre
+    instance, et les requêtes verrouillées sans l'action de verrouillage.
+
+  Un contrôle commun, en tête d'op.php, applique la règle de la liste des requêtes :
+  lecture d'une requête de l'instance courante et des espaces visibles ; écriture
+  avec, en plus, l'action « gérer les requêtes » et, si la requête est verrouillée,
+  l'action « verrouiller les requêtes ».
+
 == Module DBREPORT - version 2.1.0 ====================================================
 
 2019-02-13  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

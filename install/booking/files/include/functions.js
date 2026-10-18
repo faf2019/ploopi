@@ -55,9 +55,15 @@ function booking_element_add(type_element, e, width)
     ploopi.xhr.todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=booking_'+type_element+'_add','popup_'+type_element);
 }
 
+// Fenêtre d'un événement : 580 px sous ploopi4 (formulaire en grille, .p4-evform), 450 sinon
+function booking_event_width()
+{
+    return document.querySelector('.p4-caltb') ? 580 : 450;
+}
+
 function booking_element_open(type_element, id, e, width, center)
 {
-    if (typeof(width) == 'undefined') width = 450;
+    if (typeof(width) == 'undefined') width = type_element == 'event' ? booking_event_width() : 450;
     if (typeof(center) == 'undefined') center = false;
 
     if (center)
@@ -118,7 +124,7 @@ function booking_subresource_validate(form)
 
 function booking_event_add(e, date)
 {
-    ploopi.popup.show(ploopi.xhr.ajaxloader_content, '450', e, 'click', 'popup_event');
+    ploopi.popup.show(ploopi.xhr.ajaxloader_content, booking_event_width(), e, 'click', 'popup_event');
     ploopi.xhr.todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=booking_event_add&booking_resource_date='+date, 'popup_event');
 }
 
@@ -160,9 +166,6 @@ function booking_event_validate_2(form)
     var ok = true;
 
     jQuery('.booking_date').each(function(id, item) {
-        console.log(item);
-        console.log(item.dataset.id);
-
         if (ok) {
             // Contrôle des dates
             var datestr_b = jQuery('#_booking_event_timestp_begin_d'+item.dataset.id).val().split('/');
@@ -192,12 +195,18 @@ function booking_event_validate_2(form)
  * NAVIGATION CALENDRIER
  */
 
+// Période affichée : formulaire de la vue envoyé en XHR
+function booking_view_submit()
+{
+    ploopi.xhr.submit(jQuery('#booking_form_view')[0], 'booking_main');
+}
+
 function booking_nextmonth()
 {
     if (jQuery('#booking_month')[0].value < 12) jQuery('#booking_month')[0].selectedIndex++;
     else {jQuery('#booking_month')[0].selectedIndex = 0; jQuery('#booking_year')[0].selectedIndex++;}
 
-    jQuery('#booking_form_view')[0].onsubmit();
+    booking_view_submit();
 }
 
 function booking_prevmonth()
@@ -205,7 +214,7 @@ function booking_prevmonth()
     if (jQuery('#booking_month')[0].value > 1) jQuery('#booking_month')[0].selectedIndex--;
     else {jQuery('#booking_month')[0].selectedIndex = 11; jQuery('#booking_year')[0].selectedIndex--;}
 
-    jQuery('#booking_form_view')[0].onsubmit();
+    booking_view_submit();
 }
 
 function booking_nextweek()
@@ -213,7 +222,7 @@ function booking_nextweek()
     if (jQuery('#booking_week')[0].selectedIndex < jQuery('#booking_week')[0].length - 1) jQuery('#booking_week')[0].selectedIndex++;
     else {jQuery('#booking_week')[0].selectedIndex = 0; jQuery('#booking_year')[0].selectedIndex++;}
 
-    jQuery('#booking_form_view')[0].onsubmit();
+    booking_view_submit();
 }
 
 function booking_prevweek()
@@ -221,7 +230,7 @@ function booking_prevweek()
     if (jQuery('#booking_week')[0].selectedIndex > 0) jQuery('#booking_week')[0].selectedIndex--;
     else {jQuery('#booking_week_previousyear')[0].value = '1'; jQuery('#booking_year')[0].selectedIndex--;}
 
-    jQuery('#booking_form_view')[0].onsubmit();
+    booking_view_submit();
 }
 
 function booking_nextday()
@@ -229,7 +238,7 @@ function booking_nextday()
     if (jQuery('#booking_day')[0].selectedIndex < jQuery('#booking_day')[0].length - 1)
     {
         jQuery('#booking_day')[0].selectedIndex++;
-        jQuery('#booking_form_view')[0].onsubmit();
+        booking_view_submit();
     }
     else
     {
@@ -243,7 +252,7 @@ function booking_prevday()
     if (jQuery('#booking_day')[0].selectedIndex > 0)
     {
         jQuery('#booking_day')[0].selectedIndex--;
-        jQuery('#booking_form_view')[0].onsubmit();
+        booking_view_submit();
     }
     else
     {
@@ -271,21 +280,93 @@ function booking_front_element_open(type_element, id, e, moduleid)
 
 
 
+// Sous-ressources de la ressource choisie (rendues par booking_subresources_html) : les
+// autres sont masquées et décochées
 function booking_resource_onchange(res)
 {
-    jQuery('#booking_subresources > p').each(function(item) {
-        item.remove();
-    });
-
-    jQuery.each(booking_json_sr, function(i, row) {
-        if (row.id_resource == res.value) {
-            jQuery('#booking_subresources').append(
-                '<p class="ploopi_checkbox"><label for="booking_sr_'+row.id+'">'+row.name+':</label><input type="checkbox" name="booking_sr[]" value="'+row.id+'" id="booking_sr_'+row.id+'" /></p>'
-            );
-        }
+    jQuery('#booking_subresources [data-booking-sr]').each(function() {
+        var show = this.getAttribute('data-booking-sr') == res.value;
+        this.style.display = show ? '' : 'none';
+        if (!show) jQuery(this).find('input[type=checkbox]').prop('checked', false);
     });
 }
 
 function booking_rt_autocheck(id_rt) {
     jQuery('#booking_rt'+id_rt).prop('checked', jQuery('.booking_rt'+id_rt+':checked').length == jQuery('.booking_rt'+id_rt).length);
 }
+
+
+/**
+ * Comportements par attributs, sans gestionnaire en ligne (CSP stricte) : actions
+ * appelées par data-ploopi-action (js/actions.js du socle), formulaires et listes
+ */
+ploopi.actions = ploopi.actions || {};
+
+jQuery.each(['booking_prevmonth', 'booking_nextmonth', 'booking_prevweek', 'booking_nextweek', 'booking_prevday', 'booking_nextday'], function(i, name) {
+    ploopi.actions[name] = function(el, event) { window[name](); };
+});
+
+ploopi.actions.booking_element_check = function(el, event) { event.preventDefault(); booking_element_check(); };
+ploopi.actions.booking_element_delete = function(el, event, type) { event.preventDefault(); booking_element_delete(type); };
+ploopi.actions.booking_element_add = function(el, event, type) { event.preventDefault(); booking_element_add(type, event); };
+ploopi.actions.booking_element_open = function(el, event, type, id) { event.preventDefault(); booking_element_open(type, id, event); };
+ploopi.actions.booking_event_add = function(el, event, date) { booking_event_add(event, date); };
+ploopi.actions.booking_front_event_add = function(el, event, date, moduleid) { booking_front_event_add(event, date, moduleid); };
+ploopi.actions.booking_front_element_open = function(el, event, type, id, moduleid) { event.preventDefault(); booking_front_element_open(type, id, event, moduleid); };
+ploopi.actions.booking_alert = function(el, event, message) { alert(message); };
+ploopi.actions.booking_resource_onchange = function(el, event) { booking_resource_onchange(el); };
+
+// Taille du planning
+ploopi.actions.booking_size = function(el, event, url) {
+    ploopi.xhr.todiv(url, 'booking_size='+encodeURIComponent(el.value), 'booking_main');
+};
+
+// Date de début recopiée dans la date de fin (toujours, ou seulement si elle est vide)
+ploopi.actions.booking_copydate = function(el, event, target, onlyIfEmpty) {
+    var dest = document.getElementById(target);
+    if (dest && (!onlyIfEmpty || dest.value == '')) dest.value = el.value;
+};
+
+// Décision sur une réservation : couleur du détail
+ploopi.actions.booking_bgcolor = function(el, event, target, color) {
+    var dest = document.getElementById(target);
+    if (dest) dest.style.backgroundColor = color;
+};
+
+// Formulaires envoyés en XHR vers la zone data-booking-submit
+jQuery(document).on('submit', 'form[data-booking-submit]', function(e) {
+    e.preventDefault();
+    ploopi.xhr.submit(this, this.getAttribute('data-booking-submit'));
+});
+
+// Formulaires contrôlés avant l'envoi (data-booking-validate)
+var booking_validators = {
+    resourcetype: function(f) { return booking_resourcetype_validate(f); },
+    resource: function(f) { return booking_resource_validate(f); },
+    subresource: function(f) { return booking_subresource_validate(f); },
+    event: function(f) { return booking_event_validate(f); },
+    event_detail: function(f) { return booking_event_validate_2(f); }
+};
+
+jQuery(document).on('submit', 'form[data-booking-validate]', function(e) {
+    var func = booking_validators[this.getAttribute('data-booking-validate')];
+    if (func && !func(this)) e.preventDefault();
+});
+
+// Liste des ressources : case d'un type (toutes ses ressources), case d'une ressource
+jQuery(document).on('change', 'input[data-booking-rt]', function() {
+    jQuery('input.booking_rt'+this.getAttribute('data-booking-rt')).prop('checked', this.checked);
+    jQuery(this.form).trigger('submit');
+});
+
+jQuery(document).on('change', 'input[data-booking-resource]', function() {
+    booking_rt_autocheck(this.getAttribute('data-booking-resource'));
+    jQuery(this.form).trigger('submit');
+});
+
+// Case d'un type cochée si toutes ses ressources le sont, sur la page et le contenu inséré
+ploopi.popup.addenhancer(function(node) {
+    jQuery(node).find('input[data-booking-rt]').addBack('input[data-booking-rt]').each(function() {
+        booking_rt_autocheck(this.getAttribute('data-booking-rt'));
+    });
+});

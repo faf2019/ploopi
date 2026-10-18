@@ -39,6 +39,62 @@
 
 if (ploopi\acl::ismoduleallowed('dbreport'))
 {
+    /**
+     * Contrôle d'accès à la requête visée, commun à toutes les opérations.
+     *
+     * Les opérations reçoivent l'identifiant d'une requête, directement ou par l'un de ses
+     * champs ou l'une de ses tables. Sans ce contrôle, elles ouvraient la requête de
+     * n'importe quelle instance ou espace, et une requête verrouillée se modifiait sans
+     * l'action de verrouillage. Lecture : requête visible ; écriture : requête modifiable
+     * (cf. include/global.php).
+     */
+    $arrDbreportOpsLecture = array(
+        'dbreport_query_modify', 'dbreport_query_export', 'dbreport_query_exec', 'dbreport_query_clone',
+        'dbreport_chart_generate', 'dbreport_queryfield_add', 'dbreport_queryfield_modify', 'dbreport_querytable_add',
+    );
+    $arrDbreportOpsEcriture = array(
+        'dbreport_query_save', 'dbreport_query_delete', 'dbreport_transformation_save', 'dbreport_chart_save',
+        'dbreport_queryfield_save', 'dbreport_queryfield_delete', 'dbreport_queryfield_position',
+        'dbreport_querytable_save', 'dbreport_querytable_delete', 'dbreport_queryrelation_modify',
+    );
+
+    $booDbreportEcriture = in_array($ploopi_op, $arrDbreportOpsEcriture, true);
+
+    if ($booDbreportEcriture || in_array($ploopi_op, $arrDbreportOpsLecture, true))
+    {
+        ploopi\module::init('dbreport', false, false, false);
+        include_once './modules/dbreport/classes/class_dbreport_query.php';
+        include_once './modules/dbreport/classes/class_dbreport_queryfield.php';
+        include_once './modules/dbreport/classes/class_dbreport_querytable.php';
+
+        // Requêtes concernées : identifiant direct, ou requête parente d'un champ ou d'une table
+        $arrDbreportIds = array();
+        if (isset($_REQUEST['dbreport_query_id']) && $_REQUEST['dbreport_query_id'] !== '') $arrDbreportIds[] = $_REQUEST['dbreport_query_id'];
+
+        if (!empty($_REQUEST['dbreport_queryfield_id']))
+        {
+            $objDbrSub = new dbreport_queryfield();
+            if (!is_numeric($_REQUEST['dbreport_queryfield_id']) || !$objDbrSub->open($_REQUEST['dbreport_queryfield_id'])) ploopi\system::kill();
+            $arrDbreportIds[] = $objDbrSub->fields['id_query'];
+        }
+
+        if (!empty($_REQUEST['dbreport_querytable_id']))
+        {
+            $objDbrSub = new dbreport_querytable();
+            if (!is_numeric($_REQUEST['dbreport_querytable_id']) || !$objDbrSub->open($_REQUEST['dbreport_querytable_id'])) ploopi\system::kill();
+            $arrDbreportIds[] = $objDbrSub->fields['id_query'];
+        }
+
+        foreach (array_unique($arrDbreportIds) as $mixDbreportId)
+        {
+            $objDbrCheck = new dbreport_query();
+            if (!is_numeric($mixDbreportId) || !$objDbrCheck->open($mixDbreportId)) ploopi\system::kill();
+
+            $booDbreportAutorise = $booDbreportEcriture ? dbreport_query_ismodifiable($objDbrCheck->fields) : dbreport_query_isvisible($objDbrCheck->fields);
+            if (!$booDbreportAutorise) ploopi\system::kill();
+        }
+    }
+
     switch($ploopi_op)
     {
         // Popup d'ajout/modif d'une requête
@@ -282,8 +338,6 @@ if (ploopi\acl::ismoduleallowed('dbreport'))
 
             include_once './modules/dbreport/classes/class_dbreport_query.php';
             include_once './modules/dbreport/classes/class_dbreport_queryfield.php';
-
-            include_once './include/classes/mb.php';
 
             $objDbrQuery = new dbreport_query();
 
@@ -600,49 +654,49 @@ if (ploopi\acl::ismoduleallowed('dbreport'))
 
                     <div style="padding:2px;"><b>Choix du format :</b></div>
                     <div style="width:49%;float:left;">
-                        <p class="ploopi_checkbox" style="padding:2px;" onclick="javascript:ploopi.checkbox_click(event,'dbreport_format_ods');">
+                        <p class="ploopi_checkbox ploopi_checkbox_zone" style="padding:2px;" data-checkbox="dbreport_format_ods">
                             <input type="radio" class="radio" name="dbreport_format" id="dbreport_format_ods" value="ods" />
                             <img src="./modules/dbreport/img/mime/ods.png" />
                             <strong>ODS</strong><span>&nbsp;(OpenOffice Calc &#174;)</span>
                         </p>
-                        <p class="ploopi_checkbox" style="padding:2px;" onclick="javascript:ploopi.checkbox_click(event,'dbreport_format_xls');">
+                        <p class="ploopi_checkbox ploopi_checkbox_zone" style="padding:2px;" data-checkbox="dbreport_format_xls">
                             <input type="radio" class="radio" name="dbreport_format" id="dbreport_format_xls" value="xls" />
                             <img src="./modules/dbreport/img/mime/xls.png" />
                             <strong>XLS</strong><span>&nbsp;(Microsoft Excel &#174;)</span>
                         </p>
-                        <p class="ploopi_checkbox" style="padding:2px;" onclick="javascript:ploopi.checkbox_click(event,'dbreport_format_xlsx');">
+                        <p class="ploopi_checkbox ploopi_checkbox_zone" style="padding:2px;" data-checkbox="dbreport_format_xlsx">
                             <input type="radio" class="radio" name="dbreport_format" id="dbreport_format_xlsx" value="xlsx" />
                             <img src="./modules/dbreport/img/mime/xls.png" />
                             <strong>XLSX</strong><span>&nbsp;(Microsoft Excel &#174;)</span>
                         </p>
-                        <p class="ploopi_checkbox" style="padding:2px;" onclick="javascript:ploopi.checkbox_click(event,'dbreport_format_csv');">
+                        <p class="ploopi_checkbox ploopi_checkbox_zone" style="padding:2px;" data-checkbox="dbreport_format_csv">
                             <input type="radio" class="radio" name="dbreport_format" id="dbreport_format_csv" value="csv" checked />
                             <img src="./modules/dbreport/img/mime/csv.png" />
                             <strong>CSV</strong><span style="color:red;">&nbsp;(RECOMMANDE)</span>
                         </p>
                     </div>
                     <div style="width:51%;float:right;">
-                        <p class="ploopi_checkbox" style="padding:2px;" onclick="javascript:ploopi.checkbox_click(event,'dbreport_format_pdf');">
+                        <p class="ploopi_checkbox ploopi_checkbox_zone" style="padding:2px;" data-checkbox="dbreport_format_pdf">
                             <input type="radio" class="radio" name="dbreport_format" id="dbreport_format_pdf" value="pdf" />
                             <img src="./modules/dbreport/img/mime/pdf.png" />
                             <strong>PDF</strong><span>&nbsp;(Adobe Acrobat &#174;)</span>
                         </p>
-                        <p class="ploopi_checkbox" style="padding:2px;" onclick="javascript:ploopi.checkbox_click(event,'dbreport_format_html');">
+                        <p class="ploopi_checkbox ploopi_checkbox_zone" style="padding:2px;" data-checkbox="dbreport_format_html">
                             <input type="radio" class="radio" name="dbreport_format" id="dbreport_format_html" value="html" />
                             <img src="./modules/dbreport/img/mime/html.png" />
                             <strong>HTML</strong><span>&nbsp;(HyperText Markup Language)</span>
                         </p>
-                        <!--p class="ploopi_checkbox" style="padding:2px;" onclick="javascript:ploopi.checkbox_click(event,'dbreport_format_odt');">
+                        <!--p class="ploopi_checkbox ploopi_checkbox_zone" style="padding:2px;" data-checkbox="dbreport_format_odt">
                             <input type="radio" class="radio" name="dbreport_format" id="dbreport_format_odt" value="odt" />
                             <img src="./modules/dbreport/img/mime/odt.png" />
                             <strong>ODT</strong><span>&nbsp;(OpenOffice Writer &#174;)</span>
                         </p-->
-                        <p class="ploopi_checkbox" style="padding:2px;" onclick="javascript:ploopi.checkbox_click(event,'dbreport_format_xml');">
+                        <p class="ploopi_checkbox ploopi_checkbox_zone" style="padding:2px;" data-checkbox="dbreport_format_xml">
                             <input type="radio" class="radio" name="dbreport_format" id="dbreport_format_xml" value="xml" />
                             <img src="./modules/dbreport/img/mime/xml.png" />
                             <strong>XML</strong><span>&nbsp;(eXtensible Markup Language)</span>
                         </p>
-                        <p class="ploopi_checkbox" style="padding:2px;" onclick="javascript:ploopi.checkbox_click(event,'dbreport_format_json');">
+                        <p class="ploopi_checkbox ploopi_checkbox_zone" style="padding:2px;" data-checkbox="dbreport_format_json">
                             <input type="radio" class="radio" name="dbreport_format" id="dbreport_format_json" value="json" />
                             <img src="./modules/dbreport/img/mime/json.png" />
                             <strong>JSON</strong><span>&nbsp;(JavaScript Object Notation)</span>
@@ -650,7 +704,7 @@ if (ploopi\acl::ismoduleallowed('dbreport'))
                     </div>
 
                     <div style="clear:both;padding:2px;text-align:right;">
-                        <input type="button" class="button" value="Annuler" onclick="javascript:ploopi.popup.hide('dbreport_query_export_popup');"/>
+                        <input type="button" class="button" value="Annuler" data-ploopi-popup-hide="dbreport_query_export_popup"/>
                         <input type="submit" class="button" value="Générer" />
                     </div>
                     </form>

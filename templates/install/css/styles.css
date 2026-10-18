@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2007-2016 Ovensia
+    Copyright (c) 2007-2026 Ovensia
     Contributors hold Copyright (c) to their code submissions.
 
     This file is part of Ploopi.
@@ -20,234 +20,366 @@
 */
 
 /******************
-  MAIN LAYOUT
+  ASSISTANT D'INSTALLATION (config/install/install.php)
+
+  Chargée après la feuille de ploopi4 (templates/backoffice/ploopi4/css/styles.pack.css),
+  dont elle reprend jetons, composants (.p4-card, .p4-field, .p4-input, .p4-callout,
+  .p4-btn) et visuel de la page de connexion (.p4-login-visual, .p4-theme-switch).
+
+  Grand écran : visuel et prérequis à gauche, rubriques en cartes à droite.
+  Tablette et téléphone : visuel en bandeau, rubriques sur une colonne.
+
+  Tant que cette feuille n'est pas chargée, la page n'affiche que #htaccess.
 *******************/
 
-@font-face {
-    font-family: 'OpenSans';
-    font-style: normal;
-    font-weight: 400;
-    src: local('Open Sans'),
-         local('OpenSans'),
-         url('../../backoffice/ploopi2/fonts/OpenSans.woff2') format('woff2'),
-         url('../../backoffice/ploopi2/fonts/OpenSans.woff') format('woff'),
-         url('../../backoffice/ploopi2/fonts/OpenSans-Regular.ttf') format('truetype'),
-         url('../../backoffice/ploopi2/fonts/OpenSans-Bold.ttf') format('truetype');
-}
-
-body, form, table, td, input, select, textarea, button {
-    font: normal 12px 'OpenSans', serif;
-}
-
-body, form  {
-margin: 0;
-}
-
-body {
-color: #303030;
-position: relative;
-height:100%;
-}
-
-a {
-text-decoration: none;
-color: #304066;
-}
-
-a:hover {
-text-decoration: underline;
-}
-
-a img {
-border:0;
-}
-
-h1, h2, h3, h4 {
-font-family: "Trebuchet MS", Verdana, sans-serif;
-}
-
 #htaccess {
-display:none;
+    display: none;
 }
 
 #background {
-display:block;
-background:transparent url('../../backoffice/ploopi2/img/template/wallpaper.jpg') no-repeat scroll 0 0;
-height:100%;
-position:absolute;
-width:100%;
-overflow-y:scroll;
+    display: grid;
 }
 
-#window {
-display:block;
-position:relative;
-width:90%;
-max-width:1200px;
-margin:auto;
-margin-top:30px;
-color:#fff;
-border-radius:15px;
-border:2px solid #fff;
-background: #3B6168;
-background: linear-gradient(top, #59939C 0%, #3B6168 10%, #3B6168 90%, #2D4A4F 100%);
-background: -moz-linear-gradient(top, #59939C 0%, #3B6168 10%, #3B6168 90%, #2D4A4F 100%);
-background: -webkit-linear-gradient(top, #59939C 0%, #3B6168 10%, #3B6168 90%, #2D4A4F 100%);
-background: -ms-linear-gradient(top, #59939C 0%, #3B6168 10%, #3B6168 90%, #2D4A4F 100%);
-box-shadow:0px 2px 3px rgba(0,0,0,0.5);
-padding-bottom:30px;
-margin-bottom:30px;
+.p4-install {
+    min-height: 100vh;
+    min-height: 100dvh;
+    grid-template-columns: minmax(300px, 28vw) minmax(0, 1fr);
+    background: var(--bg);
 }
 
-#window > h1 {
-display:block;
-text-align:center;
-padding:0;
-margin:10px;
+/* Visuel : marque, titre, prérequis */
+.p4-install-visual {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    padding: 36px clamp(24px, 3vw, 44px);
+    color: #fff;
 }
 
-#form {
-margin:0;
-padding:0;
+.p4-install-visual > * {
+    position: relative;
 }
 
-
-.form_box {
-display:block;
-position:relative;
-padding:10px 20px;
-overflow:auto;
-//*olumn-count:3;
--moz-column-count:3;
--webkit-column-count:3;
-*/
+.p4-install-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
-.form_box > div {
-padding:1%;
-width:25%;
-float:left;
-box-sizing: border-box;
--moz-box-sizing: border-box;
--ms-box-sizing: border-box;
--webkit-box-sizing: border-box;
--khtml-box-sizing: border-box;
+.p4-install-brand .p4-brand-mark {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    box-shadow: 0 6px 16px rgba(240, 180, 41, .35);
 }
 
-.form_box label {
-display:block;
-margin-top:6px;
-font-weight:bold;
+.p4-install-brand strong {
+    display: block;
+    font-family: 'Ploopi Logo', 'Nunito', var(--font);
+    font-weight: 800;
+    font-size: 25px;
+    letter-spacing: -.015em;
+    line-height: 1;
 }
 
-input,
-textarea,
-select {
-display:block;
-border:2px solid #98C900;
-width:95%;
-padding: 4px;
-margin-top:6px;
-box-sizing: border-box; /* css3 rec */
--moz-box-sizing: border-box; /* ff2 */
--ms-box-sizing: border-box; /* ie8 */
--webkit-box-sizing: border-box; /* safari3 */
--khtml-box-sizing: border-box; /* konqueror */
-background: rgba(0, 0, 0, 0) -moz-linear-gradient(45deg, rgba(255, 255, 255, 0.8) 0px, rgba(255, 255, 255, 0.5) 100%) repeat scroll 0 0;
-border-radius: 3px;
-box-shadow: 0 0 3px rgba(0, 0, 0, 0.2) inset;
-color: #2c4056;
+.p4-install-brand small {
+    display: block;
+    margin-top: 1px;
+    font-size: 12.5px;
+    opacity: .72;
 }
 
-.form_box span {
-display:block;
-position:relative;
+.p4-install-tagline {
+    margin-top: auto;
 }
 
-.form_box p > span.error::after {
-content:url('../gfx/error.png');
-position:absolute;
-z-index:2;
-top:4px;
-right:-8px;
+.p4-install-tagline strong {
+    display: block;
+    font-size: clamp(26px, 2.6vw, 36px);
+    font-weight: 750;
+    letter-spacing: -.02em;
+    line-height: 1.15;
 }
 
-.form_box p > span::after {
-content:url('../gfx/accept.png');
-position:absolute;
-z-index:2;
-top:4px;
-right:-8px;
+.p4-install-tagline span {
+    display: block;
+    margin-top: 8px;
+    font-size: 14px;
+    opacity: .78;
 }
 
-.form_box p > span {
-margin-right:15px;
+.p4-install-prereq h2 {
+    margin: 0 0 10px;
+    color: inherit;
+    font-size: 12px;
+    font-weight: 650;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    opacity: .72;
 }
 
-
-input:focus,
-textarea:focus,
-select:focus {
-box-shadow:inset 0 0 3px rgba(0,0,0,0.6);
--moz-box-shadow:inset 0 0 3px rgba(0,0,0,0.6);
--webkit-box-shadow:inset 0 0 3px rgba(0,0,0,0.6);
-background: linear-gradient(45deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.8) 100%);
-background: -moz-linear-gradient(45deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.8) 100%);
-background: -webkit-linear-gradient(45deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.8) 100%);
+.p4-install-prereq ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 8px;
 }
 
-input.error,
-textarea.error,
-select.error {
-border-color:#C91F00;
+.p4-install-prereq li {
+    display: flex;
+    align-items: flex-start;
+    gap: 9px;
+    font-size: 13.5px;
+    line-height: 1.35;
 }
 
-div.error {
-padding:10px;
-text-align:center;
+.p4-install-prereq li.p4-ok .p4-icon {
+    color: #6ee7a0;
 }
 
-div.error > * {
-vertical-align:middle;
-display:inline-block;
-padding:0 2px;
+.p4-install-prereq li.p4-err {
+    font-weight: 600;
 }
 
-.login_btn_right {
-position:absolute;
-bottom:10px;
-right:8px;
-z-index:2;
+.p4-install-prereq li.p4-err .p4-icon {
+    color: #ff9aa9;
 }
 
-.login_btn_right button {
-background:transparent;
-border:none;
-color:#fff;
-box-shadow:none;
-margin:0;
-padding:0;
-cursor:pointer;
+/* Formulaire */
+.p4-install-panel {
+    min-width: 0;
+    padding: 40px clamp(20px, 4vw, 56px) 28px;
 }
 
-.login_btn_right button:hover {
-background:transparent;
-border:none;
-color:#fff;
-box-shadow:none;
+.p4-install-form {
+    max-width: 1080px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
 }
 
-.login_btn_right button img,
-.login_btn_right button span {
-display: inline-block;
-vertical-align: middle;
+.p4-install-head h1 {
+    margin: 0;
+    font-size: 26px;
+    font-weight: 750;
+    letter-spacing: -.02em;
 }
 
-.login_btn_right button img {
-border:0;
-opacity:0.7;
+.p4-install-head .p4-lead {
+    max-width: 720px;
+    margin: 8px 0 0;
+    color: var(--text-2);
 }
 
-.login_btn_right button:hover img {
-opacity:1;
+.p4-install-groups {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 400px), 1fr));
+    gap: 16px;
+    align-items: start;
+}
+
+.p4-install-group .p4-card-header .p4-icon {
+    color: var(--primary-text);
+}
+
+.p4-install-group .p4-card-header h2 {
+    margin: 0;
+}
+
+.p4-install-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Champ : état du contrôle (vérifié, refusé, en cours) à droite de la saisie */
+.p4-install-control {
+    position: relative;
+}
+
+.p4-install-field[data-field] .p4-input {
+    padding-right: 38px;
+}
+
+.p4-install-pw .p4-input,
+.p4-install-field[data-field] .p4-install-pw .p4-input {
+    padding-right: 76px;
+}
+
+.p4-install-state {
+    position: absolute;
+    right: 11px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    pointer-events: none;
+}
+
+.p4-install-pw .p4-install-state {
+    right: 44px;
+}
+
+.p4-install-state .p4-icon {
+    display: none;
+}
+
+.p4-install-field.p4-ok .p4-install-ok {
+    display: block;
+    color: var(--success);
+}
+
+.p4-install-field.p4-err .p4-install-err {
+    display: block;
+    color: var(--danger);
+}
+
+.p4-install-field.p4-wait .p4-install-wait {
+    display: block;
+    color: var(--text-3);
+    animation: p4-install-tourne 1s linear infinite;
+}
+
+@keyframes p4-install-tourne {
+    to { transform: rotate(360deg); }
+}
+
+.p4-install-field.p4-err .p4-input {
+    border-color: var(--danger);
+}
+
+.p4-install-field.p4-err .p4-input:focus {
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--danger) 22%, transparent);
+}
+
+.p4-install-msg {
+    display: none;
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    color: var(--danger);
+}
+
+.p4-install-field.p4-err .p4-install-msg {
+    display: block;
+}
+
+.p4-install-reveal {
+    position: absolute;
+    right: 4px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 34px;
+    height: 30px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--text-3);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.p4-install-reveal:hover {
+    background: var(--surface-3);
+    color: var(--text);
+}
+
+.p4-install-reveal .p4-install-eye-off,
+.p4-install-reveal[aria-pressed="true"] .p4-install-eye {
+    display: none;
+}
+
+.p4-install-reveal[aria-pressed="true"] .p4-install-eye-off {
+    display: block;
+}
+
+/* Lancement */
+.p4-install-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.p4-install-actions .p4-callout {
+    flex: 1 1 360px;
+}
+
+.p4-install-submit {
+    min-width: 200px;
+    height: 46px;
+    margin-left: auto;
+    font-size: 15px;
+    border-radius: var(--radius);
+}
+
+.p4-install-submit-busy,
+.p4-install-busy .p4-install-submit-label {
+    display: none;
+}
+
+.p4-install-busy .p4-install-submit-busy {
+    display: inline;
+}
+
+.p4-install-foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 6px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+    font-size: 11.5px;
+    color: var(--text-3);
+}
+
+.p4-install-foot a {
+    color: var(--text-2);
+}
+
+/* Tablette et téléphone : visuel en bandeau au-dessus des rubriques */
+@media (max-width: 1023px) {
+    .p4-install {
+        grid-template-columns: 1fr;
+    }
+
+    .p4-install-visual {
+        position: relative;
+        height: auto;
+        gap: 20px;
+        padding: 24px 22px 26px;
+    }
+
+    .p4-install-tagline {
+        margin-top: 0;
+    }
+
+    .p4-install-prereq ul {
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+    }
+
+    .p4-install-panel {
+        padding: 24px 16px 20px;
+    }
+}
+
+@media (max-width: 599px) {
+    .p4-install-head h1 {
+        font-size: 23px;
+    }
+
+    .p4-install-submit {
+        width: 100%;
+        margin-left: 0;
+    }
 }

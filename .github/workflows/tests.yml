@@ -1,0 +1,151 @@
+# Suite de tests de Ploopi, sur chaque version de PHP prise en charge (8.1 à 8.5).
+#
+# tests/instance.sh monte une instance jetable (base dédiée, installation par
+# l'assistant, serveur PHP intégré) et lance toutes les suites ; l'étape échoue au
+# moindre KO. Voir tests/README.md.
+#
+# La base est un service MariaDB : il voit arriver les connexions depuis le réseau des
+# conteneurs, d'où PLOOPI_TEST_DB_USER_HOSTS, qui ouvre le compte de test à tout hôte.
+
+name: Tests
+
+# Déclenchement manuel uniquement (onglet Actions → Tests → Run workflow)
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Un nouveau lancement sur la même branche annule le passage en cours, devenu sans objet
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  suite:
+    name: PHP ${{ matrix.php }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+
+    strategy:
+      # Une version en échec n'interrompt pas les autres : c'est la comparaison qui renseigne
+      fail-fast: false
+      # Pas de PHP 8.0 : toutes les versions d'aws/aws-sdk-php qui l'acceptent (<= 3.371.3)
+      # sont visées par un avis de sécurité élevé (PKSA-4t1p-xpk2-nsss), et Composer
+      # refuse de les installer. Les versions corrigées exigent PHP 8.1.
+      matrix:
+        php: ['8.1', '8.2', '8.3', '8.4', '8.5']
+
+    services:
+      mariadb:
+        image: mariadb:10.11
+        env:
+          MARIADB_ROOT_PASSWORD: root
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="healthcheck.sh --connect --innodb_initialized"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=20
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: PHP ${{ matrix.php }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: mysqli, gd, zip, curl, xml, mbstring, openssl
+          coverage: none
+
+      - name: Cache Composer
+        uses: actions/cache@v5
+        with:
+          path: ~/.cache/composer
+          key: composer-${{ hashFiles('composer.lock') }}
+          restore-keys: composer-
+
+      # composer.lock est versionné, établi sur PHP 8.1 (config.platform.php) :
+      # l'installation est identique sur toutes les versions de PHP de la matrice
+      - name: Dépendances
+        run: composer install --no-interaction --no-progress --ignore-platform-req=ext-memcached
+
+      # up puis run plutôt que test : test démonte l'instance, journal du serveur compris,
+      # dont on a besoin en cas d'échec. Le runner est jetable, rien à démonter.
+      - name: Instance de test
+        env:
+          PLOOPI_TEST_DB_ADMIN: root
+          PLOOPI_TEST_DB_ADMINPWD: root
+          PLOOPI_TEST_DB_HOST: 127.0.0.1
+          PLOOPI_TEST_DB_USER_HOSTS: localhost 127.0.0.1 %
+        run: tests/instance.sh up
+
+      - name: Suite complète
+        env:
+          PLOOPI_TEST_DB_ADMIN: root
+          PLOOPI_TEST_DB_ADMINPWD: root
+          PLOOPI_TEST_DB_HOST: 127.0.0.1
+        run: tests/instance.sh run
+
+      # En cas d'échec, les journaux du serveur et de Ploopi : à lire avant d'interpréter
+      - name: Journaux
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: journaux-php${{ matrix.php }}
+          path: |
+            data/instance_tests.log
+            /tmp/ploopi_error.log
+          if-no-files-found: ignore
+
+  # composer audit signale tout nouvel avis de sécurité sur les dépendances
+  # verrouillées par composer.lock : tout avis fait échouer la construction (aucun
+  # n'est accepté depuis le remplacement de CKEditor 4 par TinyMCE, décision D2).
+  audit:
+    name: Composer audit
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          coverage: none
+      # --abandoned=ignore : les paquets abandonnés sont une liste connue (suite
+      # au changelog de chaque dépendance), ce job ne vise que les avis de sécurité.
+      - name: Audit des dépendances
+        run: composer audit --locked --no-interaction --abandoned=ignore
+
+  # PHPCompatibility en avertissement d'abord (feuille de route, lot 9) : le job
+  # ne fait pas échouer la construction, il signale.
+  compatibilite:
+    name: PHPCompatibility 8.1-8.5
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: mysqli, gd, zip, curl, xml, mbstring, openssl
+          coverage: none
+      # Outil hors du dépôt (feuille de route §5) : le plugin dealerdirect configure
+      # installed_paths à l'installation, aucune étape supplémentaire n'est requise
+      - name: Outil (hors du dépôt)
+        run: |
+          mkdir -p /tmp/compat && cd /tmp/compat
+          echo '{}' > composer.json
+          composer config allow-plugins.dealerdirect/phpcodesniffer-composer-installer true
+          composer require phpcompatibility/php-compatibility:^10@dev squizlabs/php_codesniffer:^4.0.2 \
+            --no-interaction --no-progress --with-all-dependencies \
+            --no-security-blocking
+      # Lot 9 : avertissement d'abord. Les deux erreurs du socle sont corrigées :
+      # les ERREURS font échouer le job (régression de compatibilité), les
+      # avertissements restent signalés sans faire échouer.
+      - name: Analyse des sources
+        run: |
+          /tmp/compat/vendor/bin/phpcs --standard=PHPCompatibility --runtime-set testVersion 8.1-8.5 \
+            --extensions=php --report=summary include install modules lib config || true
+          /tmp/compat/vendor/bin/phpcs --standard=PHPCompatibility --runtime-set testVersion 8.1-8.5 \
+            --extensions=php --warning-severity=0 --report=summary include install modules lib config

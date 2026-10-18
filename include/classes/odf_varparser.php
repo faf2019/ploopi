@@ -126,11 +126,10 @@ class odf_varparser
         // resultat du traitement apres le "parsage"
         $this->parsed_data = '';
 
-        xml_set_object($this->xml_parser, $this);
         xml_parser_set_option($this->xml_parser, XML_OPTION_CASE_FOLDING, 0);
 
-        xml_set_element_handler($this->xml_parser, '_tag_open', '_tag_close');
-        xml_set_character_data_handler($this->xml_parser, '_cdata');
+        xml_set_element_handler($this->xml_parser, array($this, '_tag_open'), array($this, '_tag_close'));
+        xml_set_character_data_handler($this->xml_parser, array($this, '_cdata'));
     }
 
     /**

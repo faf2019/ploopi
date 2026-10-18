@@ -1,0 +1,420 @@
+/*
+    Copyright (c) 2007-2009 Ovensia
+    Contributors hold Copyright (c) to their code submissions.
+
+    This file is part of Ploopi.
+
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
+/**
+ * Choix d'une date (include/op.php, calendar_open) : grille de 8 colonnes de 30 px
+ * (semaine + 7 jours), flèches du sprite, jour choisi plein, aujourd'hui cerclé
+ */
+/* Le planning (ploopi\calendar) porte aussi l'identifiant « calendar » : règles limitées au
+   choix d'une date (data-ploopi-calendar-field), sinon le planning prenait 240 px, centré */
+#calendar[data-ploopi-calendar-field] {
+    width:240px;
+    margin:4px auto;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    user-select: none;
+}
+
+/* flow-root plutôt qu'overflow:auto : pas de barre de défilement vide sous le mois */
+.calendar_row {
+    clear:both;
+    display:flow-root;
+    overflow:visible;
+}
+
+.calendar_week {
+    float:left;
+    width:30px;
+    height:30px;
+    line-height:30px;
+    text-align:center;
+    color:var(--p3-text-muted);
+    font-size:0.85em;
+}
+
+.calendar_day {
+    float:left;
+    width:30px;
+    height:30px;
+    line-height:30px;
+    text-align:center;
+}
+
+/* Initiales des jours */
+#calendar[data-ploopi-calendar-field] > .calendar_row:nth-child(2) .calendar_day {
+    color:var(--p3-text-muted);
+    font-size:0.85em;
+    font-weight:600;
+}
+
+.calendar_day a {
+    display:block;
+    margin:1px;
+    width:28px;
+    height:28px;
+    line-height:28px;
+    border-radius:var(--p3-radius-sm);
+    color:var(--p3-text);
+    text-decoration:none;
+}
+
+.calendar_day a:hover {
+    background-color:var(--p3-primary-soft);
+    text-decoration:none;
+}
+
+.calendar_day a.calendar_day_today {
+    box-shadow:inset 0 0 0 1px var(--p3-primary);
+    font-weight:600;
+}
+
+.calendar_day a.calendar_day_selected,
+.calendar_day a.calendar_day_selected:hover {
+    background-color:var(--p3-primary);
+    color:var(--on-primary);
+    font-weight:600;
+}
+
+.calendar_day a.calendar_outmonth {
+    color:var(--p3-text-muted);
+}
+
+.calendar_arrow {
+    float:left;
+    display:flex;
+    align-items:center;
+    gap:2px;
+    height:30px;
+}
+
+.calendar_nav {
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:26px;
+    height:26px;
+    border-radius:var(--p3-radius-sm);
+    color:var(--p3-text-muted);
+}
+
+.calendar_nav:hover {
+    background-color:var(--p3-surface-2);
+    color:var(--p3-text);
+    text-decoration:none;
+}
+
+.calendar_nav .p4-icon {
+    width:16px;
+    height:16px;
+}
+
+.calendar_month {
+    height:30px;
+    line-height:30px;
+    text-align:center;
+    font-weight:600;
+    white-space:nowrap;
+}
+
+/* Aujourd'hui / Fermer (hauteur écrite en ligne pour les gabarits historiques) */
+.calendar_row.calendar_foot {
+    height:auto !important;
+    margin-top:6px;
+    padding-top:6px;
+    border-top:1px solid var(--p3-border);
+}
+
+.calendar_row.calendar_foot a {
+    font-weight:600;
+}
+
+/**
+ * Styles liés à la class calendar
+ */
+
+.ploopi_calendar_m {
+    color:var(--p3-text);
+}
+
+.ploopi_calendar_m div.month_inner {
+    border-width: 1px 1px 0 0;
+    border-color:var(--p3-border-strong);
+    border-style:solid;
+    background:var(--p3-border-strong);
+}
+
+.ploopi_calendar_m div.row {
+    clear:both;
+}
+
+.ploopi_calendar_m div.day_header {
+    float:left;
+    position:relative;
+    margin:0 0 1px 1px;
+    display:inline; /* IE hack pour margin */
+    background-color:color-mix(in srgb, var(--p3-primary) 22%, var(--p3-surface));
+}
+
+.ploopi_calendar_m div.day_header div.day_header_label {
+    padding:2px;
+    text-align:center;
+    font-size:0.9em;
+    font-weight:bold;
+}
+
+.ploopi_calendar_m div.day {
+    float:left;
+    position:relative;
+    background:var(--p3-surface-2);
+    margin:0 0 1px 1px;
+    display:inline; /* IE hack pour margin */
+    overflow:hidden;
+}
+
+.ploopi_calendar_m div.day_weekend {
+    background:color-mix(in srgb, #2c8a8a 12%, var(--p3-surface-2));
+}
+
+.ploopi_calendar_m div.day_holiday {
+    background:color-mix(in srgb, #b42333 10%, var(--p3-surface-2));
+}
+
+.ploopi_calendar_m div.day div.day_num {
+    padding:2px;
+    background-color:color-mix(in srgb, var(--p3-primary) 16%, var(--p3-surface));
+    text-align:right;
+    font-size:0.9em;
+}
+
+.ploopi_calendar_m div.day div.day_num_grayed {
+    padding:2px;
+    background-color:color-mix(in srgb, var(--p3-primary) 16%, var(--p3-surface));
+    text-align:right;
+    font-size:0.9em;
+    color:var(--p3-text-muted);
+}
+
+.ploopi_calendar_m div.day_weekend div.day_num {
+    background:color-mix(in srgb, #2c8a8a 25%, var(--p3-surface-2));
+}
+
+.ploopi_calendar_m div.day_holiday div.day_num {
+    background:color-mix(in srgb, #b42333 22%, var(--p3-surface-2));
+}
+
+.ploopi_calendar_m div.day_weekend div.day_num_grayed {
+    background:color-mix(in srgb, #2c8a8a 25%, var(--p3-surface-2));
+}
+
+.ploopi_calendar_m div.day_holiday div.day_num_grayed {
+    background:color-mix(in srgb, #b42333 22%, var(--p3-surface-2));
+}
+
+.ploopi_calendar_m div.week_header {
+    float:left;
+    position:relative;
+    background:var(--p3-surface-2);
+    margin:0 0 1px 1px;
+    display:inline; /* IE hack pour margin */
+    background-color:var(--p3-surface-3);
+}
+
+.ploopi_calendar_m div.week_header div.week_header_num {
+    padding:2px;
+    text-align:right;
+    font-size:14px;
+    font-weight:bold;
+    color:var(--p3-text-muted);
+}
+
+.ploopi_calendar_m div.day .event {
+    display:block;
+    margin:1px;
+    background-color:color-mix(in srgb, var(--p3-primary) 22%, var(--p3-surface));
+    text-decoration:none;
+    font-size:0.9em;
+}
+
+.ploopi_calendar div.day .event div.event_inner {
+    padding:1px 2px;
+}
+
+.ploopi_calendar_m div.day .event div.event_inner span.event_h {
+    font-weight:bold;
+    margin-right:2px;
+}
+
+.ploopi_calendar_d div.row {
+    clear:both;
+}
+
+.ploopi_calendar_d div.days_inner {
+    border-width: 1px 1px 0 0;
+    border-color:var(--p3-border-strong);
+    border-style:solid;
+    background:var(--p3-border-strong);
+}
+
+.ploopi_calendar_d div.day {
+    float:left;
+    position:relative;
+    background:var(--p3-surface-2);
+    margin:0 0 1px 1px;
+    display:inline; /* IE hack pour margin */
+}
+
+.ploopi_calendar_d div.day_weekend {
+    background:color-mix(in srgb, #2c8a8a 12%, var(--p3-surface-2));
+}
+
+.ploopi_calendar_d div.day_holiday {
+    background:color-mix(in srgb, #b42333 10%, var(--p3-surface-2));
+}
+
+.ploopi_calendar_d div.channel_header {
+    float:left;
+    position:relative;
+    margin:0 0 1px 1px;
+    display:inline; /* IE hack pour margin */
+    background-color:color-mix(in srgb, var(--p3-primary) 16%, var(--p3-surface));
+}
+
+.ploopi_calendar_d div.channel_header .channel {
+    display:block;
+    position:absolute;
+    text-align:center;
+    overflow:hidden;
+}
+
+.ploopi_calendar_d div.day_header {
+    float:left;
+    position:relative;
+    margin:0 0 1px 1px;
+    display:inline; /* IE hack pour margin */
+    background-color:color-mix(in srgb, var(--p3-primary) 22%, var(--p3-surface));
+}
+
+.ploopi_calendar_d div.day_header div.day_header_label {
+    padding:2px;
+    text-align:center;
+    font-size:0.9em;
+    font-weight:bold;
+}
+
+.ploopi_calendar_d div.day_header_weekend {
+    background-color:color-mix(in srgb, #2c8a8a 30%, var(--p3-surface-2));
+}
+
+.ploopi_calendar_d div.day_header_holiday {
+    background-color:color-mix(in srgb, #b42333 28%, var(--p3-surface-2));
+}
+
+.ploopi_calendar_d div.hours {
+    float:left;
+    position:relative;
+    background-color:var(--p3-surface-3);
+    margin:0 0 1px 1px;
+    display:inline; /* IE hack pour margin */
+}
+
+.ploopi_calendar_d div.hours div.hour_header {
+}
+
+.ploopi_calendar_d div.hours div.hour_header div.hour_header_num {
+    text-align:right;
+    font-size:14px;
+    font-weight:bold;
+    color:var(--p3-text-muted);
+    padding:2px;
+}
+
+.ploopi_calendar_d div.day div.tick {
+    position:absolute;
+    border-top:1px solid var(--p3-border);
+    z-index:100;
+}
+
+.ploopi_calendar_d div.day div.tick-half {
+    position:absolute;
+    border-top:1px solid var(--p3-border);
+    z-index:100;
+    opacity:0.5;
+}
+
+.ploopi_calendar_d div.hours div.tick {
+    position:absolute;
+    border-top:1px solid var(--p3-border-strong);
+    z-index:100;
+}
+
+.ploopi_calendar_d div.day .channel {
+    display:block;
+    position:absolute;
+}
+
+.ploopi_calendar_d div.day .channelborder {
+    display:block;
+    position:absolute;
+    left:-1px;
+    width:1px;
+    border-left:1px dotted var(--p3-border-strong);
+}
+
+.ploopi_calendar_d div.day .event {
+    display:block;
+    position:absolute;
+    background-color:color-mix(in srgb, var(--p3-primary) 22%, var(--p3-surface));
+    text-decoration:none;
+    font-size:0.9em;
+    color:#fff;
+    z-index:1000;
+    overflow:hidden;
+}
+
+.ploopi_calendar_d div.day .event div.event_title {
+    border-bottom:1px solid var(--p3-border-strong);
+    font-size:0.9em;
+    font-weight:bold;
+    background-color:color-mix(in srgb, var(--p3-text) 35%, var(--p3-surface));
+    padding:0 2px;
+}
+
+.ploopi_calendar_d div.day .event div.event_title img {
+    margin:2px;
+}
+
+.ploopi_calendar_d div.day .event a.event_inner {
+    display:block;
+    overflow:hidden;
+    text-decoration:none;
+}
+
+.hoverActive {
+    border:1px solid blue;
+}
+
+/* Événement coloré (couleur de la ressource, de l'état d'une réservation) : teintes
+   claires choisies pour un texte sombre, quel que soit le thème. Le fond blanc par défaut
+   suit le thème (base_9_enligne.css) : son texte aussi */
+.ploopi_calendar_d div.day .event[style*="background-color:"]:not([style*="background-color:;"]):not([style*="background-color:#ffffff" i]):not([style*="background-color:#fff;" i]) a.event_inner,
+.ploopi_calendar_m div.day .event div.event_inner[style*="background-color:"]:not([style*="background-color:;"]):not([style*="background-color:#ffffff" i]):not([style*="background-color:#fff;" i]) {
+    color:#15232a;
+}

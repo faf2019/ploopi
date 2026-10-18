@@ -27,7 +27,7 @@
  * @subpackage skin
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author StÃ©phane Escaich
  *
  * @see skin_common
  */
@@ -40,7 +40,7 @@
  * @subpackage skin
  * @copyright Ovensia
  * @license GNU General Public License (GPL)
- * @author Stéphane Escaich
+ * @author StÃ©phane Escaich
  *
  * @see skin_common
  */

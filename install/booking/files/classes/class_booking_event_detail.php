@@ -91,7 +91,7 @@ class booking_event_detail extends ploopi\data_object
     /**
      * Détermine si un détail d'événement est valide, c'est à dire qu'il n'y a pas de collision avec un détail déjà validé
      */
-    public function isvalid(booking_event $objEvent = null) {
+    public function isvalid(?booking_event $objEvent = null) {
         if (empty($objEvent)) {
             $objEvent = new booking_event();
             if (!$objEvent->open($this->fields['id_event'])) return false;

@@ -207,7 +207,7 @@ abstract class form_element
         $strDataSet = '';
         if (!empty($this->_arrOptions['dataset']) && is_array($this->_arrOptions['dataset'])) {
             foreach($this->_arrOptions['dataset'] as $k => $v) {
-                $strDataSet .= self::_getProperty('data-'.str::tourl($k), $v);
+                $strDataSet .= self::_getProperty('data-'.str::tourl($k), form::htmlentities((string) $v));
             }
         }
 
@@ -218,7 +218,9 @@ abstract class form_element
             self::_getProperty('readonly',  !empty($arrParentOptions['readonly']) || !empty($this->_arrOptions['readonly']) ? 'readonly' : null).
             self::_getProperty('disabled',  !empty($arrParentOptions['disabled']) || !empty($this->_arrOptions['disabled']) ? 'disabled' : null).
             self::_getProperty('multiple',  !empty($arrParentOptions['multiple']) || !empty($this->_arrOptions['multiple']) ? 'multiple' : null).
-            //self::_getProperty('required',  isset($this->_arrOptions['required']) && $this->_arrOptions['required'] ? 'required' : null).
+            // Champ obligatoire annoncé aux technologies d'assistance ; pas d'attribut required,
+            // qui déclencherait la validation native du navigateur à la place de celle de Ploopi
+            self::_getProperty('aria-required',  !empty($this->_arrOptions['required']) && !preg_match('/^(input:(hidden|radio|checkbox|button|submit|reset|img)|option|text)$/', $this->_strType) ? 'true' : null).
             self::_getProperty('autofocus',  $this->_arrOptions['autofocus'] ? 'autofocus' : null).
             self::_getProperty('autocomplete',  isset($this->_arrOptions['autocomplete']) && !$this->_arrOptions['autocomplete'] ? 'off' : null).
             self::_getProperty('autocorrect',  isset($this->_arrOptions['autocorrect']) && !$this->_arrOptions['autocorrect'] ? 'off' : null).
@@ -243,7 +245,7 @@ abstract class form_element
      */
     protected function __construct($strType, $strLabel, $arrValues, $strName = null, $strId = null, $arrOptions = null)
     {
-        if (!is_array($arrValues)) trigger_error('Tableau attendu pour $arrValues', E_USER_ERROR);
+        if (!is_array($arrValues)) throw new \ErrorException('Tableau attendu pour $arrValues');
 
         $this->setType($strType);
         $this->_arrValues = $arrValues;
@@ -271,7 +273,7 @@ abstract class form_element
      */
     public function setType($strType) {
         if (!in_array($strType, self::$_arrTypes)) {
-            trigger_error('Ce type d\'élément n\'existe pas', E_USER_ERROR);
+            throw new \ErrorException('Ce type d\'élément n\'existe pas');
             return false;
         }
         else {

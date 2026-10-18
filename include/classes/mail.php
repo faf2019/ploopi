@@ -53,6 +53,38 @@ abstract class mail
      * @return boolean true si le mail est envoyé.
      */
 
+    /**
+     * Domaine de l'émetteur (en-tête X-Sender) : hôte de la requête, sinon nom du
+     * serveur web, sinon nom de la machine (envoi depuis la ligne de commande :
+     * tâche cron, cli, où $_SERVER n'a ni HTTP_HOST ni SERVER_NAME)
+     *
+     * @return string domaine
+     */
+    private static function _domain()
+    {
+        if (!empty($_SERVER['HTTP_HOST'])) return $_SERVER['HTTP_HOST'];
+        if (!empty($_SERVER['SERVER_NAME'])) return $_SERVER['SERVER_NAME'];
+
+        $strHost = function_exists('gethostname') ? gethostname() : '';
+        return empty($strHost) ? 'localhost' : $strHost;
+    }
+
+    /**
+     * Organisation (en-tête Organization) : libellé de l'espace de travail courant,
+     * sinon le domaine (pas de session en ligne de commande)
+     *
+     * @param string $strDefault valeur à défaut d'espace courant
+     * @return string organisation
+     */
+    private static function _organization($strDefault)
+    {
+        if (empty($_SESSION['ploopi']['workspaceid'])) return $strDefault;
+
+        $intWorkspaceId = $_SESSION['ploopi']['workspaceid'];
+
+        return empty($_SESSION['ploopi']['workspaces'][$intWorkspaceId]['label']) ? $strDefault : $_SESSION['ploopi']['workspaces'][$intWorkspaceId]['label'];
+    }
+
     public static function send($from, $to, $subject, $message, $cc = null, $bcc = null, $replyto = null, $files = null, $html = true)
     {
         // from : Array('name','address')
@@ -162,8 +194,8 @@ abstract class mail
         // add "bcc" to headers
         if (!empty($str_bcc)) $headers .= "Bcc: {$str_bcc} {$crlf}";
 
-        $domain = mb_encode_mimeheader(empty($_SERVER['HTTP_HOST']) ? $_SERVER['SERVER_NAME'] : $_SERVER['HTTP_HOST']);
-        $organization = mb_encode_mimeheader(isset($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['label']) ? $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['label'] : $domain);
+        $domain = mb_encode_mimeheader(self::_domain());
+        $organization = mb_encode_mimeheader(self::_organization(self::_domain()));
 
         $headers .= "Date: ".date('r')."{$crlf}";
         $headers .= "X-Priority: 1{$crlf}";
@@ -345,9 +377,9 @@ abstract class mail
 
         $arrHeaders['Date'] = date('r');
         $arrHeaders['X-Priority'] = 1;
-        $arrHeaders['X-Sender'] = mb_encode_mimeheader(empty($_SERVER['HTTP_HOST']) ? (empty($_SERVER['SERVER_NAME']) ? 'cli' : $_SERVER['SERVER_NAME']) : $_SERVER['HTTP_HOST']);
+        $arrHeaders['X-Sender'] = mb_encode_mimeheader(self::_domain());
         $arrHeaders['X-Mailer'] = 'PHP/Ploopi';
-        $arrHeaders['Organization'] = mb_encode_mimeheader(isset($_SESSION) && isset($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['label']) ? $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['label'] : $arrHeaders['X-Sender']);
+        $arrHeaders['Organization'] = mb_encode_mimeheader(self::_organization(self::_domain()));
 
         $arrMimeParams = array(
             'text_encoding' => '7bit',

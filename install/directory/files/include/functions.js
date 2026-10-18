@@ -47,17 +47,14 @@ function directory_list_validate(form)
 
 function directory_checklist(id_list)
 {
-    var ck = $('directory_id_list'+id_list);
+    var ck = document.getElementById('directory_id_list'+id_list);
     ck.checked = !ck.checked;
 
     if (id_list>0 && jQuery('#directory_id_list0')[0] && jQuery('#directory_id_list0')[0].checked) jQuery('#directory_id_list0')[0].checked = false;
 
     if (id_list == 0 && jQuery('#directory_id_list0')[0].checked)
     {
-        for (i=0;i<$$('input.directory_id_list').length;i++)
-        {
-            $$('input.directory_id_list')[i].checked = false;
-        }
+        jQuery('input.directory_id_list').prop('checked', false);
     }
 }
 

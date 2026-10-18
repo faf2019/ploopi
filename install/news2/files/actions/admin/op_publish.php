@@ -10,7 +10,8 @@ if (!empty($_GET['id'])
 		&& ploopi\acl::isactionallowed(news2\tools::ACTION_PUBLISH)
 	) {
 		$news = new news2\news2();
-		if($news->open($_GET['id'])) {
+		// L'identifiant doit désigner une news de l'instance courante
+		if($news->open($_GET['id']) && $news->fields['id_module'] == $this->getModuleId()) {
 			if ($news->fields['published']) {
 				$news->fields['published'] = 0;
 			} else {

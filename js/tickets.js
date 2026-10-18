@@ -22,6 +22,21 @@
 ploopi.tickets = {};
 
 /**
+ * Largeur de la fenêtre de composition : plus large sous ploopi4 (destinataires en pastilles)
+ */
+ploopi.tickets.popupwidth = function() {
+    return (document.body && document.body.classList.contains('p4-body')) ? 640 : 550;
+};
+
+/**
+ * Sous ploopi4, la fenêtre s'ouvre centrée en haut de la page plutôt qu'au clic : ouverte
+ * depuis le bas d'une liste, elle sortait de l'écran une fois l'éditeur chargé
+ */
+ploopi.tickets.popupevent = function(event) {
+    return (document.body && document.body.classList.contains('p4-body')) ? null : event;
+};
+
+/**
  * Ouverture d'un popup pour envoyer un nouveau message
  */
 
@@ -29,16 +44,17 @@ ploopi.tickets = {};
 ploopi.tickets.create = function(event, id_object, id_record, object_label, id_user, reload, x, y) {
     var data = '';
 
-    if (typeof(object_label) != 'undefined' && object_label != null) data += '&ploopi_tickets_object_label='+object_label;
-    if (typeof(id_object) != 'undefined' && id_object != null) data += '&ploopi_tickets_id_object='+id_object;
-    if (typeof(id_record) != 'undefined' && id_record != null) data += '&ploopi_tickets_id_record='+id_record;
-    if (typeof(reload) != 'undefined' && reload != null) data += '&ploopi_tickets_reload='+reload;
-    if (typeof(id_user) != 'undefined' && id_user != null) data += '&ploopi_tickets_id_user='+id_user;
+    // Valeurs encodées : un libellé d'objet (nom de document…) peut contenir & ou #
+    if (typeof(object_label) != 'undefined' && object_label != null) data += '&ploopi_tickets_object_label='+encodeURIComponent(object_label);
+    if (typeof(id_object) != 'undefined' && id_object != null) data += '&ploopi_tickets_id_object='+encodeURIComponent(id_object);
+    if (typeof(id_record) != 'undefined' && id_record != null) data += '&ploopi_tickets_id_record='+encodeURIComponent(id_record);
+    if (typeof(reload) != 'undefined' && reload != null) data += '&ploopi_tickets_reload='+encodeURIComponent(reload);
+    if (typeof(id_user) != 'undefined' && id_user != null) data += '&ploopi_tickets_id_user='+encodeURIComponent(id_user);
 
     if (typeof(x) == 'undefined' || x == null) x = 0;
     if (typeof(y) == 'undefined' || y == null) y = 0;
 
-    ploopi.popup.show('', 550, event, true, 'system_popupticket', x, y);
+    ploopi.popup.show('', ploopi.tickets.popupwidth(), ploopi.tickets.popupevent(event), true, 'system_popupticket', x, y);
     ploopi.xhr.ajaxloader('system_popupticket');
 
     var request = jQuery.ajax({
@@ -49,16 +65,9 @@ ploopi.tickets.create = function(event, id_object, id_record, object_label, id_u
         contentType: 'application/x-www-form-urlencoded'
     });
 
+    // Le champ du message porte data-ploopi-editor : l'éditeur se crée seul (js/editor.js)
     request.done(function(html) {
-        var script = document.createElement('script');
-        script.onload = function () {
-            jQuery('#system_popupticket').html(html);
-            CKEDITOR.replace( 'fck_ticket_message', {
-                customConfig: _PLOOPI_BASEPATH+'/js/ckeditor/ck_config.js'
-            });
-        };
-        script.src = './vendor/ckeditor/ckeditor/ckeditor.js';
-        document.head.appendChild(script);
+        jQuery('#system_popupticket').html(html);
     });
 
 };
@@ -75,7 +84,7 @@ ploopi.tickets.open = function(event, query) {
     if (typeof(x) == 'undefined' || x == null) x = 0;
     if (typeof(y) == 'undefined' || y == null) y = 0;
 
-    ploopi.popup.show('', 550, event, true, 'system_popupticket', x, y);
+    ploopi.popup.show('', ploopi.tickets.popupwidth(), ploopi.tickets.popupevent(event), true, 'system_popupticket', x, y);
     ploopi.xhr.ajaxloader('system_popupticket');
 
     var request = jQuery.ajax({
@@ -86,16 +95,9 @@ ploopi.tickets.open = function(event, query) {
         contentType: 'application/x-www-form-urlencoded'
     });
 
+    // Le champ du message porte data-ploopi-editor : l'éditeur se crée seul (js/editor.js)
     request.done(function(html) {
-        var script = document.createElement('script');
-        script.onload = function () {
-            jQuery('#system_popupticket').html(html);
-            CKEDITOR.replace( 'fck_ticket_message', {
-                customConfig: _PLOOPI_BASEPATH+'/js/ckeditor/ck_config.js'
-            });
-        };
-        script.src = './vendor/ckeditor/ckeditor/ckeditor.js';
-        document.head.appendChild(script);
+        jQuery('#system_popupticket').html(html);
     });
 
 };
@@ -103,6 +105,11 @@ ploopi.tickets.open = function(event, query) {
 
 /**
  * Rafraichissement de la zone indiquant le nombre de tickets non lus + alerte sur nouveau ticket
+ *
+ * index-quick.php n'exécute les opérations du socle qu'avec un jeton valide : la requête
+ * transporte celui de la page (_PLOOPI_ENV). Le nombre est écrit dans #tpl_ploopi_tickets_new
+ * (gabarits du backoffice) et diffusé par l'événement « ploopi_tickets_count » sur document,
+ * pour les gabarits qui en tirent un affichage (ploopi3 : pastille).
  */
 
 // ploopi.tickets.refresh
@@ -115,32 +122,28 @@ ploopi.tickets.refresh = function(lastnewticket, timeout, str_left, str_right) {
     if (typeof(str_right) == 'undefined') str_right = '';
 
     (function worker() {
-        jQuery.get('index-quick.php?ploopi_op=tickets_getnum', function(data, textStatus, request) {
-            console.log(data);
-            console.log(request.getResponseHeader('Ploopi-Connected'));
+        jQuery.get('index-quick.php', { 'ploopi_op': 'tickets_getnum', 'ploopi_env': _PLOOPI_ENV }, function(data, textStatus, request) {
 
-            if (request.getResponseHeader('Ploopi-Connected') == '1') {
+            // Session terminée : on cesse d'interroger le serveur
+            if (request.getResponseHeader('Ploopi-Connected') != '1') return;
 
-                var res = data.split(',');
-                if (res.length == 2) {
-                    var nb = parseInt(res[0],10);
-                    var last = parseInt(res[1],10);
+            var res = String(data).split(',');
+            if (res.length == 2) {
+                var nb = parseInt(res[0],10);
+                var last = parseInt(res[1],10);
 
-                    $('#tpl_ploopi.tickets.create').html(str_left+nb+str_right);
+                jQuery('#tpl_ploopi_tickets_new').html(str_left+nb+str_right);
+                jQuery(document).trigger('ploopi_tickets_count', [nb]);
 
-                    if (last > intPloopiLastNewTicket && !boolAlert)
-                    {
-                        ploopi.tickets.alert();
-                        boolAlert = true;
-                    }
-                    intPloopiLastNewTicket = last;
+                if (last > intPloopiLastNewTicket && !boolAlert)
+                {
+                    ploopi.tickets.alert();
+                    boolAlert = true;
                 }
+                intPloopiLastNewTicket = last;
+            }
 
-                setTimeout(worker, timeout*1000);
-            }
-            else {
-                console.log('Not connected');
-            }
+            setTimeout(worker, timeout*1000);
         });
     })();
 };
@@ -206,7 +209,7 @@ ploopi.tickets.selectusers_keypress = function(e)
     switch(e.keyCode)
     {
         case 9: case 13:
-            ploopi_tickets_selectusers_prevent(e);
+            ploopi.tickets.selectusers_prevent(e);
             ploopi.event.dispatch_onclick('ploopi_ticket_search_btn');
         break;
 
@@ -245,3 +248,112 @@ function ploopi_ticket_validateTo(field_label, field_object)
     return (ok);
 
 }
+
+/**
+ * Fenêtre de composition de ploopi4 (include/op/tickets.php, ticket::selectusers) :
+ * comportement porté par les attributs data-p4-ticket-*, délégué au document, sans
+ * gestionnaire en ligne.
+ * - data-p4-ticket-search : recherche de destinataires à la frappe (type : data-p4-ticket-type)
+ * - data-p4-ticket-add / data-p4-ticket-id : ajoute un utilisateur ou les membres d'un groupe
+ * - data-p4-ticket-remove : retire un destinataire
+ * - data-p4-ticket-cancel : ferme la fenêtre
+ * - data-p4-ticket-form : contrôle du titre et des destinataires avant l'envoi
+ */
+(function() {
+    var timer = null;
+    var seq = 0;
+
+    function op(query, dest) {
+        var url = 'admin-light.php?ploopi_env=' + encodeURIComponent(_PLOOPI_ENV) + '&' + query;
+        return fetch(url, { credentials: 'same-origin', cache: 'no-store' })
+            .then(function(r) { return r.text(); })
+            .then(function(html) { var el = document.getElementById(dest); if (el) el.innerHTML = html; });
+    }
+
+    function search(input) {
+        var n = ++seq;
+        var res = document.getElementById('div_ticket_search_result');
+        if (!res) return;
+        if (input.value.trim() === '') { res.innerHTML = ''; return; }
+        var body = new URLSearchParams();
+        body.set('ploopi_ticket_userfilter', input.value);
+        body.set('ploopi_ticket_typefilter', input.getAttribute('data-p4-ticket-type') || 'user');
+        body.set('ploopi_env', _PLOOPI_ENV);
+        fetch('admin-light.php?' + input.getAttribute('data-p4-ticket-url'), { method: 'POST', body: body, credentials: 'same-origin', cache: 'no-store' })
+            .then(function(r) { return r.text(); })
+            .then(function(html) { if (n === seq) res.innerHTML = html; });
+    }
+
+    function error(form, msg) {
+        var p = form.querySelector('.p4-ticket-error');
+        if (!p) { alert(msg); return; }
+        p.textContent = msg;
+        p.hidden = (msg === '');
+    }
+
+    document.addEventListener('input', function(e) {
+        var input = e.target;
+        if (!input.hasAttribute || !input.hasAttribute('data-p4-ticket-search')) return;
+        clearTimeout(timer);
+        timer = setTimeout(function() { search(input); }, 250);
+    });
+
+    document.addEventListener('keydown', function(e) {
+        var input = e.target;
+        if (e.key !== 'Enter' || !input.hasAttribute || !input.hasAttribute('data-p4-ticket-search')) return;
+        // Entrée lance la recherche, sans envoyer le message
+        e.preventDefault();
+        clearTimeout(timer);
+        search(input);
+    });
+
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest) return;
+        var btn = e.target.closest('button[data-p4-ticket-type], [data-p4-ticket-add], [data-p4-ticket-remove], [data-p4-ticket-cancel]');
+        if (!btn || !btn.closest('.p4-ticket-compose')) return;
+        e.preventDefault();
+
+        var form = btn.closest('form');
+        if (form && !btn.hasAttribute('data-p4-ticket-type')) error(form, '');
+
+        if (btn.hasAttribute('data-p4-ticket-cancel')) {
+            ploopi.popup.hide('system_popupticket');
+        }
+        else if (btn.hasAttribute('data-p4-ticket-type')) {
+            var input = document.getElementById('p4_ticket_search');
+            Array.prototype.forEach.call(btn.parentNode.querySelectorAll('[data-p4-ticket-type]'), function(b) {
+                b.setAttribute('aria-pressed', b === btn ? 'true' : 'false');
+            });
+            if (input) { input.setAttribute('data-p4-ticket-type', btn.getAttribute('data-p4-ticket-type')); input.focus(); search(input); }
+        }
+        else if (btn.hasAttribute('data-p4-ticket-add')) {
+            var param = btn.getAttribute('data-p4-ticket-add') === 'group' ? 'group_id' : 'user_id';
+            op('ploopi_op=tickets_select_user&' + param + '=' + encodeURIComponent(btn.getAttribute('data-p4-ticket-id')), 'div_ticket_users_selected');
+            btn.classList.add('p4-ticket-added');
+        }
+        else if (btn.hasAttribute('data-p4-ticket-remove')) {
+            op('ploopi_op=tickets_select_user&remove_user_id=' + encodeURIComponent(btn.getAttribute('data-p4-ticket-remove')), 'div_ticket_users_selected');
+        }
+    });
+
+    document.addEventListener('submit', function(e) {
+        var form = e.target;
+        if (!form.hasAttribute || !form.hasAttribute('data-p4-ticket-form')) return;
+        ploopi.editor.save();
+
+        if (form.elements.ticket_title.value.trim() === '') {
+            e.preventDefault();
+            error(form, 'Le titre est obligatoire.');
+            form.elements.ticket_title.focus();
+            return;
+        }
+        if (form.getAttribute('data-p4-ticket-form') === 'new' && (!form.elements.system_ticket_ctrl_user_to || form.elements.system_ticket_ctrl_user_to.value === '')) {
+            e.preventDefault();
+            error(form, 'Choisissez au moins un destinataire.');
+            var input = document.getElementById('p4_ticket_search');
+            if (input) input.focus();
+            return;
+        }
+        error(form, '');
+    }, true);
+})();

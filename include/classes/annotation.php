@@ -36,6 +36,13 @@ use ploopi;
 
 class annotation extends data_object
 {
+    /**
+     * Étiquettes, séparées par des espaces ou des virgules. null : save() ne touche pas
+     * aux étiquettes ; une chaîne (vide comprise) les remplace.
+     *
+     * @var string|null
+     */
+    public $tags = null;
 
     /**
      * Constructeur de la classe
@@ -60,7 +67,10 @@ class annotation extends data_object
 
         $id_annotation = parent::save();
 
-        $tags = array_unique(preg_split('/(,)|( )/', $this->tags, -1, PREG_SPLIT_NO_EMPTY));
+        if (is_null($this->tags)) return $id_annotation;
+
+        $tags = array_unique(preg_split('/[,\s]+/u', (string) $this->tags, -1, PREG_SPLIT_NO_EMPTY));
+        $arrIdTags = array();
 
         foreach($tags as $tag)
         {
@@ -80,6 +90,8 @@ class annotation extends data_object
             }
             else $id_tag = $row['id'];
 
+            $arrIdTags[] = (int) $id_tag;
+
             $annotation_tag = new annotation_tag();
             if (!$annotation_tag->open($id_annotation, $id_tag))
             {
@@ -88,6 +100,9 @@ class annotation extends data_object
                 $annotation_tag->save();
             }
         }
+
+        // Étiquettes retirées (modification)
+        $db->query("DELETE FROM ploopi_annotation_tag WHERE id_annotation = ".((int) $id_annotation).(empty($arrIdTags) ? '' : ' AND id_tag NOT IN ('.implode(',', $arrIdTags).')'));
 
         return($id_annotation);
     }
@@ -165,8 +180,11 @@ class annotation extends data_object
     {
         global $ploopi_annotation_private;
 
+        // Enregistrement pas encore créé (formulaire d'ajout) : rien à annoter
+        if ((string) $id_record === '') return;
+
         // generate annotation id
-        $id_annotation = md5("{$_SESSION['ploopi']['moduleid']}_{$id_object}_".addslashes($id_record));
+        $id_annotation = md5("{$_SESSION['ploopi']['moduleid']}_{$id_object}_".addslashes((string) $id_record));
 
         $_SESSION['annotation'][$id_annotation] =
             array(
@@ -178,6 +196,174 @@ class annotation extends data_object
         <div id="ploopiannotation_<?php echo $id_annotation; ?>">
         <?php annotation::display_refresh($id_annotation); ?>
         </div>
+        <?php
+    }
+
+    /**
+     * Annotations visibles d'un enregistrement (publiques, et privées de l'utilisateur), avec
+     * leurs étiquettes, des plus récentes aux plus anciennes
+     *
+     * @param int $id_object identifiant de l'objet
+     * @param string $id_record identifiant de l'enregistrement
+     * @return array [id => ['fields' => …, 'tags' => [id_tag => tag]]]
+     */
+
+    private static function getlist($id_object, $id_record)
+    {
+        $db = db::get();
+
+        $select =   "
+                    SELECT      a.*,
+                                u.firstname,
+                                u.lastname,
+                                u.login,
+                                t.id as idtag,
+                                t.tag
+                    FROM        ploopi_annotation a
+
+                    INNER JOIN  ploopi_user u ON a.id_user = u.id
+
+                    LEFT JOIN   ploopi_annotation_tag at ON a.id = at.id_annotation
+                    LEFT JOIN   ploopi_tag t ON t.id = at.id_tag
+
+                    WHERE       a.id_record = '".$db->addslashes($id_record)."'
+                    AND         a.id_object = ".((int) $id_object)."
+                    AND         a.id_module = ".((int) $_SESSION['ploopi']['moduleid'])."
+                    AND         (a.private = 0
+                    OR          (a.private = 1 AND a.id_user = ".((int) $_SESSION['ploopi']['userid'])."))
+                    ORDER BY    a.date_annotation DESC, a.id DESC
+                    ";
+
+        $rs_anno = $db->query($select);
+
+        $array_anno = array();
+        while ($fields = $db->fetchrow($rs_anno))
+        {
+            $array_anno[$fields['id']]['fields'] = $fields;
+            if (!is_null($fields['tag'])) $array_anno[$fields['id']]['tags'][$fields['idtag']] = $fields['tag'];
+        }
+
+        return $array_anno;
+    }
+
+    /**
+     * Bloc d'annotations du gabarit ploopi4 : liste en fil (auteur, date, étiquettes,
+     * confidentialité), formulaire d'ajout ; aucun gestionnaire en ligne
+     * (attributs data-p4-anno-*, délégation dans js/annotation.js)
+     *
+     * @param string $id_annotation identifiant du bloc
+     * @param int $id_object identifiant de l'objet
+     * @param string $id_record identifiant de l'enregistrement
+     * @param int $nbanno nombre d'annotations visibles
+     * @param boolean $booShow liste dépliée
+     */
+
+    private static function display_p4($id_annotation, $id_object, $id_record, $nbanno, $booShow)
+    {
+        $skin = skin::get();
+        $strId = str::htmlentities($id_annotation);
+        $array_anno = self::getlist($id_object, $id_record);
+        ?>
+        <section class="p4-anno" data-p4-anno="<?php echo $strId; ?>">
+            <button type="button" class="p4-anno-toggle" id="annotation_count_<?php echo $strId; ?>" data-p4-anno-toggle aria-expanded="<?php echo $booShow ? 'true' : 'false'; ?>" aria-controls="annotation_list_<?php echo $strId; ?>">
+                <?php echo $skin->icon('notes'); ?>
+                <span class="p4-anno-title">Annotations</span>
+                <span class="p4-badge<?php echo $nbanno ? ' p4-badge-brand' : ''; ?>"><?php echo (int) $nbanno; ?></span>
+                <?php echo $skin->icon('chevron-down', 'p4-anno-chevron'); ?>
+            </button>
+
+            <div class="p4-anno-body" id="annotation_list_<?php echo $strId; ?>"<?php if (!$booShow) echo ' hidden'; ?>>
+                <?php
+                if (empty($array_anno))
+                {
+                    ?>
+                    <p class="p4-anno-empty">Aucune annotation pour le moment.</p>
+                    <?php
+                }
+                else
+                {
+                    ?>
+                    <ol class="p4-anno-list">
+                    <?php
+                    foreach($array_anno as $anno)
+                    {
+                        $fields = $anno['fields'];
+                        $ldate = date::timestamp2local($fields['date_annotation']);
+                        $strAuteur = trim("{$fields['firstname']} {$fields['lastname']}");
+                        if ($strAuteur == '') $strAuteur = $fields['login'];
+                        $strInitiales = mb_strtoupper(mb_substr($fields['firstname'], 0, 1).mb_substr($fields['lastname'], 0, 1));
+                        if ($strInitiales == '') $strInitiales = mb_strtoupper(mb_substr($fields['login'], 0, 2));
+                        ?>
+                        <li class="p4-anno-item">
+                            <span class="p4-avatar" aria-hidden="true"><?php echo str::htmlentities($strInitiales); ?></span>
+                            <div class="p4-anno-main">
+                                <div class="p4-anno-meta">
+                                    <strong><?php echo str::htmlentities($strAuteur); ?></strong>
+                                    <span class="p4-anno-date"><?php echo str::htmlentities("{$ldate['date']} à ".substr($ldate['time'], 0, 5)); ?></span>
+                                    <?php if ($fields['private']) { ?><span class="p4-badge p4-badge-warning"><?php echo $skin->icon('lock'); ?>Privée</span><?php } ?>
+                                </div>
+                                <div class="p4-anno-text"><?php echo str::make_links(str::nl2br(str::htmlentities($fields['content']))); ?></div>
+                                <?php
+                                if (!empty($anno['tags']))
+                                {
+                                    ?>
+                                    <div class="p4-anno-tags">
+                                        <?php foreach($anno['tags'] as $idtag => $tag) { ?>
+                                        <button type="button" class="p4-tag" data-p4-anno-tag="<?php echo (int) $idtag; ?>" title="Autres annotations portant cette étiquette">#<?php echo str::htmlentities($tag); ?></button>
+                                        <?php } ?>
+                                    </div>
+                                    <?php
+                                }
+                                ?>
+                            </div>
+                            <?php
+                            if ($fields['id_user'] == $_SESSION['ploopi']['userid'])
+                            {
+                                ?>
+                                <button type="button" class="p4-btn p4-btn-ghost p4-btn-icon p4-btn-sm p4-anno-delete" data-p4-anno-delete="<?php echo (int) $fields['id']; ?>" title="Supprimer cette annotation" aria-label="Supprimer cette annotation"><?php echo $skin->icon('trash'); ?></button>
+                                <?php
+                            }
+                            ?>
+                        </li>
+                        <?php
+                    }
+                    ?>
+                    </ol>
+                    <?php
+                }
+                ?>
+
+                <form class="p4-anno-form" action="" method="post" id="form_annotation_<?php echo $strId; ?>" target="form_annotation_target_<?php echo $strId; ?>" data-p4-anno-form novalidate>
+                    <input type="hidden" name="ploopi_op" value="annotation_save">
+                    <input type="hidden" name="id_annotation" value="<?php echo $strId; ?>">
+
+                    <div class="p4-field">
+                        <label for="ploopi_annotation_content_<?php echo $strId; ?>">Nouvelle annotation</label>
+                        <textarea class="p4-input" rows="3" id="ploopi_annotation_content_<?php echo $strId; ?>" name="ploopi_annotation_content" placeholder="Votre remarque…" required></textarea>
+                    </div>
+
+                    <div class="p4-anno-form-row">
+                        <div class="p4-field">
+                            <label for="ploopi_annotationtags_<?php echo $strId; ?>">Étiquettes <small>(facultatives, séparées par des espaces)</small></label>
+                            <input class="p4-input" type="text" name="ploopi_annotationtags" id="ploopi_annotationtags_<?php echo $strId; ?>" data-p4-anno-tags autocomplete="off">
+                            <div class="p4-anno-suggest" id="tagsfound_<?php echo $strId; ?>"></div>
+                        </div>
+                        <label class="p4-check p4-anno-private">
+                            <input type="checkbox" name="ploopi_annotation_private" value="1">
+                            <span><?php echo $skin->icon('lock'); ?>Privée<small>visible par vous seul</small></span>
+                        </label>
+                    </div>
+
+                    <p class="p4-anno-error" role="alert" hidden>Saisissez le texte de l'annotation.</p>
+
+                    <div class="p4-anno-actions">
+                        <button type="reset" class="p4-btn"><?php echo _PLOOPI_CANCEL; ?></button>
+                        <button type="submit" class="p4-btn p4-btn-primary"><?php echo $skin->icon('plus'); ?><span>Ajouter</span></button>
+                    </div>
+                </form>
+            </div>
+            <iframe name="form_annotation_target_<?php echo $strId; ?>" title="Enregistrement de l'annotation" hidden></iframe>
+        </section>
         <?php
     }
 
@@ -210,6 +396,13 @@ class annotation extends data_object
 
         $annotation_show = (isset($_SESSION['ploopi']['annotation']['show'][$id_annotation]));
 
+        // Gabarit ploopi4 : bloc refondu (composants p4-*, comportement dans js/annotation.js)
+        if (skin::get()->version() >= 4)
+        {
+            self::display_p4($id_annotation, $id_object, $id_record, $nbanno, $annotation_show);
+            return;
+        }
+
         ?>
         <a name="annotation_<?php echo $id_annotation; ?>" style="display:none;"></a>
         <div style="overflow:hidden;">
@@ -220,36 +413,7 @@ class annotation extends data_object
 
             <div style="display:<?php echo ($annotation_show) ? 'block' : 'none'; ?>;" id="annotation_list_<?php echo $id_annotation; ?>">
                 <?php
-                $select =   "
-                            SELECT      a.*,
-                                        u.firstname,
-                                        u.lastname,
-                                        u.login,
-                                        t.id as idtag,
-                                        t.tag
-                            FROM        ploopi_annotation a
-
-                            INNER JOIN  ploopi_user u ON a.id_user = u.id
-
-                            LEFT JOIN   ploopi_annotation_tag at ON a.id = at.id_annotation
-                            LEFT JOIN   ploopi_tag t ON t.id = at.id_tag
-
-                            WHERE       a.id_record = '".$db->addslashes($id_record)."'
-                            AND         a.id_object = {$id_object}
-                            AND         a.id_module = {$_SESSION['ploopi']['moduleid']}
-                            AND         (a.private = 0
-                            OR          (a.private = 1 AND a.id_user = {$_SESSION['ploopi']['userid']}))
-                            ORDER BY    a.date_annotation DESC
-                            ";
-
-                $rs_anno = $db->query($select);
-
-                $array_anno = array();
-                while ($fields = $db->fetchrow($rs_anno))
-                {
-                    $array_anno[$fields['id']]['fields'] = $fields;
-                    if (!is_null($fields['tag'])) $array_anno[$fields['id']]['tags'][$fields['idtag']] = $fields['tag'];
-                }
+                $array_anno = self::getlist($id_object, $id_record);
 
                 foreach($array_anno as $anno)
                 {

@@ -40,6 +40,9 @@ if ($_SESSION['ploopi']['mode'] == 'backoffice')
 
         self::$template_body = new \Template($_SESSION['ploopi']['template_path']);
 
+        // Déclinaison du gabarit (ploopi4.1…) : sa palette, chargée après la feuille du gabarit
+        if (!empty($_SESSION['ploopi']['template_palette'])) self::$template_body->assign_block_vars('template_palette', array('PATH' => $_SESSION['ploopi']['template_palette'].'?v='.urlencode(_PLOOPI_VERSION.','._PLOOPI_REVISION)));
+
         if (!file_exists("{$_SESSION['ploopi']['template_path']}/light.tpl") || ! is_readable("{$_SESSION['ploopi']['template_path']}/light.tpl")) {
 
             ploopi\system::kill(
@@ -106,10 +109,17 @@ if ($_SESSION['ploopi']['mode'] == 'backoffice')
         $main_content = ob_get_contents();
         @ob_end_clean();
 
+        // Préférences d'affichage (thème, densité) : gabarits qui les gèrent (ploopi4)
+        list($strUserTheme, $strUserDensity) = ploopi\skin::getdisplayprefs();
+
         self::$template_body->assign_vars(array(
+            'USER_THEME'            => $strUserTheme,
+            'USER_DENSITY'          => $strUserDensity,
+            'MODULE_TYPE'           => empty($_SESSION['ploopi']['moduletype']) ? '' : ploopi\str::htmlentities($_SESSION['ploopi']['moduletype']),
             'TEMPLATE_PATH'         => $_SESSION['ploopi']['template_path'],
             'ADDITIONAL_HEAD'       => $ploopi_additional_head,
             'ADDITIONAL_JAVASCRIPT' => $ploopi_additional_javascript,
+            'CSP_NONCE'             => ploopi\csp::nonce(),
             'PAGE_CONTENT'          => $main_content
             )
         );

@@ -1,0 +1,194 @@
+/*
+    Copyright (c) 2007-2026 Ovensia
+    Contributors hold Copyright (c) to their code submissions.
+
+    This file is part of Ploopi.
+
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
+/******************
+  PLOOPI4 : CONNEXION
+
+  Visuel de marque à gauche, panneau de connexion à droite ; carte flottante sur
+  tablette ; bandeau et feuille sur téléphone. Identifiants imposés par le socle :
+  #login_form, #ploopi_login, #ploopi_password, #ploopi_password_new,
+  #ploopi_password_new_confirm, #checkpass, #lostpassword_form.
+*******************/
+
+.p4-login {
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(400px, 34vw);
+    background: var(--brand-900);
+}
+
+.p4-login-visual {
+    position: relative;
+    overflow: hidden;
+    background:
+        radial-gradient(circle at 18% 22%, rgba(240, 180, 41, .28), transparent 34%),
+        radial-gradient(circle at 82% 78%, rgba(79, 147, 164, .55), transparent 42%),
+        linear-gradient(135deg, var(--brand-700), var(--brand-950));
+}
+.p4-login-visual::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(rgba(255, 255, 255, .09) 1px, transparent 1px);
+    background-size: 22px 22px;
+}
+/* Goutte du logo, en filets dégradés */
+.p4-login-visual::after {
+    content: "";
+    position: absolute;
+    right: 9%;
+    top: 14%;
+    width: 38%;
+    max-width: 400px;
+    aspect-ratio: 1;
+    background: url('../img/login-goutte.svg') no-repeat center / contain;
+    pointer-events: none;
+}
+.p4-login-tagline {
+    position: absolute;
+    left: 40px;
+    bottom: 36px;
+    right: 40px;
+    color: #fff;
+}
+.p4-login-tagline strong { display: block; font-size: clamp(26px, 3vw, 38px); font-weight: 750; letter-spacing: -.02em; line-height: 1.15; }
+.p4-login-tagline span { display: block; margin-top: 10px; font-size: 15px; opacity: .78; max-width: 460px; }
+
+.p4-login-panel {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 40px clamp(28px, 4vw, 64px) 72px;
+    background: var(--surface);
+    box-shadow: -20px 0 60px rgba(16, 39, 44, .15);
+}
+
+.p4-login-brand { display: flex; align-items: center; gap: 12px; margin-bottom: 36px; }
+.p4-login-brand .p4-brand-mark { width: 44px; height: 44px; border-radius: 10px; box-shadow: 0 6px 16px rgba(240, 180, 41, .35); }
+.p4-login-brand strong { display: block; font-family: 'Ploopi Logo', 'Nunito', var(--font); font-weight: 800; font-size: 25px; letter-spacing: -.015em; line-height: 1; color: var(--text); }
+.p4-login-brand small { display: block; font-size: 12.5px; color: var(--text-3); margin-top: 1px; }
+
+.p4-login-form { width: 100%; max-width: 380px; }
+.p4-login-form h1 { font-size: 26px; font-weight: 750; letter-spacing: -.02em; }
+.p4-login-form .p4-lead { color: var(--text-2); margin: 8px 0 26px; }
+.p4-login-form .p4-field + .p4-field { margin-top: 18px; }
+.p4-login-form .p4-input { height: 46px; font-size: 15px; border-radius: var(--radius); }
+.p4-login-form .p4-input-icon > .p4-input { padding-left: 42px; }
+.p4-login-form .p4-input-icon > .p4-icon { left: 14px; }
+.p4-login-form .p4-pw .p4-input { padding-right: 46px; }
+.p4-login-form .p4-pw-toggle {
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--text-3);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: none;
+}
+.p4-login-form .p4-pw-toggle:hover { background: var(--surface-3); color: var(--text); }
+.p4-login-form .p4-label-row { display: flex; align-items: center; justify-content: space-between; }
+.p4-link-btn { margin: 0; padding: 0; border: 0; background: none; box-shadow: none; font-size: var(--fs-xs); font-weight: 600; color: var(--primary-text); cursor: pointer; }
+.p4-link-btn:hover { background: none; color: var(--primary-text); text-decoration: underline; }
+.p4-login-form .p4-btn-primary { height: 48px; font-size: 15px; border-radius: var(--radius); margin-top: 24px; }
+.p4-caps { display: none; align-items: center; gap: 6px; font-size: var(--fs-xs); color: var(--warning); }
+.p4-caps.p4-show { display: flex; }
+.p4-back-link { display: inline-flex; align-items: center; gap: 6px; margin: 22px 0 0; padding: 0; border: 0; background: none; box-shadow: none; font-weight: 600; font-size: var(--fs-sm); color: var(--text-2); cursor: pointer; }
+.p4-back-link:hover { background: none; color: var(--primary-text); }
+
+.p4-login-message { display: flex; gap: 10px; align-items: flex-start; padding: 12px 14px; margin-top: 18px; border-radius: var(--radius); font-size: var(--fs-sm); background: var(--info-soft); color: var(--info); }
+.p4-login-message.p4-error { background: var(--danger-soft); color: var(--danger); }
+.p4-login-message.p4-warning { background: var(--warning-soft); color: var(--warning); }
+.p4-login-message > span { color: var(--text); }
+
+/* Jauge de robustesse du mot de passe (ploopi.checkpass) */
+#checkpass { margin: 8px 0 0; }
+#checkpass * { font-size: 11px; }
+#checkpass .password-strength-bar { border-radius: 2px; }
+
+.p4-login-foot {
+    position: absolute;
+    left: clamp(28px, 4vw, 64px);
+    right: clamp(28px, 4vw, 64px);
+    bottom: 22px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    font-size: 11.5px;
+    color: var(--text-3);
+}
+.p4-login-foot a { color: var(--text-2); }
+.p4-theme-switch { display: inline-flex; gap: 2px; padding: 2px; border-radius: 8px; background: var(--surface-3); }
+.p4-theme-switch button { width: 28px; height: 24px; margin: 0; padding: 0; border: 0; border-radius: 6px; background: transparent; color: var(--text-3); display: inline-flex; align-items: center; justify-content: center; box-shadow: none; }
+.p4-theme-switch button:hover { background: transparent; color: var(--text); }
+.p4-theme-switch button[aria-pressed="true"] { background: var(--surface); color: var(--text); box-shadow: var(--shadow-sm); }
+.p4-theme-switch .p4-icon { width: 14px; height: 14px; }
+
+.p4-login-view { animation: p4-fade-up .3s var(--ease); }
+@keyframes p4-fade-up { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+/* Tablette : visuel en fond, carte flottante */
+@media (max-width: 1023px) {
+    .p4-login { grid-template-columns: 1fr; place-items: center; padding: 32px 24px; }
+    .p4-login-visual { position: fixed; inset: 0; }
+    .p4-login-tagline { display: none; }
+    .p4-login-panel {
+        width: min(460px, 100%);
+        padding: 36px 36px 30px;
+        border-radius: 22px;
+        background: color-mix(in srgb, var(--surface) 94%, transparent);
+        -webkit-backdrop-filter: blur(16px) saturate(1.2);
+        backdrop-filter: blur(16px) saturate(1.2);
+        box-shadow: var(--shadow-lg);
+    }
+    .p4-login-brand { margin-bottom: 26px; }
+    .p4-login-foot { position: static; margin-top: 30px; }
+}
+
+/* Téléphone : bandeau puis feuille */
+@media (max-width: 599px) {
+    .p4-login { display: block; padding: 0; background: var(--surface); }
+    .p4-login-visual { position: relative; height: 26vh; min-height: 150px; }
+    .p4-login-panel {
+        width: 100%;
+        min-height: calc(74vh + 26px);
+        margin-top: -26px;
+        padding: 28px 22px 24px;
+        border-radius: 24px 24px 0 0;
+        background: var(--surface);
+        -webkit-backdrop-filter: none;
+        backdrop-filter: none;
+        box-shadow: 0 -10px 30px rgba(16, 39, 44, .12);
+    }
+    .p4-login-form { max-width: none; }
+    .p4-login-form h1 { font-size: 23px; }
+}

@@ -50,3 +50,9 @@
 	display:none;
 }
 
+
+/* Anciens styles en ligne, devenus des classes (même aspect) */
+.news2_separation {
+    clear:both;
+    border-top:1px solid #c0c0c0;
+}

@@ -137,7 +137,8 @@ ploopi.documents.dropzoneupload = function(params) {
 
         jQuery('#'+that.params.filelist).html('');
         for (var i = 0; i < that.files.length; i++) {
-            jQuery('#'+that.params.filelist).append('<div>'+that.files[i].name+'</div>');
+            // Nom en texte : un nom de fichier n'est pas du HTML
+            jQuery('#'+that.params.filelist).append(jQuery('<div>').text(that.files[i].name));
         }
 
     }
@@ -145,3 +146,128 @@ ploopi.documents.dropzoneupload = function(params) {
     that.init(params);
 
 };
+
+
+/**
+ * Choix d'un fichier (navigateur en mode « tofield » ou « tocallback ») : le nom et
+ * l'identifiant vont dans le champ <target> et <target>_id, ou à la fonction <target>
+ * (nom éventuellement pointé : « ploopi.editor.picked »)
+ */
+ploopi.documents.pick = function(mode, target, id, name, url, md5id) {
+    if (mode == 'tofield') {
+        var dest = document.getElementById(target);
+        if (dest) {
+            if (dest.type) dest.value = name;
+            else dest.textContent = name;
+        }
+        var destid = document.getElementById(target+'_id');
+        if (destid) destid.value = id;
+        ploopi.popup.hide('ploopi_documents_popup');
+    }
+    else if (mode == 'tocallback') {
+        var func = target.split('.').reduce(function(obj, key) { return obj ? obj[key] : undefined; }, window);
+        if (typeof func == 'function') func(id, name, url, md5id);
+    }
+};
+
+/**
+ * Actions du navigateur de documents (ploopi\documents::browser) : attributs
+ * data-ploopi-documents (action), data-query, data-documents-id, data-confirm…,
+ * sans gestionnaire en ligne (CSP stricte)
+ */
+jQuery(document).on('click', '[data-ploopi-documents]', function(event) {
+    var el = this;
+    var d = function(key) { return el.getAttribute('data-'+key) || ''; };
+
+    event.preventDefault();
+
+    switch(d('ploopi-documents')) {
+        case 'openfolder': ploopi.documents.openfolder(d('query'), event); break;
+        case 'openfile': ploopi.documents.openfile(d('query'), event); break;
+        case 'browser': ploopi.documents.browser(d('query'), d('documents-id'), true); break;
+        case 'deletefolder': if (confirm(d('confirm'))) ploopi.documents.deletefolder(d('query'), d('documents-id')); break;
+        case 'deletefile': if (confirm(d('confirm'))) ploopi.documents.deletefile(d('query'), d('documents-id')); break;
+        case 'download': document.location.href = d('href'); break;
+        case 'tofield':
+        case 'tocallback':
+            ploopi.documents.pick(d('ploopi-documents'), d('target'), parseInt(d('id'), 10), d('name'), d('url'), d('md5id'));
+            break;
+    }
+});
+
+/**
+ * Formulaire d'un fichier (opération documents_openfile) : zone de dépôt préparée
+ * dès l'insertion de la fenêtre (ploopi.popup.onadd)
+ */
+ploopi.documents.enhance = function(node) {
+    jQuery(node).find('form[data-ploopi-documents-form]').addBack('form[data-ploopi-documents-form]').each(function() {
+        if (this.getAttribute('data-ploopi-ready')) return;
+        this.setAttribute('data-ploopi-ready', '1');
+
+        if (this.getAttribute('data-ploopi-documents-form') == 'new' && document.getElementById('documents_dropzone')) {
+            this.ploopi_dropzone = new ploopi.documents.dropzoneupload({
+                dropzone: 'documents_dropzone',
+                status: 'documents_status',
+                loading: 'documents_loading',
+                filelist: 'documents_filelist',
+                form: this.id,
+                filesize: parseInt(this.getAttribute('data-filesize'), 10) || 50000000
+            });
+        }
+    });
+};
+
+jQuery(function() {
+    ploopi.popup.addenhancer(ploopi.documents.enhance);
+});
+
+/**
+ * Envoi du formulaire d'un fichier, en XHR : contrôle des champs, fichiers déposés
+ * (nouveau fichier) ou fichier de remplacement (modification), puis navigateur
+ * rafraîchi et fenêtre fermée, ou fichier rendu au champ, à la fonction appelante.
+ * (La modification partait vers une iframe qui ne recevait que du JSON : ni
+ * rafraîchissement ni fermeture.)
+ */
+jQuery(document).on('submit', 'form[data-ploopi-documents-form]', function(e) {
+    var form = this;
+    var d = function(key) { return form.getAttribute('data-'+key) || ''; };
+
+    if (!ploopi.documents.validate(form)) {
+        e.preventDefault();
+        return;
+    }
+
+    e.preventDefault();
+
+    if (ploopi.editor && ploopi.editor.save) ploopi.editor.save();
+
+    var formData = new FormData(form);
+    var files = form.ploopi_dropzone && form.ploopi_dropzone.files ? form.ploopi_dropzone.files : [];
+    for (var i = 0; i < files.length; i++) formData.append('documentsfile_file'+i, files[i]);
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', form.action);
+
+    xhr.onload = function() {
+        var data = {};
+        try { data = JSON.parse(xhr.responseText); } catch (err) { data = {}; }
+
+        switch(d('mode')) {
+            case 'tofield':
+                ploopi.documents.pick('tofield', d('target'), data.id, data.name);
+            break;
+
+            case 'tocallback':
+                ploopi.documents.pick('tocallback', d('target'), data.id, data.name, d('download')+'&documentsfile_id='+data.md5id, data.md5id);
+                ploopi.popup.hide('ploopi_documents_openfile_popup');
+            break;
+
+            default:
+                ploopi.documents.browser(d('query'), d('documents-id'));
+                ploopi.popup.hide('ploopi_documents_openfile_popup');
+            break;
+        }
+    };
+
+    xhr.send(formData);
+});

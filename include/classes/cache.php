@@ -71,13 +71,19 @@ class cache
      */
     private $_strCacheGroup = 'default';
 
+    /**
+     * Dossier du cache (avec / final)
+     *
+     * @var string
+     */
+    private $_strCacheDir;
 
     /**
-     * Object \Cache_Lite_Output
+     * Durée de vie du cache (en secondes)
      *
-     * @var Cache_Lite_Output
+     * @var int
      */
-    private $_objCache = null;
+    private $_intLifetime;
 
 
     /**
@@ -117,69 +123,117 @@ class cache
      *
      * @param string $id identifiant du cache
      * @param int $lifetime durée de vie du cache (en secondes)
-     * @return ploopi_cache
+     * @param string $cachedir dossier du cache
      */
 
     public function __construct($id, $lifetime = _PLOOPI_CACHE_DEFAULT_LIFETIME, $cachedir = _PLOOPI_PATHCACHE)
     {
-        if (self::$_booActivated)
-        {
-            if (substr($cachedir, -1) != '/') $cachedir .= '/';
+        if (substr($cachedir, -1) != '/') $cachedir .= '/';
 
-            $this->_strCacheId = $id;
-            $this->_objCache = new \Cache_Lite_Output(array( 'cacheDir' => $cachedir, 'lifeTime' => $lifetime));
-        }
+        $this->_strCacheId = $id;
+        $this->_strCacheDir = $cachedir;
+        $this->_intLifetime = (int) $lifetime;
+    }
+
+    /**
+     * Fichier d'un groupe (préfixe propre à ploopi : les fichiers de l'ancien Cache_Lite, « cache_… », sont ignorés)
+     *
+     * @param string $strGroup groupe
+     * @return string début du chemin des fichiers du groupe
+     */
+    private function _groupprefix($strGroup) { return $this->_strCacheDir.'ploopi_'.md5($strGroup).'_'; }
+
+    /**
+     * Chemin du fichier de cache
+     *
+     * @return string chemin
+     */
+    private function _file() { return $this->_groupprefix($this->_strCacheGroup).md5($this->_strCacheId); }
+
+    /**
+     * Lit le contenu du cache s'il est encore valide
+     *
+     * @param boolean $booForceCaching true pour ignorer le cache existant (régénération)
+     * @return string|false contenu ou false
+     */
+    private function _read($booForceCaching)
+    {
+        if ($booForceCaching) return false;
+        $strFile = $this->_file();
+        $intTime = @filemtime($strFile);
+        if ($intTime === false || $intTime <= time() - $this->_intLifetime) return false;
+        return @file_get_contents($strFile);
     }
 
     /**
      * Retourne la date de dernière modification du cache
      *
-     * @return int date/heure (format ?)
+     * @return int timestamp unix (0 si absent)
      */
     public function get_lastmodified()
     {
-        if (self::$_booActivated)
-        {
-            $this->_objCache->_setFileName($this->_strCacheId, $this->_strCacheGroup);
-            if (file_exists($this->_objCache->_file)) return($this->_objCache->lastModified());
-            else return 0;
-        }
+        if (self::$_booActivated) return (int) @filemtime($this->_file());
 
         return 0;
     }
 
     /**
-     * Démarre une mise en cache
+     * Démarre une mise en cache : affiche le contenu en cache s'il existe, sinon capture la sortie jusqu'à end()
      *
-     * @param boolean $force_caching true si la mise en cache est forcée
-     * @return mixed contenu du cache ou false si le cache est désactivé ou vide
+     * @param boolean $booForceCaching true si la mise en cache est forcée
+     * @return boolean true si le contenu en cache a été affiché, false sinon (cache désactivé ou vide)
      */
 
     public function start($booForceCaching = false)
     {
         if (self::$_booActivated)
         {
-            if ($booForceCaching) $this->_objCache->setOption('lifeTime', 0);
-            $strContent = $this->_objCache->start($this->_strCacheId, $this->_strCacheGroup);
+            $strContent = $this->_read($booForceCaching);
 
-            if ($strContent) self::$_intRead++;
+            if ($strContent !== false)
+            {
+                echo $strContent;
+                self::$_intRead++;
+                return true;
+            }
 
-            return $strContent;
+            ob_start();
+            return false;
         }
         else return false; // no cache
     }
 
     /**
-     * Termine la mise en cache
+     * Termine la mise en cache : enregistre et affiche la sortie capturée depuis start()
      */
 
     public function end()
     {
         if (self::$_booActivated)
         {
-            $this->_objCache->end();
-            self::$_intWritten++;
+            $strContent = ob_get_clean();
+            $this->save($strContent);
+            echo $strContent;
         }
+    }
+
+    /**
+     * Enregistre un contenu en cache (écriture atomique)
+     *
+     * @param string $strContent contenu
+     * @return boolean true si le contenu est enregistré
+     */
+    public function save($strContent)
+    {
+        if (!self::$_booActivated) return false;
+
+        $strFile = $this->_file();
+        $strTmp = $strFile.'.'.uniqid('', true);
+        if (@file_put_contents($strTmp, $strContent) === false) return false;
+        if (!@rename($strTmp, $strFile)) { @unlink($strTmp); return false; }
+
+        self::$_intWritten++;
+        return true;
     }
 
     /**
@@ -189,7 +243,7 @@ class cache
     {
         if (self::$_booActivated)
         {
-            $this->_objCache->clean($this->_strCacheGroup);
+            foreach(glob($this->_groupprefix($this->_strCacheGroup).'*') ?: array() as $strFile) @unlink($strFile);
         }
     }
 
@@ -200,8 +254,11 @@ class cache
     {
         if (self::$_booActivated)
         {
-            if ($booForceCaching) $this->_objCache->setOption('lifeTime', 0);
-            $mixVar = unserialize($this->_objCache->get($this->_strCacheId,$this->_strCacheGroup));
+            $strContent = $this->_read($booForceCaching);
+            if ($strContent === false) return false;
+
+            // N'en laisser sortir aucun objet
+            $mixVar = unserialize($strContent, array('allowed_classes' => false));
 
             if ($mixVar) self::$_intRead++;
 
@@ -216,12 +273,6 @@ class cache
      */
     public function save_var($var)
     {
-        if (self::$_booActivated)
-        {
-            $this->_objCache->save(serialize($var),$this->_strCacheGroup);
-            self::$_intWritten++;
-        }
+        if (self::$_booActivated) $this->save(serialize($var));
     }
-
-
 }

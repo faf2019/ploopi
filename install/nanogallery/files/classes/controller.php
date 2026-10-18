@@ -15,24 +15,30 @@ class controller extends ploopi\controller {
 	private $colorOk = false;
 
 	public function setBlock() {
-		if (class_exists('ploopi\spcolor\color')) {
+		/**
+		 * Le module spcolor (sélecteur de couleurs) est facultatif : il n'est pas livré
+		 * avec le dépôt. Sans lui, les couleurs se saisissent en texte (#rrggbb, rgba…).
+		 * classExists() teste le fichier : class_exists() seul déclenchait l'autoload d'un
+		 * fichier absent.
+		 */
+		if (ploopi\loader::classExists('ploopi\spcolor\color') && class_exists('ploopi\spcolor\color')) {
 			// Fichiers css et js pour spcolor
 			ploopi\spcolor\color::install();
 			$this->colorOk = true;
+		}
 
-			// CSS pour sliders
-			global $template_body;
-			$template_body->assign_block_vars('module_css', array('PATH' => './vendor/components/jqueryui/themes/base/all.css'));
+		// CSS pour sliders
+		$template_body = nanogallery::template();
+		if (is_object($template_body)) $template_body->assign_block_vars('module_css', array('PATH' => './vendor/components/jqueryui/themes/base/all.css'));
 
-			// Les sous-menus
-			$this->addBlockMenu('<b>Galeries photo</b>', 'public', 'list');
-			$arrGalleries = ploopi\nanogallery\nanogallery::getGalleries($this->getModuleId());
-			foreach($arrGalleries as $objGallery) {
-				$this->addBlockMenu(
-					'<img src="./modules/nanogallery/img/images_alpha.png" style="width:24px;height:20px;margin-right:5px;"> '
-					.$objGallery['label'], 'public', "display&id=${objGallery['id']}"
-				);
-			}
+		// Les sous-menus
+		$this->addBlockMenu('<b>Galeries photo</b>', 'public', 'list');
+		$arrGalleries = ploopi\nanogallery\nanogallery::getGalleries($this->getModuleId());
+		foreach($arrGalleries as $objGallery) {
+			$this->addBlockMenu(
+				'<img src="./modules/nanogallery/img/images_alpha.png" style="width:24px;height:20px;margin-right:5px;"> '
+				.ploopi\str::htmlentities($objGallery['label']), 'public', "display&id={$objGallery['id']}"
+			);
 		}
 	}
 
@@ -67,15 +73,9 @@ class controller extends ploopi\controller {
 						.($required?'required="required" ':'').($disabled?'disabled="disabled" ':'')
 						.'autocomplete="off" autocorrect="off" spellcheck="false" maxlength="10"
 						min="'.$min.'" max="'.$max.'"
-						onchange="$(\'#slider_'.$field.'\').slider(\'value\',this.value );">
+						data-nano-slider="'.ploopi\str::htmlentities(json_encode(array('min' => (int) $min, 'max' => (int) $max, 'value' => (int) $value, 'disabled' => (bool) $disabled))).'">
 					<div id="slider_'.$field.'" style="margin-top:5px;width:calc(48% - 80px);float:right;"></div>
-				</div>
-				<script>
-					$("#slider_'.$field.'").slider({min:'.$min.',max:'.$max.($disabled?',disabled:true':'')
-					.',slide: function( event, ui ) { $("#'.$field.'").val(ui.value); }'.',value:'.$value.' });'
-            		.'$( "#'.$field.'" ).val( $("#slider_'.$field.'" ).slider( "value" ) );'
-					.'sliders["slider_'.$field.'"] = '.$value.';
-				</script>'
+				</div>'
 			)
 		);		
 	}
@@ -102,11 +102,10 @@ class controller extends ploopi\controller {
 	// Ajoute une saisie de couleur
 	public function addClr($panel, $field, $value, $label) {
 		$panel->addField(
-			new ploopi\form_field('input:text', $label, $value, $field, $field, 
-				array('class' => $this->getColorClass()))
+			new ploopi\form_field('input:text', $label, $value, $field, $field,
+				// Valeur d'origine, rendue par « Réinitialiser » (uiReset)
+				array_merge($this->colorOk ? array('class' => $this->getColorClass()) : array('placeholder' => '#rrggbb', 'maxlength' => 32), array('dataset' => array('nano-reset' => $value))))
 		);
-		// Pour reset de l'UI
-		echo '<script>clrs["'.$field.'"] = "'.$value.'";</script>';
 	}
 	
 	// Ajoute une boîte de sélection

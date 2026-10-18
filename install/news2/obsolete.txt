@@ -1,0 +1,5 @@
+# Fichiers retirés du paquet, supprimés de modules/news2/ par la mise à jour
+# (un chemin relatif au module par ligne, fichier ou dossier)
+
+# 3.3.7 : CKEditor 4 remplacé par TinyMCE (éditeur du socle, js/editor.js)
+include/ckeditor

@@ -8,6 +8,8 @@ CREATE TABLE IF NOT EXISTS `ploopi_mod_nanogallery` (
   `label` varchar(255) NOT NULL DEFAULT '',
   `description` varchar(256) NOT NULL DEFAULT '',
   `id_folder` int(10) UNSIGNED NOT NULL DEFAULT 0,
+  `useAlbums` tinyint(1) NOT NULL DEFAULT 0,
+  `flatAlbums` tinyint(1) NOT NULL DEFAULT 0,
   `frameBgColor` varchar(20) NOT NULL DEFAULT '',
   `frameBorderColor` varchar(20) NOT NULL DEFAULT '',
   `frameBorderVertical` int(10) NOT NULL DEFAULT 0,

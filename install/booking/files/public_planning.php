@@ -42,9 +42,17 @@ $arrSearchPattern = array();
 
 // Lecture cookie
 if (isset($_COOKIE["booking_request{$_SESSION['ploopi']['moduleid']}"])) {
+    /**
+     * Le cookie est fourni par le client : il ne doit jamais produire d'objet.
+     * allowed_classes à false n'en laisse sortir que des tableaux et des scalaires, ce qui
+     * ferme l'injection d'objet PHP. La borne passée à gzuncompress() écarte par ailleurs
+     * une archive-bombe, qu'un cookie de quelques octets suffit à construire.
+     */
     ploopi\error::unset_handler();
-    $arrSearchPattern = @unserialize(@gzuncompress(@base64_decode($_COOKIE["booking_request{$_SESSION['ploopi']['moduleid']}"])));
+    $arrSearchPattern = @unserialize(@gzuncompress(@base64_decode($_COOKIE["booking_request{$_SESSION['ploopi']['moduleid']}"]), 1048576), array('allowed_classes' => false));
     ploopi\error::set_handler();
+
+    if (!is_array($arrSearchPattern)) $arrSearchPattern = array();
 } else {
     // Si pas de cookie alors on peut charger la valeur par défaut dans les paramètres (pré-cochage ou non)
     if (ploopi\param::get('booking_default_all_checked')) {
@@ -57,6 +65,7 @@ if (isset($_COOKIE["booking_request{$_SESSION['ploopi']['moduleid']}"])) {
 if (isset($_REQUEST['booking_display_type'])) $arrSearchPattern['booking_display_type'] = $_REQUEST['booking_display_type'];
 if (isset($_REQUEST['booking_validated'])) $arrSearchPattern['booking_validated'] = $_REQUEST['booking_validated'];
 if (isset($_REQUEST['booking_size'])) $arrSearchPattern['booking_size'] = $_REQUEST['booking_size'];
+if (isset($_REQUEST['booking_autowidth']) && is_numeric($_REQUEST['booking_autowidth'])) $arrSearchPattern['booking_autowidth'] = (int) $_REQUEST['booking_autowidth'];
 if (isset($_REQUEST['booking_channels'])) $arrSearchPattern['booking_channels'] = $_REQUEST['booking_channels'];
 
 if (isset($_REQUEST['booking_resources'])) $arrSearchPattern['booking_resources'] = $_REQUEST['booking_resources'];
@@ -72,11 +81,12 @@ $booDateModify = isset($_REQUEST['booking_month']) || isset($_REQUEST['booking_y
 // Init des valeurs par défaut
 $param_display_type = ploopi\param::get('booking_default_display_type');
 if (!isset($arrSearchPattern['booking_display_type'])) $arrSearchPattern['booking_display_type'] = empty( $param_display_type) ? 'month' : $param_display_type;
-if (!isset($arrSearchPattern['booking_size'])) $arrSearchPattern['booking_size'] = $arrBookingSize[0];
+// Taille validée (une des tailles proposées ou « auto »), cf. booking_size()
+$arrSize = booking_size($arrSearchPattern);
 if (!isset($arrSearchPattern['booking_resources'])) $arrSearchPattern['booking_resources'] = array();
 if (!isset($arrSearchPattern['booking_validated'])) $arrSearchPattern['booking_validated'] = '';
 $param_booking_channels = ploopi\param::get('booking_default_channels');
-if (!isset($arrSearchPattern['booking_channels'])) $arrSearchPattern['booking_channels'] = empty($param_booking_channels) ? 1 : $param_booking_channels;
+if (!isset($arrSearchPattern['booking_channels'])) $arrSearchPattern['booking_channels'] = ((string) $param_booking_channels === '') ? 1 : (int) $param_booking_channels;
 
 // Init de la date "virtuelle"
 if (!isset($arrSearchPattern['booking_virtualdate'])) $arrSearchPattern['booking_virtualdate'] = time();
@@ -141,9 +151,6 @@ setcookie("booking_request{$_SESSION['ploopi']['moduleid']}", $str = base64_enco
 // Lecture des ressources
 $arrResources = booking_get_resources();
 
-$arrSize = explode('x', $arrSearchPattern['booking_size']);
-
-if (sizeof($arrSize) != 2 || !is_numeric($arrSize[0]) || !is_numeric($arrSize[1])) $arrSize = array(800, 500);
 
 /**
  * Détermination des dates de début et fin de la période affichée
@@ -171,19 +178,31 @@ switch($arrSearchPattern['booking_display_type'])
 }
 ?>
 
-<div style="padding:4px;">
-    <p class="ploopi_va" style="padding:2px;float:left;">
-        <label>Affichage :</label>
-        <input type="image" alt="Aujourd'hui" src="./modules/booking/img/ico_today<?php if ($arrSearchPattern['booking_display_type'] != 'today') echo'_notsel'; ?>.png" title="Aujourd'hui" onclick="javascript:ploopi.xhr.todiv('admin-light.php', '<?php echo ploopi\crypt::queryencode('ploopi_op=booking_refresh&booking_display_type=today'); ?>', 'booking_main');" />
-        <input type="image" alt="Quotidien" src="./modules/booking/img/ico_day<?php if ($arrSearchPattern['booking_display_type'] != 'day') echo'_notsel'; ?>.png" title="Journée" onclick="javascript:ploopi.xhr.todiv('admin-light.php', '<?php echo ploopi\crypt::queryencode('ploopi_op=booking_refresh&booking_display_type=day'); ?>', 'booking_main');" />
-        <input type="image" alt="Hebdomadaire" src="./modules/booking/img/ico_week<?php if ($arrSearchPattern['booking_display_type'] != 'week') echo'_notsel'; ?>.png" title="Semaine" onclick="javascript:ploopi.xhr.todiv('admin-light.php', '<?php echo ploopi\crypt::queryencode('ploopi_op=booking_refresh&booking_display_type=week'); ?>', 'booking_main');" />
-        <input type="image" alt="Mensuel" src="./modules/booking/img/ico_month<?php if ($arrSearchPattern['booking_display_type'] != 'month') echo'_notsel'; ?>.png" title="Mois" onclick="javascript:ploopi.xhr.todiv('admin-light.php', '<?php echo ploopi\crypt::queryencode('ploopi_op=booking_refresh&booking_display_type=month'); ?>', 'booking_main');" />
+<?php
+// ploopi4 : barre d'outils en segments (vue, navigation, options) ; ids, noms et data-* inchangés
+$booTb4 = ploopi\skin::get()->version() >= 4;
+$objTbSkin = ploopi\skin::get();
+$fnTbView = function($strType, $strAlt, $strTitle, $strIcon, $strQuery) use ($booTb4, $objTbSkin, $arrSearchPattern) {
+    $booSel = $arrSearchPattern['booking_display_type'] == $strType;
+    if ($booTb4) echo '<button type="button" class="p4-caltb-view'.($booSel ? ' is-active' : '').'" aria-pressed="'.($booSel ? 'true' : 'false').'" title="'.$strTitle.'" data-view="'.$strAlt.'" data-ploopi-todiv="booking_main" data-ploopi-query="'.$strQuery.'">'.$objTbSkin->icon($strIcon).'<span>'.$strTitle.'</span></button>';
+    else echo '<input type="image" alt="'.$strAlt.'" src="./modules/booking/img/ico_'.$strType.($booSel ? '' : '_notsel').'.png" title="'.$strTitle.'" data-ploopi-todiv="booking_main" data-ploopi-query="'.$strQuery.'" />';
+};
+?>
+<div class="<?php echo $booTb4 ? 'p4-caltb' : ''; ?>" style="<?php if (!$booTb4) echo 'padding:4px;'; ?>">
+    <p class="ploopi_va<?php if ($booTb4) echo ' p4-caltb-group p4-caltb-views'; ?>" style="<?php if (!$booTb4) echo 'padding:2px;float:left;'; ?>">
+        <?php if (!$booTb4) { ?><label>Affichage :</label><?php } ?>
+        <?php $fnTbView('today', 'Aujourd\'hui', 'Aujourd\'hui', 'calendar-event', ploopi\crypt::queryencode('ploopi_op=booking_refresh&booking_display_type=today')); ?>
+        <?php $fnTbView('day', 'Quotidien', 'Journée', 'calendar', ploopi\crypt::queryencode('ploopi_op=booking_refresh&booking_display_type=day')); ?>
+        <?php $fnTbView('week', 'Hebdomadaire', 'Semaine', 'calendar-week', ploopi\crypt::queryencode('ploopi_op=booking_refresh&booking_display_type=week')); ?>
+        <?php $fnTbView('month', 'Mensuel', 'Mois', 'calendar-month', ploopi\crypt::queryencode('ploopi_op=booking_refresh&booking_display_type=month')); ?>
 
-        <label for="booking_channels">Multi Col:</label>
-        <input type="checkbox" name="booking_channels" id="booking_channels" <?php if ($arrSearchPattern['booking_channels']) echo 'checked="checked"'; ?> onclick="javascript:ploopi.xhr.todiv('admin-light.php', '<?php echo ploopi\crypt::queryencode('ploopi_op=booking_refresh&booking_channels='.($arrSearchPattern['booking_channels'] ? 0 : 1)); ?>', 'booking_main');"/>
+        <?php if ($booTb4) { ?></p><p class="p4-caltb-group p4-caltb-opts"><?php } ?>
+        <label for="booking_channels"<?php if ($booTb4) echo ' class="p4-caltb-check" title="Une colonne par ressource"'; ?>><?php echo $booTb4 ? $objTbSkin->icon('table-column').'<span>Colonnes</span>' : 'Multi Col:'; ?></label>
+        <input type="checkbox" name="booking_channels" id="booking_channels" <?php if ($arrSearchPattern['booking_channels']) echo 'checked="checked"'; ?> data-ploopi-todiv="booking_main" data-ploopi-query="<?php echo ploopi\crypt::queryencode('ploopi_op=booking_refresh&booking_channels='.($arrSearchPattern['booking_channels'] ? 0 : 1)); ?>"/>
 
-        <label>Taille :</label>
-        <select class="select" name="booking_size" id="booking_size" onchange="javascript:ploopi.xhr.todiv('<?php echo ploopi\crypt::urlencode('admin-light.php?ploopi_op=booking_refresh'); ?>', 'booking_size='+this.value, 'booking_main');">
+        <label for="booking_size"><?php echo $booTb4 ? '<span class="p4-caltb-lbl">Taille</span>' : 'Taille :'; ?></label>
+        <select class="select" name="booking_size" id="booking_size" data-ploopi-action="booking_size" data-ploopi-on="change" data-ploopi-args="<?php echo ploopi\str::htmlentities(json_encode(array(ploopi\crypt::urlencode('admin-light.php?ploopi_op=booking_refresh')))); ?>">
+        <option value="auto" <?php if ($arrSearchPattern['booking_size'] == 'auto') echo 'selected="selected"'; ?>>Auto</option>
         <?php
         foreach($arrBookingSize as $strSize)
         {
@@ -192,17 +211,16 @@ switch($arrSearchPattern['booking_display_type'])
         ?>
         </select>
     </p>
-
-    <form style="float:left;" id="booking_form_view" action="<?php echo ploopi\crypt::urlencode('admin-light.php?ploopi_op=booking_refresh'); ?>" method="post" onsubmit="javascript:ploopi.xhr.submit(this, 'booking_main');return false;">
-    <p class="ploopi_va" style="padding:2px;float:left;">
-        <label>Période :</label>
+    <form style="<?php if (!$booTb4) echo 'float:left;'; ?>" class="<?php if ($booTb4) echo 'p4-caltb-period'; ?>" id="booking_form_view" action="<?php echo ploopi\crypt::urlencode('admin-light.php?ploopi_op=booking_refresh'); ?>" method="post" data-booking-submit="booking_main">
+    <p class="ploopi_va<?php if ($booTb4) echo ' p4-caltb-group'; ?>" style="<?php if (!$booTb4) echo 'padding:2px;float:left;'; ?>">
+        <?php if (!$booTb4) { ?><label>Période :</label><?php } ?>
         <?php
         switch($arrSearchPattern['booking_display_type'])
         {
             case 'today':
             case 'day':
                 ?>
-                <select class="select" name="booking_day" id="booking_day" onchange="javascript:if (jQuery('#booking_form_view')[0].onsubmit()) jQuery('#booking_form_view')[0].submit();">
+                <select class="select" name="booking_day" id="booking_day" data-ploopi-autosubmit>
                 <?php
                 for ($intDay = 1; $intDay <= date('t', mktime(0, 0, 0, $arrSearchPattern['booking_month'], 1, $arrSearchPattern['booking_year'])); $intDay++)
                 {
@@ -216,7 +234,7 @@ switch($arrSearchPattern['booking_display_type'])
 
             case 'month':
                 ?>
-                <select class="select" name="booking_month" id="booking_month" onchange="javascript:if (jQuery('#booking_form_view')[0].onsubmit()) jQuery('#booking_form_view')[0].submit();">
+                <select class="select" name="booking_month" id="booking_month" data-ploopi-autosubmit>
                 <?php
                 foreach ($ploopi_months as $intMonth => $strMonth)
                 {
@@ -231,7 +249,7 @@ switch($arrSearchPattern['booking_display_type'])
 
             case 'week':
                 ?>
-                <select class="select" name="booking_week" id="booking_week" onchange="javascript:if (jQuery('#booking_form_view')[0].onsubmit()) jQuery('#booking_form_view')[0].submit();">
+                <select class="select" name="booking_week" id="booking_week" data-ploopi-autosubmit>
                 <?php
                 // Détermination du numéro de semaine max de l'année (on se positionne sur le 31/12)
                 $intMaxWeek = date('W', mktime(0, 0, 0, 12, 31, $arrSearchPattern['booking_year']));
@@ -254,7 +272,7 @@ switch($arrSearchPattern['booking_display_type'])
         }
         ?>
 
-        <select class="select" name="booking_year" id="booking_year" onchange="javascript:if (jQuery('#booking_form_view')[0].onsubmit()) jQuery('#booking_form_view')[0].submit();">
+        <select class="select" name="booking_year" id="booking_year" data-ploopi-autosubmit>
         <?php
         for ($intY = $arrSearchPattern['booking_year']-5; $intY <= $arrSearchPattern['booking_year']+5; $intY++)
         {
@@ -270,16 +288,16 @@ switch($arrSearchPattern['booking_display_type'])
         {
             case 'month':
                 ?>
-                <input type="button" class="button" value="&laquo;&laquo;" title="Mois précédent" onclick="javascript:booking_prevmonth();" />
-                <input type="button" class="button" value="&raquo;&raquo;" title="Mois suivant" onclick="javascript:booking_nextmonth();" />
+                <?php if ($booTb4) { ?><button type="button" class="p4-caltb-icon" title="Mois précédent" data-ploopi-action="booking_prevmonth"><?php echo $objTbSkin->icon('chevron-left'); ?></button><?php } else { ?><input type="button" class="button" value="&laquo;&laquo;" title="Mois précédent" data-ploopi-action="booking_prevmonth" /><?php } ?>
+                <?php if ($booTb4) { ?><button type="button" class="p4-caltb-icon" title="Mois suivant" data-ploopi-action="booking_nextmonth"><?php echo $objTbSkin->icon('chevron-right'); ?></button><?php } else { ?><input type="button" class="button" value="&raquo;&raquo;" title="Mois suivant" data-ploopi-action="booking_nextmonth" /><?php } ?>
                 <?php
             break;
 
             case 'week':
                 ?>
                 <input type="hidden" name="booking_week_previousyear" id="booking_week_previousyear" value="0" />
-                <input type="button" class="button" value="&laquo;&laquo;" title="Semaine précédente" onclick="javascript:booking_prevweek();" />
-                <input type="button" class="button" value="&raquo;&raquo;" title="Semaine suivante" onclick="javascript:booking_nextweek();" />
+                <?php if ($booTb4) { ?><button type="button" class="p4-caltb-icon" title="Semaine précédente" data-ploopi-action="booking_prevweek"><?php echo $objTbSkin->icon('chevron-left'); ?></button><?php } else { ?><input type="button" class="button" value="&laquo;&laquo;" title="Semaine précédente" data-ploopi-action="booking_prevweek" /><?php } ?>
+                <?php if ($booTb4) { ?><button type="button" class="p4-caltb-icon" title="Semaine suivante" data-ploopi-action="booking_nextweek"><?php echo $objTbSkin->icon('chevron-right'); ?></button><?php } else { ?><input type="button" class="button" value="&raquo;&raquo;" title="Semaine suivante" data-ploopi-action="booking_nextweek" /><?php } ?>
                 <?php
             break;
 
@@ -288,8 +306,8 @@ switch($arrSearchPattern['booking_display_type'])
                 ?>
                 <input type="hidden" name="booking_week_previousmonth" id="booking_week_previousmonth" value="0" />
                 <input type="hidden" name="booking_display_type" value="day" />
-                <input type="button" class="button" value="&laquo;&laquo;" title="Jour précédent" onclick="javascript:booking_prevday();" />
-                <input type="button" class="button" value="&raquo;&raquo;" title="Jour suivant" onclick="javascript:booking_nextday();" />
+                <?php if ($booTb4) { ?><button type="button" class="p4-caltb-icon" title="Jour précédent" data-ploopi-action="booking_prevday"><?php echo $objTbSkin->icon('chevron-left'); ?></button><?php } else { ?><input type="button" class="button" value="&laquo;&laquo;" title="Jour précédent" data-ploopi-action="booking_prevday" /><?php } ?>
+                <?php if ($booTb4) { ?><button type="button" class="p4-caltb-icon" title="Jour suivant" data-ploopi-action="booking_nextday"><?php echo $objTbSkin->icon('chevron-right'); ?></button><?php } else { ?><input type="button" class="button" value="&raquo;&raquo;" title="Jour suivant" data-ploopi-action="booking_nextday" /><?php } ?>
                 <?php
             break;
 
@@ -302,7 +320,8 @@ switch($arrSearchPattern['booking_display_type'])
 
         if (ploopi\acl::isactionallowed(_BOOKING_ACTION_ASKFOREVENT))
         {
-            ?><input type="button" class="button" value="Réserver" style="font-weight:bold;margin:0 6px;" onclick="javascript:booking_event_add(event, '<?php echo $date_sel; ?>');" /><?php
+            if ($booTb4) { ?></p><p class="p4-caltb-group p4-caltb-add"><button type="button" class="button p4-caltb-primary" data-ploopi-action="booking_event_add" data-ploopi-args="[<?php echo intval($date_sel); ?>]"><?php echo $objTbSkin->icon('plus'); ?><span>Réserver</span></button><?php }
+            else { ?><input type="button" class="button" value="Réserver" style="font-weight:bold;margin:0 6px;" data-ploopi-action="booking_event_add" data-ploopi-args="[<?php echo intval($date_sel); ?>]" /><?php }
         }
 
         ?>
@@ -371,7 +390,8 @@ if ($arrSearchPattern['booking_channels'])
     foreach($arrSearchPattern['booking_resources'] as $intIdResource)
     {
         if (isset($arrResources[$intIdResource])) {
-            if (empty($arrChannels[$intIdResource])) $arrChannels[$intIdResource] = new ploopi\calendarChannel(in_array($arrSearchPattern['booking_display_type'], array('day', 'today')) ? $arrResources[$intIdResource]['name'] : '', $arrResources[$intIdResource]['color']);
+            // Nom de la ressource en tête de colonne : vue journée, et toutes les vues en grille (ploopi4)
+            if (empty($arrChannels[$intIdResource])) $arrChannels[$intIdResource] = new ploopi\calendarChannel(in_array($arrSearchPattern['booking_display_type'], array('day', 'today')) || ploopi\skin::get()->version() >= 4 ? $arrResources[$intIdResource]['name'] : '', $arrResources[$intIdResource]['color']);
         }
     }
 
@@ -389,7 +409,13 @@ foreach($arrEvents as $event)
     $strBgColor = ($event['validated'] ? $arrBookingColor['validated'] : ($event['canceled'] ? $arrBookingColor['canceled'] : $arrBookingColor['unknown']));
     $strStatus = ($event['validated'] ? 'validé' : ($event['canceled'] ? 'annulé' : 'en attente'));
 
-    if ($arrSearchPattern['booking_display_type'] == 'month')
+    if (ploopi\skin::get()->version() >= 4)
+    {
+        // ploopi4 : l'état en pastille devant l'objet (texte au survol et pour les lecteurs
+        // d'écran), l'objet reste visible même sur un événement court
+        $strContent = '<span class="p4-cal-status" style="background-color:'.ploopi\str::htmlentities($strBgColor).';" title="'.$strStatus.'"><span class="p4-sr-only">'.$strStatus.' : </span></span>'.ploopi\str::htmlentities($event['object']);
+    }
+    elseif ($arrSearchPattern['booking_display_type'] == 'month')
     {
         $strContent = '<div style="float:right;margin:1px;width:10px;height:10px;background-color:'.$strBgColor.';"></div><div style="height:12px;overflow:hidden;"><time_begin> '.ploopi\str::htmlentities(ploopi\str::cut($event['object'],20)).'</div>';
     }
@@ -398,7 +424,9 @@ foreach($arrEvents as $event)
         $strContent = '<div style="margin:2px;background-color:'.$strBgColor.';border:1px solid #000;text-align:center;">'.$strStatus.'</div><div style="margin:2px;">'.ploopi\str::htmlentities($event['object']).'</div>';
     }
 
-    if ($arrSearchPattern['booking_display_type'] == 'week' && ($channelsCount > 1)) {
+    // Semaine à plusieurs colonnes : blocs sans texte dans le rendu historique (colonnes en
+    // pixels trop étroites) ; la grille de ploopi4 affiche l'heure et l'objet
+    if ($arrSearchPattern['booking_display_type'] == 'week' && ($channelsCount > 1) && ploopi\skin::get()->version() < 4) {
         $objCalendar->addEvent(
             new ploopi\calendarEvent(
                 $event['timestp_begin'],
@@ -408,8 +436,8 @@ foreach($arrEvents as $event)
                 $arrSearchPattern['booking_channels'] ? $event['id_resource'] : '',
                 array(
                     'strColor' => $event['color'],
-                    'strOnClick' => "booking_element_open('event', '{$event['id']},{$event['ed_id']}', event);",
-                    'strHref' => 'javascript:void(0);',
+                    'arrAttrs' => array('data-ploopi-action' => 'booking_element_open', 'data-ploopi-args' => array('event', "{$event['id']},{$event['ed_id']}")),
+                    'strHref' => '#',
                     'strLabel' => ''
                 )
             )
@@ -425,8 +453,8 @@ foreach($arrEvents as $event)
                 $arrSearchPattern['booking_channels'] ? $event['id_resource'] : '',
                 array(
                     'strColor' => $event['color'],
-                    'strOnClick' => "booking_element_open('event', '{$event['id']},{$event['ed_id']}', event);",
-                    'strHref' => 'javascript:void(0);',
+                    'arrAttrs' => array('data-ploopi-action' => 'booking_element_open', 'data-ploopi-args' => array('event', "{$event['id']},{$event['ed_id']}")),
+                    'strHref' => '#',
                     'strLabel' => ''
                 )
             )
@@ -435,7 +463,7 @@ foreach($arrEvents as $event)
 }
 
 ?>
-<div style="width:100%;overflow:auto;clear:both;" id="planning_display">
+<div style="width:100%;overflow:auto;clear:both;" id="planning_display"<?php if ($arrSearchPattern['booking_size'] == 'auto') echo ' data-autowidth="'.$arrSize[0].'" data-autowidth-op="booking_refresh" data-autowidth-param="booking_autowidth" data-autowidth-target="booking_main" data-autowidth-avoid="popup_booking"'; ?>>
     <?php
     $objCalendar->display();
     ?>

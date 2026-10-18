@@ -36,7 +36,7 @@
 
 echo ploopi\skin::get()->open_simplebloc(ploopi\str::htmlentities($title));
 ?>
-<div style="padding:4px;background-color:#e0e0e0;border-bottom:2px solid #c0c0c0;">
+<div class="directory_bandeau_fort">
 <?php echo $desc; ?>
 </div>
 
@@ -312,7 +312,7 @@ switch($_SESSION['directory']['directoryTabItem'])
 
         $id_list = $_SESSION['directory']['id_list'];
         ?>
-        <div style="padding:4px;background-color:#d8d8d8;border-bottom:2px solid #c0c0c0;">
+        <div class="directory_bandeau_sombre">
             <p class="ploopi_va">
                 <span>Choix de la liste à afficher :</span>
                 <select class="select" onchange="javascript:directory_list_change(this);" id="directory_favorites_id_list">
@@ -470,7 +470,7 @@ switch($_SESSION['directory']['directoryTabItem'])
         if (sizeof($result)>200)
         {
             ?>
-            <div style="padding:4px;font-weight:bold;border-bottom:1px solid #c0c0c0;">Il y a trop de réponses. Vous devriez préciser vos critères de recherche.</div>
+            <div class="directory_bandeau_titre">Il y a trop de réponses. Vous devriez préciser vos critères de recherche.</div>
             <?php
         }
         else
@@ -589,12 +589,24 @@ switch($_SESSION['directory']['directoryTabItem'])
         ?>
         <div class="directory_shared_main">
             <div class="directory_shared_treeview" id="directory_shared_treeview">
-                <div class="ploopi_tabs">
-                    <a href="<?php echo ploopi\crypt::urlencode("admin.php?directory_heading_id={$intHeadingId}&op=directory_heading_viewall"); ?>"><img src="./modules/directory/img/ico_viewall.png">Voir toutes les rubriques</a>
-                </div>
-                <div style="padding:10px;">
-                    <?php echo ploopi\skin::get()->display_treeview($arrTreeview['list'], $arrTreeview['tree'], $intHeadingId, null, $op == 'directory_heading_viewall'); ?>
-                </div>
+                <?php
+                // Arbre repliable sur petit écran (ploopi.skin.fold, js/skin.js : replié quand
+                // le gabarit affiche le résumé) ; ailleurs le résumé est masqué et l'arbre reste ouvert.
+                // Résumé : libellé du niveau de la rubrique courante (paramètre directory_label_depth<n>)
+                $intTreeDepth = isset($arrTreeview['list'][$intHeadingId]) ? sizeof($arrTreeview['list'][$intHeadingId]['parents']) : 1;
+                $arrTreeLabel = preg_split('/\//', !empty($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]["directory_label_depth{$intTreeDepth}"]) ? $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]["directory_label_depth{$intTreeDepth}"] : 'une/cette/rubrique');
+                $strTreeLabel = isset($arrTreeLabel[2]) ? $arrTreeLabel[2] : end($arrTreeLabel);
+                $strTreeLabel = mb_strtoupper(mb_substr($strTreeLabel, 0, 1)).mb_substr($strTreeLabel, 1);
+                ?>
+                <details class="directory_tree_toggle ploopi_fold" open>
+                    <summary><span><?php echo ploopi\str::htmlentities($strTreeLabel); ?> :</span> <strong><?php echo isset($arrTreeview['list'][$intHeadingId]) ? ploopi\str::htmlentities($arrTreeview['list'][$intHeadingId]['label']) : ''; ?></strong></summary>
+                    <div class="ploopi_tabs">
+                        <a href="<?php echo ploopi\crypt::urlencode("admin.php?directory_heading_id={$intHeadingId}&op=directory_heading_viewall"); ?>"><img src="./modules/directory/img/ico_viewall.png">Voir toutes les rubriques</a>
+                    </div>
+                    <div style="padding:10px;">
+                        <?php echo ploopi\skin::get()->display_treeview($arrTreeview['list'], $arrTreeview['tree'], $intHeadingId, null, $op == 'directory_heading_viewall'); ?>
+                    </div>
+                </details>
             </div>
             <div class="directory_shared_heading" id="directory_shared_heading">
                 <div>
@@ -809,7 +821,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                                             ?>
                                         </p>
                                         <div style="clear:both;padding:4px;">
-                                            <div style="border:1px solid #c0c0c0;overflow:hidden;">
+                                            <div class="directory_cadre">
                                             <?php ploopi\validation::selectusers(_DIRECTORY_OBJECT_HEADING, $intHeadingId, -1, _DIRECTORY_ACTION_CONTACTS, sprintf("Gestionnaires de %s %s", $arrHeadingLabel[$intDepth][1], $arrHeadingLabel[$intDepth][2])); ?>
                                             </div>
                                         </div>
@@ -887,7 +899,7 @@ switch($_SESSION['directory']['directoryTabItem'])
                         }
                         ?>
 
-                        <div style="border-top:1px solid #a0a0a0;">
+                        <div class="directory_filet_haut">
                             <?php
                             if ($booModify) // Version modifiable
                             {
@@ -1018,7 +1030,7 @@ switch($_SESSION['directory']['directoryTabItem'])
         {
             ?>
             <script type="text/javascript">
-            ploopi_window_onload_stock(
+            jQuery(
                 function() {
                         jQuery('#directory_heading_label')[0].focus();
                         jQuery('#directory_heading_label')[0].select();
@@ -1075,7 +1087,7 @@ switch($_SESSION['directory']['directoryTabItem'])
             <?php
         }
         ?>
-        <div style="border-bottom:1px solid #c0c0c0;overflow:auto;">
+        <div class="directory_filet_bas">
             <div class="ploopi_form_title">
                 <span>Liste des numéros abrégés</span>
             </div>
@@ -1139,22 +1151,22 @@ switch($_SESSION['directory']['directoryTabItem'])
 ?>
 </div>
 
-<p class="ploopi_va" style="padding:4px;background-color:#e0e0e0;">
+<p class="ploopi_va directory_bandeau_simple">
     <span style="font-weight:bold;"><?php echo _DIRECTORY_LEGEND; ?>:&nbsp;&nbsp;</span>
-    <img style="margin:0 4px 0 10px;" src="./modules/directory/img/ico_open.png" /><span><?php echo _DIRECTORY_LEGEND_VIEW; ?></span>
-    <img style="margin:0 4px 0 10px;" src="./modules/directory/img/ico_modify.png" /><span><?php echo _DIRECTORY_LEGEND_MODIFY; ?></span>
-    <img style="margin:0 4px 0 10px;" src="./modules/directory/img/ico_delete.png" /><span><?php echo _DIRECTORY_LEGEND_DELETE; ?></span>
+    <span class="directory_legend_item"><img style="margin:0 4px 0 10px;" src="./modules/directory/img/ico_open.png" /><span><?php echo _DIRECTORY_LEGEND_VIEW; ?></span></span>
+    <span class="directory_legend_item"><img style="margin:0 4px 0 10px;" src="./modules/directory/img/ico_modify.png" /><span><?php echo _DIRECTORY_LEGEND_MODIFY; ?></span></span>
+    <span class="directory_legend_item"><img style="margin:0 4px 0 10px;" src="./modules/directory/img/ico_delete.png" /><span><?php echo _DIRECTORY_LEGEND_DELETE; ?></span></span>
     <?php
     if ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['directory_myfavorites'])
     {
         ?>
-        <img style="margin:0 4px 0 10px;" src="./modules/directory/img/ico_fav_add.png" /><span><?php echo _DIRECTORY_LEGEND_FAVADD; ?></span>
-        <img style="margin:0 4px 0 10px;" src="./modules/directory/img/ico_fav_modify.png" /><span><?php echo _DIRECTORY_LEGEND_FAVMODIFY; ?></span>
+        <span class="directory_legend_item"><img style="margin:0 4px 0 10px;" src="./modules/directory/img/ico_fav_add.png" /><span><?php echo _DIRECTORY_LEGEND_FAVADD; ?></span></span>
+        <span class="directory_legend_item"><img style="margin:0 4px 0 10px;" src="./modules/directory/img/ico_fav_modify.png" /><span><?php echo _DIRECTORY_LEGEND_FAVMODIFY; ?></span></span>
         <?php
     }
     ?>
-    <img style="margin:0 4px 0 10px;" src="./modules/directory/img/ico_email.png" /><span><?php echo _DIRECTORY_LEGEND_EMAIL; ?></span>
-    <img style="margin:0 4px 0 10px;" src="./modules/directory/img/ico_ticket.png" /><span><?php echo _DIRECTORY_LEGEND_TICKET; ?></span>
+    <span class="directory_legend_item"><img style="margin:0 4px 0 10px;" src="./modules/directory/img/ico_email.png" /><span><?php echo _DIRECTORY_LEGEND_EMAIL; ?></span></span>
+    <span class="directory_legend_item"><img style="margin:0 4px 0 10px;" src="./modules/directory/img/ico_ticket.png" /><span><?php echo _DIRECTORY_LEGEND_TICKET; ?></span></span>
 </p>
 
 <?php echo ploopi\skin::get()->close_simplebloc(); ?>

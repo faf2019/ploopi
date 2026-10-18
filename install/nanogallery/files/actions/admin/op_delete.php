@@ -10,7 +10,8 @@ if ( !empty($_GET['id'])
 		&& ploopi\acl::isactionallowed(nanogallery::ACTION_DELETE)
 	) {
 		$img = new nanogallery();
-		if($img->open($_GET['id'])) {
+		// L'identifiant doit désigner une galerie de l'instance courante
+		if($img->open($_GET['id']) && $img->fields['id_module'] == $this->getModuleId()) {
 			ploopi\user_action_log::record(nanogallery::ACTION_DELETE, $img->fields['id']);
 			$img->delete();
 			ploopi\output::redirect(ploopi\crypt::urlencode("admin.php?entity=public&action=list"));

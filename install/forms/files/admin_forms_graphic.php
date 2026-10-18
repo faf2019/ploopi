@@ -34,8 +34,8 @@
 /**
  * Constantes
  */
-include_once './modules/forms/jpgraph/jpgraph.php';
-include_once './modules/forms/jpgraph/jpgraph_ttf.inc.php';
+// Polices et marqueurs : constantes de formsChart
+include_once './modules/forms/classes/formsGraphic.php';
 
 /**
  * On commence par vérifier si l'identifiant du graphique est valide.
@@ -53,7 +53,7 @@ else
     $objGraphic->init_description();
     $objGraphic->fields['type'] = 'line';
 
-    $objGraphic->fields['param_font'] = FF_VERA;
+    $objGraphic->fields['param_font'] = formsChart::FONT_VERA;
     $objGraphic->fields['param_transparency'] = '0.2';
     $objGraphic->fields['param_fill_transparency'] = '0.5';
     $objGraphic->fields['param_margin_left'] = '40';
@@ -67,7 +67,7 @@ else
     $objGraphic->fields['param_font_size_title'] = '15';
     $objGraphic->fields['param_font_size_legend'] = '8';
     $objGraphic->fields['param_font_size_data'] = '10';
-    $objGraphic->fields['param_mark_type'] = MARK_SQUARE;
+    $objGraphic->fields['param_mark_type'] = formsChart::MARK_SQUARE;
     $objGraphic->fields['param_mark_transparency'] = '0.3';
     $objGraphic->fields['param_mark_width'] = '3';
 
@@ -125,15 +125,7 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
                     <p>
                         <label>Police de caractère:</label>
                         <?php
-                        $arrFonts = array(
-                            FF_VERA => 'Vera',
-                            FF_VERAMONO => 'Vera Mono',
-                            FF_VERASERIF => 'Vera Serif',
-                            FF_DV_SERIF => 'DejaVu Serif',
-                            FF_DV_SANSSERIF => 'DejaVu Sans',
-                            FF_DV_SANSSERIFMONO => 'DejaVu Sans Mono',
-                            FF_DV_SANSSERIF => 'DejaVu Sans'
-                        );
+                        $arrFonts = formsChart::getFonts();
                         ?>
                         <select class="select" name="forms_graphic_param_font">
                             <?php
@@ -243,20 +235,7 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
                     </p>
                 </fieldset>
                 <?php
-                $arrMarks = array(
-                    MARK_SQUARE => 'Carré',
-                    MARK_CIRCLE => 'Cercle vide',
-                    MARK_FILLEDCIRCLE => 'Cercle plein',
-                    MARK_UTRIANGLE => 'Triangle vers le haut',
-                    MARK_DTRIANGLE => 'Triangle vers le bas',
-                    MARK_LEFTTRIANGLE => 'Triangle vers la gauche',
-                    MARK_RIGHTTRIANGLE => 'Triangle vers la droite',
-                    MARK_DIAMOND => 'Losange',
-                    MARK_CROSS => 'Croix',
-                    MARK_X => 'Croix 2',
-                    MARK_STAR => 'Etoile',
-                    MARK_FLASH => 'Eclair',
-                );
+                $arrMarks = formsChart::getMarks();
                 ?>
                 <fieldset>
                     <legend>Paramètres Courbes/Radars</legend>
@@ -452,7 +431,7 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
                     {
                         ?>
                         <p class="ploopi_va forms_param_link" id="forms_graphic_line<?php echo $intI; ?>_link" style="display:block;">
-                            <a href="javascript:void(0);" onclick="javascript:$('forms_graphic_line<?php echo $intI; ?>_link').style.display = 'none'; $('forms_graphic_line<?php echo $intI; ?>_param').style.display = 'block';">
+                            <a href="javascript:void(0);" onclick="javascript:jQuery('#forms_graphic_line<?php echo $intI; ?>_link').hide(); jQuery('#forms_graphic_line<?php echo $intI; ?>_param').show();">
                             <img src="./modules/forms/img/arrow_down.png" />
                             Paramétrer <?php echo _FORMS_GRAPHIC_DATASET.' n°'.$intI; ?>
                             </a>
@@ -466,7 +445,7 @@ if (!$objGraphic->isnew()) $arrParams[] = "forms_graphic_id={$objGraphic->fields
     </div>
 </div>
 
-<div style="clear:both;background-color:#d0d0d0;border-top:1px solid #a0a0a0;padding:4px;overflow:auto;text-align:right;">
+<div class="forms_barre_boutons">
     <input type="button" class="flatbutton" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<?php echo ploopi\crypt::urlencode("admin.php?op=forms_modify&forms_id={$objForm->fields['id']}"); ?>'">
     <input type="submit" class="flatbutton" value="<?php echo _PLOOPI_SAVE; ?>">
 </div>

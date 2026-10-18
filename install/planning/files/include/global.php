@@ -37,6 +37,13 @@
  */
 
 /**
+ * Écrans prêts pour la Content-Security-Policy stricte (ploopi\csp::moduleready) : aucun
+ * script ni gestionnaire en ligne, comportements par attributs data-* (js/actions.js
+ * du socle, include/functions.js du module)
+ */
+define('_PLANNING_CSP', true);
+
+/**
  * Action : Ajout d'un événement
  */
 define ('_PLANNING_ADD_EVENT',   10);
@@ -69,6 +76,34 @@ $arrPlanningSize =
         '1000x800',
         '1200x975'
     );
+
+/**
+ * Taille du calendrier : une des tailles proposées ($arrPlanningSize) ou « auto »,
+ * dont la largeur est mesurée par le navigateur (ploopi.skin.autowidth, js/skin.js)
+ * et transmise par planning_autowidth. Une taille inconnue revient à la taille par défaut :
+ * « auto » sous un gabarit adaptatif (génération 4), la première taille proposée sinon.
+ *
+ * @param array $arrSearchPattern critères d'affichage (planning_size, planning_autowidth), par référence
+ * @return array largeur et hauteur en pixels
+ */
+
+function planning_size(&$arrSearchPattern)
+{
+    global $arrPlanningSize;
+
+    if (!isset($arrSearchPattern['planning_size']) || !in_array($arrSearchPattern['planning_size'], array_merge(array('auto'), $arrPlanningSize), true))
+    {
+        $objSkin = ploopi\skin::get();
+        $arrSearchPattern['planning_size'] = ($objSkin && $objSkin->version() >= 4) ? 'auto' : $arrPlanningSize[0];
+    }
+
+    if ($arrSearchPattern['planning_size'] != 'auto') return array_map('intval', explode('x', $arrSearchPattern['planning_size']));
+
+    // Largeur mesurée, bornée ; 800 tant que le navigateur ne l'a pas transmise
+    $intWidth = empty($arrSearchPattern['planning_autowidth']) ? 800 : (int) $arrSearchPattern['planning_autowidth'];
+
+    return array(min(max($intWidth, 280), 2400), 650);
+}
 
 /**
  * Retourne la liste des ressources disponibles (utilisateurs/groupes)
@@ -212,10 +247,18 @@ function planning_getcookie()
 {
     $arrSearchPattern = array();
 
-    // Lecture cookie
+    /**
+     * Le cookie est fourni par le client : il ne doit jamais produire d'objet.
+     * allowed_classes à false n'en laisse sortir que des tableaux et des scalaires, ce qui
+     * ferme l'injection d'objet PHP. La borne passée à gzuncompress() écarte par ailleurs
+     * une archive-bombe, qu'un cookie de quelques octets suffit à construire.
+     */
     ploopi\error::unset_handler();
-    if (isset($_COOKIE["planning_request{$_SESSION['ploopi']['moduleid']}"])) $arrSearchPattern = unserialize(gzuncompress(base64_decode($_COOKIE["planning_request{$_SESSION['ploopi']['moduleid']}"])));
+    if (isset($_COOKIE["planning_request{$_SESSION['ploopi']['moduleid']}"]))
+        $arrSearchPattern = @unserialize(@gzuncompress(@base64_decode($_COOKIE["planning_request{$_SESSION['ploopi']['moduleid']}"]), 1048576), array('allowed_classes' => false));
     ploopi\error::set_handler();
+
+    if (!is_array($arrSearchPattern)) $arrSearchPattern = array();
 
     return $arrSearchPattern;
 }
@@ -223,5 +266,22 @@ function planning_getcookie()
 function planning_setcookie($arrSearchPattern)
 {
     setcookie("planning_request{$_SESSION['ploopi']['moduleid']}", base64_encode(gzcompress(serialize($arrSearchPattern), 9)));
+}
+
+/**
+ * L'utilisateur courant peut-il modifier ou supprimer l'événement ?
+ *
+ * Règle de l'interface : l'action « ajouter un événement » (10) donne la main sur les
+ * événements du planning. L'événement doit en outre appartenir à l'instance courante :
+ * un identifiant ne désigne pas l'événement d'une autre instance.
+ *
+ * @param array $arrEvent champs de l'événement
+ * @return boolean true si l'événement est modifiable
+ */
+
+function planning_event_ismodifiable($arrEvent)
+{
+    return ploopi\acl::isactionallowed(_PLANNING_ADD_EVENT)
+        && isset($arrEvent['id_module']) && $arrEvent['id_module'] == $_SESSION['ploopi']['moduleid'];
 }
 ?>

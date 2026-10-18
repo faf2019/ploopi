@@ -78,7 +78,7 @@ ob_start();
     <p class="ploopi_va" style="margin:2px;">
         <img src="./modules/doc/img/ico_folder_shared_locked.png"><span style="margin-left:4px;">Dossier Partagé protégé</span>
     </p>
-    <p class="ploopi_va" style="background-color:#ffe0e0;padding:2px 0;margin:2px;">
+    <p class="ploopi_va doc_legende_brouillon">
         <span style="margin-left:4px;">Dossier ou fichier à valider</span>
     </p>
 </div>

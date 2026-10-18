@@ -1,0 +1,1 @@
+Tabler Icons 3.49.0 — https://tabler.io/icons — licence MIT (voir LICENSE). Sous-ensemble des glyphes utilisés par tools/icones/correspondances.js, tools/icones/modules.js et tools/icones/ploopi4.txt (sprite de ploopi4).

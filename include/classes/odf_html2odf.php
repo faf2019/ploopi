@@ -90,11 +90,10 @@ class odf_html2odf
 
         $this->_html_parser = xml_parser_create('ISO-8859-1');
 
-        xml_set_object($this->_html_parser, $this);
         xml_parser_set_option($this->_html_parser, XML_OPTION_CASE_FOLDING, 0);
 
-        xml_set_element_handler($this->_html_parser, '_tag_open',  '_tag_close');
-        xml_set_character_data_handler($this->_html_parser, '_cdata');
+        xml_set_element_handler($this->_html_parser, array($this, '_tag_open'),  array($this, '_tag_close'));
+        xml_set_character_data_handler($this->_html_parser, array($this, '_cdata'));
     }
 
     /**

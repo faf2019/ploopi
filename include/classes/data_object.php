@@ -306,7 +306,7 @@ class data_object
             $arrValues = array();
             foreach ($this->fields as $key => $value)
             {
-                $arrValues[] = (is_null($value)) ? "{$this->tablename_quoted}.`{$key}` = null" : "{$this->tablename_quoted}.`{$key}` = '".$this->db->addslashes($value)."'";
+                $arrValues[] = self::sqlvalue($this->tablename_quoted, $key, $value, $this->db);
             }
 
             $listvalues = (empty($arrValues)) ? '' : 'SET '.implode(', ', $arrValues);
@@ -331,7 +331,7 @@ class data_object
             $arrValues = array();
             foreach ($this->fields as $key => $value)
             {
-                $arrValues[] = (is_null($value)) ? "{$this->tablename_quoted}.`{$key}` = null" : "{$this->tablename_quoted}.`{$key}` = '".$this->db->addslashes($value)."'";
+                $arrValues[] = self::sqlvalue($this->tablename_quoted, $key, $value, $this->db);
             }
 
             $listvalues = (empty($arrValues)) ? '' : implode(', ', $arrValues);
@@ -354,6 +354,32 @@ class data_object
     }
 
     /**
+     * Rend une affectation « table.champ = valeur » pour une requête INSERT ou UPDATE
+     *
+     * Un booléen PHP ne peut pas être inséré tel quel : la conversion implicite en
+     * chaîne donne '1' pour true mais la CHAÎNE VIDE pour false, qu'un serveur en mode
+     * strict — STRICT_TRANS_TABLES, défaut depuis MySQL 5.7 et MariaDB 10.2 — refuse
+     * sur une colonne numérique. Tout champ affecté à false était donc silencieusement
+     * impossible à enregistrer ; c'est ce qui empêchait, par exemple, de déverrouiller
+     * une page de wiki.
+     *
+     * @param string $strTable nom de table déjà protégé
+     * @param string $strChamp nom du champ
+     * @param mixed $mixValeur valeur à écrire
+     * @param db $objDb connexion, pour l'échappement
+     * @return string affectation SQL
+     */
+
+    protected static function sqlvalue($strTable, $strChamp, $mixValeur, $objDb)
+    {
+        if (is_null($mixValeur)) return "{$strTable}.`{$strChamp}` = null";
+
+        if (is_bool($mixValeur)) return "{$strTable}.`{$strChamp}` = ".($mixValeur ? '1' : '0');
+
+        return "{$strTable}.`{$strChamp}` = '".$objDb->addslashes($mixValeur)."'";
+    }
+
+    /**
      * Supprime l'enregistrement dans la base de données
      */
 
@@ -370,6 +396,17 @@ class data_object
 
     /**
      * Initialise les propriétés de l'objet avec la structure et les valeurs par défaut de la table
+     *
+     * Une colonne sans valeur par défaut déclarée prend la valeur vide qui convient à son
+     * type : null pour une colonne auto-incrémentée ou numérique acceptant null, 0 pour une
+     * colonne numérique qui ne l'accepte pas, la chaîne vide sinon.
+     *
+     * Jusqu'ici toute colonne sans défaut recevait la chaîne vide, y compris la clé
+     * auto-incrémentée. save() émettait donc « INSERT ... SET `id` = '' », que tout serveur
+     * en mode strict — STRICT_TRANS_TABLES, valeur par défaut depuis MySQL 5.7 et
+     * MariaDB 10.2 — rejette avec « Incorrect integer value: '' for column id ».
+     * L'enchaînement init_description() puis save(), pourtant recommandé pour une insertion,
+     * ne fonctionnait plus sur un serveur récent.
      */
 
     public function init_description()
@@ -377,8 +414,35 @@ class data_object
         $this->sql = "DESCRIBE {$this->tablename_quoted}";
         $rs = $this->db->query($this->sql);
         while ($fields = $this->db->fetchrow($rs)) {
-            $this->fields[$fields['Field']] = is_null($fields['Default']) ? '' : trim($fields['Default'], "'");
+            $this->fields[$fields['Field']] = self::defaultvalue($fields);
         }
+    }
+
+    /**
+     * Détermine la valeur initiale d'une colonne à partir de sa description (DESCRIBE)
+     *
+     * @param array $arrField ligne de DESCRIBE : Field, Type, Null, Key, Default, Extra
+     * @return mixed valeur par défaut déclarée, ou valeur vide adaptée au type
+     */
+
+    protected static function defaultvalue($arrField)
+    {
+        // Une colonne auto-incrémentée est renseignée par le serveur.
+        if (stripos($arrField['Extra'], 'auto_increment') !== false) return null;
+
+        // Valeur par défaut déclarée dans le schéma : elle prime.
+        if (!is_null($arrField['Default'])) return trim($arrField['Default'], "'");
+
+        // Sans défaut déclaré, la chaîne vide n'est pas une valeur acceptable pour une
+        // colonne numérique : le défaut implicite est null si la colonne l'accepte, 0 sinon.
+        if (preg_match('/^(tinyint|smallint|mediumint|int|integer|bigint|decimal|dec|numeric|float|double|real|bit|year)\b/i', $arrField['Type']))
+            return strtoupper($arrField['Null']) == 'YES' ? null : 0;
+
+        // Même raisonnement pour les colonnes temporelles, que '' ferait également rejeter.
+        if (preg_match('/^(date|datetime|timestamp|time)\b/i', $arrField['Type']) && strtoupper($arrField['Null']) == 'YES')
+            return null;
+
+        return '';
     }
 
     /**

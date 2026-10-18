@@ -96,12 +96,12 @@ foreach($load as $key => $l)
 $columns = array();
 $values = array();
 
-$columns['left']['title'] = array('label' => 'Période', 'width' => 100, 'style' => 'text-align:right;');
-$columns['left']['load'] = array('label' => 'Charge (%)', 'width' => 100, 'style' => 'text-align:right;');
-$columns['left']['tpp'] = array('label' => 'Tps de Réponse (ms)', 'width' => 180, 'style' => 'text-align:right;');
-$columns['left']['rps'] = array('label' => 'Requêtes/s', 'width' => 100, 'style' => 'text-align:right;');
-$columns['left']['pps'] = array('label' => 'Pages/s', 'width' => 100, 'style' => 'text-align:right;');
-$columns['left']['bw'] = array('label' => 'Bande passante (ko)', 'width' => 150, 'style' => 'text-align:right;');
+$columns['left']['title'] = array('label' => _SYSTEM_TOOLS_COL_PERIOD, 'width' => 100, 'style' => 'text-align:right;');
+$columns['left']['load'] = array('label' => _SYSTEM_TOOLS_COL_LOAD, 'width' => 100, 'style' => 'text-align:right;');
+$columns['left']['tpp'] = array('label' => _SYSTEM_TOOLS_COL_RESPONSE, 'width' => 180, 'style' => 'text-align:right;');
+$columns['left']['rps'] = array('label' => _SYSTEM_TOOLS_COL_RPS, 'width' => 100, 'style' => 'text-align:right;');
+$columns['left']['pps'] = array('label' => _SYSTEM_TOOLS_COL_PPS, 'width' => 100, 'style' => 'text-align:right;');
+$columns['left']['bw'] = array('label' => _SYSTEM_TOOLS_COL_BANDWIDTH, 'width' => 150, 'style' => 'text-align:right;');
 
 $c = 0;
 // Calcul Charge :
@@ -124,11 +124,11 @@ foreach($load as $key => $l)
 }
 
 ?>
-<p class="ploopi_va" style="padding:4px;background-color:#e0e0e0;border-bottom:2px solid #c0c0c0;font-weight:bold;">
-    <span>Charge du système en temps réel (nombre de coeurs : <?php echo _PLOOPI_LOAD_NBCORE; ?>)&nbsp;&nbsp;</span><img src="./img/loading.gif" style="visibility:hidden;" id="system_serverload_loading"/>
+<p class="ploopi_va system_bandeau system_bandeau_titre">
+    <span><?php echo ploopi\str::htmlentities(str_replace('<NB>', _PLOOPI_LOAD_NBCORE, _SYSTEM_TOOLS_LIVELOAD)); ?>&nbsp;&nbsp;</span><img src="./img/loading.gif" style="visibility:hidden;" id="system_serverload_loading"/>
 </p>
 <?php
-ploopi\skin::get()->display_array($columns, $values, 'array_load');
+system_display_array($columns, $values, 'array_load');
 
 ploopi\log::getdb()->query("SELECT COUNT(*) AS c FROM ploopi_log");
 $row = ploopi\log::getdb()->fetchrow();
@@ -160,14 +160,14 @@ ploopi\log::getdb()->query( "
 $columns = array();
 $values = array();
 
-$columns['left']['ts'] = array('label' => 'Date/Heure', 'width' => 135);
-$columns['left']['env'] = array('label' => 'Client', 'width' => 160);
-$columns['left']['exec'] = array('label' => 'Page (ms)', 'width' => 80);
-$columns['left']['sql'] = array('label' => 'SQL (ms)', 'width' => 80);
-$columns['left']['numq'] = array('label' => 'SQL (qy)', 'width' => 80);
-$columns['left']['ip'] = array('label' => 'IP', 'width' => 100);
-$columns['left']['ploopi'] = array('label' => 'Ploopi', 'width' => 60);
-$columns['auto']['uri'] = array('label' => 'URI');
+$columns['left']['ts'] = array('label' => _SYSTEM_TOOLS_COL_DATETIME, 'width' => 135);
+$columns['left']['env'] = array('label' => _SYSTEM_TOOLS_COL_CLIENT, 'width' => 160);
+$columns['left']['exec'] = array('label' => _SYSTEM_TOOLS_COL_PAGEMS, 'width' => 80);
+$columns['left']['sql'] = array('label' => _SYSTEM_TOOLS_COL_SQLMS, 'width' => 80);
+$columns['left']['numq'] = array('label' => _SYSTEM_TOOLS_COL_SQLCOUNT, 'width' => 80);
+$columns['left']['ip'] = array('label' => _SYSTEM_TOOLS_COL_IP, 'width' => 100);
+$columns['left']['ploopi'] = array('label' => _SYSTEM_TOOLS_COL_PLOOPI, 'width' => 60);
+$columns['auto']['uri'] = array('label' => _SYSTEM_TOOLS_COL_URI);
 
 $c = 0;
 
@@ -190,9 +190,9 @@ while ($row = ploopi\log::getdb()->fetchrow())
 }
 
 ?>
-<div style="padding:4px;background-color:#e0e0e0;border-bottom:2px solid #c0c0c0;border-top:2px solid #c0c0c0;">
-    <strong>Historique : <?php echo $intMaxRequests; ?> dernières requêtes</strong> (<span style="color:#a60000;"><?php echo $intLogRows ?> lignes dans la base</span>, pensez à vider les logs régulièrement ou à utiliser la tâche &laquo; cron &raquo;  de Ploopi)
+<div class="system_bandeau system_bandeau_cadre">
+    <strong><?php echo ploopi\str::htmlentities(str_replace('<NB>', $intMaxRequests, _SYSTEM_TOOLS_REQHISTORY)); ?></strong> (<span style="color:#a60000;"><?php echo ploopi\str::htmlentities(str_replace('<NB>', $intLogRows, _SYSTEM_TOOLS_LOGROWS)); ?></span><?php echo ploopi\str::htmlentities(_SYSTEM_TOOLS_LOGPURGE); ?>)
 </div>
 <?php
-ploopi\skin::get()->display_array($columns, $values, 'array_requests');
+system_display_array($columns, $values, 'array_requests');
 ?>

@@ -70,7 +70,7 @@ class nanogallery extends ploopi\data_object {
      */
 	public function display() {
 		// Ajout fichiers CSS et JS
-		global $template_body;
+		$template_body = self::template();
 		$template_body->assign_block_vars('module_css', array('PATH' => './modules/nanogallery/include/css/nanogallery2.min.css'));
 		$template_body->assign_block_vars('module_css', array('PATH' => './modules/nanogallery/include/css/nanogallery2.woff.min.css'));
 		$template_body->assign_block_vars('module_js', array('PATH' => './modules/nanogallery/include/js/jquery.nanogallery2.min.js'));
@@ -91,8 +91,8 @@ class nanogallery extends ploopi\data_object {
 		// Styles du cadre
 		$style = 'border-style: solid;';
 		if (!empty($f['frameBorderColor'])) $style .= "border-color:{$f['frameBorderColor']};";
-		$style .= "border-top-width:${frameBorderHorizontal}px;border-bottom-width:${frameBorderHorizontal}px;";
-		$style .= "border-left-width:${frameBorderVertical}px;border-right-width:${frameBorderVertical}px;";
+		$style .= "border-top-width:{$frameBorderHorizontal}px;border-bottom-width:{$frameBorderHorizontal}px;";
+		$style .= "border-left-width:{$frameBorderVertical}px;border-right-width:{$frameBorderVertical}px;";
 		if (!empty($f['frameBorderRadius'])) $style .= "border-radius:{$f['frameBorderRadius']}px;";
 		if (!empty($f['frameBgColor'])) $style .= "background:{$f['frameBgColor']};";
 		if (!empty($f['frameInternalVertical'])) $style .= "padding-left:{$f['frameInternalVertical']}px;padding-right:{$f['frameInternalVertical']}px;";
@@ -159,9 +159,9 @@ class nanogallery extends ploopi\data_object {
 				foreach($albums as $album) {
 					if (!is_null($album['thumbnailName']) || $this->fields['flatAlbums'] == false) {
 						if (is_null($album['thumbnailName'])) $album['thumbnailName'] = "modules/nanogallery/img/Folder-Icon.jpg";
-						$str = '<a href="" data-ngkind="album" data-ngthumb="'.$album['thumbnailName'].'"';
+						$str = '<a href="" data-ngkind="album" data-ngthumb="'.ploopi\str::htmlentities($album['thumbnailName']).'"';
 						if (!$toplevel && $this->fields['flatAlbums'] == false) $str .= ' data-ngalbumid="'.$album['ngalbumid'].'"';
-						$str .= ' data-ngid="'.$album['id'].'">ALBUM "'.$album['name'].'"</a>';
+						$str .= ' data-ngid="'.$album['id'].'">ALBUM "'.ploopi\str::htmlentities($album['name']).'"</a>';
 						echo $str;
 					}
 					$this->getFolderContent($album['id']);
@@ -173,11 +173,22 @@ class nanogallery extends ploopi\data_object {
 		$imgIdx = 1;
 		foreach ($arrImages as $img) {
 			$crtImgId = $idFolder.sprintf('%04s', $imgIdx++);
-			$str = '<a href="'.$img['file'].'" data-ngthumb="'.$img['file'].'" data-ngid="'.$img['ngid'].'"';
+			$str = '<a href="'.ploopi\str::htmlentities($img['file']).'" data-ngthumb="'.ploopi\str::htmlentities($img['file']).'" data-ngid="'.$img['ngid'].'"';
 			if (!$toplevel) $str .= ' data-ngalbumid="'.$img['ngalbumid'].'"';
-			$str .= ' data-ngdesc="'.$img['description'].'<hr>'.$img['specs'].'">'.$img['title'].'</a>';
+			// nanogallery lit data-ngdesc comme du HTML : la description saisie y entre comme du texte
+			$str .= ' data-ngdesc="'.ploopi\str::htmlentities(ploopi\str::htmlentities($img['description']).'<hr>'.$img['specs']).'">'.ploopi\str::htmlentities($img['title']).'</a>';
 			echo $str;
 		}		
+	}
+
+    /**
+     * Gabarit de la page en cours : celui du backoffice (loader::get_template(), le
+     * socle ne publie plus de variable globale) ou celui du frontoffice (webedit).
+     */
+	public static function template() {
+		$objTemplate = ploopi\loader::get_template();
+		if (!is_object($objTemplate)) { global $template_body; $objTemplate = $template_body; }
+		return $objTemplate;
 	}
 
     /**
@@ -192,6 +203,31 @@ class nanogallery extends ploopi\data_object {
 			$arrImages = $this->addAlbumImages($arrImages, $idFolder);
 		}
 		return $arrImages;
+	}
+
+    /**
+     * Renvoie les identifiants (md5id) des images de la galerie, albums compris.
+     * Version légère de getAllImages() : ni lecture EXIF ni titres.
+     */
+	public function getImageIds() {
+		$arrFolders = [intval($this->fields['id_folder'])];
+		if ($this->fields['useAlbums']) {
+			$folders = $this->getfolders();
+			for ($i = 0; $i < count($arrFolders); $i++) {
+				if (!empty($folders['tree'][$arrFolders[$i]])) {
+					foreach ($folders['tree'][$arrFolders[$i]] as $id) $arrFolders[] = intval($id);
+				}
+			}
+		}
+		$objQuery = new ploopi\query_select();
+		$objQuery->add_select('md5id');
+		$objQuery->add_from('ploopi_mod_doc_file');
+		$objQuery->add_where('id_folder IN ('.implode(',', $arrFolders).')');
+		$objQuery->add_where("LCASE(extension) IN ('jpg','jpeg','gif','png')");
+		$objResponse = $objQuery->execute();
+		$arrIds = [];
+		while ($row = $objResponse->fetchrow()) $arrIds[] = $row['md5id'];
+		return $arrIds;
 	}
 
     /**
@@ -253,7 +289,9 @@ class nanogallery extends ploopi\data_object {
 			$docfile->openmd5($image['md5id']);
             $file = $docfile->getfilepath();
 			$exif = exif_read_data($file,0,true);
-			$specs = $exif['COMPUTED']['Width'].(empty($exif['COMPUTED']['Width']) ? '':'x').$exif['COMPUTED']['Height'].'<br>';
+			// Les métadonnées EXIF viennent du fichier déposé : échappées avant d'entrer dans le HTML
+			$exif = is_array($exif) ? self::escapeExif($exif) : [];
+			$specs = ($exif['COMPUTED']['Width'] ?? '').(empty($exif['COMPUTED']['Width']) ? '':'x').($exif['COMPUTED']['Height'] ?? '').'<br>';
 			$detail = '';
 			if (isset($exif['COMPUTED']['ApertureFNumber'])) $detail .= $exif['COMPUTED']['ApertureFNumber'].' - ';
 			if (isset($exif['EXIF']['ExposureTime'])) $detail .= $exif['EXIF']['ExposureTime'].' - ';
@@ -266,6 +304,16 @@ class nanogallery extends ploopi\data_object {
 			$arrImages[] = $row;
 		}
 		return $arrImages;
+	}
+
+    /**
+     * Échappe récursivement les valeurs EXIF pour l'affichage HTML
+     */
+	private static function escapeExif($arrExif) {
+		foreach ($arrExif as $key => $value) {
+			$arrExif[$key] = is_array($value) ? self::escapeExif($value) : ploopi\str::htmlentities((string)$value);
+		}
+		return $arrExif;
 	}
 
     /**

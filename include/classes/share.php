@@ -89,7 +89,7 @@ class share extends data_object
             SELECT  id_share, type_share
             FROM    ploopi_share
             WHERE   id_object = {$id_object}
-            AND     id_record = '".addslashes($id_record)."'
+            AND     id_record = '".addslashes((string) $id_record)."'
             AND     id_module = '".addslashes($id_module)."'
         ");
 
@@ -107,8 +107,15 @@ class share extends data_object
             }
         }
 
+        // ploopi4 : recherche et sélection en pastilles (ploopi\userselect)
+        if (userselect::modern())
+        {
+            userselect::form('share', $strShareId, $strTitle, 'ploopi_share_userfilter_'.$strShareId, crypt::queryencode("ploopi_op=share_search_users&share_id={$strShareId}"), crypt::queryencode("ploopi_op=share_select_user&share_id={$strShareId}"), 'Aucune autorisation');
+            return $strShareId;
+        }
+
         ?>
-        <a class="ploopi_share_title" href="javascript:void(0);" onclick="javascript:ploopi.switchdisplay('ploopi_share_<?php echo $strShareId; ?>');">
+        <a class="ploopi_share_title" href="#" data-ploopi-switchdisplay="ploopi_share_<?php echo $strShareId; ?>">
             <p class="ploopi_va">
                 <img src="<?php echo empty($strPathIcon) ? "{$_SESSION['ploopi']['template_path']}/img/share/share.png" : $strPathIcon; ?>">
                 <span><?php echo $strTitle; ?></span>
@@ -118,25 +125,14 @@ class share extends data_object
             <div class="ploopi_share_search_form">
                 <p class="ploopi_va">
                     <span>Recherche groupes/utilisateurs:&nbsp;</span>
-                    <input type="text" id="ploopi_share_userfilter" class="text" onkeyup="javascript:if (event.keyCode == 13) { ploopi.xhr.ajaxloader('div_share_search_result_<?php echo $strShareId; ?>'); ploopi.xhr.todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_search_users&share_id=<?php echo $strShareId; ?>&ploopi_share_userfilter='+ploopi.getelem('ploopi_share_userfilter').value,'div_share_search_result_<?php echo $strShareId; ?>'); }" />
-                    <img onmouseover="javascript:this.style.cursor='pointer';" onclick="javascript:ploopi.xhr.ajaxloader('div_share_search_result_<?php echo $strShareId; ?>'); ploopi.xhr.todiv('admin-light.php','ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_search_users&share_id=<?php echo $strShareId; ?>&ploopi_share_userfilter='+ploopi.getelem('ploopi_share_userfilter').value,'div_share_search_result_<?php echo $strShareId; ?>');" style="border:0px" src="<?php echo "{$_SESSION['ploopi']['template_path']}/img/share/search.png"; ?>">
+                    <input type="text" id="ploopi_share_userfilter" class="text" data-ploopi-enterclick="ploopi_share_search_<?php echo $strShareId; ?>" />
+                    <img id="ploopi_share_search_<?php echo $strShareId; ?>" data-ploopi-search="div_share_search_result_<?php echo $strShareId; ?>" data-ploopi-query="<?php echo str::htmlentities(crypt::queryencode("ploopi_op=share_search_users&share_id={$strShareId}")); ?>" data-ploopi-field="ploopi_share_userfilter" data-ploopi-param="ploopi_share_userfilter" style="border:0px;cursor:pointer;" src="<?php echo "{$_SESSION['ploopi']['template_path']}/img/share/search.png"; ?>">
                 </p>
             </div>
             <div id="div_share_search_result_<?php echo $strShareId; ?>"></div>
 
             <div class="ploopi_share_title">Sélection actuelle :</div>
-            <div class="ploopi_share_authorizedlist" id="div_share_users_selected_<?php echo $strShareId; ?>"><?php if (empty($_SESSION['ploopi']['share'][$strShareId])) echo 'Aucune autorisation'; ?></div>
-            <?php
-            if (!empty($_SESSION['ploopi']['share'][$strShareId]))
-            {
-                ?>
-                <script type="text/javascript">
-                    ploopi.xhr.ajaxloader('div_share_users_selected_<?php echo $strShareId; ?>');
-                    ploopi.xhr.todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_select_user&share_id=<?php echo $strShareId; ?>', 'div_share_users_selected_<?php echo $strShareId; ?>')
-                </script>
-                <?php
-            }
-            ?>
+            <div class="ploopi_share_authorizedlist" id="div_share_users_selected_<?php echo $strShareId; ?>"<?php if (!empty($_SESSION['ploopi']['share'][$strShareId])) echo ' data-ploopi-load="'.str::htmlentities(crypt::queryencode("ploopi_op=share_select_user&share_id={$strShareId}")).'"'; ?>><?php if (empty($_SESSION['ploopi']['share'][$strShareId])) echo 'Aucune autorisation'; ?></div>
         </div>
         <?php
 
@@ -160,7 +156,7 @@ class share extends data_object
 
         $strShareId = is_null($strForceShareId) ? self::generateid($id_object, $id_record, $id_module) : $strForceShareId;
 
-        $db->query("DELETE FROM ploopi_share WHERE id_object = {$id_object} AND id_record = '".addslashes($id_record)."' AND id_module = {$id_module}");
+        $db->query("DELETE FROM ploopi_share WHERE id_object = {$id_object} AND id_record = '".addslashes((string) $id_record)."' AND id_module = {$id_module}");
 
         if (!empty($_SESSION['ploopi']['share'][$strShareId]['users_selected']))
         {

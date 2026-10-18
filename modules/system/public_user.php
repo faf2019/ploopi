@@ -30,6 +30,23 @@
  * @author Ovensia
  */
 
+// Gabarits de génération 4 : fiche refondue (admin_userform_p4.php, mode profil)
+if (ploopi\skin::get()->version() >= 4)
+{
+    echo ploopi\system\ui::pagehead(_PLOOPI_LABEL_MYPROFILE, _SYSTEM_MYS_PROFILE_SUBTITLE);
+    // Profil incomplet à la connexion (include/backoffice.php) : annoncé une fois
+    if (!empty($_SESSION['ploopi']['updateprofile_notice']))
+    {
+        echo '<div class="p4-profile-incomplete p4-ui">'.ploopi\system\ui::callout('warning', ploopi\system\ui::e(_SYSTEM_MYS_PROFILE_INCOMPLETE)).'</div>';
+        unset($_SESSION['ploopi']['updateprofile_notice']);
+    }
+    echo ploopi\system\ui::card_open('', '', array(), array('class' => 'p4-profile-card'));
+    $strUserFormMode = 'profile';
+    include './modules/system/admin_userform_p4.php';
+    echo ploopi\system\ui::card_close();
+    return;
+}
+
 $booReadonly = ploopi\param::get('system_profile_edit_allowed') == '0';
 
 $strDisabled = $booReadonly ? 'disabled="disabled"' : '';
@@ -334,7 +351,7 @@ if (isset($_GET['error']))
                         <label><?php echo _SYSTEM_LABEL_EMAIL; ?><?php if (in_array('email', $arrRequiredFields)) echo ' *'; ?>:</label>
                         <input type="text" class="text" name="user_email" value="<?php echo ploopi\str::htmlentities($user->fields['email']); ?>" <?php echo $strDisabled; ?> tabindex="25" />
                     </p>
-                    <p class="checkbox" onclick="javascript:ploopi.checkbox_click(event,'user_ticketsbyemail');">
+                    <p class="checkbox ploopi_checkbox_zone" data-checkbox="user_ticketsbyemail">
                         <label><?php echo _SYSTEM_LABEL_TICKETSBYEMAIL; ?>:</label>
                         <input style="width:16px;" type="checkbox" id="user_ticketsbyemail" name="user_ticketsbyemail" value="1" <?php if ($user->fields['ticketsbyemail']) echo 'checked'; ?> <?php echo $strDisabled; ?> tabindex="26" />
                     </p>
@@ -349,7 +366,7 @@ if (isset($_GET['error']))
                     $mm = floor((abs($offset) % 3600) / 60);
                     ?>
 
-                    <p class="checkbox" onclick="javascript:ploopi.checkbox_click(event,'user_servertimezone');">
+                    <p class="checkbox ploopi_checkbox_zone" data-checkbox="user_servertimezone">
                         <label><?php echo _SYSTEM_LABEL_SERVERTIMEZONE; ?>:</label>
                         <span>
                             <input style="width:16px;" type="checkbox" id="user_servertimezone" name="user_servertimezone" value="1" <?php if ($user->fields['servertimezone']) echo 'checked'; ?> <?php echo $strDisabled; ?> tabindex="27" onchange="jQuery('#user_timezone_choice')[0].style.display = (this.checked) ? 'none' : 'block';"/>
@@ -419,7 +436,7 @@ if (isset($_GET['error']))
                     <?php } else { ?>
                     <p>
                         <label><?php echo _SYSTEM_LABEL_COLOR; ?>:</label>
-                        <input type="text" style="width:100px;cursor:pointer;" class="text jscolor {hash:true}" name="user_color" id="user_color" value="<?php echo ploopi\str::htmlentities($user->fields['color']); ?>" tabindex="29" />
+                        <input type="text" style="width:100px;cursor:pointer;" class="text" data-jscolor="{}" name="user_color" id="user_color" value="<?php echo ploopi\str::htmlentities($user->fields['color']); ?>" tabindex="29" />
                     </p>
                     <?php } ?>
 

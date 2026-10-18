@@ -36,6 +36,12 @@
     width:20%;
 }
 
+/* Arbre repliable : résumé masqué (arbre toujours ouvert) ; les gabarits adaptatifs
+   l'affichent sur petit écran, et le socle replie alors l'arbre (ploopi.skin.fold) */
+.doc_tree_toggle > summary {
+    display:none;
+}
+
 #doc_treeview_inner {
     padding:5px;
 }
@@ -360,4 +366,63 @@ div.doc_thumb a p {
 
 .doc_draft {
     background-color:#ffe0e0;
+}
+
+/* Anciens styles en ligne, devenus des classes (même aspect) */
+.doc_separateur {
+    float:left;
+    height:40px;
+    border-left:1px solid #e0e0e0;
+}
+
+.doc_bandeau_titre {
+    padding:4px;
+    font-weight:bold;
+    background-color:#f0f0f0;
+    border-bottom:1px solid #c0c0c0;
+}
+
+.doc_titre {
+    padding:4px;
+    font-weight:bold;
+    border-bottom:1px solid #c0c0c0;
+}
+
+.doc_filet_bas {
+    border-bottom:1px solid #c0c0c0;
+}
+
+.doc_bandeau {
+    padding:4px;
+    border-bottom:1px solid #aaa;
+    background-color:#ddd;
+}
+
+.doc_ligne {
+    padding:4px;
+    border-bottom:1px solid #a0a0a0;
+}
+
+.doc_encadre {
+    margin:4px;
+    border:1px solid #c0c0c0;
+    padding:4px;
+    background-color:#f8f8f8;
+}
+
+.doc_encadre_gris {
+    border:1px solid #c0c0c0;
+    margin:4px;
+    background-color:#f0f0f0;
+}
+
+.doc_cadre {
+    border:1px solid #c0c0c0;
+    margin:4px 4px 0 0;
+}
+
+.doc_legende_brouillon {
+    background-color:#ffe0e0;
+    padding:2px 0;
+    margin:2px;
 }

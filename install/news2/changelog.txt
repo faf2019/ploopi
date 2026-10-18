@@ -1,3 +1,77 @@
+== Module NEWS2 - version 3.3.8 ====================================================
+
+2026-10-11  Ovensia <stephane@ovensia.fr>
+
+* Content-Security-Policy stricte (socle, § 3.32) : écrans du module servis sans script ni
+  gestionnaire en ligne, déclarés prêts par _NEWS2_CSP (include/global.php). Suppression
+  confirmée par data-ploopi-confirm, boutons Annuler par data-ploopi-href, choix d'une
+  image, d'un article ou d'une rubrique par data-ploopi-action (actions inscrites dans
+  include/functions.js), dépliage de l'arborescence par data-ploopi-treeview-node.
+
+== Module NEWS2 - version 3.3.7 ====================================================
+
+2026-10-11  Ovensia <stephane@ovensia.fr>
+
+* Éditeur : CKEditor 4 (fin de vie, failles connues) remplacé par TinyMCE, l'éditeur du socle
+  (js/editor.js) : choix d'un fichier ou d'une image de la GED, insertion d'un objet, interface
+  sombre sous ploopi4. include/ckeditor (configuration et extension « tag ») est retiré
+  (obsolete.txt). Le contenu est échappé dans le champ d'édition (il y était écrit brut).
+* Redirection vers une page du site : le titre d'une rubrique ou d'un article de webedit était
+  passé à l'arbre de choix par addslashes, dans un attribut onclick : un guillemet refermait
+  l'attribut (injection de script). Il est désormais un littéral JSON échappé pour l'attribut.
+
+== Module NEWS2 - version 3.3.6 ====================================================
+
+2026-10-10  Ovensia <stephane@ovensia.fr>
+
+* Habillage : les styles en ligne des écrans d'administration (bandeaux gris, barres de boutons,
+  cadres et filets) deviennent des classes, déclarées dans include/styles.css avec exactement le même
+  aspect ; le gabarit ploopi3 les redessine dans sa palette (tools/ploopi3_modules.php). Les écrans
+  servis au frontoffice (wce, template, display), où la feuille du module n'est pas chargée, gardent
+  leurs styles en ligne.
+
+== Module NEWS2 - version 3.3.5 ====================================================
+
+2026-10-10  Ovensia <stephane@ovensia.fr>
+
+* Icônes : jeu unifié de l'administration (Tabler Icons, au trait, palette du gabarit ploopi3), sous
+  les mêmes noms et aux mêmes tailles ; le code qui les appelle ne change pas. Correspondances dans
+  tools/icones/modules.js, régénération par tools/icones/generer.js.
+
+== Module NEWS2 - version 3.3.4 ====================================================
+
+2026-10-09  Ovensia <stephane@ovensia.fr>
+
+* Liste des news : le contenu s'affichait balisage compris (échappé) et une image
+  sans source apparaissait pour une news sans illustration. Le contenu, saisi dans
+  CKEditor et non filtré à l'enregistrement, passe par HTMLPurifier dans la liste, la
+  fiche et le frontoffice ; les liens et images aux schémas exécutables sont écartés.
+
+* Plugin CKEditor « tag » : réécrit en jQuery (il appelait Ajax.Request de Prototype
+  sur une adresse jamais définie).
+
+== Module NEWS2 - version 3.3.3 ====================================================
+
+2026-10-09  Ovensia <stephane@ovensia.fr>
+
+* Fichiers .gz resynchronisés avec leurs sources (ils dataient d'une minification antérieure).
+
+== Module NEWS2 - version 3.3.2 ====================================================
+
+2026-10-06  Ovensia <stephane@ovensia.fr>
+
+* Sécurité : cloisonnement des instances.
+
+  Les opérations (op_write, op_delete, op_publish, op_catwrite, op_catdelete)
+  contrôlaient bien les actions déclarées, mais ouvraient la news ou la catégorie
+  par son seul identifiant : un gestionnaire d'une instance modifiait, supprimait
+  ou publiait celles d'une autre. Les enregistrements ne reprennent plus du
+  formulaire ni l'identifiant, ni le propriétaire, ni le cloisonnement.
+
+* Sécurité : la fiche d'une news (entity=public&action=one) n'affiche plus qu'une
+  news de l'instance courante, dans un espace visible, et publiée — un brouillon
+  reste visible de qui peut le modifier ou le publier, comme dans la liste.
+
 == Module NEWS2 - version 3.3.1 ====================================================
 
 2025-02-24  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

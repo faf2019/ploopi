@@ -45,17 +45,34 @@ if (!$objModuleType->open($_GET['idmoduletype'])) ploopi\output::redirect("admin
 
 $strModuleType = $objModuleType->fields['label'];
 
-if (!ini_get('safe_mode')) ini_set('max_execution_time', 0);
+ini_set('max_execution_time', 0);
 
-echo ploopi\skin::get()->open_simplebloc(_SYSTEM_LABEL_UPDATEREPORT.ploopi\str::htmlentities(" - {$strModuleType} {$_GET['updatefrom']} => {$_GET['updateto']}"));
+// Gabarits de génération 4 : compte rendu dans une carte
+$booSystemP4 = ploopi\skin::get()->version() >= 4;
+
+if ($booSystemP4)
+{
+    echo ploopi\system\ui::pagehead(str_replace(array('<MODULE>', '<FROM>', '<TO>'), array($strModuleType, $_GET['updatefrom'], $_GET['updateto']), _SYSTEM_SYSMOD_UPDATE_TITLE), _SYSTEM_SYSMOD_REPORT_DESC);
+    echo ploopi\system\ui::card_open(_SYSTEM_LABEL_UPDATEREPORT, 'list-check');
+}
+else echo ploopi\skin::get()->open_simplebloc(_SYSTEM_LABEL_UPDATEREPORT.ploopi\str::htmlentities(" - {$strModuleType} {$_GET['updatefrom']} => {$_GET['updateto']}"));
 
 
-$select = "SELECT version FROM ploopi_module_type WHERE id = '".ploopi\db::get()->addslashes($strModuleType)."' AND version = '".ploopi\db::get()->addslashes($_GET['updateto'])."'";
+// Déjà à la version visée (une page rechargée ne rejoue pas les scripts) ; la comparaison portait sur le libellé
+$select = "SELECT version FROM ploopi_module_type WHERE id = ".((int) $objModuleType->fields['id'])." AND version = '".ploopi\db::get()->addslashes($_GET['updateto'])."'";
 ploopi\db::get()->query($select);
 if (ploopi\db::get()->numrows())
 {
     ?>
+    <?php
+    if ($booSystemP4) echo ploopi\system\ui::callout('warning', ploopi\str::htmlentities('Module déjà mis à jour !'));
+    else
+    {
+        ?>
     <div style="padding:4px;text-align:center;font-weight:bold;color:#a60000;">Module déjà mis à jour !</div>
+        <?php
+    }
+    ?>
     <?php
 }
 else
@@ -122,6 +139,14 @@ else
 
     $rapport[] = array('operation' => 'Copie des fichiers', 'detail' => $detail, 'res' => $testok);
 
+    // Fichiers retirés du paquet (install/<module>/obsolete.txt)
+    if (!$critical_error && file_exists("{$modpath}/obsolete.txt"))
+    {
+        if (!function_exists('system_module_purgeobsolete')) include_once './modules/system/include/functions.php';
+        $arrSupprimes = system_module_purgeobsolete("{$modpath}/obsolete.txt", $destfiles);
+        $rapport[] = array('operation' => 'Suppression des fichiers retirés du paquet', 'detail' => empty($arrSupprimes) ? 'Aucun' : implode(', ', $arrSupprimes), 'res' => true);
+    }
+
     if (!$critical_error)
     {
         // =============
@@ -181,7 +206,6 @@ else
                 }
                 else $detail = "Fichier '{$mbfile}' importé";
 
-                xml_parser_free($xml_parser);
             }
             else $detail = "Fichier '{$mbfile}' non trouvé";
 
@@ -207,7 +231,14 @@ else
         $c++;
     }
 
-    ploopi\skin::get()->display_array($columns, $values, 'array_updateproc');
+    if ($booSystemP4) echo ploopi\system\ui::report($rapport);
+    else ploopi\skin::get()->display_array($columns, $values, 'array_updateproc');
+}
+
+if ($booSystemP4)
+{
+    echo ploopi\system\ui::card_close(ploopi\system\ui::button(array('label' => _PLOOPI_CONTINUE, 'icon' => 'arrow-right', 'class' => 'primary', 'href' => ploopi\crypt::urlencode('admin.php?sysToolbarItem=install&reloadsession'))));
+    return;
 }
 ?>
 <div style="padding:4px;text-align:right;">

@@ -39,7 +39,7 @@
  * On affiche d'abord le bloc d'abonnement seulement si le dossier n'est pas privé/personnel
  */
 ?>
-<div style="border-bottom:1px solid #c0c0c0;">
+<div class="doc_filet_bas">
 <?php
 if ($objFolder->fields['foldertype'] != 'private')
 {
@@ -60,7 +60,7 @@ if ($objFolder->fields['foldertype'] != 'private')
             $objDocFolderSub = new docfolder();
             $objDocFolderSub->open($parents[$i])
             ?>
-            <div style="padding:4px;font-weight:bold;border-bottom:1px solid #c0c0c0;">
+            <div class="doc_titre">
             Vous héritez de l'abonnement à &laquo; <a href="<?php echo ploopi\crypt::urlencode("admin.php?op=doc_browser&currentfolder={$parents[$i]}"); ?>"><?php echo ploopi\str::htmlentities($objDocFolderSub->fields['name']); ?></a> &raquo;
             </div>
             <?php

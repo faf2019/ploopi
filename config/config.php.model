@@ -175,11 +175,6 @@ switch($http_host)
         define ('_PLOOPI_MEMCACHED_PORT', '11211');
 
         /**
-         * Le serveur elasticsearch utilisé
-         */
-        define ('_PLOOPI_ELASTICSEARCH_HOST', '<ELASTIC_HOST>');
-
-        /**
          * Active ou non l'affichage des erreurs.
          * Vérifiez également la valeur de la directive de configuration 'display_errors' du fichier php.ini
          * Vous pouvez également paramétrer le niveau de reporting d'erreur avec la constante _PLOOPI_ERROR_REPORTING
@@ -301,6 +296,19 @@ switch($http_host)
         define ('_PLOOPI_SECRETKEY', '<SECRETKEY>');
 
         /**
+         * Adresse publique du site (schéma, hôte, chemin), pour les liens envoyés par
+         * courriel (mot de passe oublié). L'entête Host d'une requête ne peut pas en
+         * tenir lieu : n'importe qui la choisit. Vide : seuls les hôtes déclarés en clair
+         * dans les domaines d'un espace reçoivent un lien.
+         */
+        define ('_PLOOPI_PUBLIC_URL', '<PUBLIC_URL>');
+
+        /**
+         * Durée de validité, en secondes, du lien de confirmation « mot de passe oublié »
+         */
+        define ('_PLOOPI_LOSTPASSWORD_DELAY', 3600);
+
+        /**
          * Active ou non les jetons
          */
 
@@ -319,6 +327,16 @@ switch($http_host)
          */
 
         define ('_PLOOPI_TOKENMAX', 200);
+
+        /**
+         * Content-Security-Policy (doc/deploiement.md) :
+         * - 'strict' : politique de base appliquée partout, politique stricte (scripts du
+         *   site et scripts en ligne du socle, rien d'autre) sur les écrans prêts ;
+         * - 'base' : politique de base seulement (repli si un écran prêt casse) ;
+         * - 'report' : rien d'appliqué, mesure seule (Report-Only), comme auparavant.
+         */
+
+        define ('_PLOOPI_CSP', 'strict');
 
         /**
          * Active ou non l'accès frontoffice.
@@ -345,7 +363,7 @@ switch($http_host)
          * Template backoffice par défaut (si le template utilisé n'existe pas)
          */
 
-        define ('_PLOOPI_DEFAULT_TEMPLATE', 'ploopi2');
+        define ('_PLOOPI_DEFAULT_TEMPLATE', 'ploopi4');
 
         /**
          * Force l'utilisateur à utiliser un mot de passe complexe
@@ -473,37 +491,43 @@ switch($http_host)
          * Active le stockage à distance.
          */
 
-        define ('_PLOOPI_S3_ACTIVATED', <true>);
+        define ('_PLOOPI_S3_ACTIVATED', false);
 
         /**
          * l'url de l'endpoint S3.
          */
 
-        define ('_PLOOPI_S3_ENDPOINT_URL', <https://minio-api.example.com>);
+        define ('_PLOOPI_S3_ENDPOINT_URL', '');
 
         /**
          * la region de l'endpoint S3'.
          */
 
-        define ('_PLOOPI_S3_REGION', <eu-west-1>);
+        define ('_PLOOPI_S3_REGION', '');
 
         /**
          * le nom du bucket à utiliser.
          */
 
-        define ('_PLOOPI_S3_BUCKET', <argosv1>);
+        define ('_PLOOPI_S3_BUCKET', '');
 
         /**
          * la cle publique pour s'authentifier.
          */
 
-        define ('_PLOOPI_S3_AUTH_KEY', <a>);
+        define ('_PLOOPI_S3_AUTH_KEY', '');
 
         /**
          * la cle privée pour s'authentifier.
          */
 
-        define ('_PLOOPI_S3_AUTH_SECRET', <a>);
+        define ('_PLOOPI_S3_AUTH_SECRET', '');
+
+        /**
+         * Vérification du certificat TLS du dépôt S3. À ne désactiver que pour un dépôt
+         * de développement au certificat auto-signé.
+         */
+        define ('_PLOOPI_S3_VERIFY_SSL', true);
 
 
     break;

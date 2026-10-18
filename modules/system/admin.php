@@ -137,6 +137,14 @@ else
                 ploopi\system::kill();
             }
 
+            // Gabarits de génération 4 (ploopi4) : écran refondu (arborescence filtrable,
+            // en-tête de l'entité, onglets), qui reprend le contenu de admin_index.php
+            if (ploopi\skin::get()->version() >= 4)
+            {
+                include_once './modules/system/admin_workspaces.php';
+                break;
+            }
+
             echo ploopi\skin::get()->create_pagetitle(_SYSTEM_PAGE_TITLE);
             echo ploopi\skin::get()->open_simplebloc(_PLOOPI_ADMIN_WORKSPACES);
             ?>
@@ -166,6 +174,13 @@ else
         case 'system':
             if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_SYSTEMADMIN)
             {
+                // ploopi4 : chaque écran porte son en-tête de page (admin_system_p4.php)
+                if (ploopi\skin::get()->version() >= 4)
+                {
+                    include_once './modules/system/admin_system.php';
+                    break;
+                }
+
                 echo ploopi\skin::get()->create_pagetitle(_SYSTEM_PAGE_TITLE);
                 echo ploopi\skin::get()->open_simplebloc(_PLOOPI_ADMIN_SYSTEM);
                 ?>

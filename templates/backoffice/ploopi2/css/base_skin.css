@@ -1181,3 +1181,17 @@ select.ploopi_page_by {
     margin-left:4px;
     cursor: pointer;
 }
+
+/**
+ * FORMULAIRES DE FILTRE (listes d'utilisateurs du module system)
+ * Une étiquette ne se sépare pas de son champ au retour à la ligne.
+ */
+.ploopi_filter_field,
+.ploopi_filter_buttons {
+    white-space: nowrap;
+    margin: 2px 8px 2px 0;
+}
+
+input.ploopi_button_danger {
+    color: #a60000;
+}

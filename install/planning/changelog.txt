@@ -1,3 +1,104 @@
+== Module PLANNING - version 1.0.11 ====================================================
+
+2026-10-12  Ovensia <stephane@ovensia.fr>
+
+* Fenêtre de saisie d'un événement sous ploopi4 : libellés au-dessus des champs, grille à
+  deux colonnes (date et heure côte à côte), ressources en pastilles à cocher, boutons en
+  pied de fenêtre (Supprimer à gauche). ploopi2/ploopi3 inchangés.
+* Barre d'outils du planning sous ploopi4 : vues en contrôle segmenté (icône et libellé),
+  période et navigation (chevrons), options (colonnes, taille, impression) alignées à
+  droite, bouton principal d'ajout ; repli sur petit écran. Identifiants, noms et
+  attributs data-* inchangés ; ploopi2/ploopi3 inchangés.
+* Content-Security-Policy stricte : écrans déclarés prêts (_PLANNING_CSP). Plus aucun
+  gestionnaire en ligne ni URL javascript: — affichage, période, taille et colonnes par
+  data-ploopi-todiv, data-ploopi-autosubmit et les actions de include/functions.js
+  (ploopi.actions.planning_*), formulaires envoyés en XHR par data-planning-submit,
+  événements du calendrier par les options arrAttrs et arrCloseAttrs de
+  ploopi\calendarEvent, cases des ressources par ploopi_checkbox_zone, impression
+  avec le nonce.
+* ploopi4 : calendrier en grille fluide (ploopi\calendar, rendu moderne du socle) et
+  « Ressources affichées » dans une colonne à côté, au lieu d'une fenêtre flottante qui
+  couvrait les derniers jours.
+
+== Module PLANNING - version 1.0.10 ====================================================
+
+2026-10-11  Ovensia <stephane@ovensia.fr>
+
+* PHP 8.5 : étiquettes « case …; » (point-virgule, obsolète depuis PHP 8.5, erreur en PHP 9)
+  remplacées par « case …: ». Aucun changement de comportement.
+
+== Module PLANNING - version 1.0.9 ====================================================
+
+2026-10-10  Ovensia <stephane@ovensia.fr>
+
+* Taille « Auto » du calendrier : sa largeur est mesurée par le navigateur (ploopi.skin.autowidth du
+  socle, js/skin.js, d'après les attributs data-autowidth-* de #planning_display : au chargement,
+  après chaque rafraîchissement, au redimensionnement) et transmise par planning_autowidth, bornée
+  entre 280 et 2400 px ; la fenêtre « Ressources affichées », quand elle flotte au-dessus du
+  calendrier, en est déduite. Taille par défaut sous un gabarit adaptatif (ploopi4) ; ailleurs le
+  défaut reste 800x650 et « Auto » est proposée en plus.
+* Colonnes étroites : intitulés de jour abrégés par le socle (ploopi\calendar).
+* La taille demandée (planning_size) est validée (planning_size(), include/global.php) : une valeur
+  hors de la liste revient au défaut ; elle entrait auparavant telle quelle dans le calendrier.
+
+== Module PLANNING - version 1.0.8 ====================================================
+
+2026-10-10  Ovensia <stephane@ovensia.fr>
+
+* Habillage : les styles en ligne des écrans d'administration (bandeaux gris, barres de boutons,
+  cadres et filets) deviennent des classes, déclarées dans include/styles.css avec exactement le même
+  aspect ; le gabarit ploopi3 les redessine dans sa palette (tools/ploopi3_modules.php). Les écrans
+  servis au frontoffice (wce, template, display), où la feuille du module n'est pas chargée, gardent
+  leurs styles en ligne.
+
+== Module PLANNING - version 1.0.7 ====================================================
+
+2026-10-10  Ovensia <stephane@ovensia.fr>
+
+* Icônes : jeu unifié de l'administration (Tabler Icons, au trait, palette du gabarit ploopi3), sous
+  les mêmes noms et aux mêmes tailles ; le code qui les appelle ne change pas. Correspondances dans
+  tools/icones/modules.js, régénération par tools/icones/generer.js.
+* Sélecteurs de vue du planning (aujourd'hui, jour, semaine, mois) : la vue courante en couleur, les
+  autres en gris.
+
+== Module PLANNING - version 1.0.6 ====================================================
+
+2026-10-09  Ovensia <stephane@ovensia.fr>
+
+* Prototype (retiré au profit de jQuery) : affichage et masquage des listes de ressources.
+
+== Module PLANNING - version 1.0.5 ====================================================
+
+2026-10-09  Ovensia <stephane@ovensia.fr>
+
+* Recherche d'événements : limitée à l'instance courante. Elle listait aussi les
+  événements des autres plannings de l'installation dont une ressource était sélectionnée.
+
+* Fichiers .gz resynchronisés avec leurs sources (ils dataient d'une minification antérieure).
+
+== Module PLANNING - version 1.0.4 ====================================================
+
+2026-10-06  Ovensia <stephane@ovensia.fr>
+
+* Sécurité : les opérations sur les événements appliquent les droits de l'interface.
+
+  planning_event_save (modification), planning_event_detail_quicksave (déplacement)
+  et planning_event_detail_delete ne contrôlaient rien : tout utilisateur ayant accès
+  au module modifiait, déplaçait ou supprimait n'importe quel événement par son
+  identifiant, y compris celui d'une autre instance du module. Elles exigent
+  désormais l'action « ajouter un événement » (10), comme l'interface, et un
+  événement de l'instance courante. La création exige aussi l'action.
+
+  Un second « case 'planning_event_detail_delete' », inatteignable (le premier
+  l'emporte), est retiré.
+
+== Module Planning - version 1.0.3 ===================================================
+
+2026-09-17  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Correction d'une injection d'objet PHP : le cookie de filtre était désérialisé
+  sans restriction de classes
+
 == Module Planning - version 1.0.2 ====================================================
 
 2020-04-29  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

@@ -1,0 +1,13 @@
+# Fichiers retirés du paquet, supprimés de modules/forms/ par la mise à jour
+# (un chemin relatif au module par ligne, fichier ou dossier)
+
+# 3.8.4 : jpgraph est installé par Composer (mitoteam/jpgraph)
+jpgraph
+
+# 3.8.9 : polices Verdana (Microsoft, non libres) remplacées par DejaVu Sans
+fonts/verdana.ttf
+fonts/verdanab.ttf
+fonts/verdanai.ttf
+
+# 3.9.4 : CKEditor 4 remplacé par TinyMCE (éditeur du socle, js/editor.js)
+ckeditor

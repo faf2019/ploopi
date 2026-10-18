@@ -76,7 +76,7 @@ foreach($arrPageHistory as $strPageId) $arrUrlHistory[] = "<a href=\"".wiki_gene
             $strLinkClass = 'wiki_link_notfound';
             $strTitle = 'Cette page n\'existe pas';
 
-            return '<span class="'.$strLinkClass.'"><a title="'.$strTitle.'" href="javascript:void(0);">'.$arrMatches[1].'</a><img src="./modules/wiki/img/ico_link.png" /></span>';
+            return '<span class="'.$strLinkClass.'"><a title="'.$strTitle.'" aria-disabled="true">'.$arrMatches[1].'</a><img src="./modules/wiki/img/ico_link.png" /></span>';
         }
 
     }

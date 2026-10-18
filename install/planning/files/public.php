@@ -31,6 +31,11 @@
  */
 
 echo ploopi\skin::get()->create_pagetitle(ploopi\str::htmlentities($_SESSION['ploopi']['modulelabel']));
+
+// ploopi4 : calendrier en grille fluide, ressources dans une colonne à côté (sinon : fenêtre flottante)
+$booPlanningGrille = ploopi\skin::get()->version() >= 4;
+if ($booPlanningGrille) echo '<div class="p4-cal-layout"><div class="p4-cal-layout-main">';
+
 echo ploopi\skin::get()->open_simplebloc('Planning');
 ?>
 <div id="planning_main">
@@ -39,13 +44,15 @@ echo ploopi\skin::get()->open_simplebloc('Planning');
 <?php
 echo ploopi\skin::get()->close_simplebloc();
 
+if ($booPlanningGrille) echo '</div>';
+
 /**
  * Affichage du popup de sélection des ressources
  */
 ob_start();
 ?>
 <div id="planning_ressource_list">
-<form id="planning_resource_list_form" action="<?php echo ploopi\crypt::urlencode('admin-light.php?ploopi_op=planning_setresources'); ?>" method="post" onsubmit="javascript:ploopi.xhr.submit(jQuery('#planning_resource_list_form')[0], 'planning_main'); return false;">
+<form id="planning_resource_list_form" action="<?php echo ploopi\crypt::urlencode('admin-light.php?ploopi_op=planning_setresources'); ?>" method="post" data-planning-submit="planning_main">
 <?php
 foreach ($arrResources as $strResourceType => $arrResourceType)
 {
@@ -58,8 +65,8 @@ foreach ($arrResources as $strResourceType => $arrResourceType)
             case 'group': $strResourceTitle = 'Groupes'; break;
         }
         ?>
-        <a href="javascript:void(0);" onclick="javascript:with ($('planning_<?php echo $strResourceType; ?>_list')) { style.display = (style.display == 'block') ? 'none' : 'block'; }">
-            <p class="ploopi_va" style="border-width:1px 0;border-style:solid;border-color:#bbb;background-color:#ddd;">
+        <a href="#" data-ploopi-switchdisplay="planning_<?php echo $strResourceType; ?>_list">
+            <p class="ploopi_va planning_bandeau">
                 <img src="<?php echo "{$_SESSION['ploopi']['template_path']}/img/system/ico_{$strResourceType}.png"; ?>" />
                 <strong><?php echo ploopi\str::htmlentities($strResourceTitle); ?></strong>
             </p>
@@ -69,9 +76,9 @@ foreach ($arrResources as $strResourceType => $arrResourceType)
             foreach($arrResourceType as $row)
             {
                 ?>
-                <p class="checkbox" style="background-color:<?php echo $row['color']; ?>;" onclick="javascript:ploopi.checkbox_click(event, 'planning_resource<?php echo $strResourceType[0].$row['id']; ?>');">
-                    <input type="checkbox" name="planning_resources[<?php echo $strResourceType; ?>][<?php echo $row['id']; ?>]" id="planning_resource<?php echo $strResourceType[0].$row['id']; ?>" value="<?php echo $row['id']; ?>" <?php if (!empty($arrSearchPattern['planning_resources'][$strResourceType][$row['id']])) echo 'checked="checked"'; ?> onchange="javascript:jQuery('#planning_resource_list_form')[0].onsubmit();" />
-                    <span><?php echo ploopi\str::htmlentities($row['label']); ?><span>
+                <p class="checkbox ploopi_checkbox_zone" style="<?php echo $booPlanningGrille ? '--p4-res:' : 'background-color:'; echo ploopi\str::htmlentities($row['color']); ?>;" data-checkbox="planning_resource<?php echo $strResourceType[0].$row['id']; ?>">
+                    <input type="checkbox" name="planning_resources[<?php echo $strResourceType; ?>][<?php echo $row['id']; ?>]" id="planning_resource<?php echo $strResourceType[0].$row['id']; ?>" value="<?php echo $row['id']; ?>" <?php if (!empty($arrSearchPattern['planning_resources'][$strResourceType][$row['id']])) echo 'checked="checked"'; ?> data-ploopi-autosubmit />
+                    <span><?php echo ploopi\str::htmlentities($row['label']); ?></span>
                 </p>
                 <?php
             }
@@ -83,8 +90,8 @@ foreach ($arrResources as $strResourceType => $arrResourceType)
 ?>
 </form>
 
-<form id="planning_search_form" action="<?php echo ploopi\crypt::urlencode('admin-light.php?ploopi_op=planning_search'); ?>" method="post" onsubmit="javascript:ploopi.xhr.submit(jQuery('#planning_search_form')[0], 'planning_search_result'); return false;">
-<p class="ploopi_va" style="border-width:1px 0;border-style:solid;border-color:#bbb;background-color:#ddd;">
+<form id="planning_search_form" action="<?php echo ploopi\crypt::urlencode('admin-light.php?ploopi_op=planning_search'); ?>" method="post" data-planning-submit="planning_search_result">
+<p class="ploopi_va planning_bandeau">
     <img src="./modules/planning/img/ico_search.png" />
     <strong>Rechercher un événement</strong>
 </p>
@@ -101,7 +108,8 @@ foreach ($arrResources as $strResourceType => $arrResourceType)
 $content = ob_get_contents();
 ob_end_clean();
 
-echo ploopi\skin::get()->open_popup(
+if ($booPlanningGrille) echo '<aside class="p4-cal-layout-side">'.ploopi\skin::get()->open_simplebloc('Ressources affichées').$content.ploopi\skin::get()->close_simplebloc().'</aside></div>';
+else echo ploopi\skin::get()->open_popup(
     'Ressources affichées',
     $content,
     'popup_planning',

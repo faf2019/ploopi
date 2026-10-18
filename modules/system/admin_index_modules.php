@@ -31,6 +31,13 @@
  * @author Ovensia
  */
 
+// Gabarits de génération 4 : écran refondu
+if (ploopi\skin::get()->version() >= 4)
+{
+    include './modules/system/admin_workspaces_modules.php';
+    return;
+}
+
 /**
  * Tous les modules dispos
  */
@@ -148,7 +155,7 @@ if ($op == 'modify' && !empty($_GET['moduleid']) && is_numeric($_GET['moduleid']
                 <span><em><?php echo _SYSTEM_EXPLAIN_MODULENAME; ?></em></span>
             </p>
 
-            <p class="checkbox" onclick="javascript:ploopi.checkbox_click(event, 'module_active');">
+            <p class="checkbox ploopi_checkbox_zone" data-checkbox="module_active">
                 <label><?php echo _SYSTEM_LABEL_ACTIVE; ?>:</label>
                 <input type="checkbox" class="checkbox" name="module_active" id="module_active" value="1" <?php if ($module->fields['active']) echo 'checked="checked"'; ?> tabindex="2" />
             </p>
@@ -157,7 +164,7 @@ if ($op == 'modify' && !empty($_GET['moduleid']) && is_numeric($_GET['moduleid']
                 <span><em><?php echo _SYSTEM_EXPLAIN_ACTIVE; ?></em></span>
             </p>
 
-            <p class="checkbox" onclick="javascript:ploopi.checkbox_click(event, 'module_visible');">
+            <p class="checkbox ploopi_checkbox_zone" data-checkbox="module_visible">
                 <label><?php echo _SYSTEM_LABEL_VISIBLE; ?>:</label>
                 <input type="checkbox" class="checkbox" name="module_visible" id="module_visible" value="1" <?php if ($module->fields['visible']) echo 'checked="checked"'; ?> tabindex="3" />
             </p>
@@ -166,7 +173,7 @@ if ($op == 'modify' && !empty($_GET['moduleid']) && is_numeric($_GET['moduleid']
                 <span><em><?php echo _SYSTEM_EXPLAIN_VISIBLE; ?></em></span>
             </p>
 
-            <p class="checkbox" onclick="javascript:ploopi.checkbox_click(event, 'module_autoconnect');">
+            <p class="checkbox ploopi_checkbox_zone" data-checkbox="module_autoconnect">
                 <label><?php echo _SYSTEM_LABEL_AUTOCONNECT; ?>:</label>
                 <input type="checkbox" class="checkbox" name="module_autoconnect" id="module_autoconnect" value="1" <?php if ($module->fields['autoconnect']) echo 'checked="checked"'; ?> tabindex="4" />
             </p>
@@ -175,7 +182,7 @@ if ($op == 'modify' && !empty($_GET['moduleid']) && is_numeric($_GET['moduleid']
                 <span><em><?php echo _SYSTEM_EXPLAIN_AUTOCONNECT; ?></em></span>
             </p>
 
-            <p class="checkbox" onclick="javascript:ploopi.checkbox_click(event, 'module_shared');">
+            <p class="checkbox ploopi_checkbox_zone" data-checkbox="module_shared">
                 <label><?php echo _SYSTEM_LABEL_SHARED; ?>:</label>
                 <input type="checkbox" class="checkbox" name="module_shared" id="module_shared" value="1" <?php if ($module->fields['shared']) echo 'checked="checked"'; ?> tabindex="5" />
             </p>
@@ -184,7 +191,7 @@ if ($op == 'modify' && !empty($_GET['moduleid']) && is_numeric($_GET['moduleid']
                 <span><em><?php echo _SYSTEM_EXPLAIN_SHARED; ?></em></span>
             </p>
 
-            <p class="checkbox" onclick="javascript:ploopi.checkbox_click(event, 'module_herited');">
+            <p class="checkbox ploopi_checkbox_zone" data-checkbox="module_herited">
                 <label><?php echo _SYSTEM_LABEL_HERITED; ?>:</label>
                 <input type="checkbox" class="checkbox" name="module_herited" id="module_herited" value="1" <?php if ($module->fields['herited']) echo 'checked="checked"'; ?> tabindex="6" />
             </p>
@@ -192,7 +199,7 @@ if ($op == 'modify' && !empty($_GET['moduleid']) && is_numeric($_GET['moduleid']
                 <label>&nbsp;</label>
                 <span><a href="<?php echo ploopi\crypt::urlencode("admin.php?op=apply_heritage&moduleid={$module->fields['id']}"); ?>"><?php echo _SYSTEM_APPLYHERITAGE; ?></a><br /><em><?php echo _SYSTEM_EXPLAIN_HERITED; ?></em></span>
             </p>
-            <p class="checkbox" onclick="javascript:ploopi.checkbox_click(event, 'module_adminrestricted');">
+            <p class="checkbox ploopi_checkbox_zone" data-checkbox="module_adminrestricted">
                 <label><?php echo _SYSTEM_LABEL_ADMINRESTRICTED; ?>:</label>
                 <input type="checkbox" class="checkbox" name="module_adminrestricted" id="module_adminrestricted" value="1" <?php if ($module->fields['adminrestricted']) echo 'checked="checked"'; ?> tabindex="7" />
             </p>
@@ -216,7 +223,7 @@ if ($op == 'modify' && !empty($_GET['moduleid']) && is_numeric($_GET['moduleid']
                 ?>
                 </select>
             </p>
-            <p class="checkbox" onclick="javascript:ploopi.checkbox_click(event, 'module_transverseview');">
+            <p class="checkbox ploopi_checkbox_zone" data-checkbox="module_transverseview">
                 <label><?php echo _SYSTEM_LABEL_TRANSVERSE; ?>:</label>
                 <input type="checkbox" class="checkbox" name="module_transverseview" id="module_transverseview" value="1" <?php if ($module->fields['transverseview']) echo 'checked="checked"'; ?> tabindex="9" />
             </p>

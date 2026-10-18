@@ -405,6 +405,67 @@ class user extends data_object
     }
 
     /**
+     * Entrée de bcrypt pour un mot de passe : HMAC-SHA256 de l'identifiant et du mot de
+     * passe, avec la clé secrète pour poivre, en base64 (44 caractères, sans octet nul).
+     *
+     * bcrypt ne lit que les 72 premiers octets de son entrée. L'ancienne entrée,
+     * « clé/identifiant/mot de passe », dépassait vite cette limite : avec une clé de
+     * 43 caractères, un identifiant de 27 caractères ne laissait plus aucun caractère du
+     * mot de passe dans l'empreinte, et tout mot de passe était accepté.
+     *
+     * @param string $strPassword mot de passe en clair
+     * @param string $strLogin identifiant de l'utilisateur
+     * @param string $strKey clé secrète (défaut : _PLOOPI_SECRETKEY ; l'assistant d'installation passe la sienne)
+     * @return string entrée de password_hash()
+     */
+
+    public static function bcrypt_input($strPassword, $strLogin, $strKey = null)
+    {
+        if (is_null($strKey)) $strKey = _PLOOPI_SECRETKEY;
+
+        // Longueur de l'identifiant en tête : la concaténation reste sans ambiguïté
+        return base64_encode(hash_hmac('sha256', strlen($strLogin).':'.$strLogin.'/'.$strPassword, $strKey, true));
+    }
+
+    /**
+     * Vérifie une empreinte bcrypt de l'ancienne forme (« clé/identifiant/mot de passe »).
+     *
+     * Reconnue seulement si le mot de passe figure dans les 72 octets lus par bcrypt
+     * en entier, ou pour 8 caractères au moins : au-delà, l'empreinte ne prouve rien.
+     *
+     * @param string $strPassword mot de passe en clair
+     * @param string $strLogin identifiant de l'utilisateur
+     * @param string $strHash empreinte enregistrée
+     * @return boolean true si l'empreinte de l'ancienne forme correspond
+     */
+
+    private static function _bcrypt_legacy_verify($strPassword, $strLogin, $strHash)
+    {
+        $intUtiles = 72 - strlen(_PLOOPI_SECRETKEY."/{$strLogin}/");
+
+        if ($intUtiles < min(8, strlen($strPassword)) || $intUtiles <= 0) return false;
+
+        return password_verify(_PLOOPI_SECRETKEY."/{$strLogin}/{$strPassword}", $strHash);
+    }
+
+    /**
+     * Indique si une empreinte, déjà vérifiée, doit être recalculée : empreinte bcrypt
+     * de l'ancienne forme (voir self::bcrypt_input).
+     *
+     * @param string $strPassword mot de passe en clair, vérifié
+     * @param string $strLogin identifiant de l'utilisateur
+     * @param string $strHash empreinte enregistrée
+     * @return boolean true si l'empreinte est à recalculer
+     */
+
+    public static function password_needs_rehash($strPassword, $strLogin, $strHash)
+    {
+        if (_PLOOPI_HASH_ALGO != 'bcrypt') return false;
+
+        return !password_verify(self::bcrypt_input($strPassword, $strLogin), (string)$strHash);
+    }
+
+    /**
      * Génère le hash à partir du mot de passe en clair et du login de l'utilisateur
      *
      * @param string $strPassword mot de passe à "hasher"
@@ -415,7 +476,7 @@ class user extends data_object
     {
         switch(_PLOOPI_HASH_ALGO) {
             case 'bcrypt':
-                return password_hash(_PLOOPI_SECRETKEY."/{$strLogin}/{$strPassword}", PASSWORD_BCRYPT);
+                return password_hash(self::bcrypt_input($strPassword, $strLogin), PASSWORD_BCRYPT);
             break;
 
             default:
@@ -441,11 +502,12 @@ class user extends data_object
             switch(_PLOOPI_HASH_ALGO_PREVIOUS) {
                 case 'bcrypt':
                     if (strpos(substr($strHash, 7), '$') !== false) return false;
-                    $booRes = password_verify(_PLOOPI_SECRETKEY."/{$strLogin}/{$strPassword}", $strHash);
+                    $booRes = password_verify(self::bcrypt_input($strPassword, $strLogin), $strHash) || self::_bcrypt_legacy_verify($strPassword, $strLogin, $strHash);
                 break;
 
                 default:
-                    $booRes = $strHash == hash(_PLOOPI_HASH_ALGO_PREVIOUS, _PLOOPI_SECRETKEY."/{$strLogin}/".hash(_PLOOPI_HASH_ALGO_PREVIOUS, $strPassword));
+                    // hash_equals : la comparaison de deux empreintes ne doit pas dépendre du temps
+                    $booRes = hash_equals((string)$strHash, hash(_PLOOPI_HASH_ALGO_PREVIOUS, _PLOOPI_SECRETKEY."/{$strLogin}/".hash(_PLOOPI_HASH_ALGO_PREVIOUS, $strPassword)));
                 break;
             }
 
@@ -455,11 +517,12 @@ class user extends data_object
         switch(_PLOOPI_HASH_ALGO) {
             case 'bcrypt':
                 if (strpos(substr($strHash, 7), '$') !== false) return false;
-                $booRes = password_verify(_PLOOPI_SECRETKEY."/{$strLogin}/{$strPassword}", $strHash);
+                $booRes = password_verify(self::bcrypt_input($strPassword, $strLogin), $strHash) || self::_bcrypt_legacy_verify($strPassword, $strLogin, $strHash);
             break;
 
             default:
-                $booRes = $strHash == hash(_PLOOPI_HASH_ALGO, _PLOOPI_SECRETKEY."/{$strLogin}/".hash(_PLOOPI_HASH_ALGO, $strPassword));
+                // hash_equals : la comparaison de deux empreintes ne doit pas dépendre du temps
+                $booRes = hash_equals((string)$strHash, hash(_PLOOPI_HASH_ALGO, _PLOOPI_SECRETKEY."/{$strLogin}/".hash(_PLOOPI_HASH_ALGO, $strPassword)));
             break;
         }
 

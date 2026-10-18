@@ -53,7 +53,8 @@ class confirmation_code extends data_object
     function save()
     {
         if ($this->new) {
-            if (empty($this->fields['code'])) $this->fields['code'] = md5(uniqid(rand(), true));
+            // 16 octets aléatoires, soit 32 caractères hexadécimaux : la largeur exacte du champ
+            if (empty($this->fields['code'])) $this->fields['code'] = security::generatetoken(16);
             if (empty($this->fields['timestp'])) $this->fields['timestp'] = date::createtimestamp();
         }
 

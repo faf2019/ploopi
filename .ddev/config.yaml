@@ -1,0 +1,13 @@
+name: ploopidev
+type: php
+docroot: ""
+php_version: "8.2"
+webserver_type: apache-fpm
+database:
+  type: mariadb
+  version: "10.11"
+nodejs_version: "20"
+
+# La suite de tests (ddev test) gère elle-même sa base jetable :
+# tests/instance.sh crée puis détruit la sienne sur le service « db ».
+# Pas de webimage épinglée : elle doit suivre la version de DDEV installée.

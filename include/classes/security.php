@@ -87,12 +87,52 @@ abstract class security
 
         $strChar = implode('', $arrChar);
 
-        $strPassword = '';
+        $arrPassword = array();
 
-        foreach($arrChar as $str) $strPassword .= substr($str,rand(0,strlen($str)-1),1);
-        for($c = strlen($strPassword); $c < $length; $c++) $strPassword .= substr($strChar,rand(0,strlen($strChar)-1),1);
+        // Au moins un caractère issu de chaque jeu demandé
+        foreach($arrChar as $str) $arrPassword[] = $str[random_int(0, strlen($str)-1)];
 
-        return(str_shuffle($strPassword));
+        for($c = sizeof($arrPassword); $c < $length; $c++) $arrPassword[] = $strChar[random_int(0, strlen($strChar)-1)];
+
+        /**
+         * Mélange de Fisher-Yates.
+         * str_shuffle() s'appuie sur le générateur non cryptographique de PHP : le mot de
+         * passe produit ici sert notamment à la procédure de mot de passe oublié, il ne doit
+         * pas être prédictible.
+         */
+        for($i = sizeof($arrPassword)-1; $i > 0; $i--)
+        {
+            $j = random_int(0, $i);
+            $strTmp = $arrPassword[$i];
+            $arrPassword[$i] = $arrPassword[$j];
+            $arrPassword[$j] = $strTmp;
+        }
+
+        return implode('', $arrPassword);
+    }
+
+    /**
+     * Génère un jeton aléatoire imprévisible, au format hexadécimal.
+     *
+     * Utilisé pour tout secret à usage unique : jeton anti-CSRF, code de confirmation.
+     * random_bytes() lève une exception si aucune source d'entropie sûre n'est disponible :
+     * l'échec est volontairement bruyant, un jeton prédictible valant mieux d'être absent.
+     *
+     * @param int $intBytes nombre d'octets aléatoires (16 par défaut, soit 32 caractères)
+     * @return string jeton hexadécimal de 2 * $intBytes caractères
+     *
+     * @copyright Ovensia
+     * @license GNU General Public License (GPL)
+     * @author Ovensia
+     *
+     * @see random_bytes
+     */
+
+    public static function generatetoken($intBytes = 16)
+    {
+        if ($intBytes < 8) $intBytes = 8;
+
+        return bin2hex(random_bytes($intBytes));
     }
 
     /**
@@ -119,7 +159,14 @@ abstract class security
         }
         else
         {
-            if ((!defined(_PLOOPI_FILTER_VARS) || _PLOOPI_FILTER_VARS) && substr(is_null($strVarName) ? '' : $strVarName,0,4) != 'fck_') $mixVar = inputfilter::process($mixVar);
+            /**
+             * defined() attend le NOM de la constante. En passant sa valeur, le test était
+             * inopérant : _PLOOPI_FILTER_VARS à false ne désactivait rien, et l'absence de
+             * la constante provoquait une erreur fatale en PHP 8.
+             */
+            $booFilter = !defined('_PLOOPI_FILTER_VARS') || _PLOOPI_FILTER_VARS;
+
+            if ($booFilter && substr(is_null($strVarName) ? '' : $strVarName,0,4) != 'fck_') $mixVar = inputfilter::process($mixVar);
         }
 
         return $mixVar;

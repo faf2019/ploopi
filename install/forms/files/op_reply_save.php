@@ -14,9 +14,19 @@ if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open
 {
 
     /**
-     * En frontoffice on vérifie qu'il s'agit d'un formulaire dédié (et donc public)
+     * Hors backoffice, on vérifie qu'il s'agit d'un formulaire dédié (et donc public).
+     * Le test porte sur « hors backoffice » et non sur « frontoffice » : une session
+     * anonyme ouverte par index-quick.php n'a pas encore de mode.
      */
-    if ($_SESSION['ploopi']['mode'] == 'frontoffice' && $objForm->fields['typeform'] != 'cms') ploopi\output::redirect();
+    if ($_SESSION['ploopi']['mode'] != 'backoffice' && $objForm->fields['typeform'] != 'cms') ploopi\output::redirect('index.php');
+
+    /**
+     * L'opération est dispensée du jeton par include/publicops.php, pour que les
+     * visiteurs puissent soumettre un formulaire public. En backoffice, elle écrit
+     * avec les droits de la session : le jeton y reste exigé, sans quoi un site tiers
+     * la déclencherait par index-quick.php avec la session d'un utilisateur.
+     */
+    if ($_SESSION['ploopi']['mode'] == 'backoffice' && !ploopi\loader::checktoken()) ploopi\output::redirect('admin.php');
 
 
     /**
@@ -35,17 +45,42 @@ if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open
     if ($_SESSION['ploopi']['mode'] == 'backoffice')
     {
         /**
-         * Modification d'un enregistrement existant
+         * Le formulaire doit relever de l'instance courante : les droits sont évalués
+         * sur celle-ci.
+         */
+        if (!formsForm::openInModule($objForm->fields['id'])) ploopi\output::redirect('admin.php');
+
+        /**
+         * Modification d'un enregistrement existant : mêmes conditions que le bouton
+         * « Modifier » de la liste des réponses
          */
         if (!empty($_GET['forms_record_id']))
         {
-            $objRecord->open($_GET['forms_record_id']);
+            if (!is_numeric($_GET['forms_record_id']) || !$objRecord->open($_GET['forms_record_id']) || !$objForm->isRecordEditable($objRecord->fields, _FORMS_ACTION_ADDREPLY)) ploopi\output::redirect("admin.php?op=forms_viewreplies&forms_id={$objForm->fields['id']}");
             $arrEmailContent['Formulaire']['Opération'] = 'Modification d\'Enregistrement';
         }
         else // Nouvel enregistrement
         {
+            if (!ploopi\acl::isactionallowed(_FORMS_ACTION_ADDREPLY)) ploopi\output::redirect("admin.php?op=forms_viewreplies&forms_id={$objForm->fields['id']}");
             $arrEmailContent['Formulaire']['Opération'] = 'Nouvel Enregistrement';
         }
+    }
+
+    /**
+     * Nouvelle réponse : les règles de l'affichage valent aussi pour l'enregistrement,
+     * qu'une réponse postée directement contournait.
+     * - Hors de sa période de publication, le formulaire ne reçoit rien, sauf saisie
+     *   d'un administrateur du module en backoffice (public.php l'affiche de même).
+     * - « Une seule réponse » (par utilisateur, par jour) : comme public_forms_viewreplies,
+     *   pour une session identifiée — un visiteur anonyme n'a pas d'identifiant.
+     */
+    if ($objRecord->isnew())
+    {
+        $strRetour = $_SESSION['ploopi']['mode'] == 'backoffice' ? "admin.php?op=forms_viewreplies&forms_id={$objForm->fields['id']}" : '';
+        $booAdmin = $_SESSION['ploopi']['mode'] == 'backoffice' && ploopi\acl::isactionallowed(_FORMS_ACTION_ADMIN);
+
+        if (!$objForm->isPublished() && !$booAdmin) ploopi\output::redirect($strRetour);
+        if (!empty($_SESSION['ploopi']['userid']) && $objForm->getNumRowsOnly() > 0) ploopi\output::redirect($strRetour);
     }
 
 
@@ -89,7 +124,7 @@ if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open
                     $booFieldOk = true;
                     if ($_FILES['field_'.$objField->fields['id']]['size'] <= _PLOOPI_MAXFILESIZE)
                     {
-                        $strValue = $_FILES['field_'.$objField->fields['id']]['name'];
+                        $strValue = formsField::safeFileName($_FILES['field_'.$objField->fields['id']]['name']);
                         $booFileToMove = true;
                     }
                 }
@@ -377,7 +412,7 @@ if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open
             {
                 if (!empty($_FILES['field_'.$objField->fields['id']]['name']) && $_FILES['field_'.$objField->fields['id']]['size'] <= _PLOOPI_MAXFILESIZE)
                 {
-                    $strFile = $_FILES['field_'.$objField->fields['id']]['name'];
+                    $strFile = formsField::safeFileName($_FILES['field_'.$objField->fields['id']]['name']);
                     $strPath = formsField::getFilePath($objForm->fields['id'], $objRecord->fields['#id']);
 
                     ploopi\fs::makedir($strPath);

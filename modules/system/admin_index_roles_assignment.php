@@ -92,7 +92,7 @@ while($row = ploopi\db::get()->fetchrow())
 
     if ($op == 'assign_role' && !empty($_GET['roleid']) && is_numeric($_GET['roleid']) && $_GET['roleid'] == $row['id'])
     {
-        $values[$c]['style'] = 'background-color:#ffe0e0;';
+        $values[$c]['class'] = 'system_line_selected';
         $arrRole = $row;
     }
 
@@ -110,7 +110,7 @@ if ($op == 'assign_role' && !empty($_GET['roleid']) && is_numeric($_GET['roleid'
     echo ploopi\skin::get()->open_simplebloc("Gestion des attributions du rôle &laquo; ".ploopi\str::htmlentities($arrRole['label'])." &raquo; du module &laquo; ".ploopi\str::htmlentities($arrRole['module_label'])." &raquo;");
     ?>
 
-    <p class="ploopi_va" style="padding:4px; background-color:#e0e0e0; border-bottom:1px solid #c0c0c0;">
+    <p class="ploopi_va system_bandeau">
         <span style="font-weight:bold;">Rechercher un utilisateur ou un groupe :</span>
         <input type="text" id="system_roleusers_filter" class="text">
         <img style="cursor:pointer;" onclick="javascript:system_roleusers_search(<?php echo ploopi\str::htmlentities($_GET['roleid']); ?>);" src="<?php echo "{$_SESSION['ploopi']['template_path']}/img/validation/search.png"; ?>">

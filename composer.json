@@ -7,7 +7,7 @@
     "type": "project",
     "minimum-stability": "dev",
     "prefer-stable": true,
-    "license": "GPL-2.0",
+    "license": "GPL-2.0-or-later",
     "authors": [
         {
             "name": "Stéphane Escaich"
@@ -32,7 +32,7 @@
     ],
     "require": {
         "aws/aws-sdk-php": "^3.337",
-        "php": ">=7.0.0",
+        "php": ">=8.1",
         "ext-openssl": "*",
         "ext-gd": "*",
         "ext-zip": "*",
@@ -43,35 +43,32 @@
         "ext-memcached": "*",
         "donatj/phpuseragentparser": "^0.5.1",
         "phpoffice/phpspreadsheet": "^1.8.2",
-        "mpdf/mpdf": "^8.0.12",
-        "netcarver/textile": "^3.5",
+        "netcarver/textile": "^4.1.5",
         "ezyang/htmlpurifier": "^4.8",
-        "mibe/feedwriter": "^1.0",
         "openlss/lib-array2xml": "^0.0.10",
-        "box/spout": "^2.5",
-        "keller/soundex-fr-bundle": "dev-master",
-        "wamania/php-stemmer": "^2.0",
+        "wamania/php-stemmer": "^4.0",
         "pear/http_request2": "^2.3",
-        "pear/xml_serializer": "^0.22.0",
-        "pear/cache_lite": "^1.8",
         "horde/text_diff": "*",
         "components/jquery": "^3.1",
         "components/jqueryui": "^1.12",
         "components/highlightjs": "^9.5",
         "eastdesire/jscolor": "2.5.1",
-        "ckeditor/ckeditor": "4.22",
         "pear/net_smtp": "^1.8",
         "pear/mail": "^1.4",
         "pear/mail_mime": "^1.10",
-        "pear/spreadsheet_excel_writer": "^0.9.4"
+        "dompdf/dompdf": "^3.1",
+        "tinymce/tinymce": "^8.9",
+        "mklkj/tinymce-i18n": "^26.9"
+    },
+    "autoload": {
+        "exclude-from-classmap": ["vendor/horde/exception/compat/"]
+    },
+    "config": {
+        "platform": { "php": "8.1.0" }
     },
     "scripts": {
         "post-create-project-cmd": [
             "cp .htaccess_modele .htaccess"
         ]
-    },
-    "require-dev": {
-        "phploc/phploc": "*",
-        "theseer/phpdox": "0.11.2"
     }
 }

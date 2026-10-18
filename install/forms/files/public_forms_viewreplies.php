@@ -277,7 +277,7 @@ echo ploopi\skin::get()->open_simplebloc(ploopi\str::htmlentities($objForm->fiel
                             <span style="margin-left:10px;">Graphique : </span>
                             <?php
                             ?>
-                            <select class="select" onchange="javascript:if (this.value != '') {ploopi.xhr.topopup(750, event, 'forms_popup_graphic', 'admin-light.php', '<? echo ploopi\crypt::queryencode('ploopi_op=forms_graphic_display'); ?>&forms_graphic_id='+this.value+'&forms_graphic_width='+jQuery('#forms_graphic_width')[0].value, 'POST');} else {ploopi.popup.hide('forms_popup_graphic');} this.selectedIndex = 0;">
+                            <select class="select" onchange="javascript:if (this.value != '') {ploopi.xhr.topopup(750, event, 'forms_popup_graphic', 'admin-light.php', '<?php echo ploopi\crypt::queryencode('ploopi_op=forms_graphic_display'); ?>&forms_graphic_id='+this.value+'&forms_graphic_width='+jQuery('#forms_graphic_width')[0].value, 'POST');} else {ploopi.popup.hide('forms_popup_graphic');} this.selectedIndex = 0;">
                                 <option value="">(Sélectionner un graphique)</option>
                                 <?php
                                 while ($row = ploopi\db::get()->fetchrow())
@@ -307,7 +307,7 @@ echo ploopi\skin::get()->open_simplebloc(ploopi\str::htmlentities($objForm->fiel
         <?php
         $color = (!isset($color) || $color == ploopi\skin::get()->values['bgline1']) ? ploopi\skin::get()->values['bgline2'] : ploopi\skin::get()->values['bgline1'];
         ?>
-        <tr style="background-color:<?php echo $color; ?>;">
+        <tr class="forms_viewlist_head" data-label="<?php echo ploopi\str::htmlentities(_FORMS_SORTBY); ?>" style="background-color:<?php echo $color; ?>;">
             <?php
             foreach ($arrTitles as $strKey => $row)
             {
@@ -340,7 +340,7 @@ echo ploopi\skin::get()->open_simplebloc(ploopi\str::htmlentities($objForm->fiel
             if ($_SESSION['ploopi']['action'] == 'public')
             {
                 ?>
-                <td></td>
+                <td class="forms_viewlist_actions"></td>
                 <?php
             }
             ?>
@@ -388,7 +388,8 @@ echo ploopi\skin::get()->open_simplebloc(ploopi\str::htmlentities($objForm->fiel
                         if ($row['format'] == 'float' || $row['format'] == 'integer') $strClass = 'data num';
                         else $strClass = 'data';
 
-                        echo "<td class=\"{$strClass}\">{$strValue}</td>";
+                        // data-label : libellé de la colonne, pour un affichage en cartes (gabarits adaptatifs)
+                        echo "<td class=\"{$strClass}\" data-label=\"".ploopi\str::htmlentities($row['label'])."\">{$strValue}</td>";
                     }
                 }
 
@@ -396,7 +397,7 @@ echo ploopi\skin::get()->open_simplebloc(ploopi\str::htmlentities($objForm->fiel
                 if ($_SESSION['ploopi']['action'] == 'public')
                 {
                     ?>
-                    <td align="left" nowrap>
+                    <td class="forms_viewlist_actions" align="left" nowrap>
                         <a title="Ouvrir" href="<?php echo ploopi\crypt::urlencode("admin.php?op=forms_reply_display&forms_id={$objForm->fields['id']}&record_id={$intReplyId}"); ?>"><img alt="ouvrir" border="0" src="./modules/forms/img/ico_display.png"></a>
                         <?php
                         // Droit de modif d'un enregistrement

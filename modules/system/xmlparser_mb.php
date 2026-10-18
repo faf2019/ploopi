@@ -135,7 +135,6 @@ function xmlparser_mb()
 
 function xmlparser_mb_free($xml_parser)
 {
-    xml_parser_free($xml_parser);
     $globaldata = '';
     $datatype = '';
     $newrow = false;

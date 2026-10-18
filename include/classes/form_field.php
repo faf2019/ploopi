@@ -157,7 +157,7 @@ class form_field extends form_element
             case 'input:reset':
             case 'input:img':
             case 'textarea':
-                if (is_array($mixValue)) trigger_error('Ce type d\'élément n\'accepte pas un tableau de valeurs', E_USER_ERROR);
+                if (is_array($mixValue)) throw new \ErrorException('Ce type d\'élément n\'accepte pas un tableau de valeurs');
             break;
         }
 

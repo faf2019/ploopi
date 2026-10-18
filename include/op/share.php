@@ -43,6 +43,13 @@ switch($ploopi_op)
         if (isset($_GET['remove_user_id'])) unset($_SESSION['ploopi']['share'][$_GET['share_id']]['users_selected'][$_GET['remove_user_id']]);
         if (isset($_GET['remove_group_id'])) unset($_SESSION['ploopi']['share'][$_GET['share_id']]['groups_selected'][$_GET['remove_group_id']]);
 
+        // ploopi4 : sélection en pastilles
+        if (ploopi\userselect::modern())
+        {
+            ploopi\userselect::chips('share', $_GET['share_id'], $_SESSION['ploopi']['share'][$_GET['share_id']]['groups_selected'], $_SESSION['ploopi']['share'][$_GET['share_id']]['users_selected'], 'Aucune autorisation');
+            ploopi\system::kill();
+        }
+
         foreach($_SESSION['ploopi']['share'][$_GET['share_id']]['groups_selected'] as $group_id)
         {
             $group = new ploopi\group();
@@ -50,7 +57,7 @@ switch($ploopi_op)
             {
                 ?>
                 <p class="ploopi_va" style="padding:2px;">
-                    <a class="ploopi_share_delete_user" href="javascript:void(0);" onclick="ploopi.xhr.todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_select_user&share_id=<?php echo urlencode($_GET['share_id']); ?>&remove_group_id=<?php echo $group->fields['id']; ?>', 'div_share_users_selected_<?php echo ploopi\str::htmlentities($_GET['share_id']); ?>');">
+                    <a class="ploopi_share_delete_user" href="#" data-ploopi-todiv="<?php echo ploopi\str::htmlentities('div_share_users_selected_'.(ploopi\str::htmlentities($_GET['share_id']))); ?>" data-ploopi-query="<?php echo ploopi\str::htmlentities(ploopi\crypt::queryencode('ploopi_op=share_select_user&share_id='.(urlencode($_GET['share_id'])).'&remove_group_id='.($group->fields['id']))); ?>">
                         <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/btn_delete.png" />
                         <span>Groupe &laquo; </span><strong><?php echo ploopi\str::htmlentities($group->fields['label']); ?></strong><span></span> &raquo; (Cliquez pour supprimer)</span>
                     </a>
@@ -66,7 +73,7 @@ switch($ploopi_op)
             {
                 ?>
                 <p class="ploopi_va" style="padding:2px;">
-                    <a class="ploopi_share_delete_user" href="javascript:void(0);" onclick="ploopi.xhr.todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_select_user&share_id=<?php echo urlencode($_GET['share_id']); ?>&remove_user_id=<?php echo $user->fields['id']; ?>', 'div_share_users_selected_<?php echo ploopi\str::htmlentities($_GET['share_id']); ?>');">
+                    <a class="ploopi_share_delete_user" href="#" data-ploopi-todiv="<?php echo ploopi\str::htmlentities('div_share_users_selected_'.(ploopi\str::htmlentities($_GET['share_id']))); ?>" data-ploopi-query="<?php echo ploopi\str::htmlentities(ploopi\crypt::queryencode('ploopi_op=share_select_user&share_id='.(urlencode($_GET['share_id'])).'&remove_user_id='.($user->fields['id']))); ?>">
                         <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/btn_delete.png" />
                         <strong><?php echo ploopi\str::htmlentities("{$user->fields['lastname']} {$user->fields['firstname']}"); ?></strong><span>&nbsp;(Cliquez pour supprimer)</span>
                     </a>
@@ -244,7 +251,7 @@ switch($ploopi_op)
                         {
                             $user = &$list['users'][$id_user];
                             ?>
-                            <a class="ploopi_share_select_user" href="javascript:void(0);" onclick="javascript:ploopi.xhr.todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_select_user&share_id=<?php echo urlencode($_GET['share_id']); ?>&user_id=<?php echo $id_user; ?>', 'div_share_users_selected_<?php echo ploopi\str::htmlentities($_GET['share_id']); ?>');">
+                            <a class="ploopi_share_select_user" href="#" data-ploopi-todiv="<?php echo ploopi\str::htmlentities('div_share_users_selected_'.(ploopi\str::htmlentities($_GET['share_id']))); ?>" data-ploopi-query="<?php echo ploopi\str::htmlentities(ploopi\crypt::queryencode('ploopi_op=share_select_user&share_id='.(urlencode($_GET['share_id'])).'&user_id='.($id_user))); ?>">
                                 <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span><?php echo ploopi\str::htmlentities("{$user['lastname']} {$user['firstname']}"); ?></span></p>
                             </a>
                             <?php
@@ -257,7 +264,7 @@ switch($ploopi_op)
                         {
                             $group = &$list['groups'][$id_grp];
                             ?>
-                            <a class="ploopi_share_select_usergroup" href="javascript:void(0);" onclick="javascript:ploopi.xhr.todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_select_user&share_id=<?php echo urlencode($_GET['share_id']); ?>&group_id=<?php echo $id_grp; ?>', 'div_share_users_selected_<?php echo ploopi\str::htmlentities($_GET['share_id']); ?>');">
+                            <a class="ploopi_share_select_usergroup" href="#" data-ploopi-todiv="<?php echo ploopi\str::htmlentities('div_share_users_selected_'.(ploopi\str::htmlentities($_GET['share_id']))); ?>" data-ploopi-query="<?php echo ploopi\str::htmlentities(ploopi\crypt::queryencode('ploopi_op=share_select_user&share_id='.(urlencode($_GET['share_id'])).'&group_id='.($id_grp))); ?>">
                                 <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_group.png"><span><?php echo ploopi\str::htmlentities($list['groups'][$id_grp]['label']);  ?></span></p>
                             </a>
                             <?php
@@ -267,7 +274,7 @@ switch($ploopi_op)
                                 {
                                     $user = &$list['users'][$id_user];
                                     ?>
-                                    <a class="ploopi_share_select_usergroup_user" href="javascript:void(0);" onclick="javascript:ploopi.xhr.todiv('admin.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=share_select_user&share_id=<?php echo urlencode($_GET['share_id']); ?>&user_id=<?php echo $id_user; ?>', 'div_share_users_selected_<?php echo ploopi\str::htmlentities($_GET['share_id']); ?>');">
+                                    <a class="ploopi_share_select_usergroup_user" href="#" data-ploopi-todiv="<?php echo ploopi\str::htmlentities('div_share_users_selected_'.(ploopi\str::htmlentities($_GET['share_id']))); ?>" data-ploopi-script="admin.php" data-ploopi-query="<?php echo ploopi\str::htmlentities(ploopi\crypt::queryencode('ploopi_op=share_select_user&share_id='.(urlencode($_GET['share_id'])).'&user_id='.($id_user))); ?>">
                                         <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span><?php echo ploopi\str::htmlentities("{$user['lastname']} {$user['firstname']}"); ?></span></p>
                                     </a>
                                     <?php

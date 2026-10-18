@@ -25,5 +25,26 @@ ploopi.calendar = {};
  * Ne plus utiliser cette fonction, utiliser de préférence l'appel PHP : ploopi_open_calendar()
  */
 ploopi.calendar.open = function(inputfield_id, event) {
-    ploopi.popup.show(ploopi.xhr.send('index-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=calendar_open&selected_date='+jQuery('#'+inputfield_id)[0].value+'&inputfield_id='+inputfield_id), 192, event, false, 'ploopi_popup_calendar',null,null, true);
+    ploopi.popup.show(ploopi.xhr.send('index-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=calendar_open&selected_date='+jQuery('#'+inputfield_id)[0].value+'&inputfield_id='+inputfield_id), document.querySelector('.p4-app') ? 272 : 192, event, false, 'ploopi_popup_calendar',null,null, true);
 };
+
+/**
+ * Choix d'une date (date::open_calendar, opération calendar_open) : ouverture, jour
+ * choisi et « Aujourd'hui » par attributs, sans gestionnaire en ligne (CSP)
+ */
+jQuery(document).on('click', '[data-ploopi-calendar]', function(event) {
+    event.preventDefault();
+    var id = this.getAttribute('data-ploopi-calendar');
+    var field = document.getElementById(id);
+    ploopi.xhr.topopup(parseInt(this.getAttribute('data-ploopi-width'), 10) || 192, event, 'ploopi_popup_calendar', this.getAttribute('data-ploopi-url'), 'selected_date='+encodeURIComponent(field ? field.value : '')+'&inputfield_id='+encodeURIComponent(id), 'POST');
+});
+
+jQuery(document).on('click', '[data-ploopi-calendar-day]', function(event) {
+    event.preventDefault();
+    var calendar = jQuery(this).closest('[data-ploopi-calendar-field]');
+    var id = calendar.attr('data-ploopi-calendar-field');
+    var field = id ? document.getElementById(id) : null;
+    if (field) field.value = this.getAttribute('data-ploopi-calendar-day');
+    ploopi.popup.hide('ploopi_popup_calendar');
+    if (field) ploopi.event.dispatch_onchange(id);
+});

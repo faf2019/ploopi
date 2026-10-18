@@ -1,0 +1,83 @@
+<?php
+/*
+    Copyright (c) 2007-2018 Ovensia
+    Contributors hold Copyright (c) to their code submissions.
+
+    This file is part of Ploopi.
+
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
+/**
+ * Configuration de la suite de vérification.
+ *
+ * Copier ce fichier en tests/config.php et l'adapter. tests/config.php n'est pas versionné.
+ *
+ * @package ploopi
+ * @subpackage tests
+ * @copyright Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Ovensia
+ */
+
+return array(
+
+    /**
+     * Instance à éprouver. Elle doit servir le dépôt courant : la suite compare le code
+     * source et le comportement observé.
+     */
+    'base_url'          => 'http://127.0.0.1:8080',
+
+    /**
+     * Base de données de cette instance.
+     */
+    'db_host'           => '127.0.0.1',
+    'db_name'           => 'ploopi',
+    'db_user'           => 'ploopi',
+    'db_pass'           => '',
+
+    /**
+     * Compte administrateur système utilisé pour la connexion.
+     */
+    'admin_login'       => 'admin',
+    'admin_password'    => '',
+
+    /**
+     * Dossier des fichiers de session PHP du serveur web, si le gestionnaire "php" est en
+     * usage. Laisser vide pour une détection automatique. Les deux contrôles qui lisent le
+     * fichier de session sont signalés "non évalué" si le dossier est introuvable.
+     */
+    'session_path'      => '',
+
+    /**
+     * Fichier où le serveur web consigne les courriels au lieu de les expédier
+     * (sendmail_path = "sh tests/sendmail.sh <fichier>", ce que fait tests/instance.sh).
+     * Vide : les contrôles qui lisent un courriel sont signalés "non évalué".
+     */
+    'courriels'         => '',
+
+    /**
+     * Autorise la suite 04, qui est DESTRUCTIVE : elle retire temporairement
+     * config/config.php, déroule une installation neuve par l'assistant, puis supprime la
+     * base créée. À n'activer que sur une instance jetable.
+     */
+    'allow_destructive' => false,
+
+    /**
+     * Base créée puis supprimée par la suite 04. Doit différer de db_name.
+     */
+    'install_db'        => 'ploopi_verif_installation',
+
+);

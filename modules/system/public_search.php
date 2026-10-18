@@ -36,7 +36,8 @@
 
 if (isset($_REQUEST['system_search_keywords']))     $_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords'] = $_REQUEST['system_search_keywords'];
 if (isset($_REQUEST['system_search_workspace']))    $_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_workspace'] = $_REQUEST['system_search_workspace'];
-if (isset($_REQUEST['system_search_module']))       $_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_module'] = $_REQUEST['system_search_module'];
+// Identifiant d'instance (entier) ou vide : il entre dans la requête de recherche
+if (isset($_REQUEST['system_search_module']))       $_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_module'] = is_numeric($_REQUEST['system_search_module']) ? (int) $_REQUEST['system_search_module'] : '';
 if (isset($_REQUEST['system_search_date1']))    $_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_date1'] = $_REQUEST['system_search_date1'];
 if (isset($_REQUEST['system_search_date2']))    $_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_date2'] = $_REQUEST['system_search_date2'];
 
@@ -49,6 +50,31 @@ if (!isset($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_workspace'])) $_SE
 if (!isset($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_module'])) $_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_module'] = '';
 if (!isset($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_date1'])) $_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_date1'] = '';
 if (!isset($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_date2'])) $_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_date2'] = '';
+
+// Gabarits de génération 4 : formulaire et résultats refondus (envoi classique, sans rechargement partiel)
+if (ploopi\skin::get()->version() >= 4)
+{
+    $arrSearchModules = array();
+    foreach($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['modules'] as $intModule)
+    {
+        if (!empty($_SESSION['ploopi']['modules'][$intModule]['active'])) $arrSearchModules[$intModule] = $_SESSION['ploopi']['modules'][$intModule]['label'];
+    }
+
+    echo ploopi\system\ui::pagehead(_SYSTEM_LABEL_SEARCH, _SYSTEM_MYS_SEARCH_SUBTITLE);
+    echo ploopi\system\ui::card_open('', '', array(), array('class' => 'p4-search-card'));
+    echo '<form class="p4-row p4-wrap p4-search-form" action="'.ploopi\crypt::urlencode('admin.php?op=search').'" method="post">';
+    echo '<div class="p4-input-icon p4-grow">'.ploopi\system\ui::icon('search', 'p4-icon-sm').ploopi\system\ui::input('system_search_keywords', $_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords'], array('type' => 'search', 'placeholder' => _SYSTEM_MYS_SEARCH_PLACEHOLDER, 'aria-label' => _SYSTEM_MYS_SEARCH_PLACEHOLDER, 'autofocus' => true)).'</div>';
+    echo ploopi\system\ui::select('system_search_module', $arrSearchModules, $_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_module'], array('empty' => _SYSTEM_MYS_SEARCH_ALLMODULES, 'aria-label' => _SYSTEM_ROLEF_MODULE, 'class' => 'p4-select p4-select-inline'));
+    echo ploopi\system\ui::button(array('label' => _PLOOPI_SEARCH, 'icon' => 'search', 'class' => 'primary', 'type' => 'submit'));
+    echo '</form>';
+    echo ploopi\system\ui::card_close();
+
+    if ($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords'] == '') echo ploopi\system\ui::emptystate('search', _SYSTEM_MYS_SEARCH_PROMPT);
+    else include_once './modules/system/public_search_result.php';
+
+    echo ploopi\system\ui::script();
+    return;
+}
 
 echo ploopi\skin::get()->create_pagetitle(_SYSTEM_LABEL_SEARCH);
 echo ploopi\skin::get()->open_simplebloc('Formulaire de recherche');

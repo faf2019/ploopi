@@ -1,0 +1,101 @@
+#!/bin/sh
+# Préparation du dépôt monté avant de lancer Apache (voir docker/LISEZMOI.md).
+set -e
+
+cd /var/www/html
+
+# Dépendances PHP : vendor/ n'est pas versionné.
+if [ ! -f vendor/autoload.php ]; then
+    echo "ploopi : installation des dépendances (composer install)…"
+    COMPOSER_ALLOW_SUPERUSER=1 composer install --no-dev --no-interaction --no-progress \
+        --ignore-platform-req=ext-memcached
+fi
+
+# Règles Apache de Ploopi : réécriture d'admin.php, protection de config/ et data/.
+if [ ! -f .htaccess ]; then
+    cp .htaccess_modele .htaccess
+fi
+
+# Apache doit pouvoir écrire dans le dépôt : config/config.php (assistant),
+# modules/ (installation de modules). Plutôt que de changer le propriétaire
+# des fichiers — refusé sur un disque exFAT/NTFS, un partage réseau ou avec
+# userns-remap —, Apache tourne sous le propriétaire du dépôt monté.
+# Les fichiers créés restent ainsi modifiables depuis l'hôte, sans sudo.
+intUid=$(stat -c %u .)
+intGid=$(stat -c %g .)
+if [ "$intUid" != 0 ]; then
+    # Apache refuse un uid sans compte (getpwuid) : on le déclare au besoin.
+    getent group "$intGid" >/dev/null || echo "ploopi:x:$intGid:" >> /etc/group
+    getent passwd "$intUid" >/dev/null \
+        || echo "ploopi:x:$intUid:$intGid::/var/www:/usr/sbin/nologin" >> /etc/passwd
+    export APACHE_RUN_USER="$(getent passwd "$intUid" | cut -d: -f1)"
+    export APACHE_RUN_GROUP="$(getent group "$intGid" | cut -d: -f1)"
+    strOwner="$intUid:$intGid"
+    # Mise à niveau : l'ancienne image faisait tourner Apache sous www-data,
+    # qui a laissé config/ et config/config.php (mode 0640) à son nom.
+    find config \( ! -user "$intUid" -o ! -group "$intGid" \) \
+        -exec chown "$strOwner" {} + 2>/dev/null || true
+    [ ! -e config/config.php ] \
+        || setpriv --reuid="$intUid" --regid="$intGid" --clear-groups test -r config/config.php \
+        || echo "ploopi : config/config.php illisible par Apache ($strOwner), corrigez ses droits depuis l'hôte" >&2
+else
+    # Dépôt appartenant à root : Apache ne peut pas tourner sous root,
+    # on reste sur www-data et on lui donne config/ si le système de fichiers le permet.
+    strOwner="www-data:www-data"
+    chown www-data:www-data config 2>/dev/null \
+        || setpriv --reuid=www-data --regid=www-data --clear-groups test -w config \
+        || echo "ploopi : impossible de donner config/ à www-data, l'assistant ne pourra pas écrire config/config.php" >&2
+    # L'installation d'un module copie install/<module>/files dans modules/<module> :
+    # www-data reçoit modules/ et les modules qu'il a installés (pas system, versionné).
+    { chown www-data:www-data modules \
+        && find modules -mindepth 1 -maxdepth 1 -type d ! -name system \
+            -exec chown -R www-data:www-data {} + ; } 2>/dev/null \
+        || setpriv --reuid=www-data --regid=www-data --clear-groups test -w modules \
+        || echo "ploopi : impossible de donner modules/ à www-data, l'installation des modules échouera" >&2
+fi
+
+# Configuration propre au conteneur (PLOOPI_CONFIG, volume « configuration ») : le dépôt
+# est monté tel quel, et le config/config.php d'une installation hors Docker du même
+# dossier désigne une base que le conteneur ne joint pas. Il n'est ni lu ni modifié.
+if [ -n "${PLOOPI_CONFIG:-}" ]; then
+    strConfigDir=$(dirname "$PLOOPI_CONFIG")
+    mkdir -p "$strConfigDir"
+
+    # Mise à niveau : les images antérieures écrivaient config/config.php dans le dépôt.
+    # Il n'est repris que si sa base répond depuis le conteneur, tables comprises :
+    # c'est alors celui d'une installation Docker, pas d'une installation native.
+    if [ ! -e "$PLOOPI_CONFIG" ] && [ -f config/config.php ]; then
+        if php -d display_errors=0 -r '
+            $http_host = "";
+            if (!@include "config/config.php") exit(1);
+            if (!defined("_PLOOPI_DB_SERVER")) exit(1);
+            mysqli_report(MYSQLI_REPORT_OFF);
+            $arrHote = explode(":", _PLOOPI_DB_SERVER);
+            $objDb = mysqli_init();
+            $objDb->options(MYSQLI_OPT_CONNECT_TIMEOUT, 3);
+            if (!@$objDb->real_connect($arrHote[0], _PLOOPI_DB_LOGIN, _PLOOPI_DB_PASSWORD, _PLOOPI_DB_DATABASE, isset($arrHote[1]) ? (int)$arrHote[1] : 3306)) exit(1);
+            exit($objDb->query("SELECT 1 FROM ploopi_user LIMIT 1") ? 0 : 1);
+        '; then
+            cp -p config/config.php "$PLOOPI_CONFIG"
+            echo "ploopi : config/config.php (installation Docker antérieure) repris dans $PLOOPI_CONFIG"
+        else
+            echo "ploopi : config/config.php ignoré : sa base ne répond pas depuis le conteneur (installation hors Docker ?). L'assistant écrira $PLOOPI_CONFIG"
+        fi
+    fi
+
+    chown "$strOwner" "$strConfigDir" 2>/dev/null \
+        || echo "ploopi : impossible de donner $strConfigDir à $strOwner, l'assistant ne pourra pas écrire sa configuration" >&2
+    [ ! -e "$PLOOPI_CONFIG" ] || chown "$strOwner" "$PLOOPI_CONFIG" 2>/dev/null || true
+fi
+
+# Dossier des documents, hors de la racine web : c'est la valeur que propose
+# l'assistant d'installation (../ploopi-data).
+# Récursif : les documents déposés sous l'ancienne image appartiennent à www-data.
+mkdir -p /var/www/ploopi-data
+find /var/www/ploopi-data \( ! -user "${strOwner%:*}" -o ! -group "${strOwner#*:}" \) \
+    -exec chown "$strOwner" {} + 2>/dev/null \
+    || echo "ploopi : impossible de donner /var/www/ploopi-data à $strOwner, les dépôts de documents échoueront" >&2
+
+echo "ploopi : Apache tourne sous ${APACHE_RUN_USER:-www-data} ($strOwner), propriétaire du dépôt : $intUid:$intGid"
+
+exec docker-php-entrypoint "$@"

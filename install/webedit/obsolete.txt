@@ -1,0 +1,5 @@
+# Fichiers retirés du paquet, supprimés de modules/webedit/ par la mise à jour
+# (un chemin relatif au module par ligne, fichier ou dossier)
+
+# 2.8.14 : CKEditor 4 remplacé par TinyMCE (éditeur du socle, js/editor.js)
+ckeditor

@@ -30,6 +30,13 @@
  * @author Ovensia
  */
 
+// Gabarits de génération 4 : liste refondue
+if (ploopi\skin::get()->version() >= 4)
+{
+    include './modules/system/admin_workspaces_roles_list.php';
+    return;
+}
+
 /**
  * Recherche des utilisateurs qui possèdent le rôle
  */

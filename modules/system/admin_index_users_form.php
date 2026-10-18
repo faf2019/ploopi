@@ -30,6 +30,14 @@
  * @author Ovensia
  */
 
+// Gabarits de génération 4 : fiche refondue
+if (ploopi\skin::get()->version() >= 4)
+{
+    $strUserFormMode = 'admin';
+    include './modules/system/admin_userform_p4.php';
+    return;
+}
+
 /**
  * Ouverture d'une instance de l'objet user
  */
@@ -205,6 +213,10 @@ if (isset($_REQUEST['error']))
 
         case 'login':
             $error = ploopi\str::nl2br(_SYSTEM_MSG_LOGINERROR);
+        break;
+
+        case 'save':
+            $error = ploopi\str::nl2br(_SYSTEM_MSG_SAVEUSERERROR);
         break;
     }
     ?>
@@ -509,7 +521,7 @@ if (isset($_REQUEST['confirm']))
                         <label><?php echo _SYSTEM_LABEL_PASSWORD_CONFIRM; ?>:</label>
                         <input type="password" class="text" name="usernewpass_confirm" id="usernewpass_confirm" value="" tabindex="23" style="width:180px;" />
                     </p>
-                    <p class="checkbox" onclick="javascript:ploopi.checkbox_click(event,'user_password_force_update');">
+                    <p class="checkbox ploopi_checkbox_zone" data-checkbox="user_password_force_update">
                         <label>Forcer le changement de mot de passe à la prochaine connexion:</label>
                         <input type="checkbox" id="user_password_force_update" name="user_password_force_update" value="1" <?php if ($user->fields['password_force_update']) echo 'checked="checked"'; ?> tabindex="23" />
                     </p>
@@ -530,7 +542,7 @@ if (isset($_REQUEST['confirm']))
                         <input type="text" style="width:100px;" class="text" name="user_date_expire" id="user_date_expire" value="<?php echo ploopi\str::htmlentities($user_date_expire['date']); ?>" tabindex="24" />
                         <?php ploopi\date::open_calendar('user_date_expire'); ?>
                     </p>
-                    <p class="checkbox" onclick="javascript:ploopi.checkbox_click(event,'user_disabled');">
+                    <p class="checkbox ploopi_checkbox_zone" data-checkbox="user_disabled">
                         <label>Compte désactivé:</label>
                         <input type="checkbox" id="user_disabled" name="user_disabled" value="1" <?php if ($user->fields['disabled']) echo 'checked="checked"'; ?> tabindex="24" />
                     </p>
@@ -538,7 +550,7 @@ if (isset($_REQUEST['confirm']))
                         <label><?php echo _SYSTEM_LABEL_EMAIL; ?><?php if (in_array('email', $arrRequiredFields)) echo ' *'; ?>:</label>
                         <input type="text" class="text" name="user_email"  value="<?php echo ploopi\str::htmlentities($user->fields['email']); ?>" tabindex="25" />
                     </p>
-                    <p class="checkbox" onclick="javascript:ploopi.checkbox_click(event,'user_ticketsbyemail');">
+                    <p class="checkbox ploopi_checkbox_zone" data-checkbox="user_ticketsbyemail">
                         <label><?php echo _SYSTEM_LABEL_TICKETSBYEMAIL; ?>:</label>
                         <input style="width:16px;" type="checkbox" id="user_ticketsbyemail" name="user_ticketsbyemail" value="1" <?php if ($user->fields['ticketsbyemail']) echo 'checked'; ?> tabindex="26" />
                     </p>
@@ -553,7 +565,7 @@ if (isset($_REQUEST['confirm']))
                     $mm = floor((abs($offset) % 3600) / 60);
                     ?>
 
-                    <p class="checkbox" onclick="javascript:ploopi.checkbox_click(event,'user_servertimezone');">
+                    <p class="checkbox ploopi_checkbox_zone" data-checkbox="user_servertimezone">
                         <label><?php echo _SYSTEM_LABEL_SERVERTIMEZONE; ?>:</label>
                         <span>
                             <input style="width:16px;" type="checkbox" id="user_servertimezone" name="user_servertimezone" value="1" <?php if ($user->fields['servertimezone']) echo 'checked'; ?> tabindex="27" onchange="jQuery('#user_timezone_choice')[0].style.display = (this.checked) ? 'none' : 'block';"/>
@@ -615,7 +627,7 @@ if (isset($_REQUEST['confirm']))
                     </p>
                     <p>
                         <label><?php echo _SYSTEM_LABEL_COLOR; ?>:</label>
-                        <input type="text" style="width:100px;cursor:pointer;" class="text jscolor {hash:true}" name="user_color" id="user_color" value="<?php echo ploopi\str::htmlentities($user->fields['color']); ?>" tabindex="29" readonly="readonly" />
+                        <input type="text" style="width:100px;cursor:pointer;" class="text" data-jscolor="{}" name="user_color" id="user_color" value="<?php echo ploopi\str::htmlentities($user->fields['color']); ?>" tabindex="29" readonly="readonly" />
                     </p>
                     <p>
                         <label><?php echo _SYSTEM_LABEL_PHOTO; ?>:</label>
@@ -638,8 +650,8 @@ if (isset($_REQUEST['confirm']))
                         if (!empty($workspaceid) && !empty($_GET['user_id']) && $workspace_user->open($workspaceid, $_GET['user_id']))
                         {
                             ?>
-                            <p style="margin-top:2px;padding:4px 0;border:2px solid #a0a0a0;background-color:#c0c0c0;">
-                                <label style="font-weight:bold;"><?php echo _SYSTEM_LABEL_LEVEL; ?>:</label>
+                            <p class="system_user_level">
+                                <label><?php echo _SYSTEM_LABEL_LEVEL; ?>:</label>
                                 <select class="select" name="userworkspace_adminlevel" tabindex="30">
                                 <?php
 

@@ -145,6 +145,30 @@ abstract class loader
     }
 
     /**
+     * Chemin du fichier de configuration
+     *
+     * config/config.php par défaut. La variable d'environnement PLOOPI_CONFIG en désigne
+     * un autre, lu par le socle et écrit par l'assistant d'installation. Sous Docker, le
+     * dépôt est monté tel quel dans le conteneur : le config.php d'une installation hors
+     * Docker du même dépôt n'a pas à y être lu, ni à être écrasé.
+     *
+     * @return string chemin du fichier de configuration
+     *
+     * @package ploopi
+     * @subpackage loader
+     * @copyright Ovensia
+     * @license GNU General Public License (GPL)
+     * @author Ovensia
+     */
+
+    public static function configpath()
+    {
+        $strChemin = getenv('PLOOPI_CONFIG');
+
+        return ($strChemin === false || $strChemin === '') ? './config/config.php' : $strChemin;
+    }
+
+    /**
      * Partie commune des scripts de chargement de l'environnement Ploopi
      * Démarrage du timer principal.
      * Chargement du fichier de config.
@@ -177,6 +201,17 @@ abstract class loader
         mb_internal_encoding('UTF-8');
 
         /**
+         * $_REQUEST ne contient que GET et POST, quelle que soit la configuration.
+         *
+         * Sans php.ini (images Docker officielles, PHP compilé), request_order est vide
+         * et variables_order vaut EGPCS : les cookies entrent dans $_REQUEST. Le socle
+         * prend alors le cookie de session pour un paramètre — checktoken() exige un
+         * jeton pour un simple admin.php, et la connexion elle-même échoue. C'est le
+         * comportement de request_order = "GP" (php.ini-production) : POST l'emporte, clés numériques comprises.
+         */
+        $_REQUEST = $_POST + $_GET;
+
+        /**
          * Autload
          */
         spl_autoload_register(array(__CLASS__, '_autoload'));
@@ -185,13 +220,13 @@ abstract class loader
         /**
          * Chargement du fichier de configuration
          */
-        if (!file_exists('./config/config.php'))
+        if (!file_exists(self::configpath()))
         {
             include_once './config/install/install.php' ;
             system::kill();
         }
 
-        include_once './config/config.php'; // load config (mysql, path, etc.)
+        include_once self::configpath(); // load config (mysql, path, etc.)
 
         /**
          * Création du buffer principal.
@@ -221,17 +256,30 @@ abstract class loader
              * Gestionnaire interne de session
              */
 
-            session_set_save_handler(
-                array(__NAMESPACE__.'\session', 'open'),
-                array(__NAMESPACE__.'\session', 'close'),
-                array(__NAMESPACE__.'\session', 'read'),
-                array(__NAMESPACE__.'\session', 'write'),
-                array(__NAMESPACE__.'\session', 'destroy'),
-                array(__NAMESPACE__.'\session', 'gc')
-            );
+            include_once './include/classes/session_handler.php';
+            session_set_save_handler(new session_handler());
 
             session_name('ploopi'.hash('sha256', _PLOOPI_BASEPATH));
         }
+
+        /**
+         * Durcissement du cookie de session.
+         *
+         * Ces réglages doublent ceux du .htaccess : ils s'appliquent donc aussi aux
+         * déploiements sans Apache (nginx/php-fpm) ou sans AllowOverride.
+         *
+         * use_only_cookies interdit à PHP d'accepter un identifiant de session fourni dans
+         * l'URL ou en POST, ce qui ferme la fixation de session et évite la fuite de
+         * l'identifiant par l'entête Referer.
+         *
+         * session.cookie_samesite n'existe qu'à partir de PHP 7.3 ; ini_set() y est sans
+         * effet sur les versions antérieures.
+         */
+        ini_set('session.use_only_cookies', '1');
+        ini_set('session.use_trans_sid', '0');
+        ini_set('session.cookie_httponly', '1');
+        ini_set('session.cookie_samesite', 'Lax');
+        if (self::_isssl()) ini_set('session.cookie_secure', '1');
 
         /**
          * Démarrage de la session
@@ -310,8 +358,8 @@ abstract class loader
         /**
          * Chargement du fichier de configuration
          */
-        if (!file_exists('./config/config.php')) system::kill();
-        include_once './config/config.php';
+        if (!file_exists(self::configpath())) system::kill();
+        include_once self::configpath();
 
         /**
          * Initialisation du gestionnaire d'erreur
@@ -408,6 +456,35 @@ abstract class loader
     }
 
     /**
+     * Indique si la requête courante est servie en HTTPS, terminaison TLS déportée comprise.
+     *
+     * @return boolean true si la requête est chiffrée
+     *
+     * @package ploopi
+     * @subpackage loader
+     * @copyright Ovensia
+     * @license GNU General Public License (GPL)
+     * @author Ovensia
+     */
+
+    private static function _isssl()
+    {
+        // Renseignés par le serveur web
+        if (!empty($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) != 'off') return true;
+        if (!empty($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443) return true;
+
+        /**
+         * Renseignés par un frontal assurant la terminaison TLS.
+         * Un client peut les forger, mais il ne peut ainsi que restreindre son propre cookie
+         * de session : le sens est celui de la fermeture, pas de l'ouverture.
+         */
+        if (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) == 'https') return true;
+        if (!empty($_SERVER['HTTP_X_SSL_REQUEST']) && in_array(strtolower((string)$_SERVER['HTTP_X_SSL_REQUEST']), array('1', 'on', 'true'))) return true;
+
+        return false;
+    }
+
+    /**
      * Modifie les entêtes HTTP envoyées.
      * Modifie notamment la gestion du cache (no-cache)
      *
@@ -420,6 +497,28 @@ abstract class loader
 
     private static function _setheader()
     {
+        /**
+         * Entêtes de sécurité.
+         * Doublées dans le .htaccess pour couvrir les ressources statiques, mais posées ici
+         * pour rester effectives sans Apache ou sans AllowOverride.
+         */
+
+        // Interdit au navigateur de deviner un type plus permissif que celui annoncé
+        header('X-Content-Type-Options: nosniff');
+
+        // Limite la fuite d'URL internes (identifiants de session, jetons) vers les sites tiers
+        header('Referrer-Policy: strict-origin-when-cross-origin');
+
+        /**
+         * Content-Security-Policy (décision D6, § 3.32) : politique de base appliquée,
+         * politique cible en Report-Only ; la politique stricte remplace la première en
+         * fin de requête sur les pages déclarées prêtes (ploopi\csp). Le mode n'est connu
+         * qu'après la session : _setheader() est rappelée, ses entêtes remplacent les
+         * précédentes.
+         */
+        $booBackoffice = in_array(self::$script, array('admin', 'admin-light')) || (in_array(self::$script, array('index', 'index-light')) && isset($_SESSION['ploopi']['mode']) && $_SESSION['ploopi']['mode'] == 'backoffice');
+        csp::setheaders($booBackoffice);
+
         header('Expires: Sat, 1 Jan 2000 05:00:00 GMT');
         header('Last-Modified: ' . gmdate("D, d M Y H:i:s"));
 
@@ -446,6 +545,130 @@ abstract class loader
     private static function _setheader_connected()
     {
         header('Ploopi-Connected: '.(empty($_SESSION['ploopi']['connected']) ? 0 : 1));
+    }
+
+    /**
+     * Supprime les jetons anti-CSRF périmés et limite le nombre de jetons conservés.
+     *
+     * Un jeton n'est valide que tant qu'il figure en session (self::checktoken) :
+     * cette purge est donc ce qui fait expirer les jetons, en backoffice comme en
+     * frontoffice connecté.
+     *
+     * @see _PLOOPI_TOKENTIME
+     * @see _PLOOPI_TOKENMAX
+     */
+
+    private static function _purgetokens()
+    {
+        if (empty($_SESSION['ploopi']['tokens'])) return;
+
+        // Suppression des jetons périmés
+        $mint = time() - _PLOOPI_TOKENTIME;
+        foreach($_SESSION['ploopi']['tokens'] as $k => $t) if ($t < $mint) unset($_SESSION['ploopi']['tokens'][$k]);
+        // Limitation du nombre de jetons conservés
+        $_SESSION['ploopi']['tokens'] = array_slice($_SESSION['ploopi']['tokens'], -_PLOOPI_TOKENMAX, _PLOOPI_TOKENMAX);
+    }
+
+    /**
+     * Renvoie le jeton anti-CSRF transporté par la requête courante.
+     * Le jeton est le 5ème élément du paramètre "ploopi_env".
+     *
+     * @return string jeton fourni par la requête, chaîne vide s'il est absent
+     *
+     * @package ploopi
+     * @subpackage loader
+     * @copyright Ovensia
+     * @license GNU General Public License (GPL)
+     * @author Ovensia
+     *
+     * @see crypt::queryencode
+     */
+
+    public static function gettoken()
+    {
+        if (!isset($_REQUEST['ploopi_env'])) return '';
+
+        $arrEnv = explode('/', $_REQUEST['ploopi_env']);
+
+        return isset($arrEnv[4]) ? $arrEnv[4] : '';
+    }
+
+    /**
+     * Vérifie la validité du jeton anti-CSRF de la requête courante.
+     *
+     * Le contrôle ne s'applique qu'aux requêtes authentifiées du backoffice : c'est le seul
+     * contexte dans lequel un jeton est généré et transporté par les URL.
+     * Un jeton valide voit sa date de validité repoussée.
+     *
+     * @return boolean true si la requête peut être exécutée
+     *
+     * @package ploopi
+     * @subpackage loader
+     * @copyright Ovensia
+     * @license GNU General Public License (GPL)
+     * @author Ovensia
+     *
+     * @see _PLOOPI_TOKEN
+     */
+
+    public static function checktoken()
+    {
+        /**
+         * Jetons désactivés, ou utilisateur non connecté : aucun jeton n'est émis
+         * dans ces contextes, il n'y a donc rien à vérifier.
+         *
+         * Lot 8, décision D3 : le contrôle s'applique aussi au frontoffice des
+         * sessions connectées — c'est là qu'un jeton y est désormais émis. Les
+         * visiteurs anonymes ne portent aucun jeton : leurs opérations restent
+         * celles déclarées dans publicops.php, sans vérification possible.
+         */
+        if (!_PLOOPI_TOKEN
+            || empty($_SESSION['ploopi']['mode'])
+            || empty($_SESSION['ploopi']['connected'])) return true;
+        if ($_SESSION['ploopi']['mode'] != 'backoffice'
+            && $_SESSION['ploopi']['mode'] != 'frontoffice') return true;
+
+        // On autorise un jeton non valide ou non fourni à l'unique condition que la requête ne contienne aucun paramètre
+        if (empty($_REQUEST)) return true;
+
+        $strToken = self::gettoken();
+
+        if (empty($strToken) || !isset($_SESSION['ploopi']['tokens'][$strToken])) return false;
+
+        // Mise à jour de la validité du jeton
+        unset($_SESSION['ploopi']['tokens'][$strToken]);
+        $_SESSION['ploopi']['tokens'][$strToken] = time();
+
+        return true;
+    }
+
+    /**
+     * Vérifie la validité du jeton anti-CSRF et interrompt la requête s'il est absent ou invalide.
+     *
+     * @package ploopi
+     * @subpackage loader
+     * @copyright Ovensia
+     * @license GNU General Public License (GPL)
+     * @author Ovensia
+     *
+     * @see self::checktoken
+     */
+
+    public static function requiretoken()
+    {
+        if (self::checktoken()) return;
+
+        if (self::gettoken() == '') {
+            error::syslog(LOG_INFO, 'Jeton absent');
+            echo 'Jeton absent, redirection en cours...';
+        }
+        else {
+            error::syslog(LOG_INFO, 'Jeton non valide');
+            echo 'Jeton non valide, redirection en cours...';
+        }
+
+        output::redirect('admin.php', true, true, 2);
+        system::kill();
     }
 
 
@@ -513,6 +736,7 @@ abstract class loader
                     }
                 }
 
+                self::_setheader();
                 self::_setheader_connected();
 
                 include './include/op.php';
@@ -676,6 +900,15 @@ abstract class loader
                     else $fields['password_force_update'] = 1;
                 }
 
+                /**
+                 * Empreinte bcrypt de l'ancienne forme, que bcrypt tronquait à 72 octets
+                 * (user::bcrypt_input) : recalculée dès la première connexion réussie. La
+                 * date de dernier changement de mot de passe n'est pas touchée.
+                 */
+                if ($booPasswordOk && empty($fields['password_force_update']) && user::password_needs_rehash($_REQUEST['ploopi_password'], $_REQUEST['ploopi_login'], $fields['password'])) {
+                    $db->query("UPDATE ploopi_user SET password = '".$db->addslashes(user::generate_hash($_REQUEST['ploopi_password'], $_REQUEST['ploopi_login']))."' WHERE id = ".(int)$fields['id']);
+                }
+
                 if ($booPasswordOk && (!empty($fields['failed_attemps']) || !empty($fields['jailed_since']))) {
                     $objUser = new user();
                     $objUser->open($fields['id']);
@@ -727,13 +960,12 @@ abstract class loader
                     if ($intErrorCode) {
                         user_action_log::record(_SYSTEM_ACTION_LOGIN_ERR, $_REQUEST['ploopi_login'], _PLOOPI_MODULE_SYSTEM,_PLOOPI_MODULE_SYSTEM);
                         error::syslog(LOG_INFO, 'Erreur lors du changement de mot de passe');
-                        system::logout($intErrorCode, 1, true, array('login' => $fields['login'], 'password' => $_REQUEST['ploopi_password']));
+                        system::logout($intErrorCode, 1, true, array('login' => $fields['login']));
                     }
                 }
 
 
                 $_SESSION['ploopi']['login'] = $fields['login'];
-                $_SESSION['ploopi']['password'] = $_REQUEST['ploopi_password'];
                 $_SESSION['ploopi']['userid'] = $fields['id'];
                 $_SESSION['ploopi']['user'] = $fields;
 
@@ -750,7 +982,6 @@ abstract class loader
                 self::$initsession = true;
 
                 $_SESSION['ploopi']['login'] = $fields['login'];
-                $_SESSION['ploopi']['password'] = $_REQUEST['ploopi_password'];
                 $_SESSION['ploopi']['userid'] = $fields['id'];
                 $_SESSION['ploopi']['user'] = $fields;
 
@@ -848,6 +1079,7 @@ abstract class loader
                                         and         (ploopi_module_type.label = 'webedit')
                                         and         ploopi_module.id = ploopi_module_workspace.id_module
                                         and         ploopi_module_workspace.id_workspace = {$_SESSION['ploopi']['hosts']['frontoffice'][0]}
+                                        order by    ploopi_module_workspace.position, ploopi_module.id
                                         ");
 
                             if ($fields = $db->fetchrow()) $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['hosts']['frontoffice'][0]]['webeditmoduleid'] = $fields['id_module'];
@@ -964,7 +1196,7 @@ abstract class loader
 
                 // sorting workspaces by priority/label
                 uksort ($_SESSION['ploopi']['workspaces'], function($a, $b) {
-                    return (integer)(sprintf("%03d_%s", intval($_SESSION['ploopi']['workspaces'][$b]['priority']), $_SESSION['ploopi']['workspaces'][$b]['label']) < sprintf("%03d_%s", intval($_SESSION['ploopi']['workspaces'][$a]['priority']), $_SESSION['ploopi']['workspaces'][$a]['label']));
+                    return (int)(sprintf("%03d_%s", intval($_SESSION['ploopi']['workspaces'][$b]['priority']), $_SESSION['ploopi']['workspaces'][$b]['label']) < sprintf("%03d_%s", intval($_SESSION['ploopi']['workspaces'][$a]['priority']), $_SESSION['ploopi']['workspaces'][$a]['label']));
                 });
 
                 // create a list with allowed workspaces only
@@ -978,14 +1210,24 @@ abstract class loader
         if (!$_SESSION['ploopi']['paramloaded']) self::_get_modules();
 
 
-        // Génération du token en mode backoffice uniquement
+        // Génération du token en backoffice, et en frontoffice pour les sessions
+        // connectées (lot 8, décision D3) : sans lui, les opérations frontoffice
+        // qui écrivent avec l'identité de la session (demandes de réservation)
+        // ne peuvent être protégées que par une déclaration publicops — qui les
+        // expose aux requêtes forgées.
         if (_PLOOPI_TOKEN && $_SESSION['ploopi']['mode'] == 'backoffice')
         {
-            $_SESSION['ploopi']['token'] = uniqid(rand());
+            $_SESSION['ploopi']['token'] = security::generatetoken();
             $_SESSION['ploopi']['tokens'][$_SESSION['ploopi']['token']] = time();
 
             // Injection du nouveau jeton
             if (!empty($strLoginRedirect)) $strLoginRedirect = crypt::urltoken($strLoginRedirect);
+        }
+        elseif (_PLOOPI_TOKEN && $_SESSION['ploopi']['mode'] == 'frontoffice' && !empty($_SESSION['ploopi']['frontoffice']['connected']))
+        {
+            // Lot 8, décision D3 : jeton de la session frontoffice connectée
+            $_SESSION['ploopi']['token'] = security::generatetoken();
+            $_SESSION['ploopi']['tokens'][$_SESSION['ploopi']['token']] = time();
         }
 
 
@@ -1004,8 +1246,6 @@ abstract class loader
 
         if ($_SESSION['ploopi']['mode'] == 'backoffice')
         {
-            $strToken = '';
-
             if (isset($_REQUEST['ploopi_env']))
             {
                 /**
@@ -1020,34 +1260,13 @@ abstract class loader
                 if (isset($arrEnv[2]) && is_numeric($arrEnv[2])) $ploopi_moduleid = $arrEnv[2];
 
                 if (isset($arrEnv[3])) $ploopi_action = $arrEnv[3];
-
-                if (_PLOOPI_TOKEN && isset($arrEnv[4])) $strToken = $arrEnv[4];
             }
 
 
             if ($_SESSION['ploopi']['connected'])
             {
-                if (_PLOOPI_TOKEN) {
-                    // Vérification de la validité du jeton
-                    // On autorise un jeton non valide ou non fourni à l'unique condition que la requête ne contienne aucun paramètre
-                    if (!empty($_REQUEST) && ((empty($strToken) || !isset($_SESSION['ploopi']['tokens'][$strToken])))) {
-                        if (empty($strToken)) {
-                            error::syslog(LOG_INFO, 'Jeton absent');
-                            echo 'Jeton absent, redirection en cours...';
-                        }
-                        else {
-                            error::syslog(LOG_INFO, 'Jeton non valide');
-                            echo 'Jeton non valide, redirection en cours...';
-                        }
-
-                        output::redirect('admin.php', true, true, 2);
-                        system::kill();
-                    }
-
-                    // Mise à jour de la validité du jeon
-                    unset($_SESSION['ploopi']['tokens'][$strToken]);
-                    $_SESSION['ploopi']['tokens'][$strToken] = time();
-                }
+                // Vérification de la validité du jeton anti-CSRF
+                self::requiretoken();
 
                 if (isset($_REQUEST['ploopi_mainmenu']) && is_numeric($_REQUEST['ploopi_mainmenu']))
                     $ploopi_mainmenu = $_REQUEST['ploopi_mainmenu'];
@@ -1200,11 +1419,7 @@ abstract class loader
                     $_SESSION['ploopi']['token']
                 );
 
-                // Suppression des jetons périmés
-                $mint = time() - _PLOOPI_TOKENTIME;
-                foreach($_SESSION['ploopi']['tokens'] as $k => $t) if ($t < $mint) unset($_SESSION['ploopi']['tokens'][$k]);
-                // Limitation du nombre de jetons conservés
-                $_SESSION['ploopi']['tokens'] = array_slice($_SESSION['ploopi']['tokens'], -_PLOOPI_TOKENMAX, _PLOOPI_TOKENMAX);
+                self::_purgetokens();
 
             } else {
                 $_SESSION['ploopi']['env'] = sprintf(
@@ -1221,6 +1436,29 @@ abstract class loader
         {
             $_SESSION['ploopi']['moduleid'] = $_SESSION['ploopi']['frontoffice']['moduleid'];
             $_SESSION['ploopi']['workspaceid'] = $_SESSION['ploopi']['frontoffice']['workspaceid'];
+
+            /**
+             * Lot 8, décision D3 : le frontoffice d'une session connectée porte lui
+             * aussi un environnement avec jeton. Les opérations qui écrivent avec
+             * l'identité de la session l'exigent (include/op.php), celles des
+             * visiteurs anonymes restent déclarées dans publicops.php comme
+             * auparavant — la vérification ne s'applique qu'aux sessions connectées.
+             */
+            if (_PLOOPI_TOKEN && !empty($_SESSION['ploopi']['connected']))
+            {
+                $_SESSION['ploopi']['env'] = sprintf(
+                    "%s/%s/%s/%s/%s",
+                    $_SESSION['ploopi']['mainmenu'],
+                    $_SESSION['ploopi']['workspaceid'],
+                    $_SESSION['ploopi']['moduleid'],
+                    $_SESSION['ploopi']['action'],
+                    $_SESSION['ploopi']['token']
+                );
+
+                // Un jeton est émis à chaque page : sans purge, ils
+                // s'accumuleraient en session et ne périmeraient jamais.
+                self::_purgetokens();
+            }
         }
 
 
@@ -1236,10 +1474,18 @@ abstract class loader
 
             $template_name = self::$workspace['template'];
 
-            if (empty($template_name) || !file_exists("./templates/backoffice/{$template_name}")) $template_name = _PLOOPI_DEFAULT_TEMPLATE;
+            // Déclinaison (ploopi4.1…) : fichiers du gabarit étendu, palette en plus
+            $arrTemplate = empty($template_name) ? null : skin::resolve($template_name);
+            if (is_null($arrTemplate))
+            {
+                $template_name = _PLOOPI_DEFAULT_TEMPLATE;
+                $arrTemplate = skin::resolve($template_name);
+                if (is_null($arrTemplate)) $arrTemplate = array('path' => "./templates/backoffice/{$template_name}", 'palette' => '');
+            }
 
             $_SESSION['ploopi']['template_name'] = $template_name;
-            $_SESSION['ploopi']['template_path'] = "./templates/backoffice/{$_SESSION['ploopi']['template_name']}";
+            $_SESSION['ploopi']['template_path'] = $arrTemplate['path'];
+            $_SESSION['ploopi']['template_palette'] = $arrTemplate['palette'];
         }
 
 
@@ -1375,6 +1621,7 @@ abstract class loader
 
         if (isset($_REQUEST['ploopi_moduleid']) && is_numeric($_REQUEST['ploopi_moduleid'])) $_SESSION['ploopi']['moduleid'] = $_REQUEST['ploopi_moduleid'];
 
+        self::_setheader();
         self::_setheader_connected();
     }
 

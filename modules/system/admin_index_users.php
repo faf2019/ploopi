@@ -34,6 +34,17 @@
  * Inclusion des classes de gestion des utilisateurs et d'espaces de travail
  */
 
+/**
+ * Un utilisateur existant ne se consulte, ne se modifie et ne se supprime que s'il
+ * relève de l'administrateur connecté (rattaché à un espace ou à un groupe qu'il
+ * administre) : l'identifiant transmis n'est pas forcément celui d'une ligne de la
+ * liste affichée.
+ */
+if (in_array($op, array('save_user', 'modify_user', 'delete_user')) && !empty($_GET['user_id']))
+{
+    if (!is_numeric($_GET['user_id']) || !system_user_isadministrable($_GET['user_id'])) ploopi\output::redirect('admin.php');
+}
+
 switch($op)
 {
     case 'save_user':
@@ -86,9 +97,12 @@ switch($op)
         if (!isset($_POST['user_password_force_update'])) $user->fields['password_force_update'] = 0;
         if (!isset($_POST['user_disabled'])) $user->fields['disabled'] = 0;
         if (!isset($_POST['user_servertimezone'])) $user->fields['servertimezone'] = 0;
-        if (!empty($_POST['user_date_expire'])) $_POST['user_date_expire'] = ploopi\date::local2timestamp($_POST['user_date_expire']);
+        // Colonne entière : sans date, 0 (une chaîne vide est refusée en mode SQL strict)
+        if (isset($_POST['user_date_expire'])) $_POST['user_date_expire'] = empty($_POST['user_date_expire']) ? 0 : ploopi\date::local2timestamp($_POST['user_date_expire']);
+        if (isset($_POST['user_password_validity'])) $_POST['user_password_validity'] = (int) $_POST['user_password_validity'];
 
-        $user->setvalues($_POST,'user_');
+        // Ni la clé ni l'empreinte du mot de passe ne viennent du formulaire
+        $user->setvalues(array_diff_key($_POST, array_flip(array('user_id', 'user_password', 'user_password_last_update', 'user_date_creation', 'user_last_connection'))), 'user_');
 
         // affectation nouveau password
         $passwordok = true;
@@ -127,14 +141,24 @@ switch($op)
             }
         }
 
-
-
-
+        // Nouvel utilisateur : rien n'est créé tant que le mot de passe est en erreur
+        // (différent de sa confirmation, refusé) ; retour au formulaire avec la saisie
+        if ($user->new && ($error != '' || !$passwordok))
+        {
+            $_SESSION['system']['save_user'] = array_diff_key($_POST, array_flip(array('usernewpass', 'usernewpass_confirm')));
+            ploopi\output::redirect('admin.php?wspToolbarItem=tabUsers&usrTabItem=tabUserAdd&error='.($error != '' ? $error : 'password'));
+        }
 
 
         if ($user->new)
         {
-            $user->save();
+            // Échec de l'enregistrement (identifiant trop long, mode SQL strict…) : ni
+            // journalisation, ni courriel, ni rattachement ; retour au formulaire
+            if (!$user->save())
+            {
+                $_SESSION['system']['save_user'] = array_diff_key($_POST, array_flip(array('usernewpass', 'usernewpass_confirm')));
+                ploopi\output::redirect('admin.php?wspToolbarItem=tabUsers&usrTabItem=tabUserAdd&error=save');
+            }
 
             // Envoi du mail de création utilisateur
             if ($_SESSION['system']['level'] == _SYSTEM_GROUPS && ploopi\param::get('system_new_user_mail')) {
@@ -202,10 +226,11 @@ switch($op)
         {
             // modify adminlevel for current workspace/user
             $workspace_user = new ploopi\workspace_user();
-            if ($workspace_user->open($workspaceid, $user->fields['id'])) {
-                if (!empty($_POST['userworkspace_adminlevel']) && $workspace_user->fields['adminlevel'] != $_POST['userworkspace_adminlevel']) $reload = '&reloadsession';
+            // Seul le niveau vient du formulaire, et au plus celui de l'administrateur connecté
+            if ($workspace_user->open($workspaceid, $user->fields['id']) && isset($_POST['userworkspace_adminlevel']) && is_numeric($_POST['userworkspace_adminlevel']) && $_POST['userworkspace_adminlevel'] >= 0 && $_POST['userworkspace_adminlevel'] <= $_SESSION['ploopi']['adminlevel']) {
+                if ($workspace_user->fields['adminlevel'] != $_POST['userworkspace_adminlevel']) $reload = '&reloadsession';
 
-                $workspace_user->setvalues($_POST,'userworkspace_');
+                $workspace_user->fields['adminlevel'] = (int) $_POST['userworkspace_adminlevel'];
                 $workspace_user->save();
             }
         }
@@ -219,7 +244,8 @@ switch($op)
 
         if ($passwordok)
         {
-            $alphaTabItem = ord(strtolower($user->fields['lastname']))-96;
+            $strNom = strtolower((string) $user->fields['lastname']);
+            $alphaTabItem = ($strNom === '' ? 0 : ord($strNom[0])) - 96;
             if ($alphaTabItem < 1 || $alphaTabItem > 26) $alphaTabItem = 98; // #
             ploopi\output::redirect("admin.php?wspToolbarItem=tabUsers&usrTabItem=tabUserList&alphaTabItem={$alphaTabItem}{$reload}");
         }
@@ -279,8 +305,15 @@ if ($_SESSION['system']['level'] == _SYSTEM_GROUPS)
 if (!empty($_GET['usrTabItem']))  $_SESSION['system']['usrTabItem'] = $_GET['usrTabItem'];
 if (!isset($_SESSION['system']['usrTabItem'])) $_SESSION['system']['usrTabItem'] = '';
 
-echo ploopi\skin::get()->create_tabs($tabs, $_SESSION['system']['usrTabItem']);
-echo ploopi\skin::get()->open_simplebloc();
+// ploopi4 : liste et sous-écrans dans la carte de l'entité, sans onglets de second niveau
+$booSystemP4 = ploopi\skin::get()->version() >= 4;
+
+if ($booSystemP4) include './modules/system/admin_workspaces_users_head.php';
+else
+{
+    echo ploopi\skin::get()->create_tabs($tabs, $_SESSION['system']['usrTabItem']);
+    echo ploopi\skin::get()->open_simplebloc();
+}
 
 switch($_SESSION['system']['usrTabItem'])
 {
@@ -293,8 +326,10 @@ switch($_SESSION['system']['usrTabItem'])
                     $org = new ploopi\group();
                     $org->open($_GET['orgid']);
                     $workspace_group = new ploopi\workspace_group();
-                    $workspace_group->open($workspaceid,$_GET['orgid']);
-                    include './modules/system/admin_index_group_form.php';
+                    if (!$workspace_group->open($workspaceid,$_GET['orgid']) || $workspace_group->fields['adminlevel'] > $_SESSION['ploopi']['adminlevel']) ploopi\output::redirect('admin.php?usrTabItem=tabGroupList');
+
+                    if ($booSystemP4) include './modules/system/admin_workspaces_groups.php';
+                    else include './modules/system/admin_index_group_form.php';
                 }
                 else ploopi\output::redirect('admin.php');
             break;
@@ -304,8 +339,10 @@ switch($_SESSION['system']['usrTabItem'])
                 {
                     // modify adminlevel for current group/user
                     $workspace_group = new ploopi\workspace_group();
-                    $workspace_group->open($workspaceid,$_GET['orgid']);
-                    $workspace_group->setvalues($_POST,'workspacegroup_');
+                    if (!$workspace_group->open($workspaceid,$_GET['orgid']) || $workspace_group->fields['adminlevel'] > $_SESSION['ploopi']['adminlevel']) ploopi\output::redirect('admin.php');
+                    // Au plus son propre niveau
+                    if (!isset($_POST['workspacegroup_adminlevel']) || !is_numeric($_POST['workspacegroup_adminlevel']) || $_POST['workspacegroup_adminlevel'] > $_SESSION['ploopi']['adminlevel']) ploopi\output::redirect('admin.php');
+                    $workspace_group->setvalues(array('workspacegroup_adminlevel' => $_POST['workspacegroup_adminlevel']),'workspacegroup_');
                     $workspace_group->save();
                     ploopi\output::redirect("admin.php?reloadsession");
                 }
@@ -316,7 +353,7 @@ switch($_SESSION['system']['usrTabItem'])
                 if (!empty($_GET['orgid']) && is_numeric($_GET['orgid']))
                 {
                     $workspace_group = new ploopi\workspace_group();
-                    $workspace_group->open($workspaceid,$_GET['orgid']);
+                    if (!$workspace_group->open($workspaceid,$_GET['orgid']) || $workspace_group->fields['adminlevel'] > $_SESSION['ploopi']['adminlevel']) ploopi\output::redirect('admin.php');
                     $workspace_group->delete();
 
                     unset($_SESSION['system']['groups']);
@@ -328,7 +365,8 @@ switch($_SESSION['system']['usrTabItem'])
             break;
 
             default:
-                include './modules/system/admin_index_users_grouplist.php';
+                if ($booSystemP4) include './modules/system/admin_workspaces_groups.php';
+                else include './modules/system/admin_index_users_grouplist.php';
             break;
         }
 
@@ -339,7 +377,7 @@ switch($_SESSION['system']['usrTabItem'])
         {
             case 'attach_group':
                 case _SYSTEM_GROUPS :
-                    if (!empty($_GET['orgid']) && is_numeric($_GET['orgid']))
+                    if (!empty($_GET['orgid']) && is_numeric($_GET['orgid']) && system_group_isattachable($_GET['orgid']))
                     {
                         $org = new ploopi\group();
                         $org->open($_GET['orgid']);
@@ -355,7 +393,12 @@ switch($_SESSION['system']['usrTabItem'])
             break;
 
             default:
-                include './modules/system/admin_index_users_attachgroup.php';
+                if ($booSystemP4)
+                {
+                    $strAttachType = 'group';
+                    include './modules/system/admin_workspaces_attach.php';
+                }
+                else include './modules/system/admin_index_users_attachgroup.php';
             break;
         }
     break;
@@ -364,7 +407,7 @@ switch($_SESSION['system']['usrTabItem'])
         switch($op)
         {
             case 'attach_user':
-                if (isset($_GET['userid']) && is_numeric($_GET['userid']))
+                if (isset($_GET['userid']) && is_numeric($_GET['userid']) && system_user_isattachable($_GET['userid']))
                 {
                     $alphaTabItem = isset($_GET['alphaTabItem']) ? $_GET['alphaTabItem'] : '';
                     switch ($_SESSION['system']['level'])
@@ -390,7 +433,12 @@ switch($_SESSION['system']['usrTabItem'])
             break;
 
             default:
-                include './modules/system/admin_index_users_attachlist.php';
+                if ($booSystemP4)
+                {
+                    $strAttachType = 'user';
+                    include './modules/system/admin_workspaces_attach.php';
+                }
+                else include './modules/system/admin_index_users_attachlist.php';
             break;
         }
     break;
@@ -451,11 +499,12 @@ switch($_SESSION['system']['usrTabItem'])
                 if (isset($_SESSION['system']['save_user'])) unset($_SESSION['system']['save_user']);
 
                 $user = new ploopi\user();
-                if (isset($_GET['user_id']) && is_numeric($_GET['user_id']) && $user->open($_GET['user_id']))
+                if (isset($_GET['user_id']) && is_numeric($_GET['user_id']) && system_user_isattachable($_GET['user_id']) && $user->open($_GET['user_id']))
                 {
                     $user->attachtogroup($groupid);
 
-                    $alphaTabItem = ord(strtolower($user->fields['lastname']))-96;
+                    $strNom = strtolower((string) $user->fields['lastname']);
+                    $alphaTabItem = ($strNom === '' ? 0 : ord($strNom[0])) - 96;
                     if ($alphaTabItem < 1 || $alphaTabItem > 26) $alphaTabItem = 98; // #
 
                     ploopi\output::redirect("admin.php?reloadsession&usrTabItem=tabUserList&alphaTabItem={$alphaTabItem}");
@@ -469,6 +518,9 @@ switch($_SESSION['system']['usrTabItem'])
                     switch ($_SESSION['system']['level'])
                     {
                         case _SYSTEM_GROUPS :
+                            // Pas d'utilisateur d'un niveau supérieur à celui de l'administrateur
+                            if (!system_user_isdetachable($_GET['user_id'])) ploopi\output::redirect('admin.php');
+
                             global $admin_redirect;
                             $admin_redirect = true;
 
@@ -500,6 +552,10 @@ switch($_SESSION['system']['usrTabItem'])
                         break;
 
                         case _SYSTEM_WORKSPACES :
+                            // Comme le détachement en lot : niveau dans l'espace au plus celui de l'administrateur
+                            $workspace_user = new ploopi\workspace_user();
+                            if (!$workspace_user->open($workspaceid, $_GET['user_id']) || $workspace_user->fields['adminlevel'] > $_SESSION['ploopi']['adminlevel']) ploopi\output::redirect('admin.php');
+
                             global $admin_redirect;
                             $admin_redirect = true;
 
@@ -534,8 +590,50 @@ switch($_SESSION['system']['usrTabItem'])
                 }
             break;
 
+            /**
+             * Détachement d'une sélection d'utilisateurs (liste de ploopi4), mêmes règles
+             * que detach_user : seuls les utilisateurs d'un niveau inférieur ou égal à
+             * celui de l'administrateur sont détachés (dans un espace, leur niveau dans
+             * l'espace ; d'un groupe, leur niveau le plus élevé dans les espaces).
+             */
+            case 'detach_users':
+                if (!empty($_POST['user_id']) && is_array($_POST['user_id']))
+                {
+                    foreach($_POST['user_id'] as $intUserId)
+                    {
+                        if (!is_numeric($intUserId)) continue;
+
+                        $user = new ploopi\user();
+                        if (!$user->open($intUserId)) continue;
+
+                        switch ($_SESSION['system']['level'])
+                        {
+                            case _SYSTEM_GROUPS :
+                                $group_user = new ploopi\group_user();
+                                if ($group_user->open($groupid, $intUserId) && system_user_isdetachable($intUserId))
+                                {
+                                    ploopi\user_action_log::record(_SYSTEM_ACTION_DETACHUSER, "{$user->fields['login']} - {$user->fields['lastname']} {$user->fields['firstname']} (id:{$user->fields['id']}) => {$group->fields['label']} (id:$groupid)");
+                                    $group_user->delete();
+                                }
+                            break;
+
+                            case _SYSTEM_WORKSPACES :
+                                $workspace_user = new ploopi\workspace_user();
+                                if ($workspace_user->open($workspaceid, $intUserId) && $_SESSION['ploopi']['adminlevel'] >= $workspace_user->fields['adminlevel'])
+                                {
+                                    ploopi\user_action_log::record(_SYSTEM_ACTION_DETACHUSER, "{$user->fields['login']} - {$user->fields['lastname']} {$user->fields['firstname']} (id:{$user->fields['id']}) => {$workspace->fields['label']} (id:$workspaceid)");
+                                    $workspace_user->delete();
+                                }
+                            break;
+                        }
+                    }
+                }
+                ploopi\output::redirect("admin.php?reloadsession");
+            break;
+
             default:
-                include './modules/system/admin_index_users_list.php';
+                if ($booSystemP4) include './modules/system/admin_workspaces_users.php';
+                else include './modules/system/admin_index_users_list.php';
             break;
 
         }
@@ -560,11 +658,18 @@ switch($_SESSION['system']['usrTabItem'])
     break;
 
     case 'tabUserImport':
+        // ploopi4 : envoi, aperçu et compte rendu refondus (l'import lui-même ne change pas)
+        if ($booSystemP4 && in_array($op, array('', 'end', 'preview')))
+        {
+            include './modules/system/admin_workspaces_import.php';
+            break;
+        }
+
         switch($op)
         {
             case 'end':
                 ?>
-                <div style="padding:2px;border-bottom:1px solid #a0a0a0;background-color:#e0e0e0;"><strong>Import d'un fichier CSV contenant des utilisateurs :</strong></div>
+                <div class="system_bandeau"><strong>Import d'un fichier CSV contenant des utilisateurs :</strong></div>
                 <div style="padding:4px;">Traitement terminé</div>
                 <?php
                 if (!empty($_SESSION['system']['user_import_errors']))
@@ -691,5 +796,5 @@ switch($_SESSION['system']['usrTabItem'])
 
 }
 
-echo ploopi\skin::get()->close_simplebloc();
+if (!$booSystemP4) echo ploopi\skin::get()->close_simplebloc();
 ?>

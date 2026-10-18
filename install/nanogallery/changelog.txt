@@ -1,3 +1,90 @@
+== Module NANOGALLERY - version 1.6.9 ================================================
+
+2026-10-17  Ovensia <stephane@ovensia.fr>
+
+* Création d'une galerie : plus d'avertissement PHP (« Undefined array key 0 ») quand la
+  galerie n'a pas encore de dossier ; identifiant du dossier passé par placeholder %d.
+  Relevé par le parcours navigateur (tests/navigateur/).
+
+== Module NANOGALLERY - version 1.6.8 ================================================
+
+2026-10-11  Ovensia <stephane@ovensia.fr>
+
+* Content-Security-Policy stricte (socle, § 3.32) : écrans du module servis sans script ni
+  gestionnaire en ligne, déclarés prêts par _NANOGALLERY_CSP (include/global.php). Curseurs
+  des entiers décrits par data-nano-slider, valeur d'origine des couleurs par
+  data-nano-reset, dossier choisi par data-ploopi-action, initialisés par
+  include/functions.js à l'affichage ; suppression confirmée par data-ploopi-confirm.
+
+== Module NANOGALLERY - version 1.6.7 ================================================
+
+2026-10-10  Ovensia <stephane@ovensia.fr>
+
+* L'onglet « Liste des galeries photo » pointait vers une entité inexistante (entity=publi) :
+  il menait à « Une erreur est survenue ». Il ramène à la liste.
+
+== Module NANOGALLERY - version 1.6.6 ================================================
+
+2026-10-10  Ovensia <stephane@ovensia.fr>
+
+* Icônes : jeu unifié de l'administration (Tabler Icons, au trait, palette du gabarit ploopi3), sous
+  les mêmes noms et aux mêmes tailles ; le code qui les appelle ne change pas. Correspondances dans
+  tools/icones/modules.js, régénération par tools/icones/generer.js.
+* Folder-Icon.jpg (album sans vignette) : dossier sur fond gris clair. Restent tels quels
+  icone-video-2.png (illustration) et les traits de l'arborescence.
+
+== Module NANOGALLERY - version 1.6.5 ================================================
+
+2026-10-09  Ovensia <stephane@ovensia.fr>
+
+* Le module spcolor (sélecteur de couleurs), absent du dépôt, n'est plus requis :
+  le module ne présentait que « spcolor doit être installé ». Sans lui, les couleurs se
+  saisissent en texte (#rrggbb…).
+
+* Les colonnes useAlbums et flatAlbums, lues et écrites par le module, n'étaient
+  créées ni par structure.sql ni par une mise à jour : aucune galerie ne pouvait être
+  enregistrée. Ajoutées (update_1.6.5.sql).
+
+* Affichage d'une galerie au backoffice : erreur fatale, le socle ne publiant plus de
+  variable globale $template_body (loader::get_template()).
+
+* Formulaire de galerie : erreur JavaScript à la création (aucun dossier choisi) ; nom
+  de dossier contenant une apostrophe cassant l'arborescence, et non échappé.
+
+== Module NANOGALLERY - version 1.6.4 ================================================
+
+2026-10-09  Ovensia <stephane@ovensia.fr>
+
+* Titres et descriptions des images : seules les images de la galerie éditée sont
+  enregistrées (op_saveimg acceptait tout identifiant posté). La page d'édition vérifie
+  que la galerie appartient à l'instance.
+
+* Échappement HTML des titres, descriptions, noms de fichiers et métadonnées EXIF
+  (issues du fichier déposé) dans la page d'édition et la galerie publique ; libellés
+  des galeries échappés dans le menu.
+
+* Le test de présence de spcolor ne déclenche plus l'autoload d'un fichier absent
+  (un avertissement journalisé à chaque page).
+
+== Module NANOGALLERY - version 1.6.3 ================================================
+
+2026-10-08  Ovensia <stephane@ovensia.fr>
+
+* Correctif : liens des galeries, styles de cadre et message d'erreur.
+
+  En remplaçant la syntaxe « ${var} » (dépréciée en PHP 8.2), la PR #63 avait
+  écrit « {var} », sans dollar : les chaînes n'étaient plus interpolées. Le menu
+  menait à « display&id={objGallery['id']} », le bouton de dossier appelait
+  nano_initFolder({gal['id_folder']}) et les bordures n'avaient plus de largeur.
+  Forme correcte « {$var} » rétablie.
+
+== Module NANOGALLERY - version 1.6.2 ================================================
+2026-10-06  Ovensia <stephane@ovensia.fr>
+* Sécurité : cloisonnement des instances. op_delete, op_save et op_saveimg
+  contrôlaient les actions déclarées mais ouvraient la galerie par son seul
+  identifiant : un gestionnaire d'une instance supprimait ou modifiait celles d'une
+  autre.
+
 == Module NANOGALLERY - version 1.6.1 ================================================
 2020-05-25  Jean-Pierre Pawlak ~ DSIC-EST <jean-pierre.pawlak@interieur.gouv.fr>
 * Correction d'un bug sur la saisie du nom de la galerie

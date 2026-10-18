@@ -30,6 +30,14 @@
  * @author Ovensia
  */
 
+// Gabarits de génération 4 : écran refondu
+if (ploopi\skin::get()->version() >= 4)
+{
+    $strParamContext = 'system';
+    include './modules/system/admin_params_p4.php';
+    return;
+}
+
 /**
  * Récupération de l'identifiant du module
  */

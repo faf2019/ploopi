@@ -36,6 +36,12 @@
  * Switch sur les différentes opérations possibles
  */
 
+/**
+ * Gerer les ressources : action declaree 11.
+ */
+ploopi\module::init('booking', false, false, false);
+if (!ploopi\acl::isactionallowed(_BOOKING_ACTION_ADMIN_RESOURCE)) ploopi\output::redirect('admin.php');
+
 switch($_REQUEST['ploopi_op'])
 {
     case 'booking_resource_delete':
@@ -112,7 +118,7 @@ switch($_REQUEST['ploopi_op'])
             break;
         }
         ?>
-        <form action="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=booking_resource_save&booking_resource_id={$objResource->fields['id']}"); ?>" method="post" onsubmit="javascript:return booking_resource_validate(this);">
+        <form action="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=booking_resource_save&booking_resource_id={$objResource->fields['id']}"); ?>" method="post" data-booking-validate="resource">
         <div class=ploopi_form>
             <p>
                 <label>Intitulé:</label>
@@ -156,14 +162,10 @@ switch($_REQUEST['ploopi_op'])
             <p>
                 <label>Couleur planning:</label>
                 <span>
-                    <input name="booking_resource_color" id="booking_resource_color" class="text" type="text" value="<?php echo ploopi\str::htmlentities($objResource->fields['color']); ?>" style="width:60px;cursor:pointer;" />
+                    <input name="booking_resource_color" id="booking_resource_color" class="text" type="text" value="<?php echo ploopi\str::htmlentities($objResource->fields['color']); ?>" style="width:60px;cursor:pointer;" data-jscolor="{}" />
                 </span>
-
-                <script>
-                    new jscolor(jQuery('#booking_resource_color')[0], {hash:true});
-                </script>
             </p>
-            <p onclick="javascript:ploopi.checkbox_click(event,'booking_resource_active');">
+            <p class="ploopi_checkbox_zone" data-checkbox="booking_resource_active">
                 <label for="booking_resource_active">Actif:</label>
                 <input name="booking_resource_active" id="booking_resource_active" type="checkbox" class="checkbox" value="1" <?php if ($objResource->fields['active']) echo 'checked'; ?> tabindex="111" />
             </p>

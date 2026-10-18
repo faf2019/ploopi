@@ -52,7 +52,107 @@ abstract class documents {
     {
         if ($id_module == -1) $id_module = $_SESSION['ploopi']['moduleid'];
 
-        return md5("{$id_module}_{$id_object}_".addslashes($id_record));
+        return md5("{$id_module}_{$id_object}_".addslashes((string) $id_record));
+    }
+
+    /**
+     * Indique si l'utilisateur courant a le droit d'accéder à un fichier ou à un dossier de la GED.
+     *
+     * Les opérations "documents_*" désignent un fichier ou un dossier par son identifiant MD5.
+     * Cet identifiant est dérivé de (timestp_create, id) : ce n'est pas un secret, il est
+     * énumérable. Il ne peut donc pas tenir lieu de contrôle d'accès.
+     *
+     * Deux sources d'autorisation sont acceptées :
+     *
+     * 1. Un contexte GED ouvert par un module durant la session. Le module a contrôlé les droits
+     *    de l'utilisateur sur l'enregistrement porteur au moment de l'appel à self::insert().
+     * 2. À défaut, l'utilisateur doit disposer de l'instance de module propriétaire du document
+     *    dans l'espace de travail propriétaire.
+     *
+     * @param object $objRecord fichier (documentsfile) ou dossier (documentsfolder) ouvert
+     * @return boolean true si l'utilisateur courant peut accéder à cet enregistrement
+     *
+     * @copyright Ovensia
+     * @license GNU General Public License (GPL)
+     * @author Ovensia
+     *
+     * @see self::insert
+     */
+
+    public static function isallowed($objRecord)
+    {
+        // Enregistrement non ouvert (open/openmd5 en échec)
+        if (empty($objRecord) || empty($objRecord->fields) || !isset($objRecord->fields['id_module'])) return false;
+
+        $intModuleId    = $objRecord->fields['id_module'];
+        $intWorkspaceId = isset($objRecord->fields['id_workspace']) ? $objRecord->fields['id_workspace'] : 0;
+
+        /**
+         * 1. Contexte GED ouvert par un module durant la session.
+         * La clé du contexte peut porter un suffixe (paramètre UNIQID) : on compare donc le
+         * triplet porteur plutôt que la clé.
+         */
+        if (!empty($_SESSION['documents']) && is_array($_SESSION['documents']))
+        {
+            foreach($_SESSION['documents'] as $arrContext)
+            {
+                if (!is_array($arrContext) || !isset($arrContext['id_module'])) continue;
+
+                if ($arrContext['id_module'] == $intModuleId
+                    && $arrContext['id_object'] == $objRecord->fields['id_object']
+                    && (string)$arrContext['id_record'] === (string)$objRecord->fields['id_record']) return true;
+            }
+        }
+
+        /**
+         * 2. À défaut : l'utilisateur doit être membre de l'espace propriétaire.
+         * $_SESSION['ploopi']['workspaces'] ne contient que les espaces de l'utilisateur
+         * (@see loader::start), contrairement à $_SESSION['ploopi']['modules'] qui contient
+         * toutes les instances de la plateforme et ne constitue donc pas un contrôle d'accès.
+         */
+        if (empty($intWorkspaceId) || !isset($_SESSION['ploopi']['workspaces'][$intWorkspaceId])) return false;
+
+        // Administrateur système de l'espace propriétaire
+        if (acl::isadmin($intWorkspaceId)) return true;
+
+        /**
+         * Le module "system" est le module natif : il n'est jamais rattaché à un espace par
+         * ploopi_module_workspace (@see workspace::getmodules) et n'apparaît donc dans la
+         * liste des modules d'aucun espace, alors qu'il est implicitement présent dans tous.
+         * C'est lui qui porte les documents de profil utilisateur (_SYSTEM_OBJECT_USER).
+         */
+        if (defined('_PLOOPI_MODULE_SYSTEM') && $intModuleId == _PLOOPI_MODULE_SYSTEM)
+        {
+            /**
+             * Documents d'un profil utilisateur (_SYSTEM_OBJECT_USER, id_record = titulaire) :
+             * au titulaire et aux gestionnaires de l'espace, qui administrent la fiche. Ils
+             * étaient ouverts à tout membre de l'espace.
+             */
+            $intObjetUser = defined('_SYSTEM_OBJECT_USER') ? _SYSTEM_OBJECT_USER : 3;
+            if (isset($objRecord->fields['id_object']) && $objRecord->fields['id_object'] == $intObjetUser)
+            {
+                return (isset($_SESSION['ploopi']['userid']) && (string)$objRecord->fields['id_record'] === (string)$_SESSION['ploopi']['userid'])
+                    || acl::ismanager($intWorkspaceId);
+            }
+
+            return true;
+        }
+
+        /**
+         * Instance de module accessible à l'utilisateur.
+         * On balaie tous ses espaces et non le seul espace propriétaire : un module partagé
+         * ou hérité est rattaché à l'espace parent, alors que les documents qu'il produit
+         * portent l'espace courant (@see data_object::setuwm, workspace::getsharedmodules).
+         * L'appartenance à l'espace propriétaire, exigée ci-dessus, reste la borne.
+         */
+        if (empty($intModuleId)) return false;
+
+        foreach($_SESSION['ploopi']['workspaces'] as $arrWorkspace)
+        {
+            if (!empty($arrWorkspace['modules']) && in_array($intModuleId, $arrWorkspace['modules'])) return true;
+        }
+
+        return false;
     }
 
     /**
@@ -221,7 +321,7 @@ abstract class documents {
         );
 
         // on va chercher la racine
-        $db->query("SELECT md5id, id FROM ploopi_documents_folder WHERE id_folder = 0 AND id_object = '{$_SESSION['documents'][$documents_id]['id_object']}' AND id_module = '{$_SESSION['documents'][$documents_id]['id_module']}' AND id_record = '".addslashes($_SESSION['documents'][$documents_id]['id_record'])."'");
+        $db->query("SELECT md5id, id FROM ploopi_documents_folder WHERE id_folder = 0 AND id_object = '{$_SESSION['documents'][$documents_id]['id_object']}' AND id_module = '{$_SESSION['documents'][$documents_id]['id_module']}' AND id_record = '".addslashes((string) $_SESSION['documents'][$documents_id]['id_record'])."'");
 
         if ($row = $db->fetchrow()) {
             $currentfolder = $row['md5id'];
@@ -252,7 +352,7 @@ abstract class documents {
                 WHERE   id_folder = {$id}
                 AND     id_object = '{$_SESSION['documents'][$documents_id]['id_object']}'
                 AND     id_module = '{$_SESSION['documents'][$documents_id]['id_module']}'
-                AND     id_record = '".addslashes($_SESSION['documents'][$documents_id]['id_record'])."'
+                AND     id_record = '".addslashes((string) $_SESSION['documents'][$documents_id]['id_record'])."'
                 AND     system = 1
             ");
 
@@ -538,6 +638,16 @@ abstract class documents {
 
         $db = db::get();
         $skin = skin::get();
+
+        /**
+         * Attributs d'une action du navigateur (data-ploopi-documents), lue par délégation
+         * dans js/documents.js : aucun gestionnaire en ligne (CSP stricte, § 3.32)
+         */
+        $funcAction = function($strAction, $arrData = array()) {
+            $strAttrs = ' data-ploopi-documents="'.str::htmlentities($strAction).'"';
+            foreach($arrData as $strCle => $strValeur) $strAttrs .= ' data-'.$strCle.'="'.str::htmlentities((string) $strValeur).'"';
+            return $strAttrs;
+        };
         ?>
         <div class="documents_browser">
 
@@ -546,11 +656,11 @@ abstract class documents {
                     <?php
                     if ($_SESSION['documents'][$documents_id]['rights']['FOLDER_CREATE'])
                     {
-                        ?><button title="<?php echo $_SESSION['documents'][$documents_id]['new_folder']; ?>" class="icon invert icon_foldernew" onclick="javascript:ploopi.documents.openfolder('<?php echo crypt::queryencode("ploopi_op=documents_openfolder&currentfolder={$currentfolder}&documents_id={$documents_id}&documentsfolder_id="); ?>', event);">Nouveau dossier</button><?php
+                        ?><button type="button" title="<?php echo $_SESSION['documents'][$documents_id]['new_folder']; ?>" class="icon invert icon_foldernew"<?php echo $funcAction('openfolder', array('query' => crypt::queryencode("ploopi_op=documents_openfolder&currentfolder={$currentfolder}&documents_id={$documents_id}&documentsfolder_id="))); ?>>Nouveau dossier</button><?php
                     }
                     if ($_SESSION['documents'][$documents_id]['rights']['DOCUMENT_CREATE'])
                     {
-                        ?><button title="<?php echo $_SESSION['documents'][$documents_id]['new_file']; ?>" class="icon invert icon_filenew" onclick="javascript:ploopi.documents.openfile('<?php echo crypt::queryencode("ploopi_op=documents_openfile&currentfolder={$currentfolder}&documents_id={$documents_id}&documentsfile_id="); ?>', event);">Nouveau fichier</button><?php
+                        ?><button type="button" title="<?php echo $_SESSION['documents'][$documents_id]['new_file']; ?>" class="icon invert icon_filenew"<?php echo $funcAction('openfile', array('query' => crypt::queryencode("ploopi_op=documents_openfile&currentfolder={$currentfolder}&documents_id={$documents_id}&documentsfile_id="))); ?>>Nouveau fichier</button><?php
                     }
                     ?>
 
@@ -568,7 +678,7 @@ abstract class documents {
                         // change root name
                         $foldername = (!$row['id_folder']) ? $_SESSION['documents'][$documents_id]['root_name'] : $row['name'];
                         ?>
-                        <button class="icon invert icon_folder<?php if ($currentfolder == $row['md5id']) echo ' selected'; ?>" onclick="javascript:ploopi.documents.browser('<?php echo crypt::queryencode("ploopi_op=documents_browser&currentfolder={$row['md5id']}&documents_id={$documents_id}&mode={$_SESSION['documents'][$documents_id]['mode']}"); ?>', '<?php echo $_SESSION['documents'][$documents_id]['documents_id']; ?>', true);"><?php echo str::htmlentities($foldername); ?></button>
+                        <button type="button" class="icon invert icon_folder<?php if ($currentfolder == $row['md5id']) echo ' selected'; ?>"<?php echo $funcAction('browser', array('query' => crypt::queryencode("ploopi_op=documents_browser&currentfolder={$row['md5id']}&documents_id={$documents_id}&mode={$_SESSION['documents'][$documents_id]['mode']}"), 'documents-id' => $_SESSION['documents'][$documents_id]['documents_id'])); ?>><?php echo str::htmlentities($foldername); ?></button>
                         <?php
                     }
                 }
@@ -706,8 +816,8 @@ abstract class documents {
                     );
 
                 $actions = '';
-                if ($_SESSION['documents'][$documents_id]['rights']['FOLDER_MODIFY']) $actions .= '<button title="Modifier" class="icon small_icon invert icon_edit" onclick="javascript:ploopi.documents.openfolder(\''.crypt::queryencode("ploopi_op=documents_openfolder&currentfolder={$currentfolder}&documents_id={$documents_id}&documentsfolder_id={$row['md5id']}").'\',event);">Modif.</a>';
-                if ($_SESSION['documents'][$documents_id]['rights']['FOLDER_DELETE']) $actions .= '<button title="Supprimer" style="margin-right:4px;" class="icon small_icon invert icon_delete" onclick="javascript:if (confirm(\'Attention, cette action va supprimer définitivement le dossier et son contenu\')) ploopi.documents.deletefolder(\''.crypt::queryencode("ploopi_op=documents_deletefolder&currentfolder={$currentfolder}&documents_id={$documents_id}&documentsfolder_id={$row['md5id']}").'\',\''.$_SESSION['documents'][$documents_id]['documents_id'].'\');">Suppr.</button>';
+                if ($_SESSION['documents'][$documents_id]['rights']['FOLDER_MODIFY']) $actions .= '<button type="button" title="Modifier" class="icon small_icon invert icon_edit"'.$funcAction('openfolder', array('query' => crypt::queryencode("ploopi_op=documents_openfolder&currentfolder={$currentfolder}&documents_id={$documents_id}&documentsfolder_id={$row['md5id']}"))).'>Modif.</button>';
+                if ($_SESSION['documents'][$documents_id]['rights']['FOLDER_DELETE']) $actions .= '<button type="button" title="Supprimer" style="margin-right:4px;" class="icon small_icon invert icon_delete"'.$funcAction('deletefolder', array('query' => crypt::queryencode("ploopi_op=documents_deletefolder&currentfolder={$currentfolder}&documents_id={$documents_id}&documentsfolder_id={$row['md5id']}"), 'documents-id' => $_SESSION['documents'][$documents_id]['documents_id'], 'confirm' => 'Attention, cette action va supprimer définitivement le dossier et son contenu')).'>Suppr.</button>';
 
 
                 if ($actions == '') $actions = '&nbsp;';
@@ -719,8 +829,8 @@ abstract class documents {
                     );
 
                 $documents_values[$i]['description'] = '';
-                $documents_values[$i]['link'] = 'javascript:void(0);';
-                $documents_values[$i]['option'] = 'onclick="javascript:ploopi.documents.browser(\''.crypt::queryencode("ploopi_op=documents_browser&currentfolder={$row['md5id']}&documents_id={$documents_id}&mode={$_SESSION['documents'][$documents_id]['mode']}").'\',\''.$documents_id.'\',true);"';
+                $documents_values[$i]['link'] = '#';
+                $documents_values[$i]['option'] = trim($funcAction('browser', array('query' => crypt::queryencode("ploopi_op=documents_browser&currentfolder={$row['md5id']}&documents_id={$documents_id}&mode={$_SESSION['documents'][$documents_id]['mode']}"), 'documents-id' => $documents_id)));
                 $documents_values[$i]['style'] = '';
 
                 $i++;
@@ -756,9 +866,9 @@ abstract class documents {
                 if (file_exists("{$_SESSION['ploopi']['template_path']}/img/documents/file-{$row['extension']}.svg")) $ico = "file-{$row['extension']}.svg";
                 elseif (file_exists("{$_SESSION['ploopi']['template_path']}/img/documents/file-{$row['filetype']}.svg")) $ico = "file-{$row['filetype']}.svg";
 
-                $actions = '<button title="Télécharger" class="icon small_icon invert icon_download" onclick="document.location.href=\''.crypt::urlencode("admin.php?ploopi_op=documents_downloadfile&documentsfile_id={$row['md5id']}").'\';">Téléch.</button>';
-                if ($_SESSION['documents'][$documents_id]['rights']['DOCUMENT_MODIFY']) $actions .= '<button title="Modifier" class="icon small_icon invert icon_edit" onclick="javascript:ploopi.documents.openfile(\''.crypt::queryencode("ploopi_op=documents_openfile&currentfolder={$currentfolder}&documents_id={$documents_id}&documentsfile_id={$row['md5id']}").'\',event);">Modif.</button>';
-                if ($_SESSION['documents'][$documents_id]['rights']['DOCUMENT_DELETE']) $actions .= '<button title="Supprimer" style="margin-right:4px;" class="icon small_icon invert icon_delete" onclick="if (confirm(\'Attention, cette action va supprimer définitivement le fichier\')) ploopi.documents.deletefile(\''.crypt::queryencode("ploopi_op=documents_deletefile&currentfolder={$currentfolder}&documents_id={$documents_id}&documentsfile_id={$row['md5id']}").'\',\''.$_SESSION['documents'][$documents_id]['documents_id'].'\');">Suppr.</button>';
+                $actions = '<button type="button" title="Télécharger" class="icon small_icon invert icon_download"'.$funcAction('download', array('href' => crypt::urlencode("admin.php?ploopi_op=documents_downloadfile&documentsfile_id={$row['md5id']}"))).'>Téléch.</button>';
+                if ($_SESSION['documents'][$documents_id]['rights']['DOCUMENT_MODIFY']) $actions .= '<button type="button" title="Modifier" class="icon small_icon invert icon_edit"'.$funcAction('openfile', array('query' => crypt::queryencode("ploopi_op=documents_openfile&currentfolder={$currentfolder}&documents_id={$documents_id}&documentsfile_id={$row['md5id']}"))).'>Modif.</button>';
+                if ($_SESSION['documents'][$documents_id]['rights']['DOCUMENT_DELETE']) $actions .= '<button type="button" title="Supprimer" style="margin-right:4px;" class="icon small_icon invert icon_delete"'.$funcAction('deletefile', array('query' => crypt::queryencode("ploopi_op=documents_deletefile&currentfolder={$currentfolder}&documents_id={$documents_id}&documentsfile_id={$row['md5id']}"), 'documents-id' => $_SESSION['documents'][$documents_id]['documents_id'], 'confirm' => 'Attention, cette action va supprimer définitivement le fichier')).'>Suppr.</button>';
 
 
                 $documents_values[$i]['values'] =
@@ -808,13 +918,15 @@ abstract class documents {
 
                 if ($_SESSION['documents'][$documents_id]['mode'] == 'tofield')
                 {
-                    $documents_values[$i]['link'] = 'javascript:void(0);';
-                    $documents_values[$i]['onclick'] = "javascript:dest = $('{$_SESSION['documents'][$documents_id]['target']}'); if (dest.type) dest.value='{$row['name']}'; else dest.innerHTML='{$row['name']}'; ploopi.getelem('{$_SESSION['documents'][$documents_id]['target']}_id').value='{$row['id']}';ploopi.popup.hide('ploopi_documents_popup');";
+                    // Choix d'un fichier pour un champ (cible : identifiant du champ, et <cible>_id)
+                    $documents_values[$i]['link'] = '#';
+                    $documents_values[$i]['option'] = trim($funcAction('tofield', array('target' => $_SESSION['documents'][$documents_id]['target'], 'name' => $row['name'], 'id' => $row['id'])));
                 }
                 elseif ($_SESSION['documents'][$documents_id]['mode'] == 'tocallback')
                 {
-                    $documents_values[$i]['link'] = 'javascript:void(0);';
-                    $documents_values[$i]['onclick'] = "javascript:{$_SESSION['documents'][$documents_id]['target']}({$row['id']}, '".addslashes($row['name'])."', '".crypt::urlencode("admin-light.php?ploopi_op=documents_downloadfile&documentsfile_id={$row['md5id']}")."', '{$row['md5id']}');";
+                    // Choix d'un fichier pour une fonction (cible : nom de la fonction, éventuellement pointé)
+                    $documents_values[$i]['link'] = '#';
+                    $documents_values[$i]['option'] = trim($funcAction('tocallback', array('target' => $_SESSION['documents'][$documents_id]['target'], 'name' => $row['name'], 'id' => $row['id'], 'url' => crypt::urlencode("admin-light.php?ploopi_op=documents_downloadfile&documentsfile_id={$row['md5id']}"), 'md5id' => $row['md5id'])));
                 }
                 else $documents_values[$i]['link'] = crypt::urlencode("admin-light.php?ploopi_op=documents_downloadfile&documentsfile_id={$row['md5id']}&attachement=".$_SESSION['documents'][$documents_id]['attachement']);
 

@@ -192,7 +192,7 @@ class session
                 if (_PLOOPI_DB_SERVER != _PLOOPI_SESSION_DB_SERVER || _PLOOPI_DB_DATABASE != _PLOOPI_SESSION_DB_DATABASE)
                 {
                     self::$objDb = new db(_PLOOPI_SESSION_DB_SERVER, _PLOOPI_SESSION_DB_LOGIN, _PLOOPI_SESSION_DB_PASSWORD, _PLOOPI_SESSION_DB_DATABASE);
-                    if(!self::$objDb->isconnected()) trigger_error(_PLOOPI_MSG_DBERROR, E_USER_ERROR);
+                    if(!self::$objDb->isconnected()) throw new \ErrorException(_PLOOPI_MSG_DBERROR);
                 }
                 else
                 {
@@ -434,6 +434,7 @@ class session
 
             'template_name' =>  '',
             'template_path' =>  '',
+            'template_palette' => '',
 
             'uri'   =>  '',
 

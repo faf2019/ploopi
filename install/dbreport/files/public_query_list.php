@@ -70,17 +70,20 @@ $objRs = $objQuery->execute();
 
 while ($row = $objRs->fetchrow())
 {
-    $strActions = '<a class="dbreport_action" title="Exécuter la requête" href="javascript:void(0);" onclick="javascript:ploopi.xhr.topopup(550, event, \'dbreport_query_export_popup\', \'admin-light.php\', \''.ploopi\crypt::queryencode("ploopi_op=dbreport_query_export&dbreport_query_id={$row['id']}").'\', \'POST\');"><img src="./modules/dbreport/img/ico_execute.png" /></a>';
+    // Fenêtre d'exécution, ouverte par js/actions.js (aucun gestionnaire en ligne : CSP stricte)
+    $strExport = 'data-ploopi-topopup="dbreport_query_export_popup" data-ploopi-width="550" data-ploopi-method="POST" data-ploopi-query="'.ploopi\crypt::queryencode("ploopi_op=dbreport_query_export&dbreport_query_id={$row['id']}").'"';
 
-    $strActions .= '<a class="dbreport_action" title="Voir le graphique" href="javascript:void(0);" onclick="javascript:ploopi.openwin(\''.ploopi\crypt::urlencode("admin-light.php?ploopi_op=dbreport_chart_generate&dbreport_query_id={$row['id']}").'\', '.($row['chart_width']+20).', '.($row['chart_height']+30).');"><img src="./modules/dbreport/img/ico_graph.png" /></a>';
+    $strActions = '<a class="dbreport_action" title="Exécuter la requête" href="#" '.$strExport.'><img src="./modules/dbreport/img/ico_execute.png" /></a>';
+
+    $strActions .= '<a class="dbreport_action" title="Voir le graphique" href="#" '.dbreport::chartwin($row['id'], $row['chart_width'], $row['chart_height']).'><img src="./modules/dbreport/img/ico_graph.png" /></a>';
 
     $booModify = ploopi\acl::isactionallowed(dbreport::_ACTION_MANAGE) && (!$row['locked'] || ploopi\acl::isactionallowed(dbreport::_ACTION_LOCK));
 
     if ($booModify) $strActions .= '<a class="dbreport_action" title="Modifier la requête" href="'.ploopi\crypt::urlencode("admin.php?dbreport_op=query_modify&dbreport_query_id={$row['id']}").'"><img src="./modules/dbreport/img/ico_modify.png" /></a>';
 
-    if (ploopi\acl::isactionallowed(dbreport::_ACTION_MANAGE)) $strActions .= '<a class="dbreport_action" title="Cloner la requête" href="javascript:void(0);" onclick="if (confirm(\'Êtes vous certains de vouloir cloner cette requête ?\')) document.location.href=\''.ploopi\crypt::urlencode("admin-light.php?ploopi_op=dbreport_query_clone&dbreport_query_id={$row['id']}").'\';"><img src="./modules/dbreport/img/ico_clone.png" /></a>';
+    if (ploopi\acl::isactionallowed(dbreport::_ACTION_MANAGE)) $strActions .= '<a class="dbreport_action" title="Cloner la requête" data-ploopi-confirm="Êtes vous certains de vouloir cloner cette requête ?" href="'.ploopi\crypt::urlencode("admin-light.php?ploopi_op=dbreport_query_clone&dbreport_query_id={$row['id']}").'"><img src="./modules/dbreport/img/ico_clone.png" /></a>';
 
-    if ($booModify) $strActions .= '<a class="dbreport_action" title="Supprimer la requête" href="javascript:void(0);" onclick="if (confirm(\'Êtes vous certains de vouloir supprimer cette requête ?\')) document.location.href=\''.ploopi\crypt::urlencode("admin-light.php?ploopi_op=dbreport_query_delete&dbreport_query_id={$row['id']}").'\';"><img src="./modules/dbreport/img/ico_delete.png" /></a>';
+    if ($booModify) $strActions .= '<a class="dbreport_action" title="Supprimer la requête" data-ploopi-confirm="Êtes vous certains de vouloir supprimer cette requête ?" href="'.ploopi\crypt::urlencode("admin-light.php?ploopi_op=dbreport_query_delete&dbreport_query_id={$row['id']}").'"><img src="./modules/dbreport/img/ico_delete.png" /></a>';
 
     $arrValues[] = array(
         'values' => array(
@@ -100,8 +103,8 @@ while ($row = $objRs->fetchrow())
             )
         ),
         'description' => $booModify ? 'Modifier la requête' : 'Exécuter la requête',
-        'link' => $booModify ? ploopi\crypt::urlencode("admin.php?dbreport_op=query_modify&dbreport_query_id={$row['id']}") : "javascript:void(0);",
-        'onclick' => $booModify ? 'null' : 'javascript:ploopi.xhr.topopup(550, event, \'dbreport_query_export_popup\', \'admin-light.php\', \''.ploopi\crypt::queryencode("ploopi_op=dbreport_query_export&dbreport_query_id={$row['id']}").'\', \'POST\');',
+        'link' => $booModify ? ploopi\crypt::urlencode("admin.php?dbreport_op=query_modify&dbreport_query_id={$row['id']}") : '#',
+        'option' => $booModify ? '' : $strExport,
         'style' => ''
     );
 }
@@ -113,21 +116,21 @@ if (ploopi\acl::isactionallowed(dbreport::_ACTION_MANAGE))
 {
     ?>
     <div class="ploopi_tabs">
-        <a href="javascript:void(0);" onclick="javascript:ploopi.xhr.topopup(400, event, 'dbreport_query_add', 'admin-light.php', '<?php echo ploopi\crypt::queryencode('ploopi_op=dbreport_query_add'); ?>', 'POST');"><img src="./modules/dbreport/img/ico_new.png" /><span>Nouvelle requête</span></a>
+        <a href="#" data-ploopi-topopup="dbreport_query_add" data-ploopi-width="400" data-ploopi-method="POST" data-ploopi-query="<?php echo ploopi\crypt::queryencode('ploopi_op=dbreport_query_add'); ?>"><img src="./modules/dbreport/img/ico_new.png" /><span>Nouvelle requête</span></a>
     </div>
     <?php
 }
 ?>
-<form action="<? echo ploopi\crypt::urlencode('admin.php'); ?>" method="post">
-<div style="padding:4px;border-bottom:1px solid #ccc;" class="ploopi_va">
+<form action="<?php echo ploopi\crypt::urlencode('admin.php'); ?>" method="post">
+<div class="dbreport_bandeau" class="ploopi_va">
     <label style="padding:0 10px;">Filtre:</label>
-    <input type="text" name="dbreport_filtre" value="<? echo isset($_REQUEST['dbreport_filtre']) ? ploopi\str::htmlentities($_REQUEST['dbreport_filtre']) : ''; ?>" />
+    <input type="text" name="dbreport_filtre" value="<?php echo isset($_REQUEST['dbreport_filtre']) ? ploopi\str::htmlentities($_REQUEST['dbreport_filtre']) : ''; ?>" />
     <button type="submit">Appliquer</button>
-    <button type="button" onclick="document.location.href='<? echo ploopi\crypt::urlencode('admin.php'); ?>';">Réinitialiser</button>
+    <button type="button" data-ploopi-href="<?php echo ploopi\crypt::urlencode('admin.php'); ?>">Réinitialiser</button>
 </div>
 </form>
 
-<?
+<?php
 ploopi\skin::get()->display_array($arrColumns, $arrValues, 'dbreport_query_list', array('sortable' => true, 'orderby_default' => 'query', 'limit' => 25));
 
 echo ploopi\skin::get()->close_simplebloc();

@@ -65,8 +65,7 @@ $objForm->addField(new ploopi\form_field( 'textarea', 'Description :', $newscat-
 
 // Boutons
 $objForm->addButton( new form_button('input:button', 'Annuler', null, null, 
-	['style' => 'margin-left:4px;', 'onclick' => "document.location.href='"
-		.ploopi\crypt::urlencode("admin.php?entity=admin&action=catmodify")."';" ]));
+	['style' => 'margin-left:4px;', 'dataset' => ['ploopi-href' => ploopi\crypt::urlencode("admin.php?entity=admin&action=catmodify")]]));
 $objForm->addButton( new form_button('input:reset', 'Réinitialiser', null, null, 
 	['style' => 'margin-left:4px;']));
 $objForm->addButton( new form_button('input:submit', 'Enregistrer', null, null, 

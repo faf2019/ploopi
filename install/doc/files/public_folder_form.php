@@ -283,7 +283,7 @@ else // creating
             <?php ploopi\share::selectusers(_DOC_OBJECT_FOLDER, ($newfolder) ? '' : $docfolder->fields['id'], -1, null, 'doc_share_folder'); ?>
         </div>
         <div id="doc_private" style="clear:both;<?php echo ($docfolder->fields['foldertype'] == 'private') ? 'display:block;' : 'display:none;'; ?>">
-            <div style="margin:4px;border:1px solid #c0c0c0;padding:4px;background-color:#f8f8f8;">
+            <div class="doc_encadre">
                 <strong>Attention !</strong>
                 <br />Seuls les administrateurs &laquo; Système &raquo; ainsi que le propriétaire du dossier pourront accéder à ce dossier.
             </div>
@@ -324,16 +324,16 @@ if (!$readonly)
         switch (select.value)
         {
             case 'shared':
-                $('doc_share', 'doc_validation').invoke('show');
-                $('doc_private', 'doc_allow_feeds').invoke('hide');
+                jQuery('#doc_share, #doc_validation').show();
+                jQuery('#doc_private, #doc_allow_feeds').hide();
                 break;
             case 'private':
-                jQuery('#doc_private')[0].show();
-                $('doc_share', 'doc_validation', 'doc_allow_feeds').invoke('hide');
+                jQuery('#doc_private').show();
+                jQuery('#doc_share, #doc_validation, #doc_allow_feeds').hide();
                 break;
             case 'public':
-                $('doc_validation', 'doc_allow_feeds').invoke('show');
-                jQuery('#doc_share')[0].hide();
+                jQuery('#doc_validation, #doc_allow_feeds').show();
+                jQuery('#doc_share').hide();
                 break;
         }
     }

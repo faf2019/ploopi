@@ -46,7 +46,10 @@ $webedit_subscription_messages =
     array(
         _WEBEDIT_SUBSCRIPTION_SUBSCRIBED => 'Votre abonnement a été validé.',
         _WEBEDIT_SUBSCRIPTION_UNSUBSCRIBED => 'Votre désabonnement a été validé.',
+        _WEBEDIT_SUBSCRIPTION_PENDING => 'Un courriel vous a été envoyé : suivez le lien qu\'il contient pour confirmer votre demande.',
         _WEBEDIT_SUBSCRIPTION_ERROR_EMAIL => 'Votre adresse email n\'est pas valide.',
+        _WEBEDIT_SUBSCRIPTION_ERROR_LINK => 'Ce lien n\'est pas valide ou a expiré.',
+        _WEBEDIT_SUBSCRIPTION_ERROR_SEND => 'Le courriel de confirmation ne peut pas être envoyé depuis cette adresse du site.',
         _WEBEDIT_SUBSCRIPTION_ERROR_PARAM => 'Paramètre incorrect.'
 
     );

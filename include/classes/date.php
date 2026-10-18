@@ -438,6 +438,38 @@ abstract class date {
 
 
     /**
+     * Date de Pâques (calendrier grégorien), sans l'extension PHP calendar
+     * (easter_date(), absente de certaines installations, dont l'image Docker)
+     *
+     * Algorithme de Meeus, Jones et Butcher.
+     *
+     * @param int $intYear année
+     * @return int timestamp unix du dimanche de Pâques, à minuit (heure locale)
+     */
+
+    public static function easter($intYear)
+    {
+        $intYear = (int) $intYear;
+
+        $a = $intYear % 19;
+        $b = intdiv($intYear, 100);
+        $c = $intYear % 100;
+        $d = intdiv($b, 4);
+        $e = $b % 4;
+        $f = intdiv($b + 8, 25);
+        $g = intdiv($b - $f + 1, 3);
+        $h = (19 * $a + $b - $d - $g + 15) % 30;
+        $i = intdiv($c, 4);
+        $k = $c % 4;
+        $l = (32 + 2 * $e + 2 * $i - $h - $k) % 7;
+        $m = intdiv($a + 11 * $h + 22 * $l, 451);
+        $intMonth = intdiv($h + $l - 7 * $m + 114, 31);
+        $intDay = (($h + $l - 7 * $m + 114) % 31) + 1;
+
+        return mktime(0, 0, 0, $intMonth, $intDay, $intYear);
+    }
+
+    /**
      * Retourne un booléen indiquant si une date correspond à un jour férié
      *
      * @copyright Olravet (http://olravet.fr/)
@@ -466,7 +498,7 @@ abstract class date {
 
         // fÃªtes religieuses mobiles
 
-        $pak = easter_date($intYear);
+        $pak = self::easter($intYear);
         $jp = date("d", $pak);
         $mp = date("m", $pak);
         if($jp == $intDay && $mp == $intMonth) { $booIsHoliday = true;} // PÃ¢ques
@@ -648,9 +680,16 @@ abstract class date {
         $strClass = $strClass == null ? '' : " class=\"{$strClass}\"";
         $strStyle = $strStyle == null ? '' : " style=\"{$strStyle}\"";
 
+        // Icône du gabarit en backoffice (comme la fenêtre du calendrier, include/op.php)
+        $strIcone = ($_SESSION['ploopi']['mode'] == 'backoffice' && !empty($_SESSION['ploopi']['template_path'])) ? "{$_SESSION['ploopi']['template_path']}/img/calendar/calendar.png" : './img/calendar/calendar.gif';
+
+        // Fenêtre plus large sous ploopi4 : cases de 30 px, mois et année sur une ligne
+        $intLargeur = ($_SESSION['ploopi']['mode'] == 'backoffice' && skin::get()->version() >= 4) ? 272 : 192;
+
+        // Ouverture par js/calendar.js (aucun gestionnaire en ligne, CSP)
         $strEcho = "
-            <a href=\"javascript:void(0);\" onclick=\"javascript:ploopi.xhr.topopup(192, event, 'ploopi_popup_calendar', '".crypt::urlencode("{$strScript}-light.php?ploopi_op=calendar_open")."', 'selected_date='+jQuery('#{$strInputFieldId}')[0].value+'&inputfield_id={$strInputFieldId}', 'POST', true);\" {$strClass}{$strStyle}>
-            <img src=\"./img/calendar/calendar.gif\" />
+            <a href=\"#\" data-ploopi-calendar=\"".str::htmlentities($strInputFieldId)."\" data-ploopi-url=\"".str::htmlentities(crypt::urlencode("{$strScript}-light.php?ploopi_op=calendar_open"))."\" data-ploopi-width=\"{$intLargeur}\"{$strClass}{$strStyle}>
+            <img src=\"{$strIcone}\" alt=\"Choisir une date\" />
             </a>
         ";
 

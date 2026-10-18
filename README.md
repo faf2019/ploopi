@@ -1,96 +1,45 @@
-# PLOOPI
+# Ploopi
 
-## A propos
+[![tests](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/faf2019/8992326b9a700fd3832d1f3ff85bb8cf/raw/ploopi-tests.json)](tests/README.md)
+[![dépendances](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/faf2019/8992326b9a700fd3832d1f3ff85bb8cf/raw/ploopi-dependances.json)](tests/README.md#badge-du-readme-facultatif)
+[![licence](https://img.shields.io/badge/licence-GPL--2.0--or--later-blue)](doc/licence.md)
+[![PHP](https://img.shields.io/badge/PHP-8.1%E2%80%938.5-777bb4?logo=php&logoColor=white)](doc/deploiement.md)
+[![base](https://img.shields.io/badge/base-MariaDB%20%7C%20MySQL-003545?logo=mariadb&logoColor=white)](doc/deploiement.md)
 
-http://www.ploopi.org/
+Ploopi est une plateforme web libre écrite en PHP : portail, gestion de contenus,
+GED, wiki, formulaires, planning, réservations, annuaire, requêtes sur la base…
+Tout le fonctionnel est apporté par des modules installables depuis le backoffice.
 
-## Avertissement
+Site historique : http://www.ploopi.org/
 
-Version de développement
+> **Version de développement.**
 
-## Installation
+## Essayer en cinq minutes (Docker)
 
-### Prérequis
-
-Installation des paquets logiciels nécessaires
-
-```console
-sudo apt update
-sudo apt upgrade
-sudo apt install --yes apt-transport-https apache2 libapache2-mod-php php php-mysql php-gd php-zip php-curl php-cli php-xml php-mbstring memcached php-memcached mariadb-server unoconv composer catdoc poppler-utils jhead unrtf unzip zip openssl subversion git mediainfo
-sudo a2enmod rewrite expires headers
-sudo systemctl restart apache2
+```sh
+git clone https://github.com/faf2019/ploopi.git
+cd ploopi
+docker compose up --build -d
+# puis ouvrir http://localhost:8080/
 ```
 
-Définitions des droits pour la base de données
+Guide pas à pas : [`docker/LISEZMOI.md`](docker/LISEZMOI.md).
 
-```console
-sudo mysql -uroot -p -e "GRANT ALL PRIVILEGES ON ploopi.* TO 'ploopi'@'localhost' IDENTIFIED BY 'ploopi' WITH GRANT OPTION;"
-```
+## Documentation
 
-### Installation Ploopi
+| | |
+|---|---|
+| [Déploiement](doc/deploiement.md) | installation manuelle (Apache + PHP 8.1–8.5 + MariaDB), configuration, mises à jour, sauvegardes |
+| [Développement](doc/developpement.md) | environnement DDEV, modules, tests, scripts de `tools/`, conventions |
+| [Licence](doc/licence.md) | GPL-2.0-or-later, composants tiers, contributions |
+| [Référence technique](doc/reference.md) | architecture et API du socle et des modules |
 
-```console
-mkdir /var/www/ploopi
-cd /var/www/ploopi
-composer create-project --no-dev --no-interaction ovensia/ploopi:dev-master ploopi
-sudo chown -R www-data:www-data .
-sudo find . -type d -print0 | xargs -0 -n 1 chmod 500
-sudo find . -type f -print0 | xargs -0 -n 1 chmod 400
-sudo find {data,config,modules} -type d -print0 | xargs -0 -n 1 chmod 700
-sudo find {data,config,modules} -type f -print0 | xargs -0 -n 1 chmod 600
-```
-
-### Config Apache
-
-Création d'un Virtual Host (optionnel mais recommandé) :
-
-```console
-sudo nano /etc/apache2/sites-available/ploopi.conf
-```
-
-Puis insérez les lignes suivantes :
-
-```apacheconf
-<VirtualHost *>
-    ServerName ploopi
-
-    DocumentRoot /var/www/ploopi/
-
-    <Directory /var/www/ploopi/>
-            AllowOverride All
-    </Directory>
-</VirtualHost>
-```
-
-On active le site et on redémarre Apache :
-
-```console
-sudo a2dissite 000-default
-sudo a2ensite ploopi
-sudo systemctl restart apache2
-```
-
-### Sécurité
-
-```console
-sudo nano /etc/apache2/conf-enabled/security.conf
-```
-
-```apacheconf
-ServerTokens Prod
-ServerSignature Off
-```
-
-```console
-sudo systemctl restart apache2
-```
-
-## Téléchargement direct
-
-https://daily.ploopi.org/
-
+Captures d'écran : [`screenshots/`](screenshots/).
 
 ## Licence
 
-GPL 2.0
+Ploopi est un logiciel libre, distribué sous **GNU GPL version 2 ou ultérieure**
+(`GPL-2.0-or-later`) : voir [`LICENSE`](LICENSE) et [`doc/licence.md`](doc/licence.md).
+
+Copyright © 2007-2026 Ovensia, HeXad et les contributeurs. Ploopi est un fork de DIMS
+(Netlor, GPL).

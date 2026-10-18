@@ -102,11 +102,11 @@ if ($_SESSION['ploopi']['connected'])
     <p class="ploopi_va" style="padding:4px;border-bottom:1px solid #c0c0c0;">
         <label>Demande effectuée entre le :</label>
         <input type="text" class="text" name="booking_event_from" id="booking_event_from" value="<?php echo ploopi\str::htmlentities($arrSearchPattern['booking_event_from']); ?>" style="width:70px;" />
-        <a href="javascript:void(0);" onclick="javascript:ploopi.calendar.open('booking_event_from', event);"><img align="top" src="./img/calendar/calendar.gif" /></a>
+        <?php ploopi\date::open_calendar('booking_event_from'); ?>
 
         <label>et le :</label>
         <input type="text" class="text" name="booking_event_to" id="booking_event_to" value="<?php echo ploopi\str::htmlentities($arrSearchPattern['booking_event_to']); ?>" style="width:70px;" />
-        <a href="javascript:void(0);" onclick="javascript:ploopi.calendar.open('booking_event_to', event);"><img align="top" src="./img/calendar/calendar.gif" /></a>
+        <?php ploopi\date::open_calendar('booking_event_to'); ?>
 
         <input type="submit" class="button" value="Filtrer" />
     </p>
@@ -233,8 +233,8 @@ if ($_SESSION['ploopi']['connected'])
                                 )
                         ),
                     'description' => "Ouvrir la demande '".ploopi\str::htmlentities($row['object'])."'",
-                    'link' => 'javascript:void(0);',
-                    'onclick' => "booking_front_element_open('event', '{$row['id']}', event, '{$booking_moduleid}');"
+                    'link' => '#',
+                    'option' => 'data-ploopi-action="booking_front_element_open" data-ploopi-args="'.ploopi\str::htmlentities(json_encode(array('event', (string) $row['id'], (int) $booking_moduleid))).'"'
                 );
         }
 

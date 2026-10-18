@@ -36,6 +36,12 @@
  * Switch sur les différentes opérations possibles
  */
 
+/**
+ * Gerer les ressources : action declaree 11 (les sous-ressources relevent des ressources).
+ */
+ploopi\module::init('booking', false, false, false);
+if (!ploopi\acl::isactionallowed(_BOOKING_ACTION_ADMIN_RESOURCE)) ploopi\output::redirect('admin.php');
+
 switch($_REQUEST['ploopi_op'])
 {
     case 'booking_subresource_delete':
@@ -91,7 +97,7 @@ switch($_REQUEST['ploopi_op'])
             break;
         }
         ?>
-        <form action="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=booking_subresource_save&booking_subresource_id={$objSubresource->fields['id']}"); ?>" method="post" onsubmit="javascript:return booking_subresource_validate(this);">
+        <form action="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=booking_subresource_save&booking_subresource_id={$objSubresource->fields['id']}"); ?>" method="post" data-booking-validate="subresource">
         <div class=ploopi_form>
             <p>
                 <label>Intitulé:</label>
@@ -118,7 +124,7 @@ switch($_REQUEST['ploopi_op'])
                     ?>
                 </select>
             </p>
-            <p onclick="javascript:ploopi.checkbox_click(event,'booking_subresource_active');">
+            <p class="ploopi_checkbox_zone" data-checkbox="booking_subresource_active">
                 <label for="booking_subresource_active">Actif:</label>
                 <input name="booking_subresource_active" id="booking_subresource_active" type="checkbox" class="checkbox" value="1" <?php if ($objSubresource->fields['active']) echo 'checked'; ?> tabindex="111" />
             </p>

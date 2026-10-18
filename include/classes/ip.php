@@ -57,6 +57,22 @@ abstract class ip
 
         foreach($ip_list as $ip)
         {
+            $ip = trim($ip);
+
+            /**
+             * IPv6 : les colonnes qui la reçoivent sont en varchar(45) depuis le lot
+             * 12 — une adresse tient entière (39 caractères au plus), de même qu'une
+             * courte chaîne de mandataires. inet_pton() la valide.
+             */
+            if (strpos($ip, ':') !== false)
+            {
+                // Plages privées (fc00::/7) et réservées (fe80::/10, ::1...) écartées en
+                // $wan_only, comme 10/8, 172.16/12, 192.168/16 et 169.254/16 en IPv4
+                $intDrapeaux = $wan_only ? FILTER_FLAG_IPV6 | FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE : FILTER_FLAG_IPV6;
+                if (filter_var($ip, FILTER_VALIDATE_IP, $intDrapeaux) !== false) $ret[] = $ip;
+                continue;
+            }
+
             if (preg_match("/^([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})$/", $ip) && sprintf("%u",ip2long($ip)) != sprintf("%u",ip2long('255.255.255.255')))
             {
                 if (
@@ -139,10 +155,15 @@ abstract class ip
 
         if ($iprules)
         {
-            $arrUserip = ploopi_getip();
+            // ploopi_getip() n'existait plus depuis le passage aux espaces de noms :
+            // tout espace muni de règles d'IP finissait la connexion en erreur fatale.
+            $arrUserip = self::get();
 
-            if (!empty($arrUserip)) {
-                $userip = ip2long($arrUserip[0]);
+            /**
+             * Les règles ne décrivent que des plages IPv4 : une adresse IPv6, que
+             * self::get() reconnaît depuis le lot 12, n'y appartient jamais.
+             */
+            if (!empty($arrUserip) && ($userip = ip2long($arrUserip[0])) !== false) {
 
                 foreach($iprules as $startip => $endip)
                 {

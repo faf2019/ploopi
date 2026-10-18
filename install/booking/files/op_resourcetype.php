@@ -36,6 +36,13 @@
  * Switch sur les différentes opérations possibles
  */
 
+/**
+ * Gerer les types de ressources : action declaree 10. L'interface ne montre l'onglet
+ * qu'a qui la detient ; les operations l'exigent aussi.
+ */
+ploopi\module::init('booking', false, false, false);
+if (!ploopi\acl::isactionallowed(_BOOKING_ACTION_ADMIN_TYPERESOURCE)) ploopi\output::redirect('admin.php');
+
 switch($_REQUEST['ploopi_op'])
 {
     case 'booking_resourcetype_delete':
@@ -92,13 +99,13 @@ switch($_REQUEST['ploopi_op'])
             break;
         }
         ?>
-        <form action="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=booking_resourcetype_save&booking_resourcetype_id={$objResourceType->fields['id']}"); ?>" method="post" onsubmit="javascript:return booking_resourcetype_validate(this);">
+        <form action="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=booking_resourcetype_save&booking_resourcetype_id={$objResourceType->fields['id']}"); ?>" method="post" data-booking-validate="resourcetype">
         <div class=ploopi_form>
             <p>
                 <label>Intitulé:</label>
                 <input name="booking_resourcetype_name" type="text" class="text" value="<?php echo ploopi\str::htmlentities($objResourceType->fields['name']); ?>">
             </p>
-            <p onclick="javascript:ploopi.checkbox_click(event,'booking_resourcetype_active');">
+            <p class="ploopi_checkbox_zone" data-checkbox="booking_resourcetype_active">
                 <label for="booking_resourcetype_active">Actif:</label>
                 <input name="booking_resourcetype_active" id="booking_resourcetype_active" type="checkbox" class="checkbox" value="1" <?php if ($objResourceType->fields['active']) echo 'checked'; ?> tabindex="111" />
             </p>

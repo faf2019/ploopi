@@ -1,0 +1,183 @@
+/*
+    Copyright (c) 2007-2026 Ovensia
+    Contributors hold Copyright (c) to their code submissions.
+
+    This file is part of Ploopi.
+
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
+/******************
+  PLOOPI4 : SOCLE
+
+  Éléments de base. Deux mondes cohabitent dans la page :
+  - l'interface de ploopi4 (shell, écrans refondus), marquée par la classe p4-ui :
+    boîtes en border-box, typographie de la densité courante ;
+  - la zone historique (contenu des modules, fenêtres ploopi.popup) : 12 px et
+    modèle de boîte d'origine, dont dépendent les largeurs fixes des modules.
+*******************/
+
+html {
+    -webkit-text-size-adjust: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: var(--font);
+    font-size: var(--fs);
+    line-height: 1.45;
+    color: var(--text);
+    background: var(--bg);
+    -webkit-font-smoothing: antialiased;
+}
+
+body.popup {
+    padding: 8px;
+    font-size: var(--p3-font-size);
+    background: var(--surface);
+}
+
+form {
+    margin: 0;
+}
+
+a {
+    color: var(--primary-text);
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+a img {
+    border: 0;
+}
+
+h1, h2, h3, h4 {
+    font-family: var(--font);
+    color: var(--text);
+}
+
+:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+}
+
+[hidden] {
+    display: none !important;
+}
+
+/* Interface de ploopi4 */
+.p4-ui,
+.p4-ui *,
+.p4-ui *::before,
+.p4-ui *::after {
+    box-sizing: border-box;
+}
+
+.p4-ui {
+    font-size: var(--fs);
+}
+
+.p4-ui :where(h1, h2, h3, h4, p) {
+    margin: 0;
+}
+
+.p4-ui :where(h1, h2, h3, h4) {
+    line-height: 1.25;
+    font-weight: 650;
+    letter-spacing: -.01em;
+}
+
+.p4-ui :where(button, input, select, textarea) {
+    font: inherit;
+    color: inherit;
+}
+
+.p4-ui :where(button) {
+    cursor: pointer;
+}
+
+/* Zone historique : la taille et la police de ploopi2/ploopi3 pour le contenu des
+   modules (spécificité nulle : la moindre règle d'un module l'emporte, comme avant) */
+:where(#pagecontent, .ploopi_popup, body.popup) {
+    font-size: var(--p3-font-size);
+    line-height: 1.4;
+}
+
+:where(#pagecontent, .ploopi_popup, body.popup) :where(form, table, td, th, input, select, textarea, button) {
+    font-family: var(--font);
+    font-size: var(--p3-font-size);
+    line-height: 1.4;
+}
+
+.p4-ui :where(form, table, td, th, input, select, textarea, button) {
+    font-size: inherit;
+}
+
+/* Icônes du sprite (img/icons.svg) : trait à la couleur du texte */
+.p4-icon {
+    width: 18px;
+    height: 18px;
+    flex: none;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    vertical-align: middle;
+}
+
+.p4-icon-sm { width: 15px; height: 15px; }
+.p4-icon-lg { width: 22px; height: 22px; }
+
+/* Lien d'évitement : masqué, affiché à la prise de focus au clavier */
+.p4-skiplink {
+    position: absolute;
+    left: 8px;
+    top: -100px;
+    z-index: 10000;
+    padding: 8px 12px;
+    background: var(--surface, #fff);
+    color: var(--primary-text);
+    border: 2px solid var(--focus);
+    border-radius: 4px;
+}
+
+.p4-skiplink:focus {
+    top: 8px;
+}
+
+.p4-main:focus {
+    outline: none;
+}
+
+.p4-sr-only {
+    position: absolute !important;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
+        scroll-behavior: auto !important;
+    }
+}

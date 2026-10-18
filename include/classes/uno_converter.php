@@ -71,7 +71,7 @@ class uno_converter
     function convert($srcFile, $dstFile, $outputType)
     {
         if (file_exists($this->_binary)) {
-            exec("/usr/bin/unoconv -v --stdout -f $outputType {$srcFile} > {$dstFile}");
+            exec('/usr/bin/unoconv -v --stdout -f '.escapeshellarg($outputType).' '.escapeshellarg($srcFile).' > '.escapeshellarg($dstFile));
             if (file_exists($dstFile)) return true;
         }
 

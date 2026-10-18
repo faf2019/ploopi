@@ -1,0 +1,839 @@
+/*
+    Copyright (c) 2007-2026 Ovensia
+    Contributors hold Copyright (c) to their code submissions.
+
+    This file is part of Ploopi.
+
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
+/*
+ * Planning du socle (ploopi\calendar), rendu moderne : grille fluide, sans dimension
+ * calculée côté serveur hormis la hauteur d'une heure (--p4-cal-hour) ou d'une semaine
+ * (--p4-cal-row). Couleur d'un événement : --p4-cal-ev (ressource, état). Thème sombre
+ * par les jetons du gabarit.
+ */
+
+.p4-cal {
+    --p4-cal-ev: var(--p3-primary);
+    --p4-cal-gutter: 52px;
+    --p4-cal-line: color-mix(in srgb, var(--p3-border) 70%, transparent);
+    --p4-cal-line-half: color-mix(in srgb, var(--p3-border) 35%, transparent);
+    --p4-cal-today: color-mix(in srgb, var(--p3-primary) 7%, var(--p3-surface));
+    --p4-cal-weekend: color-mix(in srgb, var(--p3-text) 3%, var(--p3-surface));
+    --p4-cal-holiday: color-mix(in srgb, var(--p3-danger) 6%, var(--p3-surface));
+    font-size: 13px;
+    color: var(--p3-text);
+    background: var(--p3-surface);
+    border: 1px solid var(--p3-border);
+    border-radius: var(--p3-radius);
+    overflow: hidden;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.p4-cal *, .p4-cal *::before, .p4-cal *::after {
+    box-sizing: border-box;
+}
+
+/* --- Journées (jour, semaine) ------------------------------------------------------ */
+
+/* La grille défile dans son cadre, en-têtes des jours et des heures fixes */
+.p4-cal-days .p4-cal-scroll {
+    overflow: auto;
+    max-height: max(420px, calc(100vh - 260px));
+    overscroll-behavior: contain;
+}
+
+.p4-cal-days .p4-cal-head,
+.p4-cal-days .p4-cal-body {
+    display: grid;
+    /* Colonnes calculées par le serveur (week-end plus étroit), sinon égales */
+    grid-template-columns: var(--p4-cal-template, var(--p4-cal-gutter) repeat(var(--p4-cal-cols), minmax(calc(var(--p4-cal-chans) * 84px), 1fr)));
+}
+
+.p4-cal-days .p4-cal-head {
+    position: sticky;
+    top: 0;
+    z-index: 3;
+    background: var(--p3-surface);
+    border-bottom: 1px solid var(--p3-border);
+}
+
+.p4-cal-corner,
+.p4-cal-hours {
+    position: sticky;
+    left: 0;
+    z-index: 2;
+    background: var(--p3-surface);
+    border-right: 1px solid var(--p3-border);
+}
+
+.p4-cal-dayhead {
+    container-type: inline-size;
+    padding: 6px 4px 4px;
+    border-left: 1px solid var(--p4-cal-line);
+    text-align: center;
+    min-width: 0;
+}
+
+.p4-cal-daylabel {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--p3-text-muted);
+    font-size: 12px;
+    text-transform: capitalize;
+}
+
+.p4-cal-dnum {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--p3-text);
+    margin-left: 2px;
+}
+
+.p4-cal-dmonth {
+    font-size: 12px;
+}
+
+@container (max-width: 90px) {
+    .p4-cal-dmonth {
+        display: none;
+    }
+}
+
+.p4-cal-dayhead.is-today .p4-cal-dnum {
+    display: inline-block;
+    min-width: 28px;
+    padding: 0 6px;
+    border-radius: 14px;
+    background: var(--p3-primary);
+    color: var(--p3-text-inverse);
+}
+
+.p4-cal-chanheads {
+    display: grid;
+    grid-template-columns: repeat(var(--p4-cal-chans), minmax(0, 1fr));
+    gap: 2px;
+    margin-top: 4px;
+}
+
+.p4-cal-chanhead {
+    font-size: 11px;
+    line-height: 16px;
+    padding: 0 4px;
+    border-radius: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    background: color-mix(in srgb, var(--p4-cal-ev) 22%, var(--p3-surface));
+    border-left: 3px solid var(--p4-cal-ev);
+}
+
+.p4-cal-days .p4-cal-body {
+    height: calc(var(--p4-cal-hours) * var(--p4-cal-hour));
+}
+
+.p4-cal-hour {
+    height: var(--p4-cal-hour);
+    position: relative;
+}
+
+.p4-cal-hour span {
+    position: absolute;
+    top: -8px;
+    right: 6px;
+    font-size: 11px;
+    color: var(--p3-text-muted);
+    font-variant-numeric: tabular-nums;
+}
+
+.p4-cal-hour:first-child span {
+    top: 2px;
+}
+
+.p4-cal-day {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(var(--p4-cal-chans), minmax(0, 1fr));
+    border-left: 1px solid var(--p4-cal-line);
+    /* Heures (trait plein) et demi-heures (trait clair) */
+    background-image:
+        repeating-linear-gradient(to bottom, var(--p4-cal-line) 0 1px, transparent 1px var(--p4-cal-hour)),
+        repeating-linear-gradient(to bottom, transparent 0 calc(var(--p4-cal-hour) / 2), var(--p4-cal-line-half) calc(var(--p4-cal-hour) / 2) calc(var(--p4-cal-hour) / 2 + 1px), transparent calc(var(--p4-cal-hour) / 2 + 1px) var(--p4-cal-hour));
+    min-width: 0;
+}
+
+.p4-cal-day.is-weekend { background-color: var(--p4-cal-weekend); }
+.p4-cal-day.is-holiday { background-color: var(--p4-cal-holiday); }
+.p4-cal-day.is-today { background-color: var(--p4-cal-today); }
+
+.p4-cal-chan {
+    position: relative;
+    min-width: 0;
+}
+
+.p4-cal-chan + .p4-cal-chan {
+    border-left: 1px dashed var(--p4-cal-line-half);
+}
+
+.p4-cal-ev {
+    position: absolute;
+    min-height: 22px;
+    filter: drop-shadow(0 0 0.5px var(--p3-surface));
+    padding: 0 2px 1px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    z-index: 1;
+}
+
+/* Événement étroit (colonne serrée, événements simultanés) : l'essentiel, le texte */
+.p4-cal-ev {
+    container-type: inline-size;
+}
+
+@container (max-width: 110px) {
+    .p4-cal-ev-body img,
+    .p4-cal-ev-body .planning_cartouche {
+        display: none;
+    }
+
+    .p4-cal-ev-body {
+        padding: 2px 4px;
+        font-size: 11px;
+        overflow-wrap: anywhere;
+    }
+
+    /* Étiquette colorée du module (état d'une réservation) : réduite à un trait de sa couleur */
+    .p4-cal-ev-body > div[style*="background-color"] {
+        font-size: 0;
+        height: 4px;
+        margin: 0 0 3px !important;
+        padding: 0;
+        border: 0 !important;
+    }
+}
+
+@container (max-width: 70px) {
+    .p4-cal-ev-time {
+        display: none;
+    }
+
+    .p4-cal-ev-head {
+        justify-content: flex-end;
+        padding: 0;
+    }
+}
+
+.p4-cal-ev > * {
+    background: color-mix(in srgb, var(--p4-cal-ev) 20%, var(--p3-surface));
+}
+
+.p4-cal-ev-head {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 6px 0;
+    border-left: 3px solid var(--p4-cal-ev);
+    border-radius: 6px 6px 0 0;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--p3-text-muted);
+    font-variant-numeric: tabular-nums;
+}
+
+.p4-cal-ev-time {
+    flex: 1 1 auto;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.p4-cal-ev-close {
+    flex: 0 0 auto;
+    width: 18px;
+    height: 18px;
+    line-height: 16px;
+    text-align: center;
+    border-radius: 9px;
+    font-size: 15px;
+    color: var(--p3-text-muted);
+    text-decoration: none;
+}
+
+.p4-cal-ev-close:hover,
+.p4-cal-ev-close:focus-visible {
+    background: var(--p3-danger-soft);
+    color: var(--p3-danger);
+}
+
+.p4-cal-ev-body {
+    display: block;
+    flex: 1 1 auto;
+    min-height: 0;
+    padding: 2px 6px 4px;
+    border-left: 3px solid var(--p4-cal-ev);
+    border-radius: 0 0 6px 6px;
+    overflow: hidden;
+    color: var(--p3-text);
+    text-decoration: none;
+    font-size: 12px;
+    line-height: 1.3;
+}
+
+.p4-cal-ev-body:only-child {
+    border-radius: 6px;
+}
+
+a.p4-cal-ev-body:hover,
+a.p4-cal-ev-body:focus-visible {
+    background: color-mix(in srgb, var(--p4-cal-ev) 32%, var(--p3-surface));
+    outline: none;
+}
+
+a.p4-cal-ev-body:focus-visible {
+    box-shadow: inset 0 0 0 2px var(--p3-focus);
+}
+
+/* Contenu fourni par les modules (styles en ligne historiques) : étiquettes colorées
+   (état d'une réservation) adoucies, lisibles sur le fond */
+.p4-cal-ev-body div[style*="background-color"] {
+    border: 0 !important;
+    border-radius: 4px;
+    padding: 0 4px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #15232a;
+}
+
+.p4-cal-ev-body img {
+    vertical-align: middle;
+}
+
+.p4-cal-ev.is-draggable .p4-cal-ev-head {
+    cursor: grab;
+    touch-action: none;
+}
+
+.p4-cal-ev.is-dragging {
+    z-index: 5;
+    opacity: 0.85;
+    cursor: grabbing;
+    box-shadow: var(--p3-shadow-2);
+}
+
+.p4-cal-day.is-drop-target {
+    box-shadow: inset 0 0 0 2px var(--p3-primary);
+}
+
+.p4-cal-now {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--p3-danger);
+    z-index: 2;
+    pointer-events: none;
+}
+
+.p4-cal-now::before {
+    content: "";
+    position: absolute;
+    left: -5px;
+    top: -4px;
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+    background: var(--p3-danger);
+}
+
+/* --- Mois -------------------------------------------------------------------------- */
+
+.p4-cal-month .p4-cal-mhead,
+.p4-cal-month .p4-cal-week {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+
+.p4-cal-month.has-weeks .p4-cal-mhead,
+.p4-cal-month.has-weeks .p4-cal-week {
+    grid-template-columns: 32px repeat(7, minmax(0, 1fr));
+}
+
+.p4-cal-mhead {
+    border-bottom: 1px solid var(--p3-border);
+}
+
+.p4-cal-mhead span {
+    padding: 6px 8px;
+    font-size: 12px;
+    color: var(--p3-text-muted);
+    text-transform: capitalize;
+}
+
+.p4-cal-week + .p4-cal-week {
+    border-top: 1px solid var(--p4-cal-line);
+}
+
+.p4-cal-wnum {
+    padding: 6px 4px;
+    font-size: 11px;
+    color: var(--p3-text-muted);
+    text-align: center;
+    border-right: 1px solid var(--p4-cal-line);
+}
+
+.p4-cal-mday {
+    min-height: var(--p4-cal-row);
+    min-width: 0;
+    padding: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.p4-cal-mday + .p4-cal-mday {
+    border-left: 1px solid var(--p4-cal-line);
+}
+
+.p4-cal-mday.is-weekend { background: var(--p4-cal-weekend); }
+.p4-cal-mday.is-holiday { background: var(--p4-cal-holiday); }
+.p4-cal-mday.is-out { background: color-mix(in srgb, var(--p3-text) 4%, var(--p3-surface)); }
+.p4-cal-mday.is-out .p4-cal-mnum { color: var(--p3-text-placeholder); }
+.p4-cal-mday.is-today { background: var(--p4-cal-today); }
+
+.p4-cal-mnum {
+    align-self: flex-start;
+    min-width: 24px;
+    padding: 0 6px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 22px;
+    text-align: center;
+}
+
+.p4-cal-mday.is-today .p4-cal-mnum {
+    background: var(--p3-primary);
+    color: var(--p3-text-inverse);
+}
+
+.p4-cal-chips {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    overflow-y: auto;
+    max-height: calc(var(--p4-cal-row) - 34px);
+}
+
+.p4-cal-chip {
+    display: block;
+    padding: 2px 6px;
+    border-left: 3px solid var(--p4-cal-ev);
+    border-radius: 4px;
+    background: color-mix(in srgb, var(--p4-cal-ev) 18%, var(--p3-surface));
+    color: var(--p3-text);
+    text-decoration: none;
+    font-size: 12px;
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.p4-cal-chip > div {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+a.p4-cal-chip:hover,
+a.p4-cal-chip:focus-visible {
+    background: color-mix(in srgb, var(--p4-cal-ev) 30%, var(--p3-surface));
+    outline: none;
+}
+
+a.p4-cal-chip:focus-visible {
+    box-shadow: inset 0 0 0 2px var(--p3-focus);
+}
+
+/* --- Petits écrans ------------------------------------------------------------------ */
+
+@media (max-width: 640px) {
+    .p4-cal {
+        --p4-cal-gutter: 40px;
+    }
+
+    .p4-cal-days .p4-cal-head,
+    .p4-cal-days .p4-cal-body {
+        grid-template-columns: var(--p4-cal-gutter) repeat(var(--p4-cal-cols), minmax(calc(var(--p4-cal-chans) * 120px), 1fr));
+    }
+
+    .p4-cal-month.has-weeks .p4-cal-mhead,
+    .p4-cal-month.has-weeks .p4-cal-week {
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+    }
+
+    .p4-cal-month .p4-cal-wnum {
+        display: none;
+    }
+
+    .p4-cal-mday {
+        min-height: 64px;
+        padding: 2px;
+    }
+
+    .p4-cal-mhead span {
+        padding: 4px 2px;
+        text-align: center;
+    }
+
+    /* Pastilles réduites à un trait de couleur : le détail s'ouvre au toucher */
+    .p4-cal-chip {
+        font-size: 0;
+        line-height: 0;
+        height: 6px;
+        padding: 0;
+        border-left: 0;
+        border-radius: 3px;
+        background: var(--p4-cal-ev);
+    }
+}
+
+/* --- Mise en page des modules : calendrier et colonne des ressources ---------------- */
+
+.p4-cal-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 260px;
+    gap: 16px;
+    align-items: start;
+}
+
+.p4-cal-layout-side {
+    position: sticky;
+    top: 16px;
+}
+
+.p4-cal-layout-side .ploopi_simplebloc_content,
+.p4-cal-layout-side form { margin: 0; }
+
+/* En-têtes de groupe (planning_bandeau, booking_bandeau) : titre de section discret */
+.p4-cal-layout-side .planning_bandeau,
+.p4-cal-layout-side .booking_bandeau {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 12px 0 4px;
+    padding: 0 2px;
+    background: none;
+    border: 0;
+    box-shadow: none;
+    color: var(--text-2);
+    font-size: var(--fs-xs);
+    text-transform: uppercase;
+    letter-spacing: .04em;
+}
+.p4-cal-layout-side form:first-child > a:first-child .planning_bandeau,
+.p4-cal-layout-side form:first-child > .booking_bandeau:first-child { margin-top: 0; }
+.p4-cal-layout-side .planning_bandeau img { width: 14px; height: 14px; opacity: .7; }
+.p4-cal-layout-side .planning_bandeau strong,
+.p4-cal-layout-side .booking_bandeau strong { font-weight: 600; }
+.p4-cal-layout-side a:has(> .planning_bandeau),
+.p4-cal-layout-side .booking_bandeau a { color: inherit; text-decoration: none; flex: 1; margin: 0 !important; }
+.p4-cal-layout-side .booking_bandeau input { float: none !important; margin: 0 !important; }
+
+/* Ressources : une ligne par ressource, case et pastille de sa couleur (--p4-res) */
+.p4-cal-layout-side p.checkbox.ploopi_checkbox_zone {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 1px 0;
+    padding: 6px 8px;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--text);
+    cursor: pointer;
+    transition: background-color .12s var(--ease);
+}
+.p4-cal-layout-side .checkbox:hover { background: var(--surface-2); }
+.p4-cal-layout-side #booking_ressource_list p.checkbox input,
+.p4-cal-layout-side #planning_ressource_list p.checkbox input,
+.p4-cal-layout-side .checkbox input { float: none; margin: 0; flex: none; accent-color: var(--primary); }
+.p4-cal-layout-side p.checkbox.ploopi_checkbox_zone > span,
+.p4-cal-layout-side #booking_ressource_list p.checkbox span,
+.p4-cal-layout-side #planning_ressource_list p.checkbox span { display: block; margin: 0; padding: 0; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.p4-cal-layout-side .checkbox[style*="--p4-res"]::after {
+    content: "";
+    flex: none;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--p4-res);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--p4-res) 25%, transparent);
+}
+.p4-cal-layout-side .checkbox:has(input:not(:checked)) { color: var(--text-3); }
+.p4-cal-layout-side .checkbox:has(input:not(:checked))::after { opacity: .35; }
+
+/* Recherche d'un événement (planning) */
+.p4-cal-layout-side #planning_search_form { margin-top: 8px; padding-top: 4px; border-top: 1px solid var(--border); }
+.p4-cal-layout-side #planning_search_form img { width: 14px; height: 14px; opacity: .7; }
+.p4-cal-layout-side #planning_search_form p:not(.planning_bandeau) { display: flex; gap: 6px; }
+.p4-cal-layout-side #planning_search_form input.text { flex: 1; width: auto !important; min-width: 0; }
+.p4-cal-layout-side #planning_search_form input.button { width: auto !important; padding: 0 12px; }
+
+@media (max-width: 1000px) {
+    .p4-cal-layout {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .p4-cal-layout-side {
+        position: static;
+        order: -1;
+    }
+}
+
+/* --- Barre d'outils des calendriers (planning, booking) ------------------------------ */
+
+.p4-caltb {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 12px;
+    margin-bottom: 12px;
+}
+.p4-caltb form { margin: 0; display: contents; }
+.p4-caltb .p4-caltb-group { display: flex; align-items: center; gap: 6px; margin: 0; padding: 0; }
+.p4-caltb .p4-caltb-views { order: 1; }
+.p4-caltb .p4-caltb-period > .p4-caltb-group { order: 2; }
+.p4-caltb .p4-caltb-opts { order: 3; margin-left: auto; }
+.p4-caltb .p4-caltb-period > .p4-caltb-add { order: 4; }
+
+/* Vues : contrôle segmenté */
+.p4-caltb .p4-caltb-views {
+    gap: 0;
+    padding: 2px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--surface-2);
+}
+.p4-caltb-view {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: calc(var(--control-h) - 6px);
+    padding: 0 10px;
+    border: 0;
+    border-radius: calc(var(--radius-sm) - 2px);
+    background: transparent;
+    color: var(--text-2);
+    font: inherit;
+    font-size: var(--fs-sm);
+    cursor: pointer;
+}
+.p4-caltb .p4-caltb-view:hover { color: var(--text); background: var(--surface-3); }
+.p4-caltb-view.is-active { background: var(--surface); color: var(--text); font-weight: 600; box-shadow: var(--shadow-sm); }
+.p4-caltb-view .p4-icon { width: 16px; height: 16px; }
+
+/* Boutons-icônes (précédent, suivant, imprimer) */
+.p4-caltb-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--control-h);
+    height: var(--control-h);
+    padding: 0;
+    border: 1px solid var(--border-field);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    color: var(--text);
+    cursor: pointer;
+}
+.p4-caltb .p4-caltb-icon:hover,
+.p4-caltb .p4-caltb-icon:focus-visible { background: var(--primary-soft); border-color: var(--primary); color: var(--text); }
+.p4-caltb-icon .p4-icon { width: 18px; height: 18px; }
+
+.p4-caltb select.select { height: var(--control-h); width: auto; }
+
+/* Options : colonnes (case), taille */
+.p4-caltb-check {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text-2);
+    font-size: var(--fs-sm);
+    cursor: pointer;
+}
+.p4-caltb-check .p4-icon { width: 16px; height: 16px; }
+.p4-caltb-opts input[type="checkbox"] { margin: 0 8px 0 0; accent-color: var(--primary); }
+.p4-caltb-lbl { color: var(--text-2); font-size: var(--fs-sm); }
+
+.p4-caltb-primary { display: inline-flex !important; align-items: center; gap: 6px; }
+.p4-caltb-primary .p4-icon { width: 16px; height: 16px; }
+
+@media (max-width: 760px) {
+    .p4-caltb-view span { display: none; }
+    .p4-caltb .p4-caltb-opts { margin-left: 0; }
+}
+
+/* --- Fenêtres de saisie des événements (planning, booking) : .p4-evform ------------- */
+
+[id^="popup_"]:has(.p4-evform) { width: min(580px, calc(100vw - 32px)) !important; }
+
+.ploopi_form.p4-evform {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 16px;
+    padding: 6px 14px 10px;
+}
+.ploopi_form.p4-evform > p {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    margin: 0;
+    padding: 0;
+}
+.ploopi_form.p4-evform > p.is-half { grid-column: auto; }
+.ploopi_form.p4-evform > p > label {
+    flex: 0 0 100%;
+    width: auto !important;
+    float: none !important;
+    margin: 0;
+    padding: 0;
+    text-align: left !important;
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--text-2);
+}
+.ploopi_form.p4-evform > p > label em { font-style: normal; }
+.ploopi_form.p4-evform > p > input.text:not([id$="_d"]):not([id*="date"]),
+.ploopi_form.p4-evform > p > textarea {
+    flex: 1 1 100%;
+    width: 100% !important;
+    margin: 0;
+}
+.ploopi_form.p4-evform > p > textarea { min-height: 72px; }
+.ploopi_form.p4-evform > p > input.text[id$="_d"],
+.ploopi_form.p4-evform > p > input.text[id*="date"] { width: 118px !important; margin: 0; }
+.ploopi_form.p4-evform > p > select.select { width: auto !important; min-width: 72px; margin: 0; }
+.ploopi_form.p4-evform > p > select[name="booking_event_id_resource"] { flex: 1 1 auto; min-width: 180px; }
+.ploopi_form.p4-evform > p > select[name$="_periodicity"] { flex: 0 1 200px; }
+.ploopi_form.p4-evform > p > label + span:last-child:not(.planning_event_ressource_list) { flex: 1 1 100%; margin: 0; padding: 0; }
+.ploopi_form.p4-evform > p > span:has(> a, > img, > button) { flex: none; float: none !important; padding: 0 !important; }
+.ploopi_form.p4-evform > p > em { float: none !important; color: var(--text-2); font-size: var(--fs-sm); }
+
+/* Ressources de l'événement : pastilles à cocher */
+.ploopi_form.p4-evform .planning_event_ressource_list {
+    display: flex !important;
+    flex-wrap: wrap;
+    gap: 6px;
+    width: 100%;
+    height: auto !important;
+    max-height: 140px;
+    overflow: auto;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+}
+.ploopi_form.p4-evform .planning_event_ressource_list em.ploopi_checkbox {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px 4px 6px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--surface-2);
+    color: var(--text);
+    font-style: normal;
+    font-size: var(--fs-sm);
+    cursor: pointer;
+}
+.ploopi_form.p4-evform .planning_event_ressource_list em.ploopi_checkbox:has(input:checked) {
+    border-color: var(--primary);
+    background: var(--primary-soft);
+}
+.ploopi_form.p4-evform .planning_event_ressource_list input { margin: 0; accent-color: var(--primary); }
+.ploopi_form.p4-evform .planning_event_ressource_list img { width: 16px; height: 16px; border-radius: 50%; padding: 2px; }
+
+/* Pied : boutons */
+.p4-evform-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 12px 14px 6px !important;
+    border-top: 1px solid var(--border);
+}
+.p4-evform-actions .p4-evform-danger { margin-right: auto; color: var(--danger) !important; }
+.p4-evform-annot { border-top-color: var(--border) !important; margin-top: 8px; }
+
+@media (max-width: 560px) {
+    .ploopi_form.p4-evform { grid-template-columns: 1fr; }
+}
+
+/* Consultation d'une réservation : détails en cartes, couleur d'état en bande latérale */
+.ploopi_form.p4-evform > :not(p) { grid-column: 1 / -1; }
+.ploopi_form.p4-evform > .p4-evform-section {
+    background: none !important;
+    margin: 4px 0 0 !important;
+    padding: 0 !important;
+    font-size: var(--fs-sm);
+    color: var(--text-2);
+}
+.p4-evform .p4-evdetail {
+    display: grid;
+    gap: 10px;
+    margin: 0 0 8px !important;
+    padding: 12px 14px 12px 20px;
+    border: 1px solid var(--border) !important;
+    border-radius: var(--radius-sm);
+    background-image: linear-gradient(to right, transparent 6px, color-mix(in srgb, var(--surface) 86%, transparent) 6px);
+    color: var(--text);
+}
+.p4-evform .p4-evdetail.is-selected { border-color: var(--primary) !important; box-shadow: 0 0 0 2px var(--primary-soft); }
+.p4-evform .p4-evdetail > p { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 0; padding: 0; }
+.p4-evform .p4-evdetail > p > label {
+    flex: 0 0 100%;
+    width: auto !important;
+    float: none !important;
+    margin: 0;
+    padding: 0;
+    text-align: left !important;
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--text-2);
+}
+.p4-evform .p4-evdetail > p > span:has(> a, > img, > button) { flex: none; float: none !important; padding: 0 !important; }
+.p4-evform .p4-evdetail > p > input.text { width: 118px !important; margin: 0; }
+.p4-evform .p4-evdetail > p > textarea { width: 100% !important; min-height: 60px; }
+.p4-evform .p4-evdetail > p > select.select { width: auto !important; min-width: 72px; margin: 0; }
+.p4-evform .p4-evdetail > div.ploopi_va { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; padding: 0 !important; }
+.p4-evform .p4-evdetail a[style*="a60000"] { color: var(--danger) !important; }
+
+/* État d'un événement (booking : validé, en attente, annulé) : pastille devant l'objet */
+.p4-cal-status {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    margin: 0 5px 1px 0;
+    border-radius: 50%;
+    vertical-align: middle;
+    box-shadow: 0 0 0 1.5px color-mix(in srgb, var(--surface) 70%, transparent), 0 0 0 2.5px color-mix(in srgb, var(--text) 25%, transparent);
+    flex: none;
+}

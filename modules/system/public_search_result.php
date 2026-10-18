@@ -36,7 +36,8 @@
 
 if (isset($_REQUEST['system_search_keywords']))     $_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords'] = $_REQUEST['system_search_keywords'];
 if (isset($_REQUEST['system_search_workspace']))    $_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_workspace'] = $_REQUEST['system_search_workspace'];
-if (isset($_REQUEST['system_search_module']))       $_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_module'] = $_REQUEST['system_search_module'];
+// Identifiant d'instance (entier) ou vide : il entre dans la requête de recherche
+if (isset($_REQUEST['system_search_module']))       $_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_module'] = is_numeric($_REQUEST['system_search_module']) ? (int) $_REQUEST['system_search_module'] : '';
 if (isset($_REQUEST['system_search_date1']))    $_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_date1'] = $_REQUEST['system_search_date1'];
 if (isset($_REQUEST['system_search_date2']))    $_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_date2'] = $_REQUEST['system_search_date2'];
 
@@ -62,52 +63,16 @@ if (!empty($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords']))
      *
      * */
 
-    $arrObjectTypes = array();
-    $arrRelevance = array();
-    $arrStems = array();
-    $arrSearch = array();
+    // Seulement un module de l'espace courant, actif (contrôlé par system_search_results)
+    $arrRelevance = system_search_results($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords'], $_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_module']);
 
-    // on parcourt la liste des modules de l'espace courant
-    $arrAvailableModules = array();
-    foreach ($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['modules'] as $modid)
-    {
-        if ($_SESSION['ploopi']['modules'][$modid]['active']) $arrAvailableModules[] = $modid;
-    }
+    $booP4 = ploopi\skin::get()->version() >= 4;
 
-    // on construit $arrObjectTypes, la liste des objets ploopi
-    ploopi\db::get()->query( '
-                SELECT      mbo.*,
-                            m.id as module_id,
-                            m.label as module_label,
-                            mt.label as module_type
-
-                FROM        ploopi_mb_object mbo
-
-                INNER JOIN  ploopi_module m
-                ON          m.id_module_type = mbo.id_module_type
-                AND         m.id IN ('.implode(',', $arrAvailableModules).')
-
-                INNER JOIN  ploopi_module_type mt
-                ON          mt.id = mbo.id_module_type
-                ');
-
-    while ($row = ploopi\db::get()->fetchrow())
-    {
-        if (empty($arrObjectTypes[$row['module_id']]))
-        {
-            $arrObjectTypes[$row['module_id']]['label'] = $row['module_label'];
-            $arrObjectTypes[$row['module_id']]['type'] = $row['module_type'];
-            $arrObjectTypes[$row['module_id']]['objects'] = array();
-        }
-        $arrObjectTypes[$row['module_id']]['objects'][$row['id']] = array('label' => $row['label'], 'script' => $row['script']);
-    }
-
-    $arrRelevance = ploopi\search_index::search($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords'], -1, '', (empty($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_module'])) ? $arrAvailableModules : $_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_module']);
-
-    if (empty($arrRelevance))
+    if (empty($arrRelevance) && $booP4) echo ploopi\system\ui::emptystate('search', _SYSTEM_MYS_SEARCH_NONE);
+    elseif (empty($arrRelevance))
     {
         ?>
-        <div style="padding:4px;font-weight:bold;background-color:#f0f0f0;border-top:2px solid #c0c0c0;">
+        <div class="system_bandeau system_bandeau_clair system_bandeau_titre">
         Saisissez un mot clé puis cliquez sur "Rechercher" ou appuyez sur "Entrée"
         </div>
         <?php
@@ -139,84 +104,50 @@ if (!empty($_SESSION['ploopi'][_PLOOPI_MODULE_SYSTEM]['search_keywords']))
         if (!empty($_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_search_displayobjecttype']))
             $columns['right']['object_type']    = array('label' => 'Type d\'Objet', 'width' => '120', 'options' => array('sort' => true));
 
-        // on parcourt le tableau des réponses
-        foreach ($arrRelevance as $row)
+        // on parcourt le tableau des réponses (modules, types d'objets et droits déjà contrôlés)
+        foreach ($arrRelevance as $c => $row)
         {
-            if (isset($arrObjectTypes[$row['id_module']]['objects'][$row['id_object']]))
+            $objUser = new ploopi\user();
+            $strUserName = ($objUser->open($row['id_user'])) ? "{$objUser->fields['firstname']} {$objUser->fields['lastname']}" : '';
+
+            $blue = 128;
+            if ($row['relevance']>=50)
             {
-                $type = $arrObjectTypes[$row['id_module']]['type'];
-
-                $objUser = new ploopi\user();
-                $strUserName = ($objUser->open($row['id_user'])) ? "{$objUser->fields['firstname']} {$objUser->fields['lastname']}" : '';
-
-                // inclusion des fonctions/constantes proposées par le module
-                ploopi\module::init($type, false, false, false);
-
-                // on cherche si on fonction de validation d'objet existe pour ce module
-                $boolRecordIsEnabled = true;
-                $funcRecordIsEnabled = "{$type}_record_isenabled";
-                if (function_exists($funcRecordIsEnabled))
-                {
-                    // si la fonction existe, on l'appelle pour chaque enregistrement
-                    $boolRecordIsEnabled = $funcRecordIsEnabled($row['id_object'], $row['id_record'], $row['id_module']);
-                }
-
-                if ($boolRecordIsEnabled && !empty($arrObjectTypes[$row['id_module']]))
-                {
-                    $blue = 128;
-                    if ($row['relevance']>=50)
-                    {
-                        $red = 255-($blue*($row['relevance']-50))/50;
-                        $green = 255;
-                    }
-                    else
-                    {
-                        $red = 255;
-                        $green = (255-$blue)+($blue*$row['relevance'])/50;
-                    }
-
-                    $color = sprintf("%02X%02X%02X",$red,$green,$blue);
-
-                    $l_timestp_lastindex = ploopi\date::timestamp2local($row['timestp_lastindex']);
-                    $l_timestp_create = ploopi\date::timestamp2local($row['timestp_create']);
-
-                    $object_script = str_replace(
-                        array(
-                            '<IDRECORD>',
-                            '<IDMODULE>',
-                            '<IDWORKSPACE>'
-                        ),
-                        array(
-                            $row['id_record'],
-                            $row['id_module'],
-                            $row['id_workspace']
-                        ),
-                        $arrObjectTypes[$row['id_module']]['objects'][$row['id_object']]['script']
-                    );
-
-                    $objWorkspace = new ploopi\workspace();
-                    $strWorkspaceLabel = ($objWorkspace->open($row['id_workspace'])) ? $objWorkspace->fields['label'] : '';
-
-                    $values[$c]['values']['relevance'] = array('label' => sprintf("<span style=\"width:12px;height:12px;float:left;border:1px solid #a0a0a0;background-color:#%s;margin-right:3px;\"></span>%d %%", $color, $row['relevance']), 'sort_label' => intval($row['relevance']));
-                    $values[$c]['values']['label'] = array('label' => ploopi\str::htmlentities($row['label']));
-                    $values[$c]['values']['timestp_lastindex'] = array('label' => $l_timestp_lastindex['date'], 'sort_label' => $row['timestp_lastindex']);
-                    $values[$c]['values']['timestp_create'] = array('label' => $l_timestp_create['date'].' '.$l_timestp_create['time'], 'sort_label' => $row['timestp_create']);
-                    $values[$c]['values']['user'] = array('label' => ploopi\str::htmlentities($strUserName));
-                    $values[$c]['values']['workspace'] = array('label' => ploopi\str::htmlentities($strWorkspaceLabel));
-                    $values[$c]['values']['module'] = array('label' => ploopi\str::htmlentities($arrObjectTypes[$row['id_module']]['label']));
-                    $values[$c]['values']['object_type'] = array('label' => ploopi\str::htmlentities($arrObjectTypes[$row['id_module']]['objects'][$row['id_object']]['label']));
-
-                    $values[$c]['description'] = ploopi\str::htmlentities($row['label']);
-                    $values[$c]['link'] = ploopi\crypt::urlencode("admin.php?ploopi_mainmenu=1&{$object_script}");
-                    $values[$c]['style'] = '';
-                }
-
-                $c++;
+                $red = 255-($blue*($row['relevance']-50))/50;
+                $green = 255;
             }
+            else
+            {
+                $red = 255;
+                $green = (255-$blue)+($blue*$row['relevance'])/50;
+            }
+
+            $color = sprintf("%02X%02X%02X",$red,$green,$blue);
+
+            $l_timestp_lastindex = ploopi\date::timestamp2local($row['timestp_lastindex']);
+            $l_timestp_create = ploopi\date::timestamp2local($row['timestp_create']);
+
+            $objWorkspace = new ploopi\workspace();
+            $strWorkspaceLabel = ($objWorkspace->open($row['id_workspace'])) ? $objWorkspace->fields['label'] : '';
+
+            $values[$c]['values']['relevance'] = array('label' => sprintf("<span style=\"width:12px;height:12px;float:left;border:1px solid #a0a0a0;background-color:#%s;margin-right:3px;\"></span>%d %%", $color, $row['relevance']), 'sort_label' => intval($row['relevance']));
+            // ploopi4 : jauge native plutôt que la pastille colorée
+            if ($booP4) $values[$c]['values']['relevance']['label'] = sprintf('<span class="p4-relevance"><meter min="0" max="100" low="40" high="70" optimum="100" value="%1$d" aria-hidden="true"></meter>%1$d %%</span>', $row['relevance']);
+            $values[$c]['values']['label'] = array('label' => ploopi\str::htmlentities($row['label']));
+            $values[$c]['values']['timestp_lastindex'] = array('label' => $l_timestp_lastindex['date'], 'sort_label' => $row['timestp_lastindex']);
+            $values[$c]['values']['timestp_create'] = array('label' => $l_timestp_create['date'].' '.$l_timestp_create['time'], 'sort_label' => $row['timestp_create']);
+            $values[$c]['values']['user'] = array('label' => ploopi\str::htmlentities($strUserName));
+            $values[$c]['values']['workspace'] = array('label' => ploopi\str::htmlentities($strWorkspaceLabel));
+            $values[$c]['values']['module'] = array('label' => ploopi\str::htmlentities($row['module']));
+            $values[$c]['values']['object_type'] = array('label' => ploopi\str::htmlentities($row['object']));
+
+            $values[$c]['description'] = ploopi\str::htmlentities($row['label']);
+            $values[$c]['link'] = $row['link'];
+            $values[$c]['style'] = '';
         }
         ?>
-        <div style="background-color:#f0f0f0;border-top:2px solid #c0c0c0;">
-        <?php ploopi\skin::get()->display_array($columns, $values, 'system_search', array('sortable' => true, 'orderby_default' => 'relevance', 'sort_default' => 'DESC', 'limit' => 25)); ?>
+        <div class="<?php echo $booP4 ? 'p4-mt-16' : 'system_bandeau_clair'; ?>">
+        <?php system_display_array($columns, $values, 'system_search', array('sortable' => true, 'orderby_default' => 'relevance', 'sort_default' => 'DESC', 'limit' => 25)); ?>
         </div>
         <?php
     }

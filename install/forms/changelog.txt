@@ -1,3 +1,211 @@
+== Module FORMS - version 3.9.5 ====================================================
+
+2026-10-11  Ovensia <stephane@ovensia.fr>
+
+* PHP 8.5 : imagedestroy() (sans effet depuis PHP 8.0, obsolète en 8.5) retiré des
+  graphiques, implode(NULL, …) et null passé à str_replace() (export CSV) corrigés.
+  Aucun changement de comportement.
+
+== Module FORMS - version 3.9.4 ====================================================
+
+2026-10-11  Ovensia <stephane@ovensia.fr>
+
+* Champ « contenu HTML » : CKEditor 4 (fin de vie, failles connues) remplacé par TinyMCE,
+  l'éditeur du socle (js/editor.js), interface sombre sous ploopi4. Le dossier ckeditor
+  (configuration) est retiré (obsolete.txt). Le contenu est échappé dans le champ d'édition.
+
+== Module FORMS - version 3.9.3 ====================================================
+
+2026-10-10  Ovensia <stephane@ovensia.fr>
+
+* Liste des saisies (public_forms_viewreplies.php) : ligne d'en-tête marquée (tr.forms_viewlist_head,
+  data-label « Trier par », constante _FORMS_SORTBY), libellé de la colonne sur chaque cellule
+  (data-label) et cellule d'actions marquée (td.forms_viewlist_actions). Rendu inchangé sous
+  ploopi2/ploopi3 ; le gabarit ploopi4 s'en sert pour afficher une carte par saisie sur petit
+  écran, les en-têtes de tri en pastilles.
+
+== Module FORMS - version 3.9.2 ====================================================
+
+2026-10-10  Ovensia <stephane@ovensia.fr>
+
+* Habillage : les styles en ligne des écrans d'administration (bandeaux gris, barres de boutons,
+  cadres et filets) deviennent des classes, déclarées dans include/styles.css avec exactement le même
+  aspect ; le gabarit ploopi3 les redessine dans sa palette (tools/ploopi3_modules.php). Les écrans
+  servis au frontoffice (wce, template, display), où la feuille du module n'est pas chargée, gardent
+  leurs styles en ligne.
+
+== Module FORMS - version 3.9.1 ====================================================
+
+2026-10-10  Ovensia <stephane@ovensia.fr>
+
+* Icônes : jeu unifié de l'administration (Tabler Icons, au trait, palette du gabarit ploopi3), sous
+  les mêmes noms et aux mêmes tailles ; le code qui les appelle ne change pas. Correspondances dans
+  tools/icones/modules.js, régénération par tools/icones/generer.js.
+* Restent tels quels les GIF que plus rien n'appelle (calendar, checked, unchecked, ico_up,
+  ico_pagebreak, download_csv, download_xls).
+
+== Module FORMS - version 3.9.0 ====================================================
+
+2026-10-10  Ovensia <stephane@ovensia.fr>
+
+* JpGraph (mitoteam/jpgraph, licence QPL incompatible avec la GPL) est abandonné au
+  profit de formsChart (classes/formsChart.php), qui dessine les graphiques avec GD
+  seul : secteurs, secteurs 3D, histogrammes, courbes, radars, cumulés ou non, en PNG
+  comme avant (mêmes opérations, même téléchargement). Les paramètres enregistrés sont
+  repris sans migration : les valeurs de police (18, 19, 20, 47 à 51) et de marqueur
+  (1 à 12) gardent leur sens. Dessin sur une image double puis réduite, pour lisser
+  les traits. Dépendance Composer retirée.
+
+* Différences visibles : légende sous le titre à droite, un seul style de grille et
+  d'axes, étiquettes de l'axe x espacées automatiquement quand elles se chevauchent,
+  ombre des histogrammes simplifiée. Deux polices de plus au choix (DejaVu Sans et
+  Serif condensées).
+
+== Module FORMS - version 3.8.9 ====================================================
+
+2026-10-09  Ovensia <stephane@ovensia.fr>
+
+* Polices Verdana retirées (Microsoft, non redistribuables) : l'image d'erreur des
+  graphiques utilise DejaVu Sans, déjà fournie avec le module.
+
+* Balises PHP courtes « <? » remplacées par « <?php » : admin_forms_group.php
+  (fichier illisible avec short_open_tag à Off), public_forms_viewreplies.php.
+
+== Module FORMS - version 3.8.8 ====================================================
+
+2026-10-09  Ovensia <stephane@ovensia.fr>
+
+* Prototype (retiré au profit de jQuery) : ouverture des paramètres d'une courbe de graphique.
+
+== Module FORMS - version 3.8.7 ====================================================
+
+2026-10-09  Ovensia <stephane@ovensia.fr>
+
+* Une nouvelle réponse respecte désormais, à l'enregistrement, la période de
+  publication du formulaire et l'option « une seule réponse », vérifiées jusqu'ici
+  à l'affichage seulement.
+
+* forms_tablelink_values : le champ demandé doit être une liste liée d'un
+  formulaire public ou de l'instance courante (toute session connectée lisait les
+  valeurs de n'importe quel formulaire).
+
+* Fichiers joints : nom ramené à des caractères sûrs, extension exécutable
+  neutralisée (formsField::safeFileName).
+
+* Notification par ticket rétablie quand la réponse arrive par index-quick.php
+  (« Class Template not found »).
+
+* Bouton « Imprimer » d'un formulaire public de nouveau opérant pour un visiteur
+  (forms_print déclarée dans publicops.php).
+
+* Graphiques chronologiques tracés même sans l'option « afficher la date ».
+
+* Mise à jour : l'ancien dossier jpgraph/ est supprimé (obsolete.txt) ; fichiers
+  .gz régénérés depuis leurs sources.
+
+== Module FORMS - version 3.8.6 ====================================================
+
+2026-10-09  Ovensia <stephane@ovensia.fr>
+
+* Sécurité : le format d'export (forms_export_format, reçu en GET) entrait tel
+  quel dans le nom du fichier, l'entête Content-Disposition et la commande unoconv.
+  Il est ramené aux lettres et chiffres, et les arguments de unoconv sont échappés.
+
+== Module FORMS - version 3.8.5 ====================================================
+
+2026-10-08  Ovensia <stephane@ovensia.fr>
+
+* Compatibilité PHP 8.1 à 8.4 (PR #63) : utf8_encode()/utf8_decode()
+  remplacées par mb_convert_encoding(), fgetcsv() reçoit explicitement son
+  caractère d'échappement, gardes safe_mode retirées.
+
+== Module FORMS - version 3.8.4 ====================================================
+
+2026-10-06  Ovensia <stephane@ovensia.fr>
+
+* jpgraph installé par Composer (mitoteam/jpgraph ^10.5, JpGraph 4.4).
+
+  Le module embarquait jpgraph 3.0.7 (2010), qui appelle des fonctions supprimées
+  en PHP 8, et formsGraphic ne chargeait pas son noyau : plus aucun graphique
+  n'était rendu. La copie embarquée (jpgraph/) est retirée ; la bibliothèque est
+  déclarée dans composer.json et chargée par formsGraphic depuis vendor/.
+  Sur une installation mise à jour, l'ancien dossier modules/forms/jpgraph/ n'est
+  plus utilisé et peut être supprimé.
+
+  - Le noyau est chargé dès l'inclusion de formsGraphic : ses constantes servent
+    aux valeurs par défaut de la classe. Leur absence rendait impossible, en PHP 8,
+    la suppression de tout formulaire.
+  - Le gestionnaire d'exceptions de jpgraph n'est pas installé (il remplacerait
+    celui du socle) : render() intercepte les erreurs et produit l'image d'erreur
+    du module.
+  - Le thème par défaut de jpgraph 4 est désactivé : il remplaçait les couleurs
+    paramétrées dans chaque graphique.
+
+* Polices du module réparées.
+
+  Les 34 polices de fonts/ avaient subi, avant l'import dans le dépôt, une
+  conversion latin-1 → UTF-8 qui les rendait illisibles par GD : aucun texte ne
+  pouvait être tracé, pas même le message de l'image d'erreur. La conversion
+  inverse restitue les fichiers d'origine (sommes de contrôle TrueType vérifiées).
+  jpgraph y cherche désormais ses polices (TTF_DIR).
+
+== Module FORMS - version 3.8.3 ====================================================
+
+2026-10-05  Ovensia <stephane@ovensia.fr>
+
+* Les visiteurs peuvent de nouveau soumettre un formulaire public.
+
+  Depuis que les opérations de module exigent un jeton anti-CSRF, une opération
+  n'est atteinte sans jeton que si le module la déclare dans include/publicops.php.
+  Aucun jeton n'étant émis hors backoffice, la soumission d'un formulaire « cms »
+  inséré dans une page webedit était ignorée : la réponse du visiteur était perdue.
+  forms_reply_save et forms_quicksave sont désormais déclarées.
+
+  En contrepartie, op_reply_save.php se protège lui-même :
+  - en backoffice, il exige le jeton, sans quoi la saisie redeviendrait
+    déclenchable par un site tiers, via index-quick.php, avec la session d'un
+    utilisateur ;
+  - hors backoffice, il n'accepte qu'un formulaire public. Le test portait sur
+    « en frontoffice » : une session anonyme ouverte par index-quick.php, sans
+    mode, pouvait poster dans un formulaire interne.
+
+== Module FORMS - version 3.8.2 ====================================================
+
+2026-10-05  Ovensia <stephane@ovensia.fr>
+
+* Contrôle des droits sur les traitements.
+
+  description.xml déclare saisir (2), exporter (3), supprimer (5), archiver (6) et
+  afficher les graphiques (7). La liste des réponses s'en sert pour afficher les
+  boutons, mais les traitements, appelables directement en HTTP, ne vérifiaient
+  rien. Un utilisateur sans aucun rôle pouvait :
+  - supprimer toutes les réponses d'un formulaire (op=forms_deletedata) ;
+  - modifier n'importe quelle réponse, ou en saisir une, par forms_reply_save ;
+  - paramétrer l'archivage (op=forms_save) ;
+  - obtenir l'export des données par forms_print_array, double de forms_export.
+  La modification d'une réponse suit désormais la même règle que le bouton
+  « Modifier » : option « modifiable par » du formulaire et droit de saisir
+  (formsForm::isRecordEditable()). La génération d'un graphique exige le droit
+  d'afficher les graphiques ; ce dernier point n'est pas éprouvé par un test, le
+  rendu jpgraph échouant en PHP 8.
+
+* Cloisonnement des instances.
+
+  Tous les traitements ouvraient le formulaire, le champ, le graphique ou le groupe
+  par son seul identifiant, alors que les droits sont évalués sur l'instance
+  courante : le gestionnaire d'une instance modifiait, supprimait ou exportait les
+  formulaires de toutes les autres. Le formulaire doit désormais relever de
+  l'instance courante (formsForm::openInModule()), et le rattachement d'un champ,
+  d'un graphique ou d'un groupe ne se choisit plus par le formulaire de saisie.
+  forms_print n'imprime plus, hors backoffice, que la saisie en cours d'un
+  formulaire public.
+
+* Suppression d'un formulaire impossible en PHP 8.
+
+  formsGraphic utilisait dans ses valeurs par défaut les constantes FF_VERA et
+  MARK_SQUARE de jpgraph, qui n'est pas chargé : erreur fatale à la première
+  utilisation de la classe, donc à toute suppression de formulaire.
+
 == Module FORMS - version 3.8.1 ====================================================
 
 2025-02-24  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

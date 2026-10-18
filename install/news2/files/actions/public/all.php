@@ -25,7 +25,7 @@ if ($newsList->numrows()>0)
 		<?php echo skin::get()->open_simplebloc('<a href="'.$url.'">'.str::htmlentities($fields['title']).'</a>'); ?>
 			<table style="width:100%;<?php if ($fields['hot']) echo 'border:2px solid red;'; ?>">
 				<tr>
-					<td style="width:20%;"><img src="./<?php echo $fields['background'];?>" style="display:block;max-width:90%;margin:0 auto;"/></td>
+					<td style="width:20%;"><?php if (news2\tools::url($fields['background']) != '') { ?><img src="./<?php echo news2\tools::url($fields['background']); ?>" alt="" style="display:block;max-width:90%;margin:0 auto;"/><?php } ?></td>
 					<td>
 						<div><b>Publié le</b> <?php echo str::htmlentities($localdate['date']); ?> à <?php 
 							echo str::htmlentities($localdate['time']); 
@@ -41,16 +41,16 @@ if ($newsList->numrows()>0)
 								if ($fields['urltitle']=='') {$urltitle = 'Lien';} else {$urltitle = $fields['urltitle'];}
 								?> 
 								<div><b>Lien</b>:&nbsp;
-									<a target="_blank" href="<?php echo $fields['url']; ?>"><?php echo str::htmlentities($urltitle); ?></a>
+									<a target="_blank" href="<?php echo news2\tools::url($fields['url']); ?>"><?php echo str::htmlentities($urltitle); ?></a>
 								</div><?php
 							}
 						?>
 						<div><b>Lectures</b>:&nbsp;<?php echo $fields['nbclick']; ?></div>
-						<div><?php echo str::htmlentities($fields['content']); ?></div>
+						<div><?php echo news2\tools::content($fields['content']); ?></div>
 					</td>
 				</tr>
 			</table>
-			<div style="clear:both;border-top:1px solid #c0c0c0;">
+			<div class="news2_separation">
 				<?php ploopi\annotation::display(news2\tools::OBJECT_NEWS2, $fields['id'], $fields['title']); ?>
 			</div>
 		</div>

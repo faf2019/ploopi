@@ -1,0 +1,72 @@
+# Ploopi — production : Caddy (HTTPS automatique) + Apache/PHP + MariaDB.
+# Guide : docker/LISEZMOI.md, section « En production ».
+#
+#   cp docker/env.prod.modele .env     → puis renseigner domaine et mots de passe
+#   docker compose -f docker-compose.prod.yml up --build -d
+#   https://<PLOOPI_DOMAIN>/           → assistant d'installation
+#
+# Différences avec docker-compose.yml (essai) : code intégré à l'image et en lecture
+# seule, seuls 80/443 publiés (par Caddy), base non exposée, mots de passe hors du
+# dépôt, opcache actif.
+
+services:
+  db:
+    image: mariadb:11.4                       # LTS, version figée
+    restart: unless-stopped
+    environment:
+      MARIADB_DATABASE: ploopi
+      MARIADB_USER: ploopi
+      MARIADB_PASSWORD: ${MARIADB_PASSWORD:?à renseigner dans .env}
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD:?à renseigner dans .env}
+    volumes:
+      - donnees_db:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  web:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      target: prod
+      args:
+        PHP_VERSION: ${PHP_VERSION:-8.5}
+    image: ploopi-web-prod:php${PHP_VERSION:-8.5}
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    # aucun port publié : seul Caddy le joint
+    environment:
+      PLOOPI_DB_SERVER: db
+      PLOOPI_CONFIG: /var/www/ploopi-config/config.php
+    volumes:
+      - modules:/var/www/html/modules         # modules installés depuis le backoffice
+      - documents:/var/www/ploopi-data
+      - configuration:/var/www/ploopi-config  # contient les clés de chiffrement : à sauvegarder
+
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    depends_on:
+      - web
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"                         # HTTP/3
+    environment:
+      PLOOPI_DOMAIN: ${PLOOPI_DOMAIN:?à renseigner dans .env}
+    volumes:
+      - ./docker/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data                      # certificats : à conserver
+      - caddy_config:/config
+
+volumes:
+  donnees_db:
+  modules:
+  documents:
+  configuration:
+  caddy_data:
+  caddy_config:

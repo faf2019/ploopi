@@ -30,6 +30,79 @@
  * @author Ovensia
  */
 
+/**
+ * Fenêtres de ploopi4 (skin::version() >= 4) : balisage p4-*, comportement dans
+ * js/tickets.js (attributs data-p4-ticket-*), aucun script ni gestionnaire en ligne.
+ * Les autres gabarits gardent les fenêtres historiques.
+ */
+$booTicketsP4 = ploopi\skin::get()->version() >= 4;
+
+if (!function_exists('ploopi_tickets_isallowed'))
+{
+    /**
+     * L'utilisateur connecté est-il l'émetteur ou un destinataire du message (ou de son fil) ?
+     *
+     * @param int $intTicketId identifiant du message
+     * @return boolean
+     */
+    function ploopi_tickets_isallowed($intTicketId)
+    {
+        if (!function_exists('system_ticket_isallowed')) include_once './modules/system/include/functions.php';
+        return system_ticket_isallowed($intTicketId);
+    }
+
+    /**
+     * Fenêtre de composition de ploopi4 (nouveau message, réponse, modification)
+     *
+     * @param array $arrOptions op, hidden (champs cachés), title, message, recipient (destinataire
+     * d'une réponse), recipients (sélection de destinataires), id_user (présélection),
+     * object_label, button
+     */
+    function ploopi_tickets_p4_form($arrOptions)
+    {
+        $skin = ploopi\skin::get();
+        $arrOptions = array_merge(array('hidden' => array(), 'title' => '', 'message' => '', 'recipient' => '', 'recipients' => false, 'id_user' => null, 'object_label' => '', 'button' => 'Envoyer'), $arrOptions);
+        ?>
+        <div class="p4-ui p4-ticket-compose">
+            <form method="post" action="<?php echo ploopi\crypt::urlencode('admin.php'); ?>" target="ploopi_tickets_send" data-p4-ticket-form="<?php echo $arrOptions['recipients'] ? 'new' : 'reply'; ?>" novalidate>
+                <input type="hidden" name="ploopi_op" value="<?php echo ploopi\str::htmlentities($arrOptions['op']); ?>">
+                <?php foreach($arrOptions['hidden'] as $strName => $strValue) { ?>
+                <input type="hidden" name="<?php echo ploopi\str::htmlentities($strName); ?>" value="<?php echo ploopi\str::htmlentities($strValue); ?>">
+                <?php } ?>
+
+                <?php if ($arrOptions['recipient'] != '') { ?>
+                <p class="p4-ticket-to"><?php echo $skin->icon('user'); ?><span><?php echo _PLOOPI_LABEL_TICKET_RECIPIENT; ?> : <strong><?php echo ploopi\str::htmlentities($arrOptions['recipient']); ?></strong></span></p>
+                <?php } ?>
+
+                <div class="p4-field">
+                    <label for="p4_ticket_title"><?php echo _PLOOPI_LABEL_TICKET_TITLE; ?></label>
+                    <input class="p4-input" type="text" id="p4_ticket_title" name="ticket_title" value="<?php echo ploopi\str::htmlentities($arrOptions['title']); ?>" maxlength="255" autocomplete="off" required>
+                </div>
+
+                <div class="p4-field">
+                    <label for="fck_ticket_message"><?php echo _PLOOPI_LABEL_TICKET_MESSAGE; ?></label>
+                    <textarea id="fck_ticket_message" name="fck_ticket_message" data-ploopi-editor="simple"><?php echo $arrOptions['message']; ?></textarea>
+                </div>
+
+                <?php if ($arrOptions['object_label'] != '') { ?>
+                <p class="p4-ticket-object"><?php echo $skin->icon('link'); ?><span><?php echo _PLOOPI_LABEL_TICKET_LINKEDOBJECT; ?> : <strong><?php echo ploopi\str::htmlentities($arrOptions['object_label']); ?></strong></span></p>
+                <?php } ?>
+
+                <?php if ($arrOptions['recipients']) ploopi\ticket::selectusers($arrOptions['id_user']); ?>
+
+                <p class="p4-ticket-error" role="alert" hidden></p>
+
+                <div class="p4-ticket-actions">
+                    <button type="button" class="p4-btn" data-p4-ticket-cancel><?php echo _PLOOPI_CANCEL; ?></button>
+                    <button type="submit" class="p4-btn p4-btn-primary"><?php echo $skin->icon('send'); ?><span><?php echo ploopi\str::htmlentities($arrOptions['button']); ?></span></button>
+                </div>
+            </form>
+            <iframe name="ploopi_tickets_send" title="Envoi" hidden></iframe>
+        </div>
+        <?php
+    }
+}
+
 switch($ploopi_op)
 {
     case 'tickets_getnum':
@@ -54,6 +127,28 @@ switch($ploopi_op)
 
     case 'tickets_new':
         if (!$_SESSION['ploopi']['connected']) ploopi\system::kill();
+
+        if ($booTicketsP4)
+        {
+            $arrHidden = array('ploopi_tickets_reload' => empty($_GET['ploopi_tickets_reload']) ? '' : $_GET['ploopi_tickets_reload']);
+            foreach(array('ploopi_tickets_id_object', 'ploopi_tickets_id_record', 'ploopi_tickets_object_label') as $strParam)
+            {
+                if (isset($_GET[$strParam])) $arrHidden[$strParam] = $_GET[$strParam];
+            }
+
+            ob_start();
+            ploopi_tickets_p4_form(array(
+                'op' => 'tickets_send',
+                'hidden' => $arrHidden,
+                'recipients' => true,
+                'id_user' => (empty($_GET['ploopi_tickets_id_user']) || !is_numeric($_GET['ploopi_tickets_id_user'])) ? null : (int) $_GET['ploopi_tickets_id_user'],
+                'object_label' => isset($_GET['ploopi_tickets_object_label']) ? $_GET['ploopi_tickets_object_label'] : ''
+            ));
+            $content = ob_get_contents();
+            ob_end_clean();
+            echo ploopi\skin::get()->create_popup(_PLOOPI_LABEL_NEWTICKET, $content, 'system_popupticket');
+            ploopi\system::kill();
+        }
 
         ob_start();
         ?>
@@ -95,7 +190,7 @@ switch($ploopi_op)
             <div><input type="text" name="ticket_title" class="text" value="" style="width:98%"></div>
             <div style="font-weight:bold;"><?php echo _PLOOPI_LABEL_TICKET_MESSAGE; ?></div>
             <div>
-                <textarea id="fck_ticket_message" name="fck_ticket_message"></textarea>
+                <textarea id="fck_ticket_message" name="fck_ticket_message" data-ploopi-editor="simple"></textarea>
             </div>
 
             <?php
@@ -108,7 +203,7 @@ switch($ploopi_op)
             ?>
             <?php
             /*
-            <p class="ploopi_va" style="padding:4px 0; cursor:pointer;" onclick="javascript:ploopi.checkbox_click(event, 'ticket_needed_validation');">
+            <p class="ploopi_va ploopi_checkbox_zone" style="padding:4px 0; cursor:pointer;" data-checkbox="ticket_needed_validation">
                 <input type="checkbox" name="ticket_needed_validation" id="ticket_needed_validation" style="cursor:pointer;" value="1"><span><?php echo _PLOOPI_LABEL_TICKET_VALIDATIONREQUIRED; ?></span>
             </p>
             */
@@ -141,7 +236,39 @@ switch($ploopi_op)
 
         $ticket = new ploopi\ticket();
 
-        if (!empty($_GET['ticket_id']) && is_numeric($_GET['ticket_id']) && $ticket->open($_GET['ticket_id']))
+        /**
+         * Réponse : émetteur ou destinataire du message seulement ; modification : son
+         * émetteur seulement. Sans ce contrôle, « Citer » affichait tout message.
+         */
+        $booTicketAllowed = !empty($_GET['ticket_id']) && is_numeric($_GET['ticket_id']) && $ticket->open($_GET['ticket_id'])
+            && ($ploopi_op == 'tickets_replyto' ? ploopi_tickets_isallowed($_GET['ticket_id']) : $ticket->fields['id_user'] == $_SESSION['ploopi']['userid']);
+
+        if (!$booTicketAllowed)
+        {
+            $popup_title = $ploopi_op == 'tickets_replyto' ? _PLOOPI_LABEL_TICKET_RESPONSE : _PLOOPI_LABEL_TICKET_MODIFICATION;
+        }
+        elseif ($booTicketsP4)
+        {
+            if ($ploopi_op == 'tickets_replyto')
+            {
+                $objUser = new ploopi\user();
+                $strUserName = ($objUser->open($ticket->fields['id_user'])) ? "{$objUser->fields['lastname']} {$objUser->fields['firstname']}" : _PLOOPI_LABEL_TICKET_UNKNOWN_USER;
+                $popup_title = _PLOOPI_LABEL_TICKET_RESPONSE;
+                $strMessage = isset($_GET['quoted']) ? '<div class="system_tickets_quoted_user">Ticket de <b>'.ploopi\str::htmlentities($strUserName).'</b> :</div><div class="system_tickets_quoted_message">'.$ticket->fields['message'].'</div>' : '';
+            }
+            else $popup_title = _PLOOPI_LABEL_TICKET_MODIFICATION;
+
+            ploopi_tickets_p4_form(array(
+                'op' => $ploopi_op == 'tickets_replyto' ? 'tickets_send' : 'tickets_modify_next',
+                'hidden' => array('ticket_id' => (int) $_GET['ticket_id'], 'ploopi_tickets_reload' => '1'),
+                'title' => $ploopi_op == 'tickets_replyto' ? "RE: {$ticket->fields['title']}" : $ticket->fields['title'],
+                // Le message est rendu dans l'éditeur (textarea) : échappé ici, interprété par l'éditeur
+                'message' => ploopi\str::htmlentities($ploopi_op == 'tickets_replyto' ? $strMessage : $ticket->fields['message']),
+                'recipient' => $ploopi_op == 'tickets_replyto' ? $strUserName : '',
+                'button' => $ploopi_op == 'tickets_replyto' ? 'Envoyer' : 'Modifier'
+            ));
+        }
+        else
         {
             if ($ploopi_op == 'tickets_replyto')
             {
@@ -153,7 +280,7 @@ switch($ploopi_op)
                 $button_value = 'Envoyer';
                 $popup_title = _PLOOPI_LABEL_TICKET_RESPONSE;
 
-                if (isset($_GET['quoted'])) $ticket->fields['message'] = '<div class="system_tickets_quoted_user">Ticket de <b>'.$strUserName.'</b> :</div><div class="system_tickets_quoted_message">'.$ticket->fields['message'].'</div>';
+                if (isset($_GET['quoted'])) $ticket->fields['message'] = '<div class="system_tickets_quoted_user">Ticket de <b>'.ploopi\str::htmlentities($strUserName).'</b> :</div><div class="system_tickets_quoted_message">'.$ticket->fields['message'].'</div>';
                 else $ticket->fields['message'] = '';
             }
             else
@@ -188,7 +315,7 @@ switch($ploopi_op)
                 <div><input type="text" name="ticket_title" class="text" value="<?php echo ploopi\str::htmlentities($ticket->fields['title']); ?>" style="width:98%"></div>
                 <div style="font-weight:bold;"><?php echo _PLOOPI_LABEL_TICKET_MESSAGE; ?></div>
                 <div>
-                    <textarea id="fck_ticket_message" name="fck_ticket_message"><? echo $ticket->fields['message']; ?></textarea>
+                    <textarea id="fck_ticket_message" name="fck_ticket_message" data-ploopi-editor="simple"><?php echo $ticket->fields['message']; ?></textarea>
                 </div>
 
                 <div style="text-align:right;">
@@ -210,6 +337,9 @@ switch($ploopi_op)
         $ticket = new ploopi\ticket();
         if (isset($_POST['ticket_id']) && is_numeric($_POST['ticket_id']) && isset($_POST['fck_ticket_message']) && $ticket->open($_POST['ticket_id']))
         {
+            // Réponse : émetteur ou destinataire du message seulement
+            if (!ploopi_tickets_isallowed($_POST['ticket_id'])) ploopi\system::kill();
+
             $root_ticket = new ploopi\ticket();
             if ($ticket->fields['root_id'] && $root_ticket->open($ticket->fields['root_id']))
             {
@@ -218,9 +348,12 @@ switch($ploopi_op)
                 $root_ticket->save();
             }
 
+            // La réponse reprend l'objet lié et le contexte du message, pas ses compteurs ni
+            // son identifiant ('' dans une colonne entière : refusé en mode SQL strict)
             $response = new ploopi\ticket();
             $response->fields = $ticket->fields;
-            $response->fields['id'] = '';
+            unset($response->fields['id']);
+            foreach(array('count_read', 'count_replies', 'status', 'lastedit_timestp', 'deleted', 'needed_validation', 'delivery_notification') as $strChamp) $response->fields[$strChamp] = 0;
             $response->fields['title'] = $_POST['ticket_title'];
             $response->fields['message'] = ploopi\str::htmlpurifier($_POST['fck_ticket_message']);
             $response->fields['id_user'] = $_SESSION['ploopi']['userid'];
@@ -269,12 +402,13 @@ switch($ploopi_op)
 
     case 'tickets_modify_next':
         $ticket = new ploopi\ticket();
-        if (isset($_POST['ticket_id']) && is_numeric($_POST['ticket_id']) && isset($_POST['fck_ticket_message']) && $ticket->open($_POST['ticket_id']))
+        // Modification : par l'émetteur du message seulement, titre et contenu seulement
+        if (isset($_POST['ticket_id']) && is_numeric($_POST['ticket_id']) && isset($_POST['fck_ticket_message']) && $ticket->open($_POST['ticket_id']) && $ticket->fields['id_user'] == $_SESSION['ploopi']['userid'])
         {
-            $_POST['ticket_message'] = $_POST['fck_ticket_message'];
-            unset($_POST['fck_ticket_message']);
+            // Champs nommés : setvalues($_POST, 'ticket_') acceptait aussi ticket_id_user, ticket_status…
+            if (isset($_POST['ticket_title'])) $ticket->fields['title'] = $_POST['ticket_title'];
+            $ticket->fields['message'] = ploopi\str::htmlpurifier($_POST['fck_ticket_message']);
             $ticket->fields['lastedit_timestp'] = ploopi\date::createtimestamp();
-            $ticket->setvalues($_POST, 'ticket_');
             $ticket->save();
         }
         ?>
@@ -308,9 +442,15 @@ switch($ploopi_op)
         if (!$_SESSION['ploopi']['connected']) ploopi\system::kill();
         if (!isset($_POST['ploopi_ticket_userfilter']) && !isset($_POST['ploopi_ticket_typefilter'])) ploopi\system::kill();
 
+        // ploopi4 : recherche à la frappe, rien à proposer tant que le champ est vide
+        if ($booTicketsP4 && trim((string) $_POST['ploopi_ticket_userfilter']) === '') ploopi\system::kill();
+
+        if (!$booTicketsP4)
+        {
         ?>
         <div style="height:150px;overflow-y:auto;overflow-x:hidden;border:1px solid #c0c0c0;">
         <?php
+        }
             $listgroup = array();
             $group = new ploopi\group();
             $workspace = new ploopi\workspace();
@@ -408,6 +548,56 @@ switch($ploopi_op)
                     }
                 }
 
+                if ($booTicketsP4)
+                {
+                    /**
+                     * ploopi4 : résultats groupés par espace, chaque utilisateur ou groupe est un
+                     * bouton (data-p4-ticket-add, js/tickets.js). Un utilisateur n'apparaît qu'une
+                     * fois par espace, directement ou par l'un de ses groupes.
+                     */
+                    $skin = ploopi\skin::get();
+                    $intResults = 0;
+                    ob_start();
+                    foreach($list['wsp'] as $id_wsp => $wsp)
+                    {
+                        $arrUsers = array_unique($wsp['users']);
+                        $arrGroups = array();
+                        foreach($wsp['groups'] as $id_grp)
+                        {
+                            if (!empty($list['grp'][$id_grp]['users'])) $arrGroups[$id_grp] = array_unique($list['grp'][$id_grp]['users']);
+                        }
+                        if (empty($arrUsers) && empty($arrGroups)) continue;
+                        ?>
+                        <div class="p4-ticket-ws">
+                            <p class="p4-ticket-ws-label"><?php echo $skin->icon('building'); ?><span><?php echo ploopi\str::htmlentities($wsp['label']); ?></span></p>
+                            <?php
+                            foreach($arrGroups as $id_grp => $arrGrpUsers)
+                            {
+                                $intResults++;
+                                ?>
+                                <button type="button" class="p4-ticket-result" data-p4-ticket-add="group" data-p4-ticket-id="<?php echo (int) $id_grp; ?>"><?php echo $skin->icon('users-group'); ?><span><?php echo ploopi\str::htmlentities($list['grp'][$id_grp]['label']); ?></span><small><?php echo sizeof($arrGrpUsers); ?> membre(s)</small></button>
+                                <?php
+                                $arrUsers = array_merge($arrUsers, $arrGrpUsers);
+                            }
+                            foreach(array_unique($arrUsers) as $id_user)
+                            {
+                                $intResults++;
+                                ?>
+                                <button type="button" class="p4-ticket-result" data-p4-ticket-add="user" data-p4-ticket-id="<?php echo (int) $id_user; ?>"><?php echo $skin->icon('user'); ?><span><?php echo ploopi\str::htmlentities(trim("{$list['usr'][$id_user]['lastname']} {$list['usr'][$id_user]['firstname']}")); ?></span><small><?php echo ploopi\str::htmlentities($list['usr'][$id_user]['login']); ?></small></button>
+                                <?php
+                            }
+                            ?>
+                        </div>
+                        <?php
+                    }
+                    $strResults = ob_get_contents();
+                    ob_end_clean();
+
+                    if ($intResults) echo $strResults;
+                    else echo '<p class="p4-ticket-empty">Aucun destinataire trouvé.</p>';
+                    ploopi\system::kill();
+                }
+
                 if (!empty($list['usr']))
                 {
                     // On vérifie que chaque espace contient bien qqchose
@@ -469,6 +659,12 @@ switch($ploopi_op)
                         }
                     }
                 }
+            }
+
+            if ($booTicketsP4)
+            {
+                echo '<p class="p4-ticket-empty">Aucun destinataire trouvé.</p>';
+                ploopi\system::kill();
             }
 
             if ($booEmptySearch)

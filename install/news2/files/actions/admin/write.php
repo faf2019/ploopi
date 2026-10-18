@@ -24,8 +24,6 @@ $localdate = (!empty($news->fields['date_publish']))
             ? ploopi\date::timestamp2local($news->fields['date_publish'],_PLOOPI_DATEFORMAT_US)
             : array('date' => ploopi\date::getdate(_PLOOPI_DATEFORMAT_US), 'time' => ploopi\date::gettime());
 
-?><script src="./vendor/ckeditor/ckeditor/ckeditor.js"></script><?php
-
 // Formulaire
 $strUrl = "admin-light.php?entity=admin&action=op_write";
 if (!empty($news->fields['id'])) $strUrl .= "&id=".$news->fields['id'];
@@ -54,15 +52,19 @@ $objPanel->addField(new form_field('input:text', 'Titre du Lien :', $news->field
 news2\tools::addLink($objPanel, 'url', $news->fields['url'], 'Lien interne ou externe', 'news_');
 news2\tools::addImg($objPanel, 'background', str::htmlentities($news->fields['background']), 'Image de fond', 'news_');
 
-// Panneau 3 - CKeditor
+// Panneau 3 - Éditeur (TinyMCE, js/editor.js) : choix d'un fichier ou d'une image de la
+// GED, insertion d'un objet ; le champ se transforme seul (data-ploopi-editor)
 $objForm->addPanel($objPanel = new ploopi\form_panel('',null,['style' => 'width:100%;border:none;']));
 $objPanel->addField(new ploopi\form_html('<textarea style="clear:both;width:95%;padding:0 5px;margin:0 5px;"
-    name="fck_news_content" id="editor">'.$news->fields['content'].'</textarea>'));
+    name="fck_news_content" id="editor" data-ploopi-editor="complet" data-ploopi-editor-objects="1"'
+    .' data-ploopi-editor-link="'.str::htmlentities(_PLOOPI_BASEPATH.'/admin-light.php?'.ploopi\crypt::queryencode('ploopi_op=doc_selectfile')).'"'
+    .' data-ploopi-editor-image="'.str::htmlentities(_PLOOPI_BASEPATH.'/admin-light.php?'.ploopi\crypt::queryencode('ploopi_op=doc_selectimage')).'">'
+    .str::htmlentities($news->fields['content']).'</textarea>'));
 
 // Boutons
 $objForm->addButton( new form_button('input:button', 'Annuler', null, null,
     ['style' => 'margin-left:4px;',
-        'onclick' => "document.location.href='".ploopi\crypt::urlencode("admin.php?entity=admin&action=default")."';"]
+        'dataset' => ['ploopi-href' => ploopi\crypt::urlencode("admin.php?entity=admin&action=default")]]
 ));
 $objForm->addButton( new form_button('input:reset', 'Réinitialiser', null, null, ['style' => 'margin-left:4px;']));
 $objForm->addButton( new form_button('input:submit', 'Enregistrer', null, null, ['style' => 'margin-left:4px;']));
@@ -70,28 +72,3 @@ $objForm->addButton( new form_button('input:submit', 'Enregistrer', null, null, 
 // Rendu
 echo $objForm->render();
 echo ploopi\skin::get()->close_simplebloc();
-
-?>
-<script>
-    // Ajout d'un plugin externe
-    CKEDITOR.plugins.addExternal('tag', '<?php echo _PLOOPI_BASEPATH.'/modules/news2/include/ckeditor/plugins/tag/'; ?>', 'plugin.js');
-    // http://docs.ckeditor.com/#!/guide/plugin_sdk_styles
-    CKEDITOR.plugins.add( 'tag', {
-        init: function( editor ) {
-            var pluginDirectory = '<?php echo _PLOOPI_BASEPATH.'/modules/news2/include/ckeditor/plugins/tag/'; ?>';
-            editor.addContentsCss( pluginDirectory + 'styles.css' );
-        }
-    } );
-    // http://docs.ckeditor.com/#!/guide/dev_file_browser_api
-    CKEDITOR.replace( 'editor', {
-        customConfig: '<?php echo _PLOOPI_BASEPATH.'/modules/news2/include/ckeditor/config.js'; ?>',
-        filebrowserBrowseUrl: '<?php echo _PLOOPI_BASEPATH.'/admin-light.php?'.ploopi\crypt::queryencode('ploopi_op=doc_selectfile'); ?>',
-        filebrowserImageBrowseUrl: '<?php echo _PLOOPI_BASEPATH.'/admin-light.php?'.ploopi\crypt::queryencode('ploopi_op=doc_selectimage'); ?>',
-        // Chargement de styles complémentaires (on remet le fichier par défaut en 1er)
-        // Puis on ajoute la feuille de style des plugins...
-        contentsCss: [
-            CKEDITOR.basePath+'contents.css',
-            '<?php echo _PLOOPI_BASEPATH; ?>/modules/news2/include/ckeditor/plugins/tag/styles.css',
-        ]
-    });
-</script>

@@ -34,43 +34,96 @@
 switch($ploopi_op)
 {
     case 'webedit_unsubscribe':
-        // Désabonnement par mail
+        // Désabonnement par le lien signé des courriels (message : display.php)
 
         ploopi\module::init('webedit');
 
-        if (!empty($_GET['subscription_email']))
+        if (isset($_GET['subscription_token']) && ($arrDemande = webedit_subscription_read($_GET['subscription_token'], 'u')) !== false)
         {
-            ploopi\db::get()->query("DELETE FROM ploopi_mod_webedit_heading_subscriber WHERE md5(email) = '".ploopi\db::get()->addslashes($_GET['subscription_email'])."'");
+            $db = ploopi\db::get();
+            $db->query("DELETE FROM ploopi_mod_webedit_heading_subscriber WHERE email = '".$db->addslashes($arrDemande['email'])."' AND id_module = {$arrDemande['moduleid']}");
         }
-        //ploopi\output::redirect('index.php', false);
+    break;
+
+    case 'webedit_subscription_confirm':
+        // Confirmation d'abonnement par le lien signé du courriel (message : display.php)
+
+        ploopi\module::init('webedit');
+
+        if (isset($_GET['subscription_token']) && ($arrDemande = webedit_subscription_read($_GET['subscription_token'], 'c')) !== false)
+        {
+            include_once './modules/webedit/class_heading_subscriber.php';
+
+            $subscriber = new webedit_heading_subscriber();
+            if (!$subscriber->open($arrDemande['headingid'], $arrDemande['email']))
+            {
+                $subscriber = new webedit_heading_subscriber();
+                $subscriber->fields['id_heading'] = $arrDemande['headingid'];
+                $subscriber->fields['email'] = $arrDemande['email'];
+                $subscriber->fields['validated'] = 1;
+                $subscriber->fields['id_module'] = $arrDemande['moduleid'];
+                $subscriber->save();
+            }
+        }
     break;
 
     case 'webedit_subscribe':
+        /**
+         * Demande d'abonnement depuis le formulaire public : rien n'est écrit, un
+         * courriel part vers l'adresse saisie. Il porte un lien de confirmation signé,
+         * ou, si l'adresse est déjà abonnée, un lien de désabonnement. Seul le titulaire
+         * de l'adresse peut donc abonner ou désabonner celle-ci (double opt-in).
+         */
         ploopi\module::init('webedit');
 
         $return = -1;
+        $intModuleId = $_SESSION['ploopi']['moduleid'];
 
         if (!empty($_GET['headingid']) && is_numeric($_GET['headingid']) && isset($_POST['subscription_headingid']) && is_numeric($_POST['subscription_headingid']))
         {
-            if (!empty($_POST['subscription_email']) && ploopi\mail::check($_POST['subscription_email']))
+            $intHeadingId = intval($_POST['subscription_headingid']);
+            $db = ploopi\db::get();
+
+            // La rubrique doit appartenir au site (0 : le site entier)
+            if ($intHeadingId > 0 && !$db->numrows($db->query("SELECT id FROM ploopi_mod_webedit_heading WHERE id = {$intHeadingId} AND id_module = {$intModuleId}")))
             {
-                include_once './modules/webedit/class_heading_subscriber.php';
+                $return = _WEBEDIT_SUBSCRIPTION_ERROR_PARAM;
+            }
+            elseif (!empty($_POST['subscription_email']) && is_string($_POST['subscription_email']) && ploopi\mail::check($_POST['subscription_email']))
+            {
+                $strEmail = $_POST['subscription_email'];
+                $strBase = webedit_subscription_baseurl();
 
-                $subscriber = new webedit_heading_subscriber();
-
-                if (!$subscriber->open($_POST['subscription_headingid'], $_POST['subscription_email']))
+                if ($strBase === false)
                 {
-                    $subscriber->fields['id_heading'] = $_POST['subscription_headingid'];
-                    $subscriber->fields['email'] = $_POST['subscription_email'];
-                    $subscriber->fields['validated'] = 1;
-                    $subscriber->fields['id_module'] = $_SESSION['ploopi']['moduleid'];
-                    $subscriber->save();
-                    $return = _WEBEDIT_SUBSCRIPTION_SUBSCRIBED;
+                    ploopi\error::syslog(LOG_WARNING, "Abonnement webedit : hôte '".preg_replace('/[^\x21-\x7e]/', '', substr((string)$_SERVER['HTTP_HOST'], 0, 255))."' non déclaré, aucun courriel envoyé. Renseigner _PLOOPI_PUBLIC_URL dans config/config.php ou le domaine dans l'espace");
+                    $return = _WEBEDIT_SUBSCRIPTION_ERROR_SEND;
                 }
                 else
                 {
-                    $subscriber->delete();
-                    $return = _WEBEDIT_SUBSCRIPTION_UNSUBSCRIBED;
+                    include_once './modules/webedit/class_heading_subscriber.php';
+
+                    $strSite = parse_url($strBase, PHP_URL_HOST);
+                    $subscriber = new webedit_heading_subscriber();
+
+                    if ($subscriber->open($intHeadingId, $strEmail))
+                    {
+                        $strLien = $strBase.'/'.ploopi\str::urlrewrite('index.php?ploopi_op=webedit_unsubscribe&subscription_token='.webedit_subscription_token('u', $intModuleId, 0, $strEmail), webedit_getrewriterules());
+                        $strTitre = "{$strSite} : votre abonnement";
+                        $strMessage = "Bonjour,\n\nune demande d'abonnement aux nouveautés du site {$strSite} a été faite pour votre adresse, qui y est déjà abonnée.\n\nPour vous désabonner, suivez ce lien :\n\n{$strLien}\n\nSinon, ignorez ce message.";
+                    }
+                    else
+                    {
+                        $strLien = $strBase.'/'.ploopi\str::urlrewrite('index.php?ploopi_op=webedit_subscription_confirm&subscription_token='.webedit_subscription_token('c', $intModuleId, $intHeadingId, $strEmail, time() + _WEBEDIT_SUBSCRIPTION_DELAY), webedit_getrewriterules());
+                        $strTitre = "{$strSite} : confirmez votre abonnement";
+                        $strMessage = "Bonjour,\n\nune demande d'abonnement aux nouveautés du site {$strSite} a été faite pour votre adresse.\n\nPour la confirmer, suivez ce lien (valable ".intval(_WEBEDIT_SUBSCRIPTION_DELAY / 3600)." heures) :\n\n{$strLien}\n\nSi vous n'êtes pas à l'origine de cette demande, ignorez ce message : vous ne serez pas abonné.";
+                    }
+
+                    $from = array(array('name' => $strSite, 'address' => trim(current(explode(',', _PLOOPI_ADMINMAIL)))));
+                    ploopi\mail::send($from, $strEmail, $strTitre, $strMessage, null, null, null, null, false);
+
+                    // Même réponse dans les deux cas : le formulaire ne révèle pas qui est abonné
+                    $return = _WEBEDIT_SUBSCRIPTION_PENDING;
                 }
             }
             else $return = _WEBEDIT_SUBSCRIPTION_ERROR_EMAIL;
@@ -89,31 +142,6 @@ switch($ploopi_op)
     case 'webedit_backend':
         include_once './modules/webedit/backend.php';
         ploopi\system::kill();
-    break;
-
-    case 'webedit_save_comment':
-        if(isset($_GET['articleid']) && is_numeric($_GET['articleid']) && isset($_GET['id_captcha']) && !empty($_GET['id_captcha']))
-        {
-
-            // Ultime verif du captcha
-            $objcaptcha = new ploopi\captcha($_GET['id_captcha']);
-            if(!$objcaptcha->verifCaptcha($_POST['captcha_code'],true)) return '0';
-
-            include_once './modules/webedit/class_article_comment.php';
-            $objComment = new webedit_article_comment();
-
-            $objComment->setvalues($_POST,'comment_');
-            $objComment->fields['id_article'] = $_GET['articleid'];
-            if($objComment->save())
-                $return = ($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['comment_ctrl']) ? '2' : '1';
-            else
-                return '0';
-
-        }
-
-        $arrHeadings = webedit_getheadings();
-        if (isset($arrHeadings['list'][$_GET['headingid']])) foreach(preg_split('/;/', $arrHeadings['list'][$_GET['headingid']]['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
-        ploopi\output::redirect(ploopi\str::urlrewrite("index.php?headingid={$_GET['headingid']}".(empty($_GET['articleid']) ? '' : "&articleid={$_GET['articleid']}")."&comment_return={$return}",webedit_getrewriterules(),$arrHeadings['list'][$_GET['headingid']]['label'], $arrParents));
     break;
 }
 
@@ -142,11 +170,11 @@ if ($_SESSION['ploopi']['connected'])
             ob_start();
             ?>
             <style>body, html, div { border:0;padding:0;margin:0;display:block;height:100%;overflow:hidden; }</style>
-            <iframe style="height:100%;float:left;width:40%;border:0;border-right:1px solid #aaa;box-sizing:border-box;" src="<? echo ploopi\crypt::urlencode('admin-light.php?ploopi_op=webedit_selectlink&CKEditor='.(isset($_REQUEST['CKEditor'])?$_REQUEST['CKEditor']:'').'&CKEditorFuncNum='.(isset($_REQUEST['CKEditorFuncNum'])?$_REQUEST['CKEditorFuncNum']:'').'&langCode=fr'); ?>">
+            <iframe style="height:100%;float:left;width:40%;border:0;border-right:1px solid #aaa;box-sizing:border-box;" src="<?php echo ploopi\crypt::urlencode('admin-light.php?ploopi_op=webedit_selectlink&CKEditor=editor&CKEditorFuncNum='.(isset($_REQUEST['CKEditorFuncNum']) ? (int)$_REQUEST['CKEditorFuncNum'] : 0).'&langCode=fr'); ?>">
             </iframe>
-            <iframe style="height:100%;float:left;width:60%;border:0;box-sizing:border-box;" src="<? echo ploopi\crypt::urlencode('admin-light.php?ploopi_op=doc_selectfile&CKEditor='.(isset($_REQUEST['CKEditor'])?$_REQUEST['CKEditor']:'').'&CKEditorFuncNum='.(isset($_REQUEST['CKEditorFuncNum'])?$_REQUEST['CKEditorFuncNum']:'').'&langCode=fr'); ?>">
+            <iframe style="height:100%;float:left;width:60%;border:0;box-sizing:border-box;" src="<?php echo ploopi\crypt::urlencode('admin-light.php?ploopi_op=doc_selectfile&CKEditor=editor&CKEditorFuncNum='.(isset($_REQUEST['CKEditorFuncNum']) ? (int)$_REQUEST['CKEditorFuncNum'] : 0).'&langCode=fr'); ?>">
             </iframe>
-            <?
+            <?php
             $main_content = ob_get_contents();
             @ob_end_clean();
 
@@ -175,7 +203,7 @@ if ($_SESSION['ploopi']['connected'])
         break;
 
         case 'webedit_selectlink':
-        case 'webedit_detail_heading';
+        case 'webedit_detail_heading':
             $template_body = ploopi\loader::get_template();
 
 

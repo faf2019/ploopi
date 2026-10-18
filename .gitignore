@@ -1,11 +1,25 @@
 build/
 build_package.sh
-composer.lock
+# composer.lock versionné depuis le lot 9 : installations reproductibles, composer audit en CI
 config/config.php*
 data/
 *.sh
+!tests/run.sh
+!tests/docker.sh
+!tests/docker/entree.sh
 *.sql
 modules/
-phploc.xml
 vendor/
 .htaccess
+tests/config.php
+
+# Instance de test montée par tests/instance.sh
+tests/.instance
+data/sessions_tests/
+data/instance_tests.log
+
+/.env
+
+tests/.instance_navigateur.json
+tests/navigateur/captures/
+tests/resultats/

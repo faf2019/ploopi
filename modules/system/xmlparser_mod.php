@@ -117,7 +117,6 @@ function xmlparser_mod()
 
 function xmlparser_mod_free($xml_parser)
 {
-    xml_parser_free($xml_parser);
     $globaldata = '';
     $datatype = '';
     $newrow = false;

@@ -87,6 +87,15 @@ $toolbar['tools'] =
 
 if (!empty($_GET['sysToolbarItem']))  $_SESSION['system']['sysToolbarItem'] = $_GET['sysToolbarItem'];
 if (!isset($_SESSION['system']['sysToolbarItem'])) $_SESSION['system']['sysToolbarItem'] = '';
+
+// ploopi4 : les écrans sont des entrées du menu latéral, la barre d'outils ferait doublon
+if (ploopi\skin::get()->version() >= 4)
+{
+    if (!isset($toolbar[$_SESSION['system']['sysToolbarItem']])) $_SESSION['system']['sysToolbarItem'] = key($toolbar);
+    include './modules/system/admin_system_p4.php';
+    return;
+}
+
 echo ploopi\skin::get()->create_toolbar($toolbar,$_SESSION['system']['sysToolbarItem']);
 ?>
 
@@ -110,6 +119,11 @@ echo ploopi\skin::get()->create_toolbar($toolbar,$_SESSION['system']['sysToolbar
 
                 case 'install':
                     include './modules/system/admin_system_installmodules_installproc.php';
+                break;
+
+                case 'demo':
+                case 'demo_done':
+                    include './modules/system/admin_system_demo.php';
                 break;
 
                 case 'uninstall':

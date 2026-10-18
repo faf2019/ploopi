@@ -114,44 +114,39 @@ ploopi\session::setvar('system_alphatabitem', $alphaTabItem);
 </div>
 
 <form action="<?php echo ploopi\crypt::urlencode('admin.php?wspToolbarItem=tabUsers'); ?>" method="post">
-<div class="ploopi_va" style="padding:6px;">
-    <label>Nom: </label>
-    <input type="text" class="text" name="ploopi_lastname" value="<?php echo ploopi\str::htmlentities($arrFilter['ploopi_lastname']); ?>" style="width:100px;" tabindex="100" />
-
-    <label>Prénom: </label>
-    <input type="text" class="text" name="ploopi_firstname" value="<?php echo ploopi\str::htmlentities($arrFilter['ploopi_firstname']); ?>" style="width:100px;" tabindex="105" />
-
-    <label>Identifiant: </label>
-    <input type="text" class="text" name="ploopi_login" value="<?php echo ploopi\str::htmlentities($arrFilter['ploopi_login']); ?>" style="width:100px;" tabindex="110" />
-
-    <label>Courriel: </label>
-    <input type="text" class="text" name="ploopi_email" value="<?php echo ploopi\str::htmlentities($arrFilter['ploopi_email']); ?>" style="width:150px;" tabindex="120" />
-
-    <label>Connexion entre le: </label>
-    <input type="text" class="text" name="ploopi_last_connection_1" id="ploopi_last_connection_1" value="<?php echo ploopi\str::htmlentities($arrFilter['ploopi_last_connection_1']); ?>" style="width:100px;" tabindex="116" />
-    <?php ploopi\date::open_calendar('ploopi_last_connection_1'); ?>
-    <label>et le: </label>
-    <input type="text" class="text" name="ploopi_last_connection_2" id="ploopi_last_connection_2" value="<?php echo ploopi\str::htmlentities($arrFilter['ploopi_last_connection_2']); ?>" style="width:100px;" tabindex="117" />
-    <?php ploopi\date::open_calendar('ploopi_last_connection_2'); ?>
-
-    <input type="submit" class="button" value="Filtrer" tabindex="150" />
-    <input type="button" class="button" value="Réinitialiser" onclick="document.location.href='<?php echo ploopi\crypt::urlencode('admin.php?wspToolbarItem=tabUsers&reset'); ?>';" tabindex="160" />
+<div class="ploopi_va ploopi_filter" style="padding:6px;">
+    <span class="ploopi_filter_field"><label>Nom: </label><input type="text" class="text" name="ploopi_lastname" value="<?php echo ploopi\str::htmlentities($arrFilter['ploopi_lastname']); ?>" style="width:100px;" tabindex="100" /></span>
+    <span class="ploopi_filter_field"><label>Prénom: </label><input type="text" class="text" name="ploopi_firstname" value="<?php echo ploopi\str::htmlentities($arrFilter['ploopi_firstname']); ?>" style="width:100px;" tabindex="105" /></span>
+    <span class="ploopi_filter_field"><label>Identifiant: </label><input type="text" class="text" name="ploopi_login" value="<?php echo ploopi\str::htmlentities($arrFilter['ploopi_login']); ?>" style="width:100px;" tabindex="110" /></span>
+    <span class="ploopi_filter_field"><label>Courriel: </label><input type="text" class="text" name="ploopi_email" value="<?php echo ploopi\str::htmlentities($arrFilter['ploopi_email']); ?>" style="width:150px;" tabindex="120" /></span>
+    <span class="ploopi_filter_field">
+        <label>Connexion entre le: </label>
+        <input type="text" class="text" name="ploopi_last_connection_1" id="ploopi_last_connection_1" value="<?php echo ploopi\str::htmlentities($arrFilter['ploopi_last_connection_1']); ?>" style="width:100px;" tabindex="116" />
+        <?php ploopi\date::open_calendar('ploopi_last_connection_1'); ?>
+        <label>et le: </label>
+        <input type="text" class="text" name="ploopi_last_connection_2" id="ploopi_last_connection_2" value="<?php echo ploopi\str::htmlentities($arrFilter['ploopi_last_connection_2']); ?>" style="width:100px;" tabindex="117" />
+        <?php ploopi\date::open_calendar('ploopi_last_connection_2'); ?>
+    </span>
+    <span class="ploopi_filter_buttons">
+        <input type="submit" class="button" value="Filtrer" tabindex="150" />
+        <input type="button" class="button" value="Réinitialiser" onclick="document.location.href='<?php echo ploopi\crypt::urlencode('admin.php?wspToolbarItem=tabUsers&reset'); ?>';" tabindex="160" />
+    </span>
 </div>
 
 <div class="ploopi_tabs">
-    <a href="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=vcf"); ?>"><img src="./img/export/vcf.png"><span>vCard <sup>VCF</sup></span></a>
-    <a href="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=xml"); ?>"><img src="./img/export/xml.png"><span>Brut <sup>XML</sup></span></a>
-    <a href="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=csv"); ?>"><img src="./img/export/csv.png"><span>Brut <sup>CSV</sup></span></a>
+    <a href="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=vcf"); ?>"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/export/vcf.png"><span>vCard <sup>VCF</sup></span></a>
+    <a href="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=xml"); ?>"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/export/xml.png"><span>Brut <sup>XML</sup></span></a>
+    <a href="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=csv"); ?>"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/export/csv.png"><span>Brut <sup>CSV</sup></span></a>
     <?php
     if (ploopi\param::get('system_jodwebservice') != '') {
         ?>
-        <a href="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=pdf"); ?>"><img src="./img/export/pdf.png"><span>Adobe &trade; <sup>PDF</sup></span></a>
-        <a href="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=ods"); ?>"><img src="./img/export/ods.png"><span>OpenOffice &trade; <sup>ODS</sup></span></a>
+        <a href="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=pdf"); ?>"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/export/pdf.png"><span>Adobe &trade; <sup>PDF</sup></span></a>
+        <a href="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=ods"); ?>"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/export/ods.png"><span>OpenOffice &trade; <sup>ODS</sup></span></a>
         <?php
     }
     ?>
-    <a href="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=xls"); ?>"><img src="./img/export/xls.png"><span>MS Excel &trade; <sup>XLS</sup></span></a>
-    <a href="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=xlsx"); ?>"><img src="./img/export/xls.png"><span>MS Excel &trade; <sup>XLSX</sup></span></a>
+    <a href="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=xls"); ?>"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/export/xls.png"><span>MS Excel &trade; <sup>XLS</sup></span></a>
+    <a href="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=xlsx"); ?>"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/export/xls.png"><span>MS Excel &trade; <sup>XLSX</sup></span></a>
 </div>
 
 <?php
@@ -311,9 +306,9 @@ else
 
         $values[$c]['values']['name']       = array('label' => ploopi\str::htmlentities("{$fields['lastname']}, {$fields['firstname']}"));
         $values[$c]['values']['login']      = array('label' => ploopi\str::htmlentities($fields['login']));
-        $values[$c]['values']['email']      = array('label' => empty($fields['email']) ? '' : '<a title="'.ploopi\str::htmlentities($fields['email']).'" href="mailto:'.ploopi\str::htmlentities($fields['email']).'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/email.gif" /></a>', 'sort_label' => $fields['email']);
+        $values[$c]['values']['email']      = array('label' => empty($fields['email']) ? '' : '<a title="'.ploopi\str::htmlentities($fields['email']).'" href="mailto:'.ploopi\str::htmlentities($fields['email']).'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/email.png" /></a>', 'sort_label' => $fields['email']);
 
-        $values[$c]['values']['origin']     = array('label' => '<a href="'.ploopi\crypt::urlencode("admin.php?wspToolbarItem=tabUsers&usrTabItem=tabUserList&groupid={$currentgroup['id']}&alphaTabItem=".(ord(strtolower($fields['lastname']))-96)).'">'.ploopi\str::htmlentities($currentgroup['label']).'</a>');
+        $values[$c]['values']['origin']     = array('label' => '<a href="'.ploopi\crypt::urlencode("admin.php?wspToolbarItem=tabUsers&usrTabItem=tabUserList&groupid={$currentgroup['id']}&alphaTabItem=".(($fields['lastname'] == '' ? 0 : ord(strtolower($fields['lastname'])[0])) - 96)).'">'.ploopi\str::htmlentities($currentgroup['label']).'</a>');
         $values[$c]['values']['entity']    = array('label' => ploopi\str::htmlentities($fields['entity']));
         $values[$c]['values']['service']    = array('label' => ploopi\str::htmlentities($fields['service']));
 

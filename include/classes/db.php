@@ -236,7 +236,7 @@ class db
         if (!is_null(self::$_objDb)) return self::$_objDb;
 
         self::$_objDb = new self(_PLOOPI_DB_SERVER, _PLOOPI_DB_LOGIN, _PLOOPI_DB_PASSWORD, _PLOOPI_DB_DATABASE);
-        if(!self::$_objDb->isconnected()) trigger_error('Database connection error, please contact administrator', E_USER_ERROR);
+        if(!self::$_objDb->isconnected()) throw new \ErrorException('Database connection error, please contact administrator');
 
         return self::$_objDb;
     }
@@ -357,7 +357,11 @@ class db
 
         if (!$this->isconnected()) return false;
 
-        if($query != '')
+        // Copie locale : les fonctions qui inspectent les arguments (debug_backtrace,
+        // ci-dessous pour la journalisation) rapportent la valeur courante du paramètre.
+        $strQuery = $query;
+
+        if($strQuery != '')
         {
             $this->num_queries++;
 
@@ -368,7 +372,7 @@ class db
 
             $res = false;
 
-            if ($res = $this->mysqli->real_query($query)) {
+            if ($res = $this->mysqli->real_query($strQuery)) {
                 $this->query_result = $this->mysqli->store_result();
                 if ($this->log) {
                     $stop = $this->timer_stop();
@@ -383,7 +387,7 @@ class db
                         }
                     }
 
-                    $this->arrLog[] = array ('query' => $query, 'time' => $stop, 'trace' => $arrFiles);
+                    $this->arrLog[] = array ('query' => $strQuery, 'time' => $stop, 'trace' => $arrFiles);
                 }
             }
             else {
@@ -413,12 +417,12 @@ class db
                         usleep($count*10000);
                         $this->timer_start();
 
-                        if (($res = $this->mysqli->real_query($query))) {
+                        if (($res = $this->mysqli->real_query($strQuery))) {
                             $this->query_result = $this->mysqli->store_result();
                             $stop = $this->timer_stop();
 
                             if ($this->log) {
-                                $this->arrLog[] = array ('query' => $query, 'time' => $stop, 'trace' => $arrFiles);
+                                $this->arrLog[] = array ('query' => $strQuery, 'time' => $stop, 'trace' => $arrFiles);
                             }
                         }
                         else {
@@ -451,9 +455,12 @@ class db
     {
         if (empty($query)) return false;
 
+        // Copie locale : voir query() — même raison.
+        $strQuery = $query;
+
         if (!$this->isconnected()) return false;
 
-        if($query != '')
+        if($strQuery != '')
         {
             $this->num_queries++;
 
@@ -461,7 +468,7 @@ class db
 
             $this->query_result = array();
 
-            if ($this->mysqli->multi_query($query)) {
+            if ($this->mysqli->multi_query($strQuery)) {
                 do {
                     $this->query_result[] = $this->mysqli->store_result();
                 } while ($this->mysqli->next_result());
@@ -644,7 +651,7 @@ class db
      * @return mixed
      */
 
-    public function fieldname($query_id = null, $i)
+    public function fieldname($query_id = null, $i = 0)
     {
         if (!$this->isconnected()) return false;
 
@@ -766,7 +773,7 @@ class db
             $this->dataseek($query_id, 0);
             while ($fields = $this->fetchrow($query_id))
             {
-                if ($utf8) foreach($fields as $key => $value) $fields[$key] = utf8_encode($value);
+                if ($utf8) foreach($fields as $key => $value) $fields[$key] = mb_convert_encoding($value, 'UTF-8', 'ISO-8859-1');
 
                 if (sizeof($fields) == 1) $array[] = $fields[key($fields)];
                 else $array[] = $fields;
@@ -802,7 +809,9 @@ class db
      */
     public function escape_string($strVar)
     {
-        return $this->mysqli->real_escape_string($strVar);
+        // null (identifiant d'un enregistrement pas encore créé…) : chaîne vide, sans
+        // l'avertissement d'obsolescence de PHP 8.1
+        return $this->mysqli->real_escape_string((string) $strVar);
     }
 
     /**

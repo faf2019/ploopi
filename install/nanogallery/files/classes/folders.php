@@ -24,7 +24,11 @@ abstract class folders {
 		    'id' => 0,
 		    'name' => 'DOSSIERS contenant des images',
 		    'parents' => '-1',
-		    'id_folder' => -1
+		    'id_folder' => -1,
+		    // Racine fictive : mêmes clés que les dossiers lus en base (« nbmedias » non défini)
+		    'nbmedias' => 0,
+		    'nbelements' => 0,
+		    'module_label' => ''
 		);
 
         $objQuery = new ploopi\query_select();
@@ -83,26 +87,26 @@ abstract class folders {
 		foreach($arrFolders['list'] as $id => $fields) {
             $strId = $fields['id'];
             $strparents = preg_split('/;/', $fields['parents']);
-			$label = "&nbsp;".$fields['name'];
-            $strOnClick = "nano_updateFolder(this, {$fields['id']},'{$fields['name']}')";
+			$label = "&nbsp;".ploopi\str::htmlentities($fields['name']);
+            // Choix du dossier par js/actions.js (ploopi.actions.nano_updatefolder), sans script en ligne
+            $arrAttrs = array('data-ploopi-action' => 'nano_updatefolder', 'data-ploopi-args' => array(intval($fields['id']), (string) $fields['name']));
 	        $arrTreeview['list'][$strId] = array(
 	            'id' => $strId,
 	            'label' => $label,
 	            'description' => $fields['name'],
 	            'parents' => preg_split('/;/', str_replace(';', ";", $fields['parents'])),
-	            'node_onclick' => "ploopi.skin.treeview_shownode(
-					'{$strId}', 
-					'".ploopi\crypt::queryencode("ploopi_op=doc_folder_detail&doc_folder_id={$fields['id']}")."',
-					'admin-light.php'
-				);",
-	            'onclick' => $strOnClick,
+	            'node_attrs' => array(
+					'data-ploopi-treeview-node' => $strId,
+					'data-ploopi-query' => ploopi\crypt::queryencode("ploopi_op=doc_folder_detail&doc_folder_id={$fields['id']}"),
+				),
+	            'attrs' => $arrAttrs,
 	            'icon' => "./modules/nanogallery/img/folder_alpha.png",
 				'status' => "<b>{$fields['nbmedias']}</b> images / {$fields['nbelements']} fichiers - (module {$fields['module_label']})"
 	        );
 	        $arrTreeview['tree'][$fields['id_folder']][] = $fields['id'];
 		}
 
-		unset($arrTreeview['list'][0]['onclick']);
+		unset($arrTreeview['list'][0]['attrs']);
 		unset($arrTreeview['list'][0]['status']);
 		return($arrTreeview);
 	}
@@ -117,8 +121,10 @@ abstract class folders {
         $objQuery = new ploopi\query_select();
         $objQuery->add_select('name');
         $objQuery->add_from('ploopi_mod_doc_folder');
-        $objQuery->add_where("id = $id");
-		return $objQuery->execute()->getarray()[0]['name'];
+        $objQuery->add_where('id = %d', $id);
+        // Galerie neuve : pas encore de dossier
+        $arrRow = $objQuery->execute()->fetchrow();
+		return $arrRow ? $arrRow['name'] : '';
 	}
 
     /**
@@ -168,8 +174,8 @@ abstract class folders {
                 } else {
                     $type_node = 'join';
                     if (isset($treeview[$node_id])) $type_node = ($is_node_sel || $is_node_opened) ? 'minus' : 'plus';
-                    $n_link = (empty($node['node_link'])) ? 'javascript:void(0);' : $node['node_link'];
-                    $n_onclick = (empty($node['node_onclick'])) ? '' : 'onclick="javascript:'.$node['node_onclick'].';"';
+                    $n_link = (empty($node['node_link'])) ? '#' : $node['node_link'];
+                    $n_onclick = ploopi\skin::treeview_attrs(isset($node['node_attrs']) ? $node['node_attrs'] : null);
                     $node_link = "<a href=\"{$n_link}\" {$n_onclick}><img id=\"t{$node['id']}\" 
 						style=\"display:block;float:left;margin:0;\" src=\"./modules/nanogallery/img/treeview/{$type_node}3.png\" /></a>";
                     $marginleft = 20;
@@ -180,9 +186,9 @@ abstract class folders {
                 // si du contenu à afficher, display = 'block'
                 $display = ($html_children == '') ? 'none' : 'block';
                 // lien sur le libellé
-                $link = (empty($node['link'])) ? 'javascript:void(0);' : $node['link'];
-                // onclick sur le libellé
-                $onclick = (empty($node['onclick'])) ? '' : 'onclick="'.$node['onclick'].';"';
+                $link = (empty($node['link'])) ? '#' : $node['link'];
+                // action sur le libellé (attributs data-ploopi-*, js/actions.js)
+                $onclick = ploopi\skin::treeview_attrs(isset($node['attrs']) ? $node['attrs'] : null);
                 // label supplémentaire
                 $status = (empty($node['status'])) ? '' : $node['status'];
 				// Largeur

@@ -39,17 +39,33 @@ use ploopi;
 abstract class crypt {
 
     /**
-     * Génère un mot de passe pour écrire dans le fichier .htpasswd
+     * Génère une empreinte de mot de passe destinée au fichier .htpasswd
+     *
+     * L'empreinte est au format bcrypt ($2y$), reconnu par Apache depuis la 2.4.4 et
+     * par nginx. C'est le format que recommande la documentation d'Apache pour un
+     * .htpasswd, les formats historiques — crypt(3) tronqué à 8 caractères, MD5-apr1,
+     * SHA1 sans sel — étant tous considérés comme faibles.
+     *
+     * L'implémentation précédente appelait crypt(trim($pass), CRYPT_STD_DES) en
+     * passant la CONSTANTE CRYPT_STD_DES, qui vaut 1, comme SEL et non comme
+     * algorithme. Le sel « 1 » étant invalide, crypt() retournait sa valeur d'échec
+     * « *0 » quel que soit le mot de passe : tous les comptes écrits dans le
+     * .htpasswd portaient la même empreinte, à laquelle aucun mot de passe ne peut
+     * correspondre. Le fichier n'ouvrait donc aucun accès.
      *
      * @param string $pass mot de passe en clair
-     * @return string mot de passe chiffré
+     * @return string empreinte bcrypt, ou chaîne vide si le mot de passe est vide
      *
-     * @see crypt
+     * @see password_hash
      */
 
     public static function htpasswd($pass)
     {
-        return (crypt(trim($pass),CRYPT_STD_DES));
+        $pass = trim($pass);
+
+        if ($pass === '') return '';
+
+        return password_hash($pass, PASSWORD_BCRYPT);
     }
 
     /**
@@ -121,7 +137,12 @@ abstract class crypt {
 
     public static function urlencode($url, $ploopi_mainmenu = null, $ploopi_workspaceid = null, $ploopi_moduleid = null, $ploopi_action = null, $addenv = true, $trusted = false)
     {
-        if (isset($_SESSION['ploopi']['mode']) && $_SESSION['ploopi']['mode'] == 'frontoffice') $addenv = false;
+        /**
+         * Lot 8, décision D3 : le frontoffice d'une session connectée porte un
+         * jeton, l'environnement doit suivre dans les URL qu'il génère. Les
+         * visiteurs anonymes n'en ont pas : leurs URL restent sans environnement.
+         */
+        if (isset($_SESSION['ploopi']['mode']) && $_SESSION['ploopi']['mode'] == 'frontoffice' && empty($_SESSION['ploopi']['connected'])) $addenv = false;
 
         $arrParsedURL = parse_url($url);
 
@@ -176,6 +197,12 @@ abstract class crypt {
         if (!is_null($ploopi_workspaceid)) $arrParams['ploopi_workspaceid'] = $ploopi_workspaceid;
         if (!is_null($ploopi_moduleid)) $arrParams['ploopi_moduleid'] = $ploopi_moduleid;
         if (!is_null($ploopi_action)) $arrParams['ploopi_action'] = $ploopi_action;
+
+        /**
+         * Lot 8, décision D3 : même règle que self::urlencode — le frontoffice
+         * d'une session connectée porte un jeton, les visiteurs anonymes non.
+         */
+        if (isset($_SESSION['ploopi']['mode']) && $_SESSION['ploopi']['mode'] == 'frontoffice' && empty($_SESSION['ploopi']['connected'])) $addenv = false;
 
         if ($addenv && isset($_SESSION['ploopi']['moduleid']))
         {
@@ -255,7 +282,14 @@ abstract class crypt {
         $mixVar = null;
 
         error::unset_handler();
-        $mixVar = unserialize(gzuncompress(self::base64_decode($str)));
+        /**
+         * allowed_classes à false n'autorise que des tableaux et des scalaires.
+         * Aucun appelant du socle ni des modules ne sérialise d'objet par ce biais, et une
+         * chaîne sérialisée qui viendrait d'ailleurs que du code ne doit jamais en produire :
+         * la désérialisation d'un objet déclenche ses méthodes magiques.
+         * La borne passée à gzuncompress() écarte une archive-bombe.
+         */
+        $mixVar = unserialize(gzuncompress(self::base64_decode($str), 16777216), array('allowed_classes' => false));
         error::set_handler();
 
         return $mixVar;

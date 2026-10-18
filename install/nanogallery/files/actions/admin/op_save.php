@@ -11,7 +11,7 @@ if (ploopi\acl::isactionallowed([nanogallery::ACTION_CREATE,nanogallery::ACTION_
     if (!empty($_GET['id'])) {
     	if (!is_numeric($_GET['id'])) 
 			ploopi\output::redirect(crypt::urlencode("admin.php?entity=error"));
-		if (!$objGallery->open($_GET['id'])) 
+		if (!$objGallery->open($_GET['id']) || $objGallery->fields['id_module'] != $this->getModuleId()) 
 			ploopi\output::redirect(crypt::urlencode("admin.php?entity=error"));
 	}
     $objGallery->setvalues($_POST,'nano_');

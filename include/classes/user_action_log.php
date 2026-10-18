@@ -61,18 +61,38 @@ class user_action_log extends data_object
 
 
     /**
+     * Largeur des colonnes texte de ploopi_user_action_log.
+     *
+     * En mode SQL strict (défaut de MySQL et MariaDB), une valeur plus longue que sa
+     * colonne fait échouer l'insertion : l'entrée serait perdue. Elle est tronquée.
+     *
+     * @var array
+     */
+
+    private static $arrLargeurs = array(
+        'id_record' => 255,
+        'ip' => 45,
+        'user' => 100,
+        'workspace' => 100,
+        'action' => 100,
+        'module_type' => 100,
+        'module' => 100,
+    );
+
+    /**
      * Enregistre le log d'une action utilisateur
+     *
+     * Module, type de module et espace non fournis (0) sont pris dans la session.
      *
      * @param int $id_action identifiant de l'action
      * @param string $id_record identifiant de l'enregistrement
      * @param int $id_module_type identifiant du type de module
      * @param int $id_module identifiant du module
+     * @param int $id_workspace identifiant de l'espace
      */
 
     public static function record($id_action, $id_record, $id_module_type = 0, $id_module = 0, $id_workspace = 0)
     {
-        $db = db::get();
-
         $user_action_log = new self();
         $user_action_log->fields['user'] = '';
         $user_action_log->fields['workspace'] = '';
@@ -80,19 +100,21 @@ class user_action_log extends data_object
         $user_action_log->fields['module_type'] = '';
         $user_action_log->fields['action'] = '';
         $user_action_log->fields['id_user'] = 0;
-        $user_action_log->fields['id_workspace'] = $id_workspace;
-        $user_action_log->fields['id_module_type'] = $id_module_type;
-        $user_action_log->fields['id_module'] = $id_module;
-        $user_action_log->fields['id_action'] = $id_action;
-        $user_action_log->fields['id_record'] = $id_record;
+        $user_action_log->fields['id_action'] = (int)$id_action;
+        $user_action_log->fields['id_record'] = (string)$id_record;
 
         if (isset($_SESSION)) {
-            if ($id_module_type == 0) $id_module_type = $_SESSION['ploopi']['moduletypeid'];
-            if ($id_module == 0) $id_module = $_SESSION['ploopi']['moduleid'];
-            if ($id_workspace == 0) $id_workspace = $_SESSION['ploopi']['workspaceid'];
+            /**
+             * Les identifiants de session peuvent être vides : à la connexion, aucun espace
+             * n'est encore sélectionné. Une chaîne vide dans une colonne entière est refusée
+             * en mode strict, d'où le typage.
+             */
+            if ($id_module_type == 0 && isset($_SESSION['ploopi']['moduletypeid'])) $id_module_type = $_SESSION['ploopi']['moduletypeid'];
+            if ($id_module == 0 && isset($_SESSION['ploopi']['moduleid'])) $id_module = $_SESSION['ploopi']['moduleid'];
+            if ($id_workspace == 0 && isset($_SESSION['ploopi']['workspaceid'])) $id_workspace = $_SESSION['ploopi']['workspaceid'];
 
             $user_action_log->fields['user'] = isset($_SESSION['ploopi']['user']) ? trim("{$_SESSION['ploopi']['user']['firstname']} {$_SESSION['ploopi']['user']['lastname']} ({$_SESSION['ploopi']['user']['login']})") : '';
-            $user_action_log->fields['workspace'] = isset($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]) ? $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['label'] : '';
+            $user_action_log->fields['workspace'] = isset($_SESSION['ploopi']['workspaceid']) && isset($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]) ? $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['label'] : '';
 
             if (isset($_SESSION['ploopi']['modules'][$id_module]))
             {
@@ -100,8 +122,7 @@ class user_action_log extends data_object
                 $user_action_log->fields['module_type'] = $_SESSION['ploopi']['modules'][$id_module]['moduletype'];
             }
 
-            $user_action_log->fields['id_user'] = isset($_SESSION['ploopi']['userid']) ? $_SESSION['ploopi']['userid'] : 0;
-            $user_action_log->fields['id_workspace'] = $id_workspace;
+            $user_action_log->fields['id_user'] = isset($_SESSION['ploopi']['userid']) ? (int)$_SESSION['ploopi']['userid'] : 0;
         }
         else {
 
@@ -115,12 +136,23 @@ class user_action_log extends data_object
             if ($workspace->open($id_workspace)) $user_action_log->fields['workspace'] = $workspace->fields['label'];
         }
 
+        // Valeurs résolues, et non celles reçues en paramètre
+        $user_action_log->fields['id_module_type'] = (int)$id_module_type;
+        $user_action_log->fields['id_module'] = (int)$id_module;
+        $user_action_log->fields['id_workspace'] = (int)$id_workspace;
+
         $action = new mb_action();
         if ($action->open($id_module_type, $id_action)) $user_action_log->fields['action'] = $action->fields['label'];
         else $user_action_log->fields['action'] = '';
 
         $user_action_log->fields['ip'] = (empty($_SESSION['ploopi']['remote_ip'])) ? php_sapi_name() : implode(',', $_SESSION['ploopi']['remote_ip']);
         $user_action_log->fields['timestp'] = date::createtimestamp();
+
+        foreach(self::$arrLargeurs as $strChamp => $intLargeur)
+        {
+            $user_action_log->fields[$strChamp] = mb_substr((string)$user_action_log->fields[$strChamp], 0, $intLargeur);
+        }
+
         $user_action_log->save();
     }
 

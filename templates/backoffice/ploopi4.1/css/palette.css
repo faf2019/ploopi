@@ -1,0 +1,162 @@
+/*
+    Copyright (c) 2007-2026 Ovensia
+    Contributors hold Copyright (c) to their code submissions.
+
+    This file is part of Ploopi.
+
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
+/******************
+  PLOOPI4.1 : PALETTE « INDIGO ET CORAIL »
+
+  Chargée après la feuille de ploopi4 (templates/backoffice/ploopi4/css/styles.pack.css),
+  dont elle redéfinit les jetons de couleur (base_0_jetons.css) : marque, accent,
+  surfaces, texte, états, ombres, en thème clair, sombre et automatique. Géométrie,
+  densité, composants et écrans restent ceux de ploopi4.
+
+  Contrastes (WCAG 2.1 AA) vérifiés par la suite 37 : texte 4,5:1, contours de saisie 3:1.
+*******************/
+
+:root,
+.p4-clair {
+    --brand-950: #15132f;
+    --brand-900: #1e1b45;
+    --brand-800: #2a2661;
+    --brand-700: #352f80;
+    --brand-600: #4b44b8;
+    --brand-500: #5f58cc;
+    --brand-400: #7c75db;
+    --brand-300: #a6a1e9;
+    --brand-200: #cdcaf4;
+    --brand-100: #e4e2fa;
+    --brand-50:  #f3f2fd;
+    --accent:    #ff7f5c;
+    --accent-text: #3a1408;
+
+    /* Surfaces et texte */
+    --bg:        #f1f2f8;
+    --bg-elev:   #ffffff;
+    --surface:   #ffffff;
+    --surface-2: #f7f7fc;
+    --surface-3: #ebecf4;
+    --border:    #dfe0ec;
+    --border-strong: #c2c4d6;
+    --border-field: #888aa0;
+    --text:      #1b1b2f;
+    --text-2:    #474960;
+    --text-3:    #686a82;
+    --text-inv:  #ffffff;
+
+    --primary:   var(--brand-600);
+    --primary-hover: var(--brand-700);
+    --primary-soft: var(--brand-50);
+    --primary-soft-2: var(--brand-100);
+    --primary-text: #3a3399;
+    --on-primary: #ffffff;
+    --focus:     #5664f0;
+
+    --success: #15803d;
+    --success-soft: #e7f6ec;
+    --warning: #8a5a00;
+    --warning-soft: #fff4e0;
+    --danger:  #b42333;
+    --danger-soft: #fdecee;
+    --info:    #3b54c8;
+    --info-soft: #e9edfd;
+
+    --shadow-sm: 0 1px 2px rgba(21, 19, 47, .06), 0 1px 1px rgba(21, 19, 47, .04);
+    --shadow-md: 0 4px 14px rgba(21, 19, 47, .09), 0 1px 3px rgba(21, 19, 47, .06);
+    --shadow-lg: 0 18px 50px rgba(21, 19, 47, .2), 0 4px 12px rgba(21, 19, 47, .08);
+    --backdrop: rgba(12, 11, 30, .45);
+}
+
+:root[data-theme="dark"] {
+    --bg:        #0f1020;
+    --bg-elev:   #14152a;
+    --surface:   #171830;
+    --surface-2: #1c1d38;
+    --surface-3: #23254a;
+    --border:    #2b2d52;
+    --border-strong: #3d406d;
+    --border-field: #6a6e9a;
+    --text:      #e9e9f5;
+    --text-2:    #b2b3cc;
+    --text-3:    #8a8ca8;
+    --primary:   #8f88f2;
+    --primary-hover: #a6a0f6;
+    --primary-soft: #24234f;
+    --primary-soft-2: #2e2c63;
+    --primary-text: #bdb8fc;
+    --on-primary: #13122c;
+    --focus:     #9ba6ff;
+    --success: #4ade80;
+    --success-soft: #12301f;
+    --warning: #fbbf24;
+    --warning-soft: #33270e;
+    --danger:  #f87186;
+    --danger-soft: #3a1820;
+    --info:    #8aa2ff;
+    --info-soft: #1c2450;
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, .4);
+    --shadow-md: 0 6px 18px rgba(0, 0, 0, .35);
+    --shadow-lg: 0 24px 60px rgba(0, 0, 0, .55);
+    --backdrop: rgba(0, 0, 0, .55);
+}
+
+@media (prefers-color-scheme: dark) {
+    :root[data-theme="auto"] {
+        --bg:        #0f1020;
+        --bg-elev:   #14152a;
+        --surface:   #171830;
+        --surface-2: #1c1d38;
+        --surface-3: #23254a;
+        --border:    #2b2d52;
+        --border-strong: #3d406d;
+        --border-field: #6a6e9a;
+        --text:      #e9e9f5;
+        --text-2:    #b2b3cc;
+        --text-3:    #8a8ca8;
+        --primary:   #8f88f2;
+        --primary-hover: #a6a0f6;
+        --primary-soft: #24234f;
+        --primary-soft-2: #2e2c63;
+        --primary-text: #bdb8fc;
+        --on-primary: #13122c;
+        --focus:     #9ba6ff;
+        --success: #4ade80;
+        --success-soft: #12301f;
+        --warning: #fbbf24;
+        --warning-soft: #33270e;
+        --danger:  #f87186;
+        --danger-soft: #3a1820;
+        --info:    #8aa2ff;
+        --info-soft: #1c2450;
+        --shadow-sm: 0 1px 2px rgba(0, 0, 0, .4);
+        --shadow-md: 0 6px 18px rgba(0, 0, 0, .35);
+        --shadow-lg: 0 24px 60px rgba(0, 0, 0, .55);
+        --backdrop: rgba(0, 0, 0, .55);
+    }
+}
+
+/* Couleurs écrites en dur par ploopi4 hors des jetons : visuel de connexion, avatar */
+.p4-login-visual {
+    background:
+        radial-gradient(circle at 18% 22%, rgba(255, 127, 92, .30), transparent 34%),
+        radial-gradient(circle at 82% 78%, rgba(124, 117, 219, .55), transparent 42%),
+        linear-gradient(135deg, var(--brand-700), var(--brand-950));
+}
+.p4-login-panel { box-shadow: -20px 0 60px rgba(21, 19, 47, .15); }
+.p4-user-btn .p4-avatar { background: linear-gradient(135deg, var(--accent), #e8456b); }

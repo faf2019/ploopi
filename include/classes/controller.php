@@ -1,4 +1,24 @@
 <?php
+/*
+    Copyright (c) 2007-2018 Ovensia
+    Contributors hold Copyright (c) to their code submissions.
+
+    This file is part of Ploopi.
+
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
 /**
  * Noyau et contrôleur principal d'un module
  *
@@ -178,9 +198,11 @@ class controller
      * @param string $strEntity  Entité pour la construction de l'url ex: [...]&entity=$strEntity
      * @param string $strAction  Action pour la construction de l'url ex: [...]&action=$strAction
      * @param integer $intAction  Action nécessaire pour accéder au menu
+     * @param string $strIcon  Nom d'icône du jeu du gabarit (optionnel, cf. ploopi\block::addmenu)
+     * @param string $strSection  Section du menu (optionnel, cf. ploopi\block::addmenu)
      * @return boolean true si le block a été ajouté, false sinon
      */
-    protected function addBlockMenu($strLabel, $strEntity, $strAction = '', $intAction = null)
+    protected function addBlockMenu($strLabel, $strEntity, $strAction = '', $intAction = null, $strIcon = '', $strSection = '')
     {
         if(empty($intAction) || ploopi\acl::isactionallowed($intAction, -1, $this->_intModuleId)) {
 
@@ -190,7 +212,7 @@ class controller
             $booSelected = $_SESSION['ploopi']['moduleid'] == $this->_intModuleId && isset($_REQUEST['entity']) && current(explode('/', $_REQUEST['entity'])) == $strEntity;
             if($strAction != '') $booSelected = $booSelected && isset($_REQUEST['action']) && $_REQUEST['action'] == $strAction;
 
-            $this->getBlock()->addmenu($strLabel, ploopi\crypt::urlencode($strUrl), $booSelected);
+            $this->getBlock()->addmenu($strLabel, ploopi\crypt::urlencode($strUrl), $booSelected, '', $strIcon, $strSection);
 
             return true;
         }

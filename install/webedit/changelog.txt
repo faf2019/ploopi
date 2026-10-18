@@ -1,3 +1,203 @@
+== Module Webedit - version 2.8.18 ===================================================
+
+2026-10-13  Ovensia <stephane@ovensia.fr>
+
+* Sécurité : le libellé de la rubrique dont les droits sont hérités (« héritées de … »,
+  validateurs, rédacteurs, autorisations d'accès) était écrit sans échappement dans les
+  écrans de rubrique, d'article et de blocs : un libellé contenant du HTML s'exécutait.
+  Échappé par ploopi\str::htmlentities().
+* Sous ploopi4 : fieldsets de droits en cartes (classes webedit_rights et
+  webedit_rights_current), droits enregistrés en pastilles, autour du nouveau choix des
+  groupes et utilisateurs du socle.
+
+== Module Webedit - version 2.8.17 ===================================================
+
+2026-10-11  Ovensia <stephane@ovensia.fr>
+
+* Gabarit frontoffice par défaut : « corporate » (templates/frontoffice/corporate) au lieu
+  de « default ». Les anciens gabarits (default, exemple, exemple_annuaire, exemple_large,
+  exemple_login, andreas07, ovensia, ovensia_officiel) sont retirés : une rubrique qui en
+  désignait un est servie avec « corporate ».
+
+== Module Webedit - version 2.8.16 ===================================================
+
+2026-10-11  Ovensia <stephane@ovensia.fr>
+
+* Flux RSS/Atom : mibe/feedwriter (non maintenu, obsolète sous PHP 8.4 et 8.5) remplacé
+  par ploopi\feed (socle). Mêmes identifiants d'articles Atom : les lecteurs de flux ne
+  revoient pas les articles déjà lus. Le flux RSS ne porte plus d'éléments Atom
+  égarés (updated, author) ; la description de l'espace ou de la rubrique y figure.
+
+== Module Webedit - version 2.8.15 ===================================================
+
+2026-10-11  Ovensia <stephane@ovensia.fr>
+
+* PHP 8.5 : étiquettes « case …; » (point-virgule, obsolète depuis PHP 8.5, erreur en PHP 9)
+  remplacées par « case …: ». Aucun changement de comportement.
+
+== Module Webedit - version 2.8.14 ===================================================
+
+2026-10-11  Ovensia <stephane@ovensia.fr>
+
+* Éditeur : CKEditor 4 (fin de support, failles connues) remplacé par TinyMCE, l'éditeur du socle
+  (js/editor.js), pour les articles comme pour les blocs. Liens vers une page du site ou un
+  document, images de la GED, objets insérés ([[…]]) et barre « débutant » sont repris ; la touche
+  Entrée insère toujours un saut de ligne (Maj+Entrée : un paragraphe). Le contenu de l'article est
+  échappé dans son champ : un « </textarea> » saisi ne sort plus de l'éditeur. Le dossier ckeditor/
+  du module est retiré (obsolete.txt), ainsi qu'un appel mort à FCKeditor.
+* Arbres de choix (rubrique de rattachement, page de redirection, lien) : le titre d'une rubrique
+  ou d'un article était inséré dans l'attribut onclick par addslashes, qui n'échappe pas pour le
+  HTML : un guillemet dans un titre refermait l'attribut (injection de script dans le
+  backoffice). Il est désormais passé comme littéral JSON échappé pour l'attribut. Même correction
+  pour les confirmations de suppression d'un article (fiche, listes) et les mots-clés proposés ; le
+  titre d'un article est aussi échappé dans la liste des articles d'une rubrique ou des blocs.
+
+== Module Webedit - version 2.8.13 ===================================================
+
+2026-10-10  Ovensia <stephane@ovensia.fr>
+
+* Réindexation : la page s'arrêtait sur un die() de mise au point (« coucou »). Elle s'affiche de
+  nouveau, et son traitement est corrigé :
+  - seuls les articles de l'instance courante sont réindexés (la boucle parcourait ceux de tous les
+    sites de l'installation) ;
+  - les compteurs portent sur l'instance, y compris le nombre de mots indexés, qui restait à 0 ;
+  - l'index d'un article est rattaché à son auteur, son espace et son instance, et non plus à la
+    session de celui qui publie ou réindexe ; de même pour les liens vers des fichiers de la GED ;
+  - bouton en formulaire (plus de JavaScript en ligne), avec une case pour le mode « force »
+    (réenregistrement de chaque article), jusque-là accessible seulement par l'URL.
+
+== Module Webedit - version 2.8.12 ===================================================
+
+2026-10-10  Ovensia <stephane@ovensia.fr>
+
+* Habillage : les styles en ligne des écrans d'administration (bandeaux gris, barres de boutons,
+  cadres et filets) deviennent des classes, déclarées dans include/styles.css avec exactement le même
+  aspect ; le gabarit ploopi3 les redessine dans sa palette (tools/ploopi3_modules.php). Les écrans
+  servis au frontoffice (wce, template, display), où la feuille du module n'est pas chargée, gardent
+  leurs styles en ligne.
+
+== Module Webedit - version 2.8.11 ===================================================
+
+2026-10-10  Ovensia <stephane@ovensia.fr>
+
+* Icônes : jeu unifié de l'administration (Tabler Icons, au trait, palette du gabarit ploopi3), sous
+  les mêmes noms et aux mêmes tailles ; le code qui les appelle ne change pas. Correspondances dans
+  tools/icones/modules.js, régénération par tools/icones/generer.js.
+* État des articles : publié (vert), modifié depuis la publication (orange), non publié (rouge),
+  chacun avec son glyphe.
+* Article et bloc : bouton du sélecteur de date pris dans le gabarit (comme
+  ploopi\date::open_calendar()), au lieu de ./img/calendar/calendar.gif.
+
+== Module Webedit - version 2.8.10 ===================================================
+
+2026-10-09  Ovensia <stephane@ovensia.fr>
+
+* Sélecteur de couleur (jscolor) : chargé depuis ./vendor/EastDesire/, alors que Composer installe
+  vendor/eastdesire/. Sous Linux, la requête renvoyait 404 et le sélecteur manquait. La suite 13 vérifie
+  désormais, casse comprise, chaque chemin ./vendor/ cité dans les sources.
+
+== Module Webedit - version 2.8.9 ====================================================
+
+2026-10-09  Ovensia <stephane@ovensia.fr>
+
+* Balises PHP courtes « <? » remplacées par « <?php » : admin_bloc.php, op.php (sélecteur de lien CKEditor). Avec
+  short_open_tag à Off (php.ini de production), le code partait tel quel dans la page.
+
+== Module Webedit - version 2.8.8 ====================================================
+
+2026-10-09  Ovensia <stephane@ovensia.fr>
+
+* Prototype (retiré au profit de jQuery) : modération des commentaires (Ajax.Request/Updater), dépliage
+  de la liste des commentaires, plugin CKEditor « tag ».
+
+== Module Webedit - version 2.8.7 ====================================================
+
+2026-10-09  Ovensia <stephane@ovensia.fr>
+
+* Abonnement par double opt-in. Le formulaire n'écrit plus rien : il envoie à
+  l'adresse saisie un courriel portant un lien de confirmation signé (HMAC tiré de
+  _PLOOPI_SECRETKEY, valable 48 heures), ou un lien de désabonnement si l'adresse est
+  déjà abonnée. Auparavant, n'importe qui abonnait ou désabonnait n'importe quelle
+  adresse. Le lien de désabonnement des courriels de publication est signé lui aussi
+  (il était md5(adresse), calculable) et ne vaut que pour le site qui l'envoie ; les
+  anciens liens aboutissent à un message « lien non valide ». Le lien de confirmation
+  est bâti sur l'hôte de la requête s'il est déclaré en clair dans les domaines d'un
+  espace, sinon sur _PLOOPI_PUBLIC_URL, jamais sur un entête Host arbitraire.
+
+* Commentaires publics retirés : ils dépendaient d'une classe ploopi\captcha jamais
+  livrée avec le socle (le formulaire était rendu, son envoi échouait). Plus de
+  formulaire ni de liste de commentaires dans les pages ; les commentaires existants
+  restent en base et dans le backoffice.
+
+* Plan du site, flux RSS/Atom : l'identifiant de cache porte l'instance (deux sites
+  d'une installation se servaient mutuellement leur plan et leurs flux avec
+  _PLOOPI_USE_CACHE). Le nuage d'étiquettes 3D, mis en cache pour tous, n'inclut plus
+  les rubriques privées accessibles à la session qui le génère.
+
+* Nuage d'étiquettes 3D : l'adresse de son flux portait l'identifiant de l'espace à la
+  place de celui de l'instance.
+
+* Fichiers .gz resynchronisés avec leurs sources.
+
+== Module Webedit - version 2.8.6 ====================================================
+
+2026-10-08  Ovensia <stephane@ovensia.fr>
+
+* Compatibilité PHP 8 (PR #63) : garde safe_mode retirée de la réindexation.
+
+== Module Webedit - version 2.8.5 ====================================================
+
+2026-10-06  Ovensia <stephane@ovensia.fr>
+
+* Frontoffice : le plan du site, les flux RSS/Atom, l'abonnement et le désabonnement
+  fonctionnent de nouveau pour les visiteurs.
+
+  Depuis que les opérations de module exigent un jeton anti-CSRF, que seul le
+  backoffice émet, ces quatre opérations déclenchées par un visiteur anonyme étaient
+  ignorées : /sitemap.xml et les flux renvoyaient la page d'accueil, l'abonnement et
+  le lien de désabonnement des courriels restaient sans effet. Elles sont déclarées
+  dans include/publicops.php.
+
+* Sécurité : injection SQL anonyme dans le nuage d'étiquettes 3D.
+
+  webedit_backend sert aussi le nuage d'étiquettes (backendtype=tagcloud3D), dont les
+  requêtes inséraient ploopi_moduleid tel quel, sans typage. Un visiteur anonyme
+  pouvait ainsi lire n'importe quelle table, comptes utilisateurs compris. La faille
+  précède le jeton anti-CSRF des opérations de module, qui l'avait masquée en
+  rendant l'opération inaccessible aux visiteurs. L'identifiant doit désormais être
+  entier, sinon 404.
+
+* Plan du site : plus aucune rubrique privée, ni ses articles, ni leurs étiquettes.
+
+  sitemap.xml, destiné aux moteurs de recherche et mis en cache pour tous, listait
+  l'adresse et le titre de tous les articles publiés, rubriques privées comprises.
+
+* Page d'étiquette : seuls les articles du site servi.
+
+  La recherche par étiquette (tags/<étiquette>.html) ne filtrait pas sur l'instance :
+  elle listait les articles de tous les sites webedit de l'installation portant la
+  même étiquette. Pour un article d'un autre site, sa rubrique étant inconnue, le
+  contrôle de rubrique privée passait à vide : même un article privé de l'autre site
+  était listé.
+
+* Flux RSS/Atom : le flux du site ne lève plus d'exception quand l'espace n'a pas de
+  titre (repli sur son libellé) ; les titres accentués ne sont plus encodés deux fois
+  (utf8_encode, obsolète en PHP 8.2, sur des données déjà en UTF-8), ni échappés deux
+  fois (FeedWriter échappe lui-même).
+
+== Module Webedit - version 2.8.4 ====================================================
+
+2026-10-05  Ovensia <stephane@ovensia.fr>
+
+* Frontoffice : un article doit appartenir à la rubrique demandée.
+
+  display.php contrôlait que l'article s'ouvrait et que la rubrique nommée dans
+  l'URL existait, jamais que l'article lui appartenait. La rubrique de l'URL n'était
+  donc que décorative : associer l'identifiant d'un article de rubrique PRIVÉE à
+  celui d'une rubrique publique suffisait à faire servir son contenu à un visiteur
+  anonyme. Le cas légitime d'un article affiché sous une autre rubrique — une
+  rubrique de type « lien » qui le désigne par linkedpage — reste accepté.
+
 == Module WebEdit - version 2.8.3 ============================================
 
 2026-02-05  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

@@ -58,45 +58,18 @@ ploopi\buffer::clean();
 
 if (!$objCache->start())
 {
-    /**
-     * Inclusions des fonctions sur les dates et les chaînes (l'appel via backend.php est minimal, les fonctions ne sont donc pas déjà incluses)
-     */
-    include_once './include/start/functions.php';
-
-    /**
-     * FeedWriter qui permet de générer le flux
-     */
-    include_once './lib/feedwriter/FeedWriter.php';
-
     ploopi\module::init('doc', false, false, false);
 
-    $intTsToday = ploopi\date::createtimestamp();
-
-    switch($format)
-    {
-        case 'rss';
-            $objDocFeed = new FeedWriter(RSS2);
-            $objDocFeed->setLink(_PLOOPI_BASEPATH.'/'.ploopi\str::urlrewrite('backend.php?format=rss&ploopi_moduleid='.$objFolder->fields['id_module'].'&id_folder='.$objFolder->fields['id'], doc_getrewriterules(), $objFolder->fields['name'].'.xml',null,true));
-            $objDocFeed->setChannelElement('language', 'fr-fr');
-            $objDocFeed->setChannelElement('pubDate', date(DATE_RSS , time()));
-            $objDocFeed->setChannelElement('lastBuildDate', date(DATE_RSS , time()));
-            break;
-
-        default:
-            case 'atom';
-            $objDocFeed = new FeedWriter(ATOM);
-            $objDocFeed->setLink(_PLOOPI_BASEPATH.'/'.ploopi\str::urlrewrite('backend.php?format=atom&ploopi_moduleid='.$objFolder->fields['id_module'].'&id_folder='.$objFolder->fields['id'], doc_getrewriterules(), $objFolder->fields['name'].'.xml',null,true));
-            $objDocFeed->setChannelElement('updated', date(DATE_ATOM , time()));
-            break;
-    }
-
-    $objDocFeed->setTitle(utf8_encode($objFolder->fields['name']));
-    $objDocFeed->setDescription(utf8_encode($objFolder->fields['description']));
+    // ploopi\feed échappe lui-même les valeurs (déjà en UTF-8) : les passer brutes
+    $objDocFeed = new ploopi\feed($format == 'rss' ? ploopi\feed::RSS : ploopi\feed::ATOM);
+    $objDocFeed->setLink(_PLOOPI_BASEPATH.'/'.ploopi\str::urlrewrite('backend.php?format='.($format == 'rss' ? 'rss' : 'atom').'&ploopi_moduleid='.$objFolder->fields['id_module'].'&id_folder='.$objFolder->fields['id'], doc_getrewriterules(), $objFolder->fields['name'].'.xml',null,true));
+    $objDocFeed->setLanguage('fr-fr');
+    $objDocFeed->setTitle($objFolder->fields['name']);
+    $objDocFeed->setDescription($objFolder->fields['description']);
 
     if(!empty($_SESSION['ploopi']['workspaces'][$objFolder->fields['id_workspace']]['meta_author']))
     {
-        $meta_author = ploopi\str::xmlentities(utf8_encode($_SESSION['ploopi']['workspaces'][$objFolder->fields['id_workspace']]['meta_author']), true);
-        $objDocFeed->setChannelElement('author', array('name '=> $meta_author));
+        $objDocFeed->setAuthor($_SESSION['ploopi']['workspaces'][$objFolder->fields['id_workspace']]['meta_author']);
     }
 
     // On recherche tous les dossiers enfants publics du dossier selectionné
@@ -123,8 +96,8 @@ if (!$objCache->start())
     $strFolderSql = implode(',',array_keys($arrFolder));
 
     $limit = '';
-    if(isset($_SESSION['ploopi']['modules'][$objFolder->fields['id_module']]['doc_nbDocFeed']))
-        $limit = 'LIMIT '.$_SESSION['ploopi']['modules'][$objFolder->fields['id_module']]['doc_nbDocFeed'];
+    if(!empty($_SESSION['ploopi']['modules'][$objFolder->fields['id_module']]['doc_nbDocFeed']))
+        $limit = 'LIMIT '.(int) $_SESSION['ploopi']['modules'][$objFolder->fields['id_module']]['doc_nbDocFeed'];
 
     $select = "
         SELECT      f.id, f.md5id, f.name, f.description, f.timestp_modify,
@@ -154,37 +127,24 @@ if (!$objCache->start())
 
     while ($file = ploopi\db::get()->fetchrow($sql_file))
     {
-        // Création d'un nouvel item
         $link = _PLOOPI_BASEPATH.'/'.ploopi\str::urlrewrite("index.php?ploopi_op=doc_file_download&docfile_md5id={$file['md5id']}", doc_getrewriterules(), $file['name'], null, true);
-        $img  = _PLOOPI_BASEPATH.'/'.ploopi\crypt::urlencode("index-light.php?ploopi_op=doc_getthumbnail&docfile_md5id={$file['md5id']}&version={$file['version']}");
-
-        $objDocItem = $objDocFeed->createNewItem();
 
         $title =  $file['name'];
         $title .=  ($file['id_folder'] != $objFolder->fields['id']) ? ' / '.$arrFolder[$file['id_folder']] : '';
         $title .= ' / '.sprintf("%0.2f kio", ($file['size']/1024));
-        $title .= ' / '.$file['lastname'].' '. $file['firstname'];
+        $title .= ' / '.trim($file['lastname'].' '. $file['firstname']);
 
-        $objDocItem->setTitle(utf8_encode(ploopi\str::xmlentities($title)));
-        $objDocItem->setLink($link);
+        // Résumé en HTML : la description, échappée. Pas de vignette : son URL porterait le
+        // jeton de la session qui a produit le flux, mis en cache et servi à tous
+        $description = ($file['description'] != '') ? '<div>'.ploopi\str::nl2br(ploopi\str::htmlentities($file['description'])).'</div>' : '';
 
-        $description = '<a href="'.$link.'"><img src="'.$img.'" align="left" hspace="20" alt="'.$file['name'].'" border="0" /></a>';
-        $description .='<div>';
-        $description .=ploopi\str::nl2br(ploopi\str::xmlentities($file['description']));
-        $description .='</div>';
-
-        $objDocItem->setDescription(utf8_encode($description)); // Pas de ploopi\str::xmlentities car on affiche du html !
-
-        $objDocItem->setDate(ploopi\date::timestamp2unixtimestamp($file['timestp_modify']));
-
-        // Ajout de l'item dans le flux
-        $objDocFeed->addItem($objDocItem);
+        $objDocFeed->addItem($title, $link, ploopi\date::timestamp2unixtimestamp($file['timestp_modify']), $description);
     }
 
     // Génération du flux
-    $objDocFeed->generateFeed();
+    echo $objDocFeed->render();
 
     $objCache->end();
 }
-header("Content-type: text/xml");
+header("Content-type: text/xml; charset=utf-8");
 ?>

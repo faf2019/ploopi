@@ -98,7 +98,7 @@ $strResourceType = '';
     <label style="margin-left:10px;">Objet :</label>
     <input type="text" class="text" name="booking_event_object" value="<?php echo ploopi\str::htmlentities($arrSearchPattern['booking_event_object']); ?>" style="width:200px;" />
 </p>
-<p class="ploopi_va" style="padding:4px;border-bottom:1px solid #c0c0c0;">
+<p class="ploopi_va booking_filtre">
     <label>Demandé par :</label>
     <input type="text" class="text" name="booking_event_requestedby" value="<?php echo ploopi\str::htmlentities($arrSearchPattern['booking_event_requestedby']); ?>" style="width:150px;" />
 
@@ -179,8 +179,6 @@ if (!empty($arrResources))
                 'managed' => $row['managed'] ? 'Oui' : 'Non',
             );
         }
-
-        include_once './include/functions/array.php';
 
         ploopi\buffer::clean();
 
@@ -313,8 +311,8 @@ if (!empty($arrResources))
                         'user' => array('label' => ploopi\str::htmlentities("{$row['u_lastname']} {$row['u_firstname']}")." <br /><em>de ".ploopi\str::htmlentities($row['w_label'])."</em>")
                     ),
                 'description' => "Ouvrir la demande '".ploopi\str::htmlentities($row['object'])."'",
-                'link' => 'javascript:void(0);',
-                'onclick' => "booking_element_open('event', '{$row['id']}', event);"
+                'link' => '#',
+                'option' => 'data-ploopi-action="booking_element_open" data-ploopi-args=\'["event", '.intval($row['id']).']\''
             );
     }
 

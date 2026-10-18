@@ -38,6 +38,61 @@ abstract class system
 {
 
     /**
+     * Adresse publique du site, pour les liens envoyés hors de la page courante
+     * (courriels de mot de passe oublié).
+     *
+     * _PLOOPI_BASEPATH est dérivée de l'entête Host de la requête : n'importe qui peut
+     * la choisir. Un lien bâti dessus et envoyé par courriel mènerait le destinataire
+     * vers l'hôte de l'attaquant, avec le code de confirmation. On retient donc, dans
+     * l'ordre :
+     * - _PLOOPI_PUBLIC_URL, renseignée par l'assistant d'installation ;
+     * - à défaut, _PLOOPI_BASEPATH si l'hôte de la requête figure en clair dans la
+     *   liste de domaines d'un espace (les jokers « * » ne valent pas déclaration).
+     *
+     * @return string|false adresse sans « / » final, false si aucune n'est sûre
+     */
+
+    public static function publicurl()
+    {
+        if (defined('_PLOOPI_PUBLIC_URL') && _PLOOPI_PUBLIC_URL != '') return rtrim(_PLOOPI_PUBLIC_URL, '/');
+
+        if (empty($_SERVER['HTTP_HOST']) || !defined('_PLOOPI_BASEPATH')) return false;
+
+        $arrListes = array();
+        $db = db::get();
+        $rs = $db->query('SELECT frontoffice_domainlist, backoffice_domainlist FROM ploopi_workspace');
+        while ($row = $db->fetchrow($rs)) { $arrListes[] = $row['frontoffice_domainlist']; $arrListes[] = $row['backoffice_domainlist']; }
+
+        return self::trustedhost($_SERVER['HTTP_HOST'], $arrListes) ? rtrim(_PLOOPI_BASEPATH, '/') : false;
+    }
+
+    /**
+     * Indique si un hôte est déclaré en clair dans des listes de domaines d'espaces.
+     *
+     * @param string $strHote hôte de la requête, port éventuel compris
+     * @param array $arrListes listes de domaines (séparateurs : espaces, virgules, points-virgules)
+     * @return boolean true si l'hôte y figure, joker exclu
+     */
+
+    public static function trustedhost($strHote, $arrListes)
+    {
+        $strHote = strtolower(preg_replace('@:\d+$@', '', trim((string)$strHote)));
+        if ($strHote === '') return false;
+
+        foreach($arrListes as $strListe)
+        {
+            foreach(preg_split('/[\s,;]+/', (string)$strListe) as $strDomaine)
+            {
+                $strDomaine = strtolower(preg_replace('@:\d+$@', '', trim($strDomaine)));
+                if ($strDomaine === '' || strpos($strDomaine, '*') !== false) continue;
+                if ($strDomaine === $strHote) return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Affiche un message et termine le script courant.
      * Peut envoyer un mail contenant les erreurs rencontrées durant l'exécution du script.
      * Peut vider le buffer en cours.
@@ -94,7 +149,7 @@ abstract class system
      */
 
     public static function getnbcore() {
-        return intval(`cat /proc/cpuinfo | grep processor | wc -l`);
+        return intval(shell_exec('cat /proc/cpuinfo | grep processor | wc -l'));
     }
 
 
@@ -185,6 +240,8 @@ abstract class system
             $tplpath=realpath($basepath._PLOOPI_SEP.$template);
 
             if ((substr($template, 0, 1) != '.') && is_dir($tplpath) && file_exists($tplpath._PLOOPI_SEP.'index.tpl')) $templates[] = $template;
+            // Déclinaison d'un gabarit de backoffice (skin.ini : extends), cf. skin::resolve()
+            elseif ($type == 'backoffice' && substr($template, 0, 1) != '.' && !is_null(skin::resolve($template))) $templates[] = $template;
         }
 
         closedir($p);

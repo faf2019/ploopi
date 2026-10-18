@@ -10,7 +10,7 @@ if (	!empty($_GET['id'])
 		&& ploopi\acl::isactionallowed(news2\tools::ACTION_MANAGECAT)
 	) {
 		$newscat = new news2\news2cat();
-		if($newscat->open($_GET['id']))
+		if($newscat->open($_GET['id']) && $newscat->fields['id_module'] == $this->getModuleId())
 		{
 			ploopi\user_action_log::record(news2\tools::ACTION_MANAGECAT, $newscat->fields['id']);
 			$newscat->delete();

@@ -34,6 +34,8 @@ switch($ploopi_op) {
             $objQuery->add_from('ploopi_mod_planning_event_detail detail');
             $objQuery->add_from('ploopi_mod_planning_event_detail_resource resource');
 
+            // Les événements de l'instance courante seulement, comme l'affichage du planning
+            $objQuery->add_where('event.id_module = %d', $_SESSION['ploopi']['moduleid']);
             $objQuery->add_where('event.id = detail.id_event');
             $objQuery->add_where('detail.id = resource.id_event_detail');
 
@@ -121,8 +123,8 @@ switch($ploopi_op) {
                         );
 
                     $values[$i]['description'] = 'Aller sur l\'événement';
-                    $values[$i]['link'] = 'javascript:void(0);';
-                    $values[$i]['onclick'] = "ploopi.xhr.todiv('admin-light.php', '".ploopi\crypt::queryencode('ploopi_op=planning_refresh&planning_display_type=day&planning_day='.date('j',$intUnixEventBegin).'&planning_month='.date('n',$intUnixEventBegin).'&planning_year='.date('Y',$intUnixEventBegin))."', 'planning_main');";
+                    $values[$i]['link'] = '#';
+                    $values[$i]['option'] = 'data-ploopi-todiv="planning_main" data-ploopi-query="'.ploopi\crypt::queryencode('ploopi_op=planning_refresh&planning_display_type=day&planning_day='.date('j',$intUnixEventBegin).'&planning_month='.date('n',$intUnixEventBegin).'&planning_year='.date('Y',$intUnixEventBegin)).'"';
 
 
                     $i += 1;

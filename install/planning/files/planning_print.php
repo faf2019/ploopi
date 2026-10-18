@@ -86,7 +86,7 @@ $strGroupEventLabel = "";
     <head>
         <title><?php echo ploopi\str::htmlentities($strPrintType); ?></title>
         <link rel="stylesheet" type="text/css" href="./modules/planning/include/styles_print.css" />
-        <script type="text/javascript">window.onload = function() { window.print(); }</script>
+        <script nonce="<?php echo ploopi\csp::nonce(); ?>">window.onload = function() { window.print(); }</script>
     </head>
     <body>
         <h1><?php echo ploopi\str::htmlentities($strPrintType); ?></h1>

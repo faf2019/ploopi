@@ -39,6 +39,59 @@ ploopi\module::init('system', false, false, false);
 if (!empty($_REQUEST['system_level'])) $_SESSION['system']['level'] = $_REQUEST['system_level'];
 if (empty($_SESSION['system']['level'])) $_SESSION['system']['level'] = _SYSTEM_WORKSPACES;
 
+/**
+ * Gabarits de génération 4 (ploopi4) : une entrée par écran, avec icône et section.
+ * Les autres gabarits gardent les deux entrées historiques.
+ */
+if (ploopi\skin::get()->version() >= 4)
+{
+    $booSystemCurrent = $_SESSION['ploopi']['moduleid'] == _PLOOPI_MODULE_SYSTEM;
+
+    $block->addmenu(
+        _SYSTEM_MENU_WORKSPACES,
+        ploopi\crypt::urlencode("admin.php?ploopi_moduleid="._PLOOPI_MODULE_SYSTEM."&ploopi_action=admin&system_level="._SYSTEM_WORKSPACES),
+        $booSystemCurrent && in_array($_SESSION['system']['level'], array(_SYSTEM_WORKSPACES, _SYSTEM_GROUPS)),
+        '',
+        'sitemap',
+        _SYSTEM_MENU_ORGANIZATION
+    );
+
+    if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_SYSTEMADMIN)
+    {
+        // Écran courant du niveau « système » (lu avant admin_system.php, qui le mémorise)
+        $strSysItem = isset($_GET['sysToolbarItem']) ? $_GET['sysToolbarItem'] : (isset($_SESSION['system']['sysToolbarItem']) ? $_SESSION['system']['sysToolbarItem'] : '');
+
+        $arrSysItems = array();
+
+        // Mise à jour proposée quand la base est en retard sur les fichiers
+        ploopi\db::get()->query('SELECT version FROM ploopi_module_type WHERE id = 1');
+        $row = ploopi\db::get()->fetchrow();
+        if ($row && version_compare(_PLOOPI_VERSION, $row['version']) > 0) $arrSysItems['systemupdate'] = array(_SYSTEM_MENU_SYSTEMUPDATE, 'refresh');
+
+        $arrSysItems['install'] = array(_SYSTEM_MENU_INSTALLMODULES, 'package');
+        $arrSysItems['params'] = array(_SYSTEM_MENU_PARAMS, 'adjustments-horizontal');
+        $arrSysItems['directory'] = array(_SYSTEM_MENU_DIRECTORY, 'address-book');
+        $arrSysItems['tools'] = array(_SYSTEM_MENU_TOOLS, 'tool');
+
+        // Sans choix mémorisé, admin_system.php affiche le premier écran
+        if (!isset($arrSysItems[$strSysItem])) $strSysItem = key($arrSysItems);
+
+        foreach($arrSysItems as $strItem => $arrItem)
+        {
+            $block->addmenu(
+                $arrItem[0],
+                ploopi\crypt::urlencode("admin.php?ploopi_moduleid="._PLOOPI_MODULE_SYSTEM."&ploopi_action=admin&system_level=system&sysToolbarItem={$strItem}"),
+                $booSystemCurrent && $_SESSION['system']['level'] == 'system' && $strSysItem == $strItem,
+                '',
+                $arrItem[1],
+                _SYSTEM_MENU_SYSTEM
+            );
+        }
+    }
+
+    return;
+}
+
 if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_SYSTEMADMIN)
     $block->addmenu(
         _PLOOPI_ADMIN_SYSTEM, 

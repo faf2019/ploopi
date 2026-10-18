@@ -58,6 +58,8 @@ abstract class buffer
             // Les classes chargées par l'autoloader ne sont plus disponibles ici
             include_once './include/classes/session.php';
             include_once './include/classes/arr.php';
+            include_once './include/classes/security.php';
+            include_once './include/classes/csp.php';
 
             // On essaye de récupérer le content-type du contenu du buffer
             $content_type = 'text/html';
@@ -146,6 +148,9 @@ abstract class buffer
                 $log->fields['page_size'] = $ploopi_stats['pagesize'];
                 $log->save();
             }
+
+            // Politique stricte des pages déclarées prêtes, si leur HTML le permet
+            if ($content_type == 'text/html' && !$booDownloadFile) csp::finalize($buffer);
 
             if ($content_type == 'text/html' && !$booDownloadFile)
             {

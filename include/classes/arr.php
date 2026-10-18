@@ -232,15 +232,19 @@ abstract class arr
     }
 
     /**
-     * Retourne le contenu d'un tableau à 2 dimensions au format XLS (ISO-8859-1)
+     * Envoie (ou écrit dans un fichier) le contenu d'un tableau à 2 dimensions au format XLS (Excel 97, PhpSpreadsheet)
+     *
+     * Une cellule peut être un tableau array('value' => …, 'bgcolor' => 'red' | '#RRGGBB' | array(r, g, b)).
+     * Les valeurs des colonnes numériques et dates sont écrites telles quelles (nombres, numéros de série Excel).
      *
      * @param array $arrArray tableau de données
      * @param boolean $booHeader true si la ligne d'entête doit être ajoutée (nom des colonnes)
      * @param string $strFileName nom du fichier
      * @param string $strSheetName nom de la feuille dans le document XLS
      * @param array $arrDataFormats formats des colonnes ('title', 'type', 'width')
-     * @param array $arrOptions Options de configuration de l'export ('landscape', 'fitpage_width', 'fitpage_height', 'tofile', 'setborder', 'textwrap')
-     * @return binary contenu XLS
+     * @param array $arrOptions Options de configuration de l'export ('landscape', 'fitpage_width', 'fitpage_height', 'tofile', 'setborder', 'textwrap', 'header')
+     * @param string $strComment texte écrit dans une seconde feuille « comment »
+     * @return boolean true
      */
     public static function toxls($arrArray, $booHeader = true, $strFileName = 'document.xls', $strSheetName = 'Feuille', $arrDataFormats = null, $arrOptions = null, $strComment = null)
     {
@@ -256,74 +260,60 @@ abstract class arr
 
         $arrOptions = empty($arrOptions) ? $arrDefautOptions : array_merge($arrDefautOptions, $arrOptions);
 
-        // Création du document
-        if ($arrOptions['tofile']) $objWorkBook = new \Spreadsheet_Excel_Writer($strFileName);
-        else { $objWorkBook = new \Spreadsheet_Excel_Writer(); $objWorkBook->send($strFileName); }
-
-
-        $objFormatTitle = $objWorkBook->addFormat( array( 'Align' => 'center', 'TextWrap' => 1, 'Bold'  => 1, 'Color'  => 'black', 'Size'  => 10, 'vAlign' => 'vcenter', 'FgColor' => 'silver'));
-        if ($arrOptions['setborder']) { $objFormatTitle->setBorder(1); $objFormatTitle->setBorderColor('black'); }
-        if ($arrOptions['textwrap']) { $objFormatTitle->setTextWrap(); }
-        $objFormatDefault = $objWorkBook->addFormat( array( 'TextWrap' => 1, 'Align' => 'left', 'Bold'  => 0, 'Color'  => 'black', 'Size'  => 10, 'vAlign' => 'vcenter'));
-        if ($arrOptions['setborder']) { $objFormatDefault->setBorder(1); $objFormatDefault->setBorderColor('black'); }
-        if ($arrOptions['textwrap']) { $objFormatDefault->setTextWrap(); }
-
-        // Définition des différents formats numériques/text
-        $arrFormats = array(
-            'string' => null,
-            'float' => null,
-            'float_percent' => null,
-            'float_euro' => null,
-            'integer' => null,
-            'integer_percent' => null,
-            'integer_euro' => null,
-            'date' => null,
-            'datejjmmm' => null,
-            'datetime' => null
+        // Formats numériques des types de colonnes
+        $arrNumFormats = array(
+            'float' => '#,##0.00;-#,##0.00',
+            'float_percent' => '#,##0.00 %;-#,##0.00 %',
+            'float_euro' => '#,##0.00 €;-#,##0.00 €',
+            'integer' => '#,##0;-#,##0',
+            'integer_percent' => '#,##0 %;-#,##0 %',
+            'integer_euro' => '#,##0 €;-#,##0 €',
+            'date' => 'DD/MM/YYYY',
+            'datejjmmm' => 'DD-MMM',
+            'datetime' => 'DD/MM/YYYY HH:MM:SS'
         );
 
-        foreach($arrFormats as $strKey => &$objFormat)
-        {
-            $objFormat = $objWorkBook->addFormat( array( 'Align' => 'right', 'TextWrap' => 1, 'Bold'  => 0, 'Color'  => 'black', 'Size'  => 10, 'vAlign' => 'vcenter'));
-            if ($arrOptions['setborder']) { $objFormat->setBorder(1); $objFormat->setBorderColor('black'); }
-            if ($arrOptions['textwrap']) { $objFormat->setTextWrap(); }
+        // Couleurs nommées de l'ancien Spreadsheet_Excel_Writer
+        $arrNamedColors = array(
+            'aqua' => '00FFFF', 'cyan' => '00FFFF', 'black' => '000000', 'blue' => '0000FF', 'brown' => '800000',
+            'magenta' => 'FF00FF', 'fuchsia' => 'FF00FF', 'gray' => '808080', 'grey' => '808080', 'green' => '008000',
+            'lime' => '00FF00', 'navy' => '000080', 'orange' => 'FF6600', 'purple' => '800080', 'red' => 'FF0000',
+            'silver' => 'C0C0C0', 'white' => 'FFFFFF', 'yellow' => 'FFFF00'
+        );
 
-            switch($strKey)
-            {
-                case 'string': $objFormat->setAlign('left'); break;
-                case 'float': $objFormat->setNumFormat('#,##0.00;-#,##0.00'); break;
-                case 'float_percent': $objFormat->setNumFormat('#,##0.00 %;-#,##0.00 %'); break;
-                case 'float_euro': $objFormat->setNumFormat(iconv('UTF-8', 'ISO-8859-1', '#,##0.00 ;-#,##0.00 ')); break;
-                case 'integer': $objFormat->setNumFormat('#,##0;-#,##0'); break;
-                case 'integer_percent': $objFormat->setNumFormat('#,##0 %;-#,##0 %'); break;
-                case 'integer_euro': $objFormat->setNumFormat(iconv('UTF-8', 'ISO-8859-1', '#,##0 ;-#,##0 ')); break;
-                case 'date': $objFormat->setNumFormat('DD/MM/YYYY'); break;
-                case 'datejjmmm': $objFormat->setNumFormat('DD-MMM'); break;
-                case 'datetime' : $objFormat->setNumFormat('DD/MM/YYYY HH:MM:SS'); break;
-            }
+        $arrBaseStyle = array(
+            'font' => array('name' => 'Arial', 'size' => 10, 'color' => array('rgb' => '000000')),
+            'alignment' => array('vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER, 'wrapText' => (bool) $arrOptions['textwrap'])
+        );
+        if ($arrOptions['setborder']) $arrBaseStyle['borders'] = array('allBorders' => array('borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN, 'color' => array('rgb' => '000000')));
+
+        $arrTitleStyle = array_replace_recursive($arrBaseStyle, array(
+            'font' => array('bold' => true),
+            'alignment' => array('horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER),
+            'fill' => array('fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID, 'startColor' => array('rgb' => 'C0C0C0'))
+        ));
+
+        $objWorkBook = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+        $objWorkSheet = $objWorkBook->getActiveSheet();
+        $objWorkSheet->setTitle(mb_substr($strSheetName, 0, 31));
+
+        if ($arrOptions['fitpage_width'] || $arrOptions['fitpage_height']) {
+            $objWorkSheet->getPageSetup()->setFitToWidth($arrOptions['fitpage_width'] ? 1 : 0);
+            $objWorkSheet->getPageSetup()->setFitToHeight($arrOptions['fitpage_height'] ? 1 : 0);
         }
-        unset($objFormat);
+        if ($arrOptions['landscape']) $objWorkSheet->getPageSetup()->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
 
-        $objWorkSheet = $objWorkBook->addWorksheet($strSheetName);
-        /*
-        $objWorkBook->setVersion(8);
-        $objWorkSheet->setInputEncoding('UTF-8');
-        */
-
-        if ($arrOptions['fitpage_width'] || $arrOptions['fitpage_height']) $objWorkSheet->fitToPages($arrOptions['fitpage_width'] ? 1 : 0, $arrOptions['fitpage_height'] ? 1 : 0);
-        if ($arrOptions['landscape']) $objWorkSheet->setLandscape();
+        // Cellule (colonne et ligne comptées à partir de 0)
+        $cell = function($intCol, $intLine) { return \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($intCol + 1).($intLine + 1); };
 
         if (!empty($arrArray))
         {
-            // Définition des formats de colonnes
-            if (!empty($arrDataFormats))
+            $arrKeys = array_keys(reset($arrArray));
+
+            // Largeur des colonnes
+            foreach($arrKeys as $intCol => $strKey)
             {
-                $intCol = 0;
-                foreach(array_keys(reset($arrArray)) as $strKey)
-                {
-                    if (isset($arrDataFormats[$strKey]['width'])) $objWorkSheet->setColumn($intCol, $intCol, $arrDataFormats[$strKey]['width']);
-                    $intCol++;
-                }
+                if (isset($arrDataFormats[$strKey]['width'])) $objWorkSheet->getColumnDimensionByColumn($intCol + 1)->setWidth($arrDataFormats[$strKey]['width']);
             }
 
             $intLine = 0;
@@ -331,7 +321,10 @@ abstract class arr
             if (!empty($arrOptions['header'])) {
                 foreach($arrOptions['header'] as $row) {
                     $intCol = 0;
-                    foreach($row as $strValue) $objWorkSheet->writeString($intLine, $intCol++, iconv('UTF-8', 'CP1252', $strValue), $objFormatDefault);
+                    foreach($row as $strValue) {
+                        $objWorkSheet->setCellValueExplicit($cell($intCol, $intLine), (string) $strValue, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
+                        $objWorkSheet->getStyle($cell($intCol++, $intLine))->applyFromArray($arrBaseStyle);
+                    }
                     $intLine++;
                 }
             }
@@ -339,13 +332,12 @@ abstract class arr
             // Ajout de la ligne d'entête
             if ($booHeader)
             {
-                $intCol = 0;
-                foreach(array_keys(reset($arrArray)) as $strKey) $objWorkSheet->writeString($intLine, $intCol++, isset($arrDataFormats[$strKey]['title']) ? iconv('UTF-8', 'CP1252', $arrDataFormats[$strKey]['title']) : iconv('UTF-8', 'CP1252', $strKey), $objFormatTitle);
+                foreach($arrKeys as $intCol => $strKey) {
+                    $objWorkSheet->setCellValueExplicit($cell($intCol, $intLine), (string) ($arrDataFormats[$strKey]['title'] ?? $strKey), \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
+                }
+                $objWorkSheet->getStyle($cell(0, $intLine).':'.$cell(count($arrKeys) - 1, $intLine))->applyFromArray($arrTitleStyle);
                 $intLine++;
             }
-
-            $idcolor = 15;
-            $arrColors = [];
 
             // Traitement des contenus
             foreach($arrArray as $row)
@@ -355,71 +347,29 @@ abstract class arr
                 {
                     $bgcolor = '';
                     if (is_array($strValue)) {
-                        $value = '';
-                        if (isset($strValue['value'])) $value = $strValue['value'];
-                        if (isset($strValue['bgcolor'])) $bgcolor = $strValue['bgcolor'];
-                        $strValue = $value;
+                        $bgcolor = $strValue['bgcolor'] ?? '';
+                        $strValue = $strValue['value'] ?? '';
                     }
 
-                    if (empty($arrDataFormats[$strKey]['type'])) $arrDataFormats[$strKey]['type'] = 'string';
+                    $strType = empty($arrDataFormats[$strKey]['type']) ? 'string' : $arrDataFormats[$strKey]['type'];
+                    $strCell = $cell($intCol, $intLine);
 
-                    $k = is_array($bgcolor) ? $strKey.implode('_', $bgcolor) : $strKey.$bgcolor;
-
-                    if (!isset($arrFormats[$k])) {
-                        $objFormat = $objWorkBook->addFormat( array( 'Align' => 'right', 'TextWrap' => 1, 'Bold'  => 0, 'Color'  => 'black', 'Size'  => 10, 'vAlign' => 'vcenter'));
-                        if ($arrOptions['setborder']) { $objFormat->setBorder(1); $objFormat->setBorderColor('black'); }
-                        if ($arrOptions['textwrap']) { $objFormat->setTextWrap(); }
-
-                        if (!empty($bgcolor)) {
-                            if (is_array($bgcolor)) {
-                                $colorcode = implode(',', $bgcolor);
-                                if (!isset($arrColors[$colorcode])) $arrColors[$colorcode] = ++$idcolor;
-
-                                $id = $arrColors[$colorcode];
-
-                                $objWorkBook->setCustomColor(++$id, $bgcolor[0], $bgcolor[1], $bgcolor[2]);
-                                $objFormat->setFgColor($id);
-                            }
-                            else $objFormat->setFgColor($bgcolor);
-                        }
-
-                        switch($arrDataFormats[$strKey]['type'])
-                        {
-                            case 'float': $objFormat->setNumFormat('#,##0.00;-#,##0.00'); break;
-                            case 'float_percent': $objFormat->setNumFormat('#,##0.00 %;-#,##0.00 %'); break;
-                            case 'float_euro': $objFormat->setNumFormat(utf8_decode('#,##0.00 ;-#,##0.00 ')); break;
-                            case 'integer': $objFormat->setNumFormat('#,##0;-#,##0'); break;
-                            case 'integer_percent': $objFormat->setNumFormat('#,##0 %;-#,##0 %'); break;
-                            case 'integer_euro': $objFormat->setNumFormat(utf8_decode('#,##0 ;-#,##0 ')); break;
-                            case 'date': $objFormat->setNumFormat('DD/MM/YYYY'); break;
-                            case 'datejjmmm': $objFormat->setNumFormat('DD-MMM'); break;
-                            case 'datetime' : $objFormat->setNumFormat('DD/MM/YYYY HH:MM:SS'); break;
-                            case 'string': default: $objFormat->setAlign('left'); break;
-                        }
-
-                        $arrFormats[$k] = $objFormat;
+                    $arrStyle = $arrBaseStyle;
+                    if (isset($arrNumFormats[$strType])) {
+                        $arrStyle['alignment']['horizontal'] = \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT;
+                        $arrStyle['numberFormat'] = array('formatCode' => $arrNumFormats[$strType]);
+                        if ($strValue !== '' && $strValue !== null) $objWorkSheet->setCellValueExplicit($strCell, $strValue, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_NUMERIC);
                     }
-                    else $objFormat = $arrFormats[$k];
-
-
-                    switch($arrDataFormats[$strKey]['type'])
-                    {
-                        case 'float':
-                        case 'float_percent':
-                        case 'float_euro':
-                        case 'integer':
-                        case 'integer_percent':
-                        case 'integer_euro':
-                        case 'date':
-                        case 'datejjmmm':
-                        case 'datetime':
-                            if ($strValue !== '') $objWorkSheet->writeNumber($intLine, $intCol, $strValue, $objFormat);
-                        break;
-
-                        default:
-                            $objWorkSheet->writeString($intLine, $intCol, iconv('UTF-8', 'CP1252', $strValue ?? ''), $objFormat);
-                        break;
+                    else {
+                        $arrStyle['alignment']['horizontal'] = \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT;
+                        $objWorkSheet->setCellValueExplicit($strCell, (string) ($strValue ?? ''), \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
                     }
+
+                    if (is_array($bgcolor)) $strRgb = sprintf('%02X%02X%02X', $bgcolor[0], $bgcolor[1], $bgcolor[2]);
+                    else $strRgb = $arrNamedColors[strtolower($bgcolor)] ?? (preg_match('/^#?([0-9a-f]{6})$/i', $bgcolor, $arrMatches) ? strtoupper($arrMatches[1]) : '');
+                    if ($strRgb !== '') $arrStyle['fill'] = array('fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID, 'startColor' => array('rgb' => $strRgb));
+
+                    $objWorkSheet->getStyle($strCell)->applyFromArray($arrStyle);
                     $intCol++;
                 }
                 $intLine++;
@@ -427,12 +377,21 @@ abstract class arr
         }
 
         if (!empty($strComment)) {
-            $objWorkSheetComment = $objWorkBook->addWorksheet('comment');
-            $objWorkSheetComment->writeString(0, 0, iconv('UTF-8', 'CP1252', $strComment));
+            $objWorkBook->createSheet()->setTitle('comment')->setCellValueExplicit('A1', $strComment, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
         }
 
-        // fermeture du document
-        $objWorkBook->close();
+        $objWriter = new \PhpOffice\PhpSpreadsheet\Writer\Xls($objWorkBook);
+
+        if ($arrOptions['tofile']) $objWriter->save($strFileName);
+        else {
+            // En-têtes de téléchargement, comme le faisait Spreadsheet_Excel_Writer::send()
+            header('Content-Type: application/vnd.ms-excel');
+            header('Content-Disposition: attachment; filename="'.str_replace('"', '', $strFileName).'"');
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+            header('Pragma: public');
+            $objWriter->save('php://output');
+        }
 
         return true;
     }
@@ -460,7 +419,7 @@ abstract class arr
             'fitpage_height' => false,
             'tofile' => false,
             'setborder' => false,
-            'writer' => 'excel2007' // excel2007, excel5, csv, html, pdf (instable)
+            'writer' => 'excel2007' // excel2007, excel5, csv, html, pdf (Dompdf)
         );
 
         $arrOptions = empty($arrOptions) ? $arrDefautOptions : array_merge($arrDefautOptions, $arrOptions);
@@ -706,8 +665,7 @@ abstract class arr
             break;
 
             case 'pdf':
-                $objWriter = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($objWorkBook, 'Mpdf');
-                //$objWriter = new \PhpOffice\PhpSpreadsheet\Writer\Mpdf($objWorkBook);
+                $objWriter = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($objWorkBook, 'Dompdf');
                 $objWriter->setSheetIndex(0);
             break;
 
@@ -762,7 +720,7 @@ abstract class arr
             'fitpage_height' => false,
             'tofile' => false,
             'setborder' => true,
-            'writer' => 'excel2007' // excel2007, excel5, csv, html, pdf (instable)
+            'writer' => 'excel2007' // excel2007, excel5, csv, html, pdf (Dompdf)
         );
 
         $arrOptions = empty($arrOptions) ? $arrDefautOptions : array_merge($arrDefautOptions, $arrOptions);
@@ -1002,8 +960,7 @@ abstract class arr
             break;
 
             case 'pdf':
-                $objWriter = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($objWorkBook, 'Mpdf');
-                //$objWriter = new \PhpOffice\PhpSpreadsheet\Writer\Mpdf($objWorkBook);
+                $objWriter = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($objWorkBook, 'Dompdf');
                 $objWriter->setSheetIndex(0);
             break;
 

@@ -58,7 +58,32 @@ class formsField extends ploopi\data_object
 
 
     /**
+     * Nom sûr pour un fichier joint à une réponse.
+     *
+     * Le nom, fourni par le visiteur, devient un nom de fichier sous _PLOOPI_PATHDATA :
+     * caractères sûrs seulement, pas de point initial (un « .htaccess » déposé sous une
+     * racine web reconfigurerait Apache), extension neutralisée si elle s'exécute
+     * (fs::safe_extension).
+     *
+     * @param string $strName nom fourni
+     * @return string nom sûr
+     */
+    public static function safeFileName($strName)
+    {
+        $strName = basename(str_replace('\\', '/', (string)$strName));
+        $intPoint = strrpos($strName, '.');
+        $strBase = $intPoint === false ? $strName : substr($strName, 0, $intPoint);
+        $strExt = $intPoint === false ? '' : ploopi\fs::safe_extension(substr($strName, $intPoint + 1));
+
+        $strBase = trim(preg_replace('/[^A-Za-z0-9_-]+/', '_', ploopi\str::convertaccents($strBase)), '_');
+        if ($strBase === '') $strBase = 'fichier';
+
+        return $strExt === '' ? $strBase : "{$strBase}.{$strExt}";
+    }
+
+    /**
      * Retourne le chemin physique d'un fichier stocké dans un champ
+     *
      * @param integer $intFormsId
      * @param integer $intRecordId
      * @param string $strFileName

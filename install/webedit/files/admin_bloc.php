@@ -104,7 +104,7 @@ switch($op)
 }
 ?>
 
-<div style="background-color:#e0e0e0;padding:4px;border-bottom:1px solid #c0c0c0;">
+<div class="webedit_titre">
     <p class="ploopi_va" style="font-weight:bold;">
         <?php
         if ($type != 'draft' && ploopi\acl::isactionallowed(_WEBEDIT_ACTION_STATS))
@@ -349,7 +349,7 @@ switch($op)
                     {
                         ?>
                         <input style="width:100px;" class="text" type="text" name="webedit_article_timestp" id="webedit_article_timestp" value="<?php echo ploopi\str::htmlentities($article_timestp); ?>" tabindex="4" />
-                        <a href="javascript:void(0);" onclick="javascript:ploopi.calendar.open('webedit_article_timestp', event);"><img src="./img/calendar/calendar.gif" width="31" height="18" align="top" border="0"></a>
+                        <a href="javascript:void(0);" onclick="javascript:ploopi.calendar.open('webedit_article_timestp', event);"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/calendar/calendar.png" align="top" border="0" alt="Choisir une date"></a>
                         <?php
                     }
                     else echo '<span>'.ploopi\str::htmlentities($article_timestp, ENT_QUOTES).'</span>';
@@ -364,10 +364,10 @@ switch($op)
 </div>
 
 <div style="clear:both;padding:4px;">
-    <fieldset class="fieldset" style="padding:6px;">
+    <fieldset class="fieldset webedit_rights" style="padding:6px;">
         <legend><strong>Validateurs</strong> (utilisateurs qui peuvent publier)</legend>
 
-        <p class="ploopi_va" style="padding:0 2px 2px 2px;"><span>Validateurs </span><?php if ($intWfHeadingId != $headingid) echo "<em>&nbsp;héritées de &laquo;&nbsp;</em><a href=\"".ploopi\crypt::urlencode("admin.php?headingid={$intWfHeadingId}")."\">{$headings['list'][$intWfHeadingId]['label']}</a><em>&nbsp;&raquo;</em>"; ?><span>:</span>
+        <p class="ploopi_va webedit_rights_current" style="padding:0 2px 2px 2px;"><span>Validateurs </span><?php if ($intWfHeadingId != $headingid) echo "<em>&nbsp;héritées de &laquo;&nbsp;</em><a href=\"".ploopi\crypt::urlencode("admin.php?headingid={$intWfHeadingId}")."\">".ploopi\str::htmlentities($headings['list'][$intWfHeadingId]['label'])."</a><em>&nbsp;&raquo;</em>"; ?><span>:</span>
             <?php
             if (!empty($arrWfUsers))
             {
@@ -398,7 +398,7 @@ switch($op)
     </fieldset>
 </div>
 
-<div style="clear:both;padding:4px;background-color:#e8e8e8;border-top:1px solid #c0c0c0;">
+<div class="webedit_pied">
     <?php
 
     if ($op != 'bloc_addnew')
@@ -411,7 +411,7 @@ switch($op)
     ?>
 </div>
 
-<div style="padding:4px; background-color:#e0e0e0; clear:both; border-width: 1px 0;border-color:#c0c0c0;border-style:solid; overflow: hidden;">
+<div class="webedit_bandeau webedit_bandeau_masque">
         <div style="float:right;" class="webedit_form_buttons">
         <?php
         if ($type == 'draft')
@@ -457,7 +457,7 @@ switch($op)
     if ($op != 'article_addnew' && (ploopi\acl::isadmin() || $booWfVal || ($_SESSION['ploopi']['userid'] == $article->fields['id_user'] && $articles['list'][$articleid]['online_id'] == '')))
     {
         ?>
-        <input class="flatbutton" type="button" value="<?php echo _PLOOPI_DELETE; ?>" onclick="javascript:ploopi.confirmlink('<?php echo ploopi\crypt::urlencode("admin.php?op=article_delete&articleid={$article->fields['id']}"); ?>','Êtes-vous certain de vouloir supprimer l\'article &laquo; <?php echo addslashes($article->fields['title']); ?> &raquo; ?');">
+        <input class="flatbutton" type="button" value="<?php echo _PLOOPI_DELETE; ?>" onclick="javascript:ploopi.confirmlink('<?php echo ploopi\crypt::urlencode("admin.php?op=article_delete&articleid={$article->fields['id']}"); ?>','Êtes-vous certain de vouloir supprimer l\'article &laquo; <?php echo ploopi\str::htmlentities(addslashes($article->fields['title'])); ?> &raquo; ?');">
         <?php
     }
     if ($type == 'draft')
@@ -481,63 +481,39 @@ switch($op)
 </div>
 
 <div style="clear:both;">
-    <div id="xToolbar"></div>
     <?php
     if (!$readonly)
     {
         ?>
-        <script src="./vendor/ckeditor/ckeditor/ckeditor.js"></script>
-        <textarea name="fck_webedit_article_content" id="editor"><?php echo $article->fields['content']; ?></textarea>
+        <textarea name="fck_webedit_article_content" id="editor" style="width:100%;"
+            data-ploopi-editor="complet"
+            data-ploopi-editor-ready="1"><?php echo ploopi\str::htmlentities($article->fields['content']); ?></textarea>
         <script>
-
-            // Ajout d'un plugin externe
-            CKEDITOR.plugins.addExternal('tag', '<?php echo _PLOOPI_BASEPATH.'/modules/webedit/ckeditor/plugins/tag/'; ?>', 'plugin.js');
-
-            /*
-            // http://docs.ckeditor.com/#!/guide/plugin_sdk_styles
-            CKEDITOR.plugins.add( 'tag', {
-                init: function( editor ) {
-                    var pluginDirectory = '<?php echo _PLOOPI_BASEPATH.'/modules/webedit/ckeditor/plugins/tag/'; ?>';
-                    editor.addContentsCss( pluginDirectory + 'styles.css' );
-                }
-            } );
-            */
-
-            // http://docs.ckeditor.com/#!/guide/dev_file_browser_api
-            CKEDITOR.replace( 'editor', {
-                customConfig: '<?php echo _PLOOPI_BASEPATH.'/modules/webedit/ckeditor/config.js'; ?>',
-                // doc_selectfile
-                filebrowserBrowseUrl: '<?php echo _PLOOPI_BASEPATH.'/admin-light.php?'.ploopi\crypt::queryencode('ploopi_op=webedit_selector'); ?>',
-                filebrowserImageBrowseUrl: '<?php echo _PLOOPI_BASEPATH.'/admin-light.php?'.ploopi\crypt::queryencode('ploopi_op=doc_selectimage'); ?>',
-                // Url de choix des objets
-                objectBrowserUrl: '<?php echo _PLOOPI_BASEPATH.'/admin-light.php?'.ploopi\crypt::queryencode('ploopi_op=ploopi_getobjects'); ?>',
-                // Chargement de styles complémentaires (on remet le fichier par défaut en 1er)
-                // Puis on ajoute la feuille de style des plugins...
-                contentsCss: [
-                    CKEDITOR.basePath+'contents.css',
-                    '<?php echo _PLOOPI_BASEPATH; ?>/modules/webedit/ckeditor/plugins/tag/styles.css',
-                ],
-                extraPlugins: 'sharedspace,colorbutton,print',
-                removePlugins: 'elementspath',
-
-                sharedSpaces: {
-                    top : 'xToolbar',
+            /**
+             * Éditeur du socle (js/editor.js), aux dimensions du bloc : pas d'agrandissement
+             * automatique. Le champ est tenu à jour pour l'envoi du formulaire.
+             */
+            ploopi.editor.create('editor', {
+                profile: 'complet',
+                objects: true,
+                picker: {
+                    link: <?php echo json_encode(_PLOOPI_BASEPATH.'/admin-light.php?'.ploopi\crypt::queryencode('ploopi_op=webedit_selector')); ?>,
+                    image: <?php echo json_encode(_PLOOPI_BASEPATH.'/admin-light.php?'.ploopi\crypt::queryencode('ploopi_op=doc_selectimage')); ?>
                 },
-                width: '<? echo $article->fields['width'] ? $article->fields['width'] : '100%'; ?>',
-                height: '<? echo $article->fields['height'] ? $article->fields['height'] : '500px'; ?>',
-
-                <?php
-                if ($_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['display_type'] == 'beginner') {
+                config: {
+                    newline_behavior: 'invert',
+                    plugins: ploopi.editor.profiles.complet.plugins.replace(/\s*autoresize/, ''),
+                    min_height: null,
+                    max_height: null,
+                    width: <?php echo json_encode((string)($article->fields['width'] ? $article->fields['width'] : '100%'), JSON_HEX_TAG | JSON_HEX_AMP); ?>,
+                    height: <?php echo json_encode((string)($article->fields['height'] ? $article->fields['height'] : '500px'), JSON_HEX_TAG | JSON_HEX_AMP); ?><?php
+                    if ($_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['display_type'] == 'beginner') {
+                        ?>,
+                    toolbar: 'bold italic underline strikethrough subscript superscript removeformat | blocks fontfamily fontsize | forecolor backcolor | image link unlink'<?php
+                    }
                     ?>
-                    toolbar: [
-                        ['Bold','Italic','Underline','Strike','Subscript','Superscript','-','RemoveFormat' ],
-                        ['Styles','Format','Font','FontSize'],
-                        ['TextColor','BGColor'],
-                        ['Image','Link','Unink'],
-                    ]
-                    <?php
+
                 }
-                ?>
             });
         </script>
 
@@ -552,7 +528,7 @@ switch($op)
     ?>
 </div>
 
-<div style="padding:4px;background-color:#e0e0e0;clear:both;border-width: 1px 0;border-color:#c0c0c0;border-style:solid;">
+<div class="webedit_bandeau">
     <?php
     if(!$readonly)
     {
@@ -579,7 +555,7 @@ switch($op)
     if ($op != 'article_addnew' && (ploopi\acl::isadmin() || $booWfVal || ($_SESSION['ploopi']['userid'] == $article->fields['id_user'] && $articles['list'][$articleid]['online_id'] == '')))
     {
         ?>
-        <input class="flatbutton" type="button" value="<?php echo _PLOOPI_DELETE; ?>" onclick="javascript:ploopi.confirmlink('<?php echo ploopi\crypt::urlencode("admin.php?op=article_delete&articleid={$article->fields['id']}"); ?>','Êtes-vous certain de vouloir supprimer l\'article &laquo; <?php echo addslashes($article->fields['title']); ?> &raquo; ?');">
+        <input class="flatbutton" type="button" value="<?php echo _PLOOPI_DELETE; ?>" onclick="javascript:ploopi.confirmlink('<?php echo ploopi\crypt::urlencode("admin.php?op=article_delete&articleid={$article->fields['id']}"); ?>','Êtes-vous certain de vouloir supprimer l\'article &laquo; <?php echo ploopi\str::htmlentities(addslashes($article->fields['title'])); ?> &raquo; ?');">
         <?php
     }
     if ($type == 'draft')
@@ -609,10 +585,10 @@ if ($op != 'bloc_addnew')
     ?>
     <div style="clear:both;">
         <?php $arrAllowedActions = array(_WEBEDIT_ACTION_ARTICLE_EDIT, _WEBEDIT_ACTION_ARTICLE_PUBLISH);?>
-        <div style="border-bottom:1px solid #c0c0c0;">
+        <div class="webedit_filet_bas">
         <?php ploopi\subscription::display(_WEBEDIT_OBJECT_ARTICLE_ADMIN, $article->fields['id'], $arrAllowedActions, "à &laquo; {$article->fields['title']} &raquo;"); ?>
         </div>
-        <div style="border-bottom:1px solid #c0c0c0;">
+        <div class="webedit_filet_bas">
         <?php ploopi\annotation::display(_WEBEDIT_OBJECT_ARTICLE_ADMIN, $article->fields['id'], $article->fields['title']); ?>
         </div>
     </div>

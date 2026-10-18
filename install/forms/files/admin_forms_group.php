@@ -69,7 +69,7 @@ if (!$objGroup->isnew()) $arrParams[] = "forms_group_id={$objGroup->fields['id']
             </p>
             <p>
                 <label><?php echo _FORMS_GROUP_FORMULA; ?>:<br /><em>ex: (C1 AND C2) OR C3</em></label>
-                <? for ($i = 1; $i <= ploopi\param::get('form_nb_cond'); $i++) { ?> <input type="button" class="button" value="C<?php echo $i; ?>" title="Insérer la condition C<?php echo $i; ?>" style="width:30px;" onclick="javascript:ploopi_insertatcursor(jQuery('#forms_group_formula')[0], this.value); jQuery('#forms_group_formula')[0].focus();" /> <?php } ?>
+                <?php for ($i = 1; $i <= ploopi\param::get('form_nb_cond'); $i++) { ?> <input type="button" class="button" value="C<?php echo $i; ?>" title="Insérer la condition C<?php echo $i; ?>" style="width:30px;" onclick="javascript:ploopi_insertatcursor(jQuery('#forms_group_formula')[0], this.value); jQuery('#forms_group_formula')[0].focus();" /> <?php } ?>
                 <input type="button" class="button" value="AND" title="Insérer l'opérateur AND" style="width:40px;" onclick="javascript:ploopi_insertatcursor(jQuery('#forms_group_formula')[0], ' '+this.value+' '); jQuery('#forms_group_formula')[0].focus();" />
                 <input type="button" class="button" value="OR" title="Insérer l'opérateur OR" style="width:40px;" onclick="javascript:ploopi_insertatcursor(jQuery('#forms_group_formula')[0], ' '+this.value+' '); jQuery('#forms_group_formula')[0].focus();" />
                 <input type="button" class="button" value="NOT" title="Insérer l'opérateur NOT" style="width:40px;" onclick="javascript:ploopi_insertatcursor(jQuery('#forms_group_formula')[0], ' '+this.value+' '); jQuery('#forms_group_formula')[0].focus();" />
@@ -136,7 +136,7 @@ if (!$objGroup->isnew()) $arrParams[] = "forms_group_id={$objGroup->fields['id']
     </div>
 </div>
 
-<div style="clear:both;background-color:#d0d0d0;border-top:1px solid #a0a0a0;padding:4px;overflow:auto;text-align:right;">
+<div class="forms_barre_boutons">
     <input type="button" class="flatbutton" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<?php echo ploopi\crypt::urlencode("admin.php?op=forms_modify&forms_id={$objForm->fields['id']}"); ?>'">
     <input type="submit" class="flatbutton" value="<?php echo _PLOOPI_SAVE; ?>">
 </div>

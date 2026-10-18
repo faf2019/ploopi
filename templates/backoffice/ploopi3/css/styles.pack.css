@@ -1,0 +1,5788 @@
+/*
+    Copyright (c) 2002-2007 Netlor
+    Copyright (c) 2007-2008 Ovensia
+    Contributors hold Copyright (c) to their code submissions.
+
+    This file is part of Ploopi.
+
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+/******************
+  SYSTEM.ANNOTATIONS
+*******************/
+
+#system_annotation_tags {
+float:right;
+width:250px;
+}
+
+#system_annotation_list {
+overflow:auto;
+border-right:1px solid var(--p3-border);
+}
+
+#system_annotation_titlebar {
+padding:2px 4px;
+border-bottom:1px solid var(--p3-border);
+background-color:var(--p3-surface-2);
+overflow:auto;
+}
+
+.system_annotation_row {
+clear:both;
+overflow:auto;
+border-bottom: 1px solid var(--p3-border);
+padding:2px;
+}
+
+.system_annotation_title {
+font-weight:bold;
+font-size:1.1em;
+float:left;
+padding:2px 2px 4px 2px;
+}
+
+.system_annotation_date {
+float:right;
+padding:2px;
+}
+
+.system_annotation_content {
+clear:both;
+padding:2px;
+}
+
+.system_annotation_taglist {
+clear:both;
+float:left;
+padding:2px;
+}
+
+.system_annotation_module {
+float:right;
+}
+
+a.system_annotation_tag {
+display:block;
+float:left;
+padding:2px 6px;
+height:22px;
+line-height:22px;
+white-space:nowrap;
+}
+
+a.system_annotation_tag:hover {
+display:block;
+background-color:var(--p3-surface-3);
+text-decoration:none;
+}
+
+a.system_annotation_tagsel {
+display:block;
+float:left;
+padding:2px 6px;
+height:22px;
+line-height:22px;
+white-space:nowrap;
+background-color:var(--p3-primary-soft);
+}
+
+a.system_annotation_tagsel:hover {
+display:block;
+background-color:var(--p3-surface-3);
+text-decoration:none;
+}
+
+.system_annotation_page {
+display:block;
+float:left;
+background-color:var(--p3-surface);
+padding: 0px 4px;
+margin-left:1px;
+text-decoration:none;
+color:var(--p3-text);
+border:1px solid var(--p3-border);
+}
+
+.system_annotation_page:hover {
+background-color:var(--p3-primary-softer);
+text-decoration:none;
+}
+
+.system_annotation_page_sel {
+display:block;
+float:left;
+background-color:var(--p3-surface);
+padding: 0px 4px;
+margin-left:1px;
+text-decoration:none;
+color:var(--p3-text);
+border:1px solid var(--p3-primary);
+}
+
+.system_annotation_page_sel:hover {
+background-color:var(--p3-primary-softer);
+text-decoration:none;
+}
+
+.ploopi_annotation_row_1 {
+border-top: 1px solid var(--p3-border);
+background-color:#fffdf4;
+overflow:auto;
+}
+
+.ploopi_annotation_row_2 {
+border-top: 1px solid var(--p3-border);
+background-color:#fbf8ec;
+overflow:auto;
+}
+
+.ploopi_annotation_viewlist {
+display:block;
+background-color:#fbf8ec;
+box-shadow:inset 4px 0 0 #b08800;
+text-decoration:none;
+height:32px;
+line-height:32px;
+color:var(--p3-text);
+font-weight:bold;
+margin:0;
+padding:0 10px 0 12px;
+overflow:hidden;
+}
+
+.ploopi_annotation_viewlist:hover {
+background-color:#f6f0d6;
+color:var(--p3-text);
+text-decoration:none;
+}
+
+.ploopi_annotation_viewlist img, .ploopi_annotation_viewlist span {
+    vertical-align: middle;
+}
+
+.ploopi_annotation_viewlist span {
+   padding-left: 5px;
+}
+
+.ploopi_annotation_popup {
+background-color:#fffdf4;
+}
+
+.ploopi_annotation_popup_list {
+height:200px;
+overflow:auto;
+}
+
+.ploopi_annotation_titleform {
+display:block;
+font-weight:bold;
+background-color:#fbf8ec;
+line-height:32px;
+height:32px;
+padding-left:12px;
+box-shadow:inset 4px 0 0 #b08800;
+border-bottom:1px solid var(--p3-border);
+}
+
+.ploopi_annotation_titleform img, .ploopi_annotation_titleform span {
+    vertical-align: middle;
+}
+
+.ploopi_annotation_titleform span {
+   padding-left: 5px;
+}
+/*
+    Copyright (c) 2007-2009 Ovensia
+    Contributors hold Copyright (c) to their code submissions.
+
+    This file is part of Ploopi.
+
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
+#calendar {
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    user-select: none;
+}
+
+/* flow-root plutôt qu'overflow:auto : pas de barre de défilement vide sous le mois */
+.calendar_row {
+    clear:both;
+    display:flow-root;
+    overflow:visible;
+}
+
+.calendar_week {
+    float:left;
+    width:28px;
+    height:22px;
+    line-height:22px;
+    text-align:center;
+    color:var(--p3-text-muted);
+    font-size:0.9em;
+}
+
+.calendar_day {
+    float:left;
+    width:22px;
+    height:22px;
+    line-height:22px;
+    text-align:center;
+}
+
+.calendar_day div {
+    width:18px;
+    height:18px;
+    line-height:18px;
+    border:1px solid var(--p3-border);
+}
+
+.calendar_day a {
+    display:block;
+    text-decoration:none;
+    width:18px;
+    height:18px;
+    line-height:18px;
+    border:1px solid var(--p3-border);
+}
+
+.calendar_day a:hover {
+    background-color:var(--p3-primary);
+    color:#ffffff;
+    text-decoration:none;
+}
+
+.calendar_day_selected {
+    background-color:var(--p3-primary);
+    color:#ffffff;
+    text-decoration:none;
+}
+
+.calendar_day_today {
+    background-color:var(--p3-surface);
+}
+
+.calendar_outmonth {
+    border:1px solid var(--p3-border);
+    color:var(--p3-text-muted);
+}
+
+.calendar_arrow {
+    float:left;
+    width:40px;
+    height:22px;
+    line-height:22px;
+    text-align:center;
+}
+
+.calendar_month {
+    height:30px;
+    line-height:15px;
+    text-align:center;
+    font-weight:bold;
+}
+
+/**
+ * Styles liés à la class calendar
+ */
+
+.ploopi_calendar_m {
+    color:var(--p3-text);
+}
+
+.ploopi_calendar_m div.month_inner {
+    border-width: 1px 1px 0 0;
+    border-color:var(--p3-border-strong);
+    border-style:solid;
+    background:#a0a0a0;
+}
+
+.ploopi_calendar_m div.row {
+    clear:both;
+}
+
+.ploopi_calendar_m div.day_header {
+    float:left;
+    position:relative;
+    margin:0 0 1px 1px;
+    display:inline; /* IE hack pour margin */
+    background-color:#d3dbe1;
+}
+
+.ploopi_calendar_m div.day_header div.day_header_label {
+    padding:2px;
+    text-align:center;
+    font-size:0.9em;
+    font-weight:bold;
+}
+
+.ploopi_calendar_m div.day {
+    float:left;
+    position:relative;
+    background:var(--p3-surface-2);
+    margin:0 0 1px 1px;
+    display:inline; /* IE hack pour margin */
+    overflow:hidden;
+}
+
+.ploopi_calendar_m div.day_weekend {
+    background:#e0f0f0;
+}
+
+.ploopi_calendar_m div.day_holiday {
+    background:#f0e0e0;
+}
+
+.ploopi_calendar_m div.day div.day_num {
+    padding:2px;
+    background-color:#dfe5ea;
+    text-align:right;
+    font-size:0.9em;
+}
+
+.ploopi_calendar_m div.day div.day_num_grayed {
+    padding:2px;
+    background-color:#dfe5ea;
+    text-align:right;
+    font-size:0.9em;
+    color:var(--p3-text-muted);
+}
+
+.ploopi_calendar_m div.day_weekend div.day_num {
+    background:#c0d0d0;
+}
+
+.ploopi_calendar_m div.day_holiday div.day_num {
+    background:#d0c0c0;
+}
+
+.ploopi_calendar_m div.day_weekend div.day_num_grayed {
+    background:#c0d0d0;
+}
+
+.ploopi_calendar_m div.day_holiday div.day_num_grayed {
+    background:#d0c0c0;
+}
+
+.ploopi_calendar_m div.week_header {
+    float:left;
+    position:relative;
+    background:var(--p3-surface-2);
+    margin:0 0 1px 1px;
+    display:inline; /* IE hack pour margin */
+    background-color:var(--p3-surface-3);
+}
+
+.ploopi_calendar_m div.week_header div.week_header_num {
+    padding:2px;
+    text-align:right;
+    font-size:14px;
+    font-weight:bold;
+    color:var(--p3-text-muted);
+}
+
+.ploopi_calendar_m div.day .event {
+    display:block;
+    margin:1px;
+    background-color:#d3dbe1;
+    text-decoration:none;
+    font-size:0.9em;
+}
+
+.ploopi_calendar div.day .event div.event_inner {
+    padding:1px 2px;
+}
+
+.ploopi_calendar_m div.day .event div.event_inner span.event_h {
+    font-weight:bold;
+    margin-right:2px;
+}
+
+.ploopi_calendar_d div.row {
+    clear:both;
+}
+
+.ploopi_calendar_d div.days_inner {
+    border-width: 1px 1px 0 0;
+    border-color:var(--p3-border-strong);
+    border-style:solid;
+    background:#a0a0a0;
+}
+
+.ploopi_calendar_d div.day {
+    float:left;
+    position:relative;
+    background:var(--p3-surface-2);
+    margin:0 0 1px 1px;
+    display:inline; /* IE hack pour margin */
+}
+
+.ploopi_calendar_d div.day_weekend {
+    background:#e0f0f0;
+}
+
+.ploopi_calendar_d div.day_holiday {
+    background:#f0e0e0;
+}
+
+.ploopi_calendar_d div.channel_header {
+    float:left;
+    position:relative;
+    margin:0 0 1px 1px;
+    display:inline; /* IE hack pour margin */
+    background-color:#dfe5ea;
+}
+
+.ploopi_calendar_d div.channel_header .channel {
+    display:block;
+    position:absolute;
+    text-align:center;
+    overflow:hidden;
+}
+
+.ploopi_calendar_d div.day_header {
+    float:left;
+    position:relative;
+    margin:0 0 1px 1px;
+    display:inline; /* IE hack pour margin */
+    background-color:#d3dbe1;
+}
+
+.ploopi_calendar_d div.day_header div.day_header_label {
+    padding:2px;
+    text-align:center;
+    font-size:0.9em;
+    font-weight:bold;
+}
+
+.ploopi_calendar_d div.day_header_weekend {
+    background-color:#b0c0c0;
+}
+
+.ploopi_calendar_d div.day_header_holiday {
+    background-color:#c0b0b0;
+}
+
+.ploopi_calendar_d div.hours {
+    float:left;
+    position:relative;
+    background-color:var(--p3-surface-3);
+    margin:0 0 1px 1px;
+    display:inline; /* IE hack pour margin */
+}
+
+.ploopi_calendar_d div.hours div.hour_header {
+}
+
+.ploopi_calendar_d div.hours div.hour_header div.hour_header_num {
+    text-align:right;
+    font-size:14px;
+    font-weight:bold;
+    color:var(--p3-text-muted);
+    padding:2px;
+}
+
+.ploopi_calendar_d div.day div.tick {
+    position:absolute;
+    border-top:1px solid var(--p3-border);
+    z-index:100;
+}
+
+.ploopi_calendar_d div.day div.tick-half {
+    position:absolute;
+    border-top:1px solid var(--p3-border);
+    z-index:100;
+    opacity:0.5;
+}
+
+.ploopi_calendar_d div.hours div.tick {
+    position:absolute;
+    border-top:1px solid var(--p3-border-strong);
+    z-index:100;
+}
+
+.ploopi_calendar_d div.day .channel {
+    display:block;
+    position:absolute;
+}
+
+.ploopi_calendar_d div.day .channelborder {
+    display:block;
+    position:absolute;
+    left:-1px;
+    width:1px;
+    border-left:1px dotted #aaa;
+}
+
+.ploopi_calendar_d div.day .event {
+    display:block;
+    position:absolute;
+    background-color:#d3dbe1;
+    text-decoration:none;
+    font-size:0.9em;
+    color:#fff;
+    z-index:1000;
+    overflow:hidden;
+}
+
+.ploopi_calendar_d div.day .event div.event_title {
+    border-bottom:1px solid var(--p3-border-strong);
+    font-size:0.9em;
+    font-weight:bold;
+    background-color:#b0b0b0;
+    padding:0 2px;
+}
+
+.ploopi_calendar_d div.day .event div.event_title img {
+    margin:2px;
+}
+
+.ploopi_calendar_d div.day .event a.event_inner {
+    display:block;
+    overflow:hidden;
+    text-decoration:none;
+}
+
+.hoverActive {
+    border:1px solid blue;
+}
+.ploopi_barchart {
+    font-size:9px;
+    clear:both;
+    overflow:auto;
+    padding:6px 2px;
+    }
+
+.ploopi_barchart .vlegend {
+    color: #666;
+    width:30px;
+    float:left;
+    position:relative;
+    }
+
+.ploopi_barchart .vlegend div {
+    position:absolute;
+    width:25px;
+    left:0px;
+    text-align:right;
+}
+
+.ploopi_barchart .chart {
+    border-bottom: 3px solid #333;
+    margin:0;
+    padding:0;
+    position: relative;
+    }
+
+.ploopi_barchart .chart li {
+    border: 1px solid #555;
+    border-bottom: none;
+    bottom: 0;
+    color: #fff;
+    background:#a0a0a0;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    list-style: none;
+    text-align: center;
+    opacity:0.9;
+    }
+
+.ploopi_barchart .chart li.p1 {
+    background-color:#666;
+    }
+
+.ploopi_barchart .chart li.p2 {
+    background-color:#888;
+    }
+
+.ploopi_barchart .chart li.p3 {
+    background-color:#aaa;
+    }
+
+.ploopi_barchart .chart div.grid {
+    position:absolute;
+    border-style: solid;
+    border-color: #a0a0a0;
+    border-width: 0 0 1px 0;
+    width:100%;
+    }
+
+.ploopi_barchart .hlegend {
+    padding:4px 0;
+    position: relative;
+    }
+
+.ploopi_barchart .hlegend div {
+    float: left;
+    color: #666;
+    text-align: center;
+    }
+/**
+ * Script original de colorjack.
+ * Adapté pour Ploopi par Stéphane Escaich / OVENSIA
+ *
+ * @link http://www.colorjack.com/software/dhtml+color+picker.html
+ */
+
+#plugin {
+   color: #444;
+   display: block;
+   padding: 7px 10px 11px 10px;
+   overflow:auto;
+}
+
+#SV {
+    background: #ff0000 url('../../../../img/colorpicker/satval.png');
+    position: relative;
+    cursor: pointer;
+    float: left;
+    height: 166px;
+    width: 167px;
+    margin-right: 10px;
+    border:1px solid #000;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    user-select: none;
+}
+
+#SVslide {
+    background: url('../../../../img/colorpicker/slide.gif');
+    height: 9px;
+    width: 9px;
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    line-height: 1px;
+}
+
+#H {
+    border: 1px solid #000;
+    cursor: pointer;
+    float: left;
+    height: 166px;
+    position: relative;
+    width: 19px;
+    padding: 0;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    user-select: none;
+}
+
+#Hslide {
+    background: url('../../../../img/colorpicker/slideHue.gif');
+    top:-2px;
+    left:-8px;
+    height: 5px;
+    width: 33px;
+    position: absolute;
+    line-height: 1px;
+}
+
+#Hmodel {
+    position: relative;
+}
+
+#Hmodel div {
+    height: 1px;
+    width: 19px;
+    line-height: 1px;
+    margin: 0;
+    padding: 0;
+}
+
+#colorpicker_footer {
+    clear:both;
+    padding-top:4px;
+    overflow:auto;
+}
+
+#colorpicker_footer .text {
+    float:left;
+    width:60px;
+    margin-left:3px;
+}
+
+#colorpicker_footer .button {
+    float:left;
+    margin-left:3px;
+}
+
+#plugCUR {
+    float: left;
+    width: 18px;
+    height: 16px;
+    background: #FFF;
+    border:1px solid #000;
+    margin-left:3px;
+}
+/*
+    Copyright (c) 2002-2007 Netlor
+    Copyright (c) 2007-2008 Ovensia
+    Contributors hold Copyright (c) to their code submissions.
+
+    This file is part of Ploopi.
+
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+/******************
+  ARTICLE.COMMENT
+*******************/
+
+.webedit_comment_viewlist {
+display:block;
+background-color:#B6FAC2;
+text-decoration:none;
+height:24px;
+line-height:24px;
+font-weight:bold;
+margin:0;
+padding:0 6px;
+overflow:hidden;
+}
+
+.webedit_comment_viewlist:hover {
+background-color:#A7FAB6;
+text-decoration:none;
+}
+
+.webedit_comment_viewlist img, .webedit_comment_viewlist span {
+    vertical-align: middle;
+}
+
+.webedit_comment_viewlist span {
+   padding-left: 5px;
+}
+
+.webedit_comment_publish {
+    padding: 0 0 0 4px;
+    float: left;
+    font-weight:bold;
+    cursor: pointer;
+}
+
+.webedit_comment_row_1 {
+border-top: 1px solid #d0d0d0;
+background-color:#C9FFD3;
+overflow:auto;
+}
+
+.webedit_comment_row_2 {
+border-top: 1px solid #d0d0d0;
+background-color:#D9FFDF;
+overflow:auto;
+}
+/*
+.crisorsec_titre {
+text-align:center;
+font-weight:bold;
+padding:6px;
+border-bottom:1px solid #808080;
+background-color:#d8d8d8;
+}
+
+.crisorsec_titre h1 {
+margin:0;
+font-size:16px;
+}
+
+.crisorsec_titre h2 {
+margin:0;
+font-size:12px;
+}
+
+.crisorsec_titre h3 {
+margin:0;
+font-size:10px;
+}
+*/
+
+.crisorsec_toolbar {
+background-color:#CEDAE6;
+border-bottom:1px solid #808080;
+overflow:hidden;
+line-height:20px;
+height:20px;
+}
+
+.crisorsec_toolbar img {
+display:block;
+float:left;
+margin:2px 3px 0 0;
+}
+
+.crisorsec_toolbar input {
+display:block;
+float:left;
+margin:3px 3px 0 0;
+}
+
+.crisorsec_toolbar a {
+display:block;
+float:right;
+padding-left:12px;
+padding-right:6px;
+text-decoration:none;
+background: url(../img/template/menu.png) 0 0 no-repeat;
+
+}
+
+.crisorsec_toolbar a:hover {
+background: url(../img/template/menu.png) 0 -20px no-repeat;
+}
+
+/* IFRAME */
+
+.crisorsec_iframe {
+width:0;
+height:0;
+visibility:hidden;
+display:none;
+}
+
+.crisorsec_iframe_debug {
+width:100%;
+height:250px;
+}
+
+
+/* POPUPS */
+
+.crisorsec_popup {
+font-size:11px;
+border:1px solid #404040;
+}
+
+.crisorsec_popup_header {
+padding:4px;
+background-color:#c0c0c0;
+border-bottom:1px solid #a0a0a0;
+}
+
+.crisorsec_popup_header h1 {
+margin:0;
+padding:0;
+font-size:12px;
+font-weight:bold;
+}
+
+.crisorsec_popup_header h2 {
+margin:0;
+padding:0;
+font-size:12px;
+font-weight:normal;
+}
+
+.crisorsec_popup_footer {
+padding:2px 4px;
+background-color:#c0c0c0;
+border-top:1px solid #a0a0a0;
+text-align:right;
+}
+
+/* FORMULAIRES */
+
+
+.crisorsec_form {
+    overflow:hidden;
+}
+
+.crisorsec_form fieldset {
+    margin: 0;
+    padding: 0.2em;
+    margin: 0.2em;
+    border:1px solid #193c1c;
+}
+
+.crisorsec_form legend {
+    font-weight: bold;
+    background: transparent;
+}
+
+.crisorsec_form h1 {
+    font-size:12px;
+    font-weight:bold;
+    padding:6px;
+    margin:2px 0;
+    text-align:left;
+    background-color:#BBBBBB;
+    display:block;
+    clear:both;
+    overflow:auto;
+    }
+
+.crisorsec_form h2 {
+    font-size:10px;
+    font-weight:bold;
+    padding:4px;
+    margin:2px 0;
+    text-align:left;
+    background-color:#BBBBBB;
+}
+
+.crisorsec_form p {
+    display:block;
+    margin:4px 2px;
+    overflow:auto;
+}
+
+.crisorsec_form p label {
+    float: left;
+    width: 30%;
+    font-weight: bold;
+    text-align: right;
+    margin: 0;
+    padding: 0 .5em 0 0;
+}
+
+.crisorsec_form p input[type='text'],
+.crisorsec_form p input[type='password'],
+.crisorsec_form p select,
+.crisorsec_form p textarea,
+.crisorsec_form p span {
+    width: 65%;
+}
+
+.crisorsec_form p input.checkbox {
+    width:14px;
+}
+
+.crisorsec_form p span {
+    float:left;
+}
+
+.crisorsec_form p textarea{
+    height: 6em;
+}
+
+.crisorsec_form p span.checkbox {
+    cursor:pointer;
+    width:100%;
+}
+
+.crisorsec_form p span.checkbox img, .crisorsec_form p span.checkbox input {
+    cursor:pointer;
+}
+
+input.crisorsec_buttoncarto {
+background: linear-gradient(top, rgba(230,230,230,0.7) 0%, rgba(150,150,150,0.6) 100%), url(../img/template/carto.png) top left repeat-x;
+background: -moz-linear-gradient(top, rgba(230,230,230,0.7) 0%, rgba(150,150,150,0.6) 100%), url(../img/template/carto.png) top left repeat-x;
+background: -webkit-linear-gradient(top, rgba(230,230,230,0.7) 0%, rgba(150,150,150,0.6) 100%), url(../img/template/carto.png) top left repeat-x;
+}
+
+input.crisorsec_buttoncarto:hover {
+background: linear-gradient(top, rgba(150,150,150,0.6) 0%, rgba(230,230,230,0.7) 100%), url(../img/template/carto.png) top left repeat-x;
+background: -moz-linear-gradient(top, rgba(150,150,150,0.6) 0%, rgba(230,230,230,0.7) 100%), url(../img/template/carto.png) top left repeat-x;
+background: -webkit-linear-gradient(top, rgba(150,150,150,0.6) 0%, rgba(230,230,230,0.7) 100%), url(../img/template/carto.png) top left repeat-x;
+}
+
+
+#crisorsec_treeview {
+height:200px;
+overflow:auto;
+overflow-x:hidden;
+width:300px;
+border-radius:2px;
+color: #2c4056;
+padding: 3px;
+border: 2px solid rgba(0,0,0,0.2);
+background: #fff;
+}
+
+#crisorsec_treeview a {
+text-decoration:none;
+border-bottom:1px dotted #c0c0c0;
+}
+
+#crisorsec_treeview a:hover {
+background-color:#d0d0d0;
+border-bottom:1px solid #c0c0c0;
+}
+/*
+    Copyright (c) 2002-2007 Netlor
+    Copyright (c) 2007-2008 Ovensia
+    Contributors hold Copyright (c) to their code submissions.
+
+    This file is part of Ploopi.
+
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+.documents_browser {
+    overflow:auto;
+}
+
+.documents_path {
+    padding:4px;
+    border-bottom:1px solid var(--p3-border);
+    background-color:var(--p3-surface-2);
+    overflow:auto;
+}
+
+.documents_path div {
+    display:block;
+    float:left;
+    padding:4px;
+    border:1px;
+}
+
+.documents_path a {
+    display:block;
+    float:left;
+    padding:4px;
+    margin-left:2px;
+    border:1px solid var(--p3-border);
+    border-radius:var(--p3-radius-sm);
+    background-color:var(--p3-surface);
+}
+
+.documents_path a:hover {
+    border:1px solid var(--p3-primary);
+    background-color:var(--p3-primary-softer);
+    text-decoration:none;
+}
+
+a.documents_pathselected {
+    border:1px solid var(--p3-primary);
+    background-color:var(--p3-primary-soft);
+    font-weight:bold;
+
+}
+
+div.documents_formtitle {
+    font-weight:bold;
+    background-color:var(--p3-surface-3);
+    border-bottom:solid 1px var(--p3-border);
+    padding:4px;
+}
+
+div.documents_formcontent {
+    background-color:var(--p3-surface-2);
+    padding:2px;
+}
+
+
+#documents_dropzone {
+    display: block;
+    position: relative;
+    border: 2px dashed var(--p3-border-strong);
+    border-radius: var(--p3-radius);
+    background-color: var(--p3-surface-2);
+    color: var(--p3-text-muted);
+    text-align: center;
+    font-size: 20px;
+}
+
+#documents_dropzone:hover {
+    cursor:pointer;
+}
+
+#documents_dropzone.dragover {
+    border: 2px dashed var(--p3-primary);
+    background-color: var(--p3-primary-softer);
+}
+
+#documents_filelist {
+    display: block;
+    font-size:12px;
+    padding:2px;
+    min-height:100px;
+    max-height:250px;
+    overflow:auto;
+}
+
+#documents_filelist > div {
+    display:block;
+    float:left;
+    padding:2px 4px;
+    border:1px solid var(--p3-border);
+    border-radius:var(--p3-radius-sm);
+    background-color:var(--p3-surface);
+    margin-left:2px;
+    margin-bottom:2px;
+    max-width: 250px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+/*
+    Copyright (c) 2002-2007 Netlor
+    Copyright (c) 2007-2026 Ovensia
+    Contributors hold Copyright (c) to their code submissions.
+
+    This file is part of Ploopi.
+
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
+/******************
+  PLOOPI3 : VARIABLES
+  Toute la palette du gabarit est ici. Changer une valeur suffit à décliner
+  l'habillage (couleur d'un établissement, contraste renforcé...).
+*******************/
+
+:root {
+    --p3-font: 'OpenSans', 'Open Sans', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+    --p3-font-size: 12px;           /* taille de ploopi2 : les largeurs fixes des modules en dépendent */
+    --p3-font-size-nav: 13px;       /* navigation, titres */
+
+    --p3-primary: #2c6e7f;          /* sarcelle Ploopi, 5,8:1 sur blanc */
+    --p3-primary-hover: #225a69;
+    --p3-primary-dark: #1b3f4a;     /* barre supérieure, titres de fenêtre */
+    --p3-primary-soft: #d6e9ee;     /* sélection (texte en --p3-primary-dark : 9:1) */
+    --p3-primary-softer: #ecf5f7;   /* survol */
+    --p3-accent: #f0b429;           /* repère de l'élément courant */
+
+    /* Contrastes (WCAG) : texte courant 16:1, texte secondaire 7,8:1, libellés
+       10,5:1, bord des champs 3:1 (composant d'interface), sur blanc. */
+    --p3-bg: #e8ecf0;               /* fond de l'application : les cartes s'en détachent */
+    --p3-surface: #ffffff;          /* cartes, champs */
+    --p3-surface-2: #f3f6f8;        /* lignes alternées, bandeaux */
+    --p3-surface-3: #e3e9ee;        /* en-têtes de tableaux et de sections */
+    --p3-border: #cfd8df;           /* cadres des cartes et tableaux */
+    --p3-border-strong: #a3b2bd;    /* séparation des en-têtes, tuiles */
+    --p3-border-field: #8796a1;     /* bord des champs de saisie (3:1) */
+    --p3-line: #e1e7ec;             /* séparation des lignes de tableau */
+
+    --p3-text: #16212a;
+    --p3-text-label: #33414a;       /* libellés de formulaires */
+    --p3-text-muted: #46545e;       /* texte secondaire */
+    --p3-text-placeholder: #6b7880; /* 4,5:1 */
+    --p3-text-inverse: #ffffff;
+
+    --p3-danger: #b42318;
+    --p3-danger-soft: #fdeceb;
+    --p3-success: #1e7b45;
+    --p3-success-soft: #e6f4ec;
+    --p3-warning: #8a5a00;
+    --p3-warning-soft: #fff5d6;
+    --p3-info: #1f5f99;
+    --p3-info-soft: #e7f0fa;
+
+    --p3-radius: 6px;
+    --p3-radius-sm: 4px;
+    --p3-shadow-1: 0 1px 2px rgba(16, 24, 40, 0.06), 0 1px 4px rgba(16, 24, 40, 0.08);
+    --p3-shadow-2: 0 12px 32px rgba(16, 24, 40, 0.22), 0 2px 6px rgba(16, 24, 40, 0.10);
+    --p3-focus: 0 0 0 3px rgba(44, 110, 127, 0.28);
+}
+
+/******************
+  MAIN LAYOUT
+*******************/
+
+@font-face {
+    font-family: 'OpenSans';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Open Sans'),
+         local('OpenSans'),
+         url('../fonts/OpenSans.woff2') format('woff2'),
+         url('../fonts/OpenSans.woff') format('woff'),
+         url('../fonts/OpenSans-Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'OpenSans';
+    font-style: normal;
+    font-weight: 700;
+    src: local('Open Sans Bold'),
+         local('OpenSans-Bold'),
+         url('../fonts/OpenSans-Bold.ttf') format('truetype');
+}
+
+body, form, table, td, input, select, textarea, button {
+    font-family: var(--p3-font);
+    font-size: var(--p3-font-size);
+    font-weight: normal;
+    line-height: 1.4;
+}
+
+body, form {
+    margin: 0;
+}
+
+body {
+    color: var(--p3-text);
+    background: var(--p3-bg);
+    -webkit-font-smoothing: antialiased;
+}
+
+body.index {
+    position: relative;
+}
+
+body.popup {
+    margin: 0;
+    padding: 8px;
+    background: var(--p3-surface);
+}
+
+a {
+    text-decoration: none;
+    color: var(--p3-primary);
+}
+
+a:hover {
+    text-decoration: underline;
+    color: var(--p3-primary-hover);
+}
+
+a img {
+    border: 0;
+}
+
+/* L'ancien gabarit demandait « Ubuntu », jamais livré : les titres
+   tombaient en Times. */
+h1, h2, h3, h4 {
+    font-family: var(--p3-font);
+    color: var(--p3-text);
+}
+
+:focus-visible {
+    outline: 2px solid var(--p3-primary);
+    outline-offset: 1px;
+}
+
+#background {
+    height: 100%;
+    min-height: 400px;
+    min-width: 500px;
+    position: absolute;
+    width: 100%;
+    overflow: hidden;
+    background: var(--p3-bg);
+}
+
+
+/******************
+  BARRE SUPÉRIEURE (#dock)
+  Deux niveaux : la barre de l'utilisateur (espace, recherche, messages,
+  profil) puis la barre des modules. La hauteur totale est lue par le script
+  du gabarit pour placer #pagecontent.
+*******************/
+
+#dock {
+    display: block;
+    position: absolute;
+    width: 100%;
+    top: 0;
+    z-index: 2;
+    white-space: nowrap;
+    background: var(--p3-surface);
+    box-shadow: 0 1px 0 var(--p3-border), 0 2px 6px rgba(16, 24, 40, 0.06);
+}
+
+#topbar {
+    height: 44px;
+    padding: 0 12px 0 16px;
+    background: var(--p3-primary-dark);
+    color: var(--p3-text-inverse);
+}
+
+#topbar > * {
+    vertical-align: middle;
+}
+
+#brand {
+    display: block;
+    float: left;
+    height: 44px;
+    line-height: 44px;
+    margin-right: 18px;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-decoration: none;
+}
+
+#brand:hover {
+    text-decoration: none;
+    color: #fff;
+}
+
+#brand span {
+    display: inline-block;
+    width: 22px;
+    height: 22px;
+    margin-right: 8px;
+    border-radius: 6px;
+    background: var(--p3-accent);
+    color: var(--p3-primary-dark);
+    font-size: 13px;
+    line-height: 22px;
+    text-align: center;
+    vertical-align: 1px;
+}
+
+/* Barre des modules */
+
+#mainmenu {
+    margin: 0;
+    padding: 0 8px;
+    min-height: 40px;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+#mainmenu::after {
+    content: '';
+    display: block;
+    clear: both;
+}
+
+#mainmenu li {
+    display: block;
+    position: relative;
+    float: left;
+    list-style: none;
+    background-color: transparent;
+}
+
+#mainmenu li a.mainmenu {
+    display: block;
+    position: relative;
+    color: var(--p3-text-muted);
+    height: 40px;
+    line-height: 40px;
+    padding: 0 12px;
+    font-size: var(--p3-font-size-nav);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+#mainmenu li a.mainmenu::after {
+    content: '';
+    position: absolute;
+    left: 10px;
+    right: 10px;
+    bottom: 0;
+    height: 3px;
+    border-radius: 3px 3px 0 0;
+    background: transparent;
+}
+
+#mainmenu li a.selected {
+    color: var(--p3-primary);
+}
+
+#mainmenu li a.mainmenu.selected::after {
+    background: var(--p3-primary);
+}
+
+#mainmenu li:hover,
+#mainmenu li:focus-within {
+    background: var(--p3-primary-softer);
+}
+
+#mainmenu li:hover a.mainmenu,
+#mainmenu li:focus-within a.mainmenu {
+    color: var(--p3-primary-dark);
+}
+
+#mainmenu li:hover div.blockmenu,
+#mainmenu li:focus-within div.blockmenu {
+    display: block;
+}
+
+#mainmenu img {
+    display: block;
+    float: left;
+}
+
+#mainmenu li div.blockmenu {
+    background: var(--p3-surface);
+    padding: 6px 0;
+    margin: 0;
+    position: absolute;
+    top: 40px;
+    left: 0;
+    display: none;
+    min-width: 220px;
+    max-width: 320px;
+    z-index: 10000;
+    border: 1px solid var(--p3-border);
+    border-radius: 0 0 var(--p3-radius) var(--p3-radius);
+    box-shadow: var(--p3-shadow-2);
+}
+
+/* Menu vide (module sans entrée) ; menu du module courant, déjà affiché
+   dans #modulemenu : pas de liste déroulante qui recouvre la page au clic */
+#mainmenu li div.blockmenu:not(:has(a, div)),
+#dock:has(#modulemenu) #mainmenu li > a.mainmenu.selected + div.blockmenu {
+    display: none !important;
+}
+
+#mainmenu div.blockmenu a.blockmenu {
+    display: block;
+    position: relative;
+    word-wrap: break-word;
+    white-space: normal;
+    overflow: hidden;
+    color: var(--p3-text);
+    text-decoration: none;
+    padding: 8px 16px;
+    font-size: var(--p3-font-size-nav);
+}
+
+#mainmenu div.blockmenu a.blockmenu:hover {
+    background-color: var(--p3-primary-softer);
+    color: var(--p3-primary-dark);
+}
+
+#mainmenu div.blockmenu a.selected {
+    background-color: var(--p3-primary-soft);
+    color: var(--p3-primary-dark);
+    font-weight: 700;
+    box-shadow: inset 3px 0 0 var(--p3-primary);
+}
+
+#mainmenu div.blockmenu a.blockmenu img {
+    border: 0;
+}
+
+#mainmenu div.blockmenu div.blockcontent {
+    background: var(--p3-surface-2);
+    border-bottom: 1px solid var(--p3-border);
+    padding: 8px 12px;
+    overflow: auto;
+    white-space: normal;
+}
+
+/* Menu du module courant, toujours visible sous la barre des modules */
+
+/* Toutes les entrées restent atteignables : passage à la ligne, puis
+   défilement au-delà de trois lignes (news2 y liste ses dernières nouvelles) */
+#modulemenu {
+    clear: both;
+    min-height: 34px;
+    max-height: 98px;
+    padding: 0 16px 4px 16px;
+    box-sizing: border-box;
+    background: var(--p3-surface-2);
+    border-top: 1px solid var(--p3-border);
+    overflow-y: auto;
+    white-space: normal;
+}
+
+#modulemenu a {
+    display: inline-block;
+    height: 26px;
+    line-height: 26px;
+    margin: 4px 2px 0 0;
+    padding: 0 12px;
+    border-radius: 13px;
+    font-size: var(--p3-font-size-nav);
+    color: var(--p3-text-muted);
+    text-decoration: none;
+}
+
+#modulemenu a:hover {
+    background: var(--p3-surface-3);
+    color: var(--p3-text);
+}
+
+#modulemenu a.selected {
+    background: var(--p3-primary-soft);
+    color: var(--p3-primary-dark);
+    font-weight: 700;
+}
+
+/* Zone de contenu : conteneur défilant où s'accrochent les popups (.hook) */
+
+#pagecontent {
+    position: absolute;
+    top: 120px;
+    width: 100%;
+    overflow: auto;
+    z-index: 1;
+    padding-bottom: 16px;
+    box-sizing: border-box;
+}
+
+#statusbar {
+    position: absolute;
+    height: 22px;
+    line-height: 22px;
+    bottom: 0;
+    width: 100%;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+    background: var(--p3-primary-dark);
+    text-align: center;
+    z-index: 100000;
+    color: #fff;
+}
+
+#statusbar a {
+    color: #fff;
+}
+
+#statusbar > div {
+    display: inline-block;
+    padding: 0 12px;
+}
+
+
+/******************
+  CONNEXION
+*******************/
+
+body.login #background,
+#background.login {
+    background:
+        radial-gradient(1200px 600px at 15% 0%, rgba(240, 180, 41, 0.18), transparent 60%),
+        linear-gradient(160deg, #1b3f4a 0%, #2c6e7f 55%, #3f8a8f 100%);
+}
+
+#login_window {
+    display: block;
+    position: absolute;
+    width: 380px;
+    left: 50%;
+    top: 50%;
+    margin-left: -190px;
+    transform: translateY(-58%);
+    color: var(--p3-text);
+}
+
+#login_brand {
+    margin: 0 0 18px 0;
+    text-align: center;
+    color: #fff;
+}
+
+#login_brand strong {
+    display: block;
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
+#login_brand strong span {
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    margin-right: 10px;
+    border-radius: 8px;
+    background: var(--p3-accent);
+    color: var(--p3-primary-dark);
+    font-size: 19px;
+    line-height: 32px;
+    vertical-align: 3px;
+}
+
+#login_brand em {
+    display: block;
+    margin-top: 4px;
+    font-style: normal;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+#login,
+#lostpassword_form {
+    position: relative;
+    background: var(--p3-surface);
+    border-radius: 10px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.28);
+    padding: 26px 30px 24px 30px;
+}
+
+#login h1,
+#lostpassword_form h1 {
+    margin: 0 0 4px 0;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+#login_form {
+    margin: 0;
+    padding: 0;
+}
+
+.login_form_box {
+    display: block;
+    position: relative;
+}
+
+.login_form_box p {
+    margin: 0 0 14px 0;
+}
+
+.login_form_box label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 700;
+    color: var(--p3-text);
+}
+
+.login_form_box input.text {
+    display: block;
+    width: 100%;
+    height: 40px;
+    padding: 0 12px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.login_intro {
+    margin: 0 0 18px 0;
+    color: var(--p3-text-muted);
+}
+
+.login_message {
+    display: flex;
+    gap: 8px;
+    margin: 4px 0 14px 0;
+    padding: 10px 12px;
+    border-radius: var(--p3-radius-sm);
+    background: var(--p3-info-soft);
+    color: var(--p3-info);
+}
+
+.login_message.error {
+    background: var(--p3-danger-soft);
+    color: var(--p3-danger);
+    font-weight: normal;
+}
+
+.login_message.warning {
+    background: var(--p3-warning-soft);
+    color: var(--p3-warning);
+}
+
+#checkpass {
+    margin: -6px 0 14px 0;
+}
+
+#checkpass * {
+    font-size: 11px;
+}
+
+#checkpass .password-strength-bar {
+    border-radius: 2px;
+}
+
+.login_actions {
+    margin-top: 20px;
+}
+
+.login_actions button {
+    display: block;
+    width: 100%;
+    height: 42px;
+    font-size: 14px;
+}
+
+.login_actions a {
+    display: block;
+    margin-top: 14px;
+    text-align: center;
+}
+
+#login_statusbar {
+    position: absolute;
+    height: 32px;
+    line-height: 32px;
+    bottom: 0;
+    width: 100%;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+    color: rgba(255, 255, 255, 0.75);
+    text-align: center;
+}
+
+#login_statusbar a {
+    color: #fff;
+}
+
+
+/******************
+  OUTILS DE L'UTILISATEUR (barre supérieure)
+*******************/
+
+#userbox {
+    display: block;
+    float: right;
+    height: 44px;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+    text-align: right;
+    color: #fff;
+}
+
+#userbox > * {
+    display: inline-block;
+    position: relative;
+    height: 44px;
+    line-height: 44px;
+    padding: 0 10px;
+    color: #fff;
+    text-decoration: none;
+    vertical-align: top;
+}
+
+#userbox > * > * {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+#userbox > div {
+    font-weight: 700;
+}
+
+#userbox > div svg {
+    margin-right: 6px;
+    opacity: 0.8;
+}
+
+#userbox > a {
+    border-radius: var(--p3-radius-sm);
+}
+
+#userbox > a:hover {
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
+    text-decoration: none;
+}
+
+#userbox > a.selected {
+    box-shadow: inset 0 -3px 0 var(--p3-accent);
+}
+
+#userbox > a svg {
+    opacity: 0.85;
+}
+
+#userbox > a:hover svg {
+    opacity: 1;
+}
+
+#userbox em {
+    font-style: normal;
+}
+
+#tpl_ploopi_tickets_new {
+    min-width: 20px;
+    height: 20px;
+    line-height: 20px;
+    margin-left: 6px;
+    padding: 0 6px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.18);
+    font-size: 11px;
+    font-weight: 700;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+#userbox a.no_tickets #tpl_ploopi_tickets_new {
+    display: none;
+}
+
+#userbox a.new_tickets #tpl_ploopi_tickets_new {
+    background: var(--p3-accent);
+    color: var(--p3-primary-dark);
+}
+
+#workspace {
+    display: block;
+    float: left;
+    position: relative;
+    margin-top: 7px;
+    margin-right: 10px;
+}
+
+#workspace .dropdown {
+    position: relative;
+    height: 30px;
+    min-width: 180px;
+    max-width: 280px;
+    padding: 0 30px 0 10px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    border-radius: var(--p3-radius-sm);
+    outline: none;
+    display: inline-block;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    color: #fff;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: none;
+    box-sizing: border-box;
+}
+
+#workspace .dropdown:hover,
+#workspace .dropdown:focus {
+    background: rgba(255, 255, 255, 0.18);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+#workspace .dropdown option {
+    color: var(--p3-text);
+    background: var(--p3-surface);
+    font-weight: normal;
+}
+
+#workspace::after {
+    content: '';
+    position: absolute;
+    right: 11px;
+    top: 11px;
+    width: 6px;
+    height: 6px;
+    border-right: 2px solid rgba(255, 255, 255, 0.8);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.8);
+    transform: rotate(45deg);
+    pointer-events: none;
+}
+
+#searchbox {
+    display: block;
+    float: right;
+    position: relative;
+    margin-top: 7px;
+    margin-right: 8px;
+}
+
+#searchbox input {
+    width: 160px;
+    height: 30px;
+    padding: 0 30px 0 10px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    border-radius: var(--p3-radius-sm);
+    color: #fff;
+    outline: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    box-shadow: none;
+    box-sizing: border-box;
+    transition: width .2s ease, background .2s ease;
+}
+
+#searchbox input:focus {
+    width: 240px;
+    background: rgba(255, 255, 255, 0.18);
+    border-color: rgba(255, 255, 255, 0.6);
+    box-shadow: none;
+}
+
+#searchbox input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+#searchbox button {
+    position: absolute;
+    right: 2px;
+    top: 2px;
+    height: 26px;
+    width: 26px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+    color: #fff;
+    opacity: 0.8;
+}
+
+#searchbox button:hover {
+    background: transparent;
+    opacity: 1;
+}
+
+#search:focus {
+    border-color: rgba(255, 255, 255, 1);
+}
+
+#msg_unread {
+    margin-left: 6px;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+#userbox a.msg_unread #tpl_ploopi_tickets_new {
+    background: var(--p3-accent);
+    color: var(--p3-primary-dark);
+}
+
+/* Le backoffice connecté garde la largeur minimale de ploopi2 : les écrans
+   des modules ne sont pas prévus pour moins. La connexion, elle, s'adapte. */
+#background.connected {
+    min-width: 1180px;
+}
+
+#background.login {
+    min-width: 0;
+    overflow: auto;
+}
+
+@media (max-width: 480px) {
+    /* Sur un téléphone, la carte suit le flux : rien ne se chevauche, quelle
+       que soit la hauteur du formulaire affiché */
+    #login_window {
+        position: static;
+        width: auto;
+        margin: 24px 16px 0 16px;
+        transform: none;
+    }
+
+    #login,
+    #lostpassword_form {
+        padding: 20px;
+    }
+
+    #login_statusbar {
+        position: static;
+        margin: 24px 0 16px 0;
+        line-height: 20px;
+        height: auto;
+    }
+}
+/*
+    Copyright (c) 2009 HeXad
+    Contributors hold Copyright (c) to their code submissions.
+
+    This file is part of Ploopi.
+
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+/******************
+  SYSTEM.MODULE.MESSAGE
+*******************/
+.ploopi_mod_mess_ok
+{
+    position: absolute;
+    right: 35px;
+    top: 46px;
+    margin: 0;
+    padding: 0;
+    font-size: 12px;
+    font-weight: bold;
+    color: var(--p3-success);
+    z-index:100;
+}
+
+.ploopi_mod_mess_error
+{
+    position: absolute;
+    right: 35px;
+    top: 46px;
+    margin: 0;
+    padding: 0;
+    font-size: 12px;
+    font-weight: bold;
+    color: var(--p3-danger);
+    z-index:100;
+}
+/*
+    Généré par tools/ploopi3_modules.php : ne pas modifier à la main.
+
+    Les feuilles des modules (install/<module>/files/include/styles.css), avec leurs
+    seules couleurs, réécrites dans la palette de ploopi3. Préfixe « body » : la
+    feuille du module est chargée après celle du gabarit. Les retouches faites à
+    la main sont dans base_modules_retouches.css.
+*/
+
+/******************
+  BOOKING
+*******************/
+
+body .booking_toolbar {
+    background-color: var(--p3-surface-3);
+    border-bottom-color: var(--p3-border-strong);
+}
+
+body #booking_treeview {
+    border-color: var(--p3-border-strong);
+    background-color: var(--p3-surface-2);
+}
+
+body #booking_treeview a {
+    border-bottom-color: var(--p3-border-strong);
+}
+
+body #booking_treeview a:hover {
+    background-color: var(--p3-primary-softer);
+    border-bottom-color: var(--p3-border-strong);
+}
+
+body .booking_event_ressource_list {
+    border-color: var(--p3-border-strong);
+    background-color: var(--p3-surface);
+}
+
+body .booking_event_ressource_list_inner {
+    background-color: var(--p3-surface);
+}
+
+body .booking_event_ressource_list p:hover {
+    background-color: var(--p3-primary-softer);
+}
+
+body .booking_event_color {
+    border-color: var(--p3-border-field);
+}
+
+body .booking_event_color + div {
+    color: var(--p3-danger);
+}
+
+body .booking_filtre {
+    border-bottom-color: var(--p3-border-strong);
+}
+
+body .booking_bandeau {
+    border-color: var(--p3-border-strong);
+    background-color: var(--p3-surface-3);
+}
+
+/******************
+  DBREPORT
+*******************/
+
+body .dbreport_title {
+    border-bottom-color: var(--p3-border-strong);
+    background-color: var(--p3-surface-3);
+}
+
+body .dbreport_checkboxes > form > div > fieldset > div > label > em {
+    color: var(--p3-text-muted);
+}
+
+body .dbreport_checkboxes > form > div > fieldset {
+    border-color: var(--p3-border-strong);
+    background-color: var(--p3-surface-2);
+}
+
+body .dbreport_panels > form > div > fieldset {
+    border-top-color: var(--p3-border);
+}
+
+body .dbreport_table {
+    border-color: var(--p3-border-strong);
+}
+
+body .dbreport_table_title {
+    border-bottom-color: var(--p3-border);
+}
+
+body .dbreport_table_field {
+    border-bottom-color: var(--p3-border);
+}
+
+body .dbreport_table_info {
+    color: var(--p3-text);
+}
+
+body .dbreport_format_howto td,
+body .dbreport_format_howto th {
+    border-color: var(--p3-border-strong);
+}
+
+body .dbreport_format_howto th {
+    background-color: var(--p3-surface-3);
+}
+
+body a.dbreport_action {
+    border-color: var(--p3-border-field);
+}
+
+body .dbreport_bandeau {
+    border-bottom-color: var(--p3-border);
+}
+
+body pre.dbreport_sql {
+    color: var(--text, var(--p3-text));
+    background-color: var(--p3-surface-2);
+}
+
+body .dbreport_sql_quote {
+    color: var(--p3-success);
+}
+
+body .dbreport_sql_backtick_quote {
+    color: var(--p3-info);
+}
+
+body .dbreport_sql_number {
+    color: var(--p3-warning);
+}
+
+body .dbreport_sql_comment {
+    color: var(--p3-text-muted);
+}
+
+body .dbreport_sql_error {
+    background-color: var(--p3-danger-soft);
+    color: var(--p3-danger);
+}
+
+body [data-theme="dark"] .dbreport_sql_quote {
+    color: var(--p3-success);
+}
+
+body [data-theme="dark"] .dbreport_sql_backtick_quote {
+    color: var(--p3-info);
+}
+
+body [data-theme="dark"] .dbreport_sql_number {
+    color: var(--p3-warning);
+}
+
+body [data-theme="dark"] .dbreport_sql_comment {
+    color: var(--p3-text-muted);
+}
+
+body [data-theme="dark"] .dbreport_sql_error {
+    color: var(--p3-danger);
+}
+
+body :root:not([data-theme="light"]) .dbreport_sql_quote {
+    color: var(--p3-success);
+}
+
+body :root:not([data-theme="light"]) .dbreport_sql_backtick_quote {
+    color: var(--p3-info);
+}
+
+body :root:not([data-theme="light"]) .dbreport_sql_number {
+    color: var(--p3-warning);
+}
+
+body :root:not([data-theme="light"]) .dbreport_sql_comment {
+    color: var(--p3-text-muted);
+}
+
+/******************
+  DIRECTORY
+*******************/
+
+body .directory_shared_main {
+    border-bottom-color: var(--p3-border-strong);
+    background-color: var(--p3-surface-2);
+}
+
+body .directory_shared_heading {
+    border-left-color: var(--p3-border-strong);
+    background-color: var(--p3-surface-2);
+}
+
+body .directory_search {
+    background-color: var(--p3-surface-2);
+    border-bottom-color: var(--p3-border-strong);
+}
+
+body .directory_titre {
+    background-color: var(--p3-surface-3);
+    border-bottom-color: var(--p3-border-strong);
+}
+
+body .directory_encadre {
+    border-color: var(--p3-border-strong);
+    background-color: var(--p3-surface-3);
+}
+
+body .directory_photo {
+    border-color: var(--p3-border-field);
+}
+
+body .directory_bandeau_titre {
+    border-bottom-color: var(--p3-border-strong);
+}
+
+body .directory_barre_boutons {
+    background-color: var(--p3-surface-3);
+    border-top-color: var(--p3-border-strong);
+}
+
+body .directory_bandeau_fort {
+    background-color: var(--p3-surface-3);
+    border-bottom-color: var(--p3-border-strong);
+}
+
+body .directory_bandeau {
+    background-color: var(--p3-surface-3);
+    border-bottom-color: var(--p3-border-strong);
+}
+
+body .directory_bandeau_simple {
+    background-color: var(--p3-surface-3);
+}
+
+body .directory_bandeau_sombre {
+    background-color: var(--p3-surface-3);
+    border-bottom-color: var(--p3-border-strong);
+}
+
+body .directory_cadre_blanc {
+    border-color: var(--p3-border-strong);
+    background-color: var(--p3-surface);
+}
+
+body .directory_fiche_detail {
+    border-left-color: var(--p3-border-strong);
+}
+
+body .directory_cadre {
+    border-color: var(--p3-border-strong);
+}
+
+body .directory_filet_haut {
+    border-top-color: var(--p3-border-strong);
+}
+
+body .directory_filet_fort {
+    border-bottom-color: var(--p3-border-strong);
+}
+
+body .directory_filet_bas {
+    border-bottom-color: var(--p3-border-strong);
+}
+
+body .directory_titre_fort {
+    background-color: var(--p3-surface-3);
+    border-bottom-color: var(--p3-border-strong);
+}
+
+/******************
+  DOC
+*******************/
+
+body .doc_path {
+    border-bottom-color: var(--p3-border);
+}
+
+body .doc_path a {
+    border-color: var(--p3-border);
+    background-color: var(--p3-surface-2);
+}
+
+body .doc_path a:hover {
+    border-color: var(--p3-border);
+    background-color: var(--p3-primary-softer);
+}
+
+body a.doc_pathselected {
+    border-color: var(--p3-border);
+    background-color: var(--p3-surface-3);
+}
+
+body div.doc_folderinfo {
+    background-color: var(--p3-surface-2);
+}
+
+body div.doc_folderannotation {
+    border-color: var(--p3-border);
+    background-color: var(--p3-surface-2);
+}
+
+body div.doc_fileinfo {
+    border-bottom-color: var(--p3-border-strong);
+    background-color: var(--p3-surface-3);
+}
+
+body div.doc_fileinfo a {
+    border-left-color: var(--p3-border-strong);
+}
+
+body div.doc_fileinfo a:hover {
+    background-color: var(--p3-primary-softer);
+}
+
+body div.doc_explorer_main {
+    border-top-color: var(--p3-border);
+}
+
+body div.doc_moreinfo_title {
+    border-color: var(--p3-border);
+    background-color: var(--p3-surface-2);
+}
+
+body div.doc_moreinfo_box {
+    border-color: var(--p3-border);
+    background-color: var(--p3-surface-2);
+}
+
+body #doc_share {
+    border-color: var(--p3-border-strong);
+    background-color: var(--p3-surface-2);
+}
+
+body #doc_validation {
+    border-color: var(--p3-border-strong);
+    background-color: var(--p3-surface-2);
+}
+
+body div.doc_fileform {
+    border-color: var(--p3-border);
+    background-color: var(--p3-surface-2);
+}
+
+body div.doc_fileform_title {
+    background-color: var(--p3-surface-3);
+    border-bottom-color: var(--p3-border-strong);
+}
+
+body div.doc_fileform_main {
+    background-color: var(--p3-surface-2);
+}
+
+body div.doc_admin_titlebar {
+    border-bottom-color: var(--p3-border-strong);
+    background-color: var(--p3-surface-3);
+}
+
+body div.doc_admin_form {
+    border-bottom-color: var(--p3-border-strong);
+    background-color: var(--p3-surface-2);
+}
+
+body #doc_progressbar {
+    border-color: var(--p3-border-strong);
+}
+
+body #doc_progressbar_bg {
+    background-color: var(--p3-surface-3);
+}
+
+body a.doc_fckexplorer_vignette {
+    border-color: var(--p3-border-strong);
+    background-color: var(--p3-surface);
+}
+
+body a.doc_fckexplorer_vignette div {
+    background-color: var(--p3-surface);
+}
+
+body a.doc_fckexplorer_vignette:hover {
+    border-color: var(--p3-border-strong);
+    background-color: var(--p3-primary-softer);
+}
+
+body a.doc_fckexplorer_vignette:hover div {
+    background-color: var(--p3-primary-softer);
+}
+
+body a.doc_fckexplorer_file {
+    border-color: var(--p3-border-strong);
+    background-color: var(--p3-surface);
+}
+
+body a.doc_fckexplorer_file div {
+    background-color: var(--p3-surface);
+}
+
+body a.doc_fckexplorer_file:hover {
+    border-color: var(--p3-border-strong);
+    background-color: var(--p3-primary-softer);
+}
+
+body div.doc_thumb {
+    border-color: var(--p3-border-field);
+    background-color: var(--p3-surface-3);
+}
+
+body div.doc_thumb:hover {
+    background-color: var(--p3-primary-softer);
+}
+
+body .doc_hl-content {
+    background-color: var(--p3-surface-2);
+}
+
+body .doc_hl-content table td.doc_hl-num {
+    border-right-color: var(--p3-border-strong);
+    background-color: var(--p3-surface-3);
+    color: var(--p3-text-muted);
+}
+
+body .doc_draft {
+    background-color: var(--p3-danger-soft);
+}
+
+body .doc_separateur {
+    border-left-color: var(--p3-border);
+}
+
+body .doc_bandeau_titre {
+    background-color: var(--p3-surface-2);
+    border-bottom-color: var(--p3-border-strong);
+}
+
+body .doc_titre {
+    border-bottom-color: var(--p3-border-strong);
+}
+
+body .doc_filet_bas {
+    border-bottom-color: var(--p3-border-strong);
+}
+
+body .doc_bandeau {
+    border-bottom-color: var(--p3-border-strong);
+    background-color: var(--p3-surface-3);
+}
+
+body .doc_ligne {
+    border-bottom-color: var(--p3-border-strong);
+}
+
+body .doc_encadre {
+    border-color: var(--p3-border-strong);
+    background-color: var(--p3-surface-2);
+}
+
+body .doc_encadre_gris {
+    border-color: var(--p3-border-strong);
+    background-color: var(--p3-surface-2);
+}
+
+body .doc_cadre {
+    border-color: var(--p3-border-strong);
+}
+
+body .doc_legende_brouillon {
+    background-color: var(--p3-danger-soft);
+}
+
+/******************
+  FORMS
+*******************/
+
+body table.forms_viewlist {
+    border-color: var(--p3-border-strong);
+}
+
+body table.forms_viewlist td,
+body table.forms_viewlist th {
+    border-color: var(--p3-border-strong);
+}
+
+body table.forms_viewlist tr:hover {
+    background-color: var(--p3-primary-softer);
+}
+
+body table.forms_viewlist th a:hover {
+    background-color: var(--p3-primary-softer);
+}
+
+body table.forms_viewlist th a.selected {
+    background-color: var(--p3-surface-3);
+}
+
+body div#forms_filter_box {
+    background-color: var(--p3-surface-3);
+    border-bottom-color: var(--p3-border-strong);
+}
+
+body div#forms_info_box {
+    background-color: var(--p3-surface-2);
+    border-bottom-color: var(--p3-border-strong);
+}
+
+body div#forms_archive_box {
+    background-color: var(--p3-surface-3);
+    border-bottom-color: var(--p3-border-strong);
+}
+
+body a.forms_public_link:hover {
+    background-color: var(--p3-primary-softer);
+}
+
+body a.forms_public_link h1 {
+    border-bottom-color: var(--p3-border);
+}
+
+body .forms_noselect {
+    background-color: var(--p3-surface-2);
+}
+
+body .forms_export_link {
+    border-color: var(--p3-border);
+    background-color: var(--p3-surface);
+}
+
+body .forms_export_link:hover {
+    background-color: var(--p3-primary-softer);
+}
+
+body .forms_param_link a {
+    border-color: var(--p3-border-strong);
+    background-color: var(--p3-surface-2);
+}
+
+body .forms_param_link a:hover {
+    background-color: var(--p3-primary-softer);
+}
+
+body .forms_barre_boutons {
+    background-color: var(--p3-surface-3);
+    border-top-color: var(--p3-border-strong);
+}
+
+body .forms_barre_boutons_bas {
+    background-color: var(--p3-surface-3);
+    border-bottom-color: var(--p3-border-strong);
+}
+
+body .forms_bandeau {
+    background-color: var(--p3-surface-3);
+    border-top-color: var(--p3-border-strong);
+    border-bottom-color: var(--p3-border-strong);
+}
+
+body .forms_separation {
+    border-top-color: var(--p3-border-strong);
+}
+
+body .forms_ligne {
+    border-bottom-color: var(--p3-border-strong);
+}
+
+body .forms_encadre {
+    background-color: var(--p3-surface-2);
+    border-color: var(--p3-border-strong);
+}
+
+body .forms_fond {
+    background-color: var(--p3-surface);
+}
+
+body .forms_bandeau_clair {
+    background-color: var(--p3-surface-2);
+    border-bottom-color: var(--p3-border);
+}
+
+/******************
+  NANOGALLERY
+*******************/
+
+body .nano form > div > fieldset > div > label.nano_clabel {
+    background-color: var(--p3-surface);
+    border-color: var(--p3-border-field);
+}
+
+body .nano_check:checked + label:after {
+    color: var(--p3-info);
+}
+
+/******************
+  NEWS2
+*******************/
+
+body .news2_separation {
+    border-top-color: var(--p3-border-strong);
+}
+
+/******************
+  PLANNING
+*******************/
+
+body .planning_event_ressource_list {
+    border-color: var(--p3-border-strong);
+    background-color: var(--p3-surface);
+}
+
+body .planning_event_ressource_list em:hover {
+    background-color: var(--p3-primary-softer);
+}
+
+body .planning_bandeau {
+    border-color: var(--p3-border-strong);
+    background-color: var(--p3-surface-3);
+}
+
+body .planning_cartouche {
+    border-color: var(--p3-border-strong);
+    background-color: var(--p3-surface);
+}
+
+/******************
+  WEBEDIT
+*******************/
+
+body #webedit_header {
+    border-bottom-color: var(--p3-border-strong);
+    background-color: var(--p3-surface-3);
+}
+
+body div.webedit_main {
+    border-left-color: var(--p3-border-strong);
+    background-color: var(--p3-info-soft);
+}
+
+body div.webedit_main2 {
+    border-left-color: var(--p3-border-strong);
+    background-color: var(--p3-surface-2);
+}
+
+body #webedit_legende {
+    background-color: var(--p3-surface-2);
+    border-top-color: var(--p3-border-strong);
+    border-bottom-color: var(--p3-border-strong);
+}
+
+body .webedit_form p fieldset {
+    border-color: var(--p3-border-strong);
+    background-color: var(--p3-surface-3);
+}
+
+body #webedit_heading_toolbar {
+    background-color: var(--p3-surface-3);
+    border-bottom-color: var(--p3-border-strong);
+}
+
+body #webedit_stats {
+    background-color: var(--p3-surface);
+}
+
+body #webedit_stats_select p {
+    border-bottom-color: var(--p3-border-strong);
+    background-color: var(--p3-surface-2);
+}
+
+body #webedit_stats_select p a {
+    background-color: var(--p3-surface-3);
+    border-color: var(--p3-border-strong);
+}
+
+body #webedit_stats_select p a:hover {
+    background-color: var(--p3-primary-softer);
+    border-color: var(--p3-border-strong);
+}
+
+body #webedit_stats_select p a.selected {
+    background-color: var(--p3-surface);
+    border-color: var(--p3-border-strong);
+}
+
+body .webedit_stats_graph {
+    background-color: var(--p3-surface);
+}
+
+body .webedit_stats_array {
+    background-color: var(--p3-surface);
+}
+
+body .webedit_cadre {
+    border-color: var(--p3-border-strong);
+}
+
+body .webedit_filet_haut {
+    border-top-color: var(--p3-border-strong);
+}
+
+body .webedit_filet_bas {
+    border-bottom-color: var(--p3-border-strong);
+}
+
+body .webedit_liste {
+    border-color: var(--p3-border-strong);
+}
+
+body .webedit_liste_titre {
+    background-color: var(--p3-surface-3);
+    border-bottom-color: var(--p3-border-strong);
+}
+
+body .webedit_bandeau {
+    background-color: var(--p3-surface-3);
+    border-color: var(--p3-border-strong);
+}
+
+body .webedit_pied {
+    background-color: var(--p3-surface-3);
+    border-top-color: var(--p3-border-strong);
+}
+
+body .webedit_titre_page {
+    background-color: var(--p3-surface-3);
+    border-bottom-color: var(--p3-border-strong);
+}
+
+body .webedit_titre {
+    background-color: var(--p3-surface-3);
+    border-bottom-color: var(--p3-border-strong);
+}
+
+/******************
+  WIKI
+*******************/
+
+body #wiki_help {
+    background-color: var(--p3-surface);
+}
+
+body #wiki_help table td {
+    background-color: var(--p3-surface-2);
+}
+
+body .wiki_page h1 {
+    color: var(--p3-text);
+}
+
+body .wiki_page h2 {
+    color: var(--p3-text);
+}
+
+body .wiki_page h3 {
+    color: var(--p3-text);
+}
+
+body .wiki_page table {
+    border-color: var(--p3-border-field);
+}
+
+body .wiki_page table,
+body .wiki_page td,
+body .wiki_page th {
+    border-color: var(--p3-border-strong);
+}
+
+body .wiki_page a.new {
+    color: var(--p3-danger);
+}
+
+body .wiki_page pre {
+    background-color: var(--p3-surface-2);
+    border-color: var(--p3-border);
+}
+
+body .wiki_page ul.toc {
+    background-color: var(--p3-warning-soft);
+    border-color: var(--p3-border);
+}
+
+body .wiki_page ul.toc a {
+    color: var(--p3-text-muted);
+}
+
+body .wiki_page ul.toc a:hover {
+    color: var(--p3-danger);
+}
+
+body .wiki_page a.wiki-anchor:hover {
+    color: var(--p3-text-muted) !important;
+}
+
+body .wiki_page span.wiki_link_notfound a {
+    color: var(--p3-danger);
+}
+
+body .wiki_page .footnote {
+    color: var(--p3-text-muted);
+}
+
+body #wiki_page_print_info {
+    color: var(--p3-text-muted);
+}
+
+body #wiki_diff {
+    background-color: var(--p3-surface);
+    border-color: var(--p3-border);
+}
+
+body #wiki_index {
+    background-color: var(--p3-surface);
+    border-color: var(--p3-border);
+}
+
+body #wiki_index h1 {
+    border-bottom-color: var(--p3-border-strong);
+    color: var(--p3-text);
+}
+
+body .wiki_page .hl-content {
+    border-color: var(--p3-border);
+    background-color: var(--p3-surface-2);
+}
+
+body .wiki_page table td.hl-num {
+    border-right-color: var(--p3-border-strong);
+    background-color: var(--p3-surface-3);
+    color: var(--p3-text-muted);
+}
+
+body .wiki_page .hl-default {
+    color: var(--p3-text);
+}
+
+body .wiki_page .hl-code {
+    color: var(--p3-text-muted);
+}
+
+body .wiki_page .hl-string {
+    color: var(--p3-danger);
+}
+
+body .wiki_page .hl-identifier {
+    color: var(--p3-info);
+}
+
+body .wiki_page .hl-reserved {
+    color: var(--p3-success);
+}
+
+body .wiki_page .hl-inlinedoc {
+    color: var(--p3-info);
+}
+
+body .wiki_page .hl-url {
+    color: var(--p3-info);
+}
+
+body .wiki_page .hl-special {
+    color: var(--p3-info);
+}
+
+body .wiki_page .hl-number {
+    color: var(--p3-danger);
+}
+
+body .wiki_page .hl-inlinetags {
+    color: var(--p3-info);
+}
+
+html body.wiki_print a,
+html body.wiki_print a:visited {
+    color: var(--p3-info);
+}
+
+body .wiki_page_toc {
+    background-color: var(--p3-warning-soft);
+}
+
+body .wiki_page_toc a {
+    color: var(--p3-text-muted);
+}
+
+body .wiki_page_toc a:hover {
+    color: var(--p3-danger);
+}
+
+body .wiki_page_toc ul {
+    color: var(--p3-text-muted);
+}
+
+body .wiki_aide_cellule {
+    border-color: var(--p3-border-strong);
+}
+
+body .wiki_filet_haut {
+    border-top-color: var(--p3-border);
+}
+
+body .wiki_bandeau {
+    background-color: var(--p3-surface-3);
+    border-bottom-color: var(--p3-border);
+}
+/*
+    Copyright (c) 2007-2026 Ovensia
+    Contributors hold Copyright (c) to their code submissions.
+
+    This file is part of Ploopi.
+
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
+/******************
+  MODULES : RETOUCHES
+  Complète base_modules.css (généré). Même règle que lui : rien qui change la
+  géométrie des écrans des modules (pas de marge, de remplissage, de bordure
+  nouvelle) ; les liserés sont des ombres intérieures.
+*******************/
+
+/* Bandeaux d'information et d'en-tête : un liseré à gauche, comme ceux du système */
+body .booking_bandeau,
+body .booking_toolbar,
+body .dbreport_bandeau,
+body .directory_bandeau,
+body .directory_bandeau_fort,
+body .directory_bandeau_simple,
+body .directory_bandeau_sombre,
+body .doc_bandeau,
+body .doc_bandeau_titre,
+body .forms_bandeau,
+body .forms_bandeau_clair,
+body .planning_bandeau,
+body .webedit_bandeau,
+body .wiki_bandeau {
+    box-shadow: inset 3px 0 0 var(--p3-border-strong);
+}
+
+/* Titres de section : en sarcelle foncée, liseré sarcelle */
+body .dbreport_title,
+body .dbreport_table_title,
+body .directory_titre,
+body .directory_titre_fort,
+body .directory_bandeau_titre,
+body .doc_titre,
+body .webedit_titre,
+body .webedit_titre_page,
+body .webedit_liste_titre {
+    color: var(--p3-primary-dark);
+    box-shadow: inset 3px 0 0 var(--p3-primary);
+}
+
+body .directory_titre_fort,
+body .webedit_titre_page {
+    background-color: var(--p3-surface-2);
+}
+
+/* Barres de boutons : les boutons suffisent, sans aplat gris derrière */
+body .forms_barre_boutons,
+body .forms_barre_boutons_bas,
+body .directory_barre_boutons {
+    background-color: transparent;
+    border-color: var(--p3-line);
+}
+
+/* Fil d'Ariane de la GED : étiquettes cliquables */
+body .doc_path a {
+    border-radius: var(--p3-radius-sm);
+}
+
+body a.doc_pathselected {
+    color: var(--p3-primary-dark);
+    background-color: var(--p3-primary-soft);
+    border-color: var(--p3-primary-soft);
+}
+
+/* Document en attente de validation (brouillon) : teinte d'avertissement */
+body .doc_draft,
+body .doc_legende_brouillon {
+    background-color: var(--p3-warning-soft);
+}
+/*
+    Copyright (c) 2002-2007 Netlor
+    Copyright (c) 2007-2008 Ovensia
+    Contributors hold Copyright (c) to their code submissions.
+
+    This file is part of Ploopi.
+
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+div.ploopi_share_title {
+    font-weight:bold;
+    padding:4px;
+    background-color:#fdf3ea;
+    box-shadow:inset 4px 0 0 #b54708;
+    padding-left:12px;
+}
+
+a.ploopi_share_title {
+    display:block;
+    font-weight:bold;
+    padding:4px;
+    background-color:#fdf3ea;
+    box-shadow:inset 4px 0 0 #b54708;
+    padding-left:12px;
+    text-decoration:none;
+}
+
+a.ploopi_share_title:hover {
+    text-decoration:none;
+}
+
+.ploopi_share_search_form {
+    padding:4px;
+    background-color:#fffaf5;
+}
+
+.ploopi_share_authorizedlist {
+    padding:4px;
+    background-color:#fffaf5;
+}
+
+.ploopi_share_select_workgroup {
+    font-weight:bold;
+    background-color:var(--p3-surface-3);
+    border-bottom:1px solid var(--p3-border);
+    padding:1px;
+}
+
+.ploopi_share_select_workgroup span {
+    margin-left:4px;
+}
+
+.ploopi_share_select_user {
+    display:block;
+    background-color:var(--p3-surface);
+    border-bottom:1px solid var(--p3-border);
+    color:var(--p3-text-muted);
+    padding:1px 1px 1px 20px;
+    text-decoration:none;
+}
+
+.ploopi_share_select_user:hover {
+    text-decoration:none;
+    background-color:#fbe8d6;
+    color:var(--p3-text);
+}
+
+.ploopi_share_select_user span {
+    padding-left:4px;
+}
+
+.ploopi_share_select_usergroup {
+    display:block;
+    font-weight:bold;
+    background-color:var(--p3-surface-2);
+    border-bottom:1px solid var(--p3-border);
+    color:var(--p3-text-muted);
+    padding:1px 1px 1px 20px;
+    text-decoration:none;
+}
+
+.ploopi_share_select_usergroup:hover {
+    text-decoration:none;
+    background-color:#fbe8d6;
+    color:var(--p3-text);
+}
+
+.ploopi_share_select_usergroup span {
+    padding-left:4px;
+}
+
+.ploopi_share_select_usergroup_user {
+    display:block;
+    background-color:var(--p3-surface);
+    border-bottom:1px solid var(--p3-border);
+    color:var(--p3-text-muted);
+    padding:1px 1px 1px 40px;
+    text-decoration:none;
+}
+
+.ploopi_share_select_usergroup_user:hover {
+    text-decoration:none;
+    background-color:#fbe8d6;
+    color:var(--p3-text);
+}
+
+.ploopi_share_select_usergroup_user span {
+    padding-left:4px;
+}
+
+.ploopi_share_select_legend {
+    padding:2px 1px;
+    text-align:right;
+}
+.ploopi_share_select_legend span {
+    padding:0 4px;
+}
+
+.ploopi_share_select_empty {
+    padding:4px;
+}
+.ploopi_share_select_empty span {
+    padding:0 4px;
+}
+
+a.ploopi_share_delete_user {
+    text-decoration:none;
+}
+
+a.ploopi_share_delete_user:hover {
+    text-decoration:none;
+}
+
+a.ploopi_share_delete_user img {
+    border:0;
+}
+/*
+    Copyright (c) 2007-2026 Ovensia
+    Contributors hold Copyright (c) to their code submissions.
+
+    This file is part of Ploopi.
+
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
+/**
+ * Composants produits par ploopi\skin (include/classes/skin.php) et par les
+ * formulaires du socle. Les sélecteurs sont ceux de ploopi2, un par un : seul
+ * l'aspect change, jamais la structure (flottants, largeurs, positions), dont
+ * dépendent les modules.
+ */
+
+/******************
+  FENÊTRES (ploopi.popup)
+*******************/
+
+.ploopi_popup {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 200px;
+    overflow: hidden;
+    background: var(--p3-surface);
+    border-radius: 8px;
+    box-shadow: var(--p3-shadow-2);
+}
+
+/* ploopi2 rendait les fenêtres translucides hors survol : illisible au-dessus
+   d'un formulaire. Elles restent opaques. */
+.ploopi_popup > * {
+    opacity: 1;
+}
+
+.ploopi_popup .simplebloc {
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.ploopi_popup .simplebloc_title {
+    border-radius: 0;
+    height: 38px;
+    line-height: 38px;
+    padding-left: 10px;
+    background: var(--p3-primary-dark);
+    color: var(--p3-text-inverse);
+    border-bottom: 0;
+}
+
+.ploopi_popup .simplebloc_title a {
+    color: var(--p3-text-inverse);
+}
+
+.ploopi_popup .simplebloc_content {
+    margin: 0;
+    padding: 0;
+}
+
+/* Fenêtre réduite à une ligne de formulaire (envoi d'une photo, d'un fichier) :
+   marges et espacement, sans toucher aux fenêtres à mise en page propre */
+.ploopi_popup .simplebloc_content > form > p.ploopi_va:only-child {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px !important;
+}
+
+.ploopi_popup .simplebloc_content > form > p.ploopi_va:only-child input[type='file'] {
+    flex: 1;
+    min-width: 0;
+}
+
+.ploopi_popup .simplebloc_titleleft img {
+    padding: 11px 8px;
+    max-width: 14px;
+    opacity: 0.8;
+}
+
+.ploopi_popup .simplebloc_titleleft img:hover {
+    opacity: 1;
+}
+
+.calendardiv {
+    position: absolute;
+    visibility: hidden;
+    background-color: var(--p3-surface);
+    top: 0px;
+    left: 0px;
+    z-index: 1000;
+    height: auto;
+    width: 150px;
+    border-radius: var(--p3-radius);
+    box-shadow: var(--p3-shadow-2);
+}
+
+
+/******************
+  TITRE DE PAGE ET BLOCS
+*******************/
+
+.pagetitle {
+    color: var(--p3-text);
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 28px;
+    padding: 16px 16px 10px 16px;
+}
+
+.pagetitle p {
+    float: left;
+    margin: 0;
+    padding-left: 6px;
+}
+
+.simplebloc {
+    margin: 0 12px 12px 12px;
+    background: var(--p3-surface);
+    border: 1px solid var(--p3-border);
+    border-radius: var(--p3-radius);
+    box-shadow: var(--p3-shadow-1);
+    padding-bottom: 8px;
+}
+
+/* Bloc dans un bloc : simple encadré, sans ombre ni marge latérale */
+.simplebloc .simplebloc {
+    margin: 8px 0;
+    box-shadow: none;
+}
+
+.simplebloc_title {
+    color: var(--p3-text);
+    background: var(--p3-surface);
+    border-bottom: 1px solid var(--p3-border);
+    border-radius: var(--p3-radius) var(--p3-radius) 0 0;
+    font-size: 14px;
+    font-weight: 700;
+    text-align: left;
+    height: 42px;
+    line-height: 42px;
+    padding-left: 8px;
+    overflow: hidden;
+}
+
+.simplebloc .simplebloc .simplebloc_title {
+    height: 36px;
+    line-height: 36px;
+    font-size: 13px;
+    background: var(--p3-surface-2);
+}
+
+.simplebloc_titleleft {
+    padding: 0 4px;
+}
+
+.simplebloc_title a {
+    color: var(--p3-text);
+    text-decoration: none;
+}
+
+.simplebloc_titleleft a {
+    display: block;
+    float: left;
+    background: var(--p3-surface);
+    border: 1px solid var(--p3-border-strong);
+    border-radius: var(--p3-radius-sm);
+    color: var(--p3-text);
+    padding: 0 10px;
+    font-weight: normal;
+    height: 26px;
+    line-height: 26px;
+    margin-top: 7px;
+    margin-right: 10px;
+}
+
+.simplebloc .simplebloc .simplebloc_titleleft a {
+    margin-top: 4px;
+}
+
+.simplebloc_titleleft a:hover {
+    border-color: var(--p3-primary);
+    color: var(--p3-primary-dark);
+    background: var(--p3-primary-softer);
+    text-decoration: none;
+}
+
+.simplebloc_titleleft a * {
+    display: inline-block;
+    vertical-align: middle;
+    padding: 0;
+}
+
+.simplebloc_titleleft a img {
+    margin-right: 4px;
+}
+
+.simplebloc_titleleft span:first-child {
+    display: block;
+    float: left;
+    margin-right: 20px;
+}
+
+.simplebloc_content {
+    position: relative;
+    margin: 4px;
+    padding: 4px;
+}
+
+.simplebloc_footer {
+}
+
+
+/******************
+  CHAMPS ET BOUTONS
+*******************/
+
+select,
+input,
+textarea,
+button {
+    border-radius: var(--p3-radius-sm);
+    color: var(--p3-text);
+    padding: 5px 6px;
+    border: 1px solid var(--p3-border-field);
+    background: var(--p3-surface);
+    outline: none;
+    transition: border-color .15s ease, box-shadow .15s ease;
+}
+
+select {
+    padding: 4px 6px;
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: var(--p3-text-placeholder);
+}
+
+select:hover,
+input:hover,
+textarea:hover {
+    border-color: #66757f;
+}
+
+select:focus,
+input:focus,
+textarea:focus {
+    background: var(--p3-surface);
+    outline: none;
+    border-color: var(--p3-primary);
+    box-shadow: var(--p3-focus);
+}
+
+input[type='checkbox'],
+input[type='radio'] {
+    accent-color: var(--p3-primary);
+    box-shadow: none;
+}
+
+input[type='button'],
+input[type='reset'],
+input[type='submit'],
+button {
+    border: 1px solid var(--p3-primary);
+    padding: 6px 12px;
+    background: var(--p3-primary);
+    color: var(--p3-text-inverse);
+    font-weight: 700;
+    cursor: pointer;
+}
+
+input[type='submit'],
+button[type='submit'] {
+    font-weight: 700;
+}
+
+input[type='button']:hover,
+input[type='submit']:hover,
+input[type='reset']:hover,
+button:hover,
+input[type='button'].selected,
+input[type='submit'].selected,
+input[type='reset'].selected,
+button.selected {
+    background: var(--p3-primary-hover);
+    border-color: var(--p3-primary-hover);
+    color: var(--p3-text-inverse);
+    cursor: pointer;
+}
+
+input[type='button']:focus,
+input[type='submit']:focus,
+input[type='reset']:focus,
+button:focus {
+    border-color: var(--p3-primary-dark);
+}
+
+/* Actions secondaires : annuler, réinitialiser, revenir. Le socle ne leur donne
+   pas de classe : elles sont repérées par leur libellé (_PLOOPI_CANCEL, _RESET, _BACK) */
+input[type='button'][value='Annuler'],
+input[type='button'][value='Réinitialiser'],
+input[type='button'][value='Retour'],
+input[type='submit'][value='Annuler'] {
+    background: var(--p3-surface);
+    border-color: var(--p3-border-field);
+    color: var(--p3-primary-dark);
+}
+
+input[type='button'][value='Annuler']:hover,
+input[type='button'][value='Réinitialiser']:hover,
+input[type='button'][value='Retour']:hover,
+input[type='submit'][value='Annuler']:hover {
+    background: var(--p3-primary-softer);
+    border-color: var(--p3-primary);
+    color: var(--p3-primary-dark);
+}
+
+/* Le bouton de remise à zéro est une action secondaire */
+input[type='reset'] {
+    background: var(--p3-surface);
+    border-color: var(--p3-border-field);
+    color: var(--p3-text);
+}
+
+input[type='reset']:hover {
+    background: var(--p3-surface-2);
+    border-color: var(--p3-primary);
+    color: var(--p3-primary-dark);
+}
+
+button.icon {
+    position: relative;
+    padding-left: 30px;
+    margin-left: 4px;
+}
+
+button.icon::before {
+    position: absolute;
+    left: 8px;
+    background-size: 16px 16px;
+    background-repeat: no-repeat;
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    content: "";
+    color: #fff;
+}
+
+button.small_icon::before {
+    left: 6px;
+    top: 4px;
+    width: 14px;
+    height: 14px;
+    background-size: 14px 14px;
+}
+
+button.small_icon {
+    padding-left: 26px;
+    margin-left: 4px;
+}
+
+/* Glyphe blanc quelle que soit sa couleur (les SVG de la GED servent aussi dans les listes) */
+button.invert::before {
+    filter: brightness(0) invert(1);
+}
+
+button.icon_home::before {
+    background-image: url('../img/documents/cloud.svg');
+}
+
+button.icon_foldernew::before {
+    background-image: url('../img/documents/folder-plus.svg');
+}
+
+button.icon_folder::before {
+    background-image: url('../img/documents/folder.svg');
+}
+
+button.icon_filenew::before {
+    background-image: url('../img/documents/file-import.svg');
+}
+
+button.icon_download::before {
+    background-image: url('../img/documents/download.svg');
+}
+
+button.icon_edit::before {
+    background-image: url('../img/documents/edit.svg');
+}
+
+button.icon_delete::before {
+    background-image: url('../img/documents/trash-alt.svg');
+}
+
+*[disabled=disabled],
+*[disabled],
+*[readonly=readonly],
+*[readonly] {
+    color: #65737c;
+    cursor: not-allowed !important;
+}
+
+input[readonly],
+textarea[readonly],
+select[disabled],
+input[disabled],
+textarea[disabled] {
+    background: var(--p3-surface-2);
+}
+
+button[disabled=disabled],
+button[disabled],
+input[type='button'][disabled],
+input[type='submit'][disabled] {
+    background: #b3c0c8;
+    border-color: #b3c0c8;
+    color: #fff;
+}
+
+label {
+    cursor: pointer;
+}
+
+/* Champ de fichier : le bouton du navigateur prend l'aspect d'un bouton secondaire */
+input[type='file'] {
+    padding: 3px;
+}
+
+input[type='file']::file-selector-button {
+    margin-right: 8px;
+    padding: 4px 10px;
+    font: inherit;
+    font-weight: 700;
+    color: var(--p3-primary-dark);
+    background: var(--p3-primary-softer);
+    border: 1px solid var(--p3-border-strong);
+    border-radius: var(--p3-radius-sm);
+    cursor: pointer;
+}
+
+input[type='file']::file-selector-button:hover {
+    background: var(--p3-primary-soft);
+    border-color: var(--p3-primary);
+}
+
+
+/******************
+  BARRE D'OUTILS (skin::create_toolbar)
+*******************/
+
+.toolbar {
+    padding-bottom: 4px;
+    overflow: auto;
+    margin: 4px;
+}
+
+.toolbar > div > div > a {
+    border-radius: 0;
+}
+
+.toolbar > div > div:first-child > a {
+    border-radius: var(--p3-radius) 0 0 var(--p3-radius);
+}
+
+.toolbar > div > div:last-child > a {
+    border-radius: 0 var(--p3-radius) var(--p3-radius) 0;
+}
+
+.toolbar > div > div:first-child:last-child > a,
+.toolbar > div > div.toolbar_icon_vertical:first-child > a,
+.toolbar > div > div.toolbar_icon_vertical:last-child > a {
+    border-radius: var(--p3-radius);
+}
+
+.toolbar_left {
+}
+
+.toolbar_right {
+    float: right;
+}
+
+.toolbar_icon,
+.toolbar_icon_sel {
+    display: block;
+    float: left;
+    width: 100px;
+}
+
+/* Les tuiles accolées partagent leur bordure */
+.toolbar_icon + .toolbar_icon,
+.toolbar_icon + .toolbar_icon_sel,
+.toolbar_icon_sel + .toolbar_icon {
+    margin-left: -1px;
+}
+
+.toolbar_icon a,
+.toolbar_icon_sel a,
+.toolbar_icon_vertical a,
+.toolbar_icon_vertical_sel a {
+    display: block;
+    position: relative;
+    text-decoration: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+    background: var(--p3-surface);
+    border: 1px solid var(--p3-border-strong);
+    color: var(--p3-text-label);
+}
+
+.toolbar_icon a:hover,
+.toolbar_icon_vertical a:hover {
+    text-decoration: none;
+    background: var(--p3-primary-softer);
+    color: var(--p3-primary-dark);
+    border-color: var(--p3-border-strong);
+    z-index: 1;
+}
+
+.toolbar_icon_sel a,
+.toolbar_icon_vertical_sel a {
+    background: var(--p3-primary-soft);
+    border-color: var(--p3-primary);
+    color: var(--p3-primary-dark);
+    z-index: 2;
+}
+
+.toolbar_icon_sel a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 3px;
+    background: var(--p3-primary);
+}
+
+.toolbar_icon_sel a:hover {
+    text-decoration: none;
+}
+
+.toolbar_icon_image {
+    text-align: center;
+    padding: 10px 6px 2px 6px;
+    min-height: 24px;
+}
+
+.toolbar_icon p,
+.toolbar_icon_sel p,
+.toolbar_icon_vertical p,
+.toolbar_icon_vertical_sel p {
+    margin: 0;
+    text-align: center;
+    padding: 4px 8px 10px 8px;
+    background: transparent;
+    color: inherit;
+    white-space: normal;
+}
+
+.toolbar_icon_sel p,
+.toolbar_icon_vertical_sel p {
+    font-weight: 700;
+}
+
+.toolbar_icon a:hover p,
+.toolbar_icon_vertical a:hover p {
+    background: transparent;
+    color: inherit;
+}
+
+.toolbar_icon_title {
+    text-align: center;
+    padding: 2px 10px;
+    background: var(--p3-surface-2);
+}
+
+.toolbar_icon_vertical,
+.toolbar_icon_vertical_sel {
+    display: block;
+    margin-bottom: 6px;
+}
+
+.toolbar_icon_vertical a,
+.toolbar_icon_vertical_sel a {
+    border-radius: var(--p3-radius);
+}
+
+
+/******************
+  ONGLETS (skin::create_tabs)
+*******************/
+
+.tabs {
+    color: var(--p3-text-muted);
+    background: transparent;
+    overflow: auto;
+    margin: 0 12px 12px 12px;
+    border-bottom: 1px solid var(--p3-border);
+}
+
+.simplebloc .tabs {
+    margin: 4px 4px 8px 4px;
+}
+
+.tabs a {
+    display: block;
+    float: left;
+    position: relative;
+    color: var(--p3-text-muted);
+    padding: 9px 14px;
+    font-size: var(--p3-font-size-nav);
+    font-weight: 700;
+    white-space: nowrap;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+    border-radius: var(--p3-radius-sm) var(--p3-radius-sm) 0 0;
+}
+
+.tabs a:hover {
+    background-color: var(--p3-primary-softer);
+    color: var(--p3-primary-dark);
+    text-decoration: none;
+}
+
+.tabs a.selected {
+    background-color: transparent;
+    color: var(--p3-primary);
+    text-decoration: none;
+    box-shadow: inset 0 -3px 0 var(--p3-primary);
+}
+
+
+/******************
+  MESSAGES
+*******************/
+
+.ploopi_error {
+    clear: both;
+    color: var(--p3-danger);
+    background-color: var(--p3-danger-soft);
+    border: 1px solid #f3c1bd;
+    border-left: 4px solid var(--p3-danger);
+    border-radius: var(--p3-radius-sm);
+    padding: 10px 12px;
+    margin: 4px;
+    font-size: 12px;
+}
+
+.ploopi_error span {
+    color: var(--p3-text);
+}
+
+.ploopi_overflowauto {
+    overflow: auto;
+}
+
+/* vertical alignement : IE / FF / Opera */
+.ploopi_va {
+    margin: 0;
+}
+
+.ploopi_va img,
+.ploopi_va span,
+.ploopi_va label,
+.ploopi_va strong,
+.ploopi_va em,
+.ploopi_va input,
+.ploopi_va select,
+.ploopi_va a {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+
+/******************
+  FORMULAIRES DU SOCLE (.ploopi_form)
+*******************/
+
+.ploopi_form {
+    overflow: hidden;
+}
+
+.ploopi_form fieldset, .fieldset {
+    margin: 8px 4px;
+    padding: 8px 10px 10px 10px;
+    background: var(--p3-surface);
+    border: 1px solid var(--p3-border);
+    border-radius: var(--p3-radius);
+}
+
+.ploopi_form legend, .fieldset legend {
+    font-size: var(--p3-font-size-nav);
+    font-weight: 700;
+    color: var(--p3-primary-dark);
+    background: var(--p3-surface);
+    padding: 0 6px;
+}
+
+.ploopi_form h1 {
+    margin: 4px 0;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.ploopi_form h2 {
+    margin: 4px 0;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.ploopi_form h3 {
+    margin: 4px 0;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.ploopi_form h4 {
+    margin: 4px 0;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+/* flow-root contient les flottants (libellé, champ) sans faire de la ligne une zone
+   défilante : avec overflow:auto, une hauteur fractionnaire faisait apparaître des
+   barres de défilement vides (▲▼) sur les libellés de plusieurs lignes */
+.ploopi_form p {
+    display: flow-root;
+    margin: 6px 2px;
+    overflow: visible;
+}
+
+.ploopi_form p label {
+    float: left;
+    width: 30%;
+    text-align: right;
+    margin: 0;
+    padding: 6px .6em 0 0;
+    line-height: 16px;
+    color: var(--p3-text-label);
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.ploopi_form p input[type='text'],
+.ploopi_form p input[type='password'],
+.ploopi_form p input[type='file'],
+.ploopi_form p select,
+.ploopi_form p textarea,
+.ploopi_form p span {
+    width: 65%;
+    float: left;
+}
+
+.ploopi_form p input.checkbox {
+    width: 14px;
+}
+
+.ploopi_form p span {
+    float: left;
+}
+
+.ploopi_form p textarea {
+    height: 6em;
+}
+
+.ploopi_form p span.checkbox {
+    cursor: pointer;
+    width: 100%;
+}
+
+.ploopi_form p span.checkbox img, .ploopi_form p span.checkbox input {
+    cursor: pointer;
+}
+
+.ploopi_form p.checkbox {
+    cursor: pointer;
+    width: 100%;
+}
+
+.ploopi_form p.checkbox label, .ploopi_form p.checkbox img, .ploopi_form p.checkbox input {
+    cursor: pointer;
+}
+
+.ploopi_form_title {
+    display: block;
+    clear: both;
+    font-size: var(--p3-font-size-nav);
+    font-weight: 700;
+    color: var(--p3-primary-dark);
+    background-color: var(--p3-surface-2);
+    border-top: 1px solid var(--p3-border);
+    border-bottom: 1px solid var(--p3-border);
+    box-shadow: inset 3px 0 0 var(--p3-primary);
+    padding: 8px 12px;
+    text-decoration: none;
+}
+
+.ploopi_form_title:hover {
+    text-decoration: none;
+    color: var(--p3-primary-dark);
+}
+
+a.ploopi_form_title * {
+    cursor: pointer;
+}
+
+.ploopi_checkbox {
+    margin: 0;
+    cursor: pointer;
+}
+
+.ploopi_checkbox * {
+    display: inline-block;
+    vertical-align: middle;
+    cursor: pointer;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.error {
+    color: var(--p3-danger);
+    font-weight: 700;
+}
+
+.information {
+    color: var(--p3-success);
+    font-weight: 700;
+}
+
+.Title td {
+    font-weight: 700;
+}
+
+
+/******************
+  TABLEAUX (skin::display_array)
+  Colonnes en flottants à largeur fixe et séparateurs en position absolue :
+  ni marge horizontale, ni bordure latérale sur les cellules.
+*******************/
+
+div.ploopi_explorer_main {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--p3-border);
+    border-radius: var(--p3-radius-sm);
+    background: var(--p3-surface);
+}
+
+div.ploopi_explorer_maintitle {
+    padding: 4px;
+    overflow: auto;
+}
+
+div.ploopi_explorer_title {
+    color: var(--p3-text);
+    background: var(--p3-surface-3);
+    overflow: hidden;
+    border-bottom: 1px solid var(--p3-border-strong);
+    font-weight: 700;
+}
+
+div.ploopi_explorer_title a {
+    color: var(--p3-text);
+}
+
+div.ploopi_explorer_title a:hover {
+    color: var(--p3-primary-dark);
+    background: #d5dee5;
+    text-decoration: none;
+}
+
+div.ploopi_explorer_title a.ploopi_explorer_element_selected,
+div.ploopi_explorer_title span.ploopi_explorer_element_selected {
+    background: var(--p3-primary-soft);
+    color: var(--p3-primary-dark);
+}
+
+div.ploopi_explorer_title a p,
+div.ploopi_explorer_title span p {
+    padding: 8px 8px 8px 6px;
+}
+
+div.ploopi_explorer_title p img {
+    margin-left: 2px;
+}
+
+div.ploopi_explorer_column {
+    position: absolute;
+    height: 100%;
+    border-left: 1px solid var(--p3-border);
+    z-index: 1000;
+}
+
+*.ploopi_explorer_element {
+    display: block;
+    overflow: hidden;
+    word-wrap: break-word;
+}
+
+a.ploopi_explorer_element * {
+    cursor: pointer;
+}
+
+*.ploopi_explorer_element p {
+    margin: 0;
+    padding: 6px 4px;
+}
+
+.ploopi_explorer_line_1 p,
+.ploopi_explorer_line_2 p {
+    line-height: 1.45em;
+}
+
+*.ploopi_explorer_element p img, *.ploopi_explorer_element p span, *.ploopi_explorer_element p a {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+a.ploopi_explorer_element:hover {
+    text-decoration: none;
+}
+
+a.ploopi_explorer_link {
+    display: block;
+    overflow: hidden;
+    color: var(--p3-text);
+    text-decoration: none;
+    outline: none;
+}
+
+a.ploopi_explorer_link:hover {
+    text-decoration: none;
+    background: var(--p3-primary-softer);
+    color: var(--p3-text);
+}
+
+div.ploopi_explorer_line_1 {
+    overflow: hidden;
+    background: var(--p3-surface);
+    border-bottom: 1px solid var(--p3-line);
+}
+
+div.ploopi_explorer_line_2 {
+    overflow: hidden;
+    background: var(--p3-surface-2);
+    border-bottom: 1px solid var(--p3-line);
+}
+
+div.ploopi_explorer_line_1:hover,
+div.ploopi_explorer_line_2:hover {
+    background: var(--p3-primary-softer);
+}
+
+/* Dans un tableau, un lien se lit comme le reste de la ligne */
+div.ploopi_explorer_line_1 a,
+div.ploopi_explorer_line_2 a {
+    color: var(--p3-text);
+}
+
+div.ploopi_explorer_line_1 a:hover,
+div.ploopi_explorer_line_2 a:hover {
+    color: var(--p3-primary);
+}
+
+div.ploopi_explorer_tools {
+    overflow: hidden;
+}
+
+div.ploopi_explorer_tools a {
+    display: block;
+    float: left;
+    padding: 4px 3px;
+    border-radius: var(--p3-radius-sm);
+}
+
+div.ploopi_explorer_tools a:hover {
+    background: var(--p3-surface-3);
+}
+
+div.ploopi_explorer_tools > button {
+    display: inline-block;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    margin-top: 3px;
+    margin-left: 2px;
+}
+
+div.ploopi_explorer_tools > button > img {
+    margin: 4px 5px 2px 5px;
+    width: 12px;
+    height: 12px;
+}
+
+div.ploopi_explorer_multipage {
+    color: var(--p3-text-muted);
+}
+
+div.ploopi_explorer_multipage a,
+div.ploopi_explorer_multipage strong {
+    display: inline-block;
+    min-width: 22px;
+    height: 22px;
+    line-height: 22px;
+    margin: 2px 0;
+    border-radius: var(--p3-radius-sm);
+    text-align: center;
+}
+
+div.ploopi_explorer_multipage a:hover {
+    background: var(--p3-primary-softer);
+    text-decoration: none;
+}
+
+div.ploopi_explorer_multipage strong {
+    background: var(--p3-primary);
+    color: #fff;
+}
+
+
+/******************
+  ARBORESCENCES (skin::display_treeview)
+*******************/
+
+.treeview_node {
+    overflow: hidden;
+}
+
+.treeview_node img {
+    display: block;
+    float: left;
+}
+
+.treeview_node a {
+    color: var(--p3-text);
+}
+
+.treeview_node a:hover {
+    color: var(--p3-primary-dark);
+}
+
+.treeview_node_loading {
+    overflow: hidden;
+}
+
+.treeview_node_loading img {
+    display: block;
+    float: left;
+}
+
+.treeview_node_loading * {
+    cursor: wait;
+}
+
+
+/******************
+  PAGINATION
+*******************/
+
+div.ploopi_page_cut {
+    clear: both;
+    overflow: auto;
+    margin: 0;
+    padding: 4px;
+    text-align: center;
+}
+
+input.ploopi_page_cut_select, input.ploopi_page_cut {
+    margin: 0 1px;
+    padding: 2px 6px;
+    border: 1px solid var(--p3-border-strong);
+    background: var(--p3-surface);
+    color: var(--p3-text);
+    text-align: center;
+    cursor: pointer;
+    font-weight: normal;
+    min-width: 26px;
+}
+
+input.ploopi_page_cut:hover {
+    background: var(--p3-primary-softer);
+    border-color: var(--p3-primary);
+    color: var(--p3-primary-dark);
+}
+
+input.ploopi_page_cut_select {
+    background: var(--p3-primary);
+    border-color: var(--p3-primary);
+    color: #fff;
+    font-weight: 700;
+    font-style: normal;
+}
+
+input.ploopi_page_cut_disable {
+    margin: 0 1px;
+    padding: 2px 6px;
+    border: 1px solid var(--p3-border);
+    background: var(--p3-surface-2);
+    color: #7d8a95;
+    text-align: center;
+    font-weight: normal;
+    width: 18px;
+}
+
+select.ploopi_page_by {
+    border: 1px solid var(--p3-border-strong);
+    background: var(--p3-surface);
+    color: var(--p3-text);
+}
+
+
+/**
+ * LISTE DE CHOIX (skin::display_selectbox)
+ */
+
+.ploopi_selectbox {
+    text-align: left;
+}
+
+.ploopi_selectbox_button {
+    position: relative;
+    margin: 0;
+    background: var(--p3-surface);
+    padding: 5px 8px;
+    border: 1px solid var(--p3-border-strong);
+    border-radius: var(--p3-radius-sm);
+    cursor: pointer;
+}
+
+.ploopi_selectbox_button::after {
+    content: '';
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    width: 6px;
+    height: 6px;
+    margin-top: -5px;
+    border-right: 2px solid var(--p3-text-muted);
+    border-bottom: 2px solid var(--p3-text-muted);
+    transform: rotate(45deg);
+}
+
+.ploopi_selectbox_button_content {
+    margin: 0;
+    padding: 0;
+    margin-right: 18px;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.ploopi_selectbox_button img,
+.ploopi_selectbox_button span {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.ploopi_selectbox:hover .ploopi_selectbox_button {
+    border-color: var(--p3-primary);
+}
+
+.ploopi_selectbox_list {
+    margin-top: 2px;
+    padding: 0;
+    background: var(--p3-surface);
+    z-index: 10000;
+    position: absolute;
+    border-radius: var(--p3-radius-sm);
+    box-shadow: var(--p3-shadow-2);
+}
+
+.ploopi_selectbox_list ul {
+    border: 1px solid var(--p3-border);
+    border-radius: var(--p3-radius-sm);
+    margin: 0;
+    padding: 4px 0;
+}
+
+.ploopi_selectbox_list li {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+.ploopi_selectbox_list li a {
+    display: block;
+    padding: 5px 8px;
+    padding-left: 14px;
+    color: var(--p3-text);
+    cursor: pointer;
+}
+
+.ploopi_selectbox_list li a:hover {
+    background: var(--p3-primary-softer);
+    color: var(--p3-primary-dark);
+    text-decoration: none;
+}
+
+.ploopi_selectbox_list li a img,
+.ploopi_selectbox_list li a span {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.ploopi_selectbox_list li strong {
+    display: block;
+    padding: 5px 8px;
+    margin: 0;
+    color: var(--p3-text-muted);
+}
+
+
+/******************
+  BARRES D'ACTIONS DES MODULES (.ploopi_tabs)
+  ploopi2 dessinait des onglets biseautés ; ici, des boutons plats.
+*******************/
+
+.ploopi_tabs {
+    overflow: hidden;
+    color: var(--p3-text);
+    border-bottom: 1px solid var(--p3-border);
+    padding: 3px 2px;
+}
+
+.ploopi_tabs input {
+    display: block;
+    float: left;
+    margin: 3px 3px 0 0;
+}
+
+.ploopi_tabs > a {
+    display: block;
+    float: right;
+    margin-left: 2px;
+    padding: 5px 10px;
+    border-radius: var(--p3-radius-sm);
+    text-decoration: none;
+    background: transparent;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+    color: var(--p3-text);
+    position: relative;
+}
+
+.ploopi_tabs > a > span,
+.ploopi_tabs > a > img {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.ploopi_tabs > a:after {
+    display: none;
+}
+
+.ploopi_tabs > a.left {
+    float: left;
+    margin-left: 0;
+    margin-right: 2px;
+}
+
+.ploopi_tabs > a:hover {
+    background: var(--p3-primary-softer);
+    color: var(--p3-primary-dark);
+}
+
+.ploopi_tabs > a > span {
+    padding-left: 4px;
+}
+
+.ploopi_tabs > span.title {
+    display: block;
+}
+
+.ploopi_tabs a.selected {
+    background: var(--p3-primary-soft);
+    color: var(--p3-primary-dark);
+    font-weight: 700;
+}
+
+
+/******************
+  FORMULAIRES GÉNÉRÉS (ploopi\form)
+*******************/
+
+.ploopi_generate_form {
+    overflow: hidden;
+}
+
+.ploopi_generate_form p,
+.ploopi_generate_form h1,
+.ploopi_generate_form h2,
+.ploopi_generate_form h3,
+.ploopi_generate_form > form {
+    border: 0;
+    margin: 0;
+    padding: 0;
+}
+
+.ploopi_generate_form h1,
+.ploopi_generate_form h2,
+.ploopi_generate_form h3 {
+    clear: both;
+    display: block;
+    font-weight: 700;
+    margin-bottom: 16px;
+    border-bottom: solid 1px var(--p3-border);
+    padding-bottom: 10px;
+}
+
+.ploopi_generate_form h1 {
+    font-size: 1.5em;
+}
+
+.ploopi_generate_form h2 {
+    font-size: 1.3em;
+}
+
+.ploopi_generate_form h3 {
+    font-size: 1.1em;
+}
+
+.ploopi_generate_form .spacer {
+    clear: both;
+    height: 1px;
+}
+
+.ploopi_generate_form .onclick,
+.ploopi_generate_form .onclick * {
+    cursor: pointer;
+}
+
+.ploopi_generate_form h1 p {
+    font-size: 0.9em;
+    color: var(--p3-text-muted);
+    margin-top: 8px;
+    font-weight: normal;
+}
+
+.ploopi_generate_form > form > div > fieldset > div > label {
+    display: block;
+    text-align: right;
+    padding-top: 6px;
+    width: 30%;
+    float: left;
+    clear: both;
+    padding-right: 10px;
+    color: var(--p3-text-muted);
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.ploopi_generate_form > form > div > fieldset > div > label.required {
+    background: url(../img/forms/required.png) no-repeat right top;
+}
+
+.ploopi_generate_form > form > div > fieldset > div > label > span {
+    color: var(--p3-text-muted);
+    display: block;
+    font-weight: normal;
+    text-align: right;
+    width: 100%;
+}
+
+.ploopi_generate_form > form > div > fieldset > div > input,
+.ploopi_generate_form > form > div > fieldset > div > select,
+.ploopi_generate_form > form > div > fieldset > div > textarea {
+    float: left;
+    width: 60%;
+    margin: 0 0 6px 0;
+}
+
+.ploopi_generate_form > form > div > fieldset > div > input[type='checkbox'],
+.ploopi_generate_form > form > div > fieldset > div > input[type='radio'] {
+    width: auto;
+    margin-top: 7px;
+}
+
+.ploopi_generate_form > form > div > fieldset > div > select option,
+.ploopi_generate_form > form > div > fieldset > div > select optgroup {
+    background: var(--p3-surface);
+}
+
+.ploopi_generate_form > form > div > fieldset > div > input[type=password] {
+    letter-spacing: 2px;
+}
+
+.ploopi_generate_form > form > div > fieldset > div > span {
+    display: block;
+    float: left;
+    margin: 2px 0 6px 0;
+    width: 60%;
+}
+
+.ploopi_generate_form > form > div > fieldset > div > span > label {
+    display: block;
+    float: left;
+    clear: none;
+    padding: 0 6px 0 2px;
+    font-weight: normal;
+    width: auto;
+}
+
+.ploopi_generate_form > form > div > fieldset > div > span > input {
+    margin: 2px 0;
+}
+
+.ploopi_generate_form > form > div > fieldset {
+    clear: both;
+    display: block;
+    margin: 6px 4px;
+    padding: 6px 8px 8px 8px;
+    border: 1px solid var(--p3-border);
+    border-radius: var(--p3-radius);
+}
+
+.ploopi_generate_form > form > div > fieldset > legend {
+    padding: 0 6px;
+    font-weight: 700;
+    color: var(--p3-primary-dark);
+}
+
+.ploopi_generate_form .buttons {
+    clear: both;
+    margin: 8px 8%;
+    overflow: auto;
+}
+
+.ploopi_generate_form button {
+    float: right;
+    margin-left: 6px;
+    cursor: pointer;
+}
+
+
+/******************
+  FORMULAIRES DE FILTRE (listes d'utilisateurs du module system)
+  Chaque étiquette reste avec son champ, la plage de dates d'un bloc, les
+  boutons ensemble : on ne passe à la ligne qu'entre deux groupes.
+*******************/
+
+.ploopi_filter {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 18px;
+}
+
+.ploopi_filter_field,
+.ploopi_filter_buttons {
+    white-space: nowrap;
+}
+
+.ploopi_filter_field label {
+    margin-right: 6px;
+    color: var(--p3-text-muted);
+}
+
+.ploopi_filter_field label ~ label {
+    margin-left: 6px;
+}
+
+.ploopi_filter_field a {
+    margin-left: 2px;
+}
+
+.ploopi_filter_buttons input + input {
+    margin-left: 4px;
+}
+
+/* Action destructrice : contour rouge, rouge plein au survol */
+/* Suppression : par classe, ou repérée par son libellé (_PLOOPI_DELETE, modules) */
+input.ploopi_button_danger,
+input[type='button'][value^='Supprimer'],
+input[type='submit'][value^='Supprimer'] {
+    background: var(--p3-surface);
+    border-color: var(--p3-danger);
+    color: var(--p3-danger);
+}
+
+input.ploopi_button_danger:hover,
+input.ploopi_button_danger:focus,
+input[type='button'][value^='Supprimer']:hover,
+input[type='submit'][value^='Supprimer']:hover {
+    background: var(--p3-danger);
+    border-color: var(--p3-danger);
+    color: var(--p3-text-inverse);
+}
+/*
+    Copyright (c) 2007-2008 Ovensia
+    Contributors hold Copyright (c) to their code submissions.
+
+    This file is part of Ploopi.
+
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
+.ploopi_subscription_viewdetail {
+    display:block;
+    background-color:#eef4fb;
+    box-shadow:inset 4px 0 0 var(--p3-info);
+    color:var(--p3-text);
+    text-decoration:none;
+    height:32px;
+    line-height:32px;
+    font-weight:bold;
+    margin:0;
+    padding:0 10px 0 12px;
+    overflow:hidden;
+    cursor:pointer;
+}
+
+.ploopi_subscription_viewdetail:hover {
+    background-color:#e2ecf8;
+    color:var(--p3-text);
+    text-decoration:none;
+}
+
+.ploopi_subscription_viewdetail img, .ploopi_annotation_viewlist span {
+    vertical-align: middle;
+}
+
+.ploopi_subscription_viewdetail span {
+   padding-left: 5px;
+}
+
+.ploopi_subscription_detail {
+    background-color:#f6f9fd;
+    border-top:1px solid var(--p3-border);
+}
+
+.ploopi_subscription_checkbox {
+    padding:2px 4px;
+    overflow:auto;
+    clear:both;
+    cursor:pointer;
+    line-height:16px;
+}
+
+.ploopi_subscription_checkbox input {
+    display:block;
+    float:left;
+    cursor:pointer;
+}
+
+.ploopi_subscription_unsubscribe {
+    color:var(--p3-danger);
+    font-weight:bold;
+}
+
+.subscription_saved {
+    padding:4px;
+    font-weight:bold;
+    color:var(--p3-success);
+}
+
+.subscription_canceled {
+    padding:4px;
+    font-weight:bold;
+    color:var(--p3-danger);
+}
+
+/* #D9EDFF */
+.syn_titre {
+text-align:center;
+font-weight:bold;
+padding:6px;
+border-bottom:1px solid #808080;
+background-color:#d8d8d8;
+}
+
+.syn_titre h1 {
+margin:0;
+font-size:16px;
+}
+
+.syn_titre h2 {
+margin:0;
+font-size:12px;
+}
+
+.syn_titre h3 {
+margin:0;
+font-size:10px;
+}
+
+.syn_toolbar {
+background-color:#CEDAE6;
+border-bottom:1px solid #808080;
+overflow:hidden;
+line-height:20px;
+height:20px;
+}
+
+.syn_toolbar img {
+display:block;
+float:left;
+margin:2px 3px 0 0;
+}
+
+.syn_toolbar input {
+display:block;
+float:left;
+margin:3px 3px 0 0;
+}
+
+.syn_toolbar a {
+display:block;
+float:right;
+padding-left:12px;
+padding-right:6px;
+text-decoration:none;
+background: url(../img/template/menu.png) 0 0 no-repeat;
+
+}
+
+.syn_toolbar a:hover {
+background: url(../img/template/menu.png) 0 -20px no-repeat;
+}
+
+/* IFRAME */
+
+.syn_iframe {
+width:0;
+height:0;
+visibility:hidden;
+display:none;
+}
+
+.syn_iframe_debug {
+width:100%;
+height:250px;
+}
+
+
+/* POPUPS */
+
+.syn_popup {
+font-size:11px;
+border:1px solid #404040;
+}
+
+.syn_popup_header {
+padding:4px;
+background-color:#c0c0c0;
+border-bottom:1px solid #a0a0a0;
+}
+
+.syn_popup_header h1 {
+margin:0;
+padding:0;
+font-size:12px;
+font-weight:bold;
+}
+
+.syn_popup_header h2 {
+margin:0;
+padding:0;
+font-size:12px;
+font-weight:normal;
+}
+
+.syn_popup_footer {
+padding:2px 4px;
+background-color:#c0c0c0;
+border-top:1px solid #a0a0a0;
+text-align:right;
+}
+
+/* FORMULAIRES */
+
+
+.syn_form {
+    overflow:hidden;
+}
+
+.syn_form fieldset {
+    margin: 0;
+    padding: 0.2em;
+    margin: 0.2em;
+    border:1px solid #193c1c;
+}
+
+.syn_form legend {
+    font-weight: bold;
+    background: transparent;
+}
+
+.syn_form h1 {
+    font-size:12px;
+    font-weight:bold;
+    padding:2px 4px;
+    margin:2px 0;
+    text-align:left;
+    background-color:#d0d0d0;
+    border-top:1px solid #c0c0C0;
+    border-bottom:1px solid #c0c0C0;
+    display:block;
+    clear:both;
+    overflow:auto;
+    }
+
+.syn_form h2 {
+    font-size:10px;
+    font-weight:bold;
+    padding:2px 4px;
+    margin:2px 0;
+    text-align:left;
+    background-color:#d0d0d0;
+    border-top:1px solid #c0c0C0;
+    border-bottom:1px solid #c0c0C0;
+}
+
+.syn_form p {
+    display:block;
+    margin:4px 2px;
+    overflow:auto;
+}
+
+.syn_form p label {
+    float: left;
+    width: 30%;
+    font-weight: bold;
+    text-align: right;
+    margin: 0;
+    padding: 0 .5em 0 0;
+}
+
+.syn_form p input[type='text'],
+.syn_form p input[type='password'],
+.syn_form p select,
+.syn_form p textarea,
+.syn_form p span {
+    width: 65%;
+}
+
+.syn_form p input.checkbox {
+    width:14px;
+}
+
+.syn_form p span {
+    float:left;
+}
+
+.syn_form p textarea{
+    height: 6em;
+}
+
+.syn_form p span.checkbox {
+    cursor:pointer;
+    width:100%;
+}
+
+.syn_form p span.checkbox img, .syn_form p span.checkbox input {
+    cursor:pointer;
+}
+
+input.syn_buttoncarto {
+background: linear-gradient(top, rgba(230,230,230,0.7) 0%, rgba(150,150,150,0.6) 100%), url(../img/template/carto.png) top left repeat-x;
+background: -moz-linear-gradient(top, rgba(230,230,230,0.7) 0%, rgba(150,150,150,0.6) 100%), url(../img/template/carto.png) top left repeat-x;
+background: -webkit-linear-gradient(top, rgba(230,230,230,0.7) 0%, rgba(150,150,150,0.6) 100%), url(../img/template/carto.png) top left repeat-x;
+}
+
+input.syn_buttoncarto:hover {
+background: linear-gradient(top, rgba(150,150,150,0.6) 0%, rgba(230,230,230,0.7) 100%), url(../img/template/carto.png) top left repeat-x;
+background: -moz-linear-gradient(top, rgba(150,150,150,0.6) 0%, rgba(230,230,230,0.7) 100%), url(../img/template/carto.png) top left repeat-x;
+background: -webkit-linear-gradient(top, rgba(150,150,150,0.6) 0%, rgba(230,230,230,0.7) 100%), url(../img/template/carto.png) top left repeat-x;
+}
+/*
+    Copyright (c) 2007-2026 Ovensia
+    Contributors hold Copyright (c) to their code submissions.
+
+    This file is part of Ploopi.
+
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
+/******************
+  ÉCRANS D'ADMINISTRATION (module system)
+  Les classes system_* sont définies, avec leur aspect historique, par
+  modules/system/include/styles.css, chargée APRÈS cette feuille : les règles
+  ci-dessous sont préfixées par « body » pour l'emporter.
+*******************/
+
+/* Bandeaux d'information : en-tête d'une liste, d'un import, d'un outil */
+body .system_bandeau {
+    margin: 4px 0 8px 0;
+    padding: 8px 12px;
+    color: var(--p3-text);
+    background: var(--p3-surface-2);
+    border: 1px solid var(--p3-border);
+    border-left: 3px solid var(--p3-border-strong);
+    border-radius: var(--p3-radius-sm);
+    line-height: 1.5;
+}
+
+body .system_bandeau_cadre {
+    border-width: 1px 1px 1px 3px;
+}
+
+body .system_bandeau.system_bandeau_clair {
+    border-bottom: 1px solid var(--p3-border);
+}
+
+/* Employée seule, la classe enveloppe un tableau : pas de bandeau */
+body .system_bandeau_clair {
+    background: transparent;
+    border-top: 0;
+}
+
+body .system_bandeau input[type='text'] {
+    margin: 0 4px;
+}
+
+/* Ligne choisie d'un tableau (rôle dont on gère les attributions) */
+body div.system_line_selected,
+body div.system_line_selected:hover {
+    background: var(--p3-primary-soft);
+    box-shadow: inset 3px 0 0 var(--p3-primary);
+}
+
+body div.system_line_selected a {
+    color: var(--p3-primary-dark);
+}
+
+/* Module system, qui ne se désinstalle pas */
+body div.system_line_system,
+body div.system_line_system:hover {
+    background: var(--p3-surface-3);
+    color: var(--p3-text-muted);
+}
+
+/* Niveau de l'utilisateur dans l'espace : le réglage qui compte, mis en avant */
+body .system_user_level {
+    margin: 10px 2px 4px 2px;
+    padding: 8px 0;
+    background: var(--p3-primary-softer);
+    border: 1px solid var(--p3-primary-soft);
+    border-left: 3px solid var(--p3-primary);
+    border-radius: var(--p3-radius-sm);
+}
+
+body .system_user_level label {
+    font-weight: 700;
+    color: var(--p3-primary-dark);
+}
+
+/* Avertissement de configuration : un encadré, plus un texte rouge en italique */
+body .system_warning {
+    display: block;
+    float: left;
+    width: 65%;
+    box-sizing: border-box;
+    position: relative;
+    padding: 8px 12px 8px 34px;
+    font-style: normal;
+    color: var(--p3-warning);
+    background: var(--p3-warning-soft);
+    border: 1px solid #ecd28c;
+    border-left: 3px solid #d29f12;
+    border-radius: var(--p3-radius-sm);
+}
+
+body .system_warning img {
+    position: absolute;
+    left: 10px;
+    top: 9px;
+    float: none;
+    margin: 0;
+}
+
+/* Modèle de courriel : balises à insérer, en étiquettes */
+body #system_filtering label em {
+    font-style: normal;
+    color: var(--p3-text-muted);
+}
+
+body .mail_model_tag {
+    display: inline-block;
+    margin: 3px 1px 0 1px;
+    padding: 1px 7px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', monospace;
+    font-size: 11px;
+    font-style: normal;
+    line-height: 18px;
+    color: var(--p3-primary-dark);
+    background: var(--p3-primary-softer);
+    border: 1px solid var(--p3-primary-soft);
+    border-radius: 10px;
+}
+
+body .mail_model_tag:hover {
+    color: var(--p3-primary-dark);
+    background: var(--p3-primary-soft);
+    border-color: var(--p3-primary);
+    text-decoration: none;
+}
+
+/* Fiche d'un espace ou d'un groupe : panneau des actions, à droite */
+body div.system_group_main {
+    border-right: 1px solid var(--p3-border);
+}
+
+body div.system_group_icons {
+    background: var(--p3-surface-2);
+    border-radius: 0 var(--p3-radius-sm) var(--p3-radius-sm) 0;
+}
+
+body div.system_group_icons_padding {
+    padding: 8px;
+}
+
+body div.system_group_icons_padding > div:first-child {
+    margin-bottom: 8px;
+    padding: 4px 2px 8px 2px !important;
+    color: var(--p3-text-muted);
+    border-bottom: 1px solid var(--p3-border);
+    line-height: 1.6;
+}
+
+body div.system_group_icons_padding > div:first-child strong {
+    color: var(--p3-text);
+}
+
+/* Arborescence des espaces et des groupes */
+body div.system_tree_padding {
+    padding: 8px 6px;
+}
+
+body a.system_tree_link {
+    padding: 1px 6px;
+    border-radius: var(--p3-radius-sm);
+    color: var(--p3-text);
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+}
+
+body a.system_tree_link:hover {
+    background: var(--p3-primary-softer);
+    color: var(--p3-primary-dark);
+    text-decoration: none;
+}
+
+body a.system_tree_link.selected {
+    background: var(--p3-primary-soft);
+    color: var(--p3-primary-dark);
+}
+
+/* Attribution des rôles : utilisateurs et groupes concernés */
+body .system_roleusers {
+    color: var(--p3-text);
+    background: var(--p3-surface-2);
+    border-bottom: 1px solid var(--p3-border);
+}
+
+body .system_roleusers:hover {
+    background: var(--p3-primary-softer);
+}
+
+body .system_roleusers_detail {
+    background: var(--p3-surface);
+    border-bottom: 1px solid var(--p3-border);
+}
+
+body #system_roleusers_result {
+    border-bottom-color: var(--p3-border);
+}
+
+body .system_roleusers_select {
+    color: var(--p3-text);
+    background: var(--p3-surface);
+    border-bottom: 1px solid var(--p3-line);
+}
+
+body .system_roleusers_select:hover {
+    background: var(--p3-primary-softer);
+}
+
+body #system_roleusers_legend {
+    background: var(--p3-surface-2);
+    border-bottom: 1px solid var(--p3-border);
+}
+
+/* Objets du site web (WCE) non installés */
+body .system_wce_warning {
+    color: var(--p3-text);
+    background: var(--p3-surface-2);
+    border: 1px solid var(--p3-border);
+    border-radius: var(--p3-radius-sm);
+    padding: 6px 10px;
+}
+/*
+    Copyright (c) 2002-2007 Netlor
+    Copyright (c) 2007-2008 Ovensia
+    Contributors hold Copyright (c) to their code submissions.
+
+    This file is part of Ploopi.
+
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+/******************
+  SYSTEM.TICKETS
+*******************/
+
+#system_tickets_titlebar {
+padding:4px 0 10px 0;
+overflow:auto;
+}
+
+.system_tickets_row_title {
+clear:both;
+color:var(--p3-text);
+background-color:var(--p3-surface-3);
+border:1px solid var(--p3-border);
+border-bottom-color:var(--p3-border-strong);
+border-radius:var(--p3-radius-sm) var(--p3-radius-sm) 0 0;
+overflow:auto;
+font-weight:bold;
+height:32px;
+line-height:32px;
+}
+
+.system_tickets_row {
+clear:both;
+border-bottom:1px solid var(--p3-line);
+overflow:auto;
+}
+
+.system_tickets_head {
+cursor:pointer;
+}
+
+.system_tickets_detail {
+clear:both;
+overflow:auto;
+display:none;
+margin-left:40px;
+}
+
+.system_tickets_sender {
+float:right;
+width:180px;
+padding:2px 0;
+}
+
+.system_tickets_date {
+float:right;
+width:160px;
+padding:2px 0;
+}
+
+.system_tickets_count {
+float:right;
+width:40px;
+padding:2px 0;
+}
+
+.system_tickets_attachment {
+float:right;
+text-align:center;
+width:20px;
+padding:2px 0;
+}
+
+.system_tickets_title {
+}
+
+.system_tickets_detail_content {
+padding-right:4px;
+overflow:auto;
+}
+
+.system_tickets_message {
+padding:4px;
+margin-right:4px;
+background-color:var(--p3-surface-2);
+border:1px solid var(--p3-border);
+overflow:auto;
+}
+
+.system_tickets_buttons {
+clear: both;
+float: left;
+margin: 4px 0 4px 0px;
+padding: 2px 4px;
+border:1px solid var(--p3-border);
+background-color:var(--p3-surface-2);
+}
+
+.system_tickets_buttons img {
+    margin-right:2px;
+}
+
+.system_tickets_buttons a {
+    margin-right:4px;
+    text-decoration:none;
+}
+
+.system_tickets_user {
+width: 250px;
+text-align: left;
+background-color:var(--p3-surface-2);
+border: 1px solid var(--p3-border);
+padding:4px;
+float: right;
+}
+
+.system_tickets_user_detail img, .system_tickets_user_detail span {
+    vertical-align: middle;
+}
+
+.system_tickets_user_puce {
+float:left;
+width:20px;
+height: 16px;
+text-align: center;
+}
+
+.system_tickets_response {
+clear:both;
+border-left: 1px solid var(--p3-border-strong);
+border-top: 1px solid var(--p3-border-strong);
+padding:2px 0 0 12px;
+overflow:auto;
+}
+
+.system_tickets_response_detail {
+padding:0;
+clear:both;
+margin:0;
+display:none;
+}
+
+.system_tickets_tovalidate {
+display:block;
+float:left;
+background-color:var(--p3-warning-soft);
+border: 1px solid var(--p3-border);
+margin:4px 0;
+padding:4px;
+overflow:auto;
+cursor:pointer;
+}
+
+.system_tickets_tovalidate:hover {
+text-decoration:none;
+}
+
+.system_tickets_tovalidate_msg img, .system_tickets_tovalidate_msg span{
+    vertical-align: middle;
+}
+
+.system_tickets_tovalidate_msg img {
+padding-right:4px;
+}
+
+.system_tickets_tovalidate_msg {
+}
+
+.system_tickets_tovalidate_button {
+    margin-top:4px;
+    text-align:right;
+}
+
+.system_tickets_tovalidate_button img {
+    margin-right:2px;
+}
+
+.system_tickets_tovalidate_button a {
+    margin-right:4px;
+    text-decoration:none;
+}
+
+.system_tickets_legend {
+    clear:both;
+    padding:4px;
+    overflow:auto;
+}
+
+.system_tickets_legend img {
+    float:left;
+    margin-left:10px;
+    margin-right:2px;
+}
+
+.system_tickets_legend div {
+    float:left;
+}
+
+#tickets_new {
+    padding:4px;
+    background-color:var(--p3-surface-2);
+}
+
+.system_tickets_page {
+display:block;
+float:left;
+background-color:var(--p3-surface-2);
+padding: 0px 4px;
+margin-left:1px;
+text-decoration:none;
+color:var(--p3-text);
+border:1px solid var(--p3-border);
+}
+
+.system_tickets_page:hover {
+background-color:var(--p3-surface-3);
+text-decoration:none;
+}
+
+.system_tickets_page_sel {
+display:block;
+float:left;
+background-color:var(--p3-surface-2);
+padding: 0px 4px;
+margin-left:1px;
+text-decoration:none;
+color:var(--p3-text);
+border:1px solid var(--p3-primary);
+}
+
+.system_tickets_page_sel:hover {
+background-color:var(--p3-surface-3);
+text-decoration:none;
+}
+
+.system_tickets_select_workgroup {
+    font-weight:bold;
+    background-color:var(--p3-surface-3);
+    border-bottom:1px solid var(--p3-border);
+    padding:1px;
+}
+
+.system_tickets_select_workgroup span {
+    margin-left:4px;
+}
+
+.system_tickets_select_user {
+    display:block;
+    background-color:var(--p3-surface-2);
+    border-bottom:1px solid var(--p3-border);
+    color:var(--p3-text-muted);
+    padding:1px 1px 1px 20px;
+    text-decoration:none;
+}
+
+.system_tickets_select_user:hover {
+    text-decoration:none;
+    background-color:var(--p3-primary-softer);
+    color:var(--p3-text);
+}
+
+.system_tickets_select_user span {
+    padding-left:4px;
+}
+
+.system_tickets_select_usergroup {
+    display:block;
+    background-color:var(--p3-surface-3);
+    border-bottom:1px solid var(--p3-border);
+    color:var(--p3-text-muted);
+    padding:1px 1px 1px 20px;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+.system_tickets_select_usergroup:hover {
+    text-decoration:none;
+    background-color:var(--p3-primary-softer);
+    color:var(--p3-text);
+}
+
+.system_tickets_select_usergroup span {
+    padding-left:4px;
+}
+
+.system_tickets_select_usergroup_user {
+    display:block;
+    background-color:var(--p3-surface-2);
+    border-bottom:1px solid var(--p3-border);
+    color:var(--p3-text-muted);
+    padding:1px 1px 1px 40px;
+    text-decoration:none;
+}
+
+.system_tickets_select_usergroup_user:hover {
+    text-decoration:none;
+    background-color:var(--p3-primary-softer);
+    color:var(--p3-text);
+}
+
+.system_tickets_select_usergroup_user span {
+    padding-left:4px;
+}
+
+.system_tickets_select_legend {
+    padding:2px 1px;
+    text-align:right;
+}
+.system_tickets_select_legend span {
+    padding:0 4px;
+}
+
+.system_tickets_select_empty {
+    padding:2px 1px;
+}
+.system_tickets_select_empty span {
+    padding:0 4px;
+}
+
+a.system_tickets_delete_user {
+    text-decoration:none;
+}
+
+a.system_tickets_delete_user:hover {
+    text-decoration:none;
+}
+
+a.system_tickets_delete_user img {
+    border:0;
+}
+
+.system_tickets_quoted_user {
+    margin:2px 2px 0 2px;
+    padding:2px 4px;
+    border-left:2px solid var(--p3-border);
+    background-color:var(--p3-surface-2);
+}
+
+.system_tickets_quoted_message {
+    margin:0 2px 2px 2px;
+    padding:2px 4px;
+    border-left:2px solid var(--p3-border);
+    background-color:var(--p3-surface-2);
+}
+
+/* Boîtes de la messagerie : commande segmentée, la boîte courante est en gras */
+#system_tickets_button {
+    display:block;
+    float:left;
+    margin:2px 0 2px -1px;
+    padding:5px 12px;
+    color:var(--p3-text-label);
+    text-decoration:none;
+    background-color:var(--p3-surface);
+    border:1px solid var(--p3-border-strong);
+}
+
+#system_tickets_button:first-child {
+    margin-left:0;
+    margin-right:10px;
+    border-radius:var(--p3-radius-sm);
+    color:var(--p3-text-inverse);
+    background-color:var(--p3-primary);
+    border-color:var(--p3-primary);
+}
+
+#system_tickets_button:first-child img {
+    filter:brightness(0) invert(1);
+}
+
+#system_tickets_button:nth-child(2) {
+    border-radius:var(--p3-radius-sm) 0 0 var(--p3-radius-sm);
+}
+
+#system_tickets_button:nth-child(4) {
+    border-radius:0 var(--p3-radius-sm) var(--p3-radius-sm) 0;
+}
+
+#system_tickets_button:hover {
+    color:var(--p3-primary-dark);
+    background-color:var(--p3-primary-softer);
+}
+
+#system_tickets_button:first-child:hover {
+    color:var(--p3-text-inverse);
+    background-color:var(--p3-primary-hover);
+}
+
+#system_tickets_button[style*="bold"] {
+    position:relative;
+    color:var(--p3-primary-dark);
+    background-color:var(--p3-primary-soft);
+    border-color:var(--p3-primary);
+    z-index:1;
+}
+
+.system_tickets_row_title input.checkbox {
+    vertical-align:middle;
+}
+/*
+    Copyright (c) 2002-2007 Netlor
+    Copyright (c) 2007-2008 Ovensia
+    Contributors hold Copyright (c) to their code submissions.
+
+    This file is part of Ploopi.
+
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
+div.ploopi_validation_title {
+    font-weight:bold;
+    padding:4px;
+    background-color:#f4f1fb;
+    box-shadow:inset 4px 0 0 #6941c6;
+    padding-left:12px;
+}
+
+a.ploopi_validation_title {
+    display:block;
+    font-weight:bold;
+    padding:4px;
+    background-color:#f4f1fb;
+    box-shadow:inset 4px 0 0 #6941c6;
+    padding-left:12px;
+    text-decoration:none;
+    cursor:pointer;
+}
+
+a.ploopi_validation_title:hover {
+    text-decoration:none;
+}
+
+.ploopi_validation_search_form {
+    padding:4px;
+    background-color:#faf8fd;
+}
+
+.ploopi_validation_authorizedlist {
+    padding:4px;
+    background-color:#faf8fd;
+}
+
+.ploopi_validation_select_workgroup {
+    font-weight:bold;
+    background-color:var(--p3-surface-3);
+    border-bottom:1px solid var(--p3-border);
+    padding:1px;
+}
+
+.ploopi_validation_select_workgroup span {
+    margin-left:4px;
+}
+
+.ploopi_validation_select_user {
+    display:block;
+    background-color:var(--p3-surface);
+    border-bottom:1px solid var(--p3-border);
+    color:var(--p3-text-muted);
+    padding:1px 1px 1px 20px;
+    text-decoration:none;
+}
+
+.ploopi_validation_select_user:hover {
+    text-decoration:none;
+    background-color:#ebe4f8;
+    color:var(--p3-text);
+}
+
+.ploopi_validation_select_user span {
+    padding-left:4px;
+}
+
+.ploopi_validation_select_usergroup {
+    display:block;
+    font-weight:bold;
+    background-color:var(--p3-surface-2);
+    border-bottom:1px solid var(--p3-border);
+    color:var(--p3-text-muted);
+    padding:1px 1px 1px 20px;
+    text-decoration:none;
+}
+
+.ploopi_validation_select_usergroup:hover {
+    text-decoration:none;
+    background-color:#ebe4f8;
+    color:var(--p3-text);
+}
+
+.ploopi_validation_select_usergroup span {
+    padding-left:4px;
+}
+
+.ploopi_validation_select_usergroup_user {
+    display:block;
+    background-color:var(--p3-surface);
+    border-bottom:1px solid var(--p3-border);
+    color:var(--p3-text-muted);
+    padding:1px 1px 1px 40px;
+    text-decoration:none;
+}
+
+.ploopi_validation_select_usergroup_user:hover {
+    text-decoration:none;
+    background-color:#ebe4f8;
+    color:var(--p3-text);
+}
+
+.ploopi_validation_select_usergroup_user span {
+    padding-left:4px;
+}
+
+.ploopi_validation_select_legend {
+    padding:2px 1px;
+    text-align:right;
+}
+.ploopi_validation_select_legend span {
+    padding:0 4px;
+}
+
+.ploopi_validation_select_empty {
+    padding:4px;
+}
+.ploopi_validation_select_empty span {
+    padding:0 4px;
+}
+
+a.ploopi_validation_delete_user {
+    text-decoration:none;
+}
+
+a.ploopi_validation_delete_user:hover {
+    text-decoration:none;
+}
+
+a.ploopi_validation_delete_user img {
+    border:0;
+}

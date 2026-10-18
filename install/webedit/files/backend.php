@@ -42,7 +42,18 @@ switch ($strbackendtype)
 
         $query_tag = (empty($_REQUEST['query_tag'])) ? '' : $_REQUEST['query_tag'];
 
-        $objCache = new ploopi\cache($query_tag.'-'.$_GET['ploopi_moduleid'].'.xml', 300);
+        /**
+         * L'identifiant d'instance vient de l'URL et entre dans les requêtes : il doit être
+         * entier. Brut, il permettait à un visiteur anonyme d'injecter du SQL.
+         */
+        if (!isset($_GET['ploopi_moduleid']) || !ctype_digit((string)$_GET['ploopi_moduleid']))
+        {
+            ploopi\output::h404();
+            ploopi\system::kill();
+        }
+        $intModuleId = (int)$_GET['ploopi_moduleid'];
+
+        $objCache = new ploopi\cache($query_tag.'-'.$intModuleId.'.xml', 300);
 
         // Vidage du buffer
         ploopi\buffer::clean();
@@ -57,10 +68,7 @@ switch ($strbackendtype)
             if (substr($strBasePath, -1) != '/') $strBasePath .= '/';
 
             // récupération des rubriques
-            $arrHeadings = webedit_getheadings($_GET['ploopi_moduleid']);
-
-            // récupération des partages (mode connecté uniquement)
-            $arrShares = webedit_getshare(null, $_GET['ploopi_moduleid']);
+            $arrHeadings = webedit_getheadings($intModuleId);
 
             $sql =  "
                     SELECT      t.tag, a.id_heading
@@ -72,7 +80,7 @@ switch ($strbackendtype)
                     INNER JOIN  ploopi_mod_webedit_article a
                     ON          at.id_article = a.id
 
-                    WHERE       t.id_module = {$_GET['ploopi_moduleid']}
+                    WHERE       t.id_module = {$intModuleId}
                     AND         (a.timestp_published <= $today OR a.timestp_published = 0)
                     AND         (a.timestp_unpublished >= $today OR a.timestp_unpublished = 0)
                     ";
@@ -82,9 +90,11 @@ switch ($strbackendtype)
             $arrTags = array();
             while ($row = ploopi\db::get()->fetchrow())
             {
-                if (!$arrHeadings['list'][$row['id_heading']]['private']
-                    || isset($arrShares[$arrHeadings['list'][$row['id_heading']]['herited_private']])
-                    || isset($_SESSION['webedit']['allowedheading'][$_GET['ploopi_moduleid']][$arrHeadings['list'][$row['id_heading']]['herited_private']])) // Rubrique non privée ou accessible par l'utilisateur
+                /**
+                 * Le nuage est public, et mis en cache pour tous : aucune étiquette de
+                 * rubrique privée, quelle que soit la session qui le génère (cf. sitemap).
+                 */
+                if (isset($arrHeadings['list'][$row['id_heading']]) && !$arrHeadings['list'][$row['id_heading']]['private'])
                 {
                     $strTag = strtolower(ploopi\str::convertaccents($row['tag']));
                     if (!isset($arrTags[$strTag])) $arrTags[$strTag] = 0;
@@ -133,7 +143,8 @@ switch ($strbackendtype)
         $format = (empty($_REQUEST['format'])) ? 'atom' : $_REQUEST['format'];
 
         // Mise en cache
-        $objCache = new ploopi\cache($format.(isset($_REQUEST['headingid']) ? "-h{$_REQUEST['headingid']}" : '').'.xml', 300);
+        // L'instance entre dans l'identifiant : deux sites d'une installation ne partagent pas leurs flux
+        $objCache = new ploopi\cache($format.'-m'.$_SESSION['ploopi']['moduleid'].(isset($_REQUEST['headingid']) ? "-h{$_REQUEST['headingid']}" : '').'.xml', 300);
 
         // Vidage du buffer
         ploopi\buffer::clean();
@@ -144,11 +155,6 @@ switch ($strbackendtype)
              * La classe heading
              */
             include_once './modules/webedit/class_heading.php';
-
-            /**
-             * FeedWriter qui permet de générer le flux
-             */
-            // include_once './lib/feedwriter/FeedWriter.php';
 
             ploopi\module::init('webedit', false, false, false);
 
@@ -163,7 +169,8 @@ switch ($strbackendtype)
 
             $objWorkspace = new ploopi\workspace();
             if ($objWorkspace->open($_SESSION['ploopi']['workspaceid'])) {
-                $feed_title = $objWorkspace->fields['title'];
+                // Titre du flux : celui de l'espace, à défaut son libellé
+                $feed_title = $objWorkspace->fields['title'] != '' ? $objWorkspace->fields['title'] : $objWorkspace->fields['label'];
                 $feed_description = $objWorkspace->fields['meta_description'];
                 $feed_author = $objWorkspace->fields['meta_author'];
             }
@@ -189,23 +196,12 @@ switch ($strbackendtype)
                 $where = '';
             }
 
-            switch($format)
-            {
-                case 'rss';
-                    $feed = new FeedWriter\RSS2();
-                break;
-
-                default:
-                case 'atom';
-                    $feed = new FeedWriter\ATOM();
-                break;
-            }
-
-            $feed->setTitle(ploopi\str::xmlentities(utf8_encode($feed_title), true));
+            // ploopi\feed échappe lui-même les valeurs : les passer brutes
+            $feed = new ploopi\feed($format == 'rss' ? ploopi\feed::RSS : ploopi\feed::ATOM);
+            $feed->setTitle($feed_title);
             $feed->setLink(_PLOOPI_BASEPATH);
-
-            $feed->setChannelElement('updated', date(DATE_ATOM , time()));
-            $feed->setChannelElement('author', array('name '=> ploopi\str::xmlentities(utf8_encode($feed_author), true)));
+            $feed->setDescription($feed_description);
+            $feed->setAuthor($feed_author);
 
 
             $select = "
@@ -235,21 +231,17 @@ switch ($strbackendtype)
 
                     $url = ploopi\str::urlrewrite("index.php?headingid={$article['id_heading']}&articleid={$article['id']}", webedit_getrewriterules(), "{$article['metatitle']} {$article['metakeywords']}", $arrParents);
 
-                    // Création d'un nouvel item
-                    $item = $feed->createNewItem();
-
-                    $item->setTitle(ploopi\str::xmlentities(utf8_encode($article['title']), true));
-                    $item->setLink(_PLOOPI_BASEPATH.'/'.$url);
-                    $item->setDate(ploopi\date::timestamp2unixtimestamp($article['timestp']));
-                    $item->setDescription(ploopi\str::nl2br(ploopi\str::htmlentities($article['metadescription'])));
-
-                    // Ajout de l'item dans le flux
-                    $feed->addItem($item);
+                    $feed->addItem(
+                        $article['title'],
+                        _PLOOPI_BASEPATH.'/'.$url,
+                        ploopi\date::timestamp2unixtimestamp($article['timestp']),
+                        ploopi\str::nl2br(ploopi\str::htmlentities($article['metadescription']))
+                    );
                 }
             }
 
             // Génération du flux
-            $feed->printFeed();
+            echo $feed->render();
 
             $objCache->end();
         }

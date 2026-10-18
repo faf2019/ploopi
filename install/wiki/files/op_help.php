@@ -39,26 +39,26 @@
 	</tr>
 
 	<tr>
-		<th><img src="./lib/jstoolbar/images/bt_strong.png"
-			style="border: 1px solid #bbb;" alt="Strong" /></th>
+		<th><img src="./modules/wiki/lib/jstoolbar/images/bt_strong.png"
+			class="wiki_aide_cellule" alt="Strong" /></th>
 		<td width="50%">*Strong*</td>
 		<td width="50%"><strong>Strong</strong></td>
 	</tr>
 	<tr>
-		<th><img src="./lib/jstoolbar/images/bt_em.png"
-			style="border: 1px solid #bbb;" alt="Italic" /></th>
+		<th><img src="./modules/wiki/lib/jstoolbar/images/bt_em.png"
+			class="wiki_aide_cellule" alt="Italic" /></th>
 		<td>_Italic_</td>
 		<td><em>Italic</em></td>
 	</tr>
 	<tr>
-		<th><img src="./lib/jstoolbar/images/bt_ins.png"
-			style="border: 1px solid #bbb;" alt="Underline" /></th>
+		<th><img src="./modules/wiki/lib/jstoolbar/images/bt_ins.png"
+			class="wiki_aide_cellule" alt="Underline" /></th>
 		<td>+Underline+</td>
 		<td><ins>Underline</ins></td>
 	</tr>
 	<tr>
-		<th><img src="./lib/jstoolbar/images/bt_del.png"
-			style="border: 1px solid #bbb;" alt="Deleted" /></th>
+		<th><img src="./modules/wiki/lib/jstoolbar/images/bt_del.png"
+			class="wiki_aide_cellule" alt="Deleted" /></th>
 		<td>-Deleted-</td>
 		<td><del>Deleted</del></td>
 	</tr>
@@ -68,15 +68,15 @@
 		<td><cite>Quote</cite></td>
 	</tr>
 	<tr>
-		<th><img src="./lib/jstoolbar/images/bt_code.png"
-			style="border: 1px solid #bbb;" alt="Inline Code" /></th>
+		<th><img src="./modules/wiki/lib/jstoolbar/images/bt_code.png"
+			class="wiki_aide_cellule" alt="Inline Code" /></th>
 		<td>@Inline Code@</td>
 		<td><code>Inline Code</code></td>
 	</tr>
 
 	<tr>
-		<th><img src="./lib/jstoolbar/images/bt_pre.png"
-			style="border: 1px solid #bbb;" alt="Preformatted text" /></th>
+		<th><img src="./modules/wiki/lib/jstoolbar/images/bt_pre.png"
+			class="wiki_aide_cellule" alt="Preformatted text" /></th>
 		<td>&lt;pre><br />
 		&nbsp;lines<br />
 		&nbsp;of code<br />
@@ -91,8 +91,8 @@
 		<th colspan="3">Listes</th>
 	</tr>
 	<tr>
-		<th><img src="./lib/jstoolbar/images/bt_ul.png"
-			style="border: 1px solid #bbb;" alt="Unordered list" /></th>
+		<th><img src="./modules/wiki/lib/jstoolbar/images/bt_ul.png"
+			class="wiki_aide_cellule" alt="Unordered list" /></th>
 		<td>* Item 1<br />
 		* Item 2</td>
 		<td>
@@ -104,8 +104,8 @@
 	</tr>
 
 	<tr>
-		<th><img src="./lib/jstoolbar/images/bt_ol.png"
-			style="border: 1px solid #bbb;" alt="Ordered list" /></th>
+		<th><img src="./modules/wiki/lib/jstoolbar/images/bt_ol.png"
+			class="wiki_aide_cellule" alt="Ordered list" /></th>
 		<td># Item 1<br />
 		# Item 2</td>
 		<td>
@@ -120,24 +120,24 @@
 		<th colspan="3">Titres</th>
 	</tr>
 	<tr>
-		<th><img src="./lib/jstoolbar/images/bt_h1.png"
-			style="border: 1px solid #bbb;" alt="Heading 1" /></th>
+		<th><img src="./modules/wiki/lib/jstoolbar/images/bt_h1.png"
+			class="wiki_aide_cellule" alt="Heading 1" /></th>
 		<td>h1. Title 1</td>
 		<td>
 		<h1>Title 1</h1>
 		</td>
 	</tr>
 	<tr>
-		<th><img src="./lib/jstoolbar/images/bt_h2.png"
-			style="border: 1px solid #bbb;" alt="Heading 2" /></th>
+		<th><img src="./modules/wiki/lib/jstoolbar/images/bt_h2.png"
+			class="wiki_aide_cellule" alt="Heading 2" /></th>
 		<td>h2. Title 2</td>
 		<td>
 		<h2>Title 2</h2>
 		</td>
 	</tr>
 	<tr>
-		<th><img src="./lib/jstoolbar/images/bt_h3.png"
-			style="border: 1px solid #bbb;" alt="Heading 3" /></th>
+		<th><img src="./modules/wiki/lib/jstoolbar/images/bt_h3.png"
+			class="wiki_aide_cellule" alt="Heading 3" /></th>
 		<td>h3. Title 3</td>
 		<td>
 		<h3>Title 3</h3>
@@ -162,8 +162,8 @@
 		<th colspan="3">Liens Wiki</th>
 	</tr>
 	<tr>
-		<th><img src="./lib/jstoolbar/images/bt_link.png"
-			style="border: 1px solid #bbb;" alt="Link to a Wiki page" /></th>
+		<th><img src="./modules/wiki/lib/jstoolbar/images/bt_link.png"
+			class="wiki_aide_cellule" alt="Link to a Wiki page" /></th>
 		<td>[[Wiki page]]</td>
 		<td><a href="#">Wiki page</a></td>
 	</tr>
@@ -172,8 +172,8 @@
 		<th colspan="3">Images</th>
 	</tr>
 	<tr>
-		<th><img src="./lib/jstoolbar/images/bt_img.png"
-			style="border: 1px solid #bbb;" alt="Image" /></th>
+		<th><img src="./modules/wiki/lib/jstoolbar/images/bt_img.png"
+			class="wiki_aide_cellule" alt="Image" /></th>
 		<td>!<em>image_url</em>!</td>
 		<td></td>
 	</tr>

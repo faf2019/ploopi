@@ -33,12 +33,26 @@ ploopi.subscription.checkaction = function (id_subscription, id_action)
 
     ck.checked = !ck.checked
 
-    if (id_action == -1 && ck.checked) jQuery('.ploopi_subscription_action').each(function(item) { this.checked = false; }); /* ploopi_checkall($('ploopi_form_subscription_'+id_subscription), 'ploopi_subscription_action_', false, true); */
+    if (id_action == -1 && ck.checked) jQuery('.ploopi_subscription_action').each(function(item) { this.checked = false; });
 
     if (id_action > -1 && jQuery('#ploopi_subscription_unsubscribe')[0] && jQuery('#ploopi_subscription_unsubscribe')[0].checked) jQuery('#ploopi_subscription_unsubscribe')[0].checked = false;
 
-    if (id_action == 0 && ck.checked) jQuery('.ploopi_subscription_action').each(function(item) { this.checked = true; }); /* ploopi_checkall($('ploopi_form_subscription_'+id_subscription), 'ploopi_subscription_action_', true, true); */
+    if (id_action == 0 && ck.checked) jQuery('.ploopi_subscription_action').each(function(item) { this.checked = true; });
 
     if (id_action > 0 && !ck.checked && jQuery('#ploopi_subscription_action_0')[0].checked) jQuery('#ploopi_subscription_action_0')[0].checked = false;
 };
 
+/**
+ * Actions des abonnements (attributs data-ploopi-action, js/actions.js) : la case est
+ * basculée une fois, que le clic porte sur la case elle-même ou sur sa ligne
+ */
+ploopi.actions.subscription_checkaction = function(el, event, id_subscription, id_action) {
+    if (event.target && event.target.type == 'checkbox') event.target.checked = !event.target.checked;
+    ploopi.subscription.checkaction(id_subscription, id_action);
+};
+
+ploopi.actions.subscription_cancel = function(el, event, formid, divid) {
+    var form = document.getElementById(formid);
+    if (form) form.reset();
+    ploopi.switchdisplay(divid);
+};

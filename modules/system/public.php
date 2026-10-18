@@ -37,6 +37,10 @@ ploopi\module::init('system');
 
 $op = empty($_REQUEST['op']) ? (ploopi\param::get('system_submenu_display') ? 'tickets' : 'profile') : $_REQUEST['op'];
 
+// Gabarits de génération 4 : même gouttière que les écrans d'administration (hors enregistrements, qui redirigent)
+$booSystemPublicP4 = ploopi\skin::get()->version() >= 4 && !in_array($op, array('paramsave', 'save_user'));
+if ($booSystemPublicP4) echo '<div class="p4-page p4-mys-page">';
+
 switch($op)
 {
     case 'search':
@@ -49,7 +53,14 @@ switch($op)
     break;
 
     case 'paramsave':
-        if (!empty($_POST['idmodule']) && is_numeric($_POST['idmodule']))
+        // Seulement un module proposé par l'écran : ceux des espaces de l'utilisateur
+        $arrParamModules = array();
+        foreach($_SESSION['ploopi']['workspaces'] as $arrParamWorkspace)
+        {
+            if (!empty($arrParamWorkspace['adminlevel']) && !empty($arrParamWorkspace['modules'])) $arrParamModules = array_merge($arrParamModules, $arrParamWorkspace['modules']);
+        }
+
+        if (!empty($_POST['idmodule']) && is_numeric($_POST['idmodule']) && in_array($_POST['idmodule'], $arrParamModules))
         {
             $param_module = new ploopi\param();
             $param_module->open($_POST['idmodule'],0,$_SESSION['ploopi']['userid'], 1);
@@ -80,7 +91,12 @@ switch($op)
         if (!isset($_POST['user_ticketsbyemail'])) $user->fields['ticketsbyemail'] = 0;
         if (!isset($_POST['user_servertimezone'])) $user->fields['servertimezone'] = 0;
 
-        $user->setvalues($_POST,'user_');
+        // Seuls les champs du formulaire de profil : ni l'identifiant, ni le mot de passe, ni l'état du compte
+        $arrProfileFields = array('lastname', 'firstname', 'civility', 'entity', 'service', 'service2', 'function', 'rank', 'number', 'phone', 'mobile', 'fax', 'email', 'building', 'floor', 'office', 'address', 'postalcode', 'city', 'country', 'ticketsbyemail', 'servertimezone', 'timezone', 'color', 'comments');
+        $arrProfileValues = array();
+        foreach($arrProfileFields as $strField) if (isset($_POST["user_{$strField}"])) $arrProfileValues["user_{$strField}"] = $_POST["user_{$strField}"];
+
+        $user->setvalues($arrProfileValues, 'user_');
 
         // Affectation nouveau mot de passe
         $error = '';
@@ -90,7 +106,9 @@ switch($op)
             if ($_POST['usernewpass'] != '')
             {
                 // Vérification de l'ancien mot de passe
-                if (strcmp($user->fields['password'], user::generate_hash($_POST['useroldpass'], $user->fields['login'])) == 0)
+                // bcrypt tire un sel à chaque empreinte : comparer deux empreintes ne
+                // réussissait jamais, il faut vérifier le mot de passe contre l'empreinte
+                if (user::password_verify($_POST['useroldpass'], $user->fields['login'], $user->fields['password']))
                 {
                     // Mots de passes équivalents
                     if ($_POST['usernewpass'] == $_POST['usernewpass_confirm'])
@@ -138,4 +156,6 @@ switch($op)
         include './modules/system/public_tickets.php';
     break;
 }
+
+if ($booSystemPublicP4) echo '</div>';
 ?>

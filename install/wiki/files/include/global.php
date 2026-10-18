@@ -111,6 +111,38 @@ function wiki_internal_links($arrMatches, $intIdModule = null)
 }
 
 /**
+ * Assainit une URL destinée à un attribut href.
+ *
+ * wiki_links() réémettait l'URL telle quelle : la valeur venait de la sortie de Textile,
+ * captée par une expression rationnelle gourmande, et pouvait donc refermer l'attribut ou
+ * porter un schéma actif.
+ *
+ * @param string $strUrl URL captée
+ * @return string URL échappée, ou '#' si son schéma n'est pas admis
+ *
+ * @copyright Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Ovensia
+ */
+function wiki_safe_url($strUrl)
+{
+    // Décodage préalable, sans quoi « java&#115;cript: » passerait au travers du contrôle
+    $strUrl = trim(html_entity_decode((string)$strUrl, ENT_QUOTES, 'UTF-8'));
+
+    if ($strUrl === '') return '#';
+
+    // Une ancre reste locale
+    if ($strUrl[0] === '#') return ploopi\str::htmlentities($strUrl);
+
+    // Une URL relative ne porte pas de schéma ; les autres sont limitées aux schémas inertes
+    $strScheme = strtolower((string)parse_url($strUrl, PHP_URL_SCHEME));
+
+    if ($strScheme !== '' && !in_array($strScheme, array('http', 'https', 'ftp', 'ftps', 'mailto'))) return '#';
+
+    return ploopi\str::htmlentities($strUrl);
+}
+
+/**
  * Traitement des liens externes et ancres (href) par expression regulière
  *
  * @param array $arrMatches Tableau des correspondances
@@ -125,11 +157,11 @@ function wiki_links($arrMatches)
         switch($arrMatches[1][0]) // On regarde le 1er caractère du lien
         {
             case '#': // cas particulier : ancre
-                return '<span class="wiki_link_ext"><a title="Aller à l\'ancre &laquo; '.ploopi\str::htmlentities(strip_tags($arrMatches[2])).' &raquo;" href="'.$arrMatches[1].'">'.$arrMatches[2].'</a><img src="./modules/wiki/img/ico_link_anchor.png" /></span>';
+                return '<span class="wiki_link_ext"><a title="Aller à l\'ancre &laquo; '.ploopi\str::htmlentities(strip_tags($arrMatches[2])).' &raquo;" href="'.wiki_safe_url($arrMatches[1]).'">'.$arrMatches[2].'</a><img src="./modules/wiki/img/ico_link_anchor.png" /></span>';
             break;
 
             default: // autres cas : liens externes
-                return '<span class="wiki_link_ext"><a title="Ouvrir le lien externe &laquo; '.ploopi\str::htmlentities(strip_tags($arrMatches[1])).' &raquo;" href="'.$arrMatches[1].'">'.$arrMatches[2].'</a><img src="./modules/wiki/img/ico_link_ext.png" /></span>';
+                return '<span class="wiki_link_ext"><a title="Ouvrir le lien externe &laquo; '.ploopi\str::htmlentities(strip_tags($arrMatches[1])).' &raquo;" href="'.wiki_safe_url($arrMatches[1]).'">'.$arrMatches[2].'</a><img src="./modules/wiki/img/ico_link_ext.png" /></span>';
             break;
 
         }
@@ -175,6 +207,20 @@ function wiki_make_links($strContent)
  */
 function wiki_render($strContent, $cbInternalLinks = 'wiki_internal_links')
 {
+    /**
+     * Le contenu d'une page est saisi sous le préfixe fck_, qui l'exempte du filtre
+     * d'entrée (@see security::filtervar), et il est enregistré sans purification. Le
+     * moteur Textile, lui, laisse passer le HTML brut : sans ce traitement, un rédacteur
+     * place un <script> dans une page et il s'exécute chez tous ses lecteurs, frontoffice
+     * compris.
+     *
+     * La purification porte sur la source, avant Textile : le balisage Textile est du texte
+     * et la traverse sans changement. Elle couvre ainsi les pages déjà enregistrées.
+     *
+     * @see str::htmlpurifier
+     */
+    $strContent = ploopi\str::htmlpurifier($strContent);
+
     $objTextile = new \Netcarver\Textile\Parser();
 
     // Pré-traitement du formatage de code
@@ -196,7 +242,7 @@ function wiki_render($strContent, $cbInternalLinks = 'wiki_internal_links')
     //$strContent = str_replace($arrSearch, $arrReplace, $strContent);
 
     // Renderer textile
-    $strTextile = utf8_decode($objTextile->parse(utf8_encode($strContent)));
+    $strTextile = mb_convert_encoding($objTextile->parse(mb_convert_encoding($strContent, 'UTF-8', 'ISO-8859-1')), 'ISO-8859-1', 'UTF-8');
 
     // Traitement des liens externes
     $strTextile = preg_replace_callback ('/<a[^>]*href="(.*)"[^>]*>(.*)<\/a>/i', 'wiki_links', $strTextile);
@@ -314,3 +360,8 @@ function wiki_object_searchresult($template_body, $rowResult, $objArticle, $arrH
 
     return true;
 }
+
+/**
+ * Écrans prêts pour la Content-Security-Policy stricte (ploopi\csp::moduleready)
+ */
+define('_WIKI_CSP', true);

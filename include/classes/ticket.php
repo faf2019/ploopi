@@ -131,6 +131,31 @@ class ticket extends data_object
             if (is_array($id_user)) foreach($id_user as $idu) $_SESSION['ploopi']['tickets']['users_selected'][$idu] = $idu;
             else $_SESSION['ploopi']['tickets']['users_selected'][$id_user] = $id_user;
         }
+
+        // ploopi4 : destinataires en pastilles, recherche à la frappe (js/tickets.js)
+        if (skin::get()->version() >= 4)
+        {
+            $skin = skin::get();
+            ?>
+            <div class="p4-field p4-ticket-recipients">
+                <label for="p4_ticket_search"><?php echo _PLOOPI_LABEL_TICKET_RECIPIENTS; ?></label>
+                <div class="p4-ticket-selected" id="div_ticket_users_selected" aria-live="polite"><?php ticket::displayusers(); ?></div>
+                <div class="p4-ticket-searchbar">
+                    <div class="p4-seg" role="group" aria-label="<?php echo _PLOOPI_LABEL_TICKET_RECIPIENTSEARCH; ?>">
+                        <button type="button" data-p4-ticket-type="user" aria-pressed="true">Utilisateurs</button>
+                        <button type="button" data-p4-ticket-type="group" aria-pressed="false">Groupes</button>
+                        <button type="button" data-p4-ticket-type="workspace" aria-pressed="false">Espaces</button>
+                    </div>
+                    <div class="p4-input-icon p4-grow">
+                        <?php echo $skin->icon('search'); ?>
+                        <input class="p4-input" type="search" id="p4_ticket_search" data-p4-ticket-search data-p4-ticket-type="user" data-p4-ticket-url="<?php echo crypt::queryencode('ploopi_op=tickets_search_users'); ?>" placeholder="Nom, prénom ou identifiant…" autocomplete="off" aria-controls="div_ticket_search_result">
+                    </div>
+                </div>
+                <div class="p4-ticket-results" id="div_ticket_search_result" aria-live="polite"></div>
+            </div>
+            <?php
+            return;
+        }
         ?>
         <p class="ploopi_va">
             <span><?php echo _PLOOPI_LABEL_TICKET_RECIPIENTSEARCH; ?>:</span>
@@ -188,7 +213,9 @@ class ticket extends data_object
         if (isset($_SESSION['ploopi']['tickets']['users_selected']) && file_exists("{$_SESSION['ploopi']['template_path']}/ticket.tpl") && is_readable("{$_SESSION['ploopi']['template_path']}/ticket.tpl"))
         {
             $email_message = str::make_links($message);
-            // initialisation du moteur de template
+            // initialisation du moteur de template : chargé par backoffice.php et light.php
+            // seulement, une opération passée par index-quick.php ne l'a pas encore
+            if (!class_exists('Template', false)) include_once './lib/template/template.php';
             $tplmail = new \Template($_SESSION['ploopi']['template_path']);
             $tplmail->set_filenames(array('mail' => 'ticket.tpl'));
 
@@ -268,24 +295,26 @@ class ticket extends data_object
             ob_end_clean();
         }
 
-        // Création du ticket
+        // Création du ticket. Colonnes entières : '' (aucun objet lié) est refusé en mode SQL
+        // strict, et le message n'était alors pas enregistré.
         $ticket = new self();
-        $ticket->fields['id_object'] = $id_object;
-        $ticket->fields['id_record'] = $id_record;
+        $ticket->fields['id_object'] = (int) $id_object;
+        $ticket->fields['id_record'] = (string) $id_record;
         $ticket->fields['id_module'] = $id_module;
         $ticket->fields['id_workspace'] = $id_workspace;
         $ticket->fields['id_user'] = $id_user;
         $ticket->fields['object_label'] = $object_label;
         $ticket->fields['title'] = $title;
         $ticket->fields['message'] = str::htmlpurifier($message);
-        $ticket->fields['needed_validation'] = $needed_validation;
-        $ticket->fields['delivery_notification'] = $delivery_notification;
+        $ticket->fields['needed_validation'] = (int) $needed_validation;
+        $ticket->fields['delivery_notification'] = (int) $delivery_notification;
         $ticket->fields['timestp'] = date::createtimestamp();
         $ticket->fields['lastreply_timestp'] = $ticket->fields['timestp'];
         $id_ticket = $ticket->save();
+        if (empty($id_ticket)) return;
 
         // Envoi du ticket aux destinataires
-        foreach(array_unique($_SESSION['ploopi']['tickets']['users_selected']) as $user_id)
+        foreach(array_unique(isset($_SESSION['ploopi']['tickets']['users_selected']) ? $_SESSION['ploopi']['tickets']['users_selected'] : array()) as $user_id)
         {
             $user = new user();
             if ($user->open($user_id))
@@ -368,6 +397,27 @@ class ticket extends data_object
     public static function displayusers()
     {
         $skin = skin::get();
+
+        // ploopi4 : pastilles retirables (data-p4-ticket-remove, js/tickets.js)
+        if ($skin->version() >= 4)
+        {
+            $arrSelected = empty($_SESSION['ploopi']['tickets']['users_selected']) ? array() : array_map('intval', $_SESSION['ploopi']['tickets']['users_selected']);
+            ?>
+            <input type="hidden" id="system_ticket_ctrl_user_to" name="system_ticket_ctrl_user_to" value="<?php echo implode(',', $arrSelected); ?>" />
+            <?php
+            if (empty($arrSelected))
+            {
+                ?><span class="p4-ticket-none">Aucun destinataire choisi : recherchez-les ci-dessous.</span><?php
+            }
+            foreach($arrSelected as $user_id)
+            {
+                $user = new user();
+                if (!$user->open($user_id)) continue;
+                $strNom = trim("{$user->fields['lastname']} {$user->fields['firstname']}");
+                ?><span class="p4-ticket-chip"><?php echo str::htmlentities($strNom); ?><button type="button" data-p4-ticket-remove="<?php echo $user_id; ?>" aria-label="<?php echo str::htmlentities(_PLOOPI_LABEL_TICKET_DELETERECIPIENT.' : '.$strNom); ?>" title="<?php echo str::htmlentities(_PLOOPI_LABEL_TICKET_DELETERECIPIENT); ?>"><?php echo $skin->icon('x'); ?></button></span><?php
+            }
+            return;
+        }
 
         if (!empty($_SESSION['ploopi']['tickets']['users_selected']))
         {

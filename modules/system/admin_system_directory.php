@@ -34,7 +34,10 @@
  * Ouverture du bloc
  */
 
-echo ploopi\skin::get()->open_simplebloc(_SYSTEM_LABEL_DIRECTORY);
+// Gabarits de génération 4 : filtres, barre d'outils et tableau refondus (admin_system_directory_p4.php)
+$booSystemP4 = ploopi\skin::get()->version() >= 4;
+
+if (!$booSystemP4) echo ploopi\skin::get()->open_simplebloc(_SYSTEM_LABEL_DIRECTORY);
 
 $intMaxResponse = 500;
 
@@ -68,40 +71,40 @@ if (!isset($arrFilter['ploopi_last_connection_2'])) $arrFilter['ploopi_last_conn
 
 // Enregistrement SESSION
 $_SESSION['system']['directoryform'] = $arrFilter;
+
+if ($booSystemP4)
+{
+    $strDirectoryPart = 'filters';
+    include './modules/system/admin_system_directory_p4.php';
+}
+else
+{
 ?>
 <form action="<?php echo ploopi\crypt::urlencode('admin.php?sysToolbarItem=directory'); ?>" method="post">
-<div class="ploopi_va" style="padding:6px;">
-    <label>Nom: </label>
-    <input type="text" class="text" name="ploopi_lastname" value="<?php echo ploopi\str::htmlentities($arrFilter['ploopi_lastname']); ?>" style="width:100px;" tabindex="100" />
-
-    <label>Prénom: </label>
-    <input type="text" class="text" name="ploopi_firstname" value="<?php echo ploopi\str::htmlentities($arrFilter['ploopi_firstname']); ?>" style="width:100px;" tabindex="105" />
-
-    <label>Login: </label>
-    <input type="text" class="text" name="ploopi_login" value="<?php echo ploopi\str::htmlentities($arrFilter['ploopi_login']); ?>" style="width:100px;" tabindex="110" />
-
-    <label>Courriel: </label>
-    <input type="text" class="text" name="ploopi_email" value="<?php echo ploopi\str::htmlentities($arrFilter['ploopi_email']); ?>" style="width:150px;" tabindex="120" />
-
-    <label>Groupe: </label>
-    <input type="text" class="text" name="ploopi_group" value="<?php echo ploopi\str::htmlentities($arrFilter['ploopi_group']); ?>" style="width:100px;" tabindex="115" />
-
-    <label>Espace: </label>
-    <input type="text" class="text" name="ploopi_workspace" value="<?php echo ploopi\str::htmlentities($arrFilter['ploopi_workspace']); ?>" style="width:100px;" tabindex="115" />
-
-    <label>Connexion entre le: </label>
-    <input type="text" class="text" name="ploopi_last_connection_1" id="ploopi_last_connection_1" value="<?php echo ploopi\str::htmlentities($arrFilter['ploopi_last_connection_1']); ?>" style="width:100px;" tabindex="116" />
-    <?php ploopi\date::open_calendar('ploopi_last_connection_1'); ?>
-    <label>et le: </label>
-    <input type="text" class="text" name="ploopi_last_connection_2" id="ploopi_last_connection_2" value="<?php echo ploopi\str::htmlentities($arrFilter['ploopi_last_connection_2']); ?>" style="width:100px;" tabindex="117" />
-    <?php ploopi\date::open_calendar('ploopi_last_connection_2'); ?>
-
-    <input type="submit" class="button" value="Filtrer" tabindex="150" />
-    <input type="submit" class="button" name="delete" value="Supprimer" style="color:#a60000" tabindex="155" onclick="if (!confirm('Attention vous allez supprimer définitivement les utilisateurs correspondant à ce filtre.\nContinuer ?')) return false;" />
-    <input type="button" class="button" value="Réinitialiser" onclick="document.location.href='<?php echo ploopi\crypt::urlencode('admin.php?sysToolbarItem=directory&system_filter_reset'); ?>';" tabindex="160" />
+<div class="ploopi_va ploopi_filter" style="padding:6px;">
+    <span class="ploopi_filter_field"><label>Nom: </label><input type="text" class="text" name="ploopi_lastname" value="<?php echo ploopi\str::htmlentities($arrFilter['ploopi_lastname']); ?>" style="width:100px;" tabindex="100" /></span>
+    <span class="ploopi_filter_field"><label>Prénom: </label><input type="text" class="text" name="ploopi_firstname" value="<?php echo ploopi\str::htmlentities($arrFilter['ploopi_firstname']); ?>" style="width:100px;" tabindex="105" /></span>
+    <span class="ploopi_filter_field"><label>Login: </label><input type="text" class="text" name="ploopi_login" value="<?php echo ploopi\str::htmlentities($arrFilter['ploopi_login']); ?>" style="width:100px;" tabindex="110" /></span>
+    <span class="ploopi_filter_field"><label>Courriel: </label><input type="text" class="text" name="ploopi_email" value="<?php echo ploopi\str::htmlentities($arrFilter['ploopi_email']); ?>" style="width:150px;" tabindex="120" /></span>
+    <span class="ploopi_filter_field"><label>Groupe: </label><input type="text" class="text" name="ploopi_group" value="<?php echo ploopi\str::htmlentities($arrFilter['ploopi_group']); ?>" style="width:100px;" tabindex="115" /></span>
+    <span class="ploopi_filter_field"><label>Espace: </label><input type="text" class="text" name="ploopi_workspace" value="<?php echo ploopi\str::htmlentities($arrFilter['ploopi_workspace']); ?>" style="width:100px;" tabindex="115" /></span>
+    <span class="ploopi_filter_field">
+        <label>Connexion entre le: </label>
+        <input type="text" class="text" name="ploopi_last_connection_1" id="ploopi_last_connection_1" value="<?php echo ploopi\str::htmlentities($arrFilter['ploopi_last_connection_1']); ?>" style="width:100px;" tabindex="116" />
+        <?php ploopi\date::open_calendar('ploopi_last_connection_1'); ?>
+        <label>et le: </label>
+        <input type="text" class="text" name="ploopi_last_connection_2" id="ploopi_last_connection_2" value="<?php echo ploopi\str::htmlentities($arrFilter['ploopi_last_connection_2']); ?>" style="width:100px;" tabindex="117" />
+        <?php ploopi\date::open_calendar('ploopi_last_connection_2'); ?>
+    </span>
+    <span class="ploopi_filter_buttons">
+        <input type="submit" class="button" value="Filtrer" tabindex="150" />
+        <input type="submit" class="button ploopi_button_danger" name="delete" value="Supprimer" tabindex="155" onclick="if (!confirm('Attention vous allez supprimer définitivement les utilisateurs correspondant à ce filtre.\nContinuer ?')) return false;" />
+        <input type="button" class="button" value="Réinitialiser" onclick="document.location.href='<?php echo ploopi\crypt::urlencode('admin.php?sysToolbarItem=directory&system_filter_reset'); ?>';" tabindex="160" />
+    </span>
 </div>
 </form>
 <?php
+}
 
 // On charge un maximum de données dans des tableaux pour simplifier les recherches par la suite
 // et pour résoudre des cas complexes (retrouver un utilisateur dans un espace attaché à un sous-groupe d'utilisateur dans un sous-espace de travail)
@@ -195,7 +198,7 @@ foreach($arrWorkspaces as $intId => $row)
     if (isset($arrWorkspaces[$row['desc']['id_workspace']])) $arrWorkspaces[$row['desc']['id_workspace']]['children'][$intId] = $intId;
 
     // Lien famille (fils, petits-fils)
-    $arrParents = explode(';', $row['desc']['parents']);
+    $arrParents = explode(';', (string) $row['desc']['parents']);
     foreach($arrParents as $intIdParent)
     {
         if ($intIdParent > 1 && isset($arrWorkspaces[$intIdParent]))
@@ -212,7 +215,7 @@ foreach($arrGroups as $intId => $row)
     if (isset($arrGroups[$row['desc']['id_group']])) $arrGroups[$row['desc']['id_group']]['children'][$intId] = $intId;
 
     // Lien famille (fils, petits-fils)
-    $arrParents = explode(';', $row['desc']['parents']);
+    $arrParents = explode(';', (string) $row['desc']['parents']);
     foreach($arrParents as $intIdParent)
     {
         if ($intIdParent > 1 && isset($arrGroups[$intIdParent]))
@@ -247,7 +250,8 @@ $objRs = $objQuery->execute();
 while ($row = $objRs->fetchrow())
 {
     //if ($row['id_workspace'] && isset($arrFilteredWorkspaces[$row['id_workspace']]) && isset($arrGroups[$row['id_group']]))
-    if ($row['id_workspace'] && isset($arrGroups[$row['id_group']]))
+    // Rattachement orphelin (espace supprimé sans ses rattachements) : ignoré
+    if ($row['id_workspace'] && isset($arrGroups[$row['id_group']]) && isset($arrWorkspaces[$row['id_workspace']]))
     {
         $arrWorkspaces[$row['id_workspace']]['groups_children'][$row['id_group']] = $row['id_group'];
 
@@ -264,7 +268,7 @@ foreach($arrWorkspaces as $intId => $row)
 {
     $arrWorkspaces[$intId]['groups_included'] = $arrWorkspaces[$intId]['groups_family'];
 
-    $arrParents = explode(';', $row['desc']['parents']);
+    $arrParents = explode(';', (string) $row['desc']['parents']);
     foreach($arrParents as $intIdParent)
     {
         if ($intIdParent > 1 && isset($arrWorkspaces[$intIdParent]))
@@ -379,7 +383,8 @@ ploopi\session::setvar('directory_sql', $objQuery->get_sql());
 // Lecture du nombre de réponses
 $intNbRep = current($objQueryCount->execute()->fetchrow());
 
-if (isset($_REQUEST['delete'])) {
+// Suppression de tous les utilisateurs du filtre : réservée aux administrateurs système
+if (isset($_REQUEST['delete']) && $_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_SYSTEMADMIN) {
 
     // Exécution de la requête principale permettant de lister les utilisateurs selon le filtre
     $objRs = $objQuery->execute();
@@ -396,9 +401,16 @@ if (isset($_REQUEST['delete'])) {
     ploopi\output::redirect('admin.php?sysToolbarItem=directory');
 }
 
+if ($booSystemP4)
+{
+    $strDirectoryPart = 'toolbar';
+    include './modules/system/admin_system_directory_p4.php';
+}
+else
+{
 ?>
 
-<div style="padding:4px;background-color:#e0e0e0;border-bottom:1px solid #ccc;">
+<div class="system_bandeau">
     <?php
     if ($_SESSION['system']['level'] == 'system')
     {
@@ -432,22 +444,24 @@ if (isset($_REQUEST['delete'])) {
 
 
 <div class="ploopi_tabs">
-    <a href="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=vcf"); ?>"><img src="./img/export/vcf.png"><span>vCard <sup>VCF</sup></span></a>
-    <a href="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=xml"); ?>"><img src="./img/export/xml.png"><span>Brut <sup>XML</sup></span></a>
-    <a href="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=csv"); ?>"><img src="./img/export/csv.png"><span>Brut <sup>CSV</sup></span></a>
+    <a href="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=vcf"); ?>"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/export/vcf.png"><span>vCard <sup>VCF</sup></span></a>
+    <a href="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=xml"); ?>"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/export/xml.png"><span>Brut <sup>XML</sup></span></a>
+    <a href="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=csv"); ?>"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/export/csv.png"><span>Brut <sup>CSV</sup></span></a>
     <?php
     if (ploopi\param::get('system_unoconv') != '') {
         ?>
-        <a href="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=pdf"); ?>"><img src="./img/export/pdf.png"><span>Adobe &trade; <sup>PDF</sup></span></a>
-        <a href="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=ods"); ?>"><img src="./img/export/ods.png"><span>OpenOffice &trade; <sup>ODS</sup></span></a>
+        <a href="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=pdf"); ?>"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/export/pdf.png"><span>Adobe &trade; <sup>PDF</sup></span></a>
+        <a href="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=ods"); ?>"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/export/ods.png"><span>OpenOffice &trade; <sup>ODS</sup></span></a>
         <?php
     }
     ?>
-    <a href="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=xls"); ?>"><img src="./img/export/xls.png"><span>MS Excel &trade; <sup>XLS</sup></span></a>
-    <a href="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=xlsx"); ?>"><img src="./img/export/xls.png"><span>MS Excel &trade; <sup>XLSX</sup></span></a>
+    <a href="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=xls"); ?>"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/export/xls.png"><span>MS Excel &trade; <sup>XLS</sup></span></a>
+    <a href="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=system_directory_export&system_directory_typedoc=xlsx"); ?>"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/export/xls.png"><span>MS Excel &trade; <sup>XLSX</sup></span></a>
 </div>
 
 <?php
+}
+
 if ($intNbRep <= $intMaxResponse && $intNbRep > 0)
 {
     // Définition des colonnes du tableau (interface)
@@ -628,6 +642,13 @@ if ($intNbRep <= $intMaxResponse && $intNbRep > 0)
 
     while ($row = $objRs->fetchrow()) $arrRoles['users'][$row['id_workspace']][$row['id_user']][$row['id']] = $row;
 
+    if ($booSystemP4)
+    {
+        $strDirectoryPart = 'table';
+        include './modules/system/admin_system_directory_p4.php';
+    }
+    else
+    {
     foreach ($arrUser as $intUserId => $row)
     {
         // tri des groupes par nom
@@ -717,6 +738,14 @@ if ($intNbRep <= $intMaxResponse && $intNbRep > 0)
         $strUserLabel = ploopi\str::htmlentities(sprintf("%s %s", $row['lastname'], $row['firstname']));
         $strUserLogin = ploopi\str::htmlentities($row['login']);
 
+        /**
+         * L'adresse est saisie par l'utilisateur dans son profil et n'est validée que côté
+         * navigateur : elle est donc à la fois échappée et validée ici avant de servir de
+         * lien. Une adresse non conforme n'est simplement pas affichée en lien.
+         */
+        $strUserEmail = filter_var((string)$row['email'], FILTER_VALIDATE_EMAIL);
+        $strUserEmail = empty($strUserEmail) ? '' : ploopi\str::htmlentities($strUserEmail);
+
         // si l'utilisateur est attaché à un groupe, on met un lien vers la fiche de l'utilisateur pour pouvoir la modifier
         if (!empty($row['groups']))
         {
@@ -739,7 +768,7 @@ if ($intNbRep <= $intMaxResponse && $intNbRep > 0)
             'values' => array(
                 'nom' => array('label' => $strUserLabel, 'sort_label' => sprintf("%s %s", $row['lastname'], $row['firstname'])),
                 'login' => array('label' => $strUserLogin, 'sort_label' => $row['login']),
-                'email' => array('label' => empty($row['email']) ? '' : '<a title="'.$row['email'].'" href="mailto:'.$row['email'].'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/email.gif" /></a>', 'sort_label' => $row['email']),
+                'email' => array('label' => empty($strUserEmail) ? '' : '<a title="'.$strUserEmail.'" href="mailto:'.$strUserEmail.'"><img src="'.$_SESSION['ploopi']['template_path'].'/img/system/email.png" /></a>', 'sort_label' => $row['email']),
                 'groups' => array(
                     'label' => (empty($row['groups'])) ? '<em>Pas de groupe dans cet espace</em>'  : implode('<br />', $row['groups']),
                     'sort_label' => $strSortLabelGroups
@@ -763,7 +792,19 @@ if ($intNbRep <= $intMaxResponse && $intNbRep > 0)
             'limit' => 50
         )
     );
+    }
 }
+elseif ($booSystemP4 && $intNbRep == 0)
+{
+    echo ploopi\system\ui::emptystate('users', _SYSTEM_DIR_NONE);
+}
+
+if ($booSystemP4)
+{
+    echo ploopi\system\ui::script();
+    return;
+}
+
 echo ploopi\skin::get()->close_simplebloc();
 
 ?>

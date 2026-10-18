@@ -1,0 +1,16 @@
+# Contexte de construction de l'image de production (docker/Dockerfile, étage prod) :
+# ni l'historique, ni les dépendances ou la configuration de l'hôte, ni les données.
+.git
+.ddev
+.env
+vendor
+data
+build
+config/config.php*
+.htaccess
+tests/.instance
+# modules/ : seuls les modules versionnés (system) ; les autres sont des copies
+# déployées sur l'hôte, réinstallées depuis install/ par le backoffice.
+modules/*
+!modules/system
+!modules/index.html

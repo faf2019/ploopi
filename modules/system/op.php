@@ -118,12 +118,40 @@ if ($_SESSION['ploopi']['connected'])
 
             ?>
             <script type="text/javascript">
-            new PeriodicalExecuter(function(pe) {
-                ploopi.popup.hide('system_popup_update_profile');
-                pe.stop();
-            }, 2);
+            setTimeout(function() { ploopi.popup.hide('system_popup_update_profile'); }, 2000);
             </script>
             <?php
+
+            ploopi\system::kill();
+        break;
+
+        /**
+         * Préférences d'affichage (thème, densité) choisies dans le menu utilisateur du
+         * gabarit ploopi4 : paramètres utilisateur du module system, appliqués aussitôt
+         * à la session. Seules les valeurs prévues sont acceptées.
+         */
+        case 'system_display_prefs_save':
+            $arrPrefs = array(
+                'system_theme' => array('auto', 'light', 'dark'),
+                'system_density' => array('comfortable', 'compact')
+            );
+
+            $db = ploopi\db::get();
+            $intUserId = (int) $_SESSION['ploopi']['userid'];
+
+            foreach($arrPrefs as $strName => $arrValues)
+            {
+                if (!isset($_POST[$strName]) || !in_array($_POST[$strName], $arrValues, true)) continue;
+
+                // Paramètre absent tant que la base n'est pas mise à jour (1.10.3.0)
+                $db->query("SELECT id_module_type FROM ploopi_param_type WHERE id_module_type = 1 AND name = '".$db->addslashes($strName)."'");
+                if (!$db->numrows()) continue;
+
+                $db->query("DELETE FROM ploopi_param_user WHERE id_module = "._PLOOPI_MODULE_SYSTEM." AND id_user = {$intUserId} AND name = '".$db->addslashes($strName)."'");
+                $db->query("INSERT INTO ploopi_param_user SET id_module = "._PLOOPI_MODULE_SYSTEM.", id_user = {$intUserId}, name = '".$db->addslashes($strName)."', value = '".$db->addslashes($_POST[$strName])."', id_module_type = 1");
+
+                $_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM][$strName] = $_POST[$strName];
+            }
 
             ploopi\system::kill();
         break;
@@ -344,7 +372,7 @@ if ($_SESSION['ploopi']['connected'])
                                     <label><?php echo _SYSTEM_LABEL_EMAIL; ?><?php if (in_array('email', $arrRequiredFields)) echo ' *'; ?>:</label>
                                     <input type="text" class="text" name="user_email"  value="<?php echo ploopi\str::htmlentities($user->fields['email']); ?>" <?php echo $strDisabled; ?> tabindex="25" />
                                 </p>
-                                <p class="checkbox" onclick="javascript:ploopi.checkbox_click(event,'user_ticketsbyemail');">
+                                <p class="checkbox ploopi_checkbox_zone" data-checkbox="user_ticketsbyemail">
                                     <label><?php echo _SYSTEM_LABEL_TICKETSBYEMAIL; ?>:</label>
                                     <input style="width:16px;" type="checkbox" id="user_ticketsbyemail" name="user_ticketsbyemail" value="1" <?php if ($user->fields['ticketsbyemail']) echo 'checked'; ?> <?php echo $strDisabled; ?> tabindex="26" />
                                 </p>
@@ -491,6 +519,37 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
             include_once('./modules/system/public_search_result.php');
             ploopi\system::kill();
         break;
+
+        /**
+         * Suggestions à la frappe du champ de recherche du shell ploopi4 (js/shell.js) :
+         * les premiers résultats de la recherche intégrale, mêmes règles que l'écran
+         * (system_search_results). Rien sous deux caractères.
+         */
+        case 'system_search_suggest':
+            if (!function_exists('system_search_results')) include_once './modules/system/include/functions.php';
+
+            $strTerme = isset($_POST['system_search_suggest']) ? trim((string) $_POST['system_search_suggest']) : '';
+            if (mb_strlen($strTerme) < 2) ploopi\system::kill();
+
+            $intMax = 8;
+            $arrResults = system_search_results(mb_substr($strTerme, 0, 100), '', $intMax + 1, array('prefix' => true));
+
+            if (empty($arrResults)) echo '<p class="p4-suggest-empty">'.ploopi\system\ui::e(_SYSTEM_MYS_SEARCH_NONE).'</p>';
+            else
+            {
+                echo '<div class="p4-suggest-list">';
+                foreach(array_slice($arrResults, 0, $intMax) as $intIdx => $row)
+                {
+                    echo '<a class="p4-suggest-item" role="option" id="p4-suggest-'.$intIdx.'" href="'.ploopi\system\ui::e($row['link']).'">';
+                    echo '<span class="p4-suggest-icon">'.ploopi\system\ui::icon(ploopi\skin::get()->moduleicon($row['module_type']), 'p4-icon-sm').'</span>';
+                    echo '<span class="p4-suggest-text"><span class="p4-suggest-label">'.ploopi\system\ui::e($row['label']).'</span><small>'.ploopi\system\ui::e(trim("{$row['module']} · {$row['object']}", ' ·')).'</small></span>';
+                    echo '</a>';
+                }
+                echo '</div>';
+            }
+            echo '<button type="button" class="p4-suggest-all" role="option" id="p4-suggest-all" data-p4-suggest-all>'.ploopi\system\ui::icon('search', 'p4-icon-sm').ploopi\system\ui::e(str_replace('<TERM>', $strTerme, _SYSTEM_MYS_SEARCH_ALL)).'</button>';
+            ploopi\system::kill();
+        break;
     }
 }
 
@@ -509,6 +568,15 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
 
             // Récupération de la requête utilisateur
             $strSql = ploopi\session::getvar('directory_sql');
+
+            // Sélection ou résultat filtré de la liste des utilisateurs d'un espace ou d'un
+            // groupe (ploopi4) : sa requête, restreinte aux identifiants transmis
+            if (!empty($_GET['system_directory_ids']))
+            {
+                $arrIds = array_filter(array_map('intval', explode(',', $_GET['system_directory_ids'])));
+                $strUsersSql = ploopi\session::getvar('system_users_sql');
+                $strSql = (empty($arrIds) || empty($strUsersSql)) ? '' : "SELECT * FROM ({$strUsersSql}) AS system_users_selection WHERE id IN (".implode(',', $arrIds).") ORDER BY lastname, firstname";
+            }
 
             // Préparation du jeu de données
             $arrData = array();
@@ -733,7 +801,8 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                     $strUnoconvPath = ploopi\param::get('system_unoconv');
 
                     // Conversion via unoconv/libreoffice
-                    passthru($cmd = "export HOME=/tmp && {$strUnoconvPath} -v --stdout -f {$strTypeDoc} {$strTmpFile}");
+                    // Les valeurs interpolées sont échappées : system_unoconv est un paramètre modifiable
+                    passthru($cmd = 'export HOME=/tmp && '.escapeshellarg($strUnoconvPath).' -v --stdout -f '.escapeshellarg($strTypeDoc).' '.escapeshellarg($strTmpFile));
 
                     unlink($strTmpFile);
                 break;
@@ -788,9 +857,11 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
         break;
 
         case 'tickets_open':
+            if (!function_exists('system_ticket_isallowed')) include_once './modules/system/include/functions.php';
+
             $ticket = new ploopi\ticket();
 
-            if (isset($_GET['ticket_id']) && is_numeric($_GET['ticket_id']) && $ticket->open($_GET['ticket_id']))
+            if (isset($_GET['ticket_id']) && is_numeric($_GET['ticket_id']) && system_ticket_isallowed($_GET['ticket_id']) && $ticket->open($_GET['ticket_id']))
             {
                 $ticket_status = new ploopi\ticket_status();
 
@@ -816,7 +887,10 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
         break;
 
         case 'tickets_open_responses':
-            if (isset($_GET['ticket_id']) && is_numeric($_GET['ticket_id']))
+            if (!function_exists('system_ticket_isallowed')) include_once './modules/system/include/functions.php';
+
+            // Seulement les réponses d'un message dont on est l'émetteur ou un destinataire
+            if (isset($_GET['ticket_id']) && is_numeric($_GET['ticket_id']) && system_ticket_isallowed($_GET['ticket_id']))
             {
                 $rootid = ploopi\db::get()->addslashes($_GET['ticket_id']);
 
@@ -865,17 +939,24 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
 
                 }
 
-                if (!empty($tickets)) system_tickets_displayresponses($parents, $tickets, $_GET['ticket_id']);
+                if (!empty($tickets))
+                {
+                    if (ploopi\skin::get()->version() >= 4) system_tickets_p4_responses($parents, $tickets, $_GET['ticket_id']);
+                    else system_tickets_displayresponses($parents, $tickets, $_GET['ticket_id']);
+                }
             }
             ploopi\system::kill();
         break;
 
         case 'tickets_validate':
+            if (!function_exists('system_ticket_isallowed')) include_once './modules/system/include/functions.php';
+
             $ticket_status = new ploopi\ticket_status();
 
-            if (!empty($_GET['ticket_id']) && is_numeric($_GET['ticket_id']))
+            // Seulement un message dont on est l'émetteur ou un destinataire
+            if (!empty($_GET['ticket_id']) && is_numeric($_GET['ticket_id']) && system_ticket_isallowed($_GET['ticket_id']))
             {
-                if (!$ticket_status->open($_GET['ticket_id'], $_SESSION['ploopi']['userid'], _ploopi\ticket::DONE))
+                if (!$ticket_status->open($_GET['ticket_id'], $_SESSION['ploopi']['userid'], ploopi\ticket::DONE))
                 {
                     $ticket_status->fields['id_ticket'] = $_GET['ticket_id'];
                     $ticket_status->fields['id_user'] = $_SESSION['ploopi']['userid'];
@@ -938,7 +1019,6 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                             {
                                 $xml_parser = xmlparser_mb();
                                 xml_parse($xml_parser,  file_get_contents($mbfile));
-                                xml_parser_free($xml_parser);
                             }
                         }
 
@@ -949,10 +1029,41 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
 
             if (ploopi\acl::ismanager())
             {
+                // Les fonctions du module (system_isroleallowed notamment) ne sont
+                // chargées par module::init('system') que dans certains cas : ce bloc
+                // peut être atteint sans qu'elles le soient.
+                if (!function_exists('system_isroleallowed')) include_once './modules/system/include/functions.php';
+
                 switch($ploopi_op)
                 {
+                    /**
+                     * Fiche d'un utilisateur pour le tiroir de la liste des utilisateurs
+                     * (gabarits de génération 4). L'utilisateur doit être administrable
+                     * par l'utilisateur connecté (system_user_isadministrable).
+                     */
+                    case 'system_user_card':
+                        if (empty($_GET['system_user_id']) || !is_numeric($_GET['system_user_id'])) ploopi\system::kill();
+
+                        ploopi\module::init('system', false, false, false);
+
+                        $objUser = new ploopi\user();
+                        if (!$objUser->open($_GET['system_user_id']) || !system_user_isadministrable($objUser->fields['id'])) ploopi\system::kill();
+
+                        // Espace dont on affiche le niveau et les rôles : celui de la liste, s'il est administrable
+                        $intContextWorkspace = 0;
+                        if (isset($_GET['system_context']) && $_GET['system_context'] == 'workspace' && !empty($_GET['system_context_id']) && is_numeric($_GET['system_context_id']))
+                        {
+                            list($arrCardWorkspaces) = system_getwg();
+                            if (isset($arrCardWorkspaces['list'][$_GET['system_context_id']])) $intContextWorkspace = (int) $_GET['system_context_id'];
+                        }
+
+                        include './modules/system/admin_workspaces_usercard.php';
+                        ploopi\system::kill();
+                    break;
+
                     case 'system_roleusers':
-                        if (empty($_GET['system_roleusers_roleid'])) ploopi\system::kill();
+                        if (empty($_GET['system_roleusers_roleid']) || empty($_SESSION['system']['workspaceid'])) ploopi\system::kill();
+                        if (!system_isroleallowed($_GET['system_roleusers_roleid'], $_SESSION['system']['workspaceid'])) ploopi\system::kill();
                         $roleid = $_GET['system_roleusers_roleid'];
                         include './modules/system/admin_index_roles_assignment_list.php';
                         ploopi\system::kill();
@@ -961,6 +1072,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                     // suppression de l'affectation d'un rôle à un utilisateur
                     case 'system_roleusers_delete_user':
                         if (empty($_GET['system_roleusers_userid']) || empty($_GET['system_roleusers_roleid']) || empty($_SESSION['system']['workspaceid'])) ploopi\system::kill();
+                        if (!system_isroleallowed($_GET['system_roleusers_roleid'], $_SESSION['system']['workspaceid'])) ploopi\system::kill();
 
                         $wur = new ploopi\workspace_user_role();
 
@@ -973,6 +1085,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                     // suppression de l'affectation d'un rôle à un groupe
                     case 'system_roleusers_delete_group':
                         if (empty($_GET['system_roleusers_groupid']) || empty($_GET['system_roleusers_roleid']) || empty($_SESSION['system']['workspaceid'])) ploopi\system::kill();
+                        if (!system_isroleallowed($_GET['system_roleusers_roleid'], $_SESSION['system']['workspaceid'])) ploopi\system::kill();
 
                         $wgr = new ploopi\workspace_group_role();
 
@@ -985,6 +1098,11 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                     // affectation d'un rôle à un utilisateur
                     case 'system_roleusers_select_user':
                         if (empty($_GET['system_roleusers_userid']) || empty($_GET['system_roleusers_roleid']) || empty($_SESSION['system']['workspaceid'])) ploopi\system::kill();
+                        if (!system_isroleallowed($_GET['system_roleusers_roleid'], $_SESSION['system']['workspaceid'])) ploopi\system::kill();
+
+                        // Seulement un utilisateur rattaché à l'espace
+                        $objWorkspaceUser = new ploopi\workspace_user();
+                        if (!is_numeric($_GET['system_roleusers_userid']) || !$objWorkspaceUser->open($_SESSION['system']['workspaceid'], $_GET['system_roleusers_userid'])) ploopi\system::kill();
 
                         $wur = new ploopi\workspace_user_role();
 
@@ -1002,6 +1120,11 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                     // affectation d'un rôle à un groupe
                     case 'system_roleusers_select_group':
                         if (empty($_GET['system_roleusers_groupid']) || empty($_GET['system_roleusers_roleid']) || empty($_SESSION['system']['workspaceid'])) ploopi\system::kill();
+                        if (!system_isroleallowed($_GET['system_roleusers_roleid'], $_SESSION['system']['workspaceid'])) ploopi\system::kill();
+
+                        // Seulement un groupe rattaché à l'espace
+                        $objWorkspaceGroup = new ploopi\workspace_group();
+                        if (!is_numeric($_GET['system_roleusers_groupid']) || !$objWorkspaceGroup->open($_SESSION['system']['workspaceid'], $_GET['system_roleusers_groupid'])) ploopi\system::kill();
 
                         $wgr = new ploopi\workspace_group_role();
 
@@ -1062,6 +1185,14 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
 
                         ploopi\db::get()->query($sql);
                         $groups = ploopi\db::get()->getarray();
+
+                        // Gabarits de génération 4 : résultats refondus
+                        if (ploopi\skin::get()->version() >= 4)
+                        {
+                            $roleid = (int) $_GET['system_roleusers_roleid'];
+                            include './modules/system/admin_workspaces_roles_search.php';
+                            ploopi\system::kill();
+                        }
 
                         if (empty($users) && empty($groups))
                         {
@@ -1160,7 +1291,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                             <p class="ploopi_va" style="padding:2px;">
                                 <label><?php echo _SYSTEM_LABEL_PHOTO; ?>: </label>
                                 <input type="file" name="system_user_photo" />
-                                <input type="submit" class="button" name="<?php echo _PLOOPI_SAVE; ?>" />
+                                <input type="submit" class="button" value="<?php echo _PLOOPI_SAVE; ?>" />
                             </p>
                             </form>
                             <iframe name="system_user_photo_iframe" style="display:none;"></iframe>
@@ -1244,7 +1375,7 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                             {
                                 $ptrHandle = fopen($_FILES['system_user_file']['tmp_name'], 'r');
 
-                                while (($arrLineData = fgetcsv($ptrHandle, null, $strSep)) !== FALSE)
+                                while (($arrLineData = fgetcsv($ptrHandle, null, $strSep, '"', '\\')) !== FALSE)
                                 {
                                     if (is_array($arrLineData))
                                     {

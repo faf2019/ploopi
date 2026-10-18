@@ -51,7 +51,7 @@ ploopi.switchdisplay = function(id) {
 ploopi.getelem = function(elem, obj) {
     if (typeof(obj) != 'object') obj = document;
 
-    return (obj.getElementById) ? obj.getElementById(elem) : eval("document.all['"+ploopi.addslashes(elem)+"']");
+    return (obj.getElementById) ? obj.getElementById(elem) : obj.all[elem];
 };
 
 ploopi.innerHTML = function(id, html) {
@@ -65,7 +65,11 @@ ploopi.checkbox_click = function(e, inputfield_id) {
 
     var element = jQuery('#'+inputfield_id)[0];
 
-    if (e.target == element) return;
+    if (!element || e.target == element) return;
+
+    // Clic sur un libellé lié à la case : le navigateur la bascule déjà (sinon, double bascule)
+    var label = jQuery(e.target).closest('label')[0];
+    if (label && (label.control == element || jQuery(label).find(element).length)) return;
 
     switch(element.type) {
         case 'radio':
@@ -78,7 +82,7 @@ ploopi.checkbox_click = function(e, inputfield_id) {
 
     }
 
-    ploopi.event.dispatch_onchange('inputfield_id');
+    ploopi.event.dispatch_onchange(inputfield_id);
 };
 
 
@@ -135,3 +139,48 @@ ploopi.insertatcursor = function(field, value) {
 ploopi_insertatcursor = function(field, value) {
     ploopi.insertatcursor(field, value);
 };
+
+// Lot P2 — les icônes de la barre d'outils ne portent plus de onclick inline :
+// create_icon() écrit data-url / data-confirm, cet écouteur délégué rejoue le
+// comportement historique (confirmation éventuelle puis navigation).
+jQuery(document).ready(function() {
+    jQuery(document).on('click', 'a.skin_icon', function(event) {
+        event.preventDefault();
+        var icon = jQuery(this);
+        var go = function() { document.location.href = icon.attr('data-url'); };
+        var confirmMessage = icon.attr('data-confirm');
+        if (confirmMessage) {
+            if (confirm(confirmMessage)) go();
+        }
+        else go();
+    });
+});
+
+// Lot P2 — fermeture des popups du socle (open_simplebloc / open_popup) :
+// le bouton porte data-popup, plus aucun onclick inline.
+jQuery(document).on('click', '.ploopi_popup_close', function(event) {
+    event.preventDefault();
+    ploopi.popup.hide(jQuery(this).attr('data-popup'));
+});
+
+// Lot P2 — tri des colonnes et pagination des tableaux avancés :
+// le socle écrit data-array / data-orderby / data-callback (tri) et
+// data-array / data-page / data-callback (pagination), l'écouteur rejoue
+// ploopi.skin.array_refresh.
+jQuery(document).on('click', 'a.ploopi_array_sort', function(event) {
+    event.preventDefault();
+    var link = jQuery(this);
+    ploopi.skin.array_refresh(link.attr('data-array'), link.attr('data-orderby'), '', link.attr('data-callback'));
+});
+
+jQuery(document).on('click', 'a.ploopi_array_page', function(event) {
+    event.preventDefault();
+    var link = jQuery(this);
+    ploopi.skin.array_refresh(link.attr('data-array'), '', link.attr('data-page'), link.attr('data-callback'));
+});
+
+// Lot P2 — zones cliquables des checkbox : data-checkbox au lieu d'onclick
+// inline ; l'écouteur rejoue ploopi.checkbox_click (bascule + onchange).
+jQuery(document).on('click', '.ploopi_checkbox_zone', function(event) {
+    ploopi.checkbox_click(event, jQuery(this).attr('data-checkbox'));
+});

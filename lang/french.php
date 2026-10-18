@@ -57,6 +57,19 @@ define ('_PLOOPI_NO', 'Non');
 
 define ('_PLOOPI_CONFIRM', 'Êtes-vous certain ?');
 
+// Tableaux avancés (ploopi\skin::display_array, gabarit ploopi4)
+define ('_PLOOPI_ARRAY_EMPTY', 'Aucun élément');
+define ('_PLOOPI_ARRAY_OF', 'sur');
+define ('_PLOOPI_ARRAY_SORTBY', 'Trier par');
+define ('_PLOOPI_ARRAY_REVERSE', 'Inverser l\'ordre');
+define ('_PLOOPI_ARRAY_ACTIONS', 'Actions');
+define ('_PLOOPI_ARRAY_PAGINATION', 'Pagination');
+define ('_PLOOPI_ARRAY_PREVIOUS', 'Page précédente');
+define ('_PLOOPI_ARRAY_NEXT', 'Page suivante');
+
+// Arborescences (ploopi\skin::display_treeview, gabarit ploopi4)
+define ('_PLOOPI_TREE_TOGGLE', 'Déplier ou replier');
+
 define ('_PLOOPI_MODULE_MANAGEMENT', 'Administration des Modules');
 define ('_PLOOPI_GENERAL_ADMINISTRATION', 'Administration');
 define ('_PLOOPI_ADMIN_USERS', 'Utilisateurs');
@@ -142,6 +155,14 @@ define ('_PLOOPI_LABEL_SUBSCRIPTION_SAVED', 'Abonnement enregistré');
 define ('_PLOOPI_LABEL_SUBSCRIPTION_DELETE', 'Désabonnement enregistré');
 define ('_PLOOPI_LABEL_SUBSCRIPTION_ALLACTIONS', 'Toutes les actions');
 define ('_PLOOPI_LABEL_SUBSCRIPTION_UNSUSCRIBE', 'Se désabonner');
+
+define ('_PLOOPI_LABEL_CALENDAR_TITLE', 'Choix d\'une date');
+define ('_PLOOPI_LABEL_CALENDAR_TODAY', 'Aujourd\'hui');
+define ('_PLOOPI_LABEL_CALENDAR_CLOSE', 'Fermer');
+define ('_PLOOPI_LABEL_CALENDAR_PREVMONTH', 'Mois précédent');
+define ('_PLOOPI_LABEL_CALENDAR_NEXTMONTH', 'Mois suivant');
+define ('_PLOOPI_LABEL_CALENDAR_PREVYEAR', 'Année précédente');
+define ('_PLOOPI_LABEL_CALENDAR_NEXTYEAR', 'Année suivante');
 
 /**
  * Tableau des jours en français
@@ -239,6 +260,8 @@ $ploopi_errormsg[_PLOOPI_ERROR_ACCOUNTJAILED]       = 'Trop de tentatives de con
 $ploopi_errormsg[_PLOOPI_ERROR_LOSTPASSWORD_UNKNOWN]      = 'Ce compte est inconnu';
 $ploopi_errormsg[_PLOOPI_ERROR_LOSTPASSWORD_INVALID]      = 'Ce compte n\'a pas d\'adresse de courriel valide';
 $ploopi_errormsg[_PLOOPI_ERROR_LOSTPASSWORD_MANYRESPONSES] = 'Ce compte n\'est pas unique';
+$ploopi_errormsg[_PLOOPI_ERROR_LOSTPASSWORD_EXPIRED]      = 'Ce lien a expiré : renouvelez votre demande de mot de passe';
+$ploopi_errormsg[_PLOOPI_ERROR_LOSTPASSWORD_UNAVAILABLE]  = 'La récupération du mot de passe n\'est pas disponible sur cette adresse : contactez l\'administrateur';
 
 $ploopi_msg[_PLOOPI_MSG_MAILSENT]      = 'Un message vous a été envoyé';
 $ploopi_msg[_PLOOPI_MSG_PASSWORDSENT]  = 'Un nouveau mot de passe vous a été envoyé';

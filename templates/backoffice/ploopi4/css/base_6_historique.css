@@ -1,0 +1,282 @@
+/*
+    Copyright (c) 2007-2026 Ovensia
+    Contributors hold Copyright (c) to their code submissions.
+
+    This file is part of Ploopi.
+
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
+/******************
+  PLOOPI4 : ZONE HISTORIQUE
+
+  Rendu du socle (ploopi\skin, ploopi\form) et écrans des modules : les feuilles
+  base_5_*.css sont celles de ploopi3, sur la palette de ploopi4. Ici, ce qui
+  change d'aspect sans changer de géométrie horizontale (largeurs, flottants,
+  marges latérales des cellules, dont dépendent les tableaux de display_array) :
+  champs et boutons, titres de page, blocs, onglets, fenêtres.
+
+  Les règles qui visent des éléments (input, button…) excluent l'interface de
+  ploopi4 (:not(.p4-ui *)) : ses composants ont leur propre dessin. Un composant
+  historique posé dans une carte refondue (GED attachée, annotations) est enveloppé
+  dans .p4-legacy, qui le rend à la zone historique, hors des composants de ploopi4
+  qu'il contient lui-même. Le filtre est dans :where() pour garder la spécificité
+  d'origine, que les feuilles des modules savent surcharger.
+*******************/
+
+/* Champs et boutons */
+select:where(:not(.p4-ui *), .p4-legacy :not(.p4-legacy .p4-ui *)),
+input:where(:not(.p4-ui *), .p4-legacy :not(.p4-legacy .p4-ui *)),
+textarea:where(:not(.p4-ui *), .p4-legacy :not(.p4-legacy .p4-ui *)),
+button:where(:not(.p4-ui *), .p4-legacy :not(.p4-legacy .p4-ui *)) {
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    padding: 5px 6px;
+    border: 1px solid var(--border-field);
+    background: var(--surface);
+    outline: none;
+    transition: border-color .15s ease, box-shadow .15s ease;
+}
+
+select:where(:not(.p4-ui *), .p4-legacy :not(.p4-legacy .p4-ui *)) {
+    padding: 4px 6px;
+}
+
+input:where(:not(.p4-ui *), .p4-legacy :not(.p4-legacy .p4-ui *))::placeholder,
+textarea:where(:not(.p4-ui *), .p4-legacy :not(.p4-legacy .p4-ui *))::placeholder {
+    color: var(--text-3);
+}
+
+select:where(:not(.p4-ui *), .p4-legacy :not(.p4-legacy .p4-ui *)):hover,
+input:where(:not(.p4-ui *), .p4-legacy :not(.p4-legacy .p4-ui *)):hover,
+textarea:where(:not(.p4-ui *), .p4-legacy :not(.p4-legacy .p4-ui *)):hover {
+    border-color: var(--text-3);
+}
+
+select:where(:not(.p4-ui *), .p4-legacy :not(.p4-legacy .p4-ui *)):focus,
+input:where(:not(.p4-ui *), .p4-legacy :not(.p4-legacy .p4-ui *)):focus,
+textarea:where(:not(.p4-ui *), .p4-legacy :not(.p4-legacy .p4-ui *)):focus {
+    background: var(--surface);
+    outline: none;
+    border-color: var(--focus);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--focus) 22%, transparent);
+}
+
+input[type='checkbox']:where(:not(.p4-ui *), .p4-legacy :not(.p4-legacy .p4-ui *)),
+input[type='radio']:where(:not(.p4-ui *), .p4-legacy :not(.p4-legacy .p4-ui *)) {
+    accent-color: var(--primary);
+    box-shadow: none;
+}
+
+input[type='button']:where(:not(.p4-ui *), .p4-legacy :not(.p4-legacy .p4-ui *)),
+input[type='reset']:where(:not(.p4-ui *), .p4-legacy :not(.p4-legacy .p4-ui *)),
+input[type='submit']:where(:not(.p4-ui *), .p4-legacy :not(.p4-legacy .p4-ui *)),
+button:where(:not(.p4-ui *), .p4-legacy :not(.p4-legacy .p4-ui *)) {
+    border: 1px solid var(--primary);
+    padding: 6px 12px;
+    background: var(--primary);
+    color: var(--on-primary);
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: var(--shadow-sm);
+}
+
+input[type='button']:where(:not(.p4-ui *), .p4-legacy :not(.p4-legacy .p4-ui *)):hover,
+input[type='submit']:where(:not(.p4-ui *), .p4-legacy :not(.p4-legacy .p4-ui *)):hover,
+input[type='reset']:where(:not(.p4-ui *), .p4-legacy :not(.p4-legacy .p4-ui *)):hover,
+button:where(:not(.p4-ui *), .p4-legacy :not(.p4-legacy .p4-ui *)):hover,
+input[type='button'].selected:where(:not(.p4-ui *), .p4-legacy :not(.p4-legacy .p4-ui *)),
+input[type='submit'].selected:where(:not(.p4-ui *), .p4-legacy :not(.p4-legacy .p4-ui *)),
+input[type='reset'].selected:where(:not(.p4-ui *), .p4-legacy :not(.p4-legacy .p4-ui *)),
+button.selected:where(:not(.p4-ui *), .p4-legacy :not(.p4-legacy .p4-ui *)) {
+    background: var(--primary-hover);
+    border-color: var(--primary-hover);
+    color: var(--on-primary);
+    cursor: pointer;
+}
+
+input[type='button']:where(:not(.p4-ui *), .p4-legacy :not(.p4-legacy .p4-ui *)):focus,
+input[type='submit']:where(:not(.p4-ui *), .p4-legacy :not(.p4-legacy .p4-ui *)):focus,
+input[type='reset']:where(:not(.p4-ui *), .p4-legacy :not(.p4-legacy .p4-ui *)):focus,
+button:where(:not(.p4-ui *), .p4-legacy :not(.p4-legacy .p4-ui *)):focus {
+    border-color: var(--brand-800);
+}
+
+/* Actions secondaires : annuler, réinitialiser, revenir (repérées par leur
+   libellé : _PLOOPI_CANCEL, _RESET, _BACK) */
+input[type='button'][value='Annuler']:where(:not(.p4-ui *), .p4-legacy :not(.p4-legacy .p4-ui *)),
+input[type='button'][value='Réinitialiser']:where(:not(.p4-ui *), .p4-legacy :not(.p4-legacy .p4-ui *)),
+input[type='button'][value='Retour']:where(:not(.p4-ui *), .p4-legacy :not(.p4-legacy .p4-ui *)),
+input[type='submit'][value='Annuler']:where(:not(.p4-ui *), .p4-legacy :not(.p4-legacy .p4-ui *)),
+input[type='reset']:where(:not(.p4-ui *), .p4-legacy :not(.p4-legacy .p4-ui *)) {
+    background: var(--surface);
+    border-color: var(--border-strong);
+    color: var(--text);
+}
+
+input[type='button'][value='Annuler']:where(:not(.p4-ui *), .p4-legacy :not(.p4-legacy .p4-ui *)):hover,
+input[type='button'][value='Réinitialiser']:where(:not(.p4-ui *), .p4-legacy :not(.p4-legacy .p4-ui *)):hover,
+input[type='button'][value='Retour']:where(:not(.p4-ui *), .p4-legacy :not(.p4-legacy .p4-ui *)):hover,
+input[type='submit'][value='Annuler']:where(:not(.p4-ui *), .p4-legacy :not(.p4-legacy .p4-ui *)):hover,
+input[type='reset']:where(:not(.p4-ui *), .p4-legacy :not(.p4-legacy .p4-ui *)):hover {
+    background: var(--surface-2);
+    border-color: var(--text-3);
+    color: var(--text);
+}
+
+button.icon {
+    position: relative;
+    padding-left: 30px;
+    margin-left: 4px;
+}
+
+button.icon::before {
+    position: absolute;
+    left: 8px;
+    background-size: 16px 16px;
+    background-repeat: no-repeat;
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    content: "";
+    color: #fff;
+}
+
+button.small_icon::before {
+    left: 6px;
+    top: 4px;
+    width: 14px;
+    height: 14px;
+    background-size: 14px 14px;
+}
+
+button.small_icon {
+    padding-left: 26px;
+    margin-left: 4px;
+}
+
+/* Glyphe blanc quelle que soit sa couleur (les SVG de la GED servent aussi dans les listes) */
+button.invert::before { filter: brightness(0) invert(1); }
+button.icon_home::before { background-image: url('../img/documents/cloud.svg'); }
+button.icon_foldernew::before { background-image: url('../img/documents/folder-plus.svg'); }
+button.icon_folder::before { background-image: url('../img/documents/folder.svg'); }
+button.icon_filenew::before { background-image: url('../img/documents/file-import.svg'); }
+button.icon_download::before { background-image: url('../img/documents/download.svg'); }
+button.icon_edit::before { background-image: url('../img/documents/edit.svg'); }
+button.icon_delete::before { background-image: url('../img/documents/trash-alt.svg'); }
+
+:where(*[disabled], *[readonly]):where(:not(.p4-ui *), .p4-legacy :not(.p4-legacy .p4-ui *)) {
+    color: var(--text-3);
+    cursor: not-allowed !important;
+}
+
+input[readonly]:where(:not(.p4-ui *), .p4-legacy :not(.p4-legacy .p4-ui *)),
+textarea[readonly]:where(:not(.p4-ui *), .p4-legacy :not(.p4-legacy .p4-ui *)),
+select[disabled]:where(:not(.p4-ui *), .p4-legacy :not(.p4-legacy .p4-ui *)),
+input[disabled]:where(:not(.p4-ui *), .p4-legacy :not(.p4-legacy .p4-ui *)),
+textarea[disabled]:where(:not(.p4-ui *), .p4-legacy :not(.p4-legacy .p4-ui *)) {
+    background: var(--surface-2);
+}
+
+button[disabled]:where(:not(.p4-ui *), .p4-legacy :not(.p4-legacy .p4-ui *)),
+input[type='button'][disabled]:where(:not(.p4-ui *), .p4-legacy :not(.p4-legacy .p4-ui *)),
+input[type='submit'][disabled]:where(:not(.p4-ui *), .p4-legacy :not(.p4-legacy .p4-ui *)) {
+    background: var(--border-strong);
+    border-color: var(--border-strong);
+    color: #fff;
+    box-shadow: none;
+}
+
+label {
+    cursor: pointer;
+}
+
+input[type='file']:where(:not(.p4-ui *), .p4-legacy :not(.p4-legacy .p4-ui *)) {
+    padding: 3px;
+}
+
+input[type='file']:where(:not(.p4-ui *), .p4-legacy :not(.p4-legacy .p4-ui *))::file-selector-button {
+    margin-right: 8px;
+    padding: 4px 10px;
+    font: inherit;
+    font-weight: 600;
+    color: var(--text);
+    background: var(--surface-2);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+}
+
+input[type='file']:where(:not(.p4-ui *), .p4-legacy :not(.p4-legacy .p4-ui *))::file-selector-button:hover {
+    background: var(--surface-3);
+    border-color: var(--text-3);
+}
+
+/* Titre de page (skin::create_pagetitle) */
+.pagetitle {
+    padding: 2px 12px 14px;
+    font-size: 22px;
+    font-weight: 750;
+    letter-spacing: -.015em;
+    line-height: 30px;
+    color: var(--text);
+}
+
+/* Blocs (skin::open_simplebloc) : cartes de ploopi4 */
+.simplebloc {
+    margin: 0 12px 16px 12px;
+    border-color: var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+}
+
+.simplebloc_title {
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    font-size: 15px;
+    font-weight: 650;
+    padding-left: 10px;
+}
+
+.simplebloc .simplebloc {
+    border-radius: var(--radius);
+}
+
+.simplebloc .simplebloc .simplebloc_title {
+    border-radius: var(--radius) var(--radius) 0 0;
+    font-size: 13px;
+}
+
+/* Fenêtres (ploopi.popup) : en-tête clair, comme les tiroirs de ploopi4 */
+.ploopi_popup {
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-lg);
+}
+
+.ploopi_popup .simplebloc_title {
+    background: var(--surface);
+    color: var(--text);
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+}
+
+.ploopi_popup .simplebloc_title a {
+    color: var(--text);
+}
+
+/* Onglets (skin::create_tabs) : soulignés, comme ceux de ploopi4 */
+.tabs a.selected {
+    box-shadow: inset 0 -2px 0 var(--primary);
+}

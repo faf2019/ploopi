@@ -94,7 +94,7 @@ function doc_upload(sid)
                     jQuery('#doc_progressbar_txt')[0].innerHTML = '<b>'+rc[5]+'%</b> ('+rc[0]+'/'+rc[1]+'ko)<br />Envoi de <b>'+rc[3]+'</b> à <i>'+rc[4]+' ko/s</i>';
                 }
 
-                setTimeout('doc_upload(\''+sid+'\');',500);
+                setTimeout(function() { doc_upload(sid); }, 500);
             }
         }
     }
@@ -149,24 +149,11 @@ function doc_fckexplorer_selectfile(fileUrl, text, urldecod)
     if (ploopi.get_param('target') != undefined) {
         window.opener.document.getElementById(ploopi.get_param('target')).value = urldecod;
     } else {
-        window.parent.opener.CKEDITOR.tools.callFunction( jQuery('#CKEditorFuncNum')[0].value, fileUrl, function() {
-            // Get the reference to a dialog window.
-            var dialog = this.getDialog();
-            // Check if this is the Image Properties dialog window.
-            if ( dialog.getName() == 'image' ) {
-                // Get the reference to a text field that stores the "alt" attribute.
-                var element = dialog.getContentElement( 'info', 'txtAlt' );
-                // Assign the new value.
-                if ( element )
-                    element.setValue( text );
-            }
-            if ( dialog.getName() == 'link' ) {
-                var element = dialog.getContentElement( 'info', 'protocol' );
-                // Assign the new value.
-                if ( element )
-                    element.setValue( '' );
-            }
-        });
+        // Éditeur du socle (TinyMCE, js/editor.js) : l'URL revient par ploopi.editor.picked()
+        var opener = window.parent.opener;
+        if (opener && opener.ploopi && opener.ploopi.editor) {
+            opener.ploopi.editor.picked(jQuery('#CKEditorFuncNum')[0].value, fileUrl, { alt: text, title: text, text: text });
+        }
     }
     window.parent.close();
 };

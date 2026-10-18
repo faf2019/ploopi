@@ -157,3 +157,59 @@ background-color:#f0f0f0;
 .forms_param_link a:hover {
     background-color:#fff;
 }
+
+/* Bandeaux et barres de boutons (anciens styles en ligne, même aspect) */
+.forms_barre_boutons {
+    clear:both;
+    background-color:#d0d0d0;
+    border-top:1px solid #a0a0a0;
+    padding:4px;
+    overflow:auto;
+    text-align:right;
+}
+
+.forms_barre_boutons_bas {
+    clear:both;
+    background-color:#d0d0d0;
+    overflow:auto;
+    text-align:right;
+    padding:4px;
+    border-bottom:1px solid #a0a0a0;
+}
+
+.forms_bandeau {
+    clear:both;
+    background-color:#d0d0d0;
+    border-top:1px solid #a0a0a0;
+    border-bottom:1px solid #a0a0a0;
+    padding:4px;
+    overflow:auto;
+}
+
+.forms_separation {
+    clear:both;
+    border-top:1px solid #a0a0a0;
+    overflow:auto;
+}
+
+.forms_ligne {
+    padding:4px;
+    border-bottom:1px solid #a0a0a0;
+}
+
+.forms_encadre {
+    background:#f0f0f0;
+    border:1px solid #c0c0c0;
+    padding:2px;
+}
+
+.forms_fond {
+    background-color:#fff;
+    overflow:auto;
+}
+
+.forms_bandeau_clair {
+    padding:4px;
+    background:#eee;
+    border-bottom:1px solid #ccc;
+}

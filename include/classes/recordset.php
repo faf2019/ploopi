@@ -134,13 +134,25 @@ class recordset
 
         $arrOptions = array_merge($arrDefaultOptions, $arrOptions);
 
-        // Fonction d'échappement & formatage du contenu
+        /**
+         * Fonction d'échappement & formatage du contenu.
+         *
+         * create_function() a été supprimée en PHP 8.0 : tout appel à getcsv() y
+         * provoquait une erreur fatale. Les fermetures rendent au passage inutile la
+         * construction du corps de la fonction par concaténation de chaînes.
+         */
         $funcLineEchap = null;
 
         if ($arrOptions['strTextSep'] != '') {
-            $funcLineEchap = create_function('$value', 'return \''.$arrOptions['strTextSep'].'\'.str_replace(\''.$arrOptions['strTextSep'].'\', \''.$arrOptions['strTextSep'].$arrOptions['strTextSep'].'\', $value).\''.$arrOptions['strTextSep'].'\';');
+            $strTextSep = $arrOptions['strTextSep'];
+            $funcLineEchap = function($value) use ($strTextSep) {
+                return $strTextSep.str_replace($strTextSep, $strTextSep.$strTextSep, $value).$strTextSep;
+            };
         } elseif ($arrOptions['strFieldSep'] != '') {
-            $funcLineEchap = create_function('$value', 'return str_replace(\''.$arrOptions['strFieldSep'].'\', \'\\'.$arrOptions['strFieldSep'].'\', $value);');
+            $strFieldSep = $arrOptions['strFieldSep'];
+            $funcLineEchap = function($value) use ($strFieldSep) {
+                return str_replace($strFieldSep, '\\'.$strFieldSep, $value);
+            };
         }
 
         $booHeader = false;

@@ -153,7 +153,7 @@ while ($row = ploopi\db::get()->fetchrow($rs))
         $link = implode(' / ', $link_detail);
     }
     ?>
-    <div class="doc_thumb" <?php echo ($row['published']) ? '' : 'style="background-color:#ffe0e0;"'; ?>>
+    <div class="doc_thumb" <?php echo ($row['published']) ? '' : 'class="doc_draft"'; ?>>
         <a href="<?php echo ploopi\crypt::urlencode("admin.php?op=doc_browser&currentfolder={$row['id']}"); ?>" title="<?php echo strtolower($row['name'].' '.$link); ?>" >
             <p style="height: 59px; padding-top: 20px;"><img alt="<?php  echo strtolower($row['name'].' '.$link); ?>" src="<?php  echo "./modules/doc/img/{$ico}" ?>" ></p>
             <p style="height: 10px; font-size: 0.8em; font-style: italic;"><?php  echo "{$row['nbelements']} élément".($row['nbelements']>1 ? 's' : ''); ?></p>

@@ -33,7 +33,7 @@
 /**
  * On vérifie le contenu de la variable GET
  */
-if (empty($_GET['uninstallidmoduletype'])) ploopi\output::redirect('admin.php');
+if (empty($_GET['uninstallidmoduletype']) || !is_numeric($_GET['uninstallidmoduletype'])) ploopi\output::redirect('admin.php');
 
 $module_type = new ploopi\module_type();
 if ($module_type->open($_GET['uninstallidmoduletype']))
@@ -50,7 +50,8 @@ if ($module_type->open($_GET['uninstallidmoduletype']))
     }
 
     // DELETE TABLES
-    $select = "SELECT * FROM ploopi_mb_table WHERE id_module_type = {$_GET['uninstallidmoduletype']}";
+    // L'identifiant provient de l'enregistrement ouvert, pas de la requête
+    $select = "SELECT * FROM ploopi_mb_table WHERE id_module_type = ".intval($module_type->fields['id']);
     $rs = ploopi\db::get()->query($select);
     while ($fields = ploopi\db::get()->fetchrow($rs))
     {

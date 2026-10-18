@@ -29,47 +29,49 @@
  * @license GNU General Public License (GPL)
  * @author Ovensia
  */
-die('coucou');
+// Instance courante : seuls ses articles sont comptés et réindexés
+$intModuleId = (int) $_SESSION['ploopi']['moduleid'];
 
 switch($op)
 {
     default:
+        $db = ploopi\db::get();
+
         echo ploopi\skin::get()->create_pagetitle(ploopi\str::htmlentities($_SESSION['ploopi']['modulelabel']));
         echo ploopi\skin::get()->open_simplebloc('Réindexation');
 
-        ploopi\db::get()->query("SELECT count(*) as c FROM ploopi_mod_webedit_heading WHERE id_module = {$_SESSION['ploopi']['moduleid']}");
-        $arrStats['headings'] = ($row = ploopi\db::get()->fetchrow()) ? $row['c'] : 0;
+        $arrStats = array();
+        foreach(array(
+            'headings' => 'ploopi_mod_webedit_heading',
+            'articles' => 'ploopi_mod_webedit_article',
+            'files' => 'ploopi_mod_webedit_docfile',
+            'tags' => 'ploopi_mod_webedit_tag'
+        ) as $strStat => $strTable)
+        {
+            $db->query("SELECT count(*) as c FROM {$strTable} WHERE id_module = {$intModuleId}");
+            $arrStats[$strStat] = ($row = $db->fetchrow()) ? (int) $row['c'] : 0;
+        }
 
-        ploopi\db::get()->query("SELECT count(*) as c FROM ploopi_mod_webedit_article WHERE id_module = {$_SESSION['ploopi']['moduleid']}");
-        $arrStats['articles'] = ($row = ploopi\db::get()->fetchrow()) ? $row['c'] : 0;
-
-        ploopi\db::get()->query("SELECT count(*) as c FROM ploopi_mod_webedit_docfile WHERE id_module = {$_SESSION['ploopi']['moduleid']}");
-        $arrStats['files'] = ($row = ploopi\db::get()->fetchrow()) ? $row['c'] : 0;
-
-        ploopi\db::get()->query("SELECT count(*) as c FROM ploopi_mod_webedit_tag WHERE id_module = {$_SESSION['ploopi']['moduleid']}");
-        $arrStats['tags'] = ($row = ploopi\db::get()->fetchrow()) ? $row['c'] : 0;
-
-        /*
+        // Mots indexés pour les articles du site (base d'indexation, éventuellement distincte)
         $idxdb = ploopi\search_index::getdb();
-        $idxdb->query(
-            "
+        $idxdb->query("
             SELECT  count(*) as c
-            FROM    ploopi_index_element e,
-                    ploopi_index_keyword_element ke
-
-            WHERE   e.id_module = {$_SESSION['ploopi']['moduleid']}
+            FROM    ploopi_index_element e
+            INNER JOIN ploopi_index_keyword_element ke ON ke.id_element = e.id
+            WHERE   e.id_module = {$intModuleId}
             AND     e.id_object = "._WEBEDIT_OBJECT_ARTICLE_PUBLIC."
-            AND     ke.id_element = e.id
-            "
-        );
-        */
-        // $arrStats['keywords'] = ($row = $idxdb->fetchrow()) ? $row['c'] : 0;
-        $arrStats['keywords'] = 0;
+        ");
+        $arrStats['keywords'] = ($row = $idxdb->fetchrow()) ? (int) $row['c'] : 0;
 
         ?>
-        <div style="padding:4px;">
-            <input type="button" class="button" value="Réindexer le contenu du site" onclick="javascript:document.location.href='<?php echo ploopi\crypt::urlencode('admin.php?webedit_menu=reindex&op=reindex'); ?>';" />
-        </div>
+        <form method="post" action="<?php echo ploopi\crypt::urlencode('admin.php?webedit_menu=reindex&op=reindex'); ?>">
+            <div style="padding:4px;">
+                <input type="submit" class="button" value="Réindexer le contenu du site" />
+            </div>
+            <div style="padding:4px;">
+                <label><input type="checkbox" name="force" value="1" /> Réenregistrer aussi chaque article (contenu nettoyé et étiquettes recalculés)</label>
+            </div>
+        </form>
         <div style="padding:4px;">
             Le site contient :
         </div>
@@ -77,13 +79,13 @@ switch($op)
             <strong><?php echo $arrStats['headings']; ?> rubrique(s)</strong>
         </div>
         <div style="padding:4px;">
-            <strong><?php echo $arrStats['articles']; ?> articles(s)</strong>
+            <strong><?php echo $arrStats['articles']; ?> article(s)</strong>
         </div>
         <div style="padding:4px;">
             <strong><?php echo $arrStats['files']; ?> lien(s) vers un fichier</strong>
         </div>
         <div style="padding:4px;">
-            <strong><?php echo $arrStats['tags']; ?> tag(s)</strong>
+            <strong><?php echo $arrStats['tags']; ?> étiquette(s)</strong>
         </div>
         <div style="padding:4px;">
             <strong><?php echo $arrStats['keywords']; ?> mot(s) indexé(s)</strong>
@@ -93,30 +95,35 @@ switch($op)
     break;
 
     case 'reindex':
-        if (!ini_get('safe_mode')) ini_set('max_execution_time', 0);
+        ini_set('max_execution_time', 0);
         include_once './modules/webedit/class_article.php';
 
+        $db = ploopi\db::get();
+        $booForce = !empty($_REQUEST['force']);
+
         echo ploopi\skin::get()->create_pagetitle(ploopi\str::htmlentities($_SESSION['ploopi']['modulelabel']));
-        echo ploopi\skin::get()->open_simplebloc();
+        echo ploopi\skin::get()->open_simplebloc('Réindexation');
         ?>
         <div style="padding:4px;">
         <?php
         $index_start = ploopi\timer::get()->getexectime();
+        $intArticles = 0;
 
-        $rsArticles = ploopi\db::get()->query("SELECT id FROM ploopi_mod_webedit_article");
+        $rsArticles = $db->query("SELECT id FROM ploopi_mod_webedit_article WHERE id_module = {$intModuleId}");
 
-        while ($row = ploopi\db::get()->fetchrow($rsArticles))
+        while ($row = $db->fetchrow($rsArticles))
         {
             $objArticle = new webedit_article();
             if ($objArticle->open($row['id']))
             {
-                if (isset($_REQUEST['force'])) $objArticle->save();
+                if ($booForce) $objArticle->save();
                 $objArticle->index();
+                $intArticles++;
             }
         }
         ?>
-        indexation terminée en <?php printf("%.02fs", ploopi\timer::get()->getexectime() - $index_start); ?>
-        <?php if (isset($_REQUEST['force'])) echo "<br />Mode 'force' activé"; ?>
+        <?php echo $intArticles; ?> article(s) : indexation terminée en <?php printf("%.02fs", ploopi\timer::get()->getexectime() - $index_start); ?>
+        <?php if ($booForce) echo "<br />Articles réenregistrés (mode « force »)"; ?>
         <br /><a title="Retour" href="<?php echo ploopi\crypt::urlencode('admin.php?webedit_menu=reindex'); ?>">Retour</a>
         </div>
         <?php

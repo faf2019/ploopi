@@ -74,7 +74,7 @@ class form_button extends form_element
      */
     public function __construct($strType, $strValue, $strName = null, $strId = null, $arrOptions = null)
     {
-        if (!in_array($strType, self::$_arrTypes)) trigger_error('Ce type de bouton n\'existe pas', E_USER_ERROR);
+        if (!in_array($strType, self::$_arrTypes)) throw new \ErrorException('Ce type de bouton n\'existe pas');
         else parent::__construct($strType, null, array($strValue), $strName, $strId, is_null($arrOptions) ? self::$_arrDefaultOptions : array_merge(self::$_arrDefaultOptions, $arrOptions));
     }
 

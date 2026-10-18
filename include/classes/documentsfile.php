@@ -129,11 +129,11 @@ class documentsfile extends data_object
 
             if (!$error)
             {
-                $this->fields['extension'] = substr(strrchr($this->fields['name'], "."),1);
+                $this->fields['extension'] = fs::safe_extension(substr(strrchr($this->fields['name'], "."),1));
 
                 $id = parent::save();
 
-                $this->fields['md5id'] = md5(sprintf("%s_%d", $this->fields['timestp_create'], $id));
+                $this->fields['md5id'] = bin2hex(random_bytes(16));
 
                 parent::save();
 
@@ -156,13 +156,13 @@ class documentsfile extends data_object
                         if (!$error) chmod($filepath, 0640);
                     } else $error = _PLOOPI_ERROR_FILENOTWRITABLE;
                 }else{
-                    // TODO S3 checks
+                        // Dépôt du document (s3_bucket, renseigné par l'appelant)
                         if ($this->tmpfile != 'none') {
-                            if (!ploopi\fs_s3::upload(_PLOOPI_S3_BUCKET,"{$this->fields['id']}.{$this->fields['extension']}", $this->tmpfile)) $error = _PLOOPI_ERROR_FILENOTWRITABLE;
+                            if (!ploopi\fs_s3::upload($this->fields['s3_bucket'],"{$this->fields['id']}.{$this->fields['extension']}", $this->tmpfile)) $error = _PLOOPI_ERROR_FILENOTWRITABLE;
                         }
 
                         if ($this->file != 'none') {
-                            if (!ploopi\fs_s3::upload(_PLOOPI_S3_BUCKET,"{$this->fields['id']}.{$this->fields['extension']}", $this->file)) $error = _PLOOPI_ERROR_FILENOTWRITABLE;
+                            if (!ploopi\fs_s3::upload($this->fields['s3_bucket'],"{$this->fields['id']}.{$this->fields['extension']}", $this->file)) $error = _PLOOPI_ERROR_FILENOTWRITABLE;
                         }
 
                 }
@@ -177,7 +177,11 @@ class documentsfile extends data_object
 
                 if (!$error)
                 {
-                    $this->fields['extension'] = substr(strrchr($this->fields['name'], "."),1);
+                    // Fichier remplacé : l'ancien, s'il change d'extension, ne sera plus atteint
+                    $strOldExtension = $this->fields['extension'];
+                    $strOldFilepath = $this->getfilepath();
+
+                    $this->fields['extension'] = fs::safe_extension(substr(strrchr($this->fields['name'], "."),1));
 
                     if($this->fields['s3_bucket'] == '') {
                         $basepath = $this->getbasepath();
@@ -199,10 +203,26 @@ class documentsfile extends data_object
                             else $error = _PLOOPI_ERROR_FILENOTWRITABLE;
                         }
                     } else {
-                        // TODO S3 checks
+                        // Dépôt du document (s3_bucket), pas forcément celui de la configuration courante
                         if ($this->tmpfile != 'none'){
-                            if (!ploopi\fs_s3::upload(_PLOOPI_S3_BUCKET,"{$this->fields['id']}.{$this->fields['extension']}", $this->tmpfile)) $error = _PLOOPI_ERROR_FILENOTWRITABLE;
+                            if (!ploopi\fs_s3::upload($this->fields['s3_bucket'],"{$this->fields['id']}.{$this->fields['extension']}", $this->tmpfile)) $error = _PLOOPI_ERROR_FILENOTWRITABLE;
                         } else $error = _PLOOPI_ERROR_EMPTYFILE;
+                    }
+
+                    // Écriture impossible : l'enregistrement reste tel quel. Il était enregistré
+                    // avec la nouvelle extension, et pointait vers un fichier inexistant
+                    if ($error)
+                    {
+                        $this->fields['extension'] = $strOldExtension;
+                        return $error;
+                    }
+
+                    // Extension changée : l'ancien fichier, ou l'ancien objet du dépôt, restait
+                    // orphelin, même après la suppression du document
+                    if ($strOldExtension != $this->fields['extension'])
+                    {
+                        if ($this->fields['s3_bucket'] == '') { if (file_exists($strOldFilepath)) unlink($strOldFilepath); }
+                        else ploopi\fs_s3::delete($this->fields['s3_bucket'], "{$this->fields['id']}.{$strOldExtension}");
                     }
                 }
 
@@ -215,7 +235,7 @@ class documentsfile extends data_object
             if ($this->oldname != $this->fields['name'])
             {
                 // renommage avec modification de type
-                if (($newext = substr(strrchr($this->fields['name'], "."),1)) != $this->fields['extension'])
+                if (($newext = fs::safe_extension(substr(strrchr($this->fields['name'], "."),1))) != $this->fields['extension'])
                 {
                     if($this->fields['s3_bucket'] == '') {
                         $basepath = $this->getbasepath();
@@ -301,11 +321,18 @@ class documentsfile extends data_object
      */
     public function getfilepath()
     {
-        if(!isset($this->fields['s3_bucket'])){
+        /**
+         * ploopi_documents_file.s3_bucket est déclarée NOT NULL DEFAULT '' : isset() y est
+         * donc toujours vrai et le test doit porter sur la valeur, pas sur la présence.
+         * Avec isset(), toute installation n'utilisant pas S3 se voyait renvoyer un chemin
+         * "s3:///<id>.<ext>" et plus aucun document n'était lisible, alors même que les
+         * appelants avaient, eux, choisi la branche locale en testant la valeur.
+         */
+        if (empty($this->fields['s3_bucket'])) {
             return $this->getbasepath()._PLOOPI_SEP."{$this->fields['id']}.{$this->fields['extension']}";
-        } else{
-            return 's3://'.$this->fields['s3_bucket'] . '/' . $this->fields['id'] . '.' . $this->fields['extension'];
         }
+
+        return 's3://'.$this->fields['s3_bucket'] . '/' . $this->fields['id'] . '.' . $this->fields['extension'];
     }
 
     /**

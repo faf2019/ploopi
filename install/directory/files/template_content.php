@@ -102,8 +102,8 @@ switch($op)
                 'DIRECTORY_SEARCH_COUNTRY' => ploopi\str::htmlentities($arrFilter['directory_country']),
                 'DIRECTORY_SEARCH_CITY' => ploopi\str::htmlentities($arrFilter['directory_city']),
                 'DIRECTORY_SEARCH_POSTALCODE' => ploopi\str::htmlentities($arrFilter['directory_postalcode']),
-                'DIRECTORY_SEARCH_HEADING' => $arrFilter['directory_heading'],
-                'DIRECTORY_SEARCH_COMMENTS' => $arrFilter['directory_comments']
+                'DIRECTORY_SEARCH_HEADING' => ploopi\str::htmlentities($arrFilter['directory_heading']),
+                'DIRECTORY_SEARCH_COMMENTS' => ploopi\str::htmlentities($arrFilter['directory_comments'])
             )
         );
 
@@ -252,7 +252,8 @@ switch($op)
         $arrDirectoryHeadings = directory_getheadings();
 
         $objContact = new directory_contact();
-        if (!empty($_GET['directory_contact_id']) && is_numeric($_GET['directory_contact_id']) && $objContact->open($_GET['directory_contact_id']))
+        // Seuls les contacts partagés (rattachés à une rubrique) sont publics, jamais les contacts personnels
+        if (!empty($_GET['directory_contact_id']) && is_numeric($_GET['directory_contact_id']) && $objContact->open($_GET['directory_contact_id']) && !empty($objContact->fields['id_heading']))
         {
             if (file_exists($objContact->getphotopath())) $strPhotopath = ploopi\crypt::urlencode("index-light.php?ploopi_op=directory_contact_getphoto&directory_contact_id={$_GET['directory_contact_id']}");
             else $strPhotopath = './modules/directory/img/nopic.gif';
@@ -514,7 +515,7 @@ switch($op)
 
                 $template_body->assign_block_vars('directory_switch_speeddialing.heading',
                     array(
-                        'ID' => urlencode(ploopi\str::convertaccents(strtolower(strtr(trim($strHeading), _PLOOPI_INDEXATION_WORDSEPARATORS, str_pad('', strlen(_PLOOPI_INDEXATION_WORDSEPARATORS), '-'))))),
+                        'ID' => ploopi\str::tourl($strHeading),
                         'LABEL' => ploopi\str::htmlentities($strHeading)
                     )
                 );

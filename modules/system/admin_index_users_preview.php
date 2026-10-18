@@ -86,7 +86,7 @@ for ($intI = 1; $intI < count($_SESSION['system']['user_import']); $intI++)
 if ($booCriticalError) $arrErrors[] = "Erreur critique, impossible d'importer le fichier";
 
 ?>
-<div style="padding:2px;border-bottom:1px solid #a0a0a0;background-color:#e0e0e0;"><strong>Import d'un fichier CSV contenant des utilisateurs :</strong></div>
+<div class="system_bandeau"><strong>Import d'un fichier CSV contenant des utilisateurs :</strong></div>
 <?php
 if (empty($arrErrors))
 {
@@ -107,7 +107,7 @@ else
 if (!$booCriticalError)
 {
     ?>
-    <div style="padding:2px;border-bottom:1px solid #a0a0a0;background-color:#e0e0e0;"><strong>Aperçu de l'import (<a href="<?php echo ploopi\crypt::urlencode("admin.php?usrTabItem=tabUserImport&op=import"); ?>">Confirmer l'import</a>):</strong></div>
+    <div class="system_bandeau"><strong>Aperçu de l'import (<a href="<?php echo ploopi\crypt::urlencode("admin.php?usrTabItem=tabUserImport&op=import"); ?>">Confirmer l'import</a>):</strong></div>
     <?php
     
     $columns = array();

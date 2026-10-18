@@ -145,6 +145,60 @@ function directory_getheadings($intIdHeading = 0)
 }
 
 /**
+ * L'utilisateur courant gère-t-il la rubrique ?
+ *
+ * Gestionnaire : administrateur système, ou validateur de la rubrique, ou à défaut d'une
+ * rubrique parente (cf. directory_getheadings). C'est la règle qu'applique l'interface.
+ *
+ * @param int $intHeadingId identifiant de la rubrique
+ * @return boolean true si l'utilisateur gère la rubrique
+ */
+
+function directory_heading_ismanager($intHeadingId)
+{
+    if (ploopi\acl::isadmin()) return true;
+    if (empty($intHeadingId)) return false;
+
+    $arrHeadings = directory_getheadings();
+
+    return !empty($arrHeadings['list'][$intHeadingId]['isvalidator']);
+}
+
+/**
+ * L'utilisateur courant peut-il consulter le contact ?
+ *
+ * Un contact partagé (rattaché à une rubrique) est visible de tous les utilisateurs du
+ * module ; un contact personnel, de son seul propriétaire.
+ *
+ * @param array $arrContact champs du contact
+ * @return boolean true si le contact est consultable
+ */
+
+function directory_contact_isreadable($arrContact)
+{
+    if (!empty($arrContact['id_heading'])) return true;
+
+    return ploopi\acl::isadmin() || (isset($arrContact['id_user']) && $arrContact['id_user'] == $_SESSION['ploopi']['userid']);
+}
+
+/**
+ * L'utilisateur courant peut-il modifier ou supprimer le contact ?
+ *
+ * Un contact partagé se gère par les gestionnaires de sa rubrique ; un contact
+ * personnel, par son seul propriétaire.
+ *
+ * @param array $arrContact champs du contact
+ * @return boolean true si le contact est modifiable
+ */
+
+function directory_contact_ismodifiable($arrContact)
+{
+    if (!empty($arrContact['id_heading'])) return directory_heading_ismanager($arrContact['id_heading']);
+
+    return ploopi\acl::isadmin() || (isset($arrContact['id_user']) && $arrContact['id_user'] == $_SESSION['ploopi']['userid']);
+}
+
+/**
  * Retourne l'ensemble des contacts partagés triés par rubrique dans un tableau
  *
  * @return array tableau contenant les contacts

@@ -589,7 +589,7 @@ class mimethumb
                     $this->strPathFile = $fileTempoPPT;
                 }
 
-                exec('java -jar '.realpath('./lib/jodconverter/lib/jodconverter-cli-2.2.2.jar').' '.$this->strPathFile.' '.$fileTempo.' > /dev/null');
+                exec('java -jar '.escapeshellarg(realpath('./lib/jodconverter/lib/jodconverter-cli-2.2.2.jar')).' '.escapeshellarg($this->strPathFile).' '.escapeshellarg($fileTempo).' > /dev/null');
 
                 if(!empty($fileTempoTXT) && is_link($fileTempoTXT)) unlink($fileTempoTXT);
                 if(!empty($fileTempoPPT) && is_link($fileTempoPPT)) unlink($fileTempoPPT);
@@ -628,9 +628,9 @@ class mimethumb
             if (!is_dir($pathTemp)) fs::makedir($pathTemp);
 
             $fileTempo = $pathTemp.md5(uniqid(rand(), true)).'.png';
-            $strParamExport = " --without-gui -f{$this->strPathFile} -e{$fileTempo} -h400";
+            $strParamExport = ' --without-gui -f'.escapeshellarg($this->strPathFile).' -e'.escapeshellarg($fileTempo).' -h400';
 
-            shell_exec("inkscape {$strParamExport}");
+            shell_exec('inkscape'.$strParamExport);
 
             image::resize($fileTempo, $this->floatCoef, $this->intWidth, $this->intHeight, $this->strExport, 0, '', $this->strBorderColor);
             if(file_exists($fileTempo)) unlink($fileTempo);
@@ -660,7 +660,7 @@ class mimethumb
 
             $fileTempo = $pathTemp.md5(uniqid(rand(), true)).'.png';
 
-            exec("ffmpeg -i {$this->strPathFile} -vcodec png -f image2 -vframes 1 -an -ss 00:00:05 -y $fileTempo",$arrReturn);
+            exec('ffmpeg -i '.escapeshellarg($this->strPathFile).' -vcodec png -f image2 -vframes 1 -an -ss 00:00:05 -y '.escapeshellarg($fileTempo), $arrReturn);
 
             if(!file_exists($fileTempo)) return false;
 

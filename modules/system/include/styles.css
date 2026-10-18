@@ -144,3 +144,63 @@ text-decoration:none;
     background-color:rgba(255,255,255,0.2);
     text-decoration:none;
 }
+
+/* Bandeaux d'information (en-tête d'une liste, d'un import, d'un outil).
+   Aspect historique ; un gabarit peut le redéfinir (ploopi3). */
+.system_bandeau {
+    padding:4px;
+    background-color:#e0e0e0;
+    border-bottom:1px solid #c0c0c0;
+}
+
+.system_bandeau_titre {
+    font-weight:bold;
+}
+
+.system_bandeau_cadre {
+    border-top:2px solid #c0c0c0;
+    border-bottom-width:2px;
+}
+
+.system_bandeau_clair {
+    background-color:#f0f0f0;
+    border-top:2px solid #c0c0c0;
+}
+
+.system_bandeau.system_bandeau_clair {
+    border-bottom:0;
+}
+
+/* Lignes de tableau : rôle choisi, module system (non désinstallable) */
+div.system_line_selected,
+div.system_line_selected:hover {
+    background-color:#ffe0e0;
+}
+
+div.system_line_system,
+div.system_line_system:hover {
+    background-color:#f0e0e0;
+}
+
+/* Niveau de l'utilisateur dans l'espace (fiche utilisateur) */
+.system_user_level {
+    margin-top:2px;
+    padding:4px 0;
+    border:2px solid #a0a0a0;
+    background-color:#c0c0c0;
+}
+
+.system_user_level label {
+    font-weight:bold;
+}
+
+/* Avertissement de configuration */
+.system_warning {
+    color:red;
+}
+
+.system_warning img {
+    display:block;
+    float:left;
+    margin:0 4px 4px 0;
+}

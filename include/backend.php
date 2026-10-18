@@ -30,8 +30,10 @@
  * @author Ovensia
  */
 
-// La requête doit forcément porter sur un module valide
-if (isset($_REQUEST['ploopi_moduleid']) && is_numeric($_REQUEST['ploopi_moduleid']) && isset($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['modules'][$_REQUEST['ploopi_moduleid']]))
+// La requête doit forcément porter sur un module de l'espace courant
+// (workspace::getmodules(true) : liste des identifiants, en valeurs)
+if (isset($_REQUEST['ploopi_moduleid']) && is_numeric($_REQUEST['ploopi_moduleid']) && isset($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['modules'])
+    && in_array((int) $_REQUEST['ploopi_moduleid'], array_map('intval', $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['modules']), true))
 {
     ploopi\db::get()->query( "
         SELECT      mt.label labeltype,

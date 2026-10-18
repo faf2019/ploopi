@@ -125,7 +125,7 @@ $keywords = array_slice($keywords, 0 , 20, true);
 
 ?>
 
-<div style="background-color:#e0e0e0;padding:4px;border-bottom:1px solid #c0c0c0;">
+<div class="webedit_titre">
     <p class="ploopi_va" style="font-weight:bold;">
         <?php
         if ($type != 'draft' && ploopi\acl::isactionallowed(_WEBEDIT_ACTION_STATS))
@@ -280,7 +280,7 @@ $keywords = array_slice($keywords, 0 , 20, true);
 
                             foreach($keywords as $kw => $value)
                             {
-                                $keywords_disp_array[] = '<a href="javascript:void(0);" onclick="javascript:webedit_article_keywordscomplete(\''.addslashes($kw).'\');">'.$kw.'</a><sup>'.$value.'</sup>';
+                                $keywords_disp_array[] = '<a href="javascript:void(0);" onclick="javascript:webedit_article_keywordscomplete(\''.ploopi\str::htmlentities(addslashes($kw)).'\');">'.ploopi\str::htmlentities($kw).'</a><sup>'.$value.'</sup>';
                             }
                             echo implode(' ', $keywords_disp_array);
                             ?>
@@ -564,7 +564,7 @@ $keywords = array_slice($keywords, 0 , 20, true);
                     {
                         ?>
                         <input style="width:100px;" class="text" type="text" name="webedit_article_timestp" id="webedit_article_timestp" value="<?php echo ploopi\str::htmlentities($article_timestp); ?>" tabindex="4" />
-                        <a href="javascript:void(0);" onclick="javascript:ploopi.calendar.open('webedit_article_timestp', event);"><img src="./img/calendar/calendar.gif" width="31" height="18" align="top" border="0"></a>
+                        <a href="javascript:void(0);" onclick="javascript:ploopi.calendar.open('webedit_article_timestp', event);"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/calendar/calendar.png" align="top" border="0" alt="Choisir une date"></a>
                         <?php
                     }
                     else echo '<span>'.ploopi\str::htmlentities($article_timestp, ENT_QUOTES).'</span>';
@@ -591,10 +591,10 @@ $keywords = array_slice($keywords, 0 , 20, true);
 </div>
 
 <div style="clear:both;padding:4px;">
-    <fieldset class="fieldset" style="padding:6px;">
+    <fieldset class="fieldset webedit_rights" style="padding:6px;">
         <legend><strong>Validateurs</strong> (utilisateurs qui peuvent publier)</legend>
 
-        <p class="ploopi_va" style="padding:0 2px 2px 2px;"><span>Validateurs </span><?php if ($intWfHeadingId != $headingid) echo "<em>&nbsp;héritées de &laquo;&nbsp;</em><a href=\"".ploopi\crypt::urlencode("admin.php?headingid={$intWfHeadingId}")."\">{$headings['list'][$intWfHeadingId]['label']}</a><em>&nbsp;&raquo;</em>"; ?><span>:</span>
+        <p class="ploopi_va webedit_rights_current" style="padding:0 2px 2px 2px;"><span>Validateurs </span><?php if ($intWfHeadingId != $headingid) echo "<em>&nbsp;héritées de &laquo;&nbsp;</em><a href=\"".ploopi\crypt::urlencode("admin.php?headingid={$intWfHeadingId}")."\">".ploopi\str::htmlentities($headings['list'][$intWfHeadingId]['label'])."</a><em>&nbsp;&raquo;</em>"; ?><span>:</span>
             <?php
             if (!empty($arrWfUsers))
             {
@@ -625,7 +625,7 @@ $keywords = array_slice($keywords, 0 , 20, true);
     </fieldset>
 </div>
 
-<div style="clear:both;padding:4px;background-color:#e8e8e8;border-top:1px solid #c0c0c0;">
+<div class="webedit_pied">
     <?php
 
     if ($op != 'article_addnew')
@@ -646,7 +646,7 @@ $keywords = array_slice($keywords, 0 , 20, true);
     ?>
 </div>
 
-<div style="padding:4px; background-color:#e0e0e0; clear:both; border-width: 1px 0;border-color:#c0c0c0;border-style:solid; overflow: hidden;">
+<div class="webedit_bandeau webedit_bandeau_masque">
         <div style="float:right;" class="webedit_form_buttons">
         <?php
         if ($type == 'draft')
@@ -692,7 +692,7 @@ $keywords = array_slice($keywords, 0 , 20, true);
     if ($op != 'article_addnew' && (ploopi\acl::isadmin() || $booWfVal || ($_SESSION['ploopi']['userid'] == $article->fields['id_user'] && $articles['list'][$articleid]['online_id'] == '')))
     {
         ?>
-        <input class="flatbutton" type="button" value="<?php echo _PLOOPI_DELETE; ?>" onclick="javascript:ploopi.confirmlink('<?php echo ploopi\crypt::urlencode("admin.php?op=article_delete&articleid={$article->fields['id']}"); ?>','Êtes-vous certain de vouloir supprimer l\'article &laquo; <?php echo addslashes($article->fields['title']); ?> &raquo; ?');">
+        <input class="flatbutton" type="button" value="<?php echo _PLOOPI_DELETE; ?>" onclick="javascript:ploopi.confirmlink('<?php echo ploopi\crypt::urlencode("admin.php?op=article_delete&articleid={$article->fields['id']}"); ?>','Êtes-vous certain de vouloir supprimer l\'article &laquo; <?php echo ploopi\str::htmlentities(addslashes($article->fields['title'])); ?> &raquo; ?');">
         <?php
     }
     if ($type == 'draft')
@@ -728,7 +728,7 @@ $keywords = array_slice($keywords, 0 , 20, true);
     <iframe id="webedit_frame_editor" style="border:0;width:100%;height:750px;margin:0;padding:0;" src="<?php echo ploopi\crypt::urlencode("index.php?headingid={$headingid}&articleid={$articleid}&webedit_mode=edit&type={$type}&readonly={$readonly}"); ?>"></iframe>
 </div>
 
-<div style="padding:4px;background-color:#e0e0e0;clear:both;border-width: 1px 0;border-color:#c0c0c0;border-style:solid;">
+<div class="webedit_bandeau">
     <?php
     if(!$readonly)
     {
@@ -755,7 +755,7 @@ $keywords = array_slice($keywords, 0 , 20, true);
     if ($op != 'article_addnew' && (ploopi\acl::isadmin() || $booWfVal || ($_SESSION['ploopi']['userid'] == $article->fields['id_user'] && $articles['list'][$articleid]['online_id'] == '')))
     {
         ?>
-        <input class="flatbutton" type="button" value="<?php echo _PLOOPI_DELETE; ?>" onclick="javascript:ploopi.confirmlink('<?php echo ploopi\crypt::urlencode("admin.php?op=article_delete&articleid={$article->fields['id']}"); ?>','Êtes-vous certain de vouloir supprimer l\'article &laquo; <?php echo addslashes($article->fields['title']); ?> &raquo; ?');">
+        <input class="flatbutton" type="button" value="<?php echo _PLOOPI_DELETE; ?>" onclick="javascript:ploopi.confirmlink('<?php echo ploopi\crypt::urlencode("admin.php?op=article_delete&articleid={$article->fields['id']}"); ?>','Êtes-vous certain de vouloir supprimer l\'article &laquo; <?php echo ploopi\str::htmlentities(addslashes($article->fields['title'])); ?> &raquo; ?');">
         <?php
     }
     if ($type == 'draft')
@@ -785,10 +785,10 @@ if ($op != 'article_addnew')
     ?>
     <div style="clear:both;">
         <?php $arrAllowedActions = array(_WEBEDIT_ACTION_ARTICLE_EDIT, _WEBEDIT_ACTION_ARTICLE_PUBLISH);?>
-        <div style="border-bottom:1px solid #c0c0c0;">
+        <div class="webedit_filet_bas">
         <?php ploopi\subscription::display(_WEBEDIT_OBJECT_ARTICLE_ADMIN, $article->fields['id'], $arrAllowedActions, "à &laquo; {$article->fields['title']} &raquo;"); ?>
         </div>
-        <div style="border-bottom:1px solid #c0c0c0;">
+        <div class="webedit_filet_bas">
         <?php ploopi\annotation::display(_WEBEDIT_OBJECT_ARTICLE_ADMIN, $article->fields['id'], $article->fields['title']); ?>
         </div>
         <?php

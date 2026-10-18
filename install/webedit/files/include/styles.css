@@ -266,3 +266,62 @@ div.webedit_row {
     font-weight:bold;
     margin:0 0 4px 4px;
 }
+/* Cadres, bandeaux et titres (anciens styles en ligne, même aspect) */
+.webedit_cadre {
+    border:1px solid #c0c0c0;
+    overflow:hidden;
+}
+
+.webedit_filet_haut {
+    border-top:1px solid #c0c0c0;
+}
+
+.webedit_filet_bas {
+    border-bottom:1px solid #c0c0c0;
+}
+
+.webedit_liste {
+    margin:0 4px 4px 4px;
+    border-style:solid;
+    border-width:1px 1px 0 1px;
+    border-color:#c0c0c0;
+}
+
+.webedit_liste_titre {
+    background-color:#e0e0e0;
+    border-bottom:1px solid #c0c0c0;
+    padding:4px 6px;
+    overflow:auto;
+}
+
+.webedit_bandeau {
+    padding:4px;
+    background-color:#e0e0e0;
+    clear:both;
+    border-width:1px 0;
+    border-color:#c0c0c0;
+    border-style:solid;
+}
+
+.webedit_bandeau_masque {
+    overflow:hidden;
+}
+
+.webedit_pied {
+    clear:both;
+    padding:4px;
+    background-color:#e8e8e8;
+    border-top:1px solid #c0c0c0;
+}
+
+.webedit_titre_page {
+    background-color:#e0e0e0;
+    padding:6px;
+    border-bottom:1px solid #c0c0c0;
+}
+
+.webedit_titre {
+    background-color:#e0e0e0;
+    padding:4px;
+    border-bottom:1px solid #c0c0c0;
+}

@@ -150,3 +150,19 @@ margin:2px;
 color:red;
 height:25px;
 }
+
+/* Anciens styles en ligne, devenus des classes (même aspect) */
+.booking_filtre {
+    padding:4px;
+    border-bottom:1px solid #c0c0c0;
+}
+
+.booking_bandeau {
+    border-width:1px 0;
+    border-style:solid;
+    border-color:#bbb;
+    background-color:#ddd;
+    overflow:auto;
+    clear:both;
+    padding:2px;
+}

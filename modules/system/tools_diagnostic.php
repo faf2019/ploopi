@@ -33,7 +33,7 @@
 /**
  * Ouverture du bloc
  */
-echo ploopi\skin::get()->open_simplebloc(_SYSTEM_LABEL_DIAGNOSTIC);
+echo system_open_bloc(_SYSTEM_LABEL_DIAGNOSTIC);
 
 $columns = array();
 $values = array();
@@ -268,20 +268,20 @@ $values[$c]['values']['comment']    = array('label' => ploopi\str::nl2br($commen
 $values[$c]['values']['result']     = array('label' => "<img src=\"{$_SESSION['ploopi']['template_path']}/img/system/p_{$bullet}.png\" />", 'style' => '');
 $c++;
 
-ploopi\skin::get()->display_array($columns, $values, 'array_diagnostic', array('sortable' => true, 'orderby_default' => 'function'));
+system_display_array($columns, $values, 'array_diagnostic', array('sortable' => true, 'orderby_default' => 'function'));
 ?>
 
 <p class="ploopi_va" style="padding:2px;">
 <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/p_red.png">
-<span>Une puce rouge indique un problème potentiellement bloquant</span>
+<span><?php echo ploopi\str::htmlentities(_SYSTEM_TOOLS_DIAG_RED); ?></span>
 </p>
 <p class="ploopi_va" style="padding:2px;">
 <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/p_orange.png">
-<span>Une puce orange indique qu'une fonctionnalité ou une configuration peut poser problème</span>
+<span><?php echo ploopi\str::htmlentities(_SYSTEM_TOOLS_DIAG_ORANGE); ?></span>
 </p>
 <p class="ploopi_va" style="padding:2px;">
 <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/p_green.png">
-<span>Une puce verte indique que tout va bien !</span>
+<span><?php echo ploopi\str::htmlentities(_SYSTEM_TOOLS_DIAG_GREEN); ?></span>
 </p>
 
-<?php echo ploopi\skin::get()->close_simplebloc(); ?>
+<?php echo system_close_bloc(); ?>

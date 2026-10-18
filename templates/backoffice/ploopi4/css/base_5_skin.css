@@ -1,0 +1,1318 @@
+/*
+    Copyright (c) 2007-2026 Ovensia
+    Contributors hold Copyright (c) to their code submissions.
+
+    This file is part of Ploopi.
+
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
+/**
+ * Composants produits par ploopi\skin (include/classes/skin.php) et par les
+ * formulaires du socle. Les sélecteurs sont ceux de ploopi2, un par un : seul
+ * l'aspect change, jamais la structure (flottants, largeurs, positions), dont
+ * dépendent les modules.
+ */
+
+/******************
+  FENÊTRES (ploopi.popup)
+*******************/
+
+.ploopi_popup {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 200px;
+    overflow: hidden;
+    background: var(--p3-surface);
+    border-radius: 8px;
+    box-shadow: var(--p3-shadow-2);
+}
+
+/* ploopi2 rendait les fenêtres translucides hors survol : illisible au-dessus
+   d'un formulaire. Elles restent opaques. */
+.ploopi_popup > * {
+    opacity: 1;
+}
+
+.ploopi_popup .simplebloc {
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.ploopi_popup .simplebloc_title {
+    border-radius: 0;
+    height: 38px;
+    line-height: 38px;
+    padding-left: 10px;
+    background: var(--p3-primary-dark);
+    color: var(--p3-text-inverse);
+    border-bottom: 0;
+}
+
+.ploopi_popup .simplebloc_title a {
+    color: var(--p3-text-inverse);
+}
+
+.ploopi_popup .simplebloc_content {
+    margin: 0;
+    padding: 0;
+}
+
+/* Fenêtre réduite à une ligne de formulaire (envoi d'une photo, d'un fichier) :
+   marges et espacement, sans toucher aux fenêtres à mise en page propre */
+.ploopi_popup .simplebloc_content > form > p.ploopi_va:only-child {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px !important;
+}
+
+.ploopi_popup .simplebloc_content > form > p.ploopi_va:only-child input[type='file'] {
+    flex: 1;
+    min-width: 0;
+}
+
+.ploopi_popup .simplebloc_titleleft img {
+    padding: 11px 8px;
+    max-width: 14px;
+    opacity: 0.8;
+}
+
+.ploopi_popup .simplebloc_titleleft img:hover {
+    opacity: 1;
+}
+
+.calendardiv {
+    position: absolute;
+    visibility: hidden;
+    background-color: var(--p3-surface);
+    top: 0px;
+    left: 0px;
+    z-index: 1000;
+    height: auto;
+    width: 150px;
+    border-radius: var(--p3-radius);
+    box-shadow: var(--p3-shadow-2);
+}
+
+
+/******************
+  TITRE DE PAGE ET BLOCS
+*******************/
+
+.pagetitle {
+    color: var(--p3-text);
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 28px;
+    padding: 16px 16px 10px 16px;
+}
+
+.pagetitle p {
+    float: left;
+    margin: 0;
+    padding-left: 6px;
+}
+
+.simplebloc {
+    margin: 0 12px 12px 12px;
+    background: var(--p3-surface);
+    border: 1px solid var(--p3-border);
+    border-radius: var(--p3-radius);
+    box-shadow: var(--p3-shadow-1);
+    padding-bottom: 8px;
+}
+
+/* Bloc dans un bloc : simple encadré, sans ombre ni marge latérale */
+.simplebloc .simplebloc {
+    margin: 8px 0;
+    box-shadow: none;
+}
+
+.simplebloc_title {
+    color: var(--p3-text);
+    background: var(--p3-surface);
+    border-bottom: 1px solid var(--p3-border);
+    border-radius: var(--p3-radius) var(--p3-radius) 0 0;
+    font-size: 14px;
+    font-weight: 700;
+    text-align: left;
+    height: 42px;
+    line-height: 42px;
+    padding-left: 8px;
+    overflow: hidden;
+}
+
+.simplebloc .simplebloc .simplebloc_title {
+    height: 36px;
+    line-height: 36px;
+    font-size: 13px;
+    background: var(--p3-surface-2);
+}
+
+.simplebloc_titleleft {
+    padding: 0 4px;
+}
+
+.simplebloc_title a {
+    color: var(--p3-text);
+    text-decoration: none;
+}
+
+.simplebloc_titleleft a {
+    display: block;
+    float: left;
+    background: var(--p3-surface);
+    border: 1px solid var(--p3-border-strong);
+    border-radius: var(--p3-radius-sm);
+    color: var(--p3-text);
+    padding: 0 10px;
+    font-weight: normal;
+    height: 26px;
+    line-height: 26px;
+    margin-top: 7px;
+    margin-right: 10px;
+}
+
+.simplebloc .simplebloc .simplebloc_titleleft a {
+    margin-top: 4px;
+}
+
+.simplebloc_titleleft a:hover {
+    border-color: var(--p3-primary);
+    color: var(--p3-primary-dark);
+    background: var(--p3-primary-softer);
+    text-decoration: none;
+}
+
+.simplebloc_titleleft a * {
+    display: inline-block;
+    vertical-align: middle;
+    padding: 0;
+}
+
+.simplebloc_titleleft a img {
+    margin-right: 4px;
+}
+
+.simplebloc_titleleft span:first-child {
+    display: block;
+    float: left;
+    margin-right: 20px;
+}
+
+.simplebloc_content {
+    position: relative;
+    margin: 4px;
+    padding: 4px;
+}
+
+.simplebloc_footer {
+}
+
+
+/******************
+  BARRE D'OUTILS (skin::create_toolbar)
+*******************/
+
+.toolbar {
+    padding-bottom: 4px;
+    overflow: auto;
+    margin: 4px;
+}
+
+.toolbar > div > div > a {
+    border-radius: 0;
+}
+
+.toolbar > div > div:first-child > a {
+    border-radius: var(--p3-radius) 0 0 var(--p3-radius);
+}
+
+.toolbar > div > div:last-child > a {
+    border-radius: 0 var(--p3-radius) var(--p3-radius) 0;
+}
+
+.toolbar > div > div:first-child:last-child > a,
+.toolbar > div > div.toolbar_icon_vertical:first-child > a,
+.toolbar > div > div.toolbar_icon_vertical:last-child > a {
+    border-radius: var(--p3-radius);
+}
+
+.toolbar_left {
+}
+
+.toolbar_right {
+    float: right;
+}
+
+.toolbar_icon,
+.toolbar_icon_sel {
+    display: block;
+    float: left;
+    width: 100px;
+}
+
+/* Les tuiles accolées partagent leur bordure */
+.toolbar_icon + .toolbar_icon,
+.toolbar_icon + .toolbar_icon_sel,
+.toolbar_icon_sel + .toolbar_icon {
+    margin-left: -1px;
+}
+
+.toolbar_icon a,
+.toolbar_icon_sel a,
+.toolbar_icon_vertical a,
+.toolbar_icon_vertical_sel a {
+    display: block;
+    position: relative;
+    text-decoration: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+    background: var(--p3-surface);
+    border: 1px solid var(--p3-border-strong);
+    color: var(--p3-text-label);
+}
+
+.toolbar_icon a:hover,
+.toolbar_icon_vertical a:hover {
+    text-decoration: none;
+    background: var(--p3-primary-softer);
+    color: var(--p3-primary-dark);
+    border-color: var(--p3-border-strong);
+    z-index: 1;
+}
+
+.toolbar_icon_sel a,
+.toolbar_icon_vertical_sel a {
+    background: var(--p3-primary-soft);
+    border-color: var(--p3-primary);
+    color: var(--p3-primary-dark);
+    z-index: 2;
+}
+
+.toolbar_icon_sel a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 3px;
+    background: var(--p3-primary);
+}
+
+.toolbar_icon_sel a:hover {
+    text-decoration: none;
+}
+
+.toolbar_icon_image {
+    text-align: center;
+    padding: 10px 6px 2px 6px;
+    min-height: 24px;
+}
+
+.toolbar_icon p,
+.toolbar_icon_sel p,
+.toolbar_icon_vertical p,
+.toolbar_icon_vertical_sel p {
+    margin: 0;
+    text-align: center;
+    padding: 4px 8px 10px 8px;
+    background: transparent;
+    color: inherit;
+    white-space: normal;
+}
+
+.toolbar_icon_sel p,
+.toolbar_icon_vertical_sel p {
+    font-weight: 700;
+}
+
+.toolbar_icon a:hover p,
+.toolbar_icon_vertical a:hover p {
+    background: transparent;
+    color: inherit;
+}
+
+.toolbar_icon_title {
+    text-align: center;
+    padding: 2px 10px;
+    background: var(--p3-surface-2);
+}
+
+.toolbar_icon_vertical,
+.toolbar_icon_vertical_sel {
+    display: block;
+    margin-bottom: 6px;
+}
+
+.toolbar_icon_vertical a,
+.toolbar_icon_vertical_sel a {
+    border-radius: var(--p3-radius);
+}
+
+
+/******************
+  ONGLETS (skin::create_tabs)
+*******************/
+
+.tabs {
+    color: var(--p3-text-muted);
+    background: transparent;
+    overflow: auto;
+    margin: 0 12px 12px 12px;
+    border-bottom: 1px solid var(--p3-border);
+}
+
+.simplebloc .tabs {
+    margin: 4px 4px 8px 4px;
+}
+
+.tabs a {
+    display: block;
+    float: left;
+    position: relative;
+    color: var(--p3-text-muted);
+    padding: 9px 14px;
+    font-size: var(--p3-font-size-nav);
+    font-weight: 700;
+    white-space: nowrap;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+    border-radius: var(--p3-radius-sm) var(--p3-radius-sm) 0 0;
+}
+
+.tabs a:hover {
+    background-color: var(--p3-primary-softer);
+    color: var(--p3-primary-dark);
+    text-decoration: none;
+}
+
+.tabs a.selected {
+    background-color: transparent;
+    color: var(--p3-primary);
+    text-decoration: none;
+    box-shadow: inset 0 -3px 0 var(--p3-primary);
+}
+
+
+/******************
+  MESSAGES
+*******************/
+
+.ploopi_error {
+    clear: both;
+    color: var(--p3-danger);
+    background-color: var(--p3-danger-soft);
+    border: 1px solid #f3c1bd;
+    border-left: 4px solid var(--p3-danger);
+    border-radius: var(--p3-radius-sm);
+    padding: 10px 12px;
+    margin: 4px;
+    font-size: 12px;
+}
+
+.ploopi_error span {
+    color: var(--p3-text);
+}
+
+.ploopi_overflowauto {
+    overflow: auto;
+}
+
+/* vertical alignement : IE / FF / Opera */
+.ploopi_va {
+    margin: 0;
+}
+
+.ploopi_va img,
+.ploopi_va span,
+.ploopi_va label,
+.ploopi_va strong,
+.ploopi_va em,
+.ploopi_va input,
+.ploopi_va select,
+.ploopi_va a {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+
+/******************
+  FORMULAIRES DU SOCLE (.ploopi_form)
+*******************/
+
+.ploopi_form {
+    overflow: hidden;
+}
+
+.ploopi_form fieldset, .fieldset {
+    margin: 8px 4px;
+    padding: 8px 10px 10px 10px;
+    background: var(--p3-surface);
+    border: 1px solid var(--p3-border);
+    border-radius: var(--p3-radius);
+}
+
+.ploopi_form legend, .fieldset legend {
+    font-size: var(--p3-font-size-nav);
+    font-weight: 700;
+    color: var(--p3-primary-dark);
+    background: var(--p3-surface);
+    padding: 0 6px;
+}
+
+.ploopi_form h1 {
+    margin: 4px 0;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.ploopi_form h2 {
+    margin: 4px 0;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.ploopi_form h3 {
+    margin: 4px 0;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.ploopi_form h4 {
+    margin: 4px 0;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+/* flow-root contient les flottants (libellé, champ) sans faire de la ligne une zone
+   défilante : avec overflow:auto, une hauteur fractionnaire faisait apparaître des
+   barres de défilement vides (▲▼) sur les libellés de plusieurs lignes */
+.ploopi_form p {
+    display: flow-root;
+    margin: 6px 2px;
+    overflow: visible;
+}
+
+.ploopi_form p label {
+    float: left;
+    width: 30%;
+    text-align: right;
+    margin: 0;
+    padding: 6px .6em 0 0;
+    line-height: 16px;
+    color: var(--p3-text-label);
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.ploopi_form p input[type='text'],
+.ploopi_form p input[type='password'],
+.ploopi_form p input[type='file'],
+.ploopi_form p select,
+.ploopi_form p textarea,
+.ploopi_form p span {
+    width: 65%;
+    float: left;
+}
+
+.ploopi_form p input.checkbox {
+    width: 14px;
+}
+
+.ploopi_form p span {
+    float: left;
+}
+
+.ploopi_form p textarea {
+    height: 6em;
+}
+
+.ploopi_form p span.checkbox {
+    cursor: pointer;
+    width: 100%;
+}
+
+.ploopi_form p span.checkbox img, .ploopi_form p span.checkbox input {
+    cursor: pointer;
+}
+
+.ploopi_form p.checkbox {
+    cursor: pointer;
+    width: 100%;
+}
+
+.ploopi_form p.checkbox label, .ploopi_form p.checkbox img, .ploopi_form p.checkbox input {
+    cursor: pointer;
+}
+
+.ploopi_form_title {
+    display: block;
+    clear: both;
+    font-size: var(--p3-font-size-nav);
+    font-weight: 700;
+    color: var(--p3-primary-dark);
+    background-color: var(--p3-surface-2);
+    border-top: 1px solid var(--p3-border);
+    border-bottom: 1px solid var(--p3-border);
+    box-shadow: inset 3px 0 0 var(--p3-primary);
+    padding: 8px 12px;
+    text-decoration: none;
+}
+
+.ploopi_form_title:hover {
+    text-decoration: none;
+    color: var(--p3-primary-dark);
+}
+
+a.ploopi_form_title * {
+    cursor: pointer;
+}
+
+.ploopi_checkbox {
+    margin: 0;
+    cursor: pointer;
+}
+
+.ploopi_checkbox * {
+    display: inline-block;
+    vertical-align: middle;
+    cursor: pointer;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.error {
+    color: var(--p3-danger);
+    font-weight: 700;
+}
+
+.information {
+    color: var(--p3-success);
+    font-weight: 700;
+}
+
+.Title td {
+    font-weight: 700;
+}
+
+
+/******************
+  TABLEAUX (skin::display_array)
+  Colonnes en flottants à largeur fixe et séparateurs en position absolue :
+  ni marge horizontale, ni bordure latérale sur les cellules.
+*******************/
+
+div.ploopi_explorer_main {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--p3-border);
+    border-radius: var(--p3-radius-sm);
+    background: var(--p3-surface);
+}
+
+div.ploopi_explorer_maintitle {
+    padding: 4px;
+    overflow: auto;
+}
+
+div.ploopi_explorer_title {
+    color: var(--p3-text);
+    background: var(--p3-surface-3);
+    overflow: hidden;
+    border-bottom: 1px solid var(--p3-border-strong);
+    font-weight: 700;
+}
+
+div.ploopi_explorer_title a {
+    color: var(--p3-text);
+}
+
+div.ploopi_explorer_title a:hover {
+    color: var(--p3-primary-dark);
+    background: #d5dee5;
+    text-decoration: none;
+}
+
+div.ploopi_explorer_title a.ploopi_explorer_element_selected,
+div.ploopi_explorer_title span.ploopi_explorer_element_selected {
+    background: var(--p3-primary-soft);
+    color: var(--p3-primary-dark);
+}
+
+div.ploopi_explorer_title a p,
+div.ploopi_explorer_title span p {
+    padding: 8px 8px 8px 6px;
+}
+
+div.ploopi_explorer_title p img {
+    margin-left: 2px;
+}
+
+div.ploopi_explorer_column {
+    position: absolute;
+    height: 100%;
+    border-left: 1px solid var(--p3-border);
+    z-index: 1000;
+}
+
+*.ploopi_explorer_element {
+    display: block;
+    overflow: hidden;
+    word-wrap: break-word;
+}
+
+a.ploopi_explorer_element * {
+    cursor: pointer;
+}
+
+*.ploopi_explorer_element p {
+    margin: 0;
+    padding: 6px 4px;
+}
+
+.ploopi_explorer_line_1 p,
+.ploopi_explorer_line_2 p {
+    line-height: 1.45em;
+}
+
+*.ploopi_explorer_element p img, *.ploopi_explorer_element p span, *.ploopi_explorer_element p a {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+a.ploopi_explorer_element:hover {
+    text-decoration: none;
+}
+
+a.ploopi_explorer_link {
+    display: block;
+    overflow: hidden;
+    color: var(--p3-text);
+    text-decoration: none;
+    outline: none;
+}
+
+a.ploopi_explorer_link:hover {
+    text-decoration: none;
+    background: var(--p3-primary-softer);
+    color: var(--p3-text);
+}
+
+div.ploopi_explorer_line_1 {
+    overflow: hidden;
+    background: var(--p3-surface);
+    border-bottom: 1px solid var(--p3-line);
+}
+
+div.ploopi_explorer_line_2 {
+    overflow: hidden;
+    background: var(--p3-surface-2);
+    border-bottom: 1px solid var(--p3-line);
+}
+
+div.ploopi_explorer_line_1:hover,
+div.ploopi_explorer_line_2:hover {
+    background: var(--p3-primary-softer);
+}
+
+/* Dans un tableau, un lien se lit comme le reste de la ligne */
+div.ploopi_explorer_line_1 a,
+div.ploopi_explorer_line_2 a {
+    color: var(--p3-text);
+}
+
+div.ploopi_explorer_line_1 a:hover,
+div.ploopi_explorer_line_2 a:hover {
+    color: var(--p3-primary);
+}
+
+div.ploopi_explorer_tools {
+    overflow: hidden;
+}
+
+div.ploopi_explorer_tools a {
+    display: block;
+    float: left;
+    padding: 4px 3px;
+    border-radius: var(--p3-radius-sm);
+}
+
+div.ploopi_explorer_tools a:hover {
+    background: var(--p3-surface-3);
+}
+
+div.ploopi_explorer_tools > button {
+    display: inline-block;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    margin-top: 3px;
+    margin-left: 2px;
+}
+
+div.ploopi_explorer_tools > button > img {
+    margin: 4px 5px 2px 5px;
+    width: 12px;
+    height: 12px;
+}
+
+div.ploopi_explorer_multipage {
+    color: var(--p3-text-muted);
+}
+
+div.ploopi_explorer_multipage a,
+div.ploopi_explorer_multipage strong {
+    display: inline-block;
+    min-width: 22px;
+    height: 22px;
+    line-height: 22px;
+    margin: 2px 0;
+    border-radius: var(--p3-radius-sm);
+    text-align: center;
+}
+
+div.ploopi_explorer_multipage a:hover {
+    background: var(--p3-primary-softer);
+    text-decoration: none;
+}
+
+div.ploopi_explorer_multipage strong {
+    background: var(--p3-primary);
+    color: #fff;
+}
+
+
+/******************
+  ARBORESCENCES (skin::display_treeview)
+*******************/
+
+.treeview_node {
+    overflow: hidden;
+}
+
+.treeview_node img {
+    display: block;
+    float: left;
+}
+
+.treeview_node a {
+    color: var(--p3-text);
+}
+
+.treeview_node a:hover {
+    color: var(--p3-primary-dark);
+}
+
+.treeview_node_loading {
+    overflow: hidden;
+}
+
+.treeview_node_loading img {
+    display: block;
+    float: left;
+}
+
+.treeview_node_loading * {
+    cursor: wait;
+}
+
+
+/******************
+  PAGINATION
+*******************/
+
+div.ploopi_page_cut {
+    clear: both;
+    overflow: auto;
+    margin: 0;
+    padding: 4px;
+    text-align: center;
+}
+
+input.ploopi_page_cut_select, input.ploopi_page_cut {
+    margin: 0 1px;
+    padding: 2px 6px;
+    border: 1px solid var(--p3-border-strong);
+    background: var(--p3-surface);
+    color: var(--p3-text);
+    text-align: center;
+    cursor: pointer;
+    font-weight: normal;
+    min-width: 26px;
+}
+
+input.ploopi_page_cut:hover {
+    background: var(--p3-primary-softer);
+    border-color: var(--p3-primary);
+    color: var(--p3-primary-dark);
+}
+
+input.ploopi_page_cut_select {
+    background: var(--p3-primary);
+    border-color: var(--p3-primary);
+    color: #fff;
+    font-weight: 700;
+    font-style: normal;
+}
+
+input.ploopi_page_cut_disable {
+    margin: 0 1px;
+    padding: 2px 6px;
+    border: 1px solid var(--p3-border);
+    background: var(--p3-surface-2);
+    color: #7d8a95;
+    text-align: center;
+    font-weight: normal;
+    width: 18px;
+}
+
+select.ploopi_page_by {
+    border: 1px solid var(--p3-border-strong);
+    background: var(--p3-surface);
+    color: var(--p3-text);
+}
+
+
+/**
+ * LISTE DE CHOIX (skin::display_selectbox)
+ */
+
+.ploopi_selectbox {
+    text-align: left;
+}
+
+.ploopi_selectbox_button {
+    position: relative;
+    margin: 0;
+    background: var(--p3-surface);
+    padding: 5px 8px;
+    border: 1px solid var(--p3-border-strong);
+    border-radius: var(--p3-radius-sm);
+    cursor: pointer;
+}
+
+.ploopi_selectbox_button::after {
+    content: '';
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    width: 6px;
+    height: 6px;
+    margin-top: -5px;
+    border-right: 2px solid var(--p3-text-muted);
+    border-bottom: 2px solid var(--p3-text-muted);
+    transform: rotate(45deg);
+}
+
+.ploopi_selectbox_button_content {
+    margin: 0;
+    padding: 0;
+    margin-right: 18px;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.ploopi_selectbox_button img,
+.ploopi_selectbox_button span {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.ploopi_selectbox:hover .ploopi_selectbox_button {
+    border-color: var(--p3-primary);
+}
+
+.ploopi_selectbox_list {
+    margin-top: 2px;
+    padding: 0;
+    background: var(--p3-surface);
+    z-index: 10000;
+    position: absolute;
+    border-radius: var(--p3-radius-sm);
+    box-shadow: var(--p3-shadow-2);
+}
+
+.ploopi_selectbox_list ul {
+    border: 1px solid var(--p3-border);
+    border-radius: var(--p3-radius-sm);
+    margin: 0;
+    padding: 4px 0;
+}
+
+.ploopi_selectbox_list li {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+.ploopi_selectbox_list li a {
+    display: block;
+    padding: 5px 8px;
+    padding-left: 14px;
+    color: var(--p3-text);
+    cursor: pointer;
+}
+
+.ploopi_selectbox_list li a:hover {
+    background: var(--p3-primary-softer);
+    color: var(--p3-primary-dark);
+    text-decoration: none;
+}
+
+.ploopi_selectbox_list li a img,
+.ploopi_selectbox_list li a span {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.ploopi_selectbox_list li strong {
+    display: block;
+    padding: 5px 8px;
+    margin: 0;
+    color: var(--p3-text-muted);
+}
+
+
+/******************
+  BARRES D'ACTIONS DES MODULES (.ploopi_tabs)
+  ploopi2 dessinait des onglets biseautés ; ici, des boutons plats.
+*******************/
+
+.ploopi_tabs {
+    overflow: hidden;
+    color: var(--p3-text);
+    border-bottom: 1px solid var(--p3-border);
+    padding: 3px 2px;
+}
+
+.ploopi_tabs input {
+    display: block;
+    float: left;
+    margin: 3px 3px 0 0;
+}
+
+.ploopi_tabs > a {
+    display: block;
+    float: right;
+    margin-left: 2px;
+    padding: 5px 10px;
+    border-radius: var(--p3-radius-sm);
+    text-decoration: none;
+    background: transparent;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+    color: var(--p3-text);
+    position: relative;
+}
+
+.ploopi_tabs > a > span,
+.ploopi_tabs > a > img {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.ploopi_tabs > a:after {
+    display: none;
+}
+
+.ploopi_tabs > a.left {
+    float: left;
+    margin-left: 0;
+    margin-right: 2px;
+}
+
+.ploopi_tabs > a:hover {
+    background: var(--p3-primary-softer);
+    color: var(--p3-primary-dark);
+}
+
+.ploopi_tabs > a > span {
+    padding-left: 4px;
+}
+
+.ploopi_tabs > span.title {
+    display: block;
+}
+
+.ploopi_tabs a.selected {
+    background: var(--p3-primary-soft);
+    color: var(--p3-primary-dark);
+    font-weight: 700;
+}
+
+
+/******************
+  FORMULAIRES GÉNÉRÉS (ploopi\form)
+*******************/
+
+.ploopi_generate_form {
+    overflow: hidden;
+}
+
+.ploopi_generate_form p,
+.ploopi_generate_form h1,
+.ploopi_generate_form h2,
+.ploopi_generate_form h3,
+.ploopi_generate_form > form {
+    border: 0;
+    margin: 0;
+    padding: 0;
+}
+
+.ploopi_generate_form h1,
+.ploopi_generate_form h2,
+.ploopi_generate_form h3 {
+    clear: both;
+    display: block;
+    font-weight: 700;
+    margin-bottom: 16px;
+    border-bottom: solid 1px var(--p3-border);
+    padding-bottom: 10px;
+}
+
+.ploopi_generate_form h1 {
+    font-size: 1.5em;
+}
+
+.ploopi_generate_form h2 {
+    font-size: 1.3em;
+}
+
+.ploopi_generate_form h3 {
+    font-size: 1.1em;
+}
+
+.ploopi_generate_form .spacer {
+    clear: both;
+    height: 1px;
+}
+
+.ploopi_generate_form .onclick,
+.ploopi_generate_form .onclick * {
+    cursor: pointer;
+}
+
+.ploopi_generate_form h1 p {
+    font-size: 0.9em;
+    color: var(--p3-text-muted);
+    margin-top: 8px;
+    font-weight: normal;
+}
+
+.ploopi_generate_form > form > div > fieldset > div > label {
+    display: block;
+    text-align: right;
+    padding-top: 6px;
+    width: 30%;
+    float: left;
+    clear: both;
+    padding-right: 10px;
+    color: var(--p3-text-muted);
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.ploopi_generate_form > form > div > fieldset > div > label.required {
+    background: url(../img/forms/required.png) no-repeat right top;
+}
+
+.ploopi_generate_form > form > div > fieldset > div > label > span {
+    color: var(--p3-text-muted);
+    display: block;
+    font-weight: normal;
+    text-align: right;
+    width: 100%;
+}
+
+.ploopi_generate_form > form > div > fieldset > div > input,
+.ploopi_generate_form > form > div > fieldset > div > select,
+.ploopi_generate_form > form > div > fieldset > div > textarea {
+    float: left;
+    width: 60%;
+    margin: 0 0 6px 0;
+}
+
+.ploopi_generate_form > form > div > fieldset > div > input[type='checkbox'],
+.ploopi_generate_form > form > div > fieldset > div > input[type='radio'] {
+    width: auto;
+    margin-top: 7px;
+}
+
+.ploopi_generate_form > form > div > fieldset > div > select option,
+.ploopi_generate_form > form > div > fieldset > div > select optgroup {
+    background: var(--p3-surface);
+}
+
+.ploopi_generate_form > form > div > fieldset > div > input[type=password] {
+    letter-spacing: 2px;
+}
+
+.ploopi_generate_form > form > div > fieldset > div > span {
+    display: block;
+    float: left;
+    margin: 2px 0 6px 0;
+    width: 60%;
+}
+
+.ploopi_generate_form > form > div > fieldset > div > span > label {
+    display: block;
+    float: left;
+    clear: none;
+    padding: 0 6px 0 2px;
+    font-weight: normal;
+    width: auto;
+}
+
+.ploopi_generate_form > form > div > fieldset > div > span > input {
+    margin: 2px 0;
+}
+
+.ploopi_generate_form > form > div > fieldset {
+    clear: both;
+    display: block;
+    margin: 6px 4px;
+    padding: 6px 8px 8px 8px;
+    border: 1px solid var(--p3-border);
+    border-radius: var(--p3-radius);
+}
+
+.ploopi_generate_form > form > div > fieldset > legend {
+    padding: 0 6px;
+    font-weight: 700;
+    color: var(--p3-primary-dark);
+}
+
+.ploopi_generate_form .buttons {
+    clear: both;
+    margin: 8px 8%;
+    overflow: auto;
+}
+
+.ploopi_generate_form button {
+    float: right;
+    margin-left: 6px;
+    cursor: pointer;
+}
+
+/* Petits écrans : libellé au-dessus du champ, champ pleine largeur (côte à côte,
+   30 % / 60 %, le libellé tronquait et le champ devenait inutilisable), panneaux
+   empilés malgré une largeur écrite en ligne (« width:49%;float:left; ») ; un
+   champ à largeur écrite en ligne passe aussi sous son libellé. Les flottants
+   sont conservés : le bouton du calendrier (date::open_calendar) reste
+   posé sur la fin de son champ. */
+@media (max-width: 640px) {
+    .ploopi_generate_form > form > div > fieldset {
+        float: none !important;
+        width: auto !important;
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .ploopi_generate_form > form > div > fieldset > div > label {
+        width: auto;
+        max-width: 100%;
+        padding: 6px 14px 4px 0;
+        text-align: left;
+        background-position: right 6px;
+    }
+
+    .ploopi_generate_form > form > div > fieldset > div > label > span {
+        text-align: left;
+    }
+
+    .ploopi_generate_form > form > div > fieldset > div > input,
+    .ploopi_generate_form > form > div > fieldset > div > select,
+    .ploopi_generate_form > form > div > fieldset > div > textarea,
+    .ploopi_generate_form > form > div > fieldset > div > span {
+        clear: left;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+    .ploopi_generate_form > form > div > fieldset > div > input[type='checkbox'],
+    .ploopi_generate_form > form > div > fieldset > div > input[type='radio'] {
+        width: auto;
+    }
+
+    .ploopi_generate_form .buttons {
+        margin: 8px 0;
+    }
+}
+
+
+/******************
+  FORMULAIRES DE FILTRE (listes d'utilisateurs du module system)
+  Chaque étiquette reste avec son champ, la plage de dates d'un bloc, les
+  boutons ensemble : on ne passe à la ligne qu'entre deux groupes.
+*******************/
+
+.ploopi_filter {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 18px;
+}
+
+.ploopi_filter_field,
+.ploopi_filter_buttons {
+    white-space: nowrap;
+}
+
+.ploopi_filter_field label {
+    margin-right: 6px;
+    color: var(--p3-text-muted);
+}
+
+.ploopi_filter_field label ~ label {
+    margin-left: 6px;
+}
+
+.ploopi_filter_field a {
+    margin-left: 2px;
+}
+
+.ploopi_filter_buttons input + input {
+    margin-left: 4px;
+}
+
+/* Action destructrice : contour rouge, rouge plein au survol */
+/* Suppression : par classe, ou repérée par son libellé (_PLOOPI_DELETE, modules) */
+input.ploopi_button_danger,
+input[type='button'][value^='Supprimer'],
+input[type='submit'][value^='Supprimer'] {
+    background: var(--p3-surface);
+    border-color: var(--p3-danger);
+    color: var(--p3-danger);
+}
+
+input.ploopi_button_danger:hover,
+input.ploopi_button_danger:focus,
+input[type='button'][value^='Supprimer']:hover,
+input[type='submit'][value^='Supprimer']:hover {
+    background: var(--p3-danger);
+    border-color: var(--p3-danger);
+    color: var(--p3-text-inverse);
+}

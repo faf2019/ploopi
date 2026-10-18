@@ -36,6 +36,7 @@
  * Inclusion de la classe parent
  */
 include_once './include/classes/data_object.php';
+include_once './modules/dbreport/classes/class_dbreport.php';
 
 include_once './include/classes/query.php';
 include_once './modules/dbreport/classes/class_dbreport_query.php';
@@ -77,6 +78,7 @@ class dbreport_queryfield extends ploopi\data_object
      */
     public function save()
     {
+        dbreport::defaults($this);
         /*
         if ($this->new)
         {

@@ -30,6 +30,15 @@
  * @author Ovensia
  */
 
+// Gabarits de génération 4 : écran refondu
+if (ploopi\skin::get()->version() >= 4)
+{
+    echo ploopi\system\ui::pagehead(_PLOOPI_LABEL_MYPARAMS, _SYSTEM_MYS_PARAMS_SUBTITLE);
+    $strParamContext = 'user';
+    include './modules/system/admin_params_p4.php';
+    return;
+}
+
 /**
  * Récupération de l'identifiant du module
  */
@@ -68,7 +77,10 @@ else
         <input type="hidden" name="op" value="param">
         <select class="select" name="idmodule" onchange="javascript:jQuery('#form_modparam').submit();">
         <?php
-        usort($arrModList, create_function('$a,$b', 'return strcasecmp($_SESSION[\'ploopi\'][\'modules\'][$a][\'label\'], $_SESSION[\'ploopi\'][\'modules\'][$b][\'label\']);'));
+        // create_function() a été supprimée en PHP 8.0
+        usort($arrModList, function($a, $b) {
+            return strcasecmp($_SESSION['ploopi']['modules'][$a]['label'], $_SESSION['ploopi']['modules'][$b]['label']);
+        });
 
         foreach($arrModList as $idm)
         {

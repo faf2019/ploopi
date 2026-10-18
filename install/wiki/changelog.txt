@@ -1,3 +1,86 @@
+== Module Wiki - version 1.4.12 ======================================================
+
+2026-10-17  Ovensia <stephane@ovensia.fr>
+
+* jsToolbar livré avec le module (modules/wiki/lib/jstoolbar/) et non plus avec le socle
+  (lib/jstoolbar/, supprimé) : le wiki est son seul utilisateur. Seule la traduction
+  française est conservée.
+
+== Module Wiki - version 1.4.11 ======================================================
+
+2026-10-12  Ovensia <stephane@ovensia.fr>
+
+* Content-Security-Policy stricte (socle, § 3.33) : écrans du module servis sans script ni
+  gestionnaire en ligne, déclarés prêts par _WIKI_CSP (include/global.php). Coloration du
+  code, sommaire de la page et barre d'outils de l'éditeur initialisés par
+  include/functions.js (data-wiki-toc, data-wiki-toolbar) ; suppression confirmée par
+  data-ploopi-confirm, impression et Annuler par attributs. Lien vers une page inexistante
+  inerte sans URL javascript:.
+
+== Module Wiki - version 1.4.10 ======================================================
+
+2026-10-10  Ovensia <stephane@ovensia.fr>
+
+* Habillage : les styles en ligne des écrans d'administration (bandeaux gris, barres de boutons,
+  cadres et filets) deviennent des classes, déclarées dans include/styles.css avec exactement le même
+  aspect ; le gabarit ploopi3 les redessine dans sa palette (tools/ploopi3_modules.php). Les écrans
+  servis au frontoffice (wce, template, display), où la feuille du module n'est pas chargée, gardent
+  leurs styles en ligne.
+
+== Module Wiki - version 1.4.9 =======================================================
+
+2026-10-10  Ovensia <stephane@ovensia.fr>
+
+* Icônes : jeu unifié de l'administration (Tabler Icons, au trait, palette du gabarit ploopi3), sous
+  les mêmes noms et aux mêmes tailles ; le code qui les appelle ne change pas. Correspondances dans
+  tools/icones/modules.js, régénération par tools/icones/generer.js.
+
+== Module Wiki - version 1.4.8 =======================================================
+
+2026-10-09  Ovensia <stephane@ovensia.fr>
+
+* Balises PHP courtes « <? » remplacées par « <?php » : op.php (impression d'une page). Avec
+  short_open_tag à Off (php.ini de production), le code partait tel quel dans la page.
+
+== Module Wiki - version 1.4.7 =======================================================
+
+2026-10-09  Ovensia <stephane@ovensia.fr>
+
+* Fichiers .gz resynchronisés avec leurs sources (ils dataient d'une minification antérieure).
+
+== Module Wiki - version 1.4.6 =======================================================
+
+2026-10-08  Ovensia <stephane@ovensia.fr>
+
+* Compatibilité PHP 8.2 (PR #63) : utf8_encode()/utf8_decode() remplacées
+  par mb_convert_encoding() autour de Textile.
+
+== Module Wiki - version 1.4.5 =======================================================
+
+2026-10-05  Ovensia <stephane@ovensia.fr>
+
+* Contrôle des droits dans op.php.
+
+  description.xml déclare cinq actions — modifier (10), renommer (11), supprimer (12),
+  verrouiller (20), déverrouiller (21) — et public_view.php s'en sert pour décider des
+  boutons à afficher. op.php, qui exécute ces actions et se laisse appeler directement
+  en HTTP, n'était protégé que par acl::ismoduleallowed('wiki') : « le module est dans
+  votre espace ». Un utilisateur sans aucun rôle pouvait donc modifier, supprimer,
+  renommer et verrouiller n'importe quelle page.
+
+  Chaque opération contrôle désormais son action, conformément à doc/reference.md §8.4.
+
+* wiki_page_save refuse d'écrire sur une page verrouillée. Le verrou n'était appliqué
+  que par la vue, qui masquait le formulaire : un appel direct l'ignorait.
+
+== Module Wiki - version 1.4.4 =======================================================
+
+2026-09-17  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Correction d'une XSS stockée : le contenu des pages est désormais purifié, à
+  l'enregistrement et à l'affichage. Le moteur Textile laissait passer le HTML brut.
+* Assainissement des URL de lien : les schémas actifs sont refusés
+
 == Module Wiki - version 1.4.3 ====================================================
 
 2022-02-17  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

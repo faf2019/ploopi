@@ -119,7 +119,7 @@ abstract class image
 
             // On mets l'image par dessus
             imagecopy($imgtmp,$imgsrc,0,0,0,0,$w,$h);
-            imagedestroy($imgsrc);
+            unset($imgsrc);
             $imgsrc = &$imgtmp;
         }
 
@@ -269,8 +269,8 @@ abstract class image
                     break;
 
                     default:
-                        imagedestroy($imgdest);
-                        imagedestroy($imgsrc);
+                        unset($imgdest);
+                        unset($imgsrc);
 
                         return false;
                     break;
@@ -278,15 +278,15 @@ abstract class image
             }
             else
             {
-                imagedestroy($imgdest);
-                imagedestroy($imgsrc);
+                unset($imgdest);
+                unset($imgsrc);
 
                 return false;
             }
         }
 
-        imagedestroy($imgdest);
-        imagedestroy($imgsrc);
+        unset($imgdest);
+        unset($imgsrc);
 
         return true;
     }

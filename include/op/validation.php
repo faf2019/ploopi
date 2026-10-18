@@ -44,6 +44,13 @@ switch($ploopi_op)
         if (isset($_GET['remove_group_id'])) unset($_SESSION['ploopi']['validation'][$_GET['validation_id']]['groups_selected'][$_GET['remove_group_id']]);
 
 
+        // ploopi4 : sélection en pastilles
+        if (ploopi\userselect::modern())
+        {
+            ploopi\userselect::chips('validation', $_GET['validation_id'], $_SESSION['ploopi']['validation'][$_GET['validation_id']]['groups_selected'], $_SESSION['ploopi']['validation'][$_GET['validation_id']]['users_selected'], 'Aucune accréditation');
+            ploopi\system::kill();
+        }
+
         foreach($_SESSION['ploopi']['validation'][$_GET['validation_id']]['groups_selected'] as $group_id)
         {
             $group = new ploopi\group();
@@ -51,7 +58,7 @@ switch($ploopi_op)
             {
                 ?>
                 <p class="ploopi_va" style="padding:2px;">
-                    <a class="ploopi_validation_delete_user" href="javascript:void(0);" onclick="ploopi.xhr.todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=validation_select_user&validation_id=<?php echo urlencode($_GET['validation_id']); ?>&remove_group_id=<?php echo $group->fields['id']; ?>', 'div_validation_users_selected_<?php echo ploopi\str::htmlentities($_GET['validation_id']); ?>');">
+                    <a class="ploopi_validation_delete_user" href="#" data-ploopi-todiv="<?php echo ploopi\str::htmlentities('div_validation_users_selected_'.(ploopi\str::htmlentities($_GET['validation_id']))); ?>" data-ploopi-query="<?php echo ploopi\str::htmlentities(ploopi\crypt::queryencode('ploopi_op=validation_select_user&validation_id='.(urlencode($_GET['validation_id'])).'&remove_group_id='.($group->fields['id']))); ?>">
                         <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/btn_delete.png" />
                         <span>Groupe &laquo; </span><strong><?php echo ploopi\str::htmlentities($group->fields['label']); ?></strong><span></span> &raquo; (Cliquez pour supprimer)</span>
                     </a>
@@ -67,7 +74,7 @@ switch($ploopi_op)
             {
                 ?>
                 <p class="ploopi_va" style="padding:2px;">
-                    <a class="ploopi_validation_delete_user" href="javascript:void(0);" onclick="ploopi.xhr.todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=validation_select_user&validation_id=<?php echo urlencode($_GET['validation_id']); ?>&remove_user_id=<?php echo $user->fields['id']; ?>', 'div_validation_users_selected_<?php echo ploopi\str::htmlentities($_GET['validation_id']); ?>');">
+                    <a class="ploopi_validation_delete_user" href="#" data-ploopi-todiv="<?php echo ploopi\str::htmlentities('div_validation_users_selected_'.(ploopi\str::htmlentities($_GET['validation_id']))); ?>" data-ploopi-query="<?php echo ploopi\str::htmlentities(ploopi\crypt::queryencode('ploopi_op=validation_select_user&validation_id='.(urlencode($_GET['validation_id'])).'&remove_user_id='.($user->fields['id']))); ?>">
                         <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/btn_delete.png" />
                         <strong><?php echo ploopi\str::htmlentities("{$user->fields['lastname']} {$user->fields['firstname']}"); ?></strong><span>&nbsp;(Cliquez pour supprimer)</span>
                     </a>
@@ -262,7 +269,7 @@ switch($ploopi_op)
                             {
                                 $user = &$list['users'][$id_user];
                                 ?>
-                                <a class="ploopi_validation_select_user" href="javascript:void(0);" onclick="javascript:ploopi.xhr.todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=validation_select_user&validation_id=<?php echo urlencode($_GET['validation_id']); ?>&user_id=<?php echo $id_user; ?>', 'div_validation_users_selected_<?php echo ploopi\str::htmlentities($_GET['validation_id']); ?>');">
+                                <a class="ploopi_validation_select_user" href="#" data-ploopi-todiv="<?php echo ploopi\str::htmlentities('div_validation_users_selected_'.(ploopi\str::htmlentities($_GET['validation_id']))); ?>" data-ploopi-query="<?php echo ploopi\str::htmlentities(ploopi\crypt::queryencode('ploopi_op=validation_select_user&validation_id='.(urlencode($_GET['validation_id'])).'&user_id='.($id_user))); ?>">
                                     <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span><?php echo ploopi\str::htmlentities("{$user['lastname']} {$user['firstname']}"); ?></span></p>
                                 </a>
                                 <?php
@@ -277,7 +284,7 @@ switch($ploopi_op)
                                 if ($group['display'])
                                 {
                                     ?>
-                                    <a class="ploopi_validation_select_usergroup" href="javascript:void(0);" onclick="javascript:ploopi.xhr.todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=validation_select_user&validation_id=<?php echo urlencode($_GET['validation_id']); ?>&group_id=<?php echo $id_grp; ?>', 'div_validation_users_selected_<?php echo ploopi\str::htmlentities($_GET['validation_id']); ?>');">
+                                    <a class="ploopi_validation_select_usergroup" href="#" data-ploopi-todiv="<?php echo ploopi\str::htmlentities('div_validation_users_selected_'.(ploopi\str::htmlentities($_GET['validation_id']))); ?>" data-ploopi-query="<?php echo ploopi\str::htmlentities(ploopi\crypt::queryencode('ploopi_op=validation_select_user&validation_id='.(urlencode($_GET['validation_id'])).'&group_id='.($id_grp))); ?>">
                                         <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_group.png"><span><?php echo ploopi\str::htmlentities($list['groups'][$id_grp]['label']);  ?></span></p>
                                     </a>
                                     <?php
@@ -287,7 +294,7 @@ switch($ploopi_op)
                                         {
                                             $user = &$list['users'][$id_user];
                                             ?>
-                                            <a class="ploopi_validation_select_usergroup_user" href="javascript:void(0);" onclick="javascript:ploopi.xhr.todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=validation_select_user&validation_id=<?php echo urlencode($_GET['validation_id']); ?>&user_id=<?php echo $id_user; ?>', 'div_validation_users_selected_<?php echo ploopi\str::htmlentities($_GET['validation_id']); ?>');">
+                                            <a class="ploopi_validation_select_usergroup_user" href="#" data-ploopi-todiv="<?php echo ploopi\str::htmlentities('div_validation_users_selected_'.(ploopi\str::htmlentities($_GET['validation_id']))); ?>" data-ploopi-query="<?php echo ploopi\str::htmlentities(ploopi\crypt::queryencode('ploopi_op=validation_select_user&validation_id='.(urlencode($_GET['validation_id'])).'&user_id='.($id_user))); ?>">
                                                 <p class="ploopi_va"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/ico_user.png"><span><?php echo ploopi\str::htmlentities("{$user['lastname']} {$user['firstname']}"); ?></span></p>
                                             </a>
                                             <?php

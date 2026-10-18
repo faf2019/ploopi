@@ -1,0 +1,17 @@
+# Caddy devant Ploopi (docker-compose.prod.yml) : HTTPS automatique (Let's Encrypt),
+# HTTP redirigé vers HTTPS. PLOOPI_DOMAIN vient du fichier .env.
+# Pas d'en-tête Content-Security-Policy ici : Ploopi pose les siennes.
+{$PLOOPI_DOMAIN} {
+    encode zstd gzip
+
+    request_body {
+        max_size 32MB    # = upload_max_filesize de docker/ploopi.ini
+    }
+
+    header {
+        Strict-Transport-Security "max-age=31536000"
+        -Server
+    }
+
+    reverse_proxy web:80
+}

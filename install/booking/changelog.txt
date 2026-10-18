@@ -1,3 +1,158 @@
+== Module BOOKING - version 1.3.15 ===================================================
+
+2026-10-12  Ovensia <stephane@ovensia.fr>
+
+* Planning sous ploopi4 : l'état d'une réservation (validé, en attente, annulé) devient une
+  pastille de couleur devant l'objet, avec le libellé au survol et pour les lecteurs
+  d'écran ; le bandeau d'état masquait l'objet des réservations courtes.
+* Fenêtres de réservation sous ploopi4 : libellés au-dessus des champs, date et heure sur
+  une ligne, boutons en pied ; en consultation, chaque événement en carte dont la couleur
+  d'état devient une bande latérale et une teinte légère (lisible en thème sombre).
+  ploopi2/ploopi3 inchangés.
+* Barre d'outils du planning sous ploopi4 : vues en contrôle segmenté (icône et libellé),
+  période et navigation (chevrons), options (colonnes, taille, impression) alignées à
+  droite, bouton principal d'ajout ; repli sur petit écran. Identifiants, noms et
+  attributs data-* inchangés ; ploopi2/ploopi3 inchangés.
+* Content-Security-Policy stricte : écrans déclarés prêts (_BOOKING_CSP), backoffice et
+  frontoffice (wce). Plus aucun gestionnaire en ligne ni URL javascript: — barres
+  d'outils, lignes des listes, planning (affichage, période, taille, colonnes),
+  événements du calendrier (arrAttrs), réservation et décision par les actions de
+  include/functions.js (ploopi.actions.booking_*) ; formulaires contrôlés par
+  data-booking-validate, envoyés en XHR par data-booking-submit ; confirmations par
+  data-ploopi-confirm ; cases par ploopi_checkbox_zone ou par leur libellé ; messages
+  d'erreur du planning avec le nonce.
+* Paramètre booking_default_all_checked déclaré : le planning le lisait (toutes les
+  ressources cochées à la première visite) sans qu'il soit proposé, l'option était
+  inaccessible.
+* Paramètre booking_default_channels : la valeur « non » (0) était lue comme absente et
+  le planning s'ouvrait toujours en multi-colonnes.
+* Sous-ressources d'une réservation rendues côté serveur (booking_subresources_html) :
+  elles étaient construites en JavaScript à partir d'un JSON posé par un script en
+  ligne, et leur nom inséré en HTML sans échappement. En lecture seule, la fenêtre
+  affiche les sous-ressources réservées, et non toutes celles de la ressource.
+* Couleur d'une ressource : data-jscolor (le sélecteur était créé par un script en
+  ligne de la fenêtre).
+* Historique (frontoffice) : choix des dates par ploopi\date::open_calendar, sans
+  gestionnaire en ligne.
+* Liste des ressources du frontoffice : la case d'un type coche ou décoche toutes ses
+  ressources, comme en backoffice (elle ne faisait que cocher).
+* ploopi4 : calendrier en grille fluide (ploopi\calendar, rendu moderne du socle) et
+  « Ressources affichées » dans une colonne à côté, au lieu d'une fenêtre flottante qui
+  couvrait les derniers jours.
+* Semaine à plusieurs colonnes (ploopi4) : heure et objet des réservations, nom de la
+  ressource en tête de colonne (blocs sans texte dans le rendu historique).
+
+== Module BOOKING - version 1.3.14 ===================================================
+
+2026-10-11  Ovensia <stephane@ovensia.fr>
+
+* Planning : il s'arrêtait sur une erreur fatale dans l'image Docker (« Call to undefined function
+  ploopi\easter_date() ») : les jours fériés s'appuyaient sur l'extension PHP calendar, absente de
+  l'image. Pâques est désormais calculé par le socle (ploopi\date::easter()).
+* Demande de réservation : trois appels Prototype ($('id')) restaient dans la fenêtre de
+  consultation. Choisir une décision (Supprimer, Refuser, Valider) levait une erreur JavaScript au
+  lieu de colorer l'événement, et la date de fin n'était plus reprise de la date de début.
+
+== Module BOOKING - version 1.3.13 ===================================================
+
+2026-10-10  Ovensia <stephane@ovensia.fr>
+
+* Planning des réservations (backoffice) : taille « Auto », comme le module planning — largeur
+  mesurée par le navigateur (ploopi.skin.autowidth, js/skin.js) et transmise par booking_autowidth,
+  bornée entre 280 et 2400 px, fenêtre « Ressources affichées » déduite quand elle flotte au-dessus.
+  Taille par défaut sous ploopi4 ; ailleurs le défaut reste 800x500.
+* Taille demandée (booking_size) validée par booking_size() (include/global.php) : une valeur hors
+  de la liste revient au défaut. Le planning du frontoffice (wce_display.php) garde sa taille,
+  lue dans les paramètres du module.
+
+== Module BOOKING - version 1.3.12 ===================================================
+
+2026-10-10  Ovensia <stephane@ovensia.fr>
+
+* Habillage : les styles en ligne des écrans d'administration (bandeaux gris, barres de boutons,
+  cadres et filets) deviennent des classes, déclarées dans include/styles.css avec exactement le même
+  aspect ; le gabarit ploopi3 les redessine dans sa palette (tools/ploopi3_modules.php). Les écrans
+  servis au frontoffice (wce, template, display), où la feuille du module n'est pas chargée, gardent
+  leurs styles en ligne.
+
+== Module BOOKING - version 1.3.11 ===================================================
+
+2026-10-10  Ovensia <stephane@ovensia.fr>
+
+* Icônes : jeu unifié de l'administration (Tabler Icons, au trait, palette du gabarit ploopi3), sous
+  les mêmes noms et aux mêmes tailles ; le code qui les appelle ne change pas. Correspondances dans
+  tools/icones/modules.js, régénération par tools/icones/generer.js.
+* Sélecteurs de vue du planning (aujourd'hui, jour, semaine, mois) : la vue courante en couleur, les
+  autres en gris.
+
+== Module BOOKING - version 1.3.10 ===================================================
+
+2026-10-09  Ovensia <stephane@ovensia.fr>
+
+* Planning public : les messages de collision s'affichaient par Event.observe de
+  Prototype, retiré du socle ; ils passent par jQuery.
+
+* Ajout de sous-ressources à une réservation : insert() et each() de Prototype,
+  each() de jQuery mal employé (l'index au lieu de l'élément) ; nom de sous-ressource
+  inséré comme texte.
+
+== Module BOOKING - version 1.3.9 ====================================================
+
+2026-10-09  Ovensia <stephane@ovensia.fr>
+
+* Fichiers .gz resynchronisés avec leurs sources (ils dataient d'une minification antérieure).
+
+== Module BOOKING - version 1.3.8 ====================================================
+
+2026-10-08  Ovensia <stephane@ovensia.fr>
+
+* Compatibilité PHP 8.4 (PR #63) : le paramètre facultatif de
+  booking_event_detail::isvalid() est déclaré nullable (?booking_event).
+
+== Module BOOKING - version 1.3.7 ====================================================
+
+2026-10-06  Ovensia <stephane@ovensia.fr>
+
+* Planning : une ressource active rattachée à aucun espace gestionnaire faisait
+  échouer booking_get_resources() en PHP 8 (in_array() sur null), donc tout le
+  planning, en backoffice comme en frontoffice. Cas légitime : une ressource créée,
+  pas encore affectée.
+
+* Frontoffice : le planning public se navigue de nouveau. Les opérations
+  booking_refresh et booking_setresources, appelées en AJAX sans jeton, étaient
+  ignorées depuis le jeton anti-CSRF des opérations de module : le visiteur recevait
+  la page entière à la place du planning. Elles sont déclarées dans
+  include/publicops.php. Les opérations sur les demandes restent soumises au jeton.
+
+* Sécurité : ces opérations désormais publiques transmettaient à la base, sans
+  typage, les identifiants de ressources venus de la requête ou d'un cookie. Ils
+  sont typés en entiers dans booking_get_events().
+
+== Module BOOKING - version 1.3.6 ====================================================
+
+2026-10-06  Ovensia <stephane@ovensia.fr>
+
+* Securite : les operations appliquent les droits que l'interface affiche.
+
+  Aucune operation d'ecriture ne controlait les droits declares. Tout utilisateur
+  ayant acces au module pouvait, en appelant l'operation directement :
+  - creer, renommer, supprimer les types de ressources, les ressources et les
+    sous-ressources (actions 10 et 11) ;
+  - supprimer, deverrouiller ou valider les demandes de reservation d'autrui
+    (action 20).
+
+  Chaque operation exige desormais son action : gerer les types de ressources (10)
+  pour op_resourcetype, gerer les ressources (11) pour op_resource et op_subresource,
+  gerer les validations (20) pour la suppression, le deverrouillage et la validation
+  d'une demande. En frontoffice, le droit s'evalue sur l'instance visee.
+
+== Module BOOKING - version 1.3.5 ====================================================
+
+2026-09-17  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Correction d'une injection d'objet PHP : le cookie de filtre était désérialisé
+  sans restriction de classes
+
 == Module BOOKING - version 1.3.4 ====================================================
 
 2020-06-04  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

@@ -106,9 +106,9 @@ if ($newsRs->numrows()) {
 		}
 		
 		if (ploopi\acl::isactionallowed(tools::ACTION_DELETE)) {
-		    $arrActions[] = '<a title="Supprimer" href="javascript:ploopi.confirmlink(\''
+		    $arrActions[] = '<a title="Supprimer" data-ploopi-confirm="Êtes-vous certain de vouloir supprimer cette actualité ?" href="'
 			.ploopi\crypt::urlencode("admin.php?entity=admin&action=op_delete&id={$fields['id']}")
-			.'\',\'Êtes-vous certain de vouloir supprimer cette actualité ?\');">'
+			.'">'
 			.'<img alt="Supprimer" src="./modules/news2/img/ico_trash.png" /></a>';
 		}
 		

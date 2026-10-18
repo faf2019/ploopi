@@ -39,7 +39,7 @@ CREATE TABLE `ploopi_confirmation_code` (
 
 CREATE TABLE `ploopi_connecteduser` (
   `sid` char(32) NOT NULL DEFAULT '0',
-  `ip` char(15) DEFAULT NULL,
+  `ip` varchar(45) DEFAULT NULL,
   `domain` varchar(255) NOT NULL,
   `user_id` int(10) UNSIGNED DEFAULT '0',
   `workspace_id` int(10) DEFAULT NULL,
@@ -1086,7 +1086,7 @@ CREATE TABLE `ploopi_user_action_log` (
   `id_module_type` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `id_module` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `id_record` char(255) NOT NULL,
-  `ip` char(16) NOT NULL,
+  `ip` varchar(45) NOT NULL,
   `timestp` bigint(14) NOT NULL DEFAULT '0',
   `user` char(100) NOT NULL,
   `workspace` char(100) NOT NULL,
@@ -1132,8 +1132,8 @@ CREATE TABLE `ploopi_workspace` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 INSERT INTO `ploopi_workspace` (`id`, `id_workspace`, `label`, `code`, `system`, `protected`, `parents`, `iprules`, `macrules`, `template`, `depth`, `mustdefinerule`, `backoffice`, `frontoffice`, `backoffice_domainlist`, `title`, `meta_description`, `meta_keywords`, `meta_author`, `meta_copyright`, `meta_robots`, `frontoffice_domainlist`, `priority`) VALUES
-(2, 1, 'Espace Principal', '', 0, 0, '0;1', '', '', 'ploopi2', 2, 0, 1, 0, '*\r\n', '', '', '', '', '', '', '*', 1),
-(1, 0, 'system', '', 1, 0, '0', NULL, NULL, 'ploopi2', 1, 0, 1, 0, NULL, '', '', '', '', '', 'index, follow, all', '', 0);
+(2, 1, 'Espace Principal', '', 0, 0, '0;1', '', '', 'ploopi4', 2, 0, 1, 0, '*\r\n', '', '', '', '', '', '', '*', 1),
+(1, 0, 'system', '', 1, 0, '0', NULL, NULL, 'ploopi4', 1, 0, 1, 0, NULL, '', '', '', '', '', 'index, follow, all', '', 0);
 
 CREATE TABLE `ploopi_workspace_group` (
   `id_group` int(10) NOT NULL DEFAULT '0',
@@ -1577,7 +1577,7 @@ ALTER TABLE `ploopi_annotation` CHANGE `id_module_type` `id_module_type` int(10)
 UPDATE `ploopi_user_action_log` SET `id_record` = '' WHERE ISNULL(`id_record`);
 ALTER TABLE `ploopi_user_action_log` CHANGE `id_record` `id_record` char(255) NOT NULL DEFAULT ''  COMMENT '' ;
 UPDATE `ploopi_user_action_log` SET `ip` = '' WHERE ISNULL(`ip`);
-ALTER TABLE `ploopi_user_action_log` CHANGE `ip` `ip` char(16) NOT NULL DEFAULT ''  COMMENT '' ;
+ALTER TABLE `ploopi_user_action_log` CHANGE `ip` `ip` varchar(45) NOT NULL DEFAULT ''  COMMENT '' ;
 UPDATE `ploopi_user_action_log` SET `user` = '' WHERE ISNULL(`user`);
 ALTER TABLE `ploopi_user_action_log` CHANGE `user` `user` char(100) NOT NULL DEFAULT ''  COMMENT '' ;
 UPDATE `ploopi_user_action_log` SET `workspace` = '' WHERE ISNULL(`workspace`);
@@ -1635,7 +1635,7 @@ ALTER TABLE `ploopi_index_stem_element` CHANGE `id_element` `id_element` int(10)
 UPDATE `ploopi_index_stem_element` SET `stem` = '' WHERE ISNULL(`stem`);
 ALTER TABLE `ploopi_index_stem_element` CHANGE `stem` `stem` char(20) NOT NULL DEFAULT ''  COMMENT '' ;
 UPDATE `ploopi_connecteduser` SET `ip` = '' WHERE ISNULL(`ip`);
-ALTER TABLE `ploopi_connecteduser` CHANGE `ip` `ip` char(15) NOT NULL DEFAULT ''  COMMENT '' ;
+ALTER TABLE `ploopi_connecteduser` CHANGE `ip` `ip` varchar(45) NOT NULL DEFAULT ''  COMMENT '' ;
 UPDATE `ploopi_connecteduser` SET `domain` = '' WHERE ISNULL(`domain`);
 ALTER TABLE `ploopi_connecteduser` CHANGE `domain` `domain` varchar(255) NOT NULL DEFAULT ''  COMMENT '' ;
 UPDATE `ploopi_connecteduser` SET `user_id` = 0  WHERE ISNULL(`user_id`);
@@ -1915,4 +1915,21 @@ INSERT INTO `ploopi_param_choice` (`id_module_type`, `name`, `value`, `displayed
 
 ALTER TABLE `ploopi_documents_file` ADD `s3_bucket` TEXT NOT NULL DEFAULT '';
 
-UPDATE `ploopi_module_type` SET `version` = '1.10.1.0', `author` = 'Ovensia', `date` = '20260205000000', `description` = 'Noyau du système' WHERE `ploopi_module_type`.`id` = 1;
+UPDATE `ploopi_module_type` SET `version` = '1.10.2.0', `author` = 'Ovensia', `date` = '20261006000000', `description` = 'Noyau du système' WHERE `ploopi_module_type`.`id` = 1;
+
+INSERT INTO `ploopi_param_type` (`id_module_type`, `name`, `default_value`, `public`, `description`, `label`) VALUES
+(1, 'system_theme', 'auto', 1, 'Gabarits qui le gèrent (ploopi4) : thème clair, sombre, ou celui du système d''exploitation', 'Thème d''affichage'),
+(1, 'system_density', 'comfortable', 1, 'Gabarits qui la gèrent (ploopi4) : espacements et taille de texte', 'Densité d''affichage');
+INSERT INTO `ploopi_param_default` (`id_module`, `name`, `value`, `id_module_type`) VALUES
+(1, 'system_theme', 'auto', 1),
+(1, 'system_density', 'comfortable', 1);
+INSERT INTO `ploopi_param_choice` (`id_module_type`, `name`, `value`, `displayed_value`) VALUES
+(1, 'system_theme', 'auto', 'selon le système'),
+(1, 'system_theme', 'light', 'clair'),
+(1, 'system_theme', 'dark', 'sombre'),
+(1, 'system_density', 'comfortable', 'confortable'),
+(1, 'system_density', 'compact', 'compacte');
+UPDATE `ploopi_module_type` SET `version` = '1.10.3.0', `author` = 'Ovensia', `date` = '20261011000000', `description` = 'Noyau du système' WHERE `ploopi_module_type`.`id` = 1;
+
+-- 2.0.0
+UPDATE `ploopi_module_type` SET `version` = '2.0.0', `author` = 'Ovensia', `date` = '20261011000000', `description` = 'Noyau du système' WHERE `ploopi_module_type`.`id` = 1;

@@ -36,12 +36,89 @@
  * inclusions fonctions système (ploopi\system::kill...)
  */
 
+/**
+ * Renvoie les opérations qu'un module déclare publiques, c'est-à-dire dispensées du jeton
+ * anti-CSRF.
+ *
+ * La déclaration se fait dans modules/<module>/include/publicops.php, qui retourne un
+ * tableau de noms d'opérations. Un module sans ce fichier n'a aucune opération publique.
+ *
+ * @param string $strModuleType nom du type de module
+ * @return array noms des opérations publiques
+ *
+ * @copyright Ovensia
+ * @license GNU General Public License (GPL)
+ * @author Ovensia
+ */
+
+function ploopi_op_getpublicops($strModuleType)
+{
+    static $arrCache = array();
+
+    if (isset($arrCache[$strModuleType])) return $arrCache[$strModuleType];
+
+    $arrPublicOps = array();
+    $strFichier = "./modules/{$strModuleType}/include/publicops.php";
+
+    if (file_exists($strFichier))
+    {
+        $mixDeclaration = include $strFichier;
+        if (is_array($mixDeclaration)) $arrPublicOps = $mixDeclaration;
+    }
+
+    return $arrCache[$strModuleType] = $arrPublicOps;
+}
+
 if (isset($_REQUEST['ploopi_op']))
 {
     $ploopi_op = $_REQUEST['ploopi_op'];
 
     switch($ploopi_op)
     {
+        /**
+         * Point de collecte des rapports de violation de la CSP en Report-Only
+         * (lot 11, décision D6). Le navigateur y POSTe ses rapports sans session
+         * ni jeton : le corps est lu brut, un exemplaire lisible est journalisé,
+         * et rien d'autre n'est exposé — l'opération ne lit pas la session.
+         */
+        case 'ploopi_csp_report':
+            $strRapport = file_get_contents('php://input');
+            if ($strRapport !== '' && strlen($strRapport) < 65536)
+            {
+                // Le rapport du navigateur est un document JSON : en extraire
+                // l'essentiel pour un journal lisible, conserver le reste tel quel.
+                $arrRapport = json_decode($strRapport, true);
+                $arrRapport = isset($arrRapport['csp-report']) && is_array($arrRapport['csp-report']) ? $arrRapport['csp-report'] : array();
+
+                /**
+                 * Le point de collecte est anonyme : chaque champ est une chaîne
+                 * quelconque. On n'en garde que du texte sur une ligne, borné —
+                 * un saut de ligne fabriquerait une fausse entrée de journal.
+                 */
+                $champ = function($strCle, $strDefaut) use ($arrRapport) {
+                    if (!isset($arrRapport[$strCle]) || !is_scalar($arrRapport[$strCle])) return $strDefaut;
+                    $strValeur = preg_replace('/[\x00-\x1F\x7F]+/', ' ', (string)$arrRapport[$strCle]);
+                    return mb_strlen($strValeur) > 255 ? mb_substr($strValeur, 0, 255).'…' : $strValeur;
+                };
+
+                $strDocument = $champ('document-uri', '?');
+                $strDirective = $champ('violated-directive', '?');
+                $strBloc = $champ('source-file', '');
+                $intLigne = isset($arrRapport['line-number']) && is_scalar($arrRapport['line-number']) ? (int)$arrRapport['line-number'] : 0;
+                // disposition « enforce » : la politique appliquée a bloqué (§ 3.32), sinon simple mesure
+                $strPolitique = $champ('disposition', 'report') == 'enforce' ? 'CSP bloquante' : 'CSP Report-Only';
+                $strMessage = "{$strPolitique} : {$strDirective} sur {$strDocument}".($strBloc !== '' ? " ({$strBloc} ligne {$intLigne})" : '');
+                ploopi\error::syslog(LOG_INFO, $strMessage);
+                // Journal fichier de l'instance : le rapport doit y être mesurable
+                // sans accès au syslog du serveur.
+                if (defined('_PLOOPI_LOG_ERRORS') && _PLOOPI_LOG_ERRORS && defined('_PLOOPI_LOG_ERRORS_FILE') && _PLOOPI_LOG_ERRORS_FILE != '')
+                {
+                    file_put_contents(_PLOOPI_LOG_ERRORS_FILE, "=============================================\n{$strMessage}\n", FILE_APPEND);
+                }
+            }
+            ploopi\system::kill();
+        break;
+
         case 'ploopi_robots':
 
             // Mise en cache
@@ -56,7 +133,6 @@ if (isset($_REQUEST['ploopi_op']))
                         '/config/',
                         '/data/',
                         '/doc/',
-                        '/FCKeditor/',
                         '/img/',
                         '/include/',
                         '/install/',
@@ -87,6 +163,10 @@ if (isset($_REQUEST['ploopi_op']))
         case 'ploopi_lostpassword_confirm':
 
             if (!isset($_REQUEST['ploopi_lostpassword_login']) && !isset($_REQUEST['ploopi_lostpassword_email'])) ploopi\system::kill();
+
+            // Adresse et nom du site pour les courriels : jamais l'entête Host (system::publicurl)
+            $strAdresse = ploopi\system::publicurl();
+            $strSite = $strAdresse === false ? '' : (string)parse_url($strAdresse, PHP_URL_HOST);
 
             $arrWhere = array();
             if (!empty($_REQUEST['ploopi_lostpassword_login'])) $arrWhere[] = "login = '".ploopi\db::get()->addslashes($_REQUEST['ploopi_lostpassword_login'])."'";
@@ -128,8 +208,21 @@ if (isset($_REQUEST['ploopi_op']))
                                     $confirmation_code = new ploopi\confirmation_code();
 
                                     // si action en cours avec le bon code de confirmation
-                                    if ($confirmation_code->open("ploopi_lostpassword{$objUser->fields['id']}") && $confirmation_code->fields['code'] == $_GET['ploopi_lostpassword_confirmcode'])
+                                    if ($confirmation_code->open("ploopi_lostpassword{$objUser->fields['id']}") && hash_equals((string)$confirmation_code->fields['code'], (string)$_GET['ploopi_lostpassword_confirmcode']))
                                     {
+                                        /**
+                                         * Le code n'expirait jamais : un lien de confirmation resté
+                                         * dans une boîte aux lettres valait indéfiniment. Il n'est
+                                         * accepté que pendant _PLOOPI_LOSTPASSWORD_DELAY secondes
+                                         * (une heure par défaut), puis supprimé.
+                                         */
+                                        $intDelai = defined('_PLOOPI_LOSTPASSWORD_DELAY') ? (int)_PLOOPI_LOSTPASSWORD_DELAY : 3600;
+                                        if (ploopi\date::timestamp2unixtimestamp($confirmation_code->fields['timestp']) < time() - $intDelai)
+                                        {
+                                            $confirmation_code->delete();
+                                            $_SESSION['ploopi']['errorcode'] = _PLOOPI_ERROR_LOSTPASSWORD_EXPIRED;
+                                            ploopi\output::redirect('admin.php');
+                                        }
 
                                         // ok on peut générer le nouveau mot de passe et l'enregistrer
                                         $strPass = ploopi\security::generatepassword();
@@ -141,7 +234,7 @@ if (isset($_REQUEST['ploopi_op']))
                                         ploopi\mail::send(
                                             array(
                                                 array(
-                                                        'name' => $_SERVER['HTTP_HOST'],
+                                                        'name' => $strSite,
                                                         'address' => trim(current(explode(',', _PLOOPI_ADMINMAIL)))
                                                 )
                                             ),
@@ -151,8 +244,8 @@ if (isset($_REQUEST['ploopi_op']))
                                                     'address' => $row['email']
                                                 )
                                             ),
-                                            "{$_SERVER['HTTP_HOST']} : modification de votre mot de passe",
-                                            "Bonjour,\n\nvous recevez ce message car vous avez effectué une demande de mot de passe sur le site {$_SERVER['HTTP_HOST']}.\n\nVotre nouveau mot de passe est le suivant :\n\n{$strPass}",
+                                            "{$strSite} : modification de votre mot de passe",
+                                            "Bonjour,\n\nvous recevez ce message car vous avez effectué une demande de mot de passe sur le site {$strSite}.\n\nVotre nouveau mot de passe est le suivant :\n\n{$strPass}",
                                             null,
                                             null,
                                             null,
@@ -164,6 +257,12 @@ if (isset($_REQUEST['ploopi_op']))
                                         $intMsg = _PLOOPI_MSG_PASSWORDSENT;
                                     }
                                 }
+                            }
+                            elseif ($strAdresse === false)
+                            {
+                                // Aucune adresse sûre pour le lien : voir system::publicurl()
+                                ploopi\error::syslog(LOG_WARNING, "Mot de passe oublié : hôte '{$_SERVER['HTTP_HOST']}' non déclaré, aucun lien envoyé. Renseigner _PLOOPI_PUBLIC_URL dans config/config.php");
+                                $intError = _PLOOPI_ERROR_LOSTPASSWORD_UNAVAILABLE;
                             }
                             else
                             {
@@ -183,7 +282,7 @@ if (isset($_REQUEST['ploopi_op']))
                                 ploopi\mail::send(
                                     array(
                                         array(
-                                                'name' => $_SERVER['HTTP_HOST'],
+                                                'name' => $strSite,
                                                 'address' => trim(current(explode(',', _PLOOPI_ADMINMAIL)))
                                         )
                                     ),
@@ -193,8 +292,8 @@ if (isset($_REQUEST['ploopi_op']))
                                             'address' => $row['email']
                                         )
                                     ),
-                                    "{$_SERVER['HTTP_HOST']} : modification de votre mot de passe",
-                                    "Bonjour,\n\nvous recevez ce message car vous avez effectué une demande de mot de passe sur le site {$_SERVER['HTTP_HOST']}.\n\nVous devez confirmer cette demande en cliquant sur le lien suivant:\n\n"._PLOOPI_BASEPATH."/".ploopi\crypt::urlencode("admin.php?ploopi_op=ploopi_lostpassword_confirm&ploopi_lostpassword_login={$_REQUEST['ploopi_lostpassword_login']}&ploopi_lostpassword_email={$_REQUEST['ploopi_lostpassword_email']}&ploopi_lostpassword_confirmcode={$confirmation_code->fields['code']}"),
+                                    "{$strSite} : modification de votre mot de passe",
+                                    "Bonjour,\n\nvous recevez ce message car vous avez effectué une demande de mot de passe sur le site {$strSite}.\n\nVous devez confirmer cette demande en cliquant sur le lien suivant:\n\n".$strAdresse."/".ploopi\crypt::urlencode("admin.php?ploopi_op=ploopi_lostpassword_confirm&ploopi_lostpassword_login=".urlencode((string)$_REQUEST['ploopi_lostpassword_login'])."&ploopi_lostpassword_email=".urlencode((string)$_REQUEST['ploopi_lostpassword_email'])."&ploopi_lostpassword_confirmcode={$confirmation_code->fields['code']}"),
                                     null,
                                     null,
                                     null,
@@ -226,7 +325,12 @@ if (isset($_REQUEST['ploopi_op']))
             $month = date('n');
             $year = date('Y');
 
-            if (!empty($_REQUEST['inputfield_id'])) $_SESSION['calendar']['inputfield_id'] = $_REQUEST['inputfield_id'];
+            if (!empty($_REQUEST['inputfield_id']))
+            {
+                // Identifiant recopié dans le JavaScript de chaque jour : un identifiant simple, rien d'autre
+                if (!preg_match('/^[A-Za-z_][A-Za-z0-9_-]*$/', $_REQUEST['inputfield_id'])) ploopi\system::kill();
+                $_SESSION['calendar']['inputfield_id'] = $_REQUEST['inputfield_id'];
+            }
 
             if (empty($_SESSION['calendar']['inputfield_id'])) ploopi\system::kill();
 
@@ -306,19 +410,32 @@ if (isset($_REQUEST['ploopi_op']))
             else $strIconsPath = '.';
 
             $strScript = $_SESSION['ploopi']['mode'] == 'backoffice' ? 'admin' : 'index';
+            $booP4 = $_SESSION['ploopi']['mode'] == 'backoffice' && ploopi\skin::get()->version() >= 4;
             ?>
-            <div id="calendar">
+            <div id="calendar" data-ploopi-calendar-field="<?php echo ploopi\str::htmlentities($_SESSION['calendar']['inputfield_id']); ?>">
                 <div class="calendar_row">
+                    <?php
+                    /**
+                     * Flèches de navigation : icônes du sprite et libellé sous ploopi4,
+                     * images du gabarit ailleurs
+                     */
+                    $funcFleche = function($intMois, $intAnnee, $strImage, $strIcone, $strLabel) use ($strScript, $strIconsPath, $booP4) {
+                        // Chargement dans la fenêtre par js/actions.js (aucun gestionnaire en ligne, CSP)
+                        $strAttrs = ' data-ploopi-todiv="ploopi_popup_calendar" data-ploopi-script="'.$strScript.'-light.php" data-ploopi-query="'.ploopi\str::htmlentities(ploopi\crypt::queryencode("ploopi_op=calendar_open&calendar_month={$intMois}&calendar_year={$intAnnee}")).'"';
+                        if ($booP4) return '<a href="#" class="calendar_nav" aria-label="'.ploopi\str::htmlentities($strLabel).'" title="'.ploopi\str::htmlentities($strLabel).'"'.$strAttrs.'>'.ploopi\skin::get()->icon($strIcone).'</a>';
+                        return '<a href="#"'.$strAttrs.'><img style="border:0;" src="'.$strIconsPath.'/img/calendar/'.$strImage.'.png"></a>';
+                    };
+                    ?>
                     <div class="calendar_arrow" style="float:right;">
-                        <a href="javascript:void(0);" onclick="javascript:ploopi.xhr.todiv('<?php echo $strScript; ?>-light.php', '<?php echo ploopi\crypt::queryencode("ploopi_op=calendar_open&calendar_month={$next_month}&calendar_year={$next_year}"); ?>', 'ploopi_popup_calendar');"><img style="border:0;" src="<?php echo $strIconsPath; ?>/img/calendar/next.png"></a>
-                        <a href="javascript:void(0);" onclick="javascript:ploopi.xhr.todiv('<?php echo $strScript; ?>-light.php', '<?php echo ploopi\crypt::queryencode("ploopi_op=calendar_open&calendar_month={$month}&calendar_year=".($year+1)); ?>', 'ploopi_popup_calendar');"><img style="border:0;" src="<?php echo $strIconsPath; ?>/img/calendar/nextx2.png"></a>
+                        <?php echo $funcFleche($next_month, $next_year, 'next', 'chevron-right', _PLOOPI_LABEL_CALENDAR_NEXTMONTH); ?>
+                        <?php echo $funcFleche($month, $year + 1, 'nextx2', 'chevrons-right', _PLOOPI_LABEL_CALENDAR_NEXTYEAR); ?>
                     </div>
                     <div class="calendar_arrow" style="float:left;">
-                        <a href="javascript:void(0);" onclick="javascript:ploopi.xhr.todiv('<?php echo $strScript; ?>-light.php', '<?php echo ploopi\crypt::queryencode("ploopi_op=calendar_open&calendar_month={$month}&calendar_year=".($year-1)); ?>', 'ploopi_popup_calendar');"><img style="border:0;" src="<?php echo $strIconsPath; ?>/img/calendar/prevx2.png"></a>
-                        <a href="javascript:void(0);" onclick="javascript:ploopi.xhr.todiv('<?php echo $strScript; ?>-light.php', '<?php echo ploopi\crypt::queryencode("ploopi_op=calendar_open&calendar_month={$prev_month}&calendar_year={$prev_year}"); ?>', 'ploopi_popup_calendar');"><img style="border:0;" src="<?php echo $strIconsPath; ?>/img/calendar/prev.png"></a>
+                        <?php echo $funcFleche($month, $year - 1, 'prevx2', 'chevrons-left', _PLOOPI_LABEL_CALENDAR_PREVYEAR); ?>
+                        <?php echo $funcFleche($prev_month, $prev_year, 'prev', 'chevron-left', _PLOOPI_LABEL_CALENDAR_PREVMONTH); ?>
                     </div>
                     <div class="calendar_month">
-                        <?php echo "{$ploopi_months[$month]}<br />{$year}"; ?>
+                        <?php echo $booP4 ? "{$ploopi_months[$month]} {$year}" : "{$ploopi_months[$month]}<br />{$year}"; ?>
                     </div>
                 </div>
                 <div class="calendar_row">
@@ -350,7 +467,7 @@ if (isset($_REQUEST['ploopi_op']))
                         $localdate = ploopi\date::timestamp2local($ts);
                         $d = intval(substr($ts, 6, 2), 10);
                         ?>
-                        <div class="calendar_day"><a class="calendar_outmonth" href="javascript:void(0);" onclick="javascript:jQuery('#<?php echo ploopi\str::htmlentities($_SESSION['calendar']['inputfield_id']); ?>').val('<?php echo ploopi\str::htmlentities($localdate['date']); ?>');ploopi.popup.hide('ploopi_popup_calendar');ploopi.event.dispatch_onchange('<?php echo ploopi\str::htmlentities($_SESSION['calendar']['inputfield_id']); ?>');"><?php echo $d; ?></a></div>
+                        <div class="calendar_day"><a class="calendar_outmonth" href="#" data-ploopi-calendar-day="<?php echo ploopi\str::htmlentities($localdate['date']); ?>"><?php echo $d; ?></a></div>
                         <?php
                     }
                 }
@@ -379,7 +496,7 @@ if (isset($_REQUEST['ploopi_op']))
                     if ($currentday == $selectedday) $class = 'class="calendar_day_selected"';
                     elseif ($currentday == $today) $class = 'class="calendar_day_today"';
                     ?>
-                        <div class="calendar_day"><a <?php echo $class; ?> href="javascript:void(0);" onclick="javascript:jQuery('#<?php echo ploopi\str::htmlentities($_SESSION['calendar']['inputfield_id']); ?>').val('<?php echo ploopi\str::htmlentities($localdate['date']); ?>');ploopi.popup.hide('ploopi_popup_calendar');ploopi.event.dispatch_onchange('<?php echo ploopi\str::htmlentities($_SESSION['calendar']['inputfield_id']); ?>');"><?php echo $d; ?></a></div>
+                        <div class="calendar_day"><a <?php echo $class; ?> href="#" data-ploopi-calendar-day="<?php echo ploopi\str::htmlentities($localdate['date']); ?>"><?php echo $d; ?></a></div>
                     <?php
 
                     /**
@@ -402,7 +519,7 @@ if (isset($_REQUEST['ploopi_op']))
                         $localdate = ploopi\date::timestamp2local($ts);
                         $d = intval(substr($ts, 6, 2), 10);
                         ?>
-                        <div class="calendar_day"><a class="calendar_outmonth" href="javascript:void(0);" onclick="javascript:jQuery('#<?php echo ploopi\str::htmlentities($_SESSION['calendar']['inputfield_id']); ?>').val('<?php echo ploopi\str::htmlentities($localdate['date']); ?>');ploopi.popup.hide('ploopi_popup_calendar');ploopi.event.dispatch_onchange('<?php echo ploopi\str::htmlentities($_SESSION['calendar']['inputfield_id']); ?>');"><?php echo $d; ?></a></div>
+                        <div class="calendar_day"><a class="calendar_outmonth" href="#" data-ploopi-calendar-day="<?php echo ploopi\str::htmlentities($localdate['date']); ?>"><?php echo $d; ?></a></div>
                         <?php
                     }
 
@@ -412,16 +529,16 @@ if (isset($_REQUEST['ploopi_op']))
 
                 $localdate = ploopi\date::timestamp2local(sprintf("%04d%02d%02d000000", date('Y'), date('n'), date('j')));
                 ?>
-                <div class="calendar_row" style="height:1.2em;overflow:hidden;">
-                    <a style="display:block;float:left;line-height:1.2em;height:1.2em;" href="javascript:void(0);" onclick="javascript:jQuery('#<?php echo ploopi\str::htmlentities($_SESSION['calendar']['inputfield_id']); ?>').val('<?php echo ploopi\str::htmlentities($localdate['date']); ?>');ploopi.popup.hide('ploopi_popup_calendar');ploopi.event.dispatch_onchange('<?php echo ploopi\str::htmlentities($_SESSION['calendar']['inputfield_id']); ?>');">Aujourd'hui</a>
-                    <a style="display:block;float:right;line-height:1.2em;height:1.2em;" href="javascript:void(0);" onclick="javascript:ploopi.popup.hide('ploopi_popup_calendar');">Fermer</a>
+                <div class="calendar_row calendar_foot" style="height:1.2em;overflow:hidden;">
+                    <a style="display:block;float:left;line-height:1.2em;height:1.2em;" href="#" data-ploopi-calendar-day="<?php echo ploopi\str::htmlentities($localdate['date']); ?>"><?php echo ploopi\str::htmlentities(_PLOOPI_LABEL_CALENDAR_TODAY); ?></a>
+                    <a style="display:block;float:right;line-height:1.2em;height:1.2em;" href="#" data-ploopi-popup-hide="ploopi_popup_calendar"><?php echo ploopi\str::htmlentities(_PLOOPI_LABEL_CALENDAR_CLOSE); ?></a>
                 </div>
             </div>
             <?php
             $content = ob_get_contents();
             ob_end_clean();
 
-            echo ploopi\skin::get()->create_popup("Choix d'une date", $content, 'ploopi_popup_calendar');
+            echo ploopi\skin::get()->create_popup(_PLOOPI_LABEL_CALENDAR_TITLE, $content, 'ploopi_popup_calendar');
             ploopi\system::kill();
         break;
 
@@ -437,16 +554,39 @@ if (isset($_REQUEST['ploopi_op']))
         break;
     }
 
+    /**
+     * Un visiteur non connecté n'a jamais de jeton : seules les opérations publiques des
+     * modules lui sont accessibles.
+     */
+    $booTokenValide = false;
+
     if ($_SESSION['ploopi']['connected'])
     {
-        include_once './include/op/annotation.php';
-        include_once './include/op/documents.php';
-        include_once './include/op/filexplorer.php';
-        include_once './include/op/share.php';
-        include_once './include/op/subscription.php';
-        include_once './include/op/validation.php';
-        include_once './include/op/tickets.php';
-        include_once './modules/system/op.php';
+        /**
+         * Les opérations du socle et du module "system" modifient des données sensibles
+         * (documents, tickets, partages, comptes utilisateurs...) : elles exigent un jeton
+         * anti-CSRF valide.
+         *
+         * admin.php et admin-light.php passent par loader::start() qui a déjà validé le jeton,
+         * mais index-quick.php court-circuite start() : sans ce contrôle, ces opérations sont
+         * exécutables depuis un site tiers avec la session de la victime.
+         *
+         * @see ploopi\loader::checktoken
+         */
+        $booTokenValide = ploopi\loader::checktoken();
+
+        if ($booTokenValide)
+        {
+            include_once './include/op/annotation.php';
+            include_once './include/op/documents.php';
+            include_once './include/op/filexplorer.php';
+            include_once './include/op/share.php';
+            include_once './include/op/subscription.php';
+            include_once './include/op/validation.php';
+            include_once './include/op/tickets.php';
+            include_once './modules/system/op.php';
+        }
+        else ploopi\error::syslog(LOG_INFO, "Jeton absent ou non valide, opération '{$ploopi_op}' ignorée");
 
         switch($ploopi_op)
         {
@@ -586,6 +726,7 @@ if (isset($_REQUEST['ploopi_op']))
                 $template_body->assign_vars(array(
                     'TEMPLATE_PATH'         => $_SESSION['ploopi']['template_path'],
                     'ADDITIONAL_JAVASCRIPT' => $ploopi_additional_javascript,
+                    'CSP_NONCE'             => ploopi\csp::nonce(),
                     'PAGE_CONTENT'          => $main_content
                     )
                 );
@@ -635,7 +776,6 @@ if (isset($_REQUEST['ploopi_op']))
 
     }
 
-    //echo $_SESSION['ploopi']['workspaceid'];
     if (isset($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['modules']))
     {
         foreach($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['modules'] as $idm)
@@ -644,8 +784,32 @@ if (isset($_REQUEST['ploopi_op']))
             {
                 if ($_SESSION['ploopi']['modules'][$idm]['active'])
                 {
-                    $ploopi_mod_opfile = "./modules/{$_SESSION['ploopi']['modules'][$idm]['moduletype']}/op.php";
-                    if (file_exists($ploopi_mod_opfile)) include_once $ploopi_mod_opfile;
+                    $strModuleType = $_SESSION['ploopi']['modules'][$idm]['moduletype'];
+                    $ploopi_mod_opfile = "./modules/{$strModuleType}/op.php";
+
+                    if (file_exists($ploopi_mod_opfile))
+                    {
+                        /**
+                         * Les opérations d'un module exigent, comme celles du socle, un jeton
+                         * anti-CSRF valide : index-quick.php court-circuite loader::start(),
+                         * qui est l'endroit où le jeton était vérifié.
+                         *
+                         * Un module peut déclarer les opérations qui échappent à ce contrôle
+                         * dans modules/<module>/include/publicops.php, fichier retournant un
+                         * tableau de noms d'opérations. N'y déclarer que des opérations sans
+                         * effet de bord, appelées par des URL qui ne portent pas de jeton :
+                         * vignettes, téléchargements liés depuis une page publique.
+                         *
+                         * @see ploopi\loader::checktoken
+                         */
+                        if (!$booTokenValide && !in_array($ploopi_op, ploopi_op_getpublicops($strModuleType), true))
+                        {
+                            ploopi\error::syslog(LOG_INFO, "Jeton absent ou non valide, opération '{$ploopi_op}' du module {$strModuleType} ignorée");
+                            continue;
+                        }
+
+                        include_once $ploopi_mod_opfile;
+                    }
                 }
             }
         }

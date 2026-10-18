@@ -447,4 +447,53 @@ abstract class dbreport {
         return $arrIndexes;
     }
 
+
+    /**
+     * Avant l'insertion d'un enregistrement : colonnes non renseignées complétées par leur
+     * valeur par défaut (data_object::init_description). Sans cela, en SQL strict (défaut
+     * de MariaDB), l'INSERT d'une requête, d'un champ, d'une table ou d'une relation
+     * échouait sur la première colonne NOT NULL sans défaut, sans message à l'écran.
+     *
+     * @param ploopi\data_object $objRecord enregistrement
+     */
+    public static function defaults($objRecord)
+    {
+        if (!$objRecord->isnew()) return;
+
+        $arrFields = $objRecord->fields;
+        $objRecord->init_description();
+        $objRecord->fields = array_merge($objRecord->fields, $arrFields);
+    }
+
+    /**
+     * Attributs d'un élément qui appelle une action de include/functions.js
+     * (ploopi.actions, js/actions.js du socle) : aucun gestionnaire en ligne, CSP stricte
+     *
+     * @param string $strAction nom de l'action (ploopi.actions.<nom>)
+     * @param array $arrArgs arguments transmis à l'action
+     * @return string attributs HTML, échappés
+     */
+    public static function action($strAction, $arrArgs = array())
+    {
+        return 'data-ploopi-action="'.ploopi\str::htmlentities($strAction).'"'
+            .(empty($arrArgs) ? '' : ' data-ploopi-args="'.ploopi\str::htmlentities(json_encode(array_values($arrArgs), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)).'"');
+    }
+
+    /**
+     * Attributs d'un lien ou d'un bouton qui ouvre le graphique d'une requête
+     *
+     * @param int $intQueryId requête
+     * @param int $intWidth largeur du graphique
+     * @param int $intHeight hauteur du graphique
+     * @return string attributs HTML
+     */
+    public static function chartwin($intQueryId, $intWidth, $intHeight)
+    {
+        return self::action('dbreport_openwin', array(
+            ploopi\crypt::urlencode('admin-light.php?ploopi_op=dbreport_chart_generate&dbreport_query_id='.intval($intQueryId)),
+            intval($intWidth) + 20,
+            intval($intHeight) + 30
+        ));
+    }
+
 }

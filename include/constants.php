@@ -30,8 +30,8 @@
  * @author Ovensia
  */
 
-define ('_PLOOPI_VERSION', '1.10.0.0');
-define ('_PLOOPI_REVISION', '240513');
+define ('_PLOOPI_VERSION', '2.0.0');
+define ('_PLOOPI_REVISION', '261011');
 
 define ('_SYSTEM_SYSTEMADMIN',  0);
 define ('_SYSTEM_WORKSPACES',   'work');
@@ -53,6 +53,8 @@ define ('_PLOOPI_ERROR_LOSTPASSWORD_UNKNOWN',  11);
 define ('_PLOOPI_ERROR_LOSTPASSWORD_INVALID',  12);
 define ('_PLOOPI_ERROR_LOSTPASSWORD_MANYRESPONSES',  13);
 define ('_PLOOPI_ERROR_ACCOUNTJAILED',  14);
+define ('_PLOOPI_ERROR_LOSTPASSWORD_EXPIRED',  15);
+define ('_PLOOPI_ERROR_LOSTPASSWORD_UNAVAILABLE',  16);
 
 
 define ('_PLOOPI_MSG_MAILSENT',             1);

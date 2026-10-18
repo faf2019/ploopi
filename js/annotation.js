@@ -93,7 +93,7 @@ ploopi.annotations.tag_init = function(id_annotation) {
 ploopi.annotations.tag_search = function(id_annotation, search) {
     clearTimeout(ploopi.annotations.tag_timer);
     ploopi.annotations.search = search;
-    ploopi.annotations.tag_timer = setTimeout("ploopi.annotations.tag_searchtimeout('"+id_annotation+"')", 100);
+    ploopi.annotations.tag_timer = setTimeout(function() { ploopi.annotations.tag_searchtimeout(id_annotation); }, 100);
 };
 
 ploopi.annotations.tag_searchtimeout = function(id_annotation) {
@@ -120,11 +120,11 @@ ploopi.annotations.tag_display = function(result,ticket) {
             ploopi.annotations.tag_results[i] = detail[0];
         }
 
-        $('tagsfound_'+ticket).innerHTML = tagstoprint;
+        document.getElementById('tagsfound_'+ticket).innerHTML = tagstoprint;
     }
     else
     {
-        $('tagsfound_'+ticket).innerHTML = '';
+        document.getElementById('tagsfound_'+ticket).innerHTML = '';
         ploopi.annotations.tag_results = new Array();
     }
 };
@@ -172,8 +172,8 @@ ploopi.annotations.tag_complete = function(idrecord, idtag) {
             taglist += ploopi.annotations.tag_new_array[i]
         }
 
-        $('ploopi_annotationtags_'+idrecord).value = taglist.replace(/(^\s*)|(\s*$)/g,'')+' ';
-        $('tagsfound_'+idrecord).innerHTML = '';
+        document.getElementById('ploopi_annotationtags_'+idrecord).value = taglist.replace(/(^\s*)|(\s*$)/g,'')+' ';
+        document.getElementById('tagsfound_'+idrecord).innerHTML = '';
     }
 
     ploopi.annotations.tag_results = new Array();
@@ -185,7 +185,94 @@ ploopi.annotations.remove = function(id_annotation, id) {
 };
 
 ploopi.annotations.validate = function(form) {
-    if (ploopi.validatefield('Titre', form.ploopi_annotationtags, "string")) return true;
+    // Le texte est requis ; les étiquettes sont facultatives (l'ancien contrôle les exigeait,
+    // sous le libellé « Titre »)
+    if (ploopi.validatefield('Commentaire', form.ploopi_annotation_content, "string")) return true;
 
     return false;
 };
+
+/**
+ * Bloc d'annotations du gabarit ploopi4 (annotation::display_p4) : attributs
+ * data-p4-anno-*, délégation sur le document, sans gestionnaire en ligne
+ */
+(function() {
+    function bloc(el) {
+        var section = el.closest('[data-p4-anno]');
+        return section ? section.getAttribute('data-p4-anno') : null;
+    }
+
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest) return;
+        var el;
+
+        // Déplier, replier (l'état est gardé en session)
+        if ((el = e.target.closest('[data-p4-anno-toggle]'))) {
+            var id = bloc(el);
+            var body = document.getElementById('annotation_list_' + id);
+            if (!body) return;
+            var open = body.hidden;
+            body.hidden = !open;
+            el.setAttribute('aria-expanded', open ? 'true' : 'false');
+            ploopi.xhr.send('admin-light.php', 'ploopi_env=' + _PLOOPI_ENV + '&ploopi_op=annotation_show&object_id=' + encodeURIComponent(id));
+            if (open) {
+                var champ = body.querySelector('textarea');
+                if (champ) champ.focus();
+            }
+            return;
+        }
+
+        // Supprimer une annotation (la sienne)
+        if ((el = e.target.closest('[data-p4-anno-delete]'))) {
+            if (!confirm('Êtes vous certain de vouloir supprimer cette annotation ?')) return;
+            ploopi.xhr.send('index-quick.php', 'ploopi_env=' + _PLOOPI_ENV + '&ploopi_op=annotation_delete&ploopi_annotation_id=' + encodeURIComponent(el.getAttribute('data-p4-anno-delete')));
+            ploopi.annotations.display(bloc(el));
+            return;
+        }
+
+        // Fermer la fenêtre des annotations d'une étiquette
+        if ((el = e.target.closest('[data-p4-anno-close]'))) {
+            var popup = el.closest('.ploopi_popup');
+            ploopi.popup.hide(popup ? popup.id : null);
+            return;
+        }
+
+        // Autres annotations portant une étiquette
+        if ((el = e.target.closest('[data-p4-anno-tag]'))) {
+            ploopi.popup.show('', 420, e, 'click');
+            ploopi.xhr.todiv('admin-light.php', 'ploopi_env=' + _PLOOPI_ENV + '&ploopi_op=annotation_taghistory&id_tag=' + encodeURIComponent(el.getAttribute('data-p4-anno-tag')), 'ploopi_popup');
+        }
+    });
+
+    // Suggestions d'étiquettes : branchées au premier passage dans le champ
+    document.addEventListener('focusin', function(e) {
+        var el = e.target;
+        if (!el.matches || !el.matches('[data-p4-anno-tags]') || el.getAttribute('data-p4-anno-ready')) return;
+        el.setAttribute('data-p4-anno-ready', '1');
+        ploopi.annotations.tag_init(bloc(el));
+    });
+
+    // Le texte est requis : message dans le bloc plutôt qu'une alerte
+    document.addEventListener('submit', function(e) {
+        var form = e.target;
+        if (!form.matches || !form.matches('[data-p4-anno-form]')) return;
+        var champ = form.elements['ploopi_annotation_content'];
+        var erreur = form.querySelector('.p4-anno-error');
+        var vide = !champ || champ.value.replace(/\s+/g, '') === '';
+        if (erreur) erreur.hidden = !vide;
+        if (champ) champ.setAttribute('aria-invalid', vide ? 'true' : 'false');
+        if (vide) {
+            e.preventDefault();
+            if (champ) champ.focus();
+        }
+    }, true);
+
+    document.addEventListener('reset', function(e) {
+        var form = e.target;
+        if (!form.matches || !form.matches('[data-p4-anno-form]')) return;
+        var erreur = form.querySelector('.p4-anno-error');
+        if (erreur) erreur.hidden = true;
+        var suggest = form.querySelector('.p4-anno-suggest');
+        if (suggest) suggest.innerHTML = '';
+    }, true);
+})();

@@ -36,7 +36,7 @@
  */
 
 // webedit_mode : edit / render / display => mode édition / rendu backoffice / affichage frontoffice
-// readonly : true / false => article modifiable oui/non (charge fckeditor si false)
+// readonly : true / false => article modifiable oui/non (charge l'éditeur si false)
 // type : draft / online => type du document : brouillon / en ligne
 
 /**
@@ -228,7 +228,23 @@ else // affichage standard rubrique/page ou blog
             if ($webedit_mode != 'edit')
             {
                 $article = new webedit_article($type);
-                if (!$article->open($articleid) || empty($arrHeadings['list'][$headingid]))
+
+                /**
+                 * L'article doit appartenir à la rubrique demandée. Sans ce contrôle, la
+                 * rubrique de l'URL n'était que décorative : il suffisait d'associer
+                 * l'identifiant d'un article de rubrique PRIVÉE à celui d'une rubrique
+                 * publique pour que son contenu soit servi à un visiteur anonyme.
+                 *
+                 * Le cas légitime d'un article affiché sous une autre rubrique est celui
+                 * d'une rubrique de type « lien » qui le désigne par linkedpage.
+                 */
+                $booArticleDeLaRubrique = $article->open($articleid)
+                    && (
+                        $article->fields['id_heading'] == $headingid
+                     || (!empty($arrHeadings['list'][$headingid]['linkedpage']) && $arrHeadings['list'][$headingid]['linkedpage'] == $articleid)
+                    );
+
+                if (!$booArticleDeLaRubrique || empty($arrHeadings['list'][$headingid]))
                 {
                     unset($articleid);
                     // renvoi à la racine
@@ -280,8 +296,8 @@ $arrNav = explode('-',$nav);
 // CHARGEMENT DU TEMPLATE
 
 // get template name
-$template_name = (!empty($arrHeadings['list'][$headingid]['template'])) ? $arrHeadings['list'][$headingid]['template'] : 'default';
-if (!file_exists(_WEBEDIT_TEMPLATES_PATH."/$template_name")) $template_name = 'default';
+$template_name = (!empty($arrHeadings['list'][$headingid]['template'])) ? $arrHeadings['list'][$headingid]['template'] : 'corporate';
+if (!file_exists(_WEBEDIT_TEMPLATES_PATH."/$template_name")) $template_name = 'corporate';
 
 $template_path = _WEBEDIT_TEMPLATES_PATH."/$template_name";
 
@@ -598,13 +614,13 @@ if ($query_string != '' || $advanced_search) // recherche intégrale
                                 // Gestion des url par mode de rendu
                                 switch($webedit_mode)
                                 {
-                                    case 'edit';
-                                    case 'render';
+                                    case 'edit':
+                                    case 'render':
                                         $link = "index.php?webedit_mode=render&headingid={$objArticle->fields['id_heading']}&articleid={$result['id_record']}";
                                     break;
 
                                     default:
-                                    case 'display';
+                                    case 'display':
                                         $arrParents = array();
                                         if (isset($arrHeadings['list'][$objArticle->fields['id_heading']])) foreach(explode(';', $arrHeadings['list'][$objArticle->fields['id_heading']]['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
                                         $link = ploopi\str::urlrewrite("index.php?headingid={$objArticle->fields['id_heading']}&articleid={$result['id_record']}", webedit_getrewriterules(), $objArticle->fields['metatitle'], $arrParents);
@@ -685,6 +701,8 @@ elseif($query_tag != '') // recherche par tag
                         ploopi_mod_webedit_article a
 
             WHERE       t.tag = '".ploopi\db::get()->addslashes($query_tag)."'
+            AND         t.id_module = {$_SESSION['ploopi']['moduleid']}
+            AND         a.id_module = {$_SESSION['ploopi']['moduleid']}
             AND         at.id_tag = t.id
             AND         at.id_article = a.id
             AND         (a.timestp_published <= $today OR a.timestp_published = 0)
@@ -695,19 +713,22 @@ elseif($query_tag != '') // recherche par tag
 
     while ($row = ploopi\db::get()->fetchrow())
     {
+        // Rubrique inconnue du site : le contrôle de privatisation ci-dessous passerait à vide
+        if (!isset($arrHeadings['list'][$row['id_heading']])) continue;
+
         if (!$arrHeadings['list'][$row['id_heading']]['private'] || isset($arrShares[$arrHeadings['list'][$row['id_heading']]['herited_private']]) || isset($_SESSION['webedit']['allowedheading'][$_SESSION['ploopi']['moduleid']][$arrHeadings['list'][$row['id_heading']]['herited_private']]) || $webedit_mode == 'edit') // Rubrique non privée ou accessible par l'utilisateur
         {
             $size = sprintf("%.02f", strlen(strip_tags(ploopi\str::html_entity_decode($row['content_cleaned'])))/1024);
 
             switch($webedit_mode)
             {
-                case 'edit';
-                case 'render';
+                case 'edit':
+                case 'render':
                     $link = "index.php?webedit_mode=render&headingid={$row['id_heading']}&articleid={$row['id']}";
                 break;
 
                 default:
-                case 'display';
+                case 'display':
                     $arrParents = array();
                     if (isset($arrHeadings['list'][$row['id_heading']])) foreach(preg_split('/;/', $arrHeadings['list'][$row['id_heading']]['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
                     $link = ploopi\str::urlrewrite("index.php?headingid={$row['id_heading']}&articleid={$row['id']}", webedit_getrewriterules(), $row['metatitle'], $arrParents);
@@ -769,9 +790,17 @@ elseif (!empty($intTemplateModuleId)) // contenu d'un module
         )
     );
 }
-elseif (!empty($ploopi_op) && $ploopi_op == 'webedit_unsubscribe') // message affiché lors du désabonnement (lien depuis email)
+elseif (!empty($ploopi_op) && ($ploopi_op == 'webedit_unsubscribe' || $ploopi_op == 'webedit_subscription_confirm')) // message affiché après un lien d'abonnement (courriel)
 {
-    $title_raw = 'Désabonnement';
+    // L'opération a déjà agi (op.php) si le jeton est valide : on n'en rend que le résultat
+    $booDesabonnement = ($ploopi_op == 'webedit_unsubscribe');
+    $booJetonValide = isset($_GET['subscription_token']) && webedit_subscription_read($_GET['subscription_token'], $booDesabonnement ? 'u' : 'c') !== false;
+
+    if (!$booJetonValide) $strMessage = 'Ce lien n\'est pas valide ou a expiré. Vous pouvez renouveler votre demande depuis le site.';
+    elseif ($booDesabonnement) $strMessage = 'Votre demande de désabonnement a été prise en compte.';
+    else $strMessage = 'Votre abonnement a été validé.';
+
+    $title_raw = $booDesabonnement ? 'Désabonnement' : 'Abonnement';
     $title = ploopi\str::htmlentities($title_raw);
 
     $template_body->assign_block_vars('switch_content_message', array());
@@ -791,7 +820,7 @@ elseif (!empty($ploopi_op) && $ploopi_op == 'webedit_unsubscribe') // message af
             'PAGE_META_DESCRIPTION' => $title,
             'PAGE_META_DESCRIPTION_RAW' => $title_raw,
             'MESSAGE_TITLE' => $title,
-            'MESSAGE_CONTENT' => ploopi\str::htmlentities('Votre demande de désabonnement a été prise en compte.')
+            'MESSAGE_CONTENT' => ploopi\str::htmlentities($strMessage)
         )
     );
 }
@@ -1126,82 +1155,8 @@ elseif($arrHeadings['list'][$headingid]['content_type'] == 'blog' && $webedit_mo
                     }
 
 
-                    // Doit on autoriser les commentaires
-                    if ($row['comments_allowed'])
-                    {
-                        $nbComment = 0;
-
-                        $action = 'index.php?ploopi_op=webedit_save_comment';
-                        if(isset($webedit_mode) && $webedit_mode != 'display') $action .= '&webedit_mode='.$webedit_mode;
-                        if(isset($headingid)) $action .= '&headingid='.$headingid;
-                        if(isset($row['id'])) $action .= '&articleid='.$row['id'];
-
-                        $template_body->assign_block_vars('switch_content_blog.article.sw_comment',
-                            array(
-                                'LIBELLE_POST'  => _WEBEDIT_COMMENT_POST,
-                                'ACTION'        => ploopi\crypt::urlencode($action)
-                            )
-                        );
-
-                        // On recherche les commentaires de l'article
-                        $selectComment = "
-                            SELECT      id, comment, email, timestp, publish, nickname
-                            FROM        ploopi_mod_webedit_article_comment
-                            WHERE       id_article = '{$row['id']}'
-                            AND         id_module = {$_SESSION['ploopi']['moduleid']}
-                            AND         publish = 1
-                            ORDER BY    timestp DESC
-                            ";
-
-                        $resSqlComment = ploopi\db::get()->query($selectComment);
-
-                        if(ploopi\db::get()->numrows())
-                        {
-                            if($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['nb_comm_blog'])
-                            {
-                                while($rowComment = ploopi\db::get()->fetchrow($resSqlComment))
-                                {
-                                    $date_comment = (!empty($row['timestp_published'])) ? ploopi\date::timestamp2local($rowComment['timestp']) : array('date' => '', 'time' => '');
-
-                                    $nbComment++;
-                                    if($nbComment <= $_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['nb_comm_blog'])
-                                    {
-                                        $template_body->assign_block_vars('switch_content_blog.article.sw_comment.comment',
-                                            array(
-                                                'ID'        => $rowComment['id'],
-                                                'PUBLISHED' => $rowComment['publish'],
-                                                'COMMENT'   => ploopi\str::htmlentities($rowComment['comment']),
-                                                'EMAIL'     => ploopi\str::htmlentities($rowComment['email']),
-                                                'NICKNAME'  => ploopi\str::htmlentities($rowComment['nickname']),
-                                                'DATE'      => $date_comment['date'],
-                                                'TIME'      => $date_comment['time'],
-                                                'POSTBY'    => sprintf(_WEBEDIT_COMMENT_COMMENT_POSTBY,ploopi\str::htmlentities($rowComment['nickname']),$date_comment['date'],$date_comment['time'])
-                                            )
-                                        );
-                                    }
-                                    else // Si il y en a + on affiche pour voir les autres commentaires
-                                    {
-                                        $template_body->assign_block_vars('switch_content_blog.article.sw_comment.sw_showall',
-                                            array(
-                                                'LIBELLE_SHOW'  => _WEBEDIT_COMMENT_SHOWALL
-                                            )
-                                        );
-                                        $nbComment = ploopi\db::get()->numrows($resSqlComment);
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-
-                        $nbComment = ploopi\db::get()->numrows($resSqlComment);
-
-                        $template_body->assign_block_vars('switch_content_blog.article.sw_comment.info',
-                            array(
-                                'LIBELLE'       => _WEBEDIT_COMMENT_COMMENT,
-                                'NB_COMMENT'    => $nbComment,
-                            )
-                        );
-                    }
+                    // Commentaires publics retirés (webedit 2.8.7) : le captcha dont ils
+                    // dépendaient n'a jamais été livré avec le socle.
                 }
 
                 $param = '';
@@ -1422,17 +1377,17 @@ else // affichage standard rubrique/page
 
                     switch($webedit_mode)
                     {
-                        case 'edit';
+                        case 'edit':
                             $script = "javascript:window.parent.document.location.href='".ploopi\crypt::urlencode("admin.php?op=article_modify&headingid={$headingid}&articleid={$row['id']}")."';";
                         break;
 
-                        case 'render';
+                        case 'render':
                             $script = "index.php?webedit_mode=render&moduleid={$_SESSION['ploopi']['moduleid']}&headingid={$headingid}&articleid={$row['id']}";
                             //$script = "admin.php?nav={$nav}&articleid={$row['id']}";
                         break;
 
                         default:
-                        case 'display';
+                        case 'display':
                             $arrParents = array();
                             if (isset($arrHeadings['list'][$headingid])) foreach(preg_split('/;/', $arrHeadings['list'][$headingid]['parents']) as $hid_parent) if (isset($arrHeadings['list'][$hid_parent])) $arrParents[] = $arrHeadings['list'][$hid_parent]['label'];
                             $script = ploopi\str::urlrewrite("index.php?headingid={$headingid}&articleid={$row['id']}", webedit_getrewriterules(), $row['metatitle'], $arrParents);
@@ -1531,49 +1486,42 @@ else // affichage standard rubrique/page
 
                     ob_start();
                     ?>
-                    <script src="./vendor/ckeditor/ckeditor/ckeditor.js"></script>
-                    <div id="editor"><?php echo $article->fields['content']; ?></div>
+                    <textarea id="editor" style="width:100%;"
+                        data-ploopi-editor="complet"
+                        data-ploopi-editor-ready="1"><?php echo ploopi\str::htmlentities($article->fields['content']); ?></textarea>
                     <script>
+                        /**
+                         * Éditeur du socle (js/editor.js) : lien vers une page du site ou un
+                         * document, image de la GED, objets des modules. Le contenu est relu par
+                         * webedit_article_validate() (fenêtre parente) à l'enregistrement.
+                         * Scripts du socle chargés par le gabarit du site : création une fois la page lue.
+                         */
+                        document.addEventListener('DOMContentLoaded', function() {
+                            ploopi.editor.create('editor', {
+                                profile: 'complet',
+                                objects: <?php echo json_encode(_PLOOPI_BASEPATH.'/admin-light.php?'.ploopi\crypt::queryencode('ploopi_op=ploopi_getobjects')); ?>,
+                                picker: {
+                                    link: <?php echo json_encode(_PLOOPI_BASEPATH.'/admin-light.php?'.ploopi\crypt::queryencode('ploopi_op=webedit_selector')); ?>,
+                                    image: <?php echo json_encode(_PLOOPI_BASEPATH.'/admin-light.php?'.ploopi\crypt::queryencode('ploopi_op=doc_selectimage')); ?>
+                                },
+                                config: {
+                                    // Comportement historique de webedit : Entrée = saut de ligne, Maj+Entrée = paragraphe
+                                    newline_behavior: 'invert',
+                                    max_height: null<?php
+                                    if ($_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['display_type'] == 'beginner') {
+                                    ?>,
+                                    toolbar: 'bold italic underline strikethrough subscript superscript removeformat | blocks fontfamily fontsize | forecolor backcolor | image link unlink'<?php
+                                    }
+                                    ?>
 
-                        // Ajout d'un plugin externe
-                        CKEDITOR.plugins.addExternal('tag', '<?php echo _PLOOPI_BASEPATH.'/modules/webedit/ckeditor/plugins/tag/'; ?>', 'plugin.js');
-
-                        /*
-                        // http://docs.ckeditor.com/#!/guide/plugin_sdk_styles
-                        CKEDITOR.plugins.add( 'tag', {
-                            init: function( editor ) {
-                                var pluginDirectory = '<?php echo _PLOOPI_BASEPATH.'/modules/webedit/ckeditor/plugins/tag/'; ?>';
-                                editor.addContentsCss( pluginDirectory + 'styles.css' );
-                            }
-                        } );
-                        */
-
-                        // http://docs.ckeditor.com/#!/guide/dev_file_browser_api
-                        CKEDITOR.replace( 'editor', {
-                            customConfig: '<?php echo _PLOOPI_BASEPATH.'/modules/webedit/ckeditor/config.js'; ?>',
-                            // doc_selectfile
-                            filebrowserBrowseUrl: '<?php echo _PLOOPI_BASEPATH.'/admin-light.php?'.ploopi\crypt::queryencode('ploopi_op=webedit_selector'); ?>',
-                            filebrowserImageBrowseUrl: '<?php echo _PLOOPI_BASEPATH.'/admin-light.php?'.ploopi\crypt::queryencode('ploopi_op=doc_selectimage'); ?>',
-                            // Url de choix des objets
-                            objectBrowserUrl: '<?php echo _PLOOPI_BASEPATH.'/admin-light.php?'.ploopi\crypt::queryencode('ploopi_op=ploopi_getobjects'); ?>',
-                            // Chargement de styles complémentaires (on remet le fichier par défaut en 1er)
-                            // Puis on ajoute la feuille de style des plugins...
-                            contentsCss: [
-                                CKEDITOR.basePath+'contents.css',
-                                '<?php echo _PLOOPI_BASEPATH; ?>/modules/webedit/ckeditor/plugins/tag/styles.css',
-                            ],
-                            <?php
-                            if ($_SESSION['webedit'][$_SESSION['ploopi']['moduleid']]['display_type'] == 'beginner') {
-                                ?>
-                                toolbar: [
-                                    ['Bold','Italic','Underline','Strike','Subscript','Superscript','-','RemoveFormat' ],
-                                    ['Styles','Format','Font','FontSize'],
-                                    ['TextColor','BGColor'],
-                                    ['Image','Link','Unink'],
-                                ]
-                                <?php
-                            }
-                            ?>
+                                },
+                                setup: function(ed) {
+                                    // Hauteur de l'iframe du backoffice ajustée à l'éditeur
+                                    ed.on('init ResizeEditor', function() {
+                                        if (typeof webedit_autofit_iframe == 'function') webedit_autofit_iframe();
+                                    });
+                                }
+                            });
                         });
                     </script>
 
@@ -1649,7 +1597,6 @@ else // affichage standard rubrique/page
                 $desc_raw = $article->fields['metadescription'];
                 $desc = ploopi\str::htmlentities($article->fields['metadescription']);
 
-                $id_captcha = md5('article_comment_catpcha_'.$article->fields['id']);
 
                 $template_body->assign_vars(
                     array(
@@ -1681,10 +1628,7 @@ else // affichage standard rubrique/page
                         'PAGE_LASTUPDATE_USER_FIRSTNAME' => ploopi\str::htmlentities($user_firstname),
                         'PAGE_LASTUPDATE_USER_LOGIN' => ploopi\str::htmlentities($user_login),
                         'PAGE_CONTENT' => $content,
-                        'PAGE_HEADCONTENT' => $article->fields['headcontent'],
-                        'PAGE_IDCAPTCHA' => $id_captcha,
-                        'PAGE_URL_UPDATECAPTCHA' => ploopi\crypt::urlencode('index-light.php?ploopi_op=ploopi_get_captcha&time='.date('His').'&id_captcha='.$id_captcha),
-                        'PAGE_URL_CONTROLCAPTCHA' => ploopi\crypt::urlencode('index-light.php?ploopi_op=ploopi_get_captcha_verif&time='.date('His').'&id_captcha='.$id_captcha)
+                        'PAGE_HEADCONTENT' => $article->fields['headcontent']
                     )
                 );
 
@@ -1697,13 +1641,13 @@ else // affichage standard rubrique/page
                     {
                         switch($webedit_mode)
                         {
-                            case 'edit';
-                            case 'render';
+                            case 'edit':
+                            case 'render':
                                 $link =  "index.php?webedit_mode=render&query_tag={$tag['tag']}";
                             break;
 
                             default:
-                            case 'display';
+                            case 'display':
                                 $link =  ploopi\str::urlrewrite("index.php?query_tag={$tag['tag']}", webedit_getrewriterules());
                             break;
                         }
@@ -1718,78 +1662,7 @@ else // affichage standard rubrique/page
                 }
             } // if (!$intErrorCode)
 
-            // Doit on autoriser les commentaires
-            if (!$intErrorCode && !empty($article->fields['comments_allowed']) && $webedit_mode !== 'edit')
-            {
-                $nbComment = 0;
-
-                $action = 'index.php?ploopi_op=webedit_save_comment&headingid='.$headingid;
-
-                if(isset($article->fields['id'])) $action .= '&articleid='.$article->fields['id'];
-                if(isset($webedit_mode) && $webedit_mode != 'display') $action .= '&webedit_mode='.$webedit_mode;
-
-                $action .= '&id_captcha='.$id_captcha;
-
-                $template_body->assign_block_vars('switch_content_page.sw_comment',
-                    array(
-                        'ACTION'        => ploopi\crypt::urlencode($action),
-                        'IDCAPTCHA'     => $id_captcha,
-                        'URLTOCAPTCHA'      => ploopi\crypt::urlencode('index-light.php?ploopi_op=ploopi_get_captcha&id_captcha='.$id_captcha),
-                        // Passage au flash nécessite constament une url_encodée
-                        'URLTOCAPTCHASOUND' => (defined('_PLOOPI_URL_ENCODE') && (_PLOOPI_URL_ENCODE)) ? ploopi\crypt::urlencode('index-light.php?ploopi_op=ploopi_get_captcha_sound&id_captcha='.$id_captcha) : urlencode('index-light.php?ploopi_op=ploopi_get_captcha_sound&id_captcha='.$id_captcha)
-                    )
-                );
-
-                if(isset($_GET['comment_return']) && defined('_WEBEDIT_COMMENT_COMMENT_SEND_'.$_GET['comment_return']))
-                {
-                    $template_body->assign_block_vars('switch_content_page.sw_comment.sw_comment_response',
-                        array(
-                            'RESPONSE' => constant('_WEBEDIT_COMMENT_COMMENT_SEND_'.$_GET['comment_return'])
-                        )
-                    );
-                }
-
-                // On recherche les commentaires de l'article
-                $selectComment = "
-                    SELECT      id, comment, email, timestp, publish, nickname
-                    FROM        ploopi_mod_webedit_article_comment
-                    WHERE       id_article = '{$article->fields['id']}'
-                    AND         id_module = {$_SESSION['ploopi']['moduleid']}
-                    AND         publish = 1
-                    ORDER BY    timestp DESC
-                    ";
-
-                $resSqlComment = ploopi\db::get()->query($selectComment);
-                if(ploopi\db::get()->numrows())
-                {
-                    while($rowComment = ploopi\db::get()->fetchrow($resSqlComment))
-                    {
-                        $date_comment = ($article->fields['timestp_published']!='') ? ploopi\date::timestamp2local($rowComment['timestp']) : array('date' => '', 'time' => '');
-
-                        $nbComment++;
-
-                        $template_body->assign_block_vars('switch_content_page.sw_comment.comment',
-                            array(
-                                'ID'        => $rowComment['id'],
-                                'PUBLISHED' => $rowComment['publish'],
-                                'COMMENT'   => ploopi\str::htmlentities($rowComment['comment']),
-                                'EMAIL'     => ploopi\str::htmlentities($rowComment['email']),
-                                'NICKNAME'  => ploopi\str::htmlentities($rowComment['nickname']),
-                                'DATE'      => $date_comment['date'],
-                                'TIME'      => $date_comment['time'],
-                                'POSTBY'    => sprintf(_WEBEDIT_COMMENT_COMMENT_POSTBY,ploopi\str::htmlentities($rowComment['nickname']),$date_comment['date'],$date_comment['time'])
-                            )
-                        );
-                    }
-                }
-
-                $template_body->assign_block_vars('switch_content_page.sw_comment.info',
-                    array(
-                        'LIBELLE'       => _WEBEDIT_COMMENT_COMMENT,
-                        'NB_COMMENT'    => $nbComment
-                    )
-                );
-            }
+            // Commentaires publics retirés (webedit 2.8.7) : voir la section blog.
 
         }
         else
@@ -1824,13 +1697,13 @@ else // affichage standard rubrique/page
             // Gestion des url par mode de rendu
             switch($webedit_mode)
             {
-                case 'edit';
-                case 'render';
+                case 'edit':
+                case 'render':
                     $link = ploopi\crypt::urlencode("index.php?webedit_mode=render&ploopi_op=webedit_subscribe&headingid={$headingid}".(empty($articleid) ? '' : "&articleid={$articleid}"), null, null, null, null, false);
                 break;
 
                 default:
-                case 'display';
+                case 'display':
                     $link = ploopi\crypt::urlencode("index.php?ploopi_op=webedit_subscribe&headingid={$headingid}".(empty($articleid) ? '' : "&articleid={$articleid}"), null, null, null, null, false);
                 break;
             }
@@ -2001,7 +1874,7 @@ $template_body->assign_block_vars(
 $template_body->assign_block_vars(
     'ploopi_js',
     array(
-        'PATH' => './vendor/EastDesire/jscolor/jscolor.js?v='.urlencode(_PLOOPI_VERSION.','._PLOOPI_REVISION)
+        'PATH' => './vendor/eastdesire/jscolor/jscolor.js?v='.urlencode(_PLOOPI_VERSION.','._PLOOPI_REVISION)
     )
 );
 
@@ -2069,7 +1942,7 @@ $template_body->assign_vars(
         'SITE_BASEPATH'                 => $strBasePath,
         'PLOOPI_VERSION'                => _PLOOPI_VERSION,
         'PLOOPI_REVISION'               => _PLOOPI_REVISION,
-        'URL_XML_TAG3D'                 => ploopi\str::urlrewrite("index.php?ploopi_op=webedit_backend&query_tag=".((!empty($query_tag)) ? $query_tag : 'tag3D')."&moduleid={$_SESSION['ploopi']['workspaceid']}", webedit_getrewriterules())
+        'URL_XML_TAG3D'                 => ploopi\str::urlrewrite("index.php?ploopi_op=webedit_backend&query_tag=".((!empty($query_tag)) ? $query_tag : 'tag3D')."&moduleid={$_SESSION['ploopi']['moduleid']}", webedit_getrewriterules())
     )
 );
 
@@ -2135,13 +2008,13 @@ foreach ($arrTags as $strTag => $arrTag)
     // Gestion des url par mode de rendu
     switch($webedit_mode)
     {
-        case 'edit';
-        case 'render';
+        case 'edit':
+        case 'render':
             $link = "index.php?webedit_mode=render&query_tag={$strTag}";
         break;
 
         default:
-        case 'display';
+        case 'display':
             $link = ploopi\str::urlrewrite("index.php?query_tag={$strTag}", webedit_getrewriterules());
         break;
     }

@@ -1,0 +1,124 @@
+/******************
+  TABLEAUX AVANCÉS FLUIDES (skin::display_array sous ploopi4)
+  Un <table> unique (styles des tableaux de ploopi4), trié et paginé par js/skin.js.
+  Conteneur de requêtes : en dessous de 640 px de large, chaque ligne devient une
+  carte (cellule titre en tête, autres cellules en « libellé : valeur », actions en
+  bas) et une barre de tri remplace les en-têtes.
+*******************/
+
+div.ploopi_explorer_main.p4-arr-main {
+    position: static;
+    overflow: visible;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    container: p4arr / inline-size;
+}
+
+/* Garde-fou (js/skin.js) : conteneur placé dans un contexte à largeur intrinsèque */
+div.ploopi_explorer_main.p4-arr-main.p4-arr-nocq { container-type: normal; }
+
+.p4-arr-main .p4-table-wrap { background: var(--surface); }
+.p4-arr-main .p4-arr-scroll { overflow: auto; }
+.p4-arr-scroll .p4-arr thead th { position: sticky; top: 0; z-index: 2; }
+
+.p4-arr th { vertical-align: middle; }
+.p4-arr th .p4-sort { text-align: left; white-space: nowrap; }
+.p4-arr th[aria-sort] .p4-sort { color: var(--text); }
+.p4-arr th[aria-sort] .p4-sort .p4-icon { opacity: 1; }
+.p4-arr th a { color: inherit; }
+.p4-arr td { overflow-wrap: break-word; }
+.p4-arr tbody tr[hidden] { display: none; }
+.p4-arr tbody tr:nth-child(even of :not([hidden])) td { background: var(--surface-2); }
+.p4-arr tbody tr:hover td { background: var(--primary-soft); }
+
+/* Colonnes d'actions : au plus juste, sans retour à la ligne des icônes */
+.p4-arr .p4-arr-acts { width: 1%; white-space: nowrap; text-align: right; }
+.p4-arr td.p4-arr-acts > * { vertical-align: middle; }
+.p4-arr td.p4-arr-acts img { display: inline-block; }
+
+/* Lien de ligne : l'ancre de la cellule titre couvre toute la ligne */
+.p4-arr tr.p4-arr-link { position: relative; cursor: pointer; }
+.p4-arr a.p4-arr-rowlink { color: inherit; text-decoration: none; }
+.p4-arr a.p4-arr-rowlink:hover { color: var(--primary-text); text-decoration: underline; }
+.p4-arr a.p4-arr-rowlink:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.p4-arr a.p4-arr-rowlink::after { content: ""; position: absolute; inset: 0; }
+.p4-arr tr.p4-arr-link td.p4-arr-title { font-weight: 600; }
+.p4-arr tr.p4-arr-link td :is(a:not(.p4-arr-rowlink), button, input, select, textarea, label),
+.p4-arr tr.p4-arr-link td.p4-arr-acts { position: relative; z-index: 1; }
+
+/* Pied : lignes affichées et pagination */
+.p4-arr-foot { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 10px; font-size: var(--fs-sm); color: var(--text-3); }
+.p4-arr-foot .p4-pager[hidden] { display: none; }
+.p4-arr-gap { color: var(--text-3); padding: 0 2px; }
+
+/* Barre de tri : seulement dans l'affichage en cartes */
+.p4-arr-sortbar { display: none; align-items: center; gap: 8px; margin-bottom: 10px; font-size: var(--fs-sm); }
+.p4-arr-sortbar label { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0; color: var(--text-3); }
+.p4-arr-sortbar label > span { white-space: nowrap; }
+.p4-arr-sortbar .p4-select { flex: 1; min-width: 0; width: auto; }
+
+.p4-arr-main > .p4-empty { border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); }
+
+@container p4arr (max-width: 639px) {
+    .p4-arr-sortbar { display: flex; }
+
+    .p4-arr-main .p4-table-wrap { border: 0; overflow: visible; background: none; }
+    .p4-arr-main .p4-arr-scroll { overflow: auto; }
+    .p4-arr thead { display: none; }
+    .p4-arr,
+    .p4-arr tbody { display: block; width: 100%; }
+
+    .p4-arr tbody tr {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        column-gap: 12px;
+        padding: 10px 14px;
+        margin-bottom: 8px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        background: var(--surface);
+    }
+    .p4-arr tbody tr[hidden] { display: none; }
+    .p4-arr tbody tr td,
+    .p4-arr tbody tr:nth-child(even of :not([hidden])) td,
+    .p4-arr tbody tr:hover td { background: transparent; }
+    .p4-arr tbody tr:hover { border-color: var(--border-strong); }
+
+    .p4-arr td {
+        display: block;
+        flex: 1 1 100%;
+        width: auto !important;
+        min-width: 0;
+        padding: 2px 0;
+        border: 0;
+        text-align: left !important;
+    }
+    .p4-arr td:empty { display: none; }
+    .p4-arr td.p4-arr-title { order: -1; font-weight: 600; font-size: var(--fs); padding-bottom: 4px; }
+    .p4-arr td[data-label]:not(.p4-arr-title)::before {
+        content: attr(data-label) " : ";
+        color: var(--text-3);
+        font-size: var(--fs-xs);
+        font-weight: 600;
+    }
+    /* Actions : cibles de 36 px au doigt */
+    .p4-arr td.p4-arr-acts a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 36px;
+        min-height: 36px;
+        vertical-align: middle;
+    }
+
+    .p4-arr td.p4-arr-acts {
+        order: 99;
+        flex: 1 1 100%;
+        text-align: right !important;
+        margin-top: 6px;
+        padding-top: 6px;
+        border-top: 1px solid var(--border);
+    }
+}

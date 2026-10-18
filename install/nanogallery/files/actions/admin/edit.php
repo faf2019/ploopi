@@ -51,9 +51,9 @@ $objPanel->addField(new ploopi\form_html(
 	'<div style="clear:both;">
 		<label for="foldername" class="required">Dossier associé<span></span></label>
 		<div style="margin-left:18%;">
-			<input type="text" name="foldername" id="foldername" value="'.$foldername.'" disabled tabindex="3" required="required" maxlength="255" style="width:250px;" />
+			<input type="text" name="foldername" id="foldername" value="'.ploopi\str::htmlentities($foldername).'" disabled tabindex="3" required="required" maxlength="255" style="width:250px;" />
 			<div id="treeview" style="margin-top: -25px; margin-left: 320px;">
-				<div id="treeview_inner">'
+				<div id="treeview_inner" data-nano-initfolder="'.((int) $gal['id_folder']).'">'
 					.folders::display_treeview($arrTreeview['list'], $arrTreeview['tree'], null, -1, true)
 			.'</div>
 			</div>
@@ -63,7 +63,7 @@ $objPanel->addField(new ploopi\form_html(
 
 // Boutons
 $objForm->addButton( new ploopi\form_button('input:reset', 'Réinitialiser', 'reinit', 'reinit', 
-	array('style' => 'margin-left:4px;', 'onclick' => "nano_initFolder(${gal['id_folder']});")
+	array('style' => 'margin-left:4px;', 'dataset' => array('ploopi-action' => 'nano_initfolder', 'ploopi-args' => json_encode(array((int) $gal['id_folder']))))
 ));
 $objForm->addButton( new ploopi\form_button('input:submit', 'Enregistrer', null, null, array('style' => 'margin-left:4px;')));
 
@@ -71,5 +71,4 @@ $objForm->addButton( new ploopi\form_button('input:submit', 'Enregistrer', null,
 echo $objForm->render();
 
 ?>
-<script>nano_initFolder(<?php echo $gal['id_folder']; ?>);</script>
 

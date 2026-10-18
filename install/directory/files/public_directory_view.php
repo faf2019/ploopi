@@ -61,7 +61,7 @@ else ploopi\system::kill();
 $strName = trim($usr->fields['lastname'].' '.$usr->fields['firstname']);
 ?>
 
-<h1 class="directory_title" style="background-color:#c0c0c0;border-bottom:1px solid #a0a0a0;">
+<h1 class="directory_title directory_titre_fort">
     <?php
     if (!$booPrintable)
     {
@@ -77,18 +77,18 @@ $strName = trim($usr->fields['lastname'].' '.$usr->fields['firstname']);
         {
             if (!empty($_GET['directory_id_user']))
             {
-                ?><img title="Photo de <?php echo ploopi\str::htmlentities($strName); ?>" src="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=ploopi_get_userphoto&ploopi_user_id={$usr->fields['id']}"); ?>" style="border:1px solid #404040;display:block;margin:5px auto;" /><?php
+                ?><img title="Photo de <?php echo ploopi\str::htmlentities($strName); ?>" src="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=ploopi_get_userphoto&ploopi_user_id={$usr->fields['id']}"); ?>" class="directory_photo" /><?php
             }
             else
             {
-                ?><img title="Photo de <?php echo ploopi\str::htmlentities($strName); ?>" src="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=directory_contact_getphoto&directory_contact_id={$usr->fields['id']}"); ?>" style="border:1px solid #404040;display:block;margin:5px auto;" /><?php
+                ?><img title="Photo de <?php echo ploopi\str::htmlentities($strName); ?>" src="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=directory_contact_getphoto&directory_contact_id={$usr->fields['id']}"); ?>" class="directory_photo" /><?php
             }
         }
         ?>
     </div>
-    <div style="margin-left:110px;border-left:1px solid #a0a0a0;">
+    <div class="directory_fiche_detail">
         <div class="ploopi_form" style="padding:4px;">
-            <h2 class="directory_title" style="background-color:#d0d0d0;border-bottom:1px solid #a0a0a0;">Informations professionnelles</h2>
+            <h2 class="directory_title directory_titre">Informations professionnelles</h2>
             <p>
                 <label style="font-weight:bold;"><?php echo _DIRECTORY_SERVICE; ?>:</label>
                 <span><?php echo ploopi\str::htmlentities($usr->fields['service']); ?></span>
@@ -122,7 +122,7 @@ $strName = trim($usr->fields['lastname'].' '.$usr->fields['firstname']);
                 <span><a href="mailto:<?php echo ploopi\str::htmlentities($usr->fields['email']); ?>"><?php echo ploopi\str::htmlentities($usr->fields['email']); ?></a></span>
             </p>
 
-            <h2 class="directory_title" style="background-color:#d0d0d0;border-bottom:1px solid #a0a0a0;">Lieu de travail</h2>
+            <h2 class="directory_title directory_titre">Lieu de travail</h2>
             <p>
                 <label style="font-weight:bold;"><?php echo _DIRECTORY_BUILDING; ?>:</label>
                 <span><?php echo ploopi\str::htmlentities($usr->fields['building']); ?></span>
@@ -147,7 +147,7 @@ $strName = trim($usr->fields['lastname'].' '.$usr->fields['firstname']);
                 <span><?php echo implode('<br />', $arrAddress); ?></span>
             </p>
 
-            <h2 class="directory_title" style="background-color:#d0d0d0;border-bottom:1px solid #a0a0a0;">Informations complémentaires ( <a href="javascript:void(0);" onclick="javascript:ploopi.switchdisplay('directory_view_details');" >Afficher</a> )</h2>
+            <h2 class="directory_title directory_titre">Informations complémentaires ( <a href="javascript:void(0);" onclick="javascript:ploopi.switchdisplay('directory_view_details');" >Afficher</a> )</h2>
             <div id="directory_view_details" style="display:none;">
                 <p>
                     <label style="font-weight:bold;"><?php echo _DIRECTORY_COMMENTARY; ?>:</label>

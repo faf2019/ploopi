@@ -1,0 +1,149 @@
+/*
+    Copyright (c) 2007-2026 Ovensia
+    Contributors hold Copyright (c) to their code submissions.
+
+    This file is part of Ploopi.
+
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
+
+/*
+ * Choix de groupes et d'utilisateurs (partages, validateurs) : ploopi\userselect.
+ * Bloc en carte, recherche en ligne avec son bouton, résultats en liste, sélection
+ * en pastilles qu'un clic retire.
+ */
+
+.p4-usel {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+    margin: 8px 0;
+    overflow: hidden;
+}
+
+.p4-usel-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    font-weight: 600;
+    color: var(--text);
+    text-decoration: none;
+    background: var(--surface-2);
+    border-bottom: 1px solid var(--border);
+}
+.p4-usel-title:hover { text-decoration: none; background: var(--surface-3); }
+.p4-usel-title .p4-icon { width: 18px; height: 18px; color: var(--primary); flex: none; }
+.p4-usel-validation .p4-usel-title .p4-icon { color: #6941c6; }
+
+.p4-usel-body { padding: 12px 14px; display: grid; gap: 10px; }
+
+.p4-usel-search label {
+    display: block;
+    font-size: var(--fs-sm);
+    color: var(--text-2);
+    margin-bottom: 4px;
+}
+.p4-usel-searchrow { display: flex; gap: 6px; max-width: 520px; }
+.p4-usel-searchrow input {
+    flex: 1;
+    min-width: 0;
+    height: var(--control-h);
+}
+.p4-usel-go {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: var(--control-h);
+    padding: 0 12px;
+    border: 1px solid var(--border-field);
+    border-radius: var(--radius-sm);
+    background: var(--surface-2);
+    color: var(--text);
+    cursor: pointer;
+    font: inherit;
+}
+.p4-usel .p4-usel-go:hover,
+.p4-usel .p4-usel-go:focus-visible { background: var(--primary-soft); border-color: var(--primary); color: var(--text); }
+.p4-usel-go .p4-icon { width: 16px; height: 16px; }
+
+/* Résultats de la recherche (balisage des opérations *_search_users) */
+.p4-usel-results:empty { display: none; }
+.p4-usel-results > div[style] {
+    height: auto !important;
+    max-height: 260px;
+    border: 1px solid var(--border) !important;
+    border-radius: var(--radius-sm);
+}
+.p4-usel-results [class$="_select_workgroup"] {
+    background: var(--surface-3);
+    color: var(--text-2);
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+    padding: 6px 10px;
+    border-bottom: 1px solid var(--border);
+}
+.p4-usel-results [class$="_select_user"],
+.p4-usel-results [class$="_select_usergroup"],
+.p4-usel-results [class$="_select_usergroup_user"] {
+    display: block;
+    padding: 6px 10px 6px 26px;
+    color: var(--text);
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    text-decoration: none;
+}
+.p4-usel-results [class$="_select_usergroup"] { font-weight: 600; background: var(--surface-2); }
+.p4-usel-results [class$="_select_usergroup_user"] { padding-left: 44px; }
+.p4-usel-results [class$="_select_user"]:hover,
+.p4-usel-results [class$="_select_usergroup"]:hover,
+.p4-usel-results [class$="_select_usergroup_user"]:hover {
+    background: var(--primary-soft);
+    color: var(--text);
+    text-decoration: none;
+}
+.p4-usel-results [class$="_select_legend"] { padding: 6px 4px; color: var(--text-3); font-size: var(--fs-xs); }
+.p4-usel-results [class$="_select_empty"] { padding: 8px 4px; color: var(--text-3); }
+
+.p4-usel-label {
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--text-2);
+}
+
+.p4-usel-chips { display: flex; flex-wrap: wrap; gap: 6px; min-height: 28px; align-items: center; }
+.p4-usel-empty { color: var(--text-3); font-style: italic; }
+
+.p4-usel-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 6px 3px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--primary-soft);
+    color: var(--text);
+    text-decoration: none;
+    font-size: var(--fs-sm);
+    line-height: 1.4;
+}
+.p4-usel-chip.is-group { background: var(--surface-3); }
+.p4-usel-chip .p4-icon { width: 14px; height: 14px; flex: none; }
+.p4-usel-chip .p4-usel-x { display: inline-flex; border-radius: 999px; padding: 2px; color: var(--text-3); }
+.p4-usel-chip:hover { text-decoration: none; border-color: var(--danger); }
+.p4-usel-chip:hover .p4-usel-x { background: var(--danger-soft); color: var(--danger); }

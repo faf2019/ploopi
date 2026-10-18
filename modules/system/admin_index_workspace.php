@@ -31,6 +31,13 @@
  * @author Ovensia
  */
 
+// Gabarits de génération 4 : écran refondu
+if (ploopi\skin::get()->version() >= 4)
+{
+    include './modules/system/admin_workspaces_workspace.php';
+    return;
+}
+
 /**
  * Ouverture du bloc
  */
@@ -395,8 +402,8 @@ echo ploopi\skin::get()->open_simplebloc();
             <div class="ploopi_form" style="clear:both;padding:2px;">
                 <p>
                     <label>&nbsp;</label>
-                    <em style="color:red">
-                        <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/attention.png" style="display:block;float:left;margin:0 4px 4px 0;">
+                    <em class="system_warning">
+                        <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/attention.png">
                         Attention, l'adresse de courriel de l'administrateur du site n'est pas définie dans le fichier de configuration.
                     </em>
                 </p>
@@ -409,7 +416,7 @@ echo ploopi\skin::get()->open_simplebloc();
             <p>
                 <label>Modèle de courriel (création de compte utilisateur):
                 <br /><em style="padding:4px;">Balises disponibles:</em>
-                <br /><em style="padding:4px;"><? foreach(array('firstname', 'lastname', 'email', 'login', 'password', 'date', 'time', 'url') as $key) { ?><a class="mail_model_tag" href="javascript:void(0);" onclick="ploopi_insertatcursor($('workspace_mail_model'), '{<? echo $key; ?>}');">{<? echo $key; ?>}</a> <? } ?></em>
+                <br /><em style="padding:4px;"><?php foreach(array('firstname', 'lastname', 'email', 'login', 'password', 'date', 'time', 'url') as $key) { ?><a class="mail_model_tag" href="javascript:void(0);" onclick="ploopi_insertatcursor(document.getElementById('workspace_mail_model'), '{<?php echo $key; ?>}');">{<?php echo $key; ?>}</a> <?php } ?></em>
 
                 </label>
                 <?php

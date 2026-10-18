@@ -507,12 +507,13 @@ ploopi.validatefield = function(field_label, field_object, field_type) {
             ok = false;
             if(arguments.length >= 4 && field_value.length > 0)
             {
-                new Ajax.Request(arguments[3], {
-                    asynchronous : false,
-                    methode: 'get',
-                    parameters : 'value='+field_value,
-                    onSuccess: function(response) {
-                        ok = (response.responseText == 1) ? true : false;
+                jQuery.ajax({
+                    url: arguments[3],
+                    async: false,
+                    type: 'GET',
+                    data: { value: field_value },
+                    success: function(response) {
+                        ok = (response == 1);
                     }
                 });
             }
@@ -539,7 +540,5 @@ ploopi.validatefield = function(field_label, field_object, field_type) {
 };
 
 ploopi.validatereset = function(form) {
-    jQuery(form).find('input,textarea,select').each(function(item) {
-        jQuery(item).removeClass('ploopi_validate_error');
-    });
+    jQuery(form).find('input,textarea,select').removeClass('ploopi_validate_error');
 };

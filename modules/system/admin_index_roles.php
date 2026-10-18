@@ -40,7 +40,8 @@ switch($op)
         if (!empty($_GET['roleid']) && is_numeric($_GET['roleid']))
         {
             $role = new ploopi\role();
-            $role->open($_GET['roleid']);
+            // Seulement un rôle de cet espace
+            if (!$role->open($_GET['roleid']) || $role->fields['id_workspace'] != $workspaceid) ploopi\output::redirect("admin.php?roleTabItem=tabRoleManagement");
             ploopi\user_action_log::record(_SYSTEM_ACTION_DELETEROLE, "{$role->fields['label']} ({$role->fields['id']})");
             $role->delete();
             ploopi\output::redirect("admin.php?roleTabItem=tabRoleManagement&reloadsession");
@@ -52,6 +53,9 @@ switch($op)
         $role = new ploopi\role();
 
         if (!empty($_POST['roleid']) && is_numeric($_POST['roleid'])) $role->open($_POST['roleid']);
+
+        // Un rôle de cet espace, pour un module de cet espace
+        if ((!$role->new && $role->fields['id_workspace'] != $workspaceid) || empty($_POST['role_id_module']) || !is_numeric($_POST['role_id_module']) || !array_key_exists($_POST['role_id_module'], $workspace->getmodules())) ploopi\output::redirect("admin.php?roleTabItem=tabRoleManagement");
 
         $isnew = $role->new;
 
@@ -71,6 +75,16 @@ switch($op)
 
         ploopi\output::redirect("admin.php?roleTabItem=tabRoleManagement");
     break;
+}
+
+if (!empty($_GET['roleTabItem']))  $_SESSION['system']['roleTabItem'] = $_GET['roleTabItem'];
+if (!isset($_SESSION['system']['roleTabItem'])) $_SESSION['system']['roleTabItem'] = '';
+
+// Gabarits de génération 4 : écran refondu
+if (ploopi\skin::get()->version() >= 4)
+{
+    include './modules/system/admin_workspaces_roles.php';
+    return;
 }
 
 if (isset($system_roletabid)) $_SESSION['system']['roletabid'] = $system_roletabid;

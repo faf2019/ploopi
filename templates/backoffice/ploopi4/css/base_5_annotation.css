@@ -1,0 +1,335 @@
+/*
+    Copyright (c) 2002-2007 Netlor
+    Copyright (c) 2007-2008 Ovensia
+    Contributors hold Copyright (c) to their code submissions.
+
+    This file is part of Ploopi.
+
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+/******************
+  SYSTEM.ANNOTATIONS
+*******************/
+
+#system_annotation_tags {
+float:right;
+width:250px;
+}
+
+#system_annotation_list {
+overflow:auto;
+border-right:1px solid var(--p3-border);
+}
+
+#system_annotation_titlebar {
+padding:2px 4px;
+border-bottom:1px solid var(--p3-border);
+background-color:var(--p3-surface-2);
+overflow:auto;
+}
+
+.system_annotation_row {
+clear:both;
+overflow:auto;
+border-bottom: 1px solid var(--p3-border);
+padding:2px;
+}
+
+.system_annotation_title {
+font-weight:bold;
+font-size:1.1em;
+float:left;
+padding:2px 2px 4px 2px;
+}
+
+.system_annotation_date {
+float:right;
+padding:2px;
+}
+
+.system_annotation_content {
+clear:both;
+padding:2px;
+}
+
+.system_annotation_taglist {
+clear:both;
+float:left;
+padding:2px;
+}
+
+.system_annotation_module {
+float:right;
+}
+
+a.system_annotation_tag {
+display:block;
+float:left;
+padding:2px 6px;
+height:22px;
+line-height:22px;
+white-space:nowrap;
+}
+
+a.system_annotation_tag:hover {
+display:block;
+background-color:var(--p3-surface-3);
+text-decoration:none;
+}
+
+a.system_annotation_tagsel {
+display:block;
+float:left;
+padding:2px 6px;
+height:22px;
+line-height:22px;
+white-space:nowrap;
+background-color:var(--p3-primary-soft);
+}
+
+a.system_annotation_tagsel:hover {
+display:block;
+background-color:var(--p3-surface-3);
+text-decoration:none;
+}
+
+.system_annotation_page {
+display:block;
+float:left;
+background-color:var(--p3-surface);
+padding: 0px 4px;
+margin-left:1px;
+text-decoration:none;
+color:var(--p3-text);
+border:1px solid var(--p3-border);
+}
+
+.system_annotation_page:hover {
+background-color:var(--p3-primary-softer);
+text-decoration:none;
+}
+
+.system_annotation_page_sel {
+display:block;
+float:left;
+background-color:var(--p3-surface);
+padding: 0px 4px;
+margin-left:1px;
+text-decoration:none;
+color:var(--p3-text);
+border:1px solid var(--p3-primary);
+}
+
+.system_annotation_page_sel:hover {
+background-color:var(--p3-primary-softer);
+text-decoration:none;
+}
+
+.ploopi_annotation_row_1 {
+border-top: 1px solid var(--p3-border);
+background-color:color-mix(in srgb, #b08800 3%, var(--p3-surface));
+overflow:auto;
+}
+
+.ploopi_annotation_row_2 {
+border-top: 1px solid var(--p3-border);
+background-color:color-mix(in srgb, #b08800 6%, var(--p3-surface));
+overflow:auto;
+}
+
+.ploopi_annotation_viewlist {
+display:block;
+background-color:color-mix(in srgb, #b08800 6%, var(--p3-surface));
+box-shadow:inset 4px 0 0 #b08800;
+text-decoration:none;
+height:32px;
+line-height:32px;
+color:var(--p3-text);
+font-weight:bold;
+margin:0;
+padding:0 10px 0 12px;
+overflow:hidden;
+}
+
+.ploopi_annotation_viewlist:hover {
+background-color:color-mix(in srgb, #b08800 13%, var(--p3-surface));
+color:var(--p3-text);
+text-decoration:none;
+}
+
+.ploopi_annotation_viewlist img, .ploopi_annotation_viewlist span {
+    vertical-align: middle;
+}
+
+.ploopi_annotation_viewlist span {
+   padding-left: 5px;
+}
+
+.ploopi_annotation_popup {
+background-color:color-mix(in srgb, #b08800 3%, var(--p3-surface));
+}
+
+.ploopi_annotation_popup_list {
+height:200px;
+overflow:auto;
+}
+
+.ploopi_annotation_titleform {
+display:block;
+font-weight:bold;
+background-color:color-mix(in srgb, #b08800 6%, var(--p3-surface));
+line-height:32px;
+height:32px;
+padding-left:12px;
+box-shadow:inset 4px 0 0 #b08800;
+border-bottom:1px solid var(--p3-border);
+}
+
+.ploopi_annotation_titleform img, .ploopi_annotation_titleform span {
+    vertical-align: middle;
+}
+
+.ploopi_annotation_titleform span {
+   padding-left: 5px;
+}
+
+/******************
+  ANNOTATIONS (bloc du socle, annotation::display_p4, comportement dans js/annotation.js)
+*******************/
+.p4-anno {
+    container-type: inline-size;
+    margin: 12px 0;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+    overflow: hidden;
+}
+
+.p4-anno-toggle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    min-height: 44px;
+    margin: 0;
+    padding: 8px 14px;
+    border: 0;
+    border-radius: 0;
+    background: var(--surface-2);
+    color: var(--text);
+    font: inherit;
+    font-size: var(--fs-sm);
+    text-align: left;
+    box-shadow: none;
+    cursor: pointer;
+}
+.p4-anno-toggle:hover { background: var(--surface-3); }
+.p4-anno-toggle:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }
+.p4-anno-toggle > .p4-icon:first-child { color: var(--warning); }
+.p4-anno-title { font-weight: 650; }
+.p4-anno-chevron { margin-left: auto; color: var(--text-3); transition: transform .15s var(--ease); }
+.p4-anno-toggle[aria-expanded="true"] .p4-anno-chevron { transform: rotate(180deg); }
+.p4-anno-toggle[aria-expanded="true"] { border-bottom: 1px solid var(--border); }
+
+.p4-anno-body { padding: 4px 14px 14px; }
+.p4-anno-empty { margin: 10px 0 4px; color: var(--text-3); font-size: var(--fs-sm); }
+
+.p4-anno-list { list-style: none; margin: 0; padding: 0; }
+.p4-anno-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+}
+.p4-anno-item .p4-avatar { width: 30px; height: 30px; font-size: 11px; }
+.p4-anno-main { flex: 1; min-width: 0; }
+.p4-anno-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 10px;
+    font-size: var(--fs-sm);
+}
+.p4-anno-meta strong { color: var(--text); font-weight: 650; }
+.p4-anno-date { color: var(--text-3); font-size: var(--fs-xs); }
+.p4-anno-meta .p4-badge { gap: 4px; }
+.p4-anno-meta .p4-badge .p4-icon { width: 12px; height: 12px; }
+.p4-anno-text {
+    margin-top: 4px;
+    color: var(--text-2);
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+.p4-anno-text a { color: var(--primary-text); }
+.p4-anno-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.p4-anno-delete { flex: none; color: var(--text-3); }
+.p4-anno-delete:hover { color: var(--danger); background: var(--danger-soft); }
+
+.p4-anno-form { display: grid; gap: 12px; margin-top: 14px; }
+.p4-anno-form .p4-input { width: 100%; max-width: 100%; box-sizing: border-box; margin: 0; }
+.p4-anno-form textarea.p4-input { min-height: 76px; resize: vertical; }
+.p4-anno .p4-field > label { display: block; float: none; width: auto; margin: 0 0 6px; padding: 0; text-align: left; }
+.p4-anno-form label small { color: var(--text-3); font-weight: 400; }
+.p4-anno-form-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+    gap: 12px;
+}
+.p4-anno .p4-anno-private { align-items: center; box-sizing: border-box; height: var(--control-h); margin: 0; padding: 0 12px; }
+.p4-anno .p4-anno-private input { margin: 0; }
+.p4-anno .p4-anno-private span { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+.p4-anno .p4-anno-private small { display: inline; margin-left: 4px; font-family: inherit; font-size: var(--fs-xs); }
+.p4-anno .p4-anno-private .p4-icon { width: 14px; height: 14px; color: var(--text-3); }
+.p4-anno-suggest:empty { display: none; }
+.p4-anno-suggest { margin-top: 6px; font-size: var(--fs-xs); color: var(--text-3); }
+.p4-anno-suggest a { color: var(--primary-text); }
+.p4-anno-error { margin: 0; color: var(--danger); font-size: var(--fs-sm); font-weight: 600; }
+.p4-anno-form [aria-invalid="true"] { border-color: var(--danger); }
+.p4-anno-actions { display: flex; justify-content: flex-end; gap: 8px; }
+
+/* Annotations d'une étiquette (fenêtre) */
+.p4-anno-history { display: flex; flex-direction: column; max-height: min(70vh, 560px); }
+.p4-anno-history-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border);
+}
+.p4-anno-history-head strong { display: block; font-family: var(--font-mono); font-size: var(--fs); color: var(--primary-text); }
+.p4-anno-history-head span { display: block; margin-top: 2px; color: var(--text-3); font-size: var(--fs-xs); }
+.p4-anno-history-list { list-style: none; margin: 0; padding: 0 14px; overflow: auto; }
+.p4-anno-history-list li { padding: 12px 0; border-bottom: 1px solid var(--border); }
+.p4-anno-history-list li:last-child { border-bottom: 0; }
+.p4-anno-history-meta { display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: baseline; font-size: var(--fs-sm); }
+.p4-anno-history-meta span { color: var(--text-3); font-size: var(--fs-xs); }
+.p4-anno-history-object { display: flex; align-items: center; gap: 6px; margin-top: 6px; font-size: var(--fs-xs); color: var(--text-3); }
+.p4-anno-history-object .p4-icon { width: 13px; height: 13px; flex: none; }
+.p4-anno-history-object a { color: var(--primary-text); }
+
+/* Bloc étroit (fenêtre d'un événement, colonne) : formulaire sur une colonne */
+@container (max-width: 560px) {
+    .p4-anno-form-row { grid-template-columns: 1fr; }
+    .p4-anno .p4-anno-private { height: auto; padding: 8px 10px; }
+}
+
+@media (max-width: 640px) {
+    .p4-anno-form-row { grid-template-columns: 1fr; }
+    .p4-anno .p4-anno-private { height: auto; padding: 8px 10px; }
+    .p4-anno .p4-anno-private span { white-space: normal; flex-wrap: wrap; }
+}

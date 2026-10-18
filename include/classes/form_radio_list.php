@@ -62,7 +62,7 @@ class form_radio_list extends form_field
      */
     public function __construct($strLabel, $arrValues, $strSelected, $strName, $strId = null, $arrOptions = null)
     {
-        if (!is_array($arrValues)) trigger_error('Ce type d\'élément attend un tableau de valeurs', E_USER_ERROR);
+        if (!is_array($arrValues)) throw new \ErrorException('Ce type d\'élément attend un tableau de valeurs');
 
         parent::__construct('input:radio', $strLabel, $arrValues, $strName, $strId, is_null($arrOptions) ? self::$_arrDefaultOptions : array_merge(self::$_arrDefaultOptions, $arrOptions));
 

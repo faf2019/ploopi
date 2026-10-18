@@ -1,3 +1,163 @@
+== Module DOC - version 4.10.24 ======================================================
+
+2026-10-11  Ovensia <stephane@ovensia.fr>
+
+* Envoi d'un fichier : la barre de progression se relance par une fonction et non
+  plus par une chaîne évaluée (setTimeout), que la Content-Security-Policy du socle
+  interdit.
+
+== Module DOC - version 4.10.23 ======================================================
+
+2026-10-11  Ovensia <stephane@ovensia.fr>
+
+* Flux RSS/Atom d'un dossier public réparé : il incluait une bibliothèque disparue
+  (lib/feedwriter, ancienne API « new FeedWriter(RSS2) ») et s'arrêtait sur une erreur
+  fatale. Il passe par ploopi\feed (socle) ; le contenu, déjà en UTF-8, n'est plus
+  converti depuis l'ISO-8859-1. La vignette est retirée du résumé : son URL portait le
+  jeton de la session qui avait produit le flux, mis en cache et servi à tous.
+  Nombre de documents du flux (doc_nbDocFeed) converti en entier.
+
+== Module DOC - version 4.10.22 ======================================================
+
+2026-10-11  Ovensia <stephane@ovensia.fr>
+
+* PHP 8.5 : étiquettes « case …; » (point-virgule, obsolète depuis PHP 8.5, erreur en PHP 9)
+  remplacées par « case …: ». Aucun changement de comportement.
+
+== Module DOC - version 4.10.21 ======================================================
+
+2026-10-11  Ovensia <stephane@ovensia.fr>
+
+* Choix d'un fichier ou d'une image depuis un éditeur (doc_selectfile, doc_selectimage) : l'URL
+  revient à l'éditeur du socle, TinyMCE (ploopi.editor.picked), qui remplace CKEditor 4. Le numéro
+  de retour, repris de l'URL, est un entier (il était écrit tel quel dans la page).
+
+== Module DOC - version 4.10.20 ======================================================
+
+2026-10-10  Ovensia <stephane@ovensia.fr>
+
+* Fiche d'un document, « Envoyer » : le lien appelait ploopi_tickets_new(), fonction
+  inexistante (rien ne se passait) ; il ouvre la fenêtre de message (ploopi.tickets.create)
+  avec le document lié. Le nom du document y était échappé pour le HTML puis par
+  addslashes() : une apostrophe dans le nom sortait de la chaîne JavaScript une fois
+  l'attribut décodé (injection de script par le nom d'un document). Il est passé en JSON.
+
+== Module DOC - version 4.10.19 ======================================================
+
+2026-10-10  Ovensia <stephane@ovensia.fr>
+
+* Explorateur : l'arbre des dossiers est enveloppé dans un <details> ouvert (classe ploopi_fold) dont
+  le résumé (« Dossier : <dossier courant> ») est masqué par include/styles.css : rendu inchangé sous
+  ploopi2/ploopi3 et sur grand écran. Le gabarit ploopi4 affiche ce résumé sur petit écran et le
+  socle (ploopi.skin.fold) replie alors l'arbre au chargement, pour montrer d'abord le contenu du
+  dossier.
+
+== Module DOC - version 4.10.18 ======================================================
+
+2026-10-10  Ovensia <stephane@ovensia.fr>
+
+* Habillage : les styles en ligne des écrans d'administration (bandeaux gris, barres de boutons,
+  cadres et filets) deviennent des classes, déclarées dans include/styles.css avec exactement le même
+  aspect ; le gabarit ploopi3 les redessine dans sa palette (tools/ploopi3_modules.php). Les écrans
+  servis au frontoffice (wce, template, display), où la feuille du module n'est pas chargée, gardent
+  leurs styles en ligne.
+
+== Module DOC - version 4.10.17 ======================================================
+
+2026-10-10  Ovensia <stephane@ovensia.fr>
+
+* Icônes : jeu unifié de l'administration (Tabler Icons, au trait, palette du gabarit ploopi3), sous
+  les mêmes noms et aux mêmes tailles ; le code qui les appelle ne change pas. Correspondances dans
+  tools/icones/modules.js, régénération par tools/icones/generer.js.
+* Dossiers : le glyphe et la couleur disent le type (privé sarcelle, partagé bleu, public ambre), le
+  cadenas la protection en écriture.
+* Recherche : bouton du sélecteur de date pris dans le gabarit (comme ploopi\date::open_calendar()),
+  au lieu de ./img/calendar/calendar.gif.
+
+== Module DOC - version 4.10.16 ======================================================
+
+2026-10-09  Ovensia <stephane@ovensia.fr>
+
+* Balises PHP courtes « <? » remplacées par « <?php » : public_search.php (options de recherche). Avec
+  short_open_tag à Off (php.ini de production), le code partait tel quel dans la page.
+
+== Module DOC - version 4.10.15 ======================================================
+
+2026-10-09  Ovensia <stephane@ovensia.fr>
+
+* Prototype (retiré au profit de jQuery) : les options d'un dossier (partage, validation, flux) ne
+  suivaient plus son type (invoke, show/hide sur un élément DOM).
+
+== Module DOC - version 4.10.14 ======================================================
+
+2026-10-09  Ovensia <stephane@ovensia.fr>
+
+* Fichiers .gz resynchronisés avec leurs sources (ils dataient d'une minification antérieure).
+
+== Module DOC - version 4.10.13 ======================================================
+
+2026-10-09  Ovensia <stephane@ovensia.fr>
+
+* Sécurité : commandes d'indexation et chemins du mode « serveur ».
+
+  - l'extension du fichier déposé, reprise de son nom, entrait telle quelle dans le
+    chemin sur le disque et dans les commandes de métadonnées et d'indexation
+    (pdfinfo, jhead, hachoir-metadata, parseurs), entre guillemets doubles où
+    $(...) reste interprété. Elle est ramenée aux lettres et chiffres, et chaque
+    chemin passe par escapeshellarg() ;
+  - en mode « serveur », le fichier était pris à _PLOOPI_PATHSHARED suivi du chemin
+    reçu, sans contrôle : « ../ » faisait copier dans la GED n'importe quel fichier
+    lisible par le serveur web. Le chemin réel doit désormais se trouver sous le
+    dossier partagé ;
+  - conversion PDF (unoconv) et réindexation en ligne de commande : arguments
+    échappés.
+
+== Module DOC - version 4.10.12 ======================================================
+
+2026-10-08  Ovensia <stephane@ovensia.fr>
+
+* Compatibilité PHP 8.1 à 8.4 (PR #63) : utf8_encode() remplacée par
+  mb_convert_encoding() dans les flux, gardes safe_mode retirées.
+
+== Module DOC - version 4.10.11 ======================================================
+
+2026-10-06  Ovensia <stephane@ovensia.fr>
+
+* Identifiants md5id imprévisibles. md5id valait md5(horodatage_identifiant) :
+  l'identifiant étant séquentiel et l'horodatage à la seconde, l'empreinte d'un
+  document était calculable par quiconque connaissait approximativement sa date
+  de création. Les nouveaux md5id sont tirés de random_bytes() (32 caractères
+  hexadécimaux, format inchangé) : docfile et docfiledraft. Aucune migration
+  des empreintes existantes (décision D4) : le md5id n'est jamais la seule
+  barrière, les opérations publiques gardent leur contrôle d'accès.
+
+== Module DOC - version 4.10.10 ======================================================
+
+2026-10-05  Ovensia <stephane@ovensia.fr>
+
+* Contrôle d'accès des opérations dispensées du jeton anti-CSRF.
+
+  doc_file_view et doc_file_download ne vérifiaient que foldertype == 'public', sans
+  le cloisonnement par espace qu'appliquent block.php et class_docapi.php : un
+  document d'un dossier public d'un espace étranger était téléchargeable.
+
+  doc_image_get n'appliquait aucun contrôle : la vignette de n'importe quel document
+  était servie à qui connaissait son identifiant md5, dossier privé d'un autre
+  utilisateur compris. Une vignette révèle le contenu du document.
+
+  include/global.php fournit désormais doc_isfolderallowed(), qui reproduit la clause
+  de visibilité de class_docapi.php (propriétaire, dossier partagé en session, ou
+  dossier public d'un espace visible), et doc_ispublicfolder(), plus restrictive, pour
+  les liens publics. Les deux échouent fermé quand la session ne connaît pas
+  l'instance de module.
+
+== Module DOC - version 4.10.9 =======================================================
+
+2026-09-17  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>
+
+* Déclaration des opérations dispensées du jeton anti-CSRF dans include/publicops.php :
+  doc_image_get, doc_file_view et doc_file_download, appelées par des URL sans jeton
+
 == Module DOC - version 4.10.8 ====================================================
 
 2022-03-15  Stéphane Escaich ~ Ovensia <stephane@ovensia.fr>

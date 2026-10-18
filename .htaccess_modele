@@ -29,14 +29,22 @@ AddDefaultCharset UTF-8
     php_flag html_errors on
     php_flag log_errors on
 
-    php_flag magic_quotes_gpc Off
-    php_flag register_globals Off
+    # magic_quotes_gpc et register_globals ont disparu de PHP en 5.4 : les directives
+    # correspondantes n'ont plus d'effet et peuvent faire échouer le démarrage selon la SAPI.
     php_value include_path .
 
+    # Sécurité de la session.
+    # use_only_cookies interdit a PHP d'accepter un identifiant de session fourni dans l'URL
+    # ou en POST : sans cela la fixation de session est triviale et l'identifiant de session
+    # fuit vers les sites tiers par l'entête Referer.
     php_flag session.use_trans_sid off
-    php_flag session.use_only_cookies Off
+    php_flag session.use_only_cookies On
     php_flag session.cookie_httponly On
-    # Recommandation de sécurité : mettre "On" si connexion chiffrée
+    # samesite limite l'envoi du cookie aux requêtes issues du site lui-même.
+    # Nécessite PHP 7.3 ou supérieur, sans effet en deçà.
+    php_value session.cookie_samesite Lax
+    # À mettre à "On" dès lors que le site est servi en HTTPS.
+    # Le socle force déjà cette valeur lorsqu'il détecte une connexion chiffrée.
     php_flag session.cookie_secure Off
 
     php_value memory_limit 256M
@@ -82,6 +90,25 @@ AddDefaultCharset UTF-8
 <IfModule mod_headers.c>
   Header unset ETag
   Header always set X-Frame-Options "SAMEORIGIN"
+
+  # Interdit au navigateur de deviner un type plus permissif que celui annoncé.
+  # Indispensable dès lors que des fichiers déposés par les utilisateurs sont servis.
+  Header always set X-Content-Type-Options "nosniff"
+
+  # Limite la fuite d'URL internes (identifiants, jetons) vers les sites tiers
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  # CSP en Report-Only : mesurer avant d'interdire (feuille de route, lot 11).
+  # Les pages PHP posent leur propre entête, avec le report-uri du point de
+  # collecte ploopi_csp_report : setifempty ne couvre que les ressources
+  # statiques, sans doubler la politique des pages (Apache >= 2.4.7).
+  Header setifempty Content-Security-Policy-Report-Only "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; object-src 'none'; frame-ancestors 'self'; base-uri 'self'"
+
+  # À activer uniquement si le site est servi exclusivement en HTTPS.
+  #Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+
+  # CSP en Report-Only active ci-dessus : le backoffice genere des gestionnaires "onclick"
+  # et des blocs <script> en ligne, qui seront signales par les navigateurs sans etre bloques.
+  # La bascule vers une CSP effective sera une decision une fois le rapport net.
 </IfModule>
 
 FileETag None
@@ -116,6 +143,10 @@ FileETag None
     RewriteRule ^(cli|cron)$ - [F]
     # Fichiers interdits partout
     RewriteRule \.(sh|log|sql|inc|bak|.*~)$ - [F]
+    # Exemples, tests et documentation des bibliothèques (vendor/) : jamais utiles en
+    # production, et parfois vulnérables (ceux de CKEditor 4, retiré depuis, portaient une
+    # XSS, CVE-2024-24816) ; seuls les fichiers des bibliothèques sont servis
+    RewriteRule ^vendor/.+/(samples|examples|tests?|docs?)/ - [F]
 
     # Regles de reecriture pour la partie FrontOffice
     RewriteRule ^(.*)-h([0-9]*)a([0-9]*)\.[a-z0-9]*(.*)$ index.php?headingid=$2&articleid=$3$4 [L]

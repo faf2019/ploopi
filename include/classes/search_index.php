@@ -23,7 +23,6 @@
 namespace ploopi;
 
 use ploopi;
-use Keller\SoundexFrBundle\Services\SoundexFr;
 use Wamania\Snowball\StemmerFactory;
 
 /**
@@ -53,7 +52,7 @@ abstract class search_index
             $objDb = new db(_PLOOPI_INDEXATION_DB_SERVER, _PLOOPI_INDEXATION_DB_LOGIN, _PLOOPI_INDEXATION_DB_PASSWORD, _PLOOPI_INDEXATION_DB_DATABASE);
             if(!$objDb->isconnected()) {
                 $objDb = null;
-                trigger_error(_PLOOPI_MSG_DBERROR, E_USER_ERROR);
+                throw new \ErrorException(_PLOOPI_MSG_DBERROR);
             }
         }
         else {
@@ -196,6 +195,8 @@ abstract class search_index
         if ($id_module == -1 && !empty($_SESSION['ploopi']['moduleid'])) $id_module= $_SESSION['ploopi']['moduleid'];
 
         $words = array();
+        // Forme accentuée de chaque mot (première rencontrée), dont se calcule la racine
+        $arrFormes = array();
         $words_indexed = $words_overall = 0;
 
         if ($usecommonwords && !isset($_SESSION['ploopi']['commonwords']) && file_exists(_PLOOPI_INDEXATION_COMMONWORDS_FR) )
@@ -215,7 +216,7 @@ abstract class search_index
         if (empty($_SESSION['ploopi']['commonwords'])) $_SESSION['ploopi']['commonwords'] = array();
 
         // TRAITEMENT DU CONTENT
-        for ($kw = strtok($content, _PLOOPI_INDEXATION_WORDSEPARATORS); $kw !== false; $kw = strtok(_PLOOPI_INDEXATION_WORDSEPARATORS))
+        foreach (str::splitwords($content) as $kw)
         {
             // mot en minuscule avec accents
             $kw = trim(mb_strtolower($kw));
@@ -233,6 +234,7 @@ abstract class search_index
 
                     if (!isset($words[$kw_clean])) $words[$kw_clean] = array('weight' => 1, 'meta' => 0);
                     else $words[$kw_clean]['weight']++;
+                    if (!isset($arrFormes[$kw_clean])) $arrFormes[$kw_clean] = $kw;
 
                     $words_indexed++;
                 }
@@ -247,10 +249,10 @@ abstract class search_index
         $max_weight = $word['weight'];
 
         // TRAITEMENT DES METAS
-        for ($kw = strtok($meta, _PLOOPI_INDEXATION_WORDSEPARATORS); $kw !== false; $kw = strtok(_PLOOPI_INDEXATION_WORDSEPARATORS))
+        foreach (str::splitwords($meta) as $kw)
         {
-            // mot en minuscule avec accents
-            $kw = trim(mb_strtolower($kw, 'ISO-8859-1'));
+            // mot en minuscule avec accents (le contenu est en UTF-8)
+            $kw = trim(mb_strtolower($kw));
 
             // mot en minuscule sans accent et sans caractère parasite
             $kw_clean = preg_replace("/[^a-zA-Z0-9]/","",str::convertaccents($kw));
@@ -267,6 +269,7 @@ abstract class search_index
 
                     $words[$kw_clean]['weight'] = _PLOOPI_INDEXATION_METAWEIGHT;
                     $words[$kw_clean]['meta'] = 1;
+                    if (!isset($arrFormes[$kw_clean])) $arrFormes[$kw_clean] = $kw;
                 }
             }
         }
@@ -301,15 +304,16 @@ abstract class search_index
         $stems = array();
         $phonetics = array();
         $stemmer = StemmerFactory::create('fr');
-        $soundex = new SoundexFr();
 
         for ($i = 1; ($i <= $max_kw && $kw_ratio >= _PLOOPI_INDEXATION_RATIOMIN) || !empty($kw['meta']); $i++)
         {
             $kw_value = key($words);
             if (strlen($kw_value) <= 20)
             {
-                $kw_pho = mb_strtolower($soundex->phonetique($kw_value));
-                $kw_stem = $stemmer->stem($kw_value);
+                $kw_pho = phonetique::code($kw_value);
+                // Racine du mot accentué, comme à la recherche (str::getwords). Aucune pour
+                // un mot sans lettre latine (forme sans accents vide) ; bornée à la colonne
+                $kw_stem = ($kw_value === '') ? '' : mb_substr(str::wordstem($stemmer, isset($arrFormes[$kw_value]) ? $arrFormes[$kw_value] : $kw_value), 0, 20);
 
                 $ratio = (empty($kw['meta']) && $kw_ratio<1) ? $kw_ratio : 1;
                 $relevance = (empty($kw['meta'])) ? ($kw['weight']*100)/$max_weight : 100;
@@ -353,7 +357,7 @@ abstract class search_index
         }
 
         foreach($stems as $stem => $detail) {
-            $db->query("INSERT INTO ploopi_index_stem_element(id_element, stem, weight, ratio, relevance) VALUES('{$id_element}', '{$stem}', {$detail['weight']}, {$detail['ratio']}, {$detail['relevance']})");
+            $db->query("INSERT INTO ploopi_index_stem_element(id_element, stem, weight, ratio, relevance) VALUES('{$id_element}', '".$db->addslashes($stem)."', {$detail['weight']}, {$detail['ratio']}, {$detail['relevance']})");
         }
 
         foreach($phonetics as $pho => $detail) {
@@ -429,7 +433,9 @@ abstract class search_index
             'limit' => 200,
             'phonetic' => true,
             'stem' => true,
-            'and' => false
+            'and' => false,
+            // Chaque mot cherché vaut aussi comme début de mot (suggestions à la frappe)
+            'prefix' => false
         );
 
         $options = array_merge($default_options, $options);
@@ -468,10 +474,19 @@ abstract class search_index
 
         // Prise en compte de la vue sur les données pour chaque module
         $arrViewFilter = array();
-        foreach($id_module as $idm) $arrViewFilter[] = "(e.id_module = {$idm} AND e.id_workspace IN (-1,0,".system::viewworkspaces($idm)."))";
+        foreach($id_module as $idm) $arrViewFilter[] = "(e.id_module = ".((int) $idm)." AND e.id_workspace IN (-1,0,".system::viewworkspaces((int) $idm)."))";
 
         // Intégration du filtre sur la vue dans le filtre global
         if (!empty($arrViewFilter)) $arrSearch[] = '('.implode(' OR ', $arrViewFilter).')';
+
+        /**
+         * Clé des résultats : l'enregistrement (id_record) quand la recherche porte sur un
+         * seul type d'objet d'un seul module — les modules s'en servent (la GED lit ses
+         * md5id dans les clés) ; l'élément d'index sinon. Toujours l'enregistrement,
+         * deux contenus de même identifiant (dossier 5 et document 5, article 5 d'un autre
+         * module) s'écrasaient : la recherche intégrale en perdait un.
+         */
+        $booParRecord = ($id_object != -1 && sizeof($id_module) == 1);
 
         $strSearch = (empty($arrSearch)) ? '' : ' WHERE '.implode(' AND ', $arrSearch);
 
@@ -496,7 +511,7 @@ abstract class search_index
 
             while ($row = $db->fetchrow())
             {
-                $id = ($id_module != '') ? $row['id_record'] : $row['id'];
+                $id = $booParRecord ? $row['id_record'] : $row['id'];
 
                 $arrElements[$id] = $row;
                 $arrRelevance[$id] = array(
@@ -510,8 +525,7 @@ abstract class search_index
         else
         {
             $stemmer = StemmerFactory::create('fr');
-            $soundex = new SoundexFr();
-
+    
             $arrSearchs = array('keyword' => array(), 'stem' => array(), 'phonetic' => array());
             foreach($arrKeywords as $kw => $occ)
             {
@@ -523,7 +537,7 @@ abstract class search_index
                 }
 
                 if ($options['phonetic']) {
-                    $pho = mb_strtolower($soundex->phonetique($kw));
+                    $pho = phonetique::code($kw);
                     if ($pho != '') $arrSearchs['phonetic'][$pho] = 1;
                 }
             }
@@ -546,14 +560,14 @@ abstract class search_index
 
                             {$strSearch}
 
-                            AND         ke.{$type} = '{$kw}'
+                            AND         ke.{$type} ".(($options['prefix'] && $type == 'keyword') ? "LIKE '".$db->addslashes(addcslashes($kw, '%_\\'))."%'" : "= '".$db->addslashes($kw)."'")."
                             ";
 
                     $db->query($sql);
 
                     while ($row = $db->fetchrow())
                     {
-                        $id = ($id_module != '') ? $row['id_record'] : $row['id'];
+                        $id = $booParRecord ? $row['id_record'] : $row['id'];
 
                         if (!isset($arrElements[$id]))
                         {
@@ -606,8 +620,9 @@ abstract class search_index
         // tri du résultat en fonction du champ et de l'ordre
         $compare_sign = ($sort == 'DESC') ? '>' : '<';
 
+        // Comparaison entière (un booléen est obsolète depuis PHP 8)
         uasort($arrRelevance, function($a, $b) use ($orderby, $compare_sign) {
-            return $compare_sign == '>' ? $b[$orderby] > $a[$orderby] : $b[$orderby] < $a[$orderby];
+            return $compare_sign == '>' ? $b[$orderby] <=> $a[$orderby] : $a[$orderby] <=> $b[$orderby];
         });
 
 

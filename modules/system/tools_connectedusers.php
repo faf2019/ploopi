@@ -33,20 +33,20 @@
 /**
  * Ouverture du bloc
  */
-echo ploopi\skin::get()->open_simplebloc(_SYSTEM_LABEL_CONNECTEDUSERS);
+echo system_open_bloc(_SYSTEM_LABEL_CONNECTEDUSERS);
 
 if (isset($_GET['monitoring'])) header("Refresh: ".intval($_GET['monitoring'])."; URL=".ploopi\crypt::urlencode("admin.php?op=connectedusers&monitoring={$_GET['monitoring']}"));
 
 $columns = array();
 $values = array();
 
-$columns['left']['timestp']     = array('label' => 'Date/Heure', 'width' => '130', 'options' => array('sort' => true));
-$columns['left']['ip']          = array('label' => 'IP client', 'width' => '110', 'options' => array('sort' => true));
-$columns['auto']['domaine']     = array('label' => 'Domaine', 'options' => array('sort' => true));
-$columns['right']['module']     = array('label' => 'Module', 'width' => '100', 'options' => array('sort' => true));
-$columns['right']['workspace']  = array('label' => 'Espace', 'width' => '150', 'options' => array('sort' => true));
-$columns['right']['name']       = array('label' => 'Nom', 'width' => '150', 'options' => array('sort' => true));
-$columns['right']['login']      = array('label' => 'Login', 'width' => '100', 'options' => array('sort' => true));
+$columns['left']['timestp']     = array('label' => _SYSTEM_TOOLS_COL_DATETIME, 'width' => '130', 'options' => array('sort' => true));
+$columns['left']['ip']          = array('label' => _SYSTEM_TOOLS_COL_IP, 'width' => '110', 'options' => array('sort' => true));
+$columns['auto']['domaine']     = array('label' => _SYSTEM_TOOLS_COL_DOMAIN, 'options' => array('sort' => true));
+$columns['right']['module']     = array('label' => _SYSTEM_TOOLS_COL_MODULE, 'width' => '100', 'options' => array('sort' => true));
+$columns['right']['workspace']  = array('label' => _SYSTEM_TOOLS_COL_WORKSPACE, 'width' => '150', 'options' => array('sort' => true));
+$columns['right']['name']       = array('label' => _SYSTEM_TOOLS_COL_NAME, 'width' => '150', 'options' => array('sort' => true));
+$columns['right']['login']      = array('label' => _SYSTEM_TOOLS_COL_LOGIN, 'width' => '100', 'options' => array('sort' => true));
 
 $c = 0;
 
@@ -71,7 +71,7 @@ while($row = ploopi\db::get()->fetchrow())
     $values[$c]['values']['domaine']    = array('label' => ploopi\str::htmlentities($row['domain']));
     if (is_null($row['login']))
     {
-        $values[$c]['values']['login']  = array('label' => 'anonyme', 'style' => 'font-style:italic;');
+        $values[$c]['values']['login']  = array('label' => _SYSTEM_TOOLS_ANONYMOUS, 'style' => 'font-style:italic;');
         $values[$c]['values']['name']   = array('label' => '&nbsp;');
     }
     else
@@ -86,7 +86,18 @@ while($row = ploopi\db::get()->fetchrow())
 
 }
 
-ploopi\skin::get()->display_array($columns, $values, 'array_connectedusers', array('sortable' => true, 'orderby_default' => 'timestp', 'sort_default' => 'DESC'));
+system_display_array($columns, $values, 'array_connectedusers', array('sortable' => true, 'orderby_default' => 'timestp', 'sort_default' => 'DESC'));
+// Gabarits de génération 4 : rafraîchissement automatique par une liste de délais
+if (ploopi\skin::get()->version() >= 4)
+{
+    $arrDelays = array(ploopi\crypt::urlencode('admin.php?op=connectedusers') => _SYSTEM_TOOLS_MONITORING_OFF);
+    foreach(array(2, 5, 10, 30, 60) as $intDelay) $arrDelays[ploopi\crypt::urlencode("admin.php?op=connectedusers&monitoring={$intDelay}")] = str_replace('<NB>', $intDelay, _SYSTEM_TOOLS_MONITORING_EVERY);
+    $strCurrent = isset($_GET['monitoring']) ? array_search(str_replace('<NB>', intval($_GET['monitoring']), _SYSTEM_TOOLS_MONITORING_EVERY), $arrDelays) : key($arrDelays);
+
+    echo '<div class="p4-row p4-wrap p4-ui p4-mt-12"><span class="p4-grow"></span>'.ploopi\system\ui::icon('refresh', 'p4-muted').ploopi\system\ui::select('p4_monitoring', $arrDelays, $strCurrent, array('data-p4-nav' => true, 'aria-label' => _SYSTEM_TOOLS_MONITORING, 'class' => 'p4-select p4-select-inline')).'</div>';
+    echo system_close_bloc();
+    return;
+}
 ?>
 
 <div style="padding:4px;text-align:right;">
@@ -107,4 +118,4 @@ else
 ?>
 </div>
 
-<?php echo ploopi\skin::get()->close_simplebloc(); ?>
+<?php echo system_close_bloc(); ?>

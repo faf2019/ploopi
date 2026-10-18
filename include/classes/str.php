@@ -71,7 +71,9 @@ abstract class str {
                 break;
 
                 case 'middle':
-                    $str = mb_substr($str,0,($len-3)/2).'...'.mb_substr($str,-($len-3)/2,($len-3)/2);
+                    // Demi-longueur entière : mb_substr() la tronquait déjà (obsolète depuis PHP 8.1)
+                    $intHalf = intdiv($len - 3, 2);
+                    $str = mb_substr($str,0,$intHalf).'...'.mb_substr($str,-$intHalf,$intHalf);
                 break;
             }
 
@@ -138,7 +140,8 @@ abstract class str {
 
     public static function tourl($str)
     {
-        $str = urlencode(strtolower(self::convertaccents(strtr(trim($str), _PLOOPI_INDEXATION_WORDSEPARATORS, str_pad('', strlen(_PLOOPI_INDEXATION_WORDSEPARATORS), '-')))));
+        // Séparateurs de mots remplacés par un tiret, caractère par caractère (UTF-8)
+        $str = urlencode(strtolower(self::convertaccents(implode('-', self::splitwords(trim((string) $str))))));
         return preg_replace(array('/--+/', '/-$/'), array('-', ''), $str);
     }
 
@@ -240,7 +243,7 @@ abstract class str {
 
     public static function xmlentities($str, $utf8 = false, $extended = false)
     {
-        if ($extended) for($i=128; $i<256; $i++) $asc2uni[$utf8 ? utf8_encode(chr($i)) : chr($i)] = "&#x".dechex($i).";";
+        if ($extended) for($i=128; $i<256; $i++) $asc2uni[$utf8 ? mb_convert_encoding(chr($i), 'UTF-8', 'ISO-8859-1') : chr($i)] = "&#x".dechex($i).";";
 
         $str = str_replace(array("&", ">", "<", "\"", "'", "\r"), array("&amp;", "&gt;", "&lt;", "&quot;", "&apos;", ""), $str);
 
@@ -526,6 +529,49 @@ abstract class str {
     }
 
     /**
+     * Découpe un texte en mots, selon les séparateurs de _PLOOPI_INDEXATION_WORDSEPARATORS.
+     *
+     * Le découpage se fait caractère par caractère (UTF-8). strtok(), qui travaille octet
+     * par octet, prenait pour séparateurs les octets des séparateurs multioctets
+     * (« » £ µ §) et coupait les lettres qui les partagent : ç, ë, û, ã, õ.
+     *
+     * @param string $str texte
+     * @return array mots, dans l'ordre, sans mot vide
+     */
+
+    public static function splitwords($str)
+    {
+        static $strMotif = null;
+
+        if (is_null($strMotif))
+        {
+            $arrSeparateurs = array();
+            foreach (mb_str_split(mb_scrub(_PLOOPI_INDEXATION_WORDSEPARATORS, 'UTF-8'), 1, 'UTF-8') as $strCar) $arrSeparateurs[$strCar] = preg_quote($strCar, '/');
+            $strMotif = '/['.implode('', $arrSeparateurs).']+/u';
+        }
+
+        $arrMots = preg_split($strMotif, mb_scrub((string) $str, 'UTF-8'), -1, PREG_SPLIT_NO_EMPTY);
+
+        return is_array($arrMots) ? $arrMots : array();
+    }
+
+    /**
+     * Racine d'un mot pour l'index de recherche, calculée de la même façon à l'indexation
+     * et à la recherche : sur le mot accentué, en minuscules, réduit à ses lettres et
+     * chiffres. Snowball est fait pour le mot accentué : sans accents, « abandonnée »
+     * donnerait « abandonne » et ne rejoindrait plus « abandon ».
+     *
+     * @param object $objStemmer racinisateur (Wamania\Snowball\StemmerFactory::create('fr'))
+     * @param string $strMot mot
+     * @return string racine
+     */
+
+    public static function wordstem($objStemmer, $strMot)
+    {
+        return (string) $objStemmer->stem((string) preg_replace('/[^\p{L}\p{N}]+/u', '', mb_strtolower((string) $strMot)));
+    }
+
+    /**
      * Extrait les mots clés ou racines d'un texte
      *
      * @param string $content contenu du texte à analyser
@@ -561,7 +607,7 @@ abstract class str {
             $stemmer = StemmerFactory::create('fr');
         }
 
-        for ($kw = strtok($content, _PLOOPI_INDEXATION_WORDSEPARATORS); $kw !== false; $kw = strtok(_PLOOPI_INDEXATION_WORDSEPARATORS))
+        foreach (self::splitwords($content) as $kw)
         {
             // remove empty characters
             $kw = trim(mb_strtolower($kw));
@@ -574,7 +620,7 @@ abstract class str {
                 $len = mb_strlen($kw_clean);
                 if ($len >= _PLOOPI_INDEXATION_WORDMINLENGHT && $len <= _PLOOPI_INDEXATION_WORDMAXLENGHT)
                 {
-                    $kw = ($getstem) ? $stemmer->stem($kw) : $kw_clean;
+                    $kw = ($getstem) ? self::wordstem($stemmer, $kw) : $kw_clean;
 
                     if (!isset($words[$kw])) $words[$kw] = 1;
                     else $words[$kw]++;

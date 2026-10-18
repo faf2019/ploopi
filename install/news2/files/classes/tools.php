@@ -89,7 +89,7 @@ abstract class tools
                 <input type="text" name="'.$pre.$curFld.'" id="'
                 .$pre.$curFld.'" value="'.$field.'" placeholder="URL de l\'image" />
                 <img src="./modules/news2/img/find_image-32_clr.png" id="'.$pre.$curFld.'_img"
-                onclick="news2_search_img(\''.$pre.$curFld.'\');"/></div>'
+                data-ploopi-action="news2_search_img" data-ploopi-args="'.self::jsarg($pre.$curFld).'"/></div>'
             )
         );
     }
@@ -108,9 +108,7 @@ abstract class tools
                 .'<img src="./modules/news2/img/ico_choose_article.png" '
                 .'style="display:block;float:left;cursor:pointer;margin:2px 4px;" '
                 .'title="Choisir un article ou une rubrique" alt="Choisir" '
-                .'onclick="javascript:ploopi.popup.show(ploopi.xhr.send('
-                .'\'admin-light.php\',\'ploopi_env=\'+_PLOOPI_ENV+\'&amp;entity=admin&amp;action=op_selectredirect\',false)'
-                .', 300, event, true,\'news2_popup_selectredirect\');"/>'
+                .'data-ploopi-action="news2_selectredirect"/>'
                 .'</div>'
             )
         );
@@ -170,6 +168,19 @@ abstract class tools
         );
     }
 
+    /**
+     * Chaîne passée en argument d'une fonction JavaScript dans un attribut onclick de
+     * l'arbre (écrit tel quel par skin::display_treeview) : littéral JSON échappé pour
+     * l'attribut. addslashes laissait un guillemet refermer l'attribut.
+     *
+     * @param string $str chaîne
+     * @return string argument JavaScript
+     */
+    private static function jsarg($str)
+    {
+        return ploopi\str::htmlentities(json_encode((string)$str, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+    }
+
     static function news2_gettreeview(
         $arrHeadings = array(),
         $articles = array(),
@@ -194,19 +205,20 @@ abstract class tools
                     self::news2_getrewriterules(),
                     $fields['label'], $arrParents
                 );
-                $onclick = "{$onclickfct}('{$linkedurl}', '".addslashes($fields['label'])."')";
+                // Choix par js/actions.js : ploopi.actions[<onclickfct>](élément, évènement, url, libellé)
+                $arrAttrs = array('data-ploopi-action' => $onclickfct, 'data-ploopi-args' => array($linkedurl, $fields['label']));
                 $node = array(
                     'id' => 'h'.$prefix.$fields['id'],
                     'label' => $fields['label'],
                     'description' => $fields['description'],
                     'parents' => preg_split('/;/', $fields['parents']),
                     'node_link' => '',
-                    'node_onclick' =>
-                        "ploopi.skin.treeview_shownode('h{$prefix}{$fields['id']}', '"
-                        .ploopi\crypt::queryencode("entity=admin&action=op_detail_heading&hid=h{$prefix}{$fields['id']}")
-                        ."', 'admin-light.php')",
+                    'node_attrs' => array(
+                        'data-ploopi-treeview-node' => "h{$prefix}{$fields['id']}",
+                        'data-ploopi-query' => ploopi\crypt::queryencode("entity=admin&action=op_detail_heading&hid=h{$prefix}{$fields['id']}"),
+                    ),
                     'link' => $link,
-                    'onclick' => $onclick,
+                    'attrs' => $arrAttrs,
                     'icon' => (
                         $fields['id_heading'] == 0)
                         ? './modules/webedit/img/base.png'
@@ -243,7 +255,7 @@ abstract class tools
                         $fields['title'],
                         $arrParents
                     );
-                    $onclick = "{$onclickfct}('{$linkedurl}', '".addslashes($fields['title'])."')";
+                    $arrAttrs = array('data-ploopi-action' => $onclickfct, 'data-ploopi-args' => array($linkedurl, $fields['title']));
                     $node = array(
                         'id' => 'a'.$prefix.$fields['id'],
                         'label' => $fields['title'],
@@ -256,7 +268,7 @@ abstract class tools
                         'node_link' => '',
                         'node_onclick' => '',
                         'link' => $link,
-                        'onclick' => $onclick,
+                        'attrs' => $arrAttrs,
                         'icon' => "./modules/webedit/img/doc{$fields['new_version']}.png"
                     );
                     $treeview['list']['a'.$prefix.$fields['id']] = $node;
@@ -267,4 +279,28 @@ abstract class tools
         return($treeview);
     }
 
+
+    /**
+     * Contenu d'une news prêt à l'affichage : HTML riche saisi dans l'éditeur,
+     * passé par HTMLPurifier (il n'est pas filtré à l'enregistrement).
+     *
+     * @param string $strContent contenu enregistré
+     * @return string HTML sûr
+     */
+    public static function content($strContent) {
+        return ploopi\str::htmlpurifier((string)$strContent);
+    }
+
+    /**
+     * Lien ou image d'une news prêt pour un attribut HTML : échappé, et vide pour les
+     * schémas exécutables (javascript:, data:, vbscript:).
+     *
+     * @param string $strUrl adresse enregistrée
+     * @return string adresse échappée, '' si refusée
+     */
+    public static function url($strUrl) {
+        $strUrl = trim((string)$strUrl);
+        if (preg_match('/^\s*(javascript|data|vbscript)\s*:/i', preg_replace('/[\x00-\x20]+/', '', $strUrl))) return '';
+        return ploopi\str::htmlentities($strUrl);
+    }
 }

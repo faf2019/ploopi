@@ -133,7 +133,7 @@ echo ploopi\skin::get()->open_simplebloc(ploopi\str::htmlentities($strWikiPageId
                     <a href="<?php echo ploopi\crypt::urlencode_trusted("admin.php?op=wiki_page_history&wiki_page_id=".urlencode($strWikiPageId)); ?>" <?php if ($op == 'wiki_page_history') echo 'style="font-weight:bold;" '; ?>>
                         <img src="./modules/wiki/img/ico_history.png" /><span>Historique</span>
                     </a>
-                    <a href="javascript:void(0);" onclick="if (confirm('Êtes vous certain de vouloir supprimer cette page ?')) document.location.href='<?php echo ploopi\crypt::urlencode_trusted("admin-light.php?ploopi_op=wiki_page_delete&wiki_page_id=".urlencode($strWikiPageId)); ?>'; return false;">
+                    <a href="<?php echo ploopi\crypt::urlencode_trusted("admin-light.php?ploopi_op=wiki_page_delete&wiki_page_id=".urlencode($strWikiPageId)); ?>" data-ploopi-confirm="Êtes vous certain de vouloir supprimer cette page ?">
                         <img src="./modules/wiki/img/ico_delete.png" /><span>Supprimer</span>
                     </a>
                     <a href="<?php echo ploopi\crypt::urlencode_trusted("admin.php?op=wiki_page_rename&wiki_page_id=".urlencode($strWikiPageId)); ?>" <?php if ($op == 'wiki_page_rename') echo 'style="font-weight:bold;" '; ?>>
@@ -149,7 +149,7 @@ echo ploopi\skin::get()->open_simplebloc(ploopi\str::htmlentities($strWikiPageId
                         <?php
                     }
                     ?>
-                    <a href="javascript:void(0);" onclick="javascript:ploopi.openwin('<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=wiki_page_print&wiki_page_id={$strWikiPageId}") ?>', 800, 600)">
+                    <a href="#" data-ploopi-action="wiki_print" data-ploopi-args="<?php echo ploopi\str::htmlentities(json_encode(array(ploopi\crypt::urlencode("admin-light.php?ploopi_op=wiki_page_print&wiki_page_id={$strWikiPageId}")))); ?>">
                         <img src="./modules/wiki/img/ico_printer.png" /><span>Imprimer</span>
                     </a>
                     <a href="<?php echo ploopi\crypt::urlencode_trusted("admin.php?op=wiki_page_modify&wiki_page_id=".urlencode($strWikiPageId)); ?>" <?php if ($op == 'wiki_page_modify') echo 'style="font-weight:bold;" '; ?>>
@@ -223,7 +223,7 @@ echo ploopi\skin::get()->open_simplebloc(ploopi\str::htmlentities($strWikiPageId
         }
         ?>
     </div>
-    <div style="padding:4px 8px;background-color:#ddd;border-bottom:1px solid #ccc;">
+    <div class="wiki_bandeau">
         Pages visitées : <?php echo implode(' &raquo; ', $arrUrlHistory); ?>
     </div>
 
@@ -475,15 +475,10 @@ echo ploopi\skin::get()->open_simplebloc(ploopi\str::htmlentities($strWikiPageId
                 ?>
                 <div id="wiki_modify">
                     <form action="<?php echo ploopi\crypt::urlencode_trusted("admin-light.php?ploopi_op=wiki_page_save&wiki_page_id=".urlencode($strWikiPageId)); ?>" method="post">
-                        <textarea accesskey="e" class="wiki-edit text" style="width:99%;" id="wiki_page_content" name="fck_wiki_page_content" rows="35"><?php echo ploopi\str::htmlentities($strPageContent, null, null, false); ?></textarea>
-                        <div style="text-align:right"><input type="button" class="button" value="Annuler" onclick="javascript:document.location.href='<?php echo ploopi\crypt::urlencode_trusted("admin.php?wiki_page_id=".urlencode($strWikiPageId)); ?>';" /><input type="submit" class="button" value="Enregistrer" style="margin-left:4px;" /></div>
+                        <textarea accesskey="e" class="wiki-edit text" style="width:99%;" id="wiki_page_content" name="fck_wiki_page_content" rows="35" data-wiki-toolbar="<?php echo ploopi\str::htmlentities(ploopi\crypt::urlencode('admin-light.php?ploopi_op=wiki_help')); ?>"><?php echo ploopi\str::htmlentities($strPageContent, null, null, false); ?></textarea>
+                        <div style="text-align:right"><input type="button" class="button" value="Annuler" data-ploopi-href="<?php echo ploopi\str::htmlentities(ploopi\crypt::urlencode_trusted("admin.php?wiki_page_id=".urlencode($strWikiPageId))); ?>" /><input type="submit" class="button" value="Enregistrer" style="margin-left:4px;" /></div>
                     </form>
                 </div>
-                <script>
-                    var toolbar = new jsToolBar($('#wiki_page_content')[0]);
-                    toolbar.setHelpLink('Formatage du texte: <a href="javascript:void(0);" onclick="javascript:ploopi.xhr.topopup(350, event, \'popup_wiki_help\', \'<?php echo ploopi\crypt::urlencode('admin-light.php?ploopi_op=wiki_help'); ?>\');"; return false;">Aide</a>');
-                    toolbar.draw();
-                </script>
                 <?php
             }
             else ploopi\output::redirect('admin.php');
@@ -492,13 +487,12 @@ echo ploopi\skin::get()->open_simplebloc(ploopi\str::htmlentities($strWikiPageId
         // consultation
         default:
             ?>
-            <div id="wiki_page" class="wiki_page"><?php echo wiki_render($objWikiPage->fields['content']); ?></div>
-            <script>wiki_toc();</script>
+            <div id="wiki_page" class="wiki_page" data-wiki-toc><?php echo wiki_render($objWikiPage->fields['content']); ?></div>
             <?php
         break;
     }
     ?>
-    <div style="border-top:1px solid #ccc;">
+    <div class="wiki_filet_haut">
         <?php
             ploopi\subscription::display(
                 _WIKI_OBJECT_PAGE,
@@ -511,7 +505,7 @@ echo ploopi\skin::get()->open_simplebloc(ploopi\str::htmlentities($strWikiPageId
             );
         ?>
     </div>
-    <div style="border-top:1px solid #ccc;">
+    <div class="wiki_filet_haut">
         <?php ploopi\annotation::display(_WIKI_OBJECT_PAGE, $strWikiPageId, $strWikiPageId); ?>
     </div>
 </div>

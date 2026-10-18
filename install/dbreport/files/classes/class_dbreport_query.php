@@ -36,6 +36,7 @@
  * Inclusion de la classe parent
  */
 include_once './include/classes/data_object.php';
+include_once './modules/dbreport/classes/class_dbreport.php';
 
 include_once './include/classes/query.php';
 
@@ -469,6 +470,7 @@ class dbreport_query extends ploopi\data_object
      */
     public function save()
     {
+        dbreport::defaults($this);
         $this->fields['timestp_update'] = ploopi\date::createtimestamp();
         return parent::save();
     }
@@ -552,13 +554,14 @@ class dbreport_query extends ploopi\data_object
 
         // Clonage de la relation avec "ploopi_mod_dbreport_queryrelation"
         $objQuerySel = new ploopi\query_select();
-        $objQuerySel->add_select('%d, `tablename_src`, `fieldname_src`,`tablename_dest`, `fieldname_dest`,`active`', $this->fields['id']);
+        $objQuerySel->add_select('%d, `tablename_src`, `fieldname_src`, `tablename_dest`, `fieldname_dest`, `type_join`, `active`', $this->fields['id']);
         $objQuerySel->add_from("ploopi_mod_dbreport_queryrelation");
         $objQuerySel->add_where('id_query = %d', $intClonedId);
 
+        // Colonnes nommées : la table compte aussi type_join, que la copie omettait (INSERT refusé)
         $objQueryIns = new ploopi\query_insert();
         $objQueryIns->set_table("ploopi_mod_dbreport_queryrelation");
-        $objQueryIns->add_raw(" ".$objQuerySel->get_sql());
+        $objQueryIns->add_raw(" (`id_query`, `tablename_src`, `fieldname_src`, `tablename_dest`, `fieldname_dest`, `type_join`, `active`) ".$objQuerySel->get_sql());
         $objQueryIns->execute();
 
         // Clonage de la relation avec "ploopi_mod_dbreport_query_module_type"
@@ -1137,7 +1140,7 @@ class dbreport_query extends ploopi\data_object
 
             if (!$this->arrResult = $objCache->get_var())
             {
-                if (!ini_get('safe_mode')) ini_set('max_execution_time', 0);
+                ini_set('max_execution_time', 0);
                 // Exécution de la requête
 
                 $this->_setFr();
@@ -1273,7 +1276,7 @@ class dbreport_query extends ploopi\data_object
     public function export_raw_csv($strFileName = null, $booSetHeaders = true, $strContentDisposition = 'attachment') {
 
         $strFormat = 'csv';
-        $strCharset = 'iso-8859-1';
+        $strCharset = 'UTF-8';
 
         ploopi\buffer::clean(true);
         ob_start();
@@ -1338,7 +1341,8 @@ class dbreport_query extends ploopi\data_object
         set_time_limit(300);
 
         $strFormat = strtolower($strFormat);
-        $strCharset = 'iso-8859-1';
+        // Les données sont lues en UTF-8 (connexion utf8) : elles sont servies telles quelles
+        $strCharset = 'UTF-8';
 
         switch($strFormat)
         {
@@ -1350,7 +1354,7 @@ class dbreport_query extends ploopi\data_object
                 echo '
                     <html>
                     <head>
-                        <meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1" />
+                        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
                         <style>
                         body {font: 11px Verdana,Tahoma,Arial,sans-serif;}
                         table {padding:0px;margin:2px;border:1px solid #c0c0c0;border-collapse:collapse;}
@@ -1594,21 +1598,23 @@ class dbreport_query extends ploopi\data_object
             }
 
             // Calcul des totaux par série (Pour: calcul de %, tri des séries par valeur, limit)
+            // Valeurs converties en nombres, comme pour les données du graphique : un champ texte
+            // choisi pour les valeurs arrêtait la génération (TypeError en PHP 8)
             $arrSeriesY = array();
             $arrSeriesX = array();
             foreach($arrResult as $row) {
                 if (isset($strChartxField)) {
                     if (!isset($arrSeriesX[$row[$strChartxField]])) $arrSeriesX[$row[$strChartxField]] = 0;
-                    $arrSeriesX[$row[$strChartxField]] += $row[$strChartvalField];
+                    $arrSeriesX[$row[$strChartxField]] += floatval($row[$strChartvalField]);
                 }
 
                 if (isset($strChartyField)) {
                     if (!isset($arrSeriesY[$row[$strChartyField]])) $arrSeriesY[$row[$strChartyField]] = 0;
-                    $arrSeriesY[$row[$strChartyField]] += $row[$strChartvalField];
+                    $arrSeriesY[$row[$strChartyField]] += floatval($row[$strChartvalField]);
                 }
                 else {
                     if (!isset($arrSeriesY[0])) $arrSeriesY[0] = 0;
-                    $arrSeriesY[0] += $row[$strChartvalField];
+                    $arrSeriesY[0] += floatval($row[$strChartvalField]);
                 }
             }
 
@@ -1725,13 +1731,14 @@ class dbreport_query extends ploopi\data_object
 
 
 
-            $arrData['categories'] = array_keys($arrSeriesX);
+            $arrData['categories'] = array_map('strval', array_keys($arrSeriesX));
+            $arrCategories = array_flip($arrData['categories']);
             $arrSeries = array();
 
 
             foreach($arrResult as $key => $row) {
 
-                $strSerie = utf8_encode(isset($strChartyField) ? $row[$strChartyField] : $strChartxField);
+                $strSerie = isset($strChartyField) ? $row[$strChartyField] : $strChartxField;
                 // Nouvelle série ?
                 if (!isset($arrSeries[$strSerie])) $arrSeries[$strSerie] = sizeof($arrSeries);
 
@@ -1739,36 +1746,15 @@ class dbreport_query extends ploopi\data_object
 
                 if (empty($arrData['series'][$keySerie])) {
                     $arrData['series'][$keySerie] = array(
-                        'name' => $strSerie,
-                        'data' => array(),
+                        'name' => (string)$strSerie,
+                        'data' => array_fill(0, sizeof($arrData['categories']), null),
                     );
-
-                    if ($this->fields['chart_indexes_display']) {
-                        $arrData['series'][$keySerie]['dataLabels'] = array(
-                            'enabled' => true,
-                            'color' => $this->fields['chart_indexes_font_color'],
-                            'style' => array(
-                                'fontSize' => $this->fields['chart_indexes_font_size'].'px',
-                                'fontFamily' => $this->fields['chart_font'],
-                            ),
-                            'rotation' => $this->fields['chart_indexes_rotation'],
-                            'x' => intval($this->fields['chart_indexes_x']),
-                            'y' => intval($this->fields['chart_indexes_y']),
-                            /*
-                            'align' => 'right',
-                            */
-                        );
-
-                        if ($this->fields['chart_indexes_format'] != '') {
-                            $arrData['series'][$keySerie]['dataLabels']['format'] = $this->fields['chart_indexes_format'];
-                        }
-
-                    }
-
-
                 }
 
-                $arrData['series'][$keySerie]['data'][] = array((string)$row[$strChartxField], floatval($row[$strChartvalField]));
+                // Valeur rangée sous sa catégorie (les doublons s'additionnent)
+                if (!isset($arrCategories[(string)$row[$strChartxField]])) continue;
+                $intCat = $arrCategories[(string)$row[$strChartxField]];
+                $arrData['series'][$keySerie]['data'][$intCat] += floatval($row[$strChartvalField]);
 
             }
 
@@ -1780,7 +1766,7 @@ class dbreport_query extends ploopi\data_object
 
 
     /**
-     * Rendu du graphique via la librairie highcharts
+     * Rendu du graphique avec Chart.js (modules/dbreport/include/chart.js)
      */
 
     public function displayChart() {
@@ -1795,205 +1781,93 @@ class dbreport_query extends ploopi\data_object
         // Lecture des données du graphique
         $arrData = $this->_getChartData();
 
+        // Indices consécutifs : json_encode doit produire des tableaux, pas des objets
+        foreach($arrData['series'] as $key => $row) $arrData['series'][$key]['data'] = array_values($row['data']);
+
         $strChartxField = $this->arrFields[$this->fields['chart_x']]['label'];
-        $strChartyField = !in_array($this->fields['chart'], array('pie', 'doughnut')) && isset($this->arrFields[$this->fields['chart_y']]['label']) ? $this->arrFields[$this->fields['chart_y']]['label'] : null;
         $strChartvalField = $this->arrFields[$this->fields['chart_val']]['label'];
 
+        $arrColors = array();
+        if ($this->fields['chart_colorset']) foreach(self::getChartColorSet($this->fields['chart_colorset']) as $strRgb) $arrColors[] = "rgb({$strRgb})";
+        if (empty($arrColors)) $arrColors[] = trim($this->fields['chart_color']);
+
+        $arrConfig = array(
+            'container' => 'dbreport_chart',
+            'type' => $this->fields['chart'],
+            'categories' => $arrData['categories'],
+            'series' => array_values($arrData['series']),
+            'colors' => $arrColors,
+            'background' => trim($this->fields['chart_background']),
+            'font' => (string)$this->fields['chart_font'],
+            'animation' => $this->fields['chart_animation'] == 1,
+            'lineWidth' => intval($this->fields['chart_line_thickness']),
+            'title' => array(
+                'text' => (string)$this->fields['chart_title'],
+                'size' => intval($this->fields['chart_title_font_size']),
+                'color' => trim($this->fields['chart_title_font_color']),
+            ),
+            'subtitle' => array('text' => (string)$this->fields['chart_subtitle']),
+            'legend' => array(
+                'display' => $this->fields['chart_legend_display'] == 1,
+                'align' => (string)$this->fields['chart_legend_align'],
+                'valign' => (string)$this->fields['chart_legend_valign'],
+                'size' => intval($this->fields['chart_legend_font_size']),
+                'color' => trim($this->fields['chart_legend_font_color']),
+            ),
+            'tooltip' => (string)$this->fields['chart_tooltip_format'],
+            'indexes' => array(
+                'display' => $this->fields['chart_indexes_display'] == 1,
+                'format' => $this->fields['chart_indexes_format'] != '' ? (string)$this->fields['chart_indexes_format'] : '{y}',
+                'size' => intval($this->fields['chart_indexes_font_size']),
+                'color' => trim($this->fields['chart_indexes_font_color']),
+                'rotation' => intval($this->fields['chart_indexes_rotation']),
+                'x' => intval($this->fields['chart_indexes_x']),
+                'y' => intval($this->fields['chart_indexes_y']),
+            ),
+            'bands' => array(
+                'display' => $this->fields['chart_interlaced_display'] == 1,
+                'xColor' => trim($this->fields['chart_interlaced_x_color']),
+                'yColor' => trim($this->fields['chart_interlaced_y_color']),
+            ),
+            'axis' => array(
+                'color' => trim($this->fields['chart_axis_color']),
+                'gridColor' => trim($this->fields['chart_grid_color']),
+                'fontSize' => intval($this->fields['chart_axis_font_size']),
+                'fontColor' => trim($this->fields['chart_axis_font_color']),
+                'x' => array(
+                    'title' => (string)$strChartxField,
+                    'prefix' => (string)$this->fields['chart_value_x_prefix'],
+                    'suffix' => (string)$this->fields['chart_value_x_suffix'],
+                    'gridWidth' => intval($this->fields['chart_grid_x_thickness']),
+                    'lineWidth' => intval($this->fields['chart_axis_x_thickness']),
+                ),
+                'y' => array(
+                    'title' => (string)$strChartvalField,
+                    'prefix' => (string)$this->fields['chart_value_y_prefix'],
+                    'suffix' => (string)$this->fields['chart_value_y_suffix'],
+                    'gridWidth' => intval($this->fields['chart_grid_y_thickness']),
+                    'lineWidth' => intval($this->fields['chart_axis_y_thickness']),
+                ),
+            ),
+        );
+
+        // Configuration en JSON : chaînes saisies par l'utilisateur inertes dans le <script>
+        $strConfig = json_encode($arrConfig, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
+        $strFilename = ploopi\str::tourl($this->fields['label'] != '' ? $this->fields['label'] : 'graphique').'.png';
+
         ?>
-
-        <div id="container" style="display:block; height: <?php echo $this->fields['chart_height']; ?>px; width: <?php echo $this->fields['chart_width']; ?>px;"></div>
-        <script type="text/javascript">
-
-
-        Event.observe(window, 'load', function() {
-            var chart = new Highcharts.Chart({
-
-                colors: <?php echo $this->fields['chart_colorset'] ? self::getChartColorSetJson($this->fields['chart_colorset']) : "['{$this->fields['chart_color']}']"; ?>,
-                lang: {
-                    decimalPoint: '.',
-                    thousandsSep: ' ',
-                    downloadJPEG: '<?php echo utf8_encode('Télécharger JPG'); ?>',
-                    downloadPDF: '<?php echo utf8_encode('Télécharger PDF'); ?>',
-                    downloadPNG: '<?php echo utf8_encode('Télécharger PNG'); ?>',
-                    downloadSVG: '<?php echo utf8_encode('Télécharger SVG'); ?>',
-                    printChart: '<?php echo utf8_encode('Imprimer'); ?>',
-                    contextButtonTitle: '<?php echo utf8_encode('Menu contextuel'); ?>',
-                },
-                chart: {
-                    renderTo: 'container',
-                    type: '<?php echo addslashes(strip_tags(self::$_arrChartBasicTypes[$this->fields['chart']])); ?>',
-                    // margin: [ 50, 50, 100, 80],
-                    backgroundColor: '<?php echo addslashes(strip_tags($this->fields['chart_background'])); ?>',
-                    animation: <?php echo $this->fields['chart_animation'] ? 'true' : 'false'; ?>,
-                    borderWidth: <?php echo $this->fields['chart_border_width']; ?>,
-                    borderColor: '<?php echo addslashes(strip_tags($this->fields['chart_border_color'])); ?>',
-                },
-                title: {
-                    text: '<?php echo utf8_encode(addslashes(strip_tags($this->fields['chart_title']))); ?>',
-                    style: {
-                        fontFamily: '<?php echo addslashes(strip_tags($this->fields['chart_font'])); ?>',
-                        fontSize: '<?php echo $this->fields['chart_title_font_size']; ?>px',
-                        color: '<?php echo addslashes(strip_tags($this->fields['chart_title_font_color'])); ?>',
-                    }
-                },
-                subtitle: {
-                    text: '<?php echo utf8_encode(addslashes(strip_tags($this->fields['chart_subtitle']))); ?>',
-                    style: {
-                        fontFamily: '<?php echo addslashes(strip_tags($this->fields['chart_font'])); ?>',
-                        fontSize: '<?php echo $this->fields['chart_title_font_size']/2; ?>px',
-                        color: '<?php echo addslashes(strip_tags($this->fields['chart_title_font_color'])); ?>',
-                    }
-                },
-                legend: {
-                    backgroundColor: '#FFFFFF',
-                    reversed: false,
-                    enabled: <?php echo $this->fields['chart_legend_display'] ? 'true' : 'false'; ?>,
-                    align: '<?php echo addslashes(strip_tags($this->fields['chart_legend_align'])); ?>',
-                    verticalAlign: '<?php echo addslashes(strip_tags($this->fields['chart_legend_valign'])); ?>',
-                    style: {
-                        fontFamily: '<?php echo addslashes(strip_tags($this->fields['chart_font'])); ?>',
-                        fontSize: '<?php echo $this->fields['chart_legend_font_size']; ?>px',
-                        color: '<?php echo addslashes(strip_tags($this->fields['chart_legend_font_color'])); ?>',
-                    },
-                    // labelFormat: '{point.y:.2f}',
-
-                },
-                tooltip: {
-                    <?php if ($this->fields['chart_tooltip_format'] != '') { ?>
-                    pointFormat: '<?php echo utf8_encode(addslashes(strip_tags($this->fields['chart_tooltip_format']))); ?>',
-                    <?php } ?>
-                    shared: true,
-                },
-                plotOptions: {
-                    series: {
-                        <?php if (in_array($this->fields['chart'], array('stackedColumn', 'stackedBar', 'stackedLine', 'stackedSpline', 'stackedArea', 'stackedSplineArea'))) { ?>
-                        stacking: 'normal'
-                        <?php } ?>
-                        <?php if (in_array($this->fields['chart'], array('stackedColumn100', 'stackedBar100', 'stackedLine100', 'stackedSpline100', 'stackedArea100', 'stackedSplineArea100'))) { ?>
-                        stacking: 'percent'
-                        <?php } ?>
-                    },
-                    pie: {
-                        animation: <?php echo $this->fields['chart_animation'] ? 'true' : 'false'; ?>,
-                        allowPointSelect: true,
-                        shadow: true,
-                        center: ['50%', '50%'],
-                        <?php if ($this->fields['chart'] == 'doughnut') { ?>
-                        size: '80%', // Donut
-                        innerSize: '50%', // Donut
-                        <?php } ?>
-                    },
-                    spline: {
-                        animation: <?php echo $this->fields['chart_animation'] ? 'true' : 'false'; ?>,
-                        lineWidth: <?php echo $this->fields['chart_line_thickness']; ?>,
-                        marker: {
-                            enabled: true
-                        },
-                    },
-                    line: {
-                        animation: <?php echo $this->fields['chart_animation'] ? 'true' : 'false'; ?>,
-                        lineWidth: <?php echo $this->fields['chart_line_thickness']; ?>,
-                        marker: {
-                            enabled: true
-                        },
-                    },
-                    area: {
-                        animation: <?php echo $this->fields['chart_animation'] ? 'true' : 'false'; ?>,
-                        lineWidth: <?php echo $this->fields['chart_line_thickness']; ?>,
-                        marker: {
-                            enabled: true
-                        },
-                    },
-                    areaspline: {
-                        animation: <?php echo $this->fields['chart_animation'] ? 'true' : 'false'; ?>,
-                        lineWidth: <?php echo $this->fields['chart_line_thickness']; ?>,
-                        marker: {
-                            enabled: true
-                        },
-                    },
-                    bar: {
-                        animation: <?php echo $this->fields['chart_animation'] ? 'true' : 'false'; ?>,
-                        borderWidth: 0,
-                    },
-                    column: {
-                        animation: <?php echo $this->fields['chart_animation'] ? 'true' : 'false'; ?>,
-                        borderWidth: 0,
-                    },
-                },
-
-
-
-                xAxis: {
-                    categories: <?php echo json_encode($arrData['categories']); ?>,
-                    title: {
-                        text: '<?php echo utf8_encode(addslashes(strip_tags($strChartxField))); ?>',
-                        style: {
-                            fontFamily: '<?php echo addslashes(strip_tags($this->fields['chart_font'])); ?>',
-                            fontSize: '<?php echo $this->fields['chart_axis_font_size']; ?>px',
-                            color: '<?php echo addslashes(strip_tags($this->fields['chart_axis_font_color'])); ?>',
-                        }
-                    },
-                    labels: {
-                        style: {
-                            fontFamily: '<?php echo addslashes(strip_tags($this->fields['chart_font'])); ?>',
-                            fontSize: '<?php echo $this->fields['chart_axis_font_size']; ?>px',
-                            color: '<?php echo addslashes(strip_tags($this->fields['chart_axis_font_color'])); ?>',
-                        },
-                        formatter: function() {
-                            return '<?php echo utf8_encode(addslashes(strip_tags($this->fields['chart_value_x_prefix']))); ?>' + this.value + '<?php echo utf8_encode(addslashes(strip_tags($this->fields['chart_value_x_suffix']))); ?>';
-                        }
-
-                    },
-                    <?php if ($this->fields['chart_interlaced_display']) { ?>
-                        alternateGridColor: '<?php echo addslashes(strip_tags($this->fields['chart_interlaced_x_color'])); ?>',
-                    <?php } ?>
-                    gridLineColor: '<?php echo addslashes(strip_tags($this->fields['chart_grid_color'])); ?>',
-                    gridLineWidth: <?php echo $this->fields['chart_grid_x_thickness']; ?>,
-                    lineColor: '<?php echo addslashes(strip_tags($this->fields['chart_axis_color'])); ?>',
-                    lineWidth: <?php echo $this->fields['chart_axis_x_thickness']; ?>,
-                    tickColor: '<?php echo addslashes(strip_tags($this->fields['chart_axis_color'])); ?>',
-                    tickWidth: <?php echo $this->fields['chart_axis_x_thickness']; ?>,
-
-                },
-                yAxis: {
-                    title: {
-                        text: '<?php echo utf8_encode(addslashes(strip_tags($strChartvalField))); ?>',
-                        style: {
-                            fontFamily: '<?php echo addslashes(strip_tags($this->fields['chart_font'])); ?>',
-                            fontSize: '<?php echo $this->fields['chart_axis_font_size']; ?>px',
-                            color: '<?php echo addslashes(strip_tags($this->fields['chart_axis_font_color'])); ?>',
-                        }
-                    },
-                    labels: {
-                        style: {
-                            fontFamily: '<?php echo addslashes(strip_tags($this->fields['chart_font'])); ?>',
-                            fontSize: '<?php echo $this->fields['chart_axis_font_size']; ?>px',
-                            color: '<?php echo addslashes(strip_tags($this->fields['chart_axis_font_color'])); ?>',
-                        },
-                        formatter: function() {
-                            return '<?php echo utf8_encode(addslashes(strip_tags($this->fields['chart_value_y_prefix']))); ?>' + this.value + '<?php echo utf8_encode(addslashes(strip_tags($this->fields['chart_value_y_suffix']))); ?>';
-                        }
-                    },
-                    <?php if ($this->fields['chart_interlaced_display']) { ?>
-                        alternateGridColor: '<?php echo addslashes(strip_tags($this->fields['chart_interlaced_y_color'])); ?>',
-                    <?php } ?>
-                    gridLineColor: '<?php echo addslashes(strip_tags($this->fields['chart_grid_color'])); ?>',
-                    gridLineWidth: <?php echo $this->fields['chart_grid_y_thickness']; ?>,
-                    lineColor: '<?php echo addslashes(strip_tags($this->fields['chart_axis_color'])); ?>',
-                    lineWidth: <?php echo $this->fields['chart_axis_y_thickness']; ?>,
-                    tickColor: '<?php echo addslashes(strip_tags($this->fields['chart_axis_color'])); ?>',
-                    tickWidth: <?php echo $this->fields['chart_axis_y_thickness']; ?>,
-
-                },
-                series: <?php echo json_encode($arrData['series']); ?>,
-                credits: {
-                    enabled: true,
-                    href: 'http://www.ploopi.org',
-                    text: 'Ploopi / DbReport',
-                }
-            });
-        });
-
+        <div id="dbreport_chart" style="position:relative; height:<?php echo intval($this->fields['chart_height']); ?>px; width:<?php echo intval($this->fields['chart_width']); ?>px; box-sizing:border-box; border:<?php echo intval($this->fields['chart_border_width']); ?>px solid <?php echo ploopi\str::htmlentities(trim($this->fields['chart_border_color'])); ?>;"></div>
+        <p class="dbreport_chart_actions">
+            <a href="#" id="dbreport_chart_png">Télécharger PNG</a>
+            &nbsp;|&nbsp;
+            <a href="#" id="dbreport_chart_print">Imprimer</a>
+        </p>
+        <script nonce="<?php echo ploopi\csp::nonce(); ?>">
+        (function() {
+            var objChart = dbreport_chart.render(<?php echo $strConfig; ?>);
+            document.getElementById('dbreport_chart_png').addEventListener('click', function(e) { e.preventDefault(); dbreport_chart.download(objChart, <?php echo json_encode($strFilename, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>); });
+            document.getElementById('dbreport_chart_print').addEventListener('click', function(e) { e.preventDefault(); window.print(); });
+        })();
         </script>
         <?php
     }

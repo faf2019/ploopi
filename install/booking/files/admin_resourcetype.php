@@ -35,9 +35,9 @@
 
 <div class="booking_toolbar">
     <em style="float:left;color:#a60000;margin-left:4px;">En rouge, les éléments inactifs</em>
-    <a href="javascript:void(0);" onclick="javascript:booking_element_check();"><img src="./modules/booking/img/ico_checkbox.png">Cocher/Décocher tout</a>
-    <a href="javascript:void(0);" onclick="javascript:booking_element_delete('resourcetype');"><img src="./modules/booking/img/ico_trash.png">Supprimer les éléments cochés</a>
-    <a href="javascript:void(0);" onclick="javascript:booking_element_add('resourcetype', event);"><img src="./modules/booking/img/ico_new.png">Ajouter un élément</a>
+    <a href="#" data-ploopi-action="booking_element_check"><img src="./modules/booking/img/ico_checkbox.png">Cocher/Décocher tout</a>
+    <a href="#" data-ploopi-action="booking_element_delete" data-ploopi-args='["resourcetype"]'><img src="./modules/booking/img/ico_trash.png">Supprimer les éléments cochés</a>
+    <a href="#" data-ploopi-action="booking_element_add" data-ploopi-args='["resourcetype"]'><img src="./modules/booking/img/ico_new.png">Ajouter un élément</a>
 </div>
 
 <?php
@@ -117,8 +117,8 @@ while ($row = ploopi\db::get()->fetchrow())
                     'actions' => array('label' => ($row['c']) ? '&nbsp;' : '<input type="checkbox" class="booking_element_checkbox" value="'.$row['id'].'">')
                 ),
             'description' => "Modifier le type de ressource '".ploopi\str::htmlentities($row['name'])."'",
-            'link' => 'javascript:void(0);',
-            'onclick' => "booking_element_open('resourcetype', '{$row['id']}', event);"
+            'link' => '#',
+            'option' => 'data-ploopi-action="booking_element_open" data-ploopi-args=\'["resourcetype", '.intval($row['id']).']\''
         );
 }
 

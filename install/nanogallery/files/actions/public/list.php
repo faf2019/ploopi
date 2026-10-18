@@ -19,7 +19,7 @@ echo ploopi\skin::get()->open_simplebloc('Liste des galeries photo');
 $strTab = $this->getAction();
 $arrTabs = array();
 $arrTabs['list'] = array('title' => 'Liste des galeries photo',
-    'url' => ploopi\crypt::urlencode("admin.php?entity=publi&action=default")
+    'url' => ploopi\crypt::urlencode("admin.php?entity=public&action=list")
 );
 if (ploopi\acl::isactionallowed(nanogallery::ACTION_CREATE)) {
 	$arrTabs['create'] = array('title' => 'Créer une galerie photo',
@@ -70,9 +70,9 @@ if (!empty($arrImg)) {
 		}
 				
 		if (ploopi\acl::isactionallowed(nanogallery::ACTION_DELETE)) {
-		    $arrActions[] = '<a title="Supprimer" href="javascript:ploopi.confirmlink(\''
+		    $arrActions[] = '<a title="Supprimer" data-ploopi-confirm="Êtes-vous certain de vouloir supprimer cette galerie ?" href="'
 			.ploopi\crypt::urlencode("admin-light.php?entity=admin&action=op_delete&id={$img['id']}")
-			.'\',\'Êtes-vous certain de vouloir supprimer cette galerie ?\');">'
+			.'">'
 			.'<img alt="Supprimer" src="./modules/nanogallery/img/trash_alpha.png" style="width:24px;height:20px;"/></a>';
 		}
 		

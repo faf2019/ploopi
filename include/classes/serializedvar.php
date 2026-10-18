@@ -76,7 +76,7 @@ class serializedvar
     {
         if (session::get_usedb())
         {
-            return (session::get_db()->query("SELECT `data` FROM `ploopi_serializedvar` WHERE `id` = '".session::get_db()->addslashes($this->strId)."' AND `id_session` = '".session::get_db()->addslashes(session_id())."'") && $arrRecord = session::get_db()->fetchrow()) ? unserialize(gzuncompress($arrRecord['data'])) : false;
+            return (session::get_db()->query("SELECT `data` FROM `ploopi_serializedvar` WHERE `id` = '".session::get_db()->addslashes($this->strId)."' AND `id_session` = '".session::get_db()->addslashes(session_id())."'") && $arrRecord = session::get_db()->fetchrow()) ? unserialize(gzuncompress($arrRecord['data'], 16777216), array('allowed_classes' => false)) : false;
         }
         elseif (session::get_usemc())
         {
@@ -86,7 +86,7 @@ class serializedvar
         }
         else
         {
-            return file_exists(self::get_path()._PLOOPI_SEP.$this->strId) ? unserialize(gzuncompress(file_get_contents(self::get_path()._PLOOPI_SEP.$this->strId))) : false;
+            return file_exists(self::get_path()._PLOOPI_SEP.$this->strId) ? unserialize(gzuncompress(file_get_contents(self::get_path()._PLOOPI_SEP.$this->strId), 16777216), array('allowed_classes' => false)) : false;
         }
     }
 

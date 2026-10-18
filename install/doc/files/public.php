@@ -68,16 +68,22 @@ if (ploopi\param::get('doc_explorer_displaytreeview'))
     ?>
     <div id="doc_main">
         <div id="doc_treeview">
-            <div id="doc_treeview_inner">
-                <?php
-                // Récupération des dossiers visibles
-                $arrFolders = doc_getfolders();
+            <?php
+            // Récupération des dossiers visibles
+            $arrFolders = doc_getfolders();
 
-                // Récupération de la structure du treeview
-                $arrTreeview = doc_gettreeview($arrFolders);
-                echo ploopi\skin::get()->display_treeview($arrTreeview['list'], $arrTreeview['tree'], $currentfolder, -1);
-                ?>
-            </div>
+            // Récupération de la structure du treeview
+            $arrTreeview = doc_gettreeview($arrFolders);
+
+            // Arbre repliable sur petit écran (ploopi.skin.fold, js/skin.js : replié quand le
+            // gabarit affiche le résumé) ; ailleurs le résumé est masqué et l'arbre reste ouvert
+            ?>
+            <details class="doc_tree_toggle ploopi_fold" open>
+                <summary><span>Dossier :</span> <strong><?php echo isset($arrTreeview['list'][$currentfolder]) ? ploopi\str::htmlentities($arrTreeview['list'][$currentfolder]['label']) : ''; ?></strong></summary>
+                <div id="doc_treeview_inner">
+                    <?php echo ploopi\skin::get()->display_treeview($arrTreeview['list'], $arrTreeview['tree'], $currentfolder, -1); ?>
+                </div>
+            </details>
         </div>
         <div id="doc_browser">
     <?php

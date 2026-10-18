@@ -42,13 +42,17 @@ if (ploopi\param::get('system_submenu_display'))
     $block->addmenu(
         _PLOOPI_LABEL_MYTICKETS,
         ploopi\crypt::urlencode('admin.php?op=tickets', _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
-        $op == 'tickets'
+        $op == 'tickets',
+        '',
+        'message'
     );
 
     $block->addmenu(
         _PLOOPI_LABEL_MYANNOTATIONS,
         ploopi\crypt::urlencode('admin.php?op=annotation', _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
-        $op == 'annotation'
+        $op == 'annotation',
+        '',
+        'notes'
     );
 }
 else $op = empty($_REQUEST['op']) ? 'profile' : $_REQUEST['op'];
@@ -56,7 +60,9 @@ else $op = empty($_REQUEST['op']) ? 'profile' : $_REQUEST['op'];
 $block->addmenu(
     _PLOOPI_LABEL_MYPROFILE,
     ploopi\crypt::urlencode('admin.php?op=profile', _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
-    $op == 'profile'
+    $op == 'profile',
+    '',
+    'user-circle'
 );
 
 if (ploopi\param::get('system_submenu_display'))
@@ -64,13 +70,17 @@ if (ploopi\param::get('system_submenu_display'))
     $block->addmenu(
         _PLOOPI_LABEL_MYDATA,
         ploopi\crypt::urlencode('admin.php?op=actions', _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
-        $op == 'actions'
+        $op == 'actions',
+        '',
+        'list-details'
     );
 
     $block->addmenu(
         _PLOOPI_LABEL_MYPARAMS,
         ploopi\crypt::urlencode('admin.php?op=param', _PLOOPI_MENU_MYWORKSPACE, 0, _PLOOPI_MODULE_SYSTEM, 'public'),
-        $op == 'param'
+        $op == 'param',
+        '',
+        'adjustments-horizontal'
     );
 }
 ?>

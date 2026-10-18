@@ -74,7 +74,11 @@ abstract class error
         E_USER_ERROR     => 'User Error',
         E_USER_WARNING   => 'User Warning',
         E_USER_NOTICE    => 'User Notice',
-        E_STRICT         => 'Strict Notice',
+        /**
+         * E_STRICT est dépréciée depuis PHP 8.4 et supprimée en PHP 9. Plus aucune
+         * erreur n'est émise avec ce niveau depuis PHP 8.0 : l'entrée ne servait donc
+         * qu'à produire un avertissement de dépréciation à chaque requête.
+         */
         E_RECOVERABLE_ERROR => 'Recoverable Error',
         E_DEPRECATED         => 'Deprecated',
         E_USER_DEPRECATED => 'User Deprecated'
@@ -107,6 +111,12 @@ abstract class error
 
     public static function handler($errno, $errstr, $errfile, $errline = 0, $vars = [])
     {
+        // Copie locale des paramètres : debug_backtrace(), ci-dessous, rapporte
+        // leur valeur courante — les modifier dénaturerait la trace.
+        $intNum = $errno;
+        $strMessage = strip_tags($errstr);
+        $strFile = $errfile;
+        $intLine = $errline;
         // Fonctions appelées avec @ (PHP 8: 4437)
         if (in_array(error_reporting(), [4437, 0])) return false;
 
@@ -124,18 +134,18 @@ abstract class error
         }
 
         // if error in error reporting levels
-        if (in_array($errno,$res))
+        if (in_array($intNum,$res))
         {
             self::$nb++;
 
-            if ($errno == E_ERROR || $errno == E_PARSE || $errno == E_USER_ERROR) self::$level = 2;
-            else if (($errno == E_WARNING || $errno == E_USER_WARNING || $errno == E_NOTICE || $errno == E_USER_NOTICE || $errno == E_DEPRECATED || $errno == E_USER_DEPRECATED) && self::$level < 2) self::$level = 1;
+            if ($intNum == E_ERROR || $intNum == E_PARSE || $intNum == E_USER_ERROR) self::$level = 2;
+            else if (($intNum == E_WARNING || $intNum == E_USER_WARNING || $intNum == E_NOTICE || $intNum == E_USER_NOTICE || $intNum == E_DEPRECATED || $intNum == E_USER_DEPRECATED) && self::$level < 2) self::$level = 1;
 
             if (self::$msg == '') self::$msg  = (php_sapi_name() == 'cli' ? '' : "[{$_SERVER['HTTP_HOST']}] ")."le ".date("d-m-Y H:i:s (T)")."\n\nVersion PHP : ".PHP_VERSION."\nOS : ".php_uname()."\nPloopi : "._PLOOPI_VERSION.' '._PLOOPI_REVISION."\n\n";
 
-            $errstr = strip_tags($errstr);
-
-            self::$msg .= "\nType d'erreur : ".self::$errortype[$errno]."\nMessage : $errstr\n";
+            self::$msg .= "\nType d'erreur : ".self::$errortype[$intNum]."\nMessage : {$strMessage}\n";
+            // Lieu de l'erreur : absent de la pile pour une erreur de compilation (fichier inclus)
+            if ($strFile != '') self::$msg .= "Lieu : {$strFile}:{$intLine}\n";
 
             $arrTrace = debug_backtrace();
             if (_PLOOPI_DISPLAY_ERRORS) $strErrorStack = '';
@@ -165,8 +175,8 @@ abstract class error
 
                     echo "<div class=\"ploopi_error\">
                             <div>
-                            <strong>".self::$errortype[$errno]."</strong>
-                            <br /><span>".htmlentities($errstr, ENT_COMPAT, 'ISO-8859-1')."</span>
+                            <strong>".self::$errortype[$intNum]."</strong>
+                            <br /><span>".htmlentities($strMessage, ENT_COMPAT, 'ISO-8859-1')."</span>
                             </div>
                             {$strErrorStack}
                         </div>";
@@ -174,16 +184,16 @@ abstract class error
                 }
                 else // Affichage cli, sortie texte brut
                 {
-                    fwrite(STDOUT, "=== ".self::$errortype[$errno]." ==================================\r\n{$errstr}\r\n{$strErrorStack}\r\n");
+                    fwrite(STDOUT, "=== ".self::$errortype[$intNum]." ==================================\r\n{$strMessage}\r\n{$strErrorStack}\r\n");
                 }
 
                 // critical error
-                if ($errno == E_ERROR || $errno == E_PARSE || $errno == E_USER_ERROR) system::kill();
+                if ($intNum == E_ERROR || $intNum == E_PARSE || $intNum == E_USER_ERROR) system::kill();
             }
             else
             {
                 // critical error
-                if ($errno == E_ERROR || $errno == E_PARSE || $errno == E_USER_ERROR)
+                if ($intNum == E_ERROR || $intNum == E_PARSE || $intNum == E_USER_ERROR)
                 {
                     buffer::clean();
                     system::kill('<html><body><div align="center">Une erreur est survenue sur le site.<br />Contactez l\'administrateur.</div></body></html>');
@@ -198,6 +208,19 @@ abstract class error
     public static function set_handler()
     {
         set_error_handler(array(__NAMESPACE__.'\\error', 'handler'));
+
+        /**
+         * Les erreurs fatales du socle sont des exceptions depuis PHP 8.4
+         * (trigger_error() n'accepte plus E_USER_ERROR) : une exception non
+         * interceptée passe donc par le même traitement qu'une erreur critique —
+         * page d'erreur sans détail hors _PLOOPI_DISPLAY_ERRORS, journal, courriel.
+         */
+        set_exception_handler(function($objException) {
+            self::handler(E_USER_ERROR, get_class($objException).' : '.$objException->getMessage(), $objException->getFile(), $objException->getLine());
+            // Niveau hors _PLOOPI_ERROR_REPORTING : l'exécution s'arrête quand même
+            system::kill();
+        });
+
         error_reporting(E_ALL);
     }
 

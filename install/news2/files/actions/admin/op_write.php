@@ -13,7 +13,8 @@ if (ploopi\acl::isactionallowed([tools::ACTION_WRITE, tools::ACTION_MODIFY])) {
     	if (!is_numeric($_GET['id'])) {
 			ploopi\output::redirect(crypt::urlencode("admin.php?entity=error"));
 		}
-		if (!$news->open($_GET['id']))  {
+		// L'identifiant doit désigner une news de l'instance courante
+		if (!$news->open($_GET['id']) || $news->fields['id_module'] != $this->getModuleId())  {
 			ploopi\output::redirect(crypt::urlencode("admin.php?entity=admin"));
 		}
     } else {
@@ -21,9 +22,10 @@ if (ploopi\acl::isactionallowed([tools::ACTION_WRITE, tools::ACTION_MODIFY])) {
 		$news->setuwm();
 	}
 	
-    $news->setvalues($_POST,'news_');
+    // Propriétaire et cloisonnement ne viennent pas du formulaire
+    $news->setvalues(array_diff_key($_POST, array_flip(array('news_id', 'news_id_module', 'news_id_workspace', 'news_id_user'))), 'news_');
 	if (empty($news->fields['title'])) {
-		echo "<script>
+		echo "<script nonce=\"".ploopi\csp::nonce()."\">
 		alert('La nouvelle ne comporte pas de titre !');
 		{document.location.href='".crypt::urlencode("admin.php?entity=error")."';}
 		</script>"; 

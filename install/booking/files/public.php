@@ -55,6 +55,11 @@ switch($_SESSION['booking']['$booking_menu'])
     default:
     case 'planning':
         echo ploopi\skin::get()->create_pagetitle(ploopi\str::htmlentities("{$_SESSION['ploopi']['modulelabel']} - Gestion"));
+
+        // ploopi4 : calendrier en grille fluide, ressources dans une colonne à côté (sinon : fenêtre flottante)
+        $booBookingGrille = ploopi\skin::get()->version() >= 4;
+        if ($booBookingGrille) echo '<div class="p4-cal-layout"><div class="p4-cal-layout-main">';
+
         echo ploopi\skin::get()->open_simplebloc('Planning des réservations');
         ?>
         <div id="booking_main">
@@ -65,6 +70,8 @@ switch($_SESSION['booking']['$booking_menu'])
         <?php
         echo ploopi\skin::get()->close_simplebloc();
 
+        if ($booBookingGrille) echo '</div>';
+
         /**
          * Affichage du popup de sélection des ressources
          */
@@ -72,7 +79,7 @@ switch($_SESSION['booking']['$booking_menu'])
 
         ?>
         <div id="booking_ressource_list">
-        <form id="booking_resource_list_form" action="<?php echo ploopi\crypt::urlencode('admin-light.php?ploopi_op=booking_setresources'); ?>" method="post" onsubmit="javascript:ploopi.xhr.submit(jQuery('#booking_resource_list_form')[0], 'booking_main'); return false;">
+        <form id="booking_resource_list_form" action="<?php echo ploopi\crypt::urlencode('admin-light.php?ploopi_op=booking_setresources'); ?>" method="post" data-booking-submit="booking_main">
         <?php
         $strResourceType = '';
 
@@ -84,26 +91,20 @@ switch($_SESSION['booking']['$booking_menu'])
                 $strResourceType = $row['rt_name'];
                 ?>
 
-                <div style="border-width:1px 0;border-style:solid;border-color:#bbb;background-color:#ddd;overflow:auto;clear:both;padding:2px;">
-                    <input type="checkbox" autocomplete="off" id="booking_rt<?php echo $row['id_resourcetype']; ?>" style="display:block;float:left;margin:0;" onclick="
-                        jQuery('.booking_rt<?php echo $row['id_resourcetype']; ?>').prop('checked', jQuery(this).prop('checked'));
-                        jQuery('#booking_resource_list_form')[0].onsubmit();"
-                    />
-                    <a style="display:block;margin-left:20px;" href="javascript:void(0);" onclick="jQuery('#booking_<?php echo $row['id_resourcetype']; ?>_list').toggle();">
+                <div class="booking_bandeau">
+                    <input type="checkbox" autocomplete="off" id="booking_rt<?php echo $row['id_resourcetype']; ?>" style="display:block;float:left;margin:0;" data-booking-rt="<?php echo intval($row['id_resourcetype']); ?>" />
+                    <a style="display:block;margin-left:20px;" href="#" data-ploopi-switchdisplay="booking_<?php echo intval($row['id_resourcetype']); ?>_list">
                         <strong><?php echo ploopi\str::htmlentities($strResourceType); ?></strong>
                     </a>
                 </div>
-                <script type="text/javascript">
-                    jQuery(function() { booking_rt_autocheck(<?php echo $row['id_resourcetype']; ?>); });
-                </script>
 
                 <div id="booking_<?php echo $row['id_resourcetype']; ?>_list" style="display:block;">
                 <?php
             }
             ?>
-            <p class="checkbox" style="background-color:<?php echo ploopi\str::htmlentities($row['color']); ?>;" onclick="javascript:ploopi.checkbox_click(event, 'booking_resource<?php echo $row['id_resourcetype'].$row['id']; ?>');">
-                <input type="checkbox" autocomplete="off" name="booking_resources[<?php echo $row['id']; ?>]" id="booking_resource<?php echo $row['id_resourcetype'].$row['id']; ?>" class="booking_rt<?php echo $row['id_resourcetype']; ?>" value="<?php echo $row['id']; ?>" <?php if (!empty($arrSearchPattern['booking_resources'][$row['id']])) echo 'checked="checked"'; ?> onchange="javascript:booking_rt_autocheck(<?php echo $row['id_resourcetype']; ?>); jQuery('#booking_resource_list_form')[0].onsubmit();" />
-                <span><?php echo ploopi\str::htmlentities($row['name']); ?><span>
+            <p class="checkbox ploopi_checkbox_zone" style="<?php echo $booBookingGrille ? '--p4-res:' : 'background-color:'; echo ploopi\str::htmlentities($row['color']); ?>;" data-checkbox="booking_resource<?php echo $row['id_resourcetype'].$row['id']; ?>">
+                <input type="checkbox" autocomplete="off" name="booking_resources[<?php echo $row['id']; ?>]" id="booking_resource<?php echo $row['id_resourcetype'].$row['id']; ?>" class="booking_rt<?php echo $row['id_resourcetype']; ?>" value="<?php echo $row['id']; ?>" <?php if (!empty($arrSearchPattern['booking_resources'][$row['id']])) echo 'checked="checked"'; ?> data-booking-resource="<?php echo intval($row['id_resourcetype']); ?>" />
+                <span><?php echo ploopi\str::htmlentities($row['name']); ?></span>
             </p>
 
             <?php
@@ -116,7 +117,8 @@ switch($_SESSION['booking']['$booking_menu'])
         $content = ob_get_contents();
         ob_end_clean();
 
-        echo ploopi\skin::get()->open_popup(
+        if ($booBookingGrille) echo '<aside class="p4-cal-layout-side">'.ploopi\skin::get()->open_simplebloc('Ressources affichées').$content.ploopi\skin::get()->close_simplebloc().'</aside></div>';
+        else echo ploopi\skin::get()->open_popup(
             'Ressources affichées',
             $content,
             'popup_booking',
@@ -132,7 +134,7 @@ switch($_SESSION['booking']['$booking_menu'])
 
 if (!empty($_REQUEST['error'])) {
     ?>
-    <script type="text/javascript">
+    <script nonce="<?php echo ploopi\csp::nonce(); ?>">
         jQuery(function() {
             <?php
             switch($_REQUEST['error']) {
@@ -147,7 +149,7 @@ if (!empty($_REQUEST['error'])) {
 
 if (!empty($_REQUEST['warning'])) {
     ?>
-    <script type="text/javascript">
+    <script nonce="<?php echo ploopi\csp::nonce(); ?>">
         jQuery(function() {
             <?php
             switch($_REQUEST['warning']) {

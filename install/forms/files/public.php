@@ -57,11 +57,10 @@ echo ploopi\skin::get()->create_pagetitle(ploopi\str::htmlentities($_SESSION['pl
 switch($op)
 {
     case 'forms_save':
-        $objForm = new formsForm();
-        if (isset($_POST['forms_id']) && $_POST['forms_id'] != '')
+        // Paramétrage de l'archivage : droit dédié, sur un formulaire de l'instance courante
+        if (ploopi\acl::isactionallowed(_FORMS_ACTION_BACKUP) && isset($_POST['forms_id']) && ($objForm = formsForm::openInModule($_POST['forms_id'])))
         {
-            $objForm->open($_POST['forms_id']);
-            $objForm->fields['autobackup'] = $_POST['forms_autobackup'];
+            $objForm->fields['autobackup'] = isset($_POST['forms_autobackup']) ? (int)$_POST['forms_autobackup'] : 0;
             $objForm->fields['autobackup_date'] = ploopi\date::local2timestamp($_POST['forms_autobackup_date']);
             $objForm->save();
             ploopi\output::redirect("admin.php?op=forms_viewreplies&forms_id={$_POST['forms_id']}");
@@ -74,9 +73,19 @@ switch($op)
     case 'forms_reply_modify':
         if (ploopi\acl::isactionallowed(_FORMS_ACTION_ADDREPLY) || $op == 'forms_reply_display')
         {
-            $objForm = new formsForm();
+            $objForm = formsForm::openInModule(isset($_GET['forms_id']) ? $_GET['forms_id'] : null);
 
-            if (!empty($_GET['forms_id']) && is_numeric($_GET['forms_id']) && $objForm->open($_GET['forms_id']))
+            /**
+             * Ouvrir une réponse existante pour la modifier : mêmes conditions que le
+             * bouton « Modifier » de la liste des réponses
+             */
+            if ($objForm && $op == 'forms_reply_modify')
+            {
+                $objRecord = new formsRecord($objForm);
+                if (empty($_GET['record_id']) || !is_numeric($_GET['record_id']) || !$objRecord->open($_GET['record_id']) || !$objForm->isRecordEditable($objRecord->fields, _FORMS_ACTION_ADDREPLY)) $objForm = false;
+            }
+
+            if ($objForm)
             {
                 if (ploopi\session::setflag('forms_nbclick', $_GET['forms_id'])) $objForm->fields['viewed']++;
                 $objForm->quicksave();
@@ -94,16 +103,17 @@ switch($op)
     case 'forms_viewreplies':
     case 'forms_filter':
     case 'forms_deletedata':
-        $objForm = new formsForm();
+        $objForm = formsForm::openInModule(isset($_REQUEST['forms_id']) ? $_REQUEST['forms_id'] : null);
 
-        if (empty($_REQUEST['forms_id']) || !is_numeric($_REQUEST['forms_id']) || !$objForm->open($_REQUEST['forms_id'])) ploopi\output::redirect('admin.php');
+        if (!$objForm) ploopi\output::redirect('admin.php');
 
         if ($objForm->isPublished() && (!$objForm->fields['option_adminonly'] || ploopi\acl::isactionallowed(_FORMS_ACTION_ADMIN)))
         {
 
             if ($op == 'forms_deletedata')
             {
-                $objForm->deleteData();
+                // Même droit que le bouton « Supprimer les données filtrées »
+                if (ploopi\acl::isactionallowed(_FORMS_ACTION_DELETE)) $objForm->deleteData();
                 ploopi\output::redirect("admin.php?op=forms_viewreplies&forms_id={$objForm->fields['id']}");
             }
             else

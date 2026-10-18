@@ -34,15 +34,14 @@
  *
  */
 
-if (!ini_get('safe_mode')) ini_set('max_execution_time', 0);
+ini_set('max_execution_time', 0);
 
 ploopi\module::init('doc');
 
 switch($op)
 {
     case 'thumbnails':
-        @include_once 'Cache/Lite.php';
-        if(!class_exists('Cache_Lite')) return false;
+        ploopi\cache::init(); // le CLI n'initialise pas le cache
 
         include_once './modules/doc/class_docfile.php';
         include_once './modules/doc/class_docfiledraft.php';
@@ -52,11 +51,12 @@ switch($op)
         $sqlResult = ploopi\db::get()->query($sql);
         while ($row = ploopi\db::get()->fetchrow($sqlResult))
         {
-            $objCache = new Cache_Lite(array( 'cacheDir' => _PLOOPI_PATHCACHE._PLOOPI_SEP, 'lifeTime' => 2592000)); // 30 jours
+            $objCache = new ploopi\cache(md5('doc_thumb_'.$row['md5id'].'_'.$row['version']), 2592000); // 30 jours
+            $objCache->set_groupe('module_doc_'.$row['id_workspace'].'_'.$row['id_module']);
 
             $objDoc = new docfile();
 
-            $objThumb = new mimethumb(111,90,0,'png','transparent');
+            $objThumb = new ploopi\mimethumb(111,90,0,'png','transparent');
             $objThumb->setIdmw($row['id_module'],$row['id_workspace']);
 
             if($objDoc->openmd5($row['md5id']))
@@ -65,7 +65,7 @@ switch($op)
                 if($objThumb->getThumbnail($objDoc->getfilepath(),$objDoc->fields['extension']))
                 {
                     $content = ob_get_contents();
-                    $objCache->save($content, md5('doc_thumb_'.$row['md5id'].'_'.$row['version']),'module_doc_'.$row['id_workspace'].'_'.$row['id_module']);
+                    $objCache->save($content);
                     /*
                     // Pour tests
                     $file = fopen(_PLOOPI_PATHCACHE._PLOOPI_SEP.$row['name'].'.png','w');
@@ -83,19 +83,20 @@ switch($op)
         $sqlResult = ploopi\db::get()->query($sql);
         while ($row = ploopi\db::get()->fetchrow($sqlResult))
         {
-            $objCache = new Cache_Lite(array( 'cacheDir' => _PLOOPI_PATHCACHE._PLOOPI_SEP, 'lifeTime' => 2592000)); // 30 jours
+            $objCache = new ploopi\cache(md5('doc_thumb_'.$row['md5id'].'_draft'), 2592000); // 30 jours
+            $objCache->set_groupe('module_doc_'.$row['id_workspace'].'_'.$row['id_module']);
 
             $objDocDraft = new docfiledraft();
 
-            $objThumb = new mimethumb(111,90,0,'png','transparent');
-            $objThumb->setIds($row['id_module'],$row['id_workspace']);
+            $objThumb = new ploopi\mimethumb(111,90,0,'png','transparent');
+            $objThumb->setIdmw($row['id_module'],$row['id_workspace']);
 
             if($objDocDraft->openmd5($row['md5id']))
             {
                 ob_start();
                 if($objThumb->getThumbnail($objDocDraft->getfilepath(),$objDocDraft->fields['extension']))
                 {
-                    $objCache->save(ob_get_contents(), md5('doc_thumb_'.$row['md5id'].'_draft'),'module_doc_'.$row['id_workspace'].'_'.$row['id_module']);
+                    $objCache->save(ob_get_contents());
                 }
                 ob_end_clean();
             }
@@ -216,7 +217,7 @@ switch($op)
                             $intLimit = $intCurrentPage*$intPageSize;
 
                             // On lance un processus sans attendre la fin d'exÃ©cution, il va Ã©crire son statut dans le fichier $tmpfile
-                            exec('php ./'.basename($argv[0])." module=doc op=mpreindex file={$arrProcessus[$p]} limit={$intLimit},{$intPageSize} >/dev/null 2>&1 &");
+                            exec('php ./'.escapeshellarg(basename($argv[0])).' module=doc op=mpreindex file='.escapeshellarg($arrProcessus[$p]).' limit='.(int)$intLimit.','.(int)$intPageSize.' >/dev/null 2>&1 &');
 
                             // On passe Ã  la page suivante
                             $intCurrentPage++;

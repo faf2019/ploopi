@@ -1,0 +1,8 @@
+# Fichiers retirés du paquet, supprimés de modules/dbreport/ par la mise à jour
+# (un chemin relatif au module par ligne, fichier ou dossier)
+
+# 2.1.4 : Highcharts s'appuie sur jQuery, les adaptateurs Prototype et MooTools sont retirés
+lib/highcharts/adapters
+
+# 2.1.6 : Highcharts (licence non libre) remplacé par Chart.js (MIT)
+lib/highcharts

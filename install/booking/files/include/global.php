@@ -76,6 +76,35 @@ $arrBookingSize =
         '1200x750'
     );
 
+/**
+ * Taille du planning des réservations : une des tailles proposées ($arrBookingSize) ou
+ * « auto », dont la largeur est mesurée par le navigateur (ploopi.skin.autowidth,
+ * js/skin.js) et transmise par booking_autowidth. Une taille inconnue revient à la
+ * taille par défaut : « auto » sous un gabarit adaptatif (génération 4), la première
+ * taille proposée sinon.
+ *
+ * @param array $arrSearchPattern critères d'affichage (booking_size, booking_autowidth), par référence
+ * @return array largeur et hauteur en pixels
+ */
+
+function booking_size(&$arrSearchPattern)
+{
+    global $arrBookingSize;
+
+    if (!isset($arrSearchPattern['booking_size']) || !in_array($arrSearchPattern['booking_size'], array_merge(array('auto'), $arrBookingSize), true))
+    {
+        $objSkin = ploopi\skin::get();
+        $arrSearchPattern['booking_size'] = ($objSkin && $objSkin->version() >= 4) ? 'auto' : $arrBookingSize[0];
+    }
+
+    if ($arrSearchPattern['booking_size'] != 'auto') return array_map('intval', explode('x', $arrSearchPattern['booking_size']));
+
+    // Largeur mesurée, bornée ; 800 tant que le navigateur ne l'a pas transmise
+    $intWidth = empty($arrSearchPattern['booking_autowidth']) ? 800 : (int) $arrSearchPattern['booking_autowidth'];
+
+    return array(min(max($intWidth, 280), 2400), 500);
+}
+
 global $arrBookingColor;
 
 $arrBookingColor =
@@ -185,7 +214,7 @@ function booking_display_workspaces(&$arrWorkspaces, $fieldname, &$widsel = arra
 
             if ($has_children)
             {
-                $link_start = "<a style=\"display:block;margin-left:20px;padding-left:4px;\" id=\"booking_tnode_{$wid_child}\" href=\"javascript:void(0);\" onclick=\"javascript:ploopi.switchdisplay('booking_subtree_{$wid_child}');\">";
+                $link_start = "<a style=\"display:block;margin-left:20px;padding-left:4px;\" id=\"booking_tnode_{$wid_child}\" href=\"#\" data-ploopi-switchdisplay=\"booking_subtree_{$wid_child}\">";
                 $link_stop = "</a>";
             }
             else
@@ -290,7 +319,8 @@ function booking_get_resources($strict = false, $moduleid = -1, $workspaceid = -
 
         foreach($arrResources as $key => $res)
         {
-            $booWorkspaceValidator = in_array($workspaceid, $res['workspaces']);
+            // Une ressource peut n'être rattachée à aucun espace gestionnaire : in_array() sur null est fatal en PHP 8
+            $booWorkspaceValidator = !empty($res['workspaces']) && in_array($workspaceid, $res['workspaces']);
 
             // Validateur oui/non ?
             $arrResources[$key]['validator'] = ($booWorkspaceValidator && ploopi\acl::isactionallowed(_BOOKING_ACTION_VALIDATE)) ? 1 : 0;
@@ -329,7 +359,8 @@ function booking_get_events($mixId = null, $extended = false, $strict = false, $
 
     $arrWhere = array();
 
-    if (is_array($mixId)) $arrWhere[] = ' e.id_resource IN ('.implode(',', $mixId).')';
+    // Les identifiants de ressources viennent de la requête ou d'un cookie : typés en entiers
+    if (is_array($mixId)) $arrWhere[] = ' e.id_resource IN ('.(empty($mixId) ? '0' : implode(',', array_map('intval', $mixId))).')';
     elseif (is_numeric($mixId)) $arrWhere[] = " e.id_resource = '{$mixId}'";
 
     switch($validated)
@@ -430,4 +461,36 @@ function booking_get_events($mixId = null, $extended = false, $strict = false, $
 
     return $db->getarray();
 }
+/**
+ * Cases des sous-ressources d'une réservation, rendues côté serveur : celles de la
+ * ressource choisie sont affichées, les autres masquées (booking_resource_onchange les
+ * affiche au changement de ressource). Remplace la liste construite en JavaScript à
+ * partir d'un JSON posé par un script en ligne, qui insérait les noms en HTML.
+ *
+ * @param array $arrSubresources sous-ressources actives (lignes de ploopi_mod_booking_subresource)
+ * @param int $intIdResource ressource choisie
+ * @param array $arrChecked sous-ressources cochées
+ * @return string HTML
+ */
+function booking_subresources_html($arrSubresources, $intIdResource, $arrChecked = array())
+{
+    $strHtml = '';
+    foreach ($arrSubresources as $row)
+    {
+        $intId = (int) $row['id'];
+        $strHtml .= '<p class="ploopi_checkbox" data-booking-sr="'.((int) $row['id_resource']).'"'.($row['id_resource'] == $intIdResource ? '' : ' style="display:none;"').'>'
+            .'<label for="booking_sr_'.$intId.'">'.ploopi\str::htmlentities($row['name']).':</label>'
+            .'<input type="checkbox" name="booking_sr[]" value="'.$intId.'" id="booking_sr_'.$intId.'"'.(in_array($intId, $arrChecked) ? ' checked="checked"' : '').' />'
+            .'</p>';
+    }
+
+    return $strHtml;
+}
+
+/**
+ * Écrans prêts pour la Content-Security-Policy stricte (ploopi\csp::moduleready) : aucun
+ * script ni gestionnaire en ligne, comportements par attributs data-* (js/actions.js
+ * du socle, include/functions.js du module)
+ */
+define('_BOOKING_CSP', true);
 ?>

@@ -83,6 +83,106 @@ class skin
     }
 
     /**
+     * Gabarit de backoffice à servir pour un nom de gabarit.
+     *
+     * Une déclinaison (skin.ini : extends = <gabarit>, sans index.tpl) ne porte que sa
+     * palette : les fichiers servis (gabarits, scripts, icônes, polices, feuilles) sont
+     * ceux du gabarit étendu, et sa feuille css/palette.css est chargée après les autres.
+     * Un seul niveau : le gabarit étendu ne peut pas être lui-même une déclinaison.
+     *
+     * @param string $strName nom du gabarit (dossier de templates/backoffice)
+     * @return array|null ['path' => dossier servi, 'palette' => feuille de la déclinaison ou ''], null si le gabarit n'existe pas
+     */
+
+    public static function resolve($strName)
+    {
+        $strBase = './templates/backoffice';
+        $funcValide = function($strNom) use ($strBase) {
+            return is_string($strNom) && preg_match('/^[A-Za-z0-9_][A-Za-z0-9._-]*$/', $strNom) && is_dir("{$strBase}/{$strNom}");
+        };
+
+        if (!$funcValide($strName)) return null;
+
+        $strPath = "{$strBase}/{$strName}";
+        if (file_exists("{$strPath}/index.tpl")) return array('path' => $strPath, 'palette' => '');
+
+        $arrIni = file_exists("{$strPath}/skin.ini") ? @parse_ini_file("{$strPath}/skin.ini") : false;
+        $strParent = is_array($arrIni) && isset($arrIni['extends']) ? $arrIni['extends'] : '';
+        if (!$funcValide($strParent) || !file_exists("{$strBase}/{$strParent}/index.tpl")) return null;
+
+        return array(
+            'path' => "{$strBase}/{$strParent}",
+            'palette' => file_exists("{$strPath}/css/palette.css") ? "{$strPath}/css/palette.css" : ''
+        );
+    }
+
+    /**
+     * Génération du gabarit (clé "version" de skin.ini, 0 si absente).
+     * Les écrans qui ont une présentation propre à une génération (ploopi4 : 4)
+     * la testent ; les autres gabarits gardent la présentation historique.
+     *
+     * @return int génération du gabarit
+     */
+
+    public function version()
+    {
+        return isset($this->values['version']) ? (int) $this->values['version'] : 0;
+    }
+
+    /**
+     * Code HTML d'une icône du jeu du gabarit.
+     * Les gabarits sans jeu d'icônes vectorielles ne rendent rien.
+     *
+     * @param string $strIcon nom de l'icône
+     * @param string $strClass classes CSS supplémentaires
+     * @return string code html de l'icône
+     */
+
+    public function icon($strIcon, $strClass = '')
+    {
+        return '';
+    }
+
+    /**
+     * Nom d'icône d'un type de module, lu dans skin.ini (icon_<type>, sinon icon_default)
+     *
+     * @param string $strModuleType type de module
+     * @return string nom de l'icône (vide si le gabarit n'en définit pas)
+     */
+
+    public function moduleicon($strModuleType)
+    {
+        if (isset($this->values["icon_{$strModuleType}"])) return $this->values["icon_{$strModuleType}"];
+        return isset($this->values['icon_default']) ? $this->values['icon_default'] : '';
+    }
+
+    /**
+     * Préférences d'affichage de l'utilisateur : thème (auto, light, dark) et densité
+     * (comfortable, compact). Connecté : paramètres system_theme et system_density
+     * (défaut, espace, utilisateur). Déconnecté : dernier thème choisi sur ce navigateur
+     * (cookie ploopi_theme posé par le gabarit), densité par défaut.
+     *
+     * @return array [thème, densité]
+     */
+
+    public static function getdisplayprefs()
+    {
+        $strTheme = $strDensity = '';
+
+        if (!empty($_SESSION['ploopi']['connected']))
+        {
+            $strTheme = param::get('system_theme', _PLOOPI_MODULE_SYSTEM);
+            $strDensity = param::get('system_density', _PLOOPI_MODULE_SYSTEM);
+        }
+        elseif (isset($_COOKIE['ploopi_theme'])) $strTheme = $_COOKIE['ploopi_theme'];
+
+        if (!in_array($strTheme, array('auto', 'light', 'dark'), true)) $strTheme = 'auto';
+        if (!in_array($strDensity, array('comfortable', 'compact'), true)) $strDensity = 'comfortable';
+
+        return array($strTheme, $strDensity);
+    }
+
+    /**
      * Créé un haut de bloc
      *
      * @param string $title titre du bloc
@@ -143,7 +243,7 @@ class skin
 
     public function create_toolbar($icons, &$iconsel, $sel = true, $vertical = false)
     {
-        if (!isset($icons[$iconsel])) $iconsel = -1;
+        if (is_null($iconsel) || !isset($icons[$iconsel])) $iconsel = -1;
 
         $icons_content_left = '';
         $icons_content_right = '';
@@ -195,7 +295,7 @@ class skin
     /**
      * Crée une icone pour la barre d'outils
      *
-     * @param array $icon icone à afficher (propriétés : title, url, icon, width, confirm, javascript)
+     * @param array $icon icone à afficher (propriétés : title, url, icon, width, confirm)
      * @param boolean $sel true si l'icone est sélectionnée
      * @param string $key clé (propriété id) de l'icone
      * @param boolean $vertical true si l'affichage est vertical
@@ -210,9 +310,9 @@ class skin
 
         $strHrefTitle = str::htmlentities(strip_tags($title));
 
-        if (!empty($icon['javascript'])) $onclick = $icon['javascript'];
-        elseif ($confirm) $onclick = "ploopi.confirmlink('".crypt::urlencode($icon['url'])."','{$icon['confirm']}')";
-        else $onclick = "document.location.href='".crypt::urlencode($icon['url'])."'";
+        // Lus par l'écouteur délégué de js/utilities.js (a.skin_icon)
+        $data = 'data-url="'.str::htmlentities(crypt::urlencode($icon['url'])).'"';
+        if ($confirm && $icon['confirm'] != '') $data .= ' data-confirm="'.str::htmlentities($icon['confirm']).'"';
 
         if (isset($icon['icon']))
         {
@@ -228,7 +328,7 @@ class skin
 
         $res = "
             <div class=\"{$class}\" id=\"{$key}\" {$style}>
-                <a href=\"javascript:void(0);\" onclick=\"javascript:{$onclick};return false;\" title=\"Accéder à &laquo; {$strHrefTitle} &raquo;\">
+                <a class=\"skin_icon\" href=\"#\" {$data} title=\"Accéder à &laquo; {$strHrefTitle} &raquo;\">
                     <div class=\"toolbar_icon_image\">$image</div>
                     <p>$title</p>
                 </a>
@@ -302,7 +402,7 @@ class skin
                     <a name="anchor_'.$popupid.'"></a>
                     <div class="simplebloc_title">
                         <div class="simplebloc_titleleft">
-                            <img alt="Fermer" title="Fermer le popup" id="close_'.$popupid.'" onclick="javascript:ploopi.popup.hide(\''.$popupid.'\');" style="display:block;float:right;cursor:pointer;" src="'.$this->values['path'].'/template/close_popup.png">
+                            <img alt="Fermer" title="Fermer le popup" id="close_'.$popupid.'" class="ploopi_popup_close" data-popup="'.$popupid.'" style="display:block;float:right;cursor:pointer;" src="'.$this->values['path'].'/template/close_popup.png">
                             <div style="overflow:auto;cursor:move;" class="handle_'.$popupid.'">'.$title.'</div>
                         </div>
                     </div>
@@ -344,7 +444,7 @@ class skin
 
         $strOptionAnchor = ($_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_focus_popup']) ? "document.location.href = '#anchor_{$popupid}';" : '';
 
-        $strClosable = $arrOptions['booClosable'] ? '<img alt="Fermer" title="Fermer le popup" id="close_'.$popupid.'" onclick="javascript:ploopi.popup.hide(\''.$popupid.'\');" style="display:block;float:right;margin:2px;cursor:pointer;" src="'.$this->values['path'].'/template/close_popup.png">' : '';
+        $strClosable = $arrOptions['booClosable'] ? '<img alt="Fermer" title="Fermer le popup" id="close_'.$popupid.'" class="ploopi_popup_close" data-popup="'.$popupid.'" style="display:block;float:right;margin:2px;cursor:pointer;" src="'.$this->values['path'].'/template/close_popup.png">' : '';
 
         $res =  '
                 <div id="'.$popupid.'" style="display:none;">
@@ -409,7 +509,8 @@ class skin
 
     public function display_array(&$arrColumns, &$arrValues, $strArrayId = null, $arrOptions = null)
     {
-
+        // Un tableau nommé par le module retrouve son tri et sa page (ploopi4 : dans le navigateur)
+        $booPersist = !empty($strArrayId);
         if (empty($strArrayId)) $strArrayId = md5(uniqid(rand(), true));
 
         $sort = $orderby = '';
@@ -438,7 +539,7 @@ class skin
                 {
                     if (!empty($c['options']['sort']))
                     {
-                        $array['columns']['left'][$id]['onclick'] = "ploopi.skin.array_refresh('{$strArrayId}', '{$id}', '', '{$array['options']['callback']}');";
+                        $array['columns']['left'][$id]['sortdata'] = array('array' => $strArrayId, 'orderby' => $id, 'callback' => $array['options']['callback']);
                         $array['sortable_columns'][] = $id;
                     }
                 }
@@ -450,7 +551,7 @@ class skin
                 {
                     if (!empty($c['options']['sort']))
                     {
-                        $array['columns']['auto'][$id]['onclick'] = "ploopi.skin.array_refresh('{$strArrayId}', '{$id}', '', '{$array['options']['callback']}');";
+                        $array['columns']['auto'][$id]['sortdata'] = array('array' => $strArrayId, 'orderby' => $id, 'callback' => $array['options']['callback']);
                         $array['sortable_columns'][] = $id;
                     }
                 }
@@ -462,7 +563,7 @@ class skin
                 {
                     if (!empty($c['options']['sort']))
                     {
-                        $array['columns']['right'][$id]['onclick'] = "ploopi.skin.array_refresh('{$strArrayId}', '{$id}', '', '{$array['options']['callback']}');";
+                        $array['columns']['right'][$id]['sortdata'] = array('array' => $strArrayId, 'orderby' => $id, 'callback' => $array['options']['callback']);
                         $array['sortable_columns'][] = $id;
                     }
                 }
@@ -474,7 +575,7 @@ class skin
                 {
                     if (!empty($c['options']['sort']))
                     {
-                        $array['columns']['actions_right'][$id]['onclick'] = "ploopi.skin.array_refresh('{$strArrayId}', '{$id}', '', '{$array['options']['callback']}');";
+                        $array['columns']['actions_left'][$id]['sortdata'] = array('array' => $strArrayId, 'orderby' => $id, 'callback' => $array['options']['callback']);
                         $array['sortable_columns'][] = $id;
                     }
                 }
@@ -486,12 +587,20 @@ class skin
                 {
                     if (!empty($c['options']['sort']))
                     {
-                        $array['columns']['actions_right'][$id]['onclick'] = "ploopi.skin.array_refresh('{$strArrayId}', '{$id}', '', '{$array['options']['callback']}');";
+                        $array['columns']['actions_right'][$id]['sortdata'] = array('array' => $strArrayId, 'orderby' => $id, 'callback' => $array['options']['callback']);
                         $array['sortable_columns'][] = $id;
                     }
                 }
             }
 
+        }
+
+        // Gabarits de génération 4 : tableau trié et paginé dans le navigateur (js/skin.js),
+        // sans aller-retour serveur ni variable sérialisée
+        if ($this->version() >= 4)
+        {
+            echo $this->_array_render_fluid($strArrayId, $array, $booPersist);
+            return;
         }
 
         $objSV = new serializedvar($strArrayId);
@@ -507,7 +616,261 @@ class skin
 
     private function array_page($strArrayId, $intPage, $strPage, $intSel = 0, $callback = '')
     {
-        return $intSel == $intPage ? str_replace('{p}', $strPage, '<strong>{p}</strong>') : str_replace(array('{p}', '{id}'), array($strPage, $intPage), '<a href="javascript:void(0);" onclick="javascript:ploopi.skin.array_refresh(\''.$strArrayId.'\', \'\', \'{id}\', \''.$callback.'\');">{p}</a>');
+        return $intSel == $intPage ? str_replace('{p}', $strPage, '<strong>{p}</strong>') : str_replace(array('{p}', '{id}'), array($strPage, $intPage), '<a href="javascript:void(0);" class="ploopi_array_page" data-array="'.$strArrayId.'" data-page="{id}" data-callback="'.$callback.'">{p}</a>');
+    }
+
+    /**
+     * Clé de tri d'une ligne pour une colonne : sort_label s'il est défini, sinon label,
+     * en majuscules sans accents (vide si la ligne n'a pas la colonne)
+     *
+     * @param array $arrRow ligne du tableau
+     * @param string $strCol clé de la colonne
+     * @param boolean $booText true pour trier sur le texte affiché (tableau fluide)
+     * @return string clé de tri
+     */
+
+    private static function _array_sortkey($arrRow, $strCol, $booText = false)
+    {
+        if (!isset($arrRow['values'][$strCol])) return '';
+        $arrCell = $arrRow['values'][$strCol];
+        $strKey = (string) (isset($arrCell['sort_label']) ? $arrCell['sort_label'] : (isset($arrCell['label']) ? $arrCell['label'] : ''));
+
+        // Tableau fluide : texte affiché (sans balises, entités décodées), pour que
+        // « &Eacute;coles » ou un lien <a href…> se trient sur leur libellé
+        if ($booText) $strKey = self::_array_text($strKey);
+
+        return strtoupper(str::convertaccents($strKey));
+    }
+
+    /**
+     * Texte d'un libellé HTML : sans balises, entités décodées
+     *
+     * @param string $strHtml libellé
+     * @return string texte brut
+     */
+
+    private static function _array_text($strHtml)
+    {
+        return trim(preg_replace('/\s+/u', ' ', html_entity_decode(strip_tags((string) $strHtml), ENT_QUOTES, 'UTF-8')));
+    }
+
+    /**
+     * Rendu fluide d'un tableau avancé (gabarits de génération 4) : un <table> unique,
+     * colonnes dans l'ordre visuel de l'affichage historique, tri et pagination par
+     * js/skin.js, affichage en cartes quand le conteneur est étroit (CSS du gabarit).
+     *
+     * Le tri initial est fait ici (le JavaScript le rejoue, puis restaure le tri et la
+     * page mémorisés pour la session de l'onglet) ; les libellés et les liens de ligne
+     * sont rendus comme dans l'affichage historique (HTML fourni par le module).
+     *
+     * @param string $strArrayId identifiant du tableau
+     * @param array $array tableau préparé par display_array()
+     * @param boolean $booPersist true si le tri et la page sont à mémoriser
+     * @return string code html
+     */
+
+    private function _array_render_fluid($strArrayId, $array, $booPersist)
+    {
+        $e = function($str) { return str::htmlentities((string) $str); };
+
+        // Ordre visuel : les colonnes « à droite » flottaient à droite, la première
+        // déclarée la plus à droite
+        $arrCols = $arrGroups = array();
+        foreach(array('actions_left' => false, 'left' => false, 'auto' => false, 'right' => true, 'actions_right' => true) as $strGroup => $booReverse)
+        {
+            if (empty($array['columns'][$strGroup]) || !is_array($array['columns'][$strGroup])) continue;
+            foreach(($booReverse ? array_reverse($array['columns'][$strGroup], true) : $array['columns'][$strGroup]) as $strKey => $arrCol)
+            {
+                $arrCols[$strKey] = $arrCol;
+                $arrGroups[$strKey] = $strGroup;
+            }
+        }
+
+        // Colonne « titre » : porte le lien de ligne et ouvre la carte sur petit écran
+        $strTitle = '';
+        foreach(array('auto', 'left', 'right') as $strGroup)
+        {
+            $strTitle = (string) array_search($strGroup, $arrGroups, true);
+            if ($strTitle !== '') break;
+        }
+
+        // Tri : comme l'affichage historique (tri par défaut, sinon première colonne triable)
+        $booSortable = !empty($array['options']['sortable']);
+        $arrSortable = $booSortable && !empty($array['sortable_columns']) ? $array['sortable_columns'] : array();
+        $strOrderBy = '';
+        if ($booSortable)
+        {
+            if (!empty($array['options']['orderby_default']) && isset($arrCols[$array['options']['orderby_default']])) $strOrderBy = (string) $array['options']['orderby_default'];
+            elseif (!empty($arrSortable)) $strOrderBy = (string) $arrSortable[0];
+        }
+        $strSort = !empty($array['options']['sort_default']) && strtoupper($array['options']['sort_default']) == 'DESC' ? 'DESC' : 'ASC';
+
+        $funcNumeric = function($strKey) use ($arrCols) { return isset($arrCols[$strKey]['options']['sort_flag']) && $arrCols[$strKey]['options']['sort_flag'] == SORT_NUMERIC; };
+
+        // Colonnes dont les cellules portent une clé de tri
+        $arrKeyed = array_flip($arrSortable);
+        if ($strOrderBy !== '') $arrKeyed[$strOrderBy] = true;
+
+        $arrValues = is_array($array['values']) ? $array['values'] : array();
+        $arrRank = array_flip(array_keys($arrValues));
+        $arrOrder = array_keys($arrValues);
+
+        if ($strOrderBy !== '')
+        {
+            $arrSortKeys = array();
+            foreach($arrValues as $mixKey => $arrRow) $arrSortKeys[$mixKey] = self::_array_sortkey($arrRow, $strOrderBy, true);
+            $booNumeric = $funcNumeric($strOrderBy);
+            $intDir = $strSort == 'DESC' ? -1 : 1;
+            usort($arrOrder, function($a, $b) use ($arrSortKeys, $arrRank, $booNumeric, $intDir) {
+                $c = $booNumeric ? floatval($arrSortKeys[$a]) <=> floatval($arrSortKeys[$b]) : strnatcmp($arrSortKeys[$a], $arrSortKeys[$b]);
+                if ($c == 0) $c = $arrRank[$a] <=> $arrRank[$b];
+                return $c * $intDir;
+            });
+        }
+
+        // Page initiale
+        $intTotal = sizeof($arrValues);
+        $intLimit = empty($array['options']['limit']) ? 0 : max(0, (int) $array['options']['limit']);
+        if ($intLimit >= $intTotal) $intLimit = 0;
+        $intPages = $intLimit ? (int) ceil($intTotal / $intLimit) : 1;
+        $intPage = empty($array['options']['page']) ? 1 : min(max(1, (int) $array['options']['page']), $intPages);
+        $intFrom = $intLimit ? ($intPage - 1) * $intLimit : 0;
+        $intTo = $intLimit ? min($intFrom + $intLimit, $intTotal) : $intTotal;
+
+        $strClass = 'ploopi_explorer_main p4-arr-main'.(isset($array['options']['class']) ? ' '.$array['options']['class'] : '');
+
+        $res = '<div class="'.$e($strClass).'" id="ploopi_explorer_main_'.$e($strArrayId).'" data-p4-arr="'.$e($strArrayId).'"'
+            .' data-p4-arr-orderby="'.$e($strOrderBy).'" data-p4-arr-sort="'.$strSort.'" data-p4-arr-limit="'.$intLimit.'" data-p4-arr-page="'.$intPage.'"'
+            .(empty($array['options']['callback']) ? '' : ' data-p4-arr-callback="'.$e($array['options']['callback']).'"')
+            .($booPersist ? ' data-p4-arr-persist="1"' : '')
+            .' data-p4-arr-of="'.$e(_PLOOPI_ARRAY_OF).'">';
+
+        if (empty($arrValues))
+        {
+            return $res.'<div class="p4-ui p4-empty">'.$this->icon('list-details').'<p>'.$e(_PLOOPI_ARRAY_EMPTY).'</p></div></div>';
+        }
+
+        // Barre de tri de l'affichage en cartes (les en-têtes y sont masqués)
+        if (!empty($arrSortable))
+        {
+            $res .= '<div class="p4-ui p4-arr-sortbar"><label><span>'.$e(_PLOOPI_ARRAY_SORTBY).'</span><select class="p4-select" data-p4-arr-select>';
+            foreach($arrSortable as $strKey)
+            {
+                $strKey = (string) $strKey;
+                $strLabel = self::_array_text(isset($arrCols[$strKey]['label']) ? $arrCols[$strKey]['label'] : '');
+                $res .= '<option value="'.$e($strKey).'"'.($strKey == $strOrderBy ? ' selected' : '').'>'.$e($strLabel == '' ? $strKey : $strLabel).'</option>';
+            }
+            $res .= '</select></label>';
+            $res .= '<button type="button" class="p4-btn p4-btn-sm p4-btn-icon" data-p4-arr-dir aria-label="'.$e(_PLOOPI_ARRAY_REVERSE).'" title="'.$e(_PLOOPI_ARRAY_REVERSE).'">'.$this->icon($strSort == 'DESC' ? 'chevron-down' : 'chevron-up').'</button></div>';
+        }
+
+        $res .= '<div class="p4-table-wrap'.(empty($array['options']['height']) ? '' : ' p4-arr-scroll').'"'.(empty($array['options']['height']) ? '' : ' style="max-height:'.(int) $array['options']['height'].'px"').'>';
+        $res .= '<table class="p4-table p4-arr"><thead class="p4-ui"><tr>';
+
+        foreach($arrCols as $strKey => $arrCol)
+        {
+            $strKey = (string) $strKey;
+            $booActions = strpos($arrGroups[$strKey], 'actions') === 0;
+            $strLabel = isset($arrCol['label']) ? (string) $arrCol['label'] : '';
+
+            $arrClass = array();
+            if ($booActions) $arrClass[] = 'p4-arr-acts';
+            if (!empty($arrCol['class'])) $arrClass[] = $arrCol['class'];
+
+            $strStyle = '';
+            if (!$booActions && !empty($arrCol['width']) && is_numeric($arrCol['width'])) $strStyle = 'width:'.(int) $arrCol['width'].'px;';
+            if (!empty($arrCol['style'])) $strStyle .= $arrCol['style'];
+
+            $res .= '<th'.(empty($arrClass) ? '' : ' class="'.$e(implode(' ', $arrClass)).'"').($strStyle == '' ? '' : ' style="'.$e($strStyle).'"');
+            if ($strKey === $strOrderBy) $res .= ' aria-sort="'.($strSort == 'DESC' ? 'descending' : 'ascending').'"';
+            $res .= ' scope="col">';
+
+            if (!empty($arrCol['sortdata']))
+            {
+                $strIcon = $strKey === $strOrderBy ? ($strSort == 'DESC' ? 'chevron-down' : 'chevron-up') : 'arrows-sort';
+                $res .= '<button type="button" class="p4-sort" data-p4-arr-sort="'.$e($strKey).'"'.($funcNumeric($strKey) ? ' data-p4-arr-num' : '').'>'
+                    .($strLabel == '' ? '<span class="p4-sr-only">'.$e($strKey).'</span>' : $strLabel).$this->icon($strIcon).'</button>';
+            }
+            elseif (!empty($arrCol['url']) || !empty($arrCol['onclick']))
+            {
+                $res .= '<a href="'.(empty($arrCol['url']) ? 'javascript:void(0);' : $arrCol['url']).'"'.(empty($arrCol['onclick']) ? '' : ' onclick="javascript:'.$arrCol['onclick'].'"').'>'.$strLabel.'</a>';
+            }
+            elseif ($booActions && self::_array_text($strLabel) == '') $res .= '<span class="p4-sr-only">'.$e(_PLOOPI_ARRAY_ACTIONS).'</span>';
+            else $res .= $strLabel;
+
+            $res .= '</th>';
+        }
+
+        $res .= '</tr></thead><tbody>';
+
+        foreach($arrOrder as $intPos => $mixKey)
+        {
+            $v = $arrValues[$mixKey];
+            $arrRowValues = isset($v['values']) && is_array($v['values']) ? $v['values'] : array();
+            $booLink = !empty($v['link']) || !empty($v['onclick']);
+
+            $res .= '<tr'.(empty($v['id']) ? '' : ' id="'.$e($v['id']).'"')
+                .' class="'.$e(trim(($booLink ? 'p4-arr-link ' : '').(empty($v['class']) ? '' : $v['class']))).'"'
+                .(empty($v['style']) ? '' : ' style="'.$e($v['style']).'"')
+                .' data-p4-arr-i="'.$arrRank[$mixKey].'"'
+                .($intPos < $intFrom || $intPos >= $intTo ? ' hidden' : '').'>';
+
+            foreach($arrCols as $strKey => $arrCol)
+            {
+                $strKey = (string) $strKey;
+                $booActions = strpos($arrGroups[$strKey], 'actions') === 0;
+                $arrCell = isset($arrRowValues[$strKey]) && is_array($arrRowValues[$strKey]) ? $arrRowValues[$strKey] : array();
+                $strLabel = isset($arrCell['label']) ? (string) $arrCell['label'] : '';
+                if (trim($strLabel) == '&nbsp;') $strLabel = '';
+
+                $arrClass = array();
+                if ($booActions) $arrClass[] = 'p4-arr-acts';
+                if ($strKey === $strTitle) $arrClass[] = 'p4-arr-title';
+                if (!empty($arrCell['class'])) $arrClass[] = $arrCell['class'];
+
+                // Lien de la ligne : ancre de la cellule titre, étendue à toute la ligne
+                // (CSS) ; vide à côté du contenu s'il est lui-même interactif
+                if ($booLink && $strKey === $strTitle)
+                {
+                    $strDescription = empty($v['description']) ? '' : self::_array_text($v['description']);
+                    $strAnchor = '<a class="p4-arr-rowlink" href="'.(empty($v['link']) ? 'javascript:void(0);' : $v['link']).'"'
+                        .($strDescription == '' ? '' : ' title="'.$e($strDescription).'"')
+                        .(empty($v['onclick']) ? '' : ' onclick="'.$v['onclick'].'"')
+                        .(empty($v['option']) ? '' : ' '.$v['option']);
+
+                    if (preg_match('/<(a|button|input|select|textarea|label)\b/i', $strLabel))
+                    {
+                        $strAria = $strDescription == '' ? self::_array_text($strLabel) : $strDescription;
+                        $strLabel = $strAnchor.' aria-label="'.$e($strAria).'"></a>'.$strLabel;
+                    }
+                    else $strLabel = $strAnchor.'>'.$strLabel.'</a>';
+                }
+
+                $res .= '<td'.(empty($arrClass) ? '' : ' class="'.$e(implode(' ', $arrClass)).'"')
+                    .(empty($arrCell['style']) ? '' : ' style="'.$e($arrCell['style']).'"');
+                if (!$booActions)
+                {
+                    $strColLabel = self::_array_text(isset($arrCol['label']) ? $arrCol['label'] : '');
+                    if ($strColLabel != '') $res .= ' data-label="'.$e($strColLabel).'"';
+                }
+                if (isset($arrKeyed[$strKey])) $res .= ' data-p4-arr-key="'.$e(self::_array_sortkey($v, $strKey, true)).'"';
+                $res .= '>'.$strLabel.'</td>';
+            }
+
+            $res .= '</tr>';
+        }
+
+        $res .= '</tbody></table></div>';
+
+        // Pied : lignes affichées et pagination (boutons construits par js/skin.js)
+        if ($intLimit)
+        {
+            $res .= '<div class="p4-ui p4-arr-foot"><span class="p4-arr-count" data-p4-arr-count>'.($intFrom + 1).'–'.$intTo.' '.$e(_PLOOPI_ARRAY_OF).' '.$intTotal.'</span>'
+                .'<nav class="p4-pager" data-p4-arr-pager aria-label="'.$e(_PLOOPI_ARRAY_PAGINATION).'"'
+                .' data-p4-arr-prev="'.$e(_PLOOPI_ARRAY_PREVIOUS).'" data-p4-arr-next="'.$e(_PLOOPI_ARRAY_NEXT).'"></nav></div>';
+        }
+
+        return $res.'</div>';
     }
 
     /**
@@ -583,8 +946,7 @@ class skin
             $c = 0;
             foreach($array['values'] as $key => $value)
             {
-                $label = isset($value['values'][$array['orderby']]['sort_label']) ? 'sort_label' : 'label';
-                $idx = sprintf("%s_%06s", strtoupper(str::convertaccents($value['values'][$array['orderby']][$label])), $c++);
+                $idx = sprintf("%s_%06s", self::_array_sortkey($value, $array['orderby']), $c++);
                 $array['index'][$idx] = $key;
             }
 
@@ -732,9 +1094,9 @@ class skin
 
                         if (isset($c['class'])) $class = trim($class.' '.$c['class']);
 
-                        if (!empty($c['url']) || !empty($c['onclick'])) {
+                        if (!empty($c['url']) || !empty($c['onclick']) || !empty($c['sortdata'])) {
                             ?>
-                            <a href="<?php echo (!empty($c['url'])) ? $c['url'] : 'javascript:void(0);'; ?>" <?php if (!empty($c['onclick'])) echo "onclick=\"javascript:{$c['onclick']}\""; ?>" style="width:<?php echo $c['width']; ?>px;float:right;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element"><p><span><?php echo $c['label'] == '' ? '&nbsp;' : $c['label']; ?></span><?php echo $img; ?></p></a>
+                            <a href="<?php echo (!empty($c['url'])) ? $c['url'] : 'javascript:void(0);'; ?>" <?php if (!empty($c['onclick'])) echo "onclick=\"javascript:{$c['onclick']}\""; if (!empty($c['sortdata'])) echo ' data-array="'.str::htmlentities($c['sortdata']['array']).'" data-orderby="'.str::htmlentities($c['sortdata']['orderby']).'" data-callback="'.str::htmlentities($c['sortdata']['callback']).'"'; ?>" style="width:<?php echo $c['width']; ?>px;float:right;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element<?php if (!empty($c['sortdata'])) echo ' ploopi_array_sort'; ?>"><p><span><?php echo $c['label'] == '' ? '&nbsp;' : $c['label']; ?></span><?php echo $img; ?></p></a>
                             <?php
                         }
                         else {
@@ -764,9 +1126,9 @@ class skin
 
                         if (isset($c['class'])) $class = trim($class.' '.$c['class']);
 
-                        if (!empty($c['url']) || !empty($c['onclick'])) {
+                        if (!empty($c['url']) || !empty($c['onclick']) || !empty($c['sortdata'])) {
                             ?>
-                            <a href="<?php echo (!empty($c['url'])) ? $c['url'] : 'javascript:void(0);'; ?>" <?php if (!empty($c['onclick'])) echo "onclick=\"javascript:{$c['onclick']}\""; ?>" style="width:<?php echo $c['width']; ?>px;float:right;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element ploopi_explorer_element_right <?php echo $class; ?>"><p><span><?php echo $c['label'] == '' ? '&nbsp;' : $c['label']; ?></span><?php echo $img; ?></p></a>
+                            <a href="<?php echo (!empty($c['url'])) ? $c['url'] : 'javascript:void(0);'; ?>" <?php if (!empty($c['onclick'])) echo "onclick=\"javascript:{$c['onclick']}\""; if (!empty($c['sortdata'])) echo ' data-array="'.str::htmlentities($c['sortdata']['array']).'" data-orderby="'.str::htmlentities($c['sortdata']['orderby']).'" data-callback="'.str::htmlentities($c['sortdata']['callback']).'"'; ?>" style="width:<?php echo $c['width']; ?>px;float:right;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element<?php if (!empty($c['sortdata'])) echo ' ploopi_array_sort'; ?> ploopi_explorer_element_right <?php echo $class; ?>"><p><span><?php echo $c['label'] == '' ? '&nbsp;' : $c['label']; ?></span><?php echo $img; ?></p></a>
                             <?php
                         }
                         else {
@@ -796,9 +1158,9 @@ class skin
 
                         if (isset($c['class'])) $class = trim($class.' '.$c['class']);
 
-                        if (!empty($c['url']) || !empty($c['onclick'])) {
+                        if (!empty($c['url']) || !empty($c['onclick']) || !empty($c['sortdata'])) {
                             ?>
-                            <a href="<?php echo (!empty($c['url'])) ? $c['url'] : 'javascript:void(0);'; ?>" <?php if (!empty($c['onclick'])) echo "onclick=\"javascript:{$c['onclick']}\""; ?>" style="width:<?php echo $c['width']; ?>px;float:left;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element <?php echo $class; ?>"><p><span><?php echo $c['label'] == '' ? '&nbsp;' : $c['label']; ?></span><?php echo $img; ?></p></a>
+                            <a href="<?php echo (!empty($c['url'])) ? $c['url'] : 'javascript:void(0);'; ?>" <?php if (!empty($c['onclick'])) echo "onclick=\"javascript:{$c['onclick']}\""; if (!empty($c['sortdata'])) echo ' data-array="'.str::htmlentities($c['sortdata']['array']).'" data-orderby="'.str::htmlentities($c['sortdata']['orderby']).'" data-callback="'.str::htmlentities($c['sortdata']['callback']).'"'; ?>" style="width:<?php echo $c['width']; ?>px;float:left;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element<?php if (!empty($c['sortdata'])) echo ' ploopi_array_sort'; ?> <?php echo $class; ?>"><p><span><?php echo $c['label'] == '' ? '&nbsp;' : $c['label']; ?></span><?php echo $img; ?></p></a>
                             <?php
                         }
                         else {
@@ -828,9 +1190,9 @@ class skin
 
                         if (isset($c['class'])) $class = trim($class.' '.$c['class']);
 
-                        if (!empty($c['url']) || !empty($c['onclick'])) {
+                        if (!empty($c['url']) || !empty($c['onclick']) || !empty($c['sortdata'])) {
                             ?>
-                            <a href="<?php echo (!empty($c['url'])) ? $c['url'] : 'javascript:void(0);'; ?>" <?php if (!empty($c['onclick'])) echo "onclick=\"javascript:{$c['onclick']}\""; ?>" style="width:<?php echo $c['width']; ?>px;float:left;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element <?php echo $class; ?>"><p><span><?php echo $c['label'] == '' ? '&nbsp;' : $c['label']; ?></span><?php echo $img; ?></p></a>
+                            <a href="<?php echo (!empty($c['url'])) ? $c['url'] : 'javascript:void(0);'; ?>" <?php if (!empty($c['onclick'])) echo "onclick=\"javascript:{$c['onclick']}\""; if (!empty($c['sortdata'])) echo ' data-array="'.str::htmlentities($c['sortdata']['array']).'" data-orderby="'.str::htmlentities($c['sortdata']['orderby']).'" data-callback="'.str::htmlentities($c['sortdata']['callback']).'"'; ?>" style="width:<?php echo $c['width']; ?>px;float:left;<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element<?php if (!empty($c['sortdata'])) echo ' ploopi_array_sort'; ?> <?php echo $class; ?>"><p><span><?php echo $c['label'] == '' ? '&nbsp;' : $c['label']; ?></span><?php echo $img; ?></p></a>
                             <?php
                         }
                         else {
@@ -860,9 +1222,9 @@ class skin
 
                         if (isset($c['class'])) $class = trim($class.' '.$c['class']);
 
-                        if (!empty($c['url']) || !empty($c['onclick'])) {
+                        if (!empty($c['url']) || !empty($c['onclick']) || !empty($c['sortdata'])) {
                             ?>
-                            <a href="<?php echo (!empty($c['url'])) ? $c['url'] : 'javascript:void(0);'; ?>" <?php if (!empty($c['onclick'])) echo "onclick=\"javascript:{$c['onclick']}\""; ?>" style="<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element <?php echo $class; ?>"><p><span><?php echo $c['label'] == '' ? '&nbsp;' : $c['label']; ?></span><?php echo $img; ?></p></a>
+                            <a href="<?php echo (!empty($c['url'])) ? $c['url'] : 'javascript:void(0);'; ?>" <?php if (!empty($c['onclick'])) echo "onclick=\"javascript:{$c['onclick']}\""; if (!empty($c['sortdata'])) echo ' data-array="'.str::htmlentities($c['sortdata']['array']).'" data-orderby="'.str::htmlentities($c['sortdata']['orderby']).'" data-callback="'.str::htmlentities($c['sortdata']['callback']).'"'; ?>" style="<?php if (!empty($c['style'])) echo $c['style']; ?>" class="ploopi_explorer_element<?php if (!empty($c['sortdata'])) echo ' ploopi_array_sort'; ?> <?php echo $class; ?>"><p><span><?php echo $c['label'] == '' ? '&nbsp;' : $c['label']; ?></span><?php echo $img; ?></p></a>
                             <?php
                         }
                         else {
@@ -900,6 +1262,7 @@ class skin
                     */
 
                     // On se positionne sur la bonne page de données
+                    reset($array['index']);
                     $intLines = $array['options']['limit'];
 
                     if ($intLines > 0 && $intLines < sizeof($array['index']))
@@ -1022,6 +1385,26 @@ class skin
      * @return string code html du treeview
      */
 
+    /**
+     * Attributs d'un lien de l'arborescence (clés 'attrs' du libellé, 'node_attrs' du
+     * dépliage) : data-ploopi-* lus par js/actions.js et js/skin.js, en remplacement de
+     * 'onclick' et 'node_onclick' (CSP stricte). Les noms sont filtrés, les valeurs échappées.
+     *
+     * @param array $arrAttrs attributs (nom => valeur)
+     * @return string attributs (HTML)
+     */
+    public static function treeview_attrs($arrAttrs)
+    {
+        $strAttrs = '';
+        if (empty($arrAttrs) || !is_array($arrAttrs)) return $strAttrs;
+        foreach($arrAttrs as $strNom => $mixValeur)
+        {
+            if (!preg_match('/^data-[a-z0-9-]+$/', $strNom)) continue;
+            $strAttrs .= ' '.$strNom.'="'.str::htmlentities(is_array($mixValeur) ? json_encode($mixValeur) : (string) $mixValeur).'"';
+        }
+        return $strAttrs;
+    }
+
     public function display_treeview(&$nodes, &$treeview, $node_id_sel = null, $node_id_from = null, $viewall = false)
     {
         // recherche du premier noeud
@@ -1077,8 +1460,9 @@ class skin
                         $bg = "background:url({$_SESSION['ploopi']['template_path']}/img/treeview/line.png) 0 0 repeat-y;";
                     }
 
-                    $n_link = (empty($node['node_link'])) ? 'javascript:void(0);' : $node['node_link'];
+                    $n_link = (empty($node['node_link'])) ? (empty($node['node_attrs']) ? 'javascript:void(0);' : '#') : $node['node_link'];
                     $n_onclick = (empty($node['node_onclick'])) ? '' : 'onclick="javascript:'.$node['node_onclick'].';"';
+                    $n_onclick .= self::treeview_attrs(isset($node['node_attrs']) ? $node['node_attrs'] : null);
 
                     $node_link = "<a href=\"{$n_link}\" {$n_onclick}><img id=\"t{$node['id']}\" style=\"display:block;float:left;\" src=\"{$_SESSION['ploopi']['template_path']}/img/treeview/{$type_node}.png\" /></a>";
 
@@ -1095,10 +1479,11 @@ class skin
                 $style_sel = ($is_node_sel) ? 'bold' : 'none';
 
                 // lien sur le libellé
-                $link = (empty($node['link'])) ? 'javascript:void(0);' : $node['link'];
+                $link = (empty($node['link'])) ? (empty($node['attrs']) ? 'javascript:void(0);' : '#') : $node['link'];
 
-                // onclick sur le libellé
+                // onclick sur le libellé (ou attributs data-* : js/actions.js, sans script en ligne)
                 $onclick = (empty($node['onclick'])) ? '' : 'onclick="'.$node['onclick'].';"';
+                $onclick .= self::treeview_attrs(isset($node['attrs']) ? $node['attrs'] : null);
 
                 // label supplémentaire
                 $status = (empty($node['status'])) ? '' : $node['status'];
@@ -1155,7 +1540,7 @@ class skin
         <input type="hidden" name="<?php echo $name; ?>" id="<?php echo $id; ?>" value="<?php if (!empty($selecteditem)) echo str::htmlentities($selecteditem); ?>" <?php if (!empty($arrOptions['onchange'])) echo 'onchange="javascript:'.$arrOptions['onchange'].'";'; ?>/>
 
         <div class="ploopi_selectbox" style="display:inline-block;<?php if (!empty($arrOptions['input_width'])) echo "width:{$arrOptions['input_width']};"; ?>">
-            <div class="ploopi_selectbox_button" id="ploopi_selectbox_button<?php echo $id; ?>" onclick="javascript:$('ploopi_selectbox_list<?php echo $id; ?>').style.display='block';">
+            <div class="ploopi_selectbox_button" id="ploopi_selectbox_button<?php echo $id; ?>" onclick="javascript:document.getElementById('ploopi_selectbox_list<?php echo $id; ?>').style.display='block';">
                 <div class="ploopi_selectbox_button_content" id="ploopi_selectbox_button_content<?php echo $id; ?>" >
                     <?php
                     if (!empty($arrValues[$selecteditem]))
@@ -1175,8 +1560,8 @@ class skin
                 </div>
             </div>
 
-            <div id="ploopi_selectbox_list<?php echo $id; ?>" class="ploopi_selectbox_list" style="display:none;<?php if (!empty($arrOptions['menu_width'])) echo "width:{$arrOptions['menu_width']};"; ?>" onclick="$('ploopi_selectbox_list<?php echo $id; ?>').style.display='none';" onmouseout="$('ploopi_selectbox_list<?php echo $id; ?>').style.display='none';">
-                <ul onmouseover="$('ploopi_selectbox_list<?php echo $id; ?>').style.display='block';">
+            <div id="ploopi_selectbox_list<?php echo $id; ?>" class="ploopi_selectbox_list" style="display:none;<?php if (!empty($arrOptions['menu_width'])) echo "width:{$arrOptions['menu_width']};"; ?>" onclick="document.getElementById('ploopi_selectbox_list<?php echo $id; ?>').style.display='none';" onmouseout="document.getElementById('ploopi_selectbox_list<?php echo $id; ?>').style.display='none';">
+                <ul onmouseover="document.getElementById('ploopi_selectbox_list<?php echo $id; ?>').style.display='block';">
                     <?php
                     foreach($arrValues as $key => $menu)
                     {
@@ -1191,7 +1576,7 @@ class skin
                             case 'select':
                                 ?>
                                 <li>
-                                    <a href="javascript:void(0);" <?php if (!empty($menu['onclick'])) echo 'onclick="javascript:'.$menu['onclick'].'"'; ?> onclick="javascript:$('ploopi_selectbox_button_content<?php echo $id; ?>').innerHTML = this.innerHTML; $('<?php echo $id; ?>').value = '<?php echo addslashes($key); ?>'; ploopi.event.dispatch_onchange('<?php echo $id; ?>');return false;" title="Accéder à <?php echo str::htmlentities($menu['label']); ?>">
+                                    <a href="javascript:void(0);" <?php if (!empty($menu['onclick'])) echo 'onclick="javascript:'.$menu['onclick'].'"'; ?> onclick="javascript:document.getElementById('ploopi_selectbox_button_content<?php echo $id; ?>').innerHTML = this.innerHTML; document.getElementById('<?php echo $id; ?>').value = '<?php echo addslashes($key); ?>'; ploopi.event.dispatch_onchange('<?php echo $id; ?>');return false;" title="Accéder à <?php echo str::htmlentities($menu['label']); ?>">
                                         <?php
                                         if (!empty($menu['icon']))
                                         {

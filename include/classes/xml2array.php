@@ -84,10 +84,9 @@ class xml2array
     {
         // set up a new XML parser to do all the work for us
         $this->parser = xml_parser_create('UTF-8');
-        xml_set_object($this->parser, $this);
         xml_parser_set_option($this->parser, XML_OPTION_CASE_FOLDING, false);
-        xml_set_element_handler($this->parser, "startElement", "endElement");
-        xml_set_character_data_handler($this->parser, "characterData");
+        xml_set_element_handler($this->parser, array($this, 'startElement'), array($this, 'endElement'));
+        xml_set_character_data_handler($this->parser, array($this, 'characterData'));
 
         // Build a Root node and initialize the node_stack...
         $this->node_stack = array();
@@ -99,7 +98,6 @@ class xml2array
         // parse the data and free the parser...
         if (xml_parse($this->parser, $xmlcontent))
         {
-            xml_parser_free($this->parser);
             return($this->xmlarray);
         }
         else return(false);

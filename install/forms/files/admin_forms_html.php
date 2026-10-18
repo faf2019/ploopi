@@ -56,8 +56,6 @@ $arrParams[] = "forms_id={$_GET['forms_id']}";
 if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
 ?>
 
-<script src="./vendor/ckeditor/ckeditor/ckeditor.js"></script>
-
 <form name="form_field" action="<?php echo ploopi\crypt::urlencode('admin.php?'.implode('&', $arrParams)); ?>" method="post" onsubmit="javascript:return field_validate(this);">
 <div style="overflow:hidden">
     <div class="ploopi_form">
@@ -91,21 +89,10 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
             <p>
                 <label><?php echo _FORMS_FIELD_XHTMLCONTENT; ?>: </label>
                 <div>
-                    <textarea id="fck_field_xhtmlcontent" name="fck_field_xhtmlcontent"><?php echo $field->fields['xhtmlcontent']; ?></textarea>
+                    <?php /* Éditeur TinyMCE (js/editor.js), créé par data-ploopi-editor */ ?>
+                    <textarea id="fck_field_xhtmlcontent" name="fck_field_xhtmlcontent" data-ploopi-editor="complet"><?php echo ploopi\str::htmlentities($field->fields['xhtmlcontent']); ?></textarea>
                 </div>
             </p>
-
-            <script>
-                // http://docs.ckeditor.com/#!/guide/dev_file_browser_api
-                CKEDITOR.replace( 'fck_field_xhtmlcontent', {
-                    customConfig: '<?php echo _PLOOPI_BASEPATH.'/modules/forms/ckeditor/config.js'; ?>',
-                    // doc_selectfile
-                    filebrowserBrowseUrl: false,
-                    filebrowserImageBrowseUrl: false,
-                    // Url de choix des objets
-                    objectBrowserUrl: false
-                });
-            </script>
 
         </div>
     </div>
@@ -115,7 +102,7 @@ if (!$field->new) $arrParams[] = "field_id={$field->fields['id']}";
     </p>
 </div>
 
-<div style="clear:both;background-color:#d0d0d0;border-top:1px solid #a0a0a0;padding:4px;overflow:auto;text-align:right;">
+<div class="forms_barre_boutons">
     <input type="button" class="flatbutton" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:document.location.href='<?php echo ploopi\crypt::urlencode("admin.php?op=forms_modify&forms_id={$_GET['forms_id']}"); ?>'">
     <input type="submit" class="flatbutton" value="<?php echo _PLOOPI_SAVE; ?>">
 </div>

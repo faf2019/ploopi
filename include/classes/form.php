@@ -284,19 +284,22 @@ class form
         else {
             $strTarget = is_null($this->_arrOptions['target']) ? '' : " target=\"{$this->_arrOptions['target']}\"";
             $strEnctype = is_null($this->_arrOptions['enctype']) ? ($booHasFile ? ' enctype="multipart/form-data"' : '') : " enctype=\"{$this->_arrOptions['enctype']}\"";
-            $strOnsubmit = is_null($this->_arrOptions['onsubmit']) ? ' onsubmit="javascript:return ploopi.'.$this->getFormValidateFunc().'(this);"' : " onsubmit=\"javascript:{$this->_arrOptions['onsubmit']}\"";
-
             /*
-             * Génération du script de validation
-             * Attention, nécessité de passer par eval() pour les appels AJAX
+             * Validation décrite par un attribut (js/actions.js), et non plus générée dans
+             * un script en ligne (CSP stricte) ; un onsubmit fourni par le module reste
+             * possible (ploopi.<id>_validate(this) y est toujours défini)
              */
-            $strOutput = '<script type="text/javascript">'.$this->renderJS().'</script>';
+            $strValidate = ' data-ploopi-validate="'.self::htmlentities(json_encode($this->renderSpec())).'"';
+            $strOnsubmit = is_null($this->_arrOptions['onsubmit']) ? ' data-ploopi-validate-submit="1"' : " onsubmit=\"javascript:{$this->_arrOptions['onsubmit']}\"";
+
+            // Scripts ajoutés par le module (addJs) : code du serveur, nonce de la session
+            $strOutput = empty($this->_arrJs) ? '' : '<script type="text/javascript" nonce="'.csp::nonce().'">'.implode("\n", $this->_arrJs).'</script>';
 
             /*
              * Génération du form
              */
 
-            $strOutput .= "<div{$strClass}{$strStyle}><form id=\"{$this->_strId}\" name=\"{$this->_strId}\" action=\"{$this->_strAction}\" method=\"{$this->_strMethod}\"{$strOnsubmit}{$strTarget}{$strEnctype}><div {$strClassForm}{$strStyleForm}>";
+            $strOutput .= "<div{$strClass}{$strStyle}><form id=\"{$this->_strId}\" name=\"{$this->_strId}\" action=\"{$this->_strAction}\" method=\"{$this->_strMethod}\"{$strValidate}{$strOnsubmit}{$strTarget}{$strEnctype}><div {$strClassForm}{$strStyleForm}>";
         }
 
 
@@ -328,83 +331,65 @@ class form
     }
 
     /**
-     * Rendu de la fonction javascript de validation du formulaire
+     * Description de la validation du formulaire (attribut data-ploopi-validate, lue par
+     * js/actions.js) : pour chaque panneau, les champs à contrôler, dans l'ordre, avec
+     * leur libellé, leur format (ploopi.validatefield) et le bloc qui, masqué, les dispense
      *
-     * @return string fonction de validation javascript
+     * @return array description
      */
-    private function renderJS()
+    private function renderSpec()
     {
-        $strOutput = '';
+        $funcLabel = function($strLabel) { return strip_tags(html_entity_decode((string) $strLabel)); };
 
+        $arrPanels = array();
         foreach($this->_arrPanels as $objPanel)
         {
-            // Génération d'une fonction de validation par panel
-            $strOutput .= "\nploopi.".$objPanel->getFormValidateFunc().' = function(form) {';
+            $arrFields = array();
             foreach($objPanel->getFields() as $objField)
             {
-                if ($objField->_strName != '')
+                if ($objField->_strName == '') continue;
+
+                $strHide = "{$objField->_strId}_form";
+                $booRequired = !empty($objField->_arrOptions['required']);
+
+                switch ($objField->_strType)
                 {
-                    $strFormField = "form['{$objField->_strName}']";
+                    case 'input:text':
+                    case 'input:date':
+                    case 'input:number':
+                    case 'input:password':
+                    case 'input:file':
+                    case 'textarea':
+                        $arrFields[] = array('name' => $objField->_strName, 'label' => $funcLabel($objField->_strLabel), 'format' => ($booRequired ? '' : 'empty').$objField->_arrOptions['datatype'], 'hide' => $strHide);
+                    break;
 
-                    $strCond = "jQuery('#{$objField->_strId}_form').css('display') == 'none' ||";
+                    case 'input:hidden':
+                        if (isset($objField->_arrOptions['label'])) $arrFields[] = array('name' => $objField->_strName, 'label' => $funcLabel($objField->_arrOptions['label']), 'format' => ($booRequired ? '' : 'empty').$objField->_arrOptions['datatype']);
+                    break;
 
-                    switch ($objField->_strType)
-                    {
-                        case 'input:text':
-                        case 'input:date':
-                        case 'input:number':
-                        case 'input:password':
-                        case 'input:file':
-                        case 'textarea':
-                            $strFormat = ($objField->_arrOptions['required'] ? '' : 'empty').$objField->_arrOptions['datatype'];
-                            $strOutput .= "\nif ({$strCond} ploopi.validatefield('".addslashes(strip_tags(html_entity_decode($objField->_strLabel)))."', {$strFormField}, '{$strFormat}'))";
-                        break;
+                    case 'select':
+                    case 'color':
+                        if ($booRequired) $arrFields[] = array('name' => $objField->_strName, 'label' => $funcLabel($objField->_strLabel), 'format' => 'selected', 'hide' => $strHide);
+                    break;
 
-                        case 'input:hidden':
-                            if (isset($objField->_arrOptions['label'])) {
-                                $strFormat = ($objField->_arrOptions['required'] ? '' : 'empty').$objField->_arrOptions['datatype'];
-                                $strOutput .= "\nif (ploopi.validatefield('".addslashes(strip_tags(html_entity_decode($objField->_arrOptions['label'])))."', {$strFormField}, '{$strFormat}'))";
-                            }
-                        break;
+                    case 'input:radio':
+                        if ($booRequired) $arrFields[] = array('name' => $objField->_strName, 'label' => $funcLabel($objField->_strLabel), 'format' => 'checked', 'hide' => $strHide);
+                    break;
 
-                        case 'select':
-                        case 'color':
-                            if ($objField->_arrOptions['required']) $strOutput .= "\nif ({$strCond} ploopi.validatefield('".addslashes(strip_tags(html_entity_decode($objField->_strLabel)))."', {$strFormField}, 'selected'))";
-                        break;
+                    case 'input:checkbox':
+                        if ($booRequired) $arrFields[] = array('name' => "{$objField->_strName}[]", 'label' => $funcLabel($objField->_strLabel), 'format' => 'checked', 'hide' => $strHide);
+                    break;
 
-                        case 'input:radio':
-                            if ($objField->_arrOptions['required']) $strOutput .= "\nif ({$strCond} ploopi.validatefield('".addslashes(strip_tags(html_entity_decode($objField->_strLabel)))."', {$strFormField}, 'checked'))";
-                        break;
-
-                        case 'input:checkbox':
-                            if ($objField->_arrOptions['required']) $strOutput .= "\nif ({$strCond} ploopi.validatefield('".addslashes(strip_tags(html_entity_decode($objField->_strLabel)))."', form['{$objField->_strName}[]'], 'checked'))";
-                        break;
-
-                        case 'datetime':
-                            $strCond = "jQuery('#{$objField->_strId}_form').css('display') == 'none' ||";
-
-                            $strFormField = "form['{$objField->_strName}_date']";
-                            $strFormat = ($objField->_arrOptions['required'] ? 'date' : 'emptydate');
-                            $strOutput .= "\nif ({$strCond} ploopi.validatefield('".addslashes(strip_tags(html_entity_decode($objField->_strLabel)))."', {$strFormField}, '{$strFormat}'))";
-
-                        break;
-                    }
+                    case 'datetime':
+                        $arrFields[] = array('name' => "{$objField->_strName}_date", 'label' => $funcLabel($objField->_strLabel), 'format' => $booRequired ? 'date' : 'emptydate', 'hide' => $strHide);
+                    break;
                 }
             }
 
-            $strOutput .= "\nreturn true; return false; }";
+            $arrPanels[] = array('func' => $objPanel->getFormValidateFunc(), 'fields' => $arrFields);
         }
 
-
-        // Génération de la fonction globale de validation pour tout le formulaire
-        $strOutput .= "\nploopi.".$this->getFormValidateFunc()." = function(form) {";
-        $strOutput .= "\nploopi.validatereset(form);";
-        foreach($this->_arrPanels as $objPanel) $strOutput .= "\nif (ploopi.".$objPanel->getFormValidateFunc()."(form))";
-        $strOutput .= "\nreturn true; return false; }";
-
-        foreach($this->_arrJs as $strJs) $strOutput .= "\n{$strJs}";
-
-        return $strOutput;
+        return array('func' => $this->getFormValidateFunc(), 'panels' => $arrPanels);
     }
 
     /**

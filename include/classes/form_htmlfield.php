@@ -64,7 +64,7 @@ class form_htmlfield extends form_field
         $strDataSet = '';
         if (!empty($this->_arrOptions['dataset']) && is_array($this->_arrOptions['dataset'])) {
             foreach($this->_arrOptions['dataset'] as $k => $v) {
-                $strDataSet .= self::_getProperty('data-'.str::tourl($k), $v);
+                $strDataSet .= self::_getProperty('data-'.str::tourl($k), form::htmlentities((string) $v));
             }
         }
 

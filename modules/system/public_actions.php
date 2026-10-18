@@ -30,6 +30,13 @@
  * @author Ovensia
  */
 
+// Gabarits de génération 4 : écran refondu
+if (ploopi\skin::get()->version() >= 4)
+{
+    include './modules/system/public_actions_p4.php';
+    return;
+}
+
 /**
  * Création du titre de la page
  */

@@ -63,3 +63,25 @@ wiki_toc = function() {
         c++;
     });
 };
+
+/**
+ * Initialisations par attributs (aucun script en ligne : CSP stricte) : coloration du
+ * code, sommaire de la page (data-wiki-toc), barre d'outils de l'éditeur
+ * (data-wiki-toolbar : adresse de l'aide)
+ */
+jQuery(function() {
+    if (window.hljs) hljs.initHighlighting();
+    if (document.querySelector('[data-wiki-toc]')) wiki_toc();
+
+    var textarea = document.querySelector('textarea[data-wiki-toolbar]');
+    if (textarea && window.jsToolBar) {
+        var toolbar = new jsToolBar(textarea);
+        var aide = jQuery('<a href="#">Aide</a>').attr({ 'data-ploopi-topopup': 'popup_wiki_help', 'data-ploopi-width': '350', 'data-ploopi-script': textarea.getAttribute('data-wiki-toolbar') });
+        toolbar.setHelpLink('Formatage du texte: ' + aide[0].outerHTML);
+        toolbar.draw();
+    }
+});
+
+ploopi.actions.wiki_print = function(el, event, url) {
+    ploopi.openwin(url, 800, 600);
+};

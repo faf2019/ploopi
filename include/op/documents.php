@@ -79,7 +79,7 @@ switch($ploopi_op)
         {
             $documentsfile = new ploopi\documentsfile();
 
-            if ($documentsfile->openmd5($_GET['documentsfile_id']))
+            if ($documentsfile->openmd5($_GET['documentsfile_id']) && ploopi\documents::isallowed($documentsfile))
             {
                 $attachement = true;
 
@@ -88,7 +88,8 @@ switch($ploopi_op)
                     if (file_exists($documentsfile->getfilepath())) ploopi\fs::downloadfile($documentsfile->getfilepath(),$documentsfile->fields['name'], false, $attachement);
                 } else{
                     // S3 download
-                    if (ploopi\fs_s3::file_exists($documentsfile->getfilepath())) ploopi\fs_s3::downloadfile($documentsfile->fields['s3_bucket'], $documentsfile->fields['id'],$documentsfile->fields['name'], false, $attachement);
+                    // La clé de l'objet est « id.extension » (documentsfile::getfilepath), pas l'identifiant seul
+                    if (ploopi\fs_s3::file_exists($documentsfile->getfilepath())) ploopi\fs_s3::downloadfile($documentsfile->fields['s3_bucket'], "{$documentsfile->fields['id']}.{$documentsfile->fields['extension']}", $documentsfile->fields['name'], false, $attachement);
                 }
             }
         }
@@ -102,7 +103,7 @@ switch($ploopi_op)
         if (!empty($_GET['documentsfile_id']))
         {
             $documentsfile = new ploopi\documentsfile();
-            if ($documentsfile->openmd5($_GET['documentsfile_id']))
+            if ($documentsfile->openmd5($_GET['documentsfile_id']) && ploopi\documents::isallowed($documentsfile))
             {
 
                 $tmpfoldername = md5(uniqid(rand(), true));
@@ -116,7 +117,8 @@ switch($ploopi_op)
 
                         $objZip = new ZipArchive();
                         if ($objZip->open($zip_path . _PLOOPI_SEP . $zip_filename, ZIPARCHIVE::CREATE) === TRUE) {
-                            $objZip->addFile($documentsfile->getfilepath(), '/' . $documentsfile->fields['name']);
+                            // Entrée sans « / » initial : un chemin absolu, signalé ou retiré à l'extraction
+                            $objZip->addFile($documentsfile->getfilepath(), $documentsfile->fields['name']);
                             $objZip->close();
                         }
 
@@ -130,18 +132,19 @@ switch($ploopi_op)
                         ploopi\system::kill(null, true);
                     }
                 } else{
-                    // TODO download S3 zip file
 
                     if (ploopi\fs_s3::file_exists($documentsfile->getfilepath()) && is_writeable($zip_path)) {
                         $zip_filename = $documentsfile->fields['name'] . '.zip';
-                        $tmp_filepath = $documentsfile->fields['name'] . '.tmp';
+                        // Copie locale dans le dossier temporaire, supprimé après envoi : elle était
+                        // écrite dans le dossier courant (la racine web), sous le nom du document
+                        $tmp_filepath = $zip_path._PLOOPI_SEP.'document.tmp';
 
-                        ploopi\fs_s3::downloadfilelocally($documentsfile->fields['s3_bucket'], $documentsfile->fields['id'],$tmp_filepath);
+                        ploopi\fs_s3::downloadfilelocally($documentsfile->fields['s3_bucket'], "{$documentsfile->fields['id']}.{$documentsfile->fields['extension']}", $tmp_filepath);
 
 
                         $objZip = new ZipArchive();
                         if ($objZip->open($zip_path . _PLOOPI_SEP . $zip_filename, ZIPARCHIVE::CREATE) === TRUE) {
-                            $objZip->addFile($tmp_filepath, '/' . $documentsfile->fields['name']);
+                            $objZip->addFile($tmp_filepath, $documentsfile->fields['name']);
                             $objZip->close();
                         }
 
@@ -181,7 +184,7 @@ switch($ploopi_op)
             $documentsfolder->setvalues($_POST,'documentsfolder_');
 
             if (isset($_POST['fck_documentsfolder_description']))
-                $documentsfolder->fields['description'] = $_POST['fck_documentsfolder_description'];
+                $documentsfolder->fields['description'] = ploopi\str::htmlpurifier($_POST['fck_documentsfolder_description']);
 
             $documentsfolder->save();
         }
@@ -189,7 +192,7 @@ switch($ploopi_op)
         {
             $documentsfolder->setvalues($_POST,'documentsfolder_');
             if (isset($_POST['fck_documentsfolder_description']))
-                $documentsfolder->fields['description'] = $_POST['fck_documentsfolder_description'];
+                $documentsfolder->fields['description'] = ploopi\str::htmlpurifier($_POST['fck_documentsfolder_description']);
 
             $documentsfolder->fields['id_folder'] = $documentsfolder_parent->fields['id'];
             $documentsfolder->fields['id_object'] = $_SESSION['documents'][$documents_id]['id_object'];
@@ -203,7 +206,7 @@ switch($ploopi_op)
             if (!empty($_SESSION['documents'][$documents_id]['callback_func'])) $_SESSION['documents'][$documents_id]['callback_func']('savefolder', $documentsfolder, true);
         }
         ?>
-        <script type="text/javascript">
+        <script type="text/javascript" nonce="<?php echo ploopi\csp::nonce(); ?>">
             window.parent.ploopi.documents.browser('<?php echo ploopi\crypt::queryencode("ploopi_op=documents_browser&currentfolder={$currentfolder}&documents_id={$documents_id}"); ?>', '<?php echo ploopi\str::htmlentities($documents_id); ?>');
             window.parent.ploopi.popup.hide('ploopi_documents_openfolder_popup');
         </script>
@@ -246,20 +249,10 @@ switch($ploopi_op)
                     <label>Description:</label>
                     <span></span>
                 </p>
-                <textarea name="fck_documentsfolder_description" id="<?php echo $id = 'editor'.uniqid(); ?>"><?php echo $documentsfolder->fields['description']; ?></textarea>
-                <script>
-                    var script = document.createElement('script');
-                    script.onload = function () {
-                        CKEDITOR.replace( '<?php echo $id; ?>', {
-                            customConfig: '<?php echo _PLOOPI_BASEPATH.'/js/documents/config.js'; ?>'
-                        });
-                    };
-                    script.src = './vendor/ckeditor/ckeditor/ckeditor.js';
-                    document.head.appendChild(script);
-                </script>
+                <textarea name="fck_documentsfolder_description" id="<?php echo 'editor'.uniqid(); ?>" data-ploopi-editor="simple"><?php echo ploopi\str::htmlentities($documentsfolder->fields['description']); ?></textarea>
             </div>
             <div class="documents_formcontent" style="text-align:right;padding:4px;">
-                <input type="button" class="flatbutton" style="width:100px;" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:ploopi.popup.hide('ploopi_documents_openfolder_popup');">
+                <input type="button" class="flatbutton" style="width:100px;" value="<?php echo _PLOOPI_CANCEL; ?>" data-ploopi-popup-hide="ploopi_documents_openfolder_popup">
                 <input type="submit" class="flatbutton" style="width:100px;" value="<?php echo _PLOOPI_SAVE; ?>">
             </div>
         </div>
@@ -310,7 +303,7 @@ switch($ploopi_op)
         }
 
         ?>
-        <script type="text/javascript">
+        <script type="text/javascript" nonce="<?php echo ploopi\csp::nonce(); ?>">
             window.parent.ploopi.documents.browser('<?php echo ploopi\crypt::queryencode("ploopi_op=documents_browser&currentfolder={$currentfolder}&documents_id={$documents_id}"); ?>', '<?php echo ploopi\str::htmlentities($documents_id); ?>');
             window.parent.ploopi.popup.hide('ploopi_documents_openfile_popup');
         </script>
@@ -334,12 +327,12 @@ switch($ploopi_op)
 
         // Modification
         if (!empty($_GET['documentsfile_id'])) {
-            $documentsfile->openmd5($_GET['documentsfile_id']);
+            if (!$documentsfile->openmd5($_GET['documentsfile_id']) || !ploopi\documents::isallowed($documentsfile)) ploopi\system::kill();
             $documentsfile->fields['id_folder'] = $documentsfolder->fields['id'];
             $documentsfile->setvalues($_POST,'documentsfile_');
 
             if (isset($_POST['fck_documentsfile_description']))
-                $documentsfile->fields['description'] = $_POST['fck_documentsfile_description'];
+                $documentsfile->fields['description'] = ploopi\str::htmlpurifier($_POST['fck_documentsfile_description']);
 
             if (isset($documentsfile->fields['timestp_file'])) $documentsfile->fields['timestp_file'] = sprintf("%014s", preg_replace('@[^0-9]@', '', $documentsfile->fields['timestp_file']));
 
@@ -362,7 +355,7 @@ switch($ploopi_op)
                     if (!empty($_FILES['documentsfile_file'.$i]['tmp_name'])) {
                         $documentsfile = new ploopi\documentsfile();
                         $documentsfile->setvalues($_POST,'documentsfile_');
-                        if (isset($_POST['fck_documentsfile_description'])) $documentsfile->fields['description'] = $_POST['fck_documentsfile_description'];
+                        if (isset($_POST['fck_documentsfile_description'])) $documentsfile->fields['description'] = ploopi\str::htmlpurifier($_POST['fck_documentsfile_description']);
                         if (isset($documentsfile->fields['timestp_file'])) $documentsfile->fields['timestp_file'] = sprintf("%014s", preg_replace('@[^0-9]@', '', $documentsfile->fields['timestp_file']));
 
                         $documentsfile->fields['id_object'] = $_SESSION['documents'][$documents_id]['id_object'];
@@ -446,7 +439,7 @@ switch($ploopi_op)
                 </p>
             </div>
             <div class="documents_formcontent" style="text-align:right;padding:4px;">
-                <input type="button" class="flatbutton" style="width:100px;" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:ploopi.popup.hide('ploopi_documents_openfile_popup');">
+                <input type="button" class="flatbutton" style="width:100px;" value="<?php echo _PLOOPI_CANCEL; ?>" data-ploopi-popup-hide="ploopi_documents_openfile_popup">
                 <input type="submit" class="flatbutton" style="width:100px;" value="<?php echo _PLOOPI_SAVE; ?>" tabindex="7">
             </div>
         </div>
@@ -475,7 +468,7 @@ switch($ploopi_op)
         }
         else
         {
-            $documentsfile->openmd5($_GET['documentsfile_id']);
+            if (!$documentsfile->openmd5($_GET['documentsfile_id']) || !ploopi\documents::isallowed($documentsfile)) ploopi\system::kill();
             $title = "Modification du Fichier";
         }
 
@@ -485,8 +478,27 @@ switch($ploopi_op)
         if (!empty($_GET['documentsfile_id'])) $url .= "&documentsfile_id={$_GET['documentsfile_id']}";
         if (isset($_GET['selectfile'])) $url .= "&selectfile";
 
+        /**
+         * Paramètres de l'envoi, lus par js/documents.js (aucun script renvoyé avec la
+         * fenêtre, CSP stricte) : nouveau fichier envoyé en XHR avec les fichiers déposés,
+         * puis rendu au champ ou à la fonction appelante (selectfile), ou navigateur
+         * rafraîchi ; modification envoyée vers l'iframe
+         */
+        $documents_id = $_GET['documents_id'];
+        $arrFormAttrs = array(
+            'data-ploopi-documents-form' => empty($_GET['documentsfile_id']) ? 'new' : 'edit',
+            'data-mode' => isset($_GET['selectfile']) && isset($_SESSION['documents'][$documents_id]['mode']) ? $_SESSION['documents'][$documents_id]['mode'] : '',
+            'data-target' => isset($_SESSION['documents'][$documents_id]['target']) ? $_SESSION['documents'][$documents_id]['target'] : '',
+            'data-download' => ploopi\crypt::urlencode("admin-light.php?ploopi_op=documents_downloadfile"),
+            'data-query' => ploopi\crypt::queryencode("ploopi_op=documents_browser&currentfolder={$_GET['currentfolder']}&documents_id={$documents_id}"),
+            'data-documents-id' => $documents_id,
+            'data-filesize' => 50000000,
+        );
+        $strFormAttrs = '';
+        foreach($arrFormAttrs as $strAttr => $mixValeur) $strFormAttrs .= ' '.$strAttr.'="'.ploopi\str::htmlentities((string) $mixValeur).'"';
+
         ?>
-        <form id="documents_folderform" action="<?php echo ploopi\crypt::urlencode($url); ?>" method="post" target="documents_fileform_iframe" enctype="multipart/form-data">
+        <form id="documents_folderform" action="<?php echo ploopi\crypt::urlencode($url); ?>" method="post" target="documents_fileform_iframe" enctype="multipart/form-data"<?php echo $strFormAttrs; ?>>
         <div class="ploopi_form">
             <div class="documents_formcontent">
                 <?php
@@ -550,143 +562,15 @@ switch($ploopi_op)
                     <span></span>
                 </p>
 
-                <textarea name="fck_documentsfile_description" id="<?php echo $id = 'editor'.uniqid(); ?>"><?php echo $documentsfile->fields['description']; ?></textarea>
-                <script>
-                    var script = document.createElement('script');
-                    script.onload = function () {
-                        CKEDITOR.replace( '<?php echo $id; ?>', {
-                            customConfig: '<?php echo _PLOOPI_BASEPATH.'/js/documents/config.js'; ?>'
-                        });
-                    };
-                    script.src = './vendor/ckeditor/ckeditor/ckeditor.js';
-                    document.head.appendChild(script);
-                </script>
+                <textarea name="fck_documentsfile_description" id="<?php echo 'editor'.uniqid(); ?>" data-ploopi-editor="simple"><?php echo ploopi\str::htmlentities($documentsfile->fields['description']); ?></textarea>
             </div>
 
             <div class="documents_formcontent" style="text-align:right;padding:4px;">
-                <input type="button" class="flatbutton" style="width:100px;" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:ploopi.popup.hide('ploopi_documents_openfile_popup');">
+                <input type="button" class="flatbutton" style="width:100px;" value="<?php echo _PLOOPI_CANCEL; ?>" data-ploopi-popup-hide="ploopi_documents_openfile_popup">
                 <input type="submit" class="flatbutton" style="width:100px;" value="<?php echo _PLOOPI_SAVE; ?>" tabindex="7">
             </div>
         </div>
         </form>
-        <?php
-        // ploopi\output::print_r($_SESSION['documents'][$_GET['documents_id']]);
-        ?>
-
-
-
-        <?php
-        $documents_id = $_GET['documents_id'];
-
-        if (empty($_GET['documentsfile_id']))
-        {
-            ?>
-            <script>
-                objDropZone = new ploopi.documents.dropzoneupload({
-                    dropzone: 'documents_dropzone',
-                    status: 'documents_status',
-                    loading: 'documents_loading',
-                    filelist: 'documents_filelist',
-                    form: 'documents_folderform',
-                    filesize: 50000000
-                });
-
-                jQuery('#documents_folderform').on('submit', function(e) {
-                    if (!ploopi.documents.validate(this)) {
-                        e.preventDefault();
-                        return;
-                    }
-
-                    e.preventDefault();
-
-                    var formElement = document.getElementById('documents_folderform');
-                    var formData = new FormData(formElement);
-                    console.log(formData);
-
-                    var xhr = new XMLHttpRequest();
-
-                    xhr.open('POST', formElement.action);
-
-                    var size = 0;
-                    for (var i = 0; i < objDropZone.files.length; i++) {
-                        formData.append('documentsfile_file'+i, objDropZone.files[i]);
-                        size += objDropZone.files[i].size;
-                    }
-
-                    xhr.onload = function() {
-                        var data = JSON.parse(xhr.responseText);
-                        <?php
-                        if (isset($_GET['selectfile'])) {
-
-                            if ($_SESSION['documents'][$documents_id]['mode'] == 'tofield')
-                            {
-                                ?>
-                                dest = $('<? echo $_SESSION['documents'][$documents_id]['target']; ?>');
-                                if (dest.type) dest.value=data.name;
-                                else dest.innerHTML=data.name;
-                                ploopi.getelem('<? echo $_SESSION['documents'][$documents_id]['target']; ?>_id').value=data.id;
-                                ploopi.popup.hide('ploopi_documents_popup');
-                                <?php
-                            }
-                            elseif ($_SESSION['documents'][$documents_id]['mode'] == 'tocallback')
-                            {
-                                ?>
-                                <?php echo $_SESSION['documents'][$documents_id]['target']; ?>(
-                                    data.id,
-                                    data.name,
-                                    '<? echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=documents_downloadfile"); ?>&documentsfile_id='+data.md5id
-                                );
-                                ploopi.popup.hide('ploopi_documents_openfile_popup');
-                                <?php
-                            }
-
-                        }
-                        // Mise à jour du navigateur
-                        else {
-                            ?>
-                            ploopi.documents.browser('<?php echo ploopi\crypt::queryencode("ploopi_op=documents_browser&currentfolder={$_GET['currentfolder']}&documents_id={$_GET['documents_id']}"); ?>', '<?php echo ploopi\str::htmlentities($_GET['documents_id']); ?>');
-                            ploopi.popup.hide('ploopi_documents_openfile_popup');
-                            <?php
-                        }
-                        ?>
-                        /*
-                        ploopi.documents.browser('<?php echo ploopi\crypt::queryencode("ploopi_op=documents_browser&currentfolder={$_GET['currentfolder']}&documents_id={$_GET['documents_id']}"); ?>', '<?php echo ploopi\str::htmlentities($_GET['documents_id']); ?>');
-                        ploopi.popup.hide('ploopi_documents_openfile_popup');
-                        */
-
-                    };
-
-                    xhr.onerror = function() {
-                        //console.log('xhr onerror');
-                    };
-
-                    xhr.upload.onprogress = function(e) {
-                        //console.log('xhr onprogress');
-                        //console.log(e.lengthComputable, e.loaded, e.total, e.loaded / e.total * 100);
-                    };
-
-                    xhr.send(formData);
-                });
-
-            </script>
-            <?php
-        }
-        else {
-            ?>
-            <script>
-
-                jQuery('#documents_folderform').on('submit', function(e) {
-                    if (!ploopi.documents.validate(this)) {
-                        e.preventDefault();
-                        return;
-                    }
-                    alert('submit');
-                });
-
-            </script>
-            <?php
-        }
-        ?>
         <iframe name="documents_fileform_iframe" src="./img/blank.gif" style="display:none;"></iframe>
         <?php
         $content = ob_get_contents();
@@ -704,7 +588,7 @@ switch($ploopi_op)
 
         $documentsfile = new ploopi\documentsfile();
 
-        if (!empty($_GET['documentsfile_id']) && $documentsfile->openmd5($_GET['documentsfile_id']))
+        if (!empty($_GET['documentsfile_id']) && $documentsfile->openmd5($_GET['documentsfile_id']) && ploopi\documents::isallowed($documentsfile))
         {
             $documentsfile->delete();
 
@@ -723,7 +607,7 @@ switch($ploopi_op)
 
         $documentsfolder = new ploopi\documentsfolder();
 
-        if (!empty($_GET['documentsfolder_id']) && $documentsfolder->openmd5($_GET['documentsfolder_id']))
+        if (!empty($_GET['documentsfolder_id']) && $documentsfolder->openmd5($_GET['documentsfolder_id']) && ploopi\documents::isallowed($documentsfolder))
         {
             $documentsfolder->delete();
 

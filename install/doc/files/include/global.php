@@ -387,7 +387,7 @@ function doc_record_isenabled($id_object, $id_record, $id_module)
 
     switch($id_object)
     {
-        case _DOC_OBJECT_FOLDER;
+        case _DOC_OBJECT_FOLDER:
             include_once './modules/doc/class_docfolder.php';
 
             $objFolder = new docfolder();
@@ -406,7 +406,7 @@ function doc_record_isenabled($id_object, $id_record, $id_module)
             }
         break;
 
-        case _DOC_OBJECT_FILE;
+        case _DOC_OBJECT_FILE:
             include_once './modules/doc/class_docfile.php';
             include_once './modules/doc/class_docfolder.php';
 
@@ -756,4 +756,71 @@ function doc_file_isreadonly($row, $action = null)
 
     return !(ploopi\acl::isadmin() || ploopi\acl::isactionallowed(_DOC_ACTION_ADMIN) || $row['id_user'] == $_SESSION['ploopi']['userid'] || ($booActionIsOk && empty($row['readonly'])));
 }
+
+/**
+ * Indique si un dossier de la GED est visible par l'utilisateur courant.
+ *
+ * Reproduit la clause de visibilité que class_docapi.php et block.php appliquent à
+ * leurs requêtes :
+ *
+ *     (published = 1 OR id_user = <moi>)
+ *     AND (   id_user = <moi>
+ *          OR (foldertype = 'shared' AND id IN (<dossiers partagés en session>))
+ *          OR (foldertype = 'public' AND id_workspace IN (viewworkspaces(module))) )
+ *
+ * Les opérations de op.php la contournaient : doc_file_view et doc_file_download ne
+ * regardaient que foldertype, doc_image_get ne regardait rien du tout.
+ *
+ * @param array $arrFolder ligne de ploopi_mod_doc_folder
+ * @return boolean true si le dossier est visible
+ */
+
+function doc_isfolderallowed($arrFolder)
+{
+    if (empty($arrFolder) || empty($arrFolder['id'])) return false;
+
+    $intModuleId = isset($arrFolder['id_module']) ? (int)$arrFolder['id_module'] : 0;
+    $intUserId   = isset($_SESSION['ploopi']['userid']) ? (int)$_SESSION['ploopi']['userid'] : 0;
+
+    /**
+     * viewworkspaces() lit le mode de vue de l'instance dans la session : une instance
+     * que la session ne connaît pas ne donne accès à rien. Échec fermé.
+     */
+    if (empty($_SESSION['ploopi']['modules'][$intModuleId])) return false;
+
+    $booProprietaire = $intUserId && (int)$arrFolder['id_user'] === $intUserId;
+
+    // Un dossier non publié n'est visible que de son propriétaire
+    if (empty($arrFolder['published']) && !$booProprietaire) return false;
+
+    if ($booProprietaire) return true;
+
+    if ($arrFolder['foldertype'] == 'shared')
+        return !empty($_SESSION['doc'][$intModuleId]['share']['folders'])
+            && in_array((int)$arrFolder['id'], array_map('intval', $_SESSION['doc'][$intModuleId]['share']['folders']), true);
+
+    if ($arrFolder['foldertype'] == 'public')
+        return in_array((int)$arrFolder['id_workspace'], array_map('intval', explode(',', ploopi\system::viewworkspaces($intModuleId))), true);
+
+    return false;
+}
+
+/**
+ * Indique si un dossier public de la GED est accessible par un lien public.
+ *
+ * Plus restrictif que doc_isfolderallowed() : seuls les dossiers de type « public »
+ * sont concernés, un lien public n'ayant pas vocation à exposer un dossier partagé ni
+ * un dossier personnel. Le cloisonnement par espace s'applique.
+ *
+ * @param array $arrFolder ligne de ploopi_mod_doc_folder
+ * @return boolean true si le dossier est joignable par un lien public
+ */
+
+function doc_ispublicfolder($arrFolder)
+{
+    if (empty($arrFolder) || $arrFolder['foldertype'] != 'public') return false;
+
+    return doc_isfolderallowed($arrFolder);
+}
+
 ?>

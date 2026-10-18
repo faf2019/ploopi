@@ -2,15 +2,15 @@
 include_once './modules/doc/class_docfile.php';
 include_once './modules/doc/class_docfolder.php';
 
-// http://gipsy/projets/ploopidev/wsdoc/test?ploopi_login=admin&ploopi_password=Baghy.c0m
-// http://gipsy/projets/ploopidev/wsdoc/list_modules?ploopi_login=admin&ploopi_password=Baghy.c0m
-// http://gipsy/projets/ploopidev/wsdoc/list_content?ploopi_login=admin&ploopi_password=Baghy.c0m&module_id=6
-// http://gipsy/projets/ploopidev/wsdoc/list_content?ploopi_login=admin&ploopi_password=Baghy.c0m&module_id=6&folder_id=1
-// http://gipsy/projets/ploopidev/wsdoc/create_folder?ploopi_login=admin&ploopi_password=Baghy.c0m&module_id=6&folder_id=1&folder_name=prive&folder_type=private
-// http://gipsy/projets/ploopidev/wsdoc/delete_folder?ploopi_login=admin&ploopi_password=Baghy.c0m&module_id=6&folder_id=1&folder_id=73
-// http://gipsy/projets/ploopidev/wsdoc/put_file?ploopi_login=admin&ploopi_password=Baghy.c0m&module_id=6&folder_id=1&file_name=test.txt&base64=NDM1OTI5NTE4NCAvIG5pbmljZTA4MDQK&crc32=943997913
-// http://gipsy/projets/ploopidev/wsdoc/get_file?ploopi_login=admin&ploopi_password=Baghy.c0m&module_id=6&file_md5id=749f97f451fd11c059d5eeb05a2e8c6e
-// http://gipsy/projets/ploopidev/wsdoc/delete_file?ploopi_login=admin&ploopi_password=Baghy.c0m&module_id=6&file_md5id=749f97f451fd11c059d5eeb05a2e8c6e
+// http://<hote>/wsdoc/test?ploopi_login=<identifiant>&ploopi_password=<mot de passe>
+// http://<hote>/wsdoc/list_modules?ploopi_login=<identifiant>&ploopi_password=<mot de passe>
+// http://<hote>/wsdoc/list_content?ploopi_login=<identifiant>&ploopi_password=<mot de passe>&module_id=6
+// http://<hote>/wsdoc/list_content?ploopi_login=<identifiant>&ploopi_password=<mot de passe>&module_id=6&folder_id=1
+// http://<hote>/wsdoc/create_folder?ploopi_login=<identifiant>&ploopi_password=<mot de passe>&module_id=6&folder_id=1&folder_name=prive&folder_type=private
+// http://<hote>/wsdoc/delete_folder?ploopi_login=<identifiant>&ploopi_password=<mot de passe>&module_id=6&folder_id=1&folder_id=73
+// http://<hote>/wsdoc/put_file?ploopi_login=<identifiant>&ploopi_password=<mot de passe>&module_id=6&folder_id=1&file_name=test.txt&base64=NDM1OTI5NTE4NCAvIG5pbmljZTA4MDQK&crc32=943997913
+// http://<hote>/wsdoc/get_file?ploopi_login=<identifiant>&ploopi_password=<mot de passe>&module_id=6&file_md5id=749f97f451fd11c059d5eeb05a2e8c6e
+// http://<hote>/wsdoc/delete_file?ploopi_login=<identifiant>&ploopi_password=<mot de passe>&module_id=6&file_md5id=749f97f451fd11c059d5eeb05a2e8c6e
 
 /**
  * Non gÃ©rÃ© :

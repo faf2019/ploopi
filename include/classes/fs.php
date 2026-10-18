@@ -38,6 +38,130 @@ use ploopi;
 abstract class fs
 {
     /**
+     * Extensions susceptibles d'être confiées à un interpréteur par le serveur web.
+     * Elles sont neutralisées au moment du stockage physique d'un fichier déposé par un
+     * utilisateur.
+     *
+     * @var array
+     *
+     * @see self::safe_extension
+     */
+
+    private static $arrUnsafeExtensions = array(
+        // PHP
+        'php', 'php2', 'php3', 'php4', 'php5', 'php6', 'php7', 'php8',
+        'phar', 'phps', 'phpt', 'pht', 'phtm', 'phtml',
+        // Server Side Includes
+        'shtml', 'shtm', 'stm',
+        // Scripts CGI
+        'cgi', 'pl', 'pm', 'py', 'rb', 'sh', 'bash', 'lua',
+        // Autres plateformes serveur
+        'asa', 'asax', 'ascx', 'ashx', 'asmx', 'asp', 'aspx', 'cer',
+        'cfc', 'cfm', 'cfml', 'jsp', 'jspf', 'jspx', 'jsv', 'jsw', 'war',
+        // Configuration Apache
+        'htaccess', 'htpasswd'
+    );
+
+    /**
+     * Extension de repli utilisée lorsque l'extension d'origine est jugée dangereuse.
+     */
+
+    const NEUTRAL_EXTENSION = 'bin';
+
+    /**
+     * Types mime pouvant être envoyés au navigateur en "inline" sans risque d'exécution
+     * de script dans l'origine de l'application.
+     *
+     * image/svg+xml, text/html, text/xml et application/xhtml+xml en sont volontairement
+     * absents : ils permettent l'exécution de script.
+     *
+     * @var array
+     *
+     * @see self::downloadfile
+     */
+
+    private static $arrInlineMimetypes = array(
+        'image/bmp',
+        'image/gif',
+        'image/jpeg',
+        'image/pjpeg',
+        'image/png',
+        'image/tiff',
+        'image/webp',
+        'image/x-icon',
+        'application/pdf',
+        'audio/mp4',
+        'audio/mpeg',
+        'audio/ogg',
+        'audio/wav',
+        'audio/webm',
+        'audio/x-wav',
+        'video/mp4',
+        'video/ogg',
+        'video/quicktime',
+        'video/webm',
+        'text/plain'
+    );
+
+    /**
+     * Neutralise l'extension d'un fichier destinée au stockage physique.
+     *
+     * Les documents sont stockés sous "<id>.<extension>" dans _PLOOPI_PATHDATA, qui reste
+     * fréquemment sous la racine web. Une extension exécutable y ouvre une exécution de code
+     * distante dès que le .htaccess n'est pas appliqué (nginx, AllowOverride None).
+     *
+     * Le nom d'affichage du document n'est pas modifié : seul le nom du fichier sur disque
+     * l'est. L'utilisateur retrouve son fichier sous son nom d'origine au téléchargement.
+     *
+     * @param string $strExtension extension d'origine
+     * @return string extension utilisable pour le stockage physique
+     *
+     * @copyright Ovensia
+     * @license GNU General Public License (GPL)
+     * @author Ovensia
+     */
+
+    public static function safe_extension($strExtension)
+    {
+        // Tout caractère hors [a-z0-9] est retiré : un point conservé permettrait une double extension
+        $strExtension = preg_replace('@[^a-z0-9]@', '', strtolower(trim((string)$strExtension)));
+
+        if ($strExtension == '') return '';
+
+        return in_array($strExtension, self::$arrUnsafeExtensions) ? self::NEUTRAL_EXTENSION : $strExtension;
+    }
+
+    /**
+     * Construit les paramètres "filename" d'un entête Content-disposition.
+     *
+     * Le nom provient d'un fichier déposé par un utilisateur : un guillemet ou un antislash
+     * y détournerait l'entête. On produit un nom ASCII échappé et sa version RFC 5987.
+     *
+     * @param string $strFilename nom du fichier
+     * @return string paramètres de l'entête
+     *
+     * @copyright Ovensia
+     * @license GNU General Public License (GPL)
+     * @author Ovensia
+     *
+     * @link https://tools.ietf.org/html/rfc5987
+     */
+
+    public static function getdispositionfilename($strFilename)
+    {
+        $strFilename = str_replace(array("\r", "\n"), '', basename((string)$strFilename));
+
+        if ($strFilename == '') $strFilename = 'document';
+
+        // Nom de repli : ASCII imprimable, sans guillemet ni antislash
+        $strFallback = str::convertaccents($strFilename);
+        $strFallback = preg_replace('@[^\x20-\x7e]@', '_', $strFallback);
+        $strFallback = str_replace(array('\\', '"'), '_', $strFallback);
+
+        return sprintf('filename="%s"; filename*=UTF-8\'\'%s', $strFallback, rawurlencode($strFilename));
+    }
+
+    /**
      * Copie récursive du contenu d'un dossier source vers un dossier destination
      *
      * @param string $src dossier source
@@ -204,14 +328,26 @@ abstract class fs
 
             $chunksize = 1*(1024*1024);
 
-            header('Content-Type: ' . ($ct = self::getmimetype($destfilename)));
+            $ct = self::getmimetype($destfilename);
+
+            /**
+             * Un fichier envoyé "inline" est interprété par le navigateur dans l'origine de
+             * l'application : un .html ou un .svg déposé par un utilisateur y exécuterait du
+             * script avec la session de la victime. Seuls les types inertes restent autorisés
+             * en inline, les autres repassent en "attachment".
+             */
+            if (!$attachment && !in_array($ct, self::$arrInlineMimetypes)) $attachment = true;
+
+            header('Content-Type: ' . $ct);
             header('Content-Length: '.$size);
+
+            // Interdit au navigateur de deviner un type plus permissif que celui annoncé
+            header('X-Content-Type-Options: nosniff');
 
             if (self::file_getextension($destfilename) == 'svgz') header('Content-Encoding: gzip');
             else header('Content-Encoding: identity');
 
-            if ($attachment) header("Content-disposition: attachment; filename=\"{$destfilename}\"");
-            else header("Content-disposition: inline; filename=\"{$destfilename}\"");
+            header('Content-disposition: '.($attachment ? 'attachment' : 'inline').'; '.self::getdispositionfilename($destfilename));
 
             header('Accept-Ranges: bytes');
             header('Pragma: private');

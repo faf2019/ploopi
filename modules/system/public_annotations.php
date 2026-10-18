@@ -30,6 +30,37 @@
  * @author Ovensia
  */
 
+// Gabarits de génération 4 : écran refondu
+if (ploopi\skin::get()->version() >= 4)
+{
+    /**
+     * Modification et suppression d'une de ses notes (formulaires de l'écran refondu).
+     * Seul l'auteur le peut ; un texte vide est refusé. Retour à la même page.
+     */
+    if (isset($_POST['annotation_action'], $_POST['annotation_id']) && is_numeric($_POST['annotation_id']))
+    {
+        $objAnnotation = new ploopi\annotation();
+        if ($objAnnotation->open((int) $_POST['annotation_id']) && $objAnnotation->fields['id_user'] == $_SESSION['ploopi']['userid'])
+        {
+            if ($_POST['annotation_action'] == 'delete') $objAnnotation->delete();
+            elseif ($_POST['annotation_action'] == 'save' && isset($_POST['annotation_content']) && trim((string) $_POST['annotation_content']) !== '')
+            {
+                $objAnnotation->fields['content'] = trim((string) $_POST['annotation_content']);
+                $objAnnotation->fields['private'] = empty($_POST['annotation_private']) ? 0 : 1;
+                $objAnnotation->tags = isset($_POST['annotation_tags']) ? (string) $_POST['annotation_tags'] : '';
+                $objAnnotation->save();
+            }
+        }
+
+        $strRetour = 'admin.php?op=annotation';
+        foreach(array('idtag', 'page') as $strParam) if (!empty($_POST[$strParam]) && is_numeric($_POST[$strParam])) $strRetour .= "&{$strParam}=".((int) $_POST[$strParam]);
+        ploopi\output::redirect($strRetour);
+    }
+
+    include './modules/system/public_annotations_p4.php';
+    return;
+}
+
 /**
  * Switch entre les différentes opérations
  */

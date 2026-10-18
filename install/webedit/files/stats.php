@@ -243,7 +243,7 @@ $arrHeadings = webedit_getheadings();
 
     <div class="webedit_stats_array">
         <h1>Articles les plus visités pour <em><?php echo $ploopi_months[$intMonthSel] ?> <?php echo $intYearSel ?></em> (nombre de visites)</h1>
-        <div style="border-top:1px solid #c0c0c0;">
+        <div class="webedit_filet_haut">
         <?php
         ploopi\skin::get()->display_array(
             $columns,
@@ -331,7 +331,7 @@ $arrHeadings = webedit_getheadings();
 
     <div class="webedit_stats_array">
         <h1>Rubriques les plus visités pour <em><?php echo $ploopi_months[$intMonthSel] ?> <?php echo $intYearSel ?></em> (nombre de visites)</h1>
-        <div style="border-top:1px solid #c0c0c0;">
+        <div class="webedit_filet_haut">
         <?php
         ploopi\skin::get()->display_array(
             $columns,

@@ -71,7 +71,10 @@ switch ($_SESSION['system']['level'])
 
         if (!empty($_GET['wspToolbarItem']))  $_SESSION['system']['wspToolbarItem'] = $_GET['wspToolbarItem'];
         if (!isset($_SESSION['system']['wspToolbarItem'])) $_SESSION['system']['wspToolbarItem'] = '';
-        echo ploopi\skin::get()->create_toolbar($toolbar,$_SESSION['system']['wspToolbarItem']);
+
+        // ploopi4 : en-tête de l'entité et onglets ; sinon barre d'outils historique
+        if (ploopi\skin::get()->version() >= 4) include './modules/system/admin_workspaces_head.php';
+        else echo ploopi\skin::get()->create_toolbar($toolbar,$_SESSION['system']['wspToolbarItem']);
 
         switch($_SESSION['system']['wspToolbarItem'])
         {
@@ -236,7 +239,13 @@ switch ($_SESSION['system']['level'])
 
         if (!empty($_GET['wspToolbarItem']))  $_SESSION['system']['wspToolbarItem'] = $_GET['wspToolbarItem'];
         if (!isset($_SESSION['system']['wspToolbarItem'])) $_SESSION['system']['wspToolbarItem'] = '';
-        echo ploopi\skin::get()->create_toolbar($toolbar, $_SESSION['system']['wspToolbarItem']);
+
+        // Onglets réservés aux administrateurs d'espace : leurs opérations aussi
+        if (in_array($_SESSION['system']['wspToolbarItem'], array('tabModules', 'tabParams', 'tabRoles')) && !isset($toolbar[$_SESSION['system']['wspToolbarItem']])) $_SESSION['system']['wspToolbarItem'] = 'tabUsers';
+
+        // ploopi4 : en-tête de l'entité et onglets ; sinon barre d'outils historique
+        if (ploopi\skin::get()->version() >= 4) include './modules/system/admin_workspaces_head.php';
+        else echo ploopi\skin::get()->create_toolbar($toolbar,$_SESSION['system']['wspToolbarItem']);
 
         switch($_SESSION['system']['wspToolbarItem'])
         {
@@ -419,6 +428,27 @@ switch ($_SESSION['system']['level'])
             break;
 
             case 'tabModules':
+                /**
+                 * Une opération sur une instance ne vaut que pour un module rattaché à cet
+                 * espace ; la modifier ou la supprimer, que pour une instance qui lui
+                 * appartient. Un ajout se fait dans cet espace, d'une instance qu'il peut
+                 * utiliser.
+                 */
+                if (!empty($_GET['moduleid']) && in_array($op, array('switch_active', 'switch_visible', 'switch_public', 'switch_shared', 'switch_herited', 'moveup', 'movedown', 'unlinkinstance', 'save_module_props', 'delete', 'apply_heritage')))
+                {
+                    $arrWorkspaceModules = $workspace->getmodules();
+
+                    if (!is_numeric($_GET['moduleid']) || !isset($arrWorkspaceModules[$_GET['moduleid']])) ploopi\output::redirect('admin.php');
+                    if (!in_array($op, array('moveup', 'movedown', 'unlinkinstance')) && $arrWorkspaceModules[$_GET['moduleid']]['instanceworkspace'] != $workspaceid) ploopi\output::redirect('admin.php');
+                }
+
+                if ($op == 'add' && !empty($_GET['instance']))
+                {
+                    $arrInstance = explode(',', $_GET['instance']);
+                    if (!isset($arrInstance[1]) || $arrInstance[1] != $workspaceid) ploopi\output::redirect('admin.php');
+                    if ($arrInstance[0] == 'SHARED' && (!isset($arrInstance[2]) || !array_key_exists($arrInstance[2], $workspace->getsharedmodules()))) ploopi\output::redirect('admin.php');
+                }
+
                 switch ($op)
                 {
                     case 'add' :
@@ -652,7 +682,8 @@ switch ($_SESSION['system']['level'])
                 {
                     case "save":
 
-                        if (!empty($_POST['idmodule']) && is_numeric($_POST['idmodule']))
+                        // Seulement les paramètres d'un module rattaché à cet espace
+                        if (!empty($_POST['idmodule']) && is_numeric($_POST['idmodule']) && array_key_exists($_POST['idmodule'], $workspace->getmodules()))
                         {
                             $module = new ploopi\module();
                             $module->open($_POST['idmodule']);

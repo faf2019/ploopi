@@ -182,28 +182,23 @@ ploopi\session::setvar('system_alphatabitem', $alphaTabItem);
 </div>
 
 <form action="<?php echo ploopi\crypt::urlencode('admin.php?usrTabItem=tabUserAttach'); ?>" method="post">
-<div class="ploopi_va" style="padding:6px;">
-    <label>Nom: </label>
-    <input type="text" class="text" name="ploopi_lastname" value="<?php echo ploopi\str::htmlentities($arrFilter['ploopi_lastname']); ?>" style="width:100px;" tabindex="100" />
-
-    <label>Prénom: </label>
-    <input type="text" class="text" name="ploopi_firstname" value="<?php echo ploopi\str::htmlentities($arrFilter['ploopi_firstname']); ?>" style="width:100px;" tabindex="105" />
-
-    <label>Identifiant: </label>
-    <input type="text" class="text" name="ploopi_login" value="<?php echo ploopi\str::htmlentities($arrFilter['ploopi_login']); ?>" style="width:100px;" tabindex="110" />
-
-    <label>Email: </label>
-    <input type="text" class="text" name="ploopi_email" value="<?php echo ploopi\str::htmlentities($arrFilter['ploopi_email']); ?>" style="width:150px;" tabindex="120" />
-
-    <label>Connexion entre le: </label>
-    <input type="text" class="text" name="ploopi_last_connection_1" id="ploopi_last_connection_1" value="<?php echo ploopi\str::htmlentities($arrFilter['ploopi_last_connection_1']); ?>" style="width:100px;" tabindex="116" />
-    <?php ploopi\date::open_calendar('ploopi_last_connection_1'); ?>
-    <label>et le: </label>
-    <input type="text" class="text" name="ploopi_last_connection_2" id="ploopi_last_connection_2" value="<?php echo ploopi\str::htmlentities($arrFilter['ploopi_last_connection_2']); ?>" style="width:100px;" tabindex="117" />
-    <?php ploopi\date::open_calendar('ploopi_last_connection_2'); ?>
-
-    <input type="submit" class="button" value="Filtrer" tabindex="150" />
-    <input type="button" class="button" value="Réinitialiser" onclick="document.location.href='<?php echo ploopi\crypt::urlencode('admin.php?usrTabItem=tabUserAttach&reset'); ?>';" tabindex="160" />
+<div class="ploopi_va ploopi_filter" style="padding:6px;">
+    <span class="ploopi_filter_field"><label>Nom: </label><input type="text" class="text" name="ploopi_lastname" value="<?php echo ploopi\str::htmlentities($arrFilter['ploopi_lastname']); ?>" style="width:100px;" tabindex="100" /></span>
+    <span class="ploopi_filter_field"><label>Prénom: </label><input type="text" class="text" name="ploopi_firstname" value="<?php echo ploopi\str::htmlentities($arrFilter['ploopi_firstname']); ?>" style="width:100px;" tabindex="105" /></span>
+    <span class="ploopi_filter_field"><label>Identifiant: </label><input type="text" class="text" name="ploopi_login" value="<?php echo ploopi\str::htmlentities($arrFilter['ploopi_login']); ?>" style="width:100px;" tabindex="110" /></span>
+    <span class="ploopi_filter_field"><label>Email: </label><input type="text" class="text" name="ploopi_email" value="<?php echo ploopi\str::htmlentities($arrFilter['ploopi_email']); ?>" style="width:150px;" tabindex="120" /></span>
+    <span class="ploopi_filter_field">
+        <label>Connexion entre le: </label>
+        <input type="text" class="text" name="ploopi_last_connection_1" id="ploopi_last_connection_1" value="<?php echo ploopi\str::htmlentities($arrFilter['ploopi_last_connection_1']); ?>" style="width:100px;" tabindex="116" />
+        <?php ploopi\date::open_calendar('ploopi_last_connection_1'); ?>
+        <label>et le: </label>
+        <input type="text" class="text" name="ploopi_last_connection_2" id="ploopi_last_connection_2" value="<?php echo ploopi\str::htmlentities($arrFilter['ploopi_last_connection_2']); ?>" style="width:100px;" tabindex="117" />
+        <?php ploopi\date::open_calendar('ploopi_last_connection_2'); ?>
+    </span>
+    <span class="ploopi_filter_buttons">
+        <input type="submit" class="button" value="Filtrer" tabindex="150" />
+        <input type="button" class="button" value="Réinitialiser" onclick="document.location.href='<?php echo ploopi\crypt::urlencode('admin.php?usrTabItem=tabUserAttach&reset'); ?>';" tabindex="160" />
+    </span>
 </div>
 </form>
 

@@ -120,12 +120,36 @@ class cipher
     {
         if (!empty($str))
         {
-            $ciphertext_raw = openssl_encrypt($str, $this->cipher, $this->key, $options = OPENSSL_RAW_DATA, $this->iv);
-            $hmac = hash_hmac('sha256', $ciphertext_raw, $this->key, $as_binary = true);
-            $encrypted = crypt::base64_encode($this->iv.$hmac.$ciphertext_raw);
-            return $encrypted;
+            /**
+             * Vecteur d'initialisation tiré au hasard pour chaque message.
+             * Avec l'IV fixe de _PLOOPI_CIPHER_IV, le chiffrement était déterministe : deux
+             * URL identiques produisaient le même cryptogramme, et deux URL partageant un
+             * préfixe produisaient des cryptogrammes partageant un préfixe, ce qui laisse
+             * lire la structure des URL et rejouer des comparaisons.
+             * L'IV n'est pas un secret : il est transporté en tête du message, comme avant.
+             */
+            $iv = $this->len > 0 ? random_bytes($this->len) : '';
+
+            $ciphertext_raw = openssl_encrypt($str, $this->cipher, $this->key, $options = OPENSSL_RAW_DATA, $iv);
+            $hmac = hash_hmac('sha256', $iv.$ciphertext_raw, $this->getmackey(), $as_binary = true);
+
+            return crypt::base64_encode($iv.$hmac.$ciphertext_raw);
         }
         else return(false);
+    }
+
+    /**
+     * Renvoie la clé d'authentification, dérivée de la clé secrète.
+     *
+     * La même clé servait au chiffrement et au calcul de l'empreinte. Les séparer est la
+     * règle : deux usages, deux clés.
+     *
+     * @return string clé binaire
+     */
+
+    private function getmackey()
+    {
+        return hash_hmac('sha256', 'ploopi/cipher/mac', $this->key, true);
     }
 
     /**
@@ -140,14 +164,24 @@ class cipher
         if (empty($strEncrypted)) return false;
 
         $c = crypt::base64_decode($strEncrypted);
+
+        if (strlen($c) <= $this->len + 32) return false;
+
         $iv = substr($c, 0, $this->len);
         $hmac = substr($c, $this->len, $sha2len = 32);
         $ciphertext_raw = substr($c, $this->len + $sha2len);
-        $strDecoded = openssl_decrypt($ciphertext_raw, $this->cipher, $this->key, $options = OPENSSL_RAW_DATA, $this->iv);
-        $calcmac = hash_hmac('sha256', $ciphertext_raw, $this->key, $as_binary = true);
 
-        if (hash_equals($hmac, $calcmac)) return $strDecoded;
+        /**
+         * L'empreinte couvre l'IV en plus du cryptogramme, sans quoi l'IV transporté serait
+         * modifiable sans invalider le message.
+         *
+         * Le format précédent (empreinte sur le seul cryptogramme, clé secrète directe) n'est
+         * plus accepté : son IV n'étant pas authentifié, il laissait altérer le premier bloc
+         * du texte clair. Les URL chiffrées antérieures à septembre 2026 sont donc refusées.
+         */
+        if (!hash_equals($hmac, hash_hmac('sha256', $iv.$ciphertext_raw, $this->getmackey(), true))) return false;
 
-        return false;
+        // L'IV utilisé est celui transporté par le message
+        return openssl_decrypt($ciphertext_raw, $this->cipher, $this->key, $options = OPENSSL_RAW_DATA, $iv);
     }
 }

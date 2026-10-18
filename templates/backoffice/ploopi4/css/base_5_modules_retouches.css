@@ -1,0 +1,89 @@
+/*
+    Copyright (c) 2007-2026 Ovensia
+    Contributors hold Copyright (c) to their code submissions.
+
+    This file is part of Ploopi.
+
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
+/******************
+  MODULES : RETOUCHES
+  Complète base_modules.css (généré). Même règle que lui : rien qui change la
+  géométrie des écrans des modules (pas de marge, de remplissage, de bordure
+  nouvelle) ; les liserés sont des ombres intérieures.
+*******************/
+
+/* Bandeaux d'information et d'en-tête : un liseré à gauche, comme ceux du système */
+body .booking_bandeau,
+body .booking_toolbar,
+body .dbreport_bandeau,
+body .directory_bandeau,
+body .directory_bandeau_fort,
+body .directory_bandeau_simple,
+body .directory_bandeau_sombre,
+body .doc_bandeau,
+body .doc_bandeau_titre,
+body .forms_bandeau,
+body .forms_bandeau_clair,
+body .planning_bandeau,
+body .webedit_bandeau,
+body .wiki_bandeau {
+    box-shadow: inset 3px 0 0 var(--p3-border-strong);
+}
+
+/* Titres de section : en sarcelle foncée, liseré sarcelle */
+body .dbreport_title,
+body .dbreport_table_title,
+body .directory_titre,
+body .directory_titre_fort,
+body .directory_bandeau_titre,
+body .doc_titre,
+body .webedit_titre,
+body .webedit_titre_page,
+body .webedit_liste_titre {
+    color: var(--p3-primary-dark);
+    box-shadow: inset 3px 0 0 var(--p3-primary);
+}
+
+body .directory_titre_fort,
+body .webedit_titre_page {
+    background-color: var(--p3-surface-2);
+}
+
+/* Barres de boutons : les boutons suffisent, sans aplat gris derrière */
+body .forms_barre_boutons,
+body .forms_barre_boutons_bas,
+body .directory_barre_boutons {
+    background-color: transparent;
+    border-color: var(--p3-line);
+}
+
+/* Fil d'Ariane de la GED : étiquettes cliquables */
+body .doc_path a {
+    border-radius: var(--p3-radius-sm);
+}
+
+body a.doc_pathselected {
+    color: var(--p3-primary-dark);
+    background-color: var(--p3-primary-soft);
+    border-color: var(--p3-primary-soft);
+}
+
+/* Document en attente de validation (brouillon) : teinte d'avertissement */
+body .doc_draft,
+body .doc_legende_brouillon {
+    background-color: var(--p3-warning-soft);
+}

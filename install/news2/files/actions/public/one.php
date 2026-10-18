@@ -10,9 +10,16 @@ use ploopi\news2;
 $news = new news2\news2();
 
 /**
- * On vérifie que l'identifiant de news est valide
+ * On vérifie que l'identifiant de news est valide, et qu'il désigne une news de
+ * l'instance courante, dans un espace visible. Une news non publiée n'est montrée qu'à
+ * qui peut la modifier ou la publier, comme dans la liste (tools::getNews).
  */
-if (!empty($_GET['id']) && is_numeric($_GET['id']) && $news->open($_GET['id'])) {
+$booNewsVisible = !empty($_GET['id']) && is_numeric($_GET['id']) && $news->open($_GET['id'])
+    && $news->fields['id_module'] == $this->getModuleId()
+    && in_array($news->fields['id_workspace'], explode(',', ploopi\system::viewworkspaces()))
+    && ($news->fields['published'] || ploopi\acl::isactionallowed([news2\tools::ACTION_MODIFY, news2\tools::ACTION_PUBLISH]));
+
+if ($booNewsVisible) {
 	// Incrémente le nombre de clicks pour la news
     if (ploopi\session::setflag('news_nbclick',$_GET['id'])) {
         $news->fields['nbclick']++;
@@ -30,8 +37,8 @@ if (!empty($_GET['id']) && is_numeric($_GET['id']) && $news->open($_GET['id'])) 
     <div class="news">
 		<table style="width:100%;<?php if ($news->fields['hot']) echo 'border:2px solid red;'; ?>">
 			<tr>
-				<td style="width:35%;"><img src="./<?php echo $news->fields['background'];?>" 
-					style="display:block;max-width:90%;margin:0 auto;"/>
+				<td style="width:35%;"><?php if (news2\tools::url($news->fields['background']) != '') { ?><img src="./<?php echo news2\tools::url($news->fields['background']); ?>" alt=""
+					style="display:block;max-width:90%;margin:0 auto;"/><?php } ?>
 				</td>
 				<td>
 					<div><b>Publié le</b> <?php echo str::htmlentities($localdate['date']); ?> 
@@ -39,7 +46,7 @@ if (!empty($_GET['id']) && is_numeric($_GET['id']) && $news->open($_GET['id'])) 
 						<?php
 							$user = new ploopi\user();
 							if ($user->open($news->fields['id_user'])) 
-								echo " par {$user->fields['firstname']} {$user->fields['lastname']}";
+								echo str::htmlentities(" par {$user->fields['firstname']} {$user->fields['lastname']}");
 						?>
 					</div>
 					<div><b><?php echo 'Catégorie' ?></b>:&nbsp;<?php echo str::htmlentities($cat); ?></div>
@@ -49,7 +56,7 @@ if (!empty($_GET['id']) && is_numeric($_GET['id']) && $news->open($_GET['id'])) 
 						if ($news->fields['urltitle'] == '') {$urltitle = 'Lien';} else {$urltitle = $news->fields['urltitle'];}
 						?>
 						    <div><b><?php echo 'Lien'; ?></b>:&nbsp;
-								<a target="_blank" href="<?php echo $news->fields['url']; ?>">
+								<a target="_blank" href="<?php echo news2\tools::url($news->fields['url']); ?>">
 									<?php echo str::htmlentities($urltitle); ?>
 								</a>
 							</div>
@@ -57,12 +64,12 @@ if (!empty($_GET['id']) && is_numeric($_GET['id']) && $news->open($_GET['id'])) 
 					}
 					?>
 					<div><b><?php echo 'Lectures'; ?></b>:&nbsp;<?php echo $news->fields['nbclick']; ?></div>
-					<div><?php echo $news->fields['content']; ?></div>
+					<div><?php echo news2\tools::content($news->fields['content']); ?></div>
 				</td>
 			</tr>
 		</table>
     </div>
-    <div style="clear:both;border-top:1px solid #c0c0c0;">
+    <div class="news2_separation">
         <?php ploopi\annotation::display(news2\tools::OBJECT_NEWS2, $news->fields['id'], $news->fields['title']); ?>
     </div>
     <?php

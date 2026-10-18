@@ -190,7 +190,7 @@ if (!empty($directory_contact->fields['id'])) ploopi\session::setvar("deletephot
                         <span>
                             <a href="javascript:void(0);" onclick="javascript:directory_choose_photo(event, '<?php echo $directory_contact->fields['id']; ?>', '<?php echo $strPhotoId; ?>');"><img title="Charger une nouvelle photo" src="./modules/directory/img/ico_new.png" /></a>
                             <?php
-                            if ($booPhotoExists) { ?><a href="javascript:void(0);" onclick="javascript:directory_delete_photo('<?php echo $directory_contact->fields['id']; ?>'); $('directory_contact_photo<?php echo $strPhotoId; ?>').innerHTML = '';"><img title="Supprimer la photo" src="./modules/directory/img/ico_delete.png" /></a><?php } ?>
+                            if ($booPhotoExists) { ?><a href="javascript:void(0);" onclick="javascript:directory_delete_photo('<?php echo $directory_contact->fields['id']; ?>'); jQuery('#directory_contact_photo<?php echo $strPhotoId; ?>').empty();"><img title="Supprimer la photo" src="./modules/directory/img/ico_delete.png" /></a><?php } ?>
                             <br /><span id="directory_contact_photo<?php echo $strPhotoId; ?>">
                             <?php
                             if ($booPhotoExists) { ?><img src="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=directory_contact_getphoto&directory_contact_id={$directory_contact->fields['id']}"); ?>" /><?php } ?>
@@ -208,6 +208,15 @@ if (!empty($directory_contact->fields['id'])) ploopi\session::setvar("deletephot
 </div>
 </form>
 
+<?php
+/**
+ * Documents du contact : seulement pour un contact enregistré. Un nouveau contact n'a pas
+ * d'identifiant ; la GED créait un dossier racine pour l'enregistrement null (refusé en
+ * SQL strict, partagé sinon par tous les nouveaux contacts).
+ */
+if (!empty($directory_contact->fields['id']))
+{
+    ?>
 <fieldset class="fieldset" style="padding:0px;margin:4px;">
     <legend>Documents liés au contact</legend>
     <?php
@@ -242,3 +251,5 @@ if (!empty($directory_contact->fields['id'])) ploopi\session::setvar("deletephot
     );
     ?>
 </fieldset>
+    <?php
+}

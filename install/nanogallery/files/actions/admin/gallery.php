@@ -90,7 +90,7 @@ $objForm->addPanel($objImagePanel = new ploopi\form_panel('nano_panel_image','Af
 $this->addCBox  ($objImagePanel, $prefix.'thumbnailOpenImage', 					$gal['thumbnailOpenImage'], "activation du mode");
 
 // Boutons
-$objForm->addButton( new ploopi\form_button('input:reset', 'Réinitialiser', null, null, array('style' => 'margin-left:4px;','onclick' => "uiReset()")));
+$objForm->addButton( new ploopi\form_button('input:reset', 'Réinitialiser', null, null, array('style' => 'margin-left:4px;','dataset' => array('ploopi-action' => 'nano_uireset'))));
 $objForm->addButton( new ploopi\form_button('input:submit', 'Enregistrer', null, null, array('style' => 'margin-left:4px;')));
 
 // Rendu

@@ -40,7 +40,7 @@
 
 if (!empty($currentfolder))
 {
-    $style = ($objFolder->fields['published']) ? '' : 'style="background-color:#ffe0e0;"';
+    $style = ($objFolder->fields['published']) ? '' : 'class="doc_draft"';
 
     ?>
     <div class="doc_folderinfo" <?php echo $style; ?>>
@@ -60,7 +60,7 @@ if (!empty($currentfolder))
                 <br />Dossier <?php echo ploopi\str::htmlentities($foldertypes[$objFolder->fields['foldertype']]); ?><?php if ($objFolder->fields['readonly']) echo ' protégé'; ?>
             </p>
         </div>
-        <div style="float:left;height:40px;border-left:1px solid #e0e0e0;">
+        <div class="doc_separateur">
             <p style="margin:0;padding:4px 8px;">
                 <strong>Propriétaire</strong>:
                 <br />
@@ -78,7 +78,7 @@ if (!empty($currentfolder))
         if ($objFolder->fields['foldertype'] == 'private')
         {
             ?>
-            <div style="float:left;height:40px;border-left:1px solid #e0e0e0;">
+            <div class="doc_separateur">
                 <p style="margin:0;padding:4px 8px;">
                     <strong>Information</strong>
                     <br />Les données de ce dossier sont exclusivement privées
@@ -93,7 +93,7 @@ if (!empty($currentfolder))
         if ($objFolder->fields['foldertype'] == 'shared')
         {
             ?>
-            <div style="float:left;height:40px;border-left:1px solid #e0e0e0;">
+            <div class="doc_separateur">
                 <div style="margin:0;padding:4px 8px;">
                     <div><strong>Partages</strong>:</div>
                     <p class="ploopi_va">
@@ -138,7 +138,7 @@ if (!empty($currentfolder))
         if ($objFolder->fields['foldertype'] != 'private')
         {
             ?>
-            <div style="float:left;height:40px;border-left:1px solid #e0e0e0;">
+            <div class="doc_separateur">
                 <div style="margin:0;padding:4px 8px;">
                     <div><strong>Validateurs</strong>:</div>
                     <p class="ploopi_va">
@@ -198,7 +198,7 @@ else
                 <br />Dossier Personnel
             </p>
         </div>
-        <div style="float:left;height:40px;border-left:1px solid #e0e0e0;">
+        <div class="doc_separateur">
             <p style="margin:0;padding:4px 8px;">
                 <strong>Information</strong>
                 <br />Les données de ce dossier sont exclusivement privées

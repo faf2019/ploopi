@@ -88,7 +88,7 @@ class validation extends data_object
             SELECT  id_validation, type_validation
             FROM    ploopi_validation
             WHERE   id_object = {$id_object}
-            AND     id_record = '".addslashes($id_record)."'
+            AND     id_record = '".addslashes((string) $id_record)."'
             AND     id_module = '".addslashes($id_module)."'
         ");
 
@@ -106,8 +106,15 @@ class validation extends data_object
             }
         }
 
+        // ploopi4 : recherche et sélection en pastilles (ploopi\userselect)
+        if (userselect::modern())
+        {
+            userselect::form('validation', $strValidationId, $strTitle, 'ploopi_validation_userfilter_'.$strValidationId, crypt::queryencode("ploopi_op=validation_search_users&validation_id={$strValidationId}&id_action={$id_action}"), crypt::queryencode("ploopi_op=validation_select_user&validation_id={$strValidationId}"), 'Aucune accréditation');
+            return;
+        }
+
         ?>
-        <a class="ploopi_validation_title" href="javascript:void(0);" onclick="javascript:ploopi.switchdisplay('ploopi_validation_<?php echo $strValidationId; ?>');">
+        <a class="ploopi_validation_title" href="#" data-ploopi-switchdisplay="ploopi_validation_<?php echo $strValidationId; ?>">
             <p class="ploopi_va">
                 <img src="<?php echo "{$_SESSION['ploopi']['template_path']}/img/validation/validation.png"; ?>">
                 <span><?php echo $strTitle; ?></span>
@@ -117,27 +124,16 @@ class validation extends data_object
             <div class="ploopi_validation_search_form">
                 <p class="ploopi_va">
                     <span>Recherche groupes/utilisateurs:&nbsp;</span>
-                    <input type="text" id="ploopi_validation_userfilter_<?php echo $strValidationId; ?>" class="text">
-                    <img onmouseover="javascript:this.style.cursor='pointer';" onclick="ploopi.xhr.todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=validation_search_users&validation_id=<?php echo $strValidationId; ?>&ploopi_validation_userfilter='+ploopi.getelem('ploopi_validation_userfilter_<?php echo $strValidationId; ?>').value+'&id_action=<?php echo $id_action; ?>', 'div_validation_search_result_<?php echo $strValidationId; ?>');" style="border:0px" src="<?php echo "{$_SESSION['ploopi']['template_path']}/img/validation/search.png"; ?>">
+                    <input type="text" id="ploopi_validation_userfilter_<?php echo $strValidationId; ?>" class="text" data-ploopi-enterclick="ploopi_validation_search_<?php echo $strValidationId; ?>">
+                    <img id="ploopi_validation_search_<?php echo $strValidationId; ?>" data-ploopi-search="div_validation_search_result_<?php echo $strValidationId; ?>" data-ploopi-query="<?php echo str::htmlentities(crypt::queryencode("ploopi_op=validation_search_users&validation_id={$strValidationId}&id_action={$id_action}")); ?>" data-ploopi-field="ploopi_validation_userfilter_<?php echo $strValidationId; ?>" data-ploopi-param="ploopi_validation_userfilter" style="border:0px;cursor:pointer;" src="<?php echo "{$_SESSION['ploopi']['template_path']}/img/validation/search.png"; ?>">
                 </p>
             </div>
             <div id="div_validation_search_result_<?php echo $strValidationId; ?>"></div>
 
             <div class="ploopi_validation_title">Sélection actuelle :</div>
-            <div class="ploopi_validation_authorizedlist" id="div_validation_users_selected_<?php echo $strValidationId; ?>">
+            <div class="ploopi_validation_authorizedlist" id="div_validation_users_selected_<?php echo $strValidationId; ?>"<?php if (!empty($_SESSION['ploopi']['validation'][$strValidationId])) echo ' data-ploopi-load="'.str::htmlentities(crypt::queryencode("ploopi_op=validation_select_user&validation_id={$strValidationId}")).'"'; ?>>
             <?php if (empty($_SESSION['ploopi']['validation'][$strValidationId]['users_selected'])) echo 'Aucune accrédidation'; ?>
             </div>
-            <?php
-            if (!empty($_SESSION['ploopi']['validation'][$strValidationId]))
-            {
-                ?>
-                <script type="text/javascript">
-                    ploopi.xhr.ajaxloader('div_validation_users_selected_<?php echo $strValidationId; ?>');
-                    ploopi.xhr.todiv('admin-light.php', 'ploopi_env='+_PLOOPI_ENV+'&ploopi_op=validation_select_user&validation_id=<?php echo $strValidationId; ?>', 'div_validation_users_selected_<?php echo $strValidationId; ?>');
-                </script>
-                <?php
-            }
-            ?>
         </div>
         <?php
     }

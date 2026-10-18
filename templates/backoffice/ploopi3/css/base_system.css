@@ -1,0 +1,235 @@
+/*
+    Copyright (c) 2007-2026 Ovensia
+    Contributors hold Copyright (c) to their code submissions.
+
+    This file is part of Ploopi.
+
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
+/******************
+  ÉCRANS D'ADMINISTRATION (module system)
+  Les classes system_* sont définies, avec leur aspect historique, par
+  modules/system/include/styles.css, chargée APRÈS cette feuille : les règles
+  ci-dessous sont préfixées par « body » pour l'emporter.
+*******************/
+
+/* Bandeaux d'information : en-tête d'une liste, d'un import, d'un outil */
+body .system_bandeau {
+    margin: 4px 0 8px 0;
+    padding: 8px 12px;
+    color: var(--p3-text);
+    background: var(--p3-surface-2);
+    border: 1px solid var(--p3-border);
+    border-left: 3px solid var(--p3-border-strong);
+    border-radius: var(--p3-radius-sm);
+    line-height: 1.5;
+}
+
+body .system_bandeau_cadre {
+    border-width: 1px 1px 1px 3px;
+}
+
+body .system_bandeau.system_bandeau_clair {
+    border-bottom: 1px solid var(--p3-border);
+}
+
+/* Employée seule, la classe enveloppe un tableau : pas de bandeau */
+body .system_bandeau_clair {
+    background: transparent;
+    border-top: 0;
+}
+
+body .system_bandeau input[type='text'] {
+    margin: 0 4px;
+}
+
+/* Ligne choisie d'un tableau (rôle dont on gère les attributions) */
+body div.system_line_selected,
+body div.system_line_selected:hover {
+    background: var(--p3-primary-soft);
+    box-shadow: inset 3px 0 0 var(--p3-primary);
+}
+
+body div.system_line_selected a {
+    color: var(--p3-primary-dark);
+}
+
+/* Module system, qui ne se désinstalle pas */
+body div.system_line_system,
+body div.system_line_system:hover {
+    background: var(--p3-surface-3);
+    color: var(--p3-text-muted);
+}
+
+/* Niveau de l'utilisateur dans l'espace : le réglage qui compte, mis en avant */
+body .system_user_level {
+    margin: 10px 2px 4px 2px;
+    padding: 8px 0;
+    background: var(--p3-primary-softer);
+    border: 1px solid var(--p3-primary-soft);
+    border-left: 3px solid var(--p3-primary);
+    border-radius: var(--p3-radius-sm);
+}
+
+body .system_user_level label {
+    font-weight: 700;
+    color: var(--p3-primary-dark);
+}
+
+/* Avertissement de configuration : un encadré, plus un texte rouge en italique */
+body .system_warning {
+    display: block;
+    float: left;
+    width: 65%;
+    box-sizing: border-box;
+    position: relative;
+    padding: 8px 12px 8px 34px;
+    font-style: normal;
+    color: var(--p3-warning);
+    background: var(--p3-warning-soft);
+    border: 1px solid #ecd28c;
+    border-left: 3px solid #d29f12;
+    border-radius: var(--p3-radius-sm);
+}
+
+body .system_warning img {
+    position: absolute;
+    left: 10px;
+    top: 9px;
+    float: none;
+    margin: 0;
+}
+
+/* Modèle de courriel : balises à insérer, en étiquettes */
+body #system_filtering label em {
+    font-style: normal;
+    color: var(--p3-text-muted);
+}
+
+body .mail_model_tag {
+    display: inline-block;
+    margin: 3px 1px 0 1px;
+    padding: 1px 7px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', monospace;
+    font-size: 11px;
+    font-style: normal;
+    line-height: 18px;
+    color: var(--p3-primary-dark);
+    background: var(--p3-primary-softer);
+    border: 1px solid var(--p3-primary-soft);
+    border-radius: 10px;
+}
+
+body .mail_model_tag:hover {
+    color: var(--p3-primary-dark);
+    background: var(--p3-primary-soft);
+    border-color: var(--p3-primary);
+    text-decoration: none;
+}
+
+/* Fiche d'un espace ou d'un groupe : panneau des actions, à droite */
+body div.system_group_main {
+    border-right: 1px solid var(--p3-border);
+}
+
+body div.system_group_icons {
+    background: var(--p3-surface-2);
+    border-radius: 0 var(--p3-radius-sm) var(--p3-radius-sm) 0;
+}
+
+body div.system_group_icons_padding {
+    padding: 8px;
+}
+
+body div.system_group_icons_padding > div:first-child {
+    margin-bottom: 8px;
+    padding: 4px 2px 8px 2px !important;
+    color: var(--p3-text-muted);
+    border-bottom: 1px solid var(--p3-border);
+    line-height: 1.6;
+}
+
+body div.system_group_icons_padding > div:first-child strong {
+    color: var(--p3-text);
+}
+
+/* Arborescence des espaces et des groupes */
+body div.system_tree_padding {
+    padding: 8px 6px;
+}
+
+body a.system_tree_link {
+    padding: 1px 6px;
+    border-radius: var(--p3-radius-sm);
+    color: var(--p3-text);
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+}
+
+body a.system_tree_link:hover {
+    background: var(--p3-primary-softer);
+    color: var(--p3-primary-dark);
+    text-decoration: none;
+}
+
+body a.system_tree_link.selected {
+    background: var(--p3-primary-soft);
+    color: var(--p3-primary-dark);
+}
+
+/* Attribution des rôles : utilisateurs et groupes concernés */
+body .system_roleusers {
+    color: var(--p3-text);
+    background: var(--p3-surface-2);
+    border-bottom: 1px solid var(--p3-border);
+}
+
+body .system_roleusers:hover {
+    background: var(--p3-primary-softer);
+}
+
+body .system_roleusers_detail {
+    background: var(--p3-surface);
+    border-bottom: 1px solid var(--p3-border);
+}
+
+body #system_roleusers_result {
+    border-bottom-color: var(--p3-border);
+}
+
+body .system_roleusers_select {
+    color: var(--p3-text);
+    background: var(--p3-surface);
+    border-bottom: 1px solid var(--p3-line);
+}
+
+body .system_roleusers_select:hover {
+    background: var(--p3-primary-softer);
+}
+
+body #system_roleusers_legend {
+    background: var(--p3-surface-2);
+    border-bottom: 1px solid var(--p3-border);
+}
+
+/* Objets du site web (WCE) non installés */
+body .system_wce_warning {
+    color: var(--p3-text);
+    background: var(--p3-surface-2);
+    border: 1px solid var(--p3-border);
+    border-radius: var(--p3-radius-sm);
+    padding: 6px 10px;
+}

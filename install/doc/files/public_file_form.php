@@ -193,7 +193,7 @@ else
     ?>
 
     <div class="doc_fileinfo">
-        <a href="javascript:void(0);" onclick="javascript:ploopi_tickets_new(event, '<?php echo _DOC_OBJECT_FILE ?>','<?php echo $docfile->fields['md5id']; ?>', '<?php echo addslashes(ploopi\str::htmlentities($docfile->fields['name'])); ?>');" title="Envoyer en Pièce Jointe">
+        <a href="javascript:void(0);" onclick="javascript:ploopi.tickets.create(event, <?php echo (int) _DOC_OBJECT_FILE; ?>, <?php echo ploopi\str::htmlentities(json_encode($docfile->fields['md5id'])); ?>, <?php echo ploopi\str::htmlentities(json_encode($docfile->fields['name'])); ?>);" title="Envoyer en Pièce Jointe">
             <p class="ploopi_va">
                 <img src="./modules/doc/img/send.png" />
                 <span>Envoyer</span>
@@ -226,7 +226,7 @@ else
     {
         $strPublicUrl = _PLOOPI_BASEPATH.'/'.ploopi\str::urlrewrite("index.php?ploopi_op=doc_file_download&docfile_md5id={$docfile->fields['md5id']}", doc_getrewriterules(), $docfile->fields['name'], null, true);
         ?>
-        <p class="ploopi_va" style="padding:4px;border-bottom:1px solid #aaa;background-color:#ddd;">
+        <p class="ploopi_va doc_bandeau">
             <strong>URL publique du fichier :</strong>
             <a title="URL publique permettant de télécharger ce fichier" href="<?php echo $strPublicUrl; ?>"><?php echo $strPublicUrl; ?></a>
         </p>
@@ -279,7 +279,7 @@ else
                         <?php
                         $strFileContent = file_get_contents($docfile->getfilepath());
                         $strFileContent = mb_convert_encoding($strFileContent, 'ISO-8859-15', mb_detect_encoding($strFileContent,  mb_detect_order(), true));
-                        $strLines = implode(range(1, count(explode("\n", $strFileContent))), '<br />');
+                        $strLines = implode('<br />', range(1, count(explode("\n", $strFileContent))));
                         echo "<div class=\"doc_hl-content\"><table><tr><td class=\"doc_hl-num\">\n$strLines\n</td><td><pre><code class=\"{$arrRenderer[1]}\">".$strFileContent."\n</code></pre></td></tr></table></div>"
                         ?></div>
                         <?php
@@ -301,7 +301,7 @@ else
                         <div style="border:1px solid #c0c0c0;margin:4px;padding:4px;background-color:#ffffff;height:<?php echo ploopi\str::htmlentities($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_viewerheight']); ?>px;overflow:auto;">
                         <?php
                         $strFileContent = file_get_contents($docfile->getfilepath());
-                        $strLines = implode(range(1, count(explode("\n", $strFileContent))), '<br />');
+                        $strLines = implode('<br />', range(1, count(explode("\n", $strFileContent))));
                         echo "<div class=\"doc_hl-content\"><table><tr><td class=\"doc_hl-num\">\n$strLines\n</td><td class=\"doc_hl-src\">\n<pre>{$strFileContent}\n</pre></td></tr></table></div>"
                         ?>
                         </div>
@@ -318,7 +318,7 @@ else
                     default:
                     case 'iframe':
                         ?>
-                        <div style="border:1px solid #c0c0c0;margin:4px;background-color:#f0f0f0;"><iframe src="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_fileview&docfile_md5id={$docfile->fields['md5id']}".($docfile_tab == 'pdf' && isset($arrRenderer[1]) && $arrRenderer[1] == 'unoconv' ? '&doc_viewmode=pdf' : '')); ?>" style="border:0;width:100%;margin:0;padding:0;height:<?php echo ploopi\str::htmlentities($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_viewerheight']); ?>px;"></iframe></div>
+                        <div class="doc_encadre_gris"><iframe src="<?php echo ploopi\crypt::urlencode("admin-light.php?ploopi_op=doc_fileview&docfile_md5id={$docfile->fields['md5id']}".($docfile_tab == 'pdf' && isset($arrRenderer[1]) && $arrRenderer[1] == 'unoconv' ? '&doc_viewmode=pdf' : '')); ?>" style="border:0;width:100%;margin:0;padding:0;height:<?php echo ploopi\str::htmlentities($_SESSION['ploopi']['modules'][$_SESSION['ploopi']['moduleid']]['doc_viewerheight']); ?>px;"></iframe></div>
                         <?php
                     break;
                 }
@@ -498,7 +498,7 @@ else
                         if (!$readonly)
                         {
                             ?>
-                            <fieldset style="border:1px solid #c0c0c0;margin:4px 4px 0 0;">
+                            <fieldset class="doc_cadre">
                                 <legend>Mettre à jour avec un fichier situé</LEGEND>
                                 <?php
                                 if ($booServerModeAvailable)
@@ -673,7 +673,7 @@ else
     }
     ?>
 
-    <div style="border-bottom:1px solid #c0c0c0;">
+    <div class="doc_filet_bas">
     <?php
     if (isset($objFolder->fields['foldertype']) && $objFolder->fields['foldertype'] != 'private')
     {
@@ -690,7 +690,7 @@ else
                 $objDocFolderSub = new docfolder();
                 $objDocFolderSub->open($parents[$i])
                 ?>
-                <div style="padding:4px;font-weight:bold;border-bottom:1px solid #c0c0c0;">
+                <div class="doc_titre">
                 Vous héritez de l'abonnement à &laquo; <a href="<?php echo ploopi\crypt::urlencode("admin.php?op=doc_browser&currentfolder={$parents[$i]}"); ?>"><?php echo ploopi\str::htmlentities($objDocFolderSub->fields['name']); ?></a> &raquo;
                 </div>
                 <?php

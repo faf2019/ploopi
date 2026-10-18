@@ -68,7 +68,7 @@ function filesubmit(form)
 
 
 
-<div style="border-bottom:2px solid #c0c0c0;padding:4px;overflow:auto;">
+<div class="directory_filet_fort">
     Vous pouvez importer des données dans une rubrique avec un fichier CSV.
     Ce fichier doit utiliser le séparateur "," ou ";".
     <br />

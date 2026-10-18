@@ -36,6 +36,7 @@
  * Inclusion de la classe parent
  */
 include_once './include/classes/data_object.php';
+include_once './modules/dbreport/classes/class_dbreport.php';
 
 include_once './modules/dbreport/classes/class_dbreport_query.php';
 
@@ -61,6 +62,7 @@ class dbreport_queryrelation extends ploopi\data_object
      */
     public function save()
     {
+        dbreport::defaults($this);
         $objDbrQuery = new dbreport_query();
         if ($objDbrQuery->open($this->fields['id_query'])) $objDbrQuery->save();
 

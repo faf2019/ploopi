@@ -35,7 +35,7 @@
  * Ouverture du bloc
  */
 
-echo ploopi\skin::get()->open_simplebloc(_SYSTEM_LABEL_ACTIONHISTORY);
+echo system_open_bloc(_SYSTEM_LABEL_ACTIONHISTORY);
 
 $intLimit = 5000;
 
@@ -108,6 +108,28 @@ if (!empty($_POST['historyoption']))
         break;
     }
 }
+
+// Gabarits de génération 4 : filtres refondus (mêmes champs, mêmes options)
+if (ploopi\skin::get()->version() >= 4)
+{
+    $funcLocalTs = function($strLocal) { return $strLocal == '' ? '' : ploopi\date::local2timestamp($strLocal); };
+
+    echo '<form class="p4-form p4-form-dense p4-ui p4-filters-form" action="'.ploopi\crypt::urlencode('admin.php').'" method="post"><input type="hidden" name="op" value="actionhistory" /><div class="p4-fgrid">';
+    echo ploopi\system\ui::field(_SYSTEM_TOOLS_FROM, ploopi\system\ui::date('filter_date', $funcLocalTs($arrSearchPattern['date'])), array('for' => 'filter_date', 'width' => 'c3'));
+    echo ploopi\system\ui::field(_SYSTEM_TOOLS_TO, ploopi\system\ui::date('filter_date2', $funcLocalTs($arrSearchPattern['date2'])), array('for' => 'filter_date2', 'width' => 'c3'));
+    foreach(array('filter_user' => array(_SYSTEM_USERS_USER, 'user'), 'filter_workspace' => array(_SYSTEM_WS_TYPE_WORKSPACE, 'workspace'), 'filter_module' => array(_SYSTEM_ROLEF_MODULE, 'module'), 'filter_action' => array(_SYSTEM_TOOLS_ACTION, 'action'), 'filter_record' => array(_SYSTEM_TOOLS_RECORD, 'record'), 'filter_ip' => array(_SYSTEM_TOOLS_IP, 'ip')) as $strName => $arrField)
+    {
+        echo ploopi\system\ui::field($arrField[0], ploopi\system\ui::input($strName, $arrSearchPattern[$arrField[1]], array('type' => 'search')), array('for' => $strName, 'width' => 'c3'));
+    }
+    echo '</div><div class="p4-row p4-wrap p4-filters-actions">';
+    echo ploopi\system\ui::button(array('label' => _SYSTEM_TOOLS_LOG_DELETE, 'icon' => 'trash', 'class' => 'danger-ghost sm', 'type' => 'submit', 'attrs' => array('name' => 'historyoption', 'value' => 'delete'), 'confirm' => _SYSTEM_TOOLS_LOG_DELETE_CONFIRM));
+    echo '<span class="p4-grow"></span>';
+    echo ploopi\system\ui::button(array('label' => _SYSTEM_TOOLS_EXPORTCSV, 'icon' => 'download', 'class' => 'sm', 'type' => 'submit', 'attrs' => array('name' => 'historyoption', 'value' => 'exportcsv')));
+    echo ploopi\system\ui::button(array('label' => _SYSTEM_USERS_FILTER, 'icon' => 'filter', 'class' => 'primary sm', 'type' => 'submit'));
+    echo '</div></form>';
+}
+else
+{
 ?>
 
 <form action="<?php echo ploopi\crypt::urlencode('admin.php'); ?>" method="post" id="form_loghistory">
@@ -116,48 +138,51 @@ if (!empty($_POST['historyoption']))
 <div style="margin: 0;border-bottom:2px solid #c0c0c0;padding:4px; with: 99%;">
     <div style="margin:0; padding:0; float:left;width:49%;" class="ploopi_form">
         <p>
-            <label>Entre le (date):</label>
+            <label><?php echo _SYSTEM_TOOLS_FILTER_DATE1; ?> :</label>
             <input type="text" class="text" name="filter_date" id="filter_date" style="width:100px;" value="<?php echo ploopi\str::htmlentities($arrSearchPattern['date']); ?>"><?php ploopi\date::open_calendar('filter_date'); ?>
         </p>
         <p>
-            <label>et le (date):</label>
+            <label><?php echo _SYSTEM_TOOLS_FILTER_DATE2; ?> :</label>
             <input type="text" class="text" name="filter_date2" id="filter_date2" style="width:100px;" value="<?php echo ploopi\str::htmlentities($arrSearchPattern['date2']); ?>"><?php ploopi\date::open_calendar('filter_date2'); ?>
         </p>
         <p>
-            <label>Utilisateur:</label>
+            <label><?php echo _SYSTEM_TOOLS_COL_USER; ?> :</label>
             <input type="text" class="text" name="filter_user" value="<?php echo ploopi\str::htmlentities($arrSearchPattern['user']); ?>">
         </p>
         <p>
-            <label>Espace de travail:</label>
+            <label><?php echo _SYSTEM_TOOLS_COL_WORKSPACE; ?> :</label>
             <input type="text" class="text" name="filter_workspace" value="<?php echo ploopi\str::htmlentities($arrSearchPattern['workspace']); ?>">
         </p>
     </div>
 
     <div style="margin:0; padding:0; float:left;width:50%;" class="ploopi_form">
         <p>
-            <label>Module:</label>
+            <label><?php echo _SYSTEM_TOOLS_COL_MODULE; ?> :</label>
             <input type="text" class="text" name="filter_module" value="<?php echo ploopi\str::htmlentities($arrSearchPattern['module']); ?>">
         </p>
         <p>
-            <label>Action:</label>
+            <label><?php echo _SYSTEM_TOOLS_COL_ACTION; ?> :</label>
             <input type="text" class="text" name="filter_action" value="<?php echo ploopi\str::htmlentities($arrSearchPattern['action']); ?>">
         </p>
         <p>
-            <label>Enregistrement:</label>
+            <label><?php echo _SYSTEM_TOOLS_COL_RECORD; ?> :</label>
             <input type="text" class="text" name="filter_record" value="<?php echo ploopi\str::htmlentities($arrSearchPattern['record']); ?>">
         </p>
         <p>
-            <label>IP:</label>
+            <label><?php echo _SYSTEM_TOOLS_COL_IP; ?> :</label>
             <input type="text" class="text" name="filter_ip" value="<?php echo ploopi\str::htmlentities($arrSearchPattern['ip']); ?>">
         </p>
     </div>
     <div style="clear:both;text-align:right;padding:4px;">
-        <input type="button" class="button" value="Effacer les logs (selon le filtre)" onclick="javascript:if (confirm('<?php echo _SYSTEM_MSG_CONFIRMLOGDELETE; ?>')) {jQuery('#historyoption')[0].value='delete';jQuery('#form_loghistory').submit();}">
+        <input type="button" class="button ploopi_button_danger" value="Effacer les logs (selon le filtre)" onclick="javascript:if (confirm('<?php echo _SYSTEM_MSG_CONFIRMLOGDELETE; ?>')) {jQuery('#historyoption')[0].value='delete';jQuery('#form_loghistory').submit();}">
         <input type="button" class="button" value="Export CSV" onclick="javascript:jQuery('#historyoption')[0].value='exportcsv';jQuery('#form_loghistory').submit();">
         <input type="submit" class="button" value="Filtrer">
     </div>
 </div>
 </form>
+<?php
+}
+?>
 <?php
 $sql =  "
         SELECT      count(*) as c
@@ -168,9 +193,17 @@ $sql =  "
 ploopi\user_action_log::getdb()->query($sql);
 $row = ploopi\user_action_log::getdb()->fetchrow();
 $intCount = $row['c'];
+if (ploopi\skin::get()->version() >= 4)
+{
+    echo '<p class="p4-ui p4-dir-toolbar"><strong>'.ploopi\str::htmlentities(str_replace('<NB>', $intCount, _SYSTEM_TOOLS_LOG_COUNT)).'</strong></p>';
+    if ($intCount > $intLimit) echo ploopi\system\ui::callout('info', ploopi\str::htmlentities(str_replace('<NB>', $intLimit, _SYSTEM_TOOLS_LOG_LIMIT)));
+}
+else
+{
 ?>
-<div style="padding:4px;border-bottom:1px solid #c0c0c0;background:#e0e0e0;"><b><?php echo $intCount; ?> élément(s) trouvés</b> <?php if ($intCount > $intLimit) { ?>- Affichage des <?php echo $intLimit; ?> premiers enregistrements - Utilisez les filtres ci-dessus pour des résultats plus précis <?php } ?></div>
+<div class="system_bandeau"><b><?php echo $intCount; ?> élément(s) trouvés</b> <?php if ($intCount > $intLimit) { ?>- Affichage des <?php echo $intLimit; ?> premiers enregistrements - Utilisez les filtres ci-dessus pour des résultats plus précis <?php } ?></div>
 <?php
+}
 $sql =  "
         SELECT      ploopi_user_action_log.*
         FROM        ploopi_user_action_log
@@ -185,43 +218,43 @@ $arrColumns = array();
 $arrValues = array();
 
 $arrColumns['left']['timestp'] = array(
-    'label' => 'Date/Heure',
+    'label' => _SYSTEM_TOOLS_COL_DATETIME,
     'width' => '130',
     'options' => array('sort' => true),
 );
 
 $arrColumns['left']['ip'] = array(
-    'label' => 'IP client',
+    'label' => _SYSTEM_TOOLS_COL_IP,
     'width' => '110',
     'options' => array('sort' => true),
 );
 
 $arrColumns['left']['user'] = array(
-    'label' => 'Utilisateur',
+    'label' => _SYSTEM_TOOLS_COL_USER,
     'width' => '120',
     'options' => array('sort' => true)
 );
 
 $arrColumns['left']['workspace'] = array(
-    'label' => 'Espace de travail',
+    'label' => _SYSTEM_TOOLS_COL_WORKSPACE,
     'width' => '140',
     'options' => array('sort' => true)
 );
 
 $arrColumns['left']['module'] = array(
-    'label' => 'Module',
+    'label' => _SYSTEM_TOOLS_COL_MODULE,
     'width' => '100',
     'options' => array('sort' => true)
 );
 
 $arrColumns['left']['action'] = array(
-    'label' => 'Action',
+    'label' => _SYSTEM_TOOLS_COL_ACTION,
     'width' => '200',
     'options' => array('sort' => true)
 );
 
 $arrColumns['auto']['record'] = array(
-    'label' => 'Enregistrement',
+    'label' => _SYSTEM_TOOLS_COL_RECORD,
     'options' => array('sort' => true)
 );
 
@@ -247,10 +280,9 @@ while($row = ploopi\user_action_log::getdb()->fetchrow())
     $c++;
 }
 
-?>
-<div style="margin:0; padding:0; border-bottom:1px solid #c0c0c0; height:0px; font-size: 0em;"></div>
-<?php
-ploopi\skin::get()->display_array(
+if (ploopi\skin::get()->version() < 4) echo '<div style="margin:0; padding:0; border-bottom:1px solid #c0c0c0; height:0px; font-size: 0em;"></div>';
+
+system_display_array(
     $arrColumns,
     $arrValues,
     'array_actionlog',
@@ -263,5 +295,5 @@ ploopi\skin::get()->display_array(
     )
 );
 
-echo ploopi\skin::get()->close_simplebloc();
+echo system_close_bloc();
 ?>

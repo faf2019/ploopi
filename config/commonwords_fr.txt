@@ -48,7 +48,7 @@ ayantes
 ayants
 ayez
 ayons
-aÔe
+a√Øe
 bah
 beaucoup
 bis
@@ -348,7 +348,7 @@ quoi
 quoique
 rataplan
 revoici
-revoil‡
+revoil√†
 rien
 sa
 salut
@@ -429,7 +429,7 @@ veux
 via
 vlan
 voici
-voil‡
+voil√†
 vos
 votre
 voudra

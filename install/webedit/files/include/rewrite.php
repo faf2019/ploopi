@@ -127,15 +127,20 @@ elseif (preg_match('/web\/rss\/(.*)\.xml/', $arrParsedURI['path'], $arrMatches) 
     $booRewriteRuleFound = true;
 }
 
-// Désinscription
-elseif (preg_match('/unsubscribe\/([a-z0-9]{32})\/index\.[a-zA-Z0-9](.*)/', $arrParsedURI['path'], $arrMatches) == 1)
+// Désinscription (lien signé des courriels ; les anciens liens md5 aboutissent au message d'erreur)
+elseif (preg_match('/(^|\/)unsubscribe\/([A-Za-z0-9_.-]{1,512})\/index\.[a-zA-Z0-9]/', $arrParsedURI['path'], $arrMatches) == 1)
 {
-    if (!empty($arrMatches[1]))
-    {
-        $_REQUEST['ploopi_op'] = $_GET['ploopi_op'] = 'webedit_unsubscribe';
-        $_REQUEST['subscription_email'] = $_GET['subscription_email'] = $arrMatches[1];
-        $booRewriteRuleFound = true;
-    }
+    $_REQUEST['ploopi_op'] = $_GET['ploopi_op'] = 'webedit_unsubscribe';
+    $_REQUEST['subscription_token'] = $_GET['subscription_token'] = $arrMatches[2];
+    $booRewriteRuleFound = true;
+}
+
+// Confirmation d'abonnement (lien signé du courriel)
+elseif (preg_match('/(^|\/)subscribe\/([A-Za-z0-9_.-]{1,512})\/index\.[a-zA-Z0-9]/', $arrParsedURI['path'], $arrMatches) == 1)
+{
+    $_REQUEST['ploopi_op'] = $_GET['ploopi_op'] = 'webedit_subscription_confirm';
+    $_REQUEST['subscription_token'] = $_GET['subscription_token'] = $arrMatches[2];
+    $booRewriteRuleFound = true;
 }
 
 // tag 3D

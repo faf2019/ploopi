@@ -194,7 +194,17 @@ if ($_SESSION['ploopi']['connected'])
                                 {
                                     $file = _PLOOPI_PATHSHARED.$_REQUEST["docfile_file_{$i}"];
 
-                                    $error = !file_exists($file);
+                                    /**
+                                     * Le chemin est fourni par la requête : il doit désigner un
+                                     * fichier situé réellement sous le dossier partagé, sans quoi
+                                     * « ../ » ferait copier dans la GED n'importe quel fichier
+                                     * lisible par le serveur web.
+                                     */
+                                    $strRacine = realpath(_PLOOPI_PATHSHARED);
+                                    $strReel = realpath($file);
+                                    $error = $strRacine === false || $strReel === false || !is_file($strReel)
+                                        || strpos($strReel, rtrim($strRacine, '/').'/') !== 0;
+                                    if (!$error) $file = $strReel;
                                     if (!$error)
                                     {
                                         $tmpfile = $file;
@@ -540,7 +550,7 @@ if ($_SESSION['ploopi']['connected'])
                                 $strTmpFile = $strTmpPath.'/'.uniqid().'.pdf';
                                 ploopi\fs::makedir($strTmpPath);
 
-                                exec($cmd = "export HOME=/tmp && {$strUnoconvPath} -v --stdout -f pdf ".$docfile->getfilepath()." > {$strTmpFile}");
+                                exec($cmd = 'export HOME=/tmp && '.escapeshellarg($strUnoconvPath).' -v --stdout -f pdf '.escapeshellarg($docfile->getfilepath()).' > '.escapeshellarg($strTmpFile));
 
                                 ploopi\fs::downloadfile($strTmpFile, $docfile->fields['name'].'.pdf', true, false);
 
@@ -959,10 +969,10 @@ if ($_SESSION['ploopi']['connected'])
         case 'doc_selectflash':
             $template_body = ploopi\loader::get_template();
 
-            // http://docs.ckeditor.com/#!/guide/dev_file_browser_api
-            // Important, paramètres fournis par ckeditor :
+            // Fenêtre de choix de l'éditeur du socle (js/editor.js), paramètres reçus
+            // (noms hérités de CKEditor 4) :
             // CKEditor (= editor)
-            // CKEditorFuncNum (= 0)
+            // CKEditorFuncNum : numéro rendu à ploopi.editor.picked()
             // langCode (= fr)
 
             ob_start();
@@ -1027,10 +1037,20 @@ switch($ploopi_op)
 
                 include_once './modules/doc/class_docfile.php';
 
+                include_once './modules/doc/class_docfolder.php';
+
                 $objDoc = new docfile();
+                $objFolder = new docfolder();
                 $objThumb = new ploopi\mimethumb($width, $height, 0, 'png', 'transparent');
 
-                if($objDoc->openmd5($_GET['docfile_md5id']))
+                /**
+                 * La vignette révèle le contenu du document : elle est soumise au même
+                 * contrôle de visibilité que le dossier qui le porte. L'opération n'en
+                 * appliquait aucun — ni dossier, ni espace.
+                 */
+                if($objDoc->openmd5($_GET['docfile_md5id'])
+                   && $objFolder->open($objDoc->fields['id_folder'])
+                   && doc_isfolderallowed($objFolder->fields))
                     $objThumb->getThumbnail($objDoc->getfilepath(),$objDoc->fields['extension']);
                 if(isset($objCache)) $objCache->end();
             }
@@ -1050,7 +1070,13 @@ switch($ploopi_op)
 
         $docfile = new docfile();
         $docfolder = new docfolder();
-        if (!empty($_GET['docfile_md5id']) && $docfile->openmd5($_GET['docfile_md5id']) && $docfolder->open($docfile->fields['id_folder']) && $docfolder->fields['foldertype'] == 'public' && file_exists($docfile->getfilepath()))
+
+        /**
+         * doc_ispublicfolder() ajoute au contrôle de foldertype le cloisonnement par
+         * espace qu'appliquent block.php et class_docapi.php. Sans lui, un document
+         * d'un dossier public d'un espace étranger était téléchargeable.
+         */
+        if (!empty($_GET['docfile_md5id']) && $docfile->openmd5($_GET['docfile_md5id']) && $docfolder->open($docfile->fields['id_folder']) && doc_ispublicfolder($docfolder->fields) && file_exists($docfile->getfilepath()))
         {
             ploopi\fs::downloadfile($docfile->getfilepath(),$docfile->fields['name'], false, $ploopi_op == 'doc_file_download');
         }

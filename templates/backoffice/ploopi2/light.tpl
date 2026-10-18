@@ -34,7 +34,7 @@
     <script type="text/javascript" src="{module_js.PATH}"></script>
     <!-- END module_js -->
 
-    <script type="text/javascript">
+    <script type="text/javascript" nonce="{CSP_NONCE}">
     //<!--
     {ADDITIONAL_JAVASCRIPT}
     //-->

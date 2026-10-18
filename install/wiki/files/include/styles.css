@@ -372,3 +372,18 @@ body.wiki_print .hl-content * {
 .wiki_page_content {
     overflow:auto;
 }
+
+/* Anciens styles en ligne, devenus des classes (même aspect) */
+.wiki_aide_cellule {
+    border:1px solid #bbb;
+}
+
+.wiki_filet_haut {
+    border-top:1px solid #ccc;
+}
+
+.wiki_bandeau {
+    padding:4px 8px;
+    background-color:#ddd;
+    border-bottom:1px solid #ccc;
+}

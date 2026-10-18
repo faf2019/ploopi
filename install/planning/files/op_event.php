@@ -39,12 +39,17 @@
 switch($ploopi_op)
 {
     case 'planning_event_detail_delete':
+        ploopi\module::init('planning', false, false, false);
+
+        include_once './modules/planning/classes/class_planning_event.php';
         include_once './modules/planning/classes/class_planning_event_detail.php';
 
         $objEventDetail = new planning_event_detail();
         if (!empty($_GET['planning_event_detail_id']) && is_numeric($_GET['planning_event_detail_id']) && $objEventDetail->open($_GET['planning_event_detail_id']))
         {
-            $objEventDetail->delete();
+            // Droits déclarés et cloisonnement de l'instance (cf. planning_event_ismodifiable)
+            $objEvent = new planning_event();
+            if ($objEvent->open($objEventDetail->fields['id_event']) && planning_event_ismodifiable($objEvent->fields)) $objEventDetail->delete();
         }
 
         ploopi\output::redirect('admin-light.php?ploopi_op=planning_refresh');
@@ -64,9 +69,10 @@ switch($ploopi_op)
             {
                 $objEvent = new planning_event();
 
-                if ($objEvent->open($objEventDetail->fields['id_event']))
+                if ($objEvent->open($objEventDetail->fields['id_event']) && planning_event_ismodifiable($objEvent->fields))
                 {
-                    $objEvent->setvalues($_POST, 'planning_event_');
+                    // Seuls les champs saisis : propriétaire et cloisonnement ne viennent pas du formulaire
+                    $objEvent->setvalues(array_diff_key($_POST, array_flip(array('planning_event_id', 'planning_event_id_user', 'planning_event_id_workspace', 'planning_event_id_module'))), 'planning_event_');
                     $objEvent->save();
 
                     $objEventDetail->setresources($_POST['_planning_eventresource_id']);
@@ -78,7 +84,7 @@ switch($ploopi_op)
         }
         else  // création
         {
-            if (!empty($_POST['_planning_event_timestp_begin_d']) && !empty($_POST['planning_event_object']) && !empty($_POST['_planning_eventresource_id']))
+            if (ploopi\acl::isactionallowed(_PLANNING_ADD_EVENT) && !empty($_POST['_planning_event_timestp_begin_d']) && !empty($_POST['planning_event_object']) && !empty($_POST['_planning_eventresource_id']))
             {
                 $objEvent = new planning_event();
 
@@ -95,16 +101,19 @@ switch($ploopi_op)
     break;
 
 
-    case 'planning_event_detail_quicksave';
+    case 'planning_event_detail_quicksave':
         ploopi\module::init('planning', false, false, false);
 
+        include_once './modules/planning/classes/class_planning_event.php';
         include_once './modules/planning/classes/class_planning_event_detail.php';
 
         if (!empty($_GET['planning_event_detail_id'])) // mise à jour
         {
             $objEventDetail = new planning_event_detail();
+            $objEvent = new planning_event();
 
-            if (is_numeric($_GET['planning_event_detail_id']) && $objEventDetail->open($_GET['planning_event_detail_id']))
+            if (is_numeric($_GET['planning_event_detail_id']) && $objEventDetail->open($_GET['planning_event_detail_id'])
+                && $objEvent->open($objEventDetail->fields['id_event']) && planning_event_ismodifiable($objEvent->fields))
             {
                 $arrDateEnd = ploopi\date::gettimestampdetail($objEventDetail->fields['timestp_end']);
                 $arrDateBegin = ploopi\date::gettimestampdetail($objEventDetail->fields['timestp_begin']);
@@ -177,12 +186,12 @@ switch($ploopi_op)
         if (ploopi\acl::isactionallowed(_PLANNING_ADD_EVENT))
         {
             ?>
-            <form id="planning_add_form" action="<?php echo ploopi\crypt::urlencode("admin-light.php?".implode('&', $arrParams)); ?>" method="post" onsubmit="javascript:ploopi.xhr.submit(jQuery('#planning_add_form')[0], 'planning_main', planning_event_validate); return false;">
+            <form id="planning_add_form" action="<?php echo ploopi\crypt::urlencode("admin-light.php?".implode('&', $arrParams)); ?>" method="post" data-planning-submit="planning_main" data-planning-validate>
             <?php
         }
         ?>
-        <div class="ploopi_form">
-            <p>
+        <div class="ploopi_form p4-evform">
+            <p class="is-full p4-evform-res">
                 <label>Utilisateur / Groupe:</label>
                 <?php
                 if (ploopi\acl::isactionallowed(_PLANNING_ADD_EVENT))
@@ -201,7 +210,7 @@ switch($ploopi_op)
                             {
                                 $booChecked = isset($arrEventDetailRessources[$strResourceType][$row['id']]);
                                 ?>
-                                <em class="ploopi_checkbox" onclick="javascript:ploopi.checkbox_click(event, '_planning_eventresource_id<?php echo $strResourceType[0].$row['id']; ?>');">
+                                <em class="ploopi_checkbox ploopi_checkbox_zone" data-checkbox="_planning_eventresource_id<?php echo $strResourceType[0].$row['id']; ?>">
                                     <input type="checkbox" name="_planning_eventresource_id[<?php echo $strResourceType; ?>][<?php echo $row['id']; ?>]" id="_planning_eventresource_id<?php echo $strResourceType[0].$row['id']; ?>" value="<?php echo $row['id']; ?>" <?php if ($booChecked) echo 'checked="checked"'; ?>/>
                                     <img style="background-color:<?php echo $row['color']; ?>;" src="./modules/planning/img/ico_<?php echo $strResourceType; ?>.png" />
                                     <?php echo ploopi\str::htmlentities($row['label']); ?>
@@ -244,7 +253,7 @@ switch($ploopi_op)
                 }
                 ?>
             </p>
-            <p>
+            <p class="is-full">
                 <label>Objet:</label>
                 <?php
                 if (ploopi\acl::isactionallowed(_PLANNING_ADD_EVENT))
@@ -257,13 +266,13 @@ switch($ploopi_op)
                 }
                 ?>
             </p>
-            <p>
+            <p class="is-half">
                 <label>Date<?php if ($ploopi_op == 'planning_event_add') echo ' de début'; ?>:</label>
                 <?php
                 if (ploopi\acl::isactionallowed(_PLANNING_ADD_EVENT))
                 {
                     ?>
-                    <input name="_planning_event_timestp_begin_d" id="_planning_event_timestp_begin_d" class="text" type="text" value="<?php echo ploopi\str::htmlentities($arrDateTimeBegin['date']); ?>" style="width:80px;" <?php if ($ploopi_op == 'planning_event_add') { ?>onchange="javascript:jQuery('#_planning_event_timestp_end_d')[0].value = this.value;"<?php } ?> />
+                    <input name="_planning_event_timestp_begin_d" id="_planning_event_timestp_begin_d" class="text" type="text" value="<?php echo ploopi\str::htmlentities($arrDateTimeBegin['date']); ?>" style="width:80px;" <?php if ($ploopi_op == 'planning_event_add') { ?>data-ploopi-action="planning_copyvalue" data-ploopi-on="change" data-ploopi-args="[&quot;_planning_event_timestp_end_d&quot;]"<?php } ?> />
                     <?php ploopi\date::open_calendar('_planning_event_timestp_begin_d'); ?>
                     <?php
                 }
@@ -274,7 +283,7 @@ switch($ploopi_op)
                 ?>
 
             </p>
-            <p>
+            <p class="is-half">
                 <label>Heure de début:</label>
                 <?php
                 if (ploopi\acl::isactionallowed(_PLANNING_ADD_EVENT))
@@ -308,7 +317,7 @@ switch($ploopi_op)
             if ($ploopi_op == 'planning_event_add')
             {
                 ?>
-                <p>
+                <p class="is-half">
                     <label>Date de fin:</label>
                     <input name="_planning_event_timestp_end_d" id="_planning_event_timestp_end_d" class="text" type="text" value="<?php echo ploopi\str::htmlentities($arrDateTimeEnd['date']); ?>" style="width:80px; "/>
                     <?php ploopi\date::open_calendar('_planning_event_timestp_end_d'); ?>
@@ -316,7 +325,7 @@ switch($ploopi_op)
                 <?php
             }
             ?>
-            <p>
+            <p class="is-half">
                 <label>Heure de fin:</label>
                 <?php
                 if (ploopi\acl::isactionallowed(_PLANNING_ADD_EVENT))
@@ -350,7 +359,7 @@ switch($ploopi_op)
             if ($ploopi_op == 'planning_event_add')
             {
                 ?>
-                <p>
+                <p class="is-half">
                     <label>Périodicité:</label>
                     <select name="planning_event_periodicity" class="select" style="width:100px;">
                         <option value="">(Aucune)</option>
@@ -364,7 +373,7 @@ switch($ploopi_op)
                         ?>
                     </select>
                 </p>
-                <p>
+                <p class="is-half">
                     <label><em>se termine le</em>:</label>
                     <input name="_planning_event_periodicity_end_date" id="_planning_event_periodicity_end_date" class="text" type="text" value="" style="width:80px; "/>
                     <?php ploopi\date::open_calendar('_planning_event_periodicity_end_date'); ?>
@@ -377,18 +386,18 @@ switch($ploopi_op)
         if (ploopi\acl::isactionallowed(_PLANNING_ADD_EVENT))
         {
             ?>
-            <div style="padding:4px;text-align:right;">
+            <div class="p4-evform-actions" style="padding:4px;text-align:right;">
                 <input type="reset" class="button" value="Réinitialiser" />
                 <?php
                 if ($ploopi_op == 'planning_event_detail_open')
                 {
-                    ?><input type="button" class="button" value="Supprimer" style="font-weight:bold;color:#a60000" onclick="javascript:if (confirm('Êtes vous certain de vouloir supprimer cet événement ?')) ploopi.xhr.todiv('admin-light.php', '<?php echo ploopi\crypt::queryencode("ploopi_op=planning_event_detail_delete&planning_event_detail_id={$_GET['planning_event_detail_id']}"); ?>', 'planning_main'); ploopi.popup.hide('popup_planning_event');" /><?php
+                    ?><input type="button" class="button p4-evform-danger" value="Supprimer" style="font-weight:bold;color:#a60000" data-ploopi-action="planning_event_delete" data-ploopi-args="<?php echo ploopi\str::htmlentities(json_encode(array(ploopi\crypt::queryencode("ploopi_op=planning_event_detail_delete&planning_event_detail_id={$_GET['planning_event_detail_id']}")))); ?>" /><?php
                 }
                 ?>
                 <input type="submit" class="button" value="Enregistrer" />
             </div>
             </form>
-            <div style="border-top:1px solid #aaa;"><?php ploopi\annotation::display(_PLANNING_OBJECT_EVENT, $objEventDetail->fields['id'], $objEvent->fields['object']); ?></div>
+            <div class="p4-evform-annot" style="border-top:1px solid #aaa;"><?php ploopi\annotation::display(_PLANNING_OBJECT_EVENT, $objEventDetail->fields['id'], $objEvent->fields['object']); ?></div>
             <?php
         }
         ?>
@@ -400,24 +409,5 @@ switch($ploopi_op)
         ploopi\system::kill();
     break;
 
-    case 'planning_event_detail_delete':
-
-        include_once './modules/planning/classes/class_planning_event.php';
-        include_once './modules/planning/classes/class_planning_event_detail.php';
-
-        $objEventDetail = new planning_event_detail();
-
-        if (!empty($_GET['planning_event_detail_id']) && is_numeric($_GET['planning_event_detail_id']) && $objEventDetail->open($_GET['planning_event_detail_id']))
-        {
-
-            $objEvent = new planning_event();
-            if ($objEvent->open($objEventDetail->fields['id_event']) && $objEvent->fields['id_user'] == $_SESSION['ploopi']['userid'])
-            {
-                $objEventDetail->delete();
-            }
-        }
-        if (ploopi\crypt::urlencode($_SESSION['ploopi']['mode'] == 'backoffice')) ploopi\output::redirect("admin.php");
-        else ploopi\output::redirect($_SESSION['planning'][$_GET['planning_moduleid']]['article_url']);
-    break;
 }
 ?>

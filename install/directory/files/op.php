@@ -42,6 +42,9 @@ if ($_SESSION['ploopi']['connected'])
 
     if (ploopi\acl::ismoduleallowed('directory'))
     {
+        // Règles d'accès : directory_heading_ismanager(), directory_contact_is*()
+        ploopi\module::init('directory', false, false, false);
+
         switch($ploopi_op)
         {
             case 'directory_list_addnew':
@@ -51,7 +54,11 @@ if ($_SESSION['ploopi']['connected'])
 
                 $directory_list = new directory_list();
 
-                if (!empty($_GET['directory_favorites_id_list']) && is_numeric($_GET['directory_favorites_id_list'])) $directory_list->open($_GET['directory_favorites_id_list']);
+                if (!empty($_GET['directory_favorites_id_list']) && is_numeric($_GET['directory_favorites_id_list']))
+                {
+                    // Une liste de favoris n'appartient qu'à son propriétaire
+                    if (!$directory_list->open($_GET['directory_favorites_id_list']) || $directory_list->fields['id_user'] != $_SESSION['ploopi']['userid']) ploopi\system::kill();
+                }
                 else $directory_list->init_description();
 
                 ?>
@@ -92,10 +99,14 @@ if ($_SESSION['ploopi']['connected'])
 
                 $directory_list = new directory_list();
 
-                if (!empty($_POST['directory_favorites_id_list']) && is_numeric($_POST['directory_favorites_id_list'])) $directory_list->open($_POST['directory_favorites_id_list']);
+                if (!empty($_POST['directory_favorites_id_list']) && is_numeric($_POST['directory_favorites_id_list']))
+                {
+                    if (!$directory_list->open($_POST['directory_favorites_id_list']) || $directory_list->fields['id_user'] != $_SESSION['ploopi']['userid']) ploopi\output::redirect('admin.php?directoryTabItem=tabFavorites');
+                }
                 else $directory_list->setuwm();
 
-                $directory_list->setvalues($_POST, 'directory_list_');
+                // Seul le libellé se saisit : propriétaire et cloisonnement ne viennent pas du formulaire
+                $directory_list->setvalues(array_intersect_key($_POST, array('directory_list_label' => 1)), 'directory_list_');
                 $directory_favorites_id_list = $directory_list->save();
 
                 ploopi\output::redirect("admin.php?directoryTabItem=tabFavorites&directory_favorites_id_list={$directory_favorites_id_list}");
@@ -141,7 +152,7 @@ if ($_SESSION['ploopi']['connected'])
                 $intContactId = empty($_GET['directory_favorites_id_contact']) ? 0 : $_GET['directory_favorites_id_contact'];
                 ?>
                 <form action="<?php echo ploopi\crypt::urlencode("admin.php?ploopi_op=directory_favorites_add&directory_favorites_id_user={$intUserId}&directory_favorites_id_contact={$intContactId}"); ?>" method="post">
-                    <div style="padding:4px;background-color:#e0e0e0;border-bottom:1px solid #c0c0c0;">
+                    <div class="directory_bandeau">
                         <span style="font-weight:bold;">Modifier les rattachements :</span>
                         <br /><i>Choix d'une ou plusieurs listes</i>
                     </div>
@@ -176,7 +187,7 @@ if ($_SESSION['ploopi']['connected'])
                         }
                     }
                     ?>
-                    <div style="padding:4px;background-color:#e0e0e0;border-top:1px solid #c0c0c0;text-align:right;">
+                    <div class="directory_barre_boutons">
                         <input type="button" class="button" value="<?php echo _PLOOPI_CANCEL; ?>" onclick="javascript:ploopi.popup.hide('popup_directory_addtofavorites');">
                         <?php
                         if (!empty($arrLists))
@@ -206,6 +217,13 @@ if ($_SESSION['ploopi']['connected'])
             case 'directory_view':
                 if ((!empty($_GET['directory_id_contact']) && is_numeric($_GET['directory_id_contact'])) || (!empty($_GET['directory_id_user']) && is_numeric($_GET['directory_id_user'])))
                 {
+                    if (!empty($_GET['directory_id_contact']))
+                    {
+                        include_once './modules/directory/class_directory_contact.php';
+                        $directory_contact = new directory_contact();
+                        if (!$directory_contact->open($_GET['directory_id_contact']) || !directory_contact_isreadable($directory_contact->fields)) ploopi\system::kill();
+                    }
+
                     ploopi\module::init('directory');
                     include './modules/directory/public_directory_view.php';
                 }
@@ -221,7 +239,11 @@ if ($_SESSION['ploopi']['connected'])
                     include_once './modules/directory/class_directory_contact.php';
 
                     $directory_contact = new directory_contact();
-                    $directory_contact->open($_GET['directory_id_contact']);
+                    if (!$directory_contact->open($_GET['directory_id_contact']) || !directory_contact_ismodifiable($directory_contact->fields))
+                    {
+                        ob_end_clean();
+                        ploopi\system::kill();
+                    }
 
                     include './modules/directory/public_directory_form.php';
 
@@ -247,7 +269,8 @@ if ($_SESSION['ploopi']['connected'])
                 $directory_contact = new directory_contact();
                 if (!empty($_GET['directory_contact_id']) && is_numeric($_GET['directory_contact_id']))
                 {
-                    $directory_contact->open($_GET['directory_contact_id']);
+                    // Le contact existant doit être modifiable par l'utilisateur
+                    if (!$directory_contact->open($_GET['directory_contact_id']) || !directory_contact_ismodifiable($directory_contact->fields)) ploopi\output::redirect('admin.php');
                     $booForcePos = !empty($_POST['_directory_contact_forcepos']);
                 }
                 else $booForcePos = false;
@@ -267,6 +290,19 @@ if ($_SESSION['ploopi']['connected'])
                 }
 
                 $directory_contact->setvalues($_POST, 'directory_contact_');
+
+                /**
+                 * Contrôle sur l'état final : setvalues() accepte aussi
+                 * directory_contact_id_heading, donc un rattachement arbitraire. Un contact
+                 * personnel reste à son propriétaire, un contact partagé doit relever d'une
+                 * rubrique que l'utilisateur gère.
+                 */
+                if (!empty($directory_contact->fields['id_heading']))
+                {
+                    if (!directory_heading_ismanager($directory_contact->fields['id_heading'])) ploopi\output::redirect('admin.php');
+                }
+                elseif (!$directory_contact->new && $directory_contact->fields['id_user'] != $_SESSION['ploopi']['userid'] && !ploopi\acl::isadmin()) ploopi\output::redirect('admin.php');
+
                 $directory_contact->setuwm();
                 $directory_contact->save($booForcePos);
 
@@ -298,7 +334,7 @@ if ($_SESSION['ploopi']['connected'])
                 if (!empty($_GET['directory_contact_id']) && is_numeric($_GET['directory_contact_id']))
                 {
                     $directory_contact = new directory_contact();
-                    if ($directory_contact->open($_GET['directory_contact_id'])) {
+                    if ($directory_contact->open($_GET['directory_contact_id']) && directory_contact_ismodifiable($directory_contact->fields)) {
                         ploopi\user_action_log::record(_DIRECTORY_ACTION_CONTACT_DELETE, "{$directory_contact->fields['lastname']} {$directory_contact->fields['firstname']} (id:{$directory_contact->fields['id']})");
                         $directory_contact->delete();
                     }
@@ -350,7 +386,7 @@ if ($_SESSION['ploopi']['connected'])
                 if (!empty($_GET['directory_favorites_id_list']) && is_numeric($_GET['directory_favorites_id_list']))
                 {
                     $directory_list = new directory_list();
-                    if ($directory_list->open($_GET['directory_favorites_id_list'])) $directory_list->delete();
+                    if ($directory_list->open($_GET['directory_favorites_id_list']) && $directory_list->fields['id_user'] == $_SESSION['ploopi']['userid']) $directory_list->delete();
                 }
                 ploopi\output::redirect("admin.php?directoryTabItem=tabFavorites");
             break;
@@ -448,6 +484,9 @@ if ($_SESSION['ploopi']['connected'])
                 $objHeading = new directory_heading();
                 if (empty($_GET['directory_heading_id']) || !is_numeric($_GET['directory_heading_id']) || !$objHeading->open($_GET['directory_heading_id'])) ploopi\output::redirect('admin.php');
 
+                // Gestionnaires de la rubrique uniquement (la suppression emporte les sous-rubriques)
+                if (!directory_heading_ismanager($objHeading->fields['id'])) ploopi\output::redirect('admin.php');
+
                 $intIdParent = $objHeading->fields['id_heading'];
 
                 ploopi\user_action_log::record(_DIRECTORY_ACTION_HEADING_DELETE, "{$objHeading->fields['label']} (id:{$objHeading->fields['id']}, pos:{$objHeading->fields['position']})");
@@ -464,6 +503,9 @@ if ($_SESSION['ploopi']['connected'])
                 $objHeading = new directory_heading();
                 if (empty($_GET['directory_heading_id_heading']) || !is_numeric($_GET['directory_heading_id_heading']) || !$objHeading->open($_GET['directory_heading_id_heading']))
                 {
+                    // Une racine ne se crée que par l'administrateur, comme dans l'interface
+                    if (!ploopi\acl::isadmin()) ploopi\output::redirect('admin.php');
+
                     // calcul pos
                     $rs = ploopi\db::get()->query("SELECT max(position) AS maxpos FROM ploopi_mod_directory_heading WHERE id_heading = 0");
                     $row = ploopi\db::get()->fetchrow();
@@ -476,7 +518,8 @@ if ($_SESSION['ploopi']['connected'])
                     $objHeadingChild->fields['id_heading'] = 0;
                     $objHeadingChild->fields['position'] = $row['maxpos']+1;
                 }
-                else $objHeadingChild = $objHeading->create_child();
+                elseif (directory_heading_ismanager($objHeading->fields['id'])) $objHeadingChild = $objHeading->create_child();
+                else ploopi\output::redirect('admin.php');
 
                 $objHeadingChild->save();
 
@@ -493,8 +536,22 @@ if ($_SESSION['ploopi']['connected'])
 
                 if (empty($_GET['directory_heading_id']) || !is_numeric($_GET['directory_heading_id']) || !$objHeading->open($_GET['directory_heading_id'])) ploopi\output::redirect('admin.php');
 
-                $objHeading->setvalues($_POST, 'directory_heading_');
-                $objHeading->save(!empty($_POST['_directory_heading_forcepos']));
+                /**
+                 * Le gestionnaire de la rubrique en modifie les propriétés ; l'action
+                 * « gérer les gestionnaires » ne donne droit qu'à la liste des validateurs,
+                 * comme dans l'interface. Le rattachement (id_heading) ne vient jamais du
+                 * formulaire : il déplacerait la rubrique sous une autre.
+                 */
+                $booManager = directory_heading_ismanager($objHeading->fields['id']);
+                if (!$booManager && !ploopi\acl::isactionallowed(_DIRECTORY_ACTION_MANAGERS)) ploopi\output::redirect('admin.php');
+
+                if ($booManager)
+                {
+                    $intIdParent = $objHeading->fields['id_heading'];
+                    $objHeading->setvalues($_POST, 'directory_heading_');
+                    $objHeading->fields['id_heading'] = $intIdParent;
+                    $objHeading->save(!empty($_POST['_directory_heading_forcepos']));
+                }
 
                 ploopi\user_action_log::record(_DIRECTORY_ACTION_HEADING_MODIFY, "{$objHeading->fields['label']} (id:{$objHeading->fields['id']}, pos:{$objHeading->fields['position']})");
 
@@ -631,7 +688,7 @@ if ($_SESSION['ploopi']['connected'])
                 ploopi\module::init('directory', false, false, false);
                 global $arrDirectoryImportFields;
 
-                if (empty($_GET['directory_heading_id']) && !is_numeric($_GET['directory_heading_id'])) ploopi\system::kill();
+                if (empty($_GET['directory_heading_id']) || !is_numeric($_GET['directory_heading_id']) || !directory_heading_ismanager($_GET['directory_heading_id'])) ploopi\system::kill();
 
                 if (isset($_GET['directory_step']) && $_GET['directory_step'] == '2')
                 {
@@ -665,7 +722,7 @@ if ($_SESSION['ploopi']['connected'])
                             }
                         }
                         ?>
-                        <div style="margin:4px;padding:4px;border:1px solid #c0c0c0;background:#e0e0e0;">
+                        <div class="directory_encadre">
                             <div><?php echo $intCount; ?> contact(s) importés, <?php echo $intDoublon; ?> doublons détecté(s).</div>
                             <div style="text-align:right;">
                                 <input type="button" class="button" value="Continuer" onclick="javascript:document.location.href='<?php echo ploopi\crypt::urlencode('admin.php'); ?>';" style="font-weight:bold;" />
@@ -695,7 +752,7 @@ if ($_SESSION['ploopi']['connected'])
                         {
                             $ptrHandle = fopen($_FILES['directory_import_file']['tmp_name'], 'r');
 
-                            while (($arrLineData = fgetcsv($ptrHandle, null, $strSep)) !== FALSE)
+                            while (($arrLineData = fgetcsv($ptrHandle, null, $strSep, '"', '\\')) !== FALSE)
                             {
                                 if ($intCount == 0) $arrLineHeader = $arrLineData;
                                 else
@@ -716,7 +773,7 @@ if ($_SESSION['ploopi']['connected'])
                         $arrInvalidCols = array_diff($arrLineHeader, array_keys($arrDirectoryImportFields));
 
                         ?>
-                        <div style="margin:4px;padding:4px;border:1px solid #c0c0c0;background:#e0e0e0;">
+                        <div class="directory_encadre">
                             <div><strong>Le fichier envoyé (<?php echo ploopi\str::htmlentities($_FILES['directory_import_file']['name']); ?>) contient <?php echo $intCount; ?> ligne(s) et <?php echo sizeof($arrLineHeader) ?> colonnes dont <?php echo sizeof($arrLineHeader) - sizeof($arrInvalidCols) ?> sont connues.</strong></div>
                             <?php
                             if ($booDataError) echo '<div>Des erreurs de données ont été rencontrées</div>';
@@ -724,7 +781,7 @@ if ($_SESSION['ploopi']['connected'])
                             ?>
 
                             <div>Aperçu du fichier :</div>
-                            <div style="overflow:auto;border:1px solid #c0c0c0;margin:4px;padding:4px;background:#fff;"><?php echo ploopi\arr::tohtml($arrDataExcerpt); ?></div>
+                            <div class="directory_cadre_blanc"><?php echo ploopi\arr::tohtml($arrDataExcerpt); ?></div>
                             <div style="text-align:right;">
                                 <input type="button" class="button" value="Annuler" onclick="javascript:document.location.href='<?php echo ploopi\crypt::urlencode('admin.php'); ?>';"/>
                                 <?php
@@ -807,6 +864,9 @@ switch($ploopi_op)
         $directory_contact = new directory_contact();
         if (!empty($_GET['directory_contact_id']) && is_numeric($_GET['directory_contact_id']) && $directory_contact->open($_GET['directory_contact_id']))
         {
+            // Photo d'un contact personnel : son propriétaire seulement
+            if (empty($directory_contact->fields['id_heading']) && (empty($_SESSION['ploopi']['connected']) || $directory_contact->fields['id_user'] != $_SESSION['ploopi']['userid'])) ploopi\system::kill();
+
             $strPhotoPath = $directory_contact->getphotopath();
             if (file_exists($strPhotoPath)) ploopi\fs::downloadfile($strPhotoPath, 'contact.png', false, false);
         }

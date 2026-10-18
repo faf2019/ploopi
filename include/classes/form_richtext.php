@@ -25,7 +25,7 @@ namespace ploopi;
 use ploopi;
 
 /**
- * Gestion des champs de type "richtext" (ckeditor) de formulaires
+ * Gestion des champs de type "richtext" (éditeur du socle, js/editor.js) de formulaires
  *
  * @package ploopi
  * @subpackage form
@@ -42,11 +42,11 @@ class form_richtext extends form_field
      * @var array
      */
     private static $_arrDefaultOptions = array(
-        'width' => '100%',
-        'height' => '150px',
-        'config' => '/js/ckeditor/ck_config.js',
-        'css' => null,
-        'toolbar'=> null
+        'profile' => 'simple',      // profil de l'éditeur (js/editor.js) : simple, complet
+        'height' => null,           // hauteur minimale en pixels
+        'css' => null,              // feuilles du contenu (tableau d'URL)
+        'link' => null,             // URL de la fenêtre de choix d'un lien
+        'image' => null             // URL de la fenêtre de choix d'une image
     );
 
     /**
@@ -71,31 +71,29 @@ class form_richtext extends form_field
      */
     public function render($intTabindex = null)
     {
-        /*
-        $arrConfig = array();
-        if (!is_null($this->_arrOptions['config'])) $arrConfig['CustomConfigurationsPath'] = _PLOOPI_BASEPATH.$this->_arrOptions['config'];
-        if (!is_null($this->_arrOptions['css'])) $arrConfig['EditorAreaCSS'] = _PLOOPI_BASEPATH.$this->_arrOptions['css'];
+        /**
+         * Champ textarea déclaré par data-ploopi-editor : l'éditeur (TinyMCE) se crée seul
+         * (js/editor.js). La valeur est envoyée avec le formulaire (l'ancien éditeur remplaçait
+         * une balise <span> sans nom : rien n'était envoyé).
+         */
+        $arrAttributes = array(
+            'data-ploopi-editor' => $this->_arrOptions['profile'],
+            'data-ploopi-editor-height' => $this->_arrOptions['height'],
+            'data-ploopi-editor-css' => is_array($this->_arrOptions['css']) ? implode(',', $this->_arrOptions['css']) : $this->_arrOptions['css'],
+            'data-ploopi-editor-link' => $this->_arrOptions['link'],
+            'data-ploopi-editor-image' => $this->_arrOptions['image']
+        );
 
-        $arrProperties = array();
-        if (!is_null($this->_arrOptions['toolbar'])) $arrProperties['ToolbarSet'] = $this->_arrOptions['toolbar'];
-        */
+        $strAttributes = '';
+        foreach($arrAttributes as $strName => $mixValue)
+        {
+            if (!is_null($mixValue) && $mixValue !== '') $strAttributes .= ' '.$strName.'="'.str::htmlentities($mixValue).'"';
+        }
 
-        $strStyle = is_null($this->_arrOptions['style']) ? '' : " style=\"{$this->_arrOptions['style']}\"";
+        $strStyle = is_null($this->_arrOptions['style']) ? '' : ' style="'.str::htmlentities($this->_arrOptions['style']).'"';
+        $strTabindex = is_null($intTabindex) ? '' : ' tabindex="'.(int) $intTabindex.'"';
 
-        ob_start();
-        ?>
-        <span<? echo $strStyle; ?>><span id="<? echo $this->_strId; ?>"><? echo $this->_arrValues[0]; ?></span></span>
-        <script>
-
-            // http://docs.ckeditor.com/#!/guide/dev_file_browser_api
-            CKEDITOR.replace( '<? echo $this->_strId; ?>', {
-                customConfig: '<?php echo _PLOOPI_BASEPATH.$this->_arrOptions['config']; ?>'
-            });
-        </script>
-
-        <?
-        $strContent = ob_get_contents();
-        ob_end_clean();
+        $strContent = '<textarea id="'.str::htmlentities($this->_strId).'" name="'.str::htmlentities($this->_strName).'"'.$strStyle.$strTabindex.$strAttributes.'>'.str::htmlentities($this->_arrValues[0]).'</textarea>';
 
         return $this->renderForm($strContent);
     }

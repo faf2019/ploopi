@@ -68,16 +68,20 @@ class block
      * @param string $url adresse du lien vers le menu
      * @param boolean $selected true si le menu est sélectionné (optionnel, false par défaut)
      * @param string $target cible du lien (optionnel, par défaut vide)
+     * @param string $icon nom d'icône du jeu du gabarit (optionnel, ignoré par les gabarits qui n'en affichent pas)
+     * @param string $section intitulé de la section du menu (optionnel : les entrées consécutives de même section sont regroupées)
      */
 
-    public function addmenu($label, $url, $selected = false, $target = '')
+    public function addmenu($label, $url, $selected = false, $target = '', $icon = '', $section = '')
     {
         $this->menu[] = array(
             'label' => $label,
             'cleaned_label' => str::htmlentities(trim(str_replace('&nbsp;', ' ', strip_tags($label)))),
             'url' => $url,
             'selected' => $selected,
-            'target' => $target
+            'target' => $target,
+            'icon' => preg_replace('/[^a-z0-9-]/', '', strtolower($icon)),
+            'section' => $section
         );
     }
 

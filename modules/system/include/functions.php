@@ -295,11 +295,11 @@ function system_build_tree($typetree, $from_wid = 1, $from_gid = 0)
                     else $marginleft = 20;
 
                     $html .=    "
-                                <div style=\"overflow:auto;{$bg}\">
+                                <div class=\"system_tree_node\" style=\"overflow:auto;{$bg}\">
                                     <div>
                                         {$node}<img style=\"display:block;float:left;\" src=\"{$_SESSION['ploopi']['template_path']}/img/treeview/{$icon}.png\" />
                                         <span style=\"display:block;margin-left:".($marginleft+20)."px;line-height:18px;\">
-                                            <a style=\"font-weight:{$style_sel};\" href=\"".ploopi\crypt::urlencode("admin.php?groupid={$group['id']}")."\">".ploopi\str::htmlentities($group['label'])."</a>
+                                            <a class=\"system_tree_link".($style_sel == 'bold' ? ' selected' : '')."\" style=\"font-weight:{$style_sel};\" href=\"".ploopi\crypt::urlencode("admin.php?groupid={$group['id']}")."\">".ploopi\str::htmlentities($group['label'])."</a>
                                         </span>
                                     </div>
                                     <div style=\"margin-left:{$marginleft}px;display:{$display};\" id=\"g{$group['id']}\">{$html_rec}</div>
@@ -366,11 +366,11 @@ function system_build_tree($typetree, $from_wid = 1, $from_gid = 0)
                     else $marginleft = 20;
 
                     $html .=    "
-                                <div style=\"overflow:auto;{$bg}\">
+                                <div class=\"system_tree_node\" style=\"overflow:auto;{$bg}\">
                                     <div>
                                         {$node}<img style=\"display:block;float:left;\" src=\"{$_SESSION['ploopi']['template_path']}/img/treeview/{$icon}.png\" />
                                         <span style=\"display:block;margin-left:".($marginleft+20)."px;line-height:18px;\">
-                                            <a style=\"font-weight:{$style_sel};\" href=\"".ploopi\crypt::urlencode("admin.php?workspaceid={$workspace['id']}")."\">".ploopi\str::htmlentities($workspace['label'])."</a>
+                                            <a class=\"system_tree_link".($style_sel == 'bold' ? ' selected' : '')."\" style=\"font-weight:{$style_sel};\" href=\"".ploopi\crypt::urlencode("admin.php?workspaceid={$workspace['id']}")."\">".ploopi\str::htmlentities($workspace['label'])."</a>
                                         </span>
                                     </div>
                                     <div style=\"margin-left:{$marginleft}px;display:{$display};\" id=\"w{$workspace['id']}\">{$html_rec}</div>
@@ -441,11 +441,11 @@ function system_build_tree($typetree, $from_wid = 1, $from_gid = 0)
                         $display = ($html_rec == '') ? 'none' : 'block';
 
                         $html .=    "
-                                    <div style=\"overflow:auto;{$bg}\">
+                                    <div class=\"system_tree_node\" style=\"overflow:auto;{$bg}\">
                                         <div>
                                             {$node}<img style=\"display:block;float:left;\" src=\"{$_SESSION['ploopi']['template_path']}/img/treeview/{$icon}.png\" />
                                             <span style=\"display:block;margin-left:40px;line-height:18px;\">
-                                                <a style=\"font-weight:{$style_sel};\" href=\"".ploopi\crypt::urlencode("admin.php?groupid={$group['id']}")."\">{$group['label']}</a>
+                                                <a class=\"system_tree_link".($style_sel == 'bold' ? ' selected' : '')."\" style=\"font-weight:{$style_sel};\" href=\"".ploopi\crypt::urlencode("admin.php?groupid={$group['id']}")."\">".ploopi\str::htmlentities($group['label'])."</a>
                                             </span>
                                         </div>
                                         <div style=\"margin-left:20px;display:{$display};\" id=\"g{$group['id']}\">{$html_rec}</div>
@@ -460,6 +460,247 @@ function system_build_tree($typetree, $from_wid = 1, $from_gid = 0)
     }
 
     return $html;
+}
+
+/**
+ * Arborescence des espaces et des groupes sous forme de données (écrans des
+ * gabarits de génération 4). Même parcours que system_build_tree() : sous un
+ * espace, ses groupes puis ses sous-espaces ; sous un groupe, ses sous-groupes.
+ *
+ * @param string $typetree 'workspaces' ou 'groups'
+ * @param int $from_wid espace de départ
+ * @param int $from_gid groupe de départ
+ * @return array nœuds : type ('workspace'|'group'), id, label, frontoffice, children
+ */
+
+function system_tree_nodes($typetree, $from_wid = 1, $from_gid = 0)
+{
+    global $workspaces;
+    global $groups;
+
+    $arrNodes = array();
+
+    if ($typetree == 'workspaces')
+    {
+        if (isset($groups['workspace_tree'][$from_wid]))
+        {
+            foreach($groups['workspace_tree'][$from_wid] as $gid)
+            {
+                $arrNodes[] = array(
+                    'type' => 'group',
+                    'id' => $gid,
+                    'label' => $groups['list'][$gid]['label'],
+                    'children' => system_tree_nodes('groups', 0, $gid)
+                );
+            }
+        }
+
+        if (isset($workspaces['tree'][$from_wid]))
+        {
+            foreach($workspaces['tree'][$from_wid] as $wid)
+            {
+                $arrNodes[] = array(
+                    'type' => 'workspace',
+                    'id' => $wid,
+                    'label' => $workspaces['list'][$wid]['label'],
+                    'frontoffice' => !empty($workspaces['list'][$wid]['frontoffice']),
+                    'children' => system_tree_nodes('workspaces', $wid, 0)
+                );
+            }
+        }
+    }
+    else
+    {
+        if ($from_gid == 0) $from_gid = 1;
+
+        if (isset($groups['tree'][$from_gid]))
+        {
+            foreach($groups['tree'][$from_gid] as $gid)
+            {
+                if (!empty($groups['list'][$gid]['id_workspace'])) continue;
+
+                $arrNodes[] = array(
+                    'type' => 'group',
+                    'id' => $gid,
+                    'label' => $groups['list'][$gid]['label'],
+                    'children' => system_tree_nodes('groups', 0, $gid)
+                );
+            }
+        }
+    }
+
+    return $arrNodes;
+}
+
+/**
+ * Nombre d'utilisateurs rattachés directement à chaque espace et à chaque groupe
+ *
+ * @return array ['workspace' => [id => nb], 'group' => [id => nb]]
+ */
+
+function system_tree_counts()
+{
+    $db = ploopi\db::get();
+    $arrCounts = array('workspace' => array(), 'group' => array());
+
+    $rs = $db->query("SELECT id_workspace, COUNT(*) AS nb FROM ploopi_workspace_user GROUP BY id_workspace");
+    while ($row = $db->fetchrow($rs)) $arrCounts['workspace'][$row['id_workspace']] = (int) $row['nb'];
+
+    $rs = $db->query("SELECT id_group, COUNT(*) AS nb FROM ploopi_group_user GROUP BY id_group");
+    while ($row = $db->fetchrow($rs)) $arrCounts['group'][$row['id_group']] = (int) $row['nb'];
+
+    return $arrCounts;
+}
+
+/**
+ * Indique si l'utilisateur connecté peut administrer un utilisateur : administrateur
+ * système, ou utilisateur rattaché (directement ou par un groupe) à un espace ou à
+ * un groupe que l'administrateur courant voit dans l'arborescence (system_getwg).
+ *
+ * @param int $intUserId identifiant de l'utilisateur
+ * @return boolean true si l'utilisateur est administrable
+ */
+
+function system_user_isadministrable($intUserId)
+{
+    if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_SYSTEMADMIN) return true;
+    if (!ploopi\acl::ismanager()) return false;
+
+    list($arrWorkspaces, $arrGroups) = system_getwg();
+
+    $db = ploopi\db::get();
+    $intUserId = (int) $intUserId;
+
+    $rs = $db->query("SELECT id_workspace FROM ploopi_workspace_user WHERE id_user = {$intUserId}");
+    while ($row = $db->fetchrow($rs)) if (isset($arrWorkspaces['list'][$row['id_workspace']])) return true;
+
+    $rs = $db->query("SELECT id_group FROM ploopi_group_user WHERE id_user = {$intUserId}");
+    while ($row = $db->fetchrow($rs)) if (isset($arrGroups['list'][$row['id_group']])) return true;
+
+    return false;
+}
+
+/**
+ * Niveau le plus élevé d'utilisateurs dans les espaces : rattachement direct
+ * (ploopi_workspace_user) ou par un groupe (ploopi_workspace_group). Un rattachement à
+ * un groupe ne porte pas de niveau : c'est celui-ci qui compte pour le détacher.
+ *
+ * @param array $arrUserIds identifiants des utilisateurs
+ * @return array niveau le plus élevé par identifiant (0 si aucun rattachement)
+ */
+
+function system_users_maxlevel($arrUserIds)
+{
+    $arrUserIds = array_unique(array_map('intval', $arrUserIds));
+    $arrLevels = array_fill_keys($arrUserIds, 0);
+    if (empty($arrUserIds)) return $arrLevels;
+
+    $db = ploopi\db::get();
+    $strIds = implode(',', $arrUserIds);
+
+    $rs = $db->query("
+        SELECT  id_user, MAX(adminlevel) AS adminlevel FROM ploopi_workspace_user WHERE id_user IN ({$strIds}) GROUP BY id_user
+        UNION ALL
+        SELECT  gu.id_user, MAX(wg.adminlevel) FROM ploopi_group_user gu INNER JOIN ploopi_workspace_group wg ON wg.id_group = gu.id_group WHERE gu.id_user IN ({$strIds}) GROUP BY gu.id_user
+    ");
+    while ($row = $db->fetchrow($rs)) $arrLevels[$row['id_user']] = max($arrLevels[$row['id_user']], (int) $row['adminlevel']);
+
+    return $arrLevels;
+}
+
+/**
+ * Indique si l'administrateur connecté peut détacher un utilisateur d'un groupe : le
+ * niveau le plus élevé de l'utilisateur dans les espaces ne dépasse pas le sien (tous
+ * pour l'administrateur système)
+ *
+ * @param int $intUserId identifiant de l'utilisateur
+ * @return boolean true si l'utilisateur peut être détaché
+ */
+
+function system_user_isdetachable($intUserId)
+{
+    if ($_SESSION['ploopi']['adminlevel'] >= _PLOOPI_ID_LEVEL_SYSTEMADMIN) return true;
+
+    $arrLevels = system_users_maxlevel(array($intUserId));
+
+    return $arrLevels[(int) $intUserId] <= $_SESSION['ploopi']['adminlevel'];
+}
+
+/**
+ * Identifiants des groupes dont les utilisateurs peuvent être rattachés à l'entité
+ * courante de l'administration (groupe ou espace), pour un administrateur qui n'est
+ * pas administrateur système : mêmes règles que la liste « Rattacher un utilisateur ».
+ *
+ * @return array identifiants des groupes
+ */
+
+function system_attach_groups()
+{
+    global $workspaces, $groups, $workspaceid, $groupid;
+
+    if ($_SESSION['system']['level'] == _SYSTEM_GROUPS) return empty($groups['list'][$groupid]['groups']) ? array() : array_map('intval', array_keys($groups['list'][$groupid]['groups']));
+
+    return empty($workspaces['list'][$workspaceid]['groups']) ? array() : array_map('intval', array_keys($workspaces['list'][$workspaceid]['groups']));
+}
+
+/**
+ * Indique si un utilisateur peut être rattaché à l'entité courante de l'administration
+ * (groupe ou espace) : il n'y est pas déjà, et il appartient à un groupe que
+ * l'administrateur peut proposer (tous pour l'administrateur système). Dans un groupe,
+ * les utilisateurs rattachés à aucun groupe sont aussi proposés.
+ *
+ * @param int $intUserId identifiant de l'utilisateur
+ * @return boolean true si l'utilisateur peut être rattaché
+ */
+
+function system_user_isattachable($intUserId)
+{
+    global $workspaceid, $groupid;
+
+    $db = ploopi\db::get();
+    $intUserId = (int) $intUserId;
+
+    if (!$db->numrows($db->query("SELECT id FROM ploopi_user WHERE id = {$intUserId}"))) return false;
+
+    if ($_SESSION['system']['level'] == _SYSTEM_GROUPS)
+    {
+        if ($db->numrows($db->query("SELECT id_user FROM ploopi_group_user WHERE id_group = ".((int) $groupid)." AND id_user = {$intUserId}"))) return false;
+        if (!$db->numrows($db->query("SELECT id_user FROM ploopi_group_user WHERE id_user = {$intUserId}"))) return true;
+    }
+    else
+    {
+        if ($db->numrows($db->query("SELECT id_user FROM ploopi_workspace_user WHERE id_workspace = ".((int) $workspaceid)." AND id_user = {$intUserId}"))) return false;
+    }
+
+    if (ploopi\acl::isadmin()) return (bool) $db->numrows($db->query("SELECT id_user FROM ploopi_group_user WHERE id_user = {$intUserId}"));
+
+    $arrAllowed = system_attach_groups();
+    if (empty($arrAllowed)) return false;
+
+    return (bool) $db->numrows($db->query("SELECT id_user FROM ploopi_group_user WHERE id_user = {$intUserId} AND id_group IN (".implode(',', $arrAllowed).")"));
+}
+
+/**
+ * Indique si un groupe peut être rattaché à l'espace courant de l'administration :
+ * groupe non système, pas déjà rattaché, et proposé à l'administrateur (tous pour
+ * l'administrateur système).
+ *
+ * @param int $intGroupId identifiant du groupe
+ * @return boolean true si le groupe peut être rattaché
+ */
+
+function system_group_isattachable($intGroupId)
+{
+    global $workspaces, $workspaceid;
+
+    $db = ploopi\db::get();
+    $intGroupId = (int) $intGroupId;
+
+    if (!$db->numrows($db->query("SELECT id FROM ploopi_group WHERE id = {$intGroupId} AND system = 0"))) return false;
+    if ($db->numrows($db->query("SELECT id_group FROM ploopi_workspace_group WHERE id_workspace = ".((int) $workspaceid)." AND id_group = {$intGroupId}"))) return false;
+    if (ploopi\acl::isadmin()) return true;
+
+    return isset($workspaces['list'][$workspaceid]['groups'][$intGroupId]);
 }
 
 function system_getallworkspaces($idworkspacetop = '')
@@ -632,27 +873,89 @@ function system_tickets_displayresponses($parents, $tickets, $rootid)
     }
 }
 
+/**
+ * Réponses d'un message, gabarits de génération 4 : fil de réponses dépliables
+ * (expéditeur, date, message, Répondre / Modifier), imbriquées comme les réponses.
+ *
+ * Mêmes données que system_tickets_displayresponses(), mêmes opérations historiques
+ * (tickets_replyto, tickets_modify) par include/p4.js.
+ *
+ * @param array $parents identifiants des réponses par message parent
+ * @param array $tickets réponses par identifiant
+ * @param int $rootid message dont on affiche les réponses
+ */
+
+function system_tickets_p4_responses($parents, $tickets, $rootid)
+{
+    sort($parents[$rootid]);
+
+    $arrToday = ploopi\date::timestamp2local(ploopi\date::createtimestamp());
+
+    echo '<ul class="p4-thread">';
+
+    foreach($parents[$rootid] as $intTicketId)
+    {
+        $arrFields = $tickets[$intTicketId];
+        $intId = (int) $arrFields['id'];
+
+        $arrLocal = ploopi\date::timestamp2local($arrFields['timestp']);
+        $strDate = ($arrLocal['date'] == $arrToday['date'] ? _SYSTEM_MSG_TODAY : $arrLocal['date']).' '.substr($arrLocal['time'], 0, 5);
+        $strSender = trim("{$arrFields['firstname']} {$arrFields['lastname']}");
+        $strInitials = mb_strtoupper(mb_substr($arrFields['firstname'], 0, 1).mb_substr($arrFields['lastname'], 0, 1));
+        $booUnread = is_null($arrFields['status']);
+
+        $arrActs = array(array('label' => _SYSTEM_MSG_REPLY, 'icon' => 'arrow-back-up', 'class' => 'ghost sm', 'attrs' => array('data-p4-ticket-open' => "ploopi_op=tickets_replyto&ticket_id={$intId}")));
+        if ($arrFields['sender_uid'] == $_SESSION['ploopi']['userid']) $arrActs[] = array('label' => _SYSTEM_LABEL_MODIFY, 'icon' => 'pencil', 'class' => 'ghost sm', 'attrs' => array('data-p4-ticket-open' => "ploopi_op=tickets_modify&ticket_id={$intId}"));
+        ?>
+        <li class="p4-thread-item<?php if ($booUnread) echo ' p4-ticket-new'; ?>" data-p4-ticket-item="<?php echo $intId; ?>">
+            <button type="button" class="p4-ticket-toggle" data-p4-ticket="<?php echo $intId; ?>" data-p4-ticket-reply aria-expanded="false" aria-controls="tickets_detail_<?php echo $intId; ?>">
+                <span class="p4-avatar p4-avatar-sm p4-av-<?php echo (ord($strInitials) ?: 0) % 5; ?>"><?php echo ploopi\system\ui::e($strInitials); ?></span>
+                <span class="p4-ticket-main">
+                    <span class="p4-ticket-from"><?php echo ploopi\system\ui::e($strSender); ?></span>
+                    <span class="p4-ticket-title<?php if ($booUnread) echo ' p4-unread'; ?>" id="tickets_title_<?php echo $intId; ?>"><?php echo ploopi\system\ui::e(html_entity_decode(strip_tags($arrFields['title']), ENT_QUOTES, 'UTF-8')); ?></span>
+                </span>
+                <span class="p4-ticket-meta">
+                    <time class="p4-ticket-date"><?php echo ploopi\system\ui::e($strDate); ?></time>
+                    <span class="p4-ticket-unreaddot" title="<?php echo ploopi\system\ui::e(_SYSTEM_MSG_NEW); ?>"></span>
+                </span>
+            </button>
+            <div class="p4-thread-detail" id="tickets_detail_<?php echo $intId; ?>" hidden>
+                <div class="p4-ticket-message p4-legacy"><?php echo ploopi\str::make_links($arrFields['message']); ?></div>
+                <?php
+                if ($arrFields['lastedit_timestp'])
+                {
+                    $arrEdit = ploopi\date::timestamp2local($arrFields['lastedit_timestp']);
+                    echo '<p class="p4-text-xs p4-muted">'.ploopi\system\ui::e(str_replace(array('<DATE>', '<TIME>'), array($arrEdit['date'], $arrEdit['time']), _SYSTEM_MSG_EDITED_ON)).'</p>';
+                }
+                echo '<div class="p4-row p4-wrap p4-ticket-actions">'.ploopi\system\ui::actions($arrActs).'</div>';
+                ?>
+            </div>
+            <?php if (isset($parents[$intTicketId])) system_tickets_p4_responses($parents, $tickets, $intTicketId); ?>
+        </li>
+        <?php
+    }
+
+    echo '</ul>';
+}
+
 function system_serverload_getcolor($min, $max, $x)
 {
-    $mil = ($min+$max)/2;
+    // Du vert (valeur minimale) au rouge (valeur maximale), en teintes claires
+    // sur lesquelles le texte reste lisible (TSL : saturation 60 %, luminosité 82 %)
+    $fltRatio = ($max > $min) ? max(0, min(1, ($x - $min) / ($max - $min))) : 0;
+    $fltTeinte = 130 * (1 - $fltRatio);
+    $fltSat = 0.60;
+    $fltLum = 0.82;
 
-    $r = 0;
-    $v = 0;
-    $b = 128;
+    $fltC = (1 - abs(2 * $fltLum - 1)) * $fltSat;
+    $fltX = $fltC * (1 - abs(fmod($fltTeinte / 60, 2) - 1));
+    $fltM = $fltLum - $fltC / 2;
 
-    if ($x<=$mil)
-    {
-        $v = 255;
-        $r = 127+($x*128)/$mil;
-    }
-    else
-    {
-        $r = 255;
-        if ($x>$max) $v = 127;
-        else $v = 127+(($max-$x)*128)/$mil;
-    }
+    if ($fltTeinte < 60) list($r, $v, $b) = array($fltC, $fltX, 0);
+    elseif ($fltTeinte < 120) list($r, $v, $b) = array($fltX, $fltC, 0);
+    else list($r, $v, $b) = array(0, $fltC, $fltX);
 
-    return $color = sprintf("#%02x%02x%02x",$r,$v,$b);
+    return sprintf("#%02x%02x%02x", round(($r + $fltM) * 255), round(($v + $fltM) * 255), round(($b + $fltM) * 255));
 }
 
 /**
@@ -680,11 +983,43 @@ function system_getparents($parents, $type)
 
 
 /**
- * Formatage d'un numéro de téléphone
+ * Indique si un rôle est administrable depuis l'espace courant : il doit appartenir
+ * à cet espace, ou à un de ses parents et être partagé — la même règle que la
+ * liste des rôles de l'écran d'administration (admin_index_roles_management.php).
+ * Sans ce contrôle, un gestionnaire d'espace affectait par identifiant un rôle
+ * d'un autre espace à n'importe quel utilisateur, dans son propre espace.
  *
- * @param string $strPhone numéro de téléphone à formater
- * @return string numéro formaté
+ * @param int $intRole identifiant du rôle
+ * @param int $intWorkspace identifiant de l'espace courant
+ * @return boolean true si le rôle est administrable depuis cet espace
  */
+function system_isroleallowed($intRole, $intWorkspace)
+{
+    $db = ploopi\db::get();
+
+    $db->query("
+        SELECT      w.parents
+        FROM        ploopi_workspace w
+        WHERE       w.id = ".(int)$intWorkspace."
+    ");
+    $arrWorkspace = $db->fetchrow();
+
+    $strParents = empty($arrWorkspace['parents']) ? '0' : str_replace(';', ',', trim($arrWorkspace['parents'], ';'));
+
+    $db->query("
+        SELECT      r.id
+        FROM        ploopi_role r
+        WHERE       r.id = ".(int)$intRole."
+        AND         (
+                        r.id_workspace = ".(int)$intWorkspace."
+                        OR (r.id_workspace IN ({$strParents}) AND r.shared = 1)
+                    )
+    ");
+    $arrRole = $db->fetchrow();
+
+    return !empty($arrRole);
+}
+
 function system_directory_formatphone($strPhone)
 {
     $strPhone = preg_replace('@[^0-9\+\(\)]@i', '', $strPhone);
@@ -696,4 +1031,257 @@ function system_directory_formatphone($strPhone)
     return $strPhone;
 }
 
-?>
+
+/**
+ * Supprime d'un module déployé les fichiers retirés de son paquet.
+ *
+ * La mise à jour d'un module recopie install/<module>/files sans rien retirer : un
+ * fichier disparu du paquet restait en place, inerte ou pire (l'ancien jpgraph de
+ * forms). Le paquet déclare ses retraits dans install/<module>/obsolete.txt, un
+ * chemin relatif au module par ligne (fichier ou dossier), « # » pour un commentaire.
+ *
+ * Seuls les chemins faits de lettres, chiffres, « . », « - », « _ » et « / », sans
+ * segment « .. », et situés réellement sous le dossier du module sont supprimés.
+ *
+ * @param string $strListe chemin de obsolete.txt
+ * @param string $strModule dossier du module déployé (modules/<module>)
+ * @return array chemins supprimés, relatifs au module
+ */
+function system_module_purgeobsolete($strListe, $strModule)
+{
+    $arrSupprimes = array();
+
+    if (!is_file($strListe) || ($strRacine = realpath($strModule)) === false) return $arrSupprimes;
+
+    foreach(file($strListe, FILE_IGNORE_NEW_LINES) as $strLigne)
+    {
+        $strChemin = trim(preg_replace('/#.*$/', '', $strLigne));
+        if ($strChemin === '') continue;
+
+        $strChemin = trim($strChemin, '/');
+        if (!preg_match('@^[A-Za-z0-9._/-]+$@', $strChemin) || in_array('..', explode('/', $strChemin), true)) continue;
+
+        $strReel = realpath($strRacine.'/'.$strChemin);
+        if ($strReel === false || strpos($strReel, $strRacine.'/') !== 0) continue;
+
+        if (is_dir($strReel)) ploopi\fs::deletedir($strReel);
+        elseif (is_file($strReel)) unlink($strReel);
+
+        if (!file_exists($strReel)) $arrSupprimes[] = $strChemin;
+    }
+
+    return $arrSupprimes;
+}
+
+/**
+ * Ouverture d'un bloc d'écran : carte pour les gabarits de génération 4, bloc
+ * historique (open_simplebloc) sinon. Sous ploopi4, un titre identique à celui de la
+ * page ($GLOBALS['system_p4_pagetitle']) n'est pas répété.
+ *
+ * @param string $strTitle titre (html historique accepté)
+ * @param string $strIcon icône (ploopi4)
+ * @return string code html
+ */
+
+function system_open_bloc($strTitle = '', $strIcon = '')
+{
+    if (ploopi\skin::get()->version() < 4) return ploopi\skin::get()->open_simplebloc($strTitle);
+
+    $strTitle = trim(html_entity_decode(strip_tags((string) $strTitle), ENT_QUOTES, 'UTF-8'));
+    if (isset($GLOBALS['system_p4_pagetitle']) && $strTitle == $GLOBALS['system_p4_pagetitle']) $strTitle = '';
+
+    return ploopi\system\ui::card_open($strTitle, $strTitle == '' ? '' : $strIcon, array(), array('class' => 'p4-legacy-card'));
+}
+
+/**
+ * Fermeture d'un bloc ouvert par system_open_bloc()
+ *
+ * @return string code html
+ */
+
+function system_close_bloc()
+{
+    return ploopi\skin::get()->version() < 4 ? ploopi\skin::get()->close_simplebloc() : ploopi\system\ui::card_close();
+}
+
+/**
+ * Tableau d'un écran de system : tableau filtrable de ploopi4 (ploopi\system\ui::table)
+ * pour les gabarits de génération 4, display_array() historique sinon. Mêmes colonnes,
+ * mêmes valeurs.
+ *
+ * @param array $arrColumns colonnes
+ * @param array $arrValues lignes
+ * @param string $strId identifiant du tableau historique
+ * @param array $arrOptions options de display_array (et de ui::table : filter, empty, count)
+ */
+
+function system_display_array($arrColumns, $arrValues, $strId, $arrOptions = array())
+{
+    if (ploopi\skin::get()->version() < 4) ploopi\skin::get()->display_array($arrColumns, $arrValues, $strId, $arrOptions);
+    else echo ploopi\system\ui::table($arrColumns, $arrValues, $arrOptions + array('limit' => 50, 'empty' => _SYSTEM_TABLE_EMPTY));
+}
+
+/**
+ * Indique si l'utilisateur connecté peut lire un message de la messagerie : il en est
+ * l'émetteur ou un destinataire (message racine, ou fil auquel appartient la réponse).
+ *
+ * @param int $intTicketId identifiant du message
+ * @return boolean true si le message est lisible
+ */
+
+function system_ticket_isallowed($intTicketId)
+{
+    $db = ploopi\db::get();
+    $intTicketId = (int) $intTicketId;
+    $intUserId = (int) $_SESSION['ploopi']['userid'];
+
+    $rs = $db->query("SELECT id, root_id, id_user FROM ploopi_ticket WHERE id = {$intTicketId}");
+    if (!($row = $db->fetchrow($rs))) return false;
+
+    $intRootId = empty($row['root_id']) ? $intTicketId : (int) $row['root_id'];
+
+    $rs = $db->query("
+        SELECT  t.id
+        FROM    ploopi_ticket t
+        WHERE   t.id IN ({$intTicketId}, {$intRootId})
+        AND     (t.id_user = {$intUserId} OR t.id IN (SELECT td.id_ticket FROM ploopi_ticket_dest td WHERE td.id_user = {$intUserId}))
+    ");
+
+    return $db->numrows($rs) > 0;
+}
+
+/**
+ * Résultats de la recherche intégrale dans l'espace courant : écran de recherche et
+ * suggestions à la frappe du shell ploopi4 (opération system_search_suggest).
+ *
+ * Seuls comptent les modules actifs de l'espace courant (un seul si $mixModule en
+ * désigne un), les types d'objets déclarés dans leur métabase et les enregistrements
+ * que le module autorise (<module>_record_isenabled).
+ *
+ * @param string $strKeywords termes cherchés
+ * @param mixed $mixModule instance de module, ou '' pour toutes celles de l'espace
+ * @param int $intLimit nombre maximal de résultats (0 : pas de limite)
+ * @param array $arrOptions options de ploopi\search_index::search() (prefix…)
+ * @return array résultats par pertinence décroissante : champs de l'index (id_object,
+ *         id_record, id_module, id_workspace, id_user, label, relevance, timestp_create,
+ *         timestp_lastindex), module (libellé de l'instance), module_type, object
+ *         (libellé du type d'objet) et link (URL chiffrée de l'enregistrement)
+ */
+
+function system_search_results($strKeywords, $mixModule = '', $intLimit = 0, $arrOptions = array())
+{
+    $db = ploopi\db::get();
+
+    $arrAvailableModules = array();
+    foreach ($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['modules'] as $intModule)
+    {
+        if (!empty($_SESSION['ploopi']['modules'][$intModule]['active'])) $arrAvailableModules[] = (int) $intModule;
+    }
+
+    // Aucun module dans l'espace : rien à chercher (la requête suivante serait invalide)
+    if (empty($arrAvailableModules) || trim((string) $strKeywords) === '') return array();
+
+    // Types d'objets de la métabase, par instance de module
+    $arrObjectTypes = array();
+    $rs = $db->query('
+        SELECT      mbo.*,
+                    m.id AS module_id,
+                    m.label AS module_label,
+                    mt.label AS module_type
+        FROM        ploopi_mb_object mbo
+        INNER JOIN  ploopi_module m
+        ON          m.id_module_type = mbo.id_module_type
+        AND         m.id IN ('.implode(',', $arrAvailableModules).')
+        INNER JOIN  ploopi_module_type mt
+        ON          mt.id = mbo.id_module_type
+    ');
+
+    while ($row = $db->fetchrow($rs))
+    {
+        if (empty($arrObjectTypes[$row['module_id']])) $arrObjectTypes[$row['module_id']] = array('label' => $row['module_label'], 'type' => $row['module_type'], 'objects' => array());
+        $arrObjectTypes[$row['module_id']]['objects'][$row['id']] = array('label' => $row['label'], 'script' => $row['script']);
+    }
+
+    $mixModule = ($mixModule !== '' && in_array((int) $mixModule, $arrAvailableModules)) ? (int) $mixModule : $arrAvailableModules;
+
+    $arrResults = array();
+    foreach (ploopi\search_index::search($strKeywords, -1, '', $mixModule, $arrOptions) as $row)
+    {
+        if (!isset($arrObjectTypes[$row['id_module']]['objects'][$row['id_object']])) continue;
+
+        $strType = $arrObjectTypes[$row['id_module']]['type'];
+
+        // Fonctions du module, dont l'éventuel contrôle d'accès aux enregistrements
+        ploopi\module::init($strType, false, false, false);
+        $strFunc = "{$strType}_record_isenabled";
+        if (function_exists($strFunc) && !$strFunc($row['id_object'], $row['id_record'], $row['id_module'])) continue;
+
+        $strScript = str_replace(
+            array('<IDRECORD>', '<IDMODULE>', '<IDWORKSPACE>'),
+            array($row['id_record'], $row['id_module'], $row['id_workspace']),
+            (string) $arrObjectTypes[$row['id_module']]['objects'][$row['id_object']]['script']
+        );
+
+        $arrResults[] = $row + array(
+            'module' => $arrObjectTypes[$row['id_module']]['label'],
+            'module_type' => $strType,
+            'object' => $arrObjectTypes[$row['id_module']]['objects'][$row['id_object']]['label'],
+            'link' => ploopi\crypt::urlencode("admin.php?ploopi_mainmenu=1&{$strScript}")
+        );
+
+        if ($intLimit && sizeof($arrResults) >= $intLimit) break;
+    }
+
+    return $arrResults;
+}
+
+/**
+ * Configuration de PHP (phpinfo()) en lignes, pour l'outil « Configuration de PHP »
+ * sous ploopi4 : rendue dans le thème de l'écran plutôt que dans un cadre au fond blanc.
+ *
+ * La page de phpinfo() est lue comme un document HTML : chaque titre de section (h2)
+ * ouvre une section, chaque ligne de tableau à cellules « e » (directive) et « v »
+ * (valeurs) donne une ligne. Les valeurs sont reprises en texte.
+ *
+ * @return array lignes : array('section' => …, 'directive' => …, 'local' => …, 'master' => …)
+ *               (master vide quand la valeur principale égale la valeur locale)
+ */
+
+function system_phpinfo_rows()
+{
+    ob_start();
+    phpinfo();
+    $strHtml = ob_get_clean();
+
+    $objDom = new DOMDocument();
+    if (!@$objDom->loadHTML('<?xml encoding="UTF-8">'.$strHtml)) return array();
+
+    $arrRows = array();
+    $strSection = 'PHP';
+    $objXpath = new DOMXPath($objDom);
+
+    foreach ($objXpath->query('//body//h2 | //body//tr') as $objNode)
+    {
+        if ($objNode->nodeName == 'h2')
+        {
+            $strSection = trim($objNode->textContent);
+            continue;
+        }
+
+        $arrCells = array();
+        foreach ($objNode->childNodes as $objCell) if ($objCell->nodeName == 'td') $arrCells[] = $objCell;
+        if (sizeof($arrCells) < 2 || strpos(' '.$arrCells[0]->getAttribute('class').' ', ' e ') === false) continue;
+
+        $strLocal = trim($arrCells[1]->textContent);
+        $strMaster = isset($arrCells[2]) ? trim($arrCells[2]->textContent) : '';
+
+        $arrRows[] = array(
+            'section' => $strSection,
+            'directive' => trim($arrCells[0]->textContent),
+            'local' => $strLocal,
+            'master' => $strMaster === $strLocal ? '' : $strMaster
+        );
+    }
+
+    return $arrRows;
+}

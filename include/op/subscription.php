@@ -91,7 +91,7 @@ switch($ploopi_op)
         }
 
         ?>
-        <script type="text/javascript">
+        <script type="text/javascript" nonce="<?php echo ploopi\csp::nonce(); ?>">
             window.parent.ploopi.subscription.display('<?php echo ploopi\str::htmlentities($_POST['ploopi_subscription_id']); ?>', '<?php echo $strNext ?>');
         </script>
         <?php

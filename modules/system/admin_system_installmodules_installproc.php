@@ -35,15 +35,24 @@
  */
 include_once './modules/system/xmlparser_mod.php';
 include_once './modules/system/xmlparser_mb.php';
+// La procédure elle-même : ploopi\system\moduleinstaller::install()
 
 if (empty($_GET['installmoduletype']) || !preg_match('@^([a-z0-9_\-])+$@i', $_GET['installmoduletype'])) ploopi\output::redirect('admin.php');
 
-if (!ini_get('safe_mode')) ini_set('max_execution_time', 0);
+ini_set('max_execution_time', 0);
 
 global $idmoduletype;
 $idmoduletype = -1;
 
-echo ploopi\skin::get()->open_simplebloc(_SYSTEM_LABEL_INSTALLREPORT);
+// Gabarits de génération 4 : compte rendu dans une carte
+$booSystemP4 = ploopi\skin::get()->version() >= 4;
+
+if ($booSystemP4)
+{
+    echo ploopi\system\ui::pagehead(str_replace('<MODULE>', $_GET['installmoduletype'], _SYSTEM_SYSMOD_INSTALL_TITLE), _SYSTEM_SYSMOD_REPORT_DESC);
+    echo ploopi\system\ui::card_open(_SYSTEM_LABEL_INSTALLREPORT, 'list-check');
+}
+else echo ploopi\skin::get()->open_simplebloc(_SYSTEM_LABEL_INSTALLREPORT);
 ?>
 
 <?php
@@ -52,224 +61,20 @@ ploopi\db::get()->query($select);
 if (ploopi\db::get()->numrows())
 {
     ?>
+    <?php
+    if ($booSystemP4) echo ploopi\system\ui::callout('warning', ploopi\str::htmlentities('Module déjà installé !'));
+    else
+    {
+        ?>
     <div style="padding:4px;text-align:center;font-weight:bold;color:#a60000;">Module déjà installé !</div>
+        <?php
+    }
+    ?>
     <?php
 }
 else
 {
-    $modpath = "./install/{$_GET['installmoduletype']}";
-
-    $sqlfile        = "{$modpath}/structure.sql";
-    $xmlfile_desc   = "{$modpath}/description.xml";
-    $xmlfile_data   = "{$modpath}/data.xml";
-    $mbfile         = "{$modpath}/mb.xml";
-    $srcfiles       = "{$modpath}/files";
-    $destfiles      = "./modules/{$_GET['installmoduletype']}";
-
-    $critical_error = false;
-
-    $rapport = array();
-
-    /**
-     * OPERATION 1 : Copie des fichiers
-     */
-    $testok = true;
-    $detail = '';
-    if (file_exists($srcfiles))
-    {
-        if (is_writable(realpath("./modules/")))
-        {
-            ploopi\fs::copydir($srcfiles , $destfiles);
-            $detail = 'Fichiers copiés';
-        }
-        else
-        {
-            $detail = "Impossible de copier les fichiers dans '{$destfiles}'.";
-            $testok = false;
-            $critical_error = true;
-        }
-    }
-    else $detail = 'Aucun fichier à copier.';
-
-    $rapport[] = array('operation' => 'Copie des fichiers', 'detail' => $detail, 'res' => $testok);
-
-    if (!$critical_error)
-    {
-        /**
-         * OPERATION 2 : Chargement des paramètres/actions
-         */
-        $testok = true;
-        $detail = '';
-
-        if (file_exists($xmlfile_desc))
-        {
-            $fp = fopen($xmlfile_desc, 'r');
-            $data = fread ($fp, filesize ($xmlfile_desc));
-            fclose($fp);
-
-            $x2a = new ploopi\xml2array();
-            $xmlarray = $x2a->parse($data);
-            if ($xmlarray)
-            {
-                $pt = &$xmlarray['root']['ploopi'][0]['moduletype'][0];
-
-                //ploopi\output::print_r($pt);
-                $module_type = new ploopi\module_type();
-                $module_type->fields = array(   'label'         => isset($pt['label'][0]) ? $pt['label'][0] : '',
-                                                'version'       => isset($pt['version'][0]) ? $pt['version'][0] : '',
-                                                'author'        => isset($pt['author'][0]) ? $pt['author'][0] : '',
-                                                'date'          => isset($pt['date'][0]) ? $pt['date'][0] : '',
-                                                'description'   => isset($pt['description'][0]) ? $pt['description'][0] : ''
-                                            );
-
-                $idmoduletype = $module_type->save();
-
-                if (!empty($pt['paramtype']))
-                {
-                    foreach($pt['paramtype'] as $key => $value)
-                    {
-                        if (empty($value['default_value'][0])) $value['default_value'][0] = '';
-
-                        $param_type = new ploopi\param_type();
-                        $param_type->fields = array(    'id_module_type'    => $module_type->fields['id'],
-                                                        'name'              => isset($value['name'][0]) ? $value['name'][0] : '',
-                                                        'label'             => isset($value['label'][0]) ? $value['label'][0] : '',
-                                                        'default_value'     => isset($value['default_value'][0]) ? $value['default_value'][0] : '',
-                                                        'public'            => isset($value['public'][0]) ? $value['public'][0] : 0,
-                                                        'description'       => isset($value['description'][0]) ? $value['description'][0] : ''
-                                                    );
-
-                        $param_type->save();
-
-                        if (!empty($value['paramchoice']))
-                        {
-                            foreach($value['paramchoice'] as $ckey => $cvalue)
-                            {
-                                $param_choice = new ploopi\param_choice();
-                                $param_choice->fields = array(  'id_module_type'    => $module_type->fields['id'],
-                                                                'name'              => isset($param_type->fields['name']) ? $param_type->fields['name'] : '',
-                                                                'value'             => isset($cvalue['value'][0]) ? $cvalue['value'][0] : '',
-                                                                'displayed_value'   => isset($cvalue['displayed_value'][0]) ? $cvalue['displayed_value'][0] : ''
-                                                            );
-                                $param_choice->save();
-                            }
-                        }
-                    }
-                }
-
-                if (!empty($pt['cms_object']))
-                {
-                    foreach($pt['cms_object'] as $key => $value)
-                    {
-                        $mb_cms_object = new ploopi\mb_cms_object();
-                        $mb_cms_object->fields = array( 'id_module_type'    => $module_type->fields['id'],
-                                                        'label' => isset($value['label'][0]) ? $value['label'][0] : '',
-                                                        'script' => isset($value['script'][0]) ? $value['script'][0] : '',
-                                                        'select_id' => isset($value['select_id'][0]) ? $value['select_id'][0] : '',
-                                                        'select_label' => isset($value['select_label'][0]) ? $value['select_label'][0] : '',
-                                                        'select_table' => isset($value['select_table'][0]) ? $value['select_table'][0] : ''
-                                                    );
-                        $mb_cms_object->save();
-                    }
-                }
-
-                if (!empty($pt['action']))
-                {
-                    foreach($pt['action'] as $key => $value)
-                    {
-                        $mb_action = new ploopi\mb_action();
-                        $mb_action->fields = array( 'id_module_type'    => $module_type->fields['id'],
-                                                    'id_action' => isset($value['id_action'][0]) ? $value['id_action'][0] : 0,
-                                                    'label' => isset($value['label'][0]) ? $value['label'][0] : '',
-                                                    'id_object' => isset($value['id_object'][0]) ? $value['id_object'][0] : 0,
-                                                    'role_enabled' => isset($value['role_enabled'][0]) ? $value['role_enabled'][0] : 1
-                        );
-                        $mb_action->save();
-                    }
-                }
-
-                $detail = "Fichier '{$xmlfile_desc}' importé.";
-            }
-            else
-            {
-                $detail = "Fichier '{$xmlfile_desc}' mal formé. Vérifiez la structure XML du document.";
-                $testok = false;
-                $critical_error = true;
-            }
-        }
-        else
-        {
-            $detail = "Fichier '{$xmlfile_desc}' non trouvé.";
-            $testok = false;
-            $critical_error = true;
-        }
-
-        $rapport[] = array('operation' => 'Chargement des paramètres/actions', 'detail' => $detail, 'res' => $testok);
-
-        if (!$critical_error)
-        {
-            ploopi\user_action_log::record(_SYSTEM_ACTION_INSTALLMODULE, $_GET['installmoduletype']);
-
-            /**
-             * OPERATION 3 : Création des tables/champs
-             */
-            $testok = true;
-            $detail = '';
-
-            if (file_exists($sqlfile))
-            {
-                ploopi\db::get()->multiplequeries(file_get_contents($sqlfile));
-                $detail = "Fichier '{$sqlfile}' importé";
-            }
-            else $detail = "Fichier '{$sqlfile}' non trouvé";
-
-            $rapport[] = array('operation' => 'Création des tables/champs', 'detail' => $detail, 'res' => $testok);
-
-            /**
-             * OPERATION 4 : Chargement des données spécifiques
-             */
-            $testok = true;
-            $detail = '';
-
-            if (file_exists($xmlfile_data))
-            {
-                $xml_parser = xmlparser_mod();
-                if (!xml_parse($xml_parser, file_get_contents($xmlfile_data)))
-                {
-                    $detail = sprintf("Erreur XML: %s à la ligne %d dans '%s'\n", xml_error_string(xml_get_error_code($xml_parser)), xml_get_current_line_number($xml_parser), $xmlfile_data);
-                    $testok = false;
-                }
-                else $detail = "Fichier '{$xmlfile_data}' importé";
-
-                xml_parser_free($xml_parser);
-            }
-            else $detail = "Fichier '{$xmlfile_data}' non trouvé";
-
-            $rapport[] = array('operation' => 'Chargement des données spécifiques', 'detail' => $detail, 'res' => $testok);
-
-            /**
-             * OPERATION 5 : Chargement de la métabase
-             */
-            $testok = true;
-            $detail = '';
-
-            if (file_exists($mbfile))
-            {
-                $xml_parser = xmlparser_mb();
-                if (!xml_parse($xml_parser,  file_get_contents($mbfile)))
-                {
-                    $stop = sprintf("Erreur XML: %s à la ligne %d dans '%s'\n", xml_error_string(xml_get_error_code($xml_parser)), xml_get_current_line_number($xml_parser), $mbfile);
-                    $testok = false;
-                }
-                else $detail = "Fichier '{$mbfile}' importé";
-
-                xml_parser_free($xml_parser);
-            }
-            else $detail = "Fichier '{$mbfile}' non trouvé";
-
-            $rapport[] = array('operation' => 'Chargement de la métabase', 'detail' => $detail, 'res' => $testok);
-        }
-    }
+    ploopi\system\moduleinstaller::install($_GET['installmoduletype'], $rapport);
 
     $columns = array();
     $values = array();
@@ -290,7 +95,14 @@ else
         $c++;
     }
 
-    ploopi\skin::get()->display_array($columns, $values, 'array_installproc');
+    if ($booSystemP4) echo ploopi\system\ui::report($rapport);
+    else ploopi\skin::get()->display_array($columns, $values, 'array_installproc');
+}
+
+if ($booSystemP4)
+{
+    echo ploopi\system\ui::card_close(ploopi\system\ui::button(array('label' => _PLOOPI_CONTINUE, 'icon' => 'arrow-right', 'class' => 'primary', 'href' => ploopi\crypt::urlencode('admin.php?sysToolbarItem=install'))));
+    return;
 }
 ?>
 <div style="padding:4px;text-align:right;">

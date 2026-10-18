@@ -41,6 +41,70 @@ switch($ploopi_op)
     break;
 
     case 'annotation_taghistory':
+        // Gabarit ploopi4 : fenêtre refondue, fermeture déléguée (js/annotation.js)
+        if (ploopi\skin::get()->version() >= 4)
+        {
+            $skin = ploopi\skin::get();
+            $tag = new ploopi\tag();
+            if (empty($_GET['id_tag']) || !is_numeric($_GET['id_tag']) || !$tag->open($_GET['id_tag'])) ploopi\system::kill();
+
+            $rs = ploopi\db::get()->query("
+                SELECT      a.*,
+                            o.script,
+                            o.label as object_name,
+                            m.label as module_name,
+                            u.firstname,
+                            u.lastname
+                FROM        ploopi_annotation a
+                INNER JOIN  ploopi_annotation_tag at ON at.id_annotation = a.id AND at.id_tag = ".((int) $_GET['id_tag'])."
+                INNER JOIN  ploopi_module m ON a.id_module = m.id
+                LEFT JOIN   ploopi_user u ON u.id = a.id_user
+                LEFT JOIN   ploopi_mb_object o ON o.id = a.id_object AND o.id_module_type = m.id_module_type
+                WHERE       (a.private = 0 OR a.id_user = ".((int) $_SESSION['ploopi']['userid']).")
+                ORDER BY    a.date_annotation DESC
+            ");
+            ?>
+            <div class="p4-ui p4-anno-history">
+                <div class="p4-anno-history-head">
+                    <div>
+                        <strong>#<?php echo ploopi\str::htmlentities($tag->fields['tag']); ?></strong>
+                        <span>Annotations portant cette étiquette</span>
+                    </div>
+                    <button type="button" class="p4-btn p4-btn-ghost p4-btn-icon p4-btn-sm" data-p4-anno-close title="Fermer" aria-label="Fermer"><?php echo $skin->icon('x'); ?></button>
+                </div>
+                <ol class="p4-anno-history-list">
+                    <?php
+                    while ($fields = ploopi\db::get()->fetchrow($rs))
+                    {
+                        $ld = ploopi\date::timestamp2local($fields['date_annotation']);
+                        $strLien = '';
+                        if ($fields['id_record'] != '' && $fields['script'] != '')
+                        {
+                            $strLien = 'admin.php?ploopi_mainmenu=1&'.str_replace(array('<IDRECORD>', '<IDMODULE>', '<IDWORKSPACE>'), array($fields['id_record'], $fields['id_module'], $fields['id_workspace']), $fields['script']);
+                        }
+                        $strObjet = implode(' / ', array_filter(array($fields['module_name'], $fields['object_name'], $fields['object_label']), 'strlen'));
+                        ?>
+                        <li>
+                            <div class="p4-anno-history-meta">
+                                <strong><?php echo ploopi\str::htmlentities(trim("{$fields['firstname']} {$fields['lastname']}")); ?></strong>
+                                <span><?php echo ploopi\str::htmlentities("{$ld['date']} à ".substr($ld['time'], 0, 5)); ?></span>
+                            </div>
+                            <div class="p4-anno-text"><?php echo ploopi\str::make_links(ploopi\str::nl2br(ploopi\str::htmlentities($fields['content']))); ?></div>
+                            <?php if ($strObjet != '') { ?>
+                            <div class="p4-anno-history-object">
+                                <?php echo $skin->icon('link'); ?>
+                                <?php if ($strLien != '') { ?><a href="<?php echo ploopi\str::htmlentities($strLien); ?>"><?php echo ploopi\str::htmlentities($strObjet); ?></a><?php } else { ?><span><?php echo ploopi\str::htmlentities($strObjet); ?></span><?php } ?>
+                            </div>
+                            <?php } ?>
+                        </li>
+                        <?php
+                    }
+                    ?>
+                </ol>
+            </div>
+            <?php
+            ploopi\system::kill();
+        }
         ?>
         <div class="ploopi_annotation_popup">
         <?php
@@ -70,6 +134,8 @@ switch($ploopi_op)
                         ON          a.id_module = m.id
 
                         LEFT JOIN   ploopi_mb_object o ON o.id = a.id_object AND o.id_module_type = m.id_module_type
+
+                        WHERE       (a.private = 0 OR a.id_user = ".((int) $_SESSION['ploopi']['userid']).")
 
                         ORDER BY    a.date_annotation DESC
                         ";

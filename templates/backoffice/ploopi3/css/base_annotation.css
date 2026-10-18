@@ -1,0 +1,206 @@
+/*
+    Copyright (c) 2002-2007 Netlor
+    Copyright (c) 2007-2008 Ovensia
+    Contributors hold Copyright (c) to their code submissions.
+
+    This file is part of Ploopi.
+
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+/******************
+  SYSTEM.ANNOTATIONS
+*******************/
+
+#system_annotation_tags {
+float:right;
+width:250px;
+}
+
+#system_annotation_list {
+overflow:auto;
+border-right:1px solid var(--p3-border);
+}
+
+#system_annotation_titlebar {
+padding:2px 4px;
+border-bottom:1px solid var(--p3-border);
+background-color:var(--p3-surface-2);
+overflow:auto;
+}
+
+.system_annotation_row {
+clear:both;
+overflow:auto;
+border-bottom: 1px solid var(--p3-border);
+padding:2px;
+}
+
+.system_annotation_title {
+font-weight:bold;
+font-size:1.1em;
+float:left;
+padding:2px 2px 4px 2px;
+}
+
+.system_annotation_date {
+float:right;
+padding:2px;
+}
+
+.system_annotation_content {
+clear:both;
+padding:2px;
+}
+
+.system_annotation_taglist {
+clear:both;
+float:left;
+padding:2px;
+}
+
+.system_annotation_module {
+float:right;
+}
+
+a.system_annotation_tag {
+display:block;
+float:left;
+padding:2px 6px;
+height:22px;
+line-height:22px;
+white-space:nowrap;
+}
+
+a.system_annotation_tag:hover {
+display:block;
+background-color:var(--p3-surface-3);
+text-decoration:none;
+}
+
+a.system_annotation_tagsel {
+display:block;
+float:left;
+padding:2px 6px;
+height:22px;
+line-height:22px;
+white-space:nowrap;
+background-color:var(--p3-primary-soft);
+}
+
+a.system_annotation_tagsel:hover {
+display:block;
+background-color:var(--p3-surface-3);
+text-decoration:none;
+}
+
+.system_annotation_page {
+display:block;
+float:left;
+background-color:var(--p3-surface);
+padding: 0px 4px;
+margin-left:1px;
+text-decoration:none;
+color:var(--p3-text);
+border:1px solid var(--p3-border);
+}
+
+.system_annotation_page:hover {
+background-color:var(--p3-primary-softer);
+text-decoration:none;
+}
+
+.system_annotation_page_sel {
+display:block;
+float:left;
+background-color:var(--p3-surface);
+padding: 0px 4px;
+margin-left:1px;
+text-decoration:none;
+color:var(--p3-text);
+border:1px solid var(--p3-primary);
+}
+
+.system_annotation_page_sel:hover {
+background-color:var(--p3-primary-softer);
+text-decoration:none;
+}
+
+.ploopi_annotation_row_1 {
+border-top: 1px solid var(--p3-border);
+background-color:#fffdf4;
+overflow:auto;
+}
+
+.ploopi_annotation_row_2 {
+border-top: 1px solid var(--p3-border);
+background-color:#fbf8ec;
+overflow:auto;
+}
+
+.ploopi_annotation_viewlist {
+display:block;
+background-color:#fbf8ec;
+box-shadow:inset 4px 0 0 #b08800;
+text-decoration:none;
+height:32px;
+line-height:32px;
+color:var(--p3-text);
+font-weight:bold;
+margin:0;
+padding:0 10px 0 12px;
+overflow:hidden;
+}
+
+.ploopi_annotation_viewlist:hover {
+background-color:#f6f0d6;
+color:var(--p3-text);
+text-decoration:none;
+}
+
+.ploopi_annotation_viewlist img, .ploopi_annotation_viewlist span {
+    vertical-align: middle;
+}
+
+.ploopi_annotation_viewlist span {
+   padding-left: 5px;
+}
+
+.ploopi_annotation_popup {
+background-color:#fffdf4;
+}
+
+.ploopi_annotation_popup_list {
+height:200px;
+overflow:auto;
+}
+
+.ploopi_annotation_titleform {
+display:block;
+font-weight:bold;
+background-color:#fbf8ec;
+line-height:32px;
+height:32px;
+padding-left:12px;
+box-shadow:inset 4px 0 0 #b08800;
+border-bottom:1px solid var(--p3-border);
+}
+
+.ploopi_annotation_titleform img, .ploopi_annotation_titleform span {
+    vertical-align: middle;
+}
+
+.ploopi_annotation_titleform span {
+   padding-left: 5px;
+}

@@ -44,3 +44,19 @@ width:100%;
 background-color:#eee;
 }
 
+
+/* Anciens styles en ligne, devenus des classes (même aspect) */
+.planning_bandeau {
+    border-width:1px 0;
+    border-style:solid;
+    border-color:#bbb;
+    background-color:#ddd;
+}
+
+.planning_cartouche {
+    margin:2px;
+    float:right;
+    padding:2px;
+    border:1px solid #888;
+    background:#fff;
+}

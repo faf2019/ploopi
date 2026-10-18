@@ -146,7 +146,7 @@ class webedit_article_comment extends ploopi\data_object
         ?>
         <a name="comment_<?php echo $id_article; ?>" style="display:none;"></a>
         <div style="overflow:hidden;">
-            <a id="comment_count_<?php echo $id_article; ?>" class="webedit_comment_viewlist" href="javascript:void(0);" onclick="javascript:$('comment_list_<?php echo $id_article; ?>').style.display=($('comment_list_<?php echo $id_article; ?>').style.display=='block') ? 'none' : 'block'; new Ajax.Request('<?php  echo $ajaxRequestShow ?>', { method: 'get'});">
+            <a id="comment_count_<?php echo $id_article; ?>" class="webedit_comment_viewlist" href="javascript:void(0);" onclick="javascript:jQuery('#comment_list_<?php echo $id_article; ?>').toggle(); jQuery.get('<?php  echo $ajaxRequestShow ?>');">
                 <img border="0" src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/system/comment.png">
                 <span>
                     <?php echo $nbcomment; ?> commentaire<?php echo ($nbcomment>1) ? 's' : '';

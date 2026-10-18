@@ -74,7 +74,7 @@ class documentsfolder extends data_object
         if ($this->new)
         {
             $id = parent::save();
-            $this->fields['md5id'] = md5(sprintf("%s_%d", $this->fields['timestp_create'], $id));
+            $this->fields['md5id'] = bin2hex(random_bytes(16));
 
             if ($this->fields['id_folder'] != 0)
             {

@@ -1,0 +1,85 @@
+/*
+    Copyright (c) 2007-2026 Ovensia
+    Contributors hold Copyright (c) to their code submissions.
+
+    This file is part of Ploopi.
+
+    Ploopi is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Ploopi is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Ploopi; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
+/******************
+  PLOOPI4 : COULEURS ÉCRITES EN LIGNE PAR LES MODULES
+
+  Les modules écrivent quelques couleurs dans l'attribut style (ligne en cours de
+  modification, état publié ou non, élément inactif, astérisque d'un article en
+  attente…). Elles sont reprises ici par les jetons du gabarit, dans les deux
+  thèmes : le contenu des modules suit ainsi le thème sombre. !important est le
+  seul moyen de passer devant un attribut style.
+
+  La liste suit l'inventaire des modules (grep des styles en ligne dans
+  install/<module>/files) ; une couleur absente reste telle quelle. Le motif
+  « ;color: » / « ^color: » écarte background-color.
+*******************/
+
+/* Textes : rouge (inactif, à supprimer, en attente), vert (publié), gris (désactivé) */
+:where(#pagecontent, .ploopi_popup, body.popup) :is(
+    [style^="color:#a60000" i], [style*=";color:#a60000" i],
+    [style^="color:#aa0000" i], [style*=";color:#aa0000" i],
+    [style^="color:#ff0000" i], [style*=";color:#ff0000" i]) {
+    color: var(--danger) !important;
+}
+
+:where(#pagecontent, .ploopi_popup, body.popup) :is(
+    [style^="color:#00aa00" i], [style*=";color:#00aa00" i],
+    [style^="color:#00a600" i], [style*=";color:#00a600" i]) {
+    color: var(--success) !important;
+}
+
+:where(#pagecontent, .ploopi_popup, body.popup) :is(
+    [style^="color:#777" i], [style*=";color:#777" i],
+    [style^="color:#888" i], [style*=";color:#888" i],
+    [style^="color:#aaa" i], [style*=";color:#aaa" i]) {
+    color: var(--text-3) !important;
+}
+
+/* Fonds : ligne en cours de modification (rose), états (vert, bleu, mauve), bandeaux gris */
+:where(#pagecontent, .ploopi_popup, body.popup) [style*="background-color:#ffe0e0" i] {
+    background-color: color-mix(in srgb, var(--danger) 14%, var(--surface)) !important;
+}
+
+:where(#pagecontent, .ploopi_popup, body.popup) :is([style*="background-color:#ddffee" i], [style*="background-color:#e0f0e0" i]) {
+    background-color: color-mix(in srgb, var(--success) 14%, var(--surface)) !important;
+}
+
+:where(#pagecontent, .ploopi_popup, body.popup) :is([style*="background-color:#ddeeff" i], [style*="background-color:#e0e0f0" i]) {
+    background-color: color-mix(in srgb, var(--info) 14%, var(--surface)) !important;
+}
+
+:where(#pagecontent, .ploopi_popup, body.popup) :is([style*="background-color:#ffffff" i], [style*="background:#fff;" i]) {
+    background-color: var(--surface) !important;
+}
+
+:where(#pagecontent, .ploopi_popup, body.popup) [style*="background:#f8f8f8" i] {
+    background: var(--surface-2) !important;
+}
+
+:where(#pagecontent, .ploopi_popup, body.popup) :is([style*="background-color:#ddd;" i], [style*="background-color:#e0e0e0" i], [style*="background-color:#c0c0c0" i]) {
+    background-color: var(--surface-3) !important;
+}
+
+/* Bordures grises en ligne */
+:where(#pagecontent, .ploopi_popup, body.popup) :is([style*="solid #c0c0c0" i], [style*="solid #a0a0a0" i], [style*="solid #aaa" i], [style*="color:#bbb" i]) {
+    border-color: var(--border-strong) !important;
+}

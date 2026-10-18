@@ -99,6 +99,7 @@ define ('_FORMS_IMPORT',       'Import de données');
 
 define ('_FORMS_FILTER',        'Filtre');
 define ('_FORMS_EXPORT',        'Export');
+define ('_FORMS_SORTBY',        'Trier par');
 define ('_FORMS_MOREDETAILS',       'Plus de détails');
 
 

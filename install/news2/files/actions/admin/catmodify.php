@@ -63,9 +63,9 @@ if ($catRs->numrows()) {
 				'<a title="Modifier" href="'
 				.ploopi\crypt::urlencode("admin.php?entity=admin&action=catmodify&id={$fields['id']}")
 				.'"><img alt="Modifier" src="./modules/news2/img/ico_modify.png" /></a>'
-				.'<a title="Supprimer" href="javascript:ploopi.confirmlink(\''
+				.'<a title="Supprimer" data-ploopi-confirm="Êtes-vous certain de vouloir supprimer cette catégorie ?" href="'
 				.ploopi\crypt::urlencode("admin.php?entity=admin&action=op_catdelete&id={$fields['id']}")
-				.'\',\'Êtes-vous certain de vouloir supprimer cette catégorie ?\');">'
+				.'">'
 				.'<img alt="Supprimer" src="./modules/news2/img/ico_trash.png" /></a>
 			'];
 		$array_values[$c]['description'] = ploopi\str::htmlentities($fields['title']);

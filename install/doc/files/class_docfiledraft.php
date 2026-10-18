@@ -107,11 +107,11 @@ class docfiledraft extends ploopi\data_object
 
             if (!$error)
             {
-                $this->fields['extension'] = substr(strrchr($this->fields['name'], "."),1);
+                $this->fields['extension'] = preg_replace('@[^A-Za-z0-9]@', '', (string)substr(strrchr($this->fields['name'], "."),1));
 
                 $id = parent::save();
 
-                $this->fields['md5id'] = md5(sprintf("%s_%d_1",$this->fields['timestp_create'],$id));
+                $this->fields['md5id'] = bin2hex(random_bytes(16));
 
                 parent::save();
 

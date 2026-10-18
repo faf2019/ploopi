@@ -35,3 +35,44 @@
 
 
 include_once './modules/dbreport/classes/class_dbreport.php';
+
+/**
+ * Écrans prêts pour la Content-Security-Policy stricte (ploopi\csp::moduleready) : aucun
+ * script ni gestionnaire en ligne, comportements par attributs data-* (js/actions.js
+ * du socle, include/functions.js du module)
+ */
+define('_DBREPORT_CSP', true);
+
+/**
+ * L'utilisateur courant peut-il consulter ou exécuter la requête ?
+ *
+ * Règle de la liste des requêtes (public_query_list.php) : requêtes de l'instance
+ * courante, dans les espaces visibles selon le mode de vue du module.
+ *
+ * @param array $arrQuery champs de la requête
+ * @return boolean true si la requête est visible
+ */
+
+function dbreport_query_isvisible($arrQuery)
+{
+    if (!isset($arrQuery['id_module']) || $arrQuery['id_module'] != $_SESSION['ploopi']['moduleid']) return false;
+
+    return in_array($arrQuery['id_workspace'], explode(',', ploopi\system::viewworkspaces()));
+}
+
+/**
+ * L'utilisateur courant peut-il modifier ou supprimer la requête ?
+ *
+ * Requête visible, action « gérer les requêtes » et, pour une requête verrouillée,
+ * action « verrouiller les requêtes », comme dans la liste.
+ *
+ * @param array $arrQuery champs de la requête
+ * @return boolean true si la requête est modifiable
+ */
+
+function dbreport_query_ismodifiable($arrQuery)
+{
+    return dbreport_query_isvisible($arrQuery)
+        && ploopi\acl::isactionallowed(dbreport::_ACTION_MANAGE)
+        && (empty($arrQuery['locked']) || ploopi\acl::isactionallowed(dbreport::_ACTION_LOCK));
+}

@@ -532,7 +532,9 @@ class formsForm extends ploopi\data_object
             // Seul l'admin peut exporter le champ ID, par contre on en a besoin en visu
             if (!$booExport || ploopi\acl::isactionallowed(_FORMS_ACTION_ADMIN, -1, $this->fields['id_module'])) $objQuery->add_select('rec.`#id` as `id`');
 
-            if ($booExport || $this->fields['option_displaydate'])
+            // Les données brutes (graphiques) ont toujours besoin de la date de réponse : les
+            // graphiques chronologiques étaient vides sans l'option « afficher la date »
+            if ($booExport || $booRawData || $this->fields['option_displaydate'])
             {
                 if ($booRawData) $objQuery->add_select('rec.`date_validation`');
                 else $objQuery->add_select("CONCAT(SUBSTRING(rec.`date_validation`, 7, 2), '/', SUBSTRING(rec.`date_validation`, 5, 2), '/', SUBSTRING(rec.`date_validation`, 1, 4), ' ', SUBSTRING(rec.`date_validation`, 9, 2), ':', SUBSTRING(rec.`date_validation`, 11, 2), ':', SUBSTRING(rec.`date_validation`, 13, 2)) as `date_validation`");
@@ -1020,7 +1022,9 @@ class formsForm extends ploopi\data_object
         }
 
 
-        $strFormat = strtolower($strFormat);
+        // Le format vient de la requête (forms_export_format) : il entre dans un nom de
+        // fichier, un entête HTTP et une commande unoconv — lettres et chiffres seulement
+        $strFormat = preg_replace('@[^a-z0-9]@', '', strtolower((string)$strFormat));
 
         $strFileName = "export.{$strFormat}";
 
@@ -1037,8 +1041,8 @@ class formsForm extends ploopi\data_object
             case 'csv':
                 // Lecture des paramètres CSV
                 $strFormat = ploopi\param::get('forms_export_csvextension', $this->fields['id_module']);
-                $strFieldSep = str_replace('(tab)',"\t", ploopi\param::get('forms_export_fieldseparator', $this->fields['id_module']));
-                $strLineSep = str_replace(array('(cr)', '(lf)'), array("\r", "\n"), ploopi\param::get('forms_export_lineseparator', $this->fields['id_module']));
+                $strFieldSep = str_replace('(tab)',"\t", (string) ploopi\param::get('forms_export_fieldseparator', $this->fields['id_module']));
+                $strLineSep = str_replace(array('(cr)', '(lf)'), array("\r", "\n"), (string) ploopi\param::get('forms_export_lineseparator', $this->fields['id_module']));
                 $strTextSep = ploopi\param::get('forms_export_textseparator', $this->fields['id_module']);
 
                 if (empty($strFormat)) $strFormat = 'csv';
@@ -1176,7 +1180,7 @@ class formsForm extends ploopi\data_object
                                 ploopi\arr::toexcel($arrData, true, $strTmpXls, 'Feuille', $arrTitles, $arrOptions);
 
                                 if (file_exists($strTmpXls)) {
-                                    exec($cmd = "{$strUnoconv} -f {$strFormat} -o '{$strTmpFile}' '{$strTmpXls}'");
+                                    exec($cmd = escapeshellarg($strUnoconv).' -f '.escapeshellarg($strFormat).' -o '.escapeshellarg($strTmpFile).' '.escapeshellarg($strTmpXls));
                                     if (file_exists($strTmpFile)) {
                                         echo file_get_contents($strTmpFile);
                                         unlink($strTmpFile);
@@ -1607,7 +1611,7 @@ class formsForm extends ploopi\data_object
                 $arrValues = array();
 
                 ploopi\error::unset_handler();
-                if (isset($_COOKIE[$strVarName])) $arrValues = ploopi\arr::map('utf8_decode', json_decode(gzuncompress(ploopi\crypt::base64_decode($_COOKIE[$strVarName])), true));
+                if (isset($_COOKIE[$strVarName])) $arrValues = ploopi\arr::map(function($v) { return mb_convert_encoding($v, 'ISO-8859-1', 'UTF-8'); }, json_decode(gzuncompress(ploopi\crypt::base64_decode($_COOKIE[$strVarName])), true));
                 ploopi\error::set_handler();
 
                 foreach($arrValues as $intFieldId => $strValue) if (is_numeric($intFieldId)) $arrFieldsContent[$intFieldId] = explode('||', $strValue);
@@ -2394,6 +2398,60 @@ class formsForm extends ploopi\data_object
         $intTsToday = ploopi\date::createtimestamp();
 
         return ($this->fields['pubdate_start'] <= $intTsToday || empty($this->fields['pubdate_start'])) && ($this->fields['pubdate_end'] >= $intTsToday || empty($this->fields['pubdate_end']));
+    }
+
+    /**
+     * Ouvre un formulaire à condition qu'il appartienne à l'instance de module donnée.
+     *
+     * Les traitements désignent le formulaire par son seul identifiant, et les droits
+     * sont évalués sur l'instance courante : sans ce contrôle, les droits détenus sur
+     * une instance s'étendraient aux formulaires de toutes les autres.
+     *
+     * @param mixed $mixId identifiant du formulaire
+     * @param int $intModuleId instance de module, par défaut l'instance courante
+     * @return formsForm|false le formulaire, ou false s'il n'existe pas ou relève d'une autre instance
+     */
+
+    public static function openInModule($mixId, $intModuleId = null)
+    {
+        if (empty($mixId) || !is_numeric($mixId)) return false;
+
+        if (is_null($intModuleId)) $intModuleId = isset($_SESSION['ploopi']['moduleid']) ? $_SESSION['ploopi']['moduleid'] : 0;
+
+        $objForm = new self();
+        if (!$objForm->open($mixId) || $objForm->fields['id_module'] != $intModuleId) return false;
+
+        return $objForm;
+    }
+
+    /**
+     * Indique si l'utilisateur courant peut modifier ou supprimer une réponse, selon
+     * l'option « modifiable par » du formulaire et le droit demandé.
+     *
+     * @param array $arrRecord la réponse (au moins user_id et workspace_id)
+     * @param int $intAction _FORMS_ACTION_ADDREPLY pour modifier, _FORMS_ACTION_DELETE pour supprimer
+     * @return boolean true si l'opération est permise
+     */
+
+    public function isRecordEditable($arrRecord, $intAction)
+    {
+        if (ploopi\acl::isadmin()) return true;
+
+        if (!ploopi\acl::isactionallowed($intAction, -1, $this->fields['id_module'])) return false;
+
+        switch($this->fields['option_modify'])
+        {
+            case 'user':
+                return $arrRecord['user_id'] == $_SESSION['ploopi']['userid'];
+
+            case 'group':
+                return $arrRecord['workspace_id'] == $_SESSION['ploopi']['workspaceid'];
+
+            case 'all':
+                return true;
+        }
+
+        return false;
     }
 
     /**

@@ -653,6 +653,7 @@ switch($menu)
                                     FROM    ploopi_mod_webedit_heading_subscriber
                                     WHERE   id_module = {$_SESSION['ploopi']['moduleid']}
                                     AND     id_heading IN (".implode(',', $arrHeadingList).")
+                                    AND     validated = 1
                                     ";
 
                             ploopi\db::get()->query($sql);
@@ -680,7 +681,7 @@ switch($menu)
                                     break;
                                 }
 
-                                $mail_content .= "\n\nVous pouvez vous désabonner en cliquant sur le lien suivant : "._PLOOPI_BASEPATH.'/'.ploopi\str::urlrewrite('index.php?ploopi_op=webedit_unsubscribe&subscription_email='.md5($row['email']), webedit_getrewriterules());
+                                $mail_content .= "\n\nVous pouvez vous désabonner en cliquant sur le lien suivant : "._PLOOPI_BASEPATH.'/'.ploopi\str::urlrewrite('index.php?ploopi_op=webedit_unsubscribe&subscription_token='.webedit_subscription_token('u', $_SESSION['ploopi']['moduleid'], 0, $row['email']), webedit_getrewriterules());
 
                                 ploopi\mail::send($from, $row['email'], $mail_title, $mail_content, null, null, null, null, false);
                             }
@@ -788,16 +789,6 @@ switch($menu)
             break;
 
             case 'display_iframe':
-                ?>
-                <script type="text/javascript" src="./FCKeditor/fckeditor.js"></script>
-                <script type="text/javascript">
-                function webedit_getcontent()
-                {
-                    var oEditor = FCKeditorAPI.GetInstance('fck_webedit_article_content') ;
-                    return(oEditor.GetXHTML(true));
-                }
-                </script>
-                <?php
                 include_once './modules/webedit/display.php';
             break;
 
