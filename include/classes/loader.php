@@ -191,7 +191,11 @@ abstract class loader
             system::kill();
         }
 
+        // Une sortie du fichier de configuration (espace ou ligne vide après la balise de fin PHP) partirait avant
+        // le buffer et empêcherait la session et les en-têtes : on l'écarte, puis on la signale.
+        ob_start();
         include_once './config/config.php'; // load config (mysql, path, etc.)
+        $strSortieConfig = ob_get_clean();
 
         /**
          * Création du buffer principal.
@@ -202,6 +206,8 @@ abstract class loader
          * Initialisation du gestionnaire d'erreur
          */
         error::set_handler();
+
+        if ($strSortieConfig !== '') trigger_error(sprintf("Sortie parasite du fichier de configuration (%d octet(s)) ignorée : supprimer ce qui suit « ?> » ou précède « <?php »", strlen($strSortieConfig)), E_USER_WARNING);
 
         /**
          * Chargement des constantes, globales
